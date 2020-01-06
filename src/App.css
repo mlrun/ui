@@ -1,3 +1,28 @@
-.App {
-  text-align: center;
+@import "./scss/variables.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  display: flex;
+}
+body {
+  background: #EEEEEE;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  margin-left: 150px;
+  margin-top: 64px;
+  width: 100%;
 }

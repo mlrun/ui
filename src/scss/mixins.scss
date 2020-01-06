@@ -1,0 +1,52 @@
+@mixin fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+@mixin jobsFlex {
+  flex-grow: 1;
+  flex-shrink: 0;
+  min-height: 300px;
+}
+
+@mixin tableDet {
+  text-align: left;
+  border-bottom: $tableBorder;
+  &:first-child {
+    padding-left: 56px;
+  }
+}
+
+@mixin chip {
+  padding: 8px 15px;
+  margin: 8px;
+  cursor: default;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  justify-content: center;
+  background-color: transparent;
+  font-size: 14px;
+  line-height: 16px;
+  color: $tableFont;
+  border-radius: 16px;
+}
+
+@mixin jobsFilter($item, $left) {
+  position: relative;
+  margin-right: 16px;
+  &::before {
+    content: $item;
+    position: absolute;
+    left: $left;
+    top: 11px;
+    color: $breadcrumbsFontColor;
+  }
+  &::after {
+    content: url('../images/caret.png');
+    position: absolute;
+    right: 15px;
+    top: 10px;
+  }
+}

@@ -1,0 +1,33 @@
+@import "../../scss/variables";
+@import "../../scss/mixins";
+
+.sidebar {
+  @include fixed;
+  width: 150px;
+  background-color: $white;
+  height: 100%;
+  &__wrapper {
+    display: flex;
+    right: auto;
+    height: 100%;
+    z-index: 1000;
+    overflow-y: auto;
+    flex-direction: column;
+    margin-top: 64px;
+    color: $sidebarFont;
+    width: inherit;
+  }
+  &__menu {
+    padding: 8px 0;
+    list-style-type: none;
+    &__item {
+      padding: 8px 16px;
+      a {
+        display: flex;
+        justify-content: flex-start;
+        text-decoration: none;
+        color: inherit;
+      }
+    }
+  }
+}

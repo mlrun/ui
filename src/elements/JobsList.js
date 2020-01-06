@@ -7,7 +7,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Typography from '@material-ui/core/Typography'
 
 import State from '../common/State'
-import { formatDatetime } from '../../utils/datetime'
+import { formatDatetime } from '../utils/datetime'
 
 const JobsList = props => (
   <List>

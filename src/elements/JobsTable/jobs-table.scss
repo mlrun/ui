@@ -1,0 +1,69 @@
+@import '../../scss/variables';
+@import '../../scss/mixins';
+
+.jobs__table {
+  @include jobsFlex;
+  border-top: $tableBorder;
+  table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+  }
+  &_head {
+    tr {
+      th {
+        @include tableDet;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 24px;
+        color: $breadcrumbsFontColor;
+        padding: 10px 16px;
+      }
+    }
+  }
+  &_body {
+    tr {
+      height: 24px;
+      td {
+        @include tableDet;
+        padding: 5px;
+        font-size: 15px;
+        line-height: 18px;
+        font-weight: 400;
+        a {
+          text-decoration: none;
+          color: $tableLink;
+          margin: 0;
+        }
+        div {
+          display: flex;
+          flex-flow: row wrap;
+        }
+        i {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          display: block;
+          margin: 0 25px;
+        }
+        .completed {
+          background-color: $statusCompleted;
+        }
+        .running {
+          background-color: $statusRunning;
+        }
+        .failed {
+
+        }
+      }
+    }
+    &__parameters {
+      @include chip;
+      border: 1px solid $parametersBorder;
+    }
+    &__results {
+      @include chip;
+      border: 1px solid $resultsBorder;
+    }
+  }
+}
