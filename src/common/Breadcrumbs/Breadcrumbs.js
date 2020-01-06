@@ -1,0 +1,43 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import { startCase } from 'lodash'
+import { Link } from 'react-router-dom'
+
+import './breadcrums.scss'
+
+const Breadcrumbs = ({ match = { path: '', url: '' } }) => {
+  const pathItems = match.path.slice(1).split('/')
+  const urlItems = match.url.slice(1).split('/')
+  return (
+    <nav className="breadcrumbs">
+      <ul className="breadcrumbs__list">
+        {urlItems.map((item, i) => {
+          const param = pathItems[i].startsWith(':')
+          const label = param ? item : startCase(item)
+          const to = `/${urlItems.slice(0, i + 1).join('/')}`
+          const last = i === urlItems.length - 1
+          return last ? (
+            <li className="breadcrumbs__list__item" key={i + item}>
+              {label}
+            </li>
+          ) : (
+            [
+              <li key={i + item} className="breadcrumbs__list__item">
+                <Link to={to}>{label}</Link>
+              </li>,
+              <li key={i} className="breadcrumbs__list_separator">
+                >
+              </li>
+            ]
+          )
+        })}
+      </ul>
+    </nav>
+  )
+}
+
+Breadcrumbs.propTypes = {
+  match: PropTypes.shape({}).isRequired
+}
+
+export default Breadcrumbs
