@@ -2,13 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
+import JobsItemInternal from '../../components/JobsItemInternal/JobsItemInternal'
+import Loader from '../../common/Loader/Loader'
+
 import { formatDatetime, truncateUid } from '../../utils'
 
 import './jobs-table.scss'
 
-const JobsTable = ({ jobs }) => {
+const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
   return (
     <div className="jobs__table">
+      {loading && <Loader />}
       <table>
         <thead className="jobs__table_head">
           <tr>
@@ -30,7 +34,12 @@ const JobsTable = ({ jobs }) => {
             return (
               <tr key={item + i}>
                 <td>
-                  <Link to={`/jobs/${item.uid}`}>{item.name}</Link>
+                  <Link
+                    to={`/jobs/${item.uid}`}
+                    onClick={() => handleSelectJob(item)}
+                  >
+                    {item.name}
+                  </Link>
                 </td>
                 <td>
                   <span title={item.uid}>{truncateUid(item.uid)}</span>
@@ -62,16 +71,22 @@ const JobsTable = ({ jobs }) => {
           })}
         </tbody>
       </table>
+      {job.uid && <JobsItemInternal job={job} handleCancel={handleCancel} />}
     </div>
   )
 }
 
 JobsTable.defaultProps = {
+  job: {},
   jobs: []
 }
 
 JobsTable.propTypes = {
-  jobs: PropTypes.arrayOf(PropTypes.shape({}))
+  handleCancel: PropTypes.func.isRequired,
+  handleSelectJob: PropTypes.func.isRequired,
+  job: PropTypes.shape({}),
+  jobs: PropTypes.arrayOf(PropTypes.shape({})),
+  loading: PropTypes.bool.isRequired
 }
 
 export default JobsTable

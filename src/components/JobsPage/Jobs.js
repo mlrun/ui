@@ -2,19 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import jobsActions from '../../actions/getJobs'
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import JobDetails from '../JobInternalPage/JobDetails'
-import JobsTable from '../../elements/JobsTable/JobsTable'
-import JobsList from '../../elements/JobsList'
+import jobsActions from '../../actions/jobs'
 
-import './jobs.scss'
-import searchIcon from '../../images/search-icon.png'
-import refreshIcon from '../../images/refresh.png'
+import JobsView from './JobsView'
 
-const Jobs = ({ match, jobsStore, fetchJobs }) => {
-  const jobId = match.params && match.params.jobId
-
+const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
+  const [jobs, setJobs] = useState([])
+  const [filter, setFilter] = useState('')
+  const [filterValue, setFilterValue] = useState('')
   const [loading, setLoading] = useState(false)
 
   const refreshJobs = useCallback(
@@ -22,6 +17,8 @@ const Jobs = ({ match, jobsStore, fetchJobs }) => {
       if (noCahche || jobsStore.jobs.length === 0) {
         setLoading(true)
         fetchJobs()
+          .then(jobs => setJobs(jobs))
+          .then(() => setLoading(false))
       }
     },
     [fetchJobs, jobsStore.jobs.length]
@@ -31,56 +28,54 @@ const Jobs = ({ match, jobsStore, fetchJobs }) => {
     refreshJobs()
   }, [refreshJobs])
 
+  useEffect(() => {
+    if (match.params.jobId) {
+      let item = jobsStore.jobs.find(item => (item.uid = match.params.jobId))
+      setSelectedJob(item)
+    }
+  }, [
+    jobsStore.jobs,
+    jobsStore.jobs.length,
+    match.params.jobId,
+    setSelectedJob
+  ])
+
+  const handleSelectJob = item => {
+    setSelectedJob(item)
+  }
+
+  const handleCancel = () => {
+    setSelectedJob({})
+  }
+
+  const handleFilterByStatus = filter => {
+    if (filter === 'All') {
+      setJobs(jobsStore.jobs)
+      return
+    }
+    let filteredJobs = jobsStore.jobs.filter(item => {
+      if (item.state === filter.toLowerCase()) return item
+    })
+    setJobs(filteredJobs)
+  }
+
+  const handleFilterClick = () => {
+    if (filter === 'status') handleFilterByStatus(filterValue)
+  }
+
   return (
-    <>
-      <div className="jobs__header">
-        <Breadcrumbs match={match} />
-      </div>
-      <div className="jobs">
-        <div className="jobs__menu">
-          <ul className="jobs__menu__list">
-            <li className="jobs__menu__list_item active">Monitor</li>
-            <li className="jobs__menu__list_item">Edit</li>
-            <li className="jobs__menu__list_item">Create</li>
-          </ul>
-        </div>
-        <div className="jobs__parameters">
-          <div className="jobs__parameters__filters">
-            <div className="jobs__parameters__select_period">
-              <select className="jobs__parameters__select">
-                <option className="jobs__parameters_period">Last 7 days</option>
-              </select>
-            </div>
-            <div className="jobs__parameters__select_group">
-              <select className="jobs__parameters__select group">
-                <option>Name</option>
-                <option>None</option>
-              </select>
-            </div>
-            <div className="jobs__parameters__select_status">
-              <select className="jobs__parameters__select status">
-                <option>All</option>
-              </select>
-            </div>
-            <button className="jobs__parameters__button_search">
-              <img src={searchIcon} alt="search icon" />
-            </button>
-          </div>
-          <button
-            className="jobs__parameters__button_refresh"
-            onClick={refreshJobs}
-          >
-            <img src={refreshIcon} alt="refresh" />
-          </button>
-        </div>
-        {jobId ? (
-          <JobsList jobs={jobsStore.jobs} loading={loading} jobId={jobId} />
-        ) : (
-          <JobsTable jobs={jobsStore.jobs} />
-        )}
-        {jobId && <JobDetails />}
-      </div>
-    </>
+    <JobsView
+      jobs={jobs}
+      job={jobsStore.selectedJob}
+      match={match}
+      refreshJobs={refreshJobs}
+      handleSelectJob={handleSelectJob}
+      handleCancel={handleCancel}
+      handleFilterClick={handleFilterClick}
+      setFilter={setFilter}
+      setFilterValue={setFilterValue}
+      loading={loading}
+    />
   )
 }
 
@@ -90,7 +85,8 @@ Jobs.propTypes = {
   jobsStore: PropTypes.shape({}).isRequired,
   location: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  setJobs: PropTypes.func.isRequired
+  setJobs: PropTypes.func.isRequired,
+  setSelectedJob: PropTypes.func.isRequired
 }
 
 export default connect(jobsStore => jobsStore, jobsActions)(Jobs)

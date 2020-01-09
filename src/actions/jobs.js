@@ -33,6 +33,10 @@ const jobsActions = {
   setJobs: jobsList => ({
     type: 'SET_JOBS',
     payload: jobsList
+  }),
+  setSelectedJob: job => ({
+    type: 'SET_SELECTED_JOB',
+    payload: job
   })
 }
 

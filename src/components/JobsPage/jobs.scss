@@ -36,7 +36,7 @@
         font-weight: bold;
         font-size: 15px;
         line-height: 18px;
-        color: $breadcrumbsFontColor;
+        color: $mainGreyColor;
         cursor: pointer;
       }
       .active {
@@ -76,6 +76,12 @@
       }
       &_status {
         @include jobsFilter('Show status:', 17px)
+      }
+      option {
+        background: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+        border-radius: 2px;
       }
     }
     .group {

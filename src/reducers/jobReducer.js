@@ -1,5 +1,6 @@
 const initialState = {
-  jobs: []
+  jobs: [],
+  selectedJob: {}
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -8,6 +9,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         jobs: payload
+      }
+    case 'SET_SELECTED_JOB':
+      return {
+        ...state,
+        selectedJob: payload
       }
     default:
       return state
