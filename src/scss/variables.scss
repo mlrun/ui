@@ -1,10 +1,11 @@
-$breadcrumbsFontColor: #7F7989;
+
+$mainGreyColor: #7F7989;
 $jobsShadow: 0 3px 4px rgba(0, 0, 0, 0.18);
 $tableBorder: 1px solid rgba(72, 63, 86, 0.12);
 $tableLink: #25A6EE;
 $statusCompleted: #0BD02B;
-$parametersBorder: #EA7F54;
-$resultsBorder: #49AF53;
+$parametersBorder: 1px solid #EA7F54;
+$resultsBorder: 1px solid #49AF53;
 $tableFontColor: #483F56;
 $white: #fff;
 $sidebarFontColor: rgba(0, 0, 0, 0.87);
@@ -16,4 +17,6 @@ $gitBorder: 1px solid rgb(255, 255, 255);
 $mainBorderRadius: 4px;
 $statusRunning: #50B1E7;
 $selectHover: #F7F7F7;
+$labelBorder: 1px solid #A44CC5;
+$statusFailed: #EB5757;
 

@@ -4,6 +4,7 @@
 .jobs__table {
   @include jobsFlex;
   border-top: $tableBorder;
+  position: relative;
   table {
     width: 100%;
     border-spacing: 0;
@@ -16,7 +17,7 @@
         font-weight: bold;
         font-size: 14px;
         line-height: 24px;
-        color: $breadcrumbsFontColor;
+        color: $mainGreyColor;
         padding: 10px 16px;
       }
     }
@@ -26,7 +27,7 @@
       height: 24px;
       td {
         @include tableDet;
-        padding: 5px;
+        padding: 15px;
         font-size: 15px;
         line-height: 18px;
         font-weight: 400;
@@ -40,30 +41,17 @@
           flex-flow: row wrap;
         }
         i {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          display: block;
           margin: 0 25px;
-        }
-        .completed {
-          background-color: $statusCompleted;
-        }
-        .running {
-          background-color: $statusRunning;
-        }
-        .failed {
-
         }
       }
     }
     &__parameters {
       @include chip;
-      border: 1px solid $parametersBorder;
+      border: $parametersBorder;
     }
     &__results {
       @include chip;
-      border: 1px solid $resultsBorder;
+      border: $resultsBorder;
     }
   }
 }

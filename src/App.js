@@ -5,12 +5,11 @@ import {
   Route,
   Switch
 } from 'react-router-dom'
-// import { connect } from 'react-redux'
-//
-// import logo from './images/iguazio-logo-corner.png'
-import './App.css'
+
 import Header from './components/Header/Header'
 import SideBar from './components/SideBar/SideBar'
+
+import './scss/main.scss'
 
 const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
 const Artifacts = React.lazy(() => import('./routes/Artifacts'))
@@ -42,7 +41,6 @@ const App = () => {
           </Switch>
         </Suspense>
       </main>
-      {/*<Route exact path="/" render={(props) => (usersStore.isAuth ? <Redirect to="/dashboard"/> : <HomePage {...props}/>)}/>*/}
     </Router>
   )
 }

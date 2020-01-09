@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import './breadcrums.scss'
 
-const Breadcrumbs = ({ match = { path: '', url: '' } }) => {
+const Breadcrumbs = ({ match = { path: '', url: '' }, onClick }) => {
   const pathItems = match.path.slice(1).split('/')
   const urlItems = match.url.slice(1).split('/')
   return (
@@ -23,7 +23,9 @@ const Breadcrumbs = ({ match = { path: '', url: '' } }) => {
           ) : (
             [
               <li key={i + item} className="breadcrumbs__list__item">
-                <Link to={to}>{label}</Link>
+                <Link to={to} onClick={onClick}>
+                  {label}
+                </Link>
               </li>,
               <li key={i} className="breadcrumbs__list_separator">
                 >
@@ -36,8 +38,13 @@ const Breadcrumbs = ({ match = { path: '', url: '' } }) => {
   )
 }
 
+Breadcrumbs.defaultProps = {
+  onClick: () => {}
+}
+
 Breadcrumbs.propTypes = {
-  match: PropTypes.shape({}).isRequired
+  match: PropTypes.shape({}).isRequired,
+  onClick: PropTypes.func
 }
 
 export default Breadcrumbs
