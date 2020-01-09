@@ -1,0 +1,92 @@
+@import "../../scss/variables";
+@import "../../scss/mixins";
+
+.jobs__table__item {
+  position: absolute;
+  top: 0;
+  left: 17%;
+  background-color: $white;
+  width: 83%;
+  height: 100%;
+  border-left: $tableBorder;
+  color: $tableFontColor;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    &_data {
+      h3 {
+        margin: 27px 24px 10px;
+        font-size: 24px;
+        line-height: 28px;
+      }
+      span {
+        font-size: 15px;
+        line-height: 18px;
+        margin-left: 24px;
+      }
+    }
+    &_buttons {
+      a {
+        display: inline-block;
+        margin: 21px;
+      }
+    }
+  }
+  &__menu {
+    margin: 29px 0 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    &_item {
+      padding: 8px 24px;
+      border-bottom: 1px solid transparent;
+      color: $mainGreyColor;
+      font-weight: bold;
+      font-size: 15px;
+      line-height: 18px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+    .active {
+      border-bottom-color: $statusRunning;
+      color: $statusRunning;
+    }
+  }
+  &_details {
+    margin: 0;
+    padding: 0 30px;
+    list-style-type: none;
+    border-top: $tableBorder;
+    &_item {
+      border-bottom: $tableBorder;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      &_header {
+        min-width: 100px;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 24px;
+      }
+      i {
+        margin-left: 21px;
+      }
+      &_data {
+        padding-left: 16px;
+        &__parameters {
+          @include chip;
+          border: $parametersBorder;
+          margin: 0 8px 0 0;
+        }
+        &__labels {
+          @include chip;
+          border: $labelBorder;
+          margin: 0 8px 0 0;
+        }
+      }
+    }
+  }
+}

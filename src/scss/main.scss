@@ -1,4 +1,5 @@
-@import "./scss/variables.scss";
+@import "./variables.scss";
+@import "./mixins.scss";
 
 * {
   box-sizing: border-box;
@@ -25,4 +26,20 @@ main {
   margin-left: 150px;
   margin-top: 64px;
   width: 100%;
+  position: relative;
+}
+
+.completed {
+  @include jobStatus;
+  background-color: $statusCompleted;
+}
+
+.running {
+  @include jobStatus;
+  background-color: $statusRunning;
+}
+
+.failed {
+  @include jobStatus;
+  background-color: $statusFailed;
 }
