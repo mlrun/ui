@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 
 import { formatDatetime } from '../../utils'
 import JobInternalInfo from '../../elements/JobInternalInfo/JobInternalInfo'
+import JobInternalInputs from '../../elements/JobInternalInputs/JobInternalInputs'
+import JobInternalResults from '../../elements/JobInternalResults/JobInternalResults'
 
 import './jobItemInternal.scss'
 import cancel from '../../images/job-details-cancel.png'
@@ -58,6 +60,8 @@ const JobsItemInternalView = ({ job, handleCancel, view, handleMenuClick }) => (
       </ul>
     </div>
     {view === 'Info' && <JobInternalInfo job={job} />}
+    {view === 'Inputs' && <JobInternalInputs job={job} />}
+    {view === 'Results' && <JobInternalResults job={job} />}
   </div>
 )
 

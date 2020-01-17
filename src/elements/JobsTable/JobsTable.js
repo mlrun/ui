@@ -48,7 +48,7 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
                 <td>
                   <i className={item.state} />
                 </td>
-                <td style={{ maxWidth: '250px', overflow: 'auto' }}>
+                <td className="jobs__table_body__chips_wrapper">
                   <div>
                     {item.parameters.map(item => (
                       <span key={item} className="jobs__table_body__parameters">
@@ -57,7 +57,7 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
                     ))}
                   </div>
                 </td>
-                <td style={{ maxWidth: '250px' }}>
+                <td className="jobs__table_body__chips_wrapper">
                   <div>
                     {item.resultsChips.map(item => (
                       <span key={item} className="jobs__table_body__results">

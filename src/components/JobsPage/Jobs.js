@@ -6,22 +6,23 @@ import jobsActions from '../../actions/jobs'
 
 import JobsView from './JobsView'
 
-const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
+const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob, history }) => {
   const [jobs, setJobs] = useState([])
   const [filter, setFilter] = useState('')
   const [filterValue, setFilterValue] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const refreshJobs = useCallback(
     noCahche => {
       if (noCahche || jobsStore.jobs.length === 0) {
+        setSelectedJob({})
         setLoading(true)
         fetchJobs()
           .then(jobs => setJobs(jobs))
           .then(() => setLoading(false))
       }
     },
-    [fetchJobs, jobsStore.jobs.length]
+    [fetchJobs, jobsStore.jobs]
   )
 
   useEffect(() => {
@@ -30,15 +31,12 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
 
   useEffect(() => {
     if (match.params.jobId) {
-      let item = jobsStore.jobs.find(item => (item.uid = match.params.jobId))
+      let item = jobsStore.jobs.find(item => {
+        if (item.uid === match.params.jobId) return item
+      })
       setSelectedJob(item)
     }
-  }, [
-    jobsStore.jobs,
-    jobsStore.jobs.length,
-    match.params.jobId,
-    setSelectedJob
-  ])
+  }, [jobsStore.jobs, match.params, setSelectedJob])
 
   const handleSelectJob = item => {
     setSelectedJob(item)

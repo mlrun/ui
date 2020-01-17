@@ -4,9 +4,9 @@
 .jobs__table__item {
   position: absolute;
   top: 0;
-  left: 17%;
+  left: 15%;
   background-color: $white;
-  width: 83%;
+  width: 85%;
   height: 100%;
   border-left: $tableBorder;
   color: $tableFontColor;
@@ -39,6 +39,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    border-bottom: $tableBorder;
     &_item {
       padding: 8px 24px;
       border-bottom: 1px solid transparent;
@@ -86,6 +87,38 @@
           border: $labelBorder;
           margin: 0 8px 0 0;
         }
+      }
+    }
+  }
+  &_inputs {
+    padding: 0;
+    margin: 0;
+    &_item {
+      border-bottom: $tableBorder;
+      padding: 27px 24px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      div {
+        margin-right: 160px;
+      }
+    }
+  }
+  &_results {\padding: 0 31px;
+    &__table {
+      text-align: left;
+      tr {
+        height: 24px;
+        border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+      }
+      th {
+        @include tableHeader;
+      }
+      td {
+        padding: 19px 16px;
+      }
+      i {
+        margin: 0 15px;
       }
     }
   }
