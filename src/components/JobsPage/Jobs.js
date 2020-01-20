@@ -6,7 +6,7 @@ import jobsActions from '../../actions/jobs'
 
 import JobsView from './JobsView'
 
-const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob, history }) => {
+const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [jobs, setJobs] = useState([])
   const [filter, setFilter] = useState('')
   const [filterValue, setFilterValue] = useState('')
@@ -52,10 +52,9 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob, history }) => {
       setJobs(jobsStore.jobs)
       return
     }
-    let filteredJobs = jobsStore.jobs.filter(item => {
-      if (item.state === filter.toLowerCase()) return item
-      return false
-    })
+    let filteredJobs = jobsStore.jobs.filter(
+      item => item.uid === match.params.jobId
+    )
     setJobs(filteredJobs)
   }
 

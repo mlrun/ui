@@ -47,7 +47,11 @@ const JobInternalResults = ({ job }) => {
                         className="jobs__table__item_results__table_medal"
                       >
                         {value}
-                        <img src={bestIterationIcon} alt="Best iteration" />
+                        <img
+                          src={bestIterationIcon}
+                          alt="Best iteration"
+                          title="Best iteration"
+                        />
                       </td>
                     )
                   } else {
