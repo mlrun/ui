@@ -3,7 +3,7 @@ import { capitalize } from 'lodash'
 import PropTypes from 'prop-types'
 
 const JobInternalResults = ({ job }) => {
-  let headers = job.iterationStats[0].map(item => {
+  let headers = (job.iterationStats[0] || []).map(item => {
     let head = capitalize(String(item).replace(/^.+\./, ''))
     return head
   })
@@ -20,8 +20,8 @@ const JobInternalResults = ({ job }) => {
         <table className="jobs__table__item_results__table">
           <thead>
             <tr>
-              {headers.map(item => (
-                <th key={item}>{item}</th>
+              {headers.map((item, i) => (
+                <th key={i}>{item}</th>
               ))}
             </tr>
           </thead>
