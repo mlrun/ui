@@ -31,10 +31,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
 
   useEffect(() => {
     if (match.params.jobId) {
-      let item = jobsStore.jobs.find(item => {
-        if (item.uid === match.params.jobId) return item
-        return false
-      })
+      let item = jobsStore.jobs.find(item => item.uid === match.params.jobId)
       setSelectedJob(item)
     }
   }, [jobsStore.jobs, match.params, setSelectedJob])
@@ -53,7 +50,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
       return
     }
     let filteredJobs = jobsStore.jobs.filter(
-      item => item.uid === match.params.jobId
+      item => item.state === filter.toLowerCase()
     )
     setJobs(filteredJobs)
   }
