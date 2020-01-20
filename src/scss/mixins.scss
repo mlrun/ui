@@ -20,7 +20,7 @@
 
 @mixin chip {
   padding: 8px 15px;
-  margin: 8px;
+  margin: 5px 8px;
   cursor: default;
   display: inline-flex;
   align-items: center;
@@ -56,4 +56,12 @@
   height: 8px;
   border-radius: 50%;
   display: inline-block;
+}
+
+@mixin tableHeader {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 24px;
+  color: $mainGreyColor;
+  padding: 10px 16px;
 }

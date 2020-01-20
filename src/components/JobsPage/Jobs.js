@@ -10,18 +10,19 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [jobs, setJobs] = useState([])
   const [filter, setFilter] = useState('')
   const [filterValue, setFilterValue] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const refreshJobs = useCallback(
     noCahche => {
       if (noCahche || jobsStore.jobs.length === 0) {
+        setSelectedJob({})
         setLoading(true)
         fetchJobs()
           .then(jobs => setJobs(jobs))
           .then(() => setLoading(false))
       }
     },
-    [fetchJobs, jobsStore.jobs.length]
+    [fetchJobs, jobsStore.jobs.length, setSelectedJob]
   )
 
   useEffect(() => {
@@ -30,15 +31,10 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
 
   useEffect(() => {
     if (match.params.jobId) {
-      let item = jobsStore.jobs.find(item => (item.uid = match.params.jobId))
+      let item = jobsStore.jobs.find(item => item.uid === match.params.jobId)
       setSelectedJob(item)
     }
-  }, [
-    jobsStore.jobs,
-    jobsStore.jobs.length,
-    match.params.jobId,
-    setSelectedJob
-  ])
+  }, [jobsStore.jobs, match.params, setSelectedJob])
 
   const handleSelectJob = item => {
     setSelectedJob(item)
@@ -53,9 +49,9 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
       setJobs(jobsStore.jobs)
       return
     }
-    let filteredJobs = jobsStore.jobs.filter(item => {
-      if (item.state === filter.toLowerCase()) return item
-    })
+    let filteredJobs = jobsStore.jobs.filter(
+      item => item.state === filter.toLowerCase()
+    )
     setJobs(filteredJobs)
   }
 

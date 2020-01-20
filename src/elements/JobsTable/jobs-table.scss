@@ -5,6 +5,9 @@
   @include jobsFlex;
   border-top: $tableBorder;
   position: relative;
+  &__wrapper {
+
+  }
   table {
     width: 100%;
     border-spacing: 0;
@@ -14,11 +17,7 @@
     tr {
       th {
         @include tableDet;
-        font-weight: bold;
-        font-size: 14px;
-        line-height: 24px;
-        color: $mainGreyColor;
-        padding: 10px 16px;
+        @include tableHeader;
       }
     }
   }
@@ -27,10 +26,11 @@
       height: 24px;
       td {
         @include tableDet;
-        padding: 15px;
+        padding: 8px;
         font-size: 15px;
         line-height: 18px;
         font-weight: 400;
+        max-width: 150px;
         a {
           text-decoration: none;
           color: $tableLink;
@@ -44,6 +44,10 @@
           margin: 0 25px;
         }
       }
+    }
+    &__chips_wrapper {
+      max-width: 200px;
+      overflow-x: auto;
     }
     &__parameters {
       @include chip;
