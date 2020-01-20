@@ -2,6 +2,8 @@ import React from 'react'
 import { capitalize } from 'lodash'
 import PropTypes from 'prop-types'
 
+import bestIterationIcon from '../../images/best-iteration-icon.png'
+
 const JobInternalResults = ({ job }) => {
   let headers = (job.iterationStats[0] || []).map(item => {
     let head = capitalize(String(item).replace(/^.+\./, ''))
@@ -32,7 +34,20 @@ const JobInternalResults = ({ job }) => {
                   if (typeof value === typeof '') {
                     return (
                       <td key={value + '' + i}>
-                        <i className={value} />
+                        <i
+                          className={value}
+                          title={value[0].toUpperCase() + value.slice(1)}
+                        />
+                      </td>
+                    )
+                  } else if (value === job.results.best_iteration) {
+                    return (
+                      <td
+                        key={value + '' + i}
+                        className="jobs__table__item_results__table_medal"
+                      >
+                        {value}
+                        <img src={bestIterationIcon} alt="Best iteration" />
                       </td>
                     )
                   } else {

@@ -16,7 +16,11 @@ const JobsItemInternalView = ({ job, handleCancel, view, handleMenuClick }) => (
       <div className="jobs__table__item__header_data">
         <h3>{job.name}</h3>
         <span>
-          {formatDatetime(job.startTime)} <i className={job.state} />
+          {formatDatetime(job.startTime)}{' '}
+          <i
+            className={job.state}
+            title={job.state[0].toUpperCase() + job.state.slice(1)}
+          />
         </span>
       </div>
       <div className="jobs__table__item__header_buttons">

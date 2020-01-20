@@ -13,64 +13,72 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
   return (
     <div className="jobs__table">
       {loading && <Loader />}
-      <table>
-        <thead className="jobs__table_head">
-          <tr>
-            <th>Name</th>
-            <th>UID</th>
-            <th>Started at</th>
-            <th>Status</th>
-            <th>Parameters</th>
-            <th>Results</th>
-          </tr>
-        </thead>
-        <tbody className="jobs__table_body">
-          {jobs.map((item, i) => {
-            if (item.parameters.length > 2) {
-              let cuttedElemets = '+' + (item.parameters.length - 2)
-              item.parameters = item.parameters.slice(0, 2)
-              item.parameters.push(cuttedElemets)
-            }
-            return (
-              <tr key={item + i}>
-                <td>
-                  <Link
-                    to={`/jobs/${item.uid}`}
-                    onClick={() => handleSelectJob(item)}
-                  >
-                    {item.name}
-                  </Link>
-                </td>
-                <td>
-                  <span title={item.uid}>{truncateUid(item.uid)}</span>
-                </td>
-                <td>{formatDatetime(item.startTime)}</td>
-                <td>
-                  <i className={item.state} />
-                </td>
-                <td className="jobs__table_body__chips_wrapper">
-                  <div>
-                    {item.parameters.map(item => (
-                      <span key={item} className="jobs__table_body__parameters">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </td>
-                <td className="jobs__table_body__chips_wrapper">
-                  <div>
-                    {item.resultsChips.map(item => (
-                      <span key={item} className="jobs__table_body__results">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+      <div className={job.uid && 'jobs__table__item_opened'}>
+        <table>
+          <thead className="jobs__table_head">
+            <tr>
+              <th>Name</th>
+              <th>UID</th>
+              <th>Started at</th>
+              <th>Status</th>
+              <th>Parameters</th>
+              <th>Results</th>
+            </tr>
+          </thead>
+          <tbody className="jobs__table_body">
+            {jobs.map((item, i) => {
+              if (item.parameters.length > 2) {
+                let cuttedElemets = '+' + (item.parameters.length - 2)
+                item.parameters = item.parameters.slice(0, 2)
+                item.parameters.push(cuttedElemets)
+              }
+              return (
+                <tr key={item + i}>
+                  <td>
+                    <Link
+                      to={`/jobs/${item.uid}`}
+                      onClick={() => handleSelectJob(item)}
+                    >
+                      {item.name}
+                    </Link>
+                  </td>
+                  <td>
+                    <span title={item.uid}>{truncateUid(item.uid)}</span>
+                  </td>
+                  <td>{formatDatetime(item.startTime)}</td>
+                  <td>
+                    <i
+                      className={item.state}
+                      title={item.state[0].toUpperCase() + item.state.slice(1)}
+                    />
+                  </td>
+                  <td className="jobs__table_body__chips_wrapper">
+                    <div>
+                      {item.parameters.map(item => (
+                        <span
+                          key={item}
+                          className="jobs__table_body__parameters"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="jobs__table_body__chips_wrapper">
+                    <div>
+                      {item.resultsChips.map(item => (
+                        <span key={item} className="jobs__table_body__results">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
       {job.uid && <JobsItemInternal job={job} handleCancel={handleCancel} />}
     </div>
   )
