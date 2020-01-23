@@ -4,12 +4,21 @@ import { Link } from 'react-router-dom'
 
 import JobsItemInternal from '../../components/JobsItemInternal/JobsItemInternal'
 import Loader from '../../common/Loader/Loader'
+import ChipCell from '../ChipCell/ChipCell'
 
 import { formatDatetime, truncateUid } from '../../utils'
+import { cutChips } from '../../utils/cutChips'
 
 import './jobs-table.scss'
 
 const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
+  const handleShowElements = e => {
+    const parentBlock = e.target.closest('.jobs__table_body__chips__block')
+    parentBlock.classList.contains('showChips')
+      ? parentBlock.classList.remove('showChips')
+      : parentBlock.classList.add('showChips')
+  }
+
   return (
     <div className="jobs__table">
       {loading && <Loader />}
@@ -27,11 +36,16 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
           </thead>
           <tbody className="jobs__table_body">
             {jobs.map((item, i) => {
-              if (item.parameters.length > 2) {
-                let cuttedElemets = '+' + (item.parameters.length - 2)
-                item.parameters = item.parameters.slice(0, 2)
-                item.parameters.push(cuttedElemets)
-              }
+              item.showedParameters = cutChips(
+                item.parameters,
+                2,
+                handleShowElements
+              )
+              item.showedResults = cutChips(
+                item.resultsChips,
+                2,
+                handleShowElements
+              )
               return (
                 <tr key={item + i}>
                   <td>
@@ -52,26 +66,17 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
                       title={item.state[0].toUpperCase() + item.state.slice(1)}
                     />
                   </td>
-                  <td className="jobs__table_body__chips_wrapper">
-                    <div>
-                      {item.parameters.map(item => (
-                        <span
-                          key={item}
-                          className="jobs__table_body__parameters"
-                        >
-                          {item}
-                        </span>
-                      ))}
-                    </div>
+                  <td className="jobs__table_body__chips_cell">
+                    <ChipCell
+                      elements={item.showedParameters}
+                      className="jobs__table_body__parameters"
+                    />
                   </td>
-                  <td className="jobs__table_body__chips_wrapper">
-                    <div>
-                      {item.resultsChips.map(item => (
-                        <span key={item} className="jobs__table_body__results">
-                          {item}
-                        </span>
-                      ))}
-                    </div>
+                  <td className="jobs__table_body__chips_cell">
+                    <ChipCell
+                      className="jobs__table_body__results"
+                      elements={item.showedResults}
+                    />
                   </td>
                 </tr>
               )
@@ -79,7 +84,13 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
           </tbody>
         </table>
       </div>
-      {job.uid && <JobsItemInternal job={job} handleCancel={handleCancel} />}
+      {job.uid && (
+        <JobsItemInternal
+          job={job}
+          handleCancel={handleCancel}
+          handleShowElements={handleShowElements}
+        />
+      )}
     </div>
   )
 }

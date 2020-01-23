@@ -18,19 +18,19 @@
   }
 }
 
-@mixin chip {
-  padding: 8px 15px;
-  margin: 5px 8px;
+@mixin chip($border) {
+  padding: 8px 14px;
+  margin: 5px 4px;
   cursor: default;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  justify-content: center;
   background-color: transparent;
   font-size: 14px;
   line-height: 16px;
   color: $tableFontColor;
   border-radius: 16px;
+  border: $border;
 }
 
 @mixin jobsFilter($item, $left) {

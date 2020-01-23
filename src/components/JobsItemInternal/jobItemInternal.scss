@@ -4,10 +4,10 @@
 .jobs__table__item {
   position: absolute;
   top: 0;
-  left: 15%;
+  left: 14%;
   background-color: $white;
-  width: 85%;
-  height: 76vh;
+  width: 86%;
+  height: 100%;
   overflow-y: scroll;
   border-left: $tableBorder;
   color: $tableFontColor;
@@ -44,7 +44,6 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    border-bottom: $tableBorder;
     &_item {
       padding: 8px 24px;
       border-bottom: 1px solid transparent;
@@ -67,7 +66,7 @@
     border-top: $tableBorder;
     &_item {
       border-bottom: $tableBorder;
-      padding: 20px 18px;
+      padding: 18px 18px;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -83,13 +82,11 @@
       &_data {
         padding-left: 16px;
         &__parameters {
-          @include chip;
-          border: $parametersBorder;
-          margin: 0 8px 0 0;
+          @include chip($parametersBorder);
+          margin: 8px 8px 0 0;
         }
         &__labels {
-          @include chip;
-          border: $labelBorder;
+          @include chip($labelBorder);
           margin: 8px 8px 0 0;
         }
       }
