@@ -3,7 +3,7 @@
 
 .sidebar {
   @include fixed;
-  width: 150px;
+  width: 90px;
   background-color: $white;
   height: 100%;
   &__wrapper {
@@ -22,6 +22,8 @@
     list-style-type: none;
     &__item {
       padding: 8px 16px;
+      display: flex;
+      justify-content: center;
       a {
         display: flex;
         justify-content: flex-start;
@@ -29,5 +31,9 @@
         color: inherit;
       }
     }
+    .active {
+      background-color: #dedede;
+    }
   }
+
 }
