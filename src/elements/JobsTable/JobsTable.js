@@ -17,7 +17,14 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
       e.target.className === 'jobs__table_body__results' ||
       e.target.className === 'jobs__table_body__parameters'
     ) {
+      let blocksArr = document.getElementsByClassName('showChips')
       const parentBlock = e.target.closest('.jobs__table_body__chips__block')
+      if (
+        blocksArr.length > 0 &&
+        !parentBlock.classList.contains('showChips')
+      ) {
+        blocksArr[0].classList.remove('showChips')
+      }
       parentBlock.classList.contains('showChips')
         ? parentBlock.classList.remove('showChips')
         : parentBlock.classList.add('showChips')
@@ -33,9 +40,7 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
         'jobs__table_body__chips__block showChips'
       )[0]
       if (block) {
-        document
-          .getElementsByClassName('jobs__table_body__chips__block showChips')[0]
-          .classList.remove('showChips')
+        block.classList.remove('showChips')
       }
     }
   }
