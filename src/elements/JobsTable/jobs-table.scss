@@ -23,7 +23,7 @@
   }
   &_body {
     tr {
-      height: 24px;
+      height: 54px;
       td {
         @include tableDet;
         padding: 8px;
@@ -36,26 +36,64 @@
           color: $tableLink;
           margin: 0;
         }
-        div {
-          display: flex;
-          flex-flow: row wrap;
-        }
         i {
           margin: 0 25px;
         }
       }
     }
-    &__chips_wrapper {
-      max-width: 200px;
-      overflow-x: auto;
+    &__chips {
+      &_cell {
+        max-width: 200px !important;
+      }
+      &_short {
+        max-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 !important;
+        font-style: normal;
+      }
+      &_hidden {
+        display: none !important;
+        position: absolute;
+        bottom: 112%;
+        right: 0;
+        border-radius: 2px;
+        background-color: $white;
+        box-shadow: $hiddenChipsBlockShadow;
+        flex-direction: column;
+        width: 165px;
+        padding: 10px;
+        z-index: 10000;
+        &__chip {
+          @include chip($parametersBorder);
+        }
+        &::after {
+          content: '';
+          display: block;
+          width: 12px;
+          height: 12px;
+          transform: rotate(-45deg);
+          background-color: inherit;
+          position: absolute;
+          bottom: -6px;
+          right: 20px;
+          z-index: -10;
+        }
+      }
+      &__block {
+        position: relative;
+        display: inline-block;
+      }
     }
     &__parameters {
-      @include chip;
-      border: $parametersBorder;
+      @include chip($parametersBorder);
     }
     &__results {
-      @include chip;
-      border: $resultsBorder;
+      @include chip($resultsBorder);
     }
+  }
+  .showChips .jobs__table_body__chips_hidden {
+    display: flex !important;
   }
 }

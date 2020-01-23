@@ -18,11 +18,16 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
         setSelectedJob({})
         setLoading(true)
         fetchJobs()
-          .then(jobs => setJobs(jobs))
+          .then(jobs => {
+            return setJobs(jobs)
+          })
           .then(() => setLoading(false))
+      } else if (jobsStore.jobs.length > 0 && !noCahche) {
+        setJobs(jobsStore.jobs)
+        setLoading(false)
       }
     },
-    [fetchJobs, jobsStore.jobs.length, setSelectedJob]
+    [fetchJobs, jobsStore.jobs, setSelectedJob]
   )
 
   useEffect(() => {

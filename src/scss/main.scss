@@ -23,7 +23,7 @@ main {
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
-  margin-left: 150px;
+  margin-left: 90px;
   margin-top: 64px;
   width: 100%;
   position: relative;
@@ -36,7 +36,7 @@ main {
 
 .running {
   @include jobStatus;
-  background-color: $statusRunning;
+  background-color: $mainBlue;
 }
 
 .failed {
