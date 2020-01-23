@@ -22,7 +22,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
           .then(() => setLoading(false))
       }
     },
-    [fetchJobs, jobsStore.jobs.length, setSelectedJob]
+    [fetchJobs, jobsStore.jobs, setSelectedJob]
   )
 
   useEffect(() => {

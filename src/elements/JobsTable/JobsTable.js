@@ -13,14 +13,35 @@ import './jobs-table.scss'
 
 const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
   const handleShowElements = e => {
-    const parentBlock = e.target.closest('.jobs__table_body__chips__block')
-    parentBlock.classList.contains('showChips')
-      ? parentBlock.classList.remove('showChips')
-      : parentBlock.classList.add('showChips')
+    if (
+      e.target.className === 'jobs__table_body__results' ||
+      e.target.className === 'jobs__table_body__parameters'
+    ) {
+      const parentBlock = e.target.closest('.jobs__table_body__chips__block')
+      parentBlock.classList.contains('showChips')
+        ? parentBlock.classList.remove('showChips')
+        : parentBlock.classList.add('showChips')
+    }
+  }
+
+  const hideChips = e => {
+    if (
+      e.target.className !== 'jobs__table_body__results' &&
+      e.target.className !== 'jobs__table_body__parameters'
+    ) {
+      const block = document.getElementsByClassName(
+        'jobs__table_body__chips__block showChips'
+      )[0]
+      if (block) {
+        document
+          .getElementsByClassName('jobs__table_body__chips__block showChips')[0]
+          .classList.remove('showChips')
+      }
+    }
   }
 
   return (
-    <div className="jobs__table">
+    <div className="jobs__table" onClick={hideChips}>
       {loading && <Loader />}
       <div className={job.uid && 'jobs__table__item_opened'}>
         <table>

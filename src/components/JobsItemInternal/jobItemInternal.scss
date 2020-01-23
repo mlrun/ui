@@ -54,8 +54,8 @@
       border-bottom: 3px solid transparent;
     }
     .active {
-      border-bottom-color: $statusRunning;
-      color: $statusRunning;
+      border-bottom-color: $mainBlue;
+      color: $mainBlue;
     }
   }
   &_details {
@@ -127,6 +127,35 @@
         img {
           margin-left: 10px;
         }
+      }
+    }
+  }
+  &_logs {
+    white-space: pre-wrap;
+    background-color: $black;
+    color: $white;
+    padding: 5px;
+    position: relative;
+    min-height: 400px;
+    button {
+      background-color: $white;
+      border: 1px solid $mainBlue;
+      color: $mainBlue;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 32px;
+      right: 29px;
+      cursor: pointer;
+      img {
+        margin-right: 6px;
+      }
+      &:active, &:focus {
+        outline: none;
+        box-shadow: none;
       }
     }
   }

@@ -31,7 +31,6 @@
         line-height: 18px;
         font-weight: 400;
         max-width: 150px;
-        white-space: nowrap;
         a {
           text-decoration: none;
           color: $tableLink;
@@ -61,7 +60,7 @@
         right: 0;
         border-radius: 2px;
         background-color: $white;
-        box-shadow: 1px 3px 8px rgba(0, 0, 0, 0.2);
+        box-shadow: $hiddenChipsBlockShadow;
         flex-direction: column;
         width: 165px;
         padding: 10px;

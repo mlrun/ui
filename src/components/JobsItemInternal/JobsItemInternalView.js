@@ -9,6 +9,7 @@ import JobInternalResults from '../../elements/JobInternalResults/JobInternalRes
 
 import './jobItemInternal.scss'
 import cancel from '../../images/job-details-cancel.png'
+import JobInternalLogs from '../../elements/JobInternalLogs/JobInternalLogs'
 
 const JobsItemInternalView = ({
   job,
@@ -74,6 +75,7 @@ const JobsItemInternalView = ({
     )}
     {view === 'Inputs' && <JobInternalInputs job={job} />}
     {view === 'Results' && <JobInternalResults job={job} />}
+    {view === 'Logs' && <JobInternalLogs />}
   </div>
 )
 

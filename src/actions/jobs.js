@@ -30,6 +30,11 @@ const jobsActions = {
       })
       .catch(error => console.error(error))
   },
+  fetchJobLogs: id => dispatch => {
+    return jobsApi.getJobLogs(id).then(result => {
+      dispatch(jobsActions.setJobLogs(result.data))
+    })
+  },
   setJobs: jobsList => ({
     type: 'SET_JOBS',
     payload: jobsList
@@ -37,6 +42,10 @@ const jobsActions = {
   setSelectedJob: job => ({
     type: 'SET_SELECTED_JOB',
     payload: job
+  }),
+  setJobLogs: logs => ({
+    type: 'SET_JOB_LOGS',
+    payload: logs
   })
 }
 
