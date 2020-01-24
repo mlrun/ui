@@ -1,0 +1,17 @@
+@import "../../scss/variables";
+
+.artifacts-header {
+    display: flex;
+    flex-shrink: 0;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 21px 24px;
+    background-color: $white;
+    box-shadow: $jobsHeaderShadow;
+}
+.artifacts-container {
+    margin-left: 24px;
+    margin-right: 24px;
+    margin-top: 15px;
+}

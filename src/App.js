@@ -12,7 +12,7 @@ import SideBar from './components/SideBar/SideBar'
 import './scss/main.scss'
 
 const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
-const Artifacts = React.lazy(() => import('./routes/Artifacts'))
+const Artifacts = React.lazy(() => import('./components/Arifacts/Artifacts'))
 
 const App = () => {
   return (

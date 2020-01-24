@@ -1,0 +1,28 @@
+.menu-container {
+    display: flex;
+    position: relative;
+    .menu-item {
+        padding: 8px 24px;
+        cursor: pointer;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 18px;
+        text-align: center;
+        color: #7F7989;
+    }
+    .active {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 18px;
+        color: #50B1E7;
+        border-bottom: 3px solid  #50B1E7;;
+    }
+}
+
+.artifacts-table {
+    background-color: #ffffff;
+}

@@ -1,0 +1,104 @@
+.table-container {
+  table {
+    border-collapse: collapse;
+    thead {
+      .table-header {
+        &-name {
+          padding-left: 56px;
+          padding-right: 110px;
+        }
+        &-path {
+          min-width: 400px;
+        }
+        &-type {
+          padding-left: 50px;
+          padding-right: 50px;
+        }
+        &-labels {
+          min-width: 400px;
+          padding-right: 50px;
+        }
+        &-producer {
+          min-width: 150px;
+        }
+        &-hash {
+          min-width: 100px;
+        }
+        &-started-at {
+          width: 100%;
+        }
+      }
+      tr {
+        th {
+          height: 32px;
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 24px;
+          color: #7f7989;
+          text-align: left;
+          border-top: 1px solid rgba(72, 63, 86, 0.12);
+        }
+      }
+    }
+    tbody {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 18px;
+      tr {
+        height: 55px;
+        &:first-child {
+          td {
+            border-top: 1px solid rgba(72, 63, 86, 0.12);
+          }
+        }
+        td {
+          border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+        }
+      }
+      .column-name-or-tree-or-iter,
+      .column-producer {
+        color: #25a6ee;
+      }
+      .column {
+        &-path {
+          color: #483f56;
+          max-width: 400px;
+          .path-container {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        &-hash,
+        &-started-at {
+          color: #483f56;
+        }
+        &-labels {
+          padding-right: 50px;
+        }
+        &-type {
+          padding-left: 50px;
+          padding-right: 50px;
+          color: #483f56;
+        }
+      }
+      .label {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        text-align: center;
+        color: #483f56;
+        padding: 8px 9px 8px 9px;
+        border: 1px solid #a44cc5;
+        box-sizing: border-box;
+        border-radius: 31px;
+      }
+    }
+  }
+}
