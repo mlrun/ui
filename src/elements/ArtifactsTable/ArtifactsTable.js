@@ -4,10 +4,9 @@ import { formatDatetime } from '../../utils'
 const ArtifactsTable = ({ artifacts }) => {
   const tableBody = artifacts.map((item, index) => {
     const labels = item.labels.map((label, index) => {
-      var newLabel = label.replace(/=/, ': ')
       return (
         <span key={index} className="label">
-          {newLabel}
+          {label}
         </span>
       )
     })
