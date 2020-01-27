@@ -4,10 +4,10 @@
 .jobs__table__item {
   position: absolute;
   top: 0;
-  left: 15%;
+  left: 14%;
   background-color: $white;
-  width: 85%;
-  height: 76vh;
+  width: 86%;
+  height: 100%;
   overflow-y: scroll;
   border-left: $tableBorder;
   color: $tableFontColor;
@@ -43,8 +43,6 @@
     list-style-type: none;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    border-bottom: $tableBorder;
     &_item {
       padding: 8px 24px;
       border-bottom: 1px solid transparent;
@@ -56,8 +54,8 @@
       border-bottom: 3px solid transparent;
     }
     .active {
-      border-bottom-color: $statusRunning;
-      color: $statusRunning;
+      border-bottom-color: $mainBlue;
+      color: $mainBlue;
     }
   }
   &_details {
@@ -67,7 +65,7 @@
     border-top: $tableBorder;
     &_item {
       border-bottom: $tableBorder;
-      padding: 20px 18px;
+      padding: 18px 18px;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -83,13 +81,11 @@
       &_data {
         padding-left: 16px;
         &__parameters {
-          @include chip;
-          border: $parametersBorder;
-          margin: 0 8px 0 0;
+          @include chip($parametersBorder);
+          margin: 8px 8px 0 0;
         }
         &__labels {
-          @include chip;
-          border: $labelBorder;
+          @include chip($labelBorder);
           margin: 8px 8px 0 0;
         }
       }
@@ -131,6 +127,36 @@
         img {
           margin-left: 10px;
         }
+      }
+    }
+  }
+  &_logs {
+    white-space: pre-wrap;
+    background-color: $black;
+    color: $white;
+    padding: 5px;
+    position: relative;
+    min-height: 400px;
+    font-family: "Source Code Pro","Courier New",monospace;
+    button {
+      background-color: $white;
+      border: 1px solid $mainBlue;
+      color: $mainBlue;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 32px;
+      right: 29px;
+      cursor: pointer;
+      img {
+        margin-right: 6px;
+      }
+      &:active, &:focus {
+        outline: none;
+        box-shadow: none;
       }
     }
   }

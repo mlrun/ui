@@ -9,8 +9,15 @@ import JobInternalResults from '../../elements/JobInternalResults/JobInternalRes
 
 import './jobItemInternal.scss'
 import cancel from '../../images/job-details-cancel.png'
+import JobInternalLogs from '../../elements/JobInternalLogs/JobInternalLogs'
 
-const JobsItemInternalView = ({ job, handleCancel, view, handleMenuClick }) => (
+const JobsItemInternalView = ({
+  job,
+  handleCancel,
+  view,
+  handleMenuClick,
+  handleShowElements
+}) => (
   <div className="jobs__table__item">
     <div className="jobs__table__item__header">
       <div className="jobs__table__item__header_data">
@@ -63,9 +70,12 @@ const JobsItemInternalView = ({ job, handleCancel, view, handleMenuClick }) => (
         </li>
       </ul>
     </div>
-    {view === 'Info' && <JobInternalInfo job={job} />}
+    {view === 'Info' && (
+      <JobInternalInfo job={job} handleShowElements={handleShowElements} />
+    )}
     {view === 'Inputs' && <JobInternalInputs job={job} />}
     {view === 'Results' && <JobInternalResults job={job} />}
+    {view === 'Logs' && <JobInternalLogs />}
   </div>
 )
 
@@ -73,6 +83,7 @@ JobsItemInternalView.propTypes = {
   job: PropTypes.shape({}).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleMenuClick: PropTypes.func.isRequired,
+  handleShowElements: PropTypes.func.isRequired,
   view: PropTypes.string.isRequired
 }
 

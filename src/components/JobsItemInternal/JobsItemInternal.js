@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import JobsItemInternalView from './JobsItemInternalView'
 
-const JobsItemInternal = ({ job, handleCancel }) => {
+const JobsItemInternal = ({ job, handleCancel, handleShowElements }) => {
   const [view, setView] = useState('Info')
 
   const handleMenuClick = (e, value) => {
@@ -19,13 +19,15 @@ const JobsItemInternal = ({ job, handleCancel }) => {
       handleCancel={handleCancel}
       view={view}
       handleMenuClick={handleMenuClick}
+      handleShowElements={handleShowElements}
     />
   )
 }
 
 JobsItemInternal.propTypes = {
   job: PropTypes.shape({}).isRequired,
-  handleCancel: PropTypes.func.isRequired
+  handleCancel: PropTypes.func.isRequired,
+  handleShowElements: PropTypes.func.isRequired
 }
 
 export default JobsItemInternal
