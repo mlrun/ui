@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import prettyBytes from 'pretty-bytes'
 import { connect } from 'react-redux'
@@ -9,19 +10,7 @@ import { formatDatetime } from '../../utils'
 import downloadIcon from '../../images/download-icon.png'
 
 const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
-  const artifacts = [
-    {
-      hash: '752254a8607cd334091f975a025bbf57b55cfc5f',
-      iter: 12,
-      key: 'model',
-      kind: '',
-      size: 50820,
-      target_path: '/User/mlrun/data/12/model.bst',
-      tree: '24f6ad39b31643208c18cd05c3a50628'
-    }
-  ]
-  // jobsStore.selectedJob.
-  const items = artifacts.map(item => {
+  const items = jobsStore.selectedJob.artifacts.map(item => {
     const index = item.target_path.indexOf('://')
     const target_path = {
       schema: item.target_path.includes('://')
@@ -129,6 +118,11 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
       </table>
     </div>
   )
+}
+
+JobInternalArtifacts.propTypes = {
+  getArtifacts: PropTypes.func.isRequired,
+  jobsStore: PropTypes.shape({}).isRequired
 }
 
 export default connect(
