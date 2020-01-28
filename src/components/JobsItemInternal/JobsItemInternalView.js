@@ -6,10 +6,11 @@ import { formatDatetime } from '../../utils'
 import JobInternalInfo from '../../elements/JobInternalInfo/JobInternalInfo'
 import JobInternalInputs from '../../elements/JobInternalInputs/JobInternalInputs'
 import JobInternalResults from '../../elements/JobInternalResults/JobInternalResults'
+import JobInternalLogs from '../../elements/JobInternalLogs/JobInternalLogs'
+import JobInternalArtifacts from '../../elements/JobInternalArtifacts/JobInternalArtifacts'
 
 import './jobItemInternal.scss'
 import cancel from '../../images/job-details-cancel.png'
-import JobInternalLogs from '../../elements/JobInternalLogs/JobInternalLogs'
 
 const JobsItemInternalView = ({
   job,
@@ -76,6 +77,7 @@ const JobsItemInternalView = ({
     {view === 'Inputs' && <JobInternalInputs job={job} />}
     {view === 'Results' && <JobInternalResults job={job} />}
     {view === 'Logs' && <JobInternalLogs />}
+    {view === 'Artifacts' && <JobInternalArtifacts job={job} />}
   </div>
 )
 

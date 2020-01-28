@@ -105,7 +105,42 @@
       }
     }
   }
-  &_results {\padding: 0 31px;
+  &_artifacts {
+    table {
+      border-bottom: $tableBorder;
+      tr {
+        min-height: 73px;
+        border-top: $tableBorder;
+        td {
+          padding: 15px 29px ;
+          p {
+            margin: 0 0 5px;
+            white-space: pre-wrap;
+          }
+          button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            &:focus, &:active {
+              outline: none;
+              box-shadow: none;
+            }
+          }
+        }
+      }
+      tr.view ~ tr.jobs__table__item_artifacts__preview {
+        display: table-row;
+      }
+    }
+    &__preview {
+      display: none;
+      &_text {
+        column-span: 5;
+      }
+    }
+  }
+  &_results {
+    padding: 0 31px;
     &__table {
       text-align: left;
       tr {
