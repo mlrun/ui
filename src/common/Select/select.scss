@@ -1,0 +1,62 @@
+@import '../../scss/variables.scss';
+
+.select {
+  &_container {
+    display: flex;
+    position: relative;
+    align-items: center;
+    height: 40px;
+    border-radius: 4px;
+    background-color: transparent;
+    border: $tableFilterBorder;
+  }
+  &_header {
+    display: flex;
+    align-items: center;
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+    &_label {
+      color: $mainGreyColor;
+      padding: 0px 5px 0px 15px;
+    }
+    &_value {
+      min-width: 96px;
+    }
+    img {
+      height: 6px;
+      margin: 0 10px;
+    }
+  }
+  &_body {
+    z-index: 9999999;
+    position: absolute;
+    top: 48px;
+    width: 100%;
+    border: $tableFilterBorder;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+    border-radius: 2px;
+    color: #483f56e0;
+    &_item {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      padding-left: 15px;
+      background-color: $white;
+      &:hover {
+        background-color: #f7f7f7;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.overall {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 999999;
+}

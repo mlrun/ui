@@ -1,6 +1,5 @@
 const initialState = {
-  artifacts: [],
-  isRefresh: false
+  artifacts: []
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -8,13 +7,7 @@ export default (state = initialState, { type, payload }) => {
     case 'SET_ARTIFACTS':
       return {
         ...state,
-        isReferesh: false,
         artifacts: payload.artifacts
-      }
-    case 'REFRESH_ARTIFACTS':
-      return {
-        ...state,
-        isRefresh: payload
       }
     default:
       return state

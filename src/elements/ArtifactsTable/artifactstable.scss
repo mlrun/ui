@@ -1,31 +1,16 @@
-.table-container {
+@import '../../scss/variables';
+
+.table_container {
   table {
+    width: 100%;
     border-collapse: collapse;
     thead {
-      .table-header {
-        &-name {
+      .table_header {
+        &_name {
           padding-left: 56px;
-          padding-right: 110px;
         }
-        &-path {
-          min-width: 400px;
-        }
-        &-type {
-          padding-left: 50px;
-          padding-right: 50px;
-        }
-        &-labels {
-          min-width: 400px;
-          padding-right: 50px;
-        }
-        &-producer {
-          min-width: 150px;
-        }
-        &-hash {
-          min-width: 100px;
-        }
-        &-started-at {
-          width: 100%;
+        &_type {
+          padding: 0px 24px 0px 24px;
         }
       }
       tr {
@@ -36,54 +21,49 @@
           font-weight: bold;
           font-size: 14px;
           line-height: 24px;
-          color: #7f7989;
+          color: $mainGreyColor;
           text-align: left;
-          border-top: 1px solid rgba(72, 63, 86, 0.12);
+          border-top: $tableBorder;
         }
       }
     }
     tbody {
-      font-family: Roboto;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 15px;
-      line-height: 18px;
       tr {
         height: 55px;
         &:first-child {
           td {
-            border-top: 1px solid rgba(72, 63, 86, 0.12);
+            border-top: $tableBorder;
           }
         }
         td {
-          border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+          border-bottom: $tableBorder;
         }
       }
-      .column-name-or-tree-or-iter,
-      .column-producer {
-        color: #25a6ee;
+      .column_producer {
+        color: $tableLink;
       }
       .column {
-        &-path {
-          color: #483f56;
+        &_path {
           max-width: 400px;
-          .path-container {
+          color: $tableFontColor;
+          .path_container {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
           }
         }
-        &-hash,
-        &-started-at {
-          color: #483f56;
+        &_producer {
+          a {
+            text-decoration: none;
+            color: $tableLink;
+          }
         }
-        &-labels {
-          padding-right: 50px;
+        &_started-at {
+          color: $tableFontColor;
         }
-        &-type {
-          padding-left: 50px;
-          padding-right: 50px;
-          color: #483f56;
+        &_type {
+          padding: 0px 24px 0px 24px;
+          color: $tableFontColor;
         }
       }
       .label {
@@ -93,12 +73,39 @@
         font-size: 14px;
         line-height: 16px;
         text-align: center;
-        color: #483f56;
+        color: $tableFontColor;
         padding: 8px 9px 8px 9px;
-        border: 1px solid #a44cc5;
+        border: $labelBorder;
         box-sizing: border-box;
         border-radius: 31px;
       }
+    }
+  }
+}
+
+.tooltip_body {
+  top: 30px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 15px 10px;
+  box-shadow: 0 5px 11px rgba(0, 0, 0, 0.18);
+  &_kind {
+    color: #7f8d89;
+    span {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 24px;
+      color: #7f7989;
+    }
+  }
+  &_owner {
+    color: #7f8d89;
+    span {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 24px;
+      color: #7f7989;
     }
   }
 }

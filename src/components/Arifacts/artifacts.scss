@@ -1,6 +1,6 @@
 @import "../../scss/variables";
 
-.artifacts-header {
+.artifacts_header {
     display: flex;
     flex-shrink: 0;
     flex-flow: row nowrap;
@@ -10,8 +10,6 @@
     background-color: $white;
     box-shadow: $jobsHeaderShadow;
 }
-.artifacts-container {
-    margin-left: 24px;
-    margin-right: 24px;
-    margin-top: 15px;
+.artifacts_container {
+    margin: 15px 24px 0px 24px;
 }

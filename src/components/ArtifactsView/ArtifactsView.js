@@ -6,7 +6,13 @@ import ArtifactsTable from '../../elements/ArtifactsTable/ArtifactsTable'
 
 import './artifactsview.scss'
 
-const ArtifactView = ({ artifacts, loading }) => {
+const ArtifactView = ({
+  loading,
+  artifacts,
+  refresh,
+  changePeriod,
+  filter
+}) => {
   return (
     <>
       <div className="menu-container">
@@ -15,7 +21,11 @@ const ArtifactView = ({ artifacts, loading }) => {
         <div className="menu-item">Create</div>
       </div>
       <div className="artifacts-table">
-        <ArtifactsFilerMenu />
+        <ArtifactsFilerMenu
+          refreshArtifacts={refresh}
+          changePeriod={changePeriod}
+          filter={filter}
+        />
         {loading ? <Loader /> : <ArtifactsTable artifacts={artifacts} />}
       </div>
     </>
@@ -27,4 +37,4 @@ ArtifactView.propTypes = {
   loading: PropTypes.bool
 }
 
-export default React.memo(ArtifactView)
+export default ArtifactView

@@ -7,20 +7,41 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 
 import './artifacts.scss'
 
-const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
+const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
   const [loading, setLoading] = useState(false)
-  const [artifacts, setArtifacts] = useState(artifactsStore.artifacts)
+  const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
+  const [filter, setFilter] = useState({
+    period: null
+  })
   const fetchData = useCallback(
     item => {
       if (item || artifactsStore.artifacts.length === 0) {
         setLoading(true)
         fetchArtifacts().then(data => {
-          setArtifacts(data)
+          if (filter.period) {
+            data = data.filter(item => {
+              return new Date(item.updated * 1000).getTime() < filter.period
+            })
+          }
+          _setArtifacts(data)
           setLoading(false)
         })
       }
     },
-    [fetchArtifacts, artifactsStore.artifacts]
+    [fetchArtifacts, artifactsStore.artifacts, filter.period]
+  )
+
+  const changePeriod = useCallback(
+    date => {
+      if (date) {
+        setFilter({ period: date })
+        let filterArtifacts = artifactsStore.artifacts.filter(item => {
+          return new Date(item.updated * 1000).getTime() < date
+        })
+        _setArtifacts(filterArtifacts)
+      }
+    },
+    [artifactsStore.artifacts]
   )
 
   useEffect(() => {
@@ -28,18 +49,26 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
   }, [fetchData])
 
   useEffect(() => {
-    if (artifactsStore.isRefresh) {
-      setArtifacts(artifactsStore.artifacts)
-    }
-  }, [artifactsStore.artifacts, artifactsStore.isRefresh])
+    changePeriod()
+  }, [changePeriod])
+
+  const refresh = useCallback(() => {
+    setArtifacts({ artifacts: [] })
+  }, [setArtifacts])
 
   return (
     <>
-      <div className="artifacts-header">
+      <div className="artifacts_header">
         <Breadcrumbs match={match} />
       </div>
-      <div className="artifacts-container">
-        <ArtifactsView artifacts={artifacts} loading={loading}></ArtifactsView>
+      <div className="artifacts_container">
+        <ArtifactsView
+          artifacts={artifacts}
+          loading={loading}
+          refresh={refresh}
+          filter={filter}
+          changePeriod={changePeriod}
+        ></ArtifactsView>
       </div>
     </>
   )

@@ -1,6 +1,5 @@
 import artifactsApi from '../api/artifacts-api'
 import { parseKeyValues, truncateUid } from '../utils'
-
 const artifactsAction = {
   fetchArtifacts: () => dispatch => {
     return artifactsApi.getArtifacts().then(({ data }) => {
@@ -17,13 +16,7 @@ const artifactsAction = {
   setArtifacts: artifactsList => ({
     type: 'SET_ARTIFACTS',
     payload: artifactsList
-  }),
-  refreshArtifacts: state => {
-    return {
-      type: 'REFRESH_ARTIFACTS',
-      payload: state
-    }
-  }
+  })
 }
 
 export default artifactsAction
