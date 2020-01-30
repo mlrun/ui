@@ -22,18 +22,18 @@ const Breadcrumbs = ({ match = { path: '', url: '' }, onClick }) => {
           const to = `/${urlItems.slice(0, i + 1).join('/')}`
           const last = i === urlItems.length - 1
           return last ? (
-            <li className="breadcrumbs__list__item" key={i + item}>
+            <li className="breadcrumbs__list__item" key={`${i}${item}`}>
               {label}
             </li>
           ) : (
             [
-              <li key={i + item} className="breadcrumbs__list__item">
+              <li key={`${i}${item}`} className="breadcrumbs__list__item">
                 <Link to={to} onClick={onClick}>
                   {label}
                 </Link>
               </li>,
               <li key={i} className="breadcrumbs__list_separator">
-                >
+                ›
               </li>
             ]
           )

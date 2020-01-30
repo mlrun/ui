@@ -26,7 +26,7 @@ const JobInternalInfo = ({ job, handleShowElements }) => {
         <li className="jobs__table__item_details_item">
           <div className="jobs__table__item_details_item_header">Status</div>
           <div className="jobs__table__item_details_item_data">
-            {job.state[0].toUpperCase() + job.state.slice(1)}
+            {`${job.state[0].toUpperCase()}${job.state.slice(1)}`}
             <i className={job.state} />
           </div>
         </li>
