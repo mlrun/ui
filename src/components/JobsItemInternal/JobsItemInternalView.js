@@ -27,7 +27,7 @@ const JobsItemInternalView = ({
           {formatDatetime(job.startTime)}{' '}
           <i
             className={job.state}
-            title={job.state[0].toUpperCase() + job.state.slice(1)}
+            title={`${job.state[0].toUpperCase()}${job.state.slice(1)}`}
           />
         </span>
       </div>
