@@ -11,7 +11,14 @@ import { cutChips } from '../../utils/cutChips'
 
 import './jobs-table.scss'
 
-const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
+const JobsTable = ({
+  jobs,
+  handleSelectJob,
+  job,
+  handleCancel,
+  loading,
+  match
+}) => {
   const handleShowElements = e => {
     if (
       e.target.className === 'jobs__table_body__results' ||
@@ -76,7 +83,7 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
                 <tr key={item + i}>
                   <td>
                     <Link
-                      to={`/jobs/${item.uid}`}
+                      to={`/jobs/${item.uid}/info`}
                       onClick={() => handleSelectJob(item)}
                     >
                       {item.name}
@@ -115,6 +122,7 @@ const JobsTable = ({ jobs, handleSelectJob, job, handleCancel, loading }) => {
           job={job}
           handleCancel={handleCancel}
           handleShowElements={handleShowElements}
+          match={match}
         />
       )}
     </div>
@@ -131,7 +139,8 @@ JobsTable.propTypes = {
   handleSelectJob: PropTypes.func.isRequired,
   job: PropTypes.shape({}),
   jobs: PropTypes.arrayOf(PropTypes.shape({})),
-  loading: PropTypes.bool.isRequired
+  loading: PropTypes.bool.isRequired,
+  match: PropTypes.shape({}).isRequired
 }
 
 export default JobsTable

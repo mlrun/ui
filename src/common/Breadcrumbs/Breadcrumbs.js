@@ -8,12 +8,17 @@ import './breadcrums.scss'
 const Breadcrumbs = ({ match = { path: '', url: '' }, onClick }) => {
   const pathItems = match.path.slice(1).split('/')
   const urlItems = match.url.slice(1).split('/')
+
   return (
     <nav className="breadcrumbs">
       <ul className="breadcrumbs__list">
         {urlItems.map((item, i) => {
-          const param = pathItems[i].startsWith(':')
-          const label = param ? item : startCase(item)
+          const param = pathItems && pathItems[i].startsWith(':')
+          const label = param
+            ? match.params.tab === item
+              ? startCase(item)
+              : item
+            : startCase(item)
           const to = `/${urlItems.slice(0, i + 1).join('/')}`
           const last = i === urlItems.length - 1
           return last ? (

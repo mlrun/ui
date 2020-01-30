@@ -23,7 +23,7 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
     return {
       key: item.key,
       target_path: target_path,
-      size: prettyBytes(item.size),
+      size: item.size ? prettyBytes(item.size) : 'N/A',
       date: formatDatetime(jobsStore.selectedJob.startTime)
     }
   })
@@ -66,13 +66,13 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
                 <td>
                   <button>
                     <Link
-                      to="/"
-                      target="_blank"
-                      download={`/files?${
+                      to={`/files?${
                         item.target_path.schema
-                          ? `schema=${item.target_path.schema}`
+                          ? `schema=${item.target_path.schema}&`
                           : ''
-                      }&path=${item.target_path.path}`}
+                      }path=${item.target_path.path}`}
+                      target="_blank"
+                      download
                     >
                       <img src={downloadIcon} alt="Download" />
                     </Link>
