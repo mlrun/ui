@@ -1,99 +1,108 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
-import downloadIcon from '../../images/download-icon.png'
+import Loader from '../../common/Loader/Loader'
+import ChipCell from '../ChipCell/ChipCell'
+import JobsItemInternal from '../../components/JobsItemInternal/JobsItemInternal'
 
-const JobsTableView = ({ items, handleClick, artifacts }) => (
-  <div className="jobs__table__item_artifacts">
-    <table>
-      <tbody>
-        {items.map((item, i) => {
-          return [
-            <tr key={i} className="jobs__table__item_artifacts__table_item">
-              <td
-                onClick={e =>
-                  handleClick(e, item.target_path.schema, item.target_path.path)
-                }
-              >
-                {item.key}
-              </td>
-              <td>
-                {item.target_path.schema && (
-                  <p>schema: {item.target_path.schema}</p>
-                )}
-                path: {item.target_path.path}
-              </td>
-              <td>size: {item.size}</td>
-              <td>{item.date}</td>
-              <td>
-                <button>
-                  <a
-                    href={`http://13.58.34.174:30080/api/files?${
-                      item.target_path.schema
-                        ? `schema=${item.target_path.schema}&`
-                        : ''
-                    }path=${item.target_path.path}`}
-                    download
+import { cutChips } from '../../utils/cutChips'
+import { formatDatetime, truncateUid } from '../../utils'
+
+const JobsTableView = ({
+  hideChips,
+  loading,
+  job,
+  jobs,
+  handleShowElements,
+  handleSelectJob,
+  handleCancel,
+  match
+}) => (
+  <div className="jobs__table" onClick={hideChips}>
+    {loading && <Loader />}
+    <div className={job.uid && 'jobs__table__item_opened'}>
+      <table>
+        <thead className="jobs__table_head">
+          <tr>
+            <th>Name</th>
+            <th>UID</th>
+            <th>Started at</th>
+            <th>Status</th>
+            <th>Parameters</th>
+            <th>Results</th>
+          </tr>
+        </thead>
+        <tbody className="jobs__table_body">
+          {jobs.map((item, i) => {
+            item.showedParameters = cutChips(
+              item.parameters,
+              2,
+              handleShowElements
+            )
+            item.showedResults = cutChips(
+              item.resultsChips,
+              2,
+              handleShowElements
+            )
+            return (
+              <tr key={item + i}>
+                <td>
+                  <Link
+                    to={`/jobs/${item.uid}/info`}
+                    onClick={() => handleSelectJob(item)}
                   >
-                    <img src={downloadIcon} alt="Download" />
-                  </a>
-                </button>
-              </td>
-            </tr>,
-            <tr className="jobs__table__item_artifacts__preview" key={i + 1}>
-              {artifacts.data && artifacts.type === 'table' && (
-                <td colSpan={5}>
-                  <table>
-                    <tbody>
-                      <tr>
-                        {artifacts.data.headers.map(header => {
-                          return <td key={header}>{header}</td>
-                        })}
-                      </tr>
-                      {artifacts.data.content.map(item => (
-                        <tr key={item + Math.random()}>
-                          {typeof item === typeof '' ? (
-                            <td>{item}</td>
-                          ) : (
-                            item.map(value => (
-                              <td key={value + Math.random()}>{value}</td>
-                            ))
-                          )}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                    {item.name}
+                  </Link>
                 </td>
-              )}
-              {artifacts.data && artifacts.type === 'text' && (
-                <td
-                  className="jobs__table__item_artifacts__preview_text"
-                  colSpan={5}
-                >
-                  {artifacts.data.content}
+                <td>
+                  <span title={item.uid}>{truncateUid(item.uid)}</span>
                 </td>
-              )}
-              {artifacts.data && artifacts.type === 'html' && (
-                <td colSpan={5}>
-                  <iframe
-                    srcDoc={artifacts.data.content}
-                    frameBorder="0"
-                    title="Preview"
+                <td>{formatDatetime(item.startTime)}</td>
+                <td>
+                  <i
+                    className={item.state}
+                    title={item.state[0].toUpperCase() + item.state.slice(1)}
                   />
                 </td>
-              )}
-            </tr>
-          ]
-        })}
-      </tbody>
-    </table>
+                <td className="jobs__table_body__chips_cell">
+                  <ChipCell
+                    elements={item.showedParameters}
+                    className="jobs__table_body__parameters"
+                  />
+                </td>
+                <td className="jobs__table_body__chips_cell">
+                  <ChipCell
+                    className="jobs__table_body__results"
+                    elements={item.showedResults}
+                  />
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+    {job.uid && (
+      <JobsItemInternal
+        job={job}
+        handleCancel={handleCancel}
+        handleShowElements={handleShowElements}
+        match={match}
+      />
+    )}
   </div>
 )
 
 JobsTableView.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  handleClick: PropTypes.func.isRequired,
-  artifacts: PropTypes.shape({}).isRequired
+  jobs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  handleShowElements: PropTypes.func.isRequired,
+  job: PropTypes.shape({}).isRequired,
+  loading: PropTypes.bool.isRequired,
+  hideChips: PropTypes.func.isRequired,
+  handleSelectJob: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func.isRequired,
+  match: PropTypes.shape({}).isRequired
 }
 
 export default JobsTableView

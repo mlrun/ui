@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import prettyBytes from 'pretty-bytes'
 import { connect } from 'react-redux'
 
-import JobsTableView from '../JobsTable/JobsTableView'
+import JobInternalArtifactsView from './JobInternalArtifactsView'
 
 import jobsActions from '../../actions/jobs'
 import { formatDatetime } from '../../utils'
@@ -39,7 +39,7 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
   }
 
   return (
-    <JobsTableView
+    <JobInternalArtifactsView
       items={items}
       handleClick={handleClick}
       artifacts={jobsStore.artifacts}
