@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 import prettyBytes from 'pretty-bytes'
 import { connect } from 'react-redux'
 
@@ -29,11 +28,13 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
   })
 
   const handleClick = (e, schema, path) => {
+    const viewedBlocks = document.getElementsByClassName('view')
+    if (viewedBlocks.length > 0) {
+      viewedBlocks[0].classList.remove('view')
+    }
     e.persist()
     getArtifacts(schema, path).then(() => {
-      e.target
-        .closest('.jobs__table__item_artifacts__table_item')
-        .classList.add('view')
+      e.target.parentNode.classList.add('view')
     })
   }
 
@@ -65,40 +66,42 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
                 <td>{item.date}</td>
                 <td>
                   <button>
-                    <Link
-                      to={`/files?${
+                    <a
+                      href={`http://13.58.34.174:30080/api/files?${
                         item.target_path.schema
                           ? `schema=${item.target_path.schema}&`
                           : ''
                       }path=${item.target_path.path}`}
-                      target="_blank"
                       download
                     >
                       <img src={downloadIcon} alt="Download" />
-                    </Link>
+                    </a>
                   </button>
                 </td>
               </tr>,
               <tr className="jobs__table__item_artifacts__preview" key={i + 1}>
                 {jobsStore.artifacts.data &&
-                  jobsStore.artifacts.data.type === 'table' && (
-                    <td>
+                  jobsStore.artifacts.type === 'table' && (
+                    <td colSpan={5}>
                       <table>
-                        <tr>
-                          {jobsStore.artifacts.data.headers.map(header => (
-                            <td key={header}>{header}</td>
-                          ))}
-                        </tr>
-                        {jobsStore.artifacts.data.content.map(item => (
-                          <tr
-                            key={item + Math.random()}
-                            className="jobs__table__item_artifacts__preview"
-                          >
-                            {item.map(value => (
-                              <td key={value + Math.random()}>{value}</td>
-                            ))}
+                        <tbody>
+                          <tr>
+                            {jobsStore.artifacts.data.headers.map(header => {
+                              return <td key={header}>{header}</td>
+                            })}
                           </tr>
-                        ))}
+                          {jobsStore.artifacts.data.content.map(item => (
+                            <tr key={item + Math.random()}>
+                              {typeof item === typeof '' ? (
+                                <td>{item}</td>
+                              ) : (
+                                item.map(value => (
+                                  <td key={value + Math.random()}>{value}</td>
+                                ))
+                              )}
+                            </tr>
+                          ))}
+                        </tbody>
                       </table>
                     </td>
                   )}
@@ -109,6 +112,16 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
                       colSpan={5}
                     >
                       {jobsStore.artifacts.data.content}
+                    </td>
+                  )}
+                {jobsStore.artifacts.data &&
+                  jobsStore.artifacts.type === 'html' && (
+                    <td colSpan={5}>
+                      <iframe
+                        srcDoc={jobsStore.artifacts.data.content}
+                        frameBorder="0"
+                        title="Preview"
+                      />
                     </td>
                   )}
               </tr>

@@ -55,6 +55,12 @@ const jobsActions = {
           content: res.data
         }
       }
+      if (res.headers['content-type'].includes('text/html')) {
+        artifacts.type = 'html'
+        artifacts.data = {
+          content: res.data
+        }
+      }
       dispatch(jobsActions.setJobArtifacts(artifacts))
     })
   },
