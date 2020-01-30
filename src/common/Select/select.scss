@@ -1,0 +1,61 @@
+@import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
+
+.select {
+  &_container {
+    display: flex;
+    position: relative;
+    align-items: center;
+    height: 40px;
+    border-radius: 4px;
+    background-color: transparent;
+    border: $tableFilterBorder;
+    margin-right: 15px;
+  }
+  &_header {
+    display: flex;
+    align-items: center;
+    -webkit-user-select: none;
+    &_label {
+      color: $mainGreyColor;
+      padding: 0px 5px 0px 15px;
+    }
+    &_value {
+      min-width: 96px;
+    }
+    img {
+      height: 6px;
+      margin: 0 10px;
+    }
+  }
+  &_body {
+    z-index: 9999999;
+    position: absolute;
+    top: 48px;
+    width: 100%;
+    border: $tableFilterBorder;
+    box-shadow: $filterShadow;
+    border-radius: 2px;
+    color: $filterColor;
+    &_item {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      padding-left: 15px;
+      background-color: $white;
+      &:hover {
+        background-color: $selectHover;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.overall {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 999999;
+}
