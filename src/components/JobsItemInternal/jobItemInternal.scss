@@ -10,7 +10,7 @@
   height: 100%;
   overflow-y: scroll;
   border-left: $tableBorder;
-  color: $tableFontColor;
+color: $tableFontColor;
   &_opened {
     height: 72vh;
     overflow-y: scroll;
@@ -130,7 +130,7 @@
           }
         }
       }
-      tr.view ~ tr.jobs__table__item_artifacts__preview {
+      tr.view + tr.jobs__table__item_artifacts__preview {
         display: table-row;
       }
     }
