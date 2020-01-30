@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import prettyBytes from 'pretty-bytes'
 import { connect } from 'react-redux'
 
+import JobsTableView from '../JobsTable/JobsTableView'
+
 import jobsActions from '../../actions/jobs'
 import { formatDatetime } from '../../utils'
-
-import downloadIcon from '../../images/download-icon.png'
 
 const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
   const items = jobsStore.selectedJob.artifacts.map(item => {
@@ -39,97 +39,11 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
   }
 
   return (
-    <div className="jobs__table__item_artifacts">
-      <table>
-        <tbody>
-          {items.map((item, i) => {
-            return [
-              <tr key={i} className="jobs__table__item_artifacts__table_item">
-                <td
-                  onClick={e =>
-                    handleClick(
-                      e,
-                      item.target_path.schema,
-                      item.target_path.path
-                    )
-                  }
-                >
-                  {item.key}
-                </td>
-                <td>
-                  {item.target_path.schema && (
-                    <p>schema: {item.target_path.schema}</p>
-                  )}
-                  path: {item.target_path.path}
-                </td>
-                <td>size: {item.size}</td>
-                <td>{item.date}</td>
-                <td>
-                  <button>
-                    <a
-                      href={`http://13.58.34.174:30080/api/files?${
-                        item.target_path.schema
-                          ? `schema=${item.target_path.schema}&`
-                          : ''
-                      }path=${item.target_path.path}`}
-                      download
-                    >
-                      <img src={downloadIcon} alt="Download" />
-                    </a>
-                  </button>
-                </td>
-              </tr>,
-              <tr className="jobs__table__item_artifacts__preview" key={i + 1}>
-                {jobsStore.artifacts.data &&
-                  jobsStore.artifacts.type === 'table' && (
-                    <td colSpan={5}>
-                      <table>
-                        <tbody>
-                          <tr>
-                            {jobsStore.artifacts.data.headers.map(header => {
-                              return <td key={header}>{header}</td>
-                            })}
-                          </tr>
-                          {jobsStore.artifacts.data.content.map(item => (
-                            <tr key={item + Math.random()}>
-                              {typeof item === typeof '' ? (
-                                <td>{item}</td>
-                              ) : (
-                                item.map(value => (
-                                  <td key={value + Math.random()}>{value}</td>
-                                ))
-                              )}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </td>
-                  )}
-                {jobsStore.artifacts.data &&
-                  jobsStore.artifacts.type === 'text' && (
-                    <td
-                      className="jobs__table__item_artifacts__preview_text"
-                      colSpan={5}
-                    >
-                      {jobsStore.artifacts.data.content}
-                    </td>
-                  )}
-                {jobsStore.artifacts.data &&
-                  jobsStore.artifacts.type === 'html' && (
-                    <td colSpan={5}>
-                      <iframe
-                        srcDoc={jobsStore.artifacts.data.content}
-                        frameBorder="0"
-                        title="Preview"
-                      />
-                    </td>
-                  )}
-              </tr>
-            ]
-          })}
-        </tbody>
-      </table>
-    </div>
+    <JobsTableView
+      items={items}
+      handleClick={handleClick}
+      artifacts={jobsStore.artifacts}
+    />
   )
 }
 
