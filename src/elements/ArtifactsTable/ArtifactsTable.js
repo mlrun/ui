@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import './artifactstable.scss'
-import { formatDatetime } from '../../utils'
+import { formatDatetime, truncateUid } from '../../utils'
 import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
 
 const tooltipTemplate = ({ kind, owner }) => {
@@ -50,7 +50,9 @@ const ArtifactsTable = ({ artifacts }) => {
           </Tooltip>
         </td>
         <td className="column_hash">
-          <div className="hash_container">{item.hash}</div>
+          <div className="hash_container" title={item.hash}>
+            {truncateUid(item.hash)}
+          </div>
         </td>
         <td className="column_started_at">
           <div className="hash_container">

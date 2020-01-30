@@ -1,4 +1,5 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
 .select {
   &_container {
@@ -9,14 +10,12 @@
     border-radius: 4px;
     background-color: transparent;
     border: $tableFilterBorder;
+    margin-right: 15px;
   }
   &_header {
     display: flex;
     align-items: center;
-    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
-    -moz-user-select: none; /* mozilla browsers */
-    -khtml-user-select: none; /* webkit (konqueror) browsers */
-    -ms-user-select: none; /* IE10+ */
+    -webkit-user-select: none;
     &_label {
       color: $mainGreyColor;
       padding: 0px 5px 0px 15px;
@@ -35,9 +34,9 @@
     top: 48px;
     width: 100%;
     border: $tableFilterBorder;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+    box-shadow: $filterShadow;
     border-radius: 2px;
-    color: #483f56e0;
+    color: $filterColor;
     &_item {
       display: flex;
       align-items: center;
@@ -45,7 +44,7 @@
       padding-left: 15px;
       background-color: $white;
       &:hover {
-        background-color: #f7f7f7;
+        background-color: $selectHover;
         cursor: pointer;
       }
     }

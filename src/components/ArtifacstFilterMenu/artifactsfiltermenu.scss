@@ -4,9 +4,7 @@
   &_container {
     display: flex;
     align-items: center;
-    padding-left: 24px;
-    padding-top: 23px;
-    padding-bottom: 23px;
+    padding: 23px 0px 23px 24px;
   }
   &_period {
     margin-right: 16px;
@@ -25,20 +23,6 @@ select {
   appearance: none;
 }
 
-.artifacts-filter-search {
-  button {
-    height: 40px;
-    width: 42px;
-    background-color: transparent;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-sizing: border-box;
-    border-radius: 4px;
-    background-image: url('../../images/search-icon.png');
-    background-repeat: no-repeat;
-    background-position-x: 50%;
-    background-position-y: 50%;
-  }
-}
 .artifacts-filter-refresh {
   margin-left: auto;
   display: flex;

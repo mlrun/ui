@@ -11,7 +11,8 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [filter, setFilter] = useState({
-    period: null
+    period: null,
+    group: null
   })
   const fetchData = useCallback(
     item => {
@@ -31,12 +32,13 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
     [fetchArtifacts, artifactsStore.artifacts, filter.period]
   )
 
-  const changePeriod = useCallback(
-    date => {
-      if (date) {
-        setFilter({ period: date })
+  const onChangeFilter = useCallback(
+    _filter => {
+      // _filter looks like {period: 123, group: null}
+      setFilter(prevFilter => ({ ...prevFilter, ..._filter }))
+      if (_filter) {
         let filterArtifacts = artifactsStore.artifacts.filter(item => {
-          return new Date(item.updated).getTime() > date
+          return new Date(item.updated).getTime() > _filter.period
         })
         _setArtifacts(filterArtifacts)
       }
@@ -49,8 +51,8 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
   }, [fetchData])
 
   useEffect(() => {
-    changePeriod()
-  }, [changePeriod])
+    onChangeFilter()
+  }, [onChangeFilter])
 
   const refresh = useCallback(() => {
     setArtifacts({ artifacts: [] })
@@ -66,8 +68,7 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
           artifacts={artifacts}
           loading={loading}
           refresh={refresh}
-          filter={filter}
-          changePeriod={changePeriod}
+          onChangeFilter={onChangeFilter}
         ></ArtifactsView>
       </div>
     </>

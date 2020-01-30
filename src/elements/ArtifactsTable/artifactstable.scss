@@ -89,7 +89,7 @@
   flex-direction: column;
   background-color: white;
   padding: 15px 10px;
-  box-shadow: 0 5px 11px rgba(0, 0, 0, 0.18);
+  box-shadow: $tooltipShadow;
   &_kind {
     color: #7f8d89;
     span {
