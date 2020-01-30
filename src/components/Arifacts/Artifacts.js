@@ -20,7 +20,7 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
         fetchArtifacts().then(data => {
           if (filter.period) {
             data = data.filter(item => {
-              return new Date(item.updated * 1000).getTime() < filter.period
+              return new Date(item.updated).getTime() > filter.period
             })
           }
           _setArtifacts(data)
@@ -36,7 +36,7 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
       if (date) {
         setFilter({ period: date })
         let filterArtifacts = artifactsStore.artifacts.filter(item => {
-          return new Date(item.updated * 1000).getTime() < date
+          return new Date(item.updated).getTime() > date
         })
         _setArtifacts(filterArtifacts)
       }
