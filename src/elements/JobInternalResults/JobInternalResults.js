@@ -33,17 +33,17 @@ const JobInternalResults = ({ job }) => {
                 {item.map((value, i) => {
                   if (typeof value === typeof '') {
                     return (
-                      <td key={value + '' + i}>
+                      <td key={`${value}${i}`}>
                         <i
                           className={value}
-                          title={value[0].toUpperCase() + value.slice(1)}
+                          title={`${value[0].toUpperCase()}${value.slice(1)}`}
                         />
                       </td>
                     )
                   } else if (value === job.results.best_iteration) {
                     return (
                       <td
-                        key={value + '' + i}
+                        key={`${value}${i}`}
                         className="jobs__table__item_results__table_medal"
                       >
                         {value}
@@ -55,7 +55,7 @@ const JobInternalResults = ({ job }) => {
                       </td>
                     )
                   } else {
-                    return <td key={value + '' + i}>{value}</td>
+                    return <td key={`${value}${i}`}>{value}</td>
                   }
                 })}
               </tr>

@@ -20,10 +20,10 @@ const SideBarView = ({ currentPage, onClick }) => {
               key={item.value}
               className={`${currentPage === item.value &&
                 'active'} sidebar__menu__item`}
-              title={item.value[0].toUpperCase() + item.value.slice(1)}
+              title={`${item.value[0].toUpperCase()}${item.value.slice(1)}`}
             >
               <Link
-                to={item.value}
+                to={`/${item.value}`}
                 onClick={() =>
                   onClick(item.img === jobsIcon ? 'jobs' : 'artifacts')
                 }

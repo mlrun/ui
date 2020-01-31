@@ -1,0 +1,15 @@
+@import "../../scss/variables";
+
+.artifacts_header {
+    display: flex;
+    flex-shrink: 0;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 21px 24px;
+    background-color: $white;
+    box-shadow: $headerShadow;
+}
+.artifacts_container {
+    margin: 15px 24px 0 24px;
+}

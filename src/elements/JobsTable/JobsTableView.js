@@ -46,7 +46,7 @@ const JobsTableView = ({
               handleShowElements
             )
             return (
-              <tr key={item + i}>
+              <tr key={`${item}${i}`}>
                 <td>
                   <Link
                     to={`/jobs/${item.uid}/info`}
@@ -62,7 +62,9 @@ const JobsTableView = ({
                 <td>
                   <i
                     className={item.state}
-                    title={item.state[0].toUpperCase() + item.state.slice(1)}
+                    title={`${item.state[0].toUpperCase()}${item.state.slice(
+                      1
+                    )}`}
                   />
                 </td>
                 <td className="jobs__table_body__chips_cell">
