@@ -1,5 +1,6 @@
 import artifactsApi from '../api/artifacts-api'
 import { parseKeyValues, truncateUid } from '../utils'
+
 const artifactsAction = {
   fetchArtifacts: () => dispatch => {
     return artifactsApi.getArtifacts().then(({ data }) => {

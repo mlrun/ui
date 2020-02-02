@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react'
+import PropTypes from 'prop-types'
 import Select from '../../common/Select/select'
 import refresh from '../../images/refresh.png'
 import './artifactsfiltermenu.scss'
@@ -25,21 +26,26 @@ const ArtifactsFilerMenu = ({ refreshArtifacts, onChangeFilter }) => {
         onChange={value => {
           changeFilter(value)
         }}
-      ></Select>
+      />
       <Select
         label="Group by:"
         value={filter.group}
         onChange={value => {
           changeFilter(value)
         }}
-      ></Select>
-      <div className="artifacts-filter-refresh">
-        <button onClick={() => refreshArtifacts()}>
+      />
+      <div className="artifacts_filter_refresh">
+        <button onClick={refreshArtifacts}>
           <img src={refresh} alt="refresh" />
         </button>
       </div>
     </div>
   )
+}
+
+ArtifactsFilerMenu.propTypes = {
+  refreshArtifacts: PropTypes.func.isRequired,
+  onChangeFilter: PropTypes.func.isRequired
 }
 
 export default ArtifactsFilerMenu

@@ -7,7 +7,7 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 
 import './artifacts.scss'
 
-const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
+const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [filter, setFilter] = useState({
@@ -54,10 +54,6 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
     onChangeFilter()
   }, [onChangeFilter])
 
-  const refresh = useCallback(() => {
-    setArtifacts({ artifacts: [] })
-  }, [setArtifacts])
-
   return (
     <>
       <div className="artifacts_header">
@@ -67,9 +63,9 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts, setArtifacts }) => {
         <ArtifactsView
           artifacts={artifacts}
           loading={loading}
-          refresh={refresh}
+          refresh={fetchData}
           onChangeFilter={onChangeFilter}
-        ></ArtifactsView>
+        />
       </div>
     </>
   )

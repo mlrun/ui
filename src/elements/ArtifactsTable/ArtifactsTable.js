@@ -1,21 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import './artifactstable.scss'
-import { formatDatetime, truncateUid } from '../../utils'
+
 import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
 
-const tooltipTemplate = ({ kind, owner }) => {
-  return (
-    <div className="tooltip_body">
-      <div className="tooltip_body_kind">
-        <span>Kind:</span> {kind}
-      </div>
-      <div className="tooltip_body_owner">
-        <span>Owner:</span> {owner}
-      </div>
-    </div>
-  )
-}
+import { formatDatetime, truncateUid } from '../../utils'
+
+import './artifactstable.scss'
 
 const ArtifactsTable = ({ artifacts }) => {
   const tableBody = artifacts.map((item, index) => {
@@ -30,7 +19,7 @@ const ArtifactsTable = ({ artifacts }) => {
     return (
       <tr key={item.hash + index || item.tree + index}>
         <td className="column_name">
-          <div className="name_container"></div>
+          <div className="name_container" />
         </td>
         <td className="column_path">
           <div className="path_container">{item.target_path}</div>
@@ -41,13 +30,11 @@ const ArtifactsTable = ({ artifacts }) => {
         <td className="column_labels">{labels}</td>
         <td className="column_producer">
           <Tooltip
-            template={tooltipTemplate({
-              kind: item.producer.kind,
-              owner: item.producer.owner
-            })}
-          >
-            <Link to={`/jobs/${item.producer.uri}`}>{item.producer.name}</Link>
-          </Tooltip>
+            kind={item.producer.kind}
+            owner={item.producer.owner}
+            to={`/jobs/${item.producer.uri}`}
+            name={item.producer.name}
+          />
         </td>
         <td className="column_hash">
           <div className="hash_container" title={item.hash}>
