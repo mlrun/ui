@@ -19,15 +19,17 @@ const ArtifactView = ({ loading, artifacts, refresh, onChangeFilter }) => {
           refreshArtifacts={refresh}
           onChangeFilter={onChangeFilter}
         />
-        {loading ? <Loader /> : <ArtifactsTable artifacts={artifacts} />}
+        <div className="artifacts_table_container">
+          {loading ? <Loader /> : <ArtifactsTable artifacts={artifacts} />}
+        </div>
       </div>
     </>
   )
 }
 
 ArtifactView.propTypes = {
-  artifacts: PropTypes.array.isRequired,
   loading: PropTypes.bool,
+  artifacts: PropTypes.array.isRequired,
   refresh: PropTypes.func.isRequired,
   onChangeFilter: PropTypes.func.isRequired
 }

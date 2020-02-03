@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ArtifactsView from '../ArtifactsView/ArtifactsView'
 import artifactsAction from '../../actions/artifacts'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import { connect } from 'react-redux'
 
 import './artifacts.scss'
 
@@ -12,7 +12,8 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [filter, setFilter] = useState({
     period: null,
-    group: null
+    group: null,
+    status: []
   })
   const fetchData = useCallback(
     item => {

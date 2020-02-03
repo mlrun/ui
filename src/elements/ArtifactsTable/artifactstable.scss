@@ -1,6 +1,8 @@
 @import '../../scss/variables';
 
 .table_container {
+  display: flex;
+  flex: 1;
   table {
     width: 100%;
     border-collapse: collapse;
