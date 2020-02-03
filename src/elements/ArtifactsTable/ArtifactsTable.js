@@ -1,5 +1,5 @@
 import React from 'react'
-
+import PropTypes from 'prop-types'
 import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
 
 import { formatDatetime, truncateUid } from '../../utils'
@@ -68,6 +68,10 @@ const ArtifactsTable = ({ artifacts }) => {
       </table>
     </div>
   )
+}
+
+ArtifactsTable.propTypes = {
+  artifacts: PropTypes.array.isRequired
 }
 
 export default ArtifactsTable
