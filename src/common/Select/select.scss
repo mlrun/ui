@@ -27,6 +27,10 @@
     }
     &_value {
       min-width: 96px;
+      max-width: 96px;
+      overflow-x: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       color: $tableFontColor;
     }
     img {
