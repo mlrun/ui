@@ -1,24 +1,12 @@
 import React, { useState, useRef } from 'react'
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
-const Tooltip = ({ children, template }) => {
+const Tooltip = ({ template, to, name, kind, owner }) => {
   const [show, setShow] = useState(false)
   const [isBottomPosition, setBottomPosition] = useState(false)
-  const [parentHeight, setParentHeight] = useState(0)
   const parentRef = useRef(null)
   useEffect(() => {
-    const handleMouseOver = () => {
-      setShow(true)
-      let { bottom, height } = parentRef.current.getBoundingClientRect()
-      let percentToBottom = Number(window.innerHeight * 0.88).toFixed(0)
-      setParentHeight(height)
-      if (bottom >= percentToBottom) {
-        setBottomPosition(true)
-      } else {
-        setBottomPosition(false)
-      }
-    }
-    const handleMouseOut = () => setShow(false)
     const node = parentRef.current
     if (node) {
       node.addEventListener('mouseover', handleMouseOver)
@@ -32,48 +20,56 @@ const Tooltip = ({ children, template }) => {
   }, [parentRef])
 
   useEffect(() => {
-    const handlerScroll = () => {
-      setShow(false)
-    }
     if (show) {
       window.addEventListener('scroll', handlerScroll)
       return () => {
         window.removeEventListener('scroll', handlerScroll)
       }
     }
-  })
+  }, [show])
 
-  const _children = React.Children.map(children, (child, index) =>
-    React.cloneElement(child, { ref: parentRef })
-  )
+  const handlerScroll = () => {
+    setShow(false)
+  }
+
+  const handleMouseOver = () => {
+    setShow(true)
+    let { bottom } = parentRef.current.getBoundingClientRect()
+    let percentToBottom = (window.innerHeight * 0.88).toFixed(0)
+    if (bottom >= percentToBottom) {
+      setBottomPosition(true)
+    } else {
+      setBottomPosition(false)
+    }
+  }
+  const handleMouseOut = () => {
+    setShow(false)
+  }
 
   return (
-    <div style={{ position: 'relative' }}>
-      {show && isBottomPosition && (
+    <div className="tooltip">
+      {show && (
         <div
           id="tooltip_container"
-          style={{
-            position: 'absolute',
-            zIndex: '1000',
-            bottom: parentHeight + 5
-          }}
+          className={`tooltip_container ${
+            isBottomPosition
+              ? 'tooltip_container_bottom'
+              : 'tooltip_container_top'
+          }`}
         >
-          {template}
+          <div className="tooltip_body">
+            <div className="tooltip_body_item">
+              <span>Kind:</span> {kind}
+            </div>
+            <div className="tooltip_body_item">
+              <span>Owner:</span> {owner}
+            </div>
+          </div>
         </div>
       )}
-      {_children}
-      {show && !isBottomPosition && (
-        <div
-          id="tooltip_container"
-          style={{
-            position: 'absolute',
-            zIndex: '1000',
-            top: parentHeight + 5
-          }}
-        >
-          {template}
-        </div>
-      )}
+      <Link to={to} ref={parentRef}>
+        {name}
+      </Link>
     </div>
   )
 }

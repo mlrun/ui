@@ -4,35 +4,36 @@
   &_container {
     display: flex;
     align-items: center;
-    padding: 23px 0px 23px 24px;
+    padding: 23px 0 23px 24px;
+    select {
+      border-radius: $mainBorderRadius;
+      background-color: transparent;
+      padding: 10px 50px 10px 69px;
+      border: $tableFilterBorder;
+      font-size: 15px;
+      line-height: 18px;
+      font-weight: normal;
+      position: relative;
+      appearance: none;
+    }
   }
+
   &_period {
     margin-right: 16px;
   }
-}
 
-select {
-  border-radius: $mainBorderRadius;
-  background-color: transparent;
-  padding: 10px 50px 10px 69px;
-  border: $tableFilterBorder;
-  font-size: 15px;
-  line-height: 18px;
-  font-weight: normal;
-  position: relative;
-  appearance: none;
-}
+  &_refresh {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    margin-right: 50px;
 
-.artifacts-filter-refresh {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  margin-right: 50px;
-  button {
-    height: 24px;
-    width: 24px;
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
+    button {
+      height: 24px;
+      width: 24px;
+      cursor: pointer;
+      background-color: transparent;
+      border: none;
+    }
   }
 }

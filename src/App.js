@@ -23,18 +23,18 @@ const App = () => {
         <Suspense fallback={<p>Loading...</p>}>
           <Switch>
             <Route
-              path="/jobs/:jobId"
-              sensitive
+              path="/jobs/:jobId/:tab"
+              exact
               render={routeProps => <Jobs {...routeProps} />}
             />
             <Route
               path="/jobs"
-              sensitive
+              exact
               render={routeProps => <Jobs {...routeProps} />}
             />
             <Route
               path="/artifacts"
-              sensitive
+              exact
               render={routeProps => <Artifacts {...routeProps} />}
             />
             <Redirect to="/jobs" />

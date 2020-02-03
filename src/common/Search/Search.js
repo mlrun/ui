@@ -28,7 +28,7 @@ const Search = ({ onChange }) => {
           }
           isSearch === false && inputRef.current.focus()
         }}
-      ></button>
+      />
     </div>
   )
 }

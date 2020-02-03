@@ -9,12 +9,12 @@ import './artifactsview.scss'
 const ArtifactView = ({ loading, artifacts, refresh, onChangeFilter }) => {
   return (
     <>
-      <div className="menu-container">
-        <div className="menu-item active">Monitor</div>
-        <div className="menu-item">Edit</div>
-        <div className="menu-item">Create</div>
+      <div className="menu_container">
+        <div className="menu_item active">Monitor</div>
+        {/*<div className="menu-item">Edit</div>*/}
+        {/*<div className="menu-item">Create</div>*/}
       </div>
-      <div className="artifacts-table">
+      <div className="artifacts_table">
         <ArtifactsFilerMenu
           refreshArtifacts={refresh}
           onChangeFilter={onChangeFilter}
@@ -27,7 +27,9 @@ const ArtifactView = ({ loading, artifacts, refresh, onChangeFilter }) => {
 
 ArtifactView.propTypes = {
   artifacts: PropTypes.array.isRequired,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  refresh: PropTypes.func.isRequired,
+  onChangeFilter: PropTypes.func.isRequired
 }
 
 export default ArtifactView

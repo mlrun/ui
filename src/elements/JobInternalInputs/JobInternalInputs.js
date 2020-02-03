@@ -2,15 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const JobInternalInputs = ({ job }) => {
-  const keys = Object.keys(job.inputs)
-  const values = Object.values(job.inputs)
   return (
     <div>
       <ul className="jobs__table__item_inputs">
-        {keys.map((item, i) => (
-          <li className="jobs__table__item_inputs_item" key={item}>
-            <div>{item}</div>
-            <div>{values[i]}</div>
+        {Object.entries(job.inputs || {}).map(([key, value]) => (
+          <li className="jobs__table__item_inputs_item" key={key}>
+            <div>{key}</div>
+            <div>{value}</div>
           </li>
         ))}
       </ul>

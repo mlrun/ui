@@ -14,9 +14,9 @@ const Header = () => {
       <h1>
         MLRun<span>UI</span>
       </h1>
-      <Link to="https://github.com/mlrun/mlrun" className="header__link">
+      <a href="https://github.com/mlrun/mlrun" className="header__link">
         See on GitHub
-      </Link>
+      </a>
     </header>
   )
 }

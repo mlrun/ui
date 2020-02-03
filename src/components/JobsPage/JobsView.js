@@ -26,8 +26,8 @@ const JobsView = ({
       <div className="jobs__menu">
         <ul className="jobs__menu__list">
           <li className="jobs__menu__list_item active">Monitor</li>
-          <li className="jobs__menu__list_item">Edit</li>
-          <li className="jobs__menu__list_item">Create</li>
+          {/*<li className="jobs__menu__list_item">Edit</li>*/}
+          {/*<li className="jobs__menu__list_item">Create</li>*/}
         </ul>
       </div>
       <div className="jobs__parameters">
@@ -77,6 +77,7 @@ const JobsView = ({
         job={job}
         handleCancel={handleCancel}
         loading={loading}
+        match={match}
       />
     </div>
   </>

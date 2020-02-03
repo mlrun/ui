@@ -10,13 +10,12 @@
           padding-left: 56px;
         }
         &_type {
-          padding: 0px 24px 0px 24px;
+          padding: 0 24px;
         }
       }
       tr {
         th {
           height: 32px;
-          font-family: Roboto;
           font-style: normal;
           font-weight: bold;
           font-size: 14px;
@@ -39,9 +38,6 @@
           border-bottom: $tableBorder;
         }
       }
-      .column_producer {
-        color: $tableLink;
-      }
       .column {
         &_path {
           max-width: 400px;
@@ -53,6 +49,7 @@
           }
         }
         &_producer {
+          color: $tableLink;
           a {
             text-decoration: none;
             color: $tableLink;
@@ -62,19 +59,16 @@
           color: $tableFontColor;
         }
         &_type {
-          padding: 0px 24px 0px 24px;
+          padding: 0 24px 0 24px;
           color: $tableFontColor;
         }
       }
       .label {
-        font-family: Roboto;
-        font-style: normal;
-        font-weight: normal;
         font-size: 14px;
         line-height: 16px;
         text-align: center;
         color: $tableFontColor;
-        padding: 8px 9px 8px 9px;
+        padding: 8px 9px;
         border: $labelBorder;
         box-sizing: border-box;
         border-radius: 31px;
@@ -83,29 +77,33 @@
   }
 }
 
-.tooltip_body {
-  top: 30px;
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  padding: 15px 10px;
-  box-shadow: $tooltipShadow;
-  &_kind {
-    color: #7f8d89;
-    span {
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 24px;
-      color: #7f7989;
+.tooltip {
+  position: relative;
+  &_container {
+    position: absolute;
+    z-index: 1000;
+    &_bottom {
+      bottom: 25px
+    }
+    &_top {
+      top: 25px
     }
   }
-  &_owner {
-    color: #7f8d89;
-    span {
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 24px;
-      color: #7f7989;
+  &_body {
+    top: 30px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 15px 10px;
+    box-shadow: $tooltipShadow;
+
+    &_item {
+      color: $artifactsTooltipColor;
+      span {
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 24px;
+      }
     }
   }
 }

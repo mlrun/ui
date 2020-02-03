@@ -6,7 +6,10 @@ const ChipCell = ({ elements, className }) => {
   return elements
     ? elements.sortedArr.map((item, i) => {
         return (
-          <div className="jobs__table_body__chips__block" key={item.value + i}>
+          <div
+            className="jobs__table_body__chips__block"
+            key={`${item.value}${i}`}
+          >
             <Chip
               key={item.value}
               className={className}
