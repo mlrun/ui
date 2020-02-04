@@ -1,13 +1,14 @@
 import artifactsApi from '../api/artifacts-api'
-import { parseKeyValues, truncateUid } from '../utils'
+import { parseKeyValues } from '../utils'
 
+// import artifactsMock from '../artifacts.json'
 const artifactsAction = {
   fetchArtifacts: () => dispatch => {
     return artifactsApi.getArtifacts().then(({ data }) => {
+      // data.artifacts = artifactsMock.artifacts
       const newArtifacts = data.artifacts.map(item => {
         return Object.assign(item, {
-          labels: parseKeyValues(item.labels),
-          hash: truncateUid(item.hash)
+          labels: parseKeyValues(item.labels)
         })
       })
       dispatch(artifactsAction.setArtifacts({ artifacts: newArtifacts }))

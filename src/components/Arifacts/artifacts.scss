@@ -12,4 +12,7 @@
 }
 .artifacts_container {
     margin: 15px 24px 0 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ArtifactsView from '../ArtifactsView/ArtifactsView'
 import artifactsAction from '../../actions/artifacts'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import { connect } from 'react-redux'
 
 import './artifacts.scss'
 
@@ -11,8 +11,7 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [filter, setFilter] = useState({
-    period: null,
-    group: null
+    period: null
   })
   const fetchData = useCallback(
     item => {
@@ -34,7 +33,7 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
 
   const onChangeFilter = useCallback(
     _filter => {
-      // _filter looks like {period: 123, group: null}
+      // _filter looks like {period: 123}
       setFilter(prevFilter => ({ ...prevFilter, ..._filter }))
       if (_filter) {
         let filterArtifacts = artifactsStore.artifacts.filter(item => {

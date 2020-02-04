@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import Select from '../../common/Select/select'
+import Select from '../../common/Select/Select'
+
 import refresh from '../../images/refresh.png'
 import './artifactsfiltermenu.scss'
 
 const ArtifactsFilerMenu = ({ refreshArtifacts, onChangeFilter }) => {
   const [filter, setFilter] = useState({
-    period: new Date().setDate(new Date().getDate() - 7),
-    group: 'name'
+    period: new Date().setDate(new Date().getDate() - 7)
   })
 
   const changeFilter = useCallback(

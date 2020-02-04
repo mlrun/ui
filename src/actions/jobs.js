@@ -28,7 +28,7 @@ const jobsActions = {
         dispatch(jobsActions.setJobs(newJobs))
         return newJobs
       })
-      .catch(error => console.error(error))
+      .catch(() => {})
   },
   fetchJobLogs: id => dispatch => {
     return jobsApi.getJobLogs(id).then(result => {
