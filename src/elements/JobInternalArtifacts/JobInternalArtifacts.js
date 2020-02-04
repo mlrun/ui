@@ -60,7 +60,7 @@ const JobInternalArtifacts = ({
         artifact.content = URL.createObjectURL(new Blob([result.data]))
         const link = document.createElement('a')
         link.href = artifact.content
-        link.setAttribute('download', 'file')
+        link.setAttribute('download', path.split('/').pop())
         document.body.appendChild(link)
         link.click()
         link.remove()

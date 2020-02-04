@@ -57,6 +57,9 @@ const JobsTableView = ({
                       onClick={() => handleSelectJob(item)}
                     >
                       {item.name}
+                      <span>
+                        {job.uid && `...${item.uid.slice(item.uid.length - 7)}`}
+                      </span>
                     </Link>
                   </td>
                   <td>
