@@ -40,26 +40,45 @@ const jobsActions = {
       const artifacts = {}
       if (res.headers['content-type'].includes('text/csv')) {
         const data = res.data.split('\n')
-        let content = data.slice(1)
-        content = content.map(item => item.split(','))
-        content.pop()
-        artifacts.type = 'table'
-        artifacts.data = {
-          headers: data[0].split(','),
-          content: content
+        if (data[0].includes('state')) {
+          const headers = data[0].split(',')
+          let content = data.slice(1)
+          content.pop()
+          content = content.map(item => item.split(','))
+          artifacts.type = 'table-results'
+          artifacts.iterationStats = [headers].concat(content)
+        } else {
+          let content = data.slice(1)
+          content = content.map(item => item.split(','))
+          content.pop()
+          artifacts.type = 'table'
+          artifacts.data = {
+            headers: data[0].split(','),
+            content: content
+          }
         }
-      }
-      if (res.headers['content-type'].includes('text/plain')) {
+      } else if (res.headers['content-type'].includes('text/plain')) {
         artifacts.type = 'text'
         artifacts.data = {
           content: res.data
         }
-      }
-      if (res.headers['content-type'].includes('text/html')) {
+      } else if (res.headers['content-type'].includes('text/html')) {
         artifacts.type = 'html'
         artifacts.data = {
           content: res.data
         }
+      } else if (res.headers['content-type'].includes('application/json')) {
+        artifacts.type = 'json'
+        artifacts.data = {
+          content: res.data
+        }
+      } else if (res.headers['content-type'].includes('image')) {
+        artifacts.type = 'image'
+        artifacts.data = {
+          content: URL.createObjectURL(new Blob([res.data]))
+        }
+      } else {
+        artifacts.type = 'unknown'
       }
       dispatch(jobsActions.setJobArtifacts(artifacts))
     })

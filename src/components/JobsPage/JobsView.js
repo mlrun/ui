@@ -16,7 +16,9 @@ const JobsView = ({
   handleFilterClick,
   setFilter,
   setFilterValue,
-  loading
+  loading,
+  downloadStatus,
+  setDownloadStatus
 }) => (
   <>
     <div className="jobs__header">
@@ -71,6 +73,13 @@ const JobsView = ({
           <img src={refreshIcon} alt="refresh" />
         </button>
       </div>
+      <div
+        className={`jobs_download_status ${
+          downloadStatus === 'Success' ? 'jobs_download_status__success' : ''
+        }`}
+      >
+        Downloading status: {downloadStatus}
+      </div>
       <JobsTable
         jobs={jobs}
         handleSelectJob={handleSelectJob}
@@ -78,6 +87,7 @@ const JobsView = ({
         handleCancel={handleCancel}
         loading={loading}
         match={match}
+        setDownloadStatus={setDownloadStatus}
       />
     </div>
   </>

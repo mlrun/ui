@@ -10,7 +10,8 @@ const JobsTable = ({
   job,
   handleCancel,
   loading,
-  match
+  match,
+  setDownloadStatus
 }) => {
   const handleShowElements = e => {
     if (
@@ -55,6 +56,7 @@ const JobsTable = ({
       handleSelectJob={handleSelectJob}
       handleCancel={handleCancel}
       match={match}
+      setDownloadStatus={setDownloadStatus}
     />
   )
 }

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import Select from '../../common/Select/Select'
+
 import refresh from '../../images/refresh.png'
 import './artifactsfiltermenu.scss'
 
@@ -22,6 +23,13 @@ const ArtifactsFilerMenu = ({ refreshArtifacts, onChangeFilter }) => {
       <Select
         label="Period:"
         value={filter.period}
+        onChange={value => {
+          changeFilter(value)
+        }}
+      />
+      <Select
+        label="Group by:"
+        value={filter.group}
         onChange={value => {
           changeFilter(value)
         }}

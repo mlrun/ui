@@ -1,5 +1,6 @@
 import artifactsApi from '../api/artifacts-api'
 import { parseKeyValues } from '../utils'
+
 // import artifactsMock from '../artifacts.json'
 const artifactsAction = {
   fetchArtifacts: () => dispatch => {
