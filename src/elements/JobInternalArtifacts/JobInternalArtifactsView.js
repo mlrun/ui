@@ -2,8 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import downloadIcon from '../../images/download-icon.png'
+import arrow from '../../images/arrow.png'
+import JobInternalResults from '../JobInternalResults/JobInternalResults'
 
-const JobInternalArtifactsView = ({ items, handleClick, artifacts }) => (
+const JobInternalArtifactsView = ({
+  items,
+  handleClick,
+  artifacts,
+  handleDownloadClick
+}) => (
   <div className="jobs__table__item_artifacts">
     <table>
       <tbody>
@@ -15,6 +22,7 @@ const JobInternalArtifactsView = ({ items, handleClick, artifacts }) => (
                   handleClick(e, item.target_path.schema, item.target_path.path)
                 }
               >
+                <img src={arrow} alt="Arrow icon" className="arrow" />
                 {item.key}
               </td>
               <td>
@@ -26,28 +34,35 @@ const JobInternalArtifactsView = ({ items, handleClick, artifacts }) => (
               <td>size: {item.size}</td>
               <td>{item.date}</td>
               <td>
-                <button>
-                  <a
-                    href={`http://13.58.34.174:30080/api/files?${
-                      item.target_path.schema
-                        ? `schema=${item.target_path.schema}&`
-                        : ''
-                    }path=${item.target_path.path}`}
-                    download
-                  >
-                    <img src={downloadIcon} alt="Download" />
-                  </a>
+                <button
+                  onClick={() =>
+                    handleDownloadClick(
+                      item.target_path.schema,
+                      item.target_path.path
+                    )
+                  }
+                >
+                  <img src={downloadIcon} alt="Download" />
                 </button>
               </td>
             </tr>,
             <tr className="jobs__table__item_artifacts__preview" key={i + 1}>
-              {artifacts.data && artifacts.type === 'table' && (
+              {artifacts.type && artifacts.type === 'table-results' && (
+                <td colSpan={5}>
+                  <JobInternalResults job={artifacts} />
+                </td>
+              )}
+              {artifacts.type && artifacts.type === 'table' && (
                 <td colSpan={5}>
                   <table>
                     <tbody>
                       <tr>
                         {artifacts.data.headers.map(header => {
-                          return <td key={header}>{header}</td>
+                          return (
+                            <td key={header}>
+                              {header[0].toUpperCase() + header.slice(1)}
+                            </td>
+                          )
                         })}
                       </tr>
                       {artifacts.data.content.map(item => (
@@ -81,6 +96,21 @@ const JobInternalArtifactsView = ({ items, handleClick, artifacts }) => (
                     title="Preview"
                   />
                 </td>
+              )}
+              {artifacts.data && artifacts.type === 'json' && (
+                <td colSpan={5}>
+                  <pre>
+                    <code>{artifacts.data.content}</code>
+                  </pre>
+                </td>
+              )}
+              {artifacts.data && artifacts.type === 'image' && (
+                <td colSpan={5}>
+                  <img src={artifacts.data.content} alt="Preview" />
+                </td>
+              )}
+              {artifacts.type && artifacts.type === 'unknown' && (
+                <td colSpan={5}>No preview</td>
               )}
             </tr>
           ]

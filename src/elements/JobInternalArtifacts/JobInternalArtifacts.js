@@ -8,7 +8,14 @@ import JobInternalArtifactsView from './JobInternalArtifactsView'
 import jobsActions from '../../actions/jobs'
 import { formatDatetime } from '../../utils'
 
-const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
+import axios from 'axios'
+import jobsApi from '../../api/jobs-api'
+
+const JobInternalArtifacts = ({
+  jobsStore,
+  getArtifacts,
+  setDownloadStatus
+}) => {
   const items = jobsStore.selectedJob.artifacts.map(item => {
     const index = item.target_path.indexOf('://')
     const target_path = {
@@ -29,13 +36,47 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
 
   const handleClick = (e, schema, path) => {
     const viewedBlocks = document.getElementsByClassName('view')
-    if (viewedBlocks.length > 0) {
+    if (
+      viewedBlocks.length > 0 &&
+      !e.target.closest('tr').classList.contains('view')
+    ) {
       viewedBlocks[0].classList.remove('view')
     }
     e.persist()
     getArtifacts(schema, path).then(() => {
-      e.target.parentNode.classList.add('view')
+      e.target.closest('tr').classList.contains('view')
+        ? e.target.closest('tr').classList.remove('view')
+        : e.target.closest('tr').classList.add('view')
     })
+  }
+
+  const handleDownloadClick = (schema, path) => {
+    const artifact = {
+      cancelDownloadSource: axios.CancelToken.source()
+    }
+    jobsApi
+      .getJobArtifacts(schema, path)
+      .then(result => {
+        artifact.content = URL.createObjectURL(new Blob([result.data]))
+        const link = document.createElement('a')
+        link.href = artifact.content
+        link.setAttribute('download', 'file')
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        setDownloadStatus('Success')
+        setTimeout(() => setDownloadStatus(''), 2000)
+      })
+      .catch(error => {
+        if (axios.isCancel(error)) {
+          return
+        } else {
+          setDownloadStatus('Failed')
+        }
+      })
+      .finally(() => {
+        URL.revokeObjectURL(artifact.content)
+      })
   }
 
   return (
@@ -43,6 +84,7 @@ const JobInternalArtifacts = ({ jobsStore, getArtifacts }) => {
       items={items}
       handleClick={handleClick}
       artifacts={jobsStore.artifacts}
+      handleDownloadClick={handleDownloadClick}
     />
   )
 }

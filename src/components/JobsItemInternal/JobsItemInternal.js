@@ -3,7 +3,13 @@ import PropTypes from 'prop-types'
 
 import JobsItemInternalView from './JobsItemInternalView'
 
-const JobsItemInternal = ({ job, handleCancel, handleShowElements, match }) => {
+const JobsItemInternal = ({
+  job,
+  handleCancel,
+  handleShowElements,
+  match,
+  setDownloadStatus
+}) => {
   useEffect(() => {
     if (match.params.tab) {
       document
@@ -26,6 +32,7 @@ const JobsItemInternal = ({ job, handleCancel, handleShowElements, match }) => {
       handleMenuClick={handleMenuClick}
       handleShowElements={handleShowElements}
       match={match}
+      setDownloadStatus={setDownloadStatus}
     />
   )
 }

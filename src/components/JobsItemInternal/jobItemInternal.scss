@@ -109,12 +109,15 @@ color: $tableFontColor;
   }
   &_artifacts {
     table {
-      border-bottom: $tableBorder;
       tr {
         min-height: 73px;
-        border-top: $tableBorder;
+        border-bottom: $tableBorder;
         td {
-          padding: 15px 29px ;
+          padding: 15px 29px;
+          &:first-child {
+            white-space: nowrap;
+            cursor: pointer;
+          }
           p {
             margin: 0 0 5px;
             white-space: pre-wrap;
@@ -128,10 +131,29 @@ color: $tableFontColor;
               box-shadow: none;
             }
           }
+          img {
+            margin-bottom: -2px;
+            margin-right: 8px;
+          }
         }
       }
       tr.view + tr.jobs__table__item_artifacts__preview {
         display: table-row;
+        //box-shadow: 0 15px 0 white, 12px 0 16px rgba(0, 0, 0, 0.1), -12px 0 16px rgba(0, 0, 0, 0.1);
+        td {
+          //box-shadow: 0 -30px 0 white;
+        }
+      }
+      tr.view {
+        //box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), inset 0 40px 16px white, 0 0 10px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.1);
+        td img.arrow {
+          transform: rotate(90deg);
+        }
+      }
+    }
+    .jobs__table__item_results__table {
+      td {
+        padding: 19px 16px;
       }
     }
     &__preview {

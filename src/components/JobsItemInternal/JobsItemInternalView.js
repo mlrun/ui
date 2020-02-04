@@ -17,7 +17,8 @@ const JobsItemInternalView = ({
   handleCancel,
   handleMenuClick,
   handleShowElements,
-  match
+  match,
+  setDownloadStatus
 }) => (
   <div className="jobs__table__item">
     <div className="jobs__table__item__header">
@@ -70,7 +71,9 @@ const JobsItemInternalView = ({
       <JobInternalInfo job={job} handleShowElements={handleShowElements} />
     )}
     {match.params.tab === 'inputs' && <JobInternalInputs job={job} />}
-    {match.params.tab === 'artifacts' && <JobInternalArtifacts job={job} />}
+    {match.params.tab === 'artifacts' && (
+      <JobInternalArtifacts job={job} setDownloadStatus={setDownloadStatus} />
+    )}
     {match.params.tab === 'results' && <JobInternalResults job={job} />}
     {match.params.tab === 'logs' && <JobInternalLogs />}
   </div>
