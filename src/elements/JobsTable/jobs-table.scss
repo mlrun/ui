@@ -43,6 +43,10 @@
         i {
           margin: 0 25px;
         }
+        span {
+          display: block;
+          color: $mainGreyColor;
+        }
       }
     }
     &__chips {
