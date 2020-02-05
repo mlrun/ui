@@ -103,4 +103,25 @@
       }
     }
   }
+  &_download_status {
+    width: 200px;
+    height: 50px;
+    background-color: $white;
+    z-index: 1000;
+    position: absolute;
+    right: -250px;
+    top: -45px;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    transition: all .8s ease-in-out;
+    display: flex;
+    &__success {
+      right: -25px;
+      color: green;
+    }
+    &__failed {
+      color: red;
+    }
+  }
 }

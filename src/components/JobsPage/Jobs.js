@@ -11,6 +11,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [filter, setFilter] = useState('')
   const [filterValue, setFilterValue] = useState('')
   const [loading, setLoading] = useState(true)
+  const [download, setDownload] = useState('')
 
   const refreshJobs = useCallback(
     noCahche => {
@@ -42,6 +43,9 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   }, [jobsStore.jobs, match.params, setSelectedJob])
 
   const handleSelectJob = item => {
+    if (document.getElementsByClassName('view')[0]) {
+      document.getElementsByClassName('view')[0].classList.remove('view')
+    }
     setSelectedJob(item)
   }
 
@@ -76,6 +80,8 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
       setFilter={setFilter}
       setFilterValue={setFilterValue}
       loading={loading}
+      downloadStatus={download}
+      setDownloadStatus={setDownload}
     />
   )
 }
