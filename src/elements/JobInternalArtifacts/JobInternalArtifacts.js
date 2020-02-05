@@ -51,18 +51,20 @@ const JobInternalArtifacts = ({
     })
   }
 
-  const handleDownloadClick = (schema, path) => {
+  const handleDownloadClick = (e, schema, path) => {
+    e.persist()
     const artifact = {
       cancelDownloadSource: axios.CancelToken.source()
     }
     const config = {
       onDownloadProgress: progressEvent => {
         const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
+          (progressEvent.loaded * 100) / (progressEvent.total + 0.1)
         )
         setProgress(percentCompleted)
       }
     }
+    e.target.closest('td').classList.add('progress')
     jobsApi
       .getJobArtifacts(schema, path, config)
       .then(result => {
@@ -76,6 +78,7 @@ const JobInternalArtifacts = ({
         setDownloadStatus('Success')
         setTimeout(() => setDownloadStatus(''), 2000)
         setProgress(0)
+        e.target.closest('td').classList.remove('progress')
       })
       .catch(error => {
         if (axios.isCancel(error)) {

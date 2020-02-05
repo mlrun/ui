@@ -135,7 +135,19 @@ color: $tableFontColor;
             margin-bottom: -2px;
             margin-right: 8px;
             transition: all .3s ease-in-out;
+            display: inline-block;
           }
+        }
+        td.progress {
+          svg {
+            display: block;
+          }
+          img {
+            display: none;
+          }
+        }
+        svg {
+          display: none;
         }
       }
       tr.view + tr.jobs__table__item_artifacts__preview {

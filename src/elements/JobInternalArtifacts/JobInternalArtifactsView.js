@@ -38,25 +38,23 @@ const JobInternalArtifactsView = ({
               <td>{item.date}</td>
               <td>
                 <button
-                  onClick={() =>
+                  onClick={e =>
                     handleDownloadClick(
+                      e,
                       item.target_path.schema,
                       item.target_path.path
                     )
                   }
                 >
-                  {progress > 0 ? (
-                    <ProgressRing
-                      radius="20"
-                      stroke="1"
-                      progress={progress}
-                      textX={20}
-                      textY={16}
-                      color="#50B1E7"
-                    />
-                  ) : (
-                    <img src={downloadIcon} alt="Download" />
-                  )}
+                  <ProgressRing
+                    radius="20"
+                    stroke="1"
+                    progress={progress}
+                    textX={20}
+                    textY={16}
+                    color="#50B1E7"
+                  />
+                  <img src={downloadIcon} alt="Download" />
                 </button>
               </td>
             </tr>,
