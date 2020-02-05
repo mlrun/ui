@@ -57,6 +57,9 @@ const JobsTableView = ({
                       onClick={() => handleSelectJob(item)}
                     >
                       {item.name}
+                      <span>
+                        {job.uid && `...${item.uid.slice(item.uid.length - 7)}`}
+                      </span>
                     </Link>
                   </td>
                   <td>
@@ -110,7 +113,8 @@ JobsTableView.propTypes = {
   hideChips: PropTypes.func.isRequired,
   handleSelectJob: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired
+  match: PropTypes.shape({}).isRequired,
+  setDownloadStatus: PropTypes.func.isRequired
 }
 
 export default JobsTableView

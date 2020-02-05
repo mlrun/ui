@@ -35,6 +35,10 @@
           text-decoration: none;
           color: $tableLink;
           margin: 0;
+          span {
+            display: block;
+            color: $mainGreyColor;
+          }
         }
         i {
           margin: 0 25px;

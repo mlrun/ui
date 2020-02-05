@@ -1,21 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import prettyBytes from 'pretty-bytes'
 import { connect } from 'react-redux'
+import axios from 'axios'
 
 import JobInternalArtifactsView from './JobInternalArtifactsView'
 
+import jobsApi from '../../api/jobs-api'
 import jobsActions from '../../actions/jobs'
 import { formatDatetime } from '../../utils'
-
-import axios from 'axios'
-import jobsApi from '../../api/jobs-api'
 
 const JobInternalArtifacts = ({
   jobsStore,
   getArtifacts,
   setDownloadStatus
 }) => {
+  const [progress, setProgress] = useState(0)
+
   const items = jobsStore.selectedJob.artifacts.map(item => {
     const index = item.target_path.indexOf('://')
     const target_path = {
@@ -54,18 +55,27 @@ const JobInternalArtifacts = ({
     const artifact = {
       cancelDownloadSource: axios.CancelToken.source()
     }
+    const config = {
+      onDownloadProgress: progressEvent => {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        )
+        setProgress(percentCompleted)
+      }
+    }
     jobsApi
-      .getJobArtifacts(schema, path)
+      .getJobArtifacts(schema, path, config)
       .then(result => {
         artifact.content = URL.createObjectURL(new Blob([result.data]))
         const link = document.createElement('a')
         link.href = artifact.content
-        link.setAttribute('download', 'file')
+        link.setAttribute('download', path.split('/').pop())
         document.body.appendChild(link)
         link.click()
         link.remove()
         setDownloadStatus('Success')
         setTimeout(() => setDownloadStatus(''), 2000)
+        setProgress(0)
       })
       .catch(error => {
         if (axios.isCancel(error)) {
@@ -85,13 +95,15 @@ const JobInternalArtifacts = ({
       handleClick={handleClick}
       artifacts={jobsStore.artifacts}
       handleDownloadClick={handleDownloadClick}
+      progress={progress}
     />
   )
 }
 
 JobInternalArtifacts.propTypes = {
   getArtifacts: PropTypes.func.isRequired,
-  jobsStore: PropTypes.shape({}).isRequired
+  jobsStore: PropTypes.shape({}).isRequired,
+  setDownloadStatus: PropTypes.func.isRequired
 }
 
 export default connect(

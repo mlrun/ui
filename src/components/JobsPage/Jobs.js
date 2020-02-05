@@ -15,8 +15,8 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
 
   const refreshJobs = useCallback(
     noCahche => {
+      setSelectedJob({})
       if (noCahche || jobsStore.jobs.length === 0) {
-        setSelectedJob({})
         setLoading(true)
         fetchJobs()
           .then(jobs => {

@@ -1,15 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import JobInternalResults from '../JobInternalResults/JobInternalResults'
+import ProgressRing from '../../common/ProgressRing/ProgressRing'
+
 import downloadIcon from '../../images/download-icon.png'
 import arrow from '../../images/arrow.png'
-import JobInternalResults from '../JobInternalResults/JobInternalResults'
 
 const JobInternalArtifactsView = ({
   items,
   handleClick,
   artifacts,
-  handleDownloadClick
+  handleDownloadClick,
+  progress
 }) => (
   <div className="jobs__table__item_artifacts">
     <table>
@@ -42,7 +45,18 @@ const JobInternalArtifactsView = ({
                     )
                   }
                 >
-                  <img src={downloadIcon} alt="Download" />
+                  {progress > 0 ? (
+                    <ProgressRing
+                      radius="20"
+                      stroke="1"
+                      progress={progress}
+                      textX={20}
+                      textY={16}
+                      color="#50B1E7"
+                    />
+                  ) : (
+                    <img src={downloadIcon} alt="Download" />
+                  )}
                 </button>
               </td>
             </tr>,
@@ -123,7 +137,9 @@ const JobInternalArtifactsView = ({
 JobInternalArtifactsView.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleClick: PropTypes.func.isRequired,
-  artifacts: PropTypes.shape({}).isRequired
+  artifacts: PropTypes.shape({}).isRequired,
+  handleDownloadClick: PropTypes.func.isRequired,
+  progress: PropTypes.number.isRequired
 }
 
 export default JobInternalArtifactsView
