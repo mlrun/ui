@@ -36,9 +36,22 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
       // _filter looks like {period: 123}
       setFilter(prevFilter => ({ ...prevFilter, ..._filter }))
       if (_filter) {
-        let filterArtifacts = artifactsStore.artifacts.filter(item => {
-          return new Date(item.updated).getTime() > _filter.period
-        })
+        let filterArtifacts = artifactsStore.artifacts.reduce((prev, curr) => {
+          let tree = curr.tree
+            .reduce((_prev, _curr) => {
+              let filter = _curr.filter(
+                item => new Date(item.updated).getTime() > _filter.period
+              )
+              return [..._prev, [...filter]]
+            }, [])
+            .filter(item => item.length !== 0)
+
+          if (tree.length !== 0) {
+            return [...prev, { key: curr.key, tree: [...tree] }]
+          } else {
+            return [...prev]
+          }
+        }, [])
         _setArtifacts(filterArtifacts)
       }
     },
