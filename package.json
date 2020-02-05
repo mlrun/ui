@@ -2,7 +2,7 @@
   "name": "dashboard-react",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://18.219.147.63:30080",
+  "proxy": "http://52.27.215.210:4000",
   "dependencies": {
     "@babel/core": "7.6.0",
     "@svgr/webpack": "4.3.2",

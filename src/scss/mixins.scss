@@ -58,6 +58,31 @@
   display: inline-block;
 }
 
+@mixin tableColumn($flex) {
+  &_container {
+    display: flex;
+    flex: $flex;
+    height: 100%;
+    align-items: flex-end;
+    &_item {
+      height: 55px;
+      display: flex;
+      flex: 1;
+      align-items: center;
+    }
+  }
+}
+
+@mixin tableDisplay($flex) {
+  display: flex;
+  flex: $flex;
+}
+
+@mixin artifactsTableHeader($flex, $lineHeight) {
+  flex: $flex;
+  line-height: $lineHeight; 
+}
+
 @mixin tableHeader {
   font-weight: bold;
   font-size: 14px;
