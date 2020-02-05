@@ -1,94 +1,245 @@
 @import '../../scss/variables';
+@import '../../scss/mixins.scss';
 
 .table_container {
-  display: flex;
-  flex: 1;
-  table {
+  @include tableDisplay(1);
+  .table {
     width: 100%;
     border-collapse: collapse;
-    thead {
+    .table_header {
+      &_type {
+        padding: 0 24px;
+      }
+    }
+    .table_header_container {
+      @include tableDisplay(1);
+      line-height: 44px;
+      height: 44px;
       .table_header {
         &_name {
-          padding-left: 56px;
+          @include artifactsTableHeader(1.2, 44px);
+          padding-left: $leftRowOffset;
         }
         &_type {
-          padding: 0 24px;
+          @include artifactsTableHeader(0.5, 44px);
         }
-      }
-      tr {
-        th {
-          height: 32px;
-          font-style: normal;
-          font-weight: bold;
-          font-size: 14px;
-          line-height: 24px;
-          color: $mainGreyColor;
-          text-align: left;
-          border-top: $tableBorder;
+        &_producer,
+        &_hash,
+        &_started_at {
+          @include artifactsTableHeader(1, 44px);
         }
-      }
-    }
-    tbody {
-      tr {
-        height: 55px;
-        &:first-child {
-          td {
-            border-top: $tableBorder;
-          }
-        }
-        td {
-          border-bottom: $tableBorder;
-        }
-      }
-      .column {
         &_path {
-          max-width: 400px;
-          color: $tableFontColor;
-          .path_container {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
+          @include artifactsTableHeader(2.5, 44px);
         }
-        &_producer {
-          color: $tableLink;
-          a {
-            text-decoration: none;
-            color: $tableLink;
-          }
-        }
-        &_started-at {
-          color: $tableFontColor;
-        }
-        &_type {
-          padding: 0 24px 0 24px;
-          color: $tableFontColor;
+
+        &_labels {
+          @include artifactsTableHeader(2, 44px);
         }
       }
-      .label {
+      div {
+        font-style: normal;
+        font-weight: bold;
         font-size: 14px;
-        line-height: 16px;
-        text-align: center;
-        color: $tableFontColor;
-        padding: 8px 9px;
-        border: $labelBorder;
-        box-sizing: border-box;
-        border-radius: 31px;
+        line-height: 24px;
+        color: $mainGreyColor;
+        text-align: left;
+        border-top: $tableBorder;
       }
     }
+  }
+
+  .table_body {
+    flex-direction: column;
+    @include tableDisplay(1);
+    .table_body_item {
+      display: flex;
+      flex-direction: row;
+      border-bottom: $tableBorder;
+      color: $tableFontColor;
+      &.active {
+        flex-direction: column;
+      }
+      .tree_container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        .tree_container_wrraper {
+          width: 100%;
+          display: flex;
+        }
+      }
+      .column_name {
+        @include tableDisplay(1.5);
+        flex-direction: column;
+        justify-content: center;
+        height: $heightRowTable;
+        min-height: $heightRowTable;
+        &_item {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          padding-left: $leftRowOffset;
+        }
+        &:hover {
+          background-color: $selectHover;
+        }
+      }
+      .column_path {
+        @include tableDisplay(2.5);
+        .path {
+          &_container {
+            @include tableDisplay(1);
+            height: 100%;
+            &_item {
+              height: $heightRowTable;
+              @include tableDisplay(1);
+              align-items: center;
+              span {
+                max-width: 400px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow-x: hidden;
+              }
+            }
+          }
+        }
+      }
+      .column_type {
+        @include tableDisplay(0.5);
+        .type {
+          @include tableColumn(0.5);
+        }
+      }
+      .column_labels {
+        @include tableDisplay(2);
+        .labels {
+          @include tableColumn(1);
+        }
+      }
+      .column_producer {
+        @include tableDisplay(1);
+        .producer {
+          @include tableColumn(1);
+        }
+      }
+      .column_hash {
+        @include tableDisplay(1);
+        .hash {
+          @include tableColumn(1);
+        }
+      }
+      .column_started_at {
+        @include tableDisplay(1);
+        .started_at {
+          @include tableColumn(1);
+        }
+      }
+      &:first-child {
+        border-top: $tableBorder;
+      }
+    }
+  }
+  .name_container {
+    display: flex;
+    align-items: center;
+    height: $heightRowTable;
+    &:hover {
+      background-color: $selectHover;
+    }
+  }
+  .tree_container {
+    @include tableDisplay(1);
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    &_item {
+      @include tableDisplay(1.2);
+      align-items: center;
+      height: $heightRowTable;
+      padding-left: $leftRowOffset;
+      .tree_container_name {
+        display: flex;
+        margin-left: 25px;
+      }
+    }
+    .iter_container {
+      display: flex;
+      width: 100%;
+      &_name {
+        @include tableDisplay(1.2);
+        padding-left: $leftRowOffset;
+        .iter_value {
+          display: flex;
+          align-items: center;
+          margin-left: 60px;
+        }
+      }
+      &:hover {
+        background-color: $selectHover;
+      }
+    }
+  }
+  img {
+    margin-right: 15px;
+    height: 15px;
+    cursor: pointer;
+    &.close {
+      transform: rotate(0deg);
+      transition: transform 150ms ease;
+    }
+    &.open {
+      transform: rotate(90deg);
+      transition: transform 150ms ease;
+    }
+  }
+  .column {
+    &_path {
+      color: $tableFontColor;
+    }
+    &_producer {
+      color: $tableLink;
+      a {
+        text-decoration: none;
+        color: $tableLink;
+      }
+    }
+    &_started-at {
+      color: $tableFontColor;
+    }
+    &_type {
+      padding: 0 24px;
+      color: $tableFontColor;
+    }
+  }
+  .label {
+    font-size: 14px;
+    line-height: 16px;
+    text-align: center;
+    color: $tableFontColor;
+    padding: 8px 9px;
+    border: $labelBorder;
+    box-sizing: border-box;
+    border-radius: 31px;
+  }
+}
+
+.hover {
+  &:hover {
+    background-color: $selectHover;
   }
 }
 
 .tooltip {
   position: relative;
+  width: 100%;
   &_container {
     position: absolute;
     z-index: 1000;
     &_bottom {
-      bottom: 25px
+      bottom: 25px;
     }
     &_top {
-      top: 25px
+      top: 25px;
     }
   }
   &_body {
