@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 
 const IterTree = ({ isOpen, items }) => {
   const [isIterOpen, setIterOpen] = useState(false)
-
   return (
     <>
       <div
@@ -56,7 +55,7 @@ const IterTree = ({ isOpen, items }) => {
 }
 
 IterTree.propTypes = {
-  isOpen: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
   items: PropTypes.array.isRequired
 }
 

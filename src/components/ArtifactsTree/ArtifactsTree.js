@@ -39,7 +39,7 @@ const ArtifactsTree = ({ items, match }) => {
 }
 
 ArtifactsTree.propTypes = {
-  items: PropTypes.array.isRequired,
+  items: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired
 }
 
