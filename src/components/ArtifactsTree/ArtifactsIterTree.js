@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import arrow from '../../images/nested_arrow.png'
 import templateArifacts from './ArtifactsTemplate'
 import { truncateUid } from '../../utils'
+import { Link } from 'react-router-dom'
+
 const IterTree = ({ isOpen, items }) => {
   const [isIterOpen, setIterOpen] = useState(false)
+
   return (
     <>
       <div
@@ -33,7 +37,15 @@ const IterTree = ({ isOpen, items }) => {
           return (
             <div key={_item.hash + index} className="iter_container">
               <div className="iter_container_name">
-                <div className="iter_value">{_item.iter}</div>
+                <div className="iter_value">
+                  <Link
+                    to={`/artifacts/${_item.key}/${_item.tree}/${
+                      _item.iter ? _item.iter : 0
+                    }`}
+                  >
+                    {_item.iter ? _item.iter : 0}
+                  </Link>
+                </div>
               </div>
               {templateArifacts(_item)}
             </div>
@@ -41,6 +53,11 @@ const IterTree = ({ isOpen, items }) => {
         })}
     </>
   )
+}
+
+IterTree.propTypes = {
+  isOpen: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired
 }
 
 export default IterTree

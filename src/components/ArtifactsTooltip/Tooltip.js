@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react'
-import { useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-const Tooltip = ({ template, to, name, kind, owner }) => {
+const Tooltip = ({ to, name, kind, owner }) => {
   const [show, setShow] = useState(false)
   const [isBottomPosition, setBottomPosition] = useState(false)
   const parentRef = useRef(null)
@@ -72,6 +72,13 @@ const Tooltip = ({ template, to, name, kind, owner }) => {
       </Link>
     </div>
   )
+}
+
+Tooltip.propTypes = {
+  to: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  kind: PropTypes.string.isRequired,
+  owner: PropTypes.string.isRequired
 }
 
 export default Tooltip
