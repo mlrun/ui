@@ -2,7 +2,6 @@
 .menu {
   &_container {
     display: flex;
-    position: relative;
     .active {
       color: $tableLink;
       border-bottom: 3px solid $tableLink;

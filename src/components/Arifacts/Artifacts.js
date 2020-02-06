@@ -13,6 +13,7 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
   const [filter, setFilter] = useState({
     period: null
   })
+
   const fetchData = useCallback(
     item => {
       if (item || artifactsStore.artifacts.length === 0) {
@@ -73,6 +74,7 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
       </div>
       <div className="artifacts_container">
         <ArtifactsView
+          match={match}
           artifacts={artifacts}
           loading={loading}
           refresh={fetchData}

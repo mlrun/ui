@@ -34,7 +34,6 @@ const App = () => {
             />
             <Route
               path="/artifacts"
-              exact
               render={routeProps => <Artifacts {...routeProps} />}
             />
             <Redirect to="/jobs" />

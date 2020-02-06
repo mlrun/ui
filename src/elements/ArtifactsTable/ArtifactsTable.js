@@ -1,12 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ArtifactsTree from '../../components/ArtifactsTree/ArtifactsTree'
-
+import ArtifactsDetails from '../../components/ArtifactsDetails/ArtifactsDetails'
+import { Route } from 'react-router-dom'
 import './artifactstable.scss'
 
-const ArtifactsTable = ({ artifacts }) => {
+const ArtifactsTable = ({ match, artifacts }) => {
   const tableBody = artifacts.map(artifacts => {
-    return <ArtifactsTree key={artifacts.key} items={artifacts} />
+    return <ArtifactsTree key={artifacts.key} items={artifacts} match={match} />
   })
 
   return (
@@ -24,13 +25,19 @@ const ArtifactsTable = ({ artifacts }) => {
           </div>
         </div>
         <div className="table_body">{tableBody}</div>
+        <Route
+          exact
+          path={`${match.path}/:name/:artifactId/:iter`}
+          render={match => <ArtifactsDetails match={match.match} />}
+        />
       </div>
     </div>
   )
 }
 
 ArtifactsTable.propTypes = {
-  artifacts: PropTypes.array.isRequired
+  artifacts: PropTypes.array.isRequired,
+  match: PropTypes.shape({}).isRequired
 }
 
 export default ArtifactsTable

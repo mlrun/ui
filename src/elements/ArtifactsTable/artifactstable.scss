@@ -19,22 +19,42 @@
         &_name {
           @include artifactsTableHeader(1.2, 44px);
           padding-left: $leftRowOffset;
+          min-width: 200px;
         }
         &_type {
           @include artifactsTableHeader(0.5, 44px);
+          min-width: 100px;
         }
-        &_producer,
-        &_hash,
+        &_producer {
+          @include artifactsTableHeader(1, 44px);
+          min-width: 80px;
+        }
+        &_hash {
+          @include artifactsTableHeader(1, 44px);
+          min-width: 80px;
+        }
         &_started_at {
           @include artifactsTableHeader(1, 44px);
+          min-width: 80px;
         }
         &_path {
           @include artifactsTableHeader(2.5, 44px);
+          min-width: 200px;
         }
 
         &_labels {
           @include artifactsTableHeader(2, 44px);
+          min-width: 150px;
         }
+      }
+      div {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 24px;
+        color: $mainGreyColor;
+        text-align: left;
+        border-top: $tableBorder;
       }
       div {
         font-style: normal;
@@ -74,6 +94,7 @@
         justify-content: center;
         height: $heightRowTable;
         min-height: $heightRowTable;
+        min-width: 200px;
         &_item {
           display: flex;
           flex: 1;
@@ -86,6 +107,8 @@
       }
       .column_path {
         @include tableDisplay(2.5);
+        min-width: 200px;
+        overflow-x: hidden;
         .path {
           &_container {
             @include tableDisplay(1);
@@ -101,34 +124,46 @@
                 overflow-x: hidden;
               }
             }
+            &_value {
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow-x: hidden;
+              max-width: 200px;
+              min-width: 100%;
+            }
           }
         }
       }
       .column_type {
         @include tableDisplay(0.5);
+        min-width: 100px;
         .type {
           @include tableColumn(0.5);
         }
       }
       .column_labels {
         @include tableDisplay(2);
+        min-width: 150px;
         .labels {
           @include tableColumn(1);
         }
       }
       .column_producer {
         @include tableDisplay(1);
+        min-width: 80px;
         .producer {
           @include tableColumn(1);
         }
       }
       .column_hash {
         @include tableDisplay(1);
+        min-width: 80px;
         .hash {
           @include tableColumn(1);
         }
       }
       .column_started_at {
+        min-width: 80px;
         @include tableDisplay(1);
         .started_at {
           @include tableColumn(1);
@@ -168,10 +203,16 @@
       &_name {
         @include tableDisplay(1.2);
         padding-left: $leftRowOffset;
+        min-width: 200px;
         .iter_value {
           display: flex;
           align-items: center;
           margin-left: 60px;
+          cursor: pointer;
+          a {
+            text-decoration: none;
+            color: $tableLink;
+          }
         }
       }
       &:hover {

@@ -1,0 +1,99 @@
+@import '../../scss/variables.scss';
+
+.artifact_details_container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 85%;
+  height: 100%;
+  background-color: $white;
+  border-left: $tableBorder;
+  border-top: $tableBorder;
+  overflow-y: auto;
+  .artifact_wrapper_header {
+    .artifact_header {
+      font-weight: bold;
+      color: $tableFontColor;
+      font-size: 24px;
+      line-height: 28px;
+      margin: 27px 24px 10px;
+      display: flex;
+      a {
+        margin-left: auto;
+      }
+    }
+    padding-bottom: 25px;
+    border-bottom: $tableBorder;
+  }
+  span {
+    font-size: 15px;
+    line-height: 18px;
+    margin-left: 24px;
+    color: $tableFontColor;
+  }
+
+  .artifact_details_body {
+    display: flex;
+    flex-direction: column;
+    .details_container {
+      display: flex;
+      padding: 18px 40px;
+      border-bottom: $tableBorder;
+      width: 100%;
+      .key,
+      .kind,
+      .size,
+      .path,
+      .tree,
+      .updated,
+      .labels {
+        &_label {
+          min-width: 80px;
+          min-width: 100px;
+          font-weight: bold;
+          font-size: 14px;
+          color: $tableFontColor;
+        }
+        &_value {
+          color: $tableFontColor;
+        }
+      }
+      .labels_container_item {
+        span:first-child {
+          margin: 0;
+        }
+      }
+    }
+    .details_container_producer {
+      display: flex;
+      flex-direction: column;
+      h3 {
+        margin-left: 40px;
+        color: $tableFontColor;
+      }
+      .details_container:first-child {
+        border-top: $tableBorder;
+        padding: 18px 50px;
+      }
+      .details_container {
+        padding: 18px 50px;
+        .kind,
+        .name,
+        .owner,
+        .uri,
+        .workflow {
+          &_label {
+            min-width: 80px;
+            min-width: 100px;
+            font-weight: bold;
+            font-size: 14px;
+            color: $tableFontColor;
+          }
+          &_value {
+            color: $tableFontColor;
+          }
+        }
+      }
+    }
+  }
+}
