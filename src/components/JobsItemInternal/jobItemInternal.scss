@@ -134,20 +134,35 @@ color: $tableFontColor;
           img {
             margin-bottom: -2px;
             margin-right: 8px;
+            transition: all .3s ease-in-out;
+            display: inline-block;
           }
+        }
+        td.progress {
+          svg {
+            display: block;
+          }
+          img {
+            display: none;
+          }
+        }
+        svg {
+          display: none;
         }
       }
       tr.view + tr.jobs__table__item_artifacts__preview {
-        display: table-row;
-        //box-shadow: 0 15px 0 white, 12px 0 16px rgba(0, 0, 0, 0.1), -12px 0 16px rgba(0, 0, 0, 0.1);
-        td {
-          //box-shadow: 0 -30px 0 white;
-        }
+        opacity: 1;
+        visibility: visible;
+        position: static;
+        z-index: 0;
+        //box-shadow: 0 -20px 30px 20px white, 0 5px 30px 10px rgba(0, 0, 0, 0.1), -12px 0 30px 10px rgba(0, 0, 0, 0.1), 12px 0 30px 10px rgba(0, 0, 0, 0.1);
       }
       tr.view {
-        //box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), inset 0 40px 16px white, 0 0 10px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.1);
-        td img.arrow {
-          transform: rotate(90deg);
+        //box-shadow: 0 -4px 11px 0 rgba(0, 0, 0, 0.3), 0 4px 11px 0 $white;
+        td {
+          img.arrow {
+            transform: rotate(90deg);
+          }
         }
       }
     }
@@ -157,7 +172,14 @@ color: $tableFontColor;
       }
     }
     &__preview {
-      display: none;
+      opacity: 0;
+      visibility: hidden;
+      z-index: -1000;
+      position: absolute;
+      top: 0;
+      transition-property: opacity, visibility;
+      transition-duration: .8s, 0s;
+      transition-timing-function:  ease-in-out,  ease-in-out;
       &_text {
         column-span: 5;
       }
@@ -218,5 +240,10 @@ color: $tableFontColor;
         box-shadow: none;
       }
     }
+  }
+  circle {
+    transition: stroke-dashoffset 0.35s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
   }
 }
