@@ -10,6 +10,9 @@
   border-left: $tableBorder;
   border-top: $tableBorder;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   .artifact_wrapper_header {
     .artifact_header {
       font-weight: bold;
@@ -18,12 +21,49 @@
       line-height: 28px;
       margin: 27px 24px 10px;
       display: flex;
-      a {
+      .close_details_artifact {
         margin-left: auto;
       }
     }
     padding-bottom: 25px;
-    border-bottom: $tableBorder;
+  }
+  .artifact {
+    &_details_tab {
+      display: flex;
+      flex: 1;
+      flex-grow: 1;
+      &_container {
+        display: flex;
+        flex: 1;
+        flex-grow: 1;
+        flex-direction: column;
+        .tabs_container {
+          display: flex;
+          flex: 1;
+          &_menu {
+            display: flex;
+            flex: 1;
+            min-height: 38px;
+            max-height: 38px;
+            a {
+              color: $mainBlue;
+              text-decoration: none;
+              cursor: pointer;
+              padding: 8px 24px;
+
+              &.active {
+                border-bottom: 3px solid $mainBlue;
+              }
+              &:hover {
+                background-color: $selectHover;
+              }
+            }
+            font-weight: bold;
+            border-bottom: $tableBorder;
+          }
+        }
+      }
+    }
   }
   span {
     font-size: 15px;
@@ -46,6 +86,7 @@
       .path,
       .tree,
       .updated,
+      .iter,
       .labels {
         &_label {
           min-width: 80px;
@@ -73,10 +114,10 @@
       }
       .details_container:first-child {
         border-top: $tableBorder;
-        padding: 18px 50px;
+        padding: 18px 60px;
       }
       .details_container {
-        padding: 18px 50px;
+        padding: 18px 60px;
         .kind,
         .name,
         .owner,

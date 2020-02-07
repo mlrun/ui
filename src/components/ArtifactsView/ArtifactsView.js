@@ -11,6 +11,7 @@ const ArtifactView = ({
   loading,
   artifacts,
   refresh,
+  selectArtifact,
   onChangeFilter
 }) => {
   return (
@@ -29,7 +30,11 @@ const ArtifactView = ({
           {loading ? (
             <Loader />
           ) : (
-            <ArtifactsTable match={match} artifacts={artifacts} />
+            <ArtifactsTable
+              match={match}
+              artifacts={artifacts}
+              selectArtifact={selectArtifact}
+            />
           )}
         </div>
       </div>

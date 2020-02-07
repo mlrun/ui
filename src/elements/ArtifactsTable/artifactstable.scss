@@ -192,6 +192,7 @@
       align-items: center;
       height: $heightRowTable;
       padding-left: $leftRowOffset;
+      min-width: 200px;
       .tree_container_name {
         display: flex;
         margin-left: 25px;

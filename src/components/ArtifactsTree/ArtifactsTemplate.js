@@ -3,14 +3,6 @@ import Tooltip from '../ArtifactsTooltip/Tooltip'
 import { truncateUid, formatDatetime } from '../../utils'
 
 const templateArifacts = item => {
-  const labels = item.labels.map((label, index) => {
-    return (
-      <div key={index} className="labels_container_item" title={label}>
-        <span className="label">{label}</span>
-      </div>
-    )
-  })
-
   return (
     <>
       <div className="column_path">
@@ -31,7 +23,15 @@ const templateArifacts = item => {
         </div>
       </div>
       <div className="column_labels">
-        <div className="labels_container">{labels}</div>
+        <div className="labels_container">
+          {item.labels.map((label, index) => {
+            return (
+              <div key={index} className="labels_container_item" title={label}>
+                <span className="label">{label}</span>
+              </div>
+            )
+          })}
+        </div>
       </div>
       <div className="column_producer">
         <div className="producer_container">

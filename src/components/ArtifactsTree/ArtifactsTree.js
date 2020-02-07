@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import IterTree from './ArtifactsIterTree'
+import IterTree from '../ArtifactsIterTree/ArtifactsIterTree'
 import arrow from '../../images/nested_arrow.png'
 import templateArifacts from './ArtifactsTemplate'
 
@@ -12,6 +12,7 @@ const ArtifactsTree = ({ items, match }) => {
         key={_items[0].hash + index}
         isOpen={isOpen}
         items={_items}
+        match={match}
       ></IterTree>
     )
   })
