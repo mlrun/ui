@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import IterTree from './ArtifactsIterTree'
+import PropTypes from 'prop-types'
+import IterTree from '../ArtifactsIterTree/ArtifactsIterTree'
 import arrow from '../../images/nested_arrow.png'
 import templateArifacts from './ArtifactsTemplate'
 
-const ArtifactsTree = ({ items }) => {
+const ArtifactsTree = ({ items, match }) => {
   const [isOpen, setOpen] = useState(false)
   const iterTree = items.tree.map((_items, index) => {
     return (
@@ -11,6 +12,7 @@ const ArtifactsTree = ({ items }) => {
         key={_items[0].hash + index}
         isOpen={isOpen}
         items={_items}
+        match={match}
       ></IterTree>
     )
   })
@@ -35,6 +37,11 @@ const ArtifactsTree = ({ items }) => {
       {isOpen === false && templateArifacts(items.tree[0][0])}
     </div>
   )
+}
+
+ArtifactsTree.propTypes = {
+  items: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}).isRequired
 }
 
 export default ArtifactsTree

@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import arrow from '../../images/nested_arrow.png'
-import templateArifacts from './ArtifactsTemplate'
+import templateArifacts from '../ArtifactsTree/ArtifactsTemplate'
 import { truncateUid } from '../../utils'
-const IterTree = ({ isOpen, items }) => {
+import { Link } from 'react-router-dom'
+import actionArtifacts from '../../actions/artifacts'
+import { useDispatch } from 'react-redux'
+
+const IterTree = ({ isOpen, items, match }) => {
   const [isIterOpen, setIterOpen] = useState(false)
+  const dispatch = useDispatch()
   return (
     <>
       <div
@@ -33,7 +39,20 @@ const IterTree = ({ isOpen, items }) => {
           return (
             <div key={_item.hash + index} className="iter_container">
               <div className="iter_container_name">
-                <div className="iter_value">{_item.iter}</div>
+                <div
+                  className="iter_value"
+                  onClick={() =>
+                    dispatch(actionArtifacts.selectArtifact(_item))
+                  }
+                >
+                  <Link
+                    to={`/artifacts/${_item.key}/${_item.tree}/${
+                      _item.iter ? _item.iter : 0
+                    }/${match.params.tab ? match.params.tab : 'info'}`}
+                  >
+                    {_item.iter ? _item.iter : 0}
+                  </Link>
+                </div>
               </div>
               {templateArifacts(_item)}
             </div>
@@ -41,6 +60,11 @@ const IterTree = ({ isOpen, items }) => {
         })}
     </>
   )
+}
+
+IterTree.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  items: PropTypes.array.isRequired
 }
 
 export default IterTree

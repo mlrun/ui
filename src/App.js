@@ -33,8 +33,13 @@ const App = () => {
               render={routeProps => <Jobs {...routeProps} />}
             />
             <Route
-              path="/artifacts"
               exact
+              path="/artifacts/:name/:artifactId/:iter/:tab"
+              render={routeProps => <Artifacts {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/artifacts"
               render={routeProps => <Artifacts {...routeProps} />}
             />
             <Redirect to="/jobs" />
