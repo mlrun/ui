@@ -33,6 +33,12 @@ const App = () => {
               render={routeProps => <Jobs {...routeProps} />}
             />
             <Route
+              exact
+              path="/artifacts/:name/:artifactId/:iter/:tab"
+              render={routeProps => <Artifacts {...routeProps} />}
+            />
+            <Route
+              exact
               path="/artifacts"
               render={routeProps => <Artifacts {...routeProps} />}
             />

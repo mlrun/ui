@@ -1,5 +1,6 @@
 const initialState = {
-  artifacts: []
+  artifacts: [],
+  selectArtifact: {}
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -7,7 +8,13 @@ export default (state = initialState, { type, payload }) => {
     case 'SET_ARTIFACTS':
       return {
         ...state,
-        artifacts: payload.artifacts
+        artifacts: payload.artifacts,
+        selectArtifact: {}
+      }
+    case 'SELECT_ARTIFACT':
+      return {
+        ...state,
+        selectArtifact: payload
       }
     default:
       return state

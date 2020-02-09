@@ -1,0 +1,53 @@
+@import '../../scss/variables.scss';
+.preview {
+  &_container {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-grow: 1;
+    flex-direction: column;
+    padding: 15px 29px;
+    &_item {
+      display: flex;
+      padding: 5px 29px;
+      border-bottom: $tableBorder;
+      &_header {
+        display: flex;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 24px;
+        color: $mainGreyColor;
+        padding: 10px 16px;
+        border-bottom: $tableBorder;
+        .preview {
+          &_header {
+            flex: 1;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 24px;
+            color: $mainGreyColor;
+            padding: 10px 16px;
+          }
+        }
+      }
+      &:hover {
+        background-color: $selectHover;
+      }
+      .preview {
+        &_value {
+          flex: 1;
+          padding: 10px 16px;
+          color: $tableFontColor;
+        }
+      }
+    }
+    iframe {
+      display: flex;
+      flex-grow: 1;
+    }
+    .no_preview,
+    .preview_text {
+      padding: 15px 29px;
+    }
+  }
+}

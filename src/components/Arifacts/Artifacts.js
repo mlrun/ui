@@ -7,7 +7,12 @@ import { connect } from 'react-redux'
 
 import './artifacts.scss'
 
-const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
+const Artifacts = ({
+  match,
+  artifactsStore,
+  fetchArtifacts,
+  selectArtifact
+}) => {
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [filter, setFilter] = useState({
@@ -24,6 +29,7 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
               return new Date(item.updated).getTime() > filter.period
             })
           }
+
           _setArtifacts(data)
           setLoading(false)
         })
@@ -64,6 +70,50 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
   }, [fetchData])
 
   useEffect(() => {
+    if (artifactsStore.selectArtifact) {
+      if (
+        match.params.name === undefined &&
+        Object.keys(artifactsStore.selectArtifact).length !== 0
+      ) {
+        selectArtifact({})
+      }
+
+      if (
+        match.params.name !== undefined &&
+        Object.keys(artifactsStore.selectArtifact).length === 0
+      ) {
+        const { name, artifactId, iter } = match.params
+
+        const artifact = artifactsStore.artifacts
+          .reduce((prev, curr) => {
+            let flatArray = curr.tree.reduce((prev, curr) => {
+              return [...prev, ...curr]
+            }, [])
+            return [...prev, ...flatArray]
+          }, [])
+          .filter(artifact => {
+            if (artifact.iter !== undefined) {
+              return (
+                artifact.key === name &&
+                artifact.tree === artifactId &&
+                artifact.iter === parseInt(iter)
+              )
+            } else {
+              return artifact.key === name && artifact.tree === artifactId
+            }
+          })[0]
+
+        selectArtifact(artifact)
+      }
+    }
+  }, [
+    artifactsStore.artifacts,
+    artifactsStore.selectArtifact,
+    match.params,
+    selectArtifact
+  ])
+
+  useEffect(() => {
     onChangeFilter()
   }, [onChangeFilter])
 
@@ -78,6 +128,7 @@ const Artifacts = ({ match, artifactsStore, fetchArtifacts }) => {
           artifacts={artifacts}
           loading={loading}
           refresh={fetchData}
+          selectArtifact={artifactsStore.selectArtifact}
           onChangeFilter={onChangeFilter}
         />
       </div>
@@ -91,7 +142,7 @@ Artifacts.propTypes = {
   fetchArtifacts: PropTypes.func.isRequired
 }
 
-export default React.memo(
-  connect(artifactsStore => artifactsStore, artifactsAction)(Artifacts),
-  (prevProps, nextProps) => prevProps.match !== nextProps.match
-)
+export default connect(
+  artifactsStore => artifactsStore,
+  artifactsAction
+)(Artifacts)
