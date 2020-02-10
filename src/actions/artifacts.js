@@ -30,6 +30,10 @@ const artifactsAction = {
       return newArtifacts
     })
   },
+  selectArtifact: selectArtifact => ({
+    type: 'SELECT_ARTIFACT',
+    payload: selectArtifact
+  }),
   setArtifacts: artifactsList => ({
     type: 'SET_ARTIFACTS',
     payload: artifactsList

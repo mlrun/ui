@@ -3,20 +3,17 @@ import Tooltip from '../ArtifactsTooltip/Tooltip'
 import { truncateUid, formatDatetime } from '../../utils'
 
 const templateArifacts = item => {
-  const labels = item.labels.map((label, index) => {
-    return (
-      <div key={index} className="labels_container_item">
-        <span className="label">{label}</span>
-      </div>
-    )
-  })
-
   return (
     <>
       <div className="column_path">
         <div className="path_container">
           <div className="path_container_item">
-            <span>{item.target_path}</span>
+            <div
+              className="path_container_value"
+              title={item.target_path.length > 60 ? item.target_path : null}
+            >
+              {item.target_path}
+            </div>
           </div>
         </div>
       </div>
@@ -26,7 +23,15 @@ const templateArifacts = item => {
         </div>
       </div>
       <div className="column_labels">
-        <div className="labels_container">{labels}</div>
+        <div className="labels_container">
+          {item.labels.map((label, index) => {
+            return (
+              <div key={index} className="labels_container_item" title={label}>
+                <span className="label">{label}</span>
+              </div>
+            )
+          })}
+        </div>
       </div>
       <div className="column_producer">
         <div className="producer_container">
@@ -34,7 +39,7 @@ const templateArifacts = item => {
             <Tooltip
               kind={item.producer.kind}
               owner={item.producer.owner}
-              to={`/jobs/${item.producer.uri}`}
+              to={`/jobs/${item.producer.uri}/info`}
               name={item.producer.name}
             />
           </div>

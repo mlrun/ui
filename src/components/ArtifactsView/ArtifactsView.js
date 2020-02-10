@@ -6,7 +6,14 @@ import ArtifactsTable from '../../elements/ArtifactsTable/ArtifactsTable'
 
 import './artifactsview.scss'
 
-const ArtifactView = ({ loading, artifacts, refresh, onChangeFilter }) => {
+const ArtifactView = ({
+  match,
+  loading,
+  artifacts,
+  refresh,
+  selectArtifact,
+  onChangeFilter
+}) => {
   return (
     <>
       <div className="menu_container">
@@ -20,7 +27,15 @@ const ArtifactView = ({ loading, artifacts, refresh, onChangeFilter }) => {
           onChangeFilter={onChangeFilter}
         />
         <div className="artifacts_table_container">
-          {loading ? <Loader /> : <ArtifactsTable artifacts={artifacts} />}
+          {loading ? (
+            <Loader />
+          ) : (
+            <ArtifactsTable
+              match={match}
+              artifacts={artifacts}
+              selectArtifact={selectArtifact}
+            />
+          )}
         </div>
       </div>
     </>

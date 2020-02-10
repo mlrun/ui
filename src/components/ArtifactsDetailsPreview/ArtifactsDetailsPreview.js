@@ -1,0 +1,95 @@
+import React, { useState, useEffect } from 'react'
+import api from '../../api/artifacts-api'
+import './artifactsdetailspreview.scss'
+
+const fetchPreviewData = (schema, path, setPreview) => {
+  api.getArtifactPreview(schema, path).then(res => {
+    if (res.headers['content-type'].includes('text/html')) {
+      setPreview({
+        type: 'text/html',
+        data: res.data
+      })
+    } else if (res.headers['content-type'].includes('text/csv')) {
+      setPreview({
+        type: 'text/csv',
+        data: res.data.split('\n').map(item => item.split(','))
+      })
+    } else if (
+      res.headers['content-type'].includes('application/octet-stream')
+    ) {
+      setPreview({
+        type: 'application/octet-stream',
+        data: null
+      })
+    } else if (res.headers['content-type'].includes('text/plain')) {
+      setPreview({
+        type: 'text/plain',
+        data: res.data
+      })
+    }
+  })
+}
+
+const ArtifactsDetailsPreview = ({ artifact }) => {
+  const [preview, setPreview] = useState({
+    type: null,
+    data: null
+  })
+
+  let isSchemaExist = artifact.target_path.includes('v3io://')
+  let path = isSchemaExist ? artifact.target_path.replace('v3io://', '') : null
+  let schema = isSchemaExist ? artifact.target_path.slice(0, 4) : null
+
+  useEffect(() => {
+    fetchPreviewData(schema, path ? path : artifact.target_path, setPreview)
+  }, [schema, path, artifact.target_path])
+
+  return (
+    <div className="preview_container">
+      {preview.type === 'text/csv' &&
+        preview.data.map((item, _index) => {
+          if (item.length === 1) {
+            return null
+          }
+          return (
+            <div
+              key={_index}
+              className={
+                _index === 0 && Object.is(Number(item[0]), NaN)
+                  ? 'preview_container_item_header'
+                  : 'preview_container_item'
+              }
+            >
+              {item.map((item, index) => (
+                <div
+                  className={
+                    _index === 0 && Object.is(Number(item), NaN)
+                      ? 'preview_header'
+                      : 'preview_value'
+                  }
+                  key={item + index}
+                >
+                  {['completed', 'running', 'failed'].includes(item) ? (
+                    <div className={item}></div>
+                  ) : (
+                    item
+                  )}
+                </div>
+              ))}
+            </div>
+          )
+        })}
+      {preview.type === 'text/html' && (
+        <iframe srcDoc={preview.data} frameBorder="0" title="Preview" />
+      )}
+      {preview.type === 'application/octet-stream' && (
+        <div className="no_preview">No preview</div>
+      )}
+      {preview.type === 'text/plain' && (
+        <div className="preview_text">{preview.data}</div>
+      )}
+    </div>
+  )
+}
+
+export default ArtifactsDetailsPreview

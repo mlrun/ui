@@ -1,14 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ArtifactsTree from '../../components/ArtifactsTree/ArtifactsTree'
-
+import ArtifactsDetails from '../../components/ArtifactsDetails/ArtifactsDetails'
 import './artifactstable.scss'
 
-const ArtifactsTable = ({ artifacts }) => {
-  const tableBody = artifacts.map(artifacts => {
-    return <ArtifactsTree key={artifacts.key} items={artifacts} />
-  })
-
+const ArtifactsTable = ({ match, artifacts, selectArtifact }) => {
   return (
     <div className="table_container">
       <div className="table">
@@ -23,14 +19,28 @@ const ArtifactsTable = ({ artifacts }) => {
             <div className="table_header_started_at">Started at</div>
           </div>
         </div>
-        <div className="table_body">{tableBody}</div>
+        <div className="table_body">
+          {artifacts.map(artifacts => {
+            return (
+              <ArtifactsTree
+                key={artifacts.key}
+                items={artifacts}
+                match={match}
+              />
+            )
+          })}
+        </div>
+        {Object.keys(selectArtifact).length !== 0 && (
+          <ArtifactsDetails artifact={selectArtifact} match={match} />
+        )}
       </div>
     </div>
   )
 }
 
 ArtifactsTable.propTypes = {
-  artifacts: PropTypes.array.isRequired
+  artifacts: PropTypes.array.isRequired,
+  match: PropTypes.shape({}).isRequired
 }
 
 export default ArtifactsTable
