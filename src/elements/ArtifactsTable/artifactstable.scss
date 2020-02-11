@@ -15,6 +15,7 @@
       @include tableDisplay(1);
       line-height: 44px;
       height: 44px;
+      border-top: $tableBorder;
       .table_header {
         &_name {
           @include artifactsTableHeader(1.2, 44px);
@@ -46,6 +47,11 @@
           @include artifactsTableHeader(2, 44px);
           min-width: 150px;
         }
+        &_download {
+          @include artifactsTableHeader(0.1, 44px);
+          min-width: 40px;
+          margin-right: 10px;
+        }
       }
       div {
         font-style: normal;
@@ -54,7 +60,6 @@
         line-height: 24px;
         color: $mainGreyColor;
         text-align: left;
-        border-top: $tableBorder;
       }
       div {
         font-style: normal;
@@ -63,7 +68,6 @@
         line-height: 24px;
         color: $mainGreyColor;
         text-align: left;
-        border-top: $tableBorder;
       }
     }
   }
@@ -168,6 +172,12 @@
         .started_at {
           @include tableColumn(1);
         }
+      }
+      .column_download {
+        min-width: 40px;
+        @include tableDisplay(0.1);
+        margin-right: 10px;
+        align-items: center;
       }
       &:first-child {
         border-top: $tableBorder;

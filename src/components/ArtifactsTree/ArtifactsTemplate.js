@@ -1,6 +1,7 @@
 import React from 'react'
 import Tooltip from '../ArtifactsTooltip/Tooltip'
 import { truncateUid, formatDatetime } from '../../utils'
+import Download from '../../common/Download/Download'
 
 const templateArifacts = item => {
   return (
@@ -36,12 +37,14 @@ const templateArifacts = item => {
       <div className="column_producer">
         <div className="producer_container">
           <div className="producer_container_item">
-            <Tooltip
-              kind={item.producer.kind}
-              owner={item.producer.owner}
-              to={`/jobs/${item.producer.uri}/info`}
-              name={item.producer.name}
-            />
+            {item.producer && (
+              <Tooltip
+                kind={item.producer.kind}
+                owner={item.producer.owner}
+                to={`/jobs/${item.producer.uri}/info`}
+                name={item.producer.name}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -56,6 +59,9 @@ const templateArifacts = item => {
             {formatDatetime(new Date(item.updated))}
           </div>
         </div>
+      </div>
+      <div className="column_download">
+        <Download path={item.target_path} />
       </div>
     </>
   )

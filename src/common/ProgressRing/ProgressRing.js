@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-
-const ProgressRing = ({ radius, stroke, progress, textX, textY, color }) => {
+const ProgressRing = ({ radius, stroke, progress, color, children }) => {
   const [normalizedRadius] = useState(radius - stroke * 2)
   const [circumference] = useState(normalizedRadius * 2 * Math.PI)
   const strokeDashoffset = circumference - (progress / 100) * circumference
+  const offset = 2
   return (
     <svg height={radius * 2} width={radius * 2}>
       <circle
@@ -13,20 +13,11 @@ const ProgressRing = ({ radius, stroke, progress, textX, textY, color }) => {
         strokeWidth={stroke}
         strokeDasharray={circumference + ' ' + circumference}
         style={{ strokeDashoffset }}
-        r={normalizedRadius}
+        r={normalizedRadius + offset}
         cx={radius}
         cy={radius}
       />
-      <text
-        x={textX}
-        y={textY}
-        textAnchor="middle"
-        dy="7"
-        fontSize="10"
-        color={color}
-      >
-        {progress}%
-      </text>
+      {children}
     </svg>
   )
 }
@@ -35,8 +26,6 @@ ProgressRing.propTypes = {
   radius: PropTypes.string.isRequired,
   stroke: PropTypes.string.isRequired,
   progress: PropTypes.number.isRequired,
-  textX: PropTypes.number.isRequired,
-  textY: PropTypes.number.isRequired,
   color: PropTypes.string.isRequired
 }
 
