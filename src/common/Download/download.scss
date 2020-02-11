@@ -11,10 +11,14 @@
   background-color: $white;
   animation: move 2.1s ease-in-out;
   &.success {
-    color: $statusCompleted;
+    &_notification {
+      color: $statusCompleted;
+    }
   }
   &.failed {
-    color: $statusFailed;
+    &_notification {
+      color: $statusFailed;
+    }
   }
   box-shadow: $tooltipShadow;
 }

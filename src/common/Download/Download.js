@@ -54,6 +54,7 @@ const Download = ({ path }) => {
         if (axios.isCancel(error)) {
           return
         } else {
+          setProgress(0)
           setDownloadStatus('failed')
           setShowNotification(true)
           setTimeout(() => {
@@ -96,7 +97,9 @@ const Download = ({ path }) => {
         createPortal(
           <div
             className={`notification_container ${
-              downloadStatus === 'success' ? 'success' : 'failed'
+              downloadStatus === 'success'
+                ? 'success_notification'
+                : 'failed_notification'
             }`}
           >
             <div>Download Status:</div>
