@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import arrow from '../../images/nested_arrow.png'
-import templateArifacts from '../ArtifactsTree/ArtifactsTemplate'
+import ArtifactsTreeView from '../ArtifactsTree/ArtifactsTreeView'
 import { truncateUid } from '../../utils'
 import { Link } from 'react-router-dom'
 import actionArtifacts from '../../actions/artifacts'
@@ -32,7 +32,7 @@ const IterTree = ({ isOpen, items, match }) => {
             <div title={items[0].tree}>{truncateUid(items[0].tree)}</div>
           </div>
         </div>
-        {isOpen === true && isIterOpen === false && templateArifacts(items[0])}
+        {isOpen === true && isIterOpen === false && ArtifactsTreeView(items[0])}
       </div>
       {isIterOpen &&
         items.map((_item, index) => {
@@ -54,7 +54,7 @@ const IterTree = ({ isOpen, items, match }) => {
                   </Link>
                 </div>
               </div>
-              {templateArifacts(_item)}
+              {ArtifactsTreeView(_item)}
             </div>
           )
         })}

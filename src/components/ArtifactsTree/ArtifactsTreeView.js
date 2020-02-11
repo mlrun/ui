@@ -3,16 +3,13 @@ import Tooltip from '../ArtifactsTooltip/Tooltip'
 import { truncateUid, formatDatetime } from '../../utils'
 import Download from '../../common/Download/Download'
 
-const templateArifacts = item => {
+const ArtifactsTreeView = item => {
   return (
     <>
       <div className="column_path">
         <div className="path_container">
           <div className="path_container_item">
-            <div
-              className="path_container_value"
-              title={item.target_path.length > 60 ? item.target_path : null}
-            >
+            <div className="path_container_value" title={item.target_path}>
               {item.target_path}
             </div>
           </div>
@@ -67,4 +64,4 @@ const templateArifacts = item => {
   )
 }
 
-export default templateArifacts
+export default ArtifactsTreeView
