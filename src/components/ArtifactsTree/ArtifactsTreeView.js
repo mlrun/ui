@@ -1,17 +1,15 @@
 import React from 'react'
 import Tooltip from '../ArtifactsTooltip/Tooltip'
 import { truncateUid, formatDatetime } from '../../utils'
+import Download from '../../common/Download/Download'
 
-const templateArifacts = item => {
+const ArtifactsTreeView = item => {
   return (
     <>
       <div className="column_path">
         <div className="path_container">
           <div className="path_container_item">
-            <div
-              className="path_container_value"
-              title={item.target_path.length > 60 ? item.target_path : null}
-            >
+            <div className="path_container_value" title={item.target_path}>
               {item.target_path}
             </div>
           </div>
@@ -36,12 +34,14 @@ const templateArifacts = item => {
       <div className="column_producer">
         <div className="producer_container">
           <div className="producer_container_item">
-            <Tooltip
-              kind={item.producer.kind}
-              owner={item.producer.owner}
-              to={`/jobs/${item.producer.uri}/info`}
-              name={item.producer.name}
-            />
+            {item.producer && (
+              <Tooltip
+                kind={item.producer.kind}
+                owner={item.producer.owner}
+                to={`/jobs/${item.producer.uri}/info`}
+                name={item.producer.name}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -57,8 +57,11 @@ const templateArifacts = item => {
           </div>
         </div>
       </div>
+      <div className="column_download">
+        <Download path={item.target_path} />
+      </div>
     </>
   )
 }
 
-export default templateArifacts
+export default ArtifactsTreeView

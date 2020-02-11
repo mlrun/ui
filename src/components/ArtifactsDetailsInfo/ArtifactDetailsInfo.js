@@ -48,31 +48,35 @@ const ArtifactDetailsInfo = ({ artifact }) => {
             })}
           </div>
         </div>
-        <div className="details_container_producer">
-          <h3>Producer</h3>
-          <div className="producer_details_body">
-            <div className="details_container">
-              <div className="kind_label">Kind</div>
-              <div className="kind_value">{artifact.producer.kind}</div>
-            </div>
-            <div className="details_container">
-              <div className="name_label">Name</div>
-              <div className="name_value">{artifact.producer.name}</div>
-            </div>
-            <div className="details_container">
-              <div className="owner_label">Owner</div>
-              <div className="owner_value">{artifact.producer.owner}</div>
-            </div>
-            <div className="details_container">
-              <div className="uri_label">Uri</div>
-              <div className="uri_value">{artifact.producer.uri}</div>
-            </div>
-            <div className="details_container">
-              <div className="workflow_label">Workflow</div>
-              <div className="workflow_value">{artifact.producer.workflow}</div>
+        {artifact.producer && (
+          <div className="details_container_producer">
+            <h3>Producer</h3>
+            <div className="producer_details_body">
+              <div className="details_container">
+                <div className="kind_label">Kind</div>
+                <div className="kind_value">{artifact.producer.kind}</div>
+              </div>
+              <div className="details_container">
+                <div className="name_label">Name</div>
+                <div className="name_value">{artifact.producer.name}</div>
+              </div>
+              <div className="details_container">
+                <div className="owner_label">Owner</div>
+                <div className="owner_value">{artifact.producer.owner}</div>
+              </div>
+              <div className="details_container">
+                <div className="uri_label">Uri</div>
+                <div className="uri_value">{artifact.producer.uri}</div>
+              </div>
+              <div className="details_container">
+                <div className="workflow_label">Workflow</div>
+                <div className="workflow_value">
+                  {artifact.producer.workflow}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   )

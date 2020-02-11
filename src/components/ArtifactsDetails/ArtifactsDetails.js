@@ -5,6 +5,7 @@ import cancel from '../../images/job-details-cancel.png'
 import './artifactsdetails.scss'
 import ArtifactDetailsTab from '../ArtifactsDetailsTab/ArtifactDetailsTab'
 import { Link } from 'react-router-dom'
+import Download from '../../common/Download/Download'
 
 const ArtifactsDetails = ({ artifact, match }) => {
   return artifact ? (
@@ -20,7 +21,10 @@ const ArtifactsDetails = ({ artifact, match }) => {
             </Link>
           </div>
         </div>
-        <span>{formatDatetime(new Date(artifact.updated))}</span>
+        <div className="wrraper">
+          <span>{formatDatetime(new Date(artifact.updated))}</span>
+          <Download path={artifact.target_path}></Download>
+        </div>
       </div>
       <div className="artifact_details_tab">
         <ArtifactDetailsTab

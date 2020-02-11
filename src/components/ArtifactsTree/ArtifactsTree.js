@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import IterTree from '../ArtifactsIterTree/ArtifactsIterTree'
 import arrow from '../../images/nested_arrow.png'
-import templateArifacts from './ArtifactsTemplate'
+import ArtifactsTreeView from './ArtifactsTreeView'
 
 const ArtifactsTree = ({ items, match }) => {
   const [isOpen, setOpen] = useState(false)
@@ -34,7 +34,7 @@ const ArtifactsTree = ({ items, match }) => {
       </div>
       {isOpen && <div className="tree_container">{iterTree}</div>}
       {/*show first value by default*/}
-      {isOpen === false && templateArifacts(items.tree[0][0])}
+      {isOpen === false && ArtifactsTreeView(items.tree[0][0])}
     </div>
   )
 }

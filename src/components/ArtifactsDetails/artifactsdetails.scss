@@ -4,7 +4,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 85%;
+  width: 86%;
   height: 100%;
   background-color: $white;
   border-left: $tableBorder;
@@ -24,6 +24,10 @@
       .close_details_artifact {
         margin-left: auto;
       }
+    }
+    .wrraper {
+      display: flex;
+      align-items: center;
     }
     padding-bottom: 25px;
   }
@@ -46,16 +50,14 @@
             min-height: 38px;
             max-height: 38px;
             a {
-              color: $mainBlue;
+              color: $mainGreyColor;
               text-decoration: none;
               cursor: pointer;
               padding: 8px 24px;
 
               &.active {
                 border-bottom: 3px solid $mainBlue;
-              }
-              &:hover {
-                background-color: $selectHover;
+                color: $mainBlue;
               }
             }
             font-weight: bold;
