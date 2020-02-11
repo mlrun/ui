@@ -69,6 +69,15 @@
         color: $mainGreyColor;
         text-align: left;
       }
+      div {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 24px;
+        color: $mainGreyColor;
+        text-align: left;
+        border-top: $tableBorder;
+      }
     }
   }
 
