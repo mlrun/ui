@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SideBarView from './SideBarView'
 
 const SideBar = ({ location }) => {
@@ -6,15 +6,11 @@ const SideBar = ({ location }) => {
     location.pathname.split('/')[1]
   )
 
-  const handleMenuClick = value => {
-    if (!currentPage.includes(value)) {
-      document
-        .getElementsByClassName('active sidebar__menu__item')[0]
-        .classList.remove('active')
-    }
-    setCurrentPage(value)
-  }
-  return <SideBarView currentPage={currentPage} onClick={handleMenuClick} />
+  useEffect(() => {
+    setCurrentPage(location.pathname.split('/')[1])
+  }, [location.pathname])
+
+  return <SideBarView currentPage={currentPage} />
 }
 
 export default SideBar
