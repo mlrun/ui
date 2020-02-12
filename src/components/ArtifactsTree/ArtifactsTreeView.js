@@ -4,20 +4,28 @@ import { truncateUid, formatDatetime } from '../../utils'
 import Download from '../../common/Download/Download'
 
 const ArtifactsTreeView = item => {
+  const index = item.target_path.indexOf('://')
+  const schema = item.target_path.includes('://')
+    ? item.target_path.slice(0, index)
+    : null
+  const path = item.target_path.includes('://')
+    ? item.target_path.slice(index + '://'.length)
+    : item.target_path
   return (
     <>
       <div className="column_path">
         <div className="path_container">
           <div className="path_container_item">
             <div className="path_container_value" title={item.target_path}>
-              {item.target_path}
+              schema: {schema} <br />
+              path: {path}
             </div>
           </div>
         </div>
       </div>
       <div className="column_type">
         <div className="type_container">
-          <div className="type_container_item">{item.kind}</div>
+          <div className="type_container_item">{item.kind && item.kind}</div>
         </div>
       </div>
       <div className="column_labels">
@@ -58,7 +66,7 @@ const ArtifactsTreeView = item => {
         </div>
       </div>
       <div className="column_download">
-        <Download path={item.target_path} />
+        <Download path={path} schema={schema} />
       </div>
     </>
   )

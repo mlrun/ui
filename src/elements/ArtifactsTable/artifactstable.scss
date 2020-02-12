@@ -85,6 +85,15 @@
         color: $mainGreyColor;
         text-align: left;
       }
+      div {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 24px;
+        color: $mainGreyColor;
+        text-align: left;
+        border-top: $tableBorder;
+      }
     }
   }
 
@@ -238,7 +247,7 @@
           cursor: pointer;
           a {
             text-decoration: none;
-            color: $tableLink;
+            color: $mainGreenColor;
           }
         }
       }
@@ -265,10 +274,10 @@
       color: $tableFontColor;
     }
     &_producer {
-      color: $tableLink;
+      color: $mainGreenColor;
       a {
         text-decoration: none;
-        color: $tableLink;
+        color: $mainGreenColor;
       }
     }
     &_started-at {

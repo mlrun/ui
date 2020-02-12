@@ -35,11 +35,9 @@
     &_details_tab {
       display: flex;
       flex: 1;
-      flex-grow: 1;
       &_container {
         display: flex;
         flex: 1;
-        flex-grow: 1;
         flex-direction: column;
         .tabs_container {
           display: flex;
@@ -50,14 +48,14 @@
             min-height: 38px;
             max-height: 38px;
             a {
-              color: $mainGreyColor;
+              color: $mainGreenColor;
               text-decoration: none;
               cursor: pointer;
               padding: 8px 24px;
 
               &.active {
-                border-bottom: 3px solid $mainBlue;
-                color: $mainBlue;
+                border-bottom: 3px solid $mainGreenColor;
+                color: $mainGreenColor;
               }
             }
             font-weight: bold;

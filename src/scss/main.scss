@@ -8,6 +8,10 @@
 #root {
   display: flex;
 }
+
+.App {
+  width: 100%;
+}
 body {
   background: #EEEEEE;
   font-family: Roboto;
@@ -15,9 +19,8 @@ body {
   font-weight: normal;
   font-size: 15px;
   line-height: 18px;
-  margin: 0;
-  padding: 0;
   overflow-x: hidden;
+  @include resetSpaces;
 }
 
 main {
@@ -26,8 +29,11 @@ main {
   flex-flow: column nowrap;
   margin-left: 90px;
   margin-top: 64px;
-  width: 100%;
   position: relative;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 }
 
 .completed {
@@ -37,7 +43,7 @@ main {
 
 .running {
   @include jobStatus;
-  background-color: $mainBlue;
+  background-color: $mainGreenColor;
 }
 
 .failed {

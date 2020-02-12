@@ -7,15 +7,11 @@ import axios from 'axios'
 import { createPortal } from 'react-dom'
 import './download.scss'
 
-const Download = ({ path }) => {
+const Download = ({ path, schema }) => {
   const [progress, setProgress] = useState(0)
   const [isShowNotification, setShowNotification] = useState(false)
   const [downloadStatus, setDownloadStatus] = useState('success')
-  let [schema] = /^([\w\d]+)(?=:)/gi.test(path)
-    ? path.match(/^([\w\d]+)(?=:)/gi)
-    : []
   let [file] = path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)
-  let [_path] = path.match(/(?<=\/{2})([\w\W\d]+)|^\/([\w\W\d]+)/gi)
 
   const handleClick = e => {
     e.persist()
@@ -34,7 +30,7 @@ const Download = ({ path }) => {
     }
 
     HttpClient.get(
-      schema ? `/files?schema=${schema}&path=${_path}` : `/files?path=${_path}`,
+      schema ? `/files?schema=${schema}&path=${path}` : `/files?path=${path}`,
       config
     )
       .then(response => {

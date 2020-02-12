@@ -6,8 +6,7 @@ import {
   Switch
 } from 'react-router-dom'
 
-import Header from './components/Header/Header'
-import SideBar from './components/SideBar/SideBar'
+import Page from './layout/Page/Page'
 
 import './scss/main.scss'
 
@@ -17,9 +16,7 @@ const Artifacts = React.lazy(() => import('./components/Arifacts/Artifacts'))
 const App = () => {
   return (
     <Router>
-      <Header />
-      <SideBar />
-      <main>
+      <Page>
         <Suspense fallback={<p>Loading...</p>}>
           <Switch>
             <Route
@@ -45,7 +42,7 @@ const App = () => {
             <Redirect to="/jobs" />
           </Switch>
         </Suspense>
-      </main>
+      </Page>
     </Router>
   )
 }

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import YAML from 'yamljs'
 
 import jobsActions from '../../actions/jobs'
 
@@ -11,7 +12,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [filter, setFilter] = useState('')
   const [filterValue, setFilterValue] = useState('')
   const [loading, setLoading] = useState(true)
-  const [download, setDownload] = useState('')
+  const [convertedYaml, setConvertedYaml] = useState()
 
   const refreshJobs = useCallback(
     noCahche => {
@@ -68,6 +69,14 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
     if (filter === 'status') handleFilterByStatus(filterValue)
   }
 
+  const convertToYaml = item => {
+    document.getElementById('yaml_modal').style.display = 'flex'
+    const jobJson = item
+    delete jobJson.showedParameters
+    delete jobJson.showedResults
+    setConvertedYaml(YAML.stringify(jobJson))
+  }
+
   return (
     <JobsView
       jobs={jobs}
@@ -80,8 +89,8 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
       setFilter={setFilter}
       setFilterValue={setFilterValue}
       loading={loading}
-      downloadStatus={download}
-      setDownloadStatus={setDownload}
+      convertedYaml={convertedYaml}
+      convertToYaml={convertToYaml}
     />
   )
 }
