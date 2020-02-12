@@ -4,7 +4,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 85%;
+  width: 86%;
   height: 100%;
   background-color: $white;
   border-left: $tableBorder;
@@ -24,6 +24,10 @@
       .close_details_artifact {
         margin-left: auto;
       }
+    }
+    .wrraper {
+      display: flex;
+      align-items: center;
     }
     padding-bottom: 25px;
   }
@@ -51,9 +55,7 @@
 
               &.active {
                 border-bottom: 3px solid $mainGreenColor;
-              }
-              &:hover {
-                background-color: $selectHover;
+                color: $mainGreenColor;
               }
             }
             font-weight: bold;

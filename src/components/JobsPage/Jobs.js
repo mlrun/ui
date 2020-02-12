@@ -12,7 +12,6 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [filter, setFilter] = useState('')
   const [filterValue, setFilterValue] = useState('')
   const [loading, setLoading] = useState(true)
-  const [download, setDownload] = useState('')
   const [convertedYaml, setConvertedYaml] = useState()
 
   const refreshJobs = useCallback(
@@ -90,8 +89,6 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
       setFilter={setFilter}
       setFilterValue={setFilterValue}
       loading={loading}
-      downloadStatus={download}
-      setDownloadStatus={setDownload}
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
     />

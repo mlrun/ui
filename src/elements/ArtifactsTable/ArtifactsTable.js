@@ -17,6 +17,7 @@ const ArtifactsTable = ({ match, artifacts, selectArtifact }) => {
             <div className="table_header_producer">Producer</div>
             <div className="table_header_hash">Hash</div>
             <div className="table_header_started_at">Started at</div>
+            <div className="table_header_download"></div>
           </div>
         </div>
         <div className="table_body">

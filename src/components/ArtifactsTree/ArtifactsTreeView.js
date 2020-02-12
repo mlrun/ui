@@ -1,18 +1,24 @@
 import React from 'react'
 import Tooltip from '../ArtifactsTooltip/Tooltip'
 import { truncateUid, formatDatetime } from '../../utils'
+import Download from '../../common/Download/Download'
 
-const templateArifacts = item => {
+const ArtifactsTreeView = item => {
+  const index = item.target_path.indexOf('://')
+  const schema = item.target_path.includes('://')
+    ? item.target_path.slice(0, index)
+    : null
+  const path = item.target_path.includes('://')
+    ? item.target_path.slice(index + '://'.length)
+    : item.target_path
   return (
     <>
       <div className="column_path">
         <div className="path_container">
           <div className="path_container_item">
-            <div
-              className="path_container_value"
-              title={item.target_path.length > 60 ? item.target_path : null}
-            >
-              {item.target_path}
+            <div className="path_container_value" title={item.target_path}>
+              schema: {schema} <br />
+              path: {path}
             </div>
           </div>
         </div>
@@ -36,12 +42,14 @@ const templateArifacts = item => {
       <div className="column_producer">
         <div className="producer_container">
           <div className="producer_container_item">
-            <Tooltip
-              kind={item.producer && item.producer.kind}
-              owner={item.producer && item.producer.owner}
-              to={`/jobs/${item.producer && item.producer.uri}/info`}
-              name={item.producer && item.producer.name}
-            />
+            {item.producer && (
+              <Tooltip
+                kind={item.producer.kind}
+                owner={item.producer.owner}
+                to={`/jobs/${item.producer.uri}/info`}
+                name={item.producer.name}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -57,8 +65,11 @@ const templateArifacts = item => {
           </div>
         </div>
       </div>
+      <div className="column_download">
+        <Download path={path} schema={schema} />
+      </div>
     </>
   )
 }
 
-export default templateArifacts
+export default ArtifactsTreeView

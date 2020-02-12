@@ -4,7 +4,6 @@
     position: relative;
     display: flex;
     flex: 1;
-    flex-grow: 1;
     flex-direction: column;
     padding: 15px 29px;
     &_item {
@@ -44,6 +43,7 @@
     iframe {
       display: flex;
       flex-grow: 1;
+      width: 100%;
     }
     .no_preview,
     .preview_text {

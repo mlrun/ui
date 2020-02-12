@@ -124,31 +124,11 @@ color: $tableFontColor;
           margin: 0 0 5px;
           white-space: pre-wrap;
         }
-        button {
-          background-color: transparent;
-          border: none;
-          cursor: pointer;
-          &:focus, &:active {
-            outline: none;
-            box-shadow: none;
-          }
-        }
         img {
           margin-bottom: -2px;
           margin-right: 8px;
           transition: all .3s ease-in-out;
           display: inline-block;
-        }
-        svg {
-          display: none;
-        }
-        &.progress {
-          svg {
-            display: block;
-          }
-          img {
-            display: none;
-          }
         }
         &_long {
           flex: 0 0 35%;

@@ -129,8 +129,7 @@ JobsTableView.propTypes = {
   hideChips: PropTypes.func.isRequired,
   handleSelectJob: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
-  setDownloadStatus: PropTypes.func.isRequired
+  match: PropTypes.shape({}).isRequired
 }
 
 export default JobsTableView

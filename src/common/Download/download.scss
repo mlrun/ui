@@ -1,0 +1,43 @@
+@import '../../scss/variables.scss';
+
+.download_container {
+  cursor: pointer;
+}
+.notification_container {
+  position: fixed;
+  top: 150px;
+  right: 0;
+  padding: 15px;
+  background-color: $white;
+  animation: move 2.1s ease-in-out;
+  &.success {
+    &_notification {
+      color: $statusCompleted;
+    }
+  }
+  &.failed {
+    &_notification {
+      color: $statusFailed;
+    }
+  }
+  box-shadow: $tooltipShadow;
+}
+
+@keyframes move {
+  0% {
+    top: 100px;
+    right: -150px;
+  }
+  10% {
+    top: 100px;
+    right: 5px;
+  }
+  90% {
+    top: 100px;
+    right: 5px;
+  }
+  100% {
+    top: 100px;
+    right: -150px;
+  }
+}

@@ -2,18 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import JobInternalResults from '../JobInternalResults/JobInternalResults'
-import ProgressRing from '../../common/ProgressRing/ProgressRing'
 
-import downloadIcon from '../../images/download-icon.png'
 import arrow from '../../images/arrow.png'
+import Download from '../../common/Download/Download'
 
-const JobInternalArtifactsView = ({
-  items,
-  handleClick,
-  artifacts,
-  handleDownloadClick,
-  progress
-}) => (
+const JobInternalArtifactsView = ({ items, handleClick, artifacts }) => (
   <div className="jobs__table__item_artifacts">
     {items.map((item, i) => {
       return (
@@ -41,25 +34,10 @@ const JobInternalArtifactsView = ({
               {item.date}
             </div>
             <div className="jobs__table__item_artifacts__row_item jobs__table__item_artifacts__row_item_short">
-              <button
-                onClick={e =>
-                  handleDownloadClick(
-                    e,
-                    item.target_path.schema,
-                    item.target_path.path
-                  )
-                }
-              >
-                <ProgressRing
-                  radius="20"
-                  stroke="1"
-                  progress={progress}
-                  textX={20}
-                  textY={16}
-                  color="#17CFA6"
-                />
-                <img src={downloadIcon} alt="Download" />
-              </button>
+              <Download
+                path={item.target_path.path}
+                schema={item.target_path.schema}
+              />
             </div>
           </div>
           <div className="jobs__table__item_artifacts__preview" key={i + 1}>
@@ -138,9 +116,7 @@ const JobInternalArtifactsView = ({
 JobInternalArtifactsView.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleClick: PropTypes.func.isRequired,
-  artifacts: PropTypes.shape({}).isRequired,
-  handleDownloadClick: PropTypes.func.isRequired,
-  progress: PropTypes.number.isRequired
+  artifacts: PropTypes.shape({}).isRequired
 }
 
 export default JobInternalArtifactsView
