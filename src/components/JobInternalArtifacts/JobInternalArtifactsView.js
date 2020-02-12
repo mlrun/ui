@@ -55,7 +55,7 @@ const JobInternalArtifactsView = ({ items, handleClick, artifacts }) => (
                         key={header}
                         className="jobs__table__item_artifacts__preview_table__header"
                       >
-                        {header[0].toUpperCase() + header.slice(1)}
+                        {header}
                       </div>
                     )
                   })}
