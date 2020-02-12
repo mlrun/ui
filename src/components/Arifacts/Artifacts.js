@@ -82,28 +82,17 @@ const Artifacts = ({
         match.params.name !== undefined &&
         Object.keys(artifactsStore.selectArtifact).length === 0
       ) {
-        const { name, artifactId, iter } = match.params
-
-        const artifact = artifactsStore.artifacts
-          .reduce((prev, curr) => {
-            let flatArray = curr.tree.reduce((prev, curr) => {
-              return [...prev, ...curr]
-            }, [])
-            return [...prev, ...flatArray]
-          }, [])
-          .filter(artifact => {
-            if (artifact.iter !== undefined) {
-              return (
-                artifact.key === name &&
-                artifact.tree === artifactId &&
-                artifact.iter === parseInt(iter)
-              )
-            } else {
-              return artifact.key === name && artifact.tree === artifactId
-            }
-          })[0]
-
-        selectArtifact(artifact)
+        const { name, iter } = match.params
+        if (artifactsStore.artifacts.length !== 0) {
+          const [searchItem] = artifactsStore.artifacts.filter(
+            item => item.key === name
+          )
+          const [artifact] = searchItem.data.filter(item => {
+            const _iter = item.iter ? item.iter : 0
+            return _iter === parseInt(iter)
+          })
+          selectArtifact(artifact)
+        }
       }
     }
   }, [

@@ -12,16 +12,14 @@ const ArtifactsDetails = ({ artifact, match }) => {
     <div className="artifact_details_container">
       <div className="artifact_wrapper_header">
         <div className="artifact_header">
-          {`${artifact.key} / ${artifact.tree} / ${
-            artifact.iter ? artifact.iter : 0
-          }`}
+          {artifact.key}
           <div className="close_details_artifact">
             <Link to="/artifacts">
-              <img src={cancel} alt="x" />
+              <img src={cancel} alt="cancel" />
             </Link>
           </div>
         </div>
-        <div className="wrraper">
+        <div className="wrapper_updated_download">
           <span>{formatDatetime(new Date(artifact.updated))}</span>
           <Download path={artifact.target_path}></Download>
         </div>

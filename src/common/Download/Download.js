@@ -11,6 +11,7 @@ const Download = ({ path }) => {
   const [progress, setProgress] = useState(0)
   const [isShowNotification, setShowNotification] = useState(false)
   const [downloadStatus, setDownloadStatus] = useState('success')
+
   let [schema] = /^([\w\d]+)(?=:)/gi.test(path)
     ? path.match(/^([\w\d]+)(?=:)/gi)
     : []
@@ -75,23 +76,13 @@ const Download = ({ path }) => {
         progress={progress}
         color={progress !== 0 ? '#49436D' : '#fff'}
       >
-        {progress === 0 ? (
-          <image
-            href={download}
-            x="7.5"
-            y="7.5"
-            height="25px"
-            width="25px"
-          ></image>
-        ) : (
-          <image
-            href={cancel}
-            x="7.5"
-            y="7.5"
-            height="25px"
-            width="25px"
-          ></image>
-        )}
+        <image
+          href={progress === 0 ? download : cancel}
+          x="7.5"
+          y="7.5"
+          height="25px"
+          width="25px"
+        />
       </ProgressRing>
       {isShowNotification &&
         createPortal(
