@@ -14,6 +14,7 @@ color: $tableFontColor;
   &_opened {
     height: 72vh;
     overflow-y: scroll;
+    overflow-x: hidden;
   }
   &__header {
     display: flex;
@@ -43,28 +44,23 @@ color: $tableFontColor;
     list-style-type: none;
     display: flex;
     align-items: center;
+    border-bottom: $tableBorder;
     &_item {
       padding: 8px 24px;
-      border-bottom: 1px solid transparent;
       color: $mainGreyColor;
       font-weight: bold;
       cursor: pointer;
       border-bottom: 3px solid transparent;
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
     }
     .active {
-      border-bottom-color: $mainBlue;
-      color: $mainBlue;
+      border-bottom-color: $mainGreenColor;
+      color: $mainGreenColor;
     }
   }
   &_details {
     margin: 0;
     padding: 0 30px;
     list-style-type: none;
-    border-top: $tableBorder;
     &_item {
       border-bottom: $tableBorder;
       padding: 18px 18px;
@@ -94,8 +90,7 @@ color: $tableFontColor;
     }
   }
   &_inputs {
-    padding: 0;
-    margin: 0;
+    @include resetSpaces;
     &_item {
       border-bottom: $tableBorder;
       padding: 27px 24px;
@@ -108,37 +103,46 @@ color: $tableFontColor;
     }
   }
   &_artifacts {
-    table {
-      tr {
-        min-height: 73px;
-        border-bottom: $tableBorder;
-        td {
-          padding: 15px 29px;
-          &:first-child {
-            white-space: nowrap;
-            cursor: pointer;
-          }
-          p {
-            margin: 0 0 5px;
-            white-space: pre-wrap;
-          }
-          button {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            &:focus, &:active {
-              outline: none;
-              box-shadow: none;
-            }
-          }
-          img {
-            margin-bottom: -2px;
-            margin-right: 8px;
-            transition: all .3s ease-in-out;
-            display: inline-block;
+    &__row {
+      min-height: 70px;
+      border-bottom: $tableBorder;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+      &_item {
+        padding: 15px 26px;
+        flex: 0 0 19%;
+        max-width: 19%;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        &:first-child {
+          white-space: nowrap;
+          cursor: pointer;
+        }
+        p {
+          margin: 0 0 5px;
+          white-space: pre-wrap;
+        }
+        button {
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+          &:focus, &:active {
+            outline: none;
+            box-shadow: none;
           }
         }
-        td.progress {
+        img {
+          margin-bottom: -2px;
+          margin-right: 8px;
+          transition: all .3s ease-in-out;
+          display: inline-block;
+        }
+        svg {
+          display: none;
+        }
+        &.progress {
           svg {
             display: block;
           }
@@ -146,42 +150,59 @@ color: $tableFontColor;
             display: none;
           }
         }
-        svg {
-          display: none;
+        &_long {
+          flex: 0 0 35%;
+          max-width: 35%;
+        }
+        &_short {
+          flex: 0 0 8%;
+          max-width: 8%;
         }
       }
-      tr.view + tr.jobs__table__item_artifacts__preview {
-        opacity: 1;
-        visibility: visible;
-        position: static;
-        z-index: 0;
-        //box-shadow: 0 -20px 30px 20px white, 0 5px 30px 10px rgba(0, 0, 0, 0.1), -12px 0 30px 10px rgba(0, 0, 0, 0.1), 12px 0 30px 10px rgba(0, 0, 0, 0.1);
+    }
+      .view .jobs__table__item_artifacts__preview {
+        display: flex;
+        flex-direction: row;
       }
-      tr.view {
-        //box-shadow: 0 -4px 11px 0 rgba(0, 0, 0, 0.3), 0 4px 11px 0 $white;
-        td {
+      .view {
+        flex-direction: column;
+        position: relative;
+        box-shadow: $previewBoxShadow;
+        div {
           img.arrow {
             transform: rotate(90deg);
           }
         }
       }
-    }
     .jobs__table__item_results__table {
       td {
         padding: 19px 16px;
       }
     }
     &__preview {
-      opacity: 0;
-      visibility: hidden;
-      z-index: -1000;
-      position: absolute;
-      top: 0;
-      transition-property: opacity, visibility;
-      transition-duration: .8s, 0s;
-      transition-timing-function:  ease-in-out,  ease-in-out;
-      &_text {
-        column-span: 5;
+      display: none;
+      padding: 21px 26px;
+      border-bottom: $tableBorder;
+      &_table {
+        width: 100%;
+        &__row {
+          display: flex;
+          flex-direction: row;
+          padding: 10px;
+          border-bottom: $tableBorder;
+          &:last-child {
+            border-bottom: none;
+          }
+          &__content {
+            flex: 1;
+          }
+        }
+        &__header {
+          flex: 1;
+        }
+      }
+      pre {
+        white-space: pre-wrap;
       }
     }
   }
@@ -189,12 +210,16 @@ color: $tableFontColor;
     padding: 0 31px;
     &__table {
       text-align: left;
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
       tr {
         height: 24px;
         border-bottom: 1px solid rgba(72, 63, 86, 0.12);
       }
       th {
         @include tableHeader;
+        padding: 10px 15px;
       }
       td {
         padding: 19px 16px;
@@ -221,8 +246,8 @@ color: $tableFontColor;
     font-family: "Source Code Pro","Courier New",monospace;
     button {
       background-color: $white;
-      border: 1px solid $mainBlue;
-      color: $mainBlue;
+      border: 1px solid $mainGreenColor;
+      color: $mainGreenColor;
       box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
       padding: 8px 12px;
       border-radius: 16px;

@@ -19,7 +19,7 @@ const templateArifacts = item => {
       </div>
       <div className="column_type">
         <div className="type_container">
-          <div className="type_container_item">{item.kind}</div>
+          <div className="type_container_item">{item.kind && item.kind}</div>
         </div>
       </div>
       <div className="column_labels">
@@ -37,10 +37,10 @@ const templateArifacts = item => {
         <div className="producer_container">
           <div className="producer_container_item">
             <Tooltip
-              kind={item.producer.kind}
-              owner={item.producer.owner}
-              to={`/jobs/${item.producer.uri}/info`}
-              name={item.producer.name}
+              kind={item.producer && item.producer.kind}
+              owner={item.producer && item.producer.owner}
+              to={`/jobs/${item.producer && item.producer.uri}/info`}
+              name={item.producer && item.producer.name}
             />
           </div>
         </div>

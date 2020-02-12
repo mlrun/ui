@@ -39,15 +39,23 @@ const JobInternalArtifacts = ({
     const viewedBlocks = document.getElementsByClassName('view')
     if (
       viewedBlocks.length > 0 &&
-      !e.target.closest('tr').classList.contains('view')
+      !e.target
+        .closest('div.jobs__table__item_artifacts_wrapper')
+        .classList.contains('view')
     ) {
       viewedBlocks[0].classList.remove('view')
     }
     e.persist()
     getArtifacts(schema, path).then(() => {
-      e.target.closest('tr').classList.contains('view')
-        ? e.target.closest('tr').classList.remove('view')
-        : e.target.closest('tr').classList.add('view')
+      e.target
+        .closest('div.jobs__table__item_artifacts_wrapper')
+        .classList.contains('view')
+        ? e.target
+            .closest('div.jobs__table__item_artifacts_wrapper')
+            .classList.remove('view')
+        : e.target
+            .closest('div.jobs__table__item_artifacts_wrapper')
+            .classList.add('view')
     })
   }
 
@@ -64,7 +72,7 @@ const JobInternalArtifacts = ({
         setProgress(percentCompleted)
       }
     }
-    e.target.closest('td').classList.add('progress')
+    e.target.closest('div').classList.add('progress')
     jobsApi
       .getJobArtifacts(schema, path, config)
       .then(result => {
@@ -76,9 +84,16 @@ const JobInternalArtifacts = ({
         link.click()
         link.remove()
         setDownloadStatus('Success')
-        setTimeout(() => setDownloadStatus(''), 2000)
         setProgress(0)
         e.target.closest('td').classList.remove('progress')
+      })
+      .then(() => {
+        setTimeout(() => setDownloadStatus(''), 3000)
+        setTimeout(() => {
+          document
+            .getElementsByClassName('jobs_download_status')[0]
+            .classList.remove('jobs_download_status__success')
+        }, 2000)
       })
       .catch(error => {
         if (axios.isCancel(error)) {

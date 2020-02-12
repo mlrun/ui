@@ -23,11 +23,10 @@
     width: 100%;
     top: -38px;
     &__list {
+      @include resetSpaces;
       list-style-type: none;
       display: flex;
       flex-direction: row;
-      margin: 0;
-      padding: 0;
       align-items: flex-end;
       &_item {
         padding: 8px 24px;
@@ -40,8 +39,8 @@
         cursor: pointer;
       }
       .active {
-        border-bottom: 3px solid $tableLink;
-        color: $tableLink;
+        border-bottom: 3px solid $mainGreenColor;
+        color: $mainGreenColor;
       }
     }
   }
@@ -118,10 +117,44 @@
     display: flex;
     &__success {
       right: -25px;
-      color: green;
+      color: $mainGreenColor;
+      border: 1px solid $mainGreenColor;
     }
     &__failed {
       color: red;
+    }
+  }
+  .yaml_modal {
+    z-index: 9999;
+    position: absolute;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: none;
+    background-color: $modalBackground;
+    pre {
+      width: 60%;
+      height: 100%;
+      white-space: pre-wrap;
+      background-color: #fff;
+      padding: 15px;
+      position: relative;
+      overflow-y: auto;
+    }
+    button {
+      position: absolute;
+      right: 1%;
+      top: 1%;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      &:active, &:focus {
+        box-shadow: none;
+        outline: none;
+      }
     }
   }
 }

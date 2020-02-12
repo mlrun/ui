@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import ChipCell from '../ChipCell/ChipCell'
+import ChipCell from '../../elements/ChipCell/ChipCell'
 
 import { formatDatetime } from '../../utils'
 import { cutChips } from '../../utils/cutChips'

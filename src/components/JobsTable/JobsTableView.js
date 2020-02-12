@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
-import ChipCell from '../ChipCell/ChipCell'
-import JobsItemInternal from '../../components/JobsItemInternal/JobsItemInternal'
+import ChipCell from '../../elements/ChipCell/ChipCell'
+import JobsItemInternal from '../JobsItemInternal/JobsItemInternal'
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 import { cutChips } from '../../utils/cutChips'
 import { formatDatetime, truncateUid } from '../../utils'
-import { Link } from 'react-router-dom'
 
 const JobsTableView = ({
   hideChips,
@@ -16,26 +17,32 @@ const JobsTableView = ({
   jobs,
   handleShowElements,
   handleSelectJob,
-  handleCancel,
   match,
-  setDownloadStatus
+  handleHoverOnRowActions,
+  handleMouseLeaveFromRowActions,
+  convertToYaml,
+  ...props
 }) => {
   return (
     <div className="jobs__table" onClick={hideChips}>
       {loading && <Loader />}
       <div className={job.uid && 'jobs__table__item_opened'}>
-        <table>
-          <thead className="jobs__table_head">
-            <tr>
-              <th>Name</th>
-              <th>UID</th>
-              <th>Started at</th>
-              <th>Status</th>
-              <th>Parameters</th>
-              <th>Results</th>
-            </tr>
-          </thead>
-          <tbody className="jobs__table_body">
+        <div className="jobs__table__content">
+          <div className="jobs__table_head">
+            <div className="jobs__table_head_item">Name</div>
+            <div className="jobs__table_head_item jobs__table_smallCell">
+              UID
+            </div>
+            <div className="jobs__table_head_item jobs__table_smallCell">
+              Started at
+            </div>
+            <div className="jobs__table_head_item jobs__table_smallCell">
+              Status
+            </div>
+            <div className="jobs__table_head_item">Parameters</div>
+            <div className="jobs__table_head_item">Results</div>
+          </div>
+          <div className="jobs__table_body">
             {jobs.map((item, i) => {
               item.showedParameters = cutChips(
                 item.parameters,
@@ -48,8 +55,13 @@ const JobsTableView = ({
                 handleShowElements
               )
               return (
-                <tr key={`${item}${i}`}>
-                  <td>
+                <div
+                  key={`${item}${i}`}
+                  className="jobs__table_body__row parent_row"
+                  onMouseEnter={handleHoverOnRowActions}
+                  onMouseLeave={handleMouseLeaveFromRowActions}
+                >
+                  <div className="jobs__table_body__row__cell">
                     <Link
                       to={`/jobs/${item.uid}${
                         match.params.tab ? `/${match.params.tab}` : '/info'
@@ -61,44 +73,48 @@ const JobsTableView = ({
                         {job.uid && `...${item.uid.slice(item.uid.length - 7)}`}
                       </span>
                     </Link>
-                  </td>
-                  <td>
+                  </div>
+                  <div className="jobs__table_body__row__cell jobs__table_smallCell">
                     <span title={item.uid}>{truncateUid(item.uid)}</span>
-                  </td>
-                  <td>{formatDatetime(item.startTime)}</td>
-                  <td>
+                  </div>
+                  <div className="jobs__table_body__row__cell jobs__table_smallCell">
+                    {formatDatetime(item.startTime)}
+                  </div>
+                  <div className="jobs__table_body__row__cell jobs__table_smallCell">
                     <i
                       className={item.state}
                       title={`${item.state[0].toUpperCase()}${item.state.slice(
                         1
                       )}`}
                     />
-                  </td>
-                  <td className="jobs__table_body__chips_cell">
+                  </div>
+                  <div className="jobs__table_body__chips_cell jobs__table_body__row__cell">
                     <ChipCell
                       elements={item.showedParameters}
                       className="jobs__table_body__parameters"
                     />
-                  </td>
-                  <td className="jobs__table_body__chips_cell">
+                  </div>
+                  <div className="jobs__table_body__chips_cell jobs__table_body__row__cell">
                     <ChipCell
                       className="jobs__table_body__results"
                       elements={item.showedResults}
                     />
-                  </td>
-                </tr>
+                  </div>
+                  <div className="jobs__table_body__row__cell row__actions">
+                    <ActionsMenu convertToYaml={convertToYaml} item={item} />
+                  </div>
+                </div>
               )
             })}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
       {job.uid && (
         <JobsItemInternal
           job={job}
-          handleCancel={handleCancel}
           handleShowElements={handleShowElements}
           match={match}
-          setDownloadStatus={setDownloadStatus}
+          {...props}
         />
       )}
     </div>

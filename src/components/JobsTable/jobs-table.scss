@@ -5,35 +5,47 @@
   @include jobsFlex;
   border-top: $tableBorder;
   position: relative;
-  &__wrapper {
-
+  &_smallCell {
+    flex: 0 0 13% !important;
+    max-width: 13% !important;
   }
-  table {
+  &__content {
     width: 100%;
-    border-spacing: 0;
-    border-collapse: collapse;
   }
   &_head {
-    tr {
-      th {
-        @include tableDet;
-        @include tableHeader;
+    display: flex;
+    &_item {
+      max-width: 19%;
+      flex: 0 0 19%;
+      @include tableDet;
+      @include tableHeader;
+      &:last-child {
+        flex: 21% !important;
+        max-width: 21% !important;
+      }
+      &:nth-child(5) {
+        flex: 21% !important;
+        max-width: 21% !important;
       }
     }
   }
   &_body {
-    tr {
-      height: 54px;
-      td {
+    &__row {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      &__cell {
         @include tableDet;
-        padding: 8px;
+        padding: 8px 0;
         font-size: 15px;
         line-height: 18px;
         font-weight: 400;
-        max-width: 150px;
+        max-width: 19%;
+        flex: 0 0 19%;
+        flex-wrap: wrap;
         a {
           text-decoration: none;
-          color: $tableLink;
+          color: $mainGreenColor;
           margin: 0;
           span {
             display: block;
@@ -41,17 +53,14 @@
           }
         }
         i {
-          margin: 0 25px;
-        }
-        span {
-          display: block;
-          color: $mainGreyColor;
+          margin: 0 17px;
         }
       }
     }
     &__chips {
       &_cell {
-        max-width: 200px !important;
+        flex: 21% !important;
+        max-width: 21% !important;
       }
       &_short {
         max-width: 80px;
@@ -99,6 +108,47 @@
     }
     &__results {
       @include chip($resultsBorder);
+    }
+    .row__actions {
+      display: none;
+      position: absolute;
+      right: -10px;
+      top: 15%;
+      border-bottom: none !important;
+      button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        &:active, &:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+      &__container {
+        position: relative;
+      }
+      &__body {
+        z-index: 999;
+        width: 150px;
+        display: none;
+        position: absolute;
+        bottom: -50px;
+        right: 16px;
+        background: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
+        border-radius: 2px;
+        &_option {
+          padding: 17px;
+          cursor: pointer;
+          &:hover {
+            background-color: #F7F7F7;;
+          }
+        }
+      }
+      &_visible .row__actions__body {
+        display: block;
+      }
     }
   }
   .showChips .jobs__table_body__chips_hidden {

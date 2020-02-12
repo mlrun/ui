@@ -1,10 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { formatDatetime } from '../../utils/index'
-import cancel from '../../images/job-details-cancel.png'
-import './artifactsdetails.scss'
-import ArtifactDetailsTab from '../ArtifactsDetailsTab/ArtifactDetailsTab'
 import { Link } from 'react-router-dom'
+
+import { formatDatetime } from '../../utils/index'
+
+import ArtifactDetailsTab from '../ArtifactsDetailsTab/ArtifactDetailsTab'
+
+import cancel from '../../images/cancel.png'
+import './artifactsdetails.scss'
 
 const ArtifactsDetails = ({ artifact, match }) => {
   return artifact ? (
@@ -23,10 +26,7 @@ const ArtifactsDetails = ({ artifact, match }) => {
         <span>{formatDatetime(new Date(artifact.updated))}</span>
       </div>
       <div className="artifact_details_tab">
-        <ArtifactDetailsTab
-          match={match}
-          artifact={artifact}
-        ></ArtifactDetailsTab>
+        <ArtifactDetailsTab match={match} artifact={artifact} />
       </div>
     </div>
   ) : null

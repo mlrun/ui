@@ -1,24 +1,25 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import JobsTable from '../JobsTable/JobsTable'
+import YamlModal from '../../common/YamlModal/YamlModal'
+
 import searchIcon from '../../images/search-icon.png'
 import refreshIcon from '../../images/refresh.png'
-import JobsTable from '../../elements/JobsTable/JobsTable'
+
 import './jobs.scss'
-import PropTypes from 'prop-types'
 
 const JobsView = ({
   match,
   refreshJobs,
-  jobs,
-  job,
-  handleSelectJob,
   handleCancel,
   handleFilterClick,
   setFilter,
   setFilterValue,
-  loading,
   downloadStatus,
-  setDownloadStatus
+  convertedYaml,
+  ...props
 }) => (
   <>
     <div className="jobs__header">
@@ -80,15 +81,8 @@ const JobsView = ({
       >
         Downloading status: {downloadStatus}
       </div>
-      <JobsTable
-        jobs={jobs}
-        handleSelectJob={handleSelectJob}
-        job={job}
-        handleCancel={handleCancel}
-        loading={loading}
-        match={match}
-        setDownloadStatus={setDownloadStatus}
-      />
+      <YamlModal convertedYaml={convertedYaml} />
+      <JobsTable handleCancel={handleCancel} match={match} {...props} />
     </div>
   </>
 )

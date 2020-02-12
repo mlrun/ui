@@ -212,7 +212,7 @@
           cursor: pointer;
           a {
             text-decoration: none;
-            color: $tableLink;
+            color: $mainGreenColor;
           }
         }
       }
@@ -239,10 +239,10 @@
       color: $tableFontColor;
     }
     &_producer {
-      color: $tableLink;
+      color: $mainGreenColor;
       a {
         text-decoration: none;
-        color: $tableLink;
+        color: $mainGreenColor;
       }
     }
     &_started-at {
