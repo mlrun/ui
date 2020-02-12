@@ -11,7 +11,6 @@ const Download = ({ path }) => {
   const [progress, setProgress] = useState(0)
   const [isShowNotification, setShowNotification] = useState(false)
   const [downloadStatus, setDownloadStatus] = useState('success')
-
   let [schema] = /^([\w\d]+)(?=:)/gi.test(path)
     ? path.match(/^([\w\d]+)(?=:)/gi)
     : []
