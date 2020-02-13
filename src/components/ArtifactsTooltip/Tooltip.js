@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-const Tooltip = ({ to, name, kind, owner }) => {
+const Tooltip = ({ to, name, kind = '', owner = '' }) => {
   const [show, setShow] = useState(false)
   const [isBottomPosition, setBottomPosition] = useState(false)
   const parentRef = useRef(null)

@@ -61,39 +61,6 @@
         color: $mainGreyColor;
         text-align: left;
       }
-      div {
-        font-style: normal;
-        font-weight: bold;
-        font-size: 14px;
-        line-height: 24px;
-        color: $mainGreyColor;
-        text-align: left;
-      }
-      div {
-        font-style: normal;
-        font-weight: bold;
-        font-size: 14px;
-        line-height: 24px;
-        color: $mainGreyColor;
-        text-align: left;
-      }
-      div {
-        font-style: normal;
-        font-weight: bold;
-        font-size: 14px;
-        line-height: 24px;
-        color: $mainGreyColor;
-        text-align: left;
-      }
-      div {
-        font-style: normal;
-        font-weight: bold;
-        font-size: 14px;
-        line-height: 24px;
-        color: $mainGreyColor;
-        text-align: left;
-        border-top: $tableBorder;
-      }
     }
   }
 
@@ -108,15 +75,6 @@
       &.active {
         flex-direction: column;
       }
-      .tree_container {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        .tree_container_wrraper {
-          width: 100%;
-          display: flex;
-        }
-      }
       .column_name {
         @include tableDisplay(1.5);
         flex-direction: column;
@@ -129,9 +87,16 @@
           flex: 1;
           align-items: center;
           padding-left: $leftRowOffset;
-        }
-        &:hover {
-          background-color: $selectHover;
+          .iter {
+            display: flex;
+            flex: 1;
+            justify-content: flex-end;
+            padding-right: 50px;
+          }
+          a {
+            text-decoration: none;
+            color: $mainGreenColor;
+          }
         }
       }
       .column_path {
@@ -207,6 +172,9 @@
       &:first-child {
         border-top: $tableBorder;
       }
+      &:hover {
+        background-color: $selectHover;
+      }
     }
   }
   .name_container {
@@ -215,58 +183,6 @@
     height: $heightRowTable;
     &:hover {
       background-color: $selectHover;
-    }
-  }
-  .tree_container {
-    @include tableDisplay(1);
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
-    &_item {
-      @include tableDisplay(1.2);
-      align-items: center;
-      height: $heightRowTable;
-      padding-left: $leftRowOffset;
-      min-width: 200px;
-      .tree_container_name {
-        display: flex;
-        margin-left: 25px;
-      }
-    }
-    .iter_container {
-      display: flex;
-      width: 100%;
-      &_name {
-        @include tableDisplay(1.2);
-        padding-left: $leftRowOffset;
-        min-width: 200px;
-        .iter_value {
-          display: flex;
-          align-items: center;
-          margin-left: 60px;
-          cursor: pointer;
-          a {
-            text-decoration: none;
-            color: $mainGreenColor;
-          }
-        }
-      }
-      &:hover {
-        background-color: $selectHover;
-      }
-    }
-  }
-  img {
-    margin-right: 15px;
-    height: 15px;
-    cursor: pointer;
-    &.close {
-      transform: rotate(0deg);
-      transition: transform 150ms ease;
-    }
-    &.open {
-      transform: rotate(90deg);
-      transition: transform 150ms ease;
     }
   }
   .column {
@@ -297,12 +213,6 @@
     border: $labelBorder;
     box-sizing: border-box;
     border-radius: 31px;
-  }
-}
-
-.hover {
-  &:hover {
-    background-color: $selectHover;
   }
 }
 

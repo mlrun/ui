@@ -31,7 +31,7 @@ const App = () => {
             />
             <Route
               exact
-              path="/artifacts/:name/:artifactId/:iter/:tab"
+              path="/artifacts/:name/:iter/:tab"
               render={routeProps => <Artifacts {...routeProps} />}
             />
             <Route

@@ -71,23 +71,13 @@ const Download = ({ path, schema }) => {
         progress={progress}
         color={progress !== 0 ? '#49436D' : '#fff'}
       >
-        {progress === 0 ? (
-          <image
-            href={download}
-            x="7.5"
-            y="7.5"
-            height="25px"
-            width="25px"
-          ></image>
-        ) : (
-          <image
-            href={cancel}
-            x="7.5"
-            y="7.5"
-            height="25px"
-            width="25px"
-          ></image>
-        )}
+        <image
+          href={progress === 0 ? download : cancel}
+          x="7.5"
+          y="7.5"
+          height="25px"
+          width="25px"
+        />
       </ProgressRing>
       {isShowNotification &&
         createPortal(

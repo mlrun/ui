@@ -6,7 +6,8 @@ import './artifactsfiltermenu.scss'
 
 const ArtifactsFilerMenu = ({ refreshArtifacts, onChangeFilter }) => {
   const [filter, setFilter] = useState({
-    period: new Date().setDate(new Date().getDate() - 7)
+    period: new Date().setDate(new Date().getDate() - 7),
+    tree: 'latest'
   })
 
   const changeFilter = useCallback(
@@ -17,6 +18,15 @@ const ArtifactsFilerMenu = ({ refreshArtifacts, onChangeFilter }) => {
     [filter, onChangeFilter]
   )
 
+  const treeFilter = useCallback(
+    _filter => {
+      setFilter(prevFilter => ({ ...prevFilter, ..._filter }))
+      onChangeFilter()
+      // onChangeFilter({ ...filter, ..._filter })
+    },
+    [onChangeFilter]
+  )
+
   return (
     <div className="artifacts_filter_container">
       <Select
@@ -24,6 +34,13 @@ const ArtifactsFilerMenu = ({ refreshArtifacts, onChangeFilter }) => {
         value={filter.period}
         onChange={value => {
           changeFilter(value)
+        }}
+      />
+      <Select
+        label="Tree:"
+        value={filter.tree}
+        onChange={value => {
+          treeFilter(value)
         }}
       />
       <div className="artifacts_filter_refresh">
