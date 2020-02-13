@@ -63,6 +63,13 @@ const statusOptions = [
   }
 ]
 
+const treeOptions = [
+  {
+    label: 'Latest',
+    value: 'latest'
+  }
+]
+
 const templateOptions = (filter, item, index, onChange) => (
   <div
     className="select_body_item"
@@ -156,7 +163,14 @@ const Select = ({ label, onChange, value }) => {
       let label = checkedOptions.join(', ')
       setValue(label)
     }
-  }, [value])
+    if (label === 'Tree:') {
+      treeOptions.forEach((item, index) => {
+        if (item.value === value) {
+          setValue(item.label)
+        }
+      })
+    }
+  }, [value, label])
 
   useEffect(() => {
     const handlerScroll = () => {
@@ -195,6 +209,8 @@ const Select = ({ label, onChange, value }) => {
             factoryOptions('group', groupOptions, onChange, null)}
           {/status/gi.test(label) &&
             factoryOptions('status', statusOptions, statusChange, value)}
+          {/tree/gi.test(label) &&
+            factoryOptions('tree', treeOptions, onChange, value)}
         </div>
       )}
     </div>

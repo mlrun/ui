@@ -13,8 +13,15 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  .artifact_wrapper_header {
-    .artifact_header {
+  .artifact {
+    &_wrapper_header {
+      .wrapper_updated_download {
+        display: flex;
+        align-items: center;
+      }
+      padding-bottom: 25px;
+    }
+    &_header {
       font-weight: bold;
       color: $tableFontColor;
       font-size: 24px;
@@ -25,11 +32,6 @@
         margin-left: auto;
       }
     }
-    .wrraper {
-      display: flex;
-      align-items: center;
-    }
-    padding-bottom: 25px;
   }
   .artifact {
     &_details_tab {
@@ -48,7 +50,7 @@
             min-height: 38px;
             max-height: 38px;
             a {
-              color: $mainGreenColor;
+              color: $mainGreyColor;
               text-decoration: none;
               cursor: pointer;
               padding: 8px 24px;
@@ -89,7 +91,6 @@
       .iter,
       .labels {
         &_label {
-          min-width: 80px;
           min-width: 100px;
           font-weight: bold;
           font-size: 14px;
@@ -124,7 +125,6 @@
         .uri,
         .workflow {
           &_label {
-            min-width: 80px;
             min-width: 100px;
             font-weight: bold;
             font-size: 14px;

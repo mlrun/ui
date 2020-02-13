@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import api from '../../api/artifacts-api'
 import './artifactsdetailspreview.scss'
 
@@ -36,9 +37,13 @@ const ArtifactsDetailsPreview = ({ artifact }) => {
     data: null
   })
 
-  let isSchemaExist = artifact.target_path.includes('v3io://')
-  let path = isSchemaExist ? artifact.target_path.replace('v3io://', '') : null
-  let schema = isSchemaExist ? artifact.target_path.slice(0, 4) : null
+  let isSchemaExist = /^([\w\d]+)(?=:)/gi.test(artifact.target_path)
+  let path = isSchemaExist
+    ? artifact.target_path.match(/(?<=\/{2})([\w\W\d]+)|^\/([\w\W\d]+)/gi)[0]
+    : null
+  let schema = isSchemaExist
+    ? artifact.target_path.match(/^([\w\d]+)(?=:)/gi)[0]
+    : null
 
   useEffect(() => {
     fetchPreviewData(schema, path ? path : artifact.target_path, setPreview)
@@ -90,6 +95,10 @@ const ArtifactsDetailsPreview = ({ artifact }) => {
       )}
     </div>
   )
+}
+
+ArtifactsDetailsPreview.propTypes = {
+  artifact: PropTypes.shape({}).isRequired
 }
 
 export default ArtifactsDetailsPreview

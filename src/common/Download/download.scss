@@ -10,9 +10,10 @@
   padding: 15px;
   background-color: $white;
   animation: move 2.1s ease-in-out;
+  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
   &.success {
     &_notification {
-      color: $statusCompleted;
+      color: #49AF53;
     }
   }
   &.failed {
@@ -28,11 +29,11 @@
     top: 100px;
     right: -150px;
   }
-  10% {
+  20% {
     top: 100px;
     right: 5px;
   }
-  90% {
+  80% {
     top: 100px;
     right: 5px;
   }

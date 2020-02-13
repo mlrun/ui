@@ -1,5 +1,5 @@
-@import "./variables.scss";
-@import "./mixins.scss";
+@import './variables.scss';
+@import './mixins.scss';
 
 * {
   box-sizing: border-box;
@@ -13,7 +13,7 @@
   width: 100%;
 }
 body {
-  background: #EEEEEE;
+  background: #eeeeee;
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -49,4 +49,8 @@ main {
 .failed {
   @include jobStatus;
   background-color: $statusFailed;
+}
+
+iframe {
+  width: 100%;
 }
