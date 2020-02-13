@@ -22,7 +22,6 @@ const ArtifactsTableBody = ({ item, match }) => {
           >
             {item.key}
           </Link>
-          <div className="iter">{item.iter ? item.iter : 0}</div>
         </div>
       </div>
       <div className="column_path">
@@ -44,12 +43,10 @@ const ArtifactsTableBody = ({ item, match }) => {
           {item.labels &&
             parseKeyValues(item.labels).map((label, index) => {
               return (
-                <div
-                  key={index}
-                  className="labels_container_item"
-                  title={label}
-                >
-                  <span className="label">{label}</span>
+                <div key={index} className="labels_container_item">
+                  <span className="label" title={label}>
+                    {label}
+                  </span>
                 </div>
               )
             })}
