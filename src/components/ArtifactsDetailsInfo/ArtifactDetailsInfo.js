@@ -1,5 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { formatDatetime } from '../../utils/index'
+import { parseKeyValues } from '../../utils'
+
 const ArtifactDetailsInfo = ({ artifact }) => {
   return (
     <>
@@ -39,7 +42,7 @@ const ArtifactDetailsInfo = ({ artifact }) => {
         <div className="details_container">
           <div className="labels_label">Lables</div>
           <div className="labels_value">
-            {artifact.labels.map((label, index) => {
+            {parseKeyValues(artifact.labels).map((label, index) => {
               return (
                 <div key={index} className="labels_container_item">
                   <span className="label">{label}</span>
@@ -80,6 +83,10 @@ const ArtifactDetailsInfo = ({ artifact }) => {
       </div>
     </>
   )
+}
+
+ArtifactDetailsInfo.propTypes = {
+  artifact: PropTypes.shape({}).isRequired
 }
 
 export default ArtifactDetailsInfo

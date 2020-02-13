@@ -179,6 +179,7 @@ color: $tableFontColor;
         }
         &__header {
           flex: 1;
+          text-transform: capitalize;
         }
       }
       pre {

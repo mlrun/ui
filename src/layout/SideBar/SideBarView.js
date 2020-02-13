@@ -6,7 +6,7 @@ import artifactsIcon from '../../images/file-chart.png'
 
 import './sidebar.scss'
 
-const SideBarView = ({ currentPage, onClick }) => {
+const SideBarView = ({ currentPage }) => {
   const menuList = [
     { img: jobsIcon, value: 'jobs' },
     { img: artifactsIcon, value: 'artifacts' }
@@ -22,12 +22,7 @@ const SideBarView = ({ currentPage, onClick }) => {
                 'active'} sidebar__menu__item`}
               title={`${item.value[0].toUpperCase()}${item.value.slice(1)}`}
             >
-              <Link
-                to={`/${item.value}`}
-                onClick={() =>
-                  onClick(item.img === jobsIcon ? 'jobs' : 'artifacts')
-                }
-              >
+              <Link to={`/${item.value}`}>
                 <img src={item.img} alt="Page icon" />
               </Link>
             </li>

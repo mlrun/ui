@@ -1,33 +1,25 @@
 import artifactsApi from '../api/artifacts-api'
-import { parseKeyValues } from '../utils'
-import _ from 'lodash'
+// import { parseKeyValues } from '../utils'
 
-// import artifactsMock from '../artifacts.json'
 const artifactsAction = {
   fetchArtifacts: () => dispatch => {
     return artifactsApi.getArtifacts().then(({ data }) => {
-      let groupArtifacts = _(data.artifacts)
-        .groupBy('key')
-        .mapValues(item => _.groupBy(item, 'tree'))
-        .value()
+      let artifacts = Object.values(
+        data.artifacts.reduce((prev, curr) => {
+          if (!prev[curr.key]) prev[curr.key] = { key: curr.key, data: [] }
+          if ('link_iteration' in curr) {
+            prev[curr.key] = Object.assign(prev[curr.key], {
+              link_iteration: curr
+            })
+          } else {
+            prev[curr.key].data.push(curr)
+          }
+          return prev
+        }, {})
+      )
 
-      let newArtifacts = []
-
-      for (const key in groupArtifacts) {
-        let newTree = []
-        for (const _key in groupArtifacts[key]) {
-          let group = groupArtifacts[key][_key].map(item => {
-            return Object.assign(item, { labels: parseKeyValues(item.labels) })
-          })
-          newTree.push(group)
-        }
-        newArtifacts.push({
-          key: key,
-          tree: newTree
-        })
-      }
-      dispatch(artifactsAction.setArtifacts({ artifacts: newArtifacts }))
-      return newArtifacts
+      dispatch(artifactsAction.setArtifacts({ artifacts: artifacts }))
+      return artifacts
     })
   },
   selectArtifact: selectArtifact => ({
