@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ArtifactsFilerMenu from '../ArtifacstFilterMenu/ArtifactsFilerMenu'
+import ArtifactsFilerMenu from '../ArtifacstFilterMenu/ArtifactsFilterMenu'
 import Loader from '../../common/Loader/Loader'
 import ArtifactsTable from '../../elements/ArtifactsTable/ArtifactsTable'
 
