@@ -11,6 +11,8 @@
 }
 
 @mixin tableDet {
+  display: flex;
+  align-items: center;
   text-align: left;
   border-bottom: $tableBorder;
   &:first-child {
@@ -20,7 +22,7 @@
 
 @mixin chip($border) {
   padding: 8px 14px;
-  margin: 5px 4px;
+  margin: 5px 2px;
   cursor: default;
   display: inline-flex;
   align-items: center;
@@ -80,7 +82,7 @@
 
 @mixin artifactsTableHeader($flex, $lineHeight) {
   flex: $flex;
-  line-height: $lineHeight; 
+  line-height: $lineHeight;
 }
 
 @mixin tableHeader {
@@ -88,5 +90,10 @@
   font-size: 14px;
   line-height: 24px;
   color: $mainGreyColor;
-  padding: 10px 16px;
+  padding: 10px 0;
+}
+
+@mixin resetSpaces {
+  margin: 0;
+  padding: 0;
 }

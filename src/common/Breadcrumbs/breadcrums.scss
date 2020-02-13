@@ -1,13 +1,12 @@
 @import "../../scss/variables";
+@import "../../scss/mixins";
 
 .breadcrumbs {
   font-size: 20px;
   line-height: 23px;
-  margin: 0;
-  padding: 0;
+  @include resetSpaces;
   &__list {
-    margin: 0;
-    padding: 0;
+    @include resetSpaces;
     list-style-type: none;
     display: flex;
     flex-wrap: wrap;
@@ -16,10 +15,6 @@
     letter-spacing: 0.00938em;
     &__item {
       color: $mainGreyColor;
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
       &:last-child {
         color: $tableFontColor;
         font-weight: 500;

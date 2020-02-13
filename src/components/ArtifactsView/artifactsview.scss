@@ -3,8 +3,8 @@
   &_container {
     display: flex;
     .active {
-      color: $tableLink;
-      border-bottom: 3px solid $tableLink;
+      color: $mainGreenColor;
+      border-bottom: 3px solid $mainGreenColor;
     }
   }
   &_item {

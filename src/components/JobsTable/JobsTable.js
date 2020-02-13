@@ -1,18 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import './jobs-table.scss'
 import JobsTableView from './JobsTableView'
 
-const JobsTable = ({
-  jobs,
-  handleSelectJob,
-  job,
-  handleCancel,
-  loading,
-  match,
-  setDownloadStatus
-}) => {
+import './jobs-table.scss'
+
+const JobsTable = props => {
   const handleShowElements = e => {
     if (
       e.target.className === 'jobs__table_body__results' ||
@@ -46,17 +38,27 @@ const JobsTable = ({
     }
   }
 
+  const handleHoverOnRowActions = e => {
+    const target = e.target.closest('.parent_row')
+    target.lastElementChild.style.display = 'block'
+  }
+
+  const handleMouseLeaveFromRowActions = e => {
+    const target = e.target.closest('.parent_row')
+    const actions = document.getElementsByClassName('row__actions_visible')[0]
+    target.lastElementChild.style.display = 'none'
+    if (actions) {
+      actions.classList.remove('row__actions_visible')
+    }
+  }
+
   return (
     <JobsTableView
       hideChips={hideChips}
-      loading={loading}
-      job={job}
-      jobs={jobs}
       handleShowElements={handleShowElements}
-      handleSelectJob={handleSelectJob}
-      handleCancel={handleCancel}
-      match={match}
-      setDownloadStatus={setDownloadStatus}
+      handleHoverOnRowActions={handleHoverOnRowActions}
+      handleMouseLeaveFromRowActions={handleMouseLeaveFromRowActions}
+      {...props}
     />
   )
 }
