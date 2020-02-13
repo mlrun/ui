@@ -11,7 +11,7 @@ import Page from './layout/Page/Page'
 import './scss/main.scss'
 
 const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
-const Artifacts = React.lazy(() => import('./components/Arifacts/Artifacts'))
+const Artifacts = React.lazy(() => import('./components/Artifacts/Artifacts'))
 
 const App = () => {
   return (
