@@ -63,9 +63,9 @@ const JobsTableView = ({
                 >
                   <div className="jobs__table_body__row__cell">
                     <Link
-                      to={`/jobs/${item.uid}${
-                        match.params.tab ? `/${match.params.tab}` : '/info'
-                      }`}
+                      to={`/projects/${match.params.projectName}/jobs/${
+                        item.uid
+                      }${match.params.tab ? `/${match.params.tab}` : '/info'}`}
                       onClick={() => handleSelectJob(item)}
                     >
                       {item.name}

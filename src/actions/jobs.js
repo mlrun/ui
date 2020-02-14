@@ -30,8 +30,8 @@ const jobsActions = {
       })
       .catch(() => {})
   },
-  fetchJobLogs: id => dispatch => {
-    return jobsApi.getJobLogs(id).then(result => {
+  fetchJobLogs: (id, project) => dispatch => {
+    return jobsApi.getJobLogs(id, project).then(result => {
       dispatch(jobsActions.setJobLogs(result.data))
     })
   },

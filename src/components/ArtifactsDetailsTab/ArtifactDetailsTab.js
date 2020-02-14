@@ -10,13 +10,13 @@ const ArtifactDetailsTab = ({ match, artifact }) => {
       <div className="tabs_container_menu">
         <Link
           className={match.params.tab === 'info' ? 'active' : null}
-          to={`/artifacts/${match.params.name}/${match.params.iter}/info`}
+          to={`/projects/${match.params.projectName}/artifacts/${match.params.name}/info`}
         >
           Info
         </Link>
         <Link
           className={match.params.tab === 'preview' ? 'active' : null}
-          to={`/artifacts/${match.params.name}/${match.params.iter}/preview`}
+          to={`/projects/${match.params.projectName}/artifacts/${match.params.name}/preview`}
         >
           Preview
         </Link>

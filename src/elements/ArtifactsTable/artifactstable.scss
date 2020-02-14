@@ -34,7 +34,7 @@
           @include artifactsTableHeader(1, 44px);
           min-width: 80px;
         }
-        &_started_at {
+        &_updated_at {
           @include artifactsTableHeader(1, 44px);
           min-width: 80px;
         }
@@ -156,10 +156,10 @@
           @include tableColumn(1);
         }
       }
-      .column_started_at {
+      .column_updated_at {
         min-width: 80px;
         @include tableDisplay(1);
-        .started_at {
+        .updated_at {
           @include tableColumn(1);
         }
       }

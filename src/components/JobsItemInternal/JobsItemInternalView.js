@@ -35,34 +35,52 @@ const JobsItemInternalView = ({
         </span>
       </div>
       <div className="jobs__table__item__header_buttons">
-        <Link to="/jobs" onClick={handleCancel}>
+        <Link
+          to={`/projects/${match.params.projectName}/jobs`}
+          onClick={handleCancel}
+        >
           <img src={cancel} alt="cancel" />
         </Link>
       </div>
     </div>
     <div>
       <ul className="jobs__table__item__menu">
-        <Link to={`/jobs/${job.uid}/info`} onClick={handleMenuClick}>
+        <Link
+          to={`/projects/${match.params.projectName}/jobs/${job.uid}/info`}
+          onClick={handleMenuClick}
+        >
           <li className="jobs__table__item__menu_item active" id="info">
             Info
           </li>
         </Link>
-        <Link to={`/jobs/${job.uid}/inputs`} onClick={handleMenuClick}>
+        <Link
+          to={`/projects/${match.params.projectName}/jobs/${job.uid}/inputs`}
+          onClick={handleMenuClick}
+        >
           <li className="jobs__table__item__menu_item" id="inputs">
             Inputs
           </li>
         </Link>
-        <Link to={`/jobs/${job.uid}/artifacts`} onClick={handleMenuClick}>
+        <Link
+          to={`/projects/${match.params.projectName}/jobs/${job.uid}/artifacts`}
+          onClick={handleMenuClick}
+        >
           <li className="jobs__table__item__menu_item" id="artifacts">
             Artifacts
           </li>
         </Link>
-        <Link to={`/jobs/${job.uid}/results`} onClick={handleMenuClick}>
+        <Link
+          to={`/projects/${match.params.projectName}/jobs/${job.uid}/results`}
+          onClick={handleMenuClick}
+        >
           <li className="jobs__table__item__menu_item" id="results">
             Results
           </li>
         </Link>
-        <Link to={`/jobs/${job.uid}/logs`} onClick={handleMenuClick}>
+        <Link
+          to={`/projects/${match.params.projectName}/jobs/${job.uid}/logs`}
+          onClick={handleMenuClick}
+        >
           <li className="jobs__table__item__menu_item" id="logs">
             Logs
           </li>
@@ -77,7 +95,7 @@ const JobsItemInternalView = ({
       <JobInternalArtifacts job={job} setDownloadStatus={setDownloadStatus} />
     )}
     {match.params.tab === 'results' && <JobInternalResults job={job} />}
-    {match.params.tab === 'logs' && <JobInternalLogs />}
+    {match.params.tab === 'logs' && <JobInternalLogs match={match} />}
   </div>
 )
 

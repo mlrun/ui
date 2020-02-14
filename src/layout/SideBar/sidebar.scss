@@ -1,5 +1,5 @@
-@import "../../scss/variables";
-@import "../../scss/mixins";
+@import '../../scss/variables';
+@import '../../scss/mixins';
 
 .sidebar {
   @include fixed;
@@ -19,19 +19,30 @@
   }
   &__menu {
     padding: 8px 0;
+    padding-top: 0;
+    margin-top: 0;
     list-style-type: none;
     &__item {
       padding: 8px 16px;
       display: flex;
       justify-content: center;
+      height: 95px;
       a {
         display: flex;
-        justify-content: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: $white;
+        img {
+          width: 25px;
+          height: 26px;
+          margin-bottom: 5px;
+        }
       }
     }
     .active {
-      background-color: #dedede;
+      background-color: $mainGreenColor;
     }
   }
-
 }

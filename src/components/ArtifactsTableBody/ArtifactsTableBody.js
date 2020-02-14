@@ -15,7 +15,7 @@ const ArtifactsTableBody = ({ item, match }) => {
       <div className="column_name">
         <div className="column_name_item">
           <Link
-            to={`/artifacts/${item.key}/${item.iter ? item.iter : 0}/${
+            to={`/projects/${match.params.projectName}/artifacts/${item.key}/${
               match.params.tab ? match.params.tab : 'info'
             }`}
             onClick={() => dispatch(actionArtifact.selectArtifact(item))}
@@ -69,9 +69,9 @@ const ArtifactsTableBody = ({ item, match }) => {
           <div className="hash_container_item">{truncateUid(item.hash)}</div>
         </div>
       </div>
-      <div className="column_started_at">
-        <div className="started_at_container">
-          <div className="started_at_container_item">
+      <div className="column_updated_at">
+        <div className="updated_at_container">
+          <div className="updated_at_container_item">
             {formatDatetime(new Date(item.updated))}
           </div>
         </div>

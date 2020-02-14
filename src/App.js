@@ -10,6 +10,7 @@ import Page from './layout/Page/Page'
 
 import './scss/main.scss'
 
+const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
 const Artifacts = React.lazy(() => import('./components/Artifacts/Artifacts'))
 
@@ -20,26 +21,31 @@ const App = () => {
         <Suspense fallback={<p>Loading...</p>}>
           <Switch>
             <Route
-              path="/jobs/:jobId/:tab"
+              path="/projects"
+              exact
+              render={routeProps => <Projects {...routeProps} />}
+            />
+            <Route
+              path="/projects/:projectName/jobs/:jobId/:tab"
               exact
               render={routeProps => <Jobs {...routeProps} />}
             />
             <Route
-              path="/jobs"
+              path="/projects/:projectName/jobs"
               exact
               render={routeProps => <Jobs {...routeProps} />}
             />
             <Route
               exact
-              path="/artifacts/:name/:iter/:tab"
+              path="/projects/:projectName/artifacts/:name/:tab"
               render={routeProps => <Artifacts {...routeProps} />}
             />
             <Route
               exact
-              path="/artifacts"
+              path="/projects/:projectName/artifacts"
               render={routeProps => <Artifacts {...routeProps} />}
             />
-            <Redirect to="/jobs" />
+            <Redirect to="/projects" />
           </Switch>
         </Suspense>
       </Page>

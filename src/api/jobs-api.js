@@ -2,7 +2,7 @@ import httpClient from '../httpClient'
 
 export default {
   getAll: () => httpClient.get('/runs'),
-  getJobLogs: id => httpClient.get(`/log/default/${id}`),
+  getJobLogs: (id, project) => httpClient.get(`/log/${project}/${id}`),
   getJobArtifacts: (schema, path, config) => {
     return schema
       ? httpClient.get(`/files?schema=${schema}&path=${path}`, config)
