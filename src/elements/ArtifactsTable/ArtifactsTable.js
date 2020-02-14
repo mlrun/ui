@@ -32,12 +32,11 @@ const ArtifactsTable = ({ match, artifacts, selectArtifact }) => {
               item = artifact.data[0]
             }
             return (
-              <div
+              <ArtifactsTableBody
                 key={item.hash + index || item.tree + index}
-                className="table_body_item"
-              >
-                <ArtifactsTableBody item={item} match={match} />
-              </div>
+                item={item}
+                match={match}
+              />
             )
           })}
         </div>

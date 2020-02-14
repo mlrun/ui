@@ -1,15 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import jobsIcon from '../../images/check-all.png'
-import artifactsIcon from '../../images/file-chart.png'
-
+// import jobsIcon from '../../images/check-all.png'
+// import artifactsIcon from '../../images/file-chart.png'
+import projectsIcon from '../../images/projects.png'
 import './sidebar.scss'
 
 const SideBarView = ({ currentPage }) => {
   const menuList = [
-    { img: jobsIcon, value: 'jobs' },
-    { img: artifactsIcon, value: 'artifacts' }
+    // { img: jobsIcon, value: 'jobs' },
+    // { img: artifactsIcon, value: 'artifacts' },
+    { img: projectsIcon, value: 'projects' }
   ]
   return (
     <div className="sidebar">

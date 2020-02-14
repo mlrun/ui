@@ -1,5 +1,4 @@
 import artifactsApi from '../api/artifacts-api'
-// import { parseKeyValues } from '../utils'
 
 const artifactsAction = {
   fetchArtifacts: () => dispatch => {

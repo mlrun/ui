@@ -1,0 +1,36 @@
+@import '../../scss//variables.scss';
+
+.yaml_modal {
+  z-index: 9999;
+  position: absolute;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: none;
+  background-color: $modalBackground;
+  pre {
+    width: 60%;
+    height: 100%;
+    white-space: pre-wrap;
+    background-color: #fff;
+    padding: 15px;
+    position: relative;
+    overflow-y: auto;
+  }
+  button {
+    position: absolute;
+    right: 1%;
+    top: 1%;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    &:active,
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+}

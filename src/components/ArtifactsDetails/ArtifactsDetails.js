@@ -17,7 +17,7 @@ const ArtifactsDetails = ({ artifact, match }) => {
         <div className="artifact_header">
           {artifact.key}
           <div className="close_details_artifact">
-            <Link to="/artifacts">
+            <Link to={`/projects/${match.params.projectName}/artifacts`}>
               <img src={cancel} alt="cancel" />
             </Link>
           </div>

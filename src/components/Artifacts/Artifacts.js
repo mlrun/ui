@@ -82,14 +82,18 @@ const Artifacts = ({
         match.params.name !== undefined &&
         Object.keys(artifactsStore.selectArtifact).length === 0
       ) {
-        const { name, iter } = match.params
+        const { name } = match.params
         if (artifactsStore.artifacts.length !== 0) {
           const [searchItem] = artifactsStore.artifacts.filter(
             item => item.key === name
           )
+
           const [artifact] = searchItem.data.filter(item => {
-            const _iter = item.iter ? item.iter : 0
-            return _iter === parseInt(iter)
+            if (searchItem.link_iteration) {
+              const { link_iteration } = searchItem.link_iteration
+              return link_iteration === item.iter
+            }
+            return true
           })
           selectArtifact(artifact)
         }

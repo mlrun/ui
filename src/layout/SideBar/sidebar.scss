@@ -1,5 +1,5 @@
-@import "../../scss/variables";
-@import "../../scss/mixins";
+@import '../../scss/variables';
+@import '../../scss/mixins';
 
 .sidebar {
   @include fixed;
@@ -26,12 +26,20 @@
       justify-content: center;
       a {
         display: flex;
-        justify-content: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: $white;
+        img {
+          width: 25px;
+          height: 26px;
+          margin-bottom: 5px;
+        }
       }
     }
     .active {
       background-color: #dedede;
     }
   }
-
 }
