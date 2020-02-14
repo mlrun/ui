@@ -1,17 +1,53 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import Tooltip from '../ArtifactsTooltip/Tooltip'
 import Download from '../../common/Download/Download'
 import actionArtifact from '../../actions/artifacts'
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
+import YAML from 'yamljs'
 import { truncateUid, formatDatetime } from '../../utils'
 import { Link } from 'react-router-dom'
 import { parseKeyValues } from '../../utils'
 import { useDispatch } from 'react-redux'
-
+import YamlModal from '../../common/YamlModal/YamlModal'
 const ArtifactsTableBody = ({ item, match }) => {
   const dispatch = useDispatch()
+  const [isShowYamlButton, setShowYamButtom] = useState(false)
+  const [showYamlModal, setShowYamlModal] = useState(false)
+  const ref = useRef(null)
+
+  const handlerActionMenu = e => {
+    setShowYamlModal(true)
+  }
+
+  const handlerModelClose = () => {
+    setShowYamButtom(false)
+  }
+
+  const handlerMouseEnter = e => {
+    if (
+      !e.target.classList.value.includes('yaml_modal') &&
+      e.target.classList.value.length !== 0
+    ) {
+      setShowYamButtom(!isShowYamlButton)
+    }
+  }
+  const handlerMouseLeave = e => {
+    if (
+      !e.target.classList.value.includes('yaml_modal') &&
+      e.target.classList.value.length !== 0
+    ) {
+      setShowYamButtom(false)
+    }
+  }
+
   return (
-    <>
+    <div
+      className="table_body_item"
+      ref={ref}
+      onMouseEnter={handlerMouseEnter}
+      onMouseLeave={handlerMouseLeave}
+    >
       <div className="column_name">
         <div className="column_name_item">
           <Link
@@ -79,7 +115,21 @@ const ArtifactsTableBody = ({ item, match }) => {
       <div className="column_download">
         <Download path={item.target_path} />
       </div>
-    </>
+      {isShowYamlButton && (
+        <div className="column_yaml_button">
+          <ActionsMenu
+            convertToYaml={handlerActionMenu}
+            item={YAML.stringify(item)}
+          />
+        </div>
+      )}
+      {showYamlModal && (
+        <YamlModal
+          convertedYaml={YAML.stringify(item)}
+          close={handlerModelClose}
+        />
+      )}
+    </div>
   )
 }
 

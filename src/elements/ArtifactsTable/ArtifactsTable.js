@@ -16,7 +16,7 @@ const ArtifactsTable = ({ match, artifacts, selectArtifact }) => {
             <div className="table_header_labels">Labels</div>
             <div className="table_header_producer">Producer</div>
             <div className="table_header_hash">Hash</div>
-            <div className="table_header_updated_at">Updated atI</div>
+            <div className="table_header_updated_at">Updated at</div>
             <div className="table_header_download"></div>
           </div>
         </div>
@@ -32,12 +32,11 @@ const ArtifactsTable = ({ match, artifacts, selectArtifact }) => {
               item = artifact.data[0]
             }
             return (
-              <div
+              <ArtifactsTableBody
                 key={item.hash + index || item.tree + index}
-                className="table_body_item"
-              >
-                <ArtifactsTableBody item={item} match={match} />
-              </div>
+                item={item}
+                match={match}
+              />
             )
           })}
         </div>
