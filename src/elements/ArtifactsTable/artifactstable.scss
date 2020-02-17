@@ -191,6 +191,19 @@
           }
         }
       }
+      .column_yaml_button {
+        position: absolute;
+        right: 0;
+        width: 20px;
+        height: 55px;
+        @include tableDisplay(0.1);
+        align-items: center;
+        .row__actions__container {
+          button {
+            padding: 0;
+          }
+        }
+      }
       &:first-child {
         border-top: $tableBorder;
       }

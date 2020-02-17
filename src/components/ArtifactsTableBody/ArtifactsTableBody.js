@@ -10,7 +10,7 @@ import { truncateUid, formatDatetime } from '../../utils'
 import { Link } from 'react-router-dom'
 import { parseKeyValues } from '../../utils'
 import { useDispatch } from 'react-redux'
-
+import YamlModal from '../../common/YamlModal/YamlModal'
 const ArtifactsTableBody = ({ item, match }) => {
   const dispatch = useDispatch()
 
