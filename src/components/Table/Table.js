@@ -50,7 +50,7 @@ Table.defaultProps = {
 
 Table.propTypes = {
   handleCancel: PropTypes.func.isRequired,
-  handleSelectJob: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func.isRequired,
   job: PropTypes.shape({}),
   jobs: PropTypes.arrayOf(PropTypes.shape({})),
   loading: PropTypes.bool.isRequired,

@@ -4,10 +4,8 @@ import PropTypes from 'prop-types'
 import ChipCell from '../../elements/ChipCell/ChipCell'
 
 import { formatDatetime } from '../../utils'
-import { cutChips } from '../../utils/cutChips'
 
-const JobInternalInfo = ({ job, handleShowElements }) => {
-  const parameters = cutChips(job.parameters, 8, handleShowElements)
+const JobInternalInfo = ({ job }) => {
   return (
     <div>
       <ul className="jobs__table__item_details">
@@ -37,7 +35,7 @@ const JobInternalInfo = ({ job, handleShowElements }) => {
           <div className="jobs__table__item_details_item_data">
             {
               <ChipCell
-                elements={parameters}
+                elements={job.parameters}
                 className="jobs__table__item_details_item_data__parameters"
               />
             }
@@ -86,8 +84,7 @@ const JobInternalInfo = ({ job, handleShowElements }) => {
 }
 
 JobInternalInfo.propTypes = {
-  job: PropTypes.shape({}).isRequired,
-  handleShowElements: PropTypes.func.isRequired
+  job: PropTypes.shape({}).isRequired
 }
 
 export default JobInternalInfo

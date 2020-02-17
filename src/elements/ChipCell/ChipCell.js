@@ -24,26 +24,29 @@ const ChipCell = ({ elements, className }) => {
   }
 
   const chips = cutChips(elements, 2)
-  return chips
+
+  return elements
     ? chips.sortedArr.map((item, i) => {
         return (
-          <div className="table_body__chips__block" key={`${item}${i}`}>
+          <div
+            className="jobs__table_body__chips__block"
+            key={`${item.value}${i}`}
+          >
             <Chip
-              key={item}
+              key={item.value}
               className={className}
               onClick={handleShowElements}
-              value={item}
-              title={item}
+              value={item.value}
+              title={item.value}
             />
-            {chips.hiddenChips && (
-              <div className="table_body__chips_hidden">
-                {chips.hiddenChips.map(element => (
+            {elements.hiddenChips && (
+              <div className="jobs__table_body__chips_hidden">
+                {elements.hiddenChips.map(element => (
                   <Chip
-                    key={element}
+                    key={element.value}
                     className={className}
-                    value={element}
-                    title={element}
-                    onClick={handleShowElements}
+                    value={element.value}
+                    title={element.value}
                   />
                 ))}
               </div>

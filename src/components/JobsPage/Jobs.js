@@ -10,8 +10,6 @@ import { formatDatetime, truncateUid } from '../../utils'
 
 const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [jobs, setJobs] = useState([])
-  const [filter, setFilter] = useState('')
-  const [filterValue, setFilterValue] = useState('')
   const [loading, setLoading] = useState(true)
   const [convertedYaml, setConvertedYaml] = useState()
   const tableHeaders = [
@@ -111,21 +109,6 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
     setSelectedJob({})
   }
 
-  const handleFilterByStatus = filter => {
-    if (filter === 'All') {
-      setJobs(jobsStore.jobs)
-      return
-    }
-    let filteredJobs = jobsStore.jobs.filter(
-      item => item.state === filter.toLowerCase()
-    )
-    setJobs(filteredJobs)
-  }
-
-  const handleFilterClick = () => {
-    if (filter === 'status') handleFilterByStatus(filterValue)
-  }
-
   const convertToYaml = item => {
     document.getElementById('yaml_modal').style.display = 'flex'
     const jobJson = item
@@ -136,20 +119,18 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
 
   return (
     <Content
-      tableContent={tableContent}
       jobs={jobs}
       selectedItem={jobsStore.selectedJob}
       match={match}
       refresh={refreshJobs}
-      handleSelectJob={handleSelectJob}
+      handleSelectItem={handleSelectJob}
       handleCancel={handleCancel}
-      handleFilterClick={handleFilterClick}
-      setFilter={setFilter}
-      setFilterValue={setFilterValue}
       loading={loading}
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
+      filters={['period', 'status']}
       tableHeaders={tableHeaders}
+      tableContent={tableContent}
     />
   )
 }

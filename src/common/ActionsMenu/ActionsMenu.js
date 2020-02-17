@@ -6,8 +6,13 @@ import actionMenuIcon from '../../images/elipsis.png'
 const ActionsMenu = ({ convertToYaml, item }) => {
   const showActionsList = e => {
     const actionsBlock = e.target.closest('.row__actions__container')
-    actionsBlock.classList.add('row__actions_visible')
+    if (actionsBlock.classList.value.includes('row__actions_visible')) {
+      actionsBlock.classList.remove('row__actions_visible')
+    } else {
+      actionsBlock.classList.add('row__actions_visible')
+    }
   }
+
   return (
     <div className="row__actions__container">
       <button onClick={showActionsList}>
@@ -16,7 +21,9 @@ const ActionsMenu = ({ convertToYaml, item }) => {
       <div className="row__actions__body">
         <div
           className="row__actions__body_option"
-          onClick={() => convertToYaml(item)}
+          onClick={() => {
+            convertToYaml(item)
+          }}
         >
           View YAML
         </div>
@@ -31,7 +38,7 @@ ActionsMenu.defaultProps = {
 
 ActionsMenu.propTypes = {
   convertToYaml: PropTypes.func.isRequired,
-  item: PropTypes.shape({})
+  item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string])
 }
 
 export default ActionsMenu

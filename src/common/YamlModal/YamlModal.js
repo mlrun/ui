@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import cancel from '../../images/cancel.png'
+import './yamlmodal.scss'
 
 const YamlModal = ({ convertedYaml }) => {
   const modal = useRef()

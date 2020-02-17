@@ -22,6 +22,7 @@
     &_label {
       color: $mainGreyColor;
       padding: 0 5px 0 15px;
+      text-transform: capitalize;
     }
     &_value {
       min-width: 96px;

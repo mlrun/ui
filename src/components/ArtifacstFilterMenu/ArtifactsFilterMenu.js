@@ -3,18 +3,18 @@ import PropTypes from 'prop-types'
 import Select from '../../common/Select/Select'
 import './artifactsfiltermenu.scss'
 
-const ArtifactsFilerMenu = ({ filters }) => {
+const ArtifactsFilterMenu = ({ filters }) => {
   return (
     <div className="content__action_bar__filters">
       {filters.map(filter => (
-        <Select filter={filter} />
+        <Select filter={filter} key={filter} />
       ))}
     </div>
   )
 }
 
-ArtifactsFilerMenu.propTypes = {
+ArtifactsFilterMenu.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
-export default ArtifactsFilerMenu
+export default ArtifactsFilterMenu

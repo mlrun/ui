@@ -8,17 +8,25 @@ import Loader from '../../common/Loader/Loader'
 
 import refreshIcon from '../../images/refresh-logs.png'
 
-const JobInternalLogs = ({ jobsStore, fetchJobLogs }) => {
+const JobInternalLogs = ({ jobsStore, fetchJobLogs, match }) => {
   const [loading, setLoading] = useState(false)
 
   const refreshLogs = useCallback(
     noCahche => {
       if (noCahche || jobsStore.logs.length === 0) {
         setLoading(true)
-        fetchJobLogs(jobsStore.selectedJob.uid).then(() => setLoading(false))
+        fetchJobLogs(
+          jobsStore.selectedJob.uid,
+          match.params.projectName
+        ).then(() => setLoading(false))
       }
     },
-    [fetchJobLogs, jobsStore.logs.length, jobsStore.selectedJob.uid]
+    [
+      fetchJobLogs,
+      jobsStore.logs.length,
+      jobsStore.selectedJob.uid,
+      match.params.projectName
+    ]
   )
 
   useEffect(() => {
