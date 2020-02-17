@@ -74,13 +74,8 @@ const JobsView = ({
           <img src={refreshIcon} alt="refresh" />
         </button>
       </div>
-      <div
-        className={`jobs_download_status ${
-          downloadStatus === 'Success' ? 'jobs_download_status__success' : ''
-        }`}
-      >
-        Downloading status: {downloadStatus}
-      </div>
+
+
       <YamlModal convertedYaml={convertedYaml} />
       <JobsTable handleCancel={handleCancel} match={match} {...props} />
     </div>

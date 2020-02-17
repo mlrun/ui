@@ -7,7 +7,7 @@ import arrow from '../../images/arrow.png'
 
 import './breadcrums.scss'
 
-const Breadcrumbs = ({ match = { path: '', url: '' }, onClick }) => {
+const Breadcrumbs = ({ match, onClick }) => {
   const pathItems = match.path.slice(1).split('/')
   const urlItems = match.url.slice(1).split('/')
 

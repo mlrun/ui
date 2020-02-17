@@ -1,0 +1,165 @@
+@import '../../scss/variables';
+@import '../../scss/mixins';
+
+.table {
+  @include jobsFlex;
+  border-top: $tableBorder;
+  position: relative;
+  &__content {
+    width: 100%;
+  }
+  &_head {
+    display: flex;
+    &_item {
+      @include tableDet;
+      @include tableHeader;
+    }
+    .header {
+      &_medium {
+        max-width: 19%;
+        flex: 0 0 19%;
+      }
+      &_small {
+        flex: 0 0 13% !important;
+        max-width: 13% !important;
+      }
+      &_big {
+        flex: 21% !important;
+        max-width: 21% !important;
+      }
+    }
+  }
+  &_body {
+    &__row {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      &__cell {
+        @include tableDet;
+        padding: 8px 0;
+        font-size: 15px;
+        line-height: 18px;
+        font-weight: 400;
+        flex-wrap: wrap;
+        a {
+          text-decoration: none;
+          color: $mainGreenColor;
+          margin: 0;
+          span {
+            display: block;
+            color: $mainGreyColor;
+          }
+        }
+        i {
+          margin: 0 17px;
+        }
+      }
+      .cell {
+        &_medium {
+          max-width: 19%;
+          flex: 0 0 19%;
+        }
+        &_small {
+          flex: 0 0 13% !important;
+          max-width: 13% !important;
+        }
+        &_big {
+          flex: 21% !important;
+          max-width: 21% !important;
+        }
+      }
+    }
+    &__parameters {
+      @include chip($parametersBorder);
+    }
+    &__results {
+      @include chip($resultsBorder);
+    }
+    .row__actions {
+      display: none;
+      position: absolute;
+      right: -10px;
+      top: 15%;
+      border-bottom: none !important;
+      button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        &:active, &:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+      &__container {
+        position: relative;
+      }
+      &__body {
+        z-index: 999;
+        width: 150px;
+        display: none;
+        position: absolute;
+        bottom: -50px;
+        right: 16px;
+        background: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
+        border-radius: 2px;
+        &_option {
+          padding: 17px;
+          cursor: pointer;
+          &:hover {
+            background-color: #F7F7F7;
+          }
+        }
+      }
+      &_visible .row__actions__body {
+        display: block;
+      }
+    }
+    &__chips {
+      &_short {
+        max-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 !important;
+        font-style: normal;
+      }
+      &_hidden {
+        display: none !important;
+        position: absolute;
+        bottom: 112%;
+        right: 0;
+        border-radius: 2px;
+        background-color: $white;
+        box-shadow: $hiddenChipsBlockShadow;
+        flex-direction: column;
+        width: 165px;
+        padding: 10px;
+        z-index: 10000;
+        &__chip {
+          @include chip($parametersBorder);
+        }
+        &::after {
+          content: '';
+          display: block;
+          width: 12px;
+          height: 12px;
+          transform: rotate(-45deg);
+          background-color: inherit;
+          position: absolute;
+          bottom: -6px;
+          right: 20px;
+          z-index: -10;
+        }
+      }
+      &__block {
+        position: relative;
+        display: inline-block;
+      }
+    }
+  }
+  .showChips .table_body__chips_hidden {
+    display: flex !important;
+  }
+}

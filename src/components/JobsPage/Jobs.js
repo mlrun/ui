@@ -5,7 +5,8 @@ import YAML from 'yamljs'
 
 import jobsActions from '../../actions/jobs'
 
-import JobsView from './JobsView'
+import Content from '../../layout/Content/Content'
+import { formatDatetime, truncateUid } from '../../utils'
 
 const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [jobs, setJobs] = useState([])
@@ -13,6 +14,62 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [filterValue, setFilterValue] = useState('')
   const [loading, setLoading] = useState(true)
   const [convertedYaml, setConvertedYaml] = useState()
+  const tableHeaders = [
+    {
+      header: 'Name',
+      size: 'medium'
+    },
+    {
+      header: 'UID',
+      size: 'small'
+    },
+    {
+      header: 'Started at',
+      size: 'small'
+    },
+    {
+      header: 'Status',
+      size: 'small'
+    },
+    {
+      header: 'Parameters',
+      size: 'big'
+    },
+    {
+      header: 'Results',
+      size: 'big'
+    }
+  ]
+
+  const tableContent = jobs.map(job => ({
+    name: {
+      value: job.name,
+      size: 'medium'
+    },
+    uid: {
+      value: truncateUid(job.uid),
+      size: 'small'
+    },
+    startTime: {
+      value: formatDatetime(job.startTime),
+      size: 'small'
+    },
+    state: {
+      value: job.state,
+      size: 'small',
+      type: 'state'
+    },
+    parameters: {
+      value: job.parameters,
+      size: 'big',
+      type: 'parameters'
+    },
+    resultsChips: {
+      value: job.resultsChips,
+      size: 'big',
+      type: 'results'
+    }
+  }))
 
   const refreshJobs = useCallback(
     noCahche => {
@@ -78,11 +135,12 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   }
 
   return (
-    <JobsView
+    <Content
+      tableContent={tableContent}
       jobs={jobs}
-      job={jobsStore.selectedJob}
+      selectedItem={jobsStore.selectedJob}
       match={match}
-      refreshJobs={refreshJobs}
+      refresh={refreshJobs}
       handleSelectJob={handleSelectJob}
       handleCancel={handleCancel}
       handleFilterClick={handleFilterClick}
@@ -91,6 +149,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
       loading={loading}
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
+      tableHeaders={tableHeaders}
     />
   )
 }

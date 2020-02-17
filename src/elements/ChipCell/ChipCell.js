@@ -1,30 +1,49 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Chip from '../Chip/Chip'
+import { cutChips } from '../../utils/cutChips'
 
 const ChipCell = ({ elements, className }) => {
-  return elements
-    ? elements.sortedArr.map((item, i) => {
+  const handleShowElements = e => {
+    if (
+      e.target.className === 'table_body__results' ||
+      e.target.className === 'table_body__parameters'
+    ) {
+      let blocksArr = document.getElementsByClassName('showChips')
+      const parentBlock = e.target.closest('.table_body__chips__block')
+      if (
+        blocksArr.length > 0 &&
+        !parentBlock.classList.contains('showChips')
+      ) {
+        blocksArr[0].classList.remove('showChips')
+      }
+      parentBlock.classList.contains('showChips')
+        ? parentBlock.classList.remove('showChips')
+        : parentBlock.classList.add('showChips')
+    }
+  }
+
+  const chips = cutChips(elements, 2)
+  return chips
+    ? chips.sortedArr.map((item, i) => {
         return (
-          <div
-            className="jobs__table_body__chips__block"
-            key={`${item.value}${i}`}
-          >
+          <div className="table_body__chips__block" key={`${item}${i}`}>
             <Chip
-              key={item.value}
+              key={item}
               className={className}
-              onClick={item.onClick}
-              value={item.value}
-              title={item.value}
+              onClick={handleShowElements}
+              value={item}
+              title={item}
             />
-            {elements.hiddenChips && (
-              <div className="jobs__table_body__chips_hidden">
-                {elements.hiddenChips.map(element => (
+            {chips.hiddenChips && (
+              <div className="table_body__chips_hidden">
+                {chips.hiddenChips.map(element => (
                   <Chip
-                    key={element.value}
+                    key={element}
                     className={className}
-                    value={element.value}
-                    title={element.value}
+                    value={element}
+                    title={element}
+                    onClick={handleShowElements}
                   />
                 ))}
               </div>

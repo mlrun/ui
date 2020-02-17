@@ -15,10 +15,7 @@ const ArtifactView = ({ loading, refresh, onChangeFilter, ...props }) => {
         {/*<div className="menu-item">Create</div>*/}
       </div>
       <div className="artifacts_table">
-        <ArtifactsFilerMenu
-          refreshArtifacts={refresh}
-          onChangeFilter={onChangeFilter}
-        />
+        <ArtifactsFilerMenu filters={['period', 'tree']} />
         <div className="artifacts_table_container">
           {loading ? <Loader /> : <ArtifactsTable {...props} />}
         </div>
