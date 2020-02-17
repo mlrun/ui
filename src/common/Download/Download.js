@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import HttpClient from '../../httpClient'
 import ProgressRing from '../ProgressRing/ProgressRing'
 import download from '../../images/download-icon.png'
@@ -9,104 +9,68 @@ import './download.scss'
 
 let cancelDownload = null
 
-const configDownload = (
-  setProgress,
-  setShowNotification,
-  setDownload,
-  setDownloadStatus
-) => {
-  setProgress(0)
-  setShowNotification(true)
-  setDownload(false)
-  cancelDownload = null
-  setTimeout(() => {
-    setDownloadStatus('success')
-    setShowNotification(false)
-  }, 2000)
-}
-
 const Download = ({ path, schema }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
   const [isShowNotification, setShowNotification] = useState(false)
-  const [downloadStatus, setDownloadStatus] = useState('success')
+  const [status, setStatus] = useState('success')
   let [file] = path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)
 
   const CancelToken = axios.CancelToken
 
-  useEffect(() => {
-    const Download = () => {
-      if (cancelDownload) {
-        cancelDownload()
-        return
-      }
-
-      if (isDownload) {
-        const artifact = {
-          cancelDownloadSource: axios.CancelToken.source()
-        }
-
-        const config = {
-          onDownloadProgress: progressEvent => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / (progressEvent.total + 0.1)
-            )
-            setProgress(percentCompleted)
-          },
-          cancelToken: new CancelToken(cancel => {
-            cancelDownload = cancel
-          })
-        }
-
-        HttpClient.get(
-          schema
-            ? `/files?schema=${schema}&path=${path}`
-            : `/files?path=${path}`,
-          config
-        )
-          .then(response => {
-            artifact.content = URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = artifact.content
-            link.download = file
-            link.click()
-            link.remove()
-            configDownload(
-              setProgress,
-              setShowNotification,
-              setDownload,
-              setDownloadStatus
-            )
-          })
-          .catch(error => {
-            if (axios.isCancel(error)) {
-              setDownloadStatus('cancel')
-              configDownload(
-                setProgress,
-                setShowNotification,
-                setDownload,
-                setDownloadStatus
-              )
-              return
-            } else {
-              setDownloadStatus('failed')
-              configDownload(
-                setProgress,
-                setShowNotification,
-                setDownload,
-                setDownloadStatus
-              )
-            }
-          })
-          .finally(() => {
-            URL.revokeObjectURL(artifact.content)
-            cancelDownload = null
-          })
-      }
+  const Download = useCallback(() => {
+    if (cancelDownload) {
+      cancelDownload()
+      return
     }
 
+    if (isDownload) {
+      const config = {
+        onDownloadProgress: progressEvent => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / (progressEvent.total + 0.1)
+          )
+          setProgress(percentCompleted)
+        },
+        cancelToken: new CancelToken(cancel => {
+          cancelDownload = cancel
+        })
+      }
+
+      HttpClient.get(
+        schema ? `/files?schema=${schema}&path=${path}` : `/files?path=${path}`,
+        config
+      )
+        .then(response => {
+          const link = document.createElement('a')
+          link.href = URL.createObjectURL(new Blob([response.data]))
+          link.download = file
+          link.click()
+          link.remove()
+        })
+        .catch(error => {
+          if (axios.isCancel(error)) {
+            setStatus('cancel')
+            return
+          }
+          setStatus('failed')
+        })
+        .finally(() => {
+          setDownload(false)
+          setProgress(0)
+          setShowNotification(true)
+          setTimeout(() => {
+            setStatus('success')
+            setShowNotification(false)
+          }, 2000)
+          cancelDownload = null
+        })
+    }
+  }, [CancelToken, file, isDownload, path, schema])
+
+  useEffect(() => {
     Download()
-  }, [isDownload, CancelToken, file, path, schema])
+  }, [Download])
 
   return (
     <div
@@ -129,23 +93,9 @@ const Download = ({ path, schema }) => {
       </ProgressRing>
       {isShowNotification &&
         createPortal(
-          <div
-            className={`notification_container ${
-              downloadStatus === 'success'
-                ? 'success_notification'
-                : downloadStatus === 'cancel'
-                ? 'cancel_notification'
-                : 'failed_notification'
-            }`}
-          >
+          <div className={`notification_container ${status}_notification`}>
             <div>Download Status:</div>
-            <div>
-              {downloadStatus === 'success'
-                ? 'Success'
-                : downloadStatus === 'cancel'
-                ? 'Cancel'
-                : 'Failed'}
-            </div>
+            <div>{status.charAt(0).toUpperCase() + status.slice(1)}</div>
           </div>,
           document.body
         )}
