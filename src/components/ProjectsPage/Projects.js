@@ -4,7 +4,8 @@ import Breadcrums from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-
+import artifact from '../../images/file-chart.png'
+import jobs from '../../images/check-all.png'
 import './projects.scss'
 const Projects = ({ projects, fetchProjects, match }) => {
   useEffect(() => {
@@ -22,8 +23,14 @@ const Projects = ({ projects, fetchProjects, match }) => {
               <div key={project} className="project_card">
                 <div className="project_card_header">{project}</div>
                 <div className="project_card_links">
-                  <Link to={`/projects/${project}/jobs`}>Jobs</Link>
-                  <Link to={`/projects/${project}/artifacts`}>Artifacts</Link>
+                  <Link to={`/projects/${project}/jobs`}>
+                    <img src={jobs} alt="jobs" />
+                    <div>Jobs</div>
+                  </Link>
+                  <Link to={`/projects/${project}/artifacts`}>
+                    <img src={artifact} alt="artifact" />
+                    <div>Artifacts</div>
+                  </Link>
                 </div>
               </div>
             )

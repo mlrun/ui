@@ -50,7 +50,7 @@
         &_download {
           @include artifactsTableHeader(0.1, 44px);
           min-width: 40px;
-          margin-right: 10px;
+          margin-right: 20px;
         }
       }
       div {
@@ -168,6 +168,12 @@
         @include tableDisplay(0.1);
         margin-right: 20px;
         align-items: center;
+        svg {
+          circle {
+            transform: rotate(-45deg);
+            transform-origin: 50% 50%;
+          }
+        }
       }
       .column_yaml_button {
         position: absolute;
@@ -175,9 +181,12 @@
         width: 20px;
         height: 55px;
         @include tableDisplay(0.1);
-        align-items: center;
         .row__actions__container {
           button {
+            align-items: center;
+            img {
+              user-select: none;
+            }
             padding: 0;
           }
         }

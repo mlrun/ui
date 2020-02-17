@@ -248,8 +248,7 @@ color: $tableFontColor;
     }
   }
   circle {
-    transition: stroke-dashoffset 0.35s;
-    transform: rotate(-90deg);
+    transform: rotate(-45deg);
     transform-origin: 50% 50%;
   }
 }

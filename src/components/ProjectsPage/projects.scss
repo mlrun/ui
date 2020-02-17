@@ -37,11 +37,15 @@
         }
         &_links {
           display: flex;
-          justify-content: space-between;
           font-weight: 500;
           font-size: 14px;
           line-height: 16px;
           color: $mainGreenColor;
+          a {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+          }
         }
       }
     }
