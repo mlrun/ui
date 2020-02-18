@@ -7,8 +7,6 @@ import './artifacts.scss'
 import Content from '../../layout/Content/Content'
 import { formatDatetime, parseKeyValues, truncateUid } from '../../utils'
 import YAML from 'yamljs'
-// import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-// import ArtifactsView from '../ArtifactsView/ArtifactsView'
 
 const Artifacts = ({
   match,
@@ -117,6 +115,8 @@ const Artifacts = ({
     }
   }))
 
+  const detailsMenu = ['info', 'inputs', 'artifacts', 'results', 'logs']
+
   useEffect(() => {
     fetchData()
   }, [fetchData])
@@ -187,22 +187,8 @@ const Artifacts = ({
       loading={loading}
       tableHeaders={tableHeaders}
       filters={['period', 'tree']}
+      detailsMenu={detailsMenu}
     />
-
-    // {/*<>*/}
-    // {/*  <div className="artifacts_header">*/}
-    // {/*    <Breadcrumbs match={match} />*/}
-    // {/*  </div>*/}
-    // {/*  <div className="artifacts_container">*/}
-    // {/*    <ArtifactsView*/}
-    // {/*      match={match}*/}
-    // {/*      artifacts={artifacts}*/}
-    // {/*      loading={loading}*/}
-    // {/*      refresh={fetchData}*/}
-    // {/*      selectArtifact={artifactsStore.selectArtifact}*/}
-    // {/*    />*/}
-    // {/*  </div>*/}
-    // {/*</>*/}
   )
 }
 

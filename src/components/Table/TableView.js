@@ -2,9 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
-import JobsItemInternal from '../JobsItemInternal/JobsItemInternal'
+// import JobsItemInternal from '../JobsItemInternal/JobsItemInternal'
 import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import Details from '../Details/Details'
 
 const TableView = ({
   tableContent,
@@ -14,8 +15,10 @@ const TableView = ({
   match,
   tableHeaders,
   job,
+  detailsMenu,
   ...props
 }) => {
+  console.log(selectedItem)
   return (
     <div className="table" onClick={hideChips}>
       {loading && <Loader />}
@@ -60,8 +63,9 @@ const TableView = ({
           </div>
         </div>
       </div>
-      {selectedItem.uid && (
-        <JobsItemInternal job={selectedItem} match={match} {...props} />
+      {selectedItem && (selectedItem.uid || selectedItem.hash) && (
+        <Details match={match} item={selectedItem} detailsMenu={detailsMenu} />
+        // <JobsItemInternal job={selectedItem} match={match} {...props} />
       )}
     </div>
   )

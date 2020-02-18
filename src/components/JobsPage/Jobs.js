@@ -69,6 +69,8 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
     }
   }))
 
+  const detailsMenu = ['info', 'inputs', 'artifacts', 'results', 'logs']
+
   const refreshJobs = useCallback(
     noCahche => {
       setSelectedJob({})
@@ -131,6 +133,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
       filters={['period', 'status']}
       tableHeaders={tableHeaders}
       tableContent={tableContent}
+      detailsMenu={detailsMenu}
     />
   )
 }

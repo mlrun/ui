@@ -1,7 +1,7 @@
 @import "../../scss/variables";
 @import "../../scss/mixins";
 
-.jobs__table__item {
+.table__item {
   position: absolute;
   top: 0;
   left: 14%;
@@ -10,7 +10,7 @@
   height: 100%;
   overflow-y: scroll;
   border-left: $tableBorder;
-color: $tableFontColor;
+  color: $tableFontColor;
   &_opened {
     height: 72vh;
     overflow-y: scroll;
@@ -51,6 +51,7 @@ color: $tableFontColor;
       font-weight: bold;
       cursor: pointer;
       border-bottom: 3px solid transparent;
+      text-transform: capitalize;
     }
     .active {
       border-bottom-color: $mainGreenColor;
@@ -140,20 +141,20 @@ color: $tableFontColor;
         }
       }
     }
-      .view .jobs__table__item_artifacts__preview {
-        display: flex;
-        flex-direction: row;
-      }
-      .view {
-        flex-direction: column;
-        position: relative;
-        box-shadow: $previewBoxShadow;
-        div {
-          img.arrow {
-            transform: rotate(90deg);
-          }
+    .view .jobs__table__item_artifacts__preview {
+      display: flex;
+      flex-direction: row;
+    }
+    .view {
+      flex-direction: column;
+      position: relative;
+      box-shadow: $previewBoxShadow;
+      div {
+        img.arrow {
+          transform: rotate(90deg);
         }
       }
+    }
     .jobs__table__item_results__table {
       td {
         padding: 19px 16px;
