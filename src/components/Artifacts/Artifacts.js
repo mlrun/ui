@@ -70,34 +70,33 @@ const Artifacts = ({
   }, [fetchData])
 
   useEffect(() => {
-    if (artifactsStore.selectArtifact) {
-      if (
-        match.params.name === undefined &&
-        Object.keys(artifactsStore.selectArtifact).length !== 0
-      ) {
-        selectArtifact({})
-      }
+    //remove the select artifact when user closes the artifact details page
+    if (
+      match.params.name === undefined &&
+      Object.keys(artifactsStore.selectArtifact).length !== 0
+    ) {
+      selectArtifact({})
+    }
 
-      if (
-        match.params.name !== undefined &&
-        Object.keys(artifactsStore.selectArtifact).length === 0
-      ) {
-        const { name } = match.params
-        if (artifactsStore.artifacts.length !== 0) {
-          const [searchItem] = artifactsStore.artifacts.filter(
-            item => item.key === name
-          )
+    //find the current artifact when user selects the artifact and updates site or an artifact name and tab exists in the URL
+    if (
+      match.params.name !== undefined &&
+      Object.keys(artifactsStore.selectArtifact).length === 0 &&
+      artifactsStore.artifacts.length !== 0
+    ) {
+      const { name } = match.params
+      const [searchItem] = artifactsStore.artifacts.filter(
+        item => item.key === name
+      )
 
-          const [artifact] = searchItem.data.filter(item => {
-            if (searchItem.link_iteration) {
-              const { link_iteration } = searchItem.link_iteration
-              return link_iteration === item.iter
-            }
-            return true
-          })
-          selectArtifact(artifact)
+      const [artifact] = searchItem.data.filter(item => {
+        if (searchItem.link_iteration) {
+          const { link_iteration } = searchItem.link_iteration
+          return link_iteration === item.iter
         }
-      }
+        return true
+      })
+      selectArtifact(artifact)
     }
   }, [
     artifactsStore.artifacts,

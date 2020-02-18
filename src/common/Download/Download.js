@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import HttpClient from '../../httpClient'
 import ProgressRing from '../ProgressRing/ProgressRing'
 import download from '../../images/download-icon.png'
@@ -7,23 +7,16 @@ import axios from 'axios'
 import { createPortal } from 'react-dom'
 import './download.scss'
 
-let cancelDownload = null
-
 const Download = ({ path, schema }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
   const [isShowNotification, setShowNotification] = useState(false)
   const [status, setStatus] = useState('success')
   let [file] = path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)
-
   const CancelToken = axios.CancelToken
+  const downloadRef = useRef(null)
 
   const Download = useCallback(() => {
-    if (cancelDownload) {
-      cancelDownload()
-      return
-    }
-
     if (isDownload) {
       const config = {
         onDownloadProgress: progressEvent => {
@@ -33,7 +26,7 @@ const Download = ({ path, schema }) => {
           setProgress(percentCompleted)
         },
         cancelToken: new CancelToken(cancel => {
-          cancelDownload = cancel
+          downloadRef.current.cancel = cancel
         })
       }
 
@@ -47,35 +40,51 @@ const Download = ({ path, schema }) => {
           link.download = file
           link.click()
           link.remove()
+          return 'success'
         })
         .catch(error => {
           if (axios.isCancel(error)) {
-            setStatus('cancel')
-            return
+            return error.message === 'cancel' && 'cancel'
           }
-          setStatus('failed')
+          return 'failed'
         })
-        .finally(() => {
-          setDownload(false)
-          setProgress(0)
-          setShowNotification(true)
-          setTimeout(() => {
-            setStatus('success')
-            setShowNotification(false)
-          }, 2000)
-          cancelDownload = null
+        .then(item => {
+          if (/success|cancel|failed/.test(item)) {
+            setStatus(item)
+            setDownload(false)
+            setProgress(0)
+            setShowNotification(true)
+            setTimeout(() => {
+              if (downloadRef.current) {
+                setStatus('success')
+                setShowNotification(false)
+              }
+            }, 2000)
+          }
+          if (downloadRef.current) downloadRef.current.cancel = null
         })
     }
   }, [CancelToken, file, isDownload, path, schema])
 
   useEffect(() => {
+    let cancelFetch = downloadRef.current
     Download()
-  }, [Download])
+    return () => {
+      cancelFetch.cancel && cancelFetch.cancel()
+    }
+  }, [Download, downloadRef])
 
   return (
     <div
       className="download_container"
-      onClick={() => setDownload(!isDownload)}
+      ref={downloadRef}
+      onClick={() => {
+        if (downloadRef.current && downloadRef.current.cancel) {
+          downloadRef.current.cancel('cancel')
+          return
+        }
+        setDownload(!isDownload)
+      }}
     >
       <ProgressRing
         radius="20"
@@ -102,4 +111,4 @@ const Download = ({ path, schema }) => {
     </div>
   )
 }
-export default Download
+export default React.memo(Download)

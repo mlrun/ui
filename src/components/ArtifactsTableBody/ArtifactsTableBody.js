@@ -116,7 +116,6 @@ const ArtifactsTableBody = ({ item, match }) => {
                 ? item.target_path.match(/^([\w\d]+)(?=:)/)[0]
                 : null
             }
-            size={item.size}
           />
         </div>
         {isShowYamlButton && (
