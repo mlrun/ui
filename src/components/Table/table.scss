@@ -16,17 +16,29 @@
       @include tableHeader;
     }
     .header {
-      &_medium {
+      &__jobs_medium {
         max-width: 19%;
         flex: 0 0 19%;
       }
-      &_small {
+      &__jobs_small {
         flex: 0 0 13% !important;
         max-width: 13% !important;
       }
-      &_big {
-        flex: 21% !important;
+      &__jobs_big {
+        flex: 0 0 21% !important;
         max-width: 21% !important;
+      }
+      &__artifacts_medium {
+        max-width: 17%;
+        flex: 0 0 17%;
+      }
+      &__artifacts_small {
+        flex: 0 0 9% !important;
+        max-width: 9% !important;
+      }
+      &__artifacts_big {
+        flex: 0 0 19% !important;
+        max-width: 19% !important;
       }
     }
   }
@@ -56,17 +68,29 @@
         }
       }
       .cell {
-        &_medium {
+        &__jobs_medium {
           max-width: 19%;
           flex: 0 0 19%;
         }
-        &_small {
+        &__jobs_small {
           flex: 0 0 13% !important;
           max-width: 13% !important;
         }
-        &_big {
-          flex: 21% !important;
+        &__jobs_big {
+          flex: 0 0 21% !important;
           max-width: 21% !important;
+        }
+        &__artifacts_medium {
+          max-width: 17%;
+          flex: 0 0 17%;
+        }
+        &__artifacts_small {
+          flex: 0 0 9% !important;
+          max-width: 9% !important;
+        }
+        &__artifacts_big {
+          flex: 0 0 19% !important;
+          max-width: 19% !important;
         }
       }
       .row__actions {

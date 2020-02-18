@@ -8,7 +8,7 @@ const JobsTableRow = ({
   handleHoverOnRowActions,
   handleMouseLeaveFromRowActions,
   selectedItem,
-  jobs,
+  content,
   index,
   match,
   handleSelectItem,
@@ -16,7 +16,6 @@ const JobsTableRow = ({
 }) => {
   return (
     <div
-      key={`${rowItem.value}${index}`}
       className="table_body__row parent_row"
       onMouseEnter={handleHoverOnRowActions}
       onMouseLeave={handleMouseLeaveFromRowActions}
@@ -26,12 +25,12 @@ const JobsTableRow = ({
           <TableCell
             selectedItem={selectedItem}
             data={value}
-            item={jobs[index]}
+            item={content[index]}
             link={
               i === 0 &&
-              `/projects/${match.params.projectName}/jobs/${jobs[index].uid}${
-                match.params.tab ? `/${match.params.tab}` : '/info'
-              }`
+              `/projects/${match.params.projectName}/jobs/${
+                content[index].uid
+              }${match.params.tab ? `/${match.params.tab}` : '/info'}`
             }
             selectItem={handleSelectItem}
             key={value.value}
@@ -39,7 +38,7 @@ const JobsTableRow = ({
         )
       })}
       <div className="table_body__row__cell row__actions">
-        <ActionsMenu convertToYaml={convertToYaml} item={jobs[index]} />
+        <ActionsMenu convertToYaml={convertToYaml} item={content[index]} />
       </div>
     </div>
   )

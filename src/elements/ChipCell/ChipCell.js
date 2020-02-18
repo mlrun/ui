@@ -63,7 +63,7 @@ ChipCell.defaultProps = {
 
 ChipCell.propTypes = {
   className: PropTypes.string.isRequired,
-  elements: PropTypes.shape({})
+  elements: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default ChipCell

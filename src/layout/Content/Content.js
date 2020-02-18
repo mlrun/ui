@@ -53,7 +53,7 @@ Content.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   job: PropTypes.shape({}),
-  jobs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired

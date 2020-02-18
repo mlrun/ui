@@ -15,56 +15,56 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const tableHeaders = [
     {
       header: 'Name',
-      size: 'medium'
+      size: 'jobs_medium'
     },
     {
       header: 'UID',
-      size: 'small'
+      size: 'jobs_small'
     },
     {
       header: 'Started at',
-      size: 'small'
+      size: 'jobs_small'
     },
     {
       header: 'Status',
-      size: 'small'
+      size: 'jobs_small'
     },
     {
       header: 'Parameters',
-      size: 'big'
+      size: 'jobs_big'
     },
     {
       header: 'Results',
-      size: 'big'
+      size: 'jobs_big'
     }
   ]
 
   const tableContent = jobs.map(job => ({
     name: {
       value: job.name,
-      size: 'medium'
+      size: 'jobs_medium'
     },
     uid: {
       value: truncateUid(job.uid),
-      size: 'small'
+      size: 'jobs_small'
     },
     startTime: {
       value: formatDatetime(job.startTime),
-      size: 'small'
+      size: 'jobs_small'
     },
     state: {
       value: job.state,
-      size: 'small',
+      size: 'jobs_small',
       type: 'state'
     },
     parameters: {
       value: job.parameters,
-      size: 'big',
+      size: 'jobs_big',
       type: 'parameters'
     },
     resultsChips: {
       value: job.resultsChips,
-      size: 'big',
+      size: 'jobs_big',
       type: 'results'
     }
   }))
@@ -119,7 +119,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
 
   return (
     <Content
-      jobs={jobs}
+      content={jobs}
       selectedItem={jobsStore.selectedJob}
       match={match}
       refresh={refreshJobs}

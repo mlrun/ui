@@ -4,8 +4,11 @@ import artifactsAction from '../../actions/artifacts'
 import { connect } from 'react-redux'
 
 import './artifacts.scss'
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import ArtifactsView from '../ArtifactsView/ArtifactsView'
+import Content from '../../layout/Content/Content'
+import { formatDatetime, parseKeyValues, truncateUid } from '../../utils'
+import YAML from 'yamljs'
+// import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+// import ArtifactsView from '../ArtifactsView/ArtifactsView'
 
 const Artifacts = ({
   match,
@@ -15,6 +18,7 @@ const Artifacts = ({
 }) => {
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
+  const [convertedYaml, setConvertedYaml] = useState()
 
   const fetchData = useCallback(
     item => {
@@ -40,6 +44,78 @@ const Artifacts = ({
     },
     [fetchArtifacts, artifactsStore.artifacts]
   )
+
+  const tableHeaders = [
+    {
+      header: 'Name',
+      size: 'artifacts_medium'
+    },
+    {
+      header: 'Path',
+      size: 'artifacts_big'
+    },
+    {
+      header: 'Type',
+      size: 'artifacts_small'
+    },
+    {
+      header: 'Labels',
+      size: 'artifacts_big'
+    },
+    {
+      header: 'Producer',
+      size: 'artifacts_small'
+    },
+    {
+      header: 'Hash',
+      size: 'artifacts_small'
+    },
+    {
+      header: 'Updated at',
+      size: 'artifacts_small'
+    },
+    {
+      header: '',
+      size: 'artifacts_small'
+    }
+  ]
+
+  const tableContent = artifacts.map(artifact => ({
+    key: {
+      value: artifact.key,
+      size: 'artifacts_medium'
+    },
+    target_path: {
+      value: artifact.target_path,
+      size: 'artifacts_big'
+    },
+    king: {
+      value: artifact.king,
+      size: 'artifacts_small'
+    },
+    labels: {
+      value: parseKeyValues(artifact.labels),
+      size: 'artifacts_big',
+      type: 'labels'
+    },
+    producer: {
+      value: artifact.producer,
+      size: 'artifacts_small',
+      type: 'producer'
+    },
+    hash: {
+      value: truncateUid(artifact.hash),
+      size: 'artifacts_small'
+    },
+    updated: {
+      value: formatDatetime(new Date(artifact.updated)),
+      size: 'artifacts_small'
+    },
+    buttons: {
+      value: '',
+      size: 'artifacts_small'
+    }
+  }))
 
   useEffect(() => {
     fetchData()
@@ -81,35 +157,52 @@ const Artifacts = ({
     selectArtifact
   ])
 
-  return (
-    <>
-      <div className="artifacts_header">
-        <Breadcrumbs match={match} />
-      </div>
-      <div className="artifacts_container">
-        <ArtifactsView
-          match={match}
-          artifacts={artifacts}
-          loading={loading}
-          refresh={fetchData}
-          selectArtifact={artifactsStore.selectArtifact}
-        />
-      </div>
-    </>
+  const convertToYaml = item => {
+    document.getElementById('yaml_modal').style.display = 'flex'
+    setConvertedYaml(YAML.stringify(item))
+  }
 
-    // {/*<Content*/}
-    // {/*  tableContent={[]}*/}
-    // {/*  artifacts={artifacts}*/}
-    // {/*  selectedItem={artifactsStore.selectArtifact}*/}
-    // {/*  match={match}*/}
-    // {/*  refresh={fetchData}*/}
-    // {/*  // handleSelectItem={handleSelectItem}*/}
-    // {/*  // handleCancel={handleCancel}*/}
-    // {/*  loading={loading}*/}
-    // {/*  tableHeaders={tableHeaders}*/}
-    // {/*  filters={['period', 'tree']}*/}
-    // {/*/>*/}
+  const handleSelectArtifact = item => {
+    if (document.getElementsByClassName('view')[0]) {
+      document.getElementsByClassName('view')[0].classList.remove('view')
+    }
+    selectArtifact(item)
+  }
+
+  const handleCancel = () => {
+    selectArtifact({})
+  }
+
+  return (
+    <Content
+      tableContent={tableContent}
+      content={artifacts}
+      selectedItem={artifactsStore.selectArtifact}
+      match={match}
+      refresh={fetchData}
+      handleSelectItem={handleSelectArtifact}
+      handleCancel={handleCancel}
+      convertedYaml={convertedYaml}
+      convertToYaml={convertToYaml}
+      loading={loading}
+      tableHeaders={tableHeaders}
+      filters={['period', 'tree']}
+    />
+
     // {/*<>*/}
+    // {/*  <div className="artifacts_header">*/}
+    // {/*    <Breadcrumbs match={match} />*/}
+    // {/*  </div>*/}
+    // {/*  <div className="artifacts_container">*/}
+    // {/*    <ArtifactsView*/}
+    // {/*      match={match}*/}
+    // {/*      artifacts={artifacts}*/}
+    // {/*      loading={loading}*/}
+    // {/*      refresh={fetchData}*/}
+    // {/*      selectArtifact={artifactsStore.selectArtifact}*/}
+    // {/*    />*/}
+    // {/*  </div>*/}
+    // {/*</>*/}
   )
 }
 

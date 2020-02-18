@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import Loader from '../../common/Loader/Loader'
 import JobsItemInternal from '../JobsItemInternal/JobsItemInternal'
 import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
+import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 
 const TableView = ({
   tableContent,
@@ -23,7 +24,7 @@ const TableView = ({
           <div className="table_head">
             {tableHeaders.map(item => (
               <div
-                className={`table_head_item header_${item.size}`}
+                className={`table_head_item header__${item.size}`}
                 key={item.header}
               >
                 {item.header}
@@ -35,10 +36,22 @@ const TableView = ({
               if (match.path.includes('jobs')) {
                 return (
                   <JobsTableRow
+                    key={i}
                     match={match}
                     selectedItem={selectedItem}
                     index={i}
                     rowItem={rowItem}
+                    {...props}
+                  />
+                )
+              } else {
+                return (
+                  <ArtifactsTableRow
+                    key={i}
+                    rowItem={rowItem}
+                    match={match}
+                    index={i}
+                    selectedItem={selectedItem}
                     {...props}
                   />
                 )
