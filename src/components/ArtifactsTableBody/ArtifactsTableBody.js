@@ -4,7 +4,7 @@ import Tooltip from '../ArtifactsTooltip/Tooltip'
 import Download from '../../common/Download/Download'
 import actionArtifact from '../../actions/artifacts'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import YAML from 'yamljs'
+import yaml from 'js-yaml'
 import { truncateUid, formatDatetime } from '../../utils'
 import { Link } from 'react-router-dom'
 import { parseKeyValues } from '../../utils'
@@ -122,14 +122,14 @@ const ArtifactsTableBody = ({ item, match }) => {
           <div className="column_yaml_button">
             <ActionsMenu
               convertToYaml={handlerActionMenu}
-              item={YAML.stringify(item)}
+              item={yaml.safeDump(item)}
             />
           </div>
         )}
       </div>
       {showYamlModal && (
         <YamlModal
-          convertedYaml={YAML.stringify(item)}
+          convertedYaml={yaml.safeDump(item)}
           close={handlerModelClose}
         />
       )}

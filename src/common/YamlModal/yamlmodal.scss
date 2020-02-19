@@ -11,14 +11,18 @@
   height: 100%;
   display: none;
   background-color: $modalBackground;
-  pre {
+  div {
     width: 60%;
     height: 100%;
     white-space: pre-wrap;
     background-color: #fff;
-    padding: 15px;
     position: relative;
     overflow-y: auto;
+    pre {
+      width: 100% !important;
+      padding: 15px !important;
+      margin: 0 !important;
+    }
   }
   button {
     position: absolute;

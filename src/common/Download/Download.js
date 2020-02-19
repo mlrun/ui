@@ -13,7 +13,7 @@ const Download = ({ path, schema }) => {
   const [isShowNotification, setShowNotification] = useState(false)
   const [status, setStatus] = useState('success')
   let [file] = path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)
-  const CancelToken = axios.CancelToken
+
   const downloadRef = useRef(null)
 
   const Download = useCallback(() => {
@@ -25,7 +25,7 @@ const Download = ({ path, schema }) => {
           )
           setProgress(percentCompleted)
         },
-        cancelToken: new CancelToken(cancel => {
+        cancelToken: new axios.CancelToken(cancel => {
           downloadRef.current.cancel = cancel
         })
       }
@@ -64,7 +64,7 @@ const Download = ({ path, schema }) => {
           if (downloadRef.current) downloadRef.current.cancel = null
         })
     }
-  }, [CancelToken, file, isDownload, path, schema])
+  }, [file, isDownload, path, schema])
 
   useEffect(() => {
     let cancelFetch = downloadRef.current
