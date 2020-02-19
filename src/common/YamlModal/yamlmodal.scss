@@ -1,4 +1,4 @@
-@import '../../scss//variables.scss';
+@import '../../scss/variables';
 
 .yaml_modal {
   z-index: 9999;
@@ -20,6 +20,7 @@
     overflow-y: auto;
     pre {
       width: 100% !important;
+      height: 100%;
       padding: 15px !important;
       margin: 0 !important;
     }

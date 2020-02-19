@@ -3,15 +3,16 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
 import jobsActions from '../../actions/jobs'
+import jobsData from './jobsData'
+import createJobsContent from '../../utils/createJobsContent'
 
-import JobsView from './JobsView'
+import Content from '../../layout/Content/Content'
 
 const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [jobs, setJobs] = useState([])
-  const [filter, setFilter] = useState('')
-  const [filterValue, setFilterValue] = useState('')
   const [loading, setLoading] = useState(true)
   const [convertedYaml, setConvertedYaml] = useState()
+  const tableContent = createJobsContent(jobs)
 
   const refreshJobs = useCallback(
     noCahche => {
@@ -53,21 +54,6 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
     setSelectedJob({})
   }
 
-  const handleFilterByStatus = filter => {
-    if (filter === 'All') {
-      setJobs(jobsStore.jobs)
-      return
-    }
-    let filteredJobs = jobsStore.jobs.filter(
-      item => item.state === filter.toLowerCase()
-    )
-    setJobs(filteredJobs)
-  }
-
-  const handleFilterClick = () => {
-    if (filter === 'status') handleFilterByStatus(filterValue)
-  }
-
   const convertToYaml = item => {
     document.getElementById('yaml_modal').style.display = 'flex'
     const jobJson = item
@@ -77,19 +63,21 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   }
 
   return (
-    <JobsView
-      jobs={jobs}
-      job={jobsStore.selectedJob}
+    <Content
+      content={jobs}
+      selectedItem={jobsStore.selectedJob}
       match={match}
-      refreshJobs={refreshJobs}
-      handleSelectJob={handleSelectJob}
+      refresh={refreshJobs}
+      handleSelectItem={handleSelectJob}
       handleCancel={handleCancel}
-      handleFilterClick={handleFilterClick}
-      setFilter={setFilter}
-      setFilterValue={setFilterValue}
       loading={loading}
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
+      filters={jobsData.filters}
+      tableHeaders={jobsData.tableHeaders}
+      tableContent={tableContent}
+      detailsMenu={jobsData.detailsMenu}
+      page={'jobs'}
     />
   )
 }

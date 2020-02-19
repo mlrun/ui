@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+
 import actionMenuIcon from '../../images/elipsis.png'
-import './actionsmenu.scss'
 
 const ActionsMenu = ({ convertToYaml, item }) => {
   const showActionsList = e => {
@@ -21,7 +21,7 @@ const ActionsMenu = ({ convertToYaml, item }) => {
       <div className="row__actions__body">
         <div
           className="row__actions__body_option"
-          onClick={e => {
+          onClick={() => {
             convertToYaml(item)
           }}
         >

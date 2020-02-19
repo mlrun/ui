@@ -1,29 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import JobsTableView from './JobsTableView'
+import TableView from './TableView'
 
-import './jobs-table.scss'
+import './table.scss'
 
-const JobsTable = props => {
-  const handleShowElements = e => {
-    if (
-      e.target.className === 'jobs__table_body__results' ||
-      e.target.className === 'jobs__table_body__parameters'
-    ) {
-      let blocksArr = document.getElementsByClassName('showChips')
-      const parentBlock = e.target.closest('.jobs__table_body__chips__block')
-      if (
-        blocksArr.length > 0 &&
-        !parentBlock.classList.contains('showChips')
-      ) {
-        blocksArr[0].classList.remove('showChips')
-      }
-      parentBlock.classList.contains('showChips')
-        ? parentBlock.classList.remove('showChips')
-        : parentBlock.classList.add('showChips')
-    }
-  }
-
+const Table = props => {
   const hideChips = e => {
     if (
       e.target.className !== 'jobs__table_body__results' &&
@@ -52,29 +33,49 @@ const JobsTable = props => {
     }
   }
 
+  const handleShowElements = e => {
+    if (
+      e.target.className === 'table_body__results' ||
+      e.target.className === 'table_body__parameters' ||
+      e.target.className === 'table__item_details_item_data__parameters'
+    ) {
+      let blocksArr = document.getElementsByClassName('showChips')
+      const parentBlock = e.target.closest('.table_body__chips__block')
+      if (
+        blocksArr.length > 0 &&
+        !parentBlock.classList.contains('showChips')
+      ) {
+        blocksArr[0].classList.remove('showChips')
+      }
+      parentBlock.classList.contains('showChips')
+        ? parentBlock.classList.remove('showChips')
+        : parentBlock.classList.add('showChips')
+    }
+  }
+
   return (
-    <JobsTableView
+    <TableView
       hideChips={hideChips}
-      handleShowElements={handleShowElements}
       handleHoverOnRowActions={handleHoverOnRowActions}
       handleMouseLeaveFromRowActions={handleMouseLeaveFromRowActions}
+      handleShowElements={handleShowElements}
       {...props}
     />
   )
 }
 
-JobsTable.defaultProps = {
+Table.defaultProps = {
   job: {},
   jobs: []
 }
 
-JobsTable.propTypes = {
+Table.propTypes = {
   handleCancel: PropTypes.func.isRequired,
-  handleSelectJob: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func.isRequired,
   job: PropTypes.shape({}),
   jobs: PropTypes.arrayOf(PropTypes.shape({})),
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired
 }
 
-export default JobsTable
+export default Table

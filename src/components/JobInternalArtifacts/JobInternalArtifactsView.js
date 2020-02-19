@@ -88,9 +88,11 @@ const JobInternalArtifactsView = ({ items, handleClick, artifacts }) => (
             )}
             {artifacts.data && artifacts.type === 'html' && (
               <div>
-                <pre>
-                  <code>{artifacts.data.content}</code>
-                </pre>
+                <iframe
+                  srcDoc={artifacts.data.content}
+                  frameBorder="0"
+                  title="Preview"
+                />
               </div>
             )}
             {artifacts.data && artifacts.type === 'json' && (

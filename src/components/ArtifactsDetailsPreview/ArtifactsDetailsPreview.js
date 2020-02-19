@@ -89,7 +89,7 @@ const ArtifactsDetailsPreview = ({ artifact }) => {
                       key={item + index}
                     >
                       {['completed', 'running', 'failed'].includes(item) ? (
-                        <div className={item}></div>
+                        <div className={item} />
                       ) : (
                         item
                       )}

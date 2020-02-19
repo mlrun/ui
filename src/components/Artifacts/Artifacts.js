@@ -1,11 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import ArtifactsView from '../ArtifactsView/ArtifactsView'
-import artifactsAction from '../../actions/artifacts'
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import { connect } from 'react-redux'
+import YAML from 'yamljs'
+
+import Content from '../../layout/Content/Content'
+
+import artifactsAction from '../../actions/artifacts'
+import artifactsData from './artifactsData'
 
 import './artifacts.scss'
+import createArtifactsContent from '../../utils/createArtifactsContent'
 
 const Artifacts = ({
   match,
@@ -15,54 +19,32 @@ const Artifacts = ({
 }) => {
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
-  const [filter, setFilter] = useState({
-    period: null
-  })
+  const [convertedYaml, setConvertedYaml] = useState()
+  const tableContent = createArtifactsContent(artifacts)
 
   const fetchData = useCallback(
     item => {
       if (item || artifactsStore.artifacts.length === 0) {
         setLoading(true)
         fetchArtifacts().then(data => {
-          if (filter.period) {
-            data = data.filter(item => {
-              return new Date(item.updated).getTime() > filter.period
-            })
-          }
-
-          _setArtifacts(data)
+          const artifacts = data.map(artifact => {
+            let item = null
+            if (artifact.link_iteration) {
+              let { link_iteration } = artifact.link_iteration
+              item = artifact.data.filter(
+                item => item.iter === link_iteration
+              )[0]
+            } else {
+              item = artifact.data[0]
+            }
+            return item
+          })
+          _setArtifacts(artifacts)
           setLoading(false)
         })
       }
     },
-    [fetchArtifacts, artifactsStore.artifacts, filter.period]
-  )
-
-  const onChangeFilter = useCallback(
-    _filter => {
-      // _filter looks like {period: 123}
-      setFilter(prevFilter => ({ ...prevFilter, ..._filter }))
-      if (_filter) {
-        let filterArtifacts = artifactsStore.artifacts.reduce((prev, curr) => {
-          let tree = curr.tree
-            .reduce((_prev, _curr) => {
-              let filter = _curr.filter(
-                item => new Date(item.updated).getTime() > _filter.period
-              )
-              return [..._prev, [...filter]]
-            }, [])
-            .filter(item => item.length !== 0)
-
-          if (tree.length !== 0) {
-            return [...prev, { key: curr.key, tree: [...tree] }]
-          } else {
-            return [...prev]
-          }
-        }, [])
-        _setArtifacts(filterArtifacts)
-      }
-    },
-    [artifactsStore.artifacts]
+    [fetchArtifacts, artifactsStore.artifacts]
   )
 
   useEffect(() => {
@@ -105,33 +87,46 @@ const Artifacts = ({
     selectArtifact
   ])
 
-  useEffect(() => {
-    onChangeFilter()
-  }, [onChangeFilter])
+  const convertToYaml = item => {
+    document.getElementById('yaml_modal').style.display = 'flex'
+    setConvertedYaml(YAML.stringify(item))
+  }
+
+  const handleSelectArtifact = item => {
+    if (document.getElementsByClassName('view')[0]) {
+      document.getElementsByClassName('view')[0].classList.remove('view')
+    }
+    selectArtifact(item)
+  }
+
+  const handleCancel = () => {
+    selectArtifact({})
+  }
 
   return (
-    <>
-      <div className="artifacts_header">
-        <Breadcrumbs match={match} />
-      </div>
-      <div className="artifacts_container">
-        <ArtifactsView
-          match={match}
-          artifacts={artifacts}
-          loading={loading}
-          refresh={fetchData}
-          selectArtifact={artifactsStore.selectArtifact}
-          onChangeFilter={onChangeFilter}
-        />
-      </div>
-    </>
+    <Content
+      tableContent={tableContent}
+      content={artifacts}
+      selectedItem={artifactsStore.selectArtifact}
+      match={match}
+      refresh={fetchData}
+      handleSelectItem={handleSelectArtifact}
+      handleCancel={handleCancel}
+      convertedYaml={convertedYaml}
+      convertToYaml={convertToYaml}
+      loading={loading}
+      tableHeaders={artifactsData.tableHeaders}
+      filters={artifactsData.filters}
+      detailsMenu={artifactsData.detailsMenu}
+    />
   )
 }
 
 Artifacts.propTypes = {
   match: PropTypes.shape({}).isRequired,
   artifactsStore: PropTypes.shape({}).isRequired,
-  fetchArtifacts: PropTypes.func.isRequired
+  fetchArtifacts: PropTypes.func.isRequired,
+  selectArtifact: PropTypes.func.isRequired
 }
 
 export default connect(

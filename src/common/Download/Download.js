@@ -3,8 +3,6 @@ import HttpClient from '../../httpClient'
 import ProgressRing from '../ProgressRing/ProgressRing'
 import download from '../../images/download-icon.png'
 import cancel from '../../images/download-cancel.png'
-import axios from 'axios'
-import { createPortal } from 'react-dom'
 import './download.scss'
 
 const Download = ({ path, schema }) => {
@@ -111,4 +109,14 @@ const Download = ({ path, schema }) => {
     </div>
   )
 }
+
+Download.defaultProps = {
+  schema: ''
+}
+
+Download.propTypes = {
+  path: PropTypes.string.isRequired,
+  schema: PropTypes.string
+}
+
 export default React.memo(Download)

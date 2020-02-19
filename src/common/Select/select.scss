@@ -11,7 +11,6 @@
     background-color: transparent;
     border: $tableFilterBorder;
     margin-right: 15px;
-
     &.active {
       background: $selectHover;
     }
@@ -20,14 +19,13 @@
   &_header {
     display: flex;
     align-items: center;
-    -webkit-user-select: none;
     &_label {
       color: $mainGreyColor;
-      padding: 0px 5px 0px 15px;
+      padding: 0 5px 0 15px;
+      text-transform: capitalize;
     }
     &_value {
       min-width: 96px;
-      max-width: 96px;
       overflow-x: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

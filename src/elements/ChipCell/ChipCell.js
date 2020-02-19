@@ -1,32 +1,33 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Chip from '../Chip/Chip'
+import { cutChips } from '../../utils/cutChips'
 
-const ChipCell = ({ elements, className }) => {
+const ChipCell = ({ elements, className, handleShowElements }) => {
+  const chips = cutChips(elements, 2)
   return elements
-    ? elements.sortedArr.map((item, i) => {
+    ? chips.sortedArr.map((item, i) => {
         return (
-          <div
-            className="jobs__table_body__chips__block"
-            key={`${item.value}${i}`}
-          >
+          <div className="table_body__chips__block" key={`${item.value}${i}`}>
             <Chip
               key={item.value}
               className={className}
-              onClick={item.onClick}
+              onClick={handleShowElements}
               value={item.value}
               title={item.value}
             />
-            {elements.hiddenChips && (
-              <div className="jobs__table_body__chips_hidden">
-                {elements.hiddenChips.map(element => (
-                  <Chip
-                    key={element.value}
-                    className={className}
-                    value={element.value}
-                    title={element.value}
-                  />
-                ))}
+            {chips.hiddenChips && (
+              <div className="table_body__chips_hidden">
+                {chips.hiddenChips.map(element => {
+                  return (
+                    <Chip
+                      key={element.value}
+                      className={className}
+                      value={element.value}
+                      title={element.value}
+                    />
+                  )
+                })}
               </div>
             )}
           </div>
@@ -41,7 +42,7 @@ ChipCell.defaultProps = {
 
 ChipCell.propTypes = {
   className: PropTypes.string.isRequired,
-  elements: PropTypes.shape({})
+  elements: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default ChipCell

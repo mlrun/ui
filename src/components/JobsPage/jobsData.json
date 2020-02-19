@@ -1,0 +1,40 @@
+{
+  "jobsInfoHeaders": [
+    "UID",
+    "Started at",
+    "Status",
+    "Parameters",
+    "Labels",
+    "Log level",
+    "Output path",
+    "Iterations"
+  ],
+  "tableHeaders": [
+    {
+      "header": "Name",
+      "size": "jobs_medium"
+    },
+    {
+      "header": "UID",
+      "size": "jobs_small"
+    },
+    {
+      "header": "Started at",
+      "size": "jobs_small"
+    },
+    {
+      "header": "Status",
+      "size": "jobs_small"
+    },
+    {
+      "header": "Parameters",
+      "size": "jobs_big"
+    },
+    {
+      "header": "Results",
+      "size": "jobs_big"
+    }
+  ],
+  "detailsMenu": ["info", "inputs", "artifacts", "results", "logs"],
+  "filters": ["period", "status"]
+}

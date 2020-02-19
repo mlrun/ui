@@ -1,12 +1,15 @@
 import React, { useRef } from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { tomorrowNightBright } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
+import PropTypes from 'prop-types'
+
 import cancel from '../../images/cancel.png'
+
 import './yamlmodal.scss'
-const YamlModal = ({ convertedYaml, close }) => {
+
+const YamlModal = ({ convertedYaml }) => {
   const modal = useRef()
   const closeYamlModal = () => {
-    close && close()
     modal.current.style.display = 'none'
   }
   return (
@@ -23,6 +26,10 @@ const YamlModal = ({ convertedYaml, close }) => {
       </div>
     </div>
   )
+}
+
+YamlModal.propTypes = {
+  convertedYaml: PropTypes.string
 }
 
 export default YamlModal
