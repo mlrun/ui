@@ -79,6 +79,7 @@
       }
       &_data {
         padding-left: 16px;
+        display: flex;
         &__parameters {
           @include chip($parametersBorder);
           margin: 8px 8px 0 0;

@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
+import ArtifactsFilterMenu from '../../components/ArtifacstFilterMenu/ArtifactsFilterMenu'
+import Table from '../../components/Table/Table'
 
 import refreshIcon from '../../images/refresh.png'
 
 import './content.scss'
-import ArtifactsFilterMenu from '../../components/ArtifacstFilterMenu/ArtifactsFilterMenu'
-import Table from '../../components/Table/Table'
 
 const Content = ({
   match,

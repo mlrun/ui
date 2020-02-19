@@ -1,5 +1,8 @@
 import React, { useRef } from 'react'
+import PropTypes from 'prop-types'
+
 import cancel from '../../images/cancel.png'
+
 import './yamlmodal.scss'
 
 const YamlModal = ({ convertedYaml }) => {
@@ -17,6 +20,10 @@ const YamlModal = ({ convertedYaml }) => {
       </pre>
     </div>
   )
+}
+
+YamlModal.propTypes = {
+  convertedYaml: PropTypes.string
 }
 
 export default YamlModal

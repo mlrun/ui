@@ -1,0 +1,38 @@
+{
+  "tableHeaders": [
+    {
+      "header": "Name",
+      "size": "artifacts_medium"
+    },
+    {
+      "header": "Path",
+      "size": "artifacts_big"
+    },
+    {
+      "header": "Type",
+      "size": "artifacts_small"
+    },
+    {
+      "header": "Labels",
+      "size": "artifacts_big"
+    },
+    {
+      "header": "Producer",
+      "size": "artifacts_small"
+    },
+    {
+      "header": "Hash",
+      "size": "artifacts_small"
+    },
+    {
+      "header": "Updated at",
+      "size": "artifacts_small"
+    },
+    {
+      "header": "",
+      "size": "artifacts_small"
+    }
+  ],
+  "detailsMenu": ["info", "inputs", "artifacts", "results", "logs"],
+  "filters": ["period", "tree"]
+}

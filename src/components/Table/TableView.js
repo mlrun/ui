@@ -16,9 +16,10 @@ const TableView = ({
   tableHeaders,
   job,
   detailsMenu,
+  page,
+  handleCancel,
   ...props
 }) => {
-  console.log(selectedItem)
   return (
     <div className="table" onClick={hideChips}>
       {loading && <Loader />}
@@ -64,8 +65,13 @@ const TableView = ({
         </div>
       </div>
       {selectedItem && (selectedItem.uid || selectedItem.hash) && (
-        <Details match={match} item={selectedItem} detailsMenu={detailsMenu} />
-        // <JobsItemInternal job={selectedItem} match={match} {...props} />
+        <Details
+          match={match}
+          item={selectedItem}
+          detailsMenu={detailsMenu}
+          page={page}
+          handleCancel={handleCancel}
+        />
       )}
     </div>
   )

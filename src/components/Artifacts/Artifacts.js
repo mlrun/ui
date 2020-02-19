@@ -1,12 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import artifactsAction from '../../actions/artifacts'
 import { connect } from 'react-redux'
+import YAML from 'yamljs'
+
+import Content from '../../layout/Content/Content'
+
+import artifactsAction from '../../actions/artifacts'
+import artifactsData from './artifactsData'
 
 import './artifacts.scss'
-import Content from '../../layout/Content/Content'
-import { formatDatetime, parseKeyValues, truncateUid } from '../../utils'
-import YAML from 'yamljs'
+import createArtifactsContent from '../../utils/createArtifactsContent'
 
 const Artifacts = ({
   match,
@@ -17,6 +20,7 @@ const Artifacts = ({
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [convertedYaml, setConvertedYaml] = useState()
+  const tableContent = createArtifactsContent(artifacts)
 
   const fetchData = useCallback(
     item => {
@@ -42,80 +46,6 @@ const Artifacts = ({
     },
     [fetchArtifacts, artifactsStore.artifacts]
   )
-
-  const tableHeaders = [
-    {
-      header: 'Name',
-      size: 'artifacts_medium'
-    },
-    {
-      header: 'Path',
-      size: 'artifacts_big'
-    },
-    {
-      header: 'Type',
-      size: 'artifacts_small'
-    },
-    {
-      header: 'Labels',
-      size: 'artifacts_big'
-    },
-    {
-      header: 'Producer',
-      size: 'artifacts_small'
-    },
-    {
-      header: 'Hash',
-      size: 'artifacts_small'
-    },
-    {
-      header: 'Updated at',
-      size: 'artifacts_small'
-    },
-    {
-      header: '',
-      size: 'artifacts_small'
-    }
-  ]
-
-  const tableContent = artifacts.map(artifact => ({
-    key: {
-      value: artifact.key,
-      size: 'artifacts_medium'
-    },
-    target_path: {
-      value: artifact.target_path,
-      size: 'artifacts_big'
-    },
-    king: {
-      value: artifact.king,
-      size: 'artifacts_small'
-    },
-    labels: {
-      value: parseKeyValues(artifact.labels),
-      size: 'artifacts_big',
-      type: 'labels'
-    },
-    producer: {
-      value: artifact.producer,
-      size: 'artifacts_small',
-      type: 'producer'
-    },
-    hash: {
-      value: truncateUid(artifact.hash),
-      size: 'artifacts_small'
-    },
-    updated: {
-      value: formatDatetime(new Date(artifact.updated)),
-      size: 'artifacts_small'
-    },
-    buttons: {
-      value: '',
-      size: 'artifacts_small'
-    }
-  }))
-
-  const detailsMenu = ['info', 'inputs', 'artifacts', 'results', 'logs']
 
   useEffect(() => {
     fetchData()
@@ -185,9 +115,9 @@ const Artifacts = ({
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
       loading={loading}
-      tableHeaders={tableHeaders}
-      filters={['period', 'tree']}
-      detailsMenu={detailsMenu}
+      tableHeaders={artifactsData.tableHeaders}
+      filters={artifactsData.filters}
+      detailsMenu={artifactsData.detailsMenu}
     />
   )
 }
@@ -195,7 +125,8 @@ const Artifacts = ({
 Artifacts.propTypes = {
   match: PropTypes.shape({}).isRequired,
   artifactsStore: PropTypes.shape({}).isRequired,
-  fetchArtifacts: PropTypes.func.isRequired
+  fetchArtifacts: PropTypes.func.isRequired,
+  selectArtifact: PropTypes.func.isRequired
 }
 
 export default connect(

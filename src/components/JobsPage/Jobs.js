@@ -4,72 +4,16 @@ import PropTypes from 'prop-types'
 import YAML from 'yamljs'
 
 import jobsActions from '../../actions/jobs'
+import jobsData from './jobsData'
+import createJobsContent from '../../utils/createJobsContent'
 
 import Content from '../../layout/Content/Content'
-import { formatDatetime, truncateUid } from '../../utils'
 
 const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState(true)
   const [convertedYaml, setConvertedYaml] = useState()
-  const tableHeaders = [
-    {
-      header: 'Name',
-      size: 'jobs_medium'
-    },
-    {
-      header: 'UID',
-      size: 'jobs_small'
-    },
-    {
-      header: 'Started at',
-      size: 'jobs_small'
-    },
-    {
-      header: 'Status',
-      size: 'jobs_small'
-    },
-    {
-      header: 'Parameters',
-      size: 'jobs_big'
-    },
-    {
-      header: 'Results',
-      size: 'jobs_big'
-    }
-  ]
-
-  const tableContent = jobs.map(job => ({
-    name: {
-      value: job.name,
-      size: 'jobs_medium'
-    },
-    uid: {
-      value: truncateUid(job.uid),
-      size: 'jobs_small'
-    },
-    startTime: {
-      value: formatDatetime(job.startTime),
-      size: 'jobs_small'
-    },
-    state: {
-      value: job.state,
-      size: 'jobs_small',
-      type: 'state'
-    },
-    parameters: {
-      value: job.parameters,
-      size: 'jobs_big',
-      type: 'parameters'
-    },
-    resultsChips: {
-      value: job.resultsChips,
-      size: 'jobs_big',
-      type: 'results'
-    }
-  }))
-
-  const detailsMenu = ['info', 'inputs', 'artifacts', 'results', 'logs']
+  const tableContent = createJobsContent(jobs)
 
   const refreshJobs = useCallback(
     noCahche => {
@@ -130,10 +74,11 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
       loading={loading}
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
-      filters={['period', 'status']}
-      tableHeaders={tableHeaders}
+      filters={jobsData.filters}
+      tableHeaders={jobsData.tableHeaders}
       tableContent={tableContent}
-      detailsMenu={detailsMenu}
+      detailsMenu={jobsData.detailsMenu}
+      page={'jobs'}
     />
   )
 }

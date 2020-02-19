@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const JobInternalInputs = ({ job }) => {
+const DetailsInputs = ({ inputs }) => {
   return (
     <div>
       <ul className="jobs__table__item_inputs">
-        {Object.entries(job.inputs || {}).map(([key, value]) => (
+        {Object.entries(inputs || {}).map(([key, value]) => (
           <li className="jobs__table__item_inputs_item" key={key}>
             <div>{key}</div>
             <div>{value}</div>
@@ -16,8 +16,8 @@ const JobInternalInputs = ({ job }) => {
   )
 }
 
-JobInternalInputs.propTypes = {
-  job: PropTypes.shape({}).isRequired
+DetailsInputs.propTypes = {
+  inputs: PropTypes.shape({}).isRequired
 }
 
-export default JobInternalInputs
+export default DetailsInputs

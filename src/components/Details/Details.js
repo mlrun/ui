@@ -4,18 +4,14 @@ import { Link } from 'react-router-dom'
 
 import { formatDatetime } from '../../utils'
 
-// import JobInternalInfo from '../JobInternalInfo/JobInternalInfo'
-// import JobInternalInputs from '../JobInternalInputs/JobInternalInputs'
-// import JobInternalResults from '../JobInternalResults/JobInternalResults'
-// import JobInternalLogs from '../JobInternalLogs/JobInternalLogs'
-// import JobInternalArtifacts from '../JobInternalArtifacts/JobInternalArtifacts'
-
 import './details.scss'
 
 import cancel from '../../images/cancel.png'
 import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
+import DetailsInfo from '../DetailsInfo/DetailsInfo'
+import DetailsInputs from '../DetailsInputs/DetailsInputs'
 
-const Details = ({ item, handleCancel, match, detailsMenu }) => {
+const Details = ({ item, handleCancel, match, detailsMenu, page }) => {
   return (
     <div className="table__item">
       <div className="table__item__header">
@@ -33,7 +29,7 @@ const Details = ({ item, handleCancel, match, detailsMenu }) => {
         </div>
         <div className="table__item__header_buttons">
           <Link
-            to={`/projects/${match.params.projectName}/jobs`}
+            to={`/projects/${match.params.projectName}/${page}`}
             onClick={handleCancel}
           >
             <img src={cancel} alt="cancel" />
@@ -46,14 +42,15 @@ const Details = ({ item, handleCancel, match, detailsMenu }) => {
             <DetailsMenuItem
               match={match}
               id={item.uid}
-              page={'jobs'}
+              page={page}
               tab={link}
+              key={link}
             />
           ))}
         </ul>
       </div>
-      {/*{match.params.tab === 'info' && <JobInternalInfo job={job} />}*/}
-      {/*{match.params.tab === 'inputs' && <JobInternalInputs job={job} />}*/}
+      {match.params.tab === 'info' && <DetailsInfo item={item} page={page} />}
+      {match.params.tab === 'inputs' && <DetailsInputs inputs={item.inputs} />}
       {/*{match.params.tab === 'artifacts' && (*/}
       {/*  <JobInternalArtifacts job={job} setDownloadStatus={setDownloadStatus} />*/}
       {/*)}*/}
@@ -64,11 +61,11 @@ const Details = ({ item, handleCancel, match, detailsMenu }) => {
 }
 
 Details.propTypes = {
-  job: PropTypes.shape({}).isRequired,
+  item: PropTypes.shape({}).isRequired,
   handleCancel: PropTypes.func.isRequired,
-  handleMenuClick: PropTypes.func.isRequired,
-  handleShowElements: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired
+  match: PropTypes.shape({}).isRequired,
+  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
+  page: PropTypes.string.isRequired
 }
 
 export default Details
