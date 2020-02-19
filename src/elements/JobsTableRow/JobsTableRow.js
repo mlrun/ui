@@ -12,7 +12,8 @@ const JobsTableRow = ({
   index,
   match,
   handleSelectItem,
-  convertToYaml
+  convertToYaml,
+  handleShowElements
 }) => {
   return (
     <div
@@ -34,6 +35,7 @@ const JobsTableRow = ({
             }
             selectItem={handleSelectItem}
             key={value.value}
+            handleShowElements={handleShowElements}
           />
         )
       })}

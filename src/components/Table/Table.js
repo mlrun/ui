@@ -33,11 +33,32 @@ const Table = props => {
     }
   }
 
+  const handleShowElements = e => {
+    if (
+      e.target.className === 'table_body__results' ||
+      e.target.className === 'table_body__parameters' ||
+      e.target.className === 'table__item_details_item_data__parameters'
+    ) {
+      let blocksArr = document.getElementsByClassName('showChips')
+      const parentBlock = e.target.closest('.table_body__chips__block')
+      if (
+        blocksArr.length > 0 &&
+        !parentBlock.classList.contains('showChips')
+      ) {
+        blocksArr[0].classList.remove('showChips')
+      }
+      parentBlock.classList.contains('showChips')
+        ? parentBlock.classList.remove('showChips')
+        : parentBlock.classList.add('showChips')
+    }
+  }
+
   return (
     <TableView
       hideChips={hideChips}
       handleHoverOnRowActions={handleHoverOnRowActions}
       handleMouseLeaveFromRowActions={handleMouseLeaveFromRowActions}
+      handleShowElements={handleShowElements}
       {...props}
     />
   )

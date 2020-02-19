@@ -2,16 +2,25 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
+import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
+import DetailsInfo from '../DetailsInfo/DetailsInfo'
+import DetailsInputs from '../DetailsInputs/DetailsInputs'
+import DetailsLogs from '../DetailsLogs/DetailsLogs'
+
 import { formatDatetime } from '../../utils'
 
 import './details.scss'
 
 import cancel from '../../images/cancel.png'
-import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
-import DetailsInfo from '../DetailsInfo/DetailsInfo'
-import DetailsInputs from '../DetailsInputs/DetailsInputs'
 
-const Details = ({ item, handleCancel, match, detailsMenu, page }) => {
+const Details = ({
+  item,
+  handleCancel,
+  match,
+  detailsMenu,
+  page,
+  handleShowElements
+}) => {
   return (
     <div className="table__item">
       <div className="table__item__header">
@@ -49,13 +58,19 @@ const Details = ({ item, handleCancel, match, detailsMenu, page }) => {
           ))}
         </ul>
       </div>
-      {match.params.tab === 'info' && <DetailsInfo item={item} page={page} />}
+      {match.params.tab === 'info' && (
+        <DetailsInfo
+          item={item}
+          page={page}
+          handleShowElements={handleShowElements}
+        />
+      )}
       {match.params.tab === 'inputs' && <DetailsInputs inputs={item.inputs} />}
       {/*{match.params.tab === 'artifacts' && (*/}
       {/*  <JobInternalArtifacts job={job} setDownloadStatus={setDownloadStatus} />*/}
       {/*)}*/}
       {/*{match.params.tab === 'results' && <JobInternalResults job={job} />}*/}
-      {/*{match.params.tab === 'logs' && <JobInternalLogs match={match} />}*/}
+      {match.params.tab === 'logs' && <DetailsLogs match={match} />}
     </div>
   )
 }

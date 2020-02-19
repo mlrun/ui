@@ -1,18 +1,25 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+
 import ChipCell from '../ChipCell/ChipCell'
 import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
 
-const TableCell = ({ item, selectItem, selectedItem, link, data }) => {
+import { truncateUid } from '../../utils'
+
+const TableCell = ({
+  item,
+  selectItem,
+  selectedItem,
+  link,
+  data,
+  handleShowElements
+}) => {
   if (link) {
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
         <Link to={link} onClick={() => selectItem(item)}>
           {data.value}
-          <span>
-            {selectedItem.uid &&
-              `...${selectedItem.uid.slice(selectedItem.uid.length - 7)}`}
-          </span>
+          <span>{selectedItem.uid && truncateUid(item.uid)}</span>
         </Link>
       </div>
     )
@@ -31,6 +38,7 @@ const TableCell = ({ item, selectItem, selectedItem, link, data }) => {
         <ChipCell
           elements={data.value}
           className={`table_body__${data.type}`}
+          handleShowElements={handleShowElements}
         />
       </div>
     )

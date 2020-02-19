@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
-// import JobsItemInternal from '../JobsItemInternal/JobsItemInternal'
 import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
@@ -18,6 +17,7 @@ const TableView = ({
   detailsMenu,
   page,
   handleCancel,
+  handleShowElements,
   ...props
 }) => {
   return (
@@ -71,6 +71,7 @@ const TableView = ({
           detailsMenu={detailsMenu}
           page={page}
           handleCancel={handleCancel}
+          handleShowElements={handleShowElements}
         />
       )}
     </div>

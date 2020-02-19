@@ -6,7 +6,7 @@ import jobsData from '../JobsPage/jobsData'
 
 import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsInfoItem'
 
-const DetailsInfo = ({ item, page }) => {
+const DetailsInfo = ({ item, page, handleShowElements }) => {
   const jobsInfoContent = [
     item.uid,
     formatDatetime(item.startTime),
@@ -28,6 +28,7 @@ const DetailsInfo = ({ item, page }) => {
                     state={item.state}
                     header={header}
                     key={header}
+                    handleShowElements={handleShowElements}
                   />
                 )
               } else if (jobsInfoContent[i] === item.parameters) {
@@ -44,6 +45,7 @@ const DetailsInfo = ({ item, page }) => {
                     chips={item.labels}
                     header={header}
                     key={header}
+                    handleShowElements={handleShowElements}
                   />
                 )
               } else {

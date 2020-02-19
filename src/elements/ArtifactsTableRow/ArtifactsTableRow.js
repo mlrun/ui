@@ -12,7 +12,8 @@ const ArtifactsTableRow = ({
   selectedItem,
   handleHoverOnRowActions,
   handleMouseLeaveFromRowActions,
-  handleSelectItem
+  handleSelectItem,
+  handleShowElements
 }) => {
   return (
     <div
@@ -34,6 +35,7 @@ const ArtifactsTableRow = ({
             }
             selectItem={handleSelectItem}
             key={value.value + i}
+            handleShowElements={handleShowElements}
           />
         )
       })}
