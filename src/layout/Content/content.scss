@@ -1,0 +1,66 @@
+@import "../../scss/variables";
+@import "../../scss/mixins";
+
+.content {
+  @include jobsFlex;
+  box-shadow: $jobsShadow;
+  border-radius: $mainBorderRadius;
+  background-color: $white;
+  margin: 52px 24px 24px;
+  position: relative;
+  &__header {
+    display: flex;
+    padding: 21px 24px;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $white;
+    box-shadow: $headerShadow;
+  }
+  &__menu {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: -38px;
+    &__list {
+      @include resetSpaces;
+      list-style-type: none;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      &_item {
+        padding: 8px 24px;
+        border-bottom: 3px solid transparent;
+        text-align: center;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 18px;
+        color: $mainGreyColor;
+        cursor: pointer;
+      }
+      .active {
+        border-bottom: 3px solid $mainGreenColor;
+        color: $mainGreenColor;
+      }
+    }
+  }
+  &__action_bar {
+    padding: 23px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &__filters {
+      display: flex;
+      align-items: center;
+    }
+    &_refresh {
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      &:focus, &:active {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+  }
+}
