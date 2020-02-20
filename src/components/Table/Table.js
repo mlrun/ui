@@ -7,11 +7,12 @@ import './table.scss'
 const Table = props => {
   const hideChips = e => {
     if (
-      e.target.className !== 'jobs__table_body__results' &&
-      e.target.className !== 'jobs__table_body__parameters'
+      e.target.className !== 'table_body__results' &&
+      e.target.className !== 'table_body__parameters' &&
+      e.target.className !== 'table__item_details_item_data__parameters'
     ) {
       const block = document.getElementsByClassName(
-        'jobs__table_body__chips__block showChips'
+        'table_body__chips__block showChips'
       )[0]
       if (block) {
         block.classList.remove('showChips')

@@ -12,6 +12,7 @@ import { formatDatetime } from '../../utils'
 import './details.scss'
 
 import cancel from '../../images/cancel.png'
+import DetailsArtifacts from '../DetailsArtifacts/DetailsArtifacts'
 
 const Details = ({
   item,
@@ -19,10 +20,11 @@ const Details = ({
   match,
   detailsMenu,
   page,
-  handleShowElements
+  handleShowElements,
+  hideChips
 }) => {
   return (
-    <div className="table__item">
+    <div className="table__item" onClick={hideChips}>
       <div className="table__item__header">
         <div className="table__item__header_data">
           <h3>{item.name || item.producer.name}</h3>
@@ -66,9 +68,7 @@ const Details = ({
         />
       )}
       {match.params.tab === 'inputs' && <DetailsInputs inputs={item.inputs} />}
-      {/*{match.params.tab === 'artifacts' && (*/}
-      {/*  <JobInternalArtifacts job={job} setDownloadStatus={setDownloadStatus} />*/}
-      {/*)}*/}
+      {match.params.tab === 'artifacts' && <DetailsArtifacts job={item} />}
       {/*{match.params.tab === 'results' && <JobInternalResults job={job} />}*/}
       {match.params.tab === 'logs' && <DetailsLogs match={match} />}
     </div>
