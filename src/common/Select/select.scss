@@ -70,7 +70,7 @@
         background-color: $mainBlue;
         margin: 0 10px;
       }
-      &_failed {
+      &_failed, &_error {
         @include jobStatus;
         background-color: $statusFailed;
         margin: 0 10px;

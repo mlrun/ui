@@ -11,7 +11,8 @@ const createArtifactsContent = artifacts =>
       },
       target_path: {
         value: artifact.target_path,
-        size: 'artifacts_big'
+        size: 'artifacts_big',
+        type: 'path'
       },
       king: {
         value: artifact.king,
@@ -33,11 +34,17 @@ const createArtifactsContent = artifacts =>
       },
       updated: {
         value: formatDatetime(new Date(artifact.updated)),
-        size: 'artifacts_small'
+        size: 'artifacts_date'
       },
-      buttons: {
+      buttonPopout: {
         value: '',
-        size: 'artifacts_small'
+        size: 'artifacts_small',
+        type: 'buttonPopout'
+      },
+      buttonDownload: {
+        value: '',
+        size: 'artifacts_small',
+        type: 'buttonDownload'
       }
     }
   })

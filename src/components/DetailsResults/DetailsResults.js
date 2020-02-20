@@ -4,12 +4,12 @@ import PropTypes from 'prop-types'
 import bestIterationIcon from '../../images/best-iteration-icon.png'
 import { resultsTable } from '../../utils/resultsTable'
 
-const JobInternalResults = ({ job }) => {
+const DetailsResults = ({ job }) => {
   const result = resultsTable(job)
   return (
-    <div className="jobs__table__item_results">
+    <div className="table__item_results">
       {job.iterationStats && (
-        <table className="jobs__table__item_results__table">
+        <table className="table__item_results__table">
           <thead>
             <tr>
               {result.headers.map((item, i) => (
@@ -37,7 +37,7 @@ const JobInternalResults = ({ job }) => {
                     return (
                       <td
                         key={`${value}${i}`}
-                        className="jobs__table__item_results__table_medal"
+                        className="table__item_results__table_medal"
                       >
                         {value}
                         <img
@@ -60,8 +60,8 @@ const JobInternalResults = ({ job }) => {
   )
 }
 
-JobInternalResults.propTypes = {
+DetailsResults.propTypes = {
   job: PropTypes.shape({}).isRequired
 }
 
-export default JobInternalResults
+export default DetailsResults

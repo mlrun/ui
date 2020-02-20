@@ -27,7 +27,7 @@ const DetailsArtifacts = ({ jobsStore, getArtifacts }) => {
     }
   })
 
-  const handleClick = (e, schema, path) => {
+  const handleClick = e => {
     const viewedBlocks = document.getElementsByClassName('view')
     if (
       viewedBlocks.length > 0 &&
@@ -36,9 +36,7 @@ const DetailsArtifacts = ({ jobsStore, getArtifacts }) => {
         .classList.contains('view')
     ) {
       viewedBlocks[0].classList.remove('view')
-    }
-    e.persist()
-    getArtifacts(schema, path).then(() => {
+    } else {
       e.target
         .closest('div.table__item_artifacts_wrapper')
         .classList.contains('view')
@@ -48,7 +46,7 @@ const DetailsArtifacts = ({ jobsStore, getArtifacts }) => {
         : e.target
             .closest('div.table__item_artifacts_wrapper')
             .classList.add('view')
-    })
+    }
   }
 
   return (

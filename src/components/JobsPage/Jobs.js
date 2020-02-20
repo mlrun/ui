@@ -17,19 +17,14 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   const refreshJobs = useCallback(
     noCahche => {
       setSelectedJob({})
-      if (noCahche || jobsStore.jobs.length === 0) {
-        setLoading(true)
-        fetchJobs()
-          .then(jobs => {
-            return setJobs(jobs)
-          })
-          .then(() => setLoading(false))
-      } else if (jobsStore.jobs.length > 0 && !noCahche) {
-        setJobs(jobsStore.jobs)
-        setLoading(false)
-      }
+      setLoading(true)
+      fetchJobs(match.params.projectName)
+        .then(jobs => {
+          return setJobs(jobs)
+        })
+        .then(() => setLoading(false))
     },
-    [fetchJobs, jobsStore.jobs, setSelectedJob]
+    [fetchJobs, match.params.projectName, setSelectedJob]
   )
 
   useEffect(() => {

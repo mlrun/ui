@@ -46,7 +46,7 @@ main {
   background-color: $mainGreenColor;
 }
 
-.failed {
+.failed, .error {
   @include jobStatus;
   background-color: $statusFailed;
 }
