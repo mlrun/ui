@@ -61,95 +61,84 @@ const ArtifactsDetailsPreview = ({ artifact }) => {
 
   const [isLoader, setLoader] = useState(false)
 
-  let isSchemaExist = /^([\w\d]+)(?=:)/gi.test(artifact.target_path)
-  let path = isSchemaExist
-    ? artifact.target_path.match(/(?<=\/{2})([\w\W\d]+)|^\/([\w\W\d]+)/gi)[0]
-    : null
-  let schema = isSchemaExist
-    ? artifact.target_path.match(/^([\w\d]+)(?=:)/gi)[0]
-    : null
-
   useEffect(() => {
     setLoader(true)
-    getArtifactPreview(schema, path ? path : artifact.target_path).then(() =>
-      setLoader(false)
-    )
-  }, [schema, path, artifact.target_path])
+    getArtifactPreview(
+      artifact.target_path.schema,
+      artifact.target_path.path
+    ).then(() => setLoader(false))
+  }, [artifact.target_path])
 
-  return (
-    <div className="preview_container">
-      {isLoader ? (
-        <Loader />
-      ) : (
-        <div>
-          {preview.type && preview.type === 'table-results' && (
-            <div className="table__item_artifacts__preview_table">
-              <DetailsResults job={preview} />
-            </div>
-          )}
-          {preview.type && preview.type === 'table' && (
-            <div className="table__item_artifacts__preview_table">
-              <div className="table__item_artifacts__preview_table__row">
-                {preview.data.headers.map(header => {
-                  return (
-                    <div
-                      key={header}
-                      className="table__item_artifacts__preview_table__header"
-                    >
-                      {header}
-                    </div>
-                  )
-                })}
-              </div>
-              {preview.data.content.map(item => (
-                <div
-                  key={item + Math.random()}
-                  className="table__item_artifacts__preview_table__row"
-                >
-                  {typeof item === typeof '' ? (
-                    <div className="table__item_artifacts__preview_table__row__content">
-                      {item}
-                    </div>
-                  ) : (
-                    item.map(value => (
-                      <div
-                        key={value + Math.random()}
-                        className="table__item_artifacts__preview_table__row__content"
-                      >
-                        {value}
-                      </div>
-                    ))
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-          {preview.data && preview.type === 'text' && (
-            <div>{preview.data.content}</div>
-          )}
-          {preview.data && preview.type === 'html' && (
-            <div>
-              <iframe
-                srcDoc={preview.data.content}
-                frameBorder="0"
-                title="Preview"
-              />
-            </div>
-          )}
-          {preview.data && preview.type === 'json' && (
-            <div>
-              <pre>
-                <code>{preview.data.content}</code>
-              </pre>
-            </div>
-          )}
-          {preview.data && preview.type === 'image' && (
-            <div>{preview.data.content}</div>
-          )}
-          {preview.type && preview.type === 'unknown' && <div>No preview</div>}
+  return isLoader ? (
+    <Loader />
+  ) : (
+    <>
+      {preview.type && preview.type === 'table-results' && (
+        <div className="table__item_artifacts__preview_table">
+          <DetailsResults job={preview} />
         </div>
       )}
-    </div>
+      {preview.type && preview.type === 'table' && (
+        <div className="table__item_artifacts__preview_table">
+          <div className="table__item_artifacts__preview_table__row">
+            {preview.data.headers.map(header => {
+              return (
+                <div
+                  key={header}
+                  className="table__item_artifacts__preview_table__header"
+                >
+                  {header}
+                </div>
+              )
+            })}
+          </div>
+          {preview.data.content.map(item => (
+            <div
+              key={item + Math.random()}
+              className="table__item_artifacts__preview_table__row"
+            >
+              {typeof item === typeof '' ? (
+                <div className="table__item_artifacts__preview_table__row__content">
+                  {item}
+                </div>
+              ) : (
+                item.map(value => (
+                  <div
+                    key={value + Math.random()}
+                    className="table__item_artifacts__preview_table__row__content"
+                  >
+                    {value}
+                  </div>
+                ))
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {preview.data && preview.type === 'text' && (
+        <div>{preview.data.content}</div>
+      )}
+      {preview.data && preview.type === 'html' && (
+        <div>
+          <iframe
+            srcDoc={preview.data.content}
+            frameBorder="0"
+            title="Preview"
+          />
+        </div>
+      )}
+      {preview.data && preview.type === 'json' && (
+        <div>
+          <pre>
+            <code>{preview.data.content}</code>
+          </pre>
+        </div>
+      )}
+      {preview.data && preview.type === 'image' && (
+        <div>{preview.data.content}</div>
+      )}
+      {preview.type && preview.type === 'unknown' && <div>No preview</div>}
+    </>
   )
 }
 
