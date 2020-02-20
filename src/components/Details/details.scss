@@ -29,6 +29,11 @@
         font-size: 15px;
         line-height: 18px;
         margin-left: 24px;
+        display: flex;
+        align-items: center;
+      }
+      i {
+        margin-left: 10px;
       }
     }
     &_buttons {
@@ -62,6 +67,10 @@
     margin: 0;
     padding: 0 30px;
     list-style-type: none;
+    &_preview_header {
+      margin: 30px;
+      font-size: 25px;
+    }
     &_item {
       border-bottom: $tableBorder;
       padding: 18px 18px;
@@ -76,6 +85,9 @@
       }
       i {
         margin-left: 21px;
+      }
+      span {
+        margin-right: 20px;
       }
       &_data {
         padding-left: 16px;
@@ -142,7 +154,7 @@
         }
       }
     }
-    .view .jobs__table__item_artifacts__preview {
+    .view .table__item_artifacts__preview {
       display: flex;
       flex-direction: row;
     }
@@ -156,7 +168,7 @@
         }
       }
     }
-    .jobs__table__item_results__table {
+    .table__item_results__table {
       td {
         padding: 19px 16px;
       }

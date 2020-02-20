@@ -13,6 +13,9 @@ import './details.scss'
 
 import cancel from '../../images/cancel.png'
 import DetailsArtifacts from '../DetailsArtifacts/DetailsArtifacts'
+import DetailsResults from '../DetailsResults/DetailsResults'
+import Download from '../../common/Download/Download'
+import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 
 const Details = ({
   item,
@@ -27,16 +30,26 @@ const Details = ({
     <div className="table__item" onClick={hideChips}>
       <div className="table__item__header">
         <div className="table__item__header_data">
-          <h3>{item.name || item.producer.name}</h3>
-          <span>
-            {formatDatetime(item.startTime)}{' '}
-            {item.state && (
-              <i
-                className={item.state}
-                title={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
+          <h3>{item.name || item.key}</h3>
+          {page === 'jobs' ? (
+            <span>
+              {formatDatetime(item.startTime)}
+              {item.state && (
+                <i
+                  className={item.state}
+                  title={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
+                />
+              )}
+            </span>
+          ) : (
+            <span>
+              {formatDatetime(new Date(item.updated))}
+              <Download
+                path={item.target_path.path}
+                schema={item.target_path.schema}
               />
-            )}
-          </span>
+            </span>
+          )}
         </div>
         <div className="table__item__header_buttons">
           <Link
@@ -56,6 +69,7 @@ const Details = ({
               page={page}
               tab={link}
               key={link}
+              name={item.key}
             />
           ))}
         </ul>
@@ -67,9 +81,10 @@ const Details = ({
           handleShowElements={handleShowElements}
         />
       )}
+      {match.params.tab === 'preview' && <ArtifactsPreview artifact={item} />}
       {match.params.tab === 'inputs' && <DetailsInputs inputs={item.inputs} />}
-      {match.params.tab === 'artifacts' && <DetailsArtifacts job={item} />}
-      {/*{match.params.tab === 'results' && <JobInternalResults job={job} />}*/}
+      {match.params.tab === 'artifacts' && <DetailsArtifacts />}
+      {match.params.tab === 'results' && <DetailsResults job={item} />}
       {match.params.tab === 'logs' && <DetailsLogs match={match} />}
     </div>
   )

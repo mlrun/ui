@@ -26,13 +26,28 @@
     },
     {
       "header": "Updated at",
+      "size": "artifacts_date"
+    },
+    {
+      "header": "Pop out",
       "size": "artifacts_small"
     },
     {
-      "header": "",
+      "header": "Download",
       "size": "artifacts_small"
     }
   ],
-  "detailsMenu": ["info", "inputs", "artifacts", "results", "logs"],
-  "filters": ["period", "tree"]
+  "detailsMenu": ["info", "preview"],
+  "filters": ["period", "tree"],
+  "artifactsInfoHeaders": [
+    "Key",
+    "Iter",
+    "Kind",
+    "Size",
+    "Path",
+    "Tree",
+    "Updated",
+    "Labels"
+  ],
+  "artifactsProducerInfoHeaders": ["Kind", "Name", "Owner", "Uri", "Workflow"]
 }

@@ -38,6 +38,16 @@ const Artifacts = ({
               } else {
                 item = artifact.data[0]
               }
+              const index = item.target_path.indexOf('://')
+              const target_path = {
+                schema: item.target_path.includes('://')
+                  ? item.target_path.slice(0, index)
+                  : '',
+                path: item.target_path.includes('://')
+                  ? item.target_path.slice(index + '://'.length)
+                  : item.target_path
+              }
+              item.target_path = target_path
               return item
             })
             _setArtifacts(artifacts)
@@ -123,6 +133,7 @@ const Artifacts = ({
       tableHeaders={artifactsData.tableHeaders}
       filters={artifactsData.filters}
       detailsMenu={artifactsData.detailsMenu}
+      page={'artifacts'}
     />
   )
 }

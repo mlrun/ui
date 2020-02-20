@@ -6,6 +6,9 @@ import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
 
 import { truncateUid } from '../../utils'
 
+import popoutIcon from '../../images/popout.png'
+import Download from '../../common/Download/Download'
+
 const TableCell = ({
   item,
   selectItem,
@@ -51,6 +54,30 @@ const TableCell = ({
           to={`/jobs/${data.value.uri}/info`}
           name={data.value.name}
         />
+      </div>
+    )
+  } else if (data.type === 'buttonPopout') {
+    return (
+      <div className={`table_body__row__cell cell__${data.size}`}>
+        <button>
+          <img src={popoutIcon} alt="Popout Icon" />
+        </button>
+      </div>
+    )
+  } else if (data.type === 'buttonDownload') {
+    return (
+      <div className={`table_body__row__cell cell__${data.size}`}>
+        <Download
+          path={item.target_path.path}
+          schema={item.target_path.schema}
+        />
+      </div>
+    )
+  } else if (data.type === 'path') {
+    return (
+      <div className={`table_body__row__cell cell__${data.size}`}>
+        <span>schema: {data.value.schema}</span> <br />
+        <span>path: {data.value.path}</span>
       </div>
     )
   } else {

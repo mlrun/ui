@@ -19,7 +19,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
       setSelectedJob({})
       if (noCahche || jobsStore.jobs.length === 0) {
         setLoading(true)
-        fetchJobs()
+        fetchJobs(match.params.projectName)
           .then(jobs => {
             return setJobs(jobs)
           })
