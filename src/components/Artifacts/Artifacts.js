@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import YAML from 'yamljs'
+import yaml from 'js-yaml'
 
 import Content from '../../layout/Content/Content'
 
@@ -20,28 +20,34 @@ const Artifacts = ({
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [convertedYaml, setConvertedYaml] = useState()
-  const tableContent = createArtifactsContent(artifacts)
+  const [tableContent, setArtifactsContent] = useState([])
 
   const fetchData = useCallback(
     item => {
       if (item || artifactsStore.artifacts.length === 0) {
         setLoading(true)
-        fetchArtifacts().then(data => {
-          const artifacts = data.map(artifact => {
-            let item = null
-            if (artifact.link_iteration) {
-              let { link_iteration } = artifact.link_iteration
-              item = artifact.data.filter(
-                item => item.iter === link_iteration
-              )[0]
-            } else {
-              item = artifact.data[0]
-            }
-            return item
+        fetchArtifacts()
+          .then(data => {
+            const artifacts = data.map(artifact => {
+              let item = null
+              if (artifact.link_iteration) {
+                let { link_iteration } = artifact.link_iteration
+                item = artifact.data.filter(
+                  item => item.iter === link_iteration
+                )[0]
+              } else {
+                item = artifact.data[0]
+              }
+              return item
+            })
+            _setArtifacts(artifacts)
+            setLoading(false)
+            return artifacts
           })
-          _setArtifacts(artifacts)
-          setLoading(false)
-        })
+          .then(artifacts => {
+            const content = createArtifactsContent(artifacts)
+            setArtifactsContent(content)
+          })
       }
     },
     [fetchArtifacts, artifactsStore.artifacts]
@@ -52,33 +58,32 @@ const Artifacts = ({
   }, [fetchData])
 
   useEffect(() => {
-    if (artifactsStore.selectArtifact) {
-      if (
-        match.params.name === undefined &&
-        Object.keys(artifactsStore.selectArtifact).length !== 0
-      ) {
-        selectArtifact({})
-      }
+    //remove the select artifact when user closes the artifact details page
+    if (
+      match.params.name === undefined &&
+      Object.keys(artifactsStore.selectArtifact).length !== 0
+    ) {
+      selectArtifact({})
+    }
+    //find the current artifact when user selects the artifact and updates site or an artifact name and tab exists in the URL
+    if (
+      match.params.name !== undefined &&
+      Object.keys(artifactsStore.selectArtifact).length === 0 &&
+      artifactsStore.artifacts.length !== 0
+    ) {
+      const { name } = match.params
+      const [searchItem] = artifactsStore.artifacts.filter(
+        item => item.key === name
+      )
 
-      if (
-        match.params.name !== undefined &&
-        Object.keys(artifactsStore.selectArtifact).length === 0
-      ) {
-        const { name } = match.params
-        if (artifactsStore.artifacts.length !== 0) {
-          const [searchItem] = artifactsStore.artifacts.filter(
-            item => item.key === name
-          )
-          const [artifact] = searchItem.data.filter(item => {
-            if (searchItem.link_iteration) {
-              const { link_iteration } = searchItem.link_iteration
-              return link_iteration === item.iter
-            }
-            return true
-          })
-          selectArtifact(artifact)
+      const [artifact] = searchItem.data.filter(item => {
+        if (searchItem.link_iteration) {
+          const { link_iteration } = searchItem.link_iteration
+          return link_iteration === item.iter
         }
-      }
+        return true
+      })
+      selectArtifact(artifact)
     }
   }, [
     artifactsStore.artifacts,
@@ -89,7 +94,7 @@ const Artifacts = ({
 
   const convertToYaml = item => {
     document.getElementById('yaml_modal').style.display = 'flex'
-    setConvertedYaml(YAML.stringify(item))
+    setConvertedYaml(yaml.safeDump(item))
   }
 
   const handleSelectArtifact = item => {

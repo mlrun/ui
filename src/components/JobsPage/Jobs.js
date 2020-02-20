@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import YAML from 'yamljs'
-
+import yaml from 'js-yaml'
 import jobsActions from '../../actions/jobs'
 import jobsData from './jobsData'
 import createJobsContent from '../../utils/createJobsContent'
@@ -60,7 +59,7 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
     const jobJson = item
     delete jobJson.showedParameters
     delete jobJson.showedResults
-    setConvertedYaml(YAML.stringify(jobJson))
+    setConvertedYaml(yaml.safeDump(jobJson))
   }
 
   return (

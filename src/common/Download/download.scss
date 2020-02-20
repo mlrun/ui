@@ -13,12 +13,17 @@
   transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
   &.success {
     &_notification {
-      color: #49AF53;
+      color: #49af53;
     }
   }
   &.failed {
     &_notification {
       color: $statusFailed;
+    }
+  }
+  &.cancel {
+    &_notification {
+      color: #ff9800;
     }
   }
   box-shadow: $tooltipShadow;

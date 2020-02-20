@@ -72,6 +72,7 @@ const TableView = ({
           page={page}
           handleCancel={handleCancel}
           handleShowElements={handleShowElements}
+          hideChips={hideChips}
         />
       )}
     </div>
