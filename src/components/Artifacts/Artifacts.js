@@ -26,7 +26,7 @@ const Artifacts = ({
     item => {
       if (item || artifactsStore.artifacts.length === 0) {
         setLoading(true)
-        fetchArtifacts()
+        fetchArtifacts(match.params.projectName)
           .then(data => {
             const artifacts = data.map(artifact => {
               let item = null
@@ -60,7 +60,7 @@ const Artifacts = ({
           })
       }
     },
-    [fetchArtifacts, artifactsStore.artifacts]
+    [artifactsStore.artifacts.length, fetchArtifacts, match.params.projectName]
   )
 
   useEffect(() => {

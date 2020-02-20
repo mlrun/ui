@@ -119,13 +119,7 @@ const ArtifactsDetailsPreview = ({ artifact }) => {
         <div>{preview.data.content}</div>
       )}
       {preview.data && preview.type === 'html' && (
-        <div>
-          <iframe
-            srcDoc={preview.data.content}
-            frameBorder="0"
-            title="Preview"
-          />
-        </div>
+        <iframe srcDoc={preview.data.content} frameBorder="0" title="Preview" />
       )}
       {preview.data && preview.type === 'json' && (
         <div>
