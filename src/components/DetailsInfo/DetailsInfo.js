@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 
 import { formatDatetime } from '../../utils'
 import jobsData from '../JobsPage/jobsData'
+import artifactsData from '../Artifacts/artifactsData'
 
 import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsInfoItem'
+import ArtifactsDetailsInfoItem from '../../elements/ArtifactsDetailsInfoItem/ArtifactsDetailsInfoItem'
 
 const DetailsInfo = ({ item, page, handleShowElements }) => {
   const jobsInfoContent = [
@@ -16,6 +18,23 @@ const DetailsInfo = ({ item, page, handleShowElements }) => {
     item.logLevel,
     item.outputPath,
     item.iterations
+  ]
+  const artifactsInfoContent = [
+    item.key,
+    item.iter ? item.iter : 0,
+    item.kind,
+    item.size,
+    item.target_path,
+    item.tree,
+    // formatDatetime(new Date(item.updated)),
+    item.labels
+  ]
+  const artifactsProducerInfoContent = item.producer && [
+    item.producer.kind,
+    item.producer.name,
+    item.producer.owner,
+    item.producer.uri,
+    item.producer.workflow
   ]
   return (
     <div>
@@ -58,10 +77,58 @@ const DetailsInfo = ({ item, page, handleShowElements }) => {
                 )
               }
             })
-          : ''}
+          : artifactsData.artifactsInfoHeaders.map((header, i) => {
+              if (artifactsInfoContent[i] === item.labels) {
+                return (
+                  <ArtifactsDetailsInfoItem
+                    chips={item.labels}
+                    header={header}
+                    key={header}
+                    handleShowElements={handleShowElements}
+                  />
+                )
+              } else if (artifactsInfoContent[i] === item.target_path) {
+                return (
+                  <ArtifactsDetailsInfoItem
+                    target_path={item.target_path}
+                    header={header}
+                    key={header}
+                    handleShowElements={handleShowElements}
+                  />
+                )
+              } else {
+                return (
+                  <ArtifactsDetailsInfoItem
+                    info={artifactsInfoContent[i]}
+                    header={header}
+                    key={header}
+                  />
+                )
+              }
+            })}
       </ul>
+      {page === 'artifacts' && item.producer && (
+        <>
+          <h3 className="table__item_details_preview_header">Producer</h3>
+          <ul className="table__item_details">
+            {artifactsData.artifactsProducerInfoHeaders.map((header, i) => (
+              <ArtifactsDetailsInfoItem
+                info={artifactsProducerInfoContent[i]}
+                header={header}
+                key={header}
+              />
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   )
+}
+
+DetailsInfo.defaultProps = {
+  item: {
+    producer: {}
+  }
 }
 
 DetailsInfo.propTypes = {

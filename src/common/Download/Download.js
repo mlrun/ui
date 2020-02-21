@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
+import PropTypes from 'prop-types'
 import HttpClient from '../../httpClient'
+import { createPortal } from 'react-dom'
+import axios from 'axios'
+
 import ProgressRing from '../ProgressRing/ProgressRing'
+
 import download from '../../images/download-icon.png'
 import cancel from '../../images/download-cancel.png'
 import './download.scss'

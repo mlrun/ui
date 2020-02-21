@@ -1,8 +1,7 @@
 const initialState = {
   jobs: [],
   selectedJob: {},
-  logs: '',
-  artifacts: {}
+  logs: ''
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -21,11 +20,6 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: payload
-      }
-    case 'SET_JOB_ARTIFACTS':
-      return {
-        ...state,
-        artifacts: payload
       }
     default:
       return state

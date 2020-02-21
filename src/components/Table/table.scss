@@ -29,16 +29,20 @@
         max-width: 21% !important;
       }
       &__artifacts_medium {
-        max-width: 17%;
-        flex: 0 0 17%;
+        max-width: 14%;
+        flex: 0 0 14%;
       }
       &__artifacts_small {
-        flex: 0 0 9% !important;
-        max-width: 9% !important;
+        flex: 0 0 6.6% !important;
+        max-width: 6.6% !important;
       }
       &__artifacts_big {
-        flex: 0 0 19% !important;
-        max-width: 19% !important;
+        flex: 0 0 21% !important;
+        max-width: 21% !important;
+      }
+      &__artifacts_date {
+        flex: 0 0 11% !important;
+        max-width: 11% !important;
       }
     }
   }
@@ -66,6 +70,12 @@
         i {
           margin: 0 17px;
         }
+        button {
+          border: none;
+          background-color: transparent;
+          cursor: pointer;
+          margin-left: 10%;
+        }
       }
       .cell {
         &__jobs_medium {
@@ -81,16 +91,20 @@
           max-width: 21% !important;
         }
         &__artifacts_medium {
-          max-width: 17%;
-          flex: 0 0 17%;
+          max-width: 14%;
+          flex: 0 0 14%;
         }
         &__artifacts_small {
-          flex: 0 0 9% !important;
-          max-width: 9% !important;
+          flex: 0 0 6.6% !important;
+          max-width: 6.6% !important;
         }
         &__artifacts_big {
-          flex: 0 0 19% !important;
-          max-width: 19% !important;
+          flex: 0 0 21% !important;
+          max-width: 21% !important;
+        }
+        &__artifacts_date {
+          flex: 0 0 11% !important;
+          max-width: 11% !important;
         }
       }
       .row__actions {
@@ -142,6 +156,9 @@
     &__results {
       @include chip($resultsBorder);
     }
+    &__labels {
+      @include chip($labelBorder);
+    }
     &__chips {
       &_short {
         max-width: 80px;
@@ -187,5 +204,36 @@
   }
   .showChips .table_body__chips_hidden {
     display: flex !important;
+  }
+  .tooltip {
+    position: relative;
+    width: 100%;
+    &_container {
+      position: absolute;
+      z-index: 1000;
+      &_bottom {
+        bottom: 25px;
+      }
+      &_top {
+        top: 25px;
+      }
+    }
+    &_body {
+      top: 30px;
+      display: flex;
+      flex-direction: column;
+      background-color: white;
+      padding: 15px 10px;
+      box-shadow: $tooltipShadow;
+
+      &_item {
+        color: $artifactsTooltipColor;
+        span {
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 24px;
+        }
+      }
+    }
   }
 }

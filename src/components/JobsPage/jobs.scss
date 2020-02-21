@@ -25,15 +25,6 @@
         outline: none;
         box-shadow: none;
       }
-      &_period {
-        @include jobsFilter('Period:', 17px)
-      }
-      &_group {
-        @include jobsFilter('Group by:', 20px)
-      }
-      &_status {
-        @include jobsFilter('Show status:', 17px)
-      }
     }
     .group {
       padding-left: 88px;

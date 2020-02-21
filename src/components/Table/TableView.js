@@ -23,7 +23,11 @@ const TableView = ({
   return (
     <div className="table" onClick={hideChips}>
       {loading && <Loader />}
-      <div className={selectedItem && 'table__item_opened'}>
+      <div
+        className={
+          selectedItem && selectedItem.target_path && 'table__item_opened'
+        }
+      >
         <div className="table__content">
           <div className="table_head">
             {tableHeaders.map(item => (
@@ -72,6 +76,7 @@ const TableView = ({
           page={page}
           handleCancel={handleCancel}
           handleShowElements={handleShowElements}
+          hideChips={hideChips}
         />
       )}
     </div>

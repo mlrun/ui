@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import YAML from 'yamljs'
+import yaml from 'js-yaml'
 
 import Content from '../../layout/Content/Content'
 
@@ -20,31 +20,47 @@ const Artifacts = ({
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [convertedYaml, setConvertedYaml] = useState()
-  const tableContent = createArtifactsContent(artifacts)
+  const [tableContent, setArtifactsContent] = useState([])
 
   const fetchData = useCallback(
     item => {
       if (item || artifactsStore.artifacts.length === 0) {
         setLoading(true)
-        fetchArtifacts().then(data => {
-          const artifacts = data.map(artifact => {
-            let item = null
-            if (artifact.link_iteration) {
-              let { link_iteration } = artifact.link_iteration
-              item = artifact.data.filter(
-                item => item.iter === link_iteration
-              )[0]
-            } else {
-              item = artifact.data[0]
-            }
-            return item
+        fetchArtifacts(match.params.projectName)
+          .then(data => {
+            const artifacts = data.map(artifact => {
+              let item = null
+              if (artifact.link_iteration) {
+                let { link_iteration } = artifact.link_iteration
+                item = artifact.data.filter(
+                  item => item.iter === link_iteration
+                )[0]
+              } else {
+                item = artifact.data[0]
+              }
+              const index = item.target_path.indexOf('://')
+              const target_path = {
+                schema: item.target_path.includes('://')
+                  ? item.target_path.slice(0, index)
+                  : '',
+                path: item.target_path.includes('://')
+                  ? item.target_path.slice(index + '://'.length)
+                  : item.target_path
+              }
+              item.target_path = target_path
+              return item
+            })
+            _setArtifacts(artifacts)
+            setLoading(false)
+            return artifacts
           })
-          _setArtifacts(artifacts)
-          setLoading(false)
-        })
+          .then(artifacts => {
+            const content = createArtifactsContent(artifacts)
+            setArtifactsContent(content)
+          })
       }
     },
-    [fetchArtifacts, artifactsStore.artifacts]
+    [artifactsStore.artifacts.length, fetchArtifacts, match.params.projectName]
   )
 
   useEffect(() => {
@@ -59,7 +75,6 @@ const Artifacts = ({
     ) {
       selectArtifact({})
     }
-
     //find the current artifact when user selects the artifact and updates site or an artifact name and tab exists in the URL
     if (
       match.params.name !== undefined &&
@@ -89,7 +104,7 @@ const Artifacts = ({
 
   const convertToYaml = item => {
     document.getElementById('yaml_modal').style.display = 'flex'
-    setConvertedYaml(YAML.stringify(item))
+    setConvertedYaml(yaml.safeDump(item))
   }
 
   const handleSelectArtifact = item => {
@@ -118,6 +133,7 @@ const Artifacts = ({
       tableHeaders={artifactsData.tableHeaders}
       filters={artifactsData.filters}
       detailsMenu={artifactsData.detailsMenu}
+      page={'artifacts'}
     />
   )
 }

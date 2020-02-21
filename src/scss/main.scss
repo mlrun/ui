@@ -46,11 +46,12 @@ main {
   background-color: $mainGreenColor;
 }
 
-.failed {
+.failed, .error {
   @include jobStatus;
   background-color: $statusFailed;
 }
 
 iframe {
   width: 100%;
+  min-height: 200px;
 }
