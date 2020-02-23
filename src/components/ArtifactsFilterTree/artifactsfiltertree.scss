@@ -1,0 +1,73 @@
+@import '../../scss/variables.scss';
+
+.artifact_filter_tree_container {
+  position: relative;
+  display: flex;
+  flex: 1;
+  border: $tableFilterBorder;
+  border-radius: $mainBorderRadius;
+  height: 40px;
+  width: 200px;
+  color: $tableFontColor;
+  input {
+    border: none;
+    height: 100%;
+    border-radius: $mainBorderRadius;
+    outline: none;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 18px;
+    padding: 10px;
+    width: 125px;
+    color: $tableFontColor;
+  }
+  .drop_down {
+    min-width: 25px;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    border-left: $tableFilterBorder;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    img {
+      height: 6px;
+    }
+    &:hover {
+      background-color: $selectHover;
+    }
+  }
+  .drop_down {
+    &_menu {
+      position: absolute;
+      top: 50px;
+      background-color: $white;
+      width: 100%;
+      z-index: 1;
+      box-shadow: $tooltipShadow;
+      border: $tableFilterBorder;
+      border-radius: $mainBorderRadius;
+      &_item {
+        height: 40px;
+        padding: 10px;
+        display: flex;
+        flex: 1;
+        text-align: center;
+        cursor: pointer;
+        border-radius: $mainBorderRadius;
+        &:hover {
+          background-color: $selectHover;
+        }
+      }
+    }
+  }
+  .select {
+    background-color: $selectHover;
+  }
+  .artifact_filter_tree_label {
+    color: $mainGreyColor;
+    padding: 10px 0 10px 10px;
+  }
+}

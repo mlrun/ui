@@ -15,7 +15,8 @@ const Artifacts = ({
   match,
   artifactsStore,
   fetchArtifacts,
-  selectArtifact
+  selectArtifact,
+  setArtifacts
 }) => {
   const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
@@ -24,48 +25,49 @@ const Artifacts = ({
 
   const fetchData = useCallback(
     item => {
-      if (item || artifactsStore.artifacts.length === 0) {
-        setLoading(true)
-        fetchArtifacts(match.params.projectName)
-          .then(data => {
-            const artifacts = data.map(artifact => {
-              let item = null
-              if (artifact.link_iteration) {
-                let { link_iteration } = artifact.link_iteration
-                item = artifact.data.filter(
-                  item => item.iter === link_iteration
-                )[0]
-              } else {
-                item = artifact.data[0]
-              }
-              const index = item.target_path.indexOf('://')
-              const target_path = {
-                schema: item.target_path.includes('://')
-                  ? item.target_path.slice(0, index)
-                  : '',
-                path: item.target_path.includes('://')
-                  ? item.target_path.slice(index + '://'.length)
-                  : item.target_path
-              }
-              item.target_path = target_path
-              return item
-            })
-            _setArtifacts(artifacts)
-            setLoading(false)
-            return artifacts
+      setLoading(true)
+      fetchArtifacts(match.params.projectName)
+        .then(data => {
+          const artifacts = data.map(artifact => {
+            let item = null
+            if (artifact.link_iteration) {
+              let { link_iteration } = artifact.link_iteration
+              item = artifact.data.filter(
+                item => item.iter === link_iteration
+              )[0]
+            } else {
+              item = artifact.data[0]
+            }
+            const index = item.target_path.indexOf('://')
+            const target_path = {
+              schema: item.target_path.includes('://')
+                ? item.target_path.slice(0, index)
+                : '',
+              path: item.target_path.includes('://')
+                ? item.target_path.slice(index + '://'.length)
+                : item.target_path
+            }
+            item.target_path = target_path
+            return item
           })
-          .then(artifacts => {
-            const content = createArtifactsContent(artifacts)
-            setArtifactsContent(content)
-          })
-      }
+          _setArtifacts(artifacts)
+          setLoading(false)
+          return artifacts
+        })
+        .then(artifacts => {
+          const content = createArtifactsContent(artifacts)
+          setArtifactsContent(content)
+        })
     },
-    [artifactsStore.artifacts.length, fetchArtifacts, match.params.projectName]
+    [fetchArtifacts, match.params.projectName]
   )
 
   useEffect(() => {
     fetchData()
-  }, [fetchData])
+    return () => {
+      setArtifacts({ artifacts: [] })
+    }
+  }, [fetchData, setArtifacts])
 
   useEffect(() => {
     //remove the select artifact when user closes the artifact details page
@@ -104,7 +106,11 @@ const Artifacts = ({
 
   const convertToYaml = item => {
     document.getElementById('yaml_modal').style.display = 'flex'
-    setConvertedYaml(yaml.safeDump(item))
+    setConvertedYaml(
+      yaml.safeDump(item, {
+        lineWidth: 1000
+      })
+    )
   }
 
   const handleSelectArtifact = item => {
