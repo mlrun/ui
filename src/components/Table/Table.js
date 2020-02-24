@@ -1,10 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import TableView from './TableView'
+import NotificationDownload from '../../elements/NotificationDownload/NotificationDownload'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { useSelector, useDispatch } from 'react-redux'
 
 import './table.scss'
 
-const Table = props => {
+const Table = ({
+  handleCancel,
+  match,
+  tableContent,
+  content,
+  selectedItem,
+  handleSelectItem,
+  convertToYaml,
+  loading,
+  tableHeaders,
+  detailsMenu,
+  page
+}) => {
+  const state = useSelector(state => state.notificationDownloadStore)
+  const dispatch = useDispatch()
   const hideChips = e => {
     if (
       e.target.className !== 'table_body__results' &&
@@ -55,13 +72,59 @@ const Table = props => {
   }
 
   return (
-    <TableView
-      hideChips={hideChips}
-      handleHoverOnRowActions={handleHoverOnRowActions}
-      handleMouseLeaveFromRowActions={handleMouseLeaveFromRowActions}
-      handleShowElements={handleShowElements}
-      {...props}
-    />
+    <>
+      <TableView
+        hideChips={hideChips}
+        handleHoverOnRowActions={handleHoverOnRowActions}
+        handleMouseLeaveFromRowActions={handleMouseLeaveFromRowActions}
+        handleShowElements={handleShowElements}
+        handleCancel={handleCancel}
+        match={match}
+        tableContent={tableContent}
+        content={content}
+        selectedItem={selectedItem}
+        handleSelectItem={handleSelectItem}
+        convertToYaml={convertToYaml}
+        loading={loading}
+        tableHeaders={tableHeaders}
+        detailsMenu={detailsMenu}
+        page={page}
+      />
+      <TransitionGroup>
+        {state.notification.map((item, index) => {
+          return (
+            <CSSTransition
+              key={'css' + item.id}
+              timeout={{
+                enter: 500,
+                exit: 500
+              }}
+              classNames="notification_download"
+              onEntered={e => {
+                setTimeout(
+                  () => {
+                    dispatch({
+                      type: 'REMOVE_NOTIFICATION_DOWNLOAD',
+                      payload: item.id
+                    })
+                  },
+                  item.status === 200 ? 1000 : 2500
+                )
+              }}
+            >
+              <NotificationDownload
+                key={item.id}
+                status={item.status}
+                url={item.url}
+                file={item.file || null}
+                id={item.id}
+                dispatch={dispatch}
+              />
+            </CSSTransition>
+          )
+        })}
+      </TransitionGroup>
+    </>
   )
 }
 

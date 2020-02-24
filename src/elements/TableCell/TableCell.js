@@ -1,14 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-
 import ChipCell from '../ChipCell/ChipCell'
-import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
-
-import { truncateUid } from '../../utils'
-
-import popoutIcon from '../../images/popout.png'
 import Download from '../../common/Download/Download'
+import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
+import popoutIcon from '../../images/popout.png'
+import { truncateUid } from '../../utils'
 
 const TableCell = ({
   data,
@@ -78,18 +75,15 @@ const TableCell = ({
   } else if (data.type === 'path') {
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
-        {data.value.schema && (
-          <>
-            <span>schema: {data.value.schema}</span> <br />
-          </>
-        )}
-        <span>path: {data.value.path}</span>
+        <span className="table_body__row__cell_path" title={data.value.path}>
+          {data.value.path}
+        </span>
       </div>
     )
   } else {
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
-        <span title={data.value}>{data.value}</span>
+        <span>{data.value}</span>
       </div>
     )
   }
