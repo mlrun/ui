@@ -7,8 +7,8 @@ import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 const ArtifactsFilterMenu = ({ filters }) => {
   const [items] = useState(['Latest'])
 
-  const handleChnage = item => {
-    console.log(item)
+  const handleChange = item => {
+    // console.log(item)
   }
 
   return (
@@ -19,7 +19,7 @@ const ArtifactsFilterMenu = ({ filters }) => {
             key={filter}
             value="Latest"
             items={items}
-            onChange={handleChnage}
+            onChange={handleChange}
           />
         ) : (
           <Select filter={filter} key={filter} />

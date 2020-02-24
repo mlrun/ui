@@ -33,8 +33,8 @@
         flex: 0 0 14%;
       }
       &__artifacts_small {
-        flex: 0 0 6.6% !important;
-        max-width: 6.6% !important;
+        flex: 0 0 5.5% !important;
+        max-width: 5.5% !important;
       }
       &__artifacts_big {
         flex: 0 0 21% !important;
@@ -43,6 +43,9 @@
       &__artifacts_date {
         flex: 0 0 11% !important;
         max-width: 11% !important;
+      }
+      &__artifacts_small:nth-child(3) {
+        padding-left: 20px;
       }
     }
   }
@@ -95,8 +98,8 @@
           flex: 0 0 14%;
         }
         &__artifacts_small {
-          flex: 0 0 6.6% !important;
-          max-width: 6.6% !important;
+          flex: 0 0 5.5% !important;
+          max-width: 5.5% !important;
         }
         &__artifacts_big {
           flex: 0 0 21% !important;
@@ -105,6 +108,20 @@
         &__artifacts_date {
           flex: 0 0 11% !important;
           max-width: 11% !important;
+        }
+        &__artifacts_small:nth-child(3) {
+          span {
+            padding-left: 20px;
+          }
+        }
+      }
+      &__cell {
+        &_path {
+          max-width: 50px;
+          min-width: 100%;
+          white-space: nowrap;
+          overflow-x: hidden;
+          text-overflow: ellipsis;
         }
       }
       .row__actions {

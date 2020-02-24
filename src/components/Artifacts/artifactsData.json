@@ -21,19 +21,23 @@
       "size": "artifacts_small"
     },
     {
+      "header": "Owner",
+      "size": "artifacts_small"
+    },
+    {
       "header": "Hash",
       "size": "artifacts_small"
     },
     {
-      "header": "Updated at",
+      "header": "Updated",
       "size": "artifacts_date"
     },
     {
-      "header": "Pop out",
+      "header": "",
       "size": "artifacts_small"
     },
     {
-      "header": "Download",
+      "header": "",
       "size": "artifacts_small"
     }
   ],

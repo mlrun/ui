@@ -1,25 +1,24 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import HttpClient from '../../httpClient'
-import { createPortal } from 'react-dom'
+import notificationDownloadAction from '../../actions/notificationDownload'
 import axios from 'axios'
-
 import ProgressRing from '../ProgressRing/ProgressRing'
-
 import download from '../../images/download-icon.png'
 import cancel from '../../images/download-cancel.png'
+import { connect } from 'react-redux'
+import downloadFile from '../../utils/downloadFile'
 import './download.scss'
 
-const Download = ({ path, schema }) => {
+const Download = ({ path, schema, setNotificationDownload }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
-  const [isShowNotification, setShowNotification] = useState(false)
-  const [status, setStatus] = useState('success')
-  let [file] = path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)
-
+  let file = path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)
+    ? path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)[0]
+    : null
   const downloadRef = useRef(null)
 
-  const Download = useCallback(() => {
+  const downloadCallback = useCallback(() => {
     if (isDownload) {
       const config = {
         onDownloadProgress: progressEvent => {
@@ -38,44 +37,44 @@ const Download = ({ path, schema }) => {
         config
       )
         .then(response => {
-          const link = document.createElement('a')
-          link.href = URL.createObjectURL(new Blob([response.data]))
-          link.download = file
-          link.click()
-          link.remove()
-          return 'success'
+          downloadFile(file, response)
+          setNotificationDownload({
+            status: response.status,
+            url: response.config.url,
+            id: Math.random()
+          })
+          setDownload(false)
+          setProgress(0)
         })
         .catch(error => {
           if (axios.isCancel(error)) {
-            return error.message === 'cancel' && 'cancel'
-          }
-          return 'failed'
-        })
-        .then(item => {
-          if (/success|cancel|failed/.test(item)) {
-            setStatus(item)
             setDownload(false)
-            setProgress(0)
-            setShowNotification(true)
-            setTimeout(() => {
-              if (downloadRef.current) {
-                setStatus('success')
-                setShowNotification(false)
-              }
-            }, 2000)
+            return
           }
+          setNotificationDownload({
+            status: 400,
+            url: schema
+              ? `/files?schema=${schema}&path=${path}`
+              : `/files?path=${path}`,
+            file,
+            id: Math.random()
+          })
+          setDownload(false)
+          setProgress(0)
+        })
+        .finally(() => {
           if (downloadRef.current) downloadRef.current.cancel = null
         })
     }
-  }, [file, isDownload, path, schema])
+  }, [file, isDownload, path, schema, setNotificationDownload])
 
   useEffect(() => {
     let cancelFetch = downloadRef.current
-    Download()
+    downloadCallback()
     return () => {
       cancelFetch.cancel && cancelFetch.cancel()
     }
-  }, [Download, downloadRef])
+  }, [downloadCallback, downloadRef])
 
   return (
     <div
@@ -103,14 +102,6 @@ const Download = ({ path, schema }) => {
           width="25px"
         />
       </ProgressRing>
-      {isShowNotification &&
-        createPortal(
-          <div className={`notification_container ${status}_notification`}>
-            <div>Download Status:</div>
-            <div>{status.charAt(0).toUpperCase() + status.slice(1)}</div>
-          </div>,
-          document.body
-        )}
     </div>
   )
 }
@@ -124,4 +115,4 @@ Download.propTypes = {
   schema: PropTypes.string
 }
 
-export default React.memo(Download)
+export default React.memo(connect(null, notificationDownloadAction)(Download))

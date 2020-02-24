@@ -15,7 +15,7 @@ const createArtifactsContent = artifacts =>
         type: 'path'
       },
       king: {
-        value: artifact.king,
+        value: artifact.kind,
         size: 'artifacts_small'
       },
       labels: {
@@ -27,6 +27,11 @@ const createArtifactsContent = artifacts =>
         value: artifact.producer,
         size: 'artifacts_small',
         type: 'producer'
+      },
+      owner: {
+        value: artifact.producer.owner,
+        size: 'artifacts_small',
+        type: 'owner'
       },
       hash: {
         value: truncateUid(artifact.hash),
