@@ -30,10 +30,10 @@ const TableView = ({
       >
         <div className="table__content">
           <div className="table_head">
-            {tableHeaders.map(item => (
+            {tableHeaders.map((item, index) => (
               <div
                 className={`table_head_item header__${item.size}`}
-                key={item.header}
+                key={item.header + index}
               >
                 {item.header}
               </div>
