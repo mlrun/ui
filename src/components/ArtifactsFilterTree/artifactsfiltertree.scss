@@ -1,4 +1,7 @@
 @import '../../scss/variables.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
 
 .artifact_filter_tree_container {
   position: relative;
@@ -8,7 +11,7 @@
   border-radius: $mainBorderRadius;
   height: 40px;
   width: 200px;
-  color: $tableFontColor;
+  color: $mulledWine;
   input {
     border: none;
     height: 100%;
@@ -21,7 +24,7 @@
     line-height: 18px;
     padding: 10px;
     width: 125px;
-    color: $tableFontColor;
+    color: $mulledWine;
   }
   .drop_down {
     min-width: 25px;
@@ -36,7 +39,7 @@
       height: 6px;
     }
     &:hover {
-      background-color: $selectHover;
+      background-color: $alabaster;
     }
   }
   .drop_down {
@@ -58,16 +61,16 @@
         cursor: pointer;
         border-radius: $mainBorderRadius;
         &:hover {
-          background-color: $selectHover;
+          background-color: $alabaster;
         }
       }
     }
   }
   .select {
-    background-color: $selectHover;
+    background-color: $alabaster;
   }
   .artifact_filter_tree_label {
-    color: $mainGreyColor;
+    color: $topaz;
     padding: 10px 0 10px 10px;
   }
 }

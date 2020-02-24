@@ -1,17 +1,22 @@
 import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+
 import projectsAction from '../../actions/projects'
+
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
-import { connect } from 'react-redux'
+
 import './projects.scss'
+
 const Projects = ({ projects, fetchProjects, match }) => {
   useEffect(() => {
     fetchProjects()
   }, [fetchProjects])
+
   return (
     <>
-      <div className="breadcrums_container">
+      <div className="breadcrumbs_container">
         <Breadcrumbs match={match} />
       </div>
       <div className="projects_wrapper">

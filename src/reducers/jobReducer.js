@@ -1,7 +1,8 @@
 const initialState = {
   jobs: [],
   selectedJob: {},
-  logs: ''
+  logs: '',
+  jobsData: []
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -10,6 +11,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         jobs: payload
+      }
+    case 'SET_JOBS_DATA':
+      return {
+        ...state,
+        jobsData: payload
       }
     case 'SET_SELECTED_JOB':
       return {

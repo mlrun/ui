@@ -1,5 +1,8 @@
 @import "../../scss/variables";
 @import "../../scss/mixins";
+@import '../../scss/shadows';
+@import '../../scss/colors';
+
 
 .content {
   @include jobsFlex;
@@ -35,12 +38,12 @@
         font-weight: bold;
         font-size: 15px;
         line-height: 18px;
-        color: $mainGreyColor;
+        color: $topaz;
         cursor: pointer;
       }
       .active {
-        border-bottom: 3px solid $mainGreenColor;
-        color: $mainGreenColor;
+        border-bottom: 3px solid $cornflowerBlue;
+        color: $cornflowerBlue;
       }
     }
   }

@@ -1,4 +1,4 @@
-@import './variables.scss';
+@import './colors';
 @import './mixins.scss';
 
 * {
@@ -24,7 +24,7 @@ body {
 }
 
 main {
-  height: 100vh;
+  height: auto;
   display: flex;
   flex-flow: column nowrap;
   margin-left: 90px;
@@ -37,21 +37,18 @@ main {
 }
 
 .completed {
-  @include jobStatus;
-  background-color: $statusCompleted;
+  @include jobStatus($malachite);
 }
 
 .running {
-  @include jobStatus;
-  background-color: $mainGreenColor;
+  @include jobStatus($cornflowerBlue);
 }
 
 .failed, .error {
-  @include jobStatus;
-  background-color: $statusFailed;
+  @include jobStatus($burntSienna);
 }
 
 iframe {
   width: 100%;
-  min-height: 200px;
+  height: 100%;
 }

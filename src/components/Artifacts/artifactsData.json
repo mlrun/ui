@@ -1,4 +1,18 @@
 {
+  "artifactsProducerInfoHeaders": ["Kind", "Name", "Owner", "Uri", "Workflow"],
+  "artifactsInfoHeaders": [
+    "Key",
+    "Iter",
+    "Kind",
+    "Size",
+    "Path",
+    "Tree",
+    "Updated",
+    "Labels"
+  ],
+  "detailsMenu": ["info", "preview"],
+  "filters": ["period", "tree"],
+  "page": "artifacts",
   "tableHeaders": [
     {
       "header": "Name",
@@ -36,18 +50,5 @@
       "header": "Download",
       "size": "artifacts_small"
     }
-  ],
-  "detailsMenu": ["info", "preview"],
-  "filters": ["period", "tree"],
-  "artifactsInfoHeaders": [
-    "Key",
-    "Iter",
-    "Kind",
-    "Size",
-    "Path",
-    "Tree",
-    "Updated",
-    "Labels"
-  ],
-  "artifactsProducerInfoHeaders": ["Kind", "Name", "Owner", "Uri", "Workflow"]
+  ]
 }

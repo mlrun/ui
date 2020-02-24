@@ -1,9 +1,11 @@
 {
+  "page": "jobs",
   "jobsInfoHeaders": [
     "UID",
-    "Started at",
+    "Start time",
     "Status",
     "Parameters",
+    "Results",
     "Labels",
     "Log level",
     "Output path",
@@ -19,11 +21,15 @@
       "size": "jobs_small"
     },
     {
-      "header": "Started at",
+      "header": "Start time",
       "size": "jobs_small"
     },
     {
       "header": "Status",
+      "size": "jobs_small"
+    },
+    {
+      "header": "Owner",
       "size": "jobs_small"
     },
     {

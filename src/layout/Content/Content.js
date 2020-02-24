@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import ArtifactsFilterMenu from '../../components/ArtifacstFilterMenu/ArtifactsFilterMenu'
+import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
 
 import refreshIcon from '../../images/refresh.png'
@@ -11,11 +11,11 @@ import refreshIcon from '../../images/refresh.png'
 import './content.scss'
 
 const Content = ({
-  match,
-  refresh,
-  handleCancel,
   convertedYaml,
   filters,
+  handleCancel,
+  match,
+  refresh,
   ...props
 }) => {
   return (
@@ -32,7 +32,7 @@ const Content = ({
           </ul>
         </div>
         <div className="content__action_bar">
-          <ArtifactsFilterMenu filters={filters} />
+          <FilterMenu filters={filters} />
           <button className="content__action_bar_refresh" onClick={refresh}>
             <img src={refreshIcon} alt="refresh" />
           </button>
@@ -46,17 +46,25 @@ const Content = ({
 }
 
 Content.defaultProps = {
-  job: {}
+  convertedYaml: '',
+  selectedItem: {}
 }
 
 Content.propTypes = {
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  convertToYaml: PropTypes.func.isRequired,
+  convertedYaml: PropTypes.string.isRequired,
+  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  job: PropTypes.shape({}),
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
-  refresh: PropTypes.func.isRequired
+  page: PropTypes.string.isRequired,
+  refresh: PropTypes.func.isRequired,
+  selectedItem: PropTypes.shape({}),
+  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default Content

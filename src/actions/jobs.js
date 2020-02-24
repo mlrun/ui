@@ -23,9 +23,15 @@ const jobsActions = {
             results: job.status.results || {},
             resultsChips: parseKeyValues(job.status.results || {}),
             artifacts: job.status.artifacts || [],
-            outputPath: job.spec.output_path
+            outputPath: job.spec.output_path,
+            owner: job.metadata.labels.owner
           }))
         dispatch(jobsActions.setJobs(newJobs))
+        dispatch(
+          jobsActions.setJobsData(
+            data.runs.filter(job => job.metadata.iteration === 0)
+          )
+        )
         return newJobs
       })
       .catch(() => {})
@@ -38,6 +44,10 @@ const jobsActions = {
   setJobs: jobsList => ({
     type: 'SET_JOBS',
     payload: jobsList
+  }),
+  setJobsData: jobsData => ({
+    type: 'SET_JOBS_DATA',
+    payload: jobsData
   }),
   setSelectedJob: job => ({
     type: 'SET_SELECTED_JOB',

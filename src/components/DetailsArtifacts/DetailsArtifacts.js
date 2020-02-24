@@ -5,10 +5,9 @@ import { connect } from 'react-redux'
 
 import DetailsArtifactsView from './DetailsArtifactsView'
 
-import jobsActions from '../../actions/jobs'
 import { formatDatetime } from '../../utils'
 
-const DetailsArtifacts = ({ jobsStore, getArtifacts }) => {
+const DetailsArtifacts = ({ jobsStore }) => {
   const items = jobsStore.selectedJob.artifacts.map(item => {
     const index = item.target_path.indexOf('://')
     const target_path = {
@@ -59,8 +58,7 @@ const DetailsArtifacts = ({ jobsStore, getArtifacts }) => {
 }
 
 DetailsArtifacts.propTypes = {
-  getArtifacts: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired
 }
 
-export default connect(jobsStore => jobsStore, jobsActions)(DetailsArtifacts)
+export default connect(jobsStore => jobsStore)(DetailsArtifacts)

@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import Chip from '../Chip/Chip'
 import { cutChips } from '../../utils/cutChips'
 
-const ChipCell = ({ elements, className, handleShowElements }) => {
-  const chips = cutChips(elements, 2)
+const ChipCell = ({ className, elements, handleShowElements, maxLength }) => {
+  const chips = cutChips(elements, maxLength)
+
   return elements
     ? chips.sortedArr.map((item, i) => {
         return (
@@ -13,8 +14,8 @@ const ChipCell = ({ elements, className, handleShowElements }) => {
               key={item.value}
               className={className}
               onClick={handleShowElements}
-              value={item.value}
               title={item.value}
+              value={item.value}
             />
             {chips.hiddenChips && (
               <div className="table_body__chips_hidden">
@@ -23,8 +24,8 @@ const ChipCell = ({ elements, className, handleShowElements }) => {
                     <Chip
                       key={element.value}
                       className={className}
-                      value={element.value}
                       title={element.value}
+                      value={element.value}
                     />
                   )
                 })}
@@ -42,7 +43,9 @@ ChipCell.defaultProps = {
 
 ChipCell.propTypes = {
   className: PropTypes.string.isRequired,
-  elements: PropTypes.arrayOf(PropTypes.string)
+  elements: PropTypes.arrayOf(PropTypes.string),
+  handleShowElements: PropTypes.func.isRequired,
+  maxLength: PropTypes.number.isRequired
 }
 
 export default ChipCell

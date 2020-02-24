@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+
 import Select from '../../common/Select/Select'
-import './artifactsfiltermenu.scss'
+
+import './filterMenu.scss'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 
-const ArtifactsFilterMenu = ({ filters }) => {
+const FilterMenu = ({ filters }) => {
   const [items] = useState(['Latest'])
 
   const handleChnage = item => {
@@ -29,8 +31,8 @@ const ArtifactsFilterMenu = ({ filters }) => {
   )
 }
 
-ArtifactsFilterMenu.propTypes = {
+FilterMenu.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
-export default ArtifactsFilterMenu
+export default FilterMenu

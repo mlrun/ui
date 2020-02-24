@@ -1,5 +1,8 @@
 @import '../../scss/variables';
+@import '../../scss/colors';
 @import '../../scss/mixins';
+@import '../../scss/borders';
+@import '../../scss/shadows';
 
 .table {
   @include jobsFlex;
@@ -17,12 +20,13 @@
     }
     .header {
       &__jobs_medium {
-        max-width: 19%;
-        flex: 0 0 19%;
+        max-width: 18%;
+        flex: 0 0 18%;
+        min-width: 18%;
       }
       &__jobs_small {
-        flex: 0 0 13% !important;
-        max-width: 13% !important;
+        flex: 0 0 10% !important;
+        max-width: 10% !important;
       }
       &__jobs_big {
         flex: 0 0 21% !important;
@@ -51,6 +55,7 @@
       position: relative;
       display: flex;
       flex-wrap: wrap;
+      min-height: 50px;
       &__cell {
         @include tableDet;
         padding: 8px 0;
@@ -60,11 +65,11 @@
         flex-wrap: wrap;
         a {
           text-decoration: none;
-          color: $mainGreenColor;
+          color: $cornflowerBlue;
           margin: 0;
           span {
             display: block;
-            color: $mainGreyColor;
+            color: $topaz;
           }
         }
         i {
@@ -79,12 +84,13 @@
       }
       .cell {
         &__jobs_medium {
-          max-width: 19%;
-          flex: 0 0 19%;
+          max-width: 18%;
+          flex: 0 0 18%;
+          min-width: 18%;
         }
         &__jobs_small {
-          flex: 0 0 13% !important;
-          max-width: 13% !important;
+          flex: 0 0 10% !important;
+          max-width: 10% !important;
         }
         &__jobs_big {
           flex: 0 0 21% !important;
@@ -105,48 +111,6 @@
         &__artifacts_date {
           flex: 0 0 11% !important;
           max-width: 11% !important;
-        }
-      }
-      .row__actions {
-        display: none;
-        position: absolute;
-        right: -10px;
-        top: 15%;
-        border-bottom: none !important;
-        &__container {
-          position: relative;
-        }
-        button {
-          border: none;
-          background-color: transparent;
-          cursor: pointer;
-          &:active,
-          &:focus {
-            outline: none;
-            box-shadow: none;
-          }
-        }
-        &__body {
-          z-index: 999;
-          width: 150px;
-          display: none;
-          position: absolute;
-          bottom: -50px;
-          right: 16px;
-          background: #ffffff;
-          border: 1px solid rgba(0, 0, 0, 0.2);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
-          border-radius: 2px;
-          &_option {
-            padding: 17px;
-            cursor: pointer;
-            &:hover {
-              background-color: #f7f7f7;
-            }
-          }
-        }
-        &_visible .row__actions__body {
-          display: block;
         }
       }
     }
@@ -227,7 +191,7 @@
       box-shadow: $tooltipShadow;
 
       &_item {
-        color: $artifactsTooltipColor;
+        color: $gunsmoke;
         span {
           font-weight: bold;
           font-size: 14px;

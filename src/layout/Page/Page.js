@@ -8,7 +8,8 @@ const Page = ({ children, location }) => {
 }
 
 Page.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.element.isRequired,
+  location: PropTypes.shape({}).isRequired
 }
 
 export default withRouter(Page)
