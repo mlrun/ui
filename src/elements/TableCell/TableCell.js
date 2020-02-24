@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ChipCell from '../ChipCell/ChipCell'
+import Download from '../../common/Download/Download'
 import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
 
-import { truncateUid } from '../../utils'
-
 import popoutIcon from '../../images/popout.png'
-import Download from '../../common/Download/Download'
+
+import { truncateUid } from '../../utils'
 
 const TableCell = ({
   data,
@@ -16,7 +16,8 @@ const TableCell = ({
   item,
   link,
   selectItem,
-  selectedItem
+  selectedItem,
+  match
 }) => {
   if (link) {
     return (
@@ -54,7 +55,9 @@ const TableCell = ({
           kind={data.value.kind}
           name={data.value.name}
           owner={data.value.owner ? data.value.owner : ''}
-          to={`/jobs/${data.value.uri}/info`}
+          to={`/projects/${match.params.projectName}/jobs/${
+            data.value.uri.split('/')[1]
+          }/info`}
         />
       </div>
     )
@@ -78,18 +81,15 @@ const TableCell = ({
   } else if (data.type === 'path') {
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
-        {data.value.schema && (
-          <>
-            <span>schema: {data.value.schema}</span> <br />
-          </>
-        )}
-        <span>path: {data.value.path}</span>
+        <span className="table_body__row__cell_path" title={data.value.path}>
+          {data.value.path + data.value.path}
+        </span>
       </div>
     )
   } else {
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
-        <span title={data.value}>{data.value}</span>
+        <span>{data.value}</span>
       </div>
     )
   }

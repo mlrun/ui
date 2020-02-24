@@ -16,7 +16,15 @@ const Content = ({
   handleCancel,
   match,
   refresh,
-  ...props
+  tableContent,
+  content,
+  selectedItem,
+  handleSelectItem,
+  convertToYaml,
+  loading,
+  tableHeaders,
+  detailsMenu,
+  page
 }) => {
   return (
     <>
@@ -39,7 +47,19 @@ const Content = ({
         </div>
 
         <YamlModal convertedYaml={convertedYaml} />
-        <Table handleCancel={handleCancel} match={match} {...props} />
+        <Table
+          handleCancel={handleCancel}
+          match={match}
+          tableContent={tableContent}
+          content={content}
+          selectedItem={selectedItem}
+          handleSelectItem={handleSelectItem}
+          convertToYaml={convertToYaml}
+          loading={loading}
+          tableHeaders={tableHeaders}
+          detailsMenu={detailsMenu}
+          page={page}
+        />
       </div>
     </>
   )

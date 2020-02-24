@@ -52,3 +52,19 @@ iframe {
   width: 100%;
   height: 100%;
 }
+
+#overlay_container {
+  position: fixed;
+  bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  transition: height 0.1s;
+}
+
+.remove-btn {
+  margin-right: 0.5rem;
+}

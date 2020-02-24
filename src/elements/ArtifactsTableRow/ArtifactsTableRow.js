@@ -37,6 +37,7 @@ const ArtifactsTableRow = ({
             selectItem={handleSelectItem}
             key={value.value + i}
             handleShowElements={handleShowElements}
+            match={match}
           />
         )
       })}
