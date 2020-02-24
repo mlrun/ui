@@ -20,7 +20,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.labels,
     item.logLevel,
     item.outputPath,
-    item.iterations.length ? item.iterations : '0'
+    item.iterations && item.iterations.length ? item.iterations : '0'
   ]
   const artifactsInfoContent = [
     item.key,
@@ -29,8 +29,8 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.size,
     item.target_path,
     item.tree,
-    // formatDatetime(new Date(item.updated)),
-    item.labels
+    item.updated && formatDatetime(new Date(item.updated)),
+    item.labels && Object.values(item.labels)
   ]
   const artifactsProducerInfoContent = item.producer && [
     item.producer.kind,
@@ -39,6 +39,8 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.producer.uri,
     item.producer.workflow
   ]
+
+  console.log(artifactsInfoContent)
 
   return (
     <div>

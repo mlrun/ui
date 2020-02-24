@@ -1,4 +1,5 @@
 export const cutChips = (chips = [], maxLength) => {
+  console.log(chips)
   if (chips.length > maxLength) {
     let hiddenChipsNumber = `+ ${chips.length - maxLength}`
     const hiddenChips = chips.slice(maxLength).map(value => ({ value: value }))
