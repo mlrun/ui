@@ -22,7 +22,9 @@ const DetailsArtifactsView = ({ items, handleClick }) => (
               {item.key}
             </div>
             <div className="table__item_artifacts__row_item table__item_artifacts__row_item_long">
-              {item.target_path.schema + item.target_path.path}
+              {`${
+                item.target_path.schema ? `${item.target_path.schema}://` : ''
+              }${item.target_path.path}`}
             </div>
             <div className="table__item_artifacts__row_item">
               size: {item.size}
