@@ -40,8 +40,6 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.producer.workflow
   ]
 
-  console.log(artifactsInfoContent)
-
   return (
     <div>
       <ul className="table__item_details">

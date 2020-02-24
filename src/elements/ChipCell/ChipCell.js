@@ -5,7 +5,6 @@ import { cutChips } from '../../utils/cutChips'
 
 const ChipCell = ({ className, elements, handleShowElements, maxLength }) => {
   const chips = cutChips(elements, maxLength)
-  console.log(chips)
 
   return elements
     ? chips.sortedArr.map((item, i) => {
