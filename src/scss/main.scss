@@ -44,10 +44,8 @@ main {
   @include jobStatus($cornflowerBlue);
 }
 
-.failed,
-.error {
-  @include jobStatus;
-  background-color: $statusFailed;
+.failed, .error {
+  @include jobStatus($burntSienna);
 }
 
 iframe {

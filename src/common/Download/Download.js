@@ -49,6 +49,7 @@ const Download = ({ path, schema, setNotificationDownload }) => {
         .catch(error => {
           if (axios.isCancel(error)) {
             setDownload(false)
+            setProgress(0)
             return
           }
           setNotificationDownload({

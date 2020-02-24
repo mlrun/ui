@@ -16,7 +16,15 @@ const Content = ({
   handleCancel,
   match,
   refresh,
-  ...props
+  tableContent,
+  content,
+  selectedItem,
+  handleSelectItem,
+  convertToYaml,
+  loading,
+  tableHeaders,
+  detailsMenu,
+  page
 }) => {
   return (
     <>

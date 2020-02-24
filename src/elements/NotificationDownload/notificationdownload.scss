@@ -1,4 +1,6 @@
-@import '../../scss/variables.scss';
+@import '../../scss/colors.scss';
+@import '../../scss/shadows.scss';
+
 .notification {
   &_container {
     margin-top: 5px;
@@ -33,7 +35,7 @@
       justify-content: center;
     }
     &_alert_icon {
-      background-color: $statusFailed;
+      background-color: $burntSienna;
     }
     &_success_icon {
       background-color: $statusReady;

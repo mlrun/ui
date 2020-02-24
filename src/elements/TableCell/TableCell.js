@@ -5,7 +5,6 @@ import ChipCell from '../ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
 import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
 import popoutIcon from '../../images/popout.png'
-import { Link } from 'react-router-dom'
 import { truncateUid } from '../../utils'
 
 const TableCell = ({
