@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+
+import options from './selectData'
+
 import caret from '../../images/caret.png'
 import unchecked from '../../images/checkbox-unchecked.png'
 import checked from '../../images/checkbox-checked.png'
+
 import './select.scss'
 
 const Select = ({ filter }) => {
-  const options = {
-    status: ['All', 'Completed', 'Running', 'Failed'],
-    tree: ['Latest'],
-    period: ['Last 7 days', 'Last 14 days', 'Last months', 'Last 6 months']
-  }
   const [isOpen, setOpen] = useState(false)
   const [value, setValue] = useState(options[filter][0])
 
   useEffect(() => {
-    const handlerScroll = () => {
-      setOpen(false)
-    }
     window.addEventListener('scroll', handlerScroll)
     return () => {
       window.removeEventListener('scroll', handlerScroll)
     }
-  })
+  }, [isOpen])
+
+  const handlerScroll = () => {
+    setOpen(false)
+  }
 
   return (
     <div

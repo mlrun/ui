@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import arrow from '../../images/arrow.png'
 import Download from '../../common/Download/Download'
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
+
+import arrow from '../../images/arrow.png'
 
 const DetailsArtifactsView = ({ items, handleClick }) => (
   <div className="table__item_artifacts">
@@ -46,8 +47,7 @@ const DetailsArtifactsView = ({ items, handleClick }) => (
 
 DetailsArtifactsView.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  handleClick: PropTypes.func.isRequired,
-  artifacts: PropTypes.shape({}).isRequired
+  handleClick: PropTypes.func.isRequired
 }
 
 export default DetailsArtifactsView

@@ -1,19 +1,20 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 const ArtifactsTableRow = ({
-  rowItem,
-  index,
-  match,
   content,
   convertToYaml,
-  selectedItem,
   handleHoverOnRowActions,
   handleMouseLeaveFromRowActions,
   handleSelectItem,
-  handleShowElements
+  handleShowElements,
+  index,
+  match,
+  rowItem,
+  selectedItem
 }) => {
   return (
     <div
@@ -44,6 +45,19 @@ const ArtifactsTableRow = ({
       </div>
     </div>
   )
+}
+
+ArtifactsTableRow.propTypes = {
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  convertToYaml: PropTypes.func.isRequired,
+  handleHoverOnRowActions: PropTypes.func.isRequired,
+  handleMouseLeaveFromRowActions: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func.isRequired,
+  handleShowElements: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+  match: PropTypes.shape({}).isRequired,
+  rowItem: PropTypes.shape({}).isRequired,
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default ArtifactsTableRow

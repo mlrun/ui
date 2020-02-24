@@ -8,7 +8,7 @@ import artifactsData from '../Artifacts/artifactsData'
 import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsInfoItem'
 import ArtifactsDetailsInfoItem from '../../elements/ArtifactsDetailsInfoItem/ArtifactsDetailsInfoItem'
 
-const DetailsInfo = ({ item, page, handleShowElements }) => {
+const DetailsInfo = ({ item, handleShowElements, page }) => {
   const jobsInfoContent = [
     item.uid,
     formatDatetime(item.startTime),
@@ -44,35 +44,35 @@ const DetailsInfo = ({ item, page, handleShowElements }) => {
               if (jobsInfoContent[i] === item.state) {
                 return (
                   <JobsDetailsInfoItem
-                    state={item.state}
-                    header={header}
                     key={header}
                     handleShowElements={handleShowElements}
+                    header={header}
+                    state={item.state}
                   />
                 )
               } else if (jobsInfoContent[i] === item.parameters) {
                 return (
                   <JobsDetailsInfoItem
+                    key={header}
                     chips={item.parameters}
                     header={header}
-                    key={header}
                   />
                 )
               } else if (jobsInfoContent[i] === item.labels) {
                 return (
                   <JobsDetailsInfoItem
+                    key={header}
                     chips={item.labels}
                     header={header}
-                    key={header}
                     handleShowElements={handleShowElements}
                   />
                 )
               } else {
                 return (
                   <JobsDetailsInfoItem
-                    info={jobsInfoContent[i]}
-                    header={header}
                     key={header}
+                    header={header}
+                    info={jobsInfoContent[i]}
                   />
                 )
               }
@@ -81,27 +81,27 @@ const DetailsInfo = ({ item, page, handleShowElements }) => {
               if (artifactsInfoContent[i] === item.labels) {
                 return (
                   <ArtifactsDetailsInfoItem
-                    chips={item.labels}
-                    header={header}
                     key={header}
                     handleShowElements={handleShowElements}
+                    chips={item.labels}
+                    header={header}
                   />
                 )
               } else if (artifactsInfoContent[i] === item.target_path) {
                 return (
                   <ArtifactsDetailsInfoItem
-                    target_path={item.target_path}
-                    header={header}
                     key={header}
                     handleShowElements={handleShowElements}
+                    header={header}
+                    target_path={item.target_path}
                   />
                 )
               } else {
                 return (
                   <ArtifactsDetailsInfoItem
+                    key={header}
                     info={artifactsInfoContent[i]}
                     header={header}
-                    key={header}
                   />
                 )
               }
@@ -113,9 +113,9 @@ const DetailsInfo = ({ item, page, handleShowElements }) => {
           <ul className="table__item_details">
             {artifactsData.artifactsProducerInfoHeaders.map((header, i) => (
               <ArtifactsDetailsInfoItem
+                key={header}
                 info={artifactsProducerInfoContent[i]}
                 header={header}
-                key={header}
               />
             ))}
           </ul>
@@ -126,12 +126,11 @@ const DetailsInfo = ({ item, page, handleShowElements }) => {
 }
 
 DetailsInfo.defaultProps = {
-  item: {
-    producer: {}
-  }
+  item: {}
 }
 
 DetailsInfo.propTypes = {
+  handleShowElements: PropTypes.func.isRequired,
   item: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired
 }

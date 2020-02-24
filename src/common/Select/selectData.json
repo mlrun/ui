@@ -1,0 +1,5 @@
+{
+  "status": ["All", "Completed", "Running", "Failed"],
+  "tree": ["Latest"],
+  "period": ["Last 7 days", "Last 14 days", "Last months", "Last 6 months"]
+}

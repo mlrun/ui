@@ -7,17 +7,16 @@ import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRo
 import Details from '../Details/Details'
 
 const TableView = ({
-  tableContent,
-  hideChips,
-  loading,
-  selectedItem,
-  match,
-  tableHeaders,
-  job,
   detailsMenu,
-  page,
   handleCancel,
   handleShowElements,
+  hideChips,
+  loading,
+  match,
+  page,
+  tableHeaders,
+  tableContent,
+  selectedItem,
   ...props
 }) => {
   return (
@@ -49,6 +48,7 @@ const TableView = ({
                     selectedItem={selectedItem}
                     index={i}
                     rowItem={rowItem}
+                    handleShowElements={handleShowElements}
                     {...props}
                   />
                 )
@@ -56,9 +56,10 @@ const TableView = ({
                 return (
                   <ArtifactsTableRow
                     key={i}
-                    rowItem={rowItem}
-                    match={match}
+                    handleShowElements={handleShowElements}
                     index={i}
+                    match={match}
+                    rowItem={rowItem}
                     selectedItem={selectedItem}
                     {...props}
                   />
@@ -70,13 +71,13 @@ const TableView = ({
       </div>
       {selectedItem && (selectedItem.uid || selectedItem.hash) && (
         <Details
-          match={match}
-          item={selectedItem}
           detailsMenu={detailsMenu}
-          page={page}
           handleCancel={handleCancel}
           handleShowElements={handleShowElements}
           hideChips={hideChips}
+          item={selectedItem}
+          match={match}
+          page={page}
         />
       )}
     </div>
@@ -84,13 +85,21 @@ const TableView = ({
 }
 
 TableView.propTypes = {
-  jobs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  job: PropTypes.shape({}).isRequired,
-  loading: PropTypes.bool.isRequired,
-  hideChips: PropTypes.func.isRequired,
-  handleSelectItem: PropTypes.func.isRequired,
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  convertToYaml: PropTypes.func.isRequired,
+  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired
+  handleHoverOnRowActions: PropTypes.func.isRequired,
+  handleMouseLeaveFromRowActions: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func.isRequired,
+  handleShowElements: PropTypes.func.isRequired,
+  hideChips: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  match: PropTypes.shape({}).isRequired,
+  page: PropTypes.string.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default TableView

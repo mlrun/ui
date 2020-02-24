@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+
 import Select from '../../common/Select/Select'
+
 import './artifactsfiltermenu.scss'
 
 const ArtifactsFilterMenu = ({ filters }) => {

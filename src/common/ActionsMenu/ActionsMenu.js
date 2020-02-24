@@ -6,11 +6,11 @@ import actionMenuIcon from '../../images/elipsis.png'
 const ActionsMenu = ({ convertToYaml, item }) => {
   const showActionsList = e => {
     const actionsBlock = e.target.closest('.row__actions__container')
-    if (actionsBlock.classList.value.includes('row__actions_visible')) {
-      actionsBlock.classList.remove('row__actions_visible')
-    } else {
-      actionsBlock.classList.add('row__actions_visible')
-    }
+    // if (actionsBlock.classList.value.includes('row__actions_visible')) {
+    //   actionsBlock.classList.remove('row__actions_visible')
+    // } else {
+    actionsBlock.classList.add('row__actions_visible')
+    // }
   }
 
   return (

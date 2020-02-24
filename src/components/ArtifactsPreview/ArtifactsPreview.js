@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import api from '../../api/artifacts-api'
-import Loader from '../../common/Loader/Loader'
-import DetailsResults from '../DetailsResults/DetailsResults'
 
-const ArtifactsDetailsPreview = ({ artifact }) => {
+import api from '../../api/artifacts-api'
+
+import Loader from '../../common/Loader/Loader'
+import ArtifactsPreviewView from './ArtifactsPreviewView'
+
+const ArtifactsPreview = ({ artifact }) => {
+  const [isLoader, setLoader] = useState(false)
   const [preview, setPreview] = useState({
     type: null,
     data: null
   })
+
+  useEffect(() => {
+    setLoader(true)
+    getArtifactPreview(
+      artifact.target_path.schema,
+      artifact.target_path.path
+    ).then(() => setLoader(false))
+  }, [artifact.target_path])
 
   const getArtifactPreview = (schema, path) => {
     return api.getArtifactPreview(schema, path).then(res => {
@@ -59,91 +70,11 @@ const ArtifactsDetailsPreview = ({ artifact }) => {
     })
   }
 
-  const [isLoader, setLoader] = useState(false)
-
-  useEffect(() => {
-    setLoader(true)
-    getArtifactPreview(
-      artifact.target_path.schema,
-      artifact.target_path.path
-    ).then(() => setLoader(false))
-  }, [artifact.target_path])
-
-  return isLoader ? (
-    <Loader />
-  ) : (
-    <>
-      {preview.type && preview.type === 'table-results' && (
-        <div className="table__item_artifacts__preview_table">
-          <DetailsResults job={preview} />
-        </div>
-      )}
-      {preview.type && preview.type === 'table' && (
-        <div className="table__item_artifacts__preview_table">
-          <div className="table__item_artifacts__preview_table__row">
-            {preview.data.headers.map(header => {
-              return (
-                <div
-                  key={header}
-                  className="table__item_artifacts__preview_table__header"
-                >
-                  {header}
-                </div>
-              )
-            })}
-          </div>
-          {preview.data.content.map(item => (
-            <div
-              key={item + Math.random()}
-              className="table__item_artifacts__preview_table__row"
-            >
-              {typeof item === typeof '' ? (
-                <div className="table__item_artifacts__preview_table__row__content">
-                  {item}
-                </div>
-              ) : (
-                item.map(value => (
-                  <div
-                    key={value + Math.random()}
-                    className="table__item_artifacts__preview_table__row__content"
-                  >
-                    {value}
-                  </div>
-                ))
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-      {preview.data && preview.type === 'text' && (
-        <div>{preview.data.content}</div>
-      )}
-      {preview.data && preview.type === 'html' && (
-        <div>
-          <iframe
-            srcDoc={preview.data.content}
-            frameBorder="0"
-            title="Preview"
-          />
-        </div>
-      )}
-      {preview.data && preview.type === 'json' && (
-        <div>
-          <pre>
-            <code>{preview.data.content}</code>
-          </pre>
-        </div>
-      )}
-      {preview.data && preview.type === 'image' && (
-        <div>{preview.data.content}</div>
-      )}
-      {preview.type && preview.type === 'unknown' && <div>No preview</div>}
-    </>
-  )
+  return isLoader ? <Loader /> : <ArtifactsPreviewView preview={preview} />
 }
 
-ArtifactsDetailsPreview.propTypes = {
+ArtifactsPreview.propTypes = {
   artifact: PropTypes.shape({}).isRequired
 }
 
-export default ArtifactsDetailsPreview
+export default ArtifactsPreview

@@ -32,7 +32,8 @@ const DetailsResults = ({ job }) => {
                     )
                   } else if (
                     job.results &&
-                    value === job.results.best_iteration
+                    value === job.results.best_iteration &&
+                    i === 0
                   ) {
                     return (
                       <td

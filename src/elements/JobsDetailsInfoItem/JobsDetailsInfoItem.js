@@ -1,12 +1,14 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import ChipCell from '../ChipCell/ChipCell'
 
 const JobsDetailsInfoItem = ({
-  header,
-  state,
   chips,
+  header,
   info,
-  handleShowElements
+  handleShowElements,
+  state
 }) => {
   return (
     <li className="table__item_details_item">
@@ -31,6 +33,11 @@ const JobsDetailsInfoItem = ({
       {info && <div className="table__item_details_item_data">{info}</div>}
     </li>
   )
+}
+
+JobsDetailsInfoItem.propTypes = {
+  chips: PropTypes.arrayOf(PropTypes.shape({})),
+  header: PropTypes.string.isRequired
 }
 
 export default JobsDetailsInfoItem

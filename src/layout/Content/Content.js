@@ -11,11 +11,11 @@ import refreshIcon from '../../images/refresh.png'
 import './content.scss'
 
 const Content = ({
-  match,
-  refresh,
-  handleCancel,
   convertedYaml,
   filters,
+  handleCancel,
+  match,
+  refresh,
   ...props
 }) => {
   return (
@@ -46,17 +46,25 @@ const Content = ({
 }
 
 Content.defaultProps = {
-  job: {}
+  convertedYaml: '',
+  selectedItem: {}
 }
 
 Content.propTypes = {
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  convertToYaml: PropTypes.func.isRequired,
+  convertedYaml: PropTypes.string.isRequired,
+  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  job: PropTypes.shape({}),
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
-  refresh: PropTypes.func.isRequired
+  page: PropTypes.string.isRequired,
+  refresh: PropTypes.func.isRequired,
+  selectedItem: PropTypes.shape({}),
+  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default Content

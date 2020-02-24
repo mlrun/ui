@@ -1,20 +1,26 @@
 import React, { useEffect } from 'react'
-import projectsAction from '../../actions/projects'
-import Breadcrums from '../../common/Breadcrumbs/Breadcrumbs'
-import Loader from '../../common/Loader/Loader'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+
+import projectsAction from '../../actions/projects'
+
+import Breadcrums from '../../common/Breadcrumbs/Breadcrumbs'
+import Loader from '../../common/Loader/Loader'
+
 import artifactIcon from '../../images/file-chart.png'
 import jobsIcon from '../../images/check-all.png'
+
 import './projects.scss'
+
 const Projects = ({ projects, fetchProjects, match }) => {
   useEffect(() => {
     fetchProjects()
   }, [fetchProjects])
+
   return (
     <>
       <div className="breadcrums_container">
-        <Breadcrums match={match}></Breadcrums>
+        <Breadcrums match={match} />
       </div>
       <div className="projects_wrapper">
         {projects.length !== 0 ? (

@@ -47,7 +47,8 @@ const DetailsLogs = ({ jobsStore, fetchJobLogs, match }) => {
 
 DetailsLogs.propTypes = {
   fetchJobLogs: PropTypes.func.isRequired,
-  jobsStore: PropTypes.shape({}).isRequired
+  jobsStore: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(jobsStore => jobsStore, jobsActions)(DetailsLogs)

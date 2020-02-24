@@ -2,16 +2,17 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
+
 import jobsActions from '../../actions/jobs'
 import jobsData from './jobsData'
 import createJobsContent from '../../utils/createJobsContent'
 
 import Content from '../../layout/Content/Content'
 
-const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
+const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob }) => {
+  const [convertedYaml, setConvertedYaml] = useState()
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState(true)
-  const [convertedYaml, setConvertedYaml] = useState()
   const tableContent = createJobsContent(jobs)
 
   const refreshJobs = useCallback(
@@ -60,30 +61,27 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
   return (
     <Content
       content={jobs}
-      selectedItem={jobsStore.selectedJob}
-      match={match}
-      refresh={refreshJobs}
-      handleSelectItem={handleSelectJob}
-      handleCancel={handleCancel}
-      loading={loading}
-      convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
+      convertedYaml={convertedYaml}
+      detailsMenu={jobsData.detailsMenu}
       filters={jobsData.filters}
+      handleCancel={handleCancel}
+      handleSelectItem={handleSelectJob}
+      loading={loading}
+      match={match}
+      page={jobsData.page}
+      selectedItem={jobsStore.selectedJob}
+      refresh={refreshJobs}
       tableHeaders={jobsData.tableHeaders}
       tableContent={tableContent}
-      detailsMenu={jobsData.detailsMenu}
-      page={'jobs'}
     />
   )
 }
 
 Jobs.propTypes = {
   fetchJobs: PropTypes.func.isRequired,
-  history: PropTypes.shape({}).isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
-  location: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  setJobs: PropTypes.func.isRequired,
   setSelectedJob: PropTypes.func.isRequired
 }
 

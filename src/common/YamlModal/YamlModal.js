@@ -29,7 +29,7 @@ const YamlModal = ({ convertedYaml }) => {
 }
 
 YamlModal.propTypes = {
-  convertedYaml: PropTypes.string
+  convertedYaml: PropTypes.string.isRequired
 }
 
 export default YamlModal
