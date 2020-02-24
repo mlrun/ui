@@ -82,7 +82,9 @@ const TableCell = ({
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
         <span className="table_body__row__cell_path" title={data.value.path}>
-          {data.value.path + data.value.path}
+          {`${data.value.schema ? `${data.value.schema}://` : ''}${
+            data.value.path
+          }`}
         </span>
       </div>
     )

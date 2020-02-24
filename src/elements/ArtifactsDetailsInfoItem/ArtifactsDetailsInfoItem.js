@@ -25,7 +25,9 @@ const ArtifactsDetailsInfoItem = ({
       )}
       {target_path && (
         <div className="table__item_details_item_data">
-          <span>{target_path.schema + target_path.path}</span>
+          <span>{`${target_path.schema ? `${target_path.schema}://` : ''}${
+            target_path.path
+          }`}</span>
         </div>
       )}
       {info && <div className="table__item_details_item_data">{info}</div>}
