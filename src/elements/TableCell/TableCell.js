@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import ChipCell from '../ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
 import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
@@ -7,12 +9,12 @@ import { Link } from 'react-router-dom'
 import { truncateUid } from '../../utils'
 
 const TableCell = ({
-  item,
-  selectItem,
-  selectedItem,
-  link,
   data,
-  handleShowElements
+  handleShowElements,
+  item,
+  link,
+  selectItem,
+  selectedItem
 }) => {
   if (link) {
     return (
@@ -36,9 +38,10 @@ const TableCell = ({
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
         <ChipCell
-          elements={data.value}
           className={`table_body__${data.type}`}
+          elements={data.value}
           handleShowElements={handleShowElements}
+          maxLength={2}
         />
       </div>
     )
@@ -47,9 +50,9 @@ const TableCell = ({
       <div className={`table_body__row__cell cell__${data.size}`}>
         <Tooltip
           kind={data.value.kind}
+          name={data.value.name}
           owner={data.value.owner ? data.value.owner : ''}
           to={`/jobs/${data.value.uri}/info`}
-          name={data.value.name}
         />
       </div>
     )
@@ -85,6 +88,15 @@ const TableCell = ({
       </div>
     )
   }
+}
+
+TableCell.propTypes = {
+  data: PropTypes.shape({}).isRequired,
+  handleShowElements: PropTypes.func.isRequired,
+  item: PropTypes.shape({}).isRequired,
+  link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  selectItem: PropTypes.func.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default TableCell

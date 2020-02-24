@@ -1,19 +1,20 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 const JobsTableRow = ({
-  rowItem,
+  content,
+  convertToYaml,
   handleHoverOnRowActions,
   handleMouseLeaveFromRowActions,
-  selectedItem,
-  content,
+  handleSelectItem,
+  handleShowElements,
   index,
   match,
-  handleSelectItem,
-  convertToYaml,
-  handleShowElements
+  rowItem,
+  selectedItem
 }) => {
   return (
     <div
@@ -24,8 +25,8 @@ const JobsTableRow = ({
       {Object.values(rowItem).map((value, i) => {
         return (
           <TableCell
-            selectedItem={selectedItem}
             data={value}
+            handleShowElements={handleShowElements}
             item={content[index]}
             link={
               i === 0 &&
@@ -33,9 +34,9 @@ const JobsTableRow = ({
                 content[index].uid
               }${match.params.tab ? `/${match.params.tab}` : '/info'}`
             }
+            key={value.value + i}
             selectItem={handleSelectItem}
-            key={value.value}
-            handleShowElements={handleShowElements}
+            selectedItem={selectedItem}
           />
         )
       })}
@@ -44,6 +45,19 @@ const JobsTableRow = ({
       </div>
     </div>
   )
+}
+
+JobsTableRow.propTypes = {
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  convertToYaml: PropTypes.func.isRequired,
+  handleHoverOnRowActions: PropTypes.func.isRequired,
+  handleMouseLeaveFromRowActions: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func.isRequired,
+  handleShowElements: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+  match: PropTypes.shape({}).isRequired,
+  rowItem: PropTypes.shape({}).isRequired,
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default JobsTableRow

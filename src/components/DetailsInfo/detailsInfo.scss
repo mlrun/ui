@@ -1,0 +1,48 @@
+@import "../../scss/colors";
+@import "../../scss/borders";
+@import "../../scss/mixins";
+
+.table__item_details {
+  margin: 0;
+  padding: 0 30px;
+  list-style-type: none;
+  &_preview_header {
+    margin: 30px;
+    font-size: 25px;
+  }
+  &_item {
+    border-bottom: $tableBorder;
+    padding: 18px 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    &_header {
+      min-width: 100px;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 24px;
+    }
+    i {
+      margin-left: 21px;
+    }
+    span {
+      margin-right: 20px;
+    }
+    &_data {
+      padding-left: 16px;
+      display: flex;
+      &__parameters {
+        @include chip($parametersBorder);
+        margin: 8px 8px 0 0;
+      }
+      &__labels {
+        @include chip($labelBorder);
+        margin: 8px 8px 0 0;
+      }
+      &__results {
+        @include chip($resultsBorder);
+        margin: 8px 8px 0 0;
+      }
+    }
+  }
+}

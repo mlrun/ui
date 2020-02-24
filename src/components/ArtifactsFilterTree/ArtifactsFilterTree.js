@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
+
 import caret from '../../images/caret.png'
+
 import './artifactsfiltertree.scss'
+
 const ArtifactFilterTree = ({ items, onChange, value }) => {
   const [isDropDownMenuOpen, setIsDropDownMenu] = useState(false)
   const [filterTree, setFilterTree] = useState(value)

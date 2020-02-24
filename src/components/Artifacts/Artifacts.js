@@ -7,20 +7,20 @@ import Content from '../../layout/Content/Content'
 
 import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
-
-import './artifacts.scss'
 import createArtifactsContent from '../../utils/createArtifactsContent'
 
+import './artifacts.scss'
+
 const Artifacts = ({
-  match,
   artifactsStore,
   fetchArtifacts,
+  match,
   selectArtifact,
   setArtifacts
 }) => {
-  const [loading, setLoading] = useState(false)
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [convertedYaml, setConvertedYaml] = useState()
+  const [loading, setLoading] = useState(false)
   const [tableContent, setArtifactsContent] = useState([])
 
   const fetchData = useCallback(
@@ -30,6 +30,7 @@ const Artifacts = ({
         .then(data => {
           const artifacts = data.map(artifact => {
             let item = null
+
             if (artifact.link_iteration) {
               let { link_iteration } = artifact.link_iteration
               item = artifact.data.filter(
@@ -38,6 +39,7 @@ const Artifacts = ({
             } else {
               item = artifact.data[0]
             }
+
             const index = item.target_path.indexOf('://')
             const target_path = {
               schema: item.target_path.includes('://')
@@ -47,9 +49,12 @@ const Artifacts = ({
                 ? item.target_path.slice(index + '://'.length)
                 : item.target_path
             }
+
             item.target_path = target_path
+
             return item
           })
+
           _setArtifacts(artifacts)
           setLoading(false)
           return artifacts
@@ -64,6 +69,7 @@ const Artifacts = ({
 
   useEffect(() => {
     fetchData()
+
     return () => {
       setArtifacts({ artifacts: [] })
     }
@@ -126,28 +132,28 @@ const Artifacts = ({
 
   return (
     <Content
-      tableContent={tableContent}
       content={artifacts}
-      selectedItem={artifactsStore.selectArtifact}
-      match={match}
-      refresh={fetchData}
-      handleSelectItem={handleSelectArtifact}
-      handleCancel={handleCancel}
-      convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
-      loading={loading}
-      tableHeaders={artifactsData.tableHeaders}
-      filters={artifactsData.filters}
+      convertedYaml={convertedYaml}
       detailsMenu={artifactsData.detailsMenu}
-      page={'artifacts'}
+      filters={artifactsData.filters}
+      handleCancel={handleCancel}
+      handleSelectItem={handleSelectArtifact}
+      match={match}
+      loading={loading}
+      page={artifactsData.page}
+      refresh={fetchData}
+      selectedItem={artifactsStore.selectArtifact}
+      tableContent={tableContent}
+      tableHeaders={artifactsData.tableHeaders}
     />
   )
 }
 
 Artifacts.propTypes = {
-  match: PropTypes.shape({}).isRequired,
   artifactsStore: PropTypes.shape({}).isRequired,
   fetchArtifacts: PropTypes.func.isRequired,
+  match: PropTypes.shape({}).isRequired,
   selectArtifact: PropTypes.func.isRequired
 }
 

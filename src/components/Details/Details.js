@@ -6,25 +6,25 @@ import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsInputs from '../DetailsInputs/DetailsInputs'
 import DetailsLogs from '../DetailsLogs/DetailsLogs'
+import DetailsArtifacts from '../DetailsArtifacts/DetailsArtifacts'
+import DetailsResults from '../DetailsResults/DetailsResults'
+import Download from '../../common/Download/Download'
+import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 
 import { formatDatetime } from '../../utils'
 
 import './details.scss'
 
 import cancel from '../../images/cancel.png'
-import DetailsArtifacts from '../DetailsArtifacts/DetailsArtifacts'
-import DetailsResults from '../DetailsResults/DetailsResults'
-import Download from '../../common/Download/Download'
-import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 
 const Details = ({
-  item,
-  handleCancel,
-  match,
   detailsMenu,
-  page,
+  handleCancel,
   handleShowElements,
-  hideChips
+  hideChips,
+  item,
+  match,
+  page
 }) => {
   return (
     <div className="table__item" onClick={hideChips}>
@@ -64,21 +64,21 @@ const Details = ({
         <ul className="table__item__menu">
           {detailsMenu.map(link => (
             <DetailsMenuItem
-              match={match}
+              key={link}
               id={item.uid}
+              match={match}
+              name={item.key}
               page={page}
               tab={link}
-              key={link}
-              name={item.key}
             />
           ))}
         </ul>
       </div>
       {match.params.tab === 'info' && (
         <DetailsInfo
+          handleShowElements={handleShowElements}
           item={item}
           page={page}
-          handleShowElements={handleShowElements}
         />
       )}
       {match.params.tab === 'preview' && <ArtifactsPreview artifact={item} />}
@@ -91,10 +91,12 @@ const Details = ({
 }
 
 Details.propTypes = {
-  item: PropTypes.shape({}).isRequired,
-  handleCancel: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
+  handleCancel: PropTypes.func.isRequired,
+  handleShowElements: PropTypes.func.isRequired,
+  hideChips: PropTypes.func.isRequired,
+  item: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired
 }
 

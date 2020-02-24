@@ -129,17 +129,21 @@ const Table = ({
 }
 
 Table.defaultProps = {
-  job: {},
-  jobs: []
+  selectedItem: {}
 }
 
 Table.propTypes = {
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  convertToYaml: PropTypes.func.isRequired,
+  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  job: PropTypes.shape({}),
-  jobs: PropTypes.arrayOf(PropTypes.shape({})),
   loading: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired
+  match: PropTypes.shape({}).isRequired,
+  page: PropTypes.string.isRequired,
+  selectedItem: PropTypes.shape({}),
+  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default Table

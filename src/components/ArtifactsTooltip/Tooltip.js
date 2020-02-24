@@ -2,10 +2,11 @@ import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-const Tooltip = ({ to, name, kind = '', owner = '' }) => {
-  const [show, setShow] = useState(false)
+const Tooltip = ({ kind = '', name, owner = '', to }) => {
   const [isBottomPosition, setBottomPosition] = useState(false)
+  const [show, setShow] = useState(false)
   const parentRef = useRef(null)
+
   useEffect(() => {
     const node = parentRef.current
     if (node) {
@@ -28,10 +29,6 @@ const Tooltip = ({ to, name, kind = '', owner = '' }) => {
     }
   }, [show])
 
-  const handlerScroll = () => {
-    setShow(false)
-  }
-
   const handleMouseOver = () => {
     setShow(true)
     let { bottom } = parentRef.current.getBoundingClientRect()
@@ -43,6 +40,10 @@ const Tooltip = ({ to, name, kind = '', owner = '' }) => {
     }
   }
   const handleMouseOut = () => {
+    setShow(false)
+  }
+
+  const handlerScroll = () => {
     setShow(false)
   }
 
@@ -75,10 +76,10 @@ const Tooltip = ({ to, name, kind = '', owner = '' }) => {
 }
 
 Tooltip.propTypes = {
-  to: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
   kind: PropTypes.string.isRequired,
-  owner: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
+  owner: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired
 }
 
 export default Tooltip

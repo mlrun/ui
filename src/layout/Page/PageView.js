@@ -14,5 +14,6 @@ export default function PageView({ children, location }) {
 }
 
 PageView.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.element.isRequired,
+  location: PropTypes.shape({}).isRequired
 }

@@ -20,6 +20,10 @@ const createJobsContent = jobs => {
       size: 'jobs_small',
       type: 'state'
     },
+    owner: {
+      value: job.owner,
+      size: 'jobs_small'
+    },
     parameters: {
       value: job.parameters,
       size: 'jobs_big',
