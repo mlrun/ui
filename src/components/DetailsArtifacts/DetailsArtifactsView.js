@@ -6,6 +6,8 @@ import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 
 import arrow from '../../images/arrow.png'
 
+import './detailsArtifacts.scss'
+
 const DetailsArtifactsView = ({ items, handleClick }) => (
   <div className="table__item_artifacts">
     {items.map((item, i) => {

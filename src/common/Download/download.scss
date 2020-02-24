@@ -1,4 +1,5 @@
-@import '../../scss/variables.scss';
+@import '../../scss/colors';
+@import '../../scss/shadows';
 
 .download_container {
   cursor: pointer;
@@ -18,7 +19,7 @@
   }
   &.failed {
     &_notification {
-      color: $statusFailed;
+      color: $burntSienna;
     }
   }
   &.cancel {

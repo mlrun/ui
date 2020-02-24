@@ -26,7 +26,7 @@ const Select = ({ filter }) => {
 
   return (
     <div
-      className={'select_container' + (isOpen === true ? ' active' : '')}
+      className={`select ${isOpen && 'active'}`}
       onClick={() => setOpen(!isOpen)}
     >
       <div className="select_header">
@@ -34,13 +34,14 @@ const Select = ({ filter }) => {
         <div className="select_header_value">{value}</div>
         <img src={caret} alt="caret" />
       </div>
-      {isOpen && <div className="overall" />}
-      {isOpen && (
+      {isOpen && [
+        <div className="overall" key={isOpen} />,
         <div
           className="select_body"
           onClick={() => {
             setOpen(false)
           }}
+          key={!isOpen}
         >
           {options[filter].map(item => (
             <div
@@ -63,7 +64,7 @@ const Select = ({ filter }) => {
             </div>
           ))}
         </div>
-      )}
+      ]}
     </div>
   )
 }

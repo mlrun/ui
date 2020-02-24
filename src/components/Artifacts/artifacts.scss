@@ -1,4 +1,5 @@
-@import '../../scss/variables';
+@import '../../scss/shadows';
+@import '../../scss/colors';
 
 .artifacts {
   &_header {
@@ -12,7 +13,7 @@
     box-shadow: $headerShadow;
   }
   &_container {
-    margin: 15px 24px 24px 24px;
+    margin: 15px 24px 24px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;

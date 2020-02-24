@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import ArtifactsFilterMenu from '../../components/ArtifacstFilterMenu/ArtifactsFilterMenu'
+import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
 
 import refreshIcon from '../../images/refresh.png'
@@ -32,7 +32,7 @@ const Content = ({
           </ul>
         </div>
         <div className="content__action_bar">
-          <ArtifactsFilterMenu filters={filters} />
+          <FilterMenu filters={filters} />
           <button className="content__action_bar_refresh" onClick={refresh}>
             <img src={refreshIcon} alt="refresh" />
           </button>

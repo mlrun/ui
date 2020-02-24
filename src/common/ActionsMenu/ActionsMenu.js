@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import actionMenuIcon from '../../images/elipsis.png'
 
+import './actionsMenu.scss'
+
 const ActionsMenu = ({ convertToYaml, item }) => {
   const showActionsList = e => {
     const actionsBlock = e.target.closest('.row__actions__container')

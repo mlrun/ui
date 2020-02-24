@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import Chip from '../Chip/Chip'
 import { cutChips } from '../../utils/cutChips'
 
-const ChipCell = ({ className, elements, handleShowElements }) => {
-  const chips = cutChips(elements, 2)
+const ChipCell = ({ className, elements, handleShowElements, maxLength }) => {
+  const chips = cutChips(elements, maxLength)
+
   return elements
     ? chips.sortedArr.map((item, i) => {
         return (
@@ -43,7 +44,8 @@ ChipCell.defaultProps = {
 ChipCell.propTypes = {
   className: PropTypes.string.isRequired,
   elements: PropTypes.arrayOf(PropTypes.string),
-  handleShowElements: PropTypes.func.isRequired
+  handleShowElements: PropTypes.func.isRequired,
+  maxLength: PropTypes.number.isRequired
 }
 
 export default ChipCell

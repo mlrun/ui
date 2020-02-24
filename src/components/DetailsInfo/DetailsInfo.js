@@ -8,20 +8,23 @@ import artifactsData from '../Artifacts/artifactsData'
 import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsInfoItem'
 import ArtifactsDetailsInfoItem from '../../elements/ArtifactsDetailsInfoItem/ArtifactsDetailsInfoItem'
 
+import './detailsInfo.scss'
+
 const DetailsInfo = ({ item, handleShowElements, page }) => {
   const jobsInfoContent = [
     item.uid,
     formatDatetime(item.startTime),
     item.state,
     item.parameters,
+    item.resultsChips,
     item.labels,
     item.logLevel,
     item.outputPath,
-    item.iterations
+    item.iterations.length ? item.iterations : '0'
   ]
   const artifactsInfoContent = [
     item.key,
-    item.iter ? item.iter : 0,
+    item.iter ? item.iter : '0',
     item.kind,
     item.size,
     item.target_path,
@@ -36,74 +39,90 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.producer.uri,
     item.producer.workflow
   ]
+
   return (
     <div>
       <ul className="table__item_details">
         {page === 'jobs'
           ? jobsData.jobsInfoHeaders.map((header, i) => {
-              if (jobsInfoContent[i] === item.state) {
-                return (
-                  <JobsDetailsInfoItem
-                    key={header}
-                    handleShowElements={handleShowElements}
-                    header={header}
-                    state={item.state}
-                  />
-                )
-              } else if (jobsInfoContent[i] === item.parameters) {
-                return (
-                  <JobsDetailsInfoItem
-                    key={header}
-                    chips={item.parameters}
-                    header={header}
-                  />
-                )
-              } else if (jobsInfoContent[i] === item.labels) {
-                return (
-                  <JobsDetailsInfoItem
-                    key={header}
-                    chips={item.labels}
-                    header={header}
-                    handleShowElements={handleShowElements}
-                  />
-                )
-              } else {
-                return (
-                  <JobsDetailsInfoItem
-                    key={header}
-                    header={header}
-                    info={jobsInfoContent[i]}
-                  />
-                )
+              switch (jobsInfoContent[i]) {
+                case item.state:
+                  return (
+                    <JobsDetailsInfoItem
+                      key={header}
+                      handleShowElements={handleShowElements}
+                      header={header}
+                      state={item.state}
+                    />
+                  )
+                case item.parameters:
+                  return (
+                    <JobsDetailsInfoItem
+                      key={header}
+                      chips={item.parameters}
+                      header={header}
+                      handleShowElements={handleShowElements}
+                      chipsClassName="parameters"
+                    />
+                  )
+                case item.resultsChips:
+                  return (
+                    <JobsDetailsInfoItem
+                      key={header}
+                      chips={item.resultsChips}
+                      header={header}
+                      handleShowElements={handleShowElements}
+                      chipsClassName="results"
+                    />
+                  )
+                case item.labels:
+                  return (
+                    <JobsDetailsInfoItem
+                      key={header}
+                      chips={item.labels}
+                      header={header}
+                      handleShowElements={handleShowElements}
+                      chipsClassName="labels"
+                    />
+                  )
+                default:
+                  return (
+                    <JobsDetailsInfoItem
+                      key={header}
+                      header={header}
+                      info={jobsInfoContent[i]}
+                    />
+                  )
               }
             })
           : artifactsData.artifactsInfoHeaders.map((header, i) => {
-              if (artifactsInfoContent[i] === item.labels) {
-                return (
-                  <ArtifactsDetailsInfoItem
-                    key={header}
-                    handleShowElements={handleShowElements}
-                    chips={item.labels}
-                    header={header}
-                  />
-                )
-              } else if (artifactsInfoContent[i] === item.target_path) {
-                return (
-                  <ArtifactsDetailsInfoItem
-                    key={header}
-                    handleShowElements={handleShowElements}
-                    header={header}
-                    target_path={item.target_path}
-                  />
-                )
-              } else {
-                return (
-                  <ArtifactsDetailsInfoItem
-                    key={header}
-                    info={artifactsInfoContent[i]}
-                    header={header}
-                  />
-                )
+              switch (artifactsInfoContent[i]) {
+                case item.labels:
+                  return (
+                    <ArtifactsDetailsInfoItem
+                      key={header}
+                      handleShowElements={handleShowElements}
+                      chips={item.labels}
+                      header={header}
+                    />
+                  )
+                case item.target_path:
+                  return (
+                    <ArtifactsDetailsInfoItem
+                      key={header}
+                      handleShowElements={handleShowElements}
+                      header={header}
+                      target_path={item.target_path}
+                    />
+                  )
+                default:
+                  return (
+                    <ArtifactsDetailsInfoItem
+                      key={header}
+                      info={artifactsInfoContent[i]}
+                      header={header}
+                    />
+                  )
               }
             })}
       </ul>

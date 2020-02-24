@@ -52,10 +52,14 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob }) => {
 
   const convertToYaml = item => {
     document.getElementById('yaml_modal').style.display = 'flex'
-    const jobJson = item
-    delete jobJson.showedParameters
-    delete jobJson.showedResults
-    setConvertedYaml(yaml.safeDump(jobJson))
+    const jobJson = jobsStore.jobsData.filter(
+      job => job.metadata.uid === item.uid
+    )
+    setConvertedYaml(
+      yaml.safeDump(jobJson, {
+        lineWidth: 1000
+      })
+    )
   }
 
   return (

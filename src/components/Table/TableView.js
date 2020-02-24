@@ -24,7 +24,7 @@ const TableView = ({
       {loading && <Loader />}
       <div
         className={
-          selectedItem && selectedItem.target_path && 'table__item_opened'
+          (selectedItem.uid || selectedItem.name) && 'table__item_opened'
         }
       >
         <div className="table__content">

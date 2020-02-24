@@ -1,9 +1,12 @@
 @import "../../scss/variables";
+@import '../../scss/colors';
 @import '../../scss/mixins';
+@import '../../scss/shadows';
+@import '../../scss/borders';
 
 .header {
   @include fixed;
-  background-color: $mainHeaderBg;
+  background-color: $ebonyClay;
   width: 100%;
   display: flex;
   z-index: 99999;

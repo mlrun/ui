@@ -5,6 +5,7 @@ import ChipCell from '../ChipCell/ChipCell'
 
 const JobsDetailsInfoItem = ({
   chips,
+  chipsClassName,
   header,
   info,
   handleShowElements,
@@ -24,8 +25,9 @@ const JobsDetailsInfoItem = ({
           {
             <ChipCell
               elements={chips}
-              className="table__item_details_item_data__parameters"
+              className={`table__item_details_item_data__${chipsClassName}`}
               handleShowElements={handleShowElements}
+              maxLength={6}
             />
           }
         </div>
@@ -34,9 +36,13 @@ const JobsDetailsInfoItem = ({
     </li>
   )
 }
+JobsDetailsInfoItem.defaultProps = {
+  chipsClassName: ''
+}
 
 JobsDetailsInfoItem.propTypes = {
-  chips: PropTypes.arrayOf(PropTypes.shape({})),
+  chips: PropTypes.arrayOf(PropTypes.string),
+  chipsClassName: PropTypes.string,
   header: PropTypes.string.isRequired
 }
 

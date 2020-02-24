@@ -1,26 +1,25 @@
-@import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
 
 .select {
-  &_container {
-    display: flex;
-    position: relative;
-    align-items: center;
-    height: 40px;
-    border-radius: 4px;
-    background-color: transparent;
-    border: $tableFilterBorder;
-    margin-right: 15px;
-    &.active {
-      background: $selectHover;
-    }
+  display: flex;
+  position: relative;
+  align-items: center;
+  height: 40px;
+  border-radius: 4px;
+  background-color: transparent;
+  border: $tableFilterBorder;
+  margin-right: 15px;
+  &.active {
+    background: $alabaster;
   }
-
   &_header {
     display: flex;
     align-items: center;
     &_label {
-      color: $mainGreyColor;
+      color: $topaz;
       padding: 0 5px 0 15px;
       text-transform: capitalize;
     }
@@ -29,7 +28,7 @@
       overflow-x: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      color: $tableFontColor;
+      color: $mulledWine;
     }
     img {
       height: 6px;
@@ -44,7 +43,7 @@
     border: $tableFilterBorder;
     box-shadow: $filterShadow;
     border-radius: 2px;
-    color: $filterColor;
+    color: $mulledWineTwo;
     &_item {
       display: flex;
       align-items: center;
@@ -52,27 +51,24 @@
       padding-left: 15px;
       background-color: $white;
       &:hover {
-        background-color: $selectHover;
+        background-color: $alabaster;
         cursor: pointer;
       }
     }
     .status {
       &_all {
-        @include jobStatus;
+        @include jobStatus(none);
       }
       &_completed {
-        @include jobStatus;
-        background-color: $statusCompleted;
+        @include jobStatus($malachite);
         margin: 0 10px;
       }
       &_running {
-        @include jobStatus;
-        background-color: $mainBlue;
+        @include jobStatus($pictonBlue);
         margin: 0 10px;
       }
       &_failed, &_error {
-        @include jobStatus;
-        background-color: $statusFailed;
+        @include jobStatus($burntSienna);
         margin: 0 10px;
       }
     }

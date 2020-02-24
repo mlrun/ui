@@ -43,6 +43,7 @@ const TableCell = ({
           className={`table_body__${data.type}`}
           elements={data.value}
           handleShowElements={handleShowElements}
+          maxLength={2}
         />
       </div>
     )
@@ -77,7 +78,11 @@ const TableCell = ({
   } else if (data.type === 'path') {
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
-        <span>schema: {data.value.schema}</span> <br />
+        {data.value.schema && (
+          <>
+            <span>schema: {data.value.schema}</span> <br />
+          </>
+        )}
         <span>path: {data.value.path}</span>
       </div>
     )

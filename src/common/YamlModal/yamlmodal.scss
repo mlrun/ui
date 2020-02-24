@@ -1,4 +1,4 @@
-@import '../../scss/variables';
+@import '../../scss/colors';
 
 .yaml_modal {
   z-index: 9999;
@@ -10,20 +10,15 @@
   left: 0;
   height: 100%;
   display: none;
-  background-color: $modalBackground;
-  div {
+  background-color: $scorpion;
+  pre {
     width: 60%;
     height: 100%;
     white-space: pre-wrap;
     background-color: $white;
     position: relative;
     overflow-y: auto;
-    pre {
-      width: 100% !important;
-      height: 100%;
-      padding: 15px !important;
-      margin: 0 !important;
-    }
+    padding: 15px;
   }
   button {
     position: absolute;
