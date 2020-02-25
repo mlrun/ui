@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import caret from '../../images/caret.png'
 
 import './artifactsfiltertree.scss'
 
-const ArtifactFilterTree = ({ items, onChange, value }) => {
+const ArtifactFilterTree = ({ items, onChange, value, label }) => {
   const [isDropDownMenuOpen, setIsDropDownMenu] = useState(false)
   const [filterTree, setFilterTree] = useState(value)
 
+  const artifactFilterTreeRef = useRef()
+
   const handlerOverall = event => {
-    if (
-      !event.target.parentNode.getAttribute('drop_down') || // if expressions !true it's means user click by drop-down-box
-      event.target.parentNode.getAttribute('drop_down') === null //if expressions true it's means user click outside drop-down-box
-    ) {
+    if (!event.path.includes(artifactFilterTreeRef.current)) {
       setIsDropDownMenu(false)
     }
   }
@@ -36,13 +35,13 @@ const ArtifactFilterTree = ({ items, onChange, value }) => {
 
   return (
     <div
-      drop_down="true"
       className="artifact_filter_tree_container"
+      ref={artifactFilterTreeRef}
       onClick={() => {
         isDropDownMenuOpen === false && setIsDropDownMenu(true)
       }}
     >
-      <div className="artifact_filter_tree_label">Tree :</div>
+      <div className="artifact_filter_tree_label">{label}</div>
       <input
         className="artifact_filter_tree"
         value={filterTree}
@@ -71,14 +70,12 @@ const ArtifactFilterTree = ({ items, onChange, value }) => {
       />
       <div
         className="drop_down"
-        drop_down="true"
         onClick={() => setIsDropDownMenu(!isDropDownMenuOpen)}
       >
         <img src={caret} alt="caret" />
       </div>
       {isDropDownMenuOpen && (
         <div
-          drop_down="true"
           className="drop_down_menu"
           onClick={() => setIsDropDownMenu(false)}
         >
@@ -89,7 +86,8 @@ const ArtifactFilterTree = ({ items, onChange, value }) => {
                 className={`drop_down_menu_item
                   ${
                     filterTree.length !== 0
-                      ? RegExp(`^${filterTree}`, 'i').test(item) && ' select'
+                      ? RegExp(`^${filterTree}`, 'i').test(item) &&
+                        ' select_item'
                       : ''
                   }
               `}

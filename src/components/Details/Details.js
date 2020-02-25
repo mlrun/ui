@@ -81,11 +81,15 @@ const Details = ({
           page={page}
         />
       )}
-      {match.params.tab === 'preview' && <ArtifactsPreview artifact={item} />}
-      {match.params.tab === 'inputs' && <DetailsInputs inputs={item.inputs} />}
-      {match.params.tab === 'artifacts' && <DetailsArtifacts />}
-      {match.params.tab === 'results' && <DetailsResults job={item} />}
-      {match.params.tab === 'logs' && <DetailsLogs match={match} />}
+      <div className="preview_container">
+        {match.params.tab === 'preview' && <ArtifactsPreview artifact={item} />}
+        {match.params.tab === 'inputs' && (
+          <DetailsInputs inputs={item.inputs} />
+        )}
+        {match.params.tab === 'artifacts' && <DetailsArtifacts />}
+        {match.params.tab === 'results' && <DetailsResults job={item} />}
+        {match.params.tab === 'logs' && <DetailsLogs match={match} />}
+      </div>
     </div>
   )
 }

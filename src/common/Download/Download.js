@@ -4,8 +4,8 @@ import HttpClient from '../../httpClient'
 import notificationDownloadAction from '../../actions/notificationDownload'
 import axios from 'axios'
 import ProgressRing from '../ProgressRing/ProgressRing'
-import download from '../../images/download-icon.png'
-import cancel from '../../images/download-cancel.png'
+import downloadIcon from '../../images/download.png'
+import cancelIcon from '../../images/close.png'
 import { connect } from 'react-redux'
 import downloadFile from '../../utils/downloadFile'
 import './download.scss'
@@ -95,13 +95,16 @@ const Download = ({ path, schema, setNotificationDownload }) => {
         progress={progress}
         color={progress !== 0 ? '#49436D' : '#fff'}
       >
-        <image
-          href={!isDownload ? download : cancel}
-          x="7.5"
-          y="7.5"
-          height="25px"
-          width="25px"
-        />
+        <g>
+          <circle r="12" cx="20px" cy="20px" />
+          <image
+            href={!isDownload ? downloadIcon : cancelIcon}
+            x="14"
+            y="14"
+            height="12px"
+            width="12px"
+          />
+        </g>
       </ProgressRing>
     </div>
   )
