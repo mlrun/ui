@@ -19,11 +19,12 @@ const DetailsMenuItem = ({ id, match, name, page, tab }) => {
 }
 
 DetailsMenuItem.defaultProps = {
-  name: ''
+  name: '',
+  id: ''
 }
 
 DetailsMenuItem.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   match: PropTypes.shape({}).isRequired,
   name: PropTypes.string,
   page: PropTypes.string.isRequired,

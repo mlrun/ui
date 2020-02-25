@@ -50,7 +50,6 @@
       width: 100%;
       z-index: 1;
       box-shadow: $tooltipShadow;
-      border: $tableFilterBorder;
       border-radius: $mainBorderRadius;
       &_item {
         height: 40px;
@@ -60,6 +59,7 @@
         text-align: center;
         cursor: pointer;
         border-radius: $mainBorderRadius;
+        margin: 0;
         &:hover {
           background-color: $alabaster;
         }
