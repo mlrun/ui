@@ -1,0 +1,64 @@
+@import '../../scss/colors.scss';
+@import '../../scss//borders.scss';
+@import '../../scss/shadows.scss';
+
+.preview_artifact_container {
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  padding: 50px;
+  background-color: #00000080;
+  .preview {
+    &_body {
+      height: 100%;
+      background-color: $white;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      box-shadow: $previewBoxShadow;
+      border-radius: 2px;
+      .artifact_container_view {
+        position: relative;
+        display: flex;
+        flex: 9;
+        overflow-y: auto;
+        flex-direction: column;
+      }
+    }
+    &_info {
+      padding: 10px;
+      display: flex;
+      flex: 0.5;
+      align-items: center;
+      border-bottom: $tableBorder;
+      color: $mulledWine;
+      &_name {
+        display: flex;
+        flex: 1;
+        padding-left: 25px;
+        color: $cornflowerBlue;
+      }
+      &_size,
+      &_date {
+        display: flex;
+        flex: 1;
+      }
+      &_path {
+        display: flex;
+        flex: 2;
+      }
+      &_download,
+      &_close {
+        display: flex;
+        flex: 0.2;
+      }
+      &_close {
+        img {
+          cursor: pointer;
+          margin: auto;
+        }
+      }
+    }
+  }
+}

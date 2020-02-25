@@ -1,6 +1,6 @@
-@import "../../scss/colors";
-@import "../../scss/borders";
-@import "../../scss/shadows";
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
 
 .table__item_artifacts {
   &__row {
@@ -28,7 +28,7 @@
       img {
         margin-bottom: -2px;
         margin-right: 8px;
-        transition: all .3s ease-in-out;
+        transition: all 0.3s ease-in-out;
         display: inline-block;
       }
       &_long {
@@ -66,6 +66,7 @@
     border-bottom: $tableBorder;
     &_table {
       width: 100%;
+      color: $mulledWine;
       &__row {
         display: flex;
         flex-direction: row;
@@ -76,6 +77,11 @@
         }
         &__content {
           flex: 1;
+        }
+        &:not(:first-child) {
+          &:hover {
+            background-color: $alabaster;
+          }
         }
       }
       &__header {

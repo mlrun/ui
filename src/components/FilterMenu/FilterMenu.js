@@ -20,6 +20,7 @@ const FilterMenu = ({ filters }) => {
           <ArtifactFilterTree
             key={filter}
             value="Latest"
+            label="Tree :"
             items={items}
             onChange={handleChange}
           />

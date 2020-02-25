@@ -2,5 +2,11 @@
 @import '../../scss/shadows';
 
 .download_container {
-  cursor: pointer;
+  g {
+    cursor: pointer;
+    fill: $purple;
+    &:hover {
+      fill: $cornflowerBlue;
+    }
+  }
 }

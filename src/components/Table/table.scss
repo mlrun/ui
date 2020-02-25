@@ -37,8 +37,8 @@
         flex: 0 0 14%;
       }
       &__artifacts_small {
-        flex: 0 0 5.5% !important;
-        max-width: 5.5% !important;
+        flex: 0 0 5.5%;
+        max-width: 5.5%;
       }
       &__artifacts_big {
         flex: 0 0 21% !important;
@@ -51,9 +51,22 @@
       &__artifacts_small:nth-child(3) {
         padding-left: 20px;
       }
+      &__artifacts_small:nth-child(5) {
+        flex: 0 0 9.5%;
+        max-width: 9.5%;
+      }
+      &__artifacts_small:nth-child(9) {
+        flex: 0 0 3.5%;
+        max-width: 3.5%;
+      }
+      &__artifacts_small:nth-child(10) {
+        flex: 0 0 3.5%;
+        max-width: 3.5%;
+      }
     }
   }
   &_body {
+    color: $mulledWine;
     &__row {
       position: relative;
       display: flex;
@@ -84,40 +97,52 @@
           cursor: pointer;
           margin-left: 10%;
         }
-      }
-      .cell {
-        &__jobs_medium {
-          max-width: 18%;
-          flex: 0 0 18%;
-          min-width: 18%;
-        }
-        &__jobs_small {
-          flex: 0 0 10% !important;
-          max-width: 10% !important;
-        }
-        &__jobs_big {
-          flex: 0 0 21% !important;
-          max-width: 21% !important;
-        }
-        &__artifacts_medium {
-          max-width: 14%;
-          flex: 0 0 14%;
-        }
-        &__artifacts_small {
-          flex: 0 0 5.5% !important;
-          max-width: 5.5% !important;
-        }
-        &__artifacts_big {
-          flex: 0 0 21% !important;
-          max-width: 21% !important;
-        }
-        &__artifacts_date {
-          flex: 0 0 11% !important;
-          max-width: 11% !important;
-        }
-        &__artifacts_small:nth-child(3) {
-          span {
-            padding-left: 20px;
+        &.cell {
+          &__jobs_medium {
+            max-width: 18%;
+            flex: 0 0 18%;
+            min-width: 18%;
+          }
+          &__jobs_small {
+            flex: 0 0 10% !important;
+            max-width: 10% !important;
+          }
+          &__jobs_big {
+            flex: 0 0 21% !important;
+            max-width: 21% !important;
+          }
+          &__artifacts_medium {
+            max-width: 14%;
+            flex: 0 0 14%;
+          }
+          &__artifacts_small {
+            flex: 0 0 5.5%;
+            max-width: 5.5%;
+          }
+          &__artifacts_big {
+            flex: 0 0 21%;
+            max-width: 21%;
+          }
+          &__artifacts_date {
+            flex: 0 0 11%;
+            max-width: 11%;
+          }
+          &__artifacts_small:nth-child(3) {
+            span {
+              padding-left: 20px;
+            }
+          }
+          &__artifacts_small:nth-child(5) {
+            flex: 0 0 9.5%;
+            max-width: 9.5%;
+          }
+          &__artifacts_small:nth-child(9) {
+            flex: 0 0 3.5%;
+            max-width: 3.5%;
+          }
+          &__artifacts_small:nth-child(10) {
+            flex: 0 0 3.5%;
+            max-width: 3.5%;
           }
         }
       }
@@ -128,6 +153,11 @@
           white-space: nowrap;
           overflow-x: hidden;
           text-overflow: ellipsis;
+        }
+      }
+      &.parent_row {
+        &:hover {
+          background-color: $alabaster;
         }
       }
     }
@@ -142,10 +172,6 @@
     }
     &__chips {
       &_short {
-        max-width: 80px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         margin: 0 !important;
         font-style: normal;
       }

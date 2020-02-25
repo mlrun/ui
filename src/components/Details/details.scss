@@ -1,5 +1,5 @@
 @import '../../scss/colors';
-@import "../../scss/mixins";
+@import '../../scss/mixins';
 @import '../../scss/borders';
 @import '../../scss/shadows';
 
@@ -10,9 +10,12 @@
   background-color: $white;
   width: 87%;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   border-left: $tableBorder;
   color: $mulledWine;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   &_opened {
     height: 72vh;
     overflow-y: scroll;
@@ -67,6 +70,7 @@
   }
   &_inputs {
     @include resetSpaces;
+    width: 100%;
     &_item {
       border-bottom: $tableBorder;
       padding: 27px 24px;
@@ -80,6 +84,7 @@
   }
   &_results {
     padding: 0 31px;
+    width: 100%;
     &__table {
       text-align: left;
       width: 100%;
@@ -106,6 +111,13 @@
           margin-left: 10px;
         }
       }
+      tbody {
+        tr {
+          &:hover {
+            background-color: $alabaster;
+          }
+        }
+      }
     }
   }
   &_logs {
@@ -115,7 +127,8 @@
     padding: 5px;
     position: relative;
     min-height: 400px;
-    font-family: "Source Code Pro","Courier New", monospace;
+    font-family: 'Source Code Pro', 'Courier New', monospace;
+    width: 100%;
     button {
       background-color: $white;
       border: 1px solid $cornflowerBlue;
@@ -132,14 +145,32 @@
       img {
         margin-right: 6px;
       }
-      &:active, &:focus {
+      &:active,
+      &:focus {
         outline: none;
         box-shadow: none;
       }
     }
   }
+  &_artifacts {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    &_wrapper {
+      width: 100%;
+    }
+  }
   circle {
     transform: rotate(-45deg);
     transform-origin: 50% 50%;
+  }
+  .preview_container {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    .inputs_container {
+      width: 100%;
+    }
   }
 }
