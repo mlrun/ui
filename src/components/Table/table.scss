@@ -44,9 +44,22 @@
       &__artifacts_small:nth-child(3) {
         padding-left: 20px;
       }
+      &__artifacts_small:nth-child(5) {
+        flex: 0 0 9.5%;
+        max-width: 9.5%;
+      }
+      &__artifacts_small:nth-child(9) {
+        flex: 0 0 3.5%;
+        max-width: 3.5%;
+      }
+      &__artifacts_small:nth-child(10) {
+        flex: 0 0 3.5%;
+        max-width: 3.5%;
+      }
     }
   }
   &_body {
+    color: $mulledWine;
     &__row {
       position: relative;
       display: flex;
@@ -83,30 +96,52 @@
           @include tableColumnFlex(18%);
           min-width: 18%;
         }
+
         &__jobs_small {
           @include tableColumnFlex(8.5%);
         }
+
         &__jobs_big {
           @include tableColumnFlex(19.75%);
         }
+
         &__artifacts_medium {
           @include tableColumnFlex(14%);
         }
+
         &__artifacts_small {
           @include tableColumnFlex(5.5%);
         }
+
         &__artifacts_big {
           @include tableColumnFlex(21%);
         }
+
         &__artifacts_date {
           @include tableColumnFlex(11%);
         }
+
         &__artifacts_small:nth-child(3) {
           span {
             padding-left: 20px;
           }
         }
-      }
+
+        &__artifacts_small:nth-child(5) {
+          flex: 0 0 9.5%;
+          max-width: 9.5%;
+        }
+
+        &__artifacts_small:nth-child(9) {
+          flex: 0 0 3.5%;
+          max-width: 3.5%;
+        }
+
+        &__artifacts_small:nth-child(10) {
+          flex: 0 0 3.5%;
+          max-width: 3.5%;
+        }
+    }
       &__cell {
         &_path {
           max-width: 50px;
@@ -114,6 +149,11 @@
           white-space: nowrap;
           overflow-x: hidden;
           text-overflow: ellipsis;
+        }
+      }
+      &.parent_row {
+        &:hover {
+          background-color: $alabaster;
         }
       }
     }
@@ -128,10 +168,6 @@
     }
     &__chips {
       &_short {
-        max-width: 80px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         margin: 0 !important;
         font-style: normal;
       }

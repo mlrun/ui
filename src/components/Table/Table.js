@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import TableView from './TableView'
 import NotificationDownload from '../../elements/NotificationDownload/NotificationDownload'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useSelector, useDispatch } from 'react-redux'
-
+import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import './table.scss'
 
 const Table = ({
@@ -22,6 +22,10 @@ const Table = ({
 }) => {
   const state = useSelector(state => state.notificationDownloadStore)
   const dispatch = useDispatch()
+  const [preview, setPreview] = useState({
+    isShow: false,
+    preview: {}
+  })
   const hideChips = e => {
     if (
       e.target.className !== 'table_body__results' &&
@@ -71,6 +75,12 @@ const Table = ({
     }
   }
 
+  const handlePreview = item => {
+    setPreview(prev => {
+      return { ...prev, isShow: true, preview: item }
+    })
+  }
+
   return (
     <>
       <TableView
@@ -89,6 +99,7 @@ const Table = ({
         tableHeaders={tableHeaders}
         detailsMenu={detailsMenu}
         page={page}
+        handlePreview={handlePreview}
       />
       <TransitionGroup>
         {state.notification.map((item, index) => {
@@ -124,6 +135,9 @@ const Table = ({
           )
         })}
       </TransitionGroup>
+      {preview.isShow && (
+        <PreviewModal item={preview.preview} close={setPreview} />
+      )}
     </>
   )
 }

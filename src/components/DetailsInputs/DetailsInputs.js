@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const DetailsInputs = ({ inputs }) => {
   return (
-    <div>
+    <div className="inputs_container">
       <ul className="table__item_inputs">
         {Object.entries(inputs || {}).map(([key, value]) => (
           <li className="table__item_inputs_item" key={key}>

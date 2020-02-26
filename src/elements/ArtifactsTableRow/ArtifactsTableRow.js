@@ -16,7 +16,8 @@ const ArtifactsTableRow = ({
   index,
   match,
   rowItem,
-  selectedItem
+  selectedItem,
+  handlePreview
 }) => {
   return (
     <div
@@ -37,13 +38,14 @@ const ArtifactsTableRow = ({
               }/${
                 match.params.tab
                   ? match.params.tab
-                  : `/${artifactsData.detailsMenu[0]}`
+                  : `${artifactsData.detailsMenu[0]}`
               }`
             }
             selectItem={handleSelectItem}
             key={value.value + i}
             handleShowElements={handleShowElements}
             match={match}
+            handlePreview={handlePreview}
           />
         )
       })}

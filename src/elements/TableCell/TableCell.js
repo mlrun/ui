@@ -6,7 +6,7 @@ import ChipCell from '../ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
 import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
 
-import popoutIcon from '../../images/popout.png'
+import artifactViewIcon from '../../images/eye.png'
 
 import { truncateUid } from '../../utils'
 
@@ -19,7 +19,8 @@ const TableCell = ({
   link,
   selectItem,
   selectedItem,
-  match
+  match,
+  handlePreview
 }) => {
   if (link) {
     return (
@@ -66,8 +67,12 @@ const TableCell = ({
   } else if (data.type === 'buttonPopout') {
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
-        <button>
-          <img src={popoutIcon} alt="Popout Icon" />
+        <button
+          onClick={() => {
+            handlePreview(item)
+          }}
+        >
+          <img src={artifactViewIcon} alt="Popout Icon" />
         </button>
       </div>
     )
@@ -84,7 +89,9 @@ const TableCell = ({
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
         <span className="table_body__row__cell_path" title={data.value.path}>
-          {data.value.schema + data.value.path}
+          {`${data.value.schema ? `${data.value.schema}://` : ''}${
+            data.value.path
+          }`}
         </span>
       </div>
     )

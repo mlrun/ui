@@ -11,6 +11,7 @@
     background-color: $darkPurple;
     color: $white;
     box-shadow: $tooltipShadow;
+    border-radius: 2px;
   }
   &_body {
     display: flex;

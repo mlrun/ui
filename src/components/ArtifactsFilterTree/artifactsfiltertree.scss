@@ -41,14 +41,13 @@
     &:hover {
       background-color: $alabaster;
     }
-  }
-  .drop_down {
     &_menu {
       position: absolute;
       top: 50px;
       background-color: $white;
       width: 100%;
       z-index: 1;
+      border: $tableFilterBorder;
       box-shadow: $tooltipShadow;
       border-radius: $mainBorderRadius;
       &_item {
@@ -66,7 +65,7 @@
       }
     }
   }
-  .select {
+  .select_item {
     background-color: $alabaster;
   }
   .artifact_filter_tree_label {
