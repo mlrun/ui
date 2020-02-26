@@ -20,33 +20,26 @@
     }
     .header {
       &__jobs_medium {
-        max-width: 18%;
-        flex: 0 0 18%;
+        @include tableColumnFlex(18%);
         min-width: 18%;
       }
       &__jobs_small {
-        flex: 0 0 10% !important;
-        max-width: 10% !important;
+        @include tableColumnFlex(8.5%);
       }
       &__jobs_big {
-        flex: 0 0 21% !important;
-        max-width: 21% !important;
+        @include tableColumnFlex(19.75%);
       }
       &__artifacts_medium {
-        max-width: 14%;
-        flex: 0 0 14%;
+        @include tableColumnFlex(14%);
       }
       &__artifacts_small {
-        flex: 0 0 5.5% !important;
-        max-width: 5.5% !important;
+        @include tableColumnFlex(5.5%);
       }
       &__artifacts_big {
-        flex: 0 0 21% !important;
-        max-width: 21% !important;
+        @include tableColumnFlex(21%);
       }
       &__artifacts_date {
-        flex: 0 0 11% !important;
-        max-width: 11% !important;
+        @include tableColumnFlex(11%);
       }
       &__artifacts_small:nth-child(3) {
         padding-left: 20px;
@@ -87,33 +80,26 @@
       }
       .cell {
         &__jobs_medium {
-          max-width: 18%;
-          flex: 0 0 18%;
+          @include tableColumnFlex(18%);
           min-width: 18%;
         }
         &__jobs_small {
-          flex: 0 0 10% !important;
-          max-width: 10% !important;
+          @include tableColumnFlex(8.5%);
         }
         &__jobs_big {
-          flex: 0 0 21% !important;
-          max-width: 21% !important;
+          @include tableColumnFlex(19.75%);
         }
         &__artifacts_medium {
-          max-width: 14%;
-          flex: 0 0 14%;
+          @include tableColumnFlex(14%);
         }
         &__artifacts_small {
-          flex: 0 0 5.5% !important;
-          max-width: 5.5% !important;
+          @include tableColumnFlex(5.5%);
         }
         &__artifacts_big {
-          flex: 0 0 21% !important;
-          max-width: 21% !important;
+          @include tableColumnFlex(21%);
         }
         &__artifacts_date {
-          flex: 0 0 11% !important;
-          max-width: 11% !important;
+          @include tableColumnFlex(11%);
         }
         &__artifacts_small:nth-child(3) {
           span {

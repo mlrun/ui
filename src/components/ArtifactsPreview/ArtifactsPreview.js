@@ -3,22 +3,16 @@ import PropTypes from 'prop-types'
 
 import api from '../../api/artifacts-api'
 
-import Loader from '../../common/Loader/Loader'
 import ArtifactsPreviewView from './ArtifactsPreviewView'
 
 const ArtifactsPreview = ({ artifact }) => {
-  const [isLoader, setLoader] = useState(false)
   const [preview, setPreview] = useState({
     type: null,
     data: null
   })
 
   useEffect(() => {
-    setLoader(true)
-    getArtifactPreview(
-      artifact.target_path.schema,
-      artifact.target_path.path
-    ).then(() => setLoader(false))
+    getArtifactPreview(artifact.target_path.schema, artifact.target_path.path)
   }, [artifact.target_path])
 
   const getArtifactPreview = (schema, path) => {
@@ -70,7 +64,7 @@ const ArtifactsPreview = ({ artifact }) => {
     })
   }
 
-  return isLoader ? <Loader /> : <ArtifactsPreviewView preview={preview} />
+  return <ArtifactsPreviewView preview={preview} />
 }
 
 ArtifactsPreview.propTypes = {

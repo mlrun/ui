@@ -29,6 +29,10 @@
       "size": "jobs_small"
     },
     {
+      "header": "Duration",
+      "size": "jobs_small"
+    },
+    {
       "header": "Owner",
       "size": "jobs_small"
     },

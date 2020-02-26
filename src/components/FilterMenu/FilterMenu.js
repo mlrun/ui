@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
-
-import './filterMenu.scss'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 
-const FilterMenu = ({ filters }) => {
+import './filterMenu.scss'
+
+import jobsActions from '../../actions/jobs'
+
+const FilterMenu = ({ filters, stateFilter, setStateFilter }) => {
   const [items] = useState(['Latest'])
 
   const handleChange = item => {
@@ -24,7 +27,12 @@ const FilterMenu = ({ filters }) => {
             onChange={handleChange}
           />
         ) : (
-          <Select filter={filter} key={filter} />
+          <Select
+            filter={filter}
+            key={filter}
+            value={filter === 'status' && stateFilter}
+            onClick={filter === 'status' && setStateFilter}
+          />
         )
       )}
     </div>
@@ -35,4 +43,4 @@ FilterMenu.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
-export default FilterMenu
+export default connect(null, jobsActions)(FilterMenu)

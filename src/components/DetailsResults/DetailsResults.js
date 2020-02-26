@@ -9,26 +9,31 @@ const DetailsResults = ({ job }) => {
   return (
     <div className="table__item_results">
       {job.iterationStats && (
-        <table className="table__item_results__table">
-          <thead>
-            <tr>
+        <div className="table__item_results__table">
+          <div className="table__item_results__table_header">
+            <div className="table__item_results__table_row">
               {result.headers.map((item, i) => (
-                <th key={i}>{item}</th>
+                <div className="table__item_results__table_header_item" key={i}>
+                  {item}
+                </div>
               ))}
-            </tr>
-          </thead>
-          <tbody>
+            </div>
+          </div>
+          <div className="table__item_results__table_body">
             {result.items.map((item, i) => (
-              <tr key={i}>
+              <div className="table__item_results__table_row" key={i}>
                 {item.map((value, i) => {
                   if (value.length > 3) {
                     return (
-                      <td key={`${value}${i}`}>
+                      <div
+                        className="table__item_results__table_row_cell"
+                        key={`${value}${i}`}
+                      >
                         <i
                           className={value}
                           title={`${value[0].toUpperCase()}${value.slice(1)}`}
                         />
-                      </td>
+                      </div>
                     )
                   } else if (
                     job.results &&
@@ -36,9 +41,9 @@ const DetailsResults = ({ job }) => {
                     i === 0
                   ) {
                     return (
-                      <td
+                      <div
                         key={`${value}${i}`}
-                        className="table__item_results__table_medal"
+                        className="table__item_results__table_medal table__item_results__table_row_cell"
                       >
                         {value}
                         <img
@@ -46,16 +51,23 @@ const DetailsResults = ({ job }) => {
                           alt="Best iteration"
                           title="Best iteration"
                         />
-                      </td>
+                      </div>
                     )
                   } else {
-                    return <td key={`${value}${i}`}>{+value}</td>
+                    return (
+                      <div
+                        className="table__item_results__table_row_cell"
+                        key={`${value}${i}`}
+                      >
+                        {+value}
+                      </div>
+                    )
                   }
                 })}
-              </tr>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       )}
     </div>
   )

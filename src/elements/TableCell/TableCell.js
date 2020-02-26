@@ -10,6 +10,8 @@ import popoutIcon from '../../images/popout.png'
 
 import { truncateUid } from '../../utils'
 
+import jobsData from '../../components/JobsPage/jobsData'
+
 const TableCell = ({
   data,
   handleShowElements,
@@ -57,7 +59,7 @@ const TableCell = ({
           owner={data.value.owner ? data.value.owner : ''}
           to={`/projects/${match.params.projectName}/jobs/${
             data.value.uri.split('/')[1]
-          }/info`}
+          }/${jobsData.detailsMenu[0]}`}
         />
       </div>
     )
@@ -82,7 +84,7 @@ const TableCell = ({
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
         <span className="table_body__row__cell_path" title={data.value.path}>
-          {data.value.path + data.value.path}
+          {data.value.schema + data.value.path}
         </span>
       </div>
     )

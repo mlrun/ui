@@ -2,9 +2,9 @@ import jobsApi from '../api/jobs-api'
 import { parseKeyValues } from '../utils'
 
 const jobsActions = {
-  fetchJobs: project => dispatch => {
-    return jobsApi
-      .getAll(project)
+  fetchJobs: (project, status) => dispatch => {
+    const getJobs = status ? jobsApi.filterByStatus : jobsApi.getAll
+    return getJobs(project, status && status)
       .then(({ data }) => {
         const newJobs = (data || {}).runs
           .filter(job => job.metadata.iteration === 0)
@@ -24,7 +24,8 @@ const jobsActions = {
             resultsChips: parseKeyValues(job.status.results || {}),
             artifacts: job.status.artifacts || [],
             outputPath: job.spec.output_path,
-            owner: job.metadata.labels.owner
+            owner: job.metadata.labels.owner,
+            updated: new Date(job.status.last_update)
           }))
         dispatch(jobsActions.setJobs(newJobs))
         dispatch(

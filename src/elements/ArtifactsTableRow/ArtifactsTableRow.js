@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
+import artifactsData from '../../components/Artifacts/artifactsData'
+
 const ArtifactsTableRow = ({
   content,
   convertToYaml,
@@ -32,7 +34,11 @@ const ArtifactsTableRow = ({
               i === 0 &&
               `/projects/${match.params.projectName}/artifacts/${
                 rowItem.key.value
-              }/${match.params.tab ? match.params.tab : 'info'}`
+              }/${
+                match.params.tab
+                  ? match.params.tab
+                  : `/${artifactsData.detailsMenu[0]}`
+              }`
             }
             selectItem={handleSelectItem}
             key={value.value + i}

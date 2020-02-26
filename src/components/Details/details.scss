@@ -80,21 +80,35 @@
   }
   &_results {
     padding: 0 31px;
+    position: relative;
     &__table {
       text-align: left;
       width: 100%;
-      border-collapse: collapse;
-      border-spacing: 0;
-      tr {
-        height: 24px;
+      position: relative;
+      &_row {
         border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+        display: flex;
+        flex-direction: row;
+        &_cell {
+          padding: 19px 16px;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+        }
       }
-      th {
-        @include tableHeader;
-        padding: 10px 15px;
-      }
-      td {
-        padding: 19px 16px;
+      &_header {
+        position: sticky;
+        height: 50px;
+        top: 0;
+        z-index: 10000;
+        background-color: $white;
+        &_item {
+          @include tableHeader;
+          display: flex;
+          flex-direction: column;
+          padding: 10px 15px;
+          flex: 1;
+        }
       }
       i {
         margin: 0 15px;
@@ -102,6 +116,7 @@
       &_medal {
         display: flex;
         align-items: center;
+        flex-direction: row;
         img {
           margin-left: 10px;
         }
