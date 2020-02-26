@@ -40,7 +40,7 @@ const Content = ({
           </ul>
         </div>
         <div className="content__action_bar">
-          <FilterMenu filters={filters} />
+          <FilterMenu filters={filters} match={match} onChange={refresh} />
           <button className="content__action_bar_refresh" onClick={refresh}>
             <img src={refreshIcon} alt="refresh" />
           </button>

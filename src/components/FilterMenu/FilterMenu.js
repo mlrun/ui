@@ -2,15 +2,15 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import Select from '../../common/Select/Select'
-
-import './filterMenu.scss'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 
-const FilterMenu = ({ filters }) => {
+import './filterMenu.scss'
+
+const FilterMenu = ({ filters, match, onChange }) => {
   const [items] = useState(['Latest'])
 
-  const handleChange = item => {
-    // console.log(item)
+  const handleChangeArtifactFilterTree = item => {
+    onChange({ tag: item.toLowerCase(), project: match.params.projectName })
   }
 
   return (
@@ -22,7 +22,7 @@ const FilterMenu = ({ filters }) => {
             value="Latest"
             label="Tree :"
             items={items}
-            onChange={handleChange}
+            onChange={handleChangeArtifactFilterTree}
           />
         ) : (
           <Select filter={filter} key={filter} />

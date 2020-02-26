@@ -54,7 +54,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
           }
         }}
         onKeyDown={event => {
-          if (event.keyCode === 13) {
+          if (event.keyCode === 13 && event.target.value.length !== 0) {
             event.preventDefault()
             let searchItem = items.filter(item =>
               RegExp(`^${filterTree}`, 'i').test(item)

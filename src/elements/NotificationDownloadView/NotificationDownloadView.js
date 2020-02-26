@@ -1,17 +1,27 @@
 import React from 'react'
-import HttpClient from '../../httpClient'
 import PropTypes from 'prop-types'
-import successDoneIcon from '../../images/success_done.png'
-import unsuccessAlertIcon from '../../images/unsuccess_alert.png'
-import downloadFile from '../../utils/downloadFile'
-import notificationDownloadAction from '../../actions/notificationDownload'
 import { createPortal } from 'react-dom'
 
-import './notificationdownload.scss'
+import successDoneIcon from '../../images/success_done.png'
+import unsuccessAlertIcon from '../../images/unsuccess_alert.png'
 
-const NotificationDownload = ({ status, url, file, id, dispatch }) =>
+import HttpClient from '../../httpClient'
+import downloadFile from '../../utils/downloadFile'
+
+import notificationDownloadAction from '../../actions/notificationDownload'
+
+import './notificationdownloadview.scss'
+
+const NotificationDownloadView = ({
+  status,
+  url,
+  file,
+  id,
+  dispatch,
+  transitionStyles
+}) =>
   createPortal(
-    <div className="notification_container">
+    <div className="notification_container" style={{ ...transitionStyles }}>
       <div className="notification_body">
         <div
           className={`notification_body_wrapper notification_body_${
@@ -65,7 +75,7 @@ const NotificationDownload = ({ status, url, file, id, dispatch }) =>
     document.getElementById('overlay_container')
   )
 
-NotificationDownload.propTypes = {
+NotificationDownloadView.propTypes = {
   status: PropTypes.number.isRequired,
   url: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
@@ -73,4 +83,4 @@ NotificationDownload.propTypes = {
   file: PropTypes.string
 }
 
-export default NotificationDownload
+export default NotificationDownloadView

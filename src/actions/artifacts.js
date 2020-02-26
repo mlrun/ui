@@ -1,8 +1,8 @@
 import artifactsApi from '../api/artifacts-api'
 
 const artifactsAction = {
-  fetchArtifacts: project => dispatch => {
-    return artifactsApi.getArtifacts(project).then(({ data }) => {
+  fetchArtifacts: item => dispatch => {
+    return artifactsApi.getArtifacts(item).then(({ data }) => {
       let artifacts = Object.values(
         data.artifacts.reduce((prev, curr) => {
           if (!prev[curr.key]) prev[curr.key] = { key: curr.key, data: [] }

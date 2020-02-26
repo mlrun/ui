@@ -1,9 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import prettyBytes from 'pretty-bytes'
+
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
-import { formatDatetime } from '../../utils/datetime'
 import Download from '../../common/Download/Download'
+
+import { formatDatetime } from '../../utils/datetime'
+
 import closeIcon from '../../images/cancel.png'
 
 import './previewmodal.scss'
