@@ -15,7 +15,6 @@ const Table = ({
   selectedItem,
   handleSelectItem,
   convertToYaml,
-  loading,
   tableHeaders,
   detailsMenu,
   page
@@ -94,7 +93,6 @@ const Table = ({
         selectedItem={selectedItem}
         handleSelectItem={handleSelectItem}
         convertToYaml={convertToYaml}
-        loading={loading}
         tableHeaders={tableHeaders}
         detailsMenu={detailsMenu}
         page={page}
@@ -118,7 +116,6 @@ Table.propTypes = {
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}),

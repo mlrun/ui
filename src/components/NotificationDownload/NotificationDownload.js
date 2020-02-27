@@ -40,7 +40,7 @@ const NotificationDownload = () => {
 
         return (
           <Transition
-            key={'css' + item.id}
+            key={`css${item.id}`}
             timeout={duration}
             classNames="notification_download"
             onEntered={() => {

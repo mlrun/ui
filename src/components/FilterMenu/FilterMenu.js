@@ -4,13 +4,18 @@ import PropTypes from 'prop-types'
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 
+import refreshIcon from '../../images/refresh.png'
+
 import './filterMenu.scss'
 
-const FilterMenu = ({ filters, match, onChange }) => {
-  const [items] = useState(['Latest'])
+const FilterMenu = ({ filters, match, onChange, page }) => {
+  const [itemsFilterTree] = useState(['Latest'])
+  const [valueFilterTree, setValueFilterTree] = useState('')
 
   const handleChangeArtifactFilterTree = item => {
-    onChange({ tag: item.toLowerCase(), project: match.params.projectName })
+    const value = item.toLowerCase()
+    onChange({ tag: value, project: match.params.projectName })
+    setValueFilterTree(value)
   }
 
   return (
@@ -19,15 +24,28 @@ const FilterMenu = ({ filters, match, onChange }) => {
         filter === 'tree' ? (
           <ArtifactFilterTree
             key={filter}
-            value="Latest"
+            value={valueFilterTree || 'Latest'}
             label="Tree :"
-            items={items}
+            items={itemsFilterTree}
             onChange={handleChangeArtifactFilterTree}
           />
         ) : (
           <Select filter={filter} key={filter} />
         )
       )}
+      <button
+        className="content__action_bar_refresh"
+        onClick={() => {
+          page === 'artifacts'
+            ? onChange({
+                tag: valueFilterTree.toLowerCase(),
+                project: match.params.projectName
+              })
+            : onChange()
+        }}
+      >
+        <img src={refreshIcon} alt="refresh" />
+      </button>
     </div>
   )
 }

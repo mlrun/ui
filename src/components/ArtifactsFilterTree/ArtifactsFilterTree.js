@@ -59,12 +59,10 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
             let searchItem = items.filter(item =>
               RegExp(`^${filterTree}`, 'i').test(item)
             )[0]
-            if (searchItem) {
-              setFilterTree(searchItem)
-              onChange(searchItem)
-              event.target.blur()
-              setIsDropDownMenu(false)
-            }
+            setFilterTree(searchItem || event.target.value)
+            onChange(searchItem || event.target.value)
+            event.target.blur()
+            setIsDropDownMenu(false)
           }
         }}
       />

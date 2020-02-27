@@ -5,8 +5,7 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
-
-import refreshIcon from '../../images/refresh.png'
+import Loader from '../../common/Loader/Loader'
 
 import './content.scss'
 
@@ -40,26 +39,35 @@ const Content = ({
           </ul>
         </div>
         <div className="content__action_bar">
-          <FilterMenu filters={filters} match={match} onChange={refresh} />
-          <button className="content__action_bar_refresh" onClick={refresh}>
-            <img src={refreshIcon} alt="refresh" />
-          </button>
+          <FilterMenu
+            filters={filters}
+            match={match}
+            onChange={refresh}
+            page={page}
+          />
         </div>
-
         <YamlModal convertedYaml={convertedYaml} />
-        <Table
-          handleCancel={handleCancel}
-          match={match}
-          tableContent={tableContent}
-          content={content}
-          selectedItem={selectedItem}
-          handleSelectItem={handleSelectItem}
-          convertToYaml={convertToYaml}
-          loading={loading}
-          tableHeaders={tableHeaders}
-          detailsMenu={detailsMenu}
-          page={page}
-        />
+        <div className="table_container">
+          {loading ? (
+            <Loader />
+          ) : content.length !== 0 ? (
+            <Table
+              handleCancel={handleCancel}
+              match={match}
+              tableContent={tableContent}
+              content={content}
+              selectedItem={selectedItem}
+              handleSelectItem={handleSelectItem}
+              convertToYaml={convertToYaml}
+              loading={loading}
+              tableHeaders={tableHeaders}
+              detailsMenu={detailsMenu}
+              page={page}
+            />
+          ) : (
+            <h2 className="no_data">No data to display!</h2>
+          )}
+        </div>
       </div>
     </>
   )
