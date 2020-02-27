@@ -45,6 +45,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
       <input
         className="artifact_filter_tree"
         value={filterTree}
+        title={filterTree.length >= 14 ? filterTree : null}
         onChange={event => {
           setFilterTree(event.target.value)
         }}

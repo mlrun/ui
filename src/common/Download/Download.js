@@ -111,6 +111,7 @@ const Download = ({ path, schema, setNotificationDownload }) => {
 }
 
 Download.defaultProps = {
+  path: '',
   schema: ''
 }
 
