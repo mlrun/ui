@@ -1,0 +1,59 @@
+@import '../../scss/shadows';
+@import '../../scss/colors';
+
+.breadcrumbs {
+  &_container {
+    padding: 21px 24px;
+    background-color: $white;
+  }
+}
+
+.projects {
+  &_wrapper {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    margin: 24px;
+    padding: 24px;
+    background-color: $white;
+    box-shadow: $jobsShadow;
+    min-height: 700px;
+    .project {
+      &_card {
+        min-width: 320px;
+        height: 219px;
+        border-radius: 4px;
+        border: 1px solid #1414141f;
+        box-shadow: 0px 3px 4px #0000002e;
+        padding: 24px 38px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-right: 24px;
+        &:last-child {
+          margin-right: 0;
+        }
+        &_header {
+          font-weight: bold;
+          font-size: 18px;
+          line-height: 21px;
+          display: flex;
+          color: #483f56;
+        }
+        &_links {
+          display: flex;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 16px;
+          color: $cornflowerBlue;
+          a {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+          }
+        }
+      }
+    }
+  }
+}

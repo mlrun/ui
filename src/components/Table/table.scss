@@ -1,0 +1,242 @@
+@import '../../scss/variables';
+@import '../../scss/colors';
+@import '../../scss/mixins';
+@import '../../scss/borders';
+@import '../../scss/shadows';
+
+.table {
+  @include jobsFlex;
+  border-top: $tableBorder;
+  position: relative;
+  min-height: 600px;
+  &__content {
+    width: 100%;
+  }
+  &_head {
+    display: flex;
+    &_item {
+      @include tableDet;
+      @include tableHeader;
+    }
+    .header {
+      &__jobs_medium {
+        @include tableColumnFlex(18%);
+        min-width: 18%;
+      }
+      &__jobs_small {
+        @include tableColumnFlex(8.5%);
+      }
+      &__jobs_big {
+        @include tableColumnFlex(19.75%);
+      }
+      &__artifacts_medium {
+        @include tableColumnFlex(14%);
+      }
+      &__artifacts_small {
+        @include tableColumnFlex(5.5%);
+      }
+      &__artifacts_big {
+        @include tableColumnFlex(21%);
+      }
+      &__artifacts_date {
+        @include tableColumnFlex(11%);
+      }
+      &__artifacts_small:nth-child(3) {
+        padding-left: 20px;
+      }
+      &__artifacts_small:nth-child(5) {
+        flex: 0 0 9.5%;
+        max-width: 9.5%;
+      }
+      &__artifacts_small:nth-child(9) {
+        flex: 0 0 3.5%;
+        max-width: 3.5%;
+      }
+      &__artifacts_small:nth-child(10) {
+        flex: 0 0 3.5%;
+        max-width: 3.5%;
+      }
+    }
+  }
+  &_body {
+    color: $mulledWine;
+    &__row {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      min-height: 50px;
+      &__cell {
+        @include tableDet;
+        padding: 8px 0;
+        font-size: 15px;
+        line-height: 18px;
+        font-weight: 400;
+        flex-wrap: wrap;
+        a {
+          text-decoration: none;
+          color: $cornflowerBlue;
+          margin: 0;
+          span {
+            display: block;
+            color: $topaz;
+          }
+        }
+        i {
+          margin: 0 17px;
+        }
+        button {
+          border: none;
+          background-color: transparent;
+          cursor: pointer;
+          margin-left: 10%;
+        }
+      }
+      .cell {
+        &__jobs_medium {
+          @include tableColumnFlex(18%);
+          min-width: 18%;
+        }
+
+        &__jobs_small {
+          @include tableColumnFlex(8.5%);
+        }
+
+        &__jobs_big {
+          @include tableColumnFlex(19.75%);
+        }
+
+        &__artifacts_medium {
+          @include tableColumnFlex(14%);
+        }
+
+        &__artifacts_small {
+          @include tableColumnFlex(5.5%);
+        }
+
+        &__artifacts_big {
+          @include tableColumnFlex(21%);
+        }
+
+        &__artifacts_date {
+          @include tableColumnFlex(11%);
+        }
+
+        &__artifacts_small:nth-child(3) {
+          span {
+            padding-left: 20px;
+          }
+        }
+
+        &__artifacts_small:nth-child(5) {
+          flex: 0 0 9.5%;
+          max-width: 9.5%;
+        }
+
+        &__artifacts_small:nth-child(9) {
+          flex: 0 0 3.5%;
+          max-width: 3.5%;
+        }
+
+        &__artifacts_small:nth-child(10) {
+          flex: 0 0 3.5%;
+          max-width: 3.5%;
+        }
+    }
+      &__cell {
+        &_path {
+          max-width: 50px;
+          min-width: 100%;
+          white-space: nowrap;
+          overflow-x: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+      &.parent_row {
+        &:hover {
+          background-color: $alabaster;
+        }
+      }
+    }
+    &__parameters {
+      @include chip($parametersBorder);
+    }
+    &__results {
+      @include chip($resultsBorder);
+    }
+    &__labels {
+      @include chip($labelBorder);
+    }
+    &__chips {
+      &_short {
+        margin: 0 !important;
+        font-style: normal;
+      }
+      &_hidden {
+        display: none !important;
+        position: absolute;
+        bottom: 112%;
+        right: 0;
+        border-radius: 2px;
+        background-color: $white;
+        box-shadow: $hiddenChipsBlockShadow;
+        flex-direction: column;
+        width: 165px;
+        padding: 10px;
+        z-index: 10000;
+        &__chip {
+          @include chip($parametersBorder);
+        }
+        &::after {
+          content: '';
+          display: block;
+          width: 12px;
+          height: 12px;
+          transform: rotate(-45deg);
+          background-color: inherit;
+          position: absolute;
+          bottom: -6px;
+          right: 20px;
+          z-index: -10;
+        }
+      }
+      &__block {
+        position: relative;
+        display: inline-block;
+      }
+    }
+  }
+  .showChips .table_body__chips_hidden {
+    display: flex !important;
+  }
+  .tooltip {
+    position: relative;
+    width: 100%;
+    &_container {
+      position: absolute;
+      z-index: 1000;
+      &_bottom {
+        bottom: 25px;
+      }
+      &_top {
+        top: 25px;
+      }
+    }
+    &_body {
+      top: 30px;
+      display: flex;
+      flex-direction: column;
+      background-color: white;
+      padding: 15px 10px;
+      box-shadow: $tooltipShadow;
+
+      &_item {
+        color: $gunsmoke;
+        span {
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 24px;
+        }
+      }
+    }
+  }
+}

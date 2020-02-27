@@ -1,0 +1,58 @@
+{
+  "artifactsProducerInfoHeaders": ["Kind", "Name", "Owner", "Uri", "Workflow"],
+  "artifactsInfoHeaders": [
+    "Key",
+    "Iter",
+    "Kind",
+    "Size",
+    "Path",
+    "Tree",
+    "Updated",
+    "Labels"
+  ],
+  "detailsMenu": ["info", "preview"],
+  "filters": ["period", "tree"],
+  "page": "artifacts",
+  "tableHeaders": [
+    {
+      "header": "Name",
+      "size": "artifacts_medium"
+    },
+    {
+      "header": "Path",
+      "size": "artifacts_big"
+    },
+    {
+      "header": "Type",
+      "size": "artifacts_small"
+    },
+    {
+      "header": "Labels",
+      "size": "artifacts_big"
+    },
+    {
+      "header": "Producer",
+      "size": "artifacts_small"
+    },
+    {
+      "header": "Owner",
+      "size": "artifacts_small"
+    },
+    {
+      "header": "Hash",
+      "size": "artifacts_small"
+    },
+    {
+      "header": "Updated",
+      "size": "artifacts_date"
+    },
+    {
+      "header": "",
+      "size": "artifacts_small"
+    },
+    {
+      "header": "",
+      "size": "artifacts_small"
+    }
+  ]
+}

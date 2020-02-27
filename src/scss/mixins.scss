@@ -7,7 +7,6 @@
 @mixin jobsFlex {
   flex-grow: 1;
   flex-shrink: 0;
-  min-height: 600px;
 }
 
 @mixin tableDet {
@@ -30,7 +29,7 @@
   background-color: transparent;
   font-size: 14px;
   line-height: 16px;
-  color: $tableFontColor;
+  color: $mulledWine;
   border-radius: 16px;
   border: $border;
 }
@@ -43,7 +42,7 @@
     position: absolute;
     left: $left;
     top: 11px;
-    color: $mainGreyColor;
+    color: $topaz;
   }
   &::after {
     content: url('../images/caret.png');
@@ -53,11 +52,12 @@
   }
 }
 
-@mixin jobStatus {
+@mixin jobStatus($color) {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   display: inline-block;
+  background-color: $color;
 }
 
 @mixin tableColumn($flex) {
@@ -89,11 +89,16 @@
   font-weight: bold;
   font-size: 14px;
   line-height: 24px;
-  color: $mainGreyColor;
+  color: $topaz;
   padding: 10px 0;
 }
 
 @mixin resetSpaces {
   margin: 0;
   padding: 0;
+}
+
+@mixin tableColumnFlex($flex) {
+  max-width: $flex;
+  flex: 0 0 $flex;
 }

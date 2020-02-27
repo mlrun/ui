@@ -1,4 +1,4 @@
-@import "../../scss/variables";
+@import '../../scss/colors';
 
 .wrapper {
   position: absolute;
@@ -23,10 +23,10 @@
     width: 64px;
     height: 64px;
     margin: 8px;
-    border: 8px solid $mainGreenColor;
+    border: 8px solid $cornflowerBlue;
     border-radius: 50%;
     animation: loading 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: $mainGreenColor transparent transparent transparent;
+    border-color: $cornflowerBlue transparent transparent transparent;
     &:nth-child(1) {
       animation-delay: -0.45s;
     }

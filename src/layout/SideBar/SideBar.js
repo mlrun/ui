@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
+
 import SideBarView from './SideBarView'
 
 const SideBar = ({ location }) => {
@@ -11,6 +13,10 @@ const SideBar = ({ location }) => {
   }, [location.pathname])
 
   return <SideBarView currentPage={currentPage} />
+}
+
+SideBar.propTypes = {
+  location: PropTypes.shape({}).isRequired
 }
 
 export default SideBar

@@ -1,0 +1,102 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
+
+.table__item_artifacts {
+  &__row {
+    min-height: 70px;
+    border-bottom: $tableBorder;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    &_item {
+      padding: 15px 26px;
+      flex: 0 0 19%;
+      max-width: 19%;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      &:first-child {
+        white-space: nowrap;
+        cursor: pointer;
+        color: $cornflowerBlue;
+      }
+      p {
+        margin: 0 0 5px;
+        white-space: pre-wrap;
+      }
+      img {
+        margin-bottom: -2px;
+        margin-right: 8px;
+        transition: all 0.3s ease-in-out;
+        display: inline-block;
+      }
+      &_long {
+        flex: 0 0 35%;
+        max-width: 35%;
+      }
+      &_short {
+        flex: 0 0 8%;
+        max-width: 8%;
+      }
+    }
+  }
+  .view .table__item_artifacts__preview {
+    display: flex;
+    flex-direction: row;
+  }
+  .view {
+    flex-direction: column;
+    position: relative;
+    box-shadow: $previewBoxShadow;
+    div {
+      img.arrow {
+        transform: rotate(90deg);
+      }
+    }
+  }
+  .table__item_results__table {
+    td {
+      padding: 19px 16px;
+    }
+  }
+  &__preview {
+    display: none;
+    padding: 21px 26px;
+    border-bottom: $tableBorder;
+    &_table {
+      width: 100%;
+      color: $mulledWine;
+      &__row {
+        display: flex;
+        flex-direction: row;
+        padding: 10px;
+        border-bottom: $tableBorder;
+        &:first-child {
+          position: sticky;
+          top: 0;
+          z-index: 10000;
+          background-color: $white;
+        }
+        &:last-child {
+          border-bottom: none;
+        }
+        &__content {
+          flex: 1;
+        }
+        &:not(:first-child) {
+          &:hover {
+            background-color: $alabaster;
+          }
+        }
+      }
+      &__header {
+        flex: 1;
+        text-transform: capitalize;
+      }
+    }
+    pre {
+      white-space: pre-wrap;
+    }
+  }
+}

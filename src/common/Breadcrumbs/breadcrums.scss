@@ -1,5 +1,5 @@
-@import "../../scss/variables";
 @import "../../scss/mixins";
+@import '../../scss/colors';
 
 .breadcrumbs {
   font-size: 20px;
@@ -14,9 +14,9 @@
     font-weight: 400;
     letter-spacing: 0.00938em;
     &__item {
-      color: $mainGreyColor;
+      color: $topaz;
       &:last-child {
-        color: $tableFontColor;
+        color: $mulledWine;
         font-weight: 500;
         font-size: 20px;
         line-height: 23px;
@@ -27,7 +27,7 @@
       margin-left: 8px;
       user-select: none;
       margin-right: 8px;
-      color: $mainGreyColor;
+      color: $topaz;
     }
   }
 }

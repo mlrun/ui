@@ -7,7 +7,7 @@ import arrow from '../../images/arrow.png'
 
 import './breadcrums.scss'
 
-const Breadcrumbs = ({ match = { path: '', url: '' }, onClick }) => {
+const Breadcrumbs = ({ match, onClick }) => {
   const pathItems = match.path.slice(1).split('/')
   const urlItems = match.url.slice(1).split('/')
 
@@ -23,12 +23,27 @@ const Breadcrumbs = ({ match = { path: '', url: '' }, onClick }) => {
             : startCase(item)
           const to = `/${urlItems.slice(0, i + 1).join('/')}`
           const last = i === urlItems.length - 1
-          return last ? (
-            <li className="breadcrumbs__list__item" key={`${i}${item}`}>
-              {label}
-            </li>
-          ) : (
-            [
+          const id =
+            urlItems[i] === match.params.jobId ||
+            urlItems[i] === match.params.name
+
+          if (last) {
+            return (
+              <li className="breadcrumbs__list__item" key={`${i}${item}`}>
+                {label}
+              </li>
+            )
+          } else if (id) {
+            return [
+              <li key={`${i}${item}`} className="breadcrumbs__list__item">
+                {label}
+              </li>,
+              <li key={i} className="breadcrumbs__list_separator">
+                <img src={arrow} alt="Arrow" />
+              </li>
+            ]
+          } else {
+            return [
               <li key={`${i}${item}`} className="breadcrumbs__list__item">
                 <Link to={to} onClick={onClick}>
                   {label}
@@ -38,7 +53,7 @@ const Breadcrumbs = ({ match = { path: '', url: '' }, onClick }) => {
                 <img src={arrow} alt="Arrow" />
               </li>
             ]
-          )
+          }
         })}
       </ul>
     </nav>

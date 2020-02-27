@@ -1,35 +1,38 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import YAML from 'yamljs'
+
+import yaml from 'js-yaml'
 
 import jobsActions from '../../actions/jobs'
+import jobsData from './jobsData'
+import createJobsContent from '../../utils/createJobsContent'
 
-import JobsView from './JobsView'
+import Content from '../../layout/Content/Content'
 
-const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
-  const [jobs, setJobs] = useState([])
-  const [filter, setFilter] = useState('')
-  const [filterValue, setFilterValue] = useState('')
-  const [loading, setLoading] = useState(true)
+const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
   const [convertedYaml, setConvertedYaml] = useState()
+  const [jobs, setJobs] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [stateFilter, setStateFilter] = useState('All')
+  const tableContent = createJobsContent(jobs)
 
   const refreshJobs = useCallback(
     noCahche => {
+      setJobs([])
+      setLoading(true)
       setSelectedJob({})
-      if (noCahche || jobsStore.jobs.length === 0) {
-        setLoading(true)
-        fetchJobs()
-          .then(jobs => {
-            return setJobs(jobs)
-          })
-          .then(() => setLoading(false))
-      } else if (jobsStore.jobs.length > 0 && !noCahche) {
-        setJobs(jobsStore.jobs)
-        setLoading(false)
-      }
+      history.push(`/projects/${match.params.projectName}/jobs`)
+      fetchJobs(
+        match.params.projectName,
+        stateFilter !== 'All' ? stateFilter : false
+      )
+        .then(jobs => {
+          return setJobs(jobs)
+        })
+        .then(() => setLoading(false))
     },
-    [fetchJobs, jobsStore.jobs, setSelectedJob]
+    [fetchJobs, history, match.params.projectName, setSelectedJob, stateFilter]
   )
 
   useEffect(() => {
@@ -54,54 +57,44 @@ const Jobs = ({ match, jobsStore, fetchJobs, setSelectedJob }) => {
     setSelectedJob({})
   }
 
-  const handleFilterByStatus = filter => {
-    if (filter === 'All') {
-      setJobs(jobsStore.jobs)
-      return
-    }
-    let filteredJobs = jobsStore.jobs.filter(
-      item => item.state === filter.toLowerCase()
-    )
-    setJobs(filteredJobs)
-  }
-
-  const handleFilterClick = () => {
-    if (filter === 'status') handleFilterByStatus(filterValue)
-  }
-
   const convertToYaml = item => {
     document.getElementById('yaml_modal').style.display = 'flex'
-    const jobJson = item
-    delete jobJson.showedParameters
-    delete jobJson.showedResults
-    setConvertedYaml(YAML.stringify(jobJson))
+    const jobJson = jobsStore.jobsData.filter(
+      job => job.metadata.uid === item.uid
+    )
+    setConvertedYaml(
+      yaml.safeDump(jobJson, {
+        lineWidth: 1000
+      })
+    )
   }
 
   return (
-    <JobsView
-      jobs={jobs}
-      job={jobsStore.selectedJob}
-      match={match}
-      refreshJobs={refreshJobs}
-      handleSelectJob={handleSelectJob}
-      handleCancel={handleCancel}
-      handleFilterClick={handleFilterClick}
-      setFilter={setFilter}
-      setFilterValue={setFilterValue}
-      loading={loading}
-      convertedYaml={convertedYaml}
+    <Content
+      content={jobs}
       convertToYaml={convertToYaml}
+      convertedYaml={convertedYaml}
+      detailsMenu={jobsData.detailsMenu}
+      filters={jobsData.filters}
+      handleCancel={handleCancel}
+      handleSelectItem={handleSelectJob}
+      loading={loading}
+      match={match}
+      page={jobsData.page}
+      selectedItem={jobsStore.selectedJob}
+      refresh={refreshJobs}
+      tableHeaders={jobsData.tableHeaders}
+      tableContent={tableContent}
+      stateFilter={stateFilter}
+      setStateFilter={setStateFilter}
     />
   )
 }
 
 Jobs.propTypes = {
   fetchJobs: PropTypes.func.isRequired,
-  history: PropTypes.shape({}).isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
-  location: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  setJobs: PropTypes.func.isRequired,
   setSelectedJob: PropTypes.func.isRequired
 }
 

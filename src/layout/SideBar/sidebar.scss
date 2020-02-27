@@ -1,5 +1,5 @@
-@import "../../scss/variables";
-@import "../../scss/mixins";
+@import '../../scss/colors';
+@import '../../scss/mixins';
 
 .sidebar {
   @include fixed;
@@ -14,7 +14,6 @@
     overflow-y: auto;
     flex-direction: column;
     margin-top: 64px;
-    color: $sidebarFontColor;
     width: inherit;
   }
   &__menu {
@@ -26,12 +25,19 @@
       justify-content: center;
       a {
         display: flex;
-        justify-content: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: $white;
+        img {
+          width: 25px;
+          height: 26px;
+        }
       }
     }
     .active {
       background-color: #dedede;
     }
   }
-
 }

@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react'
+import PropTypes from 'prop-types'
+
 import './search.scss'
 
 const Search = ({ onChange }) => {
@@ -31,6 +33,10 @@ const Search = ({ onChange }) => {
       />
     </div>
   )
+}
+
+Search.propTypes = {
+  onChange: PropTypes.func.isRequired
 }
 
 export default Search

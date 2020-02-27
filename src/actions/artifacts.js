@@ -1,9 +1,8 @@
 import artifactsApi from '../api/artifacts-api'
-// import { parseKeyValues } from '../utils'
 
 const artifactsAction = {
-  fetchArtifacts: () => dispatch => {
-    return artifactsApi.getArtifacts().then(({ data }) => {
+  fetchArtifacts: project => dispatch => {
+    return artifactsApi.getArtifacts(project).then(({ data }) => {
       let artifacts = Object.values(
         data.artifacts.reduce((prev, curr) => {
           if (!prev[curr.key]) prev[curr.key] = { key: curr.key, data: [] }

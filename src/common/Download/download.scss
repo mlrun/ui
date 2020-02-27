@@ -1,44 +1,12 @@
-@import '../../scss/variables.scss';
+@import '../../scss/colors';
+@import '../../scss/shadows';
 
 .download_container {
-  cursor: pointer;
-}
-.notification_container {
-  position: fixed;
-  top: 150px;
-  right: 0;
-  padding: 15px;
-  background-color: $white;
-  animation: move 2.1s ease-in-out;
-  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
-  &.success {
-    &_notification {
-      color: #49AF53;
+  g {
+    cursor: pointer;
+    fill: $purple;
+    &:hover {
+      fill: $cornflowerBlue;
     }
-  }
-  &.failed {
-    &_notification {
-      color: $statusFailed;
-    }
-  }
-  box-shadow: $tooltipShadow;
-}
-
-@keyframes move {
-  0% {
-    top: 100px;
-    right: -150px;
-  }
-  20% {
-    top: 100px;
-    right: 5px;
-  }
-  80% {
-    top: 100px;
-    right: 5px;
-  }
-  100% {
-    top: 100px;
-    right: -150px;
   }
 }
