@@ -80,8 +80,8 @@ const TableCell = ({
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
         <Download
-          path={item.target_path.path}
-          schema={item.target_path.schema}
+          path={item && item.target_path.path}
+          schema={item && item.target_path.schema}
         />
       </div>
     )
@@ -101,6 +101,13 @@ const TableCell = ({
         <span>{data.value}</span>
       </div>
     )
+  }
+}
+
+TableCell.defaultProps = {
+  item: {
+    target_path: '',
+    schema: ''
   }
 }
 

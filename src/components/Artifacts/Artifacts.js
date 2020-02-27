@@ -5,6 +5,7 @@ import yaml from 'js-yaml'
 
 import Content from '../../layout/Content/Content'
 
+import artifactApi from '../../api/artifacts-api'
 import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
 import createArtifactsContent from '../../utils/createArtifactsContent'
@@ -26,7 +27,7 @@ const Artifacts = ({
   const fetchData = useCallback(
     item => {
       setLoading(true)
-      fetchArtifacts(match.params.projectName)
+      fetchArtifacts(item)
         .then(data => {
           const artifacts = data.map(artifact => {
             let item = null
@@ -64,16 +65,16 @@ const Artifacts = ({
           setArtifactsContent(content)
         })
     },
-    [fetchArtifacts, match.params.projectName]
+    [fetchArtifacts]
   )
 
   useEffect(() => {
-    fetchData()
+    fetchData({ tag: 'latest', project: match.params.projectName })
 
     return () => {
       setArtifacts({ artifacts: [] })
     }
-  }, [fetchData, setArtifacts])
+  }, [fetchData, setArtifacts, match.params.projectName])
 
   useEffect(() => {
     //remove the select artifact when user closes the artifact details page
@@ -109,6 +110,10 @@ const Artifacts = ({
     match.params,
     selectArtifact
   ])
+
+  useEffect(() => {
+    artifactApi.getArtifactTag(match.params.projectName).then(item => {})
+  }, [match.params.projectName])
 
   const convertToYaml = item => {
     document.getElementById('yaml_modal').style.display = 'flex'

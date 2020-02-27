@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+
 import artifactIcon from '../../images/file-chart.png'
 import jobsIcon from '../../images/check-all.png'
 

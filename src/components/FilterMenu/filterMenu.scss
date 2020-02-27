@@ -2,40 +2,27 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
 
-.artifacts_filter {
-  &_container {
+.content {
+  &__action_bar {
+    padding: 23px 24px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 23px 0 23px 24px;
-    select {
-      border-radius: $mainBorderRadius;
-      background-color: transparent;
-      padding: 10px 50px 10px 69px;
-      border: $tableFilterBorder;
-      font-size: 15px;
-      line-height: 18px;
-      font-weight: normal;
-      position: relative;
-      appearance: none;
+    &__filters {
+      display: flex;
+      align-items: center;
+      flex: 1;
     }
-  }
-
-  &_period {
-    margin-right: 16px;
-  }
-
-  &_refresh {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    margin-right: 50px;
-
-    button {
-      height: 24px;
-      width: 24px;
-      cursor: pointer;
-      background-color: transparent;
+    &_refresh {
       border: none;
+      background-color: transparent;
+      margin-left: auto;
+      cursor: pointer;
+      &:focus,
+      &:active {
+        outline: none;
+        box-shadow: none;
+      }
     }
   }
 }

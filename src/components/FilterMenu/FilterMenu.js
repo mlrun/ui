@@ -4,16 +4,27 @@ import { connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
+import jobsActions from '../../actions/jobs'
+
+import refreshIcon from '../../images/refresh.png'
 
 import './filterMenu.scss'
 
-import jobsActions from '../../actions/jobs'
+const FilterMenu = ({
+  filters,
+  match,
+  onChange,
+  page,
+  stateFilter,
+  setStateFilter
+}) => {
+  const [itemsFilterTree] = useState(['Latest'])
+  const [valueFilterTree, setValueFilterTree] = useState('')
 
-const FilterMenu = ({ filters, stateFilter, setStateFilter }) => {
-  const [items] = useState(['Latest'])
-
-  const handleChange = item => {
-    // console.log(item)
+  const handleChangeArtifactFilterTree = item => {
+    const value = item.toLowerCase()
+    onChange({ tag: value, project: match.params.projectName })
+    setValueFilterTree(value)
   }
 
   return (
@@ -22,10 +33,10 @@ const FilterMenu = ({ filters, stateFilter, setStateFilter }) => {
         filter === 'tree' ? (
           <ArtifactFilterTree
             key={filter}
-            value="Latest"
+            value={valueFilterTree || 'Latest'}
             label="Tree :"
-            items={items}
-            onChange={handleChange}
+            items={itemsFilterTree}
+            onChange={handleChangeArtifactFilterTree}
           />
         ) : (
           <Select
@@ -36,6 +47,19 @@ const FilterMenu = ({ filters, stateFilter, setStateFilter }) => {
           />
         )
       )}
+      <button
+        className="content__action_bar_refresh"
+        onClick={() => {
+          page === 'artifacts'
+            ? onChange({
+                tag: valueFilterTree.toLowerCase(),
+                project: match.params.projectName
+              })
+            : onChange()
+        }}
+      >
+        <img src={refreshIcon} alt="refresh" />
+      </button>
     </div>
   )
 }
