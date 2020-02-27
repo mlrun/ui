@@ -9,23 +9,29 @@ import createJobsContent from '../../utils/createJobsContent'
 
 import Content from '../../layout/Content/Content'
 
-const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob }) => {
+const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
   const [convertedYaml, setConvertedYaml] = useState()
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState(true)
+  const [stateFilter, setStateFilter] = useState('All')
   const tableContent = createJobsContent(jobs)
 
   const refreshJobs = useCallback(
     noCahche => {
-      setSelectedJob({})
+      setJobs([])
       setLoading(true)
-      fetchJobs(match.params.projectName)
+      setSelectedJob({})
+      history.push(`/projects/${match.params.projectName}/jobs`)
+      fetchJobs(
+        match.params.projectName,
+        stateFilter !== 'All' ? stateFilter : false
+      )
         .then(jobs => {
           return setJobs(jobs)
         })
         .then(() => setLoading(false))
     },
-    [fetchJobs, match.params.projectName, setSelectedJob]
+    [fetchJobs, history, match.params.projectName, setSelectedJob, stateFilter]
   )
 
   useEffect(() => {
@@ -78,6 +84,8 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob }) => {
       refresh={refreshJobs}
       tableHeaders={jobsData.tableHeaders}
       tableContent={tableContent}
+      stateFilter={stateFilter}
+      setStateFilter={setStateFilter}
     />
   )
 }

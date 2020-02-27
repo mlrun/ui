@@ -24,7 +24,9 @@ const Content = ({
   loading,
   tableHeaders,
   detailsMenu,
-  page
+  page,
+  stateFilter,
+  setStateFilter
 }) => {
   return (
     <>
@@ -40,7 +42,11 @@ const Content = ({
           </ul>
         </div>
         <div className="content__action_bar">
-          <FilterMenu filters={filters} />
+          <FilterMenu
+            filters={filters}
+            stateFilter={stateFilter}
+            setStateFilter={setStateFilter}
+          />
           <button className="content__action_bar_refresh" onClick={refresh}>
             <img src={refreshIcon} alt="refresh" />
           </button>

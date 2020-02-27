@@ -60,7 +60,7 @@
         @include jobStatus(none);
       }
       &_completed {
-        @include jobStatus($malachite);
+        @include jobStatus($brightTurquoise);
         margin: 0 10px;
       }
       &_running {

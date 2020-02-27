@@ -3,23 +3,17 @@ import PropTypes from 'prop-types'
 
 import api from '../../api/artifacts-api'
 
-import Loader from '../../common/Loader/Loader'
 import ArtifactsPreviewView from './ArtifactsPreviewView'
 
 const ArtifactsPreview = ({ artifact }) => {
-  const [isLoader, setLoader] = useState(false)
   const [isError, setIsError] = useState(false)
   const [preview, setPreview] = useState({
     type: null,
     data: null
   })
   useEffect(() => {
-    setLoader(true)
-    getArtifactPreview(
-      artifact.target_path.schema,
-      artifact.target_path.path
-    ).then(() => setLoader(false))
-  }, [artifact.target_path.schema, artifact.target_path.path])
+    getArtifactPreview(artifact.target_path.schema, artifact.target_path.path)
+  }, [artifact.target_path])
 
   const getArtifactPreview = (schema, path) => {
     return api
@@ -72,14 +66,11 @@ const ArtifactsPreview = ({ artifact }) => {
         setIsError(false)
       })
       .catch(err => {
-        setLoader(false)
         setIsError(true)
       })
   }
 
-  return isLoader ? (
-    <Loader />
-  ) : isError ? (
+  return isError ? (
     <div className="error_container">
       <h1>Sorry, something went wrong.</h1>
       <h3>We're working on it and we'll get it fixed as soon as we can.</h3>

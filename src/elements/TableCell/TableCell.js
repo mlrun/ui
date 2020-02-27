@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+
 import ChipCell from '../ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
 import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
@@ -8,6 +9,8 @@ import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
 import artifactViewIcon from '../../images/eye.png'
 
 import { truncateUid } from '../../utils'
+
+import jobsData from '../../components/JobsPage/jobsData'
 
 const TableCell = ({
   data,
@@ -57,7 +60,7 @@ const TableCell = ({
           owner={data.value.owner ? data.value.owner : ''}
           to={`/projects/${match.params.projectName}/jobs/${
             data.value.uri.split('/')[1]
-          }/info`}
+          }/${jobsData.detailsMenu[0]}`}
         />
       </div>
     )
