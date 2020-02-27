@@ -45,7 +45,7 @@ main {
 }
 
 .completed {
-  @include jobStatus($malachite);
+  @include jobStatus($brightTurquoise);
 }
 
 .running {

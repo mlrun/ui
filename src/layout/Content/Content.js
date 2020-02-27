@@ -23,7 +23,9 @@ const Content = ({
   loading,
   tableHeaders,
   detailsMenu,
-  page
+  page,
+  stateFilter,
+  setStateFilter
 }) => {
   return (
     <>
@@ -44,6 +46,8 @@ const Content = ({
             match={match}
             onChange={refresh}
             page={page}
+            stateFilter={stateFilter}
+            setStateFilter={setStateFilter}
           />
         </div>
         <YamlModal convertedYaml={convertedYaml} />

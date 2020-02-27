@@ -9,9 +9,8 @@ import checked from '../../images/checkbox-checked.png'
 
 import './select.scss'
 
-const Select = ({ filter }) => {
+const Select = ({ filter, onClick, value }) => {
   const [isOpen, setOpen] = useState(false)
-  const [value, setValue] = useState(options[filter][0])
 
   useEffect(() => {
     window.addEventListener('scroll', handlerScroll)
@@ -48,13 +47,13 @@ const Select = ({ filter }) => {
               className="select_body_item"
               key={item}
               onClick={() => {
-                setValue(item)
+                onClick(item)
               }}
             >
               {filter === 'status' && (
                 <>
                   <img
-                    src={value.includes(item) ? checked : unchecked}
+                    src={value === item ? checked : unchecked}
                     alt="status"
                   />
                   <span className={`status_${item.toLowerCase()}`} />

@@ -10,6 +10,8 @@ import artifactViewIcon from '../../images/eye.png'
 
 import { truncateUid } from '../../utils'
 
+import jobsData from '../../components/JobsPage/jobsData'
+
 const TableCell = ({
   data,
   handleShowElements,
@@ -58,7 +60,7 @@ const TableCell = ({
           owner={data.value.owner ? data.value.owner : ''}
           to={`/projects/${match.params.projectName}/jobs/${
             data.value.uri.split('/')[1]
-          }/info`}
+          }/${jobsData.detailsMenu[0]}`}
         />
       </div>
     )

@@ -1,14 +1,23 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
+import jobsActions from '../../actions/jobs'
 
 import refreshIcon from '../../images/refresh.png'
 
 import './filterMenu.scss'
 
-const FilterMenu = ({ filters, match, onChange, page }) => {
+const FilterMenu = ({
+  filters,
+  match,
+  onChange,
+  page,
+  stateFilter,
+  setStateFilter
+}) => {
   const [itemsFilterTree] = useState(['Latest'])
   const [valueFilterTree, setValueFilterTree] = useState('')
 
@@ -30,7 +39,12 @@ const FilterMenu = ({ filters, match, onChange, page }) => {
             onChange={handleChangeArtifactFilterTree}
           />
         ) : (
-          <Select filter={filter} key={filter} />
+          <Select
+            filter={filter}
+            key={filter}
+            value={filter === 'status' && stateFilter}
+            onClick={filter === 'status' && setStateFilter}
+          />
         )
       )}
       <button
@@ -54,4 +68,4 @@ FilterMenu.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
-export default FilterMenu
+export default connect(null, jobsActions)(FilterMenu)

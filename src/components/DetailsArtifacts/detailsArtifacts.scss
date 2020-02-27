@@ -72,6 +72,12 @@
         flex-direction: row;
         padding: 10px;
         border-bottom: $tableBorder;
+        &:first-child {
+          position: sticky;
+          top: 0;
+          z-index: 10000;
+          background-color: $white;
+        }
         &:last-child {
           border-bottom: none;
         }

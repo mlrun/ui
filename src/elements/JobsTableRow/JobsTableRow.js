@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
+import jobsData from '../../components/JobsPage/jobsData'
+
 const JobsTableRow = ({
   content,
   convertToYaml,
@@ -32,7 +34,11 @@ const JobsTableRow = ({
               i === 0 &&
               `/projects/${match.params.projectName}/jobs/${
                 content[index].uid
-              }${match.params.tab ? `/${match.params.tab}` : '/info'}`
+              }${
+                match.params.tab
+                  ? `/${match.params.tab}`
+                  : `/${jobsData.detailsMenu[0]}`
+              }`
             }
             key={value.value + i}
             selectItem={handleSelectItem}
