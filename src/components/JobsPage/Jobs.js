@@ -18,9 +18,10 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
 
   const refreshJobs = useCallback(
     noCahche => {
-      history.push(`/projects/${match.params.projectName}/jobs`)
-      setSelectedJob({})
+      setJobs([])
       setLoading(true)
+      setSelectedJob({})
+      history.push(`/projects/${match.params.projectName}/jobs`)
       fetchJobs(
         match.params.projectName,
         stateFilter !== 'All' ? stateFilter : false
@@ -30,7 +31,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
         })
         .then(() => setLoading(false))
     },
-    [fetchJobs, match.params.projectName, setSelectedJob, stateFilter]
+    [fetchJobs, history, match.params.projectName, setSelectedJob, stateFilter]
   )
 
   useEffect(() => {
