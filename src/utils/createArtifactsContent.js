@@ -1,5 +1,4 @@
 import { parseKeyValues } from './object'
-import { truncateUid } from './string'
 import { formatDatetime } from './datetime'
 
 const createArtifactsContent = artifacts =>
@@ -34,8 +33,9 @@ const createArtifactsContent = artifacts =>
         type: 'owner'
       },
       hash: {
-        value: truncateUid(artifact.hash),
-        size: 'artifacts_small'
+        value: artifact.hash,
+        size: 'artifacts_small',
+        type: 'hash'
       },
       updated: {
         value: formatDatetime(new Date(artifact.updated)),

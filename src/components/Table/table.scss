@@ -141,7 +141,7 @@
           flex: 0 0 3.5%;
           max-width: 3.5%;
         }
-    }
+      }
       &__cell {
         &_path {
           max-width: 50px;
@@ -154,6 +154,9 @@
       &.parent_row {
         &:hover {
           background-color: $alabaster;
+          .row__actions {
+            display: block;
+          }
         }
       }
     }
@@ -208,35 +211,24 @@
   .showChips .table_body__chips_hidden {
     display: flex !important;
   }
-  .tooltip {
-    position: relative;
-    width: 100%;
-    &_container {
-      position: absolute;
-      z-index: 1000;
-      &_bottom {
-        bottom: 25px;
-      }
-      &_top {
-        top: 25px;
-      }
+  .name_status_row {
+    display: flex;
+    align-items: center;
+    span {
+      margin-left: 10px;
     }
-    &_body {
-      top: 30px;
-      display: flex;
-      flex-direction: column;
-      background-color: white;
-      padding: 15px 10px;
-      box-shadow: $tooltipShadow;
-
-      &_item {
-        color: $gunsmoke;
-        span {
-          font-weight: bold;
-          font-size: 14px;
-          line-height: 24px;
-        }
-      }
+    margin-bottom: 5px;
+  }
+  .date__uid_row {
+    display: flex;
+    align-items: center;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    span:last-child {
+      margin-left: 10px;
     }
   }
 }

@@ -1,0 +1,8 @@
+@import '../../scss//colors.scss';
+
+.text_tooltip_container {
+  padding: 6px 8px;
+  border-radius: 2px;
+  background-color: $primary;
+  color: $white;
+}

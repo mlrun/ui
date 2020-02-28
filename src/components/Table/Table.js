@@ -40,14 +40,14 @@ const Table = ({
   }
 
   const handleHoverOnRowActions = e => {
-    const target = e.target.closest('.parent_row')
-    target.lastElementChild.style.display = 'block'
+    // const target = e.target.closest('.parent_row')
+    // target.lastElementChild.style.display = 'block'
   }
 
   const handleMouseLeaveFromRowActions = e => {
-    const target = e.target.closest('.parent_row')
+    // const target = e.target.closest('.parent_row')
     const actions = document.getElementsByClassName('row__actions_visible')[0]
-    target.lastElementChild.style.display = 'none'
+    // // target.lastElementChild.style.display = 'none'
     if (actions) {
       actions.classList.remove('row__actions_visible')
     }
