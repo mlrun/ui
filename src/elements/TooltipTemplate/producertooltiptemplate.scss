@@ -1,0 +1,21 @@
+@import './../../scss/shadows.scss';
+@import './../../scss/colors.scss';
+
+.wrapper_producer {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 15px 10px;
+  box-shadow: $tooltipShadow;
+  border-radius: 4px;
+  .kind,
+  .owner {
+    color: $doveGray;
+    span {
+      color: $doveGrayTwo;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 24px;
+    }
+  }
+}
