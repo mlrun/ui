@@ -6,6 +6,7 @@ const ArtifactsDetailsInfoItem = ({
   chips,
   info,
   handleShowElements,
+  chipsClassName,
   target_path
 }) => {
   return (
@@ -13,14 +14,12 @@ const ArtifactsDetailsInfoItem = ({
       <div className="table__item_details_item_header">{header}</div>
       {chips && (
         <div className="table__item_details_item_data">
-          {
-            <ChipCell
-              elements={chips}
-              className="table__item_details_item_data__parameters"
-              handleShowElements={handleShowElements}
-              maxLength={6}
-            />
-          }
+          <ChipCell
+            elements={chips}
+            className={`table__item_details_item_data__${chipsClassName}`}
+            handleShowElements={handleShowElements}
+            maxLength={6}
+          />
         </div>
       )}
       {target_path && (

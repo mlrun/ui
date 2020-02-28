@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { formatDatetime } from '../../utils'
+import { formatDatetime, parseKeyValues } from '../../utils'
 import jobsData from '../JobsPage/jobsData'
 import artifactsData from '../Artifacts/artifactsData'
 
@@ -30,7 +30,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.target_path,
     item.tree,
     item.updated && formatDatetime(new Date(item.updated)),
-    item.labels && Object.values(item.labels)
+    item.labels
   ]
   const artifactsProducerInfoContent = item.producer && [
     item.producer.kind,
@@ -102,8 +102,9 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                     <ArtifactsDetailsInfoItem
                       key={header}
                       handleShowElements={handleShowElements}
-                      chips={item.labels}
+                      chips={parseKeyValues(item.labels)}
                       header={header}
+                      chipsClassName="labels"
                     />
                   )
                 case item.target_path:
