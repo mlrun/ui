@@ -61,7 +61,7 @@ const TableView = ({
           })}
         </div>
       </div>
-      {selectedItem && (selectedItem.uid || selectedItem.hash) && (
+      {Object.keys(selectedItem).length !== 0 && (
         <Details
           detailsMenu={detailsMenu}
           handleCancel={handleCancel}

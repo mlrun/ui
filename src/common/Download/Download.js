@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
+import { connect } from 'react-redux'
+
+import ProgressRing from '../ProgressRing/ProgressRing'
+
 import HttpClient from '../../httpClient'
 import notificationDownloadAction from '../../actions/notificationDownload'
-import axios from 'axios'
-import ProgressRing from '../ProgressRing/ProgressRing'
-import downloadIcon from '../../images/download.png'
-import cancelIcon from '../../images/close.png'
-import { connect } from 'react-redux'
 import downloadFile from '../../utils/downloadFile'
+
 import './download.scss'
 
 const Download = ({ path, schema, setNotificationDownload }) => {
@@ -22,9 +23,8 @@ const Download = ({ path, schema, setNotificationDownload }) => {
     if (isDownload) {
       const config = {
         onDownloadProgress: progressEvent => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / (progressEvent.total + 0.1)
-          )
+          const percentCompleted =
+            (progressEvent.loaded * 100) / progressEvent.total
           setProgress(percentCompleted)
         },
         cancelToken: new axios.CancelToken(cancel => {
@@ -93,17 +93,47 @@ const Download = ({ path, schema, setNotificationDownload }) => {
         radius="20"
         stroke="3"
         progress={progress}
-        color={progress !== 0 ? '#49436D' : '#fff'}
+        color={progress !== 0 ? '#49436D' : '#transparent'}
       >
-        <g>
+        <g className={!isDownload ? 'download' : 'downloading'}>
           <circle r="12" cx="20px" cy="20px" />
-          <image
-            href={!isDownload ? downloadIcon : cancelIcon}
-            x="14"
-            y="14"
-            height="12px"
-            width="12px"
-          />
+          {!isDownload ? (
+            <g className="download_container">
+              <rect
+                width="9.05318"
+                height="1.50886"
+                transform="matrix(-0.711236 -0.702953 0.711236 -0.702953 12.4389 19.0002)"
+              />
+              <rect
+                width="9.05318"
+                height="1.50886"
+                transform="matrix(0.711236 -0.702953 0.711236 0.702953 11.4879 18.0004)"
+              />
+              <rect
+                x="11.7744"
+                y="17.5"
+                width="13"
+                height="1.5"
+                transform="rotate(-90 11.7744 17.5)"
+              />
+              <rect x="5" y="19" width="15" height="1.5" />
+            </g>
+          ) : (
+            <g className="cancel_container">
+              <rect
+                x="2.19238"
+                y="1"
+                width="13"
+                height="1.5"
+                transform="rotate(45 2.19238 1)"
+              />
+              <rect
+                width="13"
+                height="1.5"
+                transform="matrix(-0.707107 0.707107 0.707107 0.707107 10.1924 1)"
+              />
+            </g>
+          )}
         </g>
       </ProgressRing>
     </div>

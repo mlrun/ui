@@ -12,9 +12,11 @@ const ChipCell = ({ className, elements, handleShowElements, maxLength }) => {
     ? chips.sortedArr.map((item, i) => {
         return (
           <div className="table_body__chips__block" key={`${item.value}${i}`}>
-            <Tooltip template={<TextTooltipTemplate text={item.value} />}>
+            <Tooltip
+              key={item.value}
+              template={<TextTooltipTemplate text={item.value} />}
+            >
               <Chip
-                key={item.value}
                 className={className}
                 onClick={handleShowElements}
                 value={item.value}
@@ -25,13 +27,10 @@ const ChipCell = ({ className, elements, handleShowElements, maxLength }) => {
                 {chips.hiddenChips.map(element => {
                   return (
                     <Tooltip
+                      key={element.value}
                       template={<TextTooltipTemplate text={element.value} />}
                     >
-                      <Chip
-                        key={element.value}
-                        className={className}
-                        value={element.value}
-                      />
+                      <Chip className={className} value={element.value} />
                     </Tooltip>
                   )
                 })}
