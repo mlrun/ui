@@ -14,14 +14,16 @@
       flex: 1;
     }
     &_refresh {
-      border: none;
-      background-color: transparent;
       margin-left: auto;
-      cursor: pointer;
-      &:focus,
-      &:active {
-        outline: none;
-        box-shadow: none;
+      button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        &:focus,
+        &:active {
+          outline: none;
+          box-shadow: none;
+        }
       }
     }
   }

@@ -2,11 +2,30 @@
 @import '../../scss/shadows';
 
 .download_container {
-  g {
+  .download {
+    cursor: pointer;
+    fill: $white;
+    &:hover {
+      fill: $alabaster;
+    }
+  }
+  .downloading {
     cursor: pointer;
     fill: $purple;
     &:hover {
       fill: $cornflowerBlue;
+    }
+  }
+  .download_container {
+    transform: translate(8px, 8px);
+    rect {
+      fill: $topaz;
+    }
+  }
+  .cancel_container {
+    transform: translate(14px, 14px);
+    rect {
+      fill: $white;
     }
   }
 }

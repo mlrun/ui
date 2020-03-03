@@ -4,6 +4,9 @@ import { connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
 import jobsActions from '../../actions/jobs'
 
 import refreshIcon from '../../images/refresh.png'
@@ -47,19 +50,23 @@ const FilterMenu = ({
           />
         )
       )}
-      <button
+      <Tooltip
         className="content__action_bar_refresh"
-        onClick={() => {
-          page === 'artifacts'
-            ? onChange({
-                tag: valueFilterTree.toLowerCase(),
-                project: match.params.projectName
-              })
-            : onChange()
-        }}
+        template={<TextTooltipTemplate text="Refresh" />}
       >
-        <img src={refreshIcon} alt="refresh" />
-      </button>
+        <button
+          onClick={() => {
+            page === 'artifacts'
+              ? onChange({
+                  tag: valueFilterTree.toLowerCase(),
+                  project: match.params.projectName
+                })
+              : onChange()
+          }}
+        >
+          <img src={refreshIcon} alt="refresh" />
+        </button>
+      </Tooltip>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Transition } from 'react-transition-group'
 
 const Tooltip = ({ children, template, className }) => {
@@ -31,21 +32,36 @@ const Tooltip = ({ children, template, className }) => {
   }
 
   const handleMouseEnter = event => {
-    setShow(true)
-
-    let { height, top, bottom } = parentRef.current.getBoundingClientRect()
-    const tooltipHeight = tooltipRef.current.getBoundingClientRect().height
-
-    if (top + height + offset + tooltipHeight >= window.innerHeight) {
-      setStyle({
-        top: bottom - height - offset - tooltipHeight,
-        left: event.x
-      })
-    } else {
-      setStyle({
-        top: top + height + offset,
-        left: event.x
-      })
+    const [child] = parentRef.current.childNodes
+    if (
+      child.nodeType !== Node.TEXT_NODE ||
+      /*
+        If the child node is a text node and the text of the child node inside the container is greater than the width of the container, then show tooltip.
+       */
+      (child.nodeType === Node.TEXT_NODE &&
+        parentRef.current.scrollWidth > parentRef.current.offsetWidth)
+    ) {
+      setShow(true)
+      let { height, top, bottom } = parentRef.current.getBoundingClientRect()
+      const {
+        height: tooltipHeight,
+        width: tooltipWidth
+      } = tooltipRef.current.getBoundingClientRect()
+      const left =
+        event.x + tooltipWidth > window.innerWidth
+          ? event.x - (event.x + tooltipWidth - window.innerWidth) - offset
+          : event.x
+      if (top + height + offset + tooltipHeight >= window.innerHeight) {
+        setStyle({
+          top: bottom - height - offset - tooltipHeight,
+          left
+        })
+      } else {
+        setStyle({
+          top: top + height + offset,
+          left
+        })
+      }
     }
   }
 
@@ -90,6 +106,12 @@ const Tooltip = ({ children, template, className }) => {
       </Transition>
     </>
   )
+}
+
+Tooltip.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired,
+  template: PropTypes.element.isRequired,
+  className: PropTypes.string
 }
 
 export default Tooltip

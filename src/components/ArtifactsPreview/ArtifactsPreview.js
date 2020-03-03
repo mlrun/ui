@@ -52,7 +52,7 @@ const ArtifactsPreview = ({ artifact }) => {
         } else if (res.headers['content-type'].includes('application/json')) {
           artifact.type = 'json'
           artifact.data = {
-            content: res.data
+            content: JSON.stringify(res.data, null, 2)
           }
         } else if (res.headers['content-type'].includes('image')) {
           artifact.type = 'image'
