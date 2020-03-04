@@ -63,7 +63,6 @@
     &__row {
       position: relative;
       display: flex;
-      flex-wrap: wrap;
       min-height: 50px;
       &__cell {
         @include tableDet;
@@ -94,7 +93,7 @@
       .cell {
         &__jobs_medium {
           @include tableColumnFlex(18%);
-          min-width: 18%;
+          min-width: 240px;
         }
 
         &__jobs_small {
@@ -107,6 +106,7 @@
 
         &__artifacts_medium {
           @include tableColumnFlex(14%);
+          min-width: 240px;
         }
 
         &__artifacts_small {
@@ -152,6 +152,9 @@
         }
       }
       &.parent_row {
+        .row__actions {
+          display: none;
+        }
         &:hover {
           background-color: $alabaster;
           .row__actions {
@@ -162,9 +165,14 @@
     }
     &__parameters {
       @include chip($parametersBorder);
+      max-width: 18ch;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     &__results {
       @include chip($resultsBorder);
+      max-width: 24ch;
     }
     &__labels {
       @include chip($labelBorder);
@@ -173,6 +181,10 @@
       &_short {
         margin: 0 !important;
         font-style: normal;
+        max-width: 24ch;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       &_hidden {
         display: none !important;

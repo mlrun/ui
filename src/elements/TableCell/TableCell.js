@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import ChipCell from '../ChipCell/ChipCell'
@@ -8,6 +9,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import artifactViewIcon from '../../images/eye.png'
 
 import { truncateUid, formatDatetime } from '../../utils'
+import artifactAction from '../../actions/artifacts'
 
 import jobsData from '../../components/JobsPage/jobsData'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
@@ -20,9 +22,9 @@ const TableCell = ({
   link,
   selectItem,
   selectedItem,
-  match,
-  handlePreview
+  match
 }) => {
+  const dispatch = useDispatch()
   if (link) {
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
@@ -42,10 +44,15 @@ const TableCell = ({
   } else if (data.type === 'state') {
     return (
       <div className={`table_body__row__cell cell__${data.size}`}>
-        <i
-          className={data.value}
-          title={`${data.value[0].toUpperCase()}${data.value.slice(1)}`}
-        />
+        <Tooltip
+          template={
+            <TextTooltipTemplate
+              text={`${data.value[0].toUpperCase()}${data.value.slice(1)}`}
+            />
+          }
+        >
+          <i className={data.value} />
+        </Tooltip>
       </div>
     )
   } else if (Array.isArray(data.value)) {
@@ -86,7 +93,12 @@ const TableCell = ({
       <div className={`table_body__row__cell cell__${data.size}`}>
         <button
           onClick={() => {
-            handlePreview(item)
+            dispatch(
+              artifactAction.selectArtifact({
+                isPreview: true,
+                item
+              })
+            )
           }}
         >
           <img src={artifactViewIcon} alt="Popout Icon" />

@@ -16,6 +16,7 @@ const TableView = ({
   tableHeaders,
   tableContent,
   selectedItem,
+  convertToYaml,
   ...props
 }) => {
   return (
@@ -42,6 +43,7 @@ const TableView = ({
                   index={i}
                   rowItem={rowItem}
                   handleShowElements={handleShowElements}
+                  convertToYaml={convertToYaml}
                   {...props}
                 />
               )
@@ -54,6 +56,7 @@ const TableView = ({
                   match={match}
                   rowItem={rowItem}
                   selectedItem={selectedItem}
+                  convertToYaml={convertToYaml}
                   {...props}
                 />
               )
@@ -63,6 +66,7 @@ const TableView = ({
       </div>
       {Object.keys(selectedItem).length !== 0 && (
         <Details
+          convertToYaml={convertToYaml}
           detailsMenu={detailsMenu}
           handleCancel={handleCancel}
           handleShowElements={handleShowElements}
@@ -81,8 +85,6 @@ TableView.propTypes = {
   convertToYaml: PropTypes.func.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
-  handleHoverOnRowActions: PropTypes.func.isRequired,
-  handleMouseLeaveFromRowActions: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   handleShowElements: PropTypes.func.isRequired,
   hideChips: PropTypes.func.isRequired,

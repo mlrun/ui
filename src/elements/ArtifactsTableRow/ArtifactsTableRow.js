@@ -9,8 +9,6 @@ import artifactsData from '../../components/Artifacts/artifactsData'
 const ArtifactsTableRow = ({
   content,
   convertToYaml,
-  handleHoverOnRowActions,
-  handleMouseLeaveFromRowActions,
   handleSelectItem,
   handleShowElements,
   index,
@@ -20,11 +18,7 @@ const ArtifactsTableRow = ({
   handlePreview
 }) => {
   return (
-    <div
-      className="table_body__row parent_row"
-      onMouseEnter={handleHoverOnRowActions}
-      onMouseLeave={handleMouseLeaveFromRowActions}
-    >
+    <div className="table_body__row parent_row">
       {Object.values(rowItem).map((value, i) => {
         return (
           <TableCell
@@ -59,8 +53,6 @@ const ArtifactsTableRow = ({
 ArtifactsTableRow.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   convertToYaml: PropTypes.func.isRequired,
-  handleHoverOnRowActions: PropTypes.func.isRequired,
-  handleMouseLeaveFromRowActions: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   handleShowElements: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,

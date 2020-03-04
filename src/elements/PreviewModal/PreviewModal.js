@@ -6,12 +6,11 @@ import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview
 import Download from '../../common/Download/Download'
 
 import { formatDatetime } from '../../utils/datetime'
-
 import closeIcon from '../../images/cancel.png'
 
 import './previewmodal.scss'
 
-const PreviewModal = ({ item, close }) => {
+const PreviewModal = ({ item, cancel }) => {
   return ReactDOM.createPortal(
     <div className="preview_artifact_container">
       <div className="preview_body">
@@ -24,7 +23,7 @@ const PreviewModal = ({ item, close }) => {
             </div>
           )}
           <div className="preview_info_date">
-            {formatDatetime(new Date(item.updated))}
+            {formatDatetime(new Date(item.updated || item.date))}
           </div>
           <div className="preview_info_download">
             <Download
@@ -35,9 +34,9 @@ const PreviewModal = ({ item, close }) => {
           <div
             className="preview_info_close"
             onClick={() => {
-              close({
-                isShow: false,
-                preview: {}
+              cancel({
+                isPreview: false,
+                item: {}
               })
             }}
           >

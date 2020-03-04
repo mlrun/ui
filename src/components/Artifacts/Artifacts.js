@@ -17,7 +17,8 @@ const Artifacts = ({
   fetchArtifacts,
   match,
   selectArtifact,
-  setArtifacts
+  setArtifacts,
+  removeSelectArtifact
 }) => {
   const [artifacts, _setArtifacts] = useState(artifactsStore.artifacts)
   const [convertedYaml, setConvertedYaml] = useState()
@@ -77,24 +78,15 @@ const Artifacts = ({
   }, [fetchData, setArtifacts, match.params.projectName])
 
   useEffect(() => {
-    //remove the select artifact when user closes the artifact details page
-    if (
-      match.params.name === undefined &&
-      Object.keys(artifactsStore.selectArtifact).length !== 0
-    ) {
-      selectArtifact({})
-    }
-    //find the current artifact when user selects the artifact and updates site or an artifact name and tab exists in the URL
     if (
       match.params.name !== undefined &&
-      Object.keys(artifactsStore.selectArtifact).length === 0 &&
       artifactsStore.artifacts.length !== 0
     ) {
       const { name } = match.params
-      const [searchItem] = artifactsStore.artifacts.filter(
-        item => item.key === name
-      )
 
+      const [searchItem] = artifactsStore.artifacts.filter(item => {
+        return item.key === name
+      })
       const [artifact] = searchItem.data.filter(item => {
         if (searchItem.link_iteration) {
           const { link_iteration } = searchItem.link_iteration
@@ -102,14 +94,9 @@ const Artifacts = ({
         }
         return true
       })
-      selectArtifact(artifact)
+      selectArtifact({ isPreview: false, item: artifact })
     }
-  }, [
-    artifactsStore.artifacts,
-    artifactsStore.selectArtifact,
-    match.params,
-    selectArtifact
-  ])
+  }, [match.params, artifactsStore.artifacts, selectArtifact])
 
   useEffect(() => {
     artifactApi.getArtifactTag(match.params.projectName).then(item => {})
@@ -128,11 +115,11 @@ const Artifacts = ({
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
     }
-    selectArtifact(item)
+    selectArtifact({ isPreview: false, item })
   }
 
   const handleCancel = () => {
-    selectArtifact({})
+    removeSelectArtifact()
   }
 
   return (
@@ -148,7 +135,7 @@ const Artifacts = ({
       loading={loading}
       page={artifactsData.page}
       refresh={fetchData}
-      selectedItem={artifactsStore.selectArtifact}
+      selectedItem={artifactsStore.selectArtifact.item}
       tableContent={tableContent}
       tableHeaders={artifactsData.tableHeaders}
     />

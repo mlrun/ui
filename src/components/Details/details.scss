@@ -6,9 +6,9 @@
 .table__item {
   position: absolute;
   top: 0;
-  left: 13%;
+  left: 240px;
   background-color: $white;
-  width: 87%;
+  width: calc(100% - 240px);
   height: 100%;
   overflow-y: auto;
   border-left: $tableBorder;
@@ -37,9 +37,16 @@
       }
     }
     &_buttons {
+      display: flex;
+      align-items: center;
       a {
         display: inline-block;
         margin: 21px;
+        margin-left: 10px;
+      }
+      div {
+        display: flex;
+        flex-direction: row;
       }
     }
   }
@@ -181,6 +188,17 @@
     flex-direction: column;
     .inputs_container {
       width: 100%;
+    }
+    button {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      border: none;
+      background: none;
+      padding: 0;
+      outline: none;
+      z-index: 99998;
+      cursor: pointer;
     }
     .json {
       padding: 0 15px;
