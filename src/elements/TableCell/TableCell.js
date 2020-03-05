@@ -4,14 +4,15 @@ import PropTypes from 'prop-types'
 
 import ChipCell from '../ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
-import Tooltip from '../../components/ArtifactsTooltip/Tooltip'
-
+import Tooltip from '../../common/Tooltip/Tooltip'
 import artifactViewIcon from '../../images/eye.png'
 import arrowIcon from '../../images/arrow.png'
 
 import { truncateUid } from '../../utils'
 
 import jobsData from '../../components/JobsPage/jobsData'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 
 const TableCell = ({
   data,
@@ -28,8 +29,16 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.size}`}>
         <Link to={link} onClick={() => selectItem(item)} className="link">
-          {data && data.value}
-          <span>{selectedItem.uid && truncateUid(item.uid.value)}</span>
+          <div className="name_status_row">
+            {data && data.value}{' '}
+            {selectedItem.uid && <span className={item.state} />}
+          </div>
+          {selectedItem.uid && !expandLink && (
+            <div className="date__uid_row">
+              <span>{item.startTime.value}</span>
+              <span>{truncateUid(item.uid.value)}</span>
+            </div>
+          )}
         </Link>
         {expandLink && (
           <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
@@ -51,6 +60,7 @@ const TableCell = ({
         <ChipCell
           className={`table-body__${data.type}`}
           elements={data.value}
+          tooltip
           handleShowElements={handleShowElements}
           maxLength={2}
         />
@@ -60,13 +70,21 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.size}`}>
         <Tooltip
-          kind={data.value.kind}
-          name={data.value.name}
-          owner={data.value.owner ? data.value.owner : ''}
-          to={`/projects/${match.params.projectName}/jobs/${
-            data.value.uri.split('/')[1]
-          }/${jobsData.detailsMenu[0]}`}
-        />
+          template={
+            <ProducerTooltipTemplate
+              kind={data.value.kind}
+              owner={data.value.owner ? data.value.owner : ''}
+            />
+          }
+        >
+          <Link
+            to={`/projects/${match.params.projectName}/jobs/${
+              data.value.uri.split('/')[1]
+            }/${jobsData.detailsMenu[0]}`}
+          >
+            {data.value.name}
+          </Link>
+        </Tooltip>
       </div>
     )
   } else if (data.type === 'buttonPopout') {
@@ -85,19 +103,30 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.size}`}>
         <Download
-          path={item.target_path.path}
-          schema={item.target_path.schema}
+          path={item && item.target_path.path}
+          schema={item && item.target_path.schema}
         />
       </div>
     )
   } else if (data.type === 'path') {
     return (
       <div className={`table-body__cell ${data.size}`}>
-        <span className="table-body__cell_path" title={data.value.path}>
+        <Tooltip
+          className="table-body__cell_path"
+          template={<TextTooltipTemplate text={data.value.path} />}
+        >
           {`${data.value.schema ? `${data.value.schema}://` : ''}${
             data.value.path
           }`}
-        </span>
+        </Tooltip>
+      </div>
+    )
+  } else if (data.type === 'hash') {
+    return (
+      <div className={`table-body__cell ${data.size}`}>
+        <Tooltip template={<TextTooltipTemplate text={data.value} />}>
+          <span>{truncateUid(data.value)}</span>
+        </Tooltip>
       </div>
     )
   } else if (data.type === 'hidden') {
@@ -111,8 +140,11 @@ const TableCell = ({
   }
 }
 
-TableCell.defaultProp = {
-  item: {}
+TableCell.defaultProps = {
+  item: {
+    target_path: '',
+    schema: ''
+  }
 }
 
 TableCell.propTypes = {

@@ -5,10 +5,7 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
-
-import refreshIcon from '../../images/refresh.png'
-import collapseIcon from '../../images/collapse.png'
-import expandIcon from '../../images/expand.png'
+import Loader from '../../common/Loader/Loader'
 
 import './content.scss'
 
@@ -51,41 +48,42 @@ const Content = ({
         </div>
         <div className="content__action_bar">
           <FilterMenu
+            expand={expand}
             filters={filters}
             groupFilter={groupFilter}
+            handleExpandAll={handleExpandAll}
             setGroupFilter={setGroupFilter}
             stateFilter={stateFilter}
             setStateFilter={setStateFilter}
+            match={match}
+            onChange={refresh}
+            page={page}
           />
-          <div className="content__buttons">
-            <button className="content__action_bar_refresh" onClick={refresh}>
-              <img src={refreshIcon} alt="refresh" />
-            </button>
-            <button onClick={handleExpandAll}>
-              <img
-                src={expand ? collapseIcon : expandIcon}
-                alt="Collapse / Expand icon"
-              />
-            </button>
-          </div>
         </div>
-
         <YamlModal convertedYaml={convertedYaml} />
-        <Table
-          groupLatestJob={groupLatestJob}
-          handleCancel={handleCancel}
-          match={match}
-          tableContent={tableContent}
-          content={content}
-          selectedItem={selectedItem}
-          handleSelectItem={handleSelectItem}
-          convertToYaml={convertToYaml}
-          loading={loading}
-          tableHeaders={tableHeaders}
-          detailsMenu={detailsMenu}
-          page={page}
-          handleExpandRow={handleExpandRow}
-        />
+        <div className="table_container">
+          {loading ? (
+            <Loader />
+          ) : content.length !== 0 ? (
+            <Table
+              groupLatestJob={groupLatestJob}
+              handleCancel={handleCancel}
+              match={match}
+              tableContent={tableContent}
+              content={content}
+              selectedItem={selectedItem}
+              handleSelectItem={handleSelectItem}
+              convertToYaml={convertToYaml}
+              loading={loading}
+              tableHeaders={tableHeaders}
+              detailsMenu={detailsMenu}
+              page={page}
+              handleExpandRow={handleExpandRow}
+            />
+          ) : (
+            <h2 className="no_data">No data to display!</h2>
+          )}
+        </div>
       </div>
     </>
   )

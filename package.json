@@ -4,16 +4,7 @@
   "private": true,
   "proxy": "http://52.27.215.210:4000",
   "dependencies": {
-    "@babel/core": "7.6.0",
-    "@svgr/webpack": "4.3.2",
-    "@typescript-eslint/eslint-plugin": "^2.2.0",
-    "@typescript-eslint/parser": "^2.2.0",
     "axios": "^0.19.0",
-    "babel-eslint": "10.0.3",
-    "babel-jest": "^24.9.0",
-    "babel-loader": "8.0.6",
-    "babel-plugin-named-asset-import": "^0.3.4",
-    "babel-preset-react-app": "^9.0.2",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "css-loader": "2.1.1",
@@ -51,14 +42,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "resolve": "1.12.0",
-    "resolve-url-loader": "3.1.0",
-    "sass-loader": "7.2.0",
-    "semver": "6.3.0",
-    "style-loader": "1.0.0",
-    "terser-webpack-plugin": "1.4.1",
-    "ts-pnp": "1.1.4",
-    "url-loader": "2.1.0",
-    "webpack": "4.41.0"
+    "semver": "6.3.0"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -82,7 +66,16 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "7.6.0",
+    "@svgr/webpack": "4.3.2",
+    "@typescript-eslint/eslint-plugin": "^2.2.0",
+    "@typescript-eslint/parser": "^2.2.0",
     "babel-plugin-prismjs": "^2.0.1",
+    "babel-eslint": "10.0.3",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "8.0.6",
+    "babel-plugin-named-asset-import": "^0.3.4",
+    "babel-preset-react-app": "^9.0.2",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
     "eslint-config-react-app": "^5.0.2",
@@ -98,7 +91,13 @@
     "prettier": "^1.19.1",
     "webpack-dev-server": "3.2.1",
     "webpack-manifest-plugin": "2.1.1",
-    "workbox-webpack-plugin": "4.3.1"
+    "workbox-webpack-plugin": "4.3.1",
+    "resolve-url-loader": "3.1.0",
+    "sass-loader": "7.2.0",
+    "style-loader": "1.0.0",
+    "terser-webpack-plugin": "1.4.1",
+    "url-loader": "2.1.0",
+    "webpack": "4.41.0"
   },
   "babel": {
     "presets": [
@@ -109,9 +108,10 @@
         "prismjs",
         {
           "languages": [
-            "yaml"
+            "yaml",
+            "json"
           ],
-          "theme": "twilight",
+          "theme": "coy",
           "css": true
         }
       ]

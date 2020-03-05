@@ -75,7 +75,6 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
   }, [jobsStore.jobs, match.params, setSelectedJob])
 
   useEffect(() => {
-    // && Object.keys(groupedByName).length === 0
     if (groupFilter === 'Name') {
       const groupedJobs = {}
 
@@ -86,10 +85,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
       })
 
       setGroupedByName(groupedJobs)
-    } else if (
-      Object.keys(groupedByName).length > 0 &&
-      groupFilter === jobsData.initialGroupFilter
-    ) {
+    } else if (groupFilter === jobsData.initialGroupFilter) {
       const rows = [...document.getElementsByClassName('parent-row')]
       rows.forEach(row => row.classList.remove('parent-row-expanded'))
       setExpand(false)

@@ -3,49 +3,93 @@ import PropTypes from 'prop-types'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
+import refreshIcon from '../../images/refresh.png'
+import collapseIcon from '../../images/collapse.png'
+import expandIcon from '../../images/expand.png'
 
 import './filterMenu.scss'
 
 const FilterMenu = ({
+  expand,
   filters,
+  handleExpandAll,
+  match,
+  onChange,
+  page,
   groupFilter,
   setStateFilter,
   setGroupFilter,
   stateFilter
 }) => {
-  const [items] = useState(['Latest'])
+  const [itemsFilterTree] = useState(['Latest'])
+  const [valueFilterTree, setValueFilterTree] = useState('')
 
-  const handleChange = item => {
-    // console.log(item)
+  const handleChangeArtifactFilterTree = item => {
+    const value = item.toLowerCase()
+    onChange({ tag: value, project: match.params.projectName })
+    setValueFilterTree(value)
   }
 
   return (
-    <div className="content__action_bar__filters">
-      {filters.map(filter =>
-        filter === 'tree' ? (
-          <ArtifactFilterTree
-            key={filter}
-            value="Latest"
-            label="Tree :"
-            items={items}
-            onChange={handleChange}
-          />
-        ) : (
-          <Select
-            filter={filter}
-            key={filter}
-            value={
-              (filter === 'status' && stateFilter) ||
-              (filter === 'group by' && groupFilter)
-            }
-            onClick={
-              (filter === 'status' && setStateFilter) ||
-              (filter === 'group by' && setGroupFilter)
-            }
-          />
-        )
-      )}
-    </div>
+    <>
+      <div className="content__action_bar__filters">
+        {filters.map(filter =>
+          filter === 'tree' ? (
+            <ArtifactFilterTree
+              key={filter}
+              value={valueFilterTree || 'Latest'}
+              label="Tree :"
+              items={itemsFilterTree}
+              onChange={handleChangeArtifactFilterTree}
+            />
+          ) : (
+            <Select
+              filter={filter}
+              key={filter}
+              value={
+                (filter === 'status' && stateFilter) ||
+                (filter === 'group by' && groupFilter)
+              }
+              onClick={
+                (filter === 'status' && setStateFilter) ||
+                (filter === 'group by' && setGroupFilter)
+              }
+            />
+          )
+        )}
+      </div>
+      <div className="content__action_bar__buttons">
+        <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
+          <button
+            onClick={() => {
+              page === 'artifacts'
+                ? onChange({
+                    tag: valueFilterTree.toLowerCase(),
+                    project: match.params.projectName
+                  })
+                : onChange()
+            }}
+          >
+            <img src={refreshIcon} alt="refresh" />
+          </button>
+        </Tooltip>
+        <Tooltip
+          template={
+            <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
+          }
+        >
+          <button onClick={handleExpandAll}>
+            <img
+              src={expand ? collapseIcon : expandIcon}
+              alt="Collapse / Expand icon"
+            />
+          </button>
+        </Tooltip>
+      </div>
+    </>
   )
 }
 

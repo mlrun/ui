@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Loader from '../../common/Loader/Loader'
 import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
@@ -28,72 +27,26 @@ const TableView = ({
 }) => {
   return (
     <div className="table" onClick={hideChips}>
-      {loading && <Loader />}
-      <div
-        className={
-          (selectedItem.uid || selectedItem.name) && 'table__item-opened'
-        }
-      >
-        <div className="table__content">
-          <div className="table-head">
-            {tableHeaders.map((item, index) => (
-              <div
-                className={`table-head__item ${item.size}`}
-                key={item.header + index}
-              >
-                {item.header}
-              </div>
-            ))}
-          </div>
-          <div className="table-body">
-            {Object.keys(groupLatestJob).length === 0
-              ? tableContent.map((rowItem, i) => {
-                  if (match.path.includes('jobs')) {
-                    return (
-                      <JobsTableRow
-                        key={i}
-                        content={content}
-                        convertToYaml={convertToYaml}
-                        handleHoverOnRowActions={handleHoverOnRowActions}
-                        handleMouseLeaveFromRowActions={
-                          handleMouseLeaveFromRowActions
-                        }
-                        handleSelectItem={handleSelectItem}
-                        handleShowElements={handleShowElements}
-                        index={i}
-                        match={match}
-                        rowItem={rowItem}
-                        selectedItem={selectedItem}
-                      />
-                    )
-                  } else {
-                    return (
-                      <ArtifactsTableRow
-                        key={i}
-                        content={content}
-                        convertToYaml={convertToYaml}
-                        handlePreview={handlePreview}
-                        handleHoverOnRowActions={handleHoverOnRowActions}
-                        handleMouseLeaveFromRowActions={
-                          handleMouseLeaveFromRowActions
-                        }
-                        handleSelectItem={handleSelectItem}
-                        handleShowElements={handleShowElements}
-                        index={i}
-                        match={match}
-                        rowItem={rowItem}
-                        selectedItem={selectedItem}
-                      />
-                    )
-                  }
-                })
-              : tableContent.map((group, i) => {
+      <div className="table__content">
+        <div className="table-head">
+          {tableHeaders.map((item, index) => (
+            <div
+              className={`table-head__item ${item.size}`}
+              key={item.header + index}
+            >
+              {item.header}
+            </div>
+          ))}
+        </div>
+        <div className="table-body">
+          {Object.keys(groupLatestJob).length === 0
+            ? tableContent.map((rowItem, i) => {
+                if (match.path.includes('jobs')) {
                   return (
                     <JobsTableRow
                       key={i}
                       content={content}
                       convertToYaml={convertToYaml}
-                      handleExpandRow={handleExpandRow}
                       handleHoverOnRowActions={handleHoverOnRowActions}
                       handleMouseLeaveFromRowActions={
                         handleMouseLeaveFromRowActions
@@ -102,16 +55,55 @@ const TableView = ({
                       handleShowElements={handleShowElements}
                       index={i}
                       match={match}
-                      rowItem={groupLatestJob[i]}
+                      rowItem={rowItem}
                       selectedItem={selectedItem}
-                      tableContent={group}
                     />
                   )
-                })}
-          </div>
+                } else {
+                  return (
+                    <ArtifactsTableRow
+                      key={i}
+                      content={content}
+                      convertToYaml={convertToYaml}
+                      handlePreview={handlePreview}
+                      handleHoverOnRowActions={handleHoverOnRowActions}
+                      handleMouseLeaveFromRowActions={
+                        handleMouseLeaveFromRowActions
+                      }
+                      handleSelectItem={handleSelectItem}
+                      handleShowElements={handleShowElements}
+                      index={i}
+                      match={match}
+                      rowItem={rowItem}
+                      selectedItem={selectedItem}
+                    />
+                  )
+                }
+              })
+            : tableContent.map((group, i) => {
+                return (
+                  <JobsTableRow
+                    key={i}
+                    content={content}
+                    convertToYaml={convertToYaml}
+                    handleExpandRow={handleExpandRow}
+                    handleHoverOnRowActions={handleHoverOnRowActions}
+                    handleMouseLeaveFromRowActions={
+                      handleMouseLeaveFromRowActions
+                    }
+                    handleSelectItem={handleSelectItem}
+                    handleShowElements={handleShowElements}
+                    index={i}
+                    match={match}
+                    rowItem={groupLatestJob[i]}
+                    selectedItem={selectedItem}
+                    tableContent={group}
+                  />
+                )
+              })}
         </div>
       </div>
-      {selectedItem && (selectedItem.uid || selectedItem.key) && (
+      {Object.keys(selectedItem).length !== 0 && (
         <Details
           detailsMenu={detailsMenu}
           handleCancel={handleCancel}
@@ -141,7 +133,6 @@ TableView.propTypes = {
   handleSelectItem: PropTypes.func.isRequired,
   handleShowElements: PropTypes.func.isRequired,
   hideChips: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

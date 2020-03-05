@@ -1,16 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Chip = ({ className, title, onClick, value }) => {
+const Chip = ({ className, onClick, value }) => {
   if (value.length > 15) {
     return (
-      <span className={className} title={title}>
+      <span className={className}>
         <i className="table-body__chips_short">{value}</i>
       </span>
     )
   }
   return (
-    <span className={className} title={title} onClick={onClick}>
+    <span className={className} onClick={onClick}>
       {value}
     </span>
   )
@@ -23,7 +23,6 @@ Chip.defaultProps = {
 Chip.propTypes = {
   className: PropTypes.string.isRequired,
   onClick: PropTypes.func,
-  title: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired
 }
 

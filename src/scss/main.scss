@@ -78,13 +78,12 @@ iframe {
 #overlay_container {
   position: fixed;
   bottom: 0px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  justify-content: center;
   width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  transition: height 0.1s;
   z-index: 99999;
 }
 

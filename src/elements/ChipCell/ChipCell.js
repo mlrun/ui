@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Chip from '../Chip/Chip'
 import { cutChips } from '../../utils/cutChips'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 const ChipCell = ({ className, elements, handleShowElements, maxLength }) => {
   const chips = cutChips(elements, maxLength)
@@ -10,23 +12,26 @@ const ChipCell = ({ className, elements, handleShowElements, maxLength }) => {
     ? chips.sortedArr.map((item, i) => {
         return (
           <div className="table-body__chips__block" key={`${item.value}${i}`}>
-            <Chip
+            <Tooltip
               key={item.value}
-              className={className}
-              onClick={handleShowElements}
-              title={item.value}
-              value={item.value}
-            />
+              template={<TextTooltipTemplate text={item.value} />}
+            >
+              <Chip
+                className={className}
+                onClick={handleShowElements}
+                value={item.value}
+              />
+            </Tooltip>
             {chips.hiddenChips && (
               <div className="table-body__chips_hidden">
                 {chips.hiddenChips.map(element => {
                   return (
-                    <Chip
+                    <Tooltip
                       key={element.value}
-                      className={className}
-                      title={element.value}
-                      value={element.value}
-                    />
+                      template={<TextTooltipTemplate text={element.value} />}
+                    >
+                      <Chip className={className} value={element.value} />
+                    </Tooltip>
                   )
                 })}
               </div>

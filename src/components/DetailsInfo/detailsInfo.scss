@@ -33,15 +33,12 @@
       display: flex;
       &__parameters {
         @include chip($parametersBorder);
-        margin: 8px 8px 0 0;
       }
       &__labels {
         @include chip($labelBorder);
-        margin: 8px 8px 0 0;
       }
       &__results {
         @include chip($resultsBorder);
-        margin: 8px 8px 0 0;
       }
     }
   }

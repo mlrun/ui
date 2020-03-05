@@ -6,7 +6,6 @@
 .artifact_filter_tree_container {
   position: relative;
   display: flex;
-  flex: 1;
   border: $tableFilterBorder;
   border-radius: $mainBorderRadius;
   height: 40px;
@@ -25,6 +24,7 @@
     padding: 10px;
     width: 125px;
     color: $mulledWine;
+    text-overflow: ellipsis;
   }
   .drop_down {
     min-width: 25px;

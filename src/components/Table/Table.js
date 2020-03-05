@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+
 import TableView from './TableView'
-import NotificationDownload from '../../elements/NotificationDownload/NotificationDownload'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import { useSelector, useDispatch } from 'react-redux'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import NotificationDownload from '../NotificationDownload/NotificationDownload'
+
 import './table.scss'
 
 const Table = ({
@@ -16,18 +16,16 @@ const Table = ({
   selectedItem,
   handleSelectItem,
   convertToYaml,
-  loading,
   tableHeaders,
   detailsMenu,
   page,
   handleExpandRow
 }) => {
-  const state = useSelector(state => state.notificationDownloadStore)
-  const dispatch = useDispatch()
   const [preview, setPreview] = useState({
     isShow: false,
     preview: {}
   })
+
   const hideChips = e => {
     if (
       e.target.className !== 'table-body__results' &&
@@ -44,14 +42,14 @@ const Table = ({
   }
 
   const handleHoverOnRowActions = e => {
-    const target = e.target.closest('.parent-row')
-    target.lastElementChild.style.display = 'block'
+    // const target = e.target.closest('.parent_row')
+    // target.lastElementChild.style.display = 'block'
   }
 
   const handleMouseLeaveFromRowActions = e => {
-    const target = e.target.closest('.parent-row')
+    // const target = e.target.closest('.parent_row')
     const actions = document.getElementsByClassName('row__actions_visible')[0]
-    target.lastElementChild.style.display = 'none'
+    // target.lastElementChild.style.display = 'none'
     if (actions) {
       actions.classList.remove('row__actions_visible')
     }
@@ -98,47 +96,13 @@ const Table = ({
         selectedItem={selectedItem}
         handleSelectItem={handleSelectItem}
         convertToYaml={convertToYaml}
-        loading={loading}
         tableHeaders={tableHeaders}
         detailsMenu={detailsMenu}
         page={page}
         handlePreview={handlePreview}
         handleExpandRow={handleExpandRow}
       />
-      <TransitionGroup>
-        {state.notification.map((item, index) => {
-          return (
-            <CSSTransition
-              key={'css' + item.id}
-              timeout={{
-                enter: 500,
-                exit: 500
-              }}
-              classNames="notification_download"
-              onEntered={e => {
-                setTimeout(
-                  () => {
-                    dispatch({
-                      type: 'REMOVE_NOTIFICATION_DOWNLOAD',
-                      payload: item.id
-                    })
-                  },
-                  item.status === 200 ? 1000 : 2500
-                )
-              }}
-            >
-              <NotificationDownload
-                key={item.id}
-                status={item.status}
-                url={item.url}
-                file={item.file || null}
-                id={item.id}
-                dispatch={dispatch}
-              />
-            </CSSTransition>
-          )
-        })}
-      </TransitionGroup>
+      <NotificationDownload />
       {preview.isShow && (
         <PreviewModal item={preview.preview} close={setPreview} />
       )}
@@ -160,7 +124,6 @@ Table.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}),
