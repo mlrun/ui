@@ -16,15 +16,15 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  &_opened {
+  &-opened {
     height: 72vh;
     overflow-y: scroll;
     overflow-x: hidden;
   }
-  &__header {
+  .item-header {
     display: flex;
     justify-content: space-between;
-    &_data {
+    &__data {
       h3 {
         margin: 27px 24px 10px;
         font-size: 24px;
@@ -41,7 +41,7 @@
         margin-left: 10px;
       }
     }
-    &_buttons {
+    &__buttons {
       a {
         display: inline-block;
         margin: 21px;

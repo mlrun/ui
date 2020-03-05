@@ -66,4 +66,17 @@
       }
     }
   }
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 90px;
+    button {
+      width: 40px;
+      height: 40px;
+      &:hover {
+        background-color: $alabaster;
+        border-radius: 20px;
+      }
+    }
+  }
 }

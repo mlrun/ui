@@ -7,12 +7,17 @@ import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
 
 import refreshIcon from '../../images/refresh.png'
+import collapseIcon from '../../images/collapse.png'
+import expandIcon from '../../images/expand.png'
 
 import './content.scss'
 
 const Content = ({
   convertedYaml,
   filters,
+  groupFilter,
+  groupLatestJob,
+  setGroupFilter,
   handleCancel,
   match,
   refresh,
@@ -26,7 +31,10 @@ const Content = ({
   detailsMenu,
   page,
   stateFilter,
-  setStateFilter
+  setStateFilter,
+  expand,
+  handleExpandRow,
+  handleExpandAll
 }) => {
   return (
     <>
@@ -44,16 +52,27 @@ const Content = ({
         <div className="content__action_bar">
           <FilterMenu
             filters={filters}
+            groupFilter={groupFilter}
+            setGroupFilter={setGroupFilter}
             stateFilter={stateFilter}
             setStateFilter={setStateFilter}
           />
-          <button className="content__action_bar_refresh" onClick={refresh}>
-            <img src={refreshIcon} alt="refresh" />
-          </button>
+          <div className="content__buttons">
+            <button className="content__action_bar_refresh" onClick={refresh}>
+              <img src={refreshIcon} alt="refresh" />
+            </button>
+            <button onClick={handleExpandAll}>
+              <img
+                src={expand ? collapseIcon : expandIcon}
+                alt="Collapse / Expand icon"
+              />
+            </button>
+          </div>
         </div>
 
         <YamlModal convertedYaml={convertedYaml} />
         <Table
+          groupLatestJob={groupLatestJob}
           handleCancel={handleCancel}
           match={match}
           tableContent={tableContent}
@@ -65,6 +84,7 @@ const Content = ({
           tableHeaders={tableHeaders}
           detailsMenu={detailsMenu}
           page={page}
+          handleExpandRow={handleExpandRow}
         />
       </div>
     </>
@@ -89,7 +109,10 @@ Content.propTypes = {
   page: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  tableContent: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
+  ]).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

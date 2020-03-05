@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 
 import './filterMenu.scss'
 
-import jobsActions from '../../actions/jobs'
-
-const FilterMenu = ({ filters, stateFilter, setStateFilter }) => {
+const FilterMenu = ({
+  filters,
+  groupFilter,
+  setStateFilter,
+  setGroupFilter,
+  stateFilter
+}) => {
   const [items] = useState(['Latest'])
 
   const handleChange = item => {
@@ -18,7 +21,7 @@ const FilterMenu = ({ filters, stateFilter, setStateFilter }) => {
 
   return (
     <div className="content__action_bar__filters">
-      {filters.map((filter, index) =>
+      {filters.map(filter =>
         filter === 'tree' ? (
           <ArtifactFilterTree
             key={filter}
@@ -31,8 +34,14 @@ const FilterMenu = ({ filters, stateFilter, setStateFilter }) => {
           <Select
             filter={filter}
             key={filter}
-            value={filter === 'status' && stateFilter}
-            onClick={filter === 'status' && setStateFilter}
+            value={
+              (filter === 'status' && stateFilter) ||
+              (filter === 'group by' && groupFilter)
+            }
+            onClick={
+              (filter === 'status' && setStateFilter) ||
+              (filter === 'group by' && setGroupFilter)
+            }
           />
         )
       )}
@@ -40,8 +49,19 @@ const FilterMenu = ({ filters, stateFilter, setStateFilter }) => {
   )
 }
 
-FilterMenu.propTypes = {
-  filters: PropTypes.arrayOf(PropTypes.string).isRequired
+FilterMenu.defaultProps = {
+  groupFilter: '',
+  setStateFilter: () => {},
+  setGroupFilter: () => {},
+  stateFilter: ''
 }
 
-export default connect(null, jobsActions)(FilterMenu)
+FilterMenu.propTypes = {
+  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
+  groupFilter: PropTypes.string,
+  setStateFilter: PropTypes.func,
+  setGroupFilter: PropTypes.func,
+  stateFilter: PropTypes.string
+}
+
+export default FilterMenu

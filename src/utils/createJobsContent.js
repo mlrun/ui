@@ -43,6 +43,11 @@ const createJobsContent = jobs => {
         value: job.resultsChips,
         size: 'jobs_big',
         type: 'results'
+      },
+      updated: {
+        value: job.updated,
+        size: 'jobs_small',
+        type: 'hidden'
       }
     }
   })

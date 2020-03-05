@@ -46,6 +46,15 @@ main {
     text-decoration: none;
     color: inherit;
   }
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    &:active, &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+  }
 }
 
 .completed {
@@ -53,7 +62,7 @@ main {
 }
 
 .running {
-  @include jobStatus($cornflowerBlue);
+  @include jobStatus($pictonBlue);
 }
 
 .failed,

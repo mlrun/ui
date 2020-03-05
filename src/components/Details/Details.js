@@ -28,8 +28,8 @@ const Details = ({
 }) => {
   return (
     <div className="table__item" onClick={hideChips}>
-      <div className="table__item__header">
-        <div className="table__item__header_data">
+      <div className="item-header">
+        <div className="item-header__data">
           <h3>{item.name || item.key}</h3>
           {page === 'jobs' ? (
             <span>
@@ -51,7 +51,7 @@ const Details = ({
             </span>
           )}
         </div>
-        <div className="table__item__header_buttons">
+        <div className="item-header__buttons">
           <Link
             to={`/projects/${match.params.projectName}/${page}`}
             onClick={handleCancel}

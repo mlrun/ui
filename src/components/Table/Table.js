@@ -8,6 +8,7 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import './table.scss'
 
 const Table = ({
+  groupLatestJob,
   handleCancel,
   match,
   tableContent,
@@ -18,7 +19,8 @@ const Table = ({
   loading,
   tableHeaders,
   detailsMenu,
-  page
+  page,
+  handleExpandRow
 }) => {
   const state = useSelector(state => state.notificationDownloadStore)
   const dispatch = useDispatch()
@@ -28,12 +30,12 @@ const Table = ({
   })
   const hideChips = e => {
     if (
-      e.target.className !== 'table_body__results' &&
-      e.target.className !== 'table_body__parameters' &&
+      e.target.className !== 'table-body__results' &&
+      e.target.className !== 'table-body__parameters' &&
       e.target.className !== 'table__item_details_item_data__parameters'
     ) {
       const block = document.getElementsByClassName(
-        'table_body__chips__block showChips'
+        'table-body__chips__block showChips'
       )[0]
       if (block) {
         block.classList.remove('showChips')
@@ -42,12 +44,12 @@ const Table = ({
   }
 
   const handleHoverOnRowActions = e => {
-    const target = e.target.closest('.parent_row')
+    const target = e.target.closest('.parent-row')
     target.lastElementChild.style.display = 'block'
   }
 
   const handleMouseLeaveFromRowActions = e => {
-    const target = e.target.closest('.parent_row')
+    const target = e.target.closest('.parent-row')
     const actions = document.getElementsByClassName('row__actions_visible')[0]
     target.lastElementChild.style.display = 'none'
     if (actions) {
@@ -57,12 +59,12 @@ const Table = ({
 
   const handleShowElements = e => {
     if (
-      e.target.className === 'table_body__results' ||
-      e.target.className === 'table_body__parameters' ||
+      e.target.className === 'table-body__results' ||
+      e.target.className === 'table-body__parameters' ||
       e.target.className === 'table__item_details_item_data__parameters'
     ) {
       let blocksArr = document.getElementsByClassName('showChips')
-      const parentBlock = e.target.closest('.table_body__chips__block')
+      const parentBlock = e.target.closest('.table-body__chips__block')
       if (
         blocksArr.length > 0 &&
         !parentBlock.classList.contains('showChips')
@@ -84,6 +86,7 @@ const Table = ({
   return (
     <>
       <TableView
+        groupLatestJob={groupLatestJob}
         hideChips={hideChips}
         handleHoverOnRowActions={handleHoverOnRowActions}
         handleMouseLeaveFromRowActions={handleMouseLeaveFromRowActions}
@@ -100,6 +103,7 @@ const Table = ({
         detailsMenu={detailsMenu}
         page={page}
         handlePreview={handlePreview}
+        handleExpandRow={handleExpandRow}
       />
       <TransitionGroup>
         {state.notification.map((item, index) => {
@@ -143,6 +147,8 @@ const Table = ({
 }
 
 Table.defaultProps = {
+  groupLatestJob: [],
+  handleExpandRow: () => {},
   selectedItem: {}
 }
 
@@ -150,13 +156,18 @@ Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   convertToYaml: PropTypes.func.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
+  groupLatestJob: PropTypes.arrayOf(PropTypes.shape({})),
   handleCancel: PropTypes.func.isRequired,
+  handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}),
-  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  tableContent: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
+  ]).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

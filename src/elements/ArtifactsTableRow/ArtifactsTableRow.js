@@ -9,6 +9,7 @@ import artifactsData from '../../components/Artifacts/artifactsData'
 const ArtifactsTableRow = ({
   content,
   convertToYaml,
+  handlePreview,
   handleHoverOnRowActions,
   handleMouseLeaveFromRowActions,
   handleSelectItem,
@@ -16,12 +17,11 @@ const ArtifactsTableRow = ({
   index,
   match,
   rowItem,
-  selectedItem,
-  handlePreview
+  selectedItem
 }) => {
   return (
     <div
-      className="table_body__row parent_row"
+      className="table-body__row parent-row"
       onMouseEnter={handleHoverOnRowActions}
       onMouseLeave={handleMouseLeaveFromRowActions}
     >
@@ -49,7 +49,7 @@ const ArtifactsTableRow = ({
           />
         )
       })}
-      <div className="table_body__row__cell row__actions">
+      <div className="table-body__cell row__actions">
         <ActionsMenu convertToYaml={convertToYaml} item={content[index]} />
       </div>
     </div>

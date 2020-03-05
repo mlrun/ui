@@ -46,5 +46,7 @@
     }
   ],
   "detailsMenu": ["info", "inputs", "artifacts", "results", "logs"],
-  "filters": ["period", "status"]
+  "filters": ["period", "status", "group by"],
+  "initialStateFilter": "All",
+  "initialGroupFilter": "None"
 }

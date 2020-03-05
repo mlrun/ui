@@ -9,7 +9,7 @@ const ChipCell = ({ className, elements, handleShowElements, maxLength }) => {
   return elements
     ? chips.sortedArr.map((item, i) => {
         return (
-          <div className="table_body__chips__block" key={`${item.value}${i}`}>
+          <div className="table-body__chips__block" key={`${item.value}${i}`}>
             <Chip
               key={item.value}
               className={className}
@@ -18,7 +18,7 @@ const ChipCell = ({ className, elements, handleShowElements, maxLength }) => {
               value={item.value}
             />
             {chips.hiddenChips && (
-              <div className="table_body__chips_hidden">
+              <div className="table-body__chips_hidden">
                 {chips.hiddenChips.map(element => {
                   return (
                     <Chip
