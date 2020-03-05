@@ -8,7 +8,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import artifactViewIcon from '../../images/eye.png'
 import arrowIcon from '../../images/arrow.png'
 
-import { truncateUid } from '../../utils'
+import { formatDatetime, truncateUid } from '../../utils'
 
 import jobsData from '../../components/JobsPage/jobsData'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
@@ -33,10 +33,18 @@ const TableCell = ({
             {data && data.value}{' '}
             {selectedItem.uid && <span className={item.state} />}
           </div>
-          {selectedItem.uid && !expandLink && (
+          {selectedItem.uid && (
             <div className="date__uid_row">
-              <span>{item.startTime.value}</span>
-              <span>{truncateUid(item.uid.value)}</span>
+              <span>
+                {expandLink
+                  ? item.startTime.value
+                  : formatDatetime(new Date(item.startTime))}
+              </span>
+              <span>
+                {expandLink
+                  ? truncateUid(item.uid.value)
+                  : truncateUid(item.uid)}
+              </span>
             </div>
           )}
         </Link>
