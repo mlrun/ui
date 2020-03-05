@@ -64,7 +64,11 @@ const Details = ({
                 path={item.target_path.path}
                 schema={item.target_path.schema}
               />
-              <ActionsMenu convertToYaml={convertToYaml} item={item} />
+              <ActionsMenu
+                convertToYaml={convertToYaml}
+                item={item}
+                time={500}
+              />
             </div>
           )}
           <Link

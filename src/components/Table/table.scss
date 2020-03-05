@@ -20,41 +20,49 @@
     }
     .header {
       &__jobs_medium {
-        @include tableColumnFlex(18%);
-        min-width: 18%;
+        @include flex(0.5, 240px);
       }
       &__jobs_small {
-        @include tableColumnFlex(8.5%);
+        @include flex(0.5, 80px);
       }
+
       &__jobs_big {
-        @include tableColumnFlex(19.75%);
+        @include flex(1, 60px);
       }
       &__artifacts_medium {
-        @include tableColumnFlex(14%);
+        @include flex(0.5, 240px);
       }
       &__artifacts_small {
-        @include tableColumnFlex(5.5%);
+        @include flex(0.2, 80px);
       }
       &__artifacts_big {
-        @include tableColumnFlex(21%);
+        @include flex(1, 70px);
       }
       &__artifacts_date {
-        @include tableColumnFlex(11%);
+        @include flex(0.5, 60px);
+        span {
+          padding-left: 10%;
+          width: 100%;
+        }
       }
       &__artifacts_small:nth-child(3) {
-        padding-left: 20px;
+        span {
+          padding-left: 20%;
+        }
       }
       &__artifacts_small:nth-child(5) {
-        flex: 0 0 9.5%;
-        max-width: 9.5%;
+        flex: 0.5;
+      }
+      &__artifacts_small:nth-child(6) {
+        span {
+          padding-left: 20%;
+        }
       }
       &__artifacts_small:nth-child(9) {
-        flex: 0 0 3.5%;
-        max-width: 3.5%;
+        @include flex(0.1, 50px);
       }
       &__artifacts_small:nth-child(10) {
-        flex: 0 0 3.5%;
-        max-width: 3.5%;
+        @include flex(0.1, 60px);
       }
     }
   }
@@ -92,54 +100,63 @@
       }
       .cell {
         &__jobs_medium {
-          @include tableColumnFlex(18%);
-          min-width: 240px;
+          @include flex(0.5, 240px);
         }
 
         &__jobs_small {
-          @include tableColumnFlex(8.5%);
+          @include flex(0.5, 80px);
         }
 
         &__jobs_big {
-          @include tableColumnFlex(19.75%);
+          @include flex(1, 90px);
+          .chips_wrapper {
+            display: flex;
+            flex: 1;
+          }
         }
 
         &__artifacts_medium {
-          @include tableColumnFlex(14%);
-          min-width: 240px;
+          @include flex(0.5, 240px);
         }
 
         &__artifacts_small {
-          @include tableColumnFlex(5.5%);
+          @include flex(0.2, 80px);
         }
 
         &__artifacts_big {
-          @include tableColumnFlex(21%);
+          @include flex(1, 60px);
         }
 
         &__artifacts_date {
-          @include tableColumnFlex(11%);
+          @include flex(0.5, 60px);
+          span {
+            padding-left: 10%;
+            width: 100%;
+          }
         }
 
         &__artifacts_small:nth-child(3) {
           span {
-            padding-left: 20px;
+            padding-left: 20%;
+          }
+        }
+
+        &__artifacts_small:nth-child(6) {
+          span {
+            padding-left: 20%;
           }
         }
 
         &__artifacts_small:nth-child(5) {
-          flex: 0 0 9.5%;
-          max-width: 9.5%;
+          @include flex(0.5, 80px);
         }
 
         &__artifacts_small:nth-child(9) {
-          flex: 0 0 3.5%;
-          max-width: 3.5%;
+          @include flex(0.1, 50px);
         }
 
         &__artifacts_small:nth-child(10) {
-          flex: 0 0 3.5%;
-          max-width: 3.5%;
+          @include flex(0.1, 60px);
         }
       }
       &__cell {
@@ -172,7 +189,7 @@
     }
     &__results {
       @include chip($resultsBorder);
-      max-width: 24ch;
+      display: flex;
     }
     &__labels {
       @include chip($labelBorder);
@@ -181,10 +198,11 @@
       &_short {
         margin: 0 !important;
         font-style: normal;
-        max-width: 24ch;
         overflow-x: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        max-width: 100px;
+        min-width: 100%;
       }
       &_hidden {
         display: none !important;
@@ -217,6 +235,9 @@
       &__block {
         position: relative;
         display: inline-block;
+        .chip_wrapper {
+          max-width: 200px;
+        }
       }
     }
   }

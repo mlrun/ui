@@ -110,3 +110,8 @@
   max-width: $flex;
   flex: 0 0 $flex;
 }
+
+@mixin flex($flex, $minWidth) {
+  flex: $flex;
+  min-width: $minWidth;
+}

@@ -7,25 +7,30 @@ import yamlIcon from '../../images/yaml.png'
 
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ convertToYaml, item }) => {
+const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
+  let idTimeout = null
+
   const showActionsList = e => {
     setIsShowMenu(!isShowMenu)
   }
-  let idTimeout = null
+
+  const handleMouseLeave = event => {
+    if (isShowMenu) {
+      idTimeout = setTimeout(() => {
+        setIsShowMenu(false)
+      }, time)
+    }
+  }
+
+  const handleMouseEnter = () => {
+    if (idTimeout) clearTimeout(idTimeout)
+  }
   return (
     <div
       className="row__actions__container"
-      onMouseLeave={() => {
-        if (isShowMenu) {
-          idTimeout = setTimeout(() => {
-            setIsShowMenu(false)
-          }, 500)
-        }
-      }}
-      onMouseEnter={() => {
-        if (idTimeout) clearTimeout(idTimeout)
-      }}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
     >
       <button onClick={showActionsList}>
         <img src={actionMenuIcon} alt="show more" />
