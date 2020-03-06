@@ -16,6 +16,7 @@ import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 
 const TableCell = ({
   data,
+  firstRow,
   handleShowElements,
   item,
   link,
@@ -27,23 +28,25 @@ const TableCell = ({
 }) => {
   if (link) {
     return (
-      <div className={`table-body__cell ${data.size}`}>
+      <div
+        className={`table-body__cell ${
+          data.type === 'date' ? 'jobs_medium' : data.size
+        }`}
+      >
         <Link to={link} onClick={() => selectItem(item)} className="link">
           <div className="name_status_row">
-            {data && data.value}{' '}
-            {selectedItem.uid && <span className={item.state} />}
+            {data && data.value}
+            {selectedItem.uid && !expandLink && <span className={item.state} />}
           </div>
           {selectedItem.uid && (
             <div className="date__uid_row">
               <span>
-                {expandLink
-                  ? item.startTime.value
-                  : formatDatetime(new Date(item.startTime))}
+                {data.type !== 'date' &&
+                  !expandLink &&
+                  formatDatetime(new Date(item.startTime))}
               </span>
               <span>
-                {expandLink
-                  ? truncateUid(item.uid.value)
-                  : truncateUid(item.uid)}
+                {data.type !== 'date' && !expandLink && truncateUid(item.uid)}
               </span>
             </div>
           )}
@@ -51,6 +54,13 @@ const TableCell = ({
         {expandLink && (
           <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
         )}
+      </div>
+    )
+  } else if (firstRow) {
+    return (
+      <div className={`table-body__cell ${data.size}`}>
+        {data && data.value}
+        <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
       </div>
     )
   } else if (data.type === 'state') {
@@ -152,14 +162,15 @@ TableCell.defaultProps = {
   item: {
     target_path: '',
     schema: ''
-  }
+  },
+  link: ''
 }
 
 TableCell.propTypes = {
   data: PropTypes.shape({}).isRequired,
   handleShowElements: PropTypes.func.isRequired,
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.bool]),
-  link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectItem: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }

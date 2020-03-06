@@ -22,9 +22,6 @@ const JobsTableRow = ({
   handleSelectItem
 }) => {
   const parent = useRef()
-  const link =
-    content.length > 0 &&
-    content.find(item => truncateUid(item.uid) === rowItem.uid.value)
   return (
     <div
       className="table-body__row parent-row"
@@ -41,14 +38,10 @@ const JobsTableRow = ({
               data={rowItem.name}
               handleShowElements={handleShowElements}
               item={rowItem}
-              link={`/projects/${match.params.projectName}/jobs/${link.uid}${
-                match.params.tab
-                  ? `/${match.params.tab}`
-                  : `/${jobsData.detailsMenu[0]}`
-              }`}
               selectItem={handleSelectItem}
               selectedItem={selectedItem}
               expandLink
+              firstRow
             />
           </div>
           {tableContent.map((job, index) => {
@@ -62,7 +55,7 @@ const JobsTableRow = ({
                     )
                   return (
                     <TableCell
-                      data={value}
+                      data={i === 0 ? job.startTime : value}
                       handleShowElements={handleShowElements}
                       item={currentItem}
                       link={

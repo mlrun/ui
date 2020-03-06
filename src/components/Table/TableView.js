@@ -18,7 +18,6 @@ const TableView = ({
   handleSelectItem,
   handleShowElements,
   hideChips,
-  loading,
   match,
   page,
   selectedItem,

@@ -15,7 +15,8 @@ const createJobsContent = jobs => {
       },
       startTime: {
         value: formatDatetime(job.startTime),
-        size: 'jobs_small'
+        size: 'jobs_small',
+        type: 'date'
       },
       state: {
         value: job.state,
