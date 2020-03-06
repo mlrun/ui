@@ -28,6 +28,9 @@ const artifactsAction = {
   setArtifacts: artifactsList => ({
     type: 'SET_ARTIFACTS',
     payload: artifactsList
+  }),
+  removeSelectArtifact: () => ({
+    type: 'REMOVE_SELECT_ARTIFACT'
   })
 }
 

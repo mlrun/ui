@@ -12,9 +12,6 @@ const TableView = ({
   groupLatestJob,
   handleCancel,
   handleExpandRow,
-  handleHoverOnRowActions,
-  handleMouseLeaveFromRowActions,
-  handlePreview,
   handleSelectItem,
   handleShowElements,
   hideChips,
@@ -46,10 +43,6 @@ const TableView = ({
                       key={i}
                       content={content}
                       convertToYaml={convertToYaml}
-                      handleHoverOnRowActions={handleHoverOnRowActions}
-                      handleMouseLeaveFromRowActions={
-                        handleMouseLeaveFromRowActions
-                      }
                       handleSelectItem={handleSelectItem}
                       handleShowElements={handleShowElements}
                       index={i}
@@ -64,11 +57,6 @@ const TableView = ({
                       key={i}
                       content={content}
                       convertToYaml={convertToYaml}
-                      handlePreview={handlePreview}
-                      handleHoverOnRowActions={handleHoverOnRowActions}
-                      handleMouseLeaveFromRowActions={
-                        handleMouseLeaveFromRowActions
-                      }
                       handleSelectItem={handleSelectItem}
                       handleShowElements={handleShowElements}
                       index={i}
@@ -86,10 +74,6 @@ const TableView = ({
                     content={content}
                     convertToYaml={convertToYaml}
                     handleExpandRow={handleExpandRow}
-                    handleHoverOnRowActions={handleHoverOnRowActions}
-                    handleMouseLeaveFromRowActions={
-                      handleMouseLeaveFromRowActions
-                    }
                     handleSelectItem={handleSelectItem}
                     handleShowElements={handleShowElements}
                     index={i}
@@ -104,6 +88,7 @@ const TableView = ({
       </div>
       {Object.keys(selectedItem).length !== 0 && (
         <Details
+          convertToYaml={convertToYaml}
           detailsMenu={detailsMenu}
           handleCancel={handleCancel}
           handleShowElements={handleShowElements}
@@ -126,9 +111,6 @@ TableView.propTypes = {
   convertToYaml: PropTypes.func.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
-  handleHoverOnRowActions: PropTypes.func.isRequired,
-  handleMouseLeaveFromRowActions: PropTypes.func.isRequired,
-  handlePreview: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   handleShowElements: PropTypes.func.isRequired,
   hideChips: PropTypes.func.isRequired,

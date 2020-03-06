@@ -1,0 +1,92 @@
+@import '../../scss/shadows.scss';
+@import '../../scss/colors.scss';
+@import '../../scss//mixins.scss';
+@import '../../scss//borders.scss';
+
+.table__item_details_item {
+  .wrapper_sources {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    .sources_header_container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 18px;
+      padding-left: 25px;
+      position: relative;
+      .sources {
+        &_header {
+          min-width: 100px;
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 24px;
+        }
+        &_value {
+          padding-left: 16px;
+          display: flex;
+        }
+      }
+      img {
+        position: absolute;
+        left: 10px;
+        cursor: pointer;
+        margin-right: 10px;
+        &.close {
+          transform: rotate(0);
+          transform-origin: center center;
+          transition: transform 200ms linear;
+        }
+        &.open {
+          transform: rotate(90deg);
+          transform-origin: center center;
+          transition: transform 200ms linear;
+        }
+      }
+    }
+  }
+  .source_table {
+    padding: 0 18px;
+    .source {
+      &_item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 56px;
+        border-bottom: $tableBorder;
+        &_header {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          padding: 18px;
+          &_name {
+            min-width: 200px;
+            @include detailsItem;
+          }
+          &_path {
+            min-width: 100px;
+            @include detailsItem;
+          }
+        }
+        &:last-child {
+          border: none;
+        }
+      }
+      &_item {
+        .source_item_header {
+          min-width: 220px;
+          padding-left: 18px;
+        }
+      }
+    }
+    > .source_item_header {
+      border-bottom: $tableBorder;
+    }
+  }
+  &.sources {
+    padding: 0;
+    &.shadow {
+      box-shadow: $previewBoxShadow;
+    }
+  }
+}

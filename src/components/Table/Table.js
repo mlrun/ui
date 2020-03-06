@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
 import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
@@ -21,11 +22,7 @@ const Table = ({
   page,
   handleExpandRow
 }) => {
-  const [preview, setPreview] = useState({
-    isShow: false,
-    preview: {}
-  })
-
+  const state = useSelector(state => state.artifactsStore.selectArtifact)
   const hideChips = e => {
     if (
       e.target.className !== 'table-body__results' &&
@@ -38,20 +35,6 @@ const Table = ({
       if (block) {
         block.classList.remove('showChips')
       }
-    }
-  }
-
-  const handleHoverOnRowActions = e => {
-    // const target = e.target.closest('.parent_row')
-    // target.lastElementChild.style.display = 'block'
-  }
-
-  const handleMouseLeaveFromRowActions = e => {
-    // const target = e.target.closest('.parent_row')
-    const actions = document.getElementsByClassName('row__actions_visible')[0]
-    // target.lastElementChild.style.display = 'none'
-    if (actions) {
-      actions.classList.remove('row__actions_visible')
     }
   }
 
@@ -74,20 +57,11 @@ const Table = ({
         : parentBlock.classList.add('showChips')
     }
   }
-
-  const handlePreview = item => {
-    setPreview(prev => {
-      return { ...prev, isShow: true, preview: item }
-    })
-  }
-
   return (
     <>
       <TableView
         groupLatestJob={groupLatestJob}
         hideChips={hideChips}
-        handleHoverOnRowActions={handleHoverOnRowActions}
-        handleMouseLeaveFromRowActions={handleMouseLeaveFromRowActions}
         handleShowElements={handleShowElements}
         handleCancel={handleCancel}
         match={match}
@@ -99,12 +73,11 @@ const Table = ({
         tableHeaders={tableHeaders}
         detailsMenu={detailsMenu}
         page={page}
-        handlePreview={handlePreview}
         handleExpandRow={handleExpandRow}
       />
       <NotificationDownload />
-      {preview.isShow && (
-        <PreviewModal item={preview.preview} close={setPreview} />
+      {state.isPreview && (
+        <PreviewModal item={selectedItem} cancel={handleCancel} />
       )}
     </>
   )

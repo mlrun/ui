@@ -10,23 +10,19 @@ import { truncateUid } from '../../utils'
 const JobsTableRow = ({
   content,
   handleExpandRow,
+  convertToYaml,
+  handleSelectItem,
   handleShowElements,
   index,
   match,
   rowItem,
   selectedItem,
-  tableContent,
-  convertToYaml,
-  handleHoverOnRowActions,
-  handleMouseLeaveFromRowActions,
-  handleSelectItem
+  tableContent
 }) => {
   const parent = useRef()
   return (
     <div
       className="table-body__row parent-row"
-      onMouseEnter={handleHoverOnRowActions}
-      onMouseLeave={handleMouseLeaveFromRowActions}
       onClick={e => handleExpandRow(e, rowItem)}
       ref={parent}
     >
@@ -117,8 +113,6 @@ JobsTableRow.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   convertToYaml: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
-  handleHoverOnRowActions: PropTypes.func.isRequired,
-  handleMouseLeaveFromRowActions: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   handleShowElements: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,

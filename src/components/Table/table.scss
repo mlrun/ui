@@ -56,7 +56,6 @@
     &__row {
       position: relative;
       display: flex;
-      flex-wrap: wrap;
       min-height: 50px;
       flex-direction: row;
       &.parent-row {
@@ -127,9 +126,14 @@
     }
     &__parameters {
       @include chip($parametersBorder);
+      max-width: 18ch;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     &__results {
       @include chip($resultsBorder);
+      max-width: 24ch;
     }
     &__labels {
       @include chip($labelBorder);
@@ -138,10 +142,10 @@
       &_short {
         margin: 0 !important;
         font-style: normal;
-        max-width: 80px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        max-width: 24ch;
       }
       &_hidden {
         display: none !important;

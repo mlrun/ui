@@ -6,9 +6,9 @@
 .table__item {
   position: absolute;
   top: 0;
-  left: 13%;
+  left: 240px;
   background-color: $white;
-  width: 87%;
+  width: calc(100% - 240px);
   height: 100%;
   overflow-y: auto;
   border-left: $tableBorder;
@@ -37,9 +37,11 @@
       }
     }
     &__buttons {
+      display: flex;
+      align-items: center;
       a {
         display: inline-block;
-        margin: 21px;
+        margin: 21px 21px 21px 10px;
       }
     }
   }
@@ -139,7 +141,7 @@
     min-height: 400px;
     font-family: 'Source Code Pro', 'Courier New', monospace;
     width: 100%;
-    button {
+    .logs_refresh {
       background-color: $white;
       border: 1px solid $cornflowerBlue;
       color: $cornflowerBlue;
@@ -181,6 +183,17 @@
     flex-direction: column;
     .inputs_container {
       width: 100%;
+    }
+    .preview_popout {
+      position: absolute;
+      right: 0;
+      margin: 16px;
+      border: none;
+      background: none;
+      padding: 0;
+      outline: none;
+      z-index: 99998;
+      cursor: pointer;
     }
     .json {
       padding: 0 15px;
