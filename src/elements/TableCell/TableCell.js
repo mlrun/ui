@@ -41,15 +41,19 @@ const TableCell = ({
         <Link to={link} onClick={() => selectItem(item)} className="link">
           <div className="name_status_row">
             {data && data.value}
-            <Tooltip
-              template={
-                <TextTooltipTemplate
-                  text={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
-                />
-              }
-            >
-              <i className={item.state} />
-            </Tooltip>
+            {item.state && (
+              <Tooltip
+                template={
+                  <TextTooltipTemplate
+                    text={`${item.state[0].toUpperCase()}${item.state.slice(
+                      1
+                    )}`}
+                  />
+                }
+              >
+                <i className={item.state} />
+              </Tooltip>
+            )}
           </div>
           {selectedItem.uid && (
             <div className="date__uid_row">
