@@ -19,7 +19,6 @@ const ArtifactsDetailsInfoItem = ({
             elements={chips}
             className={`table__item_details_item_data__${chipsClassName}`}
             handleShowElements={handleShowElements}
-            maxLength={6}
           />
         </div>
       )}

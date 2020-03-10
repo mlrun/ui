@@ -30,7 +30,7 @@ const TableView = ({
               className={`table-head__item ${item.size}`}
               key={item.header + index}
             >
-              {item.header}
+              <span>{item.header}</span>
             </div>
           ))}
         </div>

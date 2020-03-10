@@ -25,6 +25,8 @@ const Table = ({
   const state = useSelector(state => state.artifactsStore.selectArtifact)
   const hideChips = e => {
     if (
+      e.target.className !== 'table__item_details_item_data__labels' &&
+      e.target.className !== 'table-body__labels' &&
       e.target.className !== 'table-body__results' &&
       e.target.className !== 'table-body__parameters' &&
       e.target.className !== 'table__item_details_item_data__parameters'
@@ -40,6 +42,8 @@ const Table = ({
 
   const handleShowElements = e => {
     if (
+      e.target.className === 'table__item_details_item_data__labels' ||
+      e.target.className === 'table-body__labels' ||
       e.target.className === 'table-body__results' ||
       e.target.className === 'table-body__parameters' ||
       e.target.className === 'table__item_details_item_data__parameters'

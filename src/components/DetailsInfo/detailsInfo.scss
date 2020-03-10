@@ -33,6 +33,9 @@
     &_data {
       padding-left: 16px;
       display: flex;
+      flex: 1;
+      min-width: 60px;
+      align-items: center;
       &__parameters {
         @include chip($parametersBorder);
       }
@@ -41,6 +44,10 @@
       }
       &__results {
         @include chip($resultsBorder);
+      }
+      .chips_wrapper {
+        display: flex;
+        flex: 1;
       }
     }
     &.artifacts {

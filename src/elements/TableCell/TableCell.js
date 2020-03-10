@@ -87,7 +87,6 @@ const TableCell = ({
           elements={data.value}
           tooltip
           handleShowElements={handleShowElements}
-          maxLength={2}
         />
       </div>
     )

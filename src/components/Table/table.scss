@@ -133,7 +133,7 @@
     }
     &__results {
       @include chip($resultsBorder);
-      max-width: 24ch;
+      display: flex;
     }
     &__labels {
       @include chip($labelBorder);
@@ -142,10 +142,11 @@
       &_short {
         margin: 0 !important;
         font-style: normal;
-        white-space: nowrap;
-        overflow: hidden;
+        overflow-x: hidden;
         text-overflow: ellipsis;
-        max-width: 24ch;
+        white-space: nowrap;
+        max-width: 100px;
+        min-width: 100%;
       }
       &_hidden {
         display: none !important;
@@ -178,6 +179,9 @@
       &__block {
         position: relative;
         display: inline-block;
+        .chip_wrapper {
+          max-width: 200px;
+        }
       }
     }
   }
