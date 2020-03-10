@@ -37,8 +37,8 @@ const Details = ({
   const history = useHistory()
   return (
     <div className="table__item" onClick={hideChips}>
-      <div className="table__item__header">
-        <div className="table__item__header_data">
+      <div className="item-header">
+        <div className="item-header__data">
           <h3>{item.name || item.key}</h3>
           <span>
             {formatDatetime(item.startTime)}
@@ -57,9 +57,9 @@ const Details = ({
             )}
           </span>
         </div>
-        <div className="table__item__header_buttons">
+        <div className="item-header__buttons">
           {page === 'artifacts' && (
-            <div>
+            <>
               <Download
                 path={item.target_path.path}
                 schema={item.target_path.schema}
@@ -69,7 +69,7 @@ const Details = ({
                 item={item}
                 time={500}
               />
-            </div>
+            </>
           )}
           <Link
             to={`/projects/${match.params.projectName}/${page}`}
@@ -113,6 +113,7 @@ const Details = ({
                   })
                 )
               }}
+              className="preview_popout"
             >
               <img src={popout} alt="preview" />
             </button>

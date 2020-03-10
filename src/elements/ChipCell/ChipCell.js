@@ -50,7 +50,7 @@ const ChipCell = ({ className, elements, handleShowElements }) => {
     <div className="chips_wrapper" ref={chipRef}>
       {chips.sortedArr.map((item, i) => {
         return (
-          <div className="table_body__chips__block" key={`${item.value}${i}`}>
+          <div className="table-body__chips__block" key={`${item.value}${i}`}>
             <Tooltip
               className="chip_wrapper"
               key={item.value}
@@ -63,7 +63,7 @@ const ChipCell = ({ className, elements, handleShowElements }) => {
               />
             </Tooltip>
             {chips.hiddenChips && (
-              <div className="table_body__chips_hidden">
+              <div className="table-body__chips_hidden">
                 {chips.hiddenChips.map(element => {
                   return (
                     <Tooltip

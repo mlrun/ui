@@ -64,7 +64,7 @@ const ArtifactsPreviewView = ({ preview }) => (
                 'json'
               )
             }}
-          ></code>
+          />
         </pre>
       </div>
     )}

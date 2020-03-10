@@ -14,11 +14,10 @@ const ArtifactsTableRow = ({
   index,
   match,
   rowItem,
-  selectedItem,
-  handlePreview
+  selectedItem
 }) => {
   return (
-    <div className="table_body__row parent_row">
+    <div className="table-body__row parent-row">
       {Object.values(rowItem).map((value, i) => {
         return (
           <TableCell
@@ -39,11 +38,10 @@ const ArtifactsTableRow = ({
             key={value.value + i}
             handleShowElements={handleShowElements}
             match={match}
-            handlePreview={handlePreview}
           />
         )
       })}
-      <div className="table_body__row__cell row__actions">
+      <div className="table-body__cell row__actions">
         <ActionsMenu convertToYaml={convertToYaml} item={content[index]} />
       </div>
     </div>
