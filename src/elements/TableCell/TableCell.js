@@ -76,22 +76,24 @@ const TableCell = ({
   } else if (data.type === 'type') {
     return (
       <div className={`table-body__cell ${data.size}`}>
-        {data.value === 'job' || data.value === '' ? (
-          'Local'
-        ) : data.value === 'dask' ? (
-          'Dask'
-        ) : (
-          <img
-            src={
-              data.type === 'nuclio'
-                ? nuclioIcon
-                : data.type === 'spark'
-                ? sparkIcon
-                : horovodIcon
-            }
-            alt="Type"
-          />
-        )}
+        <Tooltip template={<TextTooltipTemplate text={data.value} />}>
+          {data.value === 'job' || data.value === '' ? (
+            'Local'
+          ) : data.value === 'dask' ? (
+            'Dask'
+          ) : (
+            <img
+              src={
+                data.type === 'nuclio'
+                  ? nuclioIcon
+                  : data.type === 'spark'
+                  ? sparkIcon
+                  : horovodIcon
+              }
+              alt="Type"
+            />
+          )}
+        </Tooltip>
       </div>
     )
   } else if (Array.isArray(data.value)) {
