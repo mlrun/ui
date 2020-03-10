@@ -6,15 +6,18 @@ import PropTypes from 'prop-types'
 import ChipCell from '../ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
 import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
+
 import artifactViewIcon from '../../images/eye.png'
 import arrowIcon from '../../images/arrow.png'
+import nuclioIcon from '../../images/nuclio.png'
+import sparkIcon from '../../images/spark.png'
+import horovodIcon from '../../images/horovod.png'
 
 import { truncateUid, formatDatetime } from '../../utils'
 import artifactAction from '../../actions/artifacts'
-
 import jobsData from '../../components/JobsPage/jobsData'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 
 const TableCell = ({
   data,
@@ -38,18 +41,23 @@ const TableCell = ({
         <Link to={link} onClick={() => selectItem(item)} className="link">
           <div className="name_status_row">
             {data && data.value}
-            {selectedItem.uid && !expandLink && <span className={item.state} />}
+            <Tooltip
+              template={
+                <TextTooltipTemplate
+                  text={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
+                />
+              }
+            >
+              <i className={item.state} />
+            </Tooltip>
           </div>
           {selectedItem.uid && (
             <div className="date__uid_row">
               <span>
                 {data.type !== 'date' &&
-                  !expandLink &&
                   formatDatetime(new Date(item.startTime))}
               </span>
-              <span>
-                {data.type !== 'date' && !expandLink && truncateUid(item.uid)}
-              </span>
+              <span>{truncateUid(item.uid)}</span>
             </div>
           )}
         </Link>
@@ -65,18 +73,25 @@ const TableCell = ({
         <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
       </div>
     )
-  } else if (data.type === 'state') {
+  } else if (data.type === 'type') {
     return (
       <div className={`table-body__cell ${data.size}`}>
-        <Tooltip
-          template={
-            <TextTooltipTemplate
-              text={`${data.value[0].toUpperCase()}${data.value.slice(1)}`}
-            />
-          }
-        >
-          <i className={data.value} />
-        </Tooltip>
+        {data.value === 'job' || data.value === '' ? (
+          'Local'
+        ) : data.value === 'dask' ? (
+          'Dask'
+        ) : (
+          <img
+            src={
+              data.type === 'nuclio'
+                ? nuclioIcon
+                : data.type === 'spark'
+                ? sparkIcon
+                : horovodIcon
+            }
+            alt="Type"
+          />
+        )}
       </div>
     )
   } else if (Array.isArray(data.value)) {

@@ -4,6 +4,7 @@ import { parseKeyValues } from '../utils'
 const jobsActions = {
   fetchJobs: (project, status) => dispatch => {
     const getJobs = status ? jobsApi.filterByStatus : jobsApi.getAll
+
     return getJobs(project, status && status)
       .then(({ data }) => {
         const newJobs = (data || {}).runs
@@ -27,12 +28,14 @@ const jobsActions = {
             owner: job.metadata.labels.owner,
             updated: new Date(job.status.last_update)
           }))
+
         dispatch(jobsActions.setJobs(newJobs))
         dispatch(
           jobsActions.setJobsData(
             data.runs.filter(job => job.metadata.iteration === 0)
           )
         )
+
         return newJobs
       })
       .catch(() => {})
