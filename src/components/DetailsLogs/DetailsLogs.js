@@ -37,7 +37,7 @@ const DetailsLogs = ({ jobsStore, fetchJobLogs, match }) => {
     <div className="table__item_logs">
       {loading && <Loader />}
       <div className="table__item_logs__content">{jobsStore.logs}</div>
-      <button onClick={refreshLogs}>
+      <button onClick={refreshLogs} className="logs_refresh">
         <img src={refreshIcon} alt="Refresh icon" />
         Refresh
       </button>

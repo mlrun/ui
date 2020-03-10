@@ -8,7 +8,8 @@
     "Path",
     "Tree",
     "Updated",
-    "Labels"
+    "Labels",
+    "Sources"
   ],
   "detailsMenu": ["info", "preview"],
   "filters": ["period", "tree"],

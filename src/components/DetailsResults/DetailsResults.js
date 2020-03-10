@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import bestIterationIcon from '../../images/best-iteration-icon.png'
 import { resultsTable } from '../../utils/resultsTable'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 const DetailsResults = ({ job }) => {
   const result = resultsTable(job)
@@ -19,7 +21,7 @@ const DetailsResults = ({ job }) => {
               ))}
             </div>
           </div>
-          <div className="table__item_results__table_body">
+          <div className="table__item_results__table-body">
             {result.items.map((item, i) => (
               <div className="table__item_results__table_row" key={i}>
                 {item.map((value, i) => {
@@ -29,10 +31,17 @@ const DetailsResults = ({ job }) => {
                         className="table__item_results__table_row_cell"
                         key={`${value}${i}`}
                       >
-                        <i
-                          className={value}
-                          title={`${value[0].toUpperCase()}${value.slice(1)}`}
-                        />
+                        <Tooltip
+                          template={
+                            <TextTooltipTemplate
+                              text={`${value[0].toUpperCase()}${value.slice(
+                                1
+                              )}`}
+                            />
+                          }
+                        >
+                          <i className={value} />
+                        </Tooltip>
                       </div>
                     )
                   } else if (

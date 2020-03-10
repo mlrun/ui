@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { formatDatetime } from '../../utils'
+import { formatDatetime, parseKeyValues } from '../../utils'
 import jobsData from '../JobsPage/jobsData'
 import artifactsData from '../Artifacts/artifactsData'
 
@@ -9,6 +9,7 @@ import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsI
 import ArtifactsDetailsInfoItem from '../../elements/ArtifactsDetailsInfoItem/ArtifactsDetailsInfoItem'
 
 import './detailsInfo.scss'
+import ArtifactSources from '../ArtifactSources/ArtifactSources'
 
 const DetailsInfo = ({ item, handleShowElements, page }) => {
   const jobsInfoContent = [
@@ -30,7 +31,8 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.target_path,
     item.tree,
     item.updated && formatDatetime(new Date(item.updated)),
-    item.labels && Object.values(item.labels)
+    item.labels,
+    item.sources
   ]
   const artifactsProducerInfoContent = item.producer && [
     item.producer.kind,
@@ -42,6 +44,9 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
 
   return (
     <div>
+      {page === 'artifacts' && (
+        <h3 className="table__item_details_preview_header">General</h3>
+      )}
       <ul className="table__item_details">
         {page === 'jobs'
           ? jobsData.jobsInfoHeaders.map((header, i) => {
@@ -101,24 +106,45 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                   return (
                     <ArtifactsDetailsInfoItem
                       key={header}
+                      page={page}
                       handleShowElements={handleShowElements}
-                      chips={item.labels}
+                      chips={parseKeyValues(item.labels)}
                       header={header}
+                      chipsClassName="labels"
                     />
                   )
                 case item.target_path:
                   return (
                     <ArtifactsDetailsInfoItem
                       key={header}
+                      page={page}
                       handleShowElements={handleShowElements}
                       header={header}
                       target_path={item.target_path}
                     />
                   )
+                case item.sources: {
+                  return (
+                    <ArtifactSources
+                      key={header}
+                      header={header}
+                      sources={
+                        Array.isArray(item.sources)
+                          ? item.sources.reduce((prev, cur) => {
+                              let source = {}
+                              source[cur.name] = cur.path
+                              return { ...prev, ...source }
+                            }, {})
+                          : item.sources
+                      }
+                    />
+                  )
+                }
                 default:
                   return (
                     <ArtifactsDetailsInfoItem
                       key={header}
+                      page={page}
                       info={artifactsInfoContent[i]}
                       header={header}
                     />
@@ -133,6 +159,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
             {artifactsData.artifactsProducerInfoHeaders.map((header, i) => (
               <ArtifactsDetailsInfoItem
                 key={header}
+                page={page}
                 info={artifactsProducerInfoContent[i]}
                 header={header}
               />

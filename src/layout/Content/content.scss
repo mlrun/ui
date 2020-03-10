@@ -6,11 +6,13 @@
 
 .content {
   @include jobsFlex;
+  flex-direction: column;
   box-shadow: $jobsShadow;
   border-radius: $mainBorderRadius;
   background-color: $white;
   margin: 52px 24px 24px;
   position: relative;
+  overflow: hidden;
   &__header {
     display: flex;
     padding: 21px 24px;
@@ -47,23 +49,16 @@
       }
     }
   }
+  .table_container {
+    position: relative;
+    display: flex;
+    flex: 1;
+    .no_data {
+      margin: auto;
+    }
+  }
   &__action_bar {
     padding: 23px 24px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    &__filters {
-      display: flex;
-      align-items: center;
-    }
-    &_refresh {
-      border: none;
-      background-color: transparent;
-      cursor: pointer;
-      &:focus, &:active {
-        outline: none;
-        box-shadow: none;
-      }
-    }
   }
 }

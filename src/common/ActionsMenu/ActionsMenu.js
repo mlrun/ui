@@ -1,35 +1,57 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import actionMenuIcon from '../../images/elipsis.png'
 
+import yamlIcon from '../../images/yaml.png'
+
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ convertToYaml, item }) => {
+const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
+  const [isShowMenu, setIsShowMenu] = useState(false)
+  let idTimeout = null
+
   const showActionsList = e => {
-    const actionsBlock = e.target.closest('.row__actions__container')
-    // if (actionsBlock.classList.value.includes('row__actions_visible')) {
-    //   actionsBlock.classList.remove('row__actions_visible')
-    // } else {
-    actionsBlock.classList.add('row__actions_visible')
-    // }
+    setIsShowMenu(!isShowMenu)
+  }
+
+  const handleMouseLeave = event => {
+    if (isShowMenu) {
+      idTimeout = setTimeout(() => {
+        setIsShowMenu(false)
+      }, time)
+    }
+  }
+
+  const handleMouseEnter = () => {
+    if (idTimeout) clearTimeout(idTimeout)
   }
 
   return (
-    <div className="row__actions__container">
+    <div
+      className="row__actions__container"
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
+    >
       <button onClick={showActionsList}>
         <img src={actionMenuIcon} alt="show more" />
       </button>
-      <div className="row__actions__body">
+      {isShowMenu && (
         <div
-          className="row__actions__body_option"
-          onClick={() => {
-            convertToYaml(item)
-          }}
+          className="row__actions__body"
+          onClick={() => setIsShowMenu(false)}
         >
-          View YAML
+          <div
+            className="row__actions__body_option"
+            onClick={() => {
+              convertToYaml(item)
+            }}
+          >
+            <img src={yamlIcon} alt="yaml" />
+            View YAML
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

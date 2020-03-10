@@ -4,10 +4,17 @@ import measureTime from './measureTime'
 
 const createJobsContent = jobs => {
   return jobs.map(job => {
+    let type = job.labels.filter(item => item.indexOf('kind:') >= 0 && item)
+    type = type[0].slice(type[0].indexOf(':') + 2)
     return {
       name: {
         value: job.name,
         size: 'jobs_medium'
+      },
+      type: {
+        value: type,
+        size: 'jobs_small',
+        type: 'type'
       },
       uid: {
         value: truncateUid(job.uid),
@@ -15,12 +22,8 @@ const createJobsContent = jobs => {
       },
       startTime: {
         value: formatDatetime(job.startTime),
-        size: 'jobs_small'
-      },
-      state: {
-        value: job.state,
         size: 'jobs_small',
-        type: 'state'
+        type: 'date'
       },
       duration: {
         value: measureTime(
@@ -43,6 +46,11 @@ const createJobsContent = jobs => {
         value: job.resultsChips,
         size: 'jobs_big',
         type: 'results'
+      },
+      updated: {
+        value: job.updated,
+        size: 'jobs_small',
+        type: 'hidden'
       }
     }
   })

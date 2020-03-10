@@ -1,47 +1,111 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
+import refreshIcon from '../../images/refresh.png'
+import collapseIcon from '../../images/collapse.png'
+import expandIcon from '../../images/expand.png'
 
 import './filterMenu.scss'
 
-import jobsActions from '../../actions/jobs'
+const FilterMenu = ({
+  expand,
+  filters,
+  handleExpandAll,
+  match,
+  onChange,
+  page,
+  groupFilter,
+  setStateFilter,
+  setGroupFilter,
+  stateFilter
+}) => {
+  const [itemsFilterTree] = useState(['Latest'])
+  const [valueFilterTree, setValueFilterTree] = useState('')
 
-const FilterMenu = ({ filters, stateFilter, setStateFilter }) => {
-  const [items] = useState(['Latest'])
-
-  const handleChange = item => {
-    // console.log(item)
+  const handleChangeArtifactFilterTree = item => {
+    const value = item.toLowerCase()
+    onChange({ tag: value, project: match.params.projectName })
+    setValueFilterTree(value)
   }
 
   return (
-    <div className="content__action_bar__filters">
-      {filters.map((filter, index) =>
-        filter === 'tree' ? (
-          <ArtifactFilterTree
-            key={filter}
-            value="Latest"
-            label="Tree :"
-            items={items}
-            onChange={handleChange}
-          />
-        ) : (
-          <Select
-            filter={filter}
-            key={filter}
-            value={filter === 'status' && stateFilter}
-            onClick={filter === 'status' && setStateFilter}
-          />
-        )
-      )}
-    </div>
+    <>
+      <div className="content__action_bar__filters">
+        {filters.map(filter =>
+          filter === 'tree' ? (
+            <ArtifactFilterTree
+              key={filter}
+              value={valueFilterTree || 'Latest'}
+              label="Tree :"
+              items={itemsFilterTree}
+              onChange={handleChangeArtifactFilterTree}
+            />
+          ) : (
+            <Select
+              filter={filter}
+              key={filter}
+              value={
+                (filter === 'status' && stateFilter) ||
+                (filter === 'group by' && groupFilter)
+              }
+              onClick={
+                (filter === 'status' && setStateFilter) ||
+                (filter === 'group by' && setGroupFilter)
+              }
+            />
+          )
+        )}
+      </div>
+      <div className="content__action_bar__buttons">
+        <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
+          <button
+            onClick={() => {
+              page === 'artifacts'
+                ? onChange({
+                    tag: valueFilterTree.toLowerCase(),
+                    project: match.params.projectName
+                  })
+                : onChange()
+            }}
+          >
+            <img src={refreshIcon} alt="refresh" />
+          </button>
+        </Tooltip>
+        <Tooltip
+          template={
+            <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
+          }
+        >
+          <button onClick={handleExpandAll}>
+            <img
+              src={expand ? collapseIcon : expandIcon}
+              alt="Collapse / Expand icon"
+            />
+          </button>
+        </Tooltip>
+      </div>
+    </>
   )
 }
 
-FilterMenu.propTypes = {
-  filters: PropTypes.arrayOf(PropTypes.string).isRequired
+FilterMenu.defaultProps = {
+  groupFilter: '',
+  setStateFilter: () => {},
+  setGroupFilter: () => {},
+  stateFilter: ''
 }
 
-export default connect(null, jobsActions)(FilterMenu)
+FilterMenu.propTypes = {
+  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
+  groupFilter: PropTypes.string,
+  setStateFilter: PropTypes.func,
+  setGroupFilter: PropTypes.func,
+  stateFilter: PropTypes.string
+}
+
+export default FilterMenu

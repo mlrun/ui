@@ -43,6 +43,7 @@
       &_date {
         display: flex;
         flex: 1;
+        margin-left: 30px;
       }
       &_path {
         display: flex;
@@ -60,5 +61,8 @@
         }
       }
     }
+  }
+  .json {
+    padding: 0 1rem;
   }
 }

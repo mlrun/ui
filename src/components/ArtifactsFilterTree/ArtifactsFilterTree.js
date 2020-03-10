@@ -45,6 +45,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
       <input
         className="artifact_filter_tree"
         value={filterTree}
+        title={filterTree.length >= 14 ? filterTree : null}
         onChange={event => {
           setFilterTree(event.target.value)
         }}
@@ -54,17 +55,15 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
           }
         }}
         onKeyDown={event => {
-          if (event.keyCode === 13) {
+          if (event.keyCode === 13 && event.target.value.length !== 0) {
             event.preventDefault()
             let searchItem = items.filter(item =>
               RegExp(`^${filterTree}`, 'i').test(item)
             )[0]
-            if (searchItem) {
-              setFilterTree(searchItem)
-              onChange(searchItem)
-              event.target.blur()
-              setIsDropDownMenu(false)
-            }
+            setFilterTree(searchItem || event.target.value)
+            onChange(searchItem || event.target.value)
+            event.target.blur()
+            setIsDropDownMenu(false)
           }
         }}
       />

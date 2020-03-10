@@ -48,36 +48,3 @@
     }
   }
 }
-
-.notification_download-enter {
-  position: relative;
-  opacity: 0;
-  bottom: -150px;
-}
-.notification_download-enter-active {
-  position: relative;
-  opacity: 1;
-  bottom: 20px;
-  transition: bottom 500ms, opacity 500ms linear;
-}
-.notification_download-enter-done {
-  position: relative;
-  opacity: 1;
-  bottom: 20px;
-}
-.notification_download-exit {
-  position: relative;
-  opacity: 1;
-  bottom: 20px;
-}
-.notification_download-exit-active {
-  position: relative;
-  opacity: 0;
-  bottom: -150px;
-  transition: bottom 500ms, opacity 500ms linear;
-}
-.notification_download-exit-done {
-  position: relative;
-  bottom: -150px;
-  opacity: 0;
-}

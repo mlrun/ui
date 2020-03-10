@@ -5,6 +5,7 @@
 }
 
 @mixin jobsFlex {
+  display: flex;
   flex-grow: 1;
   flex-shrink: 0;
 }
@@ -17,6 +18,13 @@
   &:first-child {
     padding-left: 56px;
   }
+}
+
+@mixin detailsItem {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 24px;
+  color: $topaz;
 }
 
 @mixin chip($border) {
@@ -101,4 +109,9 @@
 @mixin tableColumnFlex($flex) {
   max-width: $flex;
   flex: 0 0 $flex;
+}
+
+@mixin flex($flex, $minWidth) {
+  flex: $flex;
+  min-width: $minWidth;
 }

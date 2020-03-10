@@ -40,6 +40,15 @@
         max-width: 8%;
       }
     }
+    &__cell {
+      &_path {
+        max-width: 50px;
+        min-width: 100%;
+        white-space: nowrap;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+      }
+    }
   }
   .view .table__item_artifacts__preview {
     display: flex;

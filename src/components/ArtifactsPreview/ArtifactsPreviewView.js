@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
+import Prism from 'prismjs'
 import DetailsResults from '../DetailsResults/DetailsResults'
 
 const ArtifactsPreviewView = ({ preview }) => (
@@ -54,9 +54,17 @@ const ArtifactsPreviewView = ({ preview }) => (
       <iframe srcDoc={preview.data.content} frameBorder="0" title="Preview" />
     )}
     {preview.data && preview.type === 'json' && (
-      <div>
+      <div className="json">
         <pre>
-          <code>{preview.data.content}</code>
+          <code
+            dangerouslySetInnerHTML={{
+              __html: Prism.highlight(
+                preview.data.content,
+                Prism.languages.json,
+                'json'
+              )
+            }}
+          />
         </pre>
       </div>
     )}

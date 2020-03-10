@@ -5,14 +5,16 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
-
-import refreshIcon from '../../images/refresh.png'
+import Loader from '../../common/Loader/Loader'
 
 import './content.scss'
 
 const Content = ({
   convertedYaml,
   filters,
+  groupFilter,
+  groupLatestJob,
+  setGroupFilter,
   handleCancel,
   match,
   refresh,
@@ -26,7 +28,10 @@ const Content = ({
   detailsMenu,
   page,
   stateFilter,
-  setStateFilter
+  setStateFilter,
+  expand,
+  handleExpandRow,
+  handleExpandAll
 }) => {
   return (
     <>
@@ -43,29 +48,42 @@ const Content = ({
         </div>
         <div className="content__action_bar">
           <FilterMenu
+            expand={expand}
             filters={filters}
+            groupFilter={groupFilter}
+            handleExpandAll={handleExpandAll}
+            setGroupFilter={setGroupFilter}
             stateFilter={stateFilter}
             setStateFilter={setStateFilter}
+            match={match}
+            onChange={refresh}
+            page={page}
           />
-          <button className="content__action_bar_refresh" onClick={refresh}>
-            <img src={refreshIcon} alt="refresh" />
-          </button>
         </div>
-
         <YamlModal convertedYaml={convertedYaml} />
-        <Table
-          handleCancel={handleCancel}
-          match={match}
-          tableContent={tableContent}
-          content={content}
-          selectedItem={selectedItem}
-          handleSelectItem={handleSelectItem}
-          convertToYaml={convertToYaml}
-          loading={loading}
-          tableHeaders={tableHeaders}
-          detailsMenu={detailsMenu}
-          page={page}
-        />
+        <div className="table_container">
+          {loading ? (
+            <Loader />
+          ) : content.length !== 0 ? (
+            <Table
+              groupLatestJob={groupLatestJob}
+              handleCancel={handleCancel}
+              match={match}
+              tableContent={tableContent}
+              content={content}
+              selectedItem={selectedItem}
+              handleSelectItem={handleSelectItem}
+              convertToYaml={convertToYaml}
+              loading={loading}
+              tableHeaders={tableHeaders}
+              detailsMenu={detailsMenu}
+              page={page}
+              handleExpandRow={handleExpandRow}
+            />
+          ) : (
+            <h2 className="no_data">No data to display!</h2>
+          )}
+        </div>
       </div>
     </>
   )
@@ -89,7 +107,10 @@ Content.propTypes = {
   page: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  tableContent: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
+  ]).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
