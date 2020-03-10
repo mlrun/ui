@@ -76,7 +76,13 @@ const TableCell = ({
   } else if (data.type === 'type') {
     return (
       <div className={`table-body__cell ${data.size}`}>
-        <Tooltip template={<TextTooltipTemplate text={data.value} />}>
+        <Tooltip
+          template={
+            <TextTooltipTemplate
+              text={data.value === 'mpijob' ? 'Horovod' : data.value}
+            />
+          }
+        >
           {data.value === 'job' || data.value === '' ? (
             'Local'
           ) : data.value === 'dask' ? (
