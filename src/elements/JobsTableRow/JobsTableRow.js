@@ -17,7 +17,13 @@ const JobsTableRow = ({
   selectedItem
 }) => {
   return (
-    <div className="table_body__row parent_row">
+    <div
+      className={`table_body__row parent_row ${
+        content[index].uid === selectedItem.uid
+          ? 'parent_row active'
+          : 'parent_row'
+      }`}
+    >
       {Object.values(rowItem).map((value, i) => {
         return (
           <TableCell

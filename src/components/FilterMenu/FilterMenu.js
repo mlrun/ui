@@ -6,6 +6,7 @@ import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import ArtifactFilterLabels from '../ArtifactFilterLabels/ArtifactFilterLabels'
 
 import jobsActions from '../../actions/jobs'
 
@@ -23,11 +24,21 @@ const FilterMenu = ({
 }) => {
   const [itemsFilterTree] = useState(['Latest'])
   const [valueFilterTree, setValueFilterTree] = useState('')
+  const [labels, setLabels] = useState('')
 
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()
     onChange({ tag: value, project: match.params.projectName })
     setValueFilterTree(value)
+  }
+
+  const handleLabels = event => {
+    setLabels(event)
+    onChange({
+      tag: valueFilterTree,
+      project: match.params.projectName,
+      labels: event
+    })
   }
 
   return (
@@ -40,6 +51,12 @@ const FilterMenu = ({
             label="Tree :"
             items={itemsFilterTree}
             onChange={handleChangeArtifactFilterTree}
+          />
+        ) : filter === 'labels' ? (
+          <ArtifactFilterLabels
+            key={filter}
+            onChange={handleLabels}
+            value={labels}
           />
         ) : (
           <Select

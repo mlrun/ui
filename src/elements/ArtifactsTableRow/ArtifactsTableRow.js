@@ -18,7 +18,13 @@ const ArtifactsTableRow = ({
   handlePreview
 }) => {
   return (
-    <div className="table_body__row parent_row">
+    <div
+      className={`table_body__row ${
+        selectedItem.key === content[index].key
+          ? 'parent_row active'
+          : 'parent_row'
+      }`}
+    >
       {Object.values(rowItem).map((value, i) => {
         return (
           <TableCell

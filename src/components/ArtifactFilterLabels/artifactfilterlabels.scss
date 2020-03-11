@@ -1,0 +1,33 @@
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+
+.artifact_filter_labels_container {
+  display: flex;
+  max-width: 200px;
+  align-items: center;
+  border: $tableFilterBorder;
+  border-radius: 4px;
+  .label {
+    color: #7f7989;
+    padding: 10px 0 10px 10px;
+  }
+  input {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 18px;
+    color: $mulledWine;
+    display: flex;
+    flex: 1;
+    height: 38px;
+    width: 144px;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    outline: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+  }
+}

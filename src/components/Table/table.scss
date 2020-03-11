@@ -178,6 +178,9 @@
             display: block;
           }
         }
+        &.active {
+          background-color: $alabaster;
+        }
       }
     }
     &__parameters {
