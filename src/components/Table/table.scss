@@ -26,6 +26,10 @@
         @include flex(0.5, 80px);
       }
 
+      &__jobs_small:nth-child(6) {
+        @include flex(0.3, 90px);
+      }
+
       &__jobs_big {
         @include flex(1, 60px);
       }
@@ -105,6 +109,11 @@
 
         &__jobs_small {
           @include flex(0.5, 80px);
+          position: relative;
+        }
+
+        &__jobs_small:nth-child(6) {
+          @include flex(0.3, 90px);
         }
 
         &__jobs_big {
@@ -246,7 +255,6 @@
   }
   .showChips .table_body__chips_hidden {
     display: flex !important;
-    overflow: hidden;
   }
   .name_status_row {
     display: flex;

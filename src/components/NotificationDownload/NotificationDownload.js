@@ -2,7 +2,11 @@ import React from 'react'
 import { TransitionGroup, Transition } from 'react-transition-group'
 import { useSelector, useDispatch } from 'react-redux'
 
-import NotificationDownloadView from '../../elements/NotificationDownloadView/NotificationDownloadView'
+import NotificationDownloadView from './NotificationDownloadView'
+
+import HttpClient from '../../httpClient'
+import downloadFile from '../../utils/downloadFile'
+import notificationDownloadAction from '../../actions/notificationDownload'
 
 const NotificationDownload = () => {
   const state = useSelector(state => state.notificationDownloadStore)
@@ -17,6 +21,31 @@ const NotificationDownload = () => {
   const heightNotification = 60
   const offsetNotification = 60
   const duration = 500
+
+  const handleRetry = (id, url, file) => {
+    dispatch(notificationDownloadAction.removeNotificationDownload(id))
+    HttpClient(url)
+      .then(response => {
+        downloadFile(file, response)
+        dispatch(
+          notificationDownloadAction.setNotificationDownload({
+            status: response.status,
+            url: response.config.url,
+            id: Math.random()
+          })
+        )
+      })
+      .catch(() => {
+        dispatch(
+          notificationDownloadAction.setNotificationDownload({
+            status: 400,
+            url: url,
+            file: file,
+            id: Math.random()
+          })
+        )
+      })
+  }
 
   return (
     <TransitionGroup>
@@ -63,10 +92,12 @@ const NotificationDownload = () => {
                 }}
                 key={item.id}
                 status={item.status}
-                url={item.url}
-                file={item.file || null}
-                id={item.id}
-                dispatch={dispatch}
+                retry={{
+                  url: item.url,
+                  file: item.file || null,
+                  id: item.id,
+                  func: handleRetry
+                }}
               />
             )}
           </Transition>

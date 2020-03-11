@@ -2,11 +2,14 @@ import React, { useState } from 'react'
 
 import arrowIcon from '../../images/arrow.png'
 
-import './artifactsources.scss'
+import artifactData from '../Artifacts/artifactsData.json'
 
-const ArtifactSources = ({ header, sources }) => {
+import './artifactinfosources.scss'
+
+const ArtifactInfoSources = ({ header, sources }) => {
   const [isShow, setIsShow] = useState(false)
   const sourcesLength = Object.values(sources).length
+
   return (
     <li
       key={header}
@@ -30,16 +33,21 @@ const ArtifactSources = ({ header, sources }) => {
               alt="arrow"
             />
           )}
+
           <div className="sources_header">{header}</div>
-          <div className="sources_value">{`${Object.values(sources).length} ${
-            Object.values(sources).length <= 1 ? 'item' : 'items'
-          }`}</div>
+          <div className="sources_value">
+            {`${Object.values(sources).length} ${
+              Object.values(sources).length <= 1 ? 'item' : 'items'
+            }`}
+          </div>
         </div>
+
         {isShow && (
           <div className="source_table">
             <div className="source_item_header">
-              <div className="source_item_header_name">Name</div>
-              <div className="source_item_header_path">Path</div>
+              {artifactData.sources.map(item => (
+                <div className={`source_item_header_${item}`}>{item}</div>
+              ))}
             </div>
             {Object.entries(sources).map(([key, value], index) => (
               <div key={`${key}-${index}`} className="source_item">
@@ -54,4 +62,4 @@ const ArtifactSources = ({ header, sources }) => {
   )
 }
 
-export default ArtifactSources
+export default ArtifactInfoSources

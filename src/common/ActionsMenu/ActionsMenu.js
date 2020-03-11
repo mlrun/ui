@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import actionMenuIcon from '../../images/elipsis.png'
-
 import yamlIcon from '../../images/yaml.png'
 
 import './actionsMenu.scss'
@@ -11,11 +10,11 @@ const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   let idTimeout = null
 
-  const showActionsList = e => {
+  const showActionsList = () => {
     setIsShowMenu(!isShowMenu)
   }
 
-  const handleMouseLeave = event => {
+  const handleMouseLeave = () => {
     if (isShowMenu) {
       idTimeout = setTimeout(() => {
         setIsShowMenu(false)

@@ -12,11 +12,6 @@
     padding: 10px 0 10px 10px;
   }
   input {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 15px;
-    line-height: 18px;
     color: $mulledWine;
     display: flex;
     flex: 1;
@@ -26,8 +21,5 @@
     border-radius: 4px;
     padding: 10px;
     outline: none;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow-x: hidden;
   }
 }

@@ -86,3 +86,14 @@ iframe {
     color: $mulledWine;
   }
 }
+
+input {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 18px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}

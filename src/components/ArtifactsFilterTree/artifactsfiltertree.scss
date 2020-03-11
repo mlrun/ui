@@ -13,18 +13,12 @@
   color: $mulledWine;
   input {
     border: none;
+    outline: none;
     height: 100%;
     border-radius: $mainBorderRadius;
-    outline: none;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 15px;
-    line-height: 18px;
     padding: 10px;
     width: 125px;
     color: $mulledWine;
-    text-overflow: ellipsis;
   }
   .drop_down {
     min-width: 25px;
