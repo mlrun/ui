@@ -24,13 +24,7 @@ const Table = ({
 }) => {
   const state = useSelector(state => state.artifactsStore.selectArtifact)
   const hideChips = e => {
-    if (
-      e.target.className !== 'table__item_details_item_data__labels' &&
-      e.target.className !== 'table-body__labels' &&
-      e.target.className !== 'table-body__results' &&
-      e.target.className !== 'table-body__parameters' &&
-      e.target.className !== 'table__item_details_item_data__parameters'
-    ) {
+    if (e.target.getAttribute('count-chips') === null) {
       const block = document.getElementsByClassName(
         'table-body__chips__block showChips'
       )[0]
@@ -41,13 +35,7 @@ const Table = ({
   }
 
   const handleShowElements = e => {
-    if (
-      e.target.className === 'table__item_details_item_data__labels' ||
-      e.target.className === 'table-body__labels' ||
-      e.target.className === 'table-body__results' ||
-      e.target.className === 'table-body__parameters' ||
-      e.target.className === 'table__item_details_item_data__parameters'
-    ) {
+    if (e.target.getAttribute('count-chips')) {
       let blocksArr = document.getElementsByClassName('showChips')
       const parentBlock = e.target.closest('.table-body__chips__block')
       if (

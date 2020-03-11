@@ -146,7 +146,9 @@ Artifacts.propTypes = {
   artifactsStore: PropTypes.shape({}).isRequired,
   fetchArtifacts: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  selectArtifact: PropTypes.func.isRequired
+  selectArtifact: PropTypes.func.isRequired,
+  setArtifacts: PropTypes.func.isRequired,
+  removeSelectArtifact: PropTypes.func.isRequired
 }
 
 export default connect(

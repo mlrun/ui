@@ -22,7 +22,11 @@ const JobsTableRow = ({
   const parent = useRef()
   return (
     <div
-      className="table-body__row parent-row"
+      className={`table-body__row ${
+        content[index].uid === selectedItem.uid
+          ? 'parent-row active'
+          : 'parent-row'
+      }`}
       onClick={e => handleExpandRow(e, rowItem)}
       ref={parent}
     >

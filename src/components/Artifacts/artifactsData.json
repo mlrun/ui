@@ -12,8 +12,9 @@
     "Sources"
   ],
   "detailsMenu": ["info", "preview"],
-  "filters": ["period", "tree"],
+  "filters": ["period", "tree", "labels"],
   "page": "artifacts",
+  "sources": ["name", "path"],
   "tableHeaders": [
     {
       "header": "Name",

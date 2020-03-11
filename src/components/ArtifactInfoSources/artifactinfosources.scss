@@ -1,7 +1,7 @@
 @import '../../scss/shadows.scss';
 @import '../../scss/colors.scss';
-@import '../../scss//mixins.scss';
-@import '../../scss//borders.scss';
+@import '../../scss/mixins.scss';
+@import '../../scss/borders.scss';
 
 .table__item_details_item {
   .wrapper_sources {
@@ -61,10 +61,12 @@
           padding: 18px;
           &_name {
             min-width: 200px;
+            text-transform: capitalize;
             @include detailsItem;
           }
           &_path {
             min-width: 100px;
+            text-transform: capitalize;
             @include detailsItem;
           }
         }
@@ -85,6 +87,7 @@
   }
   &.sources {
     padding: 0;
+    margin-left: -6px;
     &.shadow {
       box-shadow: $previewBoxShadow;
     }

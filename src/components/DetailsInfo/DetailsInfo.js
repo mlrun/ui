@@ -7,9 +7,9 @@ import artifactsData from '../Artifacts/artifactsData'
 
 import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsInfoItem'
 import ArtifactsDetailsInfoItem from '../../elements/ArtifactsDetailsInfoItem/ArtifactsDetailsInfoItem'
+import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 
 import './detailsInfo.scss'
-import ArtifactSources from '../ArtifactSources/ArtifactSources'
 
 const DetailsInfo = ({ item, handleShowElements, page }) => {
   const jobsInfoContent = [
@@ -125,7 +125,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                   )
                 case item.sources: {
                   return (
-                    <ArtifactSources
+                    <ArtifactInfoSources
                       key={header}
                       header={header}
                       sources={

@@ -22,7 +22,7 @@
       @include tableColumnFlex(19.75%);
     }
     .artifacts_medium {
-      @include tableColumnFlex(14%);
+      @include tableColumnFlex(15%);
     }
     .artifacts_small {
       @include tableColumnFlex(5.5%);
@@ -37,11 +37,11 @@
       padding-left: 20px;
     }
     .artifacts_small:nth-child(5) {
-      @include tableColumnFlex(9.5%)
+      @include tableColumnFlex(9.5%);
     }
     .artifacts_small:nth-child(9),
     .artifacts_small:nth-child(10) {
-      @include tableColumnFlex(3.5%)
+      @include tableColumnFlex(3.5%);
     }
   }
   &-head {
@@ -83,6 +83,9 @@
               display: flex;
             }
           }
+        }
+        &.active {
+          background-color: $alabaster;
         }
       }
     }

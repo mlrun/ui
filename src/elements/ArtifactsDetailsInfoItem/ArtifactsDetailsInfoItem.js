@@ -7,11 +7,10 @@ const ArtifactsDetailsInfoItem = ({
   info,
   handleShowElements,
   chipsClassName,
-  target_path,
-  page
+  target_path
 }) => {
   return (
-    <li className={`table__item_details_item ${page}`}>
+    <li className="table__item_details_item">
       <div className="table__item_details_item_header">{header}</div>
       {chips && (
         <div className="table__item_details_item_data">

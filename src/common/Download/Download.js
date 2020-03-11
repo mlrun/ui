@@ -77,18 +77,16 @@ const Download = ({ path, schema, setNotificationDownload }) => {
     }
   }, [downloadCallback, downloadRef])
 
+  const handleClick = () => {
+    if (downloadRef.current && downloadRef.current.cancel) {
+      downloadRef.current.cancel('cancel')
+      return
+    }
+    setDownload(!isDownload)
+  }
+
   return (
-    <div
-      className="download_container"
-      ref={downloadRef}
-      onClick={() => {
-        if (downloadRef.current && downloadRef.current.cancel) {
-          downloadRef.current.cancel('cancel')
-          return
-        }
-        setDownload(!isDownload)
-      }}
-    >
+    <div className="download_container" ref={downloadRef} onClick={handleClick}>
       <ProgressRing
         radius="20"
         stroke="3"
@@ -147,7 +145,8 @@ Download.defaultProps = {
 
 Download.propTypes = {
   path: PropTypes.string.isRequired,
-  schema: PropTypes.string
+  schema: PropTypes.string,
+  setNotificationDownload: PropTypes.func.isRequired
 }
 
 export default React.memo(connect(null, notificationDownloadAction)(Download))

@@ -10,7 +10,7 @@ const Chip = ({ className, onClick, value }) => {
     )
   }
   return (
-    <span className={className} onClick={onClick}>
+    <span className={className} count-chips="true" onClick={onClick}>
       {value}
     </span>
   )
