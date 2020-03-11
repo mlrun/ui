@@ -2,28 +2,22 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
 
-.content {
-  &__action_bar {
-    padding: 23px 24px;
+.content__action_bar {
+  &__filters {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+  &__buttons {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    &__filters {
-      display: flex;
-      align-items: center;
-      flex: 1;
-    }
-    &_refresh {
-      margin-left: auto;
-      button {
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        &:focus,
-        &:active {
-          outline: none;
-          box-shadow: none;
-        }
+    width: 90px;
+    button {
+      width: 40px;
+      height: 40px;
+      &:hover {
+        background-color: $alabaster;
+        border-radius: 20px;
       }
     }
   }

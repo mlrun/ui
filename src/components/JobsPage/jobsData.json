@@ -3,7 +3,6 @@
   "jobsInfoHeaders": [
     "UID",
     "Start time",
-    "Status",
     "Parameters",
     "Results",
     "Labels",
@@ -17,15 +16,15 @@
       "size": "jobs_medium"
     },
     {
+      "header": "Type",
+      "size": "jobs_small"
+    },
+    {
       "header": "UID",
       "size": "jobs_small"
     },
     {
       "header": "Start time",
-      "size": "jobs_small"
-    },
-    {
-      "header": "Status",
       "size": "jobs_small"
     },
     {
@@ -46,5 +45,7 @@
     }
   ],
   "detailsMenu": ["info", "inputs", "artifacts", "results", "logs"],
-  "filters": ["period", "status"]
+  "filters": ["period", "status", "group by"],
+  "initialStateFilter": "All",
+  "initialGroupFilter": "None"
 }

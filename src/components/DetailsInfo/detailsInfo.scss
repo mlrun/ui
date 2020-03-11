@@ -38,14 +38,12 @@
       align-items: center;
       &__parameters {
         @include chip($parametersBorder);
-        margin: 8px 8px 0 0;
       }
       &__labels {
         @include chip($labelBorder);
       }
       &__results {
         @include chip($resultsBorder);
-        margin: 8px 8px 0 0;
       }
       .chips_wrapper {
         display: flex;

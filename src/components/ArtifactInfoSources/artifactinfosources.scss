@@ -87,6 +87,7 @@
   }
   &.sources {
     padding: 0;
+    margin-left: -6px;
     &.shadow {
       box-shadow: $previewBoxShadow;
     }

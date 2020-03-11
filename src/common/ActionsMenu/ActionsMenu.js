@@ -25,6 +25,7 @@ const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
   const handleMouseEnter = () => {
     if (idTimeout) clearTimeout(idTimeout)
   }
+
   return (
     <div
       className="row__actions__container"

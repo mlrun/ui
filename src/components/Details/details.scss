@@ -16,10 +16,10 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  &__header {
+  .item-header {
     display: flex;
     justify-content: space-between;
-    &_data {
+    &__data {
       h3 {
         margin: 27px 24px 10px;
         font-size: 24px;
@@ -36,17 +36,12 @@
         margin-left: 10px;
       }
     }
-    &_buttons {
+    &__buttons {
       display: flex;
       align-items: center;
       a {
         display: inline-block;
-        margin: 21px;
-        margin-left: 10px;
-      }
-      div {
-        display: flex;
-        flex-direction: row;
+        margin: 21px 21px 21px 10px;
       }
     }
   }
@@ -146,7 +141,7 @@
     min-height: 400px;
     font-family: 'Source Code Pro', 'Courier New', monospace;
     width: 100%;
-    button {
+    .logs_refresh {
       background-color: $white;
       border: 1px solid $cornflowerBlue;
       color: $cornflowerBlue;
@@ -189,7 +184,7 @@
     .inputs_container {
       width: 100%;
     }
-    button {
+    .preview_popout {
       position: absolute;
       right: 0;
       margin: 16px;

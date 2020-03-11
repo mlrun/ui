@@ -9,6 +9,7 @@ import NotificationDownload from '../NotificationDownload/NotificationDownload'
 import './table.scss'
 
 const Table = ({
+  groupLatestJob,
   handleCancel,
   match,
   tableContent,
@@ -18,13 +19,14 @@ const Table = ({
   convertToYaml,
   tableHeaders,
   detailsMenu,
-  page
+  page,
+  handleExpandRow
 }) => {
   const state = useSelector(state => state.artifactsStore.selectArtifact)
   const hideChips = e => {
     if (e.target.getAttribute('count-chips') === null) {
       const block = document.getElementsByClassName(
-        'table_body__chips__block showChips'
+        'table-body__chips__block showChips'
       )[0]
       if (block) {
         block.classList.remove('showChips')
@@ -35,7 +37,7 @@ const Table = ({
   const handleShowElements = e => {
     if (e.target.getAttribute('count-chips')) {
       let blocksArr = document.getElementsByClassName('showChips')
-      const parentBlock = e.target.closest('.table_body__chips__block')
+      const parentBlock = e.target.closest('.table-body__chips__block')
       if (
         blocksArr.length > 0 &&
         !parentBlock.classList.contains('showChips')
@@ -50,6 +52,7 @@ const Table = ({
   return (
     <>
       <TableView
+        groupLatestJob={groupLatestJob}
         hideChips={hideChips}
         handleShowElements={handleShowElements}
         handleCancel={handleCancel}
@@ -62,6 +65,7 @@ const Table = ({
         tableHeaders={tableHeaders}
         detailsMenu={detailsMenu}
         page={page}
+        handleExpandRow={handleExpandRow}
       />
       <NotificationDownload />
       {state.isPreview && (
@@ -72,6 +76,8 @@ const Table = ({
 }
 
 Table.defaultProps = {
+  groupLatestJob: [],
+  handleExpandRow: () => {},
   selectedItem: {}
 }
 
@@ -79,11 +85,17 @@ Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   convertToYaml: PropTypes.func.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
+  groupLatestJob: PropTypes.arrayOf(PropTypes.shape({})),
+  handleCancel: PropTypes.func.isRequired,
+  handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}),
-  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  tableContent: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
+  ]).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

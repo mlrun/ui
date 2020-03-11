@@ -15,8 +15,8 @@ const ArtifactInfoSources = ({ header, sources }) => {
       key={header}
       className={`${
         !isShow
-          ? 'table__item_details_item artifacts sources'
-          : 'table__item_details_item artifacts sources shadow'
+          ? 'table__item_details_item sources'
+          : 'table__item_details_item sources shadow'
       }`}
     >
       <div className="wrapper_sources">
@@ -46,7 +46,9 @@ const ArtifactInfoSources = ({ header, sources }) => {
           <div className="source_table">
             <div className="source_item_header">
               {artifactData.sources.map(item => (
-                <div className={`source_item_header_${item}`}>{item}</div>
+                <div key={item} className={`source_item_header_${item}`}>
+                  {item}
+                </div>
               ))}
             </div>
             {Object.entries(sources).map(([key, value], index) => (

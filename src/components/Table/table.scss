@@ -11,185 +11,120 @@
   min-height: 600px;
   &__content {
     width: 100%;
+    .jobs_medium {
+      @include tableColumnFlex(18%);
+      min-width: 18%;
+    }
+    .jobs_small {
+      @include tableColumnFlex(8.5%);
+    }
+    .jobs_big {
+      @include tableColumnFlex(19.75%);
+    }
+    .artifacts_medium {
+      @include tableColumnFlex(15%);
+    }
+    .artifacts_small {
+      @include tableColumnFlex(5.5%);
+    }
+    .artifacts_big {
+      @include tableColumnFlex(21%);
+    }
+    .artifacts_date {
+      @include tableColumnFlex(11%);
+    }
+    .artifacts_small:nth-child(3) {
+      padding-left: 20px;
+    }
+    .artifacts_small:nth-child(5) {
+      @include tableColumnFlex(9.5%);
+    }
+    .artifacts_small:nth-child(9),
+    .artifacts_small:nth-child(10) {
+      @include tableColumnFlex(3.5%);
+    }
   }
-  &_head {
+  &-head {
     display: flex;
-    &_item {
+    &__item {
       @include tableDet;
       @include tableHeader;
     }
-    .header {
-      &__jobs_medium {
-        @include flex(0.5, 240px);
-      }
-      &__jobs_small {
-        @include flex(0.5, 80px);
-      }
-
-      &__jobs_small:nth-child(6) {
-        @include flex(0.3, 90px);
-      }
-
-      &__jobs_big {
-        @include flex(1, 60px);
-      }
-      &__artifacts_medium {
-        @include flex(0.5, 240px);
-      }
-      &__artifacts_small {
-        @include flex(0.2, 80px);
-      }
-      &__artifacts_big {
-        @include flex(1, 70px);
-      }
-      &__artifacts_date {
-        @include flex(0.5, 60px);
-        span {
-          padding-left: 10%;
-          width: 100%;
-        }
-      }
-      &__artifacts_small:nth-child(3) {
-        span {
-          padding-left: 20%;
-        }
-      }
-      &__artifacts_small:nth-child(5) {
-        flex: 0.5;
-      }
-      &__artifacts_small:nth-child(6) {
-        span {
-          padding-left: 20%;
-        }
-      }
-      &__artifacts_small:nth-child(9) {
-        @include flex(0.1, 50px);
-      }
-      &__artifacts_small:nth-child(10) {
-        @include flex(0.1, 60px);
-      }
-    }
   }
-  &_body {
+  &-body {
     color: $mulledWine;
     &__row {
       position: relative;
       display: flex;
       min-height: 50px;
-      &__cell {
-        @include tableDet;
-        padding: 8px 0;
-        font-size: 15px;
-        line-height: 18px;
-        font-weight: 400;
-        flex-wrap: wrap;
-        a {
-          text-decoration: none;
-          color: $cornflowerBlue;
-          margin: 0;
-          span {
-            display: block;
-            color: $topaz;
-          }
-        }
-        i {
-          margin: 0 17px;
-        }
-        button {
-          border: none;
-          background-color: transparent;
-          cursor: pointer;
-          margin-left: 10%;
-        }
-      }
-      .cell {
-        &__jobs_medium {
-          @include flex(0.5, 240px);
-        }
-
-        &__jobs_small {
-          @include flex(0.5, 80px);
-          position: relative;
-        }
-
-        &__jobs_small:nth-child(6) {
-          @include flex(0.3, 90px);
-        }
-
-        &__jobs_big {
-          @include flex(1, 90px);
-          .chips_wrapper {
-            display: flex;
-            flex: 1;
-          }
-        }
-
-        &__artifacts_medium {
-          @include flex(0.5, 240px);
-        }
-
-        &__artifacts_small {
-          @include flex(0.2, 80px);
-        }
-
-        &__artifacts_big {
-          @include flex(1, 60px);
-        }
-
-        &__artifacts_date {
-          @include flex(0.5, 60px);
-          span {
-            padding-left: 10%;
-            width: 100%;
-          }
-        }
-
-        &__artifacts_small:nth-child(3) {
-          span {
-            padding-left: 20%;
-          }
-        }
-
-        &__artifacts_small:nth-child(6) {
-          span {
-            padding-left: 20%;
-          }
-        }
-
-        &__artifacts_small:nth-child(5) {
-          @include flex(0.5, 80px);
-        }
-
-        &__artifacts_small:nth-child(9) {
-          @include flex(0.1, 50px);
-        }
-
-        &__artifacts_small:nth-child(10) {
-          @include flex(0.1, 60px);
-        }
-      }
-      &__cell {
-        &_path {
-          max-width: 50px;
-          min-width: 100%;
-          white-space: nowrap;
-          overflow-x: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-      &.parent_row {
-        .row__actions {
-          display: none;
-        }
+      flex-direction: row;
+      &.parent-row {
         &:hover {
           background-color: $alabaster;
           .row__actions {
             display: block;
           }
         }
+        &-expanded {
+          flex-direction: column;
+        }
+        .row_grouped-by {
+          width: 100%;
+          .table-body__row {
+            &:first-child {
+              .table-body__cell {
+                border-bottom: none;
+                .expand-arrow {
+                  transform: rotate(90deg);
+                }
+              }
+            }
+            &__cell {
+              display: flex;
+            }
+          }
+        }
         &.active {
           background-color: $alabaster;
         }
+      }
+    }
+    &__cell {
+      @include tableDet;
+      padding: 8px 0;
+      font-size: 15px;
+      line-height: 18px;
+      font-weight: 400;
+      flex-wrap: wrap;
+      a {
+        text-decoration: none;
+        color: $cornflowerBlue;
+        margin: 0;
+        span {
+          display: block;
+          color: $topaz;
+        }
+      }
+      i {
+        margin: 0 17px;
+      }
+      button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        margin-left: 10%;
+      }
+      .expand-arrow {
+        position: absolute;
+        left: 40px;
+        cursor: pointer;
+      }
+      &_path {
+        max-width: 50px;
+        min-width: 100%;
+        white-space: nowrap;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
       }
     }
     &__parameters {
@@ -237,7 +172,7 @@
           width: 12px;
           height: 12px;
           transform: rotate(-45deg);
-          background-color: inherit;
+          background-color: $white;
           position: absolute;
           bottom: -6px;
           right: 20px;
@@ -253,7 +188,7 @@
       }
     }
   }
-  .showChips .table_body__chips_hidden {
+  .showChips .table-body__chips_hidden {
     display: flex !important;
   }
   .name_status_row {
@@ -262,7 +197,6 @@
     span {
       margin-left: 10px;
     }
-    margin-bottom: 5px;
   }
   .date__uid_row {
     display: flex;

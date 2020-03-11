@@ -1,4 +1,4 @@
-.row__actions {
+.table-body__cell.row__actions, .row__actions {
   display: none;
   position: absolute;
   right: -10px;
@@ -6,19 +6,19 @@
   border-bottom: none !important;
   &__container {
     position: relative;
-    button {
-      border: none;
-      background-color: transparent;
-      cursor: pointer;
-      &:active,
-      &:focus {
-        outline: none;
-        box-shadow: none;
-      }
+  }
+  button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    &:active,
+    &:focus {
+      outline: none;
+      box-shadow: none;
     }
-    &_visible .row__actions__body {
-      display: block;
-    }
+  }
+  &_visible .row__actions__body {
+    display: block;
   }
   &__body {
     z-index: 999;
