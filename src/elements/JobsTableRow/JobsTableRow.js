@@ -23,8 +23,13 @@ const JobsTableRow = ({
   return (
     <div
       className={`table-body__row ${
-        content[index].uid === selectedItem.uid
+        content[index].uid === selectedItem.uid &&
+        parent.current &&
+        !parent.current.classList.value.includes('parent-row-expanded')
           ? 'parent-row active'
+          : parent.current &&
+            parent.current.classList.value.includes('parent-row-expanded')
+          ? 'parent-row parent-row-expanded'
           : 'parent-row'
       }`}
       onClick={e => handleExpandRow(e, rowItem)}
