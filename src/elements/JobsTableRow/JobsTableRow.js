@@ -46,7 +46,16 @@ const JobsTableRow = ({
           </div>
           {tableContent.map((job, index) => {
             return (
-              <div className="table-body__row" key={index}>
+              <div
+                className={
+                  RegExp(job.uid.value.replace('...', ''), 'gi').test(
+                    selectedItem.uid
+                  )
+                    ? 'table-body__row active'
+                    : 'table-body__row'
+                }
+                key={index}
+              >
                 {Object.values(job).map((value, i) => {
                   const currentItem =
                     content.length > 0 &&

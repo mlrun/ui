@@ -127,6 +127,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
         return setExpandedItems(newArray)
       } else {
         setExpandedItems([...expandedItems, item])
+        parentRow.classList.remove('active')
         parentRow.classList.add('parent-row-expanded')
       }
     }
