@@ -105,8 +105,8 @@ const Artifacts = ({
   const convertToYaml = item => {
     document.getElementById('yaml_modal').style.display = 'flex'
     setConvertedYaml(
-      yaml.safeDump(item, {
-        lineWidth: 1000
+      yaml.dump(item, {
+        lineWidth: -1
       })
     )
   }

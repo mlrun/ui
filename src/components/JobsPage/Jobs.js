@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import yaml from 'js-yaml'
-
 import jobsActions from '../../actions/jobs'
 import jobsData from './jobsData'
 import createJobsContent from '../../utils/createJobsContent'
@@ -110,8 +109,8 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
       job => job.metadata.uid === item.uid
     )
     setConvertedYaml(
-      yaml.safeDump(jobJson, {
-        lineWidth: 1000
+      yaml.dump(jobJson[0], {
+        lineWidth: -1
       })
     )
   }

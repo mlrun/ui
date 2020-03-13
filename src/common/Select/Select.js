@@ -29,7 +29,7 @@ const Select = ({ filter, onClick, value }) => {
       onClick={() => setOpen(!isOpen)}
     >
       <div className="select_header">
-        <div className="select_header_label">{filter} : </div>
+        <div className="select_header_label">{filter}:</div>
         <div className="select_header_value">{value}</div>
         <img src={caret} alt="caret" />
       </div>

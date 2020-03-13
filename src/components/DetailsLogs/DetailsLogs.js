@@ -12,8 +12,8 @@ const DetailsLogs = ({ jobsStore, fetchJobLogs, match }) => {
   const [loading, setLoading] = useState(false)
 
   const refreshLogs = useCallback(
-    noCahche => {
-      if (noCahche || jobsStore.logs.length === 0) {
+    noCache => {
+      if (noCache || jobsStore.logs.length === 0) {
         setLoading(true)
         fetchJobLogs(
           jobsStore.selectedJob.uid,
