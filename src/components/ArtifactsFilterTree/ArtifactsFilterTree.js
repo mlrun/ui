@@ -22,6 +22,19 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
     input.blur()
   }
 
+  const handleKeyDown = event => {
+    if (event.keyCode === 13 && event.target.value.length !== 0) {
+      event.preventDefault()
+      let searchItem = items.filter(item =>
+        RegExp(`^${filterTree}`, 'i').test(item)
+      )[0]
+      setFilterTree(searchItem || event.target.value)
+      onChange(searchItem || event.target.value)
+      event.target.blur()
+      setIsDropDownMenu(false)
+    }
+  }
+
   useEffect(() => {
     if (isDropDownMenuOpen) {
       window.addEventListener('mousedown', handlerOverall)
@@ -54,18 +67,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
             event.target.select()
           }
         }}
-        onKeyDown={event => {
-          if (event.keyCode === 13 && event.target.value.length !== 0) {
-            event.preventDefault()
-            let searchItem = items.filter(item =>
-              RegExp(`^${filterTree}`, 'i').test(item)
-            )[0]
-            setFilterTree(searchItem || event.target.value)
-            onChange(searchItem || event.target.value)
-            event.target.blur()
-            setIsDropDownMenu(false)
-          }
-        }}
+        onKeyDown={handleKeyDown}
       />
       <div
         className="drop_down"

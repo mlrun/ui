@@ -9,7 +9,7 @@ import ProjectCard from '../../elements/ProjectCard/ProjectCard'
 
 import './projects.scss'
 
-const Projects = ({ projects, fetchProjects, match }) => {
+const Projects = ({ projects, error, fetchProjects, match }) => {
   useEffect(() => {
     fetchProjects()
   }, [fetchProjects])
@@ -24,8 +24,12 @@ const Projects = ({ projects, fetchProjects, match }) => {
           projects.map(project => {
             return <ProjectCard key={project} project={project} />
           })
-        ) : (
+        ) : error.length === 0 ? (
           <Loader />
+        ) : (
+          <span className="error_container">
+            <h1>No projects found</h1>
+          </span>
         )}
       </div>
     </>
@@ -33,7 +37,8 @@ const Projects = ({ projects, fetchProjects, match }) => {
 }
 
 const mapStateToProps = state => ({
-  projects: state.projectStore.projects
+  projects: state.projectStore.projects,
+  error: state.projectStore.error
 })
 
 export default connect(mapStateToProps, projectsAction)(Projects)

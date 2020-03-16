@@ -38,7 +38,13 @@ const TableCell = ({
           data.type === 'date' ? 'jobs_medium' : data.size
         }`}
       >
-        <Link to={link} onClick={() => selectItem(item)} className="link">
+        <Link
+          to={link}
+          onClick={() => {
+            selectItem(item)
+          }}
+          className="link"
+        >
           <div className="name_status_row">
             {data && data.value}
             {item.state && (
@@ -68,6 +74,17 @@ const TableCell = ({
         {expandLink && (
           <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
         )}
+      </div>
+    )
+  } else if (data.type === 'uid') {
+    return (
+      <div className={`table-body__cell ${data.size}`}>
+        <Tooltip
+          textShow={true}
+          template={<TextTooltipTemplate text={data.value} />}
+        >
+          {truncateUid(data.value)}
+        </Tooltip>
       </div>
     )
   } else if (firstRow) {
@@ -103,6 +120,17 @@ const TableCell = ({
               alt="Type"
             />
           )}
+        </Tooltip>
+      </div>
+    )
+  } else if (data.type === 'uid') {
+    return (
+      <div className={`table-body__cell ${data.size}`}>
+        <Tooltip
+          textShow={true}
+          template={<TextTooltipTemplate text={data.value} />}
+        >
+          {truncateUid(data.value)}
         </Tooltip>
       </div>
     )

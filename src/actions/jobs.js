@@ -60,6 +60,9 @@ const jobsActions = {
   setJobLogs: logs => ({
     type: 'SET_JOB_LOGS',
     payload: logs
+  }),
+  removeJobLogs: () => ({
+    type: 'REMOVE_JOB_LOGS'
   })
 }
 

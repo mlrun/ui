@@ -27,6 +27,11 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         logs: payload
       }
+    case 'REMOVE_JOB_LOGS':
+      return {
+        ...state,
+        logs: ''
+      }
     default:
       return state
   }

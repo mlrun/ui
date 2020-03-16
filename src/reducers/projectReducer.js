@@ -1,5 +1,6 @@
 const initialState = {
-  projects: []
+  projects: [],
+  error: ''
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -8,6 +9,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         projects: payload
+      }
+    case 'PROJECTS_ERROR':
+      return {
+        ...state,
+        error: payload
       }
     default:
       return state
