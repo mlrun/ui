@@ -35,6 +35,16 @@ const Details = ({
 }) => {
   const dispatch = useDispatch()
   const history = useHistory()
+
+  const handlePreview = () => {
+    history.push(`/projects/${match.params.projectName}/artifacts`)
+    dispatch(
+      artifactsAction.selectArtifact({
+        isPreview: true,
+        item
+      })
+    )
+  }
   return (
     <div className="table__item" onClick={hideChips}>
       <div className="item-header">
@@ -103,18 +113,7 @@ const Details = ({
       <div className="preview_container">
         {match.params.tab === 'preview' && (
           <>
-            <button
-              onClick={() => {
-                history.push(`/projects/${match.params.projectName}/artifacts`)
-                dispatch(
-                  artifactsAction.selectArtifact({
-                    isPreview: true,
-                    item
-                  })
-                )
-              }}
-              className="preview_popout"
-            >
+            <button onClick={() => handlePreview()} className="preview_popout">
               <img src={popout} alt="preview" />
             </button>
             <ArtifactsPreview artifact={item} />

@@ -8,30 +8,26 @@ import Loader from '../../common/Loader/Loader'
 
 import refreshIcon from '../../images/refresh-logs.png'
 
-const DetailsLogs = ({ jobsStore, fetchJobLogs, match }) => {
+const DetailsLogs = ({ jobsStore, fetchJobLogs, removeJobLogs, match }) => {
   const [loading, setLoading] = useState(false)
 
   const refreshLogs = useCallback(
     noCache => {
-      if (noCache || jobsStore.logs.length === 0) {
-        setLoading(true)
-        fetchJobLogs(
-          jobsStore.selectedJob.uid,
-          match.params.projectName
-        ).then(() => setLoading(false))
-      }
+      setLoading(true)
+      fetchJobLogs(
+        jobsStore.selectedJob.uid,
+        match.params.projectName
+      ).then(() => setLoading(false))
     },
-    [
-      fetchJobLogs,
-      jobsStore.logs.length,
-      jobsStore.selectedJob.uid,
-      match.params.projectName
-    ]
+    [fetchJobLogs, jobsStore.selectedJob.uid, match.params.projectName]
   )
 
   useEffect(() => {
     refreshLogs()
-  }, [refreshLogs])
+    return () => {
+      removeJobLogs()
+    }
+  }, [refreshLogs, removeJobLogs])
 
   return (
     <div className="table__item_logs">

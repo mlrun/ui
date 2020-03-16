@@ -5,7 +5,6 @@ import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 import jobsData from '../../components/JobsPage/jobsData'
-import { truncateUid } from '../../utils'
 
 const JobsTableRow = ({
   content,
@@ -23,7 +22,7 @@ const JobsTableRow = ({
   return (
     <div
       className={`table-body__row ${
-        content[index].uid === selectedItem.uid &&
+        rowItem.uid.value === selectedItem.uid &&
         parent.current &&
         !parent.current.classList.value.includes('parent-row-expanded')
           ? 'parent-row active'
@@ -64,9 +63,7 @@ const JobsTableRow = ({
                 {Object.values(job).map((value, i) => {
                   const currentItem =
                     content.length > 0 &&
-                    content.find(
-                      item => truncateUid(item.uid) === job.uid.value
-                    )
+                    content.find(item => item.uid === job.uid.value)
                   return (
                     <TableCell
                       data={i === 0 ? job.startTime : value}
