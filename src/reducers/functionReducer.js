@@ -1,40 +1,34 @@
 import {
-  FETCH_JOBS_BEGIN,
-  FETCH_JOBS_FAILURE,
-  FETCH_JOBS_SUCCESS
+  FETCH_FUNCTIONS_BEGIN,
+  FETCH_FUNCTIONS_FAILURE,
+  FETCH_FUNCTIONS_SUCCESS
 } from '../constants'
 
 const initialState = {
-  jobs: [],
-  logs: '',
+  functions: [],
   loading: false,
   error: null
 }
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case FETCH_JOBS_BEGIN:
+    case FETCH_FUNCTIONS_BEGIN:
       return {
         ...state,
         loading: true
       }
-    case FETCH_JOBS_SUCCESS:
+    case FETCH_FUNCTIONS_SUCCESS:
       return {
         ...state,
-        jobs: payload,
+        functions: payload,
         loading: false
       }
-    case FETCH_JOBS_FAILURE:
+    case FETCH_FUNCTIONS_FAILURE:
       return {
         ...state,
-        jobs: [],
+        functions: [],
         loading: false,
         error: payload
-      }
-    case 'SET_JOB_LOGS':
-      return {
-        ...state,
-        logs: payload
       }
     default:
       return state

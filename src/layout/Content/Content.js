@@ -5,7 +5,6 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
-import Loader from '../../common/Loader/Loader'
 
 import './content.scss'
 
@@ -23,7 +22,6 @@ const Content = ({
   selectedItem,
   handleSelectItem,
   convertToYaml,
-  loading,
   tableHeaders,
   detailsMenu,
   page,
@@ -62,9 +60,7 @@ const Content = ({
         </div>
         <YamlModal convertedYaml={convertedYaml} />
         <div className="table_container">
-          {loading ? (
-            <Loader />
-          ) : content.length !== 0 ? (
+          {content.length !== 0 ? (
             <Table
               groupLatestJob={groupLatestJob}
               handleCancel={handleCancel}
@@ -74,11 +70,11 @@ const Content = ({
               selectedItem={selectedItem}
               handleSelectItem={handleSelectItem}
               convertToYaml={convertToYaml}
-              loading={loading}
               tableHeaders={tableHeaders}
               detailsMenu={detailsMenu}
               page={page}
               handleExpandRow={handleExpandRow}
+              groupFilter={groupFilter}
             />
           ) : (
             <h2 className="no_data">No data to display!</h2>
@@ -102,7 +98,6 @@ Content.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired,

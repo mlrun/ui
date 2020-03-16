@@ -59,7 +59,7 @@ const TableCell = ({
             <div className="date__uid_row">
               <span>
                 {data.type !== 'date' &&
-                  formatDatetime(new Date(item.startTime))}
+                  formatDatetime(new Date(item.startTime || item.updated))}
               </span>
               <span>{truncateUid(item.uid)}</span>
             </div>

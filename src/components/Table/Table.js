@@ -20,9 +20,15 @@ const Table = ({
   tableHeaders,
   detailsMenu,
   page,
-  handleExpandRow
+  handleExpandRow,
+  groupFilter
 }) => {
   const state = useSelector(state => state.artifactsStore.selectArtifact)
+
+  // useEffect(() => {
+
+  // })
+
   const hideChips = e => {
     if (
       e.target.className !== 'table__item_details_item_data__labels' &&
@@ -78,6 +84,7 @@ const Table = ({
         detailsMenu={detailsMenu}
         page={page}
         handleExpandRow={handleExpandRow}
+        groupFilter={groupFilter}
       />
       <NotificationDownload />
       {state.isPreview && (

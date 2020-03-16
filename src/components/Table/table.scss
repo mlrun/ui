@@ -43,12 +43,25 @@
     .artifacts_small:nth-child(10) {
       @include tableColumnFlex(3.5%)
     }
+    .functions{
+      &_medium {
+        @include tableColumnFlex(12%);
+        min-width: 12%;
+      }
+      &_small {
+        @include tableColumnFlex(8.5%);
+      }
+      &_big {
+        @include tableColumnFlex(23%);
+      }
+    }
   }
   &-head {
     display: flex;
     &__item {
       @include tableDet;
       @include tableHeader;
+      flex: 1;
     }
   }
   &-body {
@@ -85,6 +98,13 @@
           }
         }
       }
+    }
+    .row__actions {
+      display: none;
+      position: absolute;
+      right: -10px;
+      top: 15%;
+      border-bottom: none;
     }
     &__cell {
       @include tableDet;
@@ -159,7 +179,7 @@
         flex-direction: column;
         width: 165px;
         padding: 10px;
-        z-index: 10000;
+        z-index: 1000;
         &__chip {
           @include chip($parametersBorder);
         }

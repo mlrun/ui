@@ -1,66 +1,56 @@
 import jobsApi from '../api/jobs-api'
-import { parseKeyValues } from '../utils'
+import {
+  FETCH_JOBS_BEGIN,
+  FETCH_JOBS_FAILURE,
+  FETCH_JOBS_SUCCESS
+} from '../constants'
 
 const jobsActions = {
   fetchJobs: (project, status) => dispatch => {
     const getJobs = status ? jobsApi.filterByStatus : jobsApi.getAll
 
-    return getJobs(project, status && status)
-      .then(({ data }) => {
-        const newJobs = (data || {}).runs
-          .filter(job => job.metadata.iteration === 0)
-          .map(job => ({
-            uid: job.metadata.uid,
-            iteration: job.metadata.iteration,
-            iterationStats: job.status.iterations || [],
-            iterations: [],
-            startTime: new Date(job.status.start_time),
-            state: job.status.state,
-            name: job.metadata.name,
-            labels: parseKeyValues(job.metadata.labels || {}),
-            logLevel: job.spec.log_level,
-            inputs: job.spec.inputs || {},
-            parameters: parseKeyValues(job.spec.parameters || {}),
-            results: job.status.results || {},
-            resultsChips: parseKeyValues(job.status.results || {}),
-            artifacts: job.status.artifacts || [],
-            outputPath: job.spec.output_path,
-            owner: job.metadata.labels.owner,
-            updated: new Date(job.status.last_update)
-          }))
+    dispatch(jobsActions.fetchJobsBegin())
 
-        dispatch(jobsActions.setJobs(newJobs))
-        dispatch(
-          jobsActions.setJobsData(
-            data.runs.filter(job => job.metadata.iteration === 0)
-          )
+    return getJobs(project, status && status)
+      .then(handleErrors)
+      .then(({ data }) => {
+        const newJobs = (data || {}).runs.filter(
+          job => job.metadata.iteration === 0
         )
+
+        dispatch(jobsActions.fetchJobsSuccess(newJobs))
 
         return newJobs
       })
-      .catch(() => {})
+      .catch(() => dispatch(jobsActions.fetchJobsFailure()))
   },
+  fetchJobsBegin: () => ({
+    type: FETCH_JOBS_BEGIN
+  }),
   fetchJobLogs: (id, project) => dispatch => {
     return jobsApi.getJobLogs(id, project).then(result => {
       dispatch(jobsActions.setJobLogs(result.data))
     })
   },
-  setJobs: jobsList => ({
-    type: 'SET_JOBS',
+  fetchJobsSuccess: jobsList => ({
+    type: FETCH_JOBS_SUCCESS,
     payload: jobsList
   }),
-  setJobsData: jobsData => ({
-    type: 'SET_JOBS_DATA',
-    payload: jobsData
-  }),
-  setSelectedJob: job => ({
-    type: 'SET_SELECTED_JOB',
-    payload: job
+  fetchJobsFailure: error => ({
+    type: FETCH_JOBS_FAILURE,
+    payload: error
   }),
   setJobLogs: logs => ({
     type: 'SET_JOB_LOGS',
     payload: logs
   })
+}
+
+function handleErrors(response) {
+  if (!response.data.ok) {
+    throw Error(response.statusText)
+  }
+  return response
 }
 
 export default jobsActions

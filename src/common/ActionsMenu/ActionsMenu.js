@@ -29,7 +29,7 @@ const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
 
   return (
     <div
-      className="row__actions__container"
+      className="actions-container"
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
     >
@@ -38,16 +38,20 @@ const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
       </button>
       {isShowMenu && (
         <div
-          className="row__actions__body"
+          className="actions-container__body"
           onClick={() => setIsShowMenu(false)}
         >
           <div
-            className="row__actions__body_option"
+            className="actions-container__option"
             onClick={() => {
               convertToYaml(item)
             }}
           >
-            <img src={yamlIcon} alt="yaml" />
+            <img
+              src={yamlIcon}
+              alt="yaml"
+              className="actions-container__icon"
+            />
             View YAML
           </div>
         </div>

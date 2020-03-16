@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { formatDatetime, parseKeyValues } from '../../utils'
 import jobsData from '../JobsPage/jobsData'
 import artifactsData from '../Artifacts/artifactsData'
+import functionsData from '../FunctionsPage/functionsData'
 
 import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsInfoItem'
 import ArtifactsDetailsInfoItem from '../../elements/ArtifactsDetailsInfoItem/ArtifactsDetailsInfoItem'
@@ -40,6 +41,16 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.producer.owner,
     item.producer.uri,
     item.producer.workflow
+  ]
+  const functionsInfoContent = [
+    item.name,
+    item.kind,
+    item.hash,
+    formatDatetime(new Date(item.updated)),
+    item.command,
+    item.image,
+    item.description,
+    item.status
   ]
 
   return (
@@ -100,7 +111,8 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                   )
               }
             })
-          : artifactsData.artifactsInfoHeaders.map((header, i) => {
+          : page === 'artifacts'
+          ? artifactsData.artifactsInfoHeaders.map((header, i) => {
               switch (artifactsInfoContent[i]) {
                 case item.labels:
                   return (
@@ -150,6 +162,18 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                     />
                   )
               }
+            })
+          : functionsData.functionsInfoHeaders.map((header, i) => {
+              return (
+                <li className="table__item_details_item" key={i}>
+                  <div className="table__item_details_item_header">
+                    {header}
+                  </div>
+                  <div className="table__item_details_item_data">
+                    {functionsInfoContent[i] || ''}
+                  </div>
+                </li>
+              )
             })}
       </ul>
       {page === 'artifacts' && item.producer && (

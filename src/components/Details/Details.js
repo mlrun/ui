@@ -35,13 +35,14 @@ const Details = ({
 }) => {
   const dispath = useDispatch()
   const history = useHistory()
+  console.log(item)
   return (
     <div className="table__item" onClick={hideChips}>
       <div className="item-header">
         <div className="item-header__data">
           <h3>{item.name || item.key}</h3>
           <span>
-            {formatDatetime(item.startTime)}
+            {formatDatetime(item.startTime || item.updated)}
             {item.state && (
               <Tooltip
                 template={
@@ -100,33 +101,31 @@ const Details = ({
           page={page}
         />
       )}
-      <div className="preview_container">
-        {match.params.tab === 'preview' && (
-          <>
-            <button
-              onClick={() => {
-                history.push(`/projects/${match.params.projectName}/artifacts`)
-                dispath(
-                  artifactsAction.selectArtifact({
-                    isPreview: true,
-                    item
-                  })
-                )
-              }}
-              className="preview_popout"
-            >
-              <img src={popout} alt="preview" />
-            </button>
-            <ArtifactsPreview artifact={item} />
-          </>
-        )}
-        {match.params.tab === 'inputs' && (
-          <DetailsInputs inputs={item.inputs} />
-        )}
-        {match.params.tab === 'artifacts' && <DetailsArtifacts match={match} />}
-        {match.params.tab === 'results' && <DetailsResults job={item} />}
-        {match.params.tab === 'logs' && <DetailsLogs match={match} />}
-      </div>
+      {match.params.tab === 'preview' && (
+        <div className="preview_container">
+          <button
+            onClick={() => {
+              history.push(`/projects/${match.params.projectName}/artifacts`)
+              dispath(
+                artifactsAction.selectArtifact({
+                  isPreview: true,
+                  item
+                })
+              )
+            }}
+            className="preview_popout"
+          >
+            <img src={popout} alt="preview" />
+          </button>
+          <ArtifactsPreview artifact={item} />
+        </div>
+      )}
+      {match.params.tab === 'inputs' && <DetailsInputs inputs={item.inputs} />}
+      {match.params.tab === 'artifacts' && (
+        <DetailsArtifacts match={match} selectedItem={item} />
+      )}
+      {match.params.tab === 'results' && <DetailsResults job={item} />}
+      {match.params.tab === 'logs' && <DetailsLogs match={match} />}
     </div>
   )
 }

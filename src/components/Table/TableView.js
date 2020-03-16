@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
+import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 
 const TableView = ({
   content,
@@ -19,7 +20,8 @@ const TableView = ({
   page,
   selectedItem,
   tableHeaders,
-  tableContent
+  tableContent,
+  groupFilter
 }) => {
   return (
     <div className="table" onClick={hideChips}>
@@ -35,36 +37,51 @@ const TableView = ({
           ))}
         </div>
         <div className="table-body">
-          {Object.keys(groupLatestJob).length === 0
+          {groupFilter === 'None' || groupLatestJob.length === 0
             ? tableContent.map((rowItem, i) => {
-                if (match.path.includes('jobs')) {
-                  return (
-                    <JobsTableRow
-                      key={i}
-                      content={content}
-                      convertToYaml={convertToYaml}
-                      handleSelectItem={handleSelectItem}
-                      handleShowElements={handleShowElements}
-                      index={i}
-                      match={match}
-                      rowItem={rowItem}
-                      selectedItem={selectedItem}
-                    />
-                  )
-                } else {
-                  return (
-                    <ArtifactsTableRow
-                      key={i}
-                      content={content}
-                      convertToYaml={convertToYaml}
-                      handleSelectItem={handleSelectItem}
-                      handleShowElements={handleShowElements}
-                      index={i}
-                      match={match}
-                      rowItem={rowItem}
-                      selectedItem={selectedItem}
-                    />
-                  )
+                switch (page) {
+                  case 'artifacts':
+                    return (
+                      <ArtifactsTableRow
+                        key={i}
+                        content={content}
+                        convertToYaml={convertToYaml}
+                        handleSelectItem={handleSelectItem}
+                        handleShowElements={handleShowElements}
+                        index={i}
+                        match={match}
+                        rowItem={rowItem}
+                        selectedItem={selectedItem}
+                      />
+                    )
+                  case 'functions':
+                    return (
+                      <FunctionsTableRow
+                        key={i}
+                        convertToYaml={convertToYaml}
+                        content={content}
+                        handleShowElements={handleShowElements}
+                        match={match}
+                        rowItem={rowItem}
+                        index={i}
+                        selectedItem={selectedItem}
+                        handleSelectItem={handleSelectItem}
+                      />
+                    )
+                  case 'jobs':
+                    return (
+                      <JobsTableRow
+                        key={i}
+                        content={content}
+                        convertToYaml={convertToYaml}
+                        handleSelectItem={handleSelectItem}
+                        handleShowElements={handleShowElements}
+                        index={i}
+                        match={match}
+                        rowItem={rowItem}
+                        selectedItem={selectedItem}
+                      />
+                    )
                 }
               })
             : tableContent.map((group, i) => {

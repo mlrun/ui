@@ -1,0 +1,50 @@
+{
+  "initialStateFilter": "All",
+  "detailsMenu": ["info", "code"],
+  "filters": ["status"],
+  "page": "functions",
+  "tableHeaders": [
+    {
+      "header": "Name",
+      "size": "functions_medium"
+    },
+    {
+      "header": "Kind",
+      "size": "functions_small"
+    },
+    {
+      "header": "Hash",
+      "size": "functions_small"
+    },
+    {
+      "header": "Updated",
+      "size": "functions_small"
+    },
+    {
+      "header": "Command",
+      "size": "functions_big"
+    },
+    {
+      "header": "Image",
+      "size": "functions_big"
+    },
+    {
+      "header": "Description",
+      "size": "functions_small"
+    },
+    {
+      "header": "Status",
+      "size": "functions_small"
+    }
+  ],
+  "functionsInfoHeaders": [
+    "Name",
+    "Kind",
+    "Hash",
+    "Updated",
+    "Command",
+    "Image",
+    "Description",
+    "State"
+  ]
+}
