@@ -52,7 +52,7 @@ const FilterMenu = ({
             <ArtifactFilterTree
               key={filter}
               value={valueFilterTree || 'Latest'}
-              label="Tree :"
+              label="Tree:"
               items={itemsFilterTree}
               onChange={handleChangeArtifactFilterTree}
             />
@@ -93,18 +93,20 @@ const FilterMenu = ({
             <img src={refreshIcon} alt="refresh" />
           </button>
         </Tooltip>
-        <Tooltip
-          template={
-            <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
-          }
-        >
-          <button onClick={handleExpandAll}>
-            <img
-              src={expand ? collapseIcon : expandIcon}
-              alt="Collapse / Expand icon"
-            />
-          </button>
-        </Tooltip>
+        {groupFilter.toLowerCase() !== 'none' && groupFilter !== '' && (
+          <Tooltip
+            template={
+              <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
+            }
+          >
+            <button onClick={handleExpandAll}>
+              <img
+                src={expand ? collapseIcon : expandIcon}
+                alt="Collapse / Expand icon"
+              />
+            </button>
+          </Tooltip>
+        )}
       </div>
     </>
   )

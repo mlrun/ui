@@ -33,7 +33,7 @@ const Details = ({
   page,
   convertToYaml
 }) => {
-  const dispath = useDispatch()
+  const dispatch = useDispatch()
   const history = useHistory()
   return (
     <div className="table__item" onClick={hideChips}>
@@ -106,7 +106,7 @@ const Details = ({
             <button
               onClick={() => {
                 history.push(`/projects/${match.params.projectName}/artifacts`)
-                dispath(
+                dispatch(
                   artifactsAction.selectArtifact({
                     isPreview: true,
                     item
