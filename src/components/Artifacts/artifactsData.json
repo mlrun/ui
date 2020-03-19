@@ -1,5 +1,4 @@
 {
-  "artifactsProducerInfoHeaders": ["Kind", "Name", "Owner", "Uri", "Workflow"],
   "artifactsInfoHeaders": [
     "Key",
     "Iter",
