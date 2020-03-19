@@ -95,11 +95,13 @@ const JobsTableRow = ({
             <TableCell
               data={value}
               handleShowElements={handleShowElements}
-              item={content[index]}
+              item={content.filter(item => item.uid === rowItem.uid.value)[0]}
               link={
                 i === 0 &&
                 `/projects/${match.params.projectName}/jobs/${content.length >
-                  0 && content[index].uid}${
+                  0 &&
+                  content.filter(item => item.uid === rowItem.uid.value)[0]
+                    .uid}${
                   match.params.tab
                     ? `/${match.params.tab}`
                     : `/${jobsData.detailsMenu[0]}`

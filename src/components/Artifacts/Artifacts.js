@@ -28,6 +28,7 @@ const Artifacts = ({
   const fetchData = useCallback(
     item => {
       setLoading(true)
+      selectArtifact({ isPreview: false, item: {} })
       fetchArtifacts(item)
         .then(data => {
           const artifacts = data.map(artifact => {
@@ -66,7 +67,7 @@ const Artifacts = ({
           setArtifactsContent(content)
         })
     },
-    [fetchArtifacts]
+    [fetchArtifacts, selectArtifact]
   )
 
   useEffect(() => {
