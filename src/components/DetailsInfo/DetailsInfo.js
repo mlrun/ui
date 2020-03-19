@@ -152,7 +152,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
               }
             })}
       </ul>
-      {page === 'artifacts' && item.producer && (
+      {page === 'artifacts' && item.producer && item.producer.name !== 'iris' && (
         <>
           <h3 className="table__item_details_preview_header">Producer</h3>
           <ul className="table__item_details">

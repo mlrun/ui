@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import './artifactinfometadata.scss'
 
 const ArtifactInfoMetadata = ({ item }) => {
@@ -10,7 +12,7 @@ const ArtifactInfoMetadata = ({ item }) => {
     return {
       name: name,
       type: type,
-      primary: primaryKey[0] === name ? 'Yes' : '',
+      primary: primaryKey.includes(name) ? 'Yes' : '',
       count: item.stats[name] && item.stats[name].count,
       mean: item.stats[name] && item.stats[name].mean,
       std: item.stats[name] && item.stats[name].std.toFixed(8),
@@ -47,7 +49,15 @@ const ArtifactInfoMetadata = ({ item }) => {
                     key={key}
                     className="artifact_metadata_table_body_row_item"
                   >
-                    <span>{item[key]}</span>
+                    {key === 'name' ? (
+                      <Tooltip
+                        template={<TextTooltipTemplate text={item[key]} />}
+                      >
+                        {item[key]}
+                      </Tooltip>
+                    ) : (
+                      <span>{item[key]}</span>
+                    )}
                   </div>
                 )
               })}
