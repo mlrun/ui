@@ -14,7 +14,8 @@ const Tooltip = ({ children, template, className }) => {
   const defaultStyle = {
     transition: `opacity ${duration}ms ease-in-out`,
     position: 'fixed',
-    zIndex: 1000
+    zIndex: 1000,
+    whiteSpace: 'nowrap'
   }
 
   const transitionStyles = {
@@ -49,8 +50,9 @@ const Tooltip = ({ children, template, className }) => {
       } = tooltipRef.current.getBoundingClientRect()
       const left =
         event.x + tooltipWidth > window.innerWidth
-          ? event.x - (event.x + tooltipWidth - window.innerWidth) - offset
+          ? event.x - (event.x + tooltipWidth - window.innerWidth + offset)
           : event.x
+
       if (top + height + offset + tooltipHeight >= window.innerHeight) {
         setStyle({
           top: bottom - height - offset - tooltipHeight,

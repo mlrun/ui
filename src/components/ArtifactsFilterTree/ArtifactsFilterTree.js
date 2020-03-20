@@ -90,7 +90,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
                       : ''
                   }
               `}
-                onClick={event => {
+                onClick={() => {
                   setFilterTree(item)
                   onChange(item)
                 }}

@@ -1,8 +1,6 @@
 {
-  "initialStateFilter": "All",
   "detailsMenu": ["info", "code"],
-  "filters": ["status"],
-  "page": "functions",
+  "page": "FUNCTIONS",
   "tableHeaders": [
     {
       "header": "Name",
@@ -30,10 +28,6 @@
     },
     {
       "header": "Description",
-      "size": "functions_small"
-    },
-    {
-      "header": "Status",
       "size": "functions_small"
     }
   ],

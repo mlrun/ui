@@ -9,8 +9,9 @@ const createFunctionsContent = functions =>
         size: 'functions_medium'
       },
       kind: {
-        value: func.kind,
-        size: 'functions_small'
+        value: func.type,
+        size: 'functions_small',
+        type: 'type'
       },
       hash: {
         value: truncateUid(func.hash),
@@ -31,10 +32,6 @@ const createFunctionsContent = functions =>
       },
       description: {
         value: func.description,
-        size: 'functions_small'
-      },
-      state: {
-        value: func.state,
         size: 'functions_small'
       }
     }

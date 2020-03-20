@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import ChipCell from '../ChipCell/ChipCell'
@@ -8,16 +7,14 @@ import Download from '../../common/Download/Download'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
+import TableLinkCell from '../TableLinkCell/TableLinkCell'
 
 import artifactViewIcon from '../../images/eye.png'
 import arrowIcon from '../../images/arrow.png'
-import nuclioIcon from '../../images/nuclio.png'
-import sparkIcon from '../../images/spark.png'
-import horovodIcon from '../../images/horovod.png'
 
-import { truncateUid, formatDatetime } from '../../utils'
-import artifactAction from '../../actions/artifacts'
+import { truncateUid } from '../../utils'
 import jobsData from '../../components/JobsPage/jobsData'
+import TableTypeCell from '../TableTypeCell/TableTypeCell'
 
 const TableCell = ({
   data,
@@ -30,45 +27,16 @@ const TableCell = ({
   match,
   expandLink
 }) => {
-  const dispatch = useDispatch()
   if (link) {
     return (
-      <div
-        className={`table-body__cell ${
-          data.type === 'date' ? 'jobs_medium' : data.size
-        }`}
-      >
-        <Link to={link} onClick={() => selectItem(item)} className="link">
-          <div className="name_status_row">
-            {data && data.value}
-            {item.state && (
-              <Tooltip
-                template={
-                  <TextTooltipTemplate
-                    text={`${item.state[0].toUpperCase()}${item.state.slice(
-                      1
-                    )}`}
-                  />
-                }
-              >
-                <i className={item.state} />
-              </Tooltip>
-            )}
-          </div>
-          {selectedItem.uid && (
-            <div className="date__uid_row">
-              <span>
-                {data.type !== 'date' &&
-                  formatDatetime(new Date(item.startTime || item.updated))}
-              </span>
-              <span>{truncateUid(item.uid)}</span>
-            </div>
-          )}
-        </Link>
-        {expandLink && (
-          <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
-        )}
-      </div>
+      <TableLinkCell
+        selectedItem={selectedItem}
+        expandLink={expandLink}
+        link={link}
+        item={item}
+        selectItem={selectItem}
+        data={data}
+      />
     )
   } else if (firstRow) {
     return (
@@ -78,34 +46,7 @@ const TableCell = ({
       </div>
     )
   } else if (data.type === 'type') {
-    return (
-      <div className={`table-body__cell ${data.size}`}>
-        <Tooltip
-          template={
-            <TextTooltipTemplate
-              text={data.value === 'mpijob' ? 'Horovod' : data.value}
-            />
-          }
-        >
-          {data.value === 'job' || data.value === '' ? (
-            'Local'
-          ) : data.value === 'dask' ? (
-            'Dask'
-          ) : (
-            <img
-              src={
-                data.type === 'nuclio'
-                  ? nuclioIcon
-                  : data.type === 'spark'
-                  ? sparkIcon
-                  : horovodIcon
-              }
-              alt="Type"
-            />
-          )}
-        </Tooltip>
-      </div>
-    )
+    return <TableTypeCell data={data} />
   } else if (Array.isArray(data.value)) {
     return (
       <div className={`table-body__cell ${data.size}`}>
@@ -143,12 +84,7 @@ const TableCell = ({
       <div className={`table-body__cell ${data.size}`}>
         <button
           onClick={() => {
-            dispatch(
-              artifactAction.selectArtifact({
-                isPreview: true,
-                item
-              })
-            )
+            selectItem(item, true)
           }}
         >
           <img src={artifactViewIcon} alt="Popout Icon" />

@@ -29,27 +29,27 @@ const Breadcrumbs = ({ match, onClick }) => {
 
           if (last) {
             return (
-              <li className="breadcrumbs__list__item" key={`${i}${item}`}>
+              <li className="breadcrumbs__item" key={`${i}${item}`}>
                 {label}
               </li>
             )
           } else if (id) {
             return [
-              <li key={`${i}${item}`} className="breadcrumbs__list__item">
+              <li key={`${i}${item}`} className="breadcrumbs__item">
                 {label}
               </li>,
-              <li key={i} className="breadcrumbs__list_separator">
+              <li key={i} className="breadcrumbs_separator">
                 <img src={arrow} alt="Arrow" />
               </li>
             ]
           } else {
             return [
-              <li key={`${i}${item}`} className="breadcrumbs__list__item">
+              <li key={`${i}${item}`} className="breadcrumbs__item">
                 <Link to={to} onClick={onClick}>
                   {label}
                 </Link>
               </li>,
-              <li key={i} className="breadcrumbs__list_separator">
+              <li key={i} className="breadcrumbs_separator">
                 <img src={arrow} alt="Arrow" />
               </li>
             ]

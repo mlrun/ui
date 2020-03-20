@@ -14,10 +14,12 @@ import './download.scss'
 const Download = ({ path, schema, setNotificationDownload }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
+
+  const downloadRef = useRef(null)
+
   let file = path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)
     ? path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)[0]
     : null
-  const downloadRef = useRef(null)
 
   const downloadCallback = useCallback(() => {
     if (isDownload) {
@@ -49,8 +51,7 @@ const Download = ({ path, schema, setNotificationDownload }) => {
         .catch(error => {
           if (axios.isCancel(error)) {
             setDownload(false)
-            setProgress(0)
-            return
+            return setProgress(0)
           }
           setNotificationDownload({
             status: 400,
@@ -71,24 +72,23 @@ const Download = ({ path, schema, setNotificationDownload }) => {
 
   useEffect(() => {
     let cancelFetch = downloadRef.current
+
     downloadCallback()
+
     return () => {
       cancelFetch.cancel && cancelFetch.cancel()
     }
   }, [downloadCallback, downloadRef])
 
+  const handleClick = () => {
+    if (downloadRef.current && downloadRef.current.cancel) {
+      return downloadRef.current.cancel('cancel')
+    }
+    setDownload(!isDownload)
+  }
+
   return (
-    <div
-      className="download_container"
-      ref={downloadRef}
-      onClick={() => {
-        if (downloadRef.current && downloadRef.current.cancel) {
-          downloadRef.current.cancel('cancel')
-          return
-        }
-        setDownload(!isDownload)
-      }}
-    >
+    <div className="download-container" ref={downloadRef} onClick={handleClick}>
       <ProgressRing
         radius="20"
         stroke="3"
@@ -98,7 +98,7 @@ const Download = ({ path, schema, setNotificationDownload }) => {
         <g className={!isDownload ? 'download' : 'downloading'}>
           <circle r="12" cx="20px" cy="20px" />
           {!isDownload ? (
-            <g className="download_container">
+            <g className="download-container">
               <rect
                 width="9.05318"
                 height="1.50886"
@@ -147,7 +147,8 @@ Download.defaultProps = {
 
 Download.propTypes = {
   path: PropTypes.string.isRequired,
-  schema: PropTypes.string
+  schema: PropTypes.string,
+  setNotificationDownload: PropTypes.func.isRequired
 }
 
 export default React.memo(connect(null, notificationDownloadAction)(Download))

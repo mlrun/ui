@@ -4,23 +4,20 @@ import {
   FETCH_FUNCTIONS_FAILURE,
   FETCH_FUNCTIONS_SUCCESS
 } from '../constants'
+import { handleErrors } from '../utils/handleErrors'
 
-const functionsActions = {
+const functions = {
   fetchFunctions: (project, status) => dispatch => {
-    const getFunctions = status
-      ? functionsApi.filterByStatus
-      : functionsApi.getAll
+    dispatch(functions.fetchFunctionsBegin())
 
-    dispatch(functionsActions.fetchFunctionsBegin())
-
-    return getFunctions(project, status && status)
+    return functionsApi
+      .getAll(project)
       .then(handleErrors)
       .then(({ data }) => {
-        dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
-        console.log(data)
+        dispatch(functions.fetchFunctionsSuccess(data.funcs))
         return data.funcs
       })
-      .catch(() => dispatch(functionsActions.fetchFunctionsFailure()))
+      .catch(() => dispatch(functions.fetchFunctionsFailure()))
   },
   fetchFunctionsBegin: () => ({
     type: FETCH_FUNCTIONS_BEGIN
@@ -35,11 +32,4 @@ const functionsActions = {
   })
 }
 
-function handleErrors(response) {
-  if (!response.data.ok) {
-    throw Error(response.statusText)
-  }
-  return response
-}
-
-export default functionsActions
+export default functions

@@ -1,31 +1,54 @@
+import {
+  FETCH_ARTIFACTS_BEGIN,
+  FETCH_ARTIFACTS_FAILURE,
+  FETCH_ARTIFACTS_SUCCESS
+} from '../constants'
+
 const initialState = {
   artifacts: [],
-  selectArtifact: {
-    isPreview: false,
-    item: {}
-  }
+  loading: false,
+  error: null,
+  preview: {}
 }
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case 'SET_ARTIFACTS':
+    case FETCH_ARTIFACTS_BEGIN:
       return {
         ...state,
-        artifacts: payload.artifacts
+        loading: true
       }
-    case 'SELECT_ARTIFACT':
+    case FETCH_ARTIFACTS_SUCCESS:
       return {
         ...state,
-        selectArtifact: payload
+        artifacts: payload,
+        loading: false
       }
-    case 'REMOVE_SELECT_ARTIFACT':
+    case FETCH_ARTIFACTS_FAILURE:
       return {
         ...state,
-        selectArtifact: {
-          isPreview: false,
-          item: {}
-        }
+        artifacts: [],
+        loading: false,
+        error: payload
       }
+    // case FETCH_ARTIFACT_PREVIEW_BEGIN:
+    //   return {
+    //     ...state,
+    //     loading: true
+    //   }
+    // case FETCH_ARTIFACT_PREVIEW_SUCCESS:
+    //   return {
+    //     ...state,
+    //     preview: payload,
+    //     loading: false
+    //   }
+    // case FETCH_ARTIFACT_PREVIEW_FAILURE:
+    //   return {
+    //     ...state,
+    //     preview: {},
+    //     error: payload,
+    //     loading: false
+    //   }
     default:
       return state
   }

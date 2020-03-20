@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const DetailsMenuItem = ({ id, match, name, page, tab }) => {
-  const link = `/projects/${match.params.projectName}/${
-    page === 'jobs' ? 'jobs' : 'artifacts'
-  }/${id || name}/${tab}`
+  const link = `/projects/${match.params.projectName}/${page}/${id ||
+    name}/${tab}`
   return (
     <Link to={link}>
       <li

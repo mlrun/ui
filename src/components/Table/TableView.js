@@ -6,11 +6,14 @@ import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRo
 import Details from '../Details/Details'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 
+import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
+
 const TableView = ({
   content,
-  convertToYaml,
   detailsMenu,
+  groupFilter,
   groupLatestJob,
+  groupedByName,
   handleCancel,
   handleExpandRow,
   handleSelectItem,
@@ -21,10 +24,10 @@ const TableView = ({
   selectedItem,
   tableHeaders,
   tableContent,
-  groupFilter
+  toggleConvertToYaml
 }) => {
   return (
-    <div className="table" onClick={hideChips}>
+    <div className="table">
       <div className="table__content">
         <div className="table-head">
           {tableHeaders.map((item, index) => (
@@ -37,15 +40,17 @@ const TableView = ({
           ))}
         </div>
         <div className="table-body">
-          {groupFilter === 'None' || groupLatestJob.length === 0
+          {(groupFilter === 'None' &&
+            Object.keys(groupedByName).length === 0) ||
+          groupLatestJob.length === 0
             ? tableContent.map((rowItem, i) => {
                 switch (page) {
-                  case 'artifacts':
+                  case ARTIFACTS_PAGE:
                     return (
                       <ArtifactsTableRow
                         key={i}
                         content={content}
-                        convertToYaml={convertToYaml}
+                        toggleConvertToYaml={toggleConvertToYaml}
                         handleSelectItem={handleSelectItem}
                         handleShowElements={handleShowElements}
                         index={i}
@@ -54,11 +59,11 @@ const TableView = ({
                         selectedItem={selectedItem}
                       />
                     )
-                  case 'functions':
+                  case FUNCTIONS_PAGE:
                     return (
                       <FunctionsTableRow
                         key={i}
-                        convertToYaml={convertToYaml}
+                        toggleConvertToYaml={toggleConvertToYaml}
                         content={content}
                         handleShowElements={handleShowElements}
                         match={match}
@@ -68,12 +73,12 @@ const TableView = ({
                         handleSelectItem={handleSelectItem}
                       />
                     )
-                  case 'jobs':
+                  case JOBS_PAGE:
                     return (
                       <JobsTableRow
                         key={i}
                         content={content}
-                        convertToYaml={convertToYaml}
+                        toggleConvertToYaml={toggleConvertToYaml}
                         handleSelectItem={handleSelectItem}
                         handleShowElements={handleShowElements}
                         index={i}
@@ -82,6 +87,8 @@ const TableView = ({
                         selectedItem={selectedItem}
                       />
                     )
+                  default:
+                    return null
                 }
               })
             : tableContent.map((group, i) => {
@@ -89,7 +96,7 @@ const TableView = ({
                   <JobsTableRow
                     key={i}
                     content={content}
-                    convertToYaml={convertToYaml}
+                    toggleConvertToYaml={toggleConvertToYaml}
                     handleExpandRow={handleExpandRow}
                     handleSelectItem={handleSelectItem}
                     handleShowElements={handleShowElements}
@@ -105,9 +112,10 @@ const TableView = ({
       </div>
       {Object.keys(selectedItem).length !== 0 && (
         <Details
-          convertToYaml={convertToYaml}
+          toggleConvertToYaml={toggleConvertToYaml}
           detailsMenu={detailsMenu}
           handleCancel={handleCancel}
+          handleSelectItem={handleSelectItem}
           handleShowElements={handleShowElements}
           hideChips={hideChips}
           item={selectedItem}
@@ -125,7 +133,7 @@ TableView.defaultProps = {
 
 TableView.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  convertToYaml: PropTypes.func.isRequired,
+  toggleConvertToYaml: PropTypes.func.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,

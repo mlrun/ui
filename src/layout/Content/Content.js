@@ -1,50 +1,83 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import yaml from 'js-yaml'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
+import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+
+import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
 
 import './content.scss'
+import NoData from '../../common/NoData/NoData'
 
 const Content = ({
-  convertedYaml,
+  content,
+  detailsMenu,
+  expand,
   filters,
   groupFilter,
-  groupLatestJob,
-  setGroupFilter,
+  groupedByName,
   handleCancel,
+  handleExpandAll,
+  handleExpandRow,
+  handleSelectItem,
+  isPreview,
   match,
   refresh,
-  tableContent,
-  content,
-  selectedItem,
-  handleSelectItem,
-  convertToYaml,
-  tableHeaders,
-  detailsMenu,
   page,
-  stateFilter,
+  selectedItem,
+  setGroupFilter,
   setStateFilter,
-  expand,
-  handleExpandRow,
-  handleExpandAll
+  stateFilter,
+  tableHeaders,
+  yamlContent
 }) => {
+  const [convertedYaml, setConvertedYaml] = useState('')
+
+  const toggleConvertToYaml = item => {
+    if (convertedYaml.length > 0) {
+      return setConvertedYaml('')
+    }
+    const jobJson =
+      page === JOBS_PAGE &&
+      yamlContent.filter(job => job.metadata.uid === item.uid)[0]
+    const functionJson =
+      page === FUNCTIONS_PAGE &&
+      yamlContent.filter(func => func.metadata.hash === item.hash)[0]
+
+    switch (page) {
+      case JOBS_PAGE:
+        return setConvertedYaml(
+          yaml.dump(jobJson, {
+            lineWidth: -1
+          })
+        )
+      case ARTIFACTS_PAGE:
+        return setConvertedYaml(
+          yaml.dump(item, {
+            lineWidth: -1
+          })
+        )
+      default:
+        return setConvertedYaml(
+          yaml.safeDump(functionJson, {
+            lineWidth: -1
+          })
+        )
+    }
+  }
+
   return (
     <>
       <div className="content__header">
         <Breadcrumbs match={match} onClick={handleCancel} />
       </div>
       <div className="content">
-        <div className="content__menu">
-          <ul className="content__menu__list">
-            <li className="content__menu__list_item active">Monitor</li>
-            {/*<li className="jobs__menu__list_item">Edit</li>*/}
-            {/*<li className="jobs__menu__list_item">Create</li>*/}
-          </ul>
-        </div>
-        <div className="content__action_bar">
+        <ContentMenu />
+        <div className="content__action-bar">
           <FilterMenu
             expand={expand}
             filters={filters}
@@ -58,26 +91,29 @@ const Content = ({
             page={page}
           />
         </div>
-        <YamlModal convertedYaml={convertedYaml} />
-        <div className="table_container">
+        <YamlModal
+          convertedYaml={convertedYaml}
+          toggleConvertToYaml={toggleConvertToYaml}
+        />
+        <div className="table-container">
           {content.length !== 0 ? (
             <Table
-              groupLatestJob={groupLatestJob}
-              handleCancel={handleCancel}
-              match={match}
-              tableContent={tableContent}
               content={content}
-              selectedItem={selectedItem}
-              handleSelectItem={handleSelectItem}
-              convertToYaml={convertToYaml}
-              tableHeaders={tableHeaders}
               detailsMenu={detailsMenu}
-              page={page}
-              handleExpandRow={handleExpandRow}
               groupFilter={groupFilter}
+              groupedByName={groupedByName}
+              handleCancel={handleCancel}
+              handleExpandRow={handleExpandRow}
+              handleSelectItem={handleSelectItem}
+              isPreview={isPreview}
+              match={match}
+              page={page}
+              selectedItem={selectedItem}
+              toggleConvertToYaml={toggleConvertToYaml}
+              tableHeaders={tableHeaders}
             />
           ) : (
-            <h2 className="no_data">No data to display!</h2>
+            <NoData />
           )}
         </div>
       </div>
@@ -87,25 +123,25 @@ const Content = ({
 
 Content.defaultProps = {
   convertedYaml: '',
-  selectedItem: {}
+  expand: null,
+  filters: [],
+  selectedItem: {},
+  isPreview: null
 }
 
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  convertToYaml: PropTypes.func.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
-  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
+  expand: PropTypes.bool,
+  filters: PropTypes.arrayOf(PropTypes.string),
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
+  isPreview: PropTypes.bool,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  tableContent: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
-  ]).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

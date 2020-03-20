@@ -5,12 +5,13 @@ import { formatDatetime, parseKeyValues } from '../../utils'
 import jobsData from '../JobsPage/jobsData'
 import artifactsData from '../Artifacts/artifactsData'
 import functionsData from '../FunctionsPage/functionsData'
+import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
 
 import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsInfoItem'
 import ArtifactsDetailsInfoItem from '../../elements/ArtifactsDetailsInfoItem/ArtifactsDetailsInfoItem'
+import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 
 import './detailsInfo.scss'
-import ArtifactSources from '../ArtifactSources/ArtifactSources'
 
 const DetailsInfo = ({ item, handleShowElements, page }) => {
   const jobsInfoContent = [
@@ -59,7 +60,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
         <h3 className="table__item_details_preview_header">General</h3>
       )}
       <ul className="table__item_details">
-        {page === 'jobs'
+        {page === JOBS_PAGE
           ? jobsData.jobsInfoHeaders.map((header, i) => {
               switch (jobsInfoContent[i]) {
                 case item.state:
@@ -111,7 +112,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                   )
               }
             })
-          : page === 'artifacts'
+          : page === ARTIFACTS_PAGE
           ? artifactsData.artifactsInfoHeaders.map((header, i) => {
               switch (artifactsInfoContent[i]) {
                 case item.labels:
@@ -137,7 +138,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                   )
                 case item.sources: {
                   return (
-                    <ArtifactSources
+                    <ArtifactInfoSources
                       key={header}
                       header={header}
                       sources={
@@ -176,7 +177,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
               )
             })}
       </ul>
-      {page === 'artifacts' && item.producer && (
+      {page === ARTIFACTS_PAGE && item.producer && (
         <>
           <h3 className="table__item_details_preview_header">Producer</h3>
           <ul className="table__item_details">

@@ -25,18 +25,18 @@ const Select = ({ filter, onClick, value }) => {
 
   return (
     <div
-      className={`select ${isOpen && 'active'}`}
+      className={`select${isOpen ? ' active' : ''}`}
       onClick={() => setOpen(!isOpen)}
     >
-      <div className="select_header">
-        <div className="select_header_label">{filter} : </div>
-        <div className="select_header_value">{value}</div>
-        <img src={caret} alt="caret" />
+      <div className="select__header">
+        <div className="label">{filter}:</div>
+        <div className="value">{value}</div>
+        <img src={caret} alt="caret" className="caret" />
       </div>
       {isOpen && [
         <div className="overall" key={isOpen} />,
         <div
-          className="select_body"
+          className="select__body"
           onClick={() => {
             setOpen(false)
           }}
@@ -44,7 +44,7 @@ const Select = ({ filter, onClick, value }) => {
         >
           {options[filter].map(item => (
             <div
-              className="select_body_item"
+              className="select__item"
               key={item}
               onClick={() => {
                 onClick(item)
@@ -55,6 +55,7 @@ const Select = ({ filter, onClick, value }) => {
                   <img
                     src={value === item ? checked : unchecked}
                     alt="status"
+                    className="item-status"
                   />
                   <span className={`status_${item.toLowerCase()}`} />
                 </>
@@ -69,7 +70,9 @@ const Select = ({ filter, onClick, value }) => {
 }
 
 Select.propTypes = {
-  filter: PropTypes.string.isRequired
+  filter: PropTypes.string.isRequired,
+  onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 }
 
 export default Select

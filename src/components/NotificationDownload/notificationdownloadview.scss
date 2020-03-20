@@ -3,15 +3,11 @@
 
 .notification {
   &_container {
-    margin-top: 5px;
-    margin-bottom: auto;
-    padding: 15px;
-    background-color: $white;
-    animation: move 2.01s ease-in-out;
     background-color: $darkPurple;
-    color: $white;
     box-shadow: $tooltipShadow;
+    color: $white;
     border-radius: 2px;
+    padding: 15px;
   }
   &_body {
     display: flex;
@@ -43,7 +39,7 @@
     }
     &_button {
       margin-left: 15px;
-      color: #8598f2;
+      color: $portage;
       cursor: pointer;
     }
   }

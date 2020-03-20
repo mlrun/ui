@@ -1,3 +1,5 @@
+@import "../../scss/colors";
+
 .actions-container {
   position: relative;
   &__body {
@@ -6,7 +8,7 @@
     position: absolute;
     bottom: -50px;
     right: 16px;
-    background: #ffffff;
+    background: $white;
     border: 1px solid rgba(0, 0, 0, 0.2);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
     border-radius: 2px;

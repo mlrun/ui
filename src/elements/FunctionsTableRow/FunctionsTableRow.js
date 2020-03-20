@@ -8,7 +8,7 @@ import functionsData from '../../components/FunctionsPage/functionsData'
 
 const FunctionsTableRow = ({
   content,
-  convertToYaml,
+  toggleConvertToYaml,
   handleSelectItem,
   handleShowElements,
   index,
@@ -42,7 +42,10 @@ const FunctionsTableRow = ({
         )
       })}
       <div className="table-body__cell row__actions">
-        <ActionsMenu convertToYaml={convertToYaml} item={content[index]} />
+        <ActionsMenu
+          toggleConvertToYaml={toggleConvertToYaml}
+          item={content[index]}
+        />
       </div>
     </div>
   )
@@ -50,7 +53,7 @@ const FunctionsTableRow = ({
 
 FunctionsTableRow.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  convertToYaml: PropTypes.func.isRequired,
+  toggleConvertToYaml: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   handleShowElements: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,

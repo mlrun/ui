@@ -1,4 +1,7 @@
 import {
+  FETCH_JOB_LOGS_BEGIN,
+  FETCH_JOB_LOGS_FAILURE,
+  FETCH_JOB_LOGS_SUCCESS,
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS
@@ -31,10 +34,23 @@ export default (state = initialState, { type, payload }) => {
         loading: false,
         error: payload
       }
-    case 'SET_JOB_LOGS':
+    case FETCH_JOB_LOGS_BEGIN:
       return {
         ...state,
-        logs: payload
+        loading: true
+      }
+    case FETCH_JOB_LOGS_SUCCESS:
+      return {
+        ...state,
+        logs: payload,
+        loading: false
+      }
+    case FETCH_JOB_LOGS_FAILURE:
+      return {
+        ...state,
+        logs: [],
+        loading: false,
+        error: payload
       }
     default:
       return state
