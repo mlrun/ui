@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
@@ -14,6 +14,7 @@ import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import ArtifactInfoMetadata from '../ArtifactInfoMetadata/ArtifactInfoMetada'
 
 import { formatDatetime } from '../../utils'
 import artifactsAction from '../../actions/artifacts'
@@ -45,6 +46,21 @@ const Details = ({
       })
     )
   }
+
+  useEffect(() => {
+    if (match.params.tab === 'metadata' && item.schema === undefined) {
+      history.push(
+        `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
+      )
+    }
+  }, [
+    history,
+    item.schema,
+    match.params.name,
+    match.params.projectName,
+    match.params.tab
+  ])
+
   return (
     <div className="table__item" onClick={hideChips}>
       <div className="item-header">
@@ -101,6 +117,15 @@ const Details = ({
               tab={link}
             />
           ))}
+          {item.schema && (
+            <DetailsMenuItem
+              id={item.uid}
+              match={match}
+              name={item.key}
+              page={page}
+              tab={'metadata'}
+            />
+          )}
         </ul>
       </div>
       {match.params.tab === 'info' && (
@@ -110,22 +135,21 @@ const Details = ({
           page={page}
         />
       )}
-      <div className="preview_container">
-        {match.params.tab === 'preview' && (
-          <>
-            <button onClick={() => handlePreview()} className="preview_popout">
-              <img src={popout} alt="preview" />
-            </button>
-            <ArtifactsPreview artifact={item} />
-          </>
-        )}
-        {match.params.tab === 'inputs' && (
-          <DetailsInputs inputs={item.inputs} />
-        )}
-        {match.params.tab === 'artifacts' && <DetailsArtifacts match={match} />}
-        {match.params.tab === 'results' && <DetailsResults job={item} />}
-        {match.params.tab === 'logs' && <DetailsLogs match={match} />}
-      </div>
+      {match.params.tab === 'preview' && (
+        <div className="preview_container">
+          <button onClick={() => handlePreview()} className="preview_popout">
+            <img src={popout} alt="preview" />
+          </button>
+          <ArtifactsPreview artifact={item} />
+        </div>
+      )}
+      {match.params.tab === 'inputs' && <DetailsInputs inputs={item.inputs} />}
+      {match.params.tab === 'artifacts' && <DetailsArtifacts match={match} />}
+      {match.params.tab === 'results' && <DetailsResults job={item} />}
+      {match.params.tab === 'logs' && <DetailsLogs match={match} />}
+      {match.params.tab === 'metadata' && item.schema && (
+        <ArtifactInfoMetadata item={item} />
+      )}
     </div>
   )
 }

@@ -1,0 +1,48 @@
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+
+.artifact_metadata {
+  &_table {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 20px;
+    &_header {
+      display: flex;
+      padding: 10px;
+      border-bottom: $tableBorder;
+      font-weight: bold;
+      color: $topaz;
+      &_item {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        text-transform: capitalize;
+        min-width: 80px;
+      }
+    }
+    &_body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      &_row {
+        display: flex;
+        padding: 10px;
+        flex-direction: row;
+        border-bottom: $tableBorder;
+        &_item {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          min-width: 80px;
+          span,
+          div {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow-x: hidden;
+          }
+        }
+      }
+    }
+  }
+}

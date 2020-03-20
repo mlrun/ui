@@ -42,9 +42,6 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
     setExpand(false)
     setLoading(true)
     setSelectedJob({})
-
-    history.push(`/projects/${match.params.projectName}/jobs`)
-
     fetchJobs(
       match.params.projectName,
       stateFilter !== jobsData.initialStateFilter ? stateFilter : false
@@ -53,13 +50,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
         return setJobs(jobs)
       })
       .then(() => setLoading(false))
-  }, [
-    fetchJobs,
-    history,
-    match.params.projectName,
-    setSelectedJob,
-    stateFilter
-  ])
+  }, [fetchJobs, match.params.projectName, setSelectedJob, stateFilter])
 
   useEffect(() => {
     refreshJobs()

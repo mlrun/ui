@@ -34,13 +34,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.labels,
     item.sources
   ]
-  const artifactsProducerInfoContent = item.producer && [
-    item.producer.kind,
-    item.producer.name,
-    item.producer.owner,
-    item.producer.uri,
-    item.producer.workflow
-  ]
+  console.log('123', item.producer)
 
   return (
     <div>
@@ -156,14 +150,16 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
         <>
           <h3 className="table__item_details_preview_header">Producer</h3>
           <ul className="table__item_details">
-            {artifactsData.artifactsProducerInfoHeaders.map((header, i) => (
-              <ArtifactsDetailsInfoItem
-                key={header}
-                page={page}
-                info={artifactsProducerInfoContent[i]}
-                header={header}
-              />
-            ))}
+            {Object.keys(item.producer).map(key => {
+              return (
+                <ArtifactsDetailsInfoItem
+                  key={key}
+                  page={page}
+                  info={item.producer[key]}
+                  header={key}
+                />
+              )
+            })}
           </ul>
         </>
       )}

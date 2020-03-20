@@ -18,6 +18,17 @@ const DetailsArtifacts = ({ jobsStore }) => {
         ? item.target_path.slice(index + '://'.length)
         : item.target_path
     }
+    if (item.schema) {
+      return {
+        schema: item.schema,
+        header: item.header,
+        preview: item.preview,
+        key: item.key,
+        target_path: target_path,
+        size: item.size ? prettyBytes(item.size) : 'N/A',
+        date: formatDatetime(jobsStore.selectedJob.startTime)
+      }
+    }
     return {
       key: item.key,
       target_path: target_path,
