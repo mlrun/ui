@@ -34,7 +34,6 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.labels,
     item.sources
   ]
-  console.log('123', item.producer)
 
   return (
     <div>
