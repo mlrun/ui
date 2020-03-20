@@ -60,6 +60,9 @@ const jobsActions = {
   fetchJobsFailure: error => ({
     type: FETCH_JOBS_FAILURE,
     payload: error
+  }),
+  removeJobLogs: () => ({
+    type: 'REMOVE_JOB_LOGS'
   })
 }
 

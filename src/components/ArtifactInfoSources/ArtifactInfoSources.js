@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import arrowIcon from '../../images/arrow.png'
 
@@ -10,6 +10,12 @@ const ArtifactInfoSources = ({ header, sources }) => {
   const [isShow, setIsShow] = useState(false)
 
   const sourcesLength = Object.values(sources).length
+
+  useEffect(() => {
+    if (sourcesLength === 0 && isShow === true) {
+      setIsShow(false)
+    }
+  }, [sourcesLength, isShow])
 
   return (
     <li

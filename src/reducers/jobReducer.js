@@ -52,6 +52,11 @@ export default (state = initialState, { type, payload }) => {
         loading: false,
         error: payload
       }
+    case 'REMOVE_JOB_LOGS':
+      return {
+        ...state,
+        logs: ''
+      }
     default:
       return state
   }

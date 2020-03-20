@@ -13,10 +13,20 @@ const ArtifactsPreview = ({ artifact }) => {
     type: null,
     data: null
   })
+
   useEffect(() => {
-    getArtifactPreview(artifact.target_path.schema, artifact.target_path.path)
-    return () => setPreview({})
-  }, [artifact.target_path])
+    if (artifact.schema) {
+      setPreview({
+        type: 'table',
+        data: {
+          headers: artifact.header,
+          content: artifact.preview
+        }
+      })
+    } else {
+      getArtifactPreview(artifact.target_path.schema, artifact.target_path.path)
+    }
+  }, [artifact.target_path, artifact])
 
   const getArtifactPreview = (schema, path) => {
     return api

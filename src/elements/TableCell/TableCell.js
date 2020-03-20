@@ -38,6 +38,17 @@ const TableCell = ({
         data={data}
       />
     )
+  } else if (data.type === 'uid') {
+    return (
+      <div className={`table-body__cell ${data.size}`}>
+        <Tooltip
+          textShow={true}
+          template={<TextTooltipTemplate text={data.value} />}
+        >
+          {truncateUid(data.value)}
+        </Tooltip>
+      </div>
+    )
   } else if (firstRow) {
     return (
       <div className={`table-body__cell ${data.size}`}>
@@ -47,6 +58,17 @@ const TableCell = ({
     )
   } else if (data.type === 'type') {
     return <TableTypeCell data={data} />
+    // } else if (data.type === 'uid') {
+    //   return (
+    //     <div className={`table-body__cell ${data.size}`}>
+    //       <Tooltip
+    //         textShow={true}
+    //         template={<TextTooltipTemplate text={data.value} />}
+    //       >
+    //         {truncateUid(data.value)}
+    //       </Tooltip>
+    //     </div>
+    //   )
   } else if (Array.isArray(data.value)) {
     return (
       <div className={`table-body__cell ${data.size}`}>
@@ -61,22 +83,25 @@ const TableCell = ({
   } else if (data.type === 'producer') {
     return (
       <div className={`table-body__cell ${data.size}`}>
-        <Tooltip
-          template={
-            <ProducerTooltipTemplate
-              kind={data.value.kind}
-              owner={data.value.owner ? data.value.owner : ''}
-            />
-          }
-        >
-          <Link
-            to={`/projects/${match.params.projectName}/jobs/${
-              data.value.uri.split('/')[1]
-            }/${jobsData.detailsMenu[0]}`}
+        {data.value.uri && (
+          <Tooltip
+            template={
+              <ProducerTooltipTemplate
+                kind={data.value.kind}
+                owner={data.value.owner ? data.value.owner : ''}
+              />
+            }
           >
-            {data.value.name}
-          </Link>
-        </Tooltip>
+            <Link
+              to={`/projects/${match.params.projectName}/jobs/${data.value
+                .uri && data.value.uri.split('/')[1]}/${
+                jobsData.detailsMenu[0]
+              }`}
+            >
+              {data.value.name}
+            </Link>
+          </Tooltip>
+        )}
       </div>
     )
   } else if (data.type === 'buttonPopout') {

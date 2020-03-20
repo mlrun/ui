@@ -6,6 +6,7 @@ import projectsAction from '../../actions/projects'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
+import NoData from '../../common/NoData/NoData'
 
 import './projects.scss'
 
@@ -21,10 +22,13 @@ const Projects = ({ projectStore, fetchProjects, match }) => {
       </div>
       <div className="projects_wrapper">
         {projectStore.loading && <Loader />}
-        {projectStore.projects.length !== 0 &&
+        {projectStore.projects.length !== 0 || projectStore.error ? (
           projectStore.projects.map(project => {
             return <ProjectCard key={project} project={project} />
-          })}
+          })
+        ) : (
+          <NoData />
+        )}
       </div>
     </>
   )

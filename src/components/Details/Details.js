@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useHistory } from 'react-router-dom'
 
@@ -13,6 +13,7 @@ import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import ArtifactInfoMetadata from '../ArtifactInfoMetadata/ArtifactInfoMetada'
 
 import { formatDatetime } from '../../utils'
 import { ARTIFACTS_PAGE } from '../../constants'
@@ -34,6 +35,26 @@ const Details = ({
   toggleConvertToYaml
 }) => {
   const history = useHistory()
+
+  const handlePreview = () => {
+    history.push(`/projects/${match.params.projectName}/artifacts`)
+    handleSelectItem(item, true)
+  }
+
+  useEffect(() => {
+    if (match.params.tab === 'metadata' && item.schema === undefined) {
+      history.push(
+        `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
+      )
+    }
+  }, [
+    history,
+    item.schema,
+    match.params.name,
+    match.params.projectName,
+    match.params.tab
+  ])
+
   return (
     <div className="table__item">
       <div className="item-header">
@@ -91,6 +112,15 @@ const Details = ({
               tab={link}
             />
           ))}
+          {item.schema && (
+            <DetailsMenuItem
+              id={item.uid}
+              match={match}
+              name={item.key}
+              page={page}
+              tab={'metadata'}
+            />
+          )}
         </ul>
       </div>
       {match.params.tab === 'info' && (
@@ -102,13 +132,7 @@ const Details = ({
       )}
       {match.params.tab === 'preview' && (
         <div className="preview_container">
-          <button
-            onClick={() => {
-              history.push(`/projects/${match.params.projectName}/artifacts`)
-              handleSelectItem(item, true)
-            }}
-            className="preview_popout"
-          >
+          <button onClick={() => handlePreview()} className="preview_popout">
             <img src={popout} alt="preview" />
           </button>
           <ArtifactsPreview artifact={item} />
@@ -122,6 +146,9 @@ const Details = ({
       {match.params.tab === 'logs' && <DetailsLogs match={match} item={item} />}
       {match.params.tab === 'code' && (
         <DetailsCode code={item.functionSourceCode} />
+      )}
+      {match.params.tab === 'metadata' && item.schema && (
+        <ArtifactInfoMetadata item={item} />
       )}
     </div>
   )

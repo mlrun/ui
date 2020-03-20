@@ -8,19 +8,23 @@ import NoData from '../../common/NoData/NoData'
 
 import refreshIcon from '../../images/refresh-logs.png'
 
-const DetailsLogs = ({ jobsStore, fetchJobLogs, match, item }) => {
-  const refreshLogs = useCallback(
-    noCache => {
-      if (noCache || jobsStore.logs.length === 0) {
-        fetchJobLogs(item.uid, match.params.projectName)
-      }
-    },
-    [fetchJobLogs, item.uid, jobsStore.logs.length, match.params.projectName]
-  )
+const DetailsLogs = ({
+  jobsStore,
+  fetchJobLogs,
+  match,
+  item,
+  removeJobLogs
+}) => {
+  const refreshLogs = useCallback(() => {
+    fetchJobLogs(item.uid, match.params.projectName)
+  }, [fetchJobLogs, item.uid, match.params.projectName])
 
   useEffect(() => {
     refreshLogs()
-  }, [refreshLogs])
+    return () => {
+      removeJobLogs()
+    }
+  }, [refreshLogs, removeJobLogs])
 
   return (
     <div className="table__item_logs">

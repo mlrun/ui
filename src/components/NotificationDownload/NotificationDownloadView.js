@@ -22,9 +22,7 @@ const NotificationDownloadView = ({ status, retry, transitionStyles }) =>
             alt={status === 200 ? 'success' : 'alert'}
           />
         </div>
-        {`Your download was ${
-          status === 200 ? 'Successfully' : 'unsuccessfully'
-        }`}
+        {`Your download was ${status === 200 ? 'Successful' : 'unsuccessful'}`}
         {status !== 200 && (
           <div
             className="notification_body_button"

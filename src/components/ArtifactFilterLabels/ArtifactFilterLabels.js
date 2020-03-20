@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 import './artifactfilterlabels.scss'
 
@@ -20,6 +21,10 @@ const ArtifactFilterLabels = ({ onChange }) => {
       />
     </div>
   )
+}
+
+ArtifactFilterLabels.propTypes = {
+  onChange: PropTypes.func.isRequired
 }
 
 export default ArtifactFilterLabels
