@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
+import primaryIcon from '../../images/ic_key.png'
+
 import './artifactinfometadata.scss'
 
 const ArtifactInfoMetadata = ({ item }) => {
@@ -12,7 +15,6 @@ const ArtifactInfoMetadata = ({ item }) => {
     return {
       name: name,
       type: type,
-      primary: primaryKey.includes(name) ? 'Yes' : '',
       count: item.stats[name] && item.stats[name].count,
       mean: item.stats[name] && item.stats[name].mean,
       std: item.stats[name] && item.stats[name].std.toFixed(8),
@@ -50,13 +52,18 @@ const ArtifactInfoMetadata = ({ item }) => {
                     className="artifact_metadata_table_body_row_item"
                   >
                     {key === 'name' ? (
-                      <Tooltip
-                        template={<TextTooltipTemplate text={item[key]} />}
-                      >
-                        {item[key]}
-                      </Tooltip>
+                      <>
+                        <Tooltip
+                          template={<TextTooltipTemplate text={item[key]} />}
+                        >
+                          {item[key]}
+                        </Tooltip>
+                        {primaryKey.includes(item[key]) && (
+                          <img src={primaryIcon} alt="key" />
+                        )}
+                      </>
                     ) : (
-                      <span>{item[key]}</span>
+                      <span>{item[key]} </span>
                     )}
                   </div>
                 )
