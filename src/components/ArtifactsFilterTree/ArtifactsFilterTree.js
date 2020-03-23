@@ -46,6 +46,17 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
     }
   }
 
+  const handleSelectFilter = item => {
+    if (match.params.jobId || match.params.name) {
+      history.push(
+        `/projects/${match.params.projectName}/${page.toLowerCase()}`
+      )
+    }
+
+    setFilterTree(item)
+    onChange(item)
+  }
+
   useEffect(() => {
     if (isDropDownMenuOpen) {
       window.addEventListener('mousedown', handlerOverall)
@@ -104,8 +115,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
                   }
               `}
                 onClick={() => {
-                  setFilterTree(item)
-                  onChange(item)
+                  handleSelectFilter(item)
                 }}
               >
                 {item}
