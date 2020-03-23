@@ -19,7 +19,7 @@ const ArtifactsTableRow = ({
   return (
     <div
       className={`table-body__row ${
-        selectedItem.key === content[index].key
+        selectedItem?.key === content[index]?.key
           ? 'parent-row active'
           : 'parent-row'
       }`}

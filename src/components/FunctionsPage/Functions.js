@@ -39,14 +39,19 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   }, [history, match.params.projectName, refreshFunctions])
 
   useEffect(() => {
-    if (match.params.functionId) {
+    if (match.params.name) {
       let item = functions.find(item => item.uid === match.params.functionId)
 
       setSelectedFunction(item)
     } else {
       setSelectedFunction({})
     }
-  }, [functions, match.params.functionId, setSelectedFunction])
+  }, [
+    functions,
+    match.params.functionId,
+    match.params.name,
+    setSelectedFunction
+  ])
 
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {

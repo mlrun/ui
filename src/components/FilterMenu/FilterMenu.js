@@ -39,11 +39,13 @@ const FilterMenu = ({
 
   const handleLabels = event => {
     setLabels(event)
-    onChange({
-      tag: valueFilterTree,
-      project: match.params.projectName,
-      labels: event
-    })
+    page === 'artifacts'
+      ? onChange({
+          tag: valueFilterTree,
+          project: match.params.projectName,
+          labels: event
+        })
+      : onChange(event)
   }
 
   return (
@@ -56,12 +58,16 @@ const FilterMenu = ({
               value={valueFilterTree || 'Latest'}
               label="Tree:"
               items={itemsFilterTree}
+              match={match}
               onChange={handleChangeArtifactFilterTree}
+              page={page}
             />
           ) : filter === 'labels' ? (
             <ArtifactFilterLabels
               key={filter}
+              match={match}
               onChange={handleLabels}
+              page={page}
               value={labels}
             />
           ) : (

@@ -10,12 +10,12 @@ import {
 import { handleErrors } from '../utils/handleErrors'
 
 const jobsActions = {
-  fetchJobs: (project, status) => dispatch => {
+  fetchJobs: (project, status, labels) => dispatch => {
     const getJobs = status ? jobsApi.filterByStatus : jobsApi.getAll
 
     dispatch(jobsActions.fetchJobsBegin())
 
-    return getJobs(project, status && status)
+    return getJobs(project, status && status, labels)
       .then(handleErrors)
       .then(({ data }) => {
         const newJobs = (data || {}).runs.filter(

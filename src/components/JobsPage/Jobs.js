@@ -20,33 +20,37 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
   const [expand, setExpand] = useState(false)
   const [expandedItems, setExpandedItems] = useState([])
 
-  const refreshJobs = useCallback(() => {
-    fetchJobs(
-      match.params.projectName,
-      stateFilter !== jobsData.initialStateFilter && stateFilter
-    ).then(jobs => {
-      const newJobs = jobs.map(job => ({
-        uid: job.metadata.uid,
-        iteration: job.metadata.iteration,
-        iterationStats: job.status.iterations || [],
-        iterations: [],
-        startTime: new Date(job.status.start_time),
-        state: job.status.state,
-        name: job.metadata.name,
-        labels: parseKeyValues(job.metadata.labels || {}),
-        logLevel: job.spec.log_level,
-        inputs: job.spec.inputs || {},
-        parameters: parseKeyValues(job.spec.parameters || {}),
-        results: job.status.results || {},
-        resultsChips: parseKeyValues(job.status.results || {}),
-        artifacts: job.status.artifacts || [],
-        outputPath: job.spec.output_path,
-        owner: job.metadata.labels.owner,
-        updated: new Date(job.status.last_update)
-      }))
-      return setJobs(newJobs)
-    })
-  }, [fetchJobs, match.params.projectName, stateFilter])
+  const refreshJobs = useCallback(
+    event => {
+      fetchJobs(
+        match.params.projectName,
+        stateFilter !== jobsData.initialStateFilter && stateFilter,
+        event
+      ).then(jobs => {
+        const newJobs = jobs.map(job => ({
+          uid: job.metadata.uid,
+          iteration: job.metadata.iteration,
+          iterationStats: job.status.iterations || [],
+          iterations: [],
+          startTime: new Date(job.status.start_time),
+          state: job.status.state,
+          name: job.metadata.name,
+          labels: parseKeyValues(job.metadata.labels || {}),
+          logLevel: job.spec.log_level,
+          inputs: job.spec.inputs || {},
+          parameters: parseKeyValues(job.spec.parameters || {}),
+          results: job.status.results || {},
+          resultsChips: parseKeyValues(job.status.results || {}),
+          artifacts: job.status.artifacts || [],
+          outputPath: job.spec.output_path,
+          owner: job.metadata.labels.owner,
+          updated: new Date(job.status.last_update)
+        }))
+        return setJobs(newJobs)
+      })
+    },
+    [fetchJobs, match.params.projectName, stateFilter]
+  )
 
   useEffect(() => {
     refreshJobs()
