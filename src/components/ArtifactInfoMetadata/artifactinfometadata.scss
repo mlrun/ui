@@ -19,6 +19,7 @@
         align-items: center;
         text-transform: capitalize;
         min-width: 80px;
+        padding: 0 5px;
         &:first-child {
           display: flex;
           flex: 1.5;
@@ -39,6 +40,7 @@
           flex: 1;
           align-items: center;
           min-width: 80px;
+          padding: 0 5px;
           span,
           div {
             white-space: nowrap;
@@ -46,7 +48,7 @@
             overflow-x: hidden;
           }
           img {
-            margin-left: 10px;
+            margin-right: 10px;
           }
           &:first-child {
             display: flex;

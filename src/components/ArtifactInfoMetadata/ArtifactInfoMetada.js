@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
-import primaryIcon from '../../images/ic_key.png'
+import primaryIcon from '../../images/ic-key.png'
 
 import './artifactinfometadata.scss'
 
@@ -53,14 +53,20 @@ const ArtifactInfoMetadata = ({ item }) => {
                   >
                     {key === 'name' ? (
                       <>
+                        {primaryKey.includes(item[key]) && (
+                          <Tooltip
+                            template={
+                              <TextTooltipTemplate text={'Primary key'} />
+                            }
+                          >
+                            <img src={primaryIcon} alt="key" />
+                          </Tooltip>
+                        )}
                         <Tooltip
                           template={<TextTooltipTemplate text={item[key]} />}
                         >
                           {item[key]}
                         </Tooltip>
-                        {primaryKey.includes(item[key]) && (
-                          <img src={primaryIcon} alt="key" />
-                        )}
                       </>
                     ) : (
                       <span>{item[key]} </span>
