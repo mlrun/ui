@@ -25,7 +25,6 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
         state: func.status ? func.status.state : '',
         functionSourceCode: func.spec.functionSourceCode
       }))
-      console.log(newFunctions)
       return setFunctions(newFunctions)
     })
   }, [fetchFunctions, match.params.projectName])
@@ -47,12 +46,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
     } else {
       setSelectedFunction({})
     }
-  }, [
-    functions,
-    match.params.functionId,
-    match.params.name,
-    setSelectedFunction
-  ])
+  }, [functions, match.params.name, setSelectedFunction])
 
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {

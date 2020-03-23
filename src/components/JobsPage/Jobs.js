@@ -63,7 +63,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
   }, [history, match.params.projectName, refreshJobs])
 
   useEffect(() => {
-    if (match.params.jobId) {
+    if (match.params.jobId && jobs.length > 0) {
       let item = jobs.find(item => item.uid === match.params.jobId)
 
       if (!item) {
