@@ -25,6 +25,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
         state: func.status ? func.status.state : '',
         functionSourceCode: func.spec.functionSourceCode
       }))
+      console.log(newFunctions)
       return setFunctions(newFunctions)
     })
   }, [fetchFunctions, match.params.projectName])
@@ -40,7 +41,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
 
   useEffect(() => {
     if (match.params.name) {
-      let item = functions.find(item => item.uid === match.params.functionId)
+      let item = functions.find(item => item.name === match.params.name)
 
       setSelectedFunction(item)
     } else {
