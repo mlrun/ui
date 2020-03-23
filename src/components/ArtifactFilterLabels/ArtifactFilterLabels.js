@@ -14,7 +14,7 @@ const ArtifactFilterLabels = ({ onChange }) => {
         value={labels}
         onChange={event => setLabels(event.target.value)}
         onKeyDown={event => {
-          if (event.keyCode === 13 && event.target.value.length !== 0) {
+          if (event.keyCode === 13) {
             onChange(labels)
           }
         }}

@@ -9,10 +9,14 @@
     padding: 20px;
     &_header {
       display: flex;
-      padding: 10px;
+      padding: 10px 0 10px 0;
       border-bottom: $tableBorder;
       font-weight: bold;
       color: $topaz;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: $white;
       &_item {
         display: flex;
         flex: 1;
@@ -21,6 +25,11 @@
         min-width: 80px;
         padding: 0 5px;
         &:first-child {
+          display: flex;
+          flex: 0.1;
+          min-width: 40px;
+        }
+        &:nth-child(2) {
           display: flex;
           flex: 1.5;
         }
@@ -32,7 +41,7 @@
       flex-direction: column;
       &_row {
         display: flex;
-        padding: 10px;
+        padding: 10px 0 10px 0;
         flex-direction: row;
         border-bottom: $tableBorder;
         &_item {
@@ -47,10 +56,12 @@
             text-overflow: ellipsis;
             overflow-x: hidden;
           }
-          img {
-            margin-right: 10px;
-          }
           &:first-child {
+            display: flex;
+            flex: 0.1;
+            min-width: 40px;
+          }
+          &:nth-child(2) {
             display: flex;
             flex: 1.5;
           }

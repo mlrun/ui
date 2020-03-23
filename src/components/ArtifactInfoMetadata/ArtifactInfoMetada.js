@@ -13,6 +13,7 @@ const ArtifactInfoMetadata = ({ item }) => {
   let metadata = item.schema.fields.map(_item => {
     const { name, type } = _item
     return {
+      '': '', //column of primary key
       name: name,
       type: type,
       count: item?.stats?.[name]?.count,
@@ -51,25 +52,21 @@ const ArtifactInfoMetadata = ({ item }) => {
                     key={key}
                     className="artifact_metadata_table_body_row_item"
                   >
-                    {key === 'name' ? (
-                      <>
-                        {primaryKey.includes(item[key]) && (
-                          <Tooltip
-                            template={
-                              <TextTooltipTemplate text={'Primary key'} />
-                            }
-                          >
-                            <img src={primaryIcon} alt="key" />
-                          </Tooltip>
-                        )}
-                        <Tooltip
-                          template={<TextTooltipTemplate text={item[key]} />}
-                        >
-                          {item[key]}
-                        </Tooltip>
-                      </>
+                    {key === '' && primaryKey.includes(item.name) ? (
+                      <Tooltip
+                        template={<TextTooltipTemplate text={'Primary key'} />}
+                      >
+                        <img src={primaryIcon} alt="key" />
+                      </Tooltip>
+                    ) : key === 'name' ? (
+                      <Tooltip
+                        template={<TextTooltipTemplate text={item[key]} />}
+                      >
+                        {item[key]}
+                      </Tooltip>
                     ) : (
-                      <span>{item[key]} </span>
+                      key !== '' &&
+                      item[key] !== undefined && <span>{item[key]} </span>
                     )}
                   </div>
                 )
