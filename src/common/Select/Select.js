@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
 
 import options from './selectData'
 
@@ -9,8 +10,9 @@ import checked from '../../images/checkbox-checked.png'
 
 import './select.scss'
 
-const Select = ({ filter, onClick, value }) => {
+const Select = ({ filter, match, onClick, page, value }) => {
   const [isOpen, setOpen] = useState(false)
+  const history = useHistory()
 
   useEffect(() => {
     window.addEventListener('scroll', handlerScroll)
@@ -21,6 +23,16 @@ const Select = ({ filter, onClick, value }) => {
 
   const handlerScroll = () => {
     setOpen(false)
+  }
+
+  const handleSelectOption = item => {
+    if (match.params.jobId || match.params.name) {
+      history.push(
+        `/projects/${match.params.projectName}/${page.toLowerCase()}`
+      )
+    }
+
+    onClick(item)
   }
 
   return (
@@ -46,9 +58,7 @@ const Select = ({ filter, onClick, value }) => {
             <div
               className="select__item"
               key={item}
-              onClick={() => {
-                onClick(item)
-              }}
+              onClick={() => handleSelectOption(item)}
             >
               {filter === 'status' && (
                 <>

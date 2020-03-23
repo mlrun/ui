@@ -91,7 +91,9 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
       setGroupedByName(groupedJobs)
     } else if (groupFilter === jobsData.initialGroupFilter) {
       const rows = [...document.getElementsByClassName('parent-row')]
+
       rows.forEach(row => row.classList.remove('parent-row-expanded'))
+
       setExpand(false)
       setGroupedByName({})
     }
@@ -99,7 +101,14 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
     return () => {
       setGroupedByName({})
     }
-  }, [groupFilter, setGroupedByName, jobs])
+  }, [
+    groupFilter,
+    setGroupedByName,
+    jobs,
+    jobsStore.loading,
+    history,
+    match.params.projectName
+  ])
 
   const handleSelectJob = item => {
     if (document.getElementsByClassName('view')[0]) {

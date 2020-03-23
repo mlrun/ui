@@ -72,10 +72,12 @@ const FilterMenu = ({
                 (filter === 'status' && stateFilter) ||
                 (filter === 'group by' && groupFilter)
               }
+              match={match}
               onClick={
                 (filter === 'status' && setStateFilter) ||
                 (filter === 'group by' && setGroupFilter)
               }
+              page={page}
             />
           )
         )}

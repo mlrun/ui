@@ -3,6 +3,7 @@
   "jobsInfoHeaders": [
     "UID",
     "Start time",
+    "Status",
     "Parameters",
     "Results",
     "Labels",
