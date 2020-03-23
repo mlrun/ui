@@ -15,14 +15,14 @@ const ArtifactInfoMetadata = ({ item }) => {
     return {
       name: name,
       type: type,
-      count: item.stats[name] && item.stats[name].count,
-      mean: item.stats[name] && item.stats[name].mean,
-      std: item.stats[name] && item.stats[name].std.toFixed(8),
-      min: item.stats[name] && item.stats[name].min,
-      '25%': item.stats[name] && item.stats[name]['25%'],
-      '50%': item.stats[name] && item.stats[name]['50%'],
-      '75%': item.stats[name] && item.stats[name]['75%'],
-      max: item.stats[name] && item.stats[name].max
+      count: item?.stats?.[name]?.count,
+      mean: item?.stats?.[name]?.mean,
+      std: item?.stats?.[name]?.std?.toFixed(8),
+      min: item?.stats?.[name]?.min,
+      '25%': item?.stats?.[name]?.['25%'],
+      '50%': item?.stats?.[name]?.['50%'],
+      '75%': item?.stats?.[name]?.['75%'],
+      max: item?.stats?.[name]?.max
     }
   })
 
