@@ -17,7 +17,13 @@ const FunctionsTableRow = ({
   selectedItem
 }) => {
   return (
-    <div className="table-body__row parent-row">
+    <div
+      className={`table-body__row ${
+        selectedItem.hash === content[index].hash
+          ? 'parent-row active'
+          : 'parent-row'
+      }`}
+    >
       {Object.values(rowItem).map((value, i) => {
         return (
           <TableCell
