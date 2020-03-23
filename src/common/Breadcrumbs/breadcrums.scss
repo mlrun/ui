@@ -13,21 +13,20 @@
     align-items: center;
     font-weight: 400;
     letter-spacing: 0.00938em;
-    &__item {
-      color: $topaz;
-      &:last-child {
-        color: $mulledWine;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 23px;
-      }
+  }
+  &__item {
+    color: $topaz;
+    &:last-child {
+      color: $mulledWine;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 23px;
     }
-    &_separator {
-      display: flex;
-      margin-left: 8px;
-      user-select: none;
-      margin-right: 8px;
-      color: $topaz;
-    }
+  }
+  &_separator {
+    display: flex;
+    margin: 0 8px;
+    user-select: none;
+    color: $topaz;
   }
 }

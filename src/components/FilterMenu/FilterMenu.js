@@ -11,8 +11,9 @@ import refreshIcon from '../../images/refresh.png'
 import collapseIcon from '../../images/collapse.png'
 import expandIcon from '../../images/expand.png'
 
+import artifactsData from '../Artifacts/artifactsData'
+
 import './filterMenu.scss'
-import { useHistory } from 'react-router-dom'
 
 const FilterMenu = ({
   expand,
@@ -29,7 +30,7 @@ const FilterMenu = ({
   const [itemsFilterTree] = useState(['Latest'])
   const [valueFilterTree, setValueFilterTree] = useState('')
   const [labels, setLabels] = useState('')
-  const history = useHistory()
+
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()
     onChange({ tag: value, project: match.params.projectName })
@@ -49,7 +50,7 @@ const FilterMenu = ({
 
   return (
     <>
-      <div className="content__action_bar__filters">
+      <div className="filters">
         {filters.map(filter =>
           filter === 'tree' ? (
             <ArtifactFilterTree
@@ -57,12 +58,16 @@ const FilterMenu = ({
               value={valueFilterTree || 'Latest'}
               label="Tree:"
               items={itemsFilterTree}
+              match={match}
               onChange={handleChangeArtifactFilterTree}
+              page={page}
             />
           ) : filter === 'labels' ? (
             <ArtifactFilterLabels
               key={filter}
+              match={match}
               onChange={handleLabels}
+              page={page}
               value={labels}
             />
           ) : (
@@ -73,25 +78,26 @@ const FilterMenu = ({
                 (filter === 'status' && stateFilter) ||
                 (filter === 'group by' && groupFilter)
               }
+              match={match}
               onClick={
                 (filter === 'status' && setStateFilter) ||
                 (filter === 'group by' && setGroupFilter)
               }
+              page={page}
             />
           )
         )}
       </div>
-      <div className="content__action_bar__buttons">
+      <div className="buttons">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button
             onClick={() => {
-              page === 'artifacts'
+              page === artifactsData.page
                 ? onChange({
                     tag: valueFilterTree.toLowerCase(),
                     project: match.params.projectName
                   })
                 : onChange()
-              history.push(`/projects/${match.params.projectName}/${page}`)
             }}
           >
             <img src={refreshIcon} alt="refresh" />

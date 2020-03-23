@@ -2,71 +2,85 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import yaml from 'js-yaml'
 import jobsActions from '../../actions/jobs'
 import jobsData from './jobsData'
-import createJobsContent from '../../utils/createJobsContent'
+import { parseKeyValues } from '../../utils'
 
 import Content from '../../layout/Content/Content'
+import Loader from '../../common/Loader/Loader'
 
-const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
-  const [convertedYaml, setConvertedYaml] = useState()
+const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
   const [jobs, setJobs] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [selectedJob, setSelectedJob] = useState({})
+
   const [stateFilter, setStateFilter] = useState(jobsData.initialStateFilter)
   const [groupFilter, setGroupFilter] = useState(jobsData.initialGroupFilter)
+
   const [groupedByName, setGroupedByName] = useState({})
   const [expand, setExpand] = useState(false)
   const [expandedItems, setExpandedItems] = useState([])
 
-  const tableContent =
-    Object.keys(groupedByName).length > 0
-      ? Object.values(groupedByName).map(group => {
-          return createJobsContent(group)
-        })
-      : createJobsContent(jobs)
-
-  const groupLatestJob = tableContent.map(group => {
-    if (Array.isArray(group)) {
-      return group.reduce((prev, curr) => {
-        return new Date(prev.updated.value).getTime() >
-          new Date(curr.updated.value).getTime()
-          ? prev
-          : curr
-      })
-    } else return group
-  })
-
   const refreshJobs = useCallback(
     event => {
-      setJobs([])
-      setExpand(false)
-      setLoading(true)
-      setSelectedJob({})
       fetchJobs(
         match.params.projectName,
-        stateFilter !== jobsData.initialStateFilter ? stateFilter : false,
+        stateFilter !== jobsData.initialStateFilter && stateFilter,
         event
-      )
-        .then(jobs => {
-          return setJobs(jobs)
-        })
-        .then(() => setLoading(false))
+      ).then(jobs => {
+        const newJobs = jobs.map(job => ({
+          uid: job.metadata.uid,
+          iteration: job.metadata.iteration,
+          iterationStats: job.status.iterations || [],
+          iterations: [],
+          startTime: new Date(job.status.start_time),
+          state: job.status.state,
+          name: job.metadata.name,
+          labels: parseKeyValues(job.metadata.labels || {}),
+          logLevel: job.spec.log_level,
+          inputs: job.spec.inputs || {},
+          parameters: parseKeyValues(job.spec.parameters || {}),
+          results: job.status.results || {},
+          resultsChips: parseKeyValues(job.status.results || {}),
+          artifacts: job.status.artifacts || [],
+          outputPath: job.spec.output_path,
+          owner: job.metadata.labels.owner,
+          updated: new Date(job.status.last_update)
+        }))
+        return setJobs(newJobs)
+      })
     },
-    [fetchJobs, match.params.projectName, setSelectedJob, stateFilter]
+    [fetchJobs, match.params.projectName, stateFilter]
   )
 
   useEffect(() => {
     refreshJobs()
-  }, [refreshJobs])
+
+    return () => {
+      setSelectedJob({})
+      setExpand(false)
+      setJobs([])
+    }
+  }, [history, match.params.projectName, refreshJobs])
 
   useEffect(() => {
-    if (match.params.jobId) {
-      let item = jobsStore.jobs.find(item => item.uid === match.params.jobId)
+    if (match.params.jobId && jobs.length > 0) {
+      let item = jobs.find(item => item.uid === match.params.jobId)
+
+      if (!item) {
+        return history.push(`/projects/${match.params.projectName}/jobs`)
+      }
 
       setSelectedJob(item)
+    } else {
+      setSelectedJob({})
     }
-  }, [jobsStore.jobs, match.params, setSelectedJob])
+  }, [
+    match.params.jobId,
+    setSelectedJob,
+    jobs,
+    match.params.projectName,
+    history
+  ])
 
   useEffect(() => {
     if (groupFilter === 'Name') {
@@ -81,11 +95,24 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
       setGroupedByName(groupedJobs)
     } else if (groupFilter === jobsData.initialGroupFilter) {
       const rows = [...document.getElementsByClassName('parent-row')]
+
       rows.forEach(row => row.classList.remove('parent-row-expanded'))
+
       setExpand(false)
       setGroupedByName({})
     }
-  }, [groupFilter, setGroupedByName, jobs])
+
+    return () => {
+      setGroupedByName({})
+    }
+  }, [
+    groupFilter,
+    setGroupedByName,
+    jobs,
+    jobsStore.loading,
+    history,
+    match.params.projectName
+  ])
 
   const handleSelectJob = item => {
     if (document.getElementsByClassName('view')[0]) {
@@ -96,18 +123,6 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
 
   const handleCancel = () => {
     setSelectedJob({})
-  }
-
-  const convertToYaml = item => {
-    document.getElementById('yaml_modal').style.display = 'flex'
-    const jobJson = jobsStore.jobsData.filter(
-      job => job.metadata.uid === item.uid
-    )
-    setConvertedYaml(
-      yaml.dump(jobJson[0], {
-        lineWidth: -1
-      })
-    )
   }
 
   const handleExpandRow = (e, item) => {
@@ -141,30 +156,31 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
   }
 
   return (
-    <Content
-      content={jobs}
-      convertToYaml={convertToYaml}
-      convertedYaml={convertedYaml}
-      detailsMenu={jobsData.detailsMenu}
-      filters={jobsData.filters}
-      groupFilter={groupFilter}
-      groupLatestJob={groupLatestJob}
-      setGroupFilter={setGroupFilter}
-      handleCancel={handleCancel}
-      handleSelectItem={handleSelectJob}
-      loading={loading}
-      match={match}
-      page={jobsData.page}
-      selectedItem={jobsStore.selectedJob}
-      refresh={refreshJobs}
-      tableHeaders={jobsData.tableHeaders}
-      tableContent={tableContent}
-      stateFilter={stateFilter}
-      setStateFilter={setStateFilter}
-      expand={expand}
-      handleExpandRow={handleExpandRow}
-      handleExpandAll={handleExpandAll}
-    />
+    <>
+      {jobsStore.loading && <Loader />}
+      <Content
+        content={jobs}
+        detailsMenu={jobsData.detailsMenu}
+        expand={expand}
+        filters={jobsData.filters}
+        groupFilter={groupFilter}
+        groupedByName={groupedByName}
+        handleCancel={handleCancel}
+        handleExpandAll={handleExpandAll}
+        handleExpandRow={handleExpandRow}
+        handleSelectItem={handleSelectJob}
+        loading={jobsStore.loading}
+        match={match}
+        page={jobsData.page}
+        refresh={refreshJobs}
+        selectedItem={selectedJob}
+        setGroupFilter={setGroupFilter}
+        setStateFilter={setStateFilter}
+        stateFilter={stateFilter}
+        tableHeaders={jobsData.tableHeaders}
+        yamlContent={jobsStore.jobs}
+      />
+    </>
   )
 }
 
@@ -172,8 +188,7 @@ Jobs.propTypes = {
   fetchJobs: PropTypes.func.isRequired,
   history: PropTypes.shape({}).isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired,
-  setSelectedJob: PropTypes.func.isRequired
+  match: PropTypes.shape({}).isRequired
 }
 
-export default connect(jobsStore => jobsStore, jobsActions)(Jobs)
+export default connect(jobsStore => jobsStore, jobsActions)(React.memo(Jobs))

@@ -24,11 +24,17 @@ const DetailsArtifactsView = ({ items, handleClick }) => (
               {item.key}
             </div>
             <div className="table__item_artifacts__row_item table__item_artifacts__row_item_long">
-              {item.target_path.schema ? `${item.target_path.schema}://` : ''}
               <Tooltip
                 className="table__item_artifacts__row__cell_path"
-                template={<TextTooltipTemplate text={item.target_path.path} />}
+                template={
+                  <TextTooltipTemplate
+                    text={
+                      `${item.target_path.schema}://` + item.target_path.path
+                    }
+                  />
+                }
               >
+                {item.target_path.schema ? `${item.target_path.schema}://` : ''}
                 {item.target_path.path}
               </Tooltip>
             </div>

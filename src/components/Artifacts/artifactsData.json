@@ -12,7 +12,7 @@
   ],
   "detailsMenu": ["info", "preview"],
   "filters": ["period", "tree", "labels"],
-  "page": "artifacts",
+  "page": "ARTIFACTS",
   "sources": ["name", "path"],
   "tableHeaders": [
     {

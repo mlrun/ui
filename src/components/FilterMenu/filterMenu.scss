@@ -2,22 +2,20 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
 
-.content__action_bar {
-  &__filters {
-    display: flex;
-    align-items: center;
-    flex: 1;
-  }
-  &__buttons {
-    display: flex;
-    justify-content: space-between;
-    button {
-      width: 40px;
-      height: 40px;
-      &:hover {
-        background-color: $alabaster;
-        border-radius: 20px;
-      }
+.filters {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  button {
+    width: 40px;
+    height: 40px;
+    &:hover {
+      background-color: $alabaster;
+      border-radius: 20px;
     }
   }
 }

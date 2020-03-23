@@ -9,7 +9,7 @@ import jobsData from '../../components/JobsPage/jobsData'
 const JobsTableRow = ({
   content,
   handleExpandRow,
-  convertToYaml,
+  toggleConvertToYaml,
   handleSelectItem,
   handleShowElements,
   index,
@@ -19,6 +19,7 @@ const JobsTableRow = ({
   tableContent
 }) => {
   const parent = useRef()
+
   return (
     <div
       className={`table-body__row ${
@@ -116,7 +117,10 @@ const JobsTableRow = ({
         })
       )}
       <div className="table-body__cell row__actions">
-        <ActionsMenu convertToYaml={convertToYaml} item={content[index]} />
+        <ActionsMenu
+          toggleConvertToYaml={toggleConvertToYaml}
+          item={content[index]}
+        />
       </div>
     </div>
   )
@@ -128,7 +132,7 @@ JobsTableRow.defaultProps = {
 
 JobsTableRow.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  convertToYaml: PropTypes.func.isRequired,
+  toggleConvertToYaml: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   handleShowElements: PropTypes.func.isRequired,

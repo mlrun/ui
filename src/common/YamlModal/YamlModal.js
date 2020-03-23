@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import Prism from 'prismjs'
 import PropTypes from 'prop-types'
 
@@ -6,20 +6,18 @@ import cancel from '../../images/cancel.png'
 
 import './yamlmodal.scss'
 
-const YamlModal = ({ convertedYaml }) => {
-  const modal = useRef()
+const YamlModal = ({ convertedYaml, toggleConvertToYaml }) => {
   const html =
     convertedYaml && Prism.highlight(convertedYaml, Prism.languages.yml, 'yml')
 
-  const closeYamlModal = () => {
-    modal.current.style.display = 'none'
-  }
-
   return (
-    <div className="yaml_modal" ref={modal} id="yaml_modal">
+    <div
+      className={`yaml-modal${convertedYaml.length > 0 ? ' modal-showed' : ''}`}
+      id="yaml_modal"
+    >
       <pre>
         <code dangerouslySetInnerHTML={{ __html: html }} />
-        <button onClick={closeYamlModal}>
+        <button onClick={toggleConvertToYaml}>
           <img src={cancel} alt="Cancel" />
         </button>
       </pre>
@@ -28,7 +26,8 @@ const YamlModal = ({ convertedYaml }) => {
 }
 
 YamlModal.propTypes = {
-  convertedYaml: PropTypes.string.isRequired
+  convertedYaml: PropTypes.string.isRequired,
+  toggleConvertToYaml: PropTypes.func.isRequired
 }
 
 export default YamlModal

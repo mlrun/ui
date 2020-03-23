@@ -1,7 +1,7 @@
 @import '../../scss/colors';
 @import '../../scss/shadows';
 
-.download_container {
+.download-container {
   .download {
     cursor: pointer;
     fill: $white;
@@ -16,7 +16,7 @@
       fill: $cornflowerBlue;
     }
   }
-  .download_container {
+  .download-container {
     transform: translate(8px, 8px);
     rect {
       fill: $topaz;

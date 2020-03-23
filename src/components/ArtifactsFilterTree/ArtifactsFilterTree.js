@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import caret from '../../images/caret.png'
 
 import './artifactsfiltertree.scss'
 
-const ArtifactFilterTree = ({ items, onChange, value, label }) => {
+const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
   const [isDropDownMenuOpen, setIsDropDownMenu] = useState(false)
   const [filterTree, setFilterTree] = useState(value)
+
+  const history = useHistory()
 
   const artifactFilterTreeRef = useRef()
 
@@ -25,14 +28,33 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
   const handleKeyDown = event => {
     if (event.keyCode === 13 && event.target.value.length !== 0) {
       event.preventDefault()
+
       let searchItem = items.filter(item =>
         RegExp(`^${filterTree}`, 'i').test(item)
       )[0]
+
+      if (match.params.jobId || match.params.name) {
+        history.push(
+          `/projects/${match.params.projectName}/${page.toLowerCase()}`
+        )
+      }
+
       setFilterTree(searchItem || event.target.value)
       onChange(searchItem || event.target.value)
       event.target.blur()
       setIsDropDownMenu(false)
     }
+  }
+
+  const handleSelectFilter = item => {
+    if (match.params.jobId || match.params.name) {
+      history.push(
+        `/projects/${match.params.projectName}/${page.toLowerCase()}`
+      )
+    }
+
+    setFilterTree(item)
+    onChange(item)
   }
 
   useEffect(() => {
@@ -93,8 +115,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label }) => {
                   }
               `}
                 onClick={() => {
-                  setFilterTree(item)
-                  onChange(item)
+                  handleSelectFilter(item)
                 }}
               >
                 {item}
