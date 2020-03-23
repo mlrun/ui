@@ -22,7 +22,7 @@ const Projects = ({ projects, error, fetchProjects, match }) => {
       <div className="projects_wrapper">
         {projects.length !== 0 ? (
           projects.map(project => {
-            return <ProjectCard key={project} project={project} />
+            return <ProjectCard key={project.id} project={project} />
           })
         ) : error.length === 0 ? (
           <Loader />

@@ -37,7 +37,7 @@ const ArtifactInfoMetadata = ({ item }) => {
         {headers.map(header => {
           return (
             <div className="artifact_metadata_table_header_item" key={header}>
-              <span>{header}</span>
+              {header !== '' && <span>{header}</span>}
             </div>
           )
         })}

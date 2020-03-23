@@ -1,5 +1,6 @@
 @import '../../scss/shadows';
 @import '../../scss/colors';
+@import '../../scss//borders.scss';
 
 .breadcrumbs {
   &_container {
@@ -21,16 +22,15 @@
     min-height: 700px;
     .project {
       &_card {
-        min-width: 320px;
-        height: 219px;
+        width: 338px;
+        height: 182px;
         border-radius: 4px;
-        border: 1px solid #1414141f;
-        box-shadow: 0px 3px 4px #0000002e;
-        padding: 24px 38px;
+        border: $tableBorder;
+        padding: 25px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        margin-right: 24px;
+        margin-right: 18px;
         &:last-child {
           margin-right: 0;
         }
@@ -39,19 +39,30 @@
           font-size: 18px;
           line-height: 21px;
           display: flex;
-          color: #483f56;
+          color: $primary;
+        }
+        &_description {
+          font-size: 13px;
+          line-height: 21px;
+          color: $saltbox;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          word-break: break-all;
         }
         &_links {
           display: flex;
-          font-weight: 500;
-          font-size: 14px;
-          line-height: 16px;
           color: $cornflowerBlue;
           a {
             display: flex;
             align-items: center;
             margin-right: 20px;
           }
+        }
+        &:hover {
+          box-shadow: $previewBoxShadow;
         }
       }
     }
