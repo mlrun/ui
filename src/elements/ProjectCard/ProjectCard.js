@@ -20,6 +20,9 @@ const ProjectCard = ({ project }) => {
           <img src={artifactIcon} alt="artifact" />
           <div>Artifacts</div>
         </Link>
+        <Link to={`/projects/${project.name}/functions`}>
+          <div>Functions</div>
+        </Link>
       </div>
     </div>
   )

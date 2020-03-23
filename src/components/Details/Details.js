@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 
 import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
@@ -17,34 +16,29 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import ArtifactInfoMetadata from '../ArtifactInfoMetadata/ArtifactInfoMetada'
 
 import { formatDatetime } from '../../utils'
-import artifactsAction from '../../actions/artifacts'
+import { ARTIFACTS_PAGE } from '../../constants'
 
 import './details.scss'
 
 import cancel from '../../images/cancel.png'
 import popout from '../../images/popout.png'
+import DetailsCode from '../DetailsCode/DetailsCode'
 
 const Details = ({
   detailsMenu,
   handleCancel,
+  handleSelectItem,
   handleShowElements,
-  hideChips,
   item,
   match,
   page,
-  convertToYaml
+  toggleConvertToYaml
 }) => {
-  const dispatch = useDispatch()
   const history = useHistory()
 
   const handlePreview = () => {
     history.push(`/projects/${match.params.projectName}/artifacts`)
-    dispatch(
-      artifactsAction.selectArtifact({
-        isPreview: true,
-        item
-      })
-    )
+    handleSelectItem(item, true)
   }
 
   useEffect(() => {
@@ -62,12 +56,13 @@ const Details = ({
   ])
 
   return (
-    <div className="table__item" onClick={hideChips}>
+    <div className="table__item">
       <div className="item-header">
         <div className="item-header__data">
           <h3>{item.name || item.key}</h3>
           <span>
-            {formatDatetime(item.startTime)}
+            {Object.keys(item).length > 0 &&
+              formatDatetime(item.startTime || new Date(item.updated))}
             {item.state && (
               <Tooltip
                 template={
@@ -84,21 +79,21 @@ const Details = ({
           </span>
         </div>
         <div className="item-header__buttons">
-          {page === 'artifacts' && (
+          {page === ARTIFACTS_PAGE && (
             <>
               <Download
                 path={item.target_path.path}
                 schema={item.target_path.schema}
               />
               <ActionsMenu
-                convertToYaml={convertToYaml}
+                toggleConvertToYaml={toggleConvertToYaml}
                 item={item}
                 time={500}
               />
             </>
           )}
           <Link
-            to={`/projects/${match.params.projectName}/${page}`}
+            to={`/projects/${match.params.projectName}/${page.toLowerCase()}`}
             onClick={handleCancel}
           >
             <img src={cancel} alt="cancel" />
@@ -112,7 +107,7 @@ const Details = ({
               key={link}
               id={item.uid}
               match={match}
-              name={item.key}
+              name={item.key || item.name}
               page={page}
               tab={link}
             />
@@ -144,9 +139,14 @@ const Details = ({
         </div>
       )}
       {match.params.tab === 'inputs' && <DetailsInputs inputs={item.inputs} />}
-      {match.params.tab === 'artifacts' && <DetailsArtifacts match={match} />}
+      {match.params.tab === 'artifacts' && (
+        <DetailsArtifacts match={match} selectedItem={item} />
+      )}
       {match.params.tab === 'results' && <DetailsResults job={item} />}
-      {match.params.tab === 'logs' && <DetailsLogs match={match} />}
+      {match.params.tab === 'logs' && <DetailsLogs match={match} item={item} />}
+      {match.params.tab === 'code' && (
+        <DetailsCode code={item.functionSourceCode} />
+      )}
       {match.params.tab === 'metadata' && item.schema && (
         <ArtifactInfoMetadata item={item} />
       )}
@@ -154,14 +154,18 @@ const Details = ({
   )
 }
 
+Details.defaultProps = {
+  item: {}
+}
+
 Details.propTypes = {
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleShowElements: PropTypes.func.isRequired,
-  hideChips: PropTypes.func.isRequired,
   item: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired
+  page: PropTypes.string.isRequired,
+  toggleConvertToYaml: PropTypes.func.isRequired
 }
 
 export default Details

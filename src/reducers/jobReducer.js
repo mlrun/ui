@@ -1,31 +1,56 @@
+import {
+  FETCH_JOB_LOGS_BEGIN,
+  FETCH_JOB_LOGS_FAILURE,
+  FETCH_JOB_LOGS_SUCCESS,
+  FETCH_JOBS_BEGIN,
+  FETCH_JOBS_FAILURE,
+  FETCH_JOBS_SUCCESS
+} from '../constants'
+
 const initialState = {
   jobs: [],
-  selectedJob: {},
   logs: '',
-  jobsData: []
+  loading: false,
+  error: null
 }
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case 'SET_JOBS':
+    case FETCH_JOBS_BEGIN:
       return {
         ...state,
-        jobs: payload
+        loading: true
       }
-    case 'SET_JOBS_DATA':
+    case FETCH_JOBS_SUCCESS:
       return {
         ...state,
-        jobsData: payload
+        jobs: payload,
+        loading: false
       }
-    case 'SET_SELECTED_JOB':
+    case FETCH_JOBS_FAILURE:
       return {
         ...state,
-        selectedJob: payload
+        jobs: [],
+        loading: false,
+        error: payload
       }
-    case 'SET_JOB_LOGS':
+    case FETCH_JOB_LOGS_BEGIN:
       return {
         ...state,
-        logs: payload
+        loading: true
+      }
+    case FETCH_JOB_LOGS_SUCCESS:
+      return {
+        ...state,
+        logs: payload,
+        loading: false
+      }
+    case FETCH_JOB_LOGS_FAILURE:
+      return {
+        ...state,
+        logs: [],
+        loading: false,
+        error: payload
       }
     case 'REMOVE_JOB_LOGS':
       return {

@@ -7,8 +7,8 @@ import DetailsArtifactsView from './DetailsArtifactsView'
 
 import { formatDatetime } from '../../utils'
 
-const DetailsArtifacts = ({ jobsStore }) => {
-  const items = jobsStore.selectedJob.artifacts.map(item => {
+const DetailsArtifacts = ({ jobsStore, selectedItem }) => {
+  const items = selectedItem.artifacts.map(item => {
     const index = item.target_path.indexOf('://')
     const target_path = {
       schema: item.target_path.includes('://')
@@ -26,14 +26,14 @@ const DetailsArtifacts = ({ jobsStore }) => {
         key: item.key,
         target_path: target_path,
         size: item.size ? prettyBytes(item.size) : 'N/A',
-        date: formatDatetime(jobsStore.selectedJob.startTime)
+        date: formatDatetime(selectedItem.startTime)
       }
     }
     return {
       key: item.key,
       target_path: target_path,
       size: item.size ? prettyBytes(item.size) : 'N/A',
-      date: formatDatetime(jobsStore.selectedJob.startTime)
+      date: formatDatetime(selectedItem.startTime)
     }
   })
 

@@ -5,7 +5,7 @@ const Chip = ({ className, onClick, value }) => {
   if (value.length > 15) {
     return (
       <span className={className}>
-        <i className="table-body__chips_short">{value}</i>
+        <i className="chip-short">{value}</i>
       </span>
     )
   }

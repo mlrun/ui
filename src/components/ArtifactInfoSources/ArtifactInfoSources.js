@@ -8,6 +8,7 @@ import './artifactinfosources.scss'
 
 const ArtifactInfoSources = ({ header, sources }) => {
   const [isShow, setIsShow] = useState(false)
+
   const sourcesLength = Object.values(sources).length
 
   useEffect(() => {

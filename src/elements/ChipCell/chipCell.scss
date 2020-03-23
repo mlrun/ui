@@ -1,0 +1,27 @@
+.chips {
+  &-wrapper {
+    display: flex;
+    flex: 1;
+    .chip {
+      &-short {
+        margin: 0 !important;
+        font-style: normal;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100px;
+        min-width: 100%;
+      }
+      &-block {
+        position: relative;
+        display: inline-block;
+        .tooltip-wrapper {
+          max-width: 200px;
+        }
+      }
+    }
+    .showChips .chip-block-hidden {
+      display: flex !important;
+    }
+  }
+}

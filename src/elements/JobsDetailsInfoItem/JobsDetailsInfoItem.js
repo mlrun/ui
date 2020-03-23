@@ -42,7 +42,8 @@ JobsDetailsInfoItem.defaultProps = {
 JobsDetailsInfoItem.propTypes = {
   chips: PropTypes.arrayOf(PropTypes.string),
   chipsClassName: PropTypes.string,
-  header: PropTypes.string.isRequired
+  header: PropTypes.string.isRequired,
+  handleShowElements: PropTypes.func
 }
 
 export default JobsDetailsInfoItem
