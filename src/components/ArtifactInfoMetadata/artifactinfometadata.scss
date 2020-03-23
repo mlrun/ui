@@ -19,6 +19,10 @@
         align-items: center;
         text-transform: capitalize;
         min-width: 80px;
+        &:first-child {
+          display: flex;
+          flex: 1.5;
+        }
       }
     }
     &_body {
@@ -40,6 +44,13 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow-x: hidden;
+          }
+          img {
+            margin-left: 10px;
+          }
+          &:first-child {
+            display: flex;
+            flex: 1.5;
           }
         }
       }
