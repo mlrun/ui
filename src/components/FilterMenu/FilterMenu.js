@@ -14,7 +14,6 @@ import expandIcon from '../../images/expand.png'
 import artifactsData from '../Artifacts/artifactsData'
 
 import './filterMenu.scss'
-import { useHistory } from 'react-router-dom'
 
 const FilterMenu = ({
   expand,
@@ -31,7 +30,7 @@ const FilterMenu = ({
   const [itemsFilterTree] = useState(['Latest'])
   const [valueFilterTree, setValueFilterTree] = useState('')
   const [labels, setLabels] = useState('')
-  const history = useHistory()
+
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()
     onChange({ tag: value, project: match.params.projectName })
@@ -91,9 +90,6 @@ const FilterMenu = ({
                     project: match.params.projectName
                   })
                 : onChange()
-              history.push(
-                `/projects/${match.params.projectName}/${page.toLowerCase()}`
-              )
             }}
           >
             <img src={refreshIcon} alt="refresh" />

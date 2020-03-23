@@ -67,6 +67,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
         detailsMenu={functionsData.detailsMenu}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
+        loading={functionsStore.loading}
         match={match}
         page={functionsData.page}
         refresh={refreshFunctions}

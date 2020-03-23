@@ -61,11 +61,22 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
   useEffect(() => {
     if (match.params.jobId) {
       let item = jobs.find(item => item.uid === match.params.jobId)
+
+      if (!item) {
+        return history.push(`/projects/${match.params.projectName}/jobs`)
+      }
+
       setSelectedJob(item)
     } else {
       setSelectedJob({})
     }
-  }, [match.params.jobId, setSelectedJob, jobs])
+  }, [
+    match.params.jobId,
+    setSelectedJob,
+    jobs,
+    match.params.projectName,
+    history
+  ])
 
   useEffect(() => {
     if (groupFilter === 'Name') {
@@ -145,6 +156,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
         handleExpandAll={handleExpandAll}
         handleExpandRow={handleExpandRow}
         handleSelectItem={handleSelectJob}
+        loading={jobsStore.loading}
         match={match}
         page={jobsData.page}
         refresh={refreshJobs}

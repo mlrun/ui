@@ -12,7 +12,7 @@ import artifactsData from './artifactsData'
 
 import './artifacts.scss'
 
-const Artifacts = ({ artifactsStore, fetchArtifacts, match }) => {
+const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
   const [artifacts, _setArtifacts] = useState([])
   const [selectedArtifact, setSelectedArtifact] = useState({})
 
@@ -59,6 +59,7 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match }) => {
       const [searchItem] = artifactsStore.artifacts.filter(item => {
         return item.key === name
       })
+
       const [artifact] = searchItem.data.filter(item => {
         if (searchItem.link_iteration) {
           const { link_iteration } = searchItem.link_iteration
@@ -66,6 +67,7 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match }) => {
         }
         return true
       })
+
       setSelectedArtifact({ isPreview: false, item: artifact })
     }
   }, [match.params, artifactsStore.artifacts])
@@ -95,6 +97,7 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match }) => {
         handleCancel={handleCancel}
         handleSelectItem={handleSelectArtifact}
         isPreview={selectedArtifact.isPreview}
+        loading={artifactsStore.loading}
         match={match}
         page={artifactsData.page}
         refresh={fetchData}

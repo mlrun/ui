@@ -25,6 +25,7 @@ const Content = ({
   handleExpandRow,
   handleSelectItem,
   isPreview,
+  loading,
   match,
   refresh,
   page,
@@ -112,7 +113,7 @@ const Content = ({
               toggleConvertToYaml={toggleConvertToYaml}
               tableHeaders={tableHeaders}
             />
-          ) : (
+          ) : loading ? null : (
             <NoData />
           )}
         </div>

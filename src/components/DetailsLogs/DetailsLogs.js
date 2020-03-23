@@ -30,7 +30,7 @@ const DetailsLogs = ({
     <div className="table__item_logs">
       {jobsStore.logs.length > 0 ? (
         <div className="table__item_logs__content">{jobsStore.logs}</div>
-      ) : (
+      ) : jobsStore.loading ? null : (
         <NoData />
       )}
       <button onClick={refreshLogs} className="logs_refresh">

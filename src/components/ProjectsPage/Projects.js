@@ -26,7 +26,7 @@ const Projects = ({ projectStore, fetchProjects, match }) => {
           projectStore.projects.map(project => {
             return <ProjectCard key={project} project={project} />
           })
-        ) : (
+        ) : projectStore.loading ? null : (
           <NoData />
         )}
       </div>
