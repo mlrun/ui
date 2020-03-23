@@ -2,10 +2,10 @@ import jobsApi from '../api/jobs-api'
 import { parseKeyValues } from '../utils'
 
 const jobsActions = {
-  fetchJobs: (project, status) => dispatch => {
+  fetchJobs: (project, status, labels) => dispatch => {
     const getJobs = status ? jobsApi.filterByStatus : jobsApi.getAll
 
-    return getJobs(project, status && status)
+    return getJobs(project, status && status, labels)
       .then(({ data }) => {
         const newJobs = (data || {}).runs
           .filter(job => job.metadata.iteration === 0)

@@ -38,11 +38,13 @@ const FilterMenu = ({
 
   const handleLabels = event => {
     setLabels(event)
-    onChange({
-      tag: valueFilterTree,
-      project: match.params.projectName,
-      labels: event
-    })
+    page === 'artifacts'
+      ? onChange({
+          tag: valueFilterTree,
+          project: match.params.projectName,
+          labels: event
+        })
+      : onChange(event)
   }
 
   return (

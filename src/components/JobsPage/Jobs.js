@@ -37,20 +37,24 @@ const Jobs = ({ fetchJobs, jobsStore, match, setSelectedJob, history }) => {
     } else return group
   })
 
-  const refreshJobs = useCallback(() => {
-    setJobs([])
-    setExpand(false)
-    setLoading(true)
-    setSelectedJob({})
-    fetchJobs(
-      match.params.projectName,
-      stateFilter !== jobsData.initialStateFilter ? stateFilter : false
-    )
-      .then(jobs => {
-        return setJobs(jobs)
-      })
-      .then(() => setLoading(false))
-  }, [fetchJobs, match.params.projectName, setSelectedJob, stateFilter])
+  const refreshJobs = useCallback(
+    event => {
+      setJobs([])
+      setExpand(false)
+      setLoading(true)
+      setSelectedJob({})
+      fetchJobs(
+        match.params.projectName,
+        stateFilter !== jobsData.initialStateFilter ? stateFilter : false,
+        event
+      )
+        .then(jobs => {
+          return setJobs(jobs)
+        })
+        .then(() => setLoading(false))
+    },
+    [fetchJobs, match.params.projectName, setSelectedJob, stateFilter]
+  )
 
   useEffect(() => {
     refreshJobs()
