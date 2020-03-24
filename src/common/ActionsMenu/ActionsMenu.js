@@ -2,20 +2,19 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import actionMenuIcon from '../../images/elipsis.png'
-
 import yamlIcon from '../../images/yaml.png'
 
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
+const ActionsMenu = ({ toggleConvertToYaml, item, time }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   let idTimeout = null
 
-  const showActionsList = e => {
+  const showActionsList = () => {
     setIsShowMenu(!isShowMenu)
   }
 
-  const handleMouseLeave = event => {
+  const handleMouseLeave = () => {
     if (isShowMenu) {
       idTimeout = setTimeout(() => {
         setIsShowMenu(false)
@@ -29,7 +28,7 @@ const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
 
   return (
     <div
-      className="row__actions__container"
+      className="actions-container"
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
     >
@@ -38,16 +37,20 @@ const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
       </button>
       {isShowMenu && (
         <div
-          className="row__actions__body"
+          className="actions-container__body"
           onClick={() => setIsShowMenu(false)}
         >
           <div
-            className="row__actions__body_option"
+            className="actions-container__option"
             onClick={() => {
-              convertToYaml(item)
+              toggleConvertToYaml(item)
             }}
           >
-            <img src={yamlIcon} alt="yaml" />
+            <img
+              src={yamlIcon}
+              alt="yaml"
+              className="actions-container__icon"
+            />
             View YAML
           </div>
         </div>
@@ -57,12 +60,14 @@ const ActionsMenu = ({ convertToYaml, item, time = 100 }) => {
 }
 
 ActionsMenu.defaultProps = {
-  item: {}
+  item: {},
+  time: 100
 }
 
 ActionsMenu.propTypes = {
-  convertToYaml: PropTypes.func.isRequired,
-  item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string])
+  toggleConvertToYaml: PropTypes.func.isRequired,
+  item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
+  time: PropTypes.number
 }
 
 export default ActionsMenu

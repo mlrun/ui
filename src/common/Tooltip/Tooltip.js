@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Transition } from 'react-transition-group'
 
-const Tooltip = ({ children, template, className }) => {
+const Tooltip = ({ children, template, className, textShow = false }) => {
   const [show, setShow] = useState(false)
   const [style, setStyle] = useState({})
 
@@ -14,7 +14,8 @@ const Tooltip = ({ children, template, className }) => {
   const defaultStyle = {
     transition: `opacity ${duration}ms ease-in-out`,
     position: 'fixed',
-    zIndex: 1000
+    zIndex: 1000,
+    whiteSpace: 'nowrap'
   }
 
   const transitionStyles = {
@@ -31,39 +32,44 @@ const Tooltip = ({ children, template, className }) => {
     setShow(false)
   }
 
-  const handleMouseEnter = event => {
-    const [child] = parentRef.current.childNodes
-    if (
-      child.nodeType !== Node.TEXT_NODE ||
-      /*
-        If the child node is a text node and the text of the child node inside the container is greater than the width of the container, then show tooltip.
-       */
-      (child.nodeType === Node.TEXT_NODE &&
-        parentRef.current.scrollWidth > parentRef.current.offsetWidth)
-    ) {
-      setShow(true)
-      let { height, top, bottom } = parentRef.current.getBoundingClientRect()
-      const {
-        height: tooltipHeight,
-        width: tooltipWidth
-      } = tooltipRef.current.getBoundingClientRect()
-      const left =
-        event.x + tooltipWidth > window.innerWidth
-          ? event.x - (event.x + tooltipWidth - window.innerWidth) - offset
-          : event.x
-      if (top + height + offset + tooltipHeight >= window.innerHeight) {
-        setStyle({
-          top: bottom - height - offset - tooltipHeight,
-          left
-        })
-      } else {
-        setStyle({
-          top: top + height + offset,
-          left
-        })
+  const handleMouseEnter = useCallback(
+    event => {
+      const [child] = parentRef.current.childNodes
+      let show = textShow
+        ? true
+        : child.nodeType !== Node.TEXT_NODE ||
+          /*
+          If the child node is a text node and the text of the child node inside the container is greater than the width of the container, then show tooltip.
+        */
+          (child.nodeType === Node.TEXT_NODE &&
+            parentRef.current.scrollWidth > parentRef.current.offsetWidth)
+      if (show) {
+        setShow(true)
+        let { height, top, bottom } = parentRef.current.getBoundingClientRect()
+        const {
+          height: tooltipHeight,
+          width: tooltipWidth
+        } = tooltipRef.current.getBoundingClientRect()
+        const left =
+          event.x + tooltipWidth > window.innerWidth
+            ? event.x - (event.x + tooltipWidth - window.innerWidth + offset)
+            : event.x
+
+        if (top + height + offset + tooltipHeight >= window.innerHeight) {
+          setStyle({
+            top: bottom - height - offset - tooltipHeight,
+            left
+          })
+        } else {
+          setStyle({
+            top: top + height + offset,
+            left
+          })
+        }
       }
-    }
-  }
+    },
+    [textShow]
+  )
 
   useEffect(() => {
     const node = parentRef.current
@@ -76,7 +82,7 @@ const Tooltip = ({ children, template, className }) => {
         node.removeEventListener('mouseleave', handleMouseLeave)
       }
     }
-  }, [parentRef])
+  }, [parentRef, handleMouseEnter])
 
   useEffect(() => {
     if (show) {

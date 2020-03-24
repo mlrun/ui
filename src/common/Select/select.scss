@@ -15,27 +15,27 @@
   &.active {
     background: $alabaster;
   }
-  &_header {
+  &__header {
     display: flex;
     align-items: center;
-    &_label {
+    .label {
       color: $topaz;
       padding: 0 5px 0 15px;
       text-transform: capitalize;
     }
-    &_value {
+    .value {
       min-width: 96px;
       overflow-x: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       color: $mulledWine;
     }
-    img {
+    .caret {
       height: 6px;
       margin: 0 10px;
     }
   }
-  &_body {
+  &__body {
     z-index: 9999999;
     position: absolute;
     top: 48px;
@@ -44,17 +44,6 @@
     box-shadow: $filterShadow;
     border-radius: 2px;
     color: $mulledWineTwo;
-    &_item {
-      display: flex;
-      align-items: center;
-      height: 49px;
-      padding-left: 15px;
-      background-color: $white;
-      &:hover {
-        background-color: $alabaster;
-        cursor: pointer;
-      }
-    }
     .status {
       &_all {
         @include jobStatus(none);
@@ -73,13 +62,23 @@
       }
     }
   }
-}
-
-.overall {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 999999;
+  &__item {
+    display: flex;
+    align-items: center;
+    height: 49px;
+    padding-left: 15px;
+    background-color: $white;
+    &:hover {
+      background-color: $alabaster;
+      cursor: pointer;
+    }
+  }
+  .overall {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 999999;
+  }
 }

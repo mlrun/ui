@@ -3,7 +3,6 @@
 @import '../../scss/shadows';
 @import '../../scss/colors';
 
-
 .content {
   @include jobsFlex;
   flex-direction: column;
@@ -12,7 +11,6 @@
   background-color: $white;
   margin: 52px 24px 24px;
   position: relative;
-  overflow: hidden;
   &__header {
     display: flex;
     padding: 21px 24px;
@@ -22,42 +20,16 @@
     background-color: $white;
     box-shadow: $headerShadow;
   }
-  &__menu {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    top: -38px;
-    &__list {
-      @include resetSpaces;
-      list-style-type: none;
-      display: flex;
-      flex-direction: row;
-      align-items: flex-end;
-      &_item {
-        padding: 8px 24px;
-        border-bottom: 3px solid transparent;
-        text-align: center;
-        font-weight: bold;
-        font-size: 15px;
-        line-height: 18px;
-        color: $topaz;
-        cursor: pointer;
-      }
-      .active {
-        border-bottom: 3px solid $cornflowerBlue;
-        color: $cornflowerBlue;
-      }
-    }
-  }
-  .table_container {
+  .table-container {
     position: relative;
     display: flex;
     flex: 1;
     .no_data {
       margin: auto;
+      color: $mulledWine;
     }
   }
-  &__action_bar {
+  &__action-bar {
     padding: 23px 24px;
     display: flex;
   }

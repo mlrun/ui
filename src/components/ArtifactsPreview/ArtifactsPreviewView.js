@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Prism from 'prismjs'
 import DetailsResults from '../DetailsResults/DetailsResults'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 const ArtifactsPreviewView = ({ preview }) => (
   <>
@@ -19,7 +21,9 @@ const ArtifactsPreviewView = ({ preview }) => (
                 key={header}
                 className="table__item_artifacts__preview_table__header"
               >
-                {header}
+                <Tooltip template={<TextTooltipTemplate text={header} />}>
+                  {header}
+                </Tooltip>
               </div>
             )
           })}

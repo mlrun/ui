@@ -106,12 +106,7 @@
   padding: 0;
 }
 
-@mixin tableColumnFlex($flex) {
-  max-width: $flex;
-  flex: 0 0 $flex;
-}
-
-@mixin flex($flex, $minWidth) {
+@mixin tableColumnFlex($flex, $min) {
+  min-width: $min;
   flex: $flex;
-  min-width: $minWidth;
 }

@@ -1,13 +1,34 @@
+import {
+  FETCH_PROJECTS_BEGIN,
+  FETCH_PROJECTS_FAILURE,
+  FETCH_PROJECTS_SUCCESS
+} from '../constants'
+
 const initialState = {
-  projects: []
+  projects: [],
+  loading: false,
+  error: null
 }
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case 'SET_PROJECTS':
+    case FETCH_PROJECTS_BEGIN:
       return {
         ...state,
-        projects: payload
+        loading: true
+      }
+    case FETCH_PROJECTS_SUCCESS:
+      return {
+        ...state,
+        projects: payload,
+        loading: false
+      }
+    case FETCH_PROJECTS_FAILURE:
+      return {
+        ...state,
+        projects: [],
+        loading: false,
+        error: payload
       }
     default:
       return state

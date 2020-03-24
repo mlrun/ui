@@ -92,6 +92,11 @@
         }
         &__content {
           flex: 1;
+          padding: 0 5px;
+          min-width: 80px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow-x: hidden;
         }
         &:not(:first-child) {
           &:hover {
@@ -101,7 +106,13 @@
       }
       &__header {
         flex: 1;
-        text-transform: capitalize;
+        padding: 0 5px;
+        min-width: 80px;
+        div {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow-x: hidden;
+        }
       }
     }
     pre {

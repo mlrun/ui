@@ -1,6 +1,6 @@
 @import '../../scss/colors';
 
-.yaml_modal {
+.yaml-modal {
   z-index: 99999;
   position: absolute;
   width: 100%;
@@ -19,6 +19,7 @@
     position: relative;
     overflow-y: auto;
     padding: 15px;
+    word-wrap: break-word;
   }
   button {
     position: absolute;
@@ -33,4 +34,7 @@
       outline: none;
     }
   }
+}
+.modal-showed {
+  display: flex;
 }

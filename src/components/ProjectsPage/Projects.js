@@ -6,10 +6,11 @@ import projectsAction from '../../actions/projects'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
+import NoData from '../../common/NoData/NoData'
 
 import './projects.scss'
 
-const Projects = ({ projects, fetchProjects, match }) => {
+const Projects = ({ projectStore, fetchProjects, match }) => {
   useEffect(() => {
     fetchProjects()
   }, [fetchProjects])
@@ -20,20 +21,17 @@ const Projects = ({ projects, fetchProjects, match }) => {
         <Breadcrumbs match={match} />
       </div>
       <div className="projects_wrapper">
-        {projects.length !== 0 ? (
-          projects.map(project => {
+        {projectStore.loading && <Loader />}
+        {projectStore.projects.length !== 0 || projectStore.error ? (
+          projectStore.projects.map(project => {
             return <ProjectCard key={project} project={project} />
           })
-        ) : (
-          <Loader />
+        ) : projectStore.loading ? null : (
+          <NoData />
         )}
       </div>
     </>
   )
 }
 
-const mapStateToProps = state => ({
-  projects: state.projectStore.projects
-})
-
-export default connect(mapStateToProps, projectsAction)(Projects)
+export default connect(projectStore => projectStore, projectsAction)(Projects)

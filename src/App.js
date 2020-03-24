@@ -9,6 +9,7 @@ import {
 import Page from './layout/Page/Page'
 
 import './scss/main.scss'
+import Functions from './components/FunctionsPage/Functions'
 
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
@@ -45,6 +46,16 @@ const App = () => {
               exact
               path="/projects/:projectName/artifacts"
               render={routeProps => <Artifacts {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/functions"
+              render={routeProps => <Functions {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/functions/:name/:tab"
+              render={routeProps => <Functions {...routeProps} />}
             />
             <Redirect to="/projects" />
           </Switch>

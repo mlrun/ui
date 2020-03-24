@@ -4,12 +4,14 @@ import PropTypes from 'prop-types'
 import { formatDatetime, parseKeyValues } from '../../utils'
 import jobsData from '../JobsPage/jobsData'
 import artifactsData from '../Artifacts/artifactsData'
+import functionsData from '../FunctionsPage/functionsData'
+import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
 
 import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsInfoItem'
 import ArtifactsDetailsInfoItem from '../../elements/ArtifactsDetailsInfoItem/ArtifactsDetailsInfoItem'
+import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 
 import './detailsInfo.scss'
-import ArtifactSources from '../ArtifactSources/ArtifactSources'
 
 const DetailsInfo = ({ item, handleShowElements, page }) => {
   const jobsInfoContent = [
@@ -34,12 +36,15 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
     item.labels,
     item.sources
   ]
-  const artifactsProducerInfoContent = item.producer && [
-    item.producer.kind,
-    item.producer.name,
-    item.producer.owner,
-    item.producer.uri,
-    item.producer.workflow
+  const functionsInfoContent = [
+    item.name,
+    item.kind,
+    item.hash,
+    formatDatetime(new Date(item.updated)),
+    item.command,
+    item.image,
+    item.description,
+    item.status
   ]
 
   return (
@@ -48,7 +53,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
         <h3 className="table__item_details_preview_header">General</h3>
       )}
       <ul className="table__item_details">
-        {page === 'jobs'
+        {page === JOBS_PAGE
           ? jobsData.jobsInfoHeaders.map((header, i) => {
               switch (jobsInfoContent[i]) {
                 case item.state:
@@ -100,7 +105,8 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                   )
               }
             })
-          : artifactsData.artifactsInfoHeaders.map((header, i) => {
+          : page === ARTIFACTS_PAGE
+          ? artifactsData.artifactsInfoHeaders.map((header, i) => {
               switch (artifactsInfoContent[i]) {
                 case item.labels:
                   return (
@@ -125,7 +131,7 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                   )
                 case item.sources: {
                   return (
-                    <ArtifactSources
+                    <ArtifactInfoSources
                       key={header}
                       header={header}
                       sources={
@@ -150,20 +156,34 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                     />
                   )
               }
+            })
+          : functionsData.functionsInfoHeaders.map((header, i) => {
+              return (
+                <li className="table__item_details_item" key={i}>
+                  <div className="table__item_details_item_header">
+                    {header}
+                  </div>
+                  <div className="table__item_details_item_data">
+                    {functionsInfoContent[i] || ''}
+                  </div>
+                </li>
+              )
             })}
       </ul>
-      {page === 'artifacts' && item.producer && (
+      {page === ARTIFACTS_PAGE && item.producer && (
         <>
           <h3 className="table__item_details_preview_header">Producer</h3>
           <ul className="table__item_details">
-            {artifactsData.artifactsProducerInfoHeaders.map((header, i) => (
-              <ArtifactsDetailsInfoItem
-                key={header}
-                page={page}
-                info={artifactsProducerInfoContent[i]}
-                header={header}
-              />
-            ))}
+            {Object.keys(item.producer).map(key => {
+              return (
+                <ArtifactsDetailsInfoItem
+                  key={key}
+                  page={page}
+                  info={item.producer[key]}
+                  header={key}
+                />
+              )
+            })}
           </ul>
         </>
       )}

@@ -1,4 +1,3 @@
-import { truncateUid } from './string'
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
 
@@ -17,8 +16,9 @@ const createJobsContent = jobs => {
         type: 'type'
       },
       uid: {
-        value: truncateUid(job.uid),
-        size: 'jobs_small'
+        value: job.uid,
+        size: 'jobs_small',
+        type: 'uid'
       },
       startTime: {
         value: formatDatetime(job.startTime),

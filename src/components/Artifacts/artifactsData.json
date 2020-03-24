@@ -1,5 +1,4 @@
 {
-  "artifactsProducerInfoHeaders": ["Kind", "Name", "Owner", "Uri", "Workflow"],
   "artifactsInfoHeaders": [
     "Key",
     "Iter",
@@ -12,8 +11,9 @@
     "Sources"
   ],
   "detailsMenu": ["info", "preview"],
-  "filters": ["period", "tree"],
-  "page": "artifacts",
+  "filters": ["period", "tree", "labels"],
+  "page": "ARTIFACTS",
+  "sources": ["name", "path"],
   "tableHeaders": [
     {
       "header": "Name",

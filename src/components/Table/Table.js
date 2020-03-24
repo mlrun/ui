@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
 
 import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
@@ -8,32 +7,74 @@ import NotificationDownload from '../NotificationDownload/NotificationDownload'
 
 import './table.scss'
 
+import createArtifactsContent from '../../utils/createArtifactsContent'
+import createFunctionsContent from '../../utils/createFunctionsContent'
+import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
+import createJobsContent from '../../utils/createJobsContent'
+
 const Table = ({
-  groupLatestJob,
-  handleCancel,
-  match,
-  tableContent,
   content,
-  selectedItem,
-  handleSelectItem,
-  convertToYaml,
-  tableHeaders,
   detailsMenu,
+  groupFilter,
+  groupedByName,
+  handleCancel,
+  handleExpandRow,
+  handleSelectItem,
+  isPreview,
+  match,
   page,
-  handleExpandRow
+  selectedItem,
+  toggleConvertToYaml,
+  tableHeaders
 }) => {
-  const state = useSelector(state => state.artifactsStore.selectArtifact)
+  const [tableContent, setTableContent] = useState([])
+  const [groupLatestJob, setGroupLatestJob] = useState([])
+
+  useEffect(() => {
+    const _tableContent =
+      Object.keys(groupedByName).length > 0
+        ? Object.values(groupedByName).map(group => {
+            return createJobsContent(group)
+          })
+        : page === JOBS_PAGE
+        ? createJobsContent(content)
+        : page === ARTIFACTS_PAGE
+        ? createArtifactsContent(content)
+        : createFunctionsContent(content)
+
+    if (groupFilter === 'Name') {
+      const groupLatest = _tableContent.map(group => {
+        if (Array.isArray(group)) {
+          return group.reduce((prev, curr) => {
+            return new Date(prev.updated.value).getTime() >
+              new Date(curr.updated.value).getTime()
+              ? prev
+              : curr
+          })
+        } else return group
+      })
+
+      setGroupLatestJob(groupLatest)
+    }
+
+    setTableContent(_tableContent)
+  }, [page, content, groupedByName, groupFilter])
+
+  useEffect(() => {
+    if (groupFilter === 'None') {
+      setGroupLatestJob([])
+      setTableContent([])
+    }
+  }, [groupFilter])
+
+  useEffect(() => {
+    window.addEventListener('click', hideChips)
+    return () => window.removeEventListener('click', hideChips)
+  })
+
   const hideChips = e => {
-    if (
-      e.target.className !== 'table__item_details_item_data__labels' &&
-      e.target.className !== 'table-body__labels' &&
-      e.target.className !== 'table-body__results' &&
-      e.target.className !== 'table-body__parameters' &&
-      e.target.className !== 'table__item_details_item_data__parameters'
-    ) {
-      const block = document.getElementsByClassName(
-        'table-body__chips__block showChips'
-      )[0]
+    if (e.target.getAttribute('count-chips') === null) {
+      const block = document.getElementsByClassName('chip-block showChips')[0]
       if (block) {
         block.classList.remove('showChips')
       }
@@ -41,15 +82,9 @@ const Table = ({
   }
 
   const handleShowElements = e => {
-    if (
-      e.target.className === 'table__item_details_item_data__labels' ||
-      e.target.className === 'table-body__labels' ||
-      e.target.className === 'table-body__results' ||
-      e.target.className === 'table-body__parameters' ||
-      e.target.className === 'table__item_details_item_data__parameters'
-    ) {
+    if (e.target.getAttribute('count-chips')) {
       let blocksArr = document.getElementsByClassName('showChips')
-      const parentBlock = e.target.closest('.table-body__chips__block')
+      const parentBlock = e.target.closest('.chip-block')
       if (
         blocksArr.length > 0 &&
         !parentBlock.classList.contains('showChips')
@@ -61,28 +96,29 @@ const Table = ({
         : parentBlock.classList.add('showChips')
     }
   }
+
   return (
     <>
       <TableView
-        groupLatestJob={groupLatestJob}
-        hideChips={hideChips}
-        handleShowElements={handleShowElements}
-        handleCancel={handleCancel}
-        match={match}
-        tableContent={tableContent}
         content={content}
-        selectedItem={selectedItem}
-        handleSelectItem={handleSelectItem}
-        convertToYaml={convertToYaml}
-        tableHeaders={tableHeaders}
         detailsMenu={detailsMenu}
-        page={page}
+        groupFilter={groupFilter}
+        groupLatestJob={groupLatestJob}
+        groupedByName={groupedByName}
+        handleCancel={handleCancel}
         handleExpandRow={handleExpandRow}
+        handleSelectItem={handleSelectItem}
+        handleShowElements={handleShowElements}
+        hideChips={hideChips}
+        match={match}
+        page={page}
+        selectedItem={selectedItem}
+        tableContent={tableContent}
+        toggleConvertToYaml={toggleConvertToYaml}
+        tableHeaders={tableHeaders}
       />
       <NotificationDownload />
-      {state.isPreview && (
-        <PreviewModal item={selectedItem} cancel={handleCancel} />
-      )}
+      {isPreview && <PreviewModal item={selectedItem} cancel={handleCancel} />}
     </>
   )
 }
@@ -90,24 +126,20 @@ const Table = ({
 Table.defaultProps = {
   groupLatestJob: [],
   handleExpandRow: () => {},
-  selectedItem: {}
+  selectedItem: {},
+  groupedByName: {}
 }
 
 Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  convertToYaml: PropTypes.func.isRequired,
+  toggleConvertToYaml: PropTypes.func.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
-  groupLatestJob: PropTypes.arrayOf(PropTypes.shape({})),
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}),
-  tableContent: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
-  ]).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
