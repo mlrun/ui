@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import artifactIcon from '../../images/file-chart.png'
-import jobsIcon from '../../images/check-all.png'
+// import artifactIcon from '../../images/file-chart.png'
+// import jobsIcon from '../../images/check-all.png'
 
 const ProjectCard = ({ project }) => {
   return (
@@ -13,11 +13,11 @@ const ProjectCard = ({ project }) => {
       )}
       <div className="project_card_links">
         <Link to={`/projects/${project.name}/jobs`}>
-          <img src={jobsIcon} alt="jobs" />
+          {/* <img src={jobsIcon} alt="jobs" /> */}
           <div>Jobs</div>
         </Link>
         <Link to={`/projects/${project.name}/artifacts`}>
-          <img src={artifactIcon} alt="artifact" />
+          {/* <img src={artifactIcon} alt="artifact" /> */}
           <div>Artifacts</div>
         </Link>
         <Link to={`/projects/${project.name}/functions`}>

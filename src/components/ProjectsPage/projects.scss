@@ -1,6 +1,6 @@
 @import '../../scss/shadows';
 @import '../../scss/colors';
-@import '../../scss//borders.scss';
+@import '../../scss/borders.scss';
 
 .breadcrumbs {
   &_container {
@@ -14,7 +14,7 @@
     position: relative;
     display: flex;
     flex-wrap: wrap;
-    align-content: end;
+    align-content: flex-start;
     flex: 1;
     margin: 24px;
     padding-left: 24px;
