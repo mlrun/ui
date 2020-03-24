@@ -39,7 +39,7 @@ const FilterMenu = ({
 
   const handleLabels = event => {
     setLabels(event)
-    page === 'artifacts'
+    page.toLowerCase() === 'artifacts'
       ? onChange({
           tag: valueFilterTree,
           project: match.params.projectName,
