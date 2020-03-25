@@ -15,25 +15,25 @@
   &.active {
     background: $alabaster;
   }
+  &__label {
+    color: $topaz;
+    padding: 0 5px 0 15px;
+    text-transform: capitalize;
+  }
+  &__value {
+    min-width: 96px;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: $mulledWine;
+  }
+  &__caret {
+    height: 6px;
+    margin: 0 10px;
+  }
   &__header {
     display: flex;
     align-items: center;
-    .label {
-      color: $topaz;
-      padding: 0 5px 0 15px;
-      text-transform: capitalize;
-    }
-    .value {
-      min-width: 96px;
-      overflow-x: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      color: $mulledWine;
-    }
-    .caret {
-      height: 6px;
-      margin: 0 10px;
-    }
   }
   &__body {
     z-index: 9999999;

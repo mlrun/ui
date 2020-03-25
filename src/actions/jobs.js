@@ -5,7 +5,8 @@ import {
   FETCH_JOB_LOGS_SUCCESS,
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
-  FETCH_JOBS_SUCCESS
+  FETCH_JOBS_SUCCESS,
+  REMOVE_JOB_LOGS
 } from '../constants'
 import { handleErrors } from '../utils/handleErrors'
 
@@ -62,7 +63,7 @@ const jobsActions = {
     payload: error
   }),
   removeJobLogs: () => ({
-    type: 'REMOVE_JOB_LOGS'
+    type: REMOVE_JOB_LOGS
   })
 }
 

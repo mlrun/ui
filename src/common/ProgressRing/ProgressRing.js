@@ -1,24 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
+import './progressRing.scss'
+
 const ProgressRing = ({ radius, stroke, progress, color, children }) => {
-  const [normalizedRadius] = useState(radius - stroke * 2)
+  const normalizedRadius = radius - stroke * 2
   const offset = 1
   const area = (normalizedRadius + offset) * Math.PI * 2
+
   return (
     <svg height={radius * 2} width={radius * 2}>
       <circle
         stroke={color}
-        fill="transparent"
         strokeWidth={stroke}
         strokeDasharray={(progress * area) / 100 + ' ' + area}
-        style={{
-          transformOrigin: 'center center',
-          transform: 'rotate(-90deg)'
-        }}
         r={normalizedRadius + offset}
         cx={radius}
         cy={radius}
+        className="progress"
       />
       {children}
     </svg>

@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import actionMenuIcon from '../../images/elipsis.png'
 import yamlIcon from '../../images/yaml.png'
 
-import './actionsMenu.scss'
+import './tableActionsMenu.scss'
 
-const ActionsMenu = ({ toggleConvertToYaml, item, time }) => {
+const TableActionsMenu = ({ toggleConvertToYaml, item, time }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   let idTimeout = null
 
@@ -28,7 +28,7 @@ const ActionsMenu = ({ toggleConvertToYaml, item, time }) => {
 
   return (
     <div
-      className="actions-container"
+      className="table-actions-container"
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
     >
@@ -37,11 +37,11 @@ const ActionsMenu = ({ toggleConvertToYaml, item, time }) => {
       </button>
       {isShowMenu && (
         <div
-          className="actions-container__body"
+          className="table-actions-container__body"
           onClick={() => setIsShowMenu(false)}
         >
           <div
-            className="actions-container__option"
+            className="table-actions-container__option"
             onClick={() => {
               toggleConvertToYaml(item)
             }}
@@ -49,7 +49,7 @@ const ActionsMenu = ({ toggleConvertToYaml, item, time }) => {
             <img
               src={yamlIcon}
               alt="yaml"
-              className="actions-container__icon"
+              className="table-actions-container__icon"
             />
             View YAML
           </div>
@@ -59,15 +59,15 @@ const ActionsMenu = ({ toggleConvertToYaml, item, time }) => {
   )
 }
 
-ActionsMenu.defaultProps = {
+TableActionsMenu.defaultProps = {
   item: {},
   time: 100
 }
 
-ActionsMenu.propTypes = {
+TableActionsMenu.propTypes = {
   toggleConvertToYaml: PropTypes.func.isRequired,
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
   time: PropTypes.number
 }
 
-export default ActionsMenu
+export default TableActionsMenu

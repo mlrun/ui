@@ -72,7 +72,8 @@ const FilterMenu = ({
             />
           ) : (
             <Select
-              filter={filter}
+              option={filter}
+              label={filter}
               key={filter}
               value={
                 (filter === 'status' && stateFilter) ||

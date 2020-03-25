@@ -1,0 +1,60 @@
+@import "../../scss/colors";
+
+.create-container {
+  flex: 1;
+  &__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px;
+    background-color: $white;
+    .header-link {
+      display: flex;
+      align-items: center;
+      &__title {
+        margin: 0 18px;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 23px;
+        color: $primary
+      }
+      &__icon {
+        margin-bottom: -4px;
+      }
+    }
+  }
+  &__data {
+    flex: 1;
+    padding: 28px;
+    .data-wrapper {
+      flex: 1;
+      &__header {
+        display: flex;
+        align-items: center;
+        .header {
+          &__icon {
+            margin-right: 13px;
+            &-expanded {
+              transform: rotate(90deg);
+            }
+          }
+          &__title {
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 23px;
+            color: $topaz;
+            margin: 0;
+          }
+        }
+      }
+      &__list {
+        flex: 1;
+        margin-top: 16px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@ import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 
 import functionsData from './functionsData'
-import functions from '../../actions/functions'
+import functionsActions from '../../actions/functions'
 
 const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   const [functions, setFunctions] = useState([])
@@ -23,7 +23,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
         image: func.spec.image,
         description: func.spec.description,
         state: func.status ? func.status.state : '',
-        functionSourceCode: func.spec.functionSourceCode
+        functionSourceCode: func.spec.build.functionSourceCode
       }))
       return setFunctions(newFunctions)
     })
@@ -88,5 +88,5 @@ Functions.propTypes = {
 
 export default connect(
   functionsStore => functionsStore,
-  functions
+  functionsActions
 )(React.memo(Functions))

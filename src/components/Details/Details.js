@@ -10,7 +10,7 @@ import DetailsArtifacts from '../DetailsArtifacts/DetailsArtifacts'
 import DetailsResults from '../DetailsResults/DetailsResults'
 import Download from '../../common/Download/Download'
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
+import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import ArtifactInfoMetadata from '../ArtifactInfoMetadata/ArtifactInfoMetada'
@@ -85,7 +85,7 @@ const Details = ({
                 path={item.target_path.path}
                 schema={item.target_path.schema}
               />
-              <ActionsMenu
+              <TableActionsMenu
                 toggleConvertToYaml={toggleConvertToYaml}
                 item={item}
                 time={500}
