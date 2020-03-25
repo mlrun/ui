@@ -1,14 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import Select from '../Select/Select'
+import { Link } from 'react-router-dom'
 
 import './pageActionsMenu.scss'
 
 const PageActionsMenu = ({ match, page }) => {
   return (
     <div className="page-actions-container">
-      <Select match={match} page={page} option="create" value="Split Button" />
+      <Link
+        className="select__item"
+        to={`/projects/${match.params.projectName}/jobs/create-new-job`}
+      >
+        New Job
+      </Link>
     </div>
   )
 }

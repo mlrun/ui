@@ -1,12 +1,20 @@
+@import "../../scss/colors";
+
 .page-actions-container {
-  .select {
-    width: 117px;
-    &__value {
-      min-width: 60px;
-      margin-left: 10px;
-    }
-    &__item {
-      padding-left: 8px;
-    }
+  //.select {
+  //  width: 117px;
+  //  &__value {
+  //    min-width: 60px;
+  //    margin-left: 10px;
+  //  }
+  //  &__item {
+  //    padding-left: 8px;
+  //  }
+  //}
+  a {
+    padding: 16px;
+    background-color: $white;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
   }
 }
