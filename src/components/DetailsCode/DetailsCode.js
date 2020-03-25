@@ -17,7 +17,11 @@ const DetailsCode = ({ code }) => {
   return (
     <div className="table__item_code">
       {decoded.length > 0 ? (
-        <div className="table__item_code__content">{decoded}</div>
+        <div className="table__item_code__content">
+          <pre>
+            <code>{decoded}</code>
+          </pre>
+        </div>
       ) : (
         <NoData />
       )}

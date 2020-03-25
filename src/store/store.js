@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
   const logger = createLogger({
     collapsed: true,
     errorTransformer: ({ stack }) => {
-      console.error(stack)
+      // console.error(stack)
       return stack
     }
   })

@@ -1,0 +1,19 @@
+@import "../../scss/colors";
+
+.card-template {
+  flex: 0 0 40%;
+  max-width: 325px;
+  height: 218px;
+  background-color: $white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 25px;
+  margin-bottom: 16px;
+  margin-right: 16px;
+  &__header {
+    font-size: 18px;
+    line-height: 21px;
+    margin: 0 12px 0 0;
+    display: inline-block;
+  }
+}
