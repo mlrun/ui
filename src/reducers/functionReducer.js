@@ -1,14 +1,11 @@
 import {
   FETCH_FUNCTIONS_BEGIN,
   FETCH_FUNCTIONS_FAILURE,
-  FETCH_FUNCTIONS_SUCCESS,
-  SELECTED_FUNCTION,
-  REMOVE_SELECTED_FUNCTION
+  FETCH_FUNCTIONS_SUCCESS
 } from '../constants'
 
 const initialState = {
   functions: [],
-  function: {},
   loading: false,
   error: null
 }
@@ -32,16 +29,6 @@ export default (state = initialState, { type, payload }) => {
         functions: [],
         loading: false,
         error: payload
-      }
-    case SELECTED_FUNCTION:
-      return {
-        ...state,
-        function: payload
-      }
-    case REMOVE_SELECTED_FUNCTION:
-      return {
-        ...state,
-        function: {}
       }
     default:
       return state

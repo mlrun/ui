@@ -1,27 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
 
 import Accordion from '../../common/Accordion/Accordion'
 
-import functionsActions from '../../actions/functions'
-
-import closeIcon from '../../images/cancel.png'
+import closeIcon from '../../images/close.svg'
 import runIcon from '../../images/run.png'
 
 import './jobspanel.scss'
 
-const JobsPanel = ({ func }) => {
-  const dispatch = useDispatch()
-
+const JobsPanel = ({ func, close }) => {
   return (
     <div className="job_panel_container">
       <div className="job_panel">
         <div className="job_panel_title">
           <div className="job_panel_title_name">{func?.metadata?.name}</div>
-          <button
-            onClick={() => dispatch(functionsActions.removeSelectedFunction())}
-          >
+          <button onClick={() => close({})}>
             <img src={closeIcon} alt="close" />
           </button>
         </div>

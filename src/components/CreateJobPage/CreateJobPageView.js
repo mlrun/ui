@@ -49,7 +49,7 @@ const CreateJobPageView = ({
             className={`header__icon${expandList && '-expanded'}`}
           />
           <h5 className="header__title">
-            Functions from {match?.params?.projectName}
+            Functions from {match.params.projectName}
           </h5>
         </div>
         {expandList && (
