@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import './createJobCatdTemplate.scss'
+import './createJobCardTemplate.scss'
 
 const CreateJobCardTemplate = ({ name, status }) => {
   return (
