@@ -17,7 +17,6 @@
         height: 100%;
         max-width: 45%;
         background-color: $wildsand;
-        opacity: 1;
         &_title {
           display: flex;
           flex: 0.1;
@@ -28,6 +27,7 @@
             font-weight: 300;
             font-size: 36px;
             line-height: 42px;
+            color: $mulledWineTwo;
           }
           button {
             height: 24px;

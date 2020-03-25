@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 import arrowIcon from '../../images/arrow.png'
 
@@ -22,6 +23,10 @@ const Accordion = ({ title, children }) => {
       <div className="accordion_body">{children}</div>
     </div>
   )
+}
+
+Accordion.propTypes = {
+  title: PropTypes.string
 }
 
 export default Accordion

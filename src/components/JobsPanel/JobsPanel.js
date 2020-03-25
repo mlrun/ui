@@ -1,31 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
 
 import Accordion from '../../common/Accordion/Accordion'
 
-import funcApi from '../../api/functions-api'
+import functionsActions from '../../actions/functions'
 
 import closeIcon from '../../images/cancel.png'
 import runIcon from '../../images/run.png'
 
 import './jobspanel.scss'
 
-const JobsPanel = () => {
-  const [func, setFunc] = useState({})
-  useEffect(() => {
-    funcApi.getAll('default').then(({ data }) => {
-      console.log(data)
-
-      setFunc(data?.funcs[0])
-    })
-  }, [])
-  console.log(func)
+const JobsPanel = ({ func }) => {
+  const dispatch = useDispatch()
 
   return (
     <div className="job_panel_container">
       <div className="job_panel">
         <div className="job_panel_title">
           <div className="job_panel_title_name">{func?.metadata?.name}</div>
-          <button>
+          <button
+            onClick={() => dispatch(functionsActions.removeSelectedFunction())}
+          >
             <img src={closeIcon} alt="close" />
           </button>
         </div>
@@ -50,6 +46,10 @@ const JobsPanel = () => {
       </div>
     </div>
   )
+}
+
+JobsPanel.propTypes = {
+  func: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanel
