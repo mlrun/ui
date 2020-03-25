@@ -8,6 +8,7 @@ import ProgressRing from '../ProgressRing/ProgressRing'
 import HttpClient from '../../httpClient'
 import notificationDownloadAction from '../../actions/notificationDownload'
 import downloadFile from '../../utils/downloadFile'
+import { DOWNLOAD_PROGRESS_RING } from '../../colorConstants'
 
 import './download.scss'
 
@@ -16,6 +17,9 @@ const Download = ({ path, schema, setNotificationDownload }) => {
   const [isDownload, setDownload] = useState(false)
 
   const downloadRef = useRef(null)
+
+  const progressRingRadius = '20'
+  const progressRingStroke = '3'
 
   let file = path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)
     ? path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)[0]
@@ -90,10 +94,10 @@ const Download = ({ path, schema, setNotificationDownload }) => {
   return (
     <div className="download-container" ref={downloadRef} onClick={handleClick}>
       <ProgressRing
-        radius="20"
-        stroke="3"
+        radius={progressRingRadius}
+        stroke={progressRingStroke}
         progress={progress}
-        color={progress !== 0 ? '#49436D' : '#transparent'}
+        color={progress !== 0 ? DOWNLOAD_PROGRESS_RING : 'transparent'}
       >
         <g className={!isDownload ? 'download' : 'downloading'}>
           <circle r="12" cx="20px" cy="20px" />

@@ -2,5 +2,6 @@
   "status": ["All", "Completed", "Running", "Error"],
   "tree": ["Latest"],
   "period": ["Last 7 days", "Last 14 days", "Last months", "Last 6 months"],
-  "group by": ["None", "Name"]
+  "group by": ["None", "Name"],
+  "create": ["New Job", "New Workflow"]
 }

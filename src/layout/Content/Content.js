@@ -7,11 +7,12 @@ import YamlModal from '../../common/YamlModal/YamlModal'
 import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+import NoData from '../../common/NoData/NoData'
+import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
 
 import './content.scss'
-import NoData from '../../common/NoData/NoData'
 
 const Content = ({
   content,
@@ -75,6 +76,7 @@ const Content = ({
     <>
       <div className="content__header">
         <Breadcrumbs match={match} onClick={handleCancel} />
+        <PageActionsMenu match={match} page={page} />
       </div>
       <div className="content">
         <ContentMenu />

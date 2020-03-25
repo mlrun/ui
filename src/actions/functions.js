@@ -6,18 +6,18 @@ import {
 } from '../constants'
 import { handleErrors } from '../utils/handleErrors'
 
-const functions = {
-  fetchFunctions: (project, status) => dispatch => {
-    dispatch(functions.fetchFunctionsBegin())
+const functionsActions = {
+  fetchFunctions: project => dispatch => {
+    dispatch(functionsActions.fetchFunctionsBegin())
 
     return functionsApi
       .getAll(project)
       .then(handleErrors)
       .then(({ data }) => {
-        dispatch(functions.fetchFunctionsSuccess(data.funcs))
+        dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
         return data.funcs
       })
-      .catch(() => dispatch(functions.fetchFunctionsFailure()))
+      .catch(() => dispatch(functionsActions.fetchFunctionsFailure()))
   },
   fetchFunctionsBegin: () => ({
     type: FETCH_FUNCTIONS_BEGIN
@@ -32,4 +32,4 @@ const functions = {
   })
 }
 
-export default functions
+export default functionsActions

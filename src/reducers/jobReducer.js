@@ -4,7 +4,8 @@ import {
   FETCH_JOB_LOGS_SUCCESS,
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
-  FETCH_JOBS_SUCCESS
+  FETCH_JOBS_SUCCESS,
+  REMOVE_JOB_LOGS
 } from '../constants'
 
 const initialState = {
@@ -52,7 +53,7 @@ export default (state = initialState, { type, payload }) => {
         loading: false,
         error: payload
       }
-    case 'REMOVE_JOB_LOGS':
+    case REMOVE_JOB_LOGS:
       return {
         ...state,
         logs: ''

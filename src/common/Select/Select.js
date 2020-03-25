@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
+import SelectOption from '../../elements/SelectOption/SelectOption'
+
 import options from './selectData'
 
 import caret from '../../images/caret.png'
-import unchecked from '../../images/checkbox-unchecked.png'
-import checked from '../../images/checkbox-checked.png'
 
 import './select.scss'
 
-const Select = ({ filter, match, onClick, page, value }) => {
+const Select = ({ option, label, match, onClick, page, value }) => {
   const [isOpen, setOpen] = useState(false)
   const history = useHistory()
 
@@ -41,9 +41,9 @@ const Select = ({ filter, match, onClick, page, value }) => {
       onClick={() => setOpen(!isOpen)}
     >
       <div className="select__header">
-        <div className="label">{filter}:</div>
-        <div className="value">{value}</div>
-        <img src={caret} alt="caret" className="caret" />
+        {label && <div className="select__label">{label}:</div>}
+        <div className="select__value">{value}</div>
+        <img src={caret} alt="caret" className="select__caret" />
       </div>
       {isOpen && [
         <div className="overall" key={isOpen} />,
@@ -54,24 +54,16 @@ const Select = ({ filter, match, onClick, page, value }) => {
           }}
           key={!isOpen}
         >
-          {options[filter].map(item => (
-            <div
-              className="select__item"
+          {options[option].map(item => (
+            <SelectOption
               key={item}
-              onClick={() => handleSelectOption(item)}
-            >
-              {filter === 'status' && (
-                <>
-                  <img
-                    src={value === item ? checked : unchecked}
-                    alt="status"
-                    className="item-status"
-                  />
-                  <span className={`status_${item.toLowerCase()}`} />
-                </>
-              )}
-              {item}
-            </div>
+              item={item}
+              value={value}
+              status={option === 'status'}
+              match={match}
+              onClick={handleSelectOption}
+              link={option === 'create' || page === 'jobs'}
+            />
           ))}
         </div>
       ]}
@@ -79,9 +71,17 @@ const Select = ({ filter, match, onClick, page, value }) => {
   )
 }
 
+Select.defaultProps = {
+  onClick: () => {},
+  label: ''
+}
+
 Select.propTypes = {
-  filter: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  match: PropTypes.shape({}).isRequired,
+  option: PropTypes.string.isRequired,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  page: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 }
 

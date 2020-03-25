@@ -15,7 +15,7 @@ const Breadcrumbs = ({ match, onClick }) => {
     <nav className="breadcrumbs">
       <ul className="breadcrumbs__list">
         {urlItems.map((item, i) => {
-          const param = pathItems && pathItems[i].startsWith(':')
+          const param = pathItems[i]?.startsWith(':')
           const label = param
             ? match.params.tab === item
               ? startCase(item)

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import TableCell from '../TableCell/TableCell'
-import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
+import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
 import functionsData from '../../components/FunctionsPage/functionsData'
 
@@ -48,7 +48,7 @@ const FunctionsTableRow = ({
         )
       })}
       <div className="table-body__cell row__actions">
-        <ActionsMenu
+        <TableActionsMenu
           toggleConvertToYaml={toggleConvertToYaml}
           item={content[index]}
         />
