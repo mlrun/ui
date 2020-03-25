@@ -1,0 +1,79 @@
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+
+.job {
+  &_panel_container {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba($mineshaft, 0.75);
+    .job {
+      &_panel {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-width: 45%;
+        background-color: $wildsand;
+        opacity: 1;
+        &_title {
+          display: flex;
+          flex: 0.1;
+          flex-direction: row;
+          justify-content: space-between;
+          margin: 42px 40px 32px 56px;
+          &_name {
+            font-weight: 300;
+            font-size: 36px;
+            line-height: 42px;
+          }
+          button {
+            height: 24px;
+            padding: 0;
+          }
+        }
+        .job_panel {
+          &_body {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+          }
+        }
+        .job_panel_button_container {
+          justify-content: flex-end;
+          display: flex;
+          flex: 0.1;
+          padding: 0 40px;
+          margin-top: 16px;
+          margin-bottom: 16px;
+          button {
+            padding: 10px;
+            height: 36px;
+            font-size: 14px;
+            line-height: 16px;
+          }
+          .btn_schedule {
+            border: $tableFilterBorder;
+            border-radius: 4px;
+            color: $primary;
+            display: flex;
+            align-items: center;
+          }
+          .btn_run {
+            display: flex;
+            align-items: center;
+            color: $white;
+            background: $purple;
+            border-radius: 2px;
+            margin-left: 10px;
+            img {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
