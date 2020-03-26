@@ -8,13 +8,13 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
+import TableTypeCell from '../TableTypeCell/TableTypeCell'
 
 import artifactViewIcon from '../../images/eye.png'
 import arrowIcon from '../../images/arrow.png'
 
 import { truncateUid } from '../../utils'
 import jobsData from '../../components/JobsPage/jobsData'
-import TableTypeCell from '../TableTypeCell/TableTypeCell'
 
 const TableCell = ({
   data,
@@ -58,17 +58,6 @@ const TableCell = ({
     )
   } else if (data.type === 'type') {
     return <TableTypeCell data={data} />
-    // } else if (data.type === 'uid') {
-    //   return (
-    //     <div className={`table-body__cell ${data.size}`}>
-    //       <Tooltip
-    //         textShow={true}
-    //         template={<TextTooltipTemplate text={data.value} />}
-    //       >
-    //         {truncateUid(data.value)}
-    //       </Tooltip>
-    //     </div>
-    //   )
   } else if (Array.isArray(data.value)) {
     return (
       <div className={`table-body__cell ${data.size}`}>

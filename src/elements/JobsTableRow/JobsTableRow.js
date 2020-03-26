@@ -102,7 +102,7 @@ const JobsTableRow = ({
                 `/projects/${match.params.projectName}/jobs/${content.length >
                   0 &&
                   content.filter(item => item.uid === rowItem.uid.value)[0]
-                    .uid}${
+                    ?.uid}${
                   match.params.tab
                     ? `/${match.params.tab}`
                     : `/${jobsData.detailsMenu[0]}`

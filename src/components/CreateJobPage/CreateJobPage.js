@@ -4,12 +4,14 @@ import { connect } from 'react-redux'
 
 import CreateJobPageView from './CreateJobPageView'
 import Loader from '../../common/Loader/Loader'
+import JobsPanel from '../JobsPanel/JobsPanel'
 
 import functionsActions from '../../actions/functions'
 
 const CreateJobPage = ({ functionsStore, fetchFunctions, match }) => {
   const [expandList, setExpandList] = useState(true)
   const [functions, setFunctions] = useState([])
+  const [selectedFunction, setFunction] = useState({})
 
   useEffect(() => {
     fetchFunctions(match.params.projectName).then(functions => {
@@ -28,17 +30,25 @@ const CreateJobPage = ({ functionsStore, fetchFunctions, match }) => {
     })
   }, [fetchFunctions, match.params.projectName])
 
-  console.log(functions)
+  const selectedFunc = item => {
+    setFunction(item)
+  }
 
   return functionsStore.loading ? (
     <Loader />
   ) : (
-    <CreateJobPageView
-      match={match}
-      expandList={expandList}
-      setExpandList={setExpandList}
-      functions={functions}
-    />
+    <>
+      <CreateJobPageView
+        match={match}
+        expandList={expandList}
+        setExpandList={setExpandList}
+        functions={functions}
+        selectedFunc={selectedFunc}
+      />
+      {Object.values(selectedFunction)?.length !== 0 && (
+        <JobsPanel func={selectedFunction} close={selectedFunc} />
+      )}
+    </>
   )
 }
 

@@ -1,0 +1,64 @@
+@import "../../scss/colors";
+
+.job-panel__table {
+  border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+  .table {
+    &__header {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 24px;
+      color: $topaz;
+    }
+    &__row {
+      display: flex;
+      flex-direction: row;
+      border-top: 1px solid rgba(72, 63, 86, 0.12);
+      padding: 18px 20px;
+    }
+    &__cell {
+      display: flex;
+      min-width: 190px;
+      color: $primary;
+    }
+  }
+  .add-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    font-size: 15px;
+    line-height: 18px;
+    color: $cornflowerBlue;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+    rect {
+      fill: $cornflowerBlue;
+    }
+  }
+  .input-wrapper {
+    display: flex;
+    &__item {
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      padding: 18px 24px;
+      color: $topaz;
+      &:first-child {
+        border-right: none;
+      }
+      &:nth-child(2) {
+        border-left: none;
+      }
+      &::placeholder {
+        font-style: italic;
+      }
+    }
+    .add-input {
+      margin: 0 auto;
+    }
+  }
+}
+
+.no-border {
+  border: none;
+}

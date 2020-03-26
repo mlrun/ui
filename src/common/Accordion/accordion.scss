@@ -1,0 +1,26 @@
+@import '../../scss/colors.scss';
+
+.accordion_container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  height: 65px;
+  background-color: $white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin: 16px 40px 0;
+  transition: height 0.3s linear;
+  .accordion_body {
+    overflow: hidden;
+  }
+  &.open {
+    height: 100%;
+    transition: height 0.3s linear;
+  }
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 16px;
+  }
+}

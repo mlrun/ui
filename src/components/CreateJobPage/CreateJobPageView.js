@@ -11,7 +11,13 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import './createJobPage.scss'
 import CreateJobCardTemplate from '../../elements/CreateJobCardTemplate/CreateJobCardTemplate'
 
-const CreateJobPageView = ({ functions, match, expandList, setExpandList }) => (
+const CreateJobPageView = ({
+  functions,
+  match,
+  expandList,
+  setExpandList,
+  selectedFunc
+}) => (
   <div className="create-container">
     <div className="create-container__header">
       <div className="header-link">
@@ -48,10 +54,13 @@ const CreateJobPageView = ({ functions, match, expandList, setExpandList }) => (
         </div>
         {expandList && (
           <div className="data-wrapper__list">
-            {functions.map(func => (
+            {functions.map((func, index) => (
               <CreateJobCardTemplate
-                status={func.status && func.status.state}
-                name={func.metadata.name}
+                key={func?.metadata?.hash + index}
+                status={func?.status?.state}
+                name={func?.metadata?.name}
+                func={func}
+                selectedFunc={selectedFunc}
               />
             ))}
           </div>

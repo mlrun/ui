@@ -14,6 +14,7 @@ import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import ArtifactInfoMetadata from '../ArtifactInfoMetadata/ArtifactInfoMetada'
+import DetailsCode from '../DetailsCode/DetailsCode'
 
 import { formatDatetime } from '../../utils'
 import { ARTIFACTS_PAGE } from '../../constants'
@@ -22,7 +23,6 @@ import './details.scss'
 
 import cancel from '../../images/cancel.png'
 import popout from '../../images/popout.png'
-import DetailsCode from '../DetailsCode/DetailsCode'
 
 const Details = ({
   detailsMenu,

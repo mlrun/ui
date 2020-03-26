@@ -46,6 +46,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
           owner: job.metadata.labels.owner,
           updated: new Date(job.status.last_update)
         }))
+
         return setJobs(newJobs)
       })
     },
@@ -126,7 +127,6 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
   }
 
   const handleExpandRow = (e, item) => {
-    console.log(e.target.className)
     if (e.target.className === 'expand-arrow') {
       const parentRow = e.target.closest('.parent-row')
       if (parentRow.classList.contains('parent-row-expanded')) {
