@@ -19,6 +19,12 @@
       display: flex;
       min-width: 190px;
       color: $primary;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:first-child {
+        max-width: 190px;
+      }
     }
   }
   .add-input {
@@ -43,11 +49,13 @@
       border: 1px solid rgba(0, 0, 0, 0.2);
       padding: 18px 24px;
       color: $topaz;
+      flex: 1;
       &:first-child {
         border-right: none;
       }
       &:nth-child(2) {
         border-left: none;
+        margin-right: 10px;
       }
       &::placeholder {
         font-style: italic;

@@ -10,20 +10,18 @@ const JobsPanelAddInputRow = ({
 }) => {
   return (
     <div className="input-wrapper">
-      <div>
-        <input
-          type="text"
-          className="input-wrapper__item"
-          placeholder="Set input name"
-          onChange={e => setNewInputName(e.target.value)}
-        />
-        <input
-          type="text"
-          className="input-wrapper__item"
-          placeholder="Set input path"
-          onChange={e => setNewInputPath(e.target.value)}
-        />
-      </div>
+      <input
+        type="text"
+        className="input-wrapper__item"
+        placeholder="Set input name"
+        onChange={e => setNewInputName(e.target.value)}
+      />
+      <input
+        type="text"
+        className="input-wrapper__item"
+        placeholder="Set input path"
+        onChange={e => setNewInputPath(e.target.value)}
+      />
       <button className="add-input" onClick={handleAddNewInput}>
         <Plus />
       </button>

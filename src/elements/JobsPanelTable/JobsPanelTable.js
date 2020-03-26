@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import './jobPanelTable.scss'
+import './jobsPanelTable.scss'
 
 const JobsPanelTable = ({ headers, content, addNewItem, children }) => {
   return (
@@ -15,9 +15,9 @@ const JobsPanelTable = ({ headers, content, addNewItem, children }) => {
       </div>
       {Object.entries(content).map((row, i) => {
         return (
-          <div className="table__row">
+          <div className="table__row" key={i}>
             {row.map(cell => (
-              <div className="table__cell" key={i}>
+              <div className="table__cell" key={i + cell}>
                 {cell}
               </div>
             ))}
