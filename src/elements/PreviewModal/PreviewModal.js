@@ -6,7 +6,7 @@ import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview
 import Download from '../../common/Download/Download'
 
 import { formatDatetime } from '../../utils/datetime'
-import closeIcon from '../../images/cancel.png'
+import { ReactComponent as Close } from '../../svg/close.svg'
 
 import './previewmodal.scss'
 
@@ -40,7 +40,7 @@ const PreviewModal = ({ item, cancel }) => {
               })
             }}
           >
-            <img src={closeIcon} alt="close" />
+            <Close />
           </div>
         </div>
         <div className="artifact_container_view">

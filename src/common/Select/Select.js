@@ -6,7 +6,7 @@ import SelectOption from '../../elements/SelectOption/SelectOption'
 
 import options from './selectData'
 
-import caret from '../../images/caret.png'
+import { ReactComponent as Caret } from '../../svg/dropdown.svg'
 
 import './select.scss'
 
@@ -43,7 +43,7 @@ const Select = ({ option, label, match, onClick, page, value }) => {
       <div className="select__header">
         {label && <div className="select__label">{label}:</div>}
         <div className="select__value">{value}</div>
-        <img src={caret} alt="caret" className="select__caret" />
+        <Caret className="select__caret" />
       </div>
       {isOpen && [
         <div className="overall" key={isOpen} />,

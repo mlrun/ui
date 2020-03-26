@@ -61,6 +61,11 @@
             display: flex;
             align-items: center;
           }
+          .btn_edit {
+            border: $tableFilterBorder;
+            border-radius: 2px;
+            color: $primary;
+          }
           .btn_run {
             display: flex;
             align-items: center;
@@ -68,8 +73,11 @@
             background: $purple;
             border-radius: 2px;
             margin-left: 10px;
-            img {
+            svg {
               margin-right: 5px;
+              path {
+                fill: $white;
+              }
             }
           }
         }

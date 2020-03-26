@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-import arrowIcon from '../../images/arrow.png'
+import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 import './accordion.scss'
 
@@ -15,7 +15,7 @@ const Accordion = ({ title, children }) => {
   return (
     <div className={`accordion_container ${open && 'open'}`}>
       <button onClick={handleOpenAccordion}>
-        <img className={`${open && 'open'}`} src={arrowIcon} alt="arrow" />
+        <Arrow className={`${open && 'open'}`} />
       </button>
       <div className="accordion_title">
         <div className="title">{title}</div>

@@ -154,8 +154,10 @@
       top: 32px;
       right: 29px;
       cursor: pointer;
-      img {
-        margin-right: 6px;
+      svg {
+        path {
+          fill: $cornflowerBlue;
+        }
       }
       &:active,
       &:focus {

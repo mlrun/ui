@@ -8,13 +8,13 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
+import TableTypeCell from '../TableTypeCell/TableTypeCell'
 
-import artifactViewIcon from '../../images/eye.png'
-import arrowIcon from '../../images/arrow.png'
+import { ReactComponent as ArtifactView } from '../../svg/eye.svg'
+import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 import { truncateUid } from '../../utils'
 import jobsData from '../../components/JobsPage/jobsData'
-import TableTypeCell from '../TableTypeCell/TableTypeCell'
 
 const TableCell = ({
   data,
@@ -53,7 +53,7 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.size}`}>
         {data && data.value}
-        <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
+        <Arrow className="expand-arrow" />
       </div>
     )
   } else if (data.type === 'type') {
@@ -112,7 +112,7 @@ const TableCell = ({
             selectItem(item, true)
           }}
         >
-          <img src={artifactViewIcon} alt="Popout Icon" />
+          <ArtifactView />
         </button>
       </div>
     )

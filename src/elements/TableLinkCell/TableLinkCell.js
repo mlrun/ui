@@ -7,7 +7,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { formatDatetime, truncateUid } from '../../utils'
 
-import arrowIcon from '../../images/arrow.png'
+import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 const TableLinkCell = ({
   data,
@@ -48,9 +48,7 @@ const TableLinkCell = ({
           </div>
         )}
       </Link>
-      {expandLink && (
-        <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
-      )}
+      {expandLink && <Arrow className="expand-arrow" />}
     </div>
   )
 }

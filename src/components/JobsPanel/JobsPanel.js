@@ -1,21 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import Accordion from '../../common/Accordion/Accordion'
 
-import closeIcon from '../../images/close.svg'
-import runIcon from '../../images/run.png'
+import { ReactComponent as Close } from '../../svg/close.svg'
+import { ReactComponent as Run } from '../../svg/run.svg'
 
 import './jobspanel.scss'
 
 const JobsPanel = ({ func, close }) => {
+  const [edit, setEdit] = useState(false)
+
+  const handlerEdit = () => {
+    setEdit(!edit)
+  }
+
   return (
     <div className="job_panel_container">
       <div className="job_panel">
         <div className="job_panel_title">
           <div className="job_panel_title_name">{func?.metadata?.name}</div>
           <button onClick={() => close({})}>
-            <img src={closeIcon} alt="close" />
+            <Close />
           </button>
         </div>
         <div className="job_panel_body">
@@ -29,11 +35,20 @@ const JobsPanel = ({ func, close }) => {
             <div>Accordion</div>
           </Accordion>
           <div className="job_panel_button_container">
-            <button className="btn_schedule">Schedule for later</button>
-            <button className="btn_run">
-              <img src={runIcon} alt="run" />
-              Run now
-            </button>
+            {!edit && (
+              <button className="btn_edit" onClick={handlerEdit}>
+                Edit
+              </button>
+            )}
+            {edit && (
+              <>
+                <button className="btn_schedule">Schedule for later</button>
+                <button className="btn_run">
+                  <Run />
+                  Run now
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import React from 'react'
 import Prism from 'prismjs'
 import PropTypes from 'prop-types'
 
-import cancel from '../../images/cancel.png'
+import { ReactComponent as Close } from '../../svg/close.svg'
 
 import './yamlmodal.scss'
 
@@ -18,7 +18,7 @@ const YamlModal = ({ convertedYaml, toggleConvertToYaml }) => {
       <pre>
         <code dangerouslySetInnerHTML={{ __html: html }} />
         <button onClick={toggleConvertToYaml}>
-          <img src={cancel} alt="Cancel" />
+          <Close />
         </button>
       </pre>
     </div>

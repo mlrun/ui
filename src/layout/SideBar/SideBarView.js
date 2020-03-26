@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 // import jobsIcon from '../../images/check-all.png'
 // import artifactsIcon from '../../images/file-chart.png'
-import projectsIcon from '../../images/projects.png'
+import { ReactComponent as Projects } from '../../svg/projects.svg'
 
 import './sidebar.scss'
 
@@ -12,7 +12,7 @@ const SideBarView = ({ currentPage }) => {
   const menuList = [
     // { img: jobsIcon, value: 'jobs' },
     // { img: artifactsIcon, value: 'artifacts' },
-    { img: projectsIcon, value: 'projects' }
+    { value: 'projects' }
   ]
   return (
     <div className="sidebar">
@@ -26,7 +26,7 @@ const SideBarView = ({ currentPage }) => {
               title={`${item.value[0].toUpperCase()}${item.value.slice(1)}`}
             >
               <Link to={`/${item.value}`}>
-                <img src={item.img} alt="Page icon" />
+                <Projects />
               </Link>
             </li>
           ))}

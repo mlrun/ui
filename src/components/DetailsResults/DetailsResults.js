@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import bestIterationIcon from '../../images/best-iteration-icon.png'
 import { resultsTable } from '../../utils/resultsTable'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
+import { ReactComponent as BestIteration } from '../../svg/best-iteration-icon.svg'
 
 const DetailsResults = ({ job }) => {
   const result = resultsTable(job)
@@ -55,11 +56,7 @@ const DetailsResults = ({ job }) => {
                         className="table__item_results__table_medal table__item_results__table_row_cell"
                       >
                         {value}
-                        <img
-                          src={bestIterationIcon}
-                          alt="Best iteration"
-                          title="Best iteration"
-                        />
+                        <BestIteration />
                       </div>
                     )
                   } else {
