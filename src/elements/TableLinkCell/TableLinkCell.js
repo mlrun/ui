@@ -15,7 +15,8 @@ const TableLinkCell = ({
   link,
   item,
   selectedItem,
-  expandLink
+  expandLink,
+  handleExpandRow
 }) => {
   return (
     <div
@@ -38,17 +39,26 @@ const TableLinkCell = ({
             </Tooltip>
           )}
         </div>
-        {selectedItem.uid && (
+        {Object.values(selectedItem).length !== 0 && (
           <div className="date__uid_row">
             <span>
               {data.type !== 'date' &&
                 formatDatetime(new Date(item.startTime || item.updated))}
             </span>
-            <span>{truncateUid(item.uid)}</span>
+            <span>{truncateUid(item.uid || item.hash)}</span>
           </div>
         )}
       </Link>
-      {expandLink && <Arrow className="expand-arrow" />}
+      {expandLink && (
+        <Arrow
+          onClick={e => {
+            if (expandLink) {
+              handleExpandRow(e, item)
+            }
+          }}
+          className="expand-arrow"
+        />
+      )}
     </div>
   )
 }

@@ -25,11 +25,13 @@ const TableCell = ({
   selectItem,
   selectedItem,
   match,
-  expandLink
+  expandLink,
+  handleExpandRow
 }) => {
   if (link) {
     return (
       <TableLinkCell
+        handleExpandRow={handleExpandRow}
         selectedItem={selectedItem}
         expandLink={expandLink}
         link={link}
@@ -53,7 +55,10 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.size}`}>
         {data && data.value}
-        <Arrow className="expand-arrow" />
+        <Arrow
+          onClick={e => handleExpandRow(e, item)}
+          className="expand-arrow"
+        />
       </div>
     )
   } else if (data.type === 'type') {

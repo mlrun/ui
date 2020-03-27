@@ -46,6 +46,9 @@
       &__results {
         @include chip($resultsBorder);
       }
+      &.link {
+        color: $cornflowerBlue;
+      }
     }
     &.artifacts {
       padding-left: 25px;

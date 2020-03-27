@@ -125,6 +125,7 @@ const Details = ({
       </div>
       {match.params.tab === 'info' && (
         <DetailsInfo
+          match={match}
           handleShowElements={handleShowElements}
           item={item}
           page={page}

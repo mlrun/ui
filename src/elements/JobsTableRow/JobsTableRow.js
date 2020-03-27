@@ -32,7 +32,6 @@ const JobsTableRow = ({
           ? 'parent-row parent-row-expanded'
           : 'parent-row'
       }`}
-      onClick={e => handleExpandRow(e, rowItem)}
       ref={parent}
     >
       {parent.current &&
@@ -40,6 +39,7 @@ const JobsTableRow = ({
         <div className="row_grouped-by">
           <div className="table-body__row">
             <TableCell
+              handleExpandRow={handleExpandRow}
               data={rowItem.name}
               handleShowElements={handleShowElements}
               item={rowItem}
@@ -94,6 +94,7 @@ const JobsTableRow = ({
         Object.values(rowItem).map((value, i) => {
           return (
             <TableCell
+              handleExpandRow={handleExpandRow}
               data={value}
               handleShowElements={handleShowElements}
               item={content.filter(item => item.uid === rowItem.uid.value)[0]}

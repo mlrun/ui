@@ -6,10 +6,12 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { ReactComponent as BestIteration } from '../../svg/best-iteration-icon.svg'
+import NoData from '../../common/NoData/NoData'
 
 const DetailsResults = ({ job }) => {
   const result = resultsTable(job)
-  return (
+  return job.iterations.length !== 0 ||
+    Object.values(job.results).length !== 0 ? (
     <div className="table__item_results">
       {job.iterationStats && (
         <div className="table__item_results__table">
@@ -76,6 +78,8 @@ const DetailsResults = ({ job }) => {
         </div>
       )}
     </div>
+  ) : (
+    <NoData />
   )
 }
 
