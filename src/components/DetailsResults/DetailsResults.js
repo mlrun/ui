@@ -1,14 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import bestIterationIcon from '../../images/best-iteration-icon.png'
 import { resultsTable } from '../../utils/resultsTable'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
+import { ReactComponent as BestIteration } from '../../svg/best-iteration-icon.svg'
+import NoData from '../../common/NoData/NoData'
+
 const DetailsResults = ({ job }) => {
   const result = resultsTable(job)
-  return (
+  return job.iterations.length !== 0 ||
+    Object.values(job.results).length !== 0 ? (
     <div className="table__item_results">
       {job.iterationStats && (
         <div className="table__item_results__table">
@@ -55,11 +58,7 @@ const DetailsResults = ({ job }) => {
                         className="table__item_results__table_medal table__item_results__table_row_cell"
                       >
                         {value}
-                        <img
-                          src={bestIterationIcon}
-                          alt="Best iteration"
-                          title="Best iteration"
-                        />
+                        <BestIteration />
                       </div>
                     )
                   } else {
@@ -79,6 +78,8 @@ const DetailsResults = ({ job }) => {
         </div>
       )}
     </div>
+  ) : (
+    <NoData />
   )
 }
 

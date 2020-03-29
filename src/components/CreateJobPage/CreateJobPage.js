@@ -31,7 +31,6 @@ const CreateJobPage = ({ functionsStore, fetchFunctions, match }) => {
   }, [fetchFunctions, match.params.projectName])
 
   const selectedFunc = item => {
-    console.log(item)
     setFunction(item)
   }
 

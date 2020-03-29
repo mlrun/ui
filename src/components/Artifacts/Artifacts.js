@@ -69,8 +69,6 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
       })
 
       setSelectedArtifact({ isPreview: false, item: artifact })
-    } else {
-      setSelectedArtifact({})
     }
   }, [match.params, artifactsStore.artifacts])
 

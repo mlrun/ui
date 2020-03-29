@@ -25,9 +25,8 @@
         margin: 0 0 5px;
         white-space: pre-wrap;
       }
-      img {
+      svg {
         margin-bottom: -2px;
-        margin-right: 8px;
         transition: all 0.3s ease-in-out;
         display: inline-block;
       }
@@ -59,7 +58,7 @@
     position: relative;
     box-shadow: $previewBoxShadow;
     div {
-      img.arrow {
+      .arrow {
         transform: rotate(90deg);
       }
     }

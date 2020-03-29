@@ -7,9 +7,9 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import ArtifactFilterLabels from '../ArtifactFilterLabels/ArtifactFilterLabels'
 
-import refreshIcon from '../../images/refresh.png'
-import collapseIcon from '../../images/collapse.png'
-import expandIcon from '../../images/expand.png'
+import { ReactComponent as Refresh } from '../../svg/refresh.svg'
+import { ReactComponent as Collapse } from '../../svg/collapse.svg'
+import { ReactComponent as Expand } from '../../svg/expand.svg'
 
 import artifactsData from '../Artifacts/artifactsData'
 
@@ -101,7 +101,7 @@ const FilterMenu = ({
                 : onChange()
             }}
           >
-            <img src={refreshIcon} alt="refresh" />
+            <Refresh />
           </button>
         </Tooltip>
         {groupFilter.toLowerCase() !== 'none' && groupFilter !== '' && (
@@ -111,10 +111,7 @@ const FilterMenu = ({
             }
           >
             <button onClick={handleExpandAll}>
-              <img
-                src={expand ? collapseIcon : expandIcon}
-                alt="Collapse / Expand icon"
-              />
+              {expand ? <Collapse /> : <Expand />}
             </button>
           </Tooltip>
         )}

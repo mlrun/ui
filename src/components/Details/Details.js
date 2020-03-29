@@ -14,15 +14,15 @@ import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import ArtifactInfoMetadata from '../ArtifactInfoMetadata/ArtifactInfoMetada'
+import DetailsCode from '../DetailsCode/DetailsCode'
 
 import { formatDatetime } from '../../utils'
 import { ARTIFACTS_PAGE } from '../../constants'
 
-import './details.scss'
+import { ReactComponent as Close } from '../../svg/close.svg'
+import { ReactComponent as Popout } from '../../svg/popout.svg'
 
-import cancel from '../../images/cancel.png'
-import popout from '../../images/popout.png'
-import DetailsCode from '../DetailsCode/DetailsCode'
+import './details.scss'
 
 const Details = ({
   detailsMenu,
@@ -96,7 +96,7 @@ const Details = ({
             to={`/projects/${match.params.projectName}/${page.toLowerCase()}`}
             onClick={handleCancel}
           >
-            <img src={cancel} alt="cancel" />
+            <Close />
           </Link>
         </div>
       </div>
@@ -125,6 +125,7 @@ const Details = ({
       </div>
       {match.params.tab === 'info' && (
         <DetailsInfo
+          match={match}
           handleShowElements={handleShowElements}
           item={item}
           page={page}
@@ -133,7 +134,7 @@ const Details = ({
       {match.params.tab === 'preview' && (
         <div className="preview_container">
           <button onClick={() => handlePreview()} className="preview_popout">
-            <img src={popout} alt="preview" />
+            <Popout />
           </button>
           <ArtifactsPreview artifact={item} />
         </div>

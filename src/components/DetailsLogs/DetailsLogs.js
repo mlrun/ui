@@ -6,7 +6,7 @@ import jobsActions from '../../actions/jobs'
 
 import NoData from '../../common/NoData/NoData'
 
-import refreshIcon from '../../images/refresh-logs.png'
+import { ReactComponent as Refresh } from '../../svg/refresh.svg'
 
 const DetailsLogs = ({
   jobsStore,
@@ -25,7 +25,6 @@ const DetailsLogs = ({
       removeJobLogs()
     }
   }, [refreshLogs, removeJobLogs])
-
   return (
     <div className="table__item_logs">
       {jobsStore.logs.length > 0 ? (
@@ -34,7 +33,7 @@ const DetailsLogs = ({
         <NoData />
       )}
       <button onClick={refreshLogs} className="logs_refresh">
-        <img src={refreshIcon} alt="Refresh icon" />
+        <Refresh />
         Refresh
       </button>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import caret from '../../images/caret.png'
+import { ReactComponent as Caret } from '../../svg/dropdown.svg'
 
 import './artifactsfiltertree.scss'
 
@@ -95,7 +95,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
         className="drop_down"
         onClick={() => setIsDropDownMenu(!isDropDownMenuOpen)}
       >
-        <img src={caret} alt="caret" />
+        <Caret />
       </div>
       {isDropDownMenuOpen && (
         <div

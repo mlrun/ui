@@ -12,6 +12,7 @@
   transition: height 0.3s linear;
   button {
     position: absolute;
+    padding: 0;
     top: 16px;
     left: -16px;
     width: 32px;
@@ -19,12 +20,14 @@
     border-radius: 50%;
     background: #869cff;
     z-index: 1;
-    img {
+    svg {
       margin-top: 2px;
-      filter: brightness(0) invert(1);
       transform: rotate(0);
       transform-origin: center center;
       transition: transform 200ms linear;
+      path {
+        fill: $white;
+      }
       &.open {
         transform: rotate(90deg);
         transform-origin: center center;

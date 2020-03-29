@@ -7,7 +7,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { formatDatetime, truncateUid } from '../../utils'
 
-import arrowIcon from '../../images/arrow.png'
+import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 const TableLinkCell = ({
   data,
@@ -15,7 +15,8 @@ const TableLinkCell = ({
   link,
   item,
   selectedItem,
-  expandLink
+  expandLink,
+  handleExpandRow
 }) => {
   return (
     <div
@@ -38,18 +39,25 @@ const TableLinkCell = ({
             </Tooltip>
           )}
         </div>
-        {selectedItem.uid && (
+        {Object.values(selectedItem).length !== 0 && (
           <div className="date__uid_row">
             <span>
               {data.type !== 'date' &&
                 formatDatetime(new Date(item.startTime || item.updated))}
             </span>
-            <span>{truncateUid(item.uid)}</span>
+            <span>{truncateUid(item.uid || item.hash)}</span>
           </div>
         )}
       </Link>
       {expandLink && (
-        <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
+        <Arrow
+          onClick={e => {
+            if (expandLink) {
+              handleExpandRow(e, item)
+            }
+          }}
+          className="expand-arrow"
+        />
       )}
     </div>
   )

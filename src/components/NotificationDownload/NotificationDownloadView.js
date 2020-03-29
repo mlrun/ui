@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { createPortal } from 'react-dom'
 
-import successDoneIcon from '../../images/success_done.png'
-import unsuccessAlertIcon from '../../images/unsuccess_alert.png'
+import { ReactComponent as SuccessDone } from '../../svg/success_done.svg'
+import { ReactComponent as UnsuccessAlert } from '../../svg/unsuccess_alert.svg'
 
 import './notificationdownloadview.scss'
 
@@ -16,11 +16,9 @@ const NotificationDownloadView = ({ status, retry, transitionStyles }) =>
             status === 200 ? 'success' : 'alert'
           }_icon`}
         >
-          <img
-            className={status === 200 ? 'success_icon' : 'alert_icon'}
-            src={status === 200 ? successDoneIcon : unsuccessAlertIcon}
-            alt={status === 200 ? 'success' : 'alert'}
-          />
+          <div className={status === 200 ? 'success_icon' : 'alert_icon'}>
+            {status === 200 ? <SuccessDone /> : <UnsuccessAlert />}
+          </div>
         </div>
         {`Your download was ${status === 200 ? 'Successful' : 'unsuccessful'}`}
         {status !== 200 && (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import arrowIcon from '../../images/arrow.png'
+import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 import artifactData from '../Artifacts/artifactsData.json'
 
@@ -34,11 +34,7 @@ const ArtifactInfoSources = ({ header, sources }) => {
           }}
         >
           {sourcesLength !== 0 && (
-            <img
-              className={isShow ? 'open' : 'close'}
-              src={arrowIcon}
-              alt="arrow"
-            />
+            <Arrow className={isShow ? 'open' : 'close'} />
           )}
 
           <div className="sources_header">{header}</div>
