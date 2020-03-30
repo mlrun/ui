@@ -82,6 +82,7 @@ const DetailsView = ({
             id={item.uid}
             match={match}
             name={item.key || item.name}
+            hash={item.hash}
             page={page}
             tab={link}
           />
