@@ -63,17 +63,6 @@ const TableCell = ({
     )
   } else if (data.type === 'type') {
     return <TableTypeCell data={data} />
-    // } else if (data.type === 'uid') {
-    //   return (
-    //     <div className={`table-body__cell ${data.size}`}>
-    //       <Tooltip
-    //         textShow={true}
-    //         template={<TextTooltipTemplate text={data.value} />}
-    //       >
-    //         {truncateUid(data.value)}
-    //       </Tooltip>
-    //     </div>
-    //   )
   } else if (Array.isArray(data.value)) {
     return (
       <div className={`table-body__cell ${data.size}`}>

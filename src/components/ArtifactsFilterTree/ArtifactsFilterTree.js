@@ -112,12 +112,12 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
 }
 
 ArtifactFilterTree.propTypes = {
-  items: PropTypes.array,
-  onChange: PropTypes.func,
-  value: PropTypes.string,
-  label: PropTypes.string,
-  match: PropTypes.shape({}),
-  page: PropTypes.string
+  items: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  match: PropTypes.shape({}).isRequired,
+  page: PropTypes.string.isRequired
 }
 
 export default ArtifactFilterTree

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
@@ -126,5 +127,16 @@ const DetailsView = ({
     )}
   </div>
 )
+
+DetailsView.propTypes = {
+  item: PropTypes.shape({}).isRequired,
+  page: PropTypes.string.isRequired,
+  toggleConvertToYaml: PropTypes.func.isRequired,
+  match: PropTypes.shape({}).isRequired,
+  handleCancel: PropTypes.func.isRequired,
+  detailsMenu: PropTypes.array.isRequired,
+  handleShowElements: PropTypes.func.isRequired,
+  handlePreview: PropTypes.func.isRequired
+}
 
 export default DetailsView

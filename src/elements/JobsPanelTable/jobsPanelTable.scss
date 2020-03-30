@@ -1,0 +1,79 @@
+@import '../../scss/colors';
+
+.job-panel__table {
+  border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+  width: 100%;
+  .table {
+    &__header {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 24px;
+      color: $topaz;
+    }
+    &__row {
+      display: flex;
+      flex-direction: row;
+      border-top: 1px solid rgba(72, 63, 86, 0.12);
+      padding: 18px 20px;
+    }
+    &__cell {
+      min-width: 190px;
+      color: $primary;
+      margin-right: 5px;
+      &:first-child {
+        max-width: 190px;
+      }
+      .tooltip {
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+      }
+    }
+  }
+  .add-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    font-size: 15px;
+    line-height: 18px;
+    color: $cornflowerBlue;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+    rect {
+      fill: $cornflowerBlue;
+    }
+  }
+  .btn-add {
+    position: absolute;
+    bottom: 20px;
+    right: 16px;
+  }
+}
+
+.input-row {
+  &-wrapper {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    width: 90%;
+    .input-wrapper {
+      &:first-child {
+        flex: 0.65;
+      }
+    }
+  }
+  &__item {
+    width: 100%;
+    &::placeholder {
+      font-style: italic;
+    }
+  }
+}
+
+.no-border {
+  border-bottom: none;
+}

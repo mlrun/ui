@@ -81,7 +81,7 @@ const Content = ({
         <Breadcrumbs match={match} onClick={handleCancel} />
         <PageActionsMenu match={match} page={page} />
       </div>
-      <div className="content">
+      <div className={`content ${loading && 'isLoading'}`}>
         <ContentMenu />
         <div className="content__action-bar">
           <FilterMenu

@@ -4,14 +4,12 @@ import {
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS
 } from '../constants'
-import { handleErrors } from '../utils/handleErrors'
 
 const artifactsAction = {
   fetchArtifacts: item => dispatch => {
     dispatch(artifactsAction.fetchArtifactsBegin())
     return artifactsApi
       .getArtifacts(item)
-      .then(handleErrors)
       .then(({ data }) => {
         let artifacts = Object.values(
           data.artifacts.reduce((prev, curr) => {

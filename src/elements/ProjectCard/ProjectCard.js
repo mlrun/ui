@@ -1,8 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-
-// import artifactIcon from '../../images/file-chart.png'
-// import jobsIcon from '../../images/check-all.png'
 
 const ProjectCard = ({ project }) => {
   return (
@@ -13,11 +11,9 @@ const ProjectCard = ({ project }) => {
       )}
       <div className="project_card_links">
         <Link to={`/projects/${project.name}/jobs`}>
-          {/* <img src={jobsIcon} alt="jobs" /> */}
           <div>Jobs</div>
         </Link>
         <Link to={`/projects/${project.name}/artifacts`}>
-          {/* <img src={artifactIcon} alt="artifact" /> */}
           <div>Artifacts</div>
         </Link>
         <Link to={`/projects/${project.name}/functions`}>
@@ -26,6 +22,10 @@ const ProjectCard = ({ project }) => {
       </div>
     </div>
   )
+}
+
+ProjectCard.propTypes = {
+  project: PropTypes.shape({}).isRequired
 }
 
 export default ProjectCard

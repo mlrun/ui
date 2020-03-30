@@ -1,0 +1,10 @@
+@import "../../scss/colors";
+
+.input {
+  padding: 18px 24px;
+  color: $topaz;
+  border: none;
+  &-wrapper {
+    position: relative;
+  }
+}

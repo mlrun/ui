@@ -109,4 +109,8 @@ input {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow-x: hidden;
+  &:active, &:focus {
+    outline: none;
+    box-shadow: none;
+  }
 }

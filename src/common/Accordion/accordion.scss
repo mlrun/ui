@@ -1,67 +1,28 @@
 @import '../../scss/colors.scss';
 
-.accordion_container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  border-radius: 4px;
-  height: 65px;
-  background-color: $white;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  margin: 16px 40px 0px;
-  transition: height 0.3s linear;
-  button {
-    position: absolute;
-    padding: 0;
-    top: 16px;
-    left: -16px;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: #869cff;
-    z-index: 1;
-    svg {
-      margin-top: 2px;
-      transform: rotate(0);
-      transform-origin: center center;
-      transition: transform 200ms linear;
-      path {
-        fill: $white;
-      }
-      &.open {
-        transform: rotate(90deg);
-        transform-origin: center center;
-        transition: transform 200ms linear;
-      }
-    }
-  }
-  .accordion_title {
+.accordion {
+  &__container {
+    position: relative;
     display: flex;
-    padding-left: 25px;
-    min-height: 64px;
-    .title {
-      font-weight: bold;
-      font-size: 17px;
-      line-height: 20px;
-      display: flex;
-      align-items: center;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: #4b4760;
+    flex-direction: column;
+    border-radius: 4px;
+    height: 65px;
+    background-color: $white;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    margin: 16px 40px 0;
+    transition: height 0.3s linear;
+    &.open {
+      height: 100%;
+      transition: height 0.3s linear;
+    }
+    &:first-child {
+      margin-top: 0;
+    }
+    &:last-child {
+      margin-bottom: 16px;
     }
   }
-  .accordion_body {
+  &__body {
     overflow: hidden;
-  }
-
-  &.open {
-    height: 100%;
-    transition: height 0.3s linear;
-  }
-  &:first-child {
-    margin-top: 0;
-  }
-  &:last-child {
-    margin-bottom: 16px;
   }
 }
