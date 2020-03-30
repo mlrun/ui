@@ -8,7 +8,7 @@ import Download from '../../common/Download/Download'
 import { formatDatetime } from '../../utils/datetime'
 import { ReactComponent as Close } from '../../svg/close.svg'
 
-import './previewmodal.scss'
+import './previewModal.scss'
 
 const PreviewModal = ({ item, cancel }) => {
   return ReactDOM.createPortal(

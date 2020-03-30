@@ -31,7 +31,7 @@ const JobsDetailsInfoItem = ({
           template={<TextTooltipTemplate text={func.hash} />}
         >
           <Link
-            to={`/projects/${match.params.projectName}/functions/${func.name}/${func.hash}/info`}
+            to={`/projects/${match.params.projectName}/functions/${func.hash}/info`}
           >
             {func.name}
           </Link>

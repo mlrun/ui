@@ -4,7 +4,7 @@ import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 import artifactData from '../Artifacts/artifactsData.json'
 
-import './artifactinfosources.scss'
+import './artifactInfoSources.scss'
 
 const ArtifactInfoSources = ({ header, sources }) => {
   const [isShow, setIsShow] = useState(false)

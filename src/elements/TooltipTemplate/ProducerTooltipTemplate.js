@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import './producertooltiptemplate.scss'
+import './producerTooltipTemplate.scss'
 
 const ProducerTooltipTemplate = ({ kind, owner }) => {
   return (

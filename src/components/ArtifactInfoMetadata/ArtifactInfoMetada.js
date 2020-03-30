@@ -6,7 +6,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 
 import { ReactComponent as Primary } from '../../svg/ic-key.svg'
 
-import './artifactinfometadata.scss'
+import './artifactInfoMetadata.scss'
 
 const ArtifactInfoMetadata = ({ item }) => {
   const { primaryKey } = item.schema

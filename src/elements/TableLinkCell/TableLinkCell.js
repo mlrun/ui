@@ -39,15 +39,16 @@ const TableLinkCell = ({
             </Tooltip>
           )}
         </div>
-        {Object.values(selectedItem).length !== 0 && (
-          <div className="date__uid_row">
-            <span>
-              {data.type !== 'date' &&
-                formatDatetime(new Date(item.startTime || item.updated))}
-            </span>
-            <span>{truncateUid(item.uid || item.hash)}</span>
-          </div>
-        )}
+        {!link.includes('artifacts') &&
+          Object.values(selectedItem).length !== 0 && (
+            <div className="date__uid_row">
+              <span>
+                {data.type !== 'date' &&
+                  formatDatetime(new Date(item.startTime || item.updated))}
+              </span>
+              <span>{truncateUid(item.uid || item.hash)}</span>
+            </div>
+          )}
       </Link>
       {expandLink && (
         <Arrow

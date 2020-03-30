@@ -6,7 +6,7 @@ import Accordion from '../../common/Accordion/Accordion'
 import { ReactComponent as Close } from '../../svg/close.svg'
 import { ReactComponent as Run } from '../../svg/run.svg'
 
-import './jobspanel.scss'
+import './jobsPanel.scss'
 
 const JobsPanel = ({ func, close }) => {
   const [edit, setEdit] = useState(false)

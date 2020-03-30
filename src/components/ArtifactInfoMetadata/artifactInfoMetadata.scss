@@ -9,7 +9,7 @@
     padding: 20px;
     &_header {
       display: flex;
-      padding: 10px 0 10px 0;
+      padding: 10px 0;
       border-bottom: $tableBorder;
       font-weight: bold;
       color: $topaz;
@@ -41,7 +41,7 @@
       flex-direction: column;
       &_row {
         display: flex;
-        padding: 10px 0 10px 0;
+        padding: 10px 0;
         flex-direction: row;
         border-bottom: $tableBorder;
         &_item {
