@@ -11,6 +11,8 @@ import { ReactComponent as Refresh } from '../../svg/refresh.svg'
 import { ReactComponent as Collapse } from '../../svg/collapse.svg'
 import { ReactComponent as Expand } from '../../svg/expand.svg'
 
+import { ARTIFACTS_PAGE } from '../../constants.js'
+
 import artifactsData from '../Artifacts/artifactsData'
 
 import './filterMenu.scss'
@@ -39,7 +41,7 @@ const FilterMenu = ({
 
   const handleLabels = event => {
     setLabels(event)
-    page.toLowerCase() === 'artifacts'
+    page === ARTIFACTS_PAGE
       ? onChange({
           tag: valueFilterTree,
           project: match.params.projectName,

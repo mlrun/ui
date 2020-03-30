@@ -11,7 +11,7 @@ import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 import jobsActions from '../../actions/jobs'
 
-import './jobspanel.scss'
+import './jobsPanel.scss'
 
 const JobsPanel = ({ func, close, setNewJobInputs, jobsStore }) => {
   const [edit, setEdit] = useState(false)

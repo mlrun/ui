@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import prettyBytes from 'pretty-bytes'
+import PropTypes from 'prop-types'
 
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
@@ -8,7 +9,7 @@ import Download from '../../common/Download/Download'
 import { formatDatetime } from '../../utils/datetime'
 import { ReactComponent as Close } from '../../svg/close.svg'
 
-import './previewmodal.scss'
+import './previewModal.scss'
 
 const PreviewModal = ({ item, cancel }) => {
   return ReactDOM.createPortal(
@@ -50,6 +51,11 @@ const PreviewModal = ({ item, cancel }) => {
     </div>,
     document.getElementById('overlay_container')
   )
+}
+
+PreviewModal.propTypes = {
+  item: PropTypes.shape({}).isRequired,
+  cancel: PropTypes.func.isRequired
 }
 
 export default PreviewModal

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import ChipCell from '../ChipCell/ChipCell'
 
 const ArtifactsDetailsInfoItem = ({
@@ -29,6 +30,15 @@ const ArtifactsDetailsInfoItem = ({
       {info && <div className="table__item_details_item_data">{info}</div>}
     </li>
   )
+}
+
+ArtifactsDetailsInfoItem.propTypes = {
+  header: PropTypes.string,
+  chips: PropTypes.array,
+  info: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  handleShowElements: PropTypes.func,
+  chipsClassName: PropTypes.string,
+  target_path: PropTypes.shape({})
 }
 
 export default ArtifactsDetailsInfoItem

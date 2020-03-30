@@ -39,17 +39,14 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   }, [history, match.params.projectName, refreshFunctions])
 
   useEffect(() => {
-    if (match.params.name) {
-      let item = functions.find(
-        item =>
-          item.name === match.params.name && item.hash === match.params.hash
-      )
+    if (match.params.hash) {
+      let item = functions.find(item => item.hash === match.params.hash)
 
       setSelectedFunction(item)
     } else {
       setSelectedFunction({})
     }
-  }, [functions, match.params.name, match.params.hash, setSelectedFunction])
+  }, [functions, match.params.hash, setSelectedFunction])
 
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {

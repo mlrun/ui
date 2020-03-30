@@ -33,8 +33,8 @@ const FunctionsTableRow = ({
             link={
               i === 0 &&
               `/projects/${match.params.projectName}/functions/${
-                rowItem.name.value
-              }/${rowItem.hash.value}/${
+                rowItem.hash.value
+              }/${
                 match.params.tab
                   ? match.params.tab
                   : `${functionsData.detailsMenu[0].toLowerCase()}`

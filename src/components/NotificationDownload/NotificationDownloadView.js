@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom'
 import { ReactComponent as SuccessDone } from '../../svg/success_done.svg'
 import { ReactComponent as UnsuccessAlert } from '../../svg/unsuccess_alert.svg'
 
-import './notificationdownloadview.scss'
+import './notificationDownloadView.scss'
 
 const NotificationDownloadView = ({ status, retry, transitionStyles }) =>
   createPortal(

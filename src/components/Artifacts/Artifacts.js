@@ -19,20 +19,23 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
   const fetchData = useCallback(
     item => {
       fetchArtifacts(item).then(data => {
-        const artifacts = data.map(artifact => {
-          let item = null
+        const artifacts = data
+          .map(artifact => {
+            let item = null
 
-          if (artifact.link_iteration) {
-            let { link_iteration } = artifact.link_iteration
-            item = artifact.data.filter(item => item.iter === link_iteration)[0]
-          } else {
-            item = artifact.data[0]
-          }
+            if (artifact.link_iteration) {
+              let { link_iteration } = artifact.link_iteration
+              item = artifact.data.filter(
+                item => item.iter === link_iteration
+              )[0]
+            } else {
+              item = artifact.data[0]
+            }
+            if (item) item.target_path = parseTargetPath(item.target_path)
 
-          item.target_path = parseTargetPath(item.target_path)
-
-          return item
-        })
+            return item
+          })
+          .filter(item => item !== undefined)
 
         _setArtifacts(artifacts)
         return artifacts
@@ -60,17 +63,21 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
         return item.key === name
       })
 
-      const [artifact] = searchItem.data.filter(item => {
-        if (searchItem.link_iteration) {
-          const { link_iteration } = searchItem.link_iteration
-          return link_iteration === item.iter
-        }
-        return true
-      })
+      if (searchItem === undefined) {
+        history.push(`/projects/${match.params.projectName}/artifacts`)
+      } else {
+        const [artifact] = searchItem.data.filter(item => {
+          if (searchItem.link_iteration) {
+            const { link_iteration } = searchItem.link_iteration
+            return link_iteration === item.iter
+          }
+          return true
+        })
 
-      setSelectedArtifact({ isPreview: false, item: artifact })
+        setSelectedArtifact({ isPreview: false, item: artifact })
+      }
     }
-  }, [match.params, artifactsStore.artifacts])
+  }, [match.params, artifactsStore.artifacts, history])
 
   useEffect(() => {
     artifactApi.getArtifactTag(match.params.projectName).then(item => {})
@@ -103,6 +110,7 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
         refresh={fetchData}
         selectedItem={selectedArtifact.item}
         tableHeaders={artifactsData.tableHeaders}
+        yamlContent={artifactsStore.artifacts}
       />
     </>
   )

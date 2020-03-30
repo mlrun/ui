@@ -4,14 +4,16 @@ import PropTypes from 'prop-types'
 import { resultsTable } from '../../utils/resultsTable'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import NoData from '../../common/NoData/NoData'
 
 import { ReactComponent as BestIteration } from '../../svg/best-iteration-icon.svg'
-import NoData from '../../common/NoData/NoData'
+
+import './detailsResults.scss'
 
 const DetailsResults = ({ job }) => {
   const result = resultsTable(job)
-  return job.iterations.length !== 0 ||
-    Object.values(job.results).length !== 0 ? (
+
+  return job.iterationStats.length !== 0 ? (
     <div className="table__item_results">
       {job.iterationStats && (
         <div className="table__item_results__table">
@@ -78,6 +80,15 @@ const DetailsResults = ({ job }) => {
         </div>
       )}
     </div>
+  ) : job.iterations.length === 0 && Object.keys(job.results).length !== 0 ? (
+    Object.keys(job.results).map(key => {
+      return (
+        <div key={key} className="result_table">
+          <div className="result_table_item_key">{key}</div>
+          <div className="result_table_item_value">{job.results[key]}</div>
+        </div>
+      )
+    })
   ) : (
     <NoData />
   )

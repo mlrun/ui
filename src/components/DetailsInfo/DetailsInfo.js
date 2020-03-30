@@ -50,7 +50,7 @@ const DetailsInfo = ({ item, handleShowElements, page, match }) => {
 
   return (
     <div>
-      {page === 'artifacts' && (
+      {page === ARTIFACTS_PAGE && (
         <h3 className="table__item_details_preview_header">General</h3>
       )}
       <ul className="table__item_details">
