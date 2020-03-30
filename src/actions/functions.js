@@ -4,7 +4,6 @@ import {
   FETCH_FUNCTIONS_FAILURE,
   FETCH_FUNCTIONS_SUCCESS
 } from '../constants'
-import { handleErrors } from '../utils/handleErrors'
 
 const functionsActions = {
   fetchFunctions: project => dispatch => {
@@ -12,7 +11,6 @@ const functionsActions = {
 
     return functionsApi
       .getAll(project)
-      .then(handleErrors)
       .then(({ data }) => {
         dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
         return data.funcs

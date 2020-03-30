@@ -1,0 +1,24 @@
+@import '../../scss/colors';
+
+.item-section {
+  margin-bottom: 44px;
+  &__title {
+    display: flex;
+    margin-bottom: 22px;
+    h5 {
+      font-weight: bold;
+      font-size: 17px;
+      line-height: 20px;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: $primary;
+      margin: 0;
+    }
+  }
+  &__body {
+    position: relative;
+    display: flex;
+  }
+}

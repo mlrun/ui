@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
-
 import './accordion.scss'
 
-const Accordion = ({ title, children }) => {
+const Accordion = ({ icon, children, iconClassName, accordionClassName }) => {
   const [open, setOpen] = useState(false)
 
   const handleOpenAccordion = () => {
@@ -13,20 +11,24 @@ const Accordion = ({ title, children }) => {
   }
 
   return (
-    <div className={`accordion_container ${open && 'open'}`}>
-      <button onClick={handleOpenAccordion}>
-        <Arrow className={`${open && 'open'}`} />
-      </button>
-      <div className="accordion_title">
-        <div className="title">{title}</div>
-      </div>
-      <div className="accordion_body">{children}</div>
+    <div
+      className={`accordion__container ${open && 'open'} ${accordionClassName}`}
+      onClick={!icon ? handleOpenAccordion : null}
+    >
+      {icon && (
+        <button onClick={handleOpenAccordion}>
+          <span className={`${iconClassName} ${open && 'open'}`}>{icon}</span>
+        </button>
+      )}
+      <div className="accordion__body">{children}</div>
     </div>
   )
 }
 
 Accordion.propTypes = {
-  title: PropTypes.string
+  accordionClassName: PropTypes.string,
+  icon: PropTypes.element,
+  iconClassName: PropTypes.string
 }
 
 export default Accordion
