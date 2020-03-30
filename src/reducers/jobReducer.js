@@ -5,14 +5,19 @@ import {
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
-  REMOVE_JOB_LOGS
+  REMOVE_JOB_LOGS,
+  SET_NEW_JOB_INPUTS
 } from '../constants'
 
 const initialState = {
   jobs: [],
   logs: '',
   loading: false,
-  error: null
+  error: null,
+  newJobParameters: {},
+  newJobDataInputs: {},
+  newJobResources: {},
+  newJobSchedule: {}
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -57,6 +62,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: ''
+      }
+    case SET_NEW_JOB_INPUTS:
+      return {
+        ...state,
+        newJobDataInputs: {}
       }
     default:
       return state

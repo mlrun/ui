@@ -12,7 +12,7 @@ const Accordion = ({ icon, children, iconClassName, accordionClassName }) => {
 
   return (
     <div
-      className={`accordion_container ${open && 'open'} ${accordionClassName}`}
+      className={`accordion__container ${open && 'open'} ${accordionClassName}`}
       onClick={!icon ? handleOpenAccordion : () => {}}
     >
       {icon && (
@@ -20,7 +20,7 @@ const Accordion = ({ icon, children, iconClassName, accordionClassName }) => {
           <img className={`${open && 'open'}`} src={icon} alt="Icon" />
         </button>
       )}
-      <div className="accordion_body">{children}</div>
+      <div className="accordion__body">{children}</div>
     </div>
   )
 }

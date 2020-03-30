@@ -1,7 +1,8 @@
-@import "../../scss/colors";
+@import '../../scss/colors';
 
 .job-panel__table {
   border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+  width: 100%;
   .table {
     &__header {
       font-weight: bold;
@@ -16,14 +17,17 @@
       padding: 18px 20px;
     }
     &__cell {
-      display: flex;
       min-width: 190px;
       color: $primary;
-      overflow-x: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      margin-right: 5px;
       &:first-child {
         max-width: 190px;
+      }
+      .tooltip {
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
       }
     }
   }
@@ -43,30 +47,33 @@
       fill: $cornflowerBlue;
     }
   }
-  .input-wrapper {
+  .btn-add {
+    position: absolute;
+    bottom: 20px;
+    right: 16px;
+  }
+}
+
+.input-row {
+  &-wrapper {
     display: flex;
-    &__item {
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      padding: 18px 24px;
-      color: $topaz;
-      flex: 1;
+    flex-direction: row;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    width: 90%;
+    .input-wrapper {
       &:first-child {
-        border-right: none;
-      }
-      &:nth-child(2) {
-        border-left: none;
-        margin-right: 10px;
-      }
-      &::placeholder {
-        font-style: italic;
+        flex: 0.65;
       }
     }
-    .add-input {
-      margin: 0 auto;
+  }
+  &__item {
+    width: 100%;
+    &::placeholder {
+      font-style: italic;
     }
   }
 }
 
 .no-border {
-  border: none;
+  border-bottom: none;
 }

@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
-const JobsPanelTableAddItemRow = ({ onClick }) => {
+const JobsPanelTableAddItemRow = ({ onClick, text }) => {
   return (
     <div className="table__row">
       <div className="table__cell" onClick={() => onClick(true)}>
         <button className="add-input">
           <Plus />
-          Add input
+          Add {text}
         </button>
       </div>
     </div>
@@ -17,7 +17,8 @@ const JobsPanelTableAddItemRow = ({ onClick }) => {
 }
 
 JobsPanelTableAddItemRow.propTypes = {
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired
 }
 
 export default JobsPanelTableAddItemRow
