@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
-import primaryIcon from '../../images/ic-key.png'
+import { ReactComponent as Primary } from '../../svg/ic-key.svg'
 
 import './artifactinfometadata.scss'
 
@@ -56,7 +56,7 @@ const ArtifactInfoMetadata = ({ item }) => {
                       <Tooltip
                         template={<TextTooltipTemplate text={'Primary key'} />}
                       >
-                        <img src={primaryIcon} alt="key" />
+                        <Primary />
                       </Tooltip>
                     ) : key === 'name' ? (
                       <Tooltip

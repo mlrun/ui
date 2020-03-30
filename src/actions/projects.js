@@ -4,7 +4,6 @@ import {
   FETCH_PROJECTS_FAILURE,
   FETCH_PROJECTS_SUCCESS
 } from '../constants'
-import { handleErrors } from '../utils/handleErrors'
 
 const projectsAction = {
   fetchProjects: () => dispatch => {
@@ -12,11 +11,12 @@ const projectsAction = {
 
     return projectsApi
       .getProjects()
-      .then(handleErrors)
       .then(response => {
         dispatch(projectsAction.fetchProjectsSuccess(response.data.projects))
       })
-      .catch(() => dispatch(projectsAction.fetchProjectsFailure()))
+      .catch(err => {
+        dispatch(projectsAction.fetchProjectsFailure(err))
+      })
   },
   fetchProjectsBegin: () => ({
     type: FETCH_PROJECTS_BEGIN

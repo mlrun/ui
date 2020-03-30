@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import checked from '../../images/checkbox-checked.png'
-import unchecked from '../../images/checkbox-unchecked.png'
+import { ReactComponent as Checked } from '../../svg/checkbox-checked.svg'
+import { ReactComponent as Unchecked } from '../../svg/checkbox-unchecked.svg'
 
 const SelectOption = ({ item, link, match, onClick, status, value }) => {
   if (link) {
@@ -23,11 +23,7 @@ const SelectOption = ({ item, link, match, onClick, status, value }) => {
       <div className="select__item" onClick={() => onClick(item)}>
         {status && (
           <>
-            <img
-              src={value === item ? checked : unchecked}
-              alt="status"
-              className="item-status"
-            />
+            {value === item ? <Checked /> : <Unchecked />}
             <span className={`status_${item.toLowerCase()}`} />
           </>
         )}

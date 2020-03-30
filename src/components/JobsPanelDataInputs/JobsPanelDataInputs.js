@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 
 import JobsPanelDataInputsView from './JobsPanelDataInputsView'
 
-const JobsPanelDataInputs = () => {
-  const [inputs, setInputs] = useState({})
+const JobsPanelDataInputs = ({ setNewJobInputs, inputs }) => {
   const [volumes, setVolumes] = useState({})
 
   const [addNewInput, setAddNewInput] = useState(false)
@@ -28,8 +27,8 @@ const JobsPanelDataInputs = () => {
 
       newItem[newInputName] = newInputPath
 
-      setInputs({ ...inputs, ...newItem })
       setAddNewInput(false)
+      setNewJobInputs({ ...inputs, ...newItem })
     } else if (volume) {
       if (!newVolumeType || !newVolumePath) {
         return setAddNewVolume(false)

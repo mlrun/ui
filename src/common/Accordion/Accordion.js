@@ -13,11 +13,11 @@ const Accordion = ({ icon, children, iconClassName, accordionClassName }) => {
   return (
     <div
       className={`accordion__container ${open && 'open'} ${accordionClassName}`}
-      onClick={!icon ? handleOpenAccordion : () => {}}
+      onClick={!icon ? handleOpenAccordion : null}
     >
       {icon && (
-        <button onClick={handleOpenAccordion} className={iconClassName}>
-          <img className={`${open && 'open'}`} src={icon} alt="Icon" />
+        <button onClick={handleOpenAccordion}>
+          <span className={`${iconClassName} ${open && 'open'}`}>{icon}</span>
         </button>
       )}
       <div className="accordion__body">{children}</div>
@@ -27,7 +27,7 @@ const Accordion = ({ icon, children, iconClassName, accordionClassName }) => {
 
 Accordion.propTypes = {
   accordionClassName: PropTypes.string,
-  icon: PropTypes.string,
+  icon: PropTypes.element,
   iconClassName: PropTypes.string
 }
 

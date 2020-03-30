@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { startCase } from 'lodash'
 import { Link } from 'react-router-dom'
 
-import arrow from '../../images/arrow.png'
+import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 import './breadcrums.scss'
 
@@ -39,7 +39,7 @@ const Breadcrumbs = ({ match, onClick }) => {
                 {label}
               </li>,
               <li key={i} className="breadcrumbs_separator">
-                <img src={arrow} alt="Arrow" />
+                <Arrow />
               </li>
             ]
           } else {
@@ -50,7 +50,7 @@ const Breadcrumbs = ({ match, onClick }) => {
                 </Link>
               </li>,
               <li key={i} className="breadcrumbs_separator">
-                <img src={arrow} alt="Arrow" />
+                <Arrow />
               </li>
             ]
           }

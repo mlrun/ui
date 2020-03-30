@@ -2,6 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import ChipCell from '../ChipCell/ChipCell'
+import { Link } from 'react-router-dom'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 const JobsDetailsInfoItem = ({
   chips,
@@ -9,7 +12,9 @@ const JobsDetailsInfoItem = ({
   header,
   info,
   handleShowElements,
-  state
+  state,
+  func,
+  match
 }) => {
   return (
     <li className="table__item_details_item">
@@ -19,6 +24,18 @@ const JobsDetailsInfoItem = ({
           {`${state[0].toUpperCase()}${state.slice(1)}`}
           <i className={state} />
         </div>
+      )}
+      {func?.name && (
+        <Tooltip
+          className="table__item_details_item_data link"
+          template={<TextTooltipTemplate text={func.hash} />}
+        >
+          <Link
+            to={`/projects/${match.params.projectName}/functions/${func.name}/${func.hash}/info`}
+          >
+            {func.name}
+          </Link>
+        </Tooltip>
       )}
       {chips && (
         <div className="table__item_details_item_data">

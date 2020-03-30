@@ -13,12 +13,13 @@ import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 
 import './detailsInfo.scss'
 
-const DetailsInfo = ({ item, handleShowElements, page }) => {
+const DetailsInfo = ({ item, handleShowElements, page, match }) => {
   const jobsInfoContent = [
     item.uid,
     formatDatetime(item.startTime),
     item.state,
     item.parameters,
+    item.function,
     item.resultsChips,
     item.labels,
     item.logLevel,
@@ -73,6 +74,15 @@ const DetailsInfo = ({ item, handleShowElements, page }) => {
                       header={header}
                       handleShowElements={handleShowElements}
                       chipsClassName="parameters"
+                    />
+                  )
+                case item.function:
+                  return (
+                    <JobsDetailsInfoItem
+                      match={match}
+                      key={header}
+                      header={header}
+                      func={item.function}
                     />
                   )
                 case item.resultsChips:

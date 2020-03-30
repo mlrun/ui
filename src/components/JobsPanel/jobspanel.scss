@@ -64,6 +64,17 @@
         background: $purple;
         border-radius: 2px;
         margin-left: 10px;
+        svg {
+          margin-right: 5px;
+          path {
+            fill: $white;
+          }
+        }
+      }
+      &__edit {
+        border: $tableFilterBorder;
+        border-radius: 2px;
+        color: $primary;
       }
       &__icon {
         margin-right: 5px;
@@ -83,17 +94,19 @@
       border-radius: 50%;
       background: #869cff;
       z-index: 1;
-      img {
-        margin-top: 2px;
-        filter: brightness(0) invert(1);
-        transform: rotate(0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(0);
+      transform-origin: center center;
+      transition: transform 200ms linear;
+      &.open {
+        transform: rotate(90deg);
         transform-origin: center center;
         transition: transform 200ms linear;
-        &.open {
-          transform: rotate(90deg);
-          transform-origin: center center;
-          transition: transform 200ms linear;
-        }
+      }
+      svg {
+        filter: brightness(0) invert(1);
       }
     }
   }

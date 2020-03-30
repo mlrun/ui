@@ -7,7 +7,7 @@ import Input from '../../common/Input/Input'
 import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 
 import panelData from '../JobsPanel/panelData'
-import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Plus } from '../../svg/plus.svg'
 
 const JobsPanelDataInputsView = ({
   addNewInput,

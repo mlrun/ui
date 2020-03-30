@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-import actionMenuIcon from '../../images/elipsis.png'
-import yamlIcon from '../../images/yaml.png'
+import { ReactComponent as ActionMenu } from '../../svg/elipsis.svg'
+import { ReactComponent as Yaml } from '../../svg/yaml.svg'
 
 import './tableActionsMenu.scss'
 
@@ -33,7 +33,7 @@ const TableActionsMenu = ({ toggleConvertToYaml, item, time }) => {
       onMouseEnter={handleMouseEnter}
     >
       <button onClick={showActionsList}>
-        <img src={actionMenuIcon} alt="show more" />
+        <ActionMenu />
       </button>
       {isShowMenu && (
         <div
@@ -46,11 +46,7 @@ const TableActionsMenu = ({ toggleConvertToYaml, item, time }) => {
               toggleConvertToYaml(item)
             }}
           >
-            <img
-              src={yamlIcon}
-              alt="yaml"
-              className="table-actions-container__icon"
-            />
+            <Yaml className="table-actions-container__icon" />
             View YAML
           </div>
         </div>

@@ -10,8 +10,8 @@ import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
 
-import artifactViewIcon from '../../images/eye.png'
-import arrowIcon from '../../images/arrow.png'
+import { ReactComponent as ArtifactView } from '../../svg/eye.svg'
+import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 import { truncateUid } from '../../utils'
 import jobsData from '../../components/JobsPage/jobsData'
@@ -25,11 +25,13 @@ const TableCell = ({
   selectItem,
   selectedItem,
   match,
-  expandLink
+  expandLink,
+  handleExpandRow
 }) => {
   if (link) {
     return (
       <TableLinkCell
+        handleExpandRow={handleExpandRow}
         selectedItem={selectedItem}
         expandLink={expandLink}
         link={link}
@@ -53,7 +55,10 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.size}`}>
         {data && data.value}
-        <img src={arrowIcon} alt="Arrow" className="expand-arrow" />
+        <Arrow
+          onClick={e => handleExpandRow(e, item)}
+          className="expand-arrow"
+        />
       </div>
     )
   } else if (data.type === 'type') {
@@ -101,7 +106,7 @@ const TableCell = ({
             selectItem(item, true)
           }}
         >
-          <img src={artifactViewIcon} alt="Popout Icon" />
+          <ArtifactView />
         </button>
       </div>
     )

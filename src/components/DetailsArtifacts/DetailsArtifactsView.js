@@ -6,7 +6,7 @@ import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
-import arrow from '../../images/arrow.png'
+import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
 import './detailsArtifacts.scss'
 
@@ -20,7 +20,7 @@ const DetailsArtifactsView = ({ items, handleClick }) => (
               className="table__item_artifacts__row_item"
               onClick={handleClick}
             >
-              <img src={arrow} alt="Arrow icon" className="arrow" />
+              <Arrow className="arrow" />
               {item.key}
             </div>
             <div className="table__item_artifacts__row_item table__item_artifacts__row_item_long">

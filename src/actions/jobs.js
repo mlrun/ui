@@ -6,9 +6,10 @@ import {
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
-  REMOVE_JOB_LOGS
+  REMOVE_JOB_LOGS,
+  SET_NEW_JOB_INPUTS,
+  SET_NEW_JOB_VOLUMES
 } from '../constants'
-import { handleErrors } from '../utils/handleErrors'
 
 const jobsActions = {
   fetchJobs: (project, status, labels) => dispatch => {
@@ -17,7 +18,6 @@ const jobsActions = {
     dispatch(jobsActions.fetchJobsBegin())
 
     return getJobs(project, status && status, labels)
-      .then(handleErrors)
       .then(({ data }) => {
         const newJobs = (data || {}).runs.filter(
           job => job.metadata.iteration === 0
@@ -37,7 +37,6 @@ const jobsActions = {
 
     return jobsApi
       .getJobLogs(id, project)
-      .then(handleErrors)
       .then(result => {
         dispatch(jobsActions.fetchJobLogsSuccess(result.data))
       })
@@ -64,6 +63,14 @@ const jobsActions = {
   }),
   removeJobLogs: () => ({
     type: REMOVE_JOB_LOGS
+  }),
+  setNewJobInputs: inputs => ({
+    type: SET_NEW_JOB_INPUTS,
+    payload: inputs
+  }),
+  setNewJobVolumes: volumes => ({
+    type: SET_NEW_JOB_VOLUMES,
+    payload: volumes
   })
 }
 

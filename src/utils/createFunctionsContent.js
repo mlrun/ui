@@ -1,5 +1,4 @@
 import { formatDatetime } from './datetime'
-import { truncateUid } from './string'
 
 const createFunctionsContent = functions =>
   functions.map(func => {
@@ -14,7 +13,7 @@ const createFunctionsContent = functions =>
         type: 'type'
       },
       hash: {
-        value: truncateUid(func.hash),
+        value: func.hash,
         size: 'functions_small',
         type: 'hash'
       },

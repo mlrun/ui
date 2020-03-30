@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
-import nuclioIcon from '../../images/nuclio.png'
-import sparkIcon from '../../images/spark.png'
-import horovodIcon from '../../images/horovod.png'
+import { ReactComponent as Nuclio } from '../../svg/nuclio.svg'
+import { ReactComponent as Spark } from '../../svg/spark.svg'
+import { ReactComponent as Horovod } from '../../svg/horovod.svg'
 
 const TableTypeCell = ({ data }) => {
   return (
@@ -22,17 +22,12 @@ const TableTypeCell = ({ data }) => {
           'Local'
         ) : data.value === 'dask' ? (
           'Dask'
+        ) : data.type === 'nuclio' ? (
+          <Nuclio />
+        ) : data.type === 'spark' ? (
+          <Spark />
         ) : (
-          <img
-            src={
-              data.type === 'nuclio'
-                ? nuclioIcon
-                : data.type === 'spark'
-                ? sparkIcon
-                : horovodIcon
-            }
-            alt="Type"
-          />
+          <Horovod />
         )}
       </Tooltip>
     </div>

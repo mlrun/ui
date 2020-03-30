@@ -41,7 +41,7 @@ const ArtifactsTableRow = ({
               }`
             }
             selectItem={handleSelectItem}
-            key={value.value + i}
+            key={Math.random() + i}
             handleShowElements={handleShowElements}
             match={match}
           />
