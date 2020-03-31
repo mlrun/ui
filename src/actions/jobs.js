@@ -8,7 +8,9 @@ import {
   FETCH_JOBS_SUCCESS,
   REMOVE_JOB_LOGS,
   SET_NEW_JOB_INPUTS,
-  SET_NEW_JOB_VOLUMES
+  SET_NEW_JOB_VOLUMES,
+  SET_NEW_JOB,
+  SET_NEW_JOB_VOLUME_MOUNTS
 } from '../constants'
 
 const jobsActions = {
@@ -71,6 +73,14 @@ const jobsActions = {
   setNewJobVolumes: volumes => ({
     type: SET_NEW_JOB_VOLUMES,
     payload: volumes
+  }),
+  setNewJobVolumeMounts: volume => ({
+    type: SET_NEW_JOB_VOLUME_MOUNTS,
+    payload: volume
+  }),
+  setNewJob: newJob => ({
+    type: SET_NEW_JOB,
+    payload: newJob
   })
 }
 

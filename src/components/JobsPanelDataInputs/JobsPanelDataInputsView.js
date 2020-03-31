@@ -5,6 +5,7 @@ import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import JobsPanelTable from '../../elements/JobsPanelTable/JobsPanelTable'
 import Input from '../../common/Input/Input'
 import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
+import Select from '../../common/Select/Select'
 
 import panelData from '../JobsPanel/panelData'
 import { ReactComponent as Plus } from '../../svg/plus.svg'
@@ -22,7 +23,13 @@ const JobsPanelDataInputsView = ({
   setNewResourcePath,
   setNewVolumePath,
   setNewVolumeType,
-  volumes
+  match,
+  newVolumeType,
+  volumeMounts,
+  setNewVolumeName,
+  setNewVolumeTypeName,
+  setOutputPath,
+  setInputPath
 }) => {
   return (
     <div className="job-panel__item">
@@ -61,13 +68,17 @@ const JobsPanelDataInputsView = ({
         </JobsPanelTable>
       </JobsPanelSection>
       <JobsPanelSection title="Volumes">
-        <JobsPanelTable content={volumes} addNewItem={addNewVolume}>
+        <JobsPanelTable
+          addNewItem={addNewVolume}
+          content={volumeMounts}
+          headers={panelData.volumes['table-headers']}
+        >
           {addNewVolume ? (
             <>
               <div className="input-row-wrapper no-border">
                 <Input
-                  onChange={e => setNewVolumeType(e.target.value)}
-                  placeholder="Set Type"
+                  onChange={e => setNewVolumeName(e.target.value)}
+                  placeholder="Set Name"
                   type="text"
                   className="input-row__item"
                 />
@@ -78,7 +89,7 @@ const JobsPanelDataInputsView = ({
                   className="input-row__item"
                 />
               </div>
-              <div className="input-row-wrapper">
+              <div className="input-row-wrapper no-border">
                 <Input
                   onChange={e => setNewAccessKey(e.target.value)}
                   placeholder="Set Access Key"
@@ -88,6 +99,30 @@ const JobsPanelDataInputsView = ({
                 <Input
                   onChange={e => setNewResourcePath(e.target.value)}
                   placeholder="Set Resource path"
+                  type="text"
+                  className="input-row__item"
+                />
+              </div>
+              <div className="input-row-wrapper">
+                <Select
+                  onClick={setNewVolumeType}
+                  placeholder="Set Type"
+                  option="volumeType"
+                  label={newVolumeType.length > 0 ? newVolumeType : 'Set Type'}
+                  match={match}
+                />
+                <Input
+                  onChange={e => setNewVolumeTypeName(e.target.value)}
+                  placeholder={
+                    newVolumeType === 'V3IO'
+                      ? 'v3io/fuse'
+                      : newVolumeType === 'PVC'
+                      ? 'Set claim name'
+                      : newVolumeType.length > 0
+                      ? `Set ${newVolumeType} name`
+                      : ''
+                  }
+                  disabled={newVolumeType === 'V3IO'}
                   type="text"
                   className="input-row__item"
                 />
@@ -109,11 +144,13 @@ const JobsPanelDataInputsView = ({
           placeholder="Default input path"
           type="text"
           className="default-input"
+          onChange={setInputPath}
         />
         <Input
           placeholder="Default output path"
           type="text"
           className="default-input"
+          onChange={setOutputPath}
         />
       </JobsPanelSection>
     </div>
@@ -133,7 +170,7 @@ JobsPanelDataInputsView.propTypes = {
   setNewResourcePath: PropTypes.func.isRequired,
   setNewVolumePath: PropTypes.func.isRequired,
   setNewVolumeType: PropTypes.func.isRequired,
-  volumes: PropTypes.shape({}).isRequired
+  volumes: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default JobsPanelDataInputsView

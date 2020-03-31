@@ -16,7 +16,7 @@ const CreateJobPageView = ({
   match,
   expandList,
   setExpandList,
-  selectedFunc
+  handleSelectFunction
 }) => (
   <div className="create-container">
     <div className="create-container__header">
@@ -60,7 +60,7 @@ const CreateJobPageView = ({
                 status={func?.status?.state}
                 name={func?.metadata?.name}
                 func={func}
-                selectedFunc={selectedFunc}
+                handleSelectFunction={handleSelectFunction}
               />
             ))}
           </div>

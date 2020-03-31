@@ -9,7 +9,8 @@ const Input = ({
   inputIcon,
   placeholder,
   onChange,
-  iconCLass
+  iconCLass,
+  disabled
 }) => {
   return (
     <div className="input-wrapper">
@@ -18,6 +19,7 @@ const Input = ({
         className={`input ${className}`}
         placeholder={placeholder}
         onChange={onChange}
+        disabled={disabled}
       />
       {inputIcon && <span className={iconCLass}>{inputIcon}</span>}
     </div>
@@ -27,11 +29,13 @@ const Input = ({
 Input.defaultProps = {
   inputIcon: null,
   iconCLass: null,
-  onChange: null
+  onChange: null,
+  disabled: false
 }
 
 Input.propTypes = {
   className: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
   inputIcon: PropTypes.element,
   iconCLass: PropTypes.string,
   onChange: PropTypes.func,
