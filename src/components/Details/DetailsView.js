@@ -34,7 +34,7 @@ const DetailsView = ({
   <div className="table__item">
     <div className="item-header">
       <div className="item-header__data">
-        <h3>{item.name || item.key}</h3>
+        <h3>{item.name || item.db_key}</h3>
         <span>
           {Object.keys(item).length > 0 &&
             formatDatetime(item.startTime || new Date(item.updated))}
@@ -80,7 +80,7 @@ const DetailsView = ({
             key={link}
             id={item.uid}
             match={match}
-            name={item.key || item.name}
+            name={item.db_key || item.name}
             hash={item.hash}
             page={page}
             tab={link}
@@ -90,7 +90,7 @@ const DetailsView = ({
           <DetailsMenuItem
             id={item.uid}
             match={match}
-            name={item.key}
+            name={item.db_key}
             page={page}
             tab={'metadata'}
           />

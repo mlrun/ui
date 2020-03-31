@@ -27,7 +27,7 @@ const DetailsInfo = ({ item, page, match }) => {
     item.iterations && item.iterations.length ? item.iterations : '0'
   ]
   const artifactsInfoContent = [
-    item.key,
+    item.db_key,
     item.iter ? item.iter : '0',
     item.kind,
     item.size,

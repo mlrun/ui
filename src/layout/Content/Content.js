@@ -50,7 +50,7 @@ const Content = ({
       yamlContent.filter(func => func.metadata.hash === item.hash)[0]
     const artifactJson =
       page === ARTIFACTS_PAGE &&
-      yamlContent.filter(_item => _item.key === item.key)[0].data
+      yamlContent.filter(_item => _item.key === item.db_key)[0].data
 
     switch (page) {
       case JOBS_PAGE:

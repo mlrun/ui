@@ -17,6 +17,9 @@ const DetailsArtifactsView = ({ items, handleClick, dispatch }) => {
   return (
     <div className="table__item_artifacts">
       {items.map((item, i) => {
+        const targetPath = `${
+          item.target_path.schema ? `${item.target_path.schema}://` : ''
+        }${item.target_path.path}`
         return (
           <div key={i} className="table__item_artifacts_wrapper">
             <div className="table__item_artifacts__row">
@@ -30,18 +33,9 @@ const DetailsArtifactsView = ({ items, handleClick, dispatch }) => {
               <div className="table__item_artifacts__row_item table__item_artifacts__row_item_long">
                 <Tooltip
                   className="table__item_artifacts__row__cell_path"
-                  template={
-                    <TextTooltipTemplate
-                      text={
-                        `${item.target_path.schema}://` + item.target_path.path
-                      }
-                    />
-                  }
+                  template={<TextTooltipTemplate text={targetPath} />}
                 >
-                  {item.target_path.schema
-                    ? `${item.target_path.schema}://`
-                    : ''}
-                  {item.target_path.path}
+                  {targetPath}
                 </Tooltip>
               </div>
               <div className="table__item_artifacts__row_item">

@@ -20,7 +20,7 @@ const PreviewModal = ({ item }) => {
     <div className="preview_artifact_container">
       <div className="preview_body">
         <div className="preview_info">
-          <div className="preview_info_name">{item.key}</div>
+          <div className="preview_info_name">{item.db_key || item.key}</div>
           <div className="preview_info_path">{item.target_path.path}</div>
           {item.size && (
             <div className="preview_info_size">
