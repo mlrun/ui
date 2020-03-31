@@ -45,7 +45,7 @@
     .artifacts_small:nth-child(10) {
       @include tableColumnFlex(0.5, 80px);
     }
-    .functions{
+    .functions {
       &_medium {
         @include tableColumnFlex(1, 240px);
       }
@@ -54,6 +54,17 @@
       }
       &_big {
         @include tableColumnFlex(2, 80px);
+      }
+      &_medium,
+      &_small,
+      &_big {
+        span {
+          min-width: 100%;
+          max-width: 50px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow-x: hidden;
+        }
       }
     }
   }
@@ -170,7 +181,6 @@
     &__labels {
       @include chip($labelBorder);
     }
-
   }
   .name_status_row {
     display: flex;

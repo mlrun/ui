@@ -11,7 +11,6 @@ const JobsTableRow = ({
   handleExpandRow,
   toggleConvertToYaml,
   handleSelectItem,
-  handleShowElements,
   index,
   match,
   rowItem,
@@ -41,7 +40,6 @@ const JobsTableRow = ({
             <TableCell
               handleExpandRow={handleExpandRow}
               data={rowItem.name}
-              handleShowElements={handleShowElements}
               item={rowItem}
               selectItem={handleSelectItem}
               selectedItem={selectedItem}
@@ -68,7 +66,6 @@ const JobsTableRow = ({
                   return (
                     <TableCell
                       data={i === 0 ? job.startTime : value}
-                      handleShowElements={handleShowElements}
                       item={currentItem}
                       link={
                         i === 0 &&
@@ -96,7 +93,6 @@ const JobsTableRow = ({
             <TableCell
               handleExpandRow={handleExpandRow}
               data={value}
-              handleShowElements={handleShowElements}
               item={content.filter(item => item.uid === rowItem.uid.value)[0]}
               link={
                 i === 0 &&
@@ -136,7 +132,6 @@ JobsTableRow.propTypes = {
   toggleConvertToYaml: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
-  handleShowElements: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,

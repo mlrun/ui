@@ -29,7 +29,6 @@ const DetailsView = ({
   match,
   handleCancel,
   detailsMenu,
-  handleShowElements,
   handlePreview
 }) => (
   <div className="table__item">
@@ -99,12 +98,7 @@ const DetailsView = ({
       </ul>
     </div>
     {match.params.tab === 'info' && (
-      <DetailsInfo
-        match={match}
-        handleShowElements={handleShowElements}
-        item={item}
-        page={page}
-      />
+      <DetailsInfo match={match} item={item} page={page} />
     )}
     {match.params.tab === 'preview' && (
       <div className="preview_container">
@@ -136,7 +130,6 @@ DetailsView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   handleCancel: PropTypes.func.isRequired,
   detailsMenu: PropTypes.array.isRequired,
-  handleShowElements: PropTypes.func.isRequired,
   handlePreview: PropTypes.func.isRequired
 }
 

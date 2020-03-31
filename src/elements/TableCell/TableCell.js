@@ -13,13 +13,15 @@ import TableTypeCell from '../TableTypeCell/TableTypeCell'
 import { ReactComponent as ArtifactView } from '../../svg/eye.svg'
 import { ReactComponent as Arrow } from '../../svg/arrow.svg'
 
+import artifactAction from '../../actions/artifacts'
+
 import { truncateUid } from '../../utils'
 import jobsData from '../../components/JobsPage/jobsData'
+import { useDispatch } from 'react-redux'
 
 const TableCell = ({
   data,
   firstRow,
-  handleShowElements,
   item,
   link,
   selectItem,
@@ -28,6 +30,7 @@ const TableCell = ({
   expandLink,
   handleExpandRow
 }) => {
+  const dispatch = useDispatch()
   if (link) {
     return (
       <TableLinkCell
@@ -70,7 +73,6 @@ const TableCell = ({
           className={`table-body__${data.type}`}
           elements={data.value}
           tooltip
-          handleShowElements={handleShowElements}
         />
       </div>
     )
@@ -103,7 +105,12 @@ const TableCell = ({
       <div className={`table-body__cell ${data.size}`}>
         <button
           onClick={() => {
-            selectItem(item, true)
+            dispatch(
+              artifactAction.artifactPreview({
+                isPreview: true,
+                item
+              })
+            )
           }}
         >
           <ArtifactView />
@@ -161,7 +168,6 @@ TableCell.defaultProps = {
 
 TableCell.propTypes = {
   data: PropTypes.shape({}).isRequired,
-  handleShowElements: PropTypes.func.isRequired,
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.bool]),
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectItem: PropTypes.func.isRequired,

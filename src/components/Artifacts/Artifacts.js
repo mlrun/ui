@@ -74,7 +74,7 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
           return true
         })
 
-        setSelectedArtifact({ isPreview: false, item: artifact })
+        setSelectedArtifact({ item: artifact })
       }
     }
   }, [match.params, artifactsStore.artifacts, history])
@@ -87,7 +87,7 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
     }
-    setSelectedArtifact({ isPreview: !!preview, item })
+    setSelectedArtifact({ item })
   }
 
   const handleCancel = () => {
@@ -103,7 +103,6 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
         filters={artifactsData.filters}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectArtifact}
-        isPreview={selectedArtifact.isPreview}
         loading={artifactsStore.loading}
         match={match}
         page={artifactsData.page}

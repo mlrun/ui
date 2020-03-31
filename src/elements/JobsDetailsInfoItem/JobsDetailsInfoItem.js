@@ -11,7 +11,6 @@ const JobsDetailsInfoItem = ({
   chipsClassName,
   header,
   info,
-  handleShowElements,
   state,
   func,
   match
@@ -43,7 +42,6 @@ const JobsDetailsInfoItem = ({
             <ChipCell
               elements={chips}
               className={`table__item_details_item_data__${chipsClassName}`}
-              handleShowElements={handleShowElements}
             />
           }
         </div>
@@ -59,8 +57,7 @@ JobsDetailsInfoItem.defaultProps = {
 JobsDetailsInfoItem.propTypes = {
   chips: PropTypes.arrayOf(PropTypes.string),
   chipsClassName: PropTypes.string,
-  header: PropTypes.string.isRequired,
-  handleShowElements: PropTypes.func
+  header: PropTypes.string.isRequired
 }
 
 export default JobsDetailsInfoItem

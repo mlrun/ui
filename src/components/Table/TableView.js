@@ -17,8 +17,6 @@ const TableView = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
-  handleShowElements,
-  hideChips,
   match,
   page,
   selectedItem,
@@ -52,7 +50,6 @@ const TableView = ({
                         content={content}
                         toggleConvertToYaml={toggleConvertToYaml}
                         handleSelectItem={handleSelectItem}
-                        handleShowElements={handleShowElements}
                         index={i}
                         match={match}
                         rowItem={rowItem}
@@ -65,7 +62,6 @@ const TableView = ({
                         key={i}
                         toggleConvertToYaml={toggleConvertToYaml}
                         content={content}
-                        handleShowElements={handleShowElements}
                         match={match}
                         rowItem={rowItem}
                         index={i}
@@ -80,7 +76,6 @@ const TableView = ({
                         content={content}
                         toggleConvertToYaml={toggleConvertToYaml}
                         handleSelectItem={handleSelectItem}
-                        handleShowElements={handleShowElements}
                         index={i}
                         match={match}
                         rowItem={rowItem}
@@ -99,7 +94,6 @@ const TableView = ({
                     toggleConvertToYaml={toggleConvertToYaml}
                     handleExpandRow={handleExpandRow}
                     handleSelectItem={handleSelectItem}
-                    handleShowElements={handleShowElements}
                     index={i}
                     match={match}
                     rowItem={groupLatestJob[i]}
@@ -116,8 +110,6 @@ const TableView = ({
           detailsMenu={detailsMenu}
           handleCancel={handleCancel}
           handleSelectItem={handleSelectItem}
-          handleShowElements={handleShowElements}
-          hideChips={hideChips}
           item={selectedItem}
           match={match}
           page={page}
@@ -137,8 +129,6 @@ TableView.propTypes = {
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  handleShowElements: PropTypes.func.isRequired,
-  hideChips: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

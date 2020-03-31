@@ -1,25 +1,33 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
-import './details.scss'
+import artifactActions from '../../actions/artifacts'
+
 import DetailsView from './DetailsView'
 
+import './details.scss'
 const Details = ({
   detailsMenu,
   handleCancel,
-  handleSelectItem,
-  handleShowElements,
   item,
   match,
   page,
   toggleConvertToYaml
 }) => {
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const handlePreview = () => {
     history.push(`/projects/${match.params.projectName}/artifacts`)
-    handleSelectItem(item, true)
+    dispatch(
+      artifactActions.artifactPreview({
+        isPreview: true,
+        item
+      })
+    )
+    handleCancel()
   }
 
   useEffect(() => {
@@ -41,7 +49,6 @@ const Details = ({
       handlePreview={handlePreview}
       detailsMenu={detailsMenu}
       handleCancel={handleCancel}
-      handleShowElements={handleShowElements}
       page={page}
       item={item}
       match={match}
@@ -57,7 +64,6 @@ Details.defaultProps = {
 Details.propTypes = {
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
-  handleShowElements: PropTypes.func.isRequired,
   item: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,

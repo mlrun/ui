@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
+import Prism from 'prismjs'
 import { Base64 } from 'js-base64'
 
 import NoData from '../../common/NoData/NoData'
@@ -14,12 +15,14 @@ const DetailsCode = ({ code }) => {
     decodeCode()
   }, [decodeCode])
 
+  const html = Prism.highlight(decoded, Prism.languages.py, 'py')
+
   return (
     <div className="table__item_code">
       {decoded.length > 0 ? (
         <div className="table__item_code__content">
           <pre>
-            <code>{decoded}</code>
+            <code dangerouslySetInnerHTML={{ __html: html }}></code>
           </pre>
         </div>
       ) : (

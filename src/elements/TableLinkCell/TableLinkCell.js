@@ -39,7 +39,7 @@ const TableLinkCell = ({
             </Tooltip>
           )}
         </div>
-        {!link.includes('artifacts') &&
+        {link.match(/jobs|functions/) &&
           Object.values(selectedItem).length !== 0 && (
             <div className="date__uid_row">
               <span>
