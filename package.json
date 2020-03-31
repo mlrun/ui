@@ -111,7 +111,8 @@
         {
           "languages": [
             "yaml",
-            "json"
+            "json",
+            "py"
           ],
           "theme": "coy",
           "css": true

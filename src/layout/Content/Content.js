@@ -25,7 +25,6 @@ const Content = ({
   handleExpandAll,
   handleExpandRow,
   handleSelectItem,
-  isPreview,
   loading,
   match,
   refresh,
@@ -111,7 +110,6 @@ const Content = ({
               handleCancel={handleCancel}
               handleExpandRow={handleExpandRow}
               handleSelectItem={handleSelectItem}
-              isPreview={isPreview}
               match={match}
               page={page}
               selectedItem={selectedItem}

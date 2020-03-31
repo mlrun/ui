@@ -10,7 +10,6 @@ const ArtifactsTableRow = ({
   content,
   toggleConvertToYaml,
   handleSelectItem,
-  handleShowElements,
   index,
   match,
   rowItem,
@@ -42,7 +41,6 @@ const ArtifactsTableRow = ({
             }
             selectItem={handleSelectItem}
             key={Math.random() + i}
-            handleShowElements={handleShowElements}
             match={match}
           />
         )
@@ -61,7 +59,6 @@ ArtifactsTableRow.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   toggleConvertToYaml: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  handleShowElements: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,

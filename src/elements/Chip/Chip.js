@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const Chip = ({ className, onClick, value }) => {
-  if (value.length > 15) {
+  if (!value.match(/^\+ [\d]+/g)) {
     return (
       <span className={className}>
         <i className="chip-short">{value}</i>

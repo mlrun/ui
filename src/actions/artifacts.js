@@ -2,7 +2,9 @@ import artifactsApi from '../api/artifacts-api'
 import {
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
-  FETCH_ARTIFACTS_SUCCESS
+  FETCH_ARTIFACTS_SUCCESS,
+  ARTIFACT_PREVIEW,
+  ARTIFACT_PREVIEW_CLOSE
 } from '../constants'
 
 const artifactsAction = {
@@ -41,6 +43,14 @@ const artifactsAction = {
   fetchArtifactsFailure: error => ({
     type: FETCH_ARTIFACTS_FAILURE,
     payload: error
+  }),
+  artifactPreview: item => ({
+    type: ARTIFACT_PREVIEW,
+    payload: item
+  }),
+  artifactPreviewClose: item => ({
+    type: ARTIFACT_PREVIEW_CLOSE,
+    payload: item
   })
   // fetchArtifactPreview: (schema, path) => dispatch => {
   //   dispatch(artifactsAction.fetchArtifactPreviewBegin())

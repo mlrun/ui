@@ -1,4 +1,10 @@
-import React, { useRef, useState, useCallback, useLayoutEffect } from 'react'
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useLayoutEffect,
+  useEffect
+} from 'react'
 import PropTypes from 'prop-types'
 
 import Chip from '../Chip/Chip'
@@ -11,8 +17,9 @@ import { sizeChips } from './SizeChips'
 
 import './chipCell.scss'
 
-const ChipCell = ({ className, elements, handleShowElements }) => {
+const ChipCell = ({ className, elements }) => {
   const [chips, setChips] = useState(cutChips(elements, 0))
+  const [show, setShow] = useState(false)
 
   const chipRef = useRef()
 
@@ -28,6 +35,17 @@ const ChipCell = ({ className, elements, handleShowElements }) => {
       }
     }
   }, [elements])
+
+  const handleShowElements = useCallback(() => {
+    setShow(!show)
+  }, [show])
+
+  useEffect(() => {
+    if (show) {
+      window.addEventListener('click', handleShowElements)
+      return () => window.removeEventListener('click', handleShowElements)
+    }
+  }, [show, handleShowElements])
 
   useLayoutEffect(() => {
     handleResize()
@@ -52,7 +70,7 @@ const ChipCell = ({ className, elements, handleShowElements }) => {
                   value={item.value}
                 />
               </Tooltip>
-              {chips.hiddenChips && (
+              {chips.sortedArr.length - 1 === i && show && (
                 <HiddenChipsBlock
                   className={className}
                   chips={chips.hiddenChips}
@@ -72,8 +90,7 @@ ChipCell.defaultProps = {
 
 ChipCell.propTypes = {
   className: PropTypes.string.isRequired,
-  elements: PropTypes.arrayOf(PropTypes.string),
-  handleShowElements: PropTypes.func.isRequired
+  elements: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default ChipCell

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
@@ -8,9 +8,33 @@ import Chip from '../Chip/Chip'
 import './hiddenChipsBlock.scss'
 
 const HiddenChipsBlock = ({ className, chips }) => {
+  const [isTop, setIsTop] = useState(false)
+  const hiddenRef = useRef()
+  const offset = 28
+  console.log('HiddenChipsBlock')
+
+  useEffect(() => {
+    if (hiddenRef?.current) {
+      const { height } = hiddenRef.current.getBoundingClientRect()
+
+      if (
+        hiddenRef.current.offsetParent.getBoundingClientRect().top -
+          hiddenRef.current.offsetParent.clientHeight -
+          height -
+          offset <
+        0
+      ) {
+        setIsTop(true)
+      }
+    }
+  }, [hiddenRef, offset])
+
   return (
-    <div className="chip-block-hidden">
-      {chips.map(element => {
+    <div
+      ref={hiddenRef}
+      className={`chip-block-hidden ${!isTop ? 'top' : 'bottom'}`}
+    >
+      {chips?.map(element => {
         return (
           <Tooltip
             key={element.value}
@@ -29,4 +53,8 @@ HiddenChipsBlock.propTypes = {
   chips: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
-export default HiddenChipsBlock
+export default React.memo(HiddenChipsBlock, (prev, next) => {
+  console.log(prev)
+  console.log(next)
+  return false
+})

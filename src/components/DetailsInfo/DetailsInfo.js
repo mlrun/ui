@@ -13,7 +13,7 @@ import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 
 import './detailsInfo.scss'
 
-const DetailsInfo = ({ item, handleShowElements, page, match }) => {
+const DetailsInfo = ({ item, page, match }) => {
   const jobsInfoContent = [
     item.uid,
     formatDatetime(item.startTime),
@@ -61,7 +61,6 @@ const DetailsInfo = ({ item, handleShowElements, page, match }) => {
                   return (
                     <JobsDetailsInfoItem
                       key={header}
-                      handleShowElements={handleShowElements}
                       header={header}
                       state={item.state}
                     />
@@ -72,7 +71,6 @@ const DetailsInfo = ({ item, handleShowElements, page, match }) => {
                       key={header}
                       chips={item.parameters}
                       header={header}
-                      handleShowElements={handleShowElements}
                       chipsClassName="parameters"
                     />
                   )
@@ -91,7 +89,6 @@ const DetailsInfo = ({ item, handleShowElements, page, match }) => {
                       key={header}
                       chips={item.resultsChips}
                       header={header}
-                      handleShowElements={handleShowElements}
                       chipsClassName="results"
                     />
                   )
@@ -101,7 +98,6 @@ const DetailsInfo = ({ item, handleShowElements, page, match }) => {
                       key={header}
                       chips={item.labels}
                       header={header}
-                      handleShowElements={handleShowElements}
                       chipsClassName="labels"
                     />
                   )
@@ -123,7 +119,6 @@ const DetailsInfo = ({ item, handleShowElements, page, match }) => {
                     <ArtifactsDetailsInfoItem
                       key={header}
                       page={page}
-                      handleShowElements={handleShowElements}
                       chips={parseKeyValues(item.labels)}
                       header={header}
                       chipsClassName="labels"
@@ -134,7 +129,6 @@ const DetailsInfo = ({ item, handleShowElements, page, match }) => {
                     <ArtifactsDetailsInfoItem
                       key={header}
                       page={page}
-                      handleShowElements={handleShowElements}
                       header={header}
                       target_path={item.target_path}
                     />
@@ -206,7 +200,6 @@ DetailsInfo.defaultProps = {
 }
 
 DetailsInfo.propTypes = {
-  handleShowElements: PropTypes.func.isRequired,
   item: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired
 }

@@ -1,13 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import prettyBytes from 'pretty-bytes'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 
 import DetailsArtifactsView from './DetailsArtifactsView'
 
 import { formatDatetime } from '../../utils'
 
 const DetailsArtifacts = ({ jobsStore, selectedItem }) => {
+  const dispatch = useDispatch()
+
   const items = selectedItem.artifacts.map(item => {
     const index = item.target_path.indexOf('://')
     const target_path = {
@@ -64,6 +66,7 @@ const DetailsArtifacts = ({ jobsStore, selectedItem }) => {
       items={items}
       handleClick={handleClick}
       artifacts={jobsStore.artifacts}
+      dispatch={dispatch}
     />
   )
 }
