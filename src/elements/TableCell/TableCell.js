@@ -121,8 +121,9 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.size}`}>
         <Download
-          path={item && item.target_path.path}
-          schema={item && item.target_path.schema}
+          path={item?.target_path.path}
+          schema={item?.target_path.schema}
+          user={item?.producer?.owner}
         />
       </div>
     )

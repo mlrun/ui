@@ -60,7 +60,13 @@ const DetailsResults = ({ job }) => {
                         className="table__item_results__table_medal table__item_results__table_row_cell"
                       >
                         {value}
-                        <BestIteration />
+                        <Tooltip
+                          template={
+                            <TextTooltipTemplate text={'Best iteration'} />
+                          }
+                        >
+                          <BestIteration />
+                        </Tooltip>
                       </div>
                     )
                   } else {

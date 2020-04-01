@@ -5,7 +5,7 @@ const createArtifactsContent = artifacts =>
   artifacts.map(artifact => {
     return {
       key: {
-        value: artifact.key,
+        value: artifact.db_key,
         size: 'artifacts_medium'
       },
       target_path: {

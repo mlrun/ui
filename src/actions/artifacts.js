@@ -15,13 +15,14 @@ const artifactsAction = {
       .then(({ data }) => {
         let artifacts = Object.values(
           data.artifacts.reduce((prev, curr) => {
-            if (!prev[curr.key]) prev[curr.key] = { key: curr.key, data: [] }
+            if (!prev[curr.db_key])
+              prev[curr.db_key] = { key: curr.db_key, data: [] }
             if ('link_iteration' in curr) {
-              prev[curr.key] = Object.assign(prev[curr.key], {
+              prev[curr.db_key] = Object.assign(prev[curr.db_key], {
                 link_iteration: curr
               })
             } else {
-              prev[curr.key].data.push(curr)
+              prev[curr.db_key].data.push(curr)
             }
             return prev
           }, {})
