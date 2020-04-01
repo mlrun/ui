@@ -27,7 +27,7 @@ const ArtifactsPreview = ({ artifact }) => {
       getArtifactPreview(
         artifact.target_path.schema,
         artifact.target_path.path,
-        artifact.user
+        artifact.user || artifact.producer.owner
       )
     }
   }, [artifact.target_path, artifact])

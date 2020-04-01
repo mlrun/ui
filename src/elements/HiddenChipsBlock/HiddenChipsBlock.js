@@ -52,8 +52,4 @@ HiddenChipsBlock.propTypes = {
   chips: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
-export default React.memo(HiddenChipsBlock, (prev, next) => {
-  console.log(prev)
-  console.log(next)
-  return false
-})
+export default HiddenChipsBlock

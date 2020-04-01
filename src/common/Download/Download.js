@@ -51,8 +51,10 @@ const Download = ({ path, schema, setNotificationDownload, user }) => {
             url: response.config.url,
             id: Math.random()
           })
-          setDownload(false)
-          setProgress(0)
+          if (downloadRef.current) {
+            setDownload(false)
+            setProgress(0)
+          }
         })
         .catch(error => {
           if (axios.isCancel(error)) {
@@ -67,8 +69,10 @@ const Download = ({ path, schema, setNotificationDownload, user }) => {
             file,
             id: Math.random()
           })
-          setDownload(false)
-          setProgress(0)
+          if (downloadRef.current) {
+            setDownload(false)
+            setProgress(0)
+          }
         })
         .finally(() => {
           if (downloadRef.current) downloadRef.current.cancel = null
