@@ -140,6 +140,9 @@
         text-decoration: none;
         color: $cornflowerBlue;
         margin: 0;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
         span {
           display: block;
           color: $topaz;
@@ -185,8 +188,13 @@
   .name_status_row {
     display: flex;
     align-items: center;
+    flex: 1;
     span {
       margin-left: 10px;
+    }
+    .status {
+      margin-left: auto;
+      margin-right: 10%;
     }
   }
   .date__uid_row {

@@ -11,7 +11,6 @@ const HiddenChipsBlock = ({ className, chips }) => {
   const [isTop, setIsTop] = useState(false)
   const hiddenRef = useRef()
   const offset = 28
-  console.log('HiddenChipsBlock')
 
   useEffect(() => {
     if (hiddenRef?.current) {
@@ -53,8 +52,4 @@ HiddenChipsBlock.propTypes = {
   chips: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
-export default React.memo(HiddenChipsBlock, (prev, next) => {
-  console.log(prev)
-  console.log(next)
-  return false
-})
+export default HiddenChipsBlock

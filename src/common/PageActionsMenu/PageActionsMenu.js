@@ -2,18 +2,22 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
+import { JOBS_PAGE } from '../../constants.js'
+
 import './pageActionsMenu.scss'
 
 const PageActionsMenu = ({ match, page }) => {
   return (
-    <div className="page-actions-container">
-      <Link
-        className="select__item"
-        to={`/projects/${match.params.projectName}/jobs/create-new-job`}
-      >
-        New Job
-      </Link>
-    </div>
+    page === JOBS_PAGE && (
+      <div className="page-actions-container">
+        <Link
+          className="select__item"
+          to={`/projects/${match.params.projectName}/jobs/create-new-job`}
+        >
+          New Job
+        </Link>
+      </div>
+    )
   )
 }
 

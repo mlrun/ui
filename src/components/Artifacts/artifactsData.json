@@ -11,7 +11,7 @@
     "Sources"
   ],
   "detailsMenu": ["info", "preview"],
-  "filters": ["period", "tree", "labels"],
+  "filters": ["period", "tree", "labels", "name"],
   "page": "ARTIFACTS",
   "sources": ["name", "path"],
   "tableHeaders": [

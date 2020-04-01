@@ -35,13 +35,25 @@ const Details = ({
       history.push(
         `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
       )
+    } else {
+      let newDetailsMenu =
+        item.schema !== undefined ? [...detailsMenu, 'metadata'] : detailsMenu
+      if (!newDetailsMenu.includes(match.params.tab)) {
+        history.push(
+          `/projects/${match.params.projectName}/${page.toLowerCase()}`
+        )
+        handleCancel()
+      }
     }
   }, [
+    match.params.tab,
+    match.params.projectName,
     history,
+    page,
+    detailsMenu,
     item.schema,
     match.params.name,
-    match.params.projectName,
-    match.params.tab
+    handleCancel
   ])
 
   return (

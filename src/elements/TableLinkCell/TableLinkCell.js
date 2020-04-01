@@ -29,6 +29,7 @@ const TableLinkCell = ({
           {data.value}
           {item.state && (
             <Tooltip
+              className="status"
               template={
                 <TextTooltipTemplate
                   text={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
