@@ -26,7 +26,7 @@ SelectOption.propTypes = {
   item: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   status: PropTypes.bool.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string
 }
 
 export default SelectOption

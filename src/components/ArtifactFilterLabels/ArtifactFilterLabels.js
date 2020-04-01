@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
+import Input from '../../common/Input/Input'
 
 import './artifactfilterlabels.scss'
 
@@ -22,15 +23,13 @@ const ArtifactFilterLabels = ({ match, onChange, page }) => {
 
   return (
     <div className="artifact_filter_labels_container">
-      <div className="label">Labels:</div>
-      <input
+      <Input
         type="text"
-        placeholder="key1=value1,…"
+        label="Labels:"
+        onChange={setLabels}
         value={labels}
-        onChange={event => setLabels(event.target.value)}
-        onKeyDown={event => {
-          handleSearch(event)
-        }}
+        placeholder="key1=value1,…"
+        onKeyDown={e => handleSearch(e)}
       />
     </div>
   )

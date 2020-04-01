@@ -39,6 +39,7 @@
     flex-direction: row;
     border: 1px solid rgba(0, 0, 0, 0.2);
     width: 90%;
+    min-height: 56px;
     .input-wrapper {
       &:first-child {
         flex: 0.65;

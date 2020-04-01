@@ -21,14 +21,14 @@ const JobsPanel = ({
   match,
   setNewJob,
   setNewJobVolumes,
-  setNewJobVolumeMounts
+  setNewJobVolumeMounts,
+  setNewJobInputPath,
+  setNewJobOutputPath
 }) => {
   const [edit, setEdit] = useState(false)
 
   const [inputPath, setInputPath] = useState('')
   const [outputPath, setOutputPath] = useState('')
-
-  console.log(inputPath, outputPath)
 
   const handlerEdit = () => {
     setEdit(!edit)
@@ -61,7 +61,10 @@ const JobsPanel = ({
     })
   }
 
-  const handleRunJob = () => {}
+  const handleRunJob = () => {
+    setNewJobInputPath(inputPath)
+    setNewJobOutputPath(outputPath)
+  }
 
   return (
     <div className="job-panel-container">

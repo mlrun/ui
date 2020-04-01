@@ -10,7 +10,9 @@ import {
   SET_NEW_JOB_INPUTS,
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB,
-  SET_NEW_JOB_VOLUME_MOUNTS
+  SET_NEW_JOB_VOLUME_MOUNTS,
+  SET_NEW_JOB_INPUT_PATH,
+  SET_NEW_JOB_OUTPUT_PATH
 } from '../constants'
 
 const jobsActions = {
@@ -81,6 +83,14 @@ const jobsActions = {
   setNewJob: newJob => ({
     type: SET_NEW_JOB,
     payload: newJob
+  }),
+  setNewJobInputPath: path => ({
+    type: SET_NEW_JOB_INPUT_PATH,
+    payload: path
+  }),
+  setNewJobOutputPath: path => ({
+    type: SET_NEW_JOB_OUTPUT_PATH,
+    payload: path
   })
 }
 

@@ -9,7 +9,9 @@ import {
   SET_NEW_JOB_INPUTS,
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB,
-  SET_NEW_JOB_VOLUME_MOUNTS
+  SET_NEW_JOB_VOLUME_MOUNTS,
+  SET_NEW_JOB_OUTPUT_PATH,
+  SET_NEW_JOB_INPUT_PATH
 } from '../constants'
 
 const initialState = {
@@ -135,6 +137,34 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         newJob: payload
+      }
+    case SET_NEW_JOB_OUTPUT_PATH:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              output_path: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_JOB_INPUT_PATH:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              input_path: payload
+            }
+          }
+        }
       }
     default:
       return state

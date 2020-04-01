@@ -82,8 +82,6 @@ const JobsPanelDataInputs = ({
         mountPath: newVolumePath
       }
 
-      console.log(newItem)
-
       setNewJobVolumes([...volumes, newItem])
       setNewJobVolumeMounts([...volumeMounts, newVolumeMounts])
       setAddNewVolume(false)

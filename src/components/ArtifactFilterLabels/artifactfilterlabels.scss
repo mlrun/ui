@@ -7,19 +7,9 @@
   align-items: center;
   border: $tableFilterBorder;
   border-radius: 4px;
-  .label {
-    color: #7f7989;
-    padding: 10px 0 10px 10px;
-  }
-  input {
-    color: $mulledWine;
-    display: flex;
-    flex: 1;
+  .input {
     height: 38px;
-    width: 144px;
-    border: none;
-    border-radius: 4px;
-    padding: 10px;
-    outline: none;
+    width: 200px;
+    padding: 10px 10px 10px 64px;
   }
 }
