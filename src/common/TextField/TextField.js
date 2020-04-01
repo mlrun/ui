@@ -2,10 +2,16 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
-import './artifactFilterLabels.scss'
+import './textField.scss'
 
-const ArtifactFilterLabels = ({ match, onChange, page }) => {
-  const [labels, setLabels] = useState('')
+const ArtifactFilterLabels = ({
+  label,
+  placeholder,
+  match,
+  onChange,
+  page
+}) => {
+  const [value, setValue] = useState('')
 
   const history = useHistory()
 
@@ -16,18 +22,18 @@ const ArtifactFilterLabels = ({ match, onChange, page }) => {
           `/projects/${match.params.projectName}/${page.toLowerCase()}`
         )
       }
-      onChange(labels)
+      onChange({ [label]: value })
     }
   }
 
   return (
-    <div className="artifact_filter_labels_container">
-      <div className="label">Labels:</div>
+    <div className="text_field_container">
+      <div className="label">{label}:</div>
       <input
         type="text"
-        placeholder="key1=value1,…"
-        value={labels}
-        onChange={event => setLabels(event.target.value)}
+        placeholder={placeholder}
+        value={value}
+        onChange={event => setValue(event.target.value)}
         onKeyDown={event => {
           handleSearch(event)
         }}

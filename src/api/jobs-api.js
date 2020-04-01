@@ -1,16 +1,21 @@
 import httpClient from '../httpClient'
 
 export default {
-  getAll: (project, state, labels) => {
-    let _labels = labels
-      ?.split(',')
-      .map(item => `label=${item}`)
-      .join('&')
-    return httpClient.get(
-      !labels
-        ? `/runs?project=${project}`
-        : `/runs?project=${project}&${_labels}`
-    )
+  getAll: (project, state, event) => {
+    let url = `/runs?project=${project}`
+
+    if (event?.labels) {
+      let labels = event?.labels
+        ?.split(',')
+        .map(item => `label=${item}`)
+        .join('&')
+
+      url = `${url}&${labels}`
+    }
+    if (event?.name) {
+      url = `${url}&name=${event.name}`
+    }
+    return httpClient.get(url)
   },
   getJobLogs: (id, project) => httpClient.get(`/log/${project}/${id}`),
   filterByStatus: (project, state) =>

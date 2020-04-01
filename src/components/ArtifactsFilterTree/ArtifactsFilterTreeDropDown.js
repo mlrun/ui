@@ -32,6 +32,10 @@ const ArtifactFilterTreeDropDown = ({
   )
 }
 
+ArtifactFilterTreeDropDown.defaultProps = {
+  item: []
+}
+
 ArtifactFilterTreeDropDown.propTypes = {
   item: PropTypes.array.isRequired,
   setIsDropDownMenu: PropTypes.func.isRequired,

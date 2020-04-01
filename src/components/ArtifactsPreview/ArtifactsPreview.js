@@ -24,13 +24,17 @@ const ArtifactsPreview = ({ artifact }) => {
         }
       })
     } else {
-      getArtifactPreview(artifact.target_path.schema, artifact.target_path.path)
+      getArtifactPreview(
+        artifact.target_path.schema,
+        artifact.target_path.path,
+        artifact.user
+      )
     }
   }, [artifact.target_path, artifact])
 
-  const getArtifactPreview = (schema, path) => {
+  const getArtifactPreview = (schema, path, user) => {
     return api
-      .getArtifactPreview(schema, path)
+      .getArtifactPreview(schema, path, user)
       .then(res => {
         const artifact = createArtifactPreviewContent(res)
         setPreview(artifact)
