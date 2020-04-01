@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import artifactData from '../Artifacts/artifactsData.json'
 

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
-import { ReactComponent as Primary } from '../../svg/ic-key.svg'
+import { ReactComponent as Primary } from '../../images/ic-key.svg'
 
 import './artifactInfoMetadata.scss'
 

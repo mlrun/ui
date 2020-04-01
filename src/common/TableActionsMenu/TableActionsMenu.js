@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as ActionMenu } from '../../svg/elipsis.svg'
-import { ReactComponent as Yaml } from '../../svg/yaml.svg'
+import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
+import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 import './tableActionsMenu.scss'
 

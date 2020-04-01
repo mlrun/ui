@@ -2,11 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Back } from '../../svg/back-arrow.svg'
-import { ReactComponent as Plus } from '../../svg/plus.svg'
-import { ReactComponent as Filter } from '../../svg/filter.svg'
-import { ReactComponent as Search } from '../../svg/search.svg'
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
+import { ReactComponent as Back } from '../../images/back-arrow.svg'
+import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Filter } from '../../images/filter.svg'
+import { ReactComponent as Search } from '../../images/search.svg'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './createJobPage.scss'
 import CreateJobCardTemplate from '../../elements/CreateJobCardTemplate/CreateJobCardTemplate'
@@ -16,7 +16,7 @@ const CreateJobPageView = ({
   match,
   expandList,
   setExpandList,
-  selectedFunc
+  handleSelectFunction
 }) => (
   <div className="create-container">
     <div className="create-container__header">
@@ -60,7 +60,7 @@ const CreateJobPageView = ({
                 status={func?.status?.state}
                 name={func?.metadata?.name}
                 func={func}
-                selectedFunc={selectedFunc}
+                handleSelectFunction={handleSelectFunction}
               />
             ))}
           </div>

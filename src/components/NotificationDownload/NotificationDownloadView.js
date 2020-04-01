@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { createPortal } from 'react-dom'
 
-import { ReactComponent as SuccessDone } from '../../svg/success_done.svg'
-import { ReactComponent as UnsuccessAlert } from '../../svg/unsuccess_alert.svg'
+import { ReactComponent as SuccessDone } from '../../images/success_done.svg'
+import { ReactComponent as UnsuccessAlert } from '../../images/unsuccess_alert.svg'
 
 import './notificationDownloadView.scss'
 

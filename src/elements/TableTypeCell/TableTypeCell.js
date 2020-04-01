@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
-import { ReactComponent as Nuclio } from '../../svg/nuclio.svg'
-import { ReactComponent as Spark } from '../../svg/spark.svg'
-import { ReactComponent as Horovod } from '../../svg/horovod.svg'
+import { ReactComponent as Nuclio } from '../../images/nuclio.svg'
+import { ReactComponent as Spark } from '../../images/spark.svg'
+import { ReactComponent as Horovod } from '../../images/horovod.svg'
 
 const TableTypeCell = ({ data }) => {
   return (

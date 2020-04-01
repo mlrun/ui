@@ -7,7 +7,11 @@ import {
   FETCH_JOBS_SUCCESS,
   REMOVE_JOB_LOGS,
   SET_NEW_JOB_INPUTS,
-  SET_NEW_JOB_VOLUMES
+  SET_NEW_JOB_VOLUMES,
+  SET_NEW_JOB,
+  SET_NEW_JOB_VOLUME_MOUNTS,
+  SET_NEW_JOB_OUTPUT_PATH,
+  SET_NEW_JOB_INPUT_PATH
 } from '../constants'
 
 const initialState = {
@@ -16,14 +20,31 @@ const initialState = {
   loading: false,
   error: null,
   newJob: {
-    parameters: {},
-    dataInputs: {
-      inputs: {},
-      volumes: {},
-      general: {}
+    task: {
+      spec: {
+        parameters: {},
+        inputs: {},
+        output_path: '',
+        input_path: ''
+      }
     },
-    resources: {},
-    schedule: {}
+    function: {
+      spec: {
+        volumes: [],
+        resources: {
+          limits: {
+            cpu: '',
+            memory: '',
+            nvidia_gpu: ''
+          },
+          requests: {
+            cpu: '',
+            memory: ''
+          }
+        },
+        volumeMounts: []
+      }
+    }
   }
 }
 
@@ -75,9 +96,12 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         newJob: {
           ...state.newJob,
-          dataInputs: {
-            ...state.newJob.dataInputs,
-            inputs: payload
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              inputs: payload
+            }
           }
         }
       }
@@ -86,9 +110,59 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         newJob: {
           ...state.newJob,
-          dataInputs: {
-            ...state.newJob.dataInputs,
-            volumes: payload
+          function: {
+            ...state.newJob.function,
+            spec: {
+              ...state.newJob.function.spec,
+              volumes: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_JOB_VOLUME_MOUNTS:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          function: {
+            ...state.newJob.function,
+            spec: {
+              ...state.newJob.function.spec,
+              volumeMounts: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_JOB:
+      return {
+        ...state,
+        newJob: payload
+      }
+    case SET_NEW_JOB_OUTPUT_PATH:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              output_path: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_JOB_INPUT_PATH:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              input_path: payload
+            }
           }
         }
       }

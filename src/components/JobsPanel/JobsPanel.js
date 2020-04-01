@@ -5,19 +5,65 @@ import { connect } from 'react-redux'
 import Accordion from '../../common/Accordion/Accordion'
 import JobsPanelDataInputs from '../JobsPanelDataInputs/JobsPanelDataInputs'
 
-import { ReactComponent as Close } from '../../svg/close.svg'
-import { ReactComponent as Run } from '../../svg/run.svg'
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
+import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Run } from '../../images/run.svg'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import jobsActions from '../../actions/jobs'
 
 import './jobsPanel.scss'
 
-const JobsPanel = ({ func, close, setNewJobInputs, jobsStore }) => {
+const JobsPanel = ({
+  func,
+  close,
+  setNewJobInputs,
+  jobsStore,
+  match,
+  setNewJob,
+  setNewJobVolumes,
+  setNewJobVolumeMounts,
+  setNewJobInputPath,
+  setNewJobOutputPath
+}) => {
   const [edit, setEdit] = useState(false)
+
+  const [inputPath, setInputPath] = useState('')
+  const [outputPath, setOutputPath] = useState('')
 
   const handlerEdit = () => {
     setEdit(!edit)
+    setNewJob({
+      task: {
+        spec: {
+          parameters: {},
+          inputs: {},
+          output_path: '',
+          input_path: ''
+        }
+      },
+      function: {
+        spec: {
+          volumes: [],
+          resources: {
+            limits: {
+              cpu: '',
+              memory: '',
+              nvidia_gpu: ''
+            },
+            requests: {
+              cpu: '',
+              memory: ''
+            }
+          },
+          volumeMounts: []
+        }
+      }
+    })
+  }
+
+  const handleRunJob = () => {
+    setNewJobInputPath(inputPath)
+    setNewJobOutputPath(outputPath)
   }
 
   return (
@@ -36,7 +82,14 @@ const JobsPanel = ({ func, close, setNewJobInputs, jobsStore }) => {
           <Accordion icon={<Arrow />} iconClassName="accordion__icon">
             <JobsPanelDataInputs
               setNewJobInputs={setNewJobInputs}
-              inputs={jobsStore.newJob.dataInputs.inputs}
+              inputs={jobsStore.newJob.task.spec.inputs}
+              volumes={jobsStore.newJob.function.spec.volumes}
+              setNewJobVolumes={setNewJobVolumes}
+              setNewJobVolumeMounts={setNewJobVolumeMounts}
+              volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
+              setInputPath={setInputPath}
+              setOutputPath={setOutputPath}
+              match={match}
             />
           </Accordion>
           <Accordion icon={<Arrow />} iconClassName="accordion__icon">
@@ -53,7 +106,7 @@ const JobsPanel = ({ func, close, setNewJobInputs, jobsStore }) => {
                 <button className="btn btn__schedule">
                   Schedule for later
                 </button>
-                <button className="btn btn__run">
+                <button className="btn btn__run" onClick={handleRunJob}>
                   <Run className="btn__icon" />
                   Run now
                 </button>

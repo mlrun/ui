@@ -18,22 +18,39 @@ const JobsPanelTable = ({ headers, content, addNewItem, children }) => {
           ))}
         </div>
       )}
-      {Object.entries(content).map((row, i) => {
-        return (
-          <div className="table__row" key={i}>
-            {row.map(cell => (
-              <div className="table__cell" key={i + cell}>
-                <Tooltip
-                  className="tooltip"
-                  template={<TextTooltipTemplate text={cell} />}
-                >
-                  {cell}
-                </Tooltip>
+      {Array.isArray(content)
+        ? content.map((item, i) => (
+            <div className="table__row" key={i}>
+              {Object.values(item).map((cell, i) => {
+                return (
+                  <div className="table__cell" key={i + cell}>
+                    <Tooltip
+                      className="tooltip"
+                      template={<TextTooltipTemplate text={cell} />}
+                    >
+                      {cell}
+                    </Tooltip>
+                  </div>
+                )
+              })}
+            </div>
+          ))
+        : Object.entries(content).map((row, i) => {
+            return (
+              <div className="table__row" key={i}>
+                {row.map(cell => (
+                  <div className="table__cell" key={i + cell}>
+                    <Tooltip
+                      className="tooltip"
+                      template={<TextTooltipTemplate text={cell} />}
+                    >
+                      {cell}
+                    </Tooltip>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )
-      })}
+            )
+          })}
       {children}
     </div>
   )
@@ -45,7 +62,10 @@ JobsPanelTable.defaultProps = {
 
 JobsPanelTable.propTypes = {
   addNewItem: PropTypes.bool.isRequired,
-  content: PropTypes.shape({}).isRequired,
+  content: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.shape({})
+  ]).isRequired,
   headers: PropTypes.arrayOf(PropTypes.string)
 }
 

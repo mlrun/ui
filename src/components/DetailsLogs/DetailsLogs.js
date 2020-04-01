@@ -6,7 +6,7 @@ import jobsActions from '../../actions/jobs'
 
 import NoData from '../../common/NoData/NoData'
 
-import { ReactComponent as Refresh } from '../../svg/refresh.svg'
+import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
 const DetailsLogs = ({
   jobsStore,

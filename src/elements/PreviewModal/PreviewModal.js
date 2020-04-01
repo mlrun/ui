@@ -10,7 +10,7 @@ import Download from '../../common/Download/Download'
 import artifactActions from '../../actions/artifacts'
 
 import { formatDatetime } from '../../utils/datetime'
-import { ReactComponent as Close } from '../../svg/close.svg'
+import { ReactComponent as Close } from '../../images/close.svg'
 
 import './previewModal.scss'
 

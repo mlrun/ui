@@ -15,22 +15,11 @@ const CreateJobPage = ({ functionsStore, fetchFunctions, match }) => {
 
   useEffect(() => {
     fetchFunctions(match.params.projectName).then(functions => {
-      // const newFunctions = functions.map(func => ({
-      //   name: func.metadata.name,
-      //   type: func.kind,
-      //   hash: func.metadata.hash,
-      //   updated: new Date(func.metadata.updated),
-      //   command: func.spec.command,
-      //   image: func.spec.image,
-      //   description: func.spec.description,
-      //   state: func.status ? func.status.state : '',
-      //   functionSourceCode: func.spec.functionSourceCode
-      // }))
       return setFunctions(functions)
     })
   }, [fetchFunctions, match.params.projectName])
 
-  const selectedFunc = item => {
+  const handleSelectFunction = item => {
     setFunction(item)
   }
 
@@ -43,10 +32,14 @@ const CreateJobPage = ({ functionsStore, fetchFunctions, match }) => {
         expandList={expandList}
         setExpandList={setExpandList}
         functions={functions}
-        selectedFunc={selectedFunc}
+        handleSelectFunction={handleSelectFunction}
       />
       {Object.values(selectedFunction)?.length !== 0 && (
-        <JobsPanel func={selectedFunction} close={selectedFunc} />
+        <JobsPanel
+          func={selectedFunction}
+          close={handleSelectFunction}
+          match={match}
+        />
       )}
     </>
   )

@@ -7,7 +7,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { formatDatetime, truncateUid } from '../../utils'
 
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 const TableLinkCell = ({
   data,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { startCase } from 'lodash'
 import { Link } from 'react-router-dom'
 
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './breadcrums.scss'
 

@@ -6,7 +6,7 @@ import SelectOption from '../../elements/SelectOption/SelectOption'
 
 import options from './selectData'
 
-import { ReactComponent as Caret } from '../../svg/dropdown.svg'
+import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
 import './select.scss'
 
@@ -41,8 +41,8 @@ const Select = ({ option, label, match, onClick, page, value }) => {
       onClick={() => setOpen(!isOpen)}
     >
       <div className="select__header">
-        {label && <div className="select__label">{label}:</div>}
-        <div className="select__value">{value}</div>
+        {label && <div className="select__label">{label}</div>}
+        {value && <div className="select__value">{value}</div>}
         <Caret className="select__caret" />
       </div>
       {isOpen && [
@@ -60,9 +60,7 @@ const Select = ({ option, label, match, onClick, page, value }) => {
               item={item}
               value={value}
               status={option === 'status'}
-              match={match}
               onClick={handleSelectOption}
-              link={option === 'create' || page === 'jobs'}
             />
           ))}
         </div>
@@ -73,7 +71,8 @@ const Select = ({ option, label, match, onClick, page, value }) => {
 
 Select.defaultProps = {
   onClick: () => {},
-  label: ''
+  label: '',
+  page: ''
 }
 
 Select.propTypes = {
@@ -81,7 +80,7 @@ Select.propTypes = {
   match: PropTypes.shape({}).isRequired,
   option: PropTypes.string.isRequired,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  page: PropTypes.string.isRequired,
+  page: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 }
 

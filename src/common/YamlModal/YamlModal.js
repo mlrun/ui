@@ -2,7 +2,7 @@ import React from 'react'
 import Prism from 'prismjs'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Close } from '../../svg/close.svg'
+import { ReactComponent as Close } from '../../images/close.svg'
 
 import './yamlmodal.scss'
 

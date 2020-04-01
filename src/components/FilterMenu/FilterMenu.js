@@ -7,9 +7,9 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import TextField from '../../common/TextField/TextField'
 
-import { ReactComponent as Refresh } from '../../svg/refresh.svg'
-import { ReactComponent as Collapse } from '../../svg/collapse.svg'
-import { ReactComponent as Expand } from '../../svg/expand.svg'
+import { ReactComponent as Refresh } from '../../images/refresh.svg'
+import { ReactComponent as Collapse } from '../../images/collapse.svg'
+import { ReactComponent as Expand } from '../../images/expand.svg'
 
 import { ARTIFACTS_PAGE } from '../../constants.js'
 
@@ -86,7 +86,7 @@ const FilterMenu = ({
           ) : (
             <Select
               option={filter}
-              label={filter}
+              label={`${filter}:`}
               key={filter}
               value={
                 (filter === 'status' && stateFilter) ||

@@ -31,27 +31,6 @@
       }
     }
   }
-  .add-input {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0;
-    font-size: 15px;
-    line-height: 18px;
-    color: $cornflowerBlue;
-    svg {
-      width: 20px;
-      height: 20px;
-    }
-    rect {
-      fill: $cornflowerBlue;
-    }
-  }
-  .btn-add {
-    position: absolute;
-    bottom: 20px;
-    right: 16px;
-  }
 }
 
 .input-row {
@@ -60,6 +39,7 @@
     flex-direction: row;
     border: 1px solid rgba(0, 0, 0, 0.2);
     width: 90%;
+    min-height: 56px;
     .input-wrapper {
       &:first-child {
         flex: 0.65;

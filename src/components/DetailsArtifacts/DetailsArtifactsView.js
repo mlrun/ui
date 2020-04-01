@@ -6,8 +6,8 @@ import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
-import { ReactComponent as Popout } from '../../svg/popout.svg'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Popout } from '../../images/popout.svg'
 
 import artifactAction from '../../actions/artifacts'
 

@@ -10,8 +10,8 @@ import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
 
-import { ReactComponent as ArtifactView } from '../../svg/eye.svg'
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
+import { ReactComponent as ArtifactView } from '../../images/eye.svg'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import artifactAction from '../../actions/artifacts'
 

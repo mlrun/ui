@@ -19,8 +19,8 @@ import DetailsCode from '../DetailsCode/DetailsCode'
 import { formatDatetime } from '../../utils'
 import { ARTIFACTS_PAGE } from '../../constants'
 
-import { ReactComponent as Close } from '../../svg/close.svg'
-import { ReactComponent as Popout } from '../../svg/popout.svg'
+import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Popout } from '../../images/popout.svg'
 
 const DetailsView = ({
   item,

@@ -2,9 +2,34 @@
 
 .input {
   padding: 18px 24px;
-  color: $topaz;
+  color: $primary;
   border: none;
+  z-index: 999;
+  background-color: transparent;
+  position: relative;
   &-wrapper {
     position: relative;
+  }
+  &__label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: $topaz;
+    z-index: 0;
+    text-transform: capitalize;
+    &.active {
+      top: -9px;
+      font-size: 12px;
+      z-index: 999;
+      background-color: $white;
+    }
+    &-floating {
+      position: absolute;
+      top: 19px;
+      left: 25px;
+      color: $topaz;
+      transition: 300ms ease all;
+      z-index: 0;
+    }
   }
 }

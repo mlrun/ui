@@ -6,7 +6,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import NoData from '../../common/NoData/NoData'
 
-import { ReactComponent as BestIteration } from '../../svg/best-iteration-icon.svg'
+import { ReactComponent as BestIteration } from '../../images/best-iteration-icon.svg'
 
 import './detailsResults.scss'
 
