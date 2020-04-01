@@ -1,25 +1,33 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import prettyBytes from 'pretty-bytes'
+import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
 
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
 
+import artifactActions from '../../actions/artifacts'
+
 import { formatDatetime } from '../../utils/datetime'
-import { ReactComponent as Close } from '../../svg/close.svg'
+import { ReactComponent as Close } from '../../images/close.svg'
 
-import './previewmodal.scss'
+import './previewModal.scss'
 
-const PreviewModal = ({ item, cancel }) => {
+const PreviewModal = ({ item }) => {
+  const dispatch = useDispatch()
   return ReactDOM.createPortal(
     <div className="preview_artifact_container">
       <div className="preview_body">
         <div className="preview_info">
-          <div className="preview_info_name">{item.key}</div>
+          <div className="preview_info_name">{item.db_key || item.key}</div>
           <div className="preview_info_path">{item.target_path.path}</div>
           {item.size && (
             <div className="preview_info_size">
-              size: {prettyBytes(item.size)}
+              size:
+              {typeof item.size === 'string'
+                ? item.size
+                : prettyBytes(item.size)}
             </div>
           )}
           <div className="preview_info_date">
@@ -34,10 +42,12 @@ const PreviewModal = ({ item, cancel }) => {
           <div
             className="preview_info_close"
             onClick={() => {
-              cancel({
-                isPreview: false,
-                item: {}
-              })
+              dispatch(
+                artifactActions.artifactPreviewClose({
+                  isPreview: false,
+                  item: {}
+                })
+              )
             }}
           >
             <Close />
@@ -50,6 +60,11 @@ const PreviewModal = ({ item, cancel }) => {
     </div>,
     document.getElementById('overlay_container')
   )
+}
+
+PreviewModal.propTypes = {
+  item: PropTypes.shape({}).isRequired,
+  cancel: PropTypes.func.isRequired
 }
 
 export default PreviewModal

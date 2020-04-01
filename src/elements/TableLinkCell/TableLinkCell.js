@@ -7,7 +7,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { formatDatetime, truncateUid } from '../../utils'
 
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 const TableLinkCell = ({
   data,
@@ -39,15 +39,16 @@ const TableLinkCell = ({
             </Tooltip>
           )}
         </div>
-        {Object.values(selectedItem).length !== 0 && (
-          <div className="date__uid_row">
-            <span>
-              {data.type !== 'date' &&
-                formatDatetime(new Date(item.startTime || item.updated))}
-            </span>
-            <span>{truncateUid(item.uid || item.hash)}</span>
-          </div>
-        )}
+        {link.match(/jobs|functions/) &&
+          Object.values(selectedItem).length !== 0 && (
+            <div className="date__uid_row">
+              <span>
+                {data.type !== 'date' &&
+                  formatDatetime(new Date(item.startTime || item.updated))}
+              </span>
+              <span>{truncateUid(item.uid || item.hash)}</span>
+            </div>
+          )}
       </Link>
       {expandLink && (
         <Arrow

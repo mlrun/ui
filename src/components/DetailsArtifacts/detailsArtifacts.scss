@@ -11,8 +11,7 @@
     position: relative;
     &_item {
       padding: 15px 26px;
-      flex: 0 0 19%;
-      max-width: 19%;
+      flex: 1;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
@@ -20,6 +19,10 @@
         white-space: nowrap;
         cursor: pointer;
         color: $cornflowerBlue;
+        flex: 1;
+      }
+      &:nth-child(3) {
+        flex: 0.5;
       }
       p {
         margin: 0 0 5px;
@@ -31,12 +34,13 @@
         display: inline-block;
       }
       &_long {
-        flex: 0 0 35%;
-        max-width: 35%;
+        flex: 2;
       }
       &_short {
-        flex: 0 0 8%;
-        max-width: 8%;
+        flex: 0.5;
+        svg {
+          cursor: pointer;
+        }
       }
     }
     &__cell {

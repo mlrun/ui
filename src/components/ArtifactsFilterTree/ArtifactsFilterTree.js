@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
+import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
-import { ReactComponent as Caret } from '../../svg/dropdown.svg'
+import ArtifactFilterTreeDropDown from './ArtifactsFilterTreeDropDown'
+import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
-import './artifactsfiltertree.scss'
+import './artifactsFilterTree.scss'
 
 const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
   const [isDropDownMenuOpen, setIsDropDownMenu] = useState(false)
@@ -19,7 +21,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
     }
   }
 
-  const handlerScroll = event => {
+  const handlerScroll = () => {
     let input = document.getElementsByClassName('artifact_filter_tree')[0]
     setIsDropDownMenu(false)
     input.blur()
@@ -98,34 +100,24 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
         <Caret />
       </div>
       {isDropDownMenuOpen && (
-        <div
-          className="drop_down_menu"
-          onClick={() => setIsDropDownMenu(false)}
-        >
-          {items.map(item => {
-            return (
-              <div
-                key={item}
-                className={`drop_down_menu_item
-                  ${
-                    filterTree.length !== 0
-                      ? RegExp(`^${filterTree}`, 'i').test(item) &&
-                        ' select_item'
-                      : ''
-                  }
-              `}
-                onClick={() => {
-                  handleSelectFilter(item)
-                }}
-              >
-                {item}
-              </div>
-            )
-          })}
-        </div>
+        <ArtifactFilterTreeDropDown
+          handleSelectFilter={handleSelectFilter}
+          items={items}
+          setIsDropDownMenu={setIsDropDownMenu}
+          filterTree={filterTree}
+        />
       )}
     </div>
   )
+}
+
+ArtifactFilterTree.propTypes = {
+  items: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  match: PropTypes.shape({}).isRequired,
+  page: PropTypes.string.isRequired
 }
 
 export default ArtifactFilterTree

@@ -119,8 +119,14 @@
         display: flex;
         align-items: center;
         flex-direction: row;
+        position: relative;
         img {
           margin-left: 10px;
+        }
+        svg {
+          position: absolute;
+          top: 15px;
+          left: -10px;
         }
       }
       tbody {
@@ -203,6 +209,9 @@
     h3 {
       text-align: center;
       vertical-align: middle;
+    }
+    pre {
+      padding: 8px 16px;
     }
   }
 }

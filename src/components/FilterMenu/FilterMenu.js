@@ -7,9 +7,11 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import ArtifactFilterLabels from '../ArtifactFilterLabels/ArtifactFilterLabels'
 
-import { ReactComponent as Refresh } from '../../svg/refresh.svg'
-import { ReactComponent as Collapse } from '../../svg/collapse.svg'
-import { ReactComponent as Expand } from '../../svg/expand.svg'
+import { ReactComponent as Refresh } from '../../images/refresh.svg'
+import { ReactComponent as Collapse } from '../../images/collapse.svg'
+import { ReactComponent as Expand } from '../../images/expand.svg'
+
+import { ARTIFACTS_PAGE } from '../../constants.js'
 
 import artifactsData from '../Artifacts/artifactsData'
 
@@ -39,7 +41,7 @@ const FilterMenu = ({
 
   const handleLabels = event => {
     setLabels(event)
-    page.toLowerCase() === 'artifacts'
+    page === ARTIFACTS_PAGE
       ? onChange({
           tag: valueFilterTree,
           project: match.params.projectName,

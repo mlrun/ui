@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 // import jobsIcon from '../../images/check-all.png'
 // import artifactsIcon from '../../images/file-chart.png'
-import { ReactComponent as Projects } from '../../svg/projects.svg'
+import { ReactComponent as Projects } from '../../images/projects.svg'
 
 import './sidebar.scss'
 

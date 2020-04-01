@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Checked } from '../../svg/checkbox-checked.svg'
-import { ReactComponent as Unchecked } from '../../svg/checkbox-unchecked.svg'
+import { ReactComponent as Checked } from '../../images/checkbox-checked.svg'
+import { ReactComponent as Unchecked } from '../../images/checkbox-unchecked.svg'
 
 const SelectOption = ({ item, onClick, status, value }) => {
   return (

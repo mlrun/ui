@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 const ProjectCard = ({ project }) => {
@@ -21,6 +22,10 @@ const ProjectCard = ({ project }) => {
       </div>
     </div>
   )
+}
+
+ProjectCard.propTypes = {
+  project: PropTypes.shape({}).isRequired
 }
 
 export default ProjectCard

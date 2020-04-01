@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactComponent as Plus } from '../../svg/plus.svg'
+import { ReactComponent as Plus } from '../../images/plus.svg'
 
 const JobsPanelTableAddItemRow = ({ onClick, text }) => {
   return (

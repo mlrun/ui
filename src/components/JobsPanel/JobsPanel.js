@@ -5,13 +5,13 @@ import { connect } from 'react-redux'
 import Accordion from '../../common/Accordion/Accordion'
 import JobsPanelDataInputs from '../JobsPanelDataInputs/JobsPanelDataInputs'
 
-import { ReactComponent as Close } from '../../svg/close.svg'
-import { ReactComponent as Run } from '../../svg/run.svg'
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
+import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Run } from '../../images/run.svg'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import jobsActions from '../../actions/jobs'
 
-import './jobspanel.scss'
+import './jobsPanel.scss'
 
 const JobsPanel = ({
   func,

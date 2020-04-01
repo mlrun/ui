@@ -11,6 +11,7 @@ import createArtifactsContent from '../../utils/createArtifactsContent'
 import createFunctionsContent from '../../utils/createFunctionsContent'
 import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
 import createJobsContent from '../../utils/createJobsContent'
+import { useSelector } from 'react-redux'
 
 const Table = ({
   content,
@@ -20,7 +21,6 @@ const Table = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
-  isPreview,
   match,
   page,
   selectedItem,
@@ -29,6 +29,8 @@ const Table = ({
 }) => {
   const [tableContent, setTableContent] = useState([])
   const [groupLatestJob, setGroupLatestJob] = useState([])
+
+  const previewArtifact = useSelector(state => state.artifactsStore.preview)
 
   useEffect(() => {
     const _tableContent =
@@ -67,36 +69,6 @@ const Table = ({
     }
   }, [groupFilter])
 
-  useEffect(() => {
-    window.addEventListener('click', hideChips)
-    return () => window.removeEventListener('click', hideChips)
-  })
-
-  const hideChips = e => {
-    if (e.target.getAttribute('count-chips') === null) {
-      const block = document.getElementsByClassName('chip-block showChips')[0]
-      if (block) {
-        block.classList.remove('showChips')
-      }
-    }
-  }
-
-  const handleShowElements = e => {
-    if (e.target.getAttribute('count-chips')) {
-      let blocksArr = document.getElementsByClassName('showChips')
-      const parentBlock = e.target.closest('.chip-block')
-      if (
-        blocksArr.length > 0 &&
-        !parentBlock.classList.contains('showChips')
-      ) {
-        blocksArr[0].classList.remove('showChips')
-      }
-      parentBlock.classList.contains('showChips')
-        ? parentBlock.classList.remove('showChips')
-        : parentBlock.classList.add('showChips')
-    }
-  }
-
   return (
     <>
       <TableView
@@ -108,8 +80,6 @@ const Table = ({
         handleCancel={handleCancel}
         handleExpandRow={handleExpandRow}
         handleSelectItem={handleSelectItem}
-        handleShowElements={handleShowElements}
-        hideChips={hideChips}
         match={match}
         page={page}
         selectedItem={selectedItem}
@@ -118,7 +88,9 @@ const Table = ({
         tableHeaders={tableHeaders}
       />
       <NotificationDownload />
-      {isPreview && <PreviewModal item={selectedItem} cancel={handleCancel} />}
+      {previewArtifact.isPreview && (
+        <PreviewModal item={previewArtifact.item} />
+      )}
     </>
   )
 }

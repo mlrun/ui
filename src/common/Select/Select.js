@@ -6,7 +6,7 @@ import SelectOption from '../../elements/SelectOption/SelectOption'
 
 import options from './selectData'
 
-import { ReactComponent as Caret } from '../../svg/dropdown.svg'
+import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
 import './select.scss'
 

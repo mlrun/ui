@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import Input from '../../common/Input/Input'
 
-import './artifactfilterlabels.scss'
+import './artifactFilterLabels.scss'
 
 const ArtifactFilterLabels = ({ match, onChange, page }) => {
   const [labels, setLabels] = useState('')

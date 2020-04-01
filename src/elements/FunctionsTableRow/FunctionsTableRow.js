@@ -10,7 +10,6 @@ const FunctionsTableRow = ({
   content,
   toggleConvertToYaml,
   handleSelectItem,
-  handleShowElements,
   index,
   match,
   rowItem,
@@ -33,8 +32,8 @@ const FunctionsTableRow = ({
             link={
               i === 0 &&
               `/projects/${match.params.projectName}/functions/${
-                rowItem.name.value
-              }/${rowItem.hash.value}/${
+                rowItem.hash.value
+              }/${
                 match.params.tab
                   ? match.params.tab
                   : `${functionsData.detailsMenu[0].toLowerCase()}`
@@ -42,7 +41,6 @@ const FunctionsTableRow = ({
             }
             selectItem={handleSelectItem}
             key={value.value + i}
-            handleShowElements={handleShowElements}
             match={match}
           />
         )
@@ -61,7 +59,6 @@ FunctionsTableRow.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   toggleConvertToYaml: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  handleShowElements: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,

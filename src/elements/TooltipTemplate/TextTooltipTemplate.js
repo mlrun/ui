@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import './texttooltiptemplate.scss'
+import './textTooltipTemplate.scss'
 
 const TextTooltipTemplate = ({ text }) => {
   return <div className="text_tooltip_container">{text}</div>

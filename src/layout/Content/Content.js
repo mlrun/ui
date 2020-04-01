@@ -25,7 +25,6 @@ const Content = ({
   handleExpandAll,
   handleExpandRow,
   handleSelectItem,
-  isPreview,
   loading,
   match,
   refresh,
@@ -49,6 +48,9 @@ const Content = ({
     const functionJson =
       page === FUNCTIONS_PAGE &&
       yamlContent.filter(func => func.metadata.hash === item.hash)[0]
+    const artifactJson =
+      page === ARTIFACTS_PAGE &&
+      yamlContent.filter(_item => _item.key === item.db_key)[0].data
 
     switch (page) {
       case JOBS_PAGE:
@@ -59,7 +61,7 @@ const Content = ({
         )
       case ARTIFACTS_PAGE:
         return setConvertedYaml(
-          yaml.dump(item, {
+          yaml.dump(artifactJson, {
             lineWidth: -1
           })
         )
@@ -108,7 +110,6 @@ const Content = ({
               handleCancel={handleCancel}
               handleExpandRow={handleExpandRow}
               handleSelectItem={handleSelectItem}
-              isPreview={isPreview}
               match={match}
               page={page}
               selectedItem={selectedItem}

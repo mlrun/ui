@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-
-import { ReactComponent as Arrow } from '../../svg/arrow.svg'
+import PropTypes from 'prop-types'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import artifactData from '../Artifacts/artifactsData.json'
 
-import './artifactinfosources.scss'
+import './artifactInfoSources.scss'
 
 const ArtifactInfoSources = ({ header, sources }) => {
   const [isShow, setIsShow] = useState(false)
@@ -65,6 +65,11 @@ const ArtifactInfoSources = ({ header, sources }) => {
       </div>
     </li>
   )
+}
+
+ArtifactInfoSources.propTypes = {
+  header: PropTypes.string.isRequired,
+  sources: PropTypes.shape({}).isRequired
 }
 
 export default ArtifactInfoSources

@@ -2,7 +2,9 @@ import artifactsApi from '../api/artifacts-api'
 import {
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
-  FETCH_ARTIFACTS_SUCCESS
+  FETCH_ARTIFACTS_SUCCESS,
+  ARTIFACT_PREVIEW,
+  ARTIFACT_PREVIEW_CLOSE
 } from '../constants'
 
 const artifactsAction = {
@@ -13,13 +15,14 @@ const artifactsAction = {
       .then(({ data }) => {
         let artifacts = Object.values(
           data.artifacts.reduce((prev, curr) => {
-            if (!prev[curr.key]) prev[curr.key] = { key: curr.key, data: [] }
+            if (!prev[curr.db_key])
+              prev[curr.db_key] = { key: curr.db_key, data: [] }
             if ('link_iteration' in curr) {
-              prev[curr.key] = Object.assign(prev[curr.key], {
+              prev[curr.db_key] = Object.assign(prev[curr.db_key], {
                 link_iteration: curr
               })
             } else {
-              prev[curr.key].data.push(curr)
+              prev[curr.db_key].data.push(curr)
             }
             return prev
           }, {})
@@ -41,6 +44,14 @@ const artifactsAction = {
   fetchArtifactsFailure: error => ({
     type: FETCH_ARTIFACTS_FAILURE,
     payload: error
+  }),
+  artifactPreview: item => ({
+    type: ARTIFACT_PREVIEW,
+    payload: item
+  }),
+  artifactPreviewClose: item => ({
+    type: ARTIFACT_PREVIEW_CLOSE,
+    payload: item
   })
   // fetchArtifactPreview: (schema, path) => dispatch => {
   //   dispatch(artifactsAction.fetchArtifactPreviewBegin())

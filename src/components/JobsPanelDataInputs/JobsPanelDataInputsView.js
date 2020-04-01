@@ -8,7 +8,7 @@ import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/Jo
 import Select from '../../common/Select/Select'
 
 import panelData from '../JobsPanel/panelData'
-import { ReactComponent as Plus } from '../../svg/plus.svg'
+import { ReactComponent as Plus } from '../../images/plus.svg'
 
 const JobsPanelDataInputsView = ({
   addNewInput,
@@ -138,6 +138,7 @@ const JobsPanelDataInputsView = ({
                   />
                 </div>
               )}
+
               <button
                 className="add-input btn-add"
                 onClick={() => handleAddNewItem(null, true)}

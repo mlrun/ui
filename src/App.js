@@ -59,7 +59,7 @@ const App = () => {
             />
             <Route
               exact
-              path="/projects/:projectName/functions/:name/:hash/:tab"
+              path="/projects/:projectName/functions/:hash/:tab"
               render={routeProps => <Functions {...routeProps} />}
             />
             <Route
