@@ -2,19 +2,36 @@ import httpClient from '../httpClient'
 
 export default {
   getArtifacts: item => {
-    let labels = item?.labels
-      ?.split(',')
-      .map(item => `label=${item}`)
-      .join('&')
-    const url = item.labels
-      ? `/artifacts?project=${item.project}&${labels}`
-      : `/artifacts?project=${item.project}&tag=${item.tag}`
+    let url = `/artifacts?project=${item.project}`
+    if (item?.labels) {
+      let labels = item?.labels
+        ?.split(',')
+        .map(item => `label=${item}`)
+        .join('&')
+
+      url = `${url}&${labels}`
+    }
+    if (item?.tag) {
+      url = `${url}&tag=${item.tag}`
+    }
+    if (item?.name) {
+      url = `${url}&name=${item.name}`
+    }
     return httpClient.get(url)
   },
-  getArtifactPreview: (schema, path) =>
-    httpClient.get(
-      schema ? `/files?schema=${schema}&path=${path}` : `/files?path=${path}`
-    ),
+  getArtifactPreview: (schema, path, user) => {
+    let url = '/files?'
+    if (schema) {
+      url = `${url}schema=${schema}`
+    }
+    if (path) {
+      url = `${url}&path=${path}`
+    }
+    if (user) {
+      url = `${url}&user=${user}`
+    }
+    return httpClient.get(url)
+  },
   getArtifactTag: project =>
     httpClient.get(`/projects/${project}/artifact-tags`)
 }

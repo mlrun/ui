@@ -58,6 +58,7 @@ const DetailsArtifactsView = ({ items, handleClick, dispatch }) => {
                 <Download
                   path={item.target_path.path}
                   schema={item.target_path.schema}
+                  user={item.user}
                 />
               </div>
             </div>

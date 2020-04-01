@@ -28,14 +28,20 @@ const DetailsArtifacts = ({ jobsStore, selectedItem }) => {
         key: item.key,
         target_path: target_path,
         size: item.size ? prettyBytes(item.size) : 'N/A',
-        date: formatDatetime(selectedItem.startTime)
+        date: formatDatetime(selectedItem.startTime),
+        user: selectedItem?.labels
+          ?.find(item => item.match(/v3io_user|owner/g))
+          .replace(/v3io_user|owner: /, '')
       }
     }
     return {
       key: item.key,
       target_path: target_path,
       size: item.size ? prettyBytes(item.size) : 'N/A',
-      date: formatDatetime(selectedItem.startTime)
+      date: formatDatetime(selectedItem.startTime),
+      user: selectedItem?.labels
+        ?.find(item => item.match(/v3io_user|owner/g))
+        .replace(/v3io_user|owner: /, '')
     }
   })
 

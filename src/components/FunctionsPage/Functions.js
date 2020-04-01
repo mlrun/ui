@@ -41,12 +41,20 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   useEffect(() => {
     if (match.params.hash) {
       let item = functions.find(item => item.hash === match.params.hash)
-
+      if (item === undefined) {
+        history.push(`/projects/${match.params.projectName}/functions`)
+      }
       setSelectedFunction(item)
     } else {
       setSelectedFunction({})
     }
-  }, [functions, match.params.hash, setSelectedFunction])
+  }, [
+    functions,
+    match.params.hash,
+    setSelectedFunction,
+    history,
+    match.params.projectName
+  ])
 
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {

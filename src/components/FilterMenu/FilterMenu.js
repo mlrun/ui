@@ -5,7 +5,7 @@ import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import ArtifactFilterLabels from '../ArtifactFilterLabels/ArtifactFilterLabels'
+import TextField from '../../common/TextField/TextField'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
@@ -32,6 +32,7 @@ const FilterMenu = ({
   const [itemsFilterTree] = useState(['Latest'])
   const [valueFilterTree, setValueFilterTree] = useState('')
   const [labels, setLabels] = useState('')
+  const [name, setName] = useState('')
 
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()
@@ -39,15 +40,23 @@ const FilterMenu = ({
     setValueFilterTree(value)
   }
 
-  const handleLabels = event => {
-    setLabels(event)
+  const handleOnChange = event => {
+    let innerObject = {}
+    if ('labels' in event) {
+      setLabels(event.labels)
+      innerObject = { ...event }
+    } else if ('name' in event) {
+      setName(event.name)
+      innerObject = { ...event }
+    }
+
     page === ARTIFACTS_PAGE
       ? onChange({
           tag: valueFilterTree,
           project: match.params.projectName,
-          labels: event
+          ...innerObject
         })
-      : onChange(event)
+      : onChange({ ...innerObject })
   }
 
   return (
@@ -64,13 +73,15 @@ const FilterMenu = ({
               onChange={handleChangeArtifactFilterTree}
               page={page}
             />
-          ) : filter === 'labels' ? (
-            <ArtifactFilterLabels
+          ) : filter === 'labels' || filter === 'name' ? (
+            <TextField
+              label={filter === 'labels' ? 'labels' : 'name'}
+              placeholder={filter === 'labels' ? 'key1=value1,…' : ''}
               key={filter}
               match={match}
-              onChange={handleLabels}
+              onChange={handleOnChange}
               page={page}
-              value={labels}
+              value={filter === 'labels' ? labels : name}
             />
           ) : (
             <Select
@@ -98,9 +109,11 @@ const FilterMenu = ({
               page === artifactsData.page
                 ? onChange({
                     tag: valueFilterTree.toLowerCase(),
-                    project: match.params.projectName
+                    project: match.params.projectName,
+                    labels,
+                    name
                   })
-                : onChange()
+                : onChange({ labels, name })
             }}
           >
             <Refresh />
