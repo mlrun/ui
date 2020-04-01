@@ -30,6 +30,8 @@ const JobsPanelDataInputs = ({
 
     if (input) {
       if (!newInputName || !newInputPath) {
+        setNewInputName('')
+        setNewInputPath('')
         return setAddNewInput(false)
       }
 
@@ -41,6 +43,12 @@ const JobsPanelDataInputs = ({
       setNewInputPath('')
     } else if (volume) {
       if (!newVolumeType || !newVolumePath || !newVolumeName) {
+        setNewVolumeName('')
+        setNewVolumeType('')
+        setNewVolumeTypeName('')
+        setNewVolumePath('')
+        setNewAccessKey('')
+        setNewResourcePath('')
         return setAddNewVolume(false)
       }
 
