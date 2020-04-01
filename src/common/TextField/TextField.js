@@ -31,7 +31,7 @@ const ArtifactFilterLabels = ({
     <div className="text_field_container">
       <Input
         type="text"
-        label="Labels:"
+        label={`${label}:`}
         onChange={setValue}
         value={value}
         placeholder={placeholder}

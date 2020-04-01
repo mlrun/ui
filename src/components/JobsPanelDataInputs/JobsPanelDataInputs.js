@@ -37,6 +37,8 @@ const JobsPanelDataInputs = ({
 
       setAddNewInput(false)
       setNewJobInputs({ ...inputs, ...newItem })
+      setNewInputName('')
+      setNewInputPath('')
     } else if (volume) {
       if (!newVolumeType || !newVolumePath || !newVolumeName) {
         return setAddNewVolume(false)
@@ -85,6 +87,12 @@ const JobsPanelDataInputs = ({
       setNewJobVolumes([...volumes, newItem])
       setNewJobVolumeMounts([...volumeMounts, newVolumeMounts])
       setAddNewVolume(false)
+      setNewVolumeName('')
+      setNewVolumeType('')
+      setNewVolumeTypeName('')
+      setNewVolumePath('')
+      setNewAccessKey('')
+      setNewResourcePath('')
     }
   }
 

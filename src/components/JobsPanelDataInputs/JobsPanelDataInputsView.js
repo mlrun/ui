@@ -6,8 +6,11 @@ import JobsPanelTable from '../../elements/JobsPanelTable/JobsPanelTable'
 import Input from '../../common/Input/Input'
 import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 import Select from '../../common/Select/Select'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
 import panelData from '../JobsPanel/panelData'
+
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
 const JobsPanelDataInputsView = ({
@@ -61,7 +64,9 @@ const JobsPanelDataInputsView = ({
                 className="add-input btn-add"
                 onClick={() => handleAddNewItem(true)}
               >
-                <Plus />
+                <Tooltip template={<TextTooltipTemplate text="Add item" />}>
+                  <Plus />
+                </Tooltip>
               </button>
             </>
           ) : (
@@ -143,7 +148,9 @@ const JobsPanelDataInputsView = ({
                 className="add-input btn-add"
                 onClick={() => handleAddNewItem(null, true)}
               >
-                <Plus />
+                <Tooltip template={<TextTooltipTemplate text="Add item" />}>
+                  <Plus />
+                </Tooltip>
               </button>
             </>
           ) : (

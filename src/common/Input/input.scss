@@ -16,6 +16,7 @@
     left: 10px;
     color: $topaz;
     z-index: 0;
+    text-transform: capitalize;
     &.active {
       top: -9px;
       font-size: 12px;

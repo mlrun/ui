@@ -84,7 +84,8 @@
   }
   .accordion {
     &__container.open {
-      height: 73%;
+      height: auto;
+      min-height: 40%;
     }
     &__icon {
       position: absolute;
