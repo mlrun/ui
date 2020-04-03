@@ -16,13 +16,17 @@ const Breadcrumbs = ({ match, onClick }) => {
       <ul className="breadcrumbs__list">
         {urlItems.map((item, i) => {
           const param = pathItems[i]?.startsWith(':')
+
           const label = param
             ? match.params.tab === item
               ? startCase(item)
               : item
             : startCase(item)
+
           const to = `/${urlItems.slice(0, i + 1).join('/')}`
+
           const last = i === urlItems.length - 1
+
           const id =
             urlItems[i] === match.params.jobId ||
             urlItems[i] === match.params.name

@@ -56,6 +56,29 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
             }
           }
         })
+        newJobs.push({
+          uid: '12345',
+          iteration: 0,
+          iterationStats: [],
+          iterations: [],
+          startTime: new Date(),
+          state: 'completed',
+          name: 'Name/Name',
+          labels: [],
+          logLevel: false,
+          inputs: {},
+          parameters: [],
+          results: {},
+          resultsChips: [],
+          artifacts: [],
+          outputPath: 'job.spec.output_path',
+          owner: '',
+          updated: new Date(),
+          function: {
+            name: '',
+            hash: ''
+          }
+        })
         return setJobs(newJobs)
       })
     },

@@ -1,4 +1,5 @@
 @import '../../scss/colors.scss';
+@import "../../scss/borders";
 
 .accordion {
   &__container {
@@ -8,7 +9,7 @@
     border-radius: 4px;
     height: 65px;
     background-color: $white;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: $greyBorder;
     margin: 16px 40px 0;
     transition: height 0.3s linear;
     &.open {

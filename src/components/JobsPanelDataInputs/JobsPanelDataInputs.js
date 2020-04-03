@@ -11,7 +11,8 @@ const JobsPanelDataInputs = ({
   setNewJobVolumeMounts,
   volumeMounts,
   setInputPath,
-  setOutputPath
+  setOutputPath,
+  edit
 }) => {
   const [addNewInput, setAddNewInput] = useState(false)
   const [newInputName, setNewInputName] = useState('')
@@ -125,6 +126,7 @@ const JobsPanelDataInputs = ({
       setNewVolumeTypeName={setNewVolumeTypeName}
       setInputPath={setInputPath}
       setOutputPath={setOutputPath}
+      edit={edit}
     />
   )
 }

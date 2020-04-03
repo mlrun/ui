@@ -10,7 +10,7 @@
   height: 40px;
   border-radius: 4px;
   background-color: transparent;
-  border: $tableFilterBorder;
+  border: $greyBorder;
   margin-right: 15px;
   &.active {
     background: $alabaster;
@@ -39,27 +39,10 @@
     position: absolute;
     top: 48px;
     width: 100%;
-    border: $tableFilterBorder;
+    border: $greyBorder;
     box-shadow: $filterShadow;
     border-radius: 2px;
     color: $mulledWineTwo;
-    .status {
-      &_all {
-        @include jobStatus(none);
-      }
-      &_completed {
-        @include jobStatus($brightTurquoise);
-        margin: 0 10px;
-      }
-      &_running {
-        @include jobStatus($pictonBlue);
-        margin: 0 10px;
-      }
-      &_failed, &_error {
-        @include jobStatus($burntSienna);
-        margin: 0 10px;
-      }
-    }
   }
   &__item {
     display: flex;
@@ -70,6 +53,13 @@
     &:hover {
       background-color: $alabaster;
       cursor: pointer;
+    }
+    .status {
+      margin: 0 10px;
+    }
+    .all {
+      @include jobStatus(none);
+      margin: 0;
     }
   }
   .overall {

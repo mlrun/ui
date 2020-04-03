@@ -32,10 +32,12 @@ const JobsPanelDataInputsView = ({
   setNewVolumeName,
   setNewVolumeTypeName,
   setOutputPath,
-  setInputPath
+  setInputPath,
+  edit
 }) => {
   return (
     <div className="job-panel__item">
+      {!edit && <div className="item__overlay" />}
       <JobsPanelSection title="Data inputs">
         <JobsPanelTable
           headers={panelData['data-inputs']['table-headers']}

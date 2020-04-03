@@ -1,4 +1,6 @@
 @import "../../scss/colors";
+@import '../../scss/borders';
+@import '../../scss/shadows';
 
 .table-actions-container {
   position: relative;
@@ -9,8 +11,8 @@
     bottom: -50px;
     right: 16px;
     background: $white;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
+    border: $greyBorder;
+    box-shadow: $filterShadow;
     border-radius: 2px;
   }
   &__option {
@@ -20,7 +22,7 @@
     align-items: center;
     cursor: pointer;
     &:hover {
-      background-color: #f7f7f7;
+      background-color: $alabaster;
     }
   }
   &__icon {

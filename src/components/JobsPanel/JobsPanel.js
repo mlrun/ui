@@ -90,6 +90,7 @@ const JobsPanel = ({
               setInputPath={setInputPath}
               setOutputPath={setOutputPath}
               match={match}
+              edit={edit}
             />
           </Accordion>
           <Accordion icon={<Arrow />} iconClassName="accordion__icon">
