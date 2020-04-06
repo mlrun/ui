@@ -18,6 +18,7 @@ const ArtifactsTableRow = ({
   return (
     <div
       className={`table-body__row ${
+        selectedItem?.db_key !== undefined &&
         selectedItem?.db_key === content[index]?.db_key
           ? 'parent-row active'
           : 'parent-row'
@@ -45,7 +46,7 @@ const ArtifactsTableRow = ({
           />
         )
       })}
-      <div className="table-body__cell row__actions">
+      <div className="table-body__cell action_cell">
         <TableActionsMenu
           toggleConvertToYaml={toggleConvertToYaml}
           item={content[index]}

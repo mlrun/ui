@@ -113,7 +113,7 @@ const JobsTableRow = ({
           )
         })
       )}
-      <div className="table-body__cell row__actions">
+      <div className="table-body__cell action_cell">
         <TableActionsMenu
           toggleConvertToYaml={toggleConvertToYaml}
           item={content[index]}

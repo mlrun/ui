@@ -1,13 +1,14 @@
-@import "../../scss/colors";
+@import '../../scss/colors';
 
 .table-actions-container {
+  display: none;
   position: relative;
   &__body {
     z-index: 999;
     width: 150px;
     position: absolute;
-    bottom: -50px;
-    right: 16px;
+    bottom: -55px;
+    right: 15px;
     background: $white;
     border: 1px solid rgba(0, 0, 0, 0.2);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);

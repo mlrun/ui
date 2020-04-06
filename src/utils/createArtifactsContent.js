@@ -6,49 +6,49 @@ const createArtifactsContent = artifacts =>
     return {
       key: {
         value: artifact.db_key,
-        size: 'artifacts_medium'
+        class: 'artifacts_medium'
       },
       target_path: {
         value: artifact.target_path,
-        size: 'artifacts_big',
+        class: 'artifacts_big',
         type: 'path'
       },
       king: {
         value: artifact.kind,
-        size: 'artifacts_small'
+        class: 'artifacts_kind'
       },
       labels: {
         value: parseKeyValues(artifact.labels),
-        size: 'artifacts_big',
+        class: 'artifacts_big',
         type: 'labels'
       },
       producer: {
         value: artifact.producer,
-        size: 'artifacts_small',
+        class: 'artifacts_small',
         type: 'producer'
       },
       owner: {
         value: artifact.producer.owner,
-        size: 'artifacts_small',
+        class: 'artifacts_owner',
         type: 'owner'
       },
       hash: {
         value: artifact.hash,
-        size: 'artifacts_small',
+        class: 'artifacts_small',
         type: 'hash'
       },
       updated: {
         value: formatDatetime(new Date(artifact.updated)),
-        size: 'artifacts_date'
+        class: 'artifacts_date'
       },
       buttonPopout: {
         value: '',
-        size: 'artifacts_small',
+        class: 'artifacts_popout',
         type: 'buttonPopout'
       },
       buttonDownload: {
         value: '',
-        size: 'artifacts_small',
+        class: 'artifacts_download',
         type: 'buttonDownload'
       }
     }

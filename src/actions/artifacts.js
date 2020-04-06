@@ -3,8 +3,8 @@ import {
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
-  ARTIFACT_PREVIEW,
-  ARTIFACT_PREVIEW_CLOSE
+  SHOW_ARTIFACT_PREVIEW,
+  CLOSE_ARTIFACT_PREVIEW
 } from '../constants'
 
 const artifactsAction = {
@@ -45,12 +45,12 @@ const artifactsAction = {
     type: FETCH_ARTIFACTS_FAILURE,
     payload: error
   }),
-  artifactPreview: item => ({
-    type: ARTIFACT_PREVIEW,
+  showArtifactsPreview: item => ({
+    type: SHOW_ARTIFACT_PREVIEW,
     payload: item
   }),
-  artifactPreviewClose: item => ({
-    type: ARTIFACT_PREVIEW_CLOSE,
+  closeArtifactsPreview: item => ({
+    type: CLOSE_ARTIFACT_PREVIEW,
     payload: item
   })
   // fetchArtifactPreview: (schema, path) => dispatch => {

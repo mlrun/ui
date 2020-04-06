@@ -43,7 +43,7 @@ const PreviewModal = ({ item }) => {
             className="preview_info_close"
             onClick={() => {
               dispatch(
-                artifactActions.artifactPreviewClose({
+                artifactActions.closeArtifactsPreview({
                   isPreview: false,
                   item: {}
                 })
@@ -63,8 +63,7 @@ const PreviewModal = ({ item }) => {
 }
 
 PreviewModal.propTypes = {
-  item: PropTypes.shape({}).isRequired,
-  cancel: PropTypes.func.isRequired
+  item: PropTypes.shape({}).isRequired
 }
 
 export default PreviewModal

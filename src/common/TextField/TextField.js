@@ -5,13 +5,7 @@ import Input from '../../common/Input/Input'
 
 import './textField.scss'
 
-const ArtifactFilterLabels = ({
-  label,
-  placeholder,
-  match,
-  onChange,
-  page
-}) => {
+const TextField = ({ label, placeholder, match, onChange, page }) => {
   const [value, setValue] = useState('')
 
   const history = useHistory()
@@ -41,10 +35,12 @@ const ArtifactFilterLabels = ({
   )
 }
 
-ArtifactFilterLabels.propTypes = {
+TextField.propTypes = {
+  label: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   onChange: PropTypes.func.isRequired,
   page: PropTypes.string.isRequired
 }
 
-export default ArtifactFilterLabels
+export default TextField
