@@ -22,7 +22,7 @@ const Details = ({
   const handlePreview = () => {
     history.push(`/projects/${match.params.projectName}/artifacts`)
     dispatch(
-      artifactActions.artifactPreview({
+      artifactActions.showArtifactsPreview({
         isPreview: true,
         item
       })

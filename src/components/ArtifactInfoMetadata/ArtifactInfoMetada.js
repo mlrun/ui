@@ -36,7 +36,10 @@ const ArtifactInfoMetadata = ({ item }) => {
       <div className="artifact_metadata_table_header">
         {headers.map(header => {
           return (
-            <div className="artifact_metadata_table_header_item" key={header}>
+            <div
+              className={`artifact_metadata_table_header_item metadata_cell_${header}`}
+              key={header}
+            >
               {header !== '' && <span>{header}</span>}
             </div>
           )
@@ -46,11 +49,11 @@ const ArtifactInfoMetadata = ({ item }) => {
         {metadata.map(item => {
           return (
             <div key={item.name} className="artifact_metadata_table_body_row">
-              {Object.keys(item).map(key => {
+              {Object.keys(item).map((key, index) => {
                 return (
                   <div
                     key={key}
-                    className="artifact_metadata_table_body_row_item"
+                    className={`artifact_metadata_table_body_row_item metadata_cell_${headers[index]}`}
                   >
                     {key === '' && primaryKey.includes(item.name) ? (
                       <Tooltip

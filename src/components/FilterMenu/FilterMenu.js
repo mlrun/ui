@@ -36,7 +36,7 @@ const FilterMenu = ({
 
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()
-    onChange({ tag: value, project: match.params.projectName })
+    onChange({ tag: value, project: match.params.projectName, name, labels })
     setValueFilterTree(value)
   }
 
@@ -44,10 +44,10 @@ const FilterMenu = ({
     let innerObject = {}
     if ('labels' in event) {
       setLabels(event.labels)
-      innerObject = { ...event }
+      innerObject = { ...event, name }
     } else if ('name' in event) {
       setName(event.name)
-      innerObject = { ...event }
+      innerObject = { ...event, labels }
     }
 
     page === ARTIFACTS_PAGE

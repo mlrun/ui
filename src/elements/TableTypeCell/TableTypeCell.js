@@ -10,7 +10,7 @@ import { ReactComponent as Horovod } from '../../images/horovod.svg'
 
 const TableTypeCell = ({ data }) => {
   return (
-    <div className={`table-body__cell ${data.size}`}>
+    <div className={`table-body__cell ${data.class}`}>
       <Tooltip
         template={
           <TextTooltipTemplate

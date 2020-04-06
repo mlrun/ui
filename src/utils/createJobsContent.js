@@ -8,21 +8,21 @@ const createJobsContent = jobs => {
     return {
       name: {
         value: job.name,
-        size: 'jobs_medium'
+        class: 'jobs_medium'
       },
       type: {
         value: type,
-        size: 'jobs_small',
+        class: 'jobs_small',
         type: 'type'
       },
       uid: {
         value: job.uid,
-        size: 'jobs_small',
+        class: 'jobs_small',
         type: 'uid'
       },
       startTime: {
         value: formatDatetime(job.startTime),
-        size: 'jobs_small',
+        class: 'jobs_small',
         type: 'date'
       },
       duration: {
@@ -30,26 +30,26 @@ const createJobsContent = jobs => {
           job.startTime,
           job.state !== 'running' && job.updated
         ),
-        size: 'jobs_small',
+        class: 'jobs_small',
         type: 'duration'
       },
       owner: {
         value: job.owner,
-        size: 'jobs_small'
+        class: 'jobs_small'
       },
       parameters: {
         value: job.parameters,
-        size: 'jobs_big',
+        class: 'jobs_big',
         type: 'parameters'
       },
       resultsChips: {
         value: job.resultsChips,
-        size: 'jobs_big',
+        class: 'jobs_big',
         type: 'results'
       },
       updated: {
         value: job.updated,
-        size: 'jobs_small',
+        class: 'jobs_small',
         type: 'hidden'
       }
     }

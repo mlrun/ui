@@ -43,16 +43,20 @@ const DetailsArtifactsView = ({ items, handleClick, dispatch }) => {
               </div>
               <div className="table__item_artifacts__row_item">{item.date}</div>
               <div className="table__item_artifacts__row_item table__item_artifacts__row_item_short">
-                <Popout
-                  onClick={() => {
-                    dispatch(
-                      artifactAction.artifactPreview({
-                        isPreview: true,
-                        item: item
-                      })
-                    )
-                  }}
-                />
+                <Tooltip
+                  template={<TextTooltipTemplate text="Artifacts Preview" />}
+                >
+                  <Popout
+                    onClick={() => {
+                      dispatch(
+                        artifactAction.showArtifactsPreview({
+                          isPreview: true,
+                          item: item
+                        })
+                      )
+                    }}
+                  />
+                </Tooltip>
               </div>
               <div className="table__item_artifacts__row_item table__item_artifacts__row_item_short">
                 <Download

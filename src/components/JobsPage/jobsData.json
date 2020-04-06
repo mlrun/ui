@@ -15,35 +15,39 @@
   "tableHeaders": [
     {
       "header": "Name",
-      "size": "jobs_medium"
+      "class": "jobs_medium"
     },
     {
       "header": "Type",
-      "size": "jobs_small"
+      "class": "jobs_small"
     },
     {
       "header": "UID",
-      "size": "jobs_small"
+      "class": "jobs_small"
     },
     {
       "header": "Start time",
-      "size": "jobs_small"
+      "class": "jobs_small"
     },
     {
       "header": "Duration",
-      "size": "jobs_small"
+      "class": "jobs_small"
     },
     {
       "header": "Owner",
-      "size": "jobs_small"
+      "class": "jobs_small"
     },
     {
       "header": "Parameters",
-      "size": "jobs_big"
+      "class": "jobs_big"
     },
     {
       "header": "Results",
-      "size": "jobs_big"
+      "class": "jobs_big"
+    },
+    {
+      "header": "",
+      "class": "action_cell"
     }
   ],
   "detailsMenu": ["info", "inputs", "artifacts", "results", "logs"],
