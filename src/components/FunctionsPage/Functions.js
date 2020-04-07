@@ -17,6 +17,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
       const newFunctions = functions.map(func => ({
         name: func.metadata.name,
         type: func.kind,
+        tag: func.metadata.tag,
         hash: func.metadata.hash,
         updated: new Date(func.metadata.updated),
         command: func.spec.command,

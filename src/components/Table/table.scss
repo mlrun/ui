@@ -128,12 +128,8 @@
       line-height: 18px;
       font-weight: 400;
       flex-wrap: wrap;
-      .data_ellipsis {
-        min-width: 100%;
-        max-width: 50px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow-x: hidden;
+      &_type {
+        text-transform: capitalize;
       }
       a {
         position: relative;
@@ -152,6 +148,7 @@
           color: $topaz;
         }
       }
+
       i {
         margin: 0 17px;
       }
@@ -195,6 +192,7 @@
     display: flex;
     align-items: center;
     flex: 1;
+    flex-wrap: wrap;
     span {
       margin-left: 10px;
     }
@@ -211,9 +209,19 @@
       margin-left: 10px;
     }
   }
+  .tooltip_container {
+    text-transform: capitalize;
+  }
   .action_cell {
     position: relative;
     width: 20px;
     max-width: 20px;
+  }
+  .data_ellipsis {
+    min-width: 100%;
+    max-width: 50px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
   }
 }

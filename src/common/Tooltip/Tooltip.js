@@ -105,6 +105,7 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
               ...transitionStyles[state],
               ...style
             }}
+            className="tooltip_container"
           >
             {template}
           </div>
