@@ -1,16 +1,26 @@
 .result_table {
   display: flex;
   padding: 10px;
-  .result_table{
-      &_item {
-          &_key {
-            display: flex;
-            flex: 1;
-          }
-          &_value {
-              display: flex;
-              flex: 1;
-          }
+  .result_table {
+    &_item {
+      &_key {
+        display: flex;
+        flex: 1;
       }
+      &_value {
+        display: flex;
+        flex: 1;
+      }
+    }
+  }
+}
+.table__item_results__table_row_cell,
+.table__item_results__table_header_item {
+  .data_ellipsis {
+    max-width: 50px;
+    min-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
