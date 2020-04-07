@@ -18,6 +18,7 @@ const Header = () => {
         href="https://github.com/mlrun/mlrun"
         className="header__link"
         target="_blank"
+        rel="noopener noreferrer"
       >
         See on GitHub
       </a>
