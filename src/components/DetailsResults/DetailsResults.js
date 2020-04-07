@@ -30,7 +30,10 @@ const DetailsResults = ({ job }) => {
             {result.items.map((item, i) => (
               <div className="table__item_results__table_row" key={i}>
                 {item.map((value, i) => {
-                  if (value.length > 3) {
+                  if (
+                    typeof value === 'string' &&
+                    value.match(/completed|running|error/gi)
+                  ) {
                     return (
                       <div
                         className="table__item_results__table_row_cell"
@@ -75,7 +78,14 @@ const DetailsResults = ({ job }) => {
                         className="table__item_results__table_row_cell"
                         key={`${value}${i}`}
                       >
-                        {+value}
+                        <Tooltip
+                          className="data_ellipse"
+                          template={
+                            <TextTooltipTemplate text={value.toString()} />
+                          }
+                        >
+                          {value}
+                        </Tooltip>
                       </div>
                     )
                   }
