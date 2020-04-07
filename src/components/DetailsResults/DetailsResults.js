@@ -21,7 +21,12 @@ const DetailsResults = ({ job }) => {
             <div className="table__item_results__table_row">
               {result.headers.map((item, i) => (
                 <div className="table__item_results__table_header_item" key={i}>
-                  {item}
+                  <Tooltip
+                    className="data_ellipsis"
+                    template={<TextTooltipTemplate text={item} />}
+                  >
+                    {item}
+                  </Tooltip>
                 </div>
               ))}
             </div>
@@ -79,7 +84,7 @@ const DetailsResults = ({ job }) => {
                         key={`${value}${i}`}
                       >
                         <Tooltip
-                          className="data_ellipse"
+                          className="data_ellipsis"
                           template={
                             <TextTooltipTemplate text={value.toString()} />
                           }
