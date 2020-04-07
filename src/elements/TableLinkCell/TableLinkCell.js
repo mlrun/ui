@@ -37,7 +37,13 @@ const TableLinkCell = ({
             <i className={item.state} />
           </Tooltip>
         )}
-        <div className="name_status_row">{data.value}</div>
+        <div className="name_status_row">
+          {data.value}
+          {link.match(/functions/) && (
+            <span>{item.tag ? item.tag : 'latest'}</span>
+          )}
+        </div>
+
         {link.match(/jobs|functions/) &&
           Object.values(selectedItem).length !== 0 && (
             <div className="date__uid_row">
