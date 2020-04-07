@@ -12,6 +12,7 @@ const TableTypeCell = ({ data }) => {
   return (
     <div className={`table-body__cell ${data.class}`}>
       <Tooltip
+        className="table-body__cell_type"
         template={
           <TextTooltipTemplate
             text={data.value === 'mpijob' ? 'Horovod' : data.value}
@@ -26,8 +27,10 @@ const TableTypeCell = ({ data }) => {
           <Nuclio />
         ) : data.type === 'spark' ? (
           <Spark />
-        ) : (
+        ) : data.type === 'mpijob' ? (
           <Horovod />
+        ) : (
+          data.value
         )}
       </Tooltip>
     </div>
