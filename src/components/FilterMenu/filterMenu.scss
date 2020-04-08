@@ -7,6 +7,17 @@
   align-items: center;
   flex: 1;
   flex-wrap: wrap;
+  .input-wrapper {
+    border: $tableFilterBorder;
+    border-radius: 4px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    .input {
+      height: 38px;
+      width: 200px;
+      padding: 10px 10px 10px 64px;
+    }
+  }
 }
 .buttons {
   display: flex;

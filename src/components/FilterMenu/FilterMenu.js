@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import TextField from '../../common/TextField/TextField'
+import Input from '../../common/Input/Input'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
@@ -33,6 +34,7 @@ const FilterMenu = ({
   const [valueFilterTree, setValueFilterTree] = useState('')
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
+  const history = useHistory()
 
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()
@@ -40,23 +42,23 @@ const FilterMenu = ({
     setValueFilterTree(value)
   }
 
-  const handleOnChange = event => {
-    let innerObject = {}
-    if ('labels' in event) {
-      setLabels(event.labels)
-      innerObject = { ...event, name }
-    } else if ('name' in event) {
-      setName(event.name)
-      innerObject = { ...event, labels }
-    }
+  const onKeyDown = event => {
+    if (event.keyCode === 13) {
+      if (match.params.jobId || match.params.name) {
+        history.push(
+          `/projects/${match.params.projectName}/${page.toLowerCase()}`
+        )
+      }
 
-    page === ARTIFACTS_PAGE
-      ? onChange({
-          tag: valueFilterTree,
-          project: match.params.projectName,
-          ...innerObject
-        })
-      : onChange({ ...innerObject })
+      page === ARTIFACTS_PAGE
+        ? onChange({
+            tag: valueFilterTree,
+            project: match.params.projectName,
+            labels,
+            name
+          })
+        : onChange({ labels, name })
+    }
   }
 
   return (
@@ -74,14 +76,14 @@ const FilterMenu = ({
               page={page}
             />
           ) : filter === 'labels' || filter === 'name' ? (
-            <TextField
+            <Input
+              type="text"
               label={filter === 'labels' ? 'labels' : 'name'}
               placeholder={filter === 'labels' ? 'key1=value1,…' : ''}
               key={filter}
-              match={match}
-              onChange={handleOnChange}
-              page={page}
+              onChange={filter === 'labels' ? setLabels : setName}
               value={filter === 'labels' ? labels : name}
+              onKeyDown={onKeyDown}
             />
           ) : (
             <Select
