@@ -121,4 +121,4 @@ Tooltip.propTypes = {
   className: PropTypes.string
 }
 
-export default Tooltip
+export default React.memo(Tooltip)
