@@ -114,6 +114,13 @@
             &.active {
               background-color: $alabaster;
             }
+            &:hover {
+              .action_cell {
+                .table-actions-container {
+                  display: block;
+                }
+              }
+            }
           }
         }
         &.active {

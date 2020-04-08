@@ -47,78 +47,88 @@ const JobsTableRow = ({
               firstRow
             />
           </div>
-          {tableContent.map((job, index) => {
-            return (
-              <div
-                className={
-                  RegExp(job.uid.value.replace('...', ''), 'gi').test(
-                    selectedItem.uid
-                  )
-                    ? 'table-body__row active'
-                    : 'table-body__row'
-                }
-                key={index}
-              >
-                {Object.values(job).map((value, i) => {
-                  const currentItem =
-                    content.length > 0 &&
-                    content.find(item => item.uid === job.uid.value)
-                  return (
-                    <TableCell
-                      data={i === 0 ? job.startTime : value}
-                      item={currentItem}
-                      link={
-                        i === 0 &&
-                        `/projects/${match.params.projectName}/jobs/${
-                          currentItem.uid
-                        }${
-                          match.params.tab
-                            ? `/${match.params.tab}`
-                            : `/${jobsData.detailsMenu[0]}`
-                        }`
-                      }
-                      key={value.value + i}
-                      selectItem={handleSelectItem}
-                      selectedItem={selectedItem}
+          <>
+            {tableContent.map((job, index) => {
+              return (
+                <div
+                  className={
+                    RegExp(job.uid.value.replace('...', ''), 'gi').test(
+                      selectedItem.uid
+                    )
+                      ? 'table-body__row active'
+                      : 'table-body__row'
+                  }
+                  key={index}
+                >
+                  {Object.values(job).map((value, i) => {
+                    const currentItem =
+                      content.length > 0 &&
+                      content.find(item => item.uid === job.uid.value)
+                    return (
+                      <TableCell
+                        data={i === 0 ? job.startTime : value}
+                        item={currentItem}
+                        link={
+                          i === 0 &&
+                          `/projects/${match.params.projectName}/jobs/${
+                            currentItem.uid
+                          }${
+                            match.params.tab
+                              ? `/${match.params.tab}`
+                              : `/${jobsData.detailsMenu[0]}`
+                          }`
+                        }
+                        key={value.value + i}
+                        selectItem={handleSelectItem}
+                        selectedItem={selectedItem}
+                      />
+                    )
+                  })}
+                  <div className="table-body__cell action_cell">
+                    <TableActionsMenu
+                      toggleConvertToYaml={toggleConvertToYaml}
+                      item={content[index]}
                     />
-                  )
-                })}
-              </div>
-            )
-          })}
+                  </div>
+                </div>
+              )
+            })}
+          </>
         </div>
       ) : (
-        Object.values(rowItem).map((value, i) => {
-          return (
-            <TableCell
-              handleExpandRow={handleExpandRow}
-              data={value}
-              item={content.filter(item => item.uid === rowItem.uid.value)[0]}
-              link={
-                i === 0 &&
-                `/projects/${match.params.projectName}/jobs/${content.length >
-                  0 &&
-                  content.filter(item => item.uid === rowItem.uid.value)[0]
-                    ?.uid}${
-                  match.params.tab
-                    ? `/${match.params.tab}`
-                    : `/${jobsData.detailsMenu[0]}`
-                }`
-              }
-              key={value.value + i}
-              selectItem={handleSelectItem}
-              selectedItem={selectedItem}
-              expandLink={Array.isArray(tableContent)}
+        <>
+          {Object.values(rowItem).map((value, i, arr) => {
+            return (
+              <TableCell
+                handleExpandRow={handleExpandRow}
+                data={value}
+                item={content.filter(item => item.uid === rowItem.uid.value)[0]}
+                link={
+                  i === 0 &&
+                  `/projects/${match.params.projectName}/jobs/${content.length >
+                    0 &&
+                    content.filter(item => item.uid === rowItem.uid.value)[0]
+                      ?.uid}${
+                    match.params.tab
+                      ? `/${match.params.tab}`
+                      : `/${jobsData.detailsMenu[0]}`
+                  }`
+                }
+                key={value.value + i}
+                selectItem={handleSelectItem}
+                selectedItem={selectedItem}
+                expandLink={Array.isArray(tableContent)}
+              />
+            )
+          })}
+          <div className="table-body__cell action_cell">
+            <TableActionsMenu
+              toggleConvertToYaml={toggleConvertToYaml}
+              item={content[index]}
             />
-          )
-        })
+          </div>
+        </>
       )}
-      <div className="table-body__cell action_cell">
-        <TableActionsMenu
-          toggleConvertToYaml={toggleConvertToYaml}
-          item={content[index]}
-        />
-      </div>
     </div>
   )
 }

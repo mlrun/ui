@@ -53,18 +53,16 @@ const DetailsView = ({
       </div>
       <div className="item-header__buttons">
         {page === ARTIFACTS_PAGE && (
-          <>
-            <Download
-              path={item.target_path.path}
-              schema={item.target_path.schema}
-            />
-            <TableActionsMenu
-              toggleConvertToYaml={toggleConvertToYaml}
-              item={item}
-              time={500}
-            />
-          </>
+          <Download
+            path={item.target_path.path}
+            schema={item.target_path.schema}
+          />
         )}
+        <TableActionsMenu
+          toggleConvertToYaml={toggleConvertToYaml}
+          item={item}
+          time={500}
+        />
         <Link
           to={`/projects/${match.params.projectName}/${page.toLowerCase()}`}
           onClick={handleCancel}
