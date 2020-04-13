@@ -17,6 +17,7 @@ const artifactsAction = {
           data.artifacts.reduce((prev, curr) => {
             if (!prev[curr.db_key])
               prev[curr.db_key] = { key: curr.db_key, data: [] }
+
             if ('link_iteration' in curr) {
               prev[curr.db_key] = Object.assign(prev[curr.db_key], {
                 link_iteration: curr
@@ -32,7 +33,7 @@ const artifactsAction = {
 
         return artifacts
       })
-      .catch(() => dispatch(artifactsAction.fetchArtifactsFailure()))
+      .catch(err => dispatch(artifactsAction.fetchArtifactsFailure(err)))
   },
   fetchArtifactsBegin: () => ({
     type: FETCH_ARTIFACTS_BEGIN

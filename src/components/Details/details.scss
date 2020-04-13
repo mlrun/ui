@@ -105,7 +105,7 @@
         position: sticky;
         height: 50px;
         top: 0;
-        z-index: 10000;
+        z-index: 2;
         background-color: $white;
         &_item {
           @include tableHeader;
@@ -200,7 +200,7 @@
       background: none;
       padding: 0;
       outline: none;
-      z-index: 99998;
+      z-index: 3;
       cursor: pointer;
     }
     .json {

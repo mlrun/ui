@@ -16,7 +16,7 @@
       border-radius: $mainBorderRadius;
       background-color: transparent;
       padding: 10px 50px 10px 69px;
-      border: $tableFilterBorder;
+      border: $greyBorder;
       font-size: 15px;
       line-height: 18px;
       font-weight: normal;
@@ -35,7 +35,7 @@
     }
     &__button {
       &_search {
-        border: $tableFilterBorder;
+        border: $greyBorder;
         border-radius: $mainBorderRadius;
         background-color: transparent;
         padding: 8px 13px;

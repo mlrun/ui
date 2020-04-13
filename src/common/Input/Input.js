@@ -1,30 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import './input.scss'
 
 const Input = ({
-  type,
   className,
-  inputIcon,
-  onChange,
-  iconCLass,
   disabled,
-  label,
   floatingLabel,
-  value,
+  iconClass,
+  inputIcon,
+  label,
+  onChange,
+  onKeyDown,
   placeholder,
-  onKeyDown
+  type,
+  value
 }) => {
   const [labelToTop, setLabelToTop] = useState(false)
+  const input = React.createRef()
 
-  const handleClick = e => {
-    if (e.target.value.length > 0) {
+  useEffect(() => {
+    if (input.current.value.length > 0) {
+      setLabelToTop(true)
+    }
+  }, [input])
+
+  const handleClick = () => {
+    if (input.current.value.length > 0) {
       setLabelToTop(true)
     } else {
       setLabelToTop(false)
     }
-    onChange(e.target.value)
+
+    onChange(input.current.value)
   }
 
   return (
@@ -32,11 +40,12 @@ const Input = ({
       <input
         type={type}
         className={`input ${className}`}
-        onChange={e => handleClick(e)}
+        onChange={handleClick}
         disabled={disabled}
         value={value && value}
         placeholder={placeholder}
         onKeyDown={onKeyDown}
+        ref={input}
       />
       <label
         className={`input__label ${labelToTop &&
@@ -45,26 +54,34 @@ const Input = ({
       >
         {label}
       </label>
-      {inputIcon && <span className={iconCLass}>{inputIcon}</span>}
+      {inputIcon && <span className={iconClass}>{inputIcon}</span>}
     </div>
   )
 }
 
 Input.defaultProps = {
+  disabled: false,
+  floatingLabel: false,
+  iconClass: null,
   inputIcon: null,
-  iconCLass: null,
   onChange: null,
-  disabled: false
+  onKeyDown: null,
+  placeholder: '',
+  value: undefined
 }
 
 Input.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  floatingLabel: PropTypes.bool,
+  iconClass: PropTypes.string,
   inputIcon: PropTypes.element,
-  iconCLass: PropTypes.string,
-  onChange: PropTypes.func,
   label: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired
+  onChange: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  placeholder: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 export default Input

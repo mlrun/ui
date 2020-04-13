@@ -1,31 +1,36 @@
-@import '../../scss/colors';
+
+@import "../../scss/colors";
+@import '../../scss/borders';
+@import '../../scss/shadows';
 
 .table-actions-container {
   display: none;
   position: relative;
   &__body {
-    z-index: 999;
+    z-index:4;
     width: 150px;
     position: absolute;
     bottom: -55px;
     right: 15px;
     background: $white;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
+    border: $greyBorder;
+    box-shadow: $filterShadow;
     border-radius: 2px;
   }
   &__option {
     display: flex;
-    padding: 17px;
+    padding: 10px;
     flex: 1;
     align-items: center;
     cursor: pointer;
     &:hover {
-      background-color: #f7f7f7;
+      background-color: $alabaster;
     }
   }
   &__icon {
-    width: 24px;
-    margin-right: 5px;
+    svg {
+      width: 24px;
+      margin-right: 5px;
+    }
   }
 }
