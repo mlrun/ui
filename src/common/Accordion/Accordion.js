@@ -16,8 +16,11 @@ const Accordion = ({ icon, children, iconClassName, accordionClassName }) => {
       onClick={!icon ? handleOpenAccordion : null}
     >
       {icon && (
-        <button onClick={handleOpenAccordion}>
-          <span className={`${iconClassName} ${open && 'open'}`}>{icon}</span>
+        <button
+          onClick={handleOpenAccordion}
+          className={`${iconClassName} ${open && 'open'}`}
+        >
+          <span>{icon}</span>
         </button>
       )}
       <div className="accordion__body">{children}</div>

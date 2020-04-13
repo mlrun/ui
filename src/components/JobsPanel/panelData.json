@@ -4,5 +4,8 @@
   },
   "volumes": {
     "table-headers": ["Volume Name", "Path"]
+  },
+  "parameters": {
+    "table-headers": ["Name", "Type", "Value/s", "Simple/Hyper"]
   }
 }

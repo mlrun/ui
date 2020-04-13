@@ -10,7 +10,7 @@ const SelectOption = ({ item, onClick, status, value }) => {
       {status && (
         <>
           {value === item ? <Checked /> : <Unchecked />}
-          <span className={`status_${item.toLowerCase()}`} />
+          <span className={`status ${item.toLowerCase()}`} />
         </>
       )}
       {item}

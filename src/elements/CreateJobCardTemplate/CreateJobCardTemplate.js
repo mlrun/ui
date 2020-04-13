@@ -1,18 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+
+import { truncateUid } from '../../utils'
+
 import './createJobCardTemplate.scss'
 
-const CreateJobCardTemplate = ({
-  name,
-  status,
-  func,
-  handleSelectFunction
-}) => {
+const CreateJobCardTemplate = ({ func, handleSelectFunction }) => {
   return (
     <div className="card-template" onClick={() => handleSelectFunction(func)}>
-      <h6 className="card-template__header">{name}</h6>
-      <i className={status} />
+      <h6 className="card-template__header">{func?.metadata?.name}</h6>
+      <i className={func?.status?.status} />
+      <Tooltip
+        template={<TextTooltipTemplate text={func.metadata.hash} />}
+        className="card-template__hash"
+      >
+        <span>{truncateUid(func.metadata.hash)}</span>
+      </Tooltip>
+      <span className="card-template__tag">{func.metadata.tag}</span>
     </div>
   )
 }
@@ -22,8 +29,8 @@ CreateJobCardTemplate.defaultProps = {
 }
 
 CreateJobCardTemplate.propTypes = {
-  name: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired
+  func: PropTypes.shape({}).isRequired,
+  handleSelectFunction: PropTypes.func.isRequired
 }
 
 export default CreateJobCardTemplate

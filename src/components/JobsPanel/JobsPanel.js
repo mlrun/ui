@@ -2,33 +2,44 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import Accordion from '../../common/Accordion/Accordion'
-import JobsPanelDataInputs from '../JobsPanelDataInputs/JobsPanelDataInputs'
-
-import { ReactComponent as Close } from '../../images/close.svg'
-import { ReactComponent as Run } from '../../images/run.svg'
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
-
 import jobsActions from '../../actions/jobs'
 
 import './jobsPanel.scss'
+import JobsPanelView from './JobsPanelView'
 
 const JobsPanel = ({
-  func,
   close,
-  setNewJobInputs,
+  func,
   jobsStore,
   match,
   setNewJob,
-  setNewJobVolumes,
-  setNewJobVolumeMounts,
+  setNewJobInputs,
+  setNewJobHyperParameters,
   setNewJobInputPath,
-  setNewJobOutputPath
+  setNewJobOutputPath,
+  setNewJobParameters,
+  setNewJobResourcesLimits,
+  setNewJobResourcesRequests,
+  setNewJobVolumes,
+  setNewJobVolumeMounts
 }) => {
   const [edit, setEdit] = useState(false)
 
   const [inputPath, setInputPath] = useState('')
   const [outputPath, setOutputPath] = useState('')
+
+  const [requests, setRequests] = useState({
+    cpu: '',
+    memory: ''
+  })
+  const [memoryUnit, setMemoryUnit] = useState('')
+
+  const [limits, setLimits] = useState({
+    cpu: '',
+    memory: '',
+    nvidia_gpu: ''
+  })
+  const [cpuUnit, setCpuUnit] = useState('')
 
   const handlerEdit = () => {
     setEdit(!edit)
@@ -37,24 +48,12 @@ const JobsPanel = ({
         spec: {
           parameters: {},
           inputs: {},
-          output_path: '',
-          input_path: ''
+          hyperparams: {}
         }
       },
       function: {
         spec: {
           volumes: [],
-          resources: {
-            limits: {
-              cpu: '',
-              memory: '',
-              nvidia_gpu: ''
-            },
-            requests: {
-              cpu: '',
-              memory: ''
-            }
-          },
           volumeMounts: []
         }
       }
@@ -64,63 +63,42 @@ const JobsPanel = ({
   const handleRunJob = () => {
     setNewJobInputPath(inputPath)
     setNewJobOutputPath(outputPath)
+    setNewJobResourcesRequests(requests)
+    setNewJobResourcesLimits(limits)
   }
 
   return (
-    <div className="job-panel-container">
-      <div className="job-panel">
-        <div className="job-panel__title">
-          <div className="job-panel__name">{func?.metadata?.name}</div>
-          <button onClick={() => close({})} className="job-panel__close-button">
-            <Close />
-          </button>
-        </div>
-        <div className="job_panel__body">
-          <Accordion icon={<Arrow />} iconClassName="accordion__icon">
-            <div className="job-panel__item">Accordion</div>
-          </Accordion>
-          <Accordion icon={<Arrow />} iconClassName="accordion__icon">
-            <JobsPanelDataInputs
-              setNewJobInputs={setNewJobInputs}
-              inputs={jobsStore.newJob.task.spec.inputs}
-              volumes={jobsStore.newJob.function.spec.volumes}
-              setNewJobVolumes={setNewJobVolumes}
-              setNewJobVolumeMounts={setNewJobVolumeMounts}
-              volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
-              setInputPath={setInputPath}
-              setOutputPath={setOutputPath}
-              match={match}
-            />
-          </Accordion>
-          <Accordion icon={<Arrow />} iconClassName="accordion__icon">
-            <div className="job-panel__item">Accordion</div>
-          </Accordion>
-          <div className="job-panel__buttons-container">
-            {!edit && (
-              <button className="btn btn__edit" onClick={handlerEdit}>
-                Edit
-              </button>
-            )}
-            {edit && (
-              <>
-                <button className="btn btn__schedule">
-                  Schedule for later
-                </button>
-                <button className="btn btn__run" onClick={handleRunJob}>
-                  <Run className="btn__icon" />
-                  Run now
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+    <JobsPanelView
+      func={func}
+      close={close}
+      cpuUnit={cpuUnit}
+      edit={edit}
+      handlerEdit={handlerEdit}
+      handleRunJob={handleRunJob}
+      jobsStore={jobsStore}
+      limits={limits}
+      match={match}
+      memoryUnit={memoryUnit}
+      requests={requests}
+      setCpuUnit={setCpuUnit}
+      setInputPath={setInputPath}
+      setLimits={setLimits}
+      setMemoryUnit={setMemoryUnit}
+      setNewJobHyperParameters={setNewJobHyperParameters}
+      setNewJobInputs={setNewJobInputs}
+      setNewJobParameters={setNewJobParameters}
+      setNewJobVolumes={setNewJobVolumes}
+      setNewJobVolumeMounts={setNewJobVolumeMounts}
+      setOutputPath={setOutputPath}
+      setRequests={setRequests}
+    />
   )
 }
 
 JobsPanel.propTypes = {
-  func: PropTypes.shape({}).isRequired
+  close: PropTypes.func.isRequired,
+  func: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(jobsStore => jobsStore, jobsActions)(JobsPanel)

@@ -1,0 +1,26 @@
+@import "../../scss/colors";
+
+.range {
+  position: relative;
+  &__input {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+  }
+  &__icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    z-index: 3;
+    &.increase {
+      top: 20px;
+    }
+    &.decrease {
+      transform: rotate(180deg);
+      bottom: 20px;
+    }
+  }
+}

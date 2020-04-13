@@ -12,9 +12,11 @@ export default {
 
       url = `${url}&${labels}`
     }
+
     if (event?.name) {
       url = `${url}&name=${event.name}`
     }
+
     return httpClient.get(url)
   },
   getJobLogs: (id, project) => httpClient.get(`/log/${project}/${id}`),

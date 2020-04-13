@@ -10,7 +10,7 @@
   height: 40px;
   border-radius: 4px;
   background-color: transparent;
-  border: $tableFilterBorder;
+  border: $greyBorder;
   margin-right: 15px;
   margin-bottom: 15px;
   &.active {
@@ -36,31 +36,15 @@
     align-items: center;
   }
   &__body {
-    z-index: 9999999;
+    z-index: 5;
     position: absolute;
     top: 48px;
     width: 100%;
-    border: $tableFilterBorder;
+    border: $greyBorder;
     box-shadow: $filterShadow;
     border-radius: 2px;
     color: $mulledWineTwo;
-    .status {
-      &_all {
-        @include jobStatus(none);
-      }
-      &_completed {
-        @include jobStatus($brightTurquoise);
-        margin: 0 10px;
-      }
-      &_running {
-        @include jobStatus($pictonBlue);
-        margin: 0 10px;
-      }
-      &_failed, &_error {
-        @include jobStatus($burntSienna);
-        margin: 0 10px;
-      }
-    }
+    left: 0;
   }
   &__item {
     display: flex;
@@ -72,6 +56,13 @@
       background-color: $alabaster;
       cursor: pointer;
     }
+    .status {
+      margin: 0 10px;
+    }
+    .all {
+      @include jobStatus(none);
+      margin: 0;
+    }
   }
   .overall {
     position: fixed;
@@ -79,6 +70,6 @@
     top: 0;
     height: 100%;
     width: 100%;
-    z-index: 999999;
+    z-index: 5;
   }
 }

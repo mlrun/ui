@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 import './tableActionsMenu.scss'
 
-const TableActionsMenu = ({ toggleConvertToYaml, item, time }) => {
+const TableActionsMenu = ({ item, time, menu, onClick }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   let idTimeout = null
 
@@ -40,15 +39,20 @@ const TableActionsMenu = ({ toggleConvertToYaml, item, time }) => {
           className="table-actions-container__body"
           onClick={() => setIsShowMenu(false)}
         >
-          <div
-            className="table-actions-container__option"
-            onClick={() => {
-              toggleConvertToYaml(item)
-            }}
-          >
-            <Yaml className="table-actions-container__icon" />
-            View YAML
-          </div>
+          {menu.map(menuItem => (
+            <div
+              className="table-actions-container__option"
+              onClick={() => {
+                onClick(item)
+              }}
+              key={menuItem.label}
+            >
+              <span className="table-actions-container__icon">
+                {menuItem.icon}
+              </span>
+              {menuItem.label}
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -61,7 +65,7 @@ TableActionsMenu.defaultProps = {
 }
 
 TableActionsMenu.propTypes = {
-  toggleConvertToYaml: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
   time: PropTypes.number
 }

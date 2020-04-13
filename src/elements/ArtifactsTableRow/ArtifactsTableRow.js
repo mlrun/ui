@@ -6,6 +6,8 @@ import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
 import artifactsData from '../../components/Artifacts/artifactsData'
 
+import { ReactComponent as Yaml } from '../../images/yaml.svg'
+
 const ArtifactsTableRow = ({
   content,
   toggleConvertToYaml,
@@ -15,6 +17,7 @@ const ArtifactsTableRow = ({
   rowItem,
   selectedItem
 }) => {
+  const actionsMenu = [{ label: 'View YAML', icon: <Yaml /> }]
   return (
     <div
       className={`table-body__row ${
@@ -48,8 +51,9 @@ const ArtifactsTableRow = ({
       })}
       <div className="table-body__cell action_cell">
         <TableActionsMenu
-          toggleConvertToYaml={toggleConvertToYaml}
+          onClick={toggleConvertToYaml}
           item={content[index]}
+          menu={actionsMenu}
         />
       </div>
     </div>

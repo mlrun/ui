@@ -1,106 +1,124 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 import JobsPanelDataInputsView from './JobsPanelDataInputsView'
 
 const JobsPanelDataInputs = ({
-  setNewJobInputs,
+  edit,
   inputs,
   match,
-  volumes,
+  setInputPath,
+  setNewJobInputs,
   setNewJobVolumes,
   setNewJobVolumeMounts,
-  volumeMounts,
-  setInputPath,
-  setOutputPath
+  setOutputPath,
+  volumes,
+  volumeMounts
 }) => {
   const [addNewInput, setAddNewInput] = useState(false)
-  const [newInputName, setNewInputName] = useState('')
-  const [newInputPath, setNewInputPath] = useState('')
+  const [newInput, setNewInput] = useState({
+    name: '',
+    path: ''
+  })
 
   const [addNewVolume, setAddNewVolume] = useState(false)
-  const [newVolumeName, setNewVolumeName] = useState('')
-  const [newVolumeType, setNewVolumeType] = useState('')
-  const [newVolumeTypeName, setNewVolumeTypeName] = useState('')
-  const [newVolumePath, setNewVolumePath] = useState('')
-  const [newAccessKey, setNewAccessKey] = useState('')
-  const [newResourcePath, setNewResourcePath] = useState('')
+  const [newVolume, setNewVolume] = useState({
+    name: '',
+    type: '',
+    typeName: '',
+    path: '',
+    accessKey: '',
+    resourcesPath: ''
+  })
 
   const handleAddNewItem = (input, volume) => {
     let newItem = {}
-
+    let emptyInput = null
     if (input) {
-      if (!newInputName || !newInputPath) {
-        setNewInputName('')
-        setNewInputPath('')
+      emptyInput = Object.values(newInput).filter(item => item.length === 0)
+
+      if (emptyInput.length > 0) {
+        setNewInput({
+          name: '',
+          path: ''
+        })
+
         return setAddNewInput(false)
       }
 
-      newItem[newInputName] = newInputPath
+      newItem[newInput.name] = newInput.path
 
       setAddNewInput(false)
       setNewJobInputs({ ...inputs, ...newItem })
-      setNewInputName('')
-      setNewInputPath('')
+      setNewInput({
+        name: '',
+        path: ''
+      })
     } else if (volume) {
-      if (!newVolumeType || !newVolumePath || !newVolumeName) {
-        setNewVolumeName('')
-        setNewVolumeType('')
-        setNewVolumeTypeName('')
-        setNewVolumePath('')
-        setNewAccessKey('')
-        setNewResourcePath('')
+      if (!newVolume.name || !newVolume.type || !newVolume.path) {
+        setNewVolume({
+          name: '',
+          type: '',
+          typeName: '',
+          path: '',
+          accessKey: '',
+          resourcesPath: ''
+        })
+
         return setAddNewVolume(false)
       }
 
-      if (newVolumeType === 'V3IO') {
+      if (newVolume.type === 'V3IO') {
         newItem = {
-          name: newVolumeName,
+          name: newVolume.name,
           flexVolume: {
             driver: 'v3io/fuse',
             options: {
-              accessKey: newAccessKey,
+              accessKey: newVolume.accessKey,
               container: '',
-              subPath: newResourcePath
+              subPath: newVolume.resourcesPath
             }
           }
         }
-      } else if (newVolumeType === 'Config Map') {
+      } else if (newVolume.type === 'Config Map') {
         newItem = {
-          name: newVolumeName,
+          name: newVolume.name,
           configMap: {
-            name: newVolumeTypeName
+            name: newVolume.typeName
           }
         }
-      } else if (newVolumeType === 'Secret') {
+      } else if (newVolume.type === 'Secret') {
         newItem = {
-          name: newVolumeName,
+          name: newVolume.name,
           secret: {
-            secretName: newVolumeTypeName
+            secretName: newVolume.typeName
           }
         }
       } else {
         newItem = {
-          name: newVolumeName,
+          name: newVolume.name,
           persistentVolumeClaim: {
-            claimName: newVolumeTypeName
+            claimName: newVolume.typeName
           }
         }
       }
 
       const newVolumeMounts = {
-        name: newVolumeName,
-        mountPath: newVolumePath
+        name: newVolume.name,
+        mountPath: newVolume.path
       }
 
       setNewJobVolumes([...volumes, newItem])
       setNewJobVolumeMounts([...volumeMounts, newVolumeMounts])
       setAddNewVolume(false)
-      setNewVolumeName('')
-      setNewVolumeType('')
-      setNewVolumeTypeName('')
-      setNewVolumePath('')
-      setNewAccessKey('')
-      setNewResourcePath('')
+      setNewVolume({
+        name: '',
+        type: '',
+        typeName: '',
+        path: '',
+        accessKey: '',
+        resourcesPath: ''
+      })
     }
   }
 
@@ -108,25 +126,34 @@ const JobsPanelDataInputs = ({
     <JobsPanelDataInputsView
       addNewInput={addNewInput}
       addNewVolume={addNewVolume}
+      edit={edit}
       handleAddNewItem={handleAddNewItem}
       inputs={inputs}
+      match={match}
+      newInput={newInput}
+      newVolume={newVolume}
       setAddNewInput={setAddNewInput}
       setAddNewVolume={setAddNewVolume}
-      setNewAccessKey={setNewAccessKey}
-      setNewInputName={setNewInputName}
-      setNewInputPath={setNewInputPath}
-      setNewResourcePath={setNewResourcePath}
-      setNewVolumePath={setNewVolumePath}
-      setNewVolumeType={setNewVolumeType}
-      volumeMounts={volumeMounts}
-      newVolumeType={newVolumeType}
-      match={match}
-      setNewVolumeName={setNewVolumeName}
-      setNewVolumeTypeName={setNewVolumeTypeName}
       setInputPath={setInputPath}
+      setNewInput={setNewInput}
       setOutputPath={setOutputPath}
+      setNewVolume={setNewVolume}
+      volumeMounts={volumeMounts}
     />
   )
+}
+
+JobsPanelDataInputs.propTypes = {
+  edit: PropTypes.bool.isRequired,
+  inputs: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}).isRequired,
+  setInputPath: PropTypes.func.isRequired,
+  setNewJobInputs: PropTypes.func.isRequired,
+  setNewJobVolumes: PropTypes.func.isRequired,
+  setNewJobVolumeMounts: PropTypes.func.isRequired,
+  setOutputPath: PropTypes.func.isRequired,
+  volumes: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default JobsPanelDataInputs
