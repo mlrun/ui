@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  max-width: 45%;
+  width: 900px;
   background-color: $wildsand;
   overflow-y: scroll;
   &-container {
@@ -85,7 +85,7 @@
   .accordion {
     &__container.open {
       height: auto;
-      min-height: 40%;
+      min-height: 300px;
     }
     &__icon {
       position: absolute;
@@ -94,7 +94,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: #869cff;
+      background: $purple;
       z-index: 10;
       display: flex;
       align-items: center;
@@ -106,6 +106,9 @@
         transform: rotate(90deg);
         transform-origin: center center;
         transition: transform 200ms linear;
+        svg {
+          margin-bottom: -3px;
+        }
       }
       svg {
         filter: brightness(0) invert(1);
@@ -132,7 +135,29 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      z-index: 1000;
+      z-index: 1500;
+    }
+    &.resources {
+      .select {
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        margin-right: 16px;
+        flex: 1;
+        &__body {
+          max-height: 290px;
+          overflow-y: auto;
+          top: 60px;
+        }
+        &__value {
+          min-width: 140px;
+        }
+      }
+      .range {
+        margin-right: 16px;
+      }
+    }
+    .section-gpu .item-section__body {
+      justify-content: flex-end;
     }
   }
   .add-input {
@@ -153,14 +178,23 @@
   }
   .btn-add {
     position: absolute;
-    bottom: 18px;
-    right: 16px;
+    bottom: 14px;
+    right: 22px;
   }
   .select {
     height: auto;
     border: none;
-    flex: .6;
+    flex: .38;
     margin: 0;
     padding-left: 10px;
+  }
+  .btn-load {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    padding: 10px 16px;
+    color: $primary;
+    font-size: 14px;
+    line-height: 16px;
+    margin: 24px 0;
   }
 }

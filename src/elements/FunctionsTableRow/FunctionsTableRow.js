@@ -6,6 +6,8 @@ import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
 import functionsData from '../../components/FunctionsPage/functionsData'
 
+import { ReactComponent as Yaml } from '../../images/yaml.svg'
+
 const FunctionsTableRow = ({
   content,
   toggleConvertToYaml,
@@ -15,6 +17,7 @@ const FunctionsTableRow = ({
   rowItem,
   selectedItem
 }) => {
+  const actionsMenu = [{ label: 'View YAML', icon: <Yaml /> }]
   return (
     <div
       className={`table-body__row ${
@@ -47,8 +50,9 @@ const FunctionsTableRow = ({
       })}
       <div className="table-body__cell row__actions">
         <TableActionsMenu
-          toggleConvertToYaml={toggleConvertToYaml}
+          onClick={toggleConvertToYaml}
           item={content[index]}
+          menu={actionsMenu}
         />
       </div>
     </div>

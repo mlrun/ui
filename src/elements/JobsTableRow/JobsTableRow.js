@@ -6,6 +6,8 @@ import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
 import jobsData from '../../components/JobsPage/jobsData'
 
+import { ReactComponent as Yaml } from '../../images/yaml.svg'
+
 const JobsTableRow = ({
   content,
   handleExpandRow,
@@ -18,6 +20,7 @@ const JobsTableRow = ({
   tableContent
 }) => {
   const parent = useRef()
+  const actionsMenu = [{ label: 'View YAML', icon: <Yaml /> }]
 
   return (
     <div
@@ -115,8 +118,9 @@ const JobsTableRow = ({
       )}
       <div className="table-body__cell row__actions">
         <TableActionsMenu
-          toggleConvertToYaml={toggleConvertToYaml}
+          onClick={toggleConvertToYaml}
           item={content[index]}
+          menu={actionsMenu}
         />
       </div>
     </div>

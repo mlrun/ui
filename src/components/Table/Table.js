@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
 import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
@@ -9,9 +10,8 @@ import './table.scss'
 
 import createArtifactsContent from '../../utils/createArtifactsContent'
 import createFunctionsContent from '../../utils/createFunctionsContent'
-import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
 import createJobsContent from '../../utils/createJobsContent'
-import { useSelector } from 'react-redux'
+import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
 
 const Table = ({
   content,
@@ -104,15 +104,17 @@ Table.defaultProps = {
 
 Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  toggleConvertToYaml: PropTypes.func.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
+  groupFilter: PropTypes.string.isRequired,
+  groupedByName: PropTypes.shape({}),
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}),
-  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  toggleConvertToYaml: PropTypes.func.isRequired
 }
 
 export default Table

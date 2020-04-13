@@ -114,3 +114,11 @@ input {
     box-shadow: none;
   }
 }
+
+.row__actions {
+  display: none;
+  position: absolute;
+  right: -10px;
+  top: 15%;
+  border-bottom: none;
+}

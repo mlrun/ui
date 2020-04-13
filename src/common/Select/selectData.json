@@ -3,5 +3,8 @@
   "tree": ["Latest"],
   "period": ["Last 7 days", "Last 14 days", "Last months", "Last 6 months"],
   "group by": ["None", "Name"],
-  "volumeType": ["V3IO", "Config Map", "Secret", "PVC"]
+  "volumeType": ["V3IO", "Config Map", "Secret", "PVC"],
+  "parameterType": ["Simple", "Hyper"],
+  "unitMemory": ["Bytes", "KB", "KiB", "MB", "MiB", "GB", "GiB", "TB", "TiB", "PB", "PiB", "EB", "EiB"],
+  "unitCpu": ["cpu", "millicpu"]
 }

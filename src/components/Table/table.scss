@@ -122,13 +122,6 @@
         }
       }
     }
-    .row__actions {
-      display: none;
-      position: absolute;
-      right: -10px;
-      top: 15%;
-      border-bottom: none;
-    }
     &__cell {
       @include tableDet;
       padding: 8px 0;

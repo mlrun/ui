@@ -13,9 +13,10 @@ const functionsActions = {
       .getAll(project)
       .then(({ data }) => {
         dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
+
         return data.funcs
       })
-      .catch(() => dispatch(functionsActions.fetchFunctionsFailure()))
+      .catch(err => dispatch(functionsActions.fetchFunctionsFailure(err)))
   },
   fetchFunctionsBegin: () => ({
     type: FETCH_FUNCTIONS_BEGIN
