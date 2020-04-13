@@ -26,7 +26,7 @@ const JobsPanelResources = ({
   const handleSelectMemoryUnit = value => {
     if (requests.memory.length > 0 && value !== 'Bytes') {
       const unit = value.match(/i/)
-        ? value.slice(0, value.match(/i/) + 1)
+        ? value.slice(0, value.match(/i/).index + 1)
         : value.slice(0, 1)
 
       setRequests({

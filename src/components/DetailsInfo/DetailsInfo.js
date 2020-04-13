@@ -39,13 +39,13 @@ const DetailsInfo = ({ item, page, match }) => {
   ]
   const functionsInfoContent = [
     item.name,
-    item.kind,
+    item.type,
     item.hash,
     formatDatetime(new Date(item.updated)),
     item.command,
     item.image,
     item.description,
-    item.status
+    item.state
   ]
 
   return (
@@ -168,7 +168,9 @@ const DetailsInfo = ({ item, page, match }) => {
                     {header}
                   </div>
                   <div className="table__item_details_item_data">
-                    {functionsInfoContent[i] || ''}
+                    {header === 'Kind'
+                      ? functionsInfoContent[i] || 'Local'
+                      : functionsInfoContent[i] || ''}
                   </div>
                 </li>
               )

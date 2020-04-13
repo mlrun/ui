@@ -45,6 +45,7 @@ const TableActionsMenu = ({ item, time, menu, onClick }) => {
               onClick={() => {
                 onClick(item)
               }}
+              key={menuItem.label}
             >
               <span className="table-actions-container__icon">
                 {menuItem.icon}

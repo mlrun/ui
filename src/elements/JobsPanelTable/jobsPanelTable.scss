@@ -20,13 +20,17 @@
       &:hover {
         background-color: $alabaster;
       }
-      &:hover .row__actions {
-        display: block;
+      &:hover .actions_cell {
         min-width: 36px;
-        top: 25%;
-        .table-actions-container__body {
-          bottom: -102px;
-          right: 22px;
+        position: absolute;
+        right: -8px;
+        top: 15px;
+        .table-actions-container {
+          display: block;
+          &__body {
+            bottom: -102px;
+            right: 22px;
+          }
         }
       }
     }

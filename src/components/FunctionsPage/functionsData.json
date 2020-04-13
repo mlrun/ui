@@ -4,31 +4,35 @@
   "tableHeaders": [
     {
       "header": "Name",
-      "size": "functions_medium"
+      "class": "functions_medium"
     },
     {
       "header": "Kind",
-      "size": "functions_small"
+      "class": "functions_small"
     },
     {
       "header": "Hash",
-      "size": "functions_small"
+      "class": "functions_small"
     },
     {
       "header": "Updated",
-      "size": "functions_small"
+      "class": "functions_small"
     },
     {
       "header": "Command",
-      "size": "functions_big"
+      "class": "functions_big"
     },
     {
       "header": "Image",
-      "size": "functions_big"
+      "class": "functions_big"
     },
     {
       "header": "Description",
-      "size": "functions_small"
+      "class": "functions_small"
+    },
+    {
+      "header": "",
+      "class": "action_cell"
     }
   ],
   "functionsInfoHeaders": [

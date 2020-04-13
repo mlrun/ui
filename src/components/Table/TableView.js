@@ -26,11 +26,14 @@ const TableView = ({
 }) => {
   return (
     <div className="table">
-      <div className="table__content">
+      <div
+        className={`table__content ${Object.keys(selectedItem).length !== 0 &&
+          'table_opened'}`}
+      >
         <div className="table-head">
           {tableHeaders.map((item, index) => (
             <div
-              className={`table-head__item ${item.size}`}
+              className={`table-head__item ${item.class}`}
               key={item.header + index}
             >
               <span>{item.header}</span>

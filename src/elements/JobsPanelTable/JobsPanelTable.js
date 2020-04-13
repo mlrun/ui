@@ -50,7 +50,7 @@ const JobsPanelTable = ({
                   </div>
                 )
               })}
-              <div className="table__cell row__actions">
+              <div className="table__cell actions_cell">
                 <TableActionsMenu onClick={() => {}} menu={actionsMenu} />
               </div>
             </div>
@@ -68,7 +68,7 @@ const JobsPanelTable = ({
                     </Tooltip>
                   </div>
                 ))}
-                <div className="table__cell row__actions">
+                <div className="table__cell actions_cell">
                   <TableActionsMenu onClick={() => {}} menu={actionsMenu} />
                 </div>
               </div>

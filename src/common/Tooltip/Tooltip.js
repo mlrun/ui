@@ -105,6 +105,7 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
               ...transitionStyles[state],
               ...style
             }}
+            className="tooltip_container"
           >
             {template}
           </div>
@@ -115,9 +116,8 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
 }
 
 Tooltip.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired,
   template: PropTypes.element.isRequired,
   className: PropTypes.string
 }
 
-export default Tooltip
+export default React.memo(Tooltip)

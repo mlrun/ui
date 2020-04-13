@@ -8,6 +8,7 @@
   width: 900px;
   background-color: $wildsand;
   overflow-y: scroll;
+
   &-container {
     position: fixed;
     z-index: 99999;
@@ -17,6 +18,7 @@
     height: 100%;
     background: rgba($mineshaft, 0.75);
   }
+
   &__title {
     display: flex;
     flex: 0.1;
@@ -24,21 +26,25 @@
     justify-content: space-between;
     margin: 52px;
   }
+
   &__name {
     font-weight: 300;
     font-size: 36px;
     line-height: 42px;
     color: $mulledWineTwo;
   }
+
   &__close-button {
     height: 24px;
     padding: 0;
   }
+
   &__body {
     display: flex;
     flex: 1;
     flex-direction: column;
   }
+
   &__buttons-container {
     justify-content: flex-end;
     display: flex;
@@ -46,11 +52,13 @@
     padding: 0 40px;
     margin-top: 16px;
     margin-bottom: 16px;
+
     .btn {
       padding: 10px;
       height: 36px;
       font-size: 14px;
       line-height: 16px;
+
       &__schedule {
         border: $greyBorder;
         border-radius: 4px;
@@ -58,6 +66,7 @@
         display: flex;
         align-items: center;
       }
+
       &__run {
         display: flex;
         align-items: center;
@@ -65,28 +74,34 @@
         background: $purple;
         border-radius: 2px;
         margin-left: 10px;
+
         svg {
           margin-right: 5px;
+
           path {
             fill: $white;
           }
         }
       }
+
       &__edit {
         border: $greyBorder;
         border-radius: 2px;
         color: $primary;
       }
+
       &__icon {
         margin-right: 5px;
       }
     }
   }
+
   .accordion {
     &__container.open {
       height: auto;
       min-height: 300px;
     }
+
     &__icon {
       position: absolute;
       top: 16px;
@@ -102,25 +117,30 @@
       transform: rotate(0);
       transform-origin: center center;
       transition: transform 200ms linear;
+
       &.open {
         transform: rotate(90deg);
         transform-origin: center center;
         transition: transform 200ms linear;
+
         svg {
           margin-bottom: -3px;
         }
       }
+
       svg {
         filter: brightness(0) invert(1);
       }
     }
   }
+
   &__item {
     min-height: 64px;
     padding: 22px 25px;
     height: 100%;
     position: relative;
     z-index: 1;
+
     .item-section__body {
       .default-input {
         border: 1px solid rgba(0, 0, 0, 0.2);
@@ -128,38 +148,46 @@
         width: 97%;
       }
     }
+
     .input-wrapper {
       flex: 1;
     }
+
     .item__overlay {
       position: absolute;
       width: 100%;
       height: 100%;
       z-index: 1500;
     }
+
     &.resources {
       .select {
         border: 1px solid rgba(0, 0, 0, 0.2);
         border-radius: 4px;
         margin-right: 16px;
         flex: 1;
+
         &__body {
           max-height: 290px;
           overflow-y: auto;
           top: 60px;
         }
+
         &__value {
           min-width: 140px;
         }
       }
+
       .range {
         margin-right: 16px;
       }
     }
+
     .section-gpu .item-section__body {
       justify-content: flex-end;
     }
   }
+
   .add-input {
     display: flex;
     align-items: center;
@@ -168,19 +196,23 @@
     font-size: 15px;
     line-height: 18px;
     color: $cornflowerBlue;
+
     svg {
       width: 20px;
       height: 20px;
     }
+
     rect {
       fill: $cornflowerBlue;
     }
   }
+
   .btn-add {
     position: absolute;
     bottom: 14px;
     right: 22px;
   }
+
   .select {
     height: auto;
     border: none;
@@ -188,6 +220,7 @@
     margin: 0;
     padding-left: 10px;
   }
+
   .btn-load {
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 2px;

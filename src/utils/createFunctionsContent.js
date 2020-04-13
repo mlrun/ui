@@ -5,33 +5,33 @@ const createFunctionsContent = functions =>
     return {
       name: {
         value: func.name,
-        size: 'functions_medium'
+        class: 'functions_medium'
       },
       kind: {
         value: func.type,
-        size: 'functions_small',
+        class: 'functions_small',
         type: 'type'
       },
       hash: {
         value: func.hash,
-        size: 'functions_small',
+        class: 'functions_small',
         type: 'hash'
       },
       updated: {
         value: formatDatetime(new Date(func.updated)),
-        size: 'functions_small'
+        class: 'functions_small'
       },
       command: {
         value: func.command,
-        size: 'functions_big'
+        class: 'functions_big'
       },
       image: {
         value: func.image,
-        size: 'functions_big'
+        class: 'functions_big'
       },
       description: {
         value: func.description,
-        size: 'functions_small'
+        class: 'functions_small'
       }
     }
   })

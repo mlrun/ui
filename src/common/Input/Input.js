@@ -31,6 +31,7 @@ const Input = ({
     } else {
       setLabelToTop(false)
     }
+
     onChange(input.current.value)
   }
 

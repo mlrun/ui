@@ -9,6 +9,11 @@
   border-top: $tableBorder;
   position: relative;
   min-height: 600px;
+  &_opened {
+    height: 72vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
   &__content {
     width: 100%;
     .jobs_medium {
@@ -32,18 +37,17 @@
     .artifacts_date {
       @include tableColumnFlex(1, 80px);
     }
-    .artifacts_small:nth-child(3) {
+    .artifacts_kind {
       padding-left: 20px;
-    }
-    .artifacts_small:nth-child(5) {
-      @include tableColumnFlex(1, 80px);
-    }
-    .artifacts_small:nth-child(6) {
-      flex: 0.5;
-    }
-    .artifacts_small:nth-child(9),
-    .artifacts_small:nth-child(10) {
       @include tableColumnFlex(0.5, 80px);
+    }
+    .artifacts_owner {
+      @include tableColumnFlex(0.5, 80px);
+    }
+    .artifacts_popout,
+    .artifacts_download {
+      @include tableColumnFlex(0.5, 80px);
+      justify-content: center;
     }
     .functions {
       &_medium {
@@ -55,17 +59,6 @@
       &_big {
         @include tableColumnFlex(2, 80px);
       }
-      &_medium,
-      &_small,
-      &_big {
-        span {
-          min-width: 100%;
-          max-width: 50px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow-x: hidden;
-        }
-      }
     }
   }
   &-head {
@@ -74,6 +67,10 @@
       @include tableDet;
       @include tableHeader;
       flex: 1;
+      &.buttonPopout,
+      &.buttonDownload {
+        @include tableColumnFlex(0.5, 80px);
+      }
     }
   }
   &-body {
@@ -87,8 +84,10 @@
         &:not(.parent-row-expanded) {
           &:hover {
             background-color: $alabaster;
-            .row__actions {
-              display: block;
+            .action_cell {
+              .table-actions-container {
+                display: block;
+              }
             }
           }
         }
@@ -115,6 +114,13 @@
             &.active {
               background-color: $alabaster;
             }
+            &:hover {
+              .action_cell {
+                .table-actions-container {
+                  display: block;
+                }
+              }
+            }
           }
         }
         &.active {
@@ -129,30 +135,41 @@
       line-height: 18px;
       font-weight: 400;
       flex-wrap: wrap;
+      &_type {
+        text-transform: capitalize;
+      }
       a {
+        position: relative;
         text-decoration: none;
         color: $cornflowerBlue;
         margin: 0;
         display: flex;
         flex: 1;
         flex-direction: column;
+        .status {
+          position: absolute;
+          left: -34px;
+        }
         span {
           display: block;
           color: $topaz;
         }
       }
+
       i {
         margin: 0 17px;
       }
       button {
+        display: flex;
         border: none;
         background-color: transparent;
         cursor: pointer;
-        margin-left: 10%;
+        padding: 0;
+        font-size: 15px;
       }
       .expand-arrow {
         position: absolute;
-        left: 30px;
+        left: 10px;
         cursor: pointer;
       }
       &_path {
@@ -182,12 +199,9 @@
     display: flex;
     align-items: center;
     flex: 1;
+    flex-wrap: wrap;
     span {
       margin-left: 10px;
-    }
-    .status {
-      margin-left: auto;
-      margin-right: 10%;
     }
   }
   .date__uid_row {
@@ -201,5 +215,20 @@
     span:last-child {
       margin-left: 10px;
     }
+  }
+  .tooltip_container {
+    text-transform: capitalize;
+  }
+  .action_cell {
+    position: relative;
+    width: 20px;
+    max-width: 20px;
+  }
+  .data_ellipsis {
+    min-width: 100%;
+    max-width: 50px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
   }
 }

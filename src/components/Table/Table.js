@@ -99,13 +99,14 @@ Table.defaultProps = {
   groupLatestJob: [],
   handleExpandRow: () => {},
   selectedItem: {},
-  groupedByName: {}
+  groupedByName: {},
+  groupFilter: null
 }
 
 Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
-  groupFilter: PropTypes.string.isRequired,
+  groupFilter: PropTypes.string,
   groupedByName: PropTypes.shape({}),
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
