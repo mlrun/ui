@@ -57,8 +57,6 @@ const CreateJobPageView = ({
             {functions.map((func, index) => (
               <CreateJobCardTemplate
                 key={func?.metadata?.hash + index}
-                status={func?.status?.state}
-                name={func?.metadata?.name}
                 func={func}
                 handleSelectFunction={handleSelectFunction}
               />
