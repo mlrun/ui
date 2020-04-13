@@ -35,11 +35,11 @@ const JobsPanelResourcesView = ({
           setRequests({
             ...requests,
             memory: `${value}${
-              memoryUnit.length > 0 && memoryUnit !== 'Bytes'
-                ? memoryUnit.match(/i/)
-                  ? memoryUnit.slice(0, 2)
-                  : memoryUnit.slice(0, 1)
-                : ''
+              memoryUnit.length === 0 || memoryUnit === 'Bytes'
+                ? ''
+                : memoryUnit.match(/i/)
+                ? memoryUnit.slice(0, 2)
+                : memoryUnit.slice(0, 1)
             }`
           })
         }

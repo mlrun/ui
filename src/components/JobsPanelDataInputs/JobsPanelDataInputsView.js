@@ -68,7 +68,9 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
+            edit && (
+              <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
+            )
           )}
         </JobsPanelTable>
       </JobsPanelSection>
@@ -162,7 +164,12 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            <JobsPanelTableAddItemRow onClick={setAddNewVolume} text="volume" />
+            edit && (
+              <JobsPanelTableAddItemRow
+                onClick={setAddNewVolume}
+                text="volume"
+              />
+            )
           )}
         </JobsPanelTable>
       </JobsPanelSection>

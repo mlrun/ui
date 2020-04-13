@@ -81,10 +81,12 @@ const JobsPanelParametersView = ({
               </button>
             </>
           ) : (
-            <JobsPanelTableAddItemRow
-              onClick={setAddNewParameter}
-              text="input"
-            />
+            edit && (
+              <JobsPanelTableAddItemRow
+                onClick={setAddNewParameter}
+                text="parameter"
+              />
+            )
           )}
         </JobsPanelTable>
         <button className="btn-load">Load file</button>
