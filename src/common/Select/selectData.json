@@ -1,10 +1,50 @@
 {
-  "status": ["All", "Completed", "Running", "Error"],
-  "tree": ["Latest"],
-  "period": ["Last 7 days", "Last 14 days", "Last months", "Last 6 months"],
-  "group by": ["None", "Name"],
-  "volumeType": ["V3IO", "Config Map", "Secret", "PVC"],
-  "parameterType": ["Simple", "Hyper"],
-  "unitMemory": ["Bytes", "KB", "KiB", "MB", "MiB", "GB", "GiB", "TB", "TiB", "PB", "PiB", "EB", "EiB"],
-  "unitCpu": ["cpu", "millicpu"]
+  "status": [
+    { "label": "All", "id": "all" },
+    { "label": "Completed", "id": "completed" },
+    { "label": "Running", "id": "running" },
+    { "label": "Error", "id": "error" }
+  ],
+  "tree": [{ "label": "Latest", "id": "latest" }],
+  "period": [
+    { "label": "Last 7 days", "id": "last7Days" },
+    { "label": "Last 14 days", "id": "last14Days" },
+    { "label": "Last months", "id": "lastMonths" },
+    { "label": "Last 6 months", "id": "last6Months" }
+  ],
+  "group by": [
+    { "label": "None", "id": "none" },
+    { "label": "Name", "id": "name" }
+  ],
+  "volumeType": [
+    { "label": "V3IO", "id": "v3io" },
+    { "label": "Config Map", "id": "configMap" },
+    { "label": "Secret", "id": "secret" },
+    { "label": "PVC", "id": "pvc" }
+  ],
+  "parameterType": [
+    { "label": "Simple", "id": "simple" },
+    { "label": "Hyper", "id": "hyper" }
+  ],
+  "unitMemory": [
+    { "label": "Bytes", "id": "bytes" },
+    { "label": "KB", "id": "kb" },
+    { "label": "KiB", "id": "kib" },
+    { "label": "MB", "id": "mb" },
+    { "label": "MiB", "id": "mib" },
+    { "label": "GB", "id": "gb" },
+    { "label": "GiB", "id": "gib" },
+    { "label": "TB", "id": "tb" },
+    { "label": "TiB", "id": "tib" },
+    { "label": "PB", "id": "pb" },
+    { "label": "PiB", "id": "pib" },
+    { "label": "EB", "id": "eb" },
+    { "label": "EiB", "id": "eib" }
+  ],
+  "unitCpu": [
+    { "label": "cpu", "id": "cpu" },
+    { "label": "millicpu", "id": "millicpu" }
+  ],
+  "repeatInterval": [{ "label": "Minute", "id": "minute" }],
+  "repeatEnd": [{ "label": "Never", "id": "never" }]
 }

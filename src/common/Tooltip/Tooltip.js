@@ -45,7 +45,11 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
             parentRef.current.scrollWidth > parentRef.current.offsetWidth)
       if (show) {
         setShow(true)
-        let { height, top, bottom } = parentRef.current.getBoundingClientRect()
+        let {
+          height,
+          top,
+          bottom
+        } = parentRef?.current?.getBoundingClientRect()
         const {
           height: tooltipHeight,
           width: tooltipWidth

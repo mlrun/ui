@@ -43,4 +43,4 @@ RangeInput.propTypes = {
   value: PropTypes.string.isRequired
 }
 
-export default RangeInput
+export default React.memo(RangeInput)

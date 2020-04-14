@@ -1,0 +1,44 @@
+@import '../../scss/colors.scss';
+
+.schedule {
+  &_container {
+    margin: 0 40px;
+
+    .btn-schedule {
+      background-color: $cornflowerBlue;
+      padding: 10px 16px;
+      margin-top: 16px;
+      margin-left: auto;
+      font-family: Roboto;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      color: $white;
+
+      svg {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  &_tabs {
+    display: flex;
+    flex: 1;
+
+    &_item {
+      padding: 10px 24px;
+      font-weight: bold;
+      font-size: 15px;
+      line-height: 18px;
+      color: $topaz;
+      cursor: pointer;
+
+      &.active {
+        color: $cornflowerBlue;
+        border-bottom: 3px solid $cornflowerBlue;
+      }
+    }
+  }
+}

@@ -25,6 +25,29 @@
     flex-direction: row;
     justify-content: space-between;
     margin: 52px;
+
+    &_wrapper {
+
+      .job-schedule {
+        &-container {
+          display: flex;
+          align-items: center;
+          margin-bottom: 32.5px;
+
+          svg {
+            margin-right: 18px;
+            cursor: pointer;
+          }
+        }
+
+        &__title {
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 23px;
+          color: $primary;
+        }
+      }
+    }
   }
 
   &__name {
