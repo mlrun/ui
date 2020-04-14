@@ -41,7 +41,7 @@ const TableView = ({
           ))}
         </div>
         <div className="table-body">
-          {(groupFilter === 'None' &&
+          {(groupFilter === 'none' &&
             Object.keys(groupedByName).length === 0) ||
           groupLatestJob.length === 0
             ? tableContent.map((rowItem, i) => {

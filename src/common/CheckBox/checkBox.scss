@@ -1,0 +1,24 @@
+@import '../../scss/colors.scss';
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  color: $primary;
+  cursor: pointer;
+
+  svg {
+    margin-right: 11px;
+
+    &.checked {
+      path {
+        fill: $purple;
+      }
+    }
+
+    &.unchecked {
+      path {
+        fill: $spunPearl;
+      }
+    }
+  }
+}

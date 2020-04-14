@@ -94,7 +94,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
   ])
 
   useEffect(() => {
-    if (groupFilter === 'Name') {
+    if (groupFilter === 'name') {
       const groupedJobs = {}
 
       jobs.forEach(job => {
@@ -152,7 +152,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
   }
 
   const handleExpandAll = () => {
-    if (groupFilter === 'Name') {
+    if (groupFilter === 'name') {
       const rows = [...document.getElementsByClassName('parent-row')]
       if (expand) {
         setExpand(false)
@@ -162,6 +162,10 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
         rows.forEach(row => row.classList.add('parent-row-expanded'))
       }
     }
+  }
+
+  const onStateFilterChange = id => {
+    setStateFilter(id || jobsData.initialStateFilter)
   }
 
   return (
@@ -184,7 +188,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
         refresh={refreshJobs}
         selectedItem={selectedJob}
         setGroupFilter={setGroupFilter}
-        setStateFilter={setStateFilter}
+        setStateFilter={onStateFilterChange}
         stateFilter={stateFilter}
         tableHeaders={jobsData.tableHeaders}
         yamlContent={jobsStore.jobs}
