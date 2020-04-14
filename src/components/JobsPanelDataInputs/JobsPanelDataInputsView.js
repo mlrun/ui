@@ -16,44 +16,42 @@ import { ReactComponent as Plus } from '../../images/plus.svg'
 const JobsPanelDataInputsView = ({
   addNewInput,
   addNewVolume,
+  edit,
   handleAddNewItem,
   inputs,
+  match,
+  newInput,
+  newVolume,
   setAddNewInput,
   setAddNewVolume,
-  setNewAccessKey,
-  setNewInputName,
-  setNewInputPath,
-  setNewResourcePath,
-  setNewVolumePath,
-  setNewVolumeType,
-  match,
-  newVolumeType,
-  volumeMounts,
-  setNewVolumeName,
-  setNewVolumeTypeName,
+  setInputPath,
+  setNewInput,
   setOutputPath,
-  setInputPath
+  setNewVolume,
+  volumeMounts
 }) => {
   return (
     <div className="job-panel__item">
+      {!edit && <div className="item__overlay" />}
       <JobsPanelSection title="Data inputs">
         <JobsPanelTable
           headers={panelData['data-inputs']['table-headers']}
           addNewItem={addNewInput}
           content={inputs}
+          className="data-inputs"
         >
           {addNewInput ? (
             <>
               <div className="input-row-wrapper">
                 <Input
-                  onChange={setNewInputName}
+                  onChange={name => setNewInput({ ...newInput, name: name })}
                   label="Input name"
                   type="text"
                   className="input-row__item"
                   floatingLabel
                 />
                 <Input
-                  onChange={setNewInputPath}
+                  onChange={path => setNewInput({ ...newInput, path: path })}
                   label="Input path"
                   type="text"
                   className="input-row__item"
@@ -70,7 +68,9 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
+            edit && (
+              <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
+            )
           )}
         </JobsPanelTable>
       </JobsPanelSection>
@@ -79,19 +79,20 @@ const JobsPanelDataInputsView = ({
           addNewItem={addNewVolume}
           content={volumeMounts}
           headers={panelData.volumes['table-headers']}
+          className="data-inputs"
         >
           {addNewVolume ? (
             <>
               <div className="input-row-wrapper no-border">
                 <Input
-                  onChange={setNewVolumeName}
+                  onChange={name => setNewVolume({ ...newVolume, name: name })}
                   label="Name"
                   type="text"
                   className="input-row__item"
                   floatingLabel
                 />
                 <Input
-                  onChange={setNewVolumePath}
+                  onChange={path => setNewVolume({ ...newVolume, path: path })}
                   label="Path"
                   type="text"
                   className="input-row__item"
@@ -100,24 +101,26 @@ const JobsPanelDataInputsView = ({
               </div>
               <div
                 className={`input-row-wrapper${
-                  newVolumeType === 'V3IO' ? ' no-border' : ''
+                  newVolume.type === 'V3IO' ? ' no-border' : ''
                 }`}
               >
                 <Select
-                  onClick={setNewVolumeType}
+                  onClick={type => setNewVolume({ ...newVolume, type: type })}
                   option="volumeType"
-                  label={newVolumeType.length > 0 ? newVolumeType : 'Type'}
+                  label={newVolume.type.length > 0 ? newVolume.type : 'Type'}
                   match={match}
                 />
-                {newVolumeType.length > 0 && (
+                {newVolume.type.length > 0 && (
                   <Input
-                    onChange={setNewVolumeTypeName}
+                    onChange={typeName =>
+                      setNewVolume({ ...newVolume, typeName: typeName })
+                    }
                     label={
-                      newVolumeType === 'V3IO'
+                      newVolume.type === 'V3IO'
                         ? 'Container'
-                        : newVolumeType === 'PVC'
+                        : newVolume.type === 'PVC'
                         ? 'Claim name'
-                        : `${newVolumeType} name`
+                        : `${newVolume.type} name`
                     }
                     type="text"
                     className="input-row__item"
@@ -125,17 +128,24 @@ const JobsPanelDataInputsView = ({
                   />
                 )}
               </div>
-              {newVolumeType === 'V3IO' && (
+              {newVolume.type === 'V3IO' && (
                 <div className="input-row-wrapper">
                   <Input
-                    onChange={setNewAccessKey}
+                    onChange={accessKey =>
+                      setNewVolume({ ...newVolume, accessKey: accessKey })
+                    }
                     label="Access Key"
                     type="text"
                     className="input-row__item"
                     floatingLabel
                   />
                   <Input
-                    onChange={setNewResourcePath}
+                    onChange={resourcesPath =>
+                      setNewVolume({
+                        ...newVolume,
+                        resourcesPath: resourcesPath
+                      })
+                    }
                     label="Resource path"
                     type="text"
                     className="input-row__item"
@@ -154,7 +164,12 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            <JobsPanelTableAddItemRow onClick={setAddNewVolume} text="volume" />
+            edit && (
+              <JobsPanelTableAddItemRow
+                onClick={setAddNewVolume}
+                text="volume"
+              />
+            )
           )}
         </JobsPanelTable>
       </JobsPanelSection>
@@ -181,16 +196,18 @@ const JobsPanelDataInputsView = ({
 JobsPanelDataInputsView.propTypes = {
   addNewInput: PropTypes.bool.isRequired,
   addNewVolume: PropTypes.bool.isRequired,
+  edit: PropTypes.bool.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   inputs: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}).isRequired,
+  newInput: PropTypes.shape({}).isRequired,
+  newVolume: PropTypes.shape({}).isRequired,
   setAddNewInput: PropTypes.func.isRequired,
   setAddNewVolume: PropTypes.func.isRequired,
-  setNewAccessKey: PropTypes.func.isRequired,
-  setNewInputName: PropTypes.func.isRequired,
-  setNewInputPath: PropTypes.func.isRequired,
-  setNewResourcePath: PropTypes.func.isRequired,
-  setNewVolumePath: PropTypes.func.isRequired,
-  setNewVolumeType: PropTypes.func.isRequired,
+  setInputPath: PropTypes.func.isRequired,
+  setNewInput: PropTypes.func.isRequired,
+  setOutputPath: PropTypes.func.isRequired,
+  setNewVolume: PropTypes.func.isRequired,
   volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

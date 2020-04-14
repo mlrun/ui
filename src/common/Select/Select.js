@@ -42,7 +42,7 @@ const Select = ({ option, label, match, onClick, page, value }) => {
     >
       <div className="select__header">
         {label && <div className="select__label">{label}</div>}
-        {value && <div className="select__value">{value}</div>}
+        <div className="select__value">{value && value}</div>
         <Caret className="select__caret" />
       </div>
       {isOpen && [

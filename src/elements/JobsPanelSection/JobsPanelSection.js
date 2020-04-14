@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 
 import './jobsPanelSection.scss'
 
-const JobsPanelSection = ({ children, title }) => {
+const JobsPanelSection = ({ children, title, className }) => {
   return (
-    <div className="item-section">
+    <div className={`item-section ${className}`}>
       <div className="item-section__title">
         <h5>{title}</h5>
       </div>
@@ -14,7 +14,12 @@ const JobsPanelSection = ({ children, title }) => {
   )
 }
 
+JobsPanelSection.defaultProps = {
+  className: ''
+}
+
 JobsPanelSection.propTypes = {
+  className: PropTypes.string,
   title: PropTypes.string.isRequired
 }
 

@@ -4,7 +4,7 @@
   padding: 18px 24px;
   color: $primary;
   border: none;
-  z-index: 999;
+  z-index: 1;
   background-color: transparent;
   position: relative;
   &-wrapper {
@@ -20,7 +20,7 @@
     &.active {
       top: -9px;
       font-size: 12px;
-      z-index: 999;
+      z-index: 1;
       background-color: $white;
     }
     &-floating {

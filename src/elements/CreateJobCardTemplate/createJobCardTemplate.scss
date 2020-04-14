@@ -17,4 +17,9 @@
     margin: 0 12px 0 0;
     display: inline-block;
   }
+  &__hash, &__tag {
+    display: inline-block;
+    margin-right: 5px;
+    color: $primary;
+  }
 }

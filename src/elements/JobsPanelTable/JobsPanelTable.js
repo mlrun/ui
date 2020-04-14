@@ -3,14 +3,31 @@ import PropTypes from 'prop-types'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
+
+import { ReactComponent as Edit } from '../../images/edit.svg'
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 import './jobsPanelTable.scss'
 
-const JobsPanelTable = ({ headers, content, addNewItem, children }) => {
+const JobsPanelTable = ({
+  addNewItem,
+  children,
+  className,
+  content,
+  headers
+}) => {
+  const actionsMenu = [
+    { label: 'Edit', icon: <Edit /> },
+    { label: 'Remove', icon: <Delete /> }
+  ]
+
   return (
-    <div className={`job-panel__table ${addNewItem && 'no-border'}`}>
+    <div
+      className={`job-panel__table ${addNewItem && 'no-border'} ${className}`}
+    >
       {headers.length > 0 && (
-        <div className="table__header table__row">
+        <div className="table__header table__row no-hover">
           {headers.map((header, i) => (
             <div className="table__cell" key={i}>
               {header}
@@ -33,6 +50,9 @@ const JobsPanelTable = ({ headers, content, addNewItem, children }) => {
                   </div>
                 )
               })}
+              <div className="table__cell actions_cell">
+                <TableActionsMenu onClick={() => {}} menu={actionsMenu} />
+              </div>
             </div>
           ))
         : Object.entries(content).map((row, i) => {
@@ -48,6 +68,9 @@ const JobsPanelTable = ({ headers, content, addNewItem, children }) => {
                     </Tooltip>
                   </div>
                 ))}
+                <div className="table__cell actions_cell">
+                  <TableActionsMenu onClick={() => {}} menu={actionsMenu} />
+                </div>
               </div>
             )
           })}
@@ -57,11 +80,13 @@ const JobsPanelTable = ({ headers, content, addNewItem, children }) => {
 }
 
 JobsPanelTable.defaultProps = {
+  className: '',
   headers: []
 }
 
 JobsPanelTable.propTypes = {
   addNewItem: PropTypes.bool.isRequired,
+  className: PropTypes.string,
   content: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.shape({})

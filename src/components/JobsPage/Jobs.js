@@ -56,6 +56,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
             }
           }
         })
+
         return setJobs(newJobs)
       })
     },

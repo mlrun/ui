@@ -116,7 +116,6 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
 }
 
 Tooltip.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.node, PropTypes.string]).isRequired,
   template: PropTypes.element.isRequired,
   className: PropTypes.string
 }

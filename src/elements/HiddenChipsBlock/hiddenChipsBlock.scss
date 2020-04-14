@@ -12,7 +12,7 @@
   flex-direction: column;
   width: 250px;
   padding: 10px;
-  z-index: 1000;
+  z-index: 3;
   &__chip {
     @include chip($parametersBorder);
   }
