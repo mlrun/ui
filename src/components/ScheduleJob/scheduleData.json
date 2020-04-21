@@ -1,0 +1,6 @@
+{
+  "tabs": [
+    { "label": "Normal", "id": "normal" },
+    { "label": "Cronstring", "id": "cronstring" }
+  ]
+}

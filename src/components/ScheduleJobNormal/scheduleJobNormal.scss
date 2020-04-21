@@ -1,0 +1,37 @@
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+
+.schedule-job {
+  &-normal {
+    &_container {
+      border-radius: 4px;
+      padding: 24px;
+      border: $greyBorder;
+      background-color: $white;
+
+      h3 {
+        color: $primary;
+        text-transform: uppercase;
+      }
+
+      .input {
+        &_container {
+          display: flex;
+        }
+      }
+
+      .checkbox_container {
+        display: flex;
+        padding: 10px 10px 10px 0;
+      }
+
+      .input_container {
+        .input-wrapper {
+          border: $greyBorder;
+          border-radius: 4px;
+          margin-right: 15px;
+        }
+      }
+    }
+  }
+}

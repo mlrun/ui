@@ -1,0 +1,43 @@
+@import '../../scss/colors.scss';
+@import '../../scss//borders.scss';
+
+.recurring_container {
+  user-select: none;
+  margin-top: 23px;
+
+  span {
+    color: $primary;
+  }
+
+  .repeat_container {
+    margin: 15px 0;
+    display: flex;
+
+    .range {
+      margin-right: 15px;
+    }
+  }
+
+  .select {
+    height: 56px;
+    max-width: 228px;
+    padding: 0;
+    border-radius: 4px;
+    background-color: transparent;
+    border: $greyBorder;
+
+    .select__value {
+      padding-left: 15px;
+      min-width: 190px;
+    }
+
+    .select__body {
+      top: 65px;
+    }
+  }
+
+  .repeat_end_container {
+    margin: 15px 0;
+    display: flex;
+  }
+}

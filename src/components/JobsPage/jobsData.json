@@ -52,6 +52,6 @@
   ],
   "detailsMenu": ["info", "inputs", "artifacts", "results", "logs"],
   "filters": ["period", "status", "group by", "labels", "name"],
-  "initialStateFilter": "All",
-  "initialGroupFilter": "Name"
+  "initialStateFilter": "all",
+  "initialGroupFilter": "name"
 }

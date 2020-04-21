@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useState,
-  useCallback,
-  useLayoutEffect,
-  useEffect
-} from 'react'
+import React, { useRef, useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import Chip from '../Chip/Chip'
@@ -47,11 +41,11 @@ const ChipCell = ({ className, elements }) => {
     }
   }, [show, handleShowElements])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [handleResize, setChips, elements])
+  }, [handleResize])
 
   return (
     elements.length !== 0 && (
@@ -93,4 +87,4 @@ ChipCell.propTypes = {
   elements: PropTypes.arrayOf(PropTypes.string)
 }
 
-export default ChipCell
+export default React.memo(ChipCell)
