@@ -2,7 +2,6 @@
   "name": "dashboard-react",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://13.58.191.176:30080",
   "dependencies": {
     "axios": "^0.19.0",
     "camelcase": "^5.2.0",
@@ -35,7 +34,7 @@
     "semver": "6.3.0"
   },
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "node scripts/start.js --no-cache",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "docker": "COMMIT_HASH=`git rev-parse --short HEAD`; docker build -t iguazio/mlrun-ui:${COMMIT_HASH} --build-arg COMMIT_HASH=${COMMIT_HASH} --build-arg DATE=\"`date -u`\" -f Dockerfile ."
@@ -81,6 +80,7 @@
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-loader": "3.0.1",
     "html-webpack-plugin": "4.0.0-beta.5",
+    "http-proxy-middleware": "^1.0.3",
     "mini-css-extract-plugin": "0.8.0",
     "node-sass": "^4.13.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
