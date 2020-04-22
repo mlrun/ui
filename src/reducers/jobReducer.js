@@ -16,6 +16,7 @@ import {
   SET_NEW_JOB_HYPER_PARAMETERS,
   SET_NEW_JOB_RESOURCES_REQUESTS,
   SET_NEW_JOB_RESOURCES_LIMITS
+  // EDIT_NEW_JOB_PARAMETERS
 } from '../constants'
 
 const initialState = {
@@ -233,6 +234,22 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    // case EDIT_NEW_JOB_PARAMETERS:
+    //   return {
+    //     ...state,
+    //     newJob: {
+    //       ...state.newJob,
+    //       task: {
+    //         ...state.newJob.task,
+    //         spec: {
+    //           ...state.newJob.task.spec,
+    //           parameters: state.newJob.task.spec.parameters.map(parameter => {
+    //             if (parameter === payload.name) parameter = payload.value
+    //           })
+    //         }
+    //       }
+    //     }
+    //   }
     default:
       return state
   }

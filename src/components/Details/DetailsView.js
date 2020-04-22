@@ -21,18 +21,16 @@ import { ARTIFACTS_PAGE } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Popout } from '../../images/popout.svg'
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const DetailsView = ({
-  item,
-  page,
-  toggleConvertToYaml,
-  match,
-  handleCancel,
+  actionsMenu,
   detailsMenu,
-  handlePreview
+  handleCancel,
+  handlePreview,
+  item,
+  match,
+  page
 }) => {
-  const actionsMenu = [{ label: 'View YAML', icon: <Yaml /> }]
   return (
     <div className="table__item">
       <div className="item-header">
@@ -63,12 +61,7 @@ const DetailsView = ({
               schema={item.target_path.schema}
             />
           )}
-          <TableActionsMenu
-            onClick={toggleConvertToYaml}
-            item={item}
-            time={500}
-            menu={actionsMenu}
-          />
+          <TableActionsMenu item={item} time={500} menu={actionsMenu} />
           <Link
             to={`/projects/${match.params.projectName}/${page.toLowerCase()}`}
             onClick={handleCancel}
@@ -129,13 +122,13 @@ const DetailsView = ({
 }
 
 DetailsView.propTypes = {
-  item: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired,
-  toggleConvertToYaml: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
-  handleCancel: PropTypes.func.isRequired,
+  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   detailsMenu: PropTypes.array.isRequired,
-  handlePreview: PropTypes.func.isRequired
+  item: PropTypes.shape({}).isRequired,
+  handleCancel: PropTypes.func.isRequired,
+  handlePreview: PropTypes.func.isRequired,
+  match: PropTypes.shape({}).isRequired,
+  page: PropTypes.string.isRequired
 }
 
 export default DetailsView

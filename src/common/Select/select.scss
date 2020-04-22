@@ -10,17 +10,19 @@
   height: 40px;
   border-radius: 4px;
   background-color: transparent;
-  border: $greyBorder;
-  margin-right: 15px;
-  margin-bottom: 15px;
+  border: $primaryBorder;
+  min-width: 100px;
+
   &.active {
     background: $alabaster;
   }
+
   &__label {
     color: $topaz;
     padding: 0 5px 0 15px;
     text-transform: capitalize;
   }
+
   &__value {
     min-width: 96px;
     overflow-x: hidden;
@@ -28,42 +30,54 @@
     text-overflow: ellipsis;
     color: $mulledWine;
   }
+
   &__caret {
-    margin: 0 10px;
+    position: absolute;
+    top: -2px;
+    right: 2px;
   }
+
   &__header {
     display: flex;
     align-items: center;
+    position: relative;
+    width: 100%;
   }
+
   &__body {
     z-index: 5;
     position: absolute;
-    top: 48px;
+    top: 115%;
     width: 100%;
-    border: $greyBorder;
+    border: $primaryBorder;
     box-shadow: $filterShadow;
     border-radius: 2px;
     color: $mulledWineTwo;
     left: 0;
   }
+
   &__item {
     display: flex;
     align-items: center;
     height: 49px;
     padding-left: 15px;
     background-color: $white;
+
     &:hover {
       background-color: $alabaster;
       cursor: pointer;
     }
+
     .status {
       margin: 0 10px;
     }
+
     .all {
       @include jobStatus(none);
       margin: 0;
     }
   }
+
   .overall {
     position: fixed;
     left: 0;

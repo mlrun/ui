@@ -7,6 +7,7 @@ import Details from '../Details/Details'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 
 import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
+import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const TableView = ({
   content,
@@ -24,6 +25,10 @@ const TableView = ({
   tableContent,
   toggleConvertToYaml
 }) => {
+  const actionsMenu = [
+    { label: 'View YAML', icon: <Yaml />, onClick: toggleConvertToYaml }
+  ]
+
   return (
     <div className="table">
       <div
@@ -49,9 +54,9 @@ const TableView = ({
                   case ARTIFACTS_PAGE:
                     return (
                       <ArtifactsTableRow
+                        actionsMenu={actionsMenu}
                         key={i}
                         content={content}
-                        toggleConvertToYaml={toggleConvertToYaml}
                         handleSelectItem={handleSelectItem}
                         index={i}
                         match={match}
@@ -62,8 +67,8 @@ const TableView = ({
                   case FUNCTIONS_PAGE:
                     return (
                       <FunctionsTableRow
+                        actionsMenu={actionsMenu}
                         key={i}
-                        toggleConvertToYaml={toggleConvertToYaml}
                         content={content}
                         match={match}
                         rowItem={rowItem}
@@ -75,9 +80,9 @@ const TableView = ({
                   case JOBS_PAGE:
                     return (
                       <JobsTableRow
+                        actionsMenu={actionsMenu}
                         key={i}
                         content={content}
-                        toggleConvertToYaml={toggleConvertToYaml}
                         handleSelectItem={handleSelectItem}
                         index={i}
                         match={match}
@@ -92,9 +97,9 @@ const TableView = ({
             : tableContent.map((group, i) => {
                 return (
                   <JobsTableRow
+                    actionsMenu={actionsMenu}
                     key={i}
                     content={content}
-                    toggleConvertToYaml={toggleConvertToYaml}
                     handleExpandRow={handleExpandRow}
                     handleSelectItem={handleSelectItem}
                     index={i}
@@ -109,7 +114,7 @@ const TableView = ({
       </div>
       {Object.keys(selectedItem).length !== 0 && (
         <Details
-          toggleConvertToYaml={toggleConvertToYaml}
+          actionsMenu={actionsMenu}
           detailsMenu={detailsMenu}
           handleCancel={handleCancel}
           handleSelectItem={handleSelectItem}

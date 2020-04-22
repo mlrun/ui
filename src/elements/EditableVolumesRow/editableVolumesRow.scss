@@ -1,0 +1,18 @@
+.volumes {
+  .edit-row {
+    .input-wrapper {
+
+      .input {
+        padding-top: 20px;
+
+        &__label {
+          left: 12px;
+
+          &.active-label {
+            top: 5px;
+          }
+        }
+      }
+    }
+  }
+}

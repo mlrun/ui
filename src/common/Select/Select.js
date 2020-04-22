@@ -10,7 +10,7 @@ import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
 import './select.scss'
 
-const Select = ({ option, label, match, onClick, page, value }) => {
+const Select = ({ disabled, label, match, onClick, option, page, value }) => {
   const [isOpen, setOpen] = useState(false)
   const history = useHistory()
 
@@ -25,6 +25,8 @@ const Select = ({ option, label, match, onClick, page, value }) => {
     setOpen(false)
   }
 
+  const toggleOpen = disabled => (disabled ? null : setOpen(!isOpen))
+
   const handleSelectOption = item => {
     if (match.params.jobId || match.params.name) {
       history.push(
@@ -38,7 +40,7 @@ const Select = ({ option, label, match, onClick, page, value }) => {
   return (
     <div
       className={`select${isOpen ? ' active' : ''}`}
-      onClick={() => setOpen(!isOpen)}
+      onClick={() => toggleOpen(disabled)}
     >
       <div className="select__header">
         {label && <div className="select__label">{label}</div>}
@@ -70,14 +72,17 @@ const Select = ({ option, label, match, onClick, page, value }) => {
 }
 
 Select.defaultProps = {
+  disabled: false,
   onClick: () => {},
   label: '',
+  match: null,
   page: ''
 }
 
 Select.propTypes = {
+  disabled: PropTypes.bool,
   label: PropTypes.string,
-  match: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}),
   option: PropTypes.string.isRequired,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   page: PropTypes.string,

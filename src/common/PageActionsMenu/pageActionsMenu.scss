@@ -2,20 +2,10 @@
 @import '../../scss/borders';
 
 .page-actions-container {
-  //.select {
-  //  width: 117px;
-  //  &__value {
-  //    min-width: 60px;
-  //    margin-left: 10px;
-  //  }
-  //  &__item {
-  //    padding-left: 8px;
-  //  }
-  //}
   a {
     padding: 10px 16px;
     background-color: $white;
-    border: $greyBorder;
+    border: $primaryBorder;
     border-radius: 2px;
   }
 }

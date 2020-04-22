@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import JobsPanelView from './JobsPanelView'
+
 import jobsActions from '../../actions/jobs'
 
 import './jobsPanel.scss'
-import JobsPanelView from './JobsPanelView'
 
 const JobsPanel = ({
   close,
@@ -69,10 +70,10 @@ const JobsPanel = ({
 
   return (
     <JobsPanelView
-      func={func}
       close={close}
       cpuUnit={cpuUnit}
       edit={edit}
+      func={func}
       handlerEdit={handlerEdit}
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}

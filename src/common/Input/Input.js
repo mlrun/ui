@@ -38,19 +38,21 @@ const Input = ({
   return (
     <div className="input-wrapper">
       <input
-        type={type}
-        className={`input ${className}`}
-        onChange={handleClick}
+        className={`input 
+        ${className} 
+        ${labelToTop && floatingLabel && 'active-input'}`}
         disabled={disabled}
-        value={value && value}
-        placeholder={placeholder}
+        onChange={handleClick}
         onKeyDown={onKeyDown}
+        placeholder={placeholder}
         ref={input}
+        type={type}
+        value={value && value}
       />
       <label
         className={`input__label ${labelToTop &&
           floatingLabel &&
-          'active'} ${floatingLabel && 'input__label-floating'}`}
+          'active-label'} ${floatingLabel && 'input__label-floating'}`}
       >
         {label}
       </label>
@@ -64,6 +66,7 @@ Input.defaultProps = {
   floatingLabel: false,
   iconClass: null,
   inputIcon: null,
+  label: null,
   onChange: null,
   onKeyDown: null,
   placeholder: '',
@@ -76,7 +79,7 @@ Input.propTypes = {
   floatingLabel: PropTypes.bool,
   iconClass: PropTypes.string,
   inputIcon: PropTypes.element,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,

@@ -11,10 +11,10 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 
 const JobsPanelView = ({
-  func,
   close,
   cpuUnit,
   edit,
+  func,
   handlerEdit,
   handleRunJob,
   jobsStore,
@@ -45,40 +45,40 @@ const JobsPanelView = ({
       <div className="job_panel__body">
         <Accordion icon={<Arrow />} iconClassName="accordion__icon">
           <JobsPanelParameters
-            parameters={jobsStore.newJob.task.spec.parameters}
             edit={edit}
-            setNewJobParameters={setNewJobParameters}
-            match={match}
             hyperparams={jobsStore.newJob.task.spec.hyperparams}
+            match={match}
+            parameters={jobsStore.newJob.task.spec.parameters}
+            setNewJobParameters={setNewJobParameters}
             setNewJobHyperParameters={setNewJobHyperParameters}
           />
         </Accordion>
         <Accordion icon={<Arrow />} iconClassName="accordion__icon">
           <JobsPanelDataInputs
-            setNewJobInputs={setNewJobInputs}
-            inputs={jobsStore.newJob.task.spec.inputs}
-            volumes={jobsStore.newJob.function.spec.volumes}
-            setNewJobVolumes={setNewJobVolumes}
-            setNewJobVolumeMounts={setNewJobVolumeMounts}
-            volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
-            setInputPath={setInputPath}
-            setOutputPath={setOutputPath}
-            match={match}
             edit={edit}
+            inputs={jobsStore.newJob.task.spec.inputs}
+            match={match}
+            setInputPath={setInputPath}
+            setNewJobInputs={setNewJobInputs}
+            setNewJobVolumeMounts={setNewJobVolumeMounts}
+            setNewJobVolumes={setNewJobVolumes}
+            setOutputPath={setOutputPath}
+            volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
+            volumes={jobsStore.newJob.function.spec.volumes}
           />
         </Accordion>
         <Accordion icon={<Arrow />} iconClassName="accordion__icon">
           <JobsPanelResources
-            requests={requests}
-            setRequests={setRequests}
+            cpuUnit={cpuUnit}
+            edit={edit}
             limits={limits}
-            setLimits={setLimits}
             match={match}
             memoryUnit={memoryUnit}
-            setMemoryUnit={setMemoryUnit}
-            cpuUnit={cpuUnit}
+            requests={requests}
             setCpuUnit={setCpuUnit}
-            edit={edit}
+            setLimits={setLimits}
+            setMemoryUnit={setMemoryUnit}
+            setRequests={setRequests}
           />
         </Accordion>
         <div className="job-panel__buttons-container">
@@ -103,10 +103,10 @@ const JobsPanelView = ({
 )
 
 JobsPanelView.propTypes = {
-  func: PropTypes.shape({}).isRequired,
   close: PropTypes.func.isRequired,
   cpuUnit: PropTypes.string.isRequired,
   edit: PropTypes.bool.isRequired,
+  func: PropTypes.shape({}).isRequired,
   handlerEdit: PropTypes.func.isRequired,
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,

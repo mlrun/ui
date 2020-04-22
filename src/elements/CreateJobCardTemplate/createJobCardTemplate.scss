@@ -1,22 +1,25 @@
 @import "../../scss/colors";
+@import '../../scss/borders';
 
 .card-template {
   flex: 0 0 40%;
   max-width: 325px;
   height: 218px;
   background-color: $white;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: $primaryBorder;
   border-radius: 4px;
   padding: 25px;
   margin-bottom: 16px;
   margin-right: 16px;
   cursor: pointer;
+
   &__header {
     font-size: 18px;
     line-height: 21px;
     margin: 0 12px 0 0;
     display: inline-block;
   }
+
   &__hash, &__tag {
     display: inline-block;
     margin-right: 5px;

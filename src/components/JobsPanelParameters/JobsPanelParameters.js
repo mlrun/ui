@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelParametersView from './JobsPanelParametersView'
@@ -19,16 +19,7 @@ const JobsPanelParameters = ({
   })
   const [newParameterSimple, setNewParameterSimple] = useState('Simple')
   const [parametersArray, setParametersArray] = useState([])
-
-  useEffect(() => {
-    if (parametersArray.length === 0) {
-      const newArray = Object.entries(parameters).map(parameter => ({
-        parameter
-      }))
-
-      setParametersArray(newArray)
-    }
-  }, [parameters, parametersArray.length])
+  const [selectedParameter, setSelectedParameter] = useState({})
 
   const handleAddNewParameter = () => {
     const emptyParameter = Object.values(newParameter).filter(
@@ -73,18 +64,62 @@ const JobsPanelParameters = ({
     setNewParameterSimple('Simple')
   }
 
+  const handleEditParameter = () => {
+    const params = { ...parameters }
+    const hyperParams = { ...hyperparams }
+
+    params[selectedParameter.name] = selectedParameter.value
+
+    if (selectedParameter.simple === 'Hyper') {
+      if (hyperParams[selectedParameter.name]) {
+        hyperParams[selectedParameter.name] = selectedParameter.value.split(',')
+        setNewJobHyperParameters({ ...hyperParams })
+      } else {
+        setNewJobHyperParameters({
+          ...hyperparams,
+          [selectedParameter.name]: selectedParameter.value.split(',')
+        })
+      }
+    }
+
+    if (
+      selectedParameter.simple === 'Simple' &&
+      hyperParams[selectedParameter.name]
+    ) {
+      delete hyperParams[selectedParameter.name]
+
+      setNewJobHyperParameters({ ...hyperParams })
+    }
+
+    const newParametersArray = parametersArray.map(param => {
+      if (param.name === selectedParameter.name) {
+        param.value = selectedParameter.value
+        param.simple = selectedParameter.simple
+      }
+
+      return param
+    })
+
+    setNewJobParameters({ ...params })
+    setSelectedParameter({})
+    setParametersArray(newParametersArray)
+  }
+
   return (
     <JobsPanelParametersView
       addNewParameter={addNewParameter}
       edit={edit}
       handleAddNewItem={handleAddNewParameter}
+      handleEditParameter={handleEditParameter}
       match={match}
       newParameter={newParameter}
       newParameterSimple={newParameterSimple}
       parameters={parametersArray}
+      selectedParameter={selectedParameter}
       setAddNewParameter={setAddNewParameter}
       setNewParameter={setNewParameter}
       setNewParameterSimple={setNewParameterSimple}
+      setSelectedParameter={setSelectedParameter}
     />
   )
 }

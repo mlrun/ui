@@ -8,13 +8,14 @@ import artifactActions from '../../actions/artifacts'
 import DetailsView from './DetailsView'
 
 import './details.scss'
+
 const Details = ({
+  actionsMenu,
   detailsMenu,
   handleCancel,
   item,
   match,
-  page,
-  toggleConvertToYaml
+  page
 }) => {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -58,13 +59,13 @@ const Details = ({
 
   return (
     <DetailsView
-      handlePreview={handlePreview}
+      actionsMenu={actionsMenu}
       detailsMenu={detailsMenu}
       handleCancel={handleCancel}
-      page={page}
+      handlePreview={handlePreview}
       item={item}
       match={match}
-      toggleConvertToYaml={toggleConvertToYaml}
+      page={page}
     />
   )
 }
@@ -74,12 +75,12 @@ Details.defaultProps = {
 }
 
 Details.propTypes = {
+  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   item: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired,
-  toggleConvertToYaml: PropTypes.func.isRequired
+  page: PropTypes.string.isRequired
 }
 
 export default Details

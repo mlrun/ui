@@ -10,6 +10,7 @@ import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/Jo
 import Select from '../../common/Select/Select'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+
 import panelData from '../JobsPanel/panelData'
 
 const JobsPanelParametersView = ({
@@ -22,7 +23,10 @@ const JobsPanelParametersView = ({
   parameters,
   setAddNewParameter,
   setNewParameter,
-  setNewParameterSimple
+  setNewParameterSimple,
+  setSelectedParameter,
+  handleEditParameter,
+  selectedParameter
 }) => {
   return (
     <div className="job-panel__item">
@@ -33,6 +37,11 @@ const JobsPanelParametersView = ({
           addNewItem={addNewParameter}
           content={parameters}
           className="parameters"
+          setSelectedParameter={setSelectedParameter}
+          handleEditParameter={handleEditParameter}
+          match={match}
+          selectedItem={selectedParameter}
+          section="parameters"
         >
           {addNewParameter ? (
             <>
@@ -42,27 +51,27 @@ const JobsPanelParametersView = ({
                     setNewParameter({ ...newParameter, name: value })
                   }
                   label="Name"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
                 <Input
                   onChange={value =>
                     setNewParameter({ ...newParameter, type: value })
                   }
                   label="Type"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
                 <Input
                   onChange={value =>
                     setNewParameter({ ...newParameter, value: value })
                   }
                   label="Value/s"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
                 <Select
                   onClick={setNewParameterSimple}

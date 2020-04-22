@@ -1,7 +1,8 @@
 @import '../../scss/colors.scss';
-@import "../../scss/borders";
+@import '../../scss/borders';
 
 .accordion {
+
   &__container {
     position: relative;
     display: flex;
@@ -9,20 +10,24 @@
     border-radius: 4px;
     height: 65px;
     background-color: $white;
-    border: $greyBorder;
+    border: $primaryBorder;
     margin: 16px 40px 0;
     transition: height 0.3s linear;
+
     &.open {
       height: 100%;
       transition: height 0.3s linear;
     }
+
     &:first-child {
       margin-top: 0;
     }
+
     &:last-child {
       margin-bottom: 16px;
     }
   }
+
   &__body {
     overflow: hidden;
   }
