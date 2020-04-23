@@ -15,27 +15,27 @@ import panelData from '../JobsPanel/panelData'
 
 const JobsPanelParametersView = ({
   addNewParameter,
-  edit,
   handleAddNewItem,
+  handleEditParameter,
+  handleDeleteParameter,
   match,
   newParameter,
   newParameterSimple,
   parameters,
+  selectedParameter,
   setAddNewParameter,
   setNewParameter,
   setNewParameterSimple,
-  setSelectedParameter,
-  handleEditParameter,
-  selectedParameter
+  setSelectedParameter
 }) => {
   return (
     <div className="job-panel__item">
-      {!edit && <div className="item__overlay" />}
       <JobsPanelSection title="Parameters">
         <JobsPanelTable
           addNewItem={addNewParameter}
           className="parameters"
           content={parameters}
+          handleDeleteItems={handleDeleteParameter}
           handleEditParameter={handleEditParameter}
           headers={panelData.parameters['table-headers']}
           match={match}
@@ -90,12 +90,10 @@ const JobsPanelParametersView = ({
               </button>
             </>
           ) : (
-            edit && (
-              <JobsPanelTableAddItemRow
-                onClick={setAddNewParameter}
-                text="parameter"
-              />
-            )
+            <JobsPanelTableAddItemRow
+              onClick={setAddNewParameter}
+              text="parameter"
+            />
           )}
         </JobsPanelTable>
         <button className="btn-load">Load file</button>
@@ -106,7 +104,6 @@ const JobsPanelParametersView = ({
 
 JobsPanelParametersView.propTypes = {
   addNewParameter: PropTypes.bool.isRequired,
-  edit: PropTypes.bool.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   newParameter: PropTypes.shape({}).isRequired,

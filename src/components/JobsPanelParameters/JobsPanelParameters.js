@@ -6,7 +6,6 @@ import JobsPanelParametersView from './JobsPanelParametersView'
 import panelData from '../JobsPanel/panelData'
 
 const JobsPanelParameters = ({
-  edit,
   hyperparams,
   match,
   parameters,
@@ -109,11 +108,30 @@ const JobsPanelParameters = ({
     setParametersArray(newParametersArray)
   }
 
+  const handleDeleteParameter = (isInput, item) => {
+    const newParameters = { ...parameters }
+
+    delete newParameters[item.name]
+
+    if (item.simple !== panelData.newParameterSimple[0].id) {
+      const newHyperParameters = { ...hyperparams }
+
+      delete newHyperParameters[item.name]
+
+      setNewJobHyperParameters({ ...newHyperParameters })
+    }
+
+    setNewJobParameters({ ...newParameters })
+    setParametersArray(
+      parametersArray.filter(parameter => parameter.name !== item.name)
+    )
+  }
+
   return (
     <JobsPanelParametersView
       addNewParameter={addNewParameter}
-      edit={edit}
       handleAddNewItem={handleAddNewParameter}
+      handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
       match={match}
       newParameter={newParameter}
@@ -129,7 +147,6 @@ const JobsPanelParameters = ({
 }
 
 JobsPanelParameters.propTypes = {
-  edit: PropTypes.bool.isRequired,
   hyperparams: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   parameters: PropTypes.shape({}).isRequired,

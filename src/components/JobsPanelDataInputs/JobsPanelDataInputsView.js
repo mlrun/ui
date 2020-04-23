@@ -16,8 +16,8 @@ import { ReactComponent as Plus } from '../../images/plus.svg'
 const JobsPanelDataInputsView = ({
   addNewInput,
   addNewVolume,
-  edit,
   handleAddNewItem,
+  handleDeleteItems,
   handleEditItems,
   inputs,
   match,
@@ -47,12 +47,12 @@ const JobsPanelDataInputsView = ({
 
   return (
     <div className="job-panel__item">
-      {!edit && <div className="item__overlay" />}
       <JobsPanelSection title="Data inputs">
         <JobsPanelTable
           addNewItem={addNewInput}
           className="data-inputs"
           content={inputs}
+          handleDeleteItems={handleDeleteItems}
           handleEditItems={handleEditItems}
           headers={panelData['data-inputs']['table-headers']}
           match={match}
@@ -88,9 +88,7 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            edit && (
-              <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
-            )
+            <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
           )}
         </JobsPanelTable>
       </JobsPanelSection>
@@ -99,6 +97,7 @@ const JobsPanelDataInputsView = ({
           addNewItem={addNewVolume}
           className="data-inputs volumes"
           content={volumeMounts}
+          handleDeleteItems={handleDeleteItems}
           handleEditItems={handleEditItems}
           headers={panelData.volumes['table-headers']}
           match={match}
@@ -183,12 +182,7 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            edit && (
-              <JobsPanelTableAddItemRow
-                onClick={setAddNewVolume}
-                text="volume"
-              />
-            )
+            <JobsPanelTableAddItemRow onClick={setAddNewVolume} text="volume" />
           )}
         </JobsPanelTable>
       </JobsPanelSection>
@@ -215,7 +209,7 @@ const JobsPanelDataInputsView = ({
 JobsPanelDataInputsView.propTypes = {
   addNewInput: PropTypes.bool.isRequired,
   addNewVolume: PropTypes.bool.isRequired,
-  edit: PropTypes.bool.isRequired,
+  handleDeleteItems: PropTypes.func.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   inputs: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,

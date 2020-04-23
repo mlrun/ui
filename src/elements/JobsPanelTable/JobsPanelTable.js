@@ -17,6 +17,7 @@ const JobsPanelTable = ({
   className,
   content,
   headers,
+  handleDeleteItems,
   handleEditItems,
   handleEditParameter,
   match,
@@ -35,7 +36,13 @@ const JobsPanelTable = ({
       icon: <Edit />,
       onClick: param => handleEdit(param)
     },
-    { label: 'Remove', icon: <Delete />, onClick: () => {} }
+    {
+      label: 'Remove',
+      icon: <Delete />,
+      onClick: item => {
+        handleDelete(item)
+      }
+    }
   ]
 
   const handleEdit = (item, isInput) => {
@@ -94,6 +101,13 @@ const JobsPanelTable = ({
       ...selectedVolume,
       type: newValue
     })
+  }
+
+  const handleDelete = item => {
+    if (section === 'data-inputs') {
+      return handleDeleteItems(true, item)
+    }
+    handleDeleteItems(null, item)
   }
 
   return (

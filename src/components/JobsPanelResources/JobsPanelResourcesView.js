@@ -93,7 +93,6 @@ const JobsPanelResourcesView = ({
 
 JobsPanelResourcesView.propTypes = {
   cpuUnit: PropTypes.string.isRequired,
-  edit: PropTypes.bool.isRequired,
   handleSelectСpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   limits: PropTypes.shape({}).isRequired,

@@ -5,7 +5,6 @@ import JobsPanelResourcesView from './JobsPanelResourcesView'
 
 const JobsPanelResources = ({
   cpuUnit,
-  edit,
   limits,
   match,
   memoryUnit,
@@ -52,7 +51,6 @@ const JobsPanelResources = ({
   return (
     <JobsPanelResourcesView
       cpuUnit={cpuUnit}
-      edit={edit}
       handleSelectСpuUnit={handleSelectСpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
       limits={limits}
@@ -69,7 +67,6 @@ const JobsPanelResources = ({
 
 JobsPanelResources.propTypes = {
   cpuUnit: PropTypes.string.isRequired,
-  edit: PropTypes.bool.isRequired,
   limits: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   memoryUnit: PropTypes.string.isRequired,

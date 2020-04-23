@@ -7,8 +7,14 @@ import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 
 import functionsActions from '../../actions/functions'
+import jobsActions from '../../actions/jobs'
 
-const CreateJobPage = ({ functionsStore, fetchFunctions, match }) => {
+const CreateJobPage = ({
+  fetchFunctions,
+  functionsStore,
+  match,
+  setNewJob
+}) => {
   const [expandList, setExpandList] = useState(true)
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setFunction] = useState({})
@@ -21,6 +27,23 @@ const CreateJobPage = ({ functionsStore, fetchFunctions, match }) => {
 
   const handleSelectFunction = item => {
     setFunction(item)
+    if (!item) {
+      setNewJob({
+        task: {
+          spec: {
+            parameters: {},
+            inputs: {},
+            hyperparams: {}
+          }
+        },
+        function: {
+          spec: {
+            volumes: [],
+            volumeMounts: []
+          }
+        }
+      })
+    }
   }
 
   return functionsStore.loading ? (
@@ -50,7 +73,7 @@ CreateJobPage.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(
-  functionsStore => functionsStore,
-  functionsActions
-)(CreateJobPage)
+export default connect(functionsStore => functionsStore, {
+  ...functionsActions,
+  ...jobsActions
+})(CreateJobPage)

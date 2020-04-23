@@ -6,7 +6,6 @@ import JobsPanelDataInputsView from './JobsPanelDataInputsView'
 import createVolumeOfNewJob from '../../utils/createVolumeOfNewJob'
 
 const JobsPanelDataInputs = ({
-  edit,
   inputs,
   match,
   setInputPath,
@@ -51,6 +50,14 @@ const JobsPanelDataInputs = ({
     }
 
     setSelectedDataInput({})
+  }
+
+  const handleDeleteItems = (isInput, item) => {
+    if (isInput) {
+      handleDeleteDataInput(item)
+    } else {
+      handleDeleteVolume(item)
+    }
   }
 
   const handleAddNewDataInput = () => {
@@ -155,12 +162,27 @@ const JobsPanelDataInputs = ({
     setNewJobVolumes([...currentVolumes])
   }
 
+  const handleDeleteDataInput = item => {
+    const newInputs = { ...inputs }
+
+    delete newInputs[item.name]
+
+    setNewJobInputs({ ...newInputs })
+  }
+
+  const handleDeleteVolume = item => {
+    setNewJobVolumes(volumes.filter(volume => volume.name !== item.name))
+    setNewJobVolumeMounts(
+      volumeMounts.filter(volume => volume.name !== item.name)
+    )
+  }
+
   return (
     <JobsPanelDataInputsView
       addNewInput={addNewInput}
       addNewVolume={addNewVolume}
-      edit={edit}
       handleAddNewItem={handleAddNewItem}
+      handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       inputs={inputs}
       match={match}
@@ -183,7 +205,6 @@ const JobsPanelDataInputs = ({
 }
 
 JobsPanelDataInputs.propTypes = {
-  edit: PropTypes.bool.isRequired,
   inputs: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   setInputPath: PropTypes.func.isRequired,

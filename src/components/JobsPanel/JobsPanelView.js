@@ -15,10 +15,8 @@ import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 const JobsPanelView = ({
   close,
   cpuUnit,
-  edit,
   func,
   handleRunJob,
-  handlerEdit,
   jobsStore,
   limits,
   match,
@@ -58,7 +56,6 @@ const JobsPanelView = ({
         <div className="job_panel__body">
           <Accordion icon={<Arrow />} iconClassName="accordion__icon">
             <JobsPanelParameters
-              edit={edit}
               hyperparams={jobsStore.newJob.task.spec.hyperparams}
               match={match}
               parameters={jobsStore.newJob.task.spec.parameters}
@@ -68,7 +65,6 @@ const JobsPanelView = ({
           </Accordion>
           <Accordion icon={<Arrow />} iconClassName="accordion__icon">
             <JobsPanelDataInputs
-              edit={edit}
               inputs={jobsStore.newJob.task.spec.inputs}
               match={match}
               setInputPath={setInputPath}
@@ -83,7 +79,6 @@ const JobsPanelView = ({
           <Accordion icon={<Arrow />} iconClassName="accordion__icon">
             <JobsPanelResources
               cpuUnit={cpuUnit}
-              edit={edit}
               limits={limits}
               match={match}
               memoryUnit={memoryUnit}
@@ -95,25 +90,16 @@ const JobsPanelView = ({
             />
           </Accordion>
           <div className="job-panel__buttons-container">
-            {!edit && (
-              <button className="btn btn__edit" onClick={handlerEdit}>
-                Edit
-              </button>
-            )}
-            {edit && (
-              <>
-                <button
-                  className="btn btn__schedule"
-                  onClick={() => setOpenScheduleJob(true)}
-                >
-                  Schedule for later
-                </button>
-                <button className="btn btn__run" onClick={handleRunJob}>
-                  <Run className="btn__icon" />
-                  Run now
-                </button>
-              </>
-            )}
+            <button
+              className="btn btn__schedule"
+              onClick={() => setOpenScheduleJob(true)}
+            >
+              Schedule for later
+            </button>
+            <button className="btn btn__run" onClick={handleRunJob}>
+              <Run className="btn__icon" />
+              Run now
+            </button>
           </div>
         </div>
       ) : (
@@ -126,10 +112,8 @@ const JobsPanelView = ({
 JobsPanelView.propTypes = {
   close: PropTypes.func.isRequired,
   cpuUnit: PropTypes.string.isRequired,
-  edit: PropTypes.bool.isRequired,
   func: PropTypes.shape({}).isRequired,
   handleRunJob: PropTypes.func.isRequired,
-  handlerEdit: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
   limits: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
