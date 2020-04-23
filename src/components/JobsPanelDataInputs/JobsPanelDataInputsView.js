@@ -16,6 +16,7 @@ import { ReactComponent as Plus } from '../../images/plus.svg'
 const JobsPanelDataInputsView = ({
   addNewInput,
   addNewVolume,
+  edit,
   handleAddNewItem,
   handleDeleteItems,
   handleEditItems,
@@ -47,6 +48,7 @@ const JobsPanelDataInputsView = ({
 
   return (
     <div className="job-panel__item">
+      {!edit && <div className="item__overlay" />}
       <JobsPanelSection title="Data inputs">
         <JobsPanelTable
           addNewItem={addNewInput}
@@ -88,7 +90,9 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
+            edit && (
+              <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
+            )
           )}
         </JobsPanelTable>
       </JobsPanelSection>
@@ -134,7 +138,6 @@ const JobsPanelDataInputsView = ({
                   label={newVolume.type.length > 0 ? newVolume.type : 'Type'}
                   match={match}
                 />
-
                 <Input
                   onChange={typeName =>
                     setNewVolume({ ...newVolume, typeName: typeName })
@@ -171,7 +174,6 @@ const JobsPanelDataInputsView = ({
                   />
                 </div>
               )}
-
               <button
                 className="add-input btn-add"
                 onClick={() => handleAddNewItem(null, true)}
@@ -182,7 +184,12 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            <JobsPanelTableAddItemRow onClick={setAddNewVolume} text="volume" />
+            edit && (
+              <JobsPanelTableAddItemRow
+                onClick={setAddNewVolume}
+                text="volume"
+              />
+            )
           )}
         </JobsPanelTable>
       </JobsPanelSection>
