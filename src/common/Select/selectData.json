@@ -18,28 +18,28 @@
   ],
   "volumeType": [
     { "label": "V3IO", "id": "V3IO" },
-    { "label": "Config Map", "id": "configMap" },
-    { "label": "Secret", "id": "secret" },
+    { "label": "Config Map", "id": "Config Map" },
+    { "label": "Secret", "id": "Secret" },
     { "label": "PVC", "id": "PVC" }
   ],
   "parameterType": [
-    { "label": "Simple", "id": "simple" },
-    { "label": "Hyper", "id": "hyper" }
+    { "label": "Simple", "id": "Simple" },
+    { "label": "Hyper", "id": "Hyper" }
   ],
   "unitMemory": [
-    { "label": "Bytes", "id": "bytes" },
-    { "label": "KB", "id": "kb" },
-    { "label": "KiB", "id": "kib" },
-    { "label": "MB", "id": "mb" },
-    { "label": "MiB", "id": "mib" },
-    { "label": "GB", "id": "gb" },
-    { "label": "GiB", "id": "gib" },
-    { "label": "TB", "id": "tb" },
-    { "label": "TiB", "id": "tib" },
-    { "label": "PB", "id": "pb" },
-    { "label": "PiB", "id": "pib" },
-    { "label": "EB", "id": "eb" },
-    { "label": "EiB", "id": "eib" }
+    { "label": "Bytes", "id": "Bytes" },
+    { "label": "KB", "id": "KB" },
+    { "label": "KiB", "id": "KiB" },
+    { "label": "MB", "id": "MB" },
+    { "label": "MiB", "id": "MiB" },
+    { "label": "GB", "id": "GB" },
+    { "label": "GiB", "id": "GiB" },
+    { "label": "TB", "id": "TB" },
+    { "label": "TiB", "id": "TiB" },
+    { "label": "PB", "id": "PB" },
+    { "label": "PiB", "id": "PiB" },
+    { "label": "EB", "id": "EB" },
+    { "label": "EiB", "id": "EiB" }
   ],
   "unitCpu": [
     { "label": "cpu", "id": "cpu" },

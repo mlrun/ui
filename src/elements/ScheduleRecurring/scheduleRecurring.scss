@@ -1,5 +1,5 @@
 @import '../../scss/colors.scss';
-@import '../../scss//borders.scss';
+@import '../../scss/borders.scss';
 
 .recurring_container {
   user-select: none;
@@ -19,19 +19,17 @@
   }
 
   .select {
-    height: 56px;
-    max-width: 228px;
-    padding: 0;
-    border-radius: 4px;
-    background-color: transparent;
-    border: $greyBorder;
 
-    .select__value {
+    &__header {
+      min-width: 218px;
+    }
+
+    &__value {
       padding-left: 15px;
       min-width: 190px;
     }
 
-    .select__body {
+    &__body {
       top: 65px;
     }
   }
@@ -39,5 +37,9 @@
   .repeat_end_container {
     margin: 15px 0;
     display: flex;
+
+    .select {
+      height: 56px;
+    }
   }
 }

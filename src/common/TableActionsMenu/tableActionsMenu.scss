@@ -1,11 +1,11 @@
-
-@import "../../scss/colors";
+@import '../../scss/colors';
 @import '../../scss/borders';
 @import '../../scss/shadows';
 
 .table-actions-container {
   display: none;
   position: relative;
+
   &__body {
     z-index:4;
     width: 150px;
@@ -13,20 +13,23 @@
     bottom: -55px;
     right: 15px;
     background: $white;
-    border: $greyBorder;
+    border: $primaryBorder;
     box-shadow: $filterShadow;
     border-radius: 2px;
   }
+
   &__option {
     display: flex;
     padding: 10px;
     flex: 1;
     align-items: center;
     cursor: pointer;
+
     &:hover {
       background-color: $alabaster;
     }
   }
+
   &__icon {
     svg {
       width: 24px;

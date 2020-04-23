@@ -10,12 +10,8 @@ import {
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB,
   SET_NEW_JOB_VOLUME_MOUNTS,
-  SET_NEW_JOB_OUTPUT_PATH,
-  SET_NEW_JOB_INPUT_PATH,
   SET_NEW_JOB_PARAMETERS,
-  SET_NEW_JOB_HYPER_PARAMETERS,
-  SET_NEW_JOB_RESOURCES_REQUESTS,
-  SET_NEW_JOB_RESOURCES_LIMITS
+  SET_NEW_JOB_HYPER_PARAMETERS
 } from '../constants'
 
 const initialState = {
@@ -28,25 +24,12 @@ const initialState = {
       spec: {
         parameters: {},
         inputs: {},
-        output_path: '',
-        input_path: '',
         hyperparams: {}
       }
     },
     function: {
       spec: {
         volumes: [],
-        resources: {
-          limits: {
-            cpu: '',
-            memory: '',
-            nvidia_gpu: ''
-          },
-          requests: {
-            cpu: '',
-            memory: ''
-          }
-        },
         volumeMounts: []
       }
     }
@@ -143,34 +126,6 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         newJob: payload
       }
-    case SET_NEW_JOB_OUTPUT_PATH:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              output_path: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_INPUT_PATH:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              input_path: payload
-            }
-          }
-        }
-      }
     case SET_NEW_JOB_PARAMETERS:
       return {
         ...state,
@@ -195,40 +150,6 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.newJob.task.spec,
               hyperparams: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_RESOURCES_REQUESTS:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              resources: {
-                ...state.newJob.function.spec.resources,
-                requests: payload
-              }
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_RESOURCES_LIMITS:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              resources: {
-                ...state.newJob.function.spec.resources,
-                limits: payload
-              }
             }
           }
         }

@@ -1,10 +1,12 @@
 @import '../../scss/colors';
 
 .item-section {
-  margin-bottom: 32px;
+  margin-bottom: 45px;
+
   &__title {
     display: flex;
     margin-bottom: 22px;
+
     h5 {
       font-weight: bold;
       font-size: 17px;
@@ -17,6 +19,7 @@
       margin: 0;
     }
   }
+
   &__body {
     position: relative;
     display: flex;

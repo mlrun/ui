@@ -1,29 +1,27 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+
+import JobsPanelView from './JobsPanelView'
 
 import jobsActions from '../../actions/jobs'
 
 import './jobsPanel.scss'
-import JobsPanelView from './JobsPanelView'
 
 const JobsPanel = ({
   close,
   func,
   jobsStore,
   match,
+  runNewJob,
   setNewJob,
   setNewJobHyperParameters,
-  setNewJobInputPath,
   setNewJobInputs,
-  setNewJobOutputPath,
   setNewJobParameters,
-  setNewJobResourcesLimits,
-  setNewJobResourcesRequests,
   setNewJobVolumeMounts,
   setNewJobVolumes
 }) => {
-  const [edit, setEdit] = useState(false)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
   const [inputPath, setInputPath] = useState('')
   const [outputPath, setOutputPath] = useState('')
@@ -40,41 +38,59 @@ const JobsPanel = ({
     nvidia_gpu: ''
   })
   const [cpuUnit, setCpuUnit] = useState('')
-
-  const handlerEdit = () => {
-    setEdit(!edit)
-    setNewJob({
-      task: {
-        spec: {
-          parameters: {},
-          inputs: {},
-          hyperparams: {}
-        }
-      },
-      function: {
-        spec: {
-          volumes: [],
-          volumeMounts: []
-        }
-      }
-    })
-  }
+  const history = useHistory()
 
   const handleRunJob = () => {
-    setNewJobInputPath(inputPath)
-    setNewJobOutputPath(outputPath)
-    setNewJobResourcesRequests(requests)
-    setNewJobResourcesLimits(limits)
+    const postData = {
+      ...jobsStore.newJob,
+      function: {
+        ...jobsStore.newJob.function,
+        spec: {
+          ...jobsStore.newJob.function.spec,
+          resources: {
+            limits: limits,
+            requests: requests
+          }
+        }
+      },
+      task: {
+        ...jobsStore.newJob.task,
+        spec: {
+          ...jobsStore.newJob.task.spec,
+          output_path: outputPath,
+          input_path: inputPath,
+          function: `${match.params.projectName}/${func.metadata.name}:${func.metadata.hash}`
+        }
+      }
+    }
+
+    runNewJob(postData).then(() => {
+      setNewJob({
+        task: {
+          spec: {
+            parameters: {},
+            inputs: {},
+            hyperparams: {}
+          }
+        },
+        function: {
+          spec: {
+            volumes: [],
+            volumeMounts: []
+          }
+        }
+      })
+
+      history.push(`/projects/${match.params.projectName}/jobs`)
+    })
   }
 
   return (
     <JobsPanelView
       close={close}
       cpuUnit={cpuUnit}
-      edit={edit}
       func={func}
       handleRunJob={handleRunJob}
-      handlerEdit={handlerEdit}
       jobsStore={jobsStore}
       limits={limits}
       match={match}

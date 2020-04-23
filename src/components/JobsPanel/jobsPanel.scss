@@ -16,7 +16,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba($mineshaft, 0.75);
+    background: rgba($mineshaft, .75);
   }
 
   &__title {
@@ -75,48 +75,6 @@
     padding: 0 40px;
     margin-top: 16px;
     margin-bottom: 16px;
-
-    .btn {
-      padding: 10px;
-      height: 36px;
-      font-size: 14px;
-      line-height: 16px;
-
-      &__schedule {
-        border: $greyBorder;
-        border-radius: 4px;
-        color: $primary;
-        display: flex;
-        align-items: center;
-      }
-
-      &__run {
-        display: flex;
-        align-items: center;
-        color: $white;
-        background: $purple;
-        border-radius: 2px;
-        margin-left: 10px;
-
-        svg {
-          margin-right: 5px;
-
-          path {
-            fill: $white;
-          }
-        }
-      }
-
-      &__edit {
-        border: $greyBorder;
-        border-radius: 2px;
-        color: $primary;
-      }
-
-      &__icon {
-        margin-right: 5px;
-      }
-    }
   }
 
   .accordion {
@@ -166,7 +124,7 @@
 
     .item-section__body {
       .default-input {
-        border: 1px solid rgba(0, 0, 0, 0.2);
+        border: $primaryBorder;
         border-radius: 4px;
         width: 97%;
       }
@@ -176,17 +134,9 @@
       flex: 1;
     }
 
-    .item__overlay {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 3;
-    }
-
     &.resources {
+
       .select {
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        border-radius: 4px;
         margin-right: 16px;
         flex: 1;
 
@@ -232,27 +182,72 @@
     }
   }
 
-  .btn-add {
-    position: absolute;
-    bottom: 14px;
-    right: 22px;
-  }
-
   .select {
     height: auto;
-    border: none;
-    flex: .38;
-    margin: 0;
     padding-left: 10px;
   }
 
-  .btn-load {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 2px;
-    padding: 10px 16px;
-    color: $primary;
+  .btn {
+    padding: 10px;
+    height: 36px;
     font-size: 14px;
     line-height: 16px;
-    margin: 24px 0;
+    font-family: Roboto;
+    font-weight: 500;
+
+    &-load {
+      border: $primaryBorder;
+      border-radius: 2px;
+      padding: 10px 16px;
+      color: $primary;
+      font-size: 14px;
+      line-height: 16px;
+      margin: 24px 0;
+    }
+
+    &-add {
+      position: absolute;
+      bottom: 14px;
+      right: 22px;
+    }
+
+    &__schedule-for-later {
+      border: $primaryBorder;
+      border-radius: 4px;
+      color: $primary;
+      display: flex;
+      align-items: center;
+    }
+
+    &_primary {
+      display: flex;
+      align-items: center;
+      color: $white;
+      background: $purple;
+      border-radius: 2px;
+      margin-left: 10px;
+
+      svg {
+        margin-right: 5px;
+
+        path {
+          fill: $white;
+        }
+      }
+    }
+
+    &__schedule {
+      padding: 10px 16px;
+      margin-top: 16px;
+      margin-left: auto;
+    }
+
+    &__icon {
+      margin-right: 5px;
+    }
+  }
+
+  .no-border {
+    border-bottom: none;
   }
 }

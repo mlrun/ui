@@ -11,12 +11,8 @@ import {
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB,
   SET_NEW_JOB_VOLUME_MOUNTS,
-  SET_NEW_JOB_INPUT_PATH,
-  SET_NEW_JOB_OUTPUT_PATH,
   SET_NEW_JOB_PARAMETERS,
-  SET_NEW_JOB_HYPER_PARAMETERS,
-  SET_NEW_JOB_RESOURCES_REQUESTS,
-  SET_NEW_JOB_RESOURCES_LIMITS
+  SET_NEW_JOB_HYPER_PARAMETERS
 } from '../constants'
 
 const jobsActions = {
@@ -88,14 +84,6 @@ const jobsActions = {
     type: SET_NEW_JOB,
     payload: newJob
   }),
-  setNewJobInputPath: path => ({
-    type: SET_NEW_JOB_INPUT_PATH,
-    payload: path
-  }),
-  setNewJobOutputPath: path => ({
-    type: SET_NEW_JOB_OUTPUT_PATH,
-    payload: path
-  }),
   setNewJobParameters: parameters => ({
     type: SET_NEW_JOB_PARAMETERS,
     payload: parameters
@@ -104,14 +92,7 @@ const jobsActions = {
     type: SET_NEW_JOB_HYPER_PARAMETERS,
     payload: parameters
   }),
-  setNewJobResourcesRequests: requests => ({
-    type: SET_NEW_JOB_RESOURCES_REQUESTS,
-    payload: requests
-  }),
-  setNewJobResourcesLimits: limits => ({
-    type: SET_NEW_JOB_RESOURCES_LIMITS,
-    payload: limits
-  })
+  runNewJob: postData => () => jobsApi.runJob(postData)
 }
 
 export default jobsActions

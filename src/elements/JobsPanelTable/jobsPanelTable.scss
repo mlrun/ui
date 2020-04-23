@@ -1,9 +1,11 @@
 @import '../../scss/colors';
+@import '../../scss/borders';
 
 .job-panel__table {
-  border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+  border-bottom: $tableBorder;
   width: 100%;
   position: relative;
+
   .table {
     &__header {
       font-weight: bold;
@@ -11,80 +13,106 @@
       line-height: 24px;
       color: $topaz;
     }
-    &__row {
+  }
+
+  .select {
+    border: none;
+
+    &__value {
+      min-width: unset;
+    }
+  }
+
+  .input-row {
+
+    &-wrapper {
       display: flex;
       flex-direction: row;
-      border-top: 1px solid rgba(72, 63, 86, 0.12);
-      padding: 18px 20px;
-      position: relative;
-      &:hover {
-        background-color: $alabaster;
-        .actions_cell {
-          min-width: 36px;
-          position: absolute;
-          right: -8px;
-          top: 15px;
-          .table-actions-container {
-            display: block;
-            &__body {
-              bottom: -102px;
-              right: 22px;
-            }
-          }
+      border: $primaryBorder;
+      width: 90%;
+      min-height: 56px;
+    }
+
+    &__item {
+      width: 100%;
+
+      &::placeholder {
+        font-style: italic;
+      }
+    }
+  }
+
+  &.data-inputs {
+
+    &.volumes {
+      .select {
+        flex: .38;
+      }
+    }
+
+    .input-row-wrapper {
+      .input-wrapper {
+        &:first-child {
+          flex: 0.4;
         }
       }
     }
-    &__cell {
-      min-width: 190px;
-      color: $primary;
-      margin-right: 5px;
-      .tooltip {
-        overflow-x: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        max-width: 100%;
-      }
-    }
   }
-  &.data-inputs {
-    .input-wrapper {
-      &:first-child {
-        flex: 0.4;
-      }
-    }
-    .select__value {
-      min-width: unset;
-    }
-  }
+
   &.parameters {
     .input-row-wrapper {
       width: 93%;
-    }
-    .select__value {
-      min-width: unset;
+
+      .input {
+        padding: 18px 17px;
+
+        &.active-input {
+          padding: 27px 17px 9px;;
+        }
+
+        &__label {
+          left: 17px;
+        }
+      }
+
+      .select {
+        padding: 0;
+      }
     }
   }
+
   .no-hover:hover {
     background-color: transparent;
   }
-}
 
-.input-row {
-  &-wrapper {
-    display: flex;
-    flex-direction: row;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    width: 90%;
-    min-height: 56px;
-  }
-  &__item {
-    width: 100%;
-    &::placeholder {
-      font-style: italic;
+  .edit-row {
+    padding: 7px 20px;
+    position: relative;
+
+    .input {
+      border: $primaryBorder;
+      border-radius: 2px;
+      padding: 10px;
+      width: 97%;
+    }
+
+    .apply-edit-btn {
+      position: absolute;
+      top: 15px;
+      right: 5px;
+    }
+
+    .table__cell {
+      display: flex;
+      align-items: center;
+    }
+
+    .select {
+      padding: 10px 0;
+
+      &__label {
+        padding-left: 0;
+      }
     }
   }
-}
-
-.no-border {
-  border-bottom: none;
 }

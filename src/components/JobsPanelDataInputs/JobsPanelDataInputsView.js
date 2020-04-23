@@ -16,29 +16,49 @@ import { ReactComponent as Plus } from '../../images/plus.svg'
 const JobsPanelDataInputsView = ({
   addNewInput,
   addNewVolume,
-  edit,
   handleAddNewItem,
+  handleDeleteItems,
+  handleEditItems,
   inputs,
   match,
   newInput,
   newVolume,
+  selectedVolume,
   setAddNewInput,
   setAddNewVolume,
   setInputPath,
   setNewInput,
   setOutputPath,
   setNewVolume,
+  selectedDataInput,
+  setSelectedDataInput,
+  setSelectedVolume,
+  volumes,
   volumeMounts
 }) => {
+  const volumeTypeNameLabel =
+    newVolume.type === 'V3IO'
+      ? 'Container'
+      : newVolume.type === 'PVC'
+      ? 'Claim name'
+      : newVolume.type.length > 0
+      ? `${newVolume.type} name`
+      : ''
+
   return (
     <div className="job-panel__item">
-      {!edit && <div className="item__overlay" />}
       <JobsPanelSection title="Data inputs">
         <JobsPanelTable
-          headers={panelData['data-inputs']['table-headers']}
           addNewItem={addNewInput}
-          content={inputs}
           className="data-inputs"
+          content={inputs}
+          handleDeleteItems={handleDeleteItems}
+          handleEditItems={handleEditItems}
+          headers={panelData['data-inputs']['table-headers']}
+          match={match}
+          section="data-inputs"
+          selectedItem={selectedDataInput}
+          setSelectedDataInput={setSelectedDataInput}
         >
           {addNewInput ? (
             <>
@@ -46,16 +66,16 @@ const JobsPanelDataInputsView = ({
                 <Input
                   onChange={name => setNewInput({ ...newInput, name: name })}
                   label="Input name"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
                 <Input
                   onChange={path => setNewInput({ ...newInput, path: path })}
                   label="Input path"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
               </div>
               <button
@@ -68,18 +88,23 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            edit && (
-              <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
-            )
+            <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
           )}
         </JobsPanelTable>
       </JobsPanelSection>
       <JobsPanelSection title="Volumes">
         <JobsPanelTable
           addNewItem={addNewVolume}
+          className="data-inputs volumes"
           content={volumeMounts}
+          handleDeleteItems={handleDeleteItems}
+          handleEditItems={handleEditItems}
           headers={panelData.volumes['table-headers']}
-          className="data-inputs"
+          match={match}
+          section="volumes"
+          selectedItem={selectedVolume}
+          setSelectedVolume={setSelectedVolume}
+          volumes={volumes}
         >
           {addNewVolume ? (
             <>
@@ -87,22 +112,21 @@ const JobsPanelDataInputsView = ({
                 <Input
                   onChange={name => setNewVolume({ ...newVolume, name: name })}
                   label="Name"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
                 <Input
                   onChange={path => setNewVolume({ ...newVolume, path: path })}
                   label="Path"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
               </div>
               <div
-                className={`input-row-wrapper${
-                  newVolume.type === 'V3IO' ? ' no-border' : ''
-                }`}
+                className={`input-row-wrapper ${newVolume.type === 'V3IO' &&
+                  ' no-border'}`}
               >
                 <Select
                   onClick={type => setNewVolume({ ...newVolume, type: type })}
@@ -110,23 +134,16 @@ const JobsPanelDataInputsView = ({
                   label={newVolume.type.length > 0 ? newVolume.type : 'Type'}
                   match={match}
                 />
-                {newVolume.type.length > 0 && (
-                  <Input
-                    onChange={typeName =>
-                      setNewVolume({ ...newVolume, typeName: typeName })
-                    }
-                    label={
-                      newVolume.type === 'V3IO'
-                        ? 'Container'
-                        : newVolume.type === 'PVC'
-                        ? 'Claim name'
-                        : `${newVolume.type} name`
-                    }
-                    type="text"
-                    className="input-row__item"
-                    floatingLabel
-                  />
-                )}
+                <Input
+                  onChange={typeName =>
+                    setNewVolume({ ...newVolume, typeName: typeName })
+                  }
+                  label={volumeTypeNameLabel}
+                  className="input-row__item"
+                  disabled={newVolume.type.length === 0}
+                  floatingLabel
+                  type="text"
+                />
               </div>
               {newVolume.type === 'V3IO' && (
                 <div className="input-row-wrapper">
@@ -135,9 +152,9 @@ const JobsPanelDataInputsView = ({
                       setNewVolume({ ...newVolume, accessKey: accessKey })
                     }
                     label="Access Key"
-                    type="text"
                     className="input-row__item"
                     floatingLabel
+                    type="text"
                   />
                   <Input
                     onChange={resourcesPath =>
@@ -147,13 +164,12 @@ const JobsPanelDataInputsView = ({
                       })
                     }
                     label="Resource path"
-                    type="text"
                     className="input-row__item"
                     floatingLabel
+                    type="text"
                   />
                 </div>
               )}
-
               <button
                 className="add-input btn-add"
                 onClick={() => handleAddNewItem(null, true)}
@@ -164,29 +180,24 @@ const JobsPanelDataInputsView = ({
               </button>
             </>
           ) : (
-            edit && (
-              <JobsPanelTableAddItemRow
-                onClick={setAddNewVolume}
-                text="volume"
-              />
-            )
+            <JobsPanelTableAddItemRow onClick={setAddNewVolume} text="volume" />
           )}
         </JobsPanelTable>
       </JobsPanelSection>
       <JobsPanelSection title="General">
         <Input
           label="Default input path"
-          type="text"
           className="default-input"
           onChange={setInputPath}
           floatingLabel
+          type="text"
         />
         <Input
           label="Default output path"
-          type="text"
           className="default-input"
           onChange={setOutputPath}
           floatingLabel
+          type="text"
         />
       </JobsPanelSection>
     </div>
@@ -196,7 +207,7 @@ const JobsPanelDataInputsView = ({
 JobsPanelDataInputsView.propTypes = {
   addNewInput: PropTypes.bool.isRequired,
   addNewVolume: PropTypes.bool.isRequired,
-  edit: PropTypes.bool.isRequired,
+  handleDeleteItems: PropTypes.func.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   inputs: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,

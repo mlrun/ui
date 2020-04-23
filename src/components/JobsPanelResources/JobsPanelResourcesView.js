@@ -7,7 +7,6 @@ import RangeInput from '../../common/RangeInput/RangeInput'
 
 const JobsPanelResourcesView = ({
   cpuUnit,
-  edit,
   handleSelectСpuUnit,
   handleSelectMemoryUnit,
   limits,
@@ -20,17 +19,18 @@ const JobsPanelResourcesView = ({
   setRequests
 }) => (
   <div className="job-panel__item resources">
-    {!edit && <div className="item__overlay" />}
     <JobsPanelSection title="Resources" />
     <JobsPanelSection title="Memory">
       <Select
+        label="Unit"
         match={match}
         option="unitMemory"
         onClick={value => handleSelectMemoryUnit(value)}
-        label="Unit"
         value={memoryUnit}
       />
       <RangeInput
+        floatingLabel
+        label="Request"
         onChange={value =>
           setRequests({
             ...requests,
@@ -44,23 +44,25 @@ const JobsPanelResourcesView = ({
           })
         }
         value={requestsMemory}
-        label="Request"
       />
       <RangeInput
+        floatingLabel
+        label="Limit"
         onChange={value => setLimits({ ...limits, memory: `${value}` })}
         value={limits.memory}
-        label="Limit"
       />
     </JobsPanelSection>
     <JobsPanelSection title="Cpu">
       <Select
+        label="Unit"
         match={match}
         option="unitCpu"
         onClick={value => handleSelectСpuUnit(value)}
-        label="Unit"
         value={cpuUnit}
       />
       <RangeInput
+        floatingLabel
+        label="Request"
         onChange={value =>
           setRequests({
             ...requests,
@@ -68,19 +70,20 @@ const JobsPanelResourcesView = ({
           })
         }
         value={requestsCpu}
-        label="Request"
       />
       <RangeInput
+        floatingLabel
+        label="Limit"
         onChange={value => setLimits({ ...limits, cpu: `${value}` })}
         value={limits.cpu}
-        label="Limit"
       />
     </JobsPanelSection>
     <JobsPanelSection title="Gpu" className="section-gpu">
       <RangeInput
+        floatingLabel
+        label="Limit"
         onChange={value => setLimits({ ...limits, nvidia_gpu: `${value}` })}
         value={limits.nvidia_gpu}
-        label="Limit"
       />
     </JobsPanelSection>
   </div>
@@ -88,7 +91,6 @@ const JobsPanelResourcesView = ({
 
 JobsPanelResourcesView.propTypes = {
   cpuUnit: PropTypes.string.isRequired,
-  edit: PropTypes.bool.isRequired,
   handleSelectСpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   limits: PropTypes.shape({}).isRequired,

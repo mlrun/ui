@@ -1,0 +1,49 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.table {
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    border-top: $tableBorder;
+    padding: 18px 20px;
+    position: relative;
+
+    .actions_cell {
+      min-width: 36px;
+      position: absolute;
+      right: -8px;
+      top: 15px;
+    }
+
+    &:hover {
+      background-color: $alabaster;
+
+      .actions_cell {
+        .table-actions-container {
+          display: block;
+
+          &__body {
+            bottom: -102px;
+            right: 22px;
+          }
+        }
+      }
+    }
+  }
+
+  &__cell {
+    min-width: 191px;
+    max-width: 470px;
+    color: $primary;
+    margin-right: 5px;
+
+    .tooltip {
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+  }
+}

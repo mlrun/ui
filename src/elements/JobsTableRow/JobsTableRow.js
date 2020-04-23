@@ -6,12 +6,10 @@ import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
 import jobsData from '../../components/JobsPage/jobsData'
 
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
-
 const JobsTableRow = ({
+  actionsMenu,
   content,
   handleExpandRow,
-  toggleConvertToYaml,
   handleSelectItem,
   index,
   match,
@@ -20,7 +18,6 @@ const JobsTableRow = ({
   tableContent
 }) => {
   const parent = useRef()
-  const actionsMenu = [{ label: 'View YAML', icon: <Yaml /> }]
 
   return (
     <div
@@ -89,7 +86,6 @@ const JobsTableRow = ({
                   })}
                   <div className="table-body__cell action_cell">
                     <TableActionsMenu
-                      onClick={toggleConvertToYaml}
                       item={content[index]}
                       menu={actionsMenu}
                     />
@@ -126,11 +122,7 @@ const JobsTableRow = ({
             )
           })}
           <div className="table-body__cell action_cell">
-            <TableActionsMenu
-              onClick={toggleConvertToYaml}
-              item={content[index]}
-              menu={actionsMenu}
-            />
+            <TableActionsMenu item={content[index]} menu={actionsMenu} />
           </div>
         </>
       )}
@@ -143,8 +135,8 @@ JobsTableRow.defaultProps = {
 }
 
 JobsTableRow.propTypes = {
+  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  toggleConvertToYaml: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,

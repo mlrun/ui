@@ -66,7 +66,7 @@ const ScheduleJobNormal = ({ match }) => {
         )}
       </div>
       <button
-        className="btn-schedule"
+        className="btn btn_primary btn__schedule"
         onClick={() => {
           onSchedule({
             date,

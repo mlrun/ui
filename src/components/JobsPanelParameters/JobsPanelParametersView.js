@@ -10,29 +10,38 @@ import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/Jo
 import Select from '../../common/Select/Select'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+
 import panelData from '../JobsPanel/panelData'
 
 const JobsPanelParametersView = ({
   addNewParameter,
-  edit,
   handleAddNewItem,
+  handleEditParameter,
+  handleDeleteParameter,
   match,
   newParameter,
   newParameterSimple,
   parameters,
+  selectedParameter,
   setAddNewParameter,
   setNewParameter,
-  setNewParameterSimple
+  setNewParameterSimple,
+  setSelectedParameter
 }) => {
   return (
     <div className="job-panel__item">
-      {!edit && <div className="item__overlay" />}
       <JobsPanelSection title="Parameters">
         <JobsPanelTable
-          headers={panelData.parameters['table-headers']}
           addNewItem={addNewParameter}
-          content={parameters}
           className="parameters"
+          content={parameters}
+          handleDeleteItems={handleDeleteParameter}
+          handleEditParameter={handleEditParameter}
+          headers={panelData.parameters['table-headers']}
+          match={match}
+          section="parameters"
+          selectedItem={selectedParameter}
+          setSelectedParameter={setSelectedParameter}
         >
           {addNewParameter ? (
             <>
@@ -42,27 +51,27 @@ const JobsPanelParametersView = ({
                     setNewParameter({ ...newParameter, name: value })
                   }
                   label="Name"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
                 <Input
                   onChange={value =>
                     setNewParameter({ ...newParameter, type: value })
                   }
                   label="Type"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
                 <Input
                   onChange={value =>
                     setNewParameter({ ...newParameter, value: value })
                   }
                   label="Value/s"
-                  type="text"
                   className="input-row__item"
                   floatingLabel
+                  type="text"
                 />
                 <Select
                   onClick={setNewParameterSimple}
@@ -81,12 +90,10 @@ const JobsPanelParametersView = ({
               </button>
             </>
           ) : (
-            edit && (
-              <JobsPanelTableAddItemRow
-                onClick={setAddNewParameter}
-                text="parameter"
-              />
-            )
+            <JobsPanelTableAddItemRow
+              onClick={setAddNewParameter}
+              text="parameter"
+            />
           )}
         </JobsPanelTable>
         <button className="btn-load">Load file</button>
@@ -97,7 +104,6 @@ const JobsPanelParametersView = ({
 
 JobsPanelParametersView.propTypes = {
   addNewParameter: PropTypes.bool.isRequired,
-  edit: PropTypes.bool.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   newParameter: PropTypes.shape({}).isRequired,
