@@ -17,9 +17,7 @@ const ScheduleJobNormal = ({ match }) => {
   const [scheduleRepeatStep, setScheduleRepeatStep] = useState(1)
   const [time, setTime] = useState('')
 
-  const onSchedule = useCallback(data => {
-    console.log(data)
-  }, [])
+  const onSchedule = useCallback(data => {}, [])
 
   return (
     <>
