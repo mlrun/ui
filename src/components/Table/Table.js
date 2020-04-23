@@ -44,7 +44,7 @@ const Table = ({
         ? createArtifactsContent(content)
         : createFunctionsContent(content)
 
-    if (groupFilter === 'Name') {
+    if (groupFilter === 'name') {
       const groupLatest = _tableContent.map(group => {
         if (Array.isArray(group)) {
           return group.reduce((prev, curr) => {
@@ -63,7 +63,7 @@ const Table = ({
   }, [page, content, groupedByName, groupFilter])
 
   useEffect(() => {
-    if (groupFilter === 'None') {
+    if (groupFilter === 'none') {
       setGroupLatestJob([])
       setTableContent([])
     }

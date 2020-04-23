@@ -19,6 +19,7 @@ const JobsPanelTable = ({
   headers,
   handleEditItems,
   handleEditParameter,
+  match,
   section,
   selectedItem,
   setSelectedDataInput,
@@ -115,6 +116,7 @@ const JobsPanelTable = ({
                 <EditableParametersRow
                   key={i}
                   handleEdit={handleEdit}
+                  match={match}
                   selectedParameter={selectedItem}
                   setSelectedParameter={setSelectedParameter}
                 />
@@ -182,6 +184,7 @@ JobsPanelTable.propTypes = {
   headers: PropTypes.arrayOf(PropTypes.string),
   handleEditItems: PropTypes.func,
   handleEditParameter: PropTypes.func,
+  match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedDataInput: PropTypes.func,

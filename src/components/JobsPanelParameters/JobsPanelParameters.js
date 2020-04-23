@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import JobsPanelParametersView from './JobsPanelParametersView'
 
+import panelData from '../JobsPanel/panelData'
+
 const JobsPanelParameters = ({
   edit,
   hyperparams,
@@ -17,7 +19,9 @@ const JobsPanelParameters = ({
     type: '',
     value: ''
   })
-  const [newParameterSimple, setNewParameterSimple] = useState('Simple')
+  const [newParameterSimple, setNewParameterSimple] = useState(
+    panelData.newParameterSimple[0].id
+  )
   const [parametersArray, setParametersArray] = useState([])
   const [selectedParameter, setSelectedParameter] = useState({})
 
@@ -40,7 +44,7 @@ const JobsPanelParameters = ({
       [newParameter.name]: newParameter.value
     })
 
-    if (newParameterSimple === 'Hyper') {
+    if (newParameterSimple !== panelData.newParameterSimple[0].id) {
       setNewJobHyperParameters({
         ...hyperparams,
         [newParameter.name]: newParameter.value.split(',')
@@ -61,7 +65,7 @@ const JobsPanelParameters = ({
       type: '',
       value: ''
     })
-    setNewParameterSimple('Simple')
+    setNewParameterSimple(panelData.newParameterSimple[0].id)
   }
 
   const handleEditParameter = () => {
@@ -70,7 +74,7 @@ const JobsPanelParameters = ({
 
     params[selectedParameter.name] = selectedParameter.value
 
-    if (selectedParameter.simple === 'Hyper') {
+    if (selectedParameter.simple !== panelData.newParameterSimple[0].id) {
       if (hyperParams[selectedParameter.name]) {
         hyperParams[selectedParameter.name] = selectedParameter.value.split(',')
         setNewJobHyperParameters({ ...hyperParams })
@@ -83,7 +87,7 @@ const JobsPanelParameters = ({
     }
 
     if (
-      selectedParameter.simple === 'Simple' &&
+      selectedParameter.simple === panelData.newParameterSimple[0].id &&
       hyperParams[selectedParameter.name]
     ) {
       delete hyperParams[selectedParameter.name]

@@ -21,5 +21,5 @@ export default {
   },
   getJobLogs: (id, project) => httpClient.get(`/log/${project}/${id}`),
   filterByStatus: (project, state) =>
-    httpClient.get(`/runs?project=${project}&&state=${state.toLowerCase()}`)
+    httpClient.get(`/runs?project=${project}&&state=${state}`)
 }

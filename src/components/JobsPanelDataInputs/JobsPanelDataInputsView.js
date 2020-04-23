@@ -31,7 +31,6 @@ const JobsPanelDataInputsView = ({
   setOutputPath,
   setNewVolume,
   selectedDataInput,
-
   setSelectedDataInput,
   setSelectedVolume,
   volumes,
@@ -51,14 +50,15 @@ const JobsPanelDataInputsView = ({
       {!edit && <div className="item__overlay" />}
       <JobsPanelSection title="Data inputs">
         <JobsPanelTable
-          headers={panelData['data-inputs']['table-headers']}
           addNewItem={addNewInput}
-          content={inputs}
           className="data-inputs"
+          content={inputs}
+          handleEditItems={handleEditItems}
+          headers={panelData['data-inputs']['table-headers']}
+          match={match}
+          section="data-inputs"
           selectedItem={selectedDataInput}
           setSelectedDataInput={setSelectedDataInput}
-          handleEditItems={handleEditItems}
-          section="data-inputs"
         >
           {addNewInput ? (
             <>
@@ -97,13 +97,14 @@ const JobsPanelDataInputsView = ({
       <JobsPanelSection title="Volumes">
         <JobsPanelTable
           addNewItem={addNewVolume}
-          content={volumeMounts}
-          headers={panelData.volumes['table-headers']}
           className="data-inputs volumes"
+          content={volumeMounts}
+          handleEditItems={handleEditItems}
+          headers={panelData.volumes['table-headers']}
+          match={match}
           section="volumes"
           selectedItem={selectedVolume}
           setSelectedVolume={setSelectedVolume}
-          handleEditItems={handleEditItems}
           volumes={volumes}
         >
           {addNewVolume ? (

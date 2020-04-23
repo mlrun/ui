@@ -87,4 +87,4 @@ Input.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
-export default Input
+export default React.memo(Input)

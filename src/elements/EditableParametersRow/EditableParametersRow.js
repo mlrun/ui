@@ -8,6 +8,7 @@ import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableParametersRow = ({
   handleEdit,
+  match,
   selectedParameter,
   setSelectedParameter
 }) => {
@@ -27,6 +28,7 @@ const EditableParametersRow = ({
       <div className="table__cell">
         <Select
           label={selectedParameter.simple}
+          match={match}
           onClick={simple =>
             setSelectedParameter({ ...selectedParameter, simple: simple })
           }
@@ -44,6 +46,7 @@ const EditableParametersRow = ({
 
 EditableParametersRow.propTypes = {
   handleEdit: PropTypes.func.isRequired,
+  match: PropTypes.shape({}).isRequired,
   selectedParameter: PropTypes.shape({}).isRequired,
   setSelectedParameter: PropTypes.func.isRequired
 }

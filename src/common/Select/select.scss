@@ -60,8 +60,17 @@
     display: flex;
     align-items: center;
     height: 49px;
-    padding-left: 15px;
     background-color: $white;
+    padding-left: 15px;
+
+    .checkbox {
+      flex: 1;
+      height: 100%;
+
+      svg {
+        margin: 0;
+      }
+    }
 
     &:hover {
       background-color: $alabaster;

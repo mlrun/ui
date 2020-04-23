@@ -33,15 +33,15 @@ const JobsPanelParametersView = ({
       {!edit && <div className="item__overlay" />}
       <JobsPanelSection title="Parameters">
         <JobsPanelTable
-          headers={panelData.parameters['table-headers']}
           addNewItem={addNewParameter}
-          content={parameters}
           className="parameters"
-          setSelectedParameter={setSelectedParameter}
+          content={parameters}
           handleEditParameter={handleEditParameter}
+          headers={panelData.parameters['table-headers']}
           match={match}
-          selectedItem={selectedParameter}
           section="parameters"
+          selectedItem={selectedParameter}
+          setSelectedParameter={setSelectedParameter}
         >
           {addNewParameter ? (
             <>

@@ -44,7 +44,9 @@ const Select = ({ disabled, label, match, onClick, option, page, value }) => {
     >
       <div className="select__header">
         {label && <div className="select__label">{label}</div>}
-        <div className="select__value">{value && value}</div>
+        <div className="select__value">
+          {value && options[option].find(item => item.id === value).label}
+        </div>
         <Caret className="select__caret" />
       </div>
       {isOpen && [
@@ -58,9 +60,9 @@ const Select = ({ disabled, label, match, onClick, option, page, value }) => {
         >
           {options[option].map(item => (
             <SelectOption
-              key={item}
+              key={item.id}
               item={item}
-              value={value}
+              selectedId={value}
               status={option === 'status'}
               onClick={handleSelectOption}
             />
@@ -73,7 +75,7 @@ const Select = ({ disabled, label, match, onClick, option, page, value }) => {
 
 Select.defaultProps = {
   disabled: false,
-  onClick: () => {},
+  onClick: null,
   label: '',
   match: null,
   page: ''
@@ -83,10 +85,10 @@ Select.propTypes = {
   disabled: PropTypes.bool,
   label: PropTypes.string,
   match: PropTypes.shape({}),
-  option: PropTypes.string.isRequired,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  option: PropTypes.string.isRequired,
   page: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 }
 
-export default Select
+export default React.memo(Select)

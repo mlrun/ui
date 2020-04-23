@@ -25,6 +25,29 @@
     flex-direction: row;
     justify-content: space-between;
     margin: 52px;
+
+    &_wrapper {
+
+      .job-schedule {
+        &-container {
+          display: flex;
+          align-items: center;
+          margin-bottom: 32.5px;
+
+          svg {
+            margin-right: 18px;
+            cursor: pointer;
+          }
+        }
+
+        &__title {
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 23px;
+          color: $primary;
+        }
+      }
+    }
   }
 
   &__name {
@@ -52,48 +75,6 @@
     padding: 0 40px;
     margin-top: 16px;
     margin-bottom: 16px;
-
-    .btn {
-      padding: 10px;
-      height: 36px;
-      font-size: 14px;
-      line-height: 16px;
-
-      &__schedule {
-        border: $primaryBorder;
-        border-radius: 4px;
-        color: $primary;
-        display: flex;
-        align-items: center;
-      }
-
-      &__run {
-        display: flex;
-        align-items: center;
-        color: $white;
-        background: $purple;
-        border-radius: 2px;
-        margin-left: 10px;
-
-        svg {
-          margin-right: 5px;
-
-          path {
-            fill: $white;
-          }
-        }
-      }
-
-      &__edit {
-        border: $primaryBorder;
-        border-radius: 2px;
-        color: $primary;
-      }
-
-      &__icon {
-        margin-right: 5px;
-      }
-    }
   }
 
   .accordion {
@@ -207,25 +188,75 @@
     }
   }
 
-  .btn-add {
-    position: absolute;
-    bottom: 14px;
-    right: 22px;
-  }
-
   .select {
     height: auto;
     padding-left: 10px;
   }
 
-  .btn-load {
-    border: $primaryBorder;
-    border-radius: 2px;
-    padding: 10px 16px;
-    color: $primary;
+  .btn {
+    padding: 10px;
+    height: 36px;
     font-size: 14px;
     line-height: 16px;
-    margin: 24px 0;
+    font-family: Roboto;
+    font-weight: 500;
+
+    &-load {
+      border: $primaryBorder;
+      border-radius: 2px;
+      padding: 10px 16px;
+      color: $primary;
+      font-size: 14px;
+      line-height: 16px;
+      margin: 24px 0;
+    }
+
+    &-add {
+      position: absolute;
+      bottom: 14px;
+      right: 22px;
+    }
+
+    &__schedule {
+      border: $primaryBorder;
+      border-radius: 4px;
+      color: $primary;
+      display: flex;
+      align-items: center;
+    }
+
+    &__run, &__run-schedule {
+      display: flex;
+      align-items: center;
+      color: $white;
+      background: $purple;
+      border-radius: 2px;
+      margin-left: 10px;
+
+      svg {
+        margin-right: 5px;
+
+        path {
+          fill: $white;
+        }
+      }
+    }
+
+    &__run-schedule {
+      padding: 10px 16px;
+      margin-top: 16px;
+      margin-left: auto;
+    }
+
+    &__edit {
+      border: $primaryBorder;
+      border-radius: 2px;
+      color: $primary;
+    }
+
+    &__icon {
+      margin-right: 5px;
+    }
   }
 
   .no-border {

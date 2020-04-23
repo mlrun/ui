@@ -14,18 +14,18 @@ const JobsPanel = ({
   jobsStore,
   match,
   setNewJob,
-  setNewJobInputs,
   setNewJobHyperParameters,
   setNewJobInputPath,
+  setNewJobInputs,
   setNewJobOutputPath,
   setNewJobParameters,
   setNewJobResourcesLimits,
   setNewJobResourcesRequests,
-  setNewJobVolumes,
-  setNewJobVolumeMounts
+  setNewJobVolumeMounts,
+  setNewJobVolumes
 }) => {
   const [edit, setEdit] = useState(false)
-
+  const [openScheduleJob, setOpenScheduleJob] = useState(false)
   const [inputPath, setInputPath] = useState('')
   const [outputPath, setOutputPath] = useState('')
 
@@ -74,12 +74,13 @@ const JobsPanel = ({
       cpuUnit={cpuUnit}
       edit={edit}
       func={func}
-      handlerEdit={handlerEdit}
       handleRunJob={handleRunJob}
+      handlerEdit={handlerEdit}
       jobsStore={jobsStore}
       limits={limits}
       match={match}
       memoryUnit={memoryUnit}
+      openScheduleJob={openScheduleJob}
       requests={requests}
       setCpuUnit={setCpuUnit}
       setInputPath={setInputPath}
@@ -88,8 +89,9 @@ const JobsPanel = ({
       setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}
       setNewJobParameters={setNewJobParameters}
-      setNewJobVolumes={setNewJobVolumes}
       setNewJobVolumeMounts={setNewJobVolumeMounts}
+      setNewJobVolumes={setNewJobVolumes}
+      setOpenScheduleJob={setOpenScheduleJob}
       setOutputPath={setOutputPath}
       setRequests={setRequests}
     />

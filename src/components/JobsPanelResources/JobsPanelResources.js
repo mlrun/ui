@@ -4,16 +4,16 @@ import PropTypes from 'prop-types'
 import JobsPanelResourcesView from './JobsPanelResourcesView'
 
 const JobsPanelResources = ({
-  requests,
-  setRequests,
+  cpuUnit,
+  edit,
   limits,
-  setLimits,
   match,
   memoryUnit,
-  setMemoryUnit,
-  cpuUnit,
+  requests,
   setCpuUnit,
-  edit
+  setLimits,
+  setMemoryUnit,
+  setRequests
 }) => {
   const requestsCpu = requests.cpu.match(/m/)
     ? requests.cpu.slice(0, requests.cpu.length - 1)
@@ -68,7 +68,15 @@ const JobsPanelResources = ({
 }
 
 JobsPanelResources.propTypes = {
+  cpuUnit: PropTypes.string.isRequired,
+  edit: PropTypes.bool.isRequired,
+  limits: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}).isRequired,
+  memoryUnit: PropTypes.string.isRequired,
   requests: PropTypes.shape({}).isRequired,
+  setCpuUnit: PropTypes.func.isRequired,
+  setLimits: PropTypes.func.isRequired,
+  setMemoryUnit: PropTypes.func.isRequired,
   setRequests: PropTypes.func.isRequired
 }
 

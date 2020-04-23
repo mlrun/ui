@@ -7,7 +7,7 @@ import { ReactComponent as Arrow } from '../../images/range-arrow.svg'
 
 import './rangeInput.scss'
 
-const RangeInput = ({ label, onChange, value }) => {
+const RangeInput = ({ floatingLabel, label, onChange, value }) => {
   const handleIncrease = () => {
     onChange(++value)
   }
@@ -21,7 +21,7 @@ const RangeInput = ({ label, onChange, value }) => {
     <div className="range">
       <Input
         className="range__input"
-        floatingLabel
+        floatingLabel={floatingLabel}
         label={label}
         onChange={onChange}
         type="number"
@@ -38,13 +38,15 @@ const RangeInput = ({ label, onChange, value }) => {
 }
 
 RangeInput.defaultProps = {
+  floatingLabel: false,
   label: ''
 }
 
 RangeInput.propTypes = {
+  floatingLabel: PropTypes.bool,
   label: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired
 }
 
-export default RangeInput
+export default React.memo(RangeInput)
