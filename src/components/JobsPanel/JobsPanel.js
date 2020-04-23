@@ -61,8 +61,7 @@ const JobsPanel = ({
           input_path: inputPath,
           function: `${match.params.projectName}/${func.metadata.name}:${func.metadata.hash}`
         }
-      },
-      schedule: ''
+      }
     }
 
     runNewJob(postData).then(() => {

@@ -16,20 +16,20 @@ const Input = ({
   type,
   value
 }) => {
-  const [labelToTop, setLabelToTop] = useState(false)
+  const [inputIsFocused, setInputIsFocused] = useState(false)
   const input = React.createRef()
 
   useEffect(() => {
     if (input.current.value.length > 0) {
-      setLabelToTop(true)
+      setInputIsFocused(true)
     }
   }, [input])
 
   const handleClick = () => {
     if (input.current.value.length > 0) {
-      setLabelToTop(true)
+      setInputIsFocused(true)
     } else {
-      setLabelToTop(false)
+      setInputIsFocused(false)
     }
 
     onChange(input.current.value)
@@ -40,7 +40,7 @@ const Input = ({
       <input
         className={`input 
         ${className} 
-        ${labelToTop && floatingLabel && 'active-input'}`}
+        ${inputIsFocused && floatingLabel && 'active-input'}`}
         disabled={disabled}
         onChange={handleClick}
         onKeyDown={onKeyDown}
@@ -50,7 +50,7 @@ const Input = ({
         value={value && value}
       />
       <label
-        className={`input__label ${labelToTop &&
+        className={`input__label ${inputIsFocused &&
           floatingLabel &&
           'active-label'} ${floatingLabel && 'input__label-floating'}`}
       >

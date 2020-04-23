@@ -27,7 +27,8 @@ const CreateJobPage = ({
 
   const handleSelectFunction = item => {
     setFunction(item)
-    if (!item) {
+
+    if (Object.keys(item).length === 0) {
       setNewJob({
         task: {
           spec: {

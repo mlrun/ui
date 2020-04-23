@@ -77,14 +77,13 @@ Select.defaultProps = {
   disabled: false,
   onClick: null,
   label: '',
-  match: null,
   page: ''
 }
 
 Select.propTypes = {
   disabled: PropTypes.bool,
   label: PropTypes.string,
-  match: PropTypes.shape({}),
+  match: PropTypes.shape({}).isRequired,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   option: PropTypes.string.isRequired,
   page: PropTypes.string,

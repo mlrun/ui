@@ -104,10 +104,7 @@ const JobsPanelTable = ({
   }
 
   const handleDelete = item => {
-    if (section === 'data-inputs') {
-      return handleDeleteItems(true, item)
-    }
-    handleDeleteItems(null, item)
+    handleDeleteItems(section === 'data-inputs', item)
   }
 
   return (
@@ -116,19 +113,19 @@ const JobsPanelTable = ({
     >
       {headers.length > 0 && (
         <div className="table__header table__row no-hover">
-          {headers.map((header, i) => (
-            <div className="table__cell" key={i}>
+          {headers.map((header, index) => (
+            <div className="table__cell" key={index}>
               {header}
             </div>
           ))}
         </div>
       )}
       {Array.isArray(content)
-        ? content.map((contentItem, i) => {
+        ? content.map((contentItem, index) => {
             if (editItem && contentItem.name === selectedItem.name) {
               return section === 'parameters' ? (
                 <EditableParametersRow
-                  key={i}
+                  key={index}
                   handleEdit={handleEdit}
                   match={match}
                   selectedParameter={selectedItem}
@@ -137,7 +134,7 @@ const JobsPanelTable = ({
               ) : (
                 <EditableVolumesRow
                   handleEdit={handleEdit}
-                  key={i}
+                  key={index}
                   selectedVolume={selectedItem}
                   setSelectedVolume={setSelectedVolume}
                 />
@@ -147,18 +144,18 @@ const JobsPanelTable = ({
                 <JobsPanelTableRow
                   actionsMenu={actionsMenu}
                   item={contentItem}
-                  key={i}
+                  key={index}
                   row={Object.values(contentItem)}
                 />
               )
             }
           })
-        : Object.entries(content).map((row, i) => {
+        : Object.entries(content).map((row, index) => {
             if (editItem && row[0] === selectedItem.name) {
               return (
                 <EditableDataInputsRow
                   handleEdit={handleEdit}
-                  key={i}
+                  key={index}
                   selectedDataInput={selectedItem}
                   setSelectedDataInput={setSelectedDataInput}
                 />
@@ -168,7 +165,7 @@ const JobsPanelTable = ({
               <JobsPanelTableRow
                 actionsMenu={actionsMenu}
                 item={{ name: row[0], path: row[1] }}
-                key={i}
+                key={index}
                 row={row}
               />
             )

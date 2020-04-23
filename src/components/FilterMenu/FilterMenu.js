@@ -78,7 +78,7 @@ const FilterMenu = ({
           ) : filter === 'labels' || filter === 'name' ? (
             <Input
               type="text"
-              label={filter === 'labels' ? 'labels' : 'name'}
+              label={filter === 'labels' ? 'labels:' : 'name:'}
               placeholder={filter === 'labels' ? 'key1=value1,…' : ''}
               key={filter}
               onChange={filter === 'labels' ? setLabels : setName}

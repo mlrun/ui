@@ -93,14 +93,7 @@ const JobsPanelDataInputs = ({
 
   const handleAddNewVolume = () => {
     if (!newVolume.name || !newVolume.type || !newVolume.path) {
-      setNewVolume({
-        name: '',
-        type: '',
-        typeName: '',
-        path: '',
-        accessKey: '',
-        resourcesPath: ''
-      })
+      setEmptyVolume()
 
       return setAddNewVolume(false)
     }
@@ -115,6 +108,10 @@ const JobsPanelDataInputs = ({
     setNewJobVolumes([...volumes, newItem])
     setNewJobVolumeMounts([...volumeMounts, newVolumeMounts])
     setAddNewVolume(false)
+    setEmptyVolume()
+  }
+
+  const setEmptyVolume = () => {
     setNewVolume({
       name: '',
       type: '',

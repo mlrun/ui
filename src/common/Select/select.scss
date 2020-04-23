@@ -47,7 +47,7 @@
   &__body {
     z-index: 5;
     position: absolute;
-    top: 115%;
+    top: calc(100% + 5px);
     width: 100%;
     border: $primaryBorder;
     box-shadow: $filterShadow;

@@ -92,12 +92,12 @@ const JobsPanelView = ({
           </Accordion>
           <div className="job-panel__buttons-container">
             <button
-              className="btn btn__schedule"
+              className="btn btn__schedule-for-later"
               onClick={() => setOpenScheduleJob(true)}
             >
               Schedule for later
             </button>
-            <button className="btn btn__run" onClick={handleRunJob}>
+            <button className="btn btn_primary" onClick={handleRunJob}>
               <Run className="btn__icon" />
               Run now
             </button>

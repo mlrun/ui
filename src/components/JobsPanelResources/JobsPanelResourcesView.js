@@ -7,7 +7,6 @@ import RangeInput from '../../common/RangeInput/RangeInput'
 
 const JobsPanelResourcesView = ({
   cpuUnit,
-  edit,
   handleSelectСpuUnit,
   handleSelectMemoryUnit,
   limits,
@@ -20,7 +19,6 @@ const JobsPanelResourcesView = ({
   setRequests
 }) => (
   <div className="job-panel__item resources">
-    {!edit && <div className="item__overlay" />}
     <JobsPanelSection title="Resources" />
     <JobsPanelSection title="Memory">
       <Select
