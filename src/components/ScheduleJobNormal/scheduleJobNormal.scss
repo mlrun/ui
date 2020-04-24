@@ -32,6 +32,16 @@
           margin-right: 15px;
         }
       }
+
+      .focus-input {
+        position: absolute;
+        font-size: 12px;
+        letter-spacing: 0.05em;
+        top: 0 !important;
+        background-color: $white;
+        transition: all 500ms ease;
+        z-index: 2;
+      }
     }
   }
 }

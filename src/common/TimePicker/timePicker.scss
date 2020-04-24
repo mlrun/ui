@@ -1,0 +1,14 @@
+@import '../../scss/colors.scss';
+
+.time-picker-container {
+  position: relative;
+
+  .time-picker_input_label {
+    position: absolute;
+    left: 25px;
+    top: 50%;
+    transform: translate(0, -50%);
+    color: $topaz;
+    transition: all 500ms ease;
+  }
+}
