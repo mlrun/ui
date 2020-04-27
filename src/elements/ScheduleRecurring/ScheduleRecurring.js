@@ -19,13 +19,11 @@ const ScheduleRecurring = ({
   return (
     <div className="recurring_container">
       <span>Repeat every</span>
-
       <div className="repeat_container">
         <RangeInput
           onChange={setScheduleRepeatStep}
           value={scheduleRepeatStep.toString()}
         />
-
         <Select
           match={match}
           onClick={setScheduleRepeatInterval}
@@ -33,7 +31,6 @@ const ScheduleRecurring = ({
           page="jobs"
           value={scheduleRepeatInterval}
         />
-
         {scheduleRepeatInterval === 'week' && (
           <div className="schedule-repeat-week">
             {daysOfWeek.map((day, index) => (
@@ -47,9 +44,7 @@ const ScheduleRecurring = ({
           </div>
         )}
       </div>
-
       <span>Ends</span>
-
       <div className="repeat_end_container">
         <Select
           match={match}

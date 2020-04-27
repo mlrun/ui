@@ -3,8 +3,9 @@ export const generateCalendar = (date, startWeek) => {
   let lastDayInPreviousMonth = new Date(date.getFullYear(), date.getMonth(), 0)
   let month = []
   let week = []
+  const maxDays = 42
 
-  for (let index = 0; index <= 42; index++) {
+  for (let index = 0; index <= maxDays; index++) {
     if (index % 7 === 0 && week.length) {
       month.push({
         week: week
@@ -29,7 +30,7 @@ export const generateCalendar = (date, startWeek) => {
   return month
 }
 
-export const weekStart = region => {
+export const getWeekStart = region => {
   if (
     'AGARASAUBDBRBSBTBWBZCACNCODMDOETGTGUHKHNIDILINJMJPKEKHKRLAMHMMMOMTMXMZNINPPAPEPHPKPRPTPYSASGSVTHTTTWUMUSVEVIWSYEZAZW'
       .match(/../g)
@@ -46,8 +47,8 @@ export const decodeLocale = locale => {
   )[4]
 }
 
-export const weeksDay = startWeek => {
-  const weeksDay = [
+export const getWeekDays = startWeek => {
+  const weekDays = [
     { label: 'S' },
     { label: 'M' },
     { label: 'T' },
@@ -58,11 +59,11 @@ export const weeksDay = startWeek => {
   ]
 
   if (startWeek === 'mon') {
-    weeksDay.shift()
-    weeksDay.push({ label: 'S' })
+    weekDays.shift()
+    weekDays.push({ label: 'S' })
   }
 
-  return weeksDay
+  return weekDays
 }
 
 export const months = [
@@ -80,7 +81,7 @@ export const months = [
   'December'
 ]
 
-export const dateFormat = (date, splitCharacter = '.') => {
+export const formatDate = (date, splitCharacter = '.') => {
   if (!date) {
     return ''
   }

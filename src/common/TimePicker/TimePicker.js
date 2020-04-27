@@ -4,7 +4,7 @@ import MaskedInput from 'react-text-mask'
 
 import './timePicker.scss'
 
-const TimePicker = ({ value, onChange }) => {
+const TimePicker = ({ onChange, value }) => {
   const [valueInput, setValueInput] = useState(value)
 
   const timeMask = value => {
@@ -23,26 +23,21 @@ const TimePicker = ({ value, onChange }) => {
 
   return (
     <div className="time-picker-container">
-      <span
-        className={`time-picker_input_label ${value.length > 0 &&
-          'focus-input'}`}
-      >
-        Time
-      </span>
+      <span className="time-picker_input_label">Time</span>
       <MaskedInput
         className="input input-wrapper"
         keepCharPositions
-        value={valueInput}
         mask={timeMask}
         onChange={onHandleInputChange}
+        value={valueInput}
       />
     </div>
   )
 }
 
 TimePicker.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired
 }
 
 export default TimePicker

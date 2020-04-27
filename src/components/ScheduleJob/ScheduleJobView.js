@@ -1,14 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import CheckBox from '../../common/CheckBox/CheckBox'
-import ScheduleRecurring from '../../elements/ScheduleRecurring/ScheduleRecurring'
-import DatePicker from '../../common/DatePicker/DatePicker'
+import ScheduleJobNormal from '../ScheduleJobNormal/ScheduleJobNormal'
+import ScheduleCron from '../ScheduleCron/ScheduleCron'
 
-import './scheduleJobNormal.scss'
-import TimePicker from '../../common/TimePicker/TimePicker'
-
-const ScheduleJobNormal = ({
+const ScheduleJobView = ({
+  activeTab,
+  cron,
   date,
   isRecurring,
   match,
@@ -16,6 +14,7 @@ const ScheduleJobNormal = ({
   scheduleRepeatEnd,
   scheduleRepeatInterval,
   scheduleRepeatStep,
+  scheduleTabs,
   setDate,
   setIsRecurring,
   setScheduleRepeatEnd,
@@ -24,48 +23,40 @@ const ScheduleJobNormal = ({
   time
 }) => {
   return (
-    <div className="schedule-job-normal_container">
-      <h3>Normal Schedule</h3>
-
-      <div className="input_container">
-        <DatePicker value={date} onChange={setDate} splitCharacter="." />
-        <TimePicker value={time} onChange={setTime} />
-      </div>
-
-      <div className="checkbox_container">
-        <CheckBox
-          item={{
-            label: 'Recurring',
-            id: 'recurring'
-          }}
-          selectedId={isRecurring}
-          onChange={setIsRecurring}
-        />
-      </div>
-
-      {isRecurring && (
-        <ScheduleRecurring
+    <>
+      {activeTab === scheduleTabs[0].id && (
+        <ScheduleJobNormal
+          date={date}
+          isRecurring={isRecurring}
           match={match}
+          onChangeStep={onChangeStep}
           scheduleRepeatEnd={scheduleRepeatEnd}
           scheduleRepeatInterval={scheduleRepeatInterval}
-          scheduleRepeatStep={scheduleRepeatStep[scheduleRepeatInterval]}
+          scheduleRepeatStep={scheduleRepeatStep}
+          setDate={setDate}
+          setIsRecurring={setIsRecurring}
           setScheduleRepeatEnd={setScheduleRepeatEnd}
           setScheduleRepeatInterval={setScheduleRepeatInterval}
-          setScheduleRepeatStep={onChangeStep}
+          setTime={setTime}
+          time={time}
         />
       )}
-    </div>
+      {activeTab === scheduleTabs[1].id && <ScheduleCron cron={cron} />}
+    </>
   )
 }
 
-ScheduleJobNormal.propTypes = {
-  date: PropTypes.instanceOf(Date),
+ScheduleJobView.propTypes = {
+  activeTab: PropTypes.string.isRequired,
+  cron: PropTypes.string.isRequired,
+  date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   onChangeStep: PropTypes.func.isRequired,
   scheduleRepeatEnd: PropTypes.string.isRequired,
   scheduleRepeatInterval: PropTypes.string.isRequired,
   scheduleRepeatStep: PropTypes.shape({}).isRequired,
+  scheduleTabs: PropTypes.array.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setScheduleRepeatEnd: PropTypes.func.isRequired,
@@ -74,4 +65,4 @@ ScheduleJobNormal.propTypes = {
   time: PropTypes.string.isRequired
 }
 
-export default ScheduleJobNormal
+export default ScheduleJobView

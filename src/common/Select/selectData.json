@@ -53,6 +53,6 @@
   "repeatEnd": [
     { "label": "Never", "id": "never" },
     { "label": "On date", "id": "onDate" },
-    { "label": "after", "id": "after" }
+    { "label": "After", "id": "after" }
   ]
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import { ReactComponent as Arrow } from '../../images/back-arrow.svg'
@@ -7,6 +7,7 @@ const DatePickerView = ({
   calendar,
   close,
   date,
+  isTopPosition,
   months,
   onChange,
   onNextMonth,
@@ -15,22 +16,11 @@ const DatePickerView = ({
   setSelectedDate,
   weekDay
 }) => {
-  const [isTopPosition, setIsTopPosition] = useState(false)
-  const datePickerRef = useRef()
-
-  useEffect(() => {
-    if (datePickerRef.current) {
-      const { bottom } = datePickerRef.current.getBoundingClientRect()
-      if (bottom > window.innerHeight) {
-        setIsTopPosition(true)
-      }
-    }
-  }, [])
-
   return (
     <div
-      className={`date-picker_body ${isTopPosition && 'positionTop'}`}
-      ref={datePickerRef}
+      className={`date-picker_body ${
+        isTopPosition ? 'positionTop' : 'positionBottom'
+      }`}
     >
       <div className="date-picker-header">
         <Arrow className="previous-month" onClick={onPreviousMonth} />
@@ -62,7 +52,7 @@ const DatePickerView = ({
               className={`date-picker_body_week_day ${
                 date.getMonth() === day.getMonth()
                   ? 'current-month'
-                  : 'not-current_month'
+                  : 'not-current-month'
               } ${selectedDate.getDate() === day.getDate() &&
                 selectedDate.getMonth() === day.getMonth() &&
                 'selected'}`}
@@ -91,12 +81,13 @@ const DatePickerView = ({
 DatePickerView.propTypes = {
   calendar: PropTypes.array.isRequired,
   close: PropTypes.func.isRequired,
-  date: PropTypes.any,
+  date: PropTypes.instanceOf(Date),
+  isTopPosition: PropTypes.bool.isRequired,
   months: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   onNextMonth: PropTypes.func.isRequired,
   onPreviousMonth: PropTypes.func.isRequired,
-  selectedDate: PropTypes.oneOfType([PropTypes.any, PropTypes.shape({})]),
+  selectedDate: PropTypes.instanceOf(Date),
   setSelectedDate: PropTypes.func.isRequired,
   weekDay: PropTypes.array.isRequired
 }

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-import ScheduleJobNormal from '../ScheduleJobNormal/ScheduleJobNormal'
+import ScheduleJobView from './ScheduleJobView'
 
 import { ReactComponent as Schedule } from '../../images/clock.svg'
 
@@ -18,7 +18,7 @@ const ScheduleJob = ({ match }) => {
     monthOfTheYear: '*',
     dayOfTheWeek: '*'
   })
-  const [date, setDate] = useState(null)
+  const [date, setDate] = useState(new Date())
   const [isRecurring, setIsRecurring] = useState('')
   const [scheduleRepeatEnd, setScheduleRepeatEnd] = useState('never')
   const [scheduleRepeatInterval, setScheduleRepeatInterval] = useState('minute')
@@ -29,13 +29,11 @@ const ScheduleJob = ({ match }) => {
   })
   const [time, setTime] = useState('')
 
-  const [scheduleNormalTab] = scheduleData.tabs
-
   const onSchedule = useCallback(() => {
     let cronString = Object.keys(cron).reduce((prev, next, index, arr) => {
       return (prev += arr.length - 1 === index ? cron[next] : cron[next] + ' ')
     }, '')
-    console.log(cronString)
+    return cronString
   }, [cron])
 
   const onHandleDateChange = date => {
@@ -43,8 +41,10 @@ const ScheduleJob = ({ match }) => {
   }
 
   const onHandleTimeChange = time => {
-    setTime(time)
     const [hour, minute] = time.split(':')
+
+    setTime(time)
+
     setCron(prev => ({
       ...prev,
       minute,
@@ -72,31 +72,25 @@ const ScheduleJob = ({ match }) => {
           </div>
         ))}
       </div>
-
-      {activeTab === scheduleNormalTab.id && (
-        <ScheduleJobNormal
-          date={date}
-          isRecurring={isRecurring}
-          match={match}
-          onChangeStep={onHandleStepChange}
-          scheduleRepeatEnd={scheduleRepeatEnd}
-          scheduleRepeatInterval={scheduleRepeatInterval}
-          scheduleRepeatStep={scheduleRepeatStep}
-          setDate={onHandleDateChange}
-          setIsRecurring={setIsRecurring}
-          setScheduleRepeatEnd={setScheduleRepeatEnd}
-          setScheduleRepeatInterval={setScheduleRepeatInterval}
-          setTime={onHandleTimeChange}
-          time={time}
-        />
-      )}
-
-      <button
-        className="btn btn_primary btn__schedule"
-        onClick={() => {
-          onSchedule()
-        }}
-      >
+      <ScheduleJobView
+        activeTab={activeTab}
+        cron={onSchedule(cron)}
+        date={date}
+        isRecurring={isRecurring}
+        match={match}
+        onChangeStep={onHandleStepChange}
+        scheduleRepeatEnd={scheduleRepeatEnd}
+        scheduleRepeatInterval={scheduleRepeatInterval}
+        scheduleRepeatStep={scheduleRepeatStep}
+        scheduleTabs={scheduleData.tabs}
+        setDate={onHandleDateChange}
+        setIsRecurring={setIsRecurring}
+        setScheduleRepeatEnd={setScheduleRepeatEnd}
+        setScheduleRepeatInterval={setScheduleRepeatInterval}
+        setTime={onHandleTimeChange}
+        time={time}
+      />
+      <button className="btn btn_primary btn__schedule" onClick={onSchedule}>
         <Schedule />
         Schedule
       </button>

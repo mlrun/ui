@@ -12,7 +12,6 @@ const Input = ({
   label,
   onChange,
   onKeyDown,
-  pattern,
   placeholder,
   type,
   value
