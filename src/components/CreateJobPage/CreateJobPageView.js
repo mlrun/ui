@@ -2,6 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
+import CreateJobCardTemplate from '../../elements/CreateJobCardTemplate/CreateJobCardTemplate'
+import Accordion from '../../common/Accordion/Accordion'
+
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
 import { ReactComponent as Plus } from '../../images/plus.svg'
 import { ReactComponent as Filter } from '../../images/filter.svg'
@@ -9,14 +12,12 @@ import { ReactComponent as Search } from '../../images/search.svg'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './createJobPage.scss'
-import CreateJobCardTemplate from '../../elements/CreateJobCardTemplate/CreateJobCardTemplate'
 
 const CreateJobPageView = ({
   functions,
+  handleSelectFunction,
   match,
-  expandList,
-  setExpandList,
-  handleSelectFunction
+  templates
 }) => (
   <div className="create-container">
     <div className="create-container__header">
@@ -42,17 +43,13 @@ const CreateJobPageView = ({
       </div>
     </div>
     <div className="create-container__data">
-      <div className="data-wrapper">
-        <div className="data-wrapper__header">
-          <Arrow
-            onClick={setExpandList}
-            className={`header__icon${expandList && '-expanded'}`}
-          />
-          <h5 className="header__title">
-            Functions from {match.params.projectName}
-          </h5>
-        </div>
-        {expandList && (
+      <Accordion icon={<Arrow />} iconClassName="expand-icon" openByDefault>
+        <div className="data-wrapper">
+          <div className="data-wrapper__header">
+            <h5 className="header__title">
+              Functions from {match.params.projectName}
+            </h5>
+          </div>
           <div className="data-wrapper__list">
             {functions.map((func, index) => (
               <CreateJobCardTemplate
@@ -62,17 +59,33 @@ const CreateJobPageView = ({
               />
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      </Accordion>
+      <Accordion icon={<Arrow />} iconClassName="expand-icon" openByDefault>
+        <div className="data-wrapper">
+          <div className="data-wrapper__header">
+            <h5 className="header__title">Functions templates</h5>
+          </div>
+          <div className="data-wrapper__list">
+            {templates?.map((func, index) => (
+              <CreateJobCardTemplate
+                key={func?.metadata?.hash + index}
+                func={func}
+                handleSelectFunction={handleSelectFunction}
+              />
+            ))}
+          </div>
+        </div>
+      </Accordion>
     </div>
   </div>
 )
 
 CreateJobPageView.propTypes = {
-  expandList: PropTypes.bool.isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  handleSelectFunction: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  setExpandList: PropTypes.func.isRequired
+  templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default CreateJobPageView

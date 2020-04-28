@@ -20,6 +20,9 @@ const CreateJobCardTemplate = ({ func, handleSelectFunction }) => {
         <span>{truncateUid(func.metadata.hash)}</span>
       </Tooltip>
       <span className="card-template__tag">{func.metadata.tag}</span>
+      <div className="card-template__description">
+        {func?.metadata?.description}
+      </div>
     </div>
   )
 }

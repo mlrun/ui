@@ -1,13 +1,15 @@
 import {
   FETCH_FUNCTIONS_BEGIN,
   FETCH_FUNCTIONS_FAILURE,
-  FETCH_FUNCTIONS_SUCCESS
+  FETCH_FUNCTIONS_SUCCESS,
+  SET_FUNCTIONS_TEMPLATES
 } from '../constants'
 
 const initialState = {
   functions: [],
   loading: false,
-  error: null
+  error: null,
+  templates: []
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -29,6 +31,11 @@ export default (state = initialState, { type, payload }) => {
         functions: [],
         loading: false,
         error: payload
+      }
+    case SET_FUNCTIONS_TEMPLATES:
+      return {
+        ...state,
+        templates: payload
       }
     default:
       return state
