@@ -24,10 +24,10 @@ import {
 import './datePicker.scss'
 
 const DatePicker = ({ onChange, splitCharacter, value }) => {
-  const [date, setDate] = useState(value)
+  const [date, setDate] = useState(value || new Date())
   const [isTopPosition, setIsTopPosition] = useState(false)
   const [openDatePicker, setOpenDatePicker] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(value)
+  const [selectedDate, setSelectedDate] = useState(value || new Date())
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
     formatDate(value, splitCharacter)
   )
@@ -45,9 +45,7 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
     /\d/,
     /\d/
   ]
-
   const autoCorrectedDatePipe = createAutoCorrectedDatePipe('mm/dd/yyyy')
-
   const startWeek = getWeekStart(decodeLocale(navigator.language))
 
   const calendar = useMemo(() => {
@@ -66,9 +64,10 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
 
   useLayoutEffect(() => {
     if (openDatePicker) {
-      const {
-        bottom
-      } = datePickerRef.current.children[1].getBoundingClientRect()
+      const datePickerBody = [...datePickerRef.current.children].find(item =>
+        item.className.includes('date-picker_body')
+      )
+      const { bottom } = datePickerBody.getBoundingClientRect()
       if (bottom > window.innerHeight) {
         setIsTopPosition(true)
       }
@@ -101,6 +100,8 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
 
   const onHandleInputDatePickerChange = event => {
     setValueDatePickerInput(event.target.value)
+    openDatePicker !== true && setOpenDatePicker(true)
+
     if (/^\d{2}.\d{2}.\d{4}$/.test(event.target.value)) {
       setDate(new Date(event.target.value))
       setSelectedDate(new Date(event.target.value))
@@ -113,15 +114,21 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
         className="date-picker_input"
         onClick={() => setOpenDatePicker(true)}
       >
-        <span className="date-picker_input_label">Date</span>
         <MaskedInput
-          className="input input-wrapper"
+          className={`input input-wrapper ${valueDatePickerInput.length > 1 &&
+            'active-input'}`}
           keepCharPositions={true}
           mask={maskDate}
           onChange={onHandleInputDatePickerChange}
           pipe={autoCorrectedDatePipe}
           value={valueDatePickerInput}
         />
+        <span
+          className={`input__label input__label-floating ${valueDatePickerInput.length >
+            1 && 'active-label'}`}
+        >
+          Date
+        </span>
       </div>
       {openDatePicker && (
         <DatePickerView
@@ -146,7 +153,10 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
 DatePicker.propTypes = {
   onChange: PropTypes.func.isRequired,
   splitCharacter: PropTypes.string.isRequired,
-  value: PropTypes.instanceOf(Date).isRequired
+  value: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date).isRequired,
+    PropTypes.string
+  ]).isRequired
 }
 
 export default DatePicker

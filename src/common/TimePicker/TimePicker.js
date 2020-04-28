@@ -23,9 +23,15 @@ const TimePicker = ({ onChange, value }) => {
 
   return (
     <div className="time-picker-container">
-      <span className="time-picker_input_label">Time</span>
+      <span
+        className={`input__label input__label-floating ${valueInput.length >
+          1 && 'active-label'}`}
+      >
+        Time
+      </span>
       <MaskedInput
-        className="input input-wrapper"
+        className={`input input-wrapper ${valueInput.length > 1 &&
+          'active-input'}`}
         keepCharPositions
         mask={timeMask}
         onChange={onHandleInputChange}

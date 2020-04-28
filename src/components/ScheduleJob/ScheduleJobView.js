@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import ScheduleJobNormal from '../ScheduleJobNormal/ScheduleJobNormal'
+import ScheduleJobSimple from '../ScheduleJobSimple/ScheduleJobSimple'
 import ScheduleCron from '../ScheduleCron/ScheduleCron'
 
 const ScheduleJobView = ({
@@ -25,7 +25,7 @@ const ScheduleJobView = ({
   return (
     <>
       {activeTab === scheduleTabs[0].id && (
-        <ScheduleJobNormal
+        <ScheduleJobSimple
           date={date}
           isRecurring={isRecurring}
           match={match}
@@ -48,7 +48,7 @@ const ScheduleJobView = ({
 
 ScheduleJobView.propTypes = {
   activeTab: PropTypes.string.isRequired,
-  cron: PropTypes.string.isRequired,
+  cron: PropTypes.shape({}).isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,

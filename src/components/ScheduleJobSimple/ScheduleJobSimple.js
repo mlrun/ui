@@ -5,10 +5,10 @@ import CheckBox from '../../common/CheckBox/CheckBox'
 import ScheduleRecurring from '../../elements/ScheduleRecurring/ScheduleRecurring'
 import DatePicker from '../../common/DatePicker/DatePicker'
 
-import './scheduleJobNormal.scss'
+import './scheduleJobSimple.scss'
 import TimePicker from '../../common/TimePicker/TimePicker'
 
-const ScheduleJobNormal = ({
+const ScheduleJobSimple = ({
   date,
   isRecurring,
   match,
@@ -25,7 +25,7 @@ const ScheduleJobNormal = ({
 }) => {
   return (
     <div className="schedule-job-normal_container">
-      <h3>Normal Schedule</h3>
+      <h3>Simple Schedule</h3>
 
       <div className="input_container">
         <DatePicker value={date} onChange={setDate} splitCharacter="." />
@@ -58,8 +58,8 @@ const ScheduleJobNormal = ({
   )
 }
 
-ScheduleJobNormal.propTypes = {
-  date: PropTypes.instanceOf(Date),
+ScheduleJobSimple.propTypes = {
+  date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   onChangeStep: PropTypes.func.isRequired,
@@ -74,4 +74,4 @@ ScheduleJobNormal.propTypes = {
   time: PropTypes.string.isRequired
 }
 
-export default ScheduleJobNormal
+export default ScheduleJobSimple

@@ -5,6 +5,7 @@
 .date-picker {
   &-container {
     position: relative;
+    margin-right: 15px; 
 
     .date-picker {
       &_body {
@@ -20,7 +21,7 @@
         box-shadow: $previewBoxShadow;
 
         &.positionTop {
-          top: calc(100% - 395px);
+          bottom: calc(100% + 5px);
         }
 
         &.positionBottom {
@@ -46,7 +47,6 @@
           display: flex;
           flex: 1;
           justify-content: space-around;
-          max-height: 32px;
 
           &_day {
             width: 32px;
@@ -82,7 +82,6 @@
         display: flex;
         flex: 1;
         justify-content: space-between;
-        max-height: 34px;
         align-items: center;
         color: $topaz;
 

@@ -26,26 +26,19 @@
       }
 
       .input_container {
-        input {
-          padding-top: 27px;
-          padding-bottom: 10px;
-        }
+        .input {
+          &__label {
+            left: 17px;
 
+            &.active-label {
+              font-weight: bold;
+            }
+          }
+        }
         .input-wrapper {
           border: $primaryBorder;
           border-radius: 4px;
           margin-right: 15px;
-        }
-
-        .date-picker_input_label,
-        .time-picker_input_label {
-          position: absolute;
-          left: 25px;
-          top: 10px;
-          font-weight: bold;
-          font-size: 10px;
-          line-height: 12px;
-          color: $topaz;
         }
       }
     }

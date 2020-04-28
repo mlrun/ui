@@ -18,7 +18,7 @@ const ScheduleJob = ({ match }) => {
     monthOfTheYear: '*',
     dayOfTheWeek: '*'
   })
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState('')
   const [isRecurring, setIsRecurring] = useState('')
   const [scheduleRepeatEnd, setScheduleRepeatEnd] = useState('never')
   const [scheduleRepeatInterval, setScheduleRepeatInterval] = useState('minute')
@@ -42,9 +42,7 @@ const ScheduleJob = ({ match }) => {
 
   const onHandleTimeChange = time => {
     const [hour, minute] = time.split(':')
-
     setTime(time)
-
     setCron(prev => ({
       ...prev,
       minute,
@@ -74,7 +72,7 @@ const ScheduleJob = ({ match }) => {
       </div>
       <ScheduleJobView
         activeTab={activeTab}
-        cron={onSchedule(cron)}
+        cron={cron}
         date={date}
         isRecurring={isRecurring}
         match={match}

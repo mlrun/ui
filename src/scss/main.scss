@@ -100,6 +100,33 @@ iframe {
   }
 }
 
+.active-input {
+  padding: 27px 17px 9px !important;
+}
+
+.input__label {
+  position: absolute;
+  top: 9px;
+  left: 10px;
+  color: $topaz;
+  text-transform: capitalize;
+  pointer-events: none;
+  background-color: transparent;
+
+  &.active-label {
+    top: 10px;
+    font-size: 10px;
+  }
+
+  &-floating {
+    position: absolute;
+    top: 19px;
+    left: 17px;
+    color: $topaz;
+    transition: 300ms ease all;
+  }
+}
+
 input {
   font-family: Roboto;
   font-style: normal;
