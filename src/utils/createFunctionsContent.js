@@ -33,6 +33,10 @@ const createFunctionsContent = functions =>
       description: {
         value: func.description,
         class: 'functions_small'
+      },
+      tag: {
+        value: func.tag,
+        type: 'hidden'
       }
     }
   })

@@ -49,12 +49,14 @@ const Table = ({
     if (groupFilter === 'name') {
       const groupLatest = _tableContent.map(group => {
         if (Array.isArray(group)) {
-          return group.reduce((prev, curr) => {
-            return new Date(prev.updated.value).getTime() >
-              new Date(curr.updated.value).getTime()
-              ? prev
-              : curr
-          })
+          return page === JOBS_PAGE
+            ? group.reduce((prev, curr) => {
+                return new Date(prev.updated.value).getTime() >
+                  new Date(curr.updated.value).getTime()
+                  ? prev
+                  : curr
+              })
+            : group.find(func => func.tag.value === 'latest')
         } else return group
       })
 
