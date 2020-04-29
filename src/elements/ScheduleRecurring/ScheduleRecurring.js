@@ -7,6 +7,7 @@ import Select from '../../common/Select/Select'
 import './scheduleRecurring.scss'
 
 const ScheduleRecurring = ({
+  daysOfWeek,
   match,
   scheduleRepeatEnd,
   scheduleRepeatInterval,
@@ -30,6 +31,18 @@ const ScheduleRecurring = ({
           page="jobs"
           value={scheduleRepeatInterval}
         />
+        {scheduleRepeatInterval === 'week' && (
+          <div className="schedule-repeat-week">
+            {daysOfWeek.map((day, index) => (
+              <span
+                key={day + index}
+                className={`schedule-repeat-week_day ${day}`}
+              >
+                {day}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       <span>Ends</span>
       <div className="repeat_end_container">

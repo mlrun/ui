@@ -15,6 +15,7 @@
       }
 
       .input {
+        min-width: 230px;
         &_container {
           display: flex;
         }
@@ -23,6 +24,7 @@
       .checkbox_container {
         display: flex;
         padding: 10px 10px 10px 0;
+        margin: 23px 0;
       }
 
       .input_container {

@@ -1,0 +1,121 @@
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+@import '../../scss/shadows.scss';
+
+.date-picker {
+  &-container {
+    position: relative;
+
+    .date-picker {
+      &_body {
+        position: absolute;
+        width: 323px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        background-color: $white;
+        border-radius: 2px;
+        padding: 24px;
+        z-index: 5;
+        box-shadow: $previewBoxShadow;
+
+        &.positionTop {
+          bottom: calc(100% + 5px);
+        }
+
+        &.positionBottom {
+          top: calc(100% + 5px);
+        }
+
+        &_weeks {
+          flex: 1;
+          display: flex;
+
+          &_day {
+            flex: 1;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            color: $primary;
+            font-weight: 500;
+          }
+        }
+
+        &_week {
+          display: flex;
+          flex: 1;
+          justify-content: space-around;
+
+          &_day {
+            width: 32px;
+            line-height: 32px;
+            text-align: center;
+          }
+        }
+
+        .not-current-month {
+          color: $spunPearl;
+          cursor: default;
+        }
+
+        .current-month {
+          color: $topaz;
+
+          &:hover {
+            border-radius: 16px;
+            background-color: $purple;
+            color: $white;
+            cursor: pointer;
+          }
+        }
+
+        .selected {
+          border-radius: 16px;
+          background-color: $purple;
+          color: $white;
+        }
+      }
+
+      &-header {
+        display: flex;
+        flex: 1;
+        justify-content: space-between;
+        align-items: center;
+        color: $topaz;
+
+        &_month {
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          margin-right: 5px;
+        }
+
+        .previous-month {
+          cursor: pointer;
+        }
+
+        .next-month {
+          transform: rotate(180deg);
+          cursor: pointer;
+        }
+      }
+    }
+
+    .btn-date-picker {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 24px;
+      text-transform: uppercase;
+      color: $cornflowerBlue;
+      margin-top: 10px;
+      margin-left: auto;
+    }
+  }
+
+  &_input {
+    position: relative;
+
+    input:focus {
+      border: 1px solid $purple !important;
+    }
+  }
+}

@@ -1,7 +1,7 @@
 @import "../../scss/colors";
 
 .input {
-  padding: 18px 24px;
+  padding: 18px 17px;
   color: $primary;
   border: none;
   background-color: transparent;
@@ -9,32 +9,5 @@
 
   &-wrapper {
     position: relative;
-  }
-
-  &.active-input {
-    padding: 27px 24px 9px;
-  }
-
-  &__label {
-    position: absolute;
-    top: 9px;
-    left: 10px;
-    color: $topaz;
-    text-transform: capitalize;
-    pointer-events: none;
-    background-color: transparent;
-
-    &.active-label {
-      top: 10px;
-      font-size: 10px;
-    }
-
-    &-floating {
-      position: absolute;
-      top: 19px;
-      left: 25px;
-      color: $topaz;
-      transition: 300ms ease all;
-    }
   }
 }
