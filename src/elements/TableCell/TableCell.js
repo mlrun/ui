@@ -21,26 +21,27 @@ import { useDispatch } from 'react-redux'
 
 const TableCell = ({
   data,
+  expandLink,
   firstRow,
+  handleExpandRow,
   item,
   link,
-  selectItem,
-  selectedItem,
   match,
-  expandLink,
-  handleExpandRow
+  selectItem,
+  selectedItem
 }) => {
   const dispatch = useDispatch()
+
   if (link) {
     return (
       <TableLinkCell
-        handleExpandRow={handleExpandRow}
-        selectedItem={selectedItem}
-        expandLink={expandLink}
-        link={link}
-        item={item}
-        selectItem={selectItem}
         data={data}
+        expandLink={expandLink}
+        handleExpandRow={handleExpandRow}
+        item={item}
+        link={link}
+        selectItem={selectItem}
+        selectedItem={selectedItem}
       />
     )
   } else if (data.type === 'uid') {
@@ -169,17 +170,25 @@ const TableCell = ({
 }
 
 TableCell.defaultProps = {
+  expandLink: false,
+  firstRow: false,
+  handleExpandRow: null,
   item: {
     target_path: '',
     schema: ''
   },
-  link: ''
+  link: '',
+  match: null
 }
 
 TableCell.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  expandLink: PropTypes.bool,
+  firstRow: PropTypes.bool,
+  handleExpandRow: PropTypes.func,
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.bool]),
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  match: PropTypes.shape({}),
   selectItem: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }

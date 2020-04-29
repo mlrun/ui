@@ -12,6 +12,10 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
 
+  const [groupFilter, setGroupFilter] = useState(
+    functionsData.initialGroupFilter
+  )
+
   const refreshFunctions = useCallback(() => {
     fetchFunctions(match.params.projectName).then(functions => {
       const newFunctions = functions.map(func => ({
@@ -26,6 +30,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
         state: func.status ? func.status.state : '',
         functionSourceCode: func.spec.build.functionSourceCode
       }))
+
       return setFunctions(newFunctions)
     })
   }, [fetchFunctions, match.params.projectName])
@@ -40,21 +45,33 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   }, [history, match.params.projectName, refreshFunctions])
 
   useEffect(() => {
-    if (match.params.hash) {
-      let item = functions.find(item => item.hash === match.params.hash)
-      if (item === undefined) {
-        history.push(`/projects/${match.params.projectName}/functions`)
+    let item = {}
+
+    if (match.params.hash && functions.length > 0) {
+      if (selectedFunction.updated) {
+        item = functions.find(
+          item =>
+            `${item.updated}` === `${selectedFunction.updated}` &&
+            item.hash === selectedFunction.hash
+        )
+      } else {
+        item = functions.find(func => func.hash === match.params.hash)
       }
-      setSelectedFunction(item)
-    } else {
-      setSelectedFunction({})
+
+      if (Object.keys(item).length === 0) {
+        return history.push(`/projects/${match.params.projectName}/functions`)
+      }
     }
+
+    setSelectedFunction(item)
   }, [
     functions,
     match.params.hash,
     setSelectedFunction,
     history,
-    match.params.projectName
+    match.params.projectName,
+    selectedFunction.updated,
+    selectedFunction.hash
   ])
 
   const handleSelectFunction = item => {
@@ -74,6 +91,8 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
       <Content
         content={functions}
         detailsMenu={functionsData.detailsMenu}
+        filters={functionsData.filters}
+        groupFilter={groupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
@@ -81,6 +100,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
         page={functionsData.page}
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
+        setGroupFilter={setGroupFilter}
         tableHeaders={functionsData.tableHeaders}
         yamlContent={functionsStore.functions}
       />

@@ -19,7 +19,8 @@ const createFunctionsContent = functions =>
       },
       updated: {
         value: formatDatetime(new Date(func.updated)),
-        class: 'functions_small'
+        class: 'functions_small',
+        type: 'date'
       },
       command: {
         value: func.command,

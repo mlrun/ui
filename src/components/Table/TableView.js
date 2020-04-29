@@ -13,7 +13,7 @@ const TableView = ({
   content,
   detailsMenu,
   groupFilter,
-  groupLatestJob,
+  groupLatestItem,
   groupedByName,
   handleCancel,
   handleExpandRow,
@@ -48,7 +48,7 @@ const TableView = ({
         <div className="table-body">
           {(groupFilter === 'none' &&
             Object.keys(groupedByName).length === 0) ||
-          groupLatestJob.length === 0
+          groupLatestItem.length === 0
             ? tableContent.map((rowItem, i) => {
                 switch (page) {
                   case ARTIFACTS_PAGE:
@@ -95,20 +95,37 @@ const TableView = ({
                 }
               })
             : tableContent.map((group, i) => {
-                return (
-                  <JobsTableRow
-                    actionsMenu={actionsMenu}
-                    key={i}
-                    content={content}
-                    handleExpandRow={handleExpandRow}
-                    handleSelectItem={handleSelectItem}
-                    index={i}
-                    match={match}
-                    rowItem={groupLatestJob[i]}
-                    selectedItem={selectedItem}
-                    tableContent={group}
-                  />
-                )
+                if (page === FUNCTIONS_PAGE) {
+                  return (
+                    <FunctionsTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      handleExpandRow={handleExpandRow}
+                      handleSelectItem={handleSelectItem}
+                      index={i}
+                      match={match}
+                      rowItem={groupLatestItem[i]}
+                      selectedItem={selectedItem}
+                      tableContent={group}
+                    />
+                  )
+                } else {
+                  return (
+                    <JobsTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      handleExpandRow={handleExpandRow}
+                      handleSelectItem={handleSelectItem}
+                      index={i}
+                      match={match}
+                      rowItem={groupLatestItem[i]}
+                      selectedItem={selectedItem}
+                      tableContent={group}
+                    />
+                  )
+                }
               })}
         </div>
       </div>

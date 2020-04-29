@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
 
@@ -11,19 +11,19 @@ import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
+import { expandRow } from '../../utils/expandRow'
+import { expandAll } from '../../utils/expandAll'
+import { compareDataForIdentity } from '../../utils/compareDataForIdentity'
 
 import './content.scss'
+import { formatDatetime } from '../../utils'
 
 const Content = ({
   content,
   detailsMenu,
-  expand,
   filters,
   groupFilter,
-  groupedByName,
   handleCancel,
-  handleExpandAll,
-  handleExpandRow,
   handleSelectItem,
   loading,
   match,
@@ -37,6 +37,35 @@ const Content = ({
   yamlContent
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
+  const [expandedItems, setExpandedItems] = useState([])
+  const [expand, setExpand] = useState(false)
+  const [groupedByName, setGroupedByName] = useState({})
+
+  useEffect(() => {
+    if (groupFilter === 'name') {
+      const groupedFunctions = {}
+
+      content.forEach(func => {
+        groupedFunctions[func.name]
+          ? groupedFunctions[func.name].push(func)
+          : (groupedFunctions[func.name] = [func])
+      })
+
+      setGroupedByName(groupedFunctions)
+    } else if (groupFilter === 'none') {
+      const rows = [...document.getElementsByClassName('parent-row')]
+
+      rows.forEach(row => row.classList.remove('parent-row-expanded'))
+
+      setExpand(false)
+      setGroupedByName({})
+    }
+
+    return () => {
+      setGroupedByName({})
+      setExpand(false)
+    }
+  }, [groupFilter, setGroupedByName, match.params.projectName, content])
 
   const toggleConvertToYaml = item => {
     if (convertedYaml.length > 0) {
@@ -44,13 +73,25 @@ const Content = ({
     }
     const jobJson =
       page === JOBS_PAGE &&
-      yamlContent.filter(job => job.metadata.uid === item.uid)[0]
+      yamlContent.filter(job =>
+        compareDataForIdentity(job.metadata.uid, item.uid)
+      )[0]
+
     const functionJson =
       page === FUNCTIONS_PAGE &&
-      yamlContent.filter(func => func.metadata.hash === item.hash)[0]
+      yamlContent.filter(
+        func =>
+          compareDataForIdentity(func.metadata.hash, item.hash) &&
+          compareDataForIdentity(
+            formatDatetime(new Date(func.metadata.updated)),
+            formatDatetime(new Date(item.updated))
+          )
+      )[0]
     const artifactJson =
       page === ARTIFACTS_PAGE &&
-      yamlContent.filter(_item => _item.key === item.db_key)[0].data
+      yamlContent.filter(_item =>
+        compareDataForIdentity(_item.key === item.db_key)
+      )[0].data
 
     switch (page) {
       case JOBS_PAGE:
@@ -71,6 +112,16 @@ const Content = ({
             lineWidth: -1
           })
         )
+    }
+  }
+
+  const handleExpandRow = (e, item) => {
+    setExpandedItems(expandRow(e, item, expandedItems))
+  }
+
+  const handleExpandAll = () => {
+    if (groupFilter === 'name') {
+      setExpand(expandAll(expand))
     }
   }
 
@@ -127,7 +178,6 @@ const Content = ({
 
 Content.defaultProps = {
   convertedYaml: '',
-  expand: null,
   filters: [],
   selectedItem: {},
   isPreview: null
@@ -137,7 +187,6 @@ Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   convertedYaml: PropTypes.string.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
-  expand: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.string),
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
@@ -147,6 +196,23 @@ Content.propTypes = {
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
   tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+
+  // content,
+  // detailsMenu,
+  // filters,
+  // groupFilter,
+  // handleCancel,
+  // handleSelectItem,
+  // loading,
+  // match,
+  // refresh,
+  // page,
+  // selectedItem,
+  // setGroupFilter,
+  // setStateFilter,
+  // stateFilter,
+  // tableHeaders,
+  // yamlContent
 }
 
 export default Content
