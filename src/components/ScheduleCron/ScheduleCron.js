@@ -3,14 +3,12 @@ import PropTypes from 'prop-types'
 
 import './scheduleCron.scss'
 
-const ScheduleCron = ({ cron }) => {
+const ScheduleCron = ({ cron, generateCronString }) => {
   const [cronString, setCronString] = useState('')
   useEffect(() => {
-    const generateCron = Object.keys(cron).reduce((prev, next, index, arr) => {
-      return (prev += arr.length - 1 === index ? cron[next] : cron[next] + ' ')
-    }, '')
+    const generateCron = generateCronString(cron)
     setCronString(generateCron)
-  }, [cron])
+  }, [cron, generateCronString])
   return (
     <div className="schedule-cron-container">
       <div className="cron-string">{cronString}</div>
@@ -19,7 +17,8 @@ const ScheduleCron = ({ cron }) => {
 }
 
 ScheduleCron.propTypes = {
-  cron: PropTypes.shape({}).isRequired
+  cron: PropTypes.shape({}).isRequired,
+  generateCronString: PropTypes.func.isRequired
 }
 
 export default ScheduleCron

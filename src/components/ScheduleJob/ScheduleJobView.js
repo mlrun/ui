@@ -4,15 +4,19 @@ import PropTypes from 'prop-types'
 import ScheduleJobSimple from '../ScheduleJobSimple/ScheduleJobSimple'
 import ScheduleCron from '../ScheduleCron/ScheduleCron'
 
+import { ReactComponent as Schedule } from '../../images/clock.svg'
+
 import scheduleData from './scheduleData.json'
 
 const ScheduleJobView = ({
   activeTab,
   cron,
   date,
+  generateCronString,
   isRecurring,
   match,
   onChangeStep,
+  onSchedule,
   scheduleRepeatEnd,
   scheduleRepeatInterval,
   scheduleRepeatStep,
@@ -54,7 +58,13 @@ const ScheduleJobView = ({
           time={time}
         />
       )}
-      {activeTab === scheduleData.tabs[1].id && <ScheduleCron cron={cron} />}
+      {activeTab === scheduleData.tabs[1].id && (
+        <ScheduleCron generateCronString={generateCronString} cron={cron} />
+      )}
+      <button className="btn btn_primary btn__schedule" onClick={onSchedule}>
+        <Schedule />
+        Schedule
+      </button>
     </div>
   )
 }
@@ -63,9 +73,11 @@ ScheduleJobView.propTypes = {
   activeTab: PropTypes.string.isRequired,
   cron: PropTypes.shape({}).isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
+  generateCronString: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   onChangeStep: PropTypes.func.isRequired,
+  onSchedule: PropTypes.func.isRequired,
   scheduleRepeatEnd: PropTypes.string.isRequired,
   scheduleRepeatInterval: PropTypes.string.isRequired,
   scheduleRepeatStep: PropTypes.shape({}).isRequired,

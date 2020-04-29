@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 
 import ScheduleJobView from './ScheduleJobView'
 
-import { ReactComponent as Schedule } from '../../images/clock.svg'
-
 import scheduleData from './scheduleData.json'
 
 import './scheduleJob.scss'
@@ -29,11 +27,15 @@ const ScheduleJob = ({ match }) => {
   })
   const [time, setTime] = useState('')
 
-  const onSchedule = useCallback(() => {
+  const generateCronString = cron => {
     let cronString = Object.keys(cron).reduce((prev, next, index, arr) => {
       return (prev += arr.length - 1 === index ? cron[next] : cron[next] + ' ')
     }, '')
     return cronString
+  }
+
+  const onSchedule = useCallback(() => {
+    return generateCronString(cron)
   }, [cron])
 
   const onHandleDateChange = date => {
@@ -59,30 +61,26 @@ const ScheduleJob = ({ match }) => {
   }
 
   return (
-    <>
-      <ScheduleJobView
-        activeTab={activeTab}
-        cron={cron}
-        date={date}
-        isRecurring={isRecurring}
-        match={match}
-        onChangeStep={onHandleStepChange}
-        scheduleRepeatEnd={scheduleRepeatEnd}
-        scheduleRepeatInterval={scheduleRepeatInterval}
-        scheduleRepeatStep={scheduleRepeatStep}
-        setActiveTab={setActiveTab}
-        setDate={onHandleDateChange}
-        setIsRecurring={setIsRecurring}
-        setScheduleRepeatEnd={setScheduleRepeatEnd}
-        setScheduleRepeatInterval={setScheduleRepeatInterval}
-        setTime={onHandleTimeChange}
-        time={time}
-      />
-      <button className="btn btn_primary btn__schedule" onClick={onSchedule}>
-        <Schedule />
-        Schedule
-      </button>
-    </>
+    <ScheduleJobView
+      activeTab={activeTab}
+      cron={cron}
+      date={date}
+      generateCronString={generateCronString}
+      isRecurring={isRecurring}
+      match={match}
+      onChangeStep={onHandleStepChange}
+      onSchedule={onSchedule}
+      scheduleRepeatEnd={scheduleRepeatEnd}
+      scheduleRepeatInterval={scheduleRepeatInterval}
+      scheduleRepeatStep={scheduleRepeatStep}
+      setActiveTab={setActiveTab}
+      setDate={onHandleDateChange}
+      setIsRecurring={setIsRecurring}
+      setScheduleRepeatEnd={setScheduleRepeatEnd}
+      setScheduleRepeatInterval={setScheduleRepeatInterval}
+      setTime={onHandleTimeChange}
+      time={time}
+    />
   )
 }
 

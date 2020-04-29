@@ -50,14 +50,16 @@ main {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    &:active, &:focus {
+    &:active,
+    &:focus {
       box-shadow: none;
       outline: none;
     }
   }
 }
 
-.completed, .ready {
+.completed,
+.ready {
   @include jobStatus($brightTurquoise);
 }
 
@@ -104,28 +106,28 @@ iframe {
   &.active-input {
     padding: 27px 17px 9px;
   }
-}
 
-.input__label {
-  position: absolute;
-  top: 9px;
-  left: 10px;
-  color: $topaz;
-  text-transform: capitalize;
-  pointer-events: none;
-  background-color: transparent;
-
-  &.active-label {
-    top: 10px;
-    font-size: 10px;
-  }
-
-  &-floating {
+  &__label {
     position: absolute;
-    top: 19px;
-    left: 17px;
+    top: 9px;
+    left: 10px;
     color: $topaz;
-    transition: 300ms ease all;
+    text-transform: capitalize;
+    pointer-events: none;
+    background-color: transparent;
+
+    &.active-label {
+      top: 10px;
+      font-size: 10px;
+    }
+
+    &-floating {
+      position: absolute;
+      top: 19px;
+      left: 17px;
+      color: $topaz;
+      transition: 300ms ease all;
+    }
   }
 }
 
@@ -138,7 +140,8 @@ input {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow-x: hidden;
-  &:active, &:focus {
+  &:active,
+  &:focus {
     outline: none;
     box-shadow: none;
   }
