@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
+import lodash from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -11,9 +12,6 @@ import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
-import { expandRow } from '../../utils/expandRow'
-import { expandAll } from '../../utils/expandAll'
-import { compareDataForIdentity } from '../../utils/compareDataForIdentity'
 
 import './content.scss'
 import { formatDatetime } from '../../utils'
@@ -73,16 +71,14 @@ const Content = ({
     }
     const jobJson =
       page === JOBS_PAGE &&
-      yamlContent.filter(job =>
-        compareDataForIdentity(job.metadata.uid, item.uid)
-      )[0]
+      yamlContent.filter(job => lodash.isEqual(job.metadata.uid, item.uid))[0]
 
     const functionJson =
       page === FUNCTIONS_PAGE &&
       yamlContent.filter(
         func =>
-          compareDataForIdentity(func.metadata.hash, item.hash) &&
-          compareDataForIdentity(
+          lodash.isEqual(func.metadata.hash, item.hash) &&
+          lodash.isEqual(
             formatDatetime(new Date(func.metadata.updated)),
             formatDatetime(new Date(item.updated))
           )
@@ -90,7 +86,7 @@ const Content = ({
     const artifactJson =
       page === ARTIFACTS_PAGE &&
       yamlContent.filter(yamlContentItem =>
-        compareDataForIdentity(yamlContentItem.key, item.db_key)
+        lodash.isEqual(yamlContentItem.key, item.db_key)
       )[0].data
 
     switch (page) {
@@ -116,12 +112,37 @@ const Content = ({
   }
 
   const handleExpandRow = (e, item) => {
-    setExpandedItems(expandRow(e, item, expandedItems))
+    const parentRow = e.target.closest('.parent-row')
+
+    if (parentRow.classList.contains('parent-row-expanded')) {
+      const newArray = expandedItems.filter(
+        expanded => expanded.name.value !== item.name.value
+      )
+
+      parentRow.classList.remove('parent-row-expanded')
+
+      setExpandedItems(newArray)
+    } else {
+      parentRow.classList.remove('active')
+      parentRow.classList.add('parent-row-expanded')
+
+      setExpandedItems([...expandedItems, item])
+    }
   }
 
   const handleExpandAll = () => {
     if (groupFilter === 'name') {
-      setExpand(expandAll(expand))
+      const rows = [...document.getElementsByClassName('parent-row')]
+
+      if (expand) {
+        rows.forEach(row => row.classList.remove('parent-row-expanded'))
+
+        setExpand(false)
+      } else {
+        rows.forEach(row => row.classList.add('parent-row-expanded'))
+
+        setExpand(true)
+      }
     }
   }
 

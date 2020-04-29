@@ -1,12 +1,12 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
+import lodash from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
 import functionsData from '../../components/FunctionsPage/functionsData'
 import { formatDatetime } from '../../utils'
-import { compareDataForIdentity } from '../../utils/compareDataForIdentity'
 
 const FunctionsTableRow = ({
   actionsMenu,
@@ -23,26 +23,25 @@ const FunctionsTableRow = ({
 
   const selectedItemDate =
     selectedItem.updated && formatDatetime(new Date(selectedItem.updated))
-  const indentUpdatedOnMainRow = compareDataForIdentity(
+  const indentUpdatedOnMainRow = lodash.isEqual(
     rowItem.updated.value,
     selectedItemDate
   )
-  const indentHashOnMainRow = compareDataForIdentity(
+  const indentHashOnMainRow = lodash.isEqual(
     rowItem.hash.value,
     selectedItem.hash
   )
 
   return (
     <div
-      className={`table-body__row ${
+      className={`table-body__row parent-row ${
         indentUpdatedOnMainRow &&
         indentHashOnMainRow &&
         !parent.current?.classList.value.includes('parent-row-expanded')
           ? 'parent-row active'
           : parent.current &&
-            parent.current.classList.value.includes('parent-row-expanded')
-          ? 'parent-row parent-row-expanded'
-          : 'parent-row'
+            parent.current.classList.value.includes('parent-row-expanded') &&
+            'parent-row parent-row-expanded'
       }`}
       ref={parent}
     >
@@ -61,22 +60,20 @@ const FunctionsTableRow = ({
           </div>
           <>
             {tableContent.map((func, index) => {
-              const indentUpdatedOnSubRow = compareDataForIdentity(
+              const indentUpdatedOnSubRow = lodash.isEqual(
                 selectedItemDate,
                 func.updated.value
               )
-              const indexHashOnSubRow = compareDataForIdentity(
+              const indexHashOnSubRow = lodash.isEqual(
                 func.hash.value,
                 selectedItem.hash
               )
 
               return (
                 <div
-                  className={
-                    indentUpdatedOnSubRow && indexHashOnSubRow
-                      ? 'table-body__row active'
-                      : 'table-body__row'
-                  }
+                  className={`table-body__row ${indentUpdatedOnSubRow &&
+                    indexHashOnSubRow &&
+                    'active'}`}
                   key={index}
                 >
                   {Object.values(func).map((value, i) => {
