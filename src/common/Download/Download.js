@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import ProgressRing from '../ProgressRing/ProgressRing'
 
-import HttpClient from '../../httpClient'
+import { mainHTTPClient } from '../../httpClient'
 import notificationDownloadAction from '../../actions/notificationDownload'
 import downloadFile from '../../utils/downloadFile'
 import { DOWNLOAD_PROGRESS_RING } from '../../colorConstants'
@@ -38,12 +38,13 @@ const Download = ({ path, schema, setNotificationDownload, user }) => {
         })
       }
 
-      HttpClient.get(
-        schema
-          ? `/files?schema=${schema}&path=${path}&user=${user}`
-          : `/files?path=${path}&user=${user}`,
-        config
-      )
+      mainHTTPClient
+        .get(
+          schema
+            ? `/files?schema=${schema}&path=${path}&user=${user}`
+            : `/files?path=${path}&user=${user}`,
+          config
+        )
         .then(response => {
           downloadFile(file, response)
           setNotificationDownload({

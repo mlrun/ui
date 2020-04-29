@@ -1,4 +1,4 @@
-import httpClient from '../httpClient'
+import { mainHTTPClient } from '../httpClient'
 
 export default {
   getAll: (project, state, event) => {
@@ -17,10 +17,10 @@ export default {
       url = `${url}&name=${event.name}`
     }
 
-    return httpClient.get(url)
+    return mainHTTPClient.get(url)
   },
-  getJobLogs: (id, project) => httpClient.get(`/log/${project}/${id}`),
+  getJobLogs: (id, project) => mainHTTPClient.get(`/log/${project}/${id}`),
   filterByStatus: (project, state) =>
-    httpClient.get(`/runs?project=${project}&&state=${state}`),
-  runJob: postData => httpClient.post('/submit_job', postData)
+    mainHTTPClient.get(`/runs?project=${project}&&state=${state}`),
+  runJob: postData => mainHTTPClient.post('/submit_job', postData)
 }

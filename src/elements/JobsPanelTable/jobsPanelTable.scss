@@ -47,6 +47,7 @@
     &.volumes {
       .select {
         flex: .38;
+        padding-left: 10px;
       }
     }
 
@@ -73,10 +74,6 @@
         &__label {
           left: 17px;
         }
-      }
-
-      .select {
-        padding: 0;
       }
     }
   }
@@ -107,8 +104,7 @@
       align-items: center;
     }
 
-    .select {
-      padding: 10px 0;
+    .select {;
 
       &__label {
         padding-left: 0;

@@ -1,7 +1,9 @@
 import axios from 'axios'
 
-const instance = axios.create({
+export const mainHTTPClient = axios.create({
   baseURL: '/api'
 })
 
-export default instance
+export const functionsTemplatesHTTPClient = axios.create({
+  baseURL: '/function-catalog'
+})
