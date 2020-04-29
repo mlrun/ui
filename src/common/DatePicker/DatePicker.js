@@ -6,7 +6,6 @@ import React, {
   useCallback,
   useLayoutEffect
 } from 'react'
-import MaskedInput from 'react-text-mask'
 import PropTypes from 'prop-types'
 
 import DatePickerView from './DatePickerView'
@@ -33,6 +32,7 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
   )
 
   const datePickerRef = useRef()
+  const datePickerViewRef = useRef()
   const maskDate = [
     /\d/,
     /\d/,
@@ -64,10 +64,7 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
 
   useLayoutEffect(() => {
     if (openDatePicker) {
-      const datePickerBody = [...datePickerRef.current.children].find(item =>
-        item.className.includes('date-picker_body')
-      )
-      const { bottom } = datePickerBody.getBoundingClientRect()
+      const { bottom } = datePickerViewRef.current.getBoundingClientRect()
       if (bottom > window.innerHeight) {
         setIsTopPosition(true)
       }
@@ -110,42 +107,27 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
 
   return (
     <div className="date-picker-container" ref={datePickerRef}>
-      <div
-        className="date-picker_input"
-        onClick={() => setOpenDatePicker(true)}
-      >
-        <MaskedInput
-          className={`input input-wrapper ${valueDatePickerInput.length > 1 &&
-            'active-input'}`}
-          keepCharPositions={true}
-          mask={maskDate}
-          onChange={onHandleInputDatePickerChange}
-          pipe={autoCorrectedDatePipe}
-          value={valueDatePickerInput}
-        />
-        <span
-          className={`input__label input__label-floating ${valueDatePickerInput.length >
-            1 && 'active-label'}`}
-        >
-          Date
-        </span>
-      </div>
-      {openDatePicker && (
-        <DatePickerView
-          calendar={calendar}
-          close={setOpenDatePicker}
-          date={date || new Date()}
-          isTopPosition={isTopPosition}
-          months={months}
-          onChange={onHandleDatePickerChange}
-          onNextMonth={onChangeNextMonth}
-          onPreviousMonth={onChangePreviousMonth}
-          selectedDate={selectedDate || new Date()}
-          setSelectedDate={setSelectedDate}
-          startWeek={startWeek}
-          weekDay={getWeekDays(startWeek)}
-        />
-      )}
+      <DatePickerView
+        autoCorrectedDatePipe={autoCorrectedDatePipe}
+        calendar={calendar}
+        close={setOpenDatePicker}
+        date={date || new Date()}
+        isTopPosition={isTopPosition}
+        maskDate={maskDate}
+        months={months}
+        onChange={onHandleDatePickerChange}
+        onInputChange={onHandleInputDatePickerChange}
+        onNextMonth={onChangeNextMonth}
+        onPreviousMonth={onChangePreviousMonth}
+        openDatePicker={openDatePicker}
+        ref={datePickerViewRef}
+        selectedDate={selectedDate || new Date()}
+        setOpenDatePicker={setOpenDatePicker}
+        setSelectedDate={setSelectedDate}
+        startWeek={startWeek}
+        valueDatePickerInput={valueDatePickerInput}
+        weekDay={getWeekDays(startWeek)}
+      />
     </div>
   )
 }
