@@ -11,19 +11,22 @@ import jobsActions from '../../actions/jobs'
 
 const CreateJobPage = ({
   fetchFunctions,
+  fetchFunctionsTemplates,
   functionsStore,
   match,
   setNewJob
 }) => {
-  const [expandList, setExpandList] = useState(true)
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setFunction] = useState({})
+  const [templatesArray, setTemplatesArray] = useState([])
 
   useEffect(() => {
     fetchFunctions(match.params.projectName).then(functions => {
       return setFunctions(functions)
     })
-  }, [fetchFunctions, match.params.projectName])
+
+    fetchFunctionsTemplates().then(data => setTemplatesArray(data))
+  }, [fetchFunctions, fetchFunctionsTemplates, match.params.projectName])
 
   const handleSelectFunction = item => {
     setFunction(item)
@@ -52,11 +55,10 @@ const CreateJobPage = ({
   ) : (
     <>
       <CreateJobPageView
-        match={match}
-        expandList={expandList}
-        setExpandList={setExpandList}
         functions={functions}
         handleSelectFunction={handleSelectFunction}
+        match={match}
+        templates={templatesArray}
       />
       {Object.values(selectedFunction)?.length !== 0 && (
         <JobsPanel
@@ -70,7 +72,6 @@ const CreateJobPage = ({
 }
 
 CreateJobPage.propTypes = {
-  fetchFunctions: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired
 }
 

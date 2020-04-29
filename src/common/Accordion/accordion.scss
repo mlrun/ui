@@ -7,24 +7,29 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    border-radius: 4px;
     height: 65px;
-    background-color: $white;
-    border: $primaryBorder;
-    margin: 16px 40px 0;
-    transition: height 0.3s linear;
+    transition: height 0.3s ease-in-out;
 
     &.open {
       height: 100%;
-      transition: height 0.3s linear;
+      transition: height 0.3s ease-in-out;
     }
+  }
 
-    &:first-child {
-      margin-top: 0;
-    }
+  &__icon {
+    z-index: 2;
+    transform: rotate(0);
+    transform-origin: center center;
+    transition: transform 200ms ease-in-out;
 
-    &:last-child {
-      margin-bottom: 16px;
+    &.open {
+      transform: rotate(90deg);
+      transform-origin: center center;
+      transition: transform 200ms linear;
+
+      svg {
+        margin-bottom: -3px;
+      }
     }
   }
 

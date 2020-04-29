@@ -3,8 +3,14 @@ import PropTypes from 'prop-types'
 
 import './accordion.scss'
 
-const Accordion = ({ icon, children, iconClassName, accordionClassName }) => {
-  const [open, setOpen] = useState(false)
+const Accordion = ({
+  accordionClassName,
+  children,
+  icon,
+  iconClassName,
+  openByDefault
+}) => {
+  const [open, setOpen] = useState(openByDefault)
 
   const handleOpenAccordion = () => {
     setOpen(!open)
@@ -18,7 +24,7 @@ const Accordion = ({ icon, children, iconClassName, accordionClassName }) => {
       {icon && (
         <button
           onClick={handleOpenAccordion}
-          className={`${iconClassName} ${open && 'open'}`}
+          className={`accordion__icon ${iconClassName} ${open && 'open'}`}
         >
           <span>{icon}</span>
         </button>
@@ -28,10 +34,15 @@ const Accordion = ({ icon, children, iconClassName, accordionClassName }) => {
   )
 }
 
+Accordion.defaultProps = {
+  openByDefault: false
+}
+
 Accordion.propTypes = {
   accordionClassName: PropTypes.string,
   icon: PropTypes.element,
-  iconClassName: PropTypes.string
+  iconClassName: PropTypes.string,
+  openByDefault: PropTypes.bool
 }
 
 export default Accordion

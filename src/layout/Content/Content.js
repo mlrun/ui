@@ -89,8 +89,8 @@ const Content = ({
       )[0]
     const artifactJson =
       page === ARTIFACTS_PAGE &&
-      yamlContent.filter(_item =>
-        compareDataForIdentity(_item.key === item.db_key)
+      yamlContent.filter(yamlContentItem =>
+        compareDataForIdentity(yamlContentItem.key, item.db_key)
       )[0].data
 
     switch (page) {
@@ -177,42 +177,31 @@ const Content = ({
 }
 
 Content.defaultProps = {
-  convertedYaml: '',
   filters: [],
+  groupFilter: null,
   selectedItem: {},
-  isPreview: null
+  setGroupFilter: null,
+  setStateFilter: null,
+  stateFilter: null
 }
 
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  convertedYaml: PropTypes.string.isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   filters: PropTypes.arrayOf(PropTypes.string),
+  groupFilter: PropTypes.string,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  isPreview: PropTypes.bool,
+  loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   page: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
-
-  // content,
-  // detailsMenu,
-  // filters,
-  // groupFilter,
-  // handleCancel,
-  // handleSelectItem,
-  // loading,
-  // match,
-  // refresh,
-  // page,
-  // selectedItem,
-  // setGroupFilter,
-  // setStateFilter,
-  // stateFilter,
-  // tableHeaders,
-  // yamlContent
+  setGroupFilter: PropTypes.func,
+  setStateFilter: PropTypes.func,
+  stateFilter: PropTypes.string,
+  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  yamlContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default Content

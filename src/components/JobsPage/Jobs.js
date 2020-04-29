@@ -64,7 +64,6 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
 
     return () => {
       setSelectedJob({})
-      // setExpand(false)
       setJobs([])
     }
   }, [history, match.params.projectName, refreshJobs])

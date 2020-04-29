@@ -7,6 +7,7 @@ import Loader from '../../common/Loader/Loader'
 
 import functionsData from './functionsData'
 import functionsActions from '../../actions/functions'
+import { compareDataForIdentity } from '../../utils/compareDataForIdentity'
 
 const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   const [functions, setFunctions] = useState([])
@@ -51,11 +52,13 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
       if (selectedFunction.updated) {
         item = functions.find(
           item =>
-            `${item.updated}` === `${selectedFunction.updated}` &&
-            item.hash === selectedFunction.hash
+            compareDataForIdentity(item.updated, selectedFunction.updated) &&
+            compareDataForIdentity(item.hash, selectedFunction.hash)
         )
       } else {
-        item = functions.find(func => func.hash === match.params.hash)
+        item = functions.find(func =>
+          compareDataForIdentity(func.hash, match.params.hash)
+        )
       }
 
       if (Object.keys(item).length === 0) {
