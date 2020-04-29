@@ -45,6 +45,14 @@
     { "label": "cpu", "id": "cpu" },
     { "label": "millicpu", "id": "millicpu" }
   ],
-  "repeatInterval": [{ "label": "Minute", "id": "minute" }],
-  "repeatEnd": [{ "label": "Never", "id": "never" }]
+  "repeatInterval": [
+    { "label": "Minute", "id": "minute" },
+    { "label": "Hour", "id": "hour" },
+    { "label": "Day", "id": "day" }
+  ],
+  "repeatEnd": [
+    { "label": "Never", "id": "never" },
+    { "label": "On date", "id": "onDate" },
+    { "label": "After", "id": "after" }
+  ]
 }
