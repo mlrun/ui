@@ -56,7 +56,10 @@ const Table = ({
                   ? prev
                   : curr
               })
-            : group.find(func => func.tag.value === 'latest')
+            : group.find((func, i, arr) => {
+                if (arr.length === 1) return func
+                return func.tag.value === 'latest'
+              })
         } else return group
       })
 
