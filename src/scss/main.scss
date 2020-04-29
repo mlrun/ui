@@ -100,8 +100,10 @@ iframe {
   }
 }
 
-.active-input {
-  padding: 27px 17px 9px !important;
+.input {
+  &.active-input {
+    padding: 27px 17px 9px;
+  }
 }
 
 .input__label {

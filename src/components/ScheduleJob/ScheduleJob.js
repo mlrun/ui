@@ -42,6 +42,7 @@ const ScheduleJob = ({ match }) => {
 
   const onHandleTimeChange = time => {
     const [hour, minute] = time.split(':')
+
     setTime(time)
     setCron(prev => ({
       ...prev,

@@ -26,15 +26,7 @@
       }
 
       .input_container {
-        .input {
-          &__label {
-            left: 17px;
-
-            &.active-label {
-              font-weight: bold;
-            }
-          }
-        }
+        
         .input-wrapper {
           border: $primaryBorder;
           border-radius: 4px;
