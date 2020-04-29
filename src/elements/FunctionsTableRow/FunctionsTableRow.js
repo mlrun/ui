@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import lodash from 'lodash'
+import { isEqual } from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
@@ -23,14 +23,11 @@ const FunctionsTableRow = ({
 
   const selectedItemDate =
     selectedItem.updated && formatDatetime(new Date(selectedItem.updated))
-  const indentUpdatedOnMainRow = lodash.isEqual(
+  const indentUpdatedOnMainRow = isEqual(
     rowItem.updated.value,
     selectedItemDate
   )
-  const indentHashOnMainRow = lodash.isEqual(
-    rowItem.hash.value,
-    selectedItem.hash
-  )
+  const indentHashOnMainRow = isEqual(rowItem.hash.value, selectedItem.hash)
 
   return (
     <div
@@ -60,11 +57,11 @@ const FunctionsTableRow = ({
           </div>
           <>
             {tableContent.map((func, index) => {
-              const indentUpdatedOnSubRow = lodash.isEqual(
+              const indentUpdatedOnSubRow = isEqual(
                 selectedItemDate,
                 func.updated.value
               )
-              const indexHashOnSubRow = lodash.isEqual(
+              const indexHashOnSubRow = isEqual(
                 func.hash.value,
                 selectedItem.hash
               )

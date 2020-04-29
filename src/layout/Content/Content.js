@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
-import lodash from 'lodash'
+import { isEqual } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -71,14 +71,14 @@ const Content = ({
     }
     const jobJson =
       page === JOBS_PAGE &&
-      yamlContent.filter(job => lodash.isEqual(job.metadata.uid, item.uid))[0]
+      yamlContent.filter(job => isEqual(job.metadata.uid, item.uid))[0]
 
     const functionJson =
       page === FUNCTIONS_PAGE &&
       yamlContent.filter(
         func =>
-          lodash.isEqual(func.metadata.hash, item.hash) &&
-          lodash.isEqual(
+          isEqual(func.metadata.hash, item.hash) &&
+          isEqual(
             formatDatetime(new Date(func.metadata.updated)),
             formatDatetime(new Date(item.updated))
           )
@@ -86,7 +86,7 @@ const Content = ({
     const artifactJson =
       page === ARTIFACTS_PAGE &&
       yamlContent.filter(yamlContentItem =>
-        lodash.isEqual(yamlContentItem.key, item.db_key)
+        isEqual(yamlContentItem.key, item.db_key)
       )[0].data
 
     switch (page) {

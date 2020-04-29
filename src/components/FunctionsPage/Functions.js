@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import lodash from 'lodash'
+import { isEqual } from 'lodash'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
@@ -52,13 +52,11 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
       if (selectedFunction.updated) {
         item = functions.find(
           func =>
-            lodash.isEqual(func.updated, selectedFunction.updated) &&
-            lodash.isEqual(func.hash, selectedFunction.hash)
+            isEqual(func.updated, selectedFunction.updated) &&
+            isEqual(func.hash, selectedFunction.hash)
         )
       } else {
-        item = functions.find(func =>
-          lodash.isEqual(func.hash, match.params.hash)
-        )
+        item = functions.find(func => isEqual(func.hash, match.params.hash))
       }
 
       if (Object.keys(item).length === 0) {
