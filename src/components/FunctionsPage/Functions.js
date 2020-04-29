@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import lodash from 'lodash'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 
 import functionsData from './functionsData'
 import functionsActions from '../../actions/functions'
-import { compareDataForIdentity } from '../../utils/compareDataForIdentity'
 
 const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   const [functions, setFunctions] = useState([])
@@ -51,13 +51,13 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
     if (match.params.hash && functions.length > 0) {
       if (selectedFunction.updated) {
         item = functions.find(
-          item =>
-            compareDataForIdentity(item.updated, selectedFunction.updated) &&
-            compareDataForIdentity(item.hash, selectedFunction.hash)
+          func =>
+            lodash.isEqual(func.updated, selectedFunction.updated) &&
+            lodash.isEqual(func.hash, selectedFunction.hash)
         )
       } else {
         item = functions.find(func =>
-          compareDataForIdentity(func.hash, match.params.hash)
+          lodash.isEqual(func.hash, match.params.hash)
         )
       }
 
