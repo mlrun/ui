@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import ScheduleJobSimple from '../ScheduleJobSimple/ScheduleJobSimple'
 import ScheduleCron from '../ScheduleCron/ScheduleCron'
 
+import scheduleData from './scheduleData.json'
+
 const ScheduleJobView = ({
   activeTab,
   cron,
@@ -14,7 +16,7 @@ const ScheduleJobView = ({
   scheduleRepeatEnd,
   scheduleRepeatInterval,
   scheduleRepeatStep,
-  scheduleTabs,
+  setActiveTab,
   setDate,
   setIsRecurring,
   setScheduleRepeatEnd,
@@ -23,8 +25,19 @@ const ScheduleJobView = ({
   time
 }) => {
   return (
-    <>
-      {activeTab === scheduleTabs[0].id && (
+    <div className="schedule_container">
+      <div className="schedule_tabs">
+        {scheduleData.tabs.map(tab => (
+          <div
+            key={tab.id}
+            className={`schedule_tabs_item ${activeTab === tab.id && 'active'}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </div>
+        ))}
+      </div>
+      {activeTab === scheduleData.tabs[0].id && (
         <ScheduleJobSimple
           date={date}
           isRecurring={isRecurring}
@@ -41,8 +54,8 @@ const ScheduleJobView = ({
           time={time}
         />
       )}
-      {activeTab === scheduleTabs[1].id && <ScheduleCron cron={cron} />}
-    </>
+      {activeTab === scheduleData.tabs[1].id && <ScheduleCron cron={cron} />}
+    </div>
   )
 }
 
@@ -56,7 +69,7 @@ ScheduleJobView.propTypes = {
   scheduleRepeatEnd: PropTypes.string.isRequired,
   scheduleRepeatInterval: PropTypes.string.isRequired,
   scheduleRepeatStep: PropTypes.shape({}).isRequired,
-  scheduleTabs: PropTypes.array.isRequired,
+  setActiveTab: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setScheduleRepeatEnd: PropTypes.func.isRequired,

@@ -135,7 +135,7 @@
     }
 
     &.resources {
-
+      
       .select {
         margin-right: 16px;
         flex: 1;
@@ -153,6 +153,10 @@
 
       .range {
         margin-right: 16px;
+
+        .input {
+          min-width: 230px;
+        }
       }
     }
 

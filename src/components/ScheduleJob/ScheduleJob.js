@@ -59,18 +59,7 @@ const ScheduleJob = ({ match }) => {
   }
 
   return (
-    <div className="schedule_container">
-      <div className="schedule_tabs">
-        {scheduleData.tabs.map(tab => (
-          <div
-            key={tab.id}
-            className={`schedule_tabs_item ${activeTab === tab.id && 'active'}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.label}
-          </div>
-        ))}
-      </div>
+    <>
       <ScheduleJobView
         activeTab={activeTab}
         cron={cron}
@@ -81,7 +70,7 @@ const ScheduleJob = ({ match }) => {
         scheduleRepeatEnd={scheduleRepeatEnd}
         scheduleRepeatInterval={scheduleRepeatInterval}
         scheduleRepeatStep={scheduleRepeatStep}
-        scheduleTabs={scheduleData.tabs}
+        setActiveTab={setActiveTab}
         setDate={onHandleDateChange}
         setIsRecurring={setIsRecurring}
         setScheduleRepeatEnd={setScheduleRepeatEnd}
@@ -93,7 +82,7 @@ const ScheduleJob = ({ match }) => {
         <Schedule />
         Schedule
       </button>
-    </div>
+    </>
   )
 }
 
