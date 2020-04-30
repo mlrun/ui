@@ -16,10 +16,6 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
   const [stateFilter, setStateFilter] = useState(jobsData.initialStateFilter)
   const [groupFilter, setGroupFilter] = useState(jobsData.initialGroupFilter)
 
-  const [groupedByName, setGroupedByName] = useState({})
-  const [expand, setExpand] = useState(false)
-  const [expandedItems, setExpandedItems] = useState([])
-
   const refreshJobs = useCallback(
     event => {
       fetchJobs(
@@ -68,7 +64,6 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
 
     return () => {
       setSelectedJob({})
-      setExpand(false)
       setJobs([])
     }
   }, [history, match.params.projectName, refreshJobs])
@@ -93,38 +88,6 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
     history
   ])
 
-  useEffect(() => {
-    if (groupFilter === 'name') {
-      const groupedJobs = {}
-
-      jobs.forEach(job => {
-        groupedJobs[job.name]
-          ? groupedJobs[job.name].push(job)
-          : (groupedJobs[job.name] = [job])
-      })
-
-      setGroupedByName(groupedJobs)
-    } else if (groupFilter === jobsData.initialGroupFilter) {
-      const rows = [...document.getElementsByClassName('parent-row')]
-
-      rows.forEach(row => row.classList.remove('parent-row-expanded'))
-
-      setExpand(false)
-      setGroupedByName({})
-    }
-
-    return () => {
-      setGroupedByName({})
-    }
-  }, [
-    groupFilter,
-    setGroupedByName,
-    jobs,
-    jobsStore.loading,
-    history,
-    match.params.projectName
-  ])
-
   const handleSelectJob = item => {
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
@@ -134,34 +97,6 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
 
   const handleCancel = () => {
     setSelectedJob({})
-  }
-
-  const handleExpandRow = (e, item) => {
-    const parentRow = e.target.closest('.parent-row')
-    if (parentRow.classList.contains('parent-row-expanded')) {
-      const newArray = expandedItems.filter(
-        expanded => expanded.name.value !== item.name.value
-      )
-      parentRow.classList.remove('parent-row-expanded')
-      return setExpandedItems(newArray)
-    } else {
-      setExpandedItems([...expandedItems, item])
-      parentRow.classList.remove('active')
-      parentRow.classList.add('parent-row-expanded')
-    }
-  }
-
-  const handleExpandAll = () => {
-    if (groupFilter === 'name') {
-      const rows = [...document.getElementsByClassName('parent-row')]
-      if (expand) {
-        setExpand(false)
-        rows.forEach(row => row.classList.remove('parent-row-expanded'))
-      } else {
-        setExpand(true)
-        rows.forEach(row => row.classList.add('parent-row-expanded'))
-      }
-    }
   }
 
   const onStateFilterChange = id => {
@@ -174,13 +109,9 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
       <Content
         content={jobs}
         detailsMenu={jobsData.detailsMenu}
-        expand={expand}
         filters={jobsData.filters}
         groupFilter={groupFilter}
-        groupedByName={groupedByName}
         handleCancel={handleCancel}
-        handleExpandAll={handleExpandAll}
-        handleExpandRow={handleExpandRow}
         handleSelectItem={handleSelectJob}
         loading={jobsStore.loading}
         match={match}
