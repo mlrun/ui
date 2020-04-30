@@ -117,22 +117,27 @@ const FunctionsTableRow = ({
       ) : (
         <>
           {Object.values(rowItem).map((value, i) => {
+            const currentContentItem = content.filter(
+              contentItem =>
+                isEqual(contentItem.hash, rowItem.hash.value) &&
+                isEqual(
+                  formatDatetime(new Date(contentItem.updated)),
+                  rowItem.updated.value
+                )
+            )[0]
             return (
               <TableCell
                 data={value}
                 expandLink={Array.isArray(tableContent)}
                 handleExpandRow={handleExpandRow}
-                item={
-                  content.filter(item => item.hash === rowItem.hash.value)[0]
-                }
+                item={currentContentItem}
                 key={value.value + i}
                 link={
                   i === 0 &&
                   `/projects/${
                     match.params.projectName
                   }/functions/${content.length > 0 &&
-                    content.filter(item => item.hash === rowItem.hash.value)[0]
-                      ?.hash}/${
+                    currentContentItem?.hash}/${
                     match.params.tab
                       ? match.params.tab
                       : `${functionsData.detailsMenu[0].toLowerCase()}`
