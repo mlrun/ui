@@ -24,7 +24,7 @@ const CreateJobPage = ({
     fetchFunctions(match.params.projectName).then(functions => {
       const filteredFunctions = functions.filter(
         func =>
-          func.kind !== '' || func.kind !== 'handler' || func.kind !== 'local'
+          func.kind !== '' && func.kind !== 'handler' && func.kind !== 'local'
       )
 
       return setFunctions(filteredFunctions)

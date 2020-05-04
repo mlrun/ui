@@ -12,6 +12,7 @@ import Select from '../../common/Select/Select'
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
 import panelData from '../JobsPanel/panelData'
+import selectData from '../../common/Select/selectData'
 
 const JobsPanelParametersView = ({
   addNewParameter,
@@ -60,7 +61,12 @@ const JobsPanelParametersView = ({
                   label={newParameter.type}
                   match={match}
                   onClick={value =>
-                    setNewParameter({ ...newParameter, type: value })
+                    setNewParameter({
+                      ...newParameter,
+                      type: selectData.parametersType.find(
+                        type => type.id === value
+                      ).label
+                    })
                   }
                   option="parametersType"
                 />
@@ -76,7 +82,13 @@ const JobsPanelParametersView = ({
                 <Select
                   label={newParameterSimple}
                   match={match}
-                  onClick={setNewParameterSimple}
+                  onClick={value =>
+                    setNewParameterSimple(
+                      selectData.parameterSimple.find(
+                        param => param.id === value
+                      ).label
+                    )
+                  }
                   option="parameterSimple"
                 />
               </div>
