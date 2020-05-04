@@ -15,10 +15,37 @@
     .range {
       margin-right: 15px;
     }
+
+    .schedule-repeat-week {
+      display: flex;
+      align-items: center;
+
+      &_day {
+        height: 32px;
+        width: 32px;
+        line-height: 32px;
+        text-align: center;
+        border-radius: 16px;
+        margin-right: 4px;
+
+        &:not(.S) {
+          background-color: $purple;
+          color: $white;
+        }
+
+        &.S {
+          border: $primaryBorder;
+          color: $spunPearl;
+        }
+
+        &:first-child {
+          margin-left: 16px;
+        }
+      }
+    }
   }
 
   .select {
-
     &__header {
       min-width: 218px;
     }
@@ -39,6 +66,25 @@
 
     .select {
       height: 56px;
+      margin-right: 15px;
+    }
+
+    .input__label {
+      color: $topaz;
+    }
+    
+    .range {
+      z-index: 1;
+
+      &-input-container {
+        position: relative;
+      }
+
+      &-input-label {
+        color: $topaz;
+        position: absolute;
+        top: 19px;
+      }
     }
   }
 }

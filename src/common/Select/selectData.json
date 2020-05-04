@@ -48,7 +48,9 @@
   "repeatInterval": [
     { "label": "Minute", "id": "minute" },
     { "label": "Hour", "id": "hour" },
-    { "label": "Day", "id": "day" }
+    { "label": "Day", "id": "day" },
+    { "label": "Week", "id": "week" },
+    { "label": "Month", "sub": "(every 12th day)", "id": "month" }
   ],
   "repeatEnd": [
     { "label": "Never", "id": "never" },

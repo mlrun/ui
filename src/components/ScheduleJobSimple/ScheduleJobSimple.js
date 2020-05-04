@@ -10,15 +10,18 @@ import TimePicker from '../../common/TimePicker/TimePicker'
 
 const ScheduleJobSimple = ({
   date,
+  daysOfWeek,
   isRecurring,
   match,
   onChangeStep,
   scheduleRepeatEnd,
+  scheduleRepeatEndValue,
   scheduleRepeatInterval,
   scheduleRepeatStep,
   setDate,
   setIsRecurring,
   setScheduleRepeatEnd,
+  setScheduleRepeatEndValue,
   setScheduleRepeatInterval,
   setTime,
   time
@@ -45,11 +48,14 @@ const ScheduleJobSimple = ({
 
       {isRecurring && (
         <ScheduleRecurring
+          daysOfWeek={daysOfWeek}
           match={match}
           scheduleRepeatEnd={scheduleRepeatEnd}
+          scheduleRepeatEndValue={scheduleRepeatEndValue}
           scheduleRepeatInterval={scheduleRepeatInterval}
           scheduleRepeatStep={scheduleRepeatStep[scheduleRepeatInterval]}
           setScheduleRepeatEnd={setScheduleRepeatEnd}
+          setScheduleRepeatEndValue={setScheduleRepeatEndValue}
           setScheduleRepeatInterval={setScheduleRepeatInterval}
           setScheduleRepeatStep={onChangeStep}
         />
@@ -64,11 +70,16 @@ ScheduleJobSimple.propTypes = {
   match: PropTypes.shape({}).isRequired,
   onChangeStep: PropTypes.func.isRequired,
   scheduleRepeatEnd: PropTypes.string.isRequired,
+  scheduleRepeatEndValue: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]),
   scheduleRepeatInterval: PropTypes.string.isRequired,
   scheduleRepeatStep: PropTypes.shape({}).isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setScheduleRepeatEnd: PropTypes.func.isRequired,
+  setScheduleRepeatEndValue: PropTypes.func.isRequired,
   setScheduleRepeatInterval: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,
   time: PropTypes.string.isRequired

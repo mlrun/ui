@@ -14,6 +14,8 @@ const Select = ({ disabled, label, match, onClick, option, page, value }) => {
   const [isOpen, setOpen] = useState(false)
   const history = useHistory()
 
+  const selectOption = options[option].find(item => item.id === value)
+
   useEffect(() => {
     window.addEventListener('scroll', handlerScroll)
     return () => {
@@ -45,7 +47,10 @@ const Select = ({ disabled, label, match, onClick, option, page, value }) => {
       <div className="select__header">
         {label && <div className="select__label">{label}</div>}
         <div className="select__value">
-          {value && options[option].find(item => item.id === value).label}
+          {value && selectOption.label}
+          {selectOption?.sub && (
+            <span className="sub-label">{selectOption.sub}</span>
+          )}
         </div>
         <Caret className="select__caret" />
       </div>

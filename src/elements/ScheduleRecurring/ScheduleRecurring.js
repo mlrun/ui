@@ -5,14 +5,17 @@ import RangeInput from '../../common/RangeInput/RangeInput'
 import Select from '../../common/Select/Select'
 
 import './scheduleRecurring.scss'
+import DatePicker from '../../common/DatePicker/DatePicker'
 
 const ScheduleRecurring = ({
   daysOfWeek,
   match,
   scheduleRepeatEnd,
+  scheduleRepeatEndValue,
   scheduleRepeatInterval,
   scheduleRepeatStep,
   setScheduleRepeatEnd,
+  setScheduleRepeatEndValue,
   setScheduleRepeatInterval,
   setScheduleRepeatStep
 }) => {
@@ -35,10 +38,10 @@ const ScheduleRecurring = ({
           <div className="schedule-repeat-week">
             {daysOfWeek.map((day, index) => (
               <span
-                key={day + index}
-                className={`schedule-repeat-week_day ${day}`}
+                key={day.label + index}
+                className={`schedule-repeat-week_day ${day.label}`}
               >
-                {day}
+                {day.label}
               </span>
             ))}
           </div>
@@ -53,6 +56,34 @@ const ScheduleRecurring = ({
           page="jobs"
           value={scheduleRepeatEnd}
         />
+        {scheduleRepeatEnd === 'onDate' && (
+          <DatePicker
+            onChange={setScheduleRepeatEndValue}
+            splitCharacter="."
+            value={scheduleRepeatEndValue}
+          />
+        )}
+        {scheduleRepeatEnd === 'after' && (
+          <div className="range-input-container">
+            <RangeInput
+              onChange={setScheduleRepeatEndValue}
+              value={scheduleRepeatEndValue}
+            />
+            {scheduleRepeatEndValue.length < 10 && (
+              <span
+                className="range-input-label"
+                style={{
+                  left:
+                    (scheduleRepeatEndValue
+                      ? scheduleRepeatEndValue.length + 2
+                      : 2) * 10
+                }}
+              >
+                occurrences
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

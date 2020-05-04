@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import ScheduleJobView from './ScheduleJobView'
 
 import scheduleData from './scheduleData.json'
+import { getWeekDays } from '../../utils/datePicker.util'
 
 import './scheduleJob.scss'
 
@@ -19,13 +20,18 @@ const ScheduleJob = ({ match }) => {
   const [date, setDate] = useState('')
   const [isRecurring, setIsRecurring] = useState('')
   const [scheduleRepeatEnd, setScheduleRepeatEnd] = useState('never')
+  const [scheduleRepeatEndValue, setScheduleRepeatEndValue] = useState('')
   const [scheduleRepeatInterval, setScheduleRepeatInterval] = useState('minute')
   const [scheduleRepeatStep, setScheduleRepeatStep] = useState({
     minute: 1,
     hour: 1,
-    day: 1
+    day: 1,
+    week: 1,
+    month: 12
   })
   const [time, setTime] = useState('')
+
+  const daysOfWeek = getWeekDays('mon')
 
   const generateCronString = cron => {
     let cronString = Object.keys(cron).reduce((prev, next, index, arr) => {
@@ -60,23 +66,37 @@ const ScheduleJob = ({ match }) => {
     }))
   }
 
+  const onHandleScheduleRepeatEnd = value => {
+    setScheduleRepeatEnd(value)
+    setScheduleRepeatEndValue(value === 'after' ? '1' : '')
+  }
+
+  const onHandleScheduleRepeatEndValue = value => {
+    setScheduleRepeatEndValue(
+      scheduleRepeatEnd === 'after' ? value.toString() : value
+    )
+  }
+
   return (
     <ScheduleJobView
       activeTab={activeTab}
       cron={cron}
       date={date}
+      daysOfWeek={daysOfWeek}
       generateCronString={generateCronString}
       isRecurring={isRecurring}
       match={match}
       onChangeStep={onHandleStepChange}
       onSchedule={onSchedule}
       scheduleRepeatEnd={scheduleRepeatEnd}
+      scheduleRepeatEndValue={scheduleRepeatEndValue}
       scheduleRepeatInterval={scheduleRepeatInterval}
       scheduleRepeatStep={scheduleRepeatStep}
       setActiveTab={setActiveTab}
       setDate={onHandleDateChange}
       setIsRecurring={setIsRecurring}
-      setScheduleRepeatEnd={setScheduleRepeatEnd}
+      setScheduleRepeatEnd={onHandleScheduleRepeatEnd}
+      setScheduleRepeatEndValue={onHandleScheduleRepeatEndValue}
       setScheduleRepeatInterval={setScheduleRepeatInterval}
       setTime={onHandleTimeChange}
       time={time}
