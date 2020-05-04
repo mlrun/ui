@@ -87,7 +87,10 @@
 
       &.open {
         height: auto;
-        min-height: 300px;
+
+        .accordion__body {
+          min-height: 400px;
+        }
       }
 
       &:first-child {
@@ -142,7 +145,7 @@
     }
 
     .input-wrapper {
-      flex: 1;
+      flex: .9;
     }
 
     &.resources {
