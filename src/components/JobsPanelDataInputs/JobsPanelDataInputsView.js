@@ -10,6 +10,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import Tooltip from '../../common/Tooltip/Tooltip'
 
 import panelData from '../JobsPanel/panelData'
+import selectData from '../../common/Select/selectData'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
@@ -129,7 +130,14 @@ const JobsPanelDataInputsView = ({
                   ' no-border'}`}
               >
                 <Select
-                  onClick={type => setNewVolume({ ...newVolume, type: type })}
+                  onClick={type =>
+                    setNewVolume({
+                      ...newVolume,
+                      type: selectData.volumeType.find(
+                        volumeType => volumeType.id === type
+                      ).label
+                    })
+                  }
                   option="volumeType"
                   label={newVolume.type.length > 0 ? newVolume.type : 'Type'}
                   match={match}
