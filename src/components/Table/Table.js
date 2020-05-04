@@ -28,7 +28,7 @@ const Table = ({
   tableHeaders
 }) => {
   const [tableContent, setTableContent] = useState([])
-  const [groupLatestJob, setGroupLatestJob] = useState([])
+  const [groupLatestItem, setGroupLatestItem] = useState([])
 
   const previewArtifact = useSelector(state => state.artifactsStore.preview)
 
@@ -36,7 +36,9 @@ const Table = ({
     const _tableContent =
       Object.keys(groupedByName).length > 0
         ? Object.values(groupedByName).map(group => {
-            return createJobsContent(group)
+            return page === JOBS_PAGE
+              ? createJobsContent(group)
+              : createFunctionsContent(group)
           })
         : page === JOBS_PAGE
         ? createJobsContent(content)
@@ -47,16 +49,21 @@ const Table = ({
     if (groupFilter === 'name') {
       const groupLatest = _tableContent.map(group => {
         if (Array.isArray(group)) {
-          return group.reduce((prev, curr) => {
-            return new Date(prev.updated.value).getTime() >
-              new Date(curr.updated.value).getTime()
-              ? prev
-              : curr
-          })
+          return page === JOBS_PAGE
+            ? group.reduce((prev, curr) => {
+                return new Date(prev.updated.value).getTime() >
+                  new Date(curr.updated.value).getTime()
+                  ? prev
+                  : curr
+              })
+            : group.find((func, i, arr) => {
+                if (arr.length === 1) return func
+                return func.tag.value === 'latest'
+              })
         } else return group
       })
 
-      setGroupLatestJob(groupLatest)
+      setGroupLatestItem(groupLatest)
     }
 
     setTableContent(_tableContent)
@@ -64,7 +71,7 @@ const Table = ({
 
   useEffect(() => {
     if (groupFilter === 'none') {
-      setGroupLatestJob([])
+      setGroupLatestItem([])
       setTableContent([])
     }
   }, [groupFilter])
@@ -75,7 +82,7 @@ const Table = ({
         content={content}
         detailsMenu={detailsMenu}
         groupFilter={groupFilter}
-        groupLatestJob={groupLatestJob}
+        groupLatestItem={groupLatestItem}
         groupedByName={groupedByName}
         handleCancel={handleCancel}
         handleExpandRow={handleExpandRow}

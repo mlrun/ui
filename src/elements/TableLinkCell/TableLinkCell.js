@@ -39,7 +39,7 @@ const TableLinkCell = ({
         )}
         <div className="name_status_row">
           {data.value}
-          {link.match(/functions/) && <span>{item.tag || 'latest'}</span>}
+          {link.match(/functions/) && <span>{item.tag}</span>}
         </div>
 
         {link.match(/jobs|functions/) &&
