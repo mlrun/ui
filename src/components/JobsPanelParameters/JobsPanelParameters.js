@@ -15,7 +15,7 @@ const JobsPanelParameters = ({
   const [addNewParameter, setAddNewParameter] = useState(false)
   const [newParameter, setNewParameter] = useState({
     name: '',
-    type: '',
+    type: 'string',
     value: ''
   })
   const [newParameterSimple, setNewParameterSimple] = useState(
@@ -25,14 +25,13 @@ const JobsPanelParameters = ({
   const [selectedParameter, setSelectedParameter] = useState({})
 
   const handleAddNewParameter = () => {
-    const emptyParameter = Object.values(newParameter).filter(
-      value => value.length > 0
-    )
+    const emptyParameter =
+      !newParameter.name.length || !newParameter.value.length
 
-    if (emptyParameter.length === 0) {
+    if (emptyParameter) {
       setNewParameter({
         name: '',
-        type: '',
+        type: 'string',
         value: ''
       })
       return setAddNewParameter(false)
@@ -61,7 +60,7 @@ const JobsPanelParameters = ({
     setAddNewParameter(false)
     setNewParameter({
       name: '',
-      type: '',
+      type: 'string',
       value: ''
     })
     setNewParameterSimple(panelData.newParameterSimple[0].id)

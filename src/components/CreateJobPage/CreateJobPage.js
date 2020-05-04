@@ -18,15 +18,27 @@ const CreateJobPage = ({
 }) => {
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setFunction] = useState({})
-  const [templatesArray, setTemplatesArray] = useState([])
+  const [templatesArray, setTemplatesArray] = useState(functionsStore.templates)
 
   useEffect(() => {
     fetchFunctions(match.params.projectName).then(functions => {
-      return setFunctions(functions)
+      const filteredFunctions = functions.filter(
+        func =>
+          func.kind !== '' || func.kind !== 'handler' || func.kind !== 'local'
+      )
+
+      return setFunctions(filteredFunctions)
     })
 
-    fetchFunctionsTemplates().then(data => setTemplatesArray(data))
-  }, [fetchFunctions, fetchFunctionsTemplates, match.params.projectName])
+    if (functionsStore.templates.length === 0) {
+      fetchFunctionsTemplates().then(data => setTemplatesArray(data))
+    }
+  }, [
+    fetchFunctions,
+    fetchFunctionsTemplates,
+    functionsStore.templates.length,
+    match.params.projectName
+  ])
 
   const handleSelectFunction = item => {
     setFunction(item)

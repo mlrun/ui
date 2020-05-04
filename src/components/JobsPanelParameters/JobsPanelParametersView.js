@@ -55,14 +55,14 @@ const JobsPanelParametersView = ({
                   floatingLabel
                   type="text"
                 />
-                <Input
-                  onChange={value =>
+                <Select
+                  className="parameters-type"
+                  label={newParameter.type}
+                  match={match}
+                  onClick={value =>
                     setNewParameter({ ...newParameter, type: value })
                   }
-                  label="Type"
-                  className="input-row__item"
-                  floatingLabel
-                  type="text"
+                  option="parametersType"
                 />
                 <Input
                   onChange={value =>
@@ -74,10 +74,10 @@ const JobsPanelParametersView = ({
                   type="text"
                 />
                 <Select
-                  onClick={setNewParameterSimple}
-                  option="parameterType"
                   label={newParameterSimple}
                   match={match}
+                  onClick={setNewParameterSimple}
+                  option="parameterSimple"
                 />
               </div>
               <button

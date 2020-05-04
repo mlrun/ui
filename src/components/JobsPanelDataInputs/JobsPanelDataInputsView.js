@@ -193,7 +193,7 @@ const JobsPanelDataInputsView = ({
           type="text"
         />
         <Input
-          label="Default output path"
+          label="Default artifact path"
           className="default-input"
           onChange={setOutputPath}
           floatingLabel
