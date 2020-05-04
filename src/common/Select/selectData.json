@@ -22,7 +22,7 @@
     { "label": "Secret", "id": "Secret" },
     { "label": "PVC", "id": "PVC" }
   ],
-  "parameterSimple": [
+  "parameterType": [
     { "label": "Simple", "id": "Simple" },
     { "label": "Hyper", "id": "Hyper" }
   ],
@@ -55,7 +55,7 @@
     { "label": "On date", "id": "onDate" },
     { "label": "After", "id": "after" }
   ],
-  "parametersType": [
+  "parametersValueType": [
     {
       "label": "string",
       "id": "string"

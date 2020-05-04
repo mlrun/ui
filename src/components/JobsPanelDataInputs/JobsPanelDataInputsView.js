@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { find } from 'lodash'
 
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import JobsPanelTable from '../../elements/JobsPanelTable/JobsPanelTable'
@@ -133,9 +134,7 @@ const JobsPanelDataInputsView = ({
                   onClick={type =>
                     setNewVolume({
                       ...newVolume,
-                      type: selectData.volumeType.find(
-                        volumeType => volumeType.id === type
-                      ).label
+                      type: find(selectData.volumeType, ['id', type]).label
                     })
                   }
                   option="volumeType"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { includes } from 'lodash'
 
 import CreateJobPageView from './CreateJobPageView'
 import Loader from '../../common/Loader/Loader'
@@ -23,15 +24,14 @@ const CreateJobPage = ({
   useEffect(() => {
     fetchFunctions(match.params.projectName).then(functions => {
       const filteredFunctions = functions.filter(
-        func =>
-          func.kind !== '' && func.kind !== 'handler' && func.kind !== 'local'
+        func => !includes(['', 'handler', 'local'], func.kind)
       )
 
       return setFunctions(filteredFunctions)
     })
 
     if (functionsStore.templates.length === 0) {
-      fetchFunctionsTemplates().then(data => setTemplatesArray(data))
+      fetchFunctionsTemplates().then(setTemplatesArray)
     }
   }, [
     fetchFunctions,

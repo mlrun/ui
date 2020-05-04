@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { find } from 'lodash'
 
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import JobsPanelTable from '../../elements/JobsPanelTable/JobsPanelTable'
@@ -21,12 +22,12 @@ const JobsPanelParametersView = ({
   handleDeleteParameter,
   match,
   newParameter,
-  newParameterSimple,
+  newParameterType,
   parameters,
   selectedParameter,
   setAddNewParameter,
   setNewParameter,
-  setNewParameterSimple,
+  setNewParameterType,
   setSelectedParameter
 }) => {
   return (
@@ -63,12 +64,11 @@ const JobsPanelParametersView = ({
                   onClick={value =>
                     setNewParameter({
                       ...newParameter,
-                      type: selectData.parametersType.find(
-                        type => type.id === value
-                      ).label
+                      type: find(selectData.parametersValueType, ['id', value])
+                        .label
                     })
                   }
-                  option="parametersType"
+                  option="parametersValueType"
                 />
                 <Input
                   onChange={value =>
@@ -80,16 +80,14 @@ const JobsPanelParametersView = ({
                   type="text"
                 />
                 <Select
-                  label={newParameterSimple}
+                  label={newParameterType}
                   match={match}
                   onClick={value =>
-                    setNewParameterSimple(
-                      selectData.parameterSimple.find(
-                        param => param.id === value
-                      ).label
+                    setNewParameterType(
+                      find(selectData.parameterType, ['id', value]).label
                     )
                   }
-                  option="parameterSimple"
+                  option="parameterType"
                 />
               </div>
               <button
@@ -119,11 +117,11 @@ JobsPanelParametersView.propTypes = {
   handleAddNewItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   newParameter: PropTypes.shape({}).isRequired,
-  newParameterSimple: PropTypes.string.isRequired,
+  newParameterType: PropTypes.string.isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   setAddNewParameter: PropTypes.func.isRequired,
   setNewParameter: PropTypes.func.isRequired,
-  setNewParameterSimple: PropTypes.func.isRequired
+  setNewParameterType: PropTypes.func.isRequired
 }
 
 export default JobsPanelParametersView

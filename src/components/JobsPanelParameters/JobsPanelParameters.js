@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import JobsPanelParametersView from './JobsPanelParametersView'
 
 import panelData from '../JobsPanel/panelData'
+import selectedData from '../../common/Select/selectData'
 
 const JobsPanelParameters = ({
   hyperparams,
@@ -15,23 +16,23 @@ const JobsPanelParameters = ({
   const [addNewParameter, setAddNewParameter] = useState(false)
   const [newParameter, setNewParameter] = useState({
     name: '',
-    type: 'string',
+    type: selectedData.parametersValueType[0].label,
     value: ''
   })
-  const [newParameterSimple, setNewParameterSimple] = useState(
-    panelData.newParameterSimple[0].id
+  const [newParameterType, setNewParameterType] = useState(
+    panelData.newParameterType[0].id
   )
   const [parametersArray, setParametersArray] = useState([])
   const [selectedParameter, setSelectedParameter] = useState({})
 
   const handleAddNewParameter = () => {
-    const emptyParameter =
+    const isEmptyParameter =
       !newParameter.name.length || !newParameter.value.length
 
-    if (emptyParameter) {
+    if (isEmptyParameter) {
       setNewParameter({
         name: '',
-        type: 'string',
+        type: selectedData.parametersValueType[0].label,
         value: ''
       })
       return setAddNewParameter(false)
@@ -42,7 +43,7 @@ const JobsPanelParameters = ({
       [newParameter.name]: newParameter.value
     })
 
-    if (newParameterSimple !== panelData.newParameterSimple[0].id) {
+    if (newParameterType !== panelData.newParameterType[0].id) {
       setNewJobHyperParameters({
         ...hyperparams,
         [newParameter.name]: newParameter.value.split(',')
@@ -53,17 +54,17 @@ const JobsPanelParameters = ({
       ...parametersArray,
       {
         ...newParameter,
-        simple: newParameterSimple
+        simple: newParameterType
       }
     ])
 
     setAddNewParameter(false)
     setNewParameter({
       name: '',
-      type: 'string',
+      type: selectedData.parametersValueType[0].label,
       value: ''
     })
-    setNewParameterSimple(panelData.newParameterSimple[0].id)
+    setNewParameterType(panelData.newParameterType[0].id)
   }
 
   const handleEditParameter = () => {
@@ -72,7 +73,7 @@ const JobsPanelParameters = ({
 
     params[selectedParameter.name] = selectedParameter.value
 
-    if (selectedParameter.simple !== panelData.newParameterSimple[0].id) {
+    if (selectedParameter.simple !== panelData.newParameterType[0].id) {
       if (hyperParams[selectedParameter.name]) {
         hyperParams[selectedParameter.name] = selectedParameter.value.split(',')
         setNewJobHyperParameters({ ...hyperParams })
@@ -85,7 +86,7 @@ const JobsPanelParameters = ({
     }
 
     if (
-      selectedParameter.simple === panelData.newParameterSimple[0].id &&
+      selectedParameter.simple === panelData.newParameterType[0].id &&
       hyperParams[selectedParameter.name]
     ) {
       delete hyperParams[selectedParameter.name]
@@ -112,7 +113,7 @@ const JobsPanelParameters = ({
 
     delete newParameters[item.name]
 
-    if (item.simple !== panelData.newParameterSimple[0].id) {
+    if (item.simple !== panelData.newParameterType[0].id) {
       const newHyperParameters = { ...hyperparams }
 
       delete newHyperParameters[item.name]
@@ -134,12 +135,12 @@ const JobsPanelParameters = ({
       handleEditParameter={handleEditParameter}
       match={match}
       newParameter={newParameter}
-      newParameterSimple={newParameterSimple}
+      newParameterType={newParameterType}
       parameters={parametersArray}
       selectedParameter={selectedParameter}
       setAddNewParameter={setAddNewParameter}
       setNewParameter={setNewParameter}
-      setNewParameterSimple={setNewParameterSimple}
+      setNewParameterType={setNewParameterType}
       setSelectedParameter={setSelectedParameter}
     />
   )
