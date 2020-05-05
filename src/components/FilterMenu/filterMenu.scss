@@ -25,13 +25,16 @@
     margin-right: 15px;
     margin-bottom: 15px;
   }
+
+  .filters-checkbox {
+    margin-bottom: 15px;
+  }
 }
 
 .buttons {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 15px;
 
   button {
     width: 40px;

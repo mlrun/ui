@@ -106,10 +106,9 @@ const FilterMenu = ({
             />
           )
         )}
-      </div>
-      <div className="buttons">
         {page === FUNCTIONS_PAGE && (
           <CheckBox
+            className="filters-checkbox"
             item={{
               label: 'Show untagged',
               id: 'showUntagged'
@@ -118,6 +117,8 @@ const FilterMenu = ({
             selectedId={showUntagged}
           />
         )}
+      </div>
+      <div className="buttons">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button
             onClick={() => {
