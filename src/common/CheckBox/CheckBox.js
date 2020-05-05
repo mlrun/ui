@@ -25,7 +25,7 @@ const CheckBox = ({ children, className, item, onChange, selectedId }) => {
 }
 
 CheckBox.defaultProps = {
-  className: null
+  className: ''
 }
 
 CheckBox.propTypes = {

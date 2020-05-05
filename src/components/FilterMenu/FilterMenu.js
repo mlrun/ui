@@ -114,8 +114,8 @@ const FilterMenu = ({
               label: 'Show untagged',
               id: 'showUntagged'
             }}
-            selectedId={showUntagged}
             onChange={setShowUntagged}
+            selectedId={showUntagged}
           />
         )}
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
