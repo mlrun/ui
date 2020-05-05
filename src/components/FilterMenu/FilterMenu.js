@@ -7,12 +7,13 @@ import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Input from '../../common/Input/Input'
+import CheckBox from '../../common/CheckBox/CheckBox'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
-import { ARTIFACTS_PAGE } from '../../constants.js'
+import { ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants.js'
 
 import artifactsData from '../Artifacts/artifactsData'
 
@@ -28,6 +29,8 @@ const FilterMenu = ({
   groupFilter,
   setStateFilter,
   setGroupFilter,
+  setShowUntagged,
+  showUntagged,
   stateFilter
 }) => {
   const [itemsFilterTree] = useState(['Latest'])
@@ -103,6 +106,17 @@ const FilterMenu = ({
             />
           )
         )}
+        {page === FUNCTIONS_PAGE && (
+          <CheckBox
+            className="filters-checkbox"
+            item={{
+              label: 'Show untagged',
+              id: 'showUntagged'
+            }}
+            onChange={setShowUntagged}
+            selectedId={showUntagged}
+          />
+        )}
       </div>
       <div className="buttons">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
@@ -139,8 +153,10 @@ const FilterMenu = ({
 
 FilterMenu.defaultProps = {
   groupFilter: '',
-  setStateFilter: () => {},
-  setGroupFilter: () => {},
+  setStateFilter: null,
+  setGroupFilter: null,
+  setShowUntagged: null,
+  showUntagged: '',
   stateFilter: ''
 }
 
@@ -149,6 +165,8 @@ FilterMenu.propTypes = {
   groupFilter: PropTypes.string,
   setStateFilter: PropTypes.func,
   setGroupFilter: PropTypes.func,
+  setShowUntagged: PropTypes.func,
+  showUntagged: PropTypes.string,
   stateFilter: PropTypes.string
 }
 
