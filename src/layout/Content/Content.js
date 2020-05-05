@@ -29,7 +29,9 @@ const Content = ({
   page,
   selectedItem,
   setGroupFilter,
+  setShowUntagged,
   setStateFilter,
+  showUntagged,
   stateFilter,
   tableHeaders,
   yamlContent
@@ -163,6 +165,8 @@ const Content = ({
             setGroupFilter={setGroupFilter}
             stateFilter={stateFilter}
             setStateFilter={setStateFilter}
+            setShowUntagged={setShowUntagged}
+            showUntagged={showUntagged}
             match={match}
             onChange={refresh}
             page={page}
@@ -202,7 +206,9 @@ Content.defaultProps = {
   groupFilter: null,
   selectedItem: {},
   setGroupFilter: null,
+  setShowUntagged: null,
   setStateFilter: null,
+  showUntagged: '',
   stateFilter: null
 }
 
@@ -219,7 +225,9 @@ Content.propTypes = {
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
   setGroupFilter: PropTypes.func,
+  setShowUntagged: PropTypes.func,
   setStateFilter: PropTypes.func,
+  showUntagged: PropTypes.string,
   stateFilter: PropTypes.string,
   tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   yamlContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired
