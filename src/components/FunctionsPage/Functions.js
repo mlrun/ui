@@ -47,9 +47,9 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   }, [history, match.params.projectName, refreshFunctions])
 
   useEffect(() => {
-    !showUntagged
-      ? setTaggedFunctions(functions.filter(func => func.tag.length))
-      : setTaggedFunctions(functions)
+    setTaggedFunctions(
+      !showUntagged ? functions.filter(func => func.tag.length) : functions
+    )
   }, [showUntagged, functions])
 
   useEffect(() => {
