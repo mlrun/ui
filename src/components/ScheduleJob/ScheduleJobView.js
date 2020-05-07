@@ -13,21 +13,15 @@ const ScheduleJobView = ({
   cron,
   date,
   daysOfWeek,
+  dispatch,
   generateCronString,
   isRecurring,
   match,
-  onChangeStep,
   onSchedule,
-  scheduleRepeatEnd,
-  scheduleRepeatEndValue,
-  scheduleRepeatInterval,
-  scheduleRepeatStep,
+  recurringState,
   setActiveTab,
   setDate,
   setIsRecurring,
-  setScheduleRepeatEnd,
-  setScheduleRepeatEndValue,
-  setScheduleRepeatInterval,
   setTime,
   time
 }) => {
@@ -48,18 +42,12 @@ const ScheduleJobView = ({
         <ScheduleJobSimple
           date={date}
           daysOfWeek={daysOfWeek}
+          dispatch={dispatch}
           isRecurring={isRecurring}
           match={match}
-          onChangeStep={onChangeStep}
-          scheduleRepeatEnd={scheduleRepeatEnd}
-          scheduleRepeatEndValue={scheduleRepeatEndValue}
-          scheduleRepeatInterval={scheduleRepeatInterval}
-          scheduleRepeatStep={scheduleRepeatStep}
+          recurringState={recurringState}
           setDate={setDate}
           setIsRecurring={setIsRecurring}
-          setScheduleRepeatEnd={setScheduleRepeatEnd}
-          setScheduleRepeatEndValue={setScheduleRepeatEndValue}
-          setScheduleRepeatInterval={setScheduleRepeatInterval}
           setTime={setTime}
           time={time}
         />
@@ -79,24 +67,16 @@ ScheduleJobView.propTypes = {
   activeTab: PropTypes.string.isRequired,
   cron: PropTypes.shape({}).isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
+  daysOfWeek: PropTypes.array.isRequired,
+  dispatch: PropTypes.func.isRequired,
   generateCronString: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
-  onChangeStep: PropTypes.func.isRequired,
   onSchedule: PropTypes.func.isRequired,
-  scheduleRepeatEnd: PropTypes.string.isRequired,
-  scheduleRepeatEndValue: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.instanceOf(Date)
-  ]),
-  scheduleRepeatInterval: PropTypes.string.isRequired,
-  scheduleRepeatStep: PropTypes.shape({}).isRequired,
+  recurringState: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
-  setScheduleRepeatEnd: PropTypes.func.isRequired,
-  setScheduleRepeatEndValue: PropTypes.func.isRequired,
-  setScheduleRepeatInterval: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,
   time: PropTypes.string.isRequired
 }

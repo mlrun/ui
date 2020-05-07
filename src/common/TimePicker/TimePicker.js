@@ -46,4 +46,4 @@ TimePicker.propTypes = {
   value: PropTypes.string.isRequired
 }
 
-export default TimePicker
+export default React.memo(TimePicker, (prev, next) => prev.value === next.value)

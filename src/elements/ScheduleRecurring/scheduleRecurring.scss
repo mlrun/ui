@@ -27,13 +27,14 @@
         text-align: center;
         border-radius: 16px;
         margin-right: 4px;
+        cursor: pointer;
 
-        &:not(.S) {
+        &.active {
           background-color: $purple;
           color: $white;
         }
 
-        &.S {
+        &.not-active {
           border: $primaryBorder;
           color: $spunPearl;
         }
@@ -72,7 +73,7 @@
     .input__label {
       color: $topaz;
     }
-    
+
     .range {
       z-index: 1;
 
@@ -84,6 +85,18 @@
         color: $topaz;
         position: absolute;
         top: 19px;
+
+        &-position-left-20px {
+          left: 20px;
+        }
+
+        &-position-left-40px {
+          left: 40px;
+        }
+
+        &-position-left-50px {
+          left: 50px;
+        }
       }
     }
   }

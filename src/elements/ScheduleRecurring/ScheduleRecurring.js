@@ -3,45 +3,71 @@ import PropTypes from 'prop-types'
 
 import RangeInput from '../../common/RangeInput/RangeInput'
 import Select from '../../common/Select/Select'
-
-import './scheduleRecurring.scss'
 import DatePicker from '../../common/DatePicker/DatePicker'
 
-const ScheduleRecurring = ({
-  daysOfWeek,
-  match,
-  scheduleRepeatEnd,
-  scheduleRepeatEndValue,
-  scheduleRepeatInterval,
-  scheduleRepeatStep,
-  setScheduleRepeatEnd,
-  setScheduleRepeatEndValue,
-  setScheduleRepeatInterval,
-  setScheduleRepeatStep
-}) => {
+import { scheduleActionType } from '../../components/ScheduleJob/recurringReducer'
+
+import './scheduleRecurring.scss'
+
+const ScheduleRecurring = ({ daysOfWeek, dispatch, match, recurringState }) => {
+  const {
+    scheduleRepeat: { activeOption: scheduleRepeatActiveOption, week },
+    scheduleRepeatEnd: {
+      activeOption: scheduleRepeatEndActiveOption,
+      occurrences,
+      date
+    }
+  } = recurringState
+
   return (
     <div className="recurring_container">
       <span>Repeat every</span>
       <div className="repeat_container">
         <RangeInput
-          onChange={setScheduleRepeatStep}
-          value={scheduleRepeatStep.toString()}
+          onChange={item =>
+            dispatch({
+              type: scheduleRepeatActiveOption,
+              payload: item
+            })
+          }
+          value={
+            scheduleRepeatActiveOption === 'week'
+              ? week.repeat.toString()
+              : recurringState.scheduleRepeat[
+                  scheduleRepeatActiveOption
+                ].toString()
+          }
         />
         <Select
           match={match}
-          onClick={setScheduleRepeatInterval}
+          onClick={item =>
+            dispatch({
+              type: scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION,
+              payload: item
+            })
+          }
           option="repeatInterval"
           page="jobs"
-          value={scheduleRepeatInterval}
+          value={scheduleRepeatActiveOption}
         />
-        {scheduleRepeatInterval === 'week' && (
+        {scheduleRepeatActiveOption === 'week' && (
           <div className="schedule-repeat-week">
-            {daysOfWeek.map((day, index) => (
+            {daysOfWeek.map(day => (
               <span
-                key={day.label + index}
-                className={`schedule-repeat-week_day ${day.label}`}
+                key={day.label}
+                className={`schedule-repeat-week_day ${
+                  week.daysOfTheWeek.includes(day.label)
+                    ? 'active'
+                    : 'not-active'
+                }`}
+                onClick={() =>
+                  dispatch({
+                    type: scheduleActionType.SCHEDULE_REPEAT_DAYS_OF_WEEK,
+                    payload: day.label
+                  })
+                }
               >
-                {day.label}
+                {day.shortLabel}
               </span>
             ))}
           </div>
@@ -51,37 +77,46 @@ const ScheduleRecurring = ({
       <div className="repeat_end_container">
         <Select
           match={match}
-          onClick={setScheduleRepeatEnd}
+          onClick={item =>
+            dispatch({
+              type: scheduleActionType.SCHEDULE_REPEAT_END_ACTIVE_OPTION,
+              payload: item
+            })
+          }
           option="repeatEnd"
           page="jobs"
-          value={scheduleRepeatEnd}
+          value={scheduleRepeatEndActiveOption}
         />
-        {scheduleRepeatEnd === 'onDate' && (
+        {scheduleRepeatEndActiveOption === 'onDate' && (
           <DatePicker
-            onChange={setScheduleRepeatEndValue}
+            onChange={item =>
+              dispatch({
+                type: scheduleActionType.SCHEDULE_REPEAT_END_DATE,
+                payload: item
+              })
+            }
             splitCharacter="."
-            value={scheduleRepeatEndValue}
+            value={date}
           />
         )}
-        {scheduleRepeatEnd === 'after' && (
+        {scheduleRepeatEndActiveOption === 'after' && (
           <div className="range-input-container">
             <RangeInput
-              onChange={setScheduleRepeatEndValue}
-              value={scheduleRepeatEndValue}
+              onChange={item =>
+                dispatch({
+                  type: scheduleActionType.SCHEDULE_REPEAT_END_OCCURRENCES,
+                  payload: item.toString()
+                })
+              }
+              value={occurrences.toString()}
             />
-            {scheduleRepeatEndValue.length < 10 && (
-              <span
-                className="range-input-label"
-                style={{
-                  left:
-                    (scheduleRepeatEndValue
-                      ? scheduleRepeatEndValue.length + 2
-                      : 2) * 10
-                }}
-              >
-                occurrences
-              </span>
-            )}
+            <span
+              className={`range-input-label range-input-label-position-left-${
+                occurrences.length <= 0 ? 20 : occurrences.length < 3 ? 40 : 50
+              }px`}
+            >
+              occurrences
+            </span>
           </div>
         )}
       </div>
@@ -90,13 +125,10 @@ const ScheduleRecurring = ({
 }
 
 PropTypes.propTypes = {
+  daysOfWeek: PropTypes.array.isRequired,
+  dispatch: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  scheduleRepeatEnd: PropTypes.string.isRequired,
-  scheduleRepeatInterval: PropTypes.string.isRequired,
-  scheduleRepeatStep: PropTypes.number.isRequired,
-  setScheduleRepeatEnd: PropTypes.func.isRequired,
-  setScheduleRepeatInterval: PropTypes.func.isRequired,
-  setScheduleRepeatStep: PropTypes.func.isRequired
+  recurringState: PropTypes.shape({}).isRequired
 }
 
 export default React.memo(ScheduleRecurring)

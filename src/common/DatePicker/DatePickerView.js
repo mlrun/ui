@@ -71,7 +71,7 @@ const DatePickerView = React.forwardRef(
             {weekDay.map((day, index) => {
               return (
                 <div key={day + index} className="date-picker_body_weeks_day">
-                  {day.label}
+                  {day.shortLabel}
                 </div>
               )
             })}
@@ -135,4 +135,4 @@ DatePickerView.propTypes = {
   weekDay: PropTypes.array.isRequired
 }
 
-export default DatePickerView
+export default React.memo(DatePickerView)
