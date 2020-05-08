@@ -10,10 +10,11 @@ import './scheduleRecurring.scss'
 
 const ScheduleRecurring = ({
   daysOfWeek,
-  recurringDispatch,
+  getRangeInputValue,
+  handleDaysOfWeek,
   match,
-  recurringState,
-  handleDaysOfWeek
+  recurringDispatch,
+  recurringState
 }) => {
   const {
     scheduleRepeat: { activeOption: scheduleRepeatActiveOption, week },
@@ -44,13 +45,7 @@ const ScheduleRecurring = ({
               payload: item
             })
           }
-          value={
-            scheduleRepeatActiveOption === 'week'
-              ? week.repeat.toString()
-              : recurringState.scheduleRepeat[
-                  scheduleRepeatActiveOption
-                ].toString()
-          }
+          value={getRangeInputValue()}
         />
         <Select
           match={match}
@@ -108,14 +103,14 @@ const ScheduleRecurring = ({
         )}
         {scheduleRepeatEndActiveOption === 'after' && (
           <RangeInput
+            infoLabel
+            label={occurrences.length < 10 ? 'occurrences' : ''}
             onChange={item =>
               recurringDispatch({
                 type: scheduleActionType.SCHEDULE_REPEAT_END_OCCURRENCES,
                 payload: item.toString()
               })
             }
-            label={occurrences.length < 10 ? 'occurrences' : ''}
-            infoLabel
             value={occurrences.toString()}
           />
         )}
@@ -126,6 +121,7 @@ const ScheduleRecurring = ({
 
 PropTypes.propTypes = {
   daysOfWeek: PropTypes.array.isRequired,
+  getRangeInputValue: PropTypes.func.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   recurringDispatch: PropTypes.func.isRequired,

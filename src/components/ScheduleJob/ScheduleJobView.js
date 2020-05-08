@@ -14,6 +14,7 @@ const ScheduleJobView = ({
   date,
   daysOfWeek,
   generateCronString,
+  getRangeInputValue,
   handleDaysOfWeek,
   isRecurring,
   match,
@@ -43,6 +44,7 @@ const ScheduleJobView = ({
         <ScheduleJobSimple
           date={date}
           daysOfWeek={daysOfWeek}
+          getRangeInputValue={getRangeInputValue}
           handleDaysOfWeek={handleDaysOfWeek}
           isRecurring={isRecurring}
           match={match}
@@ -71,6 +73,7 @@ ScheduleJobView.propTypes = {
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   daysOfWeek: PropTypes.array.isRequired,
   generateCronString: PropTypes.func.isRequired,
+  getRangeInputValue: PropTypes.func.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,

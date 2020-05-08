@@ -11,6 +11,7 @@ import TimePicker from '../../common/TimePicker/TimePicker'
 const ScheduleJobSimple = ({
   date,
   daysOfWeek,
+  getRangeInputValue,
   handleDaysOfWeek,
   isRecurring,
   match,
@@ -41,6 +42,7 @@ const ScheduleJobSimple = ({
       {isRecurring && (
         <ScheduleRecurring
           daysOfWeek={daysOfWeek}
+          getRangeInputValue={getRangeInputValue}
           handleDaysOfWeek={handleDaysOfWeek}
           match={match}
           recurringDispatch={recurringDispatch}
@@ -54,6 +56,7 @@ const ScheduleJobSimple = ({
 ScheduleJobSimple.propTypes = {
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   daysOfWeek: PropTypes.array.isRequired,
+  getRangeInputValue: PropTypes.func.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,

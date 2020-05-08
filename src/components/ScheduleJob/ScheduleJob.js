@@ -5,15 +5,15 @@ import ScheduleJobView from './ScheduleJobView'
 
 import scheduleData from './scheduleData.json'
 import {
-  recurringReducer,
   initialState,
+  recurringReducer,
   scheduleActionType
 } from './recurringReducer'
 
 import {
+  decodeLocale,
   getWeekDays,
-  getWeekStart,
-  decodeLocale
+  getWeekStart
 } from '../../utils/datePicker.util'
 
 import './scheduleJob.scss'
@@ -83,6 +83,14 @@ const ScheduleJob = ({ match }) => {
     }))
   }
 
+  const getRangeInputValue = () => {
+    return recurringState.scheduleRepeat.activeOption === 'week'
+      ? recurringState.scheduleRepeat.week.repeat.toString()
+      : recurringState.scheduleRepeat[
+          recurringState.scheduleRepeat.activeOption
+        ].toString()
+  }
+
   return (
     <ScheduleJobView
       activeTab={activeTab}
@@ -90,6 +98,7 @@ const ScheduleJob = ({ match }) => {
       date={date}
       daysOfWeek={daysOfWeek}
       generateCronString={generateCronString}
+      getRangeInputValue={getRangeInputValue}
       handleDaysOfWeek={handleDaysOfWeek}
       isRecurring={isRecurring}
       match={match}

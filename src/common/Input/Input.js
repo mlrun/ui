@@ -8,14 +8,14 @@ const Input = ({
   disabled,
   floatingLabel,
   iconClass,
+  infoLabel,
   inputIcon,
   label,
   onChange,
   onKeyDown,
   placeholder,
   type,
-  value,
-  infoLabel
+  value
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false)
   const input = React.createRef()
@@ -74,6 +74,7 @@ Input.defaultProps = {
   disabled: false,
   floatingLabel: false,
   iconClass: null,
+  infoLabel: undefined,
   inputIcon: null,
   label: null,
   onChange: null,
@@ -87,6 +88,7 @@ Input.propTypes = {
   disabled: PropTypes.bool,
   floatingLabel: PropTypes.bool,
   iconClass: PropTypes.string,
+  infoLabel: PropTypes.bool,
   inputIcon: PropTypes.element,
   label: PropTypes.string,
   onChange: PropTypes.func,
