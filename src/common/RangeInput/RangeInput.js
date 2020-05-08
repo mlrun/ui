@@ -40,7 +40,7 @@ const RangeInput = ({ floatingLabel, infoLabel, label, onChange, value }) => {
 
 RangeInput.defaultProps = {
   floatingLabel: false,
-  infoLabel: undefined,
+  infoLabel: false,
   label: ''
 }
 

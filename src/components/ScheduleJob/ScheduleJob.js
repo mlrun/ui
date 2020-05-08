@@ -28,15 +28,13 @@ const ScheduleJob = ({ match }) => {
     dayOfTheWeek: '*'
   })
   const [date, setDate] = useState('')
+  const [time, setTime] = useState('')
   const [isRecurring, setIsRecurring] = useState('')
   const [recurringState, recurringDispatch] = useReducer(
     recurringReducer,
     initialState
   )
-  const [time, setTime] = useState('')
-
   const startWeek = getWeekStart(decodeLocale(navigator.language))
-
   const daysOfWeek = getWeekDays(startWeek)
 
   const generateCronString = cron => {
@@ -45,12 +43,12 @@ const ScheduleJob = ({ match }) => {
     }, '')
   }
 
-  const onSchedule = useCallback(() => {
-    return generateCronString(cron)
-  }, [cron])
-
-  const onHandleDateChange = date => {
-    setDate(date)
+  const getRangeInputValue = () => {
+    return recurringState.scheduleRepeat.activeOption === 'week'
+      ? recurringState.scheduleRepeat.week.repeat.toString()
+      : recurringState.scheduleRepeat[
+          recurringState.scheduleRepeat.activeOption
+        ].toString()
   }
 
   const handleDaysOfWeek = day => {
@@ -72,6 +70,10 @@ const ScheduleJob = ({ match }) => {
     })
   }
 
+  const onHandleDateChange = date => {
+    setDate(date)
+  }
+
   const onHandleTimeChange = time => {
     const [hour, minute] = time.split(':')
 
@@ -83,13 +85,9 @@ const ScheduleJob = ({ match }) => {
     }))
   }
 
-  const getRangeInputValue = () => {
-    return recurringState.scheduleRepeat.activeOption === 'week'
-      ? recurringState.scheduleRepeat.week.repeat.toString()
-      : recurringState.scheduleRepeat[
-          recurringState.scheduleRepeat.activeOption
-        ].toString()
-  }
+  const onSchedule = useCallback(() => {
+    return generateCronString(cron)
+  }, [cron])
 
   return (
     <ScheduleJobView

@@ -57,9 +57,11 @@ const Input = ({
             'active-label'} ${floatingLabel &&
             'input__label-floating'} ${infoLabel && 'input__label_info'}`}
           style={
-            infoLabel && {
-              left: (value ? value.length + 2 : 2) * 10
-            }
+            infoLabel
+              ? {
+                  left: (value ? value.length + 2 : 2) * 10
+                }
+              : {}
           }
         >
           {label}
@@ -74,7 +76,7 @@ Input.defaultProps = {
   disabled: false,
   floatingLabel: false,
   iconClass: null,
-  infoLabel: undefined,
+  infoLabel: false,
   inputIcon: null,
   label: null,
   onChange: null,
