@@ -4,7 +4,11 @@ import PropTypes from 'prop-types'
 import ScheduleJobView from './ScheduleJobView'
 
 import scheduleData from './scheduleData.json'
-import { reducer, initialState } from './recurringReducer'
+import {
+  recurringReducer,
+  initialState,
+  scheduleActionType
+} from './recurringReducer'
 
 import {
   getWeekDays,
@@ -25,7 +29,10 @@ const ScheduleJob = ({ match }) => {
   })
   const [date, setDate] = useState('')
   const [isRecurring, setIsRecurring] = useState('')
-  const [recurringState, dispatch] = useReducer(reducer, initialState)
+  const [recurringState, recurringDispatch] = useReducer(
+    recurringReducer,
+    initialState
+  )
   const [time, setTime] = useState('')
 
   const startWeek = getWeekStart(decodeLocale(navigator.language))
@@ -46,6 +53,25 @@ const ScheduleJob = ({ match }) => {
     setDate(date)
   }
 
+  const handleDaysOfWeek = day => {
+    const {
+      scheduleRepeat: { week }
+    } = recurringState
+
+    let distinctWeek = week.daysOfTheWeek
+
+    if (week.daysOfTheWeek.indexOf(day) === -1) {
+      distinctWeek = week.daysOfTheWeek.concat(day)
+    } else {
+      distinctWeek = distinctWeek.filter(item => item !== day)
+    }
+
+    recurringDispatch({
+      type: scheduleActionType.SCHEDULE_REPEAT_DAYS_OF_WEEK,
+      payload: distinctWeek
+    })
+  }
+
   const onHandleTimeChange = time => {
     const [hour, minute] = time.split(':')
 
@@ -63,11 +89,12 @@ const ScheduleJob = ({ match }) => {
       cron={cron}
       date={date}
       daysOfWeek={daysOfWeek}
-      dispatch={dispatch}
       generateCronString={generateCronString}
+      handleDaysOfWeek={handleDaysOfWeek}
       isRecurring={isRecurring}
       match={match}
       onSchedule={onSchedule}
+      recurringDispatch={recurringDispatch}
       recurringState={recurringState}
       setActiveTab={setActiveTab}
       setDate={onHandleDateChange}

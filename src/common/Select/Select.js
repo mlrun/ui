@@ -48,8 +48,8 @@ const Select = ({ disabled, label, match, onClick, option, page, value }) => {
         {label && <div className="select__label">{label}</div>}
         <div className="select__value">
           {value && selectOption.label}
-          {selectOption?.sub && (
-            <span className="sub-label">{selectOption.sub}</span>
+          {selectOption?.subLabel && (
+            <span className="sub-label">{selectOption.subLabel}</span>
           )}
         </div>
         <Caret className="select__caret" />

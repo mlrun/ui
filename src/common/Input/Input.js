@@ -14,7 +14,8 @@ const Input = ({
   onKeyDown,
   placeholder,
   type,
-  value
+  value,
+  infoLabel
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false)
   const input = React.createRef()
@@ -49,13 +50,21 @@ const Input = ({
         type={type}
         value={value && value}
       />
-      <label
-        className={`input__label ${inputIsFocused &&
-          floatingLabel &&
-          'active-label'} ${floatingLabel && 'input__label-floating'}`}
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          className={`input__label ${inputIsFocused &&
+            floatingLabel &&
+            'active-label'} ${floatingLabel &&
+            'input__label-floating'} ${infoLabel && 'input__label_info'}`}
+          style={
+            infoLabel && {
+              left: (value ? value.length + 2 : 2) * 10
+            }
+          }
+        >
+          {label}
+        </label>
+      )}
       {inputIcon && <span className={iconClass}>{inputIcon}</span>}
     </div>
   )

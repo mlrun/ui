@@ -19,13 +19,18 @@ export const initialState = {
 
 export const scheduleActionType = {
   SCHEDULE_REPEAT_ACTIVE_OPTION: 'SCHEDULE_REPEAT_ACTIVE_OPTION',
+  SCHEDULE_REPEAT_DAY: 'SCHEDULE_REPEAT_DAY',
   SCHEDULE_REPEAT_DAYS_OF_WEEK: 'SCHEDULE_REPEAT_DAYS_OF_WEEK',
   SCHEDULE_REPEAT_END_ACTIVE_OPTION: 'SCHEDULE_REPEAT_END_ACTIVE_OPTION',
   SCHEDULE_REPEAT_END_DATE: 'SCHEDULE_REPEAT_END_DATE',
-  SCHEDULE_REPEAT_END_OCCURRENCES: 'SCHEDULE_REPEAT_END_OCCURRENCES'
+  SCHEDULE_REPEAT_END_OCCURRENCES: 'SCHEDULE_REPEAT_END_OCCURRENCES',
+  SCHEDULE_REPEAT_HOUR: 'SCHEDULE_REPEAT_HOUR',
+  SCHEDULE_REPEAT_MINUTE: 'SCHEDULE_REPEAT_MINUTE',
+  SCHEDULE_REPEAT_MONTH: 'SCHEDULE_REPEAT_MONTH',
+  SCHEDULE_REPEAT_WEEK: 'SCHEDULE_REPEAT_WEEK'
 }
 
-export const reducer = (state, action) => {
+export const recurringReducer = (state, action) => {
   switch (action.type) {
     case scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION:
       return {
@@ -35,7 +40,7 @@ export const reducer = (state, action) => {
           activeOption: action.payload
         }
       }
-    case 'minute':
+    case scheduleActionType.SCHEDULE_REPEAT_MINUTE:
       return {
         ...state,
         scheduleRepeat: {
@@ -43,7 +48,7 @@ export const reducer = (state, action) => {
           minute: action.payload
         }
       }
-    case 'hour':
+    case scheduleActionType.SCHEDULE_REPEAT_HOUR:
       return {
         ...state,
         scheduleRepeat: {
@@ -51,7 +56,7 @@ export const reducer = (state, action) => {
           hour: action.payload
         }
       }
-    case 'day':
+    case scheduleActionType.SCHEDULE_REPEAT_DAY:
       return {
         ...state,
         scheduleRepeat: {
@@ -60,31 +65,18 @@ export const reducer = (state, action) => {
         }
       }
     case scheduleActionType.SCHEDULE_REPEAT_DAYS_OF_WEEK: {
-      const {
-        scheduleRepeat: { week }
-      } = state
-
-      let distinctPrevWeek = week.daysOfTheWeek
-
-      if (week.daysOfTheWeek.indexOf(action.payload) === -1) {
-        distinctPrevWeek = week.daysOfTheWeek.concat(action.payload)
-      } else {
-        distinctPrevWeek = distinctPrevWeek.filter(
-          item => item !== action.payload
-        )
-      }
       return {
         ...state,
         scheduleRepeat: {
           ...state.scheduleRepeat,
           week: {
             ...state.scheduleRepeat.week,
-            daysOfTheWeek: distinctPrevWeek
+            daysOfTheWeek: action.payload
           }
         }
       }
     }
-    case 'week':
+    case scheduleActionType.SCHEDULE_REPEAT_WEEK:
       return {
         ...state,
         scheduleRepeat: {
@@ -95,7 +87,7 @@ export const reducer = (state, action) => {
           }
         }
       }
-    case 'month':
+    case scheduleActionType.SCHEDULE_REPEAT_MONTH:
       return {
         ...state,
         scheduleRepeat: {

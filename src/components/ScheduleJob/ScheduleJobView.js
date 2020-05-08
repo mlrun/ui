@@ -13,11 +13,12 @@ const ScheduleJobView = ({
   cron,
   date,
   daysOfWeek,
-  dispatch,
   generateCronString,
+  handleDaysOfWeek,
   isRecurring,
   match,
   onSchedule,
+  recurringDispatch,
   recurringState,
   setActiveTab,
   setDate,
@@ -42,9 +43,10 @@ const ScheduleJobView = ({
         <ScheduleJobSimple
           date={date}
           daysOfWeek={daysOfWeek}
-          dispatch={dispatch}
+          handleDaysOfWeek={handleDaysOfWeek}
           isRecurring={isRecurring}
           match={match}
+          recurringDispatch={recurringDispatch}
           recurringState={recurringState}
           setDate={setDate}
           setIsRecurring={setIsRecurring}
@@ -68,11 +70,12 @@ ScheduleJobView.propTypes = {
   cron: PropTypes.shape({}).isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   daysOfWeek: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired,
   generateCronString: PropTypes.func.isRequired,
+  handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   onSchedule: PropTypes.func.isRequired,
+  recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,

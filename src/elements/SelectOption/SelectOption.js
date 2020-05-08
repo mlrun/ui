@@ -13,7 +13,7 @@ const SelectOption = ({ item, onClick, selectedId, status }) => {
   ) : (
     <div className="select__item" onClick={() => onClick(item.id)}>
       {item.label}
-      {item.sub && <span className="sub-label">{item.sub}</span>}
+      {item.subLabel && <span className="sub-label">{item.subLabel}</span>}
     </div>
   )
 }

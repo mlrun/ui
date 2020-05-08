@@ -7,11 +7,10 @@ import JobsPanelDataInputs from '../JobsPanelDataInputs/JobsPanelDataInputs'
 import JobsPanelResources from '../JobsPanelResources/JobsPanelResources'
 import ScheduleJob from '../ScheduleJob/ScheduleJob'
 
-import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
-import { ReactComponent as Run } from '../../images/run.svg'
-
 import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
+import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Run } from '../../images/run.svg'
 
 const JobsPanelView = ({
   close,

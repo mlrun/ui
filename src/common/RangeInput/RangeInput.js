@@ -7,7 +7,7 @@ import { ReactComponent as Arrow } from '../../images/range-arrow.svg'
 
 import './rangeInput.scss'
 
-const RangeInput = ({ floatingLabel, label, onChange, value }) => {
+const RangeInput = ({ infoLabel, floatingLabel, label, onChange, value }) => {
   const handleIncrease = () => {
     onChange(++value)
   }
@@ -26,6 +26,7 @@ const RangeInput = ({ floatingLabel, label, onChange, value }) => {
         onChange={onChange}
         type="number"
         value={value}
+        infoLabel={infoLabel}
       />
       <button className="range__icon increase" onClick={handleIncrease}>
         <Arrow />

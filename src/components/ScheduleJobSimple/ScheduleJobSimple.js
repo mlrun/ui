@@ -11,9 +11,10 @@ import TimePicker from '../../common/TimePicker/TimePicker'
 const ScheduleJobSimple = ({
   date,
   daysOfWeek,
-  dispatch,
+  handleDaysOfWeek,
   isRecurring,
   match,
+  recurringDispatch,
   recurringState,
   setDate,
   setIsRecurring,
@@ -40,8 +41,9 @@ const ScheduleJobSimple = ({
       {isRecurring && (
         <ScheduleRecurring
           daysOfWeek={daysOfWeek}
-          dispatch={dispatch}
+          handleDaysOfWeek={handleDaysOfWeek}
           match={match}
+          recurringDispatch={recurringDispatch}
           recurringState={recurringState}
         />
       )}
@@ -52,9 +54,10 @@ const ScheduleJobSimple = ({
 ScheduleJobSimple.propTypes = {
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   daysOfWeek: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired,
+  handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
+  recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,

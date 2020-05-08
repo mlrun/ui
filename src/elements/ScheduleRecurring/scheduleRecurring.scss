@@ -19,6 +19,7 @@
     .schedule-repeat-week {
       display: flex;
       align-items: center;
+      margin-left: 16px;
 
       &_day {
         height: 32px;
@@ -27,20 +28,14 @@
         text-align: center;
         border-radius: 16px;
         margin-right: 4px;
+        border: $primaryBorder;
+        color: $spunPearl;
         cursor: pointer;
 
         &.active {
           background-color: $purple;
+          border: $transparentBorder;
           color: $white;
-        }
-
-        &.not-active {
-          border: $primaryBorder;
-          color: $spunPearl;
-        }
-
-        &:first-child {
-          margin-left: 16px;
         }
       }
     }
@@ -68,36 +63,6 @@
     .select {
       height: 56px;
       margin-right: 15px;
-    }
-
-    .input__label {
-      color: $topaz;
-    }
-
-    .range {
-      z-index: 1;
-
-      &-input-container {
-        position: relative;
-      }
-
-      &-input-label {
-        color: $topaz;
-        position: absolute;
-        top: 19px;
-
-        &-position-left-20px {
-          left: 20px;
-        }
-
-        &-position-left-40px {
-          left: 40px;
-        }
-
-        &-position-left-50px {
-          left: 50px;
-        }
-      }
     }
   }
 }
