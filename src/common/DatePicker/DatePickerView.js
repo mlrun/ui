@@ -71,7 +71,7 @@ const DatePickerView = React.forwardRef(
             {weekDay.map((day, index) => {
               return (
                 <div key={day + index} className="date-picker_body_weeks_day">
-                  {day.shortLabel}
+                  {day.label}
                 </div>
               )
             })}
