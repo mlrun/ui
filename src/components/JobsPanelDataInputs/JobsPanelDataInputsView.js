@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { find } from 'lodash'
 
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import JobsPanelTable from '../../elements/JobsPanelTable/JobsPanelTable'
@@ -10,6 +11,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import Tooltip from '../../common/Tooltip/Tooltip'
 
 import panelData from '../JobsPanel/panelData'
+import selectData from '../../common/Select/selectData'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
@@ -129,7 +131,12 @@ const JobsPanelDataInputsView = ({
                   ' no-border'}`}
               >
                 <Select
-                  onClick={type => setNewVolume({ ...newVolume, type: type })}
+                  onClick={type =>
+                    setNewVolume({
+                      ...newVolume,
+                      type: find(selectData.volumeType, ['id', type]).label
+                    })
+                  }
                   option="volumeType"
                   label={newVolume.type.length > 0 ? newVolume.type : 'Type'}
                   match={match}
@@ -193,7 +200,7 @@ const JobsPanelDataInputsView = ({
           type="text"
         />
         <Input
-          label="Default output path"
+          label="Default artifact path"
           className="default-input"
           onChange={setOutputPath}
           floatingLabel

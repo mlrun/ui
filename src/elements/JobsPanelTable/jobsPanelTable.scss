@@ -47,7 +47,7 @@
     &.volumes {
       .select {
         flex: .38;
-        padding-left: 10px;
+        padding-left: 3px;
       }
     }
 
@@ -74,6 +74,14 @@
         &__label {
           left: 17px;
         }
+      }
+    }
+
+    .parameters-type {
+      flex: .9;
+
+      .select__label {
+        text-transform: none;
       }
     }
   }

@@ -12,7 +12,8 @@ import functionsActions from '../../actions/functions'
 const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
-
+  const [showUntagged, setShowUntagged] = useState('')
+  const [taggedFunctions, setTaggedFunctions] = useState([])
   const [groupFilter, setGroupFilter] = useState(
     functionsData.initialGroupFilter
   )
@@ -44,6 +45,12 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
       setFunctions([])
     }
   }, [history, match.params.projectName, refreshFunctions])
+
+  useEffect(() => {
+    setTaggedFunctions(
+      !showUntagged ? functions.filter(func => func.tag.length) : functions
+    )
+  }, [showUntagged, functions])
 
   useEffect(() => {
     let item = {}
@@ -90,7 +97,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
     <>
       {functionsStore.loading && <Loader />}
       <Content
-        content={functions}
+        content={taggedFunctions}
         detailsMenu={functionsData.detailsMenu}
         filters={functionsData.filters}
         groupFilter={groupFilter}
@@ -102,6 +109,8 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
         setGroupFilter={setGroupFilter}
+        setShowUntagged={setShowUntagged}
+        showUntagged={showUntagged}
         tableHeaders={functionsData.tableHeaders}
         yamlContent={functionsStore.functions}
       />

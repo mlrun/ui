@@ -90,7 +90,7 @@ const FunctionsTableRow = ({
                         link={
                           i === 0 &&
                           `/projects/${match.params.projectName}/functions/${
-                            currentItem.hash
+                            currentItem?.hash
                           }${
                             match.params.tab
                               ? `/${match.params.tab}`

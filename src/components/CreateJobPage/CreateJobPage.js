@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { includes } from 'lodash'
 
 import CreateJobPageView from './CreateJobPageView'
 import Loader from '../../common/Loader/Loader'
@@ -18,15 +19,26 @@ const CreateJobPage = ({
 }) => {
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setFunction] = useState({})
-  const [templatesArray, setTemplatesArray] = useState([])
+  const [templatesArray, setTemplatesArray] = useState(functionsStore.templates)
 
   useEffect(() => {
     fetchFunctions(match.params.projectName).then(functions => {
-      return setFunctions(functions)
+      const filteredFunctions = functions.filter(
+        func => !includes(['', 'handler', 'local'], func.kind)
+      )
+
+      return setFunctions(filteredFunctions)
     })
 
-    fetchFunctionsTemplates().then(data => setTemplatesArray(data))
-  }, [fetchFunctions, fetchFunctionsTemplates, match.params.projectName])
+    if (functionsStore.templates.length === 0) {
+      fetchFunctionsTemplates().then(setTemplatesArray)
+    }
+  }, [
+    fetchFunctions,
+    fetchFunctionsTemplates,
+    functionsStore.templates.length,
+    match.params.projectName
+  ])
 
   const handleSelectFunction = item => {
     setFunction(item)

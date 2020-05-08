@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { find } from 'lodash'
 
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import JobsPanelTable from '../../elements/JobsPanelTable/JobsPanelTable'
@@ -12,6 +13,7 @@ import Select from '../../common/Select/Select'
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
 import panelData from '../JobsPanel/panelData'
+import selectData from '../../common/Select/selectData'
 
 const JobsPanelParametersView = ({
   addNewParameter,
@@ -20,12 +22,12 @@ const JobsPanelParametersView = ({
   handleDeleteParameter,
   match,
   newParameter,
-  newParameterSimple,
+  newParameterType,
   parameters,
   selectedParameter,
   setAddNewParameter,
   setNewParameter,
-  setNewParameterSimple,
+  setNewParameterType,
   setSelectedParameter
 }) => {
   return (
@@ -55,14 +57,18 @@ const JobsPanelParametersView = ({
                   floatingLabel
                   type="text"
                 />
-                <Input
-                  onChange={value =>
-                    setNewParameter({ ...newParameter, type: value })
+                <Select
+                  className="parameters-type"
+                  label={newParameter.type}
+                  match={match}
+                  onClick={value =>
+                    setNewParameter({
+                      ...newParameter,
+                      type: find(selectData.parametersValueType, ['id', value])
+                        .label
+                    })
                   }
-                  label="Type"
-                  className="input-row__item"
-                  floatingLabel
-                  type="text"
+                  option="parametersValueType"
                 />
                 <Input
                   onChange={value =>
@@ -74,10 +80,14 @@ const JobsPanelParametersView = ({
                   type="text"
                 />
                 <Select
-                  onClick={setNewParameterSimple}
-                  option="parameterType"
-                  label={newParameterSimple}
+                  label={newParameterType}
                   match={match}
+                  onClick={value =>
+                    setNewParameterType(
+                      find(selectData.parameterType, ['id', value]).label
+                    )
+                  }
+                  option="parameterType"
                 />
               </div>
               <button
@@ -107,11 +117,11 @@ JobsPanelParametersView.propTypes = {
   handleAddNewItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   newParameter: PropTypes.shape({}).isRequired,
-  newParameterSimple: PropTypes.string.isRequired,
+  newParameterType: PropTypes.string.isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   setAddNewParameter: PropTypes.func.isRequired,
   setNewParameter: PropTypes.func.isRequired,
-  setNewParameterSimple: PropTypes.func.isRequired
+  setNewParameterType: PropTypes.func.isRequired
 }
 
 export default JobsPanelParametersView

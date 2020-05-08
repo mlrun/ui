@@ -8,5 +8,5 @@
   "parameters": {
     "table-headers": ["Name", "Type", "Value/s", "Simple/Hyper"]
   },
-  "newParameterSimple": [{ "label": "Simple", "id": "Simple" }]
+  "newParameterType": [{ "label": "Simple", "id": "Simple" }]
 }

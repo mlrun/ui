@@ -6,10 +6,10 @@ import { ReactComponent as Checkbox } from '../../images/checkbox-checked.svg'
 
 import './checkBox.scss'
 
-const CheckBox = ({ children, item, onChange, selectedId }) => {
+const CheckBox = ({ children, className, item, onChange, selectedId }) => {
   return (
     <span
-      className="checkbox"
+      className={`checkbox ${className}`}
       onClick={() => {
         onChange(item.id === selectedId ? '' : item.id)
       }}
@@ -24,7 +24,12 @@ const CheckBox = ({ children, item, onChange, selectedId }) => {
   )
 }
 
+CheckBox.defaultProps = {
+  className: ''
+}
+
 CheckBox.propTypes = {
+  className: PropTypes.string,
   item: PropTypes.shape({}).isRequired,
   onChange: PropTypes.func.isRequired,
   selectedId: PropTypes.string.isRequired
