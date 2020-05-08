@@ -32,8 +32,8 @@ const ScheduleJobView = ({
       <div className="schedule_tabs">
         {scheduleData.tabs.map(tab => (
           <div
-            key={tab.id}
             className={`schedule_tabs_item ${activeTab === tab.id && 'active'}`}
+            key={tab.id}
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.label}
@@ -57,7 +57,7 @@ const ScheduleJobView = ({
         />
       )}
       {activeTab === scheduleData.tabs[1].id && (
-        <ScheduleCron generateCronString={generateCronString} cron={cron} />
+        <ScheduleCron cron={cron} generateCronString={generateCronString} />
       )}
       <button className="btn btn_primary btn__schedule" onClick={onSchedule}>
         <Schedule />

@@ -6,6 +6,7 @@ import Select from '../../common/Select/Select'
 import DatePicker from '../../common/DatePicker/DatePicker'
 
 import { scheduleActionType } from '../../components/ScheduleJob/recurringReducer'
+
 import './scheduleRecurring.scss'
 
 const ScheduleRecurring = ({
@@ -63,10 +64,10 @@ const ScheduleRecurring = ({
           <div className="schedule-repeat-week">
             {daysOfWeek.map(day => (
               <span
-                key={day.id}
                 className={`schedule-repeat-week_day ${week.daysOfTheWeek.includes(
                   day.id
                 ) && 'active'}`}
+                key={day.id}
                 onClick={() => handleDaysOfWeek(day.id)}
               >
                 {day.label}

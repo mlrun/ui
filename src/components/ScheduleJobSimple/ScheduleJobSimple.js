@@ -23,20 +23,17 @@ const ScheduleJobSimple = ({
   time
 }) => {
   return (
-    <div className="schedule-job-normal_container">
+    <div className="schedule-job-simple_container">
       <h3>Simple Schedule</h3>
       <div className="input_container">
-        <DatePicker value={date} onChange={setDate} splitCharacter="." />
-        <TimePicker value={time} onChange={setTime} />
+        <DatePicker onChange={setDate} splitCharacter="." value={date} />
+        <TimePicker onChange={setTime} value={time} />
       </div>
       <div className="checkbox_container">
         <CheckBox
-          item={{
-            label: 'Recurring',
-            id: 'recurring'
-          }}
-          selectedId={isRecurring}
+          item={{ label: 'Recurring', id: 'recurring' }}
           onChange={setIsRecurring}
+          selectedId={isRecurring}
         />
       </div>
       {isRecurring && (
