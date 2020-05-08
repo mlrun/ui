@@ -23,6 +23,8 @@ const Select = ({
   const [isOpen, setOpen] = useState(false)
   const history = useHistory()
 
+  const selectOption = options[option].find(item => item.id === value)
+
   useEffect(() => {
     window.addEventListener('scroll', handlerScroll)
     return () => {
@@ -54,7 +56,10 @@ const Select = ({
       <div className="select__header">
         {label && <div className="select__label">{label}</div>}
         <div className="select__value">
-          {value && options[option].find(item => item.id === value).label}
+          {value && selectOption.label}
+          {selectOption?.subLabel && (
+            <span className="sub-label">{selectOption.subLabel}</span>
+          )}
         </div>
         <Caret className="select__caret" />
       </div>

@@ -8,6 +8,7 @@ const Input = ({
   disabled,
   floatingLabel,
   iconClass,
+  infoLabel,
   inputIcon,
   label,
   onChange,
@@ -49,13 +50,23 @@ const Input = ({
         type={type}
         value={value && value}
       />
-      <label
-        className={`input__label ${inputIsFocused &&
-          floatingLabel &&
-          'active-label'} ${floatingLabel && 'input__label-floating'}`}
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          className={`input__label ${inputIsFocused &&
+            floatingLabel &&
+            'active-label'} ${floatingLabel &&
+            'input__label-floating'} ${infoLabel && 'input__label_info'}`}
+          style={
+            infoLabel
+              ? {
+                  left: (value ? value.length + 2 : 2) * 10
+                }
+              : {}
+          }
+        >
+          {label}
+        </label>
+      )}
       {inputIcon && <span className={iconClass}>{inputIcon}</span>}
     </div>
   )
@@ -65,6 +76,7 @@ Input.defaultProps = {
   disabled: false,
   floatingLabel: false,
   iconClass: null,
+  infoLabel: false,
   inputIcon: null,
   label: null,
   onChange: null,
@@ -78,6 +90,7 @@ Input.propTypes = {
   disabled: PropTypes.bool,
   floatingLabel: PropTypes.bool,
   iconClass: PropTypes.string,
+  infoLabel: PropTypes.bool,
   inputIcon: PropTypes.element,
   label: PropTypes.string,
   onChange: PropTypes.func,

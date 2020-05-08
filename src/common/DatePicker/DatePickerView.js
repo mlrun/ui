@@ -135,4 +135,4 @@ DatePickerView.propTypes = {
   weekDay: PropTypes.array.isRequired
 }
 
-export default DatePickerView
+export default React.memo(DatePickerView)

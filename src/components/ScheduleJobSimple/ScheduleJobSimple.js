@@ -10,48 +10,40 @@ import TimePicker from '../../common/TimePicker/TimePicker'
 
 const ScheduleJobSimple = ({
   date,
+  daysOfWeek,
+  getRangeInputValue,
+  handleDaysOfWeek,
   isRecurring,
   match,
-  onChangeStep,
-  scheduleRepeatEnd,
-  scheduleRepeatInterval,
-  scheduleRepeatStep,
+  recurringDispatch,
+  recurringState,
   setDate,
   setIsRecurring,
-  setScheduleRepeatEnd,
-  setScheduleRepeatInterval,
   setTime,
   time
 }) => {
   return (
-    <div className="schedule-job-normal_container">
+    <div className="schedule-job-simple_container">
       <h3>Simple Schedule</h3>
-
       <div className="input_container">
-        <DatePicker value={date} onChange={setDate} splitCharacter="." />
-        <TimePicker value={time} onChange={setTime} />
+        <DatePicker onChange={setDate} splitCharacter="." value={date} />
+        <TimePicker onChange={setTime} value={time} />
       </div>
-
       <div className="checkbox_container">
         <CheckBox
-          item={{
-            label: 'Recurring',
-            id: 'recurring'
-          }}
-          selectedId={isRecurring}
+          item={{ label: 'Recurring', id: 'recurring' }}
           onChange={setIsRecurring}
+          selectedId={isRecurring}
         />
       </div>
-
       {isRecurring && (
         <ScheduleRecurring
+          daysOfWeek={daysOfWeek}
+          getRangeInputValue={getRangeInputValue}
+          handleDaysOfWeek={handleDaysOfWeek}
           match={match}
-          scheduleRepeatEnd={scheduleRepeatEnd}
-          scheduleRepeatInterval={scheduleRepeatInterval}
-          scheduleRepeatStep={scheduleRepeatStep[scheduleRepeatInterval]}
-          setScheduleRepeatEnd={setScheduleRepeatEnd}
-          setScheduleRepeatInterval={setScheduleRepeatInterval}
-          setScheduleRepeatStep={onChangeStep}
+          recurringDispatch={recurringDispatch}
+          recurringState={recurringState}
         />
       )}
     </div>
@@ -60,16 +52,15 @@ const ScheduleJobSimple = ({
 
 ScheduleJobSimple.propTypes = {
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+  daysOfWeek: PropTypes.array.isRequired,
+  getRangeInputValue: PropTypes.func.isRequired,
+  handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
-  onChangeStep: PropTypes.func.isRequired,
-  scheduleRepeatEnd: PropTypes.string.isRequired,
-  scheduleRepeatInterval: PropTypes.string.isRequired,
-  scheduleRepeatStep: PropTypes.shape({}).isRequired,
+  recurringDispatch: PropTypes.func.isRequired,
+  recurringState: PropTypes.shape({}).isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
-  setScheduleRepeatEnd: PropTypes.func.isRequired,
-  setScheduleRepeatInterval: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,
   time: PropTypes.string.isRequired
 }

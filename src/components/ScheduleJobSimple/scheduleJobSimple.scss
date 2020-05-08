@@ -2,7 +2,7 @@
 @import '../../scss/borders.scss';
 
 .schedule-job {
-  &-normal {
+  &-simple {
     &_container {
       border-radius: 4px;
       padding: 24px;
@@ -31,7 +31,8 @@
         margin: 23px 0;
       }
 
-      .input_container {
+      .input_container,
+      .date-picker-container {
         .input-wrapper {
           border: $primaryBorder;
           border-radius: 4px;
