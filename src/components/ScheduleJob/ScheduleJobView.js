@@ -12,19 +12,18 @@ const ScheduleJobView = ({
   activeTab,
   cron,
   date,
+  daysOfWeek,
   generateCronString,
+  getRangeInputValue,
+  handleDaysOfWeek,
   isRecurring,
   match,
-  onChangeStep,
   onSchedule,
-  scheduleRepeatEnd,
-  scheduleRepeatInterval,
-  scheduleRepeatStep,
+  recurringDispatch,
+  recurringState,
   setActiveTab,
   setDate,
   setIsRecurring,
-  setScheduleRepeatEnd,
-  setScheduleRepeatInterval,
   setTime,
   time
 }) => {
@@ -33,8 +32,8 @@ const ScheduleJobView = ({
       <div className="schedule_tabs">
         {scheduleData.tabs.map(tab => (
           <div
-            key={tab.id}
             className={`schedule_tabs_item ${activeTab === tab.id && 'active'}`}
+            key={tab.id}
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.label}
@@ -44,22 +43,21 @@ const ScheduleJobView = ({
       {activeTab === scheduleData.tabs[0].id && (
         <ScheduleJobSimple
           date={date}
+          daysOfWeek={daysOfWeek}
+          getRangeInputValue={getRangeInputValue}
+          handleDaysOfWeek={handleDaysOfWeek}
           isRecurring={isRecurring}
           match={match}
-          onChangeStep={onChangeStep}
-          scheduleRepeatEnd={scheduleRepeatEnd}
-          scheduleRepeatInterval={scheduleRepeatInterval}
-          scheduleRepeatStep={scheduleRepeatStep}
+          recurringDispatch={recurringDispatch}
+          recurringState={recurringState}
           setDate={setDate}
           setIsRecurring={setIsRecurring}
-          setScheduleRepeatEnd={setScheduleRepeatEnd}
-          setScheduleRepeatInterval={setScheduleRepeatInterval}
           setTime={setTime}
           time={time}
         />
       )}
       {activeTab === scheduleData.tabs[1].id && (
-        <ScheduleCron generateCronString={generateCronString} cron={cron} />
+        <ScheduleCron cron={cron} generateCronString={generateCronString} />
       )}
       <button className="btn btn_primary btn__schedule" onClick={onSchedule}>
         <Schedule />
@@ -73,19 +71,18 @@ ScheduleJobView.propTypes = {
   activeTab: PropTypes.string.isRequired,
   cron: PropTypes.shape({}).isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
+  daysOfWeek: PropTypes.array.isRequired,
   generateCronString: PropTypes.func.isRequired,
+  getRangeInputValue: PropTypes.func.isRequired,
+  handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
-  onChangeStep: PropTypes.func.isRequired,
   onSchedule: PropTypes.func.isRequired,
-  scheduleRepeatEnd: PropTypes.string.isRequired,
-  scheduleRepeatInterval: PropTypes.string.isRequired,
-  scheduleRepeatStep: PropTypes.shape({}).isRequired,
+  recurringDispatch: PropTypes.func.isRequired,
+  recurringState: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
-  setScheduleRepeatEnd: PropTypes.func.isRequired,
-  setScheduleRepeatInterval: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,
   time: PropTypes.string.isRequired
 }

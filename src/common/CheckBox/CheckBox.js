@@ -35,4 +35,7 @@ CheckBox.propTypes = {
   selectedId: PropTypes.string.isRequired
 }
 
-export default React.memo(CheckBox)
+export default React.memo(
+  CheckBox,
+  (prev, next) => prev.selectedId === next.selectedId
+)

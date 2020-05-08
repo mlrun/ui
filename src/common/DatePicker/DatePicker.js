@@ -141,4 +141,4 @@ DatePicker.propTypes = {
   ]).isRequired
 }
 
-export default DatePicker
+export default React.memo(DatePicker, (prev, next) => prev.value === next.value)
