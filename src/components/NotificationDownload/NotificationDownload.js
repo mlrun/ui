@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import NotificationDownloadView from './NotificationDownloadView'
 
-import { mainHTTPClient } from '../../httpClient'
+import { mainHttpClient } from '../../httpClient'
 import downloadFile from '../../utils/downloadFile'
 import notificationDownloadAction from '../../actions/notificationDownload'
 
@@ -24,7 +24,7 @@ const NotificationDownload = () => {
 
   const handleRetry = (id, url, file) => {
     dispatch(notificationDownloadAction.removeNotificationDownload(id))
-    mainHTTPClient(url)
+    mainHttpClient(url)
       .then(response => {
         downloadFile(file, response)
         dispatch(

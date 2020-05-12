@@ -32,7 +32,7 @@ const functionsActions = {
   }),
   fetchFunctionsTemplates: () => dispatch => {
     return functionsApi
-      .getFunctionsTemplates()
+      .getFunctionTemplatesCatalog()
       .then(result => {
         const templates = Object.keys(result.data).map(func => {
           return {
