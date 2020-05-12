@@ -1,6 +1,8 @@
-import { functionsTemplatesHTTPClient, mainHTTPClient } from '../httpClient'
+import { functionTemplatesHttpClient, mainHttpClient } from '../httpClient'
 
 export default {
-  getAll: project => mainHTTPClient.get(`/funcs?project=${project}`),
-  getFunctionsTemplates: () => functionsTemplatesHTTPClient.get('')
+  getAll: project => mainHttpClient.get(`/funcs?project=${project}`),
+  getFunctionTemplate: path => functionTemplatesHttpClient.get(path),
+  getFunctionTemplatesCatalog: () =>
+    functionTemplatesHttpClient.get('catalog.json')
 }

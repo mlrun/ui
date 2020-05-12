@@ -11,8 +11,7 @@ module.exports = function(app) {
   app.use(
     '/function-catalog',
     createProxyMiddleware({
-      target:
-        'https://raw.githubusercontent.com/mlrun/functions/master/catalog.json',
+      target: 'https://raw.githubusercontent.com/mlrun/functions/master',
       pathRewrite: {
         '^/function-catalog': ''
       },

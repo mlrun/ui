@@ -1,7 +1,7 @@
-import { mainHTTPClient } from '../httpClient'
+import { mainHttpClient } from '../httpClient'
 
 export default {
   getProjects: () => {
-    return mainHTTPClient.get('/projects?full=yes')
+    return mainHttpClient.get('/projects?full=yes')
   }
 }

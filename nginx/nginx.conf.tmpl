@@ -2,8 +2,10 @@ server {
 
   listen 80;
 
-  # https://raw.githubusercontent.com/mlrun/functions/master/catalog.json
-  rewrite ^/function-catalog$ ${MLRUN_FUNCTION_CATALOG_URL} redirect;
+  # https://raw.githubusercontent.com/mlrun/functions/master
+  location /function-catalog {
+    proxy_pass ${MLRUN_FUNCTION_CATALOG_URL};
+  }
 
   location / {
     root   /usr/share/nginx/html;
