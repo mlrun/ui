@@ -23,23 +23,10 @@ export default {
 
     return mainHttpClient.get(url)
   },
-  getArtifactPreview: (schema, path, user) => {
-    let url = '/files?'
-
-    if (schema) {
-      url = `${url}schema=${schema}`
-    }
-
-    if (path) {
-      url = `${url}&path=${path}`
-    }
-
-    if (user) {
-      url = `${url}&user=${user}`
-    }
-
-    return mainHttpClient.get(url)
-  },
+  getArtifactPreview: (schema, path, user) =>
+    mainHttpClient.get('/files', {
+      params: schema ? { schema, path, user } : { path, user }
+    }),
   getArtifactTag: project =>
     mainHttpClient.get(`/projects/${project}/artifact-tags`)
 }
