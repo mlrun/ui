@@ -54,32 +54,6 @@ const artifactsAction = {
     type: CLOSE_ARTIFACT_PREVIEW,
     payload: item
   })
-  // fetchArtifactPreview: (schema, path) => dispatch => {
-  //   dispatch(artifactsAction.fetchArtifactPreviewBegin())
-  //
-  //   return artifactsApi
-  //     .getArtifactPreview(schema, path)
-  //     .then(handleErrors)
-  //     .then(res => {
-  //       const preview = createArtifactPreviewContent(res)
-  //
-  //       dispatch(artifactsAction.fetchArtifactPreviewSuccess(preview))
-  //     })
-  //     .catch(error =>
-  //       dispatch(artifactsAction.fetchArtifactPreviewFailure(error))
-  //     )
-  // },
-  // fetchArtifactPreviewBegin: () => ({
-  //   type: FETCH_ARTIFACT_PREVIEW_BEGIN
-  // }),
-  // fetchArtifactPreviewSuccess: preview => ({
-  //   type: FETCH_ARTIFACT_PREVIEW_SUCCESS,
-  //   payload: preview
-  // }),
-  // fetchArtifactPreviewFailure: error => ({
-  //   type: FETCH_ARTIFACT_PREVIEW_FAILURE,
-  //   payload: error
-  // })
 }
 
 export default artifactsAction

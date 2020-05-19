@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
 
 import ChipCell from '../ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
@@ -14,16 +15,15 @@ import { ReactComponent as ArtifactView } from '../../images/eye.svg'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import artifactAction from '../../actions/artifacts'
-
 import { truncateUid } from '../../utils'
 import jobsData from '../../components/JobsPage/jobsData'
-import { useDispatch } from 'react-redux'
 
 const TableCell = ({
   data,
   expandLink,
   firstRow,
   handleExpandRow,
+  isGroupedByWorkflow,
   item,
   link,
   match,
@@ -32,7 +32,7 @@ const TableCell = ({
 }) => {
   const dispatch = useDispatch()
 
-  if (link) {
+  if (link && !isGroupedByWorkflow) {
     return (
       <TableLinkCell
         data={data}
@@ -55,7 +55,7 @@ const TableCell = ({
         </Tooltip>
       </div>
     )
-  } else if (firstRow) {
+  } else if (firstRow || (link && isGroupedByWorkflow)) {
     return (
       <div className={`table-body__cell ${data.class}`}>
         {data && data.value}
@@ -173,6 +173,7 @@ TableCell.defaultProps = {
   expandLink: false,
   firstRow: false,
   handleExpandRow: null,
+  isGroupedByWorkflow: false,
   item: {
     target_path: '',
     schema: ''
@@ -186,6 +187,7 @@ TableCell.propTypes = {
   expandLink: PropTypes.bool,
   firstRow: PropTypes.bool,
   handleExpandRow: PropTypes.func,
+  isGroupedByWorkflow: PropTypes.bool,
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.bool]),
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   match: PropTypes.shape({}),

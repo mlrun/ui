@@ -12,39 +12,38 @@ const JobsTableRow = ({
   handleExpandRow,
   handleSelectItem,
   index,
+  isGroupedByWorkflow,
   match,
   rowItem,
   selectedItem,
-  tableContent
+  tableContent,
+  workflows
 }) => {
   const parent = useRef()
 
   return (
     <div
       className={`table-body__row ${
-        rowItem.uid.value === selectedItem.uid &&
-        parent.current &&
-        !parent.current.classList.value.includes('parent-row-expanded')
+        rowItem.uid?.value === selectedItem.uid &&
+        !parent.current?.classList.value.includes('parent-row-expanded')
           ? 'parent-row active'
-          : parent.current &&
-            parent.current.classList.value.includes('parent-row-expanded')
+          : parent.current?.classList.value.includes('parent-row-expanded')
           ? 'parent-row parent-row-expanded'
           : 'parent-row'
-      }`}
+      } ${isGroupedByWorkflow && 'isGroupedByWorkflow'}`}
       ref={parent}
     >
-      {parent.current &&
-      parent.current.classList.contains('parent-row-expanded') ? (
+      {parent.current?.classList.contains('parent-row-expanded') ? (
         <div className="row_grouped-by">
           <div className="table-body__row">
             <TableCell
-              handleExpandRow={handleExpandRow}
               data={rowItem.name}
+              expandLink
+              firstRow
+              handleExpandRow={handleExpandRow}
               item={rowItem}
               selectItem={handleSelectItem}
               selectedItem={selectedItem}
-              expandLink
-              firstRow
             />
           </div>
           <>
@@ -63,7 +62,10 @@ const JobsTableRow = ({
                   {Object.values(job).map((value, i) => {
                     const currentItem =
                       content.length > 0 &&
-                      content.find(item => item.uid === job.uid.value)
+                      content.find(
+                        contentItemObj => contentItemObj.uid === job.uid.value
+                      )
+
                     return (
                       <TableCell
                         data={i === 0 ? job.startTime : value}
@@ -97,27 +99,33 @@ const JobsTableRow = ({
         </div>
       ) : (
         <>
-          {Object.values(rowItem).map((value, i, arr) => {
+          {Object.values(rowItem).map((rowItemProp, i) => {
+            const currentItem = isGroupedByWorkflow
+              ? workflows.find(workflow => workflow.id === rowItem.uid.value)
+              : content.find(
+                  contentItemObj => contentItemObj.uid === rowItem.uid.value
+                )
+
             return (
               <TableCell
+                data={rowItemProp}
+                expandLink={Array.isArray(tableContent)}
                 handleExpandRow={handleExpandRow}
-                data={value}
-                item={content.filter(item => item.uid === rowItem.uid.value)[0]}
+                isGroupedByWorkflow={isGroupedByWorkflow}
+                item={currentItem}
+                key={new Date().getTime() + i}
                 link={
                   i === 0 &&
-                  `/projects/${match.params.projectName}/jobs/${content.length >
-                    0 &&
-                    content.filter(item => item.uid === rowItem.uid.value)[0]
-                      ?.uid}${
+                  `/projects/${match.params.projectName}/jobs/${
+                    content?.find(item => item.uid === rowItem.uid.value)?.uid
+                  }${
                     match.params.tab
                       ? `/${match.params.tab}`
                       : `/${jobsData.detailsMenu[0]}`
                   }`
                 }
-                key={value.value + i}
                 selectItem={handleSelectItem}
                 selectedItem={selectedItem}
-                expandLink={Array.isArray(tableContent)}
               />
             )
           })}
@@ -131,7 +139,9 @@ const JobsTableRow = ({
 }
 
 JobsTableRow.defaultProps = {
-  handleExpandRow: () => {}
+  handleExpandRow: () => {},
+  isGroupedByWorkflow: false,
+  workflows: []
 }
 
 JobsTableRow.propTypes = {
@@ -139,10 +149,13 @@ JobsTableRow.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
+  isGroupedByWorkflow: PropTypes.bool,
   index: PropTypes.number.isRequired,
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  workflows: PropTypes.arrayOf(PropTypes.shape({}))
 }
 
 export default JobsTableRow

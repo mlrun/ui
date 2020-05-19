@@ -9,14 +9,20 @@ import Loader from '../../common/Loader/Loader'
 import functionsData from './functionsData'
 import functionsActions from '../../actions/functions'
 
-const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
+const Functions = ({ fetchFunctions, functionsStore, history, match }) => {
   const [functions, setFunctions] = useState([])
-  const [selectedFunction, setSelectedFunction] = useState({})
-  const [showUntagged, setShowUntagged] = useState('')
-  const [taggedFunctions, setTaggedFunctions] = useState([])
   const [groupFilter, setGroupFilter] = useState(
     functionsData.initialGroupFilter
   )
+  const [selectedFunction, setSelectedFunction] = useState({})
+  const [showUntagged, setShowUntagged] = useState('')
+  const [taggedFunctions, setTaggedFunctions] = useState([])
+  const pageData = {
+    detailsMenu: functionsData.detailsMenu,
+    filters: functionsData.filters,
+    page: functionsData.page,
+    tableHeaders: functionsData.tableHeaders
+  }
 
   const refreshFunctions = useCallback(() => {
     fetchFunctions(match.params.projectName).then(functions => {
@@ -98,20 +104,17 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
-        detailsMenu={functionsData.detailsMenu}
-        filters={functionsData.filters}
         groupFilter={groupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
         match={match}
-        page={functionsData.page}
+        pageData={pageData}
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
         setGroupFilter={setGroupFilter}
         setShowUntagged={setShowUntagged}
         showUntagged={showUntagged}
-        tableHeaders={functionsData.tableHeaders}
         yamlContent={functionsStore.functions}
       />
     </>
@@ -119,9 +122,7 @@ const Functions = ({ fetchFunctions, functionsStore, match, history }) => {
 }
 
 Functions.propTypes = {
-  fetchFunctions: PropTypes.func.isRequired,
   history: PropTypes.shape({}).isRequired,
-  functionsStore: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired
 }
 

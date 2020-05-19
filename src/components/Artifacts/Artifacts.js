@@ -15,6 +15,12 @@ import './artifacts.scss'
 const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
   const [artifacts, _setArtifacts] = useState([])
   const [selectedArtifact, setSelectedArtifact] = useState({})
+  const pageData = {
+    detailsMenu: artifactsData.detailsMenu,
+    filters: artifactsData.filters,
+    page: artifactsData.page,
+    tableHeaders: artifactsData.tableHeaders
+  }
 
   const fetchData = useCallback(
     item => {
@@ -80,7 +86,7 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
   }, [match.params, artifactsStore.artifacts, history])
 
   useEffect(() => {
-    artifactApi.getArtifactTag(match.params.projectName).then(item => {})
+    artifactApi.getArtifactTag(match.params.projectName)
   }, [match.params.projectName])
 
   const handleSelectArtifact = (item, preview) => {
@@ -99,16 +105,13 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
       {artifactsStore.loading && <Loader />}
       <Content
         content={artifacts}
-        detailsMenu={artifactsData.detailsMenu}
-        filters={artifactsData.filters}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectArtifact}
         loading={artifactsStore.loading}
         match={match}
-        page={artifactsData.page}
+        pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedArtifact.item}
-        tableHeaders={artifactsData.tableHeaders}
         yamlContent={artifactsStore.artifacts}
       />
     </>
@@ -116,8 +119,6 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
 }
 
 Artifacts.propTypes = {
-  artifactsStore: PropTypes.shape({}).isRequired,
-  fetchArtifacts: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired
 }
 

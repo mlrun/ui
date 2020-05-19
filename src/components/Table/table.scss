@@ -9,112 +9,146 @@
   border-top: $tableBorder;
   position: relative;
   min-height: 600px;
+
   &_opened {
     height: 72vh;
     overflow-y: scroll;
     overflow-x: hidden;
   }
+
   &__content {
     width: 100%;
-    .jobs_medium {
-      @include tableColumnFlex(1, 240px);
-    }
-    .jobs_small {
-      @include tableColumnFlex(0.8, 80px);
-    }
-    .jobs_big {
-      @include tableColumnFlex(2, 80px);
-    }
-    .artifacts_medium {
-      @include tableColumnFlex(1, 240px);
-    }
-    .artifacts_small {
-      @include tableColumnFlex(1, 80px);
-    }
-    .artifacts_big {
-      @include tableColumnFlex(2.5, 80px);
-    }
-    .artifacts_date {
-      @include tableColumnFlex(1, 80px);
-    }
-    .artifacts_kind {
-      padding-left: 20px;
-      @include tableColumnFlex(0.5, 80px);
-    }
-    .artifacts_owner {
-      @include tableColumnFlex(0.5, 80px);
-    }
-    .artifacts_popout,
-    .artifacts_download {
-      @include tableColumnFlex(0.5, 80px);
-      justify-content: center;
-    }
-    .functions {
+
+    .jobs {
+
       &_medium {
         @include tableColumnFlex(1, 240px);
       }
+
+      &_small {
+        @include tableColumnFlex(0.8, 80px);
+      }
+
+      &_big {
+        @include tableColumnFlex(2, 80px);
+      }
+    }
+
+    .artifacts {
+
+      &_medium {
+        @include tableColumnFlex(1, 240px);
+      }
+
       &_small {
         @include tableColumnFlex(1, 80px);
       }
+
+      &_big {
+        @include tableColumnFlex(2.5, 80px);
+      }
+
+      &_date {
+        @include tableColumnFlex(1, 80px);
+      }
+
+      &_kind {
+        padding-left: 20px;
+        @include tableColumnFlex(0.5, 80px);
+      }
+
+      &_owner {
+        @include tableColumnFlex(0.5, 80px);
+      }
+
+      &_popout,
+      &_download {
+        @include tableColumnFlex(0.5, 80px);
+        justify-content: center;
+      }
+    }
+
+    .functions {
+
+      &_medium {
+        @include tableColumnFlex(1, 240px);
+      }
+
+      &_small {
+        @include tableColumnFlex(1, 80px);
+      }
+
       &_big {
         @include tableColumnFlex(2, 80px);
       }
     }
   }
+
   &-head {
     display: flex;
+
     &__item {
       @include tableDet;
       @include tableHeader;
       flex: 1;
+
       &.buttonPopout,
       &.buttonDownload {
         @include tableColumnFlex(0.5, 80px);
       }
     }
   }
+
   &-body {
     color: $mulledWine;
+
     &__row {
       position: relative;
       display: flex;
-      min-height: 50px;
       flex-direction: row;
+      min-height: 50px;
+
       &.parent-row {
-        &:not(.parent-row-expanded) {
+
+        &:not(.parent-row-expanded):not( .isGroupedByWorkflow) {
           &:hover {
             background-color: $alabaster;
+
             .action_cell {
+
               .table-actions-container {
                 display: block;
               }
             }
           }
         }
+
         &-expanded {
           flex-direction: column;
         }
+
         .row_grouped-by {
           width: 100%;
+
           .table-body__row {
+
             &:first-child {
               .table-body__cell {
                 border-bottom: none;
+
                 .expand-arrow {
                   transform: rotate(90deg);
                 }
               }
             }
+
             &__cell {
               display: flex;
             }
+
             &:hover {
               background-color: $alabaster;
-            }
-            &.active {
-              background-color: $alabaster;
-            }
-            &:hover {
+
               .action_cell {
                 .table-actions-container {
                   display: block;
@@ -123,11 +157,9 @@
             }
           }
         }
-        &.active {
-          background-color: $alabaster;
-        }
       }
     }
+
     &__cell {
       @include tableDet;
       padding: 8px 0;
@@ -135,9 +167,11 @@
       line-height: 18px;
       font-weight: 400;
       flex-wrap: wrap;
+
       &_type {
         text-transform: capitalize;
       }
+
       a {
         position: relative;
         text-decoration: none;
@@ -146,10 +180,12 @@
         display: flex;
         flex: 1;
         flex-direction: column;
+
         .status {
           position: absolute;
           left: -34px;
         }
+
         span {
           display: block;
           color: $topaz;
@@ -159,6 +195,7 @@
       i {
         margin: 0 17px;
       }
+
       button {
         display: flex;
         border: none;
@@ -167,11 +204,13 @@
         padding: 0;
         font-size: 15px;
       }
+
       .expand-arrow {
         position: absolute;
         left: 10px;
         cursor: pointer;
       }
+
       &_path {
         max-width: 50px;
         min-width: 100%;
@@ -180,6 +219,7 @@
         text-overflow: ellipsis;
       }
     }
+
     &__parameters {
       @include chip($parametersBorder);
       max-width: 18ch;
@@ -187,14 +227,17 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     &__results {
       @include chip($resultsBorder);
       display: flex;
     }
+
     &__labels {
       @include chip($labelBorder);
     }
   }
+
   .name_status_row {
     display: flex;
     align-items: center;
@@ -204,6 +247,7 @@
       margin-left: 10px;
     }
   }
+
   .date__uid_row {
     display: flex;
     align-items: center;
@@ -216,16 +260,22 @@
       margin-left: 10px;
     }
   }
+
   .action_cell {
     position: relative;
     width: 20px;
     max-width: 20px;
   }
+
   .data_ellipsis {
     min-width: 100%;
     max-width: 50px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow-x: hidden;
+  }
+
+  .active {
+    background-color: $alabaster;
   }
 }

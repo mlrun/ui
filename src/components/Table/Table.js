@@ -6,72 +6,74 @@ import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import NotificationDownload from '../NotificationDownload/NotificationDownload'
 
-import './table.scss'
-
-import createArtifactsContent from '../../utils/createArtifactsContent'
-import createFunctionsContent from '../../utils/createFunctionsContent'
 import createJobsContent from '../../utils/createJobsContent'
-import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
+import { generateTableContent } from '../../utils/generateTableContent'
+import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
+
+import './table.scss'
 
 const Table = ({
   content,
-  detailsMenu,
   groupFilter,
   groupedByName,
+  groupedByWorkflow,
   handleCancel,
   handleExpandRow,
   handleSelectItem,
   match,
-  page,
+  pageData,
   selectedItem,
-  toggleConvertToYaml,
-  tableHeaders
+  toggleConvertToYaml
 }) => {
-  const [tableContent, setTableContent] = useState([])
   const [groupLatestItem, setGroupLatestItem] = useState([])
+  const [groupWorkflowItems, setGroupWorkflowItems] = useState([])
+  const [tableContent, setTableContent] = useState([])
 
   const previewArtifact = useSelector(state => state.artifactsStore.preview)
+  const workflows = useSelector(state => state.workflowsStore.workflows)
 
   useEffect(() => {
-    const _tableContent =
-      Object.keys(groupedByName).length > 0
-        ? Object.values(groupedByName).map(group => {
-            return page === JOBS_PAGE
-              ? createJobsContent(group)
-              : createFunctionsContent(group)
-          })
-        : page === JOBS_PAGE
-        ? createJobsContent(content)
-        : page === ARTIFACTS_PAGE
-        ? createArtifactsContent(content)
-        : createFunctionsContent(content)
+    let generatedTableContent = generateTableContent(
+      content,
+      groupedByName,
+      groupedByWorkflow,
+      groupFilter,
+      pageData.page
+    )
 
     if (groupFilter === 'name') {
-      const groupLatest = _tableContent.map(group => {
-        if (Array.isArray(group)) {
-          return page === JOBS_PAGE
-            ? group.reduce((prev, curr) => {
-                return new Date(prev.updated.value).getTime() >
-                  new Date(curr.updated.value).getTime()
-                  ? prev
-                  : curr
-              })
-            : group.find((func, i, arr) => {
-                if (arr.length === 1) return func
-                return func.tag.value === 'latest'
-              })
-        } else return group
-      })
+      const groupLatest = generateGroupLatestItem(
+        pageData.page,
+        generatedTableContent
+      )
 
       setGroupLatestItem(groupLatest)
+      setGroupWorkflowItems([])
+    } else if (groupFilter === 'workflow') {
+      const groupWorkflowItem = Object.keys(
+        groupedByWorkflow
+      )?.map(workflowId =>
+        workflows.find(workflow => workflow.id === workflowId)
+      )
+
+      setGroupWorkflowItems(createJobsContent(groupWorkflowItem))
+      setGroupLatestItem([])
     }
 
-    setTableContent(_tableContent)
-  }, [page, content, groupedByName, groupFilter])
+    setTableContent(generatedTableContent)
+  }, [
+    content,
+    groupedByName,
+    groupFilter,
+    groupedByWorkflow,
+    workflows,
+    pageData.page
+  ])
 
   useEffect(() => {
     if (groupFilter === 'none') {
       setGroupLatestItem([])
+      setGroupWorkflowItems([])
       setTableContent([])
     }
   }, [groupFilter])
@@ -80,19 +82,21 @@ const Table = ({
     <>
       <TableView
         content={content}
-        detailsMenu={detailsMenu}
         groupFilter={groupFilter}
-        groupLatestItem={groupLatestItem}
+        groupLatestItem={
+          groupLatestItem.length ? groupLatestItem : groupWorkflowItems
+        }
         groupedByName={groupedByName}
+        groupedByWorkflow={groupedByWorkflow}
         handleCancel={handleCancel}
         handleExpandRow={handleExpandRow}
         handleSelectItem={handleSelectItem}
         match={match}
-        page={page}
+        pageData={pageData}
         selectedItem={selectedItem}
         tableContent={tableContent}
         toggleConvertToYaml={toggleConvertToYaml}
-        tableHeaders={tableHeaders}
+        workflows={workflows}
       />
       <NotificationDownload />
       {previewArtifact.isPreview && (
@@ -112,16 +116,14 @@ Table.defaultProps = {
 
 Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   groupFilter: PropTypes.string,
   groupedByName: PropTypes.shape({}),
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired,
+  pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
-  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   toggleConvertToYaml: PropTypes.func.isRequired
 }
 

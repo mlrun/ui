@@ -3,18 +3,31 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import jobsActions from '../../actions/jobs'
+import workflowActions from '../../actions/workflow'
 import jobsData from './jobsData'
 import { parseKeyValues } from '../../utils'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 
-const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
+const Jobs = ({
+  fetchJobs,
+  fetchWorkflows,
+  jobsStore,
+  match,
+  history,
+  workflowsStore
+}) => {
   const [jobs, setJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
-
   const [stateFilter, setStateFilter] = useState(jobsData.initialStateFilter)
   const [groupFilter, setGroupFilter] = useState(jobsData.initialGroupFilter)
+  const pageData = {
+    detailsMenu: jobsData.detailsMenu,
+    filters: jobsData.filters,
+    page: jobsData.page,
+    tableHeaders: jobsData.tableHeaders
+  }
 
   const refreshJobs = useCallback(
     event => {
@@ -25,7 +38,7 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
       ).then(jobs => {
         const newJobs = jobs.map(job => {
           const func = job?.spec?.function?.match(
-            /(?<=\/)([\w\W\d]+)(?=:)|(?<=:)([\w\d]+)/g
+            /(\/)([\w\W\d]+)(?=:)|(:)([\w\d]+)/g
           )
 
           return {
@@ -59,14 +72,19 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
     [fetchJobs, match.params.projectName, stateFilter]
   )
 
+  const getWorkflows = useCallback(() => {
+    fetchWorkflows()
+  }, [fetchWorkflows])
+
   useEffect(() => {
     refreshJobs()
+    getWorkflows()
 
     return () => {
       setSelectedJob({})
       setJobs([])
     }
-  }, [history, match.params.projectName, refreshJobs])
+  }, [getWorkflows, history, match.params.projectName, refreshJobs])
 
   useEffect(() => {
     if (match.params.jobId && jobs.length > 0) {
@@ -105,23 +123,20 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
 
   return (
     <>
-      {jobsStore.loading && <Loader />}
+      {(jobsStore.loading || workflowsStore.loading) && <Loader />}
       <Content
         content={jobs}
-        detailsMenu={jobsData.detailsMenu}
-        filters={jobsData.filters}
         groupFilter={groupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectJob}
         loading={jobsStore.loading}
         match={match}
-        page={jobsData.page}
+        pageData={pageData}
         refresh={refreshJobs}
         selectedItem={selectedJob}
         setGroupFilter={setGroupFilter}
         setStateFilter={onStateFilterChange}
         stateFilter={stateFilter}
-        tableHeaders={jobsData.tableHeaders}
         yamlContent={jobsStore.jobs}
       />
     </>
@@ -129,10 +144,11 @@ const Jobs = ({ fetchJobs, jobsStore, match, history }) => {
 }
 
 Jobs.propTypes = {
-  fetchJobs: PropTypes.func.isRequired,
   history: PropTypes.shape({}).isRequired,
-  jobsStore: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(jobsStore => jobsStore, jobsActions)(React.memo(Jobs))
+export default connect(
+  ({ jobsStore, workflowsStore }) => ({ jobsStore, workflowsStore }),
+  { ...jobsActions, ...workflowActions }
+)(React.memo(Jobs))
