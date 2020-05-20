@@ -4,11 +4,12 @@
 .table {
 
   &__row {
+    position: relative;
     display: flex;
     flex-direction: row;
+    height: 55px;
     border-top: $tableBorder;
     padding: 18px 20px;
-    position: relative;
 
     .actions_cell {
       min-width: 36px;
@@ -39,11 +40,10 @@
     color: $primary;
     margin-right: 5px;
 
-    .tooltip {
+    &-value {
       overflow-x: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 100%;
     }
   }
 }

@@ -4,69 +4,92 @@
 @import '../../scss/shadows';
 
 .select {
-  display: flex;
   position: relative;
+  display: flex;
   align-items: center;
   height: 40px;
+  min-width: 100px;
   border-radius: 4px;
   background-color: transparent;
   border: $primaryBorder;
-  min-width: 100px;
 
   &.active {
     background: $alabaster;
   }
 
   &__label {
-    color: $topaz;
+    top: 15px;
+    left: 0px;
     padding: 0 5px 0 15px;
+    color: $topaz;
     text-transform: capitalize;
+    font-size: 15px;
+    transition: 200ms ease;
+
+    &_floating {
+      position: absolute;
+      top: 7px;
+      left: 0;
+      font-size: 10px;
+      transition: 200ms ease;
+    }
   }
 
   &__value {
     min-width: 96px;
     overflow-x: hidden;
+    color: $mulledWine;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: $mulledWine;
+
+    &_floating {
+      position: absolute;
+      left: 16px;
+      top: 25px;
+    }
   }
 
   .sub-label {
-    color: $topaz;
     margin-left: 5px;
+    overflow: hidden;
+    color: $topaz;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   &__caret {
     position: absolute;
-    top: -2px;
+    top: 50%;
     right: 2px;
+    transform: translate(0%, -50%);
   }
 
   &__header {
+    position: relative;
     display: flex;
     align-items: center;
-    position: relative;
     width: 100%;
+    height: 100%;
   }
 
   &__body {
-    z-index: 5;
     position: absolute;
     top: calc(100% + 5px);
+    left: 0;
+    z-index: 5;
     width: 100%;
     border: $primaryBorder;
     box-shadow: $filterShadow;
     border-radius: 2px;
     color: $mulledWineTwo;
-    left: 0;
   }
 
   &__item {
     display: flex;
     align-items: center;
     height: 49px;
+    padding: 0 15px;
     background-color: $white;
-    padding-left: 15px;
 
     .checkbox {
       flex: 1;
@@ -96,8 +119,8 @@
     position: fixed;
     left: 0;
     top: 0;
+    z-index: 5;
     height: 100%;
     width: 100%;
-    z-index: 5;
   }
 }

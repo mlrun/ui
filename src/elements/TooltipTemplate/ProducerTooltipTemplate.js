@@ -5,11 +5,11 @@ import './producerTooltipTemplate.scss'
 
 const ProducerTooltipTemplate = ({ kind, owner }) => {
   return (
-    <div className="wrapper_producer">
-      <div className="kind">
+    <div className="tooltip-container">
+      <div className="tooltip-container__kind">
         <span>Kind:</span> {kind}
       </div>
-      <div className="owner">
+      <div className="tooltip-container__owner">
         <span>Owner:</span> {owner}
       </div>
     </div>

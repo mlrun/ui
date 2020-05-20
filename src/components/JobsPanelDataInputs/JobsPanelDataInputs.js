@@ -34,6 +34,15 @@ const JobsPanelDataInputs = ({
   const [selectedDataInput, setSelectedDataInput] = useState({})
   const [selectedVolume, setSelectedVolume] = useState({})
 
+  const selectOptions = {
+    volumeType: [
+      { label: 'V3IO', id: 'V3IO' },
+      { label: 'Config Map', id: 'Config Map' },
+      { label: 'Secret', id: 'Secret' },
+      { label: 'PVC', id: 'PVC' }
+    ]
+  }
+
   const handleAddNewItem = (input, volume) => {
     if (input) {
       handleAddNewDataInput()
@@ -185,18 +194,19 @@ const JobsPanelDataInputs = ({
       match={match}
       newInput={newInput}
       newVolume={newVolume}
-      selectedVolume={selectedVolume}
+      selectOptions={selectOptions}
       selectedDataInput={selectedDataInput}
+      selectedVolume={selectedVolume}
       setAddNewInput={setAddNewInput}
       setAddNewVolume={setAddNewVolume}
       setInputPath={setInputPath}
       setNewInput={setNewInput}
-      setOutputPath={setOutputPath}
       setNewVolume={setNewVolume}
+      setOutputPath={setOutputPath}
       setSelectedDataInput={setSelectedDataInput}
       setSelectedVolume={setSelectedVolume}
-      volumes={volumes}
       volumeMounts={volumeMounts}
+      volumes={volumes}
     />
   )
 }

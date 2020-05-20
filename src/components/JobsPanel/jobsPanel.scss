@@ -16,48 +16,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba($mineshaft, .75);
-  }
-
-  &__title {
-    display: flex;
-    flex: 0.1;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 52px;
-
-    &_wrapper {
-
-      .job-schedule {
-        &-container {
-          display: flex;
-          align-items: center;
-          margin-bottom: 32.5px;
-
-          svg {
-            margin-right: 18px;
-            cursor: pointer;
-          }
-        }
-
-        &__title {
-          font-weight: 500;
-          font-size: 20px;
-          line-height: 23px;
-          color: $primary;
-        }
-      }
-    }
-  }
-
-  &__name {
-    font-weight: 300;
-    font-size: 36px;
-    line-height: 42px;
-    color: $mulledWineTwo;
+    background: rgba($mineshaft, 0.75);
   }
 
   &__close-button {
+    margin-top: 16px;
     height: 24px;
     padding: 0;
   }
@@ -78,7 +41,6 @@
   }
 
   .accordion {
-
     &__container {
       margin: 16px 40px 0;
       border: $primaryBorder;
@@ -114,7 +76,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
 
     &.open {
       svg {

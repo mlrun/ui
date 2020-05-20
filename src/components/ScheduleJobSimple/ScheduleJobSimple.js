@@ -17,6 +17,7 @@ const ScheduleJobSimple = ({
   match,
   recurringDispatch,
   recurringState,
+  selectOptions,
   setDate,
   setIsRecurring,
   setTime,
@@ -44,6 +45,7 @@ const ScheduleJobSimple = ({
           match={match}
           recurringDispatch={recurringDispatch}
           recurringState={recurringState}
+          selectOptions={selectOptions}
         />
       )}
     </div>
@@ -59,6 +61,7 @@ ScheduleJobSimple.propTypes = {
   match: PropTypes.shape({}).isRequired,
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
+  selectOptions: PropTypes.shape({}).isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,

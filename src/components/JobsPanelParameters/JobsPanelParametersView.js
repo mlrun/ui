@@ -13,17 +13,17 @@ import Select from '../../common/Select/Select'
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
 import panelData from '../JobsPanel/panelData'
-import selectData from '../../common/Select/selectData'
 
 const JobsPanelParametersView = ({
   addNewParameter,
   handleAddNewItem,
-  handleEditParameter,
   handleDeleteParameter,
+  handleEditParameter,
   match,
   newParameter,
   newParameterType,
   parameters,
+  selectOptions,
   selectedParameter,
   setAddNewParameter,
   setNewParameter,
@@ -64,11 +64,13 @@ const JobsPanelParametersView = ({
                   onClick={value =>
                     setNewParameter({
                       ...newParameter,
-                      type: find(selectData.parametersValueType, ['id', value])
-                        .label
+                      type: find(selectOptions.parametersValueType, [
+                        'id',
+                        value
+                      ]).id
                     })
                   }
-                  option="parametersValueType"
+                  options={selectOptions.parametersValueType}
                 />
                 <Input
                   onChange={value =>
@@ -84,10 +86,10 @@ const JobsPanelParametersView = ({
                   match={match}
                   onClick={value =>
                     setNewParameterType(
-                      find(selectData.parameterType, ['id', value]).label
+                      find(selectOptions.parameterType, ['id', value]).id
                     )
                   }
-                  option="parameterType"
+                  options={selectOptions.parameterType}
                 />
               </div>
               <button
@@ -119,6 +121,7 @@ JobsPanelParametersView.propTypes = {
   newParameter: PropTypes.shape({}).isRequired,
   newParameterType: PropTypes.string.isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  selectOptions: PropTypes.shape({}).isRequired,
   setAddNewParameter: PropTypes.func.isRequired,
   setNewParameter: PropTypes.func.isRequired,
   setNewParameterType: PropTypes.func.isRequired

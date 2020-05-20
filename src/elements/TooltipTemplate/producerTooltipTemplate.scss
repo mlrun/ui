@@ -1,16 +1,18 @@
 @import './../../scss/shadows.scss';
 @import './../../scss/colors.scss';
 
-.wrapper_producer {
+.tooltip-container {
   display: flex;
   flex-direction: column;
-  background-color: white;
   padding: 15px 10px;
   box-shadow: $tooltipShadow;
   border-radius: 4px;
-  .kind,
-  .owner {
+  background-color: white;
+
+  &__kind,
+  &__owner {
     color: $doveGray;
+
     span {
       color: $doveGrayTwo;
       font-weight: bold;

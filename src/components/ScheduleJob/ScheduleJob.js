@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useReducer } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
 
 import ScheduleJobView from './ScheduleJobView'
 
@@ -15,10 +16,11 @@ import {
   getWeekDays,
   getWeekStart
 } from '../../utils/datePicker.util'
+import { SET_NEW_JOB_SCHEDULE } from '../../constants'
 
 import './scheduleJob.scss'
 
-const ScheduleJob = ({ match }) => {
+const ScheduleJob = ({ match, setOpenScheduleJob }) => {
   const [activeTab, setActiveTab] = useState(scheduleData.tabs[0].id)
   const [cron, setCron] = useState({
     minute: '*',
@@ -34,7 +36,22 @@ const ScheduleJob = ({ match }) => {
     recurringReducer,
     initialState
   )
+  const dispatch = useDispatch()
   const startWeek = getWeekStart(decodeLocale(navigator.language))
+  const selectOptions = {
+    repeatInterval: [
+      { label: 'Minute', id: 'minute' },
+      { label: 'Hour', id: 'hour' },
+      { label: 'Day', id: 'day' },
+      { label: 'Week', id: 'week' },
+      { label: 'Month', subLabel: '(every 12th day)', id: 'month' }
+    ],
+    repeatEnd: [
+      { label: 'Never', id: 'never' },
+      { label: 'On date', id: 'onDate' },
+      { label: 'After', id: 'after' }
+    ]
+  }
   const daysOfWeek = getWeekDays(startWeek)
 
   const generateCronString = cron => {
@@ -72,6 +89,11 @@ const ScheduleJob = ({ match }) => {
 
   const onHandleDateChange = date => {
     setDate(date)
+    setCron(prev => ({
+      ...prev,
+      dayOfTheMonth: date.getDate(),
+      monthOfTheYear: date.getMonth() + 1
+    }))
   }
 
   const onHandleTimeChange = time => {
@@ -86,8 +108,15 @@ const ScheduleJob = ({ match }) => {
   }
 
   const onSchedule = useCallback(() => {
-    return generateCronString(cron)
-  }, [cron])
+    const generateCron = generateCronString(cron)
+
+    dispatch({
+      type: SET_NEW_JOB_SCHEDULE,
+      payload: generateCron
+    })
+
+    setOpenScheduleJob(false)
+  }, [cron, dispatch, setOpenScheduleJob])
 
   return (
     <ScheduleJobView
@@ -103,6 +132,7 @@ const ScheduleJob = ({ match }) => {
       onSchedule={onSchedule}
       recurringDispatch={recurringDispatch}
       recurringState={recurringState}
+      selectOptions={selectOptions}
       setActiveTab={setActiveTab}
       setDate={onHandleDateChange}
       setIsRecurring={setIsRecurring}
@@ -113,7 +143,8 @@ const ScheduleJob = ({ match }) => {
 }
 
 ScheduleJob.propTypes = {
-  match: PropTypes.shape({}).isRequired
+  match: PropTypes.shape({}).isRequired,
+  setOpenScheduleJob: PropTypes.func.isRequired
 }
 
 export default ScheduleJob

@@ -15,7 +15,7 @@ import './createJobPage.scss'
 
 const CreateJobPageView = ({
   functions,
-  handleSelectFunction,
+  handleSelectGroupFunctions,
   match,
   templates
 }) => (
@@ -53,9 +53,9 @@ const CreateJobPageView = ({
           <div className="data-wrapper__list">
             {functions.map((func, index) => (
               <CreateJobCardTemplate
-                key={func?.metadata?.hash + index}
                 func={func}
-                handleSelectFunction={handleSelectFunction}
+                handleSelectGroupFunctions={handleSelectGroupFunctions}
+                key={func.name}
               />
             ))}
           </div>
@@ -69,9 +69,9 @@ const CreateJobPageView = ({
           <div className="data-wrapper__list">
             {templates?.map((func, index) => (
               <CreateJobCardTemplate
-                key={func?.metadata?.hash + index}
                 func={func}
-                handleSelectFunction={handleSelectFunction}
+                handleSelectGroupFunctions={handleSelectGroupFunctions}
+                key={func?.metadata.hash + index}
               />
             ))}
           </div>
@@ -83,7 +83,7 @@ const CreateJobPageView = ({
 
 CreateJobPageView.propTypes = {
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  handleSelectFunction: PropTypes.func.isRequired,
+  handleSelectGroupFunctions: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }

@@ -1,0 +1,118 @@
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+
+.job-panel {
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 40px 16px 40px;
+
+    &-wrapper {
+      margin-right: 29px;
+
+      .job-schedule {
+        &-container {
+          display: flex;
+          align-items: center;
+          margin-bottom: 18px;
+
+          svg {
+            margin-right: 18px;
+            cursor: pointer;
+          }
+        }
+      }
+
+      button.btn {
+        margin-left: auto;
+      }
+
+      &_edit {
+        width: 100%;
+      }
+
+      .input {
+        font-weight: 300;
+        font-size: 36px;
+        width: 100%;
+
+        &-wrapper {
+          width: 100%;
+          border: $primaryBorder;
+          border-radius: 4px;
+        }
+      }
+
+      &_hover {
+        display: flex;
+        border: $transparentBorder;
+        border-radius: 4px;
+
+        &:hover {
+          border: $primaryBorder;
+
+          .job-panel__button {
+            display: flex;
+            margin: 20px 16px 16px 0;
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+
+  &__button {
+    display: none;
+  }
+
+  &__icon {
+    cursor: pointer;
+  }
+
+  &__name {
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 42px;
+  }
+  &__wrapper {
+    color: $mulledWineTwo;
+    padding: 16px;
+  }
+
+  &__version,
+  &__method {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  &__version {
+    margin-right: 10px;
+  }
+
+  &__select {
+    &-container {
+      display: flex;
+      flex: 1;
+      height: 55px;
+      margin: 16px 0 16px 0;
+
+      .select {
+        width: 100%;
+
+        &__header {
+          .sub-label {
+            display: none;
+          }
+        }
+
+        &.job-methods {
+          margin-left: 16px;
+        }
+      }
+
+      .tooltip {
+        max-width: 300px;
+        white-space: inherit;
+      }
+    }
+  }
+}

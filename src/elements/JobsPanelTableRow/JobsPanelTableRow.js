@@ -14,7 +14,7 @@ const JobsPanelTableRow = ({ actionsMenu, item, row }) => {
         return (
           <div className="table__cell" key={i + cell}>
             <Tooltip
-              className="tooltip"
+              className="table__cell-value"
               template={<TextTooltipTemplate text={cell} />}
             >
               {cell}

@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Transition } from 'react-transition-group'
 
+import './tooltip.scss'
+
 const Tooltip = ({ children, template, className, textShow = false }) => {
   const [show, setShow] = useState(false)
   const [style, setStyle] = useState({})
@@ -12,10 +14,7 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
   const offset = 10
 
   const defaultStyle = {
-    transition: `opacity ${duration}ms ease-in-out`,
-    position: 'fixed',
-    zIndex: 1000,
-    whiteSpace: 'nowrap'
+    transition: `opacity ${duration}ms ease-in-out`
   }
 
   const transitionStyles = {
@@ -109,7 +108,7 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
               ...transitionStyles[state],
               ...style
             }}
-            className="tooltip_container"
+            className="tooltip"
           >
             {template}
           </div>
