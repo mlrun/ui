@@ -31,7 +31,7 @@ const JobsTableRow = ({
           : parent.current?.classList.value.includes('parent-row-expanded')
           ? 'parent-row parent-row-expanded'
           : 'parent-row'
-      } ${isGroupedByWorkflow && 'isGroupedByWorkflow'}`}
+      } ${isGroupedByWorkflow && 'parent-row_without-actions'}`}
       ref={parent}
     >
       {parent.current?.classList.contains('parent-row-expanded') ? (
