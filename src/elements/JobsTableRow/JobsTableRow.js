@@ -141,6 +141,7 @@ const JobsTableRow = ({
 JobsTableRow.defaultProps = {
   handleExpandRow: () => {},
   isGroupedByWorkflow: false,
+  tableContent: [],
   workflows: []
 }
 
@@ -154,7 +155,7 @@ JobsTableRow.propTypes = {
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.shape({})),
   workflows: PropTypes.arrayOf(PropTypes.shape({}))
 }
 
