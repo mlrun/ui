@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
@@ -9,6 +10,7 @@ import NotificationDownload from '../NotificationDownload/NotificationDownload'
 import createJobsContent from '../../utils/createJobsContent'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
+import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
 
 import './table.scss'
 
@@ -29,8 +31,12 @@ const Table = ({
   const [groupWorkflowItems, setGroupWorkflowItems] = useState([])
   const [tableContent, setTableContent] = useState([])
 
-  const previewArtifact = useSelector(state => state.artifactsStore.preview)
-  const workflows = useSelector(state => state.workflowsStore.workflows)
+  const previewArtifact = useSelector(
+    state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
+  )
+  const workflows = useSelector(
+    state => pageData.page === JOBS_PAGE && state.workflowsStore.workflows
+  )
 
   useEffect(() => {
     let generatedTableContent = generateTableContent(
@@ -84,7 +90,7 @@ const Table = ({
         content={content}
         groupFilter={groupFilter}
         groupLatestItem={
-          groupLatestItem.length ? groupLatestItem : groupWorkflowItems
+          isEmpty(groupLatestItem) ? groupWorkflowItems : groupLatestItem
         }
         groupedByName={groupedByName}
         groupedByWorkflow={groupedByWorkflow}

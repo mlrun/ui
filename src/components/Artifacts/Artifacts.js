@@ -12,7 +12,7 @@ import artifactsData from './artifactsData'
 
 import './artifacts.scss'
 
-const Artifacts = ({ artifactsStore, fetchArtifacts, match, history }) => {
+const Artifacts = ({ artifactsStore, fetchArtifacts, history, match }) => {
   const [artifacts, _setArtifacts] = useState([])
   const [selectedArtifact, setSelectedArtifact] = useState({})
   const pageData = {

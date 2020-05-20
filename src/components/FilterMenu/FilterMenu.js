@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
@@ -57,11 +57,9 @@ const FilterMenu = ({
     ]
   }
 
-  useEffect(() => {
-    if (page === JOBS_PAGE) {
-      selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
-    }
-  }, [page, selectOptions.groupBy])
+  if (page === JOBS_PAGE) {
+    selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
+  }
 
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()

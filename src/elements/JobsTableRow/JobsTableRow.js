@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
+import { map } from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
@@ -35,17 +36,36 @@ const JobsTableRow = ({
     >
       {parent.current?.classList.contains('parent-row-expanded') ? (
         <div className="row_grouped-by">
-          <div className="table-body__row">
-            <TableCell
-              data={rowItem.name}
-              expandLink
-              firstRow
-              handleExpandRow={handleExpandRow}
-              item={rowItem}
-              selectItem={handleSelectItem}
-              selectedItem={selectedItem}
-            />
-          </div>
+          {isGroupedByWorkflow ? (
+            <div className="table-body__row">
+              {map(rowItem, (rowItemData, rowItemKey) => {
+                return (
+                  <TableCell
+                    data={rowItemData}
+                    expandLink={rowItemKey === 'name'}
+                    firstRow={rowItemKey === 'name'}
+                    handleExpandRow={handleExpandRow}
+                    item={rowItem}
+                    key={rowItemKey}
+                    selectItem={handleSelectItem}
+                    selectedItem={selectedItem}
+                  />
+                )
+              })}
+            </div>
+          ) : (
+            <div className="table-body__row">
+              <TableCell
+                data={rowItem.name}
+                expandLink
+                firstRow
+                handleExpandRow={handleExpandRow}
+                item={rowItem}
+                selectItem={handleSelectItem}
+                selectedItem={selectedItem}
+              />
+            </div>
+          )}
           <>
             {tableContent.map((job, index) => {
               return (
@@ -68,7 +88,11 @@ const JobsTableRow = ({
 
                     return (
                       <TableCell
-                        data={i === 0 ? job.startTime : value}
+                        data={
+                          i === 0 && !isGroupedByWorkflow
+                            ? job.startTime
+                            : value
+                        }
                         item={currentItem}
                         link={
                           i === 0 &&
@@ -99,7 +123,7 @@ const JobsTableRow = ({
         </div>
       ) : (
         <>
-          {Object.values(rowItem).map((rowItemProp, i) => {
+          {map(rowItem, (rowItemProp, rowItemKey) => {
             const currentItem = isGroupedByWorkflow
               ? workflows.find(workflow => workflow.id === rowItem.uid.value)
               : content.find(
@@ -113,9 +137,9 @@ const JobsTableRow = ({
                 handleExpandRow={handleExpandRow}
                 isGroupedByWorkflow={isGroupedByWorkflow}
                 item={currentItem}
-                key={new Date().getTime() + i}
+                key={new Date().getTime() + rowItemKey}
                 link={
-                  i === 0 &&
+                  rowItemKey === 'name' &&
                   `/projects/${match.params.projectName}/jobs/${
                     content?.find(item => item.uid === rowItem.uid.value)?.uid
                   }${

@@ -69,7 +69,6 @@
     }
 
     .functions {
-
       &_medium {
         @include tableColumnFlex(1, 240px);
       }
@@ -109,13 +108,11 @@
       min-height: 50px;
 
       &.parent-row {
-
         &:not(.parent-row-expanded):not( .isGroupedByWorkflow) {
           &:hover {
             background-color: $alabaster;
 
             .action_cell {
-
               .table-actions-container {
                 display: block;
               }
@@ -131,7 +128,6 @@
           width: 100%;
 
           .table-body__row {
-
             &:first-child {
               .table-body__cell {
                 border-bottom: none;

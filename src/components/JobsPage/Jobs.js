@@ -14,8 +14,8 @@ const Jobs = ({
   fetchJobs,
   fetchWorkflows,
   jobsStore,
-  match,
   history,
+  match,
   workflowsStore
 }) => {
   const [jobs, setJobs] = useState([])
