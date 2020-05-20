@@ -1,4 +1,4 @@
-import { mainHTTPClient } from '../httpClient'
+import { mainHttpClient } from '../httpClient'
 
 export default {
   getArtifacts: item => {
@@ -21,25 +21,12 @@ export default {
       url = `${url}&name=${item.name}`
     }
 
-    return mainHTTPClient.get(url)
+    return mainHttpClient.get(url)
   },
-  getArtifactPreview: (schema, path, user) => {
-    let url = '/files?'
-
-    if (schema) {
-      url = `${url}schema=${schema}`
-    }
-
-    if (path) {
-      url = `${url}&path=${path}`
-    }
-
-    if (user) {
-      url = `${url}&user=${user}`
-    }
-
-    return mainHTTPClient.get(url)
-  },
+  getArtifactPreview: (schema, path, user) =>
+    mainHttpClient.get('/files', {
+      params: schema ? { schema, path, user } : { path, user }
+    }),
   getArtifactTag: project =>
-    mainHTTPClient.get(`/projects/${project}/artifact-tags`)
+    mainHttpClient.get(`/projects/${project}/artifact-tags`)
 }

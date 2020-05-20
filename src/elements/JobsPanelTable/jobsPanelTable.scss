@@ -24,7 +24,6 @@
   }
 
   .input-row {
-
     &-wrapper {
       display: flex;
       flex-direction: row;
@@ -43,10 +42,9 @@
   }
 
   &.data-inputs {
-
     &.volumes {
       .select {
-        flex: .38;
+        flex: 0.38;
         padding-left: 3px;
       }
     }
@@ -68,7 +66,7 @@
         padding: 18px 17px;
 
         &.active-input {
-          padding: 27px 17px 9px;;
+          padding: 27px 17px 9px;
         }
 
         &__label {
@@ -78,7 +76,7 @@
     }
 
     .parameters-type {
-      flex: .9;
+      flex: 0.9;
 
       .select__label {
         text-transform: none;
@@ -112,8 +110,7 @@
       align-items: center;
     }
 
-    .select {;
-
+    .select {
       &__label {
         padding-left: 0;
       }

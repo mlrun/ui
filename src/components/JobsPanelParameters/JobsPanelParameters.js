@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import JobsPanelParametersView from './JobsPanelParametersView'
 
 import panelData from '../JobsPanel/panelData'
-import selectedData from '../../common/Select/selectData'
 
 const JobsPanelParameters = ({
   hyperparams,
@@ -16,7 +15,7 @@ const JobsPanelParameters = ({
   const [addNewParameter, setAddNewParameter] = useState(false)
   const [newParameter, setNewParameter] = useState({
     name: '',
-    type: selectedData.parametersValueType[0].label,
+    type: 'string',
     value: ''
   })
   const [newParameterType, setNewParameterType] = useState(
@@ -24,6 +23,30 @@ const JobsPanelParameters = ({
   )
   const [parametersArray, setParametersArray] = useState([])
   const [selectedParameter, setSelectedParameter] = useState({})
+  const selectOptions = {
+    parameterType: [
+      { label: 'Simple', id: 'Simple' },
+      { label: 'Hyper', id: 'Hyper' }
+    ],
+    parametersValueType: [
+      {
+        label: 'string',
+        id: 'string'
+      },
+      {
+        label: 'number',
+        id: 'number'
+      },
+      {
+        label: 'list',
+        id: 'list'
+      },
+      {
+        label: 'map',
+        id: 'map'
+      }
+    ]
+  }
 
   const handleAddNewParameter = () => {
     const isEmptyParameter =
@@ -32,7 +55,7 @@ const JobsPanelParameters = ({
     if (isEmptyParameter) {
       setNewParameter({
         name: '',
-        type: selectedData.parametersValueType[0].label,
+        type: selectOptions.parametersValueType[0].id,
         value: ''
       })
       return setAddNewParameter(false)
@@ -61,7 +84,7 @@ const JobsPanelParameters = ({
     setAddNewParameter(false)
     setNewParameter({
       name: '',
-      type: selectedData.parametersValueType[0].label,
+      type: selectOptions.parametersValueType[0].id,
       value: ''
     })
     setNewParameterType(panelData.newParameterType[0].id)
@@ -137,6 +160,7 @@ const JobsPanelParameters = ({
       newParameter={newParameter}
       newParameterType={newParameterType}
       parameters={parametersArray}
+      selectOptions={selectOptions}
       selectedParameter={selectedParameter}
       setAddNewParameter={setAddNewParameter}
       setNewParameter={setNewParameter}

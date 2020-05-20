@@ -1,7 +1,7 @@
-import { mainHTTPClient } from '../httpClient'
+import { mainHttpClient } from '../httpClient'
 
 export default {
   getAllWorkflows: () => {
-    return mainHTTPClient.get('/workflows?page_size=100')
+    return mainHttpClient.get('/workflows?page_size=100')
   }
 }

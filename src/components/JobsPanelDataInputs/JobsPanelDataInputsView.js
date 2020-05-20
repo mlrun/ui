@@ -11,7 +11,6 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import Tooltip from '../../common/Tooltip/Tooltip'
 
 import panelData from '../JobsPanel/panelData'
-import selectData from '../../common/Select/selectData'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
@@ -25,18 +24,19 @@ const JobsPanelDataInputsView = ({
   match,
   newInput,
   newVolume,
+  selectOptions,
+  selectedDataInput,
   selectedVolume,
   setAddNewInput,
   setAddNewVolume,
   setInputPath,
   setNewInput,
-  setOutputPath,
   setNewVolume,
-  selectedDataInput,
+  setOutputPath,
   setSelectedDataInput,
   setSelectedVolume,
-  volumes,
-  volumeMounts
+  volumeMounts,
+  volumes
 }) => {
   const volumeTypeNameLabel =
     newVolume.type === 'V3IO'
@@ -134,10 +134,10 @@ const JobsPanelDataInputsView = ({
                   onClick={type =>
                     setNewVolume({
                       ...newVolume,
-                      type: find(selectData.volumeType, ['id', type]).label
+                      type: find(selectOptions.volumeType, ['id', type]).id
                     })
                   }
-                  option="volumeType"
+                  options={selectOptions.volumeType}
                   label={newVolume.type.length > 0 ? newVolume.type : 'Type'}
                   match={match}
                 />
@@ -214,18 +214,19 @@ const JobsPanelDataInputsView = ({
 JobsPanelDataInputsView.propTypes = {
   addNewInput: PropTypes.bool.isRequired,
   addNewVolume: PropTypes.bool.isRequired,
-  handleDeleteItems: PropTypes.func.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
+  handleDeleteItems: PropTypes.func.isRequired,
   inputs: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   newInput: PropTypes.shape({}).isRequired,
   newVolume: PropTypes.shape({}).isRequired,
+  selectOptions: PropTypes.shape({}).isRequired,
   setAddNewInput: PropTypes.func.isRequired,
   setAddNewVolume: PropTypes.func.isRequired,
   setInputPath: PropTypes.func.isRequired,
   setNewInput: PropTypes.func.isRequired,
-  setOutputPath: PropTypes.func.isRequired,
   setNewVolume: PropTypes.func.isRequired,
+  setOutputPath: PropTypes.func.isRequired,
   volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

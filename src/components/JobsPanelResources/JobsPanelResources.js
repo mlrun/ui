@@ -22,6 +22,28 @@ const JobsPanelResources = ({
     ? requests.memory.slice(0, requests.memory.match(/[a-zA-Z]/).index)
     : requests.memory
 
+  const selectOptions = {
+    unitCpu: [
+      { label: 'cpu', id: 'cpu' },
+      { label: 'millicpu', id: 'millicpu' }
+    ],
+    unitMemory: [
+      { label: 'Bytes', id: 'Bytes' },
+      { label: 'KB', id: 'KB' },
+      { label: 'KiB', id: 'KiB' },
+      { label: 'MB', id: 'MB' },
+      { label: 'MiB', id: 'MiB' },
+      { label: 'GB', id: 'GB' },
+      { label: 'GiB', id: 'GiB' },
+      { label: 'TB', id: 'TB' },
+      { label: 'TiB', id: 'TiB' },
+      { label: 'PB', id: 'PB' },
+      { label: 'PiB', id: 'PiB' },
+      { label: 'EB', id: 'EB' },
+      { label: 'EiB', id: 'EiB' }
+    ]
+  }
+
   const handleSelectMemoryUnit = value => {
     if (requests.memory.length > 0 && value !== 'Bytes') {
       const unit = value.match(/i/)
@@ -51,14 +73,15 @@ const JobsPanelResources = ({
   return (
     <JobsPanelResourcesView
       cpuUnit={cpuUnit}
-      handleSelectСpuUnit={handleSelectСpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
+      handleSelectСpuUnit={handleSelectСpuUnit}
       limits={limits}
       match={match}
       memoryUnit={memoryUnit}
       requests={requests}
       requestsCpu={requestsCpu}
       requestsMemory={requestsMemory}
+      selectOptions={selectOptions}
       setLimits={setLimits}
       setRequests={setRequests}
     />

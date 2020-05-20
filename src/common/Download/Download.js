@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import ProgressRing from '../ProgressRing/ProgressRing'
 
-import { mainHTTPClient } from '../../httpClient'
+import { mainHttpClient } from '../../httpClient'
 import notificationDownloadAction from '../../actions/notificationDownload'
 import downloadFile from '../../utils/downloadFile'
 import { DOWNLOAD_PROGRESS_RING } from '../../colorConstants'
@@ -38,7 +38,7 @@ const Download = ({ path, schema, setNotificationDownload, user }) => {
         })
       }
 
-      mainHTTPClient
+      mainHttpClient
         .get(
           schema
             ? `/files?schema=${schema}&path=${path}&user=${user}`

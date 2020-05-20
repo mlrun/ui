@@ -1,18 +1,19 @@
 import jobsApi from '../api/jobs-api'
 import {
-  FETCH_JOB_LOGS_BEGIN,
-  FETCH_JOB_LOGS_FAILURE,
-  FETCH_JOB_LOGS_SUCCESS,
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
+  FETCH_JOB_LOGS_BEGIN,
+  FETCH_JOB_LOGS_FAILURE,
+  FETCH_JOB_LOGS_SUCCESS,
   REMOVE_JOB_LOGS,
-  SET_NEW_JOB_INPUTS,
-  SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB,
-  SET_NEW_JOB_VOLUME_MOUNTS,
+  SET_NEW_JOB_HYPER_PARAMETERS,
+  SET_NEW_JOB_INPUTS,
   SET_NEW_JOB_PARAMETERS,
-  SET_NEW_JOB_HYPER_PARAMETERS
+  SET_NEW_JOB_SCHEDULE,
+  SET_NEW_JOB_VOLUMES,
+  SET_NEW_JOB_VOLUME_MOUNTS
 } from '../constants'
 
 const jobsActions = {
@@ -87,6 +88,10 @@ const jobsActions = {
   setNewJobParameters: parameters => ({
     type: SET_NEW_JOB_PARAMETERS,
     payload: parameters
+  }),
+  setNewJobSchedule: schedule => ({
+    type: SET_NEW_JOB_SCHEDULE,
+    payload: schedule
   }),
   setNewJobHyperParameters: parameters => ({
     type: SET_NEW_JOB_HYPER_PARAMETERS,

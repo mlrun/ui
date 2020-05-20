@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import './textTooltipTemplate.scss'
 
 const TextTooltipTemplate = ({ text }) => {
-  return <div className="text_tooltip_container">{text}</div>
+  return <div className="tooltip__text">{text}</div>
 }
 
 TextTooltipTemplate.propTypes = {
