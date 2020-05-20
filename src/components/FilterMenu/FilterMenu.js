@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
@@ -13,12 +13,11 @@ import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
-import { ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants.js'
+import { ARTIFACTS_PAGE, FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants.js'
 
 import artifactsData from '../Artifacts/artifactsData'
 
 import './filterMenu.scss'
-import { JOBS_PAGE } from '../../constants'
 
 const FilterMenu = ({
   expand,
@@ -54,10 +53,15 @@ const FilterMenu = ({
     ],
     groupBy: [
       { label: 'None', id: 'none' },
-      { label: 'Name', id: 'name' },
-      page === JOBS_PAGE && { label: 'Workflow', id: 'workflow' }
+      { label: 'Name', id: 'name' }
     ]
   }
+
+  useEffect(() => {
+    if (page === JOBS_PAGE) {
+      selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
+    }
+  }, [page, selectOptions.groupBy])
 
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()
