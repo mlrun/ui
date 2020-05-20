@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { isEmpty, map } from 'lodash'
 
 import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
@@ -56,9 +56,7 @@ const Table = ({
       setGroupLatestItem(groupLatest)
       setGroupWorkflowItems([])
     } else if (groupFilter === 'workflow') {
-      const groupWorkflowItem = Object.keys(
-        groupedByWorkflow
-      )?.map(workflowId =>
+      const groupWorkflowItem = map(groupedByWorkflow, workflowId =>
         workflows.find(workflow => workflow.id === workflowId)
       )
 

@@ -20,7 +20,6 @@
     width: 100%;
 
     .jobs {
-
       &_medium {
         @include tableColumnFlex(1, 240px);
       }
@@ -35,7 +34,6 @@
     }
 
     .artifacts {
-
       &_medium {
         @include tableColumnFlex(1, 240px);
       }
