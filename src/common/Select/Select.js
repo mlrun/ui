@@ -4,8 +4,6 @@ import { useHistory } from 'react-router-dom'
 
 import SelectOption from '../../elements/SelectOption/SelectOption'
 
-import options from './selectData'
-
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
 import './select.scss'
@@ -13,17 +11,19 @@ import './select.scss'
 const Select = ({
   className,
   disabled,
+  floatingLabel,
   label,
   match,
   onClick,
-  option,
+  options,
   page,
-  value
+  selectType,
+  selectedId
 }) => {
   const [isOpen, setOpen] = useState(false)
   const history = useHistory()
 
-  const selectOption = options[option].find(item => item.id === value)
+  const selectedOption = options.find(option => option.id === selectedId)
 
   useEffect(() => {
     window.addEventListener('scroll', handlerScroll)
@@ -50,39 +50,52 @@ const Select = ({
 
   return (
     <div
-      className={`select${isOpen ? ' active' : ''} ${className}`}
+      className={`select ${className} ${isOpen ? ' active' : ''}`}
       onClick={() => toggleOpen(disabled)}
     >
       <div className="select__header">
-        {label && <div className="select__label">{label}</div>}
-        <div className="select__value">
-          {value && selectOption.label}
-          {selectOption?.subLabel && (
-            <span className="sub-label">{selectOption.subLabel}</span>
+        {label && (
+          <div
+            className={`select__label ${selectedId &&
+              floatingLabel &&
+              'select__label_floating'}`}
+          >
+            {label}
+          </div>
+        )}
+        <div
+          className={`select__value ${selectedId &&
+            floatingLabel &&
+            'select__value_floating'}`}
+        >
+          {selectedId && selectedOption?.label}
+          {selectedOption?.subLabel && (
+            <span className="sub-label">{selectedOption.subLabel}</span>
           )}
         </div>
         <Caret className="select__caret" />
       </div>
-      {isOpen && [
-        <div className="overall" key={isOpen} />,
-        <div
-          className="select__body"
-          onClick={() => {
-            setOpen(false)
-          }}
-          key={!isOpen}
-        >
-          {options[option].map(item => (
-            <SelectOption
-              key={item.id}
-              item={item}
-              selectedId={value}
-              status={option === 'status'}
-              onClick={handleSelectOption}
-            />
-          ))}
-        </div>
-      ]}
+      {isOpen && (
+        <>
+          <div className="overall" key={isOpen} />
+          <div
+            className="select__body"
+            onClick={() => {
+              setOpen(false)
+            }}
+          >
+            {options.map(item => (
+              <SelectOption
+                item={item}
+                key={item.id}
+                onClick={handleSelectOption}
+                selectType={selectType}
+                selectedId={selectedId}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -90,20 +103,24 @@ const Select = ({
 Select.defaultProps = {
   className: '',
   disabled: false,
-  onClick: null,
   label: '',
-  page: ''
+  onClick: null,
+  page: '',
+  selectType: '',
+  selectedId: ''
 }
 
 Select.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  floatingLabel: PropTypes.bool,
   label: PropTypes.string,
   match: PropTypes.shape({}).isRequired,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  option: PropTypes.string.isRequired,
+  options: PropTypes.array.isRequired,
   page: PropTypes.string,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+  selectType: PropTypes.string,
+  selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 }
 
 export default React.memo(Select)

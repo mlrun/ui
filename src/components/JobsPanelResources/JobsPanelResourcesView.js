@@ -7,14 +7,15 @@ import RangeInput from '../../common/RangeInput/RangeInput'
 
 const JobsPanelResourcesView = ({
   cpuUnit,
-  handleSelectСpuUnit,
   handleSelectMemoryUnit,
+  handleSelectСpuUnit,
   limits,
   match,
   memoryUnit,
   requests,
   requestsCpu,
   requestsMemory,
+  selectOptions,
   setLimits,
   setRequests
 }) => (
@@ -24,9 +25,9 @@ const JobsPanelResourcesView = ({
       <Select
         label="Unit"
         match={match}
-        option="unitMemory"
+        options={selectOptions.unitMemory}
         onClick={value => handleSelectMemoryUnit(value)}
-        value={memoryUnit}
+        selectedId={memoryUnit}
       />
       <RangeInput
         floatingLabel
@@ -56,9 +57,9 @@ const JobsPanelResourcesView = ({
       <Select
         label="Unit"
         match={match}
-        option="unitCpu"
+        options={selectOptions.unitCpu}
         onClick={value => handleSelectСpuUnit(value)}
-        value={cpuUnit}
+        selectedId={cpuUnit}
       />
       <RangeInput
         floatingLabel
@@ -91,14 +92,15 @@ const JobsPanelResourcesView = ({
 
 JobsPanelResourcesView.propTypes = {
   cpuUnit: PropTypes.string.isRequired,
-  handleSelectСpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
+  handleSelectСpuUnit: PropTypes.func.isRequired,
   limits: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   memoryUnit: PropTypes.string.isRequired,
   requests: PropTypes.shape({}).isRequired,
   requestsCpu: PropTypes.string.isRequired,
   requestsMemory: PropTypes.string.isRequired,
+  selectOptions: PropTypes.shape({}).isRequired,
   setLimits: PropTypes.func.isRequired,
   setRequests: PropTypes.func.isRequired
 }

@@ -21,6 +21,7 @@ const ScheduleJobView = ({
   onSchedule,
   recurringDispatch,
   recurringState,
+  selectOptions,
   setActiveTab,
   setDate,
   setIsRecurring,
@@ -50,6 +51,7 @@ const ScheduleJobView = ({
           match={match}
           recurringDispatch={recurringDispatch}
           recurringState={recurringState}
+          selectOptions={selectOptions}
           setDate={setDate}
           setIsRecurring={setIsRecurring}
           setTime={setTime}
@@ -80,6 +82,7 @@ ScheduleJobView.propTypes = {
   onSchedule: PropTypes.func.isRequired,
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
+  selectOptions: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,

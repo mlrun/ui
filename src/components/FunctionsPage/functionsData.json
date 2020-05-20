@@ -45,6 +45,6 @@
     "Description",
     "State"
   ],
-  "filters": ["group by"],
+  "filters": ["groupBy"],
   "initialGroupFilter": "name"
 }

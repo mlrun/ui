@@ -6,16 +6,15 @@ import JobsPanelParameters from '../JobsPanelParameters/JobsPanelParameters'
 import JobsPanelDataInputs from '../JobsPanelDataInputs/JobsPanelDataInputs'
 import JobsPanelResources from '../JobsPanelResources/JobsPanelResources'
 import ScheduleJob from '../ScheduleJob/ScheduleJob'
+import JobsPanelTitle from '../../elements/JobsPanelTitle/JobsPanelTitle'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
-import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
-import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 
 const JobsPanelView = ({
-  close,
+  closePanel,
   cpuUnit,
-  func,
+  groupedFunctions,
   handleRunJob,
   jobsStore,
   limits,
@@ -24,6 +23,7 @@ const JobsPanelView = ({
   openScheduleJob,
   requests,
   setCpuUnit,
+  setCurrentFunctionInfo,
   setInputPath,
   setLimits,
   setMemoryUnit,
@@ -38,20 +38,14 @@ const JobsPanelView = ({
 }) => (
   <div className="job-panel-container">
     <div className="job-panel">
-      <div className="job-panel__title">
-        <div className="job-panel__title_wrapper">
-          {openScheduleJob && (
-            <div className="job-schedule-container">
-              <BackArrow onClick={() => setOpenScheduleJob(false)} />
-              <span className="job-schedule__title">Schedule Job</span>
-            </div>
-          )}
-          <div className="job-panel__name">{func?.metadata?.name}</div>
-        </div>
-        <button onClick={() => close({})} className="job-panel__close-button">
-          <Close />
-        </button>
-      </div>
+      <JobsPanelTitle
+        closePanel={closePanel}
+        groupedFunctions={groupedFunctions}
+        match={match}
+        openScheduleJob={openScheduleJob}
+        setCurrentFunctionInfo={setCurrentFunctionInfo}
+        setOpenScheduleJob={setOpenScheduleJob}
+      />
       {!openScheduleJob ? (
         <div className="job_panel__body">
           <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
@@ -103,16 +97,16 @@ const JobsPanelView = ({
           </div>
         </div>
       ) : (
-        <ScheduleJob match={match} />
+        <ScheduleJob setOpenScheduleJob={setOpenScheduleJob} match={match} />
       )}
     </div>
   </div>
 )
 
 JobsPanelView.propTypes = {
-  close: PropTypes.func.isRequired,
+  closePanel: PropTypes.func.isRequired,
   cpuUnit: PropTypes.string.isRequired,
-  func: PropTypes.shape({}).isRequired,
+  groupedFunctions: PropTypes.shape({}).isRequired,
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
   limits: PropTypes.shape({}).isRequired,
@@ -121,6 +115,7 @@ JobsPanelView.propTypes = {
   openScheduleJob: PropTypes.bool.isRequired,
   requests: PropTypes.shape({}).isRequired,
   setCpuUnit: PropTypes.func.isRequired,
+  setCurrentFunctionInfo: PropTypes.func.isRequired,
   setInputPath: PropTypes.func.isRequired,
   setLimits: PropTypes.func.isRequired,
   setMemoryUnit: PropTypes.func.isRequired,

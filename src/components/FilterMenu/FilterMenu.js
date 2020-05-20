@@ -38,6 +38,24 @@ const FilterMenu = ({
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
   const history = useHistory()
+  const selectOptions = {
+    period: [
+      { label: 'Last 7 days', id: 'last7Days' },
+      { label: 'Last 14 days', id: 'last14Days' },
+      { label: 'Last months', id: 'lastMonths' },
+      { label: 'Last 6 months', id: 'last6Months' }
+    ],
+    status: [
+      { label: 'All', id: 'all' },
+      { label: 'Completed', id: 'completed' },
+      { label: 'Running', id: 'running' },
+      { label: 'Error', id: 'error' }
+    ],
+    groupBy: [
+      { label: 'None', id: 'none' },
+      { label: 'Name', id: 'name' }
+    ]
+  }
 
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()
@@ -90,17 +108,18 @@ const FilterMenu = ({
             />
           ) : (
             <Select
-              option={filter}
+              options={selectOptions[filter]}
               label={`${filter}:`}
               key={filter}
-              value={
+              selectedId={
                 (filter === 'status' && stateFilter) ||
-                (filter === 'group by' && groupFilter)
+                (filter === 'groupBy' && groupFilter)
               }
+              selectType={filter === 'status' ? 'checkbox' : ''}
               match={match}
               onClick={
                 (filter === 'status' && setStateFilter) ||
-                (filter === 'group by' && setGroupFilter)
+                (filter === 'groupBy' && setGroupFilter)
               }
               page={page}
             />

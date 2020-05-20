@@ -45,6 +45,13 @@ const JobsPanelTable = ({
     }
   ]
 
+  const selectOption = {
+    parameterType: [
+      { label: 'Simple', id: 'Simple' },
+      { label: 'Hyper', id: 'Hyper' }
+    ]
+  }
+
   const handleEdit = (item, isInput) => {
     if (editItem) {
       setEditItem(false)
@@ -125,9 +132,10 @@ const JobsPanelTable = ({
             if (editItem && contentItem.name === selectedItem.name) {
               return section === 'parameters' ? (
                 <EditableParametersRow
-                  key={index}
                   handleEdit={handleEdit}
+                  key={index}
                   match={match}
+                  selectOption={selectOption}
                   selectedParameter={selectedItem}
                   setSelectedParameter={setSelectedParameter}
                 />

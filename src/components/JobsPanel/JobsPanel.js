@@ -10,8 +10,8 @@ import jobsActions from '../../actions/jobs'
 import './jobsPanel.scss'
 
 const JobsPanel = ({
-  close,
-  func,
+  closePanel,
+  groupedFunctions,
   jobsStore,
   match,
   runNewJob,
@@ -38,10 +38,21 @@ const JobsPanel = ({
     nvidia_gpu: ''
   })
   const [cpuUnit, setCpuUnit] = useState('')
+  const [currentFunctionInfo, setCurrentFunctionInfo] = useState({
+    name: '',
+    version: '',
+    method: ''
+  })
+
   const history = useHistory()
 
   const handleRunJob = () => {
+    let selectedFunction = groupedFunctions.functions.find(
+      func => func.metadata.tag === currentFunctionInfo.version
+    )
+
     const postData = {
+      schedule: jobsStore.newJob.schedule,
       ...jobsStore.newJob,
       function: {
         ...jobsStore.newJob.function,
@@ -59,7 +70,7 @@ const JobsPanel = ({
           ...jobsStore.newJob.task.spec,
           output_path: outputPath,
           input_path: inputPath,
-          function: `${match.params.projectName}/${func.metadata.name}:${func.metadata.hash}`
+          function: `${match.params.projectName}/${selectedFunction.metadata.name}:${selectedFunction.metadata.hash}`
         }
       }
     }
@@ -87,9 +98,9 @@ const JobsPanel = ({
 
   return (
     <JobsPanelView
-      close={close}
+      closePanel={closePanel}
       cpuUnit={cpuUnit}
-      func={func}
+      groupedFunctions={groupedFunctions}
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
       limits={limits}
@@ -98,6 +109,7 @@ const JobsPanel = ({
       openScheduleJob={openScheduleJob}
       requests={requests}
       setCpuUnit={setCpuUnit}
+      setCurrentFunctionInfo={setCurrentFunctionInfo}
       setInputPath={setInputPath}
       setLimits={setLimits}
       setMemoryUnit={setMemoryUnit}
@@ -114,9 +126,16 @@ const JobsPanel = ({
 }
 
 JobsPanel.propTypes = {
-  close: PropTypes.func.isRequired,
-  func: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired
+  closePanel: PropTypes.func.isRequired,
+  groupedFunctions: PropTypes.shape({}).isRequired,
+  match: PropTypes.shape({}).isRequired,
+  runNewJob: PropTypes.func.isRequired,
+  setNewJob: PropTypes.func.isRequired,
+  setNewJobHyperParameters: PropTypes.func.isRequired,
+  setNewJobInputs: PropTypes.func.isRequired,
+  setNewJobParameters: PropTypes.func.isRequired,
+  setNewJobVolumeMounts: PropTypes.func.isRequired,
+  setNewJobVolumes: PropTypes.func.isRequired
 }
 
 export default connect(jobsStore => jobsStore, jobsActions)(JobsPanel)
