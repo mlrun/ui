@@ -3,9 +3,7 @@ import measureTime from './measureTime'
 
 const createJobsContent = content => {
   return content.map(contentItem => {
-    let type = contentItem.labels?.filter(
-      item => item.indexOf('kind:') >= 0 && item
-    )
+    let type = contentItem.labels?.filter(item => item.includes('kind:'))
     type = type && type[0]?.slice(type[0].indexOf(':') + 2)
     return {
       name: {

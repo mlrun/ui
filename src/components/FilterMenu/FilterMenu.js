@@ -113,7 +113,7 @@ const FilterMenu = ({
           ) : (
             <Select
               options={selectOptions[filter]}
-              label={`${filter}:`}
+              label={`${filter.replace(/([A-Z])/g, ' $1')}:`}
               key={filter}
               selectedId={
                 (filter === 'status' && stateFilter) ||
