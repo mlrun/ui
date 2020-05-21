@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
 import { isEqual } from 'lodash'
@@ -18,65 +18,98 @@ import { formatDatetime } from '../../utils'
 
 const Content = ({
   content,
-  detailsMenu,
-  filters,
   groupFilter,
   handleCancel,
   handleSelectItem,
   loading,
   match,
+  pageData,
   refresh,
-  page,
   selectedItem,
   setGroupFilter,
   setShowUntagged,
+  setLoading,
   setStateFilter,
   showUntagged,
   stateFilter,
-  tableHeaders,
   yamlContent
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
   const [expandedItems, setExpandedItems] = useState([])
   const [expand, setExpand] = useState(false)
   const [groupedByName, setGroupedByName] = useState({})
+  const [groupedByWorkflow, setGroupedByWorkflow] = useState({})
+
+  const handleGroupByName = useCallback(() => {
+    const groupedItems = {}
+
+    content.forEach(contentItem => {
+      groupedItems[contentItem.name]
+        ? groupedItems[contentItem.name].push(contentItem)
+        : (groupedItems[contentItem.name] = [contentItem])
+    })
+
+    setGroupedByName(groupedItems)
+    setGroupedByWorkflow({})
+  }, [content])
+
+  const handleGroupByNone = useCallback(() => {
+    const rows = [...document.getElementsByClassName('parent-row')]
+
+    rows.forEach(row => row.classList.remove('parent-row-expanded'))
+
+    setExpand(false)
+    setGroupedByName({})
+    setGroupedByWorkflow({})
+  }, [])
+
+  const handleGroupByWorkflow = useCallback(() => {
+    const groupedItems = {}
+
+    content.forEach(contentItem => {
+      contentItem.labels.forEach(label => {
+        let workflowLabel = label.match('workflow')
+
+        if (workflowLabel) {
+          let workflowId = workflowLabel.input.slice('workflow'.length + 2)
+
+          groupedItems[workflowId]
+            ? groupedItems[workflowId].push(contentItem)
+            : (groupedItems[workflowId] = [contentItem])
+        }
+      })
+    })
+
+    setGroupedByWorkflow(groupedItems)
+    setGroupedByName({})
+  }, [content])
 
   useEffect(() => {
     if (groupFilter === 'name') {
-      const groupedFunctions = {}
-
-      content.forEach(func => {
-        groupedFunctions[func.name]
-          ? groupedFunctions[func.name].push(func)
-          : (groupedFunctions[func.name] = [func])
-      })
-
-      setGroupedByName(groupedFunctions)
+      handleGroupByName()
     } else if (groupFilter === 'none') {
-      const rows = [...document.getElementsByClassName('parent-row')]
-
-      rows.forEach(row => row.classList.remove('parent-row-expanded'))
-
-      setExpand(false)
-      setGroupedByName({})
+      handleGroupByNone()
+    } else if (groupFilter === 'workflow') {
+      handleGroupByWorkflow()
     }
 
     return () => {
       setGroupedByName({})
+      setGroupedByWorkflow({})
       setExpand(false)
     }
-  }, [groupFilter, setGroupedByName, match.params.projectName, content])
+  }, [groupFilter, handleGroupByName, handleGroupByWorkflow, handleGroupByNone])
 
   const toggleConvertToYaml = item => {
     if (convertedYaml.length > 0) {
       return setConvertedYaml('')
     }
-    const jobJson =
-      page === JOBS_PAGE &&
-      yamlContent.filter(job => isEqual(job.metadata.uid, item.uid))[0]
 
+    const jobJson =
+      pageData.page === JOBS_PAGE &&
+      yamlContent.filter(job => isEqual(job.metadata.uid, item.uid))[0]
     const functionJson =
-      page === FUNCTIONS_PAGE &&
+      pageData.page === FUNCTIONS_PAGE &&
       yamlContent.filter(
         func =>
           isEqual(func.metadata.hash, item.hash) &&
@@ -86,31 +119,21 @@ const Content = ({
           )
       )[0]
     const artifactJson =
-      page === ARTIFACTS_PAGE &&
+      pageData.page === ARTIFACTS_PAGE &&
       yamlContent.filter(yamlContentItem =>
         isEqual(yamlContentItem.key, item.db_key)
       )[0].data
 
-    switch (page) {
-      case JOBS_PAGE:
-        return setConvertedYaml(
-          yaml.dump(jobJson, {
-            lineWidth: -1
-          })
-        )
-      case ARTIFACTS_PAGE:
-        return setConvertedYaml(
-          yaml.dump(artifactJson, {
-            lineWidth: -1
-          })
-        )
-      default:
-        return setConvertedYaml(
-          yaml.safeDump(functionJson, {
-            lineWidth: -1
-          })
-        )
-    }
+    setConvertedYaml(
+      yaml.dump(
+        pageData.page === JOBS_PAGE
+          ? jobJson
+          : pageData.page === ARTIFACTS_PAGE
+          ? artifactJson
+          : functionJson,
+        { lineWidth: -1 }
+      )
+    )
   }
 
   const handleExpandRow = (e, item) => {
@@ -133,7 +156,7 @@ const Content = ({
   }
 
   const handleExpandAll = () => {
-    if (groupFilter === 'name') {
+    if (groupFilter !== 'none') {
       const rows = [...document.getElementsByClassName('parent-row')]
 
       if (expand) {
@@ -152,24 +175,24 @@ const Content = ({
     <>
       <div className="content__header">
         <Breadcrumbs match={match} onClick={handleCancel} />
-        <PageActionsMenu match={match} page={page} />
+        <PageActionsMenu match={match} page={pageData.page} />
       </div>
       <div className={`content ${loading && 'isLoading'}`}>
         <ContentMenu />
         <div className="content__action-bar">
           <FilterMenu
             expand={expand}
-            filters={filters}
+            filters={pageData.filters}
             groupFilter={groupFilter}
             handleExpandAll={handleExpandAll}
+            match={match}
+            onChange={refresh}
+            page={pageData.page}
             setGroupFilter={setGroupFilter}
-            stateFilter={stateFilter}
             setStateFilter={setStateFilter}
             setShowUntagged={setShowUntagged}
             showUntagged={showUntagged}
-            match={match}
-            onChange={refresh}
-            page={page}
+            stateFilter={stateFilter}
           />
         </div>
         <YamlModal
@@ -180,17 +203,17 @@ const Content = ({
           {content.length !== 0 ? (
             <Table
               content={content}
-              detailsMenu={detailsMenu}
               groupFilter={groupFilter}
               groupedByName={groupedByName}
+              groupedByWorkflow={groupedByWorkflow}
               handleCancel={handleCancel}
               handleExpandRow={handleExpandRow}
               handleSelectItem={handleSelectItem}
               match={match}
-              page={page}
+              pageData={pageData}
               selectedItem={selectedItem}
+              setLoading={setLoading}
               toggleConvertToYaml={toggleConvertToYaml}
-              tableHeaders={tableHeaders}
             />
           ) : loading ? null : (
             <NoData />
@@ -202,10 +225,10 @@ const Content = ({
 }
 
 Content.defaultProps = {
-  filters: [],
   groupFilter: null,
   selectedItem: {},
   setGroupFilter: null,
+  setLoading: null,
   setShowUntagged: null,
   setStateFilter: null,
   showUntagged: '',
@@ -214,22 +237,20 @@ Content.defaultProps = {
 
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
-  filters: PropTypes.arrayOf(PropTypes.string),
   groupFilter: PropTypes.string,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired,
+  pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
   setGroupFilter: PropTypes.func,
+  setLoading: PropTypes.func,
   setShowUntagged: PropTypes.func,
   setStateFilter: PropTypes.func,
   showUntagged: PropTypes.string,
   stateFilter: PropTypes.string,
-  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   yamlContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

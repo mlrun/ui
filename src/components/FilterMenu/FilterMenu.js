@@ -13,7 +13,7 @@ import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
-import { ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants.js'
+import { ARTIFACTS_PAGE, FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants.js'
 
 import artifactsData from '../Artifacts/artifactsData'
 
@@ -55,6 +55,10 @@ const FilterMenu = ({
       { label: 'None', id: 'none' },
       { label: 'Name', id: 'name' }
     ]
+  }
+
+  if (page === JOBS_PAGE) {
+    selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
   }
 
   const handleChangeArtifactFilterTree = item => {
@@ -109,7 +113,7 @@ const FilterMenu = ({
           ) : (
             <Select
               options={selectOptions[filter]}
-              label={`${filter}:`}
+              label={`${filter.replace(/([A-Z])/g, ' $1')}:`}
               key={filter}
               selectedId={
                 (filter === 'status' && stateFilter) ||

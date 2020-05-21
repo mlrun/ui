@@ -21,8 +21,8 @@ const Download = ({ path, schema, setNotificationDownload, user }) => {
   const progressRingRadius = '20'
   const progressRingStroke = '3'
 
-  let file = path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)
-    ? path.match(/\b(?<=\/)([\w]+\.[\w\d]+)\b/gi)[0]
+  let file = path.match(/\b(\/)([\w]+\.[\w\d]+)\b/gi)
+    ? path.match(/\b(\/)([\w]+\.[\w\d]+)\b/gi)[0]
     : null
 
   const downloadCallback = useCallback(() => {

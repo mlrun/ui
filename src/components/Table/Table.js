@@ -1,98 +1,121 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
+import { isEmpty, map } from 'lodash'
 
 import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import NotificationDownload from '../NotificationDownload/NotificationDownload'
 
-import './table.scss'
-
-import createArtifactsContent from '../../utils/createArtifactsContent'
-import createFunctionsContent from '../../utils/createFunctionsContent'
 import createJobsContent from '../../utils/createJobsContent'
-import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
+import { generateTableContent } from '../../utils/generateTableContent'
+import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
+import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
+
+import './table.scss'
 
 const Table = ({
   content,
-  detailsMenu,
   groupFilter,
   groupedByName,
+  groupedByWorkflow,
   handleCancel,
   handleExpandRow,
   handleSelectItem,
   match,
-  page,
+  pageData,
   selectedItem,
-  toggleConvertToYaml,
-  tableHeaders
+  setLoading,
+  toggleConvertToYaml
 }) => {
-  const [tableContent, setTableContent] = useState([])
-  const [groupLatestItem, setGroupLatestItem] = useState([])
+  const [tableContent, setTableContent] = useState({
+    groupLatestItem: [],
+    groupWorkflowItems: [],
+    content: []
+  })
 
-  const previewArtifact = useSelector(state => state.artifactsStore.preview)
+  const previewArtifact = useSelector(
+    state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
+  )
+  const workflows = useSelector(
+    state => pageData.page === JOBS_PAGE && state.workflowsStore.workflows
+  )
 
   useEffect(() => {
-    const _tableContent =
-      Object.keys(groupedByName).length > 0
-        ? Object.values(groupedByName).map(group => {
-            return page === JOBS_PAGE
-              ? createJobsContent(group)
-              : createFunctionsContent(group)
-          })
-        : page === JOBS_PAGE
-        ? createJobsContent(content)
-        : page === ARTIFACTS_PAGE
-        ? createArtifactsContent(content)
-        : createFunctionsContent(content)
+    const generatedTableContent = generateTableContent(
+      content,
+      groupedByName,
+      groupedByWorkflow,
+      groupFilter,
+      pageData.page,
+      setLoading
+    )
+    let groupLatest = []
+    let groupWorkflowItem = []
 
     if (groupFilter === 'name') {
-      const groupLatest = _tableContent.map(group => {
-        if (Array.isArray(group)) {
-          return page === JOBS_PAGE
-            ? group.reduce((prev, curr) => {
-                return new Date(prev.updated.value).getTime() >
-                  new Date(curr.updated.value).getTime()
-                  ? prev
-                  : curr
-              })
-            : group.find((func, i, arr) => {
-                if (arr.length === 1) return func
-                return func.tag.value === 'latest'
-              })
-        } else return group
-      })
-
-      setGroupLatestItem(groupLatest)
+      groupLatest = generateGroupLatestItem(
+        pageData.page,
+        generatedTableContent
+      )
+    } else if (groupFilter === 'workflow') {
+      groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
+        workflows.find(workflow => workflow.id === workflowId)
+      )
     }
 
-    setTableContent(_tableContent)
-  }, [page, content, groupedByName, groupFilter])
+    setTableContent({
+      content: generatedTableContent,
+      groupLatestItem: groupLatest,
+      groupWorkflowItems: createJobsContent(groupWorkflowItem)
+    })
+  }, [
+    content,
+    groupedByName,
+    groupFilter,
+    groupedByWorkflow,
+    workflows,
+    pageData.page,
+    setLoading
+  ])
 
   useEffect(() => {
     if (groupFilter === 'none') {
-      setGroupLatestItem([])
-      setTableContent([])
+      setTableContent({
+        groupLatestItem: [],
+        groupWorkflowItems: [],
+        content: []
+      })
     }
   }, [groupFilter])
+
+  useEffect(() => {
+    if (tableContent.content.length) {
+      setLoading(false)
+    }
+  }, [setLoading, tableContent.content.length])
 
   return (
     <>
       <TableView
         content={content}
-        detailsMenu={detailsMenu}
         groupFilter={groupFilter}
-        groupLatestItem={groupLatestItem}
+        groupLatestItem={
+          isEmpty(tableContent.groupLatestItem)
+            ? tableContent.groupWorkflowItems
+            : tableContent.groupLatestItem
+        }
         groupedByName={groupedByName}
+        groupedByWorkflow={groupedByWorkflow}
         handleCancel={handleCancel}
         handleExpandRow={handleExpandRow}
         handleSelectItem={handleSelectItem}
         match={match}
-        page={page}
+        pageData={pageData}
         selectedItem={selectedItem}
-        tableContent={tableContent}
+        tableContent={tableContent.content}
         toggleConvertToYaml={toggleConvertToYaml}
-        tableHeaders={tableHeaders}
+        workflows={workflows}
       />
       <NotificationDownload />
       {previewArtifact.isPreview && (
@@ -103,25 +126,25 @@ const Table = ({
 }
 
 Table.defaultProps = {
+  groupedByName: {},
+  groupFilter: null,
   groupLatestJob: [],
   handleExpandRow: () => {},
   selectedItem: {},
-  groupedByName: {},
-  groupFilter: null
+  setLoading: null
 }
 
 Table.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   groupFilter: PropTypes.string,
   groupedByName: PropTypes.shape({}),
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired,
+  pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
-  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  setLoading: PropTypes.func,
   toggleConvertToYaml: PropTypes.func.isRequired
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
@@ -7,23 +8,24 @@ import Details from '../Details/Details'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 
 import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
+
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const TableView = ({
   content,
-  detailsMenu,
   groupFilter,
   groupLatestItem,
   groupedByName,
+  groupedByWorkflow,
   handleCancel,
   handleExpandRow,
   handleSelectItem,
   match,
-  page,
+  pageData,
   selectedItem,
-  tableHeaders,
   tableContent,
-  toggleConvertToYaml
+  toggleConvertToYaml,
+  workflows
 }) => {
   const actionsMenu = [
     { label: 'View YAML', icon: <Yaml />, onClick: toggleConvertToYaml }
@@ -32,11 +34,10 @@ const TableView = ({
   return (
     <div className="table">
       <div
-        className={`table__content ${Object.keys(selectedItem).length !== 0 &&
-          'table_opened'}`}
+        className={`table__content ${!isEmpty(selectedItem) && 'table_opened'}`}
       >
         <div className="table-head">
-          {tableHeaders.map((item, index) => (
+          {pageData.tableHeaders.map((item, index) => (
             <div
               className={`table-head__item ${item.class}`}
               key={item.header + index}
@@ -47,10 +48,11 @@ const TableView = ({
         </div>
         <div className="table-body">
           {(groupFilter === 'none' &&
-            Object.keys(groupedByName).length === 0) ||
-          groupLatestItem.length === 0
+            isEmpty(groupedByName) &&
+            isEmpty(groupedByWorkflow)) ||
+          isEmpty(groupLatestItem)
             ? tableContent.map((rowItem, i) => {
-                switch (page) {
+                switch (pageData.page) {
                   case ARTIFACTS_PAGE:
                     return (
                       <ArtifactsTableRow
@@ -95,7 +97,7 @@ const TableView = ({
                 }
               })
             : tableContent.map((group, i) => {
-                if (page === FUNCTIONS_PAGE) {
+                if (pageData.page === FUNCTIONS_PAGE) {
                   return (
                     <FunctionsTableRow
                       actionsMenu={actionsMenu}
@@ -119,25 +121,27 @@ const TableView = ({
                       handleExpandRow={handleExpandRow}
                       handleSelectItem={handleSelectItem}
                       index={i}
+                      isGroupedByWorkflow={!isEmpty(groupedByWorkflow)}
                       match={match}
                       rowItem={groupLatestItem[i]}
                       selectedItem={selectedItem}
                       tableContent={group}
+                      workflows={workflows}
                     />
                   )
                 }
               })}
         </div>
       </div>
-      {Object.keys(selectedItem).length !== 0 && (
+      {!isEmpty(selectedItem) && (
         <Details
           actionsMenu={actionsMenu}
-          detailsMenu={detailsMenu}
+          detailsMenu={pageData.detailsMenu}
           handleCancel={handleCancel}
           handleSelectItem={handleSelectItem}
           item={selectedItem}
           match={match}
-          page={page}
+          page={pageData.page}
         />
       )}
     </div>
@@ -150,18 +154,16 @@ TableView.defaultProps = {
 
 TableView.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  toggleConvertToYaml: PropTypes.func.isRequired,
-  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired,
+  pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tableContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
   ]).isRequired,
-  tableHeaders: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  toggleConvertToYaml: PropTypes.func.isRequired
 }
 
 export default TableView
