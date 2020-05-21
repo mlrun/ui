@@ -79,24 +79,21 @@ const JobsTableRow = ({
                   }
                   key={index}
                 >
-                  {map(job, (cellContentObj, jobPropKey) => {
+                  {Object.values(job).map((cellContentObj, index) => {
                     const currentItem =
                       content.length > 0 &&
-                      find(content, ['uid', job.uid.value])
+                      content.find(item => item.uid === job.uid.value)
 
                     return (
                       <TableCell
                         data={
-                          (jobPropKey === 'name' ||
-                            jobPropKey === 'startTime') &&
-                          !isGroupedByWorkflow
+                          index === 0 && !isGroupedByWorkflow
                             ? job.startTime
                             : cellContentObj
                         }
                         item={currentItem}
                         link={
-                          (jobPropKey === 'name' ||
-                            jobPropKey === 'startTime') &&
+                          index === 0 &&
                           `/projects/${match.params.projectName}/jobs/${
                             currentItem.uid
                           }${
@@ -105,7 +102,7 @@ const JobsTableRow = ({
                               : `/${jobsData.detailsMenu[0]}`
                           }`
                         }
-                        key={cellContentObj.value + jobPropKey}
+                        key={cellContentObj.value + index}
                         selectItem={handleSelectItem}
                         selectedItem={selectedItem}
                       />
@@ -124,10 +121,12 @@ const JobsTableRow = ({
         </div>
       ) : (
         <>
-          {map(rowItem, (rowItemProp, rowItemKey) => {
+          {Object.values(rowItem).map((rowItemProp, index) => {
             const currentItem = isGroupedByWorkflow
-              ? find(workflows, ['id', rowItem.uid.value])
-              : find(content, ['uid', rowItem.uid.value])
+              ? workflows.find(workflow => workflow.id === rowItem.uid.value)
+              : content.find(
+                  contentItemObj => contentItemObj.uid === rowItem.uid.value
+                )
 
             return (
               <TableCell
@@ -136,9 +135,9 @@ const JobsTableRow = ({
                 handleExpandRow={handleExpandRow}
                 isGroupedByWorkflow={isGroupedByWorkflow}
                 item={currentItem}
-                key={new Date().getTime() + rowItemKey}
+                key={new Date().getTime() + index}
                 link={
-                  rowItemKey === 'name' &&
+                  index === 0 &&
                   `/projects/${match.params.projectName}/jobs/${
                     find(content, ['uid', rowItem.uid.value])?.uid
                   }${
