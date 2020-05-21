@@ -93,7 +93,7 @@ const Table = ({
     if (tableContent.content.length) {
       setLoading(false)
     }
-  }, [setLoading, tableContent.content.length])
+  }, [setLoading, tableContent])
 
   return (
     <>
