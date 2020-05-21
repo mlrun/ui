@@ -24,7 +24,7 @@ export const generateTableContent = (
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
     setLoading(true)
 
-    return map(group => createJobsContent(group))
+    return map(groupedByWorkflow, group => createJobsContent(group))
   } else if (groupFilter === 'none' || !groupFilter) {
     setLoading(true)
 
