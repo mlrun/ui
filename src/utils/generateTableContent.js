@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash'
+import { isEmpty, map } from 'lodash'
 
 import { ARTIFACTS_PAGE, JOBS_PAGE } from '../constants'
 import createJobsContent from './createJobsContent'
@@ -10,19 +10,24 @@ export const generateTableContent = (
   groupedByName,
   groupedByWorkflow,
   groupFilter,
-  page
+  page,
+  setLoading
 ) => {
   if (!isEmpty(groupedByName) && groupFilter === 'name') {
-    return Object.values(groupedByName).map(group =>
+    setLoading(true)
+
+    return map(groupedByName, group =>
       page === JOBS_PAGE
         ? createJobsContent(group)
         : createFunctionsContent(group)
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
-    return Object.values(groupedByWorkflow).map(group =>
-      createJobsContent(group)
-    )
+    setLoading(true)
+
+    return map(group => createJobsContent(group))
   } else if (groupFilter === 'none' || !groupFilter) {
+    setLoading(true)
+
     return page === JOBS_PAGE
       ? createJobsContent(content)
       : page === ARTIFACTS_PAGE

@@ -28,6 +28,7 @@ const Content = ({
   selectedItem,
   setGroupFilter,
   setShowUntagged,
+  setLoading,
   setStateFilter,
   showUntagged,
   stateFilter,
@@ -211,6 +212,7 @@ const Content = ({
               match={match}
               pageData={pageData}
               selectedItem={selectedItem}
+              setLoading={setLoading}
               toggleConvertToYaml={toggleConvertToYaml}
             />
           ) : loading ? null : (
@@ -226,6 +228,7 @@ Content.defaultProps = {
   groupFilter: null,
   selectedItem: {},
   setGroupFilter: null,
+  setLoading: null,
   setShowUntagged: null,
   setStateFilter: null,
   showUntagged: '',
@@ -243,6 +246,7 @@ Content.propTypes = {
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
   setGroupFilter: PropTypes.func,
+  setLoading: PropTypes.func,
   setShowUntagged: PropTypes.func,
   setStateFilter: PropTypes.func,
   showUntagged: PropTypes.string,

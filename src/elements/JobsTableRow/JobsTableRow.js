@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import { map } from 'lodash'
+import { map, isEmpty, find } from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
@@ -79,23 +79,24 @@ const JobsTableRow = ({
                   }
                   key={index}
                 >
-                  {Object.values(job).map((value, i) => {
+                  {map(job, (cellContentObj, jobPropKey) => {
                     const currentItem =
                       content.length > 0 &&
-                      content.find(
-                        contentItemObj => contentItemObj.uid === job.uid.value
-                      )
+                      find(content, ['uid', job.uid.value])
 
                     return (
                       <TableCell
                         data={
-                          i === 0 && !isGroupedByWorkflow
+                          (jobPropKey === 'name' ||
+                            jobPropKey === 'startTime') &&
+                          !isGroupedByWorkflow
                             ? job.startTime
-                            : value
+                            : cellContentObj
                         }
                         item={currentItem}
                         link={
-                          i === 0 &&
+                          (jobPropKey === 'name' ||
+                            jobPropKey === 'startTime') &&
                           `/projects/${match.params.projectName}/jobs/${
                             currentItem.uid
                           }${
@@ -104,7 +105,7 @@ const JobsTableRow = ({
                               : `/${jobsData.detailsMenu[0]}`
                           }`
                         }
-                        key={value.value + i}
+                        key={cellContentObj.value + jobPropKey}
                         selectItem={handleSelectItem}
                         selectedItem={selectedItem}
                       />
@@ -125,24 +126,23 @@ const JobsTableRow = ({
         <>
           {map(rowItem, (rowItemProp, rowItemKey) => {
             const currentItem = isGroupedByWorkflow
-              ? workflows.find(workflow => workflow.id === rowItem.uid.value)
-              : content.find(
-                  contentItemObj => contentItemObj.uid === rowItem.uid.value
-                )
+              ? find(workflows, ['id', rowItem.uid.value])
+              : find(content, ['uid', rowItem.uid.value])
 
             return (
               <TableCell
                 data={rowItemProp}
-                expandLink={Array.isArray(tableContent)}
+                expandLink={!isEmpty(tableContent)}
                 handleExpandRow={handleExpandRow}
                 isGroupedByWorkflow={isGroupedByWorkflow}
                 item={currentItem}
                 key={new Date().getTime() + rowItemKey}
                 link={
                   rowItemKey === 'name' &&
-                  `/projects/${match.params.projectName}/jobs/${
-                    content?.find(item => item.uid === rowItem.uid.value)?.uid
-                  }${
+                  `/projects/${match.params.projectName}/jobs/${find(content, [
+                    'uid',
+                    rowItem.uid.value?.uid
+                  ])}${
                     match.params.tab
                       ? `/${match.params.tab}`
                       : `/${jobsData.detailsMenu[0]}`

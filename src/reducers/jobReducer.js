@@ -6,6 +6,7 @@ import {
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
   REMOVE_JOB_LOGS,
+  SET_LOADING,
   SET_NEW_JOB_INPUTS,
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB,
@@ -164,6 +165,12 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case SET_LOADING: {
+      return {
+        ...state,
+        loading: payload
+      }
+    }
     default:
       return state
   }

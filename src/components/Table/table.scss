@@ -106,19 +106,19 @@
       min-height: 50px;
 
       &.parent-row {
-        &:not(.parent-row-expanded):not( .parent-row_without-actions) {
-          &:hover {
-            .action_cell {
-              .table-actions-container {
-                display: block;
-              }
-            }
-          }
-        }
-
         &:not(.parent-row-expanded) {
           &:hover {
             background-color: $alabaster;
+          }
+
+          &:not(.parent-row_without-actions) {
+            &:hover {
+              .action_cell {
+                .table-actions-container {
+                  display: block;
+                }
+              }
+            }
           }
         }
 

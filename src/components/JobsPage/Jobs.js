@@ -16,6 +16,7 @@ const Jobs = ({
   jobsStore,
   history,
   match,
+  setLoading,
   workflowsStore
 }) => {
   const [jobs, setJobs] = useState([])
@@ -135,6 +136,7 @@ const Jobs = ({
         refresh={refreshJobs}
         selectedItem={selectedJob}
         setGroupFilter={setGroupFilter}
+        setLoading={setLoading}
         setStateFilter={onStateFilterChange}
         stateFilter={stateFilter}
         yamlContent={jobsStore.jobs}

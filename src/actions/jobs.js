@@ -7,6 +7,7 @@ import {
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
   REMOVE_JOB_LOGS,
+  SET_LOADING,
   SET_NEW_JOB,
   SET_NEW_JOB_HYPER_PARAMETERS,
   SET_NEW_JOB_INPUTS,
@@ -97,7 +98,11 @@ const jobsActions = {
     type: SET_NEW_JOB_HYPER_PARAMETERS,
     payload: parameters
   }),
-  runNewJob: postData => () => jobsApi.runJob(postData)
+  runNewJob: postData => () => jobsApi.runJob(postData),
+  setLoading: isLoading => ({
+    type: SET_LOADING,
+    payload: isLoading
+  })
 }
 
 export default jobsActions

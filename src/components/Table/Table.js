@@ -25,11 +25,15 @@ const Table = ({
   match,
   pageData,
   selectedItem,
+  setLoading,
   toggleConvertToYaml
 }) => {
-  const [groupLatestItem, setGroupLatestItem] = useState([])
-  const [groupWorkflowItems, setGroupWorkflowItems] = useState([])
-  const [tableContent, setTableContent] = useState([])
+  console.log('here')
+  const [tableContent, setTableContent] = useState({
+    groupLatestItem: [],
+    groupWorkflowItems: [],
+    content: []
+  })
 
   const previewArtifact = useSelector(
     state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
@@ -39,48 +43,58 @@ const Table = ({
   )
 
   useEffect(() => {
-    let generatedTableContent = generateTableContent(
+    const generatedTableContent = generateTableContent(
       content,
       groupedByName,
       groupedByWorkflow,
       groupFilter,
-      pageData.page
+      pageData.page,
+      setLoading
     )
+    let groupLatest = []
+    let groupWorkflowItem = []
 
     if (groupFilter === 'name') {
-      const groupLatest = generateGroupLatestItem(
+      groupLatest = generateGroupLatestItem(
         pageData.page,
         generatedTableContent
       )
-
-      setGroupLatestItem(groupLatest)
-      setGroupWorkflowItems([])
     } else if (groupFilter === 'workflow') {
-      const groupWorkflowItem = map(groupedByWorkflow, workflowId =>
+      groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
         workflows.find(workflow => workflow.id === workflowId)
       )
-
-      setGroupWorkflowItems(createJobsContent(groupWorkflowItem))
-      setGroupLatestItem([])
     }
 
-    setTableContent(generatedTableContent)
+    setTableContent({
+      content: generatedTableContent,
+      groupLatestItem: groupLatest,
+      groupWorkflowItems: createJobsContent(groupWorkflowItem)
+    })
   }, [
     content,
     groupedByName,
     groupFilter,
     groupedByWorkflow,
     workflows,
-    pageData.page
+    pageData.page,
+    setLoading
   ])
 
   useEffect(() => {
     if (groupFilter === 'none') {
-      setGroupLatestItem([])
-      setGroupWorkflowItems([])
-      setTableContent([])
+      setTableContent({
+        groupLatestItem: [],
+        groupWorkflowItems: [],
+        content: []
+      })
     }
   }, [groupFilter])
+
+  useEffect(() => {
+    if (tableContent.content.length) {
+      setLoading(false)
+    }
+  }, [setLoading, tableContent.content.length])
 
   return (
     <>
@@ -88,7 +102,9 @@ const Table = ({
         content={content}
         groupFilter={groupFilter}
         groupLatestItem={
-          isEmpty(groupLatestItem) ? groupWorkflowItems : groupLatestItem
+          isEmpty(tableContent.groupLatestItem)
+            ? tableContent.groupWorkflowItems
+            : tableContent.groupLatestItem
         }
         groupedByName={groupedByName}
         groupedByWorkflow={groupedByWorkflow}
@@ -98,7 +114,7 @@ const Table = ({
         match={match}
         pageData={pageData}
         selectedItem={selectedItem}
-        tableContent={tableContent}
+        tableContent={tableContent.content}
         toggleConvertToYaml={toggleConvertToYaml}
         workflows={workflows}
       />
@@ -111,11 +127,12 @@ const Table = ({
 }
 
 Table.defaultProps = {
+  groupedByName: {},
+  groupFilter: null,
   groupLatestJob: [],
   handleExpandRow: () => {},
   selectedItem: {},
-  groupedByName: {},
-  groupFilter: null
+  setLoading: null
 }
 
 Table.propTypes = {
@@ -128,6 +145,7 @@ Table.propTypes = {
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
+  setLoading: PropTypes.func,
   toggleConvertToYaml: PropTypes.func.isRequired
 }
 
