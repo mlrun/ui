@@ -28,7 +28,6 @@ const Table = ({
   setLoading,
   toggleConvertToYaml
 }) => {
-  console.log('here')
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
     groupWorkflowItems: [],
