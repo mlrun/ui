@@ -139,10 +139,9 @@ const JobsTableRow = ({
                 key={new Date().getTime() + rowItemKey}
                 link={
                   rowItemKey === 'name' &&
-                  `/projects/${match.params.projectName}/jobs/${find(content, [
-                    'uid',
-                    rowItem.uid.value?.uid
-                  ])}${
+                  `/projects/${match.params.projectName}/jobs/${
+                    find(content, ['uid', rowItem.uid.value])?.uid
+                  }${
                     match.params.tab
                       ? `/${match.params.tab}`
                       : `/${jobsData.detailsMenu[0]}`
