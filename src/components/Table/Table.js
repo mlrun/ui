@@ -91,7 +91,7 @@ const Table = ({
 
   useEffect(() => {
     if (tableContent.content.length) {
-      setLoading(false)
+      setLoading && setLoading(false)
     }
   }, [setLoading, tableContent])
 
