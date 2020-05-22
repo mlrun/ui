@@ -29,9 +29,9 @@ const FilterMenu = ({
   groupFilter,
   setStateFilter,
   setGroupFilter,
-  setShowUntagged,
   showUntagged,
-  stateFilter
+  stateFilter,
+  toggleShowUntagged
 }) => {
   const [itemsFilterTree] = useState(['Latest'])
   const [valueFilterTree, setValueFilterTree] = useState('')
@@ -136,7 +136,7 @@ const FilterMenu = ({
               label: 'Show untagged',
               id: 'showUntagged'
             }}
-            onChange={setShowUntagged}
+            onChange={toggleShowUntagged}
             selectedId={showUntagged}
           />
         )}
@@ -178,9 +178,9 @@ FilterMenu.defaultProps = {
   groupFilter: '',
   setStateFilter: null,
   setGroupFilter: null,
-  setShowUntagged: null,
   showUntagged: '',
-  stateFilter: ''
+  stateFilter: '',
+  toggleShowUntagged: null
 }
 
 FilterMenu.propTypes = {
@@ -188,9 +188,9 @@ FilterMenu.propTypes = {
   groupFilter: PropTypes.string,
   setStateFilter: PropTypes.func,
   setGroupFilter: PropTypes.func,
-  setShowUntagged: PropTypes.func,
   showUntagged: PropTypes.string,
-  stateFilter: PropTypes.string
+  stateFilter: PropTypes.string,
+  toggleShowUntagged: PropTypes.func
 }
 
 export default FilterMenu

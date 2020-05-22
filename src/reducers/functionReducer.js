@@ -2,7 +2,8 @@ import {
   FETCH_FUNCTIONS_BEGIN,
   FETCH_FUNCTIONS_FAILURE,
   FETCH_FUNCTIONS_SUCCESS,
-  SET_FUNCTIONS_TEMPLATES
+  SET_FUNCTIONS_TEMPLATES,
+  SET_LOADING
 } from '../constants'
 
 const initialState = {
@@ -36,6 +37,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         templates: payload
+      }
+    case SET_LOADING:
+      return {
+        ...state,
+        loading: payload
       }
     default:
       return state
