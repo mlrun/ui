@@ -27,11 +27,11 @@ const Content = ({
   refresh,
   selectedItem,
   setGroupFilter,
-  setShowUntagged,
   setLoading,
   setStateFilter,
   showUntagged,
   stateFilter,
+  toggleShowUntagged,
   yamlContent
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
@@ -190,9 +190,9 @@ const Content = ({
             page={pageData.page}
             setGroupFilter={setGroupFilter}
             setStateFilter={setStateFilter}
-            setShowUntagged={setShowUntagged}
             showUntagged={showUntagged}
             stateFilter={stateFilter}
+            toggleShowUntagged={toggleShowUntagged}
           />
         </div>
         <YamlModal
@@ -229,10 +229,10 @@ Content.defaultProps = {
   selectedItem: {},
   setGroupFilter: null,
   setLoading: null,
-  setShowUntagged: null,
   setStateFilter: null,
   showUntagged: '',
-  stateFilter: null
+  stateFilter: null,
+  toggleShowUntagged: null
 }
 
 Content.propTypes = {
@@ -247,10 +247,10 @@ Content.propTypes = {
   selectedItem: PropTypes.shape({}),
   setGroupFilter: PropTypes.func,
   setLoading: PropTypes.func,
-  setShowUntagged: PropTypes.func,
   setStateFilter: PropTypes.func,
   showUntagged: PropTypes.string,
   stateFilter: PropTypes.string,
+  toggleShowUntagged: PropTypes.func,
   yamlContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

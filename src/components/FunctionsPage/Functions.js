@@ -9,7 +9,13 @@ import Loader from '../../common/Loader/Loader'
 import functionsData from './functionsData'
 import functionsActions from '../../actions/functions'
 
-const Functions = ({ fetchFunctions, functionsStore, history, match }) => {
+const Functions = ({
+  fetchFunctions,
+  functionsStore,
+  history,
+  match,
+  setLoading
+}) => {
   const [functions, setFunctions] = useState([])
   const [groupFilter, setGroupFilter] = useState(
     functionsData.initialGroupFilter
@@ -99,6 +105,15 @@ const Functions = ({ fetchFunctions, functionsStore, history, match }) => {
     setSelectedFunction({})
   }
 
+  const toggleShowUntagged = showUntagged => {
+    const pathLangsOnFuncScreen = 4
+    if (history.location.pathname.split('/').length > pathLangsOnFuncScreen) {
+      history.push(`/projects/${match.params.projectName}/functions`)
+    }
+
+    setShowUntagged(showUntagged)
+  }
+
   return (
     <>
       {functionsStore.loading && <Loader />}
@@ -113,8 +128,9 @@ const Functions = ({ fetchFunctions, functionsStore, history, match }) => {
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
         setGroupFilter={setGroupFilter}
-        setShowUntagged={setShowUntagged}
+        setLoading={setLoading}
         showUntagged={showUntagged}
+        toggleShowUntagged={toggleShowUntagged}
         yamlContent={functionsStore.functions}
       />
     </>

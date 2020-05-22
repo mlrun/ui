@@ -3,7 +3,8 @@ import {
   FETCH_FUNCTIONS_BEGIN,
   FETCH_FUNCTIONS_FAILURE,
   FETCH_FUNCTIONS_SUCCESS,
-  SET_FUNCTIONS_TEMPLATES
+  SET_FUNCTIONS_TEMPLATES,
+  SET_LOADING
 } from '../constants'
 
 const functionsActions = {
@@ -59,6 +60,10 @@ const functionsActions = {
   setFunctionsTemplates: templates => ({
     type: SET_FUNCTIONS_TEMPLATES,
     payload: templates
+  }),
+  setLoading: loading => ({
+    type: SET_LOADING,
+    payload: loading
   })
 }
 
