@@ -35,7 +35,7 @@ const FunctionsTableRow = ({
         indentUpdatedOnMainRow &&
         indentHashOnMainRow &&
         !parent.current?.classList.value.includes('parent-row-expanded')
-          ? 'parent-row active'
+          ? 'parent-row row_active'
           : parent.current &&
             parent.current.classList.value.includes('parent-row-expanded') &&
             'parent-row parent-row-expanded'
@@ -70,7 +70,7 @@ const FunctionsTableRow = ({
                 <div
                   className={`table-body__row ${indentUpdatedOnSubRow &&
                     indexHashOnSubRow &&
-                    'active'}`}
+                    'row_active'}`}
                   key={index}
                 >
                   {Object.values(func).map((value, i) => {

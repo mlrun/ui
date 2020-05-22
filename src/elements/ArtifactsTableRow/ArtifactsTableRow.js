@@ -20,7 +20,7 @@ const ArtifactsTableRow = ({
       className={`table-body__row ${
         selectedItem?.db_key !== undefined &&
         selectedItem?.db_key === content[index]?.db_key
-          ? 'parent-row active'
+          ? 'parent-row row_active'
           : 'parent-row'
       }`}
     >

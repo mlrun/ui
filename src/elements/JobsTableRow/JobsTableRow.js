@@ -27,7 +27,7 @@ const JobsTableRow = ({
       className={`table-body__row ${
         rowItem.uid?.value === selectedItem.uid &&
         !parent.current?.classList.value.includes('parent-row-expanded')
-          ? 'parent-row active'
+          ? 'parent-row row_active'
           : parent.current?.classList.value.includes('parent-row-expanded')
           ? 'parent-row parent-row-expanded'
           : 'parent-row'
@@ -74,7 +74,7 @@ const JobsTableRow = ({
                     RegExp(job.uid.value.replace('...', ''), 'gi').test(
                       selectedItem.uid
                     )
-                      ? 'table-body__row active'
+                      ? 'table-body__row row_active'
                       : 'table-body__row'
                   }
                   key={index}

@@ -139,7 +139,7 @@ const TableView = ({
           detailsMenu={pageData.detailsMenu}
           handleCancel={handleCancel}
           handleSelectItem={handleSelectItem}
-          item={selectedItem}
+          selectedItem={selectedItem}
           match={match}
           page={pageData.page}
         />

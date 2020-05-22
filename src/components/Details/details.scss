@@ -49,23 +49,25 @@
     }
   }
   &__menu {
+    display: flex;
+    align-items: center;
     margin: 29px 0 0;
     padding: 0;
     list-style-type: none;
-    display: flex;
-    align-items: center;
     border-bottom: $tableBorder;
-    &_item {
+
+    .menu-tab {
       padding: 8px 24px;
       color: $topaz;
       font-weight: bold;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
       text-transform: capitalize;
-    }
-    .active {
-      border-bottom-color: $cornflowerBlue;
-      color: $cornflowerBlue;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+
+      &.active-tab {
+        color: $cornflowerBlue;
+        border-bottom-color: $cornflowerBlue;
+      }
     }
   }
   &_inputs {

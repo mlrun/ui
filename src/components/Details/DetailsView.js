@@ -27,29 +27,32 @@ const DetailsView = ({
   detailsMenu,
   handleCancel,
   handlePreview,
-  item,
   match,
-  page
+  page,
+  selectedItem
 }) => {
+  console.log(selectedItem.db_key)
   return (
     <div className="table-item">
       <div className="item-header">
         <div className="item-header__data">
-          <h3>{item.name || item.db_key}</h3>
+          <h3>{selectedItem.name || selectedItem.db_key}</h3>
           <span>
-            {Object.keys(item).length > 0 &&
-              formatDatetime(item.startTime || new Date(item.updated))}
-            {item.state && (
+            {Object.keys(selectedItem).length > 0 &&
+              formatDatetime(
+                selectedItem.startTime || new Date(selectedItem.updated)
+              )}
+            {selectedItem.state && (
               <Tooltip
                 template={
                   <TextTooltipTemplate
-                    text={`${item.state[0].toUpperCase()}${item.state.slice(
+                    text={`${selectedItem.state[0].toUpperCase()}${selectedItem.state.slice(
                       1
                     )}`}
                   />
                 }
               >
-                <i className={item.state} />
+                <i className={selectedItem.state} />
               </Tooltip>
             )}
           </span>
@@ -57,11 +60,11 @@ const DetailsView = ({
         <div className="item-header__buttons">
           {page === ARTIFACTS_PAGE && (
             <Download
-              path={item.target_path.path}
-              schema={item.target_path.schema}
+              path={selectedItem.target_path.path}
+              schema={selectedItem.target_path.schema}
             />
           )}
-          <TableActionsMenu item={item} time={500} menu={actionsMenu} />
+          <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
           <Link
             to={`/projects/${match.params.projectName}/${page.toLowerCase()}`}
             onClick={handleCancel}
@@ -74,48 +77,43 @@ const DetailsView = ({
         <ul className="table-item__menu">
           {detailsMenu.map(link => (
             <DetailsMenuItem
+              hash={selectedItem.hash}
+              id={selectedItem.uid}
               key={link}
-              id={item.uid}
               match={match}
-              name={item.db_key || item.name}
-              hash={item.hash}
+              name={selectedItem.db_key || selectedItem.name}
               page={page}
               tab={link}
             />
           ))}
-          {item.schema && (
-            <DetailsMenuItem
-              id={item.uid}
-              match={match}
-              name={item.db_key}
-              page={page}
-              tab={'metadata'}
-            />
-          )}
         </ul>
       </div>
       {match.params.tab === 'info' && (
-        <DetailsInfo match={match} item={item} page={page} />
+        <DetailsInfo match={match} item={selectedItem} page={page} />
       )}
       {match.params.tab === 'preview' && (
         <div className="preview_container">
           <button onClick={() => handlePreview()} className="preview_popout">
             <Popout />
           </button>
-          <ArtifactsPreview artifact={item} />
+          <ArtifactsPreview artifact={selectedItem} />
         </div>
       )}
-      {match.params.tab === 'inputs' && <DetailsInputs inputs={item.inputs} />}
+      {match.params.tab === 'inputs' && (
+        <DetailsInputs inputs={selectedItem.inputs} />
+      )}
       {match.params.tab === 'artifacts' && (
-        <DetailsArtifacts match={match} selectedItem={item} />
+        <DetailsArtifacts match={match} selectedItem={selectedItem} />
       )}
-      {match.params.tab === 'results' && <DetailsResults job={item} />}
-      {match.params.tab === 'logs' && <DetailsLogs match={match} item={item} />}
+      {match.params.tab === 'results' && <DetailsResults job={selectedItem} />}
+      {match.params.tab === 'logs' && (
+        <DetailsLogs match={match} item={selectedItem} />
+      )}
       {match.params.tab === 'code' && (
-        <DetailsCode code={item.functionSourceCode} />
+        <DetailsCode code={selectedItem.functionSourceCode} />
       )}
-      {match.params.tab === 'metadata' && item.schema && (
-        <ArtifactInfoMetadata item={item} />
+      {match.params.tab === 'metadata' && selectedItem.schema && (
+        <ArtifactInfoMetadata item={selectedItem} />
       )}
     </div>
   )
@@ -124,11 +122,11 @@ const DetailsView = ({
 DetailsView.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   detailsMenu: PropTypes.array.isRequired,
-  item: PropTypes.shape({}).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handlePreview: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired
+  page: PropTypes.string.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default DetailsView

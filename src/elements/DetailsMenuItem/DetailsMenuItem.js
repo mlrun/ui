@@ -1,19 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
-const DetailsMenuItem = ({ id, match, name, page, tab, hash }) => {
+const DetailsMenuItem = ({ hash, id, match, name, page, tab }) => {
   const link = `/projects/${match.params.projectName}/${page.toLowerCase()}/${
     page.toLowerCase() === 'functions' ? hash : id || name
   }/${tab}`
+  const classNames = classnames(
+    'menu-tab',
+    match.params.tab === tab && 'active-tab'
+  )
+
   return (
     <Link to={link}>
-      <li
-        className={`table-item__menu_item ${match.params.tab === tab &&
-          'active'}`}
-      >
-        {tab}
-      </li>
+      <li className={classNames}>{tab}</li>
     </Link>
   )
 }
