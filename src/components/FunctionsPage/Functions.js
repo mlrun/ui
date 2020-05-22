@@ -9,7 +9,13 @@ import Loader from '../../common/Loader/Loader'
 import functionsData from './functionsData'
 import functionsActions from '../../actions/functions'
 
-const Functions = ({ fetchFunctions, functionsStore, history, match }) => {
+const Functions = ({
+  fetchFunctions,
+  functionsStore,
+  history,
+  match,
+  setLoading
+}) => {
   const [functions, setFunctions] = useState([])
   const [groupFilter, setGroupFilter] = useState(
     functionsData.initialGroupFilter
@@ -53,9 +59,15 @@ const Functions = ({ fetchFunctions, functionsStore, history, match }) => {
   }, [history, match.params.projectName, refreshFunctions])
 
   useEffect(() => {
-    setTaggedFunctions(
-      !showUntagged ? functions.filter(func => func.tag.length) : functions
-    )
+    const taggedFuncs = !showUntagged
+      ? functions.filter(func => func.tag.length)
+      : functions
+
+    if (!taggedFuncs.length) {
+      setShowUntagged('showUntagged')
+    }
+
+    setTaggedFunctions(taggedFuncs.length ? taggedFuncs : functions)
   }, [showUntagged, functions])
 
   useEffect(() => {
@@ -113,6 +125,7 @@ const Functions = ({ fetchFunctions, functionsStore, history, match }) => {
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
         setGroupFilter={setGroupFilter}
+        setLoading={setLoading}
         setShowUntagged={setShowUntagged}
         showUntagged={showUntagged}
         yamlContent={functionsStore.functions}
