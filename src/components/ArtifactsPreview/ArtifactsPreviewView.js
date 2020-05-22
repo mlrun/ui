@@ -8,18 +8,18 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 const ArtifactsPreviewView = ({ preview }) => (
   <>
     {preview.type && preview.type === 'table-results' && (
-      <div className="table__item_artifacts__preview_table">
+      <div className="table-item_artifacts__preview_table">
         <DetailsResults job={preview} />
       </div>
     )}
     {preview.type && preview.type === 'table' && (
-      <div className="table__item_artifacts__preview_table">
-        <div className="table__item_artifacts__preview_table__row">
+      <div className="table-item_artifacts__preview_table">
+        <div className="table-item_artifacts__preview_table__row">
           {preview.data.headers.map(header => {
             return (
               <div
                 key={header}
-                className="table__item_artifacts__preview_table__header"
+                className="table-item_artifacts__preview_table__header"
               >
                 <Tooltip template={<TextTooltipTemplate text={header} />}>
                   {header}
@@ -31,17 +31,17 @@ const ArtifactsPreviewView = ({ preview }) => (
         {preview.data.content.map(item => (
           <div
             key={item + Math.random()}
-            className="table__item_artifacts__preview_table__row"
+            className="table-item_artifacts__preview_table__row"
           >
             {typeof item === typeof '' ? (
-              <div className="table__item_artifacts__preview_table__row__content">
+              <div className="table-item_artifacts__preview_table__row__content">
                 {item}
               </div>
             ) : (
               item.map(value => (
                 <div
                   key={value + Math.random()}
-                  className="table__item_artifacts__preview_table__row__content"
+                  className="table-item_artifacts__preview_table__row__content"
                 >
                   {value}
                 </div>

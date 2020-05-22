@@ -50,19 +50,19 @@ const DetailsArtifacts = ({ jobsStore, selectedItem }) => {
     if (
       viewedBlocks.length > 0 &&
       !e.target
-        .closest('div.table__item_artifacts_wrapper')
+        .closest('div.table-item_artifacts_wrapper')
         .classList.contains('view')
     ) {
       viewedBlocks[0].classList.remove('view')
     } else {
       e.target
-        .closest('div.table__item_artifacts_wrapper')
+        .closest('div.table-item_artifacts_wrapper')
         .classList.contains('view')
         ? e.target
-            .closest('div.table__item_artifacts_wrapper')
+            .closest('div.table-item_artifacts_wrapper')
             .classList.remove('view')
         : e.target
-            .closest('div.table__item_artifacts_wrapper')
+            .closest('div.table-item_artifacts_wrapper')
             .classList.add('view')
     }
   }

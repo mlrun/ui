@@ -32,7 +32,7 @@ const DetailsView = ({
   page
 }) => {
   return (
-    <div className="table__item">
+    <div className="table-item">
       <div className="item-header">
         <div className="item-header__data">
           <h3>{item.name || item.db_key}</h3>
@@ -71,7 +71,7 @@ const DetailsView = ({
         </div>
       </div>
       <div>
-        <ul className="table__item__menu">
+        <ul className="table-item__menu">
           {detailsMenu.map(link => (
             <DetailsMenuItem
               key={link}

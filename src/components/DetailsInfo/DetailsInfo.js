@@ -51,9 +51,9 @@ const DetailsInfo = ({ item, page, match }) => {
   return (
     <div>
       {page === ARTIFACTS_PAGE && (
-        <h3 className="table__item_details_preview_header">General</h3>
+        <h3 className="table-item_details_preview_header">General</h3>
       )}
-      <ul className="table__item_details">
+      <ul className="table-item_details">
         {page === JOBS_PAGE
           ? jobsData.jobsInfoHeaders.map((header, i) => {
               switch (jobsInfoContent[i]) {
@@ -163,11 +163,9 @@ const DetailsInfo = ({ item, page, match }) => {
             })
           : functionsData.functionsInfoHeaders.map((header, i) => {
               return (
-                <li className="table__item_details_item" key={i}>
-                  <div className="table__item_details_item_header">
-                    {header}
-                  </div>
-                  <div className="table__item_details_item_data">
+                <li className="table-item_details_item" key={i}>
+                  <div className="table-item_details_item_header">{header}</div>
+                  <div className="table-item_details_item_data">
                     {header === 'Kind'
                       ? functionsInfoContent[i] || 'Local'
                       : functionsInfoContent[i] || ''}
@@ -178,8 +176,8 @@ const DetailsInfo = ({ item, page, match }) => {
       </ul>
       {page === ARTIFACTS_PAGE && item.producer && (
         <>
-          <h3 className="table__item_details_preview_header">Producer</h3>
-          <ul className="table__item_details">
+          <h3 className="table-item_details_preview_header">Producer</h3>
+          <ul className="table-item_details">
             {Object.keys(item.producer).map(key => {
               return (
                 <ArtifactsDetailsInfoItem

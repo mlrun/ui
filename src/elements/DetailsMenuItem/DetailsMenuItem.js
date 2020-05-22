@@ -9,7 +9,7 @@ const DetailsMenuItem = ({ id, match, name, page, tab, hash }) => {
   return (
     <Link to={link}>
       <li
-        className={`table__item__menu_item ${match.params.tab === tab &&
+        className={`table-item__menu_item ${match.params.tab === tab &&
           'active'}`}
       >
         {tab}

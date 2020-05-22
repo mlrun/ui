@@ -14,13 +14,13 @@ const DetailsResults = ({ job }) => {
   const result = resultsTable(job)
 
   return job.iterationStats.length !== 0 ? (
-    <div className="table__item_results">
+    <div className="table-item_results">
       {job.iterationStats && (
-        <div className="table__item_results__table">
-          <div className="table__item_results__table_header">
-            <div className="table__item_results__table_row">
+        <div className="table-item_results__table">
+          <div className="table-item_results__table_header">
+            <div className="table-item_results__table_row">
               {result.headers.map((item, i) => (
-                <div className="table__item_results__table_header_item" key={i}>
+                <div className="table-item_results__table_header_item" key={i}>
                   <Tooltip
                     className="data_ellipsis"
                     template={<TextTooltipTemplate text={item} />}
@@ -31,9 +31,9 @@ const DetailsResults = ({ job }) => {
               ))}
             </div>
           </div>
-          <div className="table__item_results__table-body">
-            {result.items.map((item, i) => (
-              <div className="table__item_results__table_row" key={i}>
+          <div className="table-item_results__table-body">
+            {result.tableContent.map((item, i) => (
+              <div className="table-item_results__table_row" key={i}>
                 {item.map((value, i) => {
                   if (
                     typeof value === 'string' &&
@@ -41,7 +41,7 @@ const DetailsResults = ({ job }) => {
                   ) {
                     return (
                       <div
-                        className="table__item_results__table_row_cell"
+                        className="table-item_results__table_row_cell"
                         key={`${value}${i}`}
                       >
                         <Tooltip
@@ -65,7 +65,7 @@ const DetailsResults = ({ job }) => {
                     return (
                       <div
                         key={`${value}${i}`}
-                        className="table__item_results__table_medal table__item_results__table_row_cell"
+                        className="table-item_results__table_medal table-item_results__table_row_cell"
                       >
                         {value}
                         <Tooltip
@@ -80,7 +80,7 @@ const DetailsResults = ({ job }) => {
                   } else {
                     return (
                       <div
-                        className="table__item_results__table_row_cell"
+                        className="table-item_results__table_row_cell"
                         key={`${value}${i}`}
                       >
                         <Tooltip

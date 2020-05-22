@@ -2,7 +2,7 @@
 @import '../../scss/borders';
 @import '../../scss/shadows';
 
-.table__item_artifacts {
+.table-item_artifacts {
   &__row {
     min-height: 70px;
     border-bottom: $tableBorder;
@@ -50,7 +50,7 @@
       }
     }
   }
-  .view .table__item_artifacts__preview {
+  .view .table-item_artifacts__preview {
     display: flex;
     flex-direction: row;
   }
@@ -64,7 +64,7 @@
       }
     }
   }
-  .table__item_results__table {
+  .table-item_results__table {
     td {
       padding: 19px 16px;
     }

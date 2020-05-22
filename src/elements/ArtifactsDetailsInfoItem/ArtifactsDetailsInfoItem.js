@@ -10,24 +10,24 @@ const ArtifactsDetailsInfoItem = ({
   target_path
 }) => {
   return (
-    <li className="table__item_details_item">
+    <li className="table-item_details_item">
       <div className="table__item_details_item_header">{header}</div>
       {chips && (
-        <div className="table__item_details_item_data">
+        <div className="table-item_details_item_data">
           <ChipCell
             elements={chips}
-            className={`table__item_details_item_data__${chipsClassName}`}
+            className={`table-item_details_item_data__${chipsClassName}`}
           />
         </div>
       )}
       {target_path && (
-        <div className="table__item_details_item_data">
+        <div className="table-item_details_item_data">
           <span>{`${target_path.schema ? `${target_path.schema}://` : ''}${
             target_path.path
           }`}</span>
         </div>
       )}
-      {info && <div className="table__item_details_item_data">{info}</div>}
+      {info && <div className="table-item_details_item_data">{info}</div>}
     </li>
   )
 }

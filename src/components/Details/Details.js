@@ -32,13 +32,14 @@ const Details = ({
   }
 
   useEffect(() => {
-    if (match.params.tab === 'metadata' && item.schema === undefined) {
+    if (match.params.tab === 'metadata' && !item.schema) {
       history.push(
         `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
       )
     } else {
-      let newDetailsMenu =
-        item.schema !== undefined ? [...detailsMenu, 'metadata'] : detailsMenu
+      let newDetailsMenu = item.schema
+        ? [...detailsMenu, 'metadata']
+        : detailsMenu
       if (!newDetailsMenu.includes(match.params.tab)) {
         history.push(
           `/projects/${match.params.projectName}/${page.toLowerCase()}`
@@ -46,16 +47,7 @@ const Details = ({
         handleCancel()
       }
     }
-  }, [
-    match.params.tab,
-    match.params.projectName,
-    history,
-    page,
-    detailsMenu,
-    item.schema,
-    match.params.name,
-    handleCancel
-  ])
+  }, [match.params, history, page, detailsMenu, item.schema, handleCancel])
 
   return (
     <DetailsView

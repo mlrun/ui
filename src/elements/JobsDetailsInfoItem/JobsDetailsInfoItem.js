@@ -16,17 +16,17 @@ const JobsDetailsInfoItem = ({
   match
 }) => {
   return (
-    <li className="table__item_details_item">
-      <div className="table__item_details_item_header">{header}</div>
+    <li className="table-item_details_item">
+      <div className="table-item_details_item_header">{header}</div>
       {state && (
-        <div className="table__item_details_item_data">
+        <div className="table-item_details_item_data">
           {`${state[0].toUpperCase()}${state.slice(1)}`}
           <i className={state} />
         </div>
       )}
       {func?.name && (
         <Tooltip
-          className="table__item_details_item_data link"
+          className="table-item_details_item_data link"
           template={<TextTooltipTemplate text={func.hash} />}
         >
           <Link
@@ -37,16 +37,16 @@ const JobsDetailsInfoItem = ({
         </Tooltip>
       )}
       {chips && (
-        <div className="table__item_details_item_data">
+        <div className="table-item_details_item_data">
           {
             <ChipCell
               elements={chips}
-              className={`table__item_details_item_data__${chipsClassName}`}
+              className={`table-item_details_item_data__${chipsClassName}`}
             />
           }
         </div>
       )}
-      {info && <div className="table__item_details_item_data">{info}</div>}
+      {info && <div className="table-item_details_item_data">{info}</div>}
     </li>
   )
 }
