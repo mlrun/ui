@@ -105,6 +105,15 @@ const Functions = ({
     setSelectedFunction({})
   }
 
+  const toggleShowUntagged = showUntagged => {
+    const pathLangsOnFuncScreen = 4
+    if (history.location.pathname.split('/').length > pathLangsOnFuncScreen) {
+      history.push(`/projects/${match.params.projectName}/functions`)
+    }
+
+    setShowUntagged(showUntagged)
+  }
+
   return (
     <>
       {functionsStore.loading && <Loader />}
@@ -120,8 +129,8 @@ const Functions = ({
         selectedItem={selectedFunction}
         setGroupFilter={setGroupFilter}
         setLoading={setLoading}
-        setShowUntagged={setShowUntagged}
         showUntagged={showUntagged}
+        toggleShowUntagged={toggleShowUntagged}
         yamlContent={functionsStore.functions}
       />
     </>
