@@ -73,6 +73,7 @@
     font-weight: 300;
     font-size: 36px;
     line-height: 42px;
+    margin-bottom: 6px;
   }
   &__wrapper {
     color: $mulledWineTwo;
@@ -111,6 +112,7 @@
 
       .tooltip {
         max-width: 300px;
+        word-break: break-word;
         white-space: inherit;
       }
     }

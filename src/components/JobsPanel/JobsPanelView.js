@@ -2,11 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Accordion from '../../common/Accordion/Accordion'
-import JobsPanelParameters from '../JobsPanelParameters/JobsPanelParameters'
 import JobsPanelDataInputs from '../JobsPanelDataInputs/JobsPanelDataInputs'
+import JobsPanelParameters from '../JobsPanelParameters/JobsPanelParameters'
 import JobsPanelResources from '../JobsPanelResources/JobsPanelResources'
-import ScheduleJob from '../ScheduleJob/ScheduleJob'
 import JobsPanelTitle from '../../elements/JobsPanelTitle/JobsPanelTitle'
+import ScheduleJob from '../ScheduleJob/ScheduleJob'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -14,7 +14,7 @@ import { ReactComponent as Run } from '../../images/run.svg'
 const JobsPanelView = ({
   closePanel,
   cpuUnit,
-  groupedFunctions,
+  functionsData,
   handleRunJob,
   jobsStore,
   limits,
@@ -40,7 +40,7 @@ const JobsPanelView = ({
     <div className="job-panel">
       <JobsPanelTitle
         closePanel={closePanel}
-        groupedFunctions={groupedFunctions}
+        functionsData={functionsData}
         match={match}
         openScheduleJob={openScheduleJob}
         setCurrentFunctionInfo={setCurrentFunctionInfo}
@@ -106,7 +106,7 @@ const JobsPanelView = ({
 JobsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   cpuUnit: PropTypes.string.isRequired,
-  groupedFunctions: PropTypes.shape({}).isRequired,
+  functionsData: PropTypes.shape({}).isRequired,
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
   limits: PropTypes.shape({}).isRequired,

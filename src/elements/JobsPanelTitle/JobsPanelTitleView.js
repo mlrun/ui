@@ -10,7 +10,6 @@ import { ReactComponent as Edit } from '../../images/edit.svg'
 const JobsPanelTitleView = ({
   closePanel,
   currentFunction,
-  groupedFunctions,
   handleEditJobTitle,
   isEdit,
   match,
@@ -38,9 +37,7 @@ const JobsPanelTitleView = ({
         {!isEdit ? (
           <>
             <div className="job-panel__wrapper">
-              <div className="job-panel__name">
-                {currentFunction.name || groupedFunctions?.metadata.name}
-              </div>
+              <div className="job-panel__name">{currentFunction.name}</div>
               {!openScheduleJob && (
                 <>
                   <span className="job-panel__version">
@@ -90,7 +87,6 @@ const JobsPanelTitleView = ({
 JobsPanelTitleView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   currentFunction: PropTypes.shape({}).isRequired,
-  groupedFunctions: PropTypes.shape({}).isRequired,
   handleEditJobTitle: PropTypes.func.isRequired,
   isEdit: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,

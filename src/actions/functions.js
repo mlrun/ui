@@ -1,8 +1,13 @@
 import functionsApi from '../api/functions-api'
+import yaml from 'js-yaml'
 import {
   FETCH_FUNCTIONS_BEGIN,
   FETCH_FUNCTIONS_FAILURE,
   FETCH_FUNCTIONS_SUCCESS,
+  FETCH_FUNCTION_TEMPLATE_BEGIN,
+  FETCH_FUNCTION_TEMPLATE_FAILURE,
+  FETCH_FUNCTION_TEMPLATE_SUCCESS,
+  REMOVE_FUNCTION_TEMPLATE,
   SET_FUNCTIONS_TEMPLATES,
   SET_LOADING
 } from '../constants'
@@ -57,6 +62,39 @@ const functionsActions = {
       })
       .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
   },
+  fetchFunctionTemplate: path => dispatch => {
+    dispatch(functionsActions.fetchFunctionTemplateBegin())
+
+    return functionsApi
+      .getFunctionTemplate(path)
+      .then(response => {
+        let parsedData = yaml.safeLoad(response.data)
+
+        dispatch(
+          functionsActions.fetchFunctionTemplateSuccess({
+            name: parsedData.metadata.name,
+            functions: parsedData.spec.entry_point ? [] : [parsedData]
+          })
+        )
+      })
+      .catch(err =>
+        dispatch(functionsActions.fetchFunctionTemplateFailure(err))
+      )
+  },
+  fetchFunctionTemplateSuccess: selectFunction => ({
+    type: FETCH_FUNCTION_TEMPLATE_SUCCESS,
+    payload: selectFunction
+  }),
+  fetchFunctionTemplateBegin: () => ({
+    type: FETCH_FUNCTION_TEMPLATE_BEGIN
+  }),
+  fetchFunctionTemplateFailure: err => ({
+    type: FETCH_FUNCTION_TEMPLATE_FAILURE,
+    payload: err
+  }),
+  removeFunctionTemplate: () => ({
+    type: REMOVE_FUNCTION_TEMPLATE
+  }),
   setFunctionsTemplates: templates => ({
     type: SET_FUNCTIONS_TEMPLATES,
     payload: templates
