@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 
 import Page from './layout/Page/Page'
+import Loader from './common/Loader/Loader'
 
 import './scss/main.scss'
 
@@ -24,7 +25,7 @@ const App = () => {
   return (
     <Router>
       <Page>
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<Loader />}>
           <Switch>
             <Route
               path="/projects"
