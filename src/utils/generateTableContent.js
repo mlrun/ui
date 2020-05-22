@@ -26,7 +26,7 @@ export const generateTableContent = (
 
     return map(groupedByWorkflow, group => createJobsContent(group))
   } else if (groupFilter === 'none' || !groupFilter) {
-    setLoading(true)
+    setLoading && setLoading(true)
 
     return page === JOBS_PAGE
       ? createJobsContent(content)
