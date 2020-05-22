@@ -3,15 +3,20 @@ import measureTime from './measureTime'
 
 const createJobsContent = content => {
   return content.map(contentItem => {
-    let type = contentItem.labels?.filter(item => item.includes('kind:'))
-    type = type && type[0]?.slice(type[0].indexOf(':') + 2)
+    let type = contentItem.labels?.find(label => label.includes('kind:'))
+    type = type?.slice(type.indexOf(':') + 2)
+
+    const workflowLabel = contentItem.labels?.find(label =>
+      label.match('workflow')
+    )
+
     return {
       name: {
         value: contentItem.name,
         class: 'jobs_medium'
       },
       type: {
-        value: type ? type : 'workflow',
+        value: workflowLabel ? 'workflow' : type,
         class: 'jobs_small',
         type: 'type'
       },
