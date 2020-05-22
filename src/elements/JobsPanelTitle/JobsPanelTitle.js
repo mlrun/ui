@@ -9,7 +9,7 @@ import './jobsPanelTitle.scss'
 
 const JobsPanelTitle = ({
   closePanel,
-  groupedFunctions,
+  functionsData,
   match,
   openScheduleJob,
   setCurrentFunctionInfo,
@@ -18,7 +18,7 @@ const JobsPanelTitle = ({
   const [isEdit, setIsEdit] = useState(false)
   const [currentFunction, setCurrentFunction] = useState({
     method: '',
-    name: groupedFunctions.name || groupedFunctions.metadata.name,
+    name: functionsData.name || functionsData.metadata.name,
     version: 'latest'
   })
 
@@ -32,19 +32,20 @@ const JobsPanelTitle = ({
   }
 
   const { methodOptions, versionOptions } = useMemo(() => {
-    if (isEmpty(groupedFunctions.functions)) {
+    if (isEmpty(functionsData.functions)) {
       return {
         versionOptions: [],
         methodOptions: []
       }
     }
 
-    let versionOptions = groupedFunctions.functions
+    let versionOptions = functionsData.functions
       .map(func => {
         return {
           label:
-            (func.metadata.tag === 'latest' ? '$' : '') + func.metadata.tag,
-          id: func.metadata.tag
+            (func.metadata.tag === 'latest' ? '$' : '') +
+            (func.metadata.tag || '$latest'),
+          id: func.metadata.tag || 'latest'
         }
       })
       .filter(item => item.label !== '')
@@ -54,8 +55,10 @@ const JobsPanelTitle = ({
         ? [{ label: '$latest', id: 'latest' }]
         : versionOptions
 
-    let methodOptions = _.chain(groupedFunctions.functions)
-      .map(func => Object.values(func.spec.entry_points))
+    let methodOptions = _.chain(functionsData.functions)
+      .map(func =>
+        func.spec.entry_points ? Object.values(func.spec.entry_points) : []
+      )
       .flatten()
       .map(entry_point => ({
         label: entry_point.name,
@@ -71,7 +74,7 @@ const JobsPanelTitle = ({
         method: methodOptions[0].id
       }))
     } else {
-      const defaultMethod = groupedFunctions.functions.find(
+      const defaultMethod = functionsData.functions.find(
         item => item.metadata.tag === 'latest'
       )?.spec.default_handler
 
@@ -86,13 +89,12 @@ const JobsPanelTitle = ({
       methodOptions,
       versionOptions
     }
-  }, [groupedFunctions.functions])
+  }, [functionsData.functions])
 
   return (
     <JobsPanelTitleView
       closePanel={closePanel}
       currentFunction={currentFunction}
-      groupedFunctions={groupedFunctions}
       handleEditJobTitle={handleEditJobTitle}
       isEdit={isEdit}
       match={match}
@@ -108,7 +110,7 @@ const JobsPanelTitle = ({
 
 JobsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
-  groupedFunctions: PropTypes.shape({}).isRequired,
+  functionsData: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   setCurrentFunctionInfo: PropTypes.func.isRequired,
