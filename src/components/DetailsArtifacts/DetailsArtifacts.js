@@ -31,7 +31,7 @@ const DetailsArtifacts = ({ jobsStore, selectedItem }) => {
         date: formatDatetime(selectedItem.startTime),
         user: selectedItem?.labels
           ?.find(item => item.match(/v3io_user|owner/g))
-          .replace(/v3io_user|owner: /, '')
+          .replace(/(v3io_user|owner): /, '')
       }
     }
     return {
@@ -41,7 +41,7 @@ const DetailsArtifacts = ({ jobsStore, selectedItem }) => {
       date: formatDatetime(selectedItem.startTime),
       user: selectedItem?.labels
         ?.find(item => item.match(/v3io_user|owner/g))
-        .replace(/v3io_user|owner: /, '')
+        .replace(/(v3io_user|owner): /, '')
     }
   })
 
