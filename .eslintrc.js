@@ -3,7 +3,7 @@ module.exports = {
     'react-app',
     'eslint:recommended',
     'plugin:prettier/recommended',
-    'prettier/react',
+    'prettier/react'
   ],
   parser: 'babel-eslint',
   parserOptions: {
@@ -18,5 +18,5 @@ module.exports = {
     quotes: ['error', 'single'],
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-console': process.env.NODE_ENV === 'production' ? 2 : 0
-  },
+  }
 }
