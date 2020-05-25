@@ -1,14 +1,10 @@
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
 
-const createJobsContent = content => {
+const createJobsContent = (content, groupedByWorkflow) => {
   return content.map(contentItem => {
     let type = contentItem.labels?.find(label => label.includes('kind:'))
     type = type?.slice(type.indexOf(':') + 2)
-
-    const workflowLabel = contentItem.labels?.find(label =>
-      label.match('workflow')
-    )
 
     return {
       name: {
@@ -16,7 +12,7 @@ const createJobsContent = content => {
         class: 'jobs_medium'
       },
       type: {
-        value: workflowLabel ? 'workflow' : type,
+        value: groupedByWorkflow ? 'workflow' : type,
         class: 'jobs_small',
         type: 'type'
       },
