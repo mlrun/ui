@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { map, isEmpty, find } from 'lodash'
+import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
@@ -22,18 +23,18 @@ const JobsTableRow = ({
 }) => {
   const parent = useRef()
 
+  const classNames = classnames(
+    'table-body__row',
+    'parent-row',
+    rowItem.uid?.value === selectedItem.uid &&
+      !parent.current?.classList.value.includes('parent-row-expanded') &&
+      'row_active',
+    parent.current?.classList.value.includes('parent-row-expanded') &&
+      'parent-row-expanded'
+  )
+
   return (
-    <div
-      className={`table-body__row ${
-        rowItem.uid?.value === selectedItem.uid &&
-        !parent.current?.classList.value.includes('parent-row-expanded')
-          ? 'parent-row row_active'
-          : parent.current?.classList.value.includes('parent-row-expanded')
-          ? 'parent-row parent-row-expanded'
-          : 'parent-row'
-      } ${isGroupedByWorkflow && 'parent-row_without-actions'}`}
-      ref={parent}
-    >
+    <div className={classNames} ref={parent}>
       {parent.current?.classList.contains('parent-row-expanded') ? (
         <div className="row_grouped-by">
           {isGroupedByWorkflow ? (
