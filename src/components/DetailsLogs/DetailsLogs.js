@@ -26,9 +26,9 @@ const DetailsLogs = ({
     }
   }, [refreshLogs, removeJobLogs])
   return (
-    <div className="table-item_logs">
+    <div className="table__item_logs">
       {jobsStore.logs.length > 0 ? (
-        <div className="table-item_logs__content">{jobsStore.logs}</div>
+        <div className="table__item_logs__content">{jobsStore.logs}</div>
       ) : jobsStore.loading ? null : (
         <NoData />
       )}

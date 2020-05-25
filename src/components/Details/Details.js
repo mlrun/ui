@@ -44,27 +44,18 @@ const Details = ({
         ? [...detailsMenu, 'metadata']
         : detailsMenu
 
-      if (!newDetailsMenu.includes(match.params.tab)) {
-        history.push(
-          `/projects/${match.params.projectName}/${page.toLowerCase()}`
-        )
-        handleCancel()
-      }
-
       setGeneratedDetailsMenu(newDetailsMenu)
+    } else if (!selectedItem.schema) {
+      setGeneratedDetailsMenu(detailsMenu)
     }
   }, [
     match.params.tab,
     match.params.projectName,
-    history,
-    page,
     detailsMenu,
-    handleCancel,
     selectedItem.schema,
-    match.params.name
+    match.params.name,
+    history
   ])
-
-  console.log(detailsMenu)
 
   return (
     <DetailsView
@@ -92,8 +83,4 @@ Details.propTypes = {
   selectedItem: PropTypes.shape({}).isRequired
 }
 
-export default React.memo(
-  Details,
-  (prev, next) =>
-    prev.match === next.match && prev.selectItem === next.selectedItem
-)
+export default React.memo(Details, (prev, next) => prev.match === next.match)

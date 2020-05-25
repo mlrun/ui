@@ -3,220 +3,256 @@
 @import '../../scss/borders';
 @import '../../scss/shadows';
 
-.table-item {
-  position: absolute;
-  top: 0;
-  left: 240px;
-  background-color: $white;
-  width: calc(100% - 240px);
-  height: 100%;
-  overflow-y: auto;
-  border-left: $tableBorder;
-  color: $mulledWine;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  .item-header {
+.table {
+  &__item {
+    position: absolute;
+    top: 0;
+    left: 240px;
+    background-color: $white;
+    width: calc(100% - 240px);
+    height: 100%;
+    overflow-y: auto;
+    border-left: $tableBorder;
+    color: $mulledWine;
     display: flex;
-    justify-content: space-between;
-    &__data {
-      h3 {
-        margin: 27px 24px 10px;
-        font-size: 24px;
-        line-height: 28px;
+    flex-direction: column;
+    flex: 1;
+
+    .item {
+
+      &-header {
+        display: flex;
+        justify-content: space-between;
+
+        &__data {
+          h3 {
+            margin: 27px 24px 10px;
+            font-size: 24px;
+            line-height: 28px;
+          }
+
+          span {
+            font-size: 15px;
+            line-height: 18px;
+            margin-left: 24px;
+            display: flex;
+            align-items: center;
+          }
+
+          i {
+            margin-left: 10px;
+          }
+        }
+
+        &__buttons {
+          display: flex;
+          align-items: center;
+
+          a {
+            display: inline-block;
+            margin: 21px 21px 21px 10px;
+          }
+
+          .table-actions-container {
+            display: block;
+          }
+        }
       }
-      span {
-        font-size: 15px;
-        line-height: 18px;
-        margin-left: 24px;
+
+      &-menu {
         display: flex;
         align-items: center;
-      }
-      i {
-        margin-left: 10px;
-      }
-    }
-    &__buttons {
-      display: flex;
-      align-items: center;
-      a {
-        display: inline-block;
-        margin: 21px 21px 21px 10px;
-      }
-      .table-actions-container {
-        display: block;
-      }
-    }
-  }
-  &__menu {
-    display: flex;
-    align-items: center;
-    margin: 29px 0 0;
-    padding: 0;
-    list-style-type: none;
-    border-bottom: $tableBorder;
+        padding: 29px 0 0;
+        margin: 0;
+        list-style-type: none;
+        border-bottom: $tableBorder;
 
-    .menu-tab {
-      padding: 8px 24px;
-      color: $topaz;
-      font-weight: bold;
-      text-transform: capitalize;
-      border-bottom: 3px solid transparent;
-      cursor: pointer;
+        .menu-tab {
+          padding: 8px 24px;
+          color: $topaz;
+          font-weight: bold;
+          text-transform: capitalize;
+          border-bottom: 3px solid transparent;
+          cursor: pointer;
 
-      &.active-tab {
-        color: $cornflowerBlue;
-        border-bottom-color: $cornflowerBlue;
-      }
-    }
-  }
-  &_inputs {
-    @include resetSpaces;
-    width: 100%;
-    &_item {
-      border-bottom: $tableBorder;
-      padding: 27px 24px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      div {
-        min-width: 237px;
-      }
-    }
-  }
-  &_results {
-    padding: 0 31px;
-    position: relative;
-    width: 100%;
-    &__table {
-      text-align: left;
-      width: 100%;
-      position: relative;
-      &_row {
-        border-bottom: 1px solid rgba(72, 63, 86, 0.12);
-        display: flex;
-        flex-direction: row;
-        &_cell {
-          padding: 19px 16px;
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-        }
-      }
-      &_header {
-        position: sticky;
-        height: 50px;
-        top: 0;
-        z-index: 2;
-        background-color: $white;
-        &_item {
-          @include tableHeader;
-          display: flex;
-          flex-direction: column;
-          padding: 10px 15px;
-          flex: 1;
-        }
-      }
-      i {
-        margin: 0 15px;
-      }
-      &_medal {
-        display: flex;
-        align-items: center;
-        flex-direction: row;
-        position: relative;
-        img {
-          margin-left: 10px;
-        }
-        svg {
-          position: absolute;
-          top: 15px;
-          left: -10px;
-        }
-      }
-      tbody {
-        tr {
-          &:hover {
-            background-color: $alabaster;
+          &.active-tab {
+            color: $cornflowerBlue;
+            border-bottom-color: $cornflowerBlue;
           }
         }
       }
     }
-  }
-  &_logs {
-    white-space: pre-wrap;
-    background-color: $black;
-    color: $white;
-    padding: 5px;
-    position: relative;
-    min-height: 400px;
-    overflow-y: scroll;
-    font-family: 'Source Code Pro', 'Courier New', monospace;
-    width: 100%;
-    .logs_refresh {
-      background-color: $white;
-      border: 1px solid $cornflowerBlue;
-      color: $cornflowerBlue;
-      box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
-      padding: 8px 12px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      position: absolute;
-      top: 32px;
-      right: 29px;
-      cursor: pointer;
-      svg {
-        path {
-          fill: $cornflowerBlue;
+
+    &_inputs {
+      @include resetSpaces;
+      width: 100%;
+
+      &_item {
+        border-bottom: $tableBorder;
+        padding: 27px 24px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        div {
+          min-width: 237px;
         }
       }
-      &:active,
-      &:focus {
-        outline: none;
-        box-shadow: none;
+    }
+
+    &_results {
+      padding: 0 31px;
+      position: relative;
+      width: 100%;
+
+      &__table {
+        text-align: left;
+        width: 100%;
+        position: relative;
+
+        &_row {
+          border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+          display: flex;
+          flex-direction: row;
+
+          &_cell {
+            padding: 19px 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+          }
+        }
+
+        &_header {
+          position: sticky;
+          height: 50px;
+          top: 0;
+          z-index: 2;
+          background-color: $white;
+          &_item {
+            @include tableHeader;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 15px;
+            flex: 1;
+          }
+        }
+
+        i {
+          margin: 0 15px;
+        }
+
+        &_medal {
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          position: relative;
+
+          img {
+            margin-left: 10px;
+          }
+
+          svg {
+            position: absolute;
+            top: 15px;
+            left: -10px;
+          }
+        }
+
+        tbody {
+          tr {
+            &:hover {
+              background-color: $alabaster;
+            }
+          }
+        }
       }
     }
-  }
-  &_artifacts {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    &_wrapper {
+
+    &_logs {
+      white-space: pre-wrap;
+      background-color: $black;
+      color: $white;
+      padding: 5px;
+      position: relative;
+      min-height: 400px;
+      overflow-y: scroll;
+      font-family: 'Source Code Pro', 'Courier New', monospace;
       width: 100%;
+
+      .logs_refresh {
+        background-color: $white;
+        border: 1px solid $cornflowerBlue;
+        color: $cornflowerBlue;
+        box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
+        padding: 8px 12px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 32px;
+        right: 29px;
+        cursor: pointer;
+        svg {
+          path {
+            fill: $cornflowerBlue;
+          }
+        }
+        &:active,
+        &:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
     }
-  }
-  .preview_container {
-    position: relative;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    .inputs_container {
-      width: 100%;
+
+    &_artifacts {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+
+      &_wrapper {
+        width: 100%;
+      }
     }
-    .preview_popout {
-      position: absolute;
-      right: 0;
-      margin: 16px;
-      border: none;
-      background: none;
-      padding: 0;
-      outline: none;
-      z-index: 3;
-      cursor: pointer;
+
+    .preview_container {
+      position: relative;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+
+      .inputs_container {
+        width: 100%;
+      }
+
+      .preview_popout {
+        position: absolute;
+        right: 0;
+        margin: 16px;
+        border: none;
+        background: none;
+        padding: 0;
+        outline: none;
+        z-index: 3;
+        cursor: pointer;
+      }
+
+      .json {
+        padding: 0 15px;
+      }
     }
-    .json {
-      padding: 0 15px;
-    }
-  }
-  &_code {
-    flex: 1;
-    h3 {
-      text-align: center;
-      vertical-align: middle;
-    }
-    pre {
-      padding: 8px 16px;
+
+    &_code {
+      flex: 1;
+
+      h3 {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      pre {
+        padding: 8px 16px;
+      }
     }
   }
 }

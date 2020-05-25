@@ -15,34 +15,34 @@ import './detailsArtifacts.scss'
 
 const DetailsArtifactsView = ({ items, handleClick, dispatch }) => {
   return (
-    <div className="table-item_artifacts">
+    <div className="table__item_artifacts">
       {items.map((item, i) => {
         const targetPath = `${
           item.target_path.schema ? `${item.target_path.schema}://` : ''
         }${item.target_path.path}`
         return (
-          <div key={i} className="table-item_artifacts_wrapper">
-            <div className="table-item_artifacts__row">
+          <div key={i} className="table__item_artifacts_wrapper">
+            <div className="table__item_artifacts__row">
               <div
-                className="table-item_artifacts__row_item"
+                className="table__item_artifacts__row_item"
                 onClick={handleClick}
               >
                 <Arrow className="arrow" />
                 {item.key}
               </div>
-              <div className="table-item_artifacts__row_item table-item_artifacts__row_item_long">
+              <div className="table__item_artifacts__row_item table__item_artifacts__row_item_long">
                 <Tooltip
-                  className="table-item_artifacts__row__cell_path"
+                  className="table__item_artifacts__row__cell_path"
                   template={<TextTooltipTemplate text={targetPath} />}
                 >
                   {targetPath}
                 </Tooltip>
               </div>
-              <div className="table-item_artifacts__row_item">
+              <div className="table__item_artifacts__row_item">
                 size: {item.size}
               </div>
-              <div className="table-item_artifacts__row_item">{item.date}</div>
-              <div className="table-item_artifacts__row_item table__item_artifacts__row_item_short">
+              <div className="table__item_artifacts__row_item">{item.date}</div>
+              <div className="table__item_artifacts__row_item table__item_artifacts__row_item_short">
                 <Tooltip
                   template={<TextTooltipTemplate text="Artifacts Preview" />}
                 >
@@ -58,7 +58,7 @@ const DetailsArtifactsView = ({ items, handleClick, dispatch }) => {
                   />
                 </Tooltip>
               </div>
-              <div className="table-item_artifacts__row_item table__item_artifacts__row_item_short">
+              <div className="table__item_artifacts__row_item table__item_artifacts__row_item_short">
                 <Download
                   path={item.target_path.path}
                   schema={item.target_path.schema}
@@ -66,7 +66,7 @@ const DetailsArtifactsView = ({ items, handleClick, dispatch }) => {
                 />
               </div>
             </div>
-            <div className="table-item_artifacts__preview" key={i + 1}>
+            <div className="table__item_artifacts__preview" key={i + 1}>
               <ArtifactsPreview artifact={item} />
             </div>
           </div>

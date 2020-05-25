@@ -22,8 +22,8 @@ const ArtifactInfoSources = ({ header, sources }) => {
       key={header}
       className={`${
         !isShow
-          ? 'table-item_details_item sources'
-          : 'table-item_details_item sources shadow'
+          ? 'table__item_details_item sources'
+          : 'table__item_details_item sources shadow'
       }`}
     >
       <div className="wrapper_sources">

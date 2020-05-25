@@ -18,9 +18,9 @@ const DetailsCode = ({ code }) => {
   const html = Prism.highlight(decoded, Prism.languages.py, 'py')
 
   return (
-    <div className="table-item_code">
+    <div className="table__item_code">
       {decoded.length > 0 ? (
-        <div className="table-item_code__content">
+        <div className="table__item_code__content">
           <pre>
             <code dangerouslySetInnerHTML={{ __html: html }}></code>
           </pre>

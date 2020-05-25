@@ -31,16 +31,15 @@ const DetailsView = ({
   page,
   selectedItem
 }) => {
-  console.log(selectedItem.db_key)
   return (
-    <div className="table-item">
+    <div className="table__item">
       <div className="item-header">
         <div className="item-header__data">
           <h3>{selectedItem.name || selectedItem.db_key}</h3>
           <span>
             {Object.keys(selectedItem).length > 0 &&
               formatDatetime(
-                selectedItem.startTime || new Date(selectedItem.updated)
+                selectedItem?.startTime || new Date(selectedItem?.updated)
               )}
             {selectedItem.state && (
               <Tooltip
@@ -73,23 +72,21 @@ const DetailsView = ({
           </Link>
         </div>
       </div>
-      <div>
-        <ul className="table-item__menu">
-          {detailsMenu.map(link => (
-            <DetailsMenuItem
-              hash={selectedItem.hash}
-              id={selectedItem.uid}
-              key={link}
-              match={match}
-              name={selectedItem.db_key || selectedItem.name}
-              page={page}
-              tab={link}
-            />
-          ))}
-        </ul>
-      </div>
+      <ul className="item-menu">
+        {detailsMenu.map(link => (
+          <DetailsMenuItem
+            hash={selectedItem.hash}
+            id={selectedItem.uid}
+            key={link}
+            match={match}
+            name={selectedItem.db_key || selectedItem.name}
+            page={page}
+            tab={link}
+          />
+        ))}
+      </ul>
       {match.params.tab === 'info' && (
-        <DetailsInfo match={match} item={selectedItem} page={page} />
+        <DetailsInfo match={match} selectedItem={selectedItem} page={page} />
       )}
       {match.params.tab === 'preview' && (
         <div className="preview_container">
