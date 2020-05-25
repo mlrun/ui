@@ -67,7 +67,10 @@ const Table = ({
     setTableContent({
       content: generatedTableContent,
       groupLatestItem: groupLatest,
-      groupWorkflowItems: createJobsContent(groupWorkflowItem)
+      groupWorkflowItems: createJobsContent(
+        groupWorkflowItem,
+        groupedByWorkflow
+      )
     })
   }, [
     content,

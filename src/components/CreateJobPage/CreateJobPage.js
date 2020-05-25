@@ -19,7 +19,7 @@ const CreateJobPage = ({
 }) => {
   const [functions, setFunctions] = useState([])
   const [selectedGroupFunctions, setSelectedGroupFunctions] = useState({})
-  const [templatesArray, setTemplatesArray] = useState(functionsStore.templates)
+  const [templates, setTemplates] = useState(functionsStore.templatesCatalog)
 
   useEffect(() => {
     fetchFunctions(match.params.projectName).then(functions => {
@@ -45,13 +45,13 @@ const CreateJobPage = ({
       return setFunctions(groupedFunctions)
     })
 
-    if (functionsStore.templates.length === 0) {
-      fetchFunctionsTemplates().then(setTemplatesArray)
+    if (functionsStore.templatesCatalog.length === 0) {
+      fetchFunctionsTemplates().then(setTemplates)
     }
   }, [
     fetchFunctions,
     fetchFunctionsTemplates,
-    functionsStore.templates.length,
+    functionsStore.templatesCatalog.length,
     match.params.projectName
   ])
 
@@ -85,7 +85,7 @@ const CreateJobPage = ({
         functions={functions}
         handleSelectGroupFunctions={handleSelectGroupFunctions}
         match={match}
-        templates={templatesArray}
+        templates={templates}
       />
       {Object.values(selectedGroupFunctions).length !== 0 && (
         <JobsPanel

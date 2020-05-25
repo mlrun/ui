@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -6,14 +6,18 @@ import { useHistory } from 'react-router-dom'
 import JobsPanelView from './JobsPanelView'
 
 import jobsActions from '../../actions/jobs'
+import functionActions from '../../actions/functions'
 
 import './jobsPanel.scss'
 
 const JobsPanel = ({
   closePanel,
+  fetchFunctionTemplate,
+  functionsStore,
   groupedFunctions,
   jobsStore,
   match,
+  removeFunctionTemplate,
   runNewJob,
   setNewJob,
   setNewJobHyperParameters,
@@ -25,7 +29,6 @@ const JobsPanel = ({
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
   const [inputPath, setInputPath] = useState('')
   const [outputPath, setOutputPath] = useState('')
-
   const [requests, setRequests] = useState({
     cpu: '',
     memory: ''
@@ -45,6 +48,19 @@ const JobsPanel = ({
   })
 
   const history = useHistory()
+
+  useLayoutEffect(() => {
+    if (!functionsStore.selectedFunction.name) {
+      fetchFunctionTemplate(groupedFunctions.metadata.versions.latest)
+    }
+    return () =>
+      functionsStore.selectedFunction.name && removeFunctionTemplate()
+  }, [
+    fetchFunctionTemplate,
+    functionsStore,
+    groupedFunctions,
+    removeFunctionTemplate
+  ])
 
   const handleRunJob = () => {
     let selectedFunction = groupedFunctions.functions.find(
@@ -100,7 +116,11 @@ const JobsPanel = ({
     <JobsPanelView
       closePanel={closePanel}
       cpuUnit={cpuUnit}
-      groupedFunctions={groupedFunctions}
+      functionsData={
+        functionsStore.selectedFunction.name
+          ? functionsStore.selectedFunction
+          : groupedFunctions
+      }
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
       limits={limits}
@@ -138,4 +158,7 @@ JobsPanel.propTypes = {
   setNewJobVolumes: PropTypes.func.isRequired
 }
 
-export default connect(jobsStore => jobsStore, jobsActions)(JobsPanel)
+export default connect(
+  ({ jobsStore, functionsStore }) => ({ jobsStore, functionsStore }),
+  { ...jobsActions, ...functionActions }
+)(JobsPanel)
