@@ -19,11 +19,7 @@
     },
     {
       "header": "Type",
-      "class": "jobs_small"
-    },
-    {
-      "header": "UID",
-      "class": "jobs_small"
+      "class": "jobs-type"
     },
     {
       "header": "Start time",
@@ -38,8 +34,12 @@
       "class": "jobs_small"
     },
     {
+      "header": "Labels",
+      "class": "jobs_small"
+    },
+    {
       "header": "Parameters",
-      "class": "jobs_big"
+      "class": "jobs_small"
     },
     {
       "header": "Results",

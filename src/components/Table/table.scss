@@ -25,11 +25,15 @@
       }
 
       &_small {
-        @include tableColumnFlex(0.8, 80px);
+        @include tableColumnFlex(0.5, 50px);
       }
 
       &_big {
         @include tableColumnFlex(2, 80px);
+      }
+
+      &-type {
+        @include tableColumnFlex(.3, 50px);
       }
     }
 

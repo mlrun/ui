@@ -44,17 +44,6 @@ const TableCell = ({
         selectedItem={selectedItem}
       />
     )
-  } else if (data.type === 'uid') {
-    return (
-      <div className={`table-body__cell ${data.class}`}>
-        <Tooltip
-          textShow={true}
-          template={<TextTooltipTemplate text={data.value} />}
-        >
-          {truncateUid(data.value)}
-        </Tooltip>
-      </div>
-    )
   } else if (firstRow || (link && isGroupedByWorkflow)) {
     return (
       <div className={`table-body__cell ${data.class}`}>
