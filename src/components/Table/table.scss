@@ -252,14 +252,27 @@
     }
   }
 
-  .name_status_row {
+  .name-wrapper {
     display: flex;
     flex: 1;
     flex-wrap: wrap;
     align-items: center;
 
-    span {
-      margin-left: 10px;
+    .item {
+      &-name {
+        max-width: 165px;
+        overflow-x: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        &.function-name {
+          max-width: 120px;
+        }
+      }
+
+      &-tag {
+        margin-left: 10px;
+      }
     }
   }
 
