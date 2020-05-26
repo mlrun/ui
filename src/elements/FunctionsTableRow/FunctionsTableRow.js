@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
+import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
@@ -28,20 +29,19 @@ const FunctionsTableRow = ({
     selectedItemDate
   )
   const indentHashOnMainRow = isEqual(rowItem.hash.value, selectedItem.hash)
+  const rowClassNames = classnames(
+    'table-body__row',
+    'parent-row',
+    indentUpdatedOnMainRow &&
+      indentHashOnMainRow &&
+      !parent.current?.classList.value.includes('parent-row-expanded') &&
+      'row_active',
+    parent.current?.classList.value.includes('parent-row-expanded') &&
+      'parent-row-expanded'
+  )
 
   return (
-    <div
-      className={`table-body__row parent-row ${
-        indentUpdatedOnMainRow &&
-        indentHashOnMainRow &&
-        !parent.current?.classList.value.includes('parent-row-expanded')
-          ? 'parent-row active'
-          : parent.current &&
-            parent.current.classList.value.includes('parent-row-expanded') &&
-            'parent-row parent-row-expanded'
-      }`}
-      ref={parent}
-    >
+    <div className={rowClassNames} ref={parent}>
       {parent.current?.classList.contains('parent-row-expanded') ? (
         <div className="row_grouped-by">
           <div className="table-body__row">
@@ -70,7 +70,7 @@ const FunctionsTableRow = ({
                 <div
                   className={`table-body__row ${indentUpdatedOnSubRow &&
                     indexHashOnSubRow &&
-                    'active'}`}
+                    'row_active'}`}
                   key={index}
                 >
                   {Object.values(func).map((value, i) => {

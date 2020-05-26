@@ -2,56 +2,66 @@
 @import '../../scss/borders';
 @import '../../scss/mixins';
 
-.table__item_details {
-  margin: 0;
-  padding: 0 30px;
-  list-style-type: none;
-  &_preview_header {
-    padding: 21.5px 0;
-    margin: 0 36px;
+.item-info {
+  &__header {
+    padding: 21.5px 36px;
+    margin: 0;
     font-size: 25px;
     border-bottom: $tableBorder;
   }
-  &_item {
-    border-bottom: $tableBorder;
-    padding: 18px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    &_header {
-      min-width: 100px;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 24px;
-      text-transform: capitalize;
-    }
-    i {
-      margin-left: 21px;
-    }
-    span {
-      margin-right: 20px;
-    }
-    &_data {
-      padding-left: 16px;
+
+  &__details {
+    margin: 0;
+    padding: 0 30px;
+    list-style-type: none;
+
+    .details-item {
+      border-bottom: $tableBorder;
+      padding: 18px;
       display: flex;
-      flex: 1;
-      min-width: 60px;
+      flex-direction: row;
       align-items: center;
+
+      &__header {
+        min-width: 100px;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 24px;
+        text-transform: capitalize;
+      }
+
+      &__data {
+        padding-left: 16px;
+        display: flex;
+        flex: 1;
+        min-width: 60px;
+        align-items: center;
+      }
+
+      &__status {
+        text-transform: capitalize;
+
+        .status-icon {
+          margin-left: 5px;
+        }
+      }
+
+      &__link {
+        color: $cornflowerBlue;
+      }
+
       &__parameters {
         @include chip($parametersBorder);
       }
+
       &__labels {
         @include chip($labelBorder);
       }
+
       &__results {
         @include chip($resultsBorder);
       }
-      &.link {
-        color: $cornflowerBlue;
-      }
-    }
-    &.artifacts {
-      padding-left: 25px;
     }
   }
 }
+

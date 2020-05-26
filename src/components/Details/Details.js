@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -13,9 +13,9 @@ const Details = ({
   actionsMenu,
   detailsMenu,
   handleCancel,
-  item,
   match,
-  page
+  page,
+  selectedItem
 }) => {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -25,37 +25,11 @@ const Details = ({
     dispatch(
       artifactActions.showArtifactsPreview({
         isPreview: true,
-        item
+        selectedItem
       })
     )
     handleCancel()
   }
-
-  useEffect(() => {
-    if (match.params.tab === 'metadata' && item.schema === undefined) {
-      history.push(
-        `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
-      )
-    } else {
-      let newDetailsMenu =
-        item.schema !== undefined ? [...detailsMenu, 'metadata'] : detailsMenu
-      if (!newDetailsMenu.includes(match.params.tab)) {
-        history.push(
-          `/projects/${match.params.projectName}/${page.toLowerCase()}`
-        )
-        handleCancel()
-      }
-    }
-  }, [
-    match.params.tab,
-    match.params.projectName,
-    history,
-    page,
-    detailsMenu,
-    item.schema,
-    match.params.name,
-    handleCancel
-  ])
 
   return (
     <DetailsView
@@ -63,7 +37,7 @@ const Details = ({
       detailsMenu={detailsMenu}
       handleCancel={handleCancel}
       handlePreview={handlePreview}
-      item={item}
+      selectedItem={selectedItem}
       match={match}
       page={page}
     />
@@ -78,9 +52,9 @@ Details.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
-  item: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired
+  page: PropTypes.string.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default Details

@@ -13,13 +13,13 @@ const createJobsContent = (content, groupedByWorkflow) => {
       },
       type: {
         value: groupedByWorkflow ? 'workflow' : type,
-        class: 'jobs_small',
+        class: 'jobs_extra-small',
         type: 'type'
       },
       uid: {
         value: contentItem.uid || contentItem.id,
         class: 'jobs_small',
-        type: 'uid'
+        type: 'hidden'
       },
       startTime: {
         value: formatDatetime(
@@ -42,9 +42,14 @@ const createJobsContent = (content, groupedByWorkflow) => {
         value: contentItem.owner,
         class: 'jobs_small'
       },
+      labels: {
+        value: contentItem.labels,
+        class: 'jobs_small',
+        type: 'labels'
+      },
       parameters: {
         value: contentItem.parameters,
-        class: 'jobs_big',
+        class: 'jobs_small',
         type: 'parameters'
       },
       resultsChips: {

@@ -41,17 +41,17 @@ const TableLinkCell = ({
           {data.value}
           {link.match(/functions/) && <span>{item.tag}</span>}
         </div>
-
-        {link.match(/jobs|functions/) &&
-          Object.values(selectedItem).length !== 0 && (
-            <div className="date__uid_row">
-              <span>
-                {data.type !== 'date' &&
-                  formatDatetime(new Date(item.startTime || item.updated))}
-              </span>
-              <span>{truncateUid(item.uid || item.hash)}</span>
-            </div>
-          )}
+        {(link.match(/jobs/) ||
+          (link.match(/functions/) &&
+            Object.values(selectedItem).length !== 0)) && (
+          <div className="date__uid_row">
+            <span>
+              {data.type !== 'date' &&
+                formatDatetime(new Date(item.startTime || item.updated))}
+            </span>
+            <span>{truncateUid(item.uid || item.hash)}</span>
+          </div>
+        )}
       </Link>
       {expandLink && (
         <Arrow

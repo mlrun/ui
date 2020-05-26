@@ -148,7 +148,7 @@ const Content = ({
 
       setExpandedItems(newArray)
     } else {
-      parentRow.classList.remove('active')
+      parentRow.classList.remove('row_active')
       parentRow.classList.add('parent-row-expanded')
 
       setExpandedItems([...expandedItems, item])
