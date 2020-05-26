@@ -236,7 +236,6 @@
     &__parameters {
       @include chip($parametersBorder);
 
-      max-width: 18ch;
       overflow-x: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
