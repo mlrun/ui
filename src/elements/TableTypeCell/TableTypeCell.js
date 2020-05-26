@@ -28,9 +28,13 @@ const TableTypeCell = ({ data }) => {
     <div className={`table-body__cell ${data.class}`}>
       <Tooltip
         className="table-body__cell_type"
-        template={<TextTooltipTemplate text={typesOfJob[data.value].label} />}
+        template={
+          <TextTooltipTemplate
+            text={typesOfJob[data.value]?.label || data.value}
+          />
+        }
       >
-        {typesOfJob[data.value].icon}
+        {typesOfJob[data.value]?.icon || data.value}
       </Tooltip>
     </div>
   )
