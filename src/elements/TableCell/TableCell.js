@@ -125,7 +125,7 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.class}`}>
         <Tooltip
-          className="data-ellipsis cell-content"
+          className="data-ellipsis text_small"
           template={<TextTooltipTemplate text={data.value.path} />}
         >
           {`${data.value.schema ? `${data.value.schema}://` : ''}${
@@ -148,7 +148,7 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.class}`}>
         <Tooltip
-          className="data-ellipsis cell-content"
+          className="data-ellipsis text_small"
           template={<TextTooltipTemplate text={data.value} />}
         >
           {data.value}
