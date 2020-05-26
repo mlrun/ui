@@ -42,7 +42,7 @@ const Functions = ({
         image: func.spec.image,
         description: func.spec.description,
         state: func.status ? func.status.state : '',
-        functionSourceCode: func.spec.build?.functionSourceCode || ''
+        functionSourceCode: func.spec.build?.functionSourceCode ?? ''
       }))
 
       return setFunctions(newFunctions)
