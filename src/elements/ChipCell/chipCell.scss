@@ -5,13 +5,9 @@
 
     .chip {
       &_short {
-        min-width: 100%;
         max-width: 100px;
-        margin: 0 !important;
-        overflow-x: hidden;
+        margin: 0;
         font-style: normal;
-        white-space: nowrap;
-        text-overflow: ellipsis;
       }
 
       &-block {

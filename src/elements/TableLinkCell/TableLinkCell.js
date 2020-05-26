@@ -25,6 +25,7 @@ const TableLinkCell = ({
   )
   const itemNameCLassNames = classnames(
     'item-name',
+    'data-ellipsis',
     link.match(/functions/) && 'function-name'
   )
 
