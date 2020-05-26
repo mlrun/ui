@@ -13,7 +13,7 @@ const createJobsContent = (content, groupedByWorkflow) => {
       },
       type: {
         value: groupedByWorkflow ? 'workflow' : type,
-        class: 'jobs-type',
+        class: 'jobs_extra-small',
         type: 'type'
       },
       uid: {

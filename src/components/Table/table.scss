@@ -6,14 +6,15 @@
 
 .table {
   @include jobsFlex;
-  border-top: $tableBorder;
+
   position: relative;
   min-height: 600px;
+  border-top: $tableBorder;
 
   &_opened {
     height: 72vh;
-    overflow-y: scroll;
     overflow-x: hidden;
+    overflow-y: scroll;
   }
 
   &__content {
@@ -32,8 +33,8 @@
         @include tableColumnFlex(2, 80px);
       }
 
-      &-type {
-        @include tableColumnFlex(.3, 50px);
+      &_extra-small {
+        @include tableColumnFlex(0.3, 50px);
       }
     }
 
@@ -56,6 +57,7 @@
 
       &_kind {
         padding-left: 20px;
+
         @include tableColumnFlex(0.5, 80px);
       }
 
@@ -66,6 +68,7 @@
       &_popout,
       &_download {
         @include tableColumnFlex(0.5, 80px);
+
         justify-content: center;
       }
     }
@@ -91,6 +94,7 @@
     &__item {
       @include tableDet;
       @include tableHeader;
+
       flex: 1;
 
       &.buttonPopout,
@@ -100,8 +104,75 @@
     }
   }
 
+  .action_cell {
+    position: relative;
+    width: 20px;
+    max-width: 20px;
+  }
+
   &-body {
     color: $mulledWine;
+
+    &__cell {
+      @include tableDet;
+
+      flex-wrap: wrap;
+      padding: 8px 0;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 18px;
+
+      &_type {
+        text-transform: capitalize;
+      }
+
+      a {
+        position: relative;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        margin: 0;
+        color: $cornflowerBlue;
+        text-decoration: none;
+
+        .status {
+          position: absolute;
+          left: -34px;
+        }
+
+        span {
+          display: block;
+          color: $topaz;
+        }
+      }
+
+      i {
+        margin: 0 17px;
+      }
+
+      button {
+        display: flex;
+        padding: 0;
+        font-size: 15px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+      }
+
+      &.expand-arrow {
+        position: absolute;
+        left: 10px;
+        cursor: pointer;
+      }
+
+      &_path {
+        min-width: 100%;
+        max-width: 50px;
+        overflow-x: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
 
     &__row {
       position: relative;
@@ -162,76 +233,18 @@
       }
     }
 
-    &__cell {
-      @include tableDet;
-      padding: 8px 0;
-      font-size: 15px;
-      line-height: 18px;
-      font-weight: 400;
-      flex-wrap: wrap;
-
-      &_type {
-        text-transform: capitalize;
-      }
-
-      a {
-        position: relative;
-        text-decoration: none;
-        color: $cornflowerBlue;
-        margin: 0;
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-
-        .status {
-          position: absolute;
-          left: -34px;
-        }
-
-        span {
-          display: block;
-          color: $topaz;
-        }
-      }
-
-      i {
-        margin: 0 17px;
-      }
-
-      button {
-        display: flex;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        padding: 0;
-        font-size: 15px;
-      }
-
-      .expand-arrow {
-        position: absolute;
-        left: 10px;
-        cursor: pointer;
-      }
-
-      &_path {
-        max-width: 50px;
-        min-width: 100%;
-        white-space: nowrap;
-        overflow-x: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-
     &__parameters {
       @include chip($parametersBorder);
+
       max-width: 18ch;
       overflow-x: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &__results {
       @include chip($resultsBorder);
+
       display: flex;
     }
 
@@ -242,9 +255,10 @@
 
   .name_status_row {
     display: flex;
-    align-items: center;
     flex: 1;
     flex-wrap: wrap;
+    align-items: center;
+
     span {
       margin-left: 10px;
     }
@@ -253,28 +267,23 @@
   .date__uid_row {
     display: flex;
     align-items: center;
-    font-family: Roboto;
-    font-style: normal;
     font-weight: normal;
     font-size: 12px;
+    font-family: Roboto, sans-serif;
+    font-style: normal;
     line-height: 14px;
+
     span:last-child {
       margin-left: 10px;
     }
   }
 
-  .action_cell {
-    position: relative;
-    width: 20px;
-    max-width: 20px;
-  }
-
   .data_ellipsis {
     min-width: 100%;
     max-width: 50px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .row_active {

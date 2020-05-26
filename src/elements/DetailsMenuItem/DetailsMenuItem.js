@@ -7,24 +7,26 @@ const DetailsMenuItem = ({ hash, id, match, name, page, tab }) => {
   const link = `/projects/${match.params.projectName}/${page.toLowerCase()}/${
     page.toLowerCase() === 'functions' ? hash : id || name
   }/${tab}`
-  const classNames = classnames(
+  const tabClassNames = classnames(
     'menu-tab',
     match.params.tab === tab && 'active-tab'
   )
 
   return (
     <Link to={link}>
-      <li className={classNames}>{tab}</li>
+      <li className={tabClassNames}>{tab}</li>
     </Link>
   )
 }
 
 DetailsMenuItem.defaultProps = {
-  name: '',
-  id: ''
+  hash: '',
+  id: '',
+  name: ''
 }
 
 DetailsMenuItem.propTypes = {
+  hash: PropTypes.string,
   id: PropTypes.string,
   match: PropTypes.shape({}).isRequired,
   name: PropTypes.string,

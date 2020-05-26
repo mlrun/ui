@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -17,7 +17,6 @@ const Details = ({
   page,
   selectedItem
 }) => {
-  const [generatedDetailsMenu, setGeneratedDetailsMenu] = useState(detailsMenu)
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -32,35 +31,10 @@ const Details = ({
     handleCancel()
   }
 
-  useEffect(() => {
-    if (match.params.tab === 'metadata' && !selectedItem.schema) {
-      history.push(
-        `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
-      )
-
-      setGeneratedDetailsMenu(detailsMenu)
-    } else if (selectedItem.schema) {
-      let newDetailsMenu = selectedItem.schema
-        ? [...detailsMenu, 'metadata']
-        : detailsMenu
-
-      setGeneratedDetailsMenu(newDetailsMenu)
-    } else if (!selectedItem.schema) {
-      setGeneratedDetailsMenu(detailsMenu)
-    }
-  }, [
-    match.params.tab,
-    match.params.projectName,
-    detailsMenu,
-    selectedItem.schema,
-    match.params.name,
-    history
-  ])
-
   return (
     <DetailsView
       actionsMenu={actionsMenu}
-      detailsMenu={generatedDetailsMenu}
+      detailsMenu={detailsMenu}
       handleCancel={handleCancel}
       handlePreview={handlePreview}
       selectedItem={selectedItem}
@@ -83,4 +57,4 @@ Details.propTypes = {
   selectedItem: PropTypes.shape({}).isRequired
 }
 
-export default React.memo(Details, (prev, next) => prev.match === next.match)
+export default Details

@@ -1,10 +1,11 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import ChipCell from '../ChipCell/ChipCell'
 import { isEmpty } from 'lodash'
+
+import ChipCell from '../ChipCell/ChipCell'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import { Link } from 'react-router-dom'
 
 const DetailsInfoItem = ({
   chips,
@@ -57,10 +58,23 @@ const DetailsInfoItem = ({
   }
 }
 
+DetailsInfoItem.defaultProps = {
+  chips: [],
+  chipsClassName: '',
+  func: {},
+  info: null,
+  match: {},
+  state: '',
+  target_path: {}
+}
+
 DetailsInfoItem.propTypes = {
   chips: PropTypes.array,
-  info: PropTypes.any,
   chipsClassName: PropTypes.string,
+  func: PropTypes.shape({}),
+  info: PropTypes.any,
+  match: PropTypes.shape({}),
+  state: PropTypes.string,
   target_path: PropTypes.shape({})
 }
 

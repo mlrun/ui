@@ -16,7 +16,7 @@ const ArtifactsTableRow = ({
   rowItem,
   selectedItem
 }) => {
-  const classNames = classnames(
+  const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
     selectedItem?.db_key &&
@@ -25,7 +25,7 @@ const ArtifactsTableRow = ({
   )
 
   return (
-    <div className={classNames}>
+    <div className={rowClassNames}>
       {Object.values(rowItem).map((value, i) => {
         return (
           <TableCell

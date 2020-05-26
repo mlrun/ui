@@ -23,7 +23,7 @@ const JobsTableRow = ({
 }) => {
   const parent = useRef()
 
-  const classNames = classnames(
+  const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
     rowItem.uid?.value === selectedItem.uid &&
@@ -34,7 +34,7 @@ const JobsTableRow = ({
   )
 
   return (
-    <div className={classNames} ref={parent}>
+    <div className={rowClassNames} ref={parent}>
       {parent.current?.classList.contains('parent-row-expanded') ? (
         <div className="row_grouped-by">
           {isGroupedByWorkflow ? (
