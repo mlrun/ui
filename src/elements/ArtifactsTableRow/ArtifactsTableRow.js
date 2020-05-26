@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
@@ -15,15 +16,16 @@ const ArtifactsTableRow = ({
   rowItem,
   selectedItem
 }) => {
+  const rowClassNames = classnames(
+    'table-body__row',
+    'parent-row',
+    selectedItem?.db_key &&
+      selectedItem?.db_key === content[index]?.db_key &&
+      'row_active'
+  )
+
   return (
-    <div
-      className={`table-body__row ${
-        selectedItem?.db_key !== undefined &&
-        selectedItem?.db_key === content[index]?.db_key
-          ? 'parent-row active'
-          : 'parent-row'
-      }`}
-    >
+    <div className={rowClassNames}>
       {Object.values(rowItem).map((value, i) => {
         return (
           <TableCell

@@ -1,193 +1,163 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
+import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
+
 import { formatDatetime, parseKeyValues } from '../../utils'
 import jobsData from '../JobsPage/jobsData'
 import artifactsData from '../Artifacts/artifactsData'
 import functionsData from '../FunctionsPage/functionsData'
 import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
 
-import JobsDetailsInfoItem from '../../elements/JobsDetailsInfoItem/JobsDetailsInfoItem'
-import ArtifactsDetailsInfoItem from '../../elements/ArtifactsDetailsInfoItem/ArtifactsDetailsInfoItem'
-import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
-
 import './detailsInfo.scss'
 
-const DetailsInfo = ({ item, page, match }) => {
+const DetailsInfo = ({ match, page, selectedItem }) => {
   const jobsInfoContent = [
-    item.uid,
-    formatDatetime(item.startTime),
-    item.state,
-    item.parameters,
-    item.function,
-    item.resultsChips,
-    item.labels,
-    item.logLevel,
-    item.outputPath,
-    item.iterations && item.iterations.length ? item.iterations : '0'
+    selectedItem.uid,
+    formatDatetime(selectedItem.startTime),
+    selectedItem.state,
+    selectedItem.parameters,
+    selectedItem.function,
+    selectedItem.resultsChips,
+    selectedItem.labels,
+    selectedItem.logLevel,
+    selectedItem.outputPath,
+    selectedItem.iterations?.length ? selectedItem.iterations : '0'
   ]
   const artifactsInfoContent = [
-    item.db_key,
-    item.iter ? item.iter : '0',
-    item.kind,
-    item.size,
-    item.target_path,
-    item.tree,
-    item.updated && formatDatetime(new Date(item.updated)),
-    item.labels,
-    item.sources
+    selectedItem.db_key,
+    selectedItem.iter || '0',
+    selectedItem.kind,
+    selectedItem.size,
+    selectedItem.target_path,
+    selectedItem.tree,
+    selectedItem.updated && formatDatetime(new Date(selectedItem.updated)),
+    selectedItem.labels,
+    selectedItem.sources
   ]
   const functionsInfoContent = [
-    item.name,
-    item.type,
-    item.hash,
-    formatDatetime(new Date(item.updated)),
-    item.command,
-    item.image,
-    item.description,
-    item.state
+    selectedItem.name,
+    selectedItem.type,
+    selectedItem.hash,
+    formatDatetime(new Date(selectedItem.updated)),
+    selectedItem.command,
+    selectedItem.image,
+    selectedItem.description,
+    selectedItem.state
   ]
+  const sources = Array.isArray(selectedItem.sources)
+    ? selectedItem.sources.reduce((prev, cur) => {
+        let source = {}
+        source[cur.name] = cur.path
+
+        return { ...prev, ...source }
+      }, {})
+    : selectedItem.sources
 
   return (
-    <div>
+    <div className="item-info">
       {page === ARTIFACTS_PAGE && (
-        <h3 className="table__item_details_preview_header">General</h3>
+        <h3 className="item-info__header">General</h3>
       )}
-      <ul className="table__item_details">
+      <ul className="item-info__details">
         {page === JOBS_PAGE
-          ? jobsData.jobsInfoHeaders.map((header, i) => {
-              switch (jobsInfoContent[i]) {
-                case item.state:
-                  return (
-                    <JobsDetailsInfoItem
-                      key={header}
-                      header={header}
-                      state={item.state}
-                    />
-                  )
-                case item.parameters:
-                  return (
-                    <JobsDetailsInfoItem
-                      key={header}
-                      chips={item.parameters}
-                      header={header}
-                      chipsClassName="parameters"
-                    />
-                  )
-                case item.function:
-                  return (
-                    <JobsDetailsInfoItem
-                      match={match}
-                      key={header}
-                      header={header}
-                      func={item.function}
-                    />
-                  )
-                case item.resultsChips:
-                  return (
-                    <JobsDetailsInfoItem
-                      key={header}
-                      chips={item.resultsChips}
-                      header={header}
-                      chipsClassName="results"
-                    />
-                  )
-                case item.labels:
-                  return (
-                    <JobsDetailsInfoItem
-                      key={header}
-                      chips={item.labels}
-                      header={header}
-                      chipsClassName="labels"
-                    />
-                  )
-                default:
-                  return (
-                    <JobsDetailsInfoItem
-                      key={header}
-                      header={header}
-                      info={jobsInfoContent[i]}
-                    />
-                  )
-              }
+          ? jobsData.jobsInfoHeaders.map((header, index) => {
+              return (
+                <li className="details-item" key={header}>
+                  <div className="details-item__header">{header}</div>
+                  <DetailsInfoItem
+                    chips={
+                      jobsInfoContent[index] === selectedItem.parameters
+                        ? selectedItem.parameters
+                        : jobsInfoContent[index] === selectedItem.resultsChips
+                        ? selectedItem.resultsChips
+                        : jobsInfoContent[index] === selectedItem.labels
+                        ? selectedItem.labels
+                        : []
+                    }
+                    chipsClassName={
+                      jobsInfoContent[index] === selectedItem.parameters
+                        ? 'parameters'
+                        : jobsInfoContent[index] === selectedItem.resultsChips
+                        ? 'results'
+                        : 'labels'
+                    }
+                    func={
+                      jobsInfoContent[index] === selectedItem.function
+                        ? selectedItem.function
+                        : {}
+                    }
+                    match={match}
+                    state={
+                      jobsInfoContent[index] === selectedItem.state
+                        ? selectedItem.state
+                        : ''
+                    }
+                    info={jobsInfoContent[index]}
+                  />
+                </li>
+              )
             })
           : page === ARTIFACTS_PAGE
-          ? artifactsData.artifactsInfoHeaders.map((header, i) => {
-              switch (artifactsInfoContent[i]) {
-                case item.labels:
-                  return (
-                    <ArtifactsDetailsInfoItem
-                      key={header}
-                      page={page}
-                      chips={parseKeyValues(item.labels)}
-                      header={header}
-                      chipsClassName="labels"
-                    />
-                  )
-                case item.target_path:
-                  return (
-                    <ArtifactsDetailsInfoItem
-                      key={header}
-                      page={page}
-                      header={header}
-                      target_path={item.target_path}
-                    />
-                  )
-                case item.sources: {
-                  return (
-                    <ArtifactInfoSources
-                      key={header}
-                      header={header}
-                      sources={
-                        Array.isArray(item.sources)
-                          ? item.sources.reduce((prev, cur) => {
-                              let source = {}
-                              source[cur.name] = cur.path
-                              return { ...prev, ...source }
-                            }, {})
-                          : item.sources
-                      }
-                    />
-                  )
-                }
-                default:
-                  return (
-                    <ArtifactsDetailsInfoItem
-                      key={header}
-                      page={page}
-                      info={artifactsInfoContent[i]}
-                      header={header}
-                    />
-                  )
+          ? artifactsData.artifactsInfoHeaders.map((header, index) => {
+              if (artifactsInfoContent[index] === selectedItem.sources) {
+                return (
+                  <ArtifactInfoSources
+                    sources={sources}
+                    header={header}
+                    key={header}
+                  />
+                )
               }
-            })
-          : functionsData.functionsInfoHeaders.map((header, i) => {
               return (
-                <li className="table__item_details_item" key={i}>
-                  <div className="table__item_details_item_header">
-                    {header}
-                  </div>
-                  <div className="table__item_details_item_data">
-                    {header === 'Kind'
-                      ? functionsInfoContent[i] || 'Local'
-                      : functionsInfoContent[i] || ''}
-                  </div>
+                <li className="details-item" key={header}>
+                  <div className="details-item__header">{header}</div>
+                  <DetailsInfoItem
+                    chips={
+                      artifactsInfoContent[index] === selectedItem.labels
+                        ? parseKeyValues(selectedItem.labels)
+                        : []
+                    }
+                    chipsClassName="labels"
+                    target_path={
+                      artifactsInfoContent[index] === selectedItem.target_path
+                        ? selectedItem.target_path
+                        : {}
+                    }
+                    info={artifactsInfoContent[index]}
+                  />
+                </li>
+              )
+            })
+          : functionsData.functionsInfoHeaders.map((header, index) => {
+              return (
+                <li className="details-item" key={index}>
+                  <div className="details-item__header">{header}</div>
+                  <DetailsInfoItem
+                    info={
+                      header === 'Kind'
+                        ? functionsInfoContent[index] || 'Local'
+                        : functionsInfoContent[index] || ''
+                    }
+                  />
                 </li>
               )
             })}
       </ul>
-      {page === ARTIFACTS_PAGE && item.producer && (
+      {page === ARTIFACTS_PAGE && selectedItem.producer && (
         <>
-          <h3 className="table__item_details_preview_header">Producer</h3>
-          <ul className="table__item_details">
-            {Object.keys(item.producer).map(key => {
+          <h3 className="item-info__header">Producer</h3>
+          <ul className="item-info__details">
+            {Object.keys(selectedItem.producer).map(header => {
               return (
-                <ArtifactsDetailsInfoItem
-                  key={key}
-                  page={page}
-                  info={item.producer[key]}
-                  header={key}
-                />
+                <li className="details-item" key={header}>
+                  <div className="details-item__header">{header}</div>
+                  <DetailsInfoItem
+                    page={page}
+                    info={selectedItem.producer[header]}
+                  />
+                </li>
               )
             })}
           </ul>
@@ -198,12 +168,13 @@ const DetailsInfo = ({ item, page, match }) => {
 }
 
 DetailsInfo.defaultProps = {
-  item: {}
+  selectedItem: {}
 }
 
 DetailsInfo.propTypes = {
-  item: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired
+  match: PropTypes.shape({}).isRequired,
+  page: PropTypes.string.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default DetailsInfo

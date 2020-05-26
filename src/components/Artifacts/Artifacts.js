@@ -15,12 +15,12 @@ import './artifacts.scss'
 const Artifacts = ({ artifactsStore, fetchArtifacts, history, match }) => {
   const [artifacts, _setArtifacts] = useState([])
   const [selectedArtifact, setSelectedArtifact] = useState({})
-  const pageData = {
+  const [pageData, setPageData] = useState({
     detailsMenu: artifactsData.detailsMenu,
     filters: artifactsData.filters,
     page: artifactsData.page,
     tableHeaders: artifactsData.tableHeaders
-  }
+  })
 
   const fetchData = useCallback(
     item => {
@@ -95,6 +95,34 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, history, match }) => {
     }
     setSelectedArtifact({ item })
   }
+
+  useEffect(() => {
+    if (match.params.tab === 'metadata' && !selectedArtifact.item?.schema) {
+      history.push(
+        `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
+      )
+    }
+
+    setPageData(state => {
+      if (selectedArtifact.item?.schema) {
+        return {
+          ...state,
+          detailsMenu: [...artifactsData.detailsMenu, 'metadata']
+        }
+      }
+
+      return {
+        ...state,
+        detailsMenu: artifactsData.detailsMenu
+      }
+    })
+  }, [
+    match.params.tab,
+    match.params.projectName,
+    match.params.name,
+    history,
+    selectedArtifact.item
+  ])
 
   const handleCancel = () => {
     setSelectedArtifact({})

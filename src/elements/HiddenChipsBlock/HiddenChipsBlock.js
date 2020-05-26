@@ -39,7 +39,7 @@ const HiddenChipsBlock = ({ className, chips }) => {
             key={element.value}
             template={<TextTooltipTemplate text={element.value} />}
           >
-            <Chip className={className} value={element.value} />
+            <Chip className={className} value={element.value} hiddenChips />
           </Tooltip>
         )
       })}

@@ -93,8 +93,8 @@ const Table = ({
   }, [groupFilter])
 
   useEffect(() => {
-    if (tableContent.content.length) {
-      setLoading && setLoading(false)
+    if (tableContent.content.length && setLoading) {
+      setLoading(false)
     }
   }, [setLoading, tableContent])
 

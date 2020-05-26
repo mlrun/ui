@@ -32,7 +32,7 @@ const DetailsResults = ({ job }) => {
             </div>
           </div>
           <div className="table__item_results__table-body">
-            {result.items.map((item, i) => (
+            {result.tableContent.map((item, i) => (
               <div className="table__item_results__table_row" key={i}>
                 {item.map((value, i) => {
                   if (
