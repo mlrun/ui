@@ -165,12 +165,9 @@
         cursor: pointer;
       }
 
-      &_path {
+      .text_small {
         min-width: 100%;
         max-width: 50px;
-        overflow-x: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
       }
     }
 
@@ -235,10 +232,6 @@
 
     &__parameters {
       @include chip($parametersBorder);
-
-      overflow-x: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
 
     &__results {
@@ -252,14 +245,24 @@
     }
   }
 
-  .name_status_row {
+  .name-wrapper {
     display: flex;
     flex: 1;
     flex-wrap: wrap;
     align-items: center;
 
-    span {
-      margin-left: 10px;
+    .item {
+      &-name {
+        max-width: 165px;
+
+        &.function-name {
+          max-width: 120px;
+        }
+      }
+
+      &-tag {
+        margin-left: 10px;
+      }
     }
   }
 
@@ -275,14 +278,6 @@
     span:last-child {
       margin-left: 10px;
     }
-  }
-
-  .data_ellipsis {
-    min-width: 100%;
-    max-width: 50px;
-    overflow-x: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
   }
 
   .row_active {

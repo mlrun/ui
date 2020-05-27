@@ -4,7 +4,11 @@ import classnames from 'classnames'
 import { roundFloats } from '../../utils/roundFloats'
 
 const Chip = ({ className, hiddenChips, onClick, value }) => {
-  const chipClassNames = classnames('chip_short', hiddenChips && 'chip_hidden')
+  const chipClassNames = classnames(
+    'chip_short',
+    'data-ellipsis',
+    hiddenChips && 'chip_hidden'
+  )
   const chipLabel = value.indexOf(':')
   const chipValue =
     chipLabel > 0 ? roundFloats(value.slice(chipLabel + 1)) : value
