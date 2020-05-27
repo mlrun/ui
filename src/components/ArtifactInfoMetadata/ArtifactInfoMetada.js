@@ -8,82 +8,89 @@ import { ReactComponent as Primary } from '../../images/ic-key.svg'
 
 import './artifactInfoMetadata.scss'
 
-const ArtifactInfoMetadata = ({ item }) => {
-  const { primaryKey } = item.schema
-  let metadata = item.schema.fields.map(_item => {
-    const { name, type } = _item
-    return {
-      '': '', //column of primary key
-      name: name,
-      type: type,
-      count: item?.stats?.[name]?.count,
-      mean: item?.stats?.[name]?.mean,
-      std: item?.stats?.[name]?.std?.toFixed(8),
-      min: item?.stats?.[name]?.min,
-      '25%': item?.stats?.[name]?.['25%'],
-      '50%': item?.stats?.[name]?.['50%'],
-      '75%': item?.stats?.[name]?.['75%'],
-      max: item?.stats?.[name]?.max
-    }
-  })
-
-  let headers = metadata.reduce((prev, cur) => {
-    return Object.keys(cur)
-  }, {})
+const ArtifactInfoMetadata = ({ selectedItem }) => {
+  const { primaryKey } = selectedItem.schema
+  const metadata = selectedItem.schema.fields.map(field => ({
+    'primary-key': 'primary-key',
+    name: field.name,
+    type: field.type,
+    count: selectedItem?.stats?.[field.name]?.count,
+    mean: selectedItem?.stats?.[field.name]?.mean,
+    std: selectedItem?.stats?.[field.name]?.std?.toFixed(8),
+    min: selectedItem?.stats?.[field.name]?.min,
+    '25%': selectedItem?.stats?.[field.name]?.['25%'],
+    '50%': selectedItem?.stats?.[field.name]?.['50%'],
+    '75%': selectedItem?.stats?.[field.name]?.['75%'],
+    max: selectedItem?.stats?.[field.name]?.max
+  }))
+  const headers = Object.keys(metadata[0])
 
   return (
-    <div className="artifact_metadata_table">
-      <div className="artifact_metadata_table_header">
-        {headers.map(header => {
-          return (
-            <div
-              className={`artifact_metadata_table_header_item metadata_cell_${header}`}
-              key={header}
-            >
-              {header !== '' && <span>{header}</span>}
-            </div>
-          )
-        })}
-      </div>
-      <div className="artifact_metadata_table_body">
-        {metadata.map(item => {
-          return (
-            <div key={item.name} className="artifact_metadata_table_body_row">
-              {Object.keys(item).map((key, index) => {
-                return (
-                  <div
-                    key={key}
-                    className={`artifact_metadata_table_body_row_item metadata_cell_${headers[index]}`}
-                  >
-                    {key === '' && primaryKey.includes(item.name) ? (
-                      <Tooltip
-                        template={<TextTooltipTemplate text={'Primary key'} />}
-                      >
-                        <Primary />
-                      </Tooltip>
-                    ) : key === 'name' ? (
-                      <Tooltip
-                        template={<TextTooltipTemplate text={item[key]} />}
-                      >
-                        {item[key]}
-                      </Tooltip>
-                    ) : (
-                      key !== '' &&
-                      item[key] !== undefined && <span>{item[key]} </span>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          )
-        })}
+    <div className="artifact-metadata">
+      <div className="artifact-metadata__table">
+        <div className="artifact-metadata__table-header">
+          {headers.map(header => {
+            return (
+              <div
+                className={`artifact-metadata__table-item header-item metadata-cell_${header}`}
+                key={header}
+              >
+                {header !== 'primary-key' && header}
+              </div>
+            )
+          })}
+        </div>
+        <div className="artifact-metadata__table-body">
+          {metadata.map(metadataItem => {
+            return (
+              <div
+                key={metadataItem.name}
+                className="artifact-metadata__table-row"
+              >
+                {Object.keys(metadataItem).map((metadataKey, index) => {
+                  return (
+                    <div
+                      key={metadataKey}
+                      className={`artifact-metadata__table-item metadata-cell_${headers[index]}`}
+                    >
+                      {metadataKey === 'primary-key' &&
+                      primaryKey.includes(metadataItem.name) ? (
+                        <Tooltip
+                          template={
+                            <TextTooltipTemplate text={'Primary key'} />
+                          }
+                        >
+                          <Primary />
+                        </Tooltip>
+                      ) : (
+                        metadataKey !== 'primary-key' &&
+                        metadataItem[metadataKey] && (
+                          <Tooltip
+                            className="data-ellipsis"
+                            template={
+                              <TextTooltipTemplate
+                                text={`${metadataItem[metadataKey]}`}
+                              />
+                            }
+                          >
+                            {metadataItem[metadataKey]}
+                          </Tooltip>
+                        )
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
 }
 
 ArtifactInfoMetadata.propTypes = {
-  item: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default ArtifactInfoMetadata
