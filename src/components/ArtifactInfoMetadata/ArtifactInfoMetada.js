@@ -10,7 +10,7 @@ import './artifactInfoMetadata.scss'
 
 const ArtifactInfoMetadata = ({ item }) => {
   const { primaryKey } = item.schema
-  let metadata = item.schema.fields.map(_item => {
+  const metadata = item.schema.fields.map(_item => {
     const { name, type } = _item
     return {
       '': '', //column of primary key
@@ -27,9 +27,7 @@ const ArtifactInfoMetadata = ({ item }) => {
     }
   })
 
-  let headers = metadata.reduce((prev, cur) => {
-    return Object.keys(cur)
-  }, {})
+  const headers = Object.keys(metadata[0])
 
   return (
     <div className="artifact_metadata_table">
