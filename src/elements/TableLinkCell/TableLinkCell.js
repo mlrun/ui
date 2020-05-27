@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
@@ -18,12 +19,18 @@ const TableLinkCell = ({
   expandLink,
   handleExpandRow
 }) => {
+  const tableCellClassNames = classnames(
+    'table-body__cell',
+    data.type === 'date' ? 'jobs_medium' : data.class
+  )
+  const itemNameCLassNames = classnames(
+    'item-name',
+    'data-ellipsis',
+    link.match(/functions/) && 'function-name'
+  )
+
   return (
-    <div
-      className={`table-body__cell ${
-        data.type === 'date' ? 'jobs_medium' : data.class
-      }`}
-    >
+    <div className={tableCellClassNames}>
       <Link to={link} onClick={() => selectItem(item)} className="link">
         {item.state && (
           <Tooltip
@@ -37,9 +44,16 @@ const TableLinkCell = ({
             <i className={item.state} />
           </Tooltip>
         )}
-        <div className="name_status_row">
-          {data.value}
-          {link.match(/functions/) && <span>{item.tag}</span>}
+        <div className="name-wrapper">
+          <Tooltip
+            className={itemNameCLassNames}
+            template={<TextTooltipTemplate text={data.value} />}
+          >
+            {data.value}
+          </Tooltip>
+          {link.match(/functions/) && (
+            <span className="item-tag">{item.tag}</span>
+          )}
         </div>
         {(link.match(/jobs/) ||
           (link.match(/functions/) &&
