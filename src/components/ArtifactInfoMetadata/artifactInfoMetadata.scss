@@ -1,69 +1,59 @@
 @import '../../scss/colors.scss';
 @import '../../scss/borders.scss';
 
-.artifact_metadata {
-  &_table {
+.artifact-metadata {
+  padding: 20px;
+
+  &__table {
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: 20px;
-    &_header {
-      display: flex;
-      padding: 10px 0;
-      border-bottom: $tableBorder;
-      font-weight: bold;
-      color: $topaz;
+
+    &-header {
       position: sticky;
       top: 0;
       z-index: 3;
+      display: flex;
+      padding-bottom: 10px;
+      color: $topaz;
+      font-weight: bold;
       background-color: $white;
-      &_item {
-        display: flex;
-        flex: 1;
-        align-items: center;
+      border-bottom: $tableBorder;
+
+      .header-item {
         text-transform: capitalize;
-        min-width: 80px;
-        padding: 0 5px;
-        &:first-child {
-          display: flex;
-          flex: 0.1;
-          min-width: 40px;
-        }
       }
     }
-    &_body {
+
+    &__body {
       display: flex;
       flex: 1;
       flex-direction: column;
-      &_row {
-        display: flex;
-        padding: 10px 0;
-        flex-direction: row;
-        border-bottom: $tableBorder;
-        &_item {
-          display: flex;
-          flex: 1;
-          align-items: center;
-          min-width: 80px;
-          padding: 0 5px;
-          span,
-          div {
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow-x: hidden;
-          }
-          &:first-child {
-            display: flex;
-            flex: 0.1;
-            min-width: 40px;
-          }
-        }
-      }
     }
-    .metadata_cell {
+
+    &-item {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      min-width: 70px;
+      padding: 0 5px;
+    }
+
+    &-row {
+      display: flex;
+      flex-direction: row;
+      padding: 10px 0;
+      border-bottom: $tableBorder;
+    }
+
+    .metadata-cell {
       &_name {
-        display: flex;
         flex: 1.5;
+      }
+
+      &_primary-key {
+        flex: 0.1;
+        min-width: 33px;
       }
     }
   }

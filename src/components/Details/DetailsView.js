@@ -110,7 +110,7 @@ const DetailsView = ({
         <DetailsCode code={selectedItem.functionSourceCode} />
       )}
       {match.params.tab === 'metadata' && selectedItem.schema && (
-        <ArtifactInfoMetadata item={selectedItem} />
+        <ArtifactInfoMetadata selectedItem={selectedItem} />
       )}
     </div>
   )
