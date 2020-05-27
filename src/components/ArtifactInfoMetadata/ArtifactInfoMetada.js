@@ -47,13 +47,13 @@ const ArtifactInfoMetadata = ({ selectedItem }) => {
                 key={metadataItem.name}
                 className="artifact-metadata__table-row"
               >
-                {Object.keys(metadataItem).map((key, index) => {
+                {Object.keys(metadataItem).map((metadataKey, index) => {
                   return (
                     <div
-                      key={key}
+                      key={metadataKey}
                       className={`artifact-metadata__table-item metadata-cell_${headers[index]}`}
                     >
-                      {key === 'primary-key' &&
+                      {metadataKey === 'primary-key' &&
                       primaryKey.includes(metadataItem.name) ? (
                         <Tooltip
                           template={
@@ -63,17 +63,17 @@ const ArtifactInfoMetadata = ({ selectedItem }) => {
                           <Primary />
                         </Tooltip>
                       ) : (
-                        key !== 'primary-key' &&
-                        metadataItem[key] && (
+                        metadataKey !== 'primary-key' &&
+                        metadataItem[metadataKey] && (
                           <Tooltip
                             className="data-ellipsis"
                             template={
                               <TextTooltipTemplate
-                                text={`${metadataItem[key]}`}
+                                text={`${metadataItem[metadataKey]}`}
                               />
                             }
                           >
-                            {metadataItem[key]}
+                            {metadataItem[metadataKey]}
                           </Tooltip>
                         )
                       )}
