@@ -5,80 +5,75 @@ import Download from '../../common/Download/Download'
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Accordion from '../../common/Accordion/Accordion'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Popout } from '../../images/popout.svg'
 
-import artifactAction from '../../actions/artifacts'
-
 import './detailsArtifacts.scss'
 
-const DetailsArtifactsView = ({ items, handleClick, dispatch }) => {
-  return (
-    <div className="table__item_artifacts">
-      {items.map((item, i) => {
-        const targetPath = `${
-          item.target_path.schema ? `${item.target_path.schema}://` : ''
-        }${item.target_path.path}`
-        return (
-          <div key={i} className="table__item_artifacts_wrapper">
-            <div className="table__item_artifacts__row">
-              <div
-                className="table__item_artifacts__row_item"
-                onClick={handleClick}
-              >
-                <Arrow className="arrow" />
-                {item.key}
-              </div>
-              <div className="table__item_artifacts__row_item table__item_artifacts__row_item_long">
-                <Tooltip
-                  className="table__item_artifacts__row__cell_path"
-                  template={<TextTooltipTemplate text={targetPath} />}
-                >
-                  {targetPath}
-                </Tooltip>
-              </div>
-              <div className="table__item_artifacts__row_item">
-                size: {item.size}
-              </div>
-              <div className="table__item_artifacts__row_item">{item.date}</div>
-              <div className="table__item_artifacts__row_item table__item_artifacts__row_item_short">
-                <Tooltip
-                  template={<TextTooltipTemplate text="Artifacts Preview" />}
-                >
-                  <Popout
-                    onClick={() => {
-                      dispatch(
-                        artifactAction.showArtifactsPreview({
-                          isPreview: true,
-                          item: item
-                        })
-                      )
-                    }}
-                  />
-                </Tooltip>
-              </div>
-              <div className="table__item_artifacts__row_item table__item_artifacts__row_item_short">
-                <Download
-                  path={item.target_path.path}
-                  schema={item.target_path.schema}
-                  user={item.user}
-                />
-              </div>
+const DetailsArtifactsView = ({ content, showPreview }) => (
+  <div className="item-artifacts">
+    {content.map((artifact, index) => {
+      const targetPath = `${
+        artifact.target_path.schema ? `${artifact.target_path.schema}://` : ''
+      }${artifact.target_path.path}`
+
+      return (
+        <Accordion
+          key={index}
+          icon={<Arrow />}
+          iconClassName="item-artifacts__arrow"
+          accordionClassName="item-artifacts__row-wrapper"
+        >
+          <div className="item-artifacts__row">
+            <div className="item-artifacts__row-item">{artifact.key}</div>
+            <div className="item-artifacts__row-item item-artifacts__row-item_long">
+              <Tooltip template={<TextTooltipTemplate text={targetPath} />}>
+                {targetPath}
+              </Tooltip>
             </div>
-            <div className="table__item_artifacts__preview" key={i + 1}>
-              <ArtifactsPreview artifact={item} />
+            <div className="item-artifacts__row-item">
+              <Tooltip template={<TextTooltipTemplate text={artifact.size} />}>
+                size: {artifact.size}
+              </Tooltip>
+            </div>
+            <div className="item-artifacts__row-item">
+              <Tooltip template={<TextTooltipTemplate text={artifact.date} />}>
+                {artifact.date}
+              </Tooltip>
+            </div>
+            <div className="item-artifacts__row-item item-artifacts__row-item_short">
+              <Tooltip
+                template={<TextTooltipTemplate text="Artifacts Preview" />}
+              >
+                <Popout
+                  onClick={() => {
+                    showPreview(artifact)
+                  }}
+                />
+              </Tooltip>
+            </div>
+            <div className="item-artifacts__row-item ite-artifacts__row-item_short">
+              <Download
+                path={artifact.target_path.path}
+                schema={artifact.target_path.schema}
+                user={artifact.user}
+              />
             </div>
           </div>
-        )
-      })}
-    </div>
-  )
-}
+          <div className="item-artifacts__preview">
+            <ArtifactsPreview artifact={artifact} />
+          </div>
+        </Accordion>
+      )
+    })}
+  </div>
+)
 
 DetailsArtifactsView.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  handleClick: PropTypes.func.isRequired
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  showPreview: PropTypes.func.isRequired
 }
 
 export default DetailsArtifactsView

@@ -1,84 +1,69 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import prettyBytes from 'pretty-bytes'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import DetailsArtifactsView from './DetailsArtifactsView'
 
 import { formatDatetime } from '../../utils'
+import artifactAction from '../../actions/artifacts'
 
-const DetailsArtifacts = ({ jobsStore, selectedItem }) => {
+const DetailsArtifacts = ({ selectedItem }) => {
   const dispatch = useDispatch()
 
-  const items = selectedItem.artifacts.map(item => {
-    const index = item.target_path.indexOf('://')
+  const content = selectedItem.artifacts.map(artifact => {
+    const extraData = artifact.extra_data
+      ? Object.values(artifact.extra_data).find(dataItem =>
+          dataItem.match(/html/)
+        )
+      : ''
+    const indexOfSchema = artifact.target_path.indexOf('://')
     const target_path = {
-      schema: item.target_path.includes('://')
-        ? item.target_path.slice(0, index)
-        : '',
-      path: item.target_path.includes('://')
-        ? item.target_path.slice(index + '://'.length)
-        : item.target_path
+      schema:
+        indexOfSchema > 0 ? artifact.target_path.slice(0, indexOfSchema) : '',
+      path: extraData
+        ? extraData
+        : indexOfSchema > 0
+        ? artifact.target_path.slice(indexOfSchema + '://'.length)
+        : artifact.target_path
     }
-    if (item.schema) {
-      return {
-        schema: item.schema,
-        header: item.header,
-        preview: item.preview,
-        key: item.key,
-        target_path: target_path,
-        size: item.size ? prettyBytes(item.size) : 'N/A',
-        date: formatDatetime(selectedItem.startTime),
-        user: selectedItem?.labels
-          ?.find(item => item.match(/v3io_user|owner/g))
-          .replace(/(v3io_user|owner): /, '')
-      }
-    }
-    return {
-      key: item.key,
-      target_path: target_path,
-      size: item.size ? prettyBytes(item.size) : 'N/A',
+
+    const generatedArtifact = {
       date: formatDatetime(selectedItem.startTime),
+      key: artifact.key,
+      size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
+      target_path: target_path,
       user: selectedItem?.labels
         ?.find(item => item.match(/v3io_user|owner/g))
         .replace(/(v3io_user|owner): /, '')
     }
+
+    if (artifact.schema) {
+      return {
+        ...generatedArtifact,
+        header: artifact.header,
+        preview: artifact.preview,
+        schema: artifact.schema
+      }
+    }
+
+    return generatedArtifact
   })
 
-  const handleClick = e => {
-    const viewedBlocks = document.getElementsByClassName('view')
-    if (
-      viewedBlocks.length > 0 &&
-      !e.target
-        .closest('div.table__item_artifacts_wrapper')
-        .classList.contains('view')
-    ) {
-      viewedBlocks[0].classList.remove('view')
-    } else {
-      e.target
-        .closest('div.table__item_artifacts_wrapper')
-        .classList.contains('view')
-        ? e.target
-            .closest('div.table__item_artifacts_wrapper')
-            .classList.remove('view')
-        : e.target
-            .closest('div.table__item_artifacts_wrapper')
-            .classList.add('view')
-    }
+  const showPreview = artifact => {
+    dispatch(
+      artifactAction.showArtifactsPreview({
+        isPreview: true,
+        item: artifact
+      })
+    )
   }
 
-  return (
-    <DetailsArtifactsView
-      items={items}
-      handleClick={handleClick}
-      artifacts={jobsStore.artifacts}
-      dispatch={dispatch}
-    />
-  )
+  return <DetailsArtifactsView content={content} showPreview={showPreview} />
 }
 
 DetailsArtifacts.propTypes = {
-  jobsStore: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
-export default connect(jobsStore => jobsStore)(DetailsArtifacts)
+export default DetailsArtifacts

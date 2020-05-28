@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import './accordion.scss'
 
@@ -16,16 +17,25 @@ const Accordion = ({
     setOpen(!open)
   }
 
+  const accordionClassNames = classnames(
+    'accordion__container',
+    open && 'open',
+    accordionClassName
+  )
+
+  const iconClassNames = classnames(
+    'accordion__icon',
+    iconClassName,
+    open && 'open'
+  )
+
   return (
     <div
-      className={`accordion__container ${open && 'open'} ${accordionClassName}`}
+      className={accordionClassNames}
       onClick={!icon ? handleOpenAccordion : null}
     >
       {icon && (
-        <button
-          onClick={handleOpenAccordion}
-          className={`accordion__icon ${iconClassName} ${open && 'open'}`}
-        >
+        <button onClick={handleOpenAccordion} className={iconClassNames}>
           <span>{icon}</span>
         </button>
       )}
