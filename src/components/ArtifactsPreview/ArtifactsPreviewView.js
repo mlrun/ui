@@ -28,14 +28,7 @@ const ArtifactsPreviewView = ({ preview }) => (
         </div>
         {preview.data.content.map(contentItem => (
           <div key={contentItem + Math.random()} className="preview-table__row">
-            {typeof contentItem === 'string' ? (
-              <Tooltip
-                className="preview-table__content"
-                template={<TextTooltipTemplate text={contentItem} />}
-              >
-                {contentItem}
-              </Tooltip>
-            ) : (
+            {Array.isArray(contentItem) ? (
               contentItem.map(value => (
                 <Tooltip
                   className="preview-table__content"
@@ -45,6 +38,13 @@ const ArtifactsPreviewView = ({ preview }) => (
                   {value}
                 </Tooltip>
               ))
+            ) : (
+              <Tooltip
+                className="preview-table__content"
+                template={<TextTooltipTemplate text={contentItem} />}
+              >
+                {contentItem}
+              </Tooltip>
             )}
           </div>
         ))}
@@ -56,7 +56,7 @@ const ArtifactsPreviewView = ({ preview }) => (
     )}
     {preview?.type === 'json' && (
       <div className="json">
-        <pre>
+        <pre className="json-content">
           <code
             dangerouslySetInnerHTML={{
               __html: Prism.highlight(

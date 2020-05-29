@@ -41,6 +41,8 @@
   }
 }
 
-pre {
-  white-space: pre-wrap;
+.json {
+  &-content {
+    white-space: pre-wrap;
+  }
 }

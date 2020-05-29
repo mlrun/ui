@@ -54,7 +54,7 @@ const DetailsArtifacts = ({ selectedItem }) => {
     dispatch(
       artifactAction.showArtifactsPreview({
         isPreview: true,
-        item: artifact
+        selectedItem: artifact
       })
     )
   }
