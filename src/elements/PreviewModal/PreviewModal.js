@@ -8,39 +8,44 @@ import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview
 import Download from '../../common/Download/Download'
 
 import artifactActions from '../../actions/artifacts'
-
 import { formatDatetime } from '../../utils/datetime'
+
 import { ReactComponent as Close } from '../../images/close.svg'
 
 import './previewModal.scss'
 
 const PreviewModal = ({ item }) => {
   const dispatch = useDispatch()
+
   return ReactDOM.createPortal(
-    <div className="preview_artifact_container">
-      <div className="preview_body">
-        <div className="preview_info">
-          <div className="preview_info_name">{item.db_key || item.key}</div>
-          <div className="preview_info_path">{item.target_path.path}</div>
+    <div className="item-artifacts__modal-preview">
+      <div className="preview-body">
+        <div className="preview-item">
+          <div className="item-data item-data__name">
+            {item.db_key || item.key}
+          </div>
+          <div className="item-data item-data__path">
+            {item.target_path.path}
+          </div>
           {item.size && (
-            <div className="preview_info_size">
+            <div className="item-data">
               size:
               {typeof item.size === 'string'
                 ? item.size
                 : prettyBytes(item.size)}
             </div>
           )}
-          <div className="preview_info_date">
+          <div className="item-data">
             {formatDatetime(new Date(item.updated || item.date))}
           </div>
-          <div className="preview_info_download">
+          <div className="preview-body__download">
             <Download
               path={item.target_path.path}
               schema={item.target_path.schema}
             />
           </div>
           <div
-            className="preview_info_close"
+            className="preview-body__close"
             onClick={() => {
               dispatch(
                 artifactActions.closeArtifactsPreview({
@@ -53,7 +58,7 @@ const PreviewModal = ({ item }) => {
             <Close />
           </div>
         </div>
-        <div className="artifact_container_view">
+        <div className="item-artifacts__preview">
           <ArtifactsPreview artifact={item} />
         </div>
       </div>

@@ -48,14 +48,16 @@ const DetailsArtifactsView = ({ content, showPreview }) => (
                 template={<TextTooltipTemplate text="Artifacts Preview" />}
               >
                 <Popout
+                  className="icon-popout"
                   onClick={() => {
                     showPreview(artifact)
                   }}
                 />
               </Tooltip>
             </div>
-            <div className="item-artifacts__row-item ite-artifacts__row-item_short">
+            <div className="item-artifacts__row-item item-artifacts__row-item_short">
               <Download
+                className="icon-download"
                 path={artifact.target_path.path}
                 schema={artifact.target_path.schema}
                 user={artifact.user}

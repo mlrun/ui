@@ -1,45 +1,53 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
-import artifactsAction from '../../actions/artifacts'
+import api from '../../api/artifacts-api'
 
 import ArtifactsPreviewView from './ArtifactsPreviewView'
 
 import { createArtifactPreviewContent } from '../../utils/createArtifactPreviewContent'
 
-const ArtifactsPreview = ({
-  artifact,
-  artifactsStore,
-  fetchArtifactPreview
-}) => {
+import './artifactaPreview.scss'
+
+const ArtifactsPreview = ({ artifact }) => {
+  const [isError, setIsError] = useState(false)
   const [preview, setPreview] = useState({
     type: null,
     data: null
   })
 
-  // useEffect(() => {
-  //   if (artifact.schema) {
-  //     setPreview({
-  //       type: 'table',
-  //       data: {
-  //         headers: artifact.header,
-  //         content: artifact.preview
-  //       }
-  //     })
-  //   } else {
-  //     fetchArtifactPreview(
-  //       artifact.target_path.schema,
-  //       artifact.target_path.path,
-  //       artifact.user || artifact.producer.owner
-  //     ).then(result => {
-  //       console.log(result)
-  //       setPreview(createArtifactPreviewContent(result))
-  //     })
-  //   }
-  // }, [artifact.target_path, fetchArtifactPreview])
+  useEffect(() => {
+    if (artifact.schema) {
+      setPreview({
+        type: 'table',
+        data: {
+          headers: artifact.header,
+          content: artifact.preview
+        }
+      })
+    } else {
+      getArtifactPreview(
+        artifact.target_path.schema,
+        artifact.target_path.path,
+        artifact.user || artifact.producer.owner
+      )
+    }
+  }, [artifact.target_path, artifact])
 
-  return artifactsStore.error ? (
+  const getArtifactPreview = (schema, path, user) => {
+    return api
+      .getArtifactPreview(schema, path, user)
+      .then(res => {
+        const artifact = createArtifactPreviewContent(res)
+        setPreview(artifact)
+        setIsError(false)
+      })
+      .catch(err => {
+        setIsError(true)
+      })
+  }
+
+  return isError ? (
     <div className="error_container">
       <h1>Sorry, something went wrong.</h1>
       <h3>We're working on it and we'll get it fixed as soon as we can.</h3>
@@ -53,7 +61,4 @@ ArtifactsPreview.propTypes = {
   artifact: PropTypes.shape({}).isRequired
 }
 
-export default connect(
-  artifactsStore => artifactsStore,
-  artifactsAction
-)(ArtifactsPreview)
+export default ArtifactsPreview

@@ -3,10 +3,7 @@ import {
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
   SHOW_ARTIFACT_PREVIEW,
-  CLOSE_ARTIFACT_PREVIEW,
-  FETCH_ARTIFACT_PREVIEW_BEGIN,
-  FETCH_ARTIFACT_PREVIEW_SUCCESS,
-  FETCH_ARTIFACT_PREVIEW_FAILURE
+  CLOSE_ARTIFACT_PREVIEW
 } from '../constants'
 
 const initialState = {
@@ -45,24 +42,6 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         preview: payload
-      }
-    case FETCH_ARTIFACT_PREVIEW_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_ARTIFACT_PREVIEW_SUCCESS:
-      return {
-        ...state,
-        preview: payload,
-        loading: false
-      }
-    case FETCH_ARTIFACT_PREVIEW_FAILURE:
-      return {
-        ...state,
-        preview: {},
-        error: payload,
-        loading: false
       }
     default:
       return state

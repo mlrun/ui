@@ -9,18 +9,17 @@ import DetailsLogs from '../DetailsLogs/DetailsLogs'
 import DetailsArtifacts from '../DetailsArtifacts/DetailsArtifacts'
 import DetailsResults from '../DetailsResults/DetailsResults'
 import Download from '../../common/Download/Download'
-import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import ArtifactInfoMetadata from '../ArtifactInfoMetadata/ArtifactInfoMetada'
 import DetailsCode from '../DetailsCode/DetailsCode'
+import DetailsPreview from '../DetailsPreview/DetailsPreview'
 
 import { formatDatetime } from '../../utils'
 import { ARTIFACTS_PAGE } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
-import { ReactComponent as Popout } from '../../images/popout.svg'
 
 const DetailsView = ({
   actionsMenu,
@@ -89,12 +88,7 @@ const DetailsView = ({
         <DetailsInfo match={match} selectedItem={selectedItem} page={page} />
       )}
       {match.params.tab === 'preview' && (
-        <div className="preview_container">
-          <button onClick={() => handlePreview()} className="preview_popout">
-            <Popout />
-          </button>
-          <ArtifactsPreview artifact={selectedItem} />
-        </div>
+        <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
       )}
       {match.params.tab === 'inputs' && (
         <DetailsInputs inputs={selectedItem.inputs} />

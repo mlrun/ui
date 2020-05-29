@@ -4,10 +4,7 @@ import {
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
   SHOW_ARTIFACT_PREVIEW,
-  CLOSE_ARTIFACT_PREVIEW,
-  FETCH_ARTIFACT_PREVIEW_BEGIN,
-  FETCH_ARTIFACT_PREVIEW_SUCCESS,
-  FETCH_ARTIFACT_PREVIEW_FAILURE
+  CLOSE_ARTIFACT_PREVIEW
 } from '../constants'
 
 const artifactsAction = {
@@ -56,29 +53,6 @@ const artifactsAction = {
   closeArtifactsPreview: item => ({
     type: CLOSE_ARTIFACT_PREVIEW,
     payload: item
-  }),
-  fetchArtifactPreview: (path, schema, user) => dispatch => {
-    dispatch(artifactsAction.fetchArtifactsPreviewBegin())
-
-    return artifactsApi
-      .getArtifactPreview(schema, path, user)
-      .then(result =>
-        dispatch(artifactsAction.fetchArtifactPreviewSuccess(result))
-      )
-      .catch(error =>
-        dispatch(artifactsAction.fetchArtifactsPreviewFailure(error))
-      )
-  },
-  fetchArtifactsPreviewBegin: () => ({
-    type: FETCH_ARTIFACT_PREVIEW_BEGIN
-  }),
-  fetchArtifactPreviewSuccess: preview => ({
-    type: FETCH_ARTIFACT_PREVIEW_SUCCESS,
-    payload: preview
-  }),
-  fetchArtifactsPreviewFailure: error => ({
-    type: FETCH_ARTIFACT_PREVIEW_FAILURE,
-    payload: error
   })
 }
 

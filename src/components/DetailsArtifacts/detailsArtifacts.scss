@@ -32,15 +32,7 @@
         color: $cornflowerBlue;
         cursor: pointer;
       }
-      //p {
-      //  margin: 0 0 5px;
-      //  white-space: pre-wrap;
-      //}
-      //svg {
-      //  margin-bottom: -2px;
-      //  transition: all 0.3s ease-in-out;
-      //  display: inline-block;
-      //}
+
       &_long {
         flex: 2;
       }
@@ -48,68 +40,25 @@
       &_short {
         flex: 0.3;
         min-width: 75px;
+      }
+    }
 
-        svg {
-          cursor: pointer;
-        }
+    .icon {
+      &-dowload,
+      &-popout {
+        cursor: pointer;
       }
     }
   }
-  //.table__item_results__table {
-  //  td {
-  //    padding: 19px 16px;
-  //  }
-  //}
+
+  .accordion__container.open {
+    box-shadow: $previewBoxShadow;
+  }
 
   &__preview {
     position: relative;
     height: 100%;
     padding: 21px 26px;
     border-bottom: $tableBorder;
-    //box-shadow: $previewBoxShadow;
-
-    .preview-table {
-      width: 100%;
-      color: $mulledWine;
-
-      &__row {
-        display: flex;
-        padding: 10px;
-        border-bottom: $tableBorder;
-
-        &:first-child {
-          position: sticky;
-          top: 0;
-          z-index: 2;
-          background-color: $white;
-        }
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        &:not(:first-child) {
-          &:hover {
-            background-color: $alabaster;
-          }
-        }
-      }
-
-      &__header {
-        flex: 1;
-        min-width: 80px;
-        padding: 0 5px;
-      }
-
-      &__content {
-        flex: 1;
-        min-width: 80px;
-        padding: 0 5px;
-      }
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
   }
 }

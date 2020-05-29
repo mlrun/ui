@@ -122,7 +122,7 @@ const Table = ({
       />
       <NotificationDownload />
       {previewArtifact.isPreview && (
-        <PreviewModal item={previewArtifact.item} />
+        <PreviewModal item={previewArtifact.selectedItem} />
       )}
     </>
   )
