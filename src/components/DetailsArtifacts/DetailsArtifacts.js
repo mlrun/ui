@@ -13,9 +13,9 @@ const DetailsArtifacts = ({ selectedItem }) => {
 
   const content = selectedItem.artifacts.map(artifact => {
     const extraData = artifact.extra_data
-      ? Object.values(artifact.extra_data).find(dataItem =>
-          dataItem.match(/html/)
-        )
+      ? Object.values(artifact.extra_data)
+          .find(dataItem => dataItem.match(/html/))
+          .replace(/^(.*):\/\//, '')
       : ''
     const indexOfSchema = artifact.target_path.indexOf('://')
     const target_path = {

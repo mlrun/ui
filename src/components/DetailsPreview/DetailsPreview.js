@@ -7,9 +7,9 @@ import { ReactComponent as Popout } from '../../images/popout.svg'
 
 const DetailsPreview = ({ artifact, handlePreview }) => {
   if (artifact.extra_data) {
-    artifact.target_path.path = Object.values(
-      artifact.extra_data
-    ).find(dataItem => dataItem.match(/html/))
+    artifact.target_path.path = Object.values(artifact.extra_data)
+      .find(dataItem => dataItem.match(/html/))
+      .replace(/^(.*):\/\//, '')
   }
 
   return (
