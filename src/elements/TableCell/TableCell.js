@@ -132,7 +132,7 @@ const TableCell = ({
           className="data-ellipsis text_small"
           template={
             <TextTooltipTemplate
-              text={`Copy to clipboard - ${data.value.path}`}
+              text={`Click to copy - ${data.value.path}`}
             />
           }
         >
