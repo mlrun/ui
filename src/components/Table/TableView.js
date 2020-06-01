@@ -57,10 +57,10 @@ const TableView = ({
                     return (
                       <ArtifactsTableRow
                         actionsMenu={actionsMenu}
-                        key={i}
                         content={content}
                         handleSelectItem={handleSelectItem}
                         index={i}
+                        key={i}
                         match={match}
                         rowItem={rowItem}
                         selectedItem={selectedItem}

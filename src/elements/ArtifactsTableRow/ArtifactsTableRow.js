@@ -29,9 +29,9 @@ const ArtifactsTableRow = ({
       {Object.values(rowItem).map((value, i) => {
         return (
           <TableCell
-            selectedItem={selectedItem}
             data={value}
             item={content[index]}
+            key={Math.random() + i}
             link={
               i === 0 &&
               `/projects/${match.params.projectName}/artifacts/${
@@ -42,9 +42,9 @@ const ArtifactsTableRow = ({
                   : `${artifactsData.detailsMenu[0]}`
               }`
             }
-            selectItem={handleSelectItem}
-            key={Math.random() + i}
             match={match}
+            selectedItem={selectedItem}
+            selectItem={handleSelectItem}
           />
         )
       })}
