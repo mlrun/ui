@@ -9,7 +9,7 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   if (artifact.extra_data) {
     artifact.target_path.path = Object.values(artifact.extra_data)
       .find(dataItem => dataItem.match(/html/))
-      .replace(/^(.*):\/\//, '')
+      .replace(/^.*:\/\//, '')
   }
 
   return (

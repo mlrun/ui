@@ -15,7 +15,7 @@ const DetailsArtifacts = ({ selectedItem }) => {
     const extraData = artifact.extra_data
       ? Object.values(artifact.extra_data)
           .find(dataItem => dataItem.match(/html/))
-          .replace(/^(.*):\/\//, '')
+          .replace(/^.*:\/\//, '')
       : ''
     const indexOfSchema = artifact.target_path.indexOf('://')
     const target_path = {

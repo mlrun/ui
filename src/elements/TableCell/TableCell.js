@@ -98,7 +98,7 @@ const TableCell = ({
             dispatch(
               artifactAction.showArtifactsPreview({
                 isPreview: true,
-                item
+                selectedItem: item
               })
             )
           }}
