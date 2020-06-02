@@ -14,51 +14,58 @@ const ArtifactsPreview = ({ artifact }) => {
   const [preview, setPreview] = useState([])
 
   const getArtifactPreview = useCallback((schema, path, user) => {
-    return api
-      .getArtifactPreview(schema, path, user)
-      .then(res => {
-        return createArtifactPreviewContent(res)
-      })
-      .catch(err => {
-        setIsError(true)
-      })
+    return api.getArtifactPreview(schema, path, user).then(res => {
+      return createArtifactPreviewContent(res)
+    })
   }, [])
 
   useEffect(() => {
     if (artifact.schema) {
-      setPreview({
-        type: 'table',
-        data: {
-          headers: artifact.header,
-          content: artifact.preview
+      setPreview([
+        {
+          type: 'table',
+          data: {
+            headers: artifact.header,
+            content: artifact.preview
+          }
         }
+      ])
+    } else if (artifact.preview.length) {
+      artifact.preview.forEach(previewItem => {
+        getArtifactPreview(
+          previewItem.schema,
+          previewItem.path,
+          artifact.user || artifact.producer.owner
+        )
+          .then(content => {
+            setPreview(prevState => [...prevState, content])
+
+            if (isError) {
+              setIsError(false)
+            }
+          })
+          .catch(() => {
+            setIsError(true)
+          })
       })
     } else {
-      if (artifact.preview) {
-        artifact.preview.forEach(previewItem => {
-          getArtifactPreview(
-            previewItem.schema,
-            previewItem.path,
-            artifact.user || artifact.producer.owner
-          ).then(content => {
-            setPreview(prevState => [...prevState, content])
-            setIsError(false)
-          })
-        })
-      } else {
-        getArtifactPreview(
-          artifact.target_path.schema,
-          artifact.target_path.path,
-          artifact.user || artifact.producer.owner
-        ).then(content => {
-          setPreview(prevState => [...prevState, content])
-          setIsError(false)
-        })
-      }
-    }
-  }, [artifact, getArtifactPreview])
+      getArtifactPreview(
+        artifact.target_path.schema,
+        artifact.target_path.path,
+        artifact.user || artifact.producer.owner
+      )
+        .then(content => {
+          setPreview([content])
 
-  console.log(preview)
+          if (isError) {
+            setIsError(false)
+          }
+        })
+        .catch(() => {
+          setIsError(true)
+        })
+    }
+  }, [artifact, getArtifactPreview, isError])
 
   return isError ? (
     <div className="error_container">
@@ -66,7 +73,9 @@ const ArtifactsPreview = ({ artifact }) => {
       <h3>We're working on it and we'll get it fixed as soon as we can.</h3>
     </div>
   ) : (
-    preview.map(previewItem => <ArtifactsPreviewView preview={previewItem} />)
+    preview.map((previewItem, index) => (
+      <ArtifactsPreviewView key={index} preview={previewItem} />
+    ))
   )
 }
 
@@ -76,5 +85,5 @@ ArtifactsPreview.propTypes = {
 
 export default React.memo(
   ArtifactsPreview,
-  (prev, next) => prev.artifact === next.artifact
+  (prev, next) => prev.artifact.key === next.artifact.key
 )

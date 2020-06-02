@@ -7,9 +7,29 @@ import { ReactComponent as Popout } from '../../images/popout.svg'
 
 const DetailsPreview = ({ artifact, handlePreview }) => {
   if (artifact.extra_data) {
-    artifact.target_path.path = Object.values(artifact.extra_data)
-      .find(dataItem => dataItem.match(/html/))
-      .replace(/^.*:\/\//, '')
+    const previewItems = []
+
+    Object.values(artifact.extra_data).forEach(dataItem => {
+      if (dataItem.match(/html/)) {
+        artifact.target_path.path = dataItem.replace(/^.*:\/\//, '')
+      }
+
+      if (dataItem.match(/json|yaml|png|jpg|jpeg|gif/)) {
+        previewItems.push({
+          schema: artifact.target_path.schema,
+          path: dataItem.replace(/^.*:\/\//, '')
+        })
+      }
+    })
+
+    if (previewItems.length) {
+      previewItems.push({
+        schema: artifact.target_path.schema,
+        path: artifact.target_path.path
+      })
+    }
+
+    artifact.preview = previewItems
   }
 
   return (
