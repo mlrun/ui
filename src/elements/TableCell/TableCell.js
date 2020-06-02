@@ -129,11 +129,9 @@ const TableCell = ({
         onClick={() => copyToClipboard(data.value.path)}
       >
         <Tooltip
-          className="data-ellipsis text_small"
+          className="data-ellipsis text_small path-tooltip"
           template={
-            <TextTooltipTemplate
-              text={`Click to copy - ${data.value.path}`}
-            />
+            <TextTooltipTemplate text={`Click to copy - ${data.value.path}`} />
           }
         >
           {`${data.value.schema ? `${data.value.schema}://` : ''}${

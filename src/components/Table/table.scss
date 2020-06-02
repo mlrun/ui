@@ -169,6 +169,10 @@
         min-width: 100%;
         max-width: 50px;
       }
+
+      .path-tooltip {
+        cursor: pointer;
+      }
     }
 
     &__row {
