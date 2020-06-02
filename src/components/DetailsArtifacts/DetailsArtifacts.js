@@ -12,15 +12,36 @@ const DetailsArtifacts = ({ selectedItem }) => {
   const dispatch = useDispatch()
 
   const content = selectedItem.artifacts.map(artifact => {
-    const extraData = artifact.extra_data
-      ? Object.values(artifact.extra_data)
-          .find(dataItem => dataItem.match(/html/))
-          .replace(/^.*:\/\//, '')
-      : ''
+    let extraData = ''
+    const previewItems = []
     const indexOfSchema = artifact.target_path.indexOf('://')
+    const schema =
+      indexOfSchema > 0 ? artifact.target_path.slice(0, indexOfSchema) : ''
+
+    if (artifact.extra_data) {
+      Object.values(artifact.extra_data).forEach(dataItem => {
+        if (dataItem.match(/html/)) {
+          extraData = dataItem.replace(/^.*:\/\//, '')
+        }
+
+        if (dataItem.match(/json|yaml|png|jpg|jpeg|gif/)) {
+          previewItems.push({
+            schema: schema,
+            path: dataItem.replace(/^.*:\/\//, '')
+          })
+        }
+      })
+
+      if (previewItems.length) {
+        previewItems.push({
+          schema: schema,
+          path: extraData
+        })
+      }
+    }
+
     const target_path = {
-      schema:
-        indexOfSchema > 0 ? artifact.target_path.slice(0, indexOfSchema) : '',
+      schema: schema,
       path: extraData
         ? extraData
         : indexOfSchema > 0
@@ -31,6 +52,7 @@ const DetailsArtifacts = ({ selectedItem }) => {
     const generatedArtifact = {
       date: formatDatetime(selectedItem.startTime),
       key: artifact.key,
+      preview: previewItems,
       size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
       target_path: target_path,
       user: selectedItem?.labels

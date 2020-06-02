@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 import api from '../../api/artifacts-api'
@@ -11,10 +11,18 @@ import './artifactaPreview.scss'
 
 const ArtifactsPreview = ({ artifact }) => {
   const [isError, setIsError] = useState(false)
-  const [preview, setPreview] = useState({
-    type: null,
-    data: null
-  })
+  const [preview, setPreview] = useState([])
+
+  const getArtifactPreview = useCallback((schema, path, user) => {
+    return api
+      .getArtifactPreview(schema, path, user)
+      .then(res => {
+        return createArtifactPreviewContent(res)
+      })
+      .catch(err => {
+        setIsError(true)
+      })
+  }, [])
 
   useEffect(() => {
     if (artifact.schema) {
@@ -26,26 +34,31 @@ const ArtifactsPreview = ({ artifact }) => {
         }
       })
     } else {
-      getArtifactPreview(
-        artifact.target_path.schema,
-        artifact.target_path.path,
-        artifact.user || artifact.producer.owner
-      )
+      if (artifact.preview) {
+        artifact.preview.forEach(previewItem => {
+          getArtifactPreview(
+            previewItem.schema,
+            previewItem.path,
+            artifact.user || artifact.producer.owner
+          ).then(content => {
+            setPreview(prevState => [...prevState, content])
+            setIsError(false)
+          })
+        })
+      } else {
+        getArtifactPreview(
+          artifact.target_path.schema,
+          artifact.target_path.path,
+          artifact.user || artifact.producer.owner
+        ).then(content => {
+          setPreview(prevState => [...prevState, content])
+          setIsError(false)
+        })
+      }
     }
-  }, [artifact.target_path, artifact])
+  }, [artifact, getArtifactPreview])
 
-  const getArtifactPreview = (schema, path, user) => {
-    return api
-      .getArtifactPreview(schema, path, user)
-      .then(res => {
-        const artifact = createArtifactPreviewContent(res)
-        setPreview(artifact)
-        setIsError(false)
-      })
-      .catch(err => {
-        setIsError(true)
-      })
-  }
+  console.log(preview)
 
   return isError ? (
     <div className="error_container">
@@ -53,7 +66,7 @@ const ArtifactsPreview = ({ artifact }) => {
       <h3>We're working on it and we'll get it fixed as soon as we can.</h3>
     </div>
   ) : (
-    <ArtifactsPreviewView preview={preview} />
+    preview.map(previewItem => <ArtifactsPreviewView preview={previewItem} />)
   )
 }
 
@@ -61,4 +74,7 @@ ArtifactsPreview.propTypes = {
   artifact: PropTypes.shape({}).isRequired
 }
 
-export default ArtifactsPreview
+export default React.memo(
+  ArtifactsPreview,
+  (prev, next) => prev.artifact === next.artifact
+)

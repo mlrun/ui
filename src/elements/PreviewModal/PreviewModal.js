@@ -50,7 +50,7 @@ const PreviewModal = ({ item }) => {
               dispatch(
                 artifactActions.closeArtifactsPreview({
                   isPreview: false,
-                  item: {}
+                  selectedItem: {}
                 })
               )
             }}
