@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -7,6 +7,10 @@ import JobsPanelView from './JobsPanelView'
 
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
+import { parseDefaultContent } from '../../utils/parseDefaultContent'
+import { getDefaultData, getParameters } from './jobsPanel.util'
+
+import { isEmpty } from 'lodash'
 
 import './jobsPanel.scss'
 
@@ -50,11 +54,10 @@ const JobsPanel = ({
   const history = useHistory()
 
   useLayoutEffect(() => {
-    if (!functionsStore.selectedFunction.name) {
+    if (!groupedFunctions.name && !functionsStore.template.name) {
       fetchFunctionTemplate(groupedFunctions.metadata.versions.latest)
     }
-    return () =>
-      functionsStore.selectedFunction.name && removeFunctionTemplate()
+    return () => functionsStore.template.name && removeFunctionTemplate()
   }, [
     fetchFunctionTemplate,
     functionsStore,
@@ -62,8 +65,33 @@ const JobsPanel = ({
     removeFunctionTemplate
   ])
 
+  const functionDefaultValues = useMemo(() => {
+    const selectedFunction = !isEmpty(functionsStore.template)
+      ? functionsStore.template.functions
+      : groupedFunctions.functions
+
+    const functionParameters = getParameters(selectedFunction)
+
+    if (!isEmpty(functionParameters)) {
+      const { parameters, dataInputs } = getDefaultData(functionParameters)
+
+      dataInputs.length && setNewJobInputs(parseDefaultContent(dataInputs))
+      parameters.length && setNewJobParameters(parseDefaultContent(parameters))
+
+      return {
+        parameters,
+        dataInputs
+      }
+    }
+
+    return {
+      parameters: [],
+      dataInputs: []
+    }
+  }, [functionsStore, groupedFunctions, setNewJobInputs, setNewJobParameters])
+
   const handleRunJob = () => {
-    let selectedFunction = groupedFunctions.functions.find(
+    const selectedFunction = groupedFunctions.functions.find(
       func => func.metadata.tag === currentFunctionInfo.version
     )
 
@@ -117,10 +145,11 @@ const JobsPanel = ({
       closePanel={closePanel}
       cpuUnit={cpuUnit}
       functionsData={
-        functionsStore.selectedFunction.name
-          ? functionsStore.selectedFunction
+        functionsStore.template.name
+          ? functionsStore.template
           : groupedFunctions
       }
+      functionDefaultValues={functionDefaultValues}
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
       limits={limits}

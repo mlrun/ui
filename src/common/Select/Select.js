@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
 import SelectOption from '../../elements/SelectOption/SelectOption'
 
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
+import classNames from 'classnames'
 
 import './select.scss'
 
@@ -48,26 +49,43 @@ const Select = ({
     onClick(item)
   }
 
+  const generateSelectClassName = useCallback(
+    selectItem => {
+      if (selectItem === 'select') {
+        return classNames({
+          select: true,
+          [className]: className,
+          active: isOpen
+        })
+      }
+
+      if (selectItem === 'selectLabel') {
+        return classNames({
+          select__label: true,
+          select__label_floating: selectedId && floatingLabel
+        })
+      }
+
+      if (selectItem === 'selectValue') {
+        return classNames({
+          select__value: true,
+          select__value_floating: selectedId && floatingLabel
+        })
+      }
+    },
+    [className, floatingLabel, isOpen, selectedId]
+  )
+
   return (
     <div
-      className={`select ${className} ${isOpen ? ' active' : ''}`}
+      className={generateSelectClassName('select')}
       onClick={() => toggleOpen(disabled)}
     >
       <div className="select__header">
         {label && (
-          <div
-            className={`select__label ${selectedId &&
-              floatingLabel &&
-              'select__label_floating'}`}
-          >
-            {label}
-          </div>
+          <div className={generateSelectClassName('selectLabel')}>{label}</div>
         )}
-        <div
-          className={`select__value ${selectedId &&
-            floatingLabel &&
-            'select__value_floating'}`}
-        >
+        <div className={generateSelectClassName('selectValue')}>
           {selectedId && selectedOption?.label}
           {selectedOption?.subLabel && (
             <span className="sub-label">{selectedOption.subLabel}</span>

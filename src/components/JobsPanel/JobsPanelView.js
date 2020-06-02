@@ -14,6 +14,7 @@ import { ReactComponent as Run } from '../../images/run.svg'
 const JobsPanelView = ({
   closePanel,
   cpuUnit,
+  functionDefaultValues,
   functionsData,
   handleRunJob,
   jobsStore,
@@ -50,6 +51,7 @@ const JobsPanelView = ({
         <div className="job_panel__body">
           <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
             <JobsPanelParameters
+              functionDefaultValues={functionDefaultValues}
               hyperparams={jobsStore.newJob.task.spec.hyperparams}
               match={match}
               parameters={jobsStore.newJob.task.spec.parameters}
@@ -59,6 +61,7 @@ const JobsPanelView = ({
           </Accordion>
           <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
             <JobsPanelDataInputs
+              functionDefaultValues={functionDefaultValues}
               inputs={jobsStore.newJob.task.spec.inputs}
               match={match}
               setInputPath={setInputPath}
@@ -106,6 +109,7 @@ const JobsPanelView = ({
 JobsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   cpuUnit: PropTypes.string.isRequired,
+  functionDefaultValues: PropTypes.shape({}).isRequired,
   functionsData: PropTypes.shape({}).isRequired,
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,

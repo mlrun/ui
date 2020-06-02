@@ -2,34 +2,62 @@
 @import '../../scss/borders';
 
 .job-panel__table {
-  border-bottom: $tableBorder;
-  width: 100%;
   position: relative;
+  width: 100%;
+  border-bottom: $tableBorder;
 
   .table {
     &__header {
+      color: $topaz;
       font-weight: bold;
       font-size: 14px;
       line-height: 24px;
-      color: $topaz;
+    }
+
+    &__body {
+      display: flex;
+      align-items: flex-end;
+
+      &-column {
+        width: 100%;
+      }
+    }
+
+    &__row-add-item {
+      display: flex;
     }
   }
 
-  .select {
-    border: none;
+  &:not(.data-inputs) {
+    .input-wrapper {
+      &:first-child {
+        padding-right: 7px;
+      }
+    }
 
-    &__value {
-      min-width: unset;
+    .select__header {
+      padding: 10px;
     }
   }
 
   .input-row {
     &-wrapper {
       display: flex;
-      flex-direction: row;
+      width: 100%;
+      margin: 0 -1px 0 -1px;
       border: $primaryBorder;
-      width: 90%;
-      min-height: 56px;
+
+      .select {
+        flex: 1;
+        height: 54px;
+        margin: 1px 0;
+        padding: 0;
+        border: none;
+
+        &__label {
+          padding: 0;
+        }
+      }
     }
 
     &__item {
@@ -41,79 +69,118 @@
     }
   }
 
+  .edit-row {
+    .input {
+      width: 100%;
+      margin: -1px;
+      padding: 10px;
+      border: $primaryBorder;
+      border-radius: 2px;
+    }
+
+    .table__cell {
+      &_edit {
+        min-width: 175px;
+        padding: 10px 0;
+
+        .select {
+          width: 100%;
+          margin: -1px;
+          border-radius: 2px;
+
+          &__value {
+            min-width: unset;
+          }
+
+          &__label {
+            padding-left: 0;
+          }
+        }
+      }
+
+      &-input {
+        padding: 0;
+
+        &:first-child {
+          .input-wrapper {
+            min-width: 204px;
+            margin-right: 5px;
+
+            .input {
+              padding-left: 17px;
+
+              &__label {
+                padding-left: 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   &.data-inputs {
-    &.volumes {
-      .select {
-        flex: 0.38;
-        padding-left: 3px;
+    .table__cell {
+      &:first-child {
+        max-width: 209px;
       }
     }
 
     .input-row-wrapper {
-      .input-wrapper {
+      .input-wrapper,
+      .select {
         &:first-child {
-          flex: 0.4;
+          max-width: 209px;
         }
+      }
+
+      .input-row__item_edit {
+        padding: 18px 10px;
+
+        + .input__label {
+          left: 10px;
+        }
+
+        &.active-input {
+          padding: 27px 10px 9px;
+        }
+      }
+
+      .select__header {
+        padding: 17px;
       }
     }
   }
 
   &.parameters {
     .input-row-wrapper {
-      width: 93%;
+      .parameters-value-type {
+        .select__label {
+          text-transform: none;
+        }
+      }
 
-      .input {
-        padding: 18px 17px;
+      .parameter-value {
+        padding: 18px 10px;
+
+        + .input__label {
+          left: 10px;
+        }
 
         &.active-input {
-          padding: 27px 17px 9px;
+          padding: 27px 10px 9px;
         }
-
-        &__label {
-          left: 17px;
-        }
-      }
-    }
-
-    .parameters-type {
-      flex: 0.9;
-
-      .select__label {
-        text-transform: none;
       }
     }
   }
 
-  .no-hover:hover {
-    background-color: transparent;
-  }
-
-  .edit-row {
-    padding: 7px 20px;
-    position: relative;
-
-    .input {
-      border: $primaryBorder;
-      border-radius: 2px;
-      padding: 10px;
-      width: 97%;
+  .no-hover {
+    .add-input {
+      padding: 0;
     }
 
-    .apply-edit-btn {
-      position: absolute;
-      top: 15px;
-      right: 5px;
-    }
-
-    .table__cell {
-      display: flex;
-      align-items: center;
-    }
-
-    .select {
-      &__label {
-        padding-left: 0;
-      }
+    &:hover {
+      background-color: transparent;
     }
   }
 }

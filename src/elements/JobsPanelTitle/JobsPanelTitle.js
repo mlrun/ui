@@ -48,7 +48,9 @@ const JobsPanelTitle = ({
           id: func.metadata.tag || 'latest'
         }
       })
-      .filter(item => item.label !== '')
+      .filter((version, _, array) => {
+        return array.indexOf(version.label) !== -1
+      })
 
     versionOptions =
       versionOptions.length === 0

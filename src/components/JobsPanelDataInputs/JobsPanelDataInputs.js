@@ -6,21 +6,25 @@ import JobsPanelDataInputsView from './JobsPanelDataInputsView'
 import createVolumeOfNewJob from '../../utils/createVolumeOfNewJob'
 
 const JobsPanelDataInputs = ({
+  functionDefaultValues,
   inputs,
   match,
   setInputPath,
   setNewJobInputs,
-  setNewJobVolumes,
   setNewJobVolumeMounts,
+  setNewJobVolumes,
   setOutputPath,
-  volumes,
-  volumeMounts
+  volumeMounts,
+  volumes
 }) => {
   const [addNewInput, setAddNewInput] = useState(false)
   const [newInput, setNewInput] = useState({
     name: '',
     path: ''
   })
+  const [defaultDataInputs, setDefaultDataInputs] = useState(
+    functionDefaultValues.dataInputs
+  )
 
   const [addNewVolume, setAddNewVolume] = useState(false)
   const [newVolume, setNewVolume] = useState({
@@ -84,6 +88,14 @@ const JobsPanelDataInputs = ({
 
     newItem[newInput.name] = newInput.path
 
+    setDefaultDataInputs(prev =>
+      prev.concat({
+        data: { name: newInput.name, path: newInput.path },
+        isValueEmpty: true,
+        isDefault: false
+      })
+    )
+
     setAddNewInput(false)
     setNewJobInputs({ ...inputs, ...newItem })
     setNewInput({
@@ -94,9 +106,17 @@ const JobsPanelDataInputs = ({
 
   const handleEditDataInput = () => {
     const currentInputs = { ...inputs }
+    currentInputs[selectedDataInput.data.name] = selectedDataInput.data.path
 
-    currentInputs[selectedDataInput.name] = selectedDataInput.path
+    const currentDataInput = [...defaultDataInputs]
+    const currentDataInputIndex = defaultDataInputs.findIndex(
+      item => item.data.name === selectedDataInput.data.name
+    )
 
+    currentDataInput[currentDataInputIndex] = selectedDataInput
+
+    setDefaultDataInputs(currentDataInput)
+    setSelectedDataInput(selectedDataInput)
     setNewJobInputs({ ...inputs, ...currentInputs })
   }
 
@@ -110,8 +130,9 @@ const JobsPanelDataInputs = ({
     const newItem = createVolumeOfNewJob(newVolume)
 
     const newVolumeMounts = {
-      name: newVolume.name,
-      mountPath: newVolume.path
+      data: { name: newVolume.name, mountPath: newVolume.path },
+      isValueEmpty: true,
+      isDefault: false
     }
 
     setNewJobVolumes([...volumes, newItem])
@@ -133,15 +154,15 @@ const JobsPanelDataInputs = ({
 
   const handleEditVolume = () => {
     const currentVolumeMounts = volumeMounts.map(volume => {
-      if (volume.name === selectedVolume.name) {
-        volume.mountPath = selectedVolume.mountPath
+      if (volume.data.name === selectedVolume.data.name) {
+        volume.data.mountPath = selectedVolume.data.mountPath
       }
 
       return volume
     })
 
     const currentVolumes = volumes.map(volume => {
-      if (volume.name === selectedVolume.name) {
+      if (volume.name === selectedVolume.data.name) {
         switch (selectedVolume.type.value) {
           case 'Config Map':
             volume.configMap.name = selectedVolume.type.name
@@ -173,6 +194,10 @@ const JobsPanelDataInputs = ({
 
     delete newInputs[item.name]
 
+    setDefaultDataInputs(prev => {
+      return prev.filter(dataInput => dataInput.data.name !== item.data.name)
+    })
+
     setNewJobInputs({ ...newInputs })
   }
 
@@ -190,7 +215,7 @@ const JobsPanelDataInputs = ({
       handleAddNewItem={handleAddNewItem}
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
-      inputs={inputs}
+      inputs={defaultDataInputs}
       match={match}
       newInput={newInput}
       newVolume={newVolume}
@@ -212,15 +237,16 @@ const JobsPanelDataInputs = ({
 }
 
 JobsPanelDataInputs.propTypes = {
+  functionDefaultValues: PropTypes.shape({}).isRequired,
   inputs: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   setInputPath: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired,
-  setNewJobVolumes: PropTypes.func.isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,
+  setNewJobVolumes: PropTypes.func.isRequired,
   setOutputPath: PropTypes.func.isRequired,
-  volumes: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  volumes: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 
 export default JobsPanelDataInputs

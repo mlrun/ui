@@ -7,6 +7,8 @@ import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
+import classNames from 'classnames'
+
 const JobsPanelTitleView = ({
   closePanel,
   currentFunction,
@@ -20,14 +22,15 @@ const JobsPanelTitleView = ({
   setOpenScheduleJob,
   versionOptions
 }) => {
+  const jobPanelClassName = classNames({
+    'job-panel__title-wrapper': true,
+    'job-panel__title-wrapper_edit': isEdit,
+    'job-panel__title-wrapper_hover': !openScheduleJob && !isEdit
+  })
+
   return (
     <div className="job-panel__title">
-      <div
-        className={`job-panel__title-wrapper ${isEdit &&
-          'job-panel__title-wrapper_edit'} ${!openScheduleJob &&
-          !isEdit &&
-          'job-panel__title-wrapper_hover'}`}
-      >
+      <div className={jobPanelClassName}>
         {openScheduleJob && (
           <div className="job-schedule-container">
             <BackArrow onClick={() => setOpenScheduleJob(false)} />
