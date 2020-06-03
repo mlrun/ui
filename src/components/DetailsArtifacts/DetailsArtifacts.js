@@ -7,43 +7,31 @@ import DetailsArtifactsView from './DetailsArtifactsView'
 
 import { formatDatetime } from '../../utils'
 import artifactAction from '../../actions/artifacts'
+import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 
 const DetailsArtifacts = ({ selectedItem }) => {
   const dispatch = useDispatch()
 
   const content = selectedItem.artifacts.map(artifact => {
-    let extraData = ''
-    const previewItems = []
     const indexOfSchema = artifact.target_path.indexOf('://')
     const schema =
       indexOfSchema > 0 ? artifact.target_path.slice(0, indexOfSchema) : ''
+    let generatedPreviewData = {
+      preview: [],
+      extraDataPath: ''
+    }
 
     if (artifact.extra_data) {
-      Object.values(artifact.extra_data).forEach(dataItem => {
-        if (dataItem.match(/html/)) {
-          extraData = dataItem.replace(/^.*:\/\//, '')
-        }
-
-        if (dataItem.match(/json|yaml|png|jpg|jpeg|gif/)) {
-          previewItems.push({
-            schema: schema,
-            path: dataItem.replace(/^.*:\/\//, '')
-          })
-        }
-      })
-
-      if (previewItems.length) {
-        previewItems.push({
-          schema: schema,
-          path: extraData
-        })
-      }
+      generatedPreviewData = generateArtifactPreviewData(
+        artifact.extra_data,
+        schema
+      )
     }
 
     const target_path = {
       schema: schema,
-      path: extraData
-        ? extraData
+      path: generatedPreviewData.extraDataPath
+        ? generatedPreviewData.extraDataPath
         : indexOfSchema > 0
         ? artifact.target_path.slice(indexOfSchema + '://'.length)
         : artifact.target_path
@@ -52,7 +40,7 @@ const DetailsArtifacts = ({ selectedItem }) => {
     const generatedArtifact = {
       date: formatDatetime(selectedItem.startTime),
       key: artifact.key,
-      preview: previewItems,
+      preview: generatedPreviewData.preview,
       size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
       target_path: target_path,
       user: selectedItem?.labels

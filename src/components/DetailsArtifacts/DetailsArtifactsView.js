@@ -20,54 +20,59 @@ const DetailsArtifactsView = ({ content, showPreview }) => (
       }${artifact.target_path.path}`
 
       return (
-        <Accordion
-          key={index}
-          icon={<Arrow />}
-          iconClassName="item-artifacts__arrow"
-          accordionClassName="item-artifacts__row-wrapper"
-        >
-          <div className="item-artifacts__row">
-            <div className="item-artifacts__row-item">{artifact.key}</div>
-            <div className="item-artifacts__row-item item-artifacts__row-item_long">
-              <Tooltip template={<TextTooltipTemplate text={targetPath} />}>
-                {targetPath}
-              </Tooltip>
-            </div>
-            <div className="item-artifacts__row-item">
-              <Tooltip template={<TextTooltipTemplate text={artifact.size} />}>
-                size: {artifact.size}
-              </Tooltip>
-            </div>
-            <div className="item-artifacts__row-item">
-              <Tooltip template={<TextTooltipTemplate text={artifact.date} />}>
-                {artifact.date}
-              </Tooltip>
-            </div>
-            <div className="item-artifacts__row-item item-artifacts__row-item_short">
-              <Tooltip
-                template={<TextTooltipTemplate text="Artifacts Preview" />}
-              >
-                <Popout
-                  className="icon-popout"
-                  onClick={() => {
-                    showPreview(artifact)
-                  }}
+        <div className="item-artifacts__row-wrapper" key={index}>
+          <Accordion
+            accordionClassName="item-artifacts__accordion-wrapper"
+            icon={<Arrow />}
+            iconClassName="item-artifacts__arrow"
+          >
+            <div className="item-artifacts__row">
+              <div className="item-artifacts__row-item">{artifact.key}</div>
+              <div className="item-artifacts__row-item item-artifacts__row-item_long">
+                <Tooltip template={<TextTooltipTemplate text={targetPath} />}>
+                  {targetPath}
+                </Tooltip>
+              </div>
+              <div className="item-artifacts__row-item">
+                <Tooltip
+                  template={<TextTooltipTemplate text={artifact.size} />}
+                >
+                  size: {artifact.size}
+                </Tooltip>
+              </div>
+              <div className="item-artifacts__row-item">
+                <Tooltip
+                  template={<TextTooltipTemplate text={artifact.date} />}
+                >
+                  {artifact.date}
+                </Tooltip>
+              </div>
+              <div className="item-artifacts__row-item item-artifacts__row-item_short">
+                <Tooltip
+                  template={<TextTooltipTemplate text="Artifacts Preview" />}
+                >
+                  <Popout
+                    className="icon-popout"
+                    onClick={() => {
+                      showPreview(artifact)
+                    }}
+                  />
+                </Tooltip>
+              </div>
+              <div className="item-artifacts__row-item item-artifacts__row-item_short">
+                <Download
+                  className="icon-download"
+                  path={artifact.target_path.path}
+                  schema={artifact.target_path.schema}
+                  user={artifact.user}
                 />
-              </Tooltip>
+              </div>
             </div>
-            <div className="item-artifacts__row-item item-artifacts__row-item_short">
-              <Download
-                className="icon-download"
-                path={artifact.target_path.path}
-                schema={artifact.target_path.schema}
-                user={artifact.user}
-              />
+            <div className="item-artifacts__preview">
+              <ArtifactsPreview artifact={artifact} />
             </div>
-          </div>
-          <div className="item-artifacts__preview">
-            <ArtifactsPreview artifact={artifact} />
-          </div>
-        </Accordion>
+          </Accordion>
+        </div>
       )
     })}
   </div>

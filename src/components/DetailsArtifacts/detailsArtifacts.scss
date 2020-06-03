@@ -9,6 +9,10 @@
     left: 10px;
   }
 
+  &__accordion-wrapper {
+    height: 70px;
+  }
+
   &__row {
     position: relative;
     display: flex;
@@ -17,7 +21,7 @@
     border-bottom: $tableBorder;
 
     &-wrapper {
-      height: 70px;
+      max-height: 650px;
     }
 
     &-item {
@@ -57,7 +61,7 @@
 
   &__preview {
     position: relative;
-    height: 100%;
+    height: auto;
     padding: 21px 26px;
     border-bottom: $tableBorder;
   }

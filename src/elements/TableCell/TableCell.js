@@ -116,7 +116,7 @@ const TableCell = ({
           <Download
             path={item?.target_path.path}
             schema={item?.target_path.schema}
-            user={item?.producer?.owner}
+            user={item?.producer?.owner || item.user}
           />
         </Tooltip>
       </div>

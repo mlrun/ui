@@ -7,7 +7,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 const ArtifactsPreviewView = ({ preview }) => (
-  <>
+  <div className="item-artifacts__preview-content">
     {preview?.type === 'table-results' && (
       <div className="preview-table">
         <DetailsResults job={preview} />
@@ -71,7 +71,7 @@ const ArtifactsPreviewView = ({ preview }) => (
     )}
     {preview?.type === 'image' && <div>{preview?.data.content}</div>}
     {preview?.type === 'unknown' && <div>No preview</div>}
-  </>
+  </div>
 )
 
 ArtifactsPreviewView.propTypes = {
