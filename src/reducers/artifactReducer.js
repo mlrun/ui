@@ -43,24 +43,6 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         preview: payload
       }
-    // case FETCH_ARTIFACT_PREVIEW_BEGIN:
-    //   return {
-    //     ...state,
-    //     loading: true
-    //   }
-    // case FETCH_ARTIFACT_PREVIEW_SUCCESS:
-    //   return {
-    //     ...state,
-    //     preview: payload,
-    //     loading: false
-    //   }
-    // case FETCH_ARTIFACT_PREVIEW_FAILURE:
-    //   return {
-    //     ...state,
-    //     preview: {},
-    //     error: payload,
-    //     loading: false
-    //   }
     default:
       return state
   }

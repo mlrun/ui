@@ -1,13 +1,14 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Transition } from 'react-transition-group'
+import classnames from 'classnames'
 
 import './tooltip.scss'
 
 const Tooltip = ({ children, template, className, textShow = false }) => {
   const [show, setShow] = useState(false)
   const [style, setStyle] = useState({})
-
+  const tooltipClassNames = classnames('data-ellipsis', className)
   const duration = 200
   const parentRef = useRef()
   const tooltipRef = useRef()
@@ -96,7 +97,7 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
 
   return (
     <>
-      <div ref={parentRef} className={className}>
+      <div ref={parentRef} className={tooltipClassNames}>
         {children}
       </div>
       <Transition in={show} timeout={duration} unmountOnExit>

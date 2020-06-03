@@ -1,0 +1,54 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.item-artifacts__preview-content {
+  .preview-table {
+    width: 100%;
+    color: $mulledWine;
+
+    &__row {
+      display: flex;
+      padding: 10px;
+      border-bottom: $tableBorder;
+
+      &:first-child {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background-color: $white;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:not(:first-child) {
+        &:hover {
+          background-color: $alabaster;
+        }
+      }
+    }
+
+    &__header {
+      flex: 1;
+      min-width: 80px;
+      padding: 0 5px;
+    }
+
+    &__content {
+      flex: 1;
+      min-width: 80px;
+      padding: 0 5px;
+    }
+  }
+
+  .json {
+    &-content {
+      white-space: pre-wrap;
+    }
+  }
+
+  iframe {
+    min-height: 500px;
+  }
+}

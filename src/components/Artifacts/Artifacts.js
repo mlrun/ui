@@ -11,6 +11,7 @@ import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
 
 import './artifacts.scss'
+import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 
 const Artifacts = ({ artifactsStore, fetchArtifacts, history, match }) => {
   const [artifacts, _setArtifacts] = useState([])
@@ -37,7 +38,24 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, history, match }) => {
             } else {
               item = artifact.data[0]
             }
-            if (item) item.target_path = parseTargetPath(item.target_path)
+            if (item) {
+              item.target_path = parseTargetPath(item.target_path)
+
+              if (item.extra_data) {
+                const generatedPreviewData = generateArtifactPreviewData(
+                  item.extra_data,
+                  item.target_path.schema
+                )
+
+                item.preview = generatedPreviewData.preview
+
+                if (generatedPreviewData.extraDataPath) {
+                  item.target_path.path = generatedPreviewData.extraDataPath
+                }
+              } else {
+                item.preview = item.preview ?? []
+              }
+            }
 
             return item
           })

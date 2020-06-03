@@ -2,121 +2,67 @@
 @import '../../scss/borders';
 @import '../../scss/shadows';
 
-.table__item_artifacts {
+.item-artifacts {
+  &__arrow {
+    position: absolute;
+    top: 22px;
+    left: 10px;
+  }
+
+  &__accordion-wrapper {
+    height: 70px;
+  }
+
   &__row {
-    min-height: 70px;
-    border-bottom: $tableBorder;
-    display: flex;
-    flex-direction: row;
     position: relative;
-    &_item {
-      padding: 15px 26px;
-      flex: 1;
+    display: flex;
+    min-height: 70px;
+    padding-left: 13px;
+    border-bottom: $tableBorder;
+
+    &-wrapper {
+      max-height: 650px;
+    }
+
+    &-item {
       display: flex;
+      flex: 1;
       align-items: center;
-      flex-wrap: wrap;
+      min-width: 100px;
+      padding: 12px 26px;
+
       &:first-child {
-        white-space: nowrap;
-        cursor: pointer;
+        min-width: 170px;
         color: $cornflowerBlue;
-        flex: 1;
+        cursor: pointer;
       }
-      p {
-        margin: 0 0 5px;
-        white-space: pre-wrap;
-      }
-      svg {
-        margin-bottom: -2px;
-        transition: all 0.3s ease-in-out;
-        display: inline-block;
-      }
+
       &_long {
         flex: 2;
       }
+
       &_short {
-        flex: 0.5;
-        svg {
-          cursor: pointer;
-        }
+        flex: 0.3;
+        min-width: 75px;
       }
     }
-    &__cell {
-      &_path {
-        max-width: 50px;
-        min-width: 100%;
-        white-space: nowrap;
-        overflow-x: hidden;
-        text-overflow: ellipsis;
+
+    .icon {
+      &-dowload,
+      &-popout {
+        cursor: pointer;
       }
     }
   }
-  .view .table__item_artifacts__preview {
-    display: flex;
-    flex-direction: row;
-  }
-  .view {
-    flex-direction: column;
-    position: relative;
+
+  .accordion__container.open {
     box-shadow: $previewBoxShadow;
-    div {
-      .arrow {
-        transform: rotate(90deg);
-      }
-    }
   }
-  .table__item_results__table {
-    td {
-      padding: 19px 16px;
-    }
-  }
+
   &__preview {
-    display: none;
+    position: relative;
+    height: auto;
     padding: 21px 26px;
     border-bottom: $tableBorder;
-    &_table {
-      width: 100%;
-      color: $mulledWine;
-      &__row {
-        display: flex;
-        flex-direction: row;
-        padding: 10px;
-        border-bottom: $tableBorder;
-        &:first-child {
-          position: sticky;
-          top: 0;
-          z-index: 2;
-          background-color: $white;
-        }
-        &:last-child {
-          border-bottom: none;
-        }
-        &__content {
-          flex: 1;
-          padding: 0 5px;
-          min-width: 80px;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow-x: hidden;
-        }
-        &:not(:first-child) {
-          &:hover {
-            background-color: $alabaster;
-          }
-        }
-      }
-      &__header {
-        flex: 1;
-        padding: 0 5px;
-        min-width: 80px;
-        div {
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow-x: hidden;
-        }
-      }
-    }
-    pre {
-      white-space: pre-wrap;
-    }
   }
 }
