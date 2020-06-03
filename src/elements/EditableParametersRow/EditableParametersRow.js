@@ -15,10 +15,12 @@ const EditableParametersRow = ({
 }) => {
   return (
     <div className="table__row edit-row">
-      <div className="table__cell">
+      <div className="table__cell table__cell_disabled">
         <div className="data-ellipsis">{selectedParameter.data.name}</div>
       </div>
-      <div className="table__cell">{selectedParameter.data.type}</div>
+      <div className="table__cell table__cell_disabled">
+        {selectedParameter.data.type}
+      </div>
       <div className="table__cell table__cell_edit">
         <Input
           onChange={value => {

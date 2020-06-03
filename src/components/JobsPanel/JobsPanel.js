@@ -8,7 +8,15 @@ import JobsPanelView from './JobsPanelView'
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
-import { getDefaultData, getParameters } from './jobsPanel.util'
+import {
+  getDefaultData,
+  getMethodOptions,
+  getParameters,
+  getVersionOptions,
+  getDefaultMethodAndVersion,
+  getVolumeMounts,
+  getVolume
+} from './jobsPanel.util'
 
 import { isEmpty } from 'lodash'
 
@@ -28,7 +36,8 @@ const JobsPanel = ({
   setNewJobInputs,
   setNewJobParameters,
   setNewJobVolumeMounts,
-  setNewJobVolumes
+  setNewJobVolumes,
+  setDefaultData
 }) => {
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
   const [inputPath, setInputPath] = useState('')
@@ -50,7 +59,6 @@ const JobsPanel = ({
     version: '',
     method: ''
   })
-
   const history = useHistory()
 
   useLayoutEffect(() => {
@@ -65,35 +73,85 @@ const JobsPanel = ({
     removeFunctionTemplate
   ])
 
+  const functionsData = useMemo(() => {
+    const selectedFunction = !isEmpty(functionsStore.template)
+      ? functionsStore.template.functions
+      : groupedFunctions.functions
+
+    if (!isEmpty(selectedFunction)) {
+      let versionOptions = getVersionOptions(selectedFunction)
+      let methodOptions = getMethodOptions(selectedFunction)
+      let { defaultMethod, defaultVersion } = getDefaultMethodAndVersion(
+        versionOptions,
+        selectedFunction
+      )
+
+      setCurrentFunctionInfo({
+        name: functionsStore.template.name
+          ? functionsStore.template.name
+          : groupedFunctions.name,
+        version: defaultVersion,
+        method: defaultMethod || (methodOptions[0]?.id ?? '')
+      })
+
+      return {
+        methodOptions,
+        versionOptions
+      }
+    }
+
+    return {
+      methodOptions: [],
+      versionOptions: []
+    }
+  }, [functionsStore, groupedFunctions])
+
   const functionDefaultValues = useMemo(() => {
     const selectedFunction = !isEmpty(functionsStore.template)
       ? functionsStore.template.functions
       : groupedFunctions.functions
 
-    const functionParameters = getParameters(selectedFunction)
+    const functionParameters = getParameters(
+      selectedFunction,
+      currentFunctionInfo.method
+    )
 
     if (!isEmpty(functionParameters)) {
       const { parameters, dataInputs } = getDefaultData(functionParameters)
+      const volumeMounts = getVolumeMounts(selectedFunction)
+      const volumes = getVolume(selectedFunction)
 
-      dataInputs.length && setNewJobInputs(parseDefaultContent(dataInputs))
-      parameters.length && setNewJobParameters(parseDefaultContent(parameters))
+      setDefaultData({
+        parameters: parseDefaultContent(parameters),
+        inputs: parseDefaultContent(dataInputs),
+        volumes,
+        volumeMounts: volumeMounts.length
+          ? volumeMounts.map(volumeMounts => volumeMounts.data)
+          : []
+      })
 
       return {
         parameters,
-        dataInputs
+        dataInputs,
+        volumeMounts,
+        volumes
       }
     }
 
     return {
       parameters: [],
-      dataInputs: []
+      dataInputs: [],
+      volumeMounts: [],
+      volumes: []
     }
-  }, [functionsStore, groupedFunctions, setNewJobInputs, setNewJobParameters])
+  }, [currentFunctionInfo, functionsStore, groupedFunctions, setDefaultData])
 
   const handleRunJob = () => {
-    const selectedFunction = groupedFunctions.functions.find(
-      func => func.metadata.tag === currentFunctionInfo.version
-    )
+    const selectedFunction = functionsStore.template.name
+      ? functionsStore.template.functions[0]
+      : groupedFunctions.functions.find(
+          func => func.metadata.tag === currentFunctionInfo.version
+        )
 
     const postData = {
       schedule: jobsStore.newJob.schedule,
@@ -144,12 +202,9 @@ const JobsPanel = ({
     <JobsPanelView
       closePanel={closePanel}
       cpuUnit={cpuUnit}
-      functionsData={
-        functionsStore.template.name
-          ? functionsStore.template
-          : groupedFunctions
-      }
+      currentFunctionInfo={currentFunctionInfo}
       functionDefaultValues={functionDefaultValues}
+      functionsData={functionsData}
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
       limits={limits}

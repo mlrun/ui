@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelDataInputsView from './JobsPanelDataInputsView'
@@ -25,6 +25,10 @@ const JobsPanelDataInputs = ({
   const [defaultDataInputs, setDefaultDataInputs] = useState(
     functionDefaultValues.dataInputs
   )
+  const [defaultVolumes, setDefaultVolumes] = useState({
+    volumes: functionDefaultValues.volumes,
+    volumeMounts: functionDefaultValues.volumeMounts
+  })
 
   const [addNewVolume, setAddNewVolume] = useState(false)
   const [newVolume, setNewVolume] = useState({
@@ -37,6 +41,14 @@ const JobsPanelDataInputs = ({
   })
   const [selectedDataInput, setSelectedDataInput] = useState({})
   const [selectedVolume, setSelectedVolume] = useState({})
+
+  useEffect(() => {
+    setDefaultDataInputs(functionDefaultValues.dataInputs)
+    setDefaultVolumes({
+      volumeMounts: functionDefaultValues.volumeMounts,
+      volumes: functionDefaultValues.volumes
+    })
+  }, [functionDefaultValues])
 
   const selectOptions = {
     volumeType: [
@@ -136,7 +148,13 @@ const JobsPanelDataInputs = ({
     }
 
     setNewJobVolumes([...volumes, newItem])
-    setNewJobVolumeMounts([...volumeMounts, newVolumeMounts])
+    setNewJobVolumeMounts([...volumeMounts, newVolumeMounts.data])
+    setDefaultVolumes(prevState => {
+      return {
+        volumes: [...prevState.volumes, newItem],
+        volumeMounts: [...prevState.volumeMounts, newVolumeMounts]
+      }
+    })
     setAddNewVolume(false)
     setEmptyVolume()
   }
@@ -154,8 +172,8 @@ const JobsPanelDataInputs = ({
 
   const handleEditVolume = () => {
     const currentVolumeMounts = volumeMounts.map(volume => {
-      if (volume.data.name === selectedVolume.data.name) {
-        volume.data.mountPath = selectedVolume.data.mountPath
+      if (volume.name === selectedVolume.data.name) {
+        volume.mountPath = selectedVolume.data.mountPath
       }
 
       return volume
@@ -230,8 +248,8 @@ const JobsPanelDataInputs = ({
       setOutputPath={setOutputPath}
       setSelectedDataInput={setSelectedDataInput}
       setSelectedVolume={setSelectedVolume}
-      volumeMounts={volumeMounts}
-      volumes={volumes}
+      volumeMounts={defaultVolumes.volumeMounts}
+      volumes={defaultVolumes.volumes}
     />
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
@@ -49,43 +49,21 @@ const Select = ({
     onClick(item)
   }
 
-  const generateSelectClassName = useCallback(
-    selectItem => {
-      if (selectItem === 'select') {
-        return classNames({
-          select: true,
-          [className]: className,
-          active: isOpen
-        })
-      }
-
-      if (selectItem === 'selectLabel') {
-        return classNames({
-          select__label: true,
-          select__label_floating: selectedId && floatingLabel
-        })
-      }
-
-      if (selectItem === 'selectValue') {
-        return classNames({
-          select__value: true,
-          select__value_floating: selectedId && floatingLabel
-        })
-      }
-    },
-    [className, floatingLabel, isOpen, selectedId]
+  const selectClassName = classNames('select', className, isOpen && 'active')
+  const selectLabelClassName = classNames(
+    'select__label',
+    selectedId && floatingLabel && 'select__label_floating'
+  )
+  const selectValueClassName = classNames(
+    'select__value',
+    selectedId && floatingLabel && 'select__value_floating'
   )
 
   return (
-    <div
-      className={generateSelectClassName('select')}
-      onClick={() => toggleOpen(disabled)}
-    >
+    <div className={selectClassName} onClick={() => toggleOpen(disabled)}>
       <div className="select__header">
-        {label && (
-          <div className={generateSelectClassName('selectLabel')}>{label}</div>
-        )}
-        <div className={generateSelectClassName('selectValue')}>
+        {label && <div className={selectLabelClassName}>{label}</div>}
+        <div className={selectValueClassName}>
           {selectedId && selectedOption?.label}
           {selectedOption?.subLabel && (
             <span className="sub-label">{selectedOption.subLabel}</span>
