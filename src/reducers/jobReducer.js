@@ -13,7 +13,8 @@ import {
   SET_NEW_JOB_VOLUME_MOUNTS,
   SET_NEW_JOB_PARAMETERS,
   SET_NEW_JOB_HYPER_PARAMETERS,
-  SET_NEW_JOB_SCHEDULE
+  SET_NEW_JOB_SCHEDULE,
+  SET_DEFAULT_DATA
 } from '../constants'
 
 const initialState = {
@@ -161,6 +162,29 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.newJob.task.spec,
               hyperparams: payload
+            }
+          }
+        }
+      }
+    case SET_DEFAULT_DATA:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              parameters: payload.parameters,
+              inputs: payload.inputs
+            }
+          },
+          function: {
+            ...state.newJob.function,
+            spec: {
+              ...state.newJob.function.spec,
+              volumeMounts: payload.volumeMounts,
+              volumes: payload.volumes
             }
           }
         }

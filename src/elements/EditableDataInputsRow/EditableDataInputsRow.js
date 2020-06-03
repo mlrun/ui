@@ -12,20 +12,25 @@ const EditableDataInputsRow = ({
 }) => {
   return (
     <div className="table__row edit-row">
-      <div className="table__cell">{selectedDataInput.name}</div>
       <div className="table__cell">
+        <div className="data-ellipsis">{selectedDataInput.data.name}</div>
+      </div>
+      <div className="table__cell table__cell_edit">
         <Input
           onChange={path =>
-            setSelectedDataInput({ ...selectedDataInput, path: path })
+            setSelectedDataInput({
+              ...selectedDataInput,
+              data: { ...selectedDataInput.data, path: path }
+            })
           }
           type="text"
-          value={selectedDataInput.path}
+          value={selectedDataInput.data.path}
         />
       </div>
-      <div className="table__cell">
+      <div className="table__cell table__cell-actions">
         <button
           className="apply-edit-btn"
-          onClick={() => handleEdit(null, true)}
+          onClick={() => handleEdit(selectedDataInput.data, true)}
         >
           <Checkmark />
         </button>

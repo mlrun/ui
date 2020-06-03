@@ -1,13 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-
-import EditableDataInputsRow from '../EditableDataInputsRow/EditableDataInputsRow'
-import JobsPanelTableRow from '../JobsPanelTableRow/JobsPanelTableRow'
-import EditableParametersRow from '../EditableParametersRow/EditableParametersRow'
-import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
+
+import JobsPanelTableView from './JobsPanelTableView'
 
 import './jobsPanelTable.scss'
 
@@ -30,21 +27,6 @@ const JobsPanelTable = ({
 }) => {
   const [editItem, setEditItem] = useState(false)
 
-  const actionsMenu = [
-    {
-      label: 'Edit',
-      icon: <Edit />,
-      onClick: param => handleEdit(param)
-    },
-    {
-      label: 'Remove',
-      icon: <Delete />,
-      onClick: item => {
-        handleDelete(item)
-      }
-    }
-  ]
-
   const selectOption = {
     parameterType: [
       { label: 'Simple', id: 'Simple' },
@@ -52,134 +34,125 @@ const JobsPanelTable = ({
     ]
   }
 
-  const handleEdit = (item, isInput) => {
-    if (editItem) {
-      setEditItem(false)
-      section === 'parameters'
-        ? handleEditParameter()
-        : handleEditItems(isInput)
-    } else {
-      switch (section) {
-        case 'parameters':
-          setSelectedParameter(item)
-          break
-        case 'data-inputs':
-          setSelectedDataInput(item)
-          break
-        default:
-          handleSetSelectedVolume(item)
-      }
-      setEditItem(true)
-    }
-  }
+  const handleSetSelectedVolume = useCallback(
+    selectedVolume => {
+      const searchItem = volumes.find(
+        volume => volume.name === selectedVolume.data.name
+      )
 
-  const handleSetSelectedVolume = selectedVolume => {
-    const searchItem = volumes.find(
-      volume => volume.name === selectedVolume.name
-    )
+      let newValue
 
-    let newValue
+      if (searchItem.configMap) {
+        newValue = {
+          value: 'Config Map',
+          name: searchItem.configMap.name
+        }
+      } else if (searchItem.persistentVolumeClaim) {
+        newValue = {
+          value: 'PVC',
+          name: searchItem.persistentVolumeClaim.claimName
+        }
+      } else if (searchItem.secret) {
+        newValue = {
+          value: 'Secret',
+          name: searchItem.secret.secretName
+        }
+      } else {
+        newValue = {
+          value: 'V3IO',
+          name: searchItem.flexVolume.options.container,
+          accessKey: searchItem.flexVolume.options.accessKey,
+          subPath: searchItem.flexVolume.options.subPath
+        }
+      }
 
-    if (searchItem.configMap) {
-      newValue = {
-        value: 'Config Map',
-        name: searchItem.configMap.name
-      }
-    } else if (searchItem.persistentVolumeClaim) {
-      newValue = {
-        value: 'PVC',
-        name: searchItem.persistentVolumeClaim.claimName
-      }
-    } else if (searchItem.secret) {
-      newValue = {
-        value: 'Secret',
-        name: searchItem.secret.secretName
-      }
-    } else {
-      newValue = {
-        value: 'V3IO',
-        name: searchItem.flexVolume.options.container,
-        accessKey: searchItem.flexVolume.options.accessKey,
-        subPath: searchItem.flexVolume.options.subPath
-      }
-    }
+      setSelectedVolume({
+        ...selectedVolume,
+        type: newValue
+      })
+    },
+    [setSelectedVolume, volumes]
+  )
 
-    setSelectedVolume({
-      ...selectedVolume,
-      type: newValue
-    })
-  }
+  const handleEdit = useCallback(
+    (item, isInput) => {
+      if (editItem) {
+        setEditItem(false)
+        section === 'parameters'
+          ? handleEditParameter()
+          : handleEditItems(isInput)
+      } else {
+        switch (section) {
+          case 'parameters':
+            setSelectedParameter(item)
+            break
+          case 'data-inputs':
+            setSelectedDataInput(item)
+            break
+          default:
+            handleSetSelectedVolume(item)
+        }
+        setEditItem(true)
+      }
+    },
+    [
+      editItem,
+      handleEditItems,
+      handleEditParameter,
+      handleSetSelectedVolume,
+      section,
+      setSelectedDataInput,
+      setSelectedParameter
+    ]
+  )
 
-  const handleDelete = item => {
-    handleDeleteItems(section === 'data-inputs', item)
-  }
+  const handleDelete = useCallback(
+    item => {
+      handleDeleteItems(section === 'data-inputs', item)
+    },
+    [handleDeleteItems, section]
+  )
+
+  const generateActionsMenu = useCallback(
+    item => {
+      return [
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          visible: item.isValueEmpty,
+          onClick: param => handleEdit(param)
+        },
+        {
+          label: 'Remove',
+          icon: <Delete />,
+          visible: item.isValueEmpty && !item.isDefault,
+          onClick: item => {
+            handleDelete(item)
+          }
+        }
+      ]
+    },
+    [handleEdit, handleDelete]
+  )
 
   return (
-    <div
-      className={`job-panel__table ${addNewItem && 'no-border'} ${className}`}
-    >
-      {headers.length > 0 && (
-        <div className="table__header table__row no-hover">
-          {headers.map((header, index) => (
-            <div className="table__cell" key={index}>
-              {header}
-            </div>
-          ))}
-        </div>
-      )}
-      {Array.isArray(content)
-        ? content.map((contentItem, index) => {
-            if (editItem && contentItem.name === selectedItem.name) {
-              return section === 'parameters' ? (
-                <EditableParametersRow
-                  handleEdit={handleEdit}
-                  key={index}
-                  match={match}
-                  selectOption={selectOption}
-                  selectedParameter={selectedItem}
-                  setSelectedParameter={setSelectedParameter}
-                />
-              ) : (
-                <EditableVolumesRow
-                  handleEdit={handleEdit}
-                  key={index}
-                  selectedVolume={selectedItem}
-                  setSelectedVolume={setSelectedVolume}
-                />
-              )
-            } else {
-              return (
-                <JobsPanelTableRow
-                  actionsMenu={actionsMenu}
-                  item={contentItem}
-                  key={index}
-                  row={Object.values(contentItem)}
-                />
-              )
-            }
-          })
-        : Object.entries(content).map((row, index) => {
-            if (editItem && row[0] === selectedItem.name) {
-              return (
-                <EditableDataInputsRow
-                  handleEdit={handleEdit}
-                  key={index}
-                  selectedDataInput={selectedItem}
-                  setSelectedDataInput={setSelectedDataInput}
-                />
-              )
-            }
-            return (
-              <JobsPanelTableRow
-                actionsMenu={actionsMenu}
-                item={{ name: row[0], path: row[1] }}
-                key={index}
-                row={row}
-              />
-            )
-          })}
-      {children}
-    </div>
+    <JobsPanelTableView
+      addNewItem={addNewItem}
+      children={children}
+      className={className}
+      content={content}
+      editItem={editItem}
+      generateActionsMenu={generateActionsMenu}
+      handleEdit={handleEdit}
+      headers={headers}
+      match={match}
+      section={section}
+      selectOption={selectOption}
+      selectedItem={selectedItem}
+      setSelectedDataInput={setSelectedDataInput}
+      setSelectedParameter={setSelectedParameter}
+      setSelectedVolume={setSelectedVolume}
+    />
   )
 }
 
@@ -200,7 +173,7 @@ JobsPanelTable.propTypes = {
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.shape({})
   ]).isRequired,
-  headers: PropTypes.arrayOf(PropTypes.string),
+  headers: PropTypes.arrayOf(PropTypes.shape({})),
   handleEditItems: PropTypes.func,
   handleEditParameter: PropTypes.func,
   match: PropTypes.shape({}).isRequired,

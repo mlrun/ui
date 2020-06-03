@@ -63,7 +63,7 @@ const JobsPanelDataInputsView = ({
           setSelectedDataInput={setSelectedDataInput}
         >
           {addNewInput ? (
-            <>
+            <div className="table__row-add-item">
               <div className="input-row-wrapper">
                 <Input
                   onChange={name => setNewInput({ ...newInput, name: name })}
@@ -75,7 +75,7 @@ const JobsPanelDataInputsView = ({
                 <Input
                   onChange={path => setNewInput({ ...newInput, path: path })}
                   label="Input path"
-                  className="input-row__item"
+                  className="input-row__item input-row__item_edit"
                   floatingLabel
                   type="text"
                 />
@@ -88,7 +88,7 @@ const JobsPanelDataInputsView = ({
                   <Plus />
                 </Tooltip>
               </button>
-            </>
+            </div>
           ) : (
             <JobsPanelTableAddItemRow onClick={setAddNewInput} text="input" />
           )}
@@ -109,74 +109,80 @@ const JobsPanelDataInputsView = ({
           volumes={volumes}
         >
           {addNewVolume ? (
-            <>
-              <div className="input-row-wrapper no-border">
-                <Input
-                  onChange={name => setNewVolume({ ...newVolume, name: name })}
-                  label="Name"
-                  className="input-row__item"
-                  floatingLabel
-                  type="text"
-                />
-                <Input
-                  onChange={path => setNewVolume({ ...newVolume, path: path })}
-                  label="Path"
-                  className="input-row__item"
-                  floatingLabel
-                  type="text"
-                />
-              </div>
-              <div
-                className={`input-row-wrapper ${newVolume.type === 'V3IO' &&
-                  ' no-border'}`}
-              >
-                <Select
-                  onClick={type =>
-                    setNewVolume({
-                      ...newVolume,
-                      type: find(selectOptions.volumeType, ['id', type]).id
-                    })
-                  }
-                  options={selectOptions.volumeType}
-                  label={newVolume.type.length > 0 ? newVolume.type : 'Type'}
-                  match={match}
-                />
-                <Input
-                  onChange={typeName =>
-                    setNewVolume({ ...newVolume, typeName: typeName })
-                  }
-                  label={volumeTypeNameLabel}
-                  className="input-row__item"
-                  disabled={newVolume.type.length === 0}
-                  floatingLabel
-                  type="text"
-                />
-              </div>
-              {newVolume.type === 'V3IO' && (
-                <div className="input-row-wrapper">
+            <div className="table__body">
+              <div className="table__body-column">
+                <div className="input-row-wrapper no-border">
                   <Input
-                    onChange={accessKey =>
-                      setNewVolume({ ...newVolume, accessKey: accessKey })
+                    onChange={name =>
+                      setNewVolume({ ...newVolume, name: name })
                     }
-                    label="Access Key"
+                    label="Name"
                     className="input-row__item"
                     floatingLabel
                     type="text"
                   />
                   <Input
-                    onChange={resourcesPath =>
-                      setNewVolume({
-                        ...newVolume,
-                        resourcesPath: resourcesPath
-                      })
+                    onChange={path =>
+                      setNewVolume({ ...newVolume, path: path })
                     }
-                    label="Resource path"
-                    className="input-row__item"
+                    label="Path"
+                    className="input-row__item input-row__item_edit"
                     floatingLabel
                     type="text"
                   />
                 </div>
-              )}
+                <div
+                  className={`input-row-wrapper ${newVolume.type === 'V3IO' &&
+                    'no-border'}`}
+                >
+                  <Select
+                    onClick={type =>
+                      setNewVolume({
+                        ...newVolume,
+                        type: find(selectOptions.volumeType, ['id', type]).id
+                      })
+                    }
+                    options={selectOptions.volumeType}
+                    label={newVolume.type.length ? newVolume.type : 'Type'}
+                    match={match}
+                  />
+                  <Input
+                    onChange={typeName =>
+                      setNewVolume({ ...newVolume, typeName: typeName })
+                    }
+                    label={volumeTypeNameLabel}
+                    className="input-row__item input-row__item_edit"
+                    disabled={newVolume.type.length === 0}
+                    floatingLabel
+                    type="text"
+                  />
+                </div>
+                {newVolume.type === 'V3IO' && (
+                  <div className="input-row-wrapper">
+                    <Input
+                      onChange={accessKey =>
+                        setNewVolume({ ...newVolume, accessKey: accessKey })
+                      }
+                      label="Access Key"
+                      className="input-row__item"
+                      floatingLabel
+                      type="text"
+                    />
+                    <Input
+                      onChange={resourcesPath =>
+                        setNewVolume({
+                          ...newVolume,
+                          resourcesPath: resourcesPath
+                        })
+                      }
+                      label="Resource path"
+                      className="input-row__item input-row__item_edit"
+                      floatingLabel
+                      type="text"
+                    />
+                  </div>
+                )}
+              </div>
               <button
                 className="add-input btn-add"
                 onClick={() => handleAddNewItem(null, true)}
@@ -185,7 +191,7 @@ const JobsPanelDataInputsView = ({
                   <Plus />
                 </Tooltip>
               </button>
-            </>
+            </div>
           ) : (
             <JobsPanelTableAddItemRow onClick={setAddNewVolume} text="volume" />
           )}
@@ -216,7 +222,7 @@ JobsPanelDataInputsView.propTypes = {
   addNewVolume: PropTypes.bool.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
-  inputs: PropTypes.shape({}).isRequired,
+  inputs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   match: PropTypes.shape({}).isRequired,
   newInput: PropTypes.shape({}).isRequired,
   newVolume: PropTypes.shape({}).isRequired,

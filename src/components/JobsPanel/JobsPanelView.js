@@ -14,6 +14,8 @@ import { ReactComponent as Run } from '../../images/run.svg'
 const JobsPanelView = ({
   closePanel,
   cpuUnit,
+  currentFunctionInfo,
+  functionDefaultValues,
   functionsData,
   handleRunJob,
   jobsStore,
@@ -35,77 +37,84 @@ const JobsPanelView = ({
   setOpenScheduleJob,
   setOutputPath,
   setRequests
-}) => (
-  <div className="job-panel-container">
-    <div className="job-panel">
-      <JobsPanelTitle
-        closePanel={closePanel}
-        functionsData={functionsData}
-        match={match}
-        openScheduleJob={openScheduleJob}
-        setCurrentFunctionInfo={setCurrentFunctionInfo}
-        setOpenScheduleJob={setOpenScheduleJob}
-      />
-      {!openScheduleJob ? (
-        <div className="job_panel__body">
-          <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
-            <JobsPanelParameters
-              hyperparams={jobsStore.newJob.task.spec.hyperparams}
-              match={match}
-              parameters={jobsStore.newJob.task.spec.parameters}
-              setNewJobHyperParameters={setNewJobHyperParameters}
-              setNewJobParameters={setNewJobParameters}
-            />
-          </Accordion>
-          <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
-            <JobsPanelDataInputs
-              inputs={jobsStore.newJob.task.spec.inputs}
-              match={match}
-              setInputPath={setInputPath}
-              setNewJobInputs={setNewJobInputs}
-              setNewJobVolumeMounts={setNewJobVolumeMounts}
-              setNewJobVolumes={setNewJobVolumes}
-              setOutputPath={setOutputPath}
-              volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
-              volumes={jobsStore.newJob.function.spec.volumes}
-            />
-          </Accordion>
-          <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
-            <JobsPanelResources
-              cpuUnit={cpuUnit}
-              limits={limits}
-              match={match}
-              memoryUnit={memoryUnit}
-              requests={requests}
-              setCpuUnit={setCpuUnit}
-              setLimits={setLimits}
-              setMemoryUnit={setMemoryUnit}
-              setRequests={setRequests}
-            />
-          </Accordion>
-          <div className="job-panel__buttons-container">
-            <button
-              className="btn btn__schedule-for-later"
-              onClick={() => setOpenScheduleJob(true)}
-            >
-              Schedule for later
-            </button>
-            <button className="btn btn_primary" onClick={handleRunJob}>
-              <Run className="btn__icon" />
-              Run now
-            </button>
+}) => {
+  return (
+    <div className="job-panel-container">
+      <div className="job-panel">
+        <JobsPanelTitle
+          closePanel={closePanel}
+          currentFunctionInfo={currentFunctionInfo}
+          functionsData={functionsData}
+          match={match}
+          openScheduleJob={openScheduleJob}
+          setCurrentFunctionInfo={setCurrentFunctionInfo}
+          setOpenScheduleJob={setOpenScheduleJob}
+        />
+        {!openScheduleJob ? (
+          <div className="job_panel__body">
+            <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
+              <JobsPanelParameters
+                functionDefaultValues={functionDefaultValues}
+                hyperparams={jobsStore.newJob.task.spec.hyperparams}
+                match={match}
+                parameters={jobsStore.newJob.task.spec.parameters}
+                setNewJobHyperParameters={setNewJobHyperParameters}
+                setNewJobParameters={setNewJobParameters}
+              />
+            </Accordion>
+            <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
+              <JobsPanelDataInputs
+                functionDefaultValues={functionDefaultValues}
+                inputs={jobsStore.newJob.task.spec.inputs}
+                match={match}
+                setInputPath={setInputPath}
+                setNewJobInputs={setNewJobInputs}
+                setNewJobVolumeMounts={setNewJobVolumeMounts}
+                setNewJobVolumes={setNewJobVolumes}
+                setOutputPath={setOutputPath}
+                volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
+                volumes={jobsStore.newJob.function.spec.volumes}
+              />
+            </Accordion>
+            <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
+              <JobsPanelResources
+                cpuUnit={cpuUnit}
+                limits={limits}
+                match={match}
+                memoryUnit={memoryUnit}
+                requests={requests}
+                setCpuUnit={setCpuUnit}
+                setLimits={setLimits}
+                setMemoryUnit={setMemoryUnit}
+                setRequests={setRequests}
+              />
+            </Accordion>
+            <div className="job-panel__buttons-container">
+              <button
+                className="btn btn__schedule-for-later"
+                onClick={() => setOpenScheduleJob(true)}
+              >
+                Schedule for later
+              </button>
+              <button className="btn btn_primary" onClick={handleRunJob}>
+                <Run className="btn__icon" />
+                Run now
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        <ScheduleJob setOpenScheduleJob={setOpenScheduleJob} match={match} />
-      )}
+        ) : (
+          <ScheduleJob setOpenScheduleJob={setOpenScheduleJob} match={match} />
+        )}
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 JobsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   cpuUnit: PropTypes.string.isRequired,
+  currentFunctionInfo: PropTypes.shape({}).isRequired,
+  functionDefaultValues: PropTypes.shape({}).isRequired,
   functionsData: PropTypes.shape({}).isRequired,
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,

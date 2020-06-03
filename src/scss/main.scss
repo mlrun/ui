@@ -11,49 +11,49 @@
 }
 
 .App {
-  width: 100%;
   display: flex;
   flex: 1;
-}
-
-.App {
   width: 100%;
 }
+
 body {
-  background: #eeeeee;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  line-height: 18px;
-  overflow-x: hidden;
-  @include resetSpaces;
   display: flex;
   flex: 1;
   height: 100vh;
+  overflow-x: hidden;
+  font-weight: normal;
+  font-size: 15px;
+  font-family: Roboto;
+  font-style: normal;
+  line-height: 18px;
+  background: #eeeeee;
+  @include resetSpaces;
 }
 
 main {
-  height: auto;
-  display: flex;
-  flex-flow: column nowrap;
-  margin-left: 90px;
-  margin-top: 64px;
   position: relative;
+  display: flex;
   flex: 1;
+  flex-flow: column nowrap;
+  height: auto;
+  margin-top: 64px;
+  margin-left: 90px;
   overflow: auto;
+
   a {
-    text-decoration: none;
     color: inherit;
+    text-decoration: none;
   }
+
   button {
     background-color: transparent;
     border: none;
     cursor: pointer;
+
     &:active,
     &:focus {
-      box-shadow: none;
       outline: none;
+      box-shadow: none;
     }
   }
 }
@@ -79,14 +79,14 @@ iframe {
 
 #overlay_container {
   position: fixed;
-  bottom: 0px;
-  width: 100%;
+  bottom: 0;
+  z-index: 4;
   display: flex;
   flex: 1;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  z-index: 4;
+  justify-content: center;
+  width: 100%;
 }
 
 .remove-btn {
@@ -95,10 +95,11 @@ iframe {
 
 .error_container {
   margin: auto;
+
   h1,
   h3 {
-    text-align: center;
     color: $mulledWine;
+    text-align: center;
   }
 }
 

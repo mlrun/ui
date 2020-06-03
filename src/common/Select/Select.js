@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 import SelectOption from '../../elements/SelectOption/SelectOption'
 
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
+import classNames from 'classnames'
 
 import './select.scss'
 
@@ -48,26 +49,21 @@ const Select = ({
     onClick(item)
   }
 
+  const selectClassName = classNames('select', className, isOpen && 'active')
+  const selectLabelClassName = classNames(
+    'select__label',
+    selectedId && floatingLabel && 'select__label_floating'
+  )
+  const selectValueClassName = classNames(
+    'select__value',
+    selectedId && floatingLabel && 'select__value_floating'
+  )
+
   return (
-    <div
-      className={`select ${className} ${isOpen ? ' active' : ''}`}
-      onClick={() => toggleOpen(disabled)}
-    >
+    <div className={selectClassName} onClick={() => toggleOpen(disabled)}>
       <div className="select__header">
-        {label && (
-          <div
-            className={`select__label ${selectedId &&
-              floatingLabel &&
-              'select__label_floating'}`}
-          >
-            {label}
-          </div>
-        )}
-        <div
-          className={`select__value ${selectedId &&
-            floatingLabel &&
-            'select__value_floating'}`}
-        >
+        {label && <div className={selectLabelClassName}>{label}</div>}
+        <div className={selectValueClassName}>
           {selectedId && selectedOption?.label}
           {selectedOption?.subLabel && (
             <span className="sub-label">{selectedOption.subLabel}</span>

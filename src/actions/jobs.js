@@ -14,7 +14,8 @@ import {
   SET_NEW_JOB_PARAMETERS,
   SET_NEW_JOB_SCHEDULE,
   SET_NEW_JOB_VOLUMES,
-  SET_NEW_JOB_VOLUME_MOUNTS
+  SET_NEW_JOB_VOLUME_MOUNTS,
+  SET_DEFAULT_DATA
 } from '../constants'
 
 const jobsActions = {
@@ -97,6 +98,10 @@ const jobsActions = {
   setNewJobHyperParameters: parameters => ({
     type: SET_NEW_JOB_HYPER_PARAMETERS,
     payload: parameters
+  }),
+  setDefaultData: data => ({
+    type: SET_DEFAULT_DATA,
+    payload: data
   }),
   runNewJob: postData => () => jobsApi.runJob(postData),
   setLoading: isLoading => ({

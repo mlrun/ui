@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -7,6 +7,18 @@ import JobsPanelView from './JobsPanelView'
 
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
+import { parseDefaultContent } from '../../utils/parseDefaultContent'
+import {
+  getDefaultData,
+  getMethodOptions,
+  getParameters,
+  getVersionOptions,
+  getDefaultMethodAndVersion,
+  getVolumeMounts,
+  getVolume
+} from './jobsPanel.util'
+
+import { isEmpty } from 'lodash'
 
 import './jobsPanel.scss'
 
@@ -24,7 +36,8 @@ const JobsPanel = ({
   setNewJobInputs,
   setNewJobParameters,
   setNewJobVolumeMounts,
-  setNewJobVolumes
+  setNewJobVolumes,
+  setDefaultData
 }) => {
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
   const [inputPath, setInputPath] = useState('')
@@ -46,15 +59,13 @@ const JobsPanel = ({
     version: '',
     method: ''
   })
-
   const history = useHistory()
 
   useLayoutEffect(() => {
-    if (!functionsStore.selectedFunction.name) {
+    if (!groupedFunctions.name && !functionsStore.template.name) {
       fetchFunctionTemplate(groupedFunctions.metadata.versions.latest)
     }
-    return () =>
-      functionsStore.selectedFunction.name && removeFunctionTemplate()
+    return () => functionsStore.template.name && removeFunctionTemplate()
   }, [
     fetchFunctionTemplate,
     functionsStore,
@@ -62,10 +73,85 @@ const JobsPanel = ({
     removeFunctionTemplate
   ])
 
-  const handleRunJob = () => {
-    let selectedFunction = groupedFunctions.functions.find(
-      func => func.metadata.tag === currentFunctionInfo.version
+  const functionsData = useMemo(() => {
+    const selectedFunction = !isEmpty(functionsStore.template)
+      ? functionsStore.template.functions
+      : groupedFunctions.functions
+
+    if (!isEmpty(selectedFunction)) {
+      let versionOptions = getVersionOptions(selectedFunction)
+      let methodOptions = getMethodOptions(selectedFunction)
+      let { defaultMethod, defaultVersion } = getDefaultMethodAndVersion(
+        versionOptions,
+        selectedFunction
+      )
+
+      setCurrentFunctionInfo({
+        name: functionsStore.template.name
+          ? functionsStore.template.name
+          : groupedFunctions.name,
+        version: defaultVersion,
+        method: defaultMethod || (methodOptions[0]?.id ?? '')
+      })
+
+      return {
+        methodOptions,
+        versionOptions
+      }
+    }
+
+    return {
+      methodOptions: [],
+      versionOptions: []
+    }
+  }, [functionsStore, groupedFunctions])
+
+  const functionDefaultValues = useMemo(() => {
+    const selectedFunction = !isEmpty(functionsStore.template)
+      ? functionsStore.template.functions
+      : groupedFunctions.functions
+
+    const functionParameters = getParameters(
+      selectedFunction,
+      currentFunctionInfo.method
     )
+
+    if (!isEmpty(functionParameters)) {
+      const { parameters, dataInputs } = getDefaultData(functionParameters)
+      const volumeMounts = getVolumeMounts(selectedFunction)
+      const volumes = getVolume(selectedFunction)
+
+      setDefaultData({
+        parameters: parseDefaultContent(parameters),
+        inputs: parseDefaultContent(dataInputs),
+        volumes,
+        volumeMounts: volumeMounts.length
+          ? volumeMounts.map(volumeMounts => volumeMounts.data)
+          : []
+      })
+
+      return {
+        parameters,
+        dataInputs,
+        volumeMounts,
+        volumes
+      }
+    }
+
+    return {
+      parameters: [],
+      dataInputs: [],
+      volumeMounts: [],
+      volumes: []
+    }
+  }, [currentFunctionInfo, functionsStore, groupedFunctions, setDefaultData])
+
+  const handleRunJob = () => {
+    const selectedFunction = functionsStore.template.name
+      ? functionsStore.template.functions[0]
+      : groupedFunctions.functions.find(
+          func => func.metadata.tag === currentFunctionInfo.version
+        )
 
     const postData = {
       schedule: jobsStore.newJob.schedule,
@@ -116,11 +202,9 @@ const JobsPanel = ({
     <JobsPanelView
       closePanel={closePanel}
       cpuUnit={cpuUnit}
-      functionsData={
-        functionsStore.selectedFunction.name
-          ? functionsStore.selectedFunction
-          : groupedFunctions
-      }
+      currentFunctionInfo={currentFunctionInfo}
+      functionDefaultValues={functionDefaultValues}
+      functionsData={functionsData}
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
       limits={limits}

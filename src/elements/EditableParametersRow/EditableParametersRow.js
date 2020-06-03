@@ -15,29 +15,48 @@ const EditableParametersRow = ({
 }) => {
   return (
     <div className="table__row edit-row">
-      <div className="table__cell">{selectedParameter.name}</div>
-      <div className="table__cell">{selectedParameter.type}</div>
-      <div className="table__cell">
+      <div className="table__cell table__cell_disabled">
+        <div className="data-ellipsis">{selectedParameter.data.name}</div>
+      </div>
+      <div className="table__cell table__cell_disabled">
+        {selectedParameter.data.type}
+      </div>
+      <div className="table__cell table__cell_edit">
         <Input
-          onChange={value =>
-            setSelectedParameter({ ...selectedParameter, value: value })
-          }
+          onChange={value => {
+            setSelectedParameter({
+              ...selectedParameter,
+              data: {
+                ...selectedParameter.data,
+                value: value
+              }
+            })
+          }}
           type="text"
-          value={selectedParameter.value}
+          value={selectedParameter.data.value}
         />
       </div>
-      <div className="table__cell">
+      <div className="table__cell table__cell_edit">
         <Select
-          label={selectedParameter.simple}
+          label={selectedParameter.data.simple}
           match={match}
           onClick={simple =>
-            setSelectedParameter({ ...selectedParameter, simple: simple })
+            setSelectedParameter({
+              ...selectedParameter.data,
+              data: {
+                ...selectedParameter.data,
+                simple: simple
+              }
+            })
           }
           options={selectOption.parameterType}
         />
       </div>
-      <div className="table__cell">
-        <button className="apply-edit-btn" onClick={handleEdit}>
+      <div className="table__cell cell-btn-wrapper">
+        <button
+          className="apply-edit-btn"
+          onClick={() => handleEdit(selectedParameter, false)}
+        >
           <Checkmark />
         </button>
       </div>

@@ -5,34 +5,60 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
+import { has, map } from 'lodash'
+import classNames from 'classnames'
+
+import { joinDataOfArrayOrObject } from '../../utils'
+
 import './jobsPanelTableRow.scss'
 
-const JobsPanelTableRow = ({ actionsMenu, item, row }) => {
+const JobsPanelTableRow = ({ actionsMenu, item }) => {
   return (
-    <div className="table__row">
-      {row.map((cell, i) => {
-        return (
-          <div className="table__cell" key={i + cell}>
-            <Tooltip
-              className="table__cell-value"
-              template={<TextTooltipTemplate text={cell} />}
-            >
-              {cell}
-            </Tooltip>
-          </div>
-        )
-      })}
-      <div className="table__cell actions_cell">
-        <TableActionsMenu menu={actionsMenu} item={item} />
+    item.data.name !== 'context' && (
+      <div className="table__row">
+        {map(item.data, (value, property) => {
+          const tableCellClassName = classNames({
+            table__cell: true,
+            table__cell_disabled:
+              ((property === 'name' && has(item.data, 'value')) ||
+                property === 'type') &&
+              item.isDefault
+          })
+
+          return (
+            <div className={tableCellClassName} key={property}>
+              <Tooltip
+                className="data-ellipsis"
+                textShow={property === 'name' && item.doc}
+                template={
+                  <TextTooltipTemplate
+                    text={
+                      property === 'name'
+                        ? item.doc || value
+                        : joinDataOfArrayOrObject(value, ', ')
+                    }
+                  />
+                }
+              >
+                {joinDataOfArrayOrObject(value, ', ')}
+              </Tooltip>
+            </div>
+          )
+        })}
+        <div className="table__cell table__cell-actions">
+          {((item.isValueEmpty && item.isDefault) ||
+            (item.isValueEmpty && !item.isDefault)) && (
+            <TableActionsMenu item={item} menu={actionsMenu} />
+          )}
+        </div>
       </div>
-    </div>
+    )
   )
 }
 
 JobsPanelTableRow.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  item: PropTypes.shape({}).isRequired,
-  row: PropTypes.arrayOf(PropTypes.string).isRequired
+  item: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelTableRow

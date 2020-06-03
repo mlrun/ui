@@ -14,7 +14,7 @@ const initialState = {
   loading: false,
   error: null,
   templatesCatalog: [],
-  selectedFunction: {}
+  template: {}
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -51,19 +51,19 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
-        selectedFunction: payload
+        template: payload
       }
     case FETCH_FUNCTION_TEMPLATE_FAILURE:
       return {
         ...state,
         loading: false,
-        selectedFunction: {},
+        template: {},
         error: payload
       }
     case REMOVE_FUNCTION_TEMPLATE:
       return {
         ...state,
-        selectedFunction: {}
+        template: {}
       }
     default:
       return state
