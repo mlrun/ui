@@ -9,7 +9,7 @@ import { formatDatetime } from '../../utils'
 import artifactAction from '../../actions/artifacts'
 import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 
-const DetailsArtifacts = ({ selectedItem }) => {
+const DetailsArtifacts = ({ selectedItem, match }) => {
   const dispatch = useDispatch()
 
   const content = selectedItem.artifacts.map(artifact => {
@@ -40,6 +40,7 @@ const DetailsArtifacts = ({ selectedItem }) => {
     const generatedArtifact = {
       date: formatDatetime(selectedItem.startTime),
       key: artifact.key,
+      db_key: artifact.db_key,
       preview: generatedPreviewData.preview,
       size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
       target_path: target_path,
@@ -69,7 +70,13 @@ const DetailsArtifacts = ({ selectedItem }) => {
     )
   }
 
-  return <DetailsArtifactsView content={content} showPreview={showPreview} />
+  return (
+    <DetailsArtifactsView
+      content={content}
+      match={match}
+      showPreview={showPreview}
+    />
+  )
 }
 
 DetailsArtifacts.propTypes = {
