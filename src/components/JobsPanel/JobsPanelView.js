@@ -52,7 +52,11 @@ const JobsPanelView = ({
         />
         {!openScheduleJob ? (
           <div className="job_panel__body">
-            <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
+            <Accordion
+              icon={<Arrow />}
+              iconClassName="job-panel__expand-icon"
+              openByDefault
+            >
               <JobsPanelParameters
                 functionDefaultValues={functionDefaultValues}
                 hyperparams={jobsStore.newJob.task.spec.hyperparams}
@@ -62,7 +66,11 @@ const JobsPanelView = ({
                 setNewJobParameters={setNewJobParameters}
               />
             </Accordion>
-            <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
+            <Accordion
+              icon={<Arrow />}
+              iconClassName="job-panel__expand-icon"
+              openByDefault
+            >
               <JobsPanelDataInputs
                 functionDefaultValues={functionDefaultValues}
                 inputs={jobsStore.newJob.task.spec.inputs}
@@ -76,7 +84,11 @@ const JobsPanelView = ({
                 volumes={jobsStore.newJob.function.spec.volumes}
               />
             </Accordion>
-            <Accordion icon={<Arrow />} iconClassName="job-panel__expand-icon">
+            <Accordion
+              icon={<Arrow />}
+              iconClassName="job-panel__expand-icon"
+              openByDefault
+            >
               <JobsPanelResources
                 cpuUnit={cpuUnit}
                 limits={limits}
