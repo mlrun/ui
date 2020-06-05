@@ -1,10 +1,11 @@
 import artifactsApi from '../api/artifacts-api'
 import {
+  CLOSE_ARTIFACT_PREVIEW,
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
-  SHOW_ARTIFACT_PREVIEW,
-  CLOSE_ARTIFACT_PREVIEW
+  REMOVE_ARTIFACTS,
+  SHOW_ARTIFACT_PREVIEW
 } from '../constants'
 
 const artifactsAction = {
@@ -53,6 +54,9 @@ const artifactsAction = {
   closeArtifactsPreview: item => ({
     type: CLOSE_ARTIFACT_PREVIEW,
     payload: item
+  }),
+  removeArtifacts: () => ({
+    type: REMOVE_ARTIFACTS
   })
 }
 

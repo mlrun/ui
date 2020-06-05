@@ -3,7 +3,8 @@ import {
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
   SHOW_ARTIFACT_PREVIEW,
-  CLOSE_ARTIFACT_PREVIEW
+  CLOSE_ARTIFACT_PREVIEW,
+  REMOVE_ARTIFACTS
 } from '../constants'
 
 const initialState = {
@@ -32,6 +33,11 @@ export default (state = initialState, { type, payload }) => {
         artifacts: [],
         loading: false,
         error: payload
+      }
+    case REMOVE_ARTIFACTS:
+      return {
+        ...state,
+        artifacts: []
       }
     case SHOW_ARTIFACT_PREVIEW:
       return {
