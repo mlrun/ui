@@ -16,7 +16,7 @@ const JobsPanelView = ({
   cpuUnit,
   currentFunctionInfo,
   functionDefaultValues,
-  functionsData,
+  functionData,
   handleRunJob,
   jobsStore,
   limits,
@@ -44,7 +44,7 @@ const JobsPanelView = ({
         <JobsPanelTitle
           closePanel={closePanel}
           currentFunctionInfo={currentFunctionInfo}
-          functionsData={functionsData}
+          functionData={functionData}
           match={match}
           openScheduleJob={openScheduleJob}
           setCurrentFunctionInfo={setCurrentFunctionInfo}
@@ -127,7 +127,7 @@ JobsPanelView.propTypes = {
   cpuUnit: PropTypes.string.isRequired,
   currentFunctionInfo: PropTypes.shape({}).isRequired,
   functionDefaultValues: PropTypes.shape({}).isRequired,
-  functionsData: PropTypes.shape({}).isRequired,
+  functionData: PropTypes.shape({}).isRequired,
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
   limits: PropTypes.shape({}).isRequired,

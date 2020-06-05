@@ -37,7 +37,7 @@ const JobsPanelTableView = ({
           <div className="table__cell-actions" />
         </div>
       )}
-      {content.map((contentItem, index) => {
+      {content?.map((contentItem, index) => {
         if (editItem && contentItem.data.name === selectedItem.data.name) {
           return section === 'parameters' ? (
             <EditableParametersRow

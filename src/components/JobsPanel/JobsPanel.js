@@ -39,7 +39,11 @@ const JobsPanel = ({
   setNewJobVolumes,
   setDefaultData
 }) => {
-  const [openScheduleJob, setOpenScheduleJob] = useState(false)
+  const [currentFunctionInfo, setCurrentFunctionInfo] = useState({
+    name: '',
+    version: '',
+    method: ''
+  })
   const [inputPath, setInputPath] = useState('')
   const [outputPath, setOutputPath] = useState('')
   const [requests, setRequests] = useState({
@@ -54,11 +58,12 @@ const JobsPanel = ({
     nvidia_gpu: ''
   })
   const [cpuUnit, setCpuUnit] = useState('')
-  const [currentFunctionInfo, setCurrentFunctionInfo] = useState({
-    name: '',
-    version: '',
-    method: ''
-  })
+  const [openScheduleJob, setOpenScheduleJob] = useState(false)
+  const [selectedFunction] = useState(
+    !isEmpty(functionsStore.template)
+      ? functionsStore.template.functions
+      : groupedFunctions.functions
+  )
   const history = useHistory()
 
   useLayoutEffect(() => {
@@ -68,28 +73,22 @@ const JobsPanel = ({
     return () => functionsStore.template.name && removeFunctionTemplate()
   }, [
     fetchFunctionTemplate,
-    functionsStore,
+    functionsStore.template,
     groupedFunctions,
     removeFunctionTemplate
   ])
 
-  const functionsData = useMemo(() => {
-    const selectedFunction = !isEmpty(functionsStore.template)
-      ? functionsStore.template.functions
-      : groupedFunctions.functions
-
+  const functionData = useMemo(() => {
     if (!isEmpty(selectedFunction)) {
-      let versionOptions = getVersionOptions(selectedFunction)
-      let methodOptions = getMethodOptions(selectedFunction)
-      let { defaultMethod, defaultVersion } = getDefaultMethodAndVersion(
+      const versionOptions = getVersionOptions(selectedFunction)
+      const methodOptions = getMethodOptions(selectedFunction)
+      const { defaultMethod, defaultVersion } = getDefaultMethodAndVersion(
         versionOptions,
         selectedFunction
       )
 
       setCurrentFunctionInfo({
-        name: functionsStore.template.name
-          ? functionsStore.template.name
-          : groupedFunctions.name,
+        name: functionsStore.template.name || groupedFunctions.name,
         version: defaultVersion,
         method: defaultMethod || (methodOptions[0]?.id ?? '')
       })
@@ -104,13 +103,9 @@ const JobsPanel = ({
       methodOptions: [],
       versionOptions: []
     }
-  }, [functionsStore, groupedFunctions])
+  }, [functionsStore.template.name, groupedFunctions.name, selectedFunction])
 
   const functionDefaultValues = useMemo(() => {
-    const selectedFunction = !isEmpty(functionsStore.template)
-      ? functionsStore.template.functions
-      : groupedFunctions.functions
-
     const functionParameters = getParameters(
       selectedFunction,
       currentFunctionInfo.method
@@ -144,7 +139,7 @@ const JobsPanel = ({
       volumeMounts: [],
       volumes: []
     }
-  }, [currentFunctionInfo, functionsStore, groupedFunctions, setDefaultData])
+  }, [currentFunctionInfo.method, selectedFunction, setDefaultData])
 
   const handleRunJob = () => {
     const selectedFunction = functionsStore.template.name
@@ -204,7 +199,7 @@ const JobsPanel = ({
       cpuUnit={cpuUnit}
       currentFunctionInfo={currentFunctionInfo}
       functionDefaultValues={functionDefaultValues}
-      functionsData={functionsData}
+      functionData={functionData}
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
       limits={limits}

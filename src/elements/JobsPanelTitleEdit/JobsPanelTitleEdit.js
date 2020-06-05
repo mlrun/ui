@@ -5,21 +5,21 @@ import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
 const JobsPanelTitleEdit = ({
-  currentFunction,
-  handleEditJobTitle,
+  currentFunctionInfo,
   match,
   methodOptions,
-  setCurrentFunction,
+  setCurrentFunctionInfo,
+  setIsEdit,
   versionOptions
 }) => {
   return (
     <>
       <Input
         onChange={name =>
-          setCurrentFunction(prevState => ({ ...prevState, name }))
+          setCurrentFunctionInfo(prevState => ({ ...prevState, name }))
         }
         type="text"
-        value={currentFunction.name}
+        value={currentFunctionInfo.name}
       />
       <div className="job-panel__select-container">
         <Select
@@ -27,10 +27,10 @@ const JobsPanelTitleEdit = ({
           label="Version"
           match={match}
           onClick={version =>
-            setCurrentFunction(prevState => ({ ...prevState, version }))
+            setCurrentFunctionInfo(prevState => ({ ...prevState, version }))
           }
           options={versionOptions}
-          selectedId={currentFunction.version}
+          selectedId={currentFunctionInfo.version}
         />
         {methodOptions.length !== 0 && (
           <Select
@@ -39,14 +39,14 @@ const JobsPanelTitleEdit = ({
             label="Method"
             match={match}
             onClick={method =>
-              setCurrentFunction(prevState => ({ ...prevState, method }))
+              setCurrentFunctionInfo(prevState => ({ ...prevState, method }))
             }
             options={methodOptions}
-            selectedId={currentFunction.method}
+            selectedId={currentFunctionInfo.method}
           />
         )}
       </div>
-      <button className="btn btn_primary" onClick={handleEditJobTitle}>
+      <button className="btn btn_primary" onClick={() => setIsEdit(false)}>
         Done
       </button>
     </>
@@ -54,11 +54,11 @@ const JobsPanelTitleEdit = ({
 }
 
 JobsPanelTitleEdit.propTypes = {
-  currentFunction: PropTypes.shape({}).isRequired,
-  handleEditJobTitle: PropTypes.func.isRequired,
+  currentFunctionInfo: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   methodOptions: PropTypes.array.isRequired,
-  setCurrentFunction: PropTypes.func.isRequired,
+  setCurrentFunctionInfo: PropTypes.func.isRequired,
+  setIsEdit: PropTypes.func.isRequired,
   versionOptions: PropTypes.array.isRequired
 }
 

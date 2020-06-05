@@ -6,7 +6,7 @@ import JobsPanelTitleView from './JobsPanelTitleView'
 import './jobsPanelTitle.scss'
 
 const JobsPanelTitle = ({
-  functionsData,
+  functionData,
   closePanel,
   match,
   openScheduleJob,
@@ -15,30 +15,30 @@ const JobsPanelTitle = ({
   setOpenScheduleJob
 }) => {
   const [isEdit, setIsEdit] = useState(false)
-  const [currentFunction, setCurrentFunction] = useState(currentFunctionInfo)
+  // const [currentFunction, setCurrentFunction] = useState(currentFunctionInfo)
 
-  const handleEditJobTitle = () => {
-    setCurrentFunctionInfo({
-      name: currentFunction.name,
-      version: currentFunction.version,
-      method: currentFunction.method
-    })
-    setIsEdit(false)
-  }
+  // const handleEditJobTitle = () => {
+  //   setCurrentFunctionInfo({
+  //     name: currentFunction.name,
+  //     version: currentFunction.version,
+  //     method: currentFunction.method
+  //   })
+  //   setIsEdit(false)
+  // }
 
   return (
     <JobsPanelTitleView
       closePanel={closePanel}
-      currentFunction={currentFunction}
-      handleEditJobTitle={handleEditJobTitle}
+      currentFunctionInfo={currentFunctionInfo}
+      // currentFunction={currentFunction}
       isEdit={isEdit}
       match={match}
-      methodOptions={functionsData.methodOptions}
+      methodOptions={functionData.methodOptions}
       openScheduleJob={openScheduleJob}
-      setCurrentFunction={setCurrentFunction}
+      setCurrentFunctionInfo={setCurrentFunctionInfo}
       setIsEdit={setIsEdit}
       setOpenScheduleJob={setOpenScheduleJob}
-      versionOptions={functionsData.versionOptions}
+      versionOptions={functionData.versionOptions}
     />
   )
 }
@@ -46,7 +46,7 @@ const JobsPanelTitle = ({
 JobsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
   currentFunctionInfo: PropTypes.shape({}).isRequired,
-  functionsData: PropTypes.shape({}).isRequired,
+  functionData: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   setCurrentFunctionInfo: PropTypes.func.isRequired,

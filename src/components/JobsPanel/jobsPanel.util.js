@@ -76,8 +76,8 @@ export const getVolume = selectedFunction => {
     .value()
 }
 
-export const getMethodOptions = selectedFunction => {
-  return _.chain(selectedFunction)
+export const getMethodOptions = selectedFunctions => {
+  return _.chain(selectedFunctions)
     .map(func =>
       func.spec.entry_points ? Object.values(func.spec.entry_points) : []
     )
@@ -91,9 +91,9 @@ export const getMethodOptions = selectedFunction => {
     .value()
 }
 
-export const getVersionOptions = selectedFunction => {
-  return _.unionBy(
-    selectedFunction.map(func => {
+export const getVersionOptions = selectedFunctions => {
+  const versionOptions = _.unionBy(
+    selectedFunctions.map(func => {
       return {
         label:
           (func.metadata.tag === 'latest' ? '$' : '') +
@@ -103,23 +103,23 @@ export const getVersionOptions = selectedFunction => {
     }),
     'id'
   )
+
+  return versionOptions.length
+    ? versionOptions
+    : [{ label: '$latest', id: 'latest' }]
 }
 
 export const getDefaultMethodAndVersion = (
   versionOptions,
-  selectedFunction
+  selectedFunctions
 ) => {
-  versionOptions = versionOptions.length
-    ? [{ label: '$latest', id: 'latest' }]
-    : versionOptions
-
-  const defaultMethod = selectedFunction.find(
+  const defaultMethod = selectedFunctions.find(
     item => item.metadata.tag === 'latest'
   )?.spec.default_handler
 
-  const defaultVersion = versionOptions.length
+  const defaultVersion = !versionOptions.length
     ? versionOptions[0].id
-    : versionOptions.find(version => version.id === 'latest')
+    : versionOptions.find(version => version.id === 'latest').id
 
   return {
     defaultMethod,

@@ -45,7 +45,7 @@ const CreateJobPage = ({
       return setFunctions(groupedFunctions)
     })
 
-    if (functionsStore.templatesCatalog.length === 0) {
+    if (!functionsStore.templatesCatalog.length) {
       fetchFunctionsTemplates().then(setTemplates)
     }
   }, [
@@ -58,7 +58,7 @@ const CreateJobPage = ({
   const handleSelectGroupFunctions = item => {
     setSelectedGroupFunctions(item)
 
-    if (Object.keys(item).length === 0) {
+    if (!Object.keys(item).length) {
       setNewJob({
         task: {
           spec: {
@@ -87,10 +87,10 @@ const CreateJobPage = ({
         match={match}
         templates={templates}
       />
-      {Object.values(selectedGroupFunctions).length !== 0 && (
+      {Object.values(selectedGroupFunctions).length && (
         <JobsPanel
-          groupedFunctions={selectedGroupFunctions}
           closePanel={handleSelectGroupFunctions}
+          groupedFunctions={selectedGroupFunctions}
           match={match}
         />
       )}
