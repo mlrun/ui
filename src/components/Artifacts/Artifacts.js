@@ -16,9 +16,9 @@ import { generateArtifactPreviewData } from '../../utils/generateArtifactPreview
 const Artifacts = ({
   artifactsStore,
   fetchArtifacts,
-  removeArtifacts,
   history,
-  match
+  match,
+  removeArtifacts
 }) => {
   const [artifacts, _setArtifacts] = useState([])
   const [selectedArtifact, setSelectedArtifact] = useState({})

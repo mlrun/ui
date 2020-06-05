@@ -9,7 +9,7 @@ import { formatDatetime } from '../../utils'
 import artifactAction from '../../actions/artifacts'
 import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 
-const DetailsArtifacts = ({ selectedItem, match }) => {
+const DetailsArtifacts = ({ match, selectedItem }) => {
   const dispatch = useDispatch()
 
   const content = selectedItem.artifacts.map(artifact => {
@@ -80,6 +80,7 @@ const DetailsArtifacts = ({ selectedItem, match }) => {
 }
 
 DetailsArtifacts.propTypes = {
+  match: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }
 

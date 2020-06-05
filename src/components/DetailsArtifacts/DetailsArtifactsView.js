@@ -13,7 +13,7 @@ import { ReactComponent as Popout } from '../../images/popout.svg'
 
 import './detailsArtifacts.scss'
 
-const DetailsArtifactsView = ({ content, showPreview, match }) => (
+const DetailsArtifactsView = ({ content, match, showPreview }) => (
   <div className="item-artifacts">
     {content.map((artifact, index) => {
       const targetPath = `${
@@ -88,6 +88,7 @@ const DetailsArtifactsView = ({ content, showPreview, match }) => (
 
 DetailsArtifactsView.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  match: PropTypes.shape({}).isRequired,
   showPreview: PropTypes.func.isRequired
 }
 
