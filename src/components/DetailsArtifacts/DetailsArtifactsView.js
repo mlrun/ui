@@ -31,6 +31,7 @@ const DetailsArtifactsView = ({ content, match, showPreview }) => (
               <div className="item-artifacts__row-item">
                 {artifact.key}
                 <Link
+                  className="artifact-details-link"
                   to={`/projects/${match.params.projectName}/artifacts/${artifact.db_key}/info`}
                 >
                   View details...

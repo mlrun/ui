@@ -33,7 +33,7 @@
 
       &:first-child {
         flex-direction: column;
-        align-items: end;
+        align-items: flex-start;
         justify-content: center;
         min-width: 170px;
         color: $cornflowerBlue;
@@ -48,7 +48,7 @@
         min-width: 75px;
       }
 
-      a {
+      .artifact-details-link {
         color: grey;
         font-size: 10px;
         cursor: pointer;
