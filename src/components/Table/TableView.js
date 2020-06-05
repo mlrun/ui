@@ -31,8 +31,7 @@ const TableView = ({
     {
       label: 'View YAML',
       icon: <Yaml />,
-      onClick: toggleConvertToYaml,
-      visible: true
+      onClick: toggleConvertToYaml
     }
   ]
   return (

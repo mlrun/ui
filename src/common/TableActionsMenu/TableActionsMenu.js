@@ -41,7 +41,7 @@ const TableActionsMenu = ({ item, menu, time }) => {
         >
           {menu.map(menuItem => {
             return (
-              menuItem.visible && (
+              (menuItem.visible ?? true) && (
                 <div
                   className="table-actions-container__option"
                   onClick={() => {
