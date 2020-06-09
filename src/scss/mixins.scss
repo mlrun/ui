@@ -15,70 +15,74 @@
   align-items: center;
   text-align: left;
   border-bottom: $tableBorder;
+
   &:first-child {
     padding-left: 56px;
   }
 }
 
 @mixin detailsItem {
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 24px;
   color: $topaz;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 24px;
 }
 
 @mixin chip($border) {
-  padding: 8px 14px;
-  margin: 5px 2px;
-  cursor: default;
   display: inline-flex;
   align-items: center;
-  white-space: nowrap;
-  background-color: transparent;
+  margin: 5px 2px;
+  padding: 8px 14px;
+  color: $mulledWine;
   font-size: 14px;
   line-height: 16px;
-  color: $mulledWine;
-  border-radius: 16px;
+  white-space: nowrap;
+  background-color: transparent;
   border: $border;
+  border-radius: 16px;
+  cursor: default;
 }
 
 @mixin jobsFilter($item, $left) {
   position: relative;
   margin-right: 16px;
+
   &::before {
-    content: $item;
     position: absolute;
-    left: $left;
     top: 11px;
+    left: $left;
     color: $topaz;
+    content: $item;
   }
+
   &::after {
-    content: url('../images/dropdown.svg');
     position: absolute;
-    right: 15px;
     top: 10px;
+    right: 15px;
+    content: url('../images/dropdown.svg');
   }
 }
 
 @mixin jobStatus($color) {
+  display: inline-block;
   width: 8px;
   height: 8px;
-  border-radius: 50%;
-  display: inline-block;
   background-color: $color;
+  border-radius: 50%;
 }
 
 @mixin tableColumn($flex) {
   &_container {
     display: flex;
     flex: $flex;
-    height: 100%;
     align-items: flex-end;
+    height: 100%;
+
     &_item {
-      height: 55px;
       display: flex;
       flex: 1;
       align-items: center;
+      height: 55px;
     }
   }
 }
@@ -93,12 +97,12 @@
   line-height: $lineHeight;
 }
 
-@mixin tableHeader {
+@mixin tableHeader($paddingLefAndRight) {
+  padding: 10px $paddingLefAndRight;
+  color: $topaz;
   font-weight: bold;
   font-size: 14px;
   line-height: 24px;
-  color: $topaz;
-  padding: 10px 0;
 }
 
 @mixin resetSpaces {
@@ -107,6 +111,6 @@
 }
 
 @mixin tableColumnFlex($flex, $min) {
-  min-width: $min;
   flex: $flex;
+  min-width: $min;
 }
