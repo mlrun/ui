@@ -97,8 +97,8 @@
   line-height: $lineHeight;
 }
 
-@mixin tableHeader($paddingLefAndRight) {
-  padding: 10px $paddingLefAndRight;
+@mixin tableHeader($sidePadding) {
+  padding: 10px $sidePadding;
   color: $topaz;
   font-weight: bold;
   font-size: 14px;
@@ -110,7 +110,7 @@
   padding: 0;
 }
 
-@mixin tableColumnFlex($flex, $min) {
+@mixin tableColumnFlex($flex, $minWidth) {
   flex: $flex;
-  min-width: $min;
+  min-width: $minWidth;
 }

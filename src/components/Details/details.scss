@@ -113,13 +113,13 @@
         &_row {
           display: flex;
           flex-direction: row;
-          border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+          border-bottom: $tableBorder;
 
           &_cell {
             display: flex;
             flex: 1;
             flex-direction: column;
-            min-width: 5px;
+            min-width: 55px;
             padding: 19px 16px;
           }
         }
@@ -134,7 +134,7 @@
             display: flex;
             flex: 1;
             flex-direction: column;
-            min-width: 5px;
+            min-width: 55px;
 
             @include tableHeader(16px);
           }
@@ -193,7 +193,7 @@
         background-color: $white;
         border: 1px solid $cornflowerBlue;
         border-radius: 16px;
-        box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
+        box-shadow: $previewBoxShadow;
         cursor: pointer;
 
         svg {
