@@ -93,7 +93,7 @@
 
     &__item {
       @include tableDet;
-      @include tableHeader;
+      @include tableHeader(0);
 
       flex: 1;
 
