@@ -11,6 +11,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import Tooltip from '../../common/Tooltip/Tooltip'
 
 import panelData from '../JobsPanel/panelData'
+import { panelActions } from '../JobsPanel/panelReducer'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
@@ -24,15 +25,14 @@ const JobsPanelDataInputsView = ({
   match,
   newInput,
   newVolume,
+  panelDispatch,
   selectOptions,
   selectedDataInput,
   selectedVolume,
   setAddNewInput,
   setAddNewVolume,
-  setInputPath,
   setNewInput,
   setNewVolume,
-  setOutputPath,
   setSelectedDataInput,
   setSelectedVolume,
   volumeMounts,
@@ -201,14 +201,24 @@ const JobsPanelDataInputsView = ({
         <Input
           label="Default input path"
           className="default-input"
-          onChange={setInputPath}
+          onChange={inputValue => {
+            panelDispatch({
+              type: panelActions.SET_INPUT_PATH,
+              payload: inputValue
+            })
+          }}
           floatingLabel
           type="text"
         />
         <Input
           label="Default artifact path"
           className="default-input"
-          onChange={setOutputPath}
+          onChange={inputValue => {
+            panelDispatch({
+              type: panelActions.SET_OUTPUT_PATH,
+              payload: inputValue
+            })
+          }}
           floatingLabel
           type="text"
         />
@@ -226,13 +236,12 @@ JobsPanelDataInputsView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   newInput: PropTypes.shape({}).isRequired,
   newVolume: PropTypes.shape({}).isRequired,
+  panelDispatch: PropTypes.func.isRequired,
   selectOptions: PropTypes.shape({}).isRequired,
   setAddNewInput: PropTypes.func.isRequired,
   setAddNewVolume: PropTypes.func.isRequired,
-  setInputPath: PropTypes.func.isRequired,
   setNewInput: PropTypes.func.isRequired,
   setNewVolume: PropTypes.func.isRequired,
-  setOutputPath: PropTypes.func.isRequired,
   volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

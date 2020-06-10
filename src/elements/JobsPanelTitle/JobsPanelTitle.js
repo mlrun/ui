@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelTitleView from './JobsPanelTitleView'
@@ -6,37 +6,24 @@ import JobsPanelTitleView from './JobsPanelTitleView'
 import './jobsPanelTitle.scss'
 
 const JobsPanelTitle = ({
-  functionData,
   closePanel,
+  editMode,
+  functionData,
   match,
   openScheduleJob,
-  setCurrentFunctionInfo,
   currentFunctionInfo,
+  panelDispatch,
   setOpenScheduleJob
 }) => {
-  const [isEdit, setIsEdit] = useState(false)
-  // const [currentFunction, setCurrentFunction] = useState(currentFunctionInfo)
-
-  // const handleEditJobTitle = () => {
-  //   setCurrentFunctionInfo({
-  //     name: currentFunction.name,
-  //     version: currentFunction.version,
-  //     method: currentFunction.method
-  //   })
-  //   setIsEdit(false)
-  // }
-
   return (
     <JobsPanelTitleView
       closePanel={closePanel}
       currentFunctionInfo={currentFunctionInfo}
-      // currentFunction={currentFunction}
-      isEdit={isEdit}
+      editMode={editMode}
       match={match}
       methodOptions={functionData.methodOptions}
       openScheduleJob={openScheduleJob}
-      setCurrentFunctionInfo={setCurrentFunctionInfo}
-      setIsEdit={setIsEdit}
+      panelDispatch={panelDispatch}
       setOpenScheduleJob={setOpenScheduleJob}
       versionOptions={functionData.versionOptions}
     />
@@ -49,8 +36,7 @@ JobsPanelTitle.propTypes = {
   functionData: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
-  setCurrentFunctionInfo: PropTypes.func.isRequired,
-  setOpenScheduleJob: PropTypes.func.isRequired
+  panelDispatch: PropTypes.func.isRequired
 }
 
 export default JobsPanelTitle

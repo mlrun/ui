@@ -5,19 +5,17 @@ import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import Select from '../../common/Select/Select'
 import RangeInput from '../../common/RangeInput/RangeInput'
 
+import { panelActions } from '../JobsPanel/panelReducer'
+
 const JobsPanelResourcesView = ({
-  cpuUnit,
   handleSelectMemoryUnit,
   handleSelectСpuUnit,
-  limits,
   match,
-  memoryUnit,
-  requests,
+  panelDispatch,
+  panelState,
   requestsCpu,
   requestsMemory,
-  selectOptions,
-  setLimits,
-  setRequests
+  selectOptions
 }) => (
   <div className="job-panel__item resources">
     <JobsPanelSection title="Resources" />
@@ -27,20 +25,20 @@ const JobsPanelResourcesView = ({
         match={match}
         options={selectOptions.unitMemory}
         onClick={value => handleSelectMemoryUnit(value)}
-        selectedId={memoryUnit}
+        selectedId={panelState.memoryUnit}
       />
       <RangeInput
         floatingLabel
         label="Request"
         onChange={value =>
-          setRequests({
-            ...requests,
-            memory: `${value}${
-              memoryUnit.length === 0 || memoryUnit === 'Bytes'
+          panelDispatch({
+            type: panelActions.SET_REQUESTS_MEMORY,
+            payload: `${value}${
+              !panelState.memoryUnit.length || panelState.memoryUnit === 'Bytes'
                 ? ''
-                : memoryUnit.match(/i/)
-                ? memoryUnit.slice(0, 2)
-                : memoryUnit.slice(0, 1)
+                : panelState.memoryUnit.match(/i/)
+                ? panelState.memoryUnit.slice(0, 2)
+                : panelState.memoryUnit.slice(0, 1)
             }`
           })
         }
@@ -49,8 +47,13 @@ const JobsPanelResourcesView = ({
       <RangeInput
         floatingLabel
         label="Limit"
-        onChange={value => setLimits({ ...limits, memory: `${value}` })}
-        value={limits.memory}
+        onChange={value =>
+          panelDispatch({
+            type: panelActions.SET_LIMITS_MEMORY,
+            payload: `${value}`
+          })
+        }
+        value={panelState.limits.memory}
       />
     </JobsPanelSection>
     <JobsPanelSection title="Cpu">
@@ -59,15 +62,15 @@ const JobsPanelResourcesView = ({
         match={match}
         options={selectOptions.unitCpu}
         onClick={value => handleSelectСpuUnit(value)}
-        selectedId={cpuUnit}
+        selectedId={panelState.cpuUnit}
       />
       <RangeInput
         floatingLabel
         label="Request"
         onChange={value =>
-          setRequests({
-            ...requests,
-            cpu: `${value}${cpuUnit === 'millicpu' ? 'm' : ''}`
+          panelDispatch({
+            type: panelActions.SET_REQUESTS_CPU,
+            payload: `${value}${panelState.cpuUnit === 'millicpu' ? 'm' : ''}`
           })
         }
         value={requestsCpu}
@@ -75,34 +78,40 @@ const JobsPanelResourcesView = ({
       <RangeInput
         floatingLabel
         label="Limit"
-        onChange={value => setLimits({ ...limits, cpu: `${value}` })}
-        value={limits.cpu}
+        onChange={value =>
+          panelDispatch({
+            type: panelActions.SET_LIMITS_CPU,
+            payload: `${value}`
+          })
+        }
+        value={panelState.limits.cpu}
       />
     </JobsPanelSection>
     <JobsPanelSection title="Gpu" className="section-gpu">
       <RangeInput
         floatingLabel
         label="Limit"
-        onChange={value => setLimits({ ...limits, nvidia_gpu: `${value}` })}
-        value={limits.nvidia_gpu}
+        onChange={value =>
+          panelDispatch({
+            type: panelActions.SET_LIMITS_NVIDIA_GPU,
+            payload: `${value}`
+          })
+        }
+        value={panelState.limits.nvidia_gpu}
       />
     </JobsPanelSection>
   </div>
 )
 
 JobsPanelResourcesView.propTypes = {
-  cpuUnit: PropTypes.string.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   handleSelectСpuUnit: PropTypes.func.isRequired,
-  limits: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  memoryUnit: PropTypes.string.isRequired,
-  requests: PropTypes.shape({}).isRequired,
+  panelDispatch: PropTypes.func.isRequired,
+  panelState: PropTypes.shape({}).isRequired,
   requestsCpu: PropTypes.string.isRequired,
   requestsMemory: PropTypes.string.isRequired,
-  selectOptions: PropTypes.shape({}).isRequired,
-  setLimits: PropTypes.func.isRequired,
-  setRequests: PropTypes.func.isRequired
+  selectOptions: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelResourcesView

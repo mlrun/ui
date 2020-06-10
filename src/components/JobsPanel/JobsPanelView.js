@@ -13,41 +13,32 @@ import { ReactComponent as Run } from '../../images/run.svg'
 
 const JobsPanelView = ({
   closePanel,
-  cpuUnit,
-  currentFunctionInfo,
-  functionDefaultValues,
   functionData,
   handleRunJob,
   jobsStore,
-  limits,
   match,
-  memoryUnit,
   openScheduleJob,
-  requests,
-  setCpuUnit,
-  setCurrentFunctionInfo,
-  setInputPath,
-  setLimits,
-  setMemoryUnit,
+  panelDispatch,
+  panelState,
   setNewJobHyperParameters,
   setNewJobInputs,
   setNewJobParameters,
   setNewJobVolumeMounts,
   setNewJobVolumes,
   setOpenScheduleJob,
-  setOutputPath,
-  setRequests
+  tableData
 }) => {
   return (
     <div className="job-panel-container">
       <div className="job-panel">
         <JobsPanelTitle
           closePanel={closePanel}
-          currentFunctionInfo={currentFunctionInfo}
+          currentFunctionInfo={panelState.currentFunctionInfo}
+          editMode={panelState.editMode}
           functionData={functionData}
           match={match}
           openScheduleJob={openScheduleJob}
-          setCurrentFunctionInfo={setCurrentFunctionInfo}
+          panelDispatch={panelDispatch}
           setOpenScheduleJob={setOpenScheduleJob}
         />
         {!openScheduleJob ? (
@@ -58,12 +49,13 @@ const JobsPanelView = ({
               openByDefault
             >
               <JobsPanelParameters
-                functionDefaultValues={functionDefaultValues}
                 hyperparams={jobsStore.newJob.task.spec.hyperparams}
                 match={match}
+                panelDispatch={panelDispatch}
                 parameters={jobsStore.newJob.task.spec.parameters}
                 setNewJobHyperParameters={setNewJobHyperParameters}
                 setNewJobParameters={setNewJobParameters}
+                tableData={Object.values(tableData.parameters)}
               />
             </Accordion>
             <Accordion
@@ -72,14 +64,13 @@ const JobsPanelView = ({
               openByDefault
             >
               <JobsPanelDataInputs
-                functionDefaultValues={functionDefaultValues}
+                functionDefaultValues={tableData}
                 inputs={jobsStore.newJob.task.spec.inputs}
                 match={match}
-                setInputPath={setInputPath}
+                panelDispatch={panelDispatch}
                 setNewJobInputs={setNewJobInputs}
                 setNewJobVolumeMounts={setNewJobVolumeMounts}
                 setNewJobVolumes={setNewJobVolumes}
-                setOutputPath={setOutputPath}
                 volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
                 volumes={jobsStore.newJob.function.spec.volumes}
               />
@@ -90,15 +81,9 @@ const JobsPanelView = ({
               openByDefault
             >
               <JobsPanelResources
-                cpuUnit={cpuUnit}
-                limits={limits}
                 match={match}
-                memoryUnit={memoryUnit}
-                requests={requests}
-                setCpuUnit={setCpuUnit}
-                setLimits={setLimits}
-                setMemoryUnit={setMemoryUnit}
-                setRequests={setRequests}
+                panelDispatch={panelDispatch}
+                panelState={panelState}
               />
             </Accordion>
             <div className="job-panel__buttons-container">
@@ -124,30 +109,19 @@ const JobsPanelView = ({
 
 JobsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
-  cpuUnit: PropTypes.string.isRequired,
-  currentFunctionInfo: PropTypes.shape({}).isRequired,
-  functionDefaultValues: PropTypes.shape({}).isRequired,
   functionData: PropTypes.shape({}).isRequired,
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
-  limits: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  memoryUnit: PropTypes.string.isRequired,
+  panelDispatch: PropTypes.func.isRequired,
+  panelState: PropTypes.shape({}).isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
-  requests: PropTypes.shape({}).isRequired,
-  setCpuUnit: PropTypes.func.isRequired,
-  setCurrentFunctionInfo: PropTypes.func.isRequired,
-  setInputPath: PropTypes.func.isRequired,
-  setLimits: PropTypes.func.isRequired,
-  setMemoryUnit: PropTypes.func.isRequired,
   setNewJobHyperParameters: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired,
   setNewJobParameters: PropTypes.func.isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,
   setNewJobVolumes: PropTypes.func.isRequired,
-  setOpenScheduleJob: PropTypes.func.isRequired,
-  setOutputPath: PropTypes.func.isRequired,
-  setRequests: PropTypes.func.isRequired
+  setOpenScheduleJob: PropTypes.func.isRequired
 }
 
 export default JobsPanelView

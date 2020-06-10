@@ -15,7 +15,7 @@ const CreateJobPage = ({
   fetchFunctionsTemplates,
   functionsStore,
   match,
-  setNewJob
+  removeNewJob
 }) => {
   const [functions, setFunctions] = useState([])
   const [selectedGroupFunctions, setSelectedGroupFunctions] = useState({})
@@ -59,21 +59,7 @@ const CreateJobPage = ({
     setSelectedGroupFunctions(item)
 
     if (!Object.keys(item).length) {
-      setNewJob({
-        task: {
-          spec: {
-            parameters: {},
-            inputs: {},
-            hyperparams: {}
-          }
-        },
-        function: {
-          spec: {
-            volumes: [],
-            volumeMounts: []
-          }
-        }
-      })
+      removeNewJob()
     }
   }
 

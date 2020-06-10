@@ -9,11 +9,10 @@ const JobsPanelDataInputs = ({
   functionDefaultValues,
   inputs,
   match,
-  setInputPath,
+  panelDispatch,
   setNewJobInputs,
   setNewJobVolumeMounts,
   setNewJobVolumes,
-  setOutputPath,
   volumeMounts,
   volumes
 }) => {
@@ -237,15 +236,14 @@ const JobsPanelDataInputs = ({
       match={match}
       newInput={newInput}
       newVolume={newVolume}
+      panelDispatch={panelDispatch}
       selectOptions={selectOptions}
       selectedDataInput={selectedDataInput}
       selectedVolume={selectedVolume}
       setAddNewInput={setAddNewInput}
       setAddNewVolume={setAddNewVolume}
-      setInputPath={setInputPath}
       setNewInput={setNewInput}
       setNewVolume={setNewVolume}
-      setOutputPath={setOutputPath}
       setSelectedDataInput={setSelectedDataInput}
       setSelectedVolume={setSelectedVolume}
       volumeMounts={defaultVolumes.volumeMounts}
@@ -258,11 +256,10 @@ JobsPanelDataInputs.propTypes = {
   functionDefaultValues: PropTypes.shape({}).isRequired,
   inputs: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  setInputPath: PropTypes.func.isRequired,
+  panelDispatch: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,
   setNewJobVolumes: PropTypes.func.isRequired,
-  setOutputPath: PropTypes.func.isRequired,
   volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   volumes: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }

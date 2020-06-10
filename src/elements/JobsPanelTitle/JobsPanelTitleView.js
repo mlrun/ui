@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 
 import JobsPanelTitleEdit from '../JobsPanelTitleEdit/JobsPanelTitleEdit'
 
@@ -7,24 +8,23 @@ import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
-import classNames from 'classnames'
+import { panelActions } from '../../components/JobsPanel/panelReducer'
 
 const JobsPanelTitleView = ({
   closePanel,
   currentFunctionInfo,
-  isEdit,
+  editMode,
   match,
   methodOptions,
   openScheduleJob,
-  setCurrentFunctionInfo,
-  setIsEdit,
+  panelDispatch,
   setOpenScheduleJob,
   versionOptions
 }) => {
   const jobPanelClassName = classNames({
     'job-panel__title-wrapper': true,
-    'job-panel__title-wrapper_edit': isEdit,
-    'job-panel__title-wrapper_hover': !openScheduleJob && !isEdit
+    'job-panel__title-wrapper_edit': editMode,
+    'job-panel__title-wrapper_hover': !openScheduleJob && !editMode
   })
 
   return (
@@ -36,7 +36,7 @@ const JobsPanelTitleView = ({
             <span className="job-schedule__title">Schedule Job</span>
           </div>
         )}
-        {!isEdit ? (
+        {!editMode ? (
           <>
             <div className="job-panel__wrapper">
               <div className="job-panel__name">{currentFunctionInfo.name}</div>
@@ -59,7 +59,10 @@ const JobsPanelTitleView = ({
                 <Edit
                   className="job-panel__icon"
                   onClick={() => {
-                    setIsEdit(true)
+                    panelDispatch({
+                      type: panelActions.SET_EDIT_MODE,
+                      payload: true
+                    })
                   }}
                 />
               </div>
@@ -70,8 +73,7 @@ const JobsPanelTitleView = ({
             currentFunctionInfo={currentFunctionInfo}
             match={match}
             methodOptions={methodOptions}
-            setCurrentFunctionInfo={setCurrentFunctionInfo}
-            setIsEdit={setIsEdit}
+            panelDispatch={panelDispatch}
             versionOptions={versionOptions}
           />
         )}
@@ -89,12 +91,10 @@ const JobsPanelTitleView = ({
 JobsPanelTitleView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   currentFunctionInfo: PropTypes.shape({}).isRequired,
-  isEdit: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   methodOptions: PropTypes.array.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
-  setCurrentFunctionInfo: PropTypes.func.isRequired,
-  setIsEdit: PropTypes.func.isRequired,
+  panelDispatch: PropTypes.func.isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired,
   versionOptions: PropTypes.array.isRequired
 }

@@ -1,17 +1,19 @@
-import _ from 'lodash'
+import _, { isEmpty } from 'lodash'
+import { panelActions } from './panelReducer'
+import { parseDefaultContent } from '../../utils/parseDefaultContent'
 
 export const getDefaultData = functionParameters => {
   const parameters = functionParameters
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
       doc: parameter.doc,
-      isValueEmpty: !parameter.default,
+      isValueEmpty: true,
       isDefault: true,
       data: {
         name: parameter.name ?? '',
-        type: parameter.type ?? '',
+        valueType: parameter.type ?? '',
         value: parameter.default ?? '',
-        simple: ''
+        parameterType: ''
       }
     }))
 
@@ -124,5 +126,38 @@ export const getDefaultMethodAndVersion = (
   return {
     defaultMethod,
     defaultVersion
+  }
+}
+
+export const generateTableData = (
+  method,
+  selectedFunction,
+  panelDispatch,
+  setNewJob
+) => {
+  const functionParameters = getParameters(selectedFunction, method)
+
+  if (!isEmpty(functionParameters)) {
+    const { parameters, dataInputs } = getDefaultData(functionParameters)
+    const volumeMounts = getVolumeMounts(selectedFunction)
+    const volumes = getVolume(selectedFunction)
+
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA,
+      payload: {
+        dataInputs,
+        parameters,
+        volumeMounts,
+        volumes
+      }
+    })
+    setNewJob({
+      inputs: parseDefaultContent(dataInputs),
+      parameters: parseDefaultContent(parameters),
+      volumeMounts: volumeMounts.length
+        ? volumeMounts.map(volumeMounts => volumeMounts.data)
+        : [],
+      volumes
+    })
   }
 }

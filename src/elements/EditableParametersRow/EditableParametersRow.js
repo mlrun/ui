@@ -19,7 +19,7 @@ const EditableParametersRow = ({
         <div className="data-ellipsis">{selectedParameter.data.name}</div>
       </div>
       <div className="table__cell table__cell_disabled">
-        {selectedParameter.data.type}
+        {selectedParameter.data.valueType}
       </div>
       <div className="table__cell table__cell_edit">
         <Input
@@ -38,14 +38,14 @@ const EditableParametersRow = ({
       </div>
       <div className="table__cell table__cell_edit">
         <Select
-          label={selectedParameter.data.simple}
+          label={selectedParameter.data.parameterType}
           match={match}
-          onClick={simple =>
+          onClick={parameterType =>
             setSelectedParameter({
               ...selectedParameter.data,
               data: {
                 ...selectedParameter.data,
-                simple: simple
+                parameterType: parameterType
               }
             })
           }

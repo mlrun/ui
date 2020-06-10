@@ -1,4 +1,10 @@
-import React, { useState, useLayoutEffect, useMemo } from 'react'
+import React, {
+  useState,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useEffect
+} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -7,16 +13,17 @@ import JobsPanelView from './JobsPanelView'
 
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
-import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import {
-  getDefaultData,
+  // getDefaultData,
   getMethodOptions,
-  getParameters,
+  // getParameters,
   getVersionOptions,
   getDefaultMethodAndVersion,
-  getVolumeMounts,
-  getVolume
+  // getVolumeMounts,
+  // getVolume
+  generateTableData
 } from './jobsPanel.util'
+import { initialState, panelReducer, panelActions } from './panelReducer'
 
 import { isEmpty } from 'lodash'
 
@@ -31,6 +38,7 @@ const JobsPanel = ({
   match,
   removeFunctionTemplate,
   runNewJob,
+  removeNewJob,
   setNewJob,
   setNewJobHyperParameters,
   setNewJobInputs,
@@ -39,25 +47,7 @@ const JobsPanel = ({
   setNewJobVolumes,
   setDefaultData
 }) => {
-  const [currentFunctionInfo, setCurrentFunctionInfo] = useState({
-    name: '',
-    version: '',
-    method: ''
-  })
-  const [inputPath, setInputPath] = useState('')
-  const [outputPath, setOutputPath] = useState('')
-  const [requests, setRequests] = useState({
-    cpu: '',
-    memory: ''
-  })
-  const [memoryUnit, setMemoryUnit] = useState('')
-
-  const [limits, setLimits] = useState({
-    cpu: '',
-    memory: '',
-    nvidia_gpu: ''
-  })
-  const [cpuUnit, setCpuUnit] = useState('')
+  const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
   const [selectedFunction] = useState(
     !isEmpty(functionsStore.template)
@@ -78,6 +68,102 @@ const JobsPanel = ({
     removeFunctionTemplate
   ])
 
+  useEffect(() => {
+    //   const functionParameters = getParameters(
+    //     selectedFunction,
+    //     panelState.currentFunctionInfo.method
+    //   )
+    //
+    //   if (!isEmpty(functionParameters)) {
+    //     const { parameters, dataInputs } = getDefaultData(functionParameters)
+    //     const volumeMounts = getVolumeMounts(selectedFunction)
+    //     const volumes = getVolume(selectedFunction)
+    //
+    //     panelDispatch({
+    //       type: panelActions.SET_TABLE_DATA,
+    //       payload: {
+    //         dataInputs,
+    //         parameters,
+    //         volumeMounts,
+    //         volumes
+    //       }
+    //     })
+    //     setNewJob({
+    //       dataInputs,
+    //       parameters,
+    //       volumeMounts,
+    //       volumes
+    //     })
+    //   }
+    // }, [
+    //   panelState.currentFunctionInfo.method,
+    //   selectedFunction,
+    //   setDefaultData,
+    //   setNewJob
+    // ])
+    const emptyDefaultData = Object.values(panelState.tableData).filter(
+      value => !isEmpty(value)
+    )
+    if (!panelState.editMode && !emptyDefaultData.length) {
+      console.log('when not edit mode and empty table data')
+      generateTableData(
+        panelState.currentFunctionInfo.method,
+        selectedFunction,
+        panelDispatch,
+        setNewJob
+      )
+    } else if (panelState.editMode) {
+      if (
+        panelState.previousPanelData.titleInfo.method !==
+        panelState.currentFunctionInfo.method
+      ) {
+        console.log('when edit mode and method not equal')
+        generateTableData(
+          panelState.currentFunctionInfo.method,
+          selectedFunction,
+          panelDispatch,
+          setNewJob
+        )
+      } else {
+        console.log('when edit mode and method are equal')
+        panelDispatch({
+          type: panelActions.SET_TABLE_DATA,
+          payload: {
+            ...panelState.previousPanelData.tableData
+          }
+        })
+      }
+    }
+  }, [
+    panelState.currentFunctionInfo.method,
+    panelState.editMode,
+    panelState.previousPanelData.tableData,
+    panelState.previousPanelData.titleInfo.method,
+    selectedFunction,
+    setNewJob
+  ])
+
+  useEffect(() => {
+    const emptyTableData = Object.values(
+      panelState.previousPanelData.tableData
+    ).filter(value => !isEmpty(value))
+    const emptyDefaultData = Object.values(panelState.tableData).filter(
+      value => !isEmpty(value)
+    )
+
+    if (!emptyTableData.length && emptyDefaultData.length) {
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_TABLE_DATA,
+        payload: {
+          inputs: panelState.tableData.dataInputs,
+          parameters: panelState.tableData.parameters,
+          volumes: panelState.tableData.volumes,
+          volumeMounts: panelState.tableData.volumeMounts || []
+        }
+      })
+    }
+  }, [panelState.previousPanelData.tableData, panelState.tableData])
+
   const functionData = useMemo(() => {
     if (!isEmpty(selectedFunction)) {
       const versionOptions = getVersionOptions(selectedFunction)
@@ -87,10 +173,20 @@ const JobsPanel = ({
         selectedFunction
       )
 
-      setCurrentFunctionInfo({
-        name: functionsStore.template.name || groupedFunctions.name,
-        version: defaultVersion,
-        method: defaultMethod || (methodOptions[0]?.id ?? '')
+      panelDispatch({
+        type: panelActions.SET_CURRENT_FUNCTION_INFO,
+        payload: {
+          name: functionsStore.template.name || groupedFunctions.name,
+          version: defaultVersion,
+          method: defaultMethod || (methodOptions[0]?.id ?? '')
+        }
+      })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_TITLE_INFO,
+        payload: {
+          method: defaultMethod || (methodOptions[0]?.id ?? ''),
+          version: defaultVersion
+        }
       })
 
       return {
@@ -105,47 +201,11 @@ const JobsPanel = ({
     }
   }, [functionsStore.template.name, groupedFunctions.name, selectedFunction])
 
-  const functionDefaultValues = useMemo(() => {
-    const functionParameters = getParameters(
-      selectedFunction,
-      currentFunctionInfo.method
-    )
-
-    if (!isEmpty(functionParameters)) {
-      const { parameters, dataInputs } = getDefaultData(functionParameters)
-      const volumeMounts = getVolumeMounts(selectedFunction)
-      const volumes = getVolume(selectedFunction)
-
-      setDefaultData({
-        parameters: parseDefaultContent(parameters),
-        inputs: parseDefaultContent(dataInputs),
-        volumes,
-        volumeMounts: volumeMounts.length
-          ? volumeMounts.map(volumeMounts => volumeMounts.data)
-          : []
-      })
-
-      return {
-        parameters,
-        dataInputs,
-        volumeMounts,
-        volumes
-      }
-    }
-
-    return {
-      parameters: [],
-      dataInputs: [],
-      volumeMounts: [],
-      volumes: []
-    }
-  }, [currentFunctionInfo.method, selectedFunction, setDefaultData])
-
   const handleRunJob = () => {
     const selectedFunction = functionsStore.template.name
       ? functionsStore.template.functions[0]
       : groupedFunctions.functions.find(
-          func => func.metadata.tag === currentFunctionInfo.version
+          func => func.metadata.tag === panelState.currentFunctionInfo.version
         )
 
     const postData = {
@@ -156,8 +216,8 @@ const JobsPanel = ({
         spec: {
           ...jobsStore.newJob.function.spec,
           resources: {
-            limits: limits,
-            requests: requests
+            limits: panelState.limits,
+            requests: panelState.requests
           }
         }
       },
@@ -165,29 +225,15 @@ const JobsPanel = ({
         ...jobsStore.newJob.task,
         spec: {
           ...jobsStore.newJob.task.spec,
-          output_path: outputPath,
-          input_path: inputPath,
+          output_path: panelState.outputPath,
+          input_path: panelState.inputPath,
           function: `${match.params.projectName}/${selectedFunction.metadata.name}:${selectedFunction.metadata.hash}`
         }
       }
     }
 
     runNewJob(postData).then(() => {
-      setNewJob({
-        task: {
-          spec: {
-            parameters: {},
-            inputs: {},
-            hyperparams: {}
-          }
-        },
-        function: {
-          spec: {
-            volumes: [],
-            volumeMounts: []
-          }
-        }
-      })
+      removeNewJob()
 
       history.push(`/projects/${match.params.projectName}/jobs`)
     })
@@ -196,30 +242,20 @@ const JobsPanel = ({
   return (
     <JobsPanelView
       closePanel={closePanel}
-      cpuUnit={cpuUnit}
-      currentFunctionInfo={currentFunctionInfo}
-      functionDefaultValues={functionDefaultValues}
       functionData={functionData}
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
-      limits={limits}
       match={match}
-      memoryUnit={memoryUnit}
       openScheduleJob={openScheduleJob}
-      requests={requests}
-      setCpuUnit={setCpuUnit}
-      setCurrentFunctionInfo={setCurrentFunctionInfo}
-      setInputPath={setInputPath}
-      setLimits={setLimits}
-      setMemoryUnit={setMemoryUnit}
+      panelState={panelState}
+      panelDispatch={panelDispatch}
       setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}
       setNewJobParameters={setNewJobParameters}
       setNewJobVolumeMounts={setNewJobVolumeMounts}
       setNewJobVolumes={setNewJobVolumes}
       setOpenScheduleJob={setOpenScheduleJob}
-      setOutputPath={setOutputPath}
-      setRequests={setRequests}
+      tableData={panelState.tableData}
     />
   )
 }
@@ -228,13 +264,7 @@ JobsPanel.propTypes = {
   closePanel: PropTypes.func.isRequired,
   groupedFunctions: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  runNewJob: PropTypes.func.isRequired,
-  setNewJob: PropTypes.func.isRequired,
-  setNewJobHyperParameters: PropTypes.func.isRequired,
-  setNewJobInputs: PropTypes.func.isRequired,
-  setNewJobParameters: PropTypes.func.isRequired,
-  setNewJobVolumeMounts: PropTypes.func.isRequired,
-  setNewJobVolumes: PropTypes.func.isRequired
+  runNewJob: PropTypes.func.isRequired
 }
 
 export default connect(
