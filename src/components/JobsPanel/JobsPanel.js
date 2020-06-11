@@ -78,9 +78,7 @@ const JobsPanel = ({
       } else {
         panelDispatch({
           type: panelActions.SET_TABLE_DATA,
-          payload: {
-            ...panelState.previousPanelData.tableData
-          }
+          payload: panelState.previousPanelData.tableData
         })
       }
     }
@@ -117,12 +115,7 @@ const JobsPanel = ({
     ) {
       panelDispatch({
         type: panelActions.SET_PREVIOUS_PANEL_DATA_TABLE_DATA,
-        payload: {
-          dataInputs: panelState.tableData.dataInputs,
-          parameters: panelState.tableData.parameters,
-          volumes: panelState.tableData.volumes,
-          volumeMounts: panelState.tableData.volumeMounts || []
-        }
+        payload: panelState.tableData
       })
     }
   }, [panelState.previousPanelData.tableData, panelState.tableData])

@@ -217,12 +217,7 @@ export const panelReducer = (state, { type, payload }) => {
         ...state,
         previousPanelData: {
           ...state.previousPanelData,
-          tableData: {
-            dataInputs: payload.dataInputs,
-            parameters: payload.parameters,
-            volumes: payload.volumes,
-            volumeMounts: payload.volumeMounts
-          }
+          tableData: payload
         }
       }
     case panelActions.SET_PREVIOUS_PANEL_DATA_TITLE_INFO:
