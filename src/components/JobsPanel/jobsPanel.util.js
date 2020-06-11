@@ -59,7 +59,7 @@ export const getVolumeMounts = selectedFunction => {
           name: volume_mounts?.name,
           mountPath: volume_mounts?.mountPath
         },
-        isValueEmpty: !volume_mounts?.mountPath,
+        isValueEmpty: true,
         isDefault: true
       }
     })
