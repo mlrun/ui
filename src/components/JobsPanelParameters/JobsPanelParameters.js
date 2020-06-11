@@ -9,7 +9,7 @@ import {
   parametersActions,
   parametersReducer
 } from './parametersReducer'
-import { editHyperParams, selectOptions } from './parameters.util'
+import { editHyperParams } from './parameters.util'
 import { panelActions } from '../JobsPanel/panelReducer'
 
 const JobsPanelParameters = ({
@@ -190,7 +190,6 @@ const JobsPanelParameters = ({
       parametersDispatch={parametersDispatch}
       parametersState={parametersState}
       parameters={panelState.tableData.parameters}
-      selectOptions={selectOptions}
     />
   )
 }

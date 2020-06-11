@@ -32,11 +32,10 @@ const JobsPanelView = ({
       <div className="job-panel">
         <JobsPanelTitle
           closePanel={closePanel}
-          currentFunctionInfo={panelState.currentFunctionInfo}
-          editMode={panelState.editMode}
           functionData={functionData}
           match={match}
           openScheduleJob={openScheduleJob}
+          panelState={panelState}
           panelDispatch={panelDispatch}
           setOpenScheduleJob={setOpenScheduleJob}
         />
@@ -112,9 +111,9 @@ JobsPanelView.propTypes = {
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
+  openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  openScheduleJob: PropTypes.bool.isRequired,
   setNewJobHyperParameters: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired,
   setNewJobParameters: PropTypes.func.isRequired,

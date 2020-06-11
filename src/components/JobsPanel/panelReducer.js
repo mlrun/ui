@@ -53,6 +53,7 @@ export const panelActions = {
   SET_LIMITS_NVIDIA_GPU: 'SET_LIMITS_NVIDIA_GPU',
   SET_MEMORY_UNIT: 'SET_MEMORY_UNIT',
   SET_OUTPUT_PATH: 'SET_OUTPUT_PATH',
+  SET_PREVIOUS_PANEL_DATA: 'SET_PREVIOUS_PANEL_DATA',
   SET_PREVIOUS_PANEL_DATA_INPUTS: 'SET_PREVIOUS_PANEL_DATA_INPUTS',
   SET_PREVIOUS_PANEL_DATA_METHOD: 'SET_PREVIOUS_PANEL_DATA_METHOD',
   SET_PREVIOUS_PANEL_DATA_PARAMETERS: 'SET_PREVIOUS_PANEL_DATA_PARAMETERS',
@@ -173,6 +174,11 @@ export const panelReducer = (state, { type, payload }) => {
         ...state,
         outputPath: payload
       }
+    case panelActions.SET_PREVIOUS_PANEL_DATA:
+      return {
+        ...state,
+        previousPanelData: payload
+      }
     case panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS:
       return {
         ...state,
@@ -212,7 +218,7 @@ export const panelReducer = (state, { type, payload }) => {
         previousPanelData: {
           ...state.previousPanelData,
           tableData: {
-            dataInputs: payload.inputs,
+            dataInputs: payload.dataInputs,
             parameters: payload.parameters,
             volumes: payload.volumes,
             volumeMounts: payload.volumeMounts

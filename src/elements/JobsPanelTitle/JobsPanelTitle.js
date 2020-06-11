@@ -3,23 +3,48 @@ import PropTypes from 'prop-types'
 
 import JobsPanelTitleView from './JobsPanelTitleView'
 
+import { panelActions } from '../../components/JobsPanel/panelReducer'
+
 import './jobsPanelTitle.scss'
 
 const JobsPanelTitle = ({
   closePanel,
-  editMode,
   functionData,
   match,
   openScheduleJob,
-  currentFunctionInfo,
   panelDispatch,
+  panelState,
   setOpenScheduleJob
 }) => {
+  const handleFinishEdit = () => {
+    panelDispatch({
+      type: panelActions.SET_EDIT_MODE,
+      payload: false
+    })
+
+    if (
+      panelState.currentFunctionInfo.method !==
+      panelState.previousPanelData.titleInfo.method
+    ) {
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA,
+        payload: {
+          tableData: panelState.tableData,
+          titleInfo: {
+            method: panelState.currentFunctionInfo.method,
+            version: panelState.currentFunctionInfo.version
+          }
+        }
+      })
+    }
+  }
+
   return (
     <JobsPanelTitleView
       closePanel={closePanel}
-      currentFunctionInfo={currentFunctionInfo}
-      editMode={editMode}
+      currentFunctionInfo={panelState.currentFunctionInfo}
+      editMode={panelState.editMode}
+      handleFinishEdit={handleFinishEdit}
       match={match}
       methodOptions={functionData.methodOptions}
       openScheduleJob={openScheduleJob}
@@ -32,11 +57,12 @@ const JobsPanelTitle = ({
 
 JobsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
-  currentFunctionInfo: PropTypes.shape({}).isRequired,
   functionData: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
-  panelDispatch: PropTypes.func.isRequired
+  panelDispatch: PropTypes.func.isRequired,
+  panelState: PropTypes.shape({}).isRequired,
+  setOpenScheduleJob: PropTypes.func.isRequired
 }
 
 export default JobsPanelTitle

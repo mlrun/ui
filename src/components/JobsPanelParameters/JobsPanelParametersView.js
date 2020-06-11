@@ -14,6 +14,7 @@ import { ReactComponent as Plus } from '../../images/plus.svg'
 
 import panelData from '../JobsPanel/panelData'
 import { parametersActions } from './parametersReducer'
+import { selectOptions } from './parameters.util'
 
 const JobsPanelParametersView = ({
   handleAddNewItem,
@@ -22,8 +23,7 @@ const JobsPanelParametersView = ({
   match,
   parameters,
   parametersDispatch,
-  parametersState,
-  selectOptions
+  parametersState
 }) => {
   return (
     <div className="job-panel__item">
@@ -135,8 +135,7 @@ JobsPanelParametersView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,
-  parametersState: PropTypes.shape({}).isRequired,
-  selectOptions: PropTypes.shape({}).isRequired
+  parametersState: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelParametersView

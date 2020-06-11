@@ -64,14 +64,7 @@ const JobsPanel = ({
   ])
 
   useEffect(() => {
-    if (!panelState.editMode && emptyObjectValues(panelState.tableData)) {
-      generateTableData(
-        panelState.currentFunctionInfo.method,
-        selectedFunction,
-        panelDispatch,
-        setNewJob
-      )
-    } else if (panelState.editMode) {
+    if (panelState.editMode) {
       if (
         panelState.previousPanelData.titleInfo.method !==
         panelState.currentFunctionInfo.method
@@ -96,24 +89,36 @@ const JobsPanel = ({
     panelState.editMode,
     panelState.previousPanelData.tableData,
     panelState.previousPanelData.titleInfo.method,
-    // panelState.tableData,
     selectedFunction,
     setNewJob
   ])
 
   useEffect(() => {
-    const emptyTableData = Object.values(
-      panelState.previousPanelData.tableData
-    ).filter(value => value.length)
-    const emptyDefaultData = Object.values(panelState.tableData).filter(
-      value => value.length
-    )
+    if (!panelState.editMode && emptyObjectValues(panelState.tableData)) {
+      generateTableData(
+        panelState.currentFunctionInfo.method,
+        selectedFunction,
+        panelDispatch,
+        setNewJob
+      )
+    }
+  }, [
+    panelState.currentFunctionInfo.method,
+    panelState.editMode,
+    panelState.tableData,
+    selectedFunction,
+    setNewJob
+  ])
 
-    if (!emptyTableData.length && emptyDefaultData.length) {
+  useEffect(() => {
+    if (
+      emptyObjectValues(panelState.previousPanelData.tableData) &&
+      !emptyObjectValues(panelState.tableData)
+    ) {
       panelDispatch({
         type: panelActions.SET_PREVIOUS_PANEL_DATA_TABLE_DATA,
         payload: {
-          inputs: panelState.tableData.dataInputs,
+          dataInputs: panelState.tableData.dataInputs,
           parameters: panelState.tableData.parameters,
           volumes: panelState.tableData.volumes,
           volumeMounts: panelState.tableData.volumeMounts || []

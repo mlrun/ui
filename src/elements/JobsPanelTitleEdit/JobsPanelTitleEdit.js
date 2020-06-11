@@ -8,10 +8,10 @@ import { panelActions } from '../../components/JobsPanel/panelReducer'
 
 const JobsPanelTitleEdit = ({
   currentFunctionInfo,
+  handleFinishEdit,
   match,
   methodOptions,
   panelDispatch,
-  setIsEdit,
   versionOptions
 }) => {
   return (
@@ -57,15 +57,7 @@ const JobsPanelTitleEdit = ({
           />
         )}
       </div>
-      <button
-        className="btn btn_primary"
-        onClick={() =>
-          panelDispatch({
-            type: panelActions.SET_EDIT_MODE,
-            payload: false
-          })
-        }
-      >
+      <button className="btn btn_primary" onClick={handleFinishEdit}>
         Done
       </button>
     </>
@@ -74,6 +66,7 @@ const JobsPanelTitleEdit = ({
 
 JobsPanelTitleEdit.propTypes = {
   currentFunctionInfo: PropTypes.shape({}).isRequired,
+  handleFinishEdit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   methodOptions: PropTypes.array.isRequired,
   panelDispatch: PropTypes.func.isRequired,

@@ -9,8 +9,7 @@ import {
   createVolumeOfNewJob,
   handleAddItem,
   handleDelete,
-  handleEdit,
-  selectOptions
+  handleEdit
 } from './inputs.util'
 
 const JobsPanelDataInputs = ({
@@ -199,7 +198,6 @@ const JobsPanelDataInputs = ({
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
-      selectOptions={selectOptions}
     />
   )
 }
@@ -208,6 +206,7 @@ JobsPanelDataInputs.propTypes = {
   inputs: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
+  panelState: PropTypes.shape({}).isRequired,
   setNewJobInputs: PropTypes.func.isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,
   setNewJobVolumes: PropTypes.func.isRequired,

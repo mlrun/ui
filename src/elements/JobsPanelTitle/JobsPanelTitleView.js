@@ -14,6 +14,7 @@ const JobsPanelTitleView = ({
   closePanel,
   currentFunctionInfo,
   editMode,
+  handleFinishEdit,
   match,
   methodOptions,
   openScheduleJob,
@@ -21,11 +22,11 @@ const JobsPanelTitleView = ({
   setOpenScheduleJob,
   versionOptions
 }) => {
-  const jobPanelClassName = classNames({
-    'job-panel__title-wrapper': true,
-    'job-panel__title-wrapper_edit': editMode,
-    'job-panel__title-wrapper_hover': !openScheduleJob && !editMode
-  })
+  const jobPanelClassName = classNames(
+    'job-panel__title-wrapper',
+    editMode && 'job-panel__title-wrapper_edit',
+    !openScheduleJob && !editMode && 'job-panel__title-wrapper_hover'
+  )
 
   return (
     <div className="job-panel__title">
@@ -71,6 +72,7 @@ const JobsPanelTitleView = ({
         ) : (
           <JobsPanelTitleEdit
             currentFunctionInfo={currentFunctionInfo}
+            handleFinishEdit={handleFinishEdit}
             match={match}
             methodOptions={methodOptions}
             panelDispatch={panelDispatch}
@@ -91,6 +93,8 @@ const JobsPanelTitleView = ({
 JobsPanelTitleView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   currentFunctionInfo: PropTypes.shape({}).isRequired,
+  editMode: PropTypes.bool.isRequired,
+  handleFinishEdit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   methodOptions: PropTypes.array.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,

@@ -159,6 +159,7 @@ const JobsPanelTable = ({
 JobsPanelTable.defaultProps = {
   className: '',
   headers: [],
+  handleDeleteItems: null,
   handleEditItems: null,
   handleEditParameter: null,
   etSelectedDataInput: null,
@@ -174,6 +175,7 @@ JobsPanelTable.propTypes = {
     PropTypes.shape({})
   ]).isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
+  handleDeleteItems: PropTypes.func,
   handleEditItems: PropTypes.func,
   handleEditParameter: PropTypes.func,
   match: PropTypes.shape({}).isRequired,
