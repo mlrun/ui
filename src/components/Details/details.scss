@@ -8,18 +8,17 @@
     position: absolute;
     top: 0;
     left: 240px;
-    background-color: $white;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     width: calc(100% - 240px);
     height: 100%;
     overflow-y: auto;
-    border-left: $tableBorder;
     color: $mulledWine;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+    background-color: $white;
+    border-left: $tableBorder;
 
     .item {
-
       &-header {
         display: flex;
         justify-content: space-between;
@@ -32,11 +31,11 @@
           }
 
           span {
-            font-size: 15px;
-            line-height: 18px;
-            margin-left: 24px;
             display: flex;
             align-items: center;
+            margin-left: 24px;
+            font-size: 15px;
+            line-height: 18px;
           }
 
           i {
@@ -62,8 +61,8 @@
       &-menu {
         display: flex;
         align-items: center;
-        padding: 29px 0 0;
         margin: 0;
+        padding: 29px 0 0;
         list-style-type: none;
         border-bottom: $tableBorder;
 
@@ -84,15 +83,17 @@
     }
 
     &_inputs {
-      @include resetSpaces;
       width: 100%;
 
+      @include resetSpaces;
+
       &_item {
-        border-bottom: $tableBorder;
-        padding: 27px 24px;
         display: flex;
         flex-direction: row;
         align-items: center;
+        padding: 27px 24px;
+        border-bottom: $tableBorder;
+
         div {
           min-width: 237px;
         }
@@ -100,40 +101,42 @@
     }
 
     &_results {
-      padding: 0 31px;
       position: relative;
       width: 100%;
+      padding: 0 31px;
 
       &__table {
-        text-align: left;
-        width: 100%;
         position: relative;
+        width: 100%;
+        text-align: left;
 
         &_row {
-          border-bottom: 1px solid rgba(72, 63, 86, 0.12);
           display: flex;
           flex-direction: row;
+          border-bottom: $tableBorder;
 
           &_cell {
-            padding: 19px 16px;
             display: flex;
-            flex-direction: column;
             flex: 1;
+            flex-direction: column;
+            min-width: 55px;
+            padding: 19px 16px;
           }
         }
 
         &_header {
           position: sticky;
-          height: 50px;
           top: 0;
           z-index: 2;
           background-color: $white;
+
           &_item {
-            @include tableHeader;
             display: flex;
-            flex-direction: column;
-            padding: 10px 15px;
             flex: 1;
+            flex-direction: column;
+            min-width: 55px;
+
+            @include tableHeader(16px);
           }
         }
 
@@ -142,10 +145,10 @@
         }
 
         &_medal {
-          display: flex;
-          align-items: center;
-          flex-direction: row;
           position: relative;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
 
           img {
             margin-left: 10px;
@@ -169,34 +172,36 @@
     }
 
     &_logs {
+      position: relative;
+      width: 100%;
+      min-height: 400px;
+      padding: 5px;
+      overflow-y: scroll;
+      color: $white;
+      font-family: 'Source Code Pro', 'Courier New', monospace;
       white-space: pre-wrap;
       background-color: $black;
-      color: $white;
-      padding: 5px;
-      position: relative;
-      min-height: 400px;
-      overflow-y: scroll;
-      font-family: 'Source Code Pro', 'Courier New', monospace;
-      width: 100%;
 
       .logs_refresh {
-        background-color: $white;
-        border: 1px solid $cornflowerBlue;
-        color: $cornflowerBlue;
-        box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
-        padding: 8px 12px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
         position: absolute;
         top: 32px;
         right: 29px;
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        color: $cornflowerBlue;
+        background-color: $white;
+        border: 1px solid $cornflowerBlue;
+        border-radius: 16px;
+        box-shadow: $previewBoxShadow;
         cursor: pointer;
+
         svg {
           path {
             fill: $cornflowerBlue;
           }
         }
+
         &:active,
         &:focus {
           outline: none;
@@ -228,12 +233,12 @@
       .preview_popout {
         position: absolute;
         right: 0;
-        margin: 16px;
-        border: none;
-        background: none;
-        padding: 0;
-        outline: none;
         z-index: 3;
+        margin: 16px;
+        padding: 0;
+        background: none;
+        border: none;
+        outline: none;
         cursor: pointer;
       }
 

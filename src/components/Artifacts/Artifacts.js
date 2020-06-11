@@ -13,7 +13,13 @@ import artifactsData from './artifactsData'
 import './artifacts.scss'
 import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 
-const Artifacts = ({ artifactsStore, fetchArtifacts, history, match }) => {
+const Artifacts = ({
+  artifactsStore,
+  fetchArtifacts,
+  history,
+  match,
+  removeArtifacts
+}) => {
   const [artifacts, _setArtifacts] = useState([])
   const [selectedArtifact, setSelectedArtifact] = useState({})
   const [pageData, setPageData] = useState({
@@ -73,8 +79,9 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, history, match }) => {
 
     return () => {
       _setArtifacts([])
+      removeArtifacts()
     }
-  }, [fetchData, match.params.projectName])
+  }, [fetchData, match.params.projectName, removeArtifacts])
 
   useEffect(() => {
     if (
@@ -97,7 +104,6 @@ const Artifacts = ({ artifactsStore, fetchArtifacts, history, match }) => {
           }
           return true
         })
-
         setSelectedArtifact({ item: artifact })
       }
     }
