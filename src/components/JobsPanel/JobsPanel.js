@@ -8,24 +8,20 @@ import React, {
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import JobsPanelView from './JobsPanelView'
 
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
 import {
-  // getDefaultData,
   getMethodOptions,
-  // getParameters,
   getVersionOptions,
   getDefaultMethodAndVersion,
-  // getVolumeMounts,
-  // getVolume
   generateTableData
 } from './jobsPanel.util'
+import { emptyObjectValues } from '../../utils/emptyObjectValues'
 import { initialState, panelReducer, panelActions } from './panelReducer'
-
-import { isEmpty } from 'lodash'
 
 import './jobsPanel.scss'
 
@@ -44,8 +40,7 @@ const JobsPanel = ({
   setNewJobInputs,
   setNewJobParameters,
   setNewJobVolumeMounts,
-  setNewJobVolumes,
-  setDefaultData
+  setNewJobVolumes
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
@@ -69,43 +64,7 @@ const JobsPanel = ({
   ])
 
   useEffect(() => {
-    //   const functionParameters = getParameters(
-    //     selectedFunction,
-    //     panelState.currentFunctionInfo.method
-    //   )
-    //
-    //   if (!isEmpty(functionParameters)) {
-    //     const { parameters, dataInputs } = getDefaultData(functionParameters)
-    //     const volumeMounts = getVolumeMounts(selectedFunction)
-    //     const volumes = getVolume(selectedFunction)
-    //
-    //     panelDispatch({
-    //       type: panelActions.SET_TABLE_DATA,
-    //       payload: {
-    //         dataInputs,
-    //         parameters,
-    //         volumeMounts,
-    //         volumes
-    //       }
-    //     })
-    //     setNewJob({
-    //       dataInputs,
-    //       parameters,
-    //       volumeMounts,
-    //       volumes
-    //     })
-    //   }
-    // }, [
-    //   panelState.currentFunctionInfo.method,
-    //   selectedFunction,
-    //   setDefaultData,
-    //   setNewJob
-    // ])
-    const emptyDefaultData = Object.values(panelState.tableData).filter(
-      value => !isEmpty(value)
-    )
-    if (!panelState.editMode && !emptyDefaultData.length) {
-      console.log('when not edit mode and empty table data')
+    if (!panelState.editMode && emptyObjectValues(panelState.tableData)) {
       generateTableData(
         panelState.currentFunctionInfo.method,
         selectedFunction,
@@ -117,7 +76,6 @@ const JobsPanel = ({
         panelState.previousPanelData.titleInfo.method !==
         panelState.currentFunctionInfo.method
       ) {
-        console.log('when edit mode and method not equal')
         generateTableData(
           panelState.currentFunctionInfo.method,
           selectedFunction,
@@ -125,7 +83,6 @@ const JobsPanel = ({
           setNewJob
         )
       } else {
-        console.log('when edit mode and method are equal')
         panelDispatch({
           type: panelActions.SET_TABLE_DATA,
           payload: {
@@ -139,6 +96,7 @@ const JobsPanel = ({
     panelState.editMode,
     panelState.previousPanelData.tableData,
     panelState.previousPanelData.titleInfo.method,
+    // panelState.tableData,
     selectedFunction,
     setNewJob
   ])
@@ -146,9 +104,9 @@ const JobsPanel = ({
   useEffect(() => {
     const emptyTableData = Object.values(
       panelState.previousPanelData.tableData
-    ).filter(value => !isEmpty(value))
+    ).filter(value => value.length)
     const emptyDefaultData = Object.values(panelState.tableData).filter(
-      value => !isEmpty(value)
+      value => value.length
     )
 
     if (!emptyTableData.length && emptyDefaultData.length) {
@@ -255,7 +213,6 @@ const JobsPanel = ({
       setNewJobVolumeMounts={setNewJobVolumeMounts}
       setNewJobVolumes={setNewJobVolumes}
       setOpenScheduleJob={setOpenScheduleJob}
-      tableData={panelState.tableData}
     />
   )
 }

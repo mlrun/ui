@@ -145,7 +145,7 @@ export const generateTableData = (
     panelDispatch({
       type: panelActions.SET_TABLE_DATA,
       payload: {
-        dataInputs,
+        dataInputs: dataInputs,
         parameters,
         volumeMounts,
         volumes

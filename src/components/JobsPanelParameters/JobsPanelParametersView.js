@@ -16,22 +16,20 @@ import panelData from '../JobsPanel/panelData'
 import { parametersActions } from './parametersReducer'
 
 const JobsPanelParametersView = ({
-  addNewParameter,
   handleAddNewItem,
   handleDeleteParameter,
   handleEditParameter,
   match,
+  parameters,
   parametersDispatch,
   parametersState,
-  parameters,
-  selectOptions,
-  setAddNewParameter
+  selectOptions
 }) => {
   return (
     <div className="job-panel__item">
       <JobsPanelSection title="Parameters">
         <JobsPanelTable
-          addNewItem={addNewParameter}
+          addNewItem={parametersState.addNewParameter}
           className="parameters"
           content={parameters}
           handleDeleteItems={handleDeleteParameter}
@@ -47,7 +45,7 @@ const JobsPanelParametersView = ({
             })
           }
         >
-          {addNewParameter ? (
+          {parametersState.addNewParameter ? (
             <div className="table__row-add-item">
               <div className="input-row-wrapper">
                 <Input
@@ -114,7 +112,12 @@ const JobsPanelParametersView = ({
             </div>
           ) : (
             <JobsPanelTableAddItemRow
-              onClick={setAddNewParameter}
+              onClick={value => {
+                parametersDispatch({
+                  type: parametersActions.SET_ADD_NEW_PARAMETER,
+                  payload: value
+                })
+              }}
               text="parameter"
             />
           )}
@@ -126,13 +129,14 @@ const JobsPanelParametersView = ({
 }
 
 JobsPanelParametersView.propTypes = {
-  addNewParameter: PropTypes.bool.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
+  handleDeleteParameter: PropTypes.func.isRequired,
+  handleEditParameter: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
+  parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,
   parametersState: PropTypes.shape({}).isRequired,
-  selectOptions: PropTypes.shape({}).isRequired,
-  setAddNewParameter: PropTypes.func.isRequired
+  selectOptions: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelParametersView

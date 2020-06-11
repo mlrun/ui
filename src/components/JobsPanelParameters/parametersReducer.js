@@ -1,23 +1,23 @@
 import panelData from '../JobsPanel/panelData'
 
 export const initialState = {
+  addNewParameter: false,
   newParameter: {
     name: '',
     valueType: 'string',
     value: '',
     parameterType: panelData.newParameterType[0].id
   },
-  parametersArray: [],
   selectedParameter: {}
 }
 
 export const parametersActions = {
   REMOVE_NEW_PARAMETER_DATA: 'REMOVE_NEW_PARAMETER_DATA',
+  SET_ADD_NEW_PARAMETER: 'SET_ADD_NEW_PARAMETER',
   SET_NEW_PARAMETER_NAME: 'SET_NEW_PARAMETER_NAME',
   SET_NEW_PARAMETER_TYPE: 'SET_NEW_PARAMETER_TYPE',
   SET_NEW_PARAMETER_VALUE: 'SET_NEW_PARAMETER_VALUE',
   SET_NEW_PARAMETER_VALUE_TYPE: 'SET_NEW_PARAMETER_VALUE_TYPE',
-  SET_PARAMETERS_ARRAY: 'SET_PARAMETERS_ARRAY',
   SET_SELECTED_PARAMETER: 'SET_SELECTED_PARAMETER'
 }
 
@@ -32,6 +32,11 @@ export const parametersReducer = (state, { type, payload }) => {
           valueType: 'string',
           parameterType: panelData.newParameterType[0].id
         }
+      }
+    case parametersActions.SET_ADD_NEW_PARAMETER:
+      return {
+        ...state,
+        addNewParameter: payload
       }
     case parametersActions.SET_NEW_PARAMETER_NAME:
       return {
@@ -64,11 +69,6 @@ export const parametersReducer = (state, { type, payload }) => {
           ...state.newParameter,
           valueType: payload
         }
-      }
-    case parametersActions.SET_PARAMETERS_ARRAY:
-      return {
-        ...state,
-        parametersArray: payload
       }
     case parametersActions.SET_SELECTED_PARAMETER:
       return {

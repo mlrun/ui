@@ -16,7 +16,7 @@ export const initialState = {
   outputPath: '',
   previousPanelData: {
     tableData: {
-      inputs: {},
+      dataInputs: [],
       parameters: [],
       volumes: [],
       volumeMounts: []
@@ -65,7 +65,11 @@ export const panelActions = {
   SET_REQUESTS: 'SET_REQUESTS',
   SET_REQUESTS_CPU: 'SET_REQUESTS_CPU',
   SET_REQUESTS_MEMORY: 'SET_REQUESTS_MEMORY',
-  SET_TABLE_DATA: 'SET_TABLE_DATA'
+  SET_TABLE_DATA: 'SET_TABLE_DATA',
+  SET_TABLE_DATA_INPUTS: 'SET_TABLE_DATA_INPUTS',
+  SET_TABLE_DATA_PARAMETERS: 'SET_TABLE_DATA_PARAMETERS',
+  SET_TABLE_DATA_VOLUMES: 'SET_TABLE_DATA_VOLUMES',
+  SET_TABLE_DATA_VOLUME_MOUNTS: 'SET_TABLE_DATA_VOLUME_MOUNTS'
 }
 
 export const panelReducer = (state, { type, payload }) => {
@@ -75,7 +79,7 @@ export const panelReducer = (state, { type, payload }) => {
         ...state,
         previousPanelData: {
           tableData: {
-            inputs: {},
+            dataInputs: {},
             parameters: {},
             volumes: [],
             volumeMounts: []
@@ -176,7 +180,7 @@ export const panelReducer = (state, { type, payload }) => {
           ...state.previousPanelData,
           tableData: {
             ...state.previousPanelData.tableData,
-            inputs: payload
+            dataInputs: payload
           }
         }
       }
@@ -208,7 +212,7 @@ export const panelReducer = (state, { type, payload }) => {
         previousPanelData: {
           ...state.previousPanelData,
           tableData: {
-            inputs: payload.inputs,
+            dataInputs: payload.inputs,
             parameters: payload.parameters,
             volumes: payload.volumes,
             volumeMounts: payload.volumeMounts
@@ -284,6 +288,38 @@ export const panelReducer = (state, { type, payload }) => {
       return {
         ...state,
         tableData: payload
+      }
+    case panelActions.SET_TABLE_DATA_INPUTS:
+      return {
+        ...state,
+        tableData: {
+          ...state.tableData,
+          dataInputs: payload
+        }
+      }
+    case panelActions.SET_TABLE_DATA_PARAMETERS:
+      return {
+        ...state,
+        tableData: {
+          ...state.tableData,
+          parameters: payload
+        }
+      }
+    case panelActions.SET_TABLE_DATA_VOLUMES:
+      return {
+        ...state,
+        tableData: {
+          ...state.tableData,
+          volumes: payload
+        }
+      }
+    case panelActions.SET_TABLE_DATA_VOLUME_MOUNTS:
+      return {
+        ...state,
+        tableData: {
+          ...state.tableData,
+          volumeMounts: payload
+        }
       }
     default:
       return state

@@ -1,200 +1,176 @@
-import React, { useState, useEffect } from 'react'
+import React, { useReducer } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelDataInputsView from './JobsPanelDataInputsView'
 
-import createVolumeOfNewJob from '../../utils/createVolumeOfNewJob'
+import { initialState, inputsActions, inputsReducer } from './inputsReducer'
+import { panelActions } from '../JobsPanel/panelReducer'
+import {
+  createVolumeOfNewJob,
+  handleAddItem,
+  handleDelete,
+  handleEdit,
+  selectOptions
+} from './inputs.util'
 
 const JobsPanelDataInputs = ({
-  functionDefaultValues,
   inputs,
   match,
   panelDispatch,
+  panelState,
   setNewJobInputs,
   setNewJobVolumeMounts,
   setNewJobVolumes,
   volumeMounts,
   volumes
 }) => {
-  const [addNewInput, setAddNewInput] = useState(false)
-  const [newInput, setNewInput] = useState({
-    name: '',
-    path: ''
-  })
-  const [defaultDataInputs, setDefaultDataInputs] = useState(
-    functionDefaultValues.dataInputs
-  )
-  const [defaultVolumes, setDefaultVolumes] = useState({
-    volumes: functionDefaultValues.volumes,
-    volumeMounts: functionDefaultValues.volumeMounts
-  })
-
-  const [addNewVolume, setAddNewVolume] = useState(false)
-  const [newVolume, setNewVolume] = useState({
-    name: '',
-    type: '',
-    typeName: '',
-    path: '',
-    accessKey: '',
-    resourcesPath: ''
-  })
-  const [selectedDataInput, setSelectedDataInput] = useState({})
-  const [selectedVolume, setSelectedVolume] = useState({})
-
-  useEffect(() => {
-    setDefaultDataInputs(functionDefaultValues.dataInputs)
-    setDefaultVolumes({
-      volumeMounts: functionDefaultValues.volumeMounts,
-      volumes: functionDefaultValues.volumes
-    })
-  }, [functionDefaultValues])
-
-  const selectOptions = {
-    volumeType: [
-      { label: 'V3IO', id: 'V3IO' },
-      { label: 'Config Map', id: 'Config Map' },
-      { label: 'Secret', id: 'Secret' },
-      { label: 'PVC', id: 'PVC' }
-    ]
-  }
+  const [inputsState, inputsDispatch] = useReducer(inputsReducer, initialState)
 
   const handleAddNewItem = (input, volume) => {
     if (input) {
-      handleAddNewDataInput()
+      handleAddItem(
+        panelState.tableData.dataInputs,
+        inputsDispatch,
+        false,
+        inputsState.newInput,
+        inputs,
+        panelDispatch,
+        panelState.previousPanelData.tableData.dataInputs,
+        inputsActions.REMOVE_NEW_INPUT_DATA,
+        inputsActions.SET_ADD_NEW_INPUT,
+        panelActions.SET_TABLE_DATA_INPUTS,
+        panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS,
+        setNewJobInputs
+      )
     } else if (volume) {
-      handleAddNewVolume()
+      const newItemObj = {
+        name: inputsState.newVolume.name,
+        type: inputsState.newVolume.type,
+        path: inputsState.newVolume.path
+      }
+
+      handleAddItem(
+        panelState.tableData.volumeMounts,
+        inputsDispatch,
+        true,
+        newItemObj,
+        volumeMounts,
+        panelDispatch,
+        panelState.previousPanelData.tableData.volumeMounts,
+        inputsActions.REMOVE_NEW_VOLUME_DATA,
+        inputsActions.SET_ADD_NEW_VOLUME,
+        panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
+        panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
+        setNewJobVolumeMounts
+      )
+
+      const newItem = createVolumeOfNewJob(inputsState.newVolume)
+
+      setNewJobVolumes([...volumes, newItem])
+
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
+        payload: [...panelState.previousPanelData.tableData.volumes, newItem]
+      })
+      panelDispatch({
+        type: panelActions.SET_TABLE_DATA_VOLUMES,
+        payload: [...panelState.tableData.volumes, newItem]
+      })
     }
   }
 
   const handleEditItems = isInput => {
     if (isInput) {
-      handleEditDataInput()
+      handleEdit(
+        inputs,
+        panelState.tableData.dataInputs,
+        inputsDispatch,
+        true,
+        panelDispatch,
+        inputsActions.SET_SELECTED_INPUT,
+        inputsState.selectedDataInput.data,
+        setNewJobInputs,
+        panelActions.SET_TABLE_DATA_INPUTS,
+        panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS
+      )
     } else {
+      handleEdit(
+        volumeMounts,
+        panelState.tableData.volumeMounts,
+        inputsDispatch,
+        false,
+        panelDispatch,
+        inputsActions.SET_SELECTED_VOLUME,
+        inputsState.selectedVolume.data,
+        setNewJobInputs,
+        panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
+        panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS
+      )
       handleEditVolume()
     }
-
-    setSelectedDataInput({})
   }
 
   const handleDeleteItems = (isInput, item) => {
     if (isInput) {
-      handleDeleteDataInput(item)
+      handleDelete(
+        inputs,
+        panelState.tableData.dataInputs,
+        true,
+        false,
+        panelDispatch,
+        panelState.previousPanelData.tableData.dataInputs,
+        item,
+        setNewJobInputs,
+        panelActions.SET_TABLE_DATA_INPUTS,
+        panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS
+      )
     } else {
-      handleDeleteVolume(item)
+      handleDelete(
+        volumes,
+        panelState.tableData.volumes,
+        false,
+        true,
+        panelDispatch,
+        panelState.previousPanelData.tableData.volumes,
+        item,
+        setNewJobVolumes,
+        panelActions.SET_TABLE_DATA_VOLUMES,
+        panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES
+      )
+      handleDelete(
+        volumeMounts,
+        panelState.tableData.volumeMounts,
+        false,
+        false,
+        panelDispatch,
+        panelState.previousPanelData.tableData.volumeMounts,
+        item,
+        setNewJobVolumeMounts,
+        panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
+        panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS
+      )
     }
-  }
-
-  const handleAddNewDataInput = () => {
-    let newItem = {}
-    const emptyInput = Object.values(newInput).filter(item => item.length === 0)
-
-    if (emptyInput.length > 0) {
-      setNewInput({
-        name: '',
-        path: ''
-      })
-
-      return setAddNewInput(false)
-    }
-
-    newItem[newInput.name] = newInput.path
-
-    setDefaultDataInputs(prev =>
-      prev.concat({
-        data: { name: newInput.name, path: newInput.path },
-        isValueEmpty: true,
-        isDefault: false
-      })
-    )
-
-    setAddNewInput(false)
-    setNewJobInputs({ ...inputs, ...newItem })
-    setNewInput({
-      name: '',
-      path: ''
-    })
-  }
-
-  const handleEditDataInput = () => {
-    const currentInputs = { ...inputs }
-    currentInputs[selectedDataInput.data.name] = selectedDataInput.data.path
-
-    const currentDataInput = [...defaultDataInputs]
-    const currentDataInputIndex = defaultDataInputs.findIndex(
-      item => item.data.name === selectedDataInput.data.name
-    )
-
-    currentDataInput[currentDataInputIndex] = selectedDataInput
-
-    setDefaultDataInputs(currentDataInput)
-    setSelectedDataInput(selectedDataInput)
-    setNewJobInputs({ ...inputs, ...currentInputs })
-  }
-
-  const handleAddNewVolume = () => {
-    if (!newVolume.name || !newVolume.type || !newVolume.path) {
-      setEmptyVolume()
-
-      return setAddNewVolume(false)
-    }
-
-    const newItem = createVolumeOfNewJob(newVolume)
-
-    const newVolumeMounts = {
-      data: { name: newVolume.name, mountPath: newVolume.path },
-      isValueEmpty: true,
-      isDefault: false
-    }
-
-    setNewJobVolumes([...volumes, newItem])
-    setNewJobVolumeMounts([...volumeMounts, newVolumeMounts.data])
-    setDefaultVolumes(prevState => {
-      return {
-        volumes: [...prevState.volumes, newItem],
-        volumeMounts: [...prevState.volumeMounts, newVolumeMounts]
-      }
-    })
-    setAddNewVolume(false)
-    setEmptyVolume()
-  }
-
-  const setEmptyVolume = () => {
-    setNewVolume({
-      name: '',
-      type: '',
-      typeName: '',
-      path: '',
-      accessKey: '',
-      resourcesPath: ''
-    })
   }
 
   const handleEditVolume = () => {
-    const currentVolumeMounts = volumeMounts.map(volume => {
-      if (volume.name === selectedVolume.data.name) {
-        volume.mountPath = selectedVolume.data.mountPath
-      }
-
-      return volume
-    })
-
-    const currentVolumes = volumes.map(volume => {
-      if (volume.name === selectedVolume.data.name) {
-        switch (selectedVolume.type.value) {
+    const currentVolumes = panelState.tableData.volumes.map(volume => {
+      if (volume.name === inputsState.selectedVolume.data.name) {
+        switch (inputsState.selectedVolume.type.value) {
           case 'Config Map':
-            volume.configMap.name = selectedVolume.type.name
+            volume.configMap.name = inputsState.selectedVolume.type.name
             break
           case 'PVC':
-            volume.persistentVolumeClaim.claimName = selectedVolume.type.name
+            volume.persistentVolumeClaim.claimName =
+              inputsState.selectedVolume.type.name
             break
           case 'Secret':
-            volume.secret.secretName = selectedVolume.type.name
+            volume.secret.secretName = inputsState.selectedVolume.type.name
             break
           default:
             volume.flexVolume.options = {
-              container: selectedVolume.type.name,
-              accessKey: selectedVolume.type.accessKey,
-              subPath: selectedVolume.type.subPath
+              container: inputsState.selectedVolume.type.name,
+              accessKey: inputsState.selectedVolume.type.accessKey,
+              subPath: inputsState.selectedVolume.type.subPath
             }
         }
       }
@@ -202,58 +178,33 @@ const JobsPanelDataInputs = ({
       return volume
     })
 
-    setNewJobVolumeMounts([...currentVolumeMounts])
     setNewJobVolumes([...currentVolumes])
-  }
-
-  const handleDeleteDataInput = item => {
-    const newInputs = { ...inputs }
-
-    delete newInputs[item.name]
-
-    setDefaultDataInputs(prev => {
-      return prev.filter(dataInput => dataInput.data.name !== item.data.name)
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
+      payload: currentVolumes
     })
-
-    setNewJobInputs({ ...newInputs })
-  }
-
-  const handleDeleteVolume = item => {
-    setNewJobVolumes(volumes.filter(volume => volume.name !== item.name))
-    setNewJobVolumeMounts(
-      volumeMounts.filter(volume => volume.name !== item.name)
-    )
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_VOLUMES,
+      payload: currentVolumes
+    })
   }
 
   return (
     <JobsPanelDataInputsView
-      addNewInput={addNewInput}
-      addNewVolume={addNewVolume}
       handleAddNewItem={handleAddNewItem}
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
-      inputs={defaultDataInputs}
+      inputsState={inputsState}
+      inputsDispatch={inputsDispatch}
       match={match}
-      newInput={newInput}
-      newVolume={newVolume}
       panelDispatch={panelDispatch}
+      panelState={panelState}
       selectOptions={selectOptions}
-      selectedDataInput={selectedDataInput}
-      selectedVolume={selectedVolume}
-      setAddNewInput={setAddNewInput}
-      setAddNewVolume={setAddNewVolume}
-      setNewInput={setNewInput}
-      setNewVolume={setNewVolume}
-      setSelectedDataInput={setSelectedDataInput}
-      setSelectedVolume={setSelectedVolume}
-      volumeMounts={defaultVolumes.volumeMounts}
-      volumes={defaultVolumes.volumes}
     />
   )
 }
 
 JobsPanelDataInputs.propTypes = {
-  functionDefaultValues: PropTypes.shape({}).isRequired,
   inputs: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,

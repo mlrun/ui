@@ -25,8 +25,7 @@ const JobsPanelView = ({
   setNewJobParameters,
   setNewJobVolumeMounts,
   setNewJobVolumes,
-  setOpenScheduleJob,
-  tableData
+  setOpenScheduleJob
 }) => {
   return (
     <div className="job-panel-container">
@@ -52,10 +51,10 @@ const JobsPanelView = ({
                 hyperparams={jobsStore.newJob.task.spec.hyperparams}
                 match={match}
                 panelDispatch={panelDispatch}
+                panelState={panelState}
                 parameters={jobsStore.newJob.task.spec.parameters}
                 setNewJobHyperParameters={setNewJobHyperParameters}
                 setNewJobParameters={setNewJobParameters}
-                tableData={Object.values(tableData.parameters)}
               />
             </Accordion>
             <Accordion
@@ -64,10 +63,10 @@ const JobsPanelView = ({
               openByDefault
             >
               <JobsPanelDataInputs
-                functionDefaultValues={tableData}
                 inputs={jobsStore.newJob.task.spec.inputs}
                 match={match}
                 panelDispatch={panelDispatch}
+                panelState={panelState}
                 setNewJobInputs={setNewJobInputs}
                 setNewJobVolumeMounts={setNewJobVolumeMounts}
                 setNewJobVolumes={setNewJobVolumes}
