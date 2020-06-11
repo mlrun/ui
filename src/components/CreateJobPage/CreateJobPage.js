@@ -45,7 +45,7 @@ const CreateJobPage = ({
       return setFunctions(groupedFunctions)
     })
 
-    if (!functionsStore.templatesCatalog.length) {
+    if (functionsStore.templatesCatalog.length === 0) {
       fetchFunctionsTemplates().then(setTemplates)
     }
   }, [

@@ -20,7 +20,7 @@ import {
   getDefaultMethodAndVersion,
   generateTableData
 } from './jobsPanel.util'
-import { emptyObjectValues } from '../../utils/emptyObjectValues'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { initialState, panelReducer, panelActions } from './panelReducer'
 
 import './jobsPanel.scss'
@@ -92,7 +92,7 @@ const JobsPanel = ({
   ])
 
   useEffect(() => {
-    if (!panelState.editMode && emptyObjectValues(panelState.tableData)) {
+    if (!panelState.editMode && isEveryObjectValueEmpty(panelState.tableData)) {
       generateTableData(
         panelState.currentFunctionInfo.method,
         selectedFunction,
@@ -110,8 +110,8 @@ const JobsPanel = ({
 
   useEffect(() => {
     if (
-      emptyObjectValues(panelState.previousPanelData.tableData) &&
-      !emptyObjectValues(panelState.tableData)
+      isEveryObjectValueEmpty(panelState.previousPanelData.tableData) &&
+      !isEveryObjectValueEmpty(panelState.tableData)
     ) {
       panelDispatch({
         type: panelActions.SET_PREVIOUS_PANEL_DATA_TABLE_DATA,

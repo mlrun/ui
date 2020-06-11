@@ -1,4 +1,4 @@
-import { emptyObjectValues } from '../../utils/emptyObjectValues'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 export const handleAddItem = (
   currentTableData,
@@ -14,7 +14,7 @@ export const handleAddItem = (
   setPreviousData,
   setNewJobData
 ) => {
-  if (emptyObjectValues(newItemObj)) {
+  if (isEveryObjectValueEmpty(newItemObj)) {
     inputsDispatch({
       type: removeNewItemObj
     })
