@@ -7,6 +7,7 @@ import {
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
   REMOVE_JOB_LOGS,
+  REMOVE_NEW_JOB,
   SET_LOADING,
   SET_NEW_JOB,
   SET_NEW_JOB_HYPER_PARAMETERS,
@@ -14,8 +15,7 @@ import {
   SET_NEW_JOB_PARAMETERS,
   SET_NEW_JOB_SCHEDULE,
   SET_NEW_JOB_VOLUMES,
-  SET_NEW_JOB_VOLUME_MOUNTS,
-  SET_DEFAULT_DATA
+  SET_NEW_JOB_VOLUME_MOUNTS
 } from '../constants'
 
 const jobsActions = {
@@ -71,6 +71,10 @@ const jobsActions = {
   removeJobLogs: () => ({
     type: REMOVE_JOB_LOGS
   }),
+  setNewJob: newJob => ({
+    type: SET_NEW_JOB,
+    payload: newJob
+  }),
   setNewJobInputs: inputs => ({
     type: SET_NEW_JOB_INPUTS,
     payload: inputs
@@ -83,9 +87,8 @@ const jobsActions = {
     type: SET_NEW_JOB_VOLUME_MOUNTS,
     payload: volume
   }),
-  setNewJob: newJob => ({
-    type: SET_NEW_JOB,
-    payload: newJob
+  removeNewJob: () => ({
+    type: REMOVE_NEW_JOB
   }),
   setNewJobParameters: parameters => ({
     type: SET_NEW_JOB_PARAMETERS,
@@ -98,10 +101,6 @@ const jobsActions = {
   setNewJobHyperParameters: parameters => ({
     type: SET_NEW_JOB_HYPER_PARAMETERS,
     payload: parameters
-  }),
-  setDefaultData: data => ({
-    type: SET_DEFAULT_DATA,
-    payload: data
   }),
   runNewJob: postData => () => jobsApi.runJob(postData),
   setLoading: isLoading => ({

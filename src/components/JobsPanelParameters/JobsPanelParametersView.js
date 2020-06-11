@@ -13,28 +13,23 @@ import Select from '../../common/Select/Select'
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
 import panelData from '../JobsPanel/panelData'
+import { parametersActions } from './jobsPanelParametersReducer'
+import { selectOptions } from './jobsPanelParameters.util'
 
 const JobsPanelParametersView = ({
-  addNewParameter,
   handleAddNewItem,
   handleDeleteParameter,
   handleEditParameter,
   match,
-  newParameter,
-  newParameterType,
   parameters,
-  selectOptions,
-  selectedParameter,
-  setAddNewParameter,
-  setNewParameter,
-  setNewParameterType,
-  setSelectedParameter
+  parametersDispatch,
+  parametersState
 }) => {
   return (
     <div className="job-panel__item">
       <JobsPanelSection title="Parameters">
         <JobsPanelTable
-          addNewItem={addNewParameter}
+          addNewItem={parametersState.addNewParameter}
           className="parameters"
           content={parameters}
           handleDeleteItems={handleDeleteParameter}
@@ -42,15 +37,23 @@ const JobsPanelParametersView = ({
           headers={panelData.parameters['table-headers']}
           match={match}
           section="parameters"
-          selectedItem={selectedParameter}
-          setSelectedParameter={setSelectedParameter}
+          selectedItem={parametersState.selectedParameter}
+          setSelectedParameter={selectedParam =>
+            parametersDispatch({
+              type: parametersActions.SET_SELECTED_PARAMETER,
+              payload: selectedParam
+            })
+          }
         >
-          {addNewParameter ? (
+          {parametersState.addNewParameter ? (
             <div className="table__row-add-item">
               <div className="input-row-wrapper">
                 <Input
                   onChange={value =>
-                    setNewParameter({ ...newParameter, name: value })
+                    parametersDispatch({
+                      type: parametersActions.SET_NEW_PARAMETER_NAME,
+                      payload: value
+                    })
                   }
                   label="Name"
                   className="input-row__item"
@@ -59,12 +62,12 @@ const JobsPanelParametersView = ({
                 />
                 <Select
                   className="parameters-value-type"
-                  label={newParameter.type}
+                  label={parametersState.newParameter.valueType}
                   match={match}
                   onClick={value =>
-                    setNewParameter({
-                      ...newParameter,
-                      type: find(selectOptions.parametersValueType, [
+                    parametersDispatch({
+                      type: parametersActions.SET_NEW_PARAMETER_VALUE_TYPE,
+                      payload: find(selectOptions.parametersValueType, [
                         'id',
                         value
                       ]).id
@@ -74,7 +77,10 @@ const JobsPanelParametersView = ({
                 />
                 <Input
                   onChange={value =>
-                    setNewParameter({ ...newParameter, value: value })
+                    parametersDispatch({
+                      type: parametersActions.SET_NEW_PARAMETER_VALUE,
+                      payload: value
+                    })
                   }
                   label="Value/s"
                   className="input-row__item parameter-value"
@@ -82,13 +88,15 @@ const JobsPanelParametersView = ({
                   type="text"
                 />
                 <Select
-                  label={newParameterType}
+                  label={parametersState.newParameter.parameterType}
                   className="select-parameters-type"
                   match={match}
                   onClick={value =>
-                    setNewParameterType(
-                      find(selectOptions.parameterType, ['id', value]).id
-                    )
+                    parametersDispatch({
+                      type: parametersActions.SET_NEW_PARAMETER_TYPE,
+                      payload: find(selectOptions.parameterType, ['id', value])
+                        .id
+                    })
                   }
                   options={selectOptions.parameterType}
                 />
@@ -104,7 +112,12 @@ const JobsPanelParametersView = ({
             </div>
           ) : (
             <JobsPanelTableAddItemRow
-              onClick={setAddNewParameter}
+              onClick={value => {
+                parametersDispatch({
+                  type: parametersActions.SET_ADD_NEW_PARAMETER,
+                  payload: value
+                })
+              }}
               text="parameter"
             />
           )}
@@ -116,16 +129,13 @@ const JobsPanelParametersView = ({
 }
 
 JobsPanelParametersView.propTypes = {
-  addNewParameter: PropTypes.bool.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
+  handleDeleteParameter: PropTypes.func.isRequired,
+  handleEditParameter: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  newParameter: PropTypes.shape({}).isRequired,
-  newParameterType: PropTypes.string.isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  selectOptions: PropTypes.shape({}).isRequired,
-  setAddNewParameter: PropTypes.func.isRequired,
-  setNewParameter: PropTypes.func.isRequired,
-  setNewParameterType: PropTypes.func.isRequired
+  parametersDispatch: PropTypes.func.isRequired,
+  parametersState: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelParametersView

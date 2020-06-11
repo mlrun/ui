@@ -1,17 +1,19 @@
-import _ from 'lodash'
+import _, { isEmpty } from 'lodash'
+import { panelActions } from './panelReducer'
+import { parseDefaultContent } from '../../utils/parseDefaultContent'
 
 export const getDefaultData = functionParameters => {
   const parameters = functionParameters
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
       doc: parameter.doc,
-      isValueEmpty: !parameter.default,
+      isValueEmpty: true,
       isDefault: true,
       data: {
         name: parameter.name ?? '',
-        type: parameter.type ?? '',
+        valueType: parameter.type ?? '',
         value: parameter.default ?? '',
-        simple: ''
+        parameterType: ''
       }
     }))
 
@@ -57,7 +59,7 @@ export const getVolumeMounts = selectedFunction => {
           name: volume_mounts?.name,
           mountPath: volume_mounts?.mountPath
         },
-        isValueEmpty: !volume_mounts?.mountPath,
+        isValueEmpty: true,
         isDefault: true
       }
     })
@@ -76,8 +78,8 @@ export const getVolume = selectedFunction => {
     .value()
 }
 
-export const getMethodOptions = selectedFunction => {
-  return _.chain(selectedFunction)
+export const getMethodOptions = selectedFunctions => {
+  return _.chain(selectedFunctions)
     .map(func =>
       func.spec.entry_points ? Object.values(func.spec.entry_points) : []
     )
@@ -91,9 +93,9 @@ export const getMethodOptions = selectedFunction => {
     .value()
 }
 
-export const getVersionOptions = selectedFunction => {
-  return _.unionBy(
-    selectedFunction.map(func => {
+export const getVersionOptions = selectedFunctions => {
+  const versionOptions = _.unionBy(
+    selectedFunctions.map(func => {
       return {
         label:
           (func.metadata.tag === 'latest' ? '$' : '') +
@@ -103,26 +105,59 @@ export const getVersionOptions = selectedFunction => {
     }),
     'id'
   )
+
+  return versionOptions.length
+    ? versionOptions
+    : [{ label: '$latest', id: 'latest' }]
 }
 
 export const getDefaultMethodAndVersion = (
   versionOptions,
-  selectedFunction
+  selectedFunctions
 ) => {
-  versionOptions = versionOptions.length
-    ? [{ label: '$latest', id: 'latest' }]
-    : versionOptions
-
-  const defaultMethod = selectedFunction.find(
+  const defaultMethod = selectedFunctions.find(
     item => item.metadata.tag === 'latest'
   )?.spec.default_handler
 
-  const defaultVersion = versionOptions.length
+  const defaultVersion = !versionOptions.length
     ? versionOptions[0].id
-    : versionOptions.find(version => version.id === 'latest')
+    : versionOptions.find(version => version.id === 'latest').id
 
   return {
     defaultMethod,
     defaultVersion
+  }
+}
+
+export const generateTableData = (
+  method,
+  selectedFunction,
+  panelDispatch,
+  setNewJob
+) => {
+  const functionParameters = getParameters(selectedFunction, method)
+
+  if (!isEmpty(functionParameters)) {
+    const { parameters, dataInputs } = getDefaultData(functionParameters)
+    const volumeMounts = getVolumeMounts(selectedFunction)
+    const volumes = getVolume(selectedFunction)
+
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA,
+      payload: {
+        dataInputs: dataInputs,
+        parameters,
+        volumeMounts,
+        volumes
+      }
+    })
+    setNewJob({
+      inputs: parseDefaultContent(dataInputs),
+      parameters: parseDefaultContent(parameters),
+      volumeMounts: volumeMounts.length
+        ? volumeMounts.map(volumeMounts => volumeMounts.data)
+        : [],
+      volumes
+    })
   }
 }

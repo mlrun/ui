@@ -4,22 +4,27 @@ import PropTypes from 'prop-types'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
+import { panelActions } from '../../components/JobsPanel/panelReducer'
+
 const JobsPanelTitleEdit = ({
-  currentFunction,
-  handleEditJobTitle,
+  currentFunctionInfo,
+  handleFinishEdit,
   match,
   methodOptions,
-  setCurrentFunction,
+  panelDispatch,
   versionOptions
 }) => {
   return (
     <>
       <Input
         onChange={name =>
-          setCurrentFunction(prevState => ({ ...prevState, name }))
+          panelDispatch({
+            type: panelActions.SET_CURRENT_FUNCTION_INFO_NAME,
+            payload: name
+          })
         }
         type="text"
-        value={currentFunction.name}
+        value={currentFunctionInfo.name}
       />
       <div className="job-panel__select-container">
         <Select
@@ -27,10 +32,13 @@ const JobsPanelTitleEdit = ({
           label="Version"
           match={match}
           onClick={version =>
-            setCurrentFunction(prevState => ({ ...prevState, version }))
+            panelDispatch({
+              type: panelActions.SET_CURRENT_FUNCTION_INFO_VERSION,
+              payload: version
+            })
           }
           options={versionOptions}
-          selectedId={currentFunction.version}
+          selectedId={currentFunctionInfo.version}
         />
         {methodOptions.length !== 0 && (
           <Select
@@ -39,14 +47,17 @@ const JobsPanelTitleEdit = ({
             label="Method"
             match={match}
             onClick={method =>
-              setCurrentFunction(prevState => ({ ...prevState, method }))
+              panelDispatch({
+                type: panelActions.SET_CURRENT_FUNCTION_INFO_METHOD,
+                payload: method
+              })
             }
             options={methodOptions}
-            selectedId={currentFunction.method}
+            selectedId={currentFunctionInfo.method}
           />
         )}
       </div>
-      <button className="btn btn_primary" onClick={handleEditJobTitle}>
+      <button className="btn btn_primary" onClick={handleFinishEdit}>
         Done
       </button>
     </>
@@ -54,11 +65,11 @@ const JobsPanelTitleEdit = ({
 }
 
 JobsPanelTitleEdit.propTypes = {
-  currentFunction: PropTypes.shape({}).isRequired,
-  handleEditJobTitle: PropTypes.func.isRequired,
+  currentFunctionInfo: PropTypes.shape({}).isRequired,
+  handleFinishEdit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   methodOptions: PropTypes.array.isRequired,
-  setCurrentFunction: PropTypes.func.isRequired,
+  panelDispatch: PropTypes.func.isRequired,
   versionOptions: PropTypes.array.isRequired
 }
 

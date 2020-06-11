@@ -1,55 +1,67 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelTitleView from './JobsPanelTitleView'
 
+import { panelActions } from '../../components/JobsPanel/panelReducer'
+
 import './jobsPanelTitle.scss'
 
 const JobsPanelTitle = ({
-  functionsData,
   closePanel,
+  functionData,
   match,
   openScheduleJob,
-  setCurrentFunctionInfo,
-  currentFunctionInfo,
+  panelDispatch,
+  panelState,
   setOpenScheduleJob
 }) => {
-  const [isEdit, setIsEdit] = useState(false)
-  const [currentFunction, setCurrentFunction] = useState(currentFunctionInfo)
-
-  const handleEditJobTitle = () => {
-    setCurrentFunctionInfo({
-      name: currentFunction.name,
-      version: currentFunction.version,
-      method: currentFunction.method
+  const handleFinishEdit = () => {
+    panelDispatch({
+      type: panelActions.SET_EDIT_MODE,
+      payload: false
     })
-    setIsEdit(false)
+
+    if (
+      panelState.currentFunctionInfo.method !==
+      panelState.previousPanelData.titleInfo.method
+    ) {
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA,
+        payload: {
+          tableData: panelState.tableData,
+          titleInfo: {
+            method: panelState.currentFunctionInfo.method,
+            version: panelState.currentFunctionInfo.version
+          }
+        }
+      })
+    }
   }
 
   return (
     <JobsPanelTitleView
       closePanel={closePanel}
-      currentFunction={currentFunction}
-      handleEditJobTitle={handleEditJobTitle}
-      isEdit={isEdit}
+      currentFunctionInfo={panelState.currentFunctionInfo}
+      editMode={panelState.editMode}
+      handleFinishEdit={handleFinishEdit}
       match={match}
-      methodOptions={functionsData.methodOptions}
+      methodOptions={functionData.methodOptions}
       openScheduleJob={openScheduleJob}
-      setCurrentFunction={setCurrentFunction}
-      setIsEdit={setIsEdit}
+      panelDispatch={panelDispatch}
       setOpenScheduleJob={setOpenScheduleJob}
-      versionOptions={functionsData.versionOptions}
+      versionOptions={functionData.versionOptions}
     />
   )
 }
 
 JobsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
-  currentFunctionInfo: PropTypes.shape({}).isRequired,
-  functionsData: PropTypes.shape({}).isRequired,
+  functionData: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
-  setCurrentFunctionInfo: PropTypes.func.isRequired,
+  panelDispatch: PropTypes.func.isRequired,
+  panelState: PropTypes.shape({}).isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired
 }
 

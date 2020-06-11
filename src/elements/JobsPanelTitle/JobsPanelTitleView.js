@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 
 import JobsPanelTitleEdit from '../JobsPanelTitleEdit/JobsPanelTitleEdit'
 
@@ -7,26 +8,25 @@ import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
-import classNames from 'classnames'
+import { panelActions } from '../../components/JobsPanel/panelReducer'
 
 const JobsPanelTitleView = ({
   closePanel,
-  currentFunction,
-  handleEditJobTitle,
-  isEdit,
+  currentFunctionInfo,
+  editMode,
+  handleFinishEdit,
   match,
   methodOptions,
   openScheduleJob,
-  setCurrentFunction,
-  setIsEdit,
+  panelDispatch,
   setOpenScheduleJob,
   versionOptions
 }) => {
-  const jobPanelClassName = classNames({
-    'job-panel__title-wrapper': true,
-    'job-panel__title-wrapper_edit': isEdit,
-    'job-panel__title-wrapper_hover': !openScheduleJob && !isEdit
-  })
+  const jobPanelClassName = classNames(
+    'job-panel__title-wrapper',
+    editMode && 'job-panel__title-wrapper_edit',
+    !openScheduleJob && !editMode && 'job-panel__title-wrapper_hover'
+  )
 
   return (
     <div className="job-panel__title">
@@ -37,19 +37,19 @@ const JobsPanelTitleView = ({
             <span className="job-schedule__title">Schedule Job</span>
           </div>
         )}
-        {!isEdit ? (
+        {!editMode ? (
           <>
             <div className="job-panel__wrapper">
-              <div className="job-panel__name">{currentFunction.name}</div>
+              <div className="job-panel__name">{currentFunctionInfo.name}</div>
               {!openScheduleJob && (
                 <>
                   <span className="job-panel__version">
-                    Version: {currentFunction.version === 'latest' && '$'}
-                    {currentFunction.version}
+                    Version: {currentFunctionInfo.version === 'latest' && '$'}
+                    {currentFunctionInfo.version}
                   </span>
-                  {currentFunction.method && (
+                  {currentFunctionInfo.method && (
                     <span className="job-panel__method">
-                      Method: {currentFunction.method}
+                      Method: {currentFunctionInfo.method}
                     </span>
                   )}
                 </>
@@ -60,7 +60,10 @@ const JobsPanelTitleView = ({
                 <Edit
                   className="job-panel__icon"
                   onClick={() => {
-                    setIsEdit(true)
+                    panelDispatch({
+                      type: panelActions.SET_EDIT_MODE,
+                      payload: true
+                    })
                   }}
                 />
               </div>
@@ -68,11 +71,11 @@ const JobsPanelTitleView = ({
           </>
         ) : (
           <JobsPanelTitleEdit
-            currentFunction={currentFunction}
-            handleEditJobTitle={handleEditJobTitle}
+            currentFunctionInfo={currentFunctionInfo}
+            handleFinishEdit={handleFinishEdit}
             match={match}
             methodOptions={methodOptions}
-            setCurrentFunction={setCurrentFunction}
+            panelDispatch={panelDispatch}
             versionOptions={versionOptions}
           />
         )}
@@ -89,14 +92,13 @@ const JobsPanelTitleView = ({
 
 JobsPanelTitleView.propTypes = {
   closePanel: PropTypes.func.isRequired,
-  currentFunction: PropTypes.shape({}).isRequired,
-  handleEditJobTitle: PropTypes.func.isRequired,
-  isEdit: PropTypes.bool.isRequired,
+  currentFunctionInfo: PropTypes.shape({}).isRequired,
+  editMode: PropTypes.bool.isRequired,
+  handleFinishEdit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   methodOptions: PropTypes.array.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
-  setCurrentFunction: PropTypes.func.isRequired,
-  setIsEdit: PropTypes.func.isRequired,
+  panelDispatch: PropTypes.func.isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired,
   versionOptions: PropTypes.array.isRequired
 }
