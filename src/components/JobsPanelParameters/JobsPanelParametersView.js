@@ -13,8 +13,8 @@ import Select from '../../common/Select/Select'
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
 import panelData from '../JobsPanel/panelData'
-import { parametersActions } from './parametersReducer'
-import { selectOptions } from './parameters.util'
+import { parametersActions } from './jobsPanelParametersReducer'
+import { selectOptions } from './jobsPanelParameters.util'
 
 const JobsPanelParametersView = ({
   handleAddNewItem,

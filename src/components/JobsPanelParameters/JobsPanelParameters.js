@@ -7,9 +7,9 @@ import panelData from '../JobsPanel/panelData'
 import {
   initialState,
   parametersActions,
-  parametersReducer
-} from './parametersReducer'
-import { editHyperParams } from './parameters.util'
+  jobsPanelParametersReducer
+} from './jobsPanelParametersReducer'
+import { editHyperParams } from './jobsPanelParameters.util'
 import { panelActions } from '../JobsPanel/panelReducer'
 
 const JobsPanelParameters = ({
@@ -22,7 +22,7 @@ const JobsPanelParameters = ({
   setNewJobParameters
 }) => {
   const [parametersState, parametersDispatch] = useReducer(
-    parametersReducer,
+    jobsPanelParametersReducer,
     initialState
   )
 

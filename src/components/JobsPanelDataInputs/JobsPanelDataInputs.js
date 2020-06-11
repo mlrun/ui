@@ -3,14 +3,18 @@ import PropTypes from 'prop-types'
 
 import JobsPanelDataInputsView from './JobsPanelDataInputsView'
 
-import { initialState, inputsActions, inputsReducer } from './inputsReducer'
+import {
+  initialState,
+  inputsActions,
+  jobsPanelDataInputsReducer
+} from './jobsPanelDataInputsReducer'
 import { panelActions } from '../JobsPanel/panelReducer'
 import {
   createVolumeOfNewJob,
   handleAddItem,
   handleDelete,
   handleEdit
-} from './inputs.util'
+} from './jobsPanelDataInputs.util'
 
 const JobsPanelDataInputs = ({
   inputs,
@@ -23,7 +27,10 @@ const JobsPanelDataInputs = ({
   volumeMounts,
   volumes
 }) => {
-  const [inputsState, inputsDispatch] = useReducer(inputsReducer, initialState)
+  const [inputsState, inputsDispatch] = useReducer(
+    jobsPanelDataInputsReducer,
+    initialState
+  )
 
   const handleAddNewItem = (input, volume) => {
     if (input) {

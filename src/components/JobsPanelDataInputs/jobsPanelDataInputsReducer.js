@@ -34,7 +34,7 @@ export const inputsActions = {
   SET_SELECTED_VOLUME: 'SET_SELECTED_VOLUME'
 }
 
-export const inputsReducer = (state, { type, payload }) => {
+export const jobsPanelDataInputsReducer = (state, { type, payload }) => {
   switch (type) {
     case inputsActions.REMOVE_NEW_INPUT_DATA:
       return {

@@ -8,7 +8,7 @@ import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTable
 import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
 
 import panelData from '../../components/JobsPanel/panelData'
-import { inputsActions } from '../../components/JobsPanelDataInputs/inputsReducer'
+import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 

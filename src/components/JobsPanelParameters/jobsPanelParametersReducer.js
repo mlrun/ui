@@ -21,7 +21,7 @@ export const parametersActions = {
   SET_SELECTED_PARAMETER: 'SET_SELECTED_PARAMETER'
 }
 
-export const parametersReducer = (state, { type, payload }) => {
+export const jobsPanelParametersReducer = (state, { type, payload }) => {
   switch (type) {
     case parametersActions.REMOVE_NEW_PARAMETER_DATA:
       return {
