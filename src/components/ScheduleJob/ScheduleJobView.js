@@ -23,6 +23,7 @@ const ScheduleJobView = ({
   recurringState,
   selectOptions,
   setActiveTab,
+  setCron,
   setDate,
   setIsRecurring,
   setTime,
@@ -41,26 +42,36 @@ const ScheduleJobView = ({
           </div>
         ))}
       </div>
-      {activeTab === scheduleData.tabs[0].id && (
-        <ScheduleJobSimple
-          date={date}
-          daysOfWeek={daysOfWeek}
-          getRangeInputValue={getRangeInputValue}
-          handleDaysOfWeek={handleDaysOfWeek}
-          isRecurring={isRecurring}
-          match={match}
-          recurringDispatch={recurringDispatch}
-          recurringState={recurringState}
-          selectOptions={selectOptions}
-          setDate={setDate}
-          setIsRecurring={setIsRecurring}
-          setTime={setTime}
-          time={time}
-        />
-      )}
-      {activeTab === scheduleData.tabs[1].id && (
-        <ScheduleCron cron={cron} generateCronString={generateCronString} />
-      )}
+      <div className="schedule-content">
+        <h3>
+          {activeTab === scheduleData.tabs[0].id ? 'Simple ' : 'Advanced '}
+          Schedule
+        </h3>
+        {activeTab === scheduleData.tabs[0].id && (
+          <ScheduleJobSimple
+            date={date}
+            daysOfWeek={daysOfWeek}
+            getRangeInputValue={getRangeInputValue}
+            handleDaysOfWeek={handleDaysOfWeek}
+            isRecurring={isRecurring}
+            match={match}
+            recurringDispatch={recurringDispatch}
+            recurringState={recurringState}
+            selectOptions={selectOptions}
+            setDate={setDate}
+            setIsRecurring={setIsRecurring}
+            setTime={setTime}
+            time={time}
+          />
+        )}
+        {activeTab === scheduleData.tabs[1].id && (
+          <ScheduleCron
+            cron={cron}
+            generateCronString={generateCronString}
+            setCron={setCron}
+          />
+        )}
+      </div>
       <button className="btn btn_primary btn__schedule" onClick={onSchedule}>
         <Schedule />
         Schedule

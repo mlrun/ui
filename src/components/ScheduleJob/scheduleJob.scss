@@ -1,4 +1,5 @@
 @import '../../scss/colors.scss';
+@import '../../scss/borders';
 
 .schedule {
   &_container {
@@ -19,6 +20,18 @@
         color: $cornflowerBlue;
         border-bottom: 3px solid $cornflowerBlue;
       }
+    }
+  }
+
+  &-content {
+    padding: 24px;
+    background-color: $white;
+    border: $primaryBorder;
+    border-radius: 4px;
+
+    h3 {
+      color: $primary;
+      text-transform: uppercase;
     }
   }
 }

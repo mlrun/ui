@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import ScheduleRecurring from '../../elements/ScheduleRecurring/ScheduleRecurring'
 import DatePicker from '../../common/DatePicker/DatePicker'
+import TimePicker from '../../common/TimePicker/TimePicker'
 
 import './scheduleJobSimple.scss'
-import TimePicker from '../../common/TimePicker/TimePicker'
 
 const ScheduleJobSimple = ({
   date,
@@ -24,8 +24,7 @@ const ScheduleJobSimple = ({
   time
 }) => {
   return (
-    <div className="schedule-job-simple_container">
-      <h3>Simple Schedule</h3>
+    <>
       <div className="input_container">
         <DatePicker onChange={setDate} splitCharacter="." value={date} />
         <TimePicker onChange={setTime} value={time} />
@@ -48,7 +47,7 @@ const ScheduleJobSimple = ({
           selectOptions={selectOptions}
         />
       )}
-    </div>
+    </>
   )
 }
 

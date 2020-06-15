@@ -118,6 +118,8 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
     setOpenScheduleJob(false)
   }, [cron, dispatch, setOpenScheduleJob])
 
+  console.log(cron)
+
   return (
     <ScheduleJobView
       activeTab={activeTab}
@@ -134,6 +136,7 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
       recurringState={recurringState}
       selectOptions={selectOptions}
       setActiveTab={setActiveTab}
+      setCron={setCron}
       setDate={onHandleDateChange}
       setIsRecurring={setIsRecurring}
       setTime={onHandleTimeChange}

@@ -1,3 +1,10 @@
-.schedule-cron-container {
-    
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.schedule-content {
+  .cron-string {
+    min-width: 100%;
+    border: $primaryBorder;
+    border-radius: 4px;
+  }
 }
