@@ -86,7 +86,7 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
                     func={
                       jobsInfoContent[index] === selectedItem.function
                         ? selectedItem.function
-                        : {}
+                        : ''
                     }
                     match={match}
                     state={
