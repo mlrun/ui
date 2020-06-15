@@ -68,14 +68,33 @@ const Functions = ({
     let item = {}
 
     if (match.params.hash && functions.length > 0) {
+      const funcTagIndex = match.params.hash.indexOf(':')
+
       if (selectedFunction.updated) {
-        item = functions.find(
-          func =>
-            isEqual(func.updated, selectedFunction.updated) &&
-            isEqual(func.hash, selectedFunction.hash)
-        )
+        item = functions.find(func => {
+          if (funcTagIndex > 0) {
+            return (
+              isEqual(func.updated, selectedFunction.updated) &&
+              isEqual(func.tag, selectedFunction.tag)
+            )
+          } else {
+            return (
+              isEqual(func.updated, selectedFunction.updated) &&
+              isEqual(func.hash, selectedFunction.hash)
+            )
+          }
+        })
       } else {
-        item = functions.find(func => isEqual(func.hash, match.params.hash))
+        item = functions.find(func => {
+          if (funcTagIndex > 0) {
+            return isEqual(func.tag, match.params.hash.slice(funcTagIndex + 1))
+          } else {
+            return isEqual(
+              func.hash,
+              match.params.hash.slice(match.params.hash.indexOf('@') + 1)
+            )
+          }
+        })
       }
 
       if (Object.keys(item).length === 0) {
@@ -91,7 +110,8 @@ const Functions = ({
     history,
     match.params.projectName,
     selectedFunction.updated,
-    selectedFunction.hash
+    selectedFunction.hash,
+    selectedFunction.tag
   ])
 
   const handleSelectFunction = item => {
