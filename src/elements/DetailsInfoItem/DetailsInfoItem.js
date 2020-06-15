@@ -44,13 +44,12 @@ const DetailsInfoItem = ({
     return (
       <Tooltip
         className="details-item__data details-item__link"
-        template={<TextTooltipTemplate text={func.hash} />}
+        template={<TextTooltipTemplate text={func} />}
       >
         <Link
-          to={`/projects/${match.params.projectName}/functions${func.name +
-            func.hash}/info`}
+          to={`/projects/${match.params.projectName}/functions${func}/info`}
         >
-          {func.name}
+          {func}
         </Link>
       </Tooltip>
     )
@@ -62,7 +61,7 @@ const DetailsInfoItem = ({
 DetailsInfoItem.defaultProps = {
   chips: [],
   chipsClassName: '',
-  func: {},
+  func: '',
   info: null,
   match: {},
   state: '',
@@ -72,7 +71,7 @@ DetailsInfoItem.defaultProps = {
 DetailsInfoItem.propTypes = {
   chips: PropTypes.array,
   chipsClassName: PropTypes.string,
-  func: PropTypes.shape({}),
+  func: PropTypes.string,
   info: PropTypes.any,
   match: PropTypes.shape({}),
   state: PropTypes.string,

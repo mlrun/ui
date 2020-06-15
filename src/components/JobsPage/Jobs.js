@@ -37,35 +37,26 @@ const Jobs = ({
         stateFilter !== jobsData.initialStateFilter && stateFilter,
         event
       ).then(jobs => {
-        const newJobs = jobs.map(job => {
-          const func = job?.spec?.function?.match(
-            /(\/)([\w\W\d]+)(?=:)|(:)([\w\d]+)/g
-          )
-
-          return {
-            uid: job.metadata.uid,
-            iteration: job.metadata.iteration,
-            iterationStats: job.status.iterations || [],
-            iterations: [],
-            startTime: new Date(job.status.start_time),
-            state: job.status.state,
-            name: job.metadata.name,
-            labels: parseKeyValues(job.metadata.labels || {}),
-            logLevel: job.spec.log_level,
-            inputs: job.spec.inputs || {},
-            parameters: parseKeyValues(job.spec.parameters || {}),
-            results: job.status.results || {},
-            resultsChips: parseKeyValues(job.status.results || {}),
-            artifacts: job.status.artifacts || [],
-            outputPath: job.spec.output_path,
-            owner: job.metadata.labels.owner,
-            updated: new Date(job.status.last_update),
-            function: {
-              name: func && func[0],
-              hash: func && func[1]
-            }
-          }
-        })
+        const newJobs = jobs.map(job => ({
+          uid: job.metadata.uid,
+          iteration: job.metadata.iteration,
+          iterationStats: job.status.iterations || [],
+          iterations: [],
+          startTime: new Date(job.status.start_time),
+          state: job.status.state,
+          name: job.metadata.name,
+          labels: parseKeyValues(job.metadata.labels || {}),
+          logLevel: job.spec.log_level,
+          inputs: job.spec.inputs || {},
+          parameters: parseKeyValues(job.spec.parameters || {}),
+          results: job.status.results || {},
+          resultsChips: parseKeyValues(job.status.results || {}),
+          artifacts: job.status.artifacts || [],
+          outputPath: job.spec.output_path,
+          owner: job.metadata.labels.owner,
+          updated: new Date(job.status.last_update),
+          function: job?.spec?.function ?? ''
+        }))
 
         return setJobs(newJobs)
       })
