@@ -23,10 +23,17 @@ const ScheduleCron = ({ cron, generateCronString, setCron }) => {
       return setError(errorMessage)
     }
 
-    data = data.map(dataItem => {
-      if (dataItem.length > 2) {
+    data = data.map((dataItem, index) => {
+      if (
+        dataItem.length > 2 ||
+        dataItem.match(/(\*+\d)/) ||
+        dataItem.match(/(\d\*+)/)
+      ) {
         errorMessage = 'Please add spaces after values'
-        console.log(errorMessage)
+      }
+
+      if (index === 0 || dataItem > 60) {
+        return setError('Unsupported value for minutes')
       }
 
       if (dataItem === '') dataItem = '*'
