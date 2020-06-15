@@ -15,10 +15,10 @@ const ArtifactsPreviewView = ({ preview }) => (
     )}
     {preview?.type === 'table' && (
       <div className="preview-table">
-        <div className="preview-table__row">
+        <div className="table-header">
           {preview.data.headers.map(header => {
             return (
-              <div key={header} className="preview-table__header">
+              <div key={header} className="preview-table__content">
                 <Tooltip template={<TextTooltipTemplate text={header} />}>
                   {header}
                 </Tooltip>
@@ -26,28 +26,33 @@ const ArtifactsPreviewView = ({ preview }) => (
             )
           })}
         </div>
-        {preview.data.content.map(contentItem => (
-          <div key={contentItem + Math.random()} className="preview-table__row">
-            {Array.isArray(contentItem) ? (
-              contentItem.map(value => (
+        <div className="preview-table__body">
+          {preview.data.content.map(contentItem => (
+            <div
+              key={contentItem + Math.random()}
+              className="preview-table__row"
+            >
+              {Array.isArray(contentItem) ? (
+                contentItem.map(value => (
+                  <Tooltip
+                    className="preview-table__content"
+                    key={value + Math.random()}
+                    template={<TextTooltipTemplate text={`${value}`} />}
+                  >
+                    {value}
+                  </Tooltip>
+                ))
+              ) : (
                 <Tooltip
                   className="preview-table__content"
-                  key={value + Math.random()}
-                  template={<TextTooltipTemplate text={`${value}`} />}
+                  template={<TextTooltipTemplate text={contentItem} />}
                 >
-                  {value}
+                  {contentItem}
                 </Tooltip>
-              ))
-            ) : (
-              <Tooltip
-                className="preview-table__content"
-                template={<TextTooltipTemplate text={contentItem} />}
-              >
-                {contentItem}
-              </Tooltip>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     )}
     {preview?.type === 'text' && <div>{preview?.data.content}</div>}

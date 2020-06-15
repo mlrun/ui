@@ -103,7 +103,6 @@
     &_results {
       position: relative;
       width: 100%;
-      padding: 0 31px;
 
       &__table {
         position: relative;
@@ -225,6 +224,7 @@
       display: flex;
       flex: 1;
       flex-direction: column;
+      padding: 10px 21px;
 
       .inputs_container {
         width: 100%;
@@ -244,6 +244,17 @@
 
       .json {
         padding: 0 15px;
+      }
+
+      .preview-table {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        overflow: auto;
+
+        .table-header {
+          top: 0;
+        }
       }
     }
 
