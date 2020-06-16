@@ -36,6 +36,7 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
     recurringReducer,
     initialState
   )
+  const [error, setError] = useState('')
   const dispatch = useDispatch()
   const startWeek = getWeekStart(decodeLocale(navigator.language))
   const selectOptions = {
@@ -118,14 +119,13 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
     setOpenScheduleJob(false)
   }, [cron, dispatch, setOpenScheduleJob])
 
-  console.log(cron)
-
   return (
     <ScheduleJobView
       activeTab={activeTab}
       cron={cron}
       date={date}
       daysOfWeek={daysOfWeek}
+      error={error}
       generateCronString={generateCronString}
       getRangeInputValue={getRangeInputValue}
       handleDaysOfWeek={handleDaysOfWeek}
@@ -138,6 +138,7 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
       setActiveTab={setActiveTab}
       setCron={setCron}
       setDate={onHandleDateChange}
+      setError={setError}
       setIsRecurring={setIsRecurring}
       setTime={onHandleTimeChange}
       time={time}

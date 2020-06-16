@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
+
 import Input from '../../common/Input/Input'
+import { ReactComponent as Alert } from '../../images/unsuccess_alert.svg'
+import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 import './scheduleCron.scss'
 
-const ScheduleCron = ({ cron, generateCronString, setCron }) => {
+const ScheduleCron = ({
+  cron,
+  error,
+  generateCronString,
+  setCron,
+  setError
+}) => {
   const [cronString, setCronString] = useState('')
-  const [error, setError] = useState('')
-  // const emptyCronString = '* * * * *'
+  const errorClassNames = classnames('cron-error', error && 'show-error')
 
   useEffect(() => {
     setCronString(generateCronString(cron))
   }, [cron, generateCronString])
 
-  const handleChange = value => {
+  const generateCron = value => {
     let data = value.split(' ')
     let errorMessage = ''
 
-    if (data.length > 6) {
-      errorMessage = 'Unsupported value'
-
-      return setError(errorMessage)
-    }
-
-    data = data.map((dataItem, index) => {
+    data = data.map(dataItem => {
       if (
         dataItem.length > 2 ||
         dataItem.match(/(\*+\d)/) ||
@@ -32,34 +35,57 @@ const ScheduleCron = ({ cron, generateCronString, setCron }) => {
         errorMessage = 'Please add spaces after values'
       }
 
-      if (index === 0 || dataItem > 60) {
-        return setError('Unsupported value for minutes')
+      if (dataItem !== '' && dataItem <= 0) {
+        errorMessage = 'Value must be greater than zero'
       }
 
       if (dataItem === '') dataItem = '*'
 
+      if (!Number(dataItem) && dataItem !== '*')
+        errorMessage = 'Value must be a number'
+
       return dataItem
     })
 
-    if (errorMessage) {
-      return setError(errorMessage)
-    }
-
     const cronObj = {
-      minute: data[0],
-      hour: data[1],
-      dayOfTheMonth: data[2],
-      monthOfTheYear: data[3],
-      dayOfTheWeek: data[4]
+      minute: data[0] ?? '*',
+      hour: data[1] ?? '*',
+      dayOfTheMonth: data[2] ?? '*',
+      monthOfTheYear: data[3] ?? '*',
+      dayOfTheWeek: data[4] ?? '*'
     }
 
     setCron(cronObj)
-    setError('')
+
+    if (data.length > 5) {
+      return setError('Unsupported value')
+    }
+
+    if (data[0] > 59) {
+      return setError('Unsupported value for minutes')
+    } else if (data[1] > 24) {
+      return setError('Unsupported value for hours')
+    } else if (data[2] > 31) {
+      return setError('Unsupported value for month days')
+    } else if (data[3] > 12) {
+      return setError('Unsupported value for month')
+    } else if (data[4] > 7) {
+      return setError('Unsupported value for week days')
+    }
+
+    if (errorMessage) {
+      return setError(errorMessage)
+    } else {
+      setError('')
+    }
   }
 
   return (
     <>
-      <div>{error}</div>
+      <div className={errorClassNames}>
+        <Alert className="error-icon" />
+        {error}
+      </div>
       <Input
         value={cronString}
         label="15 0-20/2 *"
@@ -69,7 +95,24 @@ const ScheduleCron = ({ cron, generateCronString, setCron }) => {
         maxLength={13}
         type="text"
       />
-      <button onClick={() => handleChange(cronString)}>Generate</button>
+      {!error && <Checkmark className="success-icon" />}
+
+      <div>
+        You can use{' '}
+        <a
+          className="cron-link"
+          href="https://www.freeformatter.com/cron-expression-generator-quartz.html"
+        >
+          this external website
+        </a>{' '}
+        to generate cronstring
+      </div>
+      <button
+        className="btn btn_primary cron-btn"
+        onClick={() => generateCron(cronString)}
+      >
+        Generate
+      </button>
     </>
   )
 }

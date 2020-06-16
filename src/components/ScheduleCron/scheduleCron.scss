@@ -2,9 +2,56 @@
 @import '../../scss/borders';
 
 .schedule-content {
-  .cron-string {
-    min-width: 100%;
-    border: $primaryBorder;
-    border-radius: 4px;
+  .cron {
+    &-error {
+      position: relative;
+      display: none;
+      padding: 13px 48px;
+      color: #e54158;
+      background: rgba(229, 65, 88, 0.1);
+      border: 1px solid #e54158;
+      border-radius: 2px;
+
+      &.show-error {
+        display: block;
+      }
+
+      .error-icon {
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        width: 24px;
+        height: 24px;
+        padding: 6px;
+        background: #e54158;
+        border-radius: 15px;
+      }
+    }
+
+    &-string {
+      min-width: 100%;
+      border: $primaryBorder;
+      border-radius: 4px;
+    }
+
+    &-link {
+      display: inline-block;
+      margin: 8px 0;
+      color: #6279e7;
+    }
+  }
+
+  .success-icon {
+    position: absolute;
+    top: 93px;
+    right: 40px;
+    width: 24px;
+    height: 24px;
+    background: #0fddaf;
+    border-radius: 15px;
+
+    path {
+      fill: $white;
+    }
   }
 }

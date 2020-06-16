@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import ScheduleJobSimple from '../ScheduleJobSimple/ScheduleJobSimple'
 import ScheduleCron from '../ScheduleCron/ScheduleCron'
@@ -13,6 +14,7 @@ const ScheduleJobView = ({
   cron,
   date,
   daysOfWeek,
+  error,
   generateCronString,
   getRangeInputValue,
   handleDaysOfWeek,
@@ -25,10 +27,18 @@ const ScheduleJobView = ({
   setActiveTab,
   setCron,
   setDate,
+  setError,
   setIsRecurring,
   setTime,
   time
 }) => {
+  const scheduleBtnClassNames = classnames(
+    'btn',
+    'btn_primary',
+    'btn__schedule',
+    error && 'btn_disabled'
+  )
+
   return (
     <div className="schedule_container">
       <div className="schedule_tabs">
@@ -67,12 +77,18 @@ const ScheduleJobView = ({
         {activeTab === scheduleData.tabs[1].id && (
           <ScheduleCron
             cron={cron}
+            error={error}
             generateCronString={generateCronString}
             setCron={setCron}
+            setError={setError}
           />
         )}
       </div>
-      <button className="btn btn_primary btn__schedule" onClick={onSchedule}>
+      <button
+        className={scheduleBtnClassNames}
+        onClick={onSchedule}
+        disabled={error}
+      >
         <Schedule />
         Schedule
       </button>

@@ -13,8 +13,8 @@
     &_item {
       padding: 10px 24px;
       font-weight: bold;
-      color: $topaz;
       cursor: pointer;
+      color: $topaz;
 
       &.active {
         color: $cornflowerBlue;
@@ -24,6 +24,7 @@
   }
 
   &-content {
+    position: relative;
     padding: 24px;
     background-color: $white;
     border: $primaryBorder;
