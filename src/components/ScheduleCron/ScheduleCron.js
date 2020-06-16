@@ -13,7 +13,8 @@ const ScheduleCron = ({
   error,
   generateCronString,
   setCron,
-  setError
+  setError,
+  success
 }) => {
   const [cronString, setCronString] = useState('')
   const errorClassNames = classnames('cron-error', error && 'show-error')
@@ -66,7 +67,7 @@ const ScheduleCron = ({
     } else if (data[1] > 24) {
       return setError('Unsupported value for hours')
     } else if (data[2] > 31) {
-      return setError('Unsupported value for month days')
+      return setError('Unsupported value for days of a month')
     } else if (data[3] > 12) {
       return setError('Unsupported value for month')
     } else if (data[4] > 7) {
@@ -95,8 +96,7 @@ const ScheduleCron = ({
         maxLength={13}
         type="text"
       />
-      {!error && <Checkmark className="success-icon" />}
-
+      {!error && success && <Checkmark className="success-icon" />}
       <div>
         You can use{' '}
         <a
@@ -119,7 +119,11 @@ const ScheduleCron = ({
 
 ScheduleCron.propTypes = {
   cron: PropTypes.shape({}).isRequired,
-  generateCronString: PropTypes.func.isRequired
+  error: PropTypes.string.isRequired,
+  generateCronString: PropTypes.func.isRequired,
+  setCron: PropTypes.func.isRequired,
+  setError: PropTypes.func.isRequired,
+  success: PropTypes.bool.isRequired
 }
 
 export default ScheduleCron

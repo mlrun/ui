@@ -98,7 +98,11 @@ const JobsPanelView = ({
             </div>
           </div>
         ) : (
-          <ScheduleJob setOpenScheduleJob={setOpenScheduleJob} match={match} />
+          <ScheduleJob
+            handleRunJob={handleRunJob}
+            match={match}
+            setOpenScheduleJob={setOpenScheduleJob}
+          />
         )}
       </div>
     </div>

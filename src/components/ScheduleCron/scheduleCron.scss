@@ -8,8 +8,8 @@
       display: none;
       padding: 13px 48px;
       color: #e54158;
-      background: rgba(229, 65, 88, 0.1);
-      border: 1px solid #e54158;
+      background: rgba($amaranth, 0.1);
+      border: 1px solid $amaranth;
       border-radius: 2px;
 
       &.show-error {
@@ -23,7 +23,7 @@
         width: 24px;
         height: 24px;
         padding: 6px;
-        background: #e54158;
+        background: $amaranth;
         border-radius: 15px;
       }
     }
@@ -37,7 +37,7 @@
     &-link {
       display: inline-block;
       margin: 8px 0;
-      color: #6279e7;
+      color: $cornflowerBlue;
     }
   }
 
@@ -47,7 +47,7 @@
     right: 40px;
     width: 24px;
     height: 24px;
-    background: #0fddaf;
+    background: $brightTurquoise;
     border-radius: 15px;
 
     path {

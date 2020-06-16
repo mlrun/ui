@@ -20,7 +20,7 @@ import { SET_NEW_JOB_SCHEDULE } from '../../constants'
 
 import './scheduleJob.scss'
 
-const ScheduleJob = ({ match, setOpenScheduleJob }) => {
+const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   const [activeTab, setActiveTab] = useState(scheduleData.tabs[0].id)
   const [cron, setCron] = useState({
     minute: '*',
@@ -116,8 +116,9 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
       payload: generateCron
     })
 
+    handleRunJob()
     setOpenScheduleJob(false)
-  }, [cron, dispatch, setOpenScheduleJob])
+  }, [cron, dispatch, handleRunJob, setOpenScheduleJob])
 
   return (
     <ScheduleJobView
@@ -147,6 +148,7 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
 }
 
 ScheduleJob.propTypes = {
+  handleRunJob: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired
 }

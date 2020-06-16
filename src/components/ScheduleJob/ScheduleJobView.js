@@ -32,11 +32,12 @@ const ScheduleJobView = ({
   setTime,
   time
 }) => {
+  const isEmptyCronString = generateCronString(cron) === '* * * * *'
   const scheduleBtnClassNames = classnames(
     'btn',
     'btn_primary',
     'btn__schedule',
-    error && 'btn_disabled'
+    (error || isEmptyCronString) && 'btn_disabled'
   )
 
   return (
@@ -81,13 +82,14 @@ const ScheduleJobView = ({
             generateCronString={generateCronString}
             setCron={setCron}
             setError={setError}
+            success={!isEmptyCronString}
           />
         )}
       </div>
       <button
         className={scheduleBtnClassNames}
         onClick={onSchedule}
-        disabled={error}
+        disabled={error || isEmptyCronString}
       >
         <Schedule />
         Schedule
