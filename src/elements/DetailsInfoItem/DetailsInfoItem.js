@@ -11,6 +11,7 @@ const DetailsInfoItem = ({
   chips,
   chipsClassName,
   func,
+  header,
   info,
   match,
   state,
@@ -54,6 +55,16 @@ const DetailsInfoItem = ({
         </Link>
       </Tooltip>
     )
+  } else if (header === 'uri') {
+    const [project, hash] = info.split('/')
+    return (
+      <Link
+        className="details-item__data details-item__link"
+        to={`/projects/${project}/jobs/${hash}/info`}
+      >
+        {info}
+      </Link>
+    )
   } else {
     return <div className="details-item__data">{info}</div>
   }
@@ -72,7 +83,8 @@ DetailsInfoItem.defaultProps = {
 DetailsInfoItem.propTypes = {
   chips: PropTypes.array,
   chipsClassName: PropTypes.string,
-  func: PropTypes.string,
+  func: PropTypes.shape({}),
+  header: PropTypes.string,
   info: PropTypes.any,
   match: PropTypes.shape({}),
   state: PropTypes.string,

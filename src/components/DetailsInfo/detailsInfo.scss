@@ -4,8 +4,8 @@
 
 .item-info {
   &__header {
-    padding: 21.5px 36px;
     margin: 0;
+    padding: 21.5px 36px;
     font-size: 25px;
     border-bottom: $tableBorder;
   }
@@ -16,11 +16,11 @@
     list-style-type: none;
 
     .details-item {
-      border-bottom: $tableBorder;
-      padding: 18px;
       display: flex;
       flex-direction: row;
       align-items: center;
+      padding: 18px;
+      border-bottom: $tableBorder;
 
       &__header {
         min-width: 100px;
@@ -31,11 +31,11 @@
       }
 
       &__data {
-        padding-left: 16px;
         display: flex;
         flex: 1;
-        min-width: 60px;
         align-items: center;
+        min-width: 60px;
+        padding-left: 16px;
       }
 
       &__status {
@@ -64,4 +64,3 @@
     }
   }
 }
-

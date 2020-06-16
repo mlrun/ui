@@ -154,8 +154,9 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
                 <li className="details-item" key={header}>
                   <div className="details-item__header">{header}</div>
                   <DetailsInfoItem
-                    page={page}
+                    header={header}
                     info={selectedItem.producer[header]}
+                    page={page}
                   />
                 </li>
               )
