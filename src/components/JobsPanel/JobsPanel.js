@@ -157,7 +157,7 @@ const JobsPanel = ({
     }
   }, [functionsStore.template.name, groupedFunctions.name, selectedFunction])
 
-  const handleRunJob = () => {
+  const handleRunJob = cronString => {
     const selectedFunction = functionsStore.template.name
       ? functionsStore.template.functions[0]
       : groupedFunctions.functions.find(
@@ -165,8 +165,8 @@ const JobsPanel = ({
         )
 
     const postData = {
-      schedule: jobsStore.newJob.schedule,
       ...jobsStore.newJob,
+      schedule: cronString || jobsStore.newJob.schedule,
       function: {
         ...jobsStore.newJob.function,
         spec: {

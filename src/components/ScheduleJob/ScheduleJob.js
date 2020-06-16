@@ -112,7 +112,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
   const onSchedule = useCallback(() => {
     let generateCron = ''
-    if (activeTab !== scheduleData.tabs[0].id) {
+    if (activeTab === 'cronstring') {
       const data = validateCronString(cronString)
 
       if (data.errorMessage) {
@@ -131,7 +131,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
       payload: generateCron
     })
 
-    handleRunJob()
+    handleRunJob(activeTab === 'cronstring' && generateCron)
     setOpenScheduleJob(false)
   }, [activeTab, cron, cronString, dispatch, handleRunJob, setOpenScheduleJob])
 
