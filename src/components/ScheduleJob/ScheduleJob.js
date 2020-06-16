@@ -19,6 +19,7 @@ import {
 import { SET_NEW_JOB_SCHEDULE } from '../../constants'
 
 import './scheduleJob.scss'
+import { validateCronString } from '../JobsPanel/jobsPanel.util'
 
 const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   const [activeTab, setActiveTab] = useState(scheduleData.tabs[0].id)
@@ -37,6 +38,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     initialState
   )
   const [error, setError] = useState('')
+  const [cronString, setCronString] = useState('* * * * *')
   const dispatch = useDispatch()
   const startWeek = getWeekStart(decodeLocale(navigator.language))
   const selectOptions = {
@@ -109,7 +111,20 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   }
 
   const onSchedule = useCallback(() => {
-    const generateCron = generateCronString(cron)
+    let generateCron = ''
+    if (activeTab !== scheduleData.tabs[0].id) {
+      const data = validateCronString(cronString)
+
+      if (data.errorMessage) {
+        return setError(data.errorMessage)
+      } else {
+        setError('')
+
+        generateCron = data.cron.join(' ')
+      }
+    } else {
+      generateCron = generateCronString(cron)
+    }
 
     dispatch({
       type: SET_NEW_JOB_SCHEDULE,
@@ -118,12 +133,12 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
     handleRunJob()
     setOpenScheduleJob(false)
-  }, [cron, dispatch, handleRunJob, setOpenScheduleJob])
+  }, [activeTab, cron, cronString, dispatch, handleRunJob, setOpenScheduleJob])
 
   return (
     <ScheduleJobView
       activeTab={activeTab}
-      cron={cron}
+      cronString={cronString}
       date={date}
       daysOfWeek={daysOfWeek}
       error={error}
@@ -137,7 +152,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
       recurringState={recurringState}
       selectOptions={selectOptions}
       setActiveTab={setActiveTab}
-      setCron={setCron}
+      setCronString={setCronString}
       setDate={onHandleDateChange}
       setError={setError}
       setIsRecurring={setIsRecurring}

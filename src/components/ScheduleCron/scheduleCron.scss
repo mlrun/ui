@@ -40,18 +40,4 @@
       color: $cornflowerBlue;
     }
   }
-
-  .success-icon {
-    position: absolute;
-    top: 93px;
-    right: 40px;
-    width: 24px;
-    height: 24px;
-    background: $brightTurquoise;
-    border-radius: 15px;
-
-    path {
-      fill: $white;
-    }
-  }
 }

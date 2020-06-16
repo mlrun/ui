@@ -11,7 +11,7 @@ import scheduleData from './scheduleData.json'
 
 const ScheduleJobView = ({
   activeTab,
-  cron,
+  cronString,
   date,
   daysOfWeek,
   error,
@@ -25,19 +25,17 @@ const ScheduleJobView = ({
   recurringState,
   selectOptions,
   setActiveTab,
-  setCron,
+  setCronString,
   setDate,
   setError,
   setIsRecurring,
   setTime,
   time
 }) => {
-  const isEmptyCronString = generateCronString(cron) === '* * * * *'
   const scheduleBtnClassNames = classnames(
     'btn',
     'btn_primary',
-    'btn__schedule',
-    (error || isEmptyCronString) && 'btn_disabled'
+    'btn__schedule'
   )
 
   return (
@@ -77,20 +75,15 @@ const ScheduleJobView = ({
         )}
         {activeTab === scheduleData.tabs[1].id && (
           <ScheduleCron
-            cron={cron}
+            cronString={cronString}
             error={error}
             generateCronString={generateCronString}
-            setCron={setCron}
+            setCronString={setCronString}
             setError={setError}
-            success={!isEmptyCronString}
           />
         )}
       </div>
-      <button
-        className={scheduleBtnClassNames}
-        onClick={onSchedule}
-        disabled={error || isEmptyCronString}
-      >
+      <button className={scheduleBtnClassNames} onClick={onSchedule}>
         <Schedule />
         Schedule
       </button>
@@ -100,7 +93,7 @@ const ScheduleJobView = ({
 
 ScheduleJobView.propTypes = {
   activeTab: PropTypes.string.isRequired,
-  cron: PropTypes.shape({}).isRequired,
+  cronString: PropTypes.string.isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   daysOfWeek: PropTypes.array.isRequired,
   generateCronString: PropTypes.func.isRequired,
@@ -113,6 +106,7 @@ ScheduleJobView.propTypes = {
   recurringState: PropTypes.shape({}).isRequired,
   selectOptions: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,
+  setCronString: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,
