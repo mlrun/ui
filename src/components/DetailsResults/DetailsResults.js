@@ -6,6 +6,8 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import NoData from '../../common/NoData/NoData'
 
+import { roundFloats } from '../../utils/roundFloats'
+
 import { ReactComponent as BestIteration } from '../../images/best-iteration-icon.svg'
 
 import './detailsResults.scss'
@@ -32,42 +34,42 @@ const DetailsResults = ({ job }) => {
             </div>
           </div>
           <div className="table__item_results__table-body">
-            {result.tableContent.map((item, i) => (
-              <div className="table__item_results__table_row" key={i}>
-                {item.map((value, i) => {
+            {result.tableContent.map((tableContentItem, index) => (
+              <div className="table__item_results__table_row" key={index}>
+                {tableContentItem.map((contentItemValue, idx) => {
                   if (
                     typeof value === 'string' &&
-                    value.match(/completed|running|error/gi)
+                    contentItemValue.match(/completed|running|error/gi)
                   ) {
                     return (
                       <div
                         className="table__item_results__table_row_cell"
-                        key={`${value}${i}`}
+                        key={`${contentItemValue}${idx}`}
                       >
                         <Tooltip
                           template={
                             <TextTooltipTemplate
-                              text={`${value[0].toUpperCase()}${value.slice(
+                              text={`${contentItemValue[0].toUpperCase()}${contentItemValue.slice(
                                 1
                               )}`}
                             />
                           }
                         >
-                          <i className={value} />
+                          <i className={contentItemValue} />
                         </Tooltip>
                       </div>
                     )
                   } else if (
                     job.results &&
-                    value === job.results.best_iteration &&
-                    i === 0
+                    contentItemValue === job.results.best_iteration &&
+                    idx === 0
                   ) {
                     return (
                       <div
-                        key={`${value}${i}`}
+                        key={`${contentItemValue}${idx}`}
                         className="table__item_results__table_medal table__item_results__table_row_cell"
                       >
-                        {value}
+                        {contentItemValue}
                         <Tooltip
                           template={
                             <TextTooltipTemplate text={'Best iteration'} />
@@ -81,15 +83,17 @@ const DetailsResults = ({ job }) => {
                     return (
                       <div
                         className="table__item_results__table_row_cell"
-                        key={`${value}${i}`}
+                        key={`${contentItemValue}${idx}`}
                       >
                         <Tooltip
                           className="data-ellipsis"
                           template={
-                            <TextTooltipTemplate text={value.toString()} />
+                            <TextTooltipTemplate
+                              text={contentItemValue.toString()}
+                            />
                           }
                         >
-                          {value}
+                          {roundFloats(contentItemValue)}
                         </Tooltip>
                       </div>
                     )
