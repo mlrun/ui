@@ -42,6 +42,7 @@ const PreviewModal = ({ item }) => {
             <Download
               path={item.target_path.path}
               schema={item.target_path.schema}
+              user={item.user ?? item.producer?.owner}
             />
           </div>
           <div
