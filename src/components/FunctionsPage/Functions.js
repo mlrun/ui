@@ -41,7 +41,7 @@ const Functions = ({
         command: func.spec.command,
         image: func.spec.image,
         description: func.spec.description,
-        state: func.status ? func.status.state : '',
+        state: func.status?.status?.state ?? '',
         functionSourceCode: func.spec.build?.functionSourceCode ?? ''
       }))
 
