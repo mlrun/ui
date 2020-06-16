@@ -101,6 +101,7 @@ const ScheduleCron = ({
         You can use{' '}
         <a
           className="cron-link"
+          target="_blank"
           href="https://www.freeformatter.com/cron-expression-generator-quartz.html"
         >
           this external website
