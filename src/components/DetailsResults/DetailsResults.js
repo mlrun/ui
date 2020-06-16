@@ -6,6 +6,8 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import NoData from '../../common/NoData/NoData'
 
+import { roundFloats } from '../../utils/roundFloats'
+
 import { ReactComponent as BestIteration } from '../../images/best-iteration-icon.svg'
 
 import './detailsResults.scss'
@@ -89,7 +91,7 @@ const DetailsResults = ({ job }) => {
                             <TextTooltipTemplate text={value.toString()} />
                           }
                         >
-                          {value}
+                          {roundFloats(value)}
                         </Tooltip>
                       </div>
                     )
