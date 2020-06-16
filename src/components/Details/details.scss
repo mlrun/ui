@@ -118,7 +118,7 @@
             display: flex;
             flex: 1;
             flex-direction: column;
-            min-width: 55px;
+            width: 55px;
             padding: 19px 16px;
           }
         }
@@ -133,7 +133,7 @@
             display: flex;
             flex: 1;
             flex-direction: column;
-            min-width: 55px;
+            width: 55px;
 
             @include tableHeader(16px);
           }
@@ -224,7 +224,7 @@
       display: flex;
       flex: 1;
       flex-direction: column;
-      padding: 10px 21px;
+      padding: 10px 0 10px 21px;
 
       .inputs_container {
         width: 100%;
@@ -236,7 +236,7 @@
         z-index: 3;
         margin: 16px;
         padding: 0;
-        background: none;
+        background: $white;
         border: none;
         outline: none;
         cursor: pointer;

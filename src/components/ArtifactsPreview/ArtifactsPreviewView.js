@@ -15,7 +15,7 @@ const ArtifactsPreviewView = ({ preview }) => (
     )}
     {preview?.type === 'table' && (
       <div className="preview-table">
-        <div className="table-header">
+        <div className="preview-table__row table-header">
           {preview.data.headers.map(header => {
             return (
               <div key={header} className="preview-table__content">
