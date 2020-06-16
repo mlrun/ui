@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import ScheduleJobSimple from '../ScheduleJobSimple/ScheduleJobSimple'
 import ScheduleCron from '../ScheduleCron/ScheduleCron'
@@ -10,9 +11,10 @@ import scheduleData from './scheduleData.json'
 
 const ScheduleJobView = ({
   activeTab,
-  cron,
+  cronString,
   date,
   daysOfWeek,
+  error,
   generateCronString,
   getRangeInputValue,
   handleDaysOfWeek,
@@ -23,11 +25,19 @@ const ScheduleJobView = ({
   recurringState,
   selectOptions,
   setActiveTab,
+  setCronString,
   setDate,
+  setError,
   setIsRecurring,
   setTime,
   time
 }) => {
+  const scheduleBtnClassNames = classnames(
+    'btn',
+    'btn_primary',
+    'btn__schedule'
+  )
+
   return (
     <div className="schedule_container">
       <div className="schedule_tabs">
@@ -41,27 +51,39 @@ const ScheduleJobView = ({
           </div>
         ))}
       </div>
-      {activeTab === scheduleData.tabs[0].id && (
-        <ScheduleJobSimple
-          date={date}
-          daysOfWeek={daysOfWeek}
-          getRangeInputValue={getRangeInputValue}
-          handleDaysOfWeek={handleDaysOfWeek}
-          isRecurring={isRecurring}
-          match={match}
-          recurringDispatch={recurringDispatch}
-          recurringState={recurringState}
-          selectOptions={selectOptions}
-          setDate={setDate}
-          setIsRecurring={setIsRecurring}
-          setTime={setTime}
-          time={time}
-        />
-      )}
-      {activeTab === scheduleData.tabs[1].id && (
-        <ScheduleCron cron={cron} generateCronString={generateCronString} />
-      )}
-      <button className="btn btn_primary btn__schedule" onClick={onSchedule}>
+      <div className="schedule-content">
+        <h3>
+          {activeTab === scheduleData.tabs[0].id ? 'Simple ' : 'Advanced '}
+          Schedule
+        </h3>
+        {activeTab === scheduleData.tabs[0].id && (
+          <ScheduleJobSimple
+            date={date}
+            daysOfWeek={daysOfWeek}
+            getRangeInputValue={getRangeInputValue}
+            handleDaysOfWeek={handleDaysOfWeek}
+            isRecurring={isRecurring}
+            match={match}
+            recurringDispatch={recurringDispatch}
+            recurringState={recurringState}
+            selectOptions={selectOptions}
+            setDate={setDate}
+            setIsRecurring={setIsRecurring}
+            setTime={setTime}
+            time={time}
+          />
+        )}
+        {activeTab === scheduleData.tabs[1].id && (
+          <ScheduleCron
+            cronString={cronString}
+            error={error}
+            generateCronString={generateCronString}
+            setCronString={setCronString}
+            setError={setError}
+          />
+        )}
+      </div>
+      <button className={scheduleBtnClassNames} onClick={onSchedule}>
         <Schedule />
         Schedule
       </button>
@@ -71,7 +93,7 @@ const ScheduleJobView = ({
 
 ScheduleJobView.propTypes = {
   activeTab: PropTypes.string.isRequired,
-  cron: PropTypes.shape({}).isRequired,
+  cronString: PropTypes.string.isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   daysOfWeek: PropTypes.array.isRequired,
   generateCronString: PropTypes.func.isRequired,
@@ -84,6 +106,7 @@ ScheduleJobView.propTypes = {
   recurringState: PropTypes.shape({}).isRequired,
   selectOptions: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,
+  setCronString: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,

@@ -1,3 +1,43 @@
-.schedule-cron-container {
-    
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.schedule-content {
+  .cron {
+    &-error {
+      position: relative;
+      display: none;
+      padding: 13px 48px;
+      color: #e54158;
+      background: rgba($amaranth, 0.1);
+      border: 1px solid $amaranth;
+      border-radius: 2px;
+
+      &.show-error {
+        display: block;
+      }
+
+      .error-icon {
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        width: 24px;
+        height: 24px;
+        padding: 6px;
+        background: $amaranth;
+        border-radius: 15px;
+      }
+    }
+
+    &-string {
+      min-width: 100%;
+      border: $primaryBorder;
+      border-radius: 4px;
+    }
+
+    &-link {
+      display: inline-block;
+      margin: 8px 0;
+      color: $cornflowerBlue;
+    }
+  }
 }

@@ -161,3 +161,48 @@ export const generateTableData = (
     })
   }
 }
+
+export const validateCronString = cronString => {
+  let errorMessage = ''
+  const cron = cronString.split(' ').map(dataItem => {
+    if (
+      dataItem.length > 2 ||
+      dataItem.match(/(\*+\d)/) ||
+      dataItem.match(/(\d\*+)/)
+    ) {
+      errorMessage = 'Please add spaces after values'
+    }
+
+    if (dataItem !== '' && dataItem <= 0) {
+      errorMessage = 'Value must be greater than zero'
+    }
+
+    if (dataItem === '') dataItem = '*'
+
+    if (!Number(dataItem) && dataItem !== '*')
+      errorMessage = 'Value must be a number'
+
+    return dataItem
+  })
+
+  if (cron.length > 5) {
+    errorMessage = 'Unsupported value'
+  }
+
+  if (cron[0] > 59) {
+    errorMessage = 'Unsupported value for minutes'
+  } else if (cron[1] > 24) {
+    errorMessage = 'Unsupported value for hours'
+  } else if (cron[2] > 31) {
+    errorMessage = 'Unsupported value for days of a month'
+  } else if (cron[3] > 12) {
+    errorMessage = 'Unsupported value for month'
+  } else if (cron[4] > 7) {
+    errorMessage = 'Unsupported value for week days'
+  }
+
+  return {
+    cron,
+    errorMessage
+  }
+}

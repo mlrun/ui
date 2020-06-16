@@ -183,6 +183,7 @@
     &__schedule-for-later {
       display: flex;
       align-items: center;
+      margin-right: 10px;
       color: $primary;
       border: $primaryBorder;
       border-radius: 4px;
@@ -191,7 +192,6 @@
     &_primary {
       display: flex;
       align-items: center;
-      margin-left: 10px;
       color: $white;
       background: $purple;
       border-radius: 2px;

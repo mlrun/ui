@@ -19,8 +19,9 @@ import {
 import { SET_NEW_JOB_SCHEDULE } from '../../constants'
 
 import './scheduleJob.scss'
+import { validateCronString } from '../JobsPanel/jobsPanel.util'
 
-const ScheduleJob = ({ match, setOpenScheduleJob }) => {
+const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   const [activeTab, setActiveTab] = useState(scheduleData.tabs[0].id)
   const [cron, setCron] = useState({
     minute: '*',
@@ -36,6 +37,8 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
     recurringReducer,
     initialState
   )
+  const [error, setError] = useState('')
+  const [cronString, setCronString] = useState('* * * * *')
   const dispatch = useDispatch()
   const startWeek = getWeekStart(decodeLocale(navigator.language))
   const selectOptions = {
@@ -108,22 +111,37 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
   }
 
   const onSchedule = useCallback(() => {
-    const generateCron = generateCronString(cron)
+    let generateCron = ''
+    if (activeTab === 'cronstring') {
+      const data = validateCronString(cronString)
+
+      if (data.errorMessage) {
+        return setError(data.errorMessage)
+      } else {
+        setError('')
+
+        generateCron = data.cron.join(' ')
+      }
+    } else {
+      generateCron = generateCronString(cron)
+    }
 
     dispatch({
       type: SET_NEW_JOB_SCHEDULE,
       payload: generateCron
     })
 
+    handleRunJob(activeTab === 'cronstring' && generateCron)
     setOpenScheduleJob(false)
-  }, [cron, dispatch, setOpenScheduleJob])
+  }, [activeTab, cron, cronString, dispatch, handleRunJob, setOpenScheduleJob])
 
   return (
     <ScheduleJobView
       activeTab={activeTab}
-      cron={cron}
+      cronString={cronString}
       date={date}
       daysOfWeek={daysOfWeek}
+      error={error}
       generateCronString={generateCronString}
       getRangeInputValue={getRangeInputValue}
       handleDaysOfWeek={handleDaysOfWeek}
@@ -134,7 +152,9 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
       recurringState={recurringState}
       selectOptions={selectOptions}
       setActiveTab={setActiveTab}
+      setCronString={setCronString}
       setDate={onHandleDateChange}
+      setError={setError}
       setIsRecurring={setIsRecurring}
       setTime={onHandleTimeChange}
       time={time}
@@ -143,6 +163,7 @@ const ScheduleJob = ({ match, setOpenScheduleJob }) => {
 }
 
 ScheduleJob.propTypes = {
+  handleRunJob: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired
 }

@@ -11,6 +11,7 @@ const Input = ({
   infoLabel,
   inputIcon,
   label,
+  maxLength,
   onChange,
   onKeyDown,
   placeholder,
@@ -43,6 +44,7 @@ const Input = ({
         ${className} 
         ${inputIsFocused && floatingLabel && 'active-input'}`}
         disabled={disabled}
+        maxLength={maxLength}
         onChange={handleClick}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
@@ -79,6 +81,7 @@ Input.defaultProps = {
   infoLabel: false,
   inputIcon: null,
   label: null,
+  maxLength: null,
   onChange: null,
   onKeyDown: null,
   placeholder: '',
@@ -93,6 +96,7 @@ Input.propTypes = {
   infoLabel: PropTypes.bool,
   inputIcon: PropTypes.element,
   label: PropTypes.string,
+  maxLength: PropTypes.number,
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,
