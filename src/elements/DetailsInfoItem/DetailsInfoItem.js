@@ -41,15 +41,16 @@ const DetailsInfoItem = ({
       </div>
     )
   } else if (!isEmpty(func)) {
+    const funcStr = func.split('/').pop()
     return (
       <Tooltip
         className="details-item__data details-item__link"
-        template={<TextTooltipTemplate text={func} />}
+        template={<TextTooltipTemplate text={funcStr} />}
       >
         <Link
-          to={`/projects/${match.params.projectName}/functions${func}/info`}
+          to={`/projects/${match.params.projectName}/functions/${funcStr}/info`}
         >
-          {func}
+          {funcStr}
         </Link>
       </Tooltip>
     )
