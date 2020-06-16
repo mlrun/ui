@@ -2,27 +2,38 @@
 @import '../../scss/borders';
 
 .item-artifacts__preview-content {
+  display: flex;
+  flex: 1;
+
   .preview-table {
     width: 100%;
     color: $mulledWine;
 
+    .table-header {
+      position: sticky;
+      top: -21px;
+      z-index: 2;
+      background-color: $white;
+    }
+
+    .preview-table__body {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      max-height: 500px;
+    }
+
     &__row {
       display: flex;
+      min-width: 100%;
       padding: 10px;
       border-bottom: $tableBorder;
-
-      &:first-child {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-        background-color: $white;
-      }
 
       &:last-child {
         border-bottom: none;
       }
 
-      &:not(:first-child) {
+      &:not(.table-header) {
         &:hover {
           background-color: $alabaster;
         }
@@ -31,13 +42,15 @@
 
     &__header {
       flex: 1;
-      min-width: 80px;
+      width: 50px;
+      min-width: 50px;
       padding: 0 5px;
     }
 
     &__content {
       flex: 1;
-      min-width: 80px;
+      width: 50px;
+      min-width: 50px;
       padding: 0 5px;
     }
   }

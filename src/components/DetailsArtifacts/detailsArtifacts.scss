@@ -20,10 +20,6 @@
     padding-left: 13px;
     border-bottom: $tableBorder;
 
-    &-wrapper {
-      max-height: 650px;
-    }
-
     &-item {
       display: flex;
       flex: 1;
@@ -69,8 +65,10 @@
 
   &__preview {
     position: relative;
+    display: flex;
     height: auto;
     padding: 21px 26px;
+    overflow: auto;
     border-bottom: $tableBorder;
   }
 }
