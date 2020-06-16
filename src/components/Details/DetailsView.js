@@ -60,6 +60,7 @@ const DetailsView = ({
             <Download
               path={selectedItem.target_path.path}
               schema={selectedItem.target_path.schema}
+              user={selectedItem.producer?.owner}
             />
           )}
           <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
