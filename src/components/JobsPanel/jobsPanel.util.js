@@ -148,7 +148,8 @@ export const generateTableData = (
         dataInputs: dataInputs,
         parameters,
         volumeMounts,
-        volumes
+        volumes,
+        environmentVariables: []
       }
     })
     setNewJob({
@@ -157,7 +158,8 @@ export const generateTableData = (
       volumeMounts: volumeMounts.length
         ? volumeMounts.map(volumeMounts => volumeMounts.data)
         : [],
-      volumes
+      volumes,
+      environmentVariables: {}
     })
   }
 }

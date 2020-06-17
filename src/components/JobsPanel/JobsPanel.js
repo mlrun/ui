@@ -36,6 +36,7 @@ const JobsPanel = ({
   runNewJob,
   removeNewJob,
   setNewJob,
+  setNewJobEnvironmentVariables,
   setNewJobHyperParameters,
   setNewJobInputs,
   setNewJobParameters,
@@ -205,6 +206,7 @@ const JobsPanel = ({
       openScheduleJob={openScheduleJob}
       panelState={panelState}
       panelDispatch={panelDispatch}
+      setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}
       setNewJobParameters={setNewJobParameters}

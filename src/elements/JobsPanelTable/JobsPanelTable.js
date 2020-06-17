@@ -17,13 +17,11 @@ const JobsPanelTable = ({
   handleDeleteItems,
   handleEditItems,
   handleEditParameter,
+  handleSetSelectedVolume,
   match,
   section,
   selectedItem,
-  setSelectedDataInput,
-  setSelectedParameter,
-  setSelectedVolume,
-  volumes
+  setSelectedItem
 }) => {
   const [editItem, setEditItem] = useState(false)
 
@@ -34,46 +32,6 @@ const JobsPanelTable = ({
     ]
   }
 
-  const handleSetSelectedVolume = useCallback(
-    selectedVolume => {
-      const searchItem = volumes.find(
-        volume => volume.name === selectedVolume.data.name
-      )
-
-      let newValue
-
-      if (searchItem.configMap) {
-        newValue = {
-          value: 'Config Map',
-          name: searchItem.configMap.name
-        }
-      } else if (searchItem.persistentVolumeClaim) {
-        newValue = {
-          value: 'PVC',
-          name: searchItem.persistentVolumeClaim.claimName
-        }
-      } else if (searchItem.secret) {
-        newValue = {
-          value: 'Secret',
-          name: searchItem.secret.secretName
-        }
-      } else {
-        newValue = {
-          value: 'V3IO',
-          name: searchItem.flexVolume.options.container,
-          accessKey: searchItem.flexVolume.options.accessKey,
-          subPath: searchItem.flexVolume.options.subPath
-        }
-      }
-
-      setSelectedVolume({
-        ...selectedVolume,
-        type: newValue
-      })
-    },
-    [setSelectedVolume, volumes]
-  )
-
   const handleEdit = useCallback(
     (item, isInput) => {
       if (editItem) {
@@ -82,16 +40,12 @@ const JobsPanelTable = ({
           ? handleEditParameter()
           : handleEditItems(isInput)
       } else {
-        switch (section) {
-          case 'parameters':
-            setSelectedParameter(item)
-            break
-          case 'data-inputs':
-            setSelectedDataInput(item)
-            break
-          default:
-            handleSetSelectedVolume(item)
+        if (section === 'volumes') {
+          handleSetSelectedVolume(item)
+        } else {
+          setSelectedItem(item)
         }
+
         setEditItem(true)
       }
     },
@@ -101,8 +55,7 @@ const JobsPanelTable = ({
       handleEditParameter,
       handleSetSelectedVolume,
       section,
-      setSelectedDataInput,
-      setSelectedParameter
+      setSelectedItem
     ]
   )
 
@@ -149,9 +102,7 @@ const JobsPanelTable = ({
       section={section}
       selectOption={selectOption}
       selectedItem={selectedItem}
-      setSelectedDataInput={setSelectedDataInput}
-      setSelectedParameter={setSelectedParameter}
-      setSelectedVolume={setSelectedVolume}
+      setSelectedItem={setSelectedItem}
     />
   )
 }
@@ -162,9 +113,7 @@ JobsPanelTable.defaultProps = {
   handleDeleteItems: null,
   handleEditItems: null,
   handleEditParameter: null,
-  etSelectedDataInput: null,
-  setSelectedParameter: null,
-  setSelectedVolume: null
+  handleSetSelectedVolume: null
 }
 
 JobsPanelTable.propTypes = {
@@ -178,13 +127,11 @@ JobsPanelTable.propTypes = {
   handleDeleteItems: PropTypes.func,
   handleEditItems: PropTypes.func,
   handleEditParameter: PropTypes.func,
+  handleSetSelectedVolume: PropTypes.func,
   match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  setSelectedDataInput: PropTypes.func,
-  setSelectedParameter: PropTypes.func,
-  setSelectedVolume: PropTypes.func,
-  volumes: PropTypes.arrayOf(PropTypes.shape({}))
+  setSelectedItem: PropTypes.func.isRequired
 }
 
 export default JobsPanelTable

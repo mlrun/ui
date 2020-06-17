@@ -7,6 +7,7 @@ import JobsPanelParameters from '../JobsPanelParameters/JobsPanelParameters'
 import JobsPanelResources from '../JobsPanelResources/JobsPanelResources'
 import JobsPanelTitle from '../../elements/JobsPanelTitle/JobsPanelTitle'
 import ScheduleJob from '../ScheduleJob/ScheduleJob'
+import JobsPanelAdvanced from '../JobsPanelAdvanced/JobsPanelAdvanced'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -20,6 +21,7 @@ const JobsPanelView = ({
   openScheduleJob,
   panelDispatch,
   panelState,
+  setNewJobEnvironmentVariables,
   setNewJobHyperParameters,
   setNewJobInputs,
   setNewJobParameters,
@@ -71,6 +73,19 @@ const JobsPanelView = ({
                 setNewJobVolumes={setNewJobVolumes}
                 volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
                 volumes={jobsStore.newJob.function.spec.volumes}
+              />
+            </Accordion>
+            <Accordion
+              icon={<Arrow />}
+              iconClassName="job-panel__expand-icon"
+              openByDefault
+            >
+              <JobsPanelAdvanced
+                environmentVariables={jobsStore.newJob.function.spec.env}
+                match={match}
+                panelDispatch={panelDispatch}
+                panelState={panelState}
+                setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
               />
             </Accordion>
             <Accordion

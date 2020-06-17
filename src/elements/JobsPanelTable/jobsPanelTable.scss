@@ -121,7 +121,8 @@
     }
   }
 
-  &.data-inputs {
+  &.data-inputs,
+  &.environment-variables {
     .table__cell {
       &:first-child {
         max-width: 209px;

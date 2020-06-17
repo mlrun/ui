@@ -7,61 +7,50 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
 
-import panelData from '../../components/JobsPanel/panelData'
-import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
-
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
-export const JobsPanelDataInputsTable = ({
+export const JobsPanelAdvancedTable = ({
+  addNewItem,
+  className,
+  content,
   handleAddNewItem,
   handleEditItems,
   handleDeleteItems,
-  inputsDispatch,
-  inputsState,
+  headers,
   match,
-  panelState
+  section,
+  selectedItem,
+  setAddNewItem,
+  setNewItemName,
+  setNewItemValue,
+  setSelectedItem
 }) => {
   return (
     <JobsPanelTable
-      addNewItem={inputsState.addNewInput}
-      className="data-inputs"
-      content={panelState.tableData.dataInputs}
+      addNewItem={addNewItem}
+      className={className}
+      content={content}
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
-      headers={panelData['data-inputs']['table-headers']}
+      headers={headers}
       match={match}
-      section="data-inputs"
-      selectedItem={inputsState.selectedDataInput}
-      setSelectedItem={selectedInput =>
-        inputsDispatch({
-          type: inputsActions.SET_SELECTED_INPUT,
-          payload: selectedInput
-        })
-      }
+      section={section}
+      selectedItem={selectedItem}
+      setSelectedItem={setSelectedItem}
     >
-      {inputsState.addNewInput ? (
+      {addNewItem ? (
         <div className="table__row-add-item">
           <div className="input-row-wrapper">
             <Input
-              onChange={name =>
-                inputsDispatch({
-                  type: inputsActions.SET_NEW_INPUT_NAME,
-                  payload: name
-                })
-              }
-              label="Input name"
+              onChange={setNewItemName}
+              label="Name"
               className="input-row__item"
               floatingLabel
               type="text"
             />
             <Input
-              onChange={path =>
-                inputsDispatch({
-                  type: inputsActions.SET_NEW_INPUT_PATH,
-                  payload: path
-                })
-              }
-              label="Input path"
+              onChange={setNewItemValue}
+              label="Value"
               className="input-row__item input-row__item_edit"
               floatingLabel
               type="text"
@@ -77,26 +66,29 @@ export const JobsPanelDataInputsTable = ({
           </button>
         </div>
       ) : (
-        <JobsPanelTableAddItemRow
-          onClick={value =>
-            inputsDispatch({
-              type: inputsActions.SET_ADD_NEW_INPUT,
-              payload: value
-            })
-          }
-          text="input"
-        />
+        <JobsPanelTableAddItemRow onClick={setAddNewItem} text="input" />
       )}
     </JobsPanelTable>
   )
 }
 
-JobsPanelDataInputsTable.propTypes = {
+JobsPanelAdvancedTable.defaultProps = {
+  className: ''
+}
+
+JobsPanelAdvancedTable.propTypes = {
+  addNewItem: PropTypes.bool.isRequired,
+  className: PropTypes.string,
+  content: PropTypes.arrayOf(PropTypes.shape).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
-  inputsDispatch: PropTypes.func.isRequired,
-  inputsState: PropTypes.shape({}).isRequired,
+  headers: PropTypes.arrayOf(PropTypes.shape).isRequired,
   match: PropTypes.shape({}).isRequired,
-  panelState: PropTypes.shape({}).isRequired
+  section: PropTypes.string.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired,
+  setAddNewItem: PropTypes.func.isRequired,
+  setNewItemName: PropTypes.func.isRequired,
+  setNewItemValue: PropTypes.func.isRequired,
+  setSelectedItem: PropTypes.func.isRequired
 }
