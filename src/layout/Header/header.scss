@@ -25,16 +25,21 @@
   h1 {
     font-weight: 700;
     font-size: 1.5rem;
-    flex: auto;
     span {
       font-weight: 300;
     }
+  }
+  &__beta {
+    font-variant: small-caps;
+    margin-left: 4px;
+    margin-bottom: -6px;
   }
   &__link {
     padding: 5px 15px;
     text-decoration: none;
     color: $white;
     min-width: 64px;
+    margin-left: auto;
     text-transform: uppercase;
     font-weight: 500;
     border: $gitBorder;
