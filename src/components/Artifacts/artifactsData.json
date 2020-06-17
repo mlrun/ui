@@ -1,14 +1,14 @@
 {
   "artifactsInfoHeaders": [
-    "Key",
-    "Iter",
-    "Kind",
-    "Size",
-    "Path",
-    "Tree",
-    "Updated",
-    "Labels",
-    "Sources"
+    { "label": "Key", "id": "key" },
+    { "label": "Iter", "id": "iter" },
+    { "label": "Kind", "id": "kind" },
+    { "label": "Size", "id": "size" },
+    { "label": "Path", "id": "path" },
+    { "label": "Tree", "id": "tree" },
+    { "label": "Updated", "id": "updated" },
+    { "label": "Labels", "id": "labels" },
+    { "label": "Sources", "id": "sources" }
   ],
   "detailsMenu": ["info", "preview"],
   "filters": ["period", "tree", "labels", "name"],

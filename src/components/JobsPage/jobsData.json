@@ -1,16 +1,16 @@
 {
   "page": "JOBS",
   "jobsInfoHeaders": [
-    "UID",
-    "Start time",
-    "Status",
-    "Parameters",
-    "Function",
-    "Results",
-    "Labels",
-    "Log level",
-    "Output path",
-    "Iterations"
+    { "label": "UID", "id": "uid" },
+    { "label": "Start time", "id": "startTime" },
+    { "label": "Status", "id": "status" },
+    { "label": "Parameters", "id": "parameters" },
+    { "label": "Function", "id": "function" },
+    { "label": "Results", "id": "results" },
+    { "label": "Labels", "id": "labels" },
+    { "label": "Log level", "id": "logLevel" },
+    { "label": "Output path", "id": "outPutPath" },
+    { "label": "Iterations", "id": "iterations" }
   ],
   "tableHeaders": [
     {

@@ -12,6 +12,7 @@ const DetailsInfoItem = ({
   chipsClassName,
   func,
   info,
+  link,
   match,
   state,
   target_path
@@ -54,6 +55,12 @@ const DetailsInfoItem = ({
         </Link>
       </Tooltip>
     )
+  } else if (link) {
+    return (
+      <Link className="details-item__data details-item__link" to={link}>
+        {info}
+      </Link>
+    )
   } else {
     return <div className="details-item__data">{info}</div>
   }
@@ -64,6 +71,7 @@ DetailsInfoItem.defaultProps = {
   chipsClassName: '',
   func: '',
   info: null,
+  link: '',
   match: {},
   state: '',
   target_path: {}
@@ -74,6 +82,7 @@ DetailsInfoItem.propTypes = {
   chipsClassName: PropTypes.string,
   func: PropTypes.string,
   info: PropTypes.any,
+  link: PropTypes.string,
   match: PropTypes.shape({}),
   state: PropTypes.string,
   target_path: PropTypes.shape({})
