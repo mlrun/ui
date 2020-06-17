@@ -22,7 +22,27 @@
 
     .jobs {
       &_medium {
-        @include tableColumnFlex(1, 240px);
+        max-width: 250px;
+
+        @include tableColumnFlex(0.6, 240px);
+      }
+
+      &_type {
+        max-width: 80px;
+
+        @include tableColumnFlex(0.2, 50px);
+      }
+
+      &_start-time {
+        max-width: 150px;
+
+        @include tableColumnFlex(0.5, 50px);
+      }
+
+      &_duration {
+        max-width: 100px;
+
+        @include tableColumnFlex(0.3, 50px);
       }
 
       &_small {
@@ -34,6 +54,8 @@
       }
 
       &_extra-small {
+        max-width: 150px;
+
         @include tableColumnFlex(0.3, 50px);
       }
     }
