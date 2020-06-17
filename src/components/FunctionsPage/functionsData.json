@@ -36,14 +36,14 @@
     }
   ],
   "functionsInfoHeaders": [
-    "Name",
-    "Kind",
-    "Hash",
-    "Updated",
-    "Command",
-    "Image",
-    "Description",
-    "State"
+    { "label": "Name", "id": "name" },
+    { "label": "Kind", "id": "kind" },
+    { "label": "Hash", "id": "hash" },
+    { "label": "Updated", "id": "updated" },
+    { "label": "Command", "id": "command" },
+    { "label": "Image", "id": "image" },
+    { "label": "Description", "id": "description" },
+    { "label": "State", "id": "state" }
   ],
   "filters": ["groupBy"],
   "initialGroupFilter": "name"

@@ -64,8 +64,8 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
         {page === JOBS_PAGE
           ? jobsData.jobsInfoHeaders.map((header, index) => {
               return (
-                <li className="details-item" key={header}>
-                  <div className="details-item__header">{header}</div>
+                <li className="details-item" key={header.id}>
+                  <div className="details-item__header">{header.label}</div>
                   <DetailsInfoItem
                     chips={
                       jobsInfoContent[index] === selectedItem.parameters
@@ -105,14 +105,14 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
                 return (
                   <ArtifactInfoSources
                     sources={sources}
-                    header={header}
-                    key={header}
+                    header={header.label}
+                    key={header.id}
                   />
                 )
               }
               return (
-                <li className="details-item" key={header}>
-                  <div className="details-item__header">{header}</div>
+                <li className="details-item" key={header.id}>
+                  <div className="details-item__header">{header.label}</div>
                   <DetailsInfoItem
                     chips={
                       artifactsInfoContent[index] === selectedItem.labels
@@ -132,11 +132,11 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
             })
           : functionsData.functionsInfoHeaders.map((header, index) => {
               return (
-                <li className="details-item" key={index}>
-                  <div className="details-item__header">{header}</div>
+                <li className="details-item" key={header.id}>
+                  <div className="details-item__header">{header.label}</div>
                   <DetailsInfoItem
                     info={
-                      header === 'Kind'
+                      header.id === 'kind'
                         ? functionsInfoContent[index] || 'Local'
                         : functionsInfoContent[index] || ''
                     }
@@ -150,11 +150,18 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
           <h3 className="item-info__header">Producer</h3>
           <ul className="item-info__details">
             {Object.keys(selectedItem.producer).map(header => {
+              let url = ''
+
+              if (header === 'uri') {
+                const [project, hash] = selectedItem.producer.uri.split('/')
+                url = `/projects/${project}/jobs/${hash}/info`
+              }
+
               return (
                 <li className="details-item" key={header}>
                   <div className="details-item__header">{header}</div>
                   <DetailsInfoItem
-                    header={header}
+                    link={url}
                     info={selectedItem.producer[header]}
                     page={page}
                   />
