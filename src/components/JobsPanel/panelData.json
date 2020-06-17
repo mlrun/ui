@@ -1,4 +1,7 @@
 {
+  "advanced": {
+    "table-headers": [{ "label": "Name" }, { "label": "Value" }]
+  },
   "data-inputs": {
     "table-headers": [{ "label": "Input Name" }, { "label": "Path" }]
   },

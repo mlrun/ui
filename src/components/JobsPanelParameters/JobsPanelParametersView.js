@@ -38,7 +38,7 @@ const JobsPanelParametersView = ({
           match={match}
           section="parameters"
           selectedItem={parametersState.selectedParameter}
-          setSelectedParameter={selectedParam =>
+          setSelectedItem={selectedParam =>
             parametersDispatch({
               type: parametersActions.SET_SELECTED_PARAMETER,
               payload: selectedParam

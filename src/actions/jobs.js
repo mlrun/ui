@@ -10,6 +10,7 @@ import {
   REMOVE_NEW_JOB,
   SET_LOADING,
   SET_NEW_JOB,
+  SET_NEW_JOB_ENVIRONMENT_VARIABLES,
   SET_NEW_JOB_HYPER_PARAMETERS,
   SET_NEW_JOB_INPUTS,
   SET_NEW_JOB_PARAMETERS,
@@ -74,6 +75,10 @@ const jobsActions = {
   setNewJob: newJob => ({
     type: SET_NEW_JOB,
     payload: newJob
+  }),
+  setNewJobEnvironmentVariables: environmentVariables => ({
+    type: SET_NEW_JOB_ENVIRONMENT_VARIABLES,
+    payload: environmentVariables
   }),
   setNewJobInputs: inputs => ({
     type: SET_NEW_JOB_INPUTS,

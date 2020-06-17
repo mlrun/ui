@@ -7,6 +7,7 @@ import {
   FETCH_JOBS_SUCCESS,
   REMOVE_JOB_LOGS,
   SET_LOADING,
+  SET_NEW_JOB_ENVIRONMENT_VARIABLES,
   SET_NEW_JOB_INPUTS,
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB_VOLUME_MOUNTS,
@@ -34,7 +35,8 @@ const initialState = {
     function: {
       spec: {
         volumes: [],
-        volumeMounts: []
+        volumeMounts: [],
+        env: {}
       }
     }
   }
@@ -82,6 +84,20 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: ''
+      }
+    case SET_NEW_JOB_ENVIRONMENT_VARIABLES:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          function: {
+            ...state.newJob.function,
+            spec: {
+              ...state.newJob.function.spec,
+              env: payload
+            }
+          }
+        }
       }
     case SET_NEW_JOB_INPUTS:
       return {
@@ -199,7 +215,8 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.newJob.function.spec,
               volumeMounts: payload.volumeMounts,
-              volumes: payload.volumes
+              volumes: payload.volumes,
+              env: payload.environmentVariables
             }
           }
         }

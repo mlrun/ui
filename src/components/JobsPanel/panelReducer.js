@@ -19,7 +19,8 @@ export const initialState = {
       dataInputs: [],
       parameters: [],
       volumes: [],
-      volumeMounts: []
+      volumeMounts: [],
+      environmentVariables: []
     },
     titleInfo: {
       method: '',
@@ -34,7 +35,8 @@ export const initialState = {
     parameters: [],
     dataInputs: [],
     volumeMounts: [],
-    volumes: []
+    volumes: [],
+    environmentVariables: []
   }
 }
 
@@ -63,6 +65,8 @@ export const panelActions = {
   SET_PREVIOUS_PANEL_DATA_VOLUMES: 'SET_PREVIOUS_PANEL_DATA_VOLUMES',
   SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS:
     'SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS',
+  SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES:
+    'SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES',
   SET_REQUESTS: 'SET_REQUESTS',
   SET_REQUESTS_CPU: 'SET_REQUESTS_CPU',
   SET_REQUESTS_MEMORY: 'SET_REQUESTS_MEMORY',
@@ -70,7 +74,8 @@ export const panelActions = {
   SET_TABLE_DATA_INPUTS: 'SET_TABLE_DATA_INPUTS',
   SET_TABLE_DATA_PARAMETERS: 'SET_TABLE_DATA_PARAMETERS',
   SET_TABLE_DATA_VOLUMES: 'SET_TABLE_DATA_VOLUMES',
-  SET_TABLE_DATA_VOLUME_MOUNTS: 'SET_TABLE_DATA_VOLUME_MOUNTS'
+  SET_TABLE_DATA_VOLUME_MOUNTS: 'SET_TABLE_DATA_VOLUME_MOUNTS',
+  SET_TABLE_DATA_ENVIRONMENT_VARIABLES: 'SET_TABLE_DATA_ENVIRONMENT_VARIABLES'
 }
 
 export const panelReducer = (state, { type, payload }) => {
@@ -178,6 +183,17 @@ export const panelReducer = (state, { type, payload }) => {
       return {
         ...state,
         previousPanelData: payload
+      }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          tableData: {
+            ...state.previousPanelData.tableData,
+            environmentVariables: payload
+          }
+        }
       }
     case panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS:
       return {
@@ -289,6 +305,14 @@ export const panelReducer = (state, { type, payload }) => {
       return {
         ...state,
         tableData: payload
+      }
+    case panelActions.SET_TABLE_DATA_ENVIRONMENT_VARIABLES:
+      return {
+        ...state,
+        tableData: {
+          ...state.tableData,
+          environmentVariables: payload
+        }
       }
     case panelActions.SET_TABLE_DATA_INPUTS:
       return {

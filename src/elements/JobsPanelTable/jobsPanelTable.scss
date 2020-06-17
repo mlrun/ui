@@ -121,10 +121,11 @@
     }
   }
 
-  &.data-inputs {
+  &.data-inputs,
+  &.environment-variables {
     .table__cell {
       &:first-child {
-        max-width: 209px;
+        max-width: 220px;
       }
     }
 
@@ -132,7 +133,7 @@
       .input-wrapper,
       .select {
         &:first-child {
-          max-width: 209px;
+          max-width: 220px;
         }
       }
 

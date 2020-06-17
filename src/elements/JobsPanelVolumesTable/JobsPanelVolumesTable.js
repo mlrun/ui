@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { find } from 'lodash'
 import PropTypes from 'prop-types'
 
@@ -33,6 +33,49 @@ export const JobsPanelVolumesTable = ({
       ? `${inputsState.newVolume.type} name`
       : ''
 
+  const handleSetSelectedVolume = useCallback(
+    selectedVolume => {
+      const searchItem = panelState.tableData.volumes.find(
+        volume => volume.name === selectedVolume.data.name
+      )
+
+      let newValue
+
+      if (searchItem.configMap) {
+        newValue = {
+          value: 'Config Map',
+          name: searchItem.configMap.name
+        }
+      } else if (searchItem.persistentVolumeClaim) {
+        newValue = {
+          value: 'PVC',
+          name: searchItem.persistentVolumeClaim.claimName
+        }
+      } else if (searchItem.secret) {
+        newValue = {
+          value: 'Secret',
+          name: searchItem.secret.secretName
+        }
+      } else {
+        newValue = {
+          value: 'V3IO',
+          name: searchItem.flexVolume.options.container,
+          accessKey: searchItem.flexVolume.options.accessKey,
+          subPath: searchItem.flexVolume.options.subPath
+        }
+      }
+
+      inputsDispatch({
+        type: inputsActions.SET_SELECTED_VOLUME,
+        payload: {
+          ...selectedVolume,
+          type: newValue
+        }
+      })
+    },
+    [inputsDispatch, panelState.tableData.volumes]
+  )
+
   return (
     <JobsPanelTable
       addNewItem={inputsState.addNewVolume}
@@ -40,17 +83,17 @@ export const JobsPanelVolumesTable = ({
       content={panelState.tableData.volumeMounts}
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
+      handleSetSelectedVolume={handleSetSelectedVolume}
       headers={panelData.volumes['table-headers']}
       match={match}
       section="volumes"
       selectedItem={inputsState.selectedVolume}
-      setSelectedVolume={selectedVolume =>
+      setSelectedItem={selectedVolume =>
         inputsDispatch({
           type: inputsActions.SET_SELECTED_VOLUME,
           payload: selectedVolume
         })
       }
-      volumes={panelState.tableData.volumes}
     >
       {inputsState.addNewVolume ? (
         <div className="table__body">

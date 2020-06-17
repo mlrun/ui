@@ -5,6 +5,7 @@ import EditableParametersRow from '../EditableParametersRow/EditableParametersRo
 import EditableDataInputsRow from '../EditableDataInputsRow/EditableDataInputsRow'
 import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
 import JobsPanelTableRow from '../JobsPanelTableRow/JobsPanelTableRow'
+import EditableAdvancedRow from '../EditableAdvancedRow/EditableAdvancedRow'
 
 const JobsPanelTableView = ({
   addNewItem,
@@ -19,9 +20,7 @@ const JobsPanelTableView = ({
   section,
   selectOption,
   selectedItem,
-  setSelectedDataInput,
-  setSelectedParameter,
-  setSelectedVolume
+  setSelectedItem
 }) => {
   return (
     <div
@@ -46,21 +45,29 @@ const JobsPanelTableView = ({
               match={match}
               selectOption={selectOption}
               selectedParameter={selectedItem}
-              setSelectedParameter={setSelectedParameter}
+              setSelectedParameter={setSelectedItem}
             />
           ) : section === 'data-inputs' ? (
             <EditableDataInputsRow
               handleEdit={handleEdit}
               key={index}
               selectedDataInput={selectedItem}
-              setSelectedDataInput={setSelectedDataInput}
+              setSelectedDataInput={setSelectedItem}
+            />
+          ) : section === 'advanced' ? (
+            <EditableAdvancedRow
+              handleEdit={handleEdit}
+              key={index}
+              selectedEnvironmentVariable={selectedItem}
+              setSelectedEnvironmentVariable={setSelectedItem}
+              table="env"
             />
           ) : (
             <EditableVolumesRow
               handleEdit={handleEdit}
               key={index}
               selectedVolume={selectedItem}
-              setSelectedVolume={setSelectedVolume}
+              setSelectedVolume={setSelectedItem}
             />
           )
         } else {
@@ -91,9 +98,7 @@ JobsPanelTableView.propTypes = {
   section: PropTypes.string.isRequired,
   selectOption: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  setSelectedDataInput: PropTypes.func,
-  setSelectedParameter: PropTypes.func,
-  setSelectedVolume: PropTypes.func
+  setSelectedItem: PropTypes.func.isRequired
 }
 
 export default JobsPanelTableView

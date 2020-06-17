@@ -36,6 +36,7 @@ const JobsPanel = ({
   runNewJob,
   removeNewJob,
   setNewJob,
+  setNewJobEnvironmentVariables,
   setNewJobHyperParameters,
   setNewJobInputs,
   setNewJobParameters,
@@ -157,7 +158,7 @@ const JobsPanel = ({
     }
   }, [functionsStore.template.name, groupedFunctions.name, selectedFunction])
 
-  const handleRunJob = cronString => {
+  const handleRunJob = (event, cronString) => {
     const selectedFunction = functionsStore.template.name
       ? functionsStore.template.functions[0]
       : groupedFunctions.functions.find(
@@ -205,6 +206,7 @@ const JobsPanel = ({
       openScheduleJob={openScheduleJob}
       panelState={panelState}
       panelDispatch={panelDispatch}
+      setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}
       setNewJobParameters={setNewJobParameters}
