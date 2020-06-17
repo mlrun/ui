@@ -158,7 +158,7 @@ const JobsPanel = ({
     }
   }, [functionsStore.template.name, groupedFunctions.name, selectedFunction])
 
-  const handleRunJob = cronString => {
+  const handleRunJob = (event, cronString) => {
     const selectedFunction = functionsStore.template.name
       ? functionsStore.template.functions[0]
       : groupedFunctions.functions.find(

@@ -66,7 +66,10 @@ export const JobsPanelAdvancedTable = ({
           </button>
         </div>
       ) : (
-        <JobsPanelTableAddItemRow onClick={setAddNewItem} text="input" />
+        <JobsPanelTableAddItemRow
+          onClick={setAddNewItem}
+          text="environment variable"
+        />
       )}
     </JobsPanelTable>
   )

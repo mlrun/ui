@@ -110,30 +110,33 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     }))
   }
 
-  const onSchedule = useCallback(() => {
-    let generateCron = ''
-    if (activeTab === 'cronstring') {
-      const data = validateCronString(cronString)
+  const onSchedule = useCallback(
+    event => {
+      let generateCron = ''
+      if (activeTab === 'cronstring') {
+        const data = validateCronString(cronString)
 
-      if (data.errorMessage) {
-        return setError(data.errorMessage)
+        if (data.errorMessage) {
+          return setError(data.errorMessage)
+        } else {
+          setError('')
+
+          generateCron = data.cron.join(' ')
+        }
       } else {
-        setError('')
-
-        generateCron = data.cron.join(' ')
+        generateCron = generateCronString(cron)
       }
-    } else {
-      generateCron = generateCronString(cron)
-    }
 
-    dispatch({
-      type: SET_NEW_JOB_SCHEDULE,
-      payload: generateCron
-    })
+      dispatch({
+        type: SET_NEW_JOB_SCHEDULE,
+        payload: generateCron
+      })
 
-    handleRunJob(activeTab === 'cronstring' && generateCron)
-    setOpenScheduleJob(false)
-  }, [activeTab, cron, cronString, dispatch, handleRunJob, setOpenScheduleJob])
+      handleRunJob(event, activeTab === 'cronstring' && generateCron)
+      setOpenScheduleJob(false)
+    },
+    [activeTab, cron, cronString, dispatch, handleRunJob, setOpenScheduleJob]
+  )
 
   return (
     <ScheduleJobView
