@@ -19,15 +19,15 @@
     },
     {
       "header": "Type",
-      "class": "jobs_type"
+      "class": "jobs_extra-small"
     },
     {
       "header": "Start time",
-      "class": "jobs_start-time"
+      "class": "jobs_small"
     },
     {
       "header": "Duration",
-      "class": "jobs_duration"
+      "class": "jobs_extra-small"
     },
     {
       "header": "Owner",
@@ -35,11 +35,11 @@
     },
     {
       "header": "Labels",
-      "class": "jobs_small"
+      "class": "jobs_extra-small"
     },
     {
       "header": "Parameters",
-      "class": "jobs_small"
+      "class": "jobs_extra-small"
     },
     {
       "header": "Results",

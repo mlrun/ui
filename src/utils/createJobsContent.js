@@ -13,7 +13,7 @@ const createJobsContent = (content, groupedByWorkflow) => {
       },
       type: {
         value: groupedByWorkflow ? 'workflow' : type,
-        class: 'jobs_type',
+        class: 'jobs_extra-small',
         type: 'type'
       },
       uid: {
@@ -25,7 +25,7 @@ const createJobsContent = (content, groupedByWorkflow) => {
         value: formatDatetime(
           contentItem.startTime || new Date(contentItem.created_at)
         ),
-        class: 'jobs_start-time',
+        class: 'jobs_small',
         type: 'date'
       },
       duration: {
@@ -35,7 +35,7 @@ const createJobsContent = (content, groupedByWorkflow) => {
             (contentItem.status !== 'error' &&
               new Date(contentItem.finished_at))
         ),
-        class: 'jobs_duration',
+        class: 'jobs_extra-small',
         type: 'duration'
       },
       owner: {
@@ -44,12 +44,12 @@ const createJobsContent = (content, groupedByWorkflow) => {
       },
       labels: {
         value: contentItem.labels,
-        class: 'jobs_small',
+        class: 'jobs_extra-small',
         type: 'labels'
       },
       parameters: {
         value: contentItem.parameters,
-        class: 'jobs_small',
+        class: 'jobs_extra-small',
         type: 'parameters'
       },
       resultsChips: {

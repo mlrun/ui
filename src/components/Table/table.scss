@@ -27,25 +27,9 @@
         @include tableColumnFlex(0.6, 240px);
       }
 
-      &_type {
-        max-width: 80px;
-
-        @include tableColumnFlex(0.2, 50px);
-      }
-
-      &_start-time {
+      &_small {
         max-width: 150px;
 
-        @include tableColumnFlex(0.5, 50px);
-      }
-
-      &_duration {
-        max-width: 100px;
-
-        @include tableColumnFlex(0.3, 50px);
-      }
-
-      &_small {
         @include tableColumnFlex(0.5, 75px);
       }
 
@@ -54,9 +38,9 @@
       }
 
       &_extra-small {
-        max-width: 150px;
+        max-width: 80px;
 
-        @include tableColumnFlex(0.3, 50px);
+        @include tableColumnFlex(0.2, 55px);
       }
     }
 
