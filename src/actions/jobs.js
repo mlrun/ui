@@ -15,6 +15,7 @@ import {
   SET_NEW_JOB_INPUTS,
   SET_NEW_JOB_PARAMETERS,
   SET_NEW_JOB_SCHEDULE,
+  SET_NEW_JOB_SECRETS,
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB_VOLUME_MOUNTS
 } from '../constants'
@@ -102,6 +103,10 @@ const jobsActions = {
   setNewJobSchedule: schedule => ({
     type: SET_NEW_JOB_SCHEDULE,
     payload: schedule
+  }),
+  setNewJobSecrets: secrets => ({
+    type: SET_NEW_JOB_SECRETS,
+    payload: secrets
   }),
   setNewJobHyperParameters: parameters => ({
     type: SET_NEW_JOB_HYPER_PARAMETERS,

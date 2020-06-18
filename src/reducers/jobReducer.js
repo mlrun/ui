@@ -14,6 +14,7 @@ import {
   SET_NEW_JOB_PARAMETERS,
   SET_NEW_JOB_HYPER_PARAMETERS,
   SET_NEW_JOB_SCHEDULE,
+  SET_NEW_JOB_SECRETS,
   REMOVE_NEW_JOB,
   SET_NEW_JOB
 } from '../constants'
@@ -36,7 +37,8 @@ const initialState = {
       spec: {
         volumes: [],
         volumeMounts: [],
-        env: {}
+        env: {},
+        secret_sources: []
       }
     }
   }
@@ -109,6 +111,21 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.newJob.task.spec,
               inputs: payload
+            }
+          }
+        }
+      }
+
+    case SET_NEW_JOB_SECRETS:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          function: {
+            ...state.newJob.function,
+            spec: {
+              ...state.newJob.function.spec,
+              secret_sources: payload
             }
           }
         }
