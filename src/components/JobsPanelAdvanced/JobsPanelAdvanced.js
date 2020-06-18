@@ -45,21 +45,22 @@ const JobsPanelAdvanced = ({
         panelActions.SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES,
         setNewJobEnvironmentVariables
       )
+    } else {
+      handleAddItem(
+        advancedDispatch,
+        panelState.tableData.secretSources,
+        isEnv,
+        advancedState.newSecret,
+        secretSources,
+        panelDispatch,
+        panelState.previousPanelData.tableData.secretSources,
+        advancedActions.REMOVE_NEW_SECRET_DATA,
+        advancedActions.SET_ADD_NEW_SECRET,
+        panelActions.SET_TABLE_DATA_SECRET_SOURCES,
+        panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES,
+        setNewJobSecretSources
+      )
     }
-    handleAddItem(
-      advancedDispatch,
-      panelState.tableData.secretSources,
-      isEnv,
-      advancedState.newSecret,
-      secretSources,
-      panelDispatch,
-      panelState.previousPanelData.tableData.secretSources,
-      advancedActions.REMOVE_NEW_SECRET_DATA,
-      advancedActions.SET_ADD_NEW_SECRET,
-      panelActions.SET_TABLE_DATA_SECRET_SOURCES,
-      panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES,
-      setNewJobSecretSources
-    )
   }
 
   const handleEditItems = isEnv => {
