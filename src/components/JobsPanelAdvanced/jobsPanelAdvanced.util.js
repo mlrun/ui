@@ -40,10 +40,10 @@ export const handleAddItem = (
   } else {
     data = {
       kind: newItemObj.kind,
-      value: newItemObj.value
+      source: newItemObj.source
     }
 
-    setNewJobData([...newJobData, { [newItemObj.kind]: newItemObj.value }])
+    setNewJobData([...newJobData, { [newItemObj.kind]: newItemObj.source }])
   }
 
   const generatedTableData = {
@@ -88,8 +88,8 @@ export const handleEdit = (
     setCurrentPanelData({ ...currentPanelData, ...currentDataObj })
   } else {
     const currentDataArray = currentPanelData.map(dataItem => {
-      if (dataItem.data.kind === selectedItem.kind) {
-        dataItem.data.value = selectedItem.value
+      if (dataItem[selectedItem.kind]) {
+        dataItem[selectedItem.kind] = selectedItem.source
       }
 
       return dataItem
@@ -99,10 +99,11 @@ export const handleEdit = (
   }
 
   const dataName = isEnv ? 'name' : 'kind'
+  const dataValue = isEnv ? 'value' : 'source'
 
   const newDataArray = currentTableData.map(dataItem => {
     if (dataItem.data[dataName] === selectedItem[dataName]) {
-      dataItem.data.value = selectedItem.value
+      dataItem.data[dataValue] = selectedItem[dataValue]
     }
 
     return dataItem
@@ -140,9 +141,7 @@ export const handleDelete = (
     setCurrentPanelData({ ...newData })
   } else {
     setCurrentPanelData(
-      currentPanelData.filter(
-        dataItem => dataItem.data.kind !== selectedItem.data.kind
-      )
+      currentPanelData.filter(dataItem => !dataItem[selectedItem.data.kind])
     )
   }
 

@@ -14,7 +14,7 @@ import {
   SET_NEW_JOB_PARAMETERS,
   SET_NEW_JOB_HYPER_PARAMETERS,
   SET_NEW_JOB_SCHEDULE,
-  SET_NEW_JOB_SECRETS,
+  SET_NEW_JOB_SECRET_SOURCES,
   REMOVE_NEW_JOB,
   SET_NEW_JOB
 } from '../constants'
@@ -116,7 +116,7 @@ export default (state = initialState, { type, payload }) => {
         }
       }
 
-    case SET_NEW_JOB_SECRETS:
+    case SET_NEW_JOB_SECRET_SOURCES:
       return {
         ...state,
         newJob: {
@@ -173,7 +173,9 @@ export default (state = initialState, { type, payload }) => {
           function: {
             spec: {
               volumes: [],
-              volumeMounts: []
+              volumeMounts: [],
+              env: {},
+              secret_sources: []
             }
           }
         }
@@ -233,7 +235,8 @@ export default (state = initialState, { type, payload }) => {
               ...state.newJob.function.spec,
               volumeMounts: payload.volumeMounts,
               volumes: payload.volumes,
-              env: payload.environmentVariables
+              env: payload.environmentVariables,
+              secret_sources: payload.secret_sources
             }
           }
         }
