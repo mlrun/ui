@@ -24,12 +24,12 @@ const JobsPanelAdvancedView = ({
         </div>
         <JobsPanelAdvancedTable
           addNewItem={advancedState.addNewEnvironmentVariable}
-          className="environment-variables"
+          className="advanced"
           content={panelState.tableData.environmentVariables}
           handleAddNewItem={handleAddNewItem}
           handleEditItems={handleEditItems}
           handleDeleteItems={handleDeleteItems}
-          headers={panelData['advanced']['table-headers']}
+          headers={panelData['env']['table-headers']}
           match={match}
           panelState={panelState}
           section="advanced"
@@ -55,6 +55,46 @@ const JobsPanelAdvancedView = ({
           setSelectedItem={selectedItem =>
             advancedDispatch({
               type: advancedActions.SET_SELECTED_ENVIRONMENT_VARIABLE,
+              payload: selectedItem
+            })
+          }
+        />
+      </JobsPanelSection>
+      <JobsPanelSection title="Secrets">
+        <JobsPanelAdvancedTable
+          addNewItem={advancedState.addNewSecret}
+          className="advanced secrets"
+          content={panelState.tableData.secrets}
+          handleAddNewItem={handleAddNewItem}
+          handleEditItems={handleEditItems}
+          handleDeleteItems={handleDeleteItems}
+          headers={panelData['secrets']['table-headers']}
+          match={match}
+          panelState={panelState}
+          section="advanced secrets"
+          selectedId={advancedState.newSecret.kind}
+          selectedItem={advancedState.selectedSecret}
+          setAddNewItem={value =>
+            advancedDispatch({
+              type: advancedActions.SET_ADD_NEW_SECRET,
+              payload: value
+            })
+          }
+          setNewItemName={kind =>
+            advancedDispatch({
+              type: advancedActions.SET_NEW_SECRET_KIND,
+              payload: kind
+            })
+          }
+          setNewItemValue={value =>
+            advancedDispatch({
+              type: advancedActions.SET_NEW_SECRET_VALUE,
+              payload: value
+            })
+          }
+          setSelectedItem={selectedItem =>
+            advancedDispatch({
+              type: advancedActions.SET_SELECTED_SECRET,
               payload: selectedItem
             })
           }

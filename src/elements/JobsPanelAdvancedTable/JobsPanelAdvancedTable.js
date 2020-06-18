@@ -6,8 +6,10 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
+import Select from '../../common/Select/Select'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
 
 export const JobsPanelAdvancedTable = ({
   addNewItem,
@@ -19,6 +21,7 @@ export const JobsPanelAdvancedTable = ({
   headers,
   match,
   section,
+  selectedId,
   selectedItem,
   setAddNewItem,
   setNewItemName,
@@ -41,13 +44,22 @@ export const JobsPanelAdvancedTable = ({
       {addNewItem ? (
         <div className="table__row-add-item">
           <div className="input-row-wrapper">
-            <Input
-              onChange={setNewItemName}
-              label="Name"
-              className="input-row__item"
-              floatingLabel
-              type="text"
-            />
+            {section.includes('secrets') ? (
+              <Select
+                match={match}
+                onClick={setNewItemName}
+                label={selectedId.length ? selectedId : 'Kind'}
+                options={selectOptions.secretKind}
+              />
+            ) : (
+              <Input
+                onChange={setNewItemName}
+                label="Name"
+                className="input-row__item"
+                floatingLabel
+                type="text"
+              />
+            )}
             <Input
               onChange={setNewItemValue}
               label="Value"
@@ -58,7 +70,9 @@ export const JobsPanelAdvancedTable = ({
           </div>
           <button
             className="add-input btn-add"
-            onClick={() => handleAddNewItem(true)}
+            onClick={() =>
+              handleAddNewItem(!section.includes('secrets') && true)
+            }
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
@@ -68,7 +82,7 @@ export const JobsPanelAdvancedTable = ({
       ) : (
         <JobsPanelTableAddItemRow
           onClick={setAddNewItem}
-          text="environment variable"
+          text={section.includes('secrets') ? 'secret' : 'environment variable'}
         />
       )}
     </JobsPanelTable>

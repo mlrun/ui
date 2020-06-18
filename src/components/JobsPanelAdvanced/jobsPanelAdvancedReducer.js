@@ -67,7 +67,7 @@ export const jobsPanelAdvancedReducer = (state, { type, payload }) => {
         ...state,
         newSecret: {
           ...state.newVolume,
-          type: payload
+          kind: payload
         }
       }
     case advancedActions.SET_NEW_ENVIRONMENT_VARIABLE_VALUE:

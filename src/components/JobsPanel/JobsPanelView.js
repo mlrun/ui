@@ -25,6 +25,7 @@ const JobsPanelView = ({
   setNewJobHyperParameters,
   setNewJobInputs,
   setNewJobParameters,
+  setNewJobSecrets,
   setNewJobVolumeMounts,
   setNewJobVolumes,
   setOpenScheduleJob
@@ -85,7 +86,9 @@ const JobsPanelView = ({
                 match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
+                secrets={jobsStore.newJob.function.spec.secret_sources}
                 setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
+                setNewJobSecrets={setNewJobSecrets}
               />
             </Accordion>
             <Accordion

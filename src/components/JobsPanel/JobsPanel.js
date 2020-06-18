@@ -40,6 +40,7 @@ const JobsPanel = ({
   setNewJobHyperParameters,
   setNewJobInputs,
   setNewJobParameters,
+  setNewJobSecrets,
   setNewJobVolumeMounts,
   setNewJobVolumes
 }) => {
@@ -210,6 +211,7 @@ const JobsPanel = ({
       setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}
       setNewJobParameters={setNewJobParameters}
+      setNewJobSecrets={setNewJobSecrets}
       setNewJobVolumeMounts={setNewJobVolumeMounts}
       setNewJobVolumes={setNewJobVolumes}
       setOpenScheduleJob={setOpenScheduleJob}

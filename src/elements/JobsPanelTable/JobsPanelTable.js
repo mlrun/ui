@@ -25,13 +25,6 @@ const JobsPanelTable = ({
 }) => {
   const [editItem, setEditItem] = useState(false)
 
-  const selectOption = {
-    parameterType: [
-      { label: 'Simple', id: 'Simple' },
-      { label: 'Hyper', id: 'Hyper' }
-    ]
-  }
-
   const handleEdit = useCallback(
     (item, isInput) => {
       if (editItem) {
@@ -100,7 +93,6 @@ const JobsPanelTable = ({
       headers={headers}
       match={match}
       section={section}
-      selectOption={selectOption}
       selectedItem={selectedItem}
       setSelectedItem={setSelectedItem}
     />

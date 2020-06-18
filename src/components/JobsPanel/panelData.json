@@ -1,9 +1,12 @@
 {
-  "advanced": {
-    "table-headers": [{ "label": "Name" }, { "label": "Value" }]
-  },
   "data-inputs": {
     "table-headers": [{ "label": "Input Name" }, { "label": "Path" }]
+  },
+  "env": {
+    "table-headers": [{ "label": "Name" }, { "label": "Value" }]
+  },
+  "secrets": {
+    "table-headers": [{ "label": "Kind" }, { "label": "Value" }]
   },
   "volumes": {
     "table-headers": [{ "label": "Volume Name" }, { "label": "Path" }]
