@@ -25,7 +25,7 @@ const JobsPanelView = ({
   setNewJobHyperParameters,
   setNewJobInputs,
   setNewJobParameters,
-  setNewJobSecrets,
+  setNewJobSecretSources,
   setNewJobVolumeMounts,
   setNewJobVolumes,
   setOpenScheduleJob
@@ -86,9 +86,9 @@ const JobsPanelView = ({
                 match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
-                secrets={jobsStore.newJob.function.spec.secret_sources}
+                secretSources={jobsStore.newJob.function.spec.secret_sources}
                 setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
-                setNewJobSecrets={setNewJobSecrets}
+                setNewJobSecretSources={setNewJobSecretSources}
               />
             </Accordion>
             <Accordion
@@ -139,6 +139,7 @@ JobsPanelView.propTypes = {
   setNewJobHyperParameters: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired,
   setNewJobParameters: PropTypes.func.isRequired,
+  setNewJobSecretSources: PropTypes.func.isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,
   setNewJobVolumes: PropTypes.func.isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired

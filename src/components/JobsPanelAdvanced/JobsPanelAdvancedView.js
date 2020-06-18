@@ -32,7 +32,7 @@ const JobsPanelAdvancedView = ({
           headers={panelData['env']['table-headers']}
           match={match}
           panelState={panelState}
-          section="advanced"
+          section="advanced env"
           selectedItem={advancedState.selectedEnvironmentVariable}
           setAddNewItem={value =>
             advancedDispatch({
@@ -64,7 +64,7 @@ const JobsPanelAdvancedView = ({
         <JobsPanelAdvancedTable
           addNewItem={advancedState.addNewSecret}
           className="advanced secrets"
-          content={panelState.tableData.secrets}
+          content={panelState.tableData.secretSources}
           handleAddNewItem={handleAddNewItem}
           handleEditItems={handleEditItems}
           handleDeleteItems={handleDeleteItems}
@@ -86,10 +86,10 @@ const JobsPanelAdvancedView = ({
               payload: kind
             })
           }
-          setNewItemValue={value =>
+          setNewItemValue={source =>
             advancedDispatch({
-              type: advancedActions.SET_NEW_SECRET_VALUE,
-              payload: value
+              type: advancedActions.SET_NEW_SECRET_SOURCE,
+              payload: source
             })
           }
           setSelectedItem={selectedItem =>

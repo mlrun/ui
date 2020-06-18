@@ -20,9 +20,9 @@ const JobsPanelAdvanced = ({
   match,
   panelDispatch,
   panelState,
-  secrets,
+  secretSources,
   setNewJobEnvironmentVariables,
-  setNewJobSecrets
+  setNewJobSecretSources
 }) => {
   const [advancedState, advancedDispatch] = useReducer(
     jobsPanelAdvancedReducer,
@@ -30,29 +30,35 @@ const JobsPanelAdvanced = ({
   )
 
   const handleAddNewItem = isEnv => {
+    if (isEnv) {
+      handleAddItem(
+        advancedDispatch,
+        panelState.tableData.environmentVariables,
+        isEnv,
+        advancedState.newEnvironmentVariable,
+        environmentVariables,
+        panelDispatch,
+        panelState.previousPanelData.tableData.environmentVariables,
+        advancedActions.REMOVE_NEW_ENVIRONMENT_VARIABLE_DATA,
+        advancedActions.SET_ADD_NEW_ENVIRONMENT_VARIABLE,
+        panelActions.SET_TABLE_DATA_ENVIRONMENT_VARIABLES,
+        panelActions.SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES,
+        setNewJobEnvironmentVariables
+      )
+    }
     handleAddItem(
       advancedDispatch,
-      isEnv
-        ? panelState.tableData.environmentVariables
-        : panelState.tableData.secrets,
+      panelState.tableData.secretSources,
       isEnv,
-      isEnv ? advancedState.newEnvironmentVariable : advancedState.newSecret,
-      isEnv ? environmentVariables : secrets,
+      advancedState.newSecret,
+      secretSources,
       panelDispatch,
-      isEnv
-        ? panelState.previousPanelData.tableData.environmentVariables
-        : panelState.previousPanelData.tableData.secrets,
-      isEnv
-        ? advancedActions.REMOVE_NEW_ENVIRONMENT_VARIABLE_DATA
-        : advancedActions.REMOVE_NEW_SECRET_DATA,
-      isEnv
-        ? advancedActions.SET_ADD_NEW_ENVIRONMENT_VARIABLE
-        : advancedActions.SET_ADD_NEW_SECRET,
-      isEnv
-        ? panelActions.SET_TABLE_DATA_ENVIRONMENT_VARIABLES
-        : panelActions.SET_TABLE_DATA_SECRETS,
-      panelActions.SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES,
-      isEnv ? setNewJobEnvironmentVariables : setNewJobSecrets
+      panelState.previousPanelData.tableData.secretSources,
+      advancedActions.REMOVE_NEW_SECRET_DATA,
+      advancedActions.SET_ADD_NEW_SECRET,
+      panelActions.SET_TABLE_DATA_SECRET_SOURCES,
+      panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES,
+      setNewJobSecretSources
     )
   }
 
@@ -72,16 +78,16 @@ const JobsPanelAdvanced = ({
       )
     } else {
       handleEdit(
-        secrets,
-        panelState.tableData.secrets,
+        secretSources,
+        panelState.tableData.secretSources,
         advancedDispatch,
         isEnv,
         panelDispatch,
         advancedActions.SET_SELECTED_ENVIRONMENT_VARIABLE,
         advancedState.selectedSecret.data,
-        setNewJobSecrets,
-        panelActions.SET_TABLE_DATA_SECRETS,
-        panelActions.SET_PREVIOUS_PANEL_DATA_SECRETS
+        setNewJobSecretSources,
+        panelActions.SET_TABLE_DATA_SECRET_SOURCES,
+        panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES
       )
     }
   }
@@ -101,15 +107,15 @@ const JobsPanelAdvanced = ({
       )
     } else {
       handleDelete(
-        secrets,
-        panelState.tableData.secrets,
+        secretSources,
+        panelState.tableData.secretSources,
         isEnv,
         panelDispatch,
-        panelState.previousPanelData.tableData.secrets,
+        panelState.previousPanelData.tableData.secretSources,
         item,
-        setNewJobSecrets,
-        panelActions.SET_TABLE_DATA_SECRETS,
-        panelActions.SET_PREVIOUS_PANEL_DATA_SECRETS
+        setNewJobSecretSources,
+        panelActions.SET_TABLE_DATA_SECRET_SOURCES,
+        panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES
       )
     }
   }
@@ -132,7 +138,9 @@ JobsPanelAdvanced.propTypes = {
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  setNewJobEnvironmentVariables: PropTypes.func.isRequired
+  secretSources: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  setNewJobEnvironmentVariables: PropTypes.func.isRequired,
+  setNewJobSecretSources: PropTypes.func.isRequired
 }
 
 export default JobsPanelAdvanced

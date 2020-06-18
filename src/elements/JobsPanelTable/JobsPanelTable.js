@@ -54,7 +54,10 @@ const JobsPanelTable = ({
 
   const handleDelete = useCallback(
     item => {
-      handleDeleteItems(section === 'data-inputs', item)
+      handleDeleteItems(
+        section.includes('data-inputs') || section.includes('env'),
+        item
+      )
     },
     [handleDeleteItems, section]
   )

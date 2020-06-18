@@ -21,7 +21,7 @@ export const initialState = {
       volumes: [],
       volumeMounts: [],
       environmentVariables: [],
-      secrets: []
+      secretSources: []
     },
     titleInfo: {
       method: '',
@@ -38,7 +38,7 @@ export const initialState = {
     volumeMounts: [],
     volumes: [],
     environmentVariables: [],
-    secrets: []
+    secretSources: []
   }
 }
 
@@ -69,7 +69,8 @@ export const panelActions = {
     'SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS',
   SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES:
     'SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES',
-  SET_PREVIOUS_PANEL_DATA_SECRETS: 'SET_PREVIOUS_PANEL_DATA_SECRETS',
+  SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES:
+    'SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES',
   SET_REQUESTS: 'SET_REQUESTS',
   SET_REQUESTS_CPU: 'SET_REQUESTS_CPU',
   SET_REQUESTS_MEMORY: 'SET_REQUESTS_MEMORY',
@@ -79,7 +80,7 @@ export const panelActions = {
   SET_TABLE_DATA_VOLUMES: 'SET_TABLE_DATA_VOLUMES',
   SET_TABLE_DATA_VOLUME_MOUNTS: 'SET_TABLE_DATA_VOLUME_MOUNTS',
   SET_TABLE_DATA_ENVIRONMENT_VARIABLES: 'SET_TABLE_DATA_ENVIRONMENT_VARIABLES',
-  SET_TABLE_DATA_SECRETS: 'SET_TABLE_DATA_SECRETS'
+  SET_TABLE_DATA_SECRET_SOURCES: 'SET_TABLE_DATA_SECRET_SOURCES'
 }
 
 export const panelReducer = (state, { type, payload }) => {
@@ -94,7 +95,7 @@ export const panelReducer = (state, { type, payload }) => {
             volumes: [],
             volumeMounts: [],
             environmentVariables: [],
-            secrets: []
+            secretSources: []
           },
           titleInfo: {
             method: '',
@@ -234,14 +235,14 @@ export const panelReducer = (state, { type, payload }) => {
           }
         }
       }
-    case panelActions.SET_PREVIOUS_PANEL_DATA_SECRETS:
+    case panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES:
       return {
         ...state,
         previousPanelData: {
           ...state.previousPanelData,
           tableData: {
             ...state.previousPanelData.tableData,
-            secrets: payload
+            secretSources: payload
           }
         }
       }
@@ -347,12 +348,12 @@ export const panelReducer = (state, { type, payload }) => {
           parameters: payload
         }
       }
-    case panelActions.SET_TABLE_DATA_SECRETS:
+    case panelActions.SET_TABLE_DATA_SECRET_SOURCES:
       return {
         ...state,
         tableData: {
           ...state.tableData,
-          secrets: payload
+          secretSources: payload
         }
       }
     case panelActions.SET_TABLE_DATA_VOLUMES:

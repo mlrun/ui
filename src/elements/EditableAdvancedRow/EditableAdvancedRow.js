@@ -12,6 +12,7 @@ const EditableAdvancedRow = ({
   table
 }) => {
   const dataName = table === 'env' ? 'name' : 'kind'
+  const dataValue = table === 'env' ? 'value' : 'source'
 
   return (
     <div className="table__row edit-row">
@@ -23,11 +24,11 @@ const EditableAdvancedRow = ({
           onChange={value =>
             setSelectedItem({
               ...selectedItem,
-              data: { ...selectedItem.data, value: value }
+              data: { ...selectedItem.data, [dataValue]: value }
             })
           }
           type="text"
-          value={selectedItem.data.value}
+          value={selectedItem.data[dataValue]}
         />
       </div>
       <div className="table__cell table__cell-actions">

@@ -70,9 +70,7 @@ export const JobsPanelAdvancedTable = ({
           </div>
           <button
             className="add-input btn-add"
-            onClick={() =>
-              handleAddNewItem(!section.includes('secrets') && true)
-            }
+            onClick={() => handleAddNewItem(section.includes('env') && true)}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
@@ -90,7 +88,8 @@ export const JobsPanelAdvancedTable = ({
 }
 
 JobsPanelAdvancedTable.defaultProps = {
-  className: ''
+  className: '',
+  selectedId: ''
 }
 
 JobsPanelAdvancedTable.propTypes = {
@@ -103,6 +102,7 @@ JobsPanelAdvancedTable.propTypes = {
   headers: PropTypes.arrayOf(PropTypes.shape).isRequired,
   match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
+  selectedId: PropTypes.string,
   selectedItem: PropTypes.shape({}).isRequired,
   setAddNewItem: PropTypes.func.isRequired,
   setNewItemName: PropTypes.func.isRequired,
