@@ -35,21 +35,21 @@ const createJobsContent = (content, groupedByWorkflow) => {
             (contentItem.status !== 'error' &&
               new Date(contentItem.finished_at))
         ),
-        class: 'jobs_small',
+        class: 'jobs_extra-small',
         type: 'duration'
       },
       owner: {
         value: contentItem.owner,
-        class: 'jobs_small'
+        class: 'jobs_extra-small'
       },
       labels: {
         value: contentItem.labels,
-        class: 'jobs_small',
+        class: 'jobs_extra-small',
         type: 'labels'
       },
       parameters: {
         value: contentItem.parameters,
-        class: 'jobs_small',
+        class: 'jobs_extra-small',
         type: 'parameters'
       },
       resultsChips: {

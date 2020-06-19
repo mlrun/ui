@@ -6,6 +6,8 @@ import JobsTableRow from '../../elements/JobsTableRow/JobsTableRow'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
 
@@ -45,7 +47,9 @@ const TableView = ({
               className={`table-head__item ${item.class}`}
               key={item.header + index}
             >
-              <span>{item.header}</span>
+              <Tooltip template={<TextTooltipTemplate text={item.header} />}>
+                {item.header}
+              </Tooltip>
             </div>
           ))}
         </div>

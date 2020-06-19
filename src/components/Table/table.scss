@@ -22,10 +22,14 @@
 
     .jobs {
       &_medium {
-        @include tableColumnFlex(1, 240px);
+        max-width: 250px;
+
+        @include tableColumnFlex(0.6, 240px);
       }
 
       &_small {
+        max-width: 150px;
+
         @include tableColumnFlex(0.5, 75px);
       }
 
@@ -34,7 +38,9 @@
       }
 
       &_extra-small {
-        @include tableColumnFlex(0.3, 50px);
+        max-width: 85px;
+
+        @include tableColumnFlex(0.2, 65px);
       }
     }
 
@@ -44,7 +50,13 @@
       }
 
       &_small {
-        @include tableColumnFlex(1, 80px);
+        max-width: 100px;
+
+        @include tableColumnFlex(1, 90px);
+
+        a {
+          display: inline;
+        }
       }
 
       &_big {
@@ -56,8 +68,6 @@
       }
 
       &_kind {
-        padding-left: 20px;
-
         @include tableColumnFlex(0.5, 80px);
       }
 
@@ -92,10 +102,10 @@
     display: flex;
 
     &__item {
-      @include tableDet;
-      @include tableHeader(0);
-
       flex: 1;
+
+      @include tableDet;
+      @include tableHeader(5px);
 
       &.buttonPopout,
       &.buttonDownload {
@@ -117,7 +127,7 @@
       @include tableDet;
 
       flex-wrap: wrap;
-      padding: 8px 0;
+      padding: 8px 5px;
       font-weight: 400;
       font-size: 15px;
       line-height: 18px;
@@ -190,6 +200,8 @@
           &:not(.parent-row_without-actions) {
             &:hover {
               .action_cell {
+                padding: 0;
+
                 .table-actions-container {
                   display: block;
                 }
