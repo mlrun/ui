@@ -20,7 +20,7 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_WORKFLOWS_SUCCESS:
       return {
         ...state,
-        workflows: payload,
+        workflows: [...state.workflows, ...payload],
         loading: false
       }
     case FETCH_WORKFLOWS_FAILURE:

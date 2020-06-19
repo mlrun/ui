@@ -6,15 +6,15 @@ import {
 } from '../constants'
 
 const workflowActions = {
-  fetchWorkflows: () => dispatch => {
+  fetchWorkflows: pageToken => dispatch => {
     dispatch(workflowActions.fetchWorkflowsBegin())
 
     return workflowApi
-      .getAllWorkflows()
+      .getAllWorkflows(pageToken)
       .then(({ data }) => {
         dispatch(workflowActions.fetchWorkflowsSuccess(data.runs))
 
-        return data.runs
+        return data.next_page_token
       })
       .catch(error => dispatch(workflowActions.fetchWorkflowsFailure(error)))
   },
