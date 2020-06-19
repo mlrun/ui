@@ -30,15 +30,15 @@ const initialState = {
       spec: {
         parameters: {},
         inputs: {},
-        hyperparams: {}
+        hyperparams: {},
+        secret_sources: []
       }
     },
     function: {
       spec: {
         volumes: [],
         volumeMounts: [],
-        env: {},
-        secret_sources: []
+        env: {}
       }
     }
   }
@@ -121,10 +121,10 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         newJob: {
           ...state.newJob,
-          function: {
-            ...state.newJob.function,
+          task: {
+            ...state.newJob.task,
             spec: {
-              ...state.newJob.function.spec,
+              ...state.newJob.task.spec,
               secret_sources: payload
             }
           }
@@ -167,15 +167,15 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               parameters: {},
               inputs: {},
-              hyperparams: {}
+              hyperparams: {},
+              secret_sources: []
             }
           },
           function: {
             spec: {
               volumes: [],
               volumeMounts: [],
-              env: {},
-              secret_sources: []
+              env: {}
             }
           }
         }
@@ -226,7 +226,8 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.newJob.task.spec,
               parameters: payload.parameters,
-              inputs: payload.inputs
+              inputs: payload.inputs,
+              secret_sources: payload.secret_sources
             }
           },
           function: {
@@ -235,8 +236,7 @@ export default (state = initialState, { type, payload }) => {
               ...state.newJob.function.spec,
               volumeMounts: payload.volumeMounts,
               volumes: payload.volumes,
-              env: payload.environmentVariables,
-              secret_sources: payload.secret_sources
+              env: payload.environmentVariables
             }
           }
         }

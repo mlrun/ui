@@ -86,7 +86,7 @@ const JobsPanelView = ({
                 match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
-                secretSources={jobsStore.newJob.function.spec.secret_sources}
+                secretSources={jobsStore.newJob.task.spec.secret_sources}
                 setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
                 setNewJobSecretSources={setNewJobSecretSources}
               />
