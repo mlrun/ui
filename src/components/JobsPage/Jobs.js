@@ -64,9 +64,16 @@ const Jobs = ({
     [fetchJobs, match.params.projectName, stateFilter]
   )
 
-  const getWorkflows = useCallback(() => {
-    fetchWorkflows()
-  }, [fetchWorkflows])
+  const getWorkflows = useCallback(
+    token => {
+      fetchWorkflows(token).then(pageToken => {
+        if (pageToken) {
+          getWorkflows(pageToken)
+        }
+      })
+    },
+    [fetchWorkflows]
+  )
 
   useEffect(() => {
     refreshJobs()
