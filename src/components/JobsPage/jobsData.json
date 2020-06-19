@@ -27,19 +27,19 @@
     },
     {
       "header": "Duration",
-      "class": "jobs_small"
+      "class": "jobs_extra-small"
     },
     {
       "header": "Owner",
-      "class": "jobs_small"
+      "class": "jobs_extra-small"
     },
     {
       "header": "Labels",
-      "class": "jobs_small"
+      "class": "jobs_extra-small"
     },
     {
       "header": "Parameters",
-      "class": "jobs_small"
+      "class": "jobs_extra-small"
     },
     {
       "header": "Results",

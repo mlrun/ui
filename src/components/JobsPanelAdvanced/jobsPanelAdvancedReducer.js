@@ -6,8 +6,8 @@ export const initialState = {
     value: ''
   },
   newSecret: {
-    name: '',
-    value: ''
+    kind: '',
+    source: ''
   },
   selectedEnvironmentVariable: {},
   selectedSecret: {}
@@ -19,9 +19,9 @@ export const advancedActions = {
   SET_ADD_NEW_ENVIRONMENT_VARIABLE: 'SET_ADD_NEW_ENVIRONMENT_VARIABLE',
   SET_ADD_NEW_SECRET: 'SET_ADD_NEW_SECRET',
   SET_NEW_ENVIRONMENT_VARIABLE_NAME: 'SET_NEW_ENVIRONMENT_VARIABLE_NAME',
-  SET_NEW_SECRET_NAME: 'SET_NEW_SECRET_NAME',
+  SET_NEW_SECRET_KIND: 'SET_NEW_SECRET_NAME',
   SET_NEW_ENVIRONMENT_VARIABLE_VALUE: 'SET_NEW_ENVIRONMENT_VARIABLE_VALUE',
-  SET_NEW_SECRET_VALUE: 'SET_NEW_SECRET_VALUE',
+  SET_NEW_SECRET_SOURCE: 'SET_NEW_SECRET_SOURCE',
   SET_SELECTED_ENVIRONMENT_VARIABLE: 'SET_SELECTED_ENVIRONMENT_VARIABLE',
   SET_SELECTED_SECRET: 'SET_SELECTED_SECRET'
 }
@@ -40,8 +40,8 @@ export const jobsPanelAdvancedReducer = (state, { type, payload }) => {
       return {
         ...state,
         newSecret: {
-          name: '',
-          value: ''
+          kind: '',
+          source: ''
         }
       }
     case advancedActions.SET_ADD_NEW_ENVIRONMENT_VARIABLE:
@@ -62,12 +62,12 @@ export const jobsPanelAdvancedReducer = (state, { type, payload }) => {
           name: payload
         }
       }
-    case advancedActions.SET_NEW_SECRET_NAME:
+    case advancedActions.SET_NEW_SECRET_KIND:
       return {
         ...state,
         newSecret: {
           ...state.newVolume,
-          name: payload
+          kind: payload
         }
       }
     case advancedActions.SET_NEW_ENVIRONMENT_VARIABLE_VALUE:
@@ -78,12 +78,12 @@ export const jobsPanelAdvancedReducer = (state, { type, payload }) => {
           value: payload
         }
       }
-    case advancedActions.SET_NEW_SECRET_VALUE:
+    case advancedActions.SET_NEW_SECRET_SOURCE:
       return {
         ...state,
         newSecret: {
           ...state.newSecret,
-          value: payload
+          source: payload
         }
       }
     case advancedActions.SET_SELECTED_ENVIRONMENT_VARIABLE:

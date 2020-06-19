@@ -18,7 +18,6 @@ const JobsPanelTableView = ({
   headers,
   match,
   section,
-  selectOption,
   selectedItem,
   setSelectedItem
 }) => {
@@ -43,7 +42,6 @@ const JobsPanelTableView = ({
               handleEdit={handleEdit}
               key={index}
               match={match}
-              selectOption={selectOption}
               selectedParameter={selectedItem}
               setSelectedParameter={setSelectedItem}
             />
@@ -54,13 +52,13 @@ const JobsPanelTableView = ({
               selectedDataInput={selectedItem}
               setSelectedDataInput={setSelectedItem}
             />
-          ) : section === 'advanced' ? (
+          ) : section.includes('advanced') ? (
             <EditableAdvancedRow
               handleEdit={handleEdit}
               key={index}
-              selectedEnvironmentVariable={selectedItem}
-              setSelectedEnvironmentVariable={setSelectedItem}
-              table="env"
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
+              table={section.includes('secrets') ? 'secrets' : 'env'}
             />
           ) : (
             <EditableVolumesRow
@@ -96,7 +94,6 @@ JobsPanelTableView.propTypes = {
   headers: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
-  selectOption: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired
 }

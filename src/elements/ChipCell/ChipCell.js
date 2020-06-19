@@ -25,7 +25,7 @@ const ChipCell = ({ className, elements }) => {
       if (sizeParent <= 900) {
         setChips(sizeChips[`${sizeParent}px`](elements))
       } else {
-        setChips(cutChips(elements, 6))
+        setChips(cutChips(elements, 7))
       }
     }
   }, [elements])
