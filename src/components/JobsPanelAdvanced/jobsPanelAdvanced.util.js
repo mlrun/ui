@@ -1,8 +1,9 @@
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 export const handleAddItem = (
-  currentTableData,
   advancedDispatch,
+  currentTableData,
+  isEnv,
   newItemObj,
   newJobData,
   panelDispatch,
@@ -13,6 +14,8 @@ export const handleAddItem = (
   setPreviousData,
   setNewJobData
 ) => {
+  let data = {}
+
   if (isEveryObjectValueEmpty(newItemObj)) {
     advancedDispatch({
       type: removeNewItemObj
@@ -24,13 +27,29 @@ export const handleAddItem = (
     })
   }
 
-  const generatedTableData = {
-    isValueEmpty: true,
-    isDefault: false,
-    data: {
+  if (isEnv) {
+    data = {
       name: newItemObj.name,
       value: newItemObj.value
     }
+
+    setNewJobData({
+      ...newJobData,
+      [newItemObj.name]: newItemObj.value
+    })
+  } else {
+    data = {
+      kind: newItemObj.kind,
+      source: newItemObj.source
+    }
+
+    setNewJobData([...newJobData, { [newItemObj.kind]: newItemObj.source }])
+  }
+
+  const generatedTableData = {
+    isValueEmpty: true,
+    isDefault: false,
+    data
   }
 
   panelDispatch({
@@ -47,10 +66,6 @@ export const handleAddItem = (
   })
   advancedDispatch({
     type: removeNewItemObj
-  })
-  setNewJobData({
-    ...newJobData,
-    [newItemObj.name]: newItemObj.value
   })
 }
 
@@ -71,11 +86,24 @@ export const handleEdit = (
     currentDataObj[selectedItem.name] = selectedItem.value
 
     setCurrentPanelData({ ...currentPanelData, ...currentDataObj })
+  } else {
+    const currentDataArray = currentPanelData.map(dataItem => {
+      if (dataItem[selectedItem.kind]) {
+        dataItem[selectedItem.kind] = selectedItem.source
+      }
+
+      return dataItem
+    })
+
+    setCurrentPanelData(currentDataArray)
   }
 
+  const dataName = isEnv ? 'name' : 'kind'
+  const dataValue = isEnv ? 'value' : 'source'
+
   const newDataArray = currentTableData.map(dataItem => {
-    if (dataItem.data.name === selectedItem.name) {
-      dataItem.data.value = selectedItem.value
+    if (dataItem.data[dataName] === selectedItem[dataName]) {
+      dataItem.data[dataValue] = selectedItem[dataValue]
     }
 
     return dataItem
@@ -98,6 +126,7 @@ export const handleEdit = (
 export const handleDelete = (
   currentPanelData,
   currentTableData,
+  isEnv,
   panelDispatch,
   previousPanelData,
   selectedItem,
@@ -105,21 +134,36 @@ export const handleDelete = (
   setCurrentTableData,
   setPreviousPanelData
 ) => {
-  const newData = { ...currentPanelData }
-  delete newData[selectedItem.data.name]
+  if (isEnv) {
+    const newData = { ...currentPanelData }
+    delete newData[selectedItem.data.name]
 
-  setCurrentPanelData({ ...newData })
+    setCurrentPanelData({ ...newData })
+  } else {
+    setCurrentPanelData(
+      currentPanelData.filter(dataItem => !dataItem[selectedItem.data.kind])
+    )
+  }
+
+  const dataName = isEnv ? 'name' : 'kind'
 
   panelDispatch({
     type: setPreviousPanelData,
     payload: previousPanelData.filter(
-      dataItem => dataItem.data.name !== selectedItem.data.name
+      dataItem => dataItem.data[dataName] !== selectedItem.data[dataName]
     )
   })
   panelDispatch({
     type: setCurrentTableData,
     payload: currentTableData.filter(
-      dataItem => dataItem.data.name !== selectedItem.data.name
+      dataItem => dataItem.data[dataName] !== selectedItem.data[dataName]
     )
   })
+}
+
+export const selectOptions = {
+  secretKind: [
+    { label: 'File', id: 'file' },
+    { label: 'Env', id: 'env' }
+  ]
 }

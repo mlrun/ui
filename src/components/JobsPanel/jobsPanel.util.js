@@ -149,7 +149,8 @@ export const generateTableData = (
         parameters,
         volumeMounts,
         volumes,
-        environmentVariables: []
+        environmentVariables: [],
+        secretSources: []
       }
     })
     setNewJob({
@@ -159,7 +160,8 @@ export const generateTableData = (
         ? volumeMounts.map(volumeMounts => volumeMounts.data)
         : [],
       volumes,
-      environmentVariables: {}
+      environmentVariables: {},
+      secret_sources: []
     })
   }
 }

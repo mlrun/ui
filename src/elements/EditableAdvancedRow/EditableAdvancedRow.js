@@ -7,35 +7,34 @@ import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableAdvancedRow = ({
   handleEdit,
-  selectedEnvironmentVariable,
-  setSelectedEnvironmentVariable,
+  selectedItem,
+  setSelectedItem,
   table
 }) => {
-  const selectedItem = table === 'env' ? selectedEnvironmentVariable : ''
-  const setSelectedItem =
-    table === 'env' ? setSelectedEnvironmentVariable : null
+  const dataName = table === 'env' ? 'name' : 'kind'
+  const dataValue = table === 'env' ? 'value' : 'source'
 
   return (
     <div className="table__row edit-row">
       <div className="table__cell">
-        <div className="data-ellipsis">{selectedItem.data.name}</div>
+        <div className="data-ellipsis">{selectedItem.data[dataName]}</div>
       </div>
       <div className="table__cell table__cell_edit">
         <Input
           onChange={value =>
             setSelectedItem({
               ...selectedItem,
-              data: { ...selectedItem.data, value: value }
+              data: { ...selectedItem.data, [dataValue]: value }
             })
           }
           type="text"
-          value={selectedItem.data.value}
+          value={selectedItem.data[dataValue]}
         />
       </div>
       <div className="table__cell table__cell-actions">
         <button
           className="apply-edit-btn"
-          onClick={() => handleEdit(selectedItem.data, true)}
+          onClick={() => handleEdit(selectedItem.data, table === 'env')}
         >
           <Checkmark />
         </button>
@@ -46,8 +45,8 @@ const EditableAdvancedRow = ({
 
 EditableAdvancedRow.propTypes = {
   handleEdit: PropTypes.func.isRequired,
-  selectedEnvironmentVariable: PropTypes.shape({}).isRequired,
-  setSelectedEnvironmentVariable: PropTypes.func.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired,
+  setSelectedItem: PropTypes.func.isRequired,
   table: PropTypes.string.isRequired
 }
 

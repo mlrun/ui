@@ -4,12 +4,13 @@ import PropTypes from 'prop-types'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
+import { selectOptions as selectOption } from '../../components/JobsPanelParameters/jobsPanelParameters.util'
+
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableParametersRow = ({
   handleEdit,
   match,
-  selectOption,
   selectedParameter,
   setSelectedParameter
 }) => {
@@ -67,7 +68,6 @@ const EditableParametersRow = ({
 EditableParametersRow.propTypes = {
   handleEdit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  selectOption: PropTypes.shape({}).isRequired,
   selectedParameter: PropTypes.shape({}).isRequired,
   setSelectedParameter: PropTypes.func.isRequired
 }
