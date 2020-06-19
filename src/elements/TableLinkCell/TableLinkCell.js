@@ -59,10 +59,12 @@ const TableLinkCell = ({
           (link.match(/functions/) &&
             Object.values(selectedItem).length !== 0)) && (
           <div className="date__uid_row">
-            <span>
-              {data.type !== 'date' &&
-                formatDatetime(new Date(item.startTime || item.updated))}
-            </span>
+            {(item.startTime || item.updated) && (
+              <span>
+                {data.type !== 'date' &&
+                  formatDatetime(new Date(item.startTime || item.updated))}
+              </span>
+            )}
             <span>{truncateUid(item.uid || item.hash)}</span>
           </div>
         )}
