@@ -23,8 +23,9 @@ Examples:
 
 ### `docker run` environment variables
 
-The Docker image runs an Nginx server, which listens on exposed port number 80 and serves the web-app.
-You can pass the following environment variables on running the Docker image:
+The Docker container runs an Nginx server, which listens on exposed port number 80, serves the web-app, and proxies to the backend API.
+
+You can pass the following environment variables to the `docker run` command to configure it:
 
 - `MLRUN_API_PROXY_URL`<br />
   Sets the base URL of the backend API<br />
@@ -43,19 +44,19 @@ Example:
 docker run -it -d -p 4000:80 --rm --name mlrun-ui -e MLRUN_API_PROXY_URL=http://17.220.101.245:30080 -e MLRUN_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com/mlrun/functions/master -e MLRUN_V3IO_ACCESS_KEY=a7097c94-6e8f-436d-9717-a84abe2861d1 quay.io/mlrun/mlrun-ui:0.4.9
 ```
 
-### Docker image contents
+### Docker container contents
 
 The files served by Nginx server are located at `/usr/share/nginx/html` and consist of:
 
 - The production deployment files coming from the `build` folder (created by the [`npm run build`](#npm-run-build) command in the Dockerflie).
-- `BUILD_DATE`: a file that contains the timestamp of running the `npm run docker` command, for example `Wed Jun 17 15:43:16 UTC 2020`.<br />
+- `BUILD_DATE`: a file that contains the timestamp of running the [`npm run docker`](#npm-run-docker) command, for example `Wed Jun 17 15:43:16 UTC 2020`.<br />
   In case the Docker container is running, you can use the following command to print the build date:
   ```
   $ docker exec -ti mlrun-ui sh -c "cat /usr/share/nginx/html/BUILD_DATE"
   Wed Jun 17 15:43:16 UTC 2020
   ```
-- `COMMIT_HASH`: a file that contains the short git hash, for example: `703a554`.<br />
-  In case the Docker container is running, you can use the following command to print the build date:
+- `COMMIT_HASH`: a file that contains the short git commit hash (for example: `703a554`) of the commit that was at the `HEAD` when running the [`npm run docker`](#npm-run-docker) command.<br />
+  In case the Docker container is running, you can use the following command to print the short git commit hash:
   ```
   $ docker exec -ti mlrun-ui sh -c "cat /usr/share/nginx/html/COMMIT_HASH"
   703a554
@@ -69,7 +70,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed.
 
-This command is run by the Dockerfile that is used by the command `npm run docker`.
+This command is run by the Dockerfile that is used by the command [`npm run docker`](#npm-run-docker).
 
 Note: `npm install` should be run first.
 
