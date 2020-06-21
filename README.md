@@ -10,7 +10,7 @@ You can pass the following environment variables to control the resulting image 
 | ----- | ----------- | ------- | ------- |
 | MLRUN_DOCKER_REGISTRY | sets the Docker registy | (Dockerhub) | `quay.io/` |
 | MLRUN_DOCKER_REPO | sets the Docker repository | `mlrun` | `iguazio` |
-| MLRUN_DOCKER_TAG | sets the Docker image tag | `0.4.9`, `unstable` | `latest` |
+| MLRUN_DOCKER_TAG | sets the Docker image tag | `latest` | `0.4.9`, `unstable` |
 
 Note: the trailing forward-slash `/` in `MLRUN_DOCKER_REGISTRY`'s value is significant.
 
