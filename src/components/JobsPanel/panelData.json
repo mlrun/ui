@@ -15,8 +15,8 @@
     "table-headers": [
       { "label": "Name" },
       { "label": "Type" },
-      { "label": "Value/s" },
-      { "label": "Simple/Hyper" }
+      { "label": "Simple/Hyper" },
+      { "label": "Value/s" }
     ]
   },
   "newParameterType": [{ "label": "Simple", "id": "Simple" }]

@@ -23,21 +23,6 @@ const EditableParametersRow = ({
         {selectedParameter.data.valueType}
       </div>
       <div className="table__cell table__cell_edit">
-        <Input
-          onChange={value => {
-            setSelectedParameter({
-              ...selectedParameter,
-              data: {
-                ...selectedParameter.data,
-                value: value
-              }
-            })
-          }}
-          type="text"
-          value={selectedParameter.data.value}
-        />
-      </div>
-      <div className="table__cell table__cell_edit">
         <Select
           label={selectedParameter.data.parameterType}
           match={match}
@@ -51,6 +36,21 @@ const EditableParametersRow = ({
             })
           }
           options={selectOption.parameterType}
+        />
+      </div>
+      <div className="table__cell table__cell_edit">
+        <Input
+          onChange={value => {
+            setSelectedParameter({
+              ...selectedParameter,
+              data: {
+                ...selectedParameter.data,
+                value: value
+              }
+            })
+          }}
+          type="text"
+          value={selectedParameter.data.value}
         />
       </div>
       <div className="table__cell cell-btn-wrapper">

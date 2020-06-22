@@ -12,8 +12,8 @@ export const getDefaultData = functionParameters => {
       data: {
         name: parameter.name ?? '',
         valueType: parameter.type ?? '',
-        value: parameter.default ?? '',
-        parameterType: ''
+        parameterType: '',
+        value: parameter.default ?? ''
       }
     }))
 

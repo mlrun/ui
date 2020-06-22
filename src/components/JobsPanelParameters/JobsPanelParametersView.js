@@ -75,18 +75,6 @@ const JobsPanelParametersView = ({
                   }
                   options={selectOptions.parametersValueType}
                 />
-                <Input
-                  onChange={value =>
-                    parametersDispatch({
-                      type: parametersActions.SET_NEW_PARAMETER_VALUE,
-                      payload: value
-                    })
-                  }
-                  label="Value/s"
-                  className="input-row__item parameter-value"
-                  floatingLabel
-                  type="text"
-                />
                 <Select
                   label={parametersState.newParameter.parameterType}
                   className="select-parameters-type"
@@ -99,6 +87,18 @@ const JobsPanelParametersView = ({
                     })
                   }
                   options={selectOptions.parameterType}
+                />
+                <Input
+                  onChange={value =>
+                    parametersDispatch({
+                      type: parametersActions.SET_NEW_PARAMETER_VALUE,
+                      payload: value
+                    })
+                  }
+                  label="Value/s"
+                  className="input-row__item parameter-value"
+                  floatingLabel
+                  type="text"
                 />
               </div>
               <button
