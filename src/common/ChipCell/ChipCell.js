@@ -2,9 +2,9 @@ import React, { useRef, useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import Chip from '../Chip/Chip'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import HiddenChipsBlock from '../HiddenChipsBlock/HiddenChipsBlock'
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import HiddenChipsBlock from '../../elements/HiddenChipsBlock/HiddenChipsBlock'
 
 import { cutChips } from '../../utils/cutChips'
 import { sizeChips } from './SizeChips'
@@ -22,10 +22,10 @@ const ChipCell = ({ className, elements }) => {
       const sizeParent =
         parseInt(chipRef.current.parentNode.offsetWidth / 100) * 100
 
-      if (sizeParent <= 900) {
+      if (sizeParent <= 1000) {
         setChips(sizeChips[`${sizeParent}px`](elements))
       } else {
-        setChips(cutChips(elements, 7))
+        setChips(cutChips(elements, 8))
       }
     }
   }, [elements])

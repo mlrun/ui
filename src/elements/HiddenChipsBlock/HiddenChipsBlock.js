@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import Chip from '../Chip/Chip'
+import Chip from '../../common/Chip/Chip'
 
 import './hiddenChipsBlock.scss'
 
