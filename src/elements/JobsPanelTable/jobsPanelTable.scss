@@ -87,7 +87,6 @@
 
         .select {
           width: 100%;
-          margin: -1px;
           border-radius: 2px;
 
           &__value {
@@ -174,6 +173,10 @@
           padding: 27px 10px 9px;
         }
       }
+    }
+
+    .select {
+      margin-right: 5px;
     }
   }
 

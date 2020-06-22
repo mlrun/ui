@@ -56,8 +56,8 @@ const JobsPanelParameters = ({
           data: {
             name: parametersState.newParameter.name,
             valueType: parametersState.newParameter.valueType,
-            value: parametersState.newParameter.value,
-            parameterType: parametersState.newParameter.parameterType
+            parameterType: parametersState.newParameter.parameterType,
+            value: parametersState.newParameter.value
           }
         }
       ]
@@ -82,8 +82,8 @@ const JobsPanelParameters = ({
           data: {
             name: parametersState.newParameter.name,
             valueType: parametersState.newParameter.valueType,
-            value: parametersState.newParameter.value,
-            parameterType: parametersState.newParameter.parameterType
+            parameterType: parametersState.newParameter.parameterType,
+            value: parametersState.newParameter.value
           },
           doc: '',
           isValueEmpty: true,
