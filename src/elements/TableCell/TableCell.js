@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
-import ChipCell from '../ChipCell/ChipCell'
+import ChipCell from '../../common/ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
