@@ -40,6 +40,7 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
     selectedItem.name,
     selectedItem.type,
     selectedItem.hash,
+    selectedItem.codeOrigin,
     formatDatetime(new Date(selectedItem.updated)),
     selectedItem.command,
     selectedItem.image,

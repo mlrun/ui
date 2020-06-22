@@ -37,6 +37,7 @@ const Functions = ({
         type: func.kind,
         tag: func.metadata.tag,
         hash: func.metadata.hash,
+        codeOrigin: func.spec.build?.code_origin ?? '',
         updated: new Date(func.metadata.updated),
         command: func.spec.command,
         image: func.spec.image,
