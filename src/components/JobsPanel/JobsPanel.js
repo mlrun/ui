@@ -136,7 +136,8 @@ const JobsPanel = ({
         payload: {
           name: functionsStore.template.name || groupedFunctions.name,
           version: defaultVersion,
-          method: defaultMethod || (methodOptions[0]?.id ?? '')
+          method: defaultMethod || (methodOptions[0]?.id ?? ''),
+          methodDescription: methodOptions[0]?.subLabel ?? ''
         }
       })
       panelDispatch({

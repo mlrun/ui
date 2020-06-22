@@ -1,0 +1,27 @@
+@import '../../scss/colors.scss';
+
+.description {
+  &-container {
+    display: flex;
+    margin-left: 16px;
+    padding: 5px 0;
+    color: $mulledWineTwo;
+
+    &-text {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-align: justify;
+      text-overflow: ellipsis;
+
+      &.extended-description {
+        overflow: visible;
+        white-space: initial;
+      }
+    }
+
+    .cursor-pointer {
+      cursor: pointer;
+    }
+  }
+}
