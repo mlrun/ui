@@ -22,10 +22,10 @@ const ChipCell = ({ className, elements }) => {
       const sizeParent =
         parseInt(chipRef.current.parentNode.offsetWidth / 100) * 100
 
-      if (sizeParent <= 900) {
+      if (sizeParent <= 1000) {
         setChips(sizeChips[`${sizeParent}px`](elements))
       } else {
-        setChips(cutChips(elements, 7))
+        setChips(cutChips(elements, 8))
       }
     }
   }, [elements])
