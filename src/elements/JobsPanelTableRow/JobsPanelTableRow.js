@@ -12,9 +12,13 @@ import { joinDataOfArrayOrObject } from '../../utils'
 
 import './jobsPanelTableRow.scss'
 
-const JobsPanelTableRow = ({ actionsMenu, handleEdit, item }) => {
+const JobsPanelTableRow = ({ actionsMenu, handleEdit, item, section }) => {
+  const currentTableSection =
+    section.includes('data-inputs') || section.includes('env')
+  console.log(item.data)
+
   return (
-    item.data.name !== 'context' && (
+    (item.data.name?.label !== 'context' || !item.data.name) && (
       <div className="table__row">
         {map(item.data, (value, property) => {
           const tableCellClassName = classNames({
@@ -31,7 +35,7 @@ const JobsPanelTableRow = ({ actionsMenu, handleEdit, item }) => {
               key={property}
               onClick={
                 has(value, 'isEdit')
-                  ? () => handleEdit(item, false, property)
+                  ? () => handleEdit(item, currentTableSection, property)
                   : null
               }
             >

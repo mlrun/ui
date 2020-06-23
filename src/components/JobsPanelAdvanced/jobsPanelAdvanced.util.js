@@ -92,13 +92,13 @@ export const handleEdit = (
 ) => {
   if (isEnv) {
     const currentDataObj = { ...currentPanelData }
-    currentDataObj[selectedItem.name] = selectedItem.value
+    currentDataObj[selectedItem.name.label] = selectedItem.value.label
 
     setCurrentPanelData({ ...currentPanelData, ...currentDataObj })
   } else {
     const currentDataArray = currentPanelData.map(dataItem => {
-      if (dataItem[selectedItem.kind]) {
-        dataItem[selectedItem.kind] = selectedItem.source
+      if (dataItem[selectedItem.kind.label]) {
+        dataItem[selectedItem.kind.label] = selectedItem.source.label
       }
 
       return dataItem
@@ -111,8 +111,9 @@ export const handleEdit = (
   const dataValue = isEnv ? 'value' : 'source'
 
   const newDataArray = currentTableData.map(dataItem => {
-    if (dataItem.data[dataName] === selectedItem[dataName]) {
-      dataItem.data[dataValue] = selectedItem[dataValue]
+    if (dataItem.data[dataName].label === selectedItem[dataName].label) {
+      dataItem.data[dataValue].label = selectedItem[dataValue].label
+      dataItem.data[dataValue].isEdit = false
     }
 
     return dataItem
@@ -145,12 +146,14 @@ export const handleDelete = (
 ) => {
   if (isEnv) {
     const newData = { ...currentPanelData }
-    delete newData[selectedItem.data.name]
+    delete newData[selectedItem.data.name.label]
 
     setCurrentPanelData({ ...newData })
   } else {
     setCurrentPanelData(
-      currentPanelData.filter(dataItem => !dataItem[selectedItem.data.kind])
+      currentPanelData.filter(
+        dataItem => !dataItem[selectedItem.data.kind.label]
+      )
     )
   }
 
@@ -159,13 +162,15 @@ export const handleDelete = (
   panelDispatch({
     type: setPreviousPanelData,
     payload: previousPanelData.filter(
-      dataItem => dataItem.data[dataName] !== selectedItem.data[dataName]
+      dataItem =>
+        dataItem.data[dataName].label !== selectedItem.data[dataName].label
     )
   })
   panelDispatch({
     type: setCurrentTableData,
     payload: currentTableData.filter(
-      dataItem => dataItem.data[dataName] !== selectedItem.data[dataName]
+      dataItem =>
+        dataItem.data[dataName].label !== selectedItem.data[dataName].label
     )
   })
 }

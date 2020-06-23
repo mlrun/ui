@@ -17,20 +17,34 @@ const EditableAdvancedRow = ({
   return (
     <div className="table__row edit-row">
       <div className="table__cell">
-        <div className="data-ellipsis">{selectedItem.data[dataName]}</div>
+        <div className="data-ellipsis">{selectedItem.data[dataName].label}</div>
       </div>
-      <div className="table__cell table__cell_edit">
-        <Input
-          onChange={value =>
-            setSelectedItem({
-              ...selectedItem,
-              data: { ...selectedItem.data, [dataValue]: value }
-            })
-          }
-          type="text"
-          value={selectedItem.data[dataValue]}
-        />
-      </div>
+      {selectedItem.data[dataValue].isEdit ? (
+        <div className="table__cell table__cell_edit">
+          <Input
+            onChange={value =>
+              setSelectedItem({
+                ...selectedItem,
+                data: {
+                  ...selectedItem.data,
+                  [dataValue]: {
+                    ...selectedItem.data[dataValue],
+                    label: value
+                  }
+                }
+              })
+            }
+            type="text"
+            value={selectedItem.data[dataValue].label}
+          />
+        </div>
+      ) : (
+        <div className="table__cell table__cell_disabled">
+          <div className="data-ellipsis">
+            {selectedItem.data[dataValue].label}
+          </div>
+        </div>
+      )}
       <div className="table__cell table__cell-actions">
         <button
           className="apply-edit-btn"

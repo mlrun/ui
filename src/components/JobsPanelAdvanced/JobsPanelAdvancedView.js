@@ -14,7 +14,8 @@ const JobsPanelAdvancedView = ({
   advancedDispatch,
   advancedState,
   match,
-  panelState
+  panelState,
+  setEditSelectedProperty
 }) => {
   return (
     <div className="job-panel__item">
@@ -58,6 +59,7 @@ const JobsPanelAdvancedView = ({
               payload: selectedItem
             })
           }
+          setEditSelectedProperty={setEditSelectedProperty}
         />
       </JobsPanelSection>
       <JobsPanelSection title="Secrets">

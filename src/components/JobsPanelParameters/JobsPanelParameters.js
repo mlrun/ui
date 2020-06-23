@@ -109,7 +109,6 @@ const JobsPanelParameters = ({
         }
       ]
     })
-
     parametersDispatch({
       type: parametersActions.SET_ADD_NEW_PARAMETER,
       payload: false
@@ -127,9 +126,8 @@ const JobsPanelParameters = ({
       parametersState.selectedParameter.data.value.label
 
     if (
-      parametersState.selectedParameter.data.parameterType.label &&
       parametersState.selectedParameter.data.parameterType.label !==
-        panelData.newParameterType[0].id
+      panelData.newParameterType[0].id
     ) {
       setNewJobHyperParameters(
         editHyperParams(hyperParamsObj, parametersState.selectedParameter.data)
@@ -177,6 +175,19 @@ const JobsPanelParameters = ({
     })
   }
 
+  const setEditSelectedProperty = (selectedItem, selectedProperty) => {
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_PARAMETERS,
+      payload: panelState.tableData.parameters.map(parameter => {
+        if (parameter.data.name.label === selectedItem.data.name.label) {
+          parameter.data[selectedProperty].isEdit = true
+        }
+
+        return parameter
+      })
+    })
+  }
+
   const handleDeleteParameter = (isInput, item) => {
     const newParameters = { ...parameters }
 
@@ -211,10 +222,10 @@ const JobsPanelParameters = ({
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
       match={match}
-      panelDispatch={panelDispatch}
       parametersDispatch={parametersDispatch}
       parametersState={parametersState}
       parameters={panelState.tableData.parameters}
+      setEditSelectedProperty={setEditSelectedProperty}
     />
   )
 }

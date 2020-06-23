@@ -73,8 +73,7 @@ export const getVolumeMounts = selectedFunction => {
             label: volume_mounts?.name
           },
           mountPath: {
-            label: volume_mounts?.mountPath,
-            isEdit: false
+            label: volume_mounts?.mountPath
           }
         },
         isDefault: true
@@ -158,7 +157,6 @@ export const generateTableData = (
     const { parameters, dataInputs } = getDefaultData(functionParameters)
     const volumeMounts = getVolumeMounts(selectedFunction)
     const volumes = getVolume(selectedFunction)
-    console.log(volumeMounts)
 
     panelDispatch({
       type: panelActions.SET_TABLE_DATA,

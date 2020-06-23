@@ -26,7 +26,8 @@ export const JobsPanelAdvancedTable = ({
   setAddNewItem,
   setNewItemName,
   setNewItemValue,
-  setSelectedItem
+  setSelectedItem,
+  setEditSelectedProperty
 }) => {
   return (
     <JobsPanelTable
@@ -40,6 +41,7 @@ export const JobsPanelAdvancedTable = ({
       section={section}
       selectedItem={selectedItem}
       setSelectedItem={setSelectedItem}
+      setEditSelectedProperty={setEditSelectedProperty}
     >
       {addNewItem ? (
         <div className="table__row-add-item">

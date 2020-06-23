@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
+import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 
 import JobsPanelTableView from './JobsPanelTableView'
@@ -21,7 +22,7 @@ const JobsPanelTable = ({
   section,
   selectedItem,
   setSelectedItem,
-  setSelectedProperty
+  setEditSelectedProperty
 }) => {
   const [editItem, setEditItem] = useState(false)
 
@@ -37,9 +38,9 @@ const JobsPanelTable = ({
           handleSetSelectedVolume(item)
         } else {
           setSelectedItem(item)
+          setEditSelectedProperty(item, property, isInput)
         }
 
-        setSelectedProperty(item, property)
         setEditItem(true)
       }
     },
@@ -49,6 +50,7 @@ const JobsPanelTable = ({
       handleEditParameter,
       handleSetSelectedVolume,
       section,
+      setEditSelectedProperty,
       setSelectedItem
     ]
   )
@@ -66,6 +68,12 @@ const JobsPanelTable = ({
   const generateActionsMenu = useCallback(
     item => {
       return [
+        section === 'volumes' && {
+          label: 'Edit',
+          icon: <Edit />,
+          visible: true,
+          onClick: param => handleEdit(param)
+        },
         {
           label: 'Remove',
           icon: <Delete />,
@@ -76,7 +84,7 @@ const JobsPanelTable = ({
         }
       ]
     },
-    [handleDelete]
+    [handleDelete, handleEdit, section]
   )
 
   return (
