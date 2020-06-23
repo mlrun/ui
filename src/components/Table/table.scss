@@ -200,8 +200,6 @@
           &:not(.parent-row_without-actions) {
             &:hover {
               .action_cell {
-                padding: 0;
-
                 .table-actions-container {
                   display: block;
                 }
