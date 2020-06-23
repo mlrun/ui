@@ -46,6 +46,6 @@
     { "label": "Description", "id": "description" },
     { "label": "State", "id": "state" }
   ],
-  "filters": ["groupBy"],
+  "filters": [],
   "initialGroupFilter": "name"
 }
