@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import JobsPanelTitleEdit from '../JobsPanelTitleEdit/JobsPanelTitleEdit'
+import MethodDescription from '../MethodDescription/MethodDescription'
 
 import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -30,53 +31,62 @@ const JobsPanelTitleView = ({
 
   return (
     <div className="job-panel__title">
-      <div className={jobPanelClassName}>
-        {openScheduleJob && (
-          <div className="job-schedule-container">
-            <BackArrow onClick={() => setOpenScheduleJob(false)} />
-            <span className="job-schedule__title">Schedule Job</span>
-          </div>
-        )}
-        {!editMode ? (
-          <>
-            <div className="job-panel__wrapper">
-              <div className="job-panel__name">{currentFunctionInfo.name}</div>
-              {!openScheduleJob && (
-                <>
-                  <span className="job-panel__version">
-                    Version: {currentFunctionInfo.version === 'latest' && '$'}
-                    {currentFunctionInfo.version}
-                  </span>
-                  {currentFunctionInfo.method && (
-                    <span className="job-panel__method">
-                      Method: {currentFunctionInfo.method}
-                    </span>
-                  )}
-                </>
-              )}
+      <div className="job-title-container">
+        <div className={jobPanelClassName}>
+          {openScheduleJob && (
+            <div className="job-schedule-container">
+              <BackArrow onClick={() => setOpenScheduleJob(false)} />
+              <span className="job-schedule__title">Schedule Job</span>
             </div>
-            {openScheduleJob !== true && (
-              <div className="job-panel__button">
-                <Edit
-                  className="job-panel__icon"
-                  onClick={() => {
-                    panelDispatch({
-                      type: panelActions.SET_EDIT_MODE,
-                      payload: true
-                    })
-                  }}
-                />
+          )}
+          {!editMode ? (
+            <>
+              <div className="job-panel__wrapper">
+                <div className="job-panel__name">
+                  {currentFunctionInfo.name}
+                </div>
+                {!openScheduleJob && (
+                  <>
+                    <span className="job-panel__version">
+                      Version: {currentFunctionInfo.version === 'latest' && '$'}
+                      {currentFunctionInfo.version}
+                    </span>
+                    {currentFunctionInfo.method && (
+                      <span className="job-panel__method">
+                        Method: {currentFunctionInfo.method}
+                      </span>
+                    )}
+                  </>
+                )}
               </div>
-            )}
-          </>
-        ) : (
-          <JobsPanelTitleEdit
-            currentFunctionInfo={currentFunctionInfo}
-            handleFinishEdit={handleFinishEdit}
-            match={match}
-            methodOptions={methodOptions}
-            panelDispatch={panelDispatch}
-            versionOptions={versionOptions}
+              {!openScheduleJob && (
+                <div className="job-panel__button">
+                  <Edit
+                    className="job-panel__icon"
+                    onClick={() => {
+                      panelDispatch({
+                        type: panelActions.SET_EDIT_MODE,
+                        payload: true
+                      })
+                    }}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <JobsPanelTitleEdit
+              currentFunctionInfo={currentFunctionInfo}
+              handleFinishEdit={handleFinishEdit}
+              match={match}
+              methodOptions={methodOptions}
+              panelDispatch={panelDispatch}
+              versionOptions={versionOptions}
+            />
+          )}
+        </div>
+        {currentFunctionInfo.methodDescription && !editMode && (
+          <MethodDescription
+            description={currentFunctionInfo.methodDescription}
           />
         )}
       </div>
