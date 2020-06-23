@@ -20,7 +20,8 @@ const JobsPanelTable = ({
   match,
   section,
   selectedItem,
-  setSelectedItem
+  setSelectedItem,
+  setSelectedProperty
 }) => {
   const [editItem, setEditItem] = useState(false)
 
@@ -38,6 +39,7 @@ const JobsPanelTable = ({
           setSelectedItem(item)
         }
 
+        setSelectedProperty(item, property)
         setEditItem(true)
       }
     },

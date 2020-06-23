@@ -8,7 +8,8 @@ export const initialState = {
     parameterType: panelData.newParameterType[0].id,
     value: ''
   },
-  selectedParameter: {}
+  selectedParameter: {},
+  selectedParameterProperty: {}
 }
 
 export const parametersActions = {
@@ -18,7 +19,8 @@ export const parametersActions = {
   SET_NEW_PARAMETER_TYPE: 'SET_NEW_PARAMETER_TYPE',
   SET_NEW_PARAMETER_VALUE: 'SET_NEW_PARAMETER_VALUE',
   SET_NEW_PARAMETER_VALUE_TYPE: 'SET_NEW_PARAMETER_VALUE_TYPE',
-  SET_SELECTED_PARAMETER: 'SET_SELECTED_PARAMETER'
+  SET_SELECTED_PARAMETER: 'SET_SELECTED_PARAMETER',
+  SET_SELECTED_PARAMETER_PROPERTY: 'SET_SELECTED_PARAMETER_PROPERTY'
 }
 
 export const jobsPanelParametersReducer = (state, { type, payload }) => {
@@ -74,6 +76,11 @@ export const jobsPanelParametersReducer = (state, { type, payload }) => {
       return {
         ...state,
         selectedParameter: payload
+      }
+    case parametersActions.SET_SELECTED_PARAMETER_PROPERTY:
+      return {
+        ...state,
+        selectedParameterProperty: payload
       }
     default:
       return state

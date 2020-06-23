@@ -126,8 +126,6 @@ const JobsPanelParameters = ({
     params[parametersState.selectedParameter.data.name.label] =
       parametersState.selectedParameter.data.value.label
 
-    console.log(params)
-
     if (
       parametersState.selectedParameter.data.parameterType.label &&
       parametersState.selectedParameter.data.parameterType.label !==
@@ -155,8 +153,10 @@ const JobsPanelParameters = ({
       ) {
         param.data.value.label =
           parametersState.selectedParameter.data.value.label
+        param.data.value.isEdit = false
         param.data.parameterType.label =
           parametersState.selectedParameter.data.parameterType.label
+        param.data.parameterType.isEdit = false
       }
 
       return param
@@ -211,6 +211,7 @@ const JobsPanelParameters = ({
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
       match={match}
+      panelDispatch={panelDispatch}
       parametersDispatch={parametersDispatch}
       parametersState={parametersState}
       parameters={panelState.tableData.parameters}

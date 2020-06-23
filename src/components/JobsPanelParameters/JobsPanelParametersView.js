@@ -15,12 +15,14 @@ import { ReactComponent as Plus } from '../../images/plus.svg'
 import panelData from '../JobsPanel/panelData'
 import { parametersActions } from './jobsPanelParametersReducer'
 import { selectOptions } from './jobsPanelParameters.util'
+import { panelActions } from '../JobsPanel/panelReducer'
 
 const JobsPanelParametersView = ({
   handleAddNewItem,
   handleDeleteParameter,
   handleEditParameter,
   match,
+  panelDispatch,
   parameters,
   parametersDispatch,
   parametersState
@@ -44,6 +46,20 @@ const JobsPanelParametersView = ({
               payload: selectedParam
             })
           }
+          setSelectedProperty={(selectedItem, selectedProperty) => {
+            panelDispatch({
+              type: panelActions.SET_TABLE_DATA_PARAMETERS,
+              payload: parameters.map(parameter => {
+                if (
+                  parameter.data.name.label === selectedItem.data.name.label
+                ) {
+                  parameter.data[selectedProperty].isEdit = true
+                }
+
+                return parameter
+              })
+            })
+          }}
         >
           {parametersState.addNewParameter ? (
             <div className="table__row-add-item">

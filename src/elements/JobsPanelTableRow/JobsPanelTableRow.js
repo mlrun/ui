@@ -29,7 +29,11 @@ const JobsPanelTableRow = ({ actionsMenu, handleEdit, item }) => {
             <div
               className={tableCellClassName}
               key={property}
-              onClick={has(value, 'isEdit') ? () => handleEdit(item, false, value) : null}
+              onClick={
+                has(value, 'isEdit')
+                  ? () => handleEdit(item, false, property)
+                  : null
+              }
             >
               <Tooltip
                 className="data-ellipsis"
