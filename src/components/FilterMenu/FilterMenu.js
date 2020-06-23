@@ -158,7 +158,7 @@ const FilterMenu = ({
             <Refresh />
           </button>
         </Tooltip>
-        {groupFilter?.toLowerCase() !== 'none' && groupFilter !== '' && (
+        {groupFilter && groupFilter?.toLowerCase() !== 'none' && (
           <Tooltip
             template={
               <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
