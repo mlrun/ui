@@ -1,12 +1,14 @@
 export const editHyperParams = (hyperParams, selectedParameter) => {
-  if (hyperParams[selectedParameter.name]) {
-    hyperParams[selectedParameter.name] = selectedParameter.value.split(',')
+  if (hyperParams[selectedParameter.name.label]) {
+    hyperParams[
+      selectedParameter.name.label
+    ] = selectedParameter.value.label.split(',')
 
     return { ...hyperParams }
   } else {
     return {
       ...hyperParams,
-      [selectedParameter.name]: selectedParameter.value.split(',')
+      [selectedParameter.name.label]: selectedParameter.value.label.split(',')
     }
   }
 }

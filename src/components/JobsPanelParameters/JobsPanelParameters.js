@@ -51,13 +51,22 @@ const JobsPanelParameters = ({
         ...panelState.previousPanelData.tableData.parameters,
         {
           doc: '',
-          isValueEmpty: false,
           isDefault: false,
           data: {
-            name: parametersState.newParameter.name,
-            valueType: parametersState.newParameter.valueType,
-            parameterType: parametersState.newParameter.parameterType,
-            value: parametersState.newParameter.value
+            name: {
+              label: parametersState.newParameter.name
+            },
+            valueType: {
+              label: parametersState.newParameter.valueType
+            },
+            parameterType: {
+              label: parametersState.newParameter.parameterType,
+              isEdit: false
+            },
+            value: {
+              label: parametersState.newParameter.value,
+              isEdit: false
+            }
           }
         }
       ]
@@ -80,13 +89,22 @@ const JobsPanelParameters = ({
         ...panelState.tableData.parameters,
         {
           data: {
-            name: parametersState.newParameter.name,
-            valueType: parametersState.newParameter.valueType,
-            parameterType: parametersState.newParameter.parameterType,
-            value: parametersState.newParameter.value
+            name: {
+              label: parametersState.newParameter.name
+            },
+            valueType: {
+              label: parametersState.newParameter.valueType
+            },
+            parameterType: {
+              label: parametersState.newParameter.parameterType,
+              isEdit: false
+            },
+            value: {
+              label: parametersState.newParameter.value,
+              isEdit: false
+            }
           },
           doc: '',
-          isValueEmpty: true,
           isDefault: false
         }
       ]
@@ -105,12 +123,14 @@ const JobsPanelParameters = ({
     const params = { ...parameters }
     const hyperParamsObj = { ...hyperparams }
 
-    params[parametersState.selectedParameter.data.name] =
-      parametersState.selectedParameter.data.value
+    params[parametersState.selectedParameter.data.name.label] =
+      parametersState.selectedParameter.data.value.label
+
+    console.log(params)
 
     if (
-      parametersState.selectedParameter.data.parameterType &&
-      parametersState.selectedParameter.data.parameterType !==
+      parametersState.selectedParameter.data.parameterType.label &&
+      parametersState.selectedParameter.data.parameterType.label !==
         panelData.newParameterType[0].id
     ) {
       setNewJobHyperParameters(
@@ -119,20 +139,24 @@ const JobsPanelParameters = ({
     }
 
     if (
-      parametersState.selectedParameter.data.parameterType ===
+      parametersState.selectedParameter.data.parameterType.label ===
         panelData.newParameterType[0].id &&
-      hyperParamsObj[parametersState.selectedParameter.data.name]
+      hyperParamsObj[parametersState.selectedParameter.data.name.label]
     ) {
-      delete hyperParamsObj[parametersState.selectedParameter.data.name]
+      delete hyperParamsObj[parametersState.selectedParameter.data.name.label]
 
       setNewJobHyperParameters({ ...hyperParamsObj })
     }
 
     const newParametersArray = panelState.tableData.parameters.map(param => {
-      if (param.data.name === parametersState.selectedParameter.data.name) {
-        param.data.value = parametersState.selectedParameter.data.value
-        param.data.parameterType =
-          parametersState.selectedParameter.data.parameterType
+      if (
+        param.data.name.label ===
+        parametersState.selectedParameter.data.name.label
+      ) {
+        param.data.value.label =
+          parametersState.selectedParameter.data.value.label
+        param.data.parameterType.label =
+          parametersState.selectedParameter.data.parameterType.label
       }
 
       return param
@@ -156,12 +180,12 @@ const JobsPanelParameters = ({
   const handleDeleteParameter = (isInput, item) => {
     const newParameters = { ...parameters }
 
-    delete newParameters[item.name]
+    delete newParameters[item.name.label]
 
-    if (item.data.parameterType !== panelData.newParameterType[0].id) {
+    if (item.data.parameterType.label !== panelData.newParameterType[0].id) {
       const newHyperParameters = { ...hyperparams }
 
-      delete newHyperParameters[item.name]
+      delete newHyperParameters[item.name.label]
 
       setNewJobHyperParameters({ ...newHyperParameters })
     }
@@ -170,13 +194,13 @@ const JobsPanelParameters = ({
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
       payload: panelState.tableData.parameters.filter(
-        parameter => parameter.data.name !== item.data.name
+        parameter => parameter.data.name.label !== item.data.name.label
       )
     })
     panelDispatch({
       type: panelActions.SET_TABLE_DATA_PARAMETERS,
       payload: panelState.tableData.parameters.filter(
-        parameter => parameter.data.name !== item.data.name
+        parameter => parameter.data.name.label !== item.data.name.label
       )
     })
   }

@@ -17,42 +17,64 @@ const EditableParametersRow = ({
   return (
     <div className="table__row edit-row">
       <div className="table__cell table__cell_disabled">
-        <div className="data-ellipsis">{selectedParameter.data.name}</div>
+        <div className="data-ellipsis">{selectedParameter.data.name.label}</div>
       </div>
       <div className="table__cell table__cell_disabled">
-        {selectedParameter.data.valueType}
+        {selectedParameter.data.valueType.label}
       </div>
-      <div className="table__cell table__cell_edit">
-        <Select
-          label={selectedParameter.data.parameterType}
-          match={match}
-          onClick={parameterType =>
-            setSelectedParameter({
-              ...selectedParameter.data,
-              data: {
+      {selectedParameter.data.parameterType.isEdit ? (
+        <div className="table__cell table__cell_edit">
+          <Select
+            label={selectedParameter.data.parameterType.label}
+            match={match}
+            onClick={parameterType =>
+              setSelectedParameter({
                 ...selectedParameter.data,
-                parameterType: parameterType
-              }
-            })
-          }
-          options={selectOption.parameterType}
-        />
-      </div>
-      <div className="table__cell table__cell_edit">
-        <Input
-          onChange={value => {
-            setSelectedParameter({
-              ...selectedParameter,
-              data: {
-                ...selectedParameter.data,
-                value: value
-              }
-            })
-          }}
-          type="text"
-          value={selectedParameter.data.value}
-        />
-      </div>
+                data: {
+                  ...selectedParameter.data,
+                  parameterType: {
+                    ...selectedParameter.data.parameterType,
+                    label: parameterType
+                  }
+                }
+              })
+            }
+            options={selectOption.parameterType}
+          />
+        </div>
+      ) : (
+        <div className="table__cell table__cell_disabled">
+          <div className="data-ellipsis">
+            {selectedParameter.data.parameterType.label}
+          </div>
+        </div>
+      )}
+      {selectedParameter.data.value.isEdit ? (
+        <div className="table__cell table__cell_edit">
+          <Input
+            onChange={value => {
+              setSelectedParameter({
+                ...selectedParameter,
+                data: {
+                  ...selectedParameter.data,
+                  value: {
+                    ...selectedParameter.data.value,
+                    label: value
+                  }
+                }
+              })
+            }}
+            type="text"
+            value={selectedParameter.data.value.label}
+          />
+        </div>
+      ) : (
+        <div className="table__cell table__cell_disabled">
+          <div className="data-ellipsis">
+            {selectedParameter.data.value.label}
+          </div>
+        </div>
+      )}
       <div className="table__cell cell-btn-wrapper">
         <button
           className="apply-edit-btn"

@@ -29,8 +29,13 @@ export const handleAddItem = (
 
   if (isEnv) {
     data = {
-      name: newItemObj.name,
-      value: newItemObj.value
+      name: {
+        label: newItemObj.name
+      },
+      value: {
+        label: newItemObj.value,
+        isEdit: false
+      }
     }
 
     setNewJobData({
@@ -39,15 +44,19 @@ export const handleAddItem = (
     })
   } else {
     data = {
-      kind: newItemObj.kind,
-      source: newItemObj.source
+      kind: {
+        label: newItemObj.kind
+      },
+      source: {
+        label: newItemObj.source,
+        isEdit: false
+      }
     }
 
     setNewJobData([...newJobData, { [newItemObj.kind]: newItemObj.source }])
   }
 
   const generatedTableData = {
-    isValueEmpty: true,
     isDefault: false,
     data
   }

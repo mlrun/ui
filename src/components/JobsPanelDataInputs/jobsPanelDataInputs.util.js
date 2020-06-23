@@ -27,11 +27,15 @@ export const handleAddItem = (
 
   const path = isVolumes ? 'mountPath' : 'path'
   const generatedTableData = {
-    isValueEmpty: true,
     isDefault: false,
     data: {
-      name: newItemObj.name,
-      [path]: newItemObj.path
+      name: {
+        label: newItemObj.name
+      },
+      [path]: {
+        label: newItemObj.path,
+        isEdit: false
+      }
     }
   }
   const generatedPanelData = isVolumes

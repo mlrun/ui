@@ -12,7 +12,7 @@ import { joinDataOfArrayOrObject } from '../../utils'
 
 import './jobsPanelTableRow.scss'
 
-const JobsPanelTableRow = ({ actionsMenu, item }) => {
+const JobsPanelTableRow = ({ actionsMenu, handleEdit, item }) => {
   return (
     item.data.name !== 'context' && (
       <div className="table__row">
@@ -26,7 +26,11 @@ const JobsPanelTableRow = ({ actionsMenu, item }) => {
           })
 
           return (
-            <div className={tableCellClassName} key={property}>
+            <div
+              className={tableCellClassName}
+              key={property}
+              onClick={has(value, 'isEdit') ? () => handleEdit(item, false, value) : null}
+            >
               <Tooltip
                 className="data-ellipsis"
                 textShow={property === 'name' && item.doc}
@@ -34,20 +38,19 @@ const JobsPanelTableRow = ({ actionsMenu, item }) => {
                   <TextTooltipTemplate
                     text={
                       property === 'name'
-                        ? item.doc || value
-                        : joinDataOfArrayOrObject(value, ', ')
+                        ? item.doc || value.label
+                        : joinDataOfArrayOrObject(value.label, ', ')
                     }
                   />
                 }
               >
-                {joinDataOfArrayOrObject(value, ', ')}
+                {joinDataOfArrayOrObject(value.label, ', ')}
               </Tooltip>
             </div>
           )
         })}
         <div className="table__cell table__cell-actions">
-          {((item.isValueEmpty && item.isDefault) ||
-            (item.isValueEmpty && !item.isDefault)) && (
+          {!item.isDefault && (
             <TableActionsMenu item={item} menu={actionsMenu} />
           )}
         </div>

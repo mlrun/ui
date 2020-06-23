@@ -7,13 +7,22 @@ export const getDefaultData = functionParameters => {
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
       doc: parameter.doc,
-      isValueEmpty: true,
       isDefault: true,
       data: {
-        name: parameter.name ?? '',
-        valueType: parameter.type ?? '',
-        parameterType: '',
-        value: parameter.default ?? ''
+        name: {
+          label: parameter.name ?? ''
+        },
+        valueType: {
+          label: parameter.type ?? ''
+        },
+        parameterType: {
+          label: '',
+          isEdit: false
+        },
+        value: {
+          label: parameter.default ?? '',
+          isEdit: false
+        }
       }
     }))
 
@@ -21,11 +30,15 @@ export const getDefaultData = functionParameters => {
     .filter(dataInputs => dataInputs.type === 'DataItem')
     .map(input => ({
       doc: input.doc,
-      isValueEmpty: !input.path,
       isDefault: true,
       data: {
-        name: input.name,
-        path: input.path ?? ''
+        name: {
+          label: input.name
+        },
+        path: {
+          label: input.path ?? '',
+          isEdit: false
+        }
       }
     }))
 
@@ -56,10 +69,14 @@ export const getVolumeMounts = selectedFunction => {
     .map(volume_mounts => {
       return {
         data: {
-          name: volume_mounts?.name,
-          mountPath: volume_mounts?.mountPath
+          name: {
+            label: volume_mounts?.name
+          },
+          mountPath: {
+            label: volume_mounts?.mountPath,
+            isEdit: false
+          }
         },
-        isValueEmpty: true,
         isDefault: true
       }
     })
@@ -141,6 +158,7 @@ export const generateTableData = (
     const { parameters, dataInputs } = getDefaultData(functionParameters)
     const volumeMounts = getVolumeMounts(selectedFunction)
     const volumes = getVolume(selectedFunction)
+    console.log(volumeMounts)
 
     panelDispatch({
       type: panelActions.SET_TABLE_DATA,
@@ -157,7 +175,10 @@ export const generateTableData = (
       inputs: parseDefaultContent(dataInputs),
       parameters: parseDefaultContent(parameters),
       volumeMounts: volumeMounts.length
-        ? volumeMounts.map(volumeMounts => volumeMounts.data)
+        ? volumeMounts.map(volume => ({
+            name: volume.data.name.label,
+            mountPath: volume.data.mountPath.label
+          }))
         : [],
       volumes,
       environmentVariables: {},

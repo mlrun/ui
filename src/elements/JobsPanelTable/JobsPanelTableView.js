@@ -72,6 +72,7 @@ const JobsPanelTableView = ({
           return (
             <JobsPanelTableRow
               actionsMenu={generateActionsMenu(contentItem)}
+              handleEdit={handleEdit}
               item={contentItem}
               key={index}
             />
