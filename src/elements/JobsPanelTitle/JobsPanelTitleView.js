@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import JobsPanelTitleEdit from '../JobsPanelTitleEdit/JobsPanelTitleEdit'
+import MethodDescription from '../MethodDescription/MethodDescription'
 
 import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
 import { panelActions } from '../../components/JobsPanel/panelReducer'
-import MethodDescription from '../../components/MethodDescription/MethodDescription'
 
 const JobsPanelTitleView = ({
   closePanel,
@@ -28,8 +28,6 @@ const JobsPanelTitleView = ({
     editMode && 'job-panel__title-wrapper_edit',
     !openScheduleJob && !editMode && 'job-panel__title-wrapper_hover'
   )
-
-  // console.log(currentFunctionInfo)
 
   return (
     <div className="job-panel__title">
@@ -61,7 +59,7 @@ const JobsPanelTitleView = ({
                   </>
                 )}
               </div>
-              {openScheduleJob !== true && (
+              {!openScheduleJob && (
                 <div className="job-panel__button">
                   <Edit
                     className="job-panel__icon"

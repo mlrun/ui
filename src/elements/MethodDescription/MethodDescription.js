@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react'
+import PropTypes from 'prop-types'
+
 import classnames from 'classnames'
 
 import './methodDescription.scss'
 
 const MethodDescription = ({ description }) => {
-  const [isAllDescription, setIsAllDescription] = useState(false)
+  const [showAllDescription, setShowAllDescription] = useState(false)
   const [isClickable, setIsClickable] = useState(false)
   const refDescriptionText = useRef()
 
   const descriptionClassName = classnames(
     'description-container-text',
-    isAllDescription && 'extended-description',
+    showAllDescription && 'extended-description',
     isClickable && 'cursor-pointer'
   )
 
@@ -29,13 +31,17 @@ const MethodDescription = ({ description }) => {
         ref={refDescriptionText}
         className={descriptionClassName}
         onClick={() => {
-          isClickable && setIsAllDescription(!isAllDescription)
+          isClickable && setShowAllDescription(!showAllDescription)
         }}
       >
         {description}
       </div>
     </div>
   )
+}
+
+MethodDescription.propTypes = {
+  description: PropTypes.string.isRequired
 }
 
 export default MethodDescription
