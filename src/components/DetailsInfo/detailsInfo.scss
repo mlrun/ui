@@ -38,6 +38,10 @@
         padding-left: 16px;
       }
 
+      &__path {
+        cursor: pointer;
+      }
+
       &__status {
         text-transform: capitalize;
 

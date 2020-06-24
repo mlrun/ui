@@ -17,7 +17,6 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import artifactAction from '../../actions/artifacts'
 import { truncateUid } from '../../utils'
 import jobsData from '../../components/JobsPage/jobsData'
-import { copyToClipboard } from '../../utils/copyToClipboard'
 
 const TableCell = ({
   data,
@@ -119,24 +118,6 @@ const TableCell = ({
             schema={item?.target_path.schema}
             user={item?.producer?.owner || item.user}
           />
-        </Tooltip>
-      </div>
-    )
-  } else if (data.type === 'path') {
-    return (
-      <div
-        className={`table-body__cell ${data.class}`}
-        onClick={() => copyToClipboard(data.value.path)}
-      >
-        <Tooltip
-          className="data-ellipsis text_small path-tooltip"
-          template={
-            <TextTooltipTemplate text={`Click to copy - ${data.value.path}`} />
-          }
-        >
-          {`${data.value.schema ? `${data.value.schema}://` : ''}${
-            data.value.path
-          }`}
         </Tooltip>
       </div>
     )
