@@ -33,7 +33,7 @@ const JobsPanelTableRow = ({
               property === 'valueType') &&
               contentItem.isDefault &&
               'table__cell_disabled',
-            has(value, 'isEdit') && 'edit-cell'
+            has(value, 'isEdit') && 'cursor-pointer'
           )
 
           return (

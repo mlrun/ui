@@ -109,7 +109,8 @@ JobsPanelTable.defaultProps = {
   handleDeleteItems: null,
   handleEditItems: null,
   handleEditParameter: null,
-  handleSetSelectedVolume: null
+  handleSetSelectedVolume: null,
+  setEditSelectedProperty: null
 }
 
 JobsPanelTable.propTypes = {
@@ -128,7 +129,7 @@ JobsPanelTable.propTypes = {
   section: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired,
-  setEditSelectedProperty: PropTypes.func.isRequired
+  setEditSelectedProperty: PropTypes.func
 }
 
 export default JobsPanelTable
