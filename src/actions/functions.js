@@ -13,11 +13,11 @@ import {
 } from '../constants'
 
 const functionsActions = {
-  fetchFunctions: project => dispatch => {
+  fetchFunctions: (project, name) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
 
     return functionsApi
-      .getAll(project)
+      .getAll(project, name)
       .then(({ data }) => {
         dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 

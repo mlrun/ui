@@ -82,7 +82,9 @@ const FilterMenu = ({
             labels,
             name
           })
-        : onChange({ labels, name })
+        : page === JOBS_PAGE
+        ? onChange({ labels, name })
+        : onChange({ name })
     }
   }
 
