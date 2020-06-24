@@ -3,7 +3,8 @@ export const initialState = {
   currentFunctionInfo: {
     method: '',
     name: '',
-    version: ''
+    version: '',
+    methodDescription: ''
   },
   editMode: false,
   inputPath: '',
@@ -118,7 +119,8 @@ export const panelReducer = (state, { type, payload }) => {
         ...state,
         currentFunctionInfo: {
           ...state.currentFunctionInfo,
-          method: payload
+          method: payload.method,
+          methodDescription: payload.methodDescription
         }
       }
     case panelActions.SET_CURRENT_FUNCTION_INFO_NAME:

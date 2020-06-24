@@ -46,12 +46,19 @@ const JobsPanelTitleEdit = ({
             floatingLabel
             label="Method"
             match={match}
-            onClick={method =>
+            onClick={method => {
+              const methodDescription = methodOptions.find(
+                func => func.id === method
+              )
+
               panelDispatch({
                 type: panelActions.SET_CURRENT_FUNCTION_INFO_METHOD,
-                payload: method
+                payload: {
+                  method,
+                  methodDescription: methodDescription.subLabel
+                }
               })
-            }
+            }}
             options={methodOptions}
             selectedId={currentFunctionInfo.method}
           />

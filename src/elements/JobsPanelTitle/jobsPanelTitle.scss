@@ -12,8 +12,6 @@
     margin: 25px 40px 16px 40px;
 
     &-wrapper {
-      margin-right: 29px;
-
       .job-schedule {
         &-container {
           display: flex;
@@ -48,7 +46,7 @@
       }
 
       &_hover {
-        display: flex;
+        display: inline-block;
         border: $transparentBorder;
         border-radius: 4px;
 
@@ -56,13 +54,19 @@
           border: $primaryBorder;
 
           .job-panel__button {
-            display: flex;
-            align-items: center;
-            margin: 20px 16px 16px 0;
+            position: relative;
+            right: -12px;
+            display: inline-block;
+            margin-right: 16px;
+            transform: translate(-44%, -60%);
           }
         }
       }
     }
+  }
+
+  &__wrapper {
+    display: inline-block;
   }
 
   &__icon {
@@ -119,5 +123,10 @@
         word-break: break-word;
       }
     }
+  }
+
+  .job-title-container {
+    width: calc(100% - 14px);
+    padding-right: 29px;
   }
 }

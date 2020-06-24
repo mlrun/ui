@@ -115,9 +115,9 @@
   }
 
   .action_cell {
-    position: relative;
     width: 20px;
     max-width: 20px;
+    padding: 0;
   }
 
   &-body {
@@ -200,8 +200,6 @@
           &:not(.parent-row_without-actions) {
             &:hover {
               .action_cell {
-                padding: 0;
-
                 .table-actions-container {
                   display: block;
                 }

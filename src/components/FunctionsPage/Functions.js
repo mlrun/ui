@@ -17,9 +17,6 @@ const Functions = ({
   setLoading
 }) => {
   const [functions, setFunctions] = useState([])
-  const [groupFilter, setGroupFilter] = useState(
-    functionsData.initialGroupFilter
-  )
   const [selectedFunction, setSelectedFunction] = useState({})
   const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
@@ -140,7 +137,7 @@ const Functions = ({
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
-        groupFilter={groupFilter}
+        groupFilter={functionsData.initialGroupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
@@ -148,7 +145,6 @@ const Functions = ({
         pageData={pageData}
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
-        setGroupFilter={setGroupFilter}
         setLoading={setLoading}
         showUntagged={showUntagged}
         toggleShowUntagged={toggleShowUntagged}
