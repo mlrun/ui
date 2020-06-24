@@ -37,10 +37,12 @@ const JobsPanelTableView = ({
         </div>
       )}
       {content?.map((contentItem, index) => {
+        const contentItemName = section.includes('secrets') ? 'kind' : 'name'
+
         if (
           editItem &&
-          (contentItem.data.name?.label === selectedItem.data.name?.label ||
-            contentItem.data.kind?.label === selectedItem.data.kind?.label)
+          contentItem.data[contentItemName].label ===
+            selectedItem.data[contentItemName].label
         ) {
           return section === 'parameters' ? (
             <EditableParametersRow
@@ -77,9 +79,9 @@ const JobsPanelTableView = ({
           return (
             <JobsPanelTableRow
               actionsMenu={generateActionsMenu(contentItem)}
-              handleEdit={handleEdit}
               handleDelete={handleDelete}
-              item={contentItem}
+              handleEdit={handleEdit}
+              contentItem={contentItem}
               key={index}
               section={section}
             />
@@ -98,6 +100,7 @@ JobsPanelTableView.propTypes = {
   content: PropTypes.array.isRequired,
   editItem: PropTypes.bool.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,

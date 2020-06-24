@@ -66,29 +66,22 @@ const JobsPanelTable = ({
   )
 
   const generateActionsMenu = useCallback(
-    item => {
-      const menu = [
-        {
-          label: 'Remove',
-          icon: <Delete />,
-          visible: !item.isDefault,
-          onClick: item => {
-            handleDelete(item)
-          }
+    rowItem => [
+      {
+        label: 'Edit',
+        icon: <Edit />,
+        onClick: param => handleEdit(param)
+      },
+      {
+        label: 'Remove',
+        icon: <Delete />,
+        visible: !rowItem.isDefault,
+        onClick: selectedItem => {
+          handleDelete(selectedItem)
         }
-      ]
-
-      section === 'volumes' &&
-        menu.push({
-          label: 'Edit',
-          icon: <Edit />,
-          visible: true,
-          onClick: param => handleEdit(param)
-        })
-
-      return menu
-    },
-    [handleDelete, handleEdit, section]
+      }
+    ],
+    [handleDelete, handleEdit]
   )
 
   return (
@@ -134,7 +127,8 @@ JobsPanelTable.propTypes = {
   match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  setSelectedItem: PropTypes.func.isRequired
+  setSelectedItem: PropTypes.func.isRequired,
+  setEditSelectedProperty: PropTypes.func.isRequired
 }
 
 export default JobsPanelTable

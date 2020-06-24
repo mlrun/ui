@@ -15,25 +15,26 @@ import './jobsPanelTableRow.scss'
 
 const JobsPanelTableRow = ({
   actionsMenu,
-  handleEdit,
   handleDelete,
-  item,
+  handleEdit,
+  contentItem,
   section
 }) => {
   const currentTableSection =
     section.includes('data-inputs') || section.includes('env')
 
   return (
-    (item.data.name?.label !== 'context' || !item.data.name) && (
+    (contentItem.data.name?.label !== 'context' || !contentItem.data.name) && (
       <div className="table__row">
-        {map(item.data, (value, property) => {
-          const tableCellClassName = classNames({
-            table__cell: true,
-            table__cell_disabled:
-              ((property === 'name' && has(item.data, 'value')) ||
-                property === 'type') &&
-              item.isDefault
-          })
+        {map(contentItem.data, (value, property) => {
+          const tableCellClassName = classNames(
+            'table__cell',
+            ((property === 'name' && has(contentItem.data, 'value')) ||
+              property === 'valueType') &&
+              contentItem.isDefault &&
+              'table__cell_disabled',
+            has(value, 'isEdit') && 'edit-cell'
+          )
 
           return (
             <div
@@ -41,18 +42,18 @@ const JobsPanelTableRow = ({
               key={property}
               onClick={
                 has(value, 'isEdit')
-                  ? () => handleEdit(item, currentTableSection, property)
+                  ? () => handleEdit(contentItem, currentTableSection, property)
                   : null
               }
             >
               <Tooltip
                 className="data-ellipsis"
-                textShow={property === 'name' && item.doc}
+                textShow={property === 'name' && contentItem.doc}
                 template={
                   <TextTooltipTemplate
                     text={
                       property === 'name'
-                        ? item.doc || value.label
+                        ? contentItem.doc || value.label
                         : joinDataOfArrayOrObject(value.label, ', ')
                     }
                   />
@@ -65,12 +66,12 @@ const JobsPanelTableRow = ({
         })}
         <div className="table__cell table__cell-actions">
           {section === 'volumes' ? (
-            <TableActionsMenu item={item} menu={actionsMenu} />
+            <TableActionsMenu item={contentItem} menu={actionsMenu} />
           ) : (
-            !item.isDefault && (
+            !contentItem.isDefault && (
               <button
                 onClick={() => {
-                  handleDelete(item)
+                  handleDelete(contentItem)
                 }}
               >
                 <Delete />
@@ -85,7 +86,10 @@ const JobsPanelTableRow = ({
 
 JobsPanelTableRow.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  item: PropTypes.shape({}).isRequired
+  handleDelete: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
+  contentItem: PropTypes.shape({}).isRequired,
+  section: PropTypes.string.isRequired
 }
 
 export default JobsPanelTableRow

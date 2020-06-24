@@ -137,7 +137,8 @@ JobsPanelParametersView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,
-  parametersState: PropTypes.shape({}).isRequired
+  parametersState: PropTypes.shape({}).isRequired,
+  setEditSelectedProperty: PropTypes.func.isRequired
 }
 
 export default JobsPanelParametersView

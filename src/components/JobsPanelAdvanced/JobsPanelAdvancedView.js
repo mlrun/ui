@@ -114,7 +114,8 @@ JobsPanelAdvancedView.propTypes = {
   advancedDispatch: PropTypes.func.isRequired,
   advancedState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  panelState: PropTypes.shape({}).isRequired
+  panelState: PropTypes.shape({}).isRequired,
+  setEditSelectedProperty: PropTypes.func.isRequired
 }
 
 export default JobsPanelAdvancedView

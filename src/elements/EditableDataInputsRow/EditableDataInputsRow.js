@@ -15,32 +15,24 @@ const EditableDataInputsRow = ({
       <div className="table__cell">
         <div className="data-ellipsis">{selectedDataInput.data.name.label}</div>
       </div>
-      {selectedDataInput.data.path.isEdit ? (
-        <div className="table__cell table__cell_edit">
-          <Input
-            onChange={path =>
-              setSelectedDataInput({
-                ...selectedDataInput,
-                data: {
-                  ...selectedDataInput.data,
-                  path: {
-                    ...selectedDataInput.data.path,
-                    label: path
-                  }
+      <div className="table__cell table__cell_edit">
+        <Input
+          onChange={path =>
+            setSelectedDataInput({
+              ...selectedDataInput,
+              data: {
+                ...selectedDataInput.data,
+                path: {
+                  ...selectedDataInput.data.path,
+                  label: path
                 }
-              })
-            }
-            type="text"
-            value={selectedDataInput.data.path.label}
-          />
-        </div>
-      ) : (
-        <div className="table__cell table__cell_disabled">
-          <div className="data-ellipsis">
-            {selectedDataInput.data.path.label}
-          </div>
-        </div>
-      )}
+              }
+            })
+          }
+          type="text"
+          value={selectedDataInput.data.path.label}
+        />
+      </div>
       <div className="table__cell table__cell-actions">
         <button
           className="apply-edit-btn"

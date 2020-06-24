@@ -100,5 +100,6 @@ JobsPanelDataInputsTable.propTypes = {
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  panelState: PropTypes.shape({}).isRequired
+  panelState: PropTypes.shape({}).isRequired,
+  setEditSelectedProperty: PropTypes.func.isRequired
 }

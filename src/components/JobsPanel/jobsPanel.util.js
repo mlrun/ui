@@ -73,7 +73,8 @@ export const getVolumeMounts = selectedFunction => {
             label: volume_mounts?.name
           },
           mountPath: {
-            label: volume_mounts?.mountPath
+            label: volume_mounts?.mountPath,
+            isEdit: false
           }
         },
         isDefault: true

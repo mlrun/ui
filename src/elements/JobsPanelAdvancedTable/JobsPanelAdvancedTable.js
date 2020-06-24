@@ -109,5 +109,6 @@ JobsPanelAdvancedTable.propTypes = {
   setAddNewItem: PropTypes.func.isRequired,
   setNewItemName: PropTypes.func.isRequired,
   setNewItemValue: PropTypes.func.isRequired,
-  setSelectedItem: PropTypes.func.isRequired
+  setSelectedItem: PropTypes.func.isRequired,
+  setEditSelectedProperty: PropTypes.func.isRequired
 }
