@@ -19,7 +19,8 @@ export const JobsPanelDataInputsTable = ({
   inputsDispatch,
   inputsState,
   match,
-  panelState
+  panelState,
+  setEditSelectedProperty
 }) => {
   return (
     <JobsPanelTable
@@ -38,6 +39,7 @@ export const JobsPanelDataInputsTable = ({
           payload: selectedInput
         })
       }
+      setEditSelectedProperty={setEditSelectedProperty}
     >
       {inputsState.addNewInput ? (
         <div className="table__row-add-item">

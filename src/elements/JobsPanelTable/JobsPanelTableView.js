@@ -36,7 +36,10 @@ const JobsPanelTableView = ({
         </div>
       )}
       {content?.map((contentItem, index) => {
-        if (editItem && contentItem.data.name === selectedItem.data.name) {
+        if (
+          editItem &&
+          contentItem.data.name.label === selectedItem.data.name.label
+        ) {
           return section === 'parameters' ? (
             <EditableParametersRow
               handleEdit={handleEdit}

@@ -97,13 +97,16 @@ const JobsPanelAdvanced = ({
     const currentItems = isEnv
       ? panelState.tableData.environmentVariables
       : panelState.tableData.secretSources
+    const dataName = isEnv ? 'name' : 'kind'
 
     panelDispatch({
       type: isEnv
         ? panelActions.SET_TABLE_DATA_ENVIRONMENT_VARIABLES
         : panelActions.SET_TABLE_DATA_SECRET_SOURCES,
       payload: currentItems.map(currentItem => {
-        if (currentItem.data.name.label === selectedItem.data.name.label) {
+        if (
+          currentItem.data[dataName].label === selectedItem.data[dataName].label
+        ) {
           currentItem.data[selectedProperty].isEdit = true
         }
 

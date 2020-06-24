@@ -15,7 +15,6 @@ import './jobsPanelTableRow.scss'
 const JobsPanelTableRow = ({ actionsMenu, handleEdit, item, section }) => {
   const currentTableSection =
     section.includes('data-inputs') || section.includes('env')
-  console.log(item.data)
 
   return (
     (item.data.name?.label !== 'context' || !item.data.name) && (
@@ -58,7 +57,7 @@ const JobsPanelTableRow = ({ actionsMenu, handleEdit, item, section }) => {
           )
         })}
         <div className="table__cell table__cell-actions">
-          {!item.isDefault && (
+          {(!item.isDefault || section === 'volumes') && (
             <TableActionsMenu item={item} menu={actionsMenu} />
           )}
         </div>

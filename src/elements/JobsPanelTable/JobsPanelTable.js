@@ -67,13 +67,7 @@ const JobsPanelTable = ({
 
   const generateActionsMenu = useCallback(
     item => {
-      return [
-        section === 'volumes' && {
-          label: 'Edit',
-          icon: <Edit />,
-          visible: true,
-          onClick: param => handleEdit(param)
-        },
+      const menu = [
         {
           label: 'Remove',
           icon: <Delete />,
@@ -83,6 +77,16 @@ const JobsPanelTable = ({
           }
         }
       ]
+
+      section === 'volumes' &&
+        menu.push({
+          label: 'Edit',
+          icon: <Edit />,
+          visible: true,
+          onClick: param => handleEdit(param)
+        })
+
+      return menu
     },
     [handleDelete, handleEdit, section]
   )

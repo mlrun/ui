@@ -100,6 +100,7 @@ const JobsPanelAdvancedView = ({
               payload: selectedItem
             })
           }
+          setEditSelectedProperty={setEditSelectedProperty}
         />
       </JobsPanelSection>
     </div>
