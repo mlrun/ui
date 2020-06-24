@@ -33,11 +33,15 @@ export const handleAddItem = (
         label: newItemObj.name
       },
       [path]: {
-        label: newItemObj.path,
-        isEdit: false
+        label: newItemObj.path
       }
     }
   }
+
+  if (!isVolumes) {
+    generatedTableData.path.isEdit = false
+  }
+
   const generatedPanelData = isVolumes
     ? [
         ...newJobData,
