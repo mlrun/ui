@@ -99,6 +99,7 @@ const JobsPanelTable = ({
       content={content}
       editItem={editItem}
       generateActionsMenu={generateActionsMenu}
+      handleDelete={handleDelete}
       handleEdit={handleEdit}
       headers={headers}
       match={match}

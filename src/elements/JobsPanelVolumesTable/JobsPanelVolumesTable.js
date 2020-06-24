@@ -39,8 +39,6 @@ export const JobsPanelVolumesTable = ({
         volume => volume.name === selectedVolume.data.name.label
       )
 
-      console.log(panelState.tableData.volumes)
-
       let newValue
 
       if (searchItem.configMap) {

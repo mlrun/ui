@@ -191,12 +191,12 @@ const JobsPanelParameters = ({
   const handleDeleteParameter = (isInput, item) => {
     const newParameters = { ...parameters }
 
-    delete newParameters[item.name.label]
+    delete newParameters[item.data.name.label]
 
     if (item.data.parameterType.label !== panelData.newParameterType[0].id) {
       const newHyperParameters = { ...hyperparams }
 
-      delete newHyperParameters[item.name.label]
+      delete newHyperParameters[item.data.name.label]
 
       setNewJobHyperParameters({ ...newHyperParameters })
     }

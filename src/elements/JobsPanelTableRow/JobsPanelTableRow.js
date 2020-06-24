@@ -1,18 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { has, map } from 'lodash'
+import classNames from 'classnames'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
-import { has, map } from 'lodash'
-import classNames from 'classnames'
-
 import { joinDataOfArrayOrObject } from '../../utils'
+
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 import './jobsPanelTableRow.scss'
 
-const JobsPanelTableRow = ({ actionsMenu, handleEdit, item, section }) => {
+const JobsPanelTableRow = ({
+  actionsMenu,
+  handleEdit,
+  handleDelete,
+  item,
+  section
+}) => {
   const currentTableSection =
     section.includes('data-inputs') || section.includes('env')
 
@@ -57,8 +64,18 @@ const JobsPanelTableRow = ({ actionsMenu, handleEdit, item, section }) => {
           )
         })}
         <div className="table__cell table__cell-actions">
-          {(!item.isDefault || section === 'volumes') && (
+          {section === 'volumes' ? (
             <TableActionsMenu item={item} menu={actionsMenu} />
+          ) : (
+            !item.isDefault && (
+              <button
+                onClick={() => {
+                  handleDelete(item)
+                }}
+              >
+                <Delete />
+              </button>
+            )
           )}
         </div>
       </div>

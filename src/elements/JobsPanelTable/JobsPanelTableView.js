@@ -14,6 +14,7 @@ const JobsPanelTableView = ({
   content,
   editItem,
   generateActionsMenu,
+  handleDelete,
   handleEdit,
   headers,
   match,
@@ -38,7 +39,8 @@ const JobsPanelTableView = ({
       {content?.map((contentItem, index) => {
         if (
           editItem &&
-          contentItem.data.name.label === selectedItem.data.name.label
+          (contentItem.data.name?.label === selectedItem.data.name?.label ||
+            contentItem.data.kind?.label === selectedItem.data.kind?.label)
         ) {
           return section === 'parameters' ? (
             <EditableParametersRow
@@ -76,6 +78,7 @@ const JobsPanelTableView = ({
             <JobsPanelTableRow
               actionsMenu={generateActionsMenu(contentItem)}
               handleEdit={handleEdit}
+              handleDelete={handleDelete}
               item={contentItem}
               key={index}
               section={section}
