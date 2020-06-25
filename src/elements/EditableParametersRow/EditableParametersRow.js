@@ -10,14 +10,13 @@ import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableParametersRow = ({
   handleEdit,
-  isDefault,
   match,
   selectedParameter,
   setSelectedParameter
 }) => {
   return (
     <div className="table__row edit-row">
-      {isDefault ? (
+      {selectedParameter.isDefault ? (
         <>
           <div className="table__cell table__cell_disabled">
             <div className="data-ellipsis">{selectedParameter.data.name}</div>

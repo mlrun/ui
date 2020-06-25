@@ -7,13 +7,12 @@ import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableDataInputsRow = ({
   handleEdit,
-  isDefault,
   selectedDataInput,
   setSelectedDataInput
 }) => {
   return (
     <div className="table__row edit-row">
-      {isDefault ? (
+      {selectedDataInput.isDefault ? (
         <div className="table__cell table__cell_disabled">
           <div className="data-ellipsis">{selectedDataInput.data.name}</div>
         </div>

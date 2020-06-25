@@ -162,7 +162,6 @@ const JobsPanelDataInputs = ({
 
   const handleEditVolume = () => {
     const currentVolumes = panelState.tableData.volumes.map(volume => {
-      console.log(inputsState.selectedVolume.newName)
       if (volume.name === inputsState.selectedVolume.data.name) {
         volume.name =
           inputsState.selectedVolume.newName ||

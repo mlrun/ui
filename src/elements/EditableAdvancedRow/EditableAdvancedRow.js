@@ -74,6 +74,7 @@ const EditableAdvancedRow = ({
 
 EditableAdvancedRow.propTypes = {
   handleEdit: PropTypes.func.isRequired,
+  match: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   table: PropTypes.string.isRequired

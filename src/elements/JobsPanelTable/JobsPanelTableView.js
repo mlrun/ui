@@ -47,7 +47,6 @@ const JobsPanelTableView = ({
           return section === 'parameters' ? (
             <EditableParametersRow
               handleEdit={handleEdit}
-              isDefault={contentItem.isDefault}
               key={index}
               match={match}
               selectedParameter={selectedItem}
@@ -56,7 +55,6 @@ const JobsPanelTableView = ({
           ) : section === 'data-inputs' ? (
             <EditableDataInputsRow
               handleEdit={handleEdit}
-              isDefault={contentItem.isDefault}
               key={index}
               selectedDataInput={selectedItem}
               setSelectedDataInput={setSelectedItem}
