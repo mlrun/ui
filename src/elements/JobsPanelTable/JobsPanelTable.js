@@ -63,25 +63,22 @@ const JobsPanelTable = ({
   )
 
   const generateActionsMenu = useCallback(
-    item => {
-      return [
-        {
-          label: 'Edit',
-          icon: <Edit />,
-          visible: item.isValueEmpty,
-          onClick: param => handleEdit(param)
-        },
-        {
-          label: 'Remove',
-          icon: <Delete />,
-          visible: item.isValueEmpty && !item.isDefault,
-          onClick: item => {
-            handleDelete(item)
-          }
+    rowItem => [
+      {
+        label: 'Edit',
+        icon: <Edit />,
+        onClick: param => handleEdit(param)
+      },
+      {
+        label: 'Remove',
+        icon: <Delete />,
+        visible: !rowItem.isDefault,
+        onClick: selectedItem => {
+          handleDelete(selectedItem)
         }
-      ]
-    },
-    [handleEdit, handleDelete]
+      }
+    ],
+    [handleDelete, handleEdit]
   )
 
   return (
@@ -92,6 +89,7 @@ const JobsPanelTable = ({
       content={content}
       editItem={editItem}
       generateActionsMenu={generateActionsMenu}
+      handleDelete={handleDelete}
       handleEdit={handleEdit}
       headers={headers}
       match={match}

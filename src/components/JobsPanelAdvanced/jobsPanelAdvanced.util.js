@@ -47,7 +47,6 @@ export const handleAddItem = (
   }
 
   const generatedTableData = {
-    isValueEmpty: true,
     isDefault: false,
     data
   }
@@ -74,6 +73,7 @@ export const handleEdit = (
   currentTableData,
   advancedDispatch,
   isEnv,
+  newName,
   panelDispatch,
   removeSelectedItem,
   selectedItem,
@@ -83,13 +83,26 @@ export const handleEdit = (
 ) => {
   if (isEnv) {
     const currentDataObj = { ...currentPanelData }
-    currentDataObj[selectedItem.name] = selectedItem.value
 
-    setCurrentPanelData({ ...currentPanelData, ...currentDataObj })
+    if (newName) {
+      delete currentDataObj[selectedItem.name]
+
+      currentDataObj[newName] = selectedItem.value
+    } else {
+      currentDataObj[selectedItem.name] = selectedItem.value
+    }
+
+    setCurrentPanelData({ ...currentDataObj })
   } else {
     const currentDataArray = currentPanelData.map(dataItem => {
       if (dataItem[selectedItem.kind]) {
-        dataItem[selectedItem.kind] = selectedItem.source
+        if (newName) {
+          delete dataItem[selectedItem.kind]
+
+          dataItem[newName] = selectedItem.source
+        } else {
+          dataItem[selectedItem.kind] = selectedItem.source
+        }
       }
 
       return dataItem
@@ -103,6 +116,7 @@ export const handleEdit = (
 
   const newDataArray = currentTableData.map(dataItem => {
     if (dataItem.data[dataName] === selectedItem[dataName]) {
+      dataItem.data[dataName] = newName || selectedItem[dataName]
       dataItem.data[dataValue] = selectedItem[dataValue]
     }
 

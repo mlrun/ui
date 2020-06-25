@@ -27,7 +27,6 @@ export const handleAddItem = (
 
   const path = isVolumes ? 'mountPath' : 'path'
   const generatedTableData = {
-    isValueEmpty: true,
     isDefault: false,
     data: {
       name: newItemObj.name,
@@ -64,6 +63,7 @@ export const handleEdit = (
   currentTableData,
   inputsDispatch,
   isInputs,
+  newName,
   panelDispatch,
   removeSelectedItem,
   selectedItem,
@@ -75,18 +75,30 @@ export const handleEdit = (
 
   if (isInputs) {
     const currentDataObj = { ...currentPanelData }
-    currentDataObj[selectedItem.name] = selectedItem.path
 
-    setCurrentPanelData({ ...currentPanelData, ...currentDataObj })
+    if (newName) {
+      delete currentDataObj[selectedItem.name]
+
+      currentDataObj[newName] = selectedItem.path
+    } else {
+      currentDataObj[selectedItem.name] = selectedItem.path
+    }
+
+    setCurrentPanelData({ ...currentDataObj })
   }
 
   const newDataArray = currentTableData.map(dataItem => {
     if (dataItem.data.name === selectedItem.name) {
+      dataItem.data.name = newName || selectedItem.name
       dataItem.data[path] = selectedItem[path]
     }
 
     return dataItem
   })
+
+  if (!isInputs) {
+    setCurrentPanelData(newDataArray.map(volume => volume.data))
+  }
 
   panelDispatch({
     type: setPreviousPanelData,

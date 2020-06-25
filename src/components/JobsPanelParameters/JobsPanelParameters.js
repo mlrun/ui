@@ -51,7 +51,6 @@ const JobsPanelParameters = ({
         ...panelState.previousPanelData.tableData.parameters,
         {
           doc: '',
-          isValueEmpty: false,
           isDefault: false,
           data: {
             name: parametersState.newParameter.name,
@@ -86,12 +85,10 @@ const JobsPanelParameters = ({
             value: parametersState.newParameter.value
           },
           doc: '',
-          isValueEmpty: true,
           isDefault: false
         }
       ]
     })
-
     parametersDispatch({
       type: parametersActions.SET_ADD_NEW_PARAMETER,
       payload: false
@@ -105,16 +102,26 @@ const JobsPanelParameters = ({
     const params = { ...parameters }
     const hyperParamsObj = { ...hyperparams }
 
-    params[parametersState.selectedParameter.data.name] =
-      parametersState.selectedParameter.data.value
+    if (parametersState.selectedParameter.newName) {
+      delete params[parametersState.selectedParameter.data.name]
+
+      params[parametersState.selectedParameter.newName] =
+        parametersState.selectedParameter.data.value
+    } else {
+      params[parametersState.selectedParameter.data.name] =
+        parametersState.selectedParameter.data.value
+    }
 
     if (
-      parametersState.selectedParameter.data.parameterType &&
       parametersState.selectedParameter.data.parameterType !==
-        panelData.newParameterType[0].id
+      panelData.newParameterType[0].id
     ) {
       setNewJobHyperParameters(
-        editHyperParams(hyperParamsObj, parametersState.selectedParameter.data)
+        editHyperParams(
+          hyperParamsObj,
+          parametersState.selectedParameter.data,
+          parametersState.selectedParameter.newName
+        )
       )
     }
 
@@ -130,6 +137,10 @@ const JobsPanelParameters = ({
 
     const newParametersArray = panelState.tableData.parameters.map(param => {
       if (param.data.name === parametersState.selectedParameter.data.name) {
+        if (parametersState.selectedParameter.newName) {
+          param.data.name = parametersState.selectedParameter.newName
+        }
+
         param.data.value = parametersState.selectedParameter.data.value
         param.data.parameterType =
           parametersState.selectedParameter.data.parameterType

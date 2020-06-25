@@ -1,40 +1,65 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { has, map } from 'lodash'
+import classNames from 'classnames'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
-import { has, map } from 'lodash'
-import classNames from 'classnames'
-
 import { joinDataOfArrayOrObject } from '../../utils'
+
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 import './jobsPanelTableRow.scss'
 
-const JobsPanelTableRow = ({ actionsMenu, item }) => {
+const JobsPanelTableRow = ({
+  actionsMenu,
+  handleDelete,
+  handleEdit,
+  contentItem,
+  section
+}) => {
+  const currentTableSection =
+    section.includes('data-inputs') || section.includes('env')
+
   return (
-    item.data.name !== 'context' && (
+    (contentItem.data.name !== 'context' || !contentItem.data.name) && (
       <div className="table__row">
-        {map(item.data, (value, property) => {
-          const tableCellClassName = classNames({
-            table__cell: true,
-            table__cell_disabled:
-              ((property === 'name' && has(item.data, 'value')) ||
-                property === 'type') &&
-              item.isDefault
-          })
+        {map(contentItem.data, (value, property) => {
+          const isEditable =
+            !contentItem.isDefault ||
+            (contentItem.isDefault &&
+              property !== 'name' &&
+              property !== 'valueType' &&
+              section !== 'volumes')
+          const tableCellClassName = classNames(
+            'table__cell',
+            ((property === 'name' && has(contentItem.data, 'value')) ||
+              property === 'valueType') &&
+              contentItem.isDefault &&
+              'table__cell_disabled',
+            isEditable && 'cursor-pointer'
+          )
 
           return (
-            <div className={tableCellClassName} key={property}>
+            <div
+              className={tableCellClassName}
+              key={property}
+              onClick={
+                isEditable
+                  ? () => handleEdit(contentItem, currentTableSection)
+                  : null
+              }
+            >
               <Tooltip
                 className="data-ellipsis"
-                textShow={property === 'name' && item.doc}
+                textShow={property === 'name' && contentItem.doc}
                 template={
                   <TextTooltipTemplate
                     text={
                       property === 'name'
-                        ? item.doc || value
+                        ? contentItem.doc || value
                         : joinDataOfArrayOrObject(value, ', ')
                     }
                   />
@@ -46,9 +71,19 @@ const JobsPanelTableRow = ({ actionsMenu, item }) => {
           )
         })}
         <div className="table__cell table__cell-actions">
-          {((item.isValueEmpty && item.isDefault) ||
-            (item.isValueEmpty && !item.isDefault)) && (
-            <TableActionsMenu item={item} menu={actionsMenu} />
+          {section === 'volumes' ? (
+            <TableActionsMenu item={contentItem} menu={actionsMenu} />
+          ) : (
+            !contentItem.isDefault && (
+              <button
+                className="table__cell-delete-btn"
+                onClick={() => {
+                  handleDelete(contentItem)
+                }}
+              >
+                <Delete />
+              </button>
+            )
           )}
         </div>
       </div>
@@ -58,7 +93,10 @@ const JobsPanelTableRow = ({ actionsMenu, item }) => {
 
 JobsPanelTableRow.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  item: PropTypes.shape({}).isRequired
+  handleDelete: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
+  contentItem: PropTypes.shape({}).isRequired,
+  section: PropTypes.string.isRequired
 }
 
 export default JobsPanelTableRow

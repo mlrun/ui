@@ -92,6 +92,7 @@ const JobsPanelDataInputs = ({
         panelState.tableData.dataInputs,
         inputsDispatch,
         true,
+        inputsState.selectedDataInput.newDataInputName,
         panelDispatch,
         inputsActions.SET_SELECTED_INPUT,
         inputsState.selectedDataInput.data,
@@ -100,19 +101,20 @@ const JobsPanelDataInputs = ({
         panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS
       )
     } else {
+      handleEditVolume()
       handleEdit(
         volumeMounts,
         panelState.tableData.volumeMounts,
         inputsDispatch,
         false,
+        inputsState.selectedVolume.newName,
         panelDispatch,
         inputsActions.SET_SELECTED_VOLUME,
         inputsState.selectedVolume.data,
-        setNewJobInputs,
+        setNewJobVolumeMounts,
         panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
         panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS
       )
-      handleEditVolume()
     }
   }
 
@@ -161,6 +163,10 @@ const JobsPanelDataInputs = ({
   const handleEditVolume = () => {
     const currentVolumes = panelState.tableData.volumes.map(volume => {
       if (volume.name === inputsState.selectedVolume.data.name) {
+        volume.name =
+          inputsState.selectedVolume.newName ||
+          inputsState.selectedVolume.data.name
+
         switch (inputsState.selectedVolume.type.value) {
           case 'Config Map':
             volume.configMap.name = inputsState.selectedVolume.type.name

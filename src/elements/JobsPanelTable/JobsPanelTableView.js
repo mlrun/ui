@@ -14,6 +14,7 @@ const JobsPanelTableView = ({
   content,
   editItem,
   generateActionsMenu,
+  handleDelete,
   handleEdit,
   headers,
   match,
@@ -36,7 +37,13 @@ const JobsPanelTableView = ({
         </div>
       )}
       {content?.map((contentItem, index) => {
-        if (editItem && contentItem.data.name === selectedItem.data.name) {
+        const contentItemName = section.includes('secrets') ? 'kind' : 'name'
+
+        if (
+          editItem &&
+          contentItem.data[contentItemName] ===
+            selectedItem.data[contentItemName]
+        ) {
           return section === 'parameters' ? (
             <EditableParametersRow
               handleEdit={handleEdit}
@@ -56,6 +63,7 @@ const JobsPanelTableView = ({
             <EditableAdvancedRow
               handleEdit={handleEdit}
               key={index}
+              match={match}
               selectedItem={selectedItem}
               setSelectedItem={setSelectedItem}
               table={section.includes('secrets') ? 'secrets' : 'env'}
@@ -72,8 +80,11 @@ const JobsPanelTableView = ({
           return (
             <JobsPanelTableRow
               actionsMenu={generateActionsMenu(contentItem)}
-              item={contentItem}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+              contentItem={contentItem}
               key={index}
+              section={section}
             />
           )
         }
@@ -90,6 +101,7 @@ JobsPanelTableView.propTypes = {
   content: PropTypes.array.isRequired,
   editItem: PropTypes.bool.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,

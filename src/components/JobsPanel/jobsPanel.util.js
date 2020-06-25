@@ -7,7 +7,6 @@ export const getDefaultData = functionParameters => {
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
       doc: parameter.doc,
-      isValueEmpty: true,
       isDefault: true,
       data: {
         name: parameter.name ?? '',
@@ -21,7 +20,6 @@ export const getDefaultData = functionParameters => {
     .filter(dataInputs => dataInputs.type === 'DataItem')
     .map(input => ({
       doc: input.doc,
-      isValueEmpty: !input.path,
       isDefault: true,
       data: {
         name: input.name,
@@ -59,7 +57,6 @@ export const getVolumeMounts = selectedFunction => {
           name: volume_mounts?.name,
           mountPath: volume_mounts?.mountPath
         },
-        isValueEmpty: true,
         isDefault: true
       }
     })

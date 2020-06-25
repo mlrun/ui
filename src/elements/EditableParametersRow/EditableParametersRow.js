@@ -16,12 +16,49 @@ const EditableParametersRow = ({
 }) => {
   return (
     <div className="table__row edit-row">
-      <div className="table__cell table__cell_disabled">
-        <div className="data-ellipsis">{selectedParameter.data.name}</div>
-      </div>
-      <div className="table__cell table__cell_disabled">
-        {selectedParameter.data.valueType}
-      </div>
+      {selectedParameter.isDefault ? (
+        <>
+          <div className="table__cell table__cell_disabled">
+            <div className="data-ellipsis">{selectedParameter.data.name}</div>
+          </div>
+          <div className="table__cell table__cell_disabled">
+            <div className="data-ellipsis">
+              {selectedParameter.data.valueType}
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="table__cell table__cell_edit">
+            <Input
+              onChange={name => {
+                setSelectedParameter({
+                  ...selectedParameter,
+                  newName: name
+                })
+              }}
+              type="text"
+              value={selectedParameter.newName || selectedParameter.data.name}
+            />
+          </div>
+          <div className="table__cell table__cell_edit">
+            <Select
+              label={selectedParameter.data.valueType}
+              match={match}
+              onClick={valueType =>
+                setSelectedParameter({
+                  ...selectedParameter.data,
+                  data: {
+                    ...selectedParameter.data,
+                    valueType: valueType
+                  }
+                })
+              }
+              options={selectOption.parametersValueType}
+            />
+          </div>
+        </>
+      )}
       <div className="table__cell table__cell_edit">
         <Select
           label={selectedParameter.data.parameterType}
@@ -50,7 +87,7 @@ const EditableParametersRow = ({
             })
           }}
           type="text"
-          value={selectedParameter.data.value}
+          value={`${selectedParameter.data.value}`}
         />
       </div>
       <div className="table__cell cell-btn-wrapper">

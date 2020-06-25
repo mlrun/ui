@@ -6,6 +6,7 @@
     position: relative;
     display: flex;
     flex-direction: row;
+    align-items: center;
     height: 55px;
     border-top: $tableBorder;
 
@@ -17,8 +18,14 @@
     &:hover {
       background-color: $alabaster;
 
-      .table__cell-actions {
-        .table-actions-container {
+      .table__cell {
+        &-actions {
+          .table-actions-container {
+            display: block;
+          }
+        }
+
+        &-delete-btn {
           display: block;
         }
       }
@@ -57,6 +64,10 @@
 
     &:first-child {
       padding-left: 17px;
+    }
+
+    &-delete-btn {
+      display: none;
     }
   }
 }
