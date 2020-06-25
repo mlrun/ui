@@ -93,28 +93,6 @@ const JobsPanelAdvanced = ({
     }
   }
 
-  const setEditSelectedProperty = (selectedItem, selectedProperty, isEnv) => {
-    const currentItems = isEnv
-      ? panelState.tableData.environmentVariables
-      : panelState.tableData.secretSources
-    const dataName = isEnv ? 'name' : 'kind'
-
-    panelDispatch({
-      type: isEnv
-        ? panelActions.SET_TABLE_DATA_ENVIRONMENT_VARIABLES
-        : panelActions.SET_TABLE_DATA_SECRET_SOURCES,
-      payload: currentItems.map(currentItem => {
-        if (
-          currentItem.data[dataName].label === selectedItem.data[dataName].label
-        ) {
-          currentItem.data[selectedProperty].isEdit = true
-        }
-
-        return currentItem
-      })
-    })
-  }
-
   const handleDeleteItems = (isEnv, item) => {
     if (isEnv) {
       handleDelete(
@@ -152,7 +130,6 @@ const JobsPanelAdvanced = ({
       advancedDispatch={advancedDispatch}
       match={match}
       panelState={panelState}
-      setEditSelectedProperty={setEditSelectedProperty}
     />
   )
 }

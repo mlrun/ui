@@ -23,8 +23,7 @@ const JobsPanelParametersView = ({
   match,
   parameters,
   parametersDispatch,
-  parametersState,
-  setEditSelectedProperty
+  parametersState
 }) => {
   return (
     <div className="job-panel__item">
@@ -45,7 +44,6 @@ const JobsPanelParametersView = ({
               payload: selectedParam
             })
           }
-          setEditSelectedProperty={setEditSelectedProperty}
         >
           {parametersState.addNewParameter ? (
             <div className="table__row-add-item">
@@ -137,8 +135,7 @@ JobsPanelParametersView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,
-  parametersState: PropTypes.shape({}).isRequired,
-  setEditSelectedProperty: PropTypes.func.isRequired
+  parametersState: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelParametersView

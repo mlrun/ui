@@ -16,7 +16,7 @@ const EditableVolumesRow = ({
     <>
       <div className="table__row edit-row">
         <div className="table__cell">
-          <div className="data-ellipsis">{selectedVolume.data.name.label}</div>
+          <div className="data-ellipsis">{selectedVolume.data.name}</div>
         </div>
         <div className="table__cell table__cell-input">
           <Input
@@ -25,14 +25,11 @@ const EditableVolumesRow = ({
             onChange={path =>
               setSelectedVolume({
                 ...selectedVolume,
-                data: {
-                  ...selectedVolume.data,
-                  mountPath: { label: path }
-                }
+                data: { ...selectedVolume.data, mountPath: path }
               })
             }
             type="text"
-            value={selectedVolume.data.mountPath.label}
+            value={selectedVolume.data.mountPath}
           />
         </div>
         <div className="table__cell-actions" />
@@ -68,10 +65,7 @@ const EditableVolumesRow = ({
               onChange={accessKey =>
                 setSelectedVolume({
                   ...selectedVolume,
-                  type: {
-                    ...selectedVolume.type,
-                    accessKey: accessKey
-                  }
+                  type: { ...selectedVolume.type, accessKey: accessKey }
                 })
               }
               type="text"

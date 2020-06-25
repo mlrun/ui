@@ -36,7 +36,7 @@ export const JobsPanelVolumesTable = ({
   const handleSetSelectedVolume = useCallback(
     selectedVolume => {
       const searchItem = panelState.tableData.volumes.find(
-        volume => volume.name === selectedVolume.data.name.label
+        volume => volume.name === selectedVolume.data.name
       )
 
       let newValue

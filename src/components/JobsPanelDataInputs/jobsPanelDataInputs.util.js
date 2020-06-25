@@ -29,27 +29,12 @@ export const handleAddItem = (
   const generatedTableData = {
     isDefault: false,
     data: {
-      name: {
-        label: newItemObj.name
-      },
-      [path]: {
-        label: newItemObj.path
-      }
+      name: newItemObj.name,
+      [path]: newItemObj.path
     }
   }
-
-  if (!isVolumes) {
-    generatedTableData.path.isEdit = false
-  }
-
   const generatedPanelData = isVolumes
-    ? [
-        ...newJobData,
-        {
-          name: generatedTableData.data.name.label,
-          mountPath: generatedTableData.data.mountPath.label
-        }
-      ]
+    ? [...newJobData, generatedTableData.data]
     : {
         ...newJobData,
         [newItemObj.name]: newItemObj.path
@@ -78,6 +63,7 @@ export const handleEdit = (
   currentTableData,
   inputsDispatch,
   isInputs,
+  newName,
   panelDispatch,
   removeSelectedItem,
   selectedItem,
@@ -88,11 +74,12 @@ export const handleEdit = (
   const path = isInputs ? 'path' : 'mountPath'
 
   const newDataArray = currentTableData.map(dataItem => {
-    if (dataItem.data.name.label === selectedItem.name.label) {
-      dataItem.data[path].label = selectedItem[path].label
-      if (dataItem.data[path].isEdit) {
-        dataItem.data[path].isEdit = false
+    if (dataItem.data.name === selectedItem.name) {
+      if (newName) {
+        dataItem.data.name = newName
       }
+
+      dataItem.data[path] = selectedItem[path]
     }
 
     return dataItem
@@ -100,16 +87,20 @@ export const handleEdit = (
 
   if (isInputs) {
     const currentDataObj = { ...currentPanelData }
-    currentDataObj[selectedItem.name.label] = selectedItem.path.label
+    // console.log(selectedItem)
 
-    setCurrentPanelData({ ...currentPanelData, ...currentDataObj })
+    if (newName) {
+      // console.log(selectedItem.name)
+      delete currentDataObj[selectedItem.name]
+
+      currentDataObj[newName] = selectedItem.path
+    } else {
+      currentDataObj[selectedItem.name] = selectedItem.path
+    }
+
+    setCurrentPanelData({ ...currentDataObj })
   } else {
-    setCurrentPanelData(
-      newDataArray.map(volume => ({
-        name: volume.data.name.label,
-        mountPath: volume.data.mountPath.label
-      }))
-    )
+    setCurrentPanelData(newDataArray.map(volume => volume.data))
   }
 
   panelDispatch({
@@ -140,13 +131,13 @@ export const handleDelete = (
 ) => {
   if (isInputs) {
     const newInputs = { ...currentPanelData }
-    delete newInputs[selectedItem.data.name.label]
+    delete newInputs[selectedItem.data.name]
 
     setCurrentPanelData({ ...newInputs })
   } else {
     setCurrentPanelData(
       currentPanelData.filter(
-        dataItem => dataItem.name.label !== selectedItem.data.name.label
+        dataItem => dataItem.name !== selectedItem.data.name
       )
     )
   }
@@ -154,15 +145,15 @@ export const handleDelete = (
   panelDispatch({
     type: setPreviousPanelData,
     payload: previousPanelData.filter(dataItem => {
-      const name = isVolumes ? dataItem.name.label : dataItem.data.name.label
-      return name !== selectedItem.data.name.label
+      const name = isVolumes ? dataItem.name : dataItem.data.name
+      return name !== selectedItem.data.name
     })
   })
   panelDispatch({
     type: setCurrentTableData,
     payload: currentTableData.filter(dataItem => {
-      const name = isVolumes ? dataItem.name.label : dataItem.data.name.label
-      return name !== selectedItem.data.name.label
+      const name = isVolumes ? dataItem.name : dataItem.data.name
+      return name !== selectedItem.data.name
     })
   })
 }

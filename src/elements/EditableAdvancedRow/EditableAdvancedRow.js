@@ -17,24 +17,18 @@ const EditableAdvancedRow = ({
   return (
     <div className="table__row edit-row">
       <div className="table__cell">
-        <div className="data-ellipsis">{selectedItem.data[dataName].label}</div>
+        <div className="data-ellipsis">{selectedItem.data[dataName]}</div>
       </div>
       <div className="table__cell table__cell_edit">
         <Input
           onChange={value =>
             setSelectedItem({
               ...selectedItem,
-              data: {
-                ...selectedItem.data,
-                [dataValue]: {
-                  ...selectedItem.data[dataValue],
-                  label: value
-                }
-              }
+              data: { ...selectedItem.data, [dataValue]: value }
             })
           }
           type="text"
-          value={selectedItem.data[dataValue].label}
+          value={selectedItem.data[dataValue]}
         />
       </div>
       <div className="table__cell table__cell-actions">

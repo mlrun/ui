@@ -14,8 +14,7 @@ const JobsPanelAdvancedView = ({
   advancedDispatch,
   advancedState,
   match,
-  panelState,
-  setEditSelectedProperty
+  panelState
 }) => {
   return (
     <div className="job-panel__item">
@@ -59,7 +58,6 @@ const JobsPanelAdvancedView = ({
               payload: selectedItem
             })
           }
-          setEditSelectedProperty={setEditSelectedProperty}
         />
       </JobsPanelSection>
       <JobsPanelSection title="Secrets">
@@ -100,7 +98,6 @@ const JobsPanelAdvancedView = ({
               payload: selectedItem
             })
           }
-          setEditSelectedProperty={setEditSelectedProperty}
         />
       </JobsPanelSection>
     </div>
@@ -114,8 +111,7 @@ JobsPanelAdvancedView.propTypes = {
   advancedDispatch: PropTypes.func.isRequired,
   advancedState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  panelState: PropTypes.shape({}).isRequired,
-  setEditSelectedProperty: PropTypes.func.isRequired
+  panelState: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelAdvancedView

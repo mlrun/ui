@@ -27,13 +27,19 @@ const JobsPanelTableRow = ({
     (contentItem.data.name?.label !== 'context' || !contentItem.data.name) && (
       <div className="table__row">
         {map(contentItem.data, (value, property) => {
+          const isEditable =
+            !contentItem.isDefault ||
+            (contentItem.isDefault &&
+              property !== 'name' &&
+              property !== 'valueType' &&
+              section !== 'volumes')
           const tableCellClassName = classNames(
             'table__cell',
             ((property === 'name' && has(contentItem.data, 'value')) ||
               property === 'valueType') &&
               contentItem.isDefault &&
               'table__cell_disabled',
-            has(value, 'isEdit') && 'cursor-pointer'
+            isEditable && 'cursor-pointer'
           )
 
           return (
@@ -41,8 +47,8 @@ const JobsPanelTableRow = ({
               className={tableCellClassName}
               key={property}
               onClick={
-                has(value, 'isEdit')
-                  ? () => handleEdit(contentItem, currentTableSection, property)
+                isEditable
+                  ? () => handleEdit(contentItem, currentTableSection)
                   : null
               }
             >
@@ -53,13 +59,13 @@ const JobsPanelTableRow = ({
                   <TextTooltipTemplate
                     text={
                       property === 'name'
-                        ? contentItem.doc || value.label
-                        : joinDataOfArrayOrObject(value.label, ', ')
+                        ? contentItem.doc || value
+                        : joinDataOfArrayOrObject(value, ', ')
                     }
                   />
                 }
               >
-                {joinDataOfArrayOrObject(value.label, ', ')}
+                {joinDataOfArrayOrObject(value, ', ')}
               </Tooltip>
             </div>
           )

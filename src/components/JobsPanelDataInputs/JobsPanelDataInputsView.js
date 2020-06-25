@@ -16,8 +16,7 @@ const JobsPanelDataInputsView = ({
   inputsState,
   match,
   panelDispatch,
-  panelState,
-  setEditSelectedProperty
+  panelState
 }) => {
   return (
     <div className="job-panel__item">
@@ -30,7 +29,6 @@ const JobsPanelDataInputsView = ({
           inputsState={inputsState}
           match={match}
           panelState={panelState}
-          setEditSelectedProperty={setEditSelectedProperty}
         />
       </JobsPanelSection>
       <JobsPanelSection title="Volumes">
@@ -82,8 +80,7 @@ JobsPanelDataInputsView.propTypes = {
   inputsState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
-  panelState: PropTypes.shape({}).isRequired,
-  setEditSelectedProperty: PropTypes.func.isRequired
+  panelState: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelDataInputsView

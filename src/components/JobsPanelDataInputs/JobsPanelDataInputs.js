@@ -92,6 +92,7 @@ const JobsPanelDataInputs = ({
         panelState.tableData.dataInputs,
         inputsDispatch,
         true,
+        inputsState.selectedDataInput.newDataInputName,
         panelDispatch,
         inputsActions.SET_SELECTED_INPUT,
         inputsState.selectedDataInput.data,
@@ -160,7 +161,7 @@ const JobsPanelDataInputs = ({
 
   const handleEditVolume = () => {
     const currentVolumes = panelState.tableData.volumes.map(volume => {
-      if (volume.name === inputsState.selectedVolume.data.name.label) {
+      if (volume.name === inputsState.selectedVolume.data.name) {
         switch (inputsState.selectedVolume.type.value) {
           case 'Config Map':
             volume.configMap.name = inputsState.selectedVolume.type.name
@@ -195,19 +196,6 @@ const JobsPanelDataInputs = ({
     })
   }
 
-  const setEditSelectedProperty = (selectedItem, selectedProperty) => {
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_INPUTS,
-      payload: panelState.tableData.dataInputs.map(input => {
-        if (input.data.name.label === selectedItem.data.name.label) {
-          input.data[selectedProperty].isEdit = true
-        }
-
-        return input
-      })
-    })
-  }
-
   return (
     <JobsPanelDataInputsView
       handleAddNewItem={handleAddNewItem}
@@ -218,7 +206,6 @@ const JobsPanelDataInputs = ({
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
-      setEditSelectedProperty={setEditSelectedProperty}
     />
   )
 }

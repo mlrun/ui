@@ -7,22 +7,13 @@ export const getDefaultData = functionParameters => {
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
       doc: parameter.doc,
+      isValueEmpty: true,
       isDefault: true,
       data: {
-        name: {
-          label: parameter.name ?? ''
-        },
-        valueType: {
-          label: parameter.type ?? ''
-        },
-        parameterType: {
-          label: '',
-          isEdit: false
-        },
-        value: {
-          label: parameter.default ?? '',
-          isEdit: false
-        }
+        name: parameter.name ?? '',
+        valueType: parameter.type ?? '',
+        parameterType: '',
+        value: parameter.default ?? ''
       }
     }))
 
@@ -30,15 +21,11 @@ export const getDefaultData = functionParameters => {
     .filter(dataInputs => dataInputs.type === 'DataItem')
     .map(input => ({
       doc: input.doc,
+      isValueEmpty: !input.path,
       isDefault: true,
       data: {
-        name: {
-          label: input.name
-        },
-        path: {
-          label: input.path ?? '',
-          isEdit: false
-        }
+        name: input.name,
+        path: input.path ?? ''
       }
     }))
 
@@ -69,13 +56,10 @@ export const getVolumeMounts = selectedFunction => {
     .map(volume_mounts => {
       return {
         data: {
-          name: {
-            label: volume_mounts?.name
-          },
-          mountPath: {
-            label: volume_mounts?.mountPath
-          }
+          name: volume_mounts?.name,
+          mountPath: volume_mounts?.mountPath
         },
+        isValueEmpty: true,
         isDefault: true
       }
     })
@@ -173,10 +157,7 @@ export const generateTableData = (
       inputs: parseDefaultContent(dataInputs),
       parameters: parseDefaultContent(parameters),
       volumeMounts: volumeMounts.length
-        ? volumeMounts.map(volume => ({
-            name: volume.data.name.label,
-            mountPath: volume.data.mountPath.label
-          }))
+        ? volumeMounts.map(volumeMounts => volumeMounts.data)
         : [],
       volumes,
       environmentVariables: {},

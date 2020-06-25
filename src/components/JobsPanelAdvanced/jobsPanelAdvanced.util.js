@@ -29,13 +29,8 @@ export const handleAddItem = (
 
   if (isEnv) {
     data = {
-      name: {
-        label: newItemObj.name
-      },
-      value: {
-        label: newItemObj.value,
-        isEdit: false
-      }
+      name: newItemObj.name,
+      value: newItemObj.value
     }
 
     setNewJobData({
@@ -44,13 +39,8 @@ export const handleAddItem = (
     })
   } else {
     data = {
-      kind: {
-        label: newItemObj.kind
-      },
-      source: {
-        label: newItemObj.source,
-        isEdit: false
-      }
+      kind: newItemObj.kind,
+      source: newItemObj.source
     }
 
     setNewJobData([...newJobData, { [newItemObj.kind]: newItemObj.source }])
@@ -92,13 +82,13 @@ export const handleEdit = (
 ) => {
   if (isEnv) {
     const currentDataObj = { ...currentPanelData }
-    currentDataObj[selectedItem.name.label] = selectedItem.value.label
+    currentDataObj[selectedItem.name] = selectedItem.value
 
     setCurrentPanelData({ ...currentPanelData, ...currentDataObj })
   } else {
     const currentDataArray = currentPanelData.map(dataItem => {
-      if (dataItem[selectedItem.kind.label]) {
-        dataItem[selectedItem.kind.label] = selectedItem.source.label
+      if (dataItem[selectedItem.kind]) {
+        dataItem[selectedItem.kind] = selectedItem.source
       }
 
       return dataItem
@@ -111,9 +101,8 @@ export const handleEdit = (
   const dataValue = isEnv ? 'value' : 'source'
 
   const newDataArray = currentTableData.map(dataItem => {
-    if (dataItem.data[dataName].label === selectedItem[dataName].label) {
-      dataItem.data[dataValue].label = selectedItem[dataValue].label
-      dataItem.data[dataValue].isEdit = false
+    if (dataItem.data[dataName] === selectedItem[dataName]) {
+      dataItem.data[dataValue] = selectedItem[dataValue]
     }
 
     return dataItem
@@ -146,14 +135,12 @@ export const handleDelete = (
 ) => {
   if (isEnv) {
     const newData = { ...currentPanelData }
-    delete newData[selectedItem.data.name.label]
+    delete newData[selectedItem.data.name]
 
     setCurrentPanelData({ ...newData })
   } else {
     setCurrentPanelData(
-      currentPanelData.filter(
-        dataItem => !dataItem[selectedItem.data.kind.label]
-      )
+      currentPanelData.filter(dataItem => !dataItem[selectedItem.data.kind])
     )
   }
 
@@ -162,15 +149,13 @@ export const handleDelete = (
   panelDispatch({
     type: setPreviousPanelData,
     payload: previousPanelData.filter(
-      dataItem =>
-        dataItem.data[dataName].label !== selectedItem.data[dataName].label
+      dataItem => dataItem.data[dataName] !== selectedItem.data[dataName]
     )
   })
   panelDispatch({
     type: setCurrentTableData,
     payload: currentTableData.filter(
-      dataItem =>
-        dataItem.data[dataName].label !== selectedItem.data[dataName].label
+      dataItem => dataItem.data[dataName] !== selectedItem.data[dataName]
     )
   })
 }

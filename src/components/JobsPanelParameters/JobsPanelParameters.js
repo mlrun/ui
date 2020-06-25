@@ -53,20 +53,10 @@ const JobsPanelParameters = ({
           doc: '',
           isDefault: false,
           data: {
-            name: {
-              label: parametersState.newParameter.name
-            },
-            valueType: {
-              label: parametersState.newParameter.valueType
-            },
-            parameterType: {
-              label: parametersState.newParameter.parameterType,
-              isEdit: false
-            },
-            value: {
-              label: parametersState.newParameter.value,
-              isEdit: false
-            }
+            name: parametersState.newParameter.name,
+            valueType: parametersState.newParameter.valueType,
+            parameterType: parametersState.newParameter.parameterType,
+            value: parametersState.newParameter.value
           }
         }
       ]
@@ -89,20 +79,10 @@ const JobsPanelParameters = ({
         ...panelState.tableData.parameters,
         {
           data: {
-            name: {
-              label: parametersState.newParameter.name
-            },
-            valueType: {
-              label: parametersState.newParameter.valueType
-            },
-            parameterType: {
-              label: parametersState.newParameter.parameterType,
-              isEdit: false
-            },
-            value: {
-              label: parametersState.newParameter.value,
-              isEdit: false
-            }
+            name: parametersState.newParameter.name,
+            valueType: parametersState.newParameter.valueType,
+            parameterType: parametersState.newParameter.parameterType,
+            value: parametersState.newParameter.value
           },
           doc: '',
           isDefault: false
@@ -122,39 +102,48 @@ const JobsPanelParameters = ({
     const params = { ...parameters }
     const hyperParamsObj = { ...hyperparams }
 
-    params[parametersState.selectedParameter.data.name.label] =
-      parametersState.selectedParameter.data.value.label
+    if (parametersState.selectedParameter.newName) {
+      delete params[parametersState.selectedParameter.data.name]
+
+      params[parametersState.selectedParameter.newName] =
+        parametersState.selectedParameter.data.value
+    } else {
+      params[parametersState.selectedParameter.data.name] =
+        parametersState.selectedParameter.data.value
+    }
 
     if (
-      parametersState.selectedParameter.data.parameterType.label !==
+      parametersState.selectedParameter.data.parameterType !==
       panelData.newParameterType[0].id
     ) {
       setNewJobHyperParameters(
-        editHyperParams(hyperParamsObj, parametersState.selectedParameter.data)
+        editHyperParams(
+          hyperParamsObj,
+          parametersState.selectedParameter.data,
+          parametersState.selectedParameter.newName
+        )
       )
     }
 
     if (
-      parametersState.selectedParameter.data.parameterType.label ===
+      parametersState.selectedParameter.data.parameterType ===
         panelData.newParameterType[0].id &&
-      hyperParamsObj[parametersState.selectedParameter.data.name.label]
+      hyperParamsObj[parametersState.selectedParameter.data.name]
     ) {
-      delete hyperParamsObj[parametersState.selectedParameter.data.name.label]
+      delete hyperParamsObj[parametersState.selectedParameter.data.name]
 
       setNewJobHyperParameters({ ...hyperParamsObj })
     }
 
     const newParametersArray = panelState.tableData.parameters.map(param => {
-      if (
-        param.data.name.label ===
-        parametersState.selectedParameter.data.name.label
-      ) {
-        param.data.value.label =
-          parametersState.selectedParameter.data.value.label
-        param.data.value.isEdit = false
-        param.data.parameterType.label =
-          parametersState.selectedParameter.data.parameterType.label
-        param.data.parameterType.isEdit = false
+      if (param.data.name === parametersState.selectedParameter.data.name) {
+        if (parametersState.selectedParameter.newName) {
+          param.data.name = parametersState.selectedParameter.newName
+        }
+
+        param.data.value = parametersState.selectedParameter.data.value
+        param.data.parameterType =
+          parametersState.selectedParameter.data.parameterType
       }
 
       return param
@@ -175,28 +164,15 @@ const JobsPanelParameters = ({
     })
   }
 
-  const setEditSelectedProperty = (selectedItem, selectedProperty) => {
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_PARAMETERS,
-      payload: panelState.tableData.parameters.map(parameter => {
-        if (parameter.data.name.label === selectedItem.data.name.label) {
-          parameter.data[selectedProperty].isEdit = true
-        }
-
-        return parameter
-      })
-    })
-  }
-
   const handleDeleteParameter = (isInput, item) => {
     const newParameters = { ...parameters }
 
-    delete newParameters[item.data.name.label]
+    delete newParameters[item.name]
 
-    if (item.data.parameterType.label !== panelData.newParameterType[0].id) {
+    if (item.data.parameterType !== panelData.newParameterType[0].id) {
       const newHyperParameters = { ...hyperparams }
 
-      delete newHyperParameters[item.data.name.label]
+      delete newHyperParameters[item.name]
 
       setNewJobHyperParameters({ ...newHyperParameters })
     }
@@ -205,13 +181,13 @@ const JobsPanelParameters = ({
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
       payload: panelState.tableData.parameters.filter(
-        parameter => parameter.data.name.label !== item.data.name.label
+        parameter => parameter.data.name !== item.data.name
       )
     })
     panelDispatch({
       type: panelActions.SET_TABLE_DATA_PARAMETERS,
       payload: panelState.tableData.parameters.filter(
-        parameter => parameter.data.name.label !== item.data.name.label
+        parameter => parameter.data.name !== item.data.name
       )
     })
   }
@@ -225,7 +201,6 @@ const JobsPanelParameters = ({
       parametersDispatch={parametersDispatch}
       parametersState={parametersState}
       parameters={panelState.tableData.parameters}
-      setEditSelectedProperty={setEditSelectedProperty}
     />
   )
 }

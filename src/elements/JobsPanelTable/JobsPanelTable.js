@@ -21,13 +21,13 @@ const JobsPanelTable = ({
   match,
   section,
   selectedItem,
-  setSelectedItem,
-  setEditSelectedProperty
+  setSelectedItem
 }) => {
   const [editItem, setEditItem] = useState(false)
 
   const handleEdit = useCallback(
-    (item, isInput, property) => {
+    (item, isInput) => {
+      console.log(item, selectedItem)
       if (editItem) {
         setEditItem(false)
         section === 'parameters'
@@ -38,7 +38,6 @@ const JobsPanelTable = ({
           handleSetSelectedVolume(item)
         } else {
           setSelectedItem(item)
-          setEditSelectedProperty(item, property, isInput)
         }
 
         setEditItem(true)
@@ -50,7 +49,7 @@ const JobsPanelTable = ({
       handleEditParameter,
       handleSetSelectedVolume,
       section,
-      setEditSelectedProperty,
+      selectedItem,
       setSelectedItem
     ]
   )
@@ -109,8 +108,7 @@ JobsPanelTable.defaultProps = {
   handleDeleteItems: null,
   handleEditItems: null,
   handleEditParameter: null,
-  handleSetSelectedVolume: null,
-  setEditSelectedProperty: null
+  handleSetSelectedVolume: null
 }
 
 JobsPanelTable.propTypes = {
@@ -128,8 +126,7 @@ JobsPanelTable.propTypes = {
   match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  setSelectedItem: PropTypes.func.isRequired,
-  setEditSelectedProperty: PropTypes.func
+  setSelectedItem: PropTypes.func.isRequired
 }
 
 export default JobsPanelTable

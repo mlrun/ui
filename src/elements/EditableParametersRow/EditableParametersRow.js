@@ -10,71 +10,87 @@ import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableParametersRow = ({
   handleEdit,
+  isDefault,
   match,
   selectedParameter,
   setSelectedParameter
 }) => {
   return (
     <div className="table__row edit-row">
-      <div className="table__cell table__cell_disabled">
-        <div className="data-ellipsis">{selectedParameter.data.name.label}</div>
-      </div>
-      <div className="table__cell table__cell_disabled">
-        {selectedParameter.data.valueType.label}
-      </div>
-      {selectedParameter.data.parameterType.isEdit ? (
-        <div className="table__cell table__cell_edit">
-          <Select
-            label={selectedParameter.data.parameterType.label}
-            match={match}
-            onClick={parameterType =>
-              setSelectedParameter({
+      {isDefault ? (
+        <>
+          <div className="table__cell table__cell_disabled">
+            <div className="data-ellipsis">{selectedParameter.data.name}</div>
+          </div>
+          <div className="table__cell table__cell_disabled">
+            <div className="data-ellipsis">
+              {selectedParameter.data.valueType}
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="table__cell table__cell_edit">
+            <Input
+              onChange={name => {
+                setSelectedParameter({
+                  ...selectedParameter,
+                  newName: name
+                })
+              }}
+              type="text"
+              value={selectedParameter.newName || selectedParameter.data.name}
+            />
+          </div>
+          <div className="table__cell table__cell_edit">
+            <Select
+              label={selectedParameter.data.valueType}
+              match={match}
+              onClick={valueType =>
+                setSelectedParameter({
+                  ...selectedParameter.data,
+                  data: {
+                    ...selectedParameter.data,
+                    valueType: valueType
+                  }
+                })
+              }
+              options={selectOption.parametersValueType}
+            />
+          </div>
+        </>
+      )}
+      <div className="table__cell table__cell_edit">
+        <Select
+          label={selectedParameter.data.parameterType}
+          match={match}
+          onClick={parameterType =>
+            setSelectedParameter({
+              ...selectedParameter.data,
+              data: {
                 ...selectedParameter.data,
-                data: {
-                  ...selectedParameter.data,
-                  parameterType: {
-                    ...selectedParameter.data.parameterType,
-                    label: parameterType
-                  }
-                }
-              })
-            }
-            options={selectOption.parameterType}
-          />
-        </div>
-      ) : (
-        <div className="table__cell table__cell_disabled">
-          <div className="data-ellipsis">
-            {selectedParameter.data.parameterType.label}
-          </div>
-        </div>
-      )}
-      {selectedParameter.data.value.isEdit ? (
-        <div className="table__cell table__cell_edit">
-          <Input
-            onChange={value => {
-              setSelectedParameter({
-                ...selectedParameter,
-                data: {
-                  ...selectedParameter.data,
-                  value: {
-                    ...selectedParameter.data.value,
-                    label: value
-                  }
-                }
-              })
-            }}
-            type="text"
-            value={selectedParameter.data.value.label}
-          />
-        </div>
-      ) : (
-        <div className="table__cell table__cell_disabled">
-          <div className="data-ellipsis">
-            {selectedParameter.data.value.label}
-          </div>
-        </div>
-      )}
+                parameterType: parameterType
+              }
+            })
+          }
+          options={selectOption.parameterType}
+        />
+      </div>
+      <div className="table__cell table__cell_edit">
+        <Input
+          onChange={value => {
+            setSelectedParameter({
+              ...selectedParameter,
+              data: {
+                ...selectedParameter.data,
+                value: value
+              }
+            })
+          }}
+          type="text"
+          value={selectedParameter.data.value}
+        />
+      </div>
       <div className="table__cell cell-btn-wrapper">
         <button
           className="apply-edit-btn"
