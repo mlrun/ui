@@ -20,10 +20,6 @@
       "class": "artifacts_medium"
     },
     {
-      "header": "Path",
-      "class": "artifacts_big"
-    },
-    {
       "header": "Type",
       "class": "artifacts_kind"
     },

@@ -8,11 +8,6 @@ const createArtifactsContent = artifacts =>
         value: artifact.db_key,
         class: 'artifacts_medium'
       },
-      target_path: {
-        value: artifact.target_path,
-        class: 'artifacts_big',
-        type: 'path'
-      },
       king: {
         value: artifact.kind,
         class: 'artifacts_kind'

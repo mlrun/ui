@@ -7,6 +7,8 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
+import { copyToClipboard } from '../../utils/copyToClipboard'
+
 const DetailsInfoItem = ({
   chips,
   chipsClassName,
@@ -28,11 +30,14 @@ const DetailsInfoItem = ({
     )
   } else if (!isEmpty(target_path)) {
     return (
-      <div className="details-item__data">
-        <span>{`${target_path.schema ? `${target_path.schema}://` : ''}${
-          target_path.path
-        }`}</span>
-      </div>
+      <Tooltip
+        className="details-item__data details-item__path"
+        template={<TextTooltipTemplate text="Click to copy" />}
+      >
+        <span onClick={() => copyToClipboard(target_path.path)}>{`${
+          target_path.schema ? `${target_path.schema}://` : ''
+        }${target_path.path}`}</span>
+      </Tooltip>
     )
   } else if (state) {
     return (
