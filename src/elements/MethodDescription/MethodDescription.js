@@ -12,8 +12,7 @@ const MethodDescription = ({ description }) => {
 
   const descriptionClassName = classnames(
     'description-container-text',
-    showAllDescription && 'extended-description',
-    isClickable && 'cursor-pointer'
+    showAllDescription && 'extended-description'
   )
 
   useEffect(() => {
@@ -27,15 +26,17 @@ const MethodDescription = ({ description }) => {
 
   return (
     <div className="description-container">
-      <div
-        ref={refDescriptionText}
-        className={descriptionClassName}
-        onClick={() => {
-          isClickable && setShowAllDescription(!showAllDescription)
-        }}
-      >
+      <div ref={refDescriptionText} className={descriptionClassName}>
         {description}
       </div>
+      {isClickable && (
+        <button
+          className="description__toggle-btn"
+          onClick={() => setShowAllDescription(!showAllDescription)}
+        >
+          ...
+        </button>
+      )}
     </div>
   )
 }
