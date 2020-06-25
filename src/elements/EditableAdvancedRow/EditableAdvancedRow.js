@@ -4,21 +4,48 @@ import PropTypes from 'prop-types'
 import Input from '../../common/Input/Input'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import Select from '../../common/Select/Select'
+import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
 
 const EditableAdvancedRow = ({
   handleEdit,
+  match,
   selectedItem,
   setSelectedItem,
   table
 }) => {
-  const dataName = table === 'env' ? 'name' : 'kind'
   const dataValue = table === 'env' ? 'value' : 'source'
 
   return (
     <div className="table__row edit-row">
-      <div className="table__cell">
-        <div className="data-ellipsis">{selectedItem.data[dataName]}</div>
-      </div>
+      {table === 'env' ? (
+        <div className="table__cell table__cell_edit">
+          <Input
+            onChange={name =>
+              setSelectedItem({
+                ...selectedItem,
+                newName: name
+              })
+            }
+            type="text"
+            value={selectedItem.newName || selectedItem.data.name}
+          />
+        </div>
+      ) : (
+        <Select
+          match={match}
+          onClick={kind =>
+            setSelectedItem({
+              ...selectedItem,
+              newKind: kind
+            })
+          }
+          label={
+            selectedItem.newKind ? selectedItem.newKind : selectedItem.data.kind
+          }
+          options={selectOptions.secretKind}
+        />
+      )}
       <div className="table__cell table__cell_edit">
         <Input
           onChange={value =>

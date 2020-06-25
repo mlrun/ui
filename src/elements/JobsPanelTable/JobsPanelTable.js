@@ -27,7 +27,6 @@ const JobsPanelTable = ({
 
   const handleEdit = useCallback(
     (item, isInput) => {
-      console.log(item, selectedItem)
       if (editItem) {
         setEditItem(false)
         section === 'parameters'

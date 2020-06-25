@@ -106,6 +106,7 @@ const JobsPanelDataInputs = ({
         panelState.tableData.volumeMounts,
         inputsDispatch,
         false,
+        false,
         panelDispatch,
         inputsActions.SET_SELECTED_VOLUME,
         inputsState.selectedVolume.data,

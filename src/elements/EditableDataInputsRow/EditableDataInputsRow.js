@@ -20,12 +20,12 @@ const EditableDataInputsRow = ({
       ) : (
         <div className="table__cell table__cell_edit">
           <Input
-            onChange={name => {
+            onChange={name =>
               setSelectedDataInput({
                 ...selectedDataInput,
                 newDataInputName: name
               })
-            }}
+            }
             type="text"
             value={
               selectedDataInput.newDataInputName || selectedDataInput.data.name

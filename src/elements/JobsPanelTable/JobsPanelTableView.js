@@ -65,6 +65,7 @@ const JobsPanelTableView = ({
             <EditableAdvancedRow
               handleEdit={handleEdit}
               key={index}
+              match={match}
               selectedItem={selectedItem}
               setSelectedItem={setSelectedItem}
               table={section.includes('secrets') ? 'secrets' : 'env'}

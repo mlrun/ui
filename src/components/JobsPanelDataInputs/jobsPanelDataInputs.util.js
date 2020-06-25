@@ -73,6 +73,20 @@ export const handleEdit = (
 ) => {
   const path = isInputs ? 'path' : 'mountPath'
 
+  if (isInputs) {
+    const currentDataObj = { ...currentPanelData }
+
+    if (newName) {
+      delete currentDataObj[selectedItem.name]
+
+      currentDataObj[newName] = selectedItem.path
+    } else {
+      currentDataObj[selectedItem.name] = selectedItem.path
+    }
+
+    setCurrentPanelData({ ...currentDataObj })
+  }
+
   const newDataArray = currentTableData.map(dataItem => {
     if (dataItem.data.name === selectedItem.name) {
       if (newName) {
@@ -85,21 +99,7 @@ export const handleEdit = (
     return dataItem
   })
 
-  if (isInputs) {
-    const currentDataObj = { ...currentPanelData }
-    // console.log(selectedItem)
-
-    if (newName) {
-      // console.log(selectedItem.name)
-      delete currentDataObj[selectedItem.name]
-
-      currentDataObj[newName] = selectedItem.path
-    } else {
-      currentDataObj[selectedItem.name] = selectedItem.path
-    }
-
-    setCurrentPanelData({ ...currentDataObj })
-  } else {
+  if (!isInputs) {
     setCurrentPanelData(newDataArray.map(volume => volume.data))
   }
 
