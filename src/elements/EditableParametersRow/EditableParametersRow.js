@@ -87,7 +87,7 @@ const EditableParametersRow = ({
             })
           }}
           type="text"
-          value={selectedParameter.data.value}
+          value={`${selectedParameter.data.value}`}
         />
       </div>
       <div className="table__cell cell-btn-wrapper">

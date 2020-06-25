@@ -19,7 +19,7 @@ export const editHyperParams = (hyperParams, selectedParameter, newName) => {
   } else {
     return {
       ...hyperParams,
-      [selectedParameter.name]: selectedParameter.value.split(',')
+      [selectedParameter.name]: `${selectedParameter.value}`.split(',')
     }
   }
 }

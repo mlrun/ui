@@ -48,7 +48,6 @@ const JobsPanelTable = ({
       handleEditParameter,
       handleSetSelectedVolume,
       section,
-      selectedItem,
       setSelectedItem
     ]
   )
