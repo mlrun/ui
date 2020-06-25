@@ -24,7 +24,7 @@ const JobsPanelTableRow = ({
     section.includes('data-inputs') || section.includes('env')
 
   return (
-    (contentItem.data.name?.label !== 'context' || !contentItem.data.name) && (
+    (contentItem.data.name !== 'context' || !contentItem.data.name) && (
       <div className="table__row">
         {map(contentItem.data, (value, property) => {
           const isEditable =

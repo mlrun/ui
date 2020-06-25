@@ -18,8 +18,8 @@ const EditableAdvancedRow = ({
 
   return (
     <div className="table__row edit-row">
-      {table === 'env' ? (
-        <div className="table__cell table__cell_edit">
+      <div className="table__cell table__cell_edit">
+        {table === 'env' ? (
           <Input
             onChange={name =>
               setSelectedItem({
@@ -30,22 +30,24 @@ const EditableAdvancedRow = ({
             type="text"
             value={selectedItem.newName || selectedItem.data.name}
           />
-        </div>
-      ) : (
-        <Select
-          match={match}
-          onClick={kind =>
-            setSelectedItem({
-              ...selectedItem,
-              newKind: kind
-            })
-          }
-          label={
-            selectedItem.newKind ? selectedItem.newKind : selectedItem.data.kind
-          }
-          options={selectOptions.secretKind}
-        />
-      )}
+        ) : (
+          <Select
+            match={match}
+            onClick={kind =>
+              setSelectedItem({
+                ...selectedItem,
+                newKind: kind
+              })
+            }
+            label={
+              selectedItem.newKind
+                ? selectedItem.newKind
+                : selectedItem.data.kind
+            }
+            options={selectOptions.secretKind}
+          />
+        )}
+      </div>
       <div className="table__cell table__cell_edit">
         <Input
           onChange={value =>

@@ -15,9 +15,24 @@ const EditableVolumesRow = ({
   return (
     <>
       <div className="table__row edit-row">
-        <div className="table__cell">
-          <div className="data-ellipsis">{selectedVolume.data.name}</div>
-        </div>
+        {selectedVolume.isDefault ? (
+          <div className="table__cell">{selectedVolume.data.name}</div>
+        ) : (
+          <div className="table__cell table__cell-input">
+            <Input
+              floatingLabel
+              label="Name"
+              onChange={name =>
+                setSelectedVolume({
+                  ...selectedVolume,
+                  newName: name
+                })
+              }
+              type="text"
+              value={selectedVolume.newName ?? selectedVolume.data.name}
+            />
+          </div>
+        )}
         <div className="table__cell table__cell-input">
           <Input
             floatingLabel

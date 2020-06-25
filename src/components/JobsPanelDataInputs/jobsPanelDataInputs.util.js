@@ -89,10 +89,7 @@ export const handleEdit = (
 
   const newDataArray = currentTableData.map(dataItem => {
     if (dataItem.data.name === selectedItem.name) {
-      if (newName) {
-        dataItem.data.name = newName
-      }
-
+      dataItem.data.name = newName || selectedItem.name
       dataItem.data[path] = selectedItem[path]
     }
 

@@ -85,6 +85,11 @@
         min-width: 175px;
         padding: 10px 0;
 
+        &:first-child {
+          padding-right: 7px;
+          padding-left: 7px;
+        }
+
         .select {
           width: 100%;
           border-radius: 2px;
@@ -180,6 +185,14 @@
 
       &__label {
         color: $primary;
+      }
+    }
+
+    .edit-row {
+      .table__cell_edit {
+        &:first-child {
+          padding-right: 0;
+        }
       }
     }
   }
