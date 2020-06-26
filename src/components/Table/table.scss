@@ -99,7 +99,11 @@
   }
 
   &-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
     display: flex;
+    background-color: white;
 
     &__item {
       flex: 1;
@@ -217,6 +221,11 @@
 
           .table-body__row {
             &:first-child {
+              position: sticky;
+              top: 45px;
+              z-index: 1;
+              background-color: white;
+
               .table-body__cell {
                 border-bottom: none;
 
