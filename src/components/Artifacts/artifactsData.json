@@ -1,5 +1,6 @@
 {
   "artifactsInfoHeaders": [
+    { "label": "Hash", "id": "hash" },
     { "label": "Key", "id": "key" },
     { "label": "Iter", "id": "iter" },
     { "label": "Kind", "id": "kind" },
@@ -21,7 +22,7 @@
     },
     {
       "header": "Type",
-      "class": "artifacts_kind"
+      "class": "artifacts_extra-small"
     },
     {
       "header": "Labels",
@@ -33,23 +34,19 @@
     },
     {
       "header": "Owner",
-      "class": "artifacts_owner"
-    },
-    {
-      "header": "Hash",
       "class": "artifacts_small"
     },
     {
       "header": "Updated",
-      "class": "artifacts_date"
+      "class": "artifacts_small"
     },
     {
       "header": "",
-      "class": "artifacts_popout"
+      "class": "artifacts_extra-small"
     },
     {
       "header": "",
-      "class": "artifacts_download"
+      "class": "artifacts_extra-small"
     },
     {
       "header": "",
