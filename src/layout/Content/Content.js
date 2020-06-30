@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
 import { isEqual } from 'lodash'
+import classnames from 'classnames'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -13,8 +14,9 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
 
-import './content.scss'
 import { formatDatetime } from '../../utils'
+
+import './content.scss'
 
 const Content = ({
   content,
@@ -39,6 +41,12 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedByName, setGroupedByName] = useState({})
   const [groupedByWorkflow, setGroupedByWorkflow] = useState({})
+
+  const contentClassName = classnames(
+    'content',
+    loading && 'isLoading',
+    pageData.page === JOBS_PAGE && 'content_with-menu'
+  )
 
   const handleGroupByName = useCallback(() => {
     const groupedItems = {}
@@ -177,8 +185,8 @@ const Content = ({
         <Breadcrumbs match={match} onClick={handleCancel} />
         <PageActionsMenu match={match} page={pageData.page} />
       </div>
-      <div className={`content ${loading && 'isLoading'}`}>
-        <ContentMenu />
+      <div className={contentClassName}>
+        {pageData.page === JOBS_PAGE && <ContentMenu />}
         <div className="content__action-bar">
           <FilterMenu
             expand={expand}

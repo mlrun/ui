@@ -46,13 +46,15 @@
 
     .artifacts {
       &_medium {
-        @include tableColumnFlex(1, 240px);
+        max-width: 245px;
+
+        @include tableColumnFlex(1, 185px);
       }
 
       &_small {
-        max-width: 100px;
+        max-width: 150px;
 
-        @include tableColumnFlex(1, 90px);
+        @include tableColumnFlex(0.5, 80px);
 
         a {
           display: inline;
@@ -60,25 +62,14 @@
       }
 
       &_big {
-        @include tableColumnFlex(2.5, 80px);
-      }
-
-      &_date {
         @include tableColumnFlex(1, 80px);
       }
 
-      &_kind {
-        @include tableColumnFlex(0.5, 80px);
+      &_extra-small {
+        @include tableColumnFlex(0.3, 65px);
       }
 
-      &_owner {
-        @include tableColumnFlex(0.5, 80px);
-      }
-
-      &_popout,
-      &_download {
-        @include tableColumnFlex(0.5, 80px);
-
+      &__btn-icon {
         justify-content: center;
       }
     }
@@ -276,7 +267,8 @@
 
     .item {
       &-name {
-        max-width: 165px;
+        min-width: 100%;
+        max-width: 125px;
 
         &.function-name {
           max-width: 120px;

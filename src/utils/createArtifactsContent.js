@@ -10,7 +10,7 @@ const createArtifactsContent = artifacts =>
       },
       king: {
         value: artifact.kind,
-        class: 'artifacts_kind'
+        class: 'artifacts_extra-small'
       },
       labels: {
         value: parseKeyValues(artifact.labels),
@@ -24,26 +24,21 @@ const createArtifactsContent = artifacts =>
       },
       owner: {
         value: artifact.producer.owner,
-        class: 'artifacts_owner',
-        type: 'owner'
-      },
-      hash: {
-        value: artifact.hash,
         class: 'artifacts_small',
-        type: 'hash'
+        type: 'owner'
       },
       updated: {
         value: formatDatetime(new Date(artifact.updated)),
-        class: 'artifacts_date'
+        class: 'artifacts_small'
       },
       buttonPopout: {
         value: '',
-        class: 'artifacts_popout',
+        class: 'artifacts_extra-small artifacts__btn-icon',
         type: 'buttonPopout'
       },
       buttonDownload: {
         value: '',
-        class: 'artifacts_download',
+        class: 'artifacts_extra-small artifacts__btn-icon',
         type: 'buttonDownload'
       }
     }

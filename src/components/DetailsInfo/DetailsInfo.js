@@ -26,6 +26,7 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
     selectedItem.iterations?.length ? selectedItem.iterations : '0'
   ]
   const artifactsInfoContent = [
+    selectedItem.hash,
     selectedItem.db_key,
     selectedItem.iter || '0',
     selectedItem.kind,
