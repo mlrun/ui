@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
+import QuestionMark from '../../common/QuestionMark/QuestionMark'
 
 import { joinDataOfArrayOrObject } from '../../utils'
 
@@ -53,20 +54,18 @@ const JobsPanelTableRow = ({
               }
             >
               <Tooltip
-                className="data-ellipsis"
-                textShow={property === 'name' && contentItem.doc}
+                className={classNames(property === 'name' && 'parameter-name')}
                 template={
                   <TextTooltipTemplate
-                    text={
-                      property === 'name'
-                        ? contentItem.doc || value
-                        : joinDataOfArrayOrObject(value, ', ')
-                    }
+                    text={joinDataOfArrayOrObject(value, ', ')}
                   />
                 }
               >
                 {joinDataOfArrayOrObject(value, ', ')}
               </Tooltip>
+              {property === 'name' && contentItem.doc && (
+                <QuestionMark text={contentItem.doc} />
+              )}
             </div>
           )
         })}
