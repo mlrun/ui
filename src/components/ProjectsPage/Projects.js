@@ -15,53 +15,72 @@ import pageData from './projectsData'
 
 import './projects.scss'
 
-const Projects = ({ projectStore, fetchProjects, match }) => {
-  const [createNewProject, setCreateNewProject] = useState(false)
-  const [newProject, setNewProject] = useState({
-    name: '',
-    description: ''
-  })
+const Projects = ({
+  createNewProject,
+  projectStore,
+  fetchProjects,
+  match,
+  removeNewProject,
+  setNewProjectDescription,
+  setNewProjectName
+}) => {
+  const [createProject, setCreateProject] = useState(false)
+  const [isEmptyValue, setIsEmptyValue] = useState(false)
 
   useEffect(() => {
     fetchProjects()
   }, [fetchProjects])
 
+  const handleCreateProject = () => {
+    if (projectStore.newProject.name.length === 0) {
+      return setIsEmptyValue(true)
+    } else if (isEmptyValue) {
+      setIsEmptyValue(false)
+    }
+
+    createNewProject({
+      name: projectStore.newProject.name,
+      description: projectStore.newProject.description
+    }).then(result => {
+      if (result) {
+        setCreateProject(false)
+        removeNewProject()
+        fetchProjects()
+      }
+    })
+  }
+
   return (
     <div className="projects">
       {projectStore.loading && <Loader />}
-      {createNewProject && (
+      {createProject && (
         <PopUpDialog
           actionBtnText="Create"
-          closePopUp={() => setCreateNewProject(false)}
+          closePopUp={() => setCreateProject(false)}
+          handleSuccess={handleCreateProject}
           headerText="Create new project"
+          message={projectStore.error}
         >
           <div className="pop-up-dialog__form">
             <Input
               className="pop-up-dialog__form-input"
               floatingLabel
               label="Name"
-              onChange={name =>
-                setNewProject({
-                  ...newProject,
-                  name
-                })
+              onChange={name => setNewProjectName(name)}
+              required={
+                isEmptyValue && projectStore.newProject.name.length === 0
               }
-              required={newProject.name.length === 0}
+              requiredText="Name is required"
               type="text"
-              value={newProject.name}
+              value={projectStore.newProject.name}
             />
             <Input
               className="pop-up-dialog__form-input"
               floatingLabel
               label="Description"
-              onChange={description =>
-                setNewProject({
-                  ...newProject,
-                  description
-                })
-              }
+              onChange={description => setNewProjectDescription(description)}
               type="text"
-              value={newProject.description}
+              value={projectStore.newProject.description}
             />
           </div>
         </PopUpDialog>
@@ -70,7 +89,7 @@ const Projects = ({ projectStore, fetchProjects, match }) => {
         <Breadcrumbs match={match} />
         <PageActionsMenu
           match={match}
-          onClick={() => setCreateNewProject(true)}
+          onClick={() => setCreateProject(true)}
           page={pageData.page}
         />
       </div>

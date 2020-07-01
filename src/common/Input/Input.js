@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import { ReactComponent as Warning } from '../../images/warning.svg'
+
 import './input.scss'
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 const Input = ({
   className,
@@ -17,6 +21,7 @@ const Input = ({
   onKeyDown,
   placeholder,
   required,
+  requiredText,
   type,
   value
 }) => {
@@ -74,6 +79,14 @@ const Input = ({
         >
           {label}
         </label>
+      )}
+      {required && (
+        <Tooltip
+          template={<TextTooltipTemplate text={requiredText} warning />}
+          className="input__warning"
+        >
+          <Warning />
+        </Tooltip>
       )}
       {inputIcon && <span className={iconClass}>{inputIcon}</span>}
     </div>

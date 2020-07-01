@@ -1,8 +1,17 @@
-@import '../../scss//colors.scss';
+@import '../../scss/colors';
+@import '../../scss/shadows';
 
-.tooltip__text {
-  padding: 6px 8px;
-  border-radius: 2px;
-  background-color: $primary;
-  color: $white;
+.tooltip {
+  &__text {
+    padding: 6px 8px;
+    color: $white;
+    background-color: $primary;
+    border-radius: 2px;
+  }
+
+  &__warning {
+    color: $amaranth;
+    background-color: $white;
+    box-shadow: $tooltipShadow;
+  }
 }

@@ -1,0 +1,22 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.error {
+  &-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    color: $amaranth;
+    background-color: rgba($amaranth, 0.1);
+    border: $errorBorder;
+  }
+
+  &-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 10px;
+    padding: 5px;
+    background-color: $burntSienna;
+    border-radius: 50%;
+  }
+}
