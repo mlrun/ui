@@ -12,7 +12,7 @@ const workflowActions = {
     return workflowApi
       .getAllWorkflows(pageToken)
       .then(({ data }) => {
-        dispatch(workflowActions.fetchWorkflowsSuccess(data.runs))
+        dispatch(workflowActions.fetchWorkflowsSuccess(data.runs || []))
 
         return data.next_page_token
       })

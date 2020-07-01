@@ -8,6 +8,7 @@ import Details from '../Details/Details'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import NoData from '../../common/NoData/NoData'
 
 import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
 
@@ -57,87 +58,91 @@ const TableView = ({
           {(groupFilter === 'none' &&
             isEmpty(groupedByName) &&
             isEmpty(groupedByWorkflow)) ||
-          isEmpty(groupLatestItem)
-            ? tableContent.map((rowItem, i) => {
-                switch (pageData.page) {
-                  case ARTIFACTS_PAGE:
-                    return (
-                      <ArtifactsTableRow
-                        actionsMenu={actionsMenu}
-                        content={content}
-                        handleSelectItem={handleSelectItem}
-                        index={i}
-                        key={i}
-                        match={match}
-                        rowItem={rowItem}
-                        selectedItem={selectedItem}
-                      />
-                    )
-                  case FUNCTIONS_PAGE:
-                    return (
-                      <FunctionsTableRow
-                        actionsMenu={actionsMenu}
-                        key={i}
-                        content={content}
-                        match={match}
-                        rowItem={rowItem}
-                        index={i}
-                        selectedItem={selectedItem}
-                        handleSelectItem={handleSelectItem}
-                      />
-                    )
-                  case JOBS_PAGE:
-                    return (
-                      <JobsTableRow
-                        actionsMenu={actionsMenu}
-                        key={i}
-                        content={content}
-                        handleSelectItem={handleSelectItem}
-                        index={i}
-                        match={match}
-                        rowItem={rowItem}
-                        selectedItem={selectedItem}
-                      />
-                    )
-                  default:
-                    return null
-                }
-              })
-            : tableContent.map((group, i) => {
-                if (pageData.page === FUNCTIONS_PAGE) {
+          (groupFilter === 'none' && isEmpty(groupLatestItem)) ? (
+            tableContent.map((rowItem, i) => {
+              switch (pageData.page) {
+                case ARTIFACTS_PAGE:
+                  return (
+                    <ArtifactsTableRow
+                      actionsMenu={actionsMenu}
+                      content={content}
+                      handleSelectItem={handleSelectItem}
+                      index={i}
+                      key={i}
+                      match={match}
+                      rowItem={rowItem}
+                      selectedItem={selectedItem}
+                    />
+                  )
+                case FUNCTIONS_PAGE:
                   return (
                     <FunctionsTableRow
                       actionsMenu={actionsMenu}
                       key={i}
                       content={content}
-                      handleExpandRow={handleExpandRow}
-                      handleSelectItem={handleSelectItem}
-                      index={i}
                       match={match}
-                      rowItem={groupLatestItem[i]}
+                      rowItem={rowItem}
+                      index={i}
                       selectedItem={selectedItem}
-                      tableContent={group}
+                      handleSelectItem={handleSelectItem}
                     />
                   )
-                } else {
+                case JOBS_PAGE:
                   return (
                     <JobsTableRow
                       actionsMenu={actionsMenu}
                       key={i}
                       content={content}
-                      handleExpandRow={handleExpandRow}
                       handleSelectItem={handleSelectItem}
                       index={i}
-                      isGroupedByWorkflow={!isEmpty(groupedByWorkflow)}
                       match={match}
-                      rowItem={groupLatestItem[i]}
+                      rowItem={rowItem}
                       selectedItem={selectedItem}
-                      tableContent={group}
-                      workflows={workflows}
                     />
                   )
-                }
-              })}
+                default:
+                  return null
+              }
+            })
+          ) : groupLatestItem.find(latestItem => !isEmpty(latestItem)) ? (
+            tableContent.map((group, i) => {
+              if (pageData.page === FUNCTIONS_PAGE) {
+                return (
+                  <FunctionsTableRow
+                    actionsMenu={actionsMenu}
+                    key={i}
+                    content={content}
+                    handleExpandRow={handleExpandRow}
+                    handleSelectItem={handleSelectItem}
+                    index={i}
+                    match={match}
+                    rowItem={groupLatestItem[i]}
+                    selectedItem={selectedItem}
+                    tableContent={group}
+                  />
+                )
+              } else {
+                return (
+                  <JobsTableRow
+                    actionsMenu={actionsMenu}
+                    key={i}
+                    content={content}
+                    handleExpandRow={handleExpandRow}
+                    handleSelectItem={handleSelectItem}
+                    index={i}
+                    isGroupedByWorkflow={!isEmpty(groupedByWorkflow)}
+                    match={match}
+                    rowItem={groupLatestItem[i]}
+                    selectedItem={selectedItem}
+                    tableContent={group}
+                    workflows={workflows}
+                  />
+                )
+              }
+            })
+          ) : (
+            <NoData />
+          )}
         </div>
       </div>
       {!isEmpty(selectedItem) && (
