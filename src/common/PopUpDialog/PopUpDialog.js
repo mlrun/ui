@@ -8,6 +8,7 @@ import './popUpDialog.scss'
 const PopUpDialog = ({
   actionBtnText,
   children,
+  closeError,
   closePopUp,
   handleSuccess,
   headerText,
@@ -19,7 +20,9 @@ const PopUpDialog = ({
         <div className="pop-up-dialog__header">{headerText}</div>
         {children}
         <div className="pop-up-dialog__btn-container">
-          {message && <ErrorMessage message={message} />}
+          {message && (
+            <ErrorMessage closeError={closeError} message={message} />
+          )}
           <button
             className="pop-up-dialog__btn btn_success btn_primary"
             onClick={handleSuccess}
@@ -39,11 +42,13 @@ const PopUpDialog = ({
 }
 
 PopUpDialog.defaultProps = {
+  closeError: null,
   message: ''
 }
 
 PopUpDialog.propTypes = {
   actionBtnText: PropTypes.string.isRequired,
+  closeError: PropTypes.func,
   closePopUp: PropTypes.func.isRequired,
   handleSuccess: PropTypes.func.isRequired,
   headerText: PropTypes.string.isRequired,

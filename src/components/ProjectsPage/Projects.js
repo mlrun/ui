@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import projectsAction from '../../actions/projects'
 
@@ -21,6 +22,7 @@ const Projects = ({
   fetchProjects,
   match,
   removeNewProject,
+  removeProjectError,
   setNewProjectDescription,
   setNewProjectName
 }) => {
@@ -56,7 +58,19 @@ const Projects = ({
       {createProject && (
         <PopUpDialog
           actionBtnText="Create"
-          closePopUp={() => setCreateProject(false)}
+          closeError={() => {
+            if (projectStore.error) {
+              removeProjectError()
+            }
+          }}
+          closePopUp={() => {
+            if (projectStore.error) {
+              removeProjectError()
+            }
+
+            removeNewProject()
+            setCreateProject(false)
+          }}
           handleSuccess={handleCreateProject}
           headerText="Create new project"
           message={projectStore.error}
@@ -106,6 +120,10 @@ const Projects = ({
       </div>
     </div>
   )
+}
+
+Projects.propTypes = {
+  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(projectStore => projectStore, projectsAction)(Projects)

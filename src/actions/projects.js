@@ -8,7 +8,8 @@ import {
   CREATE_PROJECT_FAILURE,
   REMOVE_NEW_PROJECT,
   SET_NEW_PROJECT_NAME,
-  SET_NEW_PROJECT_DESCRIPTION
+  SET_NEW_PROJECT_DESCRIPTION,
+  REMOVE_PROJECT_ERROR
 } from '../constants'
 
 const projectsAction = {
@@ -69,6 +70,9 @@ const projectsAction = {
   setNewProjectDescription: description => ({
     type: SET_NEW_PROJECT_DESCRIPTION,
     payload: description
+  }),
+  removeProjectError: () => ({
+    type: REMOVE_PROJECT_ERROR
   })
 }
 

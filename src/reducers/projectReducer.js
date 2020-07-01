@@ -6,7 +6,8 @@ import {
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
   SET_NEW_PROJECT_DESCRIPTION,
-  SET_NEW_PROJECT_NAME
+  SET_NEW_PROJECT_NAME,
+  REMOVE_PROJECT_ERROR
 } from '../constants'
 
 const initialState = {
@@ -74,6 +75,11 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         error: payload
+      }
+    case REMOVE_PROJECT_ERROR:
+      return {
+        ...state,
+        error: null
       }
     default:
       return state
