@@ -15,6 +15,10 @@
       max-width: 44px;
     }
 
+    .tip-container {
+      display: none;
+    }
+
     &:hover {
       background-color: $alabaster;
 
@@ -28,6 +32,10 @@
         &-delete-btn {
           display: block;
         }
+      }
+
+      .tip-container {
+        display: flex;
       }
     }
 
@@ -68,6 +76,10 @@
 
     &-delete-btn {
       display: none;
+    }
+
+    .parameter-name {
+      margin-right: 10px;
     }
   }
 }
