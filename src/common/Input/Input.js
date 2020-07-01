@@ -105,6 +105,7 @@ Input.defaultProps = {
   onKeyDown: null,
   placeholder: '',
   required: false,
+  requiredText: '',
   value: undefined
 }
 
@@ -121,6 +122,7 @@ Input.propTypes = {
   onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
+  requiredText: PropTypes.string,
   type: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }

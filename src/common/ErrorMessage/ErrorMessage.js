@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { ReactComponent as UnsuccessAlert } from '../../images/unsuccess_alert.svg'
 
@@ -11,6 +12,10 @@ const ErrorMessage = ({ message }) => {
       {message}
     </div>
   )
+}
+
+ErrorMessage.propTypes = {
+  message: PropTypes.string.isRequired
 }
 
 export default ErrorMessage

@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 
 import './popUpDialog.scss'
@@ -34,6 +36,18 @@ const PopUpDialog = ({
       </div>
     </div>
   )
+}
+
+PopUpDialog.defaultProps = {
+  message: ''
+}
+
+PopUpDialog.propTypes = {
+  actionBtnText: PropTypes.string.isRequired,
+  closePopUp: PropTypes.func.isRequired,
+  handleSuccess: PropTypes.func.isRequired,
+  headerText: PropTypes.string.isRequired,
+  message: PropTypes.string
 }
 
 export default PopUpDialog
