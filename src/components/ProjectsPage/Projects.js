@@ -46,6 +46,7 @@ const Projects = ({ projectStore, fetchProjects, match }) => {
                   name
                 })
               }
+              required={newProject.name.length === 0}
               type="text"
               value={newProject.name}
             />

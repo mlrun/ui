@@ -1,11 +1,12 @@
 @import "../../scss/colors";
+@import '../../scss/borders';
 
 .input {
+  position: relative;
   padding: 18px 17px;
   color: $primary;
-  border: none;
   background-color: transparent;
-  position: relative;
+  border: none;
 
   &-wrapper {
     position: relative;
@@ -14,5 +15,9 @@
   &__label_info {
     top: 50%;
     transform: translate(0, -50%);
+  }
+
+  &_required {
+    border: $errorBorder;
   }
 }

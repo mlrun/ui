@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import './input.scss'
 
@@ -15,11 +16,18 @@ const Input = ({
   onChange,
   onKeyDown,
   placeholder,
+  required,
   type,
   value
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false)
   const input = React.createRef()
+  const inputClassNames = classnames(
+    'input',
+    className,
+    inputIsFocused && floatingLabel && 'active-input',
+    required && 'input_required'
+  )
 
   useEffect(() => {
     if (input.current.value.length > 0) {
@@ -40,9 +48,7 @@ const Input = ({
   return (
     <div className="input-wrapper">
       <input
-        className={`input 
-        ${className} 
-        ${inputIsFocused && floatingLabel && 'active-input'}`}
+        className={inputClassNames}
         disabled={disabled}
         maxLength={maxLength}
         onChange={handleClick}
@@ -85,6 +91,7 @@ Input.defaultProps = {
   onChange: null,
   onKeyDown: null,
   placeholder: '',
+  required: false,
   value: undefined
 }
 
@@ -100,6 +107,7 @@ Input.propTypes = {
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,
+  required: PropTypes.bool,
   type: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
