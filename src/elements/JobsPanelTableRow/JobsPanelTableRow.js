@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
-import QuestionMark from '../../common/QuestionMark/QuestionMark'
+import Tip from '../../common/Tip/Tip'
 
 import { joinDataOfArrayOrObject } from '../../utils'
 
@@ -64,7 +64,7 @@ const JobsPanelTableRow = ({
                 {joinDataOfArrayOrObject(value, ', ')}
               </Tooltip>
               {property === 'name' && contentItem.doc && (
-                <QuestionMark text={contentItem.doc} />
+                <Tip text={contentItem.doc} />
               )}
             </div>
           )

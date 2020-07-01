@@ -1,14 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 import classnames from 'classnames'
 
 import { ReactComponent as QuestionMarkIcon } from '../../images/question-mark.svg'
 
-import './questionMark.scss'
+import './tip.scss'
 
-const QuestionMark = ({ text }) => {
+const Tip = ({ text }) => {
   const [isShow, setIsShow] = useState(false)
-  const questionMarkRef = useRef()
+  const tipRef = useRef()
+  const minTextLength = 40
 
   const handleMouseEnter = () => {
     setIsShow(true)
@@ -19,7 +21,7 @@ const QuestionMark = ({ text }) => {
   }
 
   useEffect(() => {
-    const node = questionMarkRef.current
+    const node = tipRef.current
     if (node) {
       node.addEventListener('mouseenter', handleMouseEnter)
       node.addEventListener('mouseleave', handleMouseLeave)
@@ -32,14 +34,14 @@ const QuestionMark = ({ text }) => {
   }, [isShow])
 
   return (
-    <div className="question-mark-container">
-      <QuestionMarkIcon ref={questionMarkRef} />
+    <div className="tip-container">
+      <QuestionMarkIcon ref={tipRef} />
       <CSSTransition in={isShow} timeout={200} classNames="fade" unmountOnExit>
         <div
           className={classnames(
-            'question-mark-container__tooltip',
-            'tooltip-left',
-            text.length <= 40 ? 'tooltip-min-content' : 'tooltip-max-content'
+            'tip',
+            'tip-left',
+            text.length <= minTextLength ? 'tip_small' : 'tip_big'
           )}
         >
           {text}
@@ -49,4 +51,8 @@ const QuestionMark = ({ text }) => {
   )
 }
 
-export default QuestionMark
+Tip.propTypes = {
+  text: PropTypes.string.isRequired
+}
+
+export default Tip
