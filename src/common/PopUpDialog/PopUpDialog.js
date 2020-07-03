@@ -24,16 +24,16 @@ const PopUpDialog = ({
             <ErrorMessage closeError={closeError} message={message} />
           )}
           <button
-            className="pop-up-dialog__btn btn_success btn_primary"
-            onClick={handleSuccess}
-          >
-            {actionBtnText}
-          </button>
-          <button
             className="pop-up-dialog__btn pop-up-dialog__btn_cancel btn_default"
             onClick={closePopUp}
           >
             Cancel
+          </button>
+          <button
+            className="pop-up-dialog__btn btn_success btn_primary"
+            onClick={handleSuccess}
+          >
+            {actionBtnText}
           </button>
         </div>
       </div>
