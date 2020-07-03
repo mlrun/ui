@@ -45,6 +45,7 @@ const JobsPanelView = ({
         {!openScheduleJob ? (
           <div className="job_panel__body">
             <Accordion
+              accordionClassName="job-panel__accordion"
               icon={<Arrow />}
               iconClassName="job-panel__expand-icon"
               openByDefault
@@ -60,6 +61,7 @@ const JobsPanelView = ({
               />
             </Accordion>
             <Accordion
+              accordionClassName="job-panel__accordion"
               icon={<Arrow />}
               iconClassName="job-panel__expand-icon"
               openByDefault
@@ -77,6 +79,7 @@ const JobsPanelView = ({
               />
             </Accordion>
             <Accordion
+              accordionClassName="job-panel__accordion"
               icon={<Arrow />}
               iconClassName="job-panel__expand-icon"
               openByDefault
@@ -92,6 +95,7 @@ const JobsPanelView = ({
               />
             </Accordion>
             <Accordion
+              accordionClassName="job-panel__accordion"
               icon={<Arrow />}
               iconClassName="job-panel__expand-icon"
               openByDefault

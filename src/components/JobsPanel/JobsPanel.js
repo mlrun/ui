@@ -134,10 +134,11 @@ const JobsPanel = ({
       panelDispatch({
         type: panelActions.SET_CURRENT_FUNCTION_INFO,
         payload: {
+          labels: selectedFunction[0].metadata.labels,
           name: functionsStore.template.name || groupedFunctions.name,
-          version: defaultVersion,
           method: defaultMethod || (methodOptions[0]?.id ?? ''),
-          methodDescription: methodOptions[0]?.subLabel ?? ''
+          methodDescription: methodOptions[0]?.subLabel ?? '',
+          version: defaultVersion
         }
       })
       panelDispatch({

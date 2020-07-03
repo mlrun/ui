@@ -19,12 +19,6 @@
     background: rgba($mineshaft, 0.75);
   }
 
-  &__close-button {
-    height: 24px;
-    margin-top: 16px;
-    padding: 0;
-  }
-
   &__body {
     display: flex;
     flex: 1;
@@ -40,28 +34,26 @@
     padding: 0 40px;
   }
 
-  .accordion {
-    &__container {
-      margin: 16px 40px 0;
-      background-color: $white;
-      border: $primaryBorder;
-      border-radius: 4px;
+  &__accordion {
+    margin: 16px 40px 0;
+    background-color: $white;
+    border: $primaryBorder;
+    border-radius: 4px;
 
-      &.open {
-        height: auto;
+    &.open {
+      height: auto;
 
-        .accordion__body {
-          min-height: 400px;
-        }
+      .accordion__body {
+        min-height: 400px;
       }
+    }
 
-      &:first-child {
-        margin-top: 0;
-      }
+    &:first-child {
+      margin-top: 0;
+    }
 
-      &:last-child {
-        margin-bottom: 16px;
-      }
+    &:last-child {
+      margin-bottom: 16px;
     }
   }
 

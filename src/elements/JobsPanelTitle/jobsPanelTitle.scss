@@ -2,29 +2,13 @@
 @import '../../scss/borders.scss';
 
 .job-panel {
-  &__button {
-    display: none;
-  }
-
   &__title {
+    position: relative;
     display: flex;
     justify-content: space-between;
-    margin: 25px 40px 16px 40px;
+    margin: 36px 90px 33px 55px;
 
     &-wrapper {
-      .job-schedule {
-        &-container {
-          display: flex;
-          align-items: center;
-          margin-bottom: 18px;
-
-          svg {
-            margin-right: 18px;
-            cursor: pointer;
-          }
-        }
-      }
-
       button.btn {
         margin-left: auto;
       }
@@ -49,20 +33,52 @@
         display: inline-block;
         border: $transparentBorder;
         border-radius: 4px;
-
-        &:hover {
-          border: $primaryBorder;
-
-          .job-panel__button {
-            position: relative;
-            right: -12px;
-            display: inline-block;
-            margin-right: 16px;
-            transform: translate(-44%, -60%);
-          }
-        }
       }
     }
+
+    &-container {
+      width: 100%;
+    }
+
+    &-accordion {
+      border-bottom: $primaryBorder;
+    }
+
+    &-edit-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      &.open {
+        display: none;
+      }
+    }
+
+    &-schedule {
+      display: flex;
+      align-items: center;
+      margin-bottom: 18px;
+
+      svg {
+        margin-right: 18px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__button {
+    position: relative;
+    right: -12px;
+    display: inline-block;
+    margin-right: 16px;
+    transform: translate(-44%, -60%);
+  }
+
+  .btn-close {
+    position: absolute;
+    top: -20px;
+    right: -75px;
+    height: 24px;
   }
 
   &__wrapper {
@@ -100,11 +116,12 @@
       display: flex;
       flex: 1;
       height: 55px;
-      margin: 16px 0 16px 0;
+      margin: 16px 0;
 
       .select {
         width: 100%;
         height: auto;
+        background-color: $white;
 
         &__header {
           .sub-label {
@@ -123,10 +140,5 @@
         word-break: break-word;
       }
     }
-  }
-
-  .job-title-container {
-    width: calc(100% - 14px);
-    padding-right: 29px;
   }
 }
