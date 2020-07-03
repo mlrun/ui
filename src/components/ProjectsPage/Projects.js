@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import projectsAction from '../../actions/projects'
 
@@ -28,6 +29,10 @@ const Projects = ({
 }) => {
   const [createProject, setCreateProject] = useState(false)
   const [isEmptyValue, setIsEmptyValue] = useState(false)
+  const projectsClassNames = classnames(
+    'projects',
+    createProject && 'projects-modal_opened'
+  )
 
   useEffect(() => {
     fetchProjects()
@@ -53,7 +58,7 @@ const Projects = ({
   }
 
   return (
-    <div className="projects">
+    <div className={projectsClassNames}>
       {projectStore.loading && <Loader />}
       {createProject && (
         <PopUpDialog
