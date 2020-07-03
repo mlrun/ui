@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { find } from 'lodash'
+import classnames from 'classnames'
 
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import JobsPanelTable from '../../elements/JobsPanelTable/JobsPanelTable'
@@ -20,11 +21,21 @@ const JobsPanelParametersView = ({
   handleAddNewItem,
   handleDeleteParameter,
   handleEditParameter,
+  isHyperTypeExist,
   match,
   parameters,
   parametersDispatch,
   parametersState
 }) => {
+  const urlTypeClassName = classnames(
+    'parameters-additional-settings__url-type',
+    isHyperTypeExist && 'disabled'
+  )
+  const tuningStrategyClassName = classnames(
+    'parameters-additional-settings__tuning-strategy',
+    (parametersState.url || (!isHyperTypeExist && !parametersState.url)) &&
+      'disabled'
+  )
   return (
     <div className="job-panel__item">
       <JobsPanelSection title="Parameters">
@@ -122,7 +133,46 @@ const JobsPanelParametersView = ({
             />
           )}
         </JobsPanelTable>
-        <button className="btn-load">Load file</button>
+        <div className="parameters-additional-settings-container">
+          <div className="parameters-additional-settings__header">
+            <span className="parameters-additional-settings__header-text">
+              Hyper Parameters
+            </span>
+          </div>
+          <div className="parameters-additional-settings">
+            <div className={urlTypeClassName}>
+              <Input
+                label="Type URL"
+                className="default-input"
+                type="text"
+                floatingLabel
+                onChange={value => {
+                  parametersDispatch({
+                    type: parametersActions.SET_URL_TYPE,
+                    payload: value
+                  })
+                }}
+              />
+            </div>
+            <div className={tuningStrategyClassName}>
+              <Select
+                selectedId={parametersState.hyper}
+                options={selectOptions.hyperStrategyType}
+                label="Tuning Strategy:"
+                match={match}
+                onClick={value => {
+                  parametersDispatch({
+                    type: parametersActions.SET_TUNING_STRATEGY,
+                    payload: find(selectOptions.hyperStrategyType, [
+                      'id',
+                      value
+                    ]).id
+                  })
+                }}
+              />
+            </div>
+          </div>
+        </div>
       </JobsPanelSection>
     </div>
   )
@@ -132,6 +182,7 @@ JobsPanelParametersView.propTypes = {
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
+  isHyperTypeExist: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,

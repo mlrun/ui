@@ -33,8 +33,8 @@ const JobsPanel = ({
   jobsStore,
   match,
   removeFunctionTemplate,
-  runNewJob,
   removeNewJob,
+  runNewJob,
   setNewJob,
   setNewJobEnvironmentVariables,
   setNewJobHyperParameters,
@@ -42,7 +42,8 @@ const JobsPanel = ({
   setNewJobParameters,
   setNewJobSecretSources,
   setNewJobVolumeMounts,
-  setNewJobVolumes
+  setNewJobVolumes,
+  setAdditionalSettings
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
@@ -191,6 +192,8 @@ const JobsPanel = ({
       }
     }
 
+    console.log(postData)
+
     runNewJob(postData).then(() => {
       removeNewJob()
 
@@ -206,8 +209,9 @@ const JobsPanel = ({
       jobsStore={jobsStore}
       match={match}
       openScheduleJob={openScheduleJob}
-      panelState={panelState}
       panelDispatch={panelDispatch}
+      panelState={panelState}
+      setAdditionalSettings={setAdditionalSettings}
       setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}

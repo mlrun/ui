@@ -8,6 +8,8 @@ export const initialState = {
     parameterType: panelData.newParameterType[0].id,
     value: ''
   },
+  url: '',
+  hyper: 'list',
   selectedParameter: {}
 }
 
@@ -18,7 +20,9 @@ export const parametersActions = {
   SET_NEW_PARAMETER_TYPE: 'SET_NEW_PARAMETER_TYPE',
   SET_NEW_PARAMETER_VALUE: 'SET_NEW_PARAMETER_VALUE',
   SET_NEW_PARAMETER_VALUE_TYPE: 'SET_NEW_PARAMETER_VALUE_TYPE',
-  SET_SELECTED_PARAMETER: 'SET_SELECTED_PARAMETER'
+  SET_SELECTED_PARAMETER: 'SET_SELECTED_PARAMETER',
+  SET_URL_TYPE: 'SET_URL_TYPE',
+  SET_TUNING_STRATEGY: 'SET_TUNING_STRATEGY'
 }
 
 export const jobsPanelParametersReducer = (state, { type, payload }) => {
@@ -74,6 +78,16 @@ export const jobsPanelParametersReducer = (state, { type, payload }) => {
       return {
         ...state,
         selectedParameter: payload
+      }
+    case parametersActions.SET_URL_TYPE:
+      return {
+        ...state,
+        url: payload
+      }
+    case parametersActions.SET_TUNING_STRATEGY:
+      return {
+        ...state,
+        hyper: payload
       }
     default:
       return state

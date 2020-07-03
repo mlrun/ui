@@ -46,5 +46,19 @@ export const selectOptions = {
       label: 'map',
       id: 'map'
     }
+  ],
+  hyperStrategyType: [
+    {
+      label: 'List',
+      id: 'list'
+    },
+    {
+      label: 'Grid',
+      id: 'grid'
+    },
+    {
+      label: 'Random',
+      id: 'random'
+    }
   ]
 }

@@ -16,7 +16,8 @@ import {
   SET_NEW_JOB_SCHEDULE,
   SET_NEW_JOB_SECRET_SOURCES,
   REMOVE_NEW_JOB,
-  SET_NEW_JOB
+  SET_NEW_JOB,
+  SET_ADDITIONAL_SETTINGS
 } from '../constants'
 
 const initialState = {
@@ -31,7 +32,9 @@ const initialState = {
         parameters: {},
         inputs: {},
         hyperparams: {},
-        secret_sources: []
+        secret_sources: [],
+        param_file: '',
+        tuning_strategy: 'list'
       }
     },
     function: {
@@ -241,6 +244,22 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case SET_ADDITIONAL_SETTINGS: {
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              param_file: payload.url,
+              tuning_strategy: payload.hyper
+            }
+          }
+        }
+      }
+    }
     case SET_LOADING: {
       return {
         ...state,

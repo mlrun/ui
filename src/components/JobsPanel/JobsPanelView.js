@@ -28,7 +28,8 @@ const JobsPanelView = ({
   setNewJobSecretSources,
   setNewJobVolumeMounts,
   setNewJobVolumes,
-  setOpenScheduleJob
+  setOpenScheduleJob,
+  setAdditionalSettings
 }) => {
   return (
     <div className="job-panel-container">
@@ -55,6 +56,7 @@ const JobsPanelView = ({
                 panelDispatch={panelDispatch}
                 panelState={panelState}
                 parameters={jobsStore.newJob.task.spec.parameters}
+                setAdditionalSettings={setAdditionalSettings}
                 setNewJobHyperParameters={setNewJobHyperParameters}
                 setNewJobParameters={setNewJobParameters}
               />
