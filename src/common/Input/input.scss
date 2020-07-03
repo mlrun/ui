@@ -1,18 +1,39 @@
-@import "../../scss/colors";
+@import '../../scss/colors';
+@import '../../scss/borders';
 
 .input {
+  position: relative;
   padding: 18px 17px;
   color: $primary;
-  border: none;
   background-color: transparent;
-  position: relative;
+  border: none;
 
   &-wrapper {
     position: relative;
+
+    .input.input_required {
+      border: $errorBorder;
+
+      & ~ .input__warning {
+        display: block;
+      }
+    }
   }
 
   &__label_info {
     top: 50%;
     transform: translate(0, -50%);
+  }
+
+  &__warning {
+    position: absolute;
+    top: 35%;
+    right: 15px;
+    display: none;
+
+    svg {
+      width: 15px;
+      height: 15px;
+    }
   }
 }

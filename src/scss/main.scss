@@ -1,5 +1,6 @@
 @import './colors';
 @import './mixins.scss';
+@import '../scss/borders';
 
 * {
   box-sizing: border-box;
@@ -23,7 +24,7 @@ body {
   overflow-x: hidden;
   font-weight: normal;
   font-size: 15px;
-  font-family: Roboto;
+  font-family: Roboto, sans-serif;
   font-style: normal;
   line-height: 18px;
   background: #eeeeee;
@@ -46,6 +47,7 @@ main {
   }
 
   button {
+    font-family: Roboto, sans-serif;
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -54,6 +56,32 @@ main {
     &:focus {
       outline: none;
       box-shadow: none;
+    }
+  }
+
+  .btn {
+    &_primary {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      color: $white;
+      background: $purple;
+      border-radius: 2px;
+    }
+
+    &_default {
+      display: flex;
+      align-items: center;
+      height: 49px;
+      padding: 10px 16px;
+      background-color: $white;
+      border: $primaryBorder;
+      border-radius: 2px;
+
+      &:hover {
+        background-color: $alabaster;
+        cursor: pointer;
+      }
     }
   }
 }
@@ -133,7 +161,7 @@ iframe {
 }
 
 input {
-  font-family: Roboto;
+  font-family: Roboto, sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 15px;

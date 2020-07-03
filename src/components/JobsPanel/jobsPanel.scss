@@ -167,7 +167,6 @@
     padding: 10px;
     font-weight: 500;
     font-size: 14px;
-    font-family: Roboto;
     line-height: 16px;
 
     &-load {
@@ -190,12 +189,6 @@
     }
 
     &_primary {
-      display: flex;
-      align-items: center;
-      color: $white;
-      background: $purple;
-      border-radius: 2px;
-
       svg {
         margin-right: 5px;
 

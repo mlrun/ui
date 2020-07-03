@@ -1,7 +1,6 @@
 import { mainHttpClient } from '../httpClient'
 
 export default {
-  getProjects: () => {
-    return mainHttpClient.get('/projects?full=yes')
-  }
+  getProjects: () => mainHttpClient.get('/projects?full=yes'),
+  createProject: postData => mainHttpClient.post('/project', postData)
 }
