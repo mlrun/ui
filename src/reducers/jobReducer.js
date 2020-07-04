@@ -17,7 +17,8 @@ import {
   SET_NEW_JOB_SECRET_SOURCES,
   REMOVE_NEW_JOB,
   SET_NEW_JOB,
-  SET_ADDITIONAL_SETTINGS
+  SET_TUNING_STRATEGY,
+  SET_URL
 } from '../constants'
 
 const initialState = {
@@ -244,7 +245,7 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
-    case SET_ADDITIONAL_SETTINGS: {
+    case SET_URL: {
       return {
         ...state,
         newJob: {
@@ -253,8 +254,22 @@ export default (state = initialState, { type, payload }) => {
             ...state.newJob.task,
             spec: {
               ...state.newJob.task.spec,
-              param_file: payload.url,
-              tuning_strategy: payload.hyper
+              param_file: payload
+            }
+          }
+        }
+      }
+    }
+    case SET_TUNING_STRATEGY: {
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              tuning_strategy: payload
             }
           }
         }

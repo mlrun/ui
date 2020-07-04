@@ -43,7 +43,8 @@ const JobsPanel = ({
   setNewJobSecretSources,
   setNewJobVolumeMounts,
   setNewJobVolumes,
-  setAdditionalSettings
+  setTuningStrategy,
+  setUrl
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
@@ -192,8 +193,6 @@ const JobsPanel = ({
       }
     }
 
-    console.log(postData)
-
     runNewJob(postData).then(() => {
       removeNewJob()
 
@@ -211,7 +210,6 @@ const JobsPanel = ({
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}
       panelState={panelState}
-      setAdditionalSettings={setAdditionalSettings}
       setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}
@@ -220,6 +218,8 @@ const JobsPanel = ({
       setNewJobVolumeMounts={setNewJobVolumeMounts}
       setNewJobVolumes={setNewJobVolumes}
       setOpenScheduleJob={setOpenScheduleJob}
+      setTuningStrategy={setTuningStrategy}
+      setUrl={setUrl}
     />
   )
 }

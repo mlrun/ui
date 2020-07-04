@@ -29,7 +29,8 @@ const JobsPanelView = ({
   setNewJobVolumeMounts,
   setNewJobVolumes,
   setOpenScheduleJob,
-  setAdditionalSettings
+  setTuningStrategy,
+  setUrl
 }) => {
   return (
     <div className="job-panel-container">
@@ -51,14 +52,14 @@ const JobsPanelView = ({
               openByDefault
             >
               <JobsPanelParameters
-                hyperparams={jobsStore.newJob.task.spec.hyperparams}
+                jobsStoreNewJobTaskSpec={jobsStore.newJob.task.spec}
                 match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
-                parameters={jobsStore.newJob.task.spec.parameters}
-                setAdditionalSettings={setAdditionalSettings}
                 setNewJobHyperParameters={setNewJobHyperParameters}
                 setNewJobParameters={setNewJobParameters}
+                setTuningStrategy={setTuningStrategy}
+                setUrl={setUrl}
               />
             </Accordion>
             <Accordion
@@ -144,7 +145,9 @@ JobsPanelView.propTypes = {
   setNewJobSecretSources: PropTypes.func.isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,
   setNewJobVolumes: PropTypes.func.isRequired,
-  setOpenScheduleJob: PropTypes.func.isRequired
+  setOpenScheduleJob: PropTypes.func.isRequired,
+  setTuningStrategy: PropTypes.func.isRequired,
+  setUrl: PropTypes.func.isRequired
 }
 
 export default JobsPanelView

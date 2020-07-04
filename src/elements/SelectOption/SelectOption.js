@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
-const SelectOption = ({ item, onClick, selectType, selectedId }) => {
+const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
   if (selectType === 'checkbox') {
     return (
       <div className="select__item">
@@ -16,8 +17,13 @@ const SelectOption = ({ item, onClick, selectType, selectedId }) => {
     )
   }
 
+  const selectClassName = classnames('select__item', disabled && 'disabled')
+
   return (
-    <div className="select__item" onClick={() => onClick(item.id)}>
+    <div
+      className={selectClassName}
+      onClick={() => !disabled && onClick(item.id)}
+    >
       {item.label}
       {item.subLabel && (
         <Tooltip
@@ -36,6 +42,7 @@ SelectOption.defaultProps = {
 }
 
 SelectOption.propTypes = {
+  disabled: PropTypes.bool,
   item: PropTypes.shape({}).isRequired,
   onClick: PropTypes.func,
   selectType: PropTypes.string.isRequired,

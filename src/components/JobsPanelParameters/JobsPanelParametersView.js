@@ -18,6 +18,7 @@ import { parametersActions } from './jobsPanelParametersReducer'
 import { selectOptions } from './jobsPanelParameters.util'
 
 const JobsPanelParametersView = ({
+  disabledOptions,
   handleAddNewItem,
   handleDeleteParameter,
   handleEditParameter,
@@ -25,7 +26,11 @@ const JobsPanelParametersView = ({
   match,
   parameters,
   parametersDispatch,
-  parametersState
+  parametersState,
+  setTuningStrategy,
+  setUrl,
+  tuningStrategy,
+  url
 }) => {
   const urlTypeClassName = classnames(
     'parameters-additional-settings__url-type',
@@ -33,13 +38,13 @@ const JobsPanelParametersView = ({
   )
   const tuningStrategyClassName = classnames(
     'parameters-additional-settings__tuning-strategy',
-    (parametersState.url || (!isHyperTypeExist && !parametersState.url)) &&
-      'disabled'
+    !isHyperTypeExist && !url && 'disabled'
   )
   return (
     <div className="job-panel__item">
       <JobsPanelSection title="Parameters">
         <JobsPanelTable
+          disabledOptions={disabledOptions}
           addNewItem={parametersState.addNewParameter}
           className="parameters"
           content={parameters}
@@ -87,8 +92,9 @@ const JobsPanelParametersView = ({
                   options={selectOptions.parametersValueType}
                 />
                 <Select
-                  label={parametersState.newParameter.parameterType}
                   className="select-parameters-type"
+                  disabledOptions={disabledOptions}
+                  label={parametersState.newParameter.parameterType}
                   match={match}
                   onClick={value =>
                     parametersDispatch({
@@ -142,32 +148,25 @@ const JobsPanelParametersView = ({
           <div className="parameters-additional-settings">
             <div className={urlTypeClassName}>
               <Input
-                label="Type URL"
+                label="URL"
                 className="default-input"
                 type="text"
                 floatingLabel
                 onChange={value => {
-                  parametersDispatch({
-                    type: parametersActions.SET_URL_TYPE,
-                    payload: value
-                  })
+                  setUrl(value)
                 }}
               />
             </div>
             <div className={tuningStrategyClassName}>
               <Select
-                selectedId={parametersState.hyper}
+                selectedId={tuningStrategy}
                 options={selectOptions.hyperStrategyType}
                 label="Tuning Strategy:"
                 match={match}
                 onClick={value => {
-                  parametersDispatch({
-                    type: parametersActions.SET_TUNING_STRATEGY,
-                    payload: find(selectOptions.hyperStrategyType, [
-                      'id',
-                      value
-                    ]).id
-                  })
+                  setTuningStrategy(
+                    find(selectOptions.hyperStrategyType, ['id', value]).id
+                  )
                 }}
               />
             </div>
@@ -186,7 +185,11 @@ JobsPanelParametersView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,
-  parametersState: PropTypes.shape({}).isRequired
+  parametersState: PropTypes.shape({}).isRequired,
+  setTuningStrategy: PropTypes.func.isRequired,
+  setUrl: PropTypes.func.isRequired,
+  tuningStrategy: PropTypes.string,
+  url: PropTypes.string
 }
 
 export default JobsPanelParametersView
