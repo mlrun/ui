@@ -1,16 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-// import classNames from 'classnames'
+import classNames from 'classnames'
 
-// import JobsPanelTitleEdit from '../JobsPanelTitleEdit/JobsPanelTitleEdit'
 // import MethodDescription from '../MethodDescription/MethodDescription'
 import Accordion from '../../common/Accordion/Accordion'
 import Select from '../../common/Select/Select'
+import Input from '../../common/Input/Input'
 
 import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
-import JobsPanelTitleEdit from '../JobsPanelTitleEdit/JobsPanelTitleEdit'
 
 import { panelActions } from '../../components/JobsPanel/panelReducer'
 
@@ -32,6 +31,13 @@ const JobsPanelTitleView = ({
   //   !openScheduleJob && !editMode && 'job-panel__title-wrapper_hover'
   // )
 
+  const funcTitleClassNames = classNames(
+    'job-panel__title-input',
+    !editMode && 'job-panel__title-input_disabled'
+  )
+
+  console.log(currentFunctionInfo)
+
   return (
     <div className="job-panel__title">
       <div className="job-panel__title-container">
@@ -43,6 +49,12 @@ const JobsPanelTitleView = ({
         )}
         <Accordion
           accordionClassName="job-panel__title-accordion"
+          closeOnBlur={() => {
+            panelDispatch({
+              type: panelActions.SET_EDIT_MODE,
+              payload: false
+            })
+          }}
           icon={
             <Edit
               onClick={() => {
@@ -55,53 +67,33 @@ const JobsPanelTitleView = ({
           }
           iconClassName="job-panel__title-edit-icon"
         >
-          {editMode ? (
-            <JobsPanelTitleEdit
-              currentFunctionInfo={currentFunctionInfo}
-              panelDispatch={panelDispatch}
-            />
-          ) : (
-            <div className="job-panel__name">{currentFunctionInfo.name}</div>
-          )}
-        </Accordion>
-        <div className="job-panel__select-container">
-          <Select
-            floatingLabel
-            label="Version"
-            match={match}
-            onClick={version =>
-              panelDispatch({
-                type: panelActions.SET_CURRENT_FUNCTION_INFO_VERSION,
-                payload: version
-              })
-            }
-            options={versionOptions}
-            selectedId={currentFunctionInfo.version}
-          />
-          {methodOptions.length !== 0 && (
-            <Select
-              className="job-methods"
-              floatingLabel
-              label="Method"
-              match={match}
-              onClick={method => {
-                const methodDescription = methodOptions.find(
-                  func => func.id === method
-                )
-
+          <>
+            <Input
+              className={funcTitleClassNames}
+              onChange={name =>
                 panelDispatch({
-                  type: panelActions.SET_CURRENT_FUNCTION_INFO_METHOD,
-                  payload: {
-                    method,
-                    methodDescription: methodDescription.subLabel
-                  }
+                  type: panelActions.SET_CURRENT_FUNCTION_INFO_NAME,
+                  payload: name
                 })
-              }}
-              options={methodOptions}
-              selectedId={currentFunctionInfo.method}
+              }
+              type="text"
+              value={currentFunctionInfo.name}
+              wrapperClassName={!editMode && 'job-panel__title-input-wrapper'}
             />
-          )}
-        </div>
+            <Input
+              className="job-panel__title-labels"
+              label="Labels: "
+              onChange={name =>
+                panelDispatch({
+                  type: panelActions.SET_CURRENT_FUNCTION_INFO_LABELS,
+                  payload: name.split(',')
+                })
+              }
+              type="text"
+              value={currentFunctionInfo.labels.join(',')}
+            />
+          </>
+        </Accordion>
         {/*  <div className={jobPanelClassName}>*/}
         {/*    {!editMode ? (*/}
         {/*      <>*/}
@@ -151,6 +143,44 @@ const JobsPanelTitleView = ({
         {/*      description={currentFunctionInfo.methodDescription}*/}
         {/*    />*/}
         {/*  )}*/}
+      </div>
+      <div className="job-panel__select-container">
+        <Select
+          floatingLabel
+          label="Version"
+          match={match}
+          onClick={version =>
+            panelDispatch({
+              type: panelActions.SET_CURRENT_FUNCTION_INFO_VERSION,
+              payload: version
+            })
+          }
+          options={versionOptions}
+          selectedId={currentFunctionInfo.version}
+        />
+        {methodOptions.length !== 0 && (
+          <Select
+            className="job-methods"
+            floatingLabel
+            label="Method"
+            match={match}
+            onClick={method => {
+              const methodDescription = methodOptions.find(
+                func => func.id === method
+              )
+
+              panelDispatch({
+                type: panelActions.SET_CURRENT_FUNCTION_INFO_METHOD,
+                payload: {
+                  method,
+                  methodDescription: methodDescription.subLabel
+                }
+              })
+            }}
+            options={methodOptions}
+            selectedId={currentFunctionInfo.method}
+          />
+        )}
       </div>
       <button onClick={() => closePanel({})} className="btn-close">
         <Close />

@@ -4,8 +4,6 @@
 .job-panel {
   &__title {
     position: relative;
-    display: flex;
-    justify-content: space-between;
     margin: 36px 90px 33px 55px;
 
     &-wrapper {
@@ -54,6 +52,45 @@
       }
     }
 
+    &-input {
+      width: 100%;
+      margin-bottom: 5px;
+      padding: 4px;
+      font-weight: 300;
+      font-size: 36px;
+      line-height: 42px;
+      border: $primaryBorder;
+
+      &_disabled {
+        border: none;
+        user-select: none;
+      }
+
+      &-wrapper {
+        &::after {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 2;
+          display: block;
+          width: 100%;
+          height: 100%;
+          content: '';
+        }
+      }
+    }
+
+    &-labels {
+      width: 100%;
+      margin: 15px 0;
+      padding: 18px 60px;
+      border: $primaryBorder;
+
+      & ~ .input__label {
+        top: 33px;
+      }
+    }
+
     &-schedule {
       display: flex;
       align-items: center;
@@ -79,10 +116,6 @@
     top: -20px;
     right: -75px;
     height: 24px;
-  }
-
-  &__wrapper {
-    display: inline-block;
   }
 
   &__icon {

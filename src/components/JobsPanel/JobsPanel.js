@@ -24,6 +24,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { initialState, panelReducer, panelActions } from './panelReducer'
 
 import './jobsPanel.scss'
+import { parseKeyValues } from '../../utils'
 
 const JobsPanel = ({
   closePanel,
@@ -134,7 +135,7 @@ const JobsPanel = ({
       panelDispatch({
         type: panelActions.SET_CURRENT_FUNCTION_INFO,
         payload: {
-          labels: selectedFunction[0].metadata.labels,
+          labels: parseKeyValues(selectedFunction[0].metadata.labels || {}),
           name: functionsStore.template.name || groupedFunctions.name,
           method: defaultMethod || (methodOptions[0]?.id ?? ''),
           methodDescription: methodOptions[0]?.subLabel ?? '',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 
 import './input.scss'
 
@@ -16,10 +17,18 @@ const Input = ({
   onKeyDown,
   placeholder,
   type,
-  value
+  value,
+  wrapperClassName
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false)
   const input = React.createRef()
+
+  const wrapperClassNames = classNames(wrapperClassName, 'input-wrapper')
+  const inputClassNames = classNames(
+    'input',
+    className,
+    inputIsFocused && floatingLabel && 'active-input'
+  )
 
   useEffect(() => {
     if (input.current.value.length > 0) {
@@ -38,11 +47,9 @@ const Input = ({
   }
 
   return (
-    <div className="input-wrapper">
+    <div className={wrapperClassNames}>
       <input
-        className={`input 
-        ${className} 
-        ${inputIsFocused && floatingLabel && 'active-input'}`}
+        className={inputClassNames}
         disabled={disabled}
         maxLength={maxLength}
         onChange={handleClick}
@@ -85,7 +92,8 @@ Input.defaultProps = {
   onChange: null,
   onKeyDown: null,
   placeholder: '',
-  value: undefined
+  value: undefined,
+  wrapperClassName: ''
 }
 
 Input.propTypes = {
@@ -101,7 +109,8 @@ Input.propTypes = {
   onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,
   type: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  wrapperClassName: PropTypes.string
 }
 
 export default React.memo(Input)
