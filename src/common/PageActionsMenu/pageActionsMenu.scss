@@ -1,0 +1,14 @@
+@import '../../scss/colors.scss';
+
+.page-actions-container {
+  &__btn {
+    &.green-btn {
+      height: 36px;
+      padding: 10px 12px;
+      color: $white;
+      font-size: 14px;
+      background: $brightTurquoise;
+      border-radius: 2px;
+    }
+  }
+}

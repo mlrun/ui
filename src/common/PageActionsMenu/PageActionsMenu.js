@@ -4,13 +4,15 @@ import { Link } from 'react-router-dom'
 
 import { JOBS_PAGE, PROJECTS_PAGE } from '../../constants.js'
 
+import './pageActionsMenu.scss'
+
 const PageActionsMenu = ({ match, onClick, page }) => {
   return (
     <>
       {page === JOBS_PAGE && (
         <div className="page-actions-container">
           <Link
-            className="page-actions-container__btn btn_default"
+            className="page-actions-container__btn green-btn"
             to={`/projects/${match.params.projectName}/jobs/create-new-job`}
           >
             New Job
@@ -20,7 +22,7 @@ const PageActionsMenu = ({ match, onClick, page }) => {
       {page === PROJECTS_PAGE && (
         <div className="page-actions-container">
           <button
-            className="page-actions-container__btn btn_default"
+            className="page-actions-container__btn green-btn"
             onClick={onClick}
           >
             New Project
