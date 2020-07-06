@@ -17,7 +17,9 @@ import {
   SET_NEW_JOB_SCHEDULE,
   SET_NEW_JOB_SECRET_SOURCES,
   SET_NEW_JOB_VOLUMES,
-  SET_NEW_JOB_VOLUME_MOUNTS
+  SET_NEW_JOB_VOLUME_MOUNTS,
+  SET_TUNING_STRATEGY,
+  SET_URL
 } from '../constants'
 
 const jobsActions = {
@@ -111,6 +113,14 @@ const jobsActions = {
   setNewJobHyperParameters: parameters => ({
     type: SET_NEW_JOB_HYPER_PARAMETERS,
     payload: parameters
+  }),
+  setUrl: url => ({
+    type: SET_URL,
+    payload: url
+  }),
+  setTuningStrategy: strategy => ({
+    type: SET_TUNING_STRATEGY,
+    payload: strategy
   }),
   runNewJob: postData => () => jobsApi.runJob(postData),
   setLoading: isLoading => ({

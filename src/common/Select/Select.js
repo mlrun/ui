@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
@@ -11,6 +11,7 @@ import './select.scss'
 
 const Select = ({
   className,
+  disabledOptions,
   disabled,
   floatingLabel,
   label,
@@ -49,6 +50,13 @@ const Select = ({
     onClick(item)
   }
 
+  const handleSelectValue = useCallback(event => {
+    event.stopPropagation()
+    if (!event.target.classList.contains('disabled')) {
+      setOpen(false)
+    }
+  }, [])
+
   const selectClassName = classNames('select', className, isOpen && 'active')
   const selectLabelClassName = classNames(
     'select__label',
@@ -73,22 +81,20 @@ const Select = ({
       </div>
       {isOpen && (
         <>
-          <div className="overall" key={isOpen} />
-          <div
-            className="select__body"
-            onClick={() => {
-              setOpen(false)
-            }}
-          >
-            {options.map(item => (
-              <SelectOption
-                item={item}
-                key={item.id}
-                onClick={handleSelectOption}
-                selectType={selectType}
-                selectedId={selectedId}
-              />
-            ))}
+          <div className="overall" />
+          <div className="select__body" onClick={handleSelectValue}>
+            {options.map(item => {
+              return (
+                <SelectOption
+                  disabled={disabledOptions.includes(item.id.toLowerCase())}
+                  item={item}
+                  key={item.id}
+                  onClick={handleSelectOption}
+                  selectType={selectType}
+                  selectedId={selectedId}
+                />
+              )
+            })}
           </div>
         </>
       )}
@@ -103,11 +109,13 @@ Select.defaultProps = {
   onClick: null,
   page: '',
   selectType: '',
-  selectedId: ''
+  selectedId: '',
+  disabledOptions: []
 }
 
 Select.propTypes = {
   className: PropTypes.string,
+  disabledOptions: PropTypes.array,
   disabled: PropTypes.bool,
   floatingLabel: PropTypes.bool,
   label: PropTypes.string,

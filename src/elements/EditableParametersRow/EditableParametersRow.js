@@ -9,6 +9,7 @@ import { selectOptions as selectOption } from '../../components/JobsPanelParamet
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableParametersRow = ({
+  disabledOptions,
   handleEdit,
   match,
   selectedParameter,
@@ -61,15 +62,13 @@ const EditableParametersRow = ({
       )}
       <div className="table__cell table__cell_edit">
         <Select
+          disabledOptions={disabledOptions}
           label={selectedParameter.data.parameterType}
           match={match}
           onClick={parameterType =>
             setSelectedParameter({
               ...selectedParameter.data,
-              data: {
-                ...selectedParameter.data,
-                parameterType: parameterType
-              }
+              data: { ...selectedParameter.data, parameterType: parameterType }
             })
           }
           options={selectOption.parameterType}
@@ -103,6 +102,7 @@ const EditableParametersRow = ({
 }
 
 EditableParametersRow.propTypes = {
+  disabledOptions: PropTypes.array,
   handleEdit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   selectedParameter: PropTypes.shape({}).isRequired,
