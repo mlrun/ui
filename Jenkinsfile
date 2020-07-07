@@ -17,7 +17,7 @@ podTemplate(label: "${git_project}-${label}", inheritFrom: "jnlp-python37-nodejs
             withCredentials([
                     string(credentialsId: git_deploy_user_token, variable: 'GIT_TOKEN')
             ]) {
-                github.release(git_deploy_user, git_project, git_project_user, git_project_upstream_user, true, GIT_TOKEN, 50000) {
+                github.release(git_deploy_user, git_project, git_project_user, git_project_upstream_user, true, GIT_TOKEN) {
                     container('docker-cmd') {
 
                         common.reportStage('Build mlrun/ui') {
