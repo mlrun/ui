@@ -59,24 +59,33 @@ main {
     }
   }
 
+  [class*='btn'] {
+    display: flex;
+    align-items: center;
+    height: 49px;
+    padding: 10px 16px;
+    border-radius: 2px;
+  }
+
   .btn {
+    &_small {
+      height: 36px;
+    }
+
     &_primary {
-      display: flex;
-      align-items: center;
       padding: 10px;
       color: $white;
       background: $purple;
-      border-radius: 2px;
+    }
+
+    &_secondary {
+      color: $white;
+      background-color: $brightTurquoise;
     }
 
     &_default {
-      display: flex;
-      align-items: center;
-      height: 49px;
-      padding: 10px 16px;
       background-color: $white;
       border: $primaryBorder;
-      border-radius: 2px;
 
       &:hover {
         background-color: $alabaster;
@@ -115,10 +124,6 @@ iframe {
   align-items: center;
   justify-content: center;
   width: 100%;
-}
-
-.remove-btn {
-  margin-right: 0.5rem;
 }
 
 .error_container {
