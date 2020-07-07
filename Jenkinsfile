@@ -25,7 +25,7 @@ podTemplate(label: "${git_project}-${label}", inheritFrom: "jnlp-python37-nodejs
                                 
                                 println(common.shellc("MLRUN_DOCKER_TAG=${github.DOCKER_TAG_VERSION} npm run docker"))
                                 dockerx.images_push_multi_registries(
-                                            ["${git_project}/mlrun-ui:${github.DOCKER_TAG_VERSION}"],
+                                            ["${git_project_upstream_user}/mlrun-ui:${github.DOCKER_TAG_VERSION}"],
                                             [
                                                 pipelinex.DockerRepo.ARTIFACTORY_IGUAZIO,
                                                 pipelinex.DockerRepo.MLRUN_DOCKER_HUB,
