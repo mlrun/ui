@@ -27,7 +27,8 @@ body {
   font-family: Roboto, sans-serif;
   font-style: normal;
   line-height: 18px;
-  background: #eeeeee;
+  background: $gallery;
+
   @include resetSpaces;
 }
 
@@ -64,16 +65,12 @@ main {
     align-items: center;
     height: 49px;
     padding: 10px 16px;
+    font-size: 14px;
     border-radius: 2px;
   }
 
   .btn {
-    &_small {
-      height: 36px;
-    }
-
     &_primary {
-      padding: 10px;
       color: $white;
       background: $purple;
     }
@@ -91,6 +88,10 @@ main {
         background-color: $alabaster;
         cursor: pointer;
       }
+    }
+
+    &_small {
+      height: 36px;
     }
   }
 }
@@ -147,8 +148,8 @@ iframe {
     left: 10px;
     color: $topaz;
     text-transform: capitalize;
-    pointer-events: none;
     background-color: transparent;
+    pointer-events: none;
 
     &.active-label {
       top: 10px;
@@ -166,14 +167,15 @@ iframe {
 }
 
 input {
-  font-family: Roboto, sans-serif;
-  font-style: normal;
+  overflow-x: hidden;
   font-weight: normal;
   font-size: 15px;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
   line-height: 18px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow-x: hidden;
+
   &:active,
   &:focus {
     outline: none;
