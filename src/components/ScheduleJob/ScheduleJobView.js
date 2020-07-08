@@ -33,8 +33,8 @@ const ScheduleJobView = ({
   time
 }) => {
   const scheduleBtnClassNames = classnames(
-    'btn',
     'btn_primary',
+    'btn_small',
     'btn__schedule'
   )
 

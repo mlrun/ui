@@ -10,7 +10,7 @@ const PageActionsMenu = ({ match, onClick, page }) => {
       {page === JOBS_PAGE && (
         <div className="page-actions-container">
           <Link
-            className="page-actions-container__btn btn_default"
+            className="btn_secondary btn_small"
             to={`/projects/${match.params.projectName}/jobs/create-new-job`}
           >
             New Job
@@ -19,10 +19,7 @@ const PageActionsMenu = ({ match, onClick, page }) => {
       )}
       {page === PROJECTS_PAGE && (
         <div className="page-actions-container">
-          <button
-            className="page-actions-container__btn btn_default"
-            onClick={onClick}
-          >
+          <button className="btn_secondary btn_small" onClick={onClick}>
             New Project
           </button>
         </div>
