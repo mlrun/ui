@@ -16,9 +16,9 @@ const Accordion = ({
   const accordionRef = React.createRef()
 
   const handleOnBlur = useCallback(
-    e => {
+    event => {
       if (accordionRef.current) {
-        if (closeOnBlur && !accordionRef.current.contains(e.target)) {
+        if (closeOnBlur && !accordionRef.current.contains(event.target)) {
           setOpen(false)
           closeOnBlur()
         }
