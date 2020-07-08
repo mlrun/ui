@@ -171,6 +171,12 @@ const JobsPanel = ({
           func => func.metadata.tag === panelState.currentFunctionInfo.version
         )
 
+    const labels = {}
+
+    panelState.currentFunctionInfo.labels.forEach(
+      label => (labels[label.split(':')[0]] = label.split(':')[1].slice(1))
+    )
+
     const postData = {
       ...jobsStore.newJob,
       schedule: cronString || jobsStore.newJob.schedule,
@@ -186,6 +192,10 @@ const JobsPanel = ({
       },
       task: {
         ...jobsStore.newJob.task,
+        metadata: {
+          name: panelState.currentFunctionInfo.name,
+          labels
+        },
         spec: {
           ...jobsStore.newJob.task.spec,
           output_path: panelState.outputPath,
