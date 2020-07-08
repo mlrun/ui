@@ -232,29 +232,10 @@
   }
 
   .btn {
-    height: 36px;
-    padding: 10px;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
-
-    &-load {
-      margin: 24px 0;
-      padding: 10px 16px;
-      color: $primary;
-      font-size: 14px;
-      line-height: 16px;
-      border: $primaryBorder;
-      border-radius: 2px;
-    }
-
     &__schedule-for-later {
-      display: flex;
-      align-items: center;
       margin-right: 10px;
       color: $primary;
-      border: $primaryBorder;
-      border-radius: 4px;
+      background-color: transparent;
     }
 
     &_primary {
@@ -271,11 +252,12 @@
       margin-top: 16px;
       margin-left: auto;
       padding: 10px 16px;
+      font-weight: 500;
     }
+  }
 
-    &__icon {
-      margin-right: 5px;
-    }
+  .schedule-run-icon {
+    margin-right: 5px;
   }
 
   .no-border {
