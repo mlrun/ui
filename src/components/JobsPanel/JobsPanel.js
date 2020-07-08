@@ -70,7 +70,6 @@ const JobsPanel = ({
 
   useEffect(() => {
     if (panelState.editMode) {
-      console.log('here')
       if (
         panelState.previousPanelData.titleInfo.method !==
         panelState.currentFunctionInfo.method

@@ -98,7 +98,7 @@ const JobsPanelTitleView = ({
         </Accordion>
       </div>
       {!openScheduleJob && (
-        <div className="job-panel__select-container">
+        <div className="job-panel__title-select-container">
           <Select
             floatingLabel
             label="Version"
@@ -128,17 +128,17 @@ const JobsPanelTitleView = ({
       {editMode && (
         <div className="job-panel__title-buttons-container">
           <button
-            className="btn btn_default"
+            className="btn_default btn_small"
             onClick={event => handleFinishEdit(event, true)}
           >
             Cancel
           </button>
-          <button className="btn btn_primary" onClick={handleFinishEdit}>
+          <button className="btn_primary btn_small" onClick={handleFinishEdit}>
             Done
           </button>
         </div>
       )}
-      <button onClick={() => closePanel({})} className="btn-close">
+      <button onClick={() => closePanel({})} className="job-panel__btn_close">
         <Close />
       </button>
     </div>
