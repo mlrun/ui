@@ -34,8 +34,8 @@ const JobsPanel = ({
   jobsStore,
   match,
   removeFunctionTemplate,
-  runNewJob,
   removeNewJob,
+  runNewJob,
   setNewJob,
   setNewJobEnvironmentVariables,
   setNewJobHyperParameters,
@@ -43,7 +43,9 @@ const JobsPanel = ({
   setNewJobParameters,
   setNewJobSecretSources,
   setNewJobVolumeMounts,
-  setNewJobVolumes
+  setNewJobVolumes,
+  setTuningStrategy,
+  setUrl
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
@@ -68,6 +70,7 @@ const JobsPanel = ({
 
   useEffect(() => {
     if (panelState.editMode) {
+      console.log('here')
       if (
         panelState.previousPanelData.titleInfo.method !==
         panelState.currentFunctionInfo.method
@@ -135,7 +138,7 @@ const JobsPanel = ({
       panelDispatch({
         type: panelActions.SET_CURRENT_FUNCTION_INFO,
         payload: {
-          labels: parseKeyValues(selectedFunction[0].metadata.labels || {}),
+          labels: parseKeyValues(selectedFunction[0].metadata.labels || []),
           name: functionsStore.template.name || groupedFunctions.name,
           method: defaultMethod || (methodOptions[0]?.id ?? ''),
           methodDescription: methodOptions[0]?.subLabel ?? '',
@@ -208,8 +211,8 @@ const JobsPanel = ({
       jobsStore={jobsStore}
       match={match}
       openScheduleJob={openScheduleJob}
-      panelState={panelState}
       panelDispatch={panelDispatch}
+      panelState={panelState}
       setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}
@@ -218,6 +221,8 @@ const JobsPanel = ({
       setNewJobVolumeMounts={setNewJobVolumeMounts}
       setNewJobVolumes={setNewJobVolumes}
       setOpenScheduleJob={setOpenScheduleJob}
+      setTuningStrategy={setTuningStrategy}
+      setUrl={setUrl}
     />
   )
 }

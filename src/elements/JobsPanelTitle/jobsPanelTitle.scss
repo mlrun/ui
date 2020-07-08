@@ -6,34 +6,6 @@
     position: relative;
     margin: 36px 90px 33px 55px;
 
-    &-wrapper {
-      button.btn {
-        margin-left: auto;
-      }
-
-      &_edit {
-        width: 100%;
-      }
-
-      .input {
-        width: 100%;
-        font-weight: 300;
-        font-size: 36px;
-
-        &-wrapper {
-          width: 100%;
-          border: $primaryBorder;
-          border-radius: 4px;
-        }
-      }
-
-      &_hover {
-        display: inline-block;
-        border: $transparentBorder;
-        border-radius: 4px;
-      }
-    }
-
     &-container {
       width: 100%;
     }
@@ -48,6 +20,10 @@
       right: 0;
 
       &.open {
+        display: none;
+      }
+
+      &_disabled {
         display: none;
       }
     }
@@ -67,6 +43,8 @@
       }
 
       &-wrapper {
+        user-select: none;
+
         &::after {
           position: absolute;
           top: 0;
@@ -80,6 +58,13 @@
       }
     }
 
+    &-name {
+      margin-bottom: 6px;
+      font-weight: 300;
+      font-size: 36px;
+      line-height: 42px;
+    }
+
     &-labels {
       width: 100%;
       margin: 15px 0;
@@ -88,6 +73,18 @@
 
       & ~ .input__label {
         top: 33px;
+      }
+    }
+
+    &-buttons-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      .btn {
+        &_default {
+          margin-right: 10px;
+        }
       }
     }
 
@@ -103,45 +100,11 @@
     }
   }
 
-  &__button {
-    position: relative;
-    right: -12px;
-    display: inline-block;
-    margin-right: 16px;
-    transform: translate(-44%, -60%);
-  }
-
   .btn-close {
     position: absolute;
     top: -20px;
     right: -75px;
     height: 24px;
-  }
-
-  &__icon {
-    cursor: pointer;
-  }
-
-  &__name {
-    margin-bottom: 6px;
-    font-weight: 300;
-    font-size: 36px;
-    line-height: 42px;
-  }
-
-  &__wrapper {
-    padding: 16px;
-    color: $mulledWineTwo;
-  }
-
-  &__version,
-  &__method {
-    font-weight: 500;
-    font-size: 14px;
-  }
-
-  &__version {
-    margin-right: 10px;
   }
 
   &__select {

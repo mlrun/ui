@@ -7,11 +7,11 @@
   position: relative;
   display: flex;
   align-items: center;
-  height: 40px;
   min-width: 100px;
-  border-radius: 4px;
+  height: 40px;
   background-color: transparent;
   border: $primaryBorder;
+  border-radius: 4px;
 
   &.active {
     background: $alabaster;
@@ -19,11 +19,11 @@
 
   &__label {
     top: 15px;
-    left: 0px;
+    left: 0;
     padding: 0 5px 0 15px;
     color: $topaz;
-    text-transform: capitalize;
     font-size: 15px;
+    text-transform: capitalize;
     transition: 200ms ease;
 
     &_floating {
@@ -44,8 +44,8 @@
 
     &_floating {
       position: absolute;
-      left: 16px;
       top: 25px;
+      left: 16px;
     }
   }
 
@@ -78,10 +78,10 @@
     left: 0;
     z-index: 5;
     width: 100%;
-    border: $primaryBorder;
-    box-shadow: $filterShadow;
-    border-radius: 2px;
     color: $mulledWineTwo;
+    border: $primaryBorder;
+    border-radius: 2px;
+    box-shadow: $filterShadow;
   }
 
   &__item {
@@ -110,17 +110,28 @@
     }
 
     .all {
-      @include jobStatus(none);
       margin: 0;
+
+      @include jobStatus(none);
+    }
+  }
+
+  .disabled {
+    color: $spunPearl;
+    cursor: default;
+    user-select: none;
+
+    &:hover {
+      background-color: $white;
     }
   }
 
   .overall {
     position: fixed;
-    left: 0;
     top: 0;
+    left: 0;
     z-index: 5;
-    height: 100%;
     width: 100%;
+    height: 100%;
   }
 }

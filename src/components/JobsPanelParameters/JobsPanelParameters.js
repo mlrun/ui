@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelParametersView from './JobsPanelParametersView'
@@ -13,18 +13,32 @@ import { editHyperParams } from './jobsPanelParameters.util'
 import { panelActions } from '../JobsPanel/panelReducer'
 
 const JobsPanelParameters = ({
-  hyperparams,
+  jobsStoreNewJobTaskSpec,
   match,
   panelDispatch,
   panelState,
-  parameters,
   setNewJobHyperParameters,
-  setNewJobParameters
+  setNewJobParameters,
+  setTuningStrategy,
+  setUrl
 }) => {
   const [parametersState, parametersDispatch] = useReducer(
     jobsPanelParametersReducer,
     initialState
   )
+
+  const disabledOptions = useMemo(() => {
+    if (jobsStoreNewJobTaskSpec.param_file) {
+      return ['hyper']
+    }
+    return []
+  }, [jobsStoreNewJobTaskSpec.param_file])
+
+  const isHyperTypeExist = useMemo(() => {
+    return panelState.tableData.parameters.some(
+      parameter => parameter.data.parameterType.toLowerCase() === 'hyper'
+    )
+  }, [panelState.tableData.parameters])
 
   const handleAddNewParameter = () => {
     if (
@@ -42,7 +56,7 @@ const JobsPanelParameters = ({
     }
 
     setNewJobParameters({
-      ...parameters,
+      ...jobsStoreNewJobTaskSpec.parameters,
       [parametersState.newParameter.name]: parametersState.newParameter.value
     })
     panelDispatch({
@@ -67,7 +81,7 @@ const JobsPanelParameters = ({
       panelData.newParameterType[0].id
     ) {
       setNewJobHyperParameters({
-        ...hyperparams,
+        ...jobsStoreNewJobTaskSpec.hyperparams,
         [parametersState.newParameter
           .name]: parametersState.newParameter.value.split(',')
       })
@@ -99,8 +113,8 @@ const JobsPanelParameters = ({
   }
 
   const handleEditParameter = () => {
-    const params = { ...parameters }
-    const hyperParamsObj = { ...hyperparams }
+    const params = { ...jobsStoreNewJobTaskSpec.parameters }
+    const hyperParamsObj = { ...jobsStoreNewJobTaskSpec.hyperparams }
 
     if (parametersState.selectedParameter.newName) {
       delete params[parametersState.selectedParameter.data.name]
@@ -165,12 +179,12 @@ const JobsPanelParameters = ({
   }
 
   const handleDeleteParameter = (isInput, item) => {
-    const newParameters = { ...parameters }
+    const newParameters = { ...jobsStoreNewJobTaskSpec.parameters }
 
     delete newParameters[item.name]
 
     if (item.data.parameterType !== panelData.newParameterType[0].id) {
-      const newHyperParameters = { ...hyperparams }
+      const newHyperParameters = { ...jobsStoreNewJobTaskSpec.hyperparams }
 
       delete newHyperParameters[item.name]
 
@@ -194,25 +208,32 @@ const JobsPanelParameters = ({
 
   return (
     <JobsPanelParametersView
+      disabledOptions={disabledOptions}
       handleAddNewItem={handleAddNewParameter}
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
+      isHyperTypeExist={isHyperTypeExist}
       match={match}
+      parameters={panelState.tableData.parameters}
       parametersDispatch={parametersDispatch}
       parametersState={parametersState}
-      parameters={panelState.tableData.parameters}
+      setTuningStrategy={setTuningStrategy}
+      setUrl={setUrl}
+      tuningStrategy={jobsStoreNewJobTaskSpec.tuning_strategy}
+      url={jobsStoreNewJobTaskSpec.param_file}
     />
   )
 }
 
 JobsPanelParameters.propTypes = {
-  hyperparams: PropTypes.shape({}).isRequired,
+  jobsStoreNewJobTaskSpec: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  parameters: PropTypes.shape({}).isRequired,
   setNewJobHyperParameters: PropTypes.func.isRequired,
-  setNewJobParameters: PropTypes.func.isRequired
+  setNewJobParameters: PropTypes.func.isRequired,
+  setTuningStrategy: PropTypes.func.isRequired,
+  setUrl: PropTypes.func.isRequired
 }
 
 export default JobsPanelParameters

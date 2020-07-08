@@ -12,6 +12,7 @@ const JobsPanelTableView = ({
   children,
   className,
   content,
+  disabledOptions,
   editItem,
   generateActionsMenu,
   handleDelete,
@@ -46,6 +47,7 @@ const JobsPanelTableView = ({
         ) {
           return section === 'parameters' ? (
             <EditableParametersRow
+              disabledOptions={disabledOptions}
               handleEdit={handleEdit}
               key={index}
               match={match}
@@ -99,6 +101,7 @@ JobsPanelTableView.propTypes = {
   children: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
   content: PropTypes.array.isRequired,
+  disabledOptions: PropTypes.array,
   editItem: PropTypes.bool.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,

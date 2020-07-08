@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import classNames from 'classnames'
+import classnames from 'classnames'
+
+import { ReactComponent as Warning } from '../../images/warning.svg'
+
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import './input.scss'
 
@@ -16,19 +21,22 @@ const Input = ({
   onChange,
   onKeyDown,
   placeholder,
+  required,
+  requiredText,
   type,
   value,
   wrapperClassName
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false)
   const input = React.createRef()
-
-  const wrapperClassNames = classNames(wrapperClassName, 'input-wrapper')
-  const inputClassNames = classNames(
+  const inputClassNames = classnames(
     'input',
     className,
-    inputIsFocused && floatingLabel && 'active-input'
+    inputIsFocused && floatingLabel && 'active-input',
+    required && 'input_required'
   )
+
+  const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
 
   useEffect(() => {
     if (input.current.value.length > 0) {
@@ -76,6 +84,14 @@ const Input = ({
           {label}
         </label>
       )}
+      {required && (
+        <Tooltip
+          template={<TextTooltipTemplate text={requiredText} warning />}
+          className="input__warning"
+        >
+          <Warning />
+        </Tooltip>
+      )}
       {inputIcon && <span className={iconClass}>{inputIcon}</span>}
     </div>
   )
@@ -92,6 +108,8 @@ Input.defaultProps = {
   onChange: null,
   onKeyDown: null,
   placeholder: '',
+  required: false,
+  requiredText: '',
   value: undefined,
   wrapperClassName: ''
 }
@@ -108,6 +126,8 @@ Input.propTypes = {
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,
+  required: PropTypes.bool,
+  requiredText: PropTypes.string,
   type: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   wrapperClassName: PropTypes.string

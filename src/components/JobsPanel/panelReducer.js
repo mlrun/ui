@@ -1,7 +1,7 @@
 export const initialState = {
   cpuUnit: '',
   currentFunctionInfo: {
-    labels: {},
+    labels: [],
     method: '',
     methodDescription: '',
     name: '',

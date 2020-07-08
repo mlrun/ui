@@ -13,11 +13,12 @@ const JobsPanelTable = ({
   children,
   className,
   content,
-  headers,
+  disabledOptions,
   handleDeleteItems,
   handleEditItems,
   handleEditParameter,
   handleSetSelectedVolume,
+  headers,
   match,
   section,
   selectedItem,
@@ -87,6 +88,7 @@ const JobsPanelTable = ({
       children={children}
       className={className}
       content={content}
+      disabledOptions={disabledOptions}
       editItem={editItem}
       generateActionsMenu={generateActionsMenu}
       handleDelete={handleDelete}
@@ -116,11 +118,12 @@ JobsPanelTable.propTypes = {
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.shape({})
   ]).isRequired,
-  headers: PropTypes.arrayOf(PropTypes.shape({})),
+  disabledOptions: PropTypes.array,
   handleDeleteItems: PropTypes.func,
   handleEditItems: PropTypes.func,
   handleEditParameter: PropTypes.func,
   handleSetSelectedVolume: PropTypes.func,
+  headers: PropTypes.arrayOf(PropTypes.shape({})),
   match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

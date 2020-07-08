@@ -3,7 +3,7 @@
 .description {
   &-container {
     display: flex;
-    padding: 5px 5px 5px 16px;
+    padding: 5px;
     color: $mulledWineTwo;
 
     &-text {
@@ -19,12 +19,16 @@
     }
 
     .description__toggle-btn {
+      display: flex;
+      align-items: center;
       height: 17px;
       margin-left: 5px;
-      color: $riverBed;
+      padding-bottom: 12px;
+      color: $topaz;
       font-weight: bold;
-      letter-spacing: 1px;
+      font-size: 20px;
       background: $iron;
+      border-radius: 2px;
       cursor: pointer;
     }
   }
