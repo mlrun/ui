@@ -87,7 +87,7 @@ const JobsPanelTitleView = ({
                 onChange={name =>
                   panelDispatch({
                     type: panelActions.SET_CURRENT_FUNCTION_INFO_LABELS,
-                    payload: name.split(/\s*,\s*/)
+                    payload: name.split(',')
                   })
                 }
                 type="text"
