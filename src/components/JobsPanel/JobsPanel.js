@@ -24,6 +24,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { initialState, panelReducer, panelActions } from './panelReducer'
 
 import './jobsPanel.scss'
+import { parseKeyValues } from '../../utils'
 
 const JobsPanel = ({
   closePanel,
@@ -136,10 +137,11 @@ const JobsPanel = ({
       panelDispatch({
         type: panelActions.SET_CURRENT_FUNCTION_INFO,
         payload: {
+          labels: parseKeyValues(selectedFunction[0].metadata.labels || []),
           name: functionsStore.template.name || groupedFunctions.name,
-          version: defaultVersion,
           method: defaultMethod || (methodOptions[0]?.id ?? ''),
-          methodDescription: methodOptions[0]?.subLabel ?? ''
+          methodDescription: methodOptions[0]?.subLabel ?? '',
+          version: defaultVersion
         }
       })
       panelDispatch({
@@ -169,6 +171,12 @@ const JobsPanel = ({
           func => func.metadata.tag === panelState.currentFunctionInfo.version
         )
 
+    const labels = {}
+
+    panelState.currentFunctionInfo.labels.forEach(
+      label => (labels[label.split(':')[0]] = label.split(':')[1].slice(1))
+    )
+
     const postData = {
       ...jobsStore.newJob,
       schedule: cronString || jobsStore.newJob.schedule,
@@ -184,6 +192,10 @@ const JobsPanel = ({
       },
       task: {
         ...jobsStore.newJob.task,
+        metadata: {
+          name: panelState.currentFunctionInfo.name,
+          labels
+        },
         spec: {
           ...jobsStore.newJob.task.spec,
           output_path: panelState.outputPath,

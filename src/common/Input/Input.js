@@ -4,9 +4,10 @@ import classnames from 'classnames'
 
 import { ReactComponent as Warning } from '../../images/warning.svg'
 
-import './input.scss'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
+import './input.scss'
 
 const Input = ({
   className,
@@ -23,7 +24,8 @@ const Input = ({
   required,
   requiredText,
   type,
-  value
+  value,
+  wrapperClassName
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false)
   const input = React.createRef()
@@ -33,6 +35,8 @@ const Input = ({
     inputIsFocused && floatingLabel && 'active-input',
     required && 'input_required'
   )
+
+  const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
 
   useEffect(() => {
     if (input.current.value.length > 0) {
@@ -51,7 +55,7 @@ const Input = ({
   }
 
   return (
-    <div className="input-wrapper">
+    <div className={wrapperClassNames}>
       <input
         className={inputClassNames}
         disabled={disabled}
@@ -106,7 +110,8 @@ Input.defaultProps = {
   placeholder: '',
   required: false,
   requiredText: '',
-  value: undefined
+  value: undefined,
+  wrapperClassName: ''
 }
 
 Input.propTypes = {
@@ -124,7 +129,8 @@ Input.propTypes = {
   required: PropTypes.bool,
   requiredText: PropTypes.string,
   type: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  wrapperClassName: PropTypes.string
 }
 
 export default React.memo(Input)

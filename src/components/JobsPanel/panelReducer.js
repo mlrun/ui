@@ -1,10 +1,11 @@
 export const initialState = {
   cpuUnit: '',
   currentFunctionInfo: {
+    labels: [],
     method: '',
+    methodDescription: '',
     name: '',
-    version: '',
-    methodDescription: ''
+    version: ''
   },
   editMode: false,
   inputPath: '',
@@ -47,6 +48,7 @@ export const panelActions = {
   REMOVE_PREVIOUS_PANEL_DATA: 'REMOVE_PREVIOUS_PANEL_DATA',
   SET_CPU_UNIT: 'SET_CPU_UNIT',
   SET_CURRENT_FUNCTION_INFO: 'SET_CURRENT_FUNCTION_INFO',
+  SET_CURRENT_FUNCTION_INFO_LABELS: 'SET_CURRENT_FUNCTION_INFO_LABELS',
   SET_CURRENT_FUNCTION_INFO_METHOD: 'SET_CURRENT_FUNCTION_INFO_METHOD',
   SET_CURRENT_FUNCTION_INFO_NAME: 'SET_CURRENT_FUNCTION_INFO_NAME',
   SET_CURRENT_FUNCTION_INFO_VERSION: 'SET_CURRENT_FUNCTION_INFO_VERSION',
@@ -113,6 +115,14 @@ export const panelReducer = (state, { type, payload }) => {
       return {
         ...state,
         currentFunctionInfo: payload
+      }
+    case panelActions.SET_CURRENT_FUNCTION_INFO_LABELS:
+      return {
+        ...state,
+        currentFunctionInfo: {
+          ...state.currentFunctionInfo,
+          labels: payload
+        }
       }
     case panelActions.SET_CURRENT_FUNCTION_INFO_METHOD:
       return {

@@ -74,6 +74,7 @@ const Projects = ({
             }
 
             removeNewProject()
+            setIsEmptyValue(false)
             setCreateProject(false)
           }}
           handleSuccess={handleCreateProject}

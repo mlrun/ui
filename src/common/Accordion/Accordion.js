@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -7,11 +7,35 @@ import './accordion.scss'
 const Accordion = ({
   accordionClassName,
   children,
+  closeOnBlur,
   icon,
   iconClassName,
   openByDefault
 }) => {
   const [open, setOpen] = useState(openByDefault)
+  const accordionRef = React.createRef()
+
+  const handleOnBlur = useCallback(
+    event => {
+      if (accordionRef.current) {
+        if (closeOnBlur && !accordionRef.current.contains(event.target)) {
+          setOpen(false)
+          closeOnBlur()
+        }
+      }
+    },
+    [accordionRef, closeOnBlur]
+  )
+
+  useEffect(() => {
+    if (accordionRef.current) {
+      window.addEventListener('click', handleOnBlur)
+    }
+
+    return () => {
+      window.addEventListener('click', handleOnBlur)
+    }
+  }, [accordionRef, handleOnBlur])
 
   const handleOpenAccordion = () => {
     setOpen(!open)
@@ -33,6 +57,7 @@ const Accordion = ({
     <div
       className={accordionClassNames}
       onClick={!icon ? handleOpenAccordion : null}
+      ref={accordionRef}
     >
       {icon && (
         <button onClick={handleOpenAccordion} className={iconClassNames}>
@@ -45,11 +70,13 @@ const Accordion = ({
 }
 
 Accordion.defaultProps = {
+  closeOnBlur: null,
   openByDefault: false
 }
 
 Accordion.propTypes = {
   accordionClassName: PropTypes.string,
+  closeOnBlur: PropTypes.func,
   icon: PropTypes.element,
   iconClassName: PropTypes.string,
   openByDefault: PropTypes.bool

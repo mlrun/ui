@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelTitleView from './JobsPanelTitleView'
@@ -16,7 +16,9 @@ const JobsPanelTitle = ({
   panelState,
   setOpenScheduleJob
 }) => {
-  const handleFinishEdit = () => {
+  const [editTitle, setEditTitle] = useState(false)
+
+  const handleFinishEdit = (event, cancelEdit) => {
     panelDispatch({
       type: panelActions.SET_EDIT_MODE,
       payload: false
@@ -24,7 +26,8 @@ const JobsPanelTitle = ({
 
     if (
       panelState.currentFunctionInfo.method !==
-      panelState.previousPanelData.titleInfo.method
+        panelState.previousPanelData.titleInfo.method &&
+      !cancelEdit
     ) {
       panelDispatch({
         type: panelActions.SET_PREVIOUS_PANEL_DATA,
@@ -36,7 +39,54 @@ const JobsPanelTitle = ({
           }
         }
       })
+    } else {
+      panelDispatch({
+        type: panelActions.SET_CURRENT_FUNCTION_INFO_METHOD,
+        payload: {
+          method: panelState.previousPanelData.titleInfo.method,
+          methodDescription:
+            panelState.previousPanelData.titleInfo.methodDescription
+        }
+      })
+      panelDispatch({
+        type: panelActions.SET_TABLE_DATA,
+        payload: panelState.previousPanelData.tableData
+      })
     }
+  }
+
+  const handleFunctionInfoChange = (value, isMethod) => {
+    if (isMethod) {
+      if (value === panelState.currentFunctionInfo.method) {
+        return
+      }
+
+      const methodDescription = functionData.methodOptions.find(
+        func => func.id === value
+      )
+
+      panelDispatch({
+        type: panelActions.SET_CURRENT_FUNCTION_INFO_METHOD,
+        payload: {
+          method: value,
+          methodDescription: methodDescription.subLabel
+        }
+      })
+    } else {
+      if (value === panelState.currentFunctionInfo.version) {
+        return
+      }
+
+      panelDispatch({
+        type: panelActions.SET_CURRENT_FUNCTION_INFO_VERSION,
+        payload: value
+      })
+    }
+
+    panelDispatch({
+      type: panelActions.SET_EDIT_MODE,
+      payload: true
+    })
   }
 
   return (
@@ -44,11 +94,14 @@ const JobsPanelTitle = ({
       closePanel={closePanel}
       currentFunctionInfo={panelState.currentFunctionInfo}
       editMode={panelState.editMode}
+      editTitle={editTitle}
       handleFinishEdit={handleFinishEdit}
+      handleFunctionInfoChange={handleFunctionInfoChange}
       match={match}
       methodOptions={functionData.methodOptions}
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}
+      setEditTitle={setEditTitle}
       setOpenScheduleJob={setOpenScheduleJob}
       versionOptions={functionData.versionOptions}
     />
