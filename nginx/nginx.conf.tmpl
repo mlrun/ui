@@ -1,3 +1,8 @@
+map $http_x_v3io_session_key $v3io_session_key {
+    default   $http_x_v3io_session_key;
+    ""        ${MLRUN_V3IO_ACCESS_KEY};
+}
+
 server {
 
   listen 80;
@@ -14,7 +19,7 @@ server {
   }
 
   location /api {
-    proxy_set_header x-v3io-session-key ${MLRUN_V3IO_ACCESS_KEY};
+    proxy_set_header x-v3io-session-key $v3io_session_key;
     proxy_pass ${MLRUN_API_PROXY_URL};
   }
 
