@@ -1,9 +1,12 @@
-$tableBorder: 1px solid $mulledWineThree;
-$parametersBorder: 1px solid $burntSiennaTwo;
-$resultsBorder: 1px solid $chateauGreen;
-$primaryBorder: 1px solid rgba(0, 0, 0, 0.2);
+$disabledBorder: 1px solid rgba($spunPearl, 0.3);
+$errorBorder: 1px solid $amaranth;
 $gitBorder: 1px solid $white;
 $labelBorder: 1px solid $amethyst;
+$parametersBorder: 1px solid $burntSiennaTwo;
+$primaryBorder: 1px solid rgba(0, 0, 0, 0.2);
+$resultsBorder: 1px solid $chateauGreen;
+$tableBorder: 1px solid $mulledWineThree;
 $transparentBorder: 1px solid transparent;
-$errorBorder: 1px solid $amaranth;
-$disabledBorder: 1px solid rgba($spunPearl, 0.3);
+$uploadFileDragOverBorder: 2px dashed $cornflowerBlue;
+$uploadFileDroppedBorder: 1px solid $silver;
+$uploadFileIdleBorder: 1px dashed $silver;

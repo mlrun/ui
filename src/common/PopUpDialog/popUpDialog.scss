@@ -8,8 +8,8 @@
   background-color: $white;
 
   &__overlay {
-    position: absolute;
-    z-index: 1;
+    position: fixed;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,34 +19,23 @@
   }
 
   &__header {
+    display: flex;
+    justify-content: space-between;
     margin: 10px 0 20px;
-    color: $primary;
-    font-size: 24px;
-    line-height: 28px;
-  }
 
-  &__btn {
-    margin: 8px 0 8px 8px;
+    &-text {
+      color: $primary;
+      font-size: 24px;
+      line-height: 28px;
+    }
 
-    &-container {
-      display: flex;
-      justify-content: flex-end;
+    &-close {
+      cursor: pointer;
     }
   }
 
-  .btn_success {
-    padding: 10px 18px;
-  }
-
-  .input-wrapper {
-    margin: 10px 0;
-
-    .pop-up-dialog__form {
-      &-input {
-        width: 100%;
-        border: $primaryBorder;
-        border-radius: 4px;
-      }
-    }
+  &__footer-container {
+    display: flex;
+    justify-content: flex-end;
   }
 }

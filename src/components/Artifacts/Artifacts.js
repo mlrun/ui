@@ -9,9 +9,10 @@ import parseTargetPath from '../../utils/parseTargetPath'
 import artifactApi from '../../api/artifacts-api'
 import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
+import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 
 import './artifacts.scss'
-import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
+import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 
 const Artifacts = ({
   artifactsStore,
@@ -22,6 +23,8 @@ const Artifacts = ({
 }) => {
   const [artifacts, _setArtifacts] = useState([])
   const [selectedArtifact, setSelectedArtifact] = useState({})
+  const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+
   const [pageData, setPageData] = useState({
     detailsMenu: artifactsData.detailsMenu,
     filters: artifactsData.filters,
@@ -163,9 +166,17 @@ const Artifacts = ({
         match={match}
         pageData={pageData}
         refresh={fetchData}
+        openPopupDialog={() => setIsPopupDialogOpen(true)}
         selectedItem={selectedArtifact.item}
         yamlContent={artifactsStore.artifacts}
       />
+      {isPopupDialogOpen && (
+        <RegisterArtifactPopup
+          match={match}
+          refresh={fetchData}
+          setIsPopupDialogOpen={setIsPopupDialogOpen}
+        />
+      )}
     </>
   )
 }

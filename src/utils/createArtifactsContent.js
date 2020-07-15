@@ -33,12 +33,12 @@ const createArtifactsContent = artifacts =>
       },
       buttonPopout: {
         value: '',
-        class: 'artifacts_extra-small artifacts__btn-icon',
+        class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonPopout'
       },
       buttonDownload: {
         value: '',
-        class: 'artifacts_extra-small artifacts__btn-icon',
+        class: 'artifacts_extra-small artifacts__icon',
         type: 'buttonDownload'
       }
     }

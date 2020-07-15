@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import { JOBS_PAGE, PROJECTS_PAGE } from '../../constants.js'
+import { JOBS_PAGE, PROJECTS_PAGE, ARTIFACTS_PAGE } from '../../constants.js'
 
 const PageActionsMenu = ({ match, onClick, page }) => {
   return (
@@ -17,10 +17,10 @@ const PageActionsMenu = ({ match, onClick, page }) => {
           </Link>
         </div>
       )}
-      {page === PROJECTS_PAGE && (
+      {(page === PROJECTS_PAGE || page === ARTIFACTS_PAGE) && (
         <div className="page-actions-container">
           <button className="btn_secondary btn_small" onClick={onClick}>
-            New Project
+            {page === PROJECTS_PAGE ? 'New Project' : 'Register Artifact'}
           </button>
         </div>
       )}
