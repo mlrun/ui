@@ -20,11 +20,19 @@
 
       &-column {
         width: 100%;
+
+        .input {
+          border: none;
+        }
       }
     }
 
     &__row-add-item {
       display: flex;
+
+      input {
+        border: none;
+      }
     }
   }
 

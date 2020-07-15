@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -12,6 +12,7 @@ import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Input from '../../common/Input/Input'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import pageData from './projectsData'
 
@@ -57,30 +58,21 @@ const Projects = ({
     })
   }
 
+  const closePopUp = useCallback(() => {
+    if (projectStore.error) {
+      removeProjectError()
+    }
+
+    removeNewProject()
+    setIsEmptyValue(false)
+    setCreateProject(false)
+  }, [projectStore.error, removeNewProject, removeProjectError])
+
   return (
     <div className={projectsClassNames}>
       {projectStore.loading && <Loader />}
       {createProject && (
-        <PopUpDialog
-          actionBtnText="Create"
-          closeError={() => {
-            if (projectStore.error) {
-              removeProjectError()
-            }
-          }}
-          closePopUp={() => {
-            if (projectStore.error) {
-              removeProjectError()
-            }
-
-            removeNewProject()
-            setIsEmptyValue(false)
-            setCreateProject(false)
-          }}
-          handleSuccess={handleCreateProject}
-          headerText="Create new project"
-          message={projectStore.error}
-        >
+        <PopUpDialog headerText="Create new project" closePopUp={closePopUp}>
           <div className="pop-up-dialog__form">
             <Input
               className="pop-up-dialog__form-input"
@@ -102,6 +94,30 @@ const Projects = ({
               type="text"
               value={projectStore.newProject.description}
             />
+          </div>
+          <div className="pop-up-dialog__footer-container">
+            {projectStore.error && (
+              <ErrorMessage
+                closeError={() => {
+                  if (projectStore.error) {
+                    removeProjectError()
+                  }
+                }}
+                message={projectStore.error}
+              />
+            )}
+            <button
+              className="btn_default pop-up-dialog__btn_cancel"
+              onClick={closePopUp}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn_primary btn_success"
+              onClick={handleCreateProject}
+            >
+              Create
+            </button>
           </div>
         </PopUpDialog>
       )}

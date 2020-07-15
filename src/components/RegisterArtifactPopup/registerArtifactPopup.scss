@@ -1,0 +1,15 @@
+.pop-up-dialog {
+  &__btn_cancel {
+    margin: 0 10px;
+  }
+
+  .input-wrapper {
+    margin: 10px 0;
+
+    .pop-up-dialog__form {
+      &-input {
+        width: 100%;
+      }
+    }
+  }
+}

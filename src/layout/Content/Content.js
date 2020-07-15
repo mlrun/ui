@@ -25,6 +25,7 @@ const Content = ({
   handleSelectItem,
   loading,
   match,
+  openPopupDialog,
   pageData,
   refresh,
   selectedItem,
@@ -183,7 +184,11 @@ const Content = ({
     <>
       <div className="content__header">
         <Breadcrumbs match={match} onClick={handleCancel} />
-        <PageActionsMenu match={match} page={pageData.page} />
+        <PageActionsMenu
+          match={match}
+          page={pageData.page}
+          onClick={openPopupDialog}
+        />
       </div>
       <div className={contentClassName}>
         {pageData.page === JOBS_PAGE && <ContentMenu />}

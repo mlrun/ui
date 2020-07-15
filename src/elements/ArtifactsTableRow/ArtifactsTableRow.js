@@ -65,4 +65,4 @@ ArtifactsTableRow.propTypes = {
   selectedItem: PropTypes.shape({}).isRequired
 }
 
-export default ArtifactsTableRow
+export default React.memo(ArtifactsTableRow)

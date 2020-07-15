@@ -6,7 +6,8 @@
   padding: 18px 17px;
   color: $primary;
   background-color: transparent;
-  border: none;
+  border: $primaryBorder;
+  border-radius: 4px;
 
   &-wrapper {
     position: relative;

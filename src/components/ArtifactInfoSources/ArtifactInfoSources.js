@@ -67,9 +67,13 @@ const ArtifactInfoSources = ({ header, sources }) => {
   )
 }
 
+ArtifactInfoSources.defaultProps = {
+  sources: {}
+}
+
 ArtifactInfoSources.propTypes = {
   header: PropTypes.string.isRequired,
-  sources: PropTypes.shape({}).isRequired
+  sources: PropTypes.shape({})
 }
 
 export default ArtifactInfoSources

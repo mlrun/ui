@@ -28,5 +28,7 @@ export default {
       params: schema ? { schema, path, user } : { path, user }
     }),
   getArtifactTag: project =>
-    mainHttpClient.get(`/projects/${project}/artifact-tags`)
+    mainHttpClient.get(`/projects/${project}/artifact-tags`),
+  registerArtifact: (project, data) =>
+    mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data)
 }

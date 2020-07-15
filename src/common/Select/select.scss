@@ -78,6 +78,8 @@
     left: 0;
     z-index: 5;
     width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
     color: $mulledWineTwo;
     border: $primaryBorder;
     border-radius: 2px;
