@@ -29,7 +29,7 @@
           }
         }
 
-        &-delete-btn {
+        .btn_delete {
           display: block;
         }
       }
@@ -74,8 +74,9 @@
       padding-left: 17px;
     }
 
-    &-delete-btn {
+    .btn_delete {
       display: none;
+      padding: 0;
     }
 
     .parameter-name {

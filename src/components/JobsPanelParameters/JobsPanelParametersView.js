@@ -21,7 +21,7 @@ const JobsPanelParametersView = ({
   disabledOptions,
   handleAddNewItem,
   handleDeleteParameter,
-  handleEditParameter,
+  handleEditItems,
   isHyperTypeExist,
   match,
   parameters,
@@ -40,6 +40,7 @@ const JobsPanelParametersView = ({
     'parameters-additional-settings__tuning-strategy',
     !isHyperTypeExist && !url && 'disabled'
   )
+
   return (
     <div className="job-panel__item">
       <JobsPanelSection title="Parameters">
@@ -49,7 +50,7 @@ const JobsPanelParametersView = ({
           className="parameters"
           content={parameters}
           handleDeleteItems={handleDeleteParameter}
-          handleEditParameter={handleEditParameter}
+          handleEditItems={handleEditItems}
           headers={panelData.parameters['table-headers']}
           match={match}
           section="parameters"
@@ -180,7 +181,7 @@ const JobsPanelParametersView = ({
 JobsPanelParametersView.propTypes = {
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
-  handleEditParameter: PropTypes.func.isRequired,
+  handleEditItems: PropTypes.func.isRequired,
   isHyperTypeExist: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

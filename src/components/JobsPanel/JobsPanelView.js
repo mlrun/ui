@@ -52,6 +52,20 @@ const JobsPanelView = ({
               iconClassName="job-panel__expand-icon"
               openByDefault
             >
+              <JobsPanelDataInputs
+                inputs={jobsStore.newJob.task.spec.inputs}
+                match={match}
+                panelDispatch={panelDispatch}
+                panelState={panelState}
+                setNewJobInputs={setNewJobInputs}
+              />
+            </Accordion>
+            <Accordion
+              accordionClassName="job-panel__accordion"
+              icon={<Arrow />}
+              iconClassName="job-panel__expand-icon"
+              openByDefault
+            >
               <JobsPanelParameters
                 jobsStoreNewJobTaskSpec={jobsStore.newJob.task.spec}
                 match={match}
@@ -61,24 +75,6 @@ const JobsPanelView = ({
                 setNewJobParameters={setNewJobParameters}
                 setTuningStrategy={setTuningStrategy}
                 setUrl={setUrl}
-              />
-            </Accordion>
-            <Accordion
-              accordionClassName="job-panel__accordion"
-              icon={<Arrow />}
-              iconClassName="job-panel__expand-icon"
-              openByDefault
-            >
-              <JobsPanelDataInputs
-                inputs={jobsStore.newJob.task.spec.inputs}
-                match={match}
-                panelDispatch={panelDispatch}
-                panelState={panelState}
-                setNewJobInputs={setNewJobInputs}
-                setNewJobVolumeMounts={setNewJobVolumeMounts}
-                setNewJobVolumes={setNewJobVolumes}
-                volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
-                volumes={jobsStore.newJob.function.spec.volumes}
               />
             </Accordion>
             <Accordion
@@ -107,6 +103,10 @@ const JobsPanelView = ({
                 match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
+                setNewJobVolumeMounts={setNewJobVolumeMounts}
+                setNewJobVolumes={setNewJobVolumes}
+                volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
+                volumes={jobsStore.newJob.function.spec.volumes}
               />
             </Accordion>
             <div className="job-panel__buttons-container">

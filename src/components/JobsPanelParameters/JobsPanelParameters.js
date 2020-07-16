@@ -178,7 +178,7 @@ const JobsPanelParameters = ({
     })
   }
 
-  const handleDeleteParameter = (isInput, item) => {
+  const handleDeleteParameter = item => {
     const newParameters = { ...jobsStoreNewJobTaskSpec.parameters }
 
     delete newParameters[item.name]
@@ -211,7 +211,7 @@ const JobsPanelParameters = ({
       disabledOptions={disabledOptions}
       handleAddNewItem={handleAddNewParameter}
       handleDeleteParameter={handleDeleteParameter}
-      handleEditParameter={handleEditParameter}
+      handleEditItems={handleEditParameter}
       isHyperTypeExist={isHyperTypeExist}
       match={match}
       parameters={panelState.tableData.parameters}
