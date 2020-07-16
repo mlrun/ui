@@ -77,6 +77,19 @@
     }
   }
 
+  &.volumes {
+    .table__body {
+      .select {
+        height: 54px;
+        margin-right: 0;
+
+        &__value {
+          min-width: unset;
+        }
+      }
+    }
+  }
+
   .edit-row {
     background-color: $alabaster;
 

@@ -95,7 +95,7 @@ const JobsPanelAdvanced = ({
     }
   }
 
-  const handleDeleteItems = (isEnv, item) => {
+  const handleDeleteItems = (item, isEnv) => {
     if (isEnv) {
       handleDelete(
         environmentVariables,

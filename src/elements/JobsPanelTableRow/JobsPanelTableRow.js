@@ -75,7 +75,7 @@ const JobsPanelTableRow = ({
           ) : (
             !contentItem.isDefault && (
               <button
-                className="table__cell-delete-btn"
+                className="btn_delete"
                 onClick={() => {
                   handleDelete(contentItem)
                 }}

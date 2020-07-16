@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import Input from '../../common/Input/Input'
 import { JobsPanelDataInputsTable } from '../../elements/JobsPanelDataInputsTable/JobsPanelDataInputsTable'
-import { JobsPanelVolumesTable } from '../../elements/JobsPanelVolumesTable/JobsPanelVolumesTable'
 
 import { panelActions } from '../JobsPanel/panelReducer'
 
@@ -22,17 +21,6 @@ const JobsPanelDataInputsView = ({
     <div className="job-panel__item">
       <JobsPanelSection title="Data inputs">
         <JobsPanelDataInputsTable
-          handleAddNewItem={handleAddNewItem}
-          handleEditItems={handleEditItems}
-          handleDeleteItems={handleDeleteItems}
-          inputsDispatch={inputsDispatch}
-          inputsState={inputsState}
-          match={match}
-          panelState={panelState}
-        />
-      </JobsPanelSection>
-      <JobsPanelSection title="Volumes">
-        <JobsPanelVolumesTable
           handleAddNewItem={handleAddNewItem}
           handleEditItems={handleEditItems}
           handleDeleteItems={handleDeleteItems}
