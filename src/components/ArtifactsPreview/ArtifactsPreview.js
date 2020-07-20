@@ -20,7 +20,11 @@ const ArtifactsPreview = ({ artifact }) => {
   }, [])
 
   useEffect(() => {
-    if (artifact.schema) {
+    if (
+      artifact.schema &&
+      artifact.kind !== 'dataset' &&
+      !artifact.extra_data
+    ) {
       setPreview([
         {
           type: 'table',
@@ -38,7 +42,10 @@ const ArtifactsPreview = ({ artifact }) => {
           artifact.user || artifact.producer.owner
         )
           .then(content => {
-            setPreview(prevState => [...prevState, content])
+            setPreview(prevState => [
+              ...prevState,
+              { ...content, header: previewItem.header }
+            ])
 
             if (isError) {
               setIsError(false)

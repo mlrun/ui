@@ -1,21 +1,25 @@
+import { toPairs } from 'lodash'
+
 export const generateArtifactPreviewData = (extraData, schema) => {
   const previewItems = []
   let path = ''
 
-  Object.values(extraData).forEach(dataItem => {
-    if (dataItem.match(/html/)) {
-      path = dataItem.replace(/^.*:\/\//, '')
+  toPairs(extraData).forEach(dataItem => {
+    if (dataItem[1].match(/html/)) {
+      path = dataItem[1].replace(/^.*:\/\//, '')
 
       previewItems.push({
         schema: schema,
-        path: dataItem.replace(/^.*:\/\//, '')
+        path: dataItem[1].replace(/^.*:\/\//, ''),
+        header: dataItem[0]
       })
     }
 
-    if (dataItem.match(/json|yaml|png|jpg|jpeg|gif|csv/)) {
+    if (dataItem[1].match(/json|yaml|png|jpg|jpeg|gif|csv/)) {
       previewItems.push({
         schema: schema,
-        path: dataItem.replace(/^.*:\/\//, '')
+        path: dataItem[1].replace(/^.*:\/\//, ''),
+        header: dataItem[0]
       })
     }
   })
