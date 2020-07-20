@@ -5,22 +5,20 @@ export const generateArtifactPreviewData = (extraData, schema) => {
   Object.values(extraData).forEach(dataItem => {
     if (dataItem.match(/html/)) {
       path = dataItem.replace(/^.*:\/\//, '')
+
+      previewItems.push({
+        schema: schema,
+        path: dataItem.replace(/^.*:\/\//, '')
+      })
     }
 
-    if (dataItem.match(/json|yaml|png|jpg|jpeg|gif/)) {
+    if (dataItem.match(/json|yaml|png|jpg|jpeg|gif|csv/)) {
       previewItems.push({
         schema: schema,
         path: dataItem.replace(/^.*:\/\//, '')
       })
     }
   })
-
-  if (previewItems.length) {
-    previewItems.push({
-      schema: schema,
-      path: path
-    })
-  }
 
   return {
     preview: previewItems,

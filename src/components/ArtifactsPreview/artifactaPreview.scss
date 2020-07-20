@@ -4,6 +4,7 @@
 .item-artifacts__preview-content {
   display: flex;
   flex: 1;
+  flex-direction: column;
 
   .preview-table {
     width: 100%;
