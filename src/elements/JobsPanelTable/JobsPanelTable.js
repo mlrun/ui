@@ -16,7 +16,6 @@ const JobsPanelTable = ({
   disabledOptions,
   handleDeleteItems,
   handleEditItems,
-  handleEditParameter,
   handleSetSelectedVolume,
   headers,
   match,
@@ -27,18 +26,14 @@ const JobsPanelTable = ({
   const [editItem, setEditItem] = useState(false)
 
   const handleEdit = useCallback(
-    (item, isInput) => {
+    item => {
       if (editItem) {
         setEditItem(false)
-        section === 'parameters'
-          ? handleEditParameter()
-          : handleEditItems(isInput)
+        handleEditItems(section.includes('env'))
       } else {
-        if (section === 'volumes') {
-          handleSetSelectedVolume(item)
-        } else {
-          setSelectedItem(item)
-        }
+        section === 'volumes'
+          ? handleSetSelectedVolume(item)
+          : setSelectedItem(item)
 
         setEditItem(true)
       }
@@ -46,7 +41,6 @@ const JobsPanelTable = ({
     [
       editItem,
       handleEditItems,
-      handleEditParameter,
       handleSetSelectedVolume,
       section,
       setSelectedItem
@@ -55,10 +49,7 @@ const JobsPanelTable = ({
 
   const handleDelete = useCallback(
     item => {
-      handleDeleteItems(
-        section.includes('data-inputs') || section.includes('env'),
-        item
-      )
+      handleDeleteItems(item, section.includes('env'))
     },
     [handleDeleteItems, section]
   )
@@ -106,8 +97,6 @@ JobsPanelTable.defaultProps = {
   className: '',
   headers: [],
   handleDeleteItems: null,
-  handleEditItems: null,
-  handleEditParameter: null,
   handleSetSelectedVolume: null
 }
 
@@ -120,8 +109,7 @@ JobsPanelTable.propTypes = {
   ]).isRequired,
   disabledOptions: PropTypes.array,
   handleDeleteItems: PropTypes.func,
-  handleEditItems: PropTypes.func,
-  handleEditParameter: PropTypes.func,
+  handleEditItems: PropTypes.func.isRequired,
   handleSetSelectedVolume: PropTypes.func,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
   match: PropTypes.shape({}).isRequired,

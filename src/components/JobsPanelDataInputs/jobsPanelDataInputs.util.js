@@ -3,7 +3,6 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 export const handleAddItem = (
   currentTableData,
   inputsDispatch,
-  isVolumes,
   newItemObj,
   newJobData,
   panelDispatch,
@@ -25,28 +24,31 @@ export const handleAddItem = (
     })
   }
 
-  const path = isVolumes ? 'mountPath' : 'path'
-  const generatedTableData = {
-    isDefault: false,
-    data: {
-      name: newItemObj.name,
-      [path]: newItemObj.path
-    }
-  }
-  const generatedPanelData = isVolumes
-    ? [...newJobData, generatedTableData.data]
-    : {
-        ...newJobData,
-        [newItemObj.name]: newItemObj.path
-      }
-
   panelDispatch({
     type: setPreviousData,
-    payload: [...previousData, generatedTableData]
+    payload: [
+      ...previousData,
+      {
+        isDefault: false,
+        data: {
+          name: newItemObj.name,
+          path: newItemObj.path
+        }
+      }
+    ]
   })
   panelDispatch({
     type: setCurrentTableData,
-    payload: [...currentTableData, generatedTableData]
+    payload: [
+      ...currentTableData,
+      {
+        isDefault: false,
+        data: {
+          name: newItemObj.name,
+          path: newItemObj.path
+        }
+      }
+    ]
   })
   inputsDispatch({
     type: setAddNewItem,
@@ -55,14 +57,16 @@ export const handleAddItem = (
   inputsDispatch({
     type: removeNewItemObj
   })
-  setNewJobData(generatedPanelData)
+  setNewJobData({
+    ...newJobData,
+    [newItemObj.name]: newItemObj.path
+  })
 }
 
 export const handleEdit = (
   currentPanelData,
   currentTableData,
   inputsDispatch,
-  isInputs,
   newName,
   panelDispatch,
   removeSelectedItem,
@@ -71,34 +75,26 @@ export const handleEdit = (
   setCurrentTableData,
   setPreviousPanelData
 ) => {
-  const path = isInputs ? 'path' : 'mountPath'
+  const currentDataObj = { ...currentPanelData }
 
-  if (isInputs) {
-    const currentDataObj = { ...currentPanelData }
+  if (newName) {
+    delete currentDataObj[selectedItem.name]
 
-    if (newName) {
-      delete currentDataObj[selectedItem.name]
-
-      currentDataObj[newName] = selectedItem.path
-    } else {
-      currentDataObj[selectedItem.name] = selectedItem.path
-    }
-
-    setCurrentPanelData({ ...currentDataObj })
+    currentDataObj[newName] = selectedItem.path
+  } else {
+    currentDataObj[selectedItem.name] = selectedItem.path
   }
+
+  setCurrentPanelData({ ...currentDataObj })
 
   const newDataArray = currentTableData.map(dataItem => {
     if (dataItem.data.name === selectedItem.name) {
       dataItem.data.name = newName || selectedItem.name
-      dataItem.data[path] = selectedItem[path]
+      dataItem.data.path = selectedItem.path
     }
 
     return dataItem
   })
-
-  if (!isInputs) {
-    setCurrentPanelData(newDataArray.map(volume => volume.data))
-  }
 
   panelDispatch({
     type: setPreviousPanelData,
@@ -117,8 +113,6 @@ export const handleEdit = (
 export const handleDelete = (
   currentPanelData,
   currentTableData,
-  isInputs,
-  isVolumes,
   panelDispatch,
   previousPanelData,
   selectedItem,
@@ -126,78 +120,21 @@ export const handleDelete = (
   setCurrentTableData,
   setPreviousPanelData
 ) => {
-  if (isInputs) {
-    const newInputs = { ...currentPanelData }
-    delete newInputs[selectedItem.data.name]
+  const newInputs = { ...currentPanelData }
+  delete newInputs[selectedItem.data.name]
 
-    setCurrentPanelData({ ...newInputs })
-  } else {
-    setCurrentPanelData(
-      currentPanelData.filter(
-        dataItem => dataItem.name !== selectedItem.data.name
-      )
-    )
-  }
+  setCurrentPanelData({ ...newInputs })
 
   panelDispatch({
     type: setPreviousPanelData,
-    payload: previousPanelData.filter(dataItem => {
-      const name = isVolumes ? dataItem.name : dataItem.data.name
-      return name !== selectedItem.data.name
-    })
+    payload: previousPanelData.filter(
+      dataItem => dataItem.data.name !== selectedItem.data.name
+    )
   })
   panelDispatch({
     type: setCurrentTableData,
-    payload: currentTableData.filter(dataItem => {
-      const name = isVolumes ? dataItem.name : dataItem.data.name
-      return name !== selectedItem.data.name
-    })
+    payload: currentTableData.filter(
+      dataItem => dataItem.data.name !== selectedItem.data.name
+    )
   })
-}
-
-export const selectOptions = {
-  volumeType: [
-    { label: 'V3IO', id: 'V3IO' },
-    { label: 'Config Map', id: 'Config Map' },
-    { label: 'Secret', id: 'Secret' },
-    { label: 'PVC', id: 'PVC' }
-  ]
-}
-
-export const createVolumeOfNewJob = newVolume => {
-  switch (newVolume.type) {
-    case 'V3IO':
-      return {
-        name: newVolume.name,
-        flexVolume: {
-          driver: 'v3io/fuse',
-          options: {
-            accessKey: newVolume.accessKey,
-            container: newVolume.typeName,
-            subPath: newVolume.resourcesPath
-          }
-        }
-      }
-    case 'Config Map':
-      return {
-        name: newVolume.name,
-        configMap: {
-          name: newVolume.typeName
-        }
-      }
-    case 'Secret':
-      return {
-        name: newVolume.name,
-        secret: {
-          secretName: newVolume.typeName
-        }
-      }
-    default:
-      return {
-        name: newVolume.name,
-        persistentVolumeClaim: {
-          claimName: newVolume.typeName
-        }
-      }
-  }
 }

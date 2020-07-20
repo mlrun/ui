@@ -10,8 +10,8 @@ import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTable
 import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
 
 import panelData from '../../components/JobsPanel/panelData'
-import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
-import { selectOptions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import { selectTypeOptions } from '../../components/JobsPanelResources/jobsPanelResources.util'
+import { resourcesActions } from '../../components/JobsPanelResources/jobsPanelResourcesReducer'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
@@ -19,27 +19,26 @@ export const JobsPanelVolumesTable = ({
   handleAddNewItem,
   handleEditItems,
   handleDeleteItems,
-  inputsDispatch,
-  inputsState,
+  resourcesDispatch,
+  resourcesState,
   match,
   panelState
 }) => {
   const volumeTypeNameLabel =
-    inputsState.newVolume.type === 'V3IO'
+    resourcesState.newVolume.type === 'V3IO'
       ? 'Container'
-      : inputsState.newVolume.type === 'PVC'
+      : resourcesState.newVolume.type === 'PVC'
       ? 'Claim name'
-      : inputsState.newVolume.type.length > 0
-      ? `${inputsState.newVolume.type} name`
+      : resourcesState.newVolume.type.length > 0
+      ? `${resourcesState.newVolume.type} name`
       : ''
 
   const handleSetSelectedVolume = useCallback(
     selectedVolume => {
+      let newValue = {}
       const searchItem = panelState.tableData.volumes.find(
         volume => volume.name === selectedVolume.data.name
       )
-
-      let newValue
 
       if (searchItem.configMap) {
         newValue = {
@@ -65,20 +64,20 @@ export const JobsPanelVolumesTable = ({
         }
       }
 
-      inputsDispatch({
-        type: inputsActions.SET_SELECTED_VOLUME,
+      resourcesDispatch({
+        type: resourcesActions.SET_SELECTED_VOLUME,
         payload: {
           ...selectedVolume,
           type: newValue
         }
       })
     },
-    [inputsDispatch, panelState.tableData.volumes]
+    [panelState.tableData.volumes, resourcesDispatch]
   )
 
   return (
     <JobsPanelTable
-      addNewItem={inputsState.addNewVolume}
+      addNewItem={resourcesState.addNewVolume}
       className="data-inputs volumes"
       content={panelState.tableData.volumeMounts}
       handleDeleteItems={handleDeleteItems}
@@ -87,22 +86,22 @@ export const JobsPanelVolumesTable = ({
       headers={panelData.volumes['table-headers']}
       match={match}
       section="volumes"
-      selectedItem={inputsState.selectedVolume}
+      selectedItem={resourcesState.selectedVolume}
       setSelectedItem={selectedVolume =>
-        inputsDispatch({
-          type: inputsActions.SET_SELECTED_VOLUME,
+        resourcesDispatch({
+          type: resourcesActions.SET_SELECTED_VOLUME,
           payload: selectedVolume
         })
       }
     >
-      {inputsState.addNewVolume ? (
+      {resourcesState.addNewVolume ? (
         <div className="table__body">
           <div className="table__body-column">
             <div className="input-row-wrapper no-border">
               <Input
                 onChange={name =>
-                  inputsDispatch({
-                    type: inputsActions.SET_NEW_VOLUME_NAME,
+                  resourcesDispatch({
+                    type: resourcesActions.SET_NEW_VOLUME_NAME,
                     payload: name
                   })
                 }
@@ -113,8 +112,8 @@ export const JobsPanelVolumesTable = ({
               />
               <Input
                 onChange={path =>
-                  inputsDispatch({
-                    type: inputsActions.SET_NEW_VOLUME_PATH,
+                  resourcesDispatch({
+                    type: resourcesActions.SET_NEW_VOLUME_PATH,
                     payload: path
                   })
                 }
@@ -126,43 +125,43 @@ export const JobsPanelVolumesTable = ({
             </div>
             <div
               className={`input-row-wrapper 
-                  ${inputsState.newVolume.type === 'V3IO' && 'no-border'}`}
+                  ${resourcesState.newVolume.type === 'V3IO' && 'no-border'}`}
             >
               <Select
                 onClick={type => {
-                  inputsDispatch({
-                    type: inputsActions.SET_NEW_VOLUME_TYPE,
-                    payload: find(selectOptions.volumeType, ['id', type]).id
+                  resourcesDispatch({
+                    type: resourcesActions.SET_NEW_VOLUME_TYPE,
+                    payload: find(selectTypeOptions.volumeType, ['id', type]).id
                   })
                 }}
-                options={selectOptions.volumeType}
+                options={selectTypeOptions.volumeType}
                 label={
-                  inputsState.newVolume.type.length
-                    ? inputsState.newVolume.type
+                  resourcesState.newVolume.type.length
+                    ? resourcesState.newVolume.type
                     : 'Type'
                 }
                 match={match}
               />
               <Input
                 onChange={typeName =>
-                  inputsDispatch({
-                    type: inputsActions.SET_NEW_VOLUME_TYPE_NAME,
+                  resourcesDispatch({
+                    type: resourcesActions.SET_NEW_VOLUME_TYPE_NAME,
                     payload: typeName
                   })
                 }
                 label={volumeTypeNameLabel}
                 className="input-row__item input-row__item_edit"
-                disabled={!inputsState.newVolume.type.length}
+                disabled={!resourcesState.newVolume.type.length}
                 floatingLabel
                 type="text"
               />
             </div>
-            {inputsState.newVolume.type === 'V3IO' && (
+            {resourcesState.newVolume.type === 'V3IO' && (
               <div className="input-row-wrapper">
                 <Input
                   onChange={accessKey =>
-                    inputsDispatch({
-                      type: inputsActions.SET_NEW_VOLUME_ACCESS_KEY,
+                    resourcesDispatch({
+                      type: resourcesActions.SET_NEW_VOLUME_ACCESS_KEY,
                       payload: accessKey
                     })
                   }
@@ -173,8 +172,8 @@ export const JobsPanelVolumesTable = ({
                 />
                 <Input
                   onChange={resourcesPath =>
-                    inputsDispatch({
-                      type: inputsActions.SET_NEW_VOLUME_RESOURCES_PATH,
+                    resourcesDispatch({
+                      type: resourcesActions.SET_NEW_VOLUME_RESOURCES_PATH,
                       payload: resourcesPath
                     })
                   }
@@ -186,10 +185,7 @@ export const JobsPanelVolumesTable = ({
               </div>
             )}
           </div>
-          <button
-            className="add-input btn-add"
-            onClick={() => handleAddNewItem(null, true)}
-          >
+          <button className="add-input btn-add" onClick={handleAddNewItem}>
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
             </Tooltip>
@@ -198,8 +194,8 @@ export const JobsPanelVolumesTable = ({
       ) : (
         <JobsPanelTableAddItemRow
           onClick={value =>
-            inputsDispatch({
-              type: inputsActions.SET_ADD_NEW_VOLUME,
+            resourcesDispatch({
+              type: resourcesActions.SET_ADD_NEW_VOLUME,
               payload: value
             })
           }
@@ -214,8 +210,8 @@ JobsPanelVolumesTable.propTypes = {
   handleAddNewItem: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
-  inputsDispatch: PropTypes.func.isRequired,
-  inputsState: PropTypes.shape({}).isRequired,
+  resourcesDispatch: PropTypes.func.isRequired,
+  resourcesState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   panelState: PropTypes.shape({}).isRequired
 }

@@ -6,8 +6,13 @@ import Select from '../../common/Select/Select'
 import RangeInput from '../../common/RangeInput/RangeInput'
 
 import { panelActions } from '../JobsPanel/panelReducer'
+import { JobsPanelVolumesTable } from '../../elements/JobsPanelVolumesTable/JobsPanelVolumesTable'
+import { selectMemoryOptions as selectTypeOptions } from './jobsPanelResources.util'
 
 const JobsPanelResourcesView = ({
+  handleAddNewItem,
+  handleDeleteItems,
+  handleEditItems,
   handleSelectMemoryUnit,
   handleSelectСpuUnit,
   match,
@@ -15,15 +20,27 @@ const JobsPanelResourcesView = ({
   panelState,
   requestsCpu,
   requestsMemory,
-  selectOptions
+  resourcesState,
+  resourcesDispatch
 }) => (
   <div className="job-panel__item resources">
     <JobsPanelSection title="Resources" />
+    <JobsPanelSection title="Volumes">
+      <JobsPanelVolumesTable
+        handleAddNewItem={handleAddNewItem}
+        handleEditItems={handleEditItems}
+        handleDeleteItems={handleDeleteItems}
+        resourcesDispatch={resourcesDispatch}
+        resourcesState={resourcesState}
+        match={match}
+        panelState={panelState}
+      />
+    </JobsPanelSection>
     <JobsPanelSection title="Memory">
       <Select
         label="Unit"
         match={match}
-        options={selectOptions.unitMemory}
+        options={selectTypeOptions.unitMemory}
         onClick={value => handleSelectMemoryUnit(value)}
         selectedId={panelState.memoryUnit}
       />
@@ -60,7 +77,7 @@ const JobsPanelResourcesView = ({
       <Select
         label="Unit"
         match={match}
-        options={selectOptions.unitCpu}
+        options={selectTypeOptions.unitCpu}
         onClick={value => handleSelectСpuUnit(value)}
         selectedId={panelState.cpuUnit}
       />
@@ -104,6 +121,9 @@ const JobsPanelResourcesView = ({
 )
 
 JobsPanelResourcesView.propTypes = {
+  handleAddNewItem: PropTypes.func.isRequired,
+  handleDeleteItems: PropTypes.func.isRequired,
+  handleEditItems: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   handleSelectСpuUnit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
@@ -111,7 +131,8 @@ JobsPanelResourcesView.propTypes = {
   panelState: PropTypes.shape({}).isRequired,
   requestsCpu: PropTypes.string.isRequired,
   requestsMemory: PropTypes.string.isRequired,
-  selectOptions: PropTypes.shape({}).isRequired
+  resourcesState: PropTypes.shape({}).isRequired,
+  resourcesDispatch: PropTypes.func.isRequired
 }
 
 export default JobsPanelResourcesView
