@@ -48,7 +48,7 @@
       &_medium {
         max-width: 245px;
 
-        @include tableColumnFlex(1, 185px);
+        @include tableColumnFlex(1, 235px);
       }
 
       &_small {

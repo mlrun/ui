@@ -47,6 +47,7 @@ const Artifacts = ({
             } else {
               item = artifact.data[0]
             }
+
             if (item) {
               item.target_path = parseTargetPath(item.target_path)
 
@@ -71,6 +72,7 @@ const Artifacts = ({
           .filter(item => item !== undefined)
 
         _setArtifacts(artifacts)
+
         return artifacts
       })
     },
@@ -87,17 +89,14 @@ const Artifacts = ({
   }, [fetchData, match.params.projectName, removeArtifacts])
 
   useEffect(() => {
-    if (
-      match.params.name !== undefined &&
-      artifactsStore.artifacts.length !== 0
-    ) {
+    if (match.params.name && artifactsStore.artifacts.length !== 0) {
       const { name } = match.params
 
-      const [searchItem] = artifactsStore.artifacts.filter(item => {
-        return item.key === name
-      })
+      const [searchItem] = artifactsStore.artifacts.filter(
+        item => item.key === name
+      )
 
-      if (searchItem === undefined) {
+      if (!searchItem) {
         history.push(`/projects/${match.params.projectName}/artifacts`)
       } else {
         const [artifact] = searchItem.data.filter(item => {
@@ -107,6 +106,7 @@ const Artifacts = ({
           }
           return true
         })
+
         setSelectedArtifact({ item: artifact })
       }
     }
@@ -116,10 +116,11 @@ const Artifacts = ({
     artifactApi.getArtifactTag(match.params.projectName)
   }, [match.params.projectName])
 
-  const handleSelectArtifact = (item, preview) => {
+  const handleSelectArtifact = item => {
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
     }
+
     setSelectedArtifact({ item })
   }
 
@@ -135,6 +136,41 @@ const Artifacts = ({
         return {
           ...state,
           detailsMenu: [...artifactsData.detailsMenu, 'metadata']
+        }
+      }
+
+      return {
+        ...state,
+        detailsMenu: artifactsData.detailsMenu
+      }
+    })
+  }, [
+    match.params.tab,
+    match.params.projectName,
+    match.params.name,
+    history,
+    selectedArtifact.item
+  ])
+
+  useEffect(() => {
+    if (
+      match.params.tab === 'analysis' &&
+      !selectedArtifact.item?.kind === 'dataset' &&
+      !selectedArtifact.item?.extra_data
+    ) {
+      history.push(
+        `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
+      )
+    }
+
+    setPageData(state => {
+      if (
+        selectedArtifact.item?.kind === 'dataset' &&
+        selectedArtifact.item?.extra_data
+      ) {
+        return {
+          ...state,
+          detailsMenu: [...artifactsData.detailsMenu, 'analysis']
         }
       }
 

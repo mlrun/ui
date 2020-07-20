@@ -20,6 +20,7 @@ import { formatDatetime } from '../../utils'
 import { ARTIFACTS_PAGE } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
+import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
 
 const DetailsView = ({
   actionsMenu,
@@ -107,6 +108,14 @@ const DetailsView = ({
       {match.params.tab === 'metadata' && selectedItem.schema && (
         <ArtifactInfoMetadata selectedItem={selectedItem} />
       )}
+      {match.params.tab === 'analysis' &&
+        selectedItem.kind === 'dataset' &&
+        selectedItem.extra_data && (
+          <DetailsAnalysis
+            artifact={selectedItem}
+            handlePreview={handlePreview}
+          />
+        )}
     </div>
   )
 }
