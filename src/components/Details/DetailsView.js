@@ -76,7 +76,7 @@ const DetailsView = ({
         {detailsMenu.map(link => (
           <DetailsMenuItem
             hash={selectedItem.hash}
-            id={selectedItem.uid}
+            id={page.toLowerCase() === 'jobs' ? selectedItem.uid : ''}
             key={link}
             match={match}
             name={selectedItem.db_key || selectedItem.name}

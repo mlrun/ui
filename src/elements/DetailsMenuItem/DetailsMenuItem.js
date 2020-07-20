@@ -5,7 +5,7 @@ import classnames from 'classnames'
 
 const DetailsMenuItem = ({ hash, id, match, name, page, tab }) => {
   const link = `/projects/${match.params.projectName}/${page.toLowerCase()}/${
-    page.toLowerCase() === 'functions' ? hash : name
+    page.toLowerCase() === 'functions' ? hash : id || name
   }/${tab}`
   const tabClassNames = classnames(
     'menu-tab',
