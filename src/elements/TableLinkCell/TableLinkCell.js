@@ -52,7 +52,12 @@ const TableLinkCell = ({
             {data.value}
           </Tooltip>
           {link.match(/functions/) && (
-            <span className="item-tag">{item.tag}</span>
+            <Tooltip
+              className="item-tag"
+              template={<TextTooltipTemplate text={item.tag} />}
+            >
+              <span>{item.tag}</span>
+            </Tooltip>
           )}
         </div>
         {(link.match(/jobs/) ||

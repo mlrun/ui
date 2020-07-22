@@ -276,7 +276,12 @@
       }
 
       &-tag {
+        max-width: 150px;
         margin-left: 10px;
+
+        span {
+          display: inline;
+        }
       }
     }
   }
