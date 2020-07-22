@@ -9,7 +9,7 @@ module.exports = function(app) {
       onProxyReq: function(proxyReq, req, res) {
         proxyReq.setHeader(
           'x-v3io-session-key',
-          '0a55b9d4-431e-443a-848b-c20f727c9943'
+          'eea5be29-263f-4505-9eed-9a0382aee31e'
         )
       }
     })
