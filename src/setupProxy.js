@@ -4,12 +4,12 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'http://18.221.106.241:30080',
+      target: 'http://3.12.145.63:30080',
       changeOrigin: true,
       onProxyReq: function(proxyReq, req, res) {
         proxyReq.setHeader(
           'x-v3io-session-key',
-          '0a55b9d4-431e-443a-848b-c20f727c9943'
+          'eea5be29-263f-4505-9eed-9a0382aee31e'
         )
       }
     })

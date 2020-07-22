@@ -59,6 +59,7 @@ const DetailsView = ({
         <div className="item-header__buttons">
           {page === ARTIFACTS_PAGE && (
             <Download
+              fileName={selectedItem.db_key || selectedItem.key}
               path={selectedItem.target_path.path}
               schema={selectedItem.target_path.schema}
               user={selectedItem.producer?.owner}

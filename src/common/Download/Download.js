@@ -12,7 +12,13 @@ import { DOWNLOAD_PROGRESS_RING } from '../../colorConstants'
 
 import './download.scss'
 
-const Download = ({ path, schema, setNotificationDownload, user }) => {
+const Download = ({
+  fileName,
+  path,
+  schema,
+  setNotificationDownload,
+  user
+}) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
 
@@ -46,7 +52,7 @@ const Download = ({ path, schema, setNotificationDownload, user }) => {
           config
         )
         .then(response => {
-          downloadFile(file, response)
+          downloadFile(fileName, response)
           setNotificationDownload({
             status: response.status,
             url: response.config.url,
@@ -79,7 +85,7 @@ const Download = ({ path, schema, setNotificationDownload, user }) => {
           if (downloadRef.current) downloadRef.current.cancel = null
         })
     }
-  }, [file, isDownload, path, schema, user, setNotificationDownload])
+  }, [isDownload, schema, path, user, fileName, setNotificationDownload, file])
 
   useEffect(() => {
     let cancelFetch = downloadRef.current
@@ -152,11 +158,13 @@ const Download = ({ path, schema, setNotificationDownload, user }) => {
 }
 
 Download.defaultProps = {
+  fileName: '',
   path: '',
   schema: ''
 }
 
 Download.propTypes = {
+  fileName: PropTypes.string,
   path: PropTypes.string.isRequired,
   schema: PropTypes.string,
   setNotificationDownload: PropTypes.func.isRequired
