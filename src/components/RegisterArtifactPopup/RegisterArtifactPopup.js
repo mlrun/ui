@@ -99,17 +99,9 @@ const RegisterArtifactPopup = ({ match, refresh, setIsPopupDialogOpen }) => {
       const {
         target_path,
         model_file
-      } = registerArtifactData.target_path.value.split('/').reduce(
-        (prev, curr, index, arr) => {
-          if (arr.length - 1 === index) {
-            prev.model_file = curr
-          } else {
-            prev.target_path += `${curr}/`
-          }
-          return prev
-        },
-        { model_file: '', target_path: '' }
-      )
+      } = registerArtifactData.target_path.value.match(
+        /^(?:(?<target_path>.+\/))?(?<model_file>.+)$/
+      )?.groups
 
       data.target_path = target_path
       data.model_file = model_file

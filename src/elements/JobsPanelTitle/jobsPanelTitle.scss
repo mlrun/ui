@@ -129,6 +129,114 @@
         cursor: pointer;
       }
     }
+
+    .job-labels {
+      &-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 0 15px;
+        border: $primaryBorder;
+        border-radius: 4px;
+
+        .chip-block {
+          .tooltip-wrapper {
+            max-width: initial;
+          }
+        }
+      }
+
+      &__text {
+        color: $primary;
+        font-size: 15px;
+        line-height: 18px;
+      }
+
+      &-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+
+        .chips-wrapper {
+          flex-wrap: wrap;
+        }
+      }
+
+      &__item {
+        display: flex;
+        margin: 10px 0 10px 10px;
+        padding: 5px 10px;
+        border: $labelBorder;
+        border-radius: 15px;
+
+        .chip_short {
+          color: $primary;
+          cursor: pointer;
+        }
+
+        &_edited {
+          color: $spunPearl;
+        }
+
+        &-separator {
+          color: $spunPearl;
+        }
+
+        &-icon-close {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: 5px;
+          padding: 0;
+
+          svg {
+            transform: scale(0.7);
+          }
+        }
+
+        &:hover {
+          color: $white;
+          background-color: $amethyst;
+
+          .chip_short {
+            color: $white;
+          }
+
+          .job-labels__item {
+            &-icon-close {
+              width: 14px;
+
+              svg {
+                path {
+                  fill: $white;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &__button-add {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        margin: 10px 0 10px 10px;
+        border: $labelBorder;
+        border-radius: 32px;
+
+        &:hover {
+          background-color: $amethyst;
+
+          svg {
+            rect,
+            path {
+              fill: $white;
+            }
+          }
+        }
+      }
+    }
   }
 
   &__btn_close {
