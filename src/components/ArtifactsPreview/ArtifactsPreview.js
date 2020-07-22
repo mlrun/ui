@@ -30,8 +30,8 @@ const ArtifactsPreview = ({ artifact }) => {
           }
         }
       ])
-    } else if (artifact.preview.items) {
-      artifact.preview.items.forEach(previewItem => {
+    } else if (artifact.preview.length) {
+      artifact.preview.forEach(previewItem => {
         getArtifactPreview(
           previewItem.schema,
           previewItem.path,
@@ -51,9 +51,6 @@ const ArtifactsPreview = ({ artifact }) => {
             setIsError(true)
           })
       })
-    } else if (artifact.preview.length) {
-      const content = createArtifactPreviewContent(artifact.preview)
-      console.log(content)
     } else {
       getArtifactPreview(
         artifact.target_path.schema,
