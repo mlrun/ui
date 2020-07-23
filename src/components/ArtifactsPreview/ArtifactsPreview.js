@@ -21,6 +21,7 @@ const ArtifactsPreview = ({ artifact }) => {
 
   useEffect(() => {
     if (artifact.schema && !artifact.extra_data) {
+      setIsError(false)
       setPreview([
         {
           type: 'table',
