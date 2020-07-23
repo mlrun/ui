@@ -32,7 +32,9 @@ const DetailsArtifactsView = ({ content, match, showPreview }) => (
                 {artifact.key}
                 <Link
                   className="artifact-details-link"
-                  to={`/projects/${match.params.projectName}/artifacts/${artifact.db_key}/info`}
+                  to={`/projects/${
+                    match.params.projectName
+                  }/artifacts/${artifact.db_key || artifact.key}/info`}
                 >
                   View details...
                 </Link>
