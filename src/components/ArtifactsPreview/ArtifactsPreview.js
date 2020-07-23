@@ -20,11 +20,8 @@ const ArtifactsPreview = ({ artifact }) => {
   }, [])
 
   useEffect(() => {
-    if (
-      artifact.schema &&
-      artifact.kind !== 'dataset' &&
-      !artifact.extra_data
-    ) {
+    if (artifact.schema && !artifact.extra_data) {
+      setIsError(false)
       setPreview([
         {
           type: 'table',
