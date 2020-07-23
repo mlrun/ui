@@ -43,10 +43,7 @@ const ArtifactsPreview = ({ artifact }) => {
               ...prevState,
               { ...content, header: previewItem.header }
             ])
-
-            if (isError) {
-              setIsError(false)
-            }
+            setIsError(false)
           })
           .catch(() => {
             setIsError(true)
@@ -60,16 +57,13 @@ const ArtifactsPreview = ({ artifact }) => {
       )
         .then(content => {
           setPreview([content])
-
-          if (isError) {
-            setIsError(false)
-          }
+          setIsError(false)
         })
         .catch(() => {
           setIsError(true)
         })
     }
-  }, [artifact, getArtifactPreview, isError])
+  }, [artifact, getArtifactPreview])
 
   return isError ? (
     <div className="error_container">
