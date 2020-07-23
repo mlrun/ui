@@ -24,14 +24,15 @@ podTemplate(label: "${git_project}-${label}", inheritFrom: "jnlp-python37-nodejs
                             dir("${github.BUILD_FOLDER}/src/github.com/${git_project_upstream_user}/${git_project}") {
                                 
                                 println(common.shellc("MLRUN_DOCKER_TAG=${github.DOCKER_TAG_VERSION} npm run docker"))
-                                dockerx.images_push_multi_registries(
-                                            ["${git_project_upstream_user}/mlrun-ui:${github.DOCKER_TAG_VERSION}"],
-                                            [
-                                                pipelinex.DockerRepo.ARTIFACTORY_IGUAZIO,
-                                                pipelinex.DockerRepo.MLRUN_DOCKER_HUB,
-                                                pipelinex.DockerRepo.MLRUN_QUAY_IO
-                                            ]
-                                )
+                                println(common.shellc("docker images"))
+                                // dockerx.images_push_multi_registries(
+                                //             ["${git_project_upstream_user}/mlrun-ui:${github.DOCKER_TAG_VERSION}"],
+                                //             [
+                                //                 pipelinex.DockerRepo.ARTIFACTORY_IGUAZIO,
+                                //                 pipelinex.DockerRepo.MLRUN_DOCKER_HUB,
+                                //                 pipelinex.DockerRepo.MLRUN_QUAY_IO
+                                //             ]
+                                // )
                             }
                         }
                     }
