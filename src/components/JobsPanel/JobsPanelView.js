@@ -82,21 +82,6 @@ const JobsPanelView = ({
               icon={<Arrow />}
               iconClassName="job-panel__expand-icon"
             >
-              <JobsPanelAdvanced
-                environmentVariables={jobsStore.newJob.function.spec.env}
-                match={match}
-                panelDispatch={panelDispatch}
-                panelState={panelState}
-                secretSources={jobsStore.newJob.task.spec.secret_sources}
-                setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
-                setNewJobSecretSources={setNewJobSecretSources}
-              />
-            </Accordion>
-            <Accordion
-              accordionClassName="job-panel__accordion"
-              icon={<Arrow />}
-              iconClassName="job-panel__expand-icon"
-            >
               <JobsPanelResources
                 match={match}
                 panelDispatch={panelDispatch}
@@ -105,6 +90,21 @@ const JobsPanelView = ({
                 setNewJobVolumes={setNewJobVolumes}
                 volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
                 volumes={jobsStore.newJob.function.spec.volumes}
+              />
+            </Accordion>
+            <Accordion
+              accordionClassName="job-panel__accordion"
+              icon={<Arrow />}
+              iconClassName="job-panel__expand-icon"
+            >
+              <JobsPanelAdvanced
+                environmentVariables={jobsStore.newJob.function.spec.env}
+                match={match}
+                panelDispatch={panelDispatch}
+                panelState={panelState}
+                secretSources={jobsStore.newJob.task.spec.secret_sources}
+                setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
+                setNewJobSecretSources={setNewJobSecretSources}
               />
             </Accordion>
             <div className="job-panel__buttons-container">
