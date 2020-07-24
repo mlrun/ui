@@ -7,10 +7,16 @@ import { ReactComponent as QuestionMarkIcon } from '../../images/question-mark.s
 
 import './tip.scss'
 
-const Tip = ({ text }) => {
+const Tip = ({ className, text }) => {
   const [isShow, setIsShow] = useState(false)
   const tipRef = useRef()
   const minTextLength = 40
+  const tipContainerClassNames = classnames(className, 'tip-container')
+  const tipCLassNames = classnames(
+    'tip',
+    'tip-left',
+    text.length <= minTextLength ? 'tip_small' : 'tip_big'
+  )
 
   const handleMouseEnter = () => {
     setIsShow(true)
@@ -34,24 +40,21 @@ const Tip = ({ text }) => {
   }, [isShow])
 
   return (
-    <div className="tip-container">
+    <div className={tipContainerClassNames}>
       <QuestionMarkIcon ref={tipRef} />
       <CSSTransition in={isShow} timeout={200} classNames="fade" unmountOnExit>
-        <div
-          className={classnames(
-            'tip',
-            'tip-left',
-            text.length <= minTextLength ? 'tip_small' : 'tip_big'
-          )}
-        >
-          {text}
-        </div>
+        <div className={tipCLassNames}>{text}</div>
       </CSSTransition>
     </div>
   )
 }
 
+Tip.defaultProps = {
+  className: ''
+}
+
 Tip.propTypes = {
+  className: PropTypes.string,
   text: PropTypes.string.isRequired
 }
 

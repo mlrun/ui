@@ -6,6 +6,7 @@ import { ReactComponent as Warning } from '../../images/warning.svg'
 
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Tip from '../Tip/Tip'
 
 import './input.scss'
 
@@ -23,6 +24,7 @@ const Input = ({
   placeholder,
   required,
   requiredText,
+  tip,
   type,
   value,
   wrapperClassName
@@ -92,6 +94,7 @@ const Input = ({
           <Warning />
         </Tooltip>
       )}
+      {tip && !required && <Tip text={tip} className="input__tip" />}
       {inputIcon && <span className={iconClass}>{inputIcon}</span>}
     </div>
   )
@@ -110,6 +113,7 @@ Input.defaultProps = {
   placeholder: '',
   required: false,
   requiredText: '',
+  tip: '',
   value: undefined,
   wrapperClassName: ''
 }
@@ -128,6 +132,7 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   requiredText: PropTypes.string,
+  tip: PropTypes.string,
   type: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   wrapperClassName: PropTypes.string
