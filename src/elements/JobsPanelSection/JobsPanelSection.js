@@ -9,7 +9,7 @@ const JobsPanelSection = ({ children, title, className }) => {
       <div className="item-section__title">
         <h5>{title}</h5>
       </div>
-      <div className="item-section__body">{children}</div>
+      {children && <div className="item-section__body">{children}</div>}
     </div>
   )
 }
