@@ -1,9 +1,15 @@
 export default (startTime, endTime) => {
   let d, h, m, s
   let now = new Date()
-  let time = endTime
-    ? endTime.getTime() - startTime.getTime()
-    : now.getTime() - startTime.getTime()
+  let time = null
+  if (endTime) {
+    time =
+      endTime.getTime() - startTime.getTime() > 0
+        ? endTime.getTime() - startTime.getTime()
+        : 0
+  } else {
+    time = now.getTime() - startTime.getTime()
+  }
 
   d = time / (1000 * 60 * 60 * 24)
   h = (d - ~~d) * 24
