@@ -40,7 +40,7 @@ const RegisterArtifactForm = ({ match, onChange, registerArtifactData }) => {
     <div className="artifact-register-form">
       <Input
         floatingLabel
-        label="Key"
+        label="Name"
         onChange={value =>
           onChange(prevData => ({
             ...prevData,
@@ -49,6 +49,7 @@ const RegisterArtifactForm = ({ match, onChange, registerArtifactData }) => {
         }
         required={key.required}
         requiredText="This field is required"
+        tip="Artifact names in the same project must be unique"
         type="text"
         value={key.value}
       />
