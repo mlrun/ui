@@ -15,7 +15,7 @@ export const initialState = {
     nvidia_gpu: ''
   },
   memoryUnit: '',
-  outputPath: '',
+  outputPath: 'v3io:///users/{{run.user}}/artifacts/{{run.project}}',
   previousPanelData: {
     tableData: {
       dataInputs: [],
