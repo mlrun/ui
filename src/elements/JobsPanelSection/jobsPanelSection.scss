@@ -1,7 +1,6 @@
 @import '../../scss/colors';
 
 .item-section {
-  margin-bottom: 45px;
 
   &__title {
     display: flex;
@@ -24,5 +23,12 @@
     position: relative;
     display: flex;
     flex-flow: row wrap;
+    margin-bottom: 45px;
+  }
+
+  &:last-child {
+    .item-section__body {
+      margin-bottom: 0;
+    }
   }
 }
