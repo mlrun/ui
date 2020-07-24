@@ -53,6 +53,9 @@ const JobsPanelDataInputsView = ({
             })
           }}
           floatingLabel
+          required={panelState.outputPath.length === 0}
+          requiredText="This field is required"
+          value={panelState.outputPath}
           type="text"
         />
       </JobsPanelSection>
