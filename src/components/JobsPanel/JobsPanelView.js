@@ -8,6 +8,7 @@ import JobsPanelResources from '../JobsPanelResources/JobsPanelResources'
 import JobsPanelTitle from '../../elements/JobsPanelTitle/JobsPanelTitle'
 import ScheduleJob from '../ScheduleJob/ScheduleJob'
 import JobsPanelAdvanced from '../JobsPanelAdvanced/JobsPanelAdvanced'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -21,6 +22,7 @@ const JobsPanelView = ({
   openScheduleJob,
   panelDispatch,
   panelState,
+  removeJobError,
   setNewJobEnvironmentVariables,
   setNewJobHyperParameters,
   setNewJobInputs,
@@ -108,6 +110,16 @@ const JobsPanelView = ({
               />
             </Accordion>
             <div className="job-panel__buttons-container">
+              {jobsStore.error && (
+                <ErrorMessage
+                  closeError={() => {
+                    if (jobsStore.error) {
+                      removeJobError()
+                    }
+                  }}
+                  message={jobsStore.error}
+                />
+              )}
               <button
                 className="btn_default btn_small btn__schedule-for-later"
                 onClick={() => setOpenScheduleJob(true)}
@@ -141,6 +153,7 @@ JobsPanelView.propTypes = {
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
+  removeJobError: PropTypes.func.isRequired,
   setNewJobHyperParameters: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired,
   setNewJobParameters: PropTypes.func.isRequired,
