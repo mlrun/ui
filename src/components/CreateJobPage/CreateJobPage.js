@@ -73,7 +73,7 @@ const CreateJobPage = ({
         match={match}
         templates={templates}
       />
-      {Object.values(selectedGroupFunctions).length && (
+      {Object.values(selectedGroupFunctions).length > 0 && (
         <JobsPanel
           closePanel={handleSelectGroupFunctions}
           groupedFunctions={selectedGroupFunctions}
