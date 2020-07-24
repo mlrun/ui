@@ -81,7 +81,6 @@ const JobsPanelView = ({
               accordionClassName="job-panel__accordion"
               icon={<Arrow />}
               iconClassName="job-panel__expand-icon"
-              openByDefault
             >
               <JobsPanelAdvanced
                 environmentVariables={jobsStore.newJob.function.spec.env}
@@ -97,7 +96,6 @@ const JobsPanelView = ({
               accordionClassName="job-panel__accordion"
               icon={<Arrow />}
               iconClassName="job-panel__expand-icon"
-              openByDefault
             >
               <JobsPanelResources
                 match={match}
