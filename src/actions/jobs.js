@@ -6,8 +6,10 @@ import {
   FETCH_JOB_LOGS_BEGIN,
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
+  REMOVE_JOB_ERROR,
   REMOVE_JOB_LOGS,
   REMOVE_NEW_JOB,
+  RUN_NEW_JOB_FAILURE,
   SET_LOADING,
   SET_NEW_JOB,
   SET_NEW_JOB_ENVIRONMENT_VARIABLES,
@@ -123,9 +125,16 @@ const jobsActions = {
     payload: strategy
   }),
   runNewJob: postData => () => jobsApi.runJob(postData),
+  runNewJobFailure: error => ({
+    type: RUN_NEW_JOB_FAILURE,
+    payload: error
+  }),
   setLoading: isLoading => ({
     type: SET_LOADING,
     payload: isLoading
+  }),
+  removeJobError: () => ({
+    type: REMOVE_JOB_ERROR
   })
 }
 

@@ -30,6 +30,7 @@
     display: flex;
     flex: 0.1;
     justify-content: flex-end;
+    align-items: center;
     margin-top: 16px;
     margin-bottom: 16px;
     padding: 0 40px;
@@ -233,7 +234,7 @@
 
   .btn {
     &__schedule-for-later {
-      margin-right: 10px;
+      margin: 0 10px;
       color: $primary;
       background-color: transparent;
     }
