@@ -203,7 +203,8 @@ const JobsPanel = ({
           ...jobsStore.newJob.task.spec,
           output_path: panelState.outputPath,
           input_path: panelState.inputPath,
-          function: `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+          function: `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`,
+          handler: panelState.currentFunctionInfo.method
         }
       }
     }
