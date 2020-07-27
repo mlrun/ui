@@ -126,7 +126,16 @@ const JobsPanel = ({
         payload: panelState.tableData
       })
     }
-  }, [panelState.previousPanelData.tableData, panelState.tableData])
+
+    return () => {
+      jobsStore.error && removeJobError()
+    }
+  }, [
+    jobsStore.error,
+    panelState.previousPanelData.tableData,
+    panelState.tableData,
+    removeJobError
+  ])
 
   const functionData = useMemo(() => {
     if (!isEmpty(selectedFunction)) {
