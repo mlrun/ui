@@ -10,7 +10,7 @@
     border-radius: 15px;
 
     &_edited {
-      padding-right: 15px;
+      padding-right: 16px;
       border: $labelEditBorder;
     }
 
@@ -29,18 +29,6 @@
 
       &::placeholder {
         color: $primary;
-      }
-    }
-
-    .input {
-      &-label {
-        &-key {
-          min-width: 25px;
-        }
-
-        &-value {
-          min-width: 40px;
-        }
       }
     }
   }

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -17,9 +17,12 @@ const ChipForm = ({
     valueFieldWidth: 0
   })
   const minWidthInput = 25
+  const minWidthValueInput = 40
+  const maxWidthInput = 250
 
   const refInputKey = React.createRef()
   const refInputValue = React.createRef()
+  const refInputContainer = React.createRef()
 
   const labelKeyClassName = classnames(
     className,
@@ -36,13 +39,29 @@ const ChipForm = ({
     )
   )
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!chip.keyFieldWidth && !chip.valueFieldWidth) {
-      setChip(prevState => ({
-        ...prevState,
-        keyFieldWidth: refInputKey.current.scrollWidth,
-        valueFieldWidth: refInputValue.current.scrollWidth
-      }))
+      const currentWidthKeyInput = refInputKey.current.scrollWidth
+      const currentWidthValueInput = refInputValue.current.scrollWidth
+      if (chip.key && chip.value) {
+        setChip(prevState => ({
+          ...prevState,
+          keyFieldWidth:
+            currentWidthKeyInput >= maxWidthInput
+              ? maxWidthInput
+              : currentWidthKeyInput,
+          valueFieldWidth:
+            currentWidthValueInput >= maxWidthInput
+              ? maxWidthInput
+              : currentWidthValueInput
+        }))
+      } else {
+        setChip(prevState => ({
+          ...prevState,
+          keyFieldWidth: minWidthInput,
+          valueFieldWidth: minWidthValueInput
+        }))
+      }
     }
   }, [refInputKey, refInputValue, setChip, chip])
 
@@ -62,12 +81,11 @@ const ChipForm = ({
   const outsideClick = useCallback(
     event => {
       event.stopPropagation()
-
-      if (!editConfig.isKeyFocused && !editConfig.isValueFocused) {
+      if (!event.path.includes(refInputContainer.current)) {
         onChange(chip, 'Click')
       }
     },
-    [chip, onChange, editConfig.isKeyFocused, editConfig.isValueFocused]
+    [chip, onChange, refInputContainer]
   )
 
   useEffect(() => {
@@ -98,7 +116,7 @@ const ChipForm = ({
             ? minWidthInput
             : prevState.keyFieldWidth,
           valueFieldWidth: editConfig.isValueFocused
-            ? minWidthInput
+            ? minWidthValueInput
             : prevState.valueFieldWidth
         }))
       }
@@ -112,34 +130,20 @@ const ChipForm = ({
         refInputKey.current.selectionStart = refInputKey.current.selectionEnd
         setEditConfig(prevState => ({
           ...prevState,
-          isKeyFocused: true
+          isKeyFocused: true,
+          isValueFocused: false
         }))
       } else {
         refInputValue.current.selectionStart =
           refInputValue.current.selectionEnd
         setEditConfig(prevState => ({
           ...prevState,
+          isKeyFocused: false,
           isValueFocused: true
         }))
       }
     },
     [refInputKey, refInputValue, setEditConfig]
-  )
-  const handleOnBlur = useCallback(
-    event => {
-      if (event.target.name === 'key') {
-        setEditConfig(prevState => ({
-          ...prevState,
-          isKeyFocused: false
-        }))
-      } else {
-        setEditConfig(prevState => ({
-          ...prevState,
-          isValueFocused: false
-        }))
-      }
-    },
-    [setEditConfig]
   )
 
   const handleOnChange = useCallback(
@@ -147,22 +151,32 @@ const ChipForm = ({
       event.preventDefault()
 
       if (event.target.name === 'key') {
+        const currentWidthKeyInput = refInputKey.current.scrollWidth
         setChip(prevState => ({
           ...prevState,
           key: refInputKey.current.value,
           keyFieldWidth:
             refInputKey.current.value.length <= 1
               ? minWidthInput
-              : refInputKey.current.scrollWidth + 2
+              : currentWidthKeyInput >= maxWidthInput
+              ? maxWidthInput
+              : currentWidthKeyInput > minWidthInput
+              ? currentWidthKeyInput + 2
+              : minWidthInput
         }))
       } else {
+        const currentWidthValueInput = refInputValue.current.scrollWidth
         setChip(prevState => ({
           ...prevState,
           value: refInputValue.current.value,
           valueFieldWidth:
             refInputValue.current.value.length <= 1
-              ? minWidthInput
-              : refInputValue.current.scrollWidth + 2
+              ? minWidthValueInput
+              : currentWidthValueInput >= maxWidthInput
+              ? maxWidthInput
+              : currentWidthValueInput > minWidthValueInput
+              ? currentWidthValueInput + 2
+              : minWidthValueInput
         }))
       }
     },
@@ -171,6 +185,7 @@ const ChipForm = ({
 
   return (
     <div
+      ref={refInputContainer}
       className={labelContainerClassName}
       onKeyDown={event => editConfig.isEdit && focusChip(event)}
     >
@@ -179,7 +194,6 @@ const ChipForm = ({
         className={labelKeyClassName}
         name="key"
         style={{ width: chip.keyFieldWidth }}
-        onBlur={handleOnBlur}
         onChange={handleOnChange}
         onFocus={handleOnFocus}
         placeholder="key"
@@ -192,7 +206,6 @@ const ChipForm = ({
         autoComplete="off"
         className={labelValueClassName}
         name="value"
-        onBlur={handleOnBlur}
         onChange={handleOnChange}
         onFocus={handleOnFocus}
         placeholder="value"
