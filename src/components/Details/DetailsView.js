@@ -18,7 +18,7 @@ import DetailsPreview from '../DetailsPreview/DetailsPreview'
 import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
 
 import { formatDatetime } from '../../utils'
-import { ARTIFACTS_PAGE } from '../../constants'
+import { ARTIFACTS_PAGE, JOBS_PAGE } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 
@@ -37,8 +37,9 @@ const DetailsView = ({
         <div className="item-header__data">
           <h3>{selectedItem.name || selectedItem.db_key}</h3>
           <span>
-            {Object.keys(selectedItem).length > 0 &&
-              formatDatetime(selectedItem?.startTime, 'Not yet started')}
+            {Object.keys(selectedItem).length > 0 && page === JOBS_PAGE
+              ? formatDatetime(selectedItem?.startTime, 'Not yet started')
+              : formatDatetime(new Date(selectedItem?.updated), 'N/A')}
             {selectedItem.state && (
               <Tooltip
                 template={

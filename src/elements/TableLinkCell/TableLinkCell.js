@@ -68,11 +68,8 @@ const TableLinkCell = ({
               <span>
                 {data.type !== 'date' &&
                   (link.match(/functions/)
-                    ? formatDatetime(new Date(item.updated), 'N/A')
-                    : formatDatetime(
-                        new Date(item.startTime),
-                        'Not yet started'
-                      ))}
+                    ? formatDatetime(item.updated, 'N/A')
+                    : formatDatetime(item.startTime, 'Not yet started'))}
               </span>
             )}
             <span>{truncateUid(item.uid || item.hash)}</span>
