@@ -8,20 +8,14 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 
-import Chip from '../Chip/Chip'
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import HiddenChipsBlock from '../../elements/HiddenChipsBlock/HiddenChipsBlock'
-
-import { ReactComponent as Add } from '../../images/add.svg'
-
 import { cutChips } from '../../utils/cutChips'
 import { sizeChips } from './SizeChips'
 import { panelActions } from '../../components/JobsPanel/panelReducer'
 
 import './chipCell.scss'
+import ChipCellView from './ChipCellView'
 
-const ChipCell = ({ className, elements, isEditMode, dispatch }) => {
+const ChipCell = ({ dispatch, isEditMode, elements, className }) => {
   const [sizeContainer, setSizeContainer] = useState(0)
   const [show, setShow] = useState(false)
   const [editConfig, setEditConfig] = useState({
@@ -103,6 +97,7 @@ const ChipCell = ({ className, elements, isEditMode, dispatch }) => {
   const removeChip = useCallback(
     chipIndex => {
       const newChip = elements.filter((value, index) => index !== chipIndex)
+
       dispatch({
         type: panelActions.REMOVE_JOB_LABEL,
         payload: newChip
@@ -113,9 +108,9 @@ const ChipCell = ({ className, elements, isEditMode, dispatch }) => {
 
   const editChip = useCallback(
     (chip, nameEvent) => {
-      const isChipEmpty = !!(chip.key && chip.value)
+      const isChipNotEmpty = !!(chip.key && chip.value)
 
-      if (isChipEmpty) {
+      if (isChipNotEmpty) {
         const newChips = [...elements]
         newChips[editConfig.chipIndex] = `${chip.key}: ${chip.value}`
 
@@ -126,9 +121,10 @@ const ChipCell = ({ className, elements, isEditMode, dispatch }) => {
       }
 
       if (nameEvent === 'Click') {
-        if (editConfig.isNewChip && !isChipEmpty) {
+        if (editConfig.isNewChip && !isChipNotEmpty) {
           removeChip(editConfig.chipIndex)
         }
+
         setEditConfig({
           chipIndex: null,
           isEdit: false,
@@ -138,11 +134,12 @@ const ChipCell = ({ className, elements, isEditMode, dispatch }) => {
         })
       } else if (nameEvent === 'Tab') {
         setEditConfig(prevState => {
-          const isChipIndexExists =
+          const isNextChipIndexExists =
             prevState.chipIndex + 1 > elements.length - 1
+
           return {
-            chipIndex: isChipIndexExists ? null : prevState.chipIndex + 1,
-            isEdit: isChipIndexExists ? false : true,
+            chipIndex: isNextChipIndexExists ? null : prevState.chipIndex + 1,
+            isEdit: !isNextChipIndexExists,
             isKeyFocused: true,
             isValueFocused: false,
             isNewChip: false
@@ -150,12 +147,13 @@ const ChipCell = ({ className, elements, isEditMode, dispatch }) => {
         })
       } else if (nameEvent === 'Tab+Shift') {
         setEditConfig(prevState => {
-          const inChipIndexExists = prevState.chipIndex - 1 < 0
+          const isPrevChipIndexExists = prevState.chipIndex - 1 < 0
+
           return {
-            chipIndex: inChipIndexExists ? null : prevState.chipIndex - 1,
-            isEdit: inChipIndexExists ? false : true,
-            isKeyFocused: inChipIndexExists ? true : false,
-            isValueFocused: inChipIndexExists ? false : true,
+            chipIndex: isPrevChipIndexExists ? null : prevState.chipIndex - 1,
+            isEdit: !isPrevChipIndexExists,
+            isKeyFocused: isPrevChipIndexExists,
+            isValueFocused: !isPrevChipIndexExists,
             isNewChip: false
           }
         })
@@ -176,54 +174,21 @@ const ChipCell = ({ className, elements, isEditMode, dispatch }) => {
   }, [])
 
   return (
-    (isEditMode || elements.length !== 0) && (
-      <div className="chips-wrapper" ref={chipRef}>
-        {chips.visibleChips.map((item, index) => {
-          return (
-            <div className={'chip-block'} key={`${item.value}${index}`}>
-              <Tooltip
-                className="tooltip-wrapper"
-                key={item.value}
-                template={
-                  editConfig.isEdit ? (
-                    <span />
-                  ) : (
-                    <TextTooltipTemplate text={item.value} />
-                  )
-                }
-              >
-                <Chip
-                  chipIndex={index}
-                  className={className}
-                  editConfig={editConfig}
-                  editChip={editChip}
-                  isEditMode={isEditMode}
-                  handleIsEdit={handleIsEdit}
-                  removeChip={removeChip}
-                  onClick={handleShowElements}
-                  setEditConfig={setEditConfig}
-                  value={item.value}
-                />
-              </Tooltip>
-              {chips.visibleChips.length - 1 === index && show && (
-                <HiddenChipsBlock
-                  className={className}
-                  chips={chips.hiddenChips}
-                />
-              )}
-            </div>
-          )
-        })}
-        {isEditMode && (
-          <button
-            className="job-labels__button-add"
-            onClick={() => addChip(':')}
-          >
-            <Add />
-          </button>
-        )}
-      </div>
-    )
+    <ChipCellView
+      addChip={addChip}
+      chips={chips}
+      className={className}
+      editChip={editChip}
+      editConfig={editConfig}
+      elements={elements}
+      handleIsEdit={handleIsEdit}
+      handleShowElements={handleShowElements}
+      isEditMode={isEditMode}
+      ref={chipRef}
+      removeChip={removeChip}
+      setEditConfig={setEditConfig}
+      show={show}
+    />
   )
 }
 

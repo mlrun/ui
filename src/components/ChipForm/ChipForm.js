@@ -62,6 +62,7 @@ const ChipForm = ({
   const outsideClick = useCallback(
     event => {
       event.stopPropagation()
+
       if (!editConfig.isKeyFocused && !editConfig.isValueFocused) {
         onChange(chip, 'Click')
       }
@@ -105,65 +106,67 @@ const ChipForm = ({
     [editConfig, onChange, chip]
   )
 
-  const handleOnFocusKey = useCallback(() => {
-    refInputKey.current.selectionStart = refInputKey.current.selectionEnd
-    setEditConfig(prevState => ({
-      ...prevState,
-      isKeyFocused: true
-    }))
-  }, [setEditConfig, refInputKey])
-
-  const handleOnBlurKey = useCallback(() => {
-    setEditConfig(prevState => ({
-      ...prevState,
-      isKeyFocused: false
-    }))
-  }, [setEditConfig])
-
-  const handleOnFocusValue = useCallback(() => {
-    refInputValue.current.selectionStart = refInputValue.current.selectionEnd
-    setEditConfig(prevState => ({
-      ...prevState,
-      isValueFocused: true
-    }))
-  }, [setEditConfig, refInputValue])
-
-  const handleOnBlurValue = useCallback(() => {
-    setEditConfig(prevState => ({
-      ...prevState,
-      isValueFocused: false
-    }))
-  }, [setEditConfig])
-
-  const handleOnChangeKey = useCallback(
+  const handleOnFocus = useCallback(
     event => {
-      event.preventDefault()
-      setChip(prevState => ({
-        ...prevState,
-        key: refInputKey.current.value,
-        keyFieldWidth:
-          refInputKey.current.value.length <= 1
-            ? minWidthInput
-            : refInputKey.current.scrollWidth + 2
-      }))
+      if (event.target.name === 'key') {
+        refInputKey.current.selectionStart = refInputKey.current.selectionEnd
+        setEditConfig(prevState => ({
+          ...prevState,
+          isKeyFocused: true
+        }))
+      } else {
+        refInputValue.current.selectionStart =
+          refInputValue.current.selectionEnd
+        setEditConfig(prevState => ({
+          ...prevState,
+          isValueFocused: true
+        }))
+      }
     },
-    [refInputKey]
+    [refInputKey, refInputValue, setEditConfig]
+  )
+  const handleOnBlur = useCallback(
+    event => {
+      if (event.target.name === 'key') {
+        setEditConfig(prevState => ({
+          ...prevState,
+          isKeyFocused: false
+        }))
+      } else {
+        setEditConfig(prevState => ({
+          ...prevState,
+          isValueFocused: false
+        }))
+      }
+    },
+    [setEditConfig]
   )
 
-  const handleOnChangeValue = useCallback(
+  const handleOnChange = useCallback(
     event => {
       event.preventDefault()
-      console.log(refInputValue.current.scrollWidth)
-      setChip(prevState => ({
-        ...prevState,
-        value: refInputValue.current.value,
-        valueFieldWidth:
-          refInputValue.current.value.length <= 1
-            ? minWidthInput
-            : refInputValue.current.scrollWidth + 2
-      }))
+
+      if (event.target.name === 'key') {
+        setChip(prevState => ({
+          ...prevState,
+          key: refInputKey.current.value,
+          keyFieldWidth:
+            refInputKey.current.value.length <= 1
+              ? minWidthInput
+              : refInputKey.current.scrollWidth + 2
+        }))
+      } else {
+        setChip(prevState => ({
+          ...prevState,
+          value: refInputValue.current.value,
+          valueFieldWidth:
+            refInputValue.current.value.length <= 1
+              ? minWidthInput
+              : refInputValue.current.scrollWidth + 2
+        }))
+      }
     },
-    [refInputValue]
+    [refInputKey, refInputValue]
   )
 
   return (
@@ -176,9 +179,9 @@ const ChipForm = ({
         className={labelKeyClassName}
         name="key"
         style={{ width: chip.keyFieldWidth }}
-        onBlur={handleOnBlurKey}
-        onChange={handleOnChangeKey}
-        onFocus={handleOnFocusKey}
+        onBlur={handleOnBlur}
+        onChange={handleOnChange}
+        onFocus={handleOnFocus}
         placeholder="key"
         ref={refInputKey}
         type="text"
@@ -189,9 +192,9 @@ const ChipForm = ({
         autoComplete="off"
         className={labelValueClassName}
         name="value"
-        onBlur={handleOnBlurValue}
-        onChange={handleOnChangeValue}
-        onFocus={handleOnFocusValue}
+        onBlur={handleOnBlur}
+        onChange={handleOnChange}
+        onFocus={handleOnFocus}
         placeholder="value"
         ref={refInputValue}
         style={{ width: chip.valueFieldWidth }}
@@ -211,7 +214,7 @@ ChipForm.defaultProps = {
 
 ChipForm.propTypes = {
   editConfig: PropTypes.shape({}).isRequired,
-  label: PropTypes.shape({}).isRequired,
+  label: PropTypes.shape({}),
   onChange: PropTypes.func.isRequired,
   setEditConfig: PropTypes.func.isRequired
 }

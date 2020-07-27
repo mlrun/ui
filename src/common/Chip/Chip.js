@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { roundFloats } from '../../utils/roundFloats'
 
-import { ReactComponent as Close } from '../../images/close.svg'
 import ChipForm from '../../components/ChipForm/ChipForm'
+
+import { ReactComponent as Close } from '../../images/close.svg'
 
 const Chip = ({
   chipIndex,
