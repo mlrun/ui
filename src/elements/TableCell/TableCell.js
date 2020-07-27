@@ -136,7 +136,7 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.class}`}>
         <Tooltip
-          className="data-ellipsis text_small"
+          className="text_small"
           template={<TextTooltipTemplate text={data.value} />}
         >
           {data.value}

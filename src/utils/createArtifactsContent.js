@@ -28,7 +28,7 @@ const createArtifactsContent = artifacts =>
         type: 'owner'
       },
       updated: {
-        value: formatDatetime(new Date(artifact.updated)),
+        value: formatDatetime(new Date(artifact.updated), 'N/A'),
         class: 'artifacts_small'
       },
       buttonPopout: {

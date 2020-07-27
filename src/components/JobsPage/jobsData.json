@@ -3,6 +3,7 @@
   "jobsInfoHeaders": [
     { "label": "UID", "id": "uid" },
     { "label": "Start time", "id": "startTime" },
+    { "label": "Last Updates", "id": "lastUpdates" },
     { "label": "Status", "id": "status" },
     { "label": "Parameters", "id": "parameters" },
     { "label": "Function", "id": "function" },

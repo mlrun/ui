@@ -6,6 +6,9 @@ const createJobsContent = (content, groupedByWorkflow) => {
     if (contentItem) {
       let type = contentItem.labels?.find(label => label.includes('kind:'))
       type = type?.slice(type.indexOf(':') + 2)
+      const startTime = groupedByWorkflow
+        ? contentItem.created_at
+        : contentItem.startTime
 
       return {
         name: {
@@ -23,9 +26,7 @@ const createJobsContent = (content, groupedByWorkflow) => {
           type: 'hidden'
         },
         startTime: {
-          value: formatDatetime(
-            contentItem.startTime || contentItem.created_at
-          ),
+          value: formatDatetime(startTime, 'Not yet started'),
           class: 'jobs_small',
           type: 'date'
         },

@@ -15,12 +15,12 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import ArtifactInfoMetadata from '../ArtifactInfoMetadata/ArtifactInfoMetada'
 import DetailsCode from '../DetailsCode/DetailsCode'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
+import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
 
 import { formatDatetime } from '../../utils'
 import { ARTIFACTS_PAGE } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
-import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
 
 const DetailsView = ({
   actionsMenu,
@@ -38,9 +38,7 @@ const DetailsView = ({
           <h3>{selectedItem.name || selectedItem.db_key}</h3>
           <span>
             {Object.keys(selectedItem).length > 0 &&
-              formatDatetime(
-                selectedItem?.startTime || new Date(selectedItem?.updated)
-              )}
+              formatDatetime(selectedItem?.startTime, 'Not yet started')}
             {selectedItem.state && (
               <Tooltip
                 template={

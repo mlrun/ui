@@ -42,9 +42,7 @@ const Jobs = ({
           iteration: job.metadata.iteration,
           iterationStats: job.status.iterations || [],
           iterations: [],
-          startTime: job.status.start_time
-            ? new Date(job.status.start_time)
-            : null,
+          startTime: new Date(job.status.start_time),
           state: job.status.state,
           name: job.metadata.name,
           labels: parseKeyValues(job.metadata.labels || {}),
