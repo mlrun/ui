@@ -18,7 +18,7 @@ const createFunctionsContent = functions =>
         type: 'hash'
       },
       updated: {
-        value: formatDatetime(new Date(func.updated)),
+        value: formatDatetime(new Date(func.updated), 'N/A'),
         class: 'functions_small',
         type: 'date'
       },

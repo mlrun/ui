@@ -15,7 +15,8 @@ import './detailsInfo.scss'
 const DetailsInfo = ({ match, page, selectedItem }) => {
   const jobsInfoContent = [
     selectedItem.uid,
-    formatDatetime(selectedItem.startTime),
+    formatDatetime(selectedItem.startTime, 'Not yet started'),
+    formatDatetime(selectedItem.updated, 'N/A'),
     selectedItem.state,
     selectedItem.parameters,
     selectedItem.function,
@@ -33,7 +34,7 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
     selectedItem.size,
     selectedItem.target_path,
     selectedItem.tree,
-    selectedItem.updated && formatDatetime(new Date(selectedItem.updated)),
+    formatDatetime(new Date(selectedItem.updated), 'N/A'),
     selectedItem.labels,
     selectedItem.sources
   ]
@@ -42,7 +43,7 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
     selectedItem.type,
     selectedItem.hash,
     selectedItem.codeOrigin,
-    formatDatetime(new Date(selectedItem.updated)),
+    formatDatetime(new Date(selectedItem.updated), 'N/A'),
     selectedItem.command,
     selectedItem.image,
     selectedItem.description,
