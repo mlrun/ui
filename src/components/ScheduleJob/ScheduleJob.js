@@ -63,8 +63,6 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     }, '')
   }
 
-  console.log(isRecurring)
-
   const getRangeInputValue = () => {
     return recurringState.scheduleRepeat.activeOption === 'week'
       ? recurringState.scheduleRepeat.week.repeat.toString()
