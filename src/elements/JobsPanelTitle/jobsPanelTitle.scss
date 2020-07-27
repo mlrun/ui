@@ -158,6 +158,12 @@
 
         .chips-wrapper {
           flex-wrap: wrap;
+
+          .chip_short {
+            max-width: 200px;
+            color: $primary;
+            cursor: pointer;
+          }
         }
       }
 
@@ -167,11 +173,6 @@
         padding: 5px 10px;
         border: $labelBorder;
         border-radius: 15px;
-
-        .chip_short {
-          color: $primary;
-          cursor: pointer;
-        }
 
         &_edited {
           color: $spunPearl;

@@ -15,7 +15,7 @@ import { panelActions } from '../../components/JobsPanel/panelReducer'
 import './chipCell.scss'
 import ChipCellView from './ChipCellView'
 
-const ChipCell = ({ dispatch, isEditMode, elements, className }) => {
+const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
   const [sizeContainer, setSizeContainer] = useState(0)
   const [show, setShow] = useState(false)
   const [editConfig, setEditConfig] = useState({

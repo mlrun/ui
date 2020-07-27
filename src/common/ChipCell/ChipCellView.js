@@ -76,6 +76,21 @@ const ChipCellView = React.forwardRef(
     )
 )
 
+ChipCellView.defaultProps = {
+  addChip: () => {},
+  chips: {},
+  className: '',
+  editChip: () => {},
+  editConfig: {},
+  elements: [],
+  handleIsEdit: () => {},
+  handleShowElements: () => {},
+  isEditMode: false,
+  removeChip: () => {},
+  setEditConfig: () => {},
+  show: false
+}
+
 ChipCellView.propTypes = {
   addChip: PropTypes.func,
   chips: PropTypes.shape({}),

@@ -39,7 +39,7 @@ const Chip = ({
         key={value}
         onChange={editChip}
         setEditConfig={setEditConfig}
-        value={value.match(/^(?<key>|.+?)\W{1,2}(?<value>|.+?)$/)?.groups}
+        value={value.match(/^(?<key>|.+?):\s?(?<value>|.+?)$/)?.groups}
       />
     ) : (
       <span className={className}>
