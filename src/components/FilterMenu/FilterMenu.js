@@ -131,7 +131,7 @@ const FilterMenu = ({
             default:
               return (
                 <Select
-                  className={filter === 'period' ? 'jobs-period' : ''}
+                  className={filter === 'period' ? 'period-filter' : ''}
                   options={selectOptions[filter]}
                   label={`${filter.replace(/([A-Z])/g, ' $1')}:`}
                   key={filter}
