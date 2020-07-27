@@ -32,7 +32,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   })
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
-  const [isRecurring, setIsRecurring] = useState('')
+  const [isRecurring, setIsRecurring] = useState('recurring')
   const [recurringState, recurringDispatch] = useReducer(
     recurringReducer,
     initialState
@@ -62,6 +62,8 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
       return (prev += arr.length - 1 === index ? cron[next] : cron[next] + ' ')
     }, '')
   }
+
+  console.log(isRecurring)
 
   const getRangeInputValue = () => {
     return recurringState.scheduleRepeat.activeOption === 'week'

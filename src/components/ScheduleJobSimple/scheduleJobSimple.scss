@@ -6,7 +6,7 @@
     min-width: 230px;
 
     &_container {
-      display: flex;
+      display: none;
     }
   }
 
@@ -16,7 +16,7 @@
   }
 
   .checkbox_container {
-    display: flex;
+    display: none;
     margin: 23px 0;
     padding: 10px 10px 10px 0;
   }

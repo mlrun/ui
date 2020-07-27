@@ -11,20 +11,26 @@
     padding: 18px;
     background-color: $white;
 
-    .header-link {
-      display: flex;
-      align-items: center;
+    .header {
+      &-link {
+        display: flex;
+        align-items: center;
 
-      &__title {
-        margin: 0 18px;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 23px;
-        color: $primary
+        &__title {
+          margin: 0 18px;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 23px;
+          color: $primary
+        }
+
+        &__icon {
+          margin-bottom: -4px;
+        }
       }
 
-      &__icon {
-        margin-bottom: -4px;
+      &-buttons {
+        display: none;
       }
     }
   }
