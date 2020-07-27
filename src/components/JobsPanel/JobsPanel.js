@@ -6,7 +6,7 @@ import React, {
   useEffect
 } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
@@ -22,9 +22,9 @@ import {
 } from './jobsPanel.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { initialState, panelReducer, panelActions } from './panelReducer'
+import { parseKeyValues } from '../../utils'
 
 import './jobsPanel.scss'
-import { parseKeyValues } from '../../utils'
 
 const JobsPanel = ({
   closePanel,
@@ -34,8 +34,10 @@ const JobsPanel = ({
   jobsStore,
   match,
   removeFunctionTemplate,
+  removeJobError,
   removeNewJob,
   runNewJob,
+  runNewJobFailure,
   setNewJob,
   setNewJobEnvironmentVariables,
   setNewJobHyperParameters,
@@ -55,6 +57,7 @@ const JobsPanel = ({
       : groupedFunctions.functions
   )
   const history = useHistory()
+  const dispatch = useDispatch()
 
   useLayoutEffect(() => {
     if (!groupedFunctions.name && !functionsStore.template.name) {
@@ -205,11 +208,19 @@ const JobsPanel = ({
       }
     }
 
-    runNewJob(postData).then(() => {
-      removeNewJob()
+    if (jobsStore.error) {
+      removeJobError()
+    }
 
-      history.push(`/projects/${match.params.projectName}/jobs`)
-    })
+    runNewJob(postData)
+      .then(() => {
+        removeNewJob()
+
+        history.push(`/projects/${match.params.projectName}/jobs`)
+      })
+      .catch(error => {
+        dispatch(runNewJobFailure(error.message))
+      })
   }
 
   return (
@@ -222,6 +233,7 @@ const JobsPanel = ({
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}
       panelState={panelState}
+      removeJobError={removeJobError}
       setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}

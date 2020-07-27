@@ -5,7 +5,9 @@ import {
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
+  REMOVE_JOB_ERROR,
   REMOVE_JOB_LOGS,
+  RUN_NEW_JOB_FAILURE,
   SET_LOADING,
   SET_NEW_JOB_ENVIRONMENT_VARIABLES,
   SET_NEW_JOB_INPUTS,
@@ -162,6 +164,11 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case REMOVE_JOB_ERROR:
+      return {
+        ...state,
+        error: null
+      }
     case REMOVE_NEW_JOB:
       return {
         ...state,
@@ -183,6 +190,11 @@ export default (state = initialState, { type, payload }) => {
             }
           }
         }
+      }
+    case RUN_NEW_JOB_FAILURE:
+      return {
+        ...state,
+        error: payload
       }
     case SET_NEW_JOB_PARAMETERS:
       return {
