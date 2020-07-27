@@ -91,46 +91,65 @@ const FilterMenu = ({
   return (
     <>
       <div className="filters">
-        {filters.map(filter =>
-          filter === 'tree' ? (
-            <ArtifactFilterTree
-              key={filter}
-              value={valueFilterTree || 'Latest'}
-              label="Tree:"
-              items={itemsFilterTree}
-              match={match}
-              onChange={handleChangeArtifactFilterTree}
-              page={page}
-            />
-          ) : filter === 'labels' || filter === 'name' ? (
-            <Input
-              type="text"
-              label={filter === 'labels' ? 'labels:' : 'name:'}
-              placeholder={filter === 'labels' ? 'key1=value1,…' : ''}
-              key={filter}
-              onChange={filter === 'labels' ? setLabels : setName}
-              value={filter === 'labels' ? labels : name}
-              onKeyDown={onKeyDown}
-            />
-          ) : (
-            <Select
-              options={selectOptions[filter]}
-              label={`${filter.replace(/([A-Z])/g, ' $1')}:`}
-              key={filter}
-              selectedId={
-                (filter === 'status' && stateFilter) ||
-                (filter === 'groupBy' && groupFilter)
-              }
-              selectType={filter === 'status' ? 'checkbox' : ''}
-              match={match}
-              onClick={
-                (filter === 'status' && setStateFilter) ||
-                (filter === 'groupBy' && setGroupFilter)
-              }
-              page={page}
-            />
-          )
-        )}
+        {filters.map(filter => {
+          switch (filter) {
+            case 'tree':
+              return (
+                <ArtifactFilterTree
+                  key={filter}
+                  value={valueFilterTree || 'Latest'}
+                  label="Tree:"
+                  items={itemsFilterTree}
+                  match={match}
+                  onChange={handleChangeArtifactFilterTree}
+                  page={page}
+                />
+              )
+            case 'labels':
+              return (
+                <Input
+                  type="text"
+                  label="labels:"
+                  placeholder="key1=value1,…"
+                  key={filter}
+                  onChange={setLabels}
+                  value={labels}
+                  onKeyDown={onKeyDown}
+                />
+              )
+            case 'name':
+              return (
+                <Input
+                  type="text"
+                  label="name:"
+                  key={filter}
+                  onChange={setName}
+                  value={name}
+                  onKeyDown={onKeyDown}
+                />
+              )
+            default:
+              return (
+                <Select
+                  className={filter === 'period' ? 'period-filter' : ''}
+                  options={selectOptions[filter]}
+                  label={`${filter.replace(/([A-Z])/g, ' $1')}:`}
+                  key={filter}
+                  selectedId={
+                    (filter === 'status' && stateFilter) ||
+                    (filter === 'groupBy' && groupFilter)
+                  }
+                  selectType={filter === 'status' ? 'checkbox' : ''}
+                  match={match}
+                  onClick={
+                    (filter === 'status' && setStateFilter) ||
+                    (filter === 'groupBy' && setGroupFilter)
+                  }
+                  page={page}
+                />
+              )
+          }
+        })}
         {page === FUNCTIONS_PAGE && (
           <CheckBox
             className="filters-checkbox"

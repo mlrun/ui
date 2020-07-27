@@ -32,7 +32,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   })
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
-  const [isRecurring, setIsRecurring] = useState('')
+  const [isRecurring, setIsRecurring] = useState('recurring')
   const [recurringState, recurringDispatch] = useReducer(
     recurringReducer,
     initialState
