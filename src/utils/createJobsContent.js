@@ -24,7 +24,7 @@ const createJobsContent = (content, groupedByWorkflow) => {
         },
         startTime: {
           value: formatDatetime(
-            contentItem.startTime || new Date(contentItem.created_at)
+            contentItem.startTime || contentItem.created_at
           ),
           class: 'jobs_small',
           type: 'date'
