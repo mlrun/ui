@@ -8,12 +8,13 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 
+import ChipCellView from './ChipCellView'
+
 import { cutChips } from '../../utils/cutChips'
 import { sizeChips } from './SizeChips'
 import { panelActions } from '../../components/JobsPanel/panelReducer'
 
 import './chipCell.scss'
-import ChipCellView from './ChipCellView'
 
 const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
   const [sizeContainer, setSizeContainer] = useState(0)
@@ -78,7 +79,7 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
     chip => {
       if (!editConfig.isEdit && !editConfig.chipIndex) {
         dispatch({
-          type: panelActions.SET_JOB_LABEL,
+          type: panelActions.SET_JOB_LABELS,
           payload: [...elements, chip]
         })
       }

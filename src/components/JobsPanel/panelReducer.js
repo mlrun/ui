@@ -56,7 +56,7 @@ export const panelActions = {
   SET_CURRENT_FUNCTION_INFO_VERSION: 'SET_CURRENT_FUNCTION_INFO_VERSION',
   SET_EDIT_MODE: 'SET_EDIT_MODE',
   SET_INPUT_PATH: 'SET_INPUT_PATH',
-  SET_JOB_LABEL: 'SET_JOB_LABEL',
+  SET_JOB_LABELS: 'SET_JOB_LABELS',
   SET_LIMITS: 'SET_LIMITS',
   SET_LIMITS_CPU: 'SET_LIMITS_CPU',
   SET_LIMITS_MEMORY: 'SET_LIMITS_MEMORY',
@@ -126,7 +126,7 @@ export const panelReducer = (state, { type, payload }) => {
         }
       }
     }
-    case panelActions.SET_JOB_LABEL:
+    case panelActions.SET_JOB_LABELS:
       return {
         ...state,
         currentFunctionInfo: {

@@ -43,6 +43,7 @@ const ChipForm = ({
     if (!chip.keyFieldWidth && !chip.valueFieldWidth) {
       const currentWidthKeyInput = refInputKey.current.scrollWidth
       const currentWidthValueInput = refInputValue.current.scrollWidth
+
       if (chip.key && chip.value) {
         setChip(prevState => ({
           ...prevState,
@@ -81,6 +82,7 @@ const ChipForm = ({
   const outsideClick = useCallback(
     event => {
       event.stopPropagation()
+
       if (!event.path.includes(refInputContainer.current)) {
         onChange(chip, 'Click')
       }
@@ -91,6 +93,7 @@ const ChipForm = ({
   useEffect(() => {
     if (editConfig.isEdit) {
       document.addEventListener('click', outsideClick, true)
+
       return () => {
         document.removeEventListener('click', outsideClick, true)
       }
@@ -100,6 +103,7 @@ const ChipForm = ({
   const focusChip = useCallback(
     event => {
       event.stopPropagation()
+
       if (!event.shiftKey && event.key === 'Tab' && editConfig.isValueFocused) {
         onChange(chip, 'Tab')
       } else if (
@@ -109,6 +113,7 @@ const ChipForm = ({
       ) {
         onChange(chip, 'Tab+Shift')
       }
+
       if (event.key === 'Backspace' || event.key === 'Delete') {
         setChip(prevState => ({
           ...prevState,
@@ -128,6 +133,7 @@ const ChipForm = ({
     event => {
       if (event.target.name === 'key') {
         refInputKey.current.selectionStart = refInputKey.current.selectionEnd
+
         setEditConfig(prevState => ({
           ...prevState,
           isKeyFocused: true,
@@ -136,6 +142,7 @@ const ChipForm = ({
       } else {
         refInputValue.current.selectionStart =
           refInputValue.current.selectionEnd
+
         setEditConfig(prevState => ({
           ...prevState,
           isKeyFocused: false,
@@ -152,6 +159,7 @@ const ChipForm = ({
 
       if (event.target.name === 'key') {
         const currentWidthKeyInput = refInputKey.current.scrollWidth
+
         setChip(prevState => ({
           ...prevState,
           key: refInputKey.current.value,
@@ -166,6 +174,7 @@ const ChipForm = ({
         }))
       } else {
         const currentWidthValueInput = refInputValue.current.scrollWidth
+
         setChip(prevState => ({
           ...prevState,
           value: refInputValue.current.value,
