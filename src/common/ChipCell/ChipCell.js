@@ -134,6 +134,10 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
           isNewChip: false
         })
       } else if (nameEvent === 'Tab') {
+        if (editConfig.isNewChip && !isChipNotEmpty) {
+          removeChip(editConfig.chipIndex)
+        }
+
         setEditConfig(prevState => {
           const isNextChipIndexExists =
             prevState.chipIndex + 1 > elements.length - 1
@@ -147,6 +151,10 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
           }
         })
       } else if (nameEvent === 'Tab+Shift') {
+        if (editConfig.isNewChip && !isChipNotEmpty) {
+          removeChip(editConfig.chipIndex)
+        }
+
         setEditConfig(prevState => {
           const isPrevChipIndexExists = prevState.chipIndex - 1 < 0
 
