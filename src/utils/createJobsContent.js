@@ -7,9 +7,9 @@ const createJobsContent = (content, groupedByWorkflow) => {
       let type = contentItem.labels?.find(label => label.includes('kind:'))
       type = type?.slice(type.indexOf(':') + 2)
       const startTime =
-        groupedByWorkflow === Object(groupedByWorkflow)
-          ? new Date(contentItem.created_at)
-          : contentItem.startTime
+        typeof groupedByWorkflow === 'boolean'
+          ? contentItem.startTime
+          : new Date(contentItem.created_at)
 
       return {
         name: {
