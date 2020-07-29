@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useReducer, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
 
 import ScheduleJobView from './ScheduleJobView'
 
@@ -14,7 +13,6 @@ import {
   getWeekDays,
   getWeekStart
 } from '../../utils/datePicker.util'
-import { SET_NEW_JOB_SCHEDULE } from '../../constants'
 import { tabs } from './scheduleJobData'
 
 import './scheduleJob.scss'
@@ -37,7 +35,6 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   )
   const [error, setError] = useState('')
   const [cronString, setCronString] = useState('*/10 * * * *')
-  const dispatch = useDispatch()
   const startWeek = getWeekStart(decodeLocale(navigator.language))
   const daysOfWeek = getWeekDays(startWeek)
 
@@ -51,7 +48,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
         [recurringState.scheduleRepeat
           .activeOption]: `*/${recurringState.scheduleRepeat[
           recurringState.scheduleRepeat.activeOption
-          ].toString()}`
+        ].toString()}`
       }))
     } else if (
       recurringState.scheduleRepeat.activeOption === 'week' &&
@@ -61,7 +58,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
         ...state,
         day: `*/${recurringState.scheduleRepeat[
           recurringState.scheduleRepeat.activeOption
-          ].repeat * 7}`
+        ].repeat * 7}`
       }))
     }
   }, [cron, recurringState.scheduleRepeat])
@@ -166,14 +163,10 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
       const generateCron =
         activeTab === 'cronstring' ? cronString : generateCronString(cron)
 
-      dispatch({
-        type: SET_NEW_JOB_SCHEDULE,
-        payload: generateCron
-      })
       handleRunJob(event, generateCron)
       setOpenScheduleJob(false)
     },
-    [activeTab, cron, cronString, dispatch, handleRunJob, setOpenScheduleJob]
+    [activeTab, cron, cronString, handleRunJob, setOpenScheduleJob]
   )
 
   return (
