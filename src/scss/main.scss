@@ -192,3 +192,13 @@ input {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.pop-up-dialog {
+  &__btn_cancel {
+    margin: 0 10px;
+  }
+
+  &__form-input {
+    width: 100%;
+  }
+}

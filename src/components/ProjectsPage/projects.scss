@@ -19,50 +19,56 @@
   &__wrapper {
     position: relative;
     display: flex;
+    flex: 1;
     flex-flow: row wrap;
     align-content: flex-start;
-    flex: 1;
-    padding: 15px 12px;
     min-height: 700px;
+    padding: 15px 12px;
+
     .project {
       &_card {
-        width: 338px;
-        height: 182px;
-        border-radius: 4px;
-        border: $tableBorder;
-        padding: 25px;
-        margin: 9px 12px;
         display: flex;
         flex-flow: column nowrap;
         justify-content: space-between;
+        width: 338px;
+        height: 182px;
+        margin: 9px 12px;
+        padding: 25px;
         background-color: $white;
+        border: $tableBorder;
+        border-radius: 4px;
+
         &_header {
+          display: flex;
+          color: $primary;
           font-weight: bold;
           font-size: 18px;
           line-height: 21px;
-          display: flex;
-          color: $primary;
         }
+
         &_description {
+          display: -webkit-box;
+          overflow: hidden;
+          color: $saltbox;
           font-size: 13px;
           line-height: 21px;
-          color: $saltbox;
-          display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
-          overflow: hidden;
           text-overflow: ellipsis;
           word-break: break-all;
         }
+
         &_links {
           display: flex;
           color: $cornflowerBlue;
+
           a {
             display: flex;
             align-items: center;
             margin-right: 20px;
           }
         }
+
         &:hover {
           box-shadow: $previewBoxShadow;
         }
@@ -72,5 +78,9 @@
 
   &-modal_opened {
     overflow: hidden;
+
+    .input-wrapper {
+      margin: 10px 0;
+    }
   }
 }
