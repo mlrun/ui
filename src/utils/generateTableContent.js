@@ -18,7 +18,7 @@ export const generateTableContent = (
 
     return map(groupedByName, group =>
       page === JOBS_PAGE
-        ? createJobsContent(group)
+        ? createJobsContent(group, false)
         : createFunctionsContent(group)
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
@@ -29,7 +29,7 @@ export const generateTableContent = (
     setLoading && setLoading(true)
 
     return page === JOBS_PAGE
-      ? createJobsContent(content)
+      ? createJobsContent(content, false)
       : page === ARTIFACTS_PAGE
       ? createArtifactsContent(content)
       : createFunctionsContent(content)
