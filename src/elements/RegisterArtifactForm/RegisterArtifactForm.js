@@ -39,6 +39,7 @@ const RegisterArtifactForm = ({ match, onChange, registerArtifactData }) => {
   return (
     <div className="artifact-register-form">
       <Input
+        className="pop-up-dialog__form-input"
         floatingLabel
         label="Name"
         onChange={value =>
@@ -54,6 +55,7 @@ const RegisterArtifactForm = ({ match, onChange, registerArtifactData }) => {
         value={key.value}
       />
       <Input
+        className="pop-up-dialog__form-input"
         floatingLabel
         label="Target Path"
         onChange={value =>
@@ -68,6 +70,7 @@ const RegisterArtifactForm = ({ match, onChange, registerArtifactData }) => {
         value={target_path.value}
       />
       <Input
+        className="pop-up-dialog__form-input"
         floatingLabel
         label="Description"
         onChange={value =>

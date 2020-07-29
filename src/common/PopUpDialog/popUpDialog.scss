@@ -38,4 +38,12 @@
     display: flex;
     justify-content: flex-end;
   }
+
+  &__btn_cancel {
+    margin: 0 10px;
+  }
+
+  &__form-input {
+    width: 100%;
+  }
 }
