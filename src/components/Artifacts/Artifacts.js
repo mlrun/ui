@@ -35,43 +35,46 @@ const Artifacts = ({
   const fetchData = useCallback(
     item => {
       fetchArtifacts(item).then(data => {
-        const artifacts = data
-          .map(artifact => {
-            let item = null
+        let artifacts = []
+        if (data) {
+          artifacts = data
+            .map(artifact => {
+              let item = null
 
-            if (artifact.link_iteration) {
-              let { link_iteration } = artifact.link_iteration
-              item = artifact.data.filter(
-                item => item.iter === link_iteration
-              )[0]
-            } else {
-              item = artifact.data[0]
-            }
-
-            if (item) {
-              item.target_path = parseTargetPath(item.target_path)
-
-              if (item.extra_data) {
-                const generatedPreviewData = generateArtifactPreviewData(
-                  item.extra_data,
-                  item.target_path.schema
-                )
-
-                item.preview = generatedPreviewData.preview
-
-                if (generatedPreviewData.extraDataPath) {
-                  item.target_path.path = generatedPreviewData.extraDataPath
-                }
+              if (artifact.link_iteration) {
+                let { link_iteration } = artifact.link_iteration
+                item = artifact.data.filter(
+                  item => item.iter === link_iteration
+                )[0]
               } else {
-                item.preview = item.preview ?? []
+                item = artifact.data[0]
               }
-            }
 
-            return item
-          })
-          .filter(item => item !== undefined)
+              if (item) {
+                item.target_path = parseTargetPath(item.target_path)
 
-        _setArtifacts(artifacts)
+                if (item.extra_data) {
+                  const generatedPreviewData = generateArtifactPreviewData(
+                    item.extra_data,
+                    item.target_path.schema
+                  )
+
+                  item.preview = generatedPreviewData.preview
+
+                  if (generatedPreviewData.extraDataPath) {
+                    item.target_path.path = generatedPreviewData.extraDataPath
+                  }
+                } else {
+                  item.preview = item.preview ?? []
+                }
+              }
+
+              return item
+            })
+            .filter(item => item !== undefined)
+
+          _setArtifacts(artifacts)
+        }
 
         return artifacts
       })
