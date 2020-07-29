@@ -9,6 +9,7 @@ import TimePicker from '../../common/TimePicker/TimePicker'
 import './scheduleJobSimple.scss'
 
 const ScheduleJobSimple = ({
+  cron,
   date,
   daysOfWeek,
   getRangeInputValue,
@@ -18,6 +19,7 @@ const ScheduleJobSimple = ({
   recurringDispatch,
   recurringState,
   selectOptions,
+  setCron,
   setDate,
   setIsRecurring,
   setTime,
@@ -38,6 +40,7 @@ const ScheduleJobSimple = ({
       </div>
       {isRecurring && (
         <ScheduleRecurring
+          cron={cron}
           daysOfWeek={daysOfWeek}
           getRangeInputValue={getRangeInputValue}
           handleDaysOfWeek={handleDaysOfWeek}
@@ -45,6 +48,7 @@ const ScheduleJobSimple = ({
           recurringDispatch={recurringDispatch}
           recurringState={recurringState}
           selectOptions={selectOptions}
+          setCron={setCron}
         />
       )}
     </>
@@ -52,6 +56,7 @@ const ScheduleJobSimple = ({
 }
 
 ScheduleJobSimple.propTypes = {
+  cron: PropTypes.shape({}).isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   daysOfWeek: PropTypes.array.isRequired,
   getRangeInputValue: PropTypes.func.isRequired,
@@ -61,6 +66,7 @@ ScheduleJobSimple.propTypes = {
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
   selectOptions: PropTypes.shape({}).isRequired,
+  setCron: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,

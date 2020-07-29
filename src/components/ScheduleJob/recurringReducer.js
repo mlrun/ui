@@ -1,7 +1,7 @@
 export const initialState = {
   scheduleRepeat: {
     activeOption: 'minute',
-    minute: 1,
+    minute: 10,
     hour: 1,
     day: 1,
     week: {

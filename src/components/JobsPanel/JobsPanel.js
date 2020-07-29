@@ -33,6 +33,7 @@ const JobsPanel = ({
   groupedFunctions,
   jobsStore,
   match,
+  project,
   removeFunctionTemplate,
   removeJobError,
   removeNewJob,
@@ -191,7 +192,7 @@ const JobsPanel = ({
 
     const postData = {
       ...jobsStore.newJob,
-      schedule: cronString || jobsStore.newJob.schedule,
+      schedule: cronString,
       function: {
         ...jobsStore.newJob.function,
         spec: {
@@ -206,6 +207,7 @@ const JobsPanel = ({
         ...jobsStore.newJob.task,
         metadata: {
           name: panelState.currentFunctionInfo.name,
+          project,
           labels
         },
         spec: {
@@ -262,6 +264,7 @@ JobsPanel.propTypes = {
   closePanel: PropTypes.func.isRequired,
   groupedFunctions: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
+  project: PropTypes.string.isRequired,
   runNewJob: PropTypes.func.isRequired
 }
 

@@ -49,13 +49,13 @@ export const decodeLocale = locale => {
 
 export const getWeekDays = startWeek => {
   const weekDays = [
-    { label: 'S', id: 'Sun' },
-    { label: 'M', id: 'Mon' },
-    { label: 'T', id: 'Tue' },
-    { label: 'W', id: 'Wed' },
-    { label: 'T', id: 'Thu' },
-    { label: 'F', id: 'Fri' },
-    { label: 'S', id: 'Sat' }
+    { label: 'S', id: 'Sun', index: 7 },
+    { label: 'M', id: 'Mon', index: 1 },
+    { label: 'T', id: 'Tue', index: 2 },
+    { label: 'W', id: 'Wed', index: 3 },
+    { label: 'T', id: 'Thu', index: 4 },
+    { label: 'F', id: 'Fri', index: 5 },
+    { label: 'S', id: 'Sat', index: 6 }
   ]
 
   if (startWeek === 'mon') {

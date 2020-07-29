@@ -10,13 +10,15 @@ import { scheduleActionType } from '../../components/ScheduleJob/recurringReduce
 import './scheduleRecurring.scss'
 
 const ScheduleRecurring = ({
+  cron,
   daysOfWeek,
   getRangeInputValue,
   handleDaysOfWeek,
   match,
   recurringDispatch,
   recurringState,
-  selectOptions
+  selectOptions,
+  setCron
 }) => {
   const {
     scheduleRepeat: { activeOption: scheduleRepeatActiveOption, week },
@@ -27,31 +29,58 @@ const ScheduleRecurring = ({
     }
   } = recurringState
 
+  const handleRangeInputChange = item => {
+    switch (scheduleRepeatActiveOption) {
+      case 'minute':
+        setCron({ ...cron, minute: `*/${item}` })
+        break
+      case 'hour':
+        setCron({ ...cron, hour: `*/${item}` })
+        break
+      case 'day':
+        setCron({ ...cron, day: item })
+        break
+      case 'week':
+        setCron({ ...cron, day: `*/${item * 7}` })
+        break
+      default:
+        setCron({ ...cron, day: `*/${item}` })
+    }
+
+    recurringDispatch({
+      type:
+        scheduleRepeatActiveOption === 'minute'
+          ? scheduleActionType.SCHEDULE_REPEAT_MINUTE
+          : scheduleRepeatActiveOption === 'hour'
+          ? scheduleActionType.SCHEDULE_REPEAT_HOUR
+          : scheduleRepeatActiveOption === 'day'
+          ? scheduleActionType.SCHEDULE_REPEAT_DAY
+          : scheduleRepeatActiveOption === 'week'
+          ? scheduleActionType.SCHEDULE_REPEAT_WEEK
+          : scheduleActionType.SCHEDULE_REPEAT_MONTH,
+      payload: item
+    })
+  }
+
   return (
     <div className="recurring_container">
       <span>Repeat every</span>
       <div className="repeat_container">
         <RangeInput
-          onChange={item =>
-            recurringDispatch({
-              type:
-                scheduleRepeatActiveOption === 'minute'
-                  ? scheduleActionType.SCHEDULE_REPEAT_MINUTE
-                  : scheduleRepeatActiveOption === 'hour'
-                  ? scheduleActionType.SCHEDULE_REPEAT_HOUR
-                  : scheduleRepeatActiveOption === 'day'
-                  ? scheduleActionType.SCHEDULE_REPEAT_DAY
-                  : scheduleRepeatActiveOption === 'week'
-                  ? scheduleActionType.SCHEDULE_REPEAT_WEEK
-                  : scheduleActionType.SCHEDULE_REPEAT_MONTH,
-              payload: item
-            })
-          }
+          min={scheduleRepeatActiveOption === 'minute' ? 10 : 1}
+          onChange={item => handleRangeInputChange(item)}
           value={getRangeInputValue()}
         />
         <Select
           match={match}
           onClick={item => {
+            setCron({
+              minute: '*',
+              hour: '*',
+              day: '*',
+              month: '*',
+              week: '*'
+            })
             recurringDispatch({
               type: scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION,
               payload: item
@@ -122,13 +151,15 @@ const ScheduleRecurring = ({
 }
 
 PropTypes.propTypes = {
+  cron: PropTypes.shape({}).isRequired,
   daysOfWeek: PropTypes.array.isRequired,
   getRangeInputValue: PropTypes.func.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
-  selectOptions: PropTypes.shape({}).isRequired
+  selectOptions: PropTypes.shape({}).isRequired,
+  setCron: PropTypes.func.isRequired
 }
 
 export default React.memo(ScheduleRecurring)
