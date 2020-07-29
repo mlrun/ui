@@ -17,7 +17,7 @@ const createJobsContent = (content, groupedByWorkflow) => {
           class: 'jobs_medium'
         },
         type: {
-          value: groupedByWorkflow ? 'workflow' : type,
+          value: typeof groupedByWorkflow !== 'boolean' ? 'workflow' : type,
           class: 'jobs_extra-small',
           type: 'type'
         },
