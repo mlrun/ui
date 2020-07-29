@@ -106,7 +106,7 @@ const ScheduleRecurring = ({
           </div>
         )}
       </div>
-      <span>Ends</span>
+      {/* <span>Ends</span> */}
       <div className="repeat_end_container">
         <Select
           match={match}
