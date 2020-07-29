@@ -17,13 +17,11 @@ const ScheduleCron = ({ cronString, error, setCronString, setEditMode }) => {
         {error}
       </div>
       <Input
+        placeholder="*/10 * * * *"
         value={cronString}
-        label="15 0-20/2 *"
-        floatingLabel
         className="cron-string"
         onChange={setCronString}
         onFocus={setEditMode}
-        maxLength={13}
         type="text"
       />
       <div>

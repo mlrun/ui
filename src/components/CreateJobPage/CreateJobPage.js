@@ -78,6 +78,7 @@ const CreateJobPage = ({
           closePanel={handleSelectGroupFunctions}
           groupedFunctions={selectedGroupFunctions}
           match={match}
+          project={match.params.projectName}
         />
       )}
     </>

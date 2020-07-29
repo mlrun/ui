@@ -7,16 +7,27 @@ import { ReactComponent as Arrow } from '../../images/range-arrow.svg'
 
 import './rangeInput.scss'
 
-const RangeInput = ({ floatingLabel, infoLabel, label, onChange, value }) => {
+const RangeInput = ({
+  floatingLabel,
+  infoLabel,
+  label,
+  max,
+  min,
+  onChange,
+  value
+}) => {
   const handleIncrease = () => {
+    if (value >= max) return
+
     onChange(++value)
   }
 
   const handleDecrease = () => {
-    if (value <= 0) return
+    if (value <= 0 || value <= min) return
 
     onChange(--value)
   }
+
   return (
     <div className="range">
       <Input
@@ -41,13 +52,17 @@ const RangeInput = ({ floatingLabel, infoLabel, label, onChange, value }) => {
 RangeInput.defaultProps = {
   floatingLabel: false,
   infoLabel: false,
-  label: ''
+  label: '',
+  max: undefined,
+  min: 0
 }
 
 RangeInput.propTypes = {
   floatingLabel: PropTypes.bool,
   infoLabel: PropTypes.bool,
   label: PropTypes.string,
+  max: PropTypes.number,
+  min: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired
 }

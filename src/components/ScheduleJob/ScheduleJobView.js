@@ -7,10 +7,11 @@ import ScheduleCron from '../ScheduleCron/ScheduleCron'
 
 import { ReactComponent as Schedule } from '../../images/clock.svg'
 
-import scheduleData from './scheduleData.json'
+import { selectOptions, tabs } from './scheduleJobData'
 
 const ScheduleJobView = ({
   activeTab,
+  cron,
   cronString,
   date,
   daysOfWeek,
@@ -23,8 +24,8 @@ const ScheduleJobView = ({
   onSchedule,
   recurringDispatch,
   recurringState,
-  selectOptions,
   setActiveTab,
+  setCron,
   setCronString,
   setDate,
   setError,
@@ -41,7 +42,7 @@ const ScheduleJobView = ({
   return (
     <div className="schedule_container">
       <div className="schedule_tabs">
-        {scheduleData.tabs.map(tab => (
+        {tabs.map(tab => (
           <div
             className={`schedule_tabs_item ${activeTab === tab.id && 'active'}`}
             key={tab.id}
@@ -53,11 +54,12 @@ const ScheduleJobView = ({
       </div>
       <div className="schedule-content">
         <h3>
-          {activeTab === scheduleData.tabs[0].id ? 'Simple ' : 'Advanced '}
+          {activeTab === tabs[0].id ? 'Simple ' : 'Advanced '}
           Schedule
         </h3>
-        {activeTab === scheduleData.tabs[0].id && (
+        {activeTab === tabs[0].id && (
           <ScheduleJobSimple
+            cron={cron}
             date={date}
             daysOfWeek={daysOfWeek}
             getRangeInputValue={getRangeInputValue}
@@ -67,13 +69,14 @@ const ScheduleJobView = ({
             recurringDispatch={recurringDispatch}
             recurringState={recurringState}
             selectOptions={selectOptions}
+            setCron={setCron}
             setDate={setDate}
             setIsRecurring={setIsRecurring}
             setTime={setTime}
             time={time}
           />
         )}
-        {activeTab === scheduleData.tabs[1].id && (
+        {activeTab === tabs[1].id && (
           <ScheduleCron
             cronString={cronString}
             error={error}
@@ -93,6 +96,7 @@ const ScheduleJobView = ({
 
 ScheduleJobView.propTypes = {
   activeTab: PropTypes.string.isRequired,
+  cron: PropTypes.shape({}).isRequired,
   cronString: PropTypes.string.isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   daysOfWeek: PropTypes.array.isRequired,
@@ -104,8 +108,8 @@ ScheduleJobView.propTypes = {
   onSchedule: PropTypes.func.isRequired,
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
-  selectOptions: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,
+  setCron: PropTypes.func.isRequired,
   setCronString: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,

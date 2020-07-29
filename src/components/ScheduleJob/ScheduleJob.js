@@ -1,34 +1,30 @@
-import React, { useState, useCallback, useReducer } from 'react'
+import React, { useState, useCallback, useReducer, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
 
 import ScheduleJobView from './ScheduleJobView'
 
-import scheduleData from './scheduleData.json'
 import {
   initialState,
   recurringReducer,
   scheduleActionType
 } from './recurringReducer'
-
 import {
   decodeLocale,
   getWeekDays,
   getWeekStart
 } from '../../utils/datePicker.util'
-import { SET_NEW_JOB_SCHEDULE } from '../../constants'
+import { tabs } from './scheduleJobData'
 
 import './scheduleJob.scss'
-import { validateCronString } from '../JobsPanel/jobsPanel.util'
 
 const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
-  const [activeTab, setActiveTab] = useState(scheduleData.tabs[0].id)
+  const [activeTab, setActiveTab] = useState(tabs[0].id)
   const [cron, setCron] = useState({
     minute: '*',
     hour: '*',
-    dayOfTheMonth: '*',
-    monthOfTheYear: '*',
-    dayOfTheWeek: '*'
+    day: '*',
+    month: '*',
+    week: '*'
   })
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
@@ -38,24 +34,59 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     initialState
   )
   const [error, setError] = useState('')
-  const [cronString, setCronString] = useState('* * * * *')
-  const dispatch = useDispatch()
+  const [cronString, setCronString] = useState('*/10 * * * *')
   const startWeek = getWeekStart(decodeLocale(navigator.language))
-  const selectOptions = {
-    repeatInterval: [
-      { label: 'Minute', id: 'minute' },
-      { label: 'Hour', id: 'hour' },
-      { label: 'Day', id: 'day' },
-      { label: 'Week', id: 'week' },
-      { label: 'Month', subLabel: '(every 12th day)', id: 'month' }
-    ],
-    repeatEnd: [
-      { label: 'Never', id: 'never' },
-      { label: 'On date', id: 'onDate' },
-      { label: 'After', id: 'after' }
-    ]
-  }
   const daysOfWeek = getWeekDays(startWeek)
+
+  useEffect(() => {
+    if (
+      cron[recurringState.scheduleRepeat.activeOption] === '*' &&
+      recurringState.scheduleRepeat.activeOption !== 'week'
+    ) {
+      setCron(state => ({
+        ...state,
+        [recurringState.scheduleRepeat
+          .activeOption]: `*/${recurringState.scheduleRepeat[
+          recurringState.scheduleRepeat.activeOption
+        ].toString()}`
+      }))
+    } else if (
+      recurringState.scheduleRepeat.activeOption === 'week' &&
+      cron.day === '*'
+    ) {
+      setCron(state => ({
+        ...state,
+        day: `*/${recurringState.scheduleRepeat[
+          recurringState.scheduleRepeat.activeOption
+        ].repeat * 7}`
+      }))
+    }
+  }, [cron, recurringState.scheduleRepeat])
+
+  useEffect(() => {
+    if (
+      recurringState.scheduleRepeat.activeOption === 'week' &&
+      cron.week === '*'
+    ) {
+      setCron(state => ({
+        ...state,
+        week: recurringState.scheduleRepeat.week.daysOfTheWeek.reduce(
+          (prev, next, index, arr) => {
+            const indexOfWeekDay = daysOfWeek.find(day => day.id === next).index
+
+            return (prev +=
+              arr.length - 1 === index ? indexOfWeekDay : indexOfWeekDay + ',')
+          },
+          ''
+        )
+      }))
+    }
+  }, [
+    cron.week,
+    daysOfWeek,
+    recurringState.scheduleRepeat.activeOption,
+    recurringState.scheduleRepeat.week.daysOfTheWeek
+  ])
 
   const generateCronString = cron => {
     return Object.keys(cron).reduce((prev, next, index, arr) => {
@@ -75,13 +106,30 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     const {
       scheduleRepeat: { week }
     } = recurringState
-
     let distinctWeek = week.daysOfTheWeek
+    const indexOfWeekDay = daysOfWeek.find(weekDay => weekDay.id === day).index
 
     if (week.daysOfTheWeek.indexOf(day) === -1) {
       distinctWeek = week.daysOfTheWeek.concat(day)
+
+      setCron(state => ({
+        ...state,
+        week: state.week
+          .split(',')
+          .concat(indexOfWeekDay)
+          .sort()
+          .join(',')
+      }))
     } else {
       distinctWeek = distinctWeek.filter(item => item !== day)
+
+      setCron(state => ({
+        ...state,
+        week: state.week
+          .split(',')
+          .filter(weekDay => +weekDay !== indexOfWeekDay)
+          .join(',')
+      }))
     }
 
     recurringDispatch({
@@ -94,8 +142,8 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     setDate(date)
     setCron(prev => ({
       ...prev,
-      dayOfTheMonth: date.getDate(),
-      monthOfTheYear: date.getMonth() + 1
+      day: date.getDate(),
+      month: date.getMonth() + 1
     }))
   }
 
@@ -112,35 +160,19 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
   const onSchedule = useCallback(
     event => {
-      let generateCron = ''
-      if (activeTab === 'cronstring') {
-        const data = validateCronString(cronString)
+      const generateCron =
+        activeTab === 'cronstring' ? cronString : generateCronString(cron)
 
-        if (data.errorMessage) {
-          return setError(data.errorMessage)
-        } else {
-          setError('')
-
-          generateCron = data.cron.join(' ')
-        }
-      } else {
-        generateCron = generateCronString(cron)
-      }
-
-      dispatch({
-        type: SET_NEW_JOB_SCHEDULE,
-        payload: generateCron
-      })
-
-      handleRunJob(event, activeTab === 'cronstring' && generateCron)
+      handleRunJob(event, generateCron)
       setOpenScheduleJob(false)
     },
-    [activeTab, cron, cronString, dispatch, handleRunJob, setOpenScheduleJob]
+    [activeTab, cron, cronString, handleRunJob, setOpenScheduleJob]
   )
 
   return (
     <ScheduleJobView
       activeTab={activeTab}
+      cron={cron}
       cronString={cronString}
       date={date}
       daysOfWeek={daysOfWeek}
@@ -153,8 +185,8 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
       onSchedule={onSchedule}
       recurringDispatch={recurringDispatch}
       recurringState={recurringState}
-      selectOptions={selectOptions}
       setActiveTab={setActiveTab}
+      setCron={setCron}
       setCronString={setCronString}
       setDate={onHandleDateChange}
       setError={setError}

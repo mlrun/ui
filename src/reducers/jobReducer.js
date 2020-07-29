@@ -15,7 +15,6 @@ import {
   SET_NEW_JOB_VOLUME_MOUNTS,
   SET_NEW_JOB_PARAMETERS,
   SET_NEW_JOB_HYPER_PARAMETERS,
-  SET_NEW_JOB_SCHEDULE,
   SET_NEW_JOB_SECRET_SOURCES,
   REMOVE_NEW_JOB,
   SET_NEW_JOB,
@@ -29,7 +28,6 @@ const initialState = {
   loading: false,
   error: null,
   newJob: {
-    schedule: '',
     task: {
       spec: {
         parameters: {},
@@ -173,7 +171,6 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         newJob: {
-          schedule: '',
           task: {
             spec: {
               parameters: {},
@@ -208,14 +205,6 @@ export default (state = initialState, { type, payload }) => {
               parameters: payload
             }
           }
-        }
-      }
-    case SET_NEW_JOB_SCHEDULE:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          schedule: payload
         }
       }
     case SET_NEW_JOB_HYPER_PARAMETERS:
