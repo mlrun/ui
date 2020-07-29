@@ -36,6 +36,7 @@ const Artifacts = ({
     item => {
       fetchArtifacts(item).then(data => {
         let artifacts = []
+
         if (data) {
           artifacts = data
             .map(artifact => {

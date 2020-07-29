@@ -33,7 +33,9 @@ const artifactsAction = {
         dispatch(artifactsAction.fetchArtifactsSuccess(artifacts))
         return artifacts
       })
-      .catch(err => dispatch(artifactsAction.fetchArtifactsFailure(err)))
+      .catch(err => {
+        dispatch(artifactsAction.fetchArtifactsFailure(err))
+      })
   },
   fetchArtifactsBegin: () => ({
     type: FETCH_ARTIFACTS_BEGIN
