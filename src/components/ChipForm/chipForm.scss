@@ -1,0 +1,49 @@
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+
+.edit-label {
+  &-container {
+    display: flex;
+    margin: 10px 0 10px 10px;
+    padding: 5px;
+    border: $labelBorder;
+    border-radius: 15px;
+
+    &_edited {
+      padding-right: 16px;
+      border: $labelEditBorder;
+    }
+
+    input {
+      display: flex;
+      margin: 0 5px;
+      padding: 0;
+      background-color: transparent;
+      border: none;
+
+      &.job-labels__item_edited {
+        &::placeholder {
+          color: $spunPearl;
+        }
+      }
+
+      &::placeholder {
+        color: $primary;
+      }
+    }
+  }
+
+  &-separator {
+    color: $spunPearl;
+  }
+
+  &__icon-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      transform: scale(0.7);
+    }
+  }
+}

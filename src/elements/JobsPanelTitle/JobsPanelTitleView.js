@@ -6,6 +6,7 @@ import MethodDescription from '../MethodDescription/MethodDescription'
 import Accordion from '../../common/Accordion/Accordion'
 import Select from '../../common/Select/Select'
 import Input from '../../common/Input/Input'
+import ChipCell from '../../common/ChipCell/ChipCell'
 
 import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -81,18 +82,19 @@ const JobsPanelTitleView = ({
                   !editTitle ? 'job-panel__title-input-wrapper' : ''
                 }
               />
-              <Input
-                className="job-panel__title-labels"
-                label="Labels: "
-                onChange={name =>
-                  panelDispatch({
-                    type: panelActions.SET_CURRENT_FUNCTION_INFO_LABELS,
-                    payload: name.split(',')
-                  })
-                }
-                type="text"
-                value={currentFunctionInfo.labels.join(',')}
-              />
+              {editTitle && (
+                <div className="job-labels-container">
+                  <div className="job-labels__text">Labels</div>
+                  <div className="job-labels-wrapper">
+                    <ChipCell
+                      className="job-labels__item"
+                      dispatch={panelDispatch}
+                      elements={currentFunctionInfo.labels}
+                      isEditMode={true}
+                    />
+                  </div>
+                </div>
+              )}
             </>
           )}
         </Accordion>
