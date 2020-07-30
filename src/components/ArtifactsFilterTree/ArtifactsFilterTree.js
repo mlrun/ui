@@ -9,7 +9,9 @@ import './artifactsFilterTree.scss'
 
 const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
   const [isDropDownMenuOpen, setIsDropDownMenu] = useState(false)
-  const [filterTree, setFilterTree] = useState(value)
+  const [filterTree, setFilterTree] = useState(
+    items.find(tree => tree.id === value)?.label ?? value
+  )
 
   const history = useHistory()
 
@@ -31,9 +33,9 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
     if (event.keyCode === 13 && event.target.value.length !== 0) {
       event.preventDefault()
 
-      let searchItem = items.filter(item =>
-        RegExp(`^${filterTree}`, 'i').test(item)
-      )[0]
+      let searchItem = items.find(tree =>
+        RegExp(`^${filterTree}`, 'i').test(tree.id)
+      )
 
       if (match.params.jobId || match.params.name) {
         history.push(
@@ -41,22 +43,22 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
         )
       }
 
-      setFilterTree(searchItem || event.target.value)
-      onChange(searchItem || event.target.value)
+      setFilterTree(searchItem?.label || event.target.value)
+      onChange(searchItem?.id || event.target.value)
       event.target.blur()
       setIsDropDownMenu(false)
     }
   }
 
-  const handleSelectFilter = item => {
+  const handleSelectFilter = tree => {
     if (match.params.jobId || match.params.name) {
       history.push(
         `/projects/${match.params.projectName}/${page.toLowerCase()}`
       )
     }
 
-    setFilterTree(item)
-    onChange(item)
+    setFilterTree(tree.label)
+    onChange(tree.id)
   }
 
   useEffect(() => {

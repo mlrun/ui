@@ -33,11 +33,16 @@ const FilterMenu = ({
   stateFilter,
   toggleShowUntagged
 }) => {
-  const [itemsFilterTree] = useState(['Latest'])
-  const [valueFilterTree, setValueFilterTree] = useState('')
+  const [valueFilterTree, setValueFilterTree] = useState('latest')
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
   const history = useHistory()
+  const itemsFilterTree = [
+    {
+      label: 'Latest',
+      id: 'latest'
+    }
+  ]
   const selectOptions = {
     period: [
       { label: 'Last 7 days', id: 'last7Days' },
@@ -97,7 +102,7 @@ const FilterMenu = ({
               return (
                 <ArtifactFilterTree
                   key={filter}
-                  value={valueFilterTree || 'Latest'}
+                  value={valueFilterTree}
                   label="Tree:"
                   items={itemsFilterTree}
                   match={match}
@@ -168,7 +173,7 @@ const FilterMenu = ({
             onClick={() => {
               page === artifactsData.page
                 ? onChange({
-                    tag: valueFilterTree.toLowerCase(),
+                    tag: valueFilterTree,
                     project: match.params.projectName,
                     labels,
                     name
