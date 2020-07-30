@@ -124,8 +124,9 @@ const Artifacts = ({
     if (
       (match.params.tab === 'metadata' && !selectedArtifact.item?.schema) ||
       (match.params.tab === 'analysis' &&
-        !selectedArtifact.item?.kind === 'dataset' &&
-        !selectedArtifact.item?.extra_data)
+        ((selectedArtifact.item?.kind === 'dataset' &&
+          !selectedArtifact.item?.extra_data) ||
+          selectedArtifact.item?.kind !== 'dataset'))
     ) {
       history.push(
         `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
