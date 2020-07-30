@@ -120,47 +120,13 @@ const Artifacts = ({
     artifactApi.getArtifactTag(match.params.projectName)
   }, [match.params.projectName])
 
-  const handleSelectArtifact = item => {
-    if (document.getElementsByClassName('view')[0]) {
-      document.getElementsByClassName('view')[0].classList.remove('view')
-    }
-
-    setSelectedArtifact({ item })
-  }
-
-  useEffect(() => {
-    if (match.params.tab === 'metadata' && !selectedArtifact.item?.schema) {
-      history.push(
-        `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
-      )
-    }
-
-    setPageData(state => {
-      if (selectedArtifact.item?.schema) {
-        return {
-          ...state,
-          detailsMenu: [...artifactsData.detailsMenu, 'metadata']
-        }
-      }
-
-      return {
-        ...state,
-        detailsMenu: artifactsData.detailsMenu
-      }
-    })
-  }, [
-    match.params.tab,
-    match.params.projectName,
-    match.params.name,
-    history,
-    selectedArtifact.item
-  ])
-
   useEffect(() => {
     if (
-      match.params.tab === 'analysis' &&
-      !selectedArtifact.item?.kind === 'dataset' &&
-      !selectedArtifact.item?.extra_data
+      (match.params.tab === 'metadata' && !selectedArtifact.item?.schema) ||
+      (match.params.tab === 'analysis' &&
+        ((selectedArtifact.item?.kind === 'dataset' &&
+          !selectedArtifact.item?.extra_data) ||
+          selectedArtifact.item?.kind !== 'dataset'))
     ) {
       history.push(
         `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
@@ -168,19 +134,22 @@ const Artifacts = ({
     }
 
     setPageData(state => {
+      const newDetailsMenu = [...artifactsData.detailsMenu]
+
+      if (selectedArtifact.item?.schema) {
+        newDetailsMenu.push('metadata')
+      }
+
       if (
         selectedArtifact.item?.kind === 'dataset' &&
         selectedArtifact.item?.extra_data
       ) {
-        return {
-          ...state,
-          detailsMenu: [...artifactsData.detailsMenu, 'analysis']
-        }
+        newDetailsMenu.push('analysis')
       }
 
       return {
         ...state,
-        detailsMenu: artifactsData.detailsMenu
+        detailsMenu: [...newDetailsMenu]
       }
     })
   }, [
@@ -190,6 +159,14 @@ const Artifacts = ({
     history,
     selectedArtifact.item
   ])
+
+  const handleSelectArtifact = item => {
+    if (document.getElementsByClassName('view')[0]) {
+      document.getElementsByClassName('view')[0].classList.remove('view')
+    }
+
+    setSelectedArtifact({ item })
+  }
 
   const handleCancel = () => {
     setSelectedArtifact({})
