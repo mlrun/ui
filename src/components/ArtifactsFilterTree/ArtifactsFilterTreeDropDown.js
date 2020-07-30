@@ -2,29 +2,29 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const ArtifactFilterTreeDropDown = ({
-  items,
-  setIsDropDownMenu,
   filterTree,
-  handleSelectFilter
+  filterTreeOptions,
+  handleSelectFilter,
+  setIsDropDownMenu
 }) => {
   return (
     <div className="drop_down_menu" onClick={() => setIsDropDownMenu(false)}>
-      {items.map(item => {
+      {filterTreeOptions.map(tree => {
         return (
           <div
-            key={item}
+            key={tree.id}
             className={`drop_down_menu_item
             ${
               filterTree.length !== 0
-                ? RegExp(`^${filterTree}`, 'i').test(item) && ' select_item'
+                ? RegExp(`^${filterTree}`, 'i').test(tree.id) && ' select_item'
                 : ''
             }
         `}
             onClick={() => {
-              handleSelectFilter(item)
+              handleSelectFilter(tree)
             }}
           >
-            {item}
+            {tree.label}
           </div>
         )
       })}
@@ -33,14 +33,14 @@ const ArtifactFilterTreeDropDown = ({
 }
 
 ArtifactFilterTreeDropDown.defaultProps = {
-  item: []
+  filterTreeOptions: []
 }
 
 ArtifactFilterTreeDropDown.propTypes = {
-  item: PropTypes.array.isRequired,
-  setIsDropDownMenu: PropTypes.func.isRequired,
   filterTree: PropTypes.string.isRequired,
-  handleSelectFilter: PropTypes.func.isRequired
+  filterTreeOptions: PropTypes.array,
+  handleSelectFilter: PropTypes.func.isRequired,
+  setIsDropDownMenu: PropTypes.func.isRequired
 }
 
 export default ArtifactFilterTreeDropDown
