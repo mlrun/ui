@@ -16,6 +16,7 @@ import { ReactComponent as Expand } from '../../images/expand.svg'
 import { ARTIFACTS_PAGE, FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants.js'
 
 import artifactsData from '../Artifacts/artifactsData'
+import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 
 import './filterMenu.scss'
 
@@ -37,30 +38,6 @@ const FilterMenu = ({
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
   const history = useHistory()
-  const itemsFilterTree = [
-    {
-      label: 'Latest',
-      id: 'latest'
-    }
-  ]
-  const selectOptions = {
-    period: [
-      { label: 'Last 7 days', id: 'last7Days' },
-      { label: 'Last 14 days', id: 'last14Days' },
-      { label: 'Last months', id: 'lastMonths' },
-      { label: 'Last 6 months', id: 'last6Months' }
-    ],
-    status: [
-      { label: 'All', id: 'all' },
-      { label: 'Completed', id: 'completed' },
-      { label: 'Running', id: 'running' },
-      { label: 'Error', id: 'error' }
-    ],
-    groupBy: [
-      { label: 'None', id: 'none' },
-      { label: 'Name', id: 'name' }
-    ]
-  }
 
   if (page === JOBS_PAGE) {
     selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
@@ -101,13 +78,13 @@ const FilterMenu = ({
             case 'tree':
               return (
                 <ArtifactFilterTree
+                  filterTreeOptions={filterTreeOptions}
                   key={filter}
-                  value={valueFilterTree}
                   label="Tree:"
-                  items={itemsFilterTree}
                   match={match}
                   onChange={handleChangeArtifactFilterTree}
                   page={page}
+                  value={valueFilterTree}
                 />
               )
             case 'labels':

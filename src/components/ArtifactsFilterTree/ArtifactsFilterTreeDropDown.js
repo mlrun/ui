@@ -2,14 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const ArtifactFilterTreeDropDown = ({
-  items,
-  setIsDropDownMenu,
   filterTree,
-  handleSelectFilter
+  filterTreeOptions,
+  handleSelectFilter,
+  setIsDropDownMenu
 }) => {
   return (
     <div className="drop_down_menu" onClick={() => setIsDropDownMenu(false)}>
-      {items.map(tree => {
+      {filterTreeOptions.map(tree => {
         return (
           <div
             key={tree.id}
@@ -33,14 +33,14 @@ const ArtifactFilterTreeDropDown = ({
 }
 
 ArtifactFilterTreeDropDown.defaultProps = {
-  items: []
+  filterTreeOptions: []
 }
 
 ArtifactFilterTreeDropDown.propTypes = {
-  items: PropTypes.array.isRequired,
-  setIsDropDownMenu: PropTypes.func.isRequired,
   filterTree: PropTypes.string.isRequired,
-  handleSelectFilter: PropTypes.func.isRequired
+  filterTreeOptions: PropTypes.array,
+  handleSelectFilter: PropTypes.func.isRequired,
+  setIsDropDownMenu: PropTypes.func.isRequired
 }
 
 export default ArtifactFilterTreeDropDown

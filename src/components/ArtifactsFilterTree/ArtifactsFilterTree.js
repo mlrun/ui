@@ -7,10 +7,17 @@ import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
 import './artifactsFilterTree.scss'
 
-const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
+const ArtifactFilterTree = ({
+  filterTreeOptions,
+  label,
+  match,
+  onChange,
+  page,
+  value
+}) => {
   const [isDropDownMenuOpen, setIsDropDownMenu] = useState(false)
   const [filterTree, setFilterTree] = useState(
-    items.find(tree => tree.id === value)?.label ?? value
+    filterTreeOptions.find(tree => tree.id === value)?.label
   )
 
   const history = useHistory()
@@ -33,7 +40,7 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
     if (event.keyCode === 13 && event.target.value.length !== 0) {
       event.preventDefault()
 
-      let searchItem = items.find(tree =>
+      let searchItem = filterTreeOptions.find(tree =>
         RegExp(`^${filterTree}`, 'i').test(tree.id)
       )
 
@@ -103,10 +110,10 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
       </div>
       {isDropDownMenuOpen && (
         <ArtifactFilterTreeDropDown
-          handleSelectFilter={handleSelectFilter}
-          items={items}
-          setIsDropDownMenu={setIsDropDownMenu}
           filterTree={filterTree}
+          filterTreeOptions={filterTreeOptions}
+          handleSelectFilter={handleSelectFilter}
+          setIsDropDownMenu={setIsDropDownMenu}
         />
       )}
     </div>
@@ -114,12 +121,12 @@ const ArtifactFilterTree = ({ items, onChange, value, label, match, page }) => {
 }
 
 ArtifactFilterTree.propTypes = {
-  items: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
+  filterTreeOptions: PropTypes.array.isRequired,
   label: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired
+  onChange: PropTypes.func.isRequired,
+  page: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
 }
 
 export default ArtifactFilterTree
