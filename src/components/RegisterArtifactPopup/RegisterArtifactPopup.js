@@ -113,8 +113,8 @@ const RegisterArtifactPopup = ({
     artifactApi
       .registerArtifact(match.params.projectName, data)
       .then(() => {
-        setIsPopupDialogOpen(false)
         resetRegisterArtifactForm()
+        setIsPopupDialogOpen(false)
         refresh({
           project: match.params.projectName,
           tag: artifactFilter.tag !== 'latest' ? artifactFilter.tag : '',
@@ -184,6 +184,7 @@ const RegisterArtifactPopup = ({
 }
 
 RegisterArtifactPopup.propTypes = {
+  artifactFilter: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired

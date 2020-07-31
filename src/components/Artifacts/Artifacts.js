@@ -208,6 +208,7 @@ const Artifacts = ({
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
+          artifactFilter={artifactsStore.filter}
           match={match}
           refresh={fetchData}
           setIsPopupDialogOpen={setIsPopupDialogOpen}
