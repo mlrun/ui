@@ -8,7 +8,12 @@ import { v4 as uuidv4 } from 'uuid'
 
 import artifactApi from '../../api/artifacts-api'
 
-const RegisterArtifactPopup = ({ match, refresh, setIsPopupDialogOpen }) => {
+const RegisterArtifactPopup = ({
+  artifactFilter,
+  match,
+  refresh,
+  setIsPopupDialogOpen
+}) => {
   const [registerArtifactData, setRegisterArtifactData] = useState({
     description: {
       value: '',
@@ -110,7 +115,12 @@ const RegisterArtifactPopup = ({ match, refresh, setIsPopupDialogOpen }) => {
       .then(() => {
         setIsPopupDialogOpen(false)
         resetRegisterArtifactForm()
-        refresh({ project: match.params.projectName })
+        refresh({
+          project: match.params.projectName,
+          tag: artifactFilter.tag !== 'latest' ? artifactFilter.tag : '',
+          labels: artifactFilter.labels,
+          name: artifactFilter.name
+        })
       })
       .catch(err => {
         setRegisterArtifactData(prevData => ({
@@ -126,7 +136,8 @@ const RegisterArtifactPopup = ({ match, refresh, setIsPopupDialogOpen }) => {
     refresh,
     registerArtifactData,
     resetRegisterArtifactForm,
-    setIsPopupDialogOpen
+    setIsPopupDialogOpen,
+    artifactFilter
   ])
 
   const closePopupDialog = useCallback(() => {

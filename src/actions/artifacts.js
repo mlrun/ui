@@ -5,7 +5,8 @@ import {
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
   REMOVE_ARTIFACTS,
-  SHOW_ARTIFACT_PREVIEW
+  SHOW_ARTIFACT_PREVIEW,
+  SET_ARTIFACT_FILTER
 } from '../constants'
 
 const artifactsAction = {
@@ -47,6 +48,10 @@ const artifactsAction = {
   fetchArtifactsFailure: error => ({
     type: FETCH_ARTIFACTS_FAILURE,
     payload: error
+  }),
+  setArtifactFilter: filter => ({
+    type: SET_ARTIFACT_FILTER,
+    payload: filter
   }),
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
