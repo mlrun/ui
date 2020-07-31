@@ -110,7 +110,7 @@ const RegisterArtifactPopup = ({ match, refresh, setIsPopupDialogOpen }) => {
       .then(() => {
         setIsPopupDialogOpen(false)
         resetRegisterArtifactForm()
-        refresh({ tag: 'latest', project: match.params.projectName })
+        refresh({ project: match.params.projectName })
       })
       .catch(err => {
         setRegisterArtifactData(prevData => ({

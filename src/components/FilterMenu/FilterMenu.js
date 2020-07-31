@@ -44,7 +44,7 @@ const FilterMenu = ({
   }
 
   const handleChangeArtifactFilterTree = item => {
-    const value = item.toLowerCase()
+    const value = item.toLowerCase() !== 'latest' ? item.toLowerCase() : ''
     onChange({ tag: value, project: match.params.projectName, name, labels })
     setValueFilterTree(value)
   }
@@ -150,7 +150,7 @@ const FilterMenu = ({
             onClick={() => {
               page === artifactsData.page
                 ? onChange({
-                    tag: valueFilterTree,
+                    tag: valueFilterTree !== 'latest' ? valueFilterTree : '',
                     project: match.params.projectName,
                     labels,
                     name

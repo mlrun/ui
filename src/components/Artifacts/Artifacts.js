@@ -84,7 +84,7 @@ const Artifacts = ({
   )
 
   useEffect(() => {
-    fetchData({ tag: 'latest', project: match.params.projectName })
+    fetchData({ project: match.params.projectName })
 
     return () => {
       _setArtifacts([])

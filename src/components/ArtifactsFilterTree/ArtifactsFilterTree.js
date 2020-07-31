@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
@@ -24,11 +24,24 @@ const ArtifactFilterTree = ({
 
   const artifactFilterTreeRef = useRef()
 
-  const handlerOverall = event => {
-    if (!event.path.includes(artifactFilterTreeRef.current)) {
-      setIsDropDownMenu(false)
-    }
-  }
+  const handlerOverall = useCallback(
+    event => {
+      if (!event.path.includes(artifactFilterTreeRef.current)) {
+        if (filterTree.length <= 0) {
+          onChange('latest')
+          setFilterTree(
+            filterTreeOptions.find(tree => tree.id === 'latest').label
+          )
+        } else {
+          const tree = filterTreeOptions.find(tree => tree.id === filterTree)
+          onChange(tree?.id || filterTree)
+          setFilterTree(tree?.label || filterTree)
+        }
+        setIsDropDownMenu(false)
+      }
+    },
+    [filterTree, onChange, filterTreeOptions]
+  )
 
   const handlerScroll = () => {
     let input = document.getElementsByClassName('artifact_filter_tree')[0]
@@ -37,8 +50,10 @@ const ArtifactFilterTree = ({
   }
 
   const handleKeyDown = event => {
-    if (event.keyCode === 13 && event.target.value.length !== 0) {
+    if (event.keyCode === 13) {
       event.preventDefault()
+      const value =
+        event.target.value.length > 0 ? event.target.value : 'latest'
 
       let searchItem = filterTreeOptions.find(tree =>
         RegExp(`^${filterTree}`, 'i').test(tree.id)
@@ -51,7 +66,7 @@ const ArtifactFilterTree = ({
       }
 
       setFilterTree(searchItem?.label || event.target.value)
-      onChange(searchItem?.id || event.target.value)
+      onChange(searchItem?.id || value)
       event.target.blur()
       setIsDropDownMenu(false)
     }
@@ -77,7 +92,7 @@ const ArtifactFilterTree = ({
         window.removeEventListener('mousedown', handlerOverall)
       }
     }
-  }, [isDropDownMenuOpen])
+  }, [isDropDownMenuOpen, handlerOverall])
 
   return (
     <div
