@@ -1,19 +1,21 @@
-import { JOBS_PAGE } from '../constants'
+import { FUNCTIONS_PAGE, JOBS_PAGE } from '../constants'
 
-export const generateGroupLatestItem = (page, tableContent) => {
-  return tableContent?.map(group => {
-    if (Array.isArray(group)) {
-      return page === JOBS_PAGE
-        ? group.reduce((prev, curr) => {
-            return new Date(prev.updated.value).getTime() >
-              new Date(curr.updated.value).getTime()
-              ? prev
-              : curr
-          })
-        : group.find((func, i, arr) => {
-            if (arr.length === 1) return func
-            return func.tag.value === 'latest'
-          })
-    } else return group
-  })
-}
+export const generateGroupLatestItem = (page, tableContent) =>
+  tableContent?.map(group =>
+    Array.isArray(group) && [FUNCTIONS_PAGE, JOBS_PAGE].includes(page)
+      ? group.reduce((prev, curr) => {
+          const prevDate = new Date(prev.updated.value)
+          const currDate = new Date(curr.updated.value)
+
+          // if either dates is invalid - return the other one
+          // if both are valid - return the later one
+          return isNaN(prevDate)
+            ? curr
+            : isNaN(currDate)
+            ? prev
+            : prevDate.getTime() > currDate.getTime()
+            ? prev
+            : curr
+        })
+      : group
+  )
