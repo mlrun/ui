@@ -7,6 +7,7 @@ import {
   FETCH_JOBS_SUCCESS,
   REMOVE_JOB_ERROR,
   REMOVE_JOB_LOGS,
+  REMOVE_SCHEDULED_JOB_FAILURE,
   RUN_NEW_JOB_FAILURE,
   SET_LOADING,
   SET_NEW_JOB_ENVIRONMENT_VARIABLES,
@@ -187,6 +188,12 @@ export default (state = initialState, { type, payload }) => {
             }
           }
         }
+      }
+    case REMOVE_SCHEDULED_JOB_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
       }
     case RUN_NEW_JOB_FAILURE:
       return {

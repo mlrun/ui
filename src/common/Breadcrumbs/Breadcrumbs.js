@@ -17,7 +17,7 @@ const Breadcrumbs = ({ match, onClick }) => {
         {urlItems.map((item, i) => {
           const param = pathItems[i]?.startsWith(':')
           const label = param
-            ? match.params.tab === item
+            ? match.params.tab === item || match.params.jobTab === item
               ? startCase(item)
               : item
             : startCase(item)

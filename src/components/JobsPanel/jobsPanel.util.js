@@ -207,3 +207,40 @@ export const validateCronString = cronString => {
     errorMessage
   }
 }
+export const generateRequestData = (
+  jobsStore,
+  cronString,
+  panelState,
+  project,
+  labels,
+  match,
+  selectedFunction
+) => ({
+  ...jobsStore.newJob,
+  schedule: cronString,
+  function: {
+    ...jobsStore.newJob.function,
+    spec: {
+      ...jobsStore.newJob.function.spec,
+      resources: {
+        limits: panelState.limits,
+        requests: panelState.requests
+      }
+    }
+  },
+  task: {
+    ...jobsStore.newJob.task,
+    metadata: {
+      name: panelState.currentFunctionInfo.name,
+      project,
+      labels
+    },
+    spec: {
+      ...jobsStore.newJob.task.spec,
+      output_path: panelState.outputPath,
+      input_path: panelState.inputPath,
+      function: `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`,
+      handler: panelState.currentFunctionInfo.method
+    }
+  }
+})

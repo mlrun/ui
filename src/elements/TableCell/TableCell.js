@@ -16,7 +16,7 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import artifactAction from '../../actions/artifacts'
 import { truncateUid } from '../../utils'
-import jobsData from '../../components/JobsPage/jobsData'
+import { detailsMenu } from '../../components/JobsPage/jobsData'
 
 const TableCell = ({
   data,
@@ -79,10 +79,8 @@ const TableCell = ({
             }
           >
             <Link
-              to={`/projects/${match.params.projectName}/jobs/${data.value
-                .uri && data.value.uri.split('/')[1]}/${
-                jobsData.detailsMenu[0]
-              }`}
+              to={`/projects/${match.params.projectName}/jobs/monitor/${data
+                .value.uri && data.value.uri.split('/')[1]}/${detailsMenu[0]}`}
             >
               {data.value.name}
             </Link>

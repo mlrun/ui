@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,9 +15,7 @@ import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
 import { ARTIFACTS_PAGE, FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants.js'
-
 import artifactsAction from '../../actions/artifacts'
-
 import artifactsData from '../Artifacts/artifactsData'
 import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 
@@ -39,14 +37,20 @@ const FilterMenu = ({
   toggleShowUntagged
 }) => {
   const [labels, setLabels] = useState('')
+  const [owner, setOwner] = useState('')
   const [name, setName] = useState('')
   const history = useHistory()
   const artifactFilter = useSelector(store => store.artifactsStore.filter)
   const dispatch = useDispatch()
 
-  if (page === JOBS_PAGE) {
-    selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
-  }
+  useEffect(() => {
+    if (
+      page === JOBS_PAGE &&
+      !selectOptions.groupBy.find(option => option.id === 'workflow')
+    ) {
+      selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
+    }
+  }, [page])
 
   const onKeyDown = event => {
     if (event.keyCode === 13) {
@@ -70,7 +74,9 @@ const FilterMenu = ({
           name
         })
       } else {
-        page === JOBS_PAGE ? onChange({ labels, name }) : onChange({ name })
+        page === JOBS_PAGE
+          ? onChange({ labels, name, owner })
+          : onChange({ name })
       }
     }
   }
@@ -112,6 +118,17 @@ const FilterMenu = ({
                   key={filter}
                   onChange={setName}
                   value={name}
+                  onKeyDown={onKeyDown}
+                />
+              )
+            case 'owner':
+              return (
+                <Input
+                  type="text"
+                  label="owner:"
+                  key={filter}
+                  onChange={setOwner}
+                  value={owner}
                   onKeyDown={onKeyDown}
                 />
               )

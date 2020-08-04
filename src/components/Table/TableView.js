@@ -30,13 +30,16 @@ const TableView = ({
   toggleConvertToYaml,
   workflows
 }) => {
-  const actionsMenu = [
-    {
-      label: 'View YAML',
-      icon: <Yaml />,
-      onClick: toggleConvertToYaml
-    }
-  ]
+  const actionsMenu = pageData.actionsMenu
+    ? pageData.actionsMenu
+    : [
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertToYaml
+        }
+      ]
+
   return (
     <div className="table">
       <div

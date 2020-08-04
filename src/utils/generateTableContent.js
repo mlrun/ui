@@ -11,6 +11,7 @@ export const generateTableContent = (
   groupedByWorkflow,
   groupFilter,
   page,
+  scheduled,
   setLoading
 ) => {
   if (!isEmpty(groupedByName) && groupFilter === 'name') {
@@ -29,7 +30,7 @@ export const generateTableContent = (
     setLoading && setLoading(true)
 
     return page === JOBS_PAGE
-      ? createJobsContent(content, false)
+      ? createJobsContent(content, false, scheduled)
       : page === ARTIFACTS_PAGE
       ? createArtifactsContent(content)
       : createFunctionsContent(content)
