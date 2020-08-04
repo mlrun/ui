@@ -10,7 +10,7 @@ const ProjectCard = ({ project }) => {
         <div className="project_card_description">{project.description}</div>
       )}
       <div className="project_card_links">
-        <Link to={`/projects/${project.name}/jobs`}>
+        <Link to={`/projects/${project.name}/jobs/monitor`}>
           <div>Jobs</div>
         </Link>
         <Link to={`/projects/${project.name}/artifacts`}>

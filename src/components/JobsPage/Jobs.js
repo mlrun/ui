@@ -4,8 +4,13 @@ import PropTypes from 'prop-types'
 
 import jobsActions from '../../actions/jobs'
 import workflowActions from '../../actions/workflow'
-import jobsData from './jobsData'
+import {
+  generatePageData,
+  initialStateFilter,
+  initialGroupFilter
+} from './jobsData'
 import { parseKeyValues } from '../../utils'
+import { SCHEDULE_TAB } from '../../constants'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
@@ -16,52 +21,73 @@ const Jobs = ({
   jobsStore,
   history,
   match,
+  removeScheduledJob,
   setLoading,
   workflowsStore
 }) => {
   const [jobs, setJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
-  const [stateFilter, setStateFilter] = useState(jobsData.initialStateFilter)
-  const [groupFilter, setGroupFilter] = useState(jobsData.initialGroupFilter)
-  const pageData = {
-    detailsMenu: jobsData.detailsMenu,
-    filters: jobsData.filters,
-    page: jobsData.page,
-    tableHeaders: jobsData.tableHeaders
+  const [stateFilter, setStateFilter] = useState(initialStateFilter)
+  const [groupFilter, setGroupFilter] = useState(initialGroupFilter)
+
+  const handleRemoveScheduledJob = scheduleName => {
+    removeScheduledJob(match.params.projectName, scheduleName).then(() => {
+      refreshJobs()
+    })
   }
+
+  const pageData = useCallback(
+    generatePageData(
+      match.params.jobTab.toUpperCase() === SCHEDULE_TAB,
+      handleRemoveScheduledJob
+    ),
+    [match.params.jobTab]
+  )
 
   const refreshJobs = useCallback(
     event => {
       fetchJobs(
         match.params.projectName,
-        stateFilter !== jobsData.initialStateFilter && stateFilter,
-        event
+        stateFilter !== initialStateFilter && stateFilter,
+        event,
+        match.params.jobTab.toUpperCase() === SCHEDULE_TAB
       ).then(jobs => {
-        const newJobs = jobs.map(job => ({
-          uid: job.metadata.uid,
-          iteration: job.metadata.iteration,
-          iterationStats: job.status.iterations || [],
-          iterations: [],
-          startTime: new Date(job.status.start_time),
-          state: job.status.state,
-          name: job.metadata.name,
-          labels: parseKeyValues(job.metadata.labels || {}),
-          logLevel: job.spec.log_level,
-          inputs: job.spec.inputs || {},
-          parameters: parseKeyValues(job.spec.parameters || {}),
-          results: job.status.results || {},
-          resultsChips: parseKeyValues(job.status.results || {}),
-          artifacts: job.status.artifacts || [],
-          outputPath: job.spec.output_path,
-          owner: job.metadata.labels.owner,
-          updated: new Date(job.status.last_update),
-          function: job?.spec?.function ?? ''
-        }))
+        const newJobs = jobs.map(job => {
+          if (match.params.jobTab.toUpperCase() === SCHEDULE_TAB) {
+            return {
+              name: job.name,
+              type: job.kind === 'pipeline' ? 'workflow' : job.kind,
+              createdTime: new Date(job.creation_time),
+              nextRun: new Date(job.next_run_time)
+            }
+          } else {
+            return {
+              uid: job.metadata.uid,
+              iteration: job.metadata.iteration,
+              iterationStats: job.status.iterations || [],
+              iterations: [],
+              startTime: new Date(job.status.start_time),
+              state: job.status.state,
+              name: job.metadata.name,
+              labels: parseKeyValues(job.metadata.labels || {}),
+              logLevel: job.spec.log_level,
+              inputs: job.spec.inputs || {},
+              parameters: parseKeyValues(job.spec.parameters || {}),
+              results: job.status.results || {},
+              resultsChips: parseKeyValues(job.status.results || {}),
+              artifacts: job.status.artifacts || [],
+              outputPath: job.spec.output_path,
+              owner: job.metadata.labels.owner,
+              updated: new Date(job.status.last_update),
+              function: job?.spec?.function ?? ''
+            }
+          }
+        })
 
         return setJobs(newJobs)
       })
     },
-    [fetchJobs, match.params.projectName, stateFilter]
+    [fetchJobs, match.params.jobTab, match.params.projectName, stateFilter]
   )
 
   const getWorkflows = useCallback(
@@ -77,20 +103,30 @@ const Jobs = ({
 
   useEffect(() => {
     refreshJobs()
-    getWorkflows()
 
     return () => {
       setSelectedJob({})
       setJobs([])
     }
-  }, [getWorkflows, history, match.params.projectName, refreshJobs])
+  }, [getWorkflows, history, match.params.jobTab, refreshJobs])
+
+  useEffect(() => {
+    if (match.params.jobTab.toUpperCase() === SCHEDULE_TAB) {
+      setGroupFilter('none')
+    } else {
+      getWorkflows()
+      setGroupFilter(initialGroupFilter)
+    }
+  }, [getWorkflows, match.params.jobTab])
 
   useEffect(() => {
     if (match.params.jobId && jobs.length > 0) {
       let item = jobs.find(item => item.uid === match.params.jobId)
 
       if (!item) {
-        return history.push(`/projects/${match.params.projectName}/jobs`)
+        return history.push(
+          `/projects/${match.params.projectName}/jobs/${match.params.jobTab}`
+        )
       }
 
       setSelectedJob(item)
@@ -102,7 +138,8 @@ const Jobs = ({
     setSelectedJob,
     jobs,
     match.params.projectName,
-    history
+    history,
+    match.params.jobTab
   ])
 
   const handleSelectJob = item => {
@@ -117,7 +154,7 @@ const Jobs = ({
   }
 
   const onStateFilterChange = id => {
-    setStateFilter(id || jobsData.initialStateFilter)
+    setStateFilter(id || initialStateFilter)
   }
 
   return (

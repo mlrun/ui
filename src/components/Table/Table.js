@@ -10,7 +10,7 @@ import NotificationDownload from '../NotificationDownload/NotificationDownload'
 import createJobsContent from '../../utils/createJobsContent'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
-import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
+import { FUNCTIONS_PAGE, JOBS_PAGE, SCHEDULE_TAB } from '../../constants'
 
 import './table.scss'
 
@@ -48,6 +48,7 @@ const Table = ({
       groupedByWorkflow,
       groupFilter,
       pageData.page,
+      match.params.jobTab.toUpperCase() === SCHEDULE_TAB,
       setLoading
     )
     let groupLatest = []
@@ -79,7 +80,8 @@ const Table = ({
     groupedByWorkflow,
     workflows,
     pageData.page,
-    setLoading
+    setLoading,
+    match.params.jobTab
   ])
 
   useEffect(() => {
@@ -90,7 +92,7 @@ const Table = ({
         content: []
       })
     }
-  }, [groupFilter])
+  }, [groupFilter, match.params.jobTab])
 
   useEffect(() => {
     if (tableContent.content.length && setLoading) {

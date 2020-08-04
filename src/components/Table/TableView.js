@@ -30,13 +30,16 @@ const TableView = ({
   toggleConvertToYaml,
   workflows
 }) => {
-  const actionsMenu = [
-    {
-      label: 'View YAML',
-      icon: <Yaml />,
-      onClick: toggleConvertToYaml
-    }
-  ]
+  const actionsMenu = pageData.actionsMenu
+    ? pageData.actionsMenu
+    : [
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertToYaml
+        }
+      ]
+
   return (
     <div className="table">
       <div
@@ -59,6 +62,7 @@ const TableView = ({
           (isEmpty(groupedByName) && isEmpty(groupedByWorkflow)) ||
           (groupFilter === 'none' && isEmpty(groupLatestItem)) ? (
             tableContent.map((rowItem, i) => {
+              console.log('here')
               switch (pageData.page) {
                 case ARTIFACTS_PAGE:
                   return (

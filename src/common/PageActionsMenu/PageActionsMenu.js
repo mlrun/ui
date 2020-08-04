@@ -11,7 +11,7 @@ const PageActionsMenu = ({ match, onClick, page }) => {
         <div className="page-actions-container">
           <Link
             className="btn_secondary btn_small"
-            to={`/projects/${match.params.projectName}/jobs/create-new-job`}
+            to={`/projects/${match.params.projectName}/jobs/${match.params.jobTab}/create-new-job`}
           >
             New Job
           </Link>

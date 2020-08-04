@@ -6,7 +6,8 @@ import classnames from 'classnames'
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
-import jobsData from '../../components/JobsPage/jobsData'
+import { detailsMenu } from '../../components/JobsPage/jobsData'
+import { MONITOR_TAB } from '../../constants'
 
 const JobsTableRow = ({
   actionsMenu,
@@ -69,6 +70,7 @@ const JobsTableRow = ({
           )}
           <>
             {tableContent.map((job, index) => {
+              console.log('here3')
               return (
                 <div
                   className={
@@ -96,11 +98,11 @@ const JobsTableRow = ({
                         link={
                           index === 0 &&
                           `/projects/${match.params.projectName}/jobs/${
-                            currentItem.uid
-                          }${
+                            match.params.jobTab
+                          }/${currentItem.uid}${
                             match.params.tab
                               ? `/${match.params.tab}`
-                              : `/${jobsData.detailsMenu[0]}`
+                              : `/${detailsMenu[0]}`
                           }`
                         }
                         key={cellContentObj.value + index}
@@ -125,8 +127,10 @@ const JobsTableRow = ({
           {Object.values(rowItem).map((rowItemProp, index) => {
             const currentItem = isGroupedByWorkflow
               ? workflows.find(workflow => workflow.id === rowItem.uid.value)
-              : content.find(
-                  contentItemObj => contentItemObj.uid === rowItem.uid.value
+              : content.find(contentItemObj =>
+                  match.params.jobTab.toUpperCase() === MONITOR_TAB
+                    ? contentItemObj.uid === rowItem.uid?.value
+                    : contentItemObj.name === rowItem.name.value
                 )
 
             return (
@@ -139,12 +143,13 @@ const JobsTableRow = ({
                 key={new Date().getTime() + index}
                 link={
                   index === 0 &&
+                  match.params.jobTab.toUpperCase() === MONITOR_TAB &&
                   `/projects/${match.params.projectName}/jobs/${
-                    find(content, ['uid', rowItem.uid.value])?.uid
-                  }${
+                    match.params.jobTab
+                  }/${find(content, ['uid', rowItem.uid?.value])?.uid}${
                     match.params.tab
                       ? `/${match.params.tab}`
-                      : `/${jobsData.detailsMenu[0]}`
+                      : `/${detailsMenu[0]}`
                   }`
                 }
                 selectItem={handleSelectItem}

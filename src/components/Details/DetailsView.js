@@ -66,7 +66,9 @@ const DetailsView = ({
           )}
           <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
           <Link
-            to={`/projects/${match.params.projectName}/${page.toLowerCase()}`}
+            to={`/projects/${match.params.projectName}/${page.toLowerCase()}${
+              page === JOBS_PAGE ? `/${match.params.jobTab}` : ''
+            }`}
             onClick={handleCancel}
           >
             <Close />

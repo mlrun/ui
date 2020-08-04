@@ -18,7 +18,8 @@ import {
   getMethodOptions,
   getVersionOptions,
   getDefaultMethodAndVersion,
-  generateTableData
+  generateTableData,
+  generateRequestData
 } from './jobsPanel.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { initialState, panelReducer, panelActions } from './panelReducer'
@@ -183,42 +184,21 @@ const JobsPanel = ({
       : groupedFunctions.functions.find(
           func => func.metadata.tag === panelState.currentFunctionInfo.version
         )
-
     const labels = {}
 
     panelState.currentFunctionInfo.labels.forEach(
       label => (labels[label.split(':')[0]] = label.split(':')[1].slice(1))
     )
 
-    const postData = {
-      ...jobsStore.newJob,
-      schedule: cronString,
-      function: {
-        ...jobsStore.newJob.function,
-        spec: {
-          ...jobsStore.newJob.function.spec,
-          resources: {
-            limits: panelState.limits,
-            requests: panelState.requests
-          }
-        }
-      },
-      task: {
-        ...jobsStore.newJob.task,
-        metadata: {
-          name: panelState.currentFunctionInfo.name,
-          project,
-          labels
-        },
-        spec: {
-          ...jobsStore.newJob.task.spec,
-          output_path: panelState.outputPath,
-          input_path: panelState.inputPath,
-          function: `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`,
-          handler: panelState.currentFunctionInfo.method
-        }
-      }
-    }
+    const postData = generateRequestData(
+      jobsStore,
+      cronString,
+      panelState,
+      project,
+      labels,
+      match,
+      selectedFunction
+    )
 
     if (jobsStore.error) {
       removeJobError()
@@ -228,7 +208,9 @@ const JobsPanel = ({
       .then(() => {
         removeNewJob()
 
-        history.push(`/projects/${match.params.projectName}/jobs`)
+        history.push(
+          `/projects/${match.params.projectName}/jobs/${match.params.jobTab}`
+        )
       })
       .catch(error => {
         dispatch(runNewJobFailure(error.message))

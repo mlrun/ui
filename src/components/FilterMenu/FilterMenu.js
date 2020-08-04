@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
@@ -14,7 +14,6 @@ import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
 import { ARTIFACTS_PAGE, FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants.js'
-
 import artifactsData from '../Artifacts/artifactsData'
 import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 
@@ -36,15 +35,22 @@ const FilterMenu = ({
 }) => {
   const [valueFilterTree, setValueFilterTree] = useState('latest')
   const [labels, setLabels] = useState('')
+  const [owner, setOwner] = useState('')
   const [name, setName] = useState('')
   const history = useHistory()
 
-  if (page === JOBS_PAGE) {
-    selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
-  }
+  useEffect(() => {
+    if (
+      page === JOBS_PAGE &&
+      !selectOptions.groupBy.find(option => option.id === 'workflow')
+    ) {
+      selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
+    }
+  }, [page])
 
   const handleChangeArtifactFilterTree = item => {
     const value = item.toLowerCase()
+
     onChange({ tag: value, project: match.params.projectName, name, labels })
     setValueFilterTree(value)
   }
@@ -65,7 +71,11 @@ const FilterMenu = ({
             name
           })
         : page === JOBS_PAGE
-        ? onChange({ labels, name })
+        ? onChange({
+            labels,
+            name,
+            owner
+          })
         : onChange({ name })
     }
   }
@@ -107,6 +117,17 @@ const FilterMenu = ({
                   key={filter}
                   onChange={setName}
                   value={name}
+                  onKeyDown={onKeyDown}
+                />
+              )
+            case 'owner':
+              return (
+                <Input
+                  type="text"
+                  label="owner:"
+                  key={filter}
+                  onChange={setOwner}
+                  value={owner}
                   onKeyDown={onKeyDown}
                 />
               )

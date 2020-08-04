@@ -1,5 +1,6 @@
-@import "../../scss/colors";
-@import "../../scss/mixins";
+@import '../../scss/colors';
+@import '../../scss/mixins';
+@import '../../scss/borders';
 
 .content__menu {
   position: absolute;
@@ -22,13 +23,14 @@
       font-size: 15px;
       line-height: 18px;
       text-align: center;
+      text-transform: capitalize;
       border-bottom: 3px solid transparent;
       cursor: pointer;
     }
 
     .active {
       color: $cornflowerBlue;
-      border-bottom: 3px solid $cornflowerBlue;
+      border-bottom: $activeJobTabBorder;
     }
   }
 }

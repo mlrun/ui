@@ -5,7 +5,7 @@ import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 
 import { formatDatetime, parseKeyValues } from '../../utils'
-import jobsData from '../JobsPage/jobsData'
+import { jobsInfoHeaders } from '../JobsPage/jobsData'
 import artifactsData from '../Artifacts/artifactsData'
 import functionsData from '../FunctionsPage/functionsData'
 import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
@@ -65,7 +65,7 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
       )}
       <ul className="item-info__details">
         {page === JOBS_PAGE
-          ? jobsData.jobsInfoHeaders.map((header, index) => {
+          ? jobsInfoHeaders.map((header, index) => {
               return (
                 <li className="details-item" key={header.id}>
                   <div className="details-item__header">{header.label}</div>
@@ -157,7 +157,7 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
 
               if (header === 'uri') {
                 const [project, hash] = selectedItem.producer.uri.split('/')
-                url = `/projects/${project}/jobs/${hash}/info`
+                url = `/projects/${project}/jobs/monitor/${hash}/info`
               }
 
               return (

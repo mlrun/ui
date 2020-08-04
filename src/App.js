@@ -33,12 +33,12 @@ const App = () => {
               render={routeProps => <Projects {...routeProps} />}
             />
             <Route
-              path="/projects/:projectName/jobs/:jobId/:tab"
+              path="/projects/:projectName/jobs/:jobTab/:jobId/:tab"
               exact
               render={routeProps => <Jobs {...routeProps} />}
             />
             <Route
-              path="/projects/:projectName/jobs"
+              path="/projects/:projectName/jobs/:jobTab"
               exact
               strict
               render={routeProps => <Jobs {...routeProps} />}
@@ -64,7 +64,7 @@ const App = () => {
               render={routeProps => <Functions {...routeProps} />}
             />
             <Route
-              path="/projects/:projectName/jobs/create-new-job"
+              path="/projects/:projectName/jobs/:jobTab/create-new-job"
               exact
               strict
               render={routeProps => <CreateJobPage {...routeProps} />}

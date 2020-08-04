@@ -1,17 +1,34 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import './contentMenu.scss'
 
-const ContentMenu = () => {
+const ContentMenu = ({ activeTab, tabs }) => {
   return (
     <div className="content__menu">
       <ul className="content__menu__list">
-        <li className="content__menu__list_item active">Monitor</li>
-        {/*<li className="jobs__menu__list_item">Edit</li>*/}
-        {/*<li className="jobs__menu__list_item">Create</li>*/}
+        {tabs.map(tab => {
+          const tabClassNames = classnames(
+            'content__menu__list_item',
+            tab === activeTab && 'active'
+          )
+
+          return (
+            <li className={tabClassNames} key={tab}>
+              <Link to={`${tab}`}>{tab}</Link>
+            </li>
+          )
+        })}
       </ul>
     </div>
   )
+}
+
+ContentMenu.propTypes = {
+  activeTab: PropTypes.string.isRequired,
+  tabs: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
 export default ContentMenu
