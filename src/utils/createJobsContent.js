@@ -1,10 +1,10 @@
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
 
-const createJobsContent = (content, groupedByWorkflow, scheudled) => {
+const createJobsContent = (content, groupedByWorkflow, scheduled) => {
   return content.map(contentItem => {
     if (contentItem) {
-      if (scheudled) {
+      if (scheduled) {
         return {
           name: {
             value: contentItem.name,
