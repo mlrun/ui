@@ -21,6 +21,7 @@ import './content.scss'
 const Content = ({
   content,
   groupFilter,
+  handleArtifactFilterTree,
   handleCancel,
   handleSelectItem,
   loading,
@@ -199,6 +200,7 @@ const Content = ({
             expand={expand}
             filters={pageData.filters}
             groupFilter={groupFilter}
+            handleArtifactFilterTree={handleArtifactFilterTree}
             handleExpandAll={handleExpandAll}
             match={match}
             onChange={refresh}
@@ -253,6 +255,7 @@ Content.defaultProps = {
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   groupFilter: PropTypes.string,
+  handleArtifactFilterTree: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,

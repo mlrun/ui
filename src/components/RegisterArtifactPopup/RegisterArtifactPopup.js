@@ -8,7 +8,12 @@ import { v4 as uuidv4 } from 'uuid'
 
 import artifactApi from '../../api/artifacts-api'
 
-const RegisterArtifactPopup = ({ match, refresh, setIsPopupDialogOpen }) => {
+const RegisterArtifactPopup = ({
+  artifactFilter,
+  match,
+  refresh,
+  setIsPopupDialogOpen
+}) => {
   const [registerArtifactData, setRegisterArtifactData] = useState({
     description: {
       value: '',
@@ -108,9 +113,14 @@ const RegisterArtifactPopup = ({ match, refresh, setIsPopupDialogOpen }) => {
     artifactApi
       .registerArtifact(match.params.projectName, data)
       .then(() => {
-        setIsPopupDialogOpen(false)
         resetRegisterArtifactForm()
-        refresh({ tag: 'latest', project: match.params.projectName })
+        setIsPopupDialogOpen(false)
+        refresh({
+          project: match.params.projectName,
+          tag: artifactFilter.tag !== 'latest' ? artifactFilter.tag : '',
+          labels: artifactFilter.labels,
+          name: artifactFilter.name
+        })
       })
       .catch(err => {
         setRegisterArtifactData(prevData => ({
@@ -126,7 +136,8 @@ const RegisterArtifactPopup = ({ match, refresh, setIsPopupDialogOpen }) => {
     refresh,
     registerArtifactData,
     resetRegisterArtifactForm,
-    setIsPopupDialogOpen
+    setIsPopupDialogOpen,
+    artifactFilter
   ])
 
   const closePopupDialog = useCallback(() => {
@@ -173,6 +184,7 @@ const RegisterArtifactPopup = ({ match, refresh, setIsPopupDialogOpen }) => {
 }
 
 RegisterArtifactPopup.propTypes = {
+  artifactFilter: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired

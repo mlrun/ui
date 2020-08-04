@@ -48,7 +48,7 @@ const Table = ({
       groupedByWorkflow,
       groupFilter,
       pageData.page,
-      match.params.jobTab.toUpperCase() === SCHEDULE_TAB,
+      match.params.jobTab?.toUpperCase() === SCHEDULE_TAB,
       setLoading
     )
     let groupLatest = []

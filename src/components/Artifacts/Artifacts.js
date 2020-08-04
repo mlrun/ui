@@ -17,6 +17,7 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 const Artifacts = ({
   artifactsStore,
   fetchArtifacts,
+  setArtifactFilter,
   history,
   match,
   removeArtifacts
@@ -84,7 +85,7 @@ const Artifacts = ({
   )
 
   useEffect(() => {
-    fetchData({ tag: 'latest', project: match.params.projectName })
+    fetchData({ project: match.params.projectName })
 
     return () => {
       _setArtifacts([])
@@ -168,6 +169,23 @@ const Artifacts = ({
     setSelectedArtifact({ item })
   }
 
+  const handleArtifactFilterTree = useCallback(
+    item => {
+      const value = item.toLowerCase() !== 'latest' ? item.toLowerCase() : ''
+      fetchData({
+        tag: value,
+        project: match.params.projectName,
+        labels: artifactsStore.filter.labels,
+        name: artifactsStore.filter.name
+      })
+      setArtifactFilter({
+        ...artifactsStore.filter,
+        tag: value || 'latest'
+      })
+    },
+    [fetchData, artifactsStore, match, setArtifactFilter]
+  )
+
   const handleCancel = () => {
     setSelectedArtifact({})
   }
@@ -181,14 +199,16 @@ const Artifacts = ({
         handleSelectItem={handleSelectArtifact}
         loading={artifactsStore.loading}
         match={match}
+        openPopupDialog={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
-        openPopupDialog={() => setIsPopupDialogOpen(true)}
         selectedItem={selectedArtifact.item}
         yamlContent={artifactsStore.artifacts}
+        handleArtifactFilterTree={handleArtifactFilterTree}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
+          artifactFilter={artifactsStore.filter}
           match={match}
           refresh={fetchData}
           setIsPopupDialogOpen={setIsPopupDialogOpen}

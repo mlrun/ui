@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
@@ -14,6 +15,7 @@ import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
 import { ARTIFACTS_PAGE, FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants.js'
+import artifactsAction from '../../actions/artifacts'
 import artifactsData from '../Artifacts/artifactsData'
 import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 
@@ -22,22 +24,24 @@ import './filterMenu.scss'
 const FilterMenu = ({
   expand,
   filters,
+  groupFilter,
+  handleArtifactFilterTree,
   handleExpandAll,
   match,
   onChange,
   page,
-  groupFilter,
-  setStateFilter,
   setGroupFilter,
+  setStateFilter,
   showUntagged,
   stateFilter,
   toggleShowUntagged
 }) => {
-  const [valueFilterTree, setValueFilterTree] = useState('latest')
   const [labels, setLabels] = useState('')
   const [owner, setOwner] = useState('')
   const [name, setName] = useState('')
   const history = useHistory()
+  const artifactFilter = useSelector(store => store.artifactsStore.filter)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (
@@ -48,13 +52,6 @@ const FilterMenu = ({
     }
   }, [page])
 
-  const handleChangeArtifactFilterTree = item => {
-    const value = item.toLowerCase()
-
-    onChange({ tag: value, project: match.params.projectName, name, labels })
-    setValueFilterTree(value)
-  }
-
   const onKeyDown = event => {
     if (event.keyCode === 13) {
       if (match.params.jobId || match.params.name) {
@@ -62,21 +59,25 @@ const FilterMenu = ({
           `/projects/${match.params.projectName}/${page.toLowerCase()}`
         )
       }
-
-      page === ARTIFACTS_PAGE
-        ? onChange({
-            tag: valueFilterTree,
-            project: match.params.projectName,
+      if (page === ARTIFACTS_PAGE) {
+        dispatch(
+          artifactsAction.setArtifactFilter({
+            ...artifactFilter,
             labels,
             name
           })
-        : page === JOBS_PAGE
-        ? onChange({
-            labels,
-            name,
-            owner
-          })
-        : onChange({ name })
+        )
+        onChange({
+          tag: artifactFilter.tag !== 'latest' ? artifactFilter.tag : '',
+          project: match.params.projectName,
+          labels,
+          name
+        })
+      } else {
+        page === JOBS_PAGE
+          ? onChange({ labels, name, owner })
+          : onChange({ name })
+      }
     }
   }
 
@@ -92,9 +93,9 @@ const FilterMenu = ({
                   key={filter}
                   label="Tree:"
                   match={match}
-                  onChange={handleChangeArtifactFilterTree}
+                  onChange={handleArtifactFilterTree}
                   page={page}
-                  value={valueFilterTree}
+                  value={artifactFilter.tag}
                 />
               )
             case 'labels':
@@ -171,7 +172,7 @@ const FilterMenu = ({
             onClick={() => {
               page === artifactsData.page
                 ? onChange({
-                    tag: valueFilterTree,
+                    tag: artifactFilter.tag,
                     project: match.params.projectName,
                     labels,
                     name
@@ -200,8 +201,9 @@ const FilterMenu = ({
 
 FilterMenu.defaultProps = {
   groupFilter: '',
-  setStateFilter: null,
+  handleArtifactFilterTree: null,
   setGroupFilter: null,
+  setStateFilter: null,
   showUntagged: '',
   stateFilter: '',
   toggleShowUntagged: null
@@ -210,8 +212,9 @@ FilterMenu.defaultProps = {
 FilterMenu.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired,
   groupFilter: PropTypes.string,
-  setStateFilter: PropTypes.func,
+  handleArtifactFilterTree: PropTypes.func,
   setGroupFilter: PropTypes.func,
+  setStateFilter: PropTypes.func,
   showUntagged: PropTypes.string,
   stateFilter: PropTypes.string,
   toggleShowUntagged: PropTypes.func

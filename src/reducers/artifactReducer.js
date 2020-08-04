@@ -4,14 +4,20 @@ import {
   FETCH_ARTIFACTS_SUCCESS,
   SHOW_ARTIFACT_PREVIEW,
   CLOSE_ARTIFACT_PREVIEW,
-  REMOVE_ARTIFACTS
+  REMOVE_ARTIFACTS,
+  SET_ARTIFACT_FILTER
 } from '../constants'
 
 const initialState = {
   artifacts: [],
   loading: false,
   error: null,
-  preview: {}
+  preview: {},
+  filter: {
+    tag: 'latest',
+    labels: '',
+    name: ''
+  }
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -48,6 +54,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         preview: payload
+      }
+    case SET_ARTIFACT_FILTER:
+      return {
+        ...state,
+        filter: payload
       }
     default:
       return state

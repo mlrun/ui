@@ -70,7 +70,6 @@ const JobsTableRow = ({
           )}
           <>
             {tableContent.map((job, index) => {
-              console.log('here3')
               return (
                 <div
                   className={

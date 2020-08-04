@@ -62,7 +62,6 @@ const TableView = ({
           (isEmpty(groupedByName) && isEmpty(groupedByWorkflow)) ||
           (groupFilter === 'none' && isEmpty(groupLatestItem)) ? (
             tableContent.map((rowItem, i) => {
-              console.log('here')
               switch (pageData.page) {
                 case ARTIFACTS_PAGE:
                   return (

@@ -8,7 +8,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 
 const ArtifactsPreviewView = ({ preview }) => (
   <div className="item-artifacts__preview-content">
-    <h2 className="preview-header">{preview.header}</h2>
+    {preview.header && <h2 className="preview-header">{preview.header}</h2>}
     {preview?.type === 'table-results' && (
       <div className="preview-table">
         <DetailsResults job={preview} />
