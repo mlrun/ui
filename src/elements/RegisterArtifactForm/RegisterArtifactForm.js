@@ -83,7 +83,7 @@ const RegisterArtifactForm = ({ match, onChange, registerArtifactData }) => {
         value={description.value}
       />
       <Select
-        label="Kind"
+        label="Type"
         match={match}
         onClick={value =>
           onChange(prevData => ({
