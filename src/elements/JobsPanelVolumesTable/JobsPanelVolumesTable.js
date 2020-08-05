@@ -140,7 +140,6 @@ export const JobsPanelVolumesTable = ({
                     ? resourcesState.newVolume.type
                     : 'Type'
                 }
-                match={match}
               />
               <Input
                 onChange={typeName =>

@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import classNames from 'classnames'
 
 import SelectOption from '../../elements/SelectOption/SelectOption'
 
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
-import classNames from 'classnames'
 
 import './select.scss'
 
@@ -15,20 +14,26 @@ const Select = ({
   disabled,
   floatingLabel,
   label,
-  match,
   onClick,
   options,
-  page,
   selectType,
   selectedId
 }) => {
   const [isOpen, setOpen] = useState(false)
-  const history = useHistory()
-
   const selectedOption = options.find(option => option.id === selectedId)
+  const selectClassName = classNames('select', className, isOpen && 'active')
+  const selectLabelClassName = classNames(
+    'select__label',
+    selectedId && floatingLabel && 'select__label_floating'
+  )
+  const selectValueClassName = classNames(
+    'select__value',
+    selectedId && floatingLabel && 'select__value_floating'
+  )
 
   useEffect(() => {
     window.addEventListener('scroll', handlerScroll)
+
     return () => {
       window.removeEventListener('scroll', handlerScroll)
     }
@@ -40,32 +45,13 @@ const Select = ({
 
   const toggleOpen = disabled => (disabled ? null : setOpen(!isOpen))
 
-  const handleSelectOption = item => {
-    if (match.params.jobId || match.params.name) {
-      history.push(
-        `/projects/${match.params.projectName}/${page.toLowerCase()}`
-      )
-    }
-
-    onClick(item)
-  }
-
   const handleSelectValue = useCallback(event => {
     event.stopPropagation()
+
     if (!event.target.classList.contains('disabled')) {
       setOpen(false)
     }
   }, [])
-
-  const selectClassName = classNames('select', className, isOpen && 'active')
-  const selectLabelClassName = classNames(
-    'select__label',
-    selectedId && floatingLabel && 'select__label_floating'
-  )
-  const selectValueClassName = classNames(
-    'select__value',
-    selectedId && floatingLabel && 'select__value_floating'
-  )
 
   return (
     <div className={selectClassName} onClick={() => toggleOpen(disabled)}>
@@ -89,7 +75,7 @@ const Select = ({
                   disabled={disabledOptions.includes(item.id.toLowerCase())}
                   item={item}
                   key={item.id}
-                  onClick={handleSelectOption}
+                  onClick={item => onClick(item)}
                   selectType={selectType}
                   selectedId={selectedId}
                 />
@@ -107,7 +93,6 @@ Select.defaultProps = {
   disabled: false,
   label: '',
   onClick: null,
-  page: '',
   selectType: '',
   selectedId: '',
   disabledOptions: []
@@ -119,10 +104,8 @@ Select.propTypes = {
   disabled: PropTypes.bool,
   floatingLabel: PropTypes.bool,
   label: PropTypes.string,
-  match: PropTypes.shape({}).isRequired,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   options: PropTypes.array.isRequired,
-  page: PropTypes.string,
   selectType: PropTypes.string,
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 }

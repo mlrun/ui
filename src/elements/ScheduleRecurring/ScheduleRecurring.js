@@ -72,7 +72,6 @@ const ScheduleRecurring = ({
           value={getRangeInputValue()}
         />
         <Select
-          match={match}
           onClick={item => {
             setCron({
               minute: '*',
@@ -87,7 +86,6 @@ const ScheduleRecurring = ({
             })
           }}
           options={selectOptions.repeatInterval}
-          page="jobs"
           selectedId={scheduleRepeatActiveOption}
         />
         {scheduleRepeatActiveOption === 'week' && (
@@ -109,7 +107,6 @@ const ScheduleRecurring = ({
       {/* <span>Ends</span> */}
       <div className="repeat_end_container">
         <Select
-          match={match}
           onClick={item =>
             recurringDispatch({
               type: scheduleActionType.SCHEDULE_REPEAT_END_ACTIVE_OPTION,
@@ -117,7 +114,6 @@ const ScheduleRecurring = ({
             })
           }
           options={selectOptions.repeatEnd}
-          page="jobs"
           selectedId={scheduleRepeatEndActiveOption}
         />
         {scheduleRepeatEndActiveOption === 'onDate' && (

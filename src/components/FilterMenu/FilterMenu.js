@@ -81,6 +81,22 @@ const FilterMenu = ({
     }
   }
 
+  const handleSelectOption = (item, filter) => {
+    if (match.params.jobId || match.params.name) {
+      history.push(
+        `/projects/${match.params.projectName}/${page.toLowerCase()}${
+          page === JOBS_PAGE ? `/${match.params.jobTab}` : ''
+        }`
+      )
+    }
+
+    if (filter === 'status') {
+      setStateFilter(item)
+    } else if (filter === 'groupBy') {
+      setGroupFilter(item)
+    }
+  }
+
   return (
     <>
       <div className="filters">
@@ -144,12 +160,7 @@ const FilterMenu = ({
                     (filter === 'groupBy' && groupFilter)
                   }
                   selectType={filter === 'status' ? 'checkbox' : ''}
-                  match={match}
-                  onClick={
-                    (filter === 'status' && setStateFilter) ||
-                    (filter === 'groupBy' && setGroupFilter)
-                  }
-                  page={page}
+                  onClick={item => handleSelectOption(item, filter)}
                 />
               )
           }

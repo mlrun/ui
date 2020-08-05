@@ -1,65 +1,111 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import prettyBytes from 'pretty-bytes'
-import { useDispatch } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 
 import DetailsArtifactsView from './DetailsArtifactsView'
 
-import { formatDatetime } from '../../utils'
+import { formatDatetime, parseKeyValues } from '../../utils'
 import artifactAction from '../../actions/artifacts'
 import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
+import jobsActions from '../../actions/jobs'
 
-const DetailsArtifacts = ({ match, selectedItem }) => {
+const DetailsArtifacts = ({
+  iteration,
+  jobsStore,
+  match,
+  selectedItem,
+  setIterationOptions
+}) => {
+  const [content, setContent] = useState([])
   const dispatch = useDispatch()
 
-  const content = selectedItem.artifacts.map(artifact => {
-    const indexOfSchema = artifact.target_path.indexOf('://')
-    const schema =
-      indexOfSchema > 0 ? artifact.target_path.slice(0, indexOfSchema) : ''
-    let generatedPreviewData = {
-      preview: [],
-      extraDataPath: ''
-    }
+  useEffect(() => {
+    let selectedJob = selectedItem
 
-    if (artifact.extra_data) {
-      generatedPreviewData = generateArtifactPreviewData(
-        artifact.extra_data,
-        schema
+    if (iteration !== '0') {
+      selectedJob =
+        jobsStore.allJobsData.find(
+          job =>
+            job.metadata.uid === selectedItem.uid &&
+            job.metadata.iteration === +iteration
+        ) || {}
+      selectedJob.artifacts = selectedJob.status?.artifacts || []
+      selectedJob.startTime = formatDatetime(
+        new Date(selectedJob.status?.start_time)
       )
+      selectedJob.labels = parseKeyValues(selectedJob.metadata?.labels || {})
     }
 
-    const target_path = {
-      schema: schema,
-      path: generatedPreviewData.extraDataPath
-        ? generatedPreviewData.extraDataPath
-        : indexOfSchema > 0
-        ? artifact.target_path.slice(indexOfSchema + '://'.length)
-        : artifact.target_path
-    }
-
-    const generatedArtifact = {
-      date: formatDatetime(selectedItem.startTime),
-      key: artifact.key,
-      db_key: artifact.db_key,
-      preview: generatedPreviewData.preview,
-      size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
-      target_path: target_path,
-      user: selectedItem?.labels
-        ?.find(item => item.match(/v3io_user|owner/g))
-        .replace(/(v3io_user|owner): /, '')
-    }
-
-    if (artifact.schema) {
-      return {
-        ...generatedArtifact,
-        header: artifact.header,
-        preview: artifact.preview,
-        schema: artifact.schema
+    const generatedContent = selectedJob.artifacts.map(artifact => {
+      const indexOfSchema = artifact.target_path.indexOf('://')
+      const schema =
+        indexOfSchema > 0 ? artifact.target_path.slice(0, indexOfSchema) : ''
+      let generatedPreviewData = {
+        preview: [],
+        extraDataPath: ''
       }
-    }
 
-    return generatedArtifact
-  })
+      if (artifact.extra_data) {
+        generatedPreviewData = generateArtifactPreviewData(
+          artifact.extra_data,
+          schema
+        )
+      }
+
+      const target_path = {
+        schema: schema,
+        path: generatedPreviewData.extraDataPath
+          ? generatedPreviewData.extraDataPath
+          : indexOfSchema > 0
+          ? artifact.target_path.slice(indexOfSchema + '://'.length)
+          : artifact.target_path
+      }
+      const generatedArtifact = {
+        date: formatDatetime(selectedJob.startTime),
+        key: artifact.key,
+        db_key: artifact.db_key,
+        preview: generatedPreviewData.preview,
+        size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
+        target_path: target_path,
+        user: selectedJob?.labels
+          ?.find(item => item.match(/v3io_user|owner/g))
+          .replace(/(v3io_user|owner): /, '')
+      }
+
+      if (artifact.schema) {
+        return {
+          ...generatedArtifact,
+          header: artifact.header,
+          preview: artifact.preview,
+          schema: artifact.schema
+        }
+      }
+
+      return generatedArtifact
+    })
+
+    setContent(generatedContent)
+  }, [iteration, jobsStore.allJobsData, selectedItem])
+
+  useEffect(() => {
+    const iterationsList = [0]
+
+    jobsStore.allJobsData.forEach(job => {
+      if (job.metadata.uid === selectedItem.uid) {
+        if (!iterationsList.includes(job.metadata.iteration)) {
+          iterationsList.push(job.metadata.iteration)
+        }
+      }
+    })
+
+    setIterationOptions(
+      iterationsList.sort().map(iteration => ({
+        label: iteration === 0 ? 'Main' : `${iteration}`,
+        id: `${iteration}`
+      }))
+    )
+  }, [jobsStore.allJobsData, selectedItem.uid, setIterationOptions])
 
   const showPreview = artifact => {
     dispatch(
@@ -80,8 +126,12 @@ const DetailsArtifacts = ({ match, selectedItem }) => {
 }
 
 DetailsArtifacts.propTypes = {
+  iteration: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  setIterationOptions: PropTypes.func.isRequired
 }
 
-export default DetailsArtifacts
+export default connect(({ jobsStore }) => ({ jobsStore }), { ...jobsActions })(
+  DetailsArtifacts
+)

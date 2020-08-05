@@ -193,7 +193,11 @@ const Content = ({
       </div>
       <div className={contentClassName}>
         {pageData.page === JOBS_PAGE && (
-          <ContentMenu activeTab={match.params.jobTab} tabs={pageData.tabs} />
+          <ContentMenu
+            activeTab={match.params.jobTab}
+            match={match}
+            tabs={pageData.tabs}
+          />
         )}
         <div className="content__action-bar">
           <FilterMenu
