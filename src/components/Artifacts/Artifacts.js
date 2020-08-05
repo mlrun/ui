@@ -4,15 +4,16 @@ import { connect } from 'react-redux'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
-import parseTargetPath from '../../utils/parseTargetPath'
+import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 
+import parseTargetPath from '../../utils/parseTargetPath'
 import artifactApi from '../../api/artifacts-api'
 import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
 import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
+import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
 
 import './artifacts.scss'
-import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 
 const Artifacts = ({
   artifactsStore,
@@ -123,8 +124,9 @@ const Artifacts = ({
 
   useEffect(() => {
     if (
-      (match.params.tab === 'metadata' && !selectedArtifact.item?.schema) ||
-      (match.params.tab === 'analysis' &&
+      (match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
+        !selectedArtifact.item?.schema) ||
+      (match.params.tab === DETAILS_ANALYSIS_TAB &&
         ((selectedArtifact.item?.kind === 'dataset' &&
           !selectedArtifact.item?.extra_data) ||
           selectedArtifact.item?.kind !== 'dataset'))

@@ -73,7 +73,7 @@ const DetailsView = ({
           </span>
         </div>
         <div className="item-header__buttons">
-          {match.params.tab.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
+          {match.params.tab?.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
             <Select
               options={iterationOptions}
               label="Iteration:"
@@ -114,16 +114,16 @@ const DetailsView = ({
           />
         ))}
       </ul>
-      {match.params.tab.toUpperCase() === DETAILS_INFO_TAB && (
+      {match.params.tab?.toUpperCase() === DETAILS_INFO_TAB && (
         <DetailsInfo match={match} selectedItem={selectedItem} page={page} />
       )}
-      {match.params.tab.toUpperCase() === DETAILS_PREVIEW_TAB && (
+      {match.params.tab?.toUpperCase() === DETAILS_PREVIEW_TAB && (
         <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
       )}
-      {match.params.tab.toUpperCase() === DETAILS_INPUTS_TAB && (
+      {match.params.tab?.toUpperCase() === DETAILS_INPUTS_TAB && (
         <DetailsInputs inputs={selectedItem.inputs} />
       )}
-      {match.params.tab.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
+      {match.params.tab?.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
         <DetailsArtifacts
           iteration={iteration}
           match={match}
@@ -131,20 +131,20 @@ const DetailsView = ({
           setIterationOptions={setIterationOptions}
         />
       )}
-      {match.params.tab.toUpperCase() === DETAILS_RESULTS_TAB && (
+      {match.params.tab?.toUpperCase() === DETAILS_RESULTS_TAB && (
         <DetailsResults job={selectedItem} />
       )}
-      {match.params.tab.toUpperCase() === DETAILS_LOGS_TAB && (
+      {match.params.tab?.toUpperCase() === DETAILS_LOGS_TAB && (
         <DetailsLogs match={match} item={selectedItem} />
       )}
-      {match.params.tab.toUpperCase() === DETAILS_CODE_TAB && (
+      {match.params.tab?.toUpperCase() === DETAILS_CODE_TAB && (
         <DetailsCode code={selectedItem.functionSourceCode} />
       )}
-      {match.params.tab.toUpperCase() === DETAILS_METADATA_TAB &&
+      {match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
         selectedItem.schema && (
           <ArtifactInfoMetadata selectedItem={selectedItem} />
         )}
-      {match.params.tab.toUpperCase() === DETAILS_ANALYSIS_TAB &&
+      {match.params.tab?.toUpperCase() === DETAILS_ANALYSIS_TAB &&
         selectedItem.kind === 'dataset' &&
         selectedItem.extra_data && (
           <DetailsAnalysis
