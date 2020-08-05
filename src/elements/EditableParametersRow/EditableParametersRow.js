@@ -45,7 +45,6 @@ const EditableParametersRow = ({
           <div className="table__cell table__cell_edit">
             <Select
               label={selectedParameter.data.valueType}
-              match={match}
               onClick={valueType =>
                 setSelectedParameter({
                   ...selectedParameter.data,
@@ -64,7 +63,6 @@ const EditableParametersRow = ({
         <Select
           disabledOptions={disabledOptions}
           label={selectedParameter.data.parameterType}
-          match={match}
           onClick={parameterType =>
             setSelectedParameter({
               ...selectedParameter.data,

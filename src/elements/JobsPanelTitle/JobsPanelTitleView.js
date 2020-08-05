@@ -104,7 +104,6 @@ const JobsPanelTitleView = ({
           <Select
             floatingLabel
             label="Version"
-            match={match}
             onClick={version => handleFunctionInfoChange(version)}
             options={versionOptions}
             selectedId={currentFunctionInfo.version}
@@ -114,7 +113,6 @@ const JobsPanelTitleView = ({
               className="job-methods"
               floatingLabel
               label="Method"
-              match={match}
               onClick={method => handleFunctionInfoChange(method, true)}
               options={methodOptions}
               selectedId={currentFunctionInfo.method}

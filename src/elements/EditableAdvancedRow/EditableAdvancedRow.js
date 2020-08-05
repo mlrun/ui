@@ -32,7 +32,6 @@ const EditableAdvancedRow = ({
           />
         ) : (
           <Select
-            match={match}
             onClick={kind =>
               setSelectedItem({
                 ...selectedItem,

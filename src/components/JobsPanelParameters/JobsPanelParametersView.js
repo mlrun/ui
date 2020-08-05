@@ -80,7 +80,6 @@ const JobsPanelParametersView = ({
                 <Select
                   className="parameters-value-type"
                   label={parametersState.newParameter.valueType}
-                  match={match}
                   onClick={value =>
                     parametersDispatch({
                       type: parametersActions.SET_NEW_PARAMETER_VALUE_TYPE,
@@ -96,7 +95,6 @@ const JobsPanelParametersView = ({
                   className="select-parameters-type"
                   disabledOptions={disabledOptions}
                   label={parametersState.newParameter.parameterType}
-                  match={match}
                   onClick={value =>
                     parametersDispatch({
                       type: parametersActions.SET_NEW_PARAMETER_TYPE,
@@ -163,7 +161,6 @@ const JobsPanelParametersView = ({
                 selectedId={tuningStrategy}
                 options={selectOptions.hyperStrategyType}
                 label="Tuning Strategy:"
-                match={match}
                 onClick={value => {
                   setTuningStrategy(
                     find(selectOptions.hyperStrategyType, ['id', value]).id

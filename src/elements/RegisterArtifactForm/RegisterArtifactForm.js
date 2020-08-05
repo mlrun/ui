@@ -6,9 +6,8 @@ import Select from '../../common/Select/Select'
 
 import './registerArtifactForm.scss'
 
-const RegisterArtifactForm = ({ match, onChange, registerArtifactData }) => {
+const RegisterArtifactForm = ({ onChange, registerArtifactData }) => {
   const { description, key, kind, target_path } = registerArtifactData
-
   const kindOptions = [
     {
       label: 'General',
@@ -83,8 +82,7 @@ const RegisterArtifactForm = ({ match, onChange, registerArtifactData }) => {
         value={description.value}
       />
       <Select
-        label="Type"
-        match={match}
+        label="Type:"
         onClick={value =>
           onChange(prevData => ({
             ...prevData,
@@ -102,9 +100,8 @@ const RegisterArtifactForm = ({ match, onChange, registerArtifactData }) => {
 }
 
 RegisterArtifactForm.propTypes = {
-  match: PropTypes.shape({}).isRequired,
-  registerArtifactData: PropTypes.shape({}).isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  registerArtifactData: PropTypes.shape({}).isRequired
 }
 
 export default RegisterArtifactForm

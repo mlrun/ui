@@ -39,7 +39,6 @@ const JobsPanelResourcesView = ({
     <JobsPanelSection title="Memory">
       <Select
         label="Unit"
-        match={match}
         options={selectTypeOptions.unitMemory}
         onClick={value => handleSelectMemoryUnit(value)}
         selectedId={panelState.memoryUnit}
@@ -76,7 +75,6 @@ const JobsPanelResourcesView = ({
     <JobsPanelSection title="Cpu">
       <Select
         label="Unit"
-        match={match}
         options={selectTypeOptions.unitCpu}
         onClick={value => handleSelectСpuUnit(value)}
         selectedId={panelState.cpuUnit}

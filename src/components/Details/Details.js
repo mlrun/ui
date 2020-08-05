@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
 import artifactActions from '../../actions/artifacts'
+import { JOBS_PAGE } from '../../constants'
 
 import DetailsView from './DetailsView'
 
@@ -17,6 +18,10 @@ const Details = ({
   page,
   selectedItem
 }) => {
+  const [iteration, setIteration] = useState('0')
+  const [iterationOptions, setIterationOptions] = useState([
+    { label: 'Main', id: '0' }
+  ])
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -31,15 +36,25 @@ const Details = ({
     handleCancel()
   }
 
+  useEffect(() => {
+    if (page === JOBS_PAGE) {
+      setIteration('0')
+    }
+  }, [page, selectedItem.uid])
+
   return (
     <DetailsView
       actionsMenu={actionsMenu}
       detailsMenu={detailsMenu}
       handleCancel={handleCancel}
       handlePreview={handlePreview}
-      selectedItem={selectedItem}
+      iteration={iteration}
+      iterationOptions={iterationOptions}
       match={match}
       page={page}
+      selectedItem={selectedItem}
+      setIteration={setIteration}
+      setIterationOptions={setIterationOptions}
     />
   )
 }

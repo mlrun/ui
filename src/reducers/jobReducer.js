@@ -7,8 +7,10 @@ import {
   FETCH_JOBS_SUCCESS,
   REMOVE_JOB_ERROR,
   REMOVE_JOB_LOGS,
-  REMOVE_SCHEDULED_JOB_FAILURE,
+  REMOVE_NEW_JOB,
   RUN_NEW_JOB_FAILURE,
+  REMOVE_SCHEDULED_JOB_FAILURE,
+  SET_ALL_JOBS_DATA,
   SET_LOADING,
   SET_NEW_JOB_ENVIRONMENT_VARIABLES,
   SET_NEW_JOB_INPUTS,
@@ -17,13 +19,13 @@ import {
   SET_NEW_JOB_PARAMETERS,
   SET_NEW_JOB_HYPER_PARAMETERS,
   SET_NEW_JOB_SECRET_SOURCES,
-  REMOVE_NEW_JOB,
   SET_NEW_JOB,
   SET_TUNING_STRATEGY,
   SET_URL
 } from '../constants'
 
 const initialState = {
+  allJobsData: [],
   jobs: [],
   logs: '',
   loading: false,
@@ -91,6 +93,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: ''
+      }
+    case SET_ALL_JOBS_DATA:
+      return {
+        ...state,
+        allJobsData: payload
       }
     case SET_NEW_JOB_ENVIRONMENT_VARIABLES:
       return {

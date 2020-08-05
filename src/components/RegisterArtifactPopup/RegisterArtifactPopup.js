@@ -158,7 +158,6 @@ const RegisterArtifactPopup = ({
   return (
     <PopUpDialog headerText="Register artifact" closePopUp={closePopupDialog}>
       <RegisterArtifactForm
-        match={match}
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
       />

@@ -46,7 +46,6 @@ export const JobsPanelAdvancedTable = ({
           <div className="input-row-wrapper">
             {section.includes('secrets') ? (
               <Select
-                match={match}
                 onClick={setNewItemName}
                 label={selectedId.length ? selectedId : 'Kind'}
                 options={selectOptions.secretKind}

@@ -11,6 +11,7 @@ import {
   REMOVE_NEW_JOB,
   REMOVE_SCHEDULED_JOB_FAILURE,
   RUN_NEW_JOB_FAILURE,
+  SET_ALL_JOBS_DATA,
   SET_LOADING,
   SET_NEW_JOB,
   SET_NEW_JOB_ENVIRONMENT_VARIABLES,
@@ -62,6 +63,7 @@ const jobsActions = {
           : (data || {}).runs.filter(job => job.metadata.iteration === 0)
 
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
+        dispatch(jobsActions.setAllJobsData(data.runs || {}))
 
         return newJobs
       })
@@ -101,6 +103,10 @@ const jobsActions = {
   runNewJobFailure: error => ({
     type: RUN_NEW_JOB_FAILURE,
     payload: error
+  }),
+  setAllJobsData: data => ({
+    type: SET_ALL_JOBS_DATA,
+    payload: data
   }),
   setNewJob: newJob => ({
     type: SET_NEW_JOB,
