@@ -95,7 +95,7 @@ export const generatePageData = (scheduled, removeScheduledJob) => {
     jobFilters = filters
   }
   return {
-    actionsMenu: scheduled ? generateActionsMenu(removeScheduledJob) : [],
+    actionsMenu: scheduled && generateActionsMenu(removeScheduledJob),
     detailsMenu,
     filters: jobFilters,
     page,

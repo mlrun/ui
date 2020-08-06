@@ -30,7 +30,7 @@ const TableView = ({
   toggleConvertToYaml,
   workflows
 }) => {
-  const actionsMenu = pageData.actionsMenu.length
+  const actionsMenu = pageData.actionsMenu
     ? pageData.actionsMenu
     : [
         {
