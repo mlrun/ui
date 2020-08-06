@@ -1,12 +1,64 @@
-.result_table {
-  display: flex;
-  padding: 10px;
-  .result_table {
-    &_item {
-      &_key,
-      &_value {
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/mixins';
+
+.table__item-results {
+  position: relative;
+  width: 100%;
+  padding: 0 24px;
+
+  .results-table {
+    position: relative;
+    width: 100%;
+    text-align: left;
+
+    &__row {
+      display: flex;
+      border-bottom: $tableBorder;
+
+      &:hover {
+        background-color: $alabaster;
+      }
+    }
+
+    &__header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: $white;
+
+      &-item {
         display: flex;
         flex: 1;
+        flex-direction: column;
+        width: 55px;
+
+        @include tableHeader(16px);
+      }
+    }
+
+    &__cell {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      width: 55px;
+      padding: 19px 16px;
+    }
+
+    i {
+      margin: 0 15px;
+    }
+
+    &__medal {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      svg {
+        position: absolute;
+        top: 15px;
+        left: -10px;
       }
     }
   }
