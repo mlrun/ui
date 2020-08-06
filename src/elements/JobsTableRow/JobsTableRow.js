@@ -27,7 +27,8 @@ const JobsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    rowItem.uid?.value === selectedItem.uid &&
+    rowItem.name.value === selectedItem.name &&
+      rowItem.uid?.value === selectedItem.uid &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
