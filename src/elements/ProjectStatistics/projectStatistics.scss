@@ -1,0 +1,67 @@
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+
+.project-data-card {
+  &__statistics {
+    display: flex;
+
+    &-link {
+      width: 100%;
+      margin: 0 10px;
+    }
+
+    &-item {
+      position: relative;
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+
+      &:first-child {
+        .project-data-card__statistics-link {
+          margin-left: 0;
+        }
+      }
+
+      &:last-child {
+        .project-data-card__statistics-link {
+          margin-right: 0;
+        }
+      }
+
+      &:not(:last-child)::after {
+        height: 28px;
+        margin: auto 0;
+        border-right: $dividerBorder;
+        content: '';
+      }
+    }
+
+    &-label {
+      min-width: 100%;
+      max-width: 100px;
+      color: $topaz;
+      text-align: center;
+    }
+
+    &-value {
+      font-weight: 300;
+      font-size: 48px;
+      line-height: 56px;
+      text-align: center;
+
+      &.statistics {
+        &_running {
+          color: $brightTurquoise;
+        }
+
+        &_default {
+          color: $topaz;
+        }
+
+        &_scheduled {
+          color: $supernova;
+        }
+      }
+    }
+  }
+}

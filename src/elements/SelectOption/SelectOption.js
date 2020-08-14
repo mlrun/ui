@@ -6,6 +6,8 @@ import CheckBox from '../../common/CheckBox/CheckBox'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
+import './selectOption.scss'
+
 const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
   if (selectType === 'checkbox') {
     return (
@@ -22,8 +24,11 @@ const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
   return (
     <div
       className={selectClassName}
-      onClick={() => !disabled && onClick(item.id)}
+      onClick={() => {
+        !disabled && onClick(item.id)
+      }}
     >
+      {item.icon && <span className="select__icon">{item.icon}</span>}
       {item.label}
       {item.subLabel && (
         <Tooltip

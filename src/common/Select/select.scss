@@ -86,38 +86,6 @@
     box-shadow: $filterShadow;
   }
 
-  &__item {
-    display: flex;
-    align-items: center;
-    height: 49px;
-    padding: 0 15px;
-    background-color: $white;
-
-    .checkbox {
-      flex: 1;
-      height: 100%;
-
-      svg {
-        margin: 0;
-      }
-    }
-
-    &:hover {
-      background-color: $alabaster;
-      cursor: pointer;
-    }
-
-    .status {
-      margin: 0 10px;
-    }
-
-    .all {
-      margin: 0;
-
-      @include jobStatus(none);
-    }
-  }
-
   .disabled {
     color: $spunPearl;
     cursor: default;

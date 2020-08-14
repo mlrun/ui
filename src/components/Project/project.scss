@@ -1,0 +1,212 @@
+@import '../../scss/colors.scss';
+@import '../../scss/borders.scss';
+@import '../../scss/shadows.scss';
+
+.project {
+  &__header {
+    padding: 27px 24px;
+    background-color: $white;
+    box-shadow: $headerShadow;
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    padding: 45px;
+    background: $wildSandSecond;
+
+    .general-info {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding-right: 64px;
+
+      &__main-data {
+        &-wrapper {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      &__name {
+        display: flex;
+        flex: 2;
+        color: rgba($mulledWine, 0.88);
+        font-weight: 300;
+        font-size: 36px;
+        line-height: 42px;
+        cursor: pointer;
+
+        .input {
+          width: 100%;
+          font-weight: 300;
+          font-size: 36px;
+        }
+      }
+
+      &__settings {
+        margin-left: 10px;
+      }
+
+      &__description {
+        margin-top: 16px;
+        color: rgba($mulledWine, 0.88);
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 16px;
+        cursor: pointer;
+
+        .input {
+          width: 100%;
+        }
+      }
+
+      &__status {
+        margin-bottom: 13px;
+        color: $primary;
+
+        &-label {
+          margin-right: 15px;
+          font-size: 14px;
+          line-height: 16px;
+        }
+
+        &-icon {
+          margin-right: 10px;
+        }
+
+        &-name {
+          text-transform: capitalize;
+        }
+      }
+
+      &__owner {
+        color: $primary;
+
+        &-label {
+          margin-right: 15px;
+        }
+      }
+
+      &__links {
+        display: flex;
+        flex-direction: column;
+
+        &-label {
+          margin-bottom: 16px;
+          color: $primary;
+        }
+
+        &-link {
+          margin-bottom: 15px;
+          color: $cornflowerBlue;
+        }
+      }
+
+      &__divider {
+        margin: 17px 0;
+        border-top: $tableBorder;
+      }
+    }
+
+    .main-info {
+      display: flex;
+      flex: 4;
+      flex-direction: column;
+
+      &__toolbar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+
+        &-menu {
+          width: 155px;
+
+          .select {
+            &__header {
+              cursor: pointer;
+            }
+          }
+
+          &.launch-menu {
+            background-color: $white;
+
+            .select {
+              &__label {
+                color: $primary;
+              }
+            }
+          }
+
+          &.create-new-menu {
+            background-color: $purple;
+            border: none;
+
+            .select {
+              &__label {
+                color: $white;
+              }
+            }
+
+            svg {
+              path {
+                fill: $white;
+              }
+            }
+          }
+        }
+      }
+
+      .project-data-card {
+        position: relative;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-height: 491px;
+        background-color: rgba($white, 0.84);
+        border-radius: 4px;
+
+        &__header {
+          z-index: 1;
+          padding: 20px;
+          background-color: $white;
+          box-shadow: $projectStatisticsShadow;
+
+          &-text {
+            min-width: 100%;
+            max-width: 100px;
+            margin-bottom: 16px;
+            color: $primary;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 23px;
+          }
+        }
+
+        &__see-all-link {
+          margin: 15px 20px 25px auto;
+          color: $cornflowerBlue;
+        }
+
+        &:first-child {
+          margin-right: 20px;
+        }
+      }
+
+      .wrapper {
+        position: relative;
+        z-index: 1;
+        background-color: $white;
+      }
+
+      &__statistics-section {
+        display: flex;
+      }
+    }
+  }
+
+  &__error-container {
+    margin: auto;
+    color: $primary;
+  }
+}
