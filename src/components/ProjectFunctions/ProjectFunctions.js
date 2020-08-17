@@ -61,6 +61,7 @@ const ProjectFunctions = ({ fetchProjectFunctions, functionsStore, match }) => {
 
   return (
     <ProjectDataCard
+      title="Real-Time and ML functions"
       dataCard={functionsStore}
       link={`/projects/${match.params.projectName}/functions`}
       match={match}

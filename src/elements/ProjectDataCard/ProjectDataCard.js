@@ -8,12 +8,19 @@ import NoData from '../../common/NoData/NoData'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 import ProjectTable from '../../components/ProjectTable/ProjectTable'
 
-const ProjectDataCard = ({ dataCard, link, match, statistics, table }) => {
+const ProjectDataCard = ({
+  dataCard,
+  link,
+  match,
+  statistics,
+  table,
+  title
+}) => {
   return (
     <div className="project-data-card">
       <div className="project-data-card__header">
         <div className="project-data-card__header-text data-ellipsis">
-          Real-Time and ML functions
+          {title}
         </div>
         {!isEmpty(dataCard.data) && (
           <div className="project-data-card__statistics">
@@ -51,7 +58,8 @@ ProjectDataCard.propTypes = {
   link: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   statistics: PropTypes.shape({}),
-  table: PropTypes.shape({})
+  table: PropTypes.shape({}),
+  title: PropTypes.shape({})
 }
 
 export default ProjectDataCard
