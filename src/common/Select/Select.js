@@ -10,9 +10,10 @@ import './select.scss'
 
 const Select = ({
   className,
-  disabledOptions,
   disabled,
+  disabledOptions,
   floatingLabel,
+  hideSelectedOption,
   label,
   onClick,
   options,
@@ -20,7 +21,6 @@ const Select = ({
   selectedId
 }) => {
   const [isOpen, setOpen] = useState(false)
-  const selectedOption = options.find(option => option.id === selectedId)
   const selectClassName = classNames('select', className, isOpen && 'active')
   const selectLabelClassName = classNames(
     'select__label',
@@ -30,6 +30,7 @@ const Select = ({
     'select__value',
     selectedId && floatingLabel && 'select__value_floating'
   )
+  const selectedOption = options.find(option => option.id === selectedId)
 
   useEffect(() => {
     window.addEventListener('scroll', handlerScroll)
@@ -57,25 +58,30 @@ const Select = ({
     <div className={selectClassName} onClick={() => toggleOpen(disabled)}>
       <div className="select__header">
         {label && <div className={selectLabelClassName}>{label}</div>}
-        <div className={selectValueClassName}>
-          {selectedId && selectedOption?.label}
-          {selectedOption?.subLabel && (
-            <span className="sub-label">{selectedOption.subLabel}</span>
-          )}
-        </div>
+        {!hideSelectedOption && (
+          <div className={selectValueClassName}>
+            {selectedId && selectedOption?.label}
+            {selectedOption?.subLabel && (
+              <span className="sub-label">{selectedOption.subLabel}</span>
+            )}
+          </div>
+        )}
         <Caret className="select__caret" />
       </div>
       {isOpen && (
         <>
           <div className="overall" />
           <div className="select__body" onClick={handleSelectValue}>
-            {options.map(item => {
+            {options.map(option => {
               return (
                 <SelectOption
-                  disabled={disabledOptions.includes(item.id.toLowerCase())}
-                  item={item}
-                  key={item.id}
-                  onClick={item => onClick(item)}
+                  disabled={disabledOptions.includes(option.id.toLowerCase())}
+                  item={option}
+                  key={option.id}
+                  onClick={selectedOption => {
+                    option.handler && option.handler()
+                    onClick && onClick(selectedOption)
+                  }}
                   selectType={selectType}
                   selectedId={selectedId}
                 />
@@ -91,18 +97,20 @@ const Select = ({
 Select.defaultProps = {
   className: '',
   disabled: false,
+  disabledOptions: [],
+  hideSelectedOption: false,
   label: '',
   onClick: null,
   selectType: '',
-  selectedId: '',
-  disabledOptions: []
+  selectedId: ''
 }
 
 Select.propTypes = {
   className: PropTypes.string,
-  disabledOptions: PropTypes.array,
   disabled: PropTypes.bool,
+  disabledOptions: PropTypes.array,
   floatingLabel: PropTypes.bool,
+  hideSelectedOption: PropTypes.bool,
   label: PropTypes.string,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   options: PropTypes.array.isRequired,

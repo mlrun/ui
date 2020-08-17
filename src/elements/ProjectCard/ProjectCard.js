@@ -1,24 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 const ProjectCard = ({ project }) => {
+  const history = useHistory()
+
   return (
-    <div className="project_card">
+    <div
+      className="project_card"
+      onClick={event => {
+        if (event.target.tagName !== 'A') {
+          history.push(`/projects/${project.name}`)
+        }
+      }}
+    >
       <div className="project_card_header">{project.name}</div>
       {project?.description && (
         <div className="project_card_description">{project.description}</div>
       )}
       <div className="project_card_links">
-        <Link to={`/projects/${project.name}/jobs/monitor`}>
-          <div>Jobs</div>
-        </Link>
-        <Link to={`/projects/${project.name}/artifacts`}>
-          <div>Artifacts</div>
-        </Link>
-        <Link to={`/projects/${project.name}/functions`}>
-          <div>Functions</div>
-        </Link>
+        <Link to={`/projects/${project.name}/jobs/monitor`}>Jobs</Link>
+        <Link to={`/projects/${project.name}/artifacts`}>Artifacts</Link>
+        <Link to={`/projects/${project.name}/functions`}>Functions</Link>
       </div>
     </div>
   )

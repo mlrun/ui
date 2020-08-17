@@ -41,7 +41,7 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           },
           type: {
             value: typeof groupedByWorkflow !== 'boolean' ? 'workflow' : type,
-            class: 'jobs_extra-small',
+            class: 'table-body__cell jobs_extra-small',
             type: 'type'
           },
           uid: {

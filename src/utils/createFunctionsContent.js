@@ -9,7 +9,7 @@ const createFunctionsContent = functions =>
       },
       kind: {
         value: func.type,
-        class: 'functions_small',
+        class: 'table-body__cell functions_small',
         type: 'type'
       },
       hash: {

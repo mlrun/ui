@@ -10,99 +10,108 @@ import Tip from '../Tip/Tip'
 
 import './input.scss'
 
-const Input = ({
-  className,
-  disabled,
-  floatingLabel,
-  iconClass,
-  infoLabel,
-  inputIcon,
-  label,
-  maxLength,
-  onChange,
-  onKeyDown,
-  placeholder,
-  required,
-  requiredText,
-  tip,
-  type,
-  value,
-  wrapperClassName
-}) => {
-  const [inputIsFocused, setInputIsFocused] = useState(false)
-  const input = React.createRef()
-  const inputClassNames = classnames(
-    'input',
-    className,
-    inputIsFocused && floatingLabel && 'active-input',
-    required && 'input_required'
-  )
+const Input = React.forwardRef(
+  (
+    {
+      className,
+      disabled,
+      floatingLabel,
+      iconClass,
+      infoLabel,
+      inputIcon,
+      label,
+      maxLength,
+      onChange,
+      onKeyDown,
+      placeholder,
+      required,
+      requiredText,
+      focused,
+      tip,
+      type,
+      value,
+      wrapperClassName
+    },
+    ref
+  ) => {
+    const [inputIsFocused, setInputIsFocused] = useState(false)
+    const input = React.createRef()
+    const inputClassNames = classnames(
+      'input',
+      className,
+      inputIsFocused && floatingLabel && 'active-input',
+      required && 'input_required'
+    )
 
-  const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
+    const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
+    useEffect(() => {
+      if (input.current.value.length > 0) {
+        setInputIsFocused(true)
+      }
 
-  useEffect(() => {
-    if (input.current.value.length > 0) {
-      setInputIsFocused(true)
+      if (focused) {
+        input.current.focus()
+      }
+    }, [input, focused])
+
+    const handleClick = () => {
+      if (input.current.value.length > 0) {
+        setInputIsFocused(true)
+      } else {
+        setInputIsFocused(false)
+      }
+
+      onChange(input.current.value)
     }
-  }, [input])
 
-  const handleClick = () => {
-    if (input.current.value.length > 0) {
-      setInputIsFocused(true)
-    } else {
-      setInputIsFocused(false)
-    }
-
-    onChange(input.current.value)
+    return (
+      <div ref={ref} className={wrapperClassNames}>
+        <input
+          className={inputClassNames}
+          disabled={disabled}
+          maxLength={maxLength}
+          onChange={handleClick}
+          onKeyDown={onKeyDown}
+          placeholder={placeholder}
+          ref={input}
+          type={type}
+          value={value && value}
+        />
+        {label && (
+          <label
+            className={`input__label ${inputIsFocused &&
+              floatingLabel &&
+              'active-label'} ${floatingLabel &&
+              'input__label-floating'} ${infoLabel && 'input__label_info'}`}
+            style={
+              infoLabel
+                ? {
+                    left: (value ? value.length + 2 : 2) * 10
+                  }
+                : {}
+            }
+          >
+            {label}
+          </label>
+        )}
+        {required && (
+          <Tooltip
+            template={<TextTooltipTemplate text={requiredText} warning />}
+            className="input__warning"
+          >
+            <Warning />
+          </Tooltip>
+        )}
+        {tip && !required && <Tip text={tip} className="input__tip" />}
+        {inputIcon && <span className={iconClass}>{inputIcon}</span>}
+      </div>
+    )
   }
-
-  return (
-    <div className={wrapperClassNames}>
-      <input
-        className={inputClassNames}
-        disabled={disabled}
-        maxLength={maxLength}
-        onChange={handleClick}
-        onKeyDown={onKeyDown}
-        placeholder={placeholder}
-        ref={input}
-        type={type}
-        value={value && value}
-      />
-      {label && (
-        <label
-          className={`input__label ${inputIsFocused &&
-            floatingLabel &&
-            'active-label'} ${floatingLabel &&
-            'input__label-floating'} ${infoLabel && 'input__label_info'}`}
-          style={
-            infoLabel
-              ? {
-                  left: (value ? value.length + 2 : 2) * 10
-                }
-              : {}
-          }
-        >
-          {label}
-        </label>
-      )}
-      {required && (
-        <Tooltip
-          template={<TextTooltipTemplate text={requiredText} warning />}
-          className="input__warning"
-        >
-          <Warning />
-        </Tooltip>
-      )}
-      {tip && !required && <Tip text={tip} className="input__tip" />}
-      {inputIcon && <span className={iconClass}>{inputIcon}</span>}
-    </div>
-  )
-}
-
+)
 Input.defaultProps = {
   disabled: false,
   floatingLabel: false,
+  focused: false,
   iconClass: null,
   infoLabel: false,
   inputIcon: null,
@@ -122,6 +131,7 @@ Input.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   floatingLabel: PropTypes.bool,
+  focused: PropTypes.bool,
   iconClass: PropTypes.string,
   infoLabel: PropTypes.bool,
   inputIcon: PropTypes.element,

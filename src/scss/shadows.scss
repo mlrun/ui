@@ -1,7 +1,9 @@
-$jobsShadow: 0 3px 4px rgba(0, 0, 0, .18);
-$headerShadow: inset 0px -1px 0px #EDECEF;
-$mainHeaderShadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0px 4px 5px 0px rgba(0, 0, 0, .14), 0px 1px 10px 0px rgba(0, 0, 0, .12);
-$filterShadow: 0px 4px 8px rgba(0, 0, 0, .23);
-$tooltipShadow: 0 5px 11px rgba(0, 0, 0, .18);
-$hiddenChipsBlockShadow: 1px 3px 8px rgba(0, 0, 0, .2);
-$previewBoxShadow: 0 0 16px rgba(0, 0, 0, .3);
+$jobsShadow: 0 3px 4px rgba(0, 0, 0, 0.18);
+$headerShadow: inset 0 -1px 0 #edecef;
+$mainHeaderShadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2),
+  0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+$filterShadow: 0 4px 8px rgba(0, 0, 0, 0.23);
+$tooltipShadow: 0 5px 11px rgba(0, 0, 0, 0.18);
+$hiddenChipsBlockShadow: 1px 3px 8px rgba(0, 0, 0, 0.2);
+$previewBoxShadow: 0 0 16px rgba(0, 0, 0, 0.3);
+$projectStatisticsShadow:  0 8px 30px rgba(127, 121, 137, 0.08);
