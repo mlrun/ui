@@ -7,7 +7,7 @@ git_deploy_user_token = "iguazio-prod-git-user-token"
 git_deploy_user_private_key = "iguazio-prod-git-user-private-key"
 
 
-podTemplate(label: "${git_project}-${label}", inheritFrom: "jnlp-python37-nodejs") {
+podTemplate(label: "${git_project}-${label}", inheritFrom: "jnlp-docker-nodejs") {
     node("${git_project}-${label}") {
         pipelinex = library(identifier: 'pipelinex@development', retriever: modernSCM(
                 [$class       : 'GitSCMSource',
