@@ -20,8 +20,8 @@ import './scheduleJob.scss'
 const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
   const [cron, setCron] = useState({
-    minute: '*',
-    hour: '*',
+    minute: '0',
+    hour: '0',
     day: '*',
     month: '*',
     week: '*'
@@ -40,16 +40,23 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
   useEffect(() => {
     if (
-      cron[recurringState.scheduleRepeat.activeOption] === '*' &&
+      (cron[recurringState.scheduleRepeat.activeOption] === '*' ||
+        cron[recurringState.scheduleRepeat.activeOption] === '0') &&
       recurringState.scheduleRepeat.activeOption !== 'week'
     ) {
-      setCron(state => ({
-        ...state,
-        [recurringState.scheduleRepeat
-          .activeOption]: `*/${recurringState.scheduleRepeat[
-          recurringState.scheduleRepeat.activeOption
-        ].toString()}`
-      }))
+      setCron(state => {
+        return {
+          ...state,
+          hour:
+            recurringState.scheduleRepeat.activeOption === 'minute' ? '*' : '0',
+          day:
+            recurringState.scheduleRepeat.activeOption === 'month' ? '1' : '*',
+          [recurringState.scheduleRepeat
+            .activeOption]: `*/${recurringState.scheduleRepeat[
+            recurringState.scheduleRepeat.activeOption
+          ].toString()}`
+        }
+      })
     } else if (
       recurringState.scheduleRepeat.activeOption === 'week' &&
       cron.day === '*'
