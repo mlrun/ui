@@ -35,16 +35,16 @@ const ScheduleRecurring = ({
         setCron({ ...cron, minute: `*/${item}` })
         break
       case 'hour':
-        setCron({ ...cron, hour: `*/${item}` })
+        setCron({ ...cron, hour: `*/${item}`, minute: '0' })
         break
       case 'day':
-        setCron({ ...cron, day: item })
+        setCron({ ...cron, day: item, hour: '0', minute: '0' })
         break
       case 'week':
-        setCron({ ...cron, day: `*/${item * 7}` })
+        setCron({ ...cron, day: `*/${item * 7}`, hour: '0', minute: '0' })
         break
       default:
-        setCron({ ...cron, day: `*/${item}` })
+        setCron({ ...cron, day: `*/${item}`, hour: '0', minute: '0' })
     }
 
     recurringDispatch({
@@ -74,8 +74,8 @@ const ScheduleRecurring = ({
         <Select
           onClick={item => {
             setCron({
-              minute: '*',
-              hour: '*',
+              minute: '0',
+              hour: '0',
               day: '*',
               month: '*',
               week: '*'
