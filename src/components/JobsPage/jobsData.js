@@ -90,9 +90,9 @@ export const generatePageData = (scheduled, removeScheduledJob) => {
   let jobFilters = []
 
   if (scheduled) {
-    jobFilters = ['name', 'owner']
+    jobFilters = ['name']
   } else {
-    jobFilters = filters
+    jobFilters = [...filters]
   }
   return {
     actionsMenu: scheduled && generateActionsMenu(removeScheduledJob),

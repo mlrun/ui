@@ -25,7 +25,7 @@ const TableTypeCell = ({ data }) => {
   }
 
   return (
-    <div className={`${data.class}`}>
+    <div className={`table-body__cell ${data.class}`}>
       <Tooltip
         className="table-body__cell_type"
         template={
