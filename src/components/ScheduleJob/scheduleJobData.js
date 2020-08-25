@@ -4,7 +4,7 @@ export const selectOptions = {
     { label: 'Hour', id: 'hour' },
     { label: 'Day', id: 'day' },
     { label: 'Week', id: 'week' },
-    { label: 'Month', subLabel: '(every 12th day)', id: 'month' }
+    { label: 'Month', subLabel: '(On the 1st day)', id: 'month' }
   ],
   repeatEnd: [
     { label: 'Never', id: 'never' },
