@@ -214,33 +214,40 @@ export const generateRequestData = (
   project,
   labels,
   match,
-  selectedFunction
-) => ({
-  ...jobsStore.newJob,
-  schedule: cronString,
-  function: {
-    ...jobsStore.newJob.function,
-    spec: {
-      ...jobsStore.newJob.function.spec,
-      resources: {
-        limits: panelState.limits,
-        requests: panelState.requests
+  selectedFunction,
+  isFunctionTemplate
+) => {
+  const func = isFunctionTemplate
+    ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
+    : `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+
+  return {
+    ...jobsStore.newJob,
+    schedule: cronString,
+    function: {
+      ...jobsStore.newJob.function,
+      spec: {
+        ...jobsStore.newJob.function.spec,
+        resources: {
+          limits: panelState.limits,
+          requests: panelState.requests
+        }
+      }
+    },
+    task: {
+      ...jobsStore.newJob.task,
+      metadata: {
+        name: panelState.currentFunctionInfo.name,
+        project,
+        labels
+      },
+      spec: {
+        ...jobsStore.newJob.task.spec,
+        output_path: panelState.outputPath,
+        input_path: panelState.inputPath,
+        function: func,
+        handler: panelState.currentFunctionInfo.method
       }
     }
-  },
-  task: {
-    ...jobsStore.newJob.task,
-    metadata: {
-      name: panelState.currentFunctionInfo.name,
-      project,
-      labels
-    },
-    spec: {
-      ...jobsStore.newJob.task.spec,
-      output_path: panelState.outputPath,
-      input_path: panelState.inputPath,
-      function: `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`,
-      handler: panelState.currentFunctionInfo.method
-    }
   }
-})
+}

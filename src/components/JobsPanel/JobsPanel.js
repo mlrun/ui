@@ -184,6 +184,7 @@ const JobsPanel = ({
       : groupedFunctions.functions.find(
           func => func.metadata.tag === panelState.currentFunctionInfo.version
         )
+    const isFunctionTemplate = !isEmpty(functionsStore.template)
     const labels = {}
 
     panelState.currentFunctionInfo.labels.forEach(
@@ -197,7 +198,8 @@ const JobsPanel = ({
       project,
       labels,
       match,
-      selectedFunction
+      selectedFunction,
+      isFunctionTemplate
     )
 
     if (jobsStore.error) {
