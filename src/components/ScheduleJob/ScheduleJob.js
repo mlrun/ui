@@ -49,6 +49,8 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
           ...state,
           hour:
             recurringState.scheduleRepeat.activeOption === 'minute' ? '*' : '0',
+          day:
+            recurringState.scheduleRepeat.activeOption === 'month' ? '1' : '*',
           [recurringState.scheduleRepeat
             .activeOption]: `*/${recurringState.scheduleRepeat[
             recurringState.scheduleRepeat.activeOption

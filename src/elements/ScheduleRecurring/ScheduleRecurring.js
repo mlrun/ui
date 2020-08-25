@@ -44,7 +44,13 @@ const ScheduleRecurring = ({
         setCron({ ...cron, day: `*/${item * 7}`, hour: '0', minute: '0' })
         break
       default:
-        setCron({ ...cron, day: `*/${item}`, hour: '0', minute: '0' })
+        setCron({
+          ...cron,
+          day: '1',
+          hour: '0',
+          minute: '0',
+          month: `*/${item}`
+        })
     }
 
     recurringDispatch({
