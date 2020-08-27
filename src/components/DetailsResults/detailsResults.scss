@@ -35,6 +35,10 @@
 
         @include tableHeader(16px);
       }
+
+      .results-table__row:hover {
+        background-color: transparent;
+      }
     }
 
     &__cell {

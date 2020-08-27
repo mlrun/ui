@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { resultsTable } from '../../utils/resultsTable'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import NoData from '../../common/NoData/NoData'
 
 import { roundFloats } from '../../utils/roundFloats'
+import { resultsTable } from '../../utils/resultsTable'
 
 import { ReactComponent as BestIteration } from '../../images/best-iteration-icon.svg'
 
@@ -19,7 +19,18 @@ const DetailsResults = ({ job }) => {
     <div className="table__item-results">
       <div className="results-table">
         {job.iterationStats.length !== 0 ? (
-          job.iterationStats && (
+          <>
+            <div className="results-table__header">
+              <div className="results-table__row">
+                {result.headers.map((item, i) => (
+                  <div className="results-table__header-item" key={i}>
+                    <Tooltip template={<TextTooltipTemplate text={item} />}>
+                      {item}
+                    </Tooltip>
+                  </div>
+                ))}
+              </div>
+            </div>
             <div className="results-table__body">
               {result.tableContent.map((tableContentItem, index) => (
                 <div className="results-table__row" key={index}>
@@ -89,7 +100,7 @@ const DetailsResults = ({ job }) => {
                 </div>
               ))}
             </div>
-          )
+          </>
         ) : job.iterations.length === 0 &&
           Object.keys(job.results).length !== 0 ? (
           Object.keys(job.results).map(key => {
