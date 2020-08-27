@@ -11,7 +11,7 @@ export const resultsTable = array => {
   })
 
   return {
-    headers: headers,
-    tableContent: tableContent
+    headers,
+    tableContent
   }
 }
