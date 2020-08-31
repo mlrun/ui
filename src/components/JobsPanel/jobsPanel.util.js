@@ -1,6 +1,7 @@
 import _, { isEmpty } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 export const getDefaultData = functionParameters => {
   const parameters = functionParameters
@@ -220,6 +221,26 @@ export const generateRequestData = (
   const func = isFunctionTemplate
     ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
     : `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+  const resources = {
+    limits: {},
+    requests: {}
+  }
+
+  if (!isEveryObjectValueEmpty(panelState.limits)) {
+    for (let key in panelState.limits) {
+      if (panelState.limits[key].length > 0) {
+        resources.limits[key] = panelState.limits[key]
+      }
+    }
+  }
+
+  if (!isEveryObjectValueEmpty(panelState.requests)) {
+    for (let key in panelState.requests) {
+      if (panelState.requests[key].length > 0) {
+        resources.requests[key] = panelState.requests[key]
+      }
+    }
+  }
 
   return {
     ...jobsStore.newJob,
@@ -228,10 +249,7 @@ export const generateRequestData = (
       ...jobsStore.newJob.function,
       spec: {
         ...jobsStore.newJob.function.spec,
-        resources: {
-          limits: panelState.limits,
-          requests: panelState.requests
-        }
+        resources
       }
     },
     task: {
