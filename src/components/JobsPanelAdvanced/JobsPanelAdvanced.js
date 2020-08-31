@@ -137,7 +137,7 @@ const JobsPanelAdvanced = ({
 }
 
 JobsPanelAdvanced.propTypes = {
-  environmentVariables: PropTypes.shape({}).isRequired,
+  environmentVariables: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
