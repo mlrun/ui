@@ -87,7 +87,7 @@ const EditableParametersRow = ({
           value={`${selectedParameter.data.value}`}
         />
       </div>
-      <div className="table__cell cell-btn-wrapper">
+      <div className="table__cell table__cell-actions">
         <button
           className="apply-edit-btn"
           onClick={() => handleEdit(selectedParameter, false)}
