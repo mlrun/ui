@@ -45,7 +45,7 @@ const initialState = {
       spec: {
         volumes: [],
         volumeMounts: [],
-        env: {}
+        env: []
       }
     }
   }
@@ -191,7 +191,7 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               volumes: [],
               volumeMounts: [],
-              env: {}
+              env: []
             }
           }
         }
