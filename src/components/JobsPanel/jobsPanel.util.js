@@ -158,7 +158,7 @@ export const generateTableData = (
         ? volumeMounts.map(volumeMounts => volumeMounts.data)
         : [],
       volumes,
-      environmentVariables: {},
+      environmentVariables: [],
       secret_sources: []
     })
   }
