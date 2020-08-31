@@ -2,6 +2,40 @@
 @import '../../scss/borders';
 
 .table {
+  &__cell {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 5px;
+    padding: 10px;
+    color: $primary;
+
+    &.add-input {
+      padding: 0;
+    }
+
+    &_disabled {
+      color: $spunPearl;
+    }
+
+    &:first-child {
+      padding-left: 17px;
+    }
+
+    .btn_delete {
+      display: none;
+      padding: 0;
+    }
+
+    .parameter-name {
+      margin-right: 10px;
+    }
+
+    .apply-edit-btn {
+      padding: 0;
+    }
+  }
+
   &__row {
     position: relative;
     display: flex;
@@ -41,46 +75,6 @@
 
     &-create-parameter {
       display: flex;
-    }
-  }
-
-  &__cell {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    min-width: 5px;
-    padding: 10px;
-    color: $primary;
-
-    &.add-input {
-      padding: 0;
-    }
-
-    &_disabled {
-      color: $spunPearl;
-    }
-
-    &.cell-btn-wrapper {
-      flex: 0.1;
-      min-width: 45px;
-      margin: 0;
-
-      button {
-        padding: 0;
-      }
-    }
-
-    &:first-child {
-      padding-left: 17px;
-    }
-
-    .btn_delete {
-      display: none;
-      padding: 0;
-    }
-
-    .parameter-name {
-      margin-right: 10px;
     }
   }
 }
