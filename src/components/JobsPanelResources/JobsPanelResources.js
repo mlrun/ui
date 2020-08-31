@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelResourcesView from './JobsPanelResourcesView'
@@ -8,7 +8,9 @@ import {
   createVolumeOfNewJob,
   handleAddItem,
   handleEdit,
-  handleDelete
+  handleDelete,
+  generateCpuValue,
+  generateMemoryValue
 } from './jobsPanelResources.util'
 import {
   jobsPanelResourcesReducer,
@@ -31,31 +33,102 @@ const JobsPanelResources = ({
     initialState
   )
 
-  const requestsCpu = panelState.requests.cpu.match(/m/)
-    ? panelState.requests.cpu.slice(0, panelState.requests.cpu.length - 1)
-    : panelState.requests.cpu
-
-  const requestsMemory = panelState.requests.memory.match(/[a-zA-Z]/)
-    ? panelState.requests.memory.slice(
-        0,
-        panelState.requests.memory.match(/[a-zA-Z]/).index
-      )
-    : panelState.requests.memory
+  const generateResourcesData = useCallback(
+    () => ({
+      limitsCpu: generateCpuValue(panelState.limits.cpu),
+      requestsCpu: generateCpuValue(panelState.requests.cpu),
+      requestsMemory: generateMemoryValue(panelState.requests.memory),
+      limitsMemory: generateMemoryValue(panelState.limits.memory)
+    }),
+    [panelState.limits.cpu, panelState.limits.memory, panelState.requests]
+  )
 
   const handleSelectMemoryUnit = value => {
-    if (panelState.requests.memory.length > 0 && value !== 'Bytes') {
+    if (value !== 'Bytes') {
       const unit = value.match(/i/)
         ? value.slice(0, value.match(/i/).index + 1)
         : value.slice(0, 1)
 
-      panelDispatch({
-        type: panelActions.SET_REQUESTS_MEMORY,
-        payload: panelState.requests.memory + unit
-      })
+      if (panelState.requests.memory.length > 0) {
+        panelDispatch({
+          type: panelActions.SET_REQUESTS_MEMORY,
+          payload: panelState.requests.memory + unit
+        })
+      }
+
+      if (panelState.limits.memory.length > 0) {
+        panelDispatch({
+          type: panelActions.SET_LIMITS_MEMORY,
+          payload: panelState.limits.memory + unit
+        })
+      }
+    } else {
+      if (panelState.requests.memory.match(/[a-zA-Z]/)) {
+        panelDispatch({
+          type: panelActions.SET_REQUESTS_MEMORY,
+          payload: panelState.requests.memory.slice(
+            0,
+            panelState.requests.memory.match(/[a-zA-Z]/).index
+          )
+        })
+      }
+
+      if (panelState.limits.memory.match(/[a-zA-Z]/)) {
+        panelDispatch({
+          type: panelActions.SET_LIMITS_MEMORY,
+          payload: panelState.limits.memory.slice(
+            0,
+            panelState.limits.memory.match(/[a-zA-Z]/).index
+          )
+        })
+      }
     }
 
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
+      payload: value
+    })
+  }
+
+  const handleSelectСpuUnit = value => {
+    if (value.match(/m/)) {
+      if (panelState.requests.cpu > 0) {
+        panelDispatch({
+          type: panelActions.SET_REQUESTS_CPU,
+          payload: panelState.requests.cpu + value.slice(0, 1)
+        })
+      }
+
+      if (panelState.limits.cpu > 0) {
+        panelDispatch({
+          type: panelActions.SET_LIMITS_CPU,
+          payload: panelState.limits.cpu + value.slice(0, 1)
+        })
+      }
+    } else {
+      if (panelState.requests.cpu.match(/m/)) {
+        panelDispatch({
+          type: panelActions.SET_REQUESTS_CPU,
+          payload: panelState.requests.cpu.slice(
+            0,
+            panelState.requests.cpu.match(/m/).index
+          )
+        })
+      }
+
+      if (panelState.limits.cpu.match(/m/)) {
+        panelDispatch({
+          type: panelActions.SET_LIMITS_CPU,
+          payload: panelState.limits.cpu.slice(
+            0,
+            panelState.limits.cpu.match(/m/).index
+          )
+        })
+      }
+    }
+
+    panelDispatch({
+      type: panelActions.SET_CPU_UNIT,
       payload: value
     })
   }
@@ -174,20 +247,6 @@ const JobsPanelResources = ({
     )
   }
 
-  const handleSelectСpuUnit = value => {
-    if (panelState.requests.cpu > 0 && value.match(/m/)) {
-      panelDispatch({
-        type: panelActions.SET_REQUESTS_CPU,
-        payload: panelState.requests.cpu + value.slice(0, 1)
-      })
-    }
-
-    panelDispatch({
-      type: panelActions.SET_CPU_UNIT,
-      payload: value
-    })
-  }
-
   return (
     <JobsPanelResourcesView
       handleAddNewItem={handleAddNewItem}
@@ -198,10 +257,9 @@ const JobsPanelResources = ({
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
-      requestsCpu={requestsCpu}
-      requestsMemory={requestsMemory}
-      resourcesState={resourcesState}
+      resourcesData={generateResourcesData()}
       resourcesDispatch={resourcesDispatch}
+      resourcesState={resourcesState}
     />
   )
 }

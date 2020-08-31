@@ -12,7 +12,7 @@ export const initialState = {
   limits: {
     cpu: '',
     memory: '',
-    nvidia_gpu: ''
+    'nvidia.com/gpu': ''
   },
   memoryUnit: '',
   outputPath: 'v3io:///users/{{run.user}}/artifacts/{{run.project}}',
@@ -213,7 +213,7 @@ export const panelReducer = (state, { type, payload }) => {
         ...state,
         limits: {
           ...state.limits,
-          nvidia_gpu: payload
+          'nvidia.com/gpu': payload
         }
       }
     case panelActions.SET_MEMORY_UNIT:

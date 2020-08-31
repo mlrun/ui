@@ -187,3 +187,11 @@ export const selectTypeOptions = {
     { label: 'PVC', id: 'PVC' }
   ]
 }
+
+export const generateCpuValue = cpu =>
+  cpu.match(/m/) ? cpu.slice(0, cpu.length - 1) : cpu
+
+export const generateMemoryValue = memory =>
+  memory.match(/[a-zA-Z]/)
+    ? memory.slice(0, memory.match(/[a-zA-Z]/).index)
+    : memory
