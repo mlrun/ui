@@ -21,7 +21,7 @@ export const initialState = {
       dataInputs: [],
       parameters: [],
       volumes: [],
-      volumeMounts: [],
+      volume_mounts: [],
       environmentVariables: [],
       secretSources: []
     },
@@ -37,7 +37,7 @@ export const initialState = {
   tableData: {
     parameters: [],
     dataInputs: [],
-    volumeMounts: [],
+    volume_mounts: [],
     volumes: [],
     environmentVariables: [],
     secretSources: []
@@ -107,7 +107,7 @@ export const panelReducer = (state, { type, payload }) => {
             dataInputs: {},
             parameters: {},
             volumes: [],
-            volumeMounts: [],
+            volume_mounts: [],
             environmentVariables: [],
             secretSources: []
           },
@@ -334,7 +334,7 @@ export const panelReducer = (state, { type, payload }) => {
           ...state.previousPanelData,
           tableData: {
             ...state.previousPanelData.tableData,
-            volumeMounts: payload
+            volume_mounts: payload
           }
         }
       }
@@ -409,7 +409,7 @@ export const panelReducer = (state, { type, payload }) => {
         ...state,
         tableData: {
           ...state.tableData,
-          volumeMounts: payload
+          volume_mounts: payload
         }
       }
     default:

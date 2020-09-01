@@ -90,7 +90,7 @@ const JobsPanelView = ({
                 panelState={panelState}
                 setNewJobVolumeMounts={setNewJobVolumeMounts}
                 setNewJobVolumes={setNewJobVolumes}
-                volumeMounts={jobsStore.newJob.function.spec.volumeMounts}
+                volumeMounts={jobsStore.newJob.function.spec.volume_mounts}
                 volumes={jobsStore.newJob.function.spec.volumes}
               />
             </Accordion>

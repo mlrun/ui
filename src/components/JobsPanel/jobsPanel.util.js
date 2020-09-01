@@ -145,7 +145,7 @@ export const generateTableData = (
       payload: {
         dataInputs: dataInputs,
         parameters,
-        volumeMounts,
+        volume_mounts: volumeMounts,
         volumes,
         environmentVariables: [],
         secretSources: []
@@ -154,7 +154,7 @@ export const generateTableData = (
     setNewJob({
       inputs: parseDefaultContent(dataInputs),
       parameters: parseDefaultContent(parameters),
-      volumeMounts: volumeMounts.length
+      volume_mounts: volumeMounts.length
         ? volumeMounts.map(volumeMounts => volumeMounts.data)
         : [],
       volumes,
