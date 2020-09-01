@@ -18,10 +18,9 @@ const JobsPanelResourcesView = ({
   match,
   panelDispatch,
   panelState,
-  requestsCpu,
-  requestsMemory,
-  resourcesState,
-  resourcesDispatch
+  resourcesData,
+  resourcesDispatch,
+  resourcesState
 }) => (
   <div className="job-panel__item resources">
     <JobsPanelSection title="Resources" />
@@ -58,7 +57,7 @@ const JobsPanelResourcesView = ({
             }`
           })
         }
-        value={requestsMemory}
+        value={resourcesData.requestsMemory}
       />
       <RangeInput
         floatingLabel
@@ -66,10 +65,16 @@ const JobsPanelResourcesView = ({
         onChange={value =>
           panelDispatch({
             type: panelActions.SET_LIMITS_MEMORY,
-            payload: `${value}`
+            payload: `${value}${
+              !panelState.memoryUnit.length || panelState.memoryUnit === 'Bytes'
+                ? ''
+                : panelState.memoryUnit.match(/i/)
+                ? panelState.memoryUnit.slice(0, 2)
+                : panelState.memoryUnit.slice(0, 1)
+            }`
           })
         }
-        value={panelState.limits.memory}
+        value={resourcesData.limitsMemory}
       />
     </JobsPanelSection>
     <JobsPanelSection title="Cpu">
@@ -88,7 +93,7 @@ const JobsPanelResourcesView = ({
             payload: `${value}${panelState.cpuUnit === 'millicpu' ? 'm' : ''}`
           })
         }
-        value={requestsCpu}
+        value={resourcesData.requestsCpu}
       />
       <RangeInput
         floatingLabel
@@ -96,10 +101,10 @@ const JobsPanelResourcesView = ({
         onChange={value =>
           panelDispatch({
             type: panelActions.SET_LIMITS_CPU,
-            payload: `${value}`
+            payload: `${value}${panelState.cpuUnit === 'millicpu' ? 'm' : ''}`
           })
         }
-        value={panelState.limits.cpu}
+        value={resourcesData.limitsCpu}
       />
     </JobsPanelSection>
     <JobsPanelSection title="Gpu" className="section-gpu">
@@ -112,7 +117,7 @@ const JobsPanelResourcesView = ({
             payload: `${value}`
           })
         }
-        value={panelState.limits.nvidia_gpu}
+        value={panelState.limits['nvidia.com/gpu']}
       />
     </JobsPanelSection>
   </div>
@@ -127,10 +132,9 @@ JobsPanelResourcesView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  requestsCpu: PropTypes.string.isRequired,
-  requestsMemory: PropTypes.string.isRequired,
-  resourcesState: PropTypes.shape({}).isRequired,
-  resourcesDispatch: PropTypes.func.isRequired
+  resourcesData: PropTypes.shape({}).isRequired,
+  resourcesDispatch: PropTypes.func.isRequired,
+  resourcesState: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelResourcesView
