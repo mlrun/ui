@@ -44,7 +44,7 @@ const initialState = {
     function: {
       spec: {
         volumes: [],
-        volumeMounts: [],
+        volume_mounts: [],
         env: []
       }
     }
@@ -165,7 +165,7 @@ export default (state = initialState, { type, payload }) => {
             ...state.newJob.function,
             spec: {
               ...state.newJob.function.spec,
-              volumeMounts: payload
+              volume_mounts: payload
             }
           }
         }
@@ -190,7 +190,7 @@ export default (state = initialState, { type, payload }) => {
           function: {
             spec: {
               volumes: [],
-              volumeMounts: [],
+              volume_mounts: [],
               env: []
             }
           }
@@ -253,7 +253,7 @@ export default (state = initialState, { type, payload }) => {
             ...state.newJob.function,
             spec: {
               ...state.newJob.function.spec,
-              volumeMounts: payload.volumeMounts,
+              volume_mounts: payload.volume_mounts,
               volumes: payload.volumes,
               env: payload.environmentVariables
             }

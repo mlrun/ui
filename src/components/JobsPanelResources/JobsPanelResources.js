@@ -141,12 +141,12 @@ const JobsPanelResources = ({
     }
 
     handleAddItem(
-      panelState.tableData.volumeMounts,
+      panelState.tableData.volume_mounts,
       resourcesDispatch,
       newItemObj,
       volumeMounts,
       panelDispatch,
-      panelState.previousPanelData.tableData.volumeMounts,
+      panelState.previousPanelData.tableData.volume_mounts,
       resourcesActions.REMOVE_NEW_VOLUME_DATA,
       resourcesActions.SET_ADD_NEW_VOLUME,
       panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
@@ -212,7 +212,7 @@ const JobsPanelResources = ({
     handleEditVolume()
     handleEdit(
       volumeMounts,
-      panelState.tableData.volumeMounts,
+      panelState.tableData.volume_mounts,
       resourcesDispatch,
       resourcesState.selectedVolume.newName,
       panelDispatch,
@@ -237,9 +237,9 @@ const JobsPanelResources = ({
     )
     handleDelete(
       volumeMounts,
-      panelState.tableData.volumeMounts,
+      panelState.tableData.volume_mounts,
       panelDispatch,
-      panelState.previousPanelData.tableData.volumeMounts,
+      panelState.previousPanelData.tableData.volume_mounts,
       item,
       setNewJobVolumeMounts,
       panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,

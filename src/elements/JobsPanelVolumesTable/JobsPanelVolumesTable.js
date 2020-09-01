@@ -79,7 +79,7 @@ export const JobsPanelVolumesTable = ({
     <JobsPanelTable
       addNewItem={resourcesState.addNewVolume}
       className="data-inputs volumes"
-      content={panelState.tableData.volumeMounts}
+      content={panelState.tableData.volume_mounts}
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handleSetSelectedVolume={handleSetSelectedVolume}
