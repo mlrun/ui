@@ -3,12 +3,7 @@ export const initialState = {
     activeOption: 'minute',
     minute: 10,
     hour: 1,
-    day: 1,
-    week: {
-      daysOfTheWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-      repeat: 1
-    },
-    month: 12
+    week: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
   },
   scheduleRepeatEnd: {
     activeOption: 'never',
@@ -25,9 +20,7 @@ export const scheduleActionType = {
   SCHEDULE_REPEAT_END_DATE: 'SCHEDULE_REPEAT_END_DATE',
   SCHEDULE_REPEAT_END_OCCURRENCES: 'SCHEDULE_REPEAT_END_OCCURRENCES',
   SCHEDULE_REPEAT_HOUR: 'SCHEDULE_REPEAT_HOUR',
-  SCHEDULE_REPEAT_MINUTE: 'SCHEDULE_REPEAT_MINUTE',
-  SCHEDULE_REPEAT_MONTH: 'SCHEDULE_REPEAT_MONTH',
-  SCHEDULE_REPEAT_WEEK: 'SCHEDULE_REPEAT_WEEK'
+  SCHEDULE_REPEAT_MINUTE: 'SCHEDULE_REPEAT_MINUTE'
 }
 
 export const recurringReducer = (state, action) => {
@@ -69,32 +62,10 @@ export const recurringReducer = (state, action) => {
         ...state,
         scheduleRepeat: {
           ...state.scheduleRepeat,
-          week: {
-            ...state.scheduleRepeat.week,
-            daysOfTheWeek: action.payload
-          }
+          week: action.payload
         }
       }
     }
-    case scheduleActionType.SCHEDULE_REPEAT_WEEK:
-      return {
-        ...state,
-        scheduleRepeat: {
-          ...state.scheduleRepeat,
-          week: {
-            ...state.scheduleRepeat.week,
-            repeat: action.payload
-          }
-        }
-      }
-    case scheduleActionType.SCHEDULE_REPEAT_MONTH:
-      return {
-        ...state,
-        scheduleRepeat: {
-          ...state.scheduleRepeat,
-          month: action.payload
-        }
-      }
     case scheduleActionType.SCHEDULE_REPEAT_END_ACTIVE_OPTION:
       return {
         ...state,

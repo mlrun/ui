@@ -16,27 +16,34 @@
       margin-right: 15px;
     }
 
-    .schedule-repeat-week {
+    .schedule-repeat {
       display: flex;
       align-items: center;
-      margin-left: 16px;
 
-      &_day {
-        height: 32px;
-        width: 32px;
-        line-height: 32px;
-        text-align: center;
-        border-radius: 16px;
-        margin-right: 4px;
-        border: $primaryBorder;
-        color: $spunPearl;
-        cursor: pointer;
+      &-week {
+        margin-left: 16px;
+        &_day {
+          height: 32px;
+          width: 32px;
+          line-height: 32px;
+          text-align: center;
+          border-radius: 16px;
+          margin-right: 4px;
+          border: $primaryBorder;
+          color: $spunPearl;
+          cursor: pointer;
 
-        &.active {
-          background-color: $purple;
-          border: $transparentBorder;
-          color: $white;
+          &.active {
+            background-color: $purple;
+            border: $transparentBorder;
+            color: $white;
+          }
         }
+      }
+
+      &-text,
+      &__text {
+        margin: auto 5px;
       }
     }
   }
@@ -44,6 +51,7 @@
   .select {
     &__header {
       min-width: 218px;
+      height: 55px;
     }
 
     &__value {

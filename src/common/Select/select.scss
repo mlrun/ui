@@ -37,7 +37,7 @@
 
   &__value {
     min-width: 96px;
-    overflow-x: hidden;
+    overflow: hidden;
     color: $mulledWine;
     white-space: nowrap;
     text-overflow: ellipsis;
