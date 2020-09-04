@@ -59,7 +59,7 @@ ProjectDataCard.propTypes = {
   match: PropTypes.shape({}).isRequired,
   statistics: PropTypes.shape({}),
   table: PropTypes.shape({}),
-  title: PropTypes.shape({})
+  title: PropTypes.string
 }
 
 export default ProjectDataCard
