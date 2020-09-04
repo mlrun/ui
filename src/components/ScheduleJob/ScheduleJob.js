@@ -38,7 +38,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     } = recurringState
     let distinctWeek = week
 
-    if (week.indexOf(day) === -1) {
+    if (!week.includes(day)) {
       distinctWeek = week.concat(day)
     } else {
       distinctWeek = distinctWeek.filter(item => item !== day)
