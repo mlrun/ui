@@ -1,25 +1,21 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import RangeInput from '../../common/RangeInput/RangeInput'
 import Select from '../../common/Select/Select'
 import DatePicker from '../../common/DatePicker/DatePicker'
+import TimePicker from '../../common/TimePicker/TimePicker'
 
 import { scheduleActionType } from '../../components/ScheduleJob/recurringReducer'
 
 import './scheduleRecurring.scss'
-import { getFormatTime } from '../../utils'
-import TimePicker from '../../common/TimePicker/TimePicker'
 
 const ScheduleRecurring = ({
   daysOfWeek,
   handleDaysOfWeek,
   recurringDispatch,
   recurringState,
-  selectOptions,
-  setCron,
-  setTime,
-  time
+  selectOptions
 }) => {
   const {
     scheduleRepeat: { activeOption: scheduleRepeatActiveOption, week },
@@ -30,42 +26,8 @@ const ScheduleRecurring = ({
     }
   } = recurringState
 
-  const { hour, minute } = getFormatTime(time)
-
-  const niceFormatTime = useCallback((minute, hour) => {
-    return `${minute === '0' ? '00' : minute}:${hour === '0' ? '00' : hour}`
-  }, [])
-
   const handleScheduleRepeatChange = (value, activeOption) => {
     const selectedOption = activeOption ?? scheduleRepeatActiveOption
-
-    switch (selectedOption) {
-      case 'minute':
-        setCron(`${value} * * * *`)
-        break
-      case 'hour':
-        setCron(`0 ${value} * * *`)
-        break
-      case 'day':
-        setCron(`${minute} ${hour} * * *`)
-        break
-      case 'week':
-        {
-          const days = daysOfWeek
-            .filter(day => week.includes(day.id))
-            .map(day => day.index)
-            .sort()
-            .join(',')
-
-          setCron(`${minute} ${hour} * * ${days}`)
-        }
-        break
-      case 'month':
-        setCron(`${minute} ${hour} 1 * *`)
-        break
-      default:
-        return null
-    }
 
     recurringDispatch({
       type:
@@ -83,10 +45,6 @@ const ScheduleRecurring = ({
       <div className="repeat_container">
         <Select
           onClick={item => {
-            handleScheduleRepeatChange(
-              recurringState.scheduleRepeat[item],
-              item
-            )
             recurringDispatch({
               type: scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION,
               payload: item
@@ -99,8 +57,9 @@ const ScheduleRecurring = ({
           <div className="schedule-repeat schedule-repeat-week">
             {daysOfWeek.map(day => (
               <span
-                className={`schedule-repeat-week_day ${week.includes(day.id) &&
-                  'active'}`}
+                className={`schedule-repeat-week_day ${week.days.includes(
+                  day.id
+                ) && 'active'}`}
                 key={day.id}
                 onClick={() => handleDaysOfWeek(day.id)}
               >
@@ -114,9 +73,7 @@ const ScheduleRecurring = ({
           <div className="schedule-repeat">
             <Select
               label="Every"
-              onClick={option =>
-                handleScheduleRepeatChange(option, null, { hour, minute })
-              }
+              onClick={option => handleScheduleRepeatChange(option, null)}
               options={selectOptions[scheduleRepeatActiveOption]}
               selectedId={
                 selectOptions[scheduleRepeatActiveOption].find(
@@ -125,7 +82,7 @@ const ScheduleRecurring = ({
                     recurringState.scheduleRepeat[
                       scheduleRepeatActiveOption
                     ].toString()
-                ).id
+                )?.id
               }
             />
           </div>
@@ -136,13 +93,27 @@ const ScheduleRecurring = ({
             : scheduleRepeatActiveOption === 'hour'
             ? 'hours at minute 0 past the hour'
             : scheduleRepeatActiveOption === 'month'
-            ? `on the 1st day in every month at ${niceFormatTime(minute, hour)}`
-            : scheduleRepeatActiveOption === 'day'
-            ? 'at'
-            : `at ${niceFormatTime(minute, hour)}`}
+            ? 'on the 1st day in every month at'
+            : 'at'}
         </span>
-        {scheduleRepeatActiveOption === 'day' && (
-          <TimePicker value={time} onChange={setTime} />
+        {['day', 'month', 'week'].includes(scheduleRepeatActiveOption) && (
+          <TimePicker
+            hideLabel
+            value={
+              recurringState.scheduleRepeat[scheduleRepeatActiveOption].time
+            }
+            onChange={value => {
+              recurringDispatch({
+                type:
+                  scheduleRepeatActiveOption === 'week'
+                    ? scheduleActionType.SCHEDULE_REPEAT_WEEK_TIME
+                    : scheduleRepeatActiveOption === 'day'
+                    ? scheduleActionType.SCHEDULE_REPEAT_DAY_TIME
+                    : scheduleActionType.SCHEDULE_REPEAT_MONTH_TIME,
+                payload: value
+              })
+            }}
+          />
         )}
       </div>
       {/* <span>Ends</span> */}
@@ -192,10 +163,7 @@ PropTypes.propTypes = {
   handleDaysOfWeek: PropTypes.func.isRequired,
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
-  selectOptions: PropTypes.shape({}).isRequired,
-  setCron: PropTypes.func.isRequired,
-  setTime: PropTypes.func.isRequired,
-  time: PropTypes.string.isRequired
+  selectOptions: PropTypes.shape({}).isRequired
 }
 
 export default React.memo(ScheduleRecurring)

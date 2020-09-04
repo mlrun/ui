@@ -46,9 +46,6 @@ const ScheduleJobSimple = ({
           recurringDispatch={recurringDispatch}
           recurringState={recurringState}
           selectOptions={selectOptions}
-          setCron={setCron}
-          setTime={setTime}
-          time={time}
         />
       )}
     </>

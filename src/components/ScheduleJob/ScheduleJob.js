@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useReducer } from 'react'
+import React, { useState, useCallback, useReducer, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import ScheduleJobView from './ScheduleJobView'
@@ -14,9 +14,9 @@ import {
   getWeekStart
 } from '../../utils/datePicker.util'
 import { tabs } from './scheduleJobData'
+import { getFormatTime } from '../../utils'
 
 import './scheduleJob.scss'
-import { getFormatTime } from '../../utils'
 
 const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
@@ -36,10 +36,10 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     const {
       scheduleRepeat: { week }
     } = recurringState
-    let distinctWeek = week
+    let distinctWeek = week.days
 
-    if (!week.includes(day)) {
-      distinctWeek = week.concat(day)
+    if (!week.days.includes(day)) {
+      distinctWeek = week.days.concat(day)
     } else {
       distinctWeek = distinctWeek.filter(item => item !== day)
     }
@@ -52,7 +52,10 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
     days = days || '*'
 
-    const { hour, minute } = getFormatTime(time)
+    const { hour, minute } = getFormatTime(
+      recurringState.scheduleRepeat[recurringState.scheduleRepeat.activeOption]
+        .time
+    )
 
     setCron(`${minute} ${hour} * * ${days}`)
 
@@ -68,24 +71,63 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
   const onHandleTimeChange = time => {
     setTime(time)
-    const { minute, hour } = getFormatTime(time)
-    const [, , ...rest] = cron.split(' ')
-    setCron(`${minute} ${hour} ${rest.join(' ')}`)
   }
 
   const onSchedule = useCallback(
     event => {
-      let newCron = cron
-      if (/^0 0/.test(cron)) {
-        const { hour, minute } = getFormatTime(time)
-        newCron = newCron.replace(/0 0/, `${minute} ${hour}`)
-      }
-
-      handleRunJob(event, newCron)
+      handleRunJob(event, cron)
       setOpenScheduleJob(false)
     },
-    [cron, handleRunJob, setOpenScheduleJob, time]
+    [cron, handleRunJob, setOpenScheduleJob]
   )
+
+  useEffect(() => {
+    const selectedOption = recurringState.scheduleRepeat.activeOption
+    let hour, minute
+    if (recurringState.scheduleRepeat[selectedOption].time) {
+      let [_hour, _minute] = recurringState.scheduleRepeat[
+        selectedOption
+      ].time.split(':')
+
+      hour = _hour.replace(/_/, '0')
+      minute = _minute.replace(/_/, '0')
+    }
+    switch (recurringState.scheduleRepeat.activeOption) {
+      case 'minute':
+        setCron(`${recurringState.scheduleRepeat.minute} * * * *`)
+        break
+      case 'hour':
+        setCron(`0 ${recurringState.scheduleRepeat.hour} * * *`)
+        break
+      case 'day':
+        setCron(`${minute} ${hour} * * *`)
+        break
+      case 'week':
+        {
+          const days = daysOfWeek
+            .filter(day =>
+              recurringState.scheduleRepeat.week.days.includes(day.id)
+            )
+            .map(day => day.index)
+            .sort()
+            .join(',')
+
+          setCron(`${minute} ${hour} * * ${days}`)
+        }
+        break
+      case 'month':
+        setCron(`${minute} ${hour} 1 * *`)
+        break
+      default:
+        return null
+    }
+  }, [
+    daysOfWeek,
+    recurringState.scheduleRepeat,
+    recurringState.scheduleRepeat.activeOption,
+    recurringState.scheduleRepeat.hour,
+    recurringState.scheduleRepeat.minute
+  ])
 
   return (
     <ScheduleJobView
