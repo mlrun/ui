@@ -12,7 +12,6 @@ const ScheduleJobSimple = ({
   cron,
   date,
   daysOfWeek,
-  getRangeInputValue,
   handleDaysOfWeek,
   isRecurring,
   match,
@@ -42,13 +41,11 @@ const ScheduleJobSimple = ({
         <ScheduleRecurring
           cron={cron}
           daysOfWeek={daysOfWeek}
-          getRangeInputValue={getRangeInputValue}
           handleDaysOfWeek={handleDaysOfWeek}
           match={match}
           recurringDispatch={recurringDispatch}
           recurringState={recurringState}
           selectOptions={selectOptions}
-          setCron={setCron}
         />
       )}
     </>
@@ -56,10 +53,9 @@ const ScheduleJobSimple = ({
 }
 
 ScheduleJobSimple.propTypes = {
-  cron: PropTypes.shape({}).isRequired,
+  cron: PropTypes.string.isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   daysOfWeek: PropTypes.array.isRequired,
-  getRangeInputValue: PropTypes.func.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,

@@ -7,7 +7,7 @@ import { ReactComponent as Alert } from '../../images/unsuccess_alert.svg'
 
 import './scheduleCron.scss'
 
-const ScheduleCron = ({ cronString, error, setCronString, setEditMode }) => {
+const ScheduleCron = ({ cron, error, setCron, setEditMode }) => {
   const errorClassNames = classnames('cron-error', error && 'show-error')
 
   return (
@@ -17,10 +17,10 @@ const ScheduleCron = ({ cronString, error, setCronString, setEditMode }) => {
         {error}
       </div>
       <Input
-        placeholder="*/10 * * * *"
-        value={cronString}
+        placeholder="10 * * * *"
+        value={cron}
         className="cron-string"
-        onChange={setCronString}
+        onChange={setCron}
         onFocus={setEditMode}
         type="text"
       />
@@ -41,9 +41,9 @@ const ScheduleCron = ({ cronString, error, setCronString, setEditMode }) => {
 }
 
 ScheduleCron.propTypes = {
-  cronString: PropTypes.string.isRequired,
+  cron: PropTypes.string.isRequired,
   error: PropTypes.string.isRequired,
-  setCronString: PropTypes.func.isRequired
+  setCron: PropTypes.func.isRequired
 }
 
 export default ScheduleCron

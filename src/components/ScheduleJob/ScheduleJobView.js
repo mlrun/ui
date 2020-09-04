@@ -12,12 +12,9 @@ import { selectOptions, tabs } from './scheduleJobData'
 const ScheduleJobView = ({
   activeTab,
   cron,
-  cronString,
   date,
   daysOfWeek,
   error,
-  generateCronString,
-  getRangeInputValue,
   handleDaysOfWeek,
   isRecurring,
   match,
@@ -26,7 +23,6 @@ const ScheduleJobView = ({
   recurringState,
   setActiveTab,
   setCron,
-  setCronString,
   setDate,
   setError,
   setIsRecurring,
@@ -62,7 +58,6 @@ const ScheduleJobView = ({
             cron={cron}
             date={date}
             daysOfWeek={daysOfWeek}
-            getRangeInputValue={getRangeInputValue}
             handleDaysOfWeek={handleDaysOfWeek}
             isRecurring={isRecurring}
             match={match}
@@ -78,10 +73,9 @@ const ScheduleJobView = ({
         )}
         {activeTab === tabs[1].id && (
           <ScheduleCron
-            cronString={cronString}
+            cron={cron}
             error={error}
-            generateCronString={generateCronString}
-            setCronString={setCronString}
+            setCron={setCron}
             setError={setError}
           />
         )}
@@ -96,12 +90,9 @@ const ScheduleJobView = ({
 
 ScheduleJobView.propTypes = {
   activeTab: PropTypes.string.isRequired,
-  cron: PropTypes.shape({}).isRequired,
-  cronString: PropTypes.string.isRequired,
+  cron: PropTypes.string.isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   daysOfWeek: PropTypes.array.isRequired,
-  generateCronString: PropTypes.func.isRequired,
-  getRangeInputValue: PropTypes.func.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
@@ -110,7 +101,6 @@ ScheduleJobView.propTypes = {
   recurringState: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,
   setCron: PropTypes.func.isRequired,
-  setCronString: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,
