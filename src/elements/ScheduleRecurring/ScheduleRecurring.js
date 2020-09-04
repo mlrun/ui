@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 import RangeInput from '../../common/RangeInput/RangeInput'
@@ -9,6 +9,7 @@ import { scheduleActionType } from '../../components/ScheduleJob/recurringReduce
 
 import './scheduleRecurring.scss'
 import { getFormatTime } from '../../utils'
+import TimePicker from '../../common/TimePicker/TimePicker'
 
 const ScheduleRecurring = ({
   daysOfWeek,
@@ -17,6 +18,7 @@ const ScheduleRecurring = ({
   recurringState,
   selectOptions,
   setCron,
+  setTime,
   time
 }) => {
   const {
@@ -29,6 +31,10 @@ const ScheduleRecurring = ({
   } = recurringState
 
   const { hour, minute } = getFormatTime(time)
+
+  const niceFormatTime = useCallback((minute, hour) => {
+    return `${minute === '0' ? '00' : minute}:${hour === '0' ? '00' : hour}`
+  }, [])
 
   const handleScheduleRepeatChange = (value, activeOption) => {
     const selectedOption = activeOption ?? scheduleRepeatActiveOption
@@ -130,9 +136,14 @@ const ScheduleRecurring = ({
             : scheduleRepeatActiveOption === 'hour'
             ? 'hours at minute 0 past the hour'
             : scheduleRepeatActiveOption === 'month'
-            ? `on the 1st day in every month at ${hour}:${minute}`
-            : `at ${hour}:${minute}`}
+            ? `on the 1st day in every month at ${niceFormatTime(minute, hour)}`
+            : scheduleRepeatActiveOption === 'day'
+            ? 'at'
+            : `at ${niceFormatTime(minute, hour)}`}
         </span>
+        {scheduleRepeatActiveOption === 'day' && (
+          <TimePicker value={time} onChange={setTime} />
+        )}
       </div>
       {/* <span>Ends</span> */}
       <div className="repeat_end_container">
@@ -183,6 +194,7 @@ PropTypes.propTypes = {
   recurringState: PropTypes.shape({}).isRequired,
   selectOptions: PropTypes.shape({}).isRequired,
   setCron: PropTypes.func.isRequired,
+  setTime: PropTypes.func.isRequired,
   time: PropTypes.string.isRequired
 }
 

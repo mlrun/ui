@@ -40,7 +40,6 @@ const ScheduleJobSimple = ({
       {isRecurring && (
         <ScheduleRecurring
           cron={cron}
-          time={time}
           daysOfWeek={daysOfWeek}
           handleDaysOfWeek={handleDaysOfWeek}
           match={match}
@@ -48,6 +47,8 @@ const ScheduleJobSimple = ({
           recurringState={recurringState}
           selectOptions={selectOptions}
           setCron={setCron}
+          setTime={setTime}
+          time={time}
         />
       )}
     </>

@@ -68,14 +68,17 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
   const onHandleTimeChange = time => {
     setTime(time)
+    const { minute, hour } = getFormatTime(time)
+    const [, , ...rest] = cron.split(' ')
+    setCron(`${minute} ${hour} ${rest.join(' ')}`)
   }
 
   const onSchedule = useCallback(
     event => {
       let newCron = cron
-      if (/^00 00/.test(cron)) {
+      if (/^0 0/.test(cron)) {
         const { hour, minute } = getFormatTime(time)
-        newCron = newCron.replace(/00 00/, `${minute} ${hour}`)
+        newCron = newCron.replace(/0 0/, `${minute} ${hour}`)
       }
 
       handleRunJob(event, newCron)

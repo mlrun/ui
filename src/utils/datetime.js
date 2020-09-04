@@ -13,8 +13,8 @@ export const getFormatTime = time => {
   const [hour, minute] = time.split(':')
   if (!minute) {
     return {
-      hour: '00',
-      minute: '00'
+      hour: '0',
+      minute: '0'
     }
   }
   return {
