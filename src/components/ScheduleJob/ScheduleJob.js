@@ -49,7 +49,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
       .sort()
       .join(',')
 
-    days = days ? days : '*'
+    days = days || '*'
 
     setCron(`0 0 * * ${days}`)
 
