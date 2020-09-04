@@ -8,3 +8,17 @@ export const formatDatetime = (datetime, invalidDateMessage) =>
         minute: '2-digit',
         second: '2-digit'
       }).format(datetime)
+
+export const getFormatTime = time => {
+  const [hour, minute] = time.split(':')
+  if (!minute) {
+    return {
+      hour: '00',
+      minute: '00'
+    }
+  }
+  return {
+    hour: hour.replace(/_/g, '0'),
+    minute: minute.replace(/_/g, '0')
+  }
+}

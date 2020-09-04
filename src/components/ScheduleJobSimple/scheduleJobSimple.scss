@@ -6,7 +6,11 @@
     min-width: 230px;
 
     &_container {
-      display: none;
+      display: flex;
+
+      .date-picker-container {
+        display: none;
+      }
     }
   }
 

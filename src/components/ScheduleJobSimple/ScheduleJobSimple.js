@@ -40,6 +40,7 @@ const ScheduleJobSimple = ({
       {isRecurring && (
         <ScheduleRecurring
           cron={cron}
+          time={time}
           daysOfWeek={daysOfWeek}
           handleDaysOfWeek={handleDaysOfWeek}
           match={match}

@@ -16,6 +16,7 @@ import {
 import { tabs } from './scheduleJobData'
 
 import './scheduleJob.scss'
+import { getFormatTime } from '../../utils'
 
 const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
@@ -51,7 +52,9 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
     days = days || '*'
 
-    setCron(`0 0 * * ${days}`)
+    const { hour, minute } = getFormatTime(time)
+
+    setCron(`${minute} ${hour} * * ${days}`)
 
     recurringDispatch({
       type: scheduleActionType.SCHEDULE_REPEAT_DAYS_OF_WEEK,
@@ -69,10 +72,16 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
   const onSchedule = useCallback(
     event => {
-      handleRunJob(event, cron)
+      let newCron = cron
+      if (/^00 00/.test(cron)) {
+        const { hour, minute } = getFormatTime(time)
+        newCron = newCron.replace(/00 00/, `${minute} ${hour}`)
+      }
+
+      handleRunJob(event, newCron)
       setOpenScheduleJob(false)
     },
-    [cron, handleRunJob, setOpenScheduleJob]
+    [cron, handleRunJob, setOpenScheduleJob, time]
   )
 
   return (
