@@ -38,15 +38,13 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     } = recurringState
     let distinctWeek = week.days
 
-    if (!week.days.includes(day)) {
-      distinctWeek = week.days.concat(day)
-    } else {
-      distinctWeek = distinctWeek.filter(item => item !== day)
-    }
+    distinctWeek = week.days.includes(day)
+      ? distinctWeek.filter(item => item !== day)
+      : [...week.days, day]
 
     let days = daysOfWeek
       .filter(day => distinctWeek.includes(day.id))
-      .map(day => day.index)
+      .map(day => (day.index + 6) % 7) // temporarily make Monday=0, Tuesday=1, ..., Sunday=6
       .sort()
       .join(',')
 
@@ -89,15 +87,15 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
         selectedOption
       ].time.split(':')
 
-      hour = _hour.replace(/_/, '0')
-      minute = _minute.replace(/_/, '0')
+      hour = _hour.replace(/_/, '0').replace(/^0/, '')
+      minute = _minute.replace(/_/, '0').replace(/^0/, '')
     }
     switch (recurringState.scheduleRepeat.activeOption) {
       case 'minute':
-        setCron(`${recurringState.scheduleRepeat.minute} * * * *`)
+        setCron(`*/${recurringState.scheduleRepeat.minute} * * * *`)
         break
       case 'hour':
-        setCron(`0 ${recurringState.scheduleRepeat.hour} * * *`)
+        setCron(`0 */${recurringState.scheduleRepeat.hour} * * *`)
         break
       case 'day':
         setCron(`${minute} ${hour} * * *`)
