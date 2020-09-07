@@ -71,7 +71,7 @@ const ArtifactsPreview = ({ artifact }) => {
       <h1>Sorry, something went wrong.</h1>
       <h3>We're working on it and we'll get it fixed as soon as we can.</h3>
     </div>
-  ) : !preview.length ? (
+  ) : preview.length === 0 ? (
     <div className="loader-container">
       <Loader />
     </div>
