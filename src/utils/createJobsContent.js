@@ -29,10 +29,6 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
       } else {
         let type = contentItem.labels?.find(label => label.includes('kind:'))
         type = type?.slice(type.indexOf(':') + 2)
-        const startTime =
-          typeof groupedByWorkflow === 'boolean'
-            ? contentItem.startTime
-            : new Date(contentItem.created_at)
 
         return {
           name: {
@@ -48,11 +44,6 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
             value: contentItem.uid || contentItem?.id,
             class: 'jobs_small',
             type: 'hidden'
-          },
-          startTime: {
-            value: formatDatetime(startTime, 'Not yet started'),
-            class: 'jobs_small',
-            type: 'date'
           },
           duration: {
             value: measureTime(

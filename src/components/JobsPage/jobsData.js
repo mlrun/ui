@@ -52,10 +52,6 @@ export const generateTableHeaders = scheduled => {
       class: 'jobs_extra-small'
     },
     {
-      header: 'Start time',
-      class: 'jobs_small'
-    },
-    {
       header: 'Duration',
       class: 'jobs_extra-small'
     },
