@@ -123,7 +123,7 @@ const DetailsArtifacts = ({
         artifactIndex => artifactIndex !== index
       )
 
-      if (artifactsIndexes.indexOf(index) === -1) {
+      if (!artifactsIndexes.includes(index)) {
         newArtifactsIndexes.push(index)
       }
 
