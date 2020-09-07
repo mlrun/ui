@@ -12,7 +12,7 @@ import { ReactComponent as Popout } from '../../images/popout.svg'
 import './detailsArtifacts.scss'
 
 const DetailsArtifactsView = ({
-  artifactsIndex,
+  artifactsIndexes,
   content,
   match,
   showArtifact,
@@ -80,7 +80,7 @@ const DetailsArtifactsView = ({
               />
             </div>
           </div>
-          {artifactsIndex.includes(index) && (
+          {artifactsIndexes.includes(index) && (
             <div className="item-artifacts__preview">
               <ArtifactsPreview artifact={artifact} />
             </div>
@@ -92,7 +92,7 @@ const DetailsArtifactsView = ({
 )
 
 DetailsArtifactsView.propTypes = {
-  artifactsIndex: PropTypes.array.isRequired,
+  artifactsIndexes: PropTypes.array.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   match: PropTypes.shape({}).isRequired,
   showArtifact: PropTypes.func.isRequired,

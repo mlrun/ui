@@ -18,7 +18,7 @@ const DetailsArtifacts = ({
   setIterationOptions
 }) => {
   const [content, setContent] = useState([])
-  const [artifactsIndex, setArtifactsIndex] = useState([])
+  const [artifactsIndexes, setArtifactsIndexes] = useState([])
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -119,22 +119,22 @@ const DetailsArtifacts = ({
 
   const showArtifact = useCallback(
     index => {
-      const newArtifactsIndex = artifactsIndex.filter(
+      const newArtifactsIndexes = artifactsIndexes.filter(
         artifactIndex => artifactIndex !== index
       )
 
-      if (artifactsIndex.indexOf(index) === -1) {
-        newArtifactsIndex.push(index)
+      if (artifactsIndexes.indexOf(index) === -1) {
+        newArtifactsIndexes.push(index)
       }
 
-      setArtifactsIndex(newArtifactsIndex)
+      setArtifactsIndexes(newArtifactsIndexes)
     },
-    [artifactsIndex]
+    [artifactsIndexes]
   )
 
   return (
     <DetailsArtifactsView
-      artifactsIndex={artifactsIndex}
+      artifactsIndexes={artifactsIndexes}
       content={content}
       match={match}
       showArtifact={showArtifact}
