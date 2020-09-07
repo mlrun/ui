@@ -2,7 +2,7 @@ import { mainHttpClient } from '../httpClient'
 
 export default {
   filterByStatus: (project, state) =>
-    mainHttpClient.get(`/runs?project=${project}&&state=${state}`),
+    mainHttpClient.get(`/runs?project=${project}&state=${state}`),
   getAll: (project, state, event) => {
     let url = `/runs?project=${project}`
 

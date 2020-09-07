@@ -55,7 +55,6 @@ const ScheduleJobView = ({
         </h3>
         {activeTab === tabs[0].id && (
           <ScheduleJobSimple
-            cron={cron}
             date={date}
             daysOfWeek={daysOfWeek}
             handleDaysOfWeek={handleDaysOfWeek}
@@ -64,7 +63,6 @@ const ScheduleJobView = ({
             recurringDispatch={recurringDispatch}
             recurringState={recurringState}
             selectOptions={selectOptions}
-            setCron={setCron}
             setDate={setDate}
             setIsRecurring={setIsRecurring}
             setTime={setTime}
