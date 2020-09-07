@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import logo from '../../images/iguazio-logo.png'
+import logo from '../../images/mlrun-logo-circle-small.png'
 
 import './header.scss'
 
