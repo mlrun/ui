@@ -156,11 +156,13 @@ export const generateTableData = (
   const functionParameters = getParameters(selectedFunction, method)
   const [{ limits, requests }] = getResources(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
+
   if (limits.memory.match(/[a-zA-Z]/) || requests.memory.match(/[a-zA-Z]/)) {
     const limitsMemoryUnit =
       limits.memory.slice(limits.memory.match(/[a-zA-Z]/).index) + 'B'
     const requestsMemoryUnit =
       requests.memory.slice(requests.memory.match(/[a-zA-Z]/).index) + 'B'
+
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
       payload: limitsMemoryUnit || requestsMemoryUnit
@@ -171,6 +173,7 @@ export const generateTableData = (
       payload: 'Bytes'
     })
   }
+
   if (limits.cpu.match(/m/) || requests.cpu.match(/m/)) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
@@ -182,6 +185,7 @@ export const generateTableData = (
       payload: 'cpu'
     })
   }
+
   if (!isEmpty(functionParameters)) {
     const { parameters, dataInputs } = getDefaultData(functionParameters)
     const volumeMounts = getVolumeMounts(selectedFunction)
@@ -214,6 +218,7 @@ export const generateTableData = (
       secret_sources: []
     })
   }
+
   panelDispatch({
     type: panelActions.SET_LIMITS,
     payload: {
@@ -225,28 +230,8 @@ export const generateTableData = (
     type: panelActions.SET_REQUESTS,
     payload: requests
   })
-
-  if (cron.length > 5) {
-    errorMessage = 'Unsupported value'
-  }
-
-  if (cron[0] > 59) {
-    errorMessage = 'Unsupported value for minutes'
-  } else if (cron[1] > 24) {
-    errorMessage = 'Unsupported value for hours'
-  } else if (cron[2] > 31) {
-    errorMessage = 'Unsupported value for days of a month'
-  } else if (cron[3] > 12) {
-    errorMessage = 'Unsupported value for month'
-  } else if (cron[4] > 7) {
-    errorMessage = 'Unsupported value for week days'
-  }
-
-  return {
-    cron,
-    errorMessage
-  }
 }
+
 export const generateRequestData = (
   jobsStore,
   cronString,
