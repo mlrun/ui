@@ -52,14 +52,22 @@ const JobsPanelResources = ({
       if (panelState.requests.memory.length > 0) {
         panelDispatch({
           type: panelActions.SET_REQUESTS_MEMORY,
-          payload: panelState.requests.memory + unit
+          payload:
+            panelState.requests.memory.slice(
+              0,
+              panelState.requests.memory.match(/[a-zA-Z]/).index
+            ) + unit
         })
       }
 
       if (panelState.limits.memory.length > 0) {
         panelDispatch({
           type: panelActions.SET_LIMITS_MEMORY,
-          payload: panelState.limits.memory + unit
+          payload:
+            panelState.limits.memory.slice(
+              0,
+              panelState.limits.memory.match(/[a-zA-Z]/).index
+            ) + unit
         })
       }
     } else {

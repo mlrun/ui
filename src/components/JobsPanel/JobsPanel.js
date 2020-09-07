@@ -107,12 +107,14 @@ const JobsPanel = ({
         panelState.currentFunctionInfo.method,
         selectedFunction,
         panelDispatch,
-        setNewJob
+        setNewJob,
+        panelState.limits
       )
     }
   }, [
     panelState.currentFunctionInfo.method,
     panelState.editMode,
+    panelState.limits,
     panelState.tableData,
     selectedFunction,
     setNewJob

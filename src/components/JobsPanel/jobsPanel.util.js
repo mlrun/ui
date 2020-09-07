@@ -42,6 +42,25 @@ export const getParameters = (selectedFunction, method) => {
     .unionBy('name')
     .value()
 }
+export const getResources = selectedFunction => {
+  return _.chain(selectedFunction)
+    .map(func => {
+      return func.spec.resources ?? {}
+    })
+    .flatten()
+    .unionBy('name')
+    .value()
+}
+
+export const getEnvironmentVariables = selectedFunction => {
+  return _.chain(selectedFunction)
+    .map(func => {
+      return func.spec.env ?? {}
+    })
+    .flatten()
+    .unionBy('name')
+    .value()
+}
 
 export const getVolumeMounts = selectedFunction => {
   if (!selectedFunction.some(func => func.spec.volume_mounts)) {
@@ -131,10 +150,38 @@ export const generateTableData = (
   method,
   selectedFunction,
   panelDispatch,
-  setNewJob
+  setNewJob,
+  stateLimits
 ) => {
   const functionParameters = getParameters(selectedFunction, method)
-
+  const [{ limits, requests }] = getResources(selectedFunction)
+  const environmentVariables = getEnvironmentVariables(selectedFunction)
+  if (limits.memory.match(/[a-zA-Z]/) || requests.memory.match(/[a-zA-Z]/)) {
+    const limitsMemoryUnit =
+      limits.memory.slice(limits.memory.match(/[a-zA-Z]/).index) + 'B'
+    const requestsMemoryUnit =
+      requests.memory.slice(requests.memory.match(/[a-zA-Z]/).index) + 'B'
+    panelDispatch({
+      type: panelActions.SET_MEMORY_UNIT,
+      payload: limitsMemoryUnit || requestsMemoryUnit
+    })
+  } else if (limits.memory.length > 0 || requests.memory.length > 0) {
+    panelDispatch({
+      type: panelActions.SET_MEMORY_UNIT,
+      payload: 'Bytes'
+    })
+  }
+  if (limits.cpu.match(/m/) || requests.cpu.match(/m/)) {
+    panelDispatch({
+      type: panelActions.SET_CPU_UNIT,
+      payload: 'millicpu'
+    })
+  } else if (limits.cpu.length > 0 || requests.cpu.length > 0) {
+    panelDispatch({
+      type: panelActions.SET_CPU_UNIT,
+      payload: 'cpu'
+    })
+  }
   if (!isEmpty(functionParameters)) {
     const { parameters, dataInputs } = getDefaultData(functionParameters)
     const volumeMounts = getVolumeMounts(selectedFunction)
@@ -143,11 +190,16 @@ export const generateTableData = (
     panelDispatch({
       type: panelActions.SET_TABLE_DATA,
       payload: {
-        dataInputs: dataInputs,
+        dataInputs,
         parameters,
         volume_mounts: volumeMounts,
         volumes,
-        environmentVariables: [],
+        environmentVariables: environmentVariables.map(env => ({
+          data: {
+            name: env.name,
+            value: env.value ?? ''
+          }
+        })),
         secretSources: []
       }
     })
@@ -158,33 +210,20 @@ export const generateTableData = (
         ? volumeMounts.map(volumeMounts => volumeMounts.data)
         : [],
       volumes,
-      environmentVariables: [],
+      environmentVariables,
       secret_sources: []
     })
   }
-}
-
-export const validateCronString = cronString => {
-  let errorMessage = ''
-  const cron = cronString.split(' ').map(dataItem => {
-    if (
-      dataItem.length > 2 ||
-      dataItem.match(/(\*+\d)/) ||
-      dataItem.match(/(\d\*+)/)
-    ) {
-      errorMessage = 'Please add spaces after values'
+  panelDispatch({
+    type: panelActions.SET_LIMITS,
+    payload: {
+      ...stateLimits,
+      ...limits
     }
-
-    if (dataItem !== '' && dataItem <= 0) {
-      errorMessage = 'Value must be greater than zero'
-    }
-
-    if (dataItem === '') dataItem = '*'
-
-    if (!Number(dataItem) && dataItem !== '*')
-      errorMessage = 'Value must be a number'
-
-    return dataItem
+  })
+  panelDispatch({
+    type: panelActions.SET_REQUESTS,
+    payload: requests
   })
 
   if (cron.length > 5) {
