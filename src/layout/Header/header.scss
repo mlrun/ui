@@ -23,16 +23,15 @@
     }
   }
   h1 {
+    margin-left: 4px;
     font-weight: 700;
     font-size: 1.5rem;
-    span {
-      font-weight: 300;
-    }
+    padding-top: 4px;
   }
   &__beta {
     font-variant: small-caps;
     margin-left: 4px;
-    margin-bottom: -6px;
+    margin-bottom: -10px;
   }
   &__link {
     padding: 5px 15px;
