@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import prettyBytes from 'pretty-bytes'
 import { connect, useDispatch } from 'react-redux'
@@ -18,6 +18,7 @@ const DetailsArtifacts = ({
   setIterationOptions
 }) => {
   const [content, setContent] = useState([])
+  const [artifactsIndexes, setArtifactsIndexes] = useState([])
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -116,10 +117,27 @@ const DetailsArtifacts = ({
     )
   }
 
+  const showArtifact = useCallback(
+    index => {
+      const newArtifactsIndexes = artifactsIndexes.filter(
+        artifactIndex => artifactIndex !== index
+      )
+
+      if (!artifactsIndexes.includes(index)) {
+        newArtifactsIndexes.push(index)
+      }
+
+      setArtifactsIndexes(newArtifactsIndexes)
+    },
+    [artifactsIndexes]
+  )
+
   return (
     <DetailsArtifactsView
+      artifactsIndexes={artifactsIndexes}
       content={content}
       match={match}
+      showArtifact={showArtifact}
       showPreview={showPreview}
     />
   )
