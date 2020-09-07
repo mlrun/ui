@@ -24,6 +24,8 @@ const DetailsArtifacts = ({
   useEffect(() => {
     let selectedJob = selectedItem
 
+    setArtifactsIndexes([])
+
     if (iteration !== '0') {
       selectedJob =
         jobsStore.allJobsData.find(
