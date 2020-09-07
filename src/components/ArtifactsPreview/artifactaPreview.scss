@@ -72,3 +72,13 @@
     min-height: 560px;
   }
 }
+
+.loader-container {
+  position: relative;
+  height: 150px;
+
+  .wrapper {
+    position: absolute;
+    background-color: transparent;
+  }
+}

@@ -59,6 +59,10 @@
     }
   }
 
+  &__name {
+    cursor: pointer;
+  }
+
   .accordion__container.open {
     box-shadow: $previewBoxShadow;
   }
