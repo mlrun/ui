@@ -9,7 +9,6 @@ import TimePicker from '../../common/TimePicker/TimePicker'
 import './scheduleJobSimple.scss'
 
 const ScheduleJobSimple = ({
-  cron,
   date,
   daysOfWeek,
   handleDaysOfWeek,
@@ -18,7 +17,6 @@ const ScheduleJobSimple = ({
   recurringDispatch,
   recurringState,
   selectOptions,
-  setCron,
   setDate,
   setIsRecurring,
   setTime,
@@ -39,7 +37,6 @@ const ScheduleJobSimple = ({
       </div>
       {isRecurring && (
         <ScheduleRecurring
-          cron={cron}
           daysOfWeek={daysOfWeek}
           handleDaysOfWeek={handleDaysOfWeek}
           match={match}
@@ -53,7 +50,6 @@ const ScheduleJobSimple = ({
 }
 
 ScheduleJobSimple.propTypes = {
-  cron: PropTypes.string.isRequired,
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   daysOfWeek: PropTypes.array.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
@@ -62,7 +58,6 @@ ScheduleJobSimple.propTypes = {
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
   selectOptions: PropTypes.shape({}).isRequired,
-  setCron: PropTypes.func.isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,

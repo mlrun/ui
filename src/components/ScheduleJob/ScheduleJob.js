@@ -106,7 +106,7 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
             .filter(day =>
               recurringState.scheduleRepeat.week.days.includes(day.id)
             )
-            .map(day => day.index)
+            .map(day => (day.index + 6) % 7) // temporarily make Monday=0, Tuesday=1, ..., Sunday=6
             .sort()
             .join(',')
 
