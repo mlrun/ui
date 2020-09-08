@@ -52,34 +52,28 @@ const JobsPanelResources = ({
       if (panelState.requests.memory.length > 0) {
         panelDispatch({
           type: panelActions.SET_REQUESTS_MEMORY,
-          payload: panelState.requests.memory + unit
+          payload: Number.parseInt(panelState.requests.memory) + unit
         })
       }
 
       if (panelState.limits.memory.length > 0) {
         panelDispatch({
           type: panelActions.SET_LIMITS_MEMORY,
-          payload: panelState.limits.memory + unit
+          payload: Number.parseInt(panelState.limits.memory) + unit
         })
       }
     } else {
       if (panelState.requests.memory.match(/[a-zA-Z]/)) {
         panelDispatch({
           type: panelActions.SET_REQUESTS_MEMORY,
-          payload: panelState.requests.memory.slice(
-            0,
-            panelState.requests.memory.match(/[a-zA-Z]/).index
-          )
+          payload: Number.parseInt(panelState.requests.memory)
         })
       }
 
       if (panelState.limits.memory.match(/[a-zA-Z]/)) {
         panelDispatch({
           type: panelActions.SET_LIMITS_MEMORY,
-          payload: panelState.limits.memory.slice(
-            0,
-            panelState.limits.memory.match(/[a-zA-Z]/).index
-          )
+          payload: Number.parseInt(panelState.limits.memory)
         })
       }
     }
@@ -109,20 +103,14 @@ const JobsPanelResources = ({
       if (panelState.requests.cpu.match(/m/)) {
         panelDispatch({
           type: panelActions.SET_REQUESTS_CPU,
-          payload: panelState.requests.cpu.slice(
-            0,
-            panelState.requests.cpu.match(/m/).index
-          )
+          payload: Number.parseInt(panelState.requests.cpu)
         })
       }
 
       if (panelState.limits.cpu.match(/m/)) {
         panelDispatch({
           type: panelActions.SET_LIMITS_CPU,
-          payload: panelState.limits.cpu.slice(
-            0,
-            panelState.limits.cpu.match(/m/).index
-          )
+          payload: Number.parseInt(panelState.limits.cpu)
         })
       }
     }
