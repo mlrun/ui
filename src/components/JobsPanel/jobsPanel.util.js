@@ -157,29 +157,27 @@ export const generateTableData = (
   const [{ limits, requests }] = getResources(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
 
-  if (limits.memory.match(/[a-zA-Z]/) || requests.memory.match(/[a-zA-Z]/)) {
-    const limitsMemoryUnit =
-      limits.memory.slice(limits.memory.match(/[a-zA-Z]/).index) + 'B'
-    const requestsMemoryUnit =
-      requests.memory.slice(requests.memory.match(/[a-zA-Z]/).index) + 'B'
+  if (limits?.memory.match(/[a-zA-Z]/) || requests?.memory.match(/[a-zA-Z]/)) {
+    const limitsMemoryUnit = Number.parseInt(limits.memory) + 'B'
+    const requestsMemoryUnit = Number.parseInt(requests.memory) + 'B'
 
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
       payload: limitsMemoryUnit || requestsMemoryUnit
     })
-  } else if (limits.memory.length > 0 || requests.memory.length > 0) {
+  } else if (limits?.memory.length > 0 || requests?.memory.length > 0) {
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
       payload: 'Bytes'
     })
   }
 
-  if (limits.cpu.match(/m/) || requests.cpu.match(/m/)) {
+  if (limits?.cpu.match(/m/) || requests?.cpu.match(/m/)) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'millicpu'
     })
-  } else if (limits.cpu.length > 0 || requests.cpu.length > 0) {
+  } else if (limits?.cpu.length > 0 || requests?.cpu.length > 0) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'cpu'
@@ -219,17 +217,22 @@ export const generateTableData = (
     })
   }
 
-  panelDispatch({
-    type: panelActions.SET_LIMITS,
-    payload: {
-      ...stateLimits,
-      ...limits
-    }
-  })
-  panelDispatch({
-    type: panelActions.SET_REQUESTS,
-    payload: requests
-  })
+  if (limits) {
+    panelDispatch({
+      type: panelActions.SET_LIMITS,
+      payload: {
+        ...stateLimits,
+        ...limits
+      }
+    })
+  }
+
+  if (requests) {
+    panelDispatch({
+      type: panelActions.SET_REQUESTS,
+      payload: requests
+    })
+  }
 }
 
 export const generateRequestData = (
