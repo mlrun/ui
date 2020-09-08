@@ -158,10 +158,8 @@ export const generateTableData = (
   const environmentVariables = getEnvironmentVariables(selectedFunction)
 
   if (limits?.memory.match(/[a-zA-Z]/) || requests?.memory.match(/[a-zA-Z]/)) {
-    const limitsMemoryUnit =
-      limits.memory.slice(limits.memory.match(/[a-zA-Z]/).index) + 'B'
-    const requestsMemoryUnit =
-      requests.memory.slice(requests.memory.match(/[a-zA-Z]/).index) + 'B'
+    const limitsMemoryUnit = limits.memory.replace(/\d+/g, '') + 'B'
+    const requestsMemoryUnit = requests.memory.replace(/\d+/g, '') + 'B'
 
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
