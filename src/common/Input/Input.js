@@ -54,14 +54,14 @@ const Input = React.forwardRef(
       }
     }, [input, focused])
 
-    const handleClick = () => {
-      if (input.current.value.length > 0) {
+    const handleClick = event => {
+      if (event.target.value.length > 0) {
         setInputIsFocused(true)
       } else {
         setInputIsFocused(false)
       }
 
-      onChange(input.current.value)
+      onChange(event.target.value)
     }
 
     return (
