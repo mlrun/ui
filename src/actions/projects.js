@@ -80,10 +80,13 @@ const projectsAction = {
   },
   fetchProjects: () => dispatch => {
     dispatch(projectsAction.fetchProjectsBegin())
-    projectsApi
+
+    return projectsApi
       .getProjects()
       .then(response => {
         dispatch(projectsAction.fetchProjectsSuccess(response.data.projects))
+
+        return response.data.projects
       })
       .catch(err => {
         dispatch(projectsAction.fetchProjectsFailure(err))

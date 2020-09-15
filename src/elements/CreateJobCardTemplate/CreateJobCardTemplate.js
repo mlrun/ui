@@ -19,7 +19,6 @@ const CreateJobCardTemplate = ({ func, handleSelectGroupFunctions }) => {
       </h6>
       {func.metadata && (
         <>
-          <i className={func.status.status} />
           <Tooltip
             template={<TextTooltipTemplate text={func.metadata.hash} />}
             className="card-template__hash"

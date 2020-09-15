@@ -1,13 +1,13 @@
-@import "../../scss/colors";
+@import '../../scss/colors';
 
 .create-container {
   flex: 1;
 
   &__header {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     padding: 18px;
     background-color: $white;
 
@@ -18,10 +18,10 @@
 
         &__title {
           margin: 0 18px;
+          color: $primary;
           font-weight: 500;
           font-size: 20px;
           line-height: 23px;
-          color: $primary
         }
 
         &__icon {
@@ -41,34 +41,63 @@
 
     .expand-icon {
       position: absolute;
-      left: 0;
       top: 0;
+      left: 0;
     }
 
-    .data-wrapper {
-      flex: 1;
+    .data {
+      &-wrapper {
+        flex: 1;
+      }
 
-      &__header {
-        padding-left: 35px;
-        padding-top: 3px;
+      &-search {
+        margin-bottom: 50px;
+      }
+
+      &-header {
         margin-bottom: 40px;
+        padding-top: 3px;
+        padding-left: 35px;
 
-        .header {
-          &__title {
-            font-weight: 500;
-            font-size: 20px;
-            line-height: 23px;
-            color: $topaz;
-            margin: 0;
+        &_with-select {
+          margin-top: -8px;
+        }
+
+        &__title {
+          display: flex;
+          align-items: center;
+          margin: 0;
+          color: $topaz;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 23px;
+        }
+
+        &__select {
+          border: none;
+
+          .select {
+            &__caret {
+              right: -25px;
+            }
+
+            &__item {
+              font-weight: normal;
+              font-size: 15px;
+            }
+          }
+
+          &.active {
+            background: transparent;
           }
         }
       }
 
-      &__list {
-        flex: 1;
-        margin-top: 16px;
+      &-list {
         display: flex;
+        flex: 1;
         flex-flow: row wrap;
+        margin-top: 16px;
       }
     }
   }

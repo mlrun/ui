@@ -4,11 +4,13 @@ import PropTypes from 'prop-types'
 
 import CreateJobCardTemplate from '../../elements/CreateJobCardTemplate/CreateJobCardTemplate'
 import Accordion from '../../common/Accordion/Accordion'
+import Select from '../../common/Select/Select'
+import Search from '../../common/Search/Search'
 
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
 import { ReactComponent as Plus } from '../../images/plus.svg'
 import { ReactComponent as Filter } from '../../images/filter.svg'
-import { ReactComponent as Search } from '../../images/search.svg'
+import { ReactComponent as SearchIcon } from '../../images/search.svg'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './createJobPage.scss'
@@ -17,6 +19,10 @@ const CreateJobPageView = ({
   functions,
   handleSelectGroupFunctions,
   match,
+  projects,
+  selectedProject,
+  setFilterByName,
+  setSelectedProject,
   templates
 }) => (
   <div className="create-container">
@@ -38,19 +44,31 @@ const CreateJobPageView = ({
           <Filter />
         </button>
         <button>
-          <Search />
+          <SearchIcon />
         </button>
       </div>
     </div>
     <div className="create-container__data">
+      <Search
+        className="data-search"
+        onChange={setFilterByName}
+        placeholder="Search by text, tags and keywords..."
+      />
       <Accordion icon={<Arrow />} iconClassName="expand-icon" openByDefault>
         <div className="data-wrapper">
-          <div className="data-wrapper__header">
-            <h5 className="header__title">
-              Functions from {match.params.projectName}
+          <div className="data-header data-header_with-select">
+            <h5 className="data-header__title">
+              <span>Select functions from</span>
+              <Arrow />
+              <Select
+                className="data-header__select"
+                onClick={project => setSelectedProject(project)}
+                options={projects}
+                selectedId={selectedProject}
+              />
             </h5>
           </div>
-          <div className="data-wrapper__list">
+          <div className="data-list">
             {functions.map((func, index) => (
               <CreateJobCardTemplate
                 func={func}
@@ -63,10 +81,10 @@ const CreateJobPageView = ({
       </Accordion>
       <Accordion icon={<Arrow />} iconClassName="expand-icon" openByDefault>
         <div className="data-wrapper">
-          <div className="data-wrapper__header">
-            <h5 className="header__title">Functions templates</h5>
+          <div className="data-header">
+            <h5 className="data-header__title">Functions templates</h5>
           </div>
-          <div className="data-wrapper__list">
+          <div className="data-list">
             {templates?.map((func, index) => (
               <CreateJobCardTemplate
                 func={func}
