@@ -7,7 +7,7 @@ jest.mock('../../images/warning.svg', () => ({
   ReactComponent: 'warning-icon'
 }))
 
-const component = props => render(<Input {...props} />)
+const renderComponent = props => render(<Input {...props} />)
 
 describe('Input component', () => {
   let utils
@@ -28,7 +28,7 @@ describe('Input component', () => {
       type: 'text',
       value: '123'
     }
-    utils = component(props)
+    utils = renderComponent(props)
   })
 
   afterEach(cleanup)
@@ -37,15 +37,15 @@ describe('Input component', () => {
     expect(utils.getByTestId('input')).not.toBeNull()
   })
 
-  it('should props value set to "123"', () => {
+  it('should set props value to "123"', () => {
     expect(utils.getByTestId('input').value).toEqual('123')
   })
 
-  it('should props placeholder set to "Name"', () => {
+  it('should set props placeholder to "Name"', () => {
     expect(utils.getByTestId('input').placeholder).toEqual('Name')
   })
 
-  it('should props className set to "input-default"', () => {
+  it('should set props className to "input-default"', () => {
     expect(utils.getByTestId('input').className).toMatch('input-default')
   })
 
@@ -66,7 +66,7 @@ describe('Input component', () => {
     expect(mockChange).toHaveBeenCalled()
   })
 
-  it('should props disabled set to "true"', () => {
+  it('should set props disabled to "true"', () => {
     expect(utils.getByTestId('input').disabled).toEqual(true)
   })
 
@@ -74,7 +74,7 @@ describe('Input component', () => {
     expect(utils.getByTestId('label')).not.toBeNull()
   })
 
-  it('should input in focused if props focused set to "true"', () => {
+  it('should input active if props focused is "true"', () => {
     cleanup()
     const { getByTestId } = render(<Input type="text" focused={true} />)
     const input = getByTestId('input')
@@ -82,15 +82,14 @@ describe('Input component', () => {
     expect(document.activeElement).toBe(input)
   })
 
-  it('should show the label on the left in the middle of an input container if the input is empty', () => {
+  it('should label has className "active-label"', () => {
     cleanup()
-    const props = {
+    const { getByTestId } = renderComponent({
       type: 'text',
       label: 'Name',
       floatingLabel: true,
       onChange: jest.fn()
-    }
-    const { getByTestId } = render(<Input {...props} />)
+    })
     const input = getByTestId('input')
     const label = getByTestId('label')
 
@@ -105,13 +104,12 @@ describe('Input component', () => {
 
   it('should display tooltip when cursor over the warning icon', () => {
     cleanup()
-    const props = {
+
+    const { getByTestId } = renderComponent({
       type: 'text',
       required: true,
       requiredText: 'This field is require'
-    }
-
-    const { getByTestId } = render(<Input {...props} />)
+    })
 
     const warningIcon = getByTestId('hover-element')
 
