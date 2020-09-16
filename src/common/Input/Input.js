@@ -60,13 +60,13 @@ const Input = React.forwardRef(
       } else {
         setInputIsFocused(false)
       }
-
       onChange(event.target.value)
     }
 
     return (
       <div ref={ref} className={wrapperClassNames}>
         <input
+          data-testid="input"
           className={inputClassNames}
           disabled={disabled}
           maxLength={maxLength}
@@ -79,6 +79,7 @@ const Input = React.forwardRef(
         />
         {label && (
           <label
+            data-testid="label"
             className={`input__label ${inputIsFocused &&
               floatingLabel &&
               'active-label'} ${floatingLabel &&
@@ -103,7 +104,11 @@ const Input = React.forwardRef(
           </Tooltip>
         )}
         {tip && !required && <Tip text={tip} className="input__tip" />}
-        {inputIcon && <span className={iconClass}>{inputIcon}</span>}
+        {inputIcon && (
+          <span data-testid="input-icon" className={iconClass}>
+            {inputIcon}
+          </span>
+        )}
       </div>
     )
   }

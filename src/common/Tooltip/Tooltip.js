@@ -102,12 +102,17 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
 
   return (
     <>
-      <div ref={parentRef} className={tooltipClassNames}>
+      <div
+        data-testid="hover-element"
+        ref={parentRef}
+        className={tooltipClassNames}
+      >
         {children}
       </div>
       <Transition in={show} timeout={duration} unmountOnExit>
         {state => (
           <div
+            data-testid="tooltip"
             ref={tooltipRef}
             style={{
               ...defaultStyle,

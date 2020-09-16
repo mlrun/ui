@@ -56,6 +56,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.6.0",
+    "@svgr/webpack": "^5.4.0",
     "@testing-library/react": "^11.0.2",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
@@ -65,6 +66,7 @@
     "babel-plugin-jest-hoist": "^26.2.0",
     "babel-plugin-named-asset-import": "^0.3.4",
     "babel-plugin-prismjs": "^2.0.1",
+    "babel-plugin-react-remove-properties": "^0.3.0",
     "babel-preset-react-app": "^9.0.2",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "css-loader": "2.1.1",
@@ -140,6 +142,20 @@
           "css": true
         }
       ]
-    ]
+    ],
+    "env": {
+      "production": {
+        "plugins": [
+          [
+            "react-remove-properties",
+            {
+              "properties": [
+                "data-testid"
+              ]
+            }
+          ]
+        ]
+      }
+    }
   }
 }
