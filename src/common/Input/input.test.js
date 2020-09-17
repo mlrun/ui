@@ -59,13 +59,6 @@ describe('Input component', () => {
     expect(input.value).toEqual('1243')
   })
 
-  it('should calls the "onChange" callback handler', () => {
-    const input = utils.getByTestId('input')
-
-    fireEvent.change(input, { target: { value: '123' } })
-    expect(mockChange).toHaveBeenCalled()
-  })
-
   it('should set props disabled to "true"', () => {
     expect(utils.getByTestId('input').disabled).toEqual(true)
   })
