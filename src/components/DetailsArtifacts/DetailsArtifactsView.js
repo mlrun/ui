@@ -8,6 +8,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import Tooltip from '../../common/Tooltip/Tooltip'
 
 import { ReactComponent as Popout } from '../../images/popout.svg'
+import { ReactComponent as DetailsIcon } from '../../images/view-details.svg'
 
 import './detailsArtifacts.scss'
 
@@ -34,14 +35,6 @@ const DetailsArtifactsView = ({
               >
                 {artifact.key}
               </span>
-              <Link
-                className="artifact-details-link"
-                to={`/projects/${
-                  match.params.projectName
-                }/artifacts/${artifact.db_key || artifact.key}/info`}
-              >
-                View details...
-              </Link>
             </div>
             <div className="item-artifacts__row-item item-artifacts__row-item_long">
               <Tooltip template={<TextTooltipTemplate text={targetPath} />}>
@@ -59,15 +52,15 @@ const DetailsArtifactsView = ({
               </Tooltip>
             </div>
             <div className="item-artifacts__row-item item-artifacts__row-item_short">
-              <Tooltip
-                template={<TextTooltipTemplate text="Artifacts Preview" />}
-              >
-                <Popout
-                  className="icon-popout"
-                  onClick={() => {
-                    showPreview(artifact)
-                  }}
-                />
+              <Tooltip template={<TextTooltipTemplate text="Show Details" />}>
+                <Link
+                  target="_blank"
+                  to={`/projects/${
+                    match.params.projectName
+                  }/artifacts/${artifact.db_key || artifact.key}/info`}
+                >
+                  <DetailsIcon />
+                </Link>
               </Tooltip>
             </div>
             <div className="item-artifacts__row-item item-artifacts__row-item_short">
@@ -82,6 +75,16 @@ const DetailsArtifactsView = ({
           </div>
           {artifactsIndexes.includes(index) && (
             <div className="item-artifacts__preview">
+              <Tooltip
+                template={<TextTooltipTemplate text="Artifacts Preview" />}
+                className="icon-popout"
+              >
+                <Popout
+                  onClick={() => {
+                    showPreview(artifact)
+                  }}
+                />
+              </Tooltip>
               <ArtifactsPreview artifact={artifact} />
             </div>
           )}

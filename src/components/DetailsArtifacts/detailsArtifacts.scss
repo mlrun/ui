@@ -43,19 +43,19 @@
         flex: 0.3;
         min-width: 75px;
       }
+    }
+  }
 
-      .artifact-details-link {
-        color: grey;
-        font-size: 10px;
-        cursor: pointer;
-      }
+  .icon {
+    &-dowload {
+      cursor: pointer;
     }
 
-    .icon {
-      &-dowload,
-      &-popout {
-        cursor: pointer;
-      }
+    &-popout {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      cursor: pointer;
     }
   }
 
