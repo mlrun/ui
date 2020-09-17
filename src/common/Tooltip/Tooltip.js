@@ -103,7 +103,7 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
   return (
     <>
       <div
-        data-testid="hover-element"
+        data-testid="tooltip-wrapper"
         ref={parentRef}
         className={tooltipClassNames}
       >

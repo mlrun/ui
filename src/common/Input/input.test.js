@@ -104,7 +104,7 @@ describe('Input component', () => {
       requiredText: 'This field is require'
     })
 
-    const warningIcon = getByTestId('hover-element')
+    const warningIcon = getByTestId('tooltip-wrapper')
 
     fireEvent.mouseEnter(warningIcon)
 
