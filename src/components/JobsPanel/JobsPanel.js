@@ -56,13 +56,14 @@ const JobsPanel = ({
   const [selectedFunction] = useState(
     !isEmpty(functionsStore.template)
       ? functionsStore.template.functions
-      : groupedFunctions.functions
+      : groupedFunctions.functions || {}
   )
   const history = useHistory()
   const dispatch = useDispatch()
 
   useLayoutEffect(() => {
     if (!groupedFunctions.name && !functionsStore.template.name) {
+      console.log('here')
       fetchFunctionTemplate(groupedFunctions.metadata.versions.latest)
     }
     return () => functionsStore.template.name && removeFunctionTemplate()
@@ -102,7 +103,11 @@ const JobsPanel = ({
   ])
 
   useEffect(() => {
-    if (!panelState.editMode && isEveryObjectValueEmpty(panelState.tableData)) {
+    if (
+      !panelState.editMode &&
+      isEveryObjectValueEmpty(panelState.tableData) &&
+      !isEveryObjectValueEmpty(selectedFunction)
+    ) {
       generateTableData(
         panelState.currentFunctionInfo.method,
         selectedFunction,

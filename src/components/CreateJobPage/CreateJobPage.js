@@ -10,6 +10,7 @@ import JobsPanel from '../JobsPanel/JobsPanel'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
+import { generateProjectsList } from './createJobPage.util'
 
 const CreateJobPage = ({
   fetchFunctions,
@@ -25,14 +26,14 @@ const CreateJobPage = ({
   const [filteredFunctions, setFilteredFunctions] = useState([])
   const [filteredTemplates, setFilteredTemplates] = useState([])
   const [functions, setFunctions] = useState([])
-  const [projects, setProjects] = useState(projectStore.projects)
+  const [projects, setProjects] = useState(
+    generateProjectsList(projectStore.projects, match.params.projectName)
+  )
   const [selectedGroupFunctions, setSelectedGroupFunctions] = useState({})
   const [selectedProject, setSelectedProject] = useState(
     match.params.projectName
   )
   const [templates, setTemplates] = useState(functionsStore.templatesCatalog)
-
-  console.log(filterMatches)
 
   useEffect(() => {
     if (!selectedProject) {
@@ -43,15 +44,7 @@ const CreateJobPage = ({
   useEffect(() => {
     if (projects.length === 0) {
       fetchProjects().then(projects => {
-        setProjects(
-          projects.map(project => ({
-            label:
-              project.name === match.params.projectName
-                ? 'Current project'
-                : project.name,
-            id: project.name
-          }))
-        )
+        setProjects(generateProjectsList(projects, match.params.projectName))
       })
     }
   }, [fetchProjects, match.params.projectName, projects.length])
@@ -99,6 +92,7 @@ const CreateJobPage = ({
       const filteredTemplts = templates.filter(template =>
         template.metadata.name.includes(filterByName)
       )
+
       setFilteredFunctions(filteredFuncs)
       setFilteredTemplates(filteredTemplts)
       setFilterMatches([
@@ -129,18 +123,31 @@ const CreateJobPage = ({
     }
   }
 
+  const selectProject = projectName => {
+    setSelectedProject(projectName)
+
+    if (filterByName.length > 0) {
+      setFilterByName('')
+    }
+  }
+
   return functionsStore.loading ? (
     <Loader />
   ) : (
     <>
       <CreateJobPageView
+        filterByName={filterByName}
+        filterMatches={filterMatches}
+        filteredFunctions={filteredFunctions}
+        filteredTemplates={filteredTemplates}
         functions={filteredFunctions.length > 0 ? filteredFunctions : functions}
         handleSelectGroupFunctions={handleSelectGroupFunctions}
         match={match}
         projects={projects}
+        selectProject={selectProject}
         selectedProject={selectedProject}
         setFilterByName={setFilterByName}
-        setSelectedProject={setSelectedProject}
+        setFilterMatches={setFilterMatches}
         templates={filteredTemplates.length > 0 ? filteredTemplates : templates}
       />
       {Object.values(selectedGroupFunctions).length > 0 && (

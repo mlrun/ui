@@ -45,6 +45,22 @@
       left: 0;
     }
 
+    .accordion__container {
+      .accordion__body {
+        overflow: visible;
+      }
+
+      .data-list {
+        display: none;
+      }
+
+      &.open {
+        .data-list {
+          display: flex;
+        }
+      }
+    }
+
     .data {
       &-wrapper {
         flex: 1;
@@ -55,7 +71,7 @@
       }
 
       &-header {
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         padding-top: 3px;
         padding-left: 35px;
 
@@ -77,6 +93,10 @@
           border: none;
 
           .select {
+            &__body {
+              min-width: 130px;
+            }
+
             &__caret {
               right: -25px;
             }

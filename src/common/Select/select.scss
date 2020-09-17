@@ -12,6 +12,7 @@
   background-color: transparent;
   border: $primaryBorder;
   border-radius: 4px;
+  cursor: pointer;
 
   &.active {
     background: $alabaster;
