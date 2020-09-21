@@ -1,6 +1,5 @@
 import React from 'react'
-import { render, fireEvent, cleanup, screen } from '@testing-library/react'
-
+import { render, fireEvent, cleanup } from '@testing-library/react'
 import Input from './Input'
 
 jest.mock('../../images/warning.svg', () => ({
