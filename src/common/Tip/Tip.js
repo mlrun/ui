@@ -40,7 +40,7 @@ const Tip = ({ className, text }) => {
   }, [isShow])
 
   return (
-    <div className={tipContainerClassNames}>
+    <div data-testid="tip" className={tipContainerClassNames}>
       <QuestionMarkIcon ref={tipRef} />
       <CSSTransition in={isShow} timeout={200} classNames="fade" unmountOnExit>
         <div className={tipCLassNames}>{text}</div>

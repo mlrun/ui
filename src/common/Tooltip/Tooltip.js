@@ -55,7 +55,10 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
         const {
           height: tooltipHeight,
           width: tooltipWidth
-        } = tooltipRef.current.getBoundingClientRect()
+        } = tooltipRef.current?.getBoundingClientRect() ?? {
+          height: 0,
+          width: 0
+        }
         const left =
           event.x + tooltipWidth > window.innerWidth
             ? event.x - (event.x + tooltipWidth - window.innerWidth + offset)
@@ -99,12 +102,17 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
 
   return (
     <>
-      <div ref={parentRef} className={tooltipClassNames}>
+      <div
+        data-testid="tooltip-wrapper"
+        ref={parentRef}
+        className={tooltipClassNames}
+      >
         {children}
       </div>
       <Transition in={show} timeout={duration} unmountOnExit>
         {state => (
           <div
+            data-testid="tooltip"
             ref={tooltipRef}
             style={{
               ...defaultStyle,
