@@ -7,13 +7,17 @@ on:
 #    - development
 #    - '[0-9]+.[0-9]+.x'
 
+env:
+  # When developing set this to your github username
+  MLRUN_DOCKER_REPO: hedingber
+
 jobs:
   build-images:
     name: Build and push ui image
     runs-on: ubuntu-latest
 
-    # let's not run this on every fork, change to your fork when developing
-    if: github.repository == 'hedingber/ui'
+    # let's not run this on every fork
+    if: github.repository == '${{ env.MLRUN_DOCKER_REPO }}/ui'
 
     steps:
     - uses: actions/checkout@v2
@@ -23,13 +27,16 @@ jobs:
       run: echo "::set-env name=LATEST_VERSION::$(curl -sf https://pypi.org/pypi/mlrun/json | jq -r '.info.version')"
     - name: Set GIT_HASH env var
       run: echo "::set-env name=GIT_HASH::$(git rev-parse --short $GITHUB_SHA)"
+    - name: Set MLRUN_DOCKER_TAG env var
+      run: echo "::set-env name=MLRUN_DOCKER_TAG::$($LATEST_VERSION-$GIT_HASH)"
     - name: Setup Node.js 12
       uses: actions/setup-node@v1
       with:
         node-version: '12'
     - name: Docker login
       run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ secrets.CR_USERNAME }} --password-stdin
-    - name: Pull cache, build and push image
+    - name: Build image
 
-      # When developing add MLRUN_DOCKER_REPO=<your fork name>
-      run: MLRUN_DOCKER_REGISTRY=ghcr.io/ MLRUN_DOCKER_REPO=hedingber MLRUN_DOCKER_TAG="$LATEST_VERSION"-"$GIT_HASH" npm run docker
+      run: MLRUN_DOCKER_REGISTRY=ghcr.io/ MLRUN_DOCKER_REPO="$MLRUN_DOCKER_REPO" MLRUN_DOCKER_TAG="$MLRUN_DOCKER_TAG" npm run docker
+    - name: Push image
+      run: docker push ghcr.io/"$MLRUN_DOCKER_REPO"/ui:"$MLRUN_DOCKER_TAG"
