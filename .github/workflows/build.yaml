@@ -35,7 +35,6 @@ jobs:
     - name: Docker login
       run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ secrets.CR_USERNAME }} --password-stdin
     - name: Build image
-
-      run: MLRUN_DOCKER_REGISTRY=ghcr.io/ MLRUN_DOCKER_REPO=${{ env.MLRUN_DOCKER_REPO }} MLRUN_DOCKER_TAG="$MLRUN_DOCKER_TAG" npm run docker
+      run: MLRUN_DOCKER_REGISTRY=ghcr.io/ MLRUN_DOCKER_REPO="$MLRUN_DOCKER_REPO" MLRUN_DOCKER_TAG="$MLRUN_DOCKER_TAG" npm run docker
     - name: Push image
-      run: docker push ghcr.io/${{ env.MLRUN_DOCKER_REPO }}/ui:"$MLRUN_DOCKER_TAG"
+      run: docker push ghcr.io/"$MLRUN_DOCKER_REPO"/mlrun-ui:"$MLRUN_DOCKER_TAG"
