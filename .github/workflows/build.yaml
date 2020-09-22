@@ -16,7 +16,7 @@ jobs:
     if: github.repository == 'hedingber/ui'
     env:
       # When developing set this to your github username
-      MLRUN_DOCKER_REPO: 'hedingber'
+      MLRUN_DOCKER_REPO: 'hedier'
 
     steps:
     - uses: actions/checkout@v2
