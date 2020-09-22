@@ -63,7 +63,6 @@ const JobsPanel = ({
 
   useLayoutEffect(() => {
     if (!groupedFunctions.name && !functionsStore.template.name) {
-      console.log('here')
       fetchFunctionTemplate(groupedFunctions.metadata.versions.latest)
     }
     return () => functionsStore.template.name && removeFunctionTemplate()

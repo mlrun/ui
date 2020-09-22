@@ -14,6 +14,11 @@ import { ReactComponent as Filter } from '../../images/filter.svg'
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
+import {
+  generateCategoryHeader,
+  getFunctionCategories
+} from './createJobPage.util'
+
 import './createJobPage.scss'
 
 const CreateJobPageView = ({
@@ -62,7 +67,12 @@ const CreateJobPageView = ({
         placeholder="Search by text, tags and keywords..."
         setMatches={setFilterMatches}
       />
-      <Accordion icon={<Arrow />} iconClassName="expand-icon" openByDefault>
+      <Accordion
+        accordionClassName="functions-container"
+        icon={<Arrow />}
+        iconClassName="expand-icon"
+        openByDefault
+      >
         <div className="data-wrapper">
           <div className="data-header data-header_with-select">
             <h5 className="data-header__title">
@@ -76,19 +86,27 @@ const CreateJobPageView = ({
               />
             </h5>
           </div>
-          <div className="data-list">
+          <div className="create-container__data-list">
             {(filterByName.length > 0 &&
               (filterMatches.length === 0 || filteredFunctions.length === 0)) ||
             functions.length === 0 ? (
               <NoData />
             ) : (
-              functions.map((func, index) => (
-                <CreateJobCardTemplate
-                  func={func}
-                  handleSelectGroupFunctions={handleSelectGroupFunctions}
-                  key={func.name}
-                />
-              ))
+              functions.map(func => {
+                const categories = getFunctionCategories(func.functions)
+                const categoriesHeaders = categories.map(category =>
+                  generateCategoryHeader(category)
+                )
+
+                return (
+                  <CreateJobCardTemplate
+                    categories={categoriesHeaders}
+                    func={func}
+                    handleSelectGroupFunctions={handleSelectGroupFunctions}
+                    key={func.name}
+                  />
+                )
+              })
             )}
           </div>
         </div>
@@ -98,19 +116,41 @@ const CreateJobPageView = ({
           <div className="data-header">
             <h5 className="data-header__title">Functions templates</h5>
           </div>
-          <div className="data-list">
+          <div className="templates-container">
             {(filterByName.length > 0 &&
               (filterMatches.length === 0 || filteredTemplates.length === 0)) ||
             templates.length === 0 ? (
               <NoData />
             ) : (
-              templates?.map((func, index) => (
-                <CreateJobCardTemplate
-                  func={func}
-                  handleSelectGroupFunctions={handleSelectGroupFunctions}
-                  key={func?.metadata.hash + index}
-                />
-              ))
+              Object.entries(templates).map(category => {
+                const header = generateCategoryHeader(category[0])
+
+                return (
+                  <Accordion
+                    icon={<Arrow />}
+                    iconClassName="expand-icon"
+                    key={category}
+                  >
+                    <h6 className={`category-header ${header.className}`}>
+                      <span className="category-header__icon">
+                        {header.icon}
+                      </span>
+                      {header.label}
+                    </h6>
+                    <div className="create-container__data-list">
+                      {category[1].map((template, index) => (
+                        <CreateJobCardTemplate
+                          func={template}
+                          handleSelectGroupFunctions={
+                            handleSelectGroupFunctions
+                          }
+                          key={template?.metadata.hash + index}
+                        />
+                      ))}
+                    </div>
+                  </Accordion>
+                )
+              })
             )}
           </div>
         </div>
@@ -123,7 +163,7 @@ CreateJobPageView.propTypes = {
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSelectGroupFunctions: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  templates: PropTypes.shape({}).isRequired
 }
 
 export default CreateJobPageView

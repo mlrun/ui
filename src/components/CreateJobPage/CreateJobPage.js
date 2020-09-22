@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { includes } from 'lodash'
+import { includes, isEmpty } from 'lodash'
 
 import CreateJobPageView from './CreateJobPageView'
 import Loader from '../../common/Loader/Loader'
@@ -73,13 +73,13 @@ const CreateJobPage = ({
       return setFunctions(groupedFunctions)
     })
 
-    if (functionsStore.templatesCatalog.length === 0) {
+    if (isEmpty(functionsStore.templatesCatalog)) {
       fetchFunctionsTemplates().then(setTemplates)
     }
   }, [
     fetchFunctions,
     fetchFunctionsTemplates,
-    functionsStore.templatesCatalog.length,
+    functionsStore.templatesCatalog,
     match.params.projectName,
     selectedProject
   ])
