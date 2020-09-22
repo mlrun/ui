@@ -3,8 +3,7 @@ name: Build
 on:
   push:
     branches:
-    - adding_build_ci
-#    - development
+    - development
 #    - '[0-9]+.[0-9]+.x'
 
 jobs:
@@ -13,14 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     # let's not run this on every fork, change to your fork when developing
-    if: github.repository == 'hedingber/ui'
+    if: github.repository == 'mlrun/ui'
 
     steps:
     - uses: actions/checkout@v2
     - name: Install curl and jq
       run: sudo apt-get install curl jq
     - name: Set MLRUN_DOCKER_REPO env var
-      # When developing set this to your github username
       run: echo "::set-env name=MLRUN_DOCKER_REPO::$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')"
     - name: Set LATEST_VERSION env var
       run: echo "::set-env name=LATEST_VERSION::$(curl -sf https://pypi.org/pypi/mlrun/json | jq -r '.info.version')"
