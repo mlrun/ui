@@ -16,8 +16,8 @@ jobs:
     name: Build and push ui image
     runs-on: ubuntu-latest
 
-    # let's not run this on every fork
-    if: github.repository == ${{ env.MLRUN_DOCKER_REPO }}/ui
+    # let's not run this on every fork, change to your fork when developing
+    if: github.repository == 'hedingber/ui'
 
     steps:
     - uses: actions/checkout@v2
