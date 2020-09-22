@@ -27,7 +27,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12'
-    - run: npm install
     - name: Docker login
       run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ secrets.CR_USERNAME }} --password-stdin
     - name: Pull cache, build and push image
