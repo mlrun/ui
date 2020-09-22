@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # let's not run this on every fork
-    if: github.repository == '${{ env.MLRUN_DOCKER_REPO }}/ui'
+    if: github.repository == ${{ env.MLRUN_DOCKER_REPO }}/ui
 
     steps:
     - uses: actions/checkout@v2
