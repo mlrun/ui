@@ -7,10 +7,6 @@ on:
 #    - development
 #    - '[0-9]+.[0-9]+.x'
 
-env:
-  # When developing set this to your github username
-  MLRUN_DOCKER_REPO: 'hedingber'
-
 jobs:
   build-images:
     name: Build and push ui image
@@ -18,6 +14,9 @@ jobs:
 
     # let's not run this on every fork, change to your fork when developing
     if: github.repository == 'hedingber/ui'
+    env:
+      # When developing set this to your github username
+      MLRUN_DOCKER_REPO: 'hedingber'
 
     steps:
     - uses: actions/checkout@v2
