@@ -100,11 +100,11 @@ const ProjectView = React.forwardRef(
                   )}
                 </div>
               </div>
-              <div className="general-info__divider"></div>
+              <div className="general-info__divider" />
               {projectStore.project.data.state && (
                 <div className="general-info__status">
                   <span className="general-info__status-label">Status:</span>
-                  <i className={statusClassName}></i>
+                  <i className={statusClassName} />
                   <span className="general-info__status-name">
                     {projectStore.project.data.state}
                   </span>
@@ -114,7 +114,6 @@ const ProjectView = React.forwardRef(
                 <span className="general-info__owner-label">Owner:</span>
                 <span>{projectStore.project.data.owner}</span>
               </div>
-              <div className="general-info__divider"></div>
               <div className="general-info__links">
                 <div className="general-info__links-label">Quick Links</div>
                 {links.map(({ label, link }) => {

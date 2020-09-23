@@ -45,6 +45,7 @@
       }
 
       &__settings {
+        display: none;
         margin-left: 10px;
       }
 
@@ -81,6 +82,7 @@
       }
 
       &__owner {
+        display: none;
         color: $primary;
 
         &-label {
@@ -129,6 +131,7 @@
           }
 
           &.launch-menu {
+            display: none;
             background-color: $white;
 
             .select {
@@ -139,6 +142,7 @@
           }
 
           &.create-new-menu {
+            margin-left: auto;
             background-color: $purple;
             border: none;
 
