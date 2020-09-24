@@ -93,7 +93,7 @@ const Jobs = ({
   const getWorkflows = useCallback(
     token => {
       fetchWorkflows(token).then(pageToken => {
-        if (pageToken) {
+        if (pageToken?.length > 0) {
           getWorkflows(pageToken)
         }
       })
