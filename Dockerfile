@@ -24,7 +24,8 @@ COPY nginx/nginx.conf.tmpl /etc/nginx/conf.d/
 EXPOSE 80
 
 ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:80}"
+ENV NUCLIO_API_PROXY_URL="${NUCLIO_API_PROXY_URL:-http://localhost:8080}"
 ENV MLRUN_V3IO_ACCESS_KEY="${MLRUN_V3IO_ACCESS_KEY:-\"\"}"
 ENV MLRUN_FUNCTION_CATALOG_URL="${MLRUN_FUNCTION_CATALOG_URL:-https://raw.githubusercontent.com/mlrun/functions/master}"
 
-CMD ["/bin/sh", "-c", "envsubst '${MLRUN_API_PROXY_URL} ${MLRUN_V3IO_ACCESS_KEY} ${MLRUN_FUNCTION_CATALOG_URL}' < /etc/nginx/conf.d/nginx.conf.tmpl > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'"]
+CMD ["/bin/sh", "-c", "envsubst '${MLRUN_API_PROXY_URL} ${NUCLIO_API_PROXY_URL} ${MLRUN_V3IO_ACCESS_KEY} ${MLRUN_FUNCTION_CATALOG_URL}' < /etc/nginx/conf.d/nginx.conf.tmpl > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'"]
