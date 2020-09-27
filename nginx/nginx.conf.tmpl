@@ -18,14 +18,14 @@ server {
     try_files $uri $uri/ /index.html;
   }
 
-  location /api {
-    proxy_set_header x-v3io-session-key $v3io_session_key;
-    proxy_pass ${MLRUN_API_PROXY_URL};
-  }
-
   location /nuclio {
     rewrite ^/nuclio(/|$)(.*) /$2 break;
     proxy_pass ${NUCLIO_API_PROXY_URL};
+  }
+
+  location /api {
+    proxy_set_header x-v3io-session-key $v3io_session_key;
+    proxy_pass ${MLRUN_API_PROXY_URL};
   }
 
   error_page   500 502 503 504  /50x.html;
