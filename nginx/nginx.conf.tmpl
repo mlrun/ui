@@ -24,7 +24,7 @@ server {
   }
 
   location /nuclio {
-    rewrite ^/nuclio(/|$)(.*) /$2 last;
+    rewrite ^/nuclio(/|$)(.*) /$2 break;
     proxy_pass ${NUCLIO_API_PROXY_URL};
   }
 
