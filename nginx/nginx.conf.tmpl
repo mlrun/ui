@@ -25,7 +25,7 @@ server {
 
   location /nuclio {
     rewrite ^/nuclio(/|$)(.*) /$2 break;
-    proxy_pass ${NUCLIO_API_PROXY_URL};
+    proxy_pass ${MLRUN_NUCLIO_API_URL};
   }
 
   error_page   500 502 503 504  /50x.html;
