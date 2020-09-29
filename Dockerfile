@@ -24,8 +24,8 @@ COPY nginx/nginx.conf.tmpl /etc/nginx/conf.d/
 EXPOSE 80
 
 ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:80}"
-ENV MLRUN_NUCLIO_API_URL="${MLRUN_NUCLIO_API_URL:-unknown}"
-ENV MLRUN_NUCLIO_UI_URL="${MLRUN_NUCLIO_UI_URL:-unknown}"
+ENV MLRUN_NUCLIO_API_URL="${MLRUN_NUCLIO_API_URL:-disabled}"
+ENV MLRUN_NUCLIO_UI_URL="${MLRUN_NUCLIO_UI_URL:-disabled}"
 ENV MLRUN_V3IO_ACCESS_KEY="${MLRUN_V3IO_ACCESS_KEY:-\"\"}"
 ENV MLRUN_FUNCTION_CATALOG_URL="${MLRUN_FUNCTION_CATALOG_URL:-https://raw.githubusercontent.com/mlrun/functions/master}"
 
