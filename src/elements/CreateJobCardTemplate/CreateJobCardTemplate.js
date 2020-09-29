@@ -8,12 +8,7 @@ import { truncateUid } from '../../utils'
 
 import './createJobCardTemplate.scss'
 
-const CreateJobCardTemplate = ({
-  categories,
-  func,
-  handleSelectGroupFunctions
-}) => {
-  console.log(categories)
+const CreateJobCardTemplate = ({ func, handleSelectGroupFunctions }) => {
   return (
     <div
       className="card-template"
@@ -36,24 +31,8 @@ const CreateJobCardTemplate = ({
           </div>
         </>
       )}
-      {categories && (
-        <div>
-          {categories.map(category => (
-            <Tooltip
-              template={<TextTooltipTemplate text={category.label} />}
-              key={category.label}
-            >
-              <span>{category.miniIcon}</span>
-            </Tooltip>
-          ))}
-        </div>
-      )}
     </div>
   )
-}
-
-CreateJobCardTemplate.defaultProps = {
-  status: ''
 }
 
 CreateJobCardTemplate.propTypes = {

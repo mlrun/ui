@@ -14,10 +14,8 @@ import { ReactComponent as Filter } from '../../images/filter.svg'
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
-import {
-  generateCategoryHeader,
-  getFunctionCategories
-} from './createJobPage.util'
+import { generateCategoryHeader } from './createJobPage.util'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import './createJobPage.scss'
 
@@ -92,21 +90,13 @@ const CreateJobPageView = ({
             functions.length === 0 ? (
               <NoData />
             ) : (
-              functions.map(func => {
-                const categories = getFunctionCategories(func.functions)
-                const categoriesHeaders = categories.map(category =>
-                  generateCategoryHeader(category)
-                )
-
-                return (
-                  <CreateJobCardTemplate
-                    categories={categoriesHeaders}
-                    func={func}
-                    handleSelectGroupFunctions={handleSelectGroupFunctions}
-                    key={func.name}
-                  />
-                )
-              })
+              functions.map(func => (
+                <CreateJobCardTemplate
+                  func={func}
+                  handleSelectGroupFunctions={handleSelectGroupFunctions}
+                  key={func.name}
+                />
+              ))
             )}
           </div>
         </div>
@@ -118,12 +108,15 @@ const CreateJobPageView = ({
           </div>
           <div className="templates-container">
             {(filterByName.length > 0 &&
-              (filterMatches.length === 0 || filteredTemplates.length === 0)) ||
+              (filterMatches.length === 0 ||
+                isEveryObjectValueEmpty(filteredTemplates))) ||
             templates.length === 0 ? (
               <NoData />
             ) : (
               Object.entries(templates).map(category => {
                 const header = generateCategoryHeader(category[0])
+
+                if (category[1].length === 0) return null
 
                 return (
                   <Accordion

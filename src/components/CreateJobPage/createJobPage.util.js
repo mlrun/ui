@@ -37,7 +37,7 @@ export const generateCategoryHeader = category => {
         icon: <DataPreparation />,
         miniIcon: <DataPreparationMini />
       }
-    case 'data-movement':
+    case 'data-source':
       return {
         className: category,
         label: 'ETL',
@@ -58,7 +58,7 @@ export const generateCategoryHeader = category => {
         icon: <ML />,
         miniIcon: <MLMini />
       }
-    case 'serving' || 'serve':
+    case 'serving':
       return {
         className: category,
         label: 'Model Serving',
@@ -72,7 +72,7 @@ export const generateCategoryHeader = category => {
         icon: <ModelTraining />,
         miniIcon: <ModelTrainingMini />
       }
-    case 'analysis' || 'sentiment analysis':
+    case 'analysis':
       return {
         className: category,
         label: 'Data Analysis',

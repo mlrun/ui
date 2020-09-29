@@ -4,7 +4,6 @@ export const generateCategories = templates => {
   templates.forEach(template => {
     if (template.metadata.categories) {
       template.metadata.categories.forEach(category => {
-        console.log(category)
         if (category === 'serving' || category === 'serve') {
           if (templatesCategories['serving']) {
             templatesCategories['serving'] = [
@@ -25,6 +24,37 @@ export const generateCategories = templates => {
             ]
           } else {
             templatesCategories['analysis'] = [template]
+          }
+        } else if (category === 'data-movement' || category === 'data-source') {
+          if (templatesCategories['data-source']) {
+            templatesCategories['data-source'] = [
+              ...templatesCategories['data-source'],
+              template
+            ]
+          } else {
+            templatesCategories['data-source'] = [template]
+          }
+        } else if (category === 'notifications' || category === 'ops') {
+          if (templatesCategories['notifications']) {
+            templatesCategories['notifications'] = [
+              ...templatesCategories['notifications'],
+              template
+            ]
+          } else {
+            templatesCategories['notifications'] = [template]
+          }
+        } else if (
+          category === 'test' ||
+          category === 'utils' ||
+          category === 'BERT' ||
+          category === 'embeddings' ||
+          category === 'concept-drift' ||
+          category === 'experimental'
+        ) {
+          if (templatesCategories.other) {
+            templatesCategories.other = [...templatesCategories.other, template]
+          } else {
+            templatesCategories.other = [template]
           }
         } else if (templatesCategories[category]) {
           templatesCategories[category] = [

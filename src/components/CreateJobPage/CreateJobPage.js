@@ -33,7 +33,10 @@ const CreateJobPage = ({
   const [selectedProject, setSelectedProject] = useState(
     match.params.projectName
   )
-  const [templates, setTemplates] = useState(functionsStore.templatesCatalog)
+  const [templatesCategories, setTemplatesCategories] = useState(
+    functionsStore.templatesCatalog
+  )
+  const [templates, setTemplates] = useState([])
 
   useEffect(() => {
     if (!selectedProject) {
@@ -74,7 +77,10 @@ const CreateJobPage = ({
     })
 
     if (isEmpty(functionsStore.templatesCatalog)) {
-      fetchFunctionsTemplates().then(setTemplates)
+      fetchFunctionsTemplates().then(templatesObject => {
+        setTemplatesCategories(templatesObject.templatesCategories)
+        setTemplates(templatesObject.templates)
+      })
     }
   }, [
     fetchFunctions,
@@ -93,8 +99,16 @@ const CreateJobPage = ({
         template.metadata.name.includes(filterByName)
       )
 
+      const filteredTempltsObject = {}
+
+      Object.entries(templatesCategories).forEach(category => {
+        filteredTempltsObject[category[0]] = category[1].filter(template =>
+          template.metadata.name.includes(filterByName)
+        )
+      })
+
       setFilteredFunctions(filteredFuncs)
-      setFilteredTemplates(filteredTemplts)
+      setFilteredTemplates(filteredTempltsObject)
       setFilterMatches([
         ...new Set(
           filteredFuncs
@@ -112,7 +126,8 @@ const CreateJobPage = ({
     filteredFunctions.length,
     filteredTemplates.length,
     functions,
-    templates
+    templates,
+    templatesCategories
   ])
 
   const handleSelectGroupFunctions = item => {
@@ -148,7 +163,9 @@ const CreateJobPage = ({
         selectedProject={selectedProject}
         setFilterByName={setFilterByName}
         setFilterMatches={setFilterMatches}
-        templates={filteredTemplates.length > 0 ? filteredTemplates : templates}
+        templates={
+          !isEmpty(filteredTemplates) ? filteredTemplates : templatesCategories
+        }
       />
       {Object.values(selectedGroupFunctions).length > 0 && (
         <JobsPanel

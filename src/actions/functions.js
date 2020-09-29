@@ -60,7 +60,7 @@ const functionsActions = {
 
         dispatch(functionsActions.setFunctionsTemplates(templatesCategories))
 
-        return templatesCategories
+        return { templatesCategories, templates }
       })
       .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
   },
