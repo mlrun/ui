@@ -1,28 +1,58 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { includes } from 'lodash'
+import { includes, isEmpty } from 'lodash'
 
 import CreateJobPageView from './CreateJobPageView'
-import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
+import projectsAction from '../../actions/projects'
+import { generateProjectsList } from './createJobPage.util'
 
 const CreateJobPage = ({
   fetchFunctions,
   fetchFunctionsTemplates,
+  fetchProjects,
   functionsStore,
   match,
+  projectStore,
   removeNewJob
 }) => {
+  const [filterByName, setFilterByName] = useState('')
+  const [filterMatches, setFilterMatches] = useState([])
+  const [filteredFunctions, setFilteredFunctions] = useState([])
+  const [filteredTemplates, setFilteredTemplates] = useState({})
   const [functions, setFunctions] = useState([])
+  const [projects, setProjects] = useState(
+    generateProjectsList(projectStore.projects, match.params.projectName)
+  )
   const [selectedGroupFunctions, setSelectedGroupFunctions] = useState({})
-  const [templates, setTemplates] = useState(functionsStore.templatesCatalog)
+  const [selectedProject, setSelectedProject] = useState(
+    match.params.projectName
+  )
+  const [templatesCategories, setTemplatesCategories] = useState(
+    functionsStore.templatesCatalog
+  )
+  const [templates, setTemplates] = useState([])
 
   useEffect(() => {
-    fetchFunctions(match.params.projectName).then(functions => {
+    if (!selectedProject) {
+      setSelectedProject(match.params.projectName)
+    }
+  }, [selectedProject, match.params.projectName])
+
+  useEffect(() => {
+    if (projects.length === 0) {
+      fetchProjects().then(projects => {
+        setProjects(generateProjectsList(projects, match.params.projectName))
+      })
+    }
+  }, [fetchProjects, match.params.projectName, projects.length])
+
+  useEffect(() => {
+    fetchFunctions(selectedProject).then(functions => {
       const filteredFunctions = functions.filter(
         func => !includes(['', 'handler', 'local'], func.kind)
       )
@@ -45,15 +75,49 @@ const CreateJobPage = ({
       return setFunctions(groupedFunctions)
     })
 
-    if (functionsStore.templatesCatalog.length === 0) {
-      fetchFunctionsTemplates().then(setTemplates)
+    if (isEmpty(functionsStore.templatesCatalog)) {
+      fetchFunctionsTemplates().then(templatesObject => {
+        setTemplatesCategories(templatesObject.templatesCategories)
+        setTemplates(templatesObject.templates)
+      })
     }
   }, [
     fetchFunctions,
     fetchFunctionsTemplates,
-    functionsStore.templatesCatalog.length,
-    match.params.projectName
+    functionsStore.templatesCatalog,
+    match.params.projectName,
+    selectedProject
   ])
+
+  useEffect(() => {
+    if (filterByName.length > 0) {
+      const filteredFuncs = functions.filter(func =>
+        func.name.includes(filterByName)
+      )
+      const filteredTemplts = templates.filter(template =>
+        template.metadata.name.includes(filterByName)
+      )
+      const filteredTemplatesCategories = {}
+
+      Object.entries(templatesCategories).forEach(category => {
+        filteredTemplatesCategories[
+          category[0]
+        ] = category[1].filter(template =>
+          template.metadata.name.includes(filterByName)
+        )
+      })
+
+      setFilteredFunctions(filteredFuncs)
+      setFilteredTemplates(filteredTemplatesCategories)
+      setFilterMatches([
+        ...new Set(
+          filteredFuncs
+            .map(func => func.name)
+            .concat(filteredTemplts.map(template => template.metadata.name))
+        )
+      ])
+    }
+  }, [filterByName, functions, templates, templatesCategories])
 
   const handleSelectGroupFunctions = item => {
     setSelectedGroupFunctions(item)
@@ -63,15 +127,50 @@ const CreateJobPage = ({
     }
   }
 
-  return functionsStore.loading ? (
-    <Loader />
-  ) : (
+  const selectProject = projectName => {
+    setSelectedProject(projectName)
+
+    if (filterByName.length > 0) {
+      setFilterByName('')
+    }
+  }
+
+  const handleSearchOnChange = value => {
+    if (value.length === 0) {
+      setFilterByName('')
+      setFilterMatches([])
+
+      if (filteredFunctions.length > 0) {
+        setFilteredFunctions([])
+      }
+
+      if (!isEmpty(filteredTemplates)) {
+        setFilteredTemplates({})
+      }
+    } else {
+      setFilterByName(value)
+    }
+  }
+
+  return (
     <>
       <CreateJobPageView
-        functions={functions}
+        filterByName={filterByName}
+        filterMatches={filterMatches}
+        filteredFunctions={filteredFunctions}
+        filteredTemplates={filteredTemplates}
+        functions={filteredFunctions.length > 0 ? filteredFunctions : functions}
+        handleSearchOnChange={handleSearchOnChange}
         handleSelectGroupFunctions={handleSelectGroupFunctions}
+        loading={functionsStore.loading}
         match={match}
-        templates={templates}
+        projects={projects}
+        selectProject={selectProject}
+        selectedProject={selectedProject}
+        setFilterMatches={setFilterMatches}
+        templates={
+          !isEmpty(filteredTemplates) ? filteredTemplates : templatesCategories
+        }
       />
       {Object.values(selectedGroupFunctions).length > 0 && (
         <JobsPanel
@@ -89,7 +188,11 @@ CreateJobPage.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(functionsStore => functionsStore, {
-  ...functionsActions,
-  ...jobsActions
-})(CreateJobPage)
+export default connect(
+  ({ functionsStore, projectStore }) => ({ functionsStore, projectStore }),
+  {
+    ...functionsActions,
+    ...jobsActions,
+    ...projectsAction
+  }
+)(CreateJobPage)

@@ -1,37 +1,64 @@
-.search-container {
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
+
+.search {
+  &-container {
+    position: relative;
     display: flex;
-    button {
-        height: 40px;
-        width: 42px;
-        background-color: transparent;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        box-sizing: border-box;
-        border-radius: 4px;
-        background-repeat: no-repeat;
-        background-position-x: 50%;
-        background-position-y: 50%;
-    }
-    input {
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: $primaryBorder;
+  }
+
+  &-input {
+    z-index: 2;
+    width: 100%;
+    margin-left: 13px;
+    color: $primary;
+    background-color: transparent;
+    border: none;
+  }
+
+  &-label {
+    position: absolute;
+    top: 3px;
+    left: 38px;
+    z-index: 1;
+    color: $topaz;
+    user-select: none;
+  }
+
+  &-matches {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    z-index: 4;
+    margin: 0;
+    padding: 7px 0;
+    background-color: $white;
+    box-shadow: $previewBoxShadow;
+
+    &__item {
+      padding: 7px 15px;
+      color: $mulledWine;
+      list-style-type: none;
+
+      &_active {
+        background-color: $gunsmoke;
+      }
+
+      &:active,
+      &:focus {
         border: none;
-        height: 40px;
-        background-color: transparent;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
         outline: none;
-    }
-    .not-activate-search {
-       width: 0;
-       transition: width .500s;
-    }
+        box-shadow: none;
+      }
 
-    input.not-activate-search {
-        margin-right: 0;
+      &:hover {
+        background-color: $alabaster;
+        cursor: pointer;
+      }
     }
-    input.activate-search {
-        margin-right: 5px;;
-    }
-
-    .activate-search {
-        width: 150px;
-        transition: width .500s;
-    }
+  }
 }

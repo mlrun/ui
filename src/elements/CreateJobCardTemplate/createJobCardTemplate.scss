@@ -4,31 +4,32 @@
 .card-template {
   flex: 0 0 40%;
   max-width: 325px;
-  height: 218px;
+  max-height: 140px;
+  margin-right: 16px;
+  margin-bottom: 16px;
+  padding: 25px;
   background-color: $white;
   border: $primaryBorder;
   border-radius: 4px;
-  padding: 25px;
-  margin-bottom: 16px;
-  margin-right: 16px;
   cursor: pointer;
 
   &__header {
+    display: inline-block;
+    margin: 0 12px 15px 0;
     font-size: 18px;
     line-height: 21px;
-    margin: 0 12px 15px 0;
-    display: inline-block;
   }
 
-  &__hash, &__tag {
+  &__hash,
+  &__tag {
     display: inline-block;
     margin-right: 5px;
     color: $primary;
   }
 
   &__description {
+    color: $topaz;
     font-size: 13px;
     line-height: 21px;
-    color: $topaz;
   }
 }

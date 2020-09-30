@@ -11,6 +11,7 @@ import {
   SET_FUNCTIONS_TEMPLATES,
   SET_LOADING
 } from '../constants'
+import { generateCategories } from '../utils/generateTemplatesCategories'
 
 const functionsActions = {
   fetchFunctions: (project, name) => dispatch => {
@@ -55,10 +56,11 @@ const functionsActions = {
             }
           }
         })
+        const templatesCategories = generateCategories(templates)
 
-        dispatch(functionsActions.setFunctionsTemplates(templates))
+        dispatch(functionsActions.setFunctionsTemplates(templatesCategories))
 
-        return templates
+        return { templatesCategories, templates }
       })
       .catch(error => dispatch(functionsActions.fetchJobLogsFailure(error)))
   },

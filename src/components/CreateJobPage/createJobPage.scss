@@ -1,13 +1,13 @@
-@import "../../scss/colors";
+@import '../../scss/colors';
 
 .create-container {
   flex: 1;
 
   &__header {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     padding: 18px;
     background-color: $white;
 
@@ -18,10 +18,10 @@
 
         &__title {
           margin: 0 18px;
+          color: $primary;
           font-weight: 500;
           font-size: 20px;
           line-height: 23px;
-          color: $primary
         }
 
         &__icon {
@@ -41,34 +41,151 @@
 
     .expand-icon {
       position: absolute;
-      left: 0;
       top: 0;
+      left: 0;
     }
 
-    .data-wrapper {
+    &-list {
+      position: relative;
+      display: flex;
       flex: 1;
+      flex-flow: row wrap;
+      min-height: 150px;
+      margin-top: 16px;
 
-      &__header {
-        padding-left: 35px;
-        padding-top: 3px;
-        margin-bottom: 40px;
-
-        .header {
-          &__title {
-            font-weight: 500;
-            font-size: 20px;
-            line-height: 23px;
-            color: $topaz;
-            margin: 0;
-          }
-        }
+      .data-prep {
+        color: $pharlap;
       }
 
-      &__list {
-        flex: 1;
-        margin-top: 16px;
+      .wrapper {
+        position: absolute;
+        background-color: transparent;
+      }
+    }
+
+    .templates-container {
+      padding: 10px 20px;
+
+      .category-header {
         display: flex;
-        flex-flow: row wrap;
+        align-items: center;
+        margin: 0 30px 45px;
+        font-size: 18px;
+        line-height: 21px;
+        text-transform: capitalize;
+
+        &__icon {
+          margin-right: 5px;
+        }
+
+        &.data-prep {
+          color: $pharlap;
+        }
+
+        &.data-source {
+          color: $java;
+        }
+
+        &.NLP {
+          color: $javaTwo;
+        }
+
+        &.serving {
+          color: $supernova;
+        }
+
+        &.training {
+          color: $sorbus;
+        }
+
+        &.analysis {
+          color: $orchid;
+        }
+
+        &.simulators {
+          color: $cornflowerBlue;
+        }
+
+        &.notifications {
+          color: $pictonBlue;
+        }
+
+        &.dl {
+          color: $malibu;
+        }
+
+        &.ml {
+          color: $amaranth;
+        }
+      }
+    }
+
+    .functions-container {
+      .accordion__body {
+        overflow: visible;
+      }
+
+      .create-container__data-list {
+        display: none;
+      }
+
+      &.open {
+        .create-container__data-list {
+          display: flex;
+        }
+      }
+    }
+
+    .data {
+      &-wrapper {
+        flex: 1;
+      }
+
+      &-search {
+        margin-bottom: 50px;
+      }
+
+      &-header {
+        margin-bottom: 30px;
+        padding-top: 3px;
+        padding-left: 35px;
+
+        &_with-select {
+          margin-top: -8px;
+        }
+
+        &__title {
+          display: flex;
+          align-items: center;
+          margin: 0;
+          color: $topaz;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 23px;
+        }
+
+        &__select {
+          border: none;
+
+          .select {
+            &__body {
+              min-width: 135px;
+            }
+
+            &__caret {
+              right: -25px;
+            }
+
+            &__item {
+              font-weight: normal;
+              font-size: 15px;
+            }
+          }
+
+          &.active {
+            background: transparent;
+          }
+        }
       }
     }
   }

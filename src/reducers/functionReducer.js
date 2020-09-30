@@ -13,7 +13,7 @@ const initialState = {
   functions: [],
   loading: false,
   error: null,
-  templatesCatalog: [],
+  templatesCatalog: {},
   template: {}
 }
 
