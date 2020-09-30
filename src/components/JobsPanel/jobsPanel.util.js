@@ -96,7 +96,6 @@ export const getVolume = selectedFunction => {
 }
 
 export const getMethodOptions = selectedFunctions => {
-  console.log(selectedFunctions)
   return _.chain(selectedFunctions)
     .map(func =>
       func.spec.entry_points ? Object.values(func.spec.entry_points) : []
