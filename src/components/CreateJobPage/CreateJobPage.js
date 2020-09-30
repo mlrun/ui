@@ -24,7 +24,7 @@ const CreateJobPage = ({
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [filteredFunctions, setFilteredFunctions] = useState([])
-  const [filteredTemplates, setFilteredTemplates] = useState([])
+  const [filteredTemplates, setFilteredTemplates] = useState({})
   const [functions, setFunctions] = useState([])
   const [projects, setProjects] = useState(
     generateProjectsList(projectStore.projects, match.params.projectName)
@@ -98,17 +98,18 @@ const CreateJobPage = ({
       const filteredTemplts = templates.filter(template =>
         template.metadata.name.includes(filterByName)
       )
-
-      const filteredTempltsObject = {}
+      const filteredTemplatesCategories = {}
 
       Object.entries(templatesCategories).forEach(category => {
-        filteredTempltsObject[category[0]] = category[1].filter(template =>
+        filteredTemplatesCategories[
+          category[0]
+        ] = category[1].filter(template =>
           template.metadata.name.includes(filterByName)
         )
       })
 
       setFilteredFunctions(filteredFuncs)
-      setFilteredTemplates(filteredTempltsObject)
+      setFilteredTemplates(filteredTemplatesCategories)
       setFilterMatches([
         ...new Set(
           filteredFuncs

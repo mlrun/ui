@@ -133,11 +133,17 @@ const Search = ({
 }
 
 Search.defaultProps = {
+  className: '',
+  matches: [],
+  placeholder: '',
   searchWhileTyping: false
 }
 
 Search.propTypes = {
+  className: PropTypes.string,
+  matches: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
   searchWhileTyping: PropTypes.bool
 }
 

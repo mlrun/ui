@@ -153,9 +153,18 @@ const CreateJobPageView = ({
 )
 
 CreateJobPageView.propTypes = {
+  filterByName: PropTypes.string.isRequired,
+  filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  filteredTemplates: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSelectGroupFunctions: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
+  projects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  selectProject: PropTypes.func.isRequired,
+  selectedProject: PropTypes.string.isRequired,
+  setFilterByName: PropTypes.func.isRequired,
+  setFilterMatches: PropTypes.func.isRequired,
   templates: PropTypes.shape({}).isRequired
 }
 
