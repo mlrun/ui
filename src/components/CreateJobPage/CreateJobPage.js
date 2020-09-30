@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { includes, isEmpty } from 'lodash'
 
 import CreateJobPageView from './CreateJobPageView'
-import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 
 import functionsActions from '../../actions/functions'
@@ -153,9 +152,7 @@ const CreateJobPage = ({
     }
   }
 
-  return functionsStore.loading ? (
-    <Loader />
-  ) : (
+  return (
     <>
       <CreateJobPageView
         filterByName={filterByName}
@@ -165,6 +162,7 @@ const CreateJobPage = ({
         functions={filteredFunctions.length > 0 ? filteredFunctions : functions}
         handleSearchOnChange={handleSearchOnChange}
         handleSelectGroupFunctions={handleSelectGroupFunctions}
+        loading={functionsStore.loading}
         match={match}
         projects={projects}
         selectProject={selectProject}

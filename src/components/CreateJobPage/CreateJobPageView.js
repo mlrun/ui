@@ -7,6 +7,7 @@ import Accordion from '../../common/Accordion/Accordion'
 import Select from '../../common/Select/Select'
 import Search from '../../common/Search/Search'
 import NoData from '../../common/NoData/NoData'
+import Loader from '../../common/Loader/Loader'
 
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
 import { ReactComponent as Plus } from '../../images/plus.svg'
@@ -27,6 +28,7 @@ const CreateJobPageView = ({
   functions,
   handleSearchOnChange,
   handleSelectGroupFunctions,
+  loading,
   match,
   projects,
   selectProject,
@@ -85,9 +87,12 @@ const CreateJobPageView = ({
             </h5>
           </div>
           <div className="create-container__data-list">
-            {(filterByName.length > 0 &&
-              (filterMatches.length === 0 || filteredFunctions.length === 0)) ||
-            functions.length === 0 ? (
+            {loading ? (
+              <Loader />
+            ) : (filterByName.length > 0 &&
+                (filterMatches.length === 0 ||
+                  filteredFunctions.length === 0)) ||
+              functions.length === 0 ? (
               <NoData />
             ) : (
               functions.map(func => (

@@ -46,13 +46,20 @@
     }
 
     &-list {
+      position: relative;
       display: flex;
       flex: 1;
       flex-flow: row wrap;
+      min-height: 150px;
       margin-top: 16px;
 
       .data-prep {
         color: $pharlap;
+      }
+
+      .wrapper {
+        position: absolute;
+        background-color: transparent;
       }
     }
 
