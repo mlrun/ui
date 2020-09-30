@@ -41,7 +41,8 @@ const Search = ({
       const itemStartsWithValue = matches.find(item =>
         item.startsWith(event.target.value)
       )
-      if (itemStartsWithValue) {
+
+      if (itemStartsWithValue && event.target.length > 0) {
         setLabel(itemStartsWithValue)
       } else if (label.length > 0) {
         setLabel('')
@@ -52,9 +53,9 @@ const Search = ({
       setLabel('')
     }
 
+    onChange(event.target.value)
     setInputFocused(true)
     setSearchValue(event.target.value)
-    onChange(event.target.value)
   }
 
   const matchOnClick = item => {

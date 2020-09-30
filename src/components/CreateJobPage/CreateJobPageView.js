@@ -25,12 +25,12 @@ const CreateJobPageView = ({
   filteredFunctions,
   filteredTemplates,
   functions,
+  handleSearchOnChange,
   handleSelectGroupFunctions,
   match,
   projects,
   selectProject,
   selectedProject,
-  setFilterByName,
   setFilterMatches,
   templates
 }) => (
@@ -61,7 +61,7 @@ const CreateJobPageView = ({
       <Search
         className="data-search"
         matches={filterMatches}
-        onChange={setFilterByName}
+        onChange={value => handleSearchOnChange(value)}
         placeholder="Search by text, tags and keywords..."
         setMatches={setFilterMatches}
       />
@@ -158,12 +158,12 @@ CreateJobPageView.propTypes = {
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filteredTemplates: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  handleSearchOnChange: PropTypes.func.isRequired,
   handleSelectGroupFunctions: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   projects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectProject: PropTypes.func.isRequired,
   selectedProject: PropTypes.string.isRequired,
-  setFilterByName: PropTypes.func.isRequired,
   setFilterMatches: PropTypes.func.isRequired,
   templates: PropTypes.shape({}).isRequired
 }

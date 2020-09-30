@@ -117,19 +117,8 @@ const CreateJobPage = ({
             .concat(filteredTemplts.map(template => template.metadata.name))
         )
       ])
-    } else if (filteredFunctions.length > 0 && filterByName.length === 0) {
-      setFilteredFunctions([])
-    } else if (filteredTemplates.length > 0 && filterByName.length === 0) {
-      setFilteredTemplates([])
     }
-  }, [
-    filterByName,
-    filteredFunctions.length,
-    filteredTemplates.length,
-    functions,
-    templates,
-    templatesCategories
-  ])
+  }, [filterByName, functions, templates, templatesCategories])
 
   const handleSelectGroupFunctions = item => {
     setSelectedGroupFunctions(item)
@@ -147,6 +136,23 @@ const CreateJobPage = ({
     }
   }
 
+  const handleSearchOnChange = value => {
+    if (value.length === 0) {
+      setFilterByName('')
+      setFilterMatches([])
+
+      if (filteredFunctions.length > 0) {
+        setFilteredFunctions([])
+      }
+
+      if (!isEmpty(filteredTemplates)) {
+        setFilteredTemplates({})
+      }
+    } else {
+      setFilterByName(value)
+    }
+  }
+
   return functionsStore.loading ? (
     <Loader />
   ) : (
@@ -157,12 +163,12 @@ const CreateJobPage = ({
         filteredFunctions={filteredFunctions}
         filteredTemplates={filteredTemplates}
         functions={filteredFunctions.length > 0 ? filteredFunctions : functions}
+        handleSearchOnChange={handleSearchOnChange}
         handleSelectGroupFunctions={handleSelectGroupFunctions}
         match={match}
         projects={projects}
         selectProject={selectProject}
         selectedProject={selectedProject}
-        setFilterByName={setFilterByName}
         setFilterMatches={setFilterMatches}
         templates={
           !isEmpty(filteredTemplates) ? filteredTemplates : templatesCategories
