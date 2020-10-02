@@ -1,0 +1,128 @@
+@import '../../scss/colors';
+@import '../../scss/shadows';
+@import '../../scss/borders';
+
+.combobox {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  width: 100%;
+
+  &-list {
+    min-width: 120px;
+    margin: 0;
+    list-style-type: none;
+
+    &__option {
+      padding: 8px 15px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $alabaster;
+      }
+    }
+  }
+
+  &-dropdown {
+    z-index: 5;
+    max-width: 220px;
+    background-color: $white;
+    box-shadow: $previewBoxShadow;
+
+    &__list {
+      padding: 0 0 10px;
+    }
+
+    &__search {
+      display: flex;
+      align-items: center;
+      margin: 0 9px;
+      border-bottom: $dividerBorder;
+
+      &-input {
+        padding: 12px 0 10px;
+
+        &::placeholder {
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  &-select {
+    position: relative;
+    display: flex;
+    flex: 0.5 1;
+    max-width: 50px;
+
+    &_short {
+      max-width: 32px;
+    }
+
+    &__body {
+      position: absolute;
+      top: 25px;
+      z-index: 5;
+      display: none;
+      max-width: 220px;
+      background-color: $white;
+      box-shadow: $previewBoxShadow;
+
+      &-list {
+        padding: 0;
+      }
+    }
+
+    &__header {
+      position: relative;
+      min-height: 20px;
+
+      &-label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: 66px;
+        color: $topaz;
+        user-select: none;
+        pointer-events: none;
+      }
+    }
+
+    &_open {
+      .combobox-select__body {
+        display: block;
+      }
+    }
+  }
+
+  &-icon {
+    cursor: pointer;
+
+    &_open {
+      transform: rotate(90deg);
+      transform-origin: center center;
+      transition: transform 200ms linear;
+    }
+  }
+
+  &-input {
+    display: flex;
+    flex: 3 1;
+    width: 100%;
+    padding: 18px 0;
+
+    &__label {
+      position: absolute;
+      top: 18px;
+      left: 54px;
+      color: $topaz;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    &:disabled {
+      background-color: transparent;
+    }
+  }
+}

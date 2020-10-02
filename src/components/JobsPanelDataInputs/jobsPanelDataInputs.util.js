@@ -1,4 +1,5 @@
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { inputsActions } from './jobsPanelDataInputsReducer'
 
 export const handleAddItem = (
   currentTableData,
@@ -32,7 +33,11 @@ export const handleAddItem = (
         isDefault: false,
         data: {
           name: newItemObj.name,
-          path: newItemObj.path
+          path:
+            newItemObj.path.pathType +
+            newItemObj.path.project +
+            '/' +
+            newItemObj.path.artifact
         }
       }
     ]
@@ -45,7 +50,11 @@ export const handleAddItem = (
         isDefault: false,
         data: {
           name: newItemObj.name,
-          path: newItemObj.path
+          path:
+            newItemObj.path.pathType +
+            newItemObj.path.project +
+            '/' +
+            newItemObj.path.artifact
         }
       }
     ]
@@ -59,7 +68,11 @@ export const handleAddItem = (
   })
   setNewJobData({
     ...newJobData,
-    [newItemObj.name]: newItemObj.path
+    [newItemObj.name]:
+      newItemObj.path.pathType +
+      newItemObj.path.project +
+      '/' +
+      newItemObj.path.artifact
   })
 }
 
@@ -79,7 +92,6 @@ export const handleEdit = (
 
   if (newName) {
     delete currentDataObj[selectedItem.name]
-
     currentDataObj[newName] = selectedItem.path
   } else {
     currentDataObj[selectedItem.name] = selectedItem.path
@@ -92,7 +104,6 @@ export const handleEdit = (
       dataItem.data.name = newName || selectedItem.name
       dataItem.data.path = selectedItem.path
     }
-
     return dataItem
   })
 
@@ -124,7 +135,6 @@ export const handleDelete = (
   delete newInputs[selectedItem.data.name]
 
   setCurrentPanelData({ ...newInputs })
-
   panelDispatch({
     type: setPreviousPanelData,
     payload: previousPanelData.filter(
@@ -136,5 +146,59 @@ export const handleDelete = (
     payload: currentTableData.filter(
       dataItem => dataItem.data.name !== selectedItem.data.name
     )
+  })
+}
+
+export const comboboxSelectList = [
+  {
+    className: 'path-type-store',
+    label: 'store',
+    id: 'store://'
+  },
+  {
+    className: 'path-type-s3',
+    label: 'URL',
+    id: 's3://'
+  }
+]
+
+export const S3_INPUT_PATH_TYPE = 's3://'
+
+export const handleInputPathTypeChange = (
+  inputsDispatch,
+  newInput,
+  pathType,
+  pathPlaceholder
+) => {
+  inputsDispatch({
+    type: inputsActions.SET_PATH_PLACEHOLDER,
+    payload:
+      pathType === S3_INPUT_PATH_TYPE && pathPlaceholder.length === 0
+        ? 'bucket/path'
+        : ''
+  })
+  inputsDispatch({
+    type: inputsActions.SET_NEW_INPUT_PATH,
+    payload: {
+      ...newInput.path,
+      pathType: pathType
+    }
+  })
+}
+
+export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
+  const pathItems = path.split('/')
+
+  inputsDispatch({
+    type: inputsActions.SET_NEW_INPUT_PROJECT_PATH_ENTERED,
+    payload: pathItems[1] === '' || pathItems[1]?.length > 0
+  })
+  inputsDispatch({
+    type: inputsActions.SET_NEW_INPUT_PATH,
+    payload: {
+      ...inputsState.newInput.path,
+      project: pathItems[0],
+      artifact: pathItems[1] ? pathItems[1] : inputsState.newInput.path.artifact
+    }
   })
 }

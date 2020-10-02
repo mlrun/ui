@@ -6,6 +6,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
 import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
+import Combobox from '../../common/Combobox/Combobox'
 
 import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
@@ -13,9 +14,13 @@ import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDat
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
 export const JobsPanelDataInputsTable = ({
+  comboboxMatchesList,
+  comboboxSelectList,
   handleAddNewItem,
   handleEditItems,
   handleDeleteItems,
+  handlePathChange,
+  handlePathTypeChange,
   inputsDispatch,
   inputsState,
   match,
@@ -54,17 +59,18 @@ export const JobsPanelDataInputsTable = ({
               floatingLabel
               type="text"
             />
-            <Input
-              onChange={path =>
-                inputsDispatch({
-                  type: inputsActions.SET_NEW_INPUT_PATH,
-                  payload: path
-                })
-              }
-              label="Input path"
-              className="input-row__item input-row__item_edit"
-              floatingLabel
-              type="text"
+            <Combobox
+              comboboxClassName="input-row__item"
+              inputPlaceholder={inputsState.pathPlaceholder}
+              matches={comboboxMatchesList}
+              selectDropdownList={comboboxSelectList}
+              selectOnChange={path => {
+                handlePathTypeChange(path)
+              }}
+              inputOnChange={path => {
+                handlePathChange(path)
+              }}
+              selectPlaceholder="Path Type"
             />
           </div>
           <button
@@ -92,9 +98,13 @@ export const JobsPanelDataInputsTable = ({
 }
 
 JobsPanelDataInputsTable.propTypes = {
+  comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  comboboxSelectList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
+  handlePathChange: PropTypes.func.isRequired,
+  handlePathTypeChange: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,

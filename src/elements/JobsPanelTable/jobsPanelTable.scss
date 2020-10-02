@@ -180,6 +180,18 @@
     }
   }
 
+  &.data-inputs {
+    .path-type {
+      &-store {
+        color: $amethyst;
+      }
+
+      &-s3 {
+        color: $sorbus;
+      }
+    }
+  }
+
   &.parameters {
     margin-bottom: 35px;
 
