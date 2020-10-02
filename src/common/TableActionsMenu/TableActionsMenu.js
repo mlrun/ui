@@ -27,15 +27,17 @@ const TableActionsMenu = ({ item, menu, time }) => {
 
   return (
     <div
+      data-testid="actions-menu"
       className="table-actions-container"
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
     >
-      <button onClick={showActionsList}>
+      <button data-testid="actions-menu-btn" onClick={showActionsList}>
         <ActionMenu />
       </button>
       {isShowMenu && (
         <div
+          data-testid="actions-drop-down-menu"
           className="table-actions-container__body"
           onClick={() => setIsShowMenu(false)}
         >
@@ -43,6 +45,7 @@ const TableActionsMenu = ({ item, menu, time }) => {
             return (
               (menuItem.visible ?? true) && (
                 <div
+                  data-testid="actions-menu-item"
                   className="table-actions-container__option"
                   onClick={() => {
                     menuItem.onClick(item)

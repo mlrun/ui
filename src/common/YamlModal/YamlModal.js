@@ -1,6 +1,7 @@
 import React from 'react'
 import Prism from 'prismjs'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 
@@ -10,11 +11,13 @@ const YamlModal = ({ convertedYaml, toggleConvertToYaml }) => {
   const html =
     convertedYaml && Prism.highlight(convertedYaml, Prism.languages.yml, 'yml')
 
+  const yamlClasses = classnames(
+    'yaml-modal',
+    convertedYaml.length > 0 ? 'modal-showed' : ''
+  )
+
   return (
-    <div
-      className={`yaml-modal${convertedYaml.length > 0 ? ' modal-showed' : ''}`}
-      id="yaml_modal"
-    >
+    <div data-testid="yaml-modal" className={yamlClasses} id="yaml_modal">
       <pre>
         <code dangerouslySetInnerHTML={{ __html: html }} />
         <button onClick={toggleConvertToYaml}>

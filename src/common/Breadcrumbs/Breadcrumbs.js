@@ -12,7 +12,7 @@ const Breadcrumbs = ({ match, onClick }) => {
   const urlItems = match.url.slice(1).split('/')
 
   return (
-    <nav className="breadcrumbs">
+    <nav data-testid="breadcrumbs" className="breadcrumbs">
       <ul className="breadcrumbs__list">
         {urlItems.map((item, i) => {
           const param = pathItems[i]?.startsWith(':')
@@ -29,13 +29,21 @@ const Breadcrumbs = ({ match, onClick }) => {
 
           if (last) {
             return (
-              <li className="breadcrumbs__item" key={`${i}${item}`}>
+              <li
+                data-testid="breadcrumbs-last-item"
+                className="breadcrumbs__item"
+                key={`${i}${item}`}
+              >
                 {label}
               </li>
             )
           } else if (id) {
             return [
-              <li key={`${i}${item}`} className="breadcrumbs__item">
+              <li
+                data-testid="breadcrumbs-id"
+                key={`${i}${item}`}
+                className="breadcrumbs__item"
+              >
                 {label}
               </li>,
               <li key={i} className="breadcrumbs_separator">

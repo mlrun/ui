@@ -8,12 +8,21 @@ import './popUpDialog.scss'
 const PopUpDialog = ({ children, closePopUp, headerText }) => {
   return (
     <div className="pop-up-dialog__overlay">
-      <div className="pop-up-dialog">
+      <div data-testid="pop-up-dialog" className="pop-up-dialog">
         <div className="pop-up-dialog__header">
           {headerText && (
-            <div className="pop-up-dialog__header-text">{headerText}</div>
+            <div
+              data-testid="pop-up-dialog-header"
+              className="pop-up-dialog__header-text"
+            >
+              {headerText}
+            </div>
           )}
-          <Close className="pop-up-dialog__header-close" onClick={closePopUp} />
+          <Close
+            data-testid="pop-up-close-btn"
+            className="pop-up-dialog__header-close"
+            onClick={closePopUp}
+          />
         </div>
         {children}
       </div>

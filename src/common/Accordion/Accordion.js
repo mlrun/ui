@@ -55,12 +55,17 @@ const Accordion = ({
 
   return (
     <div
+      data-testid="accordion"
       className={accordionClassNames}
       onClick={!icon ? handleOpenAccordion : null}
       ref={accordionRef}
     >
       {icon && (
-        <button onClick={handleOpenAccordion} className={iconClassNames}>
+        <button
+          data-testid="accordion-btn"
+          onClick={handleOpenAccordion}
+          className={iconClassNames}
+        >
           <span>{icon}</span>
         </button>
       )}
