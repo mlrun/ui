@@ -33,7 +33,7 @@ describe('Input component', () => {
   afterEach(cleanup)
 
   it('renders without crashing', () => {
-    expect(utils.getByTestId('input')).not.toBeNull()
+    expect(utils.queryByTestId('input')).not.toBeNull()
   })
 
   it('should set props value to "123"', () => {
@@ -63,7 +63,7 @@ describe('Input component', () => {
   })
 
   it('should show label if the props label is not empty', () => {
-    expect(utils.getByTestId('label')).not.toBeNull()
+    expect(utils.queryByTestId('label')).not.toBeNull()
   })
 
   it('should input active if props focused is "true"', () => {
@@ -91,13 +91,13 @@ describe('Input component', () => {
   })
 
   it('should display tip component if props tip is not empty and props required is false', () => {
-    expect(utils.getByTestId('tip')).not.toBeNull()
+    expect(utils.queryByTestId('tip')).not.toBeNull()
   })
 
   it('should display tooltip when cursor over the warning icon', () => {
     cleanup()
 
-    const { getByTestId } = renderComponent({
+    const { getByTestId, queryByTestId } = renderComponent({
       type: 'text',
       required: true,
       requiredText: 'This field is require'
@@ -107,7 +107,7 @@ describe('Input component', () => {
 
     fireEvent.mouseEnter(warningIcon)
 
-    const tooltip = getByTestId('tooltip')
+    const tooltip = queryByTestId('tooltip')
 
     expect(tooltip).not.toBeNull()
   })
@@ -142,7 +142,7 @@ describe('Input component', () => {
   })
 
   it('should display inputIcon if props inputIcon is not empty', () => {
-    const inputIcon = utils.getByTestId('input-icon')
+    const inputIcon = utils.queryByTestId('input-icon')
 
     expect(inputIcon).not.toBeNull()
   })

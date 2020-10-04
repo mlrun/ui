@@ -8,7 +8,7 @@ const PageActionsMenu = ({ match, onClick, page }) => {
   return (
     <>
       {page === JOBS_PAGE && (
-        <div className="page-actions-container">
+        <div data-testid="actions-link" className="page-actions-container">
           <Link
             className="btn_secondary btn_small"
             to={`/projects/${match.params.projectName}/jobs/${match.params.jobTab}/create-new-job`}
@@ -18,7 +18,7 @@ const PageActionsMenu = ({ match, onClick, page }) => {
         </div>
       )}
       {(page === PROJECTS_PAGE || page === ARTIFACTS_PAGE) && (
-        <div className="page-actions-container">
+        <div data-testid="actions-button" className="page-actions-container">
           <button className="btn_secondary btn_small" onClick={onClick}>
             {page === PROJECTS_PAGE ? 'New Project' : 'Register Artifact'}
           </button>

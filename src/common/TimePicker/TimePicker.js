@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
+import classNames from 'classnames'
 
 import './timePicker.scss'
 
 const TimePicker = ({ onChange, value, hideLabel }) => {
   const [valueInput, setValueInput] = useState(value)
+
+  const timePickerClassName = classNames(
+    'input input-wrapper',
+    valueInput.length > 1 && !hideLabel && 'active-input'
+  )
+
+  const labelClassName = classNames(
+    'input__label',
+    'input__label-floating',
+    valueInput.length > 1 && 'active-label'
+  )
 
   useEffect(() => {
     setValueInput(value)
@@ -26,19 +38,10 @@ const TimePicker = ({ onChange, value, hideLabel }) => {
   }
 
   return (
-    <div className="time-picker-container">
-      {!hideLabel && (
-        <span
-          className={`input__label input__label-floating ${valueInput.length >
-            1 && 'active-label'}`}
-        >
-          Time
-        </span>
-      )}
+    <div data-testid="time-picker" className="time-picker-container">
+      {!hideLabel && <span className={labelClassName}>Time</span>}
       <MaskedInput
-        className={`input input-wrapper ${valueInput.length > 1 &&
-          !hideLabel &&
-          'active-input'}`}
+        className={timePickerClassName}
         keepCharPositions
         mask={timeMask}
         onChange={onHandleInputChange}

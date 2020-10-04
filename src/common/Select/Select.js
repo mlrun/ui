@@ -46,7 +46,7 @@ const Select = ({
 
   const toggleOpen = disabled => (disabled ? null : setOpen(!isOpen))
 
-  const handleSelectValue = useCallback(event => {
+  const handleCloseSelectBody = useCallback(event => {
     event.stopPropagation()
 
     if (!event.target.classList.contains('disabled')) {
@@ -55,14 +55,24 @@ const Select = ({
   }, [])
 
   return (
-    <div className={selectClassName} onClick={() => toggleOpen(disabled)}>
-      <div className="select__header">
-        {label && <div className={selectLabelClassName}>{label}</div>}
+    <div
+      data-testid="select"
+      className={selectClassName}
+      onClick={() => toggleOpen(disabled)}
+    >
+      <div data-testid="select-header" className="select__header">
+        {label && (
+          <div data-testid="select-label" className={selectLabelClassName}>
+            {label}
+          </div>
+        )}
         {!hideSelectedOption && (
-          <div className={selectValueClassName}>
+          <div data-testid="selected-option" className={selectValueClassName}>
             {selectedId && selectedOption?.label}
             {selectedOption?.subLabel && (
-              <span className="sub-label">{selectedOption.subLabel}</span>
+              <span data-testid="select-subLabel" className="sub-label">
+                {selectedOption.subLabel}
+              </span>
             )}
           </div>
         )}
@@ -71,7 +81,11 @@ const Select = ({
       {isOpen && (
         <>
           <div className="overall" />
-          <div className="select__body" onClick={handleSelectValue}>
+          <div
+            data-testid="select-body"
+            className="select__body"
+            onClick={handleCloseSelectBody}
+          >
             {options.map(option => {
               return (
                 <SelectOption

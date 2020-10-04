@@ -8,10 +8,10 @@ import './errorMessage.scss'
 
 const ErrorMessage = ({ message, closeError }) => {
   return (
-    <div className="error-container">
+    <div data-testid="error-message" className="error-container">
       <UnsuccessAlert className="error-icon" />
       {message}
-      <button onClick={closeError}>
+      <button data-testid="close" onClick={closeError}>
         <Close />
       </button>
     </div>

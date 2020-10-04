@@ -37,6 +37,7 @@
     "start": "node scripts/start.js --no-cache",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
+    "test:coverage": "npm run test -- --coverage --watchAll=false",
     "docker": "COMMIT_HASH=`git rev-parse --short HEAD`; docker build -t ${MLRUN_DOCKER_REGISTRY}${MLRUN_DOCKER_REPO:-mlrun}/mlrun-ui:${MLRUN_DOCKER_TAG:-latest} --build-arg COMMIT_HASH=${COMMIT_HASH} --build-arg DATE=\"`date -u`\" -f Dockerfile ."
   },
   "eslintConfig": {
@@ -121,6 +122,9 @@
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/scripts/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
     ],
     "testEnvironment": "jest-environment-jsdom-sixteen",
     "moduleNameMapper": {

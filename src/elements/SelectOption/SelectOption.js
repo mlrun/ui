@@ -11,7 +11,7 @@ import './selectOption.scss'
 const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
   if (selectType === 'checkbox') {
     return (
-      <div className="select__item">
+      <div data-testid="select-checkbox" className="select__item">
         <CheckBox item={item} selectedId={selectedId} onChange={onClick}>
           <span className={`status ${item.id}`} /> {item.label}
         </CheckBox>
@@ -23,12 +23,17 @@ const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
 
   return (
     <div
+      data-testid="select-option"
       className={selectClassName}
       onClick={() => {
         !disabled && onClick(item.id)
       }}
     >
-      {item.icon && <span className="select__icon">{item.icon}</span>}
+      {item.icon && (
+        <span data-testid="select-icon" className="select__icon">
+          {item.icon}
+        </span>
+      )}
       {item.label}
       {item.subLabel && (
         <Tooltip

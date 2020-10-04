@@ -41,9 +41,11 @@ const Tip = ({ className, text }) => {
 
   return (
     <div data-testid="tip" className={tipContainerClassNames}>
-      <QuestionMarkIcon ref={tipRef} />
+      <QuestionMarkIcon data-testid="tip-icon" ref={tipRef} />
       <CSSTransition in={isShow} timeout={200} classNames="fade" unmountOnExit>
-        <div className={tipCLassNames}>{text}</div>
+        <div data-testid="tip-text" className={tipCLassNames}>
+          {text}
+        </div>
       </CSSTransition>
     </div>
   )
