@@ -1,4 +1,3 @@
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { inputsActions } from './jobsPanelDataInputsReducer'
 
 export const handleAddItem = (
@@ -14,7 +13,7 @@ export const handleAddItem = (
   setPreviousData,
   setNewJobData
 ) => {
-  if (isEveryObjectValueEmpty(newItemObj)) {
+  if (newItemObj.name.length === 0 || newItemObj.path.pathType === 0) {
     inputsDispatch({
       type: removeNewItemObj
     })
@@ -189,16 +188,30 @@ export const handleInputPathTypeChange = (
 export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
   const pathItems = path.split('/')
 
+  if (pathItems[1] === undefined && inputsState.artifacts.length > 0) {
+    inputsDispatch({
+      type: inputsActions.SET_ARTIFACTS,
+      payload: []
+    })
+  }
+
+  if (
+    pathItems[0] !== inputsState.newInput.path.project ||
+    (pathItems[1] !== undefined &&
+      pathItems[1] !== inputsState.newInput.path.artifact)
+  ) {
+    inputsDispatch({
+      type: inputsActions.SET_NEW_INPUT_PATH,
+      payload: {
+        ...inputsState.newInput.path,
+        project: pathItems[0],
+        artifact: pathItems[1]
+      }
+    })
+  }
+
   inputsDispatch({
     type: inputsActions.SET_NEW_INPUT_PROJECT_PATH_ENTERED,
     payload: pathItems[1] === '' || pathItems[1]?.length > 0
-  })
-  inputsDispatch({
-    type: inputsActions.SET_NEW_INPUT_PATH,
-    payload: {
-      ...inputsState.newInput.path,
-      project: pathItems[0],
-      artifact: pathItems[1] ? pathItems[1] : inputsState.newInput.path.artifact
-    }
   })
 }

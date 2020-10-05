@@ -6,10 +6,11 @@ import ComboboxView from './ComboboxView'
 import './combobox.scss'
 const Combobox = ({
   comboboxClassName,
-  selectDropdownList,
   inputPlaceholder,
   matches,
+  inputDefaultValue,
   inputOnChange,
+  selectDropdownList,
   selectOnChange,
   selectPlaceholder
 }) => {
@@ -28,12 +29,19 @@ const Combobox = ({
   const comboboxRef = React.createRef()
 
   useEffect(() => {
+    if (inputDefaultValue.length > 0 && inputValue.length === 0) {
+      setInputValue(inputDefaultValue)
+    }
+  }, [inputDefaultValue, inputValue.length])
+
+  useEffect(() => {
     if (!searchIsFocused) {
       if (JSON.stringify(dropdownList) !== JSON.stringify(matches)) {
         setDropdownList(matches)
       }
     }
   }, [dropdownList, matches, searchIsFocused])
+
   const handleOnBlur = useCallback(
     event => {
       if (comboboxRef.current && !comboboxRef.current.contains(event.target)) {
@@ -69,7 +77,10 @@ const Combobox = ({
       setSearchIsFocused(false)
     }
 
-    setInputValue(inputValueItems.join('/'))
+    if (inputValueItems.join('/') !== inputValue) {
+      setInputValue(inputValueItems.join('/'))
+    }
+
     setShowMatchesDropdown(false)
     inputOnChange(inputValueItems.join('/'))
   }
@@ -132,6 +143,7 @@ const Combobox = ({
     inputOnChange(value)
     setInputValue(value)
   }
+
   const matchesSearchOnChange = event => {
     event.persist()
     setDropdownList(() =>
@@ -140,6 +152,7 @@ const Combobox = ({
       })
     )
   }
+
   return (
     <ComboboxView
       comboboxClassName={comboboxClassName}
@@ -167,12 +180,14 @@ const Combobox = ({
 
 Combobox.defaultProps = {
   comboboxClassName: '',
+  inputDefaultValue: '',
   inputPlaceholder: '',
   selectPlaceholder: ''
 }
 
 Combobox.propTypes = {
   comboboxClassName: PropTypes.string,
+  inputDefaultValue: PropTypes.string,
   inputOnChange: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string,
   matches: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

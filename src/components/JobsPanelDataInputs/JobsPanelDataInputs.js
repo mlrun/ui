@@ -1,7 +1,6 @@
 import React, { useReducer, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { chain } from 'lodash'
 
 import JobsPanelDataInputsView from './JobsPanelDataInputsView'
 
@@ -19,8 +18,10 @@ import {
   handleInputPathTypeChange,
   S3_INPUT_PATH_TYPE
 } from './jobsPanelDataInputs.util'
+import artifactsAction from '../../actions/artifacts'
 
 const JobsPanelDataInputs = ({
+  fetchArtifacts,
   inputs,
   match,
   panelDispatch,
@@ -51,36 +52,57 @@ const JobsPanelDataInputs = ({
           type: inputsActions.SET_PROJECTS,
           payload: projectsList
         })
-      }
-
-      if (
-        inputsState.artifacts.length === 0 ||
-        inputsState.newInput.path.artifact.length === 0
-      ) {
-        const artifactsList = chain(projectStore.projects)
-          .map(project =>
-            project?.artifacts
-              ? project?.artifacts.map(artifact => ({
-                  label: artifact.db_key,
-                  id: artifact.db_key
-                }))
-              : []
-          )
-          .flatten()
-          .value()
-
         inputsDispatch({
-          type: inputsActions.SET_ARTIFACTS,
-          payload: artifactsList
+          type: inputsActions.SET_NEW_INPUT_PATH,
+          payload: {
+            ...inputsState.newInput.path,
+            project: match.params.projectName
+          }
         })
       }
     }
   }, [
-    inputsState.artifacts.length,
     inputsState.newInput.path,
+    inputsState.newInput.path.pathType,
+    inputsState.newInput.path.project.length,
     inputsState.projects.length,
     match.params.projectName,
     projectStore.projects
+  ])
+
+  useEffect(() => {
+    if (inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE) {
+      if (
+        inputsState.newInputProjectPathEntered &&
+        inputsState.artifacts.length === 0
+      ) {
+        fetchArtifacts({ project: inputsState.newInput.path.project }).then(
+          artifacts => {
+            const artifactsList = artifacts
+              .map(artifact => ({
+                label: artifact.link_iteration
+                  ? artifact.link_iteration.db_key
+                  : artifact.key ?? '',
+                id: artifact.link_iteration
+                  ? artifact.link_iteration.db_key
+                  : artifact.key ?? ''
+              }))
+              .filter(artifact => artifact.label !== '')
+
+            inputsDispatch({
+              type: inputsActions.SET_ARTIFACTS,
+              payload: artifactsList
+            })
+          }
+        )
+      }
+    }
+  }, [
+    fetchArtifacts,
+    inputsState.artifacts.length,
+    inputsState.newInput.path.pathType,
+    inputsState.newInput.path.project,
+    inputsState.newInputProjectPathEntered
   ])
 
   useEffect(() => {
@@ -91,7 +113,10 @@ const JobsPanelDataInputs = ({
         matches = inputsState.artifacts.filter(artifact =>
           artifact.id.startsWith(inputsState.newInput.path.artifact)
         )
-      } else if (inputsState.newInput.path.project.length > 0) {
+      } else if (
+        inputsState.newInput.path.project.length > 0 &&
+        inputsState.newInput.path.project !== match.params.projectName
+      ) {
         matches = inputsState.projects.filter(project => {
           return project.id.startsWith(inputsState.newInput.path.project)
         })
@@ -108,7 +133,8 @@ const JobsPanelDataInputs = ({
     inputsState.artifacts,
     inputsState.newInput.path,
     inputsState.newInputProjectPathEntered,
-    inputsState.projects
+    inputsState.projects,
+    match.params.projectName
   ])
 
   const handleAddNewItem = () => {
@@ -197,4 +223,6 @@ JobsPanelDataInputs.propTypes = {
   setNewJobInputs: PropTypes.func.isRequired
 }
 
-export default connect(projectStore => projectStore)(JobsPanelDataInputs)
+export default connect(projectStore => projectStore, { ...artifactsAction })(
+  JobsPanelDataInputs
+)

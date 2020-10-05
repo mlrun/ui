@@ -12,6 +12,7 @@ import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+import { S3_INPUT_PATH_TYPE } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
@@ -63,12 +64,18 @@ export const JobsPanelDataInputsTable = ({
               comboboxClassName="input-row__item"
               inputPlaceholder={inputsState.pathPlaceholder}
               matches={comboboxMatchesList}
+              inputDefaultValue={
+                inputsState.newInput.path.pathType.length > 0 &&
+                inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE
+                  ? inputsState.newInput.path.project
+                  : ''
+              }
+              inputOnChange={path => {
+                handlePathChange(path)
+              }}
               selectDropdownList={comboboxSelectList}
               selectOnChange={path => {
                 handlePathTypeChange(path)
-              }}
-              inputOnChange={path => {
-                handlePathChange(path)
               }}
               selectPlaceholder="Path Type"
             />
