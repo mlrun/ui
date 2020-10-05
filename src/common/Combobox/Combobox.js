@@ -29,10 +29,10 @@ const Combobox = ({
   const comboboxRef = React.createRef()
 
   useEffect(() => {
-    if (inputDefaultValue.length > 0 && inputValue.length === 0) {
+    if (inputDefaultValue.length > 0 && selectValue.length > 0) {
       setInputValue(inputDefaultValue)
     }
-  }, [inputDefaultValue, inputValue.length])
+  }, [inputDefaultValue, selectValue.length])
 
   useEffect(() => {
     if (!searchIsFocused) {

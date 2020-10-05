@@ -10,6 +10,7 @@ export const initialState = {
       artifact: ''
     }
   },
+  newInputDefaultPathProject: '',
   pathPlaceholder: '',
   projects: [],
   newInputProjectPathEntered: false,
@@ -21,6 +22,7 @@ export const inputsActions = {
   SET_ADD_NEW_INPUT: 'SET_ADD_NEW_INPUT',
   SET_ARTIFACTS: 'SET_ARTIFACTS',
   SET_COMBOBOX_MATCHES: 'SET_COMBOBOX_MATCHES',
+  SET_NEW_INPUT_DEFAULT_PATH_PROJECT: 'SET_NEW_INPUT_DEFAULT_PATH_PROJECT',
   SET_NEW_INPUT_NAME: 'SET_NEW_INPUT_NAME',
   SET_NEW_INPUT_PATH: 'SET_NEW_INPUT_PATH',
   SET_NEW_INPUT_PROJECT_PATH_ENTERED: 'SET_NEW_INPUT_PROJECT_PATH_ENTERED',
@@ -57,6 +59,11 @@ export const jobsPanelDataInputsReducer = (state, { type, payload }) => {
       return {
         ...state,
         comboboxMatches: payload
+      }
+    case inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT:
+      return {
+        ...state,
+        newInputDefaultPathProject: payload
       }
     case inputsActions.SET_NEW_INPUT_NAME:
       return {

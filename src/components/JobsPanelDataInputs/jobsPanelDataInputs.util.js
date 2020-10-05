@@ -11,7 +11,8 @@ export const handleAddItem = (
   setAddNewItem,
   setCurrentTableData,
   setPreviousData,
-  setNewJobData
+  setNewJobData,
+  setPathPlaceholder
 ) => {
   if (newItemObj.name.length === 0 || newItemObj.path.pathType === 0) {
     inputsDispatch({
@@ -64,6 +65,10 @@ export const handleAddItem = (
   })
   inputsDispatch({
     type: removeNewItemObj
+  })
+  inputsDispatch({
+    type: setPathPlaceholder,
+    payload: ''
   })
   setNewJobData({
     ...newJobData,
@@ -205,7 +210,7 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
       payload: {
         ...inputsState.newInput.path,
         project: pathItems[0],
-        artifact: pathItems[1]
+        artifact: pathItems[1] ?? inputsState.newInput.path.artifact
       }
     })
   }

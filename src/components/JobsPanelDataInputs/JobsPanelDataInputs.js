@@ -53,11 +53,8 @@ const JobsPanelDataInputs = ({
           payload: projectsList
         })
         inputsDispatch({
-          type: inputsActions.SET_NEW_INPUT_PATH,
-          payload: {
-            ...inputsState.newInput.path,
-            project: match.params.projectName
-          }
+          type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
+          payload: match.params.projectName
         })
       }
     }
@@ -149,7 +146,8 @@ const JobsPanelDataInputs = ({
       inputsActions.SET_ADD_NEW_INPUT,
       panelActions.SET_TABLE_DATA_INPUTS,
       panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS,
-      setNewJobInputs
+      setNewJobInputs,
+      inputsActions.SET_PATH_PLACEHOLDER
     )
   }
 

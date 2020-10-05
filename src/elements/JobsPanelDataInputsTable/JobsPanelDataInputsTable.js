@@ -65,9 +65,8 @@ export const JobsPanelDataInputsTable = ({
               inputPlaceholder={inputsState.pathPlaceholder}
               matches={comboboxMatchesList}
               inputDefaultValue={
-                inputsState.newInput.path.pathType.length > 0 &&
                 inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE
-                  ? inputsState.newInput.path.project
+                  ? inputsState.newInputDefaultPathProject
                   : ''
               }
               inputOnChange={path => {
