@@ -77,7 +77,7 @@ const Jobs = ({
               resultsChips: parseKeyValues(job.status.results || {}),
               artifacts: job.status.artifacts || [],
               outputPath: job.spec.output_path,
-              owner: job.metadata.labels.owner,
+              owner: job.metadata.labels?.owner,
               updated: new Date(job.status.last_update),
               function: job?.spec?.function ?? ''
             }
