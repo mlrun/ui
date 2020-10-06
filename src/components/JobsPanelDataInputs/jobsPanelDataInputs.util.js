@@ -1,4 +1,5 @@
 import { inputsActions } from './jobsPanelDataInputsReducer'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 export const handleAddItem = (
   currentTableData,
@@ -14,7 +15,10 @@ export const handleAddItem = (
   setNewJobData,
   setPathPlaceholder
 ) => {
-  if (newItemObj.name.length === 0 || newItemObj.path.pathType === 0) {
+  if (
+    newItemObj.name.length === 0 ||
+    isEveryObjectValueEmpty(newItemObj.path)
+  ) {
     inputsDispatch({
       type: removeNewItemObj
     })
