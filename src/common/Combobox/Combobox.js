@@ -7,9 +7,9 @@ import './combobox.scss'
 const Combobox = ({
   comboboxClassName,
   inputPlaceholder,
-  matches,
   inputDefaultValue,
   inputOnChange,
+  matches,
   selectDropdownList,
   selectOnChange,
   selectPlaceholder
@@ -31,6 +31,7 @@ const Combobox = ({
   useEffect(() => {
     if (inputDefaultValue.length > 0 && selectValue.length > 0) {
       setInputValue(inputDefaultValue)
+      inputOnChange(inputDefaultValue)
     }
   }, [inputDefaultValue, selectValue.length])
 
