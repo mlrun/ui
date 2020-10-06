@@ -22,6 +22,10 @@ export const handleAddItem = (
     inputsDispatch({
       type: removeNewItemObj
     })
+    inputsDispatch({
+      type: setPathPlaceholder,
+      payload: ''
+    })
 
     return inputsDispatch({
       type: setAddNewItem,
