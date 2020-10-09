@@ -219,6 +219,9 @@ export const handleInputPathTypeChange = (
 
 export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
   const pathItems = path.split('/')
+  const artifactIsEntered = inputsState.artifacts.find(
+    artifact => artifact.id === pathItems[1]
+  )
 
   if (path.length === 0 && inputsState.newInputDefaultPathProject.length > 0) {
     inputsDispatch({
@@ -252,5 +255,9 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
   inputsDispatch({
     type: inputsActions.SET_NEW_INPUT_PROJECT_PATH_ENTERED,
     payload: pathItems[1] === '' || pathItems[1]?.length > 0
+  })
+  inputsDispatch({
+    type: inputsActions.SET_NEW_INPUT_ARTIFACT_PATH_ENTERED,
+    payload: !!artifactIsEntered
   })
 }

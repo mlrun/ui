@@ -189,7 +189,8 @@ const JobsPanelDataInputs = ({
   return (
     <JobsPanelDataInputsView
       comboboxMatchesList={
-        inputsState.newInput.path.pathType === S3_INPUT_PATH_TYPE
+        inputsState.newInput.path.pathType === S3_INPUT_PATH_TYPE ||
+        inputsState.newInputArtifactPathEntered
           ? []
           : inputsState.comboboxMatches
       }
