@@ -27,13 +27,18 @@ const Combobox = ({
   const [dropdownList, setDropdownList] = useState(matches)
   const [searchIsFocused, setSearchIsFocused] = useState(false)
   const comboboxRef = React.createRef()
+  const inputRef = React.createRef()
 
   useEffect(() => {
-    if (inputDefaultValue.length > 0 && selectValue.length > 0) {
+    if (
+      inputDefaultValue.length > 0 &&
+      selectValue.length > 0 &&
+      inputValue.length === 0
+    ) {
       setInputValue(inputDefaultValue)
       inputOnChange(inputDefaultValue)
     }
-  }, [inputDefaultValue, selectValue.length])
+  }, [inputDefaultValue, inputOnChange, inputValue.length, selectValue.length])
 
   useEffect(() => {
     if (!searchIsFocused) {
@@ -72,7 +77,12 @@ const Combobox = ({
 
   const handleMatchesOptionClick = option => {
     const inputValueItems = inputValue.split('/')
-    inputValueItems[inputValueItems.length - 1] = option
+
+    if (inputValueItems.length > 1) {
+      inputValueItems[inputValueItems.length - 1] = option
+    } else {
+      inputValueItems[inputValueItems.length - 1] = `${option}/`
+    }
 
     if (searchIsFocused) {
       setSearchIsFocused(false)
@@ -84,9 +94,14 @@ const Combobox = ({
 
     setShowMatchesDropdown(false)
     inputOnChange(inputValueItems.join('/'))
+    inputRef.current.focus()
   }
 
   const handleSelectOptionOnClick = option => {
+    if (option === selectValue) {
+      return setShowSelectDropdown(false)
+    }
+
     if (selectValue.length > 0) {
       setInputValue('')
     }
@@ -94,6 +109,9 @@ const Combobox = ({
     setSelectValue(option)
     selectOnChange(option)
     setShowSelectDropdown(false)
+
+    inputRef.current.disabled = false
+    inputRef.current.focus()
   }
 
   const handleIconClick = () => {
@@ -109,16 +127,12 @@ const Combobox = ({
     setShowSelectDropdown(state => !state)
   }
 
-  const inputOnClick = event => {
-    if (selectValue.length > 0) {
-      handleInputOnChange(event)
-
-      if (showSelectDropdown) {
-        setShowSelectDropdown(false)
-      }
-
-      setShowMatchesDropdown(true)
+  const inputOnFocus = () => {
+    if (showSelectDropdown) {
+      setShowSelectDropdown(false)
     }
+
+    setShowMatchesDropdown(true)
   }
 
   const handleInputOnChange = event => {
@@ -163,11 +177,14 @@ const Combobox = ({
       handleInputOnChange={handleInputOnChange}
       handleMatchesOptionClick={handleMatchesOptionClick}
       handleSelectOptionOnClick={handleSelectOptionOnClick}
-      inputOnClick={inputOnClick}
+      inputOnFocus={inputOnFocus}
       inputPlaceholder={inputPlaceholder}
       inputValue={inputValue}
       matchesSearchOnChange={matchesSearchOnChange}
-      ref={comboboxRef}
+      ref={{
+        comboboxRef: comboboxRef,
+        inputRef: inputRef
+      }}
       searchIsFocused={searchIsFocused}
       selectDropdownList={selectDropdownList}
       selectPlaceholder={selectPlaceholder}

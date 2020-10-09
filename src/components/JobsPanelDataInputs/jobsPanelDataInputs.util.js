@@ -181,8 +181,25 @@ export const handleInputPathTypeChange = (
   inputsDispatch,
   newInput,
   pathType,
-  pathPlaceholder
+  pathPlaceholder,
+  newInputDefaultPathProject,
+  currentProject
 ) => {
+  if (
+    newInputDefaultPathProject.length > 0 &&
+    pathType === S3_INPUT_PATH_TYPE
+  ) {
+    inputsDispatch({
+      type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
+      payload: ''
+    })
+  } else if (newInputDefaultPathProject.length === 0) {
+    inputsDispatch({
+      type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
+      payload: `${currentProject}/`
+    })
+  }
+
   inputsDispatch({
     type: inputsActions.SET_PATH_PLACEHOLDER,
     payload:
@@ -193,14 +210,22 @@ export const handleInputPathTypeChange = (
   inputsDispatch({
     type: inputsActions.SET_NEW_INPUT_PATH,
     payload: {
-      ...newInput.path,
-      pathType: pathType
+      pathType: pathType,
+      project: '',
+      artifact: ''
     }
   })
 }
 
 export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
   const pathItems = path.split('/')
+
+  if (path.length === 0 && inputsState.newInputDefaultPathProject.length > 0) {
+    inputsDispatch({
+      type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
+      payload: ''
+    })
+  }
 
   if (pathItems[1] === undefined && inputsState.artifacts.length > 0) {
     inputsDispatch({

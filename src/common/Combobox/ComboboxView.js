@@ -15,7 +15,7 @@ const ComboboxView = React.forwardRef(
       handleInputOnChange,
       handleMatchesOptionClick,
       handleSelectOptionOnClick,
-      inputOnClick,
+      inputOnFocus,
       inputPlaceholder,
       inputValue,
       matchesSearchOnChange,
@@ -39,9 +39,10 @@ const ComboboxView = React.forwardRef(
       showSelectDropdown && 'combobox-select_open',
       selectValue.length <= 5 && 'combobox-select_short'
     )
+    const { comboboxRef, inputRef } = ref
 
     return (
-      <div className={comboboxClassNames} ref={ref}>
+      <div className={comboboxClassNames} ref={comboboxRef}>
         <Arrow
           className={iconClassNames}
           onClick={() => {
@@ -80,8 +81,9 @@ const ComboboxView = React.forwardRef(
           className="combobox-input"
           disabled={selectValue.length === 0}
           onChange={handleInputOnChange}
-          onClick={inputOnClick}
+          onFocus={inputOnFocus}
           placeholder={inputPlaceholder}
+          ref={inputRef}
           type="text"
           value={inputValue}
         />
@@ -129,7 +131,7 @@ ComboboxView.propTypes = {
   handleInputOnChange: PropTypes.func.isRequired,
   handleMatchesOptionClick: PropTypes.func.isRequired,
   handleSelectOptionOnClick: PropTypes.func.isRequired,
-  inputOnClick: PropTypes.func.isRequired,
+  inputOnFocus: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string.isRequired,
   inputValue: PropTypes.string.isRequired,
   matchesSearchOnChange: PropTypes.func.isRequired,

@@ -52,14 +52,9 @@ const JobsPanelDataInputs = ({
           type: inputsActions.SET_PROJECTS,
           payload: projectsList
         })
-        inputsDispatch({
-          type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
-          payload: match.params.projectName
-        })
       }
     }
   }, [
-    inputsState.newInput.path,
     inputsState.newInput.path.pathType,
     inputsState.newInput.path.project.length,
     inputsState.projects.length,
@@ -68,36 +63,33 @@ const JobsPanelDataInputs = ({
   ])
 
   useEffect(() => {
-    if (inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE) {
-      if (
-        inputsState.newInputProjectPathEntered &&
-        inputsState.artifacts.length === 0
-      ) {
-        fetchArtifacts({ project: inputsState.newInput.path.project }).then(
-          artifacts => {
-            const artifactsList = artifacts
-              .map(artifact => ({
-                label: artifact.link_iteration
-                  ? artifact.link_iteration.db_key
-                  : artifact.key ?? '',
-                id: artifact.link_iteration
-                  ? artifact.link_iteration.db_key
-                  : artifact.key ?? ''
-              }))
-              .filter(artifact => artifact.label !== '')
+    if (
+      inputsState.artifacts.length === 0 &&
+      inputsState.newInputProjectPathEntered
+    ) {
+      fetchArtifacts({ project: inputsState.newInput.path.project }).then(
+        artifacts => {
+          const artifactsList = artifacts
+            .map(artifact => ({
+              label: artifact.link_iteration
+                ? artifact.link_iteration.db_key
+                : artifact.key ?? '',
+              id: artifact.link_iteration
+                ? artifact.link_iteration.db_key
+                : artifact.key ?? ''
+            }))
+            .filter(artifact => artifact.label !== '')
 
-            inputsDispatch({
-              type: inputsActions.SET_ARTIFACTS,
-              payload: artifactsList
-            })
-          }
-        )
-      }
+          inputsDispatch({
+            type: inputsActions.SET_ARTIFACTS,
+            payload: artifactsList
+          })
+        }
+      )
     }
   }, [
     fetchArtifacts,
     inputsState.artifacts.length,
-    inputsState.newInput.path.pathType,
     inputsState.newInput.path.project,
     inputsState.newInputProjectPathEntered
   ])
@@ -184,7 +176,9 @@ const JobsPanelDataInputs = ({
       inputsDispatch,
       inputsState.newInput,
       path.replace(/:\/\/.*$/g, '://'),
-      inputsState.pathPlaceholder
+      inputsState.pathPlaceholder,
+      inputsState.newInputDefaultPathProject,
+      match.params.projectName
     )
   }
 
