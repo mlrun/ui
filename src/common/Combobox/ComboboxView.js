@@ -80,7 +80,7 @@ const ComboboxView = React.forwardRef(
         </div>
         <input
           className="combobox-input"
-          disabled={selectValue.length === 0}
+          disabled={selectValue.id.length === 0}
           onChange={handleInputOnChange}
           onFocus={inputOnFocus}
           placeholder={inputPlaceholder}

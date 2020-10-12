@@ -270,7 +270,7 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
 
   inputsDispatch({
     type: inputsActions.SET_NEW_INPUT_PROJECT_PATH_ENTERED,
-    payload: pathItems[1] === '' || pathItems[1]?.length > 0
+    payload: typeof pathItems[1] === 'string'
   })
   inputsDispatch({
     type: inputsActions.SET_NEW_INPUT_ARTIFACT_PATH_ENTERED,
