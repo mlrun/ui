@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import ComboboxView from './ComboboxView'
 
 import './combobox.scss'
+
 const Combobox = ({
   comboboxClassName,
   inputPlaceholder,
@@ -15,10 +16,12 @@ const Combobox = ({
   selectPlaceholder
 }) => {
   const [inputValue, setInputValue] = useState('')
-  const [selectValue, setSelectValue] = useState('')
+  const [selectValue, setSelectValue] = useState({
+    label: '',
+    id: '',
+    className: ''
+  })
   const [dropdownStyle, setDropdownStyle] = useState({
-    position: 'absolute',
-    top: '40px',
     left: 0,
     paddingTop: '10px'
   })
@@ -32,13 +35,18 @@ const Combobox = ({
   useEffect(() => {
     if (
       inputDefaultValue.length > 0 &&
-      selectValue.length > 0 &&
+      selectValue.id.length > 0 &&
       inputValue.length === 0
     ) {
       setInputValue(inputDefaultValue)
       inputOnChange(inputDefaultValue)
     }
-  }, [inputDefaultValue, inputOnChange, inputValue.length, selectValue.length])
+  }, [
+    inputDefaultValue,
+    inputOnChange,
+    inputValue.length,
+    selectValue.id.length
+  ])
 
   useEffect(() => {
     if (!searchIsFocused) {
@@ -98,16 +106,16 @@ const Combobox = ({
   }
 
   const handleSelectOptionOnClick = option => {
-    if (option === selectValue) {
+    if (option.id === selectValue.id) {
       return setShowSelectDropdown(false)
     }
 
-    if (selectValue.length > 0) {
+    if (selectValue.id.length > 0) {
       setInputValue('')
     }
 
     setSelectValue(option)
-    selectOnChange(option)
+    selectOnChange(option.id)
     setShowSelectDropdown(false)
 
     inputRef.current.disabled = false
@@ -119,11 +127,10 @@ const Combobox = ({
       setShowMatchesDropdown(false)
     }
 
-    setDropdownStyle(state => ({
-      ...state,
+    setDropdownStyle({
       left: 0,
       paddingTop: '10px'
-    }))
+    })
     setShowSelectDropdown(state => !state)
   }
 
@@ -136,27 +143,20 @@ const Combobox = ({
   }
 
   const handleInputOnChange = event => {
-    const value = event.target.value
-    const div = document.createElement('div')
-    div.innerHTML = value
-    comboboxRef.current.appendChild(div)
+    const target = event.target
 
-    const rect = div.getBoundingClientRect()
+    inputOnChange(target.value)
 
-    div.remove()
-
-    setDropdownStyle(state => ({
-      ...state,
-      left: `${rect.width - 10}px`,
+    setDropdownStyle({
+      left: `${target.selectionStart}ch`,
       paddingTop: '0'
-    }))
+    })
 
     if (searchIsFocused) {
       setSearchIsFocused(false)
     }
 
-    inputOnChange(value)
-    setInputValue(value)
+    setInputValue(target.value)
   }
 
   const matchesSearchOnChange = event => {

@@ -1,6 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { Transition } from 'react-transition-group'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
@@ -37,9 +38,18 @@ const ComboboxView = React.forwardRef(
     const selectClassNames = classnames(
       'combobox-select',
       showSelectDropdown && 'combobox-select_open',
-      selectValue.length <= 5 && 'combobox-select_short'
+      selectValue.id.length <= 5 && 'combobox-select_short'
     )
     const { comboboxRef, inputRef } = ref
+    const duration = 100
+    const defaultStyle = {
+      transition: `opacity ${duration}ms ease-in-out`
+    }
+    const transitionStyles = {
+      entering: { opacity: 0 },
+      entered: { opacity: 1 },
+      exiting: { opacity: 0 }
+    }
 
     return (
       <div className={comboboxClassNames} ref={comboboxRef}>
@@ -51,13 +61,8 @@ const ComboboxView = React.forwardRef(
         />
         <div className={selectClassNames}>
           <div className="combobox-select__header">
-            <span
-              className={`path-type-${selectValue.replace(/:\/\/.*$/g, '')}`}
-            >
-              {selectValue}
-            </span>
-
-            {selectValue.length === 0 && (
+            <span className={`${selectValue.className}`}>{selectValue.id}</span>
+            {selectValue.id.length === 0 && (
               <span className="combobox-select__header-label">
                 {selectPlaceholder}
               </span>
@@ -69,7 +74,7 @@ const ComboboxView = React.forwardRef(
                 <li
                   className={`combobox-list__option ${option.className}`}
                   key={option.id}
-                  onClick={() => handleSelectOptionOnClick(option.id)}
+                  onClick={() => handleSelectOptionOnClick(option)}
                 >
                   {option.label}
                 </li>
@@ -87,37 +92,52 @@ const ComboboxView = React.forwardRef(
           type="text"
           value={inputValue}
         />
-        {showMatchesDropdown && (dropdownList.length > 0 || searchIsFocused) && (
-          <div className="combobox-dropdown" style={dropdownStyle}>
-            <div className="combobox-dropdown__search">
-              <input
-                className="combobox-dropdown__search-input input"
-                onChange={event => matchesSearchOnChange(event)}
-                onFocus={() => setSearchIsFocused(true)}
-                placeholder="Type to search"
-                type="text"
-              />
-              <SearchIcon />
-            </div>
-            <ul className="combobox-dropdown__list combobox-list">
-              {searchIsFocused && dropdownList.length === 0 ? (
-                <li className="combobox-list__option" key="no data">
-                  No data
-                </li>
-              ) : (
-                dropdownList.map(value => (
-                  <li
-                    className="combobox-list__option"
-                    key={value.id}
-                    onClick={() => handleMatchesOptionClick(value.id)}
-                  >
-                    {value.label}
+        <Transition
+          in={
+            showMatchesDropdown && (dropdownList.length > 0 || searchIsFocused)
+          }
+          timeout={duration}
+          unmountOnExit
+        >
+          {state => (
+            <div
+              className="combobox-dropdown"
+              style={{
+                ...defaultStyle,
+                ...transitionStyles[state],
+                ...dropdownStyle
+              }}
+            >
+              <div className="combobox-dropdown__search">
+                <input
+                  className="combobox-dropdown__search-input input"
+                  onChange={event => matchesSearchOnChange(event)}
+                  onFocus={() => setSearchIsFocused(true)}
+                  placeholder="Type to search"
+                  type="text"
+                />
+                <SearchIcon />
+              </div>
+              <ul className="combobox-dropdown__list combobox-list">
+                {searchIsFocused && dropdownList.length === 0 ? (
+                  <li className="combobox-list__option" key="no data">
+                    No data
                   </li>
-                ))
-              )}
-            </ul>
-          </div>
-        )}
+                ) : (
+                  dropdownList.map(value => (
+                    <li
+                      className="combobox-list__option"
+                      key={value.id}
+                      onClick={() => handleMatchesOptionClick(value.id)}
+                    >
+                      {value.label}
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+          )}
+        </Transition>
       </div>
     )
   }
@@ -138,7 +158,7 @@ ComboboxView.propTypes = {
   searchIsFocused: PropTypes.bool.isRequired,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectPlaceholder: PropTypes.string.isRequired,
-  selectValue: PropTypes.string.isRequired,
+  selectValue: PropTypes.shape({}).isRequired,
   setSearchIsFocused: PropTypes.func.isRequired,
   showMatchesDropdown: PropTypes.bool.isRequired,
   showSelectDropdown: PropTypes.bool.isRequired

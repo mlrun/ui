@@ -1,4 +1,5 @@
 import { inputsActions } from './jobsPanelDataInputsReducer'
+import { isNil } from 'lodash'
 
 export const handleAddItem = (
   currentTableData,
@@ -51,11 +52,8 @@ export const handleAddItem = (
           name: newItemObj.name,
           path:
             newItemObj.path.pathType === S3_INPUT_PATH_TYPE
-              ? newItemObj.path.pathType + newInputUrlPath
-              : newItemObj.path.pathType +
-                newItemObj.path.project +
-                '/' +
-                newItemObj.path.artifact
+              ? `${newItemObj.path.pathType}${newInputUrlPath}`
+              : `${newItemObj.path.pathType}${newItemObj.path.project}/${newItemObj.path.artifact}`
         }
       }
     ]
@@ -71,10 +69,7 @@ export const handleAddItem = (
           path:
             newItemObj.path.pathType === S3_INPUT_PATH_TYPE
               ? newItemObj.path.pathType + newInputUrlPath
-              : newItemObj.path.pathType +
-                newItemObj.path.project +
-                '/' +
-                newItemObj.path.artifact
+              : `${newItemObj.path.pathType}${newItemObj.path.project}/${newItemObj.path.artifact}`
         }
       }
     ]
@@ -95,10 +90,7 @@ export const handleAddItem = (
     [newItemObj.name]:
       newItemObj.path.pathType === S3_INPUT_PATH_TYPE
         ? newItemObj.path.pathType + newInputUrlPath
-        : newItemObj.path.pathType +
-          newItemObj.path.project +
-          '/' +
-          newItemObj.path.artifact
+        : `${newItemObj.path.pathType}${newItemObj.path.project}/${newItemObj.path.artifact}`
   })
 }
 
@@ -254,7 +246,7 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
     })
   }
 
-  if (pathItems[1] === undefined && inputsState.artifacts.length > 0) {
+  if (isNil(pathItems[1]) && inputsState.artifacts.length > 0) {
     inputsDispatch({
       type: inputsActions.SET_ARTIFACTS,
       payload: []
@@ -263,7 +255,7 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
 
   if (
     pathItems[0] !== inputsState.newInput.path.project ||
-    (pathItems[1] !== undefined &&
+    (!isNil(pathItems[1]) &&
       pathItems[1] !== inputsState.newInput.path.artifact)
   ) {
     inputsDispatch({

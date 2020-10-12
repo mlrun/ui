@@ -25,6 +25,8 @@
   }
 
   &-dropdown {
+    position: absolute;
+    top: 40px;
     z-index: 5;
     max-width: 220px;
     background-color: $white;

@@ -109,6 +109,8 @@ const JobsPanelDataInputs = ({
         matches = inputsState.projects.filter(project => {
           return project.id.startsWith(inputsState.newInput.path.project)
         })
+      } else if (inputsState.newInput.path.pathType.length === 0) {
+        matches = [...inputsState.artifacts]
       } else {
         matches = [...inputsState.projects]
       }
