@@ -21,6 +21,9 @@ const Functions = React.lazy(() =>
 const CreateJobPage = React.lazy(() =>
   import('./components/CreateJobPage/CreateJobPage')
 )
+const Datasets = React.lazy(() => import('./components/Datasets/Datasets'))
+const Models = React.lazy(() => import('./components/Models/Models'))
+const Files = React.lazy(() => import('./components/Files/Files'))
 
 const App = () => {
   return (
@@ -74,6 +77,21 @@ const App = () => {
               exact
               strict
               render={routeProps => <CreateJobPage {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/datasets"
+              render={routeProps => <Datasets {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/models"
+              render={routeProps => <Models {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/files"
+              render={routeProps => <Files {...routeProps} />}
             />
             <Redirect to="/projects" />
           </Switch>

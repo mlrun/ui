@@ -4,14 +4,22 @@ import {
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
+  FETCH_DATASETS_BEGIN,
+  FETCH_DATASETS_FAILURE,
+  FETCH_DATASETS_SUCCESS,
   REMOVE_ARTIFACTS,
   SHOW_ARTIFACT_PREVIEW,
   SET_ARTIFACT_FILTER
 } from '../constants'
 
 const artifactsAction = {
+  closeArtifactsPreview: item => ({
+    type: CLOSE_ARTIFACT_PREVIEW,
+    payload: item
+  }),
   fetchArtifacts: item => dispatch => {
     dispatch(artifactsAction.fetchArtifactsBegin())
+
     return artifactsApi
       .getArtifacts(item)
       .then(({ data }) => {
@@ -32,6 +40,7 @@ const artifactsAction = {
         )
 
         dispatch(artifactsAction.fetchArtifactsSuccess(artifacts))
+
         return artifacts
       })
       .catch(err => {
@@ -41,13 +50,56 @@ const artifactsAction = {
   fetchArtifactsBegin: () => ({
     type: FETCH_ARTIFACTS_BEGIN
   }),
+  fetchArtifactsFailure: error => ({
+    type: FETCH_ARTIFACTS_FAILURE,
+    payload: error
+  }),
   fetchArtifactsSuccess: artifactsList => ({
     type: FETCH_ARTIFACTS_SUCCESS,
     payload: artifactsList
   }),
-  fetchArtifactsFailure: error => ({
-    type: FETCH_ARTIFACTS_FAILURE,
-    payload: error
+  fetchDatasets: project => dispatch => {
+    dispatch(artifactsAction.fetchDatasetsBegin())
+
+    return artifactsApi
+      .getArtifactsDatasets(project)
+      .then(({ data }) => {
+        // let artifacts = Object.values(
+        //   data.artifacts.reduce((prev, curr) => {
+        //     if (!prev[curr.db_key])
+        //       prev[curr.db_key] = { key: curr.db_key, data: [] }
+        //
+        //     if ('link_iteration' in curr) {
+        //       prev[curr.db_key] = Object.assign(prev[curr.db_key], {
+        //         link_iteration: curr
+        //       })
+        //     } else {
+        //       prev[curr.db_key].data.push(curr)
+        //     }
+        //     return prev
+        //   }, {})
+        // )
+        //
+        // dispatch(artifactsAction.fetchArtifactsSuccess(artifacts))
+
+        return data
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchArtifactsFailure(err))
+      })
+  },
+  fetchDatasetsBegin: () => ({
+    type: FETCH_DATASETS_BEGIN
+  }),
+  fetchDatasetsFailure: () => ({
+    type: FETCH_DATASETS_FAILURE
+  }),
+  fetchDatasetsSuccess: datasets => ({
+    type: FETCH_DATASETS_SUCCESS,
+    payload: datasets
+  }),
+  removeArtifacts: () => ({
+    type: REMOVE_ARTIFACTS
   }),
   setArtifactFilter: filter => ({
     type: SET_ARTIFACT_FILTER,
@@ -56,13 +108,6 @@ const artifactsAction = {
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
-  }),
-  closeArtifactsPreview: item => ({
-    type: CLOSE_ARTIFACT_PREVIEW,
-    payload: item
-  }),
-  removeArtifacts: () => ({
-    type: REMOVE_ARTIFACTS
   })
 }
 
