@@ -28,9 +28,17 @@
     position: absolute;
     top: 40px;
     z-index: 5;
+    display: none;
     max-width: 220px;
     background-color: $white;
     box-shadow: $previewBoxShadow;
+    opacity: 0;
+
+    &_visible {
+      display: block;
+      opacity: 1;
+      animation: show 100ms linear;
+    }
 
     &__list {
       padding: 0 0 10px;
@@ -126,5 +134,19 @@
     &:disabled {
       background-color: transparent;
     }
+  }
+}
+
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
   }
 }

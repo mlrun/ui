@@ -1,7 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
-import { Transition } from 'react-transition-group'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
@@ -40,16 +39,13 @@ const ComboboxView = React.forwardRef(
       showSelectDropdown && 'combobox-select_open',
       selectValue.id.length <= 5 && 'combobox-select_short'
     )
+    const dropdownClassNames = classnames(
+      'combobox-dropdown',
+      showMatchesDropdown &&
+        (dropdownList.length > 0 || searchIsFocused) &&
+        'combobox-dropdown_visible'
+    )
     const { comboboxRef, inputRef } = ref
-    const duration = 100
-    const defaultStyle = {
-      transition: `opacity ${duration}ms ease-in-out`
-    }
-    const transitionStyles = {
-      entering: { opacity: 0 },
-      entered: { opacity: 1 },
-      exiting: { opacity: 0 }
-    }
 
     return (
       <div className={comboboxClassNames} ref={comboboxRef}>
@@ -92,52 +88,87 @@ const ComboboxView = React.forwardRef(
           type="text"
           value={inputValue}
         />
-        <Transition
-          in={
-            showMatchesDropdown && (dropdownList.length > 0 || searchIsFocused)
-          }
-          timeout={duration}
-          unmountOnExit
+        <div
+          className={dropdownClassNames}
+          style={{
+            ...dropdownStyle
+          }}
         >
-          {state => (
-            <div
-              className="combobox-dropdown"
-              style={{
-                ...defaultStyle,
-                ...transitionStyles[state],
-                ...dropdownStyle
-              }}
-            >
-              <div className="combobox-dropdown__search">
-                <input
-                  className="combobox-dropdown__search-input input"
-                  onChange={event => matchesSearchOnChange(event)}
-                  onFocus={() => setSearchIsFocused(true)}
-                  placeholder="Type to search"
-                  type="text"
-                />
-                <SearchIcon />
-              </div>
-              <ul className="combobox-dropdown__list combobox-list">
-                {searchIsFocused && dropdownList.length === 0 ? (
-                  <li className="combobox-list__option" key="no data">
-                    No data
-                  </li>
-                ) : (
-                  dropdownList.map(value => (
-                    <li
-                      className="combobox-list__option"
-                      key={value.id}
-                      onClick={() => handleMatchesOptionClick(value.id)}
-                    >
-                      {value.label}
-                    </li>
-                  ))
-                )}
-              </ul>
-            </div>
-          )}
-        </Transition>
+          <div className="combobox-dropdown__search">
+            <input
+              className="combobox-dropdown__search-input input"
+              onChange={event => matchesSearchOnChange(event)}
+              onFocus={() => setSearchIsFocused(true)}
+              placeholder="Type to search"
+              type="text"
+            />
+            <SearchIcon />
+          </div>
+          <ul className="combobox-dropdown__list combobox-list">
+            {searchIsFocused && dropdownList.length === 0 ? (
+              <li className="combobox-list__option" key="no data">
+                No data
+              </li>
+            ) : (
+              dropdownList.map(value => (
+                <li
+                  className="combobox-list__option"
+                  key={value.id}
+                  onClick={() => handleMatchesOptionClick(value.id)}
+                >
+                  {value.label}
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+
+        {/*<Transition*/}
+        {/*  in={*/}
+        {/*    showMatchesDropdown && (dropdownList.length > 0 || searchIsFocused)*/}
+        {/*  }*/}
+        {/*  timeout={duration}*/}
+        {/*  unmountOnExit*/}
+        {/*>*/}
+        {/*  {state => (*/}
+        {/*    <div*/}
+        {/*      className="combobox-dropdown"*/}
+        {/*      style={{*/}
+        {/*        ...defaultStyle,*/}
+        {/*        ...transitionStyles[state],*/}
+        {/*        ...dropdownStyle*/}
+        {/*      }}*/}
+        {/*    >*/}
+        {/*      <div className="combobox-dropdown__search">*/}
+        {/*        <input*/}
+        {/*          className="combobox-dropdown__search-input input"*/}
+        {/*          onChange={event => matchesSearchOnChange(event)}*/}
+        {/*          onFocus={() => setSearchIsFocused(true)}*/}
+        {/*          placeholder="Type to search"*/}
+        {/*          type="text"*/}
+        {/*        />*/}
+        {/*        <SearchIcon />*/}
+        {/*      </div>*/}
+        {/*      <ul className="combobox-dropdown__list combobox-list">*/}
+        {/*        {searchIsFocused && dropdownList.length === 0 ? (*/}
+        {/*          <li className="combobox-list__option" key="no data">*/}
+        {/*            No data*/}
+        {/*          </li>*/}
+        {/*        ) : (*/}
+        {/*          dropdownList.map(value => (*/}
+        {/*            <li*/}
+        {/*              className="combobox-list__option"*/}
+        {/*              key={value.id}*/}
+        {/*              onClick={() => handleMatchesOptionClick(value.id)}*/}
+        {/*            >*/}
+        {/*              {value.label}*/}
+        {/*            </li>*/}
+        {/*          ))*/}
+        {/*        )}*/}
+        {/*      </ul>*/}
+        {/*    </div>*/}
+        {/*  )}*/}
+        {/*</Transition>*/}
       </div>
     )
   }

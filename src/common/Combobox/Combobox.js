@@ -86,11 +86,8 @@ const Combobox = ({
   const handleMatchesOptionClick = option => {
     const inputValueItems = inputValue.split('/')
 
-    if (inputValueItems.length > 1) {
-      inputValueItems[inputValueItems.length - 1] = option
-    } else {
-      inputValueItems[inputValueItems.length - 1] = `${option}/`
-    }
+    inputValueItems[inputValueItems.length - 1] =
+      inputValueItems.length > 1 ? option : `${option}/`
 
     if (searchIsFocused) {
       setSearchIsFocused(false)

@@ -72,7 +72,7 @@ const JobsPanelDataInputsView = ({
 }
 
 JobsPanelDataInputsView.propTypes = {
-  comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
