@@ -122,53 +122,6 @@ const ComboboxView = React.forwardRef(
             )}
           </ul>
         </div>
-
-        {/*<Transition*/}
-        {/*  in={*/}
-        {/*    showMatchesDropdown && (dropdownList.length > 0 || searchIsFocused)*/}
-        {/*  }*/}
-        {/*  timeout={duration}*/}
-        {/*  unmountOnExit*/}
-        {/*>*/}
-        {/*  {state => (*/}
-        {/*    <div*/}
-        {/*      className="combobox-dropdown"*/}
-        {/*      style={{*/}
-        {/*        ...defaultStyle,*/}
-        {/*        ...transitionStyles[state],*/}
-        {/*        ...dropdownStyle*/}
-        {/*      }}*/}
-        {/*    >*/}
-        {/*      <div className="combobox-dropdown__search">*/}
-        {/*        <input*/}
-        {/*          className="combobox-dropdown__search-input input"*/}
-        {/*          onChange={event => matchesSearchOnChange(event)}*/}
-        {/*          onFocus={() => setSearchIsFocused(true)}*/}
-        {/*          placeholder="Type to search"*/}
-        {/*          type="text"*/}
-        {/*        />*/}
-        {/*        <SearchIcon />*/}
-        {/*      </div>*/}
-        {/*      <ul className="combobox-dropdown__list combobox-list">*/}
-        {/*        {searchIsFocused && dropdownList.length === 0 ? (*/}
-        {/*          <li className="combobox-list__option" key="no data">*/}
-        {/*            No data*/}
-        {/*          </li>*/}
-        {/*        ) : (*/}
-        {/*          dropdownList.map(value => (*/}
-        {/*            <li*/}
-        {/*              className="combobox-list__option"*/}
-        {/*              key={value.id}*/}
-        {/*              onClick={() => handleMatchesOptionClick(value.id)}*/}
-        {/*            >*/}
-        {/*              {value.label}*/}
-        {/*            </li>*/}
-        {/*          ))*/}
-        {/*        )}*/}
-        {/*      </ul>*/}
-        {/*    </div>*/}
-        {/*  )}*/}
-        {/*</Transition>*/}
       </div>
     )
   }
