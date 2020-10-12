@@ -139,7 +139,9 @@ const JobsPanelDataInputs = ({
       panelActions.SET_TABLE_DATA_INPUTS,
       panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS,
       setNewJobInputs,
-      inputsActions.SET_PATH_PLACEHOLDER
+      inputsActions.SET_PATH_PLACEHOLDER,
+      inputsState.newInputUrlPath,
+      inputsActions.SET_NEW_INPUT_URL_PATH
     )
   }
 

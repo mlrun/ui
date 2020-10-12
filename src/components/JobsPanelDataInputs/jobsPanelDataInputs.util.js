@@ -12,19 +12,26 @@ export const handleAddItem = (
   setCurrentTableData,
   setPreviousData,
   setNewJobData,
-  setPathPlaceholder
+  setPathPlaceholder,
+  newInputUrlPath,
+  setNewInputUrl
 ) => {
   if (
     newItemObj.name.length === 0 ||
-    newItemObj.path.pathType.length === 0 ||
-    newItemObj.path.project.length === 0 ||
-    newItemObj.path.artifact.length === 0
+    ((newItemObj.path.pathType.length === 0 ||
+      newItemObj.path.project.length === 0 ||
+      newItemObj.path.artifact.length === 0) &&
+      !newInputUrlPath)
   ) {
     inputsDispatch({
       type: removeNewItemObj
     })
     inputsDispatch({
       type: setPathPlaceholder,
+      payload: ''
+    })
+    inputsDispatch({
+      type: setNewInputUrl,
       payload: ''
     })
 
@@ -43,10 +50,12 @@ export const handleAddItem = (
         data: {
           name: newItemObj.name,
           path:
-            newItemObj.path.pathType +
-            newItemObj.path.project +
-            '/' +
-            newItemObj.path.artifact
+            newItemObj.path.pathType === S3_INPUT_PATH_TYPE
+              ? newItemObj.path.pathType + newInputUrlPath
+              : newItemObj.path.pathType +
+                newItemObj.path.project +
+                '/' +
+                newItemObj.path.artifact
         }
       }
     ]
@@ -60,10 +69,12 @@ export const handleAddItem = (
         data: {
           name: newItemObj.name,
           path:
-            newItemObj.path.pathType +
-            newItemObj.path.project +
-            '/' +
-            newItemObj.path.artifact
+            newItemObj.path.pathType === S3_INPUT_PATH_TYPE
+              ? newItemObj.path.pathType + newInputUrlPath
+              : newItemObj.path.pathType +
+                newItemObj.path.project +
+                '/' +
+                newItemObj.path.artifact
         }
       }
     ]
@@ -82,10 +93,12 @@ export const handleAddItem = (
   setNewJobData({
     ...newJobData,
     [newItemObj.name]:
-      newItemObj.path.pathType +
-      newItemObj.path.project +
-      '/' +
-      newItemObj.path.artifact
+      newItemObj.path.pathType === S3_INPUT_PATH_TYPE
+        ? newItemObj.path.pathType + newInputUrlPath
+        : newItemObj.path.pathType +
+          newItemObj.path.project +
+          '/' +
+          newItemObj.path.artifact
   })
 }
 
@@ -208,6 +221,10 @@ export const handleInputPathTypeChange = (
         : ''
   })
   inputsDispatch({
+    type: inputsActions.SET_NEW_INPUT_URL_PATH,
+    payload: ''
+  })
+  inputsDispatch({
     type: inputsActions.SET_NEW_INPUT_PATH,
     payload: {
       pathType: pathType,
@@ -218,6 +235,13 @@ export const handleInputPathTypeChange = (
 }
 
 export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
+  if (inputsState.newInput.path.pathType === S3_INPUT_PATH_TYPE) {
+    return inputsDispatch({
+      type: inputsActions.SET_NEW_INPUT_URL_PATH,
+      payload: path
+    })
+  }
+
   const pathItems = path.split('/')
   const artifactIsEntered = inputsState.artifacts.find(
     artifact => artifact.id === pathItems[1]
