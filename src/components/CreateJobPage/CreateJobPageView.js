@@ -68,7 +68,7 @@ const CreateJobPageView = ({
         setMatches={setFilterMatches}
       />
       <Accordion
-        accordionClassName="functions-container"
+        accordionClassName="container functions-wrapper"
         icon={<Arrow />}
         iconClassName="expand-icon"
         openByDefault
@@ -125,6 +125,7 @@ const CreateJobPageView = ({
 
                 return (
                   <Accordion
+                    accordionClassName="container templates-wrapper"
                     icon={<Arrow />}
                     iconClassName="expand-icon"
                     key={category}
