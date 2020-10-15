@@ -71,13 +71,14 @@ const functionsActions = {
       .getFunctionTemplate(path)
       .then(response => {
         let parsedData = yaml.safeLoad(response.data)
+        const templates = {
+          name: parsedData.metadata.name,
+          functions: parsedData.spec.entry_point ? [] : [parsedData]
+        }
 
-        dispatch(
-          functionsActions.fetchFunctionTemplateSuccess({
-            name: parsedData.metadata.name,
-            functions: parsedData.spec.entry_point ? [] : [parsedData]
-          })
-        )
+        dispatch(functionsActions.fetchFunctionTemplateSuccess(templates))
+
+        return templates
       })
       .catch(err =>
         dispatch(functionsActions.fetchFunctionTemplateFailure(err))
