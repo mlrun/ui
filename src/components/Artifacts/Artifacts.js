@@ -6,12 +6,12 @@ import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 
-import parseTargetPath from '../../utils/parseTargetPath'
 import artifactApi from '../../api/artifacts-api'
 import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
-import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
+import { generateArtifacts } from '../../utils/generateArtifacts'
+import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 
 import './artifacts.scss'
 
@@ -31,7 +31,8 @@ const Artifacts = ({
     detailsMenu: artifactsData.detailsMenu,
     filters: artifactsData.filters,
     page: artifactsData.page,
-    tableHeaders: artifactsData.tableHeaders
+    tableHeaders: artifactsData.tableHeaders,
+    infoHeaders: artifactsData.infoHeaders
   })
 
   const fetchData = useCallback(
@@ -40,41 +41,7 @@ const Artifacts = ({
         let artifacts = []
 
         if (data) {
-          artifacts = data
-            .map(artifact => {
-              let item = null
-
-              if (artifact.link_iteration) {
-                let { link_iteration } = artifact.link_iteration
-                item = artifact.data.filter(
-                  item => item.iter === link_iteration
-                )[0]
-              } else {
-                item = artifact.data[0]
-              }
-
-              if (item) {
-                item.target_path = parseTargetPath(item.target_path)
-
-                if (item.extra_data) {
-                  const generatedPreviewData = generateArtifactPreviewData(
-                    item.extra_data,
-                    item.target_path.schema
-                  )
-
-                  item.preview = generatedPreviewData.preview
-
-                  if (generatedPreviewData.extraDataPath) {
-                    item.target_path.path = generatedPreviewData.extraDataPath
-                  }
-                } else {
-                  item.preview = item.preview ?? []
-                }
-              }
-
-              return item
-            })
-            .filter(item => item !== undefined)
+          artifacts = generateArtifacts(data)
 
           _setArtifacts(artifacts)
         }
@@ -173,19 +140,20 @@ const Artifacts = ({
 
   const handleArtifactFilterTree = useCallback(
     item => {
-      const value = item.toLowerCase() !== 'latest' ? item.toLowerCase() : ''
-      fetchData({
-        tag: value,
-        project: match.params.projectName,
-        labels: artifactsStore.filter.labels,
-        name: artifactsStore.filter.name
-      })
-      setArtifactFilter({
-        ...artifactsStore.filter,
-        tag: value || 'latest'
-      })
+      handleArtifactTreeFilterChange(
+        fetchData,
+        artifactsStore.filter,
+        item,
+        match.params.projectName,
+        setArtifactFilter
+      )
     },
-    [fetchData, artifactsStore, match, setArtifactFilter]
+    [
+      artifactsStore.filter,
+      fetchData,
+      match.params.projectName,
+      setArtifactFilter
+    ]
   )
 
   const handleCancel = () => {

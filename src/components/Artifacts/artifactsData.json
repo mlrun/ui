@@ -1,5 +1,5 @@
 {
-  "artifactsInfoHeaders": [
+  "infoHeaders": [
     { "label": "Hash", "id": "hash" },
     { "label": "Key", "id": "key" },
     { "label": "Iter", "id": "iter" },

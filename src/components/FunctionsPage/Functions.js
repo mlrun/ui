@@ -24,7 +24,8 @@ const Functions = ({
     detailsMenu: functionsData.detailsMenu,
     filters: functionsData.filters,
     page: functionsData.page,
-    tableHeaders: functionsData.tableHeaders
+    tableHeaders: functionsData.tableHeaders,
+    infoHeaders: functionsData.infoHeaders
   }
 
   const refreshFunctions = useCallback(

@@ -14,6 +14,7 @@ const ArtifactsTableRow = ({
   index,
   match,
   rowItem,
+  pageData,
   selectedItem
 }) => {
   const rowClassNames = classnames(
@@ -34,9 +35,9 @@ const ArtifactsTableRow = ({
             key={Math.random() + i}
             link={
               i === 0 &&
-              `/projects/${match.params.projectName}/artifacts/${
-                rowItem.key.value
-              }/${
+              `/projects/${match.params.projectName}/${
+                pageData.pageKind ? pageData.pageKind : 'artifacts'
+              }/${rowItem.key.value}/${
                 match.params.tab
                   ? match.params.tab
                   : `${artifactsData.detailsMenu[0]}`
