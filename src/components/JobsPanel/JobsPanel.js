@@ -56,7 +56,7 @@ const JobsPanel = ({
   const [selectedFunction] = useState(
     !isEmpty(functionsStore.template)
       ? functionsStore.template.functions
-      : groupedFunctions.functions
+      : groupedFunctions.functions || {}
   )
   const history = useHistory()
   const dispatch = useDispatch()
@@ -102,7 +102,11 @@ const JobsPanel = ({
   ])
 
   useEffect(() => {
-    if (!panelState.editMode && isEveryObjectValueEmpty(panelState.tableData)) {
+    if (
+      !panelState.editMode &&
+      isEveryObjectValueEmpty(panelState.tableData) &&
+      !isEveryObjectValueEmpty(selectedFunction)
+    ) {
       generateTableData(
         panelState.currentFunctionInfo.method,
         selectedFunction,
