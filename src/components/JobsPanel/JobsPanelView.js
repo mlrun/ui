@@ -12,12 +12,14 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
+import Loader from '../../common/Loader/Loader'
 
 const JobsPanelView = ({
   closePanel,
   functionData,
   handleRunJob,
   jobsStore,
+  loading,
   match,
   openScheduleJob,
   panelDispatch,
@@ -37,6 +39,7 @@ const JobsPanelView = ({
   return (
     <div className="job-panel-container">
       <div className="job-panel">
+        {loading && <Loader />}
         <JobsPanelTitle
           closePanel={closePanel}
           functionData={functionData}
@@ -149,6 +152,7 @@ JobsPanelView.propTypes = {
   functionData: PropTypes.shape({}).isRequired,
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
+  loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
