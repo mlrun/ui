@@ -16,7 +16,7 @@ const ContentMenu = ({ activeTab, match, tabs }) => {
           )
 
           return (
-            <li className={tabClassNames} key={tab}>
+            <li data-testid={tab} className={tabClassNames} key={tab}>
               <Link to={`/projects/${match.params.projectName}/jobs/${tab}`}>
                 {tab}
               </Link>

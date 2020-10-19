@@ -29,6 +29,7 @@ const DatePickerView = React.forwardRef(
   ) => (
     <>
       <div
+        data-testid="date-picker-input"
         className="date-picker_input"
         onClick={() => setOpenDatePicker(true)}
       >
@@ -50,13 +51,18 @@ const DatePickerView = React.forwardRef(
       </div>
       {openDatePicker && (
         <div
+          data-testid="date-picker-calendar"
           ref={ref}
           className={`date-picker_body ${
             isTopPosition ? 'positionTop' : 'positionBottom'
           }`}
         >
           <div className="date-picker-header">
-            <Arrow className="previous-month" onClick={onPreviousMonth} />
+            <Arrow
+              data-testid="btn-previous-month"
+              className="previous-month"
+              onClick={onPreviousMonth}
+            />
             <div>
               <span className="date-picker-header_month">
                 {months[date.getMonth()]}
@@ -65,7 +71,11 @@ const DatePickerView = React.forwardRef(
                 {date.getFullYear()}
               </span>
             </div>
-            <Arrow className="next-month" onClick={onNextMonth} />
+            <Arrow
+              data-testid="btn-next-month"
+              className="next-month"
+              onClick={onNextMonth}
+            />
           </div>
           <div className="date-picker_body_weeks">
             {weekDay.map((day, index) => {
@@ -101,6 +111,7 @@ const DatePickerView = React.forwardRef(
             </div>
           ))}
           <button
+            data-testid="btn-apply"
             className="btn-date-picker"
             onClick={() => {
               onChange(selectedDate)

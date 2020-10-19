@@ -9,7 +9,7 @@ const ProgressRing = ({ radius, stroke, progress, color, children }) => {
   const area = (normalizedRadius + offset) * Math.PI * 2
 
   return (
-    <svg height={radius * 2} width={radius * 2}>
+    <svg data-testid="progress-ring" height={radius * 2} width={radius * 2}>
       <circle
         stroke={color}
         strokeWidth={stroke}

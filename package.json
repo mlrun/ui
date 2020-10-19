@@ -116,7 +116,7 @@
   },
   "jest": {
     "verbose": true,
-    "clearMocks": false,
+    "clearMocks": true,
     "transform": {
       "^.+\\.js$": "babel-jest"
     },

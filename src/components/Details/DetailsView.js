@@ -92,6 +92,7 @@ const DetailsView = ({
           )}
           <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
           <Link
+            data-testid="details-close-btn"
             to={`/projects/${match.params.projectName}/${page.toLowerCase()}${
               page === JOBS_PAGE ? `/${match.params.jobTab}` : ''
             }`}
