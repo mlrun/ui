@@ -59,6 +59,7 @@ const ProjectView = React.forwardRef(
               <div className="general-info__main-data">
                 <div className="general-info__main-data-wrapper">
                   <div
+                    data-testid="project-name"
                     className="general-info__name"
                     onClick={() => handleEditProject('name')}
                   >
@@ -83,6 +84,7 @@ const ProjectView = React.forwardRef(
                 </div>
                 <div
                   className="general-info__description"
+                  data-testid="project-description"
                   onClick={() => handleEditProject('description')}
                 >
                   {editProject.description.isEdit ? (
