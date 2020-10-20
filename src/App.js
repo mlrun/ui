@@ -24,7 +24,7 @@ const CreateJobPage = React.lazy(() =>
 
 const App = () => {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Page>
         <Suspense fallback={<Loader />}>
           <Switch>

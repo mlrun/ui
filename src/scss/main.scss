@@ -38,8 +38,11 @@ main {
   flex: 1;
   flex-flow: column nowrap;
   height: auto;
-  margin-top: 64px;
   overflow: auto;
+
+  &:not(:first-child) {
+    margin-top: 64px;
+  }
 
   a {
     color: inherit;

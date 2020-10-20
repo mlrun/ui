@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 export const mainHttpClient = axios.create({
-  baseURL: '/api'
+  baseURL: `${process.env.PUBLIC_URL}/api`
 })
 
 export const functionTemplatesHttpClient = axios.create({
-  baseURL: '/function-catalog'
+  baseURL: `${process.env.PUBLIC_URL}/function-catalog`
 })
