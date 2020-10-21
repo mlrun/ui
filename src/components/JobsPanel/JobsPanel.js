@@ -53,7 +53,7 @@ const JobsPanel = ({
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
-  const [selectedFunction] = useState(
+  const [selectedFunction, setSelectedFunction] = useState(
     !isEmpty(functionsStore.template)
       ? functionsStore.template.functions
       : groupedFunctions.functions || {}
@@ -63,7 +63,11 @@ const JobsPanel = ({
 
   useLayoutEffect(() => {
     if (!groupedFunctions.name && !functionsStore.template.name) {
-      fetchFunctionTemplate(groupedFunctions.metadata.versions.latest)
+      fetchFunctionTemplate(groupedFunctions.metadata.versions.latest).then(
+        result => {
+          setSelectedFunction(result.functions)
+        }
+      )
     }
     return () => functionsStore.template.name && removeFunctionTemplate()
   }, [
@@ -231,6 +235,7 @@ const JobsPanel = ({
       functionData={functionData}
       handleRunJob={handleRunJob}
       jobsStore={jobsStore}
+      loading={functionsStore.loading}
       match={match}
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}

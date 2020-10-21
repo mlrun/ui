@@ -24,6 +24,7 @@ const Files = ({
   fetchFiles,
   history,
   match,
+  removeFiles,
   setArtifactFilter
 }) => {
   const [files, setFiles] = useState([])
@@ -40,8 +41,8 @@ const Files = ({
   })
 
   const fetchData = useCallback(
-    project => {
-      fetchFiles(project).then(result => {
+    item => {
+      fetchFiles(item.project).then(result => {
         let data = []
 
         if (result) {
@@ -57,10 +58,13 @@ const Files = ({
   )
 
   useEffect(() => {
-    if (files.length === 0) {
-      fetchData(match.params.projectName)
+    fetchData({ project: match.params.projectName })
+
+    return () => {
+      setFiles([])
+      removeFiles()
     }
-  }, [fetchData, files.length, match.params.projectName])
+  }, [fetchData, match.params.projectName, removeFiles])
 
   useEffect(() => {
     if (match.params.name && artifactsStore.files.length !== 0) {

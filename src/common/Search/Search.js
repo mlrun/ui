@@ -41,8 +41,7 @@ const Search = ({
       const itemStartsWithValue = matches.find(item =>
         item.startsWith(event.target.value)
       )
-
-      if (itemStartsWithValue && event.target.length > 0) {
+      if (itemStartsWithValue && event.target.value.length > 0) {
         setLabel(itemStartsWithValue)
       } else if (label.length > 0) {
         setLabel('')
@@ -66,7 +65,11 @@ const Search = ({
   }
 
   return (
-    <div className={searchClassNames} ref={searchRef}>
+    <div
+      data-testid="search-container"
+      className={searchClassNames}
+      ref={searchRef}
+    >
       <SearchIcon
         onClick={() => {
           if (searchValue !== '' && !searchWhileTyping) {
@@ -97,35 +100,21 @@ const Search = ({
       />
       {label.length > 0 && <label className="search-label">{label}</label>}
       {matches.length > 0 && inputIsFocused && (
-        <ul className="search-matches">
+        <ul data-testid="search-matches" className="search-matches">
           {matches.map((item, index) => {
-            const match = item.match(searchValue)
-
-            if (match) {
-              const parts = item.split(match[0])
-
-              return (
-                <li
-                  className="search-matches__item"
-                  key={item + index}
-                  onClick={() => matchOnClick(item)}
-                  tabIndex={index}
-                >
-                  {parts.map((part, idx) => {
-                    if (idx === parts.length - 1) {
-                      return part
-                    }
-
-                    return (
-                      <span key={part + idx}>
-                        {part}
-                        <b>{match[0]}</b>
-                      </span>
-                    )
-                  })}
-                </li>
-              )
-            } else return null
+            return (
+              <li
+                className="search-matches__item"
+                key={item + index}
+                onClick={() => matchOnClick(item)}
+                tabIndex={index}
+                dangerouslySetInnerHTML={{
+                  __html: item.replace(new RegExp(searchValue, 'gi'), match =>
+                    match ? `<b>${match}</b>` : match
+                  )
+                }}
+              ></li>
+            )
           })}
         </ul>
       )}

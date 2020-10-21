@@ -24,6 +24,7 @@ const Models = ({
   fetchModels,
   history,
   match,
+  removeModels,
   setArtifactFilter
 }) => {
   const [models, setModels] = useState([])
@@ -40,8 +41,8 @@ const Models = ({
   })
 
   const fetchData = useCallback(
-    project => {
-      fetchModels(project).then(result => {
+    item => {
+      fetchModels(item.project).then(result => {
         let data = []
 
         if (result) {
@@ -57,10 +58,13 @@ const Models = ({
   )
 
   useEffect(() => {
-    if (models.length === 0) {
-      fetchData(match.params.projectName)
+    fetchData({ project: match.params.projectName })
+
+    return () => {
+      setModels([])
+      removeModels()
     }
-  }, [models.length, fetchData, match.params.projectName])
+  }, [fetchData, match.params.projectName, removeModels])
 
   useEffect(() => {
     if (match.params.name && artifactsStore.models.length !== 0) {

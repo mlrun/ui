@@ -6,11 +6,15 @@ import Input from '../../common/Input/Input'
 import { JobsPanelDataInputsTable } from '../../elements/JobsPanelDataInputsTable/JobsPanelDataInputsTable'
 
 import { panelActions } from '../JobsPanel/panelReducer'
+import { comboboxSelectList } from './jobsPanelDataInputs.util'
 
 const JobsPanelDataInputsView = ({
+  comboboxMatchesList,
   handleAddNewItem,
   handleDeleteItems,
   handleEditItems,
+  handlePathChange,
+  handlePathTypeChange,
   inputsDispatch,
   inputsState,
   match,
@@ -21,9 +25,13 @@ const JobsPanelDataInputsView = ({
     <div className="job-panel__item">
       <JobsPanelSection title="Data inputs">
         <JobsPanelDataInputsTable
+          comboboxMatchesList={comboboxMatchesList}
+          comboboxSelectList={comboboxSelectList}
           handleAddNewItem={handleAddNewItem}
           handleEditItems={handleEditItems}
           handleDeleteItems={handleDeleteItems}
+          handlePathChange={handlePathChange}
+          handlePathTypeChange={handlePathTypeChange}
           inputsDispatch={inputsDispatch}
           inputsState={inputsState}
           match={match}
@@ -64,9 +72,12 @@ const JobsPanelDataInputsView = ({
 }
 
 JobsPanelDataInputsView.propTypes = {
+  comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
+  handlePathChange: PropTypes.func.isRequired,
+  handlePathTypeChange: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,

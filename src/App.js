@@ -27,7 +27,7 @@ const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 
 const App = () => {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Page>
         <Suspense fallback={<Loader />}>
           <Switch>

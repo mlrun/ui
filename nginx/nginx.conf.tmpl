@@ -12,6 +12,10 @@ server {
     proxy_pass ${MLRUN_FUNCTION_CATALOG_URL};
   }
 
+  location /mlrun {
+    rewrite ^/mlrun(/|$)(.*) /$2 last;
+  }
+
   location / {
     root   /usr/share/nginx/html;
     index  index.html index.htm;

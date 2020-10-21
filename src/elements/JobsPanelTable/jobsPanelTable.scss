@@ -29,6 +29,7 @@
 
     &__row-add-item {
       display: flex;
+      align-items: center;
 
       input {
         border: none;
@@ -176,6 +177,18 @@
 
       .select__header {
         padding: 17px;
+      }
+    }
+  }
+
+  &.data-inputs {
+    .path-type {
+      &-store {
+        color: $amethyst;
+      }
+
+      &-s3 {
+        color: $sorbus;
       }
     }
   }

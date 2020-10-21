@@ -29,7 +29,7 @@ const RangeInput = ({
   }
 
   return (
-    <div className="range">
+    <div data-testid="range-input-container" className="range">
       <Input
         className="range__input"
         floatingLabel={floatingLabel}
@@ -39,10 +39,18 @@ const RangeInput = ({
         type="number"
         value={value}
       />
-      <button className="range__icon increase" onClick={handleIncrease}>
+      <button
+        data-testid="btn-increase"
+        className="range__icon increase"
+        onClick={handleIncrease}
+      >
         <Arrow />
       </button>
-      <button className="range__icon decrease" onClick={handleDecrease}>
+      <button
+        data-testid="btn-decrease"
+        className="range__icon decrease"
+        onClick={handleDecrease}
+      >
         <Arrow />
       </button>
     </div>

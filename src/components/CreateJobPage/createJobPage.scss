@@ -52,10 +52,7 @@
       flex-flow: row wrap;
       min-height: 150px;
       margin-top: 16px;
-
-      .data-prep {
-        color: $pharlap;
-      }
+      padding: 0 15px;
 
       .wrapper {
         position: absolute;
@@ -64,12 +61,12 @@
     }
 
     .templates-container {
-      padding: 10px 20px;
+      padding: 8px 20px;
 
       .category-header {
         display: flex;
         align-items: center;
-        margin: 0 30px 45px;
+        margin: 0 30px 12px;
         font-size: 18px;
         line-height: 21px;
         text-transform: capitalize;
@@ -117,16 +114,29 @@
         &.ml {
           color: $amaranth;
         }
+
+        &.other {
+          margin: 2px 30px 17px;
+        }
       }
     }
 
-    .functions-container {
+    .container {
+      &.templates-wrapper {
+        height: 40px;
+
+        &.open {
+          height: 100%;
+        }
+      }
+
       .accordion__body {
         overflow: visible;
       }
 
       .create-container__data-list {
         display: none;
+        padding-left: 30px;
       }
 
       &.open {

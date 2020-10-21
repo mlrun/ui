@@ -31,7 +31,7 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
     formatDate(value, splitCharacter)
   )
 
-  const datePickerRef = useRef()
+  const datePickerRef = React.createRef()
   const datePickerViewRef = useRef()
   const maskDate = [
     /\d/,
@@ -54,12 +54,15 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
-      if (!event.path.includes(datePickerRef.current)) {
+      if (
+        datePickerRef.current &&
+        !datePickerRef.current.contains(event.target)
+      ) {
         setOpenDatePicker(false)
         setDate(selectedDate || new Date())
       }
     },
-    [selectedDate]
+    [datePickerRef, selectedDate]
   )
 
   useLayoutEffect(() => {
@@ -72,6 +75,12 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
       setIsTopPosition(false)
     }
   }, [openDatePicker])
+
+  useEffect(() => {
+    setValueDatePickerInput(formatDate(value, splitCharacter))
+    setSelectedDate(value)
+    setDate(value)
+  }, [value, splitCharacter])
 
   useEffect(() => {
     if (openDatePicker) {
@@ -106,7 +115,11 @@ const DatePicker = ({ onChange, splitCharacter, value }) => {
   }
 
   return (
-    <div className="date-picker-container" ref={datePickerRef}>
+    <div
+      data-testid="date-picker-container"
+      className="date-picker-container"
+      ref={datePickerRef}
+    >
       <DatePickerView
         autoCorrectedDatePipe={autoCorrectedDatePipe}
         calendar={calendar}
