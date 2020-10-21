@@ -80,46 +80,51 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   )
 
   useEffect(() => {
-    const selectedOption = recurringState.scheduleRepeat.activeOption
-    let hour, minute
-    if (recurringState.scheduleRepeat[selectedOption].time) {
-      let [_hour, _minute] = recurringState.scheduleRepeat[
-        selectedOption
-      ].time.split(':')
+    if (activeTab === tabs[0].id) {
+      const selectedOption = recurringState.scheduleRepeat.activeOption
+      let hour, minute
 
-      hour = _hour.replace(/_/, '0').replace(/^0/, '')
-      minute = _minute.replace(/_/, '0').replace(/^0/, '')
-    }
-    switch (recurringState.scheduleRepeat.activeOption) {
-      case 'minute':
-        setCron(`*/${recurringState.scheduleRepeat.minute} * * * *`)
-        break
-      case 'hour':
-        setCron(`0 */${recurringState.scheduleRepeat.hour} * * *`)
-        break
-      case 'day':
-        setCron(`${minute} ${hour} * * *`)
-        break
-      case 'week':
-        {
-          const days = daysOfWeek
-            .filter(day =>
-              recurringState.scheduleRepeat.week.days.includes(day.id)
-            )
-            .map(day => (day.index + 6) % 7) // temporarily make Monday=0, Tuesday=1, ..., Sunday=6
-            .sort()
-            .join(',')
+      if (recurringState.scheduleRepeat[selectedOption].time) {
+        let [_hour, _minute] = recurringState.scheduleRepeat[
+          selectedOption
+        ].time.split(':')
 
-          setCron(`${minute} ${hour} * * ${days}`)
-        }
-        break
-      case 'month':
-        setCron(`${minute} ${hour} 1 * *`)
-        break
-      default:
-        return null
+        hour = _hour.replace(/_/, '0').replace(/^0/, '')
+        minute = _minute.replace(/_/, '0').replace(/^0/, '')
+      }
+
+      switch (recurringState.scheduleRepeat.activeOption) {
+        case 'minute':
+          setCron(`*/${recurringState.scheduleRepeat.minute} * * * *`)
+          break
+        case 'hour':
+          setCron(`0 */${recurringState.scheduleRepeat.hour} * * *`)
+          break
+        case 'day':
+          setCron(`${minute} ${hour} * * *`)
+          break
+        case 'week':
+          {
+            const days = daysOfWeek
+              .filter(day =>
+                recurringState.scheduleRepeat.week.days.includes(day.id)
+              )
+              .map(day => (day.index + 6) % 7) // temporarily make Monday=0, Tuesday=1, ..., Sunday=6
+              .sort()
+              .join(',')
+
+            setCron(`${minute} ${hour} * * ${days}`)
+          }
+          break
+        case 'month':
+          setCron(`${minute} ${hour} 1 * *`)
+          break
+        default:
+          return null
+      }
     }
   }, [
+    activeTab,
     daysOfWeek,
     recurringState.scheduleRepeat,
     recurringState.scheduleRepeat.activeOption,
