@@ -173,7 +173,7 @@ const Artifacts = ({
 
   const handleArtifactFilterTree = useCallback(
     item => {
-      const value = item.toLowerCase() !== 'latest' ? item.toLowerCase() : ''
+      const value = item.toLowerCase()
       fetchData({
         tag: value,
         project: match.params.projectName,
@@ -182,7 +182,7 @@ const Artifacts = ({
       })
       setArtifactFilter({
         ...artifactsStore.filter,
-        tag: value || 'latest'
+        tag: value
       })
     },
     [fetchData, artifactsStore, match, setArtifactFilter]

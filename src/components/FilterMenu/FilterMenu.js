@@ -68,7 +68,7 @@ const FilterMenu = ({
           })
         )
         onChange({
-          tag: artifactFilter.tag !== 'latest' ? artifactFilter.tag : '',
+          tag: artifactFilter.tag,
           project: match.params.projectName,
           labels,
           name
