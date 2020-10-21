@@ -13,8 +13,8 @@ export const selectOptions = {
   ],
   minute: [
     { label: '10', id: '10' },
-    { label: '12', id: '12' },
     { label: '15', id: '15' },
+    { label: '20', id: '20' },
     { label: '30', id: '30' }
   ],
   hour: [
