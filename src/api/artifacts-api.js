@@ -13,7 +13,7 @@ export default {
       url = `${url}&${labels}`
     }
 
-    if (item?.tag) {
+    if (item?.tag && !/latest/i.test(item.tag)) {
       url = `${url}&tag=${item.tag}`
     }
 
