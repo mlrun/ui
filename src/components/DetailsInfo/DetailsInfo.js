@@ -181,10 +181,6 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
   )
 }
 
-DetailsInfo.defaultProps = {
-  selectedItem: {}
-}
-
 DetailsInfo.propTypes = {
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,

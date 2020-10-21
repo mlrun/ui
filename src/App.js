@@ -11,19 +11,19 @@ import Loader from './common/Loader/Loader'
 
 import './scss/main.scss'
 
-const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
-const Project = React.lazy(() => import('./components/Project/Project'))
-const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
 const Artifacts = React.lazy(() => import('./components/Artifacts/Artifacts'))
-const Functions = React.lazy(() =>
-  import('./components/FunctionsPage/Functions')
-)
 const CreateJobPage = React.lazy(() =>
   import('./components/CreateJobPage/CreateJobPage')
 )
 const DataSets = React.lazy(() => import('./components/DataSets/DataSets'))
-const Models = React.lazy(() => import('./components/Models/Models'))
 const Files = React.lazy(() => import('./components/Files/Files'))
+const Functions = React.lazy(() =>
+  import('./components/FunctionsPage/Functions')
+)
+const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
+const Models = React.lazy(() => import('./components/Models/Models'))
+const Project = React.lazy(() => import('./components/Project/Project'))
+const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 
 const App = () => {
   return (

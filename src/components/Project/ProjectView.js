@@ -207,8 +207,11 @@ const ProjectView = React.forwardRef(
 ProjectView.propTypes = {
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
+  fetchProjectDataSets: PropTypes.func.isRequired,
+  fetchProjectFiles: PropTypes.func.isRequired,
   fetchProjectFunctions: PropTypes.func.isRequired,
   fetchProjectJobs: PropTypes.func.isRequired,
+  fetchProjectModels: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   handleOnChangeProject: PropTypes.func.isRequired,

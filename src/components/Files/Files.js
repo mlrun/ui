@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-
-import artifactsAction from '../../actions/artifacts'
-import { generateArtifacts } from '../../utils/generateArtifacts'
+import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+
+import artifactsAction from '../../actions/artifacts'
+import { generateArtifacts } from '../../utils/generateArtifacts'
 import {
   detailsMenu,
   filters,
@@ -105,26 +106,14 @@ const Files = ({
     ]
   )
 
-  const handleCancel = () => {
-    setSelectedFile({})
-  }
-
-  const handleSelectFile = item => {
-    if (document.getElementsByClassName('view')[0]) {
-      document.getElementsByClassName('view')[0].classList.remove('view')
-    }
-
-    setSelectedFile({ item })
-  }
-
   return (
     <>
       {artifactsStore.loading && <Loader />}
       <Content
         content={files}
         handleArtifactFilterTree={handleFilesTreeFilterChange}
-        handleCancel={handleCancel}
-        handleSelectItem={handleSelectFile}
+        handleCancel={() => setSelectedFile({})}
+        handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={() => setIsPopupDialogOpen(true)}
@@ -145,6 +134,10 @@ const Files = ({
       )}
     </>
   )
+}
+
+Files.propTypes = {
+  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(artifactsStore => artifactsStore, {

@@ -35,8 +35,6 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
     }
   ]
 
-  console.log(showType)
-
   return (
     <div className="artifact-register-form">
       <Input

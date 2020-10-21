@@ -1,6 +1,12 @@
 import { mainHttpClient } from '../httpClient'
 
 export default {
+  getArtifactPreview: (schema, path, user) =>
+    mainHttpClient.get('/files', {
+      params: schema ? { schema, path, user } : { path, user }
+    }),
+  getArtifactTag: project =>
+    mainHttpClient.get(`/projects/${project}/artifact-tags`),
   getArtifacts: item => {
     let url = `/artifacts?project=${item.project}`
 
@@ -23,12 +29,6 @@ export default {
 
     return mainHttpClient.get(url)
   },
-  getArtifactPreview: (schema, path, user) =>
-    mainHttpClient.get('/files', {
-      params: schema ? { schema, path, user } : { path, user }
-    }),
-  getArtifactTag: project =>
-    mainHttpClient.get(`/projects/${project}/artifact-tags`),
   getArtifactsDataSets: project =>
     mainHttpClient.get(`/artifacts?project=${project}&category=dataset`),
   getArtifactsFiles: project =>

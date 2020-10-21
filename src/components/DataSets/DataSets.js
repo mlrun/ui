@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-
-import artifactsAction from '../../actions/artifacts'
-import { generateArtifacts } from '../../utils/generateArtifacts'
+import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+
+import artifactsAction from '../../actions/artifacts'
+import { generateArtifacts } from '../../utils/generateArtifacts'
 import {
   detailsMenu,
   filters,
@@ -93,9 +94,7 @@ const DataSets = ({
       (match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
         !selectedDataSet.item?.schema) ||
       (match.params.tab === DETAILS_ANALYSIS_TAB &&
-        ((selectedDataSet.item?.kind === 'dataset' &&
-          !selectedDataSet.item?.extra_data) ||
-          selectedDataSet.item?.kind !== 'dataset'))
+        !selectedDataSet.item?.extra_data)
     ) {
       history.push(
         `/projects/${match.params.projectName}/datasets/${match.params.name}/info`
@@ -109,10 +108,7 @@ const DataSets = ({
         newDetailsMenu.push('metadata')
       }
 
-      if (
-        selectedDataSet.item?.kind === 'dataset' &&
-        selectedDataSet.item?.extra_data
-      ) {
+      if (selectedDataSet.item?.extra_data) {
         newDetailsMenu.push('analysis')
       }
 
@@ -147,26 +143,14 @@ const DataSets = ({
     ]
   )
 
-  const handleCancel = () => {
-    setSelectedDataSet({})
-  }
-
-  const handleSelectDataSet = item => {
-    if (document.getElementsByClassName('view')[0]) {
-      document.getElementsByClassName('view')[0].classList.remove('view')
-    }
-
-    setSelectedDataSet({ item })
-  }
-
   return (
     <>
       {artifactsStore.loading && <Loader />}
       <Content
         content={dataSets}
         handleArtifactFilterTree={handleDataSetTreeFilterChange}
-        handleCancel={handleCancel}
-        handleSelectItem={handleSelectDataSet}
+        handleCancel={() => setSelectedDataSet({})}
+        handleSelectItem={item => setSelectedDataSet({ item })}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={() => setIsPopupDialogOpen(true)}
@@ -187,6 +171,9 @@ const DataSets = ({
       )}
     </>
   )
+}
+DataSets.propTypes = {
+  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(artifactsStore => artifactsStore, {

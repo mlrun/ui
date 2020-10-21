@@ -16,7 +16,9 @@ import {
   REMOVE_ARTIFACTS,
   REMOVE_DATASETS,
   SHOW_ARTIFACT_PREVIEW,
-  SET_ARTIFACT_FILTER
+  SET_ARTIFACT_FILTER,
+  REMOVE_FILES,
+  REMOVE_MODELS
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 
@@ -135,6 +137,12 @@ const artifactsAction = {
   }),
   removeDataSets: () => ({
     type: REMOVE_DATASETS
+  }),
+  removeFiles: () => ({
+    type: REMOVE_FILES
+  }),
+  removeModels: () => ({
+    type: REMOVE_MODELS
   }),
   setArtifactFilter: filter => ({
     type: SET_ARTIFACT_FILTER,

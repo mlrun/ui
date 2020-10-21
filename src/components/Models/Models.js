@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-
-import artifactsAction from '../../actions/artifacts'
-import { generateArtifacts } from '../../utils/generateArtifacts'
+import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+
+import artifactsAction from '../../actions/artifacts'
+import { generateArtifacts } from '../../utils/generateArtifacts'
 import {
   detailsMenu,
   filters,
@@ -26,7 +27,7 @@ const Models = ({
   setArtifactFilter
 }) => {
   const [models, setModels] = useState([])
-  const [selectedDataSet, setSelectedDataSet] = useState({})
+  const [selectedModel, setSelectedModel] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData] = useState({
     detailsMenu,
@@ -82,7 +83,7 @@ const Models = ({
           return true
         })
 
-        setSelectedDataSet({ item: model })
+        setSelectedModel({ item: model })
       }
     }
   }, [match.params, artifactsStore.artifacts, history, artifactsStore.models])
@@ -105,32 +106,20 @@ const Models = ({
     ]
   )
 
-  const handleCancel = () => {
-    setSelectedDataSet({})
-  }
-
-  const handleSelectDataSet = item => {
-    if (document.getElementsByClassName('view')[0]) {
-      document.getElementsByClassName('view')[0].classList.remove('view')
-    }
-
-    setSelectedDataSet({ item })
-  }
-
   return (
     <>
       {artifactsStore.loading && <Loader />}
       <Content
         content={models}
         handleArtifactFilterTree={handleModelTreeFilterChange}
-        handleCancel={handleCancel}
-        handleSelectItem={handleSelectDataSet}
+        handleCancel={() => setSelectedModel({})}
+        handleSelectItem={item => setSelectedModel({ item })}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
-        selectedItem={selectedDataSet.item}
+        selectedItem={selectedModel.item}
         yamlContent={artifactsStore.models}
       />
       {isPopupDialogOpen && (
@@ -145,6 +134,10 @@ const Models = ({
       )}
     </>
   )
+}
+
+Models.propTypes = {
+  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(artifactsStore => artifactsStore, {

@@ -18,15 +18,13 @@ import './artifacts.scss'
 const Artifacts = ({
   artifactsStore,
   fetchArtifacts,
-  setArtifactFilter,
   history,
   match,
-  removeArtifacts
+  removeArtifacts,
+  setArtifactFilter
 }) => {
-  const [artifacts, _setArtifacts] = useState([])
-  const [selectedArtifact, setSelectedArtifact] = useState({})
+  const [artifacts, setArtifacts] = useState([])
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
-
   const [pageData, setPageData] = useState({
     detailsMenu: artifactsData.detailsMenu,
     filters: artifactsData.filters,
@@ -35,6 +33,7 @@ const Artifacts = ({
     infoHeaders: artifactsData.infoHeaders,
     registerArtifactDialogTitle: artifactsData.registerArtifactDialogTitle
   })
+  const [selectedArtifact, setSelectedArtifact] = useState({})
 
   const fetchData = useCallback(
     item => {
@@ -44,7 +43,7 @@ const Artifacts = ({
         if (data) {
           artifacts = generateArtifacts(data)
 
-          _setArtifacts(artifacts)
+          setArtifacts(artifacts)
         }
 
         return artifacts
@@ -57,7 +56,7 @@ const Artifacts = ({
     fetchData({ project: match.params.projectName })
 
     return () => {
-      _setArtifacts([])
+      setArtifacts([])
       removeArtifacts()
     }
   }, [fetchData, match.params.projectName, removeArtifacts])
@@ -78,6 +77,7 @@ const Artifacts = ({
             const { link_iteration } = searchItem.link_iteration
             return link_iteration === item.iter
           }
+
           return true
         })
 
@@ -131,14 +131,6 @@ const Artifacts = ({
     selectedArtifact.item
   ])
 
-  const handleSelectArtifact = item => {
-    if (document.getElementsByClassName('view')[0]) {
-      document.getElementsByClassName('view')[0].classList.remove('view')
-    }
-
-    setSelectedArtifact({ item })
-  }
-
   const handleArtifactFilterTree = useCallback(
     item => {
       handleArtifactTreeFilterChange(
@@ -157,17 +149,14 @@ const Artifacts = ({
     ]
   )
 
-  const handleCancel = () => {
-    setSelectedArtifact({})
-  }
-
   return (
     <>
       {artifactsStore.loading && <Loader />}
       <Content
         content={artifacts}
-        handleCancel={handleCancel}
-        handleSelectItem={handleSelectArtifact}
+        handleArtifactFilterTree={handleArtifactFilterTree}
+        handleCancel={() => setSelectedArtifact({})}
+        handleSelectItem={item => setSelectedArtifact({ item })}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={() => setIsPopupDialogOpen(true)}
@@ -175,14 +164,15 @@ const Artifacts = ({
         refresh={fetchData}
         selectedItem={selectedArtifact.item}
         yamlContent={artifactsStore.artifacts}
-        handleArtifactFilterTree={handleArtifactFilterTree}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
           artifactFilter={artifactsStore.filter}
           match={match}
+          pageData={pageData}
           refresh={fetchData}
           setIsPopupDialogOpen={setIsPopupDialogOpen}
+          title={pageData.registerArtifactDialogTitle}
         />
       )}
     </>
