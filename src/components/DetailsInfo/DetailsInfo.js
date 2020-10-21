@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { isNil } from 'lodash'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
@@ -9,8 +10,9 @@ import {
   JOBS_PAGE,
   ARTIFACTS_PAGE,
   ARTIFACTS_DATASETS_PAGE,
-  ARTIFACTS_MODELS_PAGE,
-  FUNCTIONS_PAGE
+  ARTIFACTS_FILES_PAGE,
+  FUNCTIONS_PAGE,
+  ARTIFACTS_MODELS_PAGE
 } from '../../constants'
 
 import './detailsInfo.scss'
@@ -30,20 +32,23 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
     selectedItem.iterations?.length ? selectedItem.iterations : '0'
   ]
   const artifactsInfoContent = [
-    selectedItem.hash,
+    selectedItem.hash ?? '',
     selectedItem.db_key,
     selectedItem.iter || '0',
     pageData.pageKind !== ARTIFACTS_DATASETS_PAGE &&
-    pageData.pageKind !== ARTIFACTS_MODELS_PAGE
-      ? selectedItem.kind
+    pageData.pageKind !== ARTIFACTS_FILES_PAGE
+      ? selectedItem.kind || ' '
       : null,
-    selectedItem.size,
+    selectedItem.size ?? '',
     selectedItem.target_path,
     selectedItem.tree,
     formatDatetime(new Date(selectedItem.updated), 'N/A'),
-    selectedItem.labels,
+    pageData.pageKind === ARTIFACTS_MODELS_PAGE
+      ? selectedItem.framework ?? ''
+      : null,
+    selectedItem.labels ?? [],
     selectedItem.sources
-  ].filter(content => !!content)
+  ].filter(content => !isNil(content))
   const functionsInfoContent = [
     selectedItem.name,
     selectedItem.type,

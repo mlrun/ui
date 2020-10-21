@@ -2,19 +2,21 @@ export const infoHeaders = [
   { label: 'Hash', id: 'hash' },
   { label: 'Key', id: 'key' },
   { label: 'Iter', id: 'iter' },
+  { label: 'Kind', id: 'kind' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'path' },
   { label: 'Tree', id: 'tree' },
   { label: 'Updated', id: 'updated' },
+  { label: 'Framework', id: 'framework' },
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }
 ]
 export const detailsMenu = ['info', 'preview']
 export const filters = ['tree', 'labels', 'name']
 export const page = 'ARTIFACTS'
-export const pageKind = 'datasets'
+export const pageKind = 'models'
 export const sources = ['name', 'path']
-export const registerArtifactDialogTitle = 'Register dataset'
+export const registerArtifactDialogTitle = 'Register model'
 export const tableHeaders = [
   {
     header: 'Name',
@@ -36,11 +38,6 @@ export const tableHeaders = [
     header: 'Updated',
     class: 'artifacts_small'
   },
-  {
-    header: 'Size',
-    class: 'artifacts_small'
-  },
-
   {
     header: '',
     class: 'artifacts_extra-small'

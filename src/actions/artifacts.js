@@ -7,6 +7,12 @@ import {
   FETCH_DATASETS_BEGIN,
   FETCH_DATASETS_FAILURE,
   FETCH_DATASETS_SUCCESS,
+  FETCH_FILES_BEGIN,
+  FETCH_FILES_FAILURE,
+  FETCH_FILES_SUCCESS,
+  FETCH_MODELS_BEGIN,
+  FETCH_MODELS_FAILURE,
+  FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
   REMOVE_DATASETS,
   SHOW_ARTIFACT_PREVIEW,
@@ -47,7 +53,6 @@ const artifactsAction = {
     payload: artifactsList
   }),
   fetchDataSets: project => dispatch => {
-    console.log('here')
     dispatch(artifactsAction.fetchDataSetsBegin())
 
     return artifactsApi
@@ -72,6 +77,58 @@ const artifactsAction = {
   fetchDataSetsSuccess: dataSets => ({
     type: FETCH_DATASETS_SUCCESS,
     payload: dataSets
+  }),
+  fetchFiles: project => dispatch => {
+    dispatch(artifactsAction.fetchFilesBegin())
+
+    return artifactsApi
+      .getArtifactsFiles(project)
+      .then(({ data }) => {
+        let files = filterArtifacts(data.artifacts)
+
+        dispatch(artifactsAction.fetchFilesSuccess(files))
+
+        return files
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFilesFailure(err))
+      })
+  },
+  fetchFilesBegin: () => ({
+    type: FETCH_FILES_BEGIN
+  }),
+  fetchFilesFailure: () => ({
+    type: FETCH_FILES_FAILURE
+  }),
+  fetchFilesSuccess: files => ({
+    type: FETCH_FILES_SUCCESS,
+    payload: files
+  }),
+  fetchModels: project => dispatch => {
+    dispatch(artifactsAction.fetchModelsBegin())
+
+    return artifactsApi
+      .getArtifactsModels(project)
+      .then(({ data }) => {
+        let models = filterArtifacts(data.artifacts)
+
+        dispatch(artifactsAction.fetchModelsSuccess(models))
+
+        return models
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchModelsFailure(err))
+      })
+  },
+  fetchModelsBegin: () => ({
+    type: FETCH_MODELS_BEGIN
+  }),
+  fetchModelsFailure: () => ({
+    type: FETCH_MODELS_FAILURE
+  }),
+  fetchModelsSuccess: models => ({
+    type: FETCH_MODELS_SUCCESS,
+    payload: models
   }),
   removeArtifacts: () => ({
     type: REMOVE_ARTIFACTS

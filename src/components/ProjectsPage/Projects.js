@@ -126,7 +126,7 @@ const Projects = ({
         <PageActionsMenu
           match={match}
           onClick={() => setCreateProject(true)}
-          page={pageData.page}
+          pageData={pageData}
         />
       </div>
       <div className="projects__wrapper">

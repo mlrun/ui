@@ -13,7 +13,11 @@ const createArtifactsContent = (artifacts, pageKind) =>
       kind: {
         value: artifact.kind,
         class: 'artifacts_extra-small',
-        type: pageKind === ARTIFACTS_DATASETS_PAGE ? 'hidden' : ''
+        type:
+          pageKind === ARTIFACTS_DATASETS_PAGE ||
+          pageKind === ARTIFACTS_MODELS_PAGE
+            ? 'hidden'
+            : ''
       },
       labels: {
         value: parseKeyValues(artifact.labels),

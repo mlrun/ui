@@ -6,7 +6,7 @@ import Select from '../../common/Select/Select'
 
 import './registerArtifactForm.scss'
 
-const RegisterArtifactForm = ({ onChange, registerArtifactData }) => {
+const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
   const { description, key, kind, target_path } = registerArtifactData
   const kindOptions = [
     {
@@ -34,6 +34,8 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData }) => {
       id: 'table'
     }
   ]
+
+  console.log(showType)
 
   return (
     <div className="artifact-register-form">
@@ -81,27 +83,34 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData }) => {
         type="text"
         value={description.value}
       />
-      <Select
-        label="Type:"
-        onClick={value =>
-          onChange(prevData => ({
-            ...prevData,
-            kind: {
+      {showType && (
+        <Select
+          label="Type:"
+          onClick={value =>
+            onChange(prevData => ({
               ...prevData,
-              value
-            }
-          }))
-        }
-        options={kindOptions}
-        selectedId={kind.value}
-      />
+              kind: {
+                ...prevData,
+                value
+              }
+            }))
+          }
+          options={kindOptions}
+          selectedId={kind.value}
+        />
+      )}
     </div>
   )
 }
 
+RegisterArtifactForm.defaultProps = {
+  showType: true
+}
+
 RegisterArtifactForm.propTypes = {
   onChange: PropTypes.func.isRequired,
-  registerArtifactData: PropTypes.shape({}).isRequired
+  registerArtifactData: PropTypes.shape({}).isRequired,
+  showType: PropTypes.bool
 }
 
 export default RegisterArtifactForm

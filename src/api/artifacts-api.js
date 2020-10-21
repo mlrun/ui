@@ -31,6 +31,10 @@ export default {
     mainHttpClient.get(`/projects/${project}/artifact-tags`),
   getArtifactsDataSets: project =>
     mainHttpClient.get(`/artifacts?project=${project}&category=dataset`),
+  getArtifactsFiles: project =>
+    mainHttpClient.get(`/artifacts?project=${project}&category=other`),
+  getArtifactsModels: project =>
+    mainHttpClient.get(`/artifacts?project=${project}&category=model`),
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data)
 }

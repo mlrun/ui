@@ -14,8 +14,11 @@ import './project.scss'
 
 const Project = ({
   fetchProject,
+  fetchProjectDataSets,
+  fetchProjectFiles,
   fetchProjectFunctions,
   fetchProjectJobs,
+  fetchProjectModels,
   match,
   projectStore,
   removeProjectData
@@ -182,8 +185,11 @@ const Project = ({
     <ProjectView
       createNewOptions={createNewOptions}
       editProject={editProject}
+      fetchProjectDataSets={fetchProjectDataSets}
+      fetchProjectFiles={fetchProjectFiles}
       fetchProjectFunctions={fetchProjectFunctions}
       fetchProjectJobs={fetchProjectJobs}
+      fetchProjectModels={fetchProjectModels}
       handleEditProject={handleEditProject}
       handleLaunchIDE={handleLaunchIDE}
       handleOnChangeProject={handleOnChangeProject}

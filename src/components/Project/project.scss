@@ -167,8 +167,23 @@
         flex: 1;
         flex-direction: column;
         min-height: 491px;
+        margin-right: 20px;
         background-color: rgba($white, 0.84);
         border-radius: 4px;
+
+        &_small {
+          flex: initial;
+          min-width: 200px;
+          min-height: 155px;
+
+          .project-data-card__header {
+            height: 100%;
+
+            &-text {
+              margin-bottom: 25px;
+            }
+          }
+        }
 
         &__header {
           z-index: 1;
@@ -192,8 +207,8 @@
           color: $cornflowerBlue;
         }
 
-        &:first-child {
-          margin-right: 20px;
+        &:last-child {
+          margin-right: 0;
         }
       }
 
@@ -205,6 +220,7 @@
 
       &__statistics-section {
         display: flex;
+        margin-bottom: 25px;
       }
     }
   }

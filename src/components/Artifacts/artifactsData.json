@@ -52,5 +52,6 @@
       "header": "",
       "class": "action_cell"
     }
-  ]
+  ],
+  "registerArtifactDialogTitle": "Register artifact"
 }

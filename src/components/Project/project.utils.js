@@ -18,8 +18,16 @@ export const launchIDEOptions = [
 
 export const getLinks = match => [
   {
-    label: 'Artifacts',
-    link: `/projects/${match.params.projectName}/artifacts`
+    label: 'Models',
+    link: `/projects/${match.params.projectName}/models`
+  },
+  {
+    label: 'Datasets',
+    link: `/projects/${match.params.projectName}/datasets`
+  },
+  {
+    label: 'Files',
+    link: `/projects/${match.params.projectName}/files`
   },
   {
     label: 'Monitor jobs and workflows',

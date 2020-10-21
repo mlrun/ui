@@ -9,5 +9,11 @@ export default {
   getJobsAndWorkflows: project =>
     mainHttpClient.get(`/runs?project=${project}`),
   getProjectFunctions: project =>
-    mainHttpClient.get(`/funcs?project=${project}`)
+    mainHttpClient.get(`/funcs?project=${project}`),
+  getProjectDataSets: project =>
+    mainHttpClient.get(`/artifacts?project=${project}&category=dataset`),
+  getProjectFiles: project =>
+    mainHttpClient.get(`/artifacts?project=${project}&category=other`),
+  getProjectModels: project =>
+    mainHttpClient.get(`/artifacts?project=${project}&category=model`)
 }

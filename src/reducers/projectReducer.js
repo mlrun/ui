@@ -16,7 +16,16 @@ import {
   REMOVE_NEW_PROJECT,
   REMOVE_PROJECT_DATA,
   SET_NEW_PROJECT_DESCRIPTION,
-  SET_NEW_PROJECT_NAME
+  SET_NEW_PROJECT_NAME,
+  FETCH_PROJECT_DATASETS_BEGIN,
+  FETCH_PROJECT_DATASETS_FAILURE,
+  FETCH_PROJECT_DATASETS_SUCCESS,
+  FETCH_PROJECT_FILES_BEGIN,
+  FETCH_PROJECT_FILES_FAILURE,
+  FETCH_PROJECT_FILES_SUCCESS,
+  FETCH_PROJECT_MODELS_SUCCESS,
+  FETCH_PROJECT_MODELS_FAILURE,
+  FETCH_PROJECT_MODELS_BEGIN
 } from '../constants'
 
 const initialState = {
@@ -31,12 +40,27 @@ const initialState = {
     data: null,
     loading: false,
     error: null,
-    jobs: {
+    dataSets: {
+      data: null,
+      loading: false,
+      error: null
+    },
+    files: {
       data: null,
       loading: false,
       error: null
     },
     functions: {
+      data: null,
+      loading: false,
+      error: null
+    },
+    jobs: {
+      data: null,
+      loading: false,
+      error: null
+    },
+    models: {
       data: null,
       loading: false,
       error: null
@@ -63,6 +87,39 @@ export default (state = initialState, { type, payload }) => {
           error: payload
         }
       }
+    case FETCH_PROJECT_DATASETS_BEGIN:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          dataSets: {
+            ...state.project.dataSets,
+            loading: true
+          }
+        }
+      }
+    case FETCH_PROJECT_FILES_BEGIN:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          files: {
+            ...state.project.files,
+            loading: true
+          }
+        }
+      }
+    case FETCH_PROJECT_MODELS_BEGIN:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          models: {
+            ...state.project.models,
+            loading: true
+          }
+        }
+      }
     case FETCH_PROJECT_JOBS_BEGIN:
       return {
         ...state,
@@ -82,6 +139,42 @@ export default (state = initialState, { type, payload }) => {
           functions: {
             ...state.project.functions,
             loading: true
+          }
+        }
+      }
+    case FETCH_PROJECT_DATASETS_FAILURE:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          dataSets: {
+            data: [],
+            error: payload,
+            loading: false
+          }
+        }
+      }
+    case FETCH_PROJECT_FILES_FAILURE:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          files: {
+            data: [],
+            error: payload,
+            loading: false
+          }
+        }
+      }
+    case FETCH_PROJECT_MODELS_FAILURE:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          models: {
+            data: [],
+            error: payload,
+            loading: false
           }
         }
       }
@@ -127,6 +220,42 @@ export default (state = initialState, { type, payload }) => {
           ...state.project,
           data: payload,
           loading: false
+        }
+      }
+    case FETCH_PROJECT_DATASETS_SUCCESS:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          dataSets: {
+            data: payload,
+            loading: true,
+            error: null
+          }
+        }
+      }
+    case FETCH_PROJECT_FILES_SUCCESS:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          files: {
+            data: payload,
+            loading: true,
+            error: null
+          }
+        }
+      }
+    case FETCH_PROJECT_MODELS_SUCCESS:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          models: {
+            data: payload,
+            loading: true,
+            error: null
+          }
         }
       }
     case FETCH_PROJECT_JOBS_SUCCESS:
@@ -178,12 +307,27 @@ export default (state = initialState, { type, payload }) => {
           data: null,
           loading: false,
           error: null,
+          dataSets: {
+            data: null,
+            loading: false,
+            error: null
+          },
+          files: {
+            data: null,
+            loading: false,
+            error: null
+          },
           jobs: {
             data: null,
             loading: false,
             error: null
           },
           functions: {
+            data: null,
+            loading: false,
+            error: null
+          },
+          models: {
             data: null,
             loading: false,
             error: null

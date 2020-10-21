@@ -12,19 +12,18 @@ import {
   filters,
   page,
   pageKind,
+  registerArtifactDialogTitle,
   tableHeaders,
   infoHeaders
 } from './dataSets.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
-import artifactsData from '../Artifacts/artifactsData'
 
 const DataSets = ({
   artifactsStore,
   fetchDataSets,
   history,
   match,
-  removeDataSets,
   setArtifactFilter
 }) => {
   const [dataSets, setDataSets] = useState([])
@@ -35,11 +34,10 @@ const DataSets = ({
     filters,
     page,
     pageKind,
+    registerArtifactDialogTitle,
     tableHeaders,
     infoHeaders
   })
-
-  console.log(dataSets)
 
   const fetchData = useCallback(
     project => {
@@ -62,12 +60,7 @@ const DataSets = ({
     if (dataSets.length === 0) {
       fetchData(match.params.projectName)
     }
-
-    // return () => {
-    //   setDataSets([])
-    //   removeDataSets()
-    // }
-  }, [dataSets.length, fetchData, match.params.projectName, removeDataSets])
+  }, [dataSets.length, fetchData, match.params.projectName])
 
   useEffect(() => {
     if (match.params.name && artifactsStore.dataSets.length !== 0) {
@@ -110,7 +103,7 @@ const DataSets = ({
     }
 
     setPageData(state => {
-      const newDetailsMenu = [...artifactsData.detailsMenu]
+      const newDetailsMenu = [...detailsMenu]
 
       if (selectedDataSet.item?.schema) {
         newDetailsMenu.push('metadata')
@@ -180,14 +173,16 @@ const DataSets = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedDataSet.item}
-        yamlContent={artifactsStore.artifacts}
+        yamlContent={artifactsStore.dataSets}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
           artifactFilter={artifactsStore.filter}
           match={match}
+          pageData={pageData}
           refresh={fetchData}
           setIsPopupDialogOpen={setIsPopupDialogOpen}
+          title={pageData.registerArtifactDialogTitle}
         />
       )}
     </>

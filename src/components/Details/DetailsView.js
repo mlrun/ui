@@ -92,11 +92,11 @@ const DetailsView = ({
           )}
           <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
           <Link
-            to={`/projects/${
-              match.params.projectName
-            }/${pageData.page.toLowerCase()}${
-              pageData.page === JOBS_PAGE ? `/${match.params.jobTab}` : ''
-            }`}
+            to={`/projects/${match.params.projectName}/${
+              pageData.pageKind
+                ? pageData.pageKind
+                : pageData.page.toLowerCase()
+            }${pageData.page === JOBS_PAGE ? `/${match.params.jobTab}` : ''}`}
             onClick={handleCancel}
           >
             <Close />
@@ -111,7 +111,7 @@ const DetailsView = ({
             key={link}
             match={match}
             name={selectedItem.db_key || selectedItem.name}
-            page={pageData.page}
+            page={pageData.pageKind ? pageData.pageKind : pageData.page}
             tab={link}
           />
         ))}

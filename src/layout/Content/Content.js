@@ -187,7 +187,7 @@ const Content = ({
         <Breadcrumbs match={match} onClick={handleCancel} />
         <PageActionsMenu
           match={match}
-          page={pageData.page}
+          pageData={pageData}
           onClick={openPopupDialog}
         />
       </div>

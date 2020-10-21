@@ -32,7 +32,8 @@ const Artifacts = ({
     filters: artifactsData.filters,
     page: artifactsData.page,
     tableHeaders: artifactsData.tableHeaders,
-    infoHeaders: artifactsData.infoHeaders
+    infoHeaders: artifactsData.infoHeaders,
+    registerArtifactDialogTitle: artifactsData.registerArtifactDialogTitle
   })
 
   const fetchData = useCallback(

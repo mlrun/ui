@@ -12,13 +12,17 @@ export const infoHeaders = [
 export const detailsMenu = ['info', 'preview']
 export const filters = ['tree', 'labels', 'name']
 export const page = 'ARTIFACTS'
-export const pageKind = 'datasets'
+export const pageKind = 'files'
 export const sources = ['name', 'path']
-export const registerArtifactDialogTitle = 'Register dataset'
+export const registerArtifactDialogTitle = 'Register file'
 export const tableHeaders = [
   {
     header: 'Name',
     class: 'artifacts_medium'
+  },
+  {
+    header: 'Type',
+    class: 'artifacts_extra-small'
   },
   {
     header: 'Labels',

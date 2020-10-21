@@ -6,6 +6,12 @@ import {
   FETCH_DATASETS_BEGIN,
   FETCH_DATASETS_FAILURE,
   FETCH_DATASETS_SUCCESS,
+  FETCH_FILES_BEGIN,
+  FETCH_FILES_FAILURE,
+  FETCH_FILES_SUCCESS,
+  FETCH_MODELS_BEGIN,
+  FETCH_MODELS_FAILURE,
+  FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
   SET_ARTIFACT_FILTER,
   SHOW_ARTIFACT_PREVIEW
@@ -15,12 +21,14 @@ const initialState = {
   artifacts: [],
   dataSets: [],
   error: null,
+  files: [],
   filter: {
     tag: 'latest',
     labels: '',
     name: ''
   },
   loading: false,
+  models: [],
   preview: {}
 }
 
@@ -65,6 +73,42 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         dataSets: payload,
+        loading: false
+      }
+    case FETCH_FILES_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_FILES_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        files: [],
+        loading: false
+      }
+    case FETCH_FILES_SUCCESS:
+      return {
+        ...state,
+        files: payload,
+        loading: false
+      }
+    case FETCH_MODELS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_MODELS_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        models: [],
+        loading: false
+      }
+    case FETCH_MODELS_SUCCESS:
+      return {
+        ...state,
+        models: payload,
         loading: false
       }
     case REMOVE_ARTIFACTS:

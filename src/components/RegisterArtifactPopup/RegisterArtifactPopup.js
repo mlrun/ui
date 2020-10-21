@@ -11,8 +11,10 @@ import artifactApi from '../../api/artifacts-api'
 const RegisterArtifactPopup = ({
   artifactFilter,
   match,
+  pageData,
   refresh,
-  setIsPopupDialogOpen
+  setIsPopupDialogOpen,
+  title
 }) => {
   const [registerArtifactData, setRegisterArtifactData] = useState({
     description: {
@@ -156,10 +158,15 @@ const RegisterArtifactPopup = ({
   }, [])
 
   return (
-    <PopUpDialog headerText="Register artifact" closePopUp={closePopupDialog}>
+    <PopUpDialog headerText={title} closePopUp={closePopupDialog}>
       <RegisterArtifactForm
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
+        showType={
+          pageData.pageKind &&
+          pageData.pageKind !== 'datasets' &&
+          pageData.pageKind !== 'models'
+        }
       />
       <div className="pop-up-dialog__footer-container">
         {registerArtifactData.error.message && (
@@ -182,11 +189,17 @@ const RegisterArtifactPopup = ({
   )
 }
 
+RegisterArtifactPopup.defaultProps = {
+  title: ''
+}
+
 RegisterArtifactPopup.propTypes = {
   artifactFilter: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
+  pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
-  setIsPopupDialogOpen: PropTypes.func.isRequired
+  setIsPopupDialogOpen: PropTypes.func.isRequired,
+  title: PropTypes.string
 }
 
 export default RegisterArtifactPopup
