@@ -26,7 +26,7 @@ const Files = ({
   setArtifactFilter
 }) => {
   const [files, setFiles] = useState([])
-  const [selectedDataSet, setSelectedDataSet] = useState({})
+  const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData] = useState({
     detailsMenu,
@@ -62,10 +62,10 @@ const Files = ({
   }, [fetchData, files.length, match.params.projectName])
 
   useEffect(() => {
-    if (match.params.name && artifactsStore.dataSets.length !== 0) {
+    if (match.params.name && artifactsStore.files.length !== 0) {
       const { name } = match.params
 
-      const [searchItem] = artifactsStore.dataSets.filter(
+      const [searchItem] = artifactsStore.files.filter(
         item => item.key === name
       )
 
@@ -82,10 +82,10 @@ const Files = ({
           return true
         })
 
-        setSelectedDataSet({ item: file })
+        setSelectedFile({ item: file })
       }
     }
-  }, [match.params, artifactsStore.artifacts, history, artifactsStore.dataSets])
+  }, [artifactsStore.files, history, match.params])
 
   const handleFilesTreeFilterChange = useCallback(
     item => {
@@ -106,15 +106,15 @@ const Files = ({
   )
 
   const handleCancel = () => {
-    setSelectedDataSet({})
+    setSelectedFile({})
   }
 
-  const handleSelectDataSet = item => {
+  const handleSelectFile = item => {
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
     }
 
-    setSelectedDataSet({ item })
+    setSelectedFile({ item })
   }
 
   return (
@@ -124,13 +124,13 @@ const Files = ({
         content={files}
         handleArtifactFilterTree={handleFilesTreeFilterChange}
         handleCancel={handleCancel}
-        handleSelectItem={handleSelectDataSet}
+        handleSelectItem={handleSelectFile}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
-        selectedItem={selectedDataSet.item}
+        selectedItem={selectedFile.item}
         yamlContent={artifactsStore.files}
       />
       {isPopupDialogOpen && (
