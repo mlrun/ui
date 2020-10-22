@@ -16,6 +16,17 @@ module.exports = function(app) {
   )
 
   app.use(
+    '/nuclio',
+    createProxyMiddleware({
+      target: 'http://127.0.0.1:8070',
+      pathRewrite: {
+        '^/nuclio': ''
+      },
+      changeOrigin: true
+    })
+  )
+
+  app.use(
     '/function-catalog',
     createProxyMiddleware({
       target: 'https://raw.githubusercontent.com/mlrun/functions/master',
