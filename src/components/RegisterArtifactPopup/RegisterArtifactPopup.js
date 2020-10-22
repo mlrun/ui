@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
@@ -7,6 +7,7 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import { v4 as uuidv4 } from 'uuid'
 
 import artifactApi from '../../api/artifacts-api'
+import { ARTIFACTS_FILES_PAGE } from '../../constants'
 
 const RegisterArtifactPopup = ({
   artifactFilter,
@@ -34,6 +35,29 @@ const RegisterArtifactPopup = ({
       message: ''
     }
   })
+
+  useEffect(() => {
+    if (pageData.pageKind) {
+      setRegisterArtifactData(state => ({
+        ...state,
+        kind: {
+          ...state.kind,
+          value:
+            pageData.pageKind === ARTIFACTS_FILES_PAGE
+              ? ''
+              : pageData.pageKind.slice(0, pageData.pageKind.length - 1)
+        }
+      }))
+    } else {
+      setRegisterArtifactData(state => ({
+        ...state,
+        kind: {
+          ...state.kind,
+          value: 'general'
+        }
+      }))
+    }
+  }, [pageData.pageKind])
 
   const resetRegisterArtifactForm = useCallback(() => {
     setRegisterArtifactData({
@@ -134,12 +158,12 @@ const RegisterArtifactPopup = ({
         }))
       })
   }, [
+    artifactFilter,
     match.params.projectName,
     refresh,
     registerArtifactData,
     resetRegisterArtifactForm,
-    setIsPopupDialogOpen,
-    artifactFilter
+    setIsPopupDialogOpen
   ])
 
   const closePopupDialog = useCallback(() => {
@@ -162,11 +186,7 @@ const RegisterArtifactPopup = ({
       <RegisterArtifactForm
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
-        showType={
-          pageData.pageKind &&
-          pageData.pageKind !== 'datasets' &&
-          pageData.pageKind !== 'models'
-        }
+        showType={!pageData.pageKind}
       />
       <div className="pop-up-dialog__footer-container">
         {registerArtifactData.error.message && (

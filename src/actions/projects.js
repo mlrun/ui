@@ -156,7 +156,7 @@ const projectsAction = {
     dispatch(projectsAction.fetchProjectModelsBegin())
 
     projectsApi
-      .getProjectFiles(project)
+      .getProjectModels(project)
       .then(({ data }) => {
         dispatch(projectsAction.fetchProjectModelsSuccess(data.artifacts))
       })
