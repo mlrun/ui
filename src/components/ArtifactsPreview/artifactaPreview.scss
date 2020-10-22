@@ -62,14 +62,14 @@
     }
   }
 
-  .json {
-    &-content {
-      white-space: pre-wrap;
-    }
-  }
-
   iframe {
     min-height: 560px;
+  }
+}
+
+.json {
+  &-content {
+    white-space: pre-wrap;
   }
 }
 
