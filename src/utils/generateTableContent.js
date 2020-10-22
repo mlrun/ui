@@ -11,6 +11,7 @@ export const generateTableContent = (
   groupedByWorkflow,
   groupFilter,
   page,
+  pageKind,
   scheduled,
   setLoading
 ) => {
@@ -32,7 +33,7 @@ export const generateTableContent = (
     return page === JOBS_PAGE
       ? createJobsContent(content, false, scheduled)
       : page === ARTIFACTS_PAGE
-      ? createArtifactsContent(content)
+      ? createArtifactsContent(content, pageKind)
       : createFunctionsContent(content)
   } else return []
 }

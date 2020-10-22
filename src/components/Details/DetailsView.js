@@ -43,7 +43,7 @@ const DetailsView = ({
   iteration,
   iterationOptions,
   match,
-  page,
+  pageData,
   selectedItem,
   setIteration,
   setIterationOptions
@@ -54,7 +54,7 @@ const DetailsView = ({
         <div className="item-header__data">
           <h3>{selectedItem.name || selectedItem.db_key}</h3>
           <span>
-            {Object.keys(selectedItem).length > 0 && page === JOBS_PAGE
+            {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
               ? formatDatetime(selectedItem?.startTime, 'Not yet started')
               : formatDatetime(new Date(selectedItem?.updated), 'N/A')}
             {selectedItem.state && (
@@ -82,7 +82,7 @@ const DetailsView = ({
               onClick={setIteration}
             />
           )}
-          {page === ARTIFACTS_PAGE && (
+          {pageData.page === ARTIFACTS_PAGE && (
             <Download
               fileName={selectedItem.db_key || selectedItem.key}
               path={selectedItem.target_path.path}
@@ -92,10 +92,11 @@ const DetailsView = ({
           )}
           <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
           <Link
-            data-testid="details-close-btn"
-            to={`/projects/${match.params.projectName}/${page.toLowerCase()}${
-              page === JOBS_PAGE ? `/${match.params.jobTab}` : ''
-            }`}
+            to={`/projects/${match.params.projectName}/${
+              pageData.pageKind
+                ? pageData.pageKind
+                : pageData.page.toLowerCase()
+            }${pageData.page === JOBS_PAGE ? `/${match.params.jobTab}` : ''}`}
             onClick={handleCancel}
           >
             <Close />
@@ -106,17 +107,21 @@ const DetailsView = ({
         {detailsMenu.map(link => (
           <DetailsMenuItem
             hash={selectedItem.hash}
-            id={page === JOBS_PAGE ? selectedItem.uid : ''}
+            id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
             key={link}
             match={match}
             name={selectedItem.db_key || selectedItem.name}
-            page={page}
+            page={pageData.pageKind ? pageData.pageKind : pageData.page}
             tab={link}
           />
         ))}
       </ul>
       {match.params.tab?.toUpperCase() === DETAILS_INFO_TAB && (
-        <DetailsInfo match={match} selectedItem={selectedItem} page={page} />
+        <DetailsInfo
+          match={match}
+          selectedItem={selectedItem}
+          pageData={pageData}
+        />
       )}
       {match.params.tab?.toUpperCase() === DETAILS_PREVIEW_TAB && (
         <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
@@ -165,7 +170,7 @@ DetailsView.propTypes = {
   iteration: PropTypes.string.isRequired,
   iterationOptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired,
+  pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
   setIterationOptions: PropTypes.func.isRequired

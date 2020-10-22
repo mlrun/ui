@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 
-import ProjectDataCard from '../../elements/ProjectDataCard/ProjectDataCard'
+import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 import { getJobsStatistics, getJobsTableData } from './projectJobs.utils'
 
 const ProjectJobs = ({ match, jobs, fetchProjectJobs }) => {

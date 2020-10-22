@@ -1,16 +1,23 @@
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
+import { ARTIFACTS_DATASETS_PAGE, ARTIFACTS_MODELS_PAGE } from '../constants'
+import { convertBytes } from './convertBytes'
 
-const createArtifactsContent = artifacts =>
+const createArtifactsContent = (artifacts, pageKind) =>
   artifacts.map(artifact => {
     return {
       key: {
         value: artifact.db_key,
         class: 'artifacts_medium'
       },
-      king: {
+      kind: {
         value: artifact.kind,
-        class: 'artifacts_extra-small'
+        class: 'artifacts_extra-small',
+        type:
+          pageKind === ARTIFACTS_DATASETS_PAGE ||
+          pageKind === ARTIFACTS_MODELS_PAGE
+            ? 'hidden'
+            : ''
       },
       labels: {
         value: parseKeyValues(artifact.labels),
@@ -30,6 +37,11 @@ const createArtifactsContent = artifacts =>
       updated: {
         value: formatDatetime(new Date(artifact.updated), 'N/A'),
         class: 'artifacts_small'
+      },
+      size: {
+        value: convertBytes(artifact.size || 0),
+        class: 'artifacts_small',
+        type: pageKind === ARTIFACTS_MODELS_PAGE || !pageKind ? 'hidden' : ''
       },
       buttonPopout: {
         value: '',

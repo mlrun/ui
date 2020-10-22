@@ -1,120 +1,118 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
+import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 
-import artifactApi from '../../api/artifacts-api'
 import artifactsAction from '../../actions/artifacts'
-import artifactsData from './artifactsData'
-import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
+import {
+  detailsMenu,
+  filters,
+  page,
+  pageKind,
+  registerArtifactDialogTitle,
+  tableHeaders,
+  infoHeaders
+} from './dataSets.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
+import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
 
-import './artifacts.scss'
-
-const Artifacts = ({
+const DataSets = ({
   artifactsStore,
-  fetchArtifacts,
+  fetchDataSets,
   history,
   match,
-  removeArtifacts,
+  removeDataSets,
   setArtifactFilter
 }) => {
-  const [artifacts, setArtifacts] = useState([])
+  const [dataSets, setDataSets] = useState([])
+  const [selectedDataSet, setSelectedDataSet] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
-    detailsMenu: artifactsData.detailsMenu,
-    filters: artifactsData.filters,
-    page: artifactsData.page,
-    tableHeaders: artifactsData.tableHeaders,
-    infoHeaders: artifactsData.infoHeaders,
-    registerArtifactDialogTitle: artifactsData.registerArtifactDialogTitle
+    detailsMenu,
+    filters,
+    page,
+    pageKind,
+    registerArtifactDialogTitle,
+    tableHeaders,
+    infoHeaders
   })
-  const [selectedArtifact, setSelectedArtifact] = useState({})
 
   const fetchData = useCallback(
     item => {
-      fetchArtifacts(item).then(data => {
-        let artifacts = []
+      fetchDataSets(item).then(result => {
+        let data = []
 
-        if (data) {
-          artifacts = generateArtifacts(data)
+        if (result) {
+          data = generateArtifacts(result)
 
-          setArtifacts(artifacts)
+          setDataSets(data)
         }
 
-        return artifacts
+        return data
       })
     },
-    [fetchArtifacts]
+    [fetchDataSets]
   )
 
   useEffect(() => {
     fetchData({ project: match.params.projectName })
 
     return () => {
-      setArtifacts([])
-      removeArtifacts()
+      setDataSets([])
+      removeDataSets()
     }
-  }, [fetchData, match.params.projectName, removeArtifacts])
+  }, [fetchData, match.params.projectName, removeDataSets])
 
   useEffect(() => {
-    if (match.params.name && artifactsStore.artifacts.length !== 0) {
+    if (match.params.name && artifactsStore.dataSets.length !== 0) {
       const { name } = match.params
 
-      const [searchItem] = artifactsStore.artifacts.filter(
+      const [searchItem] = artifactsStore.dataSets.filter(
         item => item.key === name
       )
 
       if (!searchItem) {
-        history.push(`/projects/${match.params.projectName}/artifacts`)
+        history.push(`/projects/${match.params.projectName}/datasets`)
       } else {
-        const [artifact] = searchItem.data.filter(item => {
+        const [dataSet] = searchItem.data.filter(item => {
           if (searchItem.link_iteration) {
             const { link_iteration } = searchItem.link_iteration
+
             return link_iteration === item.iter
           }
 
           return true
         })
 
-        setSelectedArtifact({ item: artifact })
+        setSelectedDataSet({ item: dataSet })
       }
     }
-  }, [match.params, artifactsStore.artifacts, history])
-
-  useEffect(() => {
-    artifactApi.getArtifactTag(match.params.projectName)
-  }, [match.params.projectName])
+  }, [match.params, artifactsStore.artifacts, history, artifactsStore.dataSets])
 
   useEffect(() => {
     if (
       (match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
-        !selectedArtifact.item?.schema) ||
+        !selectedDataSet.item?.schema) ||
       (match.params.tab === DETAILS_ANALYSIS_TAB &&
-        ((selectedArtifact.item?.kind === 'dataset' &&
-          !selectedArtifact.item?.extra_data) ||
-          selectedArtifact.item?.kind !== 'dataset'))
+        !selectedDataSet.item?.extra_data)
     ) {
       history.push(
-        `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
+        `/projects/${match.params.projectName}/datasets/${match.params.name}/info`
       )
     }
 
     setPageData(state => {
-      const newDetailsMenu = [...artifactsData.detailsMenu]
+      const newDetailsMenu = [...detailsMenu]
 
-      if (selectedArtifact.item?.schema) {
+      if (selectedDataSet.item?.schema) {
         newDetailsMenu.push('metadata')
       }
 
-      if (
-        selectedArtifact.item?.kind === 'dataset' &&
-        selectedArtifact.item?.extra_data
-      ) {
+      if (selectedDataSet.item?.extra_data) {
         newDetailsMenu.push('analysis')
       }
 
@@ -128,10 +126,10 @@ const Artifacts = ({
     match.params.projectName,
     match.params.name,
     history,
-    selectedArtifact.item
+    selectedDataSet.item
   ])
 
-  const handleArtifactFilterTree = useCallback(
+  const handleDataSetTreeFilterChange = useCallback(
     item => {
       handleArtifactTreeFilterChange(
         fetchData,
@@ -153,17 +151,17 @@ const Artifacts = ({
     <>
       {artifactsStore.loading && <Loader />}
       <Content
-        content={artifacts}
-        handleArtifactFilterTree={handleArtifactFilterTree}
-        handleCancel={() => setSelectedArtifact({})}
-        handleSelectItem={item => setSelectedArtifact({ item })}
+        content={dataSets}
+        handleArtifactFilterTree={handleDataSetTreeFilterChange}
+        handleCancel={() => setSelectedDataSet({})}
+        handleSelectItem={item => setSelectedDataSet({ item })}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
-        selectedItem={selectedArtifact.item}
-        yamlContent={artifactsStore.artifacts}
+        selectedItem={selectedDataSet.item}
+        yamlContent={artifactsStore.dataSets}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
@@ -178,12 +176,10 @@ const Artifacts = ({
     </>
   )
 }
-
-Artifacts.propTypes = {
+DataSets.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(
-  artifactsStore => artifactsStore,
-  artifactsAction
-)(Artifacts)
+export default connect(artifactsStore => artifactsStore, {
+  ...artifactsAction
+})(DataSets)

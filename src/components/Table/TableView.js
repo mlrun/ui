@@ -73,6 +73,7 @@ const TableView = ({
                       key={i}
                       match={match}
                       rowItem={rowItem}
+                      pageData={pageData}
                       selectedItem={selectedItem}
                     />
                   )
@@ -153,9 +154,10 @@ const TableView = ({
           detailsMenu={pageData.detailsMenu}
           handleCancel={handleCancel}
           handleSelectItem={handleSelectItem}
-          selectedItem={selectedItem}
           match={match}
-          page={pageData.page}
+          pageData={pageData}
+          pageKind={pageData.pageKind}
+          selectedItem={selectedItem}
         />
       )}
     </div>

@@ -1,18 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { isNil } from 'lodash'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 
 import { formatDatetime, parseKeyValues } from '../../utils'
-import { jobsInfoHeaders } from '../JobsPage/jobsData'
-import artifactsData from '../Artifacts/artifactsData'
-import functionsData from '../FunctionsPage/functionsData'
-import { JOBS_PAGE, ARTIFACTS_PAGE } from '../../constants'
+import {
+  JOBS_PAGE,
+  ARTIFACTS_PAGE,
+  ARTIFACTS_DATASETS_PAGE,
+  ARTIFACTS_FILES_PAGE,
+  FUNCTIONS_PAGE,
+  ARTIFACTS_MODELS_PAGE
+} from '../../constants'
 
 import './detailsInfo.scss'
 
-const DetailsInfo = ({ match, page, selectedItem }) => {
+const DetailsInfo = ({ match, pageData, selectedItem }) => {
   const jobsInfoContent = [
     selectedItem.uid,
     formatDatetime(selectedItem.startTime, 'Not yet started'),
@@ -27,17 +32,23 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
     selectedItem.iterations?.length ? selectedItem.iterations : '0'
   ]
   const artifactsInfoContent = [
-    selectedItem.hash,
+    selectedItem.hash ?? '',
     selectedItem.db_key,
     selectedItem.iter || '0',
-    selectedItem.kind,
-    selectedItem.size,
+    pageData.pageKind !== ARTIFACTS_DATASETS_PAGE &&
+    pageData.pageKind !== ARTIFACTS_FILES_PAGE
+      ? selectedItem.kind || ' '
+      : null,
+    selectedItem.size ?? '',
     selectedItem.target_path,
     selectedItem.tree,
     formatDatetime(new Date(selectedItem.updated), 'N/A'),
-    selectedItem.labels,
+    pageData.pageKind === ARTIFACTS_MODELS_PAGE
+      ? selectedItem.framework ?? ''
+      : null,
+    selectedItem.labels ?? [],
     selectedItem.sources
-  ]
+  ].filter(content => !isNil(content))
   const functionsInfoContent = [
     selectedItem.name,
     selectedItem.type,
@@ -60,95 +71,87 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
 
   return (
     <div className="item-info">
-      {page === ARTIFACTS_PAGE && (
+      {pageData.page === ARTIFACTS_PAGE && (
         <h3 className="item-info__header">General</h3>
       )}
       <ul className="item-info__details">
-        {page === JOBS_PAGE
-          ? jobsInfoHeaders.map((header, index) => {
+        {pageData.infoHeaders.map((header, index) => {
+          let chips = []
+          let chipsClassName = ''
+          let func = ''
+          let state = ''
+          let info = null
+          let target_path = null
+
+          if (pageData.page === JOBS_PAGE) {
+            chips =
+              jobsInfoContent[index] === selectedItem.parameters
+                ? selectedItem.parameters
+                : jobsInfoContent[index] === selectedItem.resultsChips
+                ? selectedItem.resultsChips
+                : jobsInfoContent[index] === selectedItem.labels
+                ? selectedItem.labels
+                : []
+            chipsClassName =
+              jobsInfoContent[index] === selectedItem.parameters
+                ? 'parameters'
+                : jobsInfoContent[index] === selectedItem.resultsChips
+                ? 'results'
+                : 'labels'
+            func =
+              jobsInfoContent[index] === selectedItem.function
+                ? selectedItem.function
+                : ''
+            state =
+              jobsInfoContent[index] === selectedItem.state
+                ? selectedItem.state
+                : ''
+            info = jobsInfoContent[index]
+          } else if (pageData.page === ARTIFACTS_PAGE) {
+            chips =
+              artifactsInfoContent[index] === selectedItem.labels
+                ? parseKeyValues(selectedItem.labels)
+                : []
+            chipsClassName = 'labels'
+            info = artifactsInfoContent[index]
+            target_path =
+              artifactsInfoContent[index] === selectedItem.target_path
+                ? selectedItem.target_path
+                : {}
+
+            if (artifactsInfoContent[index] === selectedItem.sources) {
               return (
-                <li className="details-item" key={header.id}>
-                  <div className="details-item__header">{header.label}</div>
-                  <DetailsInfoItem
-                    chips={
-                      jobsInfoContent[index] === selectedItem.parameters
-                        ? selectedItem.parameters
-                        : jobsInfoContent[index] === selectedItem.resultsChips
-                        ? selectedItem.resultsChips
-                        : jobsInfoContent[index] === selectedItem.labels
-                        ? selectedItem.labels
-                        : []
-                    }
-                    chipsClassName={
-                      jobsInfoContent[index] === selectedItem.parameters
-                        ? 'parameters'
-                        : jobsInfoContent[index] === selectedItem.resultsChips
-                        ? 'results'
-                        : 'labels'
-                    }
-                    func={
-                      jobsInfoContent[index] === selectedItem.function
-                        ? selectedItem.function
-                        : ''
-                    }
-                    match={match}
-                    state={
-                      jobsInfoContent[index] === selectedItem.state
-                        ? selectedItem.state
-                        : ''
-                    }
-                    info={jobsInfoContent[index]}
-                  />
-                </li>
+                <ArtifactInfoSources
+                  sources={sources}
+                  header={header.label}
+                  key={header.id}
+                />
               )
-            })
-          : page === ARTIFACTS_PAGE
-          ? artifactsData.artifactsInfoHeaders.map((header, index) => {
-              if (artifactsInfoContent[index] === selectedItem.sources) {
-                return (
-                  <ArtifactInfoSources
-                    sources={sources}
-                    header={header.label}
-                    key={header.id}
-                  />
-                )
-              }
-              return (
-                <li className="details-item" key={header.id}>
-                  <div className="details-item__header">{header.label}</div>
-                  <DetailsInfoItem
-                    chips={
-                      artifactsInfoContent[index] === selectedItem.labels
-                        ? parseKeyValues(selectedItem.labels)
-                        : []
-                    }
-                    chipsClassName="labels"
-                    target_path={
-                      artifactsInfoContent[index] === selectedItem.target_path
-                        ? selectedItem.target_path
-                        : {}
-                    }
-                    info={artifactsInfoContent[index]}
-                  />
-                </li>
-              )
-            })
-          : functionsData.functionsInfoHeaders.map((header, index) => {
-              return (
-                <li className="details-item" key={header.id}>
-                  <div className="details-item__header">{header.label}</div>
-                  <DetailsInfoItem
-                    info={
-                      header.id === 'kind'
-                        ? functionsInfoContent[index] || 'Local'
-                        : functionsInfoContent[index] || ''
-                    }
-                  />
-                </li>
-              )
-            })}
+            }
+          } else if (pageData.page === FUNCTIONS_PAGE) {
+            info =
+              header.id === 'kind'
+                ? functionsInfoContent[index] || 'Local'
+                : functionsInfoContent[index] || ''
+          }
+
+          return (
+            <li className="details-item" key={header.id}>
+              <div className="details-item__header">{header.label}</div>
+              <DetailsInfoItem
+                chips={chips}
+                chipsClassName={chipsClassName}
+                func={func}
+                match={match}
+                state={state}
+                target_path={target_path}
+                info={info}
+              />
+            </li>
+          )
+        })}
       </ul>
-      {page === ARTIFACTS_PAGE && selectedItem.producer && (
+      {pageData.page === ARTIFACTS_PAGE && selectedItem.producer && (
         <>
           <h3 className="item-info__header">Producer</h3>
           <ul className="item-info__details">
@@ -166,7 +169,7 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
                   <DetailsInfoItem
                     link={url}
                     info={selectedItem.producer[header]}
-                    page={page}
+                    page={pageData.page}
                   />
                 </li>
               )
@@ -178,13 +181,9 @@ const DetailsInfo = ({ match, page, selectedItem }) => {
   )
 }
 
-DetailsInfo.defaultProps = {
-  selectedItem: {}
-}
-
 DetailsInfo.propTypes = {
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired,
+  pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }
 

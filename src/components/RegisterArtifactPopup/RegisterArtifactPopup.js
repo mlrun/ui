@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
@@ -7,12 +7,15 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import { v4 as uuidv4 } from 'uuid'
 
 import artifactApi from '../../api/artifacts-api'
+import { ARTIFACTS_FILES_PAGE } from '../../constants'
 
 const RegisterArtifactPopup = ({
   artifactFilter,
   match,
+  pageData,
   refresh,
-  setIsPopupDialogOpen
+  setIsPopupDialogOpen,
+  title
 }) => {
   const [registerArtifactData, setRegisterArtifactData] = useState({
     description: {
@@ -32,6 +35,29 @@ const RegisterArtifactPopup = ({
       message: ''
     }
   })
+
+  useEffect(() => {
+    if (pageData.pageKind) {
+      setRegisterArtifactData(state => ({
+        ...state,
+        kind: {
+          ...state.kind,
+          value:
+            pageData.pageKind === ARTIFACTS_FILES_PAGE
+              ? ''
+              : pageData.pageKind.slice(0, pageData.pageKind.length - 1)
+        }
+      }))
+    } else {
+      setRegisterArtifactData(state => ({
+        ...state,
+        kind: {
+          ...state.kind,
+          value: 'general'
+        }
+      }))
+    }
+  }, [pageData.pageKind])
 
   const resetRegisterArtifactForm = useCallback(() => {
     setRegisterArtifactData({
@@ -132,12 +158,12 @@ const RegisterArtifactPopup = ({
         }))
       })
   }, [
+    artifactFilter,
     match.params.projectName,
     refresh,
     registerArtifactData,
     resetRegisterArtifactForm,
-    setIsPopupDialogOpen,
-    artifactFilter
+    setIsPopupDialogOpen
   ])
 
   const closePopupDialog = useCallback(() => {
@@ -156,10 +182,11 @@ const RegisterArtifactPopup = ({
   }, [])
 
   return (
-    <PopUpDialog headerText="Register artifact" closePopUp={closePopupDialog}>
+    <PopUpDialog headerText={title} closePopUp={closePopupDialog}>
       <RegisterArtifactForm
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
+        showType={!pageData.pageKind}
       />
       <div className="pop-up-dialog__footer-container">
         {registerArtifactData.error.message && (
@@ -182,11 +209,17 @@ const RegisterArtifactPopup = ({
   )
 }
 
+RegisterArtifactPopup.defaultProps = {
+  title: ''
+}
+
 RegisterArtifactPopup.propTypes = {
   artifactFilter: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
+  pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
-  setIsPopupDialogOpen: PropTypes.func.isRequired
+  setIsPopupDialogOpen: PropTypes.func.isRequired,
+  title: PropTypes.string
 }
 
 export default RegisterArtifactPopup

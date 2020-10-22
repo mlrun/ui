@@ -15,7 +15,7 @@ const Details = ({
   detailsMenu,
   handleCancel,
   match,
-  page,
+  pageData,
   selectedItem
 }) => {
   const [iteration, setIteration] = useState('0')
@@ -37,10 +37,10 @@ const Details = ({
   }
 
   useEffect(() => {
-    if (page === JOBS_PAGE) {
+    if (pageData.page === JOBS_PAGE) {
       setIteration('0')
     }
-  }, [page, selectedItem.uid])
+  }, [pageData.page, selectedItem.uid])
 
   return (
     <DetailsView
@@ -51,7 +51,7 @@ const Details = ({
       iteration={iteration}
       iterationOptions={iterationOptions}
       match={match}
-      page={page}
+      pageData={pageData}
       selectedItem={selectedItem}
       setIteration={setIteration}
       setIterationOptions={setIterationOptions}
@@ -68,7 +68,7 @@ Details.propTypes = {
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  page: PropTypes.string.isRequired,
+  pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }
 

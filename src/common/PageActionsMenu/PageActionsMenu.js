@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 
 import { JOBS_PAGE, PROJECTS_PAGE, ARTIFACTS_PAGE } from '../../constants.js'
 
-const PageActionsMenu = ({ match, onClick, page }) => {
+const PageActionsMenu = ({ match, onClick, pageData }) => {
   return (
     <>
-      {page === JOBS_PAGE && (
+      {pageData.page === JOBS_PAGE && (
         <div data-testid="actions-link" className="page-actions-container">
           <Link
             className="btn_secondary btn_small"
@@ -17,10 +17,16 @@ const PageActionsMenu = ({ match, onClick, page }) => {
           </Link>
         </div>
       )}
-      {(page === PROJECTS_PAGE || page === ARTIFACTS_PAGE) && (
+      {(pageData.page === PROJECTS_PAGE ||
+        pageData.page === ARTIFACTS_PAGE) && (
         <div data-testid="actions-button" className="page-actions-container">
-          <button className="btn_secondary btn_small" onClick={onClick}>
-            {page === PROJECTS_PAGE ? 'New Project' : 'Register Artifact'}
+          <button
+            className="btn_secondary btn_small btn_register"
+            onClick={onClick}
+          >
+            {pageData.page === PROJECTS_PAGE
+              ? 'New Project'
+              : pageData.registerArtifactDialogTitle}
           </button>
         </div>
       )}
@@ -35,7 +41,7 @@ PageActionsMenu.defaultProps = {
 PageActionsMenu.propTypes = {
   match: PropTypes.shape({}).isRequired,
   onClick: PropTypes.func,
-  page: PropTypes.string.isRequired
+  pageData: PropTypes.shape({}).isRequired
 }
 
 export default PageActionsMenu

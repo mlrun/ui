@@ -15,7 +15,9 @@ describe('PageActionsMenu component', () => {
 
   beforeEach(() => {
     const props = {
-      page: 'JOBS',
+      pageData: {
+        page: 'JOBS'
+      },
       match: {
         path: '/projects/:projectName/jobs/:jobTab/:jobId/:tab',
         url:
@@ -48,7 +50,13 @@ describe('PageActionsMenu component', () => {
   it('should display button if props page is "ARTIFACTS"', () => {
     wrapper.rerender(
       <Router>
-        <PageActionsMenu match={{}} page="ARTIFACTS" />
+        <PageActionsMenu
+          match={{}}
+          pageData={{
+            page: 'ARTIFACTS',
+            registerArtifactDialogTitle: 'Register artifact'
+          }}
+        />
       </Router>
     )
 
@@ -62,7 +70,7 @@ describe('PageActionsMenu component', () => {
   it('should display button if props page is "PROJECTS"', () => {
     wrapper.rerender(
       <Router>
-        <PageActionsMenu match={{}} page="PROJECTS" />
+        <PageActionsMenu match={{}} pageData={{ page: 'PROJECTS' }} />
       </Router>
     )
 

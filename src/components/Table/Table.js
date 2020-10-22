@@ -48,6 +48,7 @@ const Table = ({
       groupedByWorkflow,
       groupFilter,
       pageData.page,
+      pageData.pageKind,
       match.params.jobTab?.toUpperCase() === SCHEDULE_TAB,
       setLoading
     )
@@ -81,7 +82,8 @@ const Table = ({
     workflows,
     pageData.page,
     setLoading,
-    match.params.jobTab
+    match.params.jobTab,
+    pageData.pageKind
   ])
 
   useEffect(() => {

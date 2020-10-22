@@ -7,6 +7,15 @@ import {
   FETCH_PROJECTS_FAILURE,
   FETCH_PROJECTS_SUCCESS,
   FETCH_PROJECT_BEGIN,
+  FETCH_PROJECT_DATASETS_BEGIN,
+  FETCH_PROJECT_DATASETS_FAILURE,
+  FETCH_PROJECT_DATASETS_SUCCESS,
+  FETCH_PROJECT_FILES_BEGIN,
+  FETCH_PROJECT_FILES_FAILURE,
+  FETCH_PROJECT_FILES_SUCCESS,
+  FETCH_PROJECT_MODELS_BEGIN,
+  FETCH_PROJECT_MODELS_FAILURE,
+  FETCH_PROJECT_MODELS_SUCCESS,
   FETCH_PROJECT_FAILURE,
   FETCH_PROJECT_FUNCTIONS_BEGIN,
   FETCH_PROJECT_FUNCTIONS_FAILURE,
@@ -54,18 +63,53 @@ const projectsAction = {
         dispatch(projectsAction.fetchProjectFailure(error.message))
       })
   },
-  fetchProjectJobs: project => dispatch => {
-    dispatch(projectsAction.fetchProjectJobsBegin())
+  fetchProjectBegin: () => ({ type: FETCH_PROJECT_BEGIN }),
+  fetchProjectDataSets: project => dispatch => {
+    dispatch(projectsAction.fetchProjectDataSetsBegin())
 
     projectsApi
-      .getJobsAndWorkflows(project)
+      .getProjectDataSets(project)
       .then(({ data }) => {
-        dispatch(projectsAction.fetchProjectJobsSuccess(data.runs))
+        dispatch(projectsAction.fetchProjectDataSetsSuccess(data.artifacts))
       })
       .catch(error => {
-        dispatch(projectsAction.fetchProjectJobsFailure(error.message))
+        dispatch(projectsAction.fetchProjectDataSetsFailure(error.message))
       })
   },
+  fetchProjectDataSetsBegin: () => ({ type: FETCH_PROJECT_DATASETS_BEGIN }),
+  fetchProjectDataSetsFailure: error => ({
+    type: FETCH_PROJECT_DATASETS_FAILURE,
+    payload: error
+  }),
+  fetchProjectDataSetsSuccess: datasets => ({
+    type: FETCH_PROJECT_DATASETS_SUCCESS,
+    payload: datasets
+  }),
+  fetchProjectFailure: error => ({
+    type: FETCH_PROJECT_FAILURE,
+    payload: error
+  }),
+  fetchProjectFiles: project => dispatch => {
+    dispatch(projectsAction.fetchProjectFilesBegin())
+
+    projectsApi
+      .getProjectFiles(project)
+      .then(({ data }) => {
+        dispatch(projectsAction.fetchProjectFilesSuccess(data.artifacts))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectFilesFailure(error.message))
+      })
+  },
+  fetchProjectFilesBegin: () => ({ type: FETCH_PROJECT_FILES_BEGIN }),
+  fetchProjectFilesFailure: error => ({
+    type: FETCH_PROJECT_FILES_FAILURE,
+    payload: error
+  }),
+  fetchProjectFilesSuccess: files => ({
+    type: FETCH_PROJECT_FILES_SUCCESS,
+    payload: files
+  }),
   fetchProjectFunctions: project => dispatch => {
     dispatch(projectsAction.fetchProjectFunctionsBegin())
 
@@ -78,6 +122,61 @@ const projectsAction = {
         dispatch(projectsAction.fetchProjectFunctionsFailure(error.message))
       })
   },
+  fetchProjectFunctionsBegin: () => ({ type: FETCH_PROJECT_FUNCTIONS_BEGIN }),
+  fetchProjectFunctionsFailure: error => ({
+    type: FETCH_PROJECT_FUNCTIONS_FAILURE,
+    payload: error
+  }),
+  fetchProjectFunctionsSuccess: functions => ({
+    type: FETCH_PROJECT_FUNCTIONS_SUCCESS,
+    payload: functions
+  }),
+  fetchProjectJobs: project => dispatch => {
+    dispatch(projectsAction.fetchProjectJobsBegin())
+
+    projectsApi
+      .getJobsAndWorkflows(project)
+      .then(({ data }) => {
+        dispatch(projectsAction.fetchProjectJobsSuccess(data.runs))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectJobsFailure(error.message))
+      })
+  },
+  fetchProjectJobsBegin: () => ({ type: FETCH_PROJECT_JOBS_BEGIN }),
+  fetchProjectJobsFailure: error => ({
+    type: FETCH_PROJECT_JOBS_FAILURE,
+    payload: error
+  }),
+  fetchProjectJobsSuccess: jobs => ({
+    type: FETCH_PROJECT_JOBS_SUCCESS,
+    payload: jobs
+  }),
+  fetchProjectModels: project => dispatch => {
+    dispatch(projectsAction.fetchProjectModelsBegin())
+
+    projectsApi
+      .getProjectModels(project)
+      .then(({ data }) => {
+        dispatch(projectsAction.fetchProjectModelsSuccess(data.artifacts))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectModelsFailure(error.message))
+      })
+  },
+  fetchProjectModelsBegin: () => ({ type: FETCH_PROJECT_MODELS_BEGIN }),
+  fetchProjectModelsFailure: error => ({
+    type: FETCH_PROJECT_MODELS_FAILURE,
+    payload: error
+  }),
+  fetchProjectModelsSuccess: models => ({
+    type: FETCH_PROJECT_MODELS_SUCCESS,
+    payload: models
+  }),
+  fetchProjectSuccess: project => ({
+    type: FETCH_PROJECT_SUCCESS,
+    payload: project
+  }),
   fetchProjects: () => dispatch => {
     dispatch(projectsAction.fetchProjectsBegin())
 
@@ -93,40 +192,13 @@ const projectsAction = {
       })
   },
   fetchProjectsBegin: () => ({ type: FETCH_PROJECTS_BEGIN }),
-  fetchProjectBegin: () => ({ type: FETCH_PROJECT_BEGIN }),
-  fetchProjectJobsBegin: () => ({ type: FETCH_PROJECT_JOBS_BEGIN }),
-  fetchProjectFunctionsBegin: () => ({ type: FETCH_PROJECT_FUNCTIONS_BEGIN }),
   fetchProjectsFailure: error => ({
     type: FETCH_PROJECTS_FAILURE,
-    payload: error
-  }),
-  fetchProjectFailure: error => ({
-    type: FETCH_PROJECT_FAILURE,
-    payload: error
-  }),
-  fetchProjectJobsFailure: error => ({
-    type: FETCH_PROJECT_JOBS_FAILURE,
-    payload: error
-  }),
-  fetchProjectFunctionsFailure: error => ({
-    type: FETCH_PROJECT_FUNCTIONS_FAILURE,
     payload: error
   }),
   fetchProjectsSuccess: projectsList => ({
     type: FETCH_PROJECTS_SUCCESS,
     payload: projectsList
-  }),
-  fetchProjectSuccess: project => ({
-    type: FETCH_PROJECT_SUCCESS,
-    payload: project
-  }),
-  fetchProjectJobsSuccess: jobs => ({
-    type: FETCH_PROJECT_JOBS_SUCCESS,
-    payload: jobs
-  }),
-  fetchProjectFunctionsSuccess: functions => ({
-    type: FETCH_PROJECT_FUNCTIONS_SUCCESS,
-    payload: functions
   }),
   removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),

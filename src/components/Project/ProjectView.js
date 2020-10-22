@@ -7,20 +7,24 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Input from '../../common/Input/Input'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
-import ProjectFunctions from '../ProjectFunctions/ProjectFunctions'
-import ProjectJobs from '../ProjectJobs/ProjectJobs'
+import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
+import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import Select from '../../common/Select/Select'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
+import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
 
 const ProjectView = React.forwardRef(
   (
     {
       createNewOptions,
       editProject,
+      fetchProjectDataSets,
+      fetchProjectFiles,
       fetchProjectFunctions,
       fetchProjectJobs,
+      fetchProjectModels,
       handleEditProject,
       handleLaunchIDE,
       handleOnChangeProject,
@@ -146,6 +150,29 @@ const ProjectView = React.forwardRef(
                 />
               </div>
               <div className="main-info__statistics-section">
+                <ProjectArtifacts
+                  artifacts={projectStore.project.models}
+                  fetchArtifacts={fetchProjectModels}
+                  link={`/projects/${match.params.projectName}/models`}
+                  match={match}
+                  title="Models"
+                />
+                <ProjectArtifacts
+                  artifacts={projectStore.project.dataSets}
+                  fetchArtifacts={fetchProjectDataSets}
+                  link={`/projects/${match.params.projectName}/datasets`}
+                  match={match}
+                  title="Datasets"
+                />
+                <ProjectArtifacts
+                  artifacts={projectStore.project.files}
+                  fetchArtifacts={fetchProjectFiles}
+                  link={`/projects/${match.params.projectName}/files`}
+                  match={match}
+                  title="Files"
+                />
+              </div>
+              <div className="main-info__statistics-section">
                 <ProjectJobs
                   fetchProjectJobs={fetchProjectJobs}
                   jobs={projectStore.project.jobs}
@@ -164,10 +191,12 @@ const ProjectView = React.forwardRef(
           <RegisterArtifactPopup
             artifactFilter={{}}
             match={match}
+            pageData={{}}
             refresh={() => {
               history.push(`/projects/${match.params.projectName}/artifacts`)
             }}
             setIsPopupDialogOpen={setIsPopupDialogOpen}
+            title="Register artifact"
           />
         )}
       </>
@@ -178,8 +207,11 @@ const ProjectView = React.forwardRef(
 ProjectView.propTypes = {
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
+  fetchProjectDataSets: PropTypes.func.isRequired,
+  fetchProjectFiles: PropTypes.func.isRequired,
   fetchProjectFunctions: PropTypes.func.isRequired,
   fetchProjectJobs: PropTypes.func.isRequired,
+  fetchProjectModels: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   handleOnChangeProject: PropTypes.func.isRequired,

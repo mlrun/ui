@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import ProjectDataCard from '../../elements/ProjectDataCard/ProjectDataCard'
+import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
 const ProjectFunctions = ({ fetchProjectFunctions, functionsStore, match }) => {
   useEffect(() => {

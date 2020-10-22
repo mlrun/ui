@@ -3,7 +3,7 @@ import React from 'react'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 
 export const page = 'JOBS'
-export const jobsInfoHeaders = [
+export const infoHeaders = [
   { label: 'UID', id: 'uid' },
   { label: 'Start time', id: 'startTime' },
   { label: 'Last Updated', id: 'lastUpdates' },
@@ -96,7 +96,8 @@ export const generatePageData = (scheduled, removeScheduledJob) => {
     filters: jobFilters,
     page,
     tableHeaders: generateTableHeaders(scheduled),
-    tabs
+    tabs,
+    infoHeaders
   }
 }
 export const generateActionsMenu = removeScheduledJob => [
