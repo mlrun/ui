@@ -42,7 +42,7 @@ const Models = ({
 
   const fetchData = useCallback(
     item => {
-      fetchModels(item.project).then(result => {
+      fetchModels(item).then(result => {
         let data = []
 
         if (result) {

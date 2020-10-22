@@ -43,7 +43,7 @@ const DataSets = ({
 
   const fetchData = useCallback(
     item => {
-      fetchDataSets(item.project).then(result => {
+      fetchDataSets(item).then(result => {
         let data = []
 
         if (result) {

@@ -42,7 +42,7 @@ const Files = ({
 
   const fetchData = useCallback(
     item => {
-      fetchFiles(item.project).then(result => {
+      fetchFiles(item).then(result => {
         let data = []
 
         if (result) {
