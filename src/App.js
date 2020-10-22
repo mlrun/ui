@@ -46,6 +46,11 @@ const App = () => {
               exact
               render={routeProps => <Jobs {...routeProps} />}
             />
+            <Redirect
+              exact
+              from="/projects/:projectName/jobs"
+              to="/projects/:projectName/jobs/monitor"
+            />
             <Route
               path="/projects/:projectName/jobs/:jobTab"
               exact
