@@ -61,7 +61,7 @@ const ArtifactsPreview = ({ artifact }) => {
           })
           .catch(err => {
             setError({
-              text: `${err.response.status} ${err.response.data}`,
+              text: `${err.response.status} ${err.response.statusText}`,
               body: JSON.stringify(err.response)
             })
           })
@@ -82,7 +82,7 @@ const ArtifactsPreview = ({ artifact }) => {
         })
         .catch(err => {
           setError({
-            text: `${err.response.status} ${err.response.data}`,
+            text: `${err.response.status} ${err.response.statusText}`,
             body: JSON.stringify(err.response)
           })
         })
