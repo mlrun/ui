@@ -97,7 +97,7 @@ const ArtifactsPreview = ({ artifact }) => {
         className="error-details btn"
         onClick={() => setShowError(state => !state)}
       >
-        View details
+        {showError ? 'Hide details' : 'View details'}
       </button>
       {showError && (
         <pre className="json-content">
