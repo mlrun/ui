@@ -35,13 +35,13 @@ const Functions = ({
           type: func.kind,
           tag: func.metadata.tag,
           hash: func.metadata.hash,
-          codeOrigin: func.spec.build?.code_origin ?? '',
+          codeOrigin: func.spec?.build?.code_origin ?? '',
           updated: new Date(func.metadata.updated),
           command: func.spec.command,
           image: func.spec.image,
           description: func.spec.description,
-          state: func.status?.status?.state ?? '',
-          functionSourceCode: func.spec.build?.functionSourceCode ?? ''
+          state: func.status?.state ?? '',
+          functionSourceCode: func.spec?.build?.functionSourceCode ?? ''
         }))
 
         return setFunctions(newFunctions)
