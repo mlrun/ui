@@ -38,6 +38,28 @@
       .preview-table__body {
         max-height: initial;
       }
+
+      button {
+        font-family: Roboto, sans-serif;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+
+        &:active,
+        &:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+
+      [class*='btn'] {
+        display: flex;
+        align-items: center;
+        height: 49px;
+        padding: 10px 16px;
+        font-size: 14px;
+        border-radius: 2px;
+      }
     }
 
     &-item {
