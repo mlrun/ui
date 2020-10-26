@@ -31,7 +31,14 @@ const TableView = ({
   workflows
 }) => {
   const actionsMenu = pageData.actionsMenu
-    ? pageData.actionsMenu
+    ? [
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertToYaml
+        },
+        ...pageData.actionsMenu
+      ]
     : [
         {
           label: 'View YAML',

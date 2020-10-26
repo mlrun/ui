@@ -6,10 +6,20 @@ import { isEqual } from 'lodash'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 
-import functionsData from './functionsData'
+import {
+  detailsMenu,
+  filters,
+  infoHeaders,
+  initialGroupFilter,
+  page,
+  tableHeaders
+} from './functions.util'
 import functionsActions from '../../actions/functions'
 
+import { ReactComponent as Delete } from '../../images/delete.svg'
+
 const Functions = ({
+  deleteFunction,
   fetchFunctions,
   functionsStore,
   history,
@@ -21,11 +31,18 @@ const Functions = ({
   const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const pageData = {
-    detailsMenu: functionsData.detailsMenu,
-    filters: functionsData.filters,
-    page: functionsData.page,
-    tableHeaders: functionsData.tableHeaders,
-    infoHeaders: functionsData.infoHeaders
+    actionsMenu: [
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        onClick: func => removeFunction(func)
+      }
+    ],
+    detailsMenu,
+    filters,
+    page,
+    tableHeaders,
+    infoHeaders
   }
 
   const refreshFunctions = useCallback(
@@ -127,6 +144,12 @@ const Functions = ({
     setSelectedFunction({})
   }
 
+  const removeFunction = func => {
+    deleteFunction(func.name, match.params.projectName).then(() => {
+      refreshFunctions()
+    })
+  }
+
   const toggleShowUntagged = showUntagged => {
     const pathLangsOnFuncScreen = 4
     if (history.location.pathname.split('/').length > pathLangsOnFuncScreen) {
@@ -141,7 +164,7 @@ const Functions = ({
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
-        groupFilter={functionsData.initialGroupFilter}
+        groupFilter={initialGroupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
