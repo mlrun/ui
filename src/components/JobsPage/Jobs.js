@@ -11,6 +11,7 @@ import {
 } from './jobsData'
 import { parseKeyValues } from '../../utils'
 import { SCHEDULE_TAB } from '../../constants'
+import notificationActions from '../../actions/notificationDownload'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
@@ -19,11 +20,12 @@ const Jobs = ({
   fetchJobs,
   fetchWorkflows,
   jobsStore,
+  handleRunScheduledJob,
   history,
   match,
   removeScheduledJob,
-  runNewJob,
   setLoading,
+  setNotification,
   workflowsStore
 }) => {
   const [jobs, setJobs] = useState([])
@@ -37,17 +39,36 @@ const Jobs = ({
     })
   }
 
-  const handleSubmitJob = job => {
-    runNewJob({
-      scheduled_object: job
-    })
+  const handleRunJob = job => {
+    handleRunScheduledJob(
+      {
+        ...job.scheduled_object
+      },
+      match.params.projectName,
+      job.name
+    )
+      .then(response => {
+        setNotification({
+          status: response.status,
+          id: Math.random(),
+          message: 'Job started successfully'
+        })
+      })
+      .catch(() => {
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          retry: item => handleRunJob(item),
+          message: ' Job failed to start'
+        })
+      })
   }
 
   const pageData = useCallback(
     generatePageData(
       match.params.jobTab.toUpperCase() === SCHEDULE_TAB,
       handleRemoveScheduledJob,
-      handleSubmitJob
+      handleRunJob
     ),
     [match.params.jobTab]
   )
@@ -66,7 +87,8 @@ const Jobs = ({
               name: job.name,
               type: job.kind === 'pipeline' ? 'workflow' : job.kind,
               createdTime: new Date(job.creation_time),
-              nextRun: new Date(job.next_run_time)
+              nextRun: new Date(job.next_run_time),
+              scheduled_object: job.scheduled_object
             }
           } else {
             return {
@@ -195,5 +217,5 @@ Jobs.propTypes = {
 
 export default connect(
   ({ jobsStore, workflowsStore }) => ({ jobsStore, workflowsStore }),
-  { ...jobsActions, ...workflowActions }
+  { ...jobsActions, ...workflowActions, ...notificationActions }
 )(React.memo(Jobs))

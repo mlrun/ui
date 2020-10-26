@@ -37,5 +37,10 @@ export default {
   },
   removeScheduledJob: (project, scheduleName) =>
     mainHttpClient.delete(`/projects/${project}/schedules/${scheduleName}`),
-  runJob: postData => mainHttpClient.post('/submit_job', postData)
+  runJob: postData => mainHttpClient.post('/submit_job', postData),
+  runScheduledJob: (postData, project, job) =>
+    mainHttpClient.post(
+      `/projects/${project}/schedules/${job}/invoke`,
+      postData
+    )
 }

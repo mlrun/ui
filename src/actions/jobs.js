@@ -104,6 +104,8 @@ const jobsActions = {
     type: RUN_NEW_JOB_FAILURE,
     payload: error
   }),
+  handleRunScheduledJob: (postData, project, job) => () =>
+    jobsApi.runScheduledJob(postData, project, job),
   setAllJobsData: data => ({
     type: SET_ALL_JOBS_DATA,
     payload: data

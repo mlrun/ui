@@ -5,9 +5,9 @@ import { createPortal } from 'react-dom'
 import { ReactComponent as SuccessDone } from '../../images/success_done.svg'
 import { ReactComponent as UnsuccessAlert } from '../../images/unsuccess_alert.svg'
 
-import './notificationDownloadView.scss'
+import './notificationView.scss'
 
-const NotificationDownloadView = ({ status, retry, transitionStyles }) =>
+const NotificationView = ({ item, status, retry, transitionStyles }) =>
   createPortal(
     <div className="notification_container" style={{ ...transitionStyles }}>
       <div className="notification_body">
@@ -20,12 +20,12 @@ const NotificationDownloadView = ({ status, retry, transitionStyles }) =>
             {status === 200 ? <SuccessDone /> : <UnsuccessAlert />}
           </div>
         </div>
-        {`Your download was ${status === 200 ? 'Successful' : 'unsuccessful'}`}
+        {item.message}
         {status !== 200 && (
           <div
             className="notification_body_button"
             onClick={() => {
-              retry.func(retry.id, retry.url, retry.file)
+              retry(item)
             }}
           >
             RETRY
@@ -36,14 +36,11 @@ const NotificationDownloadView = ({ status, retry, transitionStyles }) =>
     document.getElementById('overlay_container')
   )
 
-NotificationDownloadView.propTypes = {
+NotificationView.propTypes = {
+  item: PropTypes.shape({}).isRequired,
   status: PropTypes.number.isRequired,
-  retry: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    url: PropTypes.string.isRequired,
-    file: PropTypes.oneOf([PropTypes.string, PropTypes.any]),
-    func: PropTypes.func.isRequired
-  })
+  retry: PropTypes.func.isRequired,
+  transitionStyles: PropTypes.shape({}).isRequired
 }
 
-export default NotificationDownloadView
+export default NotificationView

@@ -1,17 +1,14 @@
-import {
-  SET_NOTIFICATION_DOWNLOAD,
-  REMOVE_NOTIFICATION_DOWNLOAD
-} from '../constants'
+import { SET_NOTIFICATION, REMOVE_NOTIFICATION } from '../constants'
 
-const notificationDownload = {
-  setNotificationDownload: notification => ({
-    type: SET_NOTIFICATION_DOWNLOAD,
+const notificationActions = {
+  setNotification: notification => ({
+    type: SET_NOTIFICATION,
     payload: notification
   }),
-  removeNotificationDownload: index => ({
-    type: REMOVE_NOTIFICATION_DOWNLOAD,
+  removeNotification: index => ({
+    type: REMOVE_NOTIFICATION,
     payload: index
   })
 }
 
-export default notificationDownload
+export default notificationActions
