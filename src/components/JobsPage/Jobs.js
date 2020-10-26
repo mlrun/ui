@@ -22,6 +22,7 @@ const Jobs = ({
   history,
   match,
   removeScheduledJob,
+  runNewJob,
   setLoading,
   workflowsStore
 }) => {
@@ -36,10 +37,17 @@ const Jobs = ({
     })
   }
 
+  const handleSubmitJob = job => {
+    runNewJob({
+      scheduled_object: job
+    })
+  }
+
   const pageData = useCallback(
     generatePageData(
       match.params.jobTab.toUpperCase() === SCHEDULE_TAB,
-      handleRemoveScheduledJob
+      handleRemoveScheduledJob,
+      handleSubmitJob
     ),
     [match.params.jobTab]
   )

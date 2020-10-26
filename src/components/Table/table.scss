@@ -113,6 +113,11 @@
     width: 20px;
     max-width: 20px;
     padding: 0;
+
+    &__run-icon {
+      margin-bottom: -2px;
+      transform: rotate(-90deg) scale(1.2);
+    }
   }
 
   &-body {
