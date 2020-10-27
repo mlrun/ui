@@ -12,7 +12,12 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
-import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
+import {
+  JOBS_PAGE,
+  ARTIFACTS_PAGE,
+  FUNCTIONS_PAGE,
+  SCHEDULE_TAB
+} from '../../constants'
 
 import { formatDatetime } from '../../utils'
 
@@ -117,7 +122,11 @@ const Content = ({
 
     const jobJson =
       pageData.page === JOBS_PAGE &&
-      yamlContent.filter(job => isEqual(job.metadata.uid, item.uid))[0]
+      yamlContent.filter(job =>
+        match.params.jobTab.toUpperCase() !== SCHEDULE_TAB
+          ? isEqual(job.metadata.uid, item.uid)
+          : isEqual(job.name, item.name)
+      )[0]
     const functionJson =
       pageData.page === FUNCTIONS_PAGE &&
       yamlContent.filter(

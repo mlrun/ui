@@ -6,19 +6,13 @@ import { connect } from 'react-redux'
 import ProgressRing from '../ProgressRing/ProgressRing'
 
 import { mainHttpClient } from '../../httpClient'
-import notificationDownloadAction from '../../actions/notificationDownload'
+import notificationActions from '../../actions/notificationDownload'
 import downloadFile from '../../utils/downloadFile'
 import { DOWNLOAD_PROGRESS_RING } from '../../colorConstants'
 
 import './download.scss'
 
-const Download = ({
-  fileName,
-  path,
-  schema,
-  setNotificationDownload,
-  user
-}) => {
+const Download = ({ fileName, path, schema, setNotification, user }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
 
@@ -30,6 +24,31 @@ const Download = ({
   let file = path.match(/\b(\/)([\w]+\.[\w\d]+)\b/gi)
     ? path.match(/\b(\/)([\w]+\.[\w\d]+)\b/gi)[0]
     : null
+
+  const retryDownload = useCallback(
+    item => {
+      mainHttpClient(item.url)
+        .then(response => {
+          downloadFile(item.file, response)
+          setNotification({
+            status: response.status,
+            url: response.config.url,
+            id: Math.random(),
+            message: 'Your download was successful'
+          })
+        })
+        .catch(() => {
+          setNotification({
+            status: 400,
+            url: item.url,
+            file: item.file,
+            id: Math.random(),
+            message: 'Your download was unsuccessful'
+          })
+        })
+    },
+    [setNotification]
+  )
 
   const downloadCallback = useCallback(() => {
     if (isDownload) {
@@ -53,10 +72,11 @@ const Download = ({
         )
         .then(response => {
           downloadFile(fileName, response)
-          setNotificationDownload({
+          setNotification({
             status: response.status,
             url: response.config.url,
-            id: Math.random()
+            id: Math.random(),
+            message: 'Your download was successful'
           })
           if (downloadRef.current) {
             setDownload(false)
@@ -68,13 +88,15 @@ const Download = ({
             setDownload(false)
             return setProgress(0)
           }
-          setNotificationDownload({
+          setNotification({
             status: 400,
             url: schema
               ? `/files?schema=${schema}&path=${path}&user=${user}`
               : `/files?path=${path}&user=${user}`,
             file,
-            id: Math.random()
+            id: Math.random(),
+            retry: item => retryDownload(item),
+            message: 'Your download was unsuccessful'
           })
           if (downloadRef.current) {
             setDownload(false)
@@ -85,7 +107,16 @@ const Download = ({
           if (downloadRef.current) downloadRef.current.cancel = null
         })
     }
-  }, [isDownload, schema, path, user, fileName, setNotificationDownload, file])
+  }, [
+    isDownload,
+    schema,
+    path,
+    user,
+    fileName,
+    setNotification,
+    file,
+    retryDownload
+  ])
 
   useEffect(() => {
     let cancelFetch = downloadRef.current
@@ -166,8 +197,7 @@ Download.defaultProps = {
 Download.propTypes = {
   fileName: PropTypes.string,
   path: PropTypes.string.isRequired,
-  schema: PropTypes.string,
-  setNotificationDownload: PropTypes.func.isRequired
+  schema: PropTypes.string
 }
 
-export default React.memo(connect(null, notificationDownloadAction)(Download))
+export default React.memo(connect(null, notificationActions)(Download))

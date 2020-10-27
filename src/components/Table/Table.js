@@ -5,7 +5,7 @@ import { isEmpty, map } from 'lodash'
 
 import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
-import NotificationDownload from '../NotificationDownload/NotificationDownload'
+import Notification from '../Notification/Notification'
 
 import createJobsContent from '../../utils/createJobsContent'
 import { generateTableContent } from '../../utils/generateTableContent'
@@ -124,7 +124,7 @@ const Table = ({
         toggleConvertToYaml={toggleConvertToYaml}
         workflows={workflows}
       />
-      <NotificationDownload />
+      <Notification />
       {previewArtifact.isPreview && (
         <PreviewModal item={previewArtifact.selectedItem} />
       )}
