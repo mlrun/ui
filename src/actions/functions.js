@@ -14,6 +14,9 @@ import {
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
 const functionsActions = {
+  deleteFunction: (func, project) => dispatch => {
+    return functionsApi.deleteSelectedFunction(func, project)
+  },
   fetchFunctions: (project, name) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
 

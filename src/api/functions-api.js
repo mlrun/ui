@@ -1,6 +1,8 @@
 import { functionTemplatesHttpClient, mainHttpClient } from '../httpClient'
 
 export default {
+  deleteSelectedFunction: (func, project) =>
+    mainHttpClient.delete(`/projects/${project}/functions/${func}`),
   getAll: (project, name) => {
     const params = {
       project
