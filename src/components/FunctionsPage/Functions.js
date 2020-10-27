@@ -160,7 +160,7 @@ const Functions = ({
         setNotification({
           status: 400,
           id: Math.random(),
-          retry: item => removeFunction(item),
+          retry: () => removeFunction(func),
           message: 'Function failed to delete'
         })
       })
