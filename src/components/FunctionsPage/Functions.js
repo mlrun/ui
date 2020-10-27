@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { isEqual } from 'lodash'
+import { isEqual, isEmpty } from 'lodash'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
@@ -149,6 +149,11 @@ const Functions = ({
   const removeFunction = func => {
     deleteFunction(func.name, match.params.projectName)
       .then(() => {
+        if (!isEmpty(selectedFunction)) {
+          setSelectedFunction({})
+          history.push(`/projects/${match.params.projectName}/functions`)
+        }
+
         setNotification({
           status: 200,
           id: Math.random(),
