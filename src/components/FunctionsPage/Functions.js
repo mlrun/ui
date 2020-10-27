@@ -15,6 +15,7 @@ import {
   tableHeaders
 } from './functions.util'
 import functionsActions from '../../actions/functions'
+import notificationActions from '../../actions/notificationDownload'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 
@@ -24,7 +25,8 @@ const Functions = ({
   functionsStore,
   history,
   match,
-  setLoading
+  setLoading,
+  setNotification
 }) => {
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
@@ -145,9 +147,23 @@ const Functions = ({
   }
 
   const removeFunction = func => {
-    deleteFunction(func.name, match.params.projectName).then(() => {
-      refreshFunctions()
-    })
+    deleteFunction(func.name, match.params.projectName)
+      .then(() => {
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deleted successfully'
+        })
+        refreshFunctions()
+      })
+      .catch(() => {
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          retry: item => removeFunction(item),
+          message: 'Function failed to delete'
+        })
+      })
   }
 
   const toggleShowUntagged = showUntagged => {
@@ -186,7 +202,7 @@ Functions.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(
-  functionsStore => functionsStore,
-  functionsActions
-)(React.memo(Functions))
+export default connect(functionsStore => functionsStore, {
+  ...functionsActions,
+  ...notificationActions
+})(React.memo(Functions))
