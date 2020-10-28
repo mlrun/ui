@@ -48,12 +48,9 @@ const Notification = ({ notificationStore, removeNotification }) => {
             timeout={duration}
             classNames="notification_download"
             onEntered={() => {
-              setTimeout(
-                () => {
-                  removeNotification(item.id)
-                },
-                item.status === 200 ? 1500 : 2500
-              )
+              setTimeout(() => {
+                removeNotification(item.id)
+              }, 4000)
             }}
           >
             {state => (

@@ -1,31 +1,50 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { isEqual } from 'lodash'
+import { isEqual, isEmpty } from 'lodash'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 
-import functionsData from './functionsData'
+import {
+  detailsMenu,
+  filters,
+  infoHeaders,
+  initialGroupFilter,
+  page,
+  tableHeaders
+} from './functions.util'
 import functionsActions from '../../actions/functions'
+import notificationActions from '../../actions/notificationDownload'
+
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 const Functions = ({
+  deleteFunction,
   fetchFunctions,
   functionsStore,
   history,
   match,
-  setLoading
+  setLoading,
+  setNotification
 }) => {
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
   const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const pageData = {
-    detailsMenu: functionsData.detailsMenu,
-    filters: functionsData.filters,
-    page: functionsData.page,
-    tableHeaders: functionsData.tableHeaders,
-    infoHeaders: functionsData.infoHeaders
+    actionsMenu: [
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        onClick: func => removeFunction(func)
+      }
+    ],
+    detailsMenu,
+    filters,
+    page,
+    tableHeaders,
+    infoHeaders
   }
 
   const refreshFunctions = useCallback(
@@ -127,6 +146,31 @@ const Functions = ({
     setSelectedFunction({})
   }
 
+  const removeFunction = func => {
+    deleteFunction(func.name, match.params.projectName)
+      .then(() => {
+        if (!isEmpty(selectedFunction)) {
+          setSelectedFunction({})
+          history.push(`/projects/${match.params.projectName}/functions`)
+        }
+
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deleted successfully'
+        })
+        refreshFunctions()
+      })
+      .catch(() => {
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          retry: () => removeFunction(func),
+          message: 'Function failed to delete'
+        })
+      })
+  }
+
   const toggleShowUntagged = showUntagged => {
     const pathLangsOnFuncScreen = 4
     if (history.location.pathname.split('/').length > pathLangsOnFuncScreen) {
@@ -141,7 +185,7 @@ const Functions = ({
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
-        groupFilter={functionsData.initialGroupFilter}
+        groupFilter={initialGroupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
@@ -163,7 +207,7 @@ Functions.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(
-  functionsStore => functionsStore,
-  functionsActions
-)(React.memo(Functions))
+export default connect(functionsStore => functionsStore, {
+  ...functionsActions,
+  ...notificationActions
+})(React.memo(Functions))

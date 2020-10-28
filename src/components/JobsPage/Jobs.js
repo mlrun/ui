@@ -59,7 +59,7 @@ const Jobs = ({
           status: 400,
           id: Math.random(),
           retry: item => handleRunJob(item),
-          message: ' Job failed to start'
+          message: 'Job failed to start'
         })
       })
   }
