@@ -164,7 +164,8 @@
       .project-data-card {
         position: relative;
         display: flex;
-        flex: 1;
+        flex: 1 0 0;
+        min-width: 0;
         flex-direction: column;
         min-height: 491px;
         margin-right: 20px;
@@ -172,8 +173,7 @@
         border-radius: 4px;
 
         &_small {
-          flex: initial;
-          min-width: 200px;
+          flex: auto;
           min-height: 155px;
 
           .project-data-card__header {
