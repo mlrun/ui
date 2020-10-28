@@ -7,12 +7,14 @@ import { useHistory } from 'react-router-dom'
 import ProjectView from './ProjectView'
 
 import projectsAction from '../../actions/projects'
+import nuclioActions from '../../actions/nuclio'
 import projectsApi from '../../api/projects-api'
 import { launchIDEOptions, getLinks } from './project.utils'
 
 import './project.scss'
 
 const Project = ({
+  fetchNuclioFunctions,
   fetchProject,
   fetchProjectDataSets,
   fetchProjectFiles,
@@ -185,6 +187,7 @@ const Project = ({
     <ProjectView
       createNewOptions={createNewOptions}
       editProject={editProject}
+      fetchNuclioFunctions={fetchNuclioFunctions}
       fetchProjectDataSets={fetchProjectDataSets}
       fetchProjectFiles={fetchProjectFiles}
       fetchProjectFunctions={fetchProjectFunctions}
@@ -211,4 +214,7 @@ Project.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(projectStore => projectStore, projectsAction)(Project)
+export default connect(projectStore => projectStore, {
+  ...projectsAction,
+  ...nuclioActions
+})(Project)

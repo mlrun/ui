@@ -20,6 +20,7 @@ const ProjectView = React.forwardRef(
     {
       createNewOptions,
       editProject,
+      fetchNuclioFunctions,
       fetchProjectDataSets,
       fetchProjectFiles,
       fetchProjectFunctions,
@@ -181,6 +182,7 @@ const ProjectView = React.forwardRef(
                   match={match}
                 />
                 <ProjectFunctions
+                  fetchNuclioFunctions={fetchNuclioFunctions}
                   fetchProjectFunctions={fetchProjectFunctions}
                   functionsStore={projectStore.project.functions}
                   match={match}

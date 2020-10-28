@@ -3,10 +3,19 @@ import PropTypes from 'prop-types'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-const ProjectFunctions = ({ fetchProjectFunctions, functionsStore, match }) => {
+const ProjectFunctions = ({
+  fetchNuclioFunctions,
+  fetchProjectFunctions,
+  functionsStore,
+  match
+}) => {
   useEffect(() => {
     fetchProjectFunctions(match.params.projectName)
   }, [match.params.projectName, fetchProjectFunctions])
+
+  useEffect(() => {
+    fetchNuclioFunctions()
+  }, [fetchNuclioFunctions])
 
   const functions = useMemo(() => {
     if (functionsStore.data) {
@@ -61,7 +70,7 @@ const ProjectFunctions = ({ fetchProjectFunctions, functionsStore, match }) => {
 
   return (
     <ProjectDataCard
-      title="Real-Time and ML functions"
+      title="Real-Time functions"
       dataCard={functionsStore}
       link={`/projects/${match.params.projectName}/functions`}
       match={match}

@@ -7,3 +7,7 @@ export const mainHttpClient = axios.create({
 export const functionTemplatesHttpClient = axios.create({
   baseURL: `${process.env.PUBLIC_URL}/function-catalog`
 })
+
+export const nuclioHttpClient = axios.create({
+  baseURL: `${process.env.PUBLIC_URL}/nuclio`
+})
