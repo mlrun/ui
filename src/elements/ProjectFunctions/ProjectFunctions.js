@@ -55,7 +55,7 @@ const ProjectFunctions = ({ fetchNuclioFunctions, functionsStore, match }) => {
           return {
             name: {
               value: func.metadata.name,
-              href: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions/${func.metadata.name}/code`,
+              href: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions/${func.metadata.name}`,
               className: 'table-cell_big'
             },
             status: {
