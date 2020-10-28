@@ -40,5 +40,10 @@ export const getLinks = match => [
   {
     label: 'ML functions',
     link: `/projects/${match.params.projectName}/functions`
+  },
+  {
+    label: 'Real-time functions',
+    link: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions`,
+    externalLink: true
   }
 ]

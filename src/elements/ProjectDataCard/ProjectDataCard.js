@@ -10,6 +10,7 @@ import ProjectTable from '../../components/ProjectTable/ProjectTable'
 
 const ProjectDataCard = ({
   dataCard,
+  href,
   link,
   match,
   statistics,
@@ -39,9 +40,15 @@ const ProjectDataCard = ({
       ) : (
         <>
           <ProjectTable match={match} table={table} />
-          <Link className="project-data-card__see-all-link" to={link}>
-            See all
-          </Link>
+          {href ? (
+            <a href={href} className="project-data-card__see-all-link">
+              See all
+            </a>
+          ) : (
+            <Link className="project-data-card__see-all-link" to={link}>
+              See all
+            </Link>
+          )}
         </>
       )}
     </div>
@@ -49,13 +56,16 @@ const ProjectDataCard = ({
 }
 
 ProjectDataCard.defaultProps = {
+  href: '',
+  link: '',
   statistics: {},
   table: {}
 }
 
 ProjectDataCard.propTypes = {
   dataCard: PropTypes.shape({}).isRequired,
-  link: PropTypes.string.isRequired,
+  href: PropTypes.string,
+  link: PropTypes.string,
   match: PropTypes.shape({}).isRequired,
   statistics: PropTypes.shape({}),
   table: PropTypes.shape({}),

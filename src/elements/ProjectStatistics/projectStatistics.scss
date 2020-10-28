@@ -61,6 +61,10 @@
         &_scheduled {
           color: $supernova;
         }
+
+        &_failed {
+          color: $amaranth;
+        }
       }
     }
   }

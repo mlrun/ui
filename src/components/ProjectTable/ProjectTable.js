@@ -47,18 +47,33 @@ const ProjectTable = ({ table }) => {
                       className={tableValueClassName}
                     >
                       {key === 'name' ? (
-                        <Link
-                          className="project-data-card__table-link"
-                          to={body[key].link}
-                        >
-                          <Tooltip
-                            template={
-                              <TextTooltipTemplate text={body[key].value} />
-                            }
+                        body[key].href ? (
+                          <a
+                            href={body[key].href}
+                            className="project-data-card__table-link"
                           >
-                            {body[key].value}
-                          </Tooltip>
-                        </Link>
+                            <Tooltip
+                              template={
+                                <TextTooltipTemplate text={body[key].value} />
+                              }
+                            >
+                              {body[key].value}
+                            </Tooltip>
+                          </a>
+                        ) : (
+                          <Link
+                            className="project-data-card__table-link"
+                            to={body[key].link}
+                          >
+                            <Tooltip
+                              template={
+                                <TextTooltipTemplate text={body[key].value} />
+                              }
+                            >
+                              {body[key].value}
+                            </Tooltip>
+                          </Link>
+                        )
                       ) : (
                         <Tooltip
                           template={

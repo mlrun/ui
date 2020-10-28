@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux'
 
-import jobsStore from './jobReducer'
 import artifactsStore from './artifactReducer'
-import projectStore from './projectReducer'
-import notificationStore from './notificationReducer'
 import functionsStore from './functionReducer'
+import jobsStore from './jobReducer'
+import notificationStore from './notificationReducer'
+import nuclioStore from './nuclioReducer'
+import projectStore from './projectReducer'
 import workflowsStore from './workflowReducer'
 
 export default combineReducers({
@@ -12,6 +13,7 @@ export default combineReducers({
   functionsStore,
   jobsStore,
   notificationStore,
+  nuclioStore,
   projectStore,
   workflowsStore
 })
