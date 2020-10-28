@@ -4,12 +4,12 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'http://3.128.234.166:30080',
+      target: process.env.REACT_APP_MLRUN_API_URL,
       changeOrigin: true,
       onProxyReq: function(proxyReq, req, res) {
         proxyReq.setHeader(
           'x-v3io-session-key',
-          '266f6eb5-1548-402a-9c94-ae2e5e710b93'
+          process.env.REACT_APP_MLRUN_V3IO_ACCESS_KEY
         )
       }
     })
@@ -18,7 +18,7 @@ module.exports = function(app) {
   app.use(
     '/nuclio',
     createProxyMiddleware({
-      target: 'http://127.0.0.1:8070',
+      target: process.env.REACT_APP_NUCLIO_API_URL,
       pathRewrite: {
         '^/nuclio': ''
       },
@@ -29,7 +29,7 @@ module.exports = function(app) {
   app.use(
     '/function-catalog',
     createProxyMiddleware({
-      target: 'https://raw.githubusercontent.com/mlrun/functions/master',
+      target: process.env.REACT_APP_FUNCTION_CATALOG_URL,
       pathRewrite: {
         '^/function-catalog': ''
       },
