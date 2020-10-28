@@ -18,10 +18,10 @@ const Project = ({
   fetchProject,
   fetchProjectDataSets,
   fetchProjectFiles,
-  fetchProjectFunctions,
   fetchProjectJobs,
   fetchProjectModels,
   match,
+  nuclioStore,
   projectStore,
   removeProjectData
 }) => {
@@ -190,7 +190,6 @@ const Project = ({
       fetchNuclioFunctions={fetchNuclioFunctions}
       fetchProjectDataSets={fetchProjectDataSets}
       fetchProjectFiles={fetchProjectFiles}
-      fetchProjectFunctions={fetchProjectFunctions}
       fetchProjectJobs={fetchProjectJobs}
       fetchProjectModels={fetchProjectModels}
       handleEditProject={handleEditProject}
@@ -203,6 +202,7 @@ const Project = ({
       links={links}
       match={match}
       projectStore={projectStore}
+      nuclioStore={nuclioStore}
       ref={inputRef}
       setIsPopupDialogOpen={setIsPopupDialogOpen}
       statusClassName={statusClassName}
@@ -214,7 +214,13 @@ Project.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(projectStore => projectStore, {
-  ...projectsAction,
-  ...nuclioActions
-})(Project)
+export default connect(
+  (projectStore, nuclioStore) => ({
+    ...projectStore,
+    ...nuclioStore
+  }),
+  {
+    ...projectsAction,
+    ...nuclioActions
+  }
+)(Project)

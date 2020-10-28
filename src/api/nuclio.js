@@ -1,10 +1,10 @@
 import { nuclioHttpClient } from '../httpClient'
 
 export default {
-  getFunctions: (project, name) => {
+  getFunctions: project => {
     return nuclioHttpClient.get('/api/functions', {
       headers: {
-        'x-nuclio-project-name': 'default'
+        'x-nuclio-project-name': project
       }
     })
   }

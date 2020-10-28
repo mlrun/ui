@@ -23,7 +23,6 @@ const ProjectView = React.forwardRef(
       fetchNuclioFunctions,
       fetchProjectDataSets,
       fetchProjectFiles,
-      fetchProjectFunctions,
       fetchProjectJobs,
       fetchProjectModels,
       handleEditProject,
@@ -35,6 +34,7 @@ const ProjectView = React.forwardRef(
       launchIDEOptions,
       links,
       match,
+      nuclioStore,
       projectStore,
       setIsPopupDialogOpen,
       statusClassName
@@ -123,7 +123,19 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="general-info__links">
                 <div className="general-info__links-label">Quick Links</div>
-                {links.map(({ label, link }) => {
+                {links.map(({ label, link, externalLink }) => {
+                  if (externalLink) {
+                    return (
+                      <a
+                        href={link}
+                        className="general-info__links-link"
+                        key={label}
+                      >
+                        {label}
+                      </a>
+                    )
+                  }
+
                   return (
                     <Link
                       key={label}
@@ -183,8 +195,7 @@ const ProjectView = React.forwardRef(
                 />
                 <ProjectFunctions
                   fetchNuclioFunctions={fetchNuclioFunctions}
-                  fetchProjectFunctions={fetchProjectFunctions}
-                  functionsStore={projectStore.project.functions}
+                  functionsStore={nuclioStore}
                   match={match}
                 />
               </div>
@@ -213,7 +224,6 @@ ProjectView.propTypes = {
   editProject: PropTypes.shape({}).isRequired,
   fetchProjectDataSets: PropTypes.func.isRequired,
   fetchProjectFiles: PropTypes.func.isRequired,
-  fetchProjectFunctions: PropTypes.func.isRequired,
   fetchProjectJobs: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
@@ -225,6 +235,7 @@ ProjectView.propTypes = {
   launchIDEOptions: PropTypes.array.isRequired,
   links: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,
+  nuclioStore: PropTypes.shape({}).isRequired,
   projectStore: PropTypes.shape({}).isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   statusClassName: PropTypes.string.isRequired

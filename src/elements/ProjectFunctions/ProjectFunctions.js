@@ -3,85 +3,93 @@ import PropTypes from 'prop-types'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-const ProjectFunctions = ({
-  fetchNuclioFunctions,
-  fetchProjectFunctions,
-  functionsStore,
-  match
-}) => {
+const ProjectFunctions = ({ fetchNuclioFunctions, functionsStore, match }) => {
   useEffect(() => {
-    fetchProjectFunctions(match.params.projectName)
-  }, [match.params.projectName, fetchProjectFunctions])
-
-  useEffect(() => {
-    fetchNuclioFunctions()
-  }, [fetchNuclioFunctions])
+    fetchNuclioFunctions(match.params.projectName)
+  }, [fetchNuclioFunctions, match.params.projectName])
 
   const functions = useMemo(() => {
-    if (functionsStore.data) {
-      const functionsCount = functionsStore.data.length
+    if (functionsStore.functions.length > 0) {
+      const functionsRunning = functionsStore.functions.reduce(
+        (prev, curr) =>
+          !curr.spec.disable && curr.status.state === 'ready'
+            ? (prev += 1)
+            : prev,
+        0
+      )
+      const functionsFailed = functionsStore.functions.reduce(
+        (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
+        0
+      )
 
       return {
-        data: {
-          value: functionsCount,
-          label: 'ML',
-          className: 'default',
-          link: `/projects/${match.params.projectName}/functions`
+        running: {
+          value: functionsRunning,
+          label: 'Running functions',
+          className: 'running',
+          href: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions`
+        },
+        failed: {
+          value: functionsFailed,
+          label: 'Failed',
+          className: 'failed',
+          href: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions`
         }
       }
     }
   }, [functionsStore, match.params.projectName])
 
   const functionsTable = useMemo(() => {
-    if (functionsStore.data) {
+    if (functionsStore.functions.length > 0) {
       const functionsTableHeaders = [
         {
           value: 'Name',
           className: 'table-cell_big'
         },
-        { value: 'Type', className: 'table-cell_small' },
         { value: 'Status', className: 'table-cell_small' }
       ]
 
-      const functionsTableBody = functionsStore.data.slice(0, 5).map(func => {
-        return {
-          name: {
-            value: func.metadata.name,
-            link: `/projects/${match.params.projectName}/functions/${func.metadata.hash}/info`,
-            className: 'table-cell_big'
-          },
-          type: {
-            value: func.metadata.kind ?? '',
-            class: 'project-data-card__table-cell table-cell_small'
-          },
-          status: {
-            value: func?.status?.state ?? '',
-            className: 'table-cell_small'
+      const functionsTableBody = functionsStore.functions
+        .slice(0, 5)
+        .map(func => {
+          return {
+            name: {
+              value: func.metadata.name,
+              href: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions/${func.metadata.name}/code`,
+              className: 'table-cell_big'
+            },
+            status: {
+              value: func?.status?.state ?? '',
+              className: `table-cell_small status_${func?.status?.state}`
+            }
           }
-        }
-      })
+        })
 
       return {
         header: functionsTableHeaders,
         body: functionsTableBody
       }
     }
-  }, [functionsStore, match.params.projectName])
+  }, [functionsStore.functions, match.params.projectName])
 
   return (
     <ProjectDataCard
-      title="Real-Time functions"
-      dataCard={functionsStore}
-      link={`/projects/${match.params.projectName}/functions`}
+      dataCard={{
+        data: functionsStore.functions,
+        error: functionsStore.error,
+        loading: functionsStore.loading
+      }}
+      href={`${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions`}
       match={match}
       statistics={functions}
       table={functionsTable}
+      title="Real-time functions"
     />
   )
 }
 
 ProjectFunctions.propTypes = {
-  fetchProjectFunctions: PropTypes.func.isRequired,
+  fetchNuclioFunctions: PropTypes.func.isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired
 }

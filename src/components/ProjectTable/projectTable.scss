@@ -49,6 +49,7 @@
 
       &.status {
         &_completed,
+        &_ready,
         &_running {
           color: $java;
         }
