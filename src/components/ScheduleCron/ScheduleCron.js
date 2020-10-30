@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import cronstrue from 'cronstrue'
 
 import Input from '../../common/Input/Input'
 import { ReactComponent as Alert } from '../../images/unsuccess_alert.svg'
@@ -16,7 +17,7 @@ const ScheduleCron = ({ cron, error, setCron, setEditMode }) => {
         <Alert className="error-icon" />
         {error}
       </div>
-      Note: all times are interpreted in UTC timezone
+      <p>Note: all times are interpreted in UTC timezone</p>
       <Input
         placeholder="10 * * * *"
         value={cron}
@@ -25,6 +26,11 @@ const ScheduleCron = ({ cron, error, setCron, setEditMode }) => {
         onFocus={setEditMode}
         type="text"
       />
+      <p>
+        {cronstrue.toString(cron, {
+          throwExceptionOnParseError: false
+        })}
+      </p>
       <div>
         You can use{' '}
         <a

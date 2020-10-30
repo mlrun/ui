@@ -26,14 +26,18 @@ export const generateTableHeaders = scheduled => {
       },
       {
         header: 'Type',
-        class: 'jobs_big'
+        class: 'jobs_medium'
       },
       {
         header: 'Created time',
-        class: 'jobs_big'
+        class: 'jobs_medium'
       },
       {
         header: 'Next run (Local TZ)',
+        class: 'jobs_big'
+      },
+      {
+        header: 'Schedule',
         class: 'jobs_big'
       },
       {
