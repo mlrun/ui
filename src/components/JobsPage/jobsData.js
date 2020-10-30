@@ -37,7 +37,7 @@ export const generateTableHeaders = scheduled => {
         class: 'jobs_big'
       },
       {
-        header: 'Schedule',
+        header: 'Schedule (UTC)',
         class: 'jobs_big'
       },
       {
