@@ -16,6 +16,7 @@ const ScheduleCron = ({ cron, error, setCron, setEditMode }) => {
         <Alert className="error-icon" />
         {error}
       </div>
+      Note: all times are interpreted in UTC timezone
       <Input
         placeholder="10 * * * *"
         value={cron}
