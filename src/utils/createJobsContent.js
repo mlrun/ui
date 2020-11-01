@@ -1,5 +1,6 @@
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
+import cronstrue from 'cronstrue'
 
 const createJobsContent = (content, groupedByWorkflow, scheduled) => {
   return content.map(contentItem => {
@@ -12,18 +13,22 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           },
           type: {
             value: contentItem.type,
-            class: 'jobs_big',
+            class: 'jobs_medium',
             type: 'type'
           },
           createdTime: {
             value: formatDatetime(contentItem.createdTime, 'Not yet started'),
-            class: 'jobs_big',
+            class: 'jobs_medium',
             type: 'date'
           },
           nextRun: {
             value: formatDatetime(contentItem.nextRun),
             class: 'jobs_big',
             type: 'date'
+          },
+          schedule: {
+            value: cronstrue.toString(contentItem.scheduled_object.schedule),
+            class: 'jobs_big'
           }
         }
       } else {
