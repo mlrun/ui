@@ -42,6 +42,7 @@ const ScheduleRecurring = ({
 
   return (
     <div className="recurring_container">
+      <p>Note: all times are interpreted in UTC timezone</p>
       <div className="repeat_container">
         <Select
           onClick={item => {
