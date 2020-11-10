@@ -10,7 +10,6 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-ENV MLRUN_NUCLIO_UI_URL="${MLRUN_NUCLIO_UI_URL:-http://localhost:8070}"
 RUN npm run build
 
 RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
@@ -20,14 +19,17 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
 FROM nginx:stable-alpine as production-stage
 
 COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY config.js.tmpl /usr/share/nginx/html/
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf.tmpl /etc/nginx/conf.d/
+COPY nginx/run_nginx /etc/nginx/
 EXPOSE 80
 
-ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:80}"
-ENV MLRUN_NUCLIO_API_URL="${MLRUN_NUCLIO_API_URL:-http://localhost:8070}"
-ENV MLRUN_NUCLIO_MODE="${MLRUN_NUCLIO_MODE:-disabled}"
-ENV MLRUN_V3IO_ACCESS_KEY="${MLRUN_V3IO_ACCESS_KEY:-\"\"}"
-ENV MLRUN_FUNCTION_CATALOG_URL="${MLRUN_FUNCTION_CATALOG_URL:-https://raw.githubusercontent.com/mlrun/functions/master}"
+ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:80}" \
+    MLRUN_FUNCTION_CATALOG_URL="${MLRUN_FUNCTION_CATALOG_URL:-https://raw.githubusercontent.com/mlrun/functions/master}" \
+    MLRUN_NUCLIO_API_URL="${MLRUN_NUCLIO_API_URL:-http://localhost:8070}" \
+    MLRUN_NUCLIO_MODE="${MLRUN_NUCLIO_MODE:-disabled}" \
+    MLRUN_NUCLIO_UI_URL="${MLRUN_NUCLIO_UI_URL:-http://localhost:8070}" \
+    MLRUN_V3IO_ACCESS_KEY="${MLRUN_V3IO_ACCESS_KEY:-\"\"}"
 
-CMD ["/bin/sh", "-c", "envsubst '${MLRUN_API_PROXY_URL} ${MLRUN_NUCLIO_API_URL} ${MLRUN_NUCLIO_UI_URL} ${MLRUN_NUCLIO_MODE} ${MLRUN_V3IO_ACCESS_KEY} ${MLRUN_FUNCTION_CATALOG_URL}' < /etc/nginx/conf.d/nginx.conf.tmpl > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'"]
+CMD ["/bin/sh", "-c", "/etc/nginx/run_nginx"]

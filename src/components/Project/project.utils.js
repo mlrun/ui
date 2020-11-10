@@ -43,7 +43,7 @@ export const getLinks = match => [
   },
   {
     label: 'Real-time functions',
-    link: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions`,
+    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`,
     externalLink: true
   }
 ]
