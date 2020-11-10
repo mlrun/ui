@@ -50,7 +50,7 @@ jobs:
       with:
         node-version: '12'
     - name: Docker login
-      run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ secrets.CR_USERNAME }} --password-stdin
+      run: echo ${{ secrets.CR_PAT }} | docker login ${{ steps.computed_params.outputs.mlrun_docker_registry }} -u ${{ secrets.CR_USERNAME }} --password-stdin
     - name: Build image
       run: |
         MLRUN_DOCKER_REGISTRY=${{ steps.computed_params.outputs.mlrun_docker_registry }} \
@@ -58,4 +58,4 @@ jobs:
         MLRUN_DOCKER_TAG=${{ steps.computed_params.outputs.mlrun_version }} \
         npm run docker
     - name: Push image
-      run: docker push ${{ steps.computed_params.outputs.mlrun_docker_registry }}/${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }}
+      run: docker push ${{ steps.computed_params.outputs.mlrun_docker_registry }}${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }}
