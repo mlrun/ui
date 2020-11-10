@@ -113,7 +113,7 @@ const Search = ({
                     match ? `<b>${match}</b>` : match
                   )
                 }}
-              ></li>
+              />
             )
           })}
         </ul>

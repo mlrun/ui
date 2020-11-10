@@ -1,0 +1,37 @@
+@import '../../scss/colors';
+@import '../../scss/shadows';
+
+.breadcrumbs__dropdown {
+  position: absolute;
+  top: 30px;
+  left: 80px;
+  z-index: 5;
+  min-width: 130px;
+  padding: 12px 0;
+  font-size: 15px;
+  line-height: 18px;
+  background: $white;
+  box-shadow: $dropdownShadow;
+
+  &-item {
+    display: block;
+    padding: 7px 16px;
+
+    &:hover {
+      background-color: $alabaster;
+      cursor: pointer;
+    }
+  }
+
+  .dropdown__search {
+    display: flex;
+    align-items: center;
+    margin: 0 9px;
+    border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+
+    &-input {
+      padding: 12px 0 10px;
+      border: none;
+    }
+  }
+}
