@@ -6,33 +6,56 @@ on:
     - development
 #    - '[0-9]+.[0-9]+.x'
 
+  workflow_dispatch:
+    inputs:
+      docker_registry:
+        description: 'Docker registry to push images to (default: ghcr.io/, use registry.hub.docker.com/ for docker hub)'
+        required: true
+        default: 'ghcr.io/'
+      docker_repo:
+        description: 'Docker repo to push images to (default: lowercase github repository owner name)'
+        required: false
+        default: ''
+
 jobs:
   build-images:
     name: Build and push ui image
     runs-on: ubuntu-latest
 
     # let's not run this on every fork, change to your fork when developing
-    if: github.repository == 'mlrun/ui'
+    if: github.repository == 'mlrun/ui' || github.event_name == 'workflow_dispatch'
 
     steps:
     - uses: actions/checkout@v2
     - name: Install curl and jq
       run: sudo apt-get install curl jq
-    - name: Set MLRUN_DOCKER_REPO env var
-      run: echo "::set-env name=MLRUN_DOCKER_REPO::$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')"
-    - name: Set LATEST_VERSION env var
-      run: echo "::set-env name=LATEST_VERSION::$(curl -sf https://pypi.org/pypi/mlrun/json | jq -r '.info.version')"
-    - name: Set GIT_HASH env var
-      run: echo "::set-env name=GIT_HASH::$(git rev-parse --short $GITHUB_SHA)"
-    - name: Set MLRUN_DOCKER_TAG env var
-      run: echo "::set-env name=MLRUN_DOCKER_TAG::$(echo $LATEST_VERSION-$GIT_HASH)"
+    - name: Extract git hashes and latest version
+      id: git_info
+      run: |
+        echo "::set-output name=mlrun_commit_hash::$(git rev-parse --short $GITHUB_SHA)"
+        echo "::set-output name=latest_version::$(curl -sf https://pypi.org/pypi/mlrun/json | jq -r '.info.version')"
+    - name: Set computed versions params
+      id: computed_params
+      run: |
+        echo "::set-output name=mlrun_version::${{ steps.git_info.outputs.latest_version }}-${{ steps.git_info.outputs.mlrun_commit_hash }}"
+        echo "::set-output name=mlrun_docker_repo::$( \
+          input_docker_repo=${{ github.event.inputs.docker_repo }} && \
+          default_docker_repo=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]') && \
+          echo ${input_docker_repo:-`echo $default_docker_repo`})"
+        echo "::set-output name=mlrun_docker_registry::$( \
+          input_docker_registry=${{ github.event.inputs.docker_registry }} && \
+          echo ${input_docker_registry:-ghcr.io/})"
     - name: Setup Node.js 12
       uses: actions/setup-node@v1
       with:
         node-version: '12'
     - name: Docker login
-      run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ secrets.CR_USERNAME }} --password-stdin
+      run: echo ${{ secrets.CR_PAT }} | docker login ${{ steps.computed_params.outputs.mlrun_docker_registry }} -u ${{ secrets.CR_USERNAME }} --password-stdin
     - name: Build image
-      run: MLRUN_DOCKER_REGISTRY=ghcr.io/ MLRUN_DOCKER_REPO="$MLRUN_DOCKER_REPO" MLRUN_DOCKER_TAG="$MLRUN_DOCKER_TAG" npm run docker
+      run: |
+        MLRUN_DOCKER_REGISTRY=${{ steps.computed_params.outputs.mlrun_docker_registry }} \
+        MLRUN_DOCKER_REPO=${{ steps.computed_params.outputs.mlrun_docker_repo }} \
+        MLRUN_DOCKER_TAG=${{ steps.computed_params.outputs.mlrun_version }} \
+        npm run docker
     - name: Push image
-      run: docker push ghcr.io/"$MLRUN_DOCKER_REPO"/mlrun-ui:"$MLRUN_DOCKER_TAG"
+      run: docker push ${{ steps.computed_params.outputs.mlrun_docker_registry }}${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }}
