@@ -9,6 +9,7 @@ import './breadcrumbsDropdown.scss'
 const BreadcrumbsDropdown = ({
   link,
   list,
+  onClick,
   screen,
   searchOnChange,
   withSearch
@@ -40,6 +41,7 @@ const BreadcrumbsDropdown = ({
             to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}`}
             key={listItem.id}
             className="breadcrumbs__dropdown-item"
+            onClick={onClick}
           >
             {listItem.label}
           </Link>
@@ -50,6 +52,7 @@ const BreadcrumbsDropdown = ({
 }
 
 BreadcrumbsDropdown.defaultProps = {
+  onClick: () => {},
   screen: '',
   searchOnChange: () => {},
   withSearch: false
@@ -58,6 +61,7 @@ BreadcrumbsDropdown.defaultProps = {
 BreadcrumbsDropdown.propTypes = {
   link: PropTypes.string.isRequired,
   list: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  onClick: PropTypes.func,
   screen: PropTypes.string,
   searchOnChange: PropTypes.func,
   withSearch: PropTypes.bool

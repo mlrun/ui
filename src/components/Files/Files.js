@@ -63,6 +63,7 @@ const Files = ({
     return () => {
       setFiles([])
       removeFiles()
+      setSelectedFile({})
     }
   }, [fetchData, match.params.projectName, removeFiles])
 
@@ -89,6 +90,8 @@ const Files = ({
 
         setSelectedFile({ item: file })
       }
+    } else {
+      setSelectedFile({})
     }
   }, [artifactsStore.files, history, match.params])
 

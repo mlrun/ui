@@ -120,6 +120,18 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
     }
   }
 
+  const handleSelectDropdownItem = separatorRef => {
+    if (showProjectsList) {
+      setProjectsList(false)
+    }
+
+    if (showScreensList) {
+      setShowScreensList(false)
+    }
+
+    separatorRef.current.classList.remove('breadcrumbs__separator_active')
+  }
+
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
       <ul className="breadcrumbs__list">
@@ -171,13 +183,18 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
                   {label}
                 </Link>
                 {showScreensList && urlItems[i + 1] === screen && (
-                  <BreadcrumbsDropdown link={to} list={projectScreens} />
+                  <BreadcrumbsDropdown
+                    link={to}
+                    list={projectScreens}
+                    onClick={() => handleSelectDropdownItem(separatorRef)}
+                  />
                 )}
                 {showProjectsList &&
                   urlItems[i + 1] === match.params.projectName && (
                     <BreadcrumbsDropdown
                       link={to}
                       list={projectsList}
+                      onClick={() => handleSelectDropdownItem(separatorRef)}
                       screen={screen}
                       searchOnChange={setSearchValue}
                       withSearch
