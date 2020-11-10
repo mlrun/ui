@@ -44,7 +44,7 @@ const ProjectView = React.forwardRef(
     return (
       <>
         <div className="project__header">
-          <Breadcrumbs enableNavigation match={match} />
+          <Breadcrumbs match={match} />
         </div>
         {projectStore.project.loading ? (
           <Loader />

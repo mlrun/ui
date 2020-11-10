@@ -18,13 +18,7 @@ import projectsAction from '../../actions/projects'
 
 import './breadcrums.scss'
 
-const Breadcrumbs = ({
-  enableNavigation,
-  match,
-  onClick,
-  projectStore,
-  fetchProjects
-}) => {
+const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
   const [projectsList, setProjectsList] = useState(
@@ -64,36 +58,29 @@ const Breadcrumbs = ({
   )
 
   useEffect(() => {
-    if (enableNavigation) {
-      window.addEventListener('click', handleCloseDropdown)
+    window.addEventListener('click', handleCloseDropdown)
 
-      return () => {
-        window.removeEventListener('click', handleCloseDropdown)
-      }
+    return () => {
+      window.removeEventListener('click', handleCloseDropdown)
     }
-  }, [enableNavigation, handleCloseDropdown])
+  }, [handleCloseDropdown])
 
   useEffect(() => {
-    if (enableNavigation) {
-      if (projectStore.projects.length === 0) {
-        fetchProjects().then(projects =>
-          setProjectsList(generateProjectsList(projects))
-        )
-      }
+    if (projectStore.projects.length === 0) {
+      fetchProjects()
     }
-  }, [
-    enableNavigation,
-    fetchProjects,
-    projectStore.projects.length,
-    projectsList.length
-  ])
+  }, [fetchProjects, projectStore.projects.length, projectsList.length])
 
   useEffect(() => {
     if (searchValue.length > 0) {
       setProjectsList(state =>
         state.filter(project => project.id.startsWith(searchValue))
       )
-    } else if (searchValue.length === 0 && projectsList.length === 0) {
+    } else if (
+      searchValue.length === 0 &&
+      projectsList.length === 0 &&
+      projectStore.projects.length > 0
+    ) {
       setProjectsList(generateProjectsList(projectStore.projects))
     }
   }, [projectStore.projects, projectsList.length, searchValue])
@@ -110,7 +97,7 @@ const Breadcrumbs = ({
           'breadcrumbs__separator_active'
         )
       ) {
-        activeSeparator.classList.toggle('breadcrumbs__separator_active')
+        activeSeparator.classList.remove('breadcrumbs__separator_active')
       }
 
       if (nextItem === screen) {
@@ -202,7 +189,6 @@ const Breadcrumbs = ({
                 className={separatorClassNames}
                 ref={separatorRef}
                 onClick={() =>
-                  enableNavigation &&
                   handleSeparatorClick(urlItems[i + 1], separatorRef)
                 }
               >

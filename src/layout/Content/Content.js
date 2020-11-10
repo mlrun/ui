@@ -193,7 +193,7 @@ const Content = ({
   return (
     <>
       <div className="content__header">
-        <Breadcrumbs enableNavigation match={match} onClick={handleCancel} />
+        <Breadcrumbs match={match} onClick={handleCancel} />
         <PageActionsMenu
           match={match}
           pageData={pageData}

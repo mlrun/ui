@@ -49,9 +49,18 @@ const BreadcrumbsDropdown = ({
   )
 }
 
+BreadcrumbsDropdown.defaultProps = {
+  screen: '',
+  searchOnChange: () => {},
+  withSearch: false
+}
+
 BreadcrumbsDropdown.propTypes = {
   link: PropTypes.string.isRequired,
-  list: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  list: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  screen: PropTypes.string,
+  searchOnChange: PropTypes.func,
+  withSearch: PropTypes.bool
 }
 
 export default BreadcrumbsDropdown
