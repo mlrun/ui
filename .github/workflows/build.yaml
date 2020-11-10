@@ -58,4 +58,4 @@ jobs:
         MLRUN_DOCKER_TAG=${{ steps.computed_params.outputs.mlrun_version }} \
         npm run docker
     - name: Push image
-      run: docker push ghcr.io/${{ steps.computed_params.outputs.mlrun_docker_registry }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }}
+      run: docker push ${{ steps.computed_params.outputs.mlrun_docker_registry }}/${{ steps.computed_params.outputs.mlrun_docker_repo }}/mlrun-ui:${{ steps.computed_params.outputs.mlrun_version }}
