@@ -27,13 +27,13 @@ const ProjectFunctions = ({ fetchNuclioFunctions, functionsStore, match }) => {
           value: functionsRunning,
           label: 'Running functions',
           className: 'running',
-          href: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions`
+          href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
         },
         failed: {
           value: functionsFailed,
           label: 'Failed',
           className: 'failed',
-          href: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions`
+          href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
         }
       }
     }
@@ -55,7 +55,7 @@ const ProjectFunctions = ({ fetchNuclioFunctions, functionsStore, match }) => {
           return {
             name: {
               value: func.metadata.name,
-              href: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions/${func.metadata.name}`,
+              href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions/${func.metadata.name}`,
               className: 'table-cell_big'
             },
             status: {
@@ -79,7 +79,7 @@ const ProjectFunctions = ({ fetchNuclioFunctions, functionsStore, match }) => {
         error: functionsStore.error,
         loading: functionsStore.loading
       }}
-      href={`${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions`}
+      href={`${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`}
       match={match}
       statistics={functions}
       table={functionsTable}
