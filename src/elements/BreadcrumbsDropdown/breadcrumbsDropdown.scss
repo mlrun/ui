@@ -1,10 +1,11 @@
 @import '../../scss/colors';
 @import '../../scss/shadows';
+@import '../../scss/borders';
 
 .breadcrumbs__dropdown {
   position: absolute;
   top: 30px;
-  left: 80px;
+  left: 14px;
   z-index: 5;
   min-width: 130px;
   padding: 12px 0;
@@ -15,22 +16,29 @@
 
   &-item {
     display: block;
+    max-width: 300px;
     padding: 7px 16px;
 
     &:hover {
       background-color: $alabaster;
       cursor: pointer;
     }
+
+    &_selected {
+      font-weight: bold;
+    }
   }
 
   .dropdown__search {
     display: flex;
     align-items: center;
-    margin: 0 9px;
-    border-bottom: 1px solid rgba(72, 63, 86, 0.12);
+    margin: 0 9px 4px;
+    border-bottom: $dividerBorder;
 
     &-input {
-      padding: 12px 0 10px;
+      width: 100%;
+      min-width: 140px;
+      padding: 12px 7px 10px;
       border: none;
     }
   }

@@ -34,6 +34,7 @@
     display: flex;
     margin: 0 8px;
     color: $topaz;
+    transition: transform 0.2s linear;
     user-select: none;
 
     &_tumbler {

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
@@ -12,6 +13,7 @@ const BreadcrumbsDropdown = ({
   onClick,
   screen,
   searchOnChange,
+  selectedItem,
   withSearch
 }) => {
   return (
@@ -27,12 +29,18 @@ const BreadcrumbsDropdown = ({
           <SearchIcon />
         </div>
       )}
-      {list.map(listItem =>
-        listItem.link ? (
+      {list.map(listItem => {
+        const dropdownItemClassNames = classnames(
+          'breadcrumbs__dropdown-item',
+          'data-ellipsis',
+          selectedItem === listItem.id && 'breadcrumbs__dropdown-item_selected'
+        )
+
+        return listItem.link ? (
           <a
             href={listItem.link}
             key={listItem.id}
-            className="breadcrumbs__dropdown-item"
+            className={dropdownItemClassNames}
           >
             {listItem.label}
           </a>
@@ -40,13 +48,13 @@ const BreadcrumbsDropdown = ({
           <Link
             to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}`}
             key={listItem.id}
-            className="breadcrumbs__dropdown-item"
+            className={dropdownItemClassNames}
             onClick={onClick}
           >
             {listItem.label}
           </Link>
         )
-      )}
+      })}
     </div>
   )
 }
@@ -64,6 +72,7 @@ BreadcrumbsDropdown.propTypes = {
   onClick: PropTypes.func,
   screen: PropTypes.string,
   searchOnChange: PropTypes.func,
+  selectedItem: PropTypes.string.isRequired,
   withSearch: PropTypes.bool
 }
 

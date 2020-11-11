@@ -76,14 +76,10 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
       setProjectsList(state =>
         state.filter(project => project.id.startsWith(searchValue))
       )
-    } else if (
-      searchValue.length === 0 &&
-      projectsList.length === 0 &&
-      projectStore.projects.length > 0
-    ) {
+    } else if (searchValue.length === 0 && projectStore.projects.length > 0) {
       setProjectsList(generateProjectsList(projectStore.projects))
     }
-  }, [projectStore.projects, projectsList.length, searchValue])
+  }, [projectStore.projects, searchValue])
 
   const handleSeparatorClick = (nextItem, separatorRef) => {
     if (nextItem === screen || nextItem === match.params.projectName) {
@@ -182,11 +178,21 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
                 <Link to={to} onClick={onClick}>
                   {label}
                 </Link>
+              </li>,
+              <li key={i} className="breadcrumbs__item">
+                <Arrow
+                  className={separatorClassNames}
+                  ref={separatorRef}
+                  onClick={() =>
+                    handleSeparatorClick(urlItems[i + 1], separatorRef)
+                  }
+                />
                 {showScreensList && urlItems[i + 1] === screen && (
                   <BreadcrumbsDropdown
                     link={to}
                     list={projectScreens}
                     onClick={() => handleSelectDropdownItem(separatorRef)}
+                    selectedItem={screen}
                   />
                 )}
                 {showProjectsList &&
@@ -197,19 +203,10 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
                       onClick={() => handleSelectDropdownItem(separatorRef)}
                       screen={screen}
                       searchOnChange={setSearchValue}
+                      selectedItem={match.params.projectName}
                       withSearch
                     />
                   )}
-              </li>,
-              <li
-                key={i}
-                className={separatorClassNames}
-                ref={separatorRef}
-                onClick={() =>
-                  handleSeparatorClick(urlItems[i + 1], separatorRef)
-                }
-              >
-                <Arrow />
               </li>
             ]
           }
