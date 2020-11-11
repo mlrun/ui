@@ -118,7 +118,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
 
   const handleSelectDropdownItem = separatorRef => {
     if (showProjectsList) {
-      setProjectsList(false)
+      setShowProjectsList(false)
     }
 
     if (showScreensList) {
