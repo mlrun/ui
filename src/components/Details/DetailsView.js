@@ -83,12 +83,14 @@ const DetailsView = ({
             />
           )}
           {pageData.page === ARTIFACTS_PAGE && (
-            <Download
-              fileName={selectedItem.db_key || selectedItem.key}
-              path={selectedItem.target_path.path}
-              schema={selectedItem.target_path.schema}
-              user={selectedItem.producer?.owner}
-            />
+            <Tooltip template={<TextTooltipTemplate text="Download" />}>
+              <Download
+                fileName={selectedItem.db_key || selectedItem.key}
+                path={selectedItem.target_path.path}
+                schema={selectedItem.target_path.schema}
+                user={selectedItem.producer?.owner}
+              />
+            </Tooltip>
           )}
           <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
           <Link
