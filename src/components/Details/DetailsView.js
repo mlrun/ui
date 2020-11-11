@@ -50,61 +50,57 @@ const DetailsView = ({
 }) => {
   return (
     <div className="table__item">
-      <div className="item-header">
-        <div className="item-header__data">
-          <h3>{selectedItem.name || selectedItem.db_key}</h3>
-          <span>
-            {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
-              ? formatDatetime(selectedItem?.startTime, 'Not yet started')
-              : formatDatetime(new Date(selectedItem?.updated), 'N/A')}
-            {selectedItem.state && (
-              <Tooltip
-                template={
-                  <TextTooltipTemplate
-                    text={`${selectedItem.state[0].toUpperCase()}${selectedItem.state.slice(
-                      1
-                    )}`}
-                  />
-                }
-              >
-                <i className={selectedItem.state} />
-              </Tooltip>
-            )}
-          </span>
-        </div>
-        <div className="item-header__buttons">
-          {match.params.tab?.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
-            <Select
-              options={iterationOptions}
-              label="Iteration:"
-              key="Iteration"
-              selectedId={iteration}
-              onClick={setIteration}
-            />
-          )}
-          {pageData.page === ARTIFACTS_PAGE && (
-            <Tooltip template={<TextTooltipTemplate text="Download" />}>
-              <Download
-                fileName={selectedItem.db_key || selectedItem.key}
-                path={selectedItem.target_path.path}
-                schema={selectedItem.target_path.schema}
-                user={selectedItem.producer?.owner}
-              />
+      <div className="item-header__data">
+        <h3>{selectedItem.name || selectedItem.db_key}</h3>
+        <span>
+          {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
+            ? formatDatetime(selectedItem?.startTime, 'Not yet started')
+            : formatDatetime(new Date(selectedItem?.updated), 'N/A')}
+          {selectedItem.state && (
+            <Tooltip
+              template={
+                <TextTooltipTemplate
+                  text={`${selectedItem.state[0].toUpperCase()}${selectedItem.state.slice(
+                    1
+                  )}`}
+                />
+              }
+            >
+              <i className={selectedItem.state} />
             </Tooltip>
           )}
-          <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
-          <Link
-            data-testid="details-close-btn"
-            to={`/projects/${match.params.projectName}/${
-              pageData.pageKind
-                ? pageData.pageKind
-                : pageData.page.toLowerCase()
-            }${pageData.page === JOBS_PAGE ? `/${match.params.jobTab}` : ''}`}
-            onClick={handleCancel}
-          >
-            <Close />
-          </Link>
-        </div>
+        </span>
+      </div>
+      <div className="item-header__buttons">
+        {match.params.tab?.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
+          <Select
+            options={iterationOptions}
+            label="Iteration:"
+            key="Iteration"
+            selectedId={iteration}
+            onClick={setIteration}
+          />
+        )}
+        {pageData.page === ARTIFACTS_PAGE && (
+          <Tooltip template={<TextTooltipTemplate text="Download" />}>
+            <Download
+              fileName={selectedItem.db_key || selectedItem.key}
+              path={selectedItem.target_path.path}
+              schema={selectedItem.target_path.schema}
+              user={selectedItem.producer?.owner}
+            />
+          </Tooltip>
+        )}
+        <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
+        <Link
+          data-testid="details-close-btn"
+          to={`/projects/${match.params.projectName}/${
+            pageData.pageKind ? pageData.pageKind : pageData.page.toLowerCase()
+          }${pageData.page === JOBS_PAGE ? `/${match.params.jobTab}` : ''}`}
+          onClick={handleCancel}
+        >
+          <Close />
+        </Link>
       </div>
       <ul className="item-menu">
         {detailsMenu.map(link => (

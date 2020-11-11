@@ -21,9 +21,6 @@
 
     .item {
       &-header {
-        display: flex;
-        justify-content: space-between;
-
         &__data {
           h3 {
             margin: 27px 24px 10px;
@@ -45,6 +42,12 @@
         }
 
         &__buttons {
+          align-self: flex-end;
+          margin-top: -70px;
+          position: sticky;
+          top: -5px;
+          z-index: 5;
+
           display: flex;
           align-items: center;
 
@@ -62,10 +65,14 @@
       &-menu {
         display: flex;
         align-items: center;
-        margin: 0;
-        padding: 29px 0 0;
+        padding: 7px 0 0;
+        margin: 29px 0 0;
         list-style-type: none;
         border-bottom: $tableBorder;
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 4;
 
         .menu-tab {
           padding: 8px 24px;
