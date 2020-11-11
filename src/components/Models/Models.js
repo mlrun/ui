@@ -63,6 +63,7 @@ const Models = ({
     return () => {
       setModels([])
       removeModels()
+      setSelectedModel({})
     }
   }, [fetchData, match.params.projectName, removeModels])
 
@@ -89,6 +90,8 @@ const Models = ({
 
         setSelectedModel({ item: model })
       }
+    } else {
+      setSelectedModel({})
     }
   }, [match.params, artifactsStore.artifacts, history, artifactsStore.models])
 

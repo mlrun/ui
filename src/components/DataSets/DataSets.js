@@ -64,6 +64,7 @@ const DataSets = ({
     return () => {
       setDataSets([])
       removeDataSets()
+      setSelectedDataSet({})
     }
   }, [fetchData, match.params.projectName, removeDataSets])
 
@@ -90,6 +91,8 @@ const DataSets = ({
 
         setSelectedDataSet({ item: dataSet })
       }
+    } else {
+      setSelectedDataSet({})
     }
   }, [match.params, artifactsStore.artifacts, history, artifactsStore.dataSets])
 
