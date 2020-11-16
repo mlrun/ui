@@ -112,21 +112,7 @@ const ProjectView = React.forwardRef(
                           projectStore.project.data.description}
                       </p>
                     </div>
-                  )
-                  // <Input
-                  //   floatingLabel
-                  //   focused={true}
-                  //   label="Project summary"
-                  //   onChange={handleOnChangeProject}
-                  //   onKeyDown={handleOnKeyDown}
-                  //   ref={ref}
-                  //   type="text"
-                  //   value={
-                  //     editProject.description.value ??
-                  //     projectStore.project.data.description
-                  //   }
-                  // />
-                  }
+                  )}
                 </div>
               </div>
               <div className="general-info__divider" />
