@@ -3,10 +3,19 @@ import PropTypes from 'prop-types'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-const ProjectFunctions = ({ fetchNuclioFunctions, functionsStore, match }) => {
+const ProjectFunctions = ({
+  fetchApiGateways,
+  fetchNuclioFunctions,
+  functionsStore,
+  match
+}) => {
   useEffect(() => {
     fetchNuclioFunctions(match.params.projectName)
   }, [fetchNuclioFunctions, match.params.projectName])
+
+  useEffect(() => {
+    fetchApiGateways(match.params.projectName)
+  }, [fetchApiGateways, match.params.projectName])
 
   const functions = useMemo(() => {
     if (functionsStore.functions.length > 0) {
@@ -32,8 +41,14 @@ const ProjectFunctions = ({ fetchNuclioFunctions, functionsStore, match }) => {
         failed: {
           value: functionsFailed,
           label: 'Failed',
-          className: 'failed',
+          className: functionsFailed > 0 ? 'failed' : 'default',
           href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
+        },
+        apiGateways: {
+          value: functionsStore.apiGateways,
+          label: 'API gateways',
+          className: 'running',
+          href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
         }
       }
     }
@@ -79,11 +94,12 @@ const ProjectFunctions = ({ fetchNuclioFunctions, functionsStore, match }) => {
         error: functionsStore.error,
         loading: functionsStore.loading
       }}
+      headerLink={`${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`}
       href={`${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`}
       match={match}
       statistics={functions}
       table={functionsTable}
-      title="Real-time functions"
+      title="Real-time functions (Nuclio)"
     />
   )
 }

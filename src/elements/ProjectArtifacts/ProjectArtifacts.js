@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { isEmpty } from 'lodash'
-
-import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
+import { Link } from 'react-router-dom'
 
 const ProjectArtifacts = ({
   artifacts,
@@ -14,23 +13,8 @@ const ProjectArtifacts = ({
     fetchArtifacts(match.params.projectName)
   }, [fetchArtifacts, match.params.projectName])
 
-  const generatedArtifacts = useMemo(() => {
-    if (artifacts.data) {
-      const artifactsCount = artifacts.data.length
-
-      return {
-        data: {
-          value: artifactsCount,
-          label: '',
-          className: 'default',
-          link: link
-        }
-      }
-    }
-  }, [artifacts.data, link])
-
   return (
-    <div className="project-data-card project-data-card_small">
+    <Link to={link} className="project-data-card project-data-card_small">
       <div className="project-data-card__header">
         <div className="project-data-card__header-text data-ellipsis">
           {title}
@@ -42,12 +26,16 @@ const ProjectArtifacts = ({
         ) : (
           !isEmpty(artifacts.data) && (
             <div className="project-data-card__statistics">
-              <ProjectStatistics statistics={generatedArtifacts} />
+              <div className="project-data-card__statistics-item">
+                <div className="project-data-card__statistics-value statistics_default">
+                  {artifacts.data.length}
+                </div>
+              </div>
             </div>
           )
         )}
       </div>
-    </div>
+    </Link>
   )
 }
 

@@ -144,36 +144,7 @@ iframe {
   }
 }
 
-.input {
-  &.active-input {
-    padding: 27px 17px 9px;
-  }
-
-  &__label {
-    position: absolute;
-    top: 9px;
-    left: 10px;
-    color: $topaz;
-    text-transform: capitalize;
-    background-color: transparent;
-    pointer-events: none;
-
-    &.active-label {
-      top: 10px;
-      font-size: 10px;
-    }
-
-    &-floating {
-      position: absolute;
-      top: 19px;
-      left: 17px;
-      color: $topaz;
-      transition: 300ms ease all;
-    }
-  }
-}
-
-input {
+input, textarea {
   overflow-x: hidden;
   font-weight: normal;
   font-size: 15px;

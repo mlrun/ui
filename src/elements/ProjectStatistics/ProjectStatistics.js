@@ -5,6 +5,8 @@ import PropTypes from 'prop-types'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
+
 import './projectStatistics.scss'
 
 const ProjectStatistics = ({ statistics }) => {
@@ -20,6 +22,7 @@ const ProjectStatistics = ({ statistics }) => {
               className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
             >
               {statistics[key].value}
+              <Arrow className="project-data-card__statistics-arrow" />
             </div>
             <div className="project-data-card__statistics-label">
               <Tooltip
@@ -38,6 +41,7 @@ const ProjectStatistics = ({ statistics }) => {
               className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
             >
               {statistics[key].value}
+              <Arrow className="project-data-card__statistics-arrow" />
             </div>
             <div className="project-data-card__statistics-label">
               <Tooltip

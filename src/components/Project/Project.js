@@ -14,6 +14,7 @@ import { launchIDEOptions, getLinks } from './project.utils'
 import './project.scss'
 
 const Project = ({
+  fetchApiGateways,
   fetchNuclioFunctions,
   fetchProject,
   fetchProjectDataSets,
@@ -95,9 +96,9 @@ const Project = ({
 
   const handleSetProjectData = useCallback(() => {
     const data = {
-      name: editProject.name.value || projectStore.project.data.name,
+      name: editProject.name.value ?? projectStore.project.data.name,
       description:
-        editProject.description.value || projectStore.project.data.description
+        editProject.description.value ?? projectStore.project.data.description
     }
 
     closeEditMode()
@@ -185,6 +186,7 @@ const Project = ({
 
   return (
     <ProjectView
+      fetchApiGateways={fetchApiGateways}
       createNewOptions={createNewOptions}
       editProject={editProject}
       fetchNuclioFunctions={fetchNuclioFunctions}
