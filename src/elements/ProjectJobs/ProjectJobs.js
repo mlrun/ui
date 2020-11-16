@@ -23,6 +23,7 @@ const ProjectJobs = ({ match, jobs, fetchProjectJobs }) => {
     <ProjectDataCard
       title="Jobs and workflows"
       dataCard={jobs}
+      headerLink={`/projects/${match.params.projectName}/jobs/monitor`}
       link={`/projects/${match.params.projectName}/jobs/monitor`}
       match={match}
       statistics={jobsData.statistics}

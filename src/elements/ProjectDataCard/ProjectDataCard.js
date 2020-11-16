@@ -21,7 +21,7 @@ const ProjectDataCard = ({
     <div className="project-data-card">
       <div className="project-data-card__header">
         <div className="project-data-card__header-text data-ellipsis">
-          {title}
+          {href ? <a href={href}>{title}</a> : <Link to={link}>{title}</Link>}
         </div>
         {!isEmpty(dataCard.data) && (
           <div className="project-data-card__statistics">

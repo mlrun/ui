@@ -5,9 +5,26 @@
   &__statistics {
     display: flex;
 
+    &-arrow {
+      position: absolute;
+      top: 20px;
+      right: 5px;
+      display: none;
+    }
+
     &-link {
       width: 100%;
-      margin: 0 10px;
+      margin: 0 5px;
+      padding: 5px;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: $wildSand;
+
+        .project-data-card__statistics-arrow {
+          display: block;
+        }
+      }
     }
 
     &-item {
@@ -44,6 +61,7 @@
     }
 
     &-value {
+      width: 100%;
       font-weight: 300;
       font-size: 48px;
       line-height: 56px;

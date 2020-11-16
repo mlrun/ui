@@ -25,7 +25,7 @@ export const getJobsStatistics = (jobs, match) => {
       failed: {
         value: jobsFailed,
         label: 'Failed',
-        className: 'default',
+        className: jobsFailed > 0 ? 'failed' : 'default',
         link: `/projects/${match.params.projectName}/jobs/monitor`
       },
       scheduled: {

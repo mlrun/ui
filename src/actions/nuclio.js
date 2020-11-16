@@ -1,11 +1,39 @@
 import nuclioApi from '../api/nuclio'
 import {
+  FETCH_API_GATEWAYS_BEGIN,
+  FETCH_API_GATEWAYS_FAILURE,
+  FETCH_API_GATEWAYS_SUCCESS,
   FETCH_NUCLIO_FUNCTIONS_BEGIN,
   FETCH_NUCLIO_FUNCTIONS_FAILURE,
   FETCH_NUCLIO_FUNCTIONS_SUCCESS
 } from '../constants'
 
 const nuclioActions = {
+  fetchApiGateways: project => dispatch => {
+    dispatch(nuclioActions.fetchApiGatewaysBegin())
+
+    return nuclioApi
+      .getApiGateways(project)
+      .then(({ data }) => {
+        dispatch(
+          nuclioActions.fetchApiGatewaysSuccess(Object.keys(data).length)
+        )
+      })
+      .catch(error => {
+        dispatch(nuclioActions.fetchApiGatewaysFailure(error.message))
+      })
+  },
+  fetchApiGatewaysBegin: () => ({
+    type: FETCH_API_GATEWAYS_BEGIN
+  }),
+  fetchApiGatewaysFailure: error => ({
+    type: FETCH_API_GATEWAYS_FAILURE,
+    payload: error
+  }),
+  fetchApiGatewaysSuccess: apiGateways => ({
+    type: FETCH_API_GATEWAYS_SUCCESS,
+    payload: apiGateways
+  }),
   fetchNuclioFunctions: project => dispatch => {
     dispatch(nuclioActions.fetchNuclioFunctionsBegin())
 

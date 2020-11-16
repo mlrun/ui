@@ -42,8 +42,8 @@ const Input = React.forwardRef(
       inputIsFocused && floatingLabel && 'active-input',
       required && 'input_required'
     )
-
     const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
+
     useEffect(() => {
       if (input.current.value.length > 0) {
         setInputIsFocused(true)
@@ -60,6 +60,7 @@ const Input = React.forwardRef(
       } else {
         setInputIsFocused(false)
       }
+
       onChange(event.target.value)
     }
 
@@ -114,21 +115,22 @@ const Input = React.forwardRef(
   }
 )
 Input.defaultProps = {
+  className: '',
   disabled: false,
   floatingLabel: false,
   focused: false,
-  iconClass: null,
+  iconClass: '',
   infoLabel: false,
   inputIcon: null,
-  label: null,
+  label: '',
   maxLength: null,
-  onChange: null,
-  onKeyDown: null,
+  onChange: () => {},
+  onKeyDown: () => {},
   placeholder: '',
   required: false,
   requiredText: '',
   tip: '',
-  value: undefined,
+  value: '',
   wrapperClassName: ''
 }
 

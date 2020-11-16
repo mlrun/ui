@@ -11,14 +11,16 @@ import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import Select from '../../common/Select/Select'
+import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
+import TextArea from '../../common/TextArea/TextArea'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
-import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
 
 const ProjectView = React.forwardRef(
   (
     {
       createNewOptions,
+      fetchApiGateways,
       editProject,
       fetchNuclioFunctions,
       fetchProjectDataSets,
@@ -67,7 +69,6 @@ const ProjectView = React.forwardRef(
                     {editProject.name.isEdit ? (
                       <Input
                         focused={true}
-                        name="name"
                         onChange={handleOnChangeProject}
                         onKeyDown={handleOnKeyDown}
                         ref={ref}
@@ -89,22 +90,43 @@ const ProjectView = React.forwardRef(
                   onClick={() => handleEditProject('description')}
                 >
                   {editProject.description.isEdit ? (
-                    <Input
-                      focused={true}
-                      name="description"
+                    <TextArea
+                      floatingLabel
+                      focused
+                      label="Project summary"
                       onChange={handleOnChangeProject}
                       onKeyDown={handleOnKeyDown}
                       ref={ref}
-                      type="text"
                       value={
                         editProject.description.value ??
                         projectStore.project.data.description
                       }
                     />
                   ) : (
-                    editProject.description.value ??
-                    projectStore.project.data.description
-                  )}
+                    <div className="general-info__description-info">
+                      <span className="general-info__description-title">
+                        Project summary
+                      </span>
+                      <p className="general-info__description-text data-ellipsis">
+                        {editProject.description.value ??
+                          projectStore.project.data.description}
+                      </p>
+                    </div>
+                  )
+                  // <Input
+                  //   floatingLabel
+                  //   focused={true}
+                  //   label="Project summary"
+                  //   onChange={handleOnChangeProject}
+                  //   onKeyDown={handleOnKeyDown}
+                  //   ref={ref}
+                  //   type="text"
+                  //   value={
+                  //     editProject.description.value ??
+                  //     projectStore.project.data.description
+                  //   }
+                  // />
+                  }
                 </div>
               </div>
               <div className="general-info__divider" />
@@ -128,6 +150,7 @@ const ProjectView = React.forwardRef(
                     return (
                       <a
                         href={link}
+                        target="_top"
                         className="general-info__links-link"
                         key={label}
                       >
@@ -175,9 +198,9 @@ const ProjectView = React.forwardRef(
                 <ProjectArtifacts
                   artifacts={projectStore.project.dataSets}
                   fetchArtifacts={fetchProjectDataSets}
-                  link={`/projects/${match.params.projectName}/datasets`}
+                  link={`/projects/${match.params.projectName}/feature-store`}
                   match={match}
-                  title="Datasets"
+                  title="Features"
                 />
                 <ProjectArtifacts
                   artifacts={projectStore.project.files}
@@ -194,6 +217,7 @@ const ProjectView = React.forwardRef(
                   match={match}
                 />
                 <ProjectFunctions
+                  fetchApiGateways={fetchApiGateways}
                   fetchNuclioFunctions={fetchNuclioFunctions}
                   functionsStore={nuclioStore}
                   match={match}

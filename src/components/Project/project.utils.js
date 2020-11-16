@@ -22,8 +22,8 @@ export const getLinks = match => [
     link: `/projects/${match.params.projectName}/models`
   },
   {
-    label: 'Datasets',
-    link: `/projects/${match.params.projectName}/datasets`
+    label: 'Feature store',
+    link: `/projects/${match.params.projectName}/feature-store`
   },
   {
     label: 'Files',
@@ -42,8 +42,13 @@ export const getLinks = match => [
     link: `/projects/${match.params.projectName}/functions`
   },
   {
-    label: 'Real-time functions',
+    label: 'Real-time functions (Nuclio)',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`,
+    externalLink: true
+  },
+  {
+    label: 'API gateways',
+    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`,
     externalLink: true
   }
 ]
