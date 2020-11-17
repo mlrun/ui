@@ -23,7 +23,7 @@ export const getLinks = match => [
   },
   {
     label: 'Feature store',
-    link: `/projects/${match.params.projectName}/datasets`
+    link: `/projects/${match.params.projectName}/feature-store`
   },
   {
     label: 'Files',

@@ -98,7 +98,7 @@ const JobsTableRow = ({
                         link={
                           index === 0 &&
                           `/projects/${match.params.projectName}/jobs/${
-                            match.params.jobTab
+                            match.params.screenTab
                           }/${currentItem.uid}${
                             match.params.tab
                               ? `/${match.params.tab}`
@@ -128,7 +128,7 @@ const JobsTableRow = ({
             const currentItem = isGroupedByWorkflow
               ? workflows.find(workflow => workflow.id === rowItem.uid.value)
               : content.find(contentItemObj =>
-                  match.params.jobTab.toUpperCase() === MONITOR_TAB
+                  match.params.screenTab === MONITOR_TAB
                     ? contentItemObj.uid === rowItem.uid?.value
                     : contentItemObj.name === rowItem.name.value
                 )
@@ -143,9 +143,9 @@ const JobsTableRow = ({
                 key={new Date().getTime() + index}
                 link={
                   index === 0 &&
-                  match.params.jobTab.toUpperCase() === MONITOR_TAB &&
+                  match.params.screenTab === MONITOR_TAB &&
                   `/projects/${match.params.projectName}/jobs/${
-                    match.params.jobTab
+                    match.params.screenTab
                   }/${find(content, ['uid', rowItem.uid?.value])?.uid}${
                     match.params.tab
                       ? `/${match.params.tab}`

@@ -66,11 +66,11 @@ const Jobs = ({
 
   const pageData = useCallback(
     generatePageData(
-      match.params.jobTab.toUpperCase() === SCHEDULE_TAB,
+      match.params.screenTab === SCHEDULE_TAB,
       handleRemoveScheduledJob,
       handleRunJob
     ),
-    [match.params.jobTab]
+    [match.params.screenTab]
   )
 
   const refreshJobs = useCallback(
@@ -79,10 +79,10 @@ const Jobs = ({
         match.params.projectName,
         stateFilter !== initialStateFilter && stateFilter,
         event,
-        match.params.jobTab.toUpperCase() === SCHEDULE_TAB
+        match.params.screenTab === SCHEDULE_TAB
       ).then(jobs => {
         const newJobs = jobs.map(job => {
-          if (match.params.jobTab.toUpperCase() === SCHEDULE_TAB) {
+          if (match.params.screenTab === SCHEDULE_TAB) {
             return {
               name: job.name,
               type: job.kind === 'pipeline' ? 'workflow' : job.kind,
@@ -117,7 +117,7 @@ const Jobs = ({
         return setJobs(newJobs)
       })
     },
-    [fetchJobs, match.params.jobTab, match.params.projectName, stateFilter]
+    [fetchJobs, match.params.screenTab, match.params.projectName, stateFilter]
   )
 
   const getWorkflows = useCallback(
@@ -138,16 +138,16 @@ const Jobs = ({
       setSelectedJob({})
       setJobs([])
     }
-  }, [getWorkflows, history, match.params.jobTab, refreshJobs])
+  }, [getWorkflows, history, match.params.screenTab, refreshJobs])
 
   useEffect(() => {
-    if (match.params.jobTab.toUpperCase() === SCHEDULE_TAB) {
+    if (match.params.screenTab === SCHEDULE_TAB) {
       setGroupFilter('none')
     } else {
       getWorkflows()
       setGroupFilter(initialGroupFilter)
     }
-  }, [getWorkflows, match.params.jobTab])
+  }, [getWorkflows, match.params.screenTab])
 
   useEffect(() => {
     if (match.params.jobId && jobs.length > 0) {
@@ -155,7 +155,7 @@ const Jobs = ({
 
       if (!item) {
         return history.push(
-          `/projects/${match.params.projectName}/jobs/${match.params.jobTab}`
+          `/projects/${match.params.projectName}/jobs/${match.params.screenTab}`
         )
       }
 
@@ -169,7 +169,7 @@ const Jobs = ({
     jobs,
     match.params.projectName,
     history,
-    match.params.jobTab
+    match.params.screenTab
   ])
 
   const handleSelectJob = item => {

@@ -49,7 +49,7 @@ const Table = ({
       groupFilter,
       pageData.page,
       pageData.pageKind,
-      match.params.jobTab?.toUpperCase() === SCHEDULE_TAB,
+      match.params.screenTab === SCHEDULE_TAB,
       setLoading
     )
     let groupLatest = []
@@ -82,7 +82,7 @@ const Table = ({
     workflows,
     pageData.page,
     setLoading,
-    match.params.jobTab,
+    match.params.screenTab,
     pageData.pageKind
   ])
 
@@ -94,7 +94,7 @@ const Table = ({
         content: []
       })
     }
-  }, [groupFilter, match.params.jobTab])
+  }, [groupFilter, match.params.screenTab])
 
   useEffect(() => {
     if (tableContent.content.length && setLoading) {

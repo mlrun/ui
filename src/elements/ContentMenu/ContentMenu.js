@@ -5,7 +5,7 @@ import classnames from 'classnames'
 
 import './contentMenu.scss'
 
-const ContentMenu = ({ activeTab, match, tabs }) => {
+const ContentMenu = ({ activeTab, match, screen, tabs }) => {
   return (
     <div className="content__menu">
       <ul className="content__menu__list">
@@ -17,7 +17,11 @@ const ContentMenu = ({ activeTab, match, tabs }) => {
 
           return (
             <li data-testid={tab} className={tabClassNames} key={tab}>
-              <Link to={`/projects/${match.params.projectName}/jobs/${tab}`}>
+              <Link
+                to={`/projects/${
+                  match.params.projectName
+                }/${screen.toLowerCase()}/${tab}`}
+              >
                 {tab}
               </Link>
             </li>

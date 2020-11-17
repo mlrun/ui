@@ -221,7 +221,7 @@ const JobsPanel = ({
         removeNewJob()
 
         history.push(
-          `/projects/${match.params.projectName}/jobs/${match.params.jobTab}`
+          `/projects/${match.params.projectName}/jobs/${match.params.screenTab}`
         )
       })
       .catch(error => {

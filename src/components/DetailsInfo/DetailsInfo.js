@@ -9,10 +9,10 @@ import { formatDatetime, parseKeyValues } from '../../utils'
 import {
   JOBS_PAGE,
   ARTIFACTS_PAGE,
-  ARTIFACTS_DATASETS_PAGE,
   ARTIFACTS_FILES_PAGE,
   FUNCTIONS_PAGE,
-  ARTIFACTS_MODELS_PAGE
+  ARTIFACTS_MODELS_PAGE,
+  ARTIFACTS_FEATURE_STORE
 } from '../../constants'
 
 import './detailsInfo.scss'
@@ -35,7 +35,7 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
     selectedItem.hash ?? '',
     selectedItem.db_key,
     selectedItem.iter || '0',
-    pageData.pageKind !== ARTIFACTS_DATASETS_PAGE &&
+    pageData.pageKind !== ARTIFACTS_FEATURE_STORE &&
     pageData.pageKind !== ARTIFACTS_FILES_PAGE
       ? selectedItem.kind || ' '
       : null,

@@ -134,7 +134,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
         {urlItems.map((item, i) => {
           const param = pathItems[i]?.startsWith(':')
           const label = param
-            ? match.params.tab === item || match.params.jobTab === item
+            ? match.params.tab === item || match.params.screenTab === item
               ? startCase(item)
               : item
             : startCase(item)

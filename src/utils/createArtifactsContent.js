@@ -1,6 +1,6 @@
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
-import { ARTIFACTS_DATASETS_PAGE, ARTIFACTS_MODELS_PAGE } from '../constants'
+import { ARTIFACTS_FEATURE_STORE, ARTIFACTS_MODELS_PAGE } from '../constants'
 import { convertBytes } from './convertBytes'
 
 const createArtifactsContent = (artifacts, pageKind) =>
@@ -14,7 +14,7 @@ const createArtifactsContent = (artifacts, pageKind) =>
         value: artifact.kind,
         class: 'artifacts_extra-small',
         type:
-          pageKind === ARTIFACTS_DATASETS_PAGE ||
+          pageKind === ARTIFACTS_FEATURE_STORE ||
           pageKind === ARTIFACTS_MODELS_PAGE
             ? 'hidden'
             : ''
