@@ -37,6 +37,7 @@ const Project = ({
       isEdit: false
     }
   })
+  const [artifactKind, setArtifactKind] = useState('')
   const history = useHistory()
   const inputRef = React.createRef(null)
 
@@ -57,9 +58,28 @@ const Project = ({
           )
       },
       {
-        label: 'Register artifact',
-        id: 'registerArtifact',
-        handler: () => setIsPopupDialogOpen(true)
+        label: 'Register File',
+        id: 'registerFile',
+        handler: () => {
+          setIsPopupDialogOpen(true)
+          setArtifactKind('file')
+        }
+      },
+      {
+        label: 'Register Model',
+        id: 'registerModel',
+        handler: () => {
+          setIsPopupDialogOpen(true)
+          setArtifactKind('model')
+        }
+      },
+      {
+        label: 'Register Dataset',
+        id: 'registerDataset',
+        handler: () => {
+          setIsPopupDialogOpen(true)
+          setArtifactKind('dataset')
+        }
       }
     ]
 
@@ -186,6 +206,7 @@ const Project = ({
 
   return (
     <ProjectView
+      artifactKind={artifactKind}
       fetchApiGateways={fetchApiGateways}
       createNewOptions={createNewOptions}
       editProject={editProject}
