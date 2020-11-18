@@ -50,6 +50,7 @@ const ProjectTable = ({ table }) => {
                         body[key].href ? (
                           <a
                             href={body[key].href}
+                            target="_top"
                             className="project-data-card__table-link"
                           >
                             <Tooltip
