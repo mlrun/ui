@@ -21,7 +21,13 @@ const ProjectDataCard = ({
     <div className="project-data-card">
       <div className="project-data-card__header">
         <div className="project-data-card__header-text data-ellipsis">
-          {href ? <a href={href}>{title}</a> : <Link to={link}>{title}</Link>}
+          {href ? (
+            <a href={href} target="_top">
+              {title}
+            </a>
+          ) : (
+            <Link to={link}>{title}</Link>
+          )}
         </div>
         {!isEmpty(dataCard.data) && (
           <div className="project-data-card__statistics">
@@ -41,7 +47,11 @@ const ProjectDataCard = ({
         <>
           <ProjectTable match={match} table={table} />
           {href ? (
-            <a href={href} className="project-data-card__see-all-link">
+            <a
+              href={href}
+              target="_top"
+              className="project-data-card__see-all-link"
+            >
               See all
             </a>
           ) : (

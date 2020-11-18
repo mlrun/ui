@@ -16,6 +16,7 @@ const ProjectStatistics = ({ statistics }) => {
         {statistics[key].href ? (
           <a
             href={statistics[key].href}
+            target="_top"
             className="project-data-card__statistics-link"
           >
             <div
