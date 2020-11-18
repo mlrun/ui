@@ -19,6 +19,7 @@ import { ReactComponent as Settings } from '../../images/settings.svg'
 const ProjectView = React.forwardRef(
   (
     {
+      artifactKind,
       createNewOptions,
       fetchApiGateways,
       editProject,
@@ -216,12 +217,14 @@ const ProjectView = React.forwardRef(
           <RegisterArtifactPopup
             artifactFilter={{}}
             match={match}
-            pageData={{}}
+            pageData={{
+              pageKind: `${artifactKind}s`
+            }}
             refresh={() => {
               history.push(`/projects/${match.params.projectName}/artifacts`)
             }}
             setIsPopupDialogOpen={setIsPopupDialogOpen}
-            title="Register artifact"
+            title={`Register ${artifactKind}`}
           />
         )}
       </>
@@ -230,6 +233,7 @@ const ProjectView = React.forwardRef(
 )
 
 ProjectView.propTypes = {
+  artifactKind: PropTypes.string.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
   fetchProjectDataSets: PropTypes.func.isRequired,

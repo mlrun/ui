@@ -184,7 +184,7 @@ const RegisterArtifactPopup = ({
   return (
     <PopUpDialog
       data-testid="register-artifact"
-      headerText="Register artifact"
+      headerText={title}
       closePopUp={closePopupDialog}
     >
       <RegisterArtifactForm
