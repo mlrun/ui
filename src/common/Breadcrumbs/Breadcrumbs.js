@@ -134,7 +134,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
         {urlItems.map((item, i) => {
           const param = pathItems[i]?.startsWith(':')
           const label = param
-            ? match.params.tab === item || match.params.jobTab === item
+            ? match.params.tab === item || match.params.pageTab === item
               ? startCase(item)
               : item
             : startCase(item)
@@ -182,6 +182,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
               <li key={i} className="breadcrumbs__item">
                 <Arrow
                   className={separatorClassNames}
+                  data-testid="separator"
                   ref={separatorRef}
                   onClick={() =>
                     handleSeparatorClick(urlItems[i + 1], separatorRef)

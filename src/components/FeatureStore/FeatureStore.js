@@ -11,16 +11,17 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import {
   detailsMenu,
   filters,
+  infoHeaders,
   page,
   pageKind,
   registerArtifactDialogTitle,
   tableHeaders,
-  infoHeaders
-} from './dataSets.util'
+  tabs
+} from './feaureStore.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
 
-const DataSets = ({
+const FeatureStore = ({
   artifactsStore,
   fetchDataSets,
   history,
@@ -34,11 +35,12 @@ const DataSets = ({
   const [pageData, setPageData] = useState({
     detailsMenu,
     filters,
+    infoHeaders,
     page,
     pageKind,
     registerArtifactDialogTitle,
     tableHeaders,
-    infoHeaders
+    tabs
   })
 
   const fetchData = useCallback(
@@ -77,7 +79,9 @@ const DataSets = ({
       )
 
       if (!searchItem) {
-        history.push(`/projects/${match.params.projectName}/datasets`)
+        history.push(
+          `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
+        )
       } else {
         const [dataSet] = searchItem.data.filter(item => {
           if (searchItem.link_iteration) {
@@ -104,7 +108,7 @@ const DataSets = ({
         !selectedDataSet.item?.extra_data)
     ) {
       history.push(
-        `/projects/${match.params.projectName}/datasets/${match.params.name}/info`
+        `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}/${match.params.name}/info`
       )
     }
 
@@ -129,7 +133,8 @@ const DataSets = ({
     match.params.projectName,
     match.params.name,
     history,
-    selectedDataSet.item
+    selectedDataSet.item,
+    match.params.pageTab
   ])
 
   const handleDataSetTreeFilterChange = useCallback(
@@ -179,10 +184,10 @@ const DataSets = ({
     </>
   )
 }
-DataSets.propTypes = {
+FeatureStore.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
 export default connect(artifactsStore => artifactsStore, {
   ...artifactsAction
-})(DataSets)
+})(FeatureStore)

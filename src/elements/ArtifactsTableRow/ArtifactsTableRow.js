@@ -37,7 +37,9 @@ const ArtifactsTableRow = ({
               i === 0 &&
               `/projects/${match.params.projectName}/${
                 pageData.pageKind ? pageData.pageKind : 'artifacts'
-              }/${rowItem.key.value}/${
+              }${match.params.pageTab ? `/${match.params.pageTab}` : ''}/${
+                rowItem.key.value
+              }/${
                 match.params.tab
                   ? match.params.tab
                   : `${artifactsData.detailsMenu[0]}`

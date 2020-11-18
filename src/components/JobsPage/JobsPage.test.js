@@ -120,7 +120,26 @@ jest.spyOn(mainHttpClient, 'get').mockImplementation(path => {
         ]
       }
     })
+  } else if (/projects\?full=yes/.test(path)) {
+    return Promise.resolve({
+      data: {
+        projects: [
+          {
+            created: '2020-08-26T17:15:09.708192',
+            description: 'description',
+            id: 1,
+            name: 'default',
+            owner: null,
+            source: null,
+            state: null,
+            users: []
+          }
+        ]
+      }
+    })
   }
+
+  // return Promise.resolve()
 })
 
 const renderWithRedux = (
@@ -140,10 +159,10 @@ describe('JobsPage component', () => {
     const props = {
       match: {
         params: {
-          jobTab: 'monitor',
+          pageTab: 'monitor',
           projectName: 'default'
         },
-        path: '/projects/:projectName/jobs/:jobTab',
+        path: '/projects/:projectName/jobs/:pageTab',
         url: '/projects/default/jobs/monitor'
       },
       history: {}
@@ -234,11 +253,11 @@ describe('JobsPage component', () => {
       match: {
         params: {
           projectName: 'default',
-          jobTab: 'monitor',
+          pageTab: 'monitor',
           jobId: 'a6422d0d93d24a8f91059992a6b1529e',
           tab: 'info'
         },
-        path: '/projects/:projectName/jobs/:jobTab/:jobId/:tab',
+        path: '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
         url:
           '/projects/default/jobs/monitor/a6422d0d93d24a8f91059992a6b1529e/info'
       },
@@ -260,13 +279,14 @@ describe('JobsPage component', () => {
 
   it('should active schedule tab', async () => {
     cleanup()
+
     const props = {
       match: {
         params: {
-          jobTab: 'schedule',
+          pageTab: 'schedule',
           projectName: 'default'
         },
-        path: '/projects/:projectName/jobs/:jobTab',
+        path: '/projects/:projectName/jobs/:pageTab',
         url: '/projects/default/jobs/schedule'
       },
       history: {}
@@ -283,18 +303,19 @@ describe('JobsPage component', () => {
 
     const schedule = wrapper.getByTestId('schedule')
 
-    expect(schedule.className).toMatch('active')
+    await expect(schedule.className).toMatch('active')
   })
 
   it('should remove one item of schedule', async () => {
     cleanup()
+
     const props = {
       match: {
         params: {
-          jobTab: 'schedule',
+          pageTab: 'schedule',
           projectName: 'default'
         },
-        path: '/projects/:projectName/jobs/:jobTab',
+        path: '/projects/:projectName/jobs/:pageTab',
         url: '/projects/default/jobs/schedule'
       },
       history: {}
@@ -329,11 +350,11 @@ describe('JobsPage component', () => {
       match: {
         params: {
           projectName: 'default',
-          jobTab: 'monitor',
+          pageTab: 'monitor',
           jobId: '716898186491548141284',
           tab: 'info'
         },
-        path: '/projects/:projectName/jobs/:jobTab/:jobId/:tab',
+        path: '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
         url: '/projects/default/jobs/monitor/716898186491548141284/info'
       },
       history: { push: mockHistoryPush }
@@ -400,9 +421,9 @@ describe('JobsPage component', () => {
       match: {
         params: {
           projectName: 'default',
-          jobTab: 'monitor'
+          pageTab: 'monitor'
         },
-        path: '/projects/:projectName/jobs/:jobTab',
+        path: '/projects/:projectName/jobs/:pageTab',
         url: '/projects/default/jobs/monitor'
       },
       history: {}

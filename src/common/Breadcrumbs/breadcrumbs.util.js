@@ -1,6 +1,6 @@
 export const generateProjectScreens = match => [
   { label: 'Models', id: 'models' },
-  { label: 'Datasets', id: 'datasets' },
+  { label: 'Feature Store', id: 'feature-store' },
   { label: 'Files', id: 'files' },
   { label: 'Jobs', id: 'jobs' },
   { label: 'ML functions', id: 'functions' },

@@ -2,12 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { JOBS_PAGE } from '../../constants'
+
+import { FUNCTIONS_PAGE } from '../../constants'
 
 const DetailsMenuItem = ({ hash, id, match, name, page, tab }) => {
   const link = `/projects/${match.params.projectName}/${page.toLowerCase()}/${
-    page === JOBS_PAGE ? `${match.params.jobTab}/` : ''
-  }${page.toLowerCase() === 'functions' ? hash : id || name}/${tab}`
+    match.params.pageTab ? `${match.params.pageTab}/` : ''
+  }${page === FUNCTIONS_PAGE ? hash : id || name}/${tab}`
   const tabClassNames = classnames(
     'menu-tab',
     match.params.tab === tab && 'active-tab'

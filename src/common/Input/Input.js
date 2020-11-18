@@ -130,7 +130,7 @@ Input.defaultProps = {
   required: false,
   requiredText: '',
   tip: '',
-  value: '',
+  value: undefined,
   wrapperClassName: ''
 }
 

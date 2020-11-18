@@ -85,7 +85,7 @@ const FilterMenu = ({
     if (match.params.jobId || match.params.name) {
       history.push(
         `/projects/${match.params.projectName}/${page.toLowerCase()}${
-          page === JOBS_PAGE ? `/${match.params.jobTab}` : ''
+          match.params.pageTab ? `/${match.params.pageTab}` : ''
         }`
       )
     }

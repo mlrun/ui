@@ -15,7 +15,9 @@ const Artifacts = React.lazy(() => import('./components/Artifacts/Artifacts'))
 const CreateJobPage = React.lazy(() =>
   import('./components/CreateJobPage/CreateJobPage')
 )
-const DataSets = React.lazy(() => import('./components/DataSets/DataSets'))
+const FeatureStore = React.lazy(() =>
+  import('./components/FeatureStore/FeatureStore')
+)
 const Files = React.lazy(() => import('./components/Files/Files'))
 const Functions = React.lazy(() =>
   import('./components/FunctionsPage/Functions')
@@ -42,7 +44,7 @@ const App = () => {
               render={routeProps => <Project {...routeProps} />}
             />
             <Route
-              path="/projects/:projectName/jobs/:jobTab/:jobId/:tab"
+              path="/projects/:projectName/jobs/:pageTab/:jobId/:tab"
               exact
               render={routeProps => <Jobs {...routeProps} />}
             />
@@ -52,7 +54,7 @@ const App = () => {
               to="/projects/:projectName/jobs/monitor"
             />
             <Route
-              path="/projects/:projectName/jobs/:jobTab"
+              path="/projects/:projectName/jobs/:pageTab"
               exact
               strict
               render={routeProps => <Jobs {...routeProps} />}
@@ -78,20 +80,25 @@ const App = () => {
               render={routeProps => <Functions {...routeProps} />}
             />
             <Route
-              path="/projects/:projectName/jobs/:jobTab/create-new-job"
+              path="/projects/:projectName/jobs/:pageTab/create-new-job"
               exact
               strict
               render={routeProps => <CreateJobPage {...routeProps} />}
             />
-            <Route
+            <Redirect
               exact
-              path="/projects/:projectName/datasets"
-              render={routeProps => <DataSets {...routeProps} />}
+              from="/projects/:projectName/feature-store"
+              to="/projects/:projectName/feature-store/datasets"
             />
             <Route
               exact
-              path="/projects/:projectName/datasets/:name/:tab"
-              render={routeProps => <DataSets {...routeProps} />}
+              path="/projects/:projectName/feature-store/:pageTab"
+              render={routeProps => <FeatureStore {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/feature-store/:pageTab/:name/:tab"
+              render={routeProps => <FeatureStore {...routeProps} />}
             />
             <Route
               exact

@@ -16,7 +16,8 @@ import {
   JOBS_PAGE,
   ARTIFACTS_PAGE,
   FUNCTIONS_PAGE,
-  SCHEDULE_TAB
+  SCHEDULE_TAB,
+  ARTIFACTS_FEATURE_STORE
 } from '../../constants'
 
 import { formatDatetime } from '../../utils'
@@ -52,7 +53,9 @@ const Content = ({
   const contentClassName = classnames(
     'content',
     loading && 'isLoading',
-    pageData.page === JOBS_PAGE && 'content_with-menu'
+    (pageData.page === JOBS_PAGE ||
+      pageData.pageKind === ARTIFACTS_FEATURE_STORE) &&
+      'content_with-menu'
   )
 
   const handleGroupByName = useCallback(() => {
@@ -123,7 +126,7 @@ const Content = ({
     const jobJson =
       pageData.page === JOBS_PAGE &&
       yamlContent.filter(job =>
-        match.params.jobTab.toUpperCase() !== SCHEDULE_TAB
+        match.params.pageTab !== SCHEDULE_TAB
           ? isEqual(job.metadata.uid, item.uid)
           : isEqual(job.name, item.name)
       )[0]
@@ -201,10 +204,14 @@ const Content = ({
         />
       </div>
       <div className={contentClassName}>
-        {pageData.page === JOBS_PAGE && (
+        {(pageData.page === JOBS_PAGE ||
+          pageData.pageKind === ARTIFACTS_FEATURE_STORE) && (
           <ContentMenu
-            activeTab={match.params.jobTab}
+            activeTab={match.params.pageTab}
             match={match}
+            screen={
+              pageData.page === JOBS_PAGE ? pageData.page : pageData.pageKind
+            }
             tabs={pageData.tabs}
           />
         )}
@@ -255,11 +262,12 @@ const Content = ({
 }
 
 Content.defaultProps = {
+  activeScreenTab: '',
   groupFilter: null,
   selectedItem: {},
-  setGroupFilter: null,
-  setLoading: null,
-  setStateFilter: null,
+  setGroupFilter: () => {},
+  setLoading: () => {},
+  setStateFilter: () => {},
   showUntagged: '',
   stateFilter: null,
   toggleShowUntagged: null

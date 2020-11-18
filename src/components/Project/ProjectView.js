@@ -184,7 +184,7 @@ const ProjectView = React.forwardRef(
                 <ProjectArtifacts
                   artifacts={projectStore.project.dataSets}
                   fetchArtifacts={fetchProjectDataSets}
-                  link={`/projects/${match.params.projectName}/datasets`}
+                  link={`/projects/${match.params.projectName}/feature-store`}
                   match={match}
                   title="Features"
                 />
