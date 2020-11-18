@@ -48,6 +48,7 @@ jest.spyOn(mainHttpClient, 'get').mockImplementation(path => {
   } else if (/funcs\?project=default/.test(path)) {
     return Promise.resolve()
   }
+
   return Promise.resolve()
 })
 
@@ -72,6 +73,7 @@ describe('Project component', () => {
         url: '/projects/default'
       }
     }
+    window.mlrunConfig = { nuclioUiUrl: 'http://localhost:8070' }
 
     wrapper = renderWithRedux(
       <Router>

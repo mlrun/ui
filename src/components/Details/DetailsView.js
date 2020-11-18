@@ -96,7 +96,7 @@ const DetailsView = ({
           data-testid="details-close-btn"
           to={`/projects/${match.params.projectName}/${
             pageData.pageKind ? pageData.pageKind : pageData.page.toLowerCase()
-          }${match.params.screenTab ? `/${match.params.screenTab}` : ''}`}
+          }${match.params.pageTab ? `/${match.params.pageTab}` : ''}`}
           onClick={handleCancel}
         >
           <Close />

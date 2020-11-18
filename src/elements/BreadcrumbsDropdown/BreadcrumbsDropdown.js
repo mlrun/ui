@@ -17,7 +17,7 @@ const BreadcrumbsDropdown = ({
   withSearch
 }) => {
   return (
-    <div className="breadcrumbs__dropdown">
+    <div className="breadcrumbs__dropdown" data-testid="breadcrumbs-dropdown">
       {withSearch && (
         <div className="dropdown__search">
           <input
@@ -47,6 +47,7 @@ const BreadcrumbsDropdown = ({
         ) : (
           <Link
             to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}`}
+            data-testid="breadcrumbs-dropdown-item"
             key={listItem.id}
             className={dropdownItemClassNames}
             onClick={onClick}

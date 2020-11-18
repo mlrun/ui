@@ -80,7 +80,7 @@ const FeatureStore = ({
 
       if (!searchItem) {
         history.push(
-          `/projects/${match.params.projectName}/feature-store/${match.params.screenTab}`
+          `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
         )
       } else {
         const [dataSet] = searchItem.data.filter(item => {
@@ -108,7 +108,7 @@ const FeatureStore = ({
         !selectedDataSet.item?.extra_data)
     ) {
       history.push(
-        `/projects/${match.params.projectName}/feature-store/${match.params.screenTab}/${match.params.name}/info`
+        `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}/${match.params.name}/info`
       )
     }
 

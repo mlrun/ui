@@ -126,7 +126,7 @@ const Content = ({
     const jobJson =
       pageData.page === JOBS_PAGE &&
       yamlContent.filter(job =>
-        match.params.screenTab !== SCHEDULE_TAB
+        match.params.pageTab !== SCHEDULE_TAB
           ? isEqual(job.metadata.uid, item.uid)
           : isEqual(job.name, item.name)
       )[0]
@@ -207,7 +207,7 @@ const Content = ({
         {(pageData.page === JOBS_PAGE ||
           pageData.pageKind === ARTIFACTS_FEATURE_STORE) && (
           <ContentMenu
-            activeTab={match.params.screenTab}
+            activeTab={match.params.pageTab}
             match={match}
             screen={
               pageData.page === JOBS_PAGE ? pageData.page : pageData.pageKind

@@ -44,7 +44,7 @@ const App = () => {
               render={routeProps => <Project {...routeProps} />}
             />
             <Route
-              path="/projects/:projectName/jobs/:screenTab/:jobId/:tab"
+              path="/projects/:projectName/jobs/:pageTab/:jobId/:tab"
               exact
               render={routeProps => <Jobs {...routeProps} />}
             />
@@ -54,7 +54,7 @@ const App = () => {
               to="/projects/:projectName/jobs/monitor"
             />
             <Route
-              path="/projects/:projectName/jobs/:screenTab"
+              path="/projects/:projectName/jobs/:pageTab"
               exact
               strict
               render={routeProps => <Jobs {...routeProps} />}
@@ -80,7 +80,7 @@ const App = () => {
               render={routeProps => <Functions {...routeProps} />}
             />
             <Route
-              path="/projects/:projectName/jobs/:screenTab/create-new-job"
+              path="/projects/:projectName/jobs/:pageTab/create-new-job"
               exact
               strict
               render={routeProps => <CreateJobPage {...routeProps} />}
@@ -92,12 +92,12 @@ const App = () => {
             />
             <Route
               exact
-              path="/projects/:projectName/feature-store/:screenTab"
+              path="/projects/:projectName/feature-store/:pageTab"
               render={routeProps => <FeatureStore {...routeProps} />}
             />
             <Route
               exact
-              path="/projects/:projectName/feature-store/:screenTab/:name/:tab"
+              path="/projects/:projectName/feature-store/:pageTab/:name/:tab"
               render={routeProps => <FeatureStore {...routeProps} />}
             />
             <Route
