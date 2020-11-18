@@ -1,7 +1,8 @@
 import { mainHttpClient } from '../httpClient'
 
 export default {
-  createProject: postData => mainHttpClient.post('/project', postData),
+  // createProject: postData => mainHttpClient.post('/project', postData),
+  createProject: () => Promise.reject(Error('myError')),
   getJobsAndWorkflows: project =>
     mainHttpClient.get(`/runs?project=${project}`),
   getProject: project => mainHttpClient.get(`/project/${project}`),

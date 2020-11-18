@@ -133,7 +133,8 @@ const FeatureStore = ({
     match.params.projectName,
     match.params.name,
     history,
-    selectedDataSet.item
+    selectedDataSet.item,
+    match.params.pageTab
   ])
 
   const handleDataSetTreeFilterChange = useCallback(
