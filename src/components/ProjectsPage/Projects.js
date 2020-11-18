@@ -68,8 +68,6 @@ const Projects = ({
     setCreateProject(false)
   }, [projectStore.error, removeNewProject, removeProjectError])
 
-  console.log(removeProjectError)
-
   return (
     <div className={projectsClassNames}>
       {projectStore.loading && <Loader />}
