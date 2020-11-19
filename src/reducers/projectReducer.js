@@ -1,4 +1,5 @@
 import {
+  CREATE_PROJECT_BEGIN,
   CREATE_PROJECT_FAILURE,
   CREATE_PROJECT_SUCCESS,
   FETCH_PROJECT_SUCCESS,
@@ -13,10 +14,6 @@ import {
   FETCH_PROJECT_FUNCTIONS_BEGIN,
   FETCH_PROJECT_JOBS_FAILURE,
   FETCH_PROJECT_JOBS_BEGIN,
-  REMOVE_NEW_PROJECT,
-  REMOVE_PROJECT_DATA,
-  SET_NEW_PROJECT_DESCRIPTION,
-  SET_NEW_PROJECT_NAME,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
@@ -25,7 +22,12 @@ import {
   FETCH_PROJECT_FILES_SUCCESS,
   FETCH_PROJECT_MODELS_SUCCESS,
   FETCH_PROJECT_MODELS_FAILURE,
-  FETCH_PROJECT_MODELS_BEGIN
+  FETCH_PROJECT_MODELS_BEGIN,
+  REMOVE_NEW_PROJECT,
+  REMOVE_NEW_PROJECT_ERROR,
+  REMOVE_PROJECT_DATA,
+  SET_NEW_PROJECT_DESCRIPTION,
+  SET_NEW_PROJECT_NAME
 } from '../constants'
 
 const initialState = {
@@ -34,7 +36,8 @@ const initialState = {
   error: null,
   newProject: {
     name: '',
-    description: ''
+    description: '',
+    error: null
   },
   project: {
     data: null,
@@ -201,17 +204,28 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case CREATE_PROJECT_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
     case CREATE_PROJECT_FAILURE:
       return {
         ...state,
         loading: false,
-        error: payload
+        newProject: {
+          ...state.newProject,
+          error: payload
+        }
       }
     case CREATE_PROJECT_SUCCESS:
       return {
         ...state,
         loading: false,
-        error: null
+        newProject: {
+          ...state.newProject,
+          error: payload
+        }
       }
     case FETCH_PROJECT_SUCCESS:
       return {
@@ -340,6 +354,14 @@ export default (state = initialState, { type, payload }) => {
         newProject: {
           name: '',
           description: ''
+        }
+      }
+    case REMOVE_NEW_PROJECT_ERROR:
+      return {
+        ...state,
+        newProject: {
+          ...state.newProject,
+          error: null
         }
       }
     case SET_NEW_PROJECT_DESCRIPTION:

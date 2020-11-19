@@ -24,7 +24,7 @@ const Projects = ({
   fetchProjects,
   match,
   removeNewProject,
-  removeProjectError,
+  removeNewProjectError,
   setNewProjectDescription,
   setNewProjectName
 }) => {
@@ -59,14 +59,14 @@ const Projects = ({
   }
 
   const closePopUp = useCallback(() => {
-    if (projectStore.error) {
-      removeProjectError()
+    if (projectStore.newProject.error) {
+      removeNewProjectError()
     }
 
     removeNewProject()
     setIsEmptyValue(false)
     setCreateProject(false)
-  }, [projectStore.error, removeNewProject, removeProjectError])
+  }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
   return (
     <div className={projectsClassNames}>
@@ -96,14 +96,14 @@ const Projects = ({
             />
           </div>
           <div className="pop-up-dialog__footer-container">
-            {projectStore.error && (
+            {projectStore.newProject.error && (
               <ErrorMessage
                 closeError={() => {
-                  if (projectStore.error) {
-                    removeProjectError()
+                  if (projectStore.newProject.error) {
+                    removeNewProjectError()
                   }
                 }}
-                message={projectStore.error}
+                message={projectStore.newProject.error}
               />
             )}
             <button

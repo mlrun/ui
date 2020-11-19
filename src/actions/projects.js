@@ -25,6 +25,7 @@ import {
   FETCH_PROJECT_JOBS_SUCCESS,
   FETCH_PROJECT_SUCCESS,
   REMOVE_NEW_PROJECT,
+  REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_DATA,
   SET_NEW_PROJECT_DESCRIPTION,
   SET_NEW_PROJECT_NAME
@@ -201,6 +202,7 @@ const projectsAction = {
     payload: projectsList
   }),
   removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
+  removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   setNewProjectDescription: description => ({
     type: SET_NEW_PROJECT_DESCRIPTION,
