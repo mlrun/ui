@@ -1,4 +1,5 @@
 import {
+  CREATE_PROJECT_BEGIN,
   CREATE_PROJECT_FAILURE,
   CREATE_PROJECT_SUCCESS,
   DELETE_PROJECT_BEGIN,
@@ -32,6 +33,7 @@ import {
   FETCH_PROJECTS_FAILURE,
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
+  REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_DATA,
   SET_NEW_PROJECT_DESCRIPTION,
   SET_NEW_PROJECT_NAME
@@ -42,7 +44,8 @@ const initialState = {
   loading: false,
   newProject: {
     name: '',
-    description: ''
+    description: '',
+    error: null
   },
   project: {
     data: null,
@@ -89,17 +92,28 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case CREATE_PROJECT_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
     case CREATE_PROJECT_FAILURE:
       return {
         ...state,
         loading: false,
-        error: payload
+        newProject: {
+          ...state.newProject,
+          error: payload
+        }
       }
     case CREATE_PROJECT_SUCCESS:
       return {
         ...state,
         loading: false,
-        error: null
+        newProject: {
+          ...state.newProject,
+          error: null
+        }
       }
     case DELETE_PROJECT_BEGIN:
       return {
@@ -501,6 +515,14 @@ export default (state = initialState, { type, payload }) => {
             error: null,
             loading: false
           }
+        }
+      }
+    case REMOVE_NEW_PROJECT_ERROR:
+      return {
+        ...state,
+        newProject: {
+          ...state.newProject,
+          error: null
         }
       }
     case SET_NEW_PROJECT_DESCRIPTION:

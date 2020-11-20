@@ -30,7 +30,7 @@ const ProjectsView = ({
   isEmptyValue,
   match,
   projectStore,
-  removeProjectError,
+  removeNewProjectError,
   setCreateProject,
   setNewProjectDescription,
   setNewProjectName
@@ -68,14 +68,14 @@ const ProjectsView = ({
             />
           </div>
           <div className="pop-up-dialog__footer-container">
-            {projectStore.error && (
+            {projectStore.newProject.error && (
               <ErrorMessage
                 closeError={() => {
-                  if (projectStore.error) {
-                    removeProjectError()
+                  if (projectStore.newProject.error) {
+                    removeNewProjectError()
                   }
                 }}
-                message={projectStore.error}
+                message={projectStore.newProject.error}
               />
             )}
             <button
@@ -145,7 +145,7 @@ ProjectsView.propTypes = {
   isEmptyValue: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   projectStore: PropTypes.shape({}).isRequired,
-  removeProjectError: PropTypes.func.isRequired,
+  removeNewProjectError: PropTypes.func.isRequired,
   setCreateProject: PropTypes.func.isRequired,
   setNewProjectDescription: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired

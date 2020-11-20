@@ -48,8 +48,6 @@ jest.mock('../../images/close.svg', () => ({
 
 describe('Projects component', () => {
   let wrapper
-  let mockRemoveProjectError = jest.fn()
-  let mockFetchProjects = jest.fn()
 
   beforeEach(() => {
     const props = {
@@ -57,9 +55,7 @@ describe('Projects component', () => {
         params: {},
         path: '/projects',
         url: '/projects'
-      },
-      fetchProjects: mockFetchProjects,
-      removeProjectError: mockRemoveProjectError
+      }
     }
     wrapper = renderWithRedux(
       <MemoryRouter>
@@ -180,7 +176,9 @@ describe('Projects component', () => {
 
     fireEvent.click(closeErrorMessageBtn)
 
-    expect(mockRemoveProjectError).toHaveBeenCalled()
+    const errorMessage = wrapper.queryByTestId('error-message')
+
+    expect(errorMessage).toBeNull()
   })
 
   it('should create new project', async () => {
@@ -269,7 +267,9 @@ describe('Projects component', () => {
 
       fireEvent.click(closeButton)
 
-      expect(mockRemoveProjectError).toHaveBeenCalled()
+      const errorMessage = wrapper.queryByTestId('error-message')
+
+      expect(errorMessage).toBeNull()
     }
   })
 })

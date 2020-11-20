@@ -9,5 +9,5 @@ export const functionTemplatesHttpClient = axios.create({
 })
 
 export const nuclioHttpClient = axios.create({
-  baseURL: '/nuclio'
+  baseURL: `${process.env.PUBLIC_URL}/nuclio`
 })

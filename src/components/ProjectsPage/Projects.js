@@ -28,7 +28,7 @@ const Projects = ({
   match,
   projectStore,
   removeNewProject,
-  removeProjectError,
+  removeNewProjectError,
   setNewProjectDescription,
   setNewProjectName,
   setNotification
@@ -100,14 +100,14 @@ const Projects = ({
   }
 
   const closePopUp = useCallback(() => {
-    if (projectStore.error) {
-      removeProjectError()
+    if (projectStore.newProject.error) {
+      removeNewProjectError()
     }
 
     removeNewProject()
     setIsEmptyValue(false)
     setCreateProject(false)
-  }, [projectStore.error, removeNewProject, removeProjectError])
+  }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
   return (
     <ProjectsView
@@ -125,7 +125,7 @@ const Projects = ({
       isEmptyValue={isEmptyValue}
       match={match}
       projectStore={projectStore}
-      removeProjectError={removeProjectError}
+      removeNewProjectError={removeNewProjectError}
       setCreateProject={setCreateProject}
       setNewProjectDescription={setNewProjectDescription}
       setNewProjectName={setNewProjectName}
