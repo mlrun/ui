@@ -52,3 +52,43 @@ export const getLinks = match => [
     externalLink: true
   }
 ]
+
+export const generateCreateNewOptions = (
+  history,
+  match,
+  setArtifactKind,
+  setIsPopupDialogOpen
+) => [
+  {
+    label: 'Job',
+    id: 'job',
+    handler: () =>
+      history.push(
+        `/projects/${match.params.projectName}/jobs/monitor/create-new-job`
+      )
+  },
+  {
+    label: 'Register File',
+    id: 'registerFile',
+    handler: () => {
+      setIsPopupDialogOpen(true)
+      setArtifactKind('file')
+    }
+  },
+  {
+    label: 'Register Model',
+    id: 'registerModel',
+    handler: () => {
+      setIsPopupDialogOpen(true)
+      setArtifactKind('model')
+    }
+  },
+  {
+    label: 'Register Dataset',
+    id: 'registerDataset',
+    handler: () => {
+      setIsPopupDialogOpen(true)
+      setArtifactKind('dataset')
+    }
+  }
+]

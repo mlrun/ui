@@ -32,7 +32,6 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         apiGateways: payload,
-        error: null,
         loading: false
       }
     case FETCH_NUCLIO_FUNCTIONS_BEGIN:

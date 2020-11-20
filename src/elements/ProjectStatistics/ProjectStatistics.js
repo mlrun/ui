@@ -33,7 +33,7 @@ const ProjectStatistics = ({ statistics }) => {
               </Tooltip>
             </div>
           </a>
-        ) : (
+        ) : statistics[key].link ? (
           <Link
             className="project-data-card__statistics-link"
             to={statistics[key].link}
@@ -52,6 +52,22 @@ const ProjectStatistics = ({ statistics }) => {
               </Tooltip>
             </div>
           </Link>
+        ) : (
+          <div className="project-data-card__statistics-data">
+            <div
+              className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
+            >
+              {statistics[key].value}
+              <Arrow className="project-data-card__statistics-arrow" />
+            </div>
+            <div className="project-data-card__statistics-label">
+              <Tooltip
+                template={<TextTooltipTemplate text={statistics[key].label} />}
+              >
+                {statistics[key].label}
+              </Tooltip>
+            </div>
+          </div>
         )}
       </div>
     )

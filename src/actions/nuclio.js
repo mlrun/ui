@@ -41,9 +41,13 @@ const nuclioActions = {
       .getFunctions(project)
       .then(({ data }) => {
         dispatch(nuclioActions.fetchNuclioFunctionsSuccess(Object.values(data)))
+
+        return data
       })
       .catch(error => {
         dispatch(nuclioActions.fetchNuclioFunctionsFailure(error.message))
+
+        throw error.message
       })
   },
   fetchNuclioFunctionsBegin: () => ({

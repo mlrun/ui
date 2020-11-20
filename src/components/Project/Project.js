@@ -9,7 +9,11 @@ import ProjectView from './ProjectView'
 import projectsAction from '../../actions/projects'
 import nuclioActions from '../../actions/nuclio'
 import projectsApi from '../../api/projects-api'
-import { launchIDEOptions, getLinks } from './project.utils'
+import {
+  launchIDEOptions,
+  getLinks,
+  generateCreateNewOptions
+} from './project.utils'
 
 import './project.scss'
 
@@ -37,6 +41,7 @@ const Project = ({
       isEdit: false
     }
   })
+  const [artifactKind, setArtifactKind] = useState('')
   const history = useHistory()
   const inputRef = React.createRef(null)
 
@@ -47,21 +52,12 @@ const Project = ({
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
-    const createNewOptions = [
-      {
-        label: 'Job',
-        id: 'job',
-        handler: () =>
-          history.push(
-            `/projects/${match.params.projectName}/jobs/monitor/create-new-job`
-          )
-      },
-      {
-        label: 'Register artifact',
-        id: 'registerArtifact',
-        handler: () => setIsPopupDialogOpen(true)
-      }
-    ]
+    const createNewOptions = generateCreateNewOptions(
+      history,
+      match,
+      setArtifactKind,
+      setIsPopupDialogOpen
+    )
 
     return {
       links,
@@ -186,6 +182,7 @@ const Project = ({
 
   return (
     <ProjectView
+      artifactKind={artifactKind}
       fetchApiGateways={fetchApiGateways}
       createNewOptions={createNewOptions}
       editProject={editProject}
