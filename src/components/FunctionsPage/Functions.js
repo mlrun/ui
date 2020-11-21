@@ -118,7 +118,7 @@ const Functions = ({
         })
       }
 
-      if (Object.keys(item).length === 0) {
+      if (!item || Object.keys(item).length === 0) {
         return history.push(`/projects/${match.params.projectName}/functions`)
       }
     }
