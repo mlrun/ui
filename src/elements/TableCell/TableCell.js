@@ -32,7 +32,7 @@ const TableCell = ({
 }) => {
   const dispatch = useDispatch()
 
-  if (link && !isGroupedByWorkflow) {
+  if (link && !isGroupedByWorkflow && data.type !== 'hidden') {
     return (
       <TableLinkCell
         data={data}

@@ -84,6 +84,7 @@ const Jobs = ({
         const newJobs = jobs.map(job => {
           if (match.params.pageTab === SCHEDULE_TAB) {
             return {
+              func: job.scheduled_object.task.spec.function,
               name: job.name,
               type: job.kind === 'pipeline' ? 'workflow' : job.kind,
               createdTime: new Date(job.creation_time),

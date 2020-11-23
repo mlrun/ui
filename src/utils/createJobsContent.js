@@ -29,6 +29,11 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           schedule: {
             value: cronstrue.toString(contentItem.scheduled_object.schedule),
             class: 'jobs_big'
+          },
+          func: {
+            value: contentItem.func,
+            class: '',
+            type: 'hidden'
           }
         }
       } else {
