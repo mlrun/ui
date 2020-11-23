@@ -1,43 +1,82 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
+import yaml from 'js-yaml'
 
+import ProjectsView from './ProjectsView'
+
+import {
+  generateProjectActionsMenu,
+  successProjectDeletingMessage,
+  failedProjectDeletingMessage
+} from './projectsData'
+import nuclioActions from '../../actions/nuclio'
+import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
-
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import Loader from '../../common/Loader/Loader'
-import ProjectCard from '../../elements/ProjectCard/ProjectCard'
-import NoData from '../../common/NoData/NoData'
-import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Input from '../../common/Input/Input'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-
-import pageData from './projectsData'
-
-import './projects.scss'
 
 const Projects = ({
   createNewProject,
-  projectStore,
+  deleteProject,
+  fetchProjectDataSets,
+  fetchProjectFailedJobs,
+  fetchNuclioFunctions,
+  fetchProjectModels,
+  fetchProjectRunningJobs,
   fetchProjects,
   match,
+  projectStore,
   removeNewProject,
   removeNewProjectError,
   setNewProjectDescription,
-  setNewProjectName
+  setNewProjectName,
+  setNotification
 }) => {
+  const [convertedYaml, setConvertedYaml] = useState('')
   const [createProject, setCreateProject] = useState(false)
   const [isEmptyValue, setIsEmptyValue] = useState(false)
-  const projectsClassNames = classnames(
-    'projects',
-    createProject && 'projects-modal_opened'
+
+  const handleDeleteProject = useCallback(
+    project => {
+      deleteProject(project.name)
+        .then(() => {
+          fetchProjects()
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: successProjectDeletingMessage
+          })
+        })
+        .catch(() => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            retry: () => handleDeleteProject(project),
+            message: failedProjectDeletingMessage
+          })
+        })
+    },
+    [deleteProject, fetchProjects, setNotification]
+  )
+
+  const convertToYaml = useCallback(
+    project => {
+      if (convertedYaml.length > 0) {
+        return setConvertedYaml('')
+      }
+
+      setConvertedYaml(yaml.dump(project, { lineWidth: -1 }))
+    },
+    [convertedYaml.length]
+  )
+
+  const actionsMenu = useMemo(
+    () => generateProjectActionsMenu(convertToYaml, handleDeleteProject),
+    [convertToYaml, handleDeleteProject]
   )
 
   useEffect(() => {
     fetchProjects()
-  }, [fetchProjects])
+  }, [fetchProjectRunningJobs, fetchProjects])
 
   const handleCreateProject = () => {
     if (projectStore.newProject.name.length === 0) {
@@ -69,78 +108,26 @@ const Projects = ({
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
   return (
-    <div className={projectsClassNames}>
-      {projectStore.loading && <Loader />}
-      {createProject && (
-        <PopUpDialog headerText="Create new project" closePopUp={closePopUp}>
-          <div className="pop-up-dialog__form">
-            <Input
-              className="pop-up-dialog__form-input"
-              floatingLabel
-              label="Name"
-              onChange={name => setNewProjectName(name)}
-              required={
-                isEmptyValue && projectStore.newProject.name.length === 0
-              }
-              requiredText="Name is required"
-              type="text"
-              value={projectStore.newProject.name}
-            />
-            <Input
-              className="pop-up-dialog__form-input"
-              floatingLabel
-              label="Description"
-              onChange={description => setNewProjectDescription(description)}
-              type="text"
-              value={projectStore.newProject.description}
-            />
-          </div>
-          <div className="pop-up-dialog__footer-container">
-            {projectStore.newProject.error && (
-              <ErrorMessage
-                closeError={() => {
-                  if (projectStore.newProject.error) {
-                    removeNewProjectError()
-                  }
-                }}
-                message={projectStore.newProject.error}
-              />
-            )}
-            <button
-              className="btn_default pop-up-dialog__btn_cancel"
-              onClick={closePopUp}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn_primary btn_success"
-              onClick={handleCreateProject}
-            >
-              Create
-            </button>
-          </div>
-        </PopUpDialog>
-      )}
-      <div className="projects__header">
-        <Breadcrumbs match={match} />
-        <PageActionsMenu
-          match={match}
-          onClick={() => setCreateProject(true)}
-          pageData={pageData}
-        />
-      </div>
-      <div className="projects__wrapper">
-        {projectStore.projects.length !== 0 || !projectStore.error ? (
-          projectStore.projects.map(project => {
-            return (
-              <ProjectCard key={project.id || project.name} project={project} />
-            )
-          })
-        ) : projectStore.loading ? null : (
-          <NoData />
-        )}
-      </div>
-    </div>
+    <ProjectsView
+      actionsMenu={actionsMenu}
+      closePopUp={closePopUp}
+      convertedYaml={convertedYaml}
+      convertToYaml={convertToYaml}
+      createProject={createProject}
+      fetchNuclioFunctions={fetchNuclioFunctions}
+      fetchProjectDataSets={fetchProjectDataSets}
+      fetchProjectFailedJobs={fetchProjectFailedJobs}
+      fetchProjectModels={fetchProjectModels}
+      fetchProjectRunningJobs={fetchProjectRunningJobs}
+      handleCreateProject={handleCreateProject}
+      isEmptyValue={isEmptyValue}
+      match={match}
+      projectStore={projectStore}
+      removeNewProjectError={removeNewProjectError}
+      setCreateProject={setCreateProject}
+      setNewProjectDescription={setNewProjectDescription}
+      setNewProjectName={setNewProjectName}
+    />
   )
 }
 
@@ -148,4 +135,13 @@ Projects.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(projectStore => projectStore, projectsAction)(Projects)
+export default connect(
+  projectStore => ({
+    ...projectStore
+  }),
+  {
+    ...projectsAction,
+    ...nuclioActions,
+    ...notificationActions
+  }
+)(Projects)

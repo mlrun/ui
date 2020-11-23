@@ -135,20 +135,6 @@ describe('Project component', () => {
     expect(projectName.textContent).toEqual('default')
   })
 
-  it('should close editing mode if press "Enter"', async () => {
-    let projectName = wrapper.getByTestId('project-name')
-
-    fireEvent.click(projectName)
-
-    const input = wrapper.getByRole('textbox')
-
-    fireEvent.keyDown(input, { keyCode: 13 })
-
-    projectName = await wrapper.findByTestId('project-name')
-
-    expect(projectName.textContent).toEqual('default')
-  })
-
   it('should go to create job page if click by "create new->job" option', () => {
     const selectCreateNew = wrapper.getByText(/create new/i)
 
@@ -161,12 +147,12 @@ describe('Project component', () => {
     expect(mockHistoryPush).toHaveBeenCalled()
   })
 
-  it('should open register artifact popup if click by "create new->register artifact" option', () => {
+  it('should open register artifact popup if click by "create new->register dataset" option', () => {
     const selectCreateNew = wrapper.getByText(/create new/i)
 
     fireEvent.click(selectCreateNew)
 
-    const selectOptionRegisterArtifact = wrapper.getByText(/^register/i)
+    const selectOptionRegisterArtifact = wrapper.getByText(/^register dataset/i)
 
     fireEvent.click(selectOptionRegisterArtifact)
 
@@ -175,7 +161,23 @@ describe('Project component', () => {
     expect(popupDialog).not.toBeNull()
   })
 
-  it('should change description of project to "project description"', async () => {
+  it('should not send a request in edit mode until press Enter', () => {
+    jest.clearAllMocks()
+
+    const postRequest = jest.spyOn(mainHttpClient, 'post')
+
+    let projectName = wrapper.getByTestId('project-name')
+
+    fireEvent.click(projectName)
+
+    const input = wrapper.getByRole('textbox')
+
+    fireEvent.keyDown(input, { keyCode: 19 })
+
+    expect(postRequest).not.toHaveBeenCalled()
+  })
+
+  it('should change project description', async () => {
     jest.clearAllMocks()
 
     jest.spyOn(mainHttpClient, 'post').mockImplementation(path => {
@@ -212,35 +214,17 @@ describe('Project component', () => {
     expect(projectDescription.textContent).toMatch(/description/)
   })
 
-  it('should not send a request in edit mode until press Enter', () => {
-    jest.clearAllMocks()
-
-    const postRequest = jest.spyOn(mainHttpClient, 'post')
-
+  it('should close editing mode if press "Enter"', async () => {
     let projectName = wrapper.getByTestId('project-name')
 
     fireEvent.click(projectName)
 
-    const input = wrapper.getByRole('textbox')
+    let input = wrapper.getByRole('textbox')
 
-    fireEvent.keyDown(input, { keyCode: 19 })
+    fireEvent.keyDown(input, { keyCode: 13 })
 
-    expect(postRequest).not.toHaveBeenCalled()
-  })
+    input = wrapper.queryByRole('textbox')
 
-  it('should not send a request in edit mode if click second time by input', () => {
-    jest.clearAllMocks()
-
-    const postRequest = jest.spyOn(mainHttpClient, 'post')
-
-    let projectName = wrapper.getByTestId('project-name')
-
-    fireEvent.click(projectName)
-
-    const input = wrapper.getByRole('textbox')
-
-    fireEvent.click(input.parentNode)
-
-    expect(postRequest).not.toHaveBeenCalled()
+    expect(input).toBeNull()
   })
 })
