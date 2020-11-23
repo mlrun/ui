@@ -6,41 +6,47 @@
 
 .header {
   @include fixed;
-  background-color: $ebonyClay;
-  width: 100%;
+
+  z-index: 5;
   display: flex;
-  z-index: 4;
-  box-shadow: $mainHeaderShadow;
+  align-items: center;
+  width: 100%;
   min-height: 64px;
   padding: 0 24px;
-  align-items: center;
   color: $white;
+  background-color: $ebonyClay;
+  box-shadow: $mainHeaderShadow;
+
   &__logo {
     width: 43px;
     height: 43px;
+
     img {
       width: 100%;
     }
   }
+
   h1 {
     margin-left: 4px;
+    padding-top: 4px;
     font-weight: 700;
     font-size: 1.5rem;
-    padding-top: 4px;
   }
+
   &__beta {
-    font-variant: small-caps;
-    margin-left: 4px;
     margin-bottom: -10px;
+    margin-left: 4px;
+    font-variant: small-caps;
   }
+
   &__link {
-    padding: 5px 15px;
-    text-decoration: none;
-    color: $white;
     min-width: 64px;
     margin-left: auto;
-    text-transform: uppercase;
+    padding: 5px 15px;
+    color: $white;
     font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: none;
     border: $gitBorder;
     border-radius: $mainBorderRadius;
   }

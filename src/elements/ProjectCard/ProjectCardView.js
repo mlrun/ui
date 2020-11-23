@@ -8,6 +8,8 @@ import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 
 import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
 
+import './projectCard.scss'
+
 const ProjectCardView = React.forwardRef(
   (
     { actionsMenu, project, setShowActionsList, showActionsList, statistics },

@@ -88,8 +88,8 @@ const projectsAction = {
 
     projectsApi
       .getProject(project)
-      .then(({ data }) => {
-        dispatch(projectsAction.fetchProjectSuccess(data.project))
+      .then(response => {
+        dispatch(projectsAction.fetchProjectSuccess(response?.data.project))
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectFailure(error.message))
@@ -101,10 +101,12 @@ const projectsAction = {
 
     return projectsApi
       .getProjectDataSets(project)
-      .then(({ data }) => {
-        dispatch(projectsAction.fetchProjectDataSetsSuccess(data.artifacts))
+      .then(response => {
+        dispatch(
+          projectsAction.fetchProjectDataSetsSuccess(response?.data.artifacts)
+        )
 
-        return data.artifacts
+        return response?.data.artifacts
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectDataSetsFailure(error.message))
@@ -126,10 +128,12 @@ const projectsAction = {
 
     return projectsApi
       .getProjectFailedJobs(project)
-      .then(({ data }) => {
-        dispatch(projectsAction.fetchProjectFailedJobsSuccess(data.runs))
+      .then(response => {
+        dispatch(
+          projectsAction.fetchProjectFailedJobsSuccess(response?.data.runs)
+        )
 
-        return data.runs
+        return response?.data.runs
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectFailedJobsFailure(error.message))
@@ -157,8 +161,10 @@ const projectsAction = {
 
     projectsApi
       .getProjectFiles(project)
-      .then(({ data }) => {
-        dispatch(projectsAction.fetchProjectFilesSuccess(data.artifacts))
+      .then(response => {
+        dispatch(
+          projectsAction.fetchProjectFilesSuccess(response?.data.artifacts)
+        )
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectFilesFailure(error.message))
@@ -178,8 +184,10 @@ const projectsAction = {
 
     projectsApi
       .getProjectFunctions(project)
-      .then(({ data }) => {
-        dispatch(projectsAction.fetchProjectFunctionsSuccess(data.funcs))
+      .then(response => {
+        dispatch(
+          projectsAction.fetchProjectFunctionsSuccess(response?.data.funcs)
+        )
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectFunctionsFailure(error.message))
@@ -199,8 +207,8 @@ const projectsAction = {
 
     projectsApi
       .getJobsAndWorkflows(project)
-      .then(({ data }) => {
-        dispatch(projectsAction.fetchProjectJobsSuccess(data.runs))
+      .then(response => {
+        dispatch(projectsAction.fetchProjectJobsSuccess(response?.data.runs))
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectJobsFailure(error.message))
@@ -220,10 +228,12 @@ const projectsAction = {
 
     return projectsApi
       .getProjectModels(project)
-      .then(({ data }) => {
-        dispatch(projectsAction.fetchProjectModelsSuccess(data.artifacts))
+      .then(response => {
+        dispatch(
+          projectsAction.fetchProjectModelsSuccess(response?.data.artifacts)
+        )
 
-        return data.artifacts
+        return response?.data.artifacts
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectModelsFailure(error.message))
@@ -245,10 +255,12 @@ const projectsAction = {
 
     return projectsApi
       .getProjectRunningJobs(project)
-      .then(({ data }) => {
-        dispatch(projectsAction.fetchProjectRunningJobsSuccess(data.runs))
+      .then(response => {
+        dispatch(
+          projectsAction.fetchProjectRunningJobsSuccess(response?.data.runs)
+        )
 
-        return data.runs
+        return response?.data.runs
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectRunningJobsFailure(error.message))

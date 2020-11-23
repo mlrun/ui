@@ -15,6 +15,8 @@ import Notification from '../../common/Notification/Notification'
 
 import { pageData } from './projectsData'
 
+import './projects.scss'
+
 const ProjectsView = ({
   actionsMenu,
   closePopUp,
@@ -37,7 +39,7 @@ const ProjectsView = ({
 }) => {
   const projectsClassNames = classnames(
     'projects',
-    createProject && 'projects-modal_opened'
+    (createProject || convertedYaml.length > 0) && 'projects-modal_opened'
   )
 
   return (

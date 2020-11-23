@@ -14,8 +14,6 @@ import nuclioActions from '../../actions/nuclio'
 import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
 
-import './projects.scss'
-
 const Projects = ({
   createNewProject,
   deleteProject,

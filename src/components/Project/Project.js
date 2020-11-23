@@ -117,6 +117,8 @@ const Project = ({
       })
   }, [closeEditMode, editProject, history, match, projectStore.project])
 
+  // console.log(projectStore.project)
+
   const handleDocumentClick = useCallback(
     event => {
       if (inputRef.current && event.target !== inputRef.current) {

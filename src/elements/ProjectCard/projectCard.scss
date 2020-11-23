@@ -10,7 +10,7 @@
   width: 438px;
   height: 166px;
   margin: 9px 12px;
-  padding: 25px;
+  padding: 25px 25px 20px;
   background-color: $white;
   border: $tableBorder;
   border-radius: 4px;
@@ -43,6 +43,10 @@
   .project-data-card__statistics {
     &-item {
       max-width: 80px;
+
+      &::after {
+        display: none;
+      }
     }
 
     &-data {
@@ -50,8 +54,23 @@
     }
 
     &-value {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
       font-size: 32px;
       line-height: 37px;
+
+      &::after {
+        position: absolute;
+        bottom: 0;
+        width: 28px;
+        height: 1px;
+        margin: auto 0;
+        border-bottom: $dividerBorder;
+        content: '';
+      }
     }
 
     &-label {

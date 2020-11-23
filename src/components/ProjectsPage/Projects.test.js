@@ -21,23 +21,165 @@ const renderWithRedux = (
 }
 
 jest.spyOn(mainHttpClient, 'get').mockImplementation(path => {
-  return Promise.resolve({
-    data: {
-      projects: [
-        {
-          created: '2020-08-26T17:15:09.708192',
-          description: null,
-          id: 1,
-          name: 'default',
-          owner: null,
-          source: null,
-          spec: null,
-          state: null,
-          users: []
+  if (/category=dataset/.test(path)) {
+    return Promise.resolve({
+      data: {
+        artifacts: [
+          {
+            db_key: 'mlrun-8727a2-training_mydf',
+            format: 'csv',
+            hash: '8b6edc4fb4d71af093ff98f7c8f879416409eba5',
+            header: ['index', 'A', 'B'],
+            iter: 0,
+            key: 'mydf',
+            kind: 'dataset',
+            length: 3,
+            preview: [
+              [0, 10, 100],
+              [1, 11, 110],
+              [2, 12, 120]
+            ],
+            producer: {},
+            project: 'default',
+            schema: {},
+            size: 32,
+            sources: [],
+            stats: {},
+            target_path: '/User/mlrun-repo/examples/data/mydf.csv',
+            tree: '84b115d5673a498491a9392c2224acba',
+            updated: '2020-11-17T10:57:39.404021+00:00'
+          }
+        ]
+      }
+    })
+  } else if (/category=model/.test(path)) {
+    return Promise.resolve({
+      data: {
+        artifacts: [
+          {
+            db_key: 'mlrun-8727a2-training_mymodel',
+            framework: '',
+            hash: '8170b9a53bbb1f4d52733bc6824955e3a362d4a1',
+            inputs: [],
+            iter: 0,
+            key: 'mymodel',
+            kind: 'model',
+            labels: { framework: 'xgboost' },
+            metrics: { accuracy: 0.85 },
+            model_file: 'model.txt',
+            outputs: [],
+            parameters: { xx: 'abc', one_more: 5 },
+            producer: {},
+            project: 'default',
+            size: 10,
+            sources: [],
+            target_path: '/User/mlrun-repo/examples/data/models/',
+            tree: '84b115d5673a498491a9392c2224acba',
+            updated: '2020-11-17T10:57:39.461590+00:00'
+          }
+        ]
+      }
+    })
+  } else if (/functions/.test(path)) {
+    return Promise.resolve({
+      test: {
+        metadata: {
+          labels: {
+            'nuclio.io/project-name': 'default'
+          },
+          name: 'test',
+          namespace: 'default-tenant',
+          resourceVersion: '13812'
+        },
+        spec: {
+          alias: 'latest',
+          build: {
+            codeEntryType: 'sourceCode',
+            functionSourceCode:
+              'ZGVmIGhhbmRsZXIoY29udGV4dCwgZXZlbnQpOg0KICAgIHJldHVybiAiIg==',
+            noBaseImagesPull: true,
+            offline: true,
+            runtimeAttributes: { repositories: [] },
+            timestamp: 1606040751
+          },
+          eventTimeout: '',
+          handler: 'main:handler',
+          imageHash: '1606040704721554134',
+          loggerSinks: [{ level: 'debug' }],
+          platform: {},
+          resources: {},
+          runtime: 'python:3.6',
+          scaleToZero: {
+            scaleResources: [
+              {
+                metricName: 'nuclio_processor_handled_events_total',
+                windowSize: '10m',
+                threshold: 0
+              }
+            ]
+          },
+          securityContext: {},
+          triggers: {
+            'default-http': {
+              attributes: { serviceType: 'ClusterIP' },
+              class: '',
+              kind: 'http',
+              maxWorkers: 1,
+              name: 'default-http'
+            }
+          },
+          version: -1
+        },
+        status: {
+          logs: [
+            {
+              level: 'info',
+              message: 'Deploying function',
+              name: 'test',
+              time: 1606040704662.182
+            },
+            {
+              level: 'info',
+              message: 'Building',
+              name: 'test',
+              time: 1606040704662.2615,
+              versionInfo:
+                'Label: 1.5.5, Git commit: 2ceb670cda373d62c897e32eb6a5e86eadf9679e, OS: linux, Arch: amd64, Go version: go1.14.3'
+            }
+          ],
+          scaleToZero: {
+            lastScaleEvent: 'resourceUpdated',
+            lastScaleEventTime: '2020-11-22T10:25:55.376549436Z'
+          },
+          state: 'ready'
         }
-      ]
-    }
-  })
+      }
+    })
+  } else if (/runs/.test(path)) {
+    return Promise.resolve({
+      data: {
+        runs: []
+      }
+    })
+  } else if (/projects/.test(path)) {
+    return Promise.resolve({
+      data: {
+        projects: [
+          {
+            created: '2020-08-26T17:15:09.708192',
+            description: null,
+            id: 1,
+            name: 'default',
+            owner: null,
+            source: null,
+            spec: null,
+            state: null,
+            users: []
+          }
+        ]
+      }
+    })
+  }
 })
 
 jest.spyOn(mainHttpClient, 'post').mockImplementation(() => Promise.resolve())
@@ -49,7 +191,7 @@ jest.mock('../../images/close.svg', () => ({
 describe('Projects component', () => {
   let wrapper
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const props = {
       match: {
         params: {},
@@ -57,10 +199,14 @@ describe('Projects component', () => {
         url: '/projects'
       }
     }
-    wrapper = renderWithRedux(
-      <MemoryRouter>
-        <Projects {...props} />
-      </MemoryRouter>
+
+    await act(
+      async () =>
+        (wrapper = renderWithRedux(
+          <MemoryRouter>
+            <Projects {...props} />
+          </MemoryRouter>
+        ))
     )
   })
 

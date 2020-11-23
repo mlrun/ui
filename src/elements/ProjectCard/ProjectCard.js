@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-import './projectCard.scss'
 import ProjectCardView from './ProjectCardView'
 
 const ProjectCard = ({
@@ -118,7 +117,8 @@ const ProjectCard = ({
       failedJobs: {
         value: fetchFailedJobsFailure ? 'N/A' : failedJobs.length,
         label: 'Failed (24hrs)',
-        className: failedJobs.length > 0 ? 'failed' : 'default'
+        className: failedJobs.length > 0 ? 'failed' : 'default',
+        tooltipClassName: 'wrap'
       },
       models: {
         value: fetchModelsFailure ? 'N/A' : models.length,
