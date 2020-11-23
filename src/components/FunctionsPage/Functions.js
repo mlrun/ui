@@ -15,7 +15,7 @@ import {
   tableHeaders
 } from './functions.util'
 import functionsActions from '../../actions/functions'
-import notificationActions from '../../actions/notificationDownload'
+import notificationActions from '../../actions/notification'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 

@@ -26,57 +26,6 @@
     align-content: flex-start;
     min-height: 700px;
     padding: 15px 12px;
-
-    .project {
-      &_card {
-        display: flex;
-        flex-flow: column nowrap;
-        justify-content: space-between;
-        width: 338px;
-        height: 182px;
-        margin: 9px 12px;
-        padding: 25px;
-        background-color: $white;
-        border: $tableBorder;
-        border-radius: 4px;
-        cursor: pointer;
-
-        &_header {
-          display: flex;
-          color: $primary;
-          font-weight: bold;
-          font-size: 18px;
-          line-height: 21px;
-        }
-
-        &_description {
-          display: -webkit-box;
-          overflow: hidden;
-          color: $saltbox;
-          font-size: 13px;
-          line-height: 21px;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          text-overflow: ellipsis;
-          word-break: break-all;
-        }
-
-        &_links {
-          display: flex;
-          color: $cornflowerBlue;
-
-          a {
-            display: flex;
-            align-items: center;
-            margin-right: 20px;
-          }
-        }
-
-        &:hover {
-          box-shadow: $previewBoxShadow;
-        }
-      }
-    }
   }
 
   &-modal_opened {

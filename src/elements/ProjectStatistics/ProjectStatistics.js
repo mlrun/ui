@@ -27,13 +27,14 @@ const ProjectStatistics = ({ statistics }) => {
             </div>
             <div className="project-data-card__statistics-label">
               <Tooltip
+                className={statistics[key].tooltipClassName || ''}
                 template={<TextTooltipTemplate text={statistics[key].label} />}
               >
                 {statistics[key].label}
               </Tooltip>
             </div>
           </a>
-        ) : (
+        ) : statistics[key].link ? (
           <Link
             className="project-data-card__statistics-link"
             to={statistics[key].link}
@@ -46,12 +47,30 @@ const ProjectStatistics = ({ statistics }) => {
             </div>
             <div className="project-data-card__statistics-label">
               <Tooltip
+                className={statistics[key].tooltipClassName || ''}
                 template={<TextTooltipTemplate text={statistics[key].label} />}
               >
                 {statistics[key].label}
               </Tooltip>
             </div>
           </Link>
+        ) : (
+          <div className="project-data-card__statistics-data">
+            <div
+              className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
+            >
+              {statistics[key].value}
+              <Arrow className="project-data-card__statistics-arrow" />
+            </div>
+            <div className="project-data-card__statistics-label">
+              <Tooltip
+                className={statistics[key].tooltipClassName || ''}
+                template={<TextTooltipTemplate text={statistics[key].label} />}
+              >
+                {statistics[key].label}
+              </Tooltip>
+            </div>
+          </div>
         )}
       </div>
     )

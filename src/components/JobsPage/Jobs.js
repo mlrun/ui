@@ -11,7 +11,7 @@ import {
 } from './jobsData'
 import { parseKeyValues } from '../../utils'
 import { SCHEDULE_TAB } from '../../constants'
-import notificationActions from '../../actions/notificationDownload'
+import notificationActions from '../../actions/notification'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'

@@ -1,0 +1,117 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
+
+.project-card {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  width: 438px;
+  height: 166px;
+  margin: 9px 12px;
+  padding: 25px 25px 20px;
+  background-color: $white;
+  border: $tableBorder;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &__statistic {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__header {
+    display: flex;
+    margin-bottom: 5px;
+    color: $primary;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+  }
+
+  &_description {
+    color: $spunPearl;
+    font-size: 15px;
+    line-height: 18px;
+  }
+
+  &:hover {
+    box-shadow: $previewBoxShadow;
+  }
+
+  .project-data-card__statistics {
+    &-item {
+      max-width: 80px;
+
+      &::after {
+        display: none;
+      }
+    }
+
+    &-data {
+      padding: 0;
+    }
+
+    &-value {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+      font-size: 32px;
+      line-height: 37px;
+
+      &::after {
+        position: absolute;
+        bottom: 0;
+        width: 28px;
+        height: 1px;
+        margin: auto 0;
+        border-bottom: $dividerBorder;
+        content: '';
+      }
+    }
+
+    &-label {
+      font-size: 12px;
+    }
+  }
+
+  &__actions-menu {
+    position: absolute;
+    top: 18px;
+    right: 0;
+    z-index: 4;
+
+    &-body {
+      position: absolute;
+      right: 15px;
+      z-index: 4;
+      width: 150px;
+      background: $white;
+      border: $primaryBorder;
+      border-radius: 2px;
+      box-shadow: $filterShadow;
+    }
+
+    &-item {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $alabaster;
+      }
+
+      &-icon {
+        svg {
+          width: 24px;
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}

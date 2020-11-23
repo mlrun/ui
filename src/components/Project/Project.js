@@ -9,7 +9,11 @@ import ProjectView from './ProjectView'
 import projectsAction from '../../actions/projects'
 import nuclioActions from '../../actions/nuclio'
 import projectsApi from '../../api/projects-api'
-import { launchIDEOptions, getLinks } from './project.utils'
+import {
+  launchIDEOptions,
+  getLinks,
+  generateCreateNewOptions
+} from './project.utils'
 
 import './project.scss'
 
@@ -48,40 +52,12 @@ const Project = ({
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
-    const createNewOptions = [
-      {
-        label: 'Job',
-        id: 'job',
-        handler: () =>
-          history.push(
-            `/projects/${match.params.projectName}/jobs/monitor/create-new-job`
-          )
-      },
-      {
-        label: 'Register File',
-        id: 'registerFile',
-        handler: () => {
-          setIsPopupDialogOpen(true)
-          setArtifactKind('file')
-        }
-      },
-      {
-        label: 'Register Model',
-        id: 'registerModel',
-        handler: () => {
-          setIsPopupDialogOpen(true)
-          setArtifactKind('model')
-        }
-      },
-      {
-        label: 'Register Dataset',
-        id: 'registerDataset',
-        handler: () => {
-          setIsPopupDialogOpen(true)
-          setArtifactKind('dataset')
-        }
-      }
-    ]
+    const createNewOptions = generateCreateNewOptions(
+      history,
+      match,
+      setArtifactKind,
+      setIsPopupDialogOpen
+    )
 
     return {
       links,
@@ -140,6 +116,8 @@ const Project = ({
         })
       })
   }, [closeEditMode, editProject, history, match, projectStore.project])
+
+  // console.log(projectStore.project)
 
   const handleDocumentClick = useCallback(
     event => {

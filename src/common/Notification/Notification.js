@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import NotificationView from './NotificationView'
 
-import notificationAction from '../../actions/notificationDownload'
+import notificationAction from '../../actions/notification'
 
 const Notification = ({ notificationStore, removeNotification }) => {
   const defaultStyle = {

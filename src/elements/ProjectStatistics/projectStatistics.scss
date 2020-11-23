@@ -27,6 +27,13 @@
       }
     }
 
+    &-data {
+      width: 100%;
+      margin: 0 5px;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
     &-item {
       position: relative;
       display: flex;

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import ProgressRing from '../ProgressRing/ProgressRing'
 
 import { mainHttpClient } from '../../httpClient'
-import notificationActions from '../../actions/notificationDownload'
+import notificationActions from '../../actions/notification'
 import downloadFile from '../../utils/downloadFile'
 import { DOWNLOAD_PROGRESS_RING } from '../../colorConstants'
 
@@ -27,7 +27,8 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
 
   const retryDownload = useCallback(
     item => {
-      mainHttpClient(item.url)
+      mainHttpClient
+        .get(item.url)
         .then(response => {
           downloadFile(item.file, response)
           setNotification({
