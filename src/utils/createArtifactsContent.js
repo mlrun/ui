@@ -1,13 +1,21 @@
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
-import { ARTIFACTS_FEATURE_STORE, ARTIFACTS_MODELS_PAGE } from '../constants'
+import {
+  ARTIFACTS_FEATURE_SETS_PAGE,
+  ARTIFACTS_FEATURE_STORE,
+  ARTIFACTS_MODELS_PAGE
+} from '../constants'
 import { convertBytes } from './convertBytes'
 
-const createArtifactsContent = (artifacts, pageKind) =>
+const createArtifactsContent = (artifacts, pageKind, featureStoreTab) =>
   artifacts.map(artifact => {
+    console.log(artifact)
     return {
       key: {
-        value: artifact.db_key,
+        value:
+          featureStoreTab === ARTIFACTS_FEATURE_SETS_PAGE
+            ? artifact.name
+            : artifact.db_key,
         class: 'artifacts_medium'
       },
       kind: {

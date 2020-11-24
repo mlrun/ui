@@ -193,6 +193,8 @@ const Content = ({
     }
   }
 
+  console.log(content)
+
   return (
     <>
       <div className="content__header">

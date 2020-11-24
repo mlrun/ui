@@ -54,4 +54,4 @@ export const tableHeaders = [
     class: 'action_cell'
   }
 ]
-export const tabs = ['datasets']
+export const tabs = ['datasets', 'feature sets']

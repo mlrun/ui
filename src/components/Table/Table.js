@@ -44,6 +44,7 @@ const Table = ({
   useEffect(() => {
     const generatedTableContent = generateTableContent(
       content,
+      match.params.pageTab,
       groupedByName,
       groupedByWorkflow,
       groupFilter,

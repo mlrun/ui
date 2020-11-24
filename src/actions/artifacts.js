@@ -18,7 +18,10 @@ import {
   SHOW_ARTIFACT_PREVIEW,
   SET_ARTIFACT_FILTER,
   REMOVE_FILES,
-  REMOVE_MODELS
+  REMOVE_MODELS,
+  FETCH_FEATURE_SETS_BEGIN,
+  FETCH_FEATURE_SETS_FAILURE,
+  FETCH_FEATURE_SETS_SUCCESS
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 
@@ -79,6 +82,33 @@ const artifactsAction = {
   fetchDataSetsSuccess: dataSets => ({
     type: FETCH_DATASETS_SUCCESS,
     payload: dataSets
+  }),
+  fetchFeatureSets: project => dispatch => {
+    dispatch(artifactsAction.fetchFeatureSetsBegin())
+
+    return artifactsApi
+      .getFeatureSets(project)
+      .then(response => {
+        let featureSets = filterArtifacts(response.data.feature_sets)
+
+        dispatch(artifactsAction.fetchFeatureSetsSuccess(featureSets))
+
+        return featureSets
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFeatureSetsFailure(err))
+      })
+  },
+  fetchFeatureSetsBegin: () => ({
+    type: FETCH_FEATURE_SETS_BEGIN
+  }),
+  fetchFeatureSetsFailure: error => ({
+    type: FETCH_FEATURE_SETS_FAILURE,
+    payload: error
+  }),
+  fetchFeatureSetsSuccess: featureSets => ({
+    type: FETCH_FEATURE_SETS_SUCCESS,
+    payload: featureSets
   }),
   fetchFiles: project => dispatch => {
     dispatch(artifactsAction.fetchFilesBegin())

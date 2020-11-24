@@ -51,6 +51,8 @@ export default {
       `/artifacts?project=${item.project}&category=model`
     )
   },
+  getFeatureSets: item =>
+    fetchArtifacts(item, `/projects/${item.project}/feature-sets`),
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data)
 }

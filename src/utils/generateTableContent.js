@@ -7,6 +7,7 @@ import createArtifactsContent from './createArtifactsContent'
 
 export const generateTableContent = (
   content,
+  featureStoreTab,
   groupedByName,
   groupedByWorkflow,
   groupFilter,
@@ -33,7 +34,7 @@ export const generateTableContent = (
     return page === JOBS_PAGE
       ? createJobsContent(content, false, scheduled)
       : page === ARTIFACTS_PAGE
-      ? createArtifactsContent(content, pageKind)
+      ? createArtifactsContent(content, pageKind, featureStoreTab)
       : createFunctionsContent(content)
   } else return []
 }

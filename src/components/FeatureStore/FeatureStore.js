@@ -19,18 +19,24 @@ import {
   tabs
 } from './feaureStore.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
-import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
+import {
+  ARTIFACTS_DATASETS_PAGE,
+  ARTIFACTS_FEATURE_STORE,
+  DETAILS_ANALYSIS_TAB,
+  DETAILS_METADATA_TAB
+} from '../../constants'
 
 const FeatureStore = ({
   artifactsStore,
   fetchDataSets,
+  fetchFeatureSets,
   history,
   match,
   removeDataSets,
   setArtifactFilter
 }) => {
-  const [dataSets, setDataSets] = useState([])
-  const [selectedDataSet, setSelectedDataSet] = useState({})
+  const [content, setContent] = useState([])
+  const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
     detailsMenu,
@@ -51,22 +57,22 @@ const FeatureStore = ({
         if (result) {
           data = generateArtifacts(result)
 
-          setDataSets(data)
+          setContent(data)
         }
 
         return data
       })
     },
-    [fetchDataSets]
+    [fetchDataSets, fetchFeatureSets, match.params.pageTab]
   )
 
   useEffect(() => {
     fetchData({ project: match.params.projectName })
 
     return () => {
-      setDataSets([])
+      setContent([])
       removeDataSets()
-      setSelectedDataSet({})
+      setSelectedItem({})
     }
   }, [fetchData, match.params.projectName, removeDataSets])
 
@@ -93,19 +99,19 @@ const FeatureStore = ({
           return true
         })
 
-        setSelectedDataSet({ item: dataSet })
+        setSelectedItem({ item: dataSet })
       }
     } else {
-      setSelectedDataSet({})
+      setSelectedItem({})
     }
   }, [match.params, artifactsStore.artifacts, history, artifactsStore.dataSets])
 
   useEffect(() => {
     if (
       (match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
-        !selectedDataSet.item?.schema) ||
+        !selectedItem.item?.schema) ||
       (match.params.tab === DETAILS_ANALYSIS_TAB &&
-        !selectedDataSet.item?.extra_data)
+        !selectedItem.item?.extra_data)
     ) {
       history.push(
         `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}/${match.params.name}/info`
@@ -115,11 +121,11 @@ const FeatureStore = ({
     setPageData(state => {
       const newDetailsMenu = [...detailsMenu]
 
-      if (selectedDataSet.item?.schema) {
+      if (selectedItem.item?.schema) {
         newDetailsMenu.push('metadata')
       }
 
-      if (selectedDataSet.item?.extra_data) {
+      if (selectedItem.item?.extra_data) {
         newDetailsMenu.push('analysis')
       }
 
@@ -133,7 +139,7 @@ const FeatureStore = ({
     match.params.projectName,
     match.params.name,
     history,
-    selectedDataSet.item,
+    selectedItem.item,
     match.params.pageTab
   ])
 
@@ -159,16 +165,16 @@ const FeatureStore = ({
     <>
       {artifactsStore.loading && <Loader />}
       <Content
-        content={dataSets}
+        content={content}
         handleArtifactFilterTree={handleDataSetTreeFilterChange}
-        handleCancel={() => setSelectedDataSet({})}
-        handleSelectItem={item => setSelectedDataSet({ item })}
+        handleCancel={() => setSelectedItem({})}
+        handleSelectItem={item => setSelectedItem({ item })}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
-        selectedItem={selectedDataSet.item}
+        selectedItem={selectedItem.item}
         yamlContent={artifactsStore.dataSets}
       />
       {isPopupDialogOpen && (
