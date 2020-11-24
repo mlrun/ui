@@ -89,8 +89,8 @@ const Jobs = ({
               name: job.name,
               nextRun: new Date(job.next_run_time),
               scheduled_object: job.scheduled_object,
-              start_time: new Date(job.last_run.status.start_time),
-              state: job.last_run.status.state,
+              start_time: new Date(job.last_run?.status.start_time),
+              state: job.last_run?.status.state,
               type: job.kind === 'pipeline' ? 'workflow' : job.kind
             }
           } else {
