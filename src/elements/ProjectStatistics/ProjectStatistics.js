@@ -22,12 +22,25 @@ const ProjectStatistics = ({ statistics }) => {
             <div
               className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
             >
-              {statistics[key].value}
+              {statistics[key].counterTooltip ? (
+                <Tooltip
+                  template={
+                    <TextTooltipTemplate
+                      text={statistics[key].counterTooltip}
+                    />
+                  }
+                  textShow
+                >
+                  {statistics[key].value}
+                </Tooltip>
+              ) : (
+                statistics[key].value
+              )}
               <Arrow className="project-data-card__statistics-arrow" />
             </div>
             <div className="project-data-card__statistics-label">
               <Tooltip
-                className={statistics[key].tooltipClassName || ''}
+                className={statistics[key].labelClassName || ''}
                 template={<TextTooltipTemplate text={statistics[key].label} />}
               >
                 {statistics[key].label}
@@ -42,12 +55,25 @@ const ProjectStatistics = ({ statistics }) => {
             <div
               className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
             >
-              {statistics[key].value}
+              {statistics[key].counterTooltip ? (
+                <Tooltip
+                  template={
+                    <TextTooltipTemplate
+                      text={statistics[key].counterTooltip}
+                    />
+                  }
+                  textShow
+                >
+                  {statistics[key].value}
+                </Tooltip>
+              ) : (
+                statistics[key].value
+              )}
               <Arrow className="project-data-card__statistics-arrow" />
             </div>
             <div className="project-data-card__statistics-label">
               <Tooltip
-                className={statistics[key].tooltipClassName || ''}
+                className={statistics[key].labelClassName || ''}
                 template={<TextTooltipTemplate text={statistics[key].label} />}
               >
                 {statistics[key].label}
@@ -59,12 +85,25 @@ const ProjectStatistics = ({ statistics }) => {
             <div
               className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
             >
-              {statistics[key].value}
+              {statistics[key].counterTooltip ? (
+                <Tooltip
+                  template={
+                    <TextTooltipTemplate
+                      text={statistics[key].counterTooltip}
+                    />
+                  }
+                  textShow
+                >
+                  {statistics[key].value}
+                </Tooltip>
+              ) : (
+                statistics[key].value
+              )}
               <Arrow className="project-data-card__statistics-arrow" />
             </div>
             <div className="project-data-card__statistics-label">
               <Tooltip
-                className={statistics[key].tooltipClassName || ''}
+                className={statistics[key].labelClassName || ''}
                 template={<TextTooltipTemplate text={statistics[key].label} />}
               >
                 {statistics[key].label}
