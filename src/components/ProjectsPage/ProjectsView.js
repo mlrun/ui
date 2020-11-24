@@ -26,6 +26,7 @@ const ProjectsView = ({
   fetchNuclioFunctions,
   fetchProjectDataSets,
   fetchProjectFailedJobs,
+  fetchProjectFunctions,
   fetchProjectModels,
   fetchProjectRunningJobs,
   handleCreateProject,
@@ -109,9 +110,10 @@ const ProjectsView = ({
             return (
               <ProjectCard
                 actionsMenu={actionsMenu}
+                fetchNuclioFunctions={fetchNuclioFunctions}
                 fetchProjectDataSets={fetchProjectDataSets}
                 fetchProjectFailedJobs={fetchProjectFailedJobs}
-                fetchNuclioFunctions={fetchNuclioFunctions}
+                fetchProjectFunctions={fetchProjectFunctions}
                 fetchProjectModels={fetchProjectModels}
                 fetchProjectRunningJobs={fetchProjectRunningJobs}
                 key={project.id || project.name}
@@ -141,6 +143,7 @@ ProjectsView.propTypes = {
   fetchNuclioFunctions: PropTypes.func.isRequired,
   fetchProjectDataSets: PropTypes.func.isRequired,
   fetchProjectFailedJobs: PropTypes.func.isRequired,
+  fetchProjectFunctions: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
   fetchProjectRunningJobs: PropTypes.func.isRequired,
   handleCreateProject: PropTypes.func.isRequired,
