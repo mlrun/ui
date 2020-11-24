@@ -2,10 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import ProjectStatisticsCounter from '../ProjectStatisticsCounter/ProjectStatisticsCounter'
 
 import './projectStatistics.scss'
 
@@ -19,147 +16,18 @@ const ProjectStatistics = ({ statistics }) => {
             target="_top"
             className="project-data-card__statistics-link"
           >
-            {statistics[key].counterTooltip ? (
-              <Tooltip
-                template={
-                  <TextTooltipTemplate text={statistics[key].counterTooltip} />
-                }
-                textShow
-              >
-                <div
-                  className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
-                >
-                  {statistics[key].value}
-                  <Arrow className="project-data-card__statistics-arrow" />
-                </div>
-                <div className="project-data-card__statistics-label">
-                  <Tooltip
-                    className={statistics[key].labelClassName || ''}
-                    template={
-                      <TextTooltipTemplate text={statistics[key].label} />
-                    }
-                  >
-                    {statistics[key].label}
-                  </Tooltip>
-                </div>
-              </Tooltip>
-            ) : (
-              [
-                <div
-                  className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
-                >
-                  {statistics[key].value}
-                  <Arrow className="project-data-card__statistics-arrow" />
-                </div>,
-                <div className="project-data-card__statistics-label">
-                  <Tooltip
-                    className={statistics[key].labelClassName || ''}
-                    template={
-                      <TextTooltipTemplate text={statistics[key].label} />
-                    }
-                  >
-                    {statistics[key].label}
-                  </Tooltip>
-                </div>
-              ]
-            )}
+            <ProjectStatisticsCounter counterObject={statistics[key]} />
           </a>
         ) : statistics[key].link ? (
           <Link
             className="project-data-card__statistics-link"
             to={statistics[key].link}
           >
-            {statistics[key].counterTooltip ? (
-              <Tooltip
-                template={
-                  <TextTooltipTemplate text={statistics[key].counterTooltip} />
-                }
-                textShow
-              >
-                <div
-                  className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
-                >
-                  {statistics[key].value}
-                  <Arrow className="project-data-card__statistics-arrow" />
-                </div>
-                <div className="project-data-card__statistics-label">
-                  <Tooltip
-                    className={statistics[key].labelClassName || ''}
-                    template={
-                      <TextTooltipTemplate text={statistics[key].label} />
-                    }
-                  >
-                    {statistics[key].label}
-                  </Tooltip>
-                </div>
-              </Tooltip>
-            ) : (
-              [
-                <div
-                  className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
-                >
-                  {statistics[key].value}
-                  <Arrow className="project-data-card__statistics-arrow" />
-                </div>,
-                <div className="project-data-card__statistics-label">
-                  <Tooltip
-                    className={statistics[key].labelClassName || ''}
-                    template={
-                      <TextTooltipTemplate text={statistics[key].label} />
-                    }
-                  >
-                    {statistics[key].label}
-                  </Tooltip>
-                </div>
-              ]
-            )}
+            <ProjectStatisticsCounter counterObject={statistics[key]} />
           </Link>
         ) : (
           <div className="project-data-card__statistics-data">
-            {statistics[key].counterTooltip ? (
-              <Tooltip
-                template={
-                  <TextTooltipTemplate text={statistics[key].counterTooltip} />
-                }
-                textShow
-              >
-                <div
-                  className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
-                >
-                  {statistics[key].value}
-                  <Arrow className="project-data-card__statistics-arrow" />
-                </div>
-                <div className="project-data-card__statistics-label">
-                  <Tooltip
-                    className={statistics[key].labelClassName || ''}
-                    template={
-                      <TextTooltipTemplate text={statistics[key].label} />
-                    }
-                  >
-                    {statistics[key].label}
-                  </Tooltip>
-                </div>
-              </Tooltip>
-            ) : (
-              [
-                <div
-                  className={`project-data-card__statistics-value statistics_${statistics[key].className}`}
-                >
-                  {statistics[key].value}
-                  <Arrow className="project-data-card__statistics-arrow" />
-                </div>,
-                <div className="project-data-card__statistics-label">
-                  <Tooltip
-                    className={statistics[key].labelClassName || ''}
-                    template={
-                      <TextTooltipTemplate text={statistics[key].label} />
-                    }
-                  >
-                    {statistics[key].label}
-                  </Tooltip>
-                </div>
-              ]
-            )}
+            <ProjectStatisticsCounter counterObject={statistics[key]} />
           </div>
         )}
       </div>
