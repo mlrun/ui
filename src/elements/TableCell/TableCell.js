@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
@@ -7,16 +6,15 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
+import TableProducerCell from '../TableProducerCell/TableProducerCell'
 
 import { ReactComponent as ArtifactView } from '../../images/eye.svg'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import artifactAction from '../../actions/artifacts'
 import { truncateUid } from '../../utils'
-import { detailsMenu } from '../../components/JobsPage/jobsData'
 
 const TableCell = ({
   data,
@@ -67,27 +65,7 @@ const TableCell = ({
       </div>
     )
   } else if (data.type === 'producer') {
-    return (
-      <div className={`table-body__cell ${data.class}`}>
-        {data.value.uri && (
-          <Tooltip
-            template={
-              <ProducerTooltipTemplate
-                kind={data.value.kind}
-                owner={data.value.owner ? data.value.owner : ''}
-              />
-            }
-          >
-            <Link
-              to={`/projects/${match.params.projectName}/jobs/monitor/${data
-                .value.uri && data.value.uri.split('/')[1]}/${detailsMenu[0]}`}
-            >
-              {data.value.name}
-            </Link>
-          </Tooltip>
-        )}
-      </div>
-    )
+    return <TableProducerCell data={data} match={match} />
   } else if (data.type === 'buttonPopout') {
     return (
       <div className={`table-body__cell ${data.class}`}>
@@ -130,6 +108,31 @@ const TableCell = ({
     )
   } else if (data.type === 'hidden') {
     return null
+  } else if (data.type === 'date with state') {
+    return (
+      <div
+        className={`table-body__cell table-body__cell_last-run ${data.class}`}
+      >
+        <Tooltip
+          className="status"
+          template={
+            <TextTooltipTemplate
+              text={`${data.value.state[0].toUpperCase()}${data.value.state.slice(
+                1
+              )}`}
+            />
+          }
+        >
+          <i className={data.value.state} />
+        </Tooltip>
+        <Tooltip
+          className="text_small"
+          template={<TextTooltipTemplate text={data.value.date} />}
+        >
+          {data.value.date}
+        </Tooltip>
+      </div>
+    )
   } else {
     return (
       <div className={`table-body__cell ${data.class}`}>
