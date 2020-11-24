@@ -37,6 +37,11 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
             value: formatDatetime(contentItem.createdTime, 'Not yet started'),
             class: 'jobs_medium',
             type: 'date'
+          },
+          func: {
+            value: contentItem.func,
+            class: '',
+            type: 'hidden'
           }
         }
       } else {

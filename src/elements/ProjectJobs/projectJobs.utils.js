@@ -3,7 +3,10 @@ import measureTime from '../../utils/measureTime'
 
 export const getJobsStatistics = (jobs, match) => {
   if (jobs.data) {
-    const jobsRunning = jobs.data.length
+    const jobsRunning = jobs.data.reduce(
+      (prev, curr) => (curr.status.state === 'running' ? (prev += 1) : prev),
+      0
+    )
     const jobsFailed = jobs.data.reduce(
       (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
       0

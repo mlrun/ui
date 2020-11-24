@@ -40,7 +40,7 @@ const CreateJobPageView = ({
     <div className="create-container__header">
       <div className="header-link">
         <Link
-          to={`/projects/${match.params.projectName}/jobs/${match.params.screenTab}`}
+          to={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}`}
           className="header-link__icon"
         >
           <Back />

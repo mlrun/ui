@@ -11,7 +11,7 @@ const PageActionsMenu = ({ match, onClick, pageData }) => {
         <div data-testid="actions-link" className="page-actions-container">
           <Link
             className="btn_secondary btn_small"
-            to={`/projects/${match.params.projectName}/jobs/${match.params.screenTab}/create-new-job`}
+            to={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}/create-new-job`}
           >
             New Job
           </Link>

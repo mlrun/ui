@@ -85,6 +85,7 @@ const Jobs = ({
           if (match.params.pageTab === SCHEDULE_TAB) {
             return {
               createdTime: new Date(job.creation_time),
+              func: job.scheduled_object.task.spec.function,
               name: job.name,
               nextRun: new Date(job.next_run_time),
               scheduled_object: job.scheduled_object,
