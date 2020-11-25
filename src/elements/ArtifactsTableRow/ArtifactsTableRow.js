@@ -20,8 +20,9 @@ const ArtifactsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    selectedItem?.db_key &&
-      selectedItem?.db_key === content[index]?.db_key &&
+    ((selectedItem?.db_key &&
+      selectedItem?.db_key === content[index]?.db_key) ||
+      (selectedItem?.name && selectedItem?.name === content[index]?.name)) &&
       'row_active'
   )
 
