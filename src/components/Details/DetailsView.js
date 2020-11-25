@@ -58,7 +58,7 @@ const DetailsView = ({
             ? formatDatetime(selectedItem?.startTime, 'Not yet started')
             : selectedItem?.updated
             ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
-            : 'N/A'}
+            : ''}
           {selectedItem.state && (
             <Tooltip
               template={
