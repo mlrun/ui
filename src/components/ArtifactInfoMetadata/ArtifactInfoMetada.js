@@ -5,10 +5,10 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { ReactComponent as Primary } from '../../images/ic-key.svg'
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+
+import { generateMetadata } from './artifactInfoMetadata.util'
 
 import './artifactInfoMetadata.scss'
-import { generateMetadata } from './artifactInfoMetadata.util'
 
 const ArtifactInfoMetadata = ({ selectedItem }) => {
   const { primaryKey } = selectedItem.schema || {}
@@ -25,7 +25,7 @@ const ArtifactInfoMetadata = ({ selectedItem }) => {
                 className={`artifact-metadata__table-item header-item metadata-cell_${header}`}
                 key={header}
               >
-                {header !== 'primary-key' && header}
+                {header !== 'primary-key' && header !== 'entity' && header}
               </div>
             )
           })}
@@ -43,17 +43,21 @@ const ArtifactInfoMetadata = ({ selectedItem }) => {
                       key={metadataKey + index}
                       className={`artifact-metadata__table-item metadata-cell_${headers[index]}`}
                     >
-                      {metadataKey === 'primary-key' &&
-                      primaryKey.includes(metadataItem.name) ? (
+                      {(metadataKey === 'primary-key' &&
+                        primaryKey.includes(metadataItem.name)) ||
+                      metadataItem[metadataKey] === 'entity' ? (
                         <Tooltip
                           template={
-                            <TextTooltipTemplate text={'Primary key'} />
+                            metadataItem[metadataKey] !== 'entity' ? (
+                              <TextTooltipTemplate text={'Primary key'} />
+                            ) : null
                           }
                         >
                           <Primary />
                         </Tooltip>
                       ) : (
                         metadataKey !== 'primary-key' &&
+                        metadataKey !== 'entity' &&
                         metadataItem[metadataKey] && (
                           <Tooltip
                             className="data-ellipsis"
@@ -63,11 +67,7 @@ const ArtifactInfoMetadata = ({ selectedItem }) => {
                               />
                             }
                           >
-                            {typeof metadataItem[metadataKey] === 'boolean' ? (
-                              <Checkmark />
-                            ) : (
-                              metadataItem[metadataKey]
-                            )}
+                            {metadataItem[metadataKey]}
                           </Tooltip>
                         )
                       )}

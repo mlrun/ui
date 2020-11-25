@@ -14,11 +14,11 @@ export const generateMetadata = selectedItem => {
         max: selectedItem?.stats?.[field.name]?.max
       }))
     : selectedItem.entities
-        .map(item => ({ ...item, entity: true }))
+        .map(item => ({ ...item, entity: 'entity' }))
         .concat(selectedItem.features)
         .map(item => ({
-          name: item.name,
           entity: item.entity,
+          name: item.name,
           partition: selectedItem.partition_keys.includes(item.name),
           type: item.value_type,
           count: selectedItem?.stats?.[item.name]?.count,
