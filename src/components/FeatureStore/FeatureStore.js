@@ -110,7 +110,7 @@ const FeatureStore = ({
           `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
         )
       } else {
-        if (searchItem.link_iteration) {
+        if (match.params.pageTab === ARTIFACTS_DATASETS_PAGE) {
           const [dataSet] = searchItem.data.filter(item => {
             if (searchItem.link_iteration) {
               const { link_iteration } = searchItem.link_iteration
@@ -140,7 +140,8 @@ const FeatureStore = ({
   useEffect(() => {
     if (
       (match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
-        !selectedItem.item?.schema) ||
+        !selectedItem.item?.schema &&
+        !selectedItem.item?.entities) ||
       (match.params.tab === DETAILS_ANALYSIS_TAB &&
         !selectedItem.item?.extra_data)
     ) {
@@ -152,7 +153,7 @@ const FeatureStore = ({
     setPageData(state => {
       const newDetailsMenu = [...detailsMenu]
 
-      if (selectedItem.item?.schema) {
+      if (selectedItem.item?.schema || selectedItem.item?.entities) {
         newDetailsMenu.push('metadata')
       }
 

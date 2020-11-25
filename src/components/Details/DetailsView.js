@@ -52,7 +52,7 @@ const DetailsView = ({
   return (
     <div className="table__item">
       <div className="item-header__data">
-        <h3>{selectedItem.name || selectedItem.db_key || selectedItem.key}</h3>
+        <h3>{selectedItem.name || selectedItem.db_key}</h3>
         <span>
           {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
             ? formatDatetime(selectedItem?.startTime, 'Not yet started')
@@ -150,7 +150,7 @@ const DetailsView = ({
         <DetailsCode code={selectedItem.functionSourceCode} />
       )}
       {match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
-        selectedItem.schema && (
+        (selectedItem.schema || selectedItem.entities) && (
           <ArtifactInfoMetadata selectedItem={selectedItem} />
         )}
       {match.params.tab?.toUpperCase() === DETAILS_ANALYSIS_TAB &&

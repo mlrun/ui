@@ -52,7 +52,9 @@ const createArtifactsContent = (artifacts, pageKind, featureStoreTab) =>
         type: featureStoreTab !== ARTIFACTS_FEATURE_SETS_PAGE ? 'hidden' : ''
       },
       updated: {
-        value: formatDatetime(artifact.updated, 'N/A'),
+        value: artifact.updated
+          ? formatDatetime(new Date(artifact.updated), 'N/A')
+          : 'N/A',
         class: 'artifacts_small'
       },
       size: {
