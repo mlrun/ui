@@ -24,15 +24,13 @@ const ProjectArtifacts = ({
             <h1>{artifacts.error}</h1>
           </div>
         ) : (
-          !isEmpty(artifacts.data) && (
-            <div className="project-data-card__statistics">
-              <div className="project-data-card__statistics-item">
-                <div className="project-data-card__statistics-value statistics_default">
-                  {artifacts.data.length}
-                </div>
+          <div className="project-data-card__statistics">
+            <div className="project-data-card__statistics-item">
+              <div className="project-data-card__statistics-value statistics_default">
+                {!isEmpty(artifacts.data) ? artifacts.data.length : 0}
               </div>
             </div>
-          )
+          </div>
         )}
       </div>
     </Link>
