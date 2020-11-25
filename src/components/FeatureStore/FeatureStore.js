@@ -73,7 +73,7 @@ const FeatureStore = ({
       removeFeatureSets()
       setSelectedItem({})
     }
-  }, [fetchData, match.params.projectName, removeDataSets])
+  }, [fetchData, match.params.projectName, removeDataSets, removeFeatureSets])
 
   useEffect(() => {
     setPageData(
