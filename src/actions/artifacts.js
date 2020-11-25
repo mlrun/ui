@@ -21,7 +21,8 @@ import {
   REMOVE_MODELS,
   FETCH_FEATURE_SETS_BEGIN,
   FETCH_FEATURE_SETS_FAILURE,
-  FETCH_FEATURE_SETS_SUCCESS
+  FETCH_FEATURE_SETS_SUCCESS,
+  REMOVE_FEATURE_SETS
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateFeatureSets } from '../utils/generateFeatureSets'
@@ -168,6 +169,9 @@ const artifactsAction = {
   }),
   removeDataSets: () => ({
     type: REMOVE_DATASETS
+  }),
+  removeFeatureSets: () => ({
+    type: REMOVE_FEATURE_SETS
   }),
   removeFiles: () => ({
     type: REMOVE_FILES

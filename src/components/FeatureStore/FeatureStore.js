@@ -24,6 +24,7 @@ const FeatureStore = ({
   history,
   match,
   removeDataSets,
+  removeFeatureSets,
   setArtifactFilter
 }) => {
   const [content, setContent] = useState([])
@@ -69,6 +70,7 @@ const FeatureStore = ({
     return () => {
       setContent([])
       removeDataSets()
+      removeFeatureSets()
       setSelectedItem({})
     }
   }, [fetchData, match.params.projectName, removeDataSets])

@@ -16,6 +16,8 @@ import {
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
+  REMOVE_DATASETS,
+  REMOVE_FEATURE_SETS,
   SET_ARTIFACT_FILTER,
   SHOW_ARTIFACT_PREVIEW
 } from '../constants'
@@ -138,6 +140,16 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         artifacts: []
+      }
+    case REMOVE_DATASETS:
+      return {
+        ...state,
+        dataSets: []
+      }
+    case REMOVE_FEATURE_SETS:
+      return {
+        ...state,
+        featureSets: []
       }
     case SET_ARTIFACT_FILTER:
       return {
