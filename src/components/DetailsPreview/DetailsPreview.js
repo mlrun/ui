@@ -7,9 +7,11 @@ import { ReactComponent as Popout } from '../../images/popout.svg'
 
 const DetailsPreview = ({ artifact, handlePreview }) => (
   <div className="preview_container">
-    <button onClick={() => handlePreview()} className="preview_popout">
-      <Popout />
-    </button>
+    {artifact.target_path && (
+      <button onClick={() => handlePreview()} className="preview_popout">
+        <Popout />
+      </button>
+    )}
     <ArtifactsPreview artifact={artifact} />
   </div>
 )

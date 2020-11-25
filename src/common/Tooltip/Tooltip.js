@@ -130,7 +130,7 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
 }
 
 Tooltip.propTypes = {
-  template: PropTypes.element.isRequired,
+  template: PropTypes.element,
   className: PropTypes.string
 }
 

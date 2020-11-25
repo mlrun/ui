@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { isNil } from 'lodash'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
@@ -9,13 +8,12 @@ import { formatDatetime, parseKeyValues } from '../../utils'
 import {
   JOBS_PAGE,
   ARTIFACTS_PAGE,
-  ARTIFACTS_FILES_PAGE,
   FUNCTIONS_PAGE,
-  ARTIFACTS_MODELS_PAGE,
-  ARTIFACTS_FEATURE_STORE
+  ARTIFACTS_FEATURE_SETS_PAGE
 } from '../../constants'
 
 import './detailsInfo.scss'
+import { generateArtifactsContent } from './detailsInfo.util'
 
 const DetailsInfo = ({ match, pageData, selectedItem }) => {
   const jobsInfoContent = [
@@ -31,24 +29,11 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
     selectedItem.outputPath,
     selectedItem.iterations?.length ? selectedItem.iterations : '0'
   ]
-  const artifactsInfoContent = [
-    selectedItem.hash ?? '',
-    selectedItem.db_key,
-    selectedItem.iter || '0',
-    pageData.pageKind !== ARTIFACTS_FEATURE_STORE &&
-    pageData.pageKind !== ARTIFACTS_FILES_PAGE
-      ? selectedItem.kind || ' '
-      : null,
-    selectedItem.size ?? '',
-    selectedItem.target_path,
-    selectedItem.tree,
-    formatDatetime(new Date(selectedItem.updated), 'N/A'),
-    pageData.pageKind === ARTIFACTS_MODELS_PAGE
-      ? selectedItem.framework ?? ''
-      : null,
-    selectedItem.labels ?? [],
-    selectedItem.sources
-  ].filter(content => !isNil(content))
+  const artifactsInfoContent = generateArtifactsContent(
+    pageData.pageKind,
+    match.params.pageTab,
+    selectedItem
+  )
   const functionsInfoContent = [
     selectedItem.name,
     selectedItem.type,
@@ -71,9 +56,10 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
 
   return (
     <div className="item-info">
-      {pageData.page === ARTIFACTS_PAGE && (
-        <h3 className="item-info__header">General</h3>
-      )}
+      {pageData.page === ARTIFACTS_PAGE &&
+        match.params.pageTab !== ARTIFACTS_FEATURE_SETS_PAGE && (
+          <h3 className="item-info__header">General</h3>
+        )}
       <ul className="item-info__details">
         {pageData.infoHeaders.map((header, index) => {
           let chips = []

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import Prism from 'prismjs'
+import { isEmpty } from 'lodash'
 
 import api from '../../api/artifacts-api'
 
@@ -66,11 +67,16 @@ const ArtifactsPreview = ({ artifact }) => {
             })
           })
       })
+    } else if (artifact.preview && !artifact.target_path) {
+      setError({
+        text: 'No preview',
+        body: {}
+      })
     } else {
       getArtifactPreview(
-        artifact.target_path.schema,
-        artifact.target_path.path,
-        artifact.user || artifact.producer.owner
+        artifact.target_path?.schema,
+        artifact.target_path?.path,
+        artifact.user || artifact.producer?.owner
       )
         .then(content => {
           setPreview([content])
@@ -91,14 +97,16 @@ const ArtifactsPreview = ({ artifact }) => {
 
   return error.text.length > 0 ? (
     <div className="error_container">
-      <h1>Failed with HTTP error:</h1>
+      {!isEmpty(error.body) && <h1>Failed with HTTP error:</h1>}
       <h3>{error.text}</h3>
-      <button
-        className="error-details btn"
-        onClick={() => setShowError(state => !state)}
-      >
-        {showError ? 'Hide details' : 'View details'}
-      </button>
+      {!isEmpty(error.body) && (
+        <button
+          className="error-details btn"
+          onClick={() => setShowError(state => !state)}
+        >
+          {showError ? 'Hide details' : 'View details'}
+        </button>
+      )}
       {showError && (
         <pre className="json-content">
           <code

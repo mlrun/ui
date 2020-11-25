@@ -51,7 +51,8 @@
         flex: 1.5;
       }
 
-      &_primary-key {
+      &_primary-key,
+      &_entity {
         flex: 0.1;
         min-width: 33px;
       }

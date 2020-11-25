@@ -17,7 +17,9 @@ import {
   ARTIFACTS_PAGE,
   FUNCTIONS_PAGE,
   SCHEDULE_TAB,
-  ARTIFACTS_FEATURE_STORE
+  ARTIFACTS_FEATURE_STORE,
+  PROJECTS_PAGE,
+  ARTIFACTS_FEATURE_SETS_PAGE
 } from '../../constants'
 
 import { formatDatetime } from '../../utils'
@@ -140,11 +142,14 @@ const Content = ({
             formatDatetime(new Date(item.updated))
           )
       )[0]
+
     const artifactJson =
       pageData.page === ARTIFACTS_PAGE &&
       yamlContent.filter(yamlContentItem =>
-        isEqual(yamlContentItem.key, item.db_key)
-      )[0].data
+        match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE
+          ? isEqual(yamlContentItem.name, item.name)
+          : isEqual(yamlContentItem.db_key, item.db_key)
+      )
 
     setConvertedYaml(
       yaml.dump(
@@ -198,6 +203,17 @@ const Content = ({
       <div className="content__header">
         <Breadcrumbs match={match} onClick={handleCancel} />
         <PageActionsMenu
+          createJob={pageData.page === JOBS_PAGE}
+          registerDialog={
+            (pageData.page === PROJECTS_PAGE ||
+              pageData.page === ARTIFACTS_PAGE) &&
+            match.params.pageTab !== ARTIFACTS_FEATURE_SETS_PAGE
+          }
+          registerDialogHeader={
+            pageData.page === PROJECTS_PAGE
+              ? 'New Project'
+              : pageData.registerArtifactDialogTitle
+          }
           match={match}
           pageData={pageData}
           onClick={openPopupDialog}

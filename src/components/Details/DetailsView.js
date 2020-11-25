@@ -30,7 +30,8 @@ import {
   DETAILS_LOGS_TAB,
   DETAILS_CODE_TAB,
   DETAILS_METADATA_TAB,
-  DETAILS_ANALYSIS_TAB
+  DETAILS_ANALYSIS_TAB,
+  ARTIFACTS_FEATURE_SETS_PAGE
 } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -55,7 +56,9 @@ const DetailsView = ({
         <span>
           {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
             ? formatDatetime(selectedItem?.startTime, 'Not yet started')
-            : formatDatetime(new Date(selectedItem?.updated), 'N/A')}
+            : selectedItem?.updated
+            ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
+            : ''}
           {selectedItem.state && (
             <Tooltip
               template={
@@ -81,16 +84,17 @@ const DetailsView = ({
             onClick={setIteration}
           />
         )}
-        {pageData.page === ARTIFACTS_PAGE && (
-          <Tooltip template={<TextTooltipTemplate text="Download" />}>
-            <Download
-              fileName={selectedItem.db_key || selectedItem.key}
-              path={selectedItem.target_path.path}
-              schema={selectedItem.target_path.schema}
-              user={selectedItem.producer?.owner}
-            />
-          </Tooltip>
-        )}
+        {pageData.page === ARTIFACTS_PAGE &&
+          match.params.pageTab !== ARTIFACTS_FEATURE_SETS_PAGE && (
+            <Tooltip template={<TextTooltipTemplate text="Download" />}>
+              <Download
+                fileName={selectedItem.db_key || selectedItem.key}
+                path={selectedItem.target_path?.path}
+                schema={selectedItem.target_path?.schema}
+                user={selectedItem.producer?.owner}
+              />
+            </Tooltip>
+          )}
         <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
         <Link
           data-testid="details-close-btn"
@@ -146,7 +150,7 @@ const DetailsView = ({
         <DetailsCode code={selectedItem.functionSourceCode} />
       )}
       {match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
-        selectedItem.schema && (
+        (selectedItem.schema || selectedItem.entities) && (
           <ArtifactInfoMetadata selectedItem={selectedItem} />
         )}
       {match.params.tab?.toUpperCase() === DETAILS_ANALYSIS_TAB &&
