@@ -46,7 +46,7 @@ export const SET_FUNCTIONS_TEMPLATES = 'SET_FUNCTIONS_TEMPLATES'
 /*=========== ARTIFACTS =============*/
 
 export const ARTIFACTS_FEATURE_STORE = 'feature-store'
-export const ARTIFACTS_FEATURE_SETS_PAGE = 'feature sets'
+export const ARTIFACTS_FEATURE_SETS_PAGE = 'feature-sets'
 export const ARTIFACTS_FILES_PAGE = 'files'
 export const ARTIFACTS_DATASETS_PAGE = 'datasets'
 export const ARTIFACTS_MODELS_PAGE = 'models'

@@ -9,7 +9,6 @@ import { convertBytes } from './convertBytes'
 
 const createArtifactsContent = (artifacts, pageKind, featureStoreTab) =>
   artifacts.map(artifact => {
-    console.log(artifact)
     return {
       key: {
         value:
@@ -23,7 +22,8 @@ const createArtifactsContent = (artifacts, pageKind, featureStoreTab) =>
         class: 'artifacts_extra-small',
         type:
           pageKind === ARTIFACTS_FEATURE_STORE ||
-          pageKind === ARTIFACTS_MODELS_PAGE
+          pageKind === ARTIFACTS_MODELS_PAGE ||
+          featureStoreTab === ARTIFACTS_FEATURE_SETS_PAGE
             ? 'hidden'
             : ''
       },
@@ -35,31 +35,51 @@ const createArtifactsContent = (artifacts, pageKind, featureStoreTab) =>
       producer: {
         value: artifact.producer,
         class: 'artifacts_small',
-        type: 'producer'
+        type:
+          featureStoreTab === ARTIFACTS_FEATURE_SETS_PAGE
+            ? 'hidden'
+            : 'producer'
       },
       owner: {
-        value: artifact.producer.owner,
+        value: artifact.producer?.owner,
         class: 'artifacts_small',
-        type: 'owner'
+        type:
+          featureStoreTab === ARTIFACTS_FEATURE_SETS_PAGE ? 'hidden' : 'owner'
+      },
+      version: {
+        value: artifact.tag,
+        class: 'artifacts_small',
+        type: featureStoreTab !== ARTIFACTS_FEATURE_SETS_PAGE ? 'hidden' : ''
       },
       updated: {
-        value: formatDatetime(new Date(artifact.updated), 'N/A'),
+        value: formatDatetime(artifact.updated, 'N/A'),
         class: 'artifacts_small'
       },
       size: {
         value: convertBytes(artifact.size || 0),
         class: 'artifacts_small',
-        type: pageKind === ARTIFACTS_MODELS_PAGE || !pageKind ? 'hidden' : ''
+        type:
+          pageKind === ARTIFACTS_MODELS_PAGE ||
+          !pageKind ||
+          featureStoreTab === ARTIFACTS_FEATURE_SETS_PAGE
+            ? 'hidden'
+            : ''
       },
       buttonPopout: {
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonPopout'
+        type:
+          featureStoreTab === ARTIFACTS_FEATURE_SETS_PAGE
+            ? 'hidden'
+            : 'buttonPopout'
       },
       buttonDownload: {
         value: '',
         class: 'artifacts_extra-small artifacts__icon',
-        type: 'buttonDownload'
+        type:
+          featureStoreTab === ARTIFACTS_FEATURE_SETS_PAGE
+            ? 'hidden'
+            : 'buttonDownload'
       }
     }
   })

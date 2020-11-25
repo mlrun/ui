@@ -8,20 +8,11 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 
 import artifactsAction from '../../actions/artifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import {
-  detailsMenu,
-  filters,
-  infoHeaders,
-  page,
-  pageKind,
-  registerArtifactDialogTitle,
-  tableHeaders,
-  tabs
-} from './feaureStore.util'
+import { detailsMenu, generatePageData } from './feaureStore.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import {
   ARTIFACTS_DATASETS_PAGE,
-  ARTIFACTS_FEATURE_STORE,
+  ARTIFACTS_FEATURE_SETS_PAGE,
   DETAILS_ANALYSIS_TAB,
   DETAILS_METADATA_TAB
 } from '../../constants'
@@ -39,29 +30,35 @@ const FeatureStore = ({
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
-    detailsMenu,
-    filters,
-    infoHeaders,
-    page,
-    pageKind,
-    registerArtifactDialogTitle,
-    tableHeaders,
-    tabs
+    detailsMenu: [],
+    filters: [],
+    infoHeaders: [],
+    page: '',
+    pageKind: '',
+    registerArtifactDialogTitle: '',
+    tabs: []
   })
 
   const fetchData = useCallback(
-    item => {
-      fetchDataSets(item).then(result => {
-        let data = []
+    async item => {
+      let result
+      if (match.params.pageTab === ARTIFACTS_DATASETS_PAGE) {
+        result = await fetchDataSets(item)
 
         if (result) {
-          data = generateArtifacts(result)
+          setContent(generateArtifacts(result))
 
-          setContent(data)
+          return result
         }
+      } else if (match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE) {
+        result = await fetchFeatureSets(item)
 
-        return data
-      })
+        if (result) {
+          setContent(result)
+
+          return result
+        }
+      }
     },
     [fetchDataSets, fetchFeatureSets, match.params.pageTab]
   )
@@ -77,34 +74,68 @@ const FeatureStore = ({
   }, [fetchData, match.params.projectName, removeDataSets])
 
   useEffect(() => {
-    if (match.params.name && artifactsStore.dataSets.length !== 0) {
-      const { name } = match.params
+    setPageData(
+      generatePageData(match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE)
+    )
+  }, [match.params.pageTab])
 
-      const [searchItem] = artifactsStore.dataSets.filter(
-        item => item.key === name
-      )
+  useEffect(() => {
+    generatePageData(match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE)
+  }, [match.params.pageTab])
+
+  useEffect(() => {
+    if (match.params.name) {
+      const { name } = match.params
+      let artifacts = []
+
+      if (
+        match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE &&
+        artifactsStore.featureSets.length > 0
+      ) {
+        artifacts = artifactsStore.featureSets
+      } else if (
+        match.params.pageTab === ARTIFACTS_DATASETS_PAGE &&
+        artifactsStore.dataSets.length > 0
+      ) {
+        artifacts = artifactsStore.dataSets
+      }
+
+      const [searchItem] = artifacts.filter(item => {
+        const searchKey = item.name ? 'name' : 'key'
+        return item[searchKey] === name
+      })
 
       if (!searchItem) {
         history.push(
           `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
         )
       } else {
-        const [dataSet] = searchItem.data.filter(item => {
-          if (searchItem.link_iteration) {
-            const { link_iteration } = searchItem.link_iteration
+        if (searchItem.link_iteration) {
+          const [dataSet] = searchItem.data.filter(item => {
+            if (searchItem.link_iteration) {
+              const { link_iteration } = searchItem.link_iteration
 
-            return link_iteration === item.iter
-          }
+              return link_iteration === item.iter
+            }
 
-          return true
-        })
+            return true
+          })
 
-        setSelectedItem({ item: dataSet })
+          return setSelectedItem({ item: dataSet })
+        }
+
+        setSelectedItem({ item: searchItem })
       }
     } else {
       setSelectedItem({})
     }
-  }, [match.params, artifactsStore.artifacts, history, artifactsStore.dataSets])
+  }, [
+    match.params,
+    artifactsStore.artifacts,
+    history,
+    artifactsStore.dataSets,
+    artifactsStore.featureSets
+  ])
 
   useEffect(() => {
     if (
@@ -175,7 +206,7 @@ const FeatureStore = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedItem.item}
-        yamlContent={artifactsStore.dataSets}
+        yamlContent={content}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup

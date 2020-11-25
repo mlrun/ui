@@ -24,6 +24,7 @@ import {
   FETCH_FEATURE_SETS_SUCCESS
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
+import { generateFeatureSets } from '../utils/generateFeatureSets'
 
 const artifactsAction = {
   closeArtifactsPreview: item => ({
@@ -89,7 +90,7 @@ const artifactsAction = {
     return artifactsApi
       .getFeatureSets(project)
       .then(response => {
-        let featureSets = filterArtifacts(response.data.feature_sets)
+        let featureSets = generateFeatureSets(response.data.feature_sets)
 
         dispatch(artifactsAction.fetchFeatureSetsSuccess(featureSets))
 
