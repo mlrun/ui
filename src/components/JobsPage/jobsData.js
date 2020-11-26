@@ -37,6 +37,10 @@ export const generateTableHeaders = scheduled => {
         class: 'jobs_big'
       },
       {
+        header: 'Labels',
+        class: 'jobs_big'
+      },
+      {
         header: 'Last run (Local TZ)',
         class: 'jobs_big'
       },
