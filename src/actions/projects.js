@@ -182,15 +182,19 @@ const projectsAction = {
   fetchProjectFunctions: project => dispatch => {
     dispatch(projectsAction.fetchProjectFunctionsBegin())
 
-    projectsApi
+    return projectsApi
       .getProjectFunctions(project)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectFunctionsSuccess(response?.data.funcs)
         )
+
+        return response?.data.funcs
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectFunctionsFailure(error.message))
+
+        throw error.message
       })
   },
   fetchProjectFunctionsBegin: () => ({ type: FETCH_PROJECT_FUNCTIONS_BEGIN }),
@@ -264,6 +268,8 @@ const projectsAction = {
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectRunningJobsFailure(error.message))
+
+        throw error.message
       })
   },
   fetchProjectRunningJobsBegin: () => ({

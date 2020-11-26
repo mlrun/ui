@@ -23,7 +23,9 @@ export default {
   },
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
   getScheduled: (project, status, event) => {
-    const params = {}
+    const params = {
+      include_last_run: 'yes'
+    }
 
     if (event?.owner) {
       params.owner = event.owner

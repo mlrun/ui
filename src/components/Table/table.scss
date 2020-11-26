@@ -132,8 +132,31 @@
       font-size: 15px;
       line-height: 18px;
 
+      .text_small {
+        min-width: 100%;
+        max-width: 50px;
+      }
+
       &_type {
         text-transform: capitalize;
+      }
+
+      &_last-run {
+        flex-wrap: nowrap;
+
+        .status {
+          display: flex;
+          min-width: 10px;
+          margin: 0 5px;
+
+          i {
+            margin: 0;
+          }
+        }
+
+        .text_small {
+          min-width: 85%;
+        }
       }
 
       a {
@@ -173,11 +196,6 @@
         position: absolute;
         left: 10px;
         cursor: pointer;
-      }
-
-      .text_small {
-        min-width: 100%;
-        max-width: 50px;
       }
 
       .path-tooltip {

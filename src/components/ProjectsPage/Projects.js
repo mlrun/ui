@@ -17,9 +17,10 @@ import projectsAction from '../../actions/projects'
 const Projects = ({
   createNewProject,
   deleteProject,
+  fetchNuclioFunctions,
   fetchProjectDataSets,
   fetchProjectFailedJobs,
-  fetchNuclioFunctions,
+  fetchProjectFunctions,
   fetchProjectModels,
   fetchProjectRunningJobs,
   fetchProjects,
@@ -117,6 +118,7 @@ const Projects = ({
       fetchNuclioFunctions={fetchNuclioFunctions}
       fetchProjectDataSets={fetchProjectDataSets}
       fetchProjectFailedJobs={fetchProjectFailedJobs}
+      fetchProjectFunctions={fetchProjectFunctions}
       fetchProjectModels={fetchProjectModels}
       fetchProjectRunningJobs={fetchProjectRunningJobs}
       handleCreateProject={handleCreateProject}

@@ -13,13 +13,8 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           },
           type: {
             value: contentItem.type,
-            class: 'jobs_medium',
+            class: 'jobs_big',
             type: 'type'
-          },
-          createdTime: {
-            value: formatDatetime(contentItem.createdTime, 'Not yet started'),
-            class: 'jobs_medium',
-            type: 'date'
           },
           nextRun: {
             value: formatDatetime(contentItem.nextRun),
@@ -29,6 +24,19 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           schedule: {
             value: cronstrue.toString(contentItem.scheduled_object.schedule),
             class: 'jobs_big'
+          },
+          lastRun: {
+            value: {
+              date: formatDatetime(contentItem.start_time),
+              state: contentItem.state
+            },
+            class: 'jobs_big',
+            type: 'date with state'
+          },
+          createdTime: {
+            value: formatDatetime(contentItem.createdTime, 'Not yet started'),
+            class: 'jobs_medium',
+            type: 'date'
           },
           func: {
             value: contentItem.func,
