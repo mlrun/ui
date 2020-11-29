@@ -84,7 +84,7 @@ export const featureSetsTableHeaders = [
     class: 'action_cell'
   }
 ]
-export const tabs = ['datasets', 'feature-sets']
+export const tabs = ['datasets', 'feature-sets', 'features', 'feature-vectors']
 
 export const generatePageData = featureSetsTab => {
   let data = {
