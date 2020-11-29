@@ -1,6 +1,7 @@
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
 import cronstrue from 'cronstrue'
+import { parseKeyValues } from './object'
 
 const createJobsContent = (content, groupedByWorkflow, scheduled) => {
   return content.map(contentItem => {
@@ -24,6 +25,13 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           schedule: {
             value: cronstrue.toString(contentItem.scheduled_object.schedule),
             class: 'jobs_big'
+          },
+          labels: {
+            value: parseKeyValues(
+              contentItem.scheduled_object.task.metadata.labels || {}
+            ),
+            class: 'jobs_big',
+            type: 'labels'
           },
           lastRun: {
             value: {
