@@ -34,7 +34,7 @@ const ProjectFunctions = ({
       return {
         running: {
           value: functionsRunning,
-          label: 'Running functions',
+          label: 'Running',
           className: 'running',
           href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
         },
