@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import { capitalize } from 'lodash'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
@@ -115,13 +116,7 @@ const TableCell = ({
       >
         <Tooltip
           className="status"
-          template={
-            <TextTooltipTemplate
-              text={`${data.value.state[0].toUpperCase()}${data.value.state.slice(
-                1
-              )}`}
-            />
-          }
+          template={<TextTooltipTemplate text={capitalize(data.value.state)} />}
         >
           <i className={data.value.state} />
         </Tooltip>
