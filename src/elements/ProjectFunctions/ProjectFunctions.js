@@ -81,7 +81,7 @@ const ProjectFunctions = ({
               className: 'table-cell_big'
             },
             status: {
-              value: func?.status?.state ?? '',
+              value: func?.status?.state || 'Building',
               className: funcClassName
             }
           }
