@@ -35,6 +35,10 @@ export default {
       params.name = event.name
     }
 
+    if (event?.labels) {
+      params.labels = event?.labels
+    }
+
     return mainHttpClient.get(`/projects/${project}/schedules`, { params })
   },
   removeScheduledJob: (project, scheduleName) =>
