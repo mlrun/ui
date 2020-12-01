@@ -103,7 +103,7 @@ export const generatePageData = (
   let jobFilters = []
 
   if (scheduled) {
-    jobFilters = ['name']
+    jobFilters = ['name', 'labels']
   } else {
     jobFilters = [...filters]
   }
