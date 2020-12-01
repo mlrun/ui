@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
@@ -67,6 +68,12 @@ const ProjectFunctions = ({
       const functionsTableBody = functionsStore.functions
         .slice(0, 5)
         .map(func => {
+          const funcClassName = classnames(
+            'table-cell_small',
+            'status',
+            `status-nuclio_${func?.status?.state}`,
+            func?.spec.disable && 'disabled'
+          )
           return {
             name: {
               value: func.metadata.name,
@@ -75,7 +82,7 @@ const ProjectFunctions = ({
             },
             status: {
               value: func?.status?.state ?? '',
-              className: `table-cell_small status_${func?.status?.state}`
+              className: funcClassName
             }
           }
         })

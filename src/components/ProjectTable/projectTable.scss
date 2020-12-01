@@ -48,14 +48,33 @@
       line-height: 24px;
 
       &.status {
+        color: $supernova;
+
         &_completed,
         &_ready,
         &_running {
           color: $java;
         }
 
-        &_failed {
+        &-nuclio {
+          &_ready {
+            color: $brightTurquoise;
+
+            &.disabled {
+              color: $topaz;
+            }
+          }
+        }
+
+        &_failed,
+        &_error,
+        &_unhealthy {
           color: $amaranth;
+        }
+
+        &_imported,
+        &_scaledToZero {
+          color: $topaz;
         }
       }
 
