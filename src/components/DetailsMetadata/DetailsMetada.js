@@ -56,7 +56,7 @@ const DetailsMetada = ({ selectedItem }) => {
                           <Tooltip
                             template={
                               <TextTooltipTemplate
-                                text={metadataKey.iconTooltip}
+                                text={metadataItem[metadataKey].iconTooltip}
                               />
                             }
                           >
