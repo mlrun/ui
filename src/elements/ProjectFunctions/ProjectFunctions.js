@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { lowerCase, upperFirst } from 'lodash'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
@@ -87,7 +88,11 @@ const ProjectFunctions = ({
                   ? 'Running'
                   : func?.status?.state === 'ready' && func?.spec?.disable
                   ? 'Standby'
-                  : func?.status?.state || 'Building',
+                  : /(error)|(unhealthy)|(imported)|(scaledToZero)/.test(
+                      func?.status?.state
+                    )
+                  ? upperFirst(lowerCase(func.status.state))
+                  : 'Building',
               className: funcClassName
             }
           }
