@@ -210,7 +210,7 @@ export default (state = initialState, { type, payload }) => {
           ...state.project,
           dataSets: {
             data: payload,
-            loading: true,
+            loading: false,
             error: null
           }
         }
@@ -395,8 +395,8 @@ export default (state = initialState, { type, payload }) => {
           ...state.project,
           models: {
             data: payload,
-            loading: true,
-            error: null
+            error: null,
+            loading: false
           }
         }
       }

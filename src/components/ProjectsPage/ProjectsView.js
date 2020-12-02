@@ -32,6 +32,7 @@ const ProjectsView = ({
   handleCreateProject,
   isEmptyValue,
   match,
+  nuclioStore,
   projectStore,
   removeNewProjectError,
   setCreateProject,
@@ -117,7 +118,9 @@ const ProjectsView = ({
                 fetchProjectModels={fetchProjectModels}
                 fetchProjectRunningJobs={fetchProjectRunningJobs}
                 key={project.id || project.name}
+                nuclioStore={nuclioStore}
                 project={project}
+                projectStore={projectStore}
               />
             )
           })
@@ -149,6 +152,7 @@ ProjectsView.propTypes = {
   handleCreateProject: PropTypes.func.isRequired,
   isEmptyValue: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
+  nuclioStore: PropTypes.shape({}).isRequired,
   projectStore: PropTypes.shape({}).isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   setCreateProject: PropTypes.func.isRequired,

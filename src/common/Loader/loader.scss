@@ -15,40 +15,40 @@
 
 .loader {
   position: relative;
-  display: inline-block;
-  width: 140px;
-  height: 140px;
+  z-index: 2;
+  width: 120px;
+  height: 120px;
+  margin: -25px 0 0 -25px;
+  animation: rotate 2s linear infinite;
 
-  div {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    margin: 8px;
-    border: 8px solid $cornflowerBlue;
-    border-color: $cornflowerBlue transparent transparent transparent;
-    border-radius: 50%;
-    animation: loading 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-
-    &:nth-child(1) {
-      animation-delay: -0.45s;
-    }
-
-    &:nth-child(2) {
-      animation-delay: -0.3s;
-    }
-
-    &:nth-child(3) {
-      animation-delay: -0.15s;
-    }
+  .path {
+    animation: dash 1.5s ease-in-out infinite;
+    stroke: $cornflowerBlue;
+    stroke-linecap: round;
+    stroke-width: 3;
   }
 }
 
-@keyframes loading {
-  0% {
-    transform: rotate(0deg);
-  }
-
+@keyframes rotate {
   100% {
     transform: rotate(360deg);
   }
 }
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
