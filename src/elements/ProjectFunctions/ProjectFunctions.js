@@ -72,8 +72,9 @@ const ProjectFunctions = ({
             'table-cell_small',
             'status',
             `status-nuclio_${func?.status?.state}`,
-            func?.spec.disable && 'disabled'
+            func?.spec?.disable && 'disabled'
           )
+
           return {
             name: {
               value: func.metadata.name,
@@ -81,7 +82,12 @@ const ProjectFunctions = ({
               className: 'table-cell_big'
             },
             status: {
-              value: func?.status?.state || 'Building',
+              value:
+                func?.status?.state === 'ready' && !func?.spec?.disable
+                  ? 'Running'
+                  : func?.status?.state === 'ready' && func?.spec?.disable
+                  ? 'Standby'
+                  : func?.status?.state || 'Building',
               className: funcClassName
             }
           }
