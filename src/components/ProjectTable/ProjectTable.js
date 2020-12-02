@@ -33,7 +33,8 @@ const ProjectTable = ({ table }) => {
                   const tableValueClassName = classnames(
                     'project-data-card__table-cell',
                     body[key].className,
-                    key === 'status' && `status_${body[key].value} capitalize`
+                    key === 'status' &&
+                      `status_${body[key].value.toLowerCase()} capitalize`
                   )
 
                   return key === 'type' ? (

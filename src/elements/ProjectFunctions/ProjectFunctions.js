@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
+import { lowerCase, upperFirst } from 'lodash'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
@@ -67,6 +69,13 @@ const ProjectFunctions = ({
       const functionsTableBody = functionsStore.functions
         .slice(0, 5)
         .map(func => {
+          const funcClassName = classnames(
+            'table-cell_small',
+            'status',
+            `status-nuclio_${func?.status?.state}`,
+            func?.spec?.disable && 'disabled'
+          )
+
           return {
             name: {
               value: func.metadata.name,
@@ -74,8 +83,17 @@ const ProjectFunctions = ({
               className: 'table-cell_big'
             },
             status: {
-              value: func?.status?.state ?? '',
-              className: `table-cell_small status_${func?.status?.state}`
+              value:
+                func?.status?.state === 'ready' && !func?.spec?.disable
+                  ? 'Running'
+                  : func?.status?.state === 'ready' && func?.spec?.disable
+                  ? 'Standby'
+                  : ['error', 'unhealthy', 'imported', 'scaledToZero'].includes(
+                      func?.status?.state
+                    )
+                  ? upperFirst(lowerCase(func.status.state))
+                  : 'Building',
+              className: funcClassName
             }
           }
         })
