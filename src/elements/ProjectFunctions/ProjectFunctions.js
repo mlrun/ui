@@ -88,7 +88,7 @@ const ProjectFunctions = ({
                   ? 'Running'
                   : func?.status?.state === 'ready' && func?.spec?.disable
                   ? 'Standby'
-                  : /(error)|(unhealthy)|(imported)|(scaledToZero)/.test(
+                  : ['error', 'unhealthy', 'imported', 'scaledToZero'].includes(
                       func?.status?.state
                     )
                   ? upperFirst(lowerCase(func.status.state))
