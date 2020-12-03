@@ -2,11 +2,12 @@ import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
 import cronstrue from 'cronstrue'
 import { parseKeyValues } from './object'
+import { SCHEDULE_TAB } from '../constants'
 
-const createJobsContent = (content, groupedByWorkflow, scheduled) => {
+const createJobsContent = (content, groupedByWorkflow, pageTab) => {
   return content.map(contentItem => {
     if (contentItem) {
-      if (scheduled) {
+      if (pageTab === SCHEDULE_TAB) {
         return {
           name: {
             value: contentItem.name,

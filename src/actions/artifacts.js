@@ -22,7 +22,11 @@ import {
   FETCH_FEATURE_SETS_BEGIN,
   FETCH_FEATURE_SETS_FAILURE,
   FETCH_FEATURE_SETS_SUCCESS,
-  REMOVE_FEATURE_SETS
+  FETCH_FEATURES_BEGIN,
+  FETCH_FEATURES_FAILURE,
+  FETCH_FEATURES_SUCCESS,
+  REMOVE_FEATURE_SETS,
+  REMOVE_FEATURES
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateFeatureSets } from '../utils/generateFeatureSets'
@@ -112,6 +116,33 @@ const artifactsAction = {
     type: FETCH_FEATURE_SETS_SUCCESS,
     payload: featureSets
   }),
+  fetchFeatures: project => dispatch => {
+    dispatch(artifactsAction.fetchFeaturesBegin())
+
+    return artifactsApi
+      .getFeatures(project)
+      .then(response => {
+        let features = response.data.features
+
+        dispatch(artifactsAction.fetchFeaturesSuccess(features))
+
+        return features
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFeaturesFailure(err))
+      })
+  },
+  fetchFeaturesBegin: () => ({
+    type: FETCH_FEATURES_BEGIN
+  }),
+  fetchFeaturesFailure: error => ({
+    type: FETCH_FEATURES_FAILURE,
+    payload: error
+  }),
+  fetchFeaturesSuccess: features => ({
+    type: FETCH_FEATURES_SUCCESS,
+    payload: features
+  }),
   fetchFiles: project => dispatch => {
     dispatch(artifactsAction.fetchFilesBegin())
 
@@ -172,6 +203,9 @@ const artifactsAction = {
   }),
   removeFeatureSets: () => ({
     type: REMOVE_FEATURE_SETS
+  }),
+  removeFeatures: () => ({
+    type: REMOVE_FEATURES
   }),
   removeFiles: () => ({
     type: REMOVE_FILES

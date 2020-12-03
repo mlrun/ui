@@ -1,3 +1,5 @@
+import { FEATURE_SETS_TAB, FEATURES_TAB } from '../../constants'
+
 export const datasetsInfoHeaders = [
   { label: 'Hash', id: 'hash' },
   { label: 'Key', id: 'key' },
@@ -19,8 +21,8 @@ export const featureSetsInfoHeaders = [
 export const datasetsFilters = ['tree', 'labels', 'name']
 export const detailsMenu = ['info', 'preview']
 export const featureSetsFilters = ['labels', 'name']
-export const page = 'ARTIFACTS'
-export const pageKind = 'feature-store'
+export const featuresFilters = ['labels', 'name']
+export const page = 'FEATURE-STORE'
 export const sources = ['name', 'path']
 export const registerDatasetsTitle = 'Register dataset'
 export const datasetsTableHeaders = [
@@ -84,20 +86,48 @@ export const featureSetsTableHeaders = [
     class: 'action_cell'
   }
 ]
+export const featuresTableHeaders = [
+  {
+    header: 'Name',
+    class: 'artifacts_medium'
+  },
+  {
+    header: 'Feature set',
+    class: 'artifacts_medium'
+  },
+  {
+    header: 'Labels',
+    class: 'artifacts_big'
+  },
+  {
+    header: 'Type',
+    class: 'artifacts_extra-small'
+  },
+  {
+    header: 'Entity',
+    class: 'artifacts_extra-small'
+  },
+  {
+    header: '',
+    class: 'action_cell'
+  }
+]
 export const tabs = ['datasets', 'feature-sets', 'features', 'feature-vectors']
 
-export const generatePageData = featureSetsTab => {
+export const generatePageData = pageTab => {
   let data = {
     detailsMenu,
     page,
-    pageKind,
     tabs
   }
 
-  if (featureSetsTab) {
+  if (pageTab === FEATURE_SETS_TAB) {
     data.filters = featureSetsFilters
     data.infoHeaders = featureSetsInfoHeaders
     data.tableHeaders = featureSetsTableHeaders
+  } else if (pageTab === FEATURES_TAB) {
+    data.filters = featuresFilters
+    data.tableHeaders = featuresTableHeaders
   } else {
     data.filters = datasetsFilters
     data.infoHeaders = datasetsInfoHeaders

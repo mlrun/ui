@@ -11,8 +11,7 @@ export const infoHeaders = [
 ]
 export const detailsMenu = ['info', 'preview']
 export const filters = ['tree', 'labels', 'name']
-export const page = 'ARTIFACTS'
-export const pageKind = 'files'
+export const page = 'FILES'
 export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register file'
 export const tableHeaders = [
