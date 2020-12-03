@@ -95,7 +95,7 @@ const projectsAction = {
     projectsApi
       .getProject(project)
       .then(response => {
-        dispatch(projectsAction.fetchProjectSuccess(response?.data.project))
+        dispatch(projectsAction.fetchProjectSuccess(response?.data))
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectFailure(error.message))

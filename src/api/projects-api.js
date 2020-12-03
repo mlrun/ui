@@ -1,11 +1,11 @@
 import { mainHttpClient } from '../httpClient'
 
 export default {
-  createProject: postData => mainHttpClient.post('/project', postData),
+  createProject: postData => mainHttpClient.post('/projects', postData),
   deleteProject: project => mainHttpClient.delete(`/projects/${project}`),
   getJobsAndWorkflows: project =>
     mainHttpClient.get(`/runs?project=${project}`),
-  getProject: project => mainHttpClient.get(`/project/${project}`),
+  getProject: project => mainHttpClient.get(`/projects/${project}`),
   getProjectDataSets: project =>
     mainHttpClient.get(`/artifacts?project=${project}&category=dataset`),
   getProjectFailedJobs: project =>
@@ -33,5 +33,5 @@ export default {
     return mainHttpClient.get('/workflows', { params })
   },
   updateProject: (project, data) =>
-    mainHttpClient.post(`/project/${project}`, data)
+    mainHttpClient.put(`/projects/${project}`, data)
 }
