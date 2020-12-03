@@ -11,8 +11,9 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { detailsMenu, generatePageData } from './feaureStore.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import {
-  ARTIFACTS_DATASETS_PAGE,
-  ARTIFACTS_FEATURE_SETS_PAGE,
+  DATASETS_TAB,
+  FEATURE_SETS_TAB,
+  FEATURES_TAB,
   DETAILS_ANALYSIS_TAB,
   DETAILS_METADATA_TAB
 } from '../../constants'
@@ -21,6 +22,7 @@ const FeatureStore = ({
   artifactsStore,
   fetchDataSets,
   fetchFeatureSets,
+  fetchFeatures,
   history,
   match,
   removeDataSets,
@@ -35,7 +37,6 @@ const FeatureStore = ({
     filters: [],
     infoHeaders: [],
     page: '',
-    pageKind: '',
     registerArtifactDialogTitle: '',
     tabs: []
   })
@@ -43,7 +44,7 @@ const FeatureStore = ({
   const fetchData = useCallback(
     async item => {
       let result
-      if (match.params.pageTab === ARTIFACTS_DATASETS_PAGE) {
+      if (match.params.pageTab === DATASETS_TAB) {
         result = await fetchDataSets(item)
 
         if (result) {
@@ -51,8 +52,16 @@ const FeatureStore = ({
 
           return result
         }
-      } else if (match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE) {
+      } else if (match.params.pageTab === FEATURE_SETS_TAB) {
         result = await fetchFeatureSets(item)
+
+        if (result) {
+          setContent(result)
+
+          return result
+        }
+      } else if (match.params.pageTab === FEATURES_TAB) {
+        result = await fetchFeatures(item)
 
         if (result) {
           setContent(result)
@@ -61,7 +70,7 @@ const FeatureStore = ({
         }
       }
     },
-    [fetchDataSets, fetchFeatureSets, match.params.pageTab]
+    [fetchDataSets, fetchFeatureSets, fetchFeatures, match.params.pageTab]
   )
 
   useEffect(() => {
@@ -76,46 +85,45 @@ const FeatureStore = ({
   }, [fetchData, match.params.projectName, removeDataSets, removeFeatureSets])
 
   useEffect(() => {
-    setPageData(
-      generatePageData(match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE)
-    )
+    setPageData(generatePageData(match.params.pageTab))
   }, [match.params.pageTab])
 
   useEffect(() => {
-    generatePageData(match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE)
-  }, [match.params.pageTab])
+    const { name } = match.params
+    let artifacts = []
 
-  useEffect(() => {
-    if (match.params.name) {
-      const { name } = match.params
-      let artifacts = []
+    if (
+      match.params.pageTab === FEATURE_SETS_TAB &&
+      artifactsStore.featureSets.length > 0
+    ) {
+      artifacts = artifactsStore.featureSets
+    } else if (
+      match.params.pageTab === FEATURES_TAB &&
+      artifactsStore.features.length > 0
+    ) {
+      artifacts = artifactsStore.features
+    } else if (
+      match.params.pageTab === DATASETS_TAB &&
+      artifactsStore.dataSets.length > 0
+    ) {
+      artifacts = artifactsStore.dataSets
+    }
 
-      if (
-        match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE &&
-        artifactsStore.featureSets.length > 0
-      ) {
-        artifacts = artifactsStore.featureSets
-      } else if (
-        match.params.pageTab === ARTIFACTS_DATASETS_PAGE &&
-        artifactsStore.dataSets.length > 0
-      ) {
-        artifacts = artifactsStore.dataSets
-      }
-
-      const [searchItem] = artifacts.filter(item => {
-        const searchKey = item.name ? 'name' : 'key'
-        return item[searchKey] === name
+    if (match.params.name && artifacts.length !== 0) {
+      const [selectedArtifact] = artifacts.filter(artifact => {
+        const searchKey = artifact.name ? 'name' : 'key'
+        return artifact[searchKey] === name
       })
 
-      if (!searchItem) {
+      if (!selectedArtifact) {
         history.push(
           `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
         )
       } else {
-        if (match.params.pageTab === ARTIFACTS_DATASETS_PAGE) {
-          const [dataSet] = searchItem.data.filter(item => {
-            if (searchItem.link_iteration) {
-              const { link_iteration } = searchItem.link_iteration
+        if (match.params.pageTab === DATASETS_TAB) {
+          const [dataSet] = selectedArtifact.data.filter(item => {
+            if (selectedArtifact.link_iteration) {
+              const { link_iteration } = selectedArtifact.link_iteration
 
               return link_iteration === item.iter
             }
@@ -126,7 +134,7 @@ const FeatureStore = ({
           return setSelectedItem({ item: dataSet })
         }
 
-        setSelectedItem({ item: searchItem })
+        setSelectedItem({ item: selectedArtifact })
       }
     } else {
       setSelectedItem({})
@@ -136,7 +144,8 @@ const FeatureStore = ({
     artifactsStore.artifacts,
     history,
     artifactsStore.dataSets,
-    artifactsStore.featureSets
+    artifactsStore.featureSets,
+    artifactsStore.features
   ])
 
   useEffect(() => {

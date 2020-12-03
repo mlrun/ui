@@ -35,16 +35,18 @@ const ArtifactsTableRow = ({
             item={content[index]}
             key={Math.random() + i}
             link={
-              i === 0 &&
-              `/projects/${match.params.projectName}/${
-                pageData.pageKind ? pageData.pageKind : 'artifacts'
-              }${match.params.pageTab ? `/${match.params.pageTab}` : ''}/${
-                rowItem.key.value
-              }/${
-                match.params.tab
-                  ? match.params.tab
-                  : `${artifactsData.detailsMenu[0]}`
-              }`
+              value.link &&
+              (value.link === 'info'
+                ? `/projects/${
+                    match.params.projectName
+                  }/${pageData.page.toLowerCase()}${
+                    match.params.pageTab ? `/${match.params.pageTab}` : ''
+                  }/${rowItem.key.value}/${
+                    match.params.tab
+                      ? match.params.tab
+                      : `${artifactsData.detailsMenu[0]}`
+                  }`
+                : value.link)
             }
             match={match}
             selectedItem={selectedItem}

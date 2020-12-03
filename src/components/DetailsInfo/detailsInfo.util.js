@@ -1,14 +1,14 @@
 import {
-  ARTIFACTS_FEATURE_SETS_PAGE,
-  ARTIFACTS_FEATURE_STORE,
-  ARTIFACTS_FILES_PAGE,
-  ARTIFACTS_MODELS_PAGE
+  FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  MODELS_PAGE
 } from '../../constants'
 import { formatDatetime } from '../../utils'
 import { isNil, isEmpty } from 'lodash'
 
-export const generateArtifactsContent = (pageKind, pageTab, selectedItem) => {
-  if (pageTab === ARTIFACTS_FEATURE_SETS_PAGE) {
+export const generateArtifactsContent = (page, pageTab, selectedItem) => {
+  if (pageTab === FEATURE_SETS_TAB) {
     return [
       selectedItem.name,
       isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
@@ -22,14 +22,14 @@ export const generateArtifactsContent = (pageKind, pageTab, selectedItem) => {
     selectedItem.hash ?? '',
     selectedItem.db_key,
     selectedItem.iter || '0',
-    pageKind !== ARTIFACTS_FEATURE_STORE && pageKind !== ARTIFACTS_FILES_PAGE
+    page !== FEATURE_STORE_PAGE && page !== FILES_PAGE
       ? selectedItem.kind || ' '
       : null,
     selectedItem.size ?? '',
     selectedItem.target_path,
     selectedItem.tree,
     formatDatetime(new Date(selectedItem.updated), 'N/A'),
-    pageKind === ARTIFACTS_MODELS_PAGE ? selectedItem.framework ?? '' : null,
+    page === MODELS_PAGE ? selectedItem.framework ?? '' : null,
     selectedItem.labels ?? [],
     selectedItem.sources
   ].filter(content => !isNil(content))

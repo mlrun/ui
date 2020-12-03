@@ -13,13 +13,16 @@ import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import {
-  JOBS_PAGE,
   ARTIFACTS_PAGE,
+  FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE,
+  FEATURES_TAB,
+  FILES_PAGE,
   FUNCTIONS_PAGE,
-  SCHEDULE_TAB,
-  ARTIFACTS_FEATURE_STORE,
+  JOBS_PAGE,
+  MODELS_PAGE,
   PROJECTS_PAGE,
-  ARTIFACTS_FEATURE_SETS_PAGE
+  SCHEDULE_TAB
 } from '../../constants'
 
 import { formatDatetime } from '../../utils'
@@ -55,8 +58,7 @@ const Content = ({
   const contentClassName = classnames(
     'content',
     loading && 'isLoading',
-    (pageData.page === JOBS_PAGE ||
-      pageData.pageKind === ARTIFACTS_FEATURE_STORE) &&
+    (pageData.page === JOBS_PAGE || pageData.page === FEATURE_STORE_PAGE) &&
       'content_with-menu'
   )
 
@@ -144,10 +146,15 @@ const Content = ({
       )[0]
 
     const artifactJson =
-      pageData.page === ARTIFACTS_PAGE &&
+      (pageData.page === ARTIFACTS_PAGE ||
+        pageData.page === FILES_PAGE ||
+        pageData.page === MODELS_PAGE ||
+        pageData.page === FEATURE_STORE_PAGE) &&
       yamlContent.filter(yamlContentItem =>
-        match.params.pageTab === ARTIFACTS_FEATURE_SETS_PAGE
+        match.params.pageTab === FEATURE_SETS_TAB
           ? isEqual(yamlContentItem.name, item.name)
+          : match.params.pageTab === FEATURES_TAB
+          ? isEqual(yamlContentItem.feature.name, item.feature.name)
           : isEqual(yamlContentItem.db_key, item.db_key)
       )
 
@@ -155,7 +162,10 @@ const Content = ({
       yaml.dump(
         pageData.page === JOBS_PAGE
           ? jobJson
-          : pageData.page === ARTIFACTS_PAGE
+          : pageData.page === ARTIFACTS_PAGE ||
+            pageData.page === FILES_PAGE ||
+            pageData.page === MODELS_PAGE ||
+            pageData.page === FEATURE_STORE_PAGE
           ? artifactJson
           : functionJson,
         { lineWidth: -1 }
@@ -206,8 +216,12 @@ const Content = ({
           createJob={pageData.page === JOBS_PAGE}
           registerDialog={
             (pageData.page === PROJECTS_PAGE ||
-              pageData.page === ARTIFACTS_PAGE) &&
-            match.params.pageTab !== ARTIFACTS_FEATURE_SETS_PAGE
+              pageData.page === ARTIFACTS_PAGE ||
+              pageData.page === FILES_PAGE ||
+              pageData.page === MODELS_PAGE ||
+              pageData.page === FEATURE_STORE_PAGE) &&
+            match.params.pageTab !== FEATURE_SETS_TAB &&
+            match.params.pageTab !== FEATURES_TAB
           }
           registerDialogHeader={
             pageData.page === PROJECTS_PAGE
@@ -221,13 +235,11 @@ const Content = ({
       </div>
       <div className={contentClassName}>
         {(pageData.page === JOBS_PAGE ||
-          pageData.pageKind === ARTIFACTS_FEATURE_STORE) && (
+          pageData.page === FEATURE_STORE_PAGE) && (
           <ContentMenu
             activeTab={match.params.pageTab}
             match={match}
-            screen={
-              pageData.page === JOBS_PAGE ? pageData.page : pageData.pageKind
-            }
+            screen={pageData.page}
             tabs={pageData.tabs}
           />
         )}

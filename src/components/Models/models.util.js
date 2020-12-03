@@ -13,8 +13,7 @@ export const infoHeaders = [
 ]
 export const detailsMenu = ['info', 'preview']
 export const filters = ['tree', 'labels', 'name']
-export const page = 'ARTIFACTS'
-export const pageKind = 'models'
+export const page = 'MODELS'
 export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register model'
 export const tableHeaders = [

@@ -14,9 +14,15 @@ import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
-import { ARTIFACTS_PAGE, FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants.js'
+import {
+  ARTIFACTS_PAGE,
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  FUNCTIONS_PAGE,
+  JOBS_PAGE,
+  MODELS_PAGE
+} from '../../constants'
 import artifactsAction from '../../actions/artifacts'
-import artifactsData from '../Artifacts/artifactsData'
 import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 
 import './filterMenu.scss'
@@ -59,7 +65,12 @@ const FilterMenu = ({
           `/projects/${match.params.projectName}/${page.toLowerCase()}`
         )
       }
-      if (page === ARTIFACTS_PAGE) {
+      if (
+        page === ARTIFACTS_PAGE ||
+        page === FILES_PAGE ||
+        page === MODELS_PAGE ||
+        page === FEATURE_STORE_PAGE
+      ) {
         dispatch(
           artifactsAction.setArtifactFilter({
             ...artifactFilter,
@@ -181,7 +192,10 @@ const FilterMenu = ({
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button
             onClick={() => {
-              page === artifactsData.page
+              page === ARTIFACTS_PAGE ||
+              page === FILES_PAGE ||
+              page === MODELS_PAGE ||
+              page === FEATURE_STORE_PAGE
                 ? onChange({
                     tag: artifactFilter.tag,
                     project: match.params.projectName,

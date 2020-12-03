@@ -9,6 +9,9 @@ import {
   FETCH_FEATURE_SETS_BEGIN,
   FETCH_FEATURE_SETS_FAILURE,
   FETCH_FEATURE_SETS_SUCCESS,
+  FETCH_FEATURES_BEGIN,
+  FETCH_FEATURES_FAILURE,
+  FETCH_FEATURES_SUCCESS,
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
@@ -18,6 +21,7 @@ import {
   REMOVE_ARTIFACTS,
   REMOVE_DATASETS,
   REMOVE_FEATURE_SETS,
+  REMOVE_FEATURES,
   SET_ARTIFACT_FILTER,
   SHOW_ARTIFACT_PREVIEW
 } from '../constants'
@@ -27,6 +31,7 @@ const initialState = {
   dataSets: [],
   error: null,
   featureSets: [],
+  features: [],
   files: [],
   filter: {
     tag: 'latest',
@@ -61,6 +66,25 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         artifacts: payload,
+        loading: false
+      }
+    case FETCH_FEATURES_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_FEATURES_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        features: [],
+        loading: false
+      }
+    case FETCH_FEATURES_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        features: payload,
         loading: false
       }
     case FETCH_FEATURE_SETS_BEGIN:
@@ -150,6 +174,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         featureSets: []
+      }
+    case REMOVE_FEATURES:
+      return {
+        ...state,
+        features: []
       }
     case SET_ARTIFACT_FILTER:
       return {

@@ -9,7 +9,10 @@ import {
   JOBS_PAGE,
   ARTIFACTS_PAGE,
   FUNCTIONS_PAGE,
-  ARTIFACTS_FEATURE_SETS_PAGE
+  FEATURE_SETS_TAB,
+  FILES_PAGE,
+  MODELS_PAGE,
+  FEATURE_STORE_PAGE
 } from '../../constants'
 
 import './detailsInfo.scss'
@@ -30,7 +33,7 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
     selectedItem.iterations?.length ? selectedItem.iterations : '0'
   ]
   const artifactsInfoContent = generateArtifactsContent(
-    pageData.pageKind,
+    pageData.page,
     match.params.pageTab,
     selectedItem
   )
@@ -56,12 +59,15 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
 
   return (
     <div className="item-info">
-      {pageData.page === ARTIFACTS_PAGE &&
-        match.params.pageTab !== ARTIFACTS_FEATURE_SETS_PAGE && (
+      {(pageData.page === ARTIFACTS_PAGE ||
+        pageData.page === FILES_PAGE ||
+        pageData.page === MODELS_PAGE ||
+        pageData.page === FEATURE_STORE_PAGE) &&
+        match.params.pageTab !== FEATURE_SETS_TAB && (
           <h3 className="item-info__header">General</h3>
         )}
       <ul className="item-info__details">
-        {pageData.infoHeaders.map((header, index) => {
+        {pageData.infoHeaders?.map((header, index) => {
           let chips = []
           let chipsClassName = ''
           let func = ''
@@ -93,7 +99,12 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
                 ? selectedItem.state
                 : ''
             info = jobsInfoContent[index]
-          } else if (pageData.page === ARTIFACTS_PAGE) {
+          } else if (
+            pageData.page === ARTIFACTS_PAGE ||
+            pageData.page === FILES_PAGE ||
+            pageData.page === MODELS_PAGE ||
+            pageData.page === FEATURE_STORE_PAGE
+          ) {
             chips =
               artifactsInfoContent[index] === selectedItem.labels
                 ? parseKeyValues(selectedItem.labels)
@@ -137,32 +148,36 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
           )
         })}
       </ul>
-      {pageData.page === ARTIFACTS_PAGE && selectedItem.producer && (
-        <>
-          <h3 className="item-info__header">Producer</h3>
-          <ul className="item-info__details">
-            {Object.keys(selectedItem.producer).map(header => {
-              let url = ''
+      {(pageData.page === ARTIFACTS_PAGE ||
+        pageData.page === FILES_PAGE ||
+        pageData.page === MODELS_PAGE ||
+        pageData.page === FEATURE_STORE_PAGE) &&
+        selectedItem.producer && (
+          <>
+            <h3 className="item-info__header">Producer</h3>
+            <ul className="item-info__details">
+              {Object.keys(selectedItem.producer).map(header => {
+                let url = ''
 
-              if (header === 'uri') {
-                const [project, hash] = selectedItem.producer.uri.split('/')
-                url = `/projects/${project}/jobs/monitor/${hash}/info`
-              }
+                if (header === 'uri') {
+                  const [project, hash] = selectedItem.producer.uri.split('/')
+                  url = `/projects/${project}/jobs/monitor/${hash}/info`
+                }
 
-              return (
-                <li className="details-item" key={header}>
-                  <div className="details-item__header">{header}</div>
-                  <DetailsInfoItem
-                    link={url}
-                    info={selectedItem.producer[header]}
-                    page={pageData.page}
-                  />
-                </li>
-              )
-            })}
-          </ul>
-        </>
-      )}
+                return (
+                  <li className="details-item" key={header}>
+                    <div className="details-item__header">{header}</div>
+                    <DetailsInfoItem
+                      link={url}
+                      info={selectedItem.producer[header]}
+                      page={pageData.page}
+                    />
+                  </li>
+                )
+              })}
+            </ul>
+          </>
+        )}
     </div>
   )
 }

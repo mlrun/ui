@@ -31,7 +31,10 @@ import {
   DETAILS_CODE_TAB,
   DETAILS_METADATA_TAB,
   DETAILS_ANALYSIS_TAB,
-  ARTIFACTS_FEATURE_SETS_PAGE
+  FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  MODELS_PAGE
 } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -84,8 +87,11 @@ const DetailsView = ({
             onClick={setIteration}
           />
         )}
-        {pageData.page === ARTIFACTS_PAGE &&
-          match.params.pageTab !== ARTIFACTS_FEATURE_SETS_PAGE && (
+        {(pageData.page === ARTIFACTS_PAGE ||
+          pageData.page === FILES_PAGE ||
+          pageData.page === MODELS_PAGE ||
+          pageData.page === FEATURE_STORE_PAGE) &&
+          match.params.pageTab !== FEATURE_SETS_TAB && (
             <Tooltip template={<TextTooltipTemplate text="Download" />}>
               <Download
                 fileName={selectedItem.db_key || selectedItem.key}
@@ -98,9 +104,11 @@ const DetailsView = ({
         <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
         <Link
           data-testid="details-close-btn"
-          to={`/projects/${match.params.projectName}/${
-            pageData.pageKind ? pageData.pageKind : pageData.page.toLowerCase()
-          }${match.params.pageTab ? `/${match.params.pageTab}` : ''}`}
+          to={`/projects/${
+            match.params.projectName
+          }/${pageData.page.toLowerCase()}${
+            match.params.pageTab ? `/${match.params.pageTab}` : ''
+          }`}
           onClick={handleCancel}
         >
           <Close />
@@ -114,7 +122,7 @@ const DetailsView = ({
             key={link}
             match={match}
             name={selectedItem.db_key || selectedItem.name}
-            page={pageData.pageKind ? pageData.pageKind : pageData.page}
+            page={pageData.page}
             tab={link}
           />
         ))}
