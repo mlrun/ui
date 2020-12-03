@@ -22,7 +22,16 @@ export default {
     mainHttpClient.get(`/artifacts?project=${project}&category=model`),
   getProjectRunningJobs: project =>
     mainHttpClient.get(`/runs?project=${project}&state=running`),
+  getProjectScheduledJobs: project =>
+    mainHttpClient.get(`/projects/${project}/schedules`),
   getProjects: () => mainHttpClient.get('/projects'),
+  getProjectWorkflows: () => {
+    const params = {
+      page_size: 100
+    }
+
+    return mainHttpClient.get('/workflows', { params })
+  },
   updateProject: (project, data) =>
     mainHttpClient.put(`/projects/${project}`, data)
 }

@@ -25,6 +25,8 @@ const Project = ({
   fetchProjectFiles,
   fetchProjectJobs,
   fetchProjectModels,
+  fetchProjectScheduledJobs,
+  fetchProjectWorkflows,
   match,
   nuclioStore,
   projectStore,
@@ -191,6 +193,8 @@ const Project = ({
       fetchProjectFiles={fetchProjectFiles}
       fetchProjectJobs={fetchProjectJobs}
       fetchProjectModels={fetchProjectModels}
+      fetchProjectScheduledJobs={fetchProjectScheduledJobs}
+      fetchProjectWorkflows={fetchProjectWorkflows}
       handleEditProject={handleEditProject}
       handleLaunchIDE={handleLaunchIDE}
       handleOnChangeProject={handleOnChangeProject}

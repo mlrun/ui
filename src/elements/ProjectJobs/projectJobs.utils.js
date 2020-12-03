@@ -1,42 +1,45 @@
-import { formatDatetime } from '../../utils/datetime'
+import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
 
-export const getJobsStatistics = (jobs, match) => {
+export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
+  let jobsRunning = 0
+  let jobsFailed = 0
+
   if (jobs.data) {
-    const jobsRunning = jobs.data.reduce(
+    jobsRunning = jobs.data.reduce(
       (prev, curr) => (curr.status.state === 'running' ? (prev += 1) : prev),
       0
     )
-    const jobsFailed = jobs.data.reduce(
+    jobsFailed = jobs.data.reduce(
       (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
       0
     )
+  }
 
-    return {
-      running: {
-        value: jobsRunning,
-        label: 'Running jobs',
-        className: 'running',
-        link: `/projects/${match.params.projectName}/jobs/monitor`
-      },
-      workflows: {
-        value: 0,
-        label: 'Running workflows',
-        className: 'running',
-        link: `/projects/${match.params.projectName}/jobs/monitor`
-      },
-      failed: {
-        value: jobsFailed,
-        label: 'Failed',
-        className: jobsFailed > 0 ? 'failed' : 'default',
-        link: `/projects/${match.params.projectName}/jobs/monitor`
-      },
-      scheduled: {
-        value: 0,
-        label: 'Scheduled',
-        className: 'scheduled',
-        link: `/projects/${match.params.projectName}/jobs/schedule`
-      }
+  return {
+    running: {
+      value: jobs.error ? 'N/A' : jobsRunning,
+      label: 'Running jobs',
+      className: jobs.error ? 'default' : 'running',
+      link: `/projects/${match.params.projectName}/jobs/monitor`
+    },
+    workflows: {
+      value: workflows.error ? 'N/A' : workflows.data.length,
+      label: 'Running workflows',
+      className: workflows.error ? 'default' : 'running',
+      link: `/projects/${match.params.projectName}/jobs/monitor`
+    },
+    failed: {
+      value: jobs.error ? 'N/A' : jobsFailed,
+      label: 'Failed',
+      className: jobsFailed > 0 && !jobs.error ? 'failed' : 'default',
+      link: `/projects/${match.params.projectName}/jobs/monitor`
+    },
+    scheduled: {
+      value: scheduledJobs.error ? 'N/A' : scheduledJobs.data.length,
+      label: 'Scheduled',
+      className: scheduledJobs.error ? 'default' : 'scheduled',
+      link: `/projects/${match.params.projectName}/jobs/schedule`
     }
   }
 }
