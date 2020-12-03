@@ -25,6 +25,8 @@ const Project = ({
   fetchProjectFiles,
   fetchProjectJobs,
   fetchProjectModels,
+  fetchProjectScheduledJobs,
+  fetchProjectWorkflows,
   match,
   nuclioStore,
   projectStore,
@@ -117,8 +119,6 @@ const Project = ({
       })
   }, [closeEditMode, editProject, history, match, projectStore.project])
 
-  // console.log(projectStore.project)
-
   const handleDocumentClick = useCallback(
     event => {
       if (inputRef.current && event.target !== inputRef.current) {
@@ -193,6 +193,8 @@ const Project = ({
       fetchProjectFiles={fetchProjectFiles}
       fetchProjectJobs={fetchProjectJobs}
       fetchProjectModels={fetchProjectModels}
+      fetchProjectScheduledJobs={fetchProjectScheduledJobs}
+      fetchProjectWorkflows={fetchProjectWorkflows}
       handleEditProject={handleEditProject}
       handleLaunchIDE={handleLaunchIDE}
       handleOnChangeProject={handleOnChangeProject}

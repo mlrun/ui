@@ -28,6 +28,8 @@ const ProjectView = React.forwardRef(
       fetchProjectFiles,
       fetchProjectJobs,
       fetchProjectModels,
+      fetchProjectScheduledJobs,
+      fetchProjectWorkflows,
       handleEditProject,
       handleLaunchIDE,
       handleOnChangeProject,
@@ -200,8 +202,12 @@ const ProjectView = React.forwardRef(
               <div className="main-info__statistics-section">
                 <ProjectJobs
                   fetchProjectJobs={fetchProjectJobs}
+                  fetchProjectScheduledJobs={fetchProjectScheduledJobs}
+                  fetchProjectWorkflows={fetchProjectWorkflows}
                   jobs={projectStore.project.jobs}
                   match={match}
+                  scheduledJobs={projectStore.project.scheduledJobs}
+                  workflows={projectStore.project.workflows}
                 />
                 <ProjectFunctions
                   fetchApiGateways={fetchApiGateways}
@@ -240,6 +246,8 @@ ProjectView.propTypes = {
   fetchProjectFiles: PropTypes.func.isRequired,
   fetchProjectJobs: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
+  fetchProjectScheduledJobs: PropTypes.func.isRequired,
+  fetchProjectWorkflows: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   handleOnChangeProject: PropTypes.func.isRequired,

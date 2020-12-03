@@ -25,6 +25,7 @@ const Projects = ({
   fetchProjectRunningJobs,
   fetchProjects,
   match,
+  nuclioStore,
   projectStore,
   removeNewProject,
   removeNewProjectError,
@@ -124,6 +125,7 @@ const Projects = ({
       handleCreateProject={handleCreateProject}
       isEmptyValue={isEmptyValue}
       match={match}
+      nuclioStore={nuclioStore}
       projectStore={projectStore}
       removeNewProjectError={removeNewProjectError}
       setCreateProject={setCreateProject}
@@ -138,8 +140,9 @@ Projects.propTypes = {
 }
 
 export default connect(
-  projectStore => ({
-    ...projectStore
+  (projectStore, nuclioStore) => ({
+    ...projectStore,
+    ...nuclioStore
   }),
   {
     ...projectsAction,

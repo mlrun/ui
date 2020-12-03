@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Loader from '../../common/Loader/Loader'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -15,8 +16,17 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
       <div
         className={`project-data-card__statistics-value statistics_${counterObject.className}`}
       >
-        {counterObject.value}
-        <Arrow className="project-data-card__statistics-arrow" />
+        {counterObject.loading ? (
+          <Loader
+            loaderClassName="project-data-card__statistics-loader"
+            wrapperClassName="project-data-card__statistics-loader-wrapper"
+          />
+        ) : (
+          <>
+            {counterObject.value}
+            <Arrow className="project-data-card__statistics-arrow" />
+          </>
+        )}
       </div>
       <div className="project-data-card__statistics-label">
         <Tooltip
@@ -33,8 +43,17 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
         key={counterObject.value + Math.random()}
         className={`project-data-card__statistics-value statistics_${counterObject.className}`}
       >
-        {counterObject.value}
-        <Arrow className="project-data-card__statistics-arrow" />
+        {counterObject.loading ? (
+          <Loader
+            loaderClassName="project-data-card__statistics-loader"
+            wrapperClassName="project-data-card__statistics-loader-wrapper"
+          />
+        ) : (
+          <>
+            {counterObject.value}
+            <Arrow className="project-data-card__statistics-arrow" />
+          </>
+        )}
       </div>,
       <div
         className="project-data-card__statistics-label"

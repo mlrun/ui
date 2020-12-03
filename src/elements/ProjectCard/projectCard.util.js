@@ -1,6 +1,8 @@
 export const generateProjectStatistic = (
   failedJobs,
+  failedJobsLoading,
   features,
+  featuresLoading,
   fetchFailedJobsFailure,
   fetchFeaturesFailure,
   fetchFunctionsFailure,
@@ -8,9 +10,13 @@ export const generateProjectStatistic = (
   fetchNuclioFunctionsFailure,
   fetchRunningJobsFailure,
   functions,
+  functionsLoading,
   models,
+  modelsLoading,
   nuclioFunctions,
-  runningJobs
+  nuclioFunctionsLoading,
+  runningJobs,
+  runningJobsLoading
 ) => {
   const runningNuclioFunctions = Object.values(nuclioFunctions).reduce(
     (prev, curr) =>
@@ -24,48 +30,53 @@ export const generateProjectStatistic = (
 
   return {
     runningJobs: {
-      value:
-        fetchRunningJobsFailure || fetchNuclioFunctionsFailure
-          ? 'N/A'
-          : runningJobs.length + runningNuclioFunctions,
-      label: 'Running',
       className:
         runningJobs.length + runningNuclioFunctions > 0 &&
         !fetchRunningJobsFailure &&
         !fetchNuclioFunctionsFailure
           ? 'running'
           : 'default',
-      counterTooltip: 'ML jobs and Nuclio functions'
+      counterTooltip: 'ML jobs and Nuclio functions',
+      label: 'Running',
+      loading: runningJobsLoading || nuclioFunctionsLoading,
+      value:
+        fetchRunningJobsFailure || fetchNuclioFunctionsFailure
+          ? 'N/A'
+          : runningJobs.length + runningNuclioFunctions
     },
     failedJobs: {
-      value:
-        fetchFailedJobsFailure || fetchNuclioFunctionsFailure
-          ? 'N/A'
-          : failedJobs.length + failedNuclioFunctions,
-      label: 'Failed (24hrs)',
       className:
         failedJobs.length + failedNuclioFunctions > 0 &&
         !fetchFailedJobsFailure &&
         !fetchNuclioFunctionsFailure
           ? 'failed'
           : 'default',
+      counterTooltip: 'ML jobs and Nuclio functions',
+      label: 'Failed (24hrs)',
       labelClassName: 'wrap',
-      counterTooltip: 'ML jobs and Nuclio functions'
+      loading: failedJobsLoading || nuclioFunctionsLoading,
+      value:
+        fetchFailedJobsFailure || fetchNuclioFunctionsFailure
+          ? 'N/A'
+          : failedJobs.length + failedNuclioFunctions
     },
     models: {
-      value: fetchModelsFailure ? 'N/A' : models.length,
+      className: 'default',
       label: 'Models',
-      className: 'default'
+      loading: modelsLoading,
+      value: fetchModelsFailure ? 'N/A' : models.length
     },
     features: {
-      value: fetchFeaturesFailure ? 'N/A' : features.length,
+      className: 'default',
       label: 'Features',
-      className: 'default'
+      loading: featuresLoading,
+      value: fetchFeaturesFailure ? 'N/A' : features.length
     },
     functions: {
-      value: fetchFunctionsFailure ? 'N/A' : functions.length,
+      className: 'default',
       label: 'ML functions',
-      className: 'default'
+      loading: functionsLoading,
+      value: fetchFunctionsFailure ? 'N/A' : functions.length
     }
   }
 }

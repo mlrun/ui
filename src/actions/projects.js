@@ -29,7 +29,13 @@ import {
   FETCH_PROJECT_RUNNING_JOBS_BEGIN,
   FETCH_PROJECT_RUNNING_JOBS_FAILURE,
   FETCH_PROJECT_RUNNING_JOBS_SUCCESS,
+  FETCH_PROJECT_SCHEDULED_JOBS_BEGIN,
+  FETCH_PROJECT_SCHEDULED_JOBS_FAILURE,
+  FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS,
   FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_WORKFLOWS_BEGIN,
+  FETCH_PROJECT_WORKFLOWS_FAILURE,
+  FETCH_PROJECT_WORKFLOWS_SUCCESS,
   FETCH_PROJECTS_BEGIN,
   FETCH_PROJECTS_FAILURE,
   FETCH_PROJECTS_SUCCESS,
@@ -89,7 +95,7 @@ const projectsAction = {
     projectsApi
       .getProject(project)
       .then(response => {
-        dispatch(projectsAction.fetchProjectSuccess(response?.data.project))
+        dispatch(projectsAction.fetchProjectSuccess(response?.data))
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectFailure(error.message))
@@ -283,6 +289,37 @@ const projectsAction = {
     type: FETCH_PROJECT_RUNNING_JOBS_SUCCESS,
     payload: jobs
   }),
+  fetchProjectScheduledJobs: project => dispatch => {
+    dispatch(projectsAction.fetchProjectScheduledJobsBegin())
+
+    return projectsApi
+      .getProjectScheduledJobs(project)
+      .then(response => {
+        dispatch(
+          projectsAction.fetchProjectScheduledJobsSuccess(
+            response.data.schedules
+          )
+        )
+
+        return response.data.schedules
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectScheduledJobsFailure(error.message))
+
+        throw error.message
+      })
+  },
+  fetchProjectScheduledJobsBegin: () => ({
+    type: FETCH_PROJECT_SCHEDULED_JOBS_BEGIN
+  }),
+  fetchProjectScheduledJobsFailure: error => ({
+    type: FETCH_PROJECT_SCHEDULED_JOBS_FAILURE,
+    payload: error
+  }),
+  fetchProjectScheduledJobsSuccess: jobs => ({
+    type: FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS,
+    payload: jobs
+  }),
   fetchProjectSuccess: project => ({
     type: FETCH_PROJECT_SUCCESS,
     payload: project
@@ -309,6 +346,33 @@ const projectsAction = {
   fetchProjectsSuccess: projectsList => ({
     type: FETCH_PROJECTS_SUCCESS,
     payload: projectsList
+  }),
+  fetchProjectWorkflows: () => dispatch => {
+    dispatch(projectsAction.fetchProjectWorkflowsBegin())
+
+    return projectsApi
+      .getProjectWorkflows()
+      .then(response => {
+        dispatch(
+          projectsAction.fetchProjectWorkflowsSuccess(response.data.runs)
+        )
+
+        return response.data.runs
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectWorkflowsFailure(error.message))
+      })
+  },
+  fetchProjectWorkflowsBegin: () => ({
+    type: FETCH_PROJECT_WORKFLOWS_BEGIN
+  }),
+  fetchProjectWorkflowsFailure: error => ({
+    type: FETCH_PROJECT_WORKFLOWS_FAILURE,
+    payload: error
+  }),
+  fetchProjectWorkflowsSuccess: workflows => ({
+    type: FETCH_PROJECT_WORKFLOWS_SUCCESS,
+    payload: workflows
   }),
   removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),

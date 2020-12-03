@@ -9,7 +9,7 @@ import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 import ProjectTable from '../../components/ProjectTable/ProjectTable'
 
 const ProjectDataCard = ({
-  dataCard,
+  content,
   href,
   link,
   match,
@@ -29,19 +29,19 @@ const ProjectDataCard = ({
             <Link to={link}>{title}</Link>
           )}
         </div>
-        {!isEmpty(dataCard.data) && (
+        {!content.loading && (
           <div className="project-data-card__statistics">
             <ProjectStatistics statistics={statistics} />
           </div>
         )}
       </div>
-      {dataCard.loading ? (
+      {content.loading ? (
         <Loader />
-      ) : dataCard.error ? (
+      ) : content.error ? (
         <div className="error_container">
-          <h1>{dataCard.error}</h1>
+          <h1>{content.error}</h1>
         </div>
-      ) : isEmpty(dataCard.data) ? (
+      ) : isEmpty(content.data) ? (
         <NoData />
       ) : (
         <>
@@ -73,7 +73,7 @@ ProjectDataCard.defaultProps = {
 }
 
 ProjectDataCard.propTypes = {
-  dataCard: PropTypes.shape({}).isRequired,
+  content: PropTypes.shape({}).isRequired,
   href: PropTypes.string,
   link: PropTypes.string,
   match: PropTypes.shape({}).isRequired,
