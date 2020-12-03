@@ -26,7 +26,7 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
     workflows: {
       value: workflows.error ? 'N/A' : workflows.data.length,
       label: 'Running workflows',
-      className: 'running',
+      className: workflows.error ? 'default' : 'running',
       link: `/projects/${match.params.projectName}/jobs/monitor`
     },
     failed: {
