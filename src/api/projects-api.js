@@ -24,7 +24,7 @@ export default {
     mainHttpClient.get(`/runs?project=${project}&state=running`),
   getProjectScheduledJobs: project =>
     mainHttpClient.get(`/projects/${project}/schedules`),
-  getProjects: () => mainHttpClient.get('/projects?full=yes'),
+  getProjects: () => mainHttpClient.get('/projects'),
   getProjectWorkflows: () => {
     const params = {
       page_size: 100
