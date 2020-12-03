@@ -28,7 +28,13 @@ import {
   FETCH_PROJECT_RUNNING_JOBS_BEGIN,
   FETCH_PROJECT_RUNNING_JOBS_FAILURE,
   FETCH_PROJECT_RUNNING_JOBS_SUCCESS,
+  FETCH_PROJECT_SCHEDULED_JOBS_BEGIN,
+  FETCH_PROJECT_SCHEDULED_JOBS_FAILURE,
+  FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS,
   FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_WORKFLOWS_BEGIN,
+  FETCH_PROJECT_WORKFLOWS_FAILURE,
+  FETCH_PROJECT_WORKFLOWS_SUCCESS,
   FETCH_PROJECTS_BEGIN,
   FETCH_PROJECTS_FAILURE,
   FETCH_PROJECTS_SUCCESS,
@@ -82,6 +88,16 @@ const initialState = {
       error: null
     },
     runningJobs: {
+      data: [],
+      error: null,
+      loading: false
+    },
+    scheduledJobs: {
+      data: [],
+      error: null,
+      loading: false
+    },
+    workflows: {
       data: [],
       error: null,
       loading: false
@@ -166,6 +182,16 @@ export default (state = initialState, { type, payload }) => {
             loading: false
           },
           runningJobs: {
+            data: [],
+            error: null,
+            loading: false
+          },
+          scheduledJobs: {
+            data: [],
+            error: null,
+            loading: false
+          },
+          workflows: {
             data: [],
             error: null,
             loading: false
@@ -447,6 +473,43 @@ export default (state = initialState, { type, payload }) => {
           loading: false
         }
       }
+    case FETCH_PROJECT_SCHEDULED_JOBS_BEGIN:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          scheduledJobs: {
+            ...state.project.scheduledJobs,
+            loading: true
+          }
+        }
+      }
+    case FETCH_PROJECT_SCHEDULED_JOBS_FAILURE:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          scheduledJobs: {
+            ...state.project.scheduledJobs,
+            data: [],
+            error: payload,
+            loading: false
+          }
+        }
+      }
+    case FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          scheduledJobs: {
+            ...state.project.scheduledJobs,
+            data: payload,
+            error: null,
+            loading: false
+          }
+        }
+      }
     case FETCH_PROJECTS_BEGIN:
       return {
         ...state,
@@ -464,6 +527,43 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         projects: payload,
         loading: false
+      }
+    case FETCH_PROJECT_WORKFLOWS_BEGIN:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          workflows: {
+            ...state.project.workflows,
+            loading: true
+          }
+        }
+      }
+    case FETCH_PROJECT_WORKFLOWS_FAILURE:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          workflows: {
+            ...state.project.workflows,
+            data: [],
+            error: payload,
+            loading: false
+          }
+        }
+      }
+    case FETCH_PROJECT_WORKFLOWS_SUCCESS:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          workflows: {
+            ...state.project.workflows,
+            data: payload,
+            error: null,
+            loading: false
+          }
+        }
       }
     case REMOVE_NEW_PROJECT:
       return {
@@ -511,6 +611,16 @@ export default (state = initialState, { type, payload }) => {
             loading: false
           },
           runningJobs: {
+            data: [],
+            error: null,
+            loading: false
+          },
+          scheduledJobs: {
+            data: [],
+            error: null,
+            loading: false
+          },
+          workflows: {
             data: [],
             error: null,
             loading: false

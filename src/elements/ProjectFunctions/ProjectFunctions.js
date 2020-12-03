@@ -89,7 +89,7 @@ const ProjectFunctions = ({
 
   return (
     <ProjectDataCard
-      dataCard={{
+      content={{
         data: functionsStore.functions,
         error: functionsStore.error,
         loading: functionsStore.loading
