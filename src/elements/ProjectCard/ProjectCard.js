@@ -13,7 +13,9 @@ const ProjectCard = ({
   fetchProjectFunctions,
   fetchProjectModels,
   fetchProjectRunningJobs,
-  project
+  nuclioStore,
+  project,
+  projectStore
 }) => {
   const [failedJobs, setFailedJobs] = useState([])
   const [features, setFeatures] = useState([])
@@ -133,7 +135,9 @@ const ProjectCard = ({
   const statistics = useMemo(() => {
     return generateProjectStatistic(
       failedJobs,
+      projectStore.project.failedJobs.loading,
       features,
+      projectStore.project.dataSets.loading,
       fetchFailedJobsFailure,
       fetchFeaturesFailure,
       fetchFunctionsFailure,
@@ -141,9 +145,13 @@ const ProjectCard = ({
       fetchNuclioFunctionsFailure,
       fetchRunningJobsFailure,
       functions,
+      projectStore.project.functions.loading,
       models,
+      projectStore.project.models.loading,
       nuclioFunctions,
-      runningJobs
+      nuclioStore.loading,
+      runningJobs,
+      projectStore.project.runningJobs.loading
     )
   }, [
     failedJobs,
@@ -157,6 +165,12 @@ const ProjectCard = ({
     functions,
     models,
     nuclioFunctions,
+    nuclioStore.loading,
+    projectStore.project.dataSets.loading,
+    projectStore.project.failedJobs.loading,
+    projectStore.project.functions.loading,
+    projectStore.project.models.loading,
+    projectStore.project.runningJobs.loading,
     runningJobs
   ])
 
@@ -180,7 +194,9 @@ ProjectCard.propTypes = {
   fetchNuclioFunctions: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
   fetchProjectRunningJobs: PropTypes.func.isRequired,
-  project: PropTypes.shape({}).isRequired
+  nuclioStore: PropTypes.shape({}).isRequired,
+  project: PropTypes.shape({}).isRequired,
+  projectStore: PropTypes.shape({}).isRequired
 }
 
 export default ProjectCard

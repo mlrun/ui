@@ -28,6 +28,7 @@
     }
 
     &-data {
+      position: relative;
       width: 100%;
       margin: 0 5px;
       padding: 5px;
@@ -95,6 +96,22 @@
       .tooltip {
         font-size: 12px;
         line-height: 16px;
+      }
+    }
+
+    &-loader {
+      width: 27px;
+      height: 27px;
+      margin: 0;
+
+      &-wrapper {
+        position: relative;
+        height: 37px;
+        background-color: transparent;
+      }
+
+      .path {
+        stroke: $spunPearl;
       }
     }
   }
