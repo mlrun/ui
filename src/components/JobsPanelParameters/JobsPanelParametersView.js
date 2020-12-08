@@ -4,11 +4,11 @@ import { find } from 'lodash'
 import classnames from 'classnames'
 
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
-import JobsPanelTable from '../../elements/JobsPanelTable/JobsPanelTable'
 import Input from '../../common/Input/Input'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/JobsPanelTableAddItemRow'
+import JobsPanelParametersTable from '../../elements/JobsPanelParametersTable/JobsPanelParametersTable'
 import Select from '../../common/Select/Select'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
@@ -18,17 +18,18 @@ import { parametersActions } from './jobsPanelParametersReducer'
 import { selectOptions } from './jobsPanelParameters.util'
 
 const JobsPanelParametersView = ({
+  checkParameter,
   disabledOptions,
   handleAddNewItem,
   handleDeleteParameter,
-  handleEditItems,
+  handleEditParameter,
   isHyperTypeExist,
-  match,
   parameters,
   parametersDispatch,
   parametersState,
   setTuningStrategy,
   setUrl,
+  tableContent,
   tuningStrategy,
   url
 }) => {
@@ -44,16 +45,14 @@ const JobsPanelParametersView = ({
   return (
     <div className="job-panel__item">
       <JobsPanelSection title="Parameters">
-        <JobsPanelTable
-          disabledOptions={disabledOptions}
+        <JobsPanelParametersTable
           addNewItem={parametersState.addNewParameter}
-          className="parameters"
+          checkParameter={checkParameter}
           content={parameters}
-          handleDeleteItems={handleDeleteParameter}
-          handleEditItems={handleEditItems}
+          disabledOptions={disabledOptions}
+          handleDeleteParameter={handleDeleteParameter}
+          handleEditParameter={handleEditParameter}
           headers={panelData.parameters['table-headers']}
-          match={match}
-          section="parameters"
           selectedItem={parametersState.selectedParameter}
           setSelectedItem={selectedParam =>
             parametersDispatch({
@@ -61,6 +60,7 @@ const JobsPanelParametersView = ({
               payload: selectedParam
             })
           }
+          tableContent={tableContent}
         >
           {parametersState.addNewParameter ? (
             <div className="table__row-add-item">
@@ -134,10 +134,10 @@ const JobsPanelParametersView = ({
                   payload: value
                 })
               }}
-              text="parameter"
+              text="custom parameter"
             />
           )}
-        </JobsPanelTable>
+        </JobsPanelParametersTable>
         <div className="parameters-additional-settings-container">
           <div className="parameters-additional-settings__header">
             <span className="parameters-additional-settings__header-text">
@@ -176,11 +176,12 @@ const JobsPanelParametersView = ({
 }
 
 JobsPanelParametersView.propTypes = {
+  checkParameter: PropTypes.func.isRequired,
+  disabledOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
-  handleEditItems: PropTypes.func.isRequired,
+  handleEditParameter: PropTypes.func.isRequired,
   isHyperTypeExist: PropTypes.bool.isRequired,
-  match: PropTypes.shape({}).isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,
   parametersState: PropTypes.shape({}).isRequired,

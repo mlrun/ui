@@ -1,12 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { has, map } from 'lodash'
-import classNames from 'classnames'
+import classnames from 'classnames'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 import Tip from '../../common/Tip/Tip'
+import CheckBox from '../../common/CheckBox/CheckBox'
 
 import { joinDataOfArrayOrObject } from '../../utils'
 
@@ -16,17 +17,31 @@ import './jobsPanelTableRow.scss'
 
 const JobsPanelTableRow = ({
   actionsMenu,
+  checkboxOnChange,
+  className,
+  contentItem,
   handleDelete,
   handleEdit,
-  contentItem,
-  section
+  section,
+  withCheckbox
 }) => {
-  const currentTableSection =
+  const isInputsOrEnv =
     section.includes('data-inputs') || section.includes('env')
+  const rowClassNames = classnames('table__row', className)
 
   return (
     (contentItem.data.name !== 'context' || !contentItem.data.name) && (
-      <div className="table__row">
+      <div className={rowClassNames}>
+        {withCheckbox && (
+          <CheckBox
+            className="table__cell-checkbox"
+            item={{
+              id: contentItem.data.name
+            }}
+            onChange={checkboxOnChange}
+            selectedId={contentItem.isChecked ? contentItem.data.name : ''}
+          />
+        )}
         {map(contentItem.data, (value, property) => {
           const isEditable =
             !contentItem.isDefault ||
@@ -34,7 +49,7 @@ const JobsPanelTableRow = ({
               property !== 'name' &&
               property !== 'valueType' &&
               section !== 'volumes')
-          const tableCellClassName = classNames(
+          const tableCellClassName = classnames(
             'table__cell',
             ((property === 'name' && has(contentItem.data, 'value')) ||
               property === 'valueType') &&
@@ -42,19 +57,20 @@ const JobsPanelTableRow = ({
               'table__cell_disabled',
             isEditable && 'cursor-pointer'
           )
+          const tooltipClassNames = classnames(
+            property === 'name' && 'parameter-name'
+          )
 
           return (
             <div
               className={tableCellClassName}
               key={property}
               onClick={
-                isEditable
-                  ? () => handleEdit(contentItem, currentTableSection)
-                  : null
+                isEditable ? () => handleEdit(contentItem, isInputsOrEnv) : null
               }
             >
               <Tooltip
-                className={classNames(property === 'name' && 'parameter-name')}
+                className={tooltipClassNames}
                 template={
                   <TextTooltipTemplate
                     text={joinDataOfArrayOrObject(value, ', ')}
@@ -90,12 +106,19 @@ const JobsPanelTableRow = ({
   )
 }
 
+JobsPanelTableRow.defaultProps = {
+  checkboxOnChange: () => {},
+  className: '',
+  withCheckbox: false
+}
+
 JobsPanelTableRow.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  contentItem: PropTypes.shape({}).isRequired,
   handleDelete: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
-  contentItem: PropTypes.shape({}).isRequired,
-  section: PropTypes.string.isRequired
+  section: PropTypes.string.isRequired,
+  withCheckbox: PropTypes.bool
 }
 
 export default JobsPanelTableRow

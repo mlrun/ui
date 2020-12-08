@@ -34,6 +34,12 @@
     .apply-edit-btn {
       padding: 0;
     }
+
+    &-checkbox {
+      position: absolute;
+      top: 15px;
+      left: -20px;
+    }
   }
 
   &__row {

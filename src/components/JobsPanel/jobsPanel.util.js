@@ -8,6 +8,7 @@ export const getDefaultData = functionParameters => {
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
       doc: parameter.doc,
+      isChecked: false,
       isDefault: true,
       data: {
         name: parameter.name ?? '',
@@ -207,7 +208,7 @@ export const generateTableData = (
     })
     setNewJob({
       inputs: parseDefaultContent(dataInputs),
-      parameters: parseDefaultContent(parameters),
+      parameters: [],
       volume_mounts: volumeMounts.length
         ? volumeMounts.map(volumeMounts => volumeMounts.data)
         : [],

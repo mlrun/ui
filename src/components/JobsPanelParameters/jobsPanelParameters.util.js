@@ -3,17 +3,19 @@ export const editHyperParams = (hyperParams, selectedParameter, newName) => {
     if (hyperParams[selectedParameter.name]) {
       return {
         ...hyperParams,
-        [newName]: selectedParameter.value.split(',')
+        [newName]: `${selectedParameter.value}`.split(',')
       }
     } else {
       delete hyperParams[selectedParameter.name]
 
-      hyperParams[newName] = selectedParameter.value.split(',')
+      hyperParams[newName] = `${selectedParameter.value}`.split(',')
 
       return { ...hyperParams }
     }
   } else if (hyperParams[selectedParameter.name]) {
-    hyperParams[selectedParameter.name] = selectedParameter.value.split(',')
+    hyperParams[selectedParameter.name] = `${selectedParameter.value}`.split(
+      ','
+    )
 
     return { ...hyperParams }
   } else {
@@ -22,6 +24,23 @@ export const editHyperParams = (hyperParams, selectedParameter, newName) => {
       [selectedParameter.name]: `${selectedParameter.value}`.split(',')
     }
   }
+}
+
+export const generateTableData = parameters => {
+  const content = {
+    predefined: [],
+    custom: []
+  }
+
+  parameters.forEach(parameter => {
+    if (parameter.isDefault && !content.predefined.includes(parameter)) {
+      content.predefined.push(parameter)
+    } else if (!parameter.isDefault && !content.custom.includes(parameter)) {
+      content.custom.push(parameter)
+    }
+  })
+
+  return content
 }
 
 export const selectOptions = {

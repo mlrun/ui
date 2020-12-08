@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import EditableParametersRow from '../EditableParametersRow/EditableParametersRow'
 import EditableDataInputsRow from '../EditableDataInputsRow/EditableDataInputsRow'
 import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
 import JobsPanelTableRow from '../JobsPanelTableRow/JobsPanelTableRow'
@@ -12,7 +11,6 @@ const JobsPanelTableView = ({
   children,
   className,
   content,
-  disabledOptions,
   editItem,
   generateActionsMenu,
   handleDelete,
@@ -45,16 +43,7 @@ const JobsPanelTableView = ({
           contentItem.data[contentItemName] ===
             selectedItem.data[contentItemName]
         ) {
-          return section === 'parameters' ? (
-            <EditableParametersRow
-              disabledOptions={disabledOptions}
-              handleEdit={handleEdit}
-              key={index}
-              match={match}
-              selectedParameter={selectedItem}
-              setSelectedParameter={setSelectedItem}
-            />
-          ) : section === 'data-inputs' ? (
+          return section === 'data-inputs' ? (
             <EditableDataInputsRow
               handleEdit={handleEdit}
               key={index}
@@ -101,7 +90,6 @@ JobsPanelTableView.propTypes = {
   children: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
   content: PropTypes.array.isRequired,
-  disabledOptions: PropTypes.array,
   editItem: PropTypes.bool.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,

@@ -9,10 +9,10 @@ import JobsPanelTitle from '../../elements/JobsPanelTitle/JobsPanelTitle'
 import ScheduleJob from '../ScheduleJob/ScheduleJob'
 import JobsPanelAdvanced from '../JobsPanelAdvanced/JobsPanelAdvanced'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import Loader from '../../common/Loader/Loader'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
-import Loader from '../../common/Loader/Loader'
 
 const JobsPanelView = ({
   closePanel,
@@ -72,8 +72,7 @@ const JobsPanelView = ({
               openByDefault
             >
               <JobsPanelParameters
-                jobsStoreNewJobTaskSpec={jobsStore.newJob.task.spec}
-                match={match}
+                newJobTaskSpecObj={jobsStore.newJob.task.spec}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
                 setNewJobHyperParameters={setNewJobHyperParameters}
