@@ -41,7 +41,7 @@ const JobsPanelParametersTableView = ({
         </div>
       )}
       {Object.entries(tableContent)?.map((contentCategory, index) => {
-        return (
+        return contentCategory[1].length > 0 ? (
           <div key={contentCategory[0]}>
             <div className="table__row no-hover">
               <div className="table__cell table__subheader">
@@ -83,7 +83,7 @@ const JobsPanelParametersTableView = ({
               }
             })}
           </div>
-        )
+        ) : null
       })}
       {children}
     </div>
