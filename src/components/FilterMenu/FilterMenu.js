@@ -159,7 +159,6 @@ const FilterMenu = ({
                     (filter === 'status' && stateFilter) ||
                     (filter === 'groupBy' && groupFilter)
                   }
-                  selectType={filter === 'status' ? 'checkbox' : ''}
                   onClick={item => handleSelectOption(item, filter)}
                 />
               )

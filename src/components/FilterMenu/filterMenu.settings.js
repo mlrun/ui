@@ -6,10 +6,10 @@ export const selectOptions = {
     { label: 'Last 6 months', id: 'last6Months' }
   ],
   status: [
-    { label: 'All', id: 'all' },
-    { label: 'Completed', id: 'completed' },
-    { label: 'Running', id: 'running' },
-    { label: 'Error', id: 'error' }
+    { label: 'All', id: 'all', status: 'all' },
+    { label: 'Completed', id: 'completed', status: 'completed' },
+    { label: 'Running', id: 'running', status: 'running' },
+    { label: 'Error', id: 'error', status: 'error' }
   ],
   groupBy: [
     { label: 'None', id: 'none' },
