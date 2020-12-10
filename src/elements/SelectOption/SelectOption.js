@@ -9,17 +9,18 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import './selectOption.scss'
 
 const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
+  const selectClassName = classnames('select__item', disabled && 'disabled')
+
   if (selectType === 'checkbox') {
     return (
       <div data-testid="select-checkbox" className="select__item">
         <CheckBox item={item} selectedId={selectedId} onChange={onClick}>
-          <span className={`status ${item.id}`} /> {item.label}
+          {item.status && <span className={`status ${item.status}`} />}
+          {item.label}
         </CheckBox>
       </div>
     )
   }
-
-  const selectClassName = classnames('select__item', disabled && 'disabled')
 
   return (
     <div
@@ -34,6 +35,7 @@ const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
           {item.icon}
         </span>
       )}
+      {item.status && <span className={`status ${item.status}`} />}
       {item.label}
       {item.subLabel && (
         <Tooltip
