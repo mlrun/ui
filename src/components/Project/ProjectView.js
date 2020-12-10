@@ -47,7 +47,13 @@ const ProjectView = React.forwardRef(
     ref
   ) => {
     const registerArtifactLink = `/projects/${match.params.projectName}/${
-      artifactKind === 'dataset' ? 'feature-store/datasets' : `${artifactKind}s`
+      artifactKind === 'model'
+        ? 'models'
+        : artifactKind === 'dataset'
+        ? 'feature-store/datasets'
+        : artifactKind === 'file'
+        ? 'files'
+        : 'artifacts'
     }`
 
     return (
