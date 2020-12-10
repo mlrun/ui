@@ -46,6 +46,10 @@ const ProjectView = React.forwardRef(
     },
     ref
   ) => {
+    const registerArtifactLink = `/projects/${match.params.projectName}/${
+      artifactKind === 'dataset' ? 'feature-store/datasets' : `${artifactKind}s`
+    }`
+
     return (
       <>
         <div className="project__header">
@@ -227,7 +231,7 @@ const ProjectView = React.forwardRef(
               pageKind: `${artifactKind}s`
             }}
             refresh={() => {
-              history.push(`/projects/${match.params.projectName}/artifacts`)
+              history.push(registerArtifactLink)
             }}
             setIsPopupDialogOpen={setIsPopupDialogOpen}
             title={`Register ${artifactKind}`}
