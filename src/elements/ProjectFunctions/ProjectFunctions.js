@@ -20,38 +20,36 @@ const ProjectFunctions = ({
   }, [fetchApiGateways, match.params.projectName])
 
   const functions = useMemo(() => {
-    if (functionsStore.functions.length > 0) {
-      const functionsRunning = functionsStore.functions.reduce(
-        (prev, curr) =>
-          !curr.spec.disable && curr.status.state === 'ready'
-            ? (prev += 1)
-            : prev,
-        0
-      )
-      const functionsFailed = functionsStore.functions.reduce(
-        (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
-        0
-      )
+    const functionsRunning = functionsStore.functions.reduce(
+      (prev, curr) =>
+        !curr.spec.disable && curr.status.state === 'ready'
+          ? (prev += 1)
+          : prev,
+      0
+    )
+    const functionsFailed = functionsStore.functions.reduce(
+      (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
+      0
+    )
 
-      return {
-        running: {
-          value: functionsRunning,
-          label: 'Running',
-          className: 'running',
-          href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
-        },
-        failed: {
-          value: functionsFailed,
-          label: 'Failed',
-          className: functionsFailed > 0 ? 'failed' : 'default',
-          href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
-        },
-        apiGateways: {
-          value: functionsStore.apiGateways,
-          label: 'API gateways',
-          className: 'running',
-          href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
-        }
+    return {
+      running: {
+        value: functionsRunning,
+        label: 'Running',
+        className: functionsRunning > 0 ? 'running' : 'default',
+        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
+      },
+      failed: {
+        value: functionsFailed,
+        label: 'Failed',
+        className: functionsFailed > 0 ? 'failed' : 'default',
+        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
+      },
+      apiGateways: {
+        value: functionsStore.apiGateways,
+        label: 'API gateways',
+        className: functionsStore.apiGateways > 0 ? 'running' : 'default',
+        href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
       }
     }
   }, [functionsStore, match.params.projectName])
