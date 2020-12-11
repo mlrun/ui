@@ -1,4 +1,4 @@
-import React, { useReducer, useMemo } from 'react'
+import React, { useReducer, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelParametersView from './JobsPanelParametersView'
@@ -33,48 +33,70 @@ const JobsPanelParameters = ({
     return []
   }, [newJobTaskSpecObj.param_file])
 
-  const checkParameter = item => {
-    const parameters = panelState.tableData.parameters.map(parameter => {
-      if (parameter.data.name === item) {
-        parameter.isChecked = true
+  const checkParameter = useCallback(
+    item => {
+      const parameters = panelState.tableData.parameters.map(parameter => {
+        if (parameter.data.name === item && !parameter.isChecked) {
+          parameter.isChecked = true
 
-        if (parameter.data.parameterType !== panelData.newParameterType[0].id) {
-          setNewJobHyperParameters({
-            ...newJobTaskSpecObj.hyperparams,
-            [parameter.data.name]: `${parameter.data.value}`.split(',')
-          })
-        } else {
+          if (
+            parameter.data.parameterType !== panelData.newParameterType[0].id
+          ) {
+            setNewJobHyperParameters({
+              ...newJobTaskSpecObj.hyperparams,
+              [parameter.data.name]: `${parameter.data.value}`.split(',')
+            })
+          }
+
           setNewJobParameters({
             ...newJobTaskSpecObj.parameters,
             [parameter.data.name]: parameter.data.value
           })
-        }
-      } else if (parameter.isChecked && item === '') {
-        parameter.isChecked = false
+        } else if (parameter.isChecked && parameter.data.name === item) {
+          parameter.isChecked = false
 
-        if (parameter.data.parameterType !== panelData.newParameterType[0].id) {
-          const hyperParams = { ...newJobTaskSpecObj.hyperparams }
+          const params = { ...newJobTaskSpecObj.parameters }
 
-          delete hyperParams[parameter.data.name]
+          delete params[parameter.data.name]
 
-          setNewJobHyperParameters({
-            ...hyperParams
+          setNewJobParameters({
+            ...params
           })
+
+          if (
+            parameter.data.parameterType !== panelData.newParameterType[0].id
+          ) {
+            const hyperParams = { ...newJobTaskSpecObj.hyperparams }
+
+            delete hyperParams[parameter.data.name]
+
+            setNewJobHyperParameters({
+              ...hyperParams
+            })
+          }
         }
-      }
 
-      return parameter
-    })
+        return parameter
+      })
 
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
-      payload: parameters
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_PARAMETERS,
-      payload: parameters
-    })
-  }
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
+        payload: parameters
+      })
+      panelDispatch({
+        type: panelActions.SET_TABLE_DATA_PARAMETERS,
+        payload: parameters
+      })
+    },
+    [
+      newJobTaskSpecObj.hyperparams,
+      newJobTaskSpecObj.parameters,
+      panelDispatch,
+      panelState.tableData.parameters,
+      setNewJobHyperParameters,
+      setNewJobParameters
+    ]
+  )
 
   const handleAddNewParameter = () => {
     if (
@@ -93,7 +115,7 @@ const JobsPanelParameters = ({
 
     setNewJobParameters({
       ...newJobTaskSpecObj.parameters,
-      [parametersState.newParameter.name]: parametersState.newParameter.value
+      [parametersState.newParameter.name]: +parametersState.newParameter.value
     })
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,

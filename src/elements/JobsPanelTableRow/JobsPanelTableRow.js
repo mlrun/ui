@@ -34,7 +34,7 @@ const JobsPanelTableRow = ({
       <div className={rowClassNames}>
         {withCheckbox && (
           <CheckBox
-            className="table__cell-checkbox"
+            className=" table__cell table__cell-checkbox"
             item={{
               id: contentItem.data.name
             }}
