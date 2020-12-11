@@ -30,7 +30,11 @@ const ProjectCardView = React.forwardRef(
         }}
       >
         <div className="project-card__general-info">
-          <div className="project-card__header">{project.name}</div>
+          <div className="project-card__header">
+            <Tooltip template={<TextTooltipTemplate text={project.name} />}>
+              {project.name}
+            </Tooltip>
+          </div>
           {project?.description && (
             <Tooltip
               className="project-card_description"
