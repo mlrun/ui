@@ -4,23 +4,21 @@ import PropTypes from 'prop-types'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 
-import JobsPanelTableView from './JobsPanelTableView'
+import JobsPanelParametersTableView from './JobsPanelParametersTableView'
 
-import './jobsPanelTable.scss'
-
-const JobsPanelTable = ({
+const JobsPanelParametersTable = ({
   addNewItem,
   children,
+  checkParameter,
   className,
   content,
-  handleDeleteItems,
-  handleEditItems,
-  handleSetSelectedVolume,
+  disabledOptions,
+  handleDeleteParameter,
+  handleEditParameter,
   headers,
-  match,
-  section,
   selectedItem,
-  setSelectedItem
+  setSelectedItem,
+  tableContent
 }) => {
   const [editItem, setEditItem] = useState(false)
 
@@ -28,29 +26,13 @@ const JobsPanelTable = ({
     item => {
       if (editItem) {
         setEditItem(false)
-        handleEditItems(section.includes('env'))
+        handleEditParameter()
       } else {
-        section === 'volumes'
-          ? handleSetSelectedVolume(item)
-          : setSelectedItem(item)
-
+        setSelectedItem(item)
         setEditItem(true)
       }
     },
-    [
-      editItem,
-      handleEditItems,
-      handleSetSelectedVolume,
-      section,
-      setSelectedItem
-    ]
-  )
-
-  const handleDelete = useCallback(
-    item => {
-      handleDeleteItems(item, section.includes('env'))
-    },
-    [handleDeleteItems, section]
+    [editItem, handleEditParameter, setSelectedItem]
   )
 
   const generateActionsMenu = useCallback(
@@ -65,54 +47,55 @@ const JobsPanelTable = ({
         icon: <Delete />,
         visible: !rowItem.isDefault,
         onClick: selectedItem => {
-          handleDelete(selectedItem)
+          handleDeleteParameter(selectedItem)
         }
       }
     ],
-    [handleDelete, handleEdit]
+    [handleDeleteParameter, handleEdit]
   )
 
   return (
-    <JobsPanelTableView
+    <JobsPanelParametersTableView
       addNewItem={addNewItem}
       children={children}
+      checkParameter={checkParameter}
       className={className}
       content={content}
+      disabledOptions={disabledOptions}
       editItem={editItem}
       generateActionsMenu={generateActionsMenu}
-      handleDelete={handleDelete}
-      handleEdit={handleEdit}
+      handleDeleteParameter={handleDeleteParameter}
+      handleEditParameter={handleEdit}
       headers={headers}
-      match={match}
-      section={section}
       selectedItem={selectedItem}
       setSelectedItem={setSelectedItem}
+      tableContent={tableContent}
     />
   )
 }
 
-JobsPanelTable.defaultProps = {
+JobsPanelParametersTable.defaultProps = {
   className: '',
   headers: [],
   handleDeleteItems: null,
   handleSetSelectedVolume: null
 }
 
-JobsPanelTable.propTypes = {
+JobsPanelParametersTable.propTypes = {
   addNewItem: PropTypes.bool.isRequired,
+  checkParameter: PropTypes.func.isRequired,
   className: PropTypes.string,
   content: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.shape({})
   ]).isRequired,
-  handleDeleteItems: PropTypes.func,
-  handleEditItems: PropTypes.func.isRequired,
-  handleSetSelectedVolume: PropTypes.func,
+  disabledOptions: PropTypes.array,
+  handleDeleteParameter: PropTypes.func,
+  handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
-  match: PropTypes.shape({}).isRequired,
-  section: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  setSelectedItem: PropTypes.func.isRequired
+  setSelectedItem: PropTypes.func.isRequired,
+  tableContent: PropTypes.shape({}).isRequired
 }
 
-export default JobsPanelTable
+export default JobsPanelParametersTable

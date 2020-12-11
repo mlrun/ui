@@ -1,41 +1,9 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/mixins';
 
 .job-panel__table {
-  position: relative;
-  width: 100%;
-  border-bottom: $tableBorder;
-
-  .table {
-    &__header {
-      color: $topaz;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 24px;
-    }
-
-    &__body {
-      display: flex;
-      align-items: flex-end;
-
-      &-column {
-        width: 100%;
-
-        .input {
-          border: none;
-        }
-      }
-    }
-
-    &__row-add-item {
-      display: flex;
-      align-items: center;
-
-      input {
-        border: none;
-      }
-    }
-  }
+  @include jobsPanelTable;
 
   &:not(.data-inputs) {
     .input-wrapper {
@@ -49,35 +17,6 @@
     }
   }
 
-  .input-row {
-    &-wrapper {
-      display: flex;
-      width: 100%;
-      margin: 0 -1px 0 -1px;
-      border: $primaryBorder;
-
-      .select {
-        flex: 1;
-        height: 54px;
-        margin: 1px 0;
-        padding: 0;
-        border: none;
-
-        &__label {
-          padding: 0;
-        }
-      }
-    }
-
-    &__item {
-      width: 100%;
-
-      &::placeholder {
-        font-style: italic;
-      }
-    }
-  }
-
   &.volumes {
     .table__body {
       .select {
@@ -86,62 +25,6 @@
 
         &__value {
           min-width: unset;
-        }
-      }
-    }
-  }
-
-  .edit-row {
-    background-color: $alabaster;
-
-    .input {
-      width: 100%;
-      margin: -1px;
-      padding: 10px;
-      border: $primaryBorder;
-      border-radius: 2px;
-    }
-
-    .table__cell {
-      &_edit {
-        min-width: 175px;
-        padding: 10px 0;
-
-        &:first-child {
-          padding-right: 7px;
-          padding-left: 7px;
-        }
-
-        .select {
-          width: 100%;
-          border-radius: 2px;
-
-          &__value {
-            min-width: unset;
-          }
-
-          &__label {
-            padding-left: 0;
-          }
-        }
-      }
-
-      &-input {
-        padding: 0;
-
-        &:first-child {
-          .input-wrapper {
-            min-width: 204px;
-            margin-right: 5px;
-
-            .input {
-              padding-left: 17px;
-
-              &__label {
-                padding-left: 5px;
-              }
-            }
-          }
         }
       }
     }
@@ -190,56 +73,6 @@
       &-s3 {
         color: $sorbus;
       }
-    }
-  }
-
-  &.parameters {
-    margin-bottom: 35px;
-
-    .input-row-wrapper {
-      .parameters-value-type {
-        .select__label {
-          text-transform: none;
-        }
-      }
-
-      .parameter-value {
-        padding: 18px 10px;
-
-        + .input__label {
-          left: 10px;
-        }
-
-        &.active-input {
-          padding: 27px 10px 9px;
-        }
-      }
-    }
-
-    .select {
-      margin-right: 5px;
-
-      &__label {
-        color: $primary;
-      }
-    }
-
-    .edit-row {
-      .table__cell_edit {
-        &:first-child {
-          padding-right: 0;
-        }
-      }
-    }
-  }
-
-  .no-hover {
-    .add-input {
-      padding: 0;
-    }
-
-    &:hover {
-      background-color: transparent;
     }
   }
 
