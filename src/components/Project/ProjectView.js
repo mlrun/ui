@@ -13,6 +13,8 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import Select from '../../common/Select/Select'
 import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
 import TextArea from '../../common/TextArea/TextArea'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
 
@@ -46,6 +48,16 @@ const ProjectView = React.forwardRef(
     },
     ref
   ) => {
+    const registerArtifactLink = `/projects/${match.params.projectName}/${
+      artifactKind === 'model'
+        ? 'models'
+        : artifactKind === 'dataset'
+        ? 'feature-store/datasets'
+        : artifactKind === 'file'
+        ? 'files'
+        : 'artifacts'
+    }`
+
     return (
       <>
         <div className="project__header">
@@ -82,7 +94,19 @@ const ProjectView = React.forwardRef(
                         }
                       />
                     ) : (
-                      editProject.name.value ?? projectStore.project.data.name
+                      <Tooltip
+                        template={
+                          <TextTooltipTemplate
+                            text={
+                              editProject.name.value ??
+                              projectStore.project.data.name
+                            }
+                          />
+                        }
+                      >
+                        {editProject.name.value ??
+                          projectStore.project.data.name}
+                      </Tooltip>
                     )}
                   </div>
                   <Settings className="general-info__settings" />
@@ -227,7 +251,7 @@ const ProjectView = React.forwardRef(
               pageKind: `${artifactKind}s`
             }}
             refresh={() => {
-              history.push(`/projects/${match.params.projectName}/artifacts`)
+              history.push(registerArtifactLink)
             }}
             setIsPopupDialogOpen={setIsPopupDialogOpen}
             title={`Register ${artifactKind}`}

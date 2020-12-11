@@ -11,7 +11,7 @@ const CheckBox = ({ children, className, item, onChange, selectedId }) => {
     <span
       className={`checkbox ${className}`}
       onClick={() => {
-        onChange(item.id === selectedId ? '' : item.id)
+        onChange(item.id)
       }}
     >
       {item.id === selectedId ? (
@@ -35,7 +35,4 @@ CheckBox.propTypes = {
   selectedId: PropTypes.string.isRequired
 }
 
-export default React.memo(
-  CheckBox,
-  (prev, next) => prev.selectedId === next.selectedId
-)
+export default React.memo(CheckBox)

@@ -18,10 +18,6 @@
       color: $spunPearl;
     }
 
-    &:first-child {
-      padding-left: 17px;
-    }
-
     .btn_delete {
       display: none;
       padding: 0;
@@ -33,6 +29,15 @@
 
     .apply-edit-btn {
       padding: 0;
+    }
+
+    &-checkbox {
+      flex: 0.16;
+      padding: 0;
+
+      svg {
+        margin: 0;
+      }
     }
   }
 

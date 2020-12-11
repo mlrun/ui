@@ -8,6 +8,7 @@ export const getDefaultData = functionParameters => {
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
       doc: parameter.doc,
+      isChecked: true,
       isDefault: true,
       data: {
         name: parameter.name ?? '',

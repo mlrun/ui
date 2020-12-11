@@ -177,7 +177,7 @@ const Functions = ({
       history.push(`/projects/${match.params.projectName}/functions`)
     }
 
-    setShowUntagged(showUntagged)
+    setShowUntagged(state => (state === showUntagged ? '' : showUntagged))
   }
 
   return (

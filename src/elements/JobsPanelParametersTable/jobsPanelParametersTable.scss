@@ -1,0 +1,65 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/mixins';
+
+.job-panel__parameters-table {
+  @include jobsPanelTable;
+
+  margin-bottom: 35px;
+
+  .table {
+    &__parameters-row {
+      &_unchecked {
+        .table__cell {
+          color: $spunPearl;
+        }
+      }
+    }
+  }
+
+  .input-wrapper {
+    &:first-child {
+      padding-right: 7px;
+    }
+  }
+
+  .select {
+    margin-right: 5px;
+
+    &__label {
+      color: $primary;
+    }
+
+    &__header {
+      padding: 10px;
+    }
+  }
+
+  .input-row-wrapper {
+    .parameters-value-type {
+      .select__label {
+        text-transform: none;
+      }
+    }
+
+    .parameter-value {
+      padding: 18px 10px;
+
+      + .input__label {
+        left: 10px;
+      }
+
+      &.active-input {
+        padding: 27px 10px 9px;
+      }
+    }
+  }
+
+  .edit-row {
+    .table__cell_edit {
+      &:first-child {
+        padding-right: 0;
+      }
+    }
+  }
+}

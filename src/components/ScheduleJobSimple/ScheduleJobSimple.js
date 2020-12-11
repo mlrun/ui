@@ -31,7 +31,9 @@ const ScheduleJobSimple = ({
       <div className="checkbox_container">
         <CheckBox
           item={{ label: 'Recurring', id: 'recurring' }}
-          onChange={setIsRecurring}
+          onChange={recurring =>
+            setIsRecurring(state => (state === recurring ? '' : recurring))
+          }
           selectedId={isRecurring}
         />
       </div>

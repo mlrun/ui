@@ -20,13 +20,14 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
     running: {
       value: jobs.error ? 'N/A' : jobsRunning,
       label: 'Running jobs',
-      className: jobs.error ? 'default' : 'running',
+      className: jobs.error || jobsRunning === 0 ? 'default' : 'running',
       link: `/projects/${match.params.projectName}/jobs/monitor`
     },
     workflows: {
       value: workflows.error ? 'N/A' : workflows.data.length,
       label: 'Running workflows',
-      className: workflows.error ? 'default' : 'running',
+      className:
+        workflows.error || workflows.data.length === 0 ? 'default' : 'running',
       link: `/projects/${match.params.projectName}/jobs/monitor`
     },
     failed: {
@@ -38,7 +39,10 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
     scheduled: {
       value: scheduledJobs.error ? 'N/A' : scheduledJobs.data.length,
       label: 'Scheduled',
-      className: scheduledJobs.error ? 'default' : 'scheduled',
+      className:
+        scheduledJobs.error || scheduledJobs.data.length === 0
+          ? 'default'
+          : 'scheduled',
       link: `/projects/${match.params.projectName}/jobs/schedule`
     }
   }
