@@ -279,31 +279,38 @@ const createFeaturesRowData = artifact => {
 }
 
 const getFeatureSetTargetCellValue = targets => {
-  let icon = null
-  let tooltip = null
+  const icons = []
 
   if (targets) {
     targets.forEach(target => {
       if (target.kind === 'nosql') {
-        icon = <Nosql />
-        tooltip = 'NoSql'
+        icons.push({
+          icon: <Nosql />,
+          tooltip: 'NoSql'
+        })
       } else if (target.kind === 'stream') {
-        icon = <Stream />
-        tooltip = 'Stream'
+        icons.push({
+          icon: <Stream />,
+          tooltip: 'Stream'
+        })
       } else if (target.kind === 'tsdb') {
-        icon = <TsdbIcon />
-        tooltip = 'TSDB'
+        icons.push({
+          icon: <TsdbIcon />,
+          tooltip: 'TSDB'
+        })
       } else {
-        icon = <DbIcon />
-        tooltip = target.kind
+        icons.push({
+          icon: <DbIcon />,
+          tooltip: target.kind
+        })
       }
     })
   }
 
   return {
-    value: icon,
-    class: 'artifacts_small',
-    tooltip: tooltip
+    value: icons,
+    class: 'artifacts_small artifacts__targets-icon',
+    type: 'icons'
   }
 }
 
