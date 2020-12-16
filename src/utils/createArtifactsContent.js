@@ -1,3 +1,4 @@
+import React from 'react'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import {
@@ -10,6 +11,11 @@ import {
   MODELS_PAGE
 } from '../constants'
 import { convertBytes } from './convertBytes'
+
+import { ReactComponent as Nosql } from '../images/nosql.svg'
+import { ReactComponent as Stream } from '../images/stream.svg'
+import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
+import { ReactComponent as DbIcon } from '../images/db-icon.svg'
 
 const createArtifactsContent = (artifacts, page, featureStoreTab, project) =>
   artifacts.map(artifact => {
@@ -231,12 +237,15 @@ const createFeatureSetsRowData = (artifact, project) => {
       class: 'artifacts_small',
       type: 'hidden'
     },
-    updated: {
-      value: artifact.updated
-        ? formatDatetime(new Date(artifact.updated), 'N/A')
-        : 'N/A',
+    description: {
+      value: artifact.description,
+      class: 'artifacts_medium'
+    },
+    entity: {
+      value: artifact.entities[0]?.name,
       class: 'artifacts_small'
-    }
+    },
+    targets: getFeatureSetTargetCellValue(artifact.targets)
   }
 }
 
@@ -266,6 +275,35 @@ const createFeaturesRowData = artifact => {
       value: artifact.feature_set_digest?.spec?.entities[0]?.name,
       class: 'artifacts_extra-small'
     }
+  }
+}
+
+const getFeatureSetTargetCellValue = targets => {
+  let icon = null
+  let tooltip = null
+
+  if (targets) {
+    targets.forEach(target => {
+      if (target.kind === 'nosql') {
+        icon = <Nosql />
+        tooltip = 'NoSql'
+      } else if (target.kind === 'stream') {
+        icon = <Stream />
+        tooltip = 'Stream'
+      } else if (target.kind === 'tsdb') {
+        icon = <TsdbIcon />
+        tooltip = 'TSDB'
+      } else {
+        icon = <DbIcon />
+        tooltip = target.kind
+      }
+    })
+  }
+
+  return {
+    value: icon,
+    class: 'artifacts_small',
+    tooltip: tooltip
   }
 }
 

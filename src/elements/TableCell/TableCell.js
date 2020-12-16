@@ -133,7 +133,7 @@ const TableCell = ({
       <div className={`table-body__cell ${data.class}`}>
         <Tooltip
           className="text_small"
-          template={<TextTooltipTemplate text={data.value} />}
+          template={<TextTooltipTemplate text={data.tooltip || data.value} />}
         >
           {data.value}
         </Tooltip>
