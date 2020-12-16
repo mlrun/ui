@@ -14,13 +14,12 @@ import createArtifactsContent from './createArtifactsContent'
 
 export const generateTableContent = (
   content,
-  pageTab,
+  match,
   groupedByName,
   groupedByWorkflow,
   groupFilter,
   pageData,
-  setLoading,
-  project
+  setLoading
 ) => {
   if (!isEmpty(groupedByName) && groupFilter === 'name') {
     setLoading(true)
@@ -30,7 +29,12 @@ export const generateTableContent = (
         ? createJobsContent(group, false)
         : pageData.page === FUNCTIONS_PAGE
         ? createFunctionsContent(group)
-        : createArtifactsContent(group, pageData.page, pageTab, project)
+        : createArtifactsContent(
+            group,
+            pageData.page,
+            match.params.pageTab,
+            match.params.projectName
+          )
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
     setLoading(true)
@@ -40,12 +44,17 @@ export const generateTableContent = (
     setLoading && setLoading(true)
 
     return pageData.page === JOBS_PAGE
-      ? createJobsContent(content, false, pageTab)
+      ? createJobsContent(content, false, match.params.pageTab)
       : pageData.page === ARTIFACTS_PAGE ||
         pageData.page === FILES_PAGE ||
         pageData.page === MODELS_PAGE ||
         pageData.page === FEATURE_STORE_PAGE
-      ? createArtifactsContent(content, pageData.page, pageTab, project)
+      ? createArtifactsContent(
+          content,
+          pageData.page,
+          match.params.pageTab,
+          match.params.projectName
+        )
       : createFunctionsContent(content)
   } else return []
 }

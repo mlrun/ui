@@ -46,13 +46,12 @@ const Table = ({
     if (isEveryObjectValueEmpty(tableContent)) {
       const generatedTableContent = generateTableContent(
         content,
-        match.params.pageTab,
+        match,
         groupedByName,
         groupedByWorkflow,
         groupFilter,
         pageData,
-        setLoading,
-        match.params.projectName
+        setLoading
       )
       let groupLatest = []
       let groupWorkflowItem = []
@@ -82,8 +81,7 @@ const Table = ({
     groupFilter,
     groupedByName,
     groupedByWorkflow,
-    match.params.pageTab,
-    match.params.projectName,
+    match,
     pageData,
     setLoading,
     tableContent,
