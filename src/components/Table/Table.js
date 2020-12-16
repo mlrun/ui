@@ -13,6 +13,7 @@ import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
 
 import './table.scss'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const Table = ({
   content,
@@ -42,48 +43,51 @@ const Table = ({
   )
 
   useEffect(() => {
-    const generatedTableContent = generateTableContent(
-      content,
-      match.params.pageTab,
-      groupedByName,
-      groupedByWorkflow,
-      groupFilter,
-      pageData,
-      setLoading,
-      match.params.projectName
-    )
-    let groupLatest = []
-    let groupWorkflowItem = []
+    if (isEveryObjectValueEmpty(tableContent)) {
+      const generatedTableContent = generateTableContent(
+        content,
+        match.params.pageTab,
+        groupedByName,
+        groupedByWorkflow,
+        groupFilter,
+        pageData,
+        setLoading,
+        match.params.projectName
+      )
+      let groupLatest = []
+      let groupWorkflowItem = []
 
-    if (groupFilter === 'name') {
-      groupLatest = generateGroupLatestItem(
-        pageData.page,
-        generatedTableContent
-      )
-    } else if (groupFilter === 'workflow') {
-      groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
-        workflows.find(workflow => workflow.id === workflowId)
-      )
+      if (groupFilter === 'name') {
+        groupLatest = generateGroupLatestItem(
+          pageData.page,
+          generatedTableContent
+        )
+      } else if (groupFilter === 'workflow') {
+        groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
+          workflows.find(workflow => workflow.id === workflowId)
+        )
+      }
+
+      setTableContent({
+        content: generatedTableContent,
+        groupLatestItem: groupLatest,
+        groupWorkflowItems: createJobsContent(
+          groupWorkflowItem,
+          groupedByWorkflow
+        )
+      })
     }
-
-    setTableContent({
-      content: generatedTableContent,
-      groupLatestItem: groupLatest,
-      groupWorkflowItems: createJobsContent(
-        groupWorkflowItem,
-        groupedByWorkflow
-      )
-    })
   }, [
     content,
-    groupedByName,
     groupFilter,
+    groupedByName,
     groupedByWorkflow,
-    workflows,
+    match.params.pageTab,
+    match.params.projectName,
     pageData,
     setLoading,
-    match.params.pageTab,
-    match.params.projectName
+    tableContent,
+    workflows
   ])
 
   useEffect(() => {
