@@ -4,6 +4,7 @@ import {
   ARTIFACTS_PAGE,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
+  FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODELS_PAGE
 } from '../constants'
@@ -13,7 +14,7 @@ import createArtifactsContent from './createArtifactsContent'
 
 export const generateTableContent = (
   content,
-  pageTab,
+  match,
   groupedByName,
   groupedByWorkflow,
   groupFilter,
@@ -26,7 +27,14 @@ export const generateTableContent = (
     return map(groupedByName, group =>
       pageData.page === JOBS_PAGE
         ? createJobsContent(group, false)
-        : createFunctionsContent(group)
+        : pageData.page === FUNCTIONS_PAGE
+        ? createFunctionsContent(group)
+        : createArtifactsContent(
+            group,
+            pageData.page,
+            match.params.pageTab,
+            match.params.projectName
+          )
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
     setLoading(true)
@@ -36,12 +44,17 @@ export const generateTableContent = (
     setLoading && setLoading(true)
 
     return pageData.page === JOBS_PAGE
-      ? createJobsContent(content, false, pageTab)
+      ? createJobsContent(content, false, match.params.pageTab)
       : pageData.page === ARTIFACTS_PAGE ||
         pageData.page === FILES_PAGE ||
         pageData.page === MODELS_PAGE ||
         pageData.page === FEATURE_STORE_PAGE
-      ? createArtifactsContent(content, pageData.page, pageTab)
+      ? createArtifactsContent(
+          content,
+          pageData.page,
+          match.params.pageTab,
+          match.params.projectName
+        )
       : createFunctionsContent(content)
   } else return []
 }

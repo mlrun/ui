@@ -74,10 +74,6 @@ export const featureSetsTableHeaders = [
     class: 'artifacts_big'
   },
   {
-    header: 'Version',
-    class: 'artifacts_small'
-  },
-  {
     header: 'Last Updated',
     class: 'artifacts_small'
   },

@@ -152,7 +152,8 @@ const Content = ({
         pageData.page === FEATURE_STORE_PAGE) &&
       yamlContent.filter(yamlContentItem =>
         match.params.pageTab === FEATURE_SETS_TAB
-          ? isEqual(yamlContentItem.name, item.name)
+          ? isEqual(yamlContentItem.name, item.name) &&
+            isEqual(yamlContentItem.tag, item.tag)
           : match.params.pageTab === FEATURES_TAB
           ? isEqual(yamlContentItem.feature.name, item.feature.name)
           : isEqual(yamlContentItem.db_key, item.db_key)
@@ -178,7 +179,10 @@ const Content = ({
 
     if (parentRow.classList.contains('parent-row-expanded')) {
       const newArray = expandedItems.filter(
-        expanded => expanded.name.value !== item.name.value
+        expanded =>
+          expanded.name?.value !== item.name?.value ||
+          expanded.name !== item.name ||
+          expanded.name !== item.key.value
       )
 
       parentRow.classList.remove('parent-row-expanded')

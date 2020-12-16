@@ -30,6 +30,7 @@ const FeatureStore = ({
   setArtifactFilter
 }) => {
   const [content, setContent] = useState([])
+  const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
@@ -78,6 +79,7 @@ const FeatureStore = ({
 
     return () => {
       setContent([])
+      setGroupFilter('')
       removeDataSets()
       removeFeatureSets()
       setSelectedItem({})
@@ -85,11 +87,19 @@ const FeatureStore = ({
   }, [fetchData, match.params.projectName, removeDataSets, removeFeatureSets])
 
   useEffect(() => {
+    if (match.params.pageTab === FEATURE_SETS_TAB) {
+      setGroupFilter('name')
+    } else if (groupFilter.length > 0) {
+      setGroupFilter('')
+    }
+  }, [match.params.pageTab, groupFilter.length])
+
+  useEffect(() => {
     setPageData(generatePageData(match.params.pageTab))
   }, [match.params.pageTab])
 
   useEffect(() => {
-    const { name } = match.params
+    const { name, tag } = match.params
     let artifacts = []
 
     if (
@@ -112,7 +122,12 @@ const FeatureStore = ({
     if (match.params.name && artifacts.length !== 0) {
       const [selectedArtifact] = artifacts.filter(artifact => {
         const searchKey = artifact.name ? 'name' : 'key'
-        return artifact[searchKey] === name
+
+        if (match.params.pageTab === FEATURE_SETS_TAB) {
+          return artifact[searchKey] === name && artifact.tag === tag
+        } else {
+          return artifact[searchKey] === name
+        }
       })
 
       if (!selectedArtifact) {
@@ -157,7 +172,11 @@ const FeatureStore = ({
         !selectedItem.item?.extra_data)
     ) {
       history.push(
-        `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}/${match.params.name}/info`
+        `/projects/${match.params.projectName}/feature-store/${
+          match.params.pageTab
+        }/${match.params.name}${
+          match.params.tag ? `/${match.params.tag}` : ''
+        }/info`
       )
     }
 
@@ -183,7 +202,8 @@ const FeatureStore = ({
     match.params.name,
     history,
     selectedItem.item,
-    match.params.pageTab
+    match.params.pageTab,
+    match.params.tag
   ])
 
   const handleDataSetTreeFilterChange = useCallback(
@@ -209,6 +229,7 @@ const FeatureStore = ({
       {artifactsStore.loading && <Loader />}
       <Content
         content={content}
+        groupFilter={groupFilter}
         handleArtifactFilterTree={handleDataSetTreeFilterChange}
         handleCancel={() => setSelectedItem({})}
         handleSelectItem={item => setSelectedItem({ item })}

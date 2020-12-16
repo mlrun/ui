@@ -62,7 +62,7 @@ const DetailsView = ({
             : selectedItem?.updated
             ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
             : ''}
-          {selectedItem.state && (
+          {selectedItem.state && pageData.page === JOBS_PAGE && (
             <Tooltip
               template={
                 <TextTooltipTemplate

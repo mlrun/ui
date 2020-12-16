@@ -8,7 +8,9 @@ import { FUNCTIONS_PAGE } from '../../constants'
 const DetailsMenuItem = ({ hash, id, match, name, page, tab }) => {
   const link = `/projects/${match.params.projectName}/${page.toLowerCase()}/${
     match.params.pageTab ? `${match.params.pageTab}/` : ''
-  }${page === FUNCTIONS_PAGE ? hash : id || name}/${tab}`
+  }${page === FUNCTIONS_PAGE ? hash : id || name}/${
+    match.params.tag ? `${match.params.tag}/` : ''
+  }${tab}`
   const tabClassNames = classnames(
     'menu-tab',
     match.params.tab === tab && 'active-tab'

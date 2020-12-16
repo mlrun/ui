@@ -1,4 +1,4 @@
-import { FUNCTIONS_PAGE, JOBS_PAGE } from '../constants'
+import { FEATURE_STORE_PAGE, FUNCTIONS_PAGE, JOBS_PAGE } from '../constants'
 
 export const generateGroupLatestItem = (page, tableContent) =>
   tableContent?.map(group =>
@@ -17,5 +17,7 @@ export const generateGroupLatestItem = (page, tableContent) =>
             ? prev
             : curr
         })
+      : Array.isArray(group) && [FEATURE_STORE_PAGE].includes(page)
+      ? group.find(groupItem => groupItem.version?.value === 'latest')
       : group
   )
