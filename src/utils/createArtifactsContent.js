@@ -294,13 +294,15 @@ const kindToIcon = {
 }
 
 const getFeatureSetTargetCellValue = targets => ({
-  value: (targets ?? []).map(
-    target =>
-      kindToIcon[target.kind] ?? {
-        icon: <DbIcon />,
-        tooltip: target.kind
-      }
-  ),
+  value: (targets ?? [])
+    .map(
+      target =>
+        kindToIcon[target.kind] ?? {
+          icon: <DbIcon />,
+          tooltip: target.kind
+        }
+    )
+    .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
   class: 'artifacts_small artifacts__targets-icon',
   type: 'icons'
 })
