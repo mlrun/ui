@@ -141,6 +141,22 @@ const TableView = ({
                     tableContent={group}
                   />
                 )
+              } else if (pageData.page === FEATURE_STORE_PAGE) {
+                return (
+                  <ArtifactsTableRow
+                    actionsMenu={actionsMenu}
+                    content={content}
+                    handleSelectItem={handleSelectItem}
+                    handleExpandRow={handleExpandRow}
+                    index={i}
+                    key={i}
+                    match={match}
+                    rowItem={groupLatestItem[i]}
+                    pageData={pageData}
+                    selectedItem={selectedItem}
+                    tableContent={group}
+                  />
+                )
               } else {
                 return (
                   <JobsTableRow

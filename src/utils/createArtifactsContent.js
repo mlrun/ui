@@ -11,9 +11,9 @@ import {
 } from '../constants'
 import { convertBytes } from './convertBytes'
 
-const createArtifactsContent = (artifacts, page, featureStoreTab) =>
+const createArtifactsContent = (artifacts, page, featureStoreTab, project) =>
   artifacts.map(artifact => {
-    var rowData = []
+    let rowData = []
 
     if (page === ARTIFACTS_PAGE) {
       rowData = createArtifactsRowData(artifact)
@@ -25,7 +25,7 @@ const createArtifactsContent = (artifacts, page, featureStoreTab) =>
       if (featureStoreTab === DATASETS_TAB) {
         rowData = createDatasetsRowData(artifact)
       } else if (featureStoreTab === FEATURE_SETS_TAB) {
-        rowData = createFeatureSetsRowData(artifact)
+        rowData = createFeatureSetsRowData(artifact, project)
       } else if (featureStoreTab === FEATURES_TAB) {
         rowData = createFeaturesRowData(artifact)
       }
@@ -214,12 +214,12 @@ const createDatasetsRowData = artifact => {
   }
 }
 
-const createFeatureSetsRowData = artifact => {
+const createFeatureSetsRowData = (artifact, project) => {
   return {
     key: {
       value: artifact.name,
       class: 'artifacts_medium',
-      link: 'info'
+      link: `/projects/${project}/feature-store/feature-sets/${artifact.name}/${artifact.tag}/info`
     },
     labels: {
       value: parseKeyValues(artifact.labels),
@@ -228,7 +228,8 @@ const createFeatureSetsRowData = artifact => {
     },
     version: {
       value: artifact.tag,
-      class: 'artifacts_small'
+      class: 'artifacts_small',
+      type: 'hidden'
     },
     updated: {
       value: artifact.updated
@@ -240,6 +241,8 @@ const createFeatureSetsRowData = artifact => {
 }
 
 const createFeaturesRowData = artifact => {
+  const artifactMetadata = artifact.feature_set_digest?.metadata
+
   return {
     key: {
       value: artifact.feature?.name,
@@ -248,7 +251,7 @@ const createFeaturesRowData = artifact => {
     feature_set: {
       value: artifact.feature_set_digest?.metadata?.name,
       class: 'artifacts_medium',
-      link: `/projects/${artifact.feature_set_digest?.metadata?.project}/feature-store/feature-sets/${artifact.feature_set_digest?.metadata?.name}/info`
+      link: `/projects/${artifactMetadata?.project}/feature-store/feature-sets/${artifactMetadata?.name}/${artifactMetadata?.tag}/info`
     },
     labels: {
       value: parseKeyValues(artifact.feature?.labels),

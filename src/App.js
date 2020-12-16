@@ -102,6 +102,11 @@ const App = () => {
             />
             <Route
               exact
+              path="/projects/:projectName/feature-store/:pageTab/:name/:tag/:tab"
+              render={routeProps => <FeatureStore {...routeProps} />}
+            />
+            <Route
+              exact
               path="/projects/:projectName/models"
               render={routeProps => <Models {...routeProps} />}
             />

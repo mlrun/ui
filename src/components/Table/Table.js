@@ -49,7 +49,8 @@ const Table = ({
       groupedByWorkflow,
       groupFilter,
       pageData,
-      setLoading
+      setLoading,
+      match.params.projectName
     )
     let groupLatest = []
     let groupWorkflowItem = []
@@ -81,7 +82,8 @@ const Table = ({
     workflows,
     pageData,
     setLoading,
-    match.params.pageTab
+    match.params.pageTab,
+    match.params.projectName
   ])
 
   useEffect(() => {
