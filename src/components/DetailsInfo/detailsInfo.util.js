@@ -10,11 +10,14 @@ import { isNil, isEmpty } from 'lodash'
 export const generateArtifactsContent = (page, pageTab, selectedItem) => {
   if (pageTab === FEATURE_SETS_TAB) {
     return [
-      selectedItem.name,
+      selectedItem.description ?? '',
       isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
       selectedItem.tag,
       formatDatetime(selectedItem.updated, 'N/A'),
-      selectedItem.parition_keys
+      selectedItem.entities?.map(entity => entity.name),
+      (selectedItem.parition_keys || []).map(key => key),
+      selectedItem.timestamp_key ?? '',
+      selectedItem.label_column ?? ''
     ]
   }
 

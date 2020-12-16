@@ -161,7 +161,7 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
 
                 if (header === 'uri') {
                   const [project, hash] = selectedItem.producer.uri.split('/')
-                  url = `/projects/${project}/jobs/monitor/${hash}/info`
+                  url = `/projects/${project}/jobs/monitor/${hash}/overview`
                 }
 
                 return (
