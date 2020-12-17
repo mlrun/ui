@@ -106,7 +106,7 @@ const ProjectsView = ({
         />
       </div>
       <div className="projects__wrapper">
-        {projectStore.projects.length !== 0 || !projectStore.error ? (
+        {projectStore.projects.length > 0 && !projectStore.error ? (
           projectStore.projects.map(project => {
             return (
               <ProjectCard
