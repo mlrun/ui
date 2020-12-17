@@ -10,8 +10,8 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 
 const DetailsInfoItem = ({
-  chips,
   chipsClassName,
+  chipsData,
   func,
   info,
   link,
@@ -19,12 +19,13 @@ const DetailsInfoItem = ({
   state,
   target_path
 }) => {
-  if (chips?.length) {
+  if (chipsData?.chips?.length) {
     return (
       <div className="details-item__data">
         <ChipCell
-          elements={chips}
+          elements={chipsData.chips}
           className={`details-item__${chipsClassName}`}
+          delimiter={chipsData.delimiter}
         />
       </div>
     )
@@ -72,8 +73,11 @@ const DetailsInfoItem = ({
 }
 
 DetailsInfoItem.defaultProps = {
-  chips: [],
   chipsClassName: '',
+  chipsData: {
+    chips: [],
+    delimiter: null
+  },
   func: '',
   info: null,
   link: '',
@@ -83,8 +87,11 @@ DetailsInfoItem.defaultProps = {
 }
 
 DetailsInfoItem.propTypes = {
-  chips: PropTypes.array,
   chipsClassName: PropTypes.string,
+  chipsData: PropTypes.shape({
+    chips: PropTypes.arrayOf(PropTypes.string),
+    delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
+  }),
   func: PropTypes.string,
   info: PropTypes.any,
   link: PropTypes.string,

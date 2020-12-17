@@ -21,7 +21,6 @@ const JobsPanelTitleView = ({
   editTitle,
   handleFinishEdit,
   handleFunctionInfoChange,
-  match,
   methodOptions,
   openScheduleJob,
   panelDispatch,
@@ -87,10 +86,27 @@ const JobsPanelTitleView = ({
                   <div className="job-labels__text">Labels</div>
                   <div className="job-labels-wrapper">
                     <ChipCell
+                      addChip={(label, labels) =>
+                        panelDispatch({
+                          type: panelActions.SET_JOB_LABELS,
+                          payload: [...labels, label]
+                        })
+                      }
                       className="job-labels__item"
-                      dispatch={panelDispatch}
+                      editChip={chips =>
+                        panelDispatch({
+                          type: panelActions.EDIT_JOB_LABEL,
+                          payload: chips
+                        })
+                      }
                       elements={currentFunctionInfo.labels}
                       isEditMode={true}
+                      removeChip={chips =>
+                        panelDispatch({
+                          type: panelActions.REMOVE_JOB_LABEL,
+                          payload: chips
+                        })
+                      }
                     />
                   </div>
                 </div>
@@ -152,7 +168,6 @@ JobsPanelTitleView.propTypes = {
   editTitle: PropTypes.bool.isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   handleFunctionInfoChange: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
   methodOptions: PropTypes.array.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,

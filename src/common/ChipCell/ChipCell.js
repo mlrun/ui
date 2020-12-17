@@ -1,22 +1,22 @@
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-  useLayoutEffect,
-  useRef
-} from 'react'
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import ChipCellView from './ChipCellView'
 
 import { cutChips } from '../../utils/cutChips'
 import { sizeChips } from './SizeChips'
-import { panelActions } from '../../components/JobsPanel/panelReducer'
 
 import './chipCell.scss'
 
-const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
+const ChipCell = ({
+  addChip,
+  className,
+  delimiter,
+  editChip,
+  elements,
+  isEditMode,
+  removeChip
+}) => {
   const [sizeContainer, setSizeContainer] = useState(0)
   const [show, setShow] = useState(false)
   const [editConfig, setEditConfig] = useState({
@@ -32,13 +32,14 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
     return isEditMode
       ? {
           visibleChips: elements.map(chip => ({
-            value: chip
+            value: chip,
+            delimiter
           }))
         }
       : sizeContainer <= 1000
-      ? sizeChips[sizeContainer](elements)
-      : cutChips(elements, 8)
-  }, [elements, isEditMode, sizeContainer])
+      ? sizeChips[sizeContainer](elements, delimiter)
+      : cutChips(elements, 8, delimiter)
+  }, [delimiter, elements, isEditMode, sizeContainer])
 
   const handleShowElements = useCallback(() => {
     if (!isEditMode) {
@@ -64,24 +65,22 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
     }
   }, [isEditMode, chipRef])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     handleResize()
   }, [handleResize])
 
   useEffect(() => {
     if (!isEditMode) {
       window.addEventListener('resize', handleResize)
+
       return () => window.removeEventListener('resize', handleResize)
     }
   }, [handleResize, isEditMode])
 
-  const addChip = useCallback(
+  const handleAddNewChip = useCallback(
     chip => {
       if (!editConfig.isEdit && !editConfig.chipIndex) {
-        dispatch({
-          type: panelActions.SET_JOB_LABELS,
-          payload: [...elements, chip]
-        })
+        addChip(chip, elements)
       }
 
       setEditConfig({
@@ -92,22 +91,19 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
         isNewChip: true
       })
     },
-    [dispatch, elements, editConfig]
+    [editConfig.isEdit, editConfig.chipIndex, elements, addChip]
   )
 
-  const removeChip = useCallback(
+  const handleRemoveChip = useCallback(
     chipIndex => {
-      const newChip = elements.filter((value, index) => index !== chipIndex)
+      const newChips = elements.filter((value, index) => index !== chipIndex)
 
-      dispatch({
-        type: panelActions.REMOVE_JOB_LABEL,
-        payload: newChip
-      })
+      removeChip(newChips)
     },
-    [elements, dispatch]
+    [elements, removeChip]
   )
 
-  const editChip = useCallback(
+  const handleEditChip = useCallback(
     (chip, nameEvent) => {
       const isChipNotEmpty = !!(chip.key && chip.value)
 
@@ -115,15 +111,12 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
         const newChips = [...elements]
         newChips[editConfig.chipIndex] = `${chip.key}: ${chip.value}`
 
-        dispatch({
-          type: panelActions.EDIT_JOB_LABEL,
-          payload: newChips
-        })
+        editChip(newChips)
       }
 
       if (nameEvent === 'Click') {
         if (editConfig.isNewChip && !isChipNotEmpty) {
-          removeChip(editConfig.chipIndex)
+          handleRemoveChip(editConfig.chipIndex)
         }
 
         setEditConfig({
@@ -135,7 +128,7 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
         })
       } else if (nameEvent === 'Tab') {
         if (editConfig.isNewChip && !isChipNotEmpty) {
-          removeChip(editConfig.chipIndex)
+          handleRemoveChip(editConfig.chipIndex)
         }
 
         setEditConfig(prevState => {
@@ -152,7 +145,7 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
         })
       } else if (nameEvent === 'Tab+Shift') {
         if (editConfig.isNewChip && !isChipNotEmpty) {
-          removeChip(editConfig.chipIndex)
+          handleRemoveChip(editConfig.chipIndex)
         }
 
         setEditConfig(prevState => {
@@ -168,7 +161,13 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
         })
       }
     },
-    [editConfig, elements, dispatch, removeChip]
+    [
+      elements,
+      editConfig.chipIndex,
+      editConfig.isNewChip,
+      editChip,
+      handleRemoveChip
+    ]
   )
 
   const handleIsEdit = useCallback((event, index) => {
@@ -184,17 +183,16 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
 
   return (
     <ChipCellView
-      addChip={addChip}
       chips={chips}
       className={className}
-      editChip={editChip}
       editConfig={editConfig}
-      elements={elements}
+      handleAddNewChip={handleAddNewChip}
+      handleEditChip={handleEditChip}
       handleIsEdit={handleIsEdit}
+      handleRemoveChip={handleRemoveChip}
       handleShowElements={handleShowElements}
       isEditMode={isEditMode}
       ref={chipRef}
-      removeChip={removeChip}
       setEditConfig={setEditConfig}
       show={show}
     />
@@ -202,14 +200,21 @@ const ChipCell = ({ className, dispatch, elements, isEditMode }) => {
 }
 
 ChipCell.defaultProps = {
-  elements: []
+  addChip: () => {},
+  delimiter: null,
+  editChip: () => {},
+  elements: [],
+  removeChip: () => {}
 }
 
 ChipCell.propTypes = {
+  addChip: PropTypes.func,
   className: PropTypes.string.isRequired,
+  delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  editChip: PropTypes.func,
   elements: PropTypes.arrayOf(PropTypes.string),
   isEditMode: PropTypes.bool,
-  dispatch: PropTypes.func
+  removeChip: PropTypes.func
 }
 
 export default React.memo(ChipCell)

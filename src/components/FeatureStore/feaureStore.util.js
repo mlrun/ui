@@ -19,6 +19,7 @@ export const featureSetsInfoHeaders = [
   { label: 'Entities', id: 'entities' },
   { label: 'Partition keys', id: 'partitionKeys' },
   { label: 'Timestamp Key', id: 'timestampKey' },
+  { label: 'Relations', id: 'relations' },
   { label: 'Label column', id: 'labelColumn' }
 ]
 export const datasetsFilters = ['tree', 'labels', 'name']

@@ -17,6 +17,7 @@ export const generateArtifactsContent = (page, pageTab, selectedItem) => {
       selectedItem.entities?.map(entity => entity.name),
       (selectedItem.parition_keys || []).map(key => key),
       selectedItem.timestamp_key ?? '',
+      isEmpty(selectedItem.relations) ? [] : selectedItem.relations,
       selectedItem.label_column ?? ''
     ]
   }
