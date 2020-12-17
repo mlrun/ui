@@ -33,5 +33,5 @@ export default {
     return mainHttpClient.get('/workflows', { params })
   },
   updateProject: (project, data) =>
-    mainHttpClient.put(`/projects/${project}`, data)
+    mainHttpClient.patch(`/projects/${project}`, data)
 }

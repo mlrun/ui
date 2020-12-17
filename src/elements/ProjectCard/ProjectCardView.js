@@ -25,22 +25,24 @@ const ProjectCardView = React.forwardRef(
             event.target.tagName !== 'A' &&
             !ref.current.contains(event.target)
           ) {
-            history.push(`/projects/${project.name}`)
+            history.push(`/projects/${project.metadata.name}`)
           }
         }}
       >
         <div className="project-card__general-info">
           <div className="project-card__header">
-            <Tooltip template={<TextTooltipTemplate text={project.name} />}>
-              {project.name}
+            <Tooltip
+              template={<TextTooltipTemplate text={project.metadata.name} />}
+            >
+              {project.metadata.name}
             </Tooltip>
           </div>
-          {project?.description && (
+          {project?.spec.description && (
             <Tooltip
               className="project-card_description"
-              template={<TextTooltipTemplate text={project.description} />}
+              template={<TextTooltipTemplate text={project.spec.description} />}
             >
-              {project.description}
+              {project.spec.description}
             </Tooltip>
           )}
         </div>
