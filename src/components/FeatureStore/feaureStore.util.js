@@ -12,14 +12,18 @@ export const datasetsInfoHeaders = [
   { label: 'Sources', id: 'sources' }
 ]
 export const featureSetsInfoHeaders = [
-  { label: 'Name', id: 'name' },
+  { label: 'Description', id: 'description' },
   { label: 'Labels', id: 'labels' },
   { label: 'Version', id: 'version' },
   { label: 'Last updated', id: 'updated' },
-  { label: 'Partition keys', id: 'partitionKeys' }
+  { label: 'Entities', id: 'entities' },
+  { label: 'Partition keys', id: 'partitionKeys' },
+  { label: 'Timestamp Key', id: 'timestampKey' },
+  { label: 'Relations', id: 'relations' },
+  { label: 'Label column', id: 'labelColumn' }
 ]
 export const datasetsFilters = ['tree', 'labels', 'name']
-export const detailsMenu = ['info', 'preview']
+export const detailsMenu = ['overview', 'preview']
 export const featureSetsFilters = ['labels', 'name']
 export const featuresFilters = ['labels', 'name']
 export const page = 'FEATURE-STORE'

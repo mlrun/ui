@@ -57,7 +57,7 @@ const DetailsArtifactsView = ({
                   target="_blank"
                   to={`/projects/${
                     match.params.projectName
-                  }/artifacts/${artifact.db_key || artifact.key}/info`}
+                  }/artifacts/${artifact.db_key || artifact.key}/overview`}
                 >
                   <DetailsIcon />
                 </Link>

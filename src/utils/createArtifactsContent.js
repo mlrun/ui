@@ -225,7 +225,7 @@ const createFeatureSetsRowData = (artifact, project) => {
     key: {
       value: artifact.name,
       class: 'artifacts_medium',
-      link: `/projects/${project}/feature-store/feature-sets/${artifact.name}/${artifact.tag}/info`
+      link: `/projects/${project}/feature-store/feature-sets/${artifact.name}/${artifact.tag}/overview`
     },
     labels: {
       value: parseKeyValues(artifact.labels),
@@ -260,7 +260,7 @@ const createFeaturesRowData = artifact => {
     feature_set: {
       value: artifact.feature_set_digest?.metadata?.name,
       class: 'artifacts_medium',
-      link: `/projects/${artifactMetadata?.project}/feature-store/feature-sets/${artifactMetadata?.name}/${artifactMetadata?.tag}/info`
+      link: `/projects/${artifactMetadata?.project}/feature-store/feature-sets/${artifactMetadata?.name}/${artifactMetadata?.tag}/overview`
     },
     labels: {
       value: parseKeyValues(artifact.feature?.labels),

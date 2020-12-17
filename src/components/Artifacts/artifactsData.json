@@ -11,7 +11,7 @@
     { "label": "Labels", "id": "labels" },
     { "label": "Sources", "id": "sources" }
   ],
-  "detailsMenu": ["info", "preview"],
+  "detailsMenu": ["overview", "preview"],
   "filters": ["period", "tree", "labels", "name"],
   "page": "ARTIFACTS",
   "sources": ["name", "path"],

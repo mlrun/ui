@@ -9,7 +9,7 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }
 ]
-export const detailsMenu = ['info', 'preview']
+export const detailsMenu = ['overview', 'preview']
 export const filters = ['tree', 'labels', 'name']
 export const page = 'FILES'
 export const sources = ['name', 'path']

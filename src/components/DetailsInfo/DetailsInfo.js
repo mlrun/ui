@@ -14,9 +14,11 @@ import {
   MODELS_PAGE,
   FEATURE_STORE_PAGE
 } from '../../constants'
+import { generateArtifactsContent } from './detailsInfo.util'
+
+import { ReactComponent as RightArrow } from '../../images/ic_arrow-right.svg'
 
 import './detailsInfo.scss'
-import { generateArtifactsContent } from './detailsInfo.util'
 
 const DetailsInfo = ({ match, pageData, selectedItem }) => {
   const jobsInfoContent = [
@@ -68,7 +70,9 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
         )}
       <ul className="item-info__details">
         {pageData.infoHeaders?.map((header, index) => {
-          let chips = []
+          let chipsData = {
+            chips: []
+          }
           let chipsClassName = ''
           let func = ''
           let state = ''
@@ -76,7 +80,7 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
           let target_path = null
 
           if (pageData.page === JOBS_PAGE) {
-            chips =
+            chipsData.chips =
               jobsInfoContent[index] === selectedItem.parameters
                 ? selectedItem.parameters
                 : jobsInfoContent[index] === selectedItem.resultsChips
@@ -105,10 +109,18 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
             pageData.page === MODELS_PAGE ||
             pageData.page === FEATURE_STORE_PAGE
           ) {
-            chips =
-              artifactsInfoContent[index] === selectedItem.labels
-                ? parseKeyValues(selectedItem.labels)
-                : []
+            chipsData = {
+              chips:
+                artifactsInfoContent[index] === selectedItem.labels
+                  ? parseKeyValues(selectedItem.labels)
+                  : artifactsInfoContent[index] === selectedItem.relations
+                  ? parseKeyValues(selectedItem.relations)
+                  : [],
+              delimiter:
+                artifactsInfoContent[index] === selectedItem.relations ? (
+                  <RightArrow />
+                ) : null
+            }
             chipsClassName = 'labels'
             info = artifactsInfoContent[index]
             target_path =
@@ -136,8 +148,8 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
             <li className="details-item" key={header.id}>
               <div className="details-item__header">{header.label}</div>
               <DetailsInfoItem
-                chips={chips}
                 chipsClassName={chipsClassName}
+                chipsData={chipsData}
                 func={func}
                 match={match}
                 state={state}
@@ -161,7 +173,7 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
 
                 if (header === 'uri') {
                   const [project, hash] = selectedItem.producer.uri.split('/')
-                  url = `/projects/${project}/jobs/monitor/${hash}/info`
+                  url = `/projects/${project}/jobs/monitor/${hash}/overview`
                 }
 
                 return (

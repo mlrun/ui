@@ -176,7 +176,7 @@ const FeatureStore = ({
           match.params.pageTab
         }/${match.params.name}${
           match.params.tag ? `/${match.params.tag}` : ''
-        }/info`
+        }/'overview'}`
       )
     }
 
@@ -254,6 +254,7 @@ const FeatureStore = ({
     </>
   )
 }
+
 FeatureStore.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
