@@ -90,7 +90,7 @@ const ProjectView = React.forwardRef(
                         type="text"
                         value={
                           editProject.name.value ??
-                          projectStore.project.data.name
+                          projectStore.project.data.metadata.name
                         }
                       />
                     ) : (
@@ -99,13 +99,13 @@ const ProjectView = React.forwardRef(
                           <TextTooltipTemplate
                             text={
                               editProject.name.value ??
-                              projectStore.project.data.name
+                              projectStore.project.data.metadata.name
                             }
                           />
                         }
                       >
                         {editProject.name.value ??
-                          projectStore.project.data.name}
+                          projectStore.project.data.metadata.name}
                       </Tooltip>
                     )}
                   </div>
@@ -126,7 +126,7 @@ const ProjectView = React.forwardRef(
                       ref={ref}
                       value={
                         editProject.description.value ??
-                        projectStore.project.data.description
+                        projectStore.project.data.spec.description
                       }
                     />
                   ) : (
@@ -136,19 +136,19 @@ const ProjectView = React.forwardRef(
                       </span>
                       <p className="general-info__description-text data-ellipsis">
                         {editProject.description.value ??
-                          projectStore.project.data.description}
+                          projectStore.project.data.spec.description}
                       </p>
                     </div>
                   )}
                 </div>
               </div>
               <div className="general-info__divider" />
-              {projectStore.project.data.state && (
+              {projectStore.project.data.status.state && (
                 <div className="general-info__status">
                   <span className="general-info__status-label">Status:</span>
                   <i className={statusClassName} />
                   <span className="general-info__status-name">
-                    {projectStore.project.data.state}
+                    {projectStore.project.data.status.state}
                   </span>
                 </div>
               )}

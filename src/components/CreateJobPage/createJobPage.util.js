@@ -24,8 +24,11 @@ import { ReactComponent as DL } from '../../images/dl.svg'
 
 export const generateProjectsList = (projects, projectName) =>
   projects.map(project => ({
-    label: project.name === projectName ? 'Current project' : project.name,
-    id: project.name
+    label:
+      project.metadata.name === projectName
+        ? 'Current project'
+        : project.metadata.name,
+    id: project.metadata.name
   }))
 
 export const generateCategoryHeader = category => {

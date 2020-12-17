@@ -42,10 +42,10 @@ const JobsPanelDataInputs = ({
       ) {
         const projectsList = projectStore.projects.map(project => ({
           label:
-            project.name === match.params.projectName
+            project.metadata.name === match.params.projectName
               ? 'Current project'
-              : project.name,
-          id: project.name
+              : project.metadata.name,
+          id: project.metadata.name
         }))
 
         inputsDispatch({

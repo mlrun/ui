@@ -49,7 +49,7 @@ const Project = ({
 
   const statusClassName = classnames(
     'general-info__status-icon',
-    projectStore.project.data?.state
+    projectStore.project.data?.status.state
   )
 
   const { links, createNewOptions } = useMemo(() => {
@@ -79,13 +79,14 @@ const Project = ({
     setEditProject(prevState => {
       return {
         name: {
-          value: prevState.name.value || projectStore.project.data.name,
+          value:
+            prevState.name.value || projectStore.project.data.metadata.name,
           isEdit: false
         },
         description: {
           value:
             prevState.description.value ||
-            projectStore.project.data.description,
+            projectStore.project.data.spec.description,
           isEdit: false
         }
       }
@@ -94,25 +95,33 @@ const Project = ({
 
   const handleSetProjectData = useCallback(() => {
     const data = {
-      name: editProject.name.value ?? projectStore.project.data.name,
+      name: editProject.name.value ?? projectStore.project.data.metadata.name,
       description:
-        editProject.description.value ?? projectStore.project.data.description
+        editProject.description.value ??
+        projectStore.project.data.spec.description
     }
 
     closeEditMode()
     projectsApi
-      .updateProject(match.params.projectName, data)
+      .updateProject(match.params.projectName, {
+        metadata: {
+          name: data.name
+        },
+        spec: {
+          description: data.description
+        }
+      })
       .then(() => {
         history.push(`/projects/${data.name}`)
       })
       .catch(() => {
         setEditProject({
           name: {
-            value: projectStore.project.data.name,
+            value: projectStore.project.data.metadata.name,
             isEdit: false
           },
           description: {
-            value: projectStore.project.data.description,
+            value: projectStore.project.data.spec.description,
             isEdit: false
           }
         })

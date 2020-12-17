@@ -37,7 +37,7 @@ const ProjectCard = ({
   const actionsMenuRef = React.createRef()
 
   useEffect(() => {
-    fetchProjectRunningJobs(project.name)
+    fetchProjectRunningJobs(project.metadata.name)
       .then(jobs => {
         if (fetchRunningJobsFailure) {
           setFetchRunningJobsFailure(false)
@@ -48,7 +48,7 @@ const ProjectCard = ({
       .catch(() => {
         setFetchRunningJobsFailure(true)
       })
-      .then(() => fetchNuclioFunctions(project.name))
+      .then(() => fetchNuclioFunctions(project.metadata.name))
       .then(funcs => {
         if (fetchNuclioFunctionsFailure) {
           setFetchNuclioFunctionsFailure(false)
@@ -59,7 +59,7 @@ const ProjectCard = ({
       .catch(() => {
         setFetchNuclioFunctionsFailure(true)
       })
-    fetchProjectFailedJobs(project.name)
+    fetchProjectFailedJobs(project.metadata.name)
       .then(jobs => {
         if (fetchFailedJobsFailure) {
           setFetchFailedJobsFailure(false)
@@ -68,7 +68,7 @@ const ProjectCard = ({
         setFailedJobs(jobs)
       })
       .catch(() => setFetchFailedJobsFailure(true))
-    fetchProjectModels(project.name)
+    fetchProjectModels(project.metadata.name)
       .then(models => {
         if (fetchModelsFailure) {
           setFetchModelsFailure(false)
@@ -77,7 +77,7 @@ const ProjectCard = ({
         setModels(models)
       })
       .catch(() => setFetchModelsFailure(true))
-    fetchProjectDataSets(project.name)
+    fetchProjectDataSets(project.metadata.name)
       .then(datasets => {
         if (fetchFeaturesFailure) {
           setFetchFeaturesFailure(false)
@@ -86,7 +86,7 @@ const ProjectCard = ({
         setFeatures(datasets)
       })
       .catch(() => setFetchFeaturesFailure(true))
-    fetchProjectFunctions(project.name)
+    fetchProjectFunctions(project.metadata.name)
       .then(funcs => {
         if (fetchFunctionsFailure) {
           setFetchFunctionsFailure(false)
@@ -108,7 +108,7 @@ const ProjectCard = ({
     fetchProjectModels,
     fetchProjectRunningJobs,
     fetchRunningJobsFailure,
-    project.name
+    project.metadata.name
   ])
 
   const closeActionsMenu = useCallback(

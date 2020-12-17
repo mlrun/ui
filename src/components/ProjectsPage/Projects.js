@@ -39,7 +39,7 @@ const Projects = ({
 
   const handleDeleteProject = useCallback(
     project => {
-      deleteProject(project.name)
+      deleteProject(project.metadata.name)
         .then(() => {
           fetchProjects()
           setNotification({
@@ -88,8 +88,12 @@ const Projects = ({
     }
 
     createNewProject({
-      name: projectStore.newProject.name,
-      description: projectStore.newProject.description
+      metadata: {
+        name: projectStore.newProject.name
+      },
+      spec: {
+        description: projectStore.newProject.description
+      }
     }).then(result => {
       if (result) {
         setCreateProject(false)
