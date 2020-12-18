@@ -7,8 +7,10 @@ import api from '../../api/artifacts-api'
 
 import ArtifactsPreviewView from './ArtifactsPreviewView'
 import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
 
 import { createArtifactPreviewContent } from '../../utils/createArtifactPreviewContent'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import './artifactaPreview.scss'
 
@@ -19,6 +21,7 @@ const ArtifactsPreview = ({ artifact }) => {
   })
   const [preview, setPreview] = useState([])
   const [showError, setShowError] = useState(false)
+  const [noData, setNoData] = useState(false)
 
   const getArtifactPreview = useCallback((schema, path, user) => {
     return api.getArtifactPreview(schema, path, user).then(res => {
@@ -28,11 +31,18 @@ const ArtifactsPreview = ({ artifact }) => {
 
   useEffect(() => {
     if (artifact.schema && !artifact.extra_data) {
-      setError({
-        text: '',
-        body: ''
-      })
-      setShowError(false)
+      if (!isEveryObjectValueEmpty(error)) {
+        setError({
+          text: '',
+          body: ''
+        })
+        setShowError(false)
+      }
+
+      if (noData) {
+        setNoData(false)
+      }
+
       setPreview([
         {
           type: 'table',
@@ -42,7 +52,29 @@ const ArtifactsPreview = ({ artifact }) => {
           }
         }
       ])
-    } else if (artifact.preview.length) {
+    } else if (artifact.preview.length > 0 && !artifact.target_path) {
+      if (!isEveryObjectValueEmpty(error)) {
+        setError({
+          text: '',
+          body: ''
+        })
+        setShowError(false)
+      }
+
+      if (noData) {
+        setNoData(false)
+      }
+
+      setPreview([
+        {
+          type: 'table',
+          data: {
+            headers: artifact.preview[0],
+            content: artifact.preview.slice(1)
+          }
+        }
+      ])
+    } else if (artifact.preview.length > 0) {
       artifact.preview.forEach(previewItem => {
         getArtifactPreview(
           previewItem.schema,
@@ -54,11 +86,18 @@ const ArtifactsPreview = ({ artifact }) => {
               ...prevState,
               { ...content, header: previewItem.header }
             ])
-            setError({
-              text: '',
-              body: ''
-            })
-            setShowError(false)
+
+            if (!isEveryObjectValueEmpty(error)) {
+              setError({
+                text: '',
+                body: ''
+              })
+              setShowError(false)
+            }
+
+            if (noData) {
+              setNoData(false)
+            }
           })
           .catch(err => {
             setError({
@@ -67,12 +106,16 @@ const ArtifactsPreview = ({ artifact }) => {
             })
           })
       })
-    } else if (artifact.preview && !artifact.target_path) {
-      setError({
-        text: 'No preview',
-        body: {}
-      })
-    } else {
+    } else if (
+      isEveryObjectValueEmpty(error) &&
+      preview.length === 0 &&
+      !artifact.target_path
+    ) {
+      setNoData(true)
+    } else if (
+      isEveryObjectValueEmpty(error) &&
+      artifact.preview.length === 0
+    ) {
       getArtifactPreview(
         artifact.target_path?.schema,
         artifact.target_path?.path,
@@ -80,11 +123,18 @@ const ArtifactsPreview = ({ artifact }) => {
       )
         .then(content => {
           setPreview([content])
-          setError({
-            text: '',
-            body: ''
-          })
-          setShowError(false)
+
+          if (!isEveryObjectValueEmpty(error)) {
+            setError({
+              text: '',
+              body: ''
+            })
+            setShowError(false)
+          }
+
+          if (noData) {
+            setNoData(false)
+          }
         })
         .catch(err => {
           setError({
@@ -93,7 +143,19 @@ const ArtifactsPreview = ({ artifact }) => {
           })
         })
     }
-  }, [artifact, getArtifactPreview])
+  }, [
+    artifact.extra_data,
+    artifact.header,
+    artifact.preview,
+    artifact.producer,
+    artifact.schema,
+    artifact.target_path,
+    artifact.user,
+    error,
+    getArtifactPreview,
+    noData,
+    preview.length
+  ])
 
   return error.text.length > 0 ? (
     <div className="error_container">
@@ -117,10 +179,12 @@ const ArtifactsPreview = ({ artifact }) => {
         </pre>
       )}
     </div>
-  ) : preview.length === 0 ? (
+  ) : preview.length === 0 && !noData ? (
     <div className="loader-container">
       <Loader />
     </div>
+  ) : noData ? (
+    <NoData />
   ) : (
     preview.map((previewItem, index) => (
       <ArtifactsPreviewView key={index} preview={previewItem} />
