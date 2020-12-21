@@ -5,9 +5,11 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import Chip from '../../common/Chip/Chip'
 
+import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
+
 import './hiddenChipsBlock.scss'
 
-const HiddenChipsBlock = ({ className, chips }) => {
+const HiddenChipsBlock = ({ className, chips, handleShowElements }) => {
   const [isTop, setIsTop] = useState(false)
   const hiddenRef = useRef()
   const offset = 28
@@ -28,28 +30,55 @@ const HiddenChipsBlock = ({ className, chips }) => {
     }
   }, [hiddenRef, offset])
 
+  useEffect(() => {
+    if (chips.length === 0) {
+      handleShowElements()
+    }
+  })
+
   return (
     <div
       ref={hiddenRef}
       className={`chip-block-hidden ${!isTop ? 'top' : 'bottom'}`}
     >
       {chips?.map(element => {
+        const { chipLabel, chipValue } = getChipLabelAndValue(element)
         return (
           <Tooltip
             key={element.value}
-            template={<TextTooltipTemplate text={element.value} />}
+            template={
+              <TextTooltipTemplate
+                text={
+                  element.delimiter ? (
+                    <span>
+                      {chipLabel}
+                      <span className="chip__delimiter">
+                        {element.delimiter}
+                      </span>
+                      {chipValue}
+                    </span>
+                  ) : (
+                    element.value
+                  )
+                }
+              />
+            }
           >
-            <Chip className={className} value={element.value} hiddenChips />
+            <Chip className={className} chip={element} hiddenChips />
           </Tooltip>
         )
       })}
     </div>
   )
 }
+HiddenChipsBlock.defaultProps = {
+  chips: []
+}
 
 HiddenChipsBlock.propTypes = {
   className: PropTypes.string.isRequired,
-  chips: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  chips: PropTypes.arrayOf(PropTypes.shape({})),
+  handleShowElements: PropTypes.func.isRequired
 }
 
 export default HiddenChipsBlock

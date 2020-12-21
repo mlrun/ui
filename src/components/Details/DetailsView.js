@@ -12,7 +12,7 @@ import Download from '../../common/Download/Download'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import ArtifactInfoMetadata from '../ArtifactInfoMetadata/ArtifactInfoMetada'
+import ArtifactInfoMetadata from '../DetailsMetadata/DetailsMetada'
 import DetailsCode from '../DetailsCode/DetailsCode'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
 import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
@@ -30,7 +30,11 @@ import {
   DETAILS_LOGS_TAB,
   DETAILS_CODE_TAB,
   DETAILS_METADATA_TAB,
-  DETAILS_ANALYSIS_TAB
+  DETAILS_ANALYSIS_TAB,
+  FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  MODELS_PAGE
 } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -55,8 +59,10 @@ const DetailsView = ({
         <span>
           {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
             ? formatDatetime(selectedItem?.startTime, 'Not yet started')
-            : formatDatetime(new Date(selectedItem?.updated), 'N/A')}
-          {selectedItem.state && (
+            : selectedItem?.updated
+            ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
+            : ''}
+          {selectedItem.state && pageData.page === JOBS_PAGE && (
             <Tooltip
               template={
                 <TextTooltipTemplate
@@ -81,22 +87,28 @@ const DetailsView = ({
             onClick={setIteration}
           />
         )}
-        {pageData.page === ARTIFACTS_PAGE && (
-          <Tooltip template={<TextTooltipTemplate text="Download" />}>
-            <Download
-              fileName={selectedItem.db_key || selectedItem.key}
-              path={selectedItem.target_path.path}
-              schema={selectedItem.target_path.schema}
-              user={selectedItem.producer?.owner}
-            />
-          </Tooltip>
-        )}
+        {(pageData.page === ARTIFACTS_PAGE ||
+          pageData.page === FILES_PAGE ||
+          pageData.page === MODELS_PAGE ||
+          pageData.page === FEATURE_STORE_PAGE) &&
+          match.params.pageTab !== FEATURE_SETS_TAB && (
+            <Tooltip template={<TextTooltipTemplate text="Download" />}>
+              <Download
+                fileName={selectedItem.db_key || selectedItem.key}
+                path={selectedItem.target_path?.path}
+                schema={selectedItem.target_path?.schema}
+                user={selectedItem.producer?.owner}
+              />
+            </Tooltip>
+          )}
         <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
         <Link
           data-testid="details-close-btn"
-          to={`/projects/${match.params.projectName}/${
-            pageData.pageKind ? pageData.pageKind : pageData.page.toLowerCase()
-          }${match.params.pageTab ? `/${match.params.pageTab}` : ''}`}
+          to={`/projects/${
+            match.params.projectName
+          }/${pageData.page.toLowerCase()}${
+            match.params.pageTab ? `/${match.params.pageTab}` : ''
+          }`}
           onClick={handleCancel}
         >
           <Close />
@@ -110,7 +122,7 @@ const DetailsView = ({
             key={link}
             match={match}
             name={selectedItem.db_key || selectedItem.name}
-            page={pageData.pageKind ? pageData.pageKind : pageData.page}
+            page={pageData.page}
             tab={link}
           />
         ))}
@@ -146,7 +158,7 @@ const DetailsView = ({
         <DetailsCode code={selectedItem.functionSourceCode} />
       )}
       {match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
-        selectedItem.schema && (
+        (selectedItem.schema || selectedItem.entities) && (
           <ArtifactInfoMetadata selectedItem={selectedItem} />
         )}
       {match.params.tab?.toUpperCase() === DETAILS_ANALYSIS_TAB &&

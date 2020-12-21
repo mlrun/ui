@@ -72,6 +72,12 @@
       &__icon {
         justify-content: center;
       }
+
+      &__targets-icon {
+        .tooltip-wrapper {
+          margin-right: 8px;
+        }
+      }
     }
 
     .functions {

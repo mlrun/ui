@@ -23,6 +23,12 @@
         }
       }
 
+      &__delimiter {
+        svg {
+          margin-bottom: -7px;
+        }
+      }
+
       &_hidden {
         max-width: 195px;
       }

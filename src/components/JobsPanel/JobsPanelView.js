@@ -43,7 +43,6 @@ const JobsPanelView = ({
         <JobsPanelTitle
           closePanel={closePanel}
           functionData={functionData}
-          match={match}
           openScheduleJob={openScheduleJob}
           panelState={panelState}
           panelDispatch={panelDispatch}

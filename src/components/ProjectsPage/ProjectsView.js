@@ -103,6 +103,8 @@ const ProjectsView = ({
           match={match}
           onClick={() => setCreateProject(true)}
           pageData={pageData}
+          registerDialog
+          registerDialogHeader="New Project"
         />
       </div>
       <div className="projects__wrapper">

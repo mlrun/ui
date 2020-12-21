@@ -10,7 +10,14 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import NoData from '../../common/NoData/NoData'
 
-import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
+import {
+  ARTIFACTS_PAGE,
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  FUNCTIONS_PAGE,
+  JOBS_PAGE,
+  MODELS_PAGE
+} from '../../constants'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
@@ -71,6 +78,9 @@ const TableView = ({
             tableContent.map((rowItem, i) => {
               switch (pageData.page) {
                 case ARTIFACTS_PAGE:
+                case FILES_PAGE:
+                case MODELS_PAGE:
+                case FEATURE_STORE_PAGE:
                   return (
                     <ArtifactsTableRow
                       actionsMenu={actionsMenu}
@@ -131,6 +141,22 @@ const TableView = ({
                     tableContent={group}
                   />
                 )
+              } else if (pageData.page === FEATURE_STORE_PAGE) {
+                return (
+                  <ArtifactsTableRow
+                    actionsMenu={actionsMenu}
+                    content={content}
+                    handleSelectItem={handleSelectItem}
+                    handleExpandRow={handleExpandRow}
+                    index={i}
+                    key={i}
+                    match={match}
+                    rowItem={groupLatestItem[i]}
+                    pageData={pageData}
+                    selectedItem={selectedItem}
+                    tableContent={group}
+                  />
+                )
               } else {
                 return (
                   <JobsTableRow
@@ -163,7 +189,6 @@ const TableView = ({
           handleSelectItem={handleSelectItem}
           match={match}
           pageData={pageData}
-          pageKind={pageData.pageKind}
           selectedItem={selectedItem}
         />
       )}

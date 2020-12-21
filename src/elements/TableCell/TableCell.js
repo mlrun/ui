@@ -55,6 +55,19 @@ const TableCell = ({
     )
   } else if (data.type === 'type') {
     return <TableTypeCell data={data} />
+  } else if (data.type === 'icons') {
+    return (
+      <div className={`table-body__cell ${data.class}`}>
+        {data.value.map((valueItem, index) => (
+          <Tooltip
+            key={valueItem.tooltip + index}
+            template={<TextTooltipTemplate text={valueItem.tooltip} />}
+          >
+            {valueItem.icon}
+          </Tooltip>
+        ))}
+      </div>
+    )
   } else if (Array.isArray(data.value)) {
     return (
       <div className={`table-body__cell ${data.class}`}>
@@ -133,7 +146,7 @@ const TableCell = ({
       <div className={`table-body__cell ${data.class}`}>
         <Tooltip
           className="text_small"
-          template={<TextTooltipTemplate text={data.value} />}
+          template={<TextTooltipTemplate text={data.tooltip || data.value} />}
         >
           {data.value}
         </Tooltip>

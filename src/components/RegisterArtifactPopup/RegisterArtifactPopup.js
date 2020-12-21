@@ -7,7 +7,7 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import { v4 as uuidv4 } from 'uuid'
 
 import artifactApi from '../../api/artifacts-api'
-import { ARTIFACTS_FILES_PAGE } from '../../constants'
+import { FILES_PAGE } from '../../constants'
 
 const RegisterArtifactPopup = ({
   artifactFilter,
@@ -43,7 +43,7 @@ const RegisterArtifactPopup = ({
         kind: {
           ...state.kind,
           value:
-            pageData.pageKind === ARTIFACTS_FILES_PAGE
+            pageData.page === FILES_PAGE
               ? ''
               : pageData.pageKind.slice(0, pageData.pageKind.length - 1)
         }
@@ -57,7 +57,7 @@ const RegisterArtifactPopup = ({
         }
       }))
     }
-  }, [pageData.pageKind])
+  }, [pageData.page, pageData.pageKind])
 
   const resetRegisterArtifactForm = useCallback(() => {
     setRegisterArtifactData({

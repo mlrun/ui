@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { isNil } from 'lodash'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
@@ -9,11 +8,15 @@ import { formatDatetime, parseKeyValues } from '../../utils'
 import {
   JOBS_PAGE,
   ARTIFACTS_PAGE,
-  ARTIFACTS_FILES_PAGE,
   FUNCTIONS_PAGE,
-  ARTIFACTS_MODELS_PAGE,
-  ARTIFACTS_FEATURE_STORE
+  FEATURE_SETS_TAB,
+  FILES_PAGE,
+  MODELS_PAGE,
+  FEATURE_STORE_PAGE
 } from '../../constants'
+import { generateArtifactsContent } from './detailsInfo.util'
+
+import { ReactComponent as RightArrow } from '../../images/ic_arrow-right.svg'
 
 import './detailsInfo.scss'
 
@@ -31,24 +34,11 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
     selectedItem.outputPath,
     selectedItem.iterations?.length ? selectedItem.iterations : '0'
   ]
-  const artifactsInfoContent = [
-    selectedItem.hash ?? '',
-    selectedItem.db_key,
-    selectedItem.iter || '0',
-    pageData.pageKind !== ARTIFACTS_FEATURE_STORE &&
-    pageData.pageKind !== ARTIFACTS_FILES_PAGE
-      ? selectedItem.kind || ' '
-      : null,
-    selectedItem.size ?? '',
-    selectedItem.target_path,
-    selectedItem.tree,
-    formatDatetime(new Date(selectedItem.updated), 'N/A'),
-    pageData.pageKind === ARTIFACTS_MODELS_PAGE
-      ? selectedItem.framework ?? ''
-      : null,
-    selectedItem.labels ?? [],
-    selectedItem.sources
-  ].filter(content => !isNil(content))
+  const artifactsInfoContent = generateArtifactsContent(
+    pageData.page,
+    match.params.pageTab,
+    selectedItem
+  )
   const functionsInfoContent = [
     selectedItem.name,
     selectedItem.type,
@@ -71,12 +61,18 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
 
   return (
     <div className="item-info">
-      {pageData.page === ARTIFACTS_PAGE && (
-        <h3 className="item-info__header">General</h3>
-      )}
+      {(pageData.page === ARTIFACTS_PAGE ||
+        pageData.page === FILES_PAGE ||
+        pageData.page === MODELS_PAGE ||
+        pageData.page === FEATURE_STORE_PAGE) &&
+        match.params.pageTab !== FEATURE_SETS_TAB && (
+          <h3 className="item-info__header">General</h3>
+        )}
       <ul className="item-info__details">
-        {pageData.infoHeaders.map((header, index) => {
-          let chips = []
+        {pageData.infoHeaders?.map((header, index) => {
+          let chipsData = {
+            chips: []
+          }
           let chipsClassName = ''
           let func = ''
           let state = ''
@@ -84,7 +80,7 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
           let target_path = null
 
           if (pageData.page === JOBS_PAGE) {
-            chips =
+            chipsData.chips =
               jobsInfoContent[index] === selectedItem.parameters
                 ? selectedItem.parameters
                 : jobsInfoContent[index] === selectedItem.resultsChips
@@ -107,11 +103,24 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
                 ? selectedItem.state
                 : ''
             info = jobsInfoContent[index]
-          } else if (pageData.page === ARTIFACTS_PAGE) {
-            chips =
-              artifactsInfoContent[index] === selectedItem.labels
-                ? parseKeyValues(selectedItem.labels)
-                : []
+          } else if (
+            pageData.page === ARTIFACTS_PAGE ||
+            pageData.page === FILES_PAGE ||
+            pageData.page === MODELS_PAGE ||
+            pageData.page === FEATURE_STORE_PAGE
+          ) {
+            chipsData = {
+              chips:
+                artifactsInfoContent[index] === selectedItem.labels
+                  ? parseKeyValues(selectedItem.labels)
+                  : artifactsInfoContent[index] === selectedItem.relations
+                  ? parseKeyValues(selectedItem.relations)
+                  : [],
+              delimiter:
+                artifactsInfoContent[index] === selectedItem.relations ? (
+                  <RightArrow />
+                ) : null
+            }
             chipsClassName = 'labels'
             info = artifactsInfoContent[index]
             target_path =
@@ -139,8 +148,8 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
             <li className="details-item" key={header.id}>
               <div className="details-item__header">{header.label}</div>
               <DetailsInfoItem
-                chips={chips}
                 chipsClassName={chipsClassName}
+                chipsData={chipsData}
                 func={func}
                 match={match}
                 state={state}
@@ -151,32 +160,36 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
           )
         })}
       </ul>
-      {pageData.page === ARTIFACTS_PAGE && selectedItem.producer && (
-        <>
-          <h3 className="item-info__header">Producer</h3>
-          <ul className="item-info__details">
-            {Object.keys(selectedItem.producer).map(header => {
-              let url = ''
+      {(pageData.page === ARTIFACTS_PAGE ||
+        pageData.page === FILES_PAGE ||
+        pageData.page === MODELS_PAGE ||
+        pageData.page === FEATURE_STORE_PAGE) &&
+        selectedItem.producer && (
+          <>
+            <h3 className="item-info__header">Producer</h3>
+            <ul className="item-info__details">
+              {Object.keys(selectedItem.producer).map(header => {
+                let url = ''
 
-              if (header === 'uri') {
-                const [project, hash] = selectedItem.producer.uri.split('/')
-                url = `/projects/${project}/jobs/monitor/${hash}/info`
-              }
+                if (header === 'uri') {
+                  const [project, hash] = selectedItem.producer.uri.split('/')
+                  url = `/projects/${project}/jobs/monitor/${hash}/overview`
+                }
 
-              return (
-                <li className="details-item" key={header}>
-                  <div className="details-item__header">{header}</div>
-                  <DetailsInfoItem
-                    link={url}
-                    info={selectedItem.producer[header]}
-                    page={pageData.page}
-                  />
-                </li>
-              )
-            })}
-          </ul>
-        </>
-      )}
+                return (
+                  <li className="details-item" key={header}>
+                    <div className="details-item__header">{header}</div>
+                    <DetailsInfoItem
+                      link={url}
+                      info={selectedItem.producer[header]}
+                      page={pageData.page}
+                    />
+                  </li>
+                )
+              })}
+            </ul>
+          </>
+        )}
     </div>
   )
 }

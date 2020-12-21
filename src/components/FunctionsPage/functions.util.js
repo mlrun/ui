@@ -1,4 +1,4 @@
-export const detailsMenu = ['info', 'code']
+export const detailsMenu = ['overview', 'code']
 export const page = 'FUNCTIONS'
 export const tableHeaders = [
   {

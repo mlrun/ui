@@ -18,9 +18,18 @@ import {
   SHOW_ARTIFACT_PREVIEW,
   SET_ARTIFACT_FILTER,
   REMOVE_FILES,
-  REMOVE_MODELS
+  REMOVE_MODELS,
+  FETCH_FEATURE_SETS_BEGIN,
+  FETCH_FEATURE_SETS_FAILURE,
+  FETCH_FEATURE_SETS_SUCCESS,
+  FETCH_FEATURES_BEGIN,
+  FETCH_FEATURES_FAILURE,
+  FETCH_FEATURES_SUCCESS,
+  REMOVE_FEATURE_SETS,
+  REMOVE_FEATURES
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
+import { generateFeatureSets } from '../utils/generateFeatureSets'
 
 const artifactsAction = {
   closeArtifactsPreview: item => ({
@@ -80,6 +89,60 @@ const artifactsAction = {
     type: FETCH_DATASETS_SUCCESS,
     payload: dataSets
   }),
+  fetchFeatureSets: project => dispatch => {
+    dispatch(artifactsAction.fetchFeatureSetsBegin())
+
+    return artifactsApi
+      .getFeatureSets(project)
+      .then(response => {
+        let featureSets = generateFeatureSets(response.data.feature_sets)
+
+        dispatch(artifactsAction.fetchFeatureSetsSuccess(featureSets))
+
+        return featureSets
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFeatureSetsFailure(err))
+      })
+  },
+  fetchFeatureSetsBegin: () => ({
+    type: FETCH_FEATURE_SETS_BEGIN
+  }),
+  fetchFeatureSetsFailure: error => ({
+    type: FETCH_FEATURE_SETS_FAILURE,
+    payload: error
+  }),
+  fetchFeatureSetsSuccess: featureSets => ({
+    type: FETCH_FEATURE_SETS_SUCCESS,
+    payload: featureSets
+  }),
+  fetchFeatures: project => dispatch => {
+    dispatch(artifactsAction.fetchFeaturesBegin())
+
+    return artifactsApi
+      .getFeatures(project)
+      .then(response => {
+        let features = response.data.features
+
+        dispatch(artifactsAction.fetchFeaturesSuccess(features))
+
+        return features
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFeaturesFailure(err))
+      })
+  },
+  fetchFeaturesBegin: () => ({
+    type: FETCH_FEATURES_BEGIN
+  }),
+  fetchFeaturesFailure: error => ({
+    type: FETCH_FEATURES_FAILURE,
+    payload: error
+  }),
+  fetchFeaturesSuccess: features => ({
+    type: FETCH_FEATURES_SUCCESS,
+    payload: features
+  }),
   fetchFiles: project => dispatch => {
     dispatch(artifactsAction.fetchFilesBegin())
 
@@ -137,6 +200,12 @@ const artifactsAction = {
   }),
   removeDataSets: () => ({
     type: REMOVE_DATASETS
+  }),
+  removeFeatureSets: () => ({
+    type: REMOVE_FEATURE_SETS
+  }),
+  removeFeatures: () => ({
+    type: REMOVE_FEATURES
   }),
   removeFiles: () => ({
     type: REMOVE_FILES

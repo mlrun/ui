@@ -12,7 +12,6 @@ import {
   detailsMenu,
   filters,
   page,
-  pageKind,
   registerArtifactDialogTitle,
   tableHeaders,
   infoHeaders
@@ -34,7 +33,6 @@ const Models = ({
     detailsMenu,
     filters,
     page,
-    pageKind,
     registerArtifactDialogTitle,
     tableHeaders,
     infoHeaders

@@ -1,27 +1,40 @@
 import { isEmpty, map } from 'lodash'
 
-import { ARTIFACTS_PAGE, JOBS_PAGE } from '../constants'
+import {
+  ARTIFACTS_PAGE,
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  FUNCTIONS_PAGE,
+  JOBS_PAGE,
+  MODELS_PAGE
+} from '../constants'
 import createJobsContent from './createJobsContent'
 import createFunctionsContent from './createFunctionsContent'
 import createArtifactsContent from './createArtifactsContent'
 
 export const generateTableContent = (
   content,
+  match,
   groupedByName,
   groupedByWorkflow,
   groupFilter,
-  page,
-  pageKind,
-  scheduled,
+  pageData,
   setLoading
 ) => {
   if (!isEmpty(groupedByName) && groupFilter === 'name') {
     setLoading(true)
 
     return map(groupedByName, group =>
-      page === JOBS_PAGE
+      pageData.page === JOBS_PAGE
         ? createJobsContent(group, false)
-        : createFunctionsContent(group)
+        : pageData.page === FUNCTIONS_PAGE
+        ? createFunctionsContent(group)
+        : createArtifactsContent(
+            group,
+            pageData.page,
+            match.params.pageTab,
+            match.params.projectName
+          )
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
     setLoading(true)
@@ -30,10 +43,18 @@ export const generateTableContent = (
   } else if (groupFilter === 'none' || !groupFilter) {
     setLoading && setLoading(true)
 
-    return page === JOBS_PAGE
-      ? createJobsContent(content, false, scheduled)
-      : page === ARTIFACTS_PAGE
-      ? createArtifactsContent(content, pageKind)
+    return pageData.page === JOBS_PAGE
+      ? createJobsContent(content, false, match.params.pageTab)
+      : pageData.page === ARTIFACTS_PAGE ||
+        pageData.page === FILES_PAGE ||
+        pageData.page === MODELS_PAGE ||
+        pageData.page === FEATURE_STORE_PAGE
+      ? createArtifactsContent(
+          content,
+          pageData.page,
+          match.params.pageTab,
+          match.params.projectName
+        )
       : createFunctionsContent(content)
   } else return []
 }
