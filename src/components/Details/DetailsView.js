@@ -12,7 +12,7 @@ import Download from '../../common/Download/Download'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import ArtifactInfoMetadata from '../DetailsMetadata/DetailsMetada'
+import DetailsMetadata from '../DetailsMetadata/DetailsMetadata'
 import DetailsCode from '../DetailsCode/DetailsCode'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
 import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
@@ -34,10 +34,12 @@ import {
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
-  MODELS_PAGE
+  MODELS_PAGE,
+  DETAILS_STATISTICS_TAB
 } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
+import DetailsStatistics from '../DetailsStatistics/DetailsStatistics'
 
 const DetailsView = ({
   actionsMenu,
@@ -159,7 +161,7 @@ const DetailsView = ({
       )}
       {match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
         (selectedItem.schema || selectedItem.entities) && (
-          <ArtifactInfoMetadata selectedItem={selectedItem} />
+          <DetailsMetadata selectedItem={selectedItem} />
         )}
       {match.params.tab?.toUpperCase() === DETAILS_ANALYSIS_TAB &&
         selectedItem.kind === 'dataset' &&
@@ -169,6 +171,9 @@ const DetailsView = ({
             handlePreview={handlePreview}
           />
         )}
+      {match.params.tab?.toUpperCase() === DETAILS_STATISTICS_TAB &&
+        selectedItem.entities &&
+        selectedItem.stats && <DetailsStatistics selectedItem={selectedItem} />}
     </div>
   )
 }

@@ -162,6 +162,7 @@ export const DETAILS_LOGS_TAB = 'LOGS'
 export const DETAILS_METADATA_TAB = 'METADATA'
 export const DETAILS_PREVIEW_TAB = 'PREVIEW'
 export const DETAILS_RESULTS_TAB = 'RESULTS'
+export const DETAILS_STATISTICS_TAB = 'STATISTICS'
 
 /*=========== NUCLIO =============*/
 

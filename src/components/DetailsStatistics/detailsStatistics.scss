@@ -1,7 +1,7 @@
 @import '../../scss/colors.scss';
 @import '../../scss/borders.scss';
 
-.artifact-metadata {
+.details-statistics {
   padding: 20px;
 
   &__table {
@@ -46,7 +46,7 @@
       border-bottom: $tableBorder;
     }
 
-    .metadata-cell {
+    .statistics-cell {
       &_name {
         flex: 1.5;
       }

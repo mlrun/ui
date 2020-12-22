@@ -100,8 +100,13 @@ main {
 
 .completed,
 .ready,
-.created {
+.created,
+.info {
   @include jobStatus($brightTurquoise);
+}
+
+.warn {
+  @include jobStatus($grandis);
 }
 
 .running {
@@ -109,7 +114,8 @@ main {
 }
 
 .failed,
-.error {
+.error,
+.fail {
   @include jobStatus($burntSienna);
 }
 
@@ -145,7 +151,8 @@ iframe {
   }
 }
 
-input, textarea {
+input,
+textarea {
   overflow-x: hidden;
   font-weight: normal;
   font-size: 15px;
