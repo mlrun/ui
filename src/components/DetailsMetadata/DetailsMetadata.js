@@ -10,7 +10,7 @@ import { generateMetadata } from './detailsMetadata.util'
 import './detailsMetadata.scss'
 
 const DetailsMetadata = ({ selectedItem }) => {
-  const { primaryKey } = selectedItem.schema || { primaryKey: '' }
+  const { primaryKey } = selectedItem.schema ?? { primaryKey: '' }
   const metadata = generateMetadata(selectedItem, primaryKey)
   const headers = Object.keys(metadata[0]).map(key => ({
     value: key,
