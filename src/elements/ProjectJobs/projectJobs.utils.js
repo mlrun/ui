@@ -4,6 +4,7 @@ import measureTime from '../../utils/measureTime'
 export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
   let jobsRunning = 0
   let jobsFailed = 0
+  let workflowsRunning = 0
 
   if (jobs.data) {
     jobsRunning = jobs.data.reduce(
@@ -12,6 +13,12 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
     )
     jobsFailed = jobs.data.reduce(
       (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
+      0
+    )
+  }
+  if (workflows.data) {
+    workflowsRunning = workflows.data.reduce(
+      (prev, curr) => (curr.status === 'Running' ? (prev += 1) : prev),
       0
     )
   }
@@ -24,10 +31,10 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
       link: `/projects/${match.params.projectName}/jobs/monitor`
     },
     workflows: {
-      value: workflows.error ? 'N/A' : workflows.data.length,
+      value: workflows.error ? 'N/A' : workflowsRunning,
       label: 'Running workflows',
       className:
-        workflows.error || workflows.data.length === 0 ? 'default' : 'running',
+        workflows.error || workflowsRunning === 0 ? 'default' : 'running',
       link: `/projects/${match.params.projectName}/jobs/monitor`
     },
     failed: {
