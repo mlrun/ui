@@ -15,7 +15,8 @@ import {
   FEATURE_SETS_TAB,
   FEATURES_TAB,
   DETAILS_ANALYSIS_TAB,
-  DETAILS_METADATA_TAB
+  DETAILS_METADATA_TAB,
+  DETAILS_STATISTICS_TAB
 } from '../../constants'
 
 const FeatureStore = ({
@@ -169,14 +170,17 @@ const FeatureStore = ({
         !selectedItem.item?.schema &&
         !selectedItem.item?.entities) ||
       (match.params.tab === DETAILS_ANALYSIS_TAB &&
-        !selectedItem.item?.extra_data)
+        !selectedItem.item?.extra_data) ||
+      (match.params.tab?.toUpperCase() === DETAILS_STATISTICS_TAB &&
+        match.params.pageTab !== FEATURE_SETS_TAB &&
+        !selectedItem.item?.entities)
     ) {
       history.push(
         `/projects/${match.params.projectName}/feature-store/${
           match.params.pageTab
         }/${match.params.name}${
           match.params.tag ? `/${match.params.tag}` : ''
-        }/'overview'}`
+        }/overview`
       )
     }
 
@@ -185,6 +189,14 @@ const FeatureStore = ({
 
       if (selectedItem.item?.schema || selectedItem.item?.entities) {
         newDetailsMenu.push('metadata')
+      }
+
+      if (
+        selectedItem.item?.entities &&
+        selectedItem.item?.stats &&
+        match.params.pageTab === FEATURE_SETS_TAB
+      ) {
+        newDetailsMenu.push('statistics')
       }
 
       if (selectedItem.item?.extra_data) {
@@ -203,7 +215,8 @@ const FeatureStore = ({
     history,
     selectedItem.item,
     match.params.pageTab,
-    match.params.tag
+    match.params.tag,
+    selectedItem.entities
   ])
 
   const handleDataSetTreeFilterChange = useCallback(
