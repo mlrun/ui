@@ -16,11 +16,9 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
       0
     )
   }
-  if (workflows.data) {
-    workflowsRunning = workflows.data.reduce(
-      (prev, curr) => (curr.status === 'Running' ? (prev += 1) : prev),
-      0
-    )
+  if (Array.isArray(workflows.data)) {
+    workflowsRunning = workflows.data.filter(workflow => workflow === 'Running')
+      .length
   }
 
   return {
