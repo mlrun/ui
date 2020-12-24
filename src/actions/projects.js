@@ -1,5 +1,8 @@
 import projectsApi from '../api/projects-api'
 import {
+  CHANGE_PROJECT_STATE_BEGIN,
+  CHANGE_PROJECT_STATE_FAILURE,
+  CHANGE_PROJECT_STATE_SUCCESS,
   CREATE_PROJECT_BEGIN,
   CREATE_PROJECT_FAILURE,
   CREATE_PROJECT_SUCCESS,
@@ -47,6 +50,17 @@ import {
 } from '../constants'
 
 const projectsAction = {
+  changeProjectState: (project, status) => dispatch => {
+    dispatch(projectsAction.changeProjectStateBegin())
+
+    return projectsApi
+      .changeProjectState(project, status)
+      .then(() => dispatch(projectsAction.changeProjectStateSuccess()))
+      .catch(() => dispatch(projectsAction.changeProjectStateFailure()))
+  },
+  changeProjectStateBegin: () => ({ type: CHANGE_PROJECT_STATE_BEGIN }),
+  changeProjectStateFailure: () => ({ type: CHANGE_PROJECT_STATE_FAILURE }),
+  changeProjectStateSuccess: () => ({ type: CHANGE_PROJECT_STATE_SUCCESS }),
   createNewProject: postData => dispatch => {
     dispatch(projectsAction.createProjectBegin())
 

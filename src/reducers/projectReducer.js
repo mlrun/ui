@@ -1,4 +1,7 @@
 import {
+  CHANGE_PROJECT_STATE_BEGIN,
+  CHANGE_PROJECT_STATE_FAILURE,
+  CHANGE_PROJECT_STATE_SUCCESS,
   CREATE_PROJECT_BEGIN,
   CREATE_PROJECT_FAILURE,
   CREATE_PROJECT_SUCCESS,
@@ -108,6 +111,21 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case CHANGE_PROJECT_STATE_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case CHANGE_PROJECT_STATE_FAILURE:
+      return {
+        ...state,
+        loading: false
+      }
+    case CHANGE_PROJECT_STATE_SUCCESS:
+      return {
+        ...state,
+        loading: false
+      }
     case CREATE_PROJECT_BEGIN:
       return {
         ...state,

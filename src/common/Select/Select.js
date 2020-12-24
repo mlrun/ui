@@ -18,10 +18,16 @@ const Select = ({
   onClick,
   options,
   selectType,
-  selectedId
+  selectedId,
+  withoutBorder
 }) => {
   const [isOpen, setOpen] = useState(false)
-  const selectClassName = classNames('select', className, isOpen && 'active')
+  const selectClassName = classNames(
+    'select',
+    className,
+    isOpen && 'active',
+    withoutBorder && 'without-border'
+  )
   const selectLabelClassName = classNames(
     'select__label',
     selectedId && floatingLabel && 'select__label_floating'
@@ -116,7 +122,8 @@ Select.defaultProps = {
   label: '',
   onClick: null,
   selectType: '',
-  selectedId: ''
+  selectedId: '',
+  withoutBorder: false
 }
 
 Select.propTypes = {
@@ -129,7 +136,8 @@ Select.propTypes = {
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   options: PropTypes.array.isRequired,
   selectType: PropTypes.string,
-  selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+  selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  withoutBorder: PropTypes.bool
 }
 
 export default React.memo(Select)

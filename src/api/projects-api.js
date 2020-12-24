@@ -1,6 +1,10 @@
 import { mainHttpClient } from '../httpClient'
 
 export default {
+  changeProjectState: (project, state) =>
+    mainHttpClient.patch(`/projects/${project}`, {
+      spec: { desired_state: state }
+    }),
   createProject: postData => mainHttpClient.post('/projects', postData),
   deleteProject: project => mainHttpClient.delete(`/projects/${project}`),
   getJobsAndWorkflows: project =>

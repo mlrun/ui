@@ -14,8 +14,22 @@
   border-radius: 4px;
   cursor: pointer;
 
-  &.active {
+  &.active:not(.without-border) {
     background: $alabaster;
+  }
+
+  &.without-border {
+    border: none;
+
+    .select__caret {
+      display: none;
+    }
+
+    &:hover {
+      .select__caret {
+        display: block;
+      }
+    }
   }
 
   &__label {

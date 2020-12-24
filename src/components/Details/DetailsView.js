@@ -76,7 +76,6 @@ const DetailsView = ({
           <Select
             options={iterationOptions}
             label="Iteration:"
-            key="Iteration"
             selectedId={iteration}
             onClick={setIteration}
           />

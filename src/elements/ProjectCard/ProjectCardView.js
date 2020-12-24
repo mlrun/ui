@@ -55,21 +55,23 @@ const ProjectCardView = React.forwardRef(
           </button>
           {showActionsList && (
             <div className="project-card__actions-menu-body">
-              {actionsMenu.map(menuItem => (
-                <div
-                  className="project-card__actions-menu-item"
-                  onClick={() => {
-                    setShowActionsList(false)
-                    menuItem.onClick(project)
-                  }}
-                  key={menuItem.label}
-                >
-                  <span className="project-card__actions-menu-item-icon">
-                    {menuItem.icon}
-                  </span>
-                  {menuItem.label}
-                </div>
-              ))}
+              {actionsMenu[project.metadata.name]
+                .filter(menuItem => !menuItem.hidden)
+                .map(menuItem => (
+                  <div
+                    className="project-card__actions-menu-item"
+                    onClick={() => {
+                      setShowActionsList(false)
+                      menuItem.onClick(project)
+                    }}
+                    key={menuItem.label}
+                  >
+                    <span className="project-card__actions-menu-item-icon">
+                      {menuItem.icon}
+                    </span>
+                    {menuItem.label}
+                  </div>
+                ))}
             </div>
           )}
         </div>
@@ -79,7 +81,7 @@ const ProjectCardView = React.forwardRef(
 )
 
 ProjectCardView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  actionsMenu: PropTypes.shape({}).isRequired,
   project: PropTypes.shape({}).isRequired,
   setShowActionsList: PropTypes.func.isRequired,
   showActionsList: PropTypes.bool.isRequired,
