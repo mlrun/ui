@@ -7,6 +7,7 @@ import ProjectsView from './ProjectsView'
 
 import {
   generateProjectActionsMenu,
+  generateProjectsStates,
   successProjectDeletingMessage,
   failedProjectDeletingMessage
 } from './projectsData'
@@ -15,6 +16,7 @@ import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
 
 const Projects = ({
+  changeProjectState,
   createNewProject,
   deleteProject,
   fetchNuclioFunctions,
@@ -33,9 +35,25 @@ const Projects = ({
   setNewProjectName,
   setNotification
 }) => {
+  const [actionsMenu, setActionsMenu] = useState({})
   const [convertedYaml, setConvertedYaml] = useState('')
   const [createProject, setCreateProject] = useState(false)
+  const [filteredProjects, setFilteredProjects] = useState([])
   const [isEmptyValue, setIsEmptyValue] = useState(false)
+  const [selectedProjectsState, setSelectedProjectsState] = useState(
+    'allProjects'
+  )
+
+  const projectsStates = useMemo(generateProjectsStates, [])
+
+  const handleArchiveProject = useCallback(
+    project => {
+      changeProjectState(project.metadata.name, 'archived').then(() => {
+        fetchProjects()
+      })
+    },
+    [changeProjectState, fetchProjects]
+  )
 
   const handleDeleteProject = useCallback(
     project => {
@@ -60,6 +78,15 @@ const Projects = ({
     [deleteProject, fetchProjects, setNotification]
   )
 
+  const handleUnarchiveProject = useCallback(
+    project => {
+      changeProjectState(project.metadata.name, 'online').then(() => {
+        fetchProjects()
+      })
+    },
+    [changeProjectState, fetchProjects]
+  )
+
   const convertToYaml = useCallback(
     project => {
       if (convertedYaml.length > 0) {
@@ -70,15 +97,6 @@ const Projects = ({
     },
     [convertedYaml.length]
   )
-
-  const actionsMenu = useMemo(
-    () => generateProjectActionsMenu(convertToYaml, handleDeleteProject),
-    [convertToYaml, handleDeleteProject]
-  )
-
-  useEffect(() => {
-    fetchProjects()
-  }, [fetchProjectRunningJobs, fetchProjects])
 
   const handleCreateProject = () => {
     if (projectStore.newProject.name.length === 0) {
@@ -113,6 +131,39 @@ const Projects = ({
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
+  useEffect(() => {
+    setActionsMenu(
+      generateProjectActionsMenu(
+        projectStore.projects,
+        convertToYaml,
+        handleArchiveProject,
+        handleUnarchiveProject,
+        handleDeleteProject
+      )
+    )
+  }, [
+    convertToYaml,
+    handleArchiveProject,
+    handleDeleteProject,
+    handleUnarchiveProject,
+    projectStore.projects
+  ])
+
+  useEffect(() => {
+    fetchProjects()
+  }, [fetchProjectRunningJobs, fetchProjects])
+
+  useEffect(() => {
+    setFilteredProjects(
+      projectStore.projects.filter(project => {
+        return (
+          selectedProjectsState === 'allProjects' ||
+          project.status.state === selectedProjectsState
+        )
+      })
+    )
+  }, [projectStore.projects, selectedProjectsState])
+
   return (
     <ProjectsView
       actionsMenu={actionsMenu}
@@ -126,15 +177,19 @@ const Projects = ({
       fetchProjectFunctions={fetchProjectFunctions}
       fetchProjectModels={fetchProjectModels}
       fetchProjectRunningJobs={fetchProjectRunningJobs}
+      filteredProjects={filteredProjects}
       handleCreateProject={handleCreateProject}
       isEmptyValue={isEmptyValue}
       match={match}
       nuclioStore={nuclioStore}
       projectStore={projectStore}
+      projectsStates={projectsStates}
       removeNewProjectError={removeNewProjectError}
+      selectedProjectsState={selectedProjectsState}
       setCreateProject={setCreateProject}
       setNewProjectDescription={setNewProjectDescription}
       setNewProjectName={setNewProjectName}
+      setSelectedProjectsState={setSelectedProjectsState}
     />
   )
 }

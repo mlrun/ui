@@ -107,9 +107,18 @@
       }
 
       &-icon {
+        display: none;
+        width: 24px;
+
         svg {
           width: 24px;
           margin-right: 5px;
+        }
+      }
+
+      &.with-icon {
+        .project-card__actions-menu-item-icon {
+          display: inline-block;
         }
       }
     }

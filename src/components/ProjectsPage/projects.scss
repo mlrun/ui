@@ -20,12 +20,37 @@
 
   &__wrapper {
     position: relative;
-    display: flex;
-    flex: 1;
-    flex-flow: row wrap;
-    align-content: flex-start;
     min-height: 700px;
     padding: 15px 12px;
+
+    .projects-content-header {
+      padding-left: 15px;
+
+      .project-types-select {
+        width: 180px;
+
+        .select__header {
+          font-size: 20px;
+
+          .select__value {
+            color: $topaz;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    .projects-content {
+      display: flex;
+      flex: 1;
+      flex-flow: row wrap;
+      align-content: flex-start;
+
+      .no-filtered-data {
+        margin: 15px;
+        font-size: 16px;
+      }
+    }
   }
 
   &-modal_opened {

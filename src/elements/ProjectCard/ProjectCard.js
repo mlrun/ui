@@ -187,7 +187,7 @@ const ProjectCard = ({
 }
 
 ProjectCard.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  actionsMenu: PropTypes.shape({}).isRequired,
   fetchProjectDataSets: PropTypes.func.isRequired,
   fetchProjectFailedJobs: PropTypes.func.isRequired,
   fetchProjectFunctions: PropTypes.func.isRequired,

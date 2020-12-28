@@ -5,6 +5,7 @@ import classnames from 'classnames'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Input from '../../common/Input/Input'
+import Select from '../../common/Select/Select'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
@@ -29,15 +30,19 @@ const ProjectsView = ({
   fetchProjectFunctions,
   fetchProjectModels,
   fetchProjectRunningJobs,
+  filteredProjects,
   handleCreateProject,
   isEmptyValue,
   match,
   nuclioStore,
   projectStore,
+  projectsStates,
   removeNewProjectError,
+  selectedProjectsState,
   setCreateProject,
   setNewProjectDescription,
-  setNewProjectName
+  setNewProjectName,
+  setSelectedProjectsState
 }) => {
   const projectsClassNames = classnames(
     'projects',
@@ -107,23 +112,40 @@ const ProjectsView = ({
       </div>
       <div className="projects__wrapper">
         {projectStore.projects.length > 0 && !projectStore.error ? (
-          projectStore.projects.map(project => {
-            return (
-              <ProjectCard
-                actionsMenu={actionsMenu}
-                fetchNuclioFunctions={fetchNuclioFunctions}
-                fetchProjectDataSets={fetchProjectDataSets}
-                fetchProjectFailedJobs={fetchProjectFailedJobs}
-                fetchProjectFunctions={fetchProjectFunctions}
-                fetchProjectModels={fetchProjectModels}
-                fetchProjectRunningJobs={fetchProjectRunningJobs}
-                key={project.id || project.metadata.name}
-                nuclioStore={nuclioStore}
-                project={project}
-                projectStore={projectStore}
+          <>
+            <div className="projects-content-header">
+              <Select
+                onClick={setSelectedProjectsState}
+                options={projectsStates}
+                selectedId={selectedProjectsState}
+                className="project-types-select"
+                withoutBorder
               />
-            )
-          })
+            </div>
+            <div className="projects-content">
+              {filteredProjects.length > 0 ? (
+                filteredProjects.map(project => {
+                  return (
+                    <ProjectCard
+                      actionsMenu={actionsMenu}
+                      fetchNuclioFunctions={fetchNuclioFunctions}
+                      fetchProjectDataSets={fetchProjectDataSets}
+                      fetchProjectFailedJobs={fetchProjectFailedJobs}
+                      fetchProjectFunctions={fetchProjectFunctions}
+                      fetchProjectModels={fetchProjectModels}
+                      fetchProjectRunningJobs={fetchProjectRunningJobs}
+                      key={project.id || project.metadata.name}
+                      nuclioStore={nuclioStore}
+                      project={project}
+                      projectStore={projectStore}
+                    />
+                  )
+                })
+              ) : selectedProjectsState === 'archived' ? (
+                <div className="no-filtered-data">No archived projects.</div>
+              ) : null}
+            </div>
+          </>
         ) : projectStore.loading ? null : (
           <NoData />
         )}
@@ -138,7 +160,7 @@ const ProjectsView = ({
 }
 
 ProjectsView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  actionsMenu: PropTypes.shape({}).isRequired,
   closePopUp: PropTypes.func.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   convertToYaml: PropTypes.func.isRequired,
@@ -149,15 +171,19 @@ ProjectsView.propTypes = {
   fetchProjectFunctions: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
   fetchProjectRunningJobs: PropTypes.func.isRequired,
+  filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
   isEmptyValue: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   nuclioStore: PropTypes.shape({}).isRequired,
   projectStore: PropTypes.shape({}).isRequired,
+  projectsStates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
+  selectedProjectsState: PropTypes.string.isRequired,
   setCreateProject: PropTypes.func.isRequired,
   setNewProjectDescription: PropTypes.func.isRequired,
-  setNewProjectName: PropTypes.func.isRequired
+  setNewProjectName: PropTypes.func.isRequired,
+  setSelectedProjectsState: PropTypes.func.isRequired
 }
 
 export default ProjectsView
