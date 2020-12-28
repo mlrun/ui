@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
+import classnames from 'classnames'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
@@ -16,6 +17,12 @@ const ProjectCardView = React.forwardRef(
     ref
   ) => {
     const history = useHistory()
+    const menuItemClasses = classnames(
+      'project-card__actions-menu-item',
+      actionsMenu[project.metadata.name].some(
+        action => !action.hidden && action.icon
+      ) && 'with-icon'
+    )
 
     return (
       <div
@@ -59,7 +66,7 @@ const ProjectCardView = React.forwardRef(
                 .filter(menuItem => !menuItem.hidden)
                 .map(menuItem => (
                   <div
-                    className="project-card__actions-menu-item"
+                    className={menuItemClasses}
                     onClick={() => {
                       setShowActionsList(false)
                       menuItem.onClick(project)

@@ -38,6 +38,7 @@ const Projects = ({
   const [actionsMenu, setActionsMenu] = useState({})
   const [convertedYaml, setConvertedYaml] = useState('')
   const [createProject, setCreateProject] = useState(false)
+  const [filteredProjects, setFilteredProjects] = useState([])
   const [isEmptyValue, setIsEmptyValue] = useState(false)
   const [selectedProjectsState, setSelectedProjectsState] = useState(
     'allProjects'
@@ -152,6 +153,17 @@ const Projects = ({
     fetchProjects()
   }, [fetchProjectRunningJobs, fetchProjects])
 
+  useEffect(() => {
+    setFilteredProjects(
+      projectStore.projects.filter(project => {
+        return (
+          selectedProjectsState === 'allProjects' ||
+          project.status.state === selectedProjectsState
+        )
+      })
+    )
+  }, [projectStore.projects, selectedProjectsState])
+
   return (
     <ProjectsView
       actionsMenu={actionsMenu}
@@ -165,6 +177,7 @@ const Projects = ({
       fetchProjectFunctions={fetchProjectFunctions}
       fetchProjectModels={fetchProjectModels}
       fetchProjectRunningJobs={fetchProjectRunningJobs}
+      filteredProjects={filteredProjects}
       handleCreateProject={handleCreateProject}
       isEmptyValue={isEmptyValue}
       match={match}

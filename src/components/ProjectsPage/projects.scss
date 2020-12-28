@@ -45,6 +45,11 @@
       flex: 1;
       flex-flow: row wrap;
       align-content: flex-start;
+
+      .no-filtered-data {
+        margin: 15px;
+        font-size: 16px;
+      }
     }
   }
 

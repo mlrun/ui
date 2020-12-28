@@ -30,6 +30,7 @@ const ProjectsView = ({
   fetchProjectFunctions,
   fetchProjectModels,
   fetchProjectRunningJobs,
+  filteredProjects,
   handleCreateProject,
   isEmptyValue,
   match,
@@ -122,14 +123,8 @@ const ProjectsView = ({
               />
             </div>
             <div className="projects-content">
-              {projectStore.projects
-                .filter(project => {
-                  return (
-                    selectedProjectsState === 'allProjects' ||
-                    project.status.state === selectedProjectsState
-                  )
-                })
-                .map(project => {
+              {filteredProjects.length > 0 ? (
+                filteredProjects.map(project => {
                   return (
                     <ProjectCard
                       actionsMenu={actionsMenu}
@@ -145,7 +140,10 @@ const ProjectsView = ({
                       projectStore={projectStore}
                     />
                   )
-                })}
+                })
+              ) : selectedProjectsState === 'archived' ? (
+                <div className="no-filtered-data">No archived projects.</div>
+              ) : null}
             </div>
           </>
         ) : projectStore.loading ? null : (
@@ -173,6 +171,7 @@ ProjectsView.propTypes = {
   fetchProjectFunctions: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
   fetchProjectRunningJobs: PropTypes.func.isRequired,
+  filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
   isEmptyValue: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
