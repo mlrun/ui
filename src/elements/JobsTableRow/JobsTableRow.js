@@ -139,11 +139,12 @@ const JobsTableRow = ({
             }${
               match.params.tab ? `/${match.params.tab}` : `/${detailsMenu[0]}`
             }`
-            const [scheduleJobProject, , scheduleJobFunctionUid] =
-              rowItem.func?.value.match(/\w(?<!\d)[\w'-]*/g, '') || []
-            const scheduleTabLink = !rowItem.func?.value.includes('hub:')
-              ? `/projects/${scheduleJobProject}/functions/${scheduleJobFunctionUid}/${detailsMenu[0]}`
-              : null
+            const [, projectName, jobUid] =
+              currentItem.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
+            const scheduleTabLink =
+              projectName &&
+              jobUid &&
+              `/projects/${projectName}/jobs/monitor/${jobUid}/info`
             const itemLink =
               match.params.pageTab === MONITOR_TAB
                 ? monitorTabLink

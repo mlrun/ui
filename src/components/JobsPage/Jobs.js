@@ -88,6 +88,7 @@ const Jobs = ({
               func: job.scheduled_object.task.spec.function,
               name: job.name,
               nextRun: new Date(job.next_run_time),
+              lastRunUri: job.last_run_uri,
               scheduled_object: job.scheduled_object,
               start_time: new Date(job.last_run?.status.start_time),
               state: job.last_run?.status.state,
@@ -153,7 +154,7 @@ const Jobs = ({
   }, [getWorkflows, match.params.pageTab])
 
   useEffect(() => {
-    if (match.params.jobId && jobs.length > 0) {
+    if (match.params.jobId && jobs.some(job => job.uid) && jobs.length > 0) {
       let item = jobs.find(item => item.uid === match.params.jobId)
 
       if (!item) {
