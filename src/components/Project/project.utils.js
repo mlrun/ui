@@ -30,11 +30,11 @@ export const getLinks = match => [
     link: `/projects/${match.params.projectName}/files`
   },
   {
-    label: 'Monitor jobs and workflows',
+    label: 'Jobs and workflows',
     link: `/projects/${match.params.projectName}/jobs/monitor`
   },
   {
-    label: 'Schedule jobs and workflows',
+    label: 'Schedule jobs',
     link: `/projects/${match.params.projectName}/jobs/schedule`
   },
   {
