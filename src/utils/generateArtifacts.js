@@ -1,20 +1,15 @@
 import parseTargetPath from './parseTargetPath'
 import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 
+import { maxBy } from 'lodash'
+
 export const generateArtifacts = artifacts =>
   artifacts
     .map(artifact => {
-      let generatedArtifact = null
-
-      if (artifact.link_iteration) {
-        let { link_iteration } = artifact.link_iteration
-
-        generatedArtifact = artifact.data.filter(
-          dataItem => dataItem.iter === link_iteration
-        )[0]
-      } else {
-        generatedArtifact = artifact.data[0]
-      }
+      const { link_iteration } = artifact.link_iteration ?? {}
+      const generatedArtifact = artifact.link_iteration
+        ? artifact.data.filter(dataItem => dataItem.iter === link_iteration)[0]
+        : maxBy(artifact.data, 'updated')
 
       if (generatedArtifact) {
         generatedArtifact.target_path = parseTargetPath(
