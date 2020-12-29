@@ -35,6 +35,7 @@ export const generateProjectActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
+        hidden: project.status.state !== 'archived',
         onClick: deleteProject
       }
     ]
