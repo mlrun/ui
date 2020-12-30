@@ -29,12 +29,8 @@ export default {
   getProjectScheduledJobs: project =>
     mainHttpClient.get(`/projects/${project}/schedules`),
   getProjects: () => mainHttpClient.get('/projects'),
-  getProjectWorkflows: () => {
-    const params = {
-      page_size: 100
-    }
-
-    return mainHttpClient.get('/workflows', { params })
+  getProjectWorkflows: project => {
+    return mainHttpClient.get(`/projects/${project}/pipelines`)
   },
   updateProject: (project, data) =>
     mainHttpClient.patch(`/projects/${project}`, data)

@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import jobsActions from '../../actions/jobs'
-import workflowActions from '../../actions/workflow'
+import notificationActions from '../../actions/notification'
+import projectActions from '../../actions/projects'
 import {
   generatePageData,
   initialStateFilter,
@@ -11,14 +12,13 @@ import {
 } from './jobsData'
 import { parseKeyValues } from '../../utils'
 import { SCHEDULE_TAB } from '../../constants'
-import notificationActions from '../../actions/notification'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 
 const Jobs = ({
   fetchJobs,
-  fetchWorkflows,
+  fetchProjectWorkflows,
   jobsStore,
   handleRunScheduledJob,
   history,
@@ -123,16 +123,9 @@ const Jobs = ({
     [fetchJobs, match.params.pageTab, match.params.projectName, stateFilter]
   )
 
-  const getWorkflows = useCallback(
-    token => {
-      fetchWorkflows(token).then(pageToken => {
-        if (pageToken?.length > 0) {
-          getWorkflows(pageToken)
-        }
-      })
-    },
-    [fetchWorkflows]
-  )
+  const getWorkflows = useCallback(() => {
+    fetchProjectWorkflows(match.params.projectName)
+  }, [fetchProjectWorkflows, match.params.projectName])
 
   useEffect(() => {
     refreshJobs()
@@ -220,5 +213,5 @@ Jobs.propTypes = {
 
 export default connect(
   ({ jobsStore, workflowsStore }) => ({ jobsStore, workflowsStore }),
-  { ...jobsActions, ...workflowActions, ...notificationActions }
+  { ...jobsActions, ...projectActions, ...notificationActions }
 )(React.memo(Jobs))
