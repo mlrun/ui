@@ -92,7 +92,8 @@ const Jobs = ({
               scheduled_object: job.scheduled_object,
               start_time: new Date(job.last_run?.status.start_time),
               state: job.last_run?.status.state,
-              type: job.kind === 'pipeline' ? 'workflow' : job.kind
+              type: job.kind === 'pipeline' ? 'workflow' : job.kind,
+              project: job.project
             }
           } else {
             return {
@@ -113,7 +114,8 @@ const Jobs = ({
               outputPath: job.spec.output_path,
               owner: job.metadata.labels?.owner,
               updated: new Date(job.status.last_update),
-              function: job?.spec?.function ?? ''
+              function: job?.spec?.function ?? '',
+              project: job.metadata.project
             }
           }
         })
