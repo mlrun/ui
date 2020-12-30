@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { capitalize } from 'lodash'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
@@ -109,25 +108,6 @@ const TableCell = ({
     )
   } else if (data.type === 'hidden') {
     return null
-  } else if (data.type === 'date with state') {
-    return (
-      <div
-        className={`table-body__cell table-body__cell_last-run ${data.class}`}
-      >
-        <Tooltip
-          className="status"
-          template={<TextTooltipTemplate text={capitalize(data.value.state)} />}
-        >
-          <i className={data.value.state} />
-        </Tooltip>
-        <Tooltip
-          className="text_small"
-          template={<TextTooltipTemplate text={data.value.date} />}
-        >
-          {data.value.date}
-        </Tooltip>
-      </div>
-    )
   } else {
     return (
       <div className={`table-body__cell ${data.class}`}>

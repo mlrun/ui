@@ -14,7 +14,7 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           : null
         const [, projectName, jobUid] =
           contentItem.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
-        const nextRunLink =
+        const lastRunLink =
           projectName &&
           jobUid &&
           `/projects/${projectName}/jobs/monitor/${jobUid}/info`
@@ -33,8 +33,7 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           nextRun: {
             value: formatDatetime(contentItem.nextRun),
             class: 'jobs_big',
-            type: 'date',
-            link: nextRunLink
+            type: 'date'
           },
           schedule: {
             value: cronstrue.toString(contentItem.scheduled_object.schedule),
@@ -48,12 +47,9 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
             type: 'labels'
           },
           lastRun: {
-            value: {
-              date: formatDatetime(contentItem.start_time),
-              state: contentItem.state
-            },
+            value: formatDatetime(contentItem.start_time),
             class: 'jobs_big',
-            type: 'date with state'
+            link: lastRunLink
           },
           createdTime: {
             value: formatDatetime(contentItem.createdTime, 'Not yet started'),
