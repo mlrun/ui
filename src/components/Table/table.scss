@@ -141,24 +141,6 @@
         text-transform: capitalize;
       }
 
-      &_last-run {
-        flex-wrap: nowrap;
-
-        .status {
-          display: flex;
-          min-width: 10px;
-          margin: 0 5px;
-
-          i {
-            margin: 0;
-          }
-        }
-
-        .text_small {
-          min-width: 85%;
-        }
-      }
-
       a {
         position: relative;
         display: flex;
@@ -168,11 +150,6 @@
         color: $cornflowerBlue;
         text-decoration: none;
 
-        .status {
-          position: absolute;
-          left: -34px;
-        }
-
         span {
           display: block;
           color: $topaz;
@@ -180,7 +157,7 @@
       }
 
       i {
-        margin: 0 17px;
+        margin-right: 5px;
       }
 
       button {

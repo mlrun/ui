@@ -75,7 +75,7 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
         <h3 className="item-info__header">General</h3>
       )}
       <ul className="item-info__details">
-        {pageData.infoHeaders.map((header, index) => {
+        {pageData.infoHeaders?.map((header, index) => {
           let chips = []
           let chipsClassName = ''
           let func = ''

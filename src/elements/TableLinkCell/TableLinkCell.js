@@ -31,20 +31,24 @@ const TableLinkCell = ({
 
   return (
     <div className={tableCellClassNames}>
-      <Link to={link} onClick={() => selectItem(item)} className="link">
-        {item.state && (
-          <Tooltip
-            className="status"
-            template={
-              <TextTooltipTemplate
-                text={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
-              />
-            }
-          >
-            <i className={item.state} />
-          </Tooltip>
-        )}
-        <div className="name-wrapper">
+      {item.state && (
+        <Tooltip
+          className="status"
+          template={
+            <TextTooltipTemplate
+              text={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
+            />
+          }
+        >
+          <i className={item.state} />
+        </Tooltip>
+      )}
+      <Link
+        to={link}
+        onClick={() => selectItem(item)}
+        className="link data-ellipsis"
+      >
+        <div className="name-wrapper data-ellipsis">
           <Tooltip
             className={itemNameCLassNames}
             template={<TextTooltipTemplate text={data.value} />}

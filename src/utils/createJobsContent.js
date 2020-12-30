@@ -7,10 +7,23 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
   return content.map(contentItem => {
     if (contentItem) {
       if (scheduled) {
+        const [, , scheduleJobFunctionUid] =
+          contentItem.func?.match(/\w(?<!\d)[\w'-]*/g, '') || []
+        const nameLink = !contentItem.func?.includes('hub:')
+          ? `/projects/${contentItem.project}/functions/${scheduleJobFunctionUid}/info`
+          : null
+        const [, projectName, jobUid] =
+          contentItem.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
+        const lastRunLink =
+          projectName &&
+          jobUid &&
+          `/projects/${projectName}/jobs/monitor/${jobUid}/info`
+
         return {
           name: {
             value: contentItem.name,
-            class: 'jobs_big'
+            class: 'jobs_big',
+            link: nameLink
           },
           type: {
             value: contentItem.type,
@@ -34,12 +47,9 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
             type: 'labels'
           },
           lastRun: {
-            value: {
-              date: formatDatetime(contentItem.start_time),
-              state: contentItem.state
-            },
+            value: formatDatetime(contentItem.start_time),
             class: 'jobs_big',
-            type: 'date with state'
+            link: lastRunLink
           },
           createdTime: {
             value: formatDatetime(contentItem.createdTime, 'Not yet started'),
@@ -59,7 +69,8 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
         return {
           name: {
             value: contentItem.name,
-            class: 'jobs_medium'
+            class: 'jobs_medium',
+            link: `/projects/${contentItem.project}/jobs/monitor/${contentItem.uid}/info`
           },
           type: {
             value: typeof groupedByWorkflow !== 'boolean' ? 'workflow' : type,
