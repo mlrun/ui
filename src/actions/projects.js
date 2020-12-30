@@ -361,11 +361,11 @@ const projectsAction = {
     type: FETCH_PROJECTS_SUCCESS,
     payload: projectsList
   }),
-  fetchProjectWorkflows: () => dispatch => {
+  fetchProjectWorkflows: project => dispatch => {
     dispatch(projectsAction.fetchProjectWorkflowsBegin())
 
     return projectsApi
-      .getProjectWorkflows()
+      .getProjectWorkflows(project)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectWorkflowsSuccess(response.data.runs)
