@@ -266,6 +266,7 @@ ProjectView.propTypes = {
   artifactKind: PropTypes.string.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
+  fetchNuclioFunctions: PropTypes.func.isRequired,
   fetchProjectDataSets: PropTypes.func.isRequired,
   fetchProjectFiles: PropTypes.func.isRequired,
   fetchProjectJobs: PropTypes.func.isRequired,

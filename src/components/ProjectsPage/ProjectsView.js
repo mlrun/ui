@@ -24,7 +24,6 @@ const ProjectsView = ({
   convertedYaml,
   convertToYaml,
   createProject,
-  fetchNuclioFunctions,
   fetchProjectDataSets,
   fetchProjectFailedJobs,
   fetchProjectFunctions,
@@ -128,7 +127,6 @@ const ProjectsView = ({
                   return (
                     <ProjectCard
                       actionsMenu={actionsMenu}
-                      fetchNuclioFunctions={fetchNuclioFunctions}
                       fetchProjectDataSets={fetchProjectDataSets}
                       fetchProjectFailedJobs={fetchProjectFailedJobs}
                       fetchProjectFunctions={fetchProjectFunctions}
@@ -165,7 +163,6 @@ ProjectsView.propTypes = {
   convertedYaml: PropTypes.string.isRequired,
   convertToYaml: PropTypes.func.isRequired,
   createProject: PropTypes.bool.isRequired,
-  fetchNuclioFunctions: PropTypes.func.isRequired,
   fetchProjectDataSets: PropTypes.func.isRequired,
   fetchProjectFailedJobs: PropTypes.func.isRequired,
   fetchProjectFunctions: PropTypes.func.isRequired,

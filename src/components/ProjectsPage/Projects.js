@@ -151,7 +151,8 @@ const Projects = ({
 
   useEffect(() => {
     fetchProjects()
-  }, [fetchProjectRunningJobs, fetchProjects])
+    fetchNuclioFunctions()
+  }, [fetchNuclioFunctions, fetchProjects])
 
   useEffect(() => {
     setFilteredProjects(
@@ -171,7 +172,6 @@ const Projects = ({
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
       createProject={createProject}
-      fetchNuclioFunctions={fetchNuclioFunctions}
       fetchProjectDataSets={fetchProjectDataSets}
       fetchProjectFailedJobs={fetchProjectFailedJobs}
       fetchProjectFunctions={fetchProjectFunctions}
