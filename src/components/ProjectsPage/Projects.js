@@ -36,6 +36,7 @@ const Projects = ({
   setNotification
 }) => {
   const [actionsMenu, setActionsMenu] = useState({})
+  const [archiveProject, setArchiveProject] = useState(null)
   const [convertedYaml, setConvertedYaml] = useState('')
   const [createProject, setCreateProject] = useState(false)
   const [filteredProjects, setFilteredProjects] = useState([])
@@ -46,14 +47,12 @@ const Projects = ({
 
   const projectsStates = useMemo(generateProjectsStates, [])
 
-  const handleArchiveProject = useCallback(
-    project => {
-      changeProjectState(project.metadata.name, 'archived').then(() => {
-        fetchProjects()
-      })
-    },
-    [changeProjectState, fetchProjects]
-  )
+  const handleArchiveProject = useCallback(() => {
+    changeProjectState(archiveProject.metadata.name, 'archived').then(() => {
+      fetchProjects()
+    })
+    setArchiveProject(null)
+  }, [archiveProject, changeProjectState, fetchProjects])
 
   const handleDeleteProject = useCallback(
     project => {
@@ -121,7 +120,11 @@ const Projects = ({
     })
   }
 
-  const closePopUp = useCallback(() => {
+  const closeArchiveProjectPopUp = useCallback(() => {
+    setArchiveProject(null)
+  }, [])
+
+  const closeNewProjectPopUp = useCallback(() => {
     if (projectStore.newProject.error) {
       removeNewProjectError()
     }
@@ -131,19 +134,23 @@ const Projects = ({
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
+  const onArchiveProject = useCallback(project => {
+    setArchiveProject(project)
+  }, [])
+
   useEffect(() => {
     setActionsMenu(
       generateProjectActionsMenu(
         projectStore.projects,
         convertToYaml,
-        handleArchiveProject,
+        onArchiveProject,
         handleUnarchiveProject,
         handleDeleteProject
       )
     )
   }, [
     convertToYaml,
-    handleArchiveProject,
+    onArchiveProject,
     handleDeleteProject,
     handleUnarchiveProject,
     projectStore.projects
@@ -168,7 +175,9 @@ const Projects = ({
   return (
     <ProjectsView
       actionsMenu={actionsMenu}
-      closePopUp={closePopUp}
+      archiveProject={archiveProject}
+      closeArchiveProjectPopUp={closeArchiveProjectPopUp}
+      closeNewProjectPopUp={closeNewProjectPopUp}
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
       createProject={createProject}
@@ -178,6 +187,7 @@ const Projects = ({
       fetchProjectModels={fetchProjectModels}
       fetchProjectRunningJobs={fetchProjectRunningJobs}
       filteredProjects={filteredProjects}
+      handleArchiveProject={handleArchiveProject}
       handleCreateProject={handleCreateProject}
       isEmptyValue={isEmptyValue}
       match={match}
