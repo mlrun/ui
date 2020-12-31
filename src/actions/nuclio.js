@@ -5,8 +5,11 @@ import {
   FETCH_API_GATEWAYS_SUCCESS,
   FETCH_NUCLIO_FUNCTIONS_BEGIN,
   FETCH_NUCLIO_FUNCTIONS_FAILURE,
-  FETCH_NUCLIO_FUNCTIONS_SUCCESS
+  FETCH_NUCLIO_FUNCTIONS_SUCCESS,
+  FETCH_ALL_NUCLIO_FUNCTIONS_SUCCESS
 } from '../constants'
+
+import { groupBy, property } from 'lodash'
 
 const nuclioActions = {
   fetchApiGateways: project => dispatch => {
@@ -40,9 +43,20 @@ const nuclioActions = {
     return nuclioApi
       .getFunctions(project)
       .then(({ data }) => {
-        dispatch(nuclioActions.fetchNuclioFunctionsSuccess(Object.values(data)))
+        if (project) {
+          dispatch(
+            nuclioActions.fetchNuclioFunctionsSuccess(Object.values(data))
+          )
+        } else {
+          let functionsByProject = groupBy(
+            data,
+            property(['metadata', 'labels', 'nuclio.io/project-name'])
+          )
 
-        return data
+          dispatch(
+            nuclioActions.fetchAllNuclioFunctionsSuccess(functionsByProject)
+          )
+        }
       })
       .catch(error => {
         dispatch(nuclioActions.fetchNuclioFunctionsFailure(error.message))
@@ -59,6 +73,10 @@ const nuclioActions = {
   }),
   fetchNuclioFunctionsSuccess: functions => ({
     type: FETCH_NUCLIO_FUNCTIONS_SUCCESS,
+    payload: functions
+  }),
+  fetchAllNuclioFunctionsSuccess: functions => ({
+    type: FETCH_ALL_NUCLIO_FUNCTIONS_SUCCESS,
     payload: functions
   })
 }

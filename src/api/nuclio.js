@@ -9,10 +9,14 @@ export default {
     })
   },
   getFunctions: project => {
-    return nuclioHttpClient.get('/api/functions', {
-      headers: {
-        'x-nuclio-project-name': project
-      }
-    })
+    let config = project
+      ? {
+          headers: {
+            'x-nuclio-project-name': project
+          }
+        }
+      : {}
+
+    return nuclioHttpClient.get('/api/functions', config)
   }
 }

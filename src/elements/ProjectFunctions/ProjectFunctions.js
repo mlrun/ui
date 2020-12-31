@@ -20,14 +20,14 @@ const ProjectFunctions = ({
   }, [fetchApiGateways, match.params.projectName])
 
   const functions = useMemo(() => {
-    const functionsRunning = functionsStore.functions.reduce(
+    const functionsRunning = functionsStore.currentProjectFunctions.reduce(
       (prev, curr) =>
         !curr.spec.disable && curr.status.state === 'ready'
           ? (prev += 1)
           : prev,
       0
     )
-    const functionsFailed = functionsStore.functions.reduce(
+    const functionsFailed = functionsStore.currentProjectFunctions.reduce(
       (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
       0
     )
@@ -55,7 +55,7 @@ const ProjectFunctions = ({
   }, [functionsStore, match.params.projectName])
 
   const functionsTable = useMemo(() => {
-    if (functionsStore.functions.length > 0) {
+    if (functionsStore.currentProjectFunctions.length > 0) {
       const functionsTableHeaders = [
         {
           value: 'Name',
@@ -64,7 +64,7 @@ const ProjectFunctions = ({
         { value: 'Status', className: 'table-cell_small' }
       ]
 
-      const functionsTableBody = functionsStore.functions
+      const functionsTableBody = functionsStore.currentProjectFunctions
         .slice(0, 5)
         .map(func => {
           const funcClassName = classnames(
@@ -101,12 +101,12 @@ const ProjectFunctions = ({
         body: functionsTableBody
       }
     }
-  }, [functionsStore.functions, match.params.projectName])
+  }, [functionsStore.currentProjectFunctions, match.params.projectName])
 
   return (
     <ProjectDataCard
       content={{
-        data: functionsStore.functions,
+        data: functionsStore.currentProjectFunctions,
         error: functionsStore.error,
         loading: functionsStore.loading
       }}
@@ -121,6 +121,7 @@ const ProjectFunctions = ({
 }
 
 ProjectFunctions.propTypes = {
+  fetchApiGateways: PropTypes.func.isRequired,
   fetchNuclioFunctions: PropTypes.func.isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired

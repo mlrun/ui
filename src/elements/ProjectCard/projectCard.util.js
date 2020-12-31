@@ -13,7 +13,7 @@ export const generateProjectStatistic = (
   functionsLoading,
   models,
   modelsLoading,
-  nuclioFunctions,
+  nuclioFunctions = [],
   nuclioFunctionsLoading,
   runningJobs,
   runningJobsLoading
