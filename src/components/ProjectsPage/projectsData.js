@@ -24,13 +24,13 @@ export const generateProjectActionsMenu = (
       },
       {
         label: 'Archive',
-        onClick: archiveProject,
-        hidden: project.status.state === 'archived'
+        hidden: project.status.state === 'archived',
+        onClick: archiveProject
       },
       {
         label: 'Unarchive',
-        onClick: unarchiveProject,
-        hidden: project.status.state === 'online'
+        hidden: project.status.state === 'online',
+        onClick: unarchiveProject
       },
       {
         label: 'Delete',

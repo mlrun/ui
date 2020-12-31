@@ -20,7 +20,9 @@ import './projects.scss'
 
 const ProjectsView = ({
   actionsMenu,
-  closePopUp,
+  archiveProject,
+  closeNewProjectPopUp,
+  closeArchiveProjectPopUp,
   convertedYaml,
   convertToYaml,
   createProject,
@@ -30,6 +32,7 @@ const ProjectsView = ({
   fetchProjectModels,
   fetchProjectRunningJobs,
   filteredProjects,
+  handleArchiveProject,
   handleCreateProject,
   isEmptyValue,
   match,
@@ -52,7 +55,10 @@ const ProjectsView = ({
     <div className={projectsClassNames}>
       {projectStore.loading && <Loader />}
       {createProject && (
-        <PopUpDialog headerText="Create new project" closePopUp={closePopUp}>
+        <PopUpDialog
+          headerText="Create new project"
+          closePopUp={closeNewProjectPopUp}
+        >
           <div className="pop-up-dialog__form">
             <Input
               className="pop-up-dialog__form-input"
@@ -88,7 +94,7 @@ const ProjectsView = ({
             )}
             <button
               className="btn_default pop-up-dialog__btn_cancel"
-              onClick={closePopUp}
+              onClick={closeNewProjectPopUp}
             >
               Cancel
             </button>
@@ -97,6 +103,32 @@ const ProjectsView = ({
               onClick={handleCreateProject}
             >
               Create
+            </button>
+          </div>
+        </PopUpDialog>
+      )}
+      {archiveProject && (
+        <PopUpDialog
+          headerText="Archive project"
+          closePopUp={closeArchiveProjectPopUp}
+        >
+          <div>
+            Note that moving a project to archive doesn't stop it from consuming
+            resources. We recommend that before setting the project as archive
+            you'll remove scheduled jobs and suspend Nuclio functions.
+          </div>
+          <div className="pop-up-dialog__footer-container">
+            <button
+              className="btn_default pop-up-dialog__btn_cancel"
+              onClick={closeArchiveProjectPopUp}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn_primary btn_success"
+              onClick={handleArchiveProject}
+            >
+              Archive
             </button>
           </div>
         </PopUpDialog>
@@ -159,7 +191,11 @@ const ProjectsView = ({
 
 ProjectsView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
-  closePopUp: PropTypes.func.isRequired,
+  archiveProject: PropTypes.oneOfType([
+    PropTypes.shape({}, PropTypes.instanceOf(null))
+  ]),
+  closeArchiveProjectPopUp: PropTypes.func.isRequired,
+  closeNewProjectPopUp: PropTypes.func.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   convertToYaml: PropTypes.func.isRequired,
   createProject: PropTypes.bool.isRequired,
@@ -169,6 +205,7 @@ ProjectsView.propTypes = {
   fetchProjectModels: PropTypes.func.isRequired,
   fetchProjectRunningJobs: PropTypes.func.isRequired,
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  handleArchiveProject: PropTypes.func.isRequired,
   handleCreateProject: PropTypes.func.isRequired,
   isEmptyValue: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
