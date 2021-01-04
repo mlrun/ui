@@ -17,7 +17,6 @@
     @include resetSpaces;
 
     &_item {
-      padding: 8px 24px;
       color: $topaz;
       font-weight: bold;
       font-size: 15px;
@@ -25,7 +24,11 @@
       text-align: center;
       text-transform: capitalize;
       border-bottom: 3px solid transparent;
-      cursor: pointer;
+
+      a {
+        display: block;
+        padding: 8px 24px;
+      }
     }
 
     .active {
