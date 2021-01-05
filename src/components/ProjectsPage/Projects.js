@@ -165,7 +165,8 @@ const Projects = ({
     setFilteredProjects(
       projectStore.projects.filter(project => {
         return (
-          selectedProjectsState === 'allProjects' ||
+          (selectedProjectsState === 'allProjects' &&
+            project.status.state !== 'archived') ||
           project.status.state === selectedProjectsState
         )
       })
