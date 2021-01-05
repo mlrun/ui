@@ -38,7 +38,8 @@ const Table = ({
     state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
   )
   const workflows = useSelector(
-    state => pageData.page === JOBS_PAGE && state.workflowsStore.workflows
+    state =>
+      pageData.page === JOBS_PAGE && state.projectStore.project.workflows.data
   )
 
   useEffect(() => {
