@@ -132,6 +132,14 @@
       font-size: 15px;
       line-height: 18px;
 
+      .cell_name {
+        position: relative;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        margin: 0;
+      }
+
       .text_small {
         min-width: 100%;
         max-width: 50px;

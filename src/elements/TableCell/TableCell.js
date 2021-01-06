@@ -45,7 +45,19 @@ const TableCell = ({
   } else if (firstRow || (link && isGroupedByWorkflow)) {
     return (
       <div className={`table-body__cell ${data.class}`}>
-        {data && data.value}
+        {item.status && (
+          <Tooltip
+            className="status"
+            template={<TextTooltipTemplate text={item.status} />}
+          >
+            <i
+              className={`${item.status[0].toLowerCase()}${item.status.slice(
+                1
+              )}`}
+            />
+          </Tooltip>
+        )}
+        <span class="cell_name">{data && data.value}</span>
         <Arrow
           onClick={e => handleExpandRow(e, item)}
           className="expand-arrow"
