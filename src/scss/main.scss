@@ -99,7 +99,8 @@ main {
 }
 
 .completed,
-.ready {
+.ready,
+.succeeded {
   @include jobStatus($brightTurquoise);
 }
 

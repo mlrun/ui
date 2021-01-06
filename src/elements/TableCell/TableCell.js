@@ -57,7 +57,7 @@ const TableCell = ({
             />
           </Tooltip>
         )}
-        <span class="cell_name">{data && data.value}</span>
+        <span className="cell_name">{data && data.value}</span>
         <Arrow
           onClick={e => handleExpandRow(e, item)}
           className="expand-arrow"
