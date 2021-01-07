@@ -125,8 +125,7 @@ const ArtifactsTableRow = ({
                 item={content[index]}
                 key={Math.random() + i}
                 link={
-                  value.link &&
-                  (value.link === 'info'
+                  value.link === 'info'
                     ? `/projects/${
                         match.params.projectName
                       }/${pageData.page.toLowerCase()}${
@@ -136,7 +135,7 @@ const ArtifactsTableRow = ({
                           ? match.params.tab
                           : `${artifactsData.detailsMenu[0]}`
                       }`
-                    : value.link)
+                    : value.link
                 }
                 match={match}
                 selectedItem={selectedItem}

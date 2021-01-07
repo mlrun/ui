@@ -22,10 +22,10 @@ export const featureSetsInfoHeaders = [
   { label: 'Relations', id: 'relations' },
   { label: 'Label column', id: 'labelColumn' }
 ]
-export const datasetsFilters = ['tree', 'labels', 'name']
+export const datasetsFilters = ['tree', 'name', 'labels']
 export const detailsMenu = ['overview', 'preview']
-export const featureSetsFilters = ['labels', 'name']
-export const featuresFilters = ['labels', 'name']
+export const featureSetsFilters = ['name', 'labels']
+export const featuresFilters = ['name', 'labels']
 export const page = 'FEATURE-STORE'
 export const sources = ['name', 'path']
 export const registerDatasetsTitle = 'Register dataset'
@@ -96,16 +96,12 @@ export const featureSetsTableHeaders = [
 ]
 export const featuresTableHeaders = [
   {
-    header: 'Name',
+    header: 'Feature Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Feature set',
-    class: 'artifacts_medium'
-  },
-  {
-    header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_small'
   },
   {
     header: 'Type',
@@ -113,14 +109,35 @@ export const featuresTableHeaders = [
   },
   {
     header: 'Entity',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_small'
+  },
+  {
+    header: 'Description',
+    class: 'artifacts_medium'
+  },
+  {
+    header: 'Labels',
+    class: 'artifacts_big'
+  },
+  {
+    header: 'Targets',
+    class: 'artifacts_small'
+  },
+  {
+    header: 'Validator',
+    class: 'artifacts_medium'
   },
   {
     header: '',
     class: 'action_cell'
   }
 ]
-export const tabs = ['datasets', 'feature-sets', 'features', 'feature-vectors']
+export const tabs = [
+  { id: 'datasets', label: 'Data sets' },
+  { id: 'feature-sets', label: 'Feature sets' },
+  { id: 'features', label: 'Features' },
+  { id: 'feature-vectors', label: 'Feature vectors' }
+]
 
 export const generatePageData = pageTab => {
   let data = {
