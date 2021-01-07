@@ -47,7 +47,7 @@ export const getLinks = match => [
     externalLink: true
   },
   {
-    label: 'API gateways',
+    label: 'API gateways (Nuclio)',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`,
     externalLink: true
   }
