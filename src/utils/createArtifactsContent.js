@@ -12,6 +12,8 @@ import {
 } from '../constants'
 import { convertBytes } from './convertBytes'
 
+import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
+
 import { ReactComponent as Nosql } from '../images/nosql.svg'
 import { ReactComponent as Stream } from '../images/stream.svg'
 import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
@@ -259,13 +261,8 @@ const createFeaturesRowData = artifact => {
     },
     feature_set: {
       value: artifact.feature_set_digest?.metadata?.name,
-      class: 'artifacts_medium',
+      class: 'artifacts_small',
       link: `/projects/${artifactMetadata?.project}/feature-store/feature-sets/${artifactMetadata?.name}/${artifactMetadata?.tag}/overview`
-    },
-    labels: {
-      value: parseKeyValues(artifact.feature?.labels),
-      class: 'artifacts_big',
-      type: 'labels'
     },
     type: {
       value: artifact.feature?.value_type,
@@ -273,7 +270,22 @@ const createFeaturesRowData = artifact => {
     },
     entity: {
       value: artifact.feature_set_digest?.spec?.entities[0]?.name,
-      class: 'artifacts_extra-small'
+      class: 'artifacts_small'
+    },
+    description: {
+      value: artifact.feature?.description,
+      class: 'artifacts_medium'
+    },
+    labels: {
+      value: parseKeyValues(artifact.feature?.labels),
+      class: 'artifacts_big',
+      type: 'labels'
+    },
+    targets: getFeatureSetTargetCellValue(artifact.feature_set_digest?.targets),
+    validator: {
+      value: <FeatureValidator validator={artifact.feature?.validator} />,
+      class: 'artifacts_medium',
+      type: 'component'
     }
   }
 }

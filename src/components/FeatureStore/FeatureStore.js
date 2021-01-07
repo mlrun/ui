@@ -210,10 +210,6 @@ const FeatureStore = ({
         newDetailsMenu.push('analysis')
       }
 
-      if (match.params.pageTab === FEATURE_SETS_TAB) {
-        newDetailsMenu.push('targets')
-      }
-
       return {
         ...state,
         detailsMenu: [...newDetailsMenu]
