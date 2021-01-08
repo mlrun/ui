@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { isEqual, isEmpty } from 'lodash'
+// eslint-disable-next-line no-unused-vars
+import { chain, isEqual, isEmpty, orderBy } from 'lodash'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
@@ -50,19 +51,22 @@ const Functions = ({
   const refreshFunctions = useCallback(
     items => {
       fetchFunctions(match.params.projectName, items?.name).then(functions => {
-        const newFunctions = functions.map(func => ({
-          name: func.metadata.name,
-          type: func.kind,
-          tag: func.metadata.tag,
-          hash: func.metadata.hash,
-          codeOrigin: func.spec?.build?.code_origin ?? '',
-          updated: new Date(func.metadata.updated),
-          command: func.spec.command,
-          image: func.spec.image,
-          description: func.spec.description,
-          state: func.status?.state ?? '',
-          functionSourceCode: func.spec?.build?.functionSourceCode ?? ''
-        }))
+        const newFunctions = chain(functions)
+          .orderBy('metadata.updated', 'desc')
+          .map(func => ({
+            name: func.metadata.name,
+            type: func.kind,
+            tag: func.metadata.tag,
+            hash: func.metadata.hash,
+            codeOrigin: func.spec?.build?.code_origin ?? '',
+            updated: new Date(func.metadata.updated),
+            command: func.spec.command,
+            image: func.spec.image,
+            description: func.spec.description,
+            state: func.status?.state ?? '',
+            functionSourceCode: func.spec?.build?.functionSourceCode ?? ''
+          }))
+          .value()
 
         return setFunctions(newFunctions)
       })
