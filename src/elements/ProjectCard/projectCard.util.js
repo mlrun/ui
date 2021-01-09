@@ -1,3 +1,5 @@
+import { groupByUniqName } from '../../utils/groupByUniqName'
+
 export const generateProjectStatistic = (
   failedJobs,
   failedJobsLoading,
@@ -18,12 +20,13 @@ export const generateProjectStatistic = (
   runningJobs,
   runningJobsLoading
 ) => {
-  const runningNuclioFunctions = Object.values(nuclioFunctions).reduce(
+  const grouppedNuclioFunctions = groupByUniqName(nuclioFunctions, 'metadata')
+  const runningNuclioFunctions = Object.values(grouppedNuclioFunctions).reduce(
     (prev, curr) =>
       curr.status.state === 'ready' && !curr.spec.disable ? (prev += 1) : prev,
     0
   )
-  const failedNuclioFunctions = Object.values(nuclioFunctions).reduce(
+  const failedNuclioFunctions = Object.values(grouppedNuclioFunctions).reduce(
     (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
     0
   )
@@ -31,7 +34,9 @@ export const generateProjectStatistic = (
   return {
     runningJobs: {
       className:
-        runningJobs.length + runningNuclioFunctions > 0 &&
+        groupByUniqName(runningJobs, 'metadata').length +
+          runningNuclioFunctions >
+          0 &&
         !fetchRunningJobsFailure &&
         !fetchNuclioFunctionsFailure
           ? 'running'
@@ -42,7 +47,8 @@ export const generateProjectStatistic = (
       value:
         fetchRunningJobsFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
-          : runningJobs.length + runningNuclioFunctions
+          : groupByUniqName(runningJobs, 'metadata').length +
+            runningNuclioFunctions
     },
     failedJobs: {
       className:
@@ -58,25 +64,32 @@ export const generateProjectStatistic = (
       value:
         fetchFailedJobsFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
-          : failedJobs.length + failedNuclioFunctions
+          : groupByUniqName(failedJobs, 'metadata').length +
+            failedNuclioFunctions
     },
     models: {
       className: 'default',
       label: 'Models',
       loading: modelsLoading,
-      value: fetchModelsFailure ? 'N/A' : models.length
+      value: fetchModelsFailure
+        ? 'N/A'
+        : groupByUniqName(models, 'producer').length
     },
     features: {
       className: 'default',
       label: 'Features',
       loading: featuresLoading,
-      value: fetchFeaturesFailure ? 'N/A' : features.length
+      value: fetchFeaturesFailure
+        ? 'N/A'
+        : groupByUniqName(features, 'producer').length
     },
     functions: {
       className: 'default',
       label: 'ML functions',
       loading: functionsLoading,
-      value: fetchFunctionsFailure ? 'N/A' : functions.length
+      value: fetchFunctionsFailure
+        ? 'N/A'
+        : groupByUniqName(functions, 'metadata').length
     }
   }
 }
