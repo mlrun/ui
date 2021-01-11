@@ -2,10 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+
 const ProjectCard = ({ project }) => {
   return (
     <div className="project_card">
-      <div className="project_card_header">{project.name}</div>
+      <div className="project_card_header">
+        <Tooltip template={<TextTooltipTemplate text={project.name} />}>
+          {project.name}
+        </Tooltip>
+      </div>
       {project?.description && (
         <div className="project_card_description">{project.description}</div>
       )}
