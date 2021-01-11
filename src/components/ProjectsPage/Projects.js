@@ -130,7 +130,7 @@ const Projects = ({
         />
       </div>
       <div className="projects__wrapper">
-        {projectStore.projects.length !== 0 || !projectStore.error ? (
+        {projectStore.projects.length > 0 && !projectStore.error ? (
           projectStore.projects.map(project => {
             return (
               <ProjectCard key={project.id || project.name} project={project} />
