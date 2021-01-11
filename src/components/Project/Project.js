@@ -245,8 +245,9 @@ const Project = ({
     const objectLabels = {}
 
     labels.forEach(label => {
-      const splitedLabel = label.split(':')
-      objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
+      const labelParts = label.split(': ')
+
+      objectLabels[labelParts[0]] = labelParts[1]
     })
 
     const newLabel = {
