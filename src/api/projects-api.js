@@ -7,6 +7,8 @@ export default {
     }),
   createProject: postData => mainHttpClient.post('/projects', postData),
   deleteProject: project => mainHttpClient.delete(`/projects/${project}`),
+  editProjectLabels: (project, data) =>
+    mainHttpClient.put(`/projects/${project}`, data),
   getJobsAndWorkflows: project =>
     mainHttpClient.get(`/runs?project=${project}`),
   getProject: project => mainHttpClient.get(`/projects/${project}`),

@@ -14,10 +14,13 @@ import {
   getLinks,
   generateCreateNewOptions
 } from './project.utils'
+import { parseKeyValues } from '../../utils'
 
 import './project.scss'
 
 const Project = ({
+  addProjectLabel,
+  editProjectLabels,
   fetchApiGateways,
   fetchNuclioFunctions,
   fetchProject,
@@ -32,7 +35,7 @@ const Project = ({
   projectStore,
   removeProjectData
 }) => {
-  const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [artifactKind, setArtifactKind] = useState('')
   const [editProject, setEditProject] = useState({
     name: {
       value: null,
@@ -41,9 +44,18 @@ const Project = ({
     description: {
       value: null,
       isEdit: false
+    },
+    goals: {
+      value: null,
+      isEdit: false
+    },
+    source: {
+      value: null,
+      isEdit: false
     }
   })
-  const [artifactKind, setArtifactKind] = useState('')
+  const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
   const history = useHistory()
   const inputRef = React.createRef(null)
 
@@ -76,26 +88,33 @@ const Project = ({
   }, [fetchProject, match.params.projectName, removeProjectData])
 
   const closeEditMode = useCallback(() => {
-    setEditProject(prevState => {
-      return {
-        name: {
-          value:
-            prevState.name.value || projectStore.project.data.metadata.name,
-          isEdit: false
-        },
-        description: {
-          value:
-            prevState.description.value ||
-            projectStore.project.data.spec.description,
-          isEdit: false
-        }
+    setEditProject(prevState => ({
+      name: {
+        value: prevState.name.value || projectStore.project.data.metadata.name,
+        isEdit: false
+      },
+      description: {
+        value:
+          prevState.description.value ||
+          projectStore.project.data.spec.description,
+        isEdit: false
+      },
+      goals: {
+        value: prevState.goals.value || projectStore.project.data.spec.goals,
+        isEdit: false
+      },
+      source: {
+        value: prevState.source.value || projectStore.project.data.spec.source,
+        isEdit: false
       }
-    })
+    }))
   }, [projectStore.project])
 
   const handleSetProjectData = useCallback(() => {
     const data = {
       name: editProject.name.value ?? projectStore.project.data.metadata.name,
+      goals: editProject.goals.value ?? projectStore.project.data.spec.goals,
+      source: editProject.source.value ?? projectStore.project.data.spec.source,
       description:
         editProject.description.value ??
         projectStore.project.data.spec.description
@@ -108,7 +127,9 @@ const Project = ({
           name: data.name
         },
         spec: {
-          description: data.description
+          description: data.description,
+          goals: data.goals,
+          source: data.source
         }
       })
       .then(() => {
@@ -122,6 +143,14 @@ const Project = ({
           },
           description: {
             value: projectStore.project.data.spec.description,
+            isEdit: false
+          },
+          goals: {
+            value: projectStore.project.data.spec.goals,
+            isEdit: false
+          },
+          source: {
+            value: projectStore.project.data.spec.source,
             isEdit: false
           }
         })
@@ -138,7 +167,12 @@ const Project = ({
   )
 
   useEffect(() => {
-    if (editProject.name.isEdit || editProject.description.isEdit) {
+    if (
+      editProject.name.isEdit ||
+      editProject.description.isEdit ||
+      editProject.goals.isEdit ||
+      editProject.source.isEdit
+    ) {
       document.addEventListener('click', handleDocumentClick)
     }
 
@@ -157,6 +191,14 @@ const Project = ({
       description: {
         ...prevState.description,
         isEdit: inputName === 'description'
+      },
+      goals: {
+        ...prevState.goals,
+        isEdit: inputName === 'goals'
+      },
+      source: {
+        ...prevState.source,
+        isEdit: inputName === 'source'
       }
     }))
   }, [])
@@ -176,6 +218,14 @@ const Project = ({
           value: editProject.description.isEdit
             ? value
             : prevState.description.value
+        },
+        goals: {
+          ...prevState.goals,
+          value: editProject.goals.isEdit ? value : prevState.goals.value
+        },
+        source: {
+          ...prevState.source,
+          value: editProject.source.isEdit ? value : prevState.source.value
         }
       }))
     },
@@ -191,6 +241,70 @@ const Project = ({
     [handleSetProjectData]
   )
 
+  const handleAddProjectLabel = (label, labels) => {
+    const objectLabels = {}
+
+    labels.forEach(label => {
+      const splitedLabel = label.split(':')
+      objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
+    })
+
+    const newLabel = {
+      [label.split(':')[0]]: label.split(':')[1].replace(' ', '')
+    }
+
+    setVisibleChipsMaxLength(null)
+    addProjectLabel(newLabel, objectLabels)
+  }
+
+  const handleUpdateProjectLabels = labels => {
+    const objectLabels = {}
+
+    labels.forEach(label => {
+      const splitedLabel = label.split(':')
+
+      objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
+    })
+
+    const projectData = {
+      description:
+        editProject.description.value ??
+        projectStore.project.data.spec.description,
+      goals: editProject.goals.value ?? projectStore.project.data.spec.goals,
+      name: editProject.name.value ?? projectStore.project.data.metadata.name,
+      source: editProject.source.value ?? projectStore.project.data.spec.source
+    }
+    const data = {
+      ...projectStore.project.data,
+      metadata: {
+        ...projectStore.project.data.metadata,
+        labels: objectLabels,
+        name: projectData.name
+      },
+      spec: {
+        ...projectStore.project.data.spec,
+        description: projectData.description,
+        goals: projectData.goals,
+        source: projectData.source
+      }
+    }
+
+    setVisibleChipsMaxLength(1)
+    editProjectLabels(
+      match.params.projectName,
+      { ...data },
+      objectLabels
+    ).then(() => fetchProject(match.params.projectName))
+  }
+
+  const projectLabels = useMemo(
+    () =>
+      projectStore.project.data?.metadata.labels
+        ? parseKeyValues(projectStore.project.data.metadata.labels || {})
+        : [],
+    [projectStore.project.data]
+  )
+
   return (
     <ProjectView
       artifactKind={artifactKind}
@@ -204,20 +318,24 @@ const Project = ({
       fetchProjectModels={fetchProjectModels}
       fetchProjectScheduledJobs={fetchProjectScheduledJobs}
       fetchProjectWorkflows={fetchProjectWorkflows}
+      handleAddProjectLabel={handleAddProjectLabel}
       handleEditProject={handleEditProject}
       handleLaunchIDE={handleLaunchIDE}
       handleOnChangeProject={handleOnChangeProject}
       handleOnKeyDown={handleOnKeyDown}
+      handleUpdateProjectLabels={handleUpdateProjectLabels}
       history={history}
       isPopupDialogOpen={isPopupDialogOpen}
       launchIDEOptions={launchIDEOptions}
       links={links}
       match={match}
-      projectStore={projectStore}
       nuclioStore={nuclioStore}
+      projectLabels={projectLabels}
+      projectStore={projectStore}
       ref={inputRef}
       setIsPopupDialogOpen={setIsPopupDialogOpen}
       statusClassName={statusClassName}
+      visibleChipsMaxLength={visibleChipsMaxLength}
     />
   )
 }
