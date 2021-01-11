@@ -91,7 +91,7 @@ const JobsTableRow = ({
                       <TableCell
                         data={
                           index === 0 && !isGroupedByWorkflow
-                            ? job.startTime
+                            ? { class: 'jobs_medium' }
                             : cellContentObj
                         }
                         item={currentItem}
