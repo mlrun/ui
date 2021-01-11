@@ -79,7 +79,6 @@ const ProjectView = React.forwardRef(
                   <div
                     data-testid="project-name"
                     className="general-info__name"
-                    onClick={() => handleEditProject('name')}
                   >
                     {editProject.name.isEdit ? (
                       <Input
