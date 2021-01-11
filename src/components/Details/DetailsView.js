@@ -52,7 +52,8 @@ const DetailsView = ({
   pageData,
   selectedItem,
   setIteration,
-  setIterationOptions
+  setIterationOptions,
+  infoContent
 }) => {
   return (
     <div className="table__item">
@@ -131,6 +132,7 @@ const DetailsView = ({
       </ul>
       {match.params.tab?.toUpperCase() === DETAILS_INFO_TAB && (
         <DetailsInfo
+          content={infoContent}
           match={match}
           selectedItem={selectedItem}
           pageData={pageData}
