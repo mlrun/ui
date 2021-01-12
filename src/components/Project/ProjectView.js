@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { isEmpty } from 'lodash'
+import { groupByUniqName } from '../../utils/groupByUniqName'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Input from '../../common/Input/Input'
@@ -296,21 +297,30 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="main-info__statistics-section">
                 <ProjectArtifacts
-                  artifacts={projectStore.project.models}
+                  artifacts={groupByUniqName(
+                    projectStore.project.models,
+                    'db_key'
+                  )}
                   fetchArtifacts={fetchProjectModels}
                   link={`/projects/${match.params.projectName}/models`}
                   match={match}
                   title="Models"
                 />
                 <ProjectArtifacts
-                  artifacts={projectStore.project.dataSets}
+                  artifacts={groupByUniqName(
+                    projectStore.project.dataSets,
+                    'db_key'
+                  )}
                   fetchArtifacts={fetchProjectDataSets}
                   link={`/projects/${match.params.projectName}/feature-store`}
                   match={match}
                   title="Features"
                 />
                 <ProjectArtifacts
-                  artifacts={projectStore.project.files}
+                  artifacts={groupByUniqName(
+                    projectStore.project.files,
+                    'db_key'
+                  )}
                   fetchArtifacts={fetchProjectFiles}
                   link={`/projects/${match.params.projectName}/files`}
                   match={match}

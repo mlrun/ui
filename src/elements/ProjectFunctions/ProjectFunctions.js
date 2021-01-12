@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { lowerCase, upperFirst } from 'lodash'
 
+import { groupByUniqName } from '../../utils/groupByUniqName'
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
 const ProjectFunctions = ({
@@ -20,14 +21,19 @@ const ProjectFunctions = ({
   }, [fetchApiGateways, match.params.projectName])
 
   const functions = useMemo(() => {
-    const functionsRunning = functionsStore.currentProjectFunctions.reduce(
+    const grouppedFunctionsRunning = groupByUniqName(
+      functionsStore.currentProjectFunctions,
+      'metadata.name'
+    )
+
+    const functionsRunning = grouppedFunctionsRunning.reduce(
       (prev, curr) =>
         !curr.spec.disable && curr.status.state === 'ready'
           ? (prev += 1)
           : prev,
       0
     )
-    const functionsFailed = functionsStore.currentProjectFunctions.reduce(
+    const functionsFailed = grouppedFunctionsRunning.reduce(
       (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
       0
     )
