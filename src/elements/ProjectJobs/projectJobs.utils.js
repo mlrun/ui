@@ -8,11 +8,11 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
   let workflowsRunning = 0
 
   if (jobs.data) {
-    jobsRunning = groupByUniqName(jobs.data, 'metadata').reduce(
+    jobsRunning = groupByUniqName(jobs.data, 'metadata.name').reduce(
       (prev, curr) => (curr.status.state === 'running' ? (prev += 1) : prev),
       0
     )
-    jobsFailed = groupByUniqName(jobs.data, 'metadata').reduce(
+    jobsFailed = groupByUniqName(jobs.data, 'metadata.name').reduce(
       (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
       0
     )
@@ -45,10 +45,11 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
     scheduled: {
       value: scheduledJobs.error
         ? 'N/A'
-        : groupByUniqName(scheduledJobs.data).length,
+        : groupByUniqName(scheduledJobs.data, 'name').length,
       label: 'Scheduled',
       className:
-        scheduledJobs.error || groupByUniqName(scheduledJobs.data).length === 0
+        scheduledJobs.error ||
+        groupByUniqName(scheduledJobs.data, 'name').length === 0
           ? 'default'
           : 'scheduled',
       link: `/projects/${match.params.projectName}/jobs/schedule`

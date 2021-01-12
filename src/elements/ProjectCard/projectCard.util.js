@@ -20,7 +20,10 @@ export const generateProjectStatistic = (
   runningJobs,
   runningJobsLoading
 ) => {
-  const grouppedNuclioFunctions = groupByUniqName(nuclioFunctions, 'metadata')
+  const grouppedNuclioFunctions = groupByUniqName(
+    nuclioFunctions,
+    'metadata.name'
+  )
   const runningNuclioFunctions = Object.values(grouppedNuclioFunctions).reduce(
     (prev, curr) =>
       curr.status.state === 'ready' && !curr.spec.disable ? (prev += 1) : prev,
@@ -34,7 +37,7 @@ export const generateProjectStatistic = (
   return {
     runningJobs: {
       className:
-        groupByUniqName(runningJobs, 'metadata').length +
+        groupByUniqName(runningJobs, 'metadata.name').length +
           runningNuclioFunctions >
           0 &&
         !fetchRunningJobsFailure &&
@@ -47,7 +50,7 @@ export const generateProjectStatistic = (
       value:
         fetchRunningJobsFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
-          : groupByUniqName(runningJobs, 'metadata').length +
+          : groupByUniqName(runningJobs, 'metadata.name').length +
             runningNuclioFunctions
     },
     failedJobs: {
@@ -64,7 +67,7 @@ export const generateProjectStatistic = (
       value:
         fetchFailedJobsFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
-          : groupByUniqName(failedJobs, 'metadata').length +
+          : groupByUniqName(failedJobs, 'metadata.name').length +
             failedNuclioFunctions
     },
     models: {
@@ -73,7 +76,7 @@ export const generateProjectStatistic = (
       loading: modelsLoading,
       value: fetchModelsFailure
         ? 'N/A'
-        : groupByUniqName(models, 'producer').length
+        : groupByUniqName(models, 'db_key').length
     },
     features: {
       className: 'default',
@@ -81,7 +84,7 @@ export const generateProjectStatistic = (
       loading: featuresLoading,
       value: fetchFeaturesFailure
         ? 'N/A'
-        : groupByUniqName(features, 'producer').length
+        : groupByUniqName(features, 'db_key').length
     },
     functions: {
       className: 'default',
@@ -89,7 +92,7 @@ export const generateProjectStatistic = (
       loading: functionsLoading,
       value: fetchFunctionsFailure
         ? 'N/A'
-        : groupByUniqName(functions, 'metadata').length
+        : groupByUniqName(functions, 'metadata.name').length
     }
   }
 }

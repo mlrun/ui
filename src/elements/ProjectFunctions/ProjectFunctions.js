@@ -23,7 +23,7 @@ const ProjectFunctions = ({
   const functions = useMemo(() => {
     const grouppedFunctionsRunning = groupByUniqName(
       functionsStore.currentProjectFunctions,
-      'metadata'
+      'metadata.name'
     )
 
     const functionsRunning = grouppedFunctionsRunning.reduce(

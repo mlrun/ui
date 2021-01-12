@@ -205,7 +205,7 @@ const ProjectView = React.forwardRef(
                 <ProjectArtifacts
                   artifacts={groupByUniqName(
                     projectStore.project.models,
-                    'producer'
+                    'db_key'
                   )}
                   fetchArtifacts={fetchProjectModels}
                   link={`/projects/${match.params.projectName}/models`}
@@ -215,7 +215,7 @@ const ProjectView = React.forwardRef(
                 <ProjectArtifacts
                   artifacts={groupByUniqName(
                     projectStore.project.dataSets,
-                    'producer'
+                    'db_key'
                   )}
                   fetchArtifacts={fetchProjectDataSets}
                   link={`/projects/${match.params.projectName}/feature-store`}
@@ -225,7 +225,7 @@ const ProjectView = React.forwardRef(
                 <ProjectArtifacts
                   artifacts={groupByUniqName(
                     projectStore.project.files,
-                    'producer'
+                    'db_key'
                   )}
                   fetchArtifacts={fetchProjectFiles}
                   link={`/projects/${match.params.projectName}/files`}
