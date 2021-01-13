@@ -12,7 +12,12 @@ import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
-import { S3_INPUT_PATH_TYPE } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import {
+  AZURE_STORAGE_INPUT_PATH_TYPE,
+  GOOGLE_STORAGE_INPUT_PATH_TYPE,
+  S3_INPUT_PATH_TYPE,
+  V3IO_INPUT_PATH_TYPE
+} from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
@@ -27,6 +32,8 @@ export const JobsPanelDataInputsTable = ({
   match,
   panelState
 }) => {
+  const pathType = inputsState.newInput.path.pathType
+
   return (
     <JobsPanelTable
       addNewItem={inputsState.addNewInput}
@@ -65,7 +72,10 @@ export const JobsPanelDataInputsTable = ({
               inputPlaceholder={inputsState.pathPlaceholder}
               matches={comboboxMatchesList}
               inputDefaultValue={
-                inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE &&
+                (pathType !== S3_INPUT_PATH_TYPE ||
+                  pathType !== V3IO_INPUT_PATH_TYPE ||
+                  pathType !== GOOGLE_STORAGE_INPUT_PATH_TYPE ||
+                  pathType !== AZURE_STORAGE_INPUT_PATH_TYPE) &&
                 inputsState.newInput.path.project.length === 0
                   ? inputsState.newInputDefaultPathProject
                   : ''
@@ -77,7 +87,7 @@ export const JobsPanelDataInputsTable = ({
               selectOnChange={path => {
                 handlePathTypeChange(path)
               }}
-              selectPlaceholder="Path Type"
+              selectPlaceholder="Path Scheme"
             />
           </div>
           <button

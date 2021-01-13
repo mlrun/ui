@@ -16,7 +16,10 @@ import {
   handleEdit,
   handleInputPathChange,
   handleInputPathTypeChange,
-  S3_INPUT_PATH_TYPE
+  AZURE_STORAGE_INPUT_PATH_TYPE,
+  GOOGLE_STORAGE_INPUT_PATH_TYPE,
+  S3_INPUT_PATH_TYPE,
+  V3IO_INPUT_PATH_TYPE
 } from './jobsPanelDataInputs.util'
 import artifactsAction from '../../actions/artifacts'
 
@@ -33,9 +36,15 @@ const JobsPanelDataInputs = ({
     jobsPanelDataInputsReducer,
     initialState
   )
+  const pathType = inputsState.newInput.path.pathType
 
   useEffect(() => {
-    if (inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE) {
+    if (
+      pathType !== AZURE_STORAGE_INPUT_PATH_TYPE ||
+      pathType !== GOOGLE_STORAGE_INPUT_PATH_TYPE ||
+      pathType !== S3_INPUT_PATH_TYPE ||
+      pathType !== V3IO_INPUT_PATH_TYPE
+    ) {
       if (
         inputsState.projects.length === 0 ||
         inputsState.newInput.path.project.length === 0
@@ -55,7 +64,7 @@ const JobsPanelDataInputs = ({
       }
     }
   }, [
-    inputsState.newInput.path.pathType,
+    pathType,
     inputsState.newInput.path.project.length,
     inputsState.projects.length,
     match.params.projectName,
@@ -95,7 +104,12 @@ const JobsPanelDataInputs = ({
   ])
 
   useEffect(() => {
-    if (inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE) {
+    if (
+      pathType !== AZURE_STORAGE_INPUT_PATH_TYPE ||
+      pathType !== GOOGLE_STORAGE_INPUT_PATH_TYPE ||
+      pathType !== S3_INPUT_PATH_TYPE ||
+      pathType !== V3IO_INPUT_PATH_TYPE
+    ) {
       let matches = []
 
       if (inputsState.newInputProjectPathEntered) {
@@ -125,7 +139,8 @@ const JobsPanelDataInputs = ({
     inputsState.newInput.path,
     inputsState.newInputProjectPathEntered,
     inputsState.projects,
-    match.params.projectName
+    match.params.projectName,
+    pathType
   ])
 
   const handleAddNewItem = () => {
@@ -193,7 +208,10 @@ const JobsPanelDataInputs = ({
   return (
     <JobsPanelDataInputsView
       comboboxMatchesList={
-        inputsState.newInput.path.pathType === S3_INPUT_PATH_TYPE ||
+        pathType === AZURE_STORAGE_INPUT_PATH_TYPE ||
+        pathType === GOOGLE_STORAGE_INPUT_PATH_TYPE ||
+        pathType === S3_INPUT_PATH_TYPE ||
+        pathType === V3IO_INPUT_PATH_TYPE ||
         inputsState.newInputArtifactPathEntered
           ? []
           : inputsState.comboboxMatches

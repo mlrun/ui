@@ -51,7 +51,10 @@ export const handleAddItem = (
         data: {
           name: newItemObj.name,
           path:
-            newItemObj.path.pathType === S3_INPUT_PATH_TYPE
+            newItemObj.path.pathType === AZURE_STORAGE_INPUT_PATH_TYPE ||
+            newItemObj.path.pathType === GOOGLE_STORAGE_INPUT_PATH_TYPE ||
+            newItemObj.path.pathType === S3_INPUT_PATH_TYPE ||
+            newItemObj.path.pathType === V3IO_INPUT_PATH_TYPE
               ? `${newItemObj.path.pathType}${newInputUrlPath}`
               : `${newItemObj.path.pathType}${newItemObj.path.project}/${newItemObj.path.artifact}`
         }
@@ -67,7 +70,10 @@ export const handleAddItem = (
         data: {
           name: newItemObj.name,
           path:
-            newItemObj.path.pathType === S3_INPUT_PATH_TYPE
+            newItemObj.path.pathType === AZURE_STORAGE_INPUT_PATH_TYPE ||
+            newItemObj.path.pathType === GOOGLE_STORAGE_INPUT_PATH_TYPE ||
+            newItemObj.path.pathType === S3_INPUT_PATH_TYPE ||
+            newItemObj.path.pathType === V3IO_INPUT_PATH_TYPE
               ? newItemObj.path.pathType + newInputUrlPath
               : `${newItemObj.path.pathType}${newItemObj.path.project}/${newItemObj.path.artifact}`
         }
@@ -88,7 +94,10 @@ export const handleAddItem = (
   setNewJobData({
     ...newJobData,
     [newItemObj.name]:
-      newItemObj.path.pathType === S3_INPUT_PATH_TYPE
+      newItemObj.path.pathType === AZURE_STORAGE_INPUT_PATH_TYPE ||
+      newItemObj.path.pathType === GOOGLE_STORAGE_INPUT_PATH_TYPE ||
+      newItemObj.path.pathType === S3_INPUT_PATH_TYPE ||
+      newItemObj.path.pathType === V3IO_INPUT_PATH_TYPE
         ? newItemObj.path.pathType + newInputUrlPath
         : `${newItemObj.path.pathType}${newItemObj.path.project}/${newItemObj.path.artifact}`
   })
@@ -170,17 +179,45 @@ export const handleDelete = (
 export const comboboxSelectList = [
   {
     className: 'path-type-store',
-    label: 'store',
+    label: 'MLRun store',
     id: 'store://'
   },
   {
+    className: 'path-type-v3io',
+    label: 'V3IO',
+    id: 'v3io://'
+  },
+  {
     className: 'path-type-s3',
-    label: 'URL',
+    label: 'S3',
     id: 's3://'
+  },
+  {
+    className: 'path-type-http',
+    label: 'HTTP',
+    id: 'http://'
+  },
+  {
+    className: 'path-type-https',
+    label: 'HTTPS',
+    id: 'https://'
+  },
+  {
+    className: 'path-type-az',
+    label: 'Azure storage',
+    id: 'az://'
+  },
+  {
+    className: 'path-type-gs',
+    label: 'Google storage',
+    id: 'gs://'
   }
 ]
 
+export const AZURE_STORAGE_INPUT_PATH_TYPE = 'az://'
+export const GOOGLE_STORAGE_INPUT_PATH_TYPE = 'gs://'
 export const S3_INPUT_PATH_TYPE = 's3://'
+export const V3IO_INPUT_PATH_TYPE = 'v3io://'
 
 export const handleInputPathTypeChange = (
   inputsDispatch,
@@ -191,14 +228,16 @@ export const handleInputPathTypeChange = (
   currentProject
 ) => {
   if (
-    newInputDefaultPathProject.length > 0 &&
-    pathType === S3_INPUT_PATH_TYPE
+    pathType === AZURE_STORAGE_INPUT_PATH_TYPE ||
+    pathType === GOOGLE_STORAGE_INPUT_PATH_TYPE ||
+    pathType === S3_INPUT_PATH_TYPE ||
+    pathType === V3IO_INPUT_PATH_TYPE
   ) {
     inputsDispatch({
       type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
       payload: ''
     })
-  } else if (newInputDefaultPathProject.length === 0) {
+  } else {
     inputsDispatch({
       type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
       payload: `${currentProject}/`
@@ -208,8 +247,13 @@ export const handleInputPathTypeChange = (
   inputsDispatch({
     type: inputsActions.SET_PATH_PLACEHOLDER,
     payload:
-      pathType === S3_INPUT_PATH_TYPE && pathPlaceholder.length === 0
+      pathType === S3_INPUT_PATH_TYPE ||
+      pathType === GOOGLE_STORAGE_INPUT_PATH_TYPE
         ? 'bucket/path'
+        : pathType === AZURE_STORAGE_INPUT_PATH_TYPE
+        ? 'container/path'
+        : pathType === V3IO_INPUT_PATH_TYPE
+        ? '/container-name/file'
         : ''
   })
   inputsDispatch({
@@ -227,7 +271,14 @@ export const handleInputPathTypeChange = (
 }
 
 export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
-  if (inputsState.newInput.path.pathType === S3_INPUT_PATH_TYPE) {
+  const pathType = inputsState.newInput.path.pathType
+
+  if (
+    pathType === AZURE_STORAGE_INPUT_PATH_TYPE ||
+    pathType === GOOGLE_STORAGE_INPUT_PATH_TYPE ||
+    pathType === S3_INPUT_PATH_TYPE ||
+    pathType === V3IO_INPUT_PATH_TYPE
+  ) {
     return inputsDispatch({
       type: inputsActions.SET_NEW_INPUT_URL_PATH,
       payload: path
