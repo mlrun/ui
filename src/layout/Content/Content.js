@@ -215,7 +215,7 @@ const Content = ({
   return (
     <>
       <div className="content__header">
-        <Breadcrumbs match={match} onClick={handleCancel} />
+        <Breadcrumbs match={match} />
         <PageActionsMenu
           createJob={pageData.page === JOBS_PAGE}
           registerDialog={
@@ -296,6 +296,7 @@ const Content = ({
 Content.defaultProps = {
   activeScreenTab: '',
   groupFilter: null,
+  handleSelectItem: () => {},
   selectedItem: {},
   setGroupFilter: () => {},
   setLoading: () => {},
@@ -310,7 +311,7 @@ Content.propTypes = {
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
-  handleSelectItem: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,

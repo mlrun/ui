@@ -245,7 +245,6 @@ const FeatureStore = ({
         groupFilter={groupFilter}
         handleArtifactFilterTree={handleDataSetTreeFilterChange}
         handleCancel={() => setSelectedItem({})}
-        handleSelectItem={item => setSelectedItem({ item })}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={() => setIsPopupDialogOpen(true)}
