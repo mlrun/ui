@@ -22,6 +22,7 @@ import {
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const TableView = ({
+  applyDetailsChanges,
   content,
   groupFilter,
   groupLatestItem,
@@ -184,6 +185,7 @@ const TableView = ({
       {!isEmpty(selectedItem) && (
         <Details
           actionsMenu={actionsMenu}
+          applyDetailsChanges={applyDetailsChanges}
           detailsMenu={pageData.detailsMenu}
           handleCancel={handleCancel}
           handleSelectItem={handleSelectItem}
@@ -197,10 +199,12 @@ const TableView = ({
 }
 
 TableView.defaultProps = {
+  applyDetailsChanges: () => {},
   groupLatestJob: {}
 }
 
 TableView.propTypes = {
+  applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,

@@ -47,7 +47,8 @@ const Content = ({
   showUntagged,
   stateFilter,
   toggleShowUntagged,
-  yamlContent
+  yamlContent,
+  applyDetailsChanges
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
   const [expandedItems, setExpandedItems] = useState([])
@@ -283,6 +284,7 @@ const Content = ({
               selectedItem={selectedItem}
               setLoading={setLoading}
               toggleConvertToYaml={toggleConvertToYaml}
+              applyDetailsChanges={applyDetailsChanges}
             />
           ) : loading ? null : (
             <NoData />

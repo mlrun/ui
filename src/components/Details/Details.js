@@ -36,6 +36,7 @@ import './details.scss'
 
 const Details = ({
   actionsMenu,
+  applyDetailsChanges,
   detailsMenu,
   handleCancel,
   match,
@@ -156,15 +157,23 @@ const Details = ({
   useEffect(() => {
     if (detailsState.changes.counter > 0 && !unblockRootChange.current) {
       blockRootChange()
-    } else if (
-      detailsState.changes.counter === 0 &&
-      unblockRootChange.current
-    ) {
-      unblockRootChange.current()
     }
+    // else if (
+    //   detailsState.changes.counter === 0 &&
+    //   unblockRootChange.current
+    // ) {
+    //   unblockRootChange.current()
+    // }
   }, [blockRootChange, detailsState.changes.counter, history])
 
-  const applyChanges = () => {}
+  const applyChanges = () => {
+    applyDetailsChanges(detailsState.changes).then(() => {
+      detailsDispatch({
+        type: detailsActions.RESET_CHANGES
+      })
+      unblockRootChange.current()
+    })
+  }
 
   const cancelChanges = () => {
     if (detailsState.changes.counter > 0) {
@@ -222,11 +231,13 @@ const Details = ({
 }
 
 Details.defaultProps = {
+  applyDetailsChanges: () => {},
   item: {}
 }
 
 Details.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  applyDetailsChanges: PropTypes.func,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,

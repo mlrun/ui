@@ -131,7 +131,13 @@ const DetailsView = ({
           }/${pageData.page.toLowerCase()}${
             match.params.pageTab ? `/${match.params.pageTab}` : ''
           }`}
-          onClick={handleCancel}
+          onClick={() => {
+            if (detailsState.changes.counter > 0) {
+              handleShowWarning(true)
+            } else {
+              handleCancel()
+            }
+          }}
         >
           <Close />
         </Link>

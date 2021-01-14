@@ -18,6 +18,7 @@ import {
   DETAILS_METADATA_TAB,
   DETAILS_STATISTICS_TAB
 } from '../../constants'
+import notificationActions from '../../actions/notification'
 
 const FeatureStore = ({
   artifactsStore,
@@ -28,7 +29,9 @@ const FeatureStore = ({
   match,
   removeDataSets,
   removeFeatureSets,
-  setArtifactFilter
+  setArtifactFilter,
+  setNotification,
+  updatedFeatureSetData
 }) => {
   const [content, setContent] = useState([])
   const [groupFilter, setGroupFilter] = useState('')
@@ -237,10 +240,57 @@ const FeatureStore = ({
     ]
   )
 
+  const applyDetailsChanges = changes => {
+    const data = {
+      spec: {
+        ...changes.data
+      }
+    }
+
+    if (data.spec.labels) {
+      const objectLabels = {}
+
+      data.spec.labels.forEach(label => {
+        const splitedLabel = label.split(':')
+
+        objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
+      })
+
+      data.spec.labels = { ...objectLabels }
+    }
+
+    return updatedFeatureSetData(
+      match.params.projectName,
+      match.params.name,
+      selectedItem.item.tag,
+      data
+    )
+      .then(response => {
+        return fetchData({ project: match.params.projectName }).then(() => {
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Updated successfully'
+          })
+
+          return response
+        })
+      })
+      .catch(error => {
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Fail to updated feature set',
+          retry: applyDetailsChanges
+        })
+      })
+  }
+
   return (
     <>
       {artifactsStore.loading && <Loader />}
       <Content
+        applyDetailsChanges={applyDetailsChanges}
         content={content}
         groupFilter={groupFilter}
         handleArtifactFilterTree={handleDataSetTreeFilterChange}
@@ -272,5 +322,6 @@ FeatureStore.propTypes = {
 }
 
 export default connect(artifactsStore => artifactsStore, {
-  ...artifactsAction
+  ...artifactsAction,
+  ...notificationActions
 })(FeatureStore)

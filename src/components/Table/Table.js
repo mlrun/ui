@@ -16,6 +16,7 @@ import './table.scss'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const Table = ({
+  applyDetailsChanges,
   content,
   groupFilter,
   groupedByName,
@@ -125,6 +126,7 @@ const Table = ({
         tableContent={tableContent.content}
         toggleConvertToYaml={toggleConvertToYaml}
         workflows={workflows}
+        applyDetailsChanges={applyDetailsChanges}
       />
       <Notification />
       {previewArtifact.isPreview && (
@@ -135,6 +137,7 @@ const Table = ({
 }
 
 Table.defaultProps = {
+  applyDetailsChanges: () => {},
   groupedByName: {},
   groupFilter: null,
   groupLatestJob: [],
@@ -144,6 +147,7 @@ Table.defaultProps = {
 }
 
 Table.propTypes = {
+  applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   groupFilter: PropTypes.string,
   groupedByName: PropTypes.shape({}),

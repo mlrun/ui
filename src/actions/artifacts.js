@@ -220,7 +220,15 @@ const artifactsAction = {
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
-  })
+  }),
+  updatedFeatureSetData: (projectName, featureSet, uid, data) => () => {
+    return artifactsApi.updatedFeatureSetData(
+      projectName,
+      featureSet,
+      uid,
+      data
+    )
+  }
 }
 
 export default artifactsAction
