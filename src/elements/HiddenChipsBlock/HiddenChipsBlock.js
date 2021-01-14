@@ -7,7 +7,17 @@ import Chip from '../../common/Chip/Chip'
 
 import './hiddenChipsBlock.scss'
 
-const HiddenChipsBlock = ({ className, chips }) => {
+const HiddenChipsBlock = ({
+  chipIndex,
+  chips,
+  className,
+  editChip,
+  editConfig,
+  handleIsEdit,
+  isEditMode,
+  setEditConfig,
+  removeChip
+}) => {
   const [isTop, setIsTop] = useState(false)
   const hiddenRef = useRef()
   const offset = 28
@@ -33,13 +43,23 @@ const HiddenChipsBlock = ({ className, chips }) => {
       ref={hiddenRef}
       className={`chip-block-hidden ${!isTop ? 'top' : 'bottom'}`}
     >
-      {chips?.map(element => {
+      {chips?.map((element, index) => {
         return (
           <Tooltip
             key={element.value}
             template={<TextTooltipTemplate text={element.value} />}
           >
-            <Chip className={className} value={element.value} hiddenChips />
+            <Chip
+              chipIndex={index + chipIndex}
+              className={className}
+              editChip={editChip}
+              editConfig={editConfig}
+              handleIsEdit={handleIsEdit}
+              isEditMode={isEditMode}
+              removeChip={removeChip}
+              setEditConfig={setEditConfig}
+              value={element.value}
+            />
           </Tooltip>
         )
       })}
@@ -47,9 +67,27 @@ const HiddenChipsBlock = ({ className, chips }) => {
   )
 }
 
+HiddenChipsBlock.defaultProps = {
+  chips: [],
+  chipIndex: 0,
+  editChip: () => {},
+  editConfig: {},
+  handleIsEdit: () => {},
+  isEditMode: false,
+  removeChip: () => {},
+  setEditConfig: () => {}
+}
+
 HiddenChipsBlock.propTypes = {
   className: PropTypes.string.isRequired,
-  chips: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  chips: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  chipIndex: PropTypes.number,
+  editChip: PropTypes.func,
+  editConfig: PropTypes.shape({}),
+  handleIsEdit: PropTypes.func,
+  isEditMode: PropTypes.bool,
+  removeChip: PropTypes.func,
+  setEditConfig: PropTypes.func
 }
 
 export default HiddenChipsBlock

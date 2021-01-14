@@ -87,10 +87,28 @@ const JobsPanelTitleView = ({
                   <div className="job-labels__text">Labels</div>
                   <div className="job-labels-wrapper">
                     <ChipCell
+                      addChip={(label, labels) =>
+                        panelDispatch({
+                          type: panelActions.SET_JOB_LABELS,
+                          payload: [...labels, label]
+                        })
+                      }
                       className="job-labels__item"
                       dispatch={panelDispatch}
+                      editChip={chips =>
+                        panelDispatch({
+                          type: panelActions.EDIT_JOB_LABEL,
+                          payload: chips
+                        })
+                      }
                       elements={currentFunctionInfo.labels}
                       isEditMode={true}
+                      removeChip={chips =>
+                        panelDispatch({
+                          type: panelActions.REMOVE_JOB_LABEL,
+                          payload: chips
+                        })
+                      }
                     />
                   </div>
                 </div>

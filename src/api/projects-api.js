@@ -15,6 +15,8 @@ export default {
         }
       }
     ),
+  editProjectLabels: (project, data) =>
+    mainHttpClient.put(`/projects/${project}`, data),
   getJobsAndWorkflows: project =>
     mainHttpClient.get(`/runs?project=${project}`),
   getProject: project => mainHttpClient.get(`/projects/${project}`),

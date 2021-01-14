@@ -1,5 +1,6 @@
 import projectsApi from '../api/projects-api'
 import {
+  ADD_PROJECT_LABEL,
   CHANGE_PROJECT_STATE_BEGIN,
   CHANGE_PROJECT_STATE_FAILURE,
   CHANGE_PROJECT_STATE_SUCCESS,
@@ -46,10 +47,15 @@ import {
   REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_DATA,
   SET_NEW_PROJECT_DESCRIPTION,
-  SET_NEW_PROJECT_NAME
+  SET_NEW_PROJECT_NAME,
+  SET_PROJECT_LABELS
 } from '../constants'
 
 const projectsAction = {
+  addProjectLabel: (label, labels) => ({
+    type: ADD_PROJECT_LABEL,
+    payload: { ...labels, ...label }
+  }),
   changeProjectState: (project, status) => dispatch => {
     dispatch(projectsAction.changeProjectStateBegin())
 
@@ -103,6 +109,11 @@ const projectsAction = {
   deleteProjectSuccess: () => ({
     type: DELETE_PROJECT_SUCCESS
   }),
+  editProjectLabels: (projectName, data, labels) => dispatch => {
+    dispatch(projectsAction.setProjectLabels(labels))
+
+    return projectsApi.editProjectLabels(projectName, { ...data })
+  },
   fetchProject: project => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
@@ -395,7 +406,11 @@ const projectsAction = {
     type: SET_NEW_PROJECT_DESCRIPTION,
     payload: description
   }),
-  setNewProjectName: name => ({ type: SET_NEW_PROJECT_NAME, payload: name })
+  setNewProjectName: name => ({ type: SET_NEW_PROJECT_NAME, payload: name }),
+  setProjectLabels: labels => ({
+    type: SET_PROJECT_LABELS,
+    payload: { ...labels }
+  })
 }
 
 export default projectsAction
