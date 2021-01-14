@@ -23,9 +23,11 @@ const ProjectsView = ({
   archiveProject,
   closeNewProjectPopUp,
   closeArchiveProjectPopUp,
+  closeDeleteNonEmtpyProjectPopUp,
   convertedYaml,
   convertToYaml,
   createProject,
+  deleteNonEmptyProject,
   fetchProjectDataSets,
   fetchProjectFailedJobs,
   fetchProjectFunctions,
@@ -34,6 +36,7 @@ const ProjectsView = ({
   filteredProjects,
   handleArchiveProject,
   handleCreateProject,
+  handleDeleteNonEmptyProject,
   isEmptyValue,
   match,
   nuclioStore,
@@ -98,10 +101,7 @@ const ProjectsView = ({
             >
               Cancel
             </button>
-            <button
-              className="btn_primary btn_success"
-              onClick={handleCreateProject}
-            >
+            <button className="btn_primary" onClick={handleCreateProject}>
               Create
             </button>
           </div>
@@ -124,11 +124,33 @@ const ProjectsView = ({
             >
               Cancel
             </button>
-            <button
-              className="btn_primary btn_success"
-              onClick={handleArchiveProject}
-            >
+            <button className="btn_primary" onClick={handleArchiveProject}>
               Archive
+            </button>
+          </div>
+        </PopUpDialog>
+      )}
+      {deleteNonEmptyProject && (
+        <PopUpDialog
+          headerText={`Delete project "${deleteNonEmptyProject?.metadata?.name}"?`}
+          closePopUp={closeDeleteNonEmtpyProjectPopUp}
+        >
+          <div>
+            The project is not empty. Deleting it will also delete all of its
+            resources, such as jobs, artifacts, and features.
+          </div>
+          <div className="pop-up-dialog__footer-container">
+            <button
+              className="btn_default pop-up-dialog__btn_cancel"
+              onClick={closeDeleteNonEmtpyProjectPopUp}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn_primary"
+              onClick={handleDeleteNonEmptyProject}
+            >
+              Delete
             </button>
           </div>
         </PopUpDialog>
@@ -195,10 +217,14 @@ ProjectsView.propTypes = {
     PropTypes.shape({}, PropTypes.instanceOf(null))
   ]),
   closeArchiveProjectPopUp: PropTypes.func.isRequired,
+  closeDeleteNonEmtpyProjectPopUp: PropTypes.func.isRequired,
   closeNewProjectPopUp: PropTypes.func.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   convertToYaml: PropTypes.func.isRequired,
   createProject: PropTypes.bool.isRequired,
+  deleteNonEmptyProject: PropTypes.oneOfType([
+    PropTypes.shape({}, PropTypes.instanceOf(null))
+  ]),
   fetchProjectDataSets: PropTypes.func.isRequired,
   fetchProjectFailedJobs: PropTypes.func.isRequired,
   fetchProjectFunctions: PropTypes.func.isRequired,
@@ -207,6 +233,7 @@ ProjectsView.propTypes = {
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleArchiveProject: PropTypes.func.isRequired,
   handleCreateProject: PropTypes.func.isRequired,
+  handleDeleteNonEmptyProject: PropTypes.func.isRequired,
   isEmptyValue: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   nuclioStore: PropTypes.shape({}).isRequired,

@@ -6,7 +6,15 @@ export default {
       spec: { desired_state: state }
     }),
   createProject: postData => mainHttpClient.post('/projects', postData),
-  deleteProject: project => mainHttpClient.delete(`/projects/${project}`),
+  deleteProject: (project, deleteNonEmpty) =>
+    mainHttpClient.delete(
+      `/projects/${project}`,
+      deleteNonEmpty && {
+        headers: {
+          'x-mlrun-deletion-strategy': 'cascade'
+        }
+      }
+    ),
   getJobsAndWorkflows: project =>
     mainHttpClient.get(`/runs?project=${project}`),
   getProject: project => mainHttpClient.get(`/projects/${project}`),
