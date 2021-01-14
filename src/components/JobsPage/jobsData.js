@@ -100,7 +100,10 @@ export const detailsMenu = [
 export const filters = ['period', 'status', 'groupBy', 'labels', 'name']
 export const initialStateFilter = 'all'
 export const initialGroupFilter = 'name'
-export const tabs = ['monitor', 'schedule']
+export const tabs = [
+  { id: 'monitor', label: 'Monitor' },
+  { id: 'schedule', label: 'Schedule' }
+]
 export const generatePageData = (
   scheduled,
   removeScheduledJob,

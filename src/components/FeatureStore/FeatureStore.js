@@ -190,6 +190,10 @@ const FeatureStore = ({
     setPageData(state => {
       const newDetailsMenu = [...detailsMenu]
 
+      if (match.params.pageTab === FEATURE_SETS_TAB) {
+        newDetailsMenu.splice(1, 0, 'transforamations')
+      }
+
       if (selectedItem.item?.schema || selectedItem.item?.entities) {
         newDetailsMenu.push('metadata')
       }
@@ -202,7 +206,10 @@ const FeatureStore = ({
         newDetailsMenu.push('statistics')
       }
 
-      if (selectedItem.item?.extra_data) {
+      if (
+        selectedItem.item?.extra_data ||
+        match.params.pageTab === FEATURE_SETS_TAB
+      ) {
         newDetailsMenu.push('analysis')
       }
 

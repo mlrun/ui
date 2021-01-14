@@ -1,5 +1,6 @@
 import React from 'react'
 
+import FeatureValidator from '../../elements/FeatureValidator/FeatureValidator'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
 
@@ -79,31 +80,6 @@ export const generateMetadata = (selectedItem, primaryKey) => {
         .map(item => ({ ...item, entity: 'entity' }))
         .concat(selectedItem.features)
         .map(item => {
-          const validatorStates = {
-            info: 'Info',
-            warn: 'Warning',
-            fail: 'Fail'
-          }
-          const validatorEntries = Object.entries(selectedItem.validator || [])
-            .filter(key => key[0] !== 'severity' && key[0] !== 'kind')
-            .map(([key, value]) => `${key}=${value}`)
-          const validatorBody = (
-            <div className="body">
-              <Tooltip
-                className="status"
-                template={
-                  <TextTooltipTemplate
-                    text={validatorStates[selectedItem.validator?.severity]}
-                  />
-                }
-              >
-                <i className={selectedItem.validator?.severity} />
-              </Tooltip>
-              {selectedItem.validator?.kind}
-              {validatorEntries.length > 0 && ` (${validatorEntries})`}
-            </div>
-          )
-
           return {
             entityIcon: {
               value: (
@@ -132,7 +108,7 @@ export const generateMetadata = (selectedItem, primaryKey) => {
                 </Tooltip>
               ),
               type: 'icon icon-timestamp-key',
-              visible: !!selectedItem.timestamp_key?.includes(item.name)
+              visible: selectedItem.timestamp_key === item.name
             },
             labelColumnIcon: {
               value: (
@@ -141,7 +117,7 @@ export const generateMetadata = (selectedItem, primaryKey) => {
                 </Tooltip>
               ),
               type: 'icon icon-label-column',
-              visible: !!selectedItem.label_column?.includes(item.name)
+              visible: selectedItem.label_column === item.name
             },
             name: {
               value: item.name,
@@ -154,18 +130,18 @@ export const generateMetadata = (selectedItem, primaryKey) => {
               visible: true
             },
             description: {
-              value: selectedItem.description,
+              value: item.description,
               type: 'text',
               visible: true
             },
             labels: {
-              value: parseKeyValues(selectedItem.labels),
+              value: parseKeyValues(item.labels),
               type: 'chip',
               visible: true,
               className: 'table-body__labels'
             },
             validators: {
-              value: validatorBody,
+              value: <FeatureValidator validator={item.validator} />,
               type: 'html',
               visible: true
             }

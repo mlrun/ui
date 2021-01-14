@@ -141,6 +141,8 @@ const TableCell = ({
         </Tooltip>
       </div>
     )
+  } else if (data.type === 'component') {
+    return <div className={`table-body__cell ${data.class}`}>{data.value}</div>
   } else {
     return (
       <div className={`table-body__cell ${data.class}`}>
