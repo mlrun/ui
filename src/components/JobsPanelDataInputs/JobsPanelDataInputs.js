@@ -16,10 +16,7 @@ import {
   handleEdit,
   handleInputPathChange,
   handleInputPathTypeChange,
-  AZURE_STORAGE_INPUT_PATH_TYPE,
-  GOOGLE_STORAGE_INPUT_PATH_TYPE,
-  S3_INPUT_PATH_TYPE,
-  V3IO_INPUT_PATH_TYPE
+  MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from './jobsPanelDataInputs.util'
 import artifactsAction from '../../actions/artifacts'
 
@@ -36,15 +33,10 @@ const JobsPanelDataInputs = ({
     jobsPanelDataInputsReducer,
     initialState
   )
-  const pathType = inputsState.newInput.path.pathType
+  const pathScheme = inputsState.newInput.path.pathType
 
   useEffect(() => {
-    if (
-      pathType !== AZURE_STORAGE_INPUT_PATH_TYPE ||
-      pathType !== GOOGLE_STORAGE_INPUT_PATH_TYPE ||
-      pathType !== S3_INPUT_PATH_TYPE ||
-      pathType !== V3IO_INPUT_PATH_TYPE
-    ) {
+    if (pathScheme === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
       if (
         inputsState.projects.length === 0 ||
         inputsState.newInput.path.project.length === 0
@@ -64,7 +56,7 @@ const JobsPanelDataInputs = ({
       }
     }
   }, [
-    pathType,
+    pathScheme,
     inputsState.newInput.path.project.length,
     inputsState.projects.length,
     match.params.projectName,
@@ -104,12 +96,7 @@ const JobsPanelDataInputs = ({
   ])
 
   useEffect(() => {
-    if (
-      pathType !== AZURE_STORAGE_INPUT_PATH_TYPE ||
-      pathType !== GOOGLE_STORAGE_INPUT_PATH_TYPE ||
-      pathType !== S3_INPUT_PATH_TYPE ||
-      pathType !== V3IO_INPUT_PATH_TYPE
-    ) {
+    if (pathScheme === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
       let matches = []
 
       if (inputsState.newInputProjectPathEntered) {
@@ -140,7 +127,7 @@ const JobsPanelDataInputs = ({
     inputsState.newInputProjectPathEntered,
     inputsState.projects,
     match.params.projectName,
-    pathType
+    pathScheme
   ])
 
   const handleAddNewItem = () => {
@@ -208,13 +195,9 @@ const JobsPanelDataInputs = ({
   return (
     <JobsPanelDataInputsView
       comboboxMatchesList={
-        pathType === AZURE_STORAGE_INPUT_PATH_TYPE ||
-        pathType === GOOGLE_STORAGE_INPUT_PATH_TYPE ||
-        pathType === S3_INPUT_PATH_TYPE ||
-        pathType === V3IO_INPUT_PATH_TYPE ||
-        inputsState.newInputArtifactPathEntered
-          ? []
-          : inputsState.comboboxMatches
+        pathScheme === MLRUN_STORAGE_INPUT_PATH_SCHEME
+          ? inputsState.comboboxMatches
+          : []
       }
       handleAddNewItem={handleAddNewItem}
       handleDeleteItems={handleDeleteItems}

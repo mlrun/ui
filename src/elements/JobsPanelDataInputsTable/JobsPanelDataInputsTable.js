@@ -12,12 +12,7 @@ import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
-import {
-  AZURE_STORAGE_INPUT_PATH_TYPE,
-  GOOGLE_STORAGE_INPUT_PATH_TYPE,
-  S3_INPUT_PATH_TYPE,
-  V3IO_INPUT_PATH_TYPE
-} from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
@@ -32,7 +27,7 @@ export const JobsPanelDataInputsTable = ({
   match,
   panelState
 }) => {
-  const pathType = inputsState.newInput.path.pathType
+  const pathScheme = inputsState.newInput.path.pathType
 
   return (
     <JobsPanelTable
@@ -72,10 +67,7 @@ export const JobsPanelDataInputsTable = ({
               inputPlaceholder={inputsState.pathPlaceholder}
               matches={comboboxMatchesList}
               inputDefaultValue={
-                (pathType !== S3_INPUT_PATH_TYPE ||
-                  pathType !== V3IO_INPUT_PATH_TYPE ||
-                  pathType !== GOOGLE_STORAGE_INPUT_PATH_TYPE ||
-                  pathType !== AZURE_STORAGE_INPUT_PATH_TYPE) &&
+                pathScheme === MLRUN_STORAGE_INPUT_PATH_SCHEME &&
                 inputsState.newInput.path.project.length === 0
                   ? inputsState.newInputDefaultPathProject
                   : ''
