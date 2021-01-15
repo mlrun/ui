@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useReducer,
-  useCallback,
-  useRef
-} from 'react'
+import React, { useEffect, useReducer, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -49,10 +43,6 @@ const Details = ({
     detailsReducer,
     initialState
   )
-  const [iterationOptions, setIterationOptions] = useState([
-    { label: 'Main', id: '0' }
-  ])
-  const [refreshWasHandled, setRefreshWasHandled] = useState(false)
   const history = useHistory()
   const dispatch = useDispatch()
   let unblockRootChange = useRef()
@@ -96,6 +86,32 @@ const Details = ({
     [detailsState.changes.data]
   )
 
+  const handleAddChip = useCallback(
+    (chip, chips, field) => {
+      detailsDispatch({
+        type: detailsActions.SET_CHANGES_DATA,
+        payload: {
+          ...detailsState.changes.data,
+          [field]: [...chips, ...chip]
+        }
+      })
+    },
+    [detailsState.changes.data]
+  )
+
+  const handleDeleteChip = useCallback(
+    (chips, field) => {
+      detailsDispatch({
+        type: detailsActions.SET_CHANGES_DATA,
+        payload: {
+          ...detailsState.changes.data,
+          [field]: chips
+        }
+      })
+    },
+    [detailsState.changes.data]
+  )
+
   useEffect(() => {
     if (pageData.page === JOBS_PAGE) {
       detailsDispatch({
@@ -124,7 +140,9 @@ const Details = ({
           pageData.page,
           match.params.pageTab,
           selectedItem,
-          handleEditChips
+          handleEditChips,
+          handleAddChip,
+          handleDeleteChip
         )
       })
     } else if (pageData.page === FUNCTIONS_PAGE) {
@@ -141,6 +159,8 @@ const Details = ({
     }
   }, [
     detailsState.changes.counter,
+    handleAddChip,
+    handleDeleteChip,
     handleEditChips,
     handleEditInput,
     match.params.pageTab,
@@ -156,7 +176,10 @@ const Details = ({
       ) {
         cancelRequest('cancel')
         handleShowWarning(true)
-        setRefreshWasHandled(true)
+        detailsDispatch({
+          type: detailsActions.SET_REFRESH_WAS_HANDLED,
+          payload: true
+        })
       }
     })
   }, [cancelRequest, detailsState.changes.counter])
@@ -224,9 +247,12 @@ const Details = ({
 
     history.push(pathname.current)
 
-    if (refreshWasHandled) {
+    if (detailsState.refreshWasHandled) {
       retryRequest({ project: match.params.projectName })
-      setRefreshWasHandled(false)
+      detailsDispatch({
+        type: detailsActions.SET_REFRESH_WAS_HANDLED,
+        payload: false
+      })
     }
   }
 
@@ -237,8 +263,7 @@ const Details = ({
       detailsDispatch,
       selectedItem,
       pageData,
-      handlePreview,
-      setIterationOptions
+      handlePreview
     ),
     [detailsState, handlePreview, match, pageData, selectedItem]
   )
@@ -254,14 +279,11 @@ const Details = ({
       detailsState={detailsState}
       handleCancel={handleCancel}
       handleShowWarning={handleShowWarning}
-      iterationOptions={iterationOptions}
       leavePage={leavePage}
       match={match}
       pageData={pageData}
       ref={detailsRef}
-      refreshWasHandled={refreshWasHandled}
       selectedItem={selectedItem}
-      setRefreshWasHandled={setRefreshWasHandled}
       tabsContent={tabsContent}
     />
   )

@@ -32,7 +32,7 @@ const FeatureStore = ({
   removeFeatureSets,
   setArtifactFilter,
   setNotification,
-  updatedFeatureSetData
+  updateFeatureSetData
 }) => {
   const [content, setContent] = useState([])
   const [groupFilter, setGroupFilter] = useState('')
@@ -281,7 +281,7 @@ const FeatureStore = ({
       data.spec.labels = { ...objectLabels }
     }
 
-    return updatedFeatureSetData(
+    return updateFeatureSetData(
       match.params.projectName,
       match.params.name,
       selectedItem.item.tag,

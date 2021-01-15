@@ -18,27 +18,25 @@ const DetailsInfoItem = React.forwardRef(
       chipsClassName,
       chipsData,
       currentField,
-      currentFieldType,
       editableFieldType,
       func,
       handleFinishEdit,
       info,
-      isEditModeEnabled,
       isFieldInEditMode,
+      item,
       link,
       match,
-      onChange,
       onClick,
       state,
       target_path
     },
     ref
   ) => {
-    if (isEditModeEnabled && isFieldInEditMode) {
+    if (item?.editModeEnabled && isFieldInEditMode) {
       if (editableFieldType === 'input') {
         return (
           <div className="details-item__input-wrapper" ref={ref}>
-            <Input onChange={onChange} value={info} type="text" focused />
+            <Input onChange={item.onChange} value={info} type="text" focused />
             <Checkmark
               className="details-item__input-btn"
               onClick={event => handleFinishEdit(event, currentField)}
@@ -49,12 +47,14 @@ const DetailsInfoItem = React.forwardRef(
         return (
           <div className="details-item__data">
             <ChipCell
+              addChip={(chip, chips) => item.onAdd(chip, chips, currentField)}
+              removeChip={chips => item.handleDelete(chips, currentField)}
               elements={chipsData.chips}
               className={`details-item__${chipsClassName}`}
               delimiter={chipsData.delimiter}
               isEditMode={true}
               editChip={chips => {
-                onChange(chips, currentField)
+                item.onChange(chips, currentField)
               }}
             />
             <Checkmark
@@ -72,7 +72,7 @@ const DetailsInfoItem = React.forwardRef(
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
             onClick={() =>
-              onClick(currentField, currentFieldType, chipsData.chips)
+              onClick(currentField, item?.editModeType, chipsData.chips)
             }
           />
         </div>
@@ -117,18 +117,23 @@ const DetailsInfoItem = React.forwardRef(
         </Link>
       )
     } else if (typeof info !== 'object') {
-      return (
-        <div
-          className="details-item__data"
-          onClick={() => {
-            if (editableFieldType.length === 0 && isEditModeEnabled) {
-              onClick(currentField, currentFieldType, info)
-            }
-          }}
-        >
-          {info}
-        </div>
-      )
+      if (item?.editModeEnabled) {
+        return (
+          <Tooltip template={<TextTooltipTemplate text="Click to edit" />}>
+            <div
+              className="details-item__data"
+              onClick={() => {
+                if (editableFieldType.length === 0) {
+                  onClick(currentField, item?.editModeType, info)
+                }
+              }}
+            >
+              {info}
+            </div>
+          </Tooltip>
+        )
+      }
+      return <div className="details-item__data">{info}</div>
     }
   }
 )
@@ -140,16 +145,14 @@ DetailsInfoItem.defaultProps = {
     delimiter: null
   },
   currentField: '',
-  currentFieldType: '',
   editableFieldType: null,
   func: '',
   handleFinishEdit: () => {},
   info: null,
-  isEditModeEnabled: false,
   isFieldInEditMode: false,
+  item: {},
   link: '',
   match: {},
-  onChange: null,
   onClick: null,
   state: '',
   target_path: {}
@@ -162,16 +165,14 @@ DetailsInfoItem.propTypes = {
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),
   currentField: PropTypes.string,
-  currentFieldType: PropTypes.string.isRequired,
   editableFieldType: PropTypes.string,
   func: PropTypes.string,
   handleFinishEdit: PropTypes.func,
   info: PropTypes.any,
-  isEditModeEnabled: PropTypes.bool.isRequired,
   isFieldInEditMode: PropTypes.bool,
+  item: PropTypes.shape({}),
   link: PropTypes.string,
   match: PropTypes.shape({}),
-  onChange: PropTypes.func,
   onClick: PropTypes.func,
   state: PropTypes.string,
   target_path: PropTypes.shape({})

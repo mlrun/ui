@@ -131,21 +131,19 @@ const DetailsInfoView = React.forwardRef(
                     chipsClassName={chipsClassName}
                     chipsData={chipsData}
                     currentField={header.id}
-                    currentFieldType={content[header.id]?.editModeType}
                     editableFieldType={detailsInfoState.editMode.fieldType}
                     func={func}
                     handleFinishEdit={handleFinishEdit}
                     info={info}
-                    isEditModeEnabled={content[header.id]?.editModeEnabled}
                     isFieldInEditMode={
                       detailsInfoState.editMode.field === header.id
                     }
                     match={match}
-                    onChange={content[header.id]?.onChange}
                     onClick={handleInfoItemClick}
                     ref={ref}
                     state={state}
                     target_path={target_path}
+                    item={content[header.id]}
                   />
                 </li>
               )

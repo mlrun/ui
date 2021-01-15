@@ -1,4 +1,5 @@
 import React from 'react'
+import { isEmpty } from 'lodash'
 
 import {
   DETAILS_ANALYSIS_TAB,
@@ -17,7 +18,7 @@ import {
   MODELS_PAGE
 } from '../../constants'
 import { formatDatetime } from '../../utils'
-import { isEmpty } from 'lodash'
+
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
 import DetailsInputs from '../DetailsInputs/DetailsInputs'
@@ -34,7 +35,9 @@ export const generateArtifactsContent = (
   page,
   pageTab,
   selectedItem,
-  editLabels
+  editChips,
+  addChip,
+  deleteChip
 ) => {
   if (pageTab === FEATURE_SETS_TAB) {
     return {
@@ -48,7 +51,9 @@ export const generateArtifactsContent = (
         value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
         editModeEnabled: true,
         editModeType: 'chips',
-        onChange: (labels, field) => editLabels(labels, field)
+        onChange: (chip, field) => editChips(chip, field),
+        onAdd: (chip, chips, field) => addChip(chip, chips, field),
+        handleDelete: (chips, field) => deleteChip(chips, field)
       },
       tag: {
         value: selectedItem.tag
@@ -186,8 +191,7 @@ export const renderContent = (
   detailsDispatch,
   selectedItem,
   pageData,
-  handlePreview,
-  setIterationOptions
+  handlePreview
 ) => {
   switch (match.params.tab?.toUpperCase()) {
     case DETAILS_INFO_TAB:
@@ -210,10 +214,10 @@ export const renderContent = (
     case DETAILS_ARTIFACTS_TAB:
       return (
         <DetailsArtifacts
+          detailsDispatch={detailsDispatch}
           iteration={detailsState.iteration}
           match={match}
           selectedItem={selectedItem}
-          setIterationOptions={setIterationOptions}
         />
       )
     case DETAILS_RESULTS_TAB:

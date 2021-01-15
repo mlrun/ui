@@ -221,13 +221,8 @@ const artifactsAction = {
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
   }),
-  updatedFeatureSetData: (projectName, featureSet, uid, data) => () => {
-    return artifactsApi.updatedFeatureSetData(
-      projectName,
-      featureSet,
-      uid,
-      data
-    )
+  updateFeatureSetData: (projectName, featureSet, uid, data) => () => {
+    return artifactsApi.updateFeatureSetData(projectName, featureSet, uid, data)
   }
 }
 

@@ -235,5 +235,11 @@
     &.pop-up-dialog-opened {
       overflow-y: hidden;
     }
+
+    .chips {
+      &-wrapper {
+        flex-wrap: wrap;
+      }
+    }
   }
 }

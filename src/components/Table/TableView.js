@@ -59,9 +59,7 @@ const TableView = ({
 
   return (
     <div className="table">
-      <div
-        className={`table__content ${!isEmpty(selectedItem) && 'table_opened'}`}
-      >
+      <div className="table__content">
         <div className="table-head">
           {pageData.tableHeaders.map((item, index) => (
             <div

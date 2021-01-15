@@ -37,13 +37,10 @@ const DetailsView = React.forwardRef(
       detailsState,
       handleCancel,
       handleShowWarning,
-      iterationOptions,
       leavePage,
       match,
       pageData,
-      refreshWasHandled,
       selectedItem,
-      setRefreshWasHandled,
       tabsContent
     },
     ref
@@ -128,7 +125,7 @@ const DetailsView = React.forwardRef(
                   payload: option
                 })
               }}
-              options={iterationOptions}
+              options={detailsState.iterationOptions}
               selectedId={detailsState.iteration}
             />
           )}
@@ -183,11 +180,16 @@ const DetailsView = React.forwardRef(
         {detailsState.showWarning && (
           <PopUpDialog
             headerText={`You have unsaved changes. ${
-              refreshWasHandled ? 'Refreshing the list' : 'Leaving this page'
+              detailsState.refreshWasHandled
+                ? 'Refreshing the list'
+                : 'Leaving this page'
             } will discard your changes.`}
             closePopUp={() => {
               handleShowWarning(false)
-              setRefreshWasHandled(false)
+              detailsDispatch({
+                type: detailsActions.SET_REFRESH_WAS_HANDLED,
+                payload: false
+              })
             }}
           >
             <div className="pop-up-dialog__footer-container">
@@ -195,7 +197,10 @@ const DetailsView = React.forwardRef(
                 className="btn_default"
                 onClick={() => {
                   handleShowWarning(false)
-                  setRefreshWasHandled(false)
+                  detailsDispatch({
+                    type: detailsActions.SET_REFRESH_WAS_HANDLED,
+                    payload: false
+                  })
                 }}
               >
                 Don't Leave
@@ -216,7 +221,6 @@ const DetailsView = React.forwardRef(
 
 DetailsView.defaultProps = {
   detailsMenuClick: () => {},
-  refreshWasHandled: false,
   tabsContent: null
 }
 
@@ -230,13 +234,10 @@ DetailsView.propTypes = {
   detailsState: PropTypes.shape({}).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleShowWarning: PropTypes.func.isRequired,
-  iterationOptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   leavePage: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
-  refreshWasHandled: PropTypes.bool,
   selectedItem: PropTypes.shape({}).isRequired,
-  setRefreshWasHandled: PropTypes.func.isRequired,
   tabsContent: PropTypes.element
 }
 
