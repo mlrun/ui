@@ -59,7 +59,6 @@ const Content = ({
 
   const contentClassName = classnames(
     'content',
-    loading && 'isLoading',
     (pageData.page === JOBS_PAGE || pageData.page === FEATURE_STORE_PAGE) &&
       'content_with-menu'
   )

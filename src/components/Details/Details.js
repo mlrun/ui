@@ -259,6 +259,7 @@ const Details = ({
       match={match}
       pageData={pageData}
       ref={detailsRef}
+      refreshWasHandled={refreshWasHandled}
       selectedItem={selectedItem}
       setRefreshWasHandled={setRefreshWasHandled}
       tabsContent={tabsContent}

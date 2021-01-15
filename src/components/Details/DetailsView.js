@@ -41,6 +41,7 @@ const DetailsView = React.forwardRef(
       leavePage,
       match,
       pageData,
+      refreshWasHandled,
       selectedItem,
       setRefreshWasHandled,
       tabsContent
@@ -92,13 +93,29 @@ const DetailsView = React.forwardRef(
               >
                 Cancel
               </button>
-              <button
-                onClick={applyChanges}
-                className={applyChangesBtnClassNames}
-                disabled={detailsState.changes.counter === 0}
-              >
-                Apply Changes
-              </button>
+              {detailsState.changes.counter > 0 ? (
+                <Tooltip
+                  template={
+                    <TextTooltipTemplate text={detailsState.changes.counter} />
+                  }
+                >
+                  <button
+                    onClick={applyChanges}
+                    className={applyChangesBtnClassNames}
+                    disabled={detailsState.changes.counter === 0}
+                  >
+                    Apply Changes
+                  </button>
+                </Tooltip>
+              ) : (
+                <button
+                  onClick={applyChanges}
+                  className={applyChangesBtnClassNames}
+                  disabled={detailsState.changes.counter === 0}
+                >
+                  Apply Changes
+                </button>
+              )}
             </>
           )}
           {match.params.tab?.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
@@ -165,7 +182,9 @@ const DetailsView = React.forwardRef(
         {tabsContent}
         {detailsState.showWarning && (
           <PopUpDialog
-            headerText="You have unsaved changes. Leaving this page will discard your changes."
+            headerText={`You have unsaved changes. ${
+              refreshWasHandled ? 'Refreshing the list' : 'Leaving this page'
+            } will discard your changes.`}
             closePopUp={() => {
               handleShowWarning(false)
               setRefreshWasHandled(false)
@@ -197,6 +216,7 @@ const DetailsView = React.forwardRef(
 
 DetailsView.defaultProps = {
   detailsMenuClick: () => {},
+  refreshWasHandled: false,
   tabsContent: null
 }
 
@@ -214,6 +234,7 @@ DetailsView.propTypes = {
   leavePage: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  refreshWasHandled: PropTypes.bool,
   selectedItem: PropTypes.shape({}).isRequired,
   setRefreshWasHandled: PropTypes.func.isRequired,
   tabsContent: PropTypes.element

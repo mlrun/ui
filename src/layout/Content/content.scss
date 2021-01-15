@@ -18,6 +18,7 @@
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
+    min-height: 80px;
     padding: 21px 24px;
     background-color: $white;
     box-shadow: $headerShadow;
@@ -33,6 +34,7 @@
     position: relative;
     display: flex;
     flex: 1;
+    min-height: 620px;
 
     .no_data {
       margin: auto;
@@ -48,8 +50,4 @@
     display: flex;
     padding: 23px 24px;
   }
-}
-
-.isLoading {
-  height: 50%;
 }
