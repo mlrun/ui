@@ -63,8 +63,18 @@
             color: $topaz;
           }
 
-          .btn_apply-changes_default {
-            opacity: 0.5;
+          .btn_apply-changes {
+            &_default {
+              opacity: 0.5;
+            }
+
+            &:not(.btn_apply-changes_default):hover {
+              background-color: $alabasterTwo;
+            }
+
+            &:not(.btn_apply-changes_default):active {
+              background-color: $galleryTwo;
+            }
           }
         }
       }

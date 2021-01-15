@@ -90,21 +90,15 @@ const DetailsView = React.forwardRef(
               >
                 Cancel
               </button>
-              {detailsState.changes.counter > 0 ? (
-                <Tooltip
-                  template={
-                    <TextTooltipTemplate text={detailsState.changes.counter} />
-                  }
-                >
-                  <button
-                    onClick={applyChanges}
-                    className={applyChangesBtnClassNames}
-                    disabled={detailsState.changes.counter === 0}
-                  >
-                    Apply Changes
-                  </button>
-                </Tooltip>
-              ) : (
+              <Tooltip
+                template={
+                  <TextTooltipTemplate
+                    text={`${detailsState.changes.counter} change${
+                      detailsState.changes.counter === 1 ? '' : 's'
+                    } pending`}
+                  />
+                }
+              >
                 <button
                   onClick={applyChanges}
                   className={applyChangesBtnClassNames}
@@ -112,7 +106,7 @@ const DetailsView = React.forwardRef(
                 >
                   Apply Changes
                 </button>
-              )}
+              </Tooltip>
             </>
           )}
           {match.params.tab?.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
