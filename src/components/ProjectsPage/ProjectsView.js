@@ -147,7 +147,7 @@ const ProjectsView = ({
               Cancel
             </button>
             <button
-              className="btn_primary"
+              className="btn_danger"
               onClick={handleDeleteNonEmptyProject}
             >
               Delete
