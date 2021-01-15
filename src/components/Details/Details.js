@@ -172,7 +172,7 @@ const Details = ({
     window.addEventListener('click', event => {
       if (
         detailsState.changes.counter > 0 &&
-        document.getElementById('refresh').contains(event.target)
+        document.getElementById('refresh')?.contains(event.target)
       ) {
         cancelRequest('cancel')
         handleShowWarning(true)
