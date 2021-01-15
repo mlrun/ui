@@ -37,6 +37,7 @@ const Projects = ({
 }) => {
   const [actionsMenu, setActionsMenu] = useState({})
   const [archiveProject, setArchiveProject] = useState(null)
+  const [deleteNonEmptyProject, setDeleteNonEmptyProject] = useState(null)
   const [convertedYaml, setConvertedYaml] = useState('')
   const [createProject, setCreateProject] = useState(false)
   const [filteredProjects, setFilteredProjects] = useState([])
@@ -55,8 +56,8 @@ const Projects = ({
   }, [archiveProject, changeProjectState, fetchProjects])
 
   const handleDeleteProject = useCallback(
-    project => {
-      deleteProject(project.metadata.name)
+    (project, deleteNonEmpty) => {
+      deleteProject(project.metadata.name, deleteNonEmpty)
         .then(() => {
           fetchProjects()
           setNotification({
@@ -65,17 +66,31 @@ const Projects = ({
             message: successProjectDeletingMessage
           })
         })
-        .catch(() => {
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            retry: () => handleDeleteProject(project),
-            message: failedProjectDeletingMessage
-          })
+        .catch(error => {
+          if (
+            error.response?.status === 412 &&
+            error.response?.data?.detail?.includes(
+              'can not be deleted since related resources found'
+            )
+          ) {
+            setDeleteNonEmptyProject(project)
+          } else {
+            setNotification({
+              status: 400,
+              id: Math.random(),
+              retry: () => handleDeleteProject(project),
+              message: failedProjectDeletingMessage
+            })
+          }
         })
     },
     [deleteProject, fetchProjects, setNotification]
   )
+
+  const handleDeleteNonEmptyProject = useCallback(() => {
+    setDeleteNonEmptyProject(null)
+    handleDeleteProject(deleteNonEmptyProject, true)
+  }, [deleteNonEmptyProject, handleDeleteProject])
 
   const handleUnarchiveProject = useCallback(
     project => {
@@ -122,6 +137,10 @@ const Projects = ({
 
   const closeArchiveProjectPopUp = useCallback(() => {
     setArchiveProject(null)
+  }, [])
+
+  const closeDeleteNonEmtpyProjectPopUp = useCallback(() => {
+    setDeleteNonEmptyProject(null)
   }, [])
 
   const closeNewProjectPopUp = useCallback(() => {
@@ -178,16 +197,19 @@ const Projects = ({
       actionsMenu={actionsMenu}
       archiveProject={archiveProject}
       closeArchiveProjectPopUp={closeArchiveProjectPopUp}
+      closeDeleteNonEmtpyProjectPopUp={closeDeleteNonEmtpyProjectPopUp}
       closeNewProjectPopUp={closeNewProjectPopUp}
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
       createProject={createProject}
+      deleteNonEmptyProject={deleteNonEmptyProject}
       fetchProjectDataSets={fetchProjectDataSets}
       fetchProjectFailedJobs={fetchProjectFailedJobs}
       fetchProjectFunctions={fetchProjectFunctions}
       fetchProjectModels={fetchProjectModels}
       fetchProjectRunningJobs={fetchProjectRunningJobs}
       filteredProjects={filteredProjects}
+      handleDeleteNonEmptyProject={handleDeleteNonEmptyProject}
       handleArchiveProject={handleArchiveProject}
       handleCreateProject={handleCreateProject}
       isEmptyValue={isEmptyValue}

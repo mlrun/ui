@@ -82,6 +82,11 @@ main {
       background-color: $brightTurquoise;
     }
 
+    &_danger {
+      color: $white;
+      background-color: $amaranth;
+    }
+
     &_default {
       background-color: $white;
       border: $primaryBorder;
@@ -145,7 +150,8 @@ iframe {
   }
 }
 
-input, textarea {
+input,
+textarea {
   overflow-x: hidden;
   font-weight: normal;
   font-size: 15px;

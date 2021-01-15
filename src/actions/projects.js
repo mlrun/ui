@@ -87,11 +87,11 @@ const projectsAction = {
     payload: error
   }),
   createProjectSuccess: () => ({ type: CREATE_PROJECT_SUCCESS }),
-  deleteProject: project => dispatch => {
+  deleteProject: (project, deleteNonEmpty) => dispatch => {
     dispatch(projectsAction.deleteProjectBegin())
 
     return projectsApi
-      .deleteProject(project)
+      .deleteProject(project, deleteNonEmpty)
       .then(() => dispatch(projectsAction.deleteProjectSuccess()))
       .catch(error => {
         dispatch(projectsAction.deleteProjectFailure())
