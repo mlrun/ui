@@ -12,7 +12,7 @@ import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
-import { S3_INPUT_PATH_TYPE } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
@@ -27,6 +27,8 @@ export const JobsPanelDataInputsTable = ({
   match,
   panelState
 }) => {
+  const pathScheme = inputsState.newInput.path.pathType
+
   return (
     <JobsPanelTable
       addNewItem={inputsState.addNewInput}
@@ -65,7 +67,7 @@ export const JobsPanelDataInputsTable = ({
               inputPlaceholder={inputsState.pathPlaceholder}
               matches={comboboxMatchesList}
               inputDefaultValue={
-                inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE &&
+                pathScheme === MLRUN_STORAGE_INPUT_PATH_SCHEME &&
                 inputsState.newInput.path.project.length === 0
                   ? inputsState.newInputDefaultPathProject
                   : ''
@@ -77,7 +79,7 @@ export const JobsPanelDataInputsTable = ({
               selectOnChange={path => {
                 handlePathTypeChange(path)
               }}
-              selectPlaceholder="Path Type"
+              selectPlaceholder="Path Scheme"
             />
           </div>
           <button
