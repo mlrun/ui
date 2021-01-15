@@ -5,7 +5,7 @@ import classnames from 'classnames'
 
 import { FUNCTIONS_PAGE } from '../../constants'
 
-const DetailsMenuItem = ({ hash, id, match, name, page, tab }) => {
+const DetailsMenuItem = ({ hash, id, match, name, onClick, page, tab }) => {
   const link = `/projects/${match.params.projectName}/${page.toLowerCase()}/${
     match.params.pageTab ? `${match.params.pageTab}/` : ''
   }${page === FUNCTIONS_PAGE ? hash : id || name}/${
@@ -17,7 +17,7 @@ const DetailsMenuItem = ({ hash, id, match, name, page, tab }) => {
   )
 
   return (
-    <Link to={link}>
+    <Link to={link} onClick={onClick}>
       <li className={tabClassNames}>{tab}</li>
     </Link>
   )
@@ -26,7 +26,8 @@ const DetailsMenuItem = ({ hash, id, match, name, page, tab }) => {
 DetailsMenuItem.defaultProps = {
   hash: '',
   id: '',
-  name: ''
+  name: '',
+  onClick: () => {}
 }
 
 DetailsMenuItem.propTypes = {
@@ -34,6 +35,7 @@ DetailsMenuItem.propTypes = {
   id: PropTypes.string,
   match: PropTypes.shape({}).isRequired,
   name: PropTypes.string,
+  onClick: PropTypes.func,
   page: PropTypes.string.isRequired,
   tab: PropTypes.string.isRequired
 }

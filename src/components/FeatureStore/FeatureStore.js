@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useRef } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -19,6 +19,7 @@ import {
   DETAILS_STATISTICS_TAB
 } from '../../constants'
 import notificationActions from '../../actions/notification'
+import axios from 'axios'
 
 const FeatureStore = ({
   artifactsStore,
@@ -45,10 +46,12 @@ const FeatureStore = ({
     registerArtifactDialogTitle: '',
     tabs: []
   })
+  const featureStoreRef = useRef(null)
 
   const fetchData = useCallback(
     async item => {
       let result
+
       if (match.params.pageTab === DATASETS_TAB) {
         result = await fetchDataSets(item)
 
@@ -58,7 +61,13 @@ const FeatureStore = ({
           return result
         }
       } else if (match.params.pageTab === FEATURE_SETS_TAB) {
-        result = await fetchFeatureSets(item)
+        const config = {
+          cancelToken: new axios.CancelToken(cancel => {
+            featureStoreRef.current.cancel = cancel
+          })
+        }
+
+        result = await fetchFeatureSets(item, config)
 
         if (result) {
           setContent(result)
@@ -75,7 +84,7 @@ const FeatureStore = ({
         }
       }
     },
-    [fetchDataSets, fetchFeatureSets, fetchFeatures, match.params.pageTab]
+    [match.params.pageTab, fetchDataSets, fetchFeatureSets, fetchFeatures]
   )
 
   useEffect(() => {
@@ -88,7 +97,13 @@ const FeatureStore = ({
       removeFeatureSets()
       setSelectedItem({})
     }
-  }, [fetchData, match.params.projectName, removeDataSets, removeFeatureSets])
+  }, [
+    fetchData,
+    match.params.projectName,
+    removeDataSets,
+    removeFeatureSets,
+    featureStoreRef
+  ])
 
   useEffect(() => {
     if (match.params.pageTab === FEATURE_SETS_TAB) {
@@ -294,10 +309,14 @@ const FeatureStore = ({
   }
 
   return (
-    <>
+    <div ref={featureStoreRef}>
       {artifactsStore.loading && <Loader />}
       <Content
         applyDetailsChanges={applyDetailsChanges}
+        cancelRequest={message => {
+          featureStoreRef.current?.cancel &&
+            featureStoreRef.current.cancel(message)
+        }}
         content={content}
         groupFilter={groupFilter}
         handleArtifactFilterTree={handleDataSetTreeFilterChange}
@@ -306,7 +325,9 @@ const FeatureStore = ({
         match={match}
         openPopupDialog={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
-        refresh={fetchData}
+        refresh={item => {
+          fetchData(item)
+        }}
         selectedItem={selectedItem.item}
         yamlContent={content}
       />
@@ -320,7 +341,7 @@ const FeatureStore = ({
           title={pageData.registerArtifactDialogTitle}
         />
       )}
-    </>
+    </div>
   )
 }
 

@@ -24,7 +24,7 @@ const fetchArtifacts = (item, path) => {
   return mainHttpClient.get(url)
 }
 
-const fetchFeatureStoreData = (item, tab) => {
+const fetchFeatureStoreData = (item, tab, config) => {
   const initialUrl = `/projects/${item.project}/${tab}`
   let url = initialUrl
 
@@ -41,7 +41,7 @@ const fetchFeatureStoreData = (item, tab) => {
     url = `${url === initialUrl ? `${url}?` : `${url}&`}name=${item.name}`
   }
 
-  return mainHttpClient.get(url)
+  return mainHttpClient.get(url, config)
 }
 
 export default {
@@ -72,8 +72,8 @@ export default {
       `/artifacts?project=${item.project}&category=model`
     )
   },
-  getFeatureSets: item => {
-    return fetchFeatureStoreData(item, FEATURE_SETS_TAB)
+  getFeatureSets: (item, config) => {
+    return fetchFeatureStoreData(item, FEATURE_SETS_TAB, config)
   },
   getFeatures: item => {
     return fetchFeatureStoreData(item, FEATURES_TAB)

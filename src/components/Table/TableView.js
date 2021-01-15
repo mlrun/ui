@@ -23,6 +23,7 @@ import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const TableView = ({
   applyDetailsChanges,
+  cancelRequest,
   content,
   groupFilter,
   groupLatestItem,
@@ -33,6 +34,7 @@ const TableView = ({
   handleSelectItem,
   match,
   pageData,
+  retryRequest,
   selectedItem,
   tableContent,
   toggleConvertToYaml,
@@ -186,11 +188,13 @@ const TableView = ({
         <Details
           actionsMenu={actionsMenu}
           applyDetailsChanges={applyDetailsChanges}
+          cancelRequest={cancelRequest}
           detailsMenu={pageData.detailsMenu}
           handleCancel={handleCancel}
           handleSelectItem={handleSelectItem}
           match={match}
           pageData={pageData}
+          retryRequest={retryRequest}
           selectedItem={selectedItem}
         />
       )}

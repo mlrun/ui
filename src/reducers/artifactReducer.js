@@ -96,7 +96,6 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
-        featureSets: [],
         loading: false
       }
     case FETCH_FEATURE_SETS_SUCCESS:

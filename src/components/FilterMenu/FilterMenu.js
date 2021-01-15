@@ -203,6 +203,7 @@ const FilterMenu = ({
                   })
                 : onChange({ labels, name })
             }}
+            id="refresh"
           >
             <Refresh />
           </button>

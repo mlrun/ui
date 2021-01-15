@@ -121,7 +121,7 @@ const DetailsInfoItem = React.forwardRef(
         <div
           className="details-item__data"
           onClick={() => {
-            if (!editableFieldType) {
+            if (editableFieldType.length === 0 && isEditModeEnabled) {
               onClick(currentField, currentFieldType, info)
             }
           }}
@@ -139,13 +139,18 @@ DetailsInfoItem.defaultProps = {
     chips: [],
     delimiter: null
   },
+  currentField: '',
   currentFieldType: '',
+  editableFieldType: null,
   func: '',
+  handleFinishEdit: () => {},
   info: null,
-  isEditModeEnabled: true,
+  isEditModeEnabled: false,
+  isFieldInEditMode: false,
   link: '',
   match: {},
   onChange: null,
+  onClick: null,
   state: '',
   target_path: {}
 }
@@ -156,18 +161,18 @@ DetailsInfoItem.propTypes = {
     chips: PropTypes.arrayOf(PropTypes.string),
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),
-  currentField: PropTypes.string.isRequired,
+  currentField: PropTypes.string,
   currentFieldType: PropTypes.string.isRequired,
-  editableFieldType: PropTypes.string.isRequired,
+  editableFieldType: PropTypes.string,
   func: PropTypes.string,
-  handleFinishEdit: PropTypes.func.isRequired,
+  handleFinishEdit: PropTypes.func,
   info: PropTypes.any,
   isEditModeEnabled: PropTypes.bool.isRequired,
-  isFieldInEditMode: PropTypes.bool.isRequired,
+  isFieldInEditMode: PropTypes.bool,
   link: PropTypes.string,
   match: PropTypes.shape({}),
   onChange: PropTypes.func,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   state: PropTypes.string,
   target_path: PropTypes.shape({})
 }

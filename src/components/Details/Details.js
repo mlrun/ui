@@ -37,10 +37,12 @@ import './details.scss'
 const Details = ({
   actionsMenu,
   applyDetailsChanges,
+  cancelRequest,
   detailsMenu,
   handleCancel,
   match,
   pageData,
+  retryRequest,
   selectedItem
 }) => {
   const [detailsState, detailsDispatch] = useReducer(
@@ -50,10 +52,12 @@ const Details = ({
   const [iterationOptions, setIterationOptions] = useState([
     { label: 'Main', id: '0' }
   ])
+  const [refreshWasHandled, setRefreshWasHandled] = useState(false)
   const history = useHistory()
   const dispatch = useDispatch()
   let unblockRootChange = useRef()
   let pathname = useRef()
+  const detailsRef = useRef()
 
   const handlePreview = () => {
     history.push(`/projects/${match.params.projectName}/artifacts`)
@@ -144,27 +148,47 @@ const Details = ({
     selectedItem
   ])
 
-  const blockRootChange = useCallback(() => {
-    unblockRootChange.current = history.block(tx => {
-      handleShowWarning(true)
-
-      pathname.current = tx.pathname
-
-      return false
+  useEffect(() => {
+    window.addEventListener('click', event => {
+      if (
+        detailsState.changes.counter > 0 &&
+        document.getElementById('refresh').contains(event.target)
+      ) {
+        cancelRequest('cancel')
+        handleShowWarning(true)
+        setRefreshWasHandled(true)
+      }
     })
+  }, [cancelRequest, detailsState.changes.counter])
+
+  const blockRootChange = useCallback(() => {
+    if (!unblockRootChange.current) {
+      unblockRootChange.current = history.block(tx => {
+        handleShowWarning(true)
+        pathname.current = tx.pathname
+
+        return false
+      })
+    }
   }, [history])
 
   useEffect(() => {
     if (detailsState.changes.counter > 0 && !unblockRootChange.current) {
       blockRootChange()
+    } else if (
+      detailsState.changes.counter === 0 &&
+      unblockRootChange.current
+    ) {
+      unblockRootChange.current()
     }
-    // else if (
-    //   detailsState.changes.counter === 0 &&
-    //   unblockRootChange.current
-    // ) {
-    //   unblockRootChange.current()
-    // }
-  }, [blockRootChange, detailsState.changes.counter, history])
+  })
+
+  const detailsMenuClick = () => {
+    if (unblockRootChange.current) {
+      unblockRootChange.current()
+      unblockRootChange.current = null
+    }
+  }
 
   const applyChanges = () => {
     applyDetailsChanges(detailsState.changes).then(() => {
@@ -172,6 +196,7 @@ const Details = ({
         type: detailsActions.RESET_CHANGES
       })
       unblockRootChange.current()
+      unblockRootChange.current = null
     })
   }
 
@@ -194,7 +219,15 @@ const Details = ({
     cancelChanges()
     handleShowWarning(false)
     unblockRootChange.current()
+
+    unblockRootChange.current = null
+
     history.push(pathname.current)
+
+    if (refreshWasHandled) {
+      retryRequest({ project: match.params.projectName })
+      setRefreshWasHandled(false)
+    }
   }
 
   const tabsContent = useCallback(
@@ -217,6 +250,7 @@ const Details = ({
       cancelChanges={cancelChanges}
       detailsDispatch={detailsDispatch}
       detailsMenu={detailsMenu}
+      detailsMenuClick={detailsMenuClick}
       detailsState={detailsState}
       handleCancel={handleCancel}
       handleShowWarning={handleShowWarning}
@@ -224,7 +258,9 @@ const Details = ({
       leavePage={leavePage}
       match={match}
       pageData={pageData}
+      ref={detailsRef}
       selectedItem={selectedItem}
+      setRefreshWasHandled={setRefreshWasHandled}
       tabsContent={tabsContent}
     />
   )
@@ -232,16 +268,20 @@ const Details = ({
 
 Details.defaultProps = {
   applyDetailsChanges: () => {},
-  item: {}
+  cancelRequest: () => {},
+  item: {},
+  retryRequest: () => {}
 }
 
 Details.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   applyDetailsChanges: PropTypes.func,
+  cancelRequest: PropTypes.func,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCancel: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}).isRequired
 }
 

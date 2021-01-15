@@ -71,6 +71,10 @@ const DetailsInfo = ({
 
   useEffect(() => {
     window.addEventListener('click', onBlurEditField)
+
+    return () => {
+      window.removeEventListener('click', onBlurEditField)
+    }
   }, [onBlurEditField])
 
   const handleFinishEdit = (event, field) => {

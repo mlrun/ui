@@ -30,6 +30,7 @@ import { formatDatetime } from '../../utils'
 import './content.scss'
 
 const Content = ({
+  cancelRequest,
   content,
   groupFilter,
   handleArtifactFilterTree,
@@ -285,6 +286,8 @@ const Content = ({
               setLoading={setLoading}
               toggleConvertToYaml={toggleConvertToYaml}
               applyDetailsChanges={applyDetailsChanges}
+              cancelRequest={cancelRequest}
+              retryRequest={refresh}
             />
           ) : loading ? null : (
             <NoData />

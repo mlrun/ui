@@ -17,6 +17,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const Table = ({
   applyDetailsChanges,
+  cancelRequest,
   content,
   groupFilter,
   groupedByName,
@@ -26,6 +27,7 @@ const Table = ({
   handleSelectItem,
   match,
   pageData,
+  retryRequest,
   selectedItem,
   setLoading,
   toggleConvertToYaml
@@ -108,6 +110,7 @@ const Table = ({
   return (
     <>
       <TableView
+        cancelRequest={cancelRequest}
         content={content}
         groupFilter={groupFilter}
         groupLatestItem={
@@ -122,6 +125,7 @@ const Table = ({
         handleSelectItem={handleSelectItem}
         match={match}
         pageData={pageData}
+        retryRequest={retryRequest}
         selectedItem={selectedItem}
         tableContent={tableContent.content}
         toggleConvertToYaml={toggleConvertToYaml}
