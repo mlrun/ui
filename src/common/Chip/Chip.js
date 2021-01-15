@@ -45,7 +45,7 @@ const Chip = ({
       <span className={className}>
         <div
           className={chipClassNames}
-          onClick={event => isEditMode && handleIsEdit(event, chipIndex)}
+          onClick={event => handleIsEdit(event, chipIndex)}
         >
           {chip.delimiter ? (
             <span>

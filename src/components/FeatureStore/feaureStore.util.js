@@ -2,7 +2,7 @@ import { FEATURE_SETS_TAB, FEATURES_TAB } from '../../constants'
 
 export const datasetsInfoHeaders = [
   { label: 'Hash', id: 'hash' },
-  { label: 'Key', id: 'key' },
+  { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'path' },
@@ -14,13 +14,13 @@ export const datasetsInfoHeaders = [
 export const featureSetsInfoHeaders = [
   { label: 'Description', id: 'description' },
   { label: 'Labels', id: 'labels' },
-  { label: 'Version', id: 'version' },
+  { label: 'Version', id: 'tag' },
   { label: 'Last updated', id: 'updated' },
   { label: 'Entities', id: 'entities' },
-  { label: 'Partition keys', id: 'partitionKeys' },
-  { label: 'Timestamp Key', id: 'timestampKey' },
+  { label: 'Partition keys', id: 'partition_keys' },
+  { label: 'Timestamp Key', id: 'timestamp_key' },
   { label: 'Relations', id: 'relations' },
-  { label: 'Label column', id: 'labelColumn' }
+  { label: 'Label column', id: 'label_column' }
 ]
 export const datasetsFilters = ['tree', 'name', 'labels']
 export const detailsMenu = ['overview', 'preview']

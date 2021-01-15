@@ -95,6 +95,13 @@ main {
     &_small {
       height: 36px;
     }
+
+    &_border-bottom {
+      height: 36px;
+      border: $primaryBorder;
+      border-bottom: $applyBtnBorder;
+      border-radius: 4px;
+    }
   }
 }
 

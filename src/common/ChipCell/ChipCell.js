@@ -15,6 +15,7 @@ const ChipCell = ({
   editChip,
   elements,
   isEditMode,
+  onClick,
   removeChip
 }) => {
   const [sizeContainer, setSizeContainer] = useState(0)
@@ -170,16 +171,23 @@ const ChipCell = ({
     ]
   )
 
-  const handleIsEdit = useCallback((event, index) => {
-    event.stopPropagation()
+  const handleIsEdit = useCallback(
+    (event, index) => {
+      if (isEditMode) {
+        event.stopPropagation()
 
-    setEditConfig({
-      chipIndex: index,
-      isEdit: true,
-      isKeyFocused: true,
-      isValueFocused: false
-    })
-  }, [])
+        setEditConfig({
+          chipIndex: index,
+          isEdit: true,
+          isKeyFocused: true,
+          isValueFocused: false
+        })
+      }
+
+      onClick && onClick()
+    },
+    [isEditMode, onClick]
+  )
 
   return (
     <ChipCellView
@@ -204,6 +212,7 @@ ChipCell.defaultProps = {
   delimiter: null,
   editChip: () => {},
   elements: [],
+  onClick: () => {},
   removeChip: () => {}
 }
 
@@ -214,6 +223,7 @@ ChipCell.propTypes = {
   editChip: PropTypes.func,
   elements: PropTypes.arrayOf(PropTypes.string),
   isEditMode: PropTypes.bool,
+  onClick: PropTypes.func,
   removeChip: PropTypes.func
 }
 

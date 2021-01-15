@@ -47,7 +47,6 @@
           position: sticky;
           top: -5px;
           z-index: 5;
-
           display: flex;
           align-items: center;
 
@@ -58,6 +57,24 @@
 
           .table-actions-container {
             display: block;
+          }
+
+          .btn_cancel {
+            color: $topaz;
+          }
+
+          .btn_apply-changes {
+            &_default {
+              opacity: 0.5;
+            }
+
+            &:not(.btn_apply-changes_default):hover {
+              background-color: $alabasterTwo;
+            }
+
+            &:not(.btn_apply-changes_default):active {
+              background-color: $galleryTwo;
+            }
           }
         }
       }
@@ -206,6 +223,32 @@
 
       pre {
         padding: 8px 16px;
+      }
+    }
+
+    .pop-up-dialog {
+      &__overlay {
+        position: absolute;
+      }
+
+      &__header {
+        margin: 20px 0;
+
+        &-close {
+          position: absolute;
+          top: -18px;
+          right: 0;
+        }
+      }
+    }
+
+    &.pop-up-dialog-opened {
+      overflow-y: hidden;
+    }
+
+    .chips {
+      &-wrapper {
+        flex-wrap: wrap;
       }
     }
   }

@@ -30,6 +30,7 @@ import { formatDatetime } from '../../utils'
 import './content.scss'
 
 const Content = ({
+  cancelRequest,
   content,
   groupFilter,
   handleArtifactFilterTree,
@@ -47,7 +48,8 @@ const Content = ({
   showUntagged,
   stateFilter,
   toggleShowUntagged,
-  yamlContent
+  yamlContent,
+  applyDetailsChanges
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
   const [expandedItems, setExpandedItems] = useState([])
@@ -57,7 +59,6 @@ const Content = ({
 
   const contentClassName = classnames(
     'content',
-    loading && 'isLoading',
     (pageData.page === JOBS_PAGE || pageData.page === FEATURE_STORE_PAGE) &&
       'content_with-menu'
   )
@@ -215,7 +216,7 @@ const Content = ({
   return (
     <>
       <div className="content__header">
-        <Breadcrumbs match={match} onClick={handleCancel} />
+        <Breadcrumbs match={match} />
         <PageActionsMenu
           createJob={pageData.page === JOBS_PAGE}
           registerDialog={
@@ -283,6 +284,9 @@ const Content = ({
               selectedItem={selectedItem}
               setLoading={setLoading}
               toggleConvertToYaml={toggleConvertToYaml}
+              applyDetailsChanges={applyDetailsChanges}
+              cancelRequest={cancelRequest}
+              retryRequest={refresh}
             />
           ) : loading ? null : (
             <NoData />
@@ -296,6 +300,7 @@ const Content = ({
 Content.defaultProps = {
   activeScreenTab: '',
   groupFilter: null,
+  handleSelectItem: () => {},
   selectedItem: {},
   setGroupFilter: () => {},
   setLoading: () => {},
@@ -310,7 +315,7 @@ Content.propTypes = {
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
-  handleSelectItem: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,

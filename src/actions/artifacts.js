@@ -89,11 +89,11 @@ const artifactsAction = {
     type: FETCH_DATASETS_SUCCESS,
     payload: dataSets
   }),
-  fetchFeatureSets: project => dispatch => {
+  fetchFeatureSets: (project, config) => dispatch => {
     dispatch(artifactsAction.fetchFeatureSetsBegin())
 
     return artifactsApi
-      .getFeatureSets(project)
+      .getFeatureSets(project, config)
       .then(response => {
         let featureSets = generateFeatureSets(response.data.feature_sets)
 
@@ -220,7 +220,10 @@ const artifactsAction = {
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
-  })
+  }),
+  updateFeatureSetData: (projectName, featureSet, uid, data) => () => {
+    return artifactsApi.updateFeatureSetData(projectName, featureSet, uid, data)
+  }
 }
 
 export default artifactsAction

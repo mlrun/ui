@@ -7,14 +7,14 @@ export const page = 'JOBS'
 export const infoHeaders = [
   { label: 'UID', id: 'uid' },
   { label: 'Start time', id: 'startTime' },
-  { label: 'Last Updated', id: 'lastUpdates' },
-  { label: 'Status', id: 'status' },
+  { label: 'Last Updated', id: 'updated' },
+  { label: 'Status', id: 'state' },
   { label: 'Parameters', id: 'parameters' },
   { label: 'Function', id: 'function' },
-  { label: 'Results', id: 'results' },
+  { label: 'Results', id: 'resultsChips' },
   { label: 'Labels', id: 'labels' },
   { label: 'Log level', id: 'logLevel' },
-  { label: 'Output path', id: 'outPutPath' },
+  { label: 'Output path', id: 'outputPath' },
   { label: 'Iterations', id: 'iterations' }
 ]
 export const generateTableHeaders = scheduled => {

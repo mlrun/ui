@@ -9,7 +9,7 @@
 
   &__overlay {
     position: fixed;
-    z-index: 2;
+    z-index: 4;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,6 +19,7 @@
   }
 
   &__header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     margin: 10px 0 20px;

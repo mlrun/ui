@@ -22,6 +22,8 @@ import {
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const TableView = ({
+  applyDetailsChanges,
+  cancelRequest,
   content,
   groupFilter,
   groupLatestItem,
@@ -32,6 +34,7 @@ const TableView = ({
   handleSelectItem,
   match,
   pageData,
+  retryRequest,
   selectedItem,
   tableContent,
   toggleConvertToYaml,
@@ -56,9 +59,7 @@ const TableView = ({
 
   return (
     <div className="table">
-      <div
-        className={`table__content ${!isEmpty(selectedItem) && 'table_opened'}`}
-      >
+      <div className="table__content">
         <div className="table-head">
           {pageData.tableHeaders.map((item, index) => (
             <div
@@ -184,11 +185,14 @@ const TableView = ({
       {!isEmpty(selectedItem) && (
         <Details
           actionsMenu={actionsMenu}
+          applyDetailsChanges={applyDetailsChanges}
+          cancelRequest={cancelRequest}
           detailsMenu={pageData.detailsMenu}
           handleCancel={handleCancel}
           handleSelectItem={handleSelectItem}
           match={match}
           pageData={pageData}
+          retryRequest={retryRequest}
           selectedItem={selectedItem}
         />
       )}
@@ -197,10 +201,12 @@ const TableView = ({
 }
 
 TableView.defaultProps = {
+  applyDetailsChanges: () => {},
   groupLatestJob: {}
 }
 
 TableView.propTypes = {
+  applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,

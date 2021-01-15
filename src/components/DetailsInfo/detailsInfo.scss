@@ -65,6 +65,31 @@
       &__results {
         @include chip($resultsBorder);
       }
+
+      &__input {
+        &-wrapper {
+          display: flex;
+          align-items: center;
+          width: 100%;
+
+          .input {
+            width: 100%;
+            padding: 8px 17px;
+            line-height: 16px;
+
+            &-wrapper {
+              width: 100%;
+            }
+          }
+        }
+
+        &-btn {
+          height: 30px;
+          margin-left: 10px;
+          padding: 0;
+          cursor: pointer;
+        }
+      }
     }
   }
 }
