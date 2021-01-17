@@ -210,7 +210,11 @@ const FeatureStore = ({
       }
 
       if (selectedItem.item?.schema || selectedItem.item?.entities) {
-        newDetailsMenu.push('metadata')
+        if (match.params.pageTab === FEATURE_SETS_TAB) {
+          newDetailsMenu.push('features')
+        } else if (match.params.pageTab === DATASETS_TAB) {
+          newDetailsMenu.push('metadata')
+        }
       }
 
       if (

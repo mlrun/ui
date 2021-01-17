@@ -9,6 +9,7 @@ import {
   DETAILS_INPUTS_TAB,
   DETAILS_LOGS_TAB,
   DETAILS_METADATA_TAB,
+  DETAILS_FEATURES_TAB,
   DETAILS_PREVIEW_TAB,
   DETAILS_RESULTS_TAB,
   DETAILS_STATISTICS_TAB,
@@ -227,11 +228,10 @@ export const renderContent = (
     case DETAILS_CODE_TAB:
       return <DetailsCode code={selectedItem.functionSourceCode} />
     case DETAILS_METADATA_TAB:
-      if (selectedItem.schema || selectedItem.entities) {
-        return <DetailsMetadata selectedItem={selectedItem} />
-      } else {
-        return null
-      }
+    case DETAILS_FEATURES_TAB:
+      return selectedItem.schema || selectedItem.entities ? (
+        <DetailsMetadata selectedItem={selectedItem} />
+      ) : null
     case DETAILS_ANALYSIS_TAB:
       if (selectedItem.kind === 'dataset' && selectedItem.extra_data) {
         return (
