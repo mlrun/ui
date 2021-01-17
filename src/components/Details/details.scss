@@ -66,6 +66,7 @@
           .btn_apply-changes {
             &_default {
               opacity: 0.5;
+              cursor: default;
             }
 
             &:not(.btn_apply-changes_default):hover {
