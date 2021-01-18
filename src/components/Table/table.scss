@@ -135,6 +135,14 @@
       font-size: 15px;
       line-height: 18px;
 
+      .cell_name {
+        position: relative;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        margin: 0;
+      }
+
       .text_small {
         min-width: 100%;
         max-width: 50px;
@@ -142,24 +150,6 @@
 
       &_type {
         text-transform: capitalize;
-      }
-
-      &_last-run {
-        flex-wrap: nowrap;
-
-        .status {
-          display: flex;
-          min-width: 10px;
-          margin: 0 5px;
-
-          i {
-            margin: 0;
-          }
-        }
-
-        .text_small {
-          min-width: 85%;
-        }
       }
 
       a {
@@ -171,11 +161,6 @@
         color: $cornflowerBlue;
         text-decoration: none;
 
-        .status {
-          position: absolute;
-          left: -34px;
-        }
-
         span {
           display: block;
           color: $topaz;
@@ -183,7 +168,7 @@
       }
 
       i {
-        margin: 0 17px;
+        margin-right: 5px;
       }
 
       button {

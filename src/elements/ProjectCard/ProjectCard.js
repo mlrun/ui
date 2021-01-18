@@ -7,7 +7,6 @@ import { generateProjectStatistic } from './projectCard.util'
 
 const ProjectCard = ({
   actionsMenu,
-  fetchNuclioFunctions,
   fetchProjectDataSets,
   fetchProjectFailedJobs,
   fetchProjectFunctions,
@@ -30,14 +29,13 @@ const ProjectCard = ({
   const [fetchRunningJobsFailure, setFetchRunningJobsFailure] = useState(false)
   const [functions, setFunctions] = useState([])
   const [models, setModels] = useState([])
-  const [nuclioFunctions, setNuclioFunctions] = useState({})
   const [runningJobs, setRunningJobs] = useState([])
   const [showActionsList, setShowActionsList] = useState(false)
 
   const actionsMenuRef = React.createRef()
 
   useEffect(() => {
-    fetchProjectRunningJobs(project.name)
+    fetchProjectRunningJobs(project.metadata.name)
       .then(jobs => {
         if (fetchRunningJobsFailure) {
           setFetchRunningJobsFailure(false)
@@ -48,18 +46,7 @@ const ProjectCard = ({
       .catch(() => {
         setFetchRunningJobsFailure(true)
       })
-      .then(() => fetchNuclioFunctions(project.name))
-      .then(funcs => {
-        if (fetchNuclioFunctionsFailure) {
-          setFetchNuclioFunctionsFailure(false)
-        }
-
-        setNuclioFunctions(funcs)
-      })
-      .catch(() => {
-        setFetchNuclioFunctionsFailure(true)
-      })
-    fetchProjectFailedJobs(project.name)
+    fetchProjectFailedJobs(project.metadata.name)
       .then(jobs => {
         if (fetchFailedJobsFailure) {
           setFetchFailedJobsFailure(false)
@@ -68,7 +55,7 @@ const ProjectCard = ({
         setFailedJobs(jobs)
       })
       .catch(() => setFetchFailedJobsFailure(true))
-    fetchProjectModels(project.name)
+    fetchProjectModels(project.metadata.name)
       .then(models => {
         if (fetchModelsFailure) {
           setFetchModelsFailure(false)
@@ -77,7 +64,7 @@ const ProjectCard = ({
         setModels(models)
       })
       .catch(() => setFetchModelsFailure(true))
-    fetchProjectDataSets(project.name)
+    fetchProjectDataSets(project.metadata.name)
       .then(datasets => {
         if (fetchFeaturesFailure) {
           setFetchFeaturesFailure(false)
@@ -86,7 +73,7 @@ const ProjectCard = ({
         setFeatures(datasets)
       })
       .catch(() => setFetchFeaturesFailure(true))
-    fetchProjectFunctions(project.name)
+    fetchProjectFunctions(project.metadata.name)
       .then(funcs => {
         if (fetchFunctionsFailure) {
           setFetchFunctionsFailure(false)
@@ -100,7 +87,6 @@ const ProjectCard = ({
     fetchFeaturesFailure,
     fetchFunctionsFailure,
     fetchModelsFailure,
-    fetchNuclioFunctions,
     fetchNuclioFunctionsFailure,
     fetchProjectDataSets,
     fetchProjectFailedJobs,
@@ -108,8 +94,14 @@ const ProjectCard = ({
     fetchProjectModels,
     fetchProjectRunningJobs,
     fetchRunningJobsFailure,
-    project.name
+    project.metadata.name
   ])
+
+  useEffect(() => {
+    setFetchNuclioFunctionsFailure(
+      nuclioStore.error && !nuclioStore.functions[project.metadata.name]
+    )
+  }, [project.metadata.name, nuclioStore.functions, nuclioStore.error])
 
   const closeActionsMenu = useCallback(
     event => {
@@ -148,7 +140,7 @@ const ProjectCard = ({
       projectStore.project.functions.loading,
       models,
       projectStore.project.models.loading,
-      nuclioFunctions,
+      nuclioStore.functions[project.metadata.name],
       nuclioStore.loading,
       runningJobs,
       projectStore.project.runningJobs.loading
@@ -164,8 +156,9 @@ const ProjectCard = ({
     fetchRunningJobsFailure,
     functions,
     models,
-    nuclioFunctions,
+    nuclioStore.functions,
     nuclioStore.loading,
+    project.metadata.name,
     projectStore.project.dataSets.loading,
     projectStore.project.failedJobs.loading,
     projectStore.project.functions.loading,
@@ -187,11 +180,10 @@ const ProjectCard = ({
 }
 
 ProjectCard.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  actionsMenu: PropTypes.shape({}).isRequired,
   fetchProjectDataSets: PropTypes.func.isRequired,
   fetchProjectFailedJobs: PropTypes.func.isRequired,
   fetchProjectFunctions: PropTypes.func.isRequired,
-  fetchNuclioFunctions: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
   fetchProjectRunningJobs: PropTypes.func.isRequired,
   nuclioStore: PropTypes.shape({}).isRequired,

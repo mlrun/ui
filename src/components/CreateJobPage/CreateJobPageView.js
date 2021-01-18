@@ -64,7 +64,7 @@ const CreateJobPageView = ({
         className="data-search"
         matches={filterMatches}
         onChange={value => handleSearchOnChange(value)}
-        placeholder="Search by text, tags and keywords..."
+        placeholder="Search by name..."
         setMatches={setFilterMatches}
       />
       <Accordion

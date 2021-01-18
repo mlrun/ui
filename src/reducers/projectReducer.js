@@ -1,10 +1,14 @@
 import {
+  CHANGE_PROJECT_STATE_BEGIN,
+  CHANGE_PROJECT_STATE_FAILURE,
+  CHANGE_PROJECT_STATE_SUCCESS,
   CREATE_PROJECT_BEGIN,
   CREATE_PROJECT_FAILURE,
   CREATE_PROJECT_SUCCESS,
   DELETE_PROJECT_BEGIN,
   DELETE_PROJECT_FAILURE,
   DELETE_PROJECT_SUCCESS,
+  ADD_PROJECT_LABEL,
   FETCH_PROJECT_BEGIN,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
@@ -42,7 +46,8 @@ import {
   REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_DATA,
   SET_NEW_PROJECT_DESCRIPTION,
-  SET_NEW_PROJECT_NAME
+  SET_NEW_PROJECT_NAME,
+  SET_PROJECT_LABELS
 } from '../constants'
 
 const initialState = {
@@ -108,6 +113,38 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case ADD_PROJECT_LABEL: {
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          data: {
+            ...state.project.data,
+            metadata: {
+              ...state.project.data.metadata,
+              labels: {
+                ...payload
+              }
+            }
+          }
+        }
+      }
+    }
+    case CHANGE_PROJECT_STATE_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case CHANGE_PROJECT_STATE_FAILURE:
+      return {
+        ...state,
+        loading: false
+      }
+    case CHANGE_PROJECT_STATE_SUCCESS:
+      return {
+        ...state,
+        loading: false
+      }
     case CREATE_PROJECT_BEGIN:
       return {
         ...state,
@@ -651,6 +688,23 @@ export default (state = initialState, { type, payload }) => {
           name: payload
         }
       }
+    case SET_PROJECT_LABELS: {
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          data: {
+            ...state.project.data,
+            metadata: {
+              ...state.project.data.metadata,
+              labels: {
+                ...payload
+              }
+            }
+          }
+        }
+      }
+    }
     default:
       return state
   }

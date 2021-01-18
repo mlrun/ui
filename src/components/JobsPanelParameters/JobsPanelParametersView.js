@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { find } from 'lodash'
 import classnames from 'classnames'
 
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
@@ -83,10 +82,7 @@ const JobsPanelParametersView = ({
                   onClick={value =>
                     parametersDispatch({
                       type: parametersActions.SET_NEW_PARAMETER_VALUE_TYPE,
-                      payload: find(selectOptions.parametersValueType, [
-                        'id',
-                        value
-                      ]).id
+                      payload: value
                     })
                   }
                   options={selectOptions.parametersValueType}
@@ -98,8 +94,7 @@ const JobsPanelParametersView = ({
                   onClick={value =>
                     parametersDispatch({
                       type: parametersActions.SET_NEW_PARAMETER_TYPE,
-                      payload: find(selectOptions.parameterType, ['id', value])
-                        .id
+                      payload: value
                     })
                   }
                   options={selectOptions.parameterType}
@@ -162,9 +157,7 @@ const JobsPanelParametersView = ({
                 options={selectOptions.hyperStrategyType}
                 label="Tuning Strategy:"
                 onClick={value => {
-                  setTuningStrategy(
-                    find(selectOptions.hyperStrategyType, ['id', value]).id
-                  )
+                  setTuningStrategy(value)
                 }}
               />
             </div>

@@ -13,7 +13,6 @@ import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
 
 import './table.scss'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const Table = ({
   applyDetailsChanges,
@@ -42,64 +41,60 @@ const Table = ({
     state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
   )
   const workflows = useSelector(
-    state => pageData.page === JOBS_PAGE && state.workflowsStore.workflows
+    state =>
+      pageData.page === JOBS_PAGE && state.projectStore.project.workflows.data
   )
 
   useEffect(() => {
-    if (isEveryObjectValueEmpty(tableContent)) {
-      const generatedTableContent = generateTableContent(
-        content,
-        match,
-        groupedByName,
-        groupedByWorkflow,
-        groupFilter,
-        pageData,
-        setLoading
-      )
-      let groupLatest = []
-      let groupWorkflowItem = []
+    const generatedTableContent = generateTableContent(
+      content,
+      groupedByName,
+      groupedByWorkflow,
+      groupFilter,
+      pageData.page,
+      match,
+      setLoading
+    )
 
-      if (groupFilter === 'name') {
-        groupLatest = generateGroupLatestItem(
+    if (groupFilter === 'name') {
+      setTableContent({
+        content: generatedTableContent,
+        groupLatestItem: generateGroupLatestItem(
           pageData.page,
           generatedTableContent
-        )
-      } else if (groupFilter === 'workflow') {
-        groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
-          workflows.find(workflow => workflow.id === workflowId)
-        )
-      }
+        ),
+        groupWorkflowItems: []
+      })
+    } else if (groupFilter === 'workflow') {
+      let groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
+        workflows.find(workflow => workflow.id === workflowId)
+      )
 
       setTableContent({
         content: generatedTableContent,
-        groupLatestItem: groupLatest,
+        groupLatestItem: [],
         groupWorkflowItems: createJobsContent(
           groupWorkflowItem,
           groupedByWorkflow
         )
       })
+    } else if (!groupFilter || groupFilter === 'none') {
+      setTableContent({
+        groupLatestItem: [],
+        groupWorkflowItems: [],
+        content: generatedTableContent
+      })
     }
   }, [
     content,
     groupFilter,
-    groupedByName,
     groupedByWorkflow,
+    groupedByName,
     match,
-    pageData,
+    pageData.page,
     setLoading,
-    tableContent,
     workflows
   ])
-
-  useEffect(() => {
-    if (groupFilter === 'none') {
-      setTableContent({
-        groupLatestItem: [],
-        groupWorkflowItems: [],
-        content: []
-      })
-    }
-  }, [groupFilter, match.params.pageTab])
 
   useEffect(() => {
     if (tableContent.content.length && setLoading) {

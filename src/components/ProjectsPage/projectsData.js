@@ -7,18 +7,49 @@ export const pageData = {
   page: 'PROJECTS'
 }
 export const generateProjectActionsMenu = (
+  projects,
   toggleConvertToYaml,
+  archiveProject,
+  unarchiveProject,
   deleteProject
-) => [
+) => {
+  let actionsMenu = {}
+
+  projects.forEach(project => {
+    actionsMenu[project.metadata.name] = [
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertToYaml
+      },
+      {
+        label: 'Archive',
+        hidden: project.status.state === 'archived',
+        onClick: archiveProject
+      },
+      {
+        label: 'Unarchive',
+        hidden: project.status.state === 'online',
+        onClick: unarchiveProject
+      },
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        onClick: deleteProject
+      }
+    ]
+  })
+
+  return actionsMenu
+}
+export const generateProjectsStates = () => [
   {
-    label: 'View YAML',
-    icon: <Yaml />,
-    onClick: toggleConvertToYaml
+    id: 'allProjects',
+    label: 'All Projects'
   },
   {
-    label: 'Delete',
-    icon: <Delete />,
-    onClick: deleteProject
+    id: 'archived',
+    label: 'Archived Projects'
   }
 ]
 export const successProjectDeletingMessage = 'Project deleted successfully'

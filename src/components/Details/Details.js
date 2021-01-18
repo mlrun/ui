@@ -228,6 +228,8 @@ const Details = ({
       detailsDispatch({
         type: detailsActions.RESET_CHANGES
       })
+      unblockRootChange.current()
+      unblockRootChange.current = null
     }
   }
 

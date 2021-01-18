@@ -17,14 +17,17 @@
     @include resetSpaces;
 
     &_item {
-      padding: 8px 24px;
       color: $topaz;
       font-weight: bold;
       font-size: 15px;
       line-height: 18px;
       text-align: center;
       border-bottom: 3px solid transparent;
-      cursor: pointer;
+
+      a {
+        display: block;
+        padding: 8px 24px;
+      }
     }
 
     .active {

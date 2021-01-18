@@ -77,7 +77,14 @@ const ChipCellView = React.forwardRef(
                 <HiddenChipsBlock
                   className={className}
                   chips={chips.hiddenChips}
+                  chipIndex={index}
+                  editConfig={editConfig}
+                  handleEditChip={handleEditChip}
+                  handleIsEdit={handleIsEdit}
+                  handleRemoveChip={handleRemoveChip}
                   handleShowElements={handleShowElements}
+                  isEditMode={isEditMode}
+                  setEditConfig={setEditConfig}
                 />
               )}
             </div>
