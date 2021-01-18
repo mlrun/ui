@@ -3,7 +3,7 @@
 
 .edit-label {
   &-container {
-    display: flex;
+    display: inline-flex;
     margin: 10px 0 10px 10px;
     padding: 5px;
     border: $labelBorder;

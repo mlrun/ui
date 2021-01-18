@@ -1,5 +1,9 @@
 import projectsApi from '../api/projects-api'
 import {
+  ADD_PROJECT_LABEL,
+  CHANGE_PROJECT_STATE_BEGIN,
+  CHANGE_PROJECT_STATE_FAILURE,
+  CHANGE_PROJECT_STATE_SUCCESS,
   CREATE_PROJECT_BEGIN,
   CREATE_PROJECT_FAILURE,
   CREATE_PROJECT_SUCCESS,
@@ -43,10 +47,26 @@ import {
   REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_DATA,
   SET_NEW_PROJECT_DESCRIPTION,
-  SET_NEW_PROJECT_NAME
+  SET_NEW_PROJECT_NAME,
+  SET_PROJECT_LABELS
 } from '../constants'
 
 const projectsAction = {
+  addProjectLabel: (label, labels) => ({
+    type: ADD_PROJECT_LABEL,
+    payload: { ...labels, ...label }
+  }),
+  changeProjectState: (project, status) => dispatch => {
+    dispatch(projectsAction.changeProjectStateBegin())
+
+    return projectsApi
+      .changeProjectState(project, status)
+      .then(() => dispatch(projectsAction.changeProjectStateSuccess()))
+      .catch(() => dispatch(projectsAction.changeProjectStateFailure()))
+  },
+  changeProjectStateBegin: () => ({ type: CHANGE_PROJECT_STATE_BEGIN }),
+  changeProjectStateFailure: () => ({ type: CHANGE_PROJECT_STATE_FAILURE }),
+  changeProjectStateSuccess: () => ({ type: CHANGE_PROJECT_STATE_SUCCESS }),
   createNewProject: postData => dispatch => {
     dispatch(projectsAction.createProjectBegin())
 
@@ -67,11 +87,11 @@ const projectsAction = {
     payload: error
   }),
   createProjectSuccess: () => ({ type: CREATE_PROJECT_SUCCESS }),
-  deleteProject: project => dispatch => {
+  deleteProject: (project, deleteNonEmpty) => dispatch => {
     dispatch(projectsAction.deleteProjectBegin())
 
     return projectsApi
-      .deleteProject(project)
+      .deleteProject(project, deleteNonEmpty)
       .then(() => dispatch(projectsAction.deleteProjectSuccess()))
       .catch(error => {
         dispatch(projectsAction.deleteProjectFailure())
@@ -89,6 +109,11 @@ const projectsAction = {
   deleteProjectSuccess: () => ({
     type: DELETE_PROJECT_SUCCESS
   }),
+  editProjectLabels: (projectName, data, labels) => dispatch => {
+    dispatch(projectsAction.setProjectLabels(labels))
+
+    return projectsApi.editProjectLabels(projectName, { ...data })
+  },
   fetchProject: project => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
@@ -347,11 +372,11 @@ const projectsAction = {
     type: FETCH_PROJECTS_SUCCESS,
     payload: projectsList
   }),
-  fetchProjectWorkflows: () => dispatch => {
+  fetchProjectWorkflows: project => dispatch => {
     dispatch(projectsAction.fetchProjectWorkflowsBegin())
 
     return projectsApi
-      .getProjectWorkflows()
+      .getProjectWorkflows(project)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectWorkflowsSuccess(response.data.runs)
@@ -381,7 +406,11 @@ const projectsAction = {
     type: SET_NEW_PROJECT_DESCRIPTION,
     payload: description
   }),
-  setNewProjectName: name => ({ type: SET_NEW_PROJECT_NAME, payload: name })
+  setNewProjectName: name => ({ type: SET_NEW_PROJECT_NAME, payload: name }),
+  setProjectLabels: labels => ({
+    type: SET_PROJECT_LABELS,
+    payload: { ...labels }
+  })
 }
 
 export default projectsAction

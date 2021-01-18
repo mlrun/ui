@@ -9,8 +9,9 @@ import {
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { detailsActions } from './detailsReducer'
 
-import './detailsInfo.scss'
 import DetailsInfoView from './DetailsInfoView'
+
+import './detailsInfo.scss'
 
 const DetailsInfo = ({
   changes,

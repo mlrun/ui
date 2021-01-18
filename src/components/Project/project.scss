@@ -36,7 +36,6 @@
         font-weight: 300;
         font-size: 36px;
         line-height: 42px;
-        cursor: pointer;
 
         .input {
           width: 100%;
@@ -48,6 +47,83 @@
       &__settings {
         display: none;
         margin-left: 10px;
+      }
+
+      &__source {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 26px;
+
+        .input {
+          width: 100%;
+
+          &-wrapper {
+            width: 100%;
+          }
+        }
+
+        &-edit {
+          position: relative;
+          display: none;
+          margin-left: 10px;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+
+        &-text {
+          max-width: 230px;
+          color: $cornflowerBlue;
+        }
+
+        &:hover {
+          .general-info {
+            &__source-edit {
+              display: block;
+            }
+          }
+        }
+      }
+
+      &__labels {
+        .chips-wrapper {
+          flex-wrap: wrap;
+        }
+
+        &-item {
+          display: inline-flex;
+          margin: 10px 0 0 10px;
+          padding: 5px 10px;
+          color: $primary;
+          font-size: 14px;
+          border: $labelBorder;
+          border-radius: 15px;
+        }
+
+        .job-labels {
+          &__item-icon-close {
+            transform: scale(0.7);
+          }
+
+          &__button-add {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            margin: 10px 0 0 10px;
+            border: $labelBorder;
+            border-radius: 32px;
+          }
+        }
+
+        .chip-block-hidden {
+          left: 0;
+
+          &::after {
+            right: 220px;
+          }
+        }
       }
 
       &__description {

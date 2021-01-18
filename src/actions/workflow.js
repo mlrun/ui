@@ -6,16 +6,20 @@ import {
 } from '../constants'
 
 const workflowActions = {
-  fetchWorkflows: pageToken => dispatch => {
+  fetchWorkflows: (project, pageSize) => dispatch => {
     dispatch(workflowActions.fetchWorkflowsBegin())
 
-    return workflowApi
-      .getAllWorkflows(pageToken)
-      .then(({ data }) => {
-        dispatch(workflowActions.fetchWorkflowsSuccess(data.runs || []))
+    const recursiveCall = pageToken =>
+      workflowApi
+        .getWorkflows(project, pageToken, pageSize)
+        .then(({ data: { runs = [], next_page_token: nextToken } }) =>
+          nextToken
+            ? recursiveCall(nextToken).then(moreRuns => runs.concat(moreRuns))
+            : runs
+        )
 
-        return data.next_page_token
-      })
+    return recursiveCall()
+      .then(runs => dispatch(workflowActions.fetchWorkflowsSuccess(runs)))
       .catch(error => dispatch(workflowActions.fetchWorkflowsFailure(error)))
   },
   fetchWorkflowsBegin: () => ({

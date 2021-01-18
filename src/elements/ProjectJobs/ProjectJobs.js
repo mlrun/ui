@@ -16,7 +16,7 @@ const ProjectJobs = ({
   useEffect(() => {
     fetchProjectJobs(match.params.projectName)
     fetchProjectScheduledJobs(match.params.projectName)
-    fetchProjectWorkflows()
+    fetchProjectWorkflows(match.params.projectName)
   }, [
     match.params.projectName,
     fetchProjectJobs,

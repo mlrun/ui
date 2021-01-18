@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import { map, isEmpty, find } from 'lodash'
+import { map, isEmpty } from 'lodash'
 import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
@@ -27,7 +27,7 @@ const JobsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    rowItem.name.value === selectedItem.name &&
+    rowItem.name?.value === selectedItem.name &&
       rowItem.uid?.value === selectedItem.uid &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
@@ -132,22 +132,6 @@ const JobsTableRow = ({
                     ? contentItemObj.uid === rowItem.uid?.value
                     : contentItemObj.name === rowItem.name.value
                 )
-            const monitorTabLink = `/projects/${
-              match.params.projectName
-            }/jobs/${match.params.pageTab}/${
-              find(content, ['uid', rowItem.uid?.value])?.uid
-            }${
-              match.params.tab ? `/${match.params.tab}` : `/${detailsMenu[0]}`
-            }`
-            const [scheduleJobProject, , scheduleJobFunctionUid] =
-              rowItem.func?.value.match(/\w(?<!\d)[\w'-]*/g, '') || []
-            const scheduleTabLink = !rowItem.func?.value.includes('hub:')
-              ? `/projects/${scheduleJobProject}/functions/${scheduleJobFunctionUid}/${detailsMenu[0]}`
-              : null
-            const itemLink =
-              match.params.pageTab === MONITOR_TAB
-                ? monitorTabLink
-                : scheduleTabLink
 
             return (
               <TableCell
@@ -157,7 +141,7 @@ const JobsTableRow = ({
                 isGroupedByWorkflow={isGroupedByWorkflow}
                 item={currentItem}
                 key={new Date().getTime() + index}
-                link={index === 0 && itemLink}
+                link={rowItemProp.link}
                 selectItem={handleSelectItem}
                 selectedItem={selectedItem}
               />

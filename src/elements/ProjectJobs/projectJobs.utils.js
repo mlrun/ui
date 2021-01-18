@@ -1,19 +1,25 @@
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
+import { groupByUniqName } from '../../utils/groupByUniqName'
 
 export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
   let jobsRunning = 0
   let jobsFailed = 0
+  let workflowsRunning = 0
 
   if (jobs.data) {
-    jobsRunning = jobs.data.reduce(
+    jobsRunning = groupByUniqName(jobs.data, 'metadata.name').reduce(
       (prev, curr) => (curr.status.state === 'running' ? (prev += 1) : prev),
       0
     )
-    jobsFailed = jobs.data.reduce(
+    jobsFailed = groupByUniqName(jobs.data, 'metadata.name').reduce(
       (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
       0
     )
+  }
+  if (Array.isArray(workflows.data)) {
+    workflowsRunning = workflows.data.filter(workflow => workflow === 'Running')
+      .length
   }
 
   return {
@@ -24,10 +30,10 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
       link: `/projects/${match.params.projectName}/jobs/monitor`
     },
     workflows: {
-      value: workflows.error ? 'N/A' : workflows.data.length,
+      value: workflows.error ? 'N/A' : workflowsRunning,
       label: 'Running workflows',
       className:
-        workflows.error || workflows.data.length === 0 ? 'default' : 'running',
+        workflows.error || workflowsRunning === 0 ? 'default' : 'running',
       link: `/projects/${match.params.projectName}/jobs/monitor`
     },
     failed: {
@@ -37,10 +43,13 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
       link: `/projects/${match.params.projectName}/jobs/monitor`
     },
     scheduled: {
-      value: scheduledJobs.error ? 'N/A' : scheduledJobs.data.length,
+      value: scheduledJobs.error
+        ? 'N/A'
+        : groupByUniqName(scheduledJobs.data, 'name').length,
       label: 'Scheduled',
       className:
-        scheduledJobs.error || scheduledJobs.data.length === 0
+        scheduledJobs.error ||
+        groupByUniqName(scheduledJobs.data, 'name').length === 0
           ? 'default'
           : 'scheduled',
       link: `/projects/${match.params.projectName}/jobs/schedule`

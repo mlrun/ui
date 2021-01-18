@@ -2,16 +2,28 @@ import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
 import cronstrue from 'cronstrue'
 import { parseKeyValues } from './object'
-import { SCHEDULE_TAB } from '../constants'
 
-const createJobsContent = (content, groupedByWorkflow, pageTab) => {
+const createJobsContent = (content, groupedByWorkflow, scheduled) => {
   return content.map(contentItem => {
     if (contentItem) {
-      if (pageTab === SCHEDULE_TAB) {
+      if (scheduled) {
+        const [, , scheduleJobFunctionUid] =
+          contentItem.func?.match(/\w(?<!\d)[\w'-]*/g, '') || []
+        const nameLink = !contentItem.func?.includes('hub:')
+          ? `/projects/${contentItem.project}/functions/${scheduleJobFunctionUid}/overview`
+          : null
+        const [, projectName, jobUid] =
+          contentItem.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
+        const lastRunLink =
+          projectName &&
+          jobUid &&
+          `/projects/${projectName}/jobs/monitor/${jobUid}/overview`
+
         return {
           name: {
             value: contentItem.name,
-            class: 'jobs_big'
+            class: 'jobs_big',
+            link: nameLink
           },
           type: {
             value: contentItem.type,
@@ -24,7 +36,9 @@ const createJobsContent = (content, groupedByWorkflow, pageTab) => {
             type: 'date'
           },
           schedule: {
-            value: cronstrue.toString(contentItem.scheduled_object.schedule),
+            value: contentItem.scheduled_object
+              ? cronstrue.toString(contentItem.scheduled_object?.schedule)
+              : null,
             class: 'jobs_big'
           },
           labels: {
@@ -35,12 +49,9 @@ const createJobsContent = (content, groupedByWorkflow, pageTab) => {
             type: 'labels'
           },
           lastRun: {
-            value: {
-              date: formatDatetime(contentItem.start_time),
-              state: contentItem.state
-            },
+            value: formatDatetime(contentItem.start_time),
             class: 'jobs_big',
-            type: 'date with state'
+            link: lastRunLink
           },
           createdTime: {
             value: formatDatetime(contentItem.createdTime, 'Not yet started'),
@@ -60,7 +71,8 @@ const createJobsContent = (content, groupedByWorkflow, pageTab) => {
         return {
           name: {
             value: contentItem.name,
-            class: 'jobs_medium'
+            class: 'jobs_medium',
+            link: `/projects/${contentItem.project}/jobs/monitor/${contentItem.uid}/overview`
           },
           type: {
             value: typeof groupedByWorkflow !== 'boolean' ? 'workflow' : type,

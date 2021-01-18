@@ -4,12 +4,14 @@ import {
   FETCH_API_GATEWAYS_SUCCESS,
   FETCH_NUCLIO_FUNCTIONS_BEGIN,
   FETCH_NUCLIO_FUNCTIONS_FAILURE,
-  FETCH_NUCLIO_FUNCTIONS_SUCCESS
+  FETCH_NUCLIO_FUNCTIONS_SUCCESS,
+  FETCH_ALL_NUCLIO_FUNCTIONS_SUCCESS
 } from '../constants'
 
 const initialState = {
   apiGateways: 0,
-  functions: [],
+  functions: {},
+  currentProjectFunctions: [],
   loading: false,
   error: null
 }
@@ -47,6 +49,13 @@ export default (state = initialState, { type, payload }) => {
         error: payload
       }
     case FETCH_NUCLIO_FUNCTIONS_SUCCESS:
+      return {
+        ...state,
+        currentProjectFunctions: payload,
+        loading: false,
+        error: null
+      }
+    case FETCH_ALL_NUCLIO_FUNCTIONS_SUCCESS:
       return {
         ...state,
         functions: payload,

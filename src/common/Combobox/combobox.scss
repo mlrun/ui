@@ -10,7 +10,7 @@
   width: 100%;
 
   &-list {
-    min-width: 120px;
+    min-width: 140px;
     margin: 0;
     list-style-type: none;
 
@@ -63,7 +63,6 @@
   &-select {
     position: relative;
     display: flex;
-    flex: 0.5 1;
     max-width: 50px;
 
     &_short {
@@ -86,13 +85,13 @@
 
     &__header {
       position: relative;
-      min-height: 20px;
+      min-height: 17px;
 
       &-label {
         position: absolute;
         top: 0;
         left: 0;
-        min-width: 66px;
+        min-width: 90px;
         color: $topaz;
         user-select: none;
         pointer-events: none;

@@ -82,6 +82,11 @@ main {
       background-color: $brightTurquoise;
     }
 
+    &_danger {
+      color: $white;
+      background-color: $amaranth;
+    }
+
     &_default {
       background-color: $white;
       border: $primaryBorder;
@@ -108,7 +113,8 @@ main {
 .completed,
 .ready,
 .created,
-.info {
+.info,
+.succeeded {
   @include jobStatus($brightTurquoise);
 }
 

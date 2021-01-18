@@ -244,7 +244,7 @@ const createFeatureSetsRowData = (artifact, project) => {
       class: 'artifacts_medium'
     },
     entity: {
-      value: artifact.entities[0]?.name,
+      value: artifact.entities ? artifact.entities[0]?.name : '',
       class: 'artifacts_small'
     },
     targets: getFeatureSetTargetCellValue(artifact.targets)
