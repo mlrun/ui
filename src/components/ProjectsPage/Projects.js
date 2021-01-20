@@ -67,12 +67,7 @@ const Projects = ({
           })
         })
         .catch(error => {
-          if (
-            error.response?.status === 412 &&
-            error.response?.data?.detail?.includes(
-              'can not be deleted since related resources found'
-            )
-          ) {
+          if (error.response?.status === 412) {
             setDeleteNonEmptyProject(project)
           } else {
             setNotification({
