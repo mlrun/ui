@@ -94,9 +94,6 @@ const HiddenChipsBlock = ({
     </div>
   )
 }
-HiddenChipsBlock.defaultProps = {
-  chips: []
-}
 
 HiddenChipsBlock.defaultProps = {
   chips: [],
