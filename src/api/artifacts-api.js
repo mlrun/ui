@@ -95,9 +95,9 @@ export default {
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data),
-  updateFeatureSetData: (projectName, featureSet, uid, data) =>
+  updateFeatureSetData: (projectName, featureSet, tag, data) =>
     mainHttpClient.patch(
-      `/projects/${projectName}/feature-sets/${featureSet}/references/${uid}`,
+      `/projects/${projectName}/feature-sets/${featureSet}/references/${tag}`,
       data
     )
 }
