@@ -101,7 +101,7 @@ export const featureSetsTableHeaders = [
 ]
 export const featureVectorsTableHeaders = [
   {
-    header: 'Feature Name',
+    header: 'Name',
     class: 'artifacts_medium'
   },
   {

@@ -29,27 +29,24 @@ const fetchArtifacts = (item, path) => {
 }
 
 const fetchFeatureStoreData = (item, tab, config) => {
-  const initialUrl = `/projects/${item.project}/${tab}`
-  let url = initialUrl
+  const params = {}
 
   if (item?.labels) {
-    let labels = item?.labels
-      ?.split(',')
-      .map(item => `label=${item}`)
-      .join('&')
-
-    url = `${url}?${labels}`
+    params.labels = item.labels
   }
 
   if (item?.tag && !/latest/i.test(item.tag)) {
-    url = `${url === initialUrl ? `${url}?` : `${url}&`}tag=${item.tag}`
+    params.tag = item.tag
   }
 
   if (item?.name) {
-    url = `${url === initialUrl ? `${url}?` : `${url}&`}name=${item.name}`
+    params.name = item.name
   }
 
-  return mainHttpClient.get(url, config)
+  return mainHttpClient.get(`/projects/${item.project}/${tab}`, {
+    ...config,
+    params
+  })
 }
 
 export default {

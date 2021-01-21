@@ -344,6 +344,14 @@ const FeatureStore = ({
 
   const handleTreeFilterChange = useCallback(
     item => {
+      if (match.params.name) {
+        history.push(
+          `/projects/${match.params.projectName}/feature-store${
+            match.params.pageTab ? `/${match.params.pageTab}` : ''
+          }`
+        )
+      }
+
       handleArtifactTreeFilterChange(
         fetchData,
         artifactsStore.filter,
@@ -355,6 +363,9 @@ const FeatureStore = ({
     [
       artifactsStore.filter,
       fetchData,
+      history,
+      match.params.name,
+      match.params.pageTab,
       match.params.projectName,
       setArtifactFilter
     ]
