@@ -6,6 +6,7 @@ import {
   DATASETS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
+  FEATURE_VECTORS_TAB,
   FEATURES_TAB,
   FILES_PAGE,
   MODELS_PAGE
@@ -36,6 +37,8 @@ const createArtifactsContent = (artifacts, page, featureStoreTab, project) =>
         rowData = createFeatureSetsRowData(artifact, project)
       } else if (featureStoreTab === FEATURES_TAB) {
         rowData = createFeaturesRowData(artifact)
+      } else if (featureStoreTab === FEATURE_VECTORS_TAB) {
+        rowData = createFeatureVectorsRowData(artifact, project)
       }
     }
 
@@ -317,6 +320,34 @@ const getFeatureSetTargetCellValue = targets => ({
     .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
   class: 'artifacts_small artifacts__targets-icon',
   type: 'icons'
+})
+
+const createFeatureVectorsRowData = (artifact, project) => ({
+  key: {
+    value: artifact.name,
+    class: 'artifacts_medium',
+    link: `/projects/${project}/feature-store/feature-vectors/${artifact.name}/${artifact.tag}/overview`
+  },
+  labels: {
+    value: parseKeyValues(artifact.labels),
+    class: 'artifacts_big',
+    type: 'labels'
+  },
+  version: {
+    value: artifact.tag,
+    class: 'artifacts_small',
+    type: 'hidden'
+  },
+  description: {
+    value: artifact.description,
+    class: 'artifacts_medium'
+  },
+  updated: {
+    value: artifact.updated
+      ? formatDatetime(new Date(artifact.updated), 'N/A')
+      : 'N/A',
+    class: 'artifacts_small'
+  }
 })
 
 export default createArtifactsContent

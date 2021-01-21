@@ -1,5 +1,9 @@
 import { mainHttpClient } from '../httpClient'
-import { FEATURE_SETS_TAB, FEATURES_TAB } from '../constants'
+import {
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB
+} from '../constants'
 
 const fetchArtifacts = (item, path) => {
   let url = path
@@ -35,6 +39,10 @@ const fetchFeatureStoreData = (item, tab, config) => {
       .join('&')
 
     url = `${url}?${labels}`
+  }
+
+  if (item?.tag && !/latest/i.test(item.tag)) {
+    url = `${url === initialUrl ? `${url}?` : `${url}&`}tag=${item.tag}`
   }
 
   if (item?.name) {
@@ -74,6 +82,13 @@ export default {
   },
   getFeatureSets: (item, config) => {
     return fetchFeatureStoreData(item, FEATURE_SETS_TAB, config)
+  },
+  getFeatureVector: (featureVector, project) =>
+    mainHttpClient.get(
+      `/projects/${project}/feature-vectors?name=${featureVector}`
+    ),
+  getFeatureVectors: item => {
+    return fetchFeatureStoreData(item, FEATURE_VECTORS_TAB)
   },
   getFeatures: item => {
     return fetchFeatureStoreData(item, FEATURES_TAB)
