@@ -97,7 +97,6 @@ const JobsPanelTitle = ({
       editTitle={editTitle}
       handleFinishEdit={handleFinishEdit}
       handleFunctionInfoChange={handleFunctionInfoChange}
-      match={match}
       methodOptions={functionData.methodOptions}
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}

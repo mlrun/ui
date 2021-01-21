@@ -21,7 +21,6 @@ const JobsPanelTitleView = ({
   editTitle,
   handleFinishEdit,
   handleFunctionInfoChange,
-  match,
   methodOptions,
   openScheduleJob,
   panelDispatch,
@@ -50,9 +49,11 @@ const JobsPanelTitleView = ({
         )}
         <Accordion
           accordionClassName="job-panel__title-accordion"
-          closeOnBlur={() => {
-            setEditTitle(false)
-          }}
+          closeOnBlur={
+            currentFunctionInfo.name.trim() === ''
+              ? null
+              : () => setEditTitle(false)
+          }
           icon={
             <Edit
               onClick={() => {
@@ -78,6 +79,9 @@ const JobsPanelTitleView = ({
                 }
                 type="text"
                 value={currentFunctionInfo.name}
+                disabled={!editTitle}
+                required={currentFunctionInfo.name.trim() === ''}
+                requiredText="This field is required"
                 wrapperClassName={
                   !editTitle ? 'job-panel__title-input-wrapper' : ''
                 }
@@ -170,7 +174,6 @@ JobsPanelTitleView.propTypes = {
   editTitle: PropTypes.bool.isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   handleFunctionInfoChange: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
   methodOptions: PropTypes.array.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
