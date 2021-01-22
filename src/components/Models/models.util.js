@@ -12,7 +12,11 @@ export const infoHeaders = [
   { label: 'Sources', id: 'sources' }
 ]
 export const detailsMenu = ['overview', 'preview']
-export const filters = ['tree', 'labels', 'name']
+export const filters = [
+  { type: 'tree', label: 'Tree:' },
+  { type: 'labels', label: 'Labels:' },
+  { type: 'name', label: 'Name:' }
+]
 export const page = 'MODELS'
 export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register model'

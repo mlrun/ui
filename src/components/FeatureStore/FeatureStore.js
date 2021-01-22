@@ -346,19 +346,17 @@ const FeatureStore = ({
     item => {
       if (match.params.name) {
         history.push(
-          `/projects/${match.params.projectName}/feature-store${
-            match.params.pageTab ? `/${match.params.pageTab}` : ''
-          }`
+          `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
+        )
+
+        handleArtifactTreeFilterChange(
+          fetchData,
+          artifactsStore.filter,
+          item,
+          match.params.projectName,
+          setArtifactFilter
         )
       }
-
-      handleArtifactTreeFilterChange(
-        fetchData,
-        artifactsStore.filter,
-        item,
-        match.params.projectName,
-        setArtifactFilter
-      )
     },
     [
       artifactsStore.filter,

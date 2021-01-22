@@ -26,11 +26,25 @@ export const featureSetsInfoHeaders = [
   { label: 'Relations', id: 'relations' },
   { label: 'Label column', id: 'label_column' }
 ]
-export const datasetsFilters = ['tree', 'name', 'labels']
+export const datasetsFilters = [
+  { type: 'tree', label: 'Tree:' },
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
+]
 export const detailsMenu = ['overview', 'preview']
-export const featureSetsFilters = ['name', 'labels']
-export const featureVectorsFilters = ['tree', 'name', 'labels']
-export const featuresFilters = ['name', 'labels']
+export const featureSetsFilters = [
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
+]
+export const featureVectorsFilters = [
+  { type: 'tree', label: 'Tag:' },
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
+]
+export const featuresFilters = [
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
+]
 export const page = 'FEATURE-STORE'
 export const sources = ['name', 'path']
 export const registerDatasetsTitle = 'Register dataset'
