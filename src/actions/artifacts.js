@@ -26,10 +26,16 @@ import {
   FETCH_FEATURES_FAILURE,
   FETCH_FEATURES_SUCCESS,
   REMOVE_FEATURE_SETS,
-  REMOVE_FEATURES
+  REMOVE_FEATURES,
+  FETCH_FEATURE_VECTORS_BEGIN,
+  FETCH_FEATURE_VECTORS_FAILURE,
+  FETCH_FEATURE_VECTORS_SUCCESS,
+  REMOVE_FEATURE_VECTORS,
+  FETCH_FEATURE_VECTOR_SUCCESS,
+  REMOVE_FEATURE_VECTOR
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
-import { generateFeatureSets } from '../utils/generateFeatureSets'
+import { parseFeatureStoreDataRequest } from '../utils/parseFeatureStoreDataRequest'
 
 const artifactsAction = {
   closeArtifactsPreview: item => ({
@@ -95,7 +101,9 @@ const artifactsAction = {
     return artifactsApi
       .getFeatureSets(project, config)
       .then(response => {
-        let featureSets = generateFeatureSets(response.data.feature_sets)
+        let featureSets = parseFeatureStoreDataRequest(
+          response.data.feature_sets
+        )
 
         dispatch(artifactsAction.fetchFeatureSetsSuccess(featureSets))
 
@@ -114,6 +122,56 @@ const artifactsAction = {
   }),
   fetchFeatureSetsSuccess: featureSets => ({
     type: FETCH_FEATURE_SETS_SUCCESS,
+    payload: featureSets
+  }),
+  fetchFeatureVector: (featureVector, project) => dispatch => {
+    return artifactsApi
+      .getFeatureVector(featureVector, project)
+      .then(response => {
+        let featureVectors = parseFeatureStoreDataRequest(
+          response.data.feature_vectors
+        )
+
+        dispatch(
+          artifactsAction.fetchFeatureVectorSuccess({
+            [featureVector]: featureVectors
+          })
+        )
+
+        return featureVectors
+      })
+  },
+  fetchFeatureVectorSuccess: featureSets => ({
+    type: FETCH_FEATURE_VECTOR_SUCCESS,
+    payload: featureSets
+  }),
+  fetchFeatureVectors: (project, config) => dispatch => {
+    dispatch(artifactsAction.fetchFeatureVectorsBegin())
+
+    return artifactsApi
+      .getFeatureVectors(project, config)
+      .then(response => {
+        let featureVectors = parseFeatureStoreDataRequest(
+          response.data.feature_vectors
+        )
+
+        dispatch(artifactsAction.fetchFeatureVectorsSuccess(featureVectors))
+
+        return featureVectors
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFeatureVectorsFailure(err))
+      })
+  },
+  fetchFeatureVectorsBegin: () => ({
+    type: FETCH_FEATURE_VECTORS_BEGIN
+  }),
+  fetchFeatureVectorsFailure: error => ({
+    type: FETCH_FEATURE_VECTORS_FAILURE,
+    payload: error
+  }),
+  fetchFeatureVectorsSuccess: featureSets => ({
+    type: FETCH_FEATURE_VECTORS_SUCCESS,
     payload: featureSets
   }),
   fetchFeatures: project => dispatch => {
@@ -203,6 +261,13 @@ const artifactsAction = {
   }),
   removeFeatureSets: () => ({
     type: REMOVE_FEATURE_SETS
+  }),
+  removeFeatureVector: featureVectors => ({
+    type: REMOVE_FEATURE_VECTOR,
+    payload: featureVectors
+  }),
+  removeFeatureVectors: () => ({
+    type: REMOVE_FEATURE_VECTORS
   }),
   removeFeatures: () => ({
     type: REMOVE_FEATURES

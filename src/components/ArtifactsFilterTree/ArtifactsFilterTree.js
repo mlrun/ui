@@ -61,7 +61,9 @@ const ArtifactFilterTree = ({
 
       if (match.params.jobId || match.params.name) {
         history.push(
-          `/projects/${match.params.projectName}/${page.toLowerCase()}`
+          `/projects/${match.params.projectName}/${page.toLowerCase()}${
+            match.params.pageTab ? `/${match.params.pageTab}` : ''
+          }`
         )
       }
 

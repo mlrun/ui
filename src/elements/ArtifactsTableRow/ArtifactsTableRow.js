@@ -4,6 +4,7 @@ import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
+import Loader from '../../common/Loader/Loader'
 
 import artifactsData from '../../components/Artifacts/artifactsData'
 
@@ -47,72 +48,76 @@ const ArtifactsTableRow = ({
               firstRow
             />
           </div>
-          <>
-            {tableContent.map((artifact, index) => {
-              const subRowClassNames = classnames(
-                'table-body__row',
-                ((selectedItem?.db_key &&
-                  selectedItem?.db_key === content[index]?.db_key) ||
-                  (selectedItem?.name &&
-                    selectedItem?.name === content[index]?.name)) &&
-                  'row_active'
-              )
-              let currentItem = {}
+          {tableContent.map((artifact, index) => {
+            const subRowClassNames = classnames(
+              'table-body__row',
+              ((selectedItem?.db_key &&
+                selectedItem?.db_key === content[index]?.db_key) ||
+                (selectedItem?.name &&
+                  selectedItem?.name === content[index]?.name)) &&
+                'row_active'
+            )
+            let currentItem = {}
 
-              return (
-                <div className={subRowClassNames} key={index}>
-                  {Object.values(artifact).map((value, i) => {
-                    currentItem =
-                      content.length > 0 &&
-                      content.find(contentItem => {
-                        return (
-                          (contentItem.name === artifact.name ||
-                            contentItem.db_key === artifact.db_key) &&
-                          contentItem.tag === artifact.version.value
-                        )
-                      })
+            return (
+              <div className={subRowClassNames} key={index}>
+                {pageData.selectedRowData?.loading ? (
+                  <Loader key={index} />
+                ) : (
+                  <>
+                    {Object.values(artifact).map((value, i) => {
+                      currentItem =
+                        content.length > 0 &&
+                        content.find(contentItem => {
+                          return (
+                            (contentItem.name === artifact.name ||
+                              contentItem.db_key === artifact.db_key) &&
+                            contentItem.tag === artifact.version.value
+                          )
+                        })
 
-                    return (
-                      <TableCell
-                        data={
-                          value.link
-                            ? {
-                                class: 'artifacts_medium',
-                                value: currentItem.tag
-                              }
-                            : value
-                        }
-                        item={currentItem}
-                        link={
-                          value.link &&
-                          (value.link === 'info'
-                            ? `/projects/${
-                                match.params.projectName
-                              }/${pageData.page.toLowerCase()}${
-                                match.params.pageTab
-                                  ? `/${match.params.pageTab}`
-                                  : ''
-                              }/${rowItem.key.value}/${
-                                match.params.tab
-                                  ? match.params.tab
-                                  : `${artifactsData.detailsMenu[0]}`
-                              }`
-                            : value.link)
-                        }
-                        match={match}
-                        key={value.value + i}
-                        selectItem={handleSelectItem}
-                        selectedItem={selectedItem}
-                      />
-                    )
-                  })}
-                  <div className="table-body__cell action_cell">
-                    <TableActionsMenu item={currentItem} menu={actionsMenu} />
-                  </div>
-                </div>
-              )
-            })}
-          </>
+                      return (
+                        <TableCell
+                          data={
+                            value.link
+                              ? {
+                                  class: 'artifacts_medium',
+                                  value: currentItem.tag
+                                }
+                              : value
+                          }
+                          item={currentItem}
+                          link={
+                            value.link &&
+                            (value.link === 'info'
+                              ? `/projects/${
+                                  match.params.projectName
+                                }/${pageData.page.toLowerCase()}${
+                                  match.params.pageTab
+                                    ? `/${match.params.pageTab}`
+                                    : ''
+                                }/${rowItem.key.value}/${
+                                  match.params.tab
+                                    ? match.params.tab
+                                    : `${artifactsData.detailsMenu[0]}`
+                                }`
+                              : value.link)
+                          }
+                          match={match}
+                          key={value.value + i}
+                          selectItem={handleSelectItem}
+                          selectedItem={selectedItem}
+                        />
+                      )
+                    })}
+                    <div className="table-body__cell action_cell">
+                      <TableActionsMenu item={currentItem} menu={actionsMenu} />
+                    </div>
+                  </>
+                )}
+              </div>
+            )
+          })}
         </div>
       ) : (
         <>

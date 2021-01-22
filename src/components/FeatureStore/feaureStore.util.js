@@ -1,4 +1,8 @@
-import { FEATURE_SETS_TAB, FEATURES_TAB } from '../../constants'
+import {
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB
+} from '../../constants'
 
 export const datasetsInfoHeaders = [
   { label: 'Hash', id: 'hash' },
@@ -22,10 +26,25 @@ export const featureSetsInfoHeaders = [
   { label: 'Relations', id: 'relations' },
   { label: 'Label column', id: 'label_column' }
 ]
-export const datasetsFilters = ['tree', 'name', 'labels']
+export const datasetsFilters = [
+  { type: 'tree', label: 'Tree:' },
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
+]
 export const detailsMenu = ['overview', 'preview']
-export const featureSetsFilters = ['name', 'labels']
-export const featuresFilters = ['name', 'labels']
+export const featureSetsFilters = [
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
+]
+export const featureVectorsFilters = [
+  { type: 'tree', label: 'Tag:' },
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
+]
+export const featuresFilters = [
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
+]
 export const page = 'FEATURE-STORE'
 export const sources = ['name', 'path']
 export const registerDatasetsTitle = 'Register dataset'
@@ -94,6 +113,28 @@ export const featureSetsTableHeaders = [
     class: 'action_cell'
   }
 ]
+export const featureVectorsTableHeaders = [
+  {
+    header: 'Name',
+    class: 'artifacts_medium'
+  },
+  {
+    header: 'Labels',
+    class: 'artifacts_big'
+  },
+  {
+    header: 'Description',
+    class: 'artifacts_medium'
+  },
+  {
+    header: 'Updated',
+    class: 'artifacts_small'
+  },
+  {
+    header: '',
+    class: 'action_cell'
+  }
+]
 export const featuresTableHeaders = [
   {
     header: 'Feature Name',
@@ -139,7 +180,11 @@ export const tabs = [
   { id: 'feature-vectors', label: 'Feature vectors' }
 ]
 
-export const generatePageData = pageTab => {
+export const generatePageData = (
+  pageTab,
+  handleRequestOnExpand,
+  handleRemoveFeatureVector
+) => {
   let data = {
     detailsMenu,
     page,
@@ -153,6 +198,11 @@ export const generatePageData = pageTab => {
   } else if (pageTab === FEATURES_TAB) {
     data.filters = featuresFilters
     data.tableHeaders = featuresTableHeaders
+  } else if (pageTab === FEATURE_VECTORS_TAB) {
+    data.filters = featureVectorsFilters
+    data.tableHeaders = featureVectorsTableHeaders
+    data.handleRequestOnExpand = handleRequestOnExpand
+    data.handleRemoveFeatureVector = handleRemoveFeatureVector
   } else {
     data.filters = datasetsFilters
     data.infoHeaders = datasetsInfoHeaders

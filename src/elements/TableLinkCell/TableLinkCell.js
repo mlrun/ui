@@ -55,14 +55,15 @@ const TableLinkCell = ({
           >
             {data.value}
           </Tooltip>
-          {link.match(/functions|feature-sets/) && data.value !== item.tag && (
-            <Tooltip
-              className="item-tag"
-              template={<TextTooltipTemplate text={item.tag} />}
-            >
-              <span>{item.tag}</span>
-            </Tooltip>
-          )}
+          {link.match(/functions|feature-sets|feature-vectors/) &&
+            data.value !== item.tag && (
+              <Tooltip
+                className="item-tag"
+                template={<TextTooltipTemplate text={item.tag} />}
+              >
+                <span>{item.tag}</span>
+              </Tooltip>
+            )}
         </div>
         {(link.match(/jobs/) ||
           (link.match(/functions/) &&

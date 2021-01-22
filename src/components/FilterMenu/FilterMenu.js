@@ -62,7 +62,9 @@ const FilterMenu = ({
     if (event.keyCode === 13) {
       if (match.params.jobId || match.params.name) {
         history.push(
-          `/projects/${match.params.projectName}/${page.toLowerCase()}`
+          `/projects/${match.params.projectName}/${page.toLowerCase()}${
+            match.params.pageTab ? `/${match.params.pageTab}` : ''
+          }`
         )
       }
       if (
@@ -112,13 +114,13 @@ const FilterMenu = ({
     <>
       <div className="filters">
         {filters.map(filter => {
-          switch (filter) {
+          switch (filter.type) {
             case 'tree':
               return (
                 <ArtifactFilterTree
                   filterTreeOptions={filterTreeOptions}
-                  key={filter}
-                  label="Tree:"
+                  key={filter.type}
+                  label={filter.label}
                   match={match}
                   onChange={handleArtifactFilterTree}
                   page={page}
@@ -129,9 +131,9 @@ const FilterMenu = ({
               return (
                 <Input
                   type="text"
-                  label="labels:"
+                  label={filter.label}
                   placeholder="key1=value1,…"
-                  key={filter}
+                  key={filter.type}
                   onChange={setLabels}
                   value={labels}
                   onKeyDown={onKeyDown}
@@ -141,8 +143,8 @@ const FilterMenu = ({
               return (
                 <Input
                   type="text"
-                  label="name:"
-                  key={filter}
+                  label={filter.label}
+                  key={filter.type}
                   onChange={setName}
                   value={name}
                   onKeyDown={onKeyDown}
@@ -152,8 +154,8 @@ const FilterMenu = ({
               return (
                 <Input
                   type="text"
-                  label="owner:"
-                  key={filter}
+                  label={filter.label}
+                  key={filter.type}
                   onChange={setOwner}
                   value={owner}
                   onKeyDown={onKeyDown}
@@ -162,13 +164,13 @@ const FilterMenu = ({
             default:
               return (
                 <Select
-                  className={filter === 'period' ? 'period-filter' : ''}
-                  options={selectOptions[filter]}
-                  label={`${filter.replace(/([A-Z])/g, ' $1')}:`}
-                  key={filter}
+                  className={filter.type === 'period' ? 'period-filter' : ''}
+                  options={selectOptions[filter.type]}
+                  label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
+                  key={filter.type}
                   selectedId={
-                    (filter === 'status' && stateFilter) ||
-                    (filter === 'groupBy' && groupFilter)
+                    (filter.type === 'status' && stateFilter) ||
+                    (filter.type === 'groupBy' && groupFilter)
                   }
                   onClick={item => handleSelectOption(item, filter)}
                 />
@@ -235,7 +237,7 @@ FilterMenu.defaultProps = {
 }
 
 FilterMenu.propTypes = {
-  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,
   setGroupFilter: PropTypes.func,

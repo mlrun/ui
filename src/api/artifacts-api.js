@@ -1,5 +1,9 @@
 import { mainHttpClient } from '../httpClient'
-import { FEATURE_SETS_TAB, FEATURES_TAB } from '../constants'
+import {
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB
+} from '../constants'
 
 const fetchArtifacts = (item, path) => {
   let url = path
@@ -25,23 +29,24 @@ const fetchArtifacts = (item, path) => {
 }
 
 const fetchFeatureStoreData = (item, tab, config) => {
-  const initialUrl = `/projects/${item.project}/${tab}`
-  let url = initialUrl
+  const params = {}
 
   if (item?.labels) {
-    let labels = item?.labels
-      ?.split(',')
-      .map(item => `label=${item}`)
-      .join('&')
+    params.labels = item.labels
+  }
 
-    url = `${url}?${labels}`
+  if (item?.tag && !/latest/i.test(item.tag)) {
+    params.tag = item.tag
   }
 
   if (item?.name) {
-    url = `${url === initialUrl ? `${url}?` : `${url}&`}name=${item.name}`
+    params.name = item.name
   }
 
-  return mainHttpClient.get(url, config)
+  return mainHttpClient.get(`/projects/${item.project}/${tab}`, {
+    ...config,
+    params
+  })
 }
 
 export default {
@@ -74,6 +79,13 @@ export default {
   },
   getFeatureSets: (item, config) => {
     return fetchFeatureStoreData(item, FEATURE_SETS_TAB, config)
+  },
+  getFeatureVector: (featureVector, project) =>
+    mainHttpClient.get(
+      `/projects/${project}/feature-vectors?name=${featureVector}`
+    ),
+  getFeatureVectors: item => {
+    return fetchFeatureStoreData(item, FEATURE_VECTORS_TAB)
   },
   getFeatures: item => {
     return fetchFeatureStoreData(item, FEATURES_TAB)

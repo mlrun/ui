@@ -45,5 +45,5 @@ export const infoHeaders = [
   { label: 'Description', id: 'description' },
   { label: 'State', id: 'state' }
 ]
-export const filters = ['name']
+export const filters = [{ type: 'name', label: 'Name:' }]
 export const initialGroupFilter = 'name'

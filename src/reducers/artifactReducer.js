@@ -9,6 +9,10 @@ import {
   FETCH_FEATURE_SETS_BEGIN,
   FETCH_FEATURE_SETS_FAILURE,
   FETCH_FEATURE_SETS_SUCCESS,
+  FETCH_FEATURE_VECTOR_SUCCESS,
+  FETCH_FEATURE_VECTORS_BEGIN,
+  FETCH_FEATURE_VECTORS_FAILURE,
+  FETCH_FEATURE_VECTORS_SUCCESS,
   FETCH_FEATURES_BEGIN,
   FETCH_FEATURES_FAILURE,
   FETCH_FEATURES_SUCCESS,
@@ -21,6 +25,8 @@ import {
   REMOVE_ARTIFACTS,
   REMOVE_DATASETS,
   REMOVE_FEATURE_SETS,
+  REMOVE_FEATURE_VECTOR,
+  REMOVE_FEATURE_VECTORS,
   REMOVE_FEATURES,
   SET_ARTIFACT_FILTER,
   SHOW_ARTIFACT_PREVIEW
@@ -31,6 +37,12 @@ const initialState = {
   dataSets: [],
   error: null,
   featureSets: [],
+  featureVectors: {
+    allData: [],
+    selectedRowData: {
+      content: {}
+    }
+  },
   features: [],
   files: [],
   filter: {
@@ -68,23 +80,22 @@ export default (state = initialState, { type, payload }) => {
         artifacts: payload,
         loading: false
       }
-    case FETCH_FEATURES_BEGIN:
+    case FETCH_DATASETS_BEGIN:
       return {
         ...state,
         loading: true
       }
-    case FETCH_FEATURES_FAILURE:
+    case FETCH_DATASETS_FAILURE:
       return {
         ...state,
+        dataSets: [],
         error: payload,
-        features: [],
         loading: false
       }
-    case FETCH_FEATURES_SUCCESS:
+    case FETCH_DATASETS_SUCCESS:
       return {
         ...state,
-        error: false,
-        features: payload,
+        dataSets: payload,
         loading: false
       }
     case FETCH_FEATURE_SETS_BEGIN:
@@ -105,22 +116,59 @@ export default (state = initialState, { type, payload }) => {
         featureSets: payload,
         loading: false
       }
-    case FETCH_DATASETS_BEGIN:
+    case FETCH_FEATURE_VECTOR_SUCCESS:
+      return {
+        ...state,
+        featureVectors: {
+          ...state.featureVectors,
+          selectedRowData: {
+            content: {
+              ...state.featureVectors.content,
+              ...payload
+            },
+            error: false,
+            loading: false
+          }
+        }
+      }
+    case FETCH_FEATURE_VECTORS_BEGIN:
       return {
         ...state,
         loading: true
       }
-    case FETCH_DATASETS_FAILURE:
+    case FETCH_FEATURE_VECTORS_FAILURE:
       return {
         ...state,
-        dataSets: [],
         error: payload,
         loading: false
       }
-    case FETCH_DATASETS_SUCCESS:
+    case FETCH_FEATURE_VECTORS_SUCCESS:
       return {
         ...state,
-        dataSets: payload,
+        error: false,
+        featureVectors: {
+          ...state.featureVectors,
+          allData: payload
+        },
+        loading: false
+      }
+    case FETCH_FEATURES_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_FEATURES_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        features: [],
+        loading: false
+      }
+    case FETCH_FEATURES_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        features: payload,
         loading: false
       }
     case FETCH_FILES_BEGIN:
@@ -173,6 +221,30 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         featureSets: []
+      }
+    case REMOVE_FEATURE_VECTOR:
+      return {
+        ...state,
+        featureVectors: {
+          ...state.featureVectors,
+          selectedRowData: {
+            content: payload,
+            error: null,
+            loading: false
+          }
+        }
+      }
+    case REMOVE_FEATURE_VECTORS:
+      return {
+        ...state,
+        featureVectors: {
+          allData: [],
+          selectedRowData: {
+            content: {},
+            error: null,
+            loading: false
+          }
+        }
       }
     case REMOVE_FEATURES:
       return {
