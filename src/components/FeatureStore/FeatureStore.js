@@ -35,6 +35,7 @@ const FeatureStore = ({
   updateFeatureSetData
 }) => {
   const [content, setContent] = useState([])
+  const [yamlContent, setYamlContent] = useState([])
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
@@ -57,6 +58,7 @@ const FeatureStore = ({
 
         if (result) {
           setContent(generateArtifacts(result))
+          setYamlContent(result)
 
           return result
         }
@@ -71,6 +73,7 @@ const FeatureStore = ({
 
         if (result) {
           setContent(result)
+          setYamlContent(result)
 
           return result
         }
@@ -79,6 +82,7 @@ const FeatureStore = ({
 
         if (result) {
           setContent(result)
+          setYamlContent(result)
 
           return result
         }
@@ -92,6 +96,7 @@ const FeatureStore = ({
 
     return () => {
       setContent([])
+      setYamlContent([])
       setGroupFilter('')
       removeDataSets()
       removeFeatureSets()
@@ -333,7 +338,7 @@ const FeatureStore = ({
           fetchData(item)
         }}
         selectedItem={selectedItem.item}
-        yamlContent={content}
+        yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup

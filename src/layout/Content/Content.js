@@ -157,7 +157,7 @@ const Content = ({
             isEqual(yamlContentItem.tag, item.tag)
           : match.params.pageTab === FEATURES_TAB
           ? isEqual(yamlContentItem.feature.name, item.feature.name)
-          : isEqual(yamlContentItem.db_key, item.db_key)
+          : isEqual(yamlContentItem.key, item.db_key)
       )
 
     setConvertedYaml(
