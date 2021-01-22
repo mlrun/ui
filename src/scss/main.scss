@@ -70,9 +70,9 @@ main {
     font-size: 14px;
     border-radius: 2px;
 
-    &.disabled {
-      cursor: default;
-      pointer-events: none;
+    &.disabled,
+    &.disabled:hover {
+      cursor: not-allowed;
     }
   }
 

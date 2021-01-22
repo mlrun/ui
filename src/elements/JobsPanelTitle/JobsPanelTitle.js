@@ -10,6 +10,7 @@ import './jobsPanelTitle.scss'
 const JobsPanelTitle = ({
   closePanel,
   functionData,
+  isTitleValid,
   match,
   openScheduleJob,
   panelDispatch,
@@ -97,6 +98,7 @@ const JobsPanelTitle = ({
       editTitle={editTitle}
       handleFinishEdit={handleFinishEdit}
       handleFunctionInfoChange={handleFunctionInfoChange}
+      isTitleValid={isTitleValid}
       methodOptions={functionData.methodOptions}
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}
@@ -110,6 +112,7 @@ const JobsPanelTitle = ({
 JobsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
   functionData: PropTypes.shape({}).isRequired,
+  isTitleValid: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,

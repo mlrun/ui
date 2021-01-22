@@ -19,6 +19,7 @@ const JobsPanelView = ({
   closePanel,
   functionData,
   handleRunJob,
+  isTitleValid,
   jobsStore,
   loading,
   match,
@@ -41,12 +42,12 @@ const JobsPanelView = ({
     'btn_default',
     'btn_small',
     'btn__schedule-for-later',
-    panelState.currentFunctionInfo.name.trim() === '' && 'disabled'
+    !isTitleValid() && 'disabled'
   )
   const runNowClassNames = classnames(
     'btn_primary',
     'btn_small',
-    panelState.currentFunctionInfo.name.trim() === '' && 'disabled'
+    !isTitleValid() && 'disabled'
   )
 
   return (
@@ -56,6 +57,7 @@ const JobsPanelView = ({
         <JobsPanelTitle
           closePanel={closePanel}
           functionData={functionData}
+          isTitleValid={isTitleValid}
           match={match}
           openScheduleJob={openScheduleJob}
           panelState={panelState}
@@ -137,11 +139,14 @@ const JobsPanelView = ({
               )}
               <button
                 className={scheduleForLaterClassNames}
-                onClick={() => setOpenScheduleJob(true)}
+                onClick={() => isTitleValid() && setOpenScheduleJob(true)}
               >
                 Schedule for later
               </button>
-              <button className={runNowClassNames} onClick={handleRunJob}>
+              <button
+                className={runNowClassNames}
+                onClick={() => isTitleValid() && handleRunJob()}
+              >
                 <Run className="schedule-run-icon" />
                 Run now
               </button>
