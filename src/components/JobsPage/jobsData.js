@@ -97,7 +97,13 @@ export const detailsMenu = [
   'results',
   'logs'
 ]
-export const filters = ['period', 'status', 'groupBy', 'labels', 'name']
+export const filters = [
+  { type: 'period', label: 'Period:' },
+  { type: 'status', label: 'Status:' },
+  { type: 'groupBy', label: 'Group by:' },
+  { type: 'labels', label: 'Labels:' },
+  { type: 'name', label: 'Name:' }
+]
 export const initialStateFilter = 'all'
 export const initialGroupFilter = 'name'
 export const tabs = [
@@ -112,7 +118,10 @@ export const generatePageData = (
   let jobFilters = []
 
   if (scheduled) {
-    jobFilters = ['name', 'labels']
+    jobFilters = [
+      { type: 'name', label: 'Name:' },
+      { type: 'labels', label: 'Labels:' }
+    ]
   } else {
     jobFilters = [...filters]
   }

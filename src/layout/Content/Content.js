@@ -14,6 +14,7 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import {
   ARTIFACTS_PAGE,
+  DATASETS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURES_TAB,
@@ -67,14 +68,22 @@ const Content = ({
     const groupedItems = {}
 
     content.forEach(contentItem => {
-      groupedItems[contentItem.name]
-        ? groupedItems[contentItem.name].push(contentItem)
-        : (groupedItems[contentItem.name] = [contentItem])
+      if (
+        pageData.selectedRowData?.content &&
+        pageData.selectedRowData.content[contentItem.name]
+      ) {
+        groupedItems[contentItem] =
+          pageData.selectedRowData?.content[contentItem.name]
+      } else {
+        groupedItems[contentItem.name]
+          ? groupedItems[contentItem.name].push(contentItem)
+          : (groupedItems[contentItem.name] = [contentItem])
+      }
     })
 
     setGroupedByName(groupedItems)
     setGroupedByWorkflow({})
-  }, [content])
+  }, [content, pageData.selectedRowData])
 
   const handleGroupByNone = useCallback(() => {
     const rows = [...document.getElementsByClassName('parent-row')]
@@ -187,12 +196,13 @@ const Content = ({
       )
 
       parentRow.classList.remove('parent-row-expanded')
-
+      pageData.handleRemoveFeatureVector &&
+        pageData.handleRemoveFeatureVector(item)
       setExpandedItems(newArray)
     } else {
       parentRow.classList.remove('row_active')
       parentRow.classList.add('parent-row-expanded')
-
+      pageData.handleRequestOnExpand && pageData.handleRequestOnExpand(item)
       setExpandedItems([...expandedItems, item])
     }
   }
@@ -225,8 +235,7 @@ const Content = ({
               pageData.page === FILES_PAGE ||
               pageData.page === MODELS_PAGE ||
               pageData.page === FEATURE_STORE_PAGE) &&
-            match.params.pageTab !== FEATURE_SETS_TAB &&
-            match.params.pageTab !== FEATURES_TAB
+            match.params.pageTab === DATASETS_TAB
           }
           registerDialogHeader={
             pageData.page === PROJECTS_PAGE
@@ -252,7 +261,7 @@ const Content = ({
           <FilterMenu
             expand={expand}
             filters={pageData.filters}
-            groupFilter={groupFilter}
+            groupFilter={pageData.handleRequestOnExpand ? null : groupFilter}
             handleArtifactFilterTree={handleArtifactFilterTree}
             handleExpandAll={handleExpandAll}
             match={match}
