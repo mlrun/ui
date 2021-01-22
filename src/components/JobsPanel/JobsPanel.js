@@ -229,11 +229,16 @@ const JobsPanel = ({
       })
   }
 
+  const isTitleValid = () => {
+    return panelState.currentFunctionInfo.name.trim() !== ''
+  }
+
   return (
     <JobsPanelView
       closePanel={closePanel}
       functionData={functionData}
       handleRunJob={handleRunJob}
+      isTitleValid={isTitleValid}
       jobsStore={jobsStore}
       loading={functionsStore.loading}
       match={match}
