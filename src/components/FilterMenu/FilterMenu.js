@@ -118,8 +118,8 @@ const FilterMenu = ({
               return (
                 <Input
                   type="text"
-                  label="labels:"
-                  placeholder="key1=value1,…"
+                  label="label:"
+                  placeholder="key=value"
                   key={filter}
                   onChange={setLabels}
                   value={labels}
