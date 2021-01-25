@@ -79,7 +79,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchDataSetsSuccess(dataSets))
 
-        return dataSets
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchDataSetsFailure(err))
@@ -211,7 +211,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchFilesSuccess(files))
 
-        return files
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFilesFailure(err))
@@ -237,7 +237,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchModelsSuccess(models))
 
-        return models
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchModelsFailure(err))

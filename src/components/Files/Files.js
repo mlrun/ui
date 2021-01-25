@@ -17,6 +17,7 @@ import {
   infoHeaders
 } from './files.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
+import { filterArtifacts } from '../../utils/filterArtifacts'
 
 const Files = ({
   artifactsStore,
@@ -27,6 +28,7 @@ const Files = ({
   setArtifactFilter
 }) => {
   const [files, setFiles] = useState([])
+  const [yamlContent, setYamlContent] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData] = useState({
@@ -44,9 +46,11 @@ const Files = ({
         let data = []
 
         if (result) {
-          data = generateArtifacts(result)
+          const filteredFiles = filterArtifacts(result)
+          data = generateArtifacts(filteredFiles)
 
           setFiles(data)
+          setYamlContent(result)
         }
 
         return data
@@ -125,7 +129,7 @@ const Files = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedFile.item}
-        yamlContent={artifactsStore.files}
+        yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
