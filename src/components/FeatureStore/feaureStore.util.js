@@ -9,6 +9,7 @@ import {
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import axios from 'axios'
+import { filterArtifacts } from '../../utils/filterArtifacts'
 
 export const datasetsInfoHeaders = [
   { label: 'Hash', id: 'hash' },
@@ -238,7 +239,8 @@ export const handleFetchData = async (
     result = await fetchDataSets(item)
 
     if (result) {
-      data.content = generateArtifacts(result)
+      const dataSets = filterArtifacts(result)
+      data.content = generateArtifacts(dataSets)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURE_SETS_TAB) {
