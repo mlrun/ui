@@ -314,7 +314,7 @@ const ProjectView = React.forwardRef(
                   fetchArtifacts={fetchProjectDataSets}
                   link={`/projects/${match.params.projectName}/feature-store`}
                   match={match}
-                  title="Features"
+                  title="Datasets"
                 />
                 <ProjectArtifacts
                   artifacts={groupByUniqName(
