@@ -74,7 +74,7 @@ const Projects = ({
           if (error.response?.status === 412) {
             setConfirmData({
               item: project,
-              title: `Delete project "${project.metadata.name}"`,
+              title: `Delete project "${project.metadata.name}"?`,
               description:
                 'The project is not empty. Deleting it will also delete all of its resources, such as jobs,' +
                 'artifacts, and features.',
@@ -176,7 +176,7 @@ const Projects = ({
     project => {
       setConfirmData({
         item: project,
-        title: `Delete project "${project.metadata.name}"`,
+        title: `Delete project "${project.metadata.name}"?`,
         description: 'Deleted projects can not be restored.',
         btnConfirmLabel: 'Delete',
         btnConfirmClassNames: 'btn_danger',

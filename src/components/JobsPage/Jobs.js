@@ -71,7 +71,7 @@ const Jobs = ({
   const onRemoveScheduledJob = scheduledJob => {
     setConfirmData({
       item: scheduledJob,
-      title: `Delete scheduled job "${scheduledJob.name}"`,
+      title: `Delete scheduled job "${scheduledJob.name}"?`,
       description: 'Deleted scheduled jobs can not be restored.',
       btnConfirmLabel: 'Delete',
       btnConfirmClassNames: 'btn_danger',
