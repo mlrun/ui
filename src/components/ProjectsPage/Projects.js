@@ -36,8 +36,7 @@ const Projects = ({
   setNotification
 }) => {
   const [actionsMenu, setActionsMenu] = useState({})
-  const [archiveProject, setArchiveProject] = useState(null)
-  const [deleteNonEmptyProject, setDeleteNonEmptyProject] = useState(null)
+  const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, setConvertedYaml] = useState('')
   const [createProject, setCreateProject] = useState(false)
   const [filteredProjects, setFilteredProjects] = useState([])
@@ -48,15 +47,20 @@ const Projects = ({
 
   const projectsStates = useMemo(generateProjectsStates, [])
 
-  const handleArchiveProject = useCallback(() => {
-    changeProjectState(archiveProject.metadata.name, 'archived').then(() => {
-      fetchProjects()
-    })
-    setArchiveProject(null)
-  }, [archiveProject, changeProjectState, fetchProjects])
+  const handleArchiveProject = useCallback(
+    project => {
+      changeProjectState(project.metadata.name, 'archived').then(() => {
+        fetchProjects()
+      })
+      setConfirmData(null)
+    },
+    [changeProjectState, fetchProjects]
+  )
 
   const handleDeleteProject = useCallback(
     (project, deleteNonEmpty) => {
+      setConfirmData(null)
+
       deleteProject(project.metadata.name, deleteNonEmpty)
         .then(() => {
           fetchProjects()
@@ -68,7 +72,21 @@ const Projects = ({
         })
         .catch(error => {
           if (error.response?.status === 412) {
-            setDeleteNonEmptyProject(project)
+            setConfirmData({
+              item: project,
+              title: `Delete project "${project.metadata.name}"`,
+              description:
+                'The project is not empty. Deleting it will also delete all of its resources, such as jobs,' +
+                'artifacts, and features.',
+              btnConfirmLabel: 'Delete',
+              btnConfirmClassNames: 'btn_danger',
+              rejectHandler: () => {
+                setConfirmData(null)
+              },
+              confirmHandler: project => {
+                handleDeleteProject(project, true)
+              }
+            })
           } else {
             setNotification({
               status: 400,
@@ -81,11 +99,6 @@ const Projects = ({
     },
     [deleteProject, fetchProjects, setNotification]
   )
-
-  const handleDeleteNonEmptyProject = useCallback(() => {
-    setDeleteNonEmptyProject(null)
-    handleDeleteProject(deleteNonEmptyProject, true)
-  }, [deleteNonEmptyProject, handleDeleteProject])
 
   const handleUnarchiveProject = useCallback(
     project => {
@@ -130,14 +143,6 @@ const Projects = ({
     })
   }
 
-  const closeArchiveProjectPopUp = useCallback(() => {
-    setArchiveProject(null)
-  }, [])
-
-  const closeDeleteNonEmtpyProjectPopUp = useCallback(() => {
-    setDeleteNonEmptyProject(null)
-  }, [])
-
   const closeNewProjectPopUp = useCallback(() => {
     if (projectStore.newProject.error) {
       removeNewProjectError()
@@ -148,9 +153,41 @@ const Projects = ({
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
-  const onArchiveProject = useCallback(project => {
-    setArchiveProject(project)
-  }, [])
+  const onArchiveProject = useCallback(
+    project => {
+      setConfirmData({
+        item: project,
+        title: 'Archive project',
+        description:
+          "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that " +
+          "before setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
+        btnConfirmLabel: 'Archive',
+        btnConfirmClassNames: 'btn_primary',
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: handleArchiveProject
+      })
+    },
+    [handleArchiveProject]
+  )
+
+  const onDeleteProject = useCallback(
+    project => {
+      setConfirmData({
+        item: project,
+        title: `Delete project "${project.metadata.name}"`,
+        description: 'Deleted projects can not be restored.',
+        btnConfirmLabel: 'Delete',
+        btnConfirmClassNames: 'btn_danger',
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: handleDeleteProject
+      })
+    },
+    [handleDeleteProject]
+  )
 
   useEffect(() => {
     setActionsMenu(
@@ -159,13 +196,13 @@ const Projects = ({
         convertToYaml,
         onArchiveProject,
         handleUnarchiveProject,
-        handleDeleteProject
+        onDeleteProject
       )
     )
   }, [
     convertToYaml,
     onArchiveProject,
-    handleDeleteProject,
+    onDeleteProject,
     handleUnarchiveProject,
     projectStore.projects
   ])
@@ -190,22 +227,17 @@ const Projects = ({
   return (
     <ProjectsView
       actionsMenu={actionsMenu}
-      archiveProject={archiveProject}
-      closeArchiveProjectPopUp={closeArchiveProjectPopUp}
-      closeDeleteNonEmtpyProjectPopUp={closeDeleteNonEmtpyProjectPopUp}
       closeNewProjectPopUp={closeNewProjectPopUp}
+      confirmData={confirmData}
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
       createProject={createProject}
-      deleteNonEmptyProject={deleteNonEmptyProject}
       fetchProjectDataSets={fetchProjectDataSets}
       fetchProjectFailedJobs={fetchProjectFailedJobs}
       fetchProjectFunctions={fetchProjectFunctions}
       fetchProjectModels={fetchProjectModels}
       fetchProjectRunningJobs={fetchProjectRunningJobs}
       filteredProjects={filteredProjects}
-      handleDeleteNonEmptyProject={handleDeleteNonEmptyProject}
-      handleArchiveProject={handleArchiveProject}
       handleCreateProject={handleCreateProject}
       isEmptyValue={isEmptyValue}
       match={match}

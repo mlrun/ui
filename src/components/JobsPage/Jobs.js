@@ -15,6 +15,7 @@ import { SCHEDULE_TAB } from '../../constants'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
+import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 
 const Jobs = ({
   fetchJobs,
@@ -29,14 +30,17 @@ const Jobs = ({
   workflowsStore
 }) => {
   const [jobs, setJobs] = useState([])
+  const [confirmData, setConfirmData] = useState(null)
   const [selectedJob, setSelectedJob] = useState({})
   const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const [groupFilter, setGroupFilter] = useState(initialGroupFilter)
 
-  const handleRemoveScheduledJob = scheduleName => {
-    removeScheduledJob(match.params.projectName, scheduleName).then(() => {
+  const handleRemoveScheduledJob = schedule => {
+    removeScheduledJob(match.params.projectName, schedule.name).then(() => {
       refreshJobs()
     })
+
+    setConfirmData(null)
   }
 
   const handleRunJob = job => {
@@ -64,10 +68,26 @@ const Jobs = ({
       })
   }
 
+  const onRemoveScheduledJob = scheduledJob => {
+    setConfirmData({
+      item: scheduledJob,
+      title: `Delete scheduled job "${scheduledJob.name}"`,
+      description: 'Deleted scheduled jobs can not be restored.',
+      btnConfirmLabel: 'Delete',
+      btnConfirmClassNames: 'btn_danger',
+      rejectHandler: () => {
+        setConfirmData(null)
+      },
+      confirmHandler: () => {
+        handleRemoveScheduledJob(scheduledJob)
+      }
+    })
+  }
+
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab === SCHEDULE_TAB,
-      handleRemoveScheduledJob,
+      onRemoveScheduledJob,
       handleRunJob
     ),
     [match.params.pageTab]
@@ -188,6 +208,28 @@ const Jobs = ({
 
   return (
     <>
+      {confirmData && (
+        <PopUpDialog
+          headerText={confirmData.title}
+          closePopUp={confirmData.rejectHandler}
+        >
+          <div>{confirmData.description}</div>
+          <div className="pop-up-dialog__footer-container">
+            <button
+              className="btn_default pop-up-dialog__btn_cancel"
+              onClick={confirmData.rejectHandler}
+            >
+              Cancel
+            </button>
+            <button
+              className={confirmData.btnConfirmClassNames}
+              onClick={() => confirmData.confirmHandler(confirmData.item)}
+            >
+              {confirmData.btnConfirmLabel}
+            </button>
+          </div>
+        </PopUpDialog>
+      )}
       {(jobsStore.loading || workflowsStore.loading) && <Loader />}
       <Content
         content={jobs}
