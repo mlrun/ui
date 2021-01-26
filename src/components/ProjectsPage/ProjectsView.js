@@ -183,7 +183,9 @@ const ProjectsView = ({
 ProjectsView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
   closeNewProjectPopUp: PropTypes.func.isRequired,
-  confirmData: PropTypes.shape({}).isRequired,
+  confirmData: PropTypes.oneOfType([
+    PropTypes.shape({}, PropTypes.instanceOf(null))
+  ]),
   convertedYaml: PropTypes.string.isRequired,
   convertToYaml: PropTypes.func.isRequired,
   createProject: PropTypes.bool.isRequired,
