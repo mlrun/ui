@@ -33,6 +33,7 @@ import './content.scss'
 const Content = ({
   cancelRequest,
   content,
+  expandRow,
   groupFilter,
   handleArtifactFilterTree,
   handleCancel,
@@ -199,6 +200,7 @@ const Content = ({
       pageData.handleRemoveFeatureVector &&
         pageData.handleRemoveFeatureVector(item)
       setExpandedItems(newArray)
+      expandRow && expandRow(item, true)
     } else {
       parentRow.classList.remove('row_active')
       parentRow.classList.add('parent-row-expanded')
@@ -308,6 +310,7 @@ const Content = ({
 
 Content.defaultProps = {
   activeScreenTab: '',
+  expandRow: null,
   groupFilter: null,
   handleSelectItem: () => {},
   selectedItem: {},
@@ -321,6 +324,7 @@ Content.defaultProps = {
 
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  expandRow: PropTypes.func,
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,

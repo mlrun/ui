@@ -17,7 +17,9 @@ import {
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   MODELS_PAGE,
-  FEATURE_VECTORS_TAB
+  FEATURE_VECTORS_TAB,
+  DETAILS_REQUESTED_FEATURES_TAB,
+  DETAILS_RETURNED_FEATURES_TAB
 } from '../../constants'
 import { formatDatetime } from '../../utils'
 
@@ -31,6 +33,7 @@ import DetailsCode from '../DetailsCode/DetailsCode'
 import DetailsMetadata from '../DetailsMetadata/DetailsMetadata'
 import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
 import DetailsStatistics from '../DetailsStatistics/DetailsStatistics'
+import DetailsRequestedFeatures from '../DetailsRequestedFeatures/DetailsRequestedFeatures'
 
 export const generateArtifactsContent = (
   editDescription,
@@ -202,6 +205,7 @@ export const renderContent = (
       return <DetailsCode code={selectedItem.functionSourceCode} />
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
+    case DETAILS_RETURNED_FEATURES_TAB:
       return selectedItem.schema ||
         selectedItem.entities ||
         selectedItem.features ? (
@@ -216,11 +220,12 @@ export const renderContent = (
           />
         )
       } else return null
-
     case DETAILS_STATISTICS_TAB:
-      if (selectedItem.entities && selectedItem.stats) {
+      if (selectedItem.stats) {
         return <DetailsStatistics selectedItem={selectedItem} />
       } else return null
+    case DETAILS_REQUESTED_FEATURES_TAB:
+      return <DetailsRequestedFeatures selectedItem={selectedItem} />
     default:
       return null
   }

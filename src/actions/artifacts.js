@@ -36,6 +36,7 @@ import {
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { parseFeatureStoreDataRequest } from '../utils/parseFeatureStoreDataRequest'
+import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 
 const artifactsAction = {
   closeArtifactsPreview: item => ({
@@ -79,7 +80,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchDataSetsSuccess(dataSets))
 
-        return dataSets
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchDataSetsFailure(err))
@@ -128,9 +129,7 @@ const artifactsAction = {
     return artifactsApi
       .getFeatureVector(featureVector, project)
       .then(response => {
-        let featureVectors = parseFeatureStoreDataRequest(
-          response.data.feature_vectors
-        )
+        let featureVectors = parseFeatureVectors(response.data.feature_vectors)
 
         dispatch(
           artifactsAction.fetchFeatureVectorSuccess({
@@ -138,7 +137,7 @@ const artifactsAction = {
           })
         )
 
-        return featureVectors
+        return response.data.feature_vectors
       })
   },
   fetchFeatureVectorSuccess: featureSets => ({
@@ -151,13 +150,11 @@ const artifactsAction = {
     return artifactsApi
       .getFeatureVectors(project, config)
       .then(response => {
-        let featureVectors = parseFeatureStoreDataRequest(
-          response.data.feature_vectors
-        )
+        let featureVectors = parseFeatureVectors(response.data.feature_vectors)
 
         dispatch(artifactsAction.fetchFeatureVectorsSuccess(featureVectors))
 
-        return featureVectors
+        return response.data.feature_vectors
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFeatureVectorsFailure(err))
@@ -211,7 +208,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchFilesSuccess(files))
 
-        return files
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFilesFailure(err))
@@ -237,7 +234,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchModelsSuccess(models))
 
-        return models
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchModelsFailure(err))
