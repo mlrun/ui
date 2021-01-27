@@ -16,7 +16,8 @@ import {
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
-  MODELS_PAGE
+  MODELS_PAGE,
+  FEATURE_VECTORS_TAB
 } from '../../constants'
 import { formatDatetime } from '../../utils'
 
@@ -41,81 +42,53 @@ export const generateArtifactsContent = (
   deleteChip
 ) => {
   if (pageTab === FEATURE_SETS_TAB) {
+    return generateFeatureSetsOverviewContent(
+      addChip,
+      deleteChip,
+      editChips,
+      editDescription,
+      selectedItem
+    )
+  } else if (pageTab === FEATURE_VECTORS_TAB) {
+    return generateFeatureVectorsOverviewContent(selectedItem)
+  } else {
     return {
-      description: {
-        value: selectedItem.description ?? '',
-        editModeEnabled: true,
-        editModeType: 'input',
-        onChange: value => editDescription(value, 'description')
+      hash: {
+        value: selectedItem.hash ?? ''
       },
-      labels: {
-        value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
-        editModeEnabled: true,
-        editModeType: 'chips',
-        onChange: (chip, field) => editChips(chip, field),
-        onAdd: (chip, chips, field) => addChip(chip, chips, field),
-        handleDelete: (chips, field) => deleteChip(chips, field)
+      db_key: {
+        value: selectedItem.db_key
       },
-      tag: {
-        value: selectedItem.tag
+      iter: {
+        value: selectedItem.iter || '0'
+      },
+      kind: {
+        value:
+          page !== FEATURE_STORE_PAGE && page !== FILES_PAGE
+            ? selectedItem.kind || ' '
+            : null
+      },
+      size: {
+        value: selectedItem.size ?? ''
+      },
+      target_path: {
+        value: selectedItem.target_path
+      },
+      tree: {
+        value: selectedItem.tree
       },
       updated: {
-        value: formatDatetime(selectedItem.updated, 'N/A')
+        value: formatDatetime(new Date(selectedItem.updated), 'N/A')
       },
-      entities: {
-        value: selectedItem.entities?.map(entity => entity.name)
+      framework: {
+        value: page === MODELS_PAGE ? selectedItem.framework ?? '' : null
       },
-      partition_keys: {
-        value: (selectedItem.partition_keys || []).map(key => key)
+      labels: {
+        value: selectedItem.labels ?? []
       },
-      timestamp_key: {
-        value: selectedItem.timestamp_key ?? ''
-      },
-      relations: {
-        value: isEmpty(selectedItem.relations) ? [] : selectedItem.relations
-      },
-      label_column: {
-        value: selectedItem.label_column ?? ''
+      sources: {
+        value: selectedItem.sources
       }
-    }
-  }
-
-  return {
-    hash: {
-      value: selectedItem.hash ?? ''
-    },
-    db_key: {
-      value: selectedItem.db_key
-    },
-    iter: {
-      value: selectedItem.iter || '0'
-    },
-    kind: {
-      value:
-        page !== FEATURE_STORE_PAGE && page !== FILES_PAGE
-          ? selectedItem.kind || ' '
-          : null
-    },
-    size: {
-      value: selectedItem.size ?? ''
-    },
-    target_path: {
-      value: selectedItem.target_path
-    },
-    tree: {
-      value: selectedItem.tree
-    },
-    updated: {
-      value: formatDatetime(new Date(selectedItem.updated), 'N/A')
-    },
-    framework: {
-      value: page === MODELS_PAGE ? selectedItem.framework ?? '' : null
-    },
-    labels: {
-      value: selectedItem.labels ?? []
-    },
-    sources: {
-      value: selectedItem.sources
     }
   }
 }
@@ -229,7 +202,9 @@ export const renderContent = (
       return <DetailsCode code={selectedItem.functionSourceCode} />
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
-      return selectedItem.schema || selectedItem.entities ? (
+      return selectedItem.schema ||
+        selectedItem.entities ||
+        selectedItem.features ? (
         <DetailsMetadata selectedItem={selectedItem} />
       ) : null
     case DETAILS_ANALYSIS_TAB:
@@ -250,3 +225,68 @@ export const renderContent = (
       return null
   }
 }
+
+export const generateFeatureSetsOverviewContent = (
+  addChip,
+  deleteChip,
+  editChips,
+  editDescription,
+  selectedItem
+) => ({
+  description: {
+    value: selectedItem.description ?? '',
+    editModeEnabled: true,
+    editModeType: 'input',
+    onChange: value => editDescription(value, 'description')
+  },
+  labels: {
+    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
+    editModeEnabled: true,
+    editModeType: 'chips',
+    onChange: (chip, field) => editChips(chip, field),
+    onAdd: (chip, chips, field) => addChip(chip, chips, field),
+    handleDelete: (chips, field) => deleteChip(chips, field)
+  },
+  tag: {
+    value: selectedItem.tag
+  },
+  updated: {
+    value: formatDatetime(selectedItem.updated, 'N/A')
+  },
+  entities: {
+    value: selectedItem.entities?.map(entity => entity.name)
+  },
+  partition_keys: {
+    value: (selectedItem.partition_keys || []).map(key => key)
+  },
+  timestamp_key: {
+    value: selectedItem.timestamp_key ?? ''
+  },
+  relations: {
+    value: isEmpty(selectedItem.relations) ? [] : selectedItem.relations
+  },
+  label_column: {
+    value: selectedItem.label_column ?? ''
+  }
+})
+
+export const generateFeatureVectorsOverviewContent = selectedItem => ({
+  description: {
+    value: selectedItem.description ?? ''
+  },
+  labels: {
+    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels
+  },
+  tag: {
+    value: selectedItem.tag
+  },
+  updated: {
+    value: formatDatetime(selectedItem.updated, 'N/A')
+  },
+  timestamp_key: {
+    value: selectedItem.timestamp_field ?? ''
+  },
+  label_column: {
+    value: selectedItem.label_column ?? ''
+  }
+})

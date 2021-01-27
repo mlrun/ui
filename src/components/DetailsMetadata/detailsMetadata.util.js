@@ -77,9 +77,10 @@ export const generateMetadata = (selectedItem, primaryKey) => {
         }
       })
     : selectedItem.entities
+    ? selectedItem.entities
         .map(item => ({ ...item, entity: 'entity' }))
-        .concat(selectedItem.features)
         .map(item => {
+          console.log(selectedItem.entities.concat(selectedItem.features))
           return {
             entityIcon: {
               value: (
@@ -108,7 +109,9 @@ export const generateMetadata = (selectedItem, primaryKey) => {
                 </Tooltip>
               ),
               type: 'icon icon-timestamp-key',
-              visible: selectedItem.timestamp_key === item.name
+              visible:
+                selectedItem.timestamp_key === item.name ||
+                selectedItem.timestamp_field === item.name
             },
             labelColumnIcon: {
               value: (
@@ -147,4 +150,57 @@ export const generateMetadata = (selectedItem, primaryKey) => {
             }
           }
         })
+    : selectedItem.features.map(item => {
+        console.log(item)
+        return {
+          timestampKeyIcon: {
+            value: (
+              <Tooltip template={<TextTooltipTemplate text="Timestamp key" />}>
+                <TimestampKey />
+              </Tooltip>
+            ),
+            type: 'icon icon-timestamp-key',
+            visible:
+              selectedItem.timestamp_key === item.name ||
+              selectedItem.timestamp_field === item.name
+          },
+          labelColumnIcon: {
+            value: (
+              <Tooltip template={<TextTooltipTemplate text="Label column" />}>
+                <LabelColumn />
+              </Tooltip>
+            ),
+            type: 'icon icon-label-column',
+            visible: selectedItem.label_column === item.name
+          },
+          name: {
+            value: item.name,
+            type: 'text',
+            visible: true
+          },
+          type: {
+            value: item.value_type,
+            type: 'text',
+            visible: true
+          },
+          description: {
+            value: item.description,
+            type: 'text',
+            visible: true
+          },
+          labels: {
+            value: parseKeyValues(item.labels),
+            type: 'chip',
+            visible: true,
+            className: 'table-body__labels'
+          },
+          validators: {
+            value: item.validator && (
+              <FeatureValidator validator={item.validator} />
+            ),
+            type: 'html',
+            visible: !!item.validator
+          }
+        }
+      })
 }

@@ -26,12 +26,21 @@ export const featureSetsInfoHeaders = [
   { label: 'Relations', id: 'relations' },
   { label: 'Label column', id: 'label_column' }
 ]
+export const featureVectorsInfoHeaders = [
+  { label: 'Description', id: 'description' },
+  { label: 'Labels', id: 'labels' },
+  { label: 'Version', id: 'tag' },
+  { label: 'Last updated', id: 'updated' },
+  { label: 'Timestamp Key', id: 'timestamp_key' },
+  { label: 'Label column', id: 'label_column' }
+]
 export const datasetsFilters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Labels:' }
 ]
 export const detailsMenu = ['overview', 'preview']
+export const featureVectorsDetailsMenu = ['overview', 'preview', 'requested']
 export const featureSetsFilters = [
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Labels:' }
@@ -203,6 +212,8 @@ export const generatePageData = (
     data.tableHeaders = featureVectorsTableHeaders
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveFeatureVector = handleRemoveFeatureVector
+    data.infoHeaders = featureVectorsInfoHeaders
+    data.detailsMenu = featureVectorsDetailsMenu
   } else {
     data.filters = datasetsFilters
     data.infoHeaders = datasetsInfoHeaders

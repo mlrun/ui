@@ -303,8 +303,16 @@ const FeatureStore = ({
         newDetailsMenu.splice(1, 0, 'transforamations')
       }
 
-      if (selectedItem.item?.schema || selectedItem.item?.entities) {
-        if (match.params.pageTab === FEATURE_SETS_TAB) {
+      console.log(selectedItem)
+
+      if (
+        selectedItem.item?.schema ||
+        selectedItem.item?.entities ||
+        selectedItem.item?.features
+      ) {
+        if (
+          [FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)
+        ) {
           newDetailsMenu.push('features')
         } else if (match.params.pageTab === DATASETS_TAB) {
           newDetailsMenu.push('metadata')
@@ -339,7 +347,8 @@ const FeatureStore = ({
     selectedItem.item,
     match.params.pageTab,
     match.params.tag,
-    selectedItem.entities
+    selectedItem.entities,
+    selectedItem
   ])
 
   const handleTreeFilterChange = useCallback(
