@@ -20,6 +20,7 @@
 
 .project-data-card {
   &__table {
+    min-width: fit-content;
     height: 100%;
 
     &-body {
