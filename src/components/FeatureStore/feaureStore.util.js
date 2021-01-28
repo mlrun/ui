@@ -46,7 +46,7 @@ export const featureVectorsInfoHeaders = [
 export const datasetsFilters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' }
+  { type: 'labels', label: 'Label:' }
 ]
 export const detailsMenu = ['overview', 'preview']
 export const featureVectorsDetailsMenu = [
@@ -56,16 +56,16 @@ export const featureVectorsDetailsMenu = [
 ]
 export const featureSetsFilters = [
   { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' }
+  { type: 'labels', label: 'Label:' }
 ]
 export const featureVectorsFilters = [
   { type: 'tree', label: 'Tag:' },
   { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' }
+  { type: 'labels', label: 'Label:' }
 ]
 export const featuresFilters = [
   { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' }
+  { type: 'labels', label: 'Label:' }
 ]
 export const page = 'FEATURE-STORE'
 export const sources = ['name', 'path']
