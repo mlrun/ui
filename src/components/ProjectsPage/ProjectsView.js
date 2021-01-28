@@ -20,23 +20,18 @@ import './projects.scss'
 
 const ProjectsView = ({
   actionsMenu,
-  archiveProject,
   closeNewProjectPopUp,
-  closeArchiveProjectPopUp,
-  closeDeleteNonEmtpyProjectPopUp,
+  confirmData,
   convertedYaml,
   convertToYaml,
   createProject,
-  deleteNonEmptyProject,
   fetchProjectDataSets,
   fetchProjectFailedJobs,
   fetchProjectFunctions,
   fetchProjectModels,
   fetchProjectRunningJobs,
   filteredProjects,
-  handleArchiveProject,
   handleCreateProject,
-  handleDeleteNonEmptyProject,
   isEmptyValue,
   match,
   nuclioStore,
@@ -107,50 +102,24 @@ const ProjectsView = ({
           </div>
         </PopUpDialog>
       )}
-      {archiveProject && (
+      {confirmData && (
         <PopUpDialog
-          headerText="Archive project"
-          closePopUp={closeArchiveProjectPopUp}
+          headerText={confirmData.title}
+          closePopUp={confirmData.rejectHandler}
         >
-          <div>
-            Note that moving a project to archive doesn't stop it from consuming
-            resources. We recommend that before setting the project as archive
-            you'll remove scheduled jobs and suspend Nuclio functions.
-          </div>
+          <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
             <button
               className="btn_default pop-up-dialog__btn_cancel"
-              onClick={closeArchiveProjectPopUp}
-            >
-              Cancel
-            </button>
-            <button className="btn_primary" onClick={handleArchiveProject}>
-              Archive
-            </button>
-          </div>
-        </PopUpDialog>
-      )}
-      {deleteNonEmptyProject && (
-        <PopUpDialog
-          headerText={`Delete project "${deleteNonEmptyProject?.metadata?.name}"?`}
-          closePopUp={closeDeleteNonEmtpyProjectPopUp}
-        >
-          <div>
-            The project is not empty. Deleting it will also delete all of its
-            resources, such as jobs, artifacts, and features.
-          </div>
-          <div className="pop-up-dialog__footer-container">
-            <button
-              className="btn_default pop-up-dialog__btn_cancel"
-              onClick={closeDeleteNonEmtpyProjectPopUp}
+              onClick={confirmData.rejectHandler}
             >
               Cancel
             </button>
             <button
-              className="btn_danger"
-              onClick={handleDeleteNonEmptyProject}
+              className={confirmData.btnConfirmClassNames}
+              onClick={() => confirmData.confirmHandler(confirmData.item)}
             >
-              Delete
+              {confirmData.btnConfirmLabel}
             </button>
           </div>
         </PopUpDialog>
@@ -215,27 +184,20 @@ const ProjectsView = ({
 
 ProjectsView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
-  archiveProject: PropTypes.oneOfType([
+  closeNewProjectPopUp: PropTypes.func.isRequired,
+  confirmData: PropTypes.oneOfType([
     PropTypes.shape({}, PropTypes.instanceOf(null))
   ]),
-  closeArchiveProjectPopUp: PropTypes.func.isRequired,
-  closeDeleteNonEmtpyProjectPopUp: PropTypes.func.isRequired,
-  closeNewProjectPopUp: PropTypes.func.isRequired,
   convertedYaml: PropTypes.string.isRequired,
   convertToYaml: PropTypes.func.isRequired,
   createProject: PropTypes.bool.isRequired,
-  deleteNonEmptyProject: PropTypes.oneOfType([
-    PropTypes.shape({}, PropTypes.instanceOf(null))
-  ]),
   fetchProjectDataSets: PropTypes.func.isRequired,
   fetchProjectFailedJobs: PropTypes.func.isRequired,
   fetchProjectFunctions: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
   fetchProjectRunningJobs: PropTypes.func.isRequired,
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  handleArchiveProject: PropTypes.func.isRequired,
   handleCreateProject: PropTypes.func.isRequired,
-  handleDeleteNonEmptyProject: PropTypes.func.isRequired,
   isEmptyValue: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   nuclioStore: PropTypes.shape({}).isRequired,

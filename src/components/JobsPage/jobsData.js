@@ -140,11 +140,11 @@ export const generateActionsMenu = (removeScheduledJob, handleSubmitJob) => [
   {
     label: 'Remove',
     icon: <Delete />,
-    onClick: schedule => removeScheduledJob(schedule.name)
+    onClick: removeScheduledJob
   },
   {
     label: 'Run now',
     icon: <Dropdown className="action_cell__run-icon" />,
-    onClick: job => handleSubmitJob(job)
+    onClick: handleSubmitJob
   }
 ]
