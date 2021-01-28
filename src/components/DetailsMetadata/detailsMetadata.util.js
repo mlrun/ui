@@ -16,7 +16,9 @@ export const generateMetadata = (selectedItem, primaryKey) => {
     ? generateArtifactDefaultMetadata(selectedItem, primaryKey)
     : selectedItem.entities
     ? generateArtifactMetadataFromEntities(selectedItem)
-    : generateArtifactMetadataFromFeatures(selectedItem)
+    : selectedItem.features
+    ? generateArtifactMetadataFromFeatures(selectedItem)
+    : []
 }
 
 export const generateArtifactDefaultMetadata = (selectedItem, primaryKey) =>

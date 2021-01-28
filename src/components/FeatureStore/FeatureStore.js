@@ -9,6 +9,9 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import artifactsAction from '../../actions/artifacts'
 import {
   checkTabIsValid,
+  generateDataSetsDetailsMenu,
+  generateFeatureSetsDetailsMenu,
+  generateFeatureVectorsDetailsMenu,
   generatePageData,
   handleApplyDetailsChanges,
   handleFetchData,
@@ -198,54 +201,27 @@ const FeatureStore = ({
     setPageData(state => {
       const newDetailsMenu = [...state.detailsMenu]
 
-      if (
-        match.params.pageTab === FEATURE_SETS_TAB &&
-        !newDetailsMenu.includes('transforamations')
-      ) {
-        newDetailsMenu.splice(1, 0, 'transforamations')
-      }
-
-      if (
-        selectedItem.item?.schema ||
-        selectedItem.item?.entities ||
-        selectedItem.item?.features
-      ) {
-        if (
-          match.params.pageTab === FEATURE_SETS_TAB &&
-          !newDetailsMenu.includes('features')
-        ) {
-          newDetailsMenu.push('features')
-        } else if (
-          match.params.pageTab === FEATURE_VECTORS_TAB &&
-          !newDetailsMenu.includes('returned features')
-        ) {
-          newDetailsMenu.push('returned features')
-        } else if (
-          match.params.pageTab === DATASETS_TAB &&
-          !newDetailsMenu.includes('metadata')
-        ) {
-          newDetailsMenu.push('metadata')
+      if (match.params.pageTab === FEATURE_SETS_TAB) {
+        return {
+          ...state,
+          detailsMenu: [
+            ...generateFeatureSetsDetailsMenu(newDetailsMenu, selectedItem)
+          ]
         }
-      }
-
-      if (
-        selectedItem.item?.stats &&
-        [FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
-          match.params.pageTab
-        ) &&
-        !newDetailsMenu.includes('statistics')
-      ) {
-        newDetailsMenu.push('statistics')
-      }
-
-      if (
-        (selectedItem.item?.extra_data ||
-          [FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
-            match.params.pageTab
-          )) &&
-        !newDetailsMenu.includes('analysis')
-      ) {
-        newDetailsMenu.push('analysis')
+      } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
+        return {
+          ...state,
+          detailsMenu: [
+            ...generateFeatureVectorsDetailsMenu(newDetailsMenu, selectedItem)
+          ]
+        }
+      } else if (match.params.pageTab === DATASETS_TAB) {
+        return {
+          ...state,
+          detailsMenu: [
+            ...generateDataSetsDetailsMenu(newDetailsMenu, selectedItem)
+          ]
+        }
       }
 
       return {
@@ -253,7 +229,14 @@ const FeatureStore = ({
         detailsMenu: [...newDetailsMenu]
       }
     })
-  }, [history, selectedItem.item, selectedItem.entities, match, selectedItem])
+  }, [
+    history,
+    selectedItem.item,
+    selectedItem.entities,
+    match.params.pageTab,
+    selectedItem,
+    match
+  ])
 
   const handleTreeFilterChange = useCallback(
     item => {

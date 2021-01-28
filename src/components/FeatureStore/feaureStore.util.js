@@ -51,8 +51,8 @@ export const datasetsFilters = [
 export const detailsMenu = ['overview', 'preview']
 export const featureVectorsDetailsMenu = [
   'overview',
-  'preview',
-  'requested features'
+  'requested features',
+  'preview'
 ]
 export const featureSetsFilters = [
   { type: 'name', label: 'Name:' },
@@ -440,4 +440,69 @@ export const checkTabIsValid = (history, match, selectedItem) => {
       }/overview`
     )
   }
+}
+
+export const generateFeatureSetsDetailsMenu = (
+  newDetailsMenu,
+  selectedItem
+) => {
+  if (!newDetailsMenu.includes('transforamations')) {
+    newDetailsMenu.splice(1, 0, 'transforamations')
+  }
+
+  if (
+    selectedItem.item?.entities &&
+    selectedItem.item?.features &&
+    !newDetailsMenu.includes('features')
+  ) {
+    newDetailsMenu.splice(1, 0, 'features')
+  }
+
+  if (selectedItem.item?.stats && !newDetailsMenu.includes('statistics')) {
+    newDetailsMenu.splice(newDetailsMenu.length - 1, 0, 'statistics')
+  }
+
+  if (!newDetailsMenu.includes('analysis')) {
+    newDetailsMenu.push('analysis')
+  }
+
+  return newDetailsMenu
+}
+
+export const generateFeatureVectorsDetailsMenu = (
+  newDetailsMenu,
+  selectedItem
+) => {
+  if (
+    selectedItem.item?.features &&
+    !newDetailsMenu.includes('returned features')
+  ) {
+    newDetailsMenu.splice(2, 0, 'returned features')
+  }
+
+  if (
+    selectedItem.item?.stats &&
+    selectedItem.item?.features &&
+    !newDetailsMenu.includes('statistics')
+  ) {
+    newDetailsMenu.splice(newDetailsMenu.length - 1, 0, 'statistics')
+  }
+
+  if (!newDetailsMenu.includes('analysis')) {
+    newDetailsMenu.push('analysis')
+  }
+
+  return newDetailsMenu
+}
+
+export const generateDataSetsDetailsMenu = (newDetailsMenu, selectedItem) => {
+  if (selectedItem.item?.schema && !newDetailsMenu.includes('metadata')) {
+    newDetailsMenu.push('metadata')
+  }
+
+  if (selectedItem.item?.extra_data && !newDetailsMenu.includes('analysis')) {
+    newDetailsMenu.push('analysis')
+  }
+
+  return newDetailsMenu
 }

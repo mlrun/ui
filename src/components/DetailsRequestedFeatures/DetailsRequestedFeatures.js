@@ -28,7 +28,7 @@ const DetailsRequestedFeatures = ({ selectedItem }) => {
 
             return (
               <div className="item-requested-features__table-row" key={feature}>
-                <div className="item-requested-features__table-cell_rule">
+                <div className="item-requested-features__table-cell">
                   <span className="item-requested-features__table-cell_name">
                     {featureSet}
                   </span>
