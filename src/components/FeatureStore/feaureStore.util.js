@@ -181,7 +181,7 @@ export const featuresTableHeaders = [
   }
 ]
 export const tabs = [
-  { id: 'datasets', label: 'Data sets' },
+  { id: 'datasets', label: 'Datasets' },
   { id: 'feature-sets', label: 'Feature sets' },
   { id: 'features', label: 'Features' },
   { id: 'feature-vectors', label: 'Feature vectors' }
