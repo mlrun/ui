@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import Accordion from '../../common/Accordion/Accordion'
 import JobsPanelDataInputs from '../JobsPanelDataInputs/JobsPanelDataInputs'
@@ -18,6 +19,7 @@ const JobsPanelView = ({
   closePanel,
   functionData,
   handleRunJob,
+  isTitleValid,
   jobsStore,
   loading,
   match,
@@ -36,6 +38,18 @@ const JobsPanelView = ({
   setTuningStrategy,
   setUrl
 }) => {
+  const scheduleForLaterClassNames = classnames(
+    'btn_default',
+    'btn_small',
+    'btn__schedule-for-later',
+    !isTitleValid() && 'disabled'
+  )
+  const runNowClassNames = classnames(
+    'btn_primary',
+    'btn_small',
+    !isTitleValid() && 'disabled'
+  )
+
   return (
     <div className="job-panel-container">
       <div className="job-panel">
@@ -43,6 +57,8 @@ const JobsPanelView = ({
         <JobsPanelTitle
           closePanel={closePanel}
           functionData={functionData}
+          isTitleValid={isTitleValid}
+          match={match}
           openScheduleJob={openScheduleJob}
           panelState={panelState}
           panelDispatch={panelDispatch}
@@ -122,12 +138,15 @@ const JobsPanelView = ({
                 />
               )}
               <button
-                className="btn_default btn_small btn__schedule-for-later"
-                onClick={() => setOpenScheduleJob(true)}
+                className={scheduleForLaterClassNames}
+                onClick={() => isTitleValid() && setOpenScheduleJob(true)}
               >
                 Schedule for later
               </button>
-              <button className="btn_primary btn_small" onClick={handleRunJob}>
+              <button
+                className={runNowClassNames}
+                onClick={() => isTitleValid() && handleRunJob()}
+              >
                 <Run className="schedule-run-icon" />
                 Run now
               </button>

@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import {
   DATASETS_TAB,
   DETAILS_ANALYSIS_TAB,
@@ -8,8 +10,8 @@ import {
   FEATURES_TAB
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import axios from 'axios'
 import { filterArtifacts } from '../../utils/filterArtifacts'
+import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 
 export const datasetsInfoHeaders = [
   { label: 'Hash', id: 'hash' },
@@ -33,12 +35,25 @@ export const featureSetsInfoHeaders = [
   { label: 'Relations', id: 'relations' },
   { label: 'Label column', id: 'label_column' }
 ]
+export const featureVectorsInfoHeaders = [
+  { label: 'Description', id: 'description' },
+  { label: 'Labels', id: 'labels' },
+  { label: 'Version', id: 'tag' },
+  { label: 'Last updated', id: 'updated' },
+  { label: 'Timestamp Key', id: 'timestamp_key' },
+  { label: 'Label column', id: 'label_column' }
+]
 export const datasetsFilters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Labels:' }
 ]
 export const detailsMenu = ['overview', 'preview']
+export const featureVectorsDetailsMenu = [
+  'overview',
+  'requested features',
+  'preview'
+]
 export const featureSetsFilters = [
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Labels:' }
@@ -210,6 +225,8 @@ export const generatePageData = (
     data.tableHeaders = featureVectorsTableHeaders
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveFeatureVector = handleRemoveFeatureVector
+    data.infoHeaders = featureVectorsInfoHeaders
+    data.detailsMenu = featureVectorsDetailsMenu
   } else {
     data.filters = datasetsFilters
     data.infoHeaders = datasetsInfoHeaders
@@ -265,10 +282,9 @@ export const handleFetchData = async (
     }
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     result = await fetchFeatureVectors(item)
-    result[0].labels = { 1: '1' }
 
     if (result) {
-      data.content = result
+      data.content = parseFeatureVectors(result)
       data.yamlContent = result
     }
   }
@@ -394,7 +410,7 @@ export const handleApplyDetailsChanges = (
         return response
       })
     })
-    .catch(error => {
+    .catch(() => {
       setNotification({
         status: 400,
         id: Math.random(),
@@ -410,11 +426,11 @@ export const checkTabIsValid = (history, match, selectedItem) => {
       !selectedItem.item?.schema &&
       !selectedItem.item?.entities) ||
     (match.params.tab?.toUpperCase() === DETAILS_ANALYSIS_TAB &&
-      match.params.pageTab !== FEATURE_SETS_TAB &&
+      ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab) &&
       !selectedItem.item?.extra_data) ||
     (match.params.tab?.toUpperCase() === DETAILS_STATISTICS_TAB &&
-      match.params.pageTab !== FEATURE_SETS_TAB &&
-      !selectedItem.item?.entities)
+      ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab) &&
+      !selectedItem.item?.stats)
   ) {
     return history.push(
       `/projects/${match.params.projectName}/feature-store/${
@@ -424,4 +440,69 @@ export const checkTabIsValid = (history, match, selectedItem) => {
       }/overview`
     )
   }
+}
+
+export const generateFeatureSetsDetailsMenu = (
+  newDetailsMenu,
+  selectedItem
+) => {
+  if (!newDetailsMenu.includes('transforamations')) {
+    newDetailsMenu.splice(1, 0, 'transforamations')
+  }
+
+  if (
+    selectedItem.item?.entities &&
+    selectedItem.item?.features &&
+    !newDetailsMenu.includes('features')
+  ) {
+    newDetailsMenu.splice(1, 0, 'features')
+  }
+
+  if (selectedItem.item?.stats && !newDetailsMenu.includes('statistics')) {
+    newDetailsMenu.splice(newDetailsMenu.length - 1, 0, 'statistics')
+  }
+
+  if (!newDetailsMenu.includes('analysis')) {
+    newDetailsMenu.push('analysis')
+  }
+
+  return newDetailsMenu
+}
+
+export const generateFeatureVectorsDetailsMenu = (
+  newDetailsMenu,
+  selectedItem
+) => {
+  if (
+    selectedItem.item?.features &&
+    !newDetailsMenu.includes('returned features')
+  ) {
+    newDetailsMenu.splice(2, 0, 'returned features')
+  }
+
+  if (
+    selectedItem.item?.stats &&
+    selectedItem.item?.features &&
+    !newDetailsMenu.includes('statistics')
+  ) {
+    newDetailsMenu.splice(newDetailsMenu.length - 1, 0, 'statistics')
+  }
+
+  if (!newDetailsMenu.includes('analysis')) {
+    newDetailsMenu.push('analysis')
+  }
+
+  return newDetailsMenu
+}
+
+export const generateDataSetsDetailsMenu = (newDetailsMenu, selectedItem) => {
+  if (selectedItem.item?.schema && !newDetailsMenu.includes('metadata')) {
+    newDetailsMenu.push('metadata')
+  }
+
+  if (selectedItem.item?.extra_data && !newDetailsMenu.includes('analysis')) {
+    newDetailsMenu.push('analysis')
+  }
+
+  return newDetailsMenu
 }

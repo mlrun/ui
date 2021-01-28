@@ -9,7 +9,9 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import artifactsAction from '../../actions/artifacts'
 import {
   checkTabIsValid,
-  detailsMenu,
+  generateDataSetsDetailsMenu,
+  generateFeatureSetsDetailsMenu,
+  generateFeatureVectorsDetailsMenu,
   generatePageData,
   handleApplyDetailsChanges,
   handleFetchData,
@@ -22,6 +24,7 @@ import {
   FEATURE_VECTORS_TAB
 } from '../../constants'
 import notificationActions from '../../actions/notification'
+import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 
 const FeatureStore = ({
   artifactsStore,
@@ -108,11 +111,13 @@ const FeatureStore = ({
 
       fetchFeatureVector(featureVector.name, match.params.projectName)
         .then(result => {
+          const generatedResult = parseFeatureVectors(result)
+
           setPageData(state => ({
             ...state,
             selectedRowData: {
               content: {
-                [featureVector.name]: [...result]
+                [featureVector.name]: [...generatedResult]
               },
               error: null,
               loading: false
@@ -188,49 +193,35 @@ const FeatureStore = ({
 
   useEffect(() => {
     navigateToDetailsPane(artifactsStore, history, match, setSelectedItem)
-  }, [
-    match.params,
-    artifactsStore.artifacts,
-    history,
-    artifactsStore.dataSets,
-    artifactsStore.featureSets,
-    artifactsStore.features,
-    artifactsStore.featureVectors,
-    artifactsStore,
-    match
-  ])
+  }, [artifactsStore.artifacts, history, artifactsStore, match])
 
   useEffect(() => {
     checkTabIsValid(history, match, selectedItem)
 
     setPageData(state => {
-      const newDetailsMenu = [...detailsMenu]
+      const newDetailsMenu = [...state.detailsMenu]
 
       if (match.params.pageTab === FEATURE_SETS_TAB) {
-        newDetailsMenu.splice(1, 0, 'transforamations')
-      }
-
-      if (selectedItem.item?.schema || selectedItem.item?.entities) {
-        if (match.params.pageTab === FEATURE_SETS_TAB) {
-          newDetailsMenu.push('features')
-        } else if (match.params.pageTab === DATASETS_TAB) {
-          newDetailsMenu.push('metadata')
+        return {
+          ...state,
+          detailsMenu: [
+            ...generateFeatureSetsDetailsMenu(newDetailsMenu, selectedItem)
+          ]
         }
-      }
-
-      if (
-        selectedItem.item?.entities &&
-        selectedItem.item?.stats &&
-        match.params.pageTab === FEATURE_SETS_TAB
-      ) {
-        newDetailsMenu.push('statistics')
-      }
-
-      if (
-        selectedItem.item?.extra_data ||
-        match.params.pageTab === FEATURE_SETS_TAB
-      ) {
-        newDetailsMenu.push('analysis')
+      } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
+        return {
+          ...state,
+          detailsMenu: [
+            ...generateFeatureVectorsDetailsMenu(newDetailsMenu, selectedItem)
+          ]
+        }
+      } else if (match.params.pageTab === DATASETS_TAB) {
+        return {
+          ...state,
+          detailsMenu: [
+            ...generateDataSetsDetailsMenu(newDetailsMenu, selectedItem)
+          ]
+        }
       }
 
       return {
@@ -239,16 +230,12 @@ const FeatureStore = ({
       }
     })
   }, [
-    match.params.tab,
-    match.params.projectName,
-    match.params.name,
     history,
     selectedItem.item,
-    match.params.pageTab,
-    match.params.tag,
     selectedItem.entities,
-    match,
-    selectedItem
+    match.params.pageTab,
+    selectedItem,
+    match
   ])
 
   const handleTreeFilterChange = useCallback(

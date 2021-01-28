@@ -1,0 +1,48 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.item-requested-features {
+  &__table {
+    &-header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 10px 18px;
+      color: $topaz;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 24px;
+      border-bottom: $tableBorder;
+    }
+
+    &-cell {
+      display: flex;
+      flex: 1 1;
+      align-items: center;
+      min-width: 70px;
+      padding: 0 5px;
+
+      &_name,
+      &_alias {
+        color: $mulledWine;
+      }
+
+      &_hash {
+        color: $topaz;
+      }
+
+      &_prefix {
+        color: $silver;
+      }
+
+      &_feature {
+        color: $cornflowerBlue;
+      }
+    }
+
+    &-row {
+      padding: 18px;
+      border-bottom: $tableBorder;
+    }
+  }
+}

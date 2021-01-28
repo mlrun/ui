@@ -133,7 +133,7 @@ const Content = ({
     }
   }, [groupFilter, handleGroupByName, handleGroupByWorkflow, handleGroupByNone])
 
-  const toggleConvertToYaml = (item, isSubRow) => {
+  const toggleConvertToYaml = item => {
     if (convertedYaml.length > 0) {
       return setConvertedYaml('')
     }

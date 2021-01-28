@@ -13,13 +13,12 @@ import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 
 import { formatDatetime } from '../../utils'
 import {
-  ARTIFACTS_PAGE,
   JOBS_PAGE,
   DETAILS_ARTIFACTS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
-  FILES_PAGE,
-  MODELS_PAGE
+  FUNCTIONS_PAGE,
+  FEATURE_VECTORS_TAB
 } from '../../constants'
 import { detailsActions } from '../DetailsInfo/detailsReducer'
 
@@ -123,11 +122,10 @@ const DetailsView = React.forwardRef(
               selectedId={detailsState.iteration}
             />
           )}
-          {(pageData.page === ARTIFACTS_PAGE ||
-            pageData.page === FILES_PAGE ||
-            pageData.page === MODELS_PAGE ||
-            pageData.page === FEATURE_STORE_PAGE) &&
-            match.params.pageTab !== FEATURE_SETS_TAB && (
+          {![JOBS_PAGE, FUNCTIONS_PAGE].includes(pageData.page) &&
+            ![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
+              match.params.pageTab
+            ) && (
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
                 <Download
                   fileName={selectedItem.db_key || selectedItem.key}
