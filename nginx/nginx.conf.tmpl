@@ -7,7 +7,7 @@ server {
 
   listen 80;
 
-  resolver kube-dns.kube-system.svc.cluster.local;
+  resolver 127.0.0.1;
 
   # https://raw.githubusercontent.com/mlrun/functions/master
   location /function-catalog {
