@@ -24,12 +24,14 @@ server {
 
   location /api {
     proxy_set_header x-v3io-session-key $v3io_session_key;
-    proxy_pass ${MLRUN_API_PROXY_URL};
+    set $backend ${MLRUN_API_PROXY_URL};
+    proxy_pass $backend;
   }
 
   location /nuclio {
     rewrite ^/nuclio(/|$)(.*) /$2 break;
-    proxy_pass ${MLRUN_NUCLIO_API_URL};
+    set $nuclio_backend ${MLRUN_NUCLIO_API_URL};
+    proxy_pass $nuclio_backend;
   }
 
   error_page   500 502 503 504  /50x.html;
