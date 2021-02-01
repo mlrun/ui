@@ -25,12 +25,14 @@ server {
   set $backend ${MLRUN_API_PROXY_URL};
   location /api {
     proxy_set_header x-v3io-session-key $v3io_session_key;
+    resolver 127.0.0.1;
     proxy_pass $backend;
   }
 
   set $nuclio_backend ${MLRUN_NUCLIO_API_URL};
   location /nuclio {
     rewrite ^/nuclio(/|$)(.*) /$2 break;
+    resolver 127.0.0.1;
     proxy_pass $nuclio_backend;
   }
 
