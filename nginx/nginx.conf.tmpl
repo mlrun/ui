@@ -22,15 +22,15 @@ server {
     try_files $uri $uri/ /index.html;
   }
 
+  set $backend ${MLRUN_API_PROXY_URL};
   location /api {
     proxy_set_header x-v3io-session-key $v3io_session_key;
-    set $backend ${MLRUN_API_PROXY_URL};
     proxy_pass $backend;
   }
 
+  set $nuclio_backend ${MLRUN_NUCLIO_API_URL};
   location /nuclio {
     rewrite ^/nuclio(/|$)(.*) /$2 break;
-    set $nuclio_backend ${MLRUN_NUCLIO_API_URL};
     proxy_pass $nuclio_backend;
   }
 
