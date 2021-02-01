@@ -7,7 +7,7 @@ server {
 
   listen 80;
 
-  resolver 127.0.0.1;
+  include resolvers.conf;
 
   # https://raw.githubusercontent.com/mlrun/functions/master
   location /function-catalog {

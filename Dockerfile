@@ -32,4 +32,6 @@ ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:80}" \
     MLRUN_NUCLIO_UI_URL="${MLRUN_NUCLIO_UI_URL:-http://localhost:8070}" \
     MLRUN_V3IO_ACCESS_KEY="${MLRUN_V3IO_ACCESS_KEY:-\"\"}"
 
-CMD ["/bin/sh", "-c", "/etc/nginx/run_nginx"]
+CMD echo resolver $(awk 'BEGIN{ORS=" "} $1=="nameserver" {print $2}' /etc/resolv.conf) ";" > /etc/nginx/resolvers.conf && /etc/nginx/run_nginx
+#CMD ["echo", "resolver", "$(awk", "'BEGIN{ORS=\"", "\"}", "$1==\"nameserver\"", "{print $2}'", "/etc/resolv.conf)", "\";\"", ">", "/etc/nginx/resolvers.conf"]
+#CMD ["/bin/sh", "-c", "/etc/nginx/run_nginx"]
