@@ -82,8 +82,9 @@ const ChipForm = ({
   const outsideClick = useCallback(
     event => {
       event.stopPropagation()
+      const elementPath = event.path ?? event.composedPath?.()
 
-      if (!event.path.includes(refInputContainer.current)) {
+      if (!elementPath.includes(refInputContainer.current)) {
         onChange(chip, 'Click')
       }
     },
