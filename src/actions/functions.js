@@ -43,24 +43,24 @@ const functionsActions = {
   fetchFunctionsTemplates: () => dispatch => {
     return functionsApi
       .getFunctionTemplatesCatalog()
-      .then(result => {
-        const templates = Object.keys(result.data).map(func => {
-          return {
+      .then(({ data: functionTemplates }) => {
+        const templates = Object.entries(functionTemplates).map(
+          ([key, value]) => ({
+            kind: value?.kind,
             metadata: {
-              name: func,
+              name: key,
               hash: '',
-              description: result.data[func].description,
-              categories: result.data[func].categories,
-              versions: result.data[func].versions,
+              description: value?.description,
+              categories: value?.categories,
+              versions: value?.versions,
               tag: ''
             },
             status: {
-              status: ''
+              state: ''
             }
-          }
-        })
+          })
+        )
         const templatesCategories = generateCategories(templates)
-
         dispatch(functionsActions.setFunctionsTemplates(templatesCategories))
 
         return { templatesCategories, templates }
