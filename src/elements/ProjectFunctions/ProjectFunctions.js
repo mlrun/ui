@@ -82,7 +82,9 @@ const ProjectFunctions = ({
 
           return {
             name: {
-              value: func.metadata.name,
+              value: func.metadata.name.startsWith(match.params.projectName)
+                ? func.metadata.name.slice(match.params.projectName.length + 1)
+                : func.metadata.name,
               href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions/${func.metadata.name}`,
               className: 'table-cell_big'
             },
