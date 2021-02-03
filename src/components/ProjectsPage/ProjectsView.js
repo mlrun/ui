@@ -57,49 +57,53 @@ const ProjectsView = ({
           headerText="Create new project"
           closePopUp={closeNewProjectPopUp}
         >
-          <div className="pop-up-dialog__form">
-            <Input
-              className="pop-up-dialog__form-input"
-              floatingLabel
-              label="Name"
-              onChange={name => setNewProjectName(name)}
-              required={
-                isEmptyValue && projectStore.newProject.name.length === 0
-              }
-              requiredText="Name is required"
-              type="text"
-              value={projectStore.newProject.name}
-            />
-            <Input
-              className="pop-up-dialog__form-input"
-              floatingLabel
-              label="Description"
-              onChange={description => setNewProjectDescription(description)}
-              type="text"
-              value={projectStore.newProject.description}
-            />
-          </div>
-          <div className="pop-up-dialog__footer-container">
-            {projectStore.newProject.error && (
-              <ErrorMessage
-                closeError={() => {
-                  if (projectStore.newProject.error) {
-                    removeNewProjectError()
-                  }
-                }}
-                message={projectStore.newProject.error}
+          <form onSubmit={handleCreateProject} noValidate>
+            <div className="pop-up-dialog__form">
+              <Input
+                className="pop-up-dialog__form-input"
+                floatingLabel
+                label="Name"
+                onChange={name => setNewProjectName(name)}
+                required={
+                  isEmptyValue && projectStore.newProject.name.length === 0
+                }
+                requiredText="Name is required"
+                pattern="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+                tip="&bull; Valid characters: a-z, 0-9, -&#13;&#10;&bull; Must being and end with: a-z, 0-9&#13;&#10;&bull; Length - max: 63"
+                type="text"
+                value={projectStore.newProject.name}
               />
-            )}
-            <button
-              className="btn_default pop-up-dialog__btn_cancel"
-              onClick={closeNewProjectPopUp}
-            >
-              Cancel
-            </button>
-            <button className="btn_primary" onClick={handleCreateProject}>
-              Create
-            </button>
-          </div>
+              <Input
+                className="pop-up-dialog__form-input"
+                floatingLabel
+                label="Description"
+                onChange={description => setNewProjectDescription(description)}
+                type="text"
+                value={projectStore.newProject.description}
+              />
+            </div>
+            <div className="pop-up-dialog__footer-container">
+              {projectStore.newProject.error && (
+                <ErrorMessage
+                  closeError={() => {
+                    if (projectStore.newProject.error) {
+                      removeNewProjectError()
+                    }
+                  }}
+                  message={projectStore.newProject.error}
+                />
+              )}
+              <button
+                className="btn_default pop-up-dialog__btn_cancel"
+                onClick={closeNewProjectPopUp}
+              >
+                Cancel
+              </button>
+              <button className="btn_primary" type="submit">
+                Create
+              </button>
+            </div>
+          </form>
         </PopUpDialog>
       )}
       {confirmData && (
