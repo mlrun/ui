@@ -314,7 +314,7 @@ export const navigateToDetailsPane = (
     match.params.pageTab === FEATURE_SETS_TAB &&
     artifactsStore.featureSets.length > 0
   ) {
-    artifacts = artifactsStore.featureSets
+    artifacts = parseFeatureStoreDataRequest(artifactsStore.featureSets)
   } else if (
     match.params.pageTab === FEATURES_TAB &&
     artifactsStore.features.allData.length > 0
@@ -441,6 +441,7 @@ export const checkTabIsValid = (history, match, selectedItem) => {
       ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab) &&
       !selectedItem.item?.stats)
   ) {
+    console.log('here')
     return history.push(
       `/projects/${match.params.projectName}/feature-store/${
         match.params.pageTab
