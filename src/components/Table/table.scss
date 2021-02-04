@@ -43,7 +43,7 @@
 
     .artifacts {
       &_medium {
-        max-width: 245px;
+        max-width: 235px;
 
         @include tableColumnFlex(1, 235px);
       }
@@ -313,5 +313,10 @@
 
   .row_active {
     background-color: $alabaster;
+  }
+
+  .error-container {
+    justify-content: center;
+    width: 100%;
   }
 }

@@ -9,6 +9,7 @@ import {
   FETCH_FEATURE_SETS_BEGIN,
   FETCH_FEATURE_SETS_FAILURE,
   FETCH_FEATURE_SETS_SUCCESS,
+  FETCH_FEATURE_SUCCESS,
   FETCH_FEATURE_VECTOR_SUCCESS,
   FETCH_FEATURE_VECTORS_BEGIN,
   FETCH_FEATURE_VECTORS_FAILURE,
@@ -24,6 +25,7 @@ import {
   FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
   REMOVE_DATASETS,
+  REMOVE_FEATURE,
   REMOVE_FEATURE_SETS,
   REMOVE_FEATURE_VECTOR,
   REMOVE_FEATURE_VECTORS,
@@ -43,7 +45,12 @@ const initialState = {
       content: {}
     }
   },
-  features: [],
+  features: {
+    allData: [],
+    selectedRowData: {
+      content: {}
+    }
+  },
   files: [],
   filter: {
     tag: 'latest',
@@ -123,11 +130,8 @@ export default (state = initialState, { type, payload }) => {
           ...state.featureVectors,
           selectedRowData: {
             content: {
-              ...state.featureVectors.content,
               ...payload
-            },
-            error: false,
-            loading: false
+            }
           }
         }
       }
@@ -152,6 +156,18 @@ export default (state = initialState, { type, payload }) => {
         },
         loading: false
       }
+    case FETCH_FEATURE_SUCCESS:
+      return {
+        ...state,
+        features: {
+          ...state.features,
+          selectedRowData: {
+            content: {
+              ...payload
+            }
+          }
+        }
+      }
     case FETCH_FEATURES_BEGIN:
       return {
         ...state,
@@ -161,14 +177,16 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
-        features: [],
         loading: false
       }
     case FETCH_FEATURES_SUCCESS:
       return {
         ...state,
         error: false,
-        features: payload,
+        features: {
+          ...state.features,
+          allData: payload
+        },
         loading: false
       }
     case FETCH_FILES_BEGIN:
@@ -241,6 +259,18 @@ export default (state = initialState, { type, payload }) => {
           allData: [],
           selectedRowData: {
             content: {},
+            error: null,
+            loading: false
+          }
+        }
+      }
+    case REMOVE_FEATURE:
+      return {
+        ...state,
+        features: {
+          ...state.features,
+          selectedRowData: {
+            content: payload,
             error: null,
             loading: false
           }

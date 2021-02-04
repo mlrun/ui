@@ -87,8 +87,26 @@ export default {
   getFeatureVectors: item => {
     return fetchFeatureStoreData(item, FEATURE_VECTORS_TAB)
   },
+  getFeature: (project, feature) =>
+    mainHttpClient.get(`/projects/${project}/features?name=${feature}`),
   getFeatures: item => {
-    return fetchFeatureStoreData(item, FEATURES_TAB)
+    const params = {}
+
+    if (item?.labels) {
+      params.labels = item.labels
+    }
+
+    if (item?.tag) {
+      params.tag = item.tag
+    }
+
+    if (item?.name) {
+      params.name = item.name
+    }
+
+    return mainHttpClient.get(`/projects/${item.project}/${FEATURES_TAB}`, {
+      params
+    })
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data),

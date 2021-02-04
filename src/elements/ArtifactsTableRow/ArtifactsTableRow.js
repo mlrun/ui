@@ -5,8 +5,10 @@ import classnames from 'classnames'
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 import Loader from '../../common/Loader/Loader'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import artifactsData from '../../components/Artifacts/artifactsData'
+import { FEATURES_TAB } from '../../constants'
 
 const ArtifactsTableRow = ({
   actionsMenu,
@@ -14,6 +16,7 @@ const ArtifactsTableRow = ({
   handleExpandRow,
   handleSelectItem,
   index,
+  mainRowItemsCount,
   match,
   rowItem,
   pageData,
@@ -32,21 +35,28 @@ const ArtifactsTableRow = ({
     parent.current?.classList.value.includes('parent-row-expanded') &&
       'parent-row-expanded'
   )
+  const mainRowData = Object.values(rowItem)
 
   return (
     <div className={rowClassNames} ref={parent}>
       {parent.current?.classList.contains('parent-row-expanded') ? (
         <div className="row_grouped-by">
           <div className="table-body__row">
-            <TableCell
-              handleExpandRow={handleExpandRow}
-              data={rowItem.key || rowItem.name}
-              item={rowItem}
-              selectItem={handleSelectItem}
-              selectedItem={selectedItem}
-              expandLink
-              firstRow
-            />
+            {mainRowData.map((data, index) => {
+              return index < mainRowItemsCount ? (
+                <TableCell
+                  key={data.value}
+                  handleExpandRow={handleExpandRow}
+                  data={data}
+                  item={rowItem}
+                  selectItem={handleSelectItem}
+                  selectedItem={selectedItem}
+                  expandLink={index === 0}
+                  firstRow={index === 0}
+                  link={data.link && data.link}
+                />
+              ) : null
+            })}
           </div>
           {tableContent.map((artifact, index) => {
             const subRowClassNames = classnames(
@@ -59,31 +69,51 @@ const ArtifactsTableRow = ({
             )
             let currentItem = {}
 
+            if (match.params.pageTab === FEATURES_TAB) {
+              currentItem = content.find(
+                item =>
+                  `${item.name}-${item.metadata?.name}` ===
+                  `${artifact.key?.value}-${artifact.feature_set?.value}`
+              )
+            } else {
+              currentItem = content.find(
+                contentItem =>
+                  (contentItem.name === artifact.name ||
+                    contentItem.db_key === artifact.db_key) &&
+                  contentItem.tag === artifact.version?.value
+              )
+            }
+
             return (
               <div className={subRowClassNames} key={index}>
-                {pageData.selectedRowData?.loading ? (
+                {pageData.selectedRowData &&
+                (pageData.selectedRowData[artifact.key?.value]?.loading ||
+                  pageData.selectedRowData[
+                    `${artifact.key?.value}-${artifact.feature_set?.value}`
+                  ]?.loading) ? (
                   <Loader key={index} />
+                ) : pageData.selectedRowData &&
+                  (pageData.selectedRowData[artifact.key?.value]?.error ||
+                    pageData.selectedRowData[
+                      `${artifact.key.value}-${artifact.feature_set?.value}`
+                    ]?.error) ? (
+                  <ErrorMessage
+                    message={
+                      pageData.selectedRowData[artifact.key?.value]?.error
+                        ?.message ||
+                      pageData.selectedRowData[
+                        `${artifact.key.value}-${artifact.feature_set?.value}`
+                      ]?.error.message
+                    }
+                  />
                 ) : (
                   <>
                     {Object.values(artifact).map((value, i) => {
-                      currentItem =
-                        content.length > 0 &&
-                        content.find(contentItem => {
-                          return (
-                            (contentItem.name === artifact.name ||
-                              contentItem.db_key === artifact.db_key) &&
-                            contentItem.tag === artifact.version.value
-                          )
-                        })
-
                       return (
                         <TableCell
                           data={
-                            value.link
-                              ? {
-                                  class: 'artifacts_medium',
-                                  value: currentItem.tag
-                                }
+                            value.expandedCellContent
+                              ? value.expandedCellContent
                               : value
                           }
                           item={currentItem}
@@ -111,7 +141,11 @@ const ArtifactsTableRow = ({
                       )
                     })}
                     <div className="table-body__cell action_cell">
-                      <TableActionsMenu item={currentItem} menu={actionsMenu} />
+                      <TableActionsMenu
+                        item={currentItem}
+                        menu={actionsMenu}
+                        subRow
+                      />
                     </div>
                   </>
                 )}
@@ -159,6 +193,7 @@ const ArtifactsTableRow = ({
 
 ArtifactsTableRow.defaultProps = {
   handleExpandRow: null,
+  mainRowItemsCount: 1,
   tableContent: null
 }
 
@@ -168,6 +203,7 @@ ArtifactsTableRow.propTypes = {
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
+  mainRowItemsCount: PropTypes.number,
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

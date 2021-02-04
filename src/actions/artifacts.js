@@ -32,11 +32,14 @@ import {
   FETCH_FEATURE_VECTORS_SUCCESS,
   REMOVE_FEATURE_VECTORS,
   FETCH_FEATURE_VECTOR_SUCCESS,
-  REMOVE_FEATURE_VECTOR
+  REMOVE_FEATURE_VECTOR,
+  FETCH_FEATURE_SUCCESS,
+  REMOVE_FEATURE
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { parseFeatureStoreDataRequest } from '../utils/parseFeatureStoreDataRequest'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
+import { parseFeatures } from '../utils/parseFeatures'
 
 const artifactsAction = {
   closeArtifactsPreview: item => ({
@@ -139,6 +142,9 @@ const artifactsAction = {
 
         return response.data.feature_vectors
       })
+      .catch(error => {
+        throw error
+      })
   },
   fetchFeatureVectorSuccess: featureSets => ({
     type: FETCH_FEATURE_VECTOR_SUCCESS,
@@ -171,17 +177,38 @@ const artifactsAction = {
     type: FETCH_FEATURE_VECTORS_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatures: project => dispatch => {
+  fetchFeature: (project, feature) => dispatch => {
+    return artifactsApi
+      .getFeature(project, feature.name)
+      .then(response => {
+        const filteredFeatures = response.data.features.filter(
+          responseItem =>
+            responseItem.feature_set_digest.metadata.name ===
+            feature.metadata.name
+        )
+        let features = parseFeatures(filteredFeatures)
+
+        dispatch(artifactsAction.fetchFeatureSuccess(features))
+
+        return filteredFeatures
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchFeatureSuccess: features => ({
+    type: FETCH_FEATURE_SUCCESS,
+    payload: features
+  }),
+  fetchFeatures: item => dispatch => {
     dispatch(artifactsAction.fetchFeaturesBegin())
 
     return artifactsApi
-      .getFeatures(project)
+      .getFeatures(item)
       .then(response => {
-        let features = response.data.features
+        dispatch(artifactsAction.fetchFeaturesSuccess(response.data.features))
 
-        dispatch(artifactsAction.fetchFeaturesSuccess(features))
-
-        return features
+        return response.data.features
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFeaturesFailure(err))
@@ -265,6 +292,10 @@ const artifactsAction = {
   }),
   removeFeatureVectors: () => ({
     type: REMOVE_FEATURE_VECTORS
+  }),
+  removeFeature: features => ({
+    type: REMOVE_FEATURE,
+    payload: features
   }),
   removeFeatures: () => ({
     type: REMOVE_FEATURES
