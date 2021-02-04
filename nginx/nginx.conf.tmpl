@@ -7,6 +7,8 @@ server {
 
   listen 80;
 
+  include resolvers.conf;
+
   # https://raw.githubusercontent.com/mlrun/functions/master
   location /function-catalog {
     proxy_pass ${MLRUN_FUNCTION_CATALOG_URL};
@@ -22,14 +24,16 @@ server {
     try_files $uri $uri/ /index.html;
   }
 
+  set $backend ${MLRUN_API_PROXY_URL};
   location /api {
     proxy_set_header x-v3io-session-key $v3io_session_key;
-    proxy_pass ${MLRUN_API_PROXY_URL};
+    proxy_pass $backend;
   }
 
+  set $nuclio_backend ${MLRUN_NUCLIO_API_URL};
   location /nuclio {
     rewrite ^/nuclio(/|$)(.*) /$2 break;
-    proxy_pass ${MLRUN_NUCLIO_API_URL};
+    proxy_pass $nuclio_backend;
   }
 
   error_page   500 502 503 504  /50x.html;

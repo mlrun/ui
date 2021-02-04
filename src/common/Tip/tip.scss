@@ -12,6 +12,7 @@
     color: $white;
     background: $primary;
     border-radius: 2px;
+    white-space: pre-line;
 
     &-left {
       bottom: calc(100% + 10px);

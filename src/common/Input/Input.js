@@ -23,6 +23,7 @@ const Input = React.forwardRef(
       maxLength,
       onChange,
       onKeyDown,
+      pattern,
       placeholder,
       required,
       requiredText,
@@ -39,8 +40,14 @@ const Input = React.forwardRef(
     const inputClassNames = classnames(
       'input',
       className,
-      inputIsFocused && floatingLabel && 'active-input',
+      (inputIsFocused || placeholder) && floatingLabel && 'active-input',
       required && 'input_required'
+    )
+    const labelClassNames = classnames(
+      'input__label',
+      floatingLabel && 'input__label-floating',
+      (inputIsFocused || placeholder) && floatingLabel && 'active-label',
+      infoLabel && 'input__label_info'
     )
     const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
 
@@ -69,22 +76,23 @@ const Input = React.forwardRef(
         <input
           data-testid="input"
           className={inputClassNames}
-          disabled={disabled}
-          maxLength={maxLength}
           onChange={handleClick}
-          onKeyDown={onKeyDown}
-          placeholder={placeholder}
           ref={input}
-          type={type}
-          value={value && value}
+          {...{
+            disabled,
+            maxLength,
+            onKeyDown,
+            pattern,
+            placeholder,
+            required,
+            type,
+            value
+          }}
         />
         {label && (
           <label
             data-testid="label"
-            className={`input__label ${inputIsFocused &&
-              floatingLabel &&
-              'active-label'} ${floatingLabel &&
-              'input__label-floating'} ${infoLabel && 'input__label_info'}`}
+            className={labelClassNames}
             style={
               infoLabel
                 ? {
@@ -146,6 +154,7 @@ Input.propTypes = {
   maxLength: PropTypes.number,
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
+  pattern: PropTypes.string,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   requiredText: PropTypes.string,
