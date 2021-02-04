@@ -151,16 +151,22 @@ const Content = ({
         isEqual(yamlContentItem.db_key, item.db_key)
       )
     } else if (pageData.page === FEATURE_STORE_PAGE) {
-      const currentYamlContent = subRow ? 'selectedRowData' : 'allData'
+      if (match.params.pageTab === FEATURES_TAB) {
+        const currentYamlContent = subRow ? 'selectedRowData' : 'allData'
 
-      artifactJson = yamlContent[currentYamlContent].filter(yamlContentItem =>
-        match.params.pageTab === FEATURE_SETS_TAB
-          ? isEqual(yamlContentItem.name, item.name) &&
-            isEqual(yamlContentItem.tag, item.tag)
-          : match.params.pageTab === FEATURES_TAB
-          ? isEqual(yamlContentItem.feature?.name, item.name)
-          : isEqual(yamlContentItem.db_key, item.db_key)
-      )
+        artifactJson = yamlContent[currentYamlContent].filter(
+          yamlContentItem => {
+            return isEqual(yamlContentItem.feature?.name, item.name)
+          }
+        )
+      } else {
+        artifactJson = yamlContent.allData.filter(yamlContentItem =>
+          match.params.pageTab === FEATURE_SETS_TAB
+            ? isEqual(yamlContentItem.metadata.name, item.name) &&
+              isEqual(yamlContentItem.metadata.tag, item.tag)
+            : isEqual(yamlContentItem.db_key, item.db_key)
+        )
+      }
     }
 
     setConvertedYaml(

@@ -37,7 +37,6 @@ import {
   REMOVE_FEATURE
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
-import { parseFeatureStoreDataRequest } from '../utils/parseFeatureStoreDataRequest'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
 
@@ -105,13 +104,11 @@ const artifactsAction = {
     return artifactsApi
       .getFeatureSets(project, config)
       .then(response => {
-        let featureSets = parseFeatureStoreDataRequest(
-          response.data.feature_sets
+        dispatch(
+          artifactsAction.fetchFeatureSetsSuccess(response.data.feature_sets)
         )
 
-        dispatch(artifactsAction.fetchFeatureSetsSuccess(featureSets))
-
-        return featureSets
+        return response.data.feature_sets
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFeatureSetsFailure(err))

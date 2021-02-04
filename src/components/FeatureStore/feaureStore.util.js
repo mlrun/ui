@@ -13,6 +13,7 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
+import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
 
 export const datasetsInfoHeaders = [
   { label: 'Hash', id: 'hash' },
@@ -274,7 +275,7 @@ export const handleFetchData = async (
     result = await fetchFeatureSets(item, config)
 
     if (result) {
-      data.content = result
+      data.content = parseFeatureStoreDataRequest(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {

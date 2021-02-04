@@ -287,7 +287,7 @@ const FeatureStore = ({
   )
 
   const applyDetailsChanges = changes => {
-    handleApplyDetailsChanges(
+    return handleApplyDetailsChanges(
       changes,
       fetchData,
       match,
