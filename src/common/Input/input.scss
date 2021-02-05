@@ -9,6 +9,10 @@
   border: $primaryBorder;
   border-radius: 4px;
 
+  &:invalid {
+    border: $errorBorder;
+  }
+
   &-wrapper {
     position: relative;
 
