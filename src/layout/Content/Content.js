@@ -14,7 +14,6 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import {
   ARTIFACTS_PAGE,
-  DATASETS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURES_TAB,
@@ -31,6 +30,7 @@ import { formatDatetime } from '../../utils'
 import './content.scss'
 
 const Content = ({
+  applyDetailsChanges,
   cancelRequest,
   content,
   expandRow,
@@ -50,8 +50,9 @@ const Content = ({
   showUntagged,
   stateFilter,
   toggleShowUntagged,
-  yamlContent,
-  applyDetailsChanges
+  selectedRowId,
+  setSelectedRowId,
+  yamlContent
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
   const [expandedItems, setExpandedItems] = useState([])
@@ -232,12 +233,13 @@ const Content = ({
         <PageActionsMenu
           createJob={pageData.page === JOBS_PAGE}
           registerDialog={
-            (pageData.page === PROJECTS_PAGE ||
-              pageData.page === ARTIFACTS_PAGE ||
-              pageData.page === FILES_PAGE ||
-              pageData.page === MODELS_PAGE ||
-              pageData.page === FEATURE_STORE_PAGE) &&
-            match.params.pageTab === DATASETS_TAB
+            [
+              PROJECTS_PAGE,
+              ARTIFACTS_PAGE,
+              FILES_PAGE,
+              MODELS_PAGE,
+              FEATURE_STORE_PAGE
+            ].includes(pageData.page) && match.params.pageTab !== FEATURES_TAB
           }
           registerDialogHeader={
             pageData.page === PROJECTS_PAGE
@@ -261,6 +263,7 @@ const Content = ({
         )}
         <div className="content__action-bar">
           <FilterMenu
+            actionButtonTitle={pageData.filterMenuActionButtonTitle}
             expand={expand}
             filters={pageData.filters}
             groupFilter={pageData.handleRequestOnExpand ? null : groupFilter}
@@ -298,6 +301,8 @@ const Content = ({
               applyDetailsChanges={applyDetailsChanges}
               cancelRequest={cancelRequest}
               retryRequest={refresh}
+              selectedRowId={selectedRowId}
+              setSelectedRowId={setSelectedRowId}
             />
           ) : loading ? null : (
             <NoData />
@@ -314,6 +319,8 @@ Content.defaultProps = {
   groupFilter: null,
   handleSelectItem: () => {},
   selectedItem: {},
+  selectedRowId: '',
+  setSelectedRowId: () => {},
   setGroupFilter: () => {},
   setLoading: () => {},
   setStateFilter: () => {},
@@ -334,6 +341,8 @@ Content.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
   setGroupFilter: PropTypes.func,
   setLoading: PropTypes.func,
   setStateFilter: PropTypes.func,

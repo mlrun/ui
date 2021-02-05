@@ -70,6 +70,8 @@ export const featuresFilters = [
 export const page = 'FEATURE-STORE'
 export const sources = ['name', 'path']
 export const registerDatasetsTitle = 'Register dataset'
+export const createFeatureSetTitle = 'Create set'
+export const createFeatureVectorTitle = 'Create vector'
 export const datasetsTableHeaders = [
   {
     header: 'Name',
@@ -115,12 +117,12 @@ export const featureSetsTableHeaders = [
     class: 'artifacts_medium'
   },
   {
-    header: 'Labels',
-    class: 'artifacts_big'
-  },
-  {
     header: 'Description',
     class: 'artifacts_medium'
+  },
+  {
+    header: 'Labels',
+    class: 'artifacts_big'
   },
   {
     header: 'Entity',
@@ -141,12 +143,12 @@ export const featureVectorsTableHeaders = [
     class: 'artifacts_medium'
   },
   {
-    header: 'Labels',
-    class: 'artifacts_big'
-  },
-  {
     header: 'Description',
     class: 'artifacts_medium'
+  },
+  {
+    header: 'Labels',
+    class: 'artifacts_big'
   },
   {
     header: 'Updated',
@@ -217,9 +219,11 @@ export const generatePageData = (
     data.filters = featureSetsFilters
     data.infoHeaders = featureSetsInfoHeaders
     data.tableHeaders = featureSetsTableHeaders
+    data.registerArtifactDialogTitle = createFeatureSetTitle
   } else if (pageTab === FEATURES_TAB) {
     data.filters = featuresFilters
     data.tableHeaders = featuresTableHeaders
+    data.filterMenuActionButtonTitle = 'Add to feature vector'
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders
@@ -227,6 +231,7 @@ export const generatePageData = (
     data.handleRemoveFeatureVector = handleRemoveFeatureVector
     data.infoHeaders = featureVectorsInfoHeaders
     data.detailsMenu = featureVectorsDetailsMenu
+    data.registerArtifactDialogTitle = createFeatureVectorTitle
   } else {
     data.filters = datasetsFilters
     data.infoHeaders = datasetsInfoHeaders

@@ -232,6 +232,10 @@ const createFeatureSetsRowData = (artifact, project) => {
       class: 'artifacts_medium',
       link: `/projects/${project}/feature-store/feature-sets/${artifact.name}/${artifact.tag}/overview`
     },
+    description: {
+      value: artifact.description,
+      class: 'artifacts_medium'
+    },
     labels: {
       value: parseKeyValues(artifact.labels),
       class: 'artifacts_big',
@@ -241,10 +245,6 @@ const createFeatureSetsRowData = (artifact, project) => {
       value: artifact.tag,
       class: 'artifacts_small',
       type: 'hidden'
-    },
-    description: {
-      value: artifact.description,
-      class: 'artifacts_medium'
     },
     entity: {
       value: artifact.entities ? artifact.entities[0]?.name : '',
@@ -328,6 +328,10 @@ const createFeatureVectorsRowData = (artifact, project) => ({
     class: 'artifacts_medium',
     link: `/projects/${project}/feature-store/feature-vectors/${artifact.name}/${artifact.tag}/overview`
   },
+  description: {
+    value: artifact.description,
+    class: 'artifacts_medium'
+  },
   labels: {
     value: parseKeyValues(artifact.labels),
     class: 'artifacts_big',
@@ -337,10 +341,6 @@ const createFeatureVectorsRowData = (artifact, project) => ({
     value: artifact.tag,
     class: 'artifacts_small',
     type: 'hidden'
-  },
-  description: {
-    value: artifact.description,
-    class: 'artifacts_medium'
   },
   updated: {
     value: artifact.updated

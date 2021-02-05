@@ -13,6 +13,7 @@ import NoData from '../../common/NoData/NoData'
 import {
   ARTIFACTS_PAGE,
   FEATURE_STORE_PAGE,
+  FEATURES_TAB,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -36,6 +37,8 @@ const TableView = ({
   pageData,
   retryRequest,
   selectedItem,
+  selectedRowId,
+  setSelectedRowId,
   tableContent,
   toggleConvertToYaml,
   workflows
@@ -93,6 +96,9 @@ const TableView = ({
                       rowItem={rowItem}
                       pageData={pageData}
                       selectedItem={selectedItem}
+                      selectedRowId={selectedRowId}
+                      setSelectedRowId={setSelectedRowId}
+                      withCheckbox={match.params.pageTab === FEATURES_TAB}
                     />
                   )
                 case FUNCTIONS_PAGE:
@@ -156,6 +162,9 @@ const TableView = ({
                     pageData={pageData}
                     selectedItem={selectedItem}
                     tableContent={group}
+                    selectedRowId={selectedRowId}
+                    setSelectedRowId={setSelectedRowId}
+                    withCheckbox={match.params.pageTab === FEATURES_TAB}
                   />
                 )
               } else {
@@ -202,7 +211,10 @@ const TableView = ({
 
 TableView.defaultProps = {
   applyDetailsChanges: () => {},
-  groupLatestJob: {}
+  groupLatestJob: {},
+  selectedRowId: '',
+  setSelectedRowId: () => {},
+  withCheckbox: false
 }
 
 TableView.propTypes = {
@@ -213,11 +225,14 @@ TableView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
   tableContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
   ]).isRequired,
-  toggleConvertToYaml: PropTypes.func.isRequired
+  toggleConvertToYaml: PropTypes.func.isRequired,
+  withCheckbox: PropTypes.bool
 }
 
 export default TableView

@@ -56,6 +56,7 @@ const FeatureStore = ({
     registerArtifactDialogTitle: '',
     tabs: []
   })
+  const [selectedRowId, setSelectedRowId] = useState('')
   const featureStoreRef = useRef(null)
 
   const fetchData = useCallback(
@@ -292,12 +293,16 @@ const FeatureStore = ({
         handleCancel={() => setSelectedItem({})}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() => setIsPopupDialogOpen(true)}
+        openPopupDialog={() =>
+          match.params.pageTab === DATASETS_TAB && setIsPopupDialogOpen(true)
+        }
         pageData={pageData}
         refresh={item => {
           fetchData(item)
         }}
         selectedItem={selectedItem.item}
+        selectedRowId={selectedRowId}
+        setSelectedRowId={id => setSelectedRowId(selectedRowId ? '' : id)}
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (
