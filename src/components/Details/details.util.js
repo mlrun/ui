@@ -256,7 +256,7 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.tag
   },
   updated: {
-    value: formatDatetime(selectedItem.updated, 'N/A')
+    value: formatDatetime(new Date(selectedItem.updated), 'N/A')
   },
   entities: {
     value: selectedItem.entities?.map(entity => entity.name)

@@ -116,7 +116,7 @@ const DetailsInfoItem = React.forwardRef(
           {info}
         </Link>
       )
-    } else if (typeof info !== 'object') {
+    } else if (typeof info !== 'object' || Array.isArray(info)) {
       if (item?.editModeEnabled) {
         return (
           <Tooltip template={<TextTooltipTemplate text="Click to edit" />}>
@@ -133,6 +133,7 @@ const DetailsInfoItem = React.forwardRef(
           </Tooltip>
         )
       }
+
       return <div className="details-item__data">{info}</div>
     }
   }
