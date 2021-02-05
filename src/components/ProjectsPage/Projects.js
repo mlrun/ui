@@ -119,9 +119,16 @@ const Projects = ({
     [convertedYaml.length]
   )
 
-  const handleCreateProject = () => {
+  const handleCreateProject = e => {
+    e.preventDefault()
+
+    if (!e.currentTarget.checkValidity()) {
+      return false
+    }
+
     if (projectStore.newProject.name.length === 0) {
-      return setIsEmptyValue(true)
+      setIsEmptyValue(true)
+      return false
     } else if (isEmptyValue) {
       setIsEmptyValue(false)
     }
