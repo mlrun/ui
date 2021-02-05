@@ -34,7 +34,8 @@ const Table = ({
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
     groupWorkflowItems: [],
-    content: []
+    content: [],
+    mainRowItemsCount: 1
   })
 
   const previewArtifact = useSelector(
@@ -61,9 +62,11 @@ const Table = ({
         content: generatedTableContent,
         groupLatestItem: generateGroupLatestItem(
           pageData.page,
-          generatedTableContent
+          generatedTableContent,
+          match.params.pageTab
         ),
-        groupWorkflowItems: []
+        groupWorkflowItems: [],
+        mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
     } else if (groupFilter === 'workflow') {
       let groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
@@ -93,7 +96,8 @@ const Table = ({
     match,
     pageData.page,
     setLoading,
-    workflows
+    workflows,
+    pageData.mainRowItemsCount
   ])
 
   useEffect(() => {
@@ -105,6 +109,7 @@ const Table = ({
   return (
     <>
       <TableView
+        applyDetailsChanges={applyDetailsChanges}
         cancelRequest={cancelRequest}
         content={content}
         groupFilter={groupFilter}
@@ -118,6 +123,7 @@ const Table = ({
         handleCancel={handleCancel}
         handleExpandRow={handleExpandRow}
         handleSelectItem={handleSelectItem}
+        mainRowItemsCount={tableContent.mainRowItemsCount}
         match={match}
         pageData={pageData}
         retryRequest={retryRequest}
@@ -125,7 +131,6 @@ const Table = ({
         tableContent={tableContent.content}
         toggleConvertToYaml={toggleConvertToYaml}
         workflows={workflows}
-        applyDetailsChanges={applyDetailsChanges}
       />
       <Notification />
       {previewArtifact.isPreview && (

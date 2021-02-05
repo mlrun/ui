@@ -243,9 +243,12 @@ const Details = ({
   const leavePage = () => {
     cancelChanges()
     handleShowWarning(false)
-    unblockRootChange.current()
 
-    unblockRootChange.current = null
+    if (unblockRootChange.current) {
+      unblockRootChange.current()
+
+      unblockRootChange.current = null
+    }
 
     history.push(pathname.current)
 

@@ -193,10 +193,7 @@ const FilterMenu = ({
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button
             onClick={() => {
-              page === ARTIFACTS_PAGE ||
-              page === FILES_PAGE ||
-              page === MODELS_PAGE ||
-              page === FEATURE_STORE_PAGE
+              ![JOBS_PAGE, FUNCTIONS_PAGE].includes(page)
                 ? onChange({
                     tag: artifactFilter.tag,
                     project: match.params.projectName,
