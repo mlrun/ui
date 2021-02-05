@@ -441,7 +441,6 @@ export const checkTabIsValid = (history, match, selectedItem) => {
       ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab) &&
       !selectedItem.item?.stats)
   ) {
-    console.log('here')
     return history.push(
       `/projects/${match.params.projectName}/feature-store/${
         match.params.pageTab

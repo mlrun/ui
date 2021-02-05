@@ -267,6 +267,7 @@ const FeatureStore = ({
         )
       }
 
+      setContent([])
       handleArtifactTreeFilterChange(
         fetchData,
         artifactsStore.filter,

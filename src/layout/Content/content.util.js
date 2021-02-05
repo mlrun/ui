@@ -2,12 +2,11 @@ export const generateGroupedItems = (content, selectedRowData) => {
   const groupedItems = {}
 
   content.forEach(contentItem => {
-    if (selectedRowData && selectedRowData[contentItem.name]?.content) {
+    if (selectedRowData?.[contentItem.name]?.content) {
       groupedItems[contentItem.name] =
         selectedRowData[contentItem.name]?.content
     } else if (
-      selectedRowData &&
-      selectedRowData[`${contentItem.name}-${contentItem.metadata?.name}`]
+      selectedRowData?.[`${contentItem.name}-${contentItem.metadata?.name}`]
         ?.content
     ) {
       groupedItems[`${contentItem.name}-${contentItem.metadata.name}`] =
