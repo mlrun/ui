@@ -12,6 +12,8 @@ import {
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
+import { parseFeatures } from '../../utils/parseFeatures'
+import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
 
 export const datasetsInfoHeaders = [
   { label: 'Hash', id: 'hash' },
@@ -64,6 +66,7 @@ export const featureVectorsFilters = [
   { type: 'labels', label: 'Label:' }
 ]
 export const featuresFilters = [
+  { type: 'tree', label: 'Tag:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
 ]
@@ -207,7 +210,7 @@ export const tabs = [
 export const generatePageData = (
   pageTab,
   handleRequestOnExpand,
-  handleRemoveFeatureVector
+  handleRemoveRequestData
 ) => {
   let data = {
     detailsMenu,
@@ -224,11 +227,13 @@ export const generatePageData = (
     data.filters = featuresFilters
     data.tableHeaders = featuresTableHeaders
     data.filterMenuActionButtonTitle = 'Add to feature vector'
+    data.handleRequestOnExpand = handleRequestOnExpand
+    data.mainRowItemsCount = 2
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders
     data.handleRequestOnExpand = handleRequestOnExpand
-    data.handleRemoveFeatureVector = handleRemoveFeatureVector
+    data.handleRemoveRequestData = handleRemoveRequestData
     data.infoHeaders = featureVectorsInfoHeaders
     data.detailsMenu = featureVectorsDetailsMenu
     data.registerArtifactDialogTitle = createFeatureVectorTitle
@@ -275,14 +280,18 @@ export const handleFetchData = async (
     result = await fetchFeatureSets(item, config)
 
     if (result) {
-      data.content = result
+      data.content = parseFeatureStoreDataRequest(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
+    if (item.onEntering) {
+      item.tag = 'latest'
+    }
+
     result = await fetchFeatures(item)
 
     if (result) {
-      data.content = result
+      data.content = parseFeatures(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURE_VECTORS_TAB) {
@@ -310,10 +319,10 @@ export const navigateToDetailsPane = (
     match.params.pageTab === FEATURE_SETS_TAB &&
     artifactsStore.featureSets.length > 0
   ) {
-    artifacts = artifactsStore.featureSets
+    artifacts = parseFeatureStoreDataRequest(artifactsStore.featureSets)
   } else if (
     match.params.pageTab === FEATURES_TAB &&
-    artifactsStore.features.length > 0
+    artifactsStore.features.allData.length > 0
   ) {
     artifacts = artifactsStore.features
   } else if (
@@ -510,4 +519,101 @@ export const generateDataSetsDetailsMenu = (newDetailsMenu, selectedItem) => {
   }
 
   return newDetailsMenu
+}
+
+export const fetchFeatureRowData = async (
+  fetchFeature,
+  item,
+  match,
+  setPageData,
+  setYamlContent
+) => {
+  setPageData(state => ({
+    ...state,
+    selectedRowData: {
+      ...state.selectedRowData,
+      [`${item.name}-${item.metadata.name}`]: {
+        loading: true
+      }
+    }
+  }))
+
+  const result = await fetchFeature(match.params.projectName, item).catch(
+    error => {
+      setPageData(state => ({
+        ...state,
+        selectedRowData: {
+          ...state.selectedRowData,
+          [`${item.name}-${item.metadata.name}`]: {
+            ...state.selectedRowData[`${item.name}-${item.metadata.name}`],
+            error,
+            loading: false
+          }
+        }
+      }))
+    }
+  )
+
+  if (result?.length > 0) {
+    setYamlContent(state => ({ ...state, selectedRowData: result }))
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        [`${item.name}-${item.metadata.name}`]: {
+          content: [...parseFeatures(result)],
+          error: null,
+          loading: false
+        }
+      }
+    }))
+  }
+}
+
+export const fetchFeatureVectorRowData = async (
+  fetchFeatureVector,
+  item,
+  match,
+  setPageData,
+  setYamlContent
+) => {
+  setPageData(state => ({
+    ...state,
+    selectedRowData: {
+      ...state.selectedRowData,
+      [item.name]: {
+        loading: true
+      }
+    }
+  }))
+
+  const result = await fetchFeatureVector(
+    item.name,
+    match.params.projectName
+  ).catch(error => {
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        ...state.selectedRowData,
+        [item.name]: {
+          ...state.selectedRowData[item.name],
+          error,
+          loading: false
+        }
+      }
+    }))
+  })
+
+  if (result?.length > 0) {
+    setYamlContent(state => ({ ...state, selectedRowData: result }))
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        [item.name]: {
+          content: [...parseFeatureVectors(result)],
+          error: null,
+          loading: false
+        }
+      }
+    }))
+  }
 }

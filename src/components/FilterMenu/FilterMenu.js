@@ -200,12 +200,7 @@ const FilterMenu = ({
           <button
             className="btn btn_refresh btn_icon"
             onClick={() => {
-              ;[
-                ARTIFACTS_PAGE,
-                FILES_PAGE,
-                MODELS_PAGE,
-                FEATURE_STORE_PAGE
-              ].includes(page)
+              ![JOBS_PAGE, FUNCTIONS_PAGE].includes(page)
                 ? onChange({
                     tag: artifactFilter.tag,
                     project: match.params.projectName,

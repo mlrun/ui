@@ -9,6 +9,8 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import artifactsAction from '../../actions/artifacts'
 import {
   checkTabIsValid,
+  fetchFeatureRowData,
+  fetchFeatureVectorRowData,
   generateDataSetsDetailsMenu,
   generateFeatureSetsDetailsMenu,
   generateFeatureVectorsDetailsMenu,
@@ -21,14 +23,15 @@ import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFi
 import {
   DATASETS_TAB,
   FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB
 } from '../../constants'
 import notificationActions from '../../actions/notification'
-import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 
 const FeatureStore = ({
   artifactsStore,
   fetchDataSets,
+  fetchFeature,
   fetchFeatureSets,
   fetchFeatureVector,
   fetchFeatureVectors,
@@ -36,6 +39,7 @@ const FeatureStore = ({
   history,
   match,
   removeDataSets,
+  removeFeature,
   removeFeatureSets,
   removeFeatureVector,
   removeFeatureVectors,
@@ -44,7 +48,10 @@ const FeatureStore = ({
   updateFeatureSetData
 }) => {
   const [content, setContent] = useState([])
-  const [yamlContent, setYamlContent] = useState([])
+  const [yamlContent, setYamlContent] = useState({
+    allData: [],
+    selectedRowData: []
+  })
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
@@ -71,9 +78,9 @@ const FeatureStore = ({
         match.params.pageTab
       )
 
-      if (data.content.length > 0) {
+      if (data.content) {
         setContent(data.content)
-        setYamlContent(data.yamlContent)
+        setYamlContent(state => ({ ...state, allData: data.yamlContent }))
       }
 
       return data.yamlContent
@@ -100,66 +107,73 @@ const FeatureStore = ({
     [artifactsStore.featureVectors.selectedRowData, removeFeatureVector]
   )
 
-  const handleRequestOnExpand = useCallback(
-    featureVector => {
-      setPageData(state => ({
-        ...state,
-        selectedRowData: {
-          ...state.selectedRowData,
-          loading: true
-        }
-      }))
+  const handleRemoveFeature = useCallback(
+    feature => {
+      const newSelectedRowData = {
+        ...artifactsStore.features.selectedRowData
+      }
 
-      fetchFeatureVector(featureVector.name, match.params.projectName)
-        .then(result => {
-          const generatedResult = parseFeatureVectors(result)
+      delete newSelectedRowData[`${feature.name}-${feature.metadata.name}`]
 
-          setPageData(state => ({
-            ...state,
-            selectedRowData: {
-              content: {
-                [featureVector.name]: [...generatedResult]
-              },
-              error: null,
-              loading: false
-            }
-          }))
-          setYamlContent(result)
-        })
-        .catch(error =>
-          setPageData(state => ({
-            ...state,
-            selectedRowData: {
-              ...state.selectedRowData,
-              error,
-              loading: false
-            }
-          }))
-        )
+      removeFeature(newSelectedRowData)
     },
-    [fetchFeatureVector, match.params.projectName]
+    [artifactsStore.features.selectedRowData, removeFeature]
+  )
+
+  const handleRequestOnExpand = useCallback(
+    async item => {
+      if (match.params.pageTab === FEATURES_TAB) {
+        await fetchFeatureRowData(
+          fetchFeature,
+          item,
+          match,
+          setPageData,
+          setYamlContent
+        )
+      } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
+        await fetchFeatureVectorRowData(
+          fetchFeatureVector,
+          item,
+          match,
+          setPageData,
+          setYamlContent
+        )
+      }
+    },
+    [fetchFeature, fetchFeatureVector, match]
   )
 
   const handleExpandRow = useCallback(
     (item, isCollapse) => {
-      if (match.params.pageTab === FEATURE_VECTORS_TAB && isCollapse) {
-        setYamlContent(artifactsStore.featureVectors.allData)
+      if (
+        [FEATURE_VECTORS_TAB, FEATURES_TAB].includes(match.params.pageTab) &&
+        isCollapse
+      ) {
+        setYamlContent(state => ({
+          ...state,
+          selectedRowData: []
+        }))
       }
     },
-    [artifactsStore.featureVectors.allData, match.params.pageTab]
+    [match.params.pageTab]
   )
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName })
+    fetchData({ project: match.params.projectName, onEntering: true })
 
     return () => {
       setContent([])
-      setYamlContent([])
+      setYamlContent({
+        allData: [],
+        selectedRowData: []
+      })
       setGroupFilter('')
       removeDataSets()
       removeFeatureSets()
       removeFeatureVectors()
       setSelectedItem({})
+      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
+      setSelectedRowId('')
     }
   }, [
     fetchData,
@@ -167,13 +181,14 @@ const FeatureStore = ({
     removeDataSets,
     removeFeatureSets,
     featureStoreRef,
-    removeFeatureVectors
+    removeFeatureVectors,
+    setArtifactFilter
   ])
 
   useEffect(() => {
     if (
       match.params.pageTab === FEATURE_SETS_TAB ||
-      (match.params.pageTab === FEATURE_VECTORS_TAB &&
+      ([FEATURES_TAB, FEATURE_VECTORS_TAB].includes(match.params.pageTab) &&
         artifactsStore.filter.tag === 'latest')
     ) {
       setGroupFilter('name')
@@ -187,10 +202,17 @@ const FeatureStore = ({
       generatePageData(
         match.params.pageTab,
         handleRequestOnExpand,
-        handleRemoveFeatureVector
+        match.params.pageTab === FEATURE_VECTORS_TAB
+          ? handleRemoveFeatureVector
+          : handleRemoveFeature
       )
     )
-  }, [handleRemoveFeatureVector, handleRequestOnExpand, match.params.pageTab])
+  }, [
+    handleRemoveFeatureVector,
+    handleRequestOnExpand,
+    handleRemoveFeature,
+    match.params.pageTab
+  ])
 
   useEffect(() => {
     navigateToDetailsPane(artifactsStore, history, match, setSelectedItem)
@@ -245,15 +267,16 @@ const FeatureStore = ({
         history.push(
           `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
         )
-
-        handleArtifactTreeFilterChange(
-          fetchData,
-          artifactsStore.filter,
-          item,
-          match.params.projectName,
-          setArtifactFilter
-        )
       }
+
+      setContent([])
+      handleArtifactTreeFilterChange(
+        fetchData,
+        artifactsStore.filter,
+        item,
+        match.params.projectName,
+        setArtifactFilter
+      )
     },
     [
       artifactsStore.filter,
@@ -267,7 +290,7 @@ const FeatureStore = ({
   )
 
   const applyDetailsChanges = changes => {
-    handleApplyDetailsChanges(
+    return handleApplyDetailsChanges(
       changes,
       fetchData,
       match,
@@ -302,7 +325,9 @@ const FeatureStore = ({
         }}
         selectedItem={selectedItem.item}
         selectedRowId={selectedRowId}
-        setSelectedRowId={id => setSelectedRowId(selectedRowId ? '' : id)}
+        setSelectedRowId={id =>
+          setSelectedRowId(selectedRowId === id ? '' : id)
+        }
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (

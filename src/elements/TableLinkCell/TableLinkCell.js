@@ -98,7 +98,13 @@ const TableLinkCell = ({
       {withCheckbox && (
         <CheckBox
           onChange={setSelectedRowId}
-          item={{ id: item.name ?? item.feature.name }}
+          item={{
+            id: item?.metadata?.name
+              ? `${item?.name}-${item.metadata.name}`
+              : item?.name
+              ? item?.name
+              : item.key.value
+          }}
           selectedId={selectedRowId}
         />
       )}

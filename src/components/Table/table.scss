@@ -43,7 +43,7 @@
 
     .artifacts {
       &_medium {
-        max-width: 245px;
+        max-width: 235px;
 
         @include tableColumnFlex(1, 235px);
       }
@@ -182,7 +182,7 @@
 
       .expand-arrow {
         position: absolute;
-        left: 30px;
+        left: 35px;
         cursor: pointer;
       }
 
@@ -257,6 +257,7 @@
       .checkbox {
         position: absolute;
         left: 8px;
+        margin: 0;
       }
     }
 
@@ -318,5 +319,10 @@
 
   .row_active {
     background-color: $alabaster;
+  }
+
+  .error-container {
+    justify-content: center;
+    width: 100%;
   }
 }

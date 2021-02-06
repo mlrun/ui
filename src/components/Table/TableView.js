@@ -33,6 +33,7 @@ const TableView = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
+  mainRowItemsCount,
   match,
   pageData,
   retryRequest,
@@ -157,6 +158,7 @@ const TableView = ({
                     handleExpandRow={handleExpandRow}
                     index={i}
                     key={i}
+                    mainRowItemsCount={mainRowItemsCount}
                     match={match}
                     rowItem={groupLatestItem[i]}
                     pageData={pageData}
