@@ -49,7 +49,6 @@ const TableCell = ({
       />
     )
   } else if (firstRow || (link && isGroupedByWorkflow)) {
-    console.log('here')
     return (
       <div className={`table-body__cell ${data.class}`}>
         {item.status && (
