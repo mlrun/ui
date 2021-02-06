@@ -28,6 +28,7 @@ import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 import './filterMenu.scss'
 
 const FilterMenu = ({
+  actionButtonTitle,
   expand,
   filters,
   groupFilter,
@@ -67,11 +68,11 @@ const FilterMenu = ({
           }`
         )
       }
+
       if (
-        page === ARTIFACTS_PAGE ||
-        page === FILES_PAGE ||
-        page === MODELS_PAGE ||
-        page === FEATURE_STORE_PAGE
+        [ARTIFACTS_PAGE, FILES_PAGE, MODELS_PAGE, FEATURE_STORE_PAGE].includes(
+          page
+        )
       ) {
         dispatch(
           artifactsAction.setArtifactFilter({
@@ -190,8 +191,14 @@ const FilterMenu = ({
         )}
       </div>
       <div className="buttons">
+        {actionButtonTitle && (
+          <button className="btn btn_primary btn_action">
+            {actionButtonTitle}
+          </button>
+        )}
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button
+            className="btn btn_refresh btn_icon"
             onClick={() => {
               ![JOBS_PAGE, FUNCTIONS_PAGE].includes(page)
                 ? onChange({
@@ -213,7 +220,10 @@ const FilterMenu = ({
               <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
             }
           >
-            <button onClick={handleExpandAll}>
+            <button
+              onClick={handleExpandAll}
+              className="btn btn_expand btn_icon"
+            >
               {expand ? <Collapse /> : <Expand />}
             </button>
           </Tooltip>
@@ -224,6 +234,7 @@ const FilterMenu = ({
 }
 
 FilterMenu.defaultProps = {
+  actionButtonTitle: '',
   groupFilter: '',
   handleArtifactFilterTree: null,
   setGroupFilter: null,
@@ -234,6 +245,7 @@ FilterMenu.defaultProps = {
 }
 
 FilterMenu.propTypes = {
+  actionButtonTitle: PropTypes.string,
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,

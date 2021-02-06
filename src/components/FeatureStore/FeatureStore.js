@@ -63,6 +63,7 @@ const FeatureStore = ({
     registerArtifactDialogTitle: '',
     tabs: []
   })
+  const [selectedRowId, setSelectedRowId] = useState('')
   const featureStoreRef = useRef(null)
 
   const fetchData = useCallback(
@@ -172,6 +173,7 @@ const FeatureStore = ({
       removeFeatureVectors()
       setSelectedItem({})
       setArtifactFilter({ tag: 'latest', labels: '', name: '' })
+      setSelectedRowId('')
     }
   }, [
     fetchData,
@@ -314,12 +316,18 @@ const FeatureStore = ({
         handleCancel={() => setSelectedItem({})}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() => setIsPopupDialogOpen(true)}
+        openPopupDialog={() =>
+          match.params.pageTab === DATASETS_TAB && setIsPopupDialogOpen(true)
+        }
         pageData={pageData}
         refresh={item => {
           fetchData(item)
         }}
         selectedItem={selectedItem.item}
+        selectedRowId={selectedRowId}
+        setSelectedRowId={id =>
+          setSelectedRowId(selectedRowId === id ? '' : id)
+        }
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (

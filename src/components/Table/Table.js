@@ -28,6 +28,8 @@ const Table = ({
   pageData,
   retryRequest,
   selectedItem,
+  selectedRowId,
+  setSelectedRowId,
   setLoading,
   toggleConvertToYaml
 }) => {
@@ -128,6 +130,8 @@ const Table = ({
         pageData={pageData}
         retryRequest={retryRequest}
         selectedItem={selectedItem}
+        selectedRowId={selectedRowId}
+        setSelectedRowId={setSelectedRowId}
         tableContent={tableContent.content}
         toggleConvertToYaml={toggleConvertToYaml}
         workflows={workflows}
@@ -147,6 +151,8 @@ Table.defaultProps = {
   groupLatestJob: [],
   handleExpandRow: () => {},
   selectedItem: {},
+  selectedRowId: '',
+  setSelectedRowId: () => {},
   setLoading: null
 }
 
@@ -161,6 +167,8 @@ Table.propTypes = {
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
   setLoading: PropTypes.func,
   toggleConvertToYaml: PropTypes.func.isRequired
 }

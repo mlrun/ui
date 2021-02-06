@@ -26,7 +26,10 @@ const TableCell = ({
   link,
   match,
   selectItem,
-  selectedItem
+  selectedItem,
+  selectedRowId,
+  setSelectedRowId,
+  withCheckbox
 }) => {
   const dispatch = useDispatch()
 
@@ -40,9 +43,13 @@ const TableCell = ({
         link={link}
         selectItem={selectItem}
         selectedItem={selectedItem}
+        selectedRowId={selectedRowId}
+        setSelectedRowId={setSelectedRowId}
+        withCheckbox={withCheckbox}
       />
     )
   } else if (firstRow || (link && isGroupedByWorkflow)) {
+    console.log('here')
     return (
       <div className={`table-body__cell ${data.class}`}>
         {item.status && (
@@ -159,7 +166,10 @@ TableCell.defaultProps = {
     schema: ''
   },
   link: '',
-  match: null
+  match: null,
+  selectedRowId: '',
+  setSelectedRowId: () => {},
+  withCheckbox: false
 }
 
 TableCell.propTypes = {
@@ -172,7 +182,10 @@ TableCell.propTypes = {
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   match: PropTypes.shape({}),
   selectItem: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
+  withCheckbox: PropTypes.bool
 }
 
 export default TableCell
