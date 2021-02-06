@@ -3,8 +3,13 @@ import PropTypes from 'prop-types'
 
 import './detailsRequestedFeatures.scss'
 
-const DetailsRequestedFeatures = ({ selectedItem }) => {
-  const headers = [{ label: 'Requested rule', id: 'requestedRule' }]
+const DetailsRequestedFeatures = ({ projectName, selectedItem }) => {
+  const headers = [
+    { label: 'Project name', id: 'project-name' },
+    { label: 'Feature set', id: 'feature-set' },
+    { label: 'Feature', id: 'feature' },
+    { label: 'Alias', id: 'alias' }
+  ]
 
   return (
     <div className="item-requested-features">
@@ -12,7 +17,7 @@ const DetailsRequestedFeatures = ({ selectedItem }) => {
         <div className="item-requested-features__table-header">
           {headers.map(header => (
             <div
-              className="item-requested-features__table-cell"
+              className={`item-requested-features__table-cell header_${header.id}`}
               key={header.id}
             >
               {header.label}
@@ -21,34 +26,37 @@ const DetailsRequestedFeatures = ({ selectedItem }) => {
         </div>
         <div className="item-requested-features__table-body">
           {selectedItem.specFeatures.map(feature => {
-            const featureSet = feature.split('.')[0]
-            const featureName = feature.split('.')[1].split(' ')[0]
-            const aliasPrefix = feature.split(' ')[1]
+            const project =
+              feature.indexOf('/') > 0 ? feature.split('/')[0] : ''
+            const featureSet = feature.match(/(?<=\/)(.*?)(?=\.)/)
+              ? feature.match(/(?<=\/)(.*?)(?=\.)/)[0].split(':')[0]
+              : feature.split('.')[0]
+            const tag = feature.match(/(?<=\/)(.*?)(?=\.)/)
+              ? feature.match(/(?<=\/)(.*?)(?=\.)/)[0].split(':')[1]
+              : ''
+            const featureName = feature.match(/(?<=\.)(.*?)(?=as)/)
+              ? feature.match(/(?<=\.)(.*?)(?=as)/)[0]
+              : feature.split('.')[1]
             const alias = feature.split('as')[1]
 
             return (
               <div className="item-requested-features__table-row" key={feature}>
+                <div className="item-requested-features__table-cell cell_project-name">
+                  {project !== projectName && project}
+                </div>
                 <div className="item-requested-features__table-cell">
-                  <span className="item-requested-features__table-cell_name">
-                    {featureSet}
-                  </span>
-                  <span className="item-requested-features__table-cell_hash">
-                    {' #'}
-                  </span>
-                  <span className="item-requested-features__table-cell_feature">
-                    {featureName}
-                  </span>
-                  {aliasPrefix && (
+                  <span className="cell_feature-set">{featureSet}</span>
+                  {tag && (
                     <>
-                      <span className="item-requested-features__table-cell_prefix">
-                        {' '}
-                        {aliasPrefix}
-                      </span>
-                      <span className="item-requested-features__table-cell_alias">
-                        {alias}
-                      </span>
+                      <span className="cell_tag">: {tag}</span>
                     </>
                   )}
+                </div>
+                <div className="item-requested-features__table-cell cell_feature">
+                  {featureName}
+                </div>
+                <div className="item-requested-features__table-cell cell_alias">
+                  {alias}
                 </div>
               </div>
             )
@@ -60,6 +68,7 @@ const DetailsRequestedFeatures = ({ selectedItem }) => {
 }
 
 DetailsRequestedFeatures.propTypes = {
+  projectName: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }
 

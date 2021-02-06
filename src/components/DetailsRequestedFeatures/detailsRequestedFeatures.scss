@@ -21,26 +21,31 @@
       align-items: center;
       min-width: 70px;
       padding: 0 5px;
+    }
 
-      &_name,
-      &_alias {
-        color: $mulledWine;
+    .cell {
+      &_project-name {
+        max-width: 180px;
       }
 
-      &_hash {
+      &_feature-set {
+        margin-right: 5px;
+        color: $primary;
+      }
+
+      &_tag {
         color: $topaz;
       }
+    }
 
-      &_prefix {
-        color: $silver;
-      }
-
-      &_feature {
-        color: $cornflowerBlue;
+    .header {
+      &_project-name {
+        max-width: 180px;
       }
     }
 
     &-row {
+      display: flex;
       padding: 18px;
       border-bottom: $tableBorder;
     }

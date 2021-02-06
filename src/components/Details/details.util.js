@@ -225,7 +225,12 @@ export const renderContent = (
         return <DetailsStatistics selectedItem={selectedItem} />
       } else return null
     case DETAILS_REQUESTED_FEATURES_TAB:
-      return <DetailsRequestedFeatures selectedItem={selectedItem} />
+      return (
+        <DetailsRequestedFeatures
+          selectedItem={selectedItem}
+          projectName={match.params.projectName}
+        />
+      )
     default:
       return null
   }
