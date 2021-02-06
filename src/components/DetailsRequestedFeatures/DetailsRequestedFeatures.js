@@ -37,7 +37,9 @@ const DetailsRequestedFeatures = ({ projectName, selectedItem }) => {
             const featureName = feature.match(/(?<=\.)(.*?)(?=as)/)
               ? feature.match(/(?<=\.)(.*?)(?=as)/)[0]
               : feature.split('.')[1]
-            const alias = feature.split('as')[1]
+            const alias = feature.match(/(?<=as)(.*?)(&|$)/)
+              ? feature.match(/(?<=as)(.*?)(&|$)/)[0]
+              : ''
 
             return (
               <div className="item-requested-features__table-row" key={feature}>
