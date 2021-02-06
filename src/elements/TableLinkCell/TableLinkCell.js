@@ -9,6 +9,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import { formatDatetime, truncateUid } from '../../utils'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import CheckBox from '../../common/CheckBox/CheckBox'
 
 const TableLinkCell = ({
   data,
@@ -17,7 +18,10 @@ const TableLinkCell = ({
   item,
   selectedItem,
   expandLink,
-  handleExpandRow
+  handleExpandRow,
+  selectedRowId,
+  setSelectedRowId,
+  withCheckbox
 }) => {
   const tableCellClassNames = classnames(
     'table-body__cell',
@@ -91,13 +95,29 @@ const TableLinkCell = ({
           className="expand-arrow"
         />
       )}
+      {withCheckbox && (
+        <CheckBox
+          onChange={setSelectedRowId}
+          item={{
+            id: item?.metadata?.name
+              ? `${item?.name}-${item.metadata.name}`
+              : item?.name
+              ? item?.name
+              : item.key.value
+          }}
+          selectedId={selectedRowId}
+        />
+      )}
     </div>
   )
 }
 
 TableLinkCell.defaultProps = {
   data: {},
-  expandLink: false
+  expandLink: false,
+  selectedRowId: '',
+  setSelectedRowId: () => {},
+  withCheckbox: false
 }
 
 TableLinkCell.propTypes = {
@@ -106,7 +126,10 @@ TableLinkCell.propTypes = {
   item: PropTypes.shape({}).isRequired,
   link: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
+  withCheckbox: PropTypes.bool
 }
 
 export default TableLinkCell

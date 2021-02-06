@@ -21,7 +21,10 @@ const ArtifactsTableRow = ({
   rowItem,
   pageData,
   selectedItem,
-  tableContent
+  selectedRowId,
+  setSelectedRowId,
+  tableContent,
+  withCheckbox
 }) => {
   const parent = useRef()
   const rowClassNames = classnames(
@@ -54,6 +57,9 @@ const ArtifactsTableRow = ({
                   expandLink={index === 0}
                   firstRow={index === 0}
                   link={data.link && data.link}
+                  selectedRowId={selectedRowId}
+                  setSelectedRowId={setSelectedRowId}
+                  withCheckbox={withCheckbox}
                 />
               ) : null
             })}
@@ -179,6 +185,9 @@ const ArtifactsTableRow = ({
                 match={match}
                 selectedItem={selectedItem}
                 selectItem={handleSelectItem}
+                selectedRowId={selectedRowId}
+                setSelectedRowId={setSelectedRowId}
+                withCheckbox={withCheckbox}
               />
             )
           })}
@@ -193,8 +202,11 @@ const ArtifactsTableRow = ({
 
 ArtifactsTableRow.defaultProps = {
   handleExpandRow: null,
+  tableContent: null,
   mainRowItemsCount: 1,
-  tableContent: null
+  selectedRowId: '',
+  setSelectedRowId: () => {},
+  withCheckbox: false
 }
 
 ArtifactsTableRow.propTypes = {
@@ -207,7 +219,10 @@ ArtifactsTableRow.propTypes = {
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.shape({}))
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
+  tableContent: PropTypes.arrayOf(PropTypes.shape({})),
+  withCheckbox: PropTypes.bool
 }
 
 export default React.memo(ArtifactsTableRow)

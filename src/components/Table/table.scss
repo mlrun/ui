@@ -182,7 +182,7 @@
 
       .expand-arrow {
         position: absolute;
-        left: 10px;
+        left: 35px;
         cursor: pointer;
       }
 
@@ -252,6 +252,12 @@
             }
           }
         }
+      }
+
+      .checkbox {
+        position: absolute;
+        left: 8px;
+        margin: 0;
       }
     }
 
