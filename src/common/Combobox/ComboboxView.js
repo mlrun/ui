@@ -96,7 +96,7 @@ const ComboboxView = React.forwardRef(
         >
           <div className="combobox-dropdown__search">
             <input
-              className="combobox-dropdown__search-input input"
+              className="combobox-dropdown__search-input input border-none"
               onChange={event => matchesSearchOnChange(event)}
               onFocus={() => setSearchIsFocused(true)}
               placeholder="Type to search"

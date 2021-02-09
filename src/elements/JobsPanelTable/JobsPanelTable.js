@@ -19,6 +19,9 @@ const JobsPanelTable = ({
   headers,
   match,
   section,
+  sectionData,
+  sectionDispatch,
+  sectionState,
   selectedItem,
   setSelectedItem
 }) => {
@@ -85,7 +88,11 @@ const JobsPanelTable = ({
       headers={headers}
       match={match}
       section={section}
+      sectionData={sectionData}
+      sectionDispatch={sectionDispatch}
+      sectionState={sectionState}
       selectedItem={selectedItem}
+      setEditItem={setEditItem}
       setSelectedItem={setSelectedItem}
     />
   )
@@ -95,7 +102,10 @@ JobsPanelTable.defaultProps = {
   className: '',
   headers: [],
   handleDeleteItems: null,
-  handleSetSelectedVolume: null
+  handleSetSelectedVolume: null,
+  sectionData: {},
+  sectionDispatch: () => {},
+  sectionState: {}
 }
 
 JobsPanelTable.propTypes = {
@@ -111,6 +121,9 @@ JobsPanelTable.propTypes = {
   headers: PropTypes.arrayOf(PropTypes.shape({})),
   match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
+  sectionData: PropTypes.shape({}),
+  sectionDispatch: PropTypes.func,
+  sectionState: PropTypes.shape({}),
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired
 }

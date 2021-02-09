@@ -73,11 +73,17 @@ const JobsPanelTableRow = ({
                 className={tooltipClassNames}
                 template={
                   <TextTooltipTemplate
-                    text={joinDataOfArrayOrObject(value, ', ')}
+                    text={joinDataOfArrayOrObject(
+                      value,
+                      section.includes('data-inputs') ? '' : ', '
+                    )}
                   />
                 }
               >
-                {joinDataOfArrayOrObject(value, ', ')}
+                {joinDataOfArrayOrObject(
+                  value,
+                  section.includes('data-inputs') ? '' : ', '
+                )}
               </Tooltip>
               {property === 'name' && contentItem.doc && (
                 <Tip text={contentItem.doc} />
