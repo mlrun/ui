@@ -2,6 +2,12 @@ import _, { isEmpty } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import {
+  AZURE_STORAGE_INPUT_PATH_SCHEME,
+  GOOGLE_STORAGE_INPUT_PATH_SCHEME,
+  S3_INPUT_PATH_SCHEME,
+  V3IO_INPUT_PATH_SCHEME
+} from '../../constants'
 
 export const getDefaultData = functionParameters => {
   const parameters = functionParameters
@@ -20,14 +26,37 @@ export const getDefaultData = functionParameters => {
 
   const dataInputs = functionParameters
     .filter(dataInputs => dataInputs.type === 'DataItem')
-    .map(input => ({
-      doc: input.doc,
-      isDefault: true,
-      data: {
-        name: input.name,
-        path: input.path ?? ''
+    .map(input => {
+      const inputPath = {
+        pathType: input.path?.replace(/:\/\/.*$/g, '://') ?? ''
       }
-    }))
+
+      if (
+        [
+          AZURE_STORAGE_INPUT_PATH_SCHEME,
+          GOOGLE_STORAGE_INPUT_PATH_SCHEME,
+          S3_INPUT_PATH_SCHEME,
+          V3IO_INPUT_PATH_SCHEME
+        ].includes(inputPath.pathType)
+      ) {
+        inputPath.url = input.path?.replace(/.*:\/\//g, '')
+        inputPath.value = ''
+      } else {
+        inputPath.value = input.path?.replace(/.*:\/\//g, '') ?? ''
+        inputPath.url = ''
+      }
+
+      return {
+        doc: input.doc,
+        isDefault: true,
+        data: {
+          name: input.name,
+          path: {
+            ...inputPath
+          }
+        }
+      }
+    })
 
   return { parameters, dataInputs }
 }
@@ -207,7 +236,7 @@ export const generateTableData = (
       }
     })
     setNewJob({
-      inputs: parseDefaultContent(dataInputs),
+      inputs: parseDefaultDataInputsContent(dataInputs),
       parameters: parseDefaultContent(parameters),
       volume_mounts: volumeMounts.length
         ? volumeMounts.map(volumeMounts => volumeMounts.data)
@@ -296,4 +325,14 @@ export const generateRequestData = (
       }
     }
   }
+}
+
+export const parseDefaultDataInputsContent = inputs => {
+  return inputs.reduce((prev, curr) => {
+    return {
+      ...prev,
+      [curr.data.name]:
+        curr.data.path.pathType + (curr.data.path.url || curr.data.path.value)
+    }
+  }, {})
 }

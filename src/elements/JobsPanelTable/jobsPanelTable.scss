@@ -30,6 +30,45 @@
     }
   }
 
+  &.data-inputs {
+    .path-type {
+      &-store {
+        color: $amethyst;
+      }
+
+      &-v3io {
+        color: $cornflowerBlueTwo;
+      }
+
+      &-az,
+      &-gs,
+      &-http,
+      &-https,
+      &-s3 {
+        color: $sorbus;
+      }
+    }
+
+    .table__cell {
+      &_edit {
+        .combobox {
+          padding: 7px 0;
+          border: $primaryBorder;
+
+          &.required {
+            border: $errorBorder;
+          }
+
+          &-input {
+            padding: 0;
+            background-color: transparent;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+
   &.data-inputs,
   &.advanced {
     .table__cell {
@@ -60,26 +99,6 @@
 
       .select__header {
         padding: 17px;
-      }
-    }
-  }
-
-  &.data-inputs {
-    .path-type {
-      &-store {
-        color: $amethyst;
-      }
-
-      &-v3io {
-        color: $cornflowerBlueTwo;
-      }
-
-      &-az,
-      &-gs,
-      &-http,
-      &-https,
-      &-s3 {
-        color: $sorbus;
       }
     }
   }
