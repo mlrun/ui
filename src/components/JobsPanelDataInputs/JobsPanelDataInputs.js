@@ -83,14 +83,15 @@ const JobsPanelDataInputs = ({
           inputsState.selectedDataInput.data.path.value.split('/')[0]
       }).then(artifacts => {
         const artifactsList = artifacts
-          .map(artifact => ({
-            label: artifact.link_iteration
-              ? artifact.link_iteration.db_key
-              : artifact.key ?? '',
-            id: artifact.link_iteration
+          .map(artifact => {
+            const key = artifact.link_iteration
               ? artifact.link_iteration.db_key
               : artifact.key ?? ''
-          }))
+            return {
+              label: key,
+              id: key
+            }
+          })
           .filter(artifact => artifact.label !== '')
 
         inputsDispatch({

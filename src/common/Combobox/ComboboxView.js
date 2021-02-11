@@ -18,6 +18,7 @@ const ComboboxView = React.forwardRef(
       inputOnFocus,
       inputPlaceholder,
       inputValue,
+      isDefaultSelectedInput,
       matchesSearchOnChange,
       searchIsFocused,
       selectDropdownList,
@@ -37,7 +38,9 @@ const ComboboxView = React.forwardRef(
     const selectClassNames = classnames(
       'combobox-select',
       showSelectDropdown && 'combobox-select_open',
-      selectValue.id.length <= 5 && 'combobox-select_short'
+      selectValue.id.length <= 5 &&
+        selectValue.id.length !== 0 &&
+        'combobox-select_short'
     )
     const dropdownClassNames = classnames(
       'combobox-dropdown',
@@ -49,14 +52,9 @@ const ComboboxView = React.forwardRef(
 
     return (
       <div className={comboboxClassNames} ref={comboboxRef}>
-        <Arrow
-          className={iconClassNames}
-          onClick={() => {
-            handleIconClick()
-          }}
-        />
+        <Arrow className={iconClassNames} onClick={handleIconClick} />
         <div className={selectClassNames}>
-          <div className="combobox-select__header">
+          <div className="combobox-select__header" onClick={handleIconClick}>
             <span className={`${selectValue.className}`}>{selectValue.id}</span>
             {selectValue.id.length === 0 && (
               <span className="combobox-select__header-label">
@@ -83,7 +81,13 @@ const ComboboxView = React.forwardRef(
           disabled={selectValue.id.length === 0}
           onChange={handleInputOnChange}
           onFocus={inputOnFocus}
-          placeholder={inputPlaceholder}
+          placeholder={
+            inputPlaceholder.length === 0 &&
+            isDefaultSelectedInput &&
+            !selectValue.id
+              ? 'Path Scheme'
+              : inputPlaceholder
+          }
           ref={inputRef}
           type="text"
           value={inputValue}
@@ -127,6 +131,10 @@ const ComboboxView = React.forwardRef(
   }
 )
 
+ComboboxView.defaultProps = {
+  isDefaultSelectedInput: false
+}
+
 ComboboxView.propTypes = {
   comboboxClassName: PropTypes.string.isRequired,
   dropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -138,6 +146,7 @@ ComboboxView.propTypes = {
   inputOnFocus: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string.isRequired,
   inputValue: PropTypes.string.isRequired,
+  isDefaultSelectedInput: PropTypes.bool,
   matchesSearchOnChange: PropTypes.func.isRequired,
   searchIsFocused: PropTypes.bool.isRequired,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

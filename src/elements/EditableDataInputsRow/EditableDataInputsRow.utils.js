@@ -44,10 +44,9 @@ export const applyEditButtonHandler = (
   if (!isEveryObjectValueEmpty(requiredField)) {
     setRequiredField({
       name: inputName.length > 0,
-      path: !!(
+      path:
         selectedDataInput.data.path.value.split('/')[1]?.length > 0 ||
         selectedDataInput.data.path.url.length > 0
-      )
     })
   }
 

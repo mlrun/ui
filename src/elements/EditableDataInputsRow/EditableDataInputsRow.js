@@ -159,6 +159,7 @@ const EditableDataInputsRow = ({
               setSelectedDataInput
             )
           }}
+          isDefaultSelectedInput={selectedDataInput.isDefault}
           selectDefaultValue={selectDefaultValue}
           selectDropdownList={comboboxSelectList}
           selectOnChange={path => selectOnChangeComboboxHandler(path)}

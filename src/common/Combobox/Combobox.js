@@ -10,6 +10,7 @@ const Combobox = ({
   inputPlaceholder,
   inputDefaultValue,
   inputOnChange,
+  isDefaultSelectedInput,
   matches,
   selectDefaultValue,
   selectDropdownList,
@@ -112,6 +113,10 @@ const Combobox = ({
     setShowMatchesDropdown(false)
     inputOnChange(inputValueItems.join('/'))
     inputRef.current.focus()
+
+    if (inputValueItems.length > 1) {
+      setShowMatchesDropdown(false)
+    }
   }
 
   const handleSelectOptionOnClick = option => {
@@ -189,6 +194,7 @@ const Combobox = ({
       inputOnFocus={inputOnFocus}
       inputPlaceholder={inputPlaceholder}
       inputValue={inputValue}
+      isDefaultSelectedInput={isDefaultSelectedInput}
       matchesSearchOnChange={matchesSearchOnChange}
       ref={{
         comboboxRef: comboboxRef,
@@ -209,6 +215,7 @@ Combobox.defaultProps = {
   comboboxClassName: '',
   inputDefaultValue: '',
   inputPlaceholder: '',
+  isDefaultSelectedInput: false,
   selectDefaultValue: null,
   selectPlaceholder: ''
 }
@@ -218,6 +225,7 @@ Combobox.propTypes = {
   inputDefaultValue: PropTypes.string,
   inputOnChange: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string,
+  isDefaultSelectedInput: PropTypes.bool,
   matches: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectOnChange: PropTypes.func.isRequired,

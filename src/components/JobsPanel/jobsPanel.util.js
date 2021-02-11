@@ -332,7 +332,7 @@ export const parseDefaultDataInputsContent = inputs => {
     return {
       ...prev,
       [curr.data.name]:
-        curr.data.path.pathType + [curr.data.path.url || curr.data.path.value]
+        curr.data.path.pathType + (curr.data.path.url || curr.data.path.value)
     }
   }, {})
 }

@@ -63,10 +63,10 @@
   &-select {
     position: relative;
     display: flex;
-    max-width: 50px;
+    max-width: 90px;
 
     &_short {
-      max-width: 32px;
+      max-width: 90px;
     }
 
     &__body {
@@ -86,12 +86,9 @@
     &__header {
       position: relative;
       min-height: 17px;
+      cursor: pointer;
 
       &-label {
-        position: absolute;
-        top: 0;
-        left: 0;
-        min-width: 90px;
         color: $topaz;
         user-select: none;
         pointer-events: none;
