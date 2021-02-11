@@ -159,10 +159,10 @@ const EditableDataInputsRow = ({
               setSelectedDataInput
             )
           }}
-          isDefaultSelectedInput={selectedDataInput.isDefault}
           selectDefaultValue={selectDefaultValue}
           selectDropdownList={comboboxSelectList}
           selectOnChange={path => selectOnChangeComboboxHandler(path)}
+          selectPlaceholder="Path Scheme"
         />
       </div>
       <div className="table__cell table__cell-actions">
