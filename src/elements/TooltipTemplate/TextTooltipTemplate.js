@@ -17,7 +17,11 @@ TextTooltipTemplate.propTypes = {
 }
 
 TextTooltipTemplate.propTypes = {
-  text: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
+  text: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.element,
+    PropTypes.number
+  ])
 }
 
 export default TextTooltipTemplate

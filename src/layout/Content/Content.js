@@ -28,9 +28,13 @@ import {
 import { formatDatetime } from '../../utils'
 
 import './content.scss'
+import { generateGroupedItems } from './content.util'
 
 const Content = ({
+  applyDetailsChanges,
+  cancelRequest,
   content,
+  expandRow,
   groupFilter,
   handleArtifactFilterTree,
   handleCancel,
@@ -47,6 +51,8 @@ const Content = ({
   showUntagged,
   stateFilter,
   toggleShowUntagged,
+  selectedRowId,
+  setSelectedRowId,
   yamlContent
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
@@ -57,23 +63,14 @@ const Content = ({
 
   const contentClassName = classnames(
     'content',
-    loading && 'isLoading',
     (pageData.page === JOBS_PAGE || pageData.page === FEATURE_STORE_PAGE) &&
       'content_with-menu'
   )
 
   const handleGroupByName = useCallback(() => {
-    const groupedItems = {}
-
-    content.forEach(contentItem => {
-      groupedItems[contentItem.name]
-        ? groupedItems[contentItem.name].push(contentItem)
-        : (groupedItems[contentItem.name] = [contentItem])
-    })
-
-    setGroupedByName(groupedItems)
+    setGroupedByName(generateGroupedItems(content, pageData.selectedRowData))
     setGroupedByWorkflow({})
-  }, [content])
+  }, [content, pageData.selectedRowData])
 
   const handleGroupByNone = useCallback(() => {
     const rows = [...document.getElementsByClassName('parent-row')]
@@ -122,7 +119,7 @@ const Content = ({
     }
   }, [groupFilter, handleGroupByName, handleGroupByWorkflow, handleGroupByNone])
 
-  const toggleConvertToYaml = item => {
+  const toggleConvertToYaml = (item, subRow) => {
     if (convertedYaml.length > 0) {
       return setConvertedYaml('')
     }
@@ -144,20 +141,34 @@ const Content = ({
             formatDatetime(new Date(item.updated))
           )
       )[0]
+    let artifactJson = null
 
-    const artifactJson =
-      (pageData.page === ARTIFACTS_PAGE ||
-        pageData.page === FILES_PAGE ||
-        pageData.page === MODELS_PAGE ||
-        pageData.page === FEATURE_STORE_PAGE) &&
-      yamlContent.filter(yamlContentItem =>
-        match.params.pageTab === FEATURE_SETS_TAB
-          ? isEqual(yamlContentItem.name, item.name) &&
-            isEqual(yamlContentItem.tag, item.tag)
-          : match.params.pageTab === FEATURES_TAB
-          ? isEqual(yamlContentItem.feature.name, item.feature.name)
-          : isEqual(yamlContentItem.db_key, item.db_key)
+    if (
+      pageData.page === ARTIFACTS_PAGE ||
+      pageData.page === FILES_PAGE ||
+      pageData.page === MODELS_PAGE
+    ) {
+      artifactJson = yamlContent.filter(yamlContentItem =>
+        isEqual(yamlContentItem.db_key, item.db_key)
       )
+    } else if (pageData.page === FEATURE_STORE_PAGE) {
+      if (match.params.pageTab === FEATURES_TAB) {
+        const currentYamlContent = subRow ? 'selectedRowData' : 'allData'
+
+        artifactJson = yamlContent[currentYamlContent].filter(
+          yamlContentItem => {
+            return isEqual(yamlContentItem.feature?.name, item.name)
+          }
+        )
+      } else {
+        artifactJson = yamlContent.allData.filter(yamlContentItem =>
+          match.params.pageTab === FEATURE_SETS_TAB
+            ? isEqual(yamlContentItem.metadata.name, item.name) &&
+              isEqual(yamlContentItem.metadata.tag, item.tag)
+            : isEqual(yamlContentItem.db_key, item.db_key)
+        )
+      }
+    }
 
     setConvertedYaml(
       yaml.dump(
@@ -186,12 +197,13 @@ const Content = ({
       )
 
       parentRow.classList.remove('parent-row-expanded')
-
+      pageData.handleRemoveRequestData && pageData.handleRemoveRequestData(item)
       setExpandedItems(newArray)
+      expandRow && expandRow(item, true)
     } else {
       parentRow.classList.remove('row_active')
       parentRow.classList.add('parent-row-expanded')
-
+      pageData.handleRequestOnExpand && pageData.handleRequestOnExpand(item)
       setExpandedItems([...expandedItems, item])
     }
   }
@@ -215,17 +227,17 @@ const Content = ({
   return (
     <>
       <div className="content__header">
-        <Breadcrumbs match={match} onClick={handleCancel} />
+        <Breadcrumbs match={match} />
         <PageActionsMenu
           createJob={pageData.page === JOBS_PAGE}
           registerDialog={
-            (pageData.page === PROJECTS_PAGE ||
-              pageData.page === ARTIFACTS_PAGE ||
-              pageData.page === FILES_PAGE ||
-              pageData.page === MODELS_PAGE ||
-              pageData.page === FEATURE_STORE_PAGE) &&
-            match.params.pageTab !== FEATURE_SETS_TAB &&
-            match.params.pageTab !== FEATURES_TAB
+            [
+              PROJECTS_PAGE,
+              ARTIFACTS_PAGE,
+              FILES_PAGE,
+              MODELS_PAGE,
+              FEATURE_STORE_PAGE
+            ].includes(pageData.page) && match.params.pageTab !== FEATURES_TAB
           }
           registerDialogHeader={
             pageData.page === PROJECTS_PAGE
@@ -249,9 +261,10 @@ const Content = ({
         )}
         <div className="content__action-bar">
           <FilterMenu
+            actionButtonTitle={pageData.filterMenuActionButtonTitle}
             expand={expand}
             filters={pageData.filters}
-            groupFilter={groupFilter}
+            groupFilter={pageData.handleRequestOnExpand ? null : groupFilter}
             handleArtifactFilterTree={handleArtifactFilterTree}
             handleExpandAll={handleExpandAll}
             match={match}
@@ -283,6 +296,11 @@ const Content = ({
               selectedItem={selectedItem}
               setLoading={setLoading}
               toggleConvertToYaml={toggleConvertToYaml}
+              applyDetailsChanges={applyDetailsChanges}
+              cancelRequest={cancelRequest}
+              retryRequest={refresh}
+              selectedRowId={selectedRowId}
+              setSelectedRowId={setSelectedRowId}
             />
           ) : loading ? null : (
             <NoData />
@@ -295,8 +313,12 @@ const Content = ({
 
 Content.defaultProps = {
   activeScreenTab: '',
+  expandRow: null,
   groupFilter: null,
+  handleSelectItem: () => {},
   selectedItem: {},
+  selectedRowId: '',
+  setSelectedRowId: () => {},
   setGroupFilter: () => {},
   setLoading: () => {},
   setStateFilter: () => {},
@@ -307,22 +329,28 @@ Content.defaultProps = {
 
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  expandRow: PropTypes.func,
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
-  handleSelectItem: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
   setGroupFilter: PropTypes.func,
   setLoading: PropTypes.func,
   setStateFilter: PropTypes.func,
   showUntagged: PropTypes.string,
   stateFilter: PropTypes.string,
   toggleShowUntagged: PropTypes.func,
-  yamlContent: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  yamlContent: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.shape({})
+  ]).isRequired
 }
 
 export default Content

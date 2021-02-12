@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import jobsActions from '../../actions/jobs'
-import workflowActions from '../../actions/workflow'
+import notificationActions from '../../actions/notification'
+import projectActions from '../../actions/projects'
 import {
   generatePageData,
   initialStateFilter,
@@ -11,14 +12,14 @@ import {
 } from './jobsData'
 import { parseKeyValues } from '../../utils'
 import { SCHEDULE_TAB } from '../../constants'
-import notificationActions from '../../actions/notification'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
+import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 
 const Jobs = ({
   fetchJobs,
-  fetchWorkflows,
+  fetchProjectWorkflows,
   jobsStore,
   handleRunScheduledJob,
   history,
@@ -29,14 +30,17 @@ const Jobs = ({
   workflowsStore
 }) => {
   const [jobs, setJobs] = useState([])
+  const [confirmData, setConfirmData] = useState(null)
   const [selectedJob, setSelectedJob] = useState({})
   const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const [groupFilter, setGroupFilter] = useState(initialGroupFilter)
 
-  const handleRemoveScheduledJob = scheduleName => {
-    removeScheduledJob(match.params.projectName, scheduleName).then(() => {
+  const handleRemoveScheduledJob = schedule => {
+    removeScheduledJob(match.params.projectName, schedule.name).then(() => {
       refreshJobs()
     })
+
+    setConfirmData(null)
   }
 
   const handleRunJob = job => {
@@ -64,10 +68,26 @@ const Jobs = ({
       })
   }
 
+  const onRemoveScheduledJob = scheduledJob => {
+    setConfirmData({
+      item: scheduledJob,
+      title: `Delete scheduled job "${scheduledJob.name}"?`,
+      description: 'Deleted scheduled jobs can not be restored.',
+      btnConfirmLabel: 'Delete',
+      btnConfirmClassNames: 'btn_danger',
+      rejectHandler: () => {
+        setConfirmData(null)
+      },
+      confirmHandler: () => {
+        handleRemoveScheduledJob(scheduledJob)
+      }
+    })
+  }
+
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab === SCHEDULE_TAB,
-      handleRemoveScheduledJob,
+      onRemoveScheduledJob,
       handleRunJob
     ),
     [match.params.pageTab]
@@ -88,10 +108,12 @@ const Jobs = ({
               func: job.scheduled_object.task.spec.function,
               name: job.name,
               nextRun: new Date(job.next_run_time),
+              lastRunUri: job.last_run_uri,
               scheduled_object: job.scheduled_object,
               start_time: new Date(job.last_run?.status.start_time),
               state: job.last_run?.status.state,
-              type: job.kind === 'pipeline' ? 'workflow' : job.kind
+              type: job.kind === 'pipeline' ? 'workflow' : job.kind,
+              project: job.project
             }
           } else {
             return {
@@ -112,7 +134,8 @@ const Jobs = ({
               outputPath: job.spec.output_path,
               owner: job.metadata.labels?.owner,
               updated: new Date(job.status.last_update),
-              function: job?.spec?.function ?? ''
+              function: job?.spec?.function ?? '',
+              project: job.metadata.project
             }
           }
         })
@@ -123,16 +146,9 @@ const Jobs = ({
     [fetchJobs, match.params.pageTab, match.params.projectName, stateFilter]
   )
 
-  const getWorkflows = useCallback(
-    token => {
-      fetchWorkflows(token).then(pageToken => {
-        if (pageToken?.length > 0) {
-          getWorkflows(pageToken)
-        }
-      })
-    },
-    [fetchWorkflows]
-  )
+  const getWorkflows = useCallback(() => {
+    fetchProjectWorkflows(match.params.projectName)
+  }, [fetchProjectWorkflows, match.params.projectName])
 
   useEffect(() => {
     refreshJobs()
@@ -153,7 +169,7 @@ const Jobs = ({
   }, [getWorkflows, match.params.pageTab])
 
   useEffect(() => {
-    if (match.params.jobId && jobs.length > 0) {
+    if (match.params.jobId && jobs.some(job => job.uid) && jobs.length > 0) {
       let item = jobs.find(item => item.uid === match.params.jobId)
 
       if (!item) {
@@ -192,6 +208,28 @@ const Jobs = ({
 
   return (
     <>
+      {confirmData && (
+        <PopUpDialog
+          headerText={confirmData.title}
+          closePopUp={confirmData.rejectHandler}
+        >
+          <div>{confirmData.description}</div>
+          <div className="pop-up-dialog__footer-container">
+            <button
+              className="btn_default pop-up-dialog__btn_cancel"
+              onClick={confirmData.rejectHandler}
+            >
+              Cancel
+            </button>
+            <button
+              className={confirmData.btnConfirmClassNames}
+              onClick={() => confirmData.confirmHandler(confirmData.item)}
+            >
+              {confirmData.btnConfirmLabel}
+            </button>
+          </div>
+        </PopUpDialog>
+      )}
       {(jobsStore.loading || workflowsStore.loading) && <Loader />}
       <Content
         content={jobs}
@@ -220,5 +258,5 @@ Jobs.propTypes = {
 
 export default connect(
   ({ jobsStore, workflowsStore }) => ({ jobsStore, workflowsStore }),
-  { ...jobsActions, ...workflowActions, ...notificationActions }
+  { ...jobsActions, ...projectActions, ...notificationActions }
 )(React.memo(Jobs))

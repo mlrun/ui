@@ -9,7 +9,18 @@ import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 
 import './hiddenChipsBlock.scss'
 
-const HiddenChipsBlock = ({ className, chips, handleShowElements }) => {
+const HiddenChipsBlock = ({
+  chipIndex,
+  chips,
+  className,
+  editConfig,
+  handleEditChip,
+  handleIsEdit,
+  handleRemoveChip,
+  handleShowElements,
+  isEditMode,
+  setEditConfig
+}) => {
   const [isTop, setIsTop] = useState(false)
   const hiddenRef = useRef()
   const offset = 28
@@ -41,8 +52,9 @@ const HiddenChipsBlock = ({ className, chips, handleShowElements }) => {
       ref={hiddenRef}
       className={`chip-block-hidden ${!isTop ? 'top' : 'bottom'}`}
     >
-      {chips?.map(element => {
+      {chips?.map((element, index) => {
         const { chipLabel, chipValue } = getChipLabelAndValue(element)
+
         return (
           <Tooltip
             key={element.value}
@@ -64,21 +76,47 @@ const HiddenChipsBlock = ({ className, chips, handleShowElements }) => {
               />
             }
           >
-            <Chip className={className} chip={element} hiddenChips />
+            <Chip
+              chipIndex={index + chipIndex}
+              chip={element}
+              className={className}
+              editConfig={editConfig}
+              handleEditChip={handleEditChip}
+              handleIsEdit={handleIsEdit}
+              handleRemoveChip={handleRemoveChip}
+              hiddenChips
+              isEditMode={isEditMode}
+              setEditConfig={setEditConfig}
+            />
           </Tooltip>
         )
       })}
     </div>
   )
 }
+
 HiddenChipsBlock.defaultProps = {
-  chips: []
+  chips: [],
+  chipIndex: 0,
+  editChip: () => {},
+  editConfig: {},
+  handleIsEdit: () => {},
+  isEditMode: false,
+  removeChip: () => {},
+  setEditConfig: () => {}
 }
 
 HiddenChipsBlock.propTypes = {
   className: PropTypes.string.isRequired,
   chips: PropTypes.arrayOf(PropTypes.shape({})),
-  handleShowElements: PropTypes.func.isRequired
+  chipIndex: PropTypes.number,
+  editConfig: PropTypes.shape({}),
+  handleEditChip: PropTypes.func,
+  handleIsEdit: PropTypes.func,
+  handleRemoveChip: PropTypes.func,
+  handleShowElements: PropTypes.func.isRequired,
+  isEditMode: PropTypes.bool,
+  setEditConfig: PropTypes.func
 }
 
 export default HiddenChipsBlock

@@ -9,13 +9,14 @@ import { formatDatetime, parseKeyValues } from '../../utils'
 import artifactAction from '../../actions/artifacts'
 import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 import jobsActions from '../../actions/jobs'
+import { detailsActions } from '../DetailsInfo/detailsReducer'
 
 const DetailsArtifacts = ({
+  detailsDispatch,
   iteration,
   jobsStore,
   match,
-  selectedItem,
-  setIterationOptions
+  selectedItem
 }) => {
   const [content, setContent] = useState([])
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
@@ -92,7 +93,7 @@ const DetailsArtifacts = ({
   }, [iteration, jobsStore.allJobsData, selectedItem])
 
   useEffect(() => {
-    const iterationsList = [0]
+    const iterationsList = [0, 1]
 
     jobsStore.allJobsData.forEach(job => {
       if (job.metadata.uid === selectedItem.uid) {
@@ -102,13 +103,14 @@ const DetailsArtifacts = ({
       }
     })
 
-    setIterationOptions(
-      iterationsList.sort().map(iteration => ({
+    detailsDispatch({
+      type: detailsActions.SET_ITERATION_OPTIONS,
+      payload: iterationsList.sort().map(iteration => ({
         label: iteration === 0 ? 'Main' : `${iteration}`,
         id: `${iteration}`
       }))
-    )
-  }, [jobsStore.allJobsData, selectedItem.uid, setIterationOptions])
+    })
+  }, [detailsDispatch, jobsStore.allJobsData, selectedItem.uid])
 
   const showPreview = artifact => {
     dispatch(
@@ -146,10 +148,10 @@ const DetailsArtifacts = ({
 }
 
 DetailsArtifacts.propTypes = {
+  detailsDispatch: PropTypes.func.isRequired,
   iteration: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  setIterationOptions: PropTypes.func.isRequired
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default connect(({ jobsStore }) => ({ jobsStore }), { ...jobsActions })(

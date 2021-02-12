@@ -15,7 +15,9 @@ const ChipCell = ({
   editChip,
   elements,
   isEditMode,
-  removeChip
+  onClick,
+  removeChip,
+  visibleChipsMaxLength
 }) => {
   const [sizeContainer, setSizeContainer] = useState(0)
   const [show, setShow] = useState(false)
@@ -29,23 +31,27 @@ const ChipCell = ({
   const chipRef = useRef()
 
   let chips = useMemo(() => {
-    return isEditMode
+    return isEditMode && !visibleChipsMaxLength
       ? {
           visibleChips: elements.map(chip => ({
             value: chip,
             delimiter
           }))
         }
-      : sizeContainer <= 1000
+      : sizeContainer <= 1000 && !visibleChipsMaxLength
       ? sizeChips[sizeContainer](elements, delimiter)
-      : cutChips(elements, 8, delimiter)
-  }, [delimiter, elements, isEditMode, sizeContainer])
+      : cutChips(
+          elements,
+          visibleChipsMaxLength ? visibleChipsMaxLength : 8,
+          delimiter
+        )
+  }, [elements, isEditMode, sizeContainer, visibleChipsMaxLength, delimiter])
 
   const handleShowElements = useCallback(() => {
-    if (!isEditMode) {
+    if (!isEditMode || (isEditMode && visibleChipsMaxLength)) {
       setShow(!show)
     }
-  }, [show, isEditMode])
+  }, [isEditMode, show, visibleChipsMaxLength])
 
   useEffect(() => {
     if (show) {
@@ -170,16 +176,23 @@ const ChipCell = ({
     ]
   )
 
-  const handleIsEdit = useCallback((event, index) => {
-    event.stopPropagation()
+  const handleIsEdit = useCallback(
+    (event, index) => {
+      if (isEditMode) {
+        event.stopPropagation()
 
-    setEditConfig({
-      chipIndex: index,
-      isEdit: true,
-      isKeyFocused: true,
-      isValueFocused: false
-    })
-  }, [])
+        setEditConfig({
+          chipIndex: index,
+          isEdit: true,
+          isKeyFocused: true,
+          isValueFocused: false
+        })
+      }
+
+      onClick && onClick()
+    },
+    [isEditMode, onClick]
+  )
 
   return (
     <ChipCellView
@@ -204,7 +217,10 @@ ChipCell.defaultProps = {
   delimiter: null,
   editChip: () => {},
   elements: [],
-  removeChip: () => {}
+  isEditMode: false,
+  onClick: () => {},
+  removeChip: () => {},
+  visibleChipsMaxLength: null
 }
 
 ChipCell.propTypes = {
@@ -214,7 +230,9 @@ ChipCell.propTypes = {
   editChip: PropTypes.func,
   elements: PropTypes.arrayOf(PropTypes.string),
   isEditMode: PropTypes.bool,
-  removeChip: PropTypes.func
+  onClick: PropTypes.func,
+  removeChip: PropTypes.func,
+  visibleChipsMaxLength: PropTypes.number
 }
 
 export default React.memo(ChipCell)

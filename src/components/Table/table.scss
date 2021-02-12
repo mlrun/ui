@@ -11,14 +11,11 @@
   min-height: 600px;
   border-top: $tableBorder;
 
-  &_opened {
-    height: 72vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
-
   &__content {
     width: 100%;
+    height: 620px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 
     .jobs {
       &_medium {
@@ -46,7 +43,7 @@
 
     .artifacts {
       &_medium {
-        max-width: 245px;
+        max-width: 235px;
 
         @include tableColumnFlex(1, 235px);
       }
@@ -138,6 +135,14 @@
       font-size: 15px;
       line-height: 18px;
 
+      .cell_name {
+        position: relative;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        margin: 0;
+      }
+
       .text_small {
         min-width: 100%;
         max-width: 50px;
@@ -145,24 +150,6 @@
 
       &_type {
         text-transform: capitalize;
-      }
-
-      &_last-run {
-        flex-wrap: nowrap;
-
-        .status {
-          display: flex;
-          min-width: 10px;
-          margin: 0 5px;
-
-          i {
-            margin: 0;
-          }
-        }
-
-        .text_small {
-          min-width: 85%;
-        }
       }
 
       a {
@@ -174,11 +161,6 @@
         color: $cornflowerBlue;
         text-decoration: none;
 
-        .status {
-          position: absolute;
-          left: -34px;
-        }
-
         span {
           display: block;
           color: $topaz;
@@ -186,7 +168,7 @@
       }
 
       i {
-        margin: 0 17px;
+        margin-right: 5px;
       }
 
       button {
@@ -200,7 +182,7 @@
 
       .expand-arrow {
         position: absolute;
-        left: 10px;
+        left: 35px;
         cursor: pointer;
       }
 
@@ -271,6 +253,12 @@
           }
         }
       }
+
+      .checkbox {
+        position: absolute;
+        left: 8px;
+        margin: 0;
+      }
     }
 
     &__parameters {
@@ -331,5 +319,10 @@
 
   .row_active {
     background-color: $alabaster;
+  }
+
+  .error-container {
+    justify-content: center;
+    width: 100%;
   }
 }

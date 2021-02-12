@@ -9,6 +9,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import { formatDatetime, truncateUid } from '../../utils'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import CheckBox from '../../common/CheckBox/CheckBox'
 
 const TableLinkCell = ({
   data,
@@ -17,7 +18,10 @@ const TableLinkCell = ({
   item,
   selectedItem,
   expandLink,
-  handleExpandRow
+  handleExpandRow,
+  selectedRowId,
+  setSelectedRowId,
+  withCheckbox
 }) => {
   const tableCellClassNames = classnames(
     'table-body__cell',
@@ -31,34 +35,39 @@ const TableLinkCell = ({
 
   return (
     <div className={tableCellClassNames}>
-      <Link to={link} onClick={() => selectItem(item)} className="link">
-        {item.state && (
-          <Tooltip
-            className="status"
-            template={
-              <TextTooltipTemplate
-                text={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
-              />
-            }
-          >
-            <i className={item.state} />
-          </Tooltip>
-        )}
-        <div className="name-wrapper">
+      {item.state && (
+        <Tooltip
+          className="status"
+          template={
+            <TextTooltipTemplate
+              text={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
+            />
+          }
+        >
+          <i className={item.state} />
+        </Tooltip>
+      )}
+      <Link
+        to={link}
+        onClick={() => selectItem(item)}
+        className="link data-ellipsis"
+      >
+        <div className="name-wrapper data-ellipsis">
           <Tooltip
             className={itemNameCLassNames}
             template={<TextTooltipTemplate text={data.value} />}
           >
             {data.value}
           </Tooltip>
-          {link.match(/functions|feature-sets/) && data.value !== item.tag && (
-            <Tooltip
-              className="item-tag"
-              template={<TextTooltipTemplate text={item.tag} />}
-            >
-              <span>{item.tag}</span>
-            </Tooltip>
-          )}
+          {link.match(/functions|feature-sets|feature-vectors/) &&
+            data.value !== item.tag && (
+              <Tooltip
+                className="item-tag"
+                template={<TextTooltipTemplate text={item.tag} />}
+              >
+                <span>{item.tag}</span>
+              </Tooltip>
+            )}
         </div>
         {(link.match(/jobs/) ||
           (link.match(/functions/) &&
@@ -86,13 +95,29 @@ const TableLinkCell = ({
           className="expand-arrow"
         />
       )}
+      {withCheckbox && (
+        <CheckBox
+          onChange={setSelectedRowId}
+          item={{
+            id: item?.metadata?.name
+              ? `${item?.name}-${item.metadata.name}`
+              : item?.name
+              ? item?.name
+              : item.key.value
+          }}
+          selectedId={selectedRowId}
+        />
+      )}
     </div>
   )
 }
 
 TableLinkCell.defaultProps = {
   data: {},
-  expandLink: false
+  expandLink: false,
+  selectedRowId: '',
+  setSelectedRowId: () => {},
+  withCheckbox: false
 }
 
 TableLinkCell.propTypes = {
@@ -101,7 +126,10 @@ TableLinkCell.propTypes = {
   item: PropTypes.shape({}).isRequired,
   link: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
+  withCheckbox: PropTypes.bool
 }
 
 export default TableLinkCell

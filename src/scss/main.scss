@@ -69,6 +69,11 @@ main {
     padding: 10px 16px;
     font-size: 14px;
     border-radius: 2px;
+
+    &.disabled,
+    &.disabled:hover {
+      cursor: not-allowed;
+    }
   }
 
   .btn {
@@ -80,6 +85,11 @@ main {
     &_secondary {
       color: $white;
       background-color: $brightTurquoise;
+    }
+
+    &_danger {
+      color: $white;
+      background-color: $amaranth;
     }
 
     &_default {
@@ -95,13 +105,26 @@ main {
     &_small {
       height: 36px;
     }
+
+    &_border-bottom {
+      height: 36px;
+      border: $primaryBorder;
+      border-bottom: $applyBtnBorder;
+      border-radius: 4px;
+    }
   }
 }
 
 .completed,
 .ready,
-.created {
+.created,
+.info,
+.succeeded {
   @include jobStatus($brightTurquoise);
+}
+
+.warn {
+  @include jobStatus($grandis);
 }
 
 .running {
@@ -109,7 +132,8 @@ main {
 }
 
 .failed,
-.error {
+.error,
+.fail {
   @include jobStatus($burntSienna);
 }
 
@@ -145,7 +169,8 @@ iframe {
   }
 }
 
-input, textarea {
+input,
+textarea {
   overflow-x: hidden;
   font-weight: normal;
   font-size: 15px;

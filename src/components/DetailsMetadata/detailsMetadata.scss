@@ -55,6 +55,14 @@
         flex: 0.1;
         min-width: 33px;
       }
+
+      &_type {
+        flex: 0.5;
+      }
+
+      &_validators {
+        flex: 2;
+      }
     }
   }
 }

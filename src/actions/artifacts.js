@@ -26,10 +26,19 @@ import {
   FETCH_FEATURES_FAILURE,
   FETCH_FEATURES_SUCCESS,
   REMOVE_FEATURE_SETS,
-  REMOVE_FEATURES
+  REMOVE_FEATURES,
+  FETCH_FEATURE_VECTORS_BEGIN,
+  FETCH_FEATURE_VECTORS_FAILURE,
+  FETCH_FEATURE_VECTORS_SUCCESS,
+  REMOVE_FEATURE_VECTORS,
+  FETCH_FEATURE_VECTOR_SUCCESS,
+  REMOVE_FEATURE_VECTOR,
+  FETCH_FEATURE_SUCCESS,
+  REMOVE_FEATURE
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
-import { generateFeatureSets } from '../utils/generateFeatureSets'
+import { parseFeatureVectors } from '../utils/parseFeatureVectors'
+import { parseFeatures } from '../utils/parseFeatures'
 
 const artifactsAction = {
   closeArtifactsPreview: item => ({
@@ -73,7 +82,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchDataSetsSuccess(dataSets))
 
-        return dataSets
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchDataSetsFailure(err))
@@ -89,17 +98,17 @@ const artifactsAction = {
     type: FETCH_DATASETS_SUCCESS,
     payload: dataSets
   }),
-  fetchFeatureSets: project => dispatch => {
+  fetchFeatureSets: (project, config) => dispatch => {
     dispatch(artifactsAction.fetchFeatureSetsBegin())
 
     return artifactsApi
-      .getFeatureSets(project)
+      .getFeatureSets(project, config)
       .then(response => {
-        let featureSets = generateFeatureSets(response.data.feature_sets)
+        dispatch(
+          artifactsAction.fetchFeatureSetsSuccess(response.data.feature_sets)
+        )
 
-        dispatch(artifactsAction.fetchFeatureSetsSuccess(featureSets))
-
-        return featureSets
+        return response.data.feature_sets
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFeatureSetsFailure(err))
@@ -116,17 +125,87 @@ const artifactsAction = {
     type: FETCH_FEATURE_SETS_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatures: project => dispatch => {
+  fetchFeatureVector: (featureVector, project) => dispatch => {
+    return artifactsApi
+      .getFeatureVector(featureVector, project)
+      .then(response => {
+        let featureVectors = parseFeatureVectors(response.data.feature_vectors)
+
+        dispatch(
+          artifactsAction.fetchFeatureVectorSuccess({
+            [featureVector]: featureVectors
+          })
+        )
+
+        return response.data.feature_vectors
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchFeatureVectorSuccess: featureSets => ({
+    type: FETCH_FEATURE_VECTOR_SUCCESS,
+    payload: featureSets
+  }),
+  fetchFeatureVectors: (project, config) => dispatch => {
+    dispatch(artifactsAction.fetchFeatureVectorsBegin())
+
+    return artifactsApi
+      .getFeatureVectors(project, config)
+      .then(response => {
+        let featureVectors = parseFeatureVectors(response.data.feature_vectors)
+
+        dispatch(artifactsAction.fetchFeatureVectorsSuccess(featureVectors))
+
+        return response.data.feature_vectors
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFeatureVectorsFailure(err))
+      })
+  },
+  fetchFeatureVectorsBegin: () => ({
+    type: FETCH_FEATURE_VECTORS_BEGIN
+  }),
+  fetchFeatureVectorsFailure: error => ({
+    type: FETCH_FEATURE_VECTORS_FAILURE,
+    payload: error
+  }),
+  fetchFeatureVectorsSuccess: featureSets => ({
+    type: FETCH_FEATURE_VECTORS_SUCCESS,
+    payload: featureSets
+  }),
+  fetchFeature: (project, feature) => dispatch => {
+    return artifactsApi
+      .getFeature(project, feature.name)
+      .then(response => {
+        const filteredFeatures = response.data.features.filter(
+          responseItem =>
+            responseItem.feature_set_digest.metadata.name ===
+            feature.metadata.name
+        )
+        let features = parseFeatures(filteredFeatures)
+
+        dispatch(artifactsAction.fetchFeatureSuccess(features))
+
+        return filteredFeatures
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchFeatureSuccess: features => ({
+    type: FETCH_FEATURE_SUCCESS,
+    payload: features
+  }),
+  fetchFeatures: item => dispatch => {
     dispatch(artifactsAction.fetchFeaturesBegin())
 
     return artifactsApi
-      .getFeatures(project)
+      .getFeatures(item)
       .then(response => {
-        let features = response.data.features
+        dispatch(artifactsAction.fetchFeaturesSuccess(response.data.features))
 
-        dispatch(artifactsAction.fetchFeaturesSuccess(features))
-
-        return features
+        return response.data.features
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFeaturesFailure(err))
@@ -153,7 +232,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchFilesSuccess(files))
 
-        return files
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFilesFailure(err))
@@ -179,7 +258,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchModelsSuccess(models))
 
-        return models
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchModelsFailure(err))
@@ -204,6 +283,17 @@ const artifactsAction = {
   removeFeatureSets: () => ({
     type: REMOVE_FEATURE_SETS
   }),
+  removeFeatureVector: featureVectors => ({
+    type: REMOVE_FEATURE_VECTOR,
+    payload: featureVectors
+  }),
+  removeFeatureVectors: () => ({
+    type: REMOVE_FEATURE_VECTORS
+  }),
+  removeFeature: features => ({
+    type: REMOVE_FEATURE,
+    payload: features
+  }),
   removeFeatures: () => ({
     type: REMOVE_FEATURES
   }),
@@ -220,7 +310,10 @@ const artifactsAction = {
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
-  })
+  }),
+  updateFeatureSetData: (projectName, featureSet, tag, data) => () => {
+    return artifactsApi.updateFeatureSetData(projectName, featureSet, tag, data)
+  }
 }
 
 export default artifactsAction

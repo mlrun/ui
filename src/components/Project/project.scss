@@ -36,7 +36,6 @@
         font-weight: 300;
         font-size: 36px;
         line-height: 42px;
-        cursor: pointer;
 
         .input {
           width: 100%;
@@ -48,6 +47,83 @@
       &__settings {
         display: none;
         margin-left: 10px;
+      }
+
+      &__source {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 26px;
+
+        .input {
+          width: 100%;
+
+          &-wrapper {
+            width: 100%;
+          }
+        }
+
+        &-edit {
+          position: relative;
+          display: none;
+          margin-left: 10px;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+
+        &-text {
+          max-width: 230px;
+          color: $cornflowerBlue;
+        }
+
+        &:hover {
+          .general-info {
+            &__source-edit {
+              display: block;
+            }
+          }
+        }
+      }
+
+      &__labels {
+        .chips-wrapper {
+          flex-wrap: wrap;
+        }
+
+        &-item {
+          display: inline-flex;
+          margin: 10px 0 0 10px;
+          padding: 5px 10px;
+          color: $primary;
+          font-size: 14px;
+          border: $labelBorder;
+          border-radius: 15px;
+        }
+
+        .job-labels {
+          &__item-icon-close {
+            transform: scale(0.7);
+          }
+
+          &__button-add {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            margin: 10px 0 0 10px;
+            border: $labelBorder;
+            border-radius: 32px;
+          }
+        }
+
+        .chip-block-hidden {
+          left: 0;
+
+          &::after {
+            right: 220px;
+          }
+        }
       }
 
       &__description {
@@ -184,28 +260,17 @@
         position: relative;
         display: flex;
         flex: 1 0 0;
-        min-width: 0;
         flex-direction: column;
+        min-width: 0;
         min-height: 491px;
         margin-right: 20px;
+        overflow-x: auto;
         background-color: rgba($white, 0.84);
         border-radius: 4px;
 
-        &_small {
-          flex: 1 1 0;
-          min-height: 155px;
-
-          .project-data-card__header {
-            height: 100%;
-
-            &-text {
-              margin-bottom: 25px;
-            }
-          }
-        }
-
         &__header {
           z-index: 1;
+          min-width: fit-content;
           padding: 20px;
           background-color: $white;
           box-shadow: $projectStatisticsShadow;
@@ -218,6 +283,19 @@
             font-weight: 500;
             font-size: 20px;
             line-height: 23px;
+          }
+        }
+
+        &_small {
+          flex: 1 1 0;
+          min-height: 155px;
+
+          .project-data-card__header {
+            height: 100%;
+
+            &-text {
+              margin-bottom: 25px;
+            }
           }
         }
 

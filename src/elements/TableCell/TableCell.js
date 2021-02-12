@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { capitalize } from 'lodash'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Download from '../../common/Download/Download'
@@ -27,7 +26,10 @@ const TableCell = ({
   link,
   match,
   selectItem,
-  selectedItem
+  selectedItem,
+  selectedRowId,
+  setSelectedRowId,
+  withCheckbox
 }) => {
   const dispatch = useDispatch()
 
@@ -41,12 +43,27 @@ const TableCell = ({
         link={link}
         selectItem={selectItem}
         selectedItem={selectedItem}
+        selectedRowId={selectedRowId}
+        setSelectedRowId={setSelectedRowId}
+        withCheckbox={withCheckbox}
       />
     )
   } else if (firstRow || (link && isGroupedByWorkflow)) {
     return (
       <div className={`table-body__cell ${data.class}`}>
-        {data && data.value}
+        {item.status && (
+          <Tooltip
+            className="status"
+            template={<TextTooltipTemplate text={item.status} />}
+          >
+            <i
+              className={`${item.status[0].toLowerCase()}${item.status.slice(
+                1
+              )}`}
+            />
+          </Tooltip>
+        )}
+        <span className="cell_name">{data && data.value}</span>
         <Arrow
           onClick={e => handleExpandRow(e, item)}
           className="expand-arrow"
@@ -122,25 +139,8 @@ const TableCell = ({
     )
   } else if (data.type === 'hidden') {
     return null
-  } else if (data.type === 'date with state') {
-    return (
-      <div
-        className={`table-body__cell table-body__cell_last-run ${data.class}`}
-      >
-        <Tooltip
-          className="status"
-          template={<TextTooltipTemplate text={capitalize(data.value.state)} />}
-        >
-          <i className={data.value.state} />
-        </Tooltip>
-        <Tooltip
-          className="text_small"
-          template={<TextTooltipTemplate text={data.value.date} />}
-        >
-          {data.value.date}
-        </Tooltip>
-      </div>
-    )
+  } else if (data.type === 'component') {
+    return <div className={`table-body__cell ${data.class}`}>{data.value}</div>
   } else {
     return (
       <div className={`table-body__cell ${data.class}`}>
@@ -165,7 +165,10 @@ TableCell.defaultProps = {
     schema: ''
   },
   link: '',
-  match: null
+  match: null,
+  selectedRowId: '',
+  setSelectedRowId: () => {},
+  withCheckbox: false
 }
 
 TableCell.propTypes = {
@@ -178,7 +181,10 @@ TableCell.propTypes = {
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   match: PropTypes.shape({}),
   selectItem: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
+  withCheckbox: PropTypes.bool
 }
 
 export default TableCell

@@ -30,11 +30,11 @@ export const getLinks = match => [
     link: `/projects/${match.params.projectName}/files`
   },
   {
-    label: 'Monitor jobs and workflows',
+    label: 'Jobs and workflows',
     link: `/projects/${match.params.projectName}/jobs/monitor`
   },
   {
-    label: 'Schedule jobs and workflows',
+    label: 'Schedule jobs',
     link: `/projects/${match.params.projectName}/jobs/schedule`
   },
   {
@@ -47,7 +47,7 @@ export const getLinks = match => [
     externalLink: true
   },
   {
-    label: 'API gateways',
+    label: 'API gateways (Nuclio)',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`,
     externalLink: true
   }

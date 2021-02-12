@@ -16,7 +16,7 @@ import {
   handleEdit,
   handleInputPathChange,
   handleInputPathTypeChange,
-  S3_INPUT_PATH_TYPE
+  MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from './jobsPanelDataInputs.util'
 import artifactsAction from '../../actions/artifacts'
 
@@ -33,9 +33,10 @@ const JobsPanelDataInputs = ({
     jobsPanelDataInputsReducer,
     initialState
   )
+  const pathScheme = inputsState.newInput.path.pathType
 
   useEffect(() => {
-    if (inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE) {
+    if (pathScheme === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
       if (
         inputsState.projects.length === 0 ||
         inputsState.newInput.path.project.length === 0
@@ -55,7 +56,7 @@ const JobsPanelDataInputs = ({
       }
     }
   }, [
-    inputsState.newInput.path.pathType,
+    pathScheme,
     inputsState.newInput.path.project.length,
     inputsState.projects.length,
     match.params.projectName,
@@ -95,7 +96,7 @@ const JobsPanelDataInputs = ({
   ])
 
   useEffect(() => {
-    if (inputsState.newInput.path.pathType !== S3_INPUT_PATH_TYPE) {
+    if (pathScheme === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
       let matches = []
 
       if (inputsState.newInputProjectPathEntered) {
@@ -125,7 +126,8 @@ const JobsPanelDataInputs = ({
     inputsState.newInput.path,
     inputsState.newInputProjectPathEntered,
     inputsState.projects,
-    match.params.projectName
+    match.params.projectName,
+    pathScheme
   ])
 
   const handleAddNewItem = () => {
@@ -193,10 +195,9 @@ const JobsPanelDataInputs = ({
   return (
     <JobsPanelDataInputsView
       comboboxMatchesList={
-        inputsState.newInput.path.pathType === S3_INPUT_PATH_TYPE ||
-        inputsState.newInputArtifactPathEntered
-          ? []
-          : inputsState.comboboxMatches
+        pathScheme === MLRUN_STORAGE_INPUT_PATH_SCHEME
+          ? inputsState.comboboxMatches
+          : []
       }
       handleAddNewItem={handleAddNewItem}
       handleDeleteItems={handleDeleteItems}

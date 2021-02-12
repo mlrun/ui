@@ -9,7 +9,8 @@
 
   &__overlay {
     position: fixed;
-    z-index: 2;
+    top: 0;
+    z-index: 5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,6 +20,7 @@
   }
 
   &__header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     margin: 10px 0 20px;
@@ -37,6 +39,7 @@
   &__footer-container {
     display: flex;
     justify-content: flex-end;
+    margin-top: 20px;
   }
 
   &__btn_cancel {

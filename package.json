@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "/mlrun",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "camelcase": "^5.2.0",
     "classnames": "^2.2.6",
     "cronstrue": "^1.103.0",
@@ -59,6 +59,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.6.0",
+    "@babel/plugin-proposal-logical-assignment-operators": "^7.12.1",
     "@svgr/webpack": "^5.4.0",
     "@testing-library/react": "^11.0.2",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
@@ -139,6 +140,7 @@
       "react-app"
     ],
     "plugins": [
+      "@babel/plugin-proposal-logical-assignment-operators",
       [
         "prismjs",
         {

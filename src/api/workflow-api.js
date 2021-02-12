@@ -1,13 +1,13 @@
 import { mainHttpClient } from '../httpClient'
 
 export default {
-  getAllWorkflows: pageToken => {
+  getWorkflows: (project, pageToken, pageSize = 100) => {
     const params = {
-      page_size: 100
+      page_size: pageSize
     }
     if (pageToken) {
       params.page_token = pageToken
     }
-    return mainHttpClient.get('/workflows', { params })
+    return mainHttpClient.get(`/projects/${project}/pipelines`, { params })
   }
 }

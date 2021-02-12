@@ -4,17 +4,17 @@
 
 .filters {
   display: flex;
-  align-items: center;
   flex: 1;
   flex-wrap: wrap;
+  align-items: center;
 
   .input-wrapper {
     margin-right: 15px;
     margin-bottom: 15px;
 
     .input {
-      height: 38px;
       width: 200px;
+      height: 38px;
       padding: 10px 10px 10px 64px;
     }
   }
@@ -35,16 +35,30 @@
 
 .buttons {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 
-  button {
-    width: 40px;
+  .btn {
     height: 40px;
 
-    &:hover {
-      background-color: $alabaster;
-      border-radius: 20px;
+    &_expand {
+      width: 40px;
+    }
+
+    &_refresh {
+      width: 40px;
+      padding: 0 8px;
+    }
+
+    &_action {
+      margin: 0 5px;
+    }
+
+    &_icon {
+      &:hover {
+        background-color: $alabaster;
+        border-radius: 20px;
+      }
     }
   }
 }

@@ -6,19 +6,22 @@ import {
   DATASETS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
+  FEATURE_VECTORS_TAB,
   FEATURES_TAB,
   FILES_PAGE,
   MODELS_PAGE
 } from '../constants'
 import { convertBytes } from './convertBytes'
 
+import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
+
 import { ReactComponent as Nosql } from '../images/nosql.svg'
 import { ReactComponent as Stream } from '../images/stream.svg'
 import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
 import { ReactComponent as DbIcon } from '../images/db-icon.svg'
 
-const createArtifactsContent = (artifacts, page, featureStoreTab, project) =>
-  artifacts.map(artifact => {
+const createArtifactsContent = (artifacts, page, featureStoreTab, project) => {
+  return artifacts.map(artifact => {
     let rowData = []
 
     if (page === ARTIFACTS_PAGE) {
@@ -34,11 +37,14 @@ const createArtifactsContent = (artifacts, page, featureStoreTab, project) =>
         rowData = createFeatureSetsRowData(artifact, project)
       } else if (featureStoreTab === FEATURES_TAB) {
         rowData = createFeaturesRowData(artifact)
+      } else if (featureStoreTab === FEATURE_VECTORS_TAB) {
+        rowData = createFeatureVectorsRowData(artifact, project)
       }
     }
 
     return rowData
   })
+}
 
 const createArtifactsRowData = artifact => {
   return {
@@ -227,6 +233,10 @@ const createFeatureSetsRowData = (artifact, project) => {
       class: 'artifacts_medium',
       link: `/projects/${project}/feature-store/feature-sets/${artifact.name}/${artifact.tag}/overview`
     },
+    description: {
+      value: artifact.description,
+      class: 'artifacts_medium'
+    },
     labels: {
       value: parseKeyValues(artifact.labels),
       class: 'artifacts_big',
@@ -237,12 +247,8 @@ const createFeatureSetsRowData = (artifact, project) => {
       class: 'artifacts_small',
       type: 'hidden'
     },
-    description: {
-      value: artifact.description,
-      class: 'artifacts_medium'
-    },
     entity: {
-      value: artifact.entities[0]?.name,
+      value: artifact.entities ? artifact.entities[0]?.name : '',
       class: 'artifacts_small'
     },
     targets: getFeatureSetTargetCellValue(artifact.targets)
@@ -250,30 +256,46 @@ const createFeatureSetsRowData = (artifact, project) => {
 }
 
 const createFeaturesRowData = artifact => {
-  const artifactMetadata = artifact.feature_set_digest?.metadata
-
   return {
     key: {
-      value: artifact.feature?.name,
-      class: 'artifacts_medium'
+      value: artifact.name,
+      class: 'artifacts_medium',
+      expandedCellContent: {
+        class: 'artifacts_medium',
+        value: artifact.metadata?.tag
+      }
     },
     feature_set: {
-      value: artifact.feature_set_digest?.metadata?.name,
-      class: 'artifacts_medium',
-      link: `/projects/${artifactMetadata?.project}/feature-store/feature-sets/${artifactMetadata?.name}/${artifactMetadata?.tag}/overview`
-    },
-    labels: {
-      value: parseKeyValues(artifact.feature?.labels),
-      class: 'artifacts_big',
-      type: 'labels'
+      value: artifact.metadata?.name,
+      class: 'artifacts_small',
+      link: `/projects/${artifact.metadata?.project}/feature-store/feature-sets/${artifact.metadata?.name}/${artifact.metadata?.tag}/overview`,
+      expandedCellContent: {
+        class: 'artifacts_small',
+        value: ''
+      }
     },
     type: {
-      value: artifact.feature?.value_type,
+      value: artifact.value_type,
       class: 'artifacts_extra-small'
     },
     entity: {
-      value: artifact.feature_set_digest?.spec?.entities[0]?.name,
-      class: 'artifacts_extra-small'
+      value: artifact.spec?.entities[0]?.name,
+      class: 'artifacts_small'
+    },
+    description: {
+      value: artifact.description,
+      class: 'artifacts_medium'
+    },
+    labels: {
+      value: parseKeyValues(artifact.labels),
+      class: 'artifacts_big',
+      type: 'labels'
+    },
+    targets: getFeatureSetTargetCellValue(artifact.targets),
+    validator: {
+      value: <FeatureValidator validator={artifact.validator} />,
+      class: 'artifacts_medium',
+      type: 'component'
     }
   }
 }
@@ -305,6 +327,38 @@ const getFeatureSetTargetCellValue = targets => ({
     .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
   class: 'artifacts_small artifacts__targets-icon',
   type: 'icons'
+})
+
+const createFeatureVectorsRowData = (artifact, project) => ({
+  key: {
+    value: artifact.name,
+    class: 'artifacts_medium',
+    link: `/projects/${project}/feature-store/feature-vectors/${artifact.name}/${artifact.tag}/overview`,
+    expandedCellContent: {
+      class: 'artifacts_medium',
+      value: artifact.tag
+    }
+  },
+  description: {
+    value: artifact.description,
+    class: 'artifacts_medium'
+  },
+  labels: {
+    value: parseKeyValues(artifact.labels),
+    class: 'artifacts_big',
+    type: 'labels'
+  },
+  version: {
+    value: artifact.tag,
+    class: 'artifacts_small',
+    type: 'hidden'
+  },
+  updated: {
+    value: artifact.updated
+      ? formatDatetime(new Date(artifact.updated), 'N/A')
+      : 'N/A',
+    class: 'artifacts_small'
+  }
 })
 
 export default createArtifactsContent
