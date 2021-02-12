@@ -9,7 +9,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 
 import './projectTable.scss'
 
-const ProjectTable = ({ table }) => {
+const ProjectTable = ({ match, table }) => {
   return (
     <>
       <div className="project-data-card__table">
@@ -58,8 +58,15 @@ const ProjectTable = ({ table }) => {
                               template={
                                 <TextTooltipTemplate text={body[key].value} />
                               }
+                              textShow={true}
                             >
-                              {body[key].value}
+                              {body[key].value.startsWith(
+                                match.params.projectName
+                              )
+                                ? body[key].value.slice(
+                                    match.params.projectName.length + 1
+                                  )
+                                : body[key].value}
                             </Tooltip>
                           </a>
                         ) : (
@@ -98,6 +105,7 @@ const ProjectTable = ({ table }) => {
 }
 
 ProjectTable.propTypes = {
+  match: PropTypes.shape({}).isRequired,
   table: PropTypes.shape({}).isRequired
 }
 

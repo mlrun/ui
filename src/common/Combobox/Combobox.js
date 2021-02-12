@@ -11,6 +11,7 @@ const Combobox = ({
   inputDefaultValue,
   inputOnChange,
   matches,
+  selectDefaultValue,
   selectDropdownList,
   selectOnChange,
   selectPlaceholder
@@ -49,6 +50,15 @@ const Combobox = ({
   ])
 
   useEffect(() => {
+    if (
+      selectDefaultValue?.label.length > 0 &&
+      selectValue.label.length === 0
+    ) {
+      setSelectValue(selectDefaultValue)
+    }
+  }, [selectDefaultValue, selectValue.label.length])
+
+  useEffect(() => {
     if (!searchIsFocused) {
       if (JSON.stringify(dropdownList) !== JSON.stringify(matches)) {
         setDropdownList(matches)
@@ -59,6 +69,8 @@ const Combobox = ({
   const handleOnBlur = useCallback(
     event => {
       if (comboboxRef.current && !comboboxRef.current.contains(event.target)) {
+        event.preventDefault()
+
         if (showSelectDropdown) {
           setShowSelectDropdown(false)
         }
@@ -100,6 +112,10 @@ const Combobox = ({
     setShowMatchesDropdown(false)
     inputOnChange(inputValueItems.join('/'))
     inputRef.current.focus()
+
+    if (inputValueItems.length > 1) {
+      setShowMatchesDropdown(false)
+    }
   }
 
   const handleSelectOptionOnClick = option => {
@@ -197,6 +213,7 @@ Combobox.defaultProps = {
   comboboxClassName: '',
   inputDefaultValue: '',
   inputPlaceholder: '',
+  selectDefaultValue: null,
   selectPlaceholder: ''
 }
 
@@ -208,6 +225,7 @@ Combobox.propTypes = {
   matches: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectOnChange: PropTypes.func.isRequired,
+  selectDefaultValue: PropTypes.shape({}),
   selectPlaceholder: PropTypes.string
 }
 

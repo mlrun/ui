@@ -18,7 +18,11 @@ const JobsPanelTableView = ({
   headers,
   match,
   section,
+  sectionData,
+  sectionDispatch,
+  sectionState,
   selectedItem,
+  setEditItem,
   setSelectedItem
 }) => {
   return (
@@ -45,9 +49,13 @@ const JobsPanelTableView = ({
         ) {
           return section === 'data-inputs' ? (
             <EditableDataInputsRow
+              comboboxMatchesList={sectionData.comboboxMatchesList}
               handleEdit={handleEdit}
+              inputsDispatch={sectionDispatch}
+              inputsState={sectionState}
               key={index}
               selectedDataInput={selectedItem}
+              setEditItem={setEditItem}
               setSelectedDataInput={setSelectedItem}
             />
           ) : section.includes('advanced') ? (
@@ -85,6 +93,13 @@ const JobsPanelTableView = ({
   )
 }
 
+JobsPanelTableView.defaultProps = {
+  sectionData: {},
+  sectionDispatch: () => {},
+  sectionState: {},
+  setEditItem: () => {}
+}
+
 JobsPanelTableView.propTypes = {
   addNewItem: PropTypes.bool.isRequired,
   children: PropTypes.object.isRequired,
@@ -97,7 +112,11 @@ JobsPanelTableView.propTypes = {
   headers: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,
   section: PropTypes.string.isRequired,
+  sectionData: PropTypes.shape({}),
+  sectionDispatch: PropTypes.func,
+  sectionState: PropTypes.shape({}),
   selectedItem: PropTypes.shape({}).isRequired,
+  setEditItem: PropTypes.func,
   setSelectedItem: PropTypes.func.isRequired
 }
 

@@ -1,12 +1,17 @@
 /*=========== JOBS =============*/
 
+export const AZURE_STORAGE_INPUT_PATH_SCHEME = 'az://'
 export const FETCH_JOB_LOGS_BEGIN = 'FETCH_JOB_LOGS_BEGIN'
 export const FETCH_JOB_LOGS_FAILURE = 'FETCH_JOB_LOGS_FAILURE'
 export const FETCH_JOB_LOGS_SUCCESS = 'FETCH_JOB_LOGS_SUCCESS'
 export const FETCH_JOBS_BEGIN = 'FETCH_JOBS_BEGIN'
 export const FETCH_JOBS_SUCCESS = 'FETCH_JOBS_SUCCESS'
 export const FETCH_JOBS_FAILURE = 'FETCH_JOBS_FAILURE'
+export const GOOGLE_STORAGE_INPUT_PATH_SCHEME = 'gs://'
+export const HTTP_STORAGE_INPUT_PATH_SCHEME = 'http://'
+export const HTTPS_STORAGE_INPUT_PATH_SCHEME = 'https://'
 export const JOBS_PAGE = 'JOBS'
+export const MLRUN_STORAGE_INPUT_PATH_SCHEME = 'store://'
 export const MONITOR_TAB = 'monitor'
 export const REMOVE_JOB_ERROR = 'REMOVE_JOB_ERROR'
 export const REMOVE_NEW_JOB = 'REMOVE_NEW_JOB'
@@ -25,6 +30,8 @@ export const SET_NEW_JOB_VOLUME_MOUNTS = 'SET_NEW_JOB_VOLUME_MOUNTS'
 export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
+export const S3_INPUT_PATH_SCHEME = 's3://'
+export const V3IO_INPUT_PATH_SCHEME = 'v3io://'
 
 /*=========== ML FUNCTIONS =============*/
 
