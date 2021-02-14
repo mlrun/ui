@@ -9,7 +9,11 @@ import {
   parametersActions,
   jobsPanelParametersReducer
 } from './jobsPanelParametersReducer'
-import { editHyperParams, generateTableData } from './jobsPanelParameters.util'
+import {
+  convertParamValue,
+  editHyperParams,
+  generateTableData
+} from './jobsPanelParameters.util'
 import { panelActions } from '../JobsPanel/panelReducer'
 
 const JobsPanelParameters = ({
@@ -115,7 +119,10 @@ const JobsPanelParameters = ({
 
     setNewJobParameters({
       ...newJobTaskSpecObj.parameters,
-      [parametersState.newParameter.name]: +parametersState.newParameter.value
+      [parametersState.newParameter.name]: convertParamValue(
+        parametersState.newParameter.value,
+        parametersState.newParameter.valueType
+      )
     })
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
@@ -175,15 +182,16 @@ const JobsPanelParameters = ({
   const handleEditParameter = () => {
     const params = { ...newJobTaskSpecObj.parameters }
     const hyperParamsObj = { ...newJobTaskSpecObj.hyperparams }
+    const convertedValue = convertParamValue(
+      parametersState.selectedParameter.data.value,
+      parametersState.selectedParameter.data.valueType
+    )
 
     if (parametersState.selectedParameter.newName) {
       delete params[parametersState.selectedParameter.data.name]
-
-      params[parametersState.selectedParameter.newName] =
-        parametersState.selectedParameter.data.value
+      params[parametersState.selectedParameter.newName] = convertedValue
     } else {
-      params[parametersState.selectedParameter.data.name] =
-        parametersState.selectedParameter.data.value
+      params[parametersState.selectedParameter.data.name] = convertedValue
     }
 
     if (
@@ -207,7 +215,6 @@ const JobsPanelParameters = ({
       parametersState.selectedParameter.isChecked
     ) {
       delete hyperParamsObj[parametersState.selectedParameter.data.name]
-
       setNewJobHyperParameters({ ...hyperParamsObj })
     }
 
@@ -218,6 +225,7 @@ const JobsPanelParameters = ({
         }
 
         param.data.value = parametersState.selectedParameter.data.value
+        param.data.valueType = parametersState.selectedParameter.data.valueType
         param.data.parameterType =
           parametersState.selectedParameter.data.parameterType
       }
