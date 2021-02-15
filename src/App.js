@@ -88,7 +88,7 @@ const App = () => {
             <Redirect
               exact
               from="/projects/:projectName/feature-store"
-              to="/projects/:projectName/feature-store/datasets"
+              to="/projects/:projectName/feature-store/feature-sets"
             />
             <Route
               exact
