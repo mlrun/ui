@@ -100,7 +100,7 @@ const Artifacts = ({
           selectedArtifact.item?.kind !== 'dataset'))
     ) {
       history.push(
-        `/projects/${match.params.projectName}/artifacts/${match.params.name}/info`
+        `/projects/${match.params.projectName}/artifacts/${match.params.name}/overview`
       )
     }
 

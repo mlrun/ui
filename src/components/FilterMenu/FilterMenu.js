@@ -14,9 +14,15 @@ import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
-import { ARTIFACTS_PAGE, FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants.js'
+import {
+  ARTIFACTS_PAGE,
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  FUNCTIONS_PAGE,
+  JOBS_PAGE,
+  MODELS_PAGE
+} from '../../constants.js'
 import artifactsAction from '../../actions/artifacts'
-import artifactsData from '../Artifacts/artifactsData'
 import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 
 import './filterMenu.scss'
@@ -56,10 +62,17 @@ const FilterMenu = ({
     if (event.keyCode === 13) {
       if (match.params.jobId || match.params.name) {
         history.push(
-          `/projects/${match.params.projectName}/${page.toLowerCase()}`
+          `/projects/${match.params.projectName}/${page.toLowerCase()}${
+            match.params.pageTab ? `/${match.params.pageTab}` : ''
+          }`
         )
       }
-      if (page === ARTIFACTS_PAGE) {
+
+      if (
+        [ARTIFACTS_PAGE, FILES_PAGE, MODELS_PAGE, FEATURE_STORE_PAGE].includes(
+          page
+        )
+      ) {
         dispatch(
           artifactsAction.setArtifactFilter({
             ...artifactFilter,
@@ -180,7 +193,7 @@ const FilterMenu = ({
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button
             onClick={() => {
-              page === artifactsData.page
+              ![JOBS_PAGE, FUNCTIONS_PAGE].includes(page)
                 ? onChange({
                     tag: artifactFilter.tag,
                     project: match.params.projectName,

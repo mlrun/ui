@@ -18,7 +18,10 @@ import {
   SHOW_ARTIFACT_PREVIEW,
   SET_ARTIFACT_FILTER,
   REMOVE_FILES,
-  REMOVE_MODELS
+  REMOVE_MODELS,
+  FETCH_MODEL_ENDPOINTS_BEGIN,
+  FETCH_MODEL_ENDPOINTS_FAILURE,
+  FETCH_MODEL_ENDPOINTS_SUCCESS
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 
@@ -106,6 +109,30 @@ const artifactsAction = {
     type: FETCH_FILES_SUCCESS,
     payload: files
   }),
+  fetchModelEndpoints: item => dispatch => {
+    dispatch(artifactsAction.fetchModelEndpointsBegin())
+
+    return artifactsApi
+      .getModelEndpoints(item)
+      .then(({ data }) => {
+        dispatch(artifactsAction.fetchModelEndpointsSuccess(data.endpoints))
+
+        return data.endpoints
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchModelEndpointsFailure(err))
+      })
+  },
+  fetchModelEndpointsBegin: () => ({
+    type: FETCH_MODEL_ENDPOINTS_BEGIN
+  }),
+  fetchModelEndpointsFailure: () => ({
+    type: FETCH_MODEL_ENDPOINTS_FAILURE
+  }),
+  fetchModelEndpointsSuccess: models => ({
+    type: FETCH_MODEL_ENDPOINTS_SUCCESS,
+    payload: models
+  }),
   fetchModels: project => dispatch => {
     dispatch(artifactsAction.fetchModelsBegin())
 
@@ -116,7 +143,7 @@ const artifactsAction = {
 
         dispatch(artifactsAction.fetchModelsSuccess(models))
 
-        return models
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchModelsFailure(err))

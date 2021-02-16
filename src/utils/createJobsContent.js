@@ -10,14 +10,14 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
         const [, , scheduleJobFunctionUid] =
           contentItem.func?.match(/\w(?<!\d)[\w'-]*/g, '') || []
         const nameLink = !contentItem.func?.includes('hub:')
-          ? `/projects/${contentItem.project}/functions/${scheduleJobFunctionUid}/info`
+          ? `/projects/${contentItem.project}/functions/${scheduleJobFunctionUid}/overview`
           : null
         const [, projectName, jobUid] =
           contentItem.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
         const lastRunLink =
           projectName &&
           jobUid &&
-          `/projects/${projectName}/jobs/monitor/${jobUid}/info`
+          `/projects/${projectName}/jobs/monitor/${jobUid}/overview`
 
         return {
           name: {
@@ -70,7 +70,7 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           name: {
             value: contentItem.name,
             class: 'jobs_medium',
-            link: `/projects/${contentItem.project}/jobs/monitor/${contentItem.uid}/info`
+            link: `/projects/${contentItem.project}/jobs/monitor/${contentItem.uid}/overview`
           },
           type: {
             value: typeof groupedByWorkflow !== 'boolean' ? 'workflow' : type,

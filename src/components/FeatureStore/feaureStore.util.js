@@ -1,3 +1,5 @@
+import { FEATURE_STORE_PAGE } from '../../constants'
+
 export const infoHeaders = [
   { label: 'Hash', id: 'hash' },
   { label: 'Key', id: 'key' },
@@ -9,10 +11,9 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }
 ]
-export const detailsMenu = ['info', 'preview']
+export const detailsMenu = ['overview', 'preview']
 export const filters = ['tree', 'labels', 'name']
-export const page = 'ARTIFACTS'
-export const pageKind = 'feature-store'
+export const page = FEATURE_STORE_PAGE
 export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register dataset'
 export const tableHeaders = [

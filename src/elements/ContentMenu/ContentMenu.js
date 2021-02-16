@@ -7,12 +7,12 @@ import './contentMenu.scss'
 
 const ContentMenu = ({ activeTab, match, screen, tabs }) => {
   return (
-    <div className="content__menu">
-      <ul className="content__menu__list">
+    <div className="content-menu">
+      <ul className="content-menu__list">
         {tabs.map(tab => {
           const tabClassNames = classnames(
-            'content__menu__list_item',
-            tab === activeTab && 'active'
+            'content-menu__item',
+            tab === activeTab && 'content-menu__item_active'
           )
 
           return (

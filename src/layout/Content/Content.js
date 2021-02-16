@@ -17,7 +17,11 @@ import {
   ARTIFACTS_PAGE,
   FUNCTIONS_PAGE,
   SCHEDULE_TAB,
-  ARTIFACTS_FEATURE_STORE
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  MODELS_PAGE,
+  PROJECTS_PAGE,
+  MODEL_ENDPOINTS_TAB
 } from '../../constants'
 
 import { formatDatetime } from '../../utils'
@@ -53,8 +57,7 @@ const Content = ({
   const contentClassName = classnames(
     'content',
     loading && 'isLoading',
-    (pageData.page === JOBS_PAGE ||
-      pageData.pageKind === ARTIFACTS_FEATURE_STORE) &&
+    [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
       'content_with-menu'
   )
 
@@ -141,16 +144,23 @@ const Content = ({
           )
       )[0]
     const artifactJson =
-      pageData.page === ARTIFACTS_PAGE &&
-      yamlContent.filter(yamlContentItem =>
-        isEqual(yamlContentItem.key, item.db_key)
-      )[0].data
+      [ARTIFACTS_PAGE, FILES_PAGE, MODELS_PAGE, FEATURE_STORE_PAGE].includes(
+        pageData.page
+      ) &&
+      yamlContent.filter(yamlContentItem => {
+        return item.db_key
+          ? isEqual(yamlContentItem.db_key, item.db_key)
+          : isEqual(yamlContentItem.endpoint.id, item.endpoint.id)
+      })
 
     setConvertedYaml(
       yaml.dump(
         pageData.page === JOBS_PAGE
           ? jobJson
-          : pageData.page === ARTIFACTS_PAGE
+          : pageData.page === ARTIFACTS_PAGE ||
+            pageData.page === FILES_PAGE ||
+            pageData.page === MODELS_PAGE ||
+            pageData.page === FEATURE_STORE_PAGE
           ? artifactJson
           : functionJson,
         { lineWidth: -1 }
@@ -196,22 +206,37 @@ const Content = ({
   return (
     <>
       <div className="content__header">
-        <Breadcrumbs match={match} onClick={handleCancel} />
+        <Breadcrumbs match={match} />
         <PageActionsMenu
+          createJob={pageData.page === JOBS_PAGE}
+          registerDialog={
+            [
+              PROJECTS_PAGE,
+              ARTIFACTS_PAGE,
+              FILES_PAGE,
+              MODELS_PAGE,
+              FEATURE_STORE_PAGE
+            ].includes(pageData.page) &&
+            match.params.pageTab !== MODEL_ENDPOINTS_TAB
+          }
+          registerDialogHeader={
+            pageData.page === PROJECTS_PAGE
+              ? 'New Project'
+              : pageData.registerArtifactDialogTitle
+          }
           match={match}
           pageData={pageData}
           onClick={openPopupDialog}
         />
       </div>
       <div className={contentClassName}>
-        {(pageData.page === JOBS_PAGE ||
-          pageData.pageKind === ARTIFACTS_FEATURE_STORE) && (
+        {[JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(
+          pageData.page
+        ) && (
           <ContentMenu
             activeTab={match.params.pageTab}
             match={match}
-            screen={
-              pageData.page === JOBS_PAGE ? pageData.page : pageData.pageKind
-            }
+            screen={pageData.page}
             tabs={pageData.tabs}
           />
         )}

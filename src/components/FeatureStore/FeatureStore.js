@@ -13,7 +13,6 @@ import {
   filters,
   infoHeaders,
   page,
-  pageKind,
   registerArtifactDialogTitle,
   tableHeaders,
   tabs
@@ -37,7 +36,6 @@ const FeatureStore = ({
     filters,
     infoHeaders,
     page,
-    pageKind,
     registerArtifactDialogTitle,
     tableHeaders,
     tabs

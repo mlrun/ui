@@ -10,7 +10,7 @@ import Notification from '../../common/Notification/Notification'
 import createJobsContent from '../../utils/createJobsContent'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
-import { FUNCTIONS_PAGE, JOBS_PAGE, SCHEDULE_TAB } from '../../constants'
+import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
 
 import './table.scss'
 
@@ -49,8 +49,7 @@ const Table = ({
       groupedByWorkflow,
       groupFilter,
       pageData.page,
-      pageData.pageKind,
-      match.params.pageTab === SCHEDULE_TAB,
+      match,
       setLoading
     )
     let groupLatest = []
@@ -83,8 +82,7 @@ const Table = ({
     workflows,
     pageData.page,
     setLoading,
-    match.params.pageTab,
-    pageData.pageKind
+    match
   ])
 
   useEffect(() => {

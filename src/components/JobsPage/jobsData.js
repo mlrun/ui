@@ -90,7 +90,13 @@ export const generateTableHeaders = scheduled => {
     }
   ]
 }
-export const detailsMenu = ['info', 'inputs', 'artifacts', 'results', 'logs']
+export const detailsMenu = [
+  'overview',
+  'inputs',
+  'artifacts',
+  'results',
+  'logs'
+]
 export const filters = ['period', 'status', 'groupBy', 'labels', 'name']
 export const initialStateFilter = 'all'
 export const initialGroupFilter = 'name'

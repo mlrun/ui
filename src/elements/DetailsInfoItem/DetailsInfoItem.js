@@ -54,7 +54,7 @@ const DetailsInfoItem = ({
         template={<TextTooltipTemplate text={funcStr} />}
       >
         <Link
-          to={`/projects/${match.params.projectName}/functions/${funcStr}/info`}
+          to={`/projects/${match.params.projectName}/functions/${funcStr}/overview`}
         >
           {funcStr}
         </Link>

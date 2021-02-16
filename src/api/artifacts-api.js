@@ -51,6 +51,17 @@ export default {
       `/artifacts?project=${item.project}&category=model`
     )
   },
+  getModelEndpoints: item => {
+    const params = {}
+
+    if (item?.labels) {
+      params.labels = item.labels
+    }
+
+    return mainHttpClient.get(`/projects/${item.project}/model-endpoints`, {
+      params
+    })
+  },
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data)
 }

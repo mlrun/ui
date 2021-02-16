@@ -2,7 +2,7 @@
 @import '../../scss/mixins';
 @import '../../scss/borders';
 
-.content__menu {
+.content-menu {
   position: absolute;
   top: -38px;
   left: 0;
@@ -15,23 +15,23 @@
     list-style-type: none;
 
     @include resetSpaces;
+  }
 
-    &_item {
-      color: $topaz;
-      font-weight: bold;
-      font-size: 15px;
-      line-height: 18px;
-      text-align: center;
-      text-transform: capitalize;
-      border-bottom: 3px solid transparent;
+  &__item {
+    color: $topaz;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 18px;
+    text-align: center;
+    text-transform: capitalize;
+    border-bottom: 3px solid transparent;
 
-      a {
-        display: block;
-        padding: 8px 24px;
-      }
+    a {
+      display: block;
+      padding: 8px 24px;
     }
 
-    .active {
+    &_active {
       color: $cornflowerBlue;
       border-bottom: $activeJobTabBorder;
     }

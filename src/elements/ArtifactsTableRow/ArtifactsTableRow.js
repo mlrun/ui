@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
-import artifactsData from '../../components/Artifacts/artifactsData'
+import { DETAILS_INFO_TAB } from '../../constants'
 
 const ArtifactsTableRow = ({
   actionsMenu,
@@ -20,9 +20,9 @@ const ArtifactsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    selectedItem?.db_key &&
-      selectedItem?.db_key === content[index]?.db_key &&
-      'row_active'
+    (selectedItem?.db_key && selectedItem?.db_key === content[index]?.db_key) ||
+      (selectedItem?.endpoint?.id === content[index]?.endpoint?.id &&
+        'row_active')
   )
 
   return (
@@ -34,16 +34,17 @@ const ArtifactsTableRow = ({
             item={content[index]}
             key={Math.random() + i}
             link={
-              i === 0 &&
-              `/projects/${match.params.projectName}/${
-                pageData.pageKind ? pageData.pageKind : 'artifacts'
-              }${match.params.pageTab ? `/${match.params.pageTab}` : ''}/${
-                rowItem.key.value
-              }/${
-                match.params.tab
-                  ? match.params.tab
-                  : `${artifactsData.detailsMenu[0]}`
-              }`
+              value.link === 'overview'
+                ? `/projects/${
+                    match.params.projectName
+                  }/${pageData.page.toLowerCase()}${
+                    match.params.pageTab ? `/${match.params.pageTab}` : ''
+                  }/${rowItem.key.value}/${
+                    match.params.tab
+                      ? match.params.tab
+                      : DETAILS_INFO_TAB.toLowerCase()
+                  }`
+                : value.link
             }
             match={match}
             selectedItem={selectedItem}

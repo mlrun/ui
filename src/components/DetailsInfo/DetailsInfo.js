@@ -1,18 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { isNil } from 'lodash'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 
 import { formatDatetime, parseKeyValues } from '../../utils'
+import { generateArtifactsInfoContent } from './detailsInfo.util'
 import {
   JOBS_PAGE,
   ARTIFACTS_PAGE,
-  ARTIFACTS_FILES_PAGE,
   FUNCTIONS_PAGE,
-  ARTIFACTS_MODELS_PAGE,
-  ARTIFACTS_FEATURE_STORE
+  MODELS_PAGE,
+  FILES_PAGE,
+  FEATURE_STORE_PAGE
 } from '../../constants'
 
 import './detailsInfo.scss'
@@ -31,24 +31,11 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
     selectedItem.outputPath,
     selectedItem.iterations?.length ? selectedItem.iterations : '0'
   ]
-  const artifactsInfoContent = [
-    selectedItem.hash ?? '',
-    selectedItem.db_key,
-    selectedItem.iter || '0',
-    pageData.pageKind !== ARTIFACTS_FEATURE_STORE &&
-    pageData.pageKind !== ARTIFACTS_FILES_PAGE
-      ? selectedItem.kind || ' '
-      : null,
-    selectedItem.size ?? '',
-    selectedItem.target_path,
-    selectedItem.tree,
-    formatDatetime(new Date(selectedItem.updated), 'N/A'),
-    pageData.pageKind === ARTIFACTS_MODELS_PAGE
-      ? selectedItem.framework ?? ''
-      : null,
-    selectedItem.labels ?? [],
-    selectedItem.sources
-  ].filter(content => !isNil(content))
+  const artifactsInfoContent = generateArtifactsInfoContent(
+    pageData.page,
+    match.params.pageTab,
+    selectedItem
+  )
   const functionsInfoContent = [
     selectedItem.name,
     selectedItem.type,
@@ -107,7 +94,14 @@ const DetailsInfo = ({ match, pageData, selectedItem }) => {
                 ? selectedItem.state
                 : ''
             info = jobsInfoContent[index]
-          } else if (pageData.page === ARTIFACTS_PAGE) {
+          } else if (
+            [
+              ARTIFACTS_PAGE,
+              MODELS_PAGE,
+              FILES_PAGE,
+              FEATURE_STORE_PAGE
+            ].includes(pageData.page)
+          ) {
             chips =
               artifactsInfoContent[index] === selectedItem.labels
                 ? parseKeyValues(selectedItem.labels)

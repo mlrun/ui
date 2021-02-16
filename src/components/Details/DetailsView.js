@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { capitalize } from 'lodash'
 
 import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
@@ -48,25 +49,25 @@ const DetailsView = ({
   setIteration,
   setIterationOptions
 }) => {
+  const state = selectedItem.state || selectedItem.endpoint?.status?.state
+
   return (
     <div className="table__item">
       <div className="item-header__data">
-        <h3>{selectedItem.name || selectedItem.db_key}</h3>
+        <h3>
+          {selectedItem.name || selectedItem.db_key || selectedItem.endpoint.id}
+        </h3>
         <span>
           {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
             ? formatDatetime(selectedItem?.startTime, 'Not yet started')
-            : formatDatetime(new Date(selectedItem?.updated), 'N/A')}
-          {selectedItem.state && (
+            : selectedItem?.updated
+            ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
+            : ''}
+          {state && (
             <Tooltip
-              template={
-                <TextTooltipTemplate
-                  text={`${selectedItem.state[0].toUpperCase()}${selectedItem.state.slice(
-                    1
-                  )}`}
-                />
-              }
+              template={<TextTooltipTemplate text={capitalize(state)} />}
             >
-              <i className={selectedItem.state} />
+              <i className={state} />
             </Tooltip>
           )}
         </span>
