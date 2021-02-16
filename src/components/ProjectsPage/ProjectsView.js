@@ -63,12 +63,13 @@ const ProjectsView = ({
                 className="pop-up-dialog__form-input"
                 floatingLabel
                 label="Name"
+                maxLength="63"
                 onChange={name => setNewProjectName(name)}
                 required={
                   isEmptyValue && projectStore.newProject.name.length === 0
                 }
                 requiredText="Name is required"
-                pattern="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+                pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
                 tip="&bull; Valid characters: a-z, 0-9, -&#13;&#10;&bull; Must being and end with: a-z, 0-9&#13;&#10;&bull; Length - max: 63"
                 type="text"
                 value={projectStore.newProject.name}

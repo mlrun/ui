@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
@@ -10,9 +10,9 @@ import Combobox from '../../common/Combobox/Combobox'
 
 import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
@@ -27,7 +27,30 @@ export const JobsPanelDataInputsTable = ({
   match,
   panelState
 }) => {
-  const pathScheme = inputsState.newInput.path.pathType
+  const addItemRowRef = useRef(null)
+
+  const handleDocumentClick = useCallback(
+    event => {
+      if (!addItemRowRef.current?.contains(event.target)) {
+        handleAddNewItem(true)
+        inputsDispatch({
+          type: inputsActions.SET_PATH_PLACEHOLDER,
+          payload: ''
+        })
+      }
+    },
+    [handleAddNewItem, inputsDispatch]
+  )
+
+  useEffect(() => {
+    if (addItemRowRef.current) {
+      document.addEventListener('click', handleDocumentClick)
+
+      return () => {
+        document.removeEventListener('click', handleDocumentClick)
+      }
+    }
+  }, [handleDocumentClick, addItemRowRef])
 
   return (
     <JobsPanelTable
@@ -39,17 +62,20 @@ export const JobsPanelDataInputsTable = ({
       headers={panelData['data-inputs']['table-headers']}
       match={match}
       section="data-inputs"
+      sectionData={{ comboboxMatchesList }}
+      sectionDispatch={inputsDispatch}
+      sectionState={inputsState}
       selectedItem={inputsState.selectedDataInput}
-      setSelectedItem={selectedInput =>
+      setSelectedItem={selectedInput => {
         inputsDispatch({
           type: inputsActions.SET_SELECTED_INPUT,
           payload: selectedInput
         })
-      }
+      }}
     >
       {inputsState.addNewInput ? (
         <div className="table__row-add-item">
-          <div className="input-row-wrapper">
+          <div className="input-row-wrapper" ref={addItemRowRef}>
             <Input
               onChange={name =>
                 inputsDispatch({
@@ -67,7 +93,8 @@ export const JobsPanelDataInputsTable = ({
               inputPlaceholder={inputsState.pathPlaceholder}
               matches={comboboxMatchesList}
               inputDefaultValue={
-                pathScheme === MLRUN_STORAGE_INPUT_PATH_SCHEME &&
+                inputsState.newInput.path.pathType ===
+                  MLRUN_STORAGE_INPUT_PATH_SCHEME &&
                 inputsState.newInput.path.project.length === 0
                   ? inputsState.newInputDefaultPathProject
                   : ''

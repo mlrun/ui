@@ -193,6 +193,14 @@
       padding: 10px;
       border: $primaryBorder;
       border-radius: 2px;
+
+      &_required {
+        border: 1px solid $amaranth;
+      }
+    }
+
+    .border-none {
+      border: none;
     }
 
     .table__cell {

@@ -10,13 +10,22 @@ export const initialState = {
       artifact: ''
     }
   },
-  newInputArtifactPathEntered: false,
+  inputArtifactPathEntered: false,
   newInputDefaultPathProject: '',
-  newInputProjectPathEntered: false,
+  inputProjectPathEntered: false,
   newInputUrlPath: '',
   pathPlaceholder: '',
   projects: [],
-  selectedDataInput: {}
+  selectedDataInput: {
+    data: {
+      name: '',
+      path: {
+        pathType: '',
+        value: '',
+        url: ''
+      }
+    }
+  }
 }
 
 export const inputsActions = {
@@ -27,8 +36,8 @@ export const inputsActions = {
   SET_NEW_INPUT_DEFAULT_PATH_PROJECT: 'SET_NEW_INPUT_DEFAULT_PATH_PROJECT',
   SET_NEW_INPUT_NAME: 'SET_NEW_INPUT_NAME',
   SET_NEW_INPUT_PATH: 'SET_NEW_INPUT_PATH',
-  SET_NEW_INPUT_ARTIFACT_PATH_ENTERED: 'SET_NEW_INPUT_ARTIFACT_PATH_ENTERED',
-  SET_NEW_INPUT_PROJECT_PATH_ENTERED: 'SET_NEW_INPUT_PROJECT_PATH_ENTERED',
+  SET_INPUT_ARTIFACT_PATH_ENTERED: 'SET_INPUT_ARTIFACT_PATH_ENTERED',
+  SET_INPUT_PROJECT_PATH_ENTERED: 'SET_INPUT_PROJECT_PATH_ENTERED',
   SET_NEW_INPUT_URL_PATH: 'SET_NEW_INPUT_URL_PATH',
   SET_PATH_PLACEHOLDER: 'SET_PATH_PLACEHOLDER',
   SET_PROJECTS: 'SET_PROJECTS',
@@ -64,10 +73,10 @@ export const jobsPanelDataInputsReducer = (state, { type, payload }) => {
         ...state,
         comboboxMatches: payload
       }
-    case inputsActions.SET_NEW_INPUT_ARTIFACT_PATH_ENTERED:
+    case inputsActions.SET_INPUT_ARTIFACT_PATH_ENTERED:
       return {
         ...state,
-        newInputArtifactPathEntered: payload
+        inputArtifactPathEntered: payload
       }
     case inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT:
       return {
@@ -90,10 +99,10 @@ export const jobsPanelDataInputsReducer = (state, { type, payload }) => {
           path: payload
         }
       }
-    case inputsActions.SET_NEW_INPUT_PROJECT_PATH_ENTERED:
+    case inputsActions.SET_INPUT_PROJECT_PATH_ENTERED:
       return {
         ...state,
-        newInputProjectPathEntered: payload
+        inputProjectPathEntered: payload
       }
     case inputsActions.SET_NEW_INPUT_URL_PATH:
       return {

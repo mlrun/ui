@@ -37,7 +37,9 @@ const ComboboxView = React.forwardRef(
     const selectClassNames = classnames(
       'combobox-select',
       showSelectDropdown && 'combobox-select_open',
-      selectValue.id.length <= 5 && 'combobox-select_short'
+      selectValue.id.length <= 5 &&
+        selectValue.id.length !== 0 &&
+        'combobox-select_short'
     )
     const dropdownClassNames = classnames(
       'combobox-dropdown',
@@ -49,14 +51,9 @@ const ComboboxView = React.forwardRef(
 
     return (
       <div className={comboboxClassNames} ref={comboboxRef}>
-        <Arrow
-          className={iconClassNames}
-          onClick={() => {
-            handleIconClick()
-          }}
-        />
+        <Arrow className={iconClassNames} onClick={handleIconClick} />
         <div className={selectClassNames}>
-          <div className="combobox-select__header">
+          <div className="combobox-select__header" onClick={handleIconClick}>
             <span className={`${selectValue.className}`}>{selectValue.id}</span>
             {selectValue.id.length === 0 && (
               <span className="combobox-select__header-label">
@@ -96,7 +93,7 @@ const ComboboxView = React.forwardRef(
         >
           <div className="combobox-dropdown__search">
             <input
-              className="combobox-dropdown__search-input input"
+              className="combobox-dropdown__search-input input border-none"
               onChange={event => matchesSearchOnChange(event)}
               onFocus={() => setSearchIsFocused(true)}
               placeholder="Type to search"
