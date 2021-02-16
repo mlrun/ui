@@ -1,0 +1,38 @@
+@import '../../scss/variables';
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  margin: 2px;
+  padding: 8px 14px;
+  color: $mulledWine;
+  font-size: 15px;
+  line-height: 16px;
+  white-space: nowrap;
+  background-color: transparent;
+  border: $labelBorder;
+  border-radius: 20px;
+  cursor: default;
+
+  &.editable {
+    cursor: pointer;
+  }
+
+  &.chips_button {
+    padding: 8px 7px;
+  }
+
+  .item-icon-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    padding: 0;
+
+    svg {
+      transform: scale(0.7);
+    }
+  }
+}

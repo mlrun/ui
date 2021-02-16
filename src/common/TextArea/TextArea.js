@@ -145,7 +145,7 @@ TextArea.defaultProps = {
   required: false,
   requiredText: '',
   tip: '',
-  value: null,
+  value: '',
   wrapperClassName: ''
 }
 

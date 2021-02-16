@@ -17,7 +17,7 @@
     overflow-y: auto;
     color: $mulledWine;
     background-color: $white;
-    border-left: $tableBorder;
+    border-left: $secondaryBorder;
 
     .item {
       &-header {
@@ -42,13 +42,11 @@
         }
 
         &__buttons {
-          align-self: flex-end;
-          margin-top: -70px;
-          position: sticky;
-          top: -5px;
           z-index: 5;
           display: flex;
           align-items: center;
+          align-self: flex-end;
+          margin-top: -70px;
 
           a {
             display: inline-block;
@@ -65,32 +63,32 @@
 
           .btn_apply-changes {
             &_default {
-              opacity: 0.5;
               cursor: default;
+              opacity: 0.5;
             }
 
             &:not(.btn_apply-changes_default):hover {
-              background-color: $alabasterTwo;
+              background-color: $alabaster;
             }
 
             &:not(.btn_apply-changes_default):active {
-              background-color: $galleryTwo;
+              background-color: $gallery;
             }
           }
         }
       }
 
       &-menu {
-        display: flex;
-        align-items: center;
-        padding: 7px 0 0;
-        margin: 29px 0 0;
-        list-style-type: none;
-        border-bottom: $tableBorder;
         position: sticky;
         top: 0;
-        background-color: white;
         z-index: 4;
+        display: flex;
+        align-items: center;
+        margin: 29px 0 0;
+        padding: 7px 0 0;
+        list-style-type: none;
+        background-color: $white;
+        border-bottom: $secondaryBorder;
 
         .menu-tab {
           padding: 8px 24px;
@@ -118,7 +116,7 @@
         flex-direction: row;
         align-items: center;
         padding: 27px 24px;
-        border-bottom: $tableBorder;
+        border-bottom: $secondaryBorder;
 
         div {
           min-width: 237px;
@@ -230,16 +228,6 @@
     .pop-up-dialog {
       &__overlay {
         position: absolute;
-      }
-
-      &__header {
-        margin: 20px 0;
-
-        &-close {
-          position: absolute;
-          top: -18px;
-          right: 0;
-        }
       }
     }
 

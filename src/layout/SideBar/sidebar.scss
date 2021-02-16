@@ -3,39 +3,46 @@
 
 .sidebar {
   @include fixed;
+
   width: 90px;
-  background-color: $white;
   height: 100%;
+  background-color: $white;
+
   &__wrapper {
-    display: flex;
     right: auto;
-    height: 100%;
     z-index: 3;
-    overflow-y: auto;
+    display: flex;
     flex-direction: column;
-    margin-top: 64px;
     width: inherit;
+    height: 100%;
+    margin-top: 64px;
+    overflow-y: auto;
   }
+
   &__menu {
     padding: 8px 0;
     list-style-type: none;
+
     &__item {
-      padding: 8px 16px;
       display: flex;
       justify-content: center;
+      padding: 8px 16px;
+
       a {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        text-decoration: none;
+        justify-content: center;
         color: $white;
+        text-decoration: none;
+
         img {
           width: 25px;
           height: 26px;
         }
       }
     }
+
     .active {
       background-color: #dedede;
     }

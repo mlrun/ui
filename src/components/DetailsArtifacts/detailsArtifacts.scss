@@ -18,7 +18,7 @@
     display: flex;
     min-height: 70px;
     padding-left: 13px;
-    border-bottom: $tableBorder;
+    border-bottom: $secondaryBorder;
 
     &-item {
       display: flex;
@@ -74,6 +74,6 @@
     height: 100%;
     padding: 21px 26px;
     overflow: auto;
-    border-bottom: $tableBorder;
+    border-bottom: $secondaryBorder;
   }
 }

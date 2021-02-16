@@ -1,6 +1,6 @@
-@import '../../scss/colors.scss';
-@import '../../scss/borders.scss';
-@import '../../scss/shadows.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
 
 .item-artifacts__modal-preview {
   position: fixed;
@@ -67,7 +67,7 @@
       align-items: center;
       padding: 10px;
       color: $mulledWine;
-      border-bottom: $tableBorder;
+      border-bottom: $secondaryBorder;
 
       .item {
         &-data {

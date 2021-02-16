@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../../scss/variables';
 @import '../../scss/colors';
 @import '../../scss/borders';
 
@@ -9,8 +9,7 @@
   align-items: center;
 
   .input-wrapper {
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin: 7px 15px 7px 0;
 
     .input {
       width: 200px;
@@ -20,12 +19,12 @@
   }
 
   .select {
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin: 7px 15px 7px 0;
   }
 
   .filters-checkbox {
-    margin-bottom: 15px;
+    margin-top: 7px;
+    margin-bottom: 7px;
   }
 
   .period-filter {
@@ -33,32 +32,6 @@
   }
 }
 
-.buttons {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .btn {
-    height: 40px;
-
-    &_expand {
-      width: 40px;
-    }
-
-    &_refresh {
-      width: 40px;
-      padding: 0 8px;
-    }
-
-    &_action {
-      margin: 0 5px;
-    }
-
-    &_icon {
-      &:hover {
-        background-color: $alabaster;
-        border-radius: 20px;
-      }
-    }
-  }
+.actions {
+  margin: 0 10px;
 }

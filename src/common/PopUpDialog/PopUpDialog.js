@@ -11,7 +11,11 @@ const PopUpDialog = ({ children, className, closePopUp, headerText }) => {
 
   return (
     <div className={popUpClassNames}>
-      <div data-testid="pop-up-dialog" className="pop-up-dialog">
+      <div
+        data-testid="pop-up-dialog"
+        className="pop-up-dialog"
+        onClick={event => event.stopPropagation()}
+      >
         <div className="pop-up-dialog__header">
           {headerText && (
             <div
@@ -21,11 +25,9 @@ const PopUpDialog = ({ children, className, closePopUp, headerText }) => {
               {headerText}
             </div>
           )}
-          <Close
-            data-testid="pop-up-close-btn"
-            className="pop-up-dialog__header-close"
-            onClick={closePopUp}
-          />
+          <div className="pop-up-dialog__header-close">
+            <Close data-testid="pop-up-close-btn" onClick={closePopUp} />
+          </div>
         </div>
         {children}
       </div>

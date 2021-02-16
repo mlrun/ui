@@ -460,8 +460,8 @@ export const generateFeatureSetsDetailsMenu = (
   newDetailsMenu,
   selectedItem
 ) => {
-  if (!newDetailsMenu.includes('transforamations')) {
-    newDetailsMenu.splice(1, 0, 'transforamations')
+  if (!newDetailsMenu.includes('transformations')) {
+    newDetailsMenu.splice(1, 0, 'transformations')
   }
 
   if (

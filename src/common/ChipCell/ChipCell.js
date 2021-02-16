@@ -225,7 +225,7 @@ ChipCell.defaultProps = {
 
 ChipCell.propTypes = {
   addChip: PropTypes.func,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
   delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   editChip: PropTypes.func,
   elements: PropTypes.arrayOf(PropTypes.string),

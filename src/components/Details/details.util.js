@@ -5,7 +5,7 @@ import {
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
   DETAILS_CODE_TAB,
-  DETAILS_INFO_TAB,
+  DETAILS_OVERVIEW_TAB,
   DETAILS_INPUTS_TAB,
   DETAILS_LOGS_TAB,
   DETAILS_METADATA_TAB,
@@ -19,7 +19,8 @@ import {
   MODELS_PAGE,
   FEATURE_VECTORS_TAB,
   DETAILS_REQUESTED_FEATURES_TAB,
-  DETAILS_RETURNED_FEATURES_TAB
+  DETAILS_RETURNED_FEATURES_TAB,
+  DETAILS_TRANSFORMATIONS_TAB
 } from '../../constants'
 import { formatDatetime } from '../../utils'
 
@@ -34,6 +35,7 @@ import DetailsMetadata from '../DetailsMetadata/DetailsMetadata'
 import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
 import DetailsStatistics from '../DetailsStatistics/DetailsStatistics'
 import DetailsRequestedFeatures from '../DetailsRequestedFeatures/DetailsRequestedFeatures'
+import DetailsTransformations from '../DetailsTransformations/DetailsTransformations'
 
 export const generateArtifactsContent = (
   editDescription,
@@ -171,7 +173,7 @@ export const renderContent = (
   handlePreview
 ) => {
   switch (match.params.tab?.toUpperCase()) {
-    case DETAILS_INFO_TAB:
+    case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
           changes={detailsState.changes}
@@ -211,6 +213,8 @@ export const renderContent = (
         selectedItem.features ? (
         <DetailsMetadata selectedItem={selectedItem} />
       ) : null
+    case DETAILS_TRANSFORMATIONS_TAB:
+      return <DetailsTransformations selectedItem={selectedItem} />
     case DETAILS_ANALYSIS_TAB:
       if (selectedItem.kind === 'dataset' && selectedItem.extra_data) {
         return (

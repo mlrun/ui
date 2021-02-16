@@ -1,6 +1,6 @@
-@import '../../scss/colors.scss';
-@import '../../scss/borders.scss';
-@import '../../scss/mixins.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/mixins';
 
 .job-panel {
   position: absolute;
@@ -32,8 +32,8 @@
   &__buttons-container {
     display: flex;
     flex: 0.1;
-    justify-content: flex-end;
     align-items: center;
+    justify-content: flex-end;
     margin-top: 16px;
     margin-bottom: 16px;
     padding: 0 40px;
@@ -72,7 +72,7 @@
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: $purple;
+    background: $malibu;
     border-radius: 50%;
 
     svg {
