@@ -62,7 +62,7 @@ const DetailsTransformations = ({ selectedItem }) => {
 
       let nodesEdges = map(edgesMap, (source, target) => {
         return {
-          id: 'e.' + source + '.' + target,
+          id: `e.${source}.${target}`,
           source: source,
           target: target,
           type: 'smoothstep',
@@ -80,7 +80,7 @@ const DetailsTransformations = ({ selectedItem }) => {
             type: 'output'
           })
           nodesEdges.push({
-            id: 'e.' + target.after_state + '.' + target.name,
+            id: `e.${target.after_state}.${target.name}`,
             source: target.after_state,
             target: target.name,
             type: 'smoothstep',
@@ -94,7 +94,7 @@ const DetailsTransformations = ({ selectedItem }) => {
         errorHandlerElement.className += ' error-handler'
 
         return {
-          id: 'e.' + source + '.' + target,
+          id: `e.${source}.${target}`,
           source: source,
           target: target,
           type: 'smoothstep',

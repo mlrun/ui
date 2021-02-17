@@ -31,7 +31,7 @@ const ConfigSource = ({ selectedItem }) => {
             <ChipCell
               elements={map(
                 selectedItem.source?.attributes,
-                (value, key) => key + ': ' + value
+                (value, key) => `${key}: ${value}`
               )}
               tooltip
             />
