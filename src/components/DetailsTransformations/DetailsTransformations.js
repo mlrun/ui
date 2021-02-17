@@ -170,7 +170,7 @@ const DetailsTransformations = ({ selectedItem }) => {
             elements={elements}
             onLoad={onLoad}
             elementsSelectable={false}
-            nodesDraggable={true}
+            nodesDraggable={false}
             nodesConnectable={false}
           />
         </ReactFlowProvider>

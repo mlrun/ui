@@ -40,6 +40,11 @@ const ConfigTargets = ({ steps, targets }) => {
   )
 }
 
+ConfigTargets.defaultProps = {
+  steps: [],
+  targets: []
+}
+
 ConfigTargets.propTypes = {
   steps: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   targets: PropTypes.arrayOf(PropTypes.shape({})).isRequired
