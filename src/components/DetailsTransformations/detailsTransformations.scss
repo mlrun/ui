@@ -1,0 +1,191 @@
+@import '../../scss/borders';
+@import '../../scss/colors';
+
+.transformations-tab {
+  display: flex;
+  flex: 1 1;
+  background-color: $gallery;
+
+  .graph-view {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+
+    .react-flow__renderer {
+      z-index: 3;
+
+      .react-flow__node {
+        width: 130px;
+        height: 50px;
+        padding: 15px 10px;
+        font-size: 14px;
+        border-width: 2px;
+        border-radius: 8px;
+        cursor: unset;
+
+        &:hover {
+          box-shadow: unset;
+        }
+
+        &.react-flow__node-input {
+          color: $white;
+          background-color: $hotPink;
+          border-color: $hotPink;
+          box-shadow: 0 3px 14px rgba($hotPink, 0.34);
+        }
+
+        &.react-flow__node-default {
+          color: $malibu;
+          border-color: $malibu;
+        }
+
+        &.react-flow__node-output {
+          &:not(.error-handler) {
+            color: $white;
+            background-color: $malibu;
+            border-color: $malibu;
+            box-shadow: 0 3px 14px rgba($malibu, 0.5);
+          }
+        }
+
+        &.error-handler {
+          color: rgba($black, 0.2);
+          background-color: $white;
+
+          &:not(.selected) {
+            border-color: $bombay;
+          }
+        }
+
+        &.selected {
+          border-color: $brightTurquoise;
+          box-shadow: 0 4px 20px rgba($brightTurquoise, 0.5);
+        }
+
+        .react-flow__handle {
+          width: 12px;
+          height: 12px;
+          background: $white;
+          border: 2px solid $bombay;
+
+          &-top {
+            top: -6px;
+            visibility: hidden;
+          }
+
+          &-bottom {
+            bottom: -6px;
+          }
+
+          &-left {
+            left: -6px;
+            visibility: hidden;
+          }
+
+          &-right {
+            right: -6px;
+          }
+        }
+      }
+
+      .react-flow__edge-path {
+        stroke: $bombay;
+        stroke-width: 2px;
+      }
+    }
+  }
+
+  .config-pane {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    min-width: 320px;
+    background: $white;
+    border: $secondaryBorder;
+    box-shadow: 0 0 30px rgba($black, 0.15);
+
+    &.scrollable {
+      overflow-y: auto;
+    }
+
+    &__title {
+      padding: 25px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .config-item {
+      height: 50px;
+      border-top: $secondaryBorder;
+
+      &:last-child {
+        border-bottom: $secondaryBorder;
+      }
+
+      &__title {
+        margin-left: 40px;
+        padding: 15px 0;
+        font-size: 16px;
+      }
+
+      &__content {
+        display: none;
+        margin: 10px 15px 10px 40px;
+
+        .row {
+          display: flex;
+          align-items: center;
+          margin: 20px 0;
+
+          &-label {
+            margin-right: 10px;
+            color: $spunPearl;
+            font-weight: bold;
+            white-space: nowrap;
+          }
+
+          &-value {
+            width: 100%;
+          }
+
+          &.radio-buttons-row {
+            margin-right: 10px;
+            margin-left: 10px;
+          }
+
+          &.select-row {
+            justify-content: space-between;
+
+            & > * {
+              width: 50%;
+
+              &:not(:last-child) {
+                margin-right: 10px;
+              }
+            }
+          }
+        }
+      }
+
+      &.open {
+        height: auto;
+
+        .config-item__content {
+          display: block;
+        }
+      }
+
+      .accordion__body {
+        overflow: visible;
+      }
+
+      .expand-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40px;
+        height: 50px;
+      }
+    }
+  }
+}

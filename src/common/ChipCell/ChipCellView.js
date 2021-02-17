@@ -8,37 +8,55 @@ import HiddenChipsBlock from '../../elements/HiddenChipsBlock/HiddenChipsBlock'
 
 import { ReactComponent as Add } from '../../images/add.svg'
 
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
+
 const ChipCellView = React.forwardRef(
   (
     {
-      addChip,
       chips,
       className,
-      editChip,
       editConfig,
-      elements,
+      handleAddNewChip,
+      handleEditChip,
       handleIsEdit,
+      handleRemoveChip,
       handleShowElements,
       isEditMode,
-      removeChip,
       setEditConfig,
       show
     },
     ref
   ) =>
-    (isEditMode || elements.length !== 0) && (
+    (isEditMode || !isEveryObjectValueEmpty(chips)) && (
       <div className="chips-wrapper" ref={ref}>
-        {chips.visibleChips.map((item, index) => {
+        {chips.visibleChips.map((chip, index) => {
+          const { chipLabel, chipValue } = getChipLabelAndValue(chip)
+
           return (
-            <div className={'chip-block'} key={`${item.value}${index}`}>
+            <div className={'chip-block'} key={`${chip.value}${index}`}>
               <Tooltip
                 className="tooltip-wrapper"
-                key={item.value}
+                key={chip.value}
                 template={
                   editConfig.isEdit ? (
                     <span />
                   ) : (
-                    <TextTooltipTemplate text={item.value} />
+                    <TextTooltipTemplate
+                      text={
+                        chip.delimiter && !chip.value.match(/^\+ [\d]+/g) ? (
+                          <span>
+                            {chipLabel}
+                            <span className="chip__delimiter">
+                              {chip.delimiter}
+                            </span>
+                            {chipValue}
+                          </span>
+                        ) : (
+                          chip.value
+                        )
+                      }
+                    />
                   )
                 }
               >
@@ -46,13 +64,13 @@ const ChipCellView = React.forwardRef(
                   chipIndex={index}
                   className={className}
                   editConfig={editConfig}
-                  editChip={editChip}
+                  handleEditChip={handleEditChip}
                   isEditMode={isEditMode}
                   handleIsEdit={handleIsEdit}
-                  removeChip={removeChip}
+                  handleRemoveChip={handleRemoveChip}
                   onClick={handleShowElements}
                   setEditConfig={setEditConfig}
-                  value={item.value}
+                  chip={chip}
                 />
               </Tooltip>
               {chips.visibleChips.length - 1 === index && show && (
@@ -60,11 +78,12 @@ const ChipCellView = React.forwardRef(
                   className={className}
                   chips={chips.hiddenChips}
                   chipIndex={index}
-                  editChip={editChip}
                   editConfig={editConfig}
+                  handleEditChip={handleEditChip}
                   handleIsEdit={handleIsEdit}
+                  handleRemoveChip={handleRemoveChip}
+                  handleShowElements={handleShowElements}
                   isEditMode={isEditMode}
-                  removeChip={removeChip}
                   setEditConfig={setEditConfig}
                 />
               )}
@@ -72,10 +91,7 @@ const ChipCellView = React.forwardRef(
           )
         })}
         {isEditMode && (
-          <button
-            className="job-labels__button-add"
-            onClick={() => addChip(':')}
-          >
+          <button className="button-add" onClick={() => handleAddNewChip(':')}>
             <Add />
           </button>
         )}
@@ -84,12 +100,11 @@ const ChipCellView = React.forwardRef(
 )
 
 ChipCellView.defaultProps = {
-  addChip: () => {},
   chips: {},
   className: '',
   editChip: () => {},
   editConfig: {},
-  elements: [],
+  handleAddNewChip: () => {},
   handleIsEdit: () => {},
   handleShowElements: () => {},
   isEditMode: false,
@@ -99,16 +114,15 @@ ChipCellView.defaultProps = {
 }
 
 ChipCellView.propTypes = {
-  addChip: PropTypes.func,
   chips: PropTypes.shape({}),
   className: PropTypes.string,
-  editChip: PropTypes.func,
   editConfig: PropTypes.shape({}),
-  elements: PropTypes.array,
+  handleAddNewChip: PropTypes.func,
+  handleEditChip: PropTypes.func,
   handleIsEdit: PropTypes.func,
+  handleRemoveChip: PropTypes.func,
   handleShowElements: PropTypes.func,
   isEditMode: PropTypes.bool,
-  removeChip: PropTypes.func,
   setEditConfig: PropTypes.func,
   show: PropTypes.bool
 }

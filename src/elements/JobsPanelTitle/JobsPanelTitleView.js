@@ -95,7 +95,6 @@ const JobsPanelTitleView = ({
                         })
                       }
                       className="job-labels__item"
-                      dispatch={panelDispatch}
                       editChip={chips =>
                         panelDispatch({
                           type: panelActions.EDIT_JOB_LABEL,

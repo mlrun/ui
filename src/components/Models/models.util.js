@@ -11,10 +11,13 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }
 ]
-export const detailsMenu = ['info', 'preview']
-export const filters = ['tree', 'labels', 'name']
-export const page = 'ARTIFACTS'
-export const pageKind = 'models'
+export const detailsMenu = ['overview', 'preview']
+export const filters = [
+  { type: 'tree', label: 'Tree:' },
+  { type: 'labels', label: 'Labels:' },
+  { type: 'name', label: 'Name:' }
+]
+export const page = 'MODELS'
 export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register model'
 export const tableHeaders = [

@@ -9,10 +9,13 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }
 ]
-export const detailsMenu = ['info', 'preview']
-export const filters = ['tree', 'labels', 'name']
-export const page = 'ARTIFACTS'
-export const pageKind = 'files'
+export const detailsMenu = ['overview', 'preview']
+export const filters = [
+  { type: 'tree', label: 'Tree:' },
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
+]
+export const page = 'FILES'
 export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register file'
 export const tableHeaders = [

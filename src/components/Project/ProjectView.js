@@ -241,7 +241,6 @@ const ProjectView = React.forwardRef(
                 <div className="general-info__labels-wrapper">
                   <ChipCell
                     addChip={handleAddProjectLabel}
-                    className="general-info__labels-item"
                     editChip={handleUpdateProjectLabels}
                     elements={projectLabels}
                     isEditMode={true}

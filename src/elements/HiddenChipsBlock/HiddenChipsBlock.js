@@ -5,18 +5,21 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import Chip from '../../common/Chip/Chip'
 
+import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
+
 import './hiddenChipsBlock.scss'
 
 const HiddenChipsBlock = ({
   chipIndex,
   chips,
   className,
-  editChip,
   editConfig,
+  handleEditChip,
   handleIsEdit,
+  handleRemoveChip,
+  handleShowElements,
   isEditMode,
-  setEditConfig,
-  removeChip
+  setEditConfig
 }) => {
   const [isTop, setIsTop] = useState(false)
   const hiddenRef = useRef()
@@ -38,27 +41,52 @@ const HiddenChipsBlock = ({
     }
   }, [hiddenRef, offset])
 
+  useEffect(() => {
+    if (chips.length === 0) {
+      handleShowElements()
+    }
+  })
+
   return (
     <div
       ref={hiddenRef}
       className={`chip-block-hidden ${!isTop ? 'top' : 'bottom'}`}
     >
       {chips?.map((element, index) => {
+        const { chipLabel, chipValue } = getChipLabelAndValue(element)
+
         return (
           <Tooltip
             key={element.value}
-            template={<TextTooltipTemplate text={element.value} />}
+            template={
+              <TextTooltipTemplate
+                text={
+                  element.delimiter ? (
+                    <span>
+                      {chipLabel}
+                      <span className="chip__delimiter">
+                        {element.delimiter}
+                      </span>
+                      {chipValue}
+                    </span>
+                  ) : (
+                    element.value
+                  )
+                }
+              />
+            }
           >
             <Chip
               chipIndex={index + chipIndex}
+              chip={element}
               className={className}
-              editChip={editChip}
               editConfig={editConfig}
+              handleEditChip={handleEditChip}
               handleIsEdit={handleIsEdit}
+              handleRemoveChip={handleRemoveChip}
+              hiddenChips
               isEditMode={isEditMode}
-              removeChip={removeChip}
               setEditConfig={setEditConfig}
-              value={element.value}
             />
           </Tooltip>
         )
@@ -79,14 +107,15 @@ HiddenChipsBlock.defaultProps = {
 }
 
 HiddenChipsBlock.propTypes = {
-  className: PropTypes.string.isRequired,
-  chips: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  className: PropTypes.string,
+  chips: PropTypes.arrayOf(PropTypes.shape({})),
   chipIndex: PropTypes.number,
-  editChip: PropTypes.func,
   editConfig: PropTypes.shape({}),
+  handleEditChip: PropTypes.func,
   handleIsEdit: PropTypes.func,
+  handleRemoveChip: PropTypes.func,
+  handleShowElements: PropTypes.func.isRequired,
   isEditMode: PropTypes.bool,
-  removeChip: PropTypes.func,
   setEditConfig: PropTypes.func
 }
 

@@ -52,21 +52,21 @@ const ArtifactFilterTree = ({
   const handleKeyDown = event => {
     if (event.keyCode === 13) {
       event.preventDefault()
-      const value =
-        event.target.value.length > 0 ? event.target.value : 'latest'
 
-      let searchItem = filterTreeOptions.find(tree =>
-        RegExp(`^${filterTree}`, 'i').test(tree.id)
-      )
+      let searchItem = filterTreeOptions.find(tree => {
+        return filterTree.toLowerCase() === tree.id
+      })
 
       if (match.params.jobId || match.params.name) {
         history.push(
-          `/projects/${match.params.projectName}/${page.toLowerCase()}`
+          `/projects/${match.params.projectName}/${page.toLowerCase()}${
+            match.params.pageTab ? `/${match.params.pageTab}` : ''
+          }`
         )
       }
 
       setFilterTree(searchItem?.label || event.target.value)
-      onChange(searchItem?.id || value)
+      onChange(searchItem?.id || event.target.value)
       event.target.blur()
       setIsDropDownMenu(false)
     }
@@ -106,7 +106,7 @@ const ArtifactFilterTree = ({
       <input
         className="artifact_filter_tree"
         value={filterTree}
-        title={filterTree.length >= 14 ? filterTree : null}
+        title={filterTree?.length >= 14 ? filterTree : null}
         onChange={event => {
           setFilterTree(event.target.value)
         }}

@@ -2,12 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import { JOBS_PAGE, PROJECTS_PAGE, ARTIFACTS_PAGE } from '../../constants.js'
-
-const PageActionsMenu = ({ match, onClick, pageData }) => {
+const PageActionsMenu = ({
+  createJob,
+  match,
+  onClick,
+  registerDialog,
+  registerDialogHeader
+}) => {
   return (
     <>
-      {pageData.page === JOBS_PAGE && (
+      {createJob && (
         <div data-testid="actions-link" className="page-actions-container">
           <Link
             className="btn_secondary btn_small"
@@ -17,16 +21,13 @@ const PageActionsMenu = ({ match, onClick, pageData }) => {
           </Link>
         </div>
       )}
-      {(pageData.page === PROJECTS_PAGE ||
-        pageData.page === ARTIFACTS_PAGE) && (
+      {registerDialog && (
         <div data-testid="actions-button" className="page-actions-container">
           <button
             className="btn_secondary btn_small btn_register"
             onClick={onClick}
           >
-            {pageData.page === PROJECTS_PAGE
-              ? 'New Project'
-              : pageData.registerArtifactDialogTitle}
+            {registerDialogHeader}
           </button>
         </div>
       )}
@@ -35,13 +36,18 @@ const PageActionsMenu = ({ match, onClick, pageData }) => {
 }
 
 PageActionsMenu.defaultProps = {
-  onClick: null
+  createJob: false,
+  onClick: null,
+  registerDialog: false,
+  registerDialogHeader: ''
 }
 
 PageActionsMenu.propTypes = {
+  createJob: PropTypes.bool,
   match: PropTypes.shape({}).isRequired,
   onClick: PropTypes.func,
-  pageData: PropTypes.shape({}).isRequired
+  registerDialog: PropTypes.bool,
+  registerDialogHeader: PropTypes.string
 }
 
 export default PageActionsMenu

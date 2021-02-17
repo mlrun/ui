@@ -3,12 +3,11 @@
 @import '../../scss/borders';
 
 .jobs {
-
   &__parameters {
-    padding: 23px 24px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    padding: 23px 24px;
 
     &__filters {
       display: flex;
@@ -16,17 +15,18 @@
     }
 
     &__select {
-      border-radius: $mainBorderRadius;
-      background-color: transparent;
+      position: relative;
       padding: 10px 50px 10px 69px;
-      border: $primaryBorder;
+      font-weight: normal;
       font-size: 15px;
       line-height: 18px;
-      font-weight: normal;
-      position: relative;
+      background-color: transparent;
+      border: $primaryBorder;
+      border-radius: $mainBorderRadius;
       appearance: none;
 
-      &:active, &:focus {
+      &:active,
+      &:focus {
         outline: none;
         box-shadow: none;
       }
@@ -41,21 +41,21 @@
     }
 
     &__button {
-
       &_search {
-        border: $primaryBorder;
-        border-radius: $mainBorderRadius;
-        background-color: transparent;
         padding: 8px 13px;
         text-align: center;
+        background-color: transparent;
+        border: $primaryBorder;
+        border-radius: $mainBorderRadius;
       }
 
       &_refresh {
-        border: none;
         background-color: transparent;
+        border: none;
         cursor: pointer;
 
-        &:focus, &:active {
+        &:focus,
+        &:active {
           outline: none;
           box-shadow: none;
         }

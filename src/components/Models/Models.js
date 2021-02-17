@@ -12,12 +12,12 @@ import {
   detailsMenu,
   filters,
   page,
-  pageKind,
   registerArtifactDialogTitle,
   tableHeaders,
   infoHeaders
 } from './models.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
+import { filterArtifacts } from '../../utils/filterArtifacts'
 
 const Models = ({
   artifactsStore,
@@ -30,11 +30,11 @@ const Models = ({
   const [models, setModels] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [yamlContent, setYamlContent] = useState([])
   const [pageData] = useState({
     detailsMenu,
     filters,
     page,
-    pageKind,
     registerArtifactDialogTitle,
     tableHeaders,
     infoHeaders
@@ -46,9 +46,11 @@ const Models = ({
         let data = []
 
         if (result) {
-          data = generateArtifacts(result)
+          const filteredModels = filterArtifacts(result)
+          data = generateArtifacts(filteredModels)
 
           setModels(data)
+          setYamlContent(result)
         }
 
         return data
@@ -127,7 +129,7 @@ const Models = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
-        yamlContent={artifactsStore.models}
+        yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup

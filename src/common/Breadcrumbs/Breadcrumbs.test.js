@@ -89,7 +89,7 @@ describe('Breadcrumbs component', () => {
       match: {
         path: '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
         url:
-          '/projects/default/jobs/monitor/a6422d0d93d24a8f91059992a6b1529e/info',
+          '/projects/default/jobs/monitor/a6422d0d93d24a8f91059992a6b1529e/overview',
         params: {
           jobId: 'a6422d0d93d24a8f91059992a6b1529e',
           pageTab: 'monitor',

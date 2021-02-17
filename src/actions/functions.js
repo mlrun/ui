@@ -32,9 +32,9 @@ const functionsActions = {
   fetchFunctionsBegin: () => ({
     type: FETCH_FUNCTIONS_BEGIN
   }),
-  fetchFunctionsSuccess: jobsList => ({
+  fetchFunctionsSuccess: funcs => ({
     type: FETCH_FUNCTIONS_SUCCESS,
-    payload: jobsList
+    payload: funcs
   }),
   fetchFunctionsFailure: error => ({
     type: FETCH_FUNCTIONS_FAILURE,

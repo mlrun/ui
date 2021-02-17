@@ -5,27 +5,34 @@
   .download {
     cursor: pointer;
     fill: $white;
+
     &:hover {
       fill: $alabaster;
     }
   }
+
   .downloading {
     cursor: pointer;
-    fill: $purple;
+    fill: $malibu;
+
     &:hover {
       fill: $cornflowerBlue;
     }
   }
+
   .download-container {
     transform: translate(8px, 8px);
+
     rect {
       fill: $topaz;
       //width: 9.05318px;
       //height: 1.50886px;
     }
   }
+
   .cancel_container {
     transform: translate(14px, 14px);
+
     rect {
       fill: $white;
     }

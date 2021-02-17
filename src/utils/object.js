@@ -1,2 +1,4 @@
 export const parseKeyValues = (object = {}) =>
-  Object.entries(object).map(([key, value]) => `${key}: ${value}`)
+  object == null
+    ? []
+    : Object.entries(object).map(([key, value]) => `${key}: ${value}`)

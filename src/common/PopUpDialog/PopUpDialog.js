@@ -1,14 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 
 import './popUpDialog.scss'
 
-const PopUpDialog = ({ children, closePopUp, headerText }) => {
+const PopUpDialog = ({ children, className, closePopUp, headerText }) => {
+  const popUpClassNames = classnames(className, 'pop-up-dialog__overlay')
+
   return (
-    <div className="pop-up-dialog__overlay">
-      <div data-testid="pop-up-dialog" className="pop-up-dialog">
+    <div className={popUpClassNames}>
+      <div
+        data-testid="pop-up-dialog"
+        className="pop-up-dialog"
+        onClick={event => event.stopPropagation()}
+      >
         <div className="pop-up-dialog__header">
           {headerText && (
             <div
@@ -18,11 +25,9 @@ const PopUpDialog = ({ children, closePopUp, headerText }) => {
               {headerText}
             </div>
           )}
-          <Close
-            data-testid="pop-up-close-btn"
-            className="pop-up-dialog__header-close"
-            onClick={closePopUp}
-          />
+          <div className="pop-up-dialog__header-close">
+            <Close data-testid="pop-up-close-btn" onClick={closePopUp} />
+          </div>
         </div>
         {children}
       </div>
@@ -30,7 +35,13 @@ const PopUpDialog = ({ children, closePopUp, headerText }) => {
   )
 }
 
+PopUpDialog.defaultProps = {
+  className: '',
+  headerText: ''
+}
+
 PopUpDialog.propTypes = {
+  className: PropTypes.string,
   closePopUp: PropTypes.func.isRequired,
   headerText: PropTypes.string
 }

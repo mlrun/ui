@@ -7,7 +7,7 @@ export const formatDatetime = (datetime, invalidDateMessage) =>
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
-      }).format(datetime)
+      }).format(new Date(datetime))
 
 export const getFormatTime = time => {
   const [hour, minute] = time.split(':')

@@ -9,16 +9,11 @@
 
   position: relative;
   min-height: 600px;
-  border-top: $tableBorder;
-
-  &_opened {
-    height: 72vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
+  border-top: $secondaryBorder;
 
   &__content {
     width: 100%;
+    height: 100%;
 
     .jobs {
       &_medium {
@@ -46,7 +41,7 @@
 
     .artifacts {
       &_medium {
-        max-width: 245px;
+        max-width: 235px;
 
         @include tableColumnFlex(1, 235px);
       }
@@ -72,6 +67,12 @@
       &__icon {
         justify-content: center;
       }
+
+      &__targets-icon {
+        .tooltip-wrapper {
+          margin-right: 8px;
+        }
+      }
     }
 
     .functions {
@@ -94,7 +95,7 @@
     top: 0;
     z-index: 2;
     display: flex;
-    background-color: white;
+    background-color: $white;
 
     &__item {
       flex: 1;
@@ -179,7 +180,7 @@
 
       .expand-arrow {
         position: absolute;
-        left: 10px;
+        left: 35px;
         cursor: pointer;
       }
 
@@ -223,7 +224,7 @@
               position: sticky;
               top: 45px;
               z-index: 1;
-              background-color: white;
+              background-color: $white;
 
               .table-body__cell {
                 border-bottom: none;
@@ -250,20 +251,24 @@
           }
         }
       }
+
+      .checkbox {
+        position: absolute;
+        left: 8px;
+        margin: 0;
+      }
     }
 
     &__parameters {
-      @include chip($parametersBorder);
+      border: $parametersBorder;
     }
 
     &__results {
-      @include chip($resultsBorder);
-
-      display: flex;
+      border: $resultsBorder;
     }
 
     &__labels {
-      @include chip($labelBorder);
+      border: $labelBorder;
     }
   }
 
@@ -310,5 +315,10 @@
 
   .row_active {
     background-color: $alabaster;
+  }
+
+  .error-container {
+    justify-content: center;
+    width: 100%;
   }
 }

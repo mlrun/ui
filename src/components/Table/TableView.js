@@ -10,11 +10,21 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import NoData from '../../common/NoData/NoData'
 
-import { JOBS_PAGE, ARTIFACTS_PAGE, FUNCTIONS_PAGE } from '../../constants'
+import {
+  ARTIFACTS_PAGE,
+  FEATURE_STORE_PAGE,
+  FEATURES_TAB,
+  FILES_PAGE,
+  FUNCTIONS_PAGE,
+  JOBS_PAGE,
+  MODELS_PAGE
+} from '../../constants'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const TableView = ({
+  applyDetailsChanges,
+  cancelRequest,
   content,
   groupFilter,
   groupLatestItem,
@@ -23,9 +33,13 @@ const TableView = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
+  mainRowItemsCount,
   match,
   pageData,
+  retryRequest,
   selectedItem,
+  selectedRowId,
+  setSelectedRowId,
   tableContent,
   toggleConvertToYaml,
   workflows
@@ -49,9 +63,7 @@ const TableView = ({
 
   return (
     <div className="table">
-      <div
-        className={`table__content ${!isEmpty(selectedItem) && 'table_opened'}`}
-      >
+      <div className="table__content">
         <div className="table-head">
           {pageData.tableHeaders.map((item, index) => (
             <div
@@ -71,6 +83,9 @@ const TableView = ({
             tableContent.map((rowItem, i) => {
               switch (pageData.page) {
                 case ARTIFACTS_PAGE:
+                case FILES_PAGE:
+                case MODELS_PAGE:
+                case FEATURE_STORE_PAGE:
                   return (
                     <ArtifactsTableRow
                       actionsMenu={actionsMenu}
@@ -82,6 +97,9 @@ const TableView = ({
                       rowItem={rowItem}
                       pageData={pageData}
                       selectedItem={selectedItem}
+                      selectedRowId={selectedRowId}
+                      setSelectedRowId={setSelectedRowId}
+                      withCheckbox={match.params.pageTab === FEATURES_TAB}
                     />
                   )
                 case FUNCTIONS_PAGE:
@@ -131,6 +149,26 @@ const TableView = ({
                     tableContent={group}
                   />
                 )
+              } else if (pageData.page === FEATURE_STORE_PAGE) {
+                return (
+                  <ArtifactsTableRow
+                    actionsMenu={actionsMenu}
+                    content={content}
+                    handleSelectItem={handleSelectItem}
+                    handleExpandRow={handleExpandRow}
+                    index={i}
+                    key={i}
+                    mainRowItemsCount={mainRowItemsCount}
+                    match={match}
+                    rowItem={groupLatestItem[i]}
+                    pageData={pageData}
+                    selectedItem={selectedItem}
+                    tableContent={group}
+                    selectedRowId={selectedRowId}
+                    setSelectedRowId={setSelectedRowId}
+                    withCheckbox={match.params.pageTab === FEATURES_TAB}
+                  />
+                )
               } else {
                 return (
                   <JobsTableRow
@@ -158,12 +196,14 @@ const TableView = ({
       {!isEmpty(selectedItem) && (
         <Details
           actionsMenu={actionsMenu}
+          applyDetailsChanges={applyDetailsChanges}
+          cancelRequest={cancelRequest}
           detailsMenu={pageData.detailsMenu}
           handleCancel={handleCancel}
           handleSelectItem={handleSelectItem}
           match={match}
           pageData={pageData}
-          pageKind={pageData.pageKind}
+          retryRequest={retryRequest}
           selectedItem={selectedItem}
         />
       )}
@@ -172,21 +212,29 @@ const TableView = ({
 }
 
 TableView.defaultProps = {
-  groupLatestJob: {}
+  applyDetailsChanges: () => {},
+  groupLatestJob: {},
+  selectedRowId: '',
+  setSelectedRowId: () => {},
+  withCheckbox: false
 }
 
 TableView.propTypes = {
+  applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
   tableContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
   ]).isRequired,
-  toggleConvertToYaml: PropTypes.func.isRequired
+  toggleConvertToYaml: PropTypes.func.isRequired,
+  withCheckbox: PropTypes.bool
 }
 
 export default TableView

@@ -88,7 +88,7 @@ const App = () => {
             <Redirect
               exact
               from="/projects/:projectName/feature-store"
-              to="/projects/:projectName/feature-store/datasets"
+              to="/projects/:projectName/feature-store/feature-sets"
             />
             <Route
               exact
@@ -98,6 +98,11 @@ const App = () => {
             <Route
               exact
               path="/projects/:projectName/feature-store/:pageTab/:name/:tab"
+              render={routeProps => <FeatureStore {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/feature-store/:pageTab/:name/:tag/:tab"
               render={routeProps => <FeatureStore {...routeProps} />}
             />
             <Route

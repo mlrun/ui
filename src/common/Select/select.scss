@@ -1,4 +1,4 @@
-@import '../../scss/mixins.scss';
+@import '../../scss/mixins';
 @import '../../scss/colors';
 @import '../../scss/borders';
 @import '../../scss/shadows';
@@ -18,6 +18,13 @@
     background: $alabaster;
   }
 
+  &__caret {
+    position: absolute;
+    top: 50%;
+    right: 2px;
+    transform: translate(0%, -50%);
+  }
+
   &.without-border {
     border: none;
 
@@ -29,6 +36,15 @@
       .select__caret {
         display: block;
       }
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+
+    .select__label,
+    .select__value {
+      color: $spunPearl;
     }
   }
 
@@ -73,19 +89,13 @@
     text-overflow: ellipsis;
   }
 
-  &__caret {
-    position: absolute;
-    top: 50%;
-    right: 2px;
-    transform: translate(0%, -50%);
-  }
-
   &__header {
     position: relative;
     display: flex;
     align-items: center;
     width: 100%;
     height: 100%;
+    overflow: hidden;
   }
 
   &__body {
@@ -100,6 +110,11 @@
     border: $primaryBorder;
     border-radius: 2px;
     box-shadow: $filterShadow;
+  }
+
+  .actions {
+    position: absolute;
+    right: 25px;
   }
 
   .disabled {
@@ -119,5 +134,10 @@
     z-index: 5;
     width: 100%;
     height: 100%;
+  }
+
+  .pop-up-dialog__overlay {
+    top: 100%;
+    right: calc(100% + 10px);
   }
 }

@@ -11,8 +11,16 @@
     { "label": "Labels", "id": "labels" },
     { "label": "Sources", "id": "sources" }
   ],
-  "detailsMenu": ["info", "preview"],
-  "filters": ["period", "tree", "labels", "name"],
+  "detailsMenu": ["overview", "preview"],
+  "filters": [
+    {
+      "type": "period",
+      "label": "period"
+    },
+    { "type": "tree", "label": "Tree:" },
+    { "type": "name", "label": "Name:" },
+    { "type": "labels", "label": "Labels:" }
+  ],
   "page": "ARTIFACTS",
   "sources": ["name", "path"],
   "tableHeaders": [

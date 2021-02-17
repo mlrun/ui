@@ -1,6 +1,11 @@
-import { FUNCTIONS_PAGE, JOBS_PAGE } from '../constants'
+import {
+  FEATURE_STORE_PAGE,
+  FEATURES_TAB,
+  FUNCTIONS_PAGE,
+  JOBS_PAGE
+} from '../constants'
 
-export const generateGroupLatestItem = (page, tableContent) =>
+export const generateGroupLatestItem = (page, tableContent, pageTab) =>
   tableContent?.map(group =>
     Array.isArray(group) && [FUNCTIONS_PAGE, JOBS_PAGE].includes(page)
       ? group.reduce((prev, curr) => {
@@ -17,5 +22,9 @@ export const generateGroupLatestItem = (page, tableContent) =>
             ? prev
             : curr
         })
-      : group
+      : Array.isArray(group) &&
+        [FEATURE_STORE_PAGE].includes(page) &&
+        ![FEATURES_TAB].includes(pageTab)
+      ? group.find(groupItem => groupItem.version?.value === 'latest')
+      : group[0]
   )

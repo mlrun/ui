@@ -10,11 +10,13 @@ import Notification from '../../common/Notification/Notification'
 import createJobsContent from '../../utils/createJobsContent'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
-import { FUNCTIONS_PAGE, JOBS_PAGE, SCHEDULE_TAB } from '../../constants'
+import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
 
 import './table.scss'
 
 const Table = ({
+  applyDetailsChanges,
+  cancelRequest,
   content,
   groupFilter,
   groupedByName,
@@ -24,14 +26,18 @@ const Table = ({
   handleSelectItem,
   match,
   pageData,
+  retryRequest,
   selectedItem,
+  selectedRowId,
+  setSelectedRowId,
   setLoading,
   toggleConvertToYaml
 }) => {
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
     groupWorkflowItems: [],
-    content: []
+    content: [],
+    mainRowItemsCount: 1
   })
 
   const previewArtifact = useSelector(
@@ -49,53 +55,52 @@ const Table = ({
       groupedByWorkflow,
       groupFilter,
       pageData.page,
-      pageData.pageKind,
-      match.params.pageTab === SCHEDULE_TAB,
+      match,
       setLoading
     )
-    let groupLatest = []
-    let groupWorkflowItem = []
 
     if (groupFilter === 'name') {
-      groupLatest = generateGroupLatestItem(
-        pageData.page,
-        generatedTableContent
-      )
+      setTableContent({
+        content: generatedTableContent,
+        groupLatestItem: generateGroupLatestItem(
+          pageData.page,
+          generatedTableContent,
+          match.params.pageTab
+        ),
+        groupWorkflowItems: [],
+        mainRowItemsCount: pageData.mainRowItemsCount ?? 1
+      })
     } else if (groupFilter === 'workflow') {
-      groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
+      let groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
         workflows.find(workflow => workflow.id === workflowId)
       )
-    }
 
-    setTableContent({
-      content: generatedTableContent,
-      groupLatestItem: groupLatest,
-      groupWorkflowItems: createJobsContent(
-        groupWorkflowItem,
-        groupedByWorkflow
-      )
-    })
-  }, [
-    content,
-    groupedByName,
-    groupFilter,
-    groupedByWorkflow,
-    workflows,
-    pageData.page,
-    setLoading,
-    match.params.pageTab,
-    pageData.pageKind
-  ])
-
-  useEffect(() => {
-    if (groupFilter === 'none') {
+      setTableContent({
+        content: generatedTableContent,
+        groupLatestItem: [],
+        groupWorkflowItems: createJobsContent(
+          groupWorkflowItem,
+          groupedByWorkflow
+        )
+      })
+    } else if (!groupFilter || groupFilter === 'none') {
       setTableContent({
         groupLatestItem: [],
         groupWorkflowItems: [],
-        content: []
+        content: generatedTableContent
       })
     }
-  }, [groupFilter, match.params.pageTab])
+  }, [
+    content,
+    groupFilter,
+    groupedByWorkflow,
+    groupedByName,
+    match,
+    pageData.page,
+    setLoading,
+    workflows,
+    pageData.mainRowItemsCount
+  ])
 
   useEffect(() => {
     if (tableContent.content.length && setLoading) {
@@ -106,6 +111,8 @@ const Table = ({
   return (
     <>
       <TableView
+        applyDetailsChanges={applyDetailsChanges}
+        cancelRequest={cancelRequest}
         content={content}
         groupFilter={groupFilter}
         groupLatestItem={
@@ -118,9 +125,13 @@ const Table = ({
         handleCancel={handleCancel}
         handleExpandRow={handleExpandRow}
         handleSelectItem={handleSelectItem}
+        mainRowItemsCount={tableContent.mainRowItemsCount}
         match={match}
         pageData={pageData}
+        retryRequest={retryRequest}
         selectedItem={selectedItem}
+        selectedRowId={selectedRowId}
+        setSelectedRowId={setSelectedRowId}
         tableContent={tableContent.content}
         toggleConvertToYaml={toggleConvertToYaml}
         workflows={workflows}
@@ -134,15 +145,19 @@ const Table = ({
 }
 
 Table.defaultProps = {
+  applyDetailsChanges: () => {},
   groupedByName: {},
   groupFilter: null,
   groupLatestJob: [],
   handleExpandRow: () => {},
   selectedItem: {},
+  selectedRowId: '',
+  setSelectedRowId: () => {},
   setLoading: null
 }
 
 Table.propTypes = {
+  applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   groupFilter: PropTypes.string,
   groupedByName: PropTypes.shape({}),
@@ -152,6 +167,8 @@ Table.propTypes = {
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
+  selectedRowId: PropTypes.string,
+  setSelectedRowId: PropTypes.func,
   setLoading: PropTypes.func,
   toggleConvertToYaml: PropTypes.func.isRequired
 }

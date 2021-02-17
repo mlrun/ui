@@ -14,10 +14,10 @@
   display: flex;
   align-items: center;
   text-align: left;
-  border-bottom: $tableBorder;
+  border-bottom: $secondaryBorder;
 
   &:first-child {
-    padding-left: 56px;
+    padding-left: 67px;
   }
 }
 
@@ -26,21 +26,6 @@
   font-weight: bold;
   font-size: 14px;
   line-height: 24px;
-}
-
-@mixin chip($border) {
-  display: inline-flex;
-  align-items: center;
-  margin: 5px 2px;
-  padding: 8px 14px;
-  color: $mulledWine;
-  font-size: 14px;
-  line-height: 16px;
-  white-space: nowrap;
-  background-color: transparent;
-  border: $border;
-  border-radius: 16px;
-  cursor: default;
 }
 
 @mixin jobsFilter($item, $left) {
@@ -118,7 +103,7 @@
 @mixin jobsPanelTable {
   position: relative;
   width: 100%;
-  border-bottom: $tableBorder;
+  border-bottom: $secondaryBorder;
 
   .table {
     &__header {

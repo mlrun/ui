@@ -1,4 +1,4 @@
-@import '../../scss/colors.scss';
+@import '../../scss/colors';
 
 .checkbox {
   display: flex;
@@ -11,7 +11,7 @@
 
     &.checked {
       path {
-        fill: $purple;
+        fill: $malibu;
       }
     }
 

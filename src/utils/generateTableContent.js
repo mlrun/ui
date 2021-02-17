@@ -1,6 +1,14 @@
 import { isEmpty, map } from 'lodash'
 
-import { ARTIFACTS_PAGE, JOBS_PAGE } from '../constants'
+import {
+  ARTIFACTS_PAGE,
+  FEATURE_STORE_PAGE,
+  FILES_PAGE,
+  FUNCTIONS_PAGE,
+  JOBS_PAGE,
+  MODELS_PAGE,
+  SCHEDULE_TAB
+} from '../constants'
 import createJobsContent from './createJobsContent'
 import createFunctionsContent from './createFunctionsContent'
 import createArtifactsContent from './createArtifactsContent'
@@ -11,8 +19,7 @@ export const generateTableContent = (
   groupedByWorkflow,
   groupFilter,
   page,
-  pageKind,
-  scheduled,
+  match,
   setLoading
 ) => {
   if (!isEmpty(groupedByName) && groupFilter === 'name') {
@@ -21,7 +28,14 @@ export const generateTableContent = (
     return map(groupedByName, group =>
       page === JOBS_PAGE
         ? createJobsContent(group, false)
-        : createFunctionsContent(group)
+        : page === FUNCTIONS_PAGE
+        ? createFunctionsContent(group)
+        : createArtifactsContent(
+            group,
+            page,
+            match.params.pageTab,
+            match.params.projectName
+          )
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
     setLoading(true)
@@ -31,9 +45,17 @@ export const generateTableContent = (
     setLoading && setLoading(true)
 
     return page === JOBS_PAGE
-      ? createJobsContent(content, false, scheduled)
-      : page === ARTIFACTS_PAGE
-      ? createArtifactsContent(content, pageKind)
+      ? createJobsContent(content, false, match.params.pageTab === SCHEDULE_TAB)
+      : page === ARTIFACTS_PAGE ||
+        page === FILES_PAGE ||
+        page === MODELS_PAGE ||
+        page === FEATURE_STORE_PAGE
+      ? createArtifactsContent(
+          content,
+          page,
+          match.params.pageTab,
+          match.params.projectName
+        )
       : createFunctionsContent(content)
   } else return []
 }

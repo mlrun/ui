@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../../scss/variables';
 @import '../../scss/colors';
 @import '../../scss/borders';
 @import '../../scss/shadows';
@@ -8,8 +8,7 @@
   display: flex;
   width: 200px;
   height: 40px;
-  margin-right: 15px;
-  margin-bottom: 15px;
+  margin: 7px 15px 7px 0;
   color: $mulledWine;
   border: $primaryBorder;
   border-radius: $mainBorderRadius;
