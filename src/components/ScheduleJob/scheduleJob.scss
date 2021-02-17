@@ -1,4 +1,4 @@
-@import '../../scss/colors.scss';
+@import '../../scss/colors';
 @import '../../scss/borders';
 
 .schedule {
@@ -12,9 +12,9 @@
 
     &_item {
       padding: 10px 24px;
+      color: $topaz;
       font-weight: bold;
       cursor: pointer;
-      color: $topaz;
 
       &.active {
         color: $cornflowerBlue;

@@ -7,6 +7,7 @@ import ChipForm from '../../components/ChipForm/ChipForm'
 import { ReactComponent as Close } from '../../images/close.svg'
 
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
+import './chip.scss'
 
 const Chip = ({
   chip,
@@ -22,6 +23,11 @@ const Chip = ({
   setEditConfig
 }) => {
   const chipClassNames = classnames(
+    'chip',
+    className && className,
+    isEditMode && 'editable'
+  )
+  const chipContentClassNames = classnames(
     'chip_short',
     'data-ellipsis',
     hiddenChips && 'chip_hidden'
@@ -42,9 +48,9 @@ const Chip = ({
         value={chip.value.match(/^(?<key>|.+?):\s?(?<value>|.+?)$/)?.groups}
       />
     ) : (
-      <span className={className}>
+      <span className={chipClassNames}>
         <div
-          className={chipClassNames}
+          className={chipContentClassNames}
           onClick={event => handleIsEdit(event, chipIndex)}
         >
           {chip.delimiter ? (
@@ -59,7 +65,7 @@ const Chip = ({
         </div>
         {isEditMode && (
           <button
-            className="job-labels__item-icon-close"
+            className="item-icon-close"
             onClick={() => handleRemoveChip(chipIndex)}
           >
             <Close />
@@ -70,7 +76,7 @@ const Chip = ({
   }
 
   return (
-    <span className={`${className} chips_button`} onClick={onClick}>
+    <span className={`${chipClassNames} chips_button`} onClick={onClick}>
       {chip.value}
     </span>
   )
@@ -91,7 +97,7 @@ Chip.defaultProps = {
 Chip.propTypes = {
   chip: PropTypes.shape({}).isRequired,
   chipIndex: PropTypes.number,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
   editConfig: PropTypes.shape({}),
   handleEditChip: PropTypes.func,
   handleIsEdit: PropTypes.func,

@@ -17,18 +17,18 @@
   &__icon {
     position: absolute;
     right: 0;
-    cursor: pointer;
     z-index: 2;
-    height: 20px;
     width: 30px;
+    height: 20px;
+    cursor: pointer;
 
     &.increase {
       top: 8px;
     }
 
     &.decrease {
-      transform: rotate(180deg);
       bottom: 8px;
+      transform: rotate(180deg);
     }
   }
 }

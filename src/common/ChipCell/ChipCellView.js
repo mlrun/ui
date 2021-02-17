@@ -91,10 +91,7 @@ const ChipCellView = React.forwardRef(
           )
         })}
         {isEditMode && (
-          <button
-            className="job-labels__button-add"
-            onClick={() => handleAddNewChip(':')}
-          >
+          <button className="button-add" onClick={() => handleAddNewChip(':')}>
             <Add />
           </button>
         )}

@@ -27,6 +27,7 @@ import {
   FEATURES_TAB
 } from '../../constants'
 import notificationActions from '../../actions/notification'
+import './featureStore.scss'
 
 const FeatureStore = ({
   artifactsStore,
@@ -301,7 +302,7 @@ const FeatureStore = ({
   }
 
   return (
-    <div ref={featureStoreRef}>
+    <div ref={featureStoreRef} className="feature-store-container">
       {artifactsStore.loading && <Loader />}
       <Content
         applyDetailsChanges={applyDetailsChanges}

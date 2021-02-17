@@ -1,6 +1,6 @@
 @import '../../scss/shadows';
 @import '../../scss/colors';
-@import '../../scss/borders.scss';
+@import '../../scss/borders';
 
 .projects {
   display: flex;
@@ -13,7 +13,7 @@
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
-    padding: 21px 24px;
+    padding: 14px 24px;
     background-color: $white;
     box-shadow: $headerShadow;
   }

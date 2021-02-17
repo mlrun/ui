@@ -1,6 +1,6 @@
-@import '../../scss/colors.scss';
-@import '../../scss/borders.scss';
-@import '../../scss/shadows.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
 
 .date-picker {
   &-container {
@@ -9,14 +9,14 @@
     .date-picker {
       &_body {
         position: absolute;
-        width: 323px;
+        z-index: 5;
         display: flex;
-        justify-content: center;
         flex-direction: column;
+        justify-content: center;
+        width: 323px;
+        padding: 24px;
         background-color: $white;
         border-radius: 2px;
-        padding: 24px;
-        z-index: 5;
         box-shadow: $previewBoxShadow;
 
         &.positionTop {
@@ -28,16 +28,16 @@
         }
 
         &_weeks {
-          flex: 1;
           display: flex;
+          flex: 1;
 
           &_day {
             flex: 1;
             height: 32px;
-            line-height: 32px;
-            text-align: center;
             color: $primary;
             font-weight: 500;
+            line-height: 32px;
+            text-align: center;
           }
         }
 
@@ -62,31 +62,31 @@
           color: $topaz;
 
           &:hover {
-            border-radius: 16px;
-            background-color: $purple;
             color: $white;
+            background-color: $malibu;
+            border-radius: 16px;
             cursor: pointer;
           }
         }
 
         .selected {
-          border-radius: 16px;
-          background-color: $purple;
           color: $white;
+          background-color: $malibu;
+          border-radius: 16px;
         }
       }
 
       &-header {
         display: flex;
         flex: 1;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
         color: $topaz;
 
         &_month {
+          margin-right: 5px;
           letter-spacing: 0.03em;
           text-transform: uppercase;
-          margin-right: 5px;
         }
 
         .previous-month {
@@ -101,13 +101,13 @@
     }
 
     .btn-date-picker {
+      margin-top: 10px;
+      margin-left: auto;
+      color: $cornflowerBlue;
       font-weight: bold;
       font-size: 14px;
       line-height: 24px;
       text-transform: uppercase;
-      color: $cornflowerBlue;
-      margin-top: 10px;
-      margin-left: auto;
     }
   }
 
@@ -115,7 +115,7 @@
     position: relative;
 
     input:focus {
-      border: 1px solid $purple !important;
+      border: 1px solid $malibu !important;
     }
   }
 }

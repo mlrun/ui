@@ -26,17 +26,14 @@ const ChipForm = ({
 
   const labelKeyClassName = classnames(
     className,
-    !editConfig.isKeyFocused && 'job-labels__item_edited'
+    !editConfig.isKeyFocused && 'item_edited'
   )
   const labelContainerClassName = classnames(
     'edit-label-container',
     (editConfig.isEdit || editConfig.isNewChip) && 'edit-label-container_edited'
   )
   const labelValueClassName = classnames(
-    classnames(
-      'input-label-value',
-      !editConfig.isValueFocused && 'job-labels__item_edited'
-    )
+    classnames('input-label-value', !editConfig.isValueFocused && 'item_edited')
   )
 
   useLayoutEffect(() => {

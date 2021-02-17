@@ -1,0 +1,66 @@
+@import '../../scss/colors';
+
+.radio-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  .radio-button {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+
+    .checkmark {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      margin-right: 10px;
+      background-color: transparent;
+      border: 1px solid $malibu;
+      border-radius: 50%;
+
+      &::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: none;
+        width: 8px;
+        height: 8px;
+        background: $malibu;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        content: "";
+      }
+    }
+
+    input {
+      position: absolute;
+      cursor: pointer;
+      opacity: 0;
+
+      &:checked ~ .checkmark {
+        &::after {
+          display: block;
+        }
+      }
+    }
+  }
+
+  &.disabled {
+    color: $spunPearl;
+
+    .radio-button {
+      cursor: not-allowed;
+
+      .checkmark {
+        border-color: rgba($black, 0.2);
+
+        &::after {
+          background: rgba($black, 0.2);
+        }
+      }
+    }
+  }
+}

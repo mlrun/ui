@@ -1,16 +1,16 @@
-@import '../../scss/colors.scss';
-@import '../../scss/borders.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
 
 .edit-label {
   &-container {
     display: inline-flex;
-    margin: 10px 0 10px 10px;
-    padding: 5px;
+    margin: 5px 2px;
+    padding: 7px 9px;
     border: $labelBorder;
-    border-radius: 15px;
+    border-radius: 20px;
 
     &_edited {
-      padding-right: 16px;
+      padding-right: 18px;
       border: $labelEditBorder;
     }
 
@@ -21,7 +21,7 @@
       background-color: transparent;
       border: none;
 
-      &.job-labels__item_edited {
+      &.item_edited {
         &::placeholder {
           color: $spunPearl;
         }

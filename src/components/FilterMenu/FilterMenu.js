@@ -190,15 +190,12 @@ const FilterMenu = ({
           />
         )}
       </div>
-      <div className="buttons">
-        {actionButtonTitle && (
-          <button className="btn btn_primary btn_action">
-            {actionButtonTitle}
-          </button>
-        )}
+      {actionButtonTitle && (
+        <button className="btn_primary btn_small">{actionButtonTitle}</button>
+      )}
+      <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button
-            className="btn btn_refresh btn_icon"
             onClick={() => {
               ![JOBS_PAGE, FUNCTIONS_PAGE].includes(page)
                 ? onChange({
@@ -220,10 +217,7 @@ const FilterMenu = ({
               <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
             }
           >
-            <button
-              onClick={handleExpandAll}
-              className="btn btn_expand btn_icon"
-            >
+            <button onClick={handleExpandAll}>
               {expand ? <Collapse /> : <Expand />}
             </button>
           </Tooltip>

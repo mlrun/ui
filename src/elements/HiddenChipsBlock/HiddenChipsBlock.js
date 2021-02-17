@@ -107,7 +107,7 @@ HiddenChipsBlock.defaultProps = {
 }
 
 HiddenChipsBlock.propTypes = {
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
   chips: PropTypes.arrayOf(PropTypes.shape({})),
   chipIndex: PropTypes.number,
   editConfig: PropTypes.shape({}),
