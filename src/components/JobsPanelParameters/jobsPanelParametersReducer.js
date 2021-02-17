@@ -4,7 +4,7 @@ export const initialState = {
   addNewParameter: false,
   newParameter: {
     name: '',
-    valueType: 'string',
+    valueType: 'str',
     parameterType: panelData.newParameterType[0].id,
     value: ''
   },
@@ -26,12 +26,7 @@ export const jobsPanelParametersReducer = (state, { type, payload }) => {
     case parametersActions.REMOVE_NEW_PARAMETER_DATA:
       return {
         ...state,
-        newParameter: {
-          name: '',
-          value: '',
-          parameterType: panelData.newParameterType[0].id,
-          valueType: 'string'
-        }
+        newParameter: { ...initialState.newParameter }
       }
     case parametersActions.SET_ADD_NEW_PARAMETER:
       return {
