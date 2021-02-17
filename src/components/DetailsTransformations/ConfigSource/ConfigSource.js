@@ -44,7 +44,8 @@ const ConfigSource = ({ selectedItem }) => {
         <div className="row">
           <div className="row-label">Schedule:</div>
           <div className="row-value">
-            {cronstrue.toString(selectedItem.source?.schedule)}
+            {selectedItem.source?.schedule &&
+              cronstrue.toString(selectedItem.source?.schedule)}
           </div>
         </div>
         <div className="row">

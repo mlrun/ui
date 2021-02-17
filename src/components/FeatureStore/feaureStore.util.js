@@ -50,12 +50,6 @@ export const datasetsFilters = [
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
 ]
-export const detailsMenu = ['overview', 'preview']
-export const featureVectorsDetailsMenu = [
-  'overview',
-  'requested features',
-  'preview'
-]
 export const featureSetsFilters = [
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
@@ -213,7 +207,7 @@ export const generatePageData = (
   handleRemoveRequestData
 ) => {
   let data = {
-    detailsMenu,
+    detailsMenu: [],
     page,
     tabs
   }
@@ -235,7 +229,6 @@ export const generatePageData = (
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
     data.infoHeaders = featureVectorsInfoHeaders
-    data.detailsMenu = featureVectorsDetailsMenu
     data.registerArtifactDialogTitle = createFeatureVectorTitle
   } else {
     data.filters = datasetsFilters
@@ -456,69 +449,52 @@ export const checkTabIsValid = (history, match, selectedItem) => {
   }
 }
 
-export const generateFeatureSetsDetailsMenu = (
-  newDetailsMenu,
-  selectedItem
-) => {
-  if (!newDetailsMenu.includes('transformations')) {
-    newDetailsMenu.splice(1, 0, 'transformations')
-  }
+export const generateFeatureSetsDetailsMenu = selectedItem => {
+  const detailsMenu = [
+    { header: 'overview', visible: true },
+    {
+      header: 'features',
+      visible: Boolean(
+        selectedItem.item?.entities && selectedItem.item?.features
+      )
+    },
+    { header: 'transformations', visible: true },
+    { header: 'preview', visible: true },
+    { header: 'statistics', visible: Boolean(selectedItem.item?.stats) },
+    { header: 'analysis', visible: true }
+  ]
 
-  if (
-    selectedItem.item?.entities &&
-    selectedItem.item?.features &&
-    !newDetailsMenu.includes('features')
-  ) {
-    newDetailsMenu.splice(1, 0, 'features')
-  }
-
-  if (selectedItem.item?.stats && !newDetailsMenu.includes('statistics')) {
-    newDetailsMenu.splice(newDetailsMenu.length - 1, 0, 'statistics')
-  }
-
-  if (!newDetailsMenu.includes('analysis')) {
-    newDetailsMenu.push('analysis')
-  }
-
-  return newDetailsMenu
+  return detailsMenu.filter(item => item.visible).map(item => item.header)
 }
 
-export const generateFeatureVectorsDetailsMenu = (
-  newDetailsMenu,
-  selectedItem
-) => {
-  if (
-    selectedItem.item?.features &&
-    !newDetailsMenu.includes('returned features')
-  ) {
-    newDetailsMenu.splice(2, 0, 'returned features')
-  }
+export const generateFeatureVectorsDetailsMenu = selectedItem => {
+  const detailsMenu = [
+    { header: 'overview', visible: true },
+    { header: 'requested features', visible: true },
+    {
+      header: 'returned features',
+      visible: Boolean(selectedItem.item?.features)
+    },
+    { header: 'preview', visible: true },
+    {
+      header: 'statistics',
+      visible: Boolean(selectedItem.item?.stats && selectedItem.item?.features)
+    },
+    { header: 'analysis', visible: true }
+  ]
 
-  if (
-    selectedItem.item?.stats &&
-    selectedItem.item?.features &&
-    !newDetailsMenu.includes('statistics')
-  ) {
-    newDetailsMenu.splice(newDetailsMenu.length - 1, 0, 'statistics')
-  }
-
-  if (!newDetailsMenu.includes('analysis')) {
-    newDetailsMenu.push('analysis')
-  }
-
-  return newDetailsMenu
+  return detailsMenu.filter(item => item.visible).map(item => item.header)
 }
 
-export const generateDataSetsDetailsMenu = (newDetailsMenu, selectedItem) => {
-  if (selectedItem.item?.schema && !newDetailsMenu.includes('metadata')) {
-    newDetailsMenu.push('metadata')
-  }
+export const generateDataSetsDetailsMenu = selectedItem => {
+  const detailsMenu = [
+    { header: 'overview', visible: true },
+    { header: 'preview', visible: true },
+    { header: 'metadata', visible: Boolean(selectedItem.item?.schema) },
+    { header: 'analysis', visible: Boolean(selectedItem.item?.extra_data) }
+  ]
 
-  if (selectedItem.item?.extra_data && !newDetailsMenu.includes('analysis')) {
-    newDetailsMenu.push('analysis')
-  }
-
-  return newDetailsMenu
+  return detailsMenu.filter(item => item.visible).map(item => item.header)
 }
 
 export const fetchFeatureRowData = async (

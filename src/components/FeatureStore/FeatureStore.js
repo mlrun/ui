@@ -223,35 +223,24 @@ const FeatureStore = ({
     checkTabIsValid(history, match, selectedItem)
 
     setPageData(state => {
-      const newDetailsMenu = [...state.detailsMenu]
-
       if (match.params.pageTab === FEATURE_SETS_TAB) {
         return {
           ...state,
-          detailsMenu: [
-            ...generateFeatureSetsDetailsMenu(newDetailsMenu, selectedItem)
-          ]
+          detailsMenu: [...generateFeatureSetsDetailsMenu(selectedItem)]
         }
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
         return {
           ...state,
-          detailsMenu: [
-            ...generateFeatureVectorsDetailsMenu(newDetailsMenu, selectedItem)
-          ]
+          detailsMenu: [...generateFeatureVectorsDetailsMenu(selectedItem)]
         }
       } else if (match.params.pageTab === DATASETS_TAB) {
         return {
           ...state,
-          detailsMenu: [
-            ...generateDataSetsDetailsMenu(newDetailsMenu, selectedItem)
-          ]
+          detailsMenu: [...generateDataSetsDetailsMenu(selectedItem)]
         }
       }
 
-      return {
-        ...state,
-        detailsMenu: [...newDetailsMenu]
-      }
+      return { ...state }
     })
   }, [
     history,

@@ -123,6 +123,7 @@ const ConfigSteps = ({
         <Select
           floatingLabel
           label="Selected step"
+          disabled={steps.length === 0}
           onClick={onSelectStep}
           options={steps}
           selectedId={selectedStep}
@@ -208,6 +209,20 @@ const ConfigSteps = ({
       </div>
     </Accordion>
   )
+}
+
+ConfigSteps.defaultProps = {
+  afterSteps: [],
+  errorSteps: [],
+  selectedAfterStep: '',
+  selectedErrorStep: '',
+  selectedStep: '',
+  setSelectedAfterStep: () => {},
+  setSelectedErrorStep: () => {},
+  setSelectedStep: () => {},
+  setStates: () => {},
+  states: {},
+  steps: []
 }
 
 ConfigSteps.propTypes = {
