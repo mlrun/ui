@@ -55,7 +55,9 @@ const DetailsView = ({
     <div className="table__item">
       <div className="item-header__data">
         <h3>
-          {selectedItem.name || selectedItem.db_key || selectedItem.endpoint.id}
+          {selectedItem.name ||
+            selectedItem.db_key ||
+            selectedItem.endpoint?.id}
         </h3>
         <span>
           {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE

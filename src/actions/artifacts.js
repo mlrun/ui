@@ -115,6 +115,170 @@ const artifactsAction = {
     return artifactsApi
       .getModelEndpoints(item)
       .then(({ data }) => {
+        data = {
+          endpoints: [
+            {
+              endpoint: {
+                kind: 'model-endpoint',
+                metadata: {
+                  project: 'test',
+                  tag: 'v44',
+                  labels: {
+                    L: 20,
+                    Q: 66,
+                    r: 16,
+                    j: 71
+                  }
+                },
+                spec: {
+                  model: 'model_71',
+                  function: 'function_91',
+                  model_class: 'classifier'
+                },
+                status: {
+                  state: 'active'
+                },
+                id: 'test.8d6a27af1ec985efea9d3e4b1d8d08a7'
+              },
+              first_request: null,
+              last_request: null,
+              accuracy: null,
+              error_count: null,
+              alert_count: null,
+              drift_status: null,
+              metrics: null,
+              features: null
+            },
+            {
+              endpoint: {
+                kind: 'model-endpoint',
+                metadata: {
+                  project: 'test',
+                  tag: 'v53',
+                  labels: {
+                    q: 20,
+                    p: 64,
+                    D: 41,
+                    s: 59
+                  }
+                },
+                spec: {
+                  model: 'model_70',
+                  function: 'function_66',
+                  model_class: 'classifier'
+                },
+                status: {
+                  state: 'active'
+                },
+                id: 'test.878b8f085a1e6ee5a0545a8655016846'
+              },
+              first_request: null,
+              last_request: null,
+              accuracy: null,
+              error_count: null,
+              alert_count: null,
+              drift_status: null,
+              metrics: null,
+              features: null
+            },
+            {
+              endpoint: {
+                kind: 'model-endpoint',
+                metadata: {
+                  project: 'test',
+                  tag: 'v70',
+                  labels: {
+                    f: 65,
+                    v: 10,
+                    s: 36,
+                    o: 47
+                  }
+                },
+                spec: {
+                  model: 'model_95',
+                  function: 'function_90',
+                  model_class: 'classifier'
+                },
+                status: {
+                  state: 'active'
+                },
+                id: 'test.b8e161209ce64611437d95bf56129a47'
+              },
+              first_request: null,
+              last_request: null,
+              accuracy: null,
+              error_count: null,
+              alert_count: null,
+              drift_status: null,
+              metrics: null,
+              features: null
+            },
+            {
+              endpoint: {
+                kind: 'model-endpoint',
+                metadata: {
+                  project: 'test',
+                  tag: 'v31',
+                  labels: {
+                    v: 72,
+                    m: 56,
+                    K: 50,
+                    U: 33
+                  }
+                },
+                spec: {
+                  model: 'model_33',
+                  function: 'function_13',
+                  model_class: 'classifier'
+                },
+                status: {
+                  state: 'active'
+                },
+                id: 'test.0fd0a8e6da0c0b917022617df7f9c874'
+              },
+              first_request: null,
+              last_request: null,
+              accuracy: null,
+              error_count: null,
+              alert_count: null,
+              drift_status: '-1',
+              metrics: null,
+              features: null
+            },
+            {
+              endpoint: {
+                kind: 'model-endpoint',
+                metadata: {
+                  project: 'test',
+                  tag: 'v78',
+                  labels: {
+                    u: 91,
+                    t: 38,
+                    g: 46,
+                    H: 19
+                  }
+                },
+                spec: {
+                  model: 'model_18',
+                  function: 'function_45',
+                  model_class: 'classifier'
+                },
+                status: {
+                  state: 'active'
+                },
+                id: 'test.6f354925a1398dcfa91dd863c478538a'
+              },
+              first_request: null,
+              last_request: null,
+              accuracy: null,
+              error_count: null,
+              alert_count: null,
+              drift_status: null,
+              metrics: null,
+              features: null
+            }
+          ]
+        }
         dispatch(artifactsAction.fetchModelEndpointsSuccess(data.endpoints))
 
         return data.endpoints

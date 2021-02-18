@@ -185,17 +185,20 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
                   data-testid="separator"
                   ref={separatorRef}
                   onClick={() =>
+                    i + 1 !== urlItems.length - 1 &&
                     handleSeparatorClick(urlItems[i + 1], separatorRef)
                   }
                 />
-                {showScreensList && urlItems[i + 1] === screen && (
-                  <BreadcrumbsDropdown
-                    link={to}
-                    list={projectScreens}
-                    onClick={() => handleSelectDropdownItem(separatorRef)}
-                    selectedItem={screen}
-                  />
-                )}
+                {showScreensList &&
+                  urlItems[i + 1] === screen &&
+                  i + 1 !== urlItems.length - 1 && (
+                    <BreadcrumbsDropdown
+                      link={to}
+                      list={projectScreens}
+                      onClick={() => handleSelectDropdownItem(separatorRef)}
+                      selectedItem={screen}
+                    />
+                  )}
                 {showProjectsList &&
                   urlItems[i + 1] === match.params.projectName && (
                     <BreadcrumbsDropdown

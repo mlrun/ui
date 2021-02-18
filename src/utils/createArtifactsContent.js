@@ -128,33 +128,42 @@ const createModelsRowData = artifact => {
 }
 
 const driftStatusIcons = {
-  '-1': <SeverityOk />,
-  '0': <SeverityWarning />,
-  '1': <SeverityError />
+  '-1': {
+    value: <SeverityOk />,
+    tooltip: 'No drift'
+  },
+  '0': {
+    value: <SeverityWarning />,
+    tooltip: 'Possible drift'
+  },
+  '1': {
+    value: <SeverityError />,
+    tooltip: 'Drift detected'
+  }
 }
 
 const createModelEndpointsRowData = artifact => {
   return {
     key: {
-      value: artifact.endpoint.id,
+      value: artifact.endpoint?.id,
       class: 'artifacts_medium',
       link: 'overview'
     },
     state: {
-      value: artifact.endpoint.status.state,
+      value: artifact.endpoint?.status?.state,
       class: 'artifacts_extra-small',
       type: 'hidden'
     },
     tag: {
-      value: artifact.endpoint.metadata.tag,
+      value: artifact.endpoint?.metadata?.tag,
       class: 'artifacts_extra-small'
     },
     modelClass: {
-      value: artifact.endpoint.spec.model_class,
+      value: artifact.endpoint?.spec?.model_class,
       class: 'artifacts_small'
     },
     labels: {
-      value: parseKeyValues(artifact.endpoint.metadata.labels),
+      value: parseKeyValues(artifact.endpoint?.metadata?.labels),
       class: 'artifacts_big',
       type: 'labels'
     },
@@ -175,8 +184,9 @@ const createModelEndpointsRowData = artifact => {
       class: 'artifacts_small'
     },
     driftStatus: {
-      value: driftStatusIcons[artifact.drift_status],
-      class: 'artifacts_extra-small'
+      value: driftStatusIcons[artifact.drift_status]?.value,
+      class: 'artifacts_extra-small',
+      tooltip: driftStatusIcons[artifact.drift_status]?.tooltip
     },
     accuracy: {
       value: artifact.accuracy ? `${Math.round(artifact.accuracy * 100)}%` : '',

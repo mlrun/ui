@@ -150,7 +150,7 @@ const Content = ({
       yamlContent.filter(yamlContentItem => {
         return item.db_key
           ? isEqual(yamlContentItem.db_key, item.db_key)
-          : isEqual(yamlContentItem.endpoint.id, item.endpoint.id)
+          : isEqual(yamlContentItem.endpoint?.id, item.endpoint?.id)
       })
 
     setConvertedYaml(

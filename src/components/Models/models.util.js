@@ -15,7 +15,7 @@ export const modelsInfoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }
 ]
-export const modelEndpointsInfoHeaders = [{ label: 'Label', id: 'model_class' }]
+export const modelEndpointsInfoHeaders = [{ label: 'Class', id: 'model_class' }]
 export const modelsDetailsMenu = ['overview', 'preview']
 export const modelEndpointsDetailsMenu = ['overview']
 export const modelsFilters = ['tree', 'labels', 'name']
@@ -191,7 +191,7 @@ export const checkForSelectedModelEndpoint = (
   setSelectedModel
 ) => {
   const [searchItem] = modelEndpoints.filter(
-    item => item.endpoint.id === modelEndpointId
+    item => item.endpoint?.id === modelEndpointId
   )
   if (!searchItem) {
     history.push(
