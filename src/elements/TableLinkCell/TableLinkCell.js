@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { capitalize } from 'lodash'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
@@ -32,19 +33,16 @@ const TableLinkCell = ({
     'data-ellipsis',
     link.match(/functions/) && 'function-name'
   )
+  const state = item.state || item.endpoint?.status?.state
 
   return (
     <div className={tableCellClassNames}>
-      {item.state && (
+      {state && (
         <Tooltip
           className="status"
-          template={
-            <TextTooltipTemplate
-              text={`${item.state[0].toUpperCase()}${item.state.slice(1)}`}
-            />
-          }
+          template={<TextTooltipTemplate text={capitalize(state)} />}
         >
-          <i className={item.state} />
+          <i className={state} />
         </Tooltip>
       )}
       <Link

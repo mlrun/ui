@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { capitalize } from 'lodash'
 import classnames from 'classnames'
 
 import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
@@ -53,28 +54,27 @@ const DetailsView = React.forwardRef(
       'btn_border-bottom',
       detailsState.changes.counter === 0 && 'btn_apply-changes_default'
     )
+    const state = selectedItem.state || selectedItem.endpoint?.status?.state
 
     return (
       <div className={detailsPanelClassNames} ref={ref}>
         <div className="item-header__data">
-          <h3>{selectedItem.name || selectedItem.db_key}</h3>
+          <h3>
+            {selectedItem.name ||
+              selectedItem.db_key ||
+              selectedItem.endpoint?.id}
+          </h3>
           <span>
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
               ? formatDatetime(selectedItem?.startTime, 'Not yet started')
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
               : ''}
-            {selectedItem.state && pageData.page === JOBS_PAGE && (
+            {state && (
               <Tooltip
-                template={
-                  <TextTooltipTemplate
-                    text={`${selectedItem.state[0].toUpperCase()}${selectedItem.state.slice(
-                      1
-                    )}`}
-                  />
-                }
+                template={<TextTooltipTemplate text={capitalize(state)} />}
               >
-                <i className={selectedItem.state} />
+                <i className={state} />
               </Tooltip>
             )}
           </span>

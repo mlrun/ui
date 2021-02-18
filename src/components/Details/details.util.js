@@ -20,7 +20,8 @@ import {
   FEATURE_VECTORS_TAB,
   DETAILS_REQUESTED_FEATURES_TAB,
   DETAILS_RETURNED_FEATURES_TAB,
-  DETAILS_TRANSFORMATIONS_TAB
+  DETAILS_TRANSFORMATIONS_TAB,
+  MODEL_ENDPOINTS_TAB
 } from '../../constants'
 import { formatDatetime } from '../../utils'
 
@@ -56,6 +57,12 @@ export const generateArtifactsContent = (
     )
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     return generateFeatureVectorsOverviewContent(selectedItem)
+  } else if (pageTab === MODEL_ENDPOINTS_TAB) {
+    return {
+      model_class: {
+        value: selectedItem.endpoint?.spec?.model_class
+      }
+    }
   } else {
     return {
       hash: {

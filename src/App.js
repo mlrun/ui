@@ -105,14 +105,19 @@ const App = () => {
               path="/projects/:projectName/feature-store/:pageTab/:name/:tag/:tab"
               render={routeProps => <FeatureStore {...routeProps} />}
             />
+            <Redirect
+              exact
+              from="/projects/:projectName/models"
+              to="/projects/:projectName/models/models"
+            />
             <Route
               exact
-              path="/projects/:projectName/models"
+              path="/projects/:projectName/models/:pageTab"
               render={routeProps => <Models {...routeProps} />}
             />
             <Route
               exact
-              path="/projects/:projectName/models/:name/:tab"
+              path="/projects/:projectName/models/:pageTab/:name/:tab"
               render={routeProps => <Models {...routeProps} />}
             />
             <Route

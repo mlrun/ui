@@ -14,7 +14,7 @@
   border-radius: 4px;
   cursor: pointer;
 
-  &.active:not(.without-border) {
+  &_active:not(.without-border) {
     background: $alabaster;
   }
 

@@ -117,9 +117,10 @@ main {
 
 .completed,
 .ready,
+.succeeded,
+.active,
 .created,
-.info,
-.succeeded {
+.info {
   @include jobStatus($brightTurquoise);
 }
 
@@ -132,8 +133,9 @@ main {
 }
 
 .failed,
+.fail,
 .error,
-.fail {
+.broken {
   @include jobStatus($burntSienna);
 }
 

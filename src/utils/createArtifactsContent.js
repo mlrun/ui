@@ -1,4 +1,9 @@
 import React from 'react'
+
+import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
+import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
+import { ReactComponent as SeverityError } from '../images/severity-error.svg'
+
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import {
@@ -9,7 +14,9 @@ import {
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
   FILES_PAGE,
-  MODELS_PAGE
+  MODELS_PAGE,
+  MODEL_ENDPOINTS_TAB,
+  MODELS_TAB
 } from '../constants'
 import { convertBytes } from './convertBytes'
 
@@ -20,24 +27,28 @@ import { ReactComponent as Stream } from '../images/stream.svg'
 import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
 import { ReactComponent as DbIcon } from '../images/db-icon.svg'
 
-const createArtifactsContent = (artifacts, page, featureStoreTab, project) => {
+const createArtifactsContent = (artifacts, page, pageTab, project) => {
   return artifacts.map(artifact => {
     let rowData = []
 
     if (page === ARTIFACTS_PAGE) {
       rowData = createArtifactsRowData(artifact)
     } else if (page === MODELS_PAGE) {
-      rowData = createModelsRowData(artifact)
+      if (pageTab === MODELS_TAB) {
+        rowData = createModelsRowData(artifact)
+      } else if (pageTab === MODEL_ENDPOINTS_TAB) {
+        rowData = createModelEndpointsRowData(artifact)
+      }
     } else if (page === FILES_PAGE) {
       rowData = createFilesRowData(artifact)
     } else if (page === FEATURE_STORE_PAGE) {
-      if (featureStoreTab === DATASETS_TAB) {
+      if (pageTab === DATASETS_TAB) {
         rowData = createDatasetsRowData(artifact)
-      } else if (featureStoreTab === FEATURE_SETS_TAB) {
+      } else if (pageTab === FEATURE_SETS_TAB) {
         rowData = createFeatureSetsRowData(artifact, project)
-      } else if (featureStoreTab === FEATURES_TAB) {
+      } else if (pageTab === FEATURES_TAB) {
         rowData = createFeaturesRowData(artifact)
-      } else if (featureStoreTab === FEATURE_VECTORS_TAB) {
+      } else if (pageTab === FEATURE_VECTORS_TAB) {
         rowData = createFeatureVectorsRowData(artifact, project)
       }
     }
@@ -51,7 +62,7 @@ const createArtifactsRowData = artifact => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: 'info'
+      link: 'overview'
     },
     kind: {
       value: artifact.kind,
@@ -96,7 +107,7 @@ const createModelsRowData = artifact => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: 'info'
+      link: 'overview'
     },
     labels: {
       value: parseKeyValues(artifact.labels),
@@ -137,7 +148,7 @@ const createFilesRowData = artifact => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: 'info'
+      link: 'overview'
     },
     kind: {
       value: artifact.kind,
@@ -181,12 +192,80 @@ const createFilesRowData = artifact => {
   }
 }
 
+const driftStatusIcons = {
+  '-1': {
+    value: <SeverityOk />,
+    tooltip: 'No drift'
+  },
+  '0': {
+    value: <SeverityWarning />,
+    tooltip: 'Possible drift'
+  },
+  '1': {
+    value: <SeverityError />,
+    tooltip: 'Drift detected'
+  }
+}
+
+const createModelEndpointsRowData = artifact => {
+  return {
+    key: {
+      value: artifact.endpoint?.id,
+      class: 'artifacts_medium',
+      link: 'overview'
+    },
+    state: {
+      value: artifact.endpoint?.status?.state,
+      class: 'artifacts_extra-small',
+      type: 'hidden'
+    },
+    tag: {
+      value: artifact.endpoint?.metadata?.tag,
+      class: 'artifacts_extra-small'
+    },
+    modelClass: {
+      value: artifact.endpoint?.spec?.model_class,
+      class: 'artifacts_small'
+    },
+    labels: {
+      value: parseKeyValues(artifact.endpoint?.metadata?.labels),
+      class: 'artifacts_big',
+      type: 'labels'
+    },
+    firstRequest: {
+      value: artifact.first_request
+        ? formatDatetime(new Date(artifact.first_request), 'N/A')
+        : 'N/A',
+      class: 'artifacts_small'
+    },
+    lastRequest: {
+      value: artifact.last_request
+        ? formatDatetime(new Date(artifact.last_request), 'N/A')
+        : 'N/A',
+      class: 'artifacts_small'
+    },
+    errorCount: {
+      value: artifact.error_count,
+      class: 'artifacts_small'
+    },
+    driftStatus: {
+      value: driftStatusIcons[artifact.drift_status]?.value,
+      class: 'artifacts_extra-small',
+      tooltip: driftStatusIcons[artifact.drift_status]?.tooltip
+    },
+    accuracy: {
+      value: artifact.accuracy ? `${Math.round(artifact.accuracy * 100)}%` : '',
+      class: 'artifacts_extra-small'
+    }
+  }
+}
+
 const createDatasetsRowData = artifact => {
   return {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: 'info'
+      link: 'overview'
     },
     labels: {
       value: parseKeyValues(artifact.labels),

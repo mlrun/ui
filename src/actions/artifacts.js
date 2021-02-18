@@ -7,34 +7,37 @@ import {
   FETCH_DATASETS_BEGIN,
   FETCH_DATASETS_FAILURE,
   FETCH_DATASETS_SUCCESS,
+  FETCH_FEATURE_SETS_BEGIN,
+  FETCH_FEATURE_SETS_FAILURE,
+  FETCH_FEATURE_SETS_SUCCESS,
+  FETCH_FEATURE_SUCCESS,
+  FETCH_FEATURE_VECTOR_SUCCESS,
+  FETCH_FEATURE_VECTORS_BEGIN,
+  FETCH_FEATURE_VECTORS_FAILURE,
+  FETCH_FEATURE_VECTORS_SUCCESS,
+  FETCH_FEATURES_BEGIN,
+  FETCH_FEATURES_FAILURE,
+  FETCH_FEATURES_SUCCESS,
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
+  FETCH_MODEL_ENDPOINTS_BEGIN,
+  FETCH_MODEL_ENDPOINTS_FAILURE,
+  FETCH_MODEL_ENDPOINTS_SUCCESS,
   FETCH_MODELS_BEGIN,
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
   REMOVE_DATASETS,
-  SHOW_ARTIFACT_PREVIEW,
-  SET_ARTIFACT_FILTER,
+  REMOVE_FEATURE,
+  REMOVE_FEATURE_SETS,
+  REMOVE_FEATURE_VECTOR,
+  REMOVE_FEATURE_VECTORS,
+  REMOVE_FEATURES,
   REMOVE_FILES,
   REMOVE_MODELS,
-  FETCH_FEATURE_SETS_BEGIN,
-  FETCH_FEATURE_SETS_FAILURE,
-  FETCH_FEATURE_SETS_SUCCESS,
-  FETCH_FEATURES_BEGIN,
-  FETCH_FEATURES_FAILURE,
-  FETCH_FEATURES_SUCCESS,
-  REMOVE_FEATURE_SETS,
-  REMOVE_FEATURES,
-  FETCH_FEATURE_VECTORS_BEGIN,
-  FETCH_FEATURE_VECTORS_FAILURE,
-  FETCH_FEATURE_VECTORS_SUCCESS,
-  REMOVE_FEATURE_VECTORS,
-  FETCH_FEATURE_VECTOR_SUCCESS,
-  REMOVE_FEATURE_VECTOR,
-  FETCH_FEATURE_SUCCESS,
-  REMOVE_FEATURE
+  SET_ARTIFACT_FILTER,
+  SHOW_ARTIFACT_PREVIEW
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
@@ -76,7 +79,7 @@ const artifactsAction = {
     dispatch(artifactsAction.fetchDataSetsBegin())
 
     return artifactsApi
-      .getArtifactsDataSets(project)
+      .getDataSets(project)
       .then(({ data }) => {
         let dataSets = filterArtifacts(data.artifacts)
 
@@ -105,10 +108,10 @@ const artifactsAction = {
       .getFeatureSets(project, config)
       .then(response => {
         dispatch(
-          artifactsAction.fetchFeatureSetsSuccess(response.data.feature_sets)
+          artifactsAction.fetchFeatureSetsSuccess(response.data?.feature_sets)
         )
 
-        return response.data.feature_sets
+        return response.data?.feature_sets
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFeatureSetsFailure(err))
@@ -129,7 +132,7 @@ const artifactsAction = {
     return artifactsApi
       .getFeatureVector(featureVector, project)
       .then(response => {
-        let featureVectors = parseFeatureVectors(response.data.feature_vectors)
+        let featureVectors = parseFeatureVectors(response.data?.feature_vectors)
 
         dispatch(
           artifactsAction.fetchFeatureVectorSuccess({
@@ -137,7 +140,7 @@ const artifactsAction = {
           })
         )
 
-        return response.data.feature_vectors
+        return response.data?.feature_vectors
       })
       .catch(error => {
         throw error
@@ -226,7 +229,7 @@ const artifactsAction = {
     dispatch(artifactsAction.fetchFilesBegin())
 
     return artifactsApi
-      .getArtifactsFiles(project)
+      .getFiles(project)
       .then(({ data }) => {
         let files = filterArtifacts(data.artifacts)
 
@@ -248,11 +251,35 @@ const artifactsAction = {
     type: FETCH_FILES_SUCCESS,
     payload: files
   }),
+  fetchModelEndpoints: item => dispatch => {
+    dispatch(artifactsAction.fetchModelEndpointsBegin())
+
+    return artifactsApi
+      .getModelEndpoints(item)
+      .then(({ data }) => {
+        dispatch(artifactsAction.fetchModelEndpointsSuccess(data.endpoints))
+
+        return data.endpoints
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchModelEndpointsFailure(err))
+      })
+  },
+  fetchModelEndpointsBegin: () => ({
+    type: FETCH_MODEL_ENDPOINTS_BEGIN
+  }),
+  fetchModelEndpointsFailure: () => ({
+    type: FETCH_MODEL_ENDPOINTS_FAILURE
+  }),
+  fetchModelEndpointsSuccess: models => ({
+    type: FETCH_MODEL_ENDPOINTS_SUCCESS,
+    payload: models
+  }),
   fetchModels: project => dispatch => {
     dispatch(artifactsAction.fetchModelsBegin())
 
     return artifactsApi
-      .getArtifactsModels(project)
+      .getModels(project)
       .then(({ data }) => {
         let models = filterArtifacts(data.artifacts)
 

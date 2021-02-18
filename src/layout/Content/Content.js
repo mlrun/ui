@@ -20,6 +20,7 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
+  MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
   PROJECTS_PAGE,
   SCHEDULE_TAB
@@ -63,7 +64,7 @@ const Content = ({
 
   const contentClassName = classnames(
     'content',
-    (pageData.page === JOBS_PAGE || pageData.page === FEATURE_STORE_PAGE) &&
+    [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
       'content_with-menu'
   )
 
@@ -149,7 +150,9 @@ const Content = ({
       pageData.page === MODELS_PAGE
     ) {
       artifactJson = yamlContent.filter(yamlContentItem =>
-        isEqual(yamlContentItem.db_key, item.db_key)
+        item.db_key
+          ? isEqual(yamlContentItem.db_key, item.db_key)
+          : isEqual(yamlContentItem.endpoint?.id, item.endpoint?.id)
       )
     } else if (pageData.page === FEATURE_STORE_PAGE) {
       if (match.params.pageTab === FEATURES_TAB) {
@@ -174,10 +177,12 @@ const Content = ({
       yaml.dump(
         pageData.page === JOBS_PAGE
           ? jobJson
-          : pageData.page === ARTIFACTS_PAGE ||
-            pageData.page === FILES_PAGE ||
-            pageData.page === MODELS_PAGE ||
-            pageData.page === FEATURE_STORE_PAGE
+          : [
+              ARTIFACTS_PAGE,
+              FILES_PAGE,
+              MODELS_PAGE,
+              FEATURE_STORE_PAGE
+            ].includes(pageData.page)
           ? artifactJson
           : functionJson,
         { lineWidth: -1 }
@@ -237,7 +242,10 @@ const Content = ({
               FILES_PAGE,
               MODELS_PAGE,
               FEATURE_STORE_PAGE
-            ].includes(pageData.page) && match.params.pageTab !== FEATURES_TAB
+            ].includes(pageData.page) &&
+            ![FEATURES_TAB, FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(
+              match.params.pageTab
+            )
           }
           registerDialogHeader={
             pageData.page === PROJECTS_PAGE
@@ -250,8 +258,9 @@ const Content = ({
         />
       </div>
       <div className={contentClassName}>
-        {(pageData.page === JOBS_PAGE ||
-          pageData.page === FEATURE_STORE_PAGE) && (
+        {[JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(
+          pageData.page
+        ) && (
           <ContentMenu
             activeTab={match.params.pageTab}
             match={match}

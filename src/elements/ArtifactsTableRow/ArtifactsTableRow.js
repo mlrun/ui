@@ -32,7 +32,9 @@ const ArtifactsTableRow = ({
     'parent-row',
     ((selectedItem?.db_key &&
       selectedItem?.db_key === content[index]?.db_key) ||
-      (selectedItem?.name && selectedItem?.name === content[index]?.name)) &&
+      (selectedItem?.name && selectedItem?.name === content[index]?.name) ||
+      (selectedItem?.endpoint &&
+        selectedItem?.endpoint?.id === content[index]?.endpoint?.id)) &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -125,7 +127,7 @@ const ArtifactsTableRow = ({
                           item={currentItem}
                           link={
                             value.link &&
-                            (value.link === 'info'
+                            (value.link === 'overview'
                               ? `/projects/${
                                   match.params.projectName
                                 }/${pageData.page.toLowerCase()}${
@@ -170,7 +172,7 @@ const ArtifactsTableRow = ({
                 item={content[index]}
                 key={Math.random() + i}
                 link={
-                  value.link === 'info'
+                  value.link === 'overview'
                     ? `/projects/${
                         match.params.projectName
                       }/${pageData.page.toLowerCase()}${

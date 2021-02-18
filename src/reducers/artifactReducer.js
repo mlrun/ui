@@ -20,6 +20,9 @@ import {
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
+  FETCH_MODEL_ENDPOINTS_BEGIN,
+  FETCH_MODEL_ENDPOINTS_FAILURE,
+  FETCH_MODEL_ENDPOINTS_SUCCESS,
   FETCH_MODELS_BEGIN,
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
@@ -58,6 +61,7 @@ const initialState = {
     name: ''
   },
   loading: false,
+  modelEndpoints: [],
   models: [],
   preview: {}
 }
@@ -205,6 +209,24 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         files: payload,
+        loading: false
+      }
+    case FETCH_MODEL_ENDPOINTS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_MODEL_ENDPOINTS_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        modelEndpoints: [],
+        loading: false
+      }
+    case FETCH_MODEL_ENDPOINTS_SUCCESS:
+      return {
+        ...state,
+        modelEndpoints: payload,
         loading: false
       }
     case FETCH_MODELS_BEGIN:

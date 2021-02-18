@@ -30,7 +30,7 @@ const Select = ({
   const selectClassName = classNames(
     'select',
     className,
-    isOpen && 'active',
+    isOpen && 'select_active',
     withoutBorder && 'without-border',
     disabled && 'disabled'
   )

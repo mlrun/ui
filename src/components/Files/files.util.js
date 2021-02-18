@@ -1,3 +1,5 @@
+import { FILES_PAGE } from '../../constants'
+
 export const infoHeaders = [
   { label: 'Hash', id: 'hash' },
   { label: 'Key', id: 'key' },
@@ -15,7 +17,7 @@ export const filters = [
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Labels:' }
 ]
-export const page = 'FILES'
+export const page = FILES_PAGE
 export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register file'
 export const tableHeaders = [

@@ -59,22 +59,10 @@ export default {
   getArtifacts: item => {
     return fetchArtifacts(item, `/artifacts?project=${item.project}`)
   },
-  getArtifactsDataSets: item => {
+  getDataSets: item => {
     return fetchArtifacts(
       item,
       `/artifacts?project=${item.project}&category=dataset`
-    )
-  },
-  getArtifactsFiles: item => {
-    return fetchArtifacts(
-      item,
-      `/artifacts?project=${item.project}&category=other`
-    )
-  },
-  getArtifactsModels: item => {
-    return fetchArtifacts(
-      item,
-      `/artifacts?project=${item.project}&category=model`
     )
   },
   getFeatureSets: (item, config) => {
@@ -107,6 +95,29 @@ export default {
     return mainHttpClient.get(`/projects/${item.project}/${FEATURES_TAB}`, {
       params
     })
+  },
+  getFiles: item => {
+    return fetchArtifacts(
+      item,
+      `/artifacts?project=${item.project}&category=other`
+    )
+  },
+  getModelEndpoints: item => {
+    const params = {}
+
+    if (item?.labels) {
+      params.labels = item.labels
+    }
+
+    return mainHttpClient.get(`/projects/${item.project}/model-endpoints`, {
+      params
+    })
+  },
+  getModels: item => {
+    return fetchArtifacts(
+      item,
+      `/artifacts?project=${item.project}&category=model`
+    )
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data),
