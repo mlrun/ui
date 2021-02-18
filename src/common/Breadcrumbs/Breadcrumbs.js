@@ -81,8 +81,11 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
     }
   }, [projectStore.projects, searchValue])
 
-  const handleSeparatorClick = (nextItem, separatorRef) => {
-    if (nextItem === screen || nextItem === match.params.projectName) {
+  const handleSeparatorClick = (nextItem, separatorRef, param) => {
+    if (
+      (nextItem === screen && !param) ||
+      nextItem === match.params.projectName
+    ) {
       const activeSeparator = document.getElementsByClassName(
         'breadcrumbs__separator_active'
       )[0]
@@ -146,7 +149,8 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
             item === match.params.tag
           const separatorClassNames = classnames(
             'breadcrumbs__separator',
-            (urlItems[i + 1] === screen ||
+            ((urlItems[i + 1] === screen &&
+              !pathItems[i + 1]?.startsWith(':')) ||
               urlItems[i + 1] === match.params.projectName) &&
               'breadcrumbs__separator_tumbler'
           )
@@ -188,13 +192,16 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
                   data-testid="separator"
                   ref={separatorRef}
                   onClick={() =>
-                    i + 1 !== urlItems.length - 1 &&
-                    handleSeparatorClick(urlItems[i + 1], separatorRef)
+                    handleSeparatorClick(
+                      urlItems[i + 1],
+                      separatorRef,
+                      pathItems[i + 1]?.startsWith(':')
+                    )
                   }
                 />
                 {showScreensList &&
                   urlItems[i + 1] === screen &&
-                  i + 1 !== urlItems.length - 1 && (
+                  !pathItems[i + 1]?.startsWith(':') && (
                     <BreadcrumbsDropdown
                       link={to}
                       list={projectScreens}

@@ -8,7 +8,6 @@ import { ReactComponent as Close } from '../../images/close.svg'
 
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 
-
 import './chip.scss'
 
 const Chip = ({
