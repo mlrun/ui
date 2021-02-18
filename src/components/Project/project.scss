@@ -210,7 +210,6 @@
           }
 
           &.create-new-menu {
-            margin-left: auto;
             background-color: $malibu;
             border: none;
 
@@ -226,6 +225,12 @@
               }
             }
           }
+        }
+
+        .refresh {
+          display: flex;
+          margin-right: 10px;
+          margin-left: auto;
         }
       }
 

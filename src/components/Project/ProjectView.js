@@ -1,11 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
+import { useSelector } from 'react-redux'
+import classnames from 'classnames'
+
+import { launchIDEOptions } from './project.utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import Input from '../../common/Input/Input'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
@@ -13,13 +16,17 @@ import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import Select from '../../common/Select/Select'
 import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
-import TextArea from '../../common/TextArea/TextArea'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import ChipCell from '../../common/ChipCell/ChipCell'
+import ProjectName from './ProjectName/ProjectName'
+import ProjectDescription from './ProjectDescription/ProjectDescription'
+import ProjectGoals from './ProjectGoals/ProjectGoals'
+import ProjectSource from './ProjectSource/ProjectSource'
+import ProjectLinks from './ProjectLinks/ProjectLinks'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
-import { ReactComponent as Edit } from '../../images/edit.svg'
+import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
 const ProjectView = React.forwardRef(
   (
@@ -41,20 +48,18 @@ const ProjectView = React.forwardRef(
       handleOnChangeProject,
       handleOnKeyDown,
       handleUpdateProjectLabels,
-      history,
       isPopupDialogOpen,
-      launchIDEOptions,
       links,
       match,
-      nuclioStore,
       projectLabels,
-      projectStore,
+      refresh,
       setIsPopupDialogOpen,
-      statusClassName,
       visibleChipsMaxLength
     },
     ref
   ) => {
+    const project = useSelector(store => store.projectStore.project)
+    const history = useHistory()
     const registerArtifactLink = `/projects/${match.params.projectName}/${
       artifactKind === 'model'
         ? 'models'
@@ -64,177 +69,78 @@ const ProjectView = React.forwardRef(
         ? 'files'
         : 'artifacts'
     }`
+    const statusClassName = classnames(
+      'general-info__status-icon',
+      project.data?.status.state
+    )
 
     return (
       <>
         <div className="project__header">
           <Breadcrumbs match={match} />
         </div>
-        {projectStore.project.loading ? (
+        {project.loading ? (
           <Loader />
-        ) : projectStore.project.error ? (
+        ) : project.error ? (
           <div className=" project__error-container">
-            <h1>{projectStore.project.error}</h1>
+            <h1>{project.error}</h1>
           </div>
-        ) : isEmpty(projectStore.project.data) ? (
+        ) : isEmpty(project.data) ? (
           <NoData />
         ) : (
           <div className="project__content">
             <div className="general-info">
               <div className="general-info__main-data">
                 <div className="general-info__main-data-wrapper">
-                  <div
-                    data-testid="project-name"
-                    className="general-info__name"
-                  >
-                    {editProject.name.isEdit ? (
-                      <Input
-                        focused={true}
-                        onChange={handleOnChangeProject}
-                        onKeyDown={handleOnKeyDown}
-                        ref={ref}
-                        type="text"
-                        value={
-                          editProject.name.value ??
-                          projectStore.project.data.metadata.name
-                        }
-                      />
-                    ) : (
-                      <Tooltip
-                        template={
-                          <TextTooltipTemplate
-                            text={
-                              editProject.name.value ??
-                              projectStore.project.data.metadata.name
-                            }
-                          />
-                        }
-                      >
-                        {editProject.name.value ??
-                          projectStore.project.data.metadata.name}
-                      </Tooltip>
-                    )}
-                  </div>
+                  <ProjectName
+                    editNameData={editProject.name}
+                    handleOnChangeProject={handleOnChangeProject}
+                    handleOnKeyDown={handleOnKeyDown}
+                    projectName={project.data.metadata.name}
+                    ref={ref}
+                  />
                   <Settings className="general-info__settings" />
                 </div>
-                <div
-                  className="general-info__description"
-                  data-testid="project-description"
-                  onClick={() => handleEditProject('description')}
-                >
-                  {editProject.description.isEdit ? (
-                    <TextArea
-                      floatingLabel
-                      focused
-                      label="Project summary"
-                      onChange={handleOnChangeProject}
-                      onKeyDown={handleOnKeyDown}
-                      ref={ref}
-                      value={
-                        editProject.description.value ??
-                        projectStore.project.data.spec.description
-                      }
-                    />
-                  ) : (
-                    <div className="general-info__description-info">
-                      <span className="general-info__description-title">
-                        Project summary
-                      </span>
-                      <p className="general-info__description-text data-ellipsis">
-                        {editProject.description.value ??
-                          projectStore.project.data.spec.description}
-                      </p>
-                    </div>
-                  )}
-                </div>
-                <div
-                  className="general-info__description"
-                  data-testid="project-goals"
-                  onClick={() => handleEditProject('goals')}
-                >
-                  {editProject.goals.isEdit ? (
-                    <TextArea
-                      floatingLabel
-                      focused
-                      label="Project goals"
-                      onChange={handleOnChangeProject}
-                      onKeyDown={handleOnKeyDown}
-                      ref={ref}
-                      value={
-                        editProject.goals.value ??
-                        projectStore.project.data.spec.goals
-                      }
-                    />
-                  ) : (
-                    <div className="general-info__description-info">
-                      <span className="general-info__description-title">
-                        Project goals
-                      </span>
-                      <p className="general-info__description-text data-ellipsis">
-                        {editProject.goals.value ??
-                          projectStore.project.data.spec.goals}
-                      </p>
-                    </div>
-                  )}
-                </div>
+                <ProjectDescription
+                  editDescriptionData={editProject.description}
+                  handleEditProject={handleEditProject}
+                  handleOnChangeProject={handleOnChangeProject}
+                  handleOnKeyDown={handleOnKeyDown}
+                  projectDescription={project.data.spec.description}
+                  ref={ref}
+                />
+                <ProjectGoals
+                  editGoalsData={editProject.goals}
+                  handleEditProject={handleEditProject}
+                  handleOnChangeProject={handleOnChangeProject}
+                  handleOnKeyDown={handleOnKeyDown}
+                  projectGoals={project.data.spec.goals}
+                  ref={ref}
+                />
               </div>
               <div className="general-info__divider" />
-              {projectStore.project.data.status.state && (
+              {project.data.status.state && (
                 <div className="general-info__status">
                   <span className="general-info__status-label">Status:</span>
                   <i className={statusClassName} />
                   <span className="general-info__status-name">
-                    {projectStore.project.data.status.state}
+                    {project.data.status.state}
                   </span>
                 </div>
               )}
               <div className="general-info__owner">
                 <span className="general-info__owner-label">Owner:</span>
-                <span>{projectStore.project.data.owner}</span>
+                <span>{project.data.owner}</span>
               </div>
               <div className="general-info__divider" />
-              <div
-                className="general-info__source"
-                onClick={() => handleEditProject('source')}
-              >
-                {editProject.source.isEdit ? (
-                  <Input
-                    focused
-                    onChange={handleOnChangeProject}
-                    onKeyDown={handleOnKeyDown}
-                    ref={ref}
-                    type="text"
-                    value={
-                      editProject.source.value ??
-                      projectStore.project.data.spec.source
-                    }
-                  />
-                ) : (
-                  <>
-                    {editProject.source.value ||
-                    projectStore.project.data.spec.source ? (
-                      <a
-                        href={
-                          editProject.source.value ||
-                          projectStore.project.data.spec.source
-                        }
-                        target="_blanc"
-                        className="general-info__source-text data-ellipsis"
-                      >
-                        {editProject.source.value ||
-                          (projectStore.project.data.spec.source &&
-                            'Click to add source URL')}
-                      </a>
-                    ) : (
-                      <span>Click to add source URL</span>
-                    )}
-                    <Edit
-                      className="general-info__source-edit"
-                      onClick={() => handleEditProject('source')}
-                    />
-                  </>
-                )}
-              </div>
+              <ProjectSource
+                editSourceData={editProject.source}
+                handleEditProject={handleEditProject}
+                handleOnChangeProject={handleOnChangeProject}
+                handleOnKeyDown={handleOnKeyDown}
+                projectSource={project.data.spec.source}
+                ref={ref}
+              />
               <div className="general-info__divider" />
               <div className="general-info__labels">
                 <div className="general-info__labels-text">Labels</div>
@@ -250,36 +156,18 @@ const ProjectView = React.forwardRef(
                 </div>
               </div>
               <div className="general-info__divider" />
-              <div className="general-info__links">
-                <div className="general-info__links-label">Quick Links</div>
-                {links.map(({ label, link, externalLink }) => {
-                  if (externalLink) {
-                    return (
-                      <a
-                        href={link}
-                        target="_top"
-                        className="general-info__links-link"
-                        key={label}
-                      >
-                        {label}
-                      </a>
-                    )
-                  }
-
-                  return (
-                    <Link
-                      key={label}
-                      className="general-info__links-link"
-                      to={link}
-                    >
-                      {label}
-                    </Link>
-                  )
-                })}
-              </div>
+              <ProjectLinks links={links} />
             </div>
             <div className="main-info">
               <div className="main-info__toolbar">
+                <Tooltip
+                  className="refresh"
+                  template={<TextTooltipTemplate text="Refresh" />}
+                >
+                  <button onClick={refresh} id="refresh">
+                    <Refresh />
+                  </button>
+                </Tooltip>
                 <Select
                   className="main-info__toolbar-menu launch-menu"
                   hideSelectedOption
@@ -296,30 +184,21 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="main-info__statistics-section">
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(
-                    projectStore.project.models,
-                    'db_key'
-                  )}
+                  artifacts={groupByUniqName(project.models, 'db_key')}
                   fetchArtifacts={fetchProjectModels}
                   link={`/projects/${match.params.projectName}/models`}
                   match={match}
                   title="Models"
                 />
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(
-                    projectStore.project.dataSets,
-                    'db_key'
-                  )}
+                  artifacts={groupByUniqName(project.dataSets, 'db_key')}
                   fetchArtifacts={fetchProjectDataSets}
                   link={`/projects/${match.params.projectName}/feature-store`}
                   match={match}
                   title="Datasets"
                 />
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(
-                    projectStore.project.files,
-                    'db_key'
-                  )}
+                  artifacts={groupByUniqName(project.files, 'db_key')}
                   fetchArtifacts={fetchProjectFiles}
                   link={`/projects/${match.params.projectName}/files`}
                   match={match}
@@ -331,15 +210,14 @@ const ProjectView = React.forwardRef(
                   fetchProjectJobs={fetchProjectJobs}
                   fetchProjectScheduledJobs={fetchProjectScheduledJobs}
                   fetchProjectWorkflows={fetchProjectWorkflows}
-                  jobs={projectStore.project.jobs}
+                  jobs={project.jobs}
                   match={match}
-                  scheduledJobs={projectStore.project.scheduledJobs}
-                  workflows={projectStore.project.workflows}
+                  scheduledJobs={project.scheduledJobs}
+                  workflows={project.workflows}
                 />
                 <ProjectFunctions
                   fetchApiGateways={fetchApiGateways}
                   fetchNuclioFunctions={fetchNuclioFunctions}
-                  functionsStore={nuclioStore}
                   match={match}
                 />
               </div>
@@ -386,16 +264,11 @@ ProjectView.propTypes = {
   handleOnChangeProject: PropTypes.func.isRequired,
   handleOnKeyDown: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,
-  history: PropTypes.shape({}).isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
-  launchIDEOptions: PropTypes.array.isRequired,
   links: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,
-  nuclioStore: PropTypes.shape({}).isRequired,
   projectLabels: PropTypes.array.isRequired,
-  projectStore: PropTypes.shape({}).isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
-  statusClassName: PropTypes.string.isRequired,
   visibleChipsMaxLength: PropTypes.number
 }
 
