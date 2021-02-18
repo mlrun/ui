@@ -1,4 +1,4 @@
-@import '../../scss/colors.scss';
+@import '../../scss/colors';
 
 .tip-container {
   position: relative;
@@ -10,9 +10,9 @@
     z-index: 6;
     padding: 6px 8px;
     color: $white;
+    white-space: pre-line;
     background: $primary;
     border-radius: 2px;
-    white-space: pre-line;
 
     &-left {
       bottom: calc(100% + 10px);

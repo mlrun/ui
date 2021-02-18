@@ -36,7 +36,7 @@ export const tableHeaders = [
 ]
 export const infoHeaders = [
   { label: 'Name', id: 'name' },
-  { label: 'Kind', id: 'kind' },
+  { label: 'Kind', id: 'type' },
   { label: 'Hash', id: 'hash' },
   { label: 'Code origin', id: 'codeOrigin' },
   { label: 'Updated', id: 'updated' },
@@ -45,5 +45,5 @@ export const infoHeaders = [
   { label: 'Description', id: 'description' },
   { label: 'State', id: 'state' }
 ]
-export const filters = ['name']
+export const filters = [{ type: 'name', label: 'Name:' }]
 export const initialGroupFilter = 'name'

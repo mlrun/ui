@@ -8,7 +8,11 @@ import './tooltip.scss'
 const Tooltip = ({ children, template, className, textShow = false }) => {
   const [show, setShow] = useState(false)
   const [style, setStyle] = useState({})
-  const tooltipClassNames = classnames('data-ellipsis', className)
+  const tooltipClassNames = classnames(
+    'data-ellipsis',
+    'tooltip-wrapper',
+    className
+  )
   const duration = 200
   const parentRef = useRef()
   const tooltipRef = useRef()

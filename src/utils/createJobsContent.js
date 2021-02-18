@@ -36,7 +36,9 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
             type: 'date'
           },
           schedule: {
-            value: cronstrue.toString(contentItem.scheduled_object.schedule),
+            value: contentItem.scheduled_object
+              ? cronstrue.toString(contentItem.scheduled_object?.schedule)
+              : null,
             class: 'jobs_big'
           },
           labels: {

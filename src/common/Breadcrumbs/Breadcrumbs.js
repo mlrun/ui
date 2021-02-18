@@ -140,7 +140,10 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
             : startCase(item)
           const to = `/${urlItems.slice(0, i + 1).join('/')}`
           const last = i === urlItems.length - 1
-          const id = item === match.params.jobId || item === match.params.name
+          const id =
+            item === match.params.jobId ||
+            item === match.params.name ||
+            item === match.params.tag
           const separatorClassNames = classnames(
             'breadcrumbs__separator',
             (urlItems[i + 1] === screen ||

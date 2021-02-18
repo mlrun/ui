@@ -11,16 +11,22 @@ const ErrorMessage = ({ message, closeError }) => {
     <div data-testid="error-message" className="error-container">
       <UnsuccessAlert className="error-icon" />
       {message}
-      <button data-testid="close" onClick={closeError}>
-        <Close />
-      </button>
+      {closeError && (
+        <button data-testid="close" onClick={closeError}>
+          <Close />
+        </button>
+      )}
     </div>
   )
 }
 
+ErrorMessage.defaultProps = {
+  closeError: null
+}
+
 ErrorMessage.propTypes = {
   message: PropTypes.string.isRequired,
-  closeError: PropTypes.func.isRequired
+  closeError: PropTypes.func
 }
 
 export default ErrorMessage

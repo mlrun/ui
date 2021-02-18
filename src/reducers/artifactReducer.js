@@ -6,6 +6,17 @@ import {
   FETCH_DATASETS_BEGIN,
   FETCH_DATASETS_FAILURE,
   FETCH_DATASETS_SUCCESS,
+  FETCH_FEATURE_SETS_BEGIN,
+  FETCH_FEATURE_SETS_FAILURE,
+  FETCH_FEATURE_SETS_SUCCESS,
+  FETCH_FEATURE_SUCCESS,
+  FETCH_FEATURE_VECTOR_SUCCESS,
+  FETCH_FEATURE_VECTORS_BEGIN,
+  FETCH_FEATURE_VECTORS_FAILURE,
+  FETCH_FEATURE_VECTORS_SUCCESS,
+  FETCH_FEATURES_BEGIN,
+  FETCH_FEATURES_FAILURE,
+  FETCH_FEATURES_SUCCESS,
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
@@ -16,6 +27,12 @@ import {
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
+  REMOVE_DATASETS,
+  REMOVE_FEATURE,
+  REMOVE_FEATURE_SETS,
+  REMOVE_FEATURE_VECTOR,
+  REMOVE_FEATURE_VECTORS,
+  REMOVE_FEATURES,
   SET_ARTIFACT_FILTER,
   SHOW_ARTIFACT_PREVIEW
 } from '../constants'
@@ -24,6 +41,19 @@ const initialState = {
   artifacts: [],
   dataSets: [],
   error: null,
+  featureSets: [],
+  featureVectors: {
+    allData: [],
+    selectedRowData: {
+      content: {}
+    }
+  },
+  features: {
+    allData: [],
+    selectedRowData: {
+      content: {}
+    }
+  },
   files: [],
   filter: {
     tag: 'latest',
@@ -77,6 +107,90 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         dataSets: payload,
+        loading: false
+      }
+    case FETCH_FEATURE_SETS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_FEATURE_SETS_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case FETCH_FEATURE_SETS_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        featureSets: payload,
+        loading: false
+      }
+    case FETCH_FEATURE_VECTOR_SUCCESS:
+      return {
+        ...state,
+        featureVectors: {
+          ...state.featureVectors,
+          selectedRowData: {
+            content: {
+              ...payload
+            }
+          }
+        }
+      }
+    case FETCH_FEATURE_VECTORS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_FEATURE_VECTORS_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case FETCH_FEATURE_VECTORS_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        featureVectors: {
+          ...state.featureVectors,
+          allData: payload
+        },
+        loading: false
+      }
+    case FETCH_FEATURE_SUCCESS:
+      return {
+        ...state,
+        features: {
+          ...state.features,
+          selectedRowData: {
+            content: {
+              ...payload
+            }
+          }
+        }
+      }
+    case FETCH_FEATURES_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_FEATURES_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case FETCH_FEATURES_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        features: {
+          ...state.features,
+          allData: payload
+        },
         loading: false
       }
     case FETCH_FILES_BEGIN:
@@ -137,6 +251,57 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         artifacts: []
+      }
+    case REMOVE_DATASETS:
+      return {
+        ...state,
+        dataSets: []
+      }
+    case REMOVE_FEATURE_SETS:
+      return {
+        ...state,
+        featureSets: []
+      }
+    case REMOVE_FEATURE_VECTOR:
+      return {
+        ...state,
+        featureVectors: {
+          ...state.featureVectors,
+          selectedRowData: {
+            content: payload,
+            error: null,
+            loading: false
+          }
+        }
+      }
+    case REMOVE_FEATURE_VECTORS:
+      return {
+        ...state,
+        featureVectors: {
+          allData: [],
+          selectedRowData: {
+            content: {},
+            error: null,
+            loading: false
+          }
+        }
+      }
+    case REMOVE_FEATURE:
+      return {
+        ...state,
+        features: {
+          ...state.features,
+          selectedRowData: {
+            content: payload,
+            error: null,
+            loading: false
+          }
+        }
+      }
+    case REMOVE_FEATURES:
+      return {
+        ...state,
+        features: []
       }
     case SET_ARTIFACT_FILTER:
       return {

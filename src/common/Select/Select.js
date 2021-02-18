@@ -7,6 +7,9 @@ import SelectOption from '../../elements/SelectOption/SelectOption'
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
 import './select.scss'
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import PopUpDialog from '../PopUpDialog/PopUpDialog'
 
 const Select = ({
   className,
@@ -19,14 +22,17 @@ const Select = ({
   options,
   selectType,
   selectedId,
+  selectedItemAction,
   withoutBorder
 }) => {
+  const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [isOpen, setOpen] = useState(false)
   const selectClassName = classNames(
     'select',
     className,
-    isOpen && 'active',
-    withoutBorder && 'without-border'
+    isOpen && 'select_active',
+    withoutBorder && 'without-border',
+    disabled && 'disabled'
   )
   const selectLabelClassName = classNames(
     'select__label',
@@ -82,8 +88,64 @@ const Select = ({
             )}
           </div>
         )}
+        {selectedId && selectedItemAction && (
+          <div className="actions">
+            {selectedItemAction.handler ? (
+              <Tooltip
+                template={
+                  <TextTooltipTemplate text={selectedItemAction.tooltip} />
+                }
+              >
+                <button
+                  onClick={event => {
+                    if (selectedItemAction.confirm) {
+                      setConfirmDialogOpen(true)
+                    } else {
+                      selectedItemAction.handler(selectedId)
+                    }
+
+                    event.stopPropagation()
+                  }}
+                >
+                  {selectedItemAction.icon}
+                </button>
+              </Tooltip>
+            ) : (
+              <span>{selectedItemAction.icon}</span>
+            )}
+          </div>
+        )}
         <Caret className="select__caret" />
       </div>
+      {isConfirmDialogOpen && (
+        <PopUpDialog
+          headerText={selectedItemAction.confirm.title}
+          closePopUp={() => {
+            setConfirmDialogOpen(false)
+          }}
+        >
+          <div>{selectedItemAction.confirm.description}</div>
+          <div className="pop-up-dialog__footer-container">
+            <button
+              className="btn_default pop-up-dialog__btn_cancel"
+              onClick={() => {
+                setConfirmDialogOpen(false)
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              className={selectedItemAction.confirm.btnConfirmClassNames}
+              onClick={() => {
+                selectedItemAction.handler(selectedId)
+                setConfirmDialogOpen(false)
+              }}
+            >
+              {selectedItemAction.confirm.btnConfirmLabel}
+            </button>
+          </div>
+        </PopUpDialog>
+      )}
       {isOpen && (
         <>
           <div className="overall" />

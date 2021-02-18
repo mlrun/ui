@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-  useLayoutEffect,
-  useRef
-} from 'react'
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import ChipCellView from './ChipCellView'
@@ -18,9 +11,11 @@ import './chipCell.scss'
 const ChipCell = ({
   addChip,
   className,
+  delimiter,
   editChip,
   elements,
   isEditMode,
+  onClick,
   removeChip,
   visibleChipsMaxLength
 }) => {
@@ -39,13 +34,18 @@ const ChipCell = ({
     return isEditMode && !visibleChipsMaxLength
       ? {
           visibleChips: elements.map(chip => ({
-            value: chip
+            value: chip,
+            delimiter
           }))
         }
       : sizeContainer <= 1000 && !visibleChipsMaxLength
-      ? sizeChips[sizeContainer](elements)
-      : cutChips(elements, visibleChipsMaxLength ? visibleChipsMaxLength : 8)
-  }, [elements, isEditMode, sizeContainer, visibleChipsMaxLength])
+      ? sizeChips[sizeContainer](elements, delimiter)
+      : cutChips(
+          elements,
+          visibleChipsMaxLength ? visibleChipsMaxLength : 8,
+          delimiter
+        )
+  }, [elements, isEditMode, sizeContainer, visibleChipsMaxLength, delimiter])
 
   const handleShowElements = useCallback(() => {
     if (!isEditMode || (isEditMode && visibleChipsMaxLength)) {
@@ -71,13 +71,14 @@ const ChipCell = ({
     }
   }, [isEditMode, chipRef])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     handleResize()
   }, [handleResize])
 
   useEffect(() => {
     if (!isEditMode) {
       window.addEventListener('resize', handleResize)
+
       return () => window.removeEventListener('resize', handleResize)
     }
   }, [handleResize, isEditMode])
@@ -96,7 +97,7 @@ const ChipCell = ({
         isNewChip: true
       })
     },
-    [elements, editConfig, addChip]
+    [editConfig.isEdit, editConfig.chipIndex, elements, addChip]
   )
 
   const handleRemoveChip = useCallback(
@@ -175,30 +176,36 @@ const ChipCell = ({
     ]
   )
 
-  const handleIsEdit = useCallback((event, index) => {
-    event.stopPropagation()
+  const handleIsEdit = useCallback(
+    (event, index) => {
+      if (isEditMode) {
+        event.stopPropagation()
 
-    setEditConfig({
-      chipIndex: index,
-      isEdit: true,
-      isKeyFocused: true,
-      isValueFocused: false
-    })
-  }, [])
+        setEditConfig({
+          chipIndex: index,
+          isEdit: true,
+          isKeyFocused: true,
+          isValueFocused: false
+        })
+      }
+
+      onClick && onClick()
+    },
+    [isEditMode, onClick]
+  )
 
   return (
     <ChipCellView
-      addChip={handleAddNewChip}
       chips={chips}
       className={className}
-      editChip={handleEditChip}
       editConfig={editConfig}
-      elements={elements}
+      handleAddNewChip={handleAddNewChip}
+      handleEditChip={handleEditChip}
       handleIsEdit={handleIsEdit}
+      handleRemoveChip={handleRemoveChip}
       handleShowElements={handleShowElements}
       isEditMode={isEditMode}
       ref={chipRef}
-      removeChip={handleRemoveChip}
       setEditConfig={setEditConfig}
       show={show}
     />
@@ -207,19 +214,23 @@ const ChipCell = ({
 
 ChipCell.defaultProps = {
   addChip: () => {},
+  delimiter: null,
   editChip: () => {},
   elements: [],
   isEditMode: false,
+  onClick: () => {},
   removeChip: () => {},
   visibleChipsMaxLength: null
 }
 
 ChipCell.propTypes = {
   addChip: PropTypes.func,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
+  delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   editChip: PropTypes.func,
   elements: PropTypes.arrayOf(PropTypes.string),
   isEditMode: PropTypes.bool,
+  onClick: PropTypes.func,
   removeChip: PropTypes.func,
   visibleChipsMaxLength: PropTypes.number
 }

@@ -1,3 +1,4 @@
+@import '../../scss/variables';
 @import '../../scss/colors';
 @import '../../scss/borders';
 
@@ -6,9 +7,12 @@
   height: auto;
   padding: 20px;
   background-color: $white;
+  border-radius: $mainBorderRadius;
+  box-shadow: 0 6px 26px rgba($black, 0.2);
 
   &__overlay {
     position: fixed;
+    top: 0;
     z-index: 5;
     display: flex;
     align-items: center;
@@ -19,6 +23,7 @@
   }
 
   &__header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     margin: 10px 0 20px;
@@ -30,6 +35,9 @@
     }
 
     &-close {
+      width: 14px;
+      height: 14px;
+      margin: 5px;
       cursor: pointer;
     }
   }

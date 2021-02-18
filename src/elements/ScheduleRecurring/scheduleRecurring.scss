@@ -1,5 +1,5 @@
-@import '../../scss/colors.scss';
-@import '../../scss/borders.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
 
 .recurring_container {
   user-select: none;
@@ -9,8 +9,8 @@
   }
 
   .repeat_container {
-    margin: 15px 0;
     display: flex;
+    margin: 15px 0;
 
     .range {
       margin-right: 15px;
@@ -22,21 +22,22 @@
 
       &-week {
         margin-left: 16px;
+
         &_day {
-          height: 32px;
           width: 32px;
+          height: 32px;
+          margin-right: 4px;
+          color: $spunPearl;
           line-height: 32px;
           text-align: center;
-          border-radius: 16px;
-          margin-right: 4px;
           border: $primaryBorder;
-          color: $spunPearl;
+          border-radius: 16px;
           cursor: pointer;
 
           &.active {
-            background-color: $purple;
-            border: $transparentBorder;
             color: $white;
+            background-color: $malibu;
+            border: $transparentBorder;
           }
         }
       }
@@ -59,15 +60,15 @@
     }
 
     &__value {
-      padding-left: 15px;
       min-width: 190px;
+      padding-left: 15px;
     }
   }
 
   .repeat_end_container {
-    margin: 15px 0;
     // display: flex;
     display: none;
+    margin: 15px 0;
 
     .select {
       height: 56px;

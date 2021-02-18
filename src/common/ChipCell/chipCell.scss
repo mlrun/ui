@@ -1,7 +1,11 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
 .chips {
   &-wrapper {
     display: flex;
     flex: 1;
+    align-items: center;
 
     .chip {
       &_short {
@@ -15,16 +19,40 @@
         display: inline-block;
 
         .tooltip-wrapper {
-          max-width: 200px;
+          max-width: 230px;
+        }
+      }
 
-          .chips_button {
-            cursor: pointer;
-          }
+      &__delimiter {
+        svg {
+          margin-bottom: -7px;
         }
       }
 
       &_hidden {
         max-width: 195px;
+      }
+    }
+
+    .button-add {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      margin: 10px 0 10px 10px;
+      border: $labelBorder;
+      border-radius: 32px;
+
+      &:hover {
+        background-color: $amethyst;
+
+        svg {
+          rect,
+          path {
+            fill: $white;
+          }
+        }
       }
     }
   }

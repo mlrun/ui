@@ -12,17 +12,17 @@ const ContentMenu = ({ activeTab, match, screen, tabs }) => {
         {tabs.map(tab => {
           const tabClassNames = classnames(
             'content-menu__item',
-            tab === activeTab && 'content-menu__item_active'
+            tab.id === activeTab && 'content-menu__item_active'
           )
 
           return (
-            <li data-testid={tab} className={tabClassNames} key={tab}>
+            <li data-testid={tab.id} className={tabClassNames} key={tab.id}>
               <Link
                 to={`/projects/${
                   match.params.projectName
-                }/${screen.toLowerCase()}/${tab}`}
+                }/${screen.toLowerCase()}/${tab.id}`}
               >
-                {tab}
+                {tab.label ?? tab.id}
               </Link>
             </li>
           )
@@ -34,7 +34,7 @@ const ContentMenu = ({ activeTab, match, screen, tabs }) => {
 
 ContentMenu.propTypes = {
   activeTab: PropTypes.string.isRequired,
-  tabs: PropTypes.arrayOf(PropTypes.string).isRequired
+  tabs: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default ContentMenu

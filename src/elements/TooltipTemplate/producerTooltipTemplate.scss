@@ -1,13 +1,13 @@
-@import './../../scss/shadows.scss';
-@import './../../scss/colors.scss';
+@import './../../scss/shadows';
+@import './../../scss/colors';
 
 .tooltip-container {
   display: flex;
   flex-direction: column;
   padding: 15px 10px;
-  box-shadow: $tooltipShadow;
+  background-color: $white;
   border-radius: 4px;
-  background-color: white;
+  box-shadow: $tooltipShadow;
 
   &__kind,
   &__owner {

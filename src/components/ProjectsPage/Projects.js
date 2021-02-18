@@ -60,7 +60,6 @@ const Projects = ({
   const handleDeleteProject = useCallback(
     (project, deleteNonEmpty) => {
       setConfirmData(null)
-
       deleteProject(project.metadata.name, deleteNonEmpty)
         .then(() => {
           fetchProjects()

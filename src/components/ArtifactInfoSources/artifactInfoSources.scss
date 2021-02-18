@@ -1,20 +1,22 @@
-@import '../../scss/shadows.scss';
-@import '../../scss/colors.scss';
-@import '../../scss/mixins.scss';
-@import '../../scss/borders.scss';
+@import '../../scss/shadows';
+@import '../../scss/colors';
+@import '../../scss/mixins';
+@import '../../scss/borders';
 
 .table__item_details_item {
   .wrapper_sources {
     display: flex;
     flex: 1;
     flex-direction: column;
+
     .sources_header_container {
+      position: relative;
       display: flex;
       flex-direction: row;
       align-items: center;
       padding: 18px 25px;
-      position: relative;
       cursor: pointer;
+
       .sources {
         &_header {
           min-width: 100px;
@@ -22,20 +24,24 @@
           font-size: 14px;
           line-height: 24px;
         }
+
         &_value {
-          padding-left: 16px;
           display: flex;
+          padding-left: 16px;
         }
       }
+
       svg {
         position: absolute;
         left: 0;
         cursor: pointer;
+
         &.close {
           transform: rotate(0);
           transform-origin: center center;
           transition: transform 200ms linear;
         }
+
         &.open {
           transform: rotate(90deg);
           transform-origin: center center;
@@ -44,35 +50,44 @@
       }
     }
   }
+
   .source_table {
     padding: 0 18px;
+
     .source {
       &_item {
         display: flex;
         flex-direction: row;
         align-items: center;
         height: 56px;
-        border-bottom: $tableBorder;
+        border-bottom: $secondaryBorder;
+
         &_header {
           display: flex;
           flex-direction: row;
           align-items: center;
           padding: 18px;
+
           &_name {
             min-width: 200px;
             text-transform: capitalize;
+
             @include detailsItem;
           }
+
           &_path {
             min-width: 100px;
             text-transform: capitalize;
+
             @include detailsItem;
           }
         }
+
         &:last-child {
           border: none;
         }
       }
+
       &_item {
         .source_item_header {
           min-width: 220px;
@@ -80,13 +95,16 @@
         }
       }
     }
+
     > .source_item_header {
-      border-bottom: $tableBorder;
+      border-bottom: $secondaryBorder;
     }
   }
+
   &.sources {
-    padding: 0;
     margin-left: -6px;
+    padding: 0;
+
     &.shadow {
       box-shadow: $previewBoxShadow;
     }

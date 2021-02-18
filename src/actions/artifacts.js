@@ -7,23 +7,41 @@ import {
   FETCH_DATASETS_BEGIN,
   FETCH_DATASETS_FAILURE,
   FETCH_DATASETS_SUCCESS,
+  FETCH_FEATURE_SETS_BEGIN,
+  FETCH_FEATURE_SETS_FAILURE,
+  FETCH_FEATURE_SETS_SUCCESS,
+  FETCH_FEATURE_SUCCESS,
+  FETCH_FEATURE_VECTOR_SUCCESS,
+  FETCH_FEATURE_VECTORS_BEGIN,
+  FETCH_FEATURE_VECTORS_FAILURE,
+  FETCH_FEATURE_VECTORS_SUCCESS,
+  FETCH_FEATURES_BEGIN,
+  FETCH_FEATURES_FAILURE,
+  FETCH_FEATURES_SUCCESS,
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
+  FETCH_MODEL_ENDPOINTS_BEGIN,
+  FETCH_MODEL_ENDPOINTS_FAILURE,
+  FETCH_MODEL_ENDPOINTS_SUCCESS,
   FETCH_MODELS_BEGIN,
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
   REMOVE_DATASETS,
-  SHOW_ARTIFACT_PREVIEW,
-  SET_ARTIFACT_FILTER,
+  REMOVE_FEATURE,
+  REMOVE_FEATURE_SETS,
+  REMOVE_FEATURE_VECTOR,
+  REMOVE_FEATURE_VECTORS,
+  REMOVE_FEATURES,
   REMOVE_FILES,
   REMOVE_MODELS,
-  FETCH_MODEL_ENDPOINTS_BEGIN,
-  FETCH_MODEL_ENDPOINTS_FAILURE,
-  FETCH_MODEL_ENDPOINTS_SUCCESS
+  SET_ARTIFACT_FILTER,
+  SHOW_ARTIFACT_PREVIEW
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
+import { parseFeatureVectors } from '../utils/parseFeatureVectors'
+import { parseFeatures } from '../utils/parseFeatures'
 
 const artifactsAction = {
   closeArtifactsPreview: item => ({
@@ -61,13 +79,13 @@ const artifactsAction = {
     dispatch(artifactsAction.fetchDataSetsBegin())
 
     return artifactsApi
-      .getArtifactsDataSets(project)
+      .getDataSets(project)
       .then(({ data }) => {
         let dataSets = filterArtifacts(data.artifacts)
 
         dispatch(artifactsAction.fetchDataSetsSuccess(dataSets))
 
-        return dataSets
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchDataSetsFailure(err))
@@ -83,17 +101,141 @@ const artifactsAction = {
     type: FETCH_DATASETS_SUCCESS,
     payload: dataSets
   }),
+  fetchFeatureSets: (project, config) => dispatch => {
+    dispatch(artifactsAction.fetchFeatureSetsBegin())
+
+    return artifactsApi
+      .getFeatureSets(project, config)
+      .then(response => {
+        dispatch(
+          artifactsAction.fetchFeatureSetsSuccess(response.data?.feature_sets)
+        )
+
+        return response.data?.feature_sets
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFeatureSetsFailure(err))
+      })
+  },
+  fetchFeatureSetsBegin: () => ({
+    type: FETCH_FEATURE_SETS_BEGIN
+  }),
+  fetchFeatureSetsFailure: error => ({
+    type: FETCH_FEATURE_SETS_FAILURE,
+    payload: error
+  }),
+  fetchFeatureSetsSuccess: featureSets => ({
+    type: FETCH_FEATURE_SETS_SUCCESS,
+    payload: featureSets
+  }),
+  fetchFeatureVector: (featureVector, project) => dispatch => {
+    return artifactsApi
+      .getFeatureVector(featureVector, project)
+      .then(response => {
+        let featureVectors = parseFeatureVectors(response.data?.feature_vectors)
+
+        dispatch(
+          artifactsAction.fetchFeatureVectorSuccess({
+            [featureVector]: featureVectors
+          })
+        )
+
+        return response.data?.feature_vectors
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchFeatureVectorSuccess: featureSets => ({
+    type: FETCH_FEATURE_VECTOR_SUCCESS,
+    payload: featureSets
+  }),
+  fetchFeatureVectors: (project, config) => dispatch => {
+    dispatch(artifactsAction.fetchFeatureVectorsBegin())
+
+    return artifactsApi
+      .getFeatureVectors(project, config)
+      .then(response => {
+        let featureVectors = parseFeatureVectors(response.data.feature_vectors)
+
+        dispatch(artifactsAction.fetchFeatureVectorsSuccess(featureVectors))
+
+        return response.data.feature_vectors
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFeatureVectorsFailure(err))
+      })
+  },
+  fetchFeatureVectorsBegin: () => ({
+    type: FETCH_FEATURE_VECTORS_BEGIN
+  }),
+  fetchFeatureVectorsFailure: error => ({
+    type: FETCH_FEATURE_VECTORS_FAILURE,
+    payload: error
+  }),
+  fetchFeatureVectorsSuccess: featureSets => ({
+    type: FETCH_FEATURE_VECTORS_SUCCESS,
+    payload: featureSets
+  }),
+  fetchFeature: (project, feature) => dispatch => {
+    return artifactsApi
+      .getFeature(project, feature.name)
+      .then(response => {
+        const filteredFeatures = response.data.features.filter(
+          responseItem =>
+            responseItem.feature_set_digest.metadata.name ===
+            feature.metadata.name
+        )
+        let features = parseFeatures(filteredFeatures)
+
+        dispatch(artifactsAction.fetchFeatureSuccess(features))
+
+        return filteredFeatures
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchFeatureSuccess: features => ({
+    type: FETCH_FEATURE_SUCCESS,
+    payload: features
+  }),
+  fetchFeatures: item => dispatch => {
+    dispatch(artifactsAction.fetchFeaturesBegin())
+
+    return artifactsApi
+      .getFeatures(item)
+      .then(response => {
+        dispatch(artifactsAction.fetchFeaturesSuccess(response.data.features))
+
+        return response.data.features
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFeaturesFailure(err))
+      })
+  },
+  fetchFeaturesBegin: () => ({
+    type: FETCH_FEATURES_BEGIN
+  }),
+  fetchFeaturesFailure: error => ({
+    type: FETCH_FEATURES_FAILURE,
+    payload: error
+  }),
+  fetchFeaturesSuccess: features => ({
+    type: FETCH_FEATURES_SUCCESS,
+    payload: features
+  }),
   fetchFiles: project => dispatch => {
     dispatch(artifactsAction.fetchFilesBegin())
 
     return artifactsApi
-      .getArtifactsFiles(project)
+      .getFiles(project)
       .then(({ data }) => {
         let files = filterArtifacts(data.artifacts)
 
         dispatch(artifactsAction.fetchFilesSuccess(files))
 
-        return files
+        return data.artifacts
       })
       .catch(err => {
         dispatch(artifactsAction.fetchFilesFailure(err))
@@ -115,170 +257,6 @@ const artifactsAction = {
     return artifactsApi
       .getModelEndpoints(item)
       .then(({ data }) => {
-        data = {
-          endpoints: [
-            {
-              endpoint: {
-                kind: 'model-endpoint',
-                metadata: {
-                  project: 'test',
-                  tag: 'v44',
-                  labels: {
-                    L: 20,
-                    Q: 66,
-                    r: 16,
-                    j: 71
-                  }
-                },
-                spec: {
-                  model: 'model_71',
-                  function: 'function_91',
-                  model_class: 'classifier'
-                },
-                status: {
-                  state: 'active'
-                },
-                id: 'test.8d6a27af1ec985efea9d3e4b1d8d08a7'
-              },
-              first_request: null,
-              last_request: null,
-              accuracy: null,
-              error_count: null,
-              alert_count: null,
-              drift_status: null,
-              metrics: null,
-              features: null
-            },
-            {
-              endpoint: {
-                kind: 'model-endpoint',
-                metadata: {
-                  project: 'test',
-                  tag: 'v53',
-                  labels: {
-                    q: 20,
-                    p: 64,
-                    D: 41,
-                    s: 59
-                  }
-                },
-                spec: {
-                  model: 'model_70',
-                  function: 'function_66',
-                  model_class: 'classifier'
-                },
-                status: {
-                  state: 'active'
-                },
-                id: 'test.878b8f085a1e6ee5a0545a8655016846'
-              },
-              first_request: null,
-              last_request: null,
-              accuracy: null,
-              error_count: null,
-              alert_count: null,
-              drift_status: null,
-              metrics: null,
-              features: null
-            },
-            {
-              endpoint: {
-                kind: 'model-endpoint',
-                metadata: {
-                  project: 'test',
-                  tag: 'v70',
-                  labels: {
-                    f: 65,
-                    v: 10,
-                    s: 36,
-                    o: 47
-                  }
-                },
-                spec: {
-                  model: 'model_95',
-                  function: 'function_90',
-                  model_class: 'classifier'
-                },
-                status: {
-                  state: 'active'
-                },
-                id: 'test.b8e161209ce64611437d95bf56129a47'
-              },
-              first_request: null,
-              last_request: null,
-              accuracy: null,
-              error_count: null,
-              alert_count: null,
-              drift_status: null,
-              metrics: null,
-              features: null
-            },
-            {
-              endpoint: {
-                kind: 'model-endpoint',
-                metadata: {
-                  project: 'test',
-                  tag: 'v31',
-                  labels: {
-                    v: 72,
-                    m: 56,
-                    K: 50,
-                    U: 33
-                  }
-                },
-                spec: {
-                  model: 'model_33',
-                  function: 'function_13',
-                  model_class: 'classifier'
-                },
-                status: {
-                  state: 'active'
-                },
-                id: 'test.0fd0a8e6da0c0b917022617df7f9c874'
-              },
-              first_request: null,
-              last_request: null,
-              accuracy: null,
-              error_count: null,
-              alert_count: null,
-              drift_status: '-1',
-              metrics: null,
-              features: null
-            },
-            {
-              endpoint: {
-                kind: 'model-endpoint',
-                metadata: {
-                  project: 'test',
-                  tag: 'v78',
-                  labels: {
-                    u: 91,
-                    t: 38,
-                    g: 46,
-                    H: 19
-                  }
-                },
-                spec: {
-                  model: 'model_18',
-                  function: 'function_45',
-                  model_class: 'classifier'
-                },
-                status: {
-                  state: 'active'
-                },
-                id: 'test.6f354925a1398dcfa91dd863c478538a'
-              },
-              first_request: null,
-              last_request: null,
-              accuracy: null,
-              error_count: null,
-              alert_count: null,
-              drift_status: null,
-              metrics: null,
-              features: null
-            }
-          ]
-        }
         dispatch(artifactsAction.fetchModelEndpointsSuccess(data.endpoints))
 
         return data.endpoints
@@ -301,7 +279,7 @@ const artifactsAction = {
     dispatch(artifactsAction.fetchModelsBegin())
 
     return artifactsApi
-      .getArtifactsModels(project)
+      .getModels(project)
       .then(({ data }) => {
         let models = filterArtifacts(data.artifacts)
 
@@ -329,6 +307,23 @@ const artifactsAction = {
   removeDataSets: () => ({
     type: REMOVE_DATASETS
   }),
+  removeFeatureSets: () => ({
+    type: REMOVE_FEATURE_SETS
+  }),
+  removeFeatureVector: featureVectors => ({
+    type: REMOVE_FEATURE_VECTOR,
+    payload: featureVectors
+  }),
+  removeFeatureVectors: () => ({
+    type: REMOVE_FEATURE_VECTORS
+  }),
+  removeFeature: features => ({
+    type: REMOVE_FEATURE,
+    payload: features
+  }),
+  removeFeatures: () => ({
+    type: REMOVE_FEATURES
+  }),
   removeFiles: () => ({
     type: REMOVE_FILES
   }),
@@ -342,7 +337,10 @@ const artifactsAction = {
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
-  })
+  }),
+  updateFeatureSetData: (projectName, featureSet, tag, data) => () => {
+    return artifactsApi.updateFeatureSetData(projectName, featureSet, tag, data)
+  }
 }
 
 export default artifactsAction

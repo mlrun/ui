@@ -1,10 +1,10 @@
-@import '../../scss/colors.scss';
-@import '../../scss/borders.scss';
-@import '../../scss/shadows.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
 
 .project {
   &__header {
-    padding: 27px 24px;
+    padding: 20px 24px;
     background-color: $white;
     box-shadow: $headerShadow;
   }
@@ -13,7 +13,7 @@
     display: flex;
     flex: 1;
     padding: 45px;
-    background: $wildSandSecond;
+    background: $wildSand;
 
     .general-info {
       display: flex;
@@ -88,33 +88,6 @@
       &__labels {
         .chips-wrapper {
           flex-wrap: wrap;
-        }
-
-        &-item {
-          display: inline-flex;
-          margin: 10px 0 0 10px;
-          padding: 5px 10px;
-          color: $primary;
-          font-size: 14px;
-          border: $labelBorder;
-          border-radius: 15px;
-        }
-
-        .job-labels {
-          &__item-icon-close {
-            transform: scale(0.7);
-          }
-
-          &__button-add {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            margin: 10px 0 0 10px;
-            border: $labelBorder;
-            border-radius: 32px;
-          }
         }
 
         .chip-block-hidden {
@@ -202,7 +175,7 @@
 
       &__divider {
         margin: 17px 0;
-        border-top: $tableBorder;
+        border-top: $secondaryBorder;
       }
     }
 
@@ -238,7 +211,7 @@
 
           &.create-new-menu {
             margin-left: auto;
-            background-color: $purple;
+            background-color: $malibu;
             border: none;
 
             .select {

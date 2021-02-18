@@ -1,7 +1,7 @@
-@import '../../scss/colors.scss';
-@import '../../scss/borders.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
 
-.artifact-metadata {
+.details-statistics {
   padding: 20px;
 
   &__table {
@@ -18,7 +18,7 @@
       color: $topaz;
       font-weight: bold;
       background-color: $white;
-      border-bottom: $tableBorder;
+      border-bottom: $secondaryBorder;
 
       .header-item {
         text-transform: capitalize;
@@ -43,17 +43,35 @@
       display: flex;
       flex-direction: row;
       padding: 10px 0;
-      border-bottom: $tableBorder;
+      border-bottom: $secondaryBorder;
     }
 
-    .metadata-cell {
+    .statistics-cell {
       &_name {
         flex: 1.5;
       }
 
-      &_primary-key {
+      &_icon {
         flex: 0.1;
         min-width: 33px;
+      }
+
+      &_type {
+        flex: 0.5;
+      }
+
+      &_validators {
+        flex: 2;
+
+        .body {
+          display: flex;
+          align-items: center;
+        }
+
+        .status {
+          display: inline-block;
+          margin-right: 5px;
+        }
       }
     }
   }

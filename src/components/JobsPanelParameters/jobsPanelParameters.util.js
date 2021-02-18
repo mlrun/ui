@@ -1,27 +1,33 @@
+export const convertParamValue = (value, type) =>
+  ['int', 'float', 'number'].includes(type) && Number.isFinite(Number(value))
+    ? Number(value)
+    : type === 'bool' && value.toLowerCase() === 'true'
+    ? true
+    : type === 'bool' && value.toLowerCase() === 'false'
+    ? false
+    : String(value)
+
 export const editHyperParams = (hyperParams, selectedParameter, newName) => {
   if (newName) {
     if (hyperParams[selectedParameter.name]) {
       return {
         ...hyperParams,
-        [newName]: `${selectedParameter.value}`.split(',')
+        [newName]: selectedParameter.value.split(',')
       }
     } else {
       delete hyperParams[selectedParameter.name]
-
-      hyperParams[newName] = `${selectedParameter.value}`.split(',')
+      hyperParams[newName] = selectedParameter.value.split(',')
 
       return { ...hyperParams }
     }
   } else if (hyperParams[selectedParameter.name]) {
-    hyperParams[selectedParameter.name] = `${selectedParameter.value}`.split(
-      ','
-    )
+    hyperParams[selectedParameter.name] = selectedParameter.value.split(',')
 
     return { ...hyperParams }
   } else {
     return {
       ...hyperParams,
-      [selectedParameter.name]: `${selectedParameter.value}`.split(',')
+      [selectedParameter.name]: selectedParameter.value.split(',')
     }
   }
 }
@@ -50,12 +56,20 @@ export const selectOptions = {
   ],
   parametersValueType: [
     {
-      label: 'string',
-      id: 'string'
+      label: 'str',
+      id: 'str'
     },
     {
-      label: 'number',
-      id: 'number'
+      label: 'int',
+      id: 'int'
+    },
+    {
+      label: 'float',
+      id: 'float'
+    },
+    {
+      label: 'bool',
+      id: 'bool'
     },
     {
       label: 'list',

@@ -8,7 +8,7 @@ import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview
 import Download from '../../common/Download/Download'
 
 import artifactActions from '../../actions/artifacts'
-import { formatDatetime } from '../../utils/datetime'
+import { formatDatetime } from '../../utils'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 
@@ -25,7 +25,7 @@ const PreviewModal = ({ item }) => {
             {item.db_key || item.key}
           </div>
           <div className="item-data item-data__path">
-            {item.target_path.path}
+            {item.target_path?.path}
           </div>
           {item.size && (
             <div className="item-data">
@@ -41,8 +41,8 @@ const PreviewModal = ({ item }) => {
           <div className="preview-body__download">
             <Download
               fileName={item.db_key || item.key}
-              path={item.target_path.path}
-              schema={item.target_path.schema}
+              path={item.target_path?.path}
+              schema={item.target_path?.schema}
               user={item.user ?? item.producer?.owner}
             />
           </div>

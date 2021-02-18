@@ -18,8 +18,12 @@ export const modelsInfoHeaders = [
 export const modelEndpointsInfoHeaders = [{ label: 'Class', id: 'model_class' }]
 export const modelsDetailsMenu = ['overview', 'preview']
 export const modelEndpointsDetailsMenu = ['overview']
-export const modelsFilters = ['tree', 'labels', 'name']
-export const modelEndpointsFilters = ['labels']
+export const modelsFilters = [
+  { type: 'tree', label: 'Tree:' },
+  { type: 'labels', label: 'Labels:' },
+  { type: 'name', label: 'Name:' }
+]
+export const modelEndpointsFilters = [{ type: 'labels', label: 'Labels:' }]
 export const page = MODELS_PAGE
 export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register model'
@@ -99,7 +103,10 @@ export const modelEndpointsTableHeaders = [
     class: 'action_cell'
   }
 ]
-export const tabs = ['models', 'model-endpoints']
+export const tabs = [
+  { id: 'models', label: 'Models' },
+  { id: 'model-endpoints', label: 'Model endpoints' }
+]
 
 export const handleFetchData = async (
   fetchModelEndpoints,

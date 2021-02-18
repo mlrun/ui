@@ -4,6 +4,7 @@ import {
   ARTIFACTS_PAGE,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
+  FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODELS_PAGE,
   SCHEDULE_TAB
@@ -27,7 +28,14 @@ export const generateTableContent = (
     return map(groupedByName, group =>
       page === JOBS_PAGE
         ? createJobsContent(group, false)
-        : createFunctionsContent(group)
+        : page === FUNCTIONS_PAGE
+        ? createFunctionsContent(group)
+        : createArtifactsContent(
+            group,
+            page,
+            match.params.pageTab,
+            match.params.projectName
+          )
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
     setLoading(true)

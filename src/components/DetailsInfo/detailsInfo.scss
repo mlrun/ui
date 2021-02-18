@@ -7,7 +7,7 @@
     margin: 0;
     padding: 21.5px 36px;
     font-size: 25px;
-    border-bottom: $tableBorder;
+    border-bottom: $secondaryBorder;
   }
 
   &__details {
@@ -20,7 +20,7 @@
       flex-direction: row;
       align-items: center;
       padding: 18px;
-      border-bottom: $tableBorder;
+      border-bottom: $secondaryBorder;
 
       &__header {
         min-width: 100px;
@@ -55,15 +55,40 @@
       }
 
       &__parameters {
-        @include chip($parametersBorder);
+        border: $parametersBorder;
       }
 
       &__labels {
-        @include chip($labelBorder);
+        border: $labelBorder;
       }
 
       &__results {
-        @include chip($resultsBorder);
+        border: $resultsBorder;
+      }
+
+      &__input {
+        &-wrapper {
+          display: flex;
+          align-items: center;
+          width: 100%;
+
+          .input {
+            width: 100%;
+            padding: 8px 17px;
+            line-height: 16px;
+
+            &-wrapper {
+              width: 100%;
+            }
+          }
+        }
+
+        &-btn {
+          height: 30px;
+          margin-left: 10px;
+          padding: 0;
+          cursor: pointer;
+        }
       }
     }
   }
