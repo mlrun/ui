@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -9,11 +8,7 @@ import ProjectView from './ProjectView'
 import projectsAction from '../../actions/projects'
 import nuclioActions from '../../actions/nuclio'
 import projectsApi from '../../api/projects-api'
-import {
-  launchIDEOptions,
-  getLinks,
-  generateCreateNewOptions
-} from './project.utils'
+import { getLinks, generateCreateNewOptions } from './project.utils'
 import { parseKeyValues } from '../../utils'
 
 import './project.scss'
@@ -31,7 +26,6 @@ const Project = ({
   fetchProjectScheduledJobs,
   fetchProjectWorkflows,
   match,
-  nuclioStore,
   projectStore,
   removeProjectData
 }) => {
@@ -57,12 +51,7 @@ const Project = ({
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
   const history = useHistory()
-  const inputRef = React.createRef(null)
-
-  const statusClassName = classnames(
-    'general-info__status-icon',
-    projectStore.project.data?.status.state
-  )
+  const inputRef = React.createRef()
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
@@ -181,6 +170,23 @@ const Project = ({
     }
   }, [editProject, handleDocumentClick])
 
+  const handleAddProjectLabel = (label, labels) => {
+    const objectLabels = {}
+
+    labels.forEach(label => {
+      const labelParts = label.split(': ')
+
+      objectLabels[labelParts[0]] = labelParts[1]
+    })
+
+    const newLabel = {
+      [label.split(':')[0]]: label.split(':')[1].replace(' ', '')
+    }
+
+    setVisibleChipsMaxLength(null)
+    addProjectLabel(newLabel, objectLabels)
+  }
+
   const handleEditProject = useCallback(inputName => {
     setEditProject(prevState => ({
       ...prevState,
@@ -241,21 +247,9 @@ const Project = ({
     [handleSetProjectData]
   )
 
-  const handleAddProjectLabel = (label, labels) => {
-    const objectLabels = {}
-
-    labels.forEach(label => {
-      const labelParts = label.split(': ')
-
-      objectLabels[labelParts[0]] = labelParts[1]
-    })
-
-    const newLabel = {
-      [label.split(':')[0]]: label.split(':')[1].replace(' ', '')
-    }
-
-    setVisibleChipsMaxLength(null)
-    addProjectLabel(newLabel, objectLabels)
+  const handleRefresh = () => {
+    removeProjectData()
+    fetchProject(match.params.projectName)
   }
 
   const handleUpdateProjectLabels = labels => {
@@ -325,17 +319,13 @@ const Project = ({
       handleOnChangeProject={handleOnChangeProject}
       handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
-      history={history}
       isPopupDialogOpen={isPopupDialogOpen}
-      launchIDEOptions={launchIDEOptions}
       links={links}
       match={match}
-      nuclioStore={nuclioStore}
       projectLabels={projectLabels}
-      projectStore={projectStore}
       ref={inputRef}
+      refresh={handleRefresh}
       setIsPopupDialogOpen={setIsPopupDialogOpen}
-      statusClassName={statusClassName}
       visibleChipsMaxLength={visibleChipsMaxLength}
     />
   )
@@ -346,9 +336,8 @@ Project.propTypes = {
 }
 
 export default connect(
-  (projectStore, nuclioStore) => ({
-    ...projectStore,
-    ...nuclioStore
+  projectStore => ({
+    ...projectStore
   }),
   {
     ...projectsAction,

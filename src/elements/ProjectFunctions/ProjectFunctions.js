@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { lowerCase, upperFirst } from 'lodash'
+import { useSelector } from 'react-redux'
 
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
@@ -9,9 +10,10 @@ import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 const ProjectFunctions = ({
   fetchApiGateways,
   fetchNuclioFunctions,
-  functionsStore,
   match
 }) => {
+  const functionsStore = useSelector(store => store.nuclioStore)
+
   useEffect(() => {
     fetchNuclioFunctions(match.params.projectName)
   }, [fetchNuclioFunctions, match.params.projectName])
@@ -129,7 +131,6 @@ const ProjectFunctions = ({
 ProjectFunctions.propTypes = {
   fetchApiGateways: PropTypes.func.isRequired,
   fetchNuclioFunctions: PropTypes.func.isRequired,
-  functionsStore: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired
 }
 
