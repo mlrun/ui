@@ -24,7 +24,15 @@
     padding: 15px 12px;
 
     .projects-content-header {
+      display: flex;
+      flex: 1;
+      flex-flow: row wrap;
+      justify-content: space-between;
       padding-left: 15px;
+
+      &-item {
+        display: flex;
+      }
 
       .project-types-select {
         width: 180px;
@@ -59,5 +67,10 @@
     .input-wrapper {
       margin: 10px 0;
     }
+  }
+
+  &-search {
+    min-width: 500px;
+    margin-bottom: 15px;
   }
 }

@@ -9,7 +9,8 @@ import {
   generateProjectActionsMenu,
   generateProjectsStates,
   successProjectDeletingMessage,
-  failedProjectDeletingMessage
+  failedProjectDeletingMessage,
+  generateProjectsSortOptions
 } from './projectsData'
 import nuclioActions from '../../actions/nuclio'
 import notificationActions from '../../actions/notification'
@@ -40,12 +41,21 @@ const Projects = ({
   const [convertedYaml, setConvertedYaml] = useState('')
   const [createProject, setCreateProject] = useState(false)
   const [filteredProjects, setFilteredProjects] = useState([])
+  const [filterByName, setFilterByName] = useState('')
+  const [filterMatches, setFilterMatches] = useState([])
+  const [isDescendingOrder, setIsDescendingOrder] = useState(true)
   const [isEmptyValue, setIsEmptyValue] = useState(false)
   const [selectedProjectsState, setSelectedProjectsState] = useState(
     'allProjects'
   )
+  const [sortProjectData, setSortProjectData] = useState({
+    id: 'byName',
+    label: 'By name',
+    sortPath: 'name'
+  })
 
   const projectsStates = useMemo(generateProjectsStates, [])
+  const projectsSortOptions = useMemo(generateProjectsSortOptions, [])
 
   const handleArchiveProject = useCallback(
     project => {
@@ -218,17 +228,75 @@ const Projects = ({
     fetchNuclioFunctions()
   }, [fetchNuclioFunctions, fetchProjects])
 
+  const filterProjectsHandler = useCallback(
+    project => {
+      return filterByName.length > 0
+        ? (project.metadata.name.includes(filterByName) &&
+            selectedProjectsState === 'allProjects' &&
+            project.status.state !== 'archived') ||
+            project.status.state === selectedProjectsState
+        : (selectedProjectsState === 'allProjects' &&
+            project.status.state !== 'archived') ||
+            project.status.state === selectedProjectsState
+    },
+    [filterByName, selectedProjectsState]
+  )
+
+  const sortProjectsHandler = useCallback(
+    (a, b, sortPath) => {
+      return isDescendingOrder
+        ? a.metadata[sortPath] < b.metadata[sortPath]
+          ? -1
+          : 1
+        : a.metadata[sortPath] < b.metadata[sortPath]
+        ? 1
+        : -1
+    },
+    [isDescendingOrder]
+  )
+
   useEffect(() => {
     setFilteredProjects(
-      projectStore.projects.filter(project => {
-        return (
-          (selectedProjectsState === 'allProjects' &&
-            project.status.state !== 'archived') ||
-          project.status.state === selectedProjectsState
-        )
-      })
+      projectStore.projects
+        .filter(project => filterProjectsHandler(project))
+        .sort((a, b) => sortProjectsHandler(a, b, sortProjectData.sortPath))
     )
-  }, [projectStore.projects, selectedProjectsState])
+  }, [
+    filterByName,
+    filterProjectsHandler,
+    isDescendingOrder,
+    projectStore.projects,
+    selectedProjectsState,
+    sortProjectData.sortPath,
+    sortProjectsHandler
+  ])
+
+  useEffect(() => {
+    if (filterByName.length > 0) {
+      setFilterMatches(filteredProjects.map(func => func.metadata.name))
+    }
+  }, [filterByName, filteredProjects])
+
+  const handleSearchOnChange = value => {
+    if (value.length === 0) {
+      setFilterByName('')
+      setFilterMatches([])
+
+      if (filteredProjects.length > 0) {
+        setFilteredProjects([])
+      }
+    } else {
+      setFilterByName(value)
+    }
+  }
+
+  const refreshProjects = () => {
+    fetchProjects()
+  }
+
+  const setSortProjectDataHandler = id => {
+    setSortProjectData(projectsSortOptions.find(option => option.id === id))
+  }
 
   return (
     <ProjectsView
@@ -243,19 +311,29 @@ const Projects = ({
       fetchProjectFunctions={fetchProjectFunctions}
       fetchProjectModels={fetchProjectModels}
       fetchProjectRunningJobs={fetchProjectRunningJobs}
+      filterByName={filterByName}
       filteredProjects={filteredProjects}
+      filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
+      handleSearchOnChange={handleSearchOnChange}
+      isDescendingOrder={isDescendingOrder}
       isEmptyValue={isEmptyValue}
       match={match}
       nuclioStore={nuclioStore}
       projectStore={projectStore}
+      projectsSortOptions={projectsSortOptions}
       projectsStates={projectsStates}
+      refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}
       selectedProjectsState={selectedProjectsState}
       setCreateProject={setCreateProject}
+      setFilterMatches={setFilterMatches}
+      setIsDescendingOrder={setIsDescendingOrder}
       setNewProjectDescription={setNewProjectDescription}
       setNewProjectName={setNewProjectName}
       setSelectedProjectsState={setSelectedProjectsState}
+      setSortProjectDataHandler={setSortProjectDataHandler}
+      sortProjectData={sortProjectData}
     />
   )
 }

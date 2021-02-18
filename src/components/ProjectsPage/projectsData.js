@@ -55,5 +55,17 @@ export const generateProjectsStates = () => [
     label: 'Archived Projects'
   }
 ]
+export const generateProjectsSortOptions = () => [
+  {
+    id: 'byName',
+    label: 'By name',
+    sortPath: 'name'
+  },
+  {
+    id: 'byDate',
+    label: 'By date',
+    sortPath: 'created'
+  }
+]
 export const successProjectDeletingMessage = 'Project deleted successfully'
 export const failedProjectDeletingMessage = 'Failed to delete project'
