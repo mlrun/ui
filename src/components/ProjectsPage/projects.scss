@@ -32,6 +32,10 @@
 
       &-item {
         display: flex;
+
+        .sort {
+          margin-left: 30px;
+        }
       }
 
       .project-types-select {

@@ -45,6 +45,7 @@ import {
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_DATA,
+  REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
   SET_NEW_PROJECT_NAME,
   SET_PROJECT_LABELS
@@ -663,6 +664,11 @@ export default (state = initialState, { type, payload }) => {
             loading: false
           }
         }
+      }
+    case REMOVE_PROJECTS:
+      return {
+        ...state,
+        projects: []
       }
     case REMOVE_NEW_PROJECT_ERROR:
       return {

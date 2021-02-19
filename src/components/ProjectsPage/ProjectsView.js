@@ -18,7 +18,7 @@ import Sort from '../../common/Sort/Sort'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
 
-import { pageData } from './projectsData'
+import { pageData, projectsSortOptions, projectsStates } from './projectsData'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
@@ -46,8 +46,6 @@ const ProjectsView = ({
   match,
   nuclioStore,
   projectStore,
-  projectsSortOptions,
-  projectsStates,
   refreshProjects,
   removeNewProjectError,
   selectedProjectsState,
@@ -57,8 +55,8 @@ const ProjectsView = ({
   setNewProjectDescription,
   setNewProjectName,
   setSelectedProjectsState,
-  setSortProjectDataHandler,
-  sortProjectData
+  setSortProjectId,
+  sortProjectId
 }) => {
   const projectsClassNames = classnames(
     'projects',
@@ -169,9 +167,9 @@ const ProjectsView = ({
                 />
                 <Sort
                   isDescendingOrder={isDescendingOrder}
-                  onClickHandler={setSortProjectDataHandler}
+                  onSelectOption={setSortProjectId}
                   options={projectsSortOptions}
-                  selectedValue={sortProjectData}
+                  selectedId={sortProjectId}
                   setIsDescendingOrder={setIsDescendingOrder}
                 />
               </div>
@@ -194,7 +192,8 @@ const ProjectsView = ({
               {filterByName.length > 0 &&
               (filterMatches.length === 0 || filteredProjects.length === 0) ? (
                 <NoData />
-              ) : selectedProjectsState === 'archived' ? (
+              ) : selectedProjectsState === 'archived' &&
+                filteredProjects.length === 0 ? (
                 <div className="no-filtered-data">No archived projects.</div>
               ) : (
                 filteredProjects.map(project => {
@@ -256,8 +255,6 @@ ProjectsView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   nuclioStore: PropTypes.shape({}).isRequired,
   projectStore: PropTypes.shape({}).isRequired,
-  projectsSortOptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  projectsStates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
@@ -267,8 +264,8 @@ ProjectsView.propTypes = {
   setNewProjectDescription: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
-  setSortProjectDataHandler: PropTypes.func.isRequired,
-  sortProjectData: PropTypes.shape({}).isRequired
+  setSortProjectId: PropTypes.func.isRequired,
+  sortProjectId: PropTypes.string.isRequired
 }
 
 export default ProjectsView

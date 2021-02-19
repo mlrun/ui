@@ -10,29 +10,33 @@ import './sort.scss'
 
 const Sort = ({
   isDescendingOrder,
-  onClickHandler,
+  onSelectOption,
   options,
-  selectedValue,
+  selectedId,
   setIsDescendingOrder
 }) => {
-  const [isOpenBody, setOpenBody] = useState(false)
+  const [isBodyOpen, setIsBodyOpen] = useState(false)
+  const [selectedOption, setSelectedOption] = useState({})
   const labelRef = useRef(null)
   const arrowDirectionClassName = classNames(
-    isDescendingOrder && 'sort__down',
-    !isDescendingOrder && 'sort__up'
+    isDescendingOrder ? 'sort_down' : 'sort_up'
   )
+
+  useEffect(() => {
+    setSelectedOption(options.find(option => option.id === selectedId))
+  }, [options, selectedId])
 
   const handleDocumentClick = useCallback(
     event => {
       if (
         event.target &&
         !labelRef.current?.contains(event.target) &&
-        isOpenBody
+        isBodyOpen
       ) {
-        setOpenBody(false)
+        setIsBodyOpen(false)
       }
     },
-    [isOpenBody, labelRef]
+    [isBodyOpen]
   )
 
   useEffect(() => {
@@ -45,38 +49,30 @@ const Sort = ({
     }
   }, [handleDocumentClick, labelRef])
 
-  const handleCloseSortBody = useCallback(event => {
-    event.stopPropagation()
-
-    setOpenBody(false)
-  }, [])
-
   return (
     <div className="sort">
       <div className="sort__header">
-        <div onClick={() => setOpenBody(!isOpenBody)} ref={labelRef}>
-          {selectedValue.label}
+        <div onClick={() => setIsBodyOpen(state => !state)} ref={labelRef}>
+          {selectedOption.label}
         </div>
-        <button onClick={() => setIsDescendingOrder(!isDescendingOrder)}>
+        <button onClick={() => setIsDescendingOrder(state => !state)}>
           <Arrow className={arrowDirectionClassName} />
         </button>
       </div>
-      {isOpenBody && (
-        <>
-          <div className="sort__body" onClick={handleCloseSortBody}>
-            {options.map(option => {
-              return (
-                <SelectOption
-                  item={option}
-                  key={option.id}
-                  onClick={selectedOption => onClickHandler(selectedOption)}
-                  selectType=""
-                  selectedId={selectedValue.id}
-                />
-              )
-            })}
-          </div>
-        </>
+      {isBodyOpen && (
+        <div className="sort__body" onClick={() => setIsBodyOpen(false)}>
+          {options.map(option => {
+            return (
+              <SelectOption
+                item={option}
+                key={option.id}
+                onClick={onSelectOption}
+                selectType=""
+                selectedId={selectedOption.id}
+              />
+            )
+          })}
+        </div>
       )}
     </div>
   )
@@ -84,9 +80,9 @@ const Sort = ({
 
 Sort.propTypes = {
   isDescendingOrder: PropTypes.bool.isRequired,
-  onClickHandler: PropTypes.func.isRequired,
+  onSelectOption: PropTypes.func.isRequired,
   options: PropTypes.array.isRequired,
-  selectedValue: PropTypes.shape({}).isRequired,
+  selectedId: PropTypes.string.isRequired,
   setIsDescendingOrder: PropTypes.func.isRequired
 }
 

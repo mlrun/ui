@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
+import { orderBy } from 'lodash'
 
 import ProjectsView from './ProjectsView'
 
 import {
   generateProjectActionsMenu,
-  generateProjectsStates,
   successProjectDeletingMessage,
   failedProjectDeletingMessage,
-  generateProjectsSortOptions
+  projectsSortOptions
 } from './projectsData'
 import nuclioActions from '../../actions/nuclio'
 import notificationActions from '../../actions/notification'
@@ -32,6 +32,7 @@ const Projects = ({
   projectStore,
   removeNewProject,
   removeNewProjectError,
+  removeProjects,
   setNewProjectDescription,
   setNewProjectName,
   setNotification
@@ -48,14 +49,39 @@ const Projects = ({
   const [selectedProjectsState, setSelectedProjectsState] = useState(
     'allProjects'
   )
-  const [sortProjectData, setSortProjectData] = useState({
-    id: 'byName',
-    label: 'By name',
-    sortPath: 'name'
-  })
+  const [sortProjectId, setSortProjectId] = useState('byName')
 
-  const projectsStates = useMemo(generateProjectsStates, [])
-  const projectsSortOptions = useMemo(generateProjectsSortOptions, [])
+  const isValidProjectState = useCallback(
+    project => {
+      return (
+        (selectedProjectsState === 'allProjects' &&
+          project.status.state !== 'archived') ||
+        project.status.state === selectedProjectsState
+      )
+    },
+    [selectedProjectsState]
+  )
+
+  const handleFilterProject = useCallback(
+    project => {
+      return filterByName.length > 0
+        ? project.metadata.name.includes(filterByName) &&
+            isValidProjectState(project)
+        : isValidProjectState(project)
+    },
+    [filterByName, isValidProjectState]
+  )
+
+  const handleSortProjects = useCallback(
+    projects => {
+      const sortPath = projectsSortOptions.find(
+        option => option.id === sortProjectId
+      ).path
+
+      return orderBy(projects, [sortPath], [isDescendingOrder ? 'asc' : 'desc'])
+    },
+    [isDescendingOrder, sortProjectId]
+  )
 
   const handleArchiveProject = useCallback(
     project => {
@@ -129,46 +155,6 @@ const Projects = ({
     [convertedYaml.length]
   )
 
-  const handleCreateProject = e => {
-    e.preventDefault()
-
-    if (!e.currentTarget.checkValidity()) {
-      return false
-    }
-
-    if (projectStore.newProject.name.length === 0) {
-      setIsEmptyValue(true)
-      return false
-    } else if (isEmptyValue) {
-      setIsEmptyValue(false)
-    }
-
-    createNewProject({
-      metadata: {
-        name: projectStore.newProject.name
-      },
-      spec: {
-        description: projectStore.newProject.description
-      }
-    }).then(result => {
-      if (result) {
-        setCreateProject(false)
-        removeNewProject()
-        fetchProjects()
-      }
-    })
-  }
-
-  const closeNewProjectPopUp = useCallback(() => {
-    if (projectStore.newProject.error) {
-      removeNewProjectError()
-    }
-
-    removeNewProject()
-    setIsEmptyValue(false)
-    setCreateProject(false)
-  }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
-
   const onArchiveProject = useCallback(
     project => {
       setConfirmData({
@@ -228,48 +214,11 @@ const Projects = ({
     fetchNuclioFunctions()
   }, [fetchNuclioFunctions, fetchProjects])
 
-  const filterProjectsHandler = useCallback(
-    project => {
-      return filterByName.length > 0
-        ? (project.metadata.name.includes(filterByName) &&
-            selectedProjectsState === 'allProjects' &&
-            project.status.state !== 'archived') ||
-            project.status.state === selectedProjectsState
-        : (selectedProjectsState === 'allProjects' &&
-            project.status.state !== 'archived') ||
-            project.status.state === selectedProjectsState
-    },
-    [filterByName, selectedProjectsState]
-  )
-
-  const sortProjectsHandler = useCallback(
-    (a, b, sortPath) => {
-      return isDescendingOrder
-        ? a.metadata[sortPath] < b.metadata[sortPath]
-          ? -1
-          : 1
-        : a.metadata[sortPath] < b.metadata[sortPath]
-        ? 1
-        : -1
-    },
-    [isDescendingOrder]
-  )
-
   useEffect(() => {
     setFilteredProjects(
-      projectStore.projects
-        .filter(project => filterProjectsHandler(project))
-        .sort((a, b) => sortProjectsHandler(a, b, sortProjectData.sortPath))
+      handleSortProjects(projectStore.projects.filter(handleFilterProject))
     )
-  }, [
-    filterByName,
-    filterProjectsHandler,
-    isDescendingOrder,
-    projectStore.projects,
-    selectedProjectsState,
-    sortProjectData.sortPath,
-    sortProjectsHandler
-  ])
+  }, [handleFilterProject, handleSortProjects, projectStore.projects])
 
   useEffect(() => {
     if (filterByName.length > 0) {
@@ -277,25 +226,53 @@ const Projects = ({
     }
   }, [filterByName, filteredProjects])
 
-  const handleSearchOnChange = value => {
-    if (value.length === 0) {
-      setFilterByName('')
-      setFilterMatches([])
-
-      if (filteredProjects.length > 0) {
-        setFilteredProjects([])
-      }
-    } else {
-      setFilterByName(value)
+  const closeNewProjectPopUp = useCallback(() => {
+    if (projectStore.newProject.error) {
+      removeNewProjectError()
     }
+
+    removeNewProject()
+    setIsEmptyValue(false)
+    setCreateProject(false)
+  }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
+
+  const handleCreateProject = e => {
+    e.preventDefault()
+
+    if (!e.currentTarget.checkValidity()) {
+      return false
+    }
+
+    if (projectStore.newProject.name.length === 0) {
+      setIsEmptyValue(true)
+      return false
+    } else if (isEmptyValue) {
+      setIsEmptyValue(false)
+    }
+
+    createNewProject({
+      metadata: {
+        name: projectStore.newProject.name
+      },
+      spec: {
+        description: projectStore.newProject.description
+      }
+    }).then(result => {
+      if (result) {
+        setCreateProject(false)
+        removeNewProject()
+        fetchProjects()
+      }
+    })
+  }
+
+  const handleSearchOnChange = value => {
+    setFilterByName(value)
   }
 
   const refreshProjects = () => {
+    removeProjects()
     fetchProjects()
-  }
-
-  const setSortProjectDataHandler = id => {
-    setSortProjectData(projectsSortOptions.find(option => option.id === id))
   }
 
   return (
@@ -321,8 +298,6 @@ const Projects = ({
       match={match}
       nuclioStore={nuclioStore}
       projectStore={projectStore}
-      projectsSortOptions={projectsSortOptions}
-      projectsStates={projectsStates}
       refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}
       selectedProjectsState={selectedProjectsState}
@@ -332,8 +307,8 @@ const Projects = ({
       setNewProjectDescription={setNewProjectDescription}
       setNewProjectName={setNewProjectName}
       setSelectedProjectsState={setSelectedProjectsState}
-      setSortProjectDataHandler={setSortProjectDataHandler}
-      sortProjectData={sortProjectData}
+      setSortProjectId={setSortProjectId}
+      sortProjectId={sortProjectId}
     />
   )
 }

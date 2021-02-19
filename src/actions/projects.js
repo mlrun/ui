@@ -46,6 +46,7 @@ import {
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_DATA,
+  REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
   SET_NEW_PROJECT_NAME,
   SET_PROJECT_LABELS
@@ -402,6 +403,7 @@ const projectsAction = {
   removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
+  removeProjects: () => ({ type: REMOVE_PROJECTS }),
   setNewProjectDescription: description => ({
     type: SET_NEW_PROJECT_DESCRIPTION,
     payload: description
