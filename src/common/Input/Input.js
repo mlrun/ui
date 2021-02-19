@@ -158,7 +158,7 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   requiredText: PropTypes.string,
-  tip: PropTypes.string,
+  tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   wrapperClassName: PropTypes.string

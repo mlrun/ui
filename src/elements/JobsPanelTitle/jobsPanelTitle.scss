@@ -12,6 +12,12 @@
 
     &-accordion {
       border-bottom: $primaryBorder;
+
+      .accordion {
+        &__body {
+          overflow: visible;
+        }
+      }
     }
 
     &-edit-icon {
