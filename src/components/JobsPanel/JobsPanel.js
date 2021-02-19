@@ -230,7 +230,12 @@ const JobsPanel = ({
   }
 
   const isTitleValid = () => {
-    return panelState.currentFunctionInfo.name.trim() !== ''
+    return (
+      panelState.currentFunctionInfo.name.trim() !== '' &&
+      /^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/.test(
+        panelState.currentFunctionInfo.name
+      )
+    )
   }
 
   return (
