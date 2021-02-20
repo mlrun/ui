@@ -38,6 +38,17 @@ const JobsPanelTitleView = ({
     'job-panel__title-edit-icon',
     openScheduleJob && 'job-panel__title-edit-icon_disabled'
   )
+  const titleValidationTip = editTitle ? (
+    <>
+      <span>&bull; Valid characters: A-Z, a-z, 0-9, -, _, .</span>
+      <br />
+      <span>&bull; Must begin and end with: A-Z, a-z, 0-9</span>
+      <br />
+      <span>&bull; Length - max: 63</span>
+    </>
+  ) : (
+    ''
+  )
 
   return (
     <div className="job-panel__title">
@@ -68,17 +79,24 @@ const JobsPanelTitleView = ({
             <>
               <Input
                 className={funcTitleClassNames}
+                disabled={!editTitle}
                 onChange={name =>
                   panelDispatch({
                     type: panelActions.SET_CURRENT_FUNCTION_INFO_NAME,
                     payload: name
                   })
                 }
+                maxLength={63}
+                pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
+                required={!isTitleValid()}
+                requiredText={
+                  currentFunctionInfo.name.length === 0
+                    ? 'This field is required'
+                    : 'This field is invalid'
+                }
+                tip={titleValidationTip}
                 type="text"
                 value={currentFunctionInfo.name}
-                disabled={!editTitle}
-                required={!isTitleValid()}
-                requiredText="This field is required"
                 wrapperClassName={
                   !editTitle ? 'job-panel__title-input-wrapper' : ''
                 }

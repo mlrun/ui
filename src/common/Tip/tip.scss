@@ -14,9 +14,31 @@
     background: $primary;
     border-radius: 2px;
 
-    &-left {
+    &_top {
       bottom: calc(100% + 10px);
       left: -10px;
+
+      &::after {
+        bottom: -4px;
+      }
+    }
+
+    &_bottom {
+      &::after {
+        top: -4px;
+      }
+    }
+
+    &_left {
+      &::after {
+        left: 13px;
+      }
+    }
+
+    &_right {
+      &::after {
+        right: 13px;
+      }
     }
 
     &_small {
@@ -29,8 +51,6 @@
 
     &::after {
       position: absolute;
-      bottom: -4px;
-      left: 13px;
       width: 10px;
       height: 10px;
       background: $primary;

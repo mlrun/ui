@@ -63,7 +63,7 @@ const ProjectsView = ({
                 className="pop-up-dialog__form-input"
                 floatingLabel
                 label="Name"
-                maxLength="63"
+                maxLength={63}
                 onChange={name => setNewProjectName(name)}
                 required={
                   isEmptyValue && projectStore.newProject.name.length === 0
