@@ -13,8 +13,14 @@ import ProjectCard from '../../elements/ProjectCard/ProjectCard'
 import NoData from '../../common/NoData/NoData'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import Notification from '../../common/Notification/Notification'
+import Search from '../../common/Search/Search'
+import Sort from '../../common/Sort/Sort'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
-import { pageData } from './projectsData'
+import { pageData, projectsSortOptions, projectsStates } from './projectsData'
+
+import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
 import './projects.scss'
 
@@ -30,19 +36,27 @@ const ProjectsView = ({
   fetchProjectFunctions,
   fetchProjectModels,
   fetchProjectRunningJobs,
+  filterByName,
   filteredProjects,
+  filterMatches,
   handleCreateProject,
+  handleSearchOnChange,
+  isDescendingOrder,
   isEmptyValue,
   match,
   nuclioStore,
   projectStore,
-  projectsStates,
+  refreshProjects,
   removeNewProjectError,
   selectedProjectsState,
   setCreateProject,
+  setFilterMatches,
+  setIsDescendingOrder,
   setNewProjectDescription,
   setNewProjectName,
-  setSelectedProjectsState
+  setSelectedProjectsState,
+  setSortProjectId,
+  sortProjectId
 }) => {
   const projectsClassNames = classnames(
     'projects',
@@ -143,16 +157,45 @@ const ProjectsView = ({
         {projectStore.projects.length > 0 && !projectStore.error ? (
           <>
             <div className="projects-content-header">
-              <Select
-                onClick={setSelectedProjectsState}
-                options={projectsStates}
-                selectedId={selectedProjectsState}
-                className="project-types-select"
-                withoutBorder
-              />
+              <div className="projects-content-header-item">
+                <Select
+                  onClick={setSelectedProjectsState}
+                  options={projectsStates}
+                  selectedId={selectedProjectsState}
+                  className="project-types-select"
+                  withoutBorder
+                />
+                <Sort
+                  isDescendingOrder={isDescendingOrder}
+                  onSelectOption={setSortProjectId}
+                  options={projectsSortOptions}
+                  selectedId={sortProjectId}
+                  setIsDescendingOrder={setIsDescendingOrder}
+                />
+              </div>
+              <div className="projects-content-header-item">
+                <Search
+                  className="projects-search"
+                  matches={filterMatches}
+                  onChange={value => handleSearchOnChange(value)}
+                  placeholder="Search projects..."
+                  setMatches={setFilterMatches}
+                />
+                <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
+                  <button onClick={refreshProjects}>
+                    <Refresh />
+                  </button>
+                </Tooltip>
+              </div>
             </div>
             <div className="projects-content">
-              {filteredProjects.length > 0 ? (
+              {filterByName.length > 0 &&
+              (filterMatches.length === 0 || filteredProjects.length === 0) ? (
+                <NoData />
+              ) : selectedProjectsState === 'archived' &&
+                filteredProjects.length === 0 ? (
+                <div className="no-filtered-data">No archived projects.</div>
+              ) : (
                 filteredProjects.map(project => {
                   return (
                     <ProjectCard
@@ -169,9 +212,7 @@ const ProjectsView = ({
                     />
                   )
                 })
-              ) : selectedProjectsState === 'archived' ? (
-                <div className="no-filtered-data">No archived projects.</div>
-              ) : null}
+              )}
             </div>
           </>
         ) : projectStore.loading ? null : (
@@ -185,6 +226,10 @@ const ProjectsView = ({
       <Notification />
     </div>
   )
+}
+
+ProjectsView.defaultProps = {
+  searchValue: null
 }
 
 ProjectsView.propTypes = {
@@ -201,19 +246,26 @@ ProjectsView.propTypes = {
   fetchProjectFunctions: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
   fetchProjectRunningJobs: PropTypes.func.isRequired,
+  filterByName: PropTypes.string.isRequired,
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
+  handleSearchOnChange: PropTypes.func.isRequired,
   isEmptyValue: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   nuclioStore: PropTypes.shape({}).isRequired,
   projectStore: PropTypes.shape({}).isRequired,
-  projectsStates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
   setCreateProject: PropTypes.func.isRequired,
+  setFilterMatches: PropTypes.func.isRequired,
+  setIsDescendingOrder: PropTypes.func.isRequired,
   setNewProjectDescription: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
-  setSelectedProjectsState: PropTypes.func.isRequired
+  setSelectedProjectsState: PropTypes.func.isRequired,
+  setSortProjectId: PropTypes.func.isRequired,
+  sortProjectId: PropTypes.string.isRequired
 }
 
 export default ProjectsView

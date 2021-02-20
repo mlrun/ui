@@ -45,7 +45,7 @@ export const generateProjectActionsMenu = (
 
   return actionsMenu
 }
-export const generateProjectsStates = () => [
+export const projectsStates = [
   {
     id: 'allProjects',
     label: 'All Projects'
@@ -53,6 +53,18 @@ export const generateProjectsStates = () => [
   {
     id: 'archived',
     label: 'Archived Projects'
+  }
+]
+export const projectsSortOptions = [
+  {
+    id: 'byName',
+    label: 'By name',
+    path: 'metadata.name'
+  },
+  {
+    id: 'byDate',
+    label: 'By date',
+    path: 'metadata.created'
   }
 ]
 export const successProjectDeletingMessage = 'Project deleted successfully'
