@@ -78,7 +78,7 @@ const Projects = ({
         option => option.id === sortProjectId
       ).path
 
-      return orderBy(projects, [sortPath], [isDescendingOrder ? 'asc' : 'desc'])
+      return orderBy(projects, [sortPath], [isDescendingOrder ? 'desc' : 'asc'])
     },
     [isDescendingOrder, sortProjectId]
   )
