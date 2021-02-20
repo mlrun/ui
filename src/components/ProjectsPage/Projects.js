@@ -44,7 +44,7 @@ const Projects = ({
   const [filteredProjects, setFilteredProjects] = useState([])
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
-  const [isDescendingOrder, setIsDescendingOrder] = useState(true)
+  const [isDescendingOrder, setIsDescendingOrder] = useState(false)
   const [isEmptyValue, setIsEmptyValue] = useState(false)
   const [selectedProjectsState, setSelectedProjectsState] = useState(
     'allProjects'
