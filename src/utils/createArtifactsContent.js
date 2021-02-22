@@ -310,7 +310,11 @@ const createFeatureSetsRowData = (artifact, project) => {
     key: {
       value: artifact.name,
       class: 'artifacts_medium',
-      link: `/projects/${project}/feature-store/feature-sets/${artifact.name}/${artifact.tag}/overview`
+      link: `/projects/${project}/feature-store/feature-sets/${artifact.name}/${artifact.tag}/overview`,
+      expandedCellContent: {
+        class: 'artifacts_medium',
+        value: artifact.tag
+      }
     },
     description: {
       value: artifact.description,
