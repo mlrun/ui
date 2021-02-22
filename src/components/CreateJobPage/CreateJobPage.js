@@ -99,10 +99,8 @@ const CreateJobPage = ({
       )
       const filteredTemplatesCategories = {}
 
-      Object.entries(templatesCategories).forEach(category => {
-        filteredTemplatesCategories[
-          category[0]
-        ] = category[1].filter(template =>
+      Object.entries(templatesCategories).forEach(([key, value]) => {
+        filteredTemplatesCategories[key] = value.filter(template =>
           template.metadata.name.includes(filterByName)
         )
       })

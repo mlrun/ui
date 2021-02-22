@@ -41,15 +41,13 @@ const JobsPanelParametersTableView = ({
           <div className="table__cell-actions" />
         </div>
       )}
-      {Object.entries(tableContent)?.map((contentCategory, index) => {
-        return contentCategory[1].length > 0 ? (
-          <div key={contentCategory[0]}>
+      {Object.entries(tableContent)?.map(([key, value], index) =>
+        value.length > 0 ? (
+          <div key={key}>
             <div className="table__row no-hover">
-              <div className="table__cell table__subheader">
-                {contentCategory[0]}
-              </div>
+              <div className="table__cell table__subheader">{key}</div>
             </div>
-            {contentCategory[1].map(contentItem => {
+            {value.map(contentItem => {
               if (
                 editItem &&
                 contentItem.data.name === selectedItem.data.name
@@ -58,7 +56,7 @@ const JobsPanelParametersTableView = ({
                   <EditableParametersRow
                     disabledOptions={disabledOptions}
                     handleEdit={handleEditParameter}
-                    key={contentItem.data.name + index}
+                    key={`${contentItem.data.name}${index}`}
                     selectedParameter={selectedItem}
                     setSelectedParameter={setSelectedItem}
                   />
@@ -76,7 +74,7 @@ const JobsPanelParametersTableView = ({
                     contentItem={contentItem}
                     handleDelete={handleDeleteParameter}
                     handleEdit={handleEditParameter}
-                    key={contentItem.data.name + index}
+                    key={`${contentItem.data.name}${index}`}
                     section="parameters"
                     withCheckbox
                   />
@@ -85,7 +83,7 @@ const JobsPanelParametersTableView = ({
             })}
           </div>
         ) : null
-      })}
+      )}
       {children}
     </div>
   )
