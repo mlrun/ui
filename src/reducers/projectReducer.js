@@ -207,6 +207,11 @@ export default (state = initialState, { type, payload }) => {
             error: null,
             loading: false
           },
+          featureSets: {
+            data: null,
+            error: null,
+            loading: false
+          },
           files: {
             data: null,
             error: null,
