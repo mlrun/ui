@@ -223,7 +223,10 @@ export const renderContent = (
     case DETAILS_TRANSFORMATIONS_TAB:
       return <DetailsTransformations selectedItem={selectedItem} />
     case DETAILS_ANALYSIS_TAB:
-      if (selectedItem.kind === 'dataset' && selectedItem.extra_data) {
+      if (
+        (selectedItem.kind === 'dataset' && selectedItem.extra_data) ||
+        selectedItem.analysis
+      ) {
         return (
           <DetailsAnalysis
             artifact={selectedItem}

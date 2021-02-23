@@ -1,5 +1,6 @@
 export const createArtifactPreviewContent = res => {
   const artifact = {}
+  console.log(res)
   if (res.headers['content-type'].includes('text/csv')) {
     const data = res.data.split('\n')
     if (data[0].includes('state')) {
