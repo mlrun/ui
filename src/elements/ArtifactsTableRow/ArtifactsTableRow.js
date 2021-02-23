@@ -42,6 +42,25 @@ const ArtifactsTableRow = ({
   )
   const mainRowData = Object.values(rowItem)
 
+  const findCurrentItem = artifact => {
+    if (match.params.pageTab === FEATURES_TAB) {
+      return content.find(
+        item =>
+          `${item.name}-${item.metadata?.name}` ===
+          `${artifact.key?.value}-${artifact.feature_set?.value}`
+      )
+    } else {
+      return content.find(contentItem => {
+        const key = contentItem.db_key ? 'db_key' : 'name'
+
+        return (
+          contentItem[key] === artifact.key.value &&
+          contentItem.tag === artifact.version?.value
+        )
+      })
+    }
+  }
+
   return (
     <div className={rowClassNames} ref={parent}>
       {parent.current?.classList.contains('parent-row-expanded') ? (
@@ -67,30 +86,15 @@ const ArtifactsTableRow = ({
             })}
           </div>
           {tableContent.map((artifact, index) => {
+            const currentItem = findCurrentItem(artifact)
             const subRowClassNames = classnames(
               'table-body__row',
               ((selectedItem?.db_key &&
-                selectedItem?.db_key === content[index]?.db_key) ||
+                selectedItem?.db_key === currentItem.db_key) ||
                 (selectedItem?.name &&
-                  selectedItem?.name === content[index]?.name)) &&
+                  selectedItem?.name === currentItem.name)) &&
                 'row_active'
             )
-            let currentItem = {}
-
-            if (match.params.pageTab === FEATURES_TAB) {
-              currentItem = content.find(
-                item =>
-                  `${item.name}-${item.metadata?.name}` ===
-                  `${artifact.key?.value}-${artifact.feature_set?.value}`
-              )
-            } else {
-              currentItem = content.find(
-                contentItem =>
-                  (contentItem.name === artifact.name ||
-                    contentItem.db_key === artifact.db_key) &&
-                  contentItem.tag === artifact.version?.value
-              )
-            }
 
             return (
               <div className={subRowClassNames} key={index}>
