@@ -36,7 +36,7 @@ const ProjectView = React.forwardRef(
       fetchApiGateways,
       editProject,
       fetchNuclioFunctions,
-      fetchProjectDataSets,
+      fetchProjectFeatureSets,
       fetchProjectFiles,
       fetchProjectJobs,
       fetchProjectModels,
@@ -191,11 +191,14 @@ const ProjectView = React.forwardRef(
                   title="Models"
                 />
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(project.dataSets, 'db_key')}
-                  fetchArtifacts={fetchProjectDataSets}
+                  artifacts={groupByUniqName(
+                    project.featureSets,
+                    'metadata.name'
+                  )}
+                  fetchArtifacts={fetchProjectFeatureSets}
                   link={`/projects/${match.params.projectName}/feature-store`}
                   match={match}
-                  title="Datasets"
+                  title="Feature sets"
                 />
                 <ProjectArtifacts
                   artifacts={groupByUniqName(project.files, 'db_key')}
@@ -252,7 +255,7 @@ ProjectView.propTypes = {
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
   fetchNuclioFunctions: PropTypes.func.isRequired,
-  fetchProjectDataSets: PropTypes.func.isRequired,
+  fetchProjectFeatureSets: PropTypes.func.isRequired,
   fetchProjectFiles: PropTypes.func.isRequired,
   fetchProjectJobs: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,

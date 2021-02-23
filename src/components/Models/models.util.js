@@ -4,11 +4,11 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 
 export const modelsInfoHeaders = [
   { label: 'Hash', id: 'hash' },
-  { label: 'Key', id: 'key' },
+  { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
   { label: 'Kind', id: 'kind' },
   { label: 'Size', id: 'size' },
-  { label: 'Path', id: 'path' },
+  { label: 'Path', id: 'target_path' },
   { label: 'Tree', id: 'tree' },
   { label: 'Updated', id: 'updated' },
   { label: 'Framework', id: 'framework' },

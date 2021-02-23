@@ -3,10 +3,10 @@ import { groupByUniqName } from '../../utils/groupByUniqName'
 export const generateProjectStatistic = (
   failedJobs,
   failedJobsLoading,
-  features,
+  featureSets,
   featuresLoading,
   fetchFailedJobsFailure,
-  fetchFeaturesFailure,
+  fetchFeatureSetsFailure,
   fetchFunctionsFailure,
   fetchModelsFailure,
   fetchNuclioFunctionsFailure,
@@ -78,13 +78,13 @@ export const generateProjectStatistic = (
         ? 'N/A'
         : groupByUniqName(models, 'db_key').length
     },
-    features: {
+    featureSets: {
       className: 'default',
-      label: 'Features',
+      label: 'Feature sets',
       loading: featuresLoading,
-      value: fetchFeaturesFailure
+      value: fetchFeatureSetsFailure
         ? 'N/A'
-        : groupByUniqName(features, 'db_key').length
+        : groupByUniqName(featureSets, 'metadata.name').length
     },
     functions: {
       className: 'default',

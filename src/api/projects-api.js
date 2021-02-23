@@ -28,6 +28,8 @@ export default {
         Date.now() - 24 * 60 * 60 * 1000
       ).toISOString()}`
     ),
+  getProjectFeatureSets: project =>
+    mainHttpClient.get(`/projects/${project}/feature-sets`),
   getProjectFiles: project =>
     mainHttpClient.get(`/artifacts?project=${project}&category=other`),
   getProjectFunctions: project =>

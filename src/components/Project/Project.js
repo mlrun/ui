@@ -19,7 +19,7 @@ const Project = ({
   fetchApiGateways,
   fetchNuclioFunctions,
   fetchProject,
-  fetchProjectDataSets,
+  fetchProjectFeatureSets,
   fetchProjectFiles,
   fetchProjectJobs,
   fetchProjectModels,
@@ -307,7 +307,7 @@ const Project = ({
       createNewOptions={createNewOptions}
       editProject={editProject}
       fetchNuclioFunctions={fetchNuclioFunctions}
-      fetchProjectDataSets={fetchProjectDataSets}
+      fetchProjectFeatureSets={fetchProjectFeatureSets}
       fetchProjectFiles={fetchProjectFiles}
       fetchProjectJobs={fetchProjectJobs}
       fetchProjectModels={fetchProjectModels}

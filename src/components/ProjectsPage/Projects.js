@@ -9,8 +9,8 @@ import ProjectsView from './ProjectsView'
 import {
   generateProjectActionsMenu,
   successProjectDeletingMessage,
-  failedProjectDeletingMessage,
-  projectsSortOptions
+  projectsSortOptions,
+  handleDeleteProjectError
 } from './projectsData'
 import nuclioActions from '../../actions/nuclio'
 import notificationActions from '../../actions/notification'
@@ -21,14 +21,8 @@ const Projects = ({
   createNewProject,
   deleteProject,
   fetchNuclioFunctions,
-  fetchProjectDataSets,
-  fetchProjectFailedJobs,
-  fetchProjectFunctions,
-  fetchProjectModels,
-  fetchProjectRunningJobs,
   fetchProjects,
   match,
-  nuclioStore,
   projectStore,
   removeNewProject,
   removeNewProjectError,
@@ -106,30 +100,13 @@ const Projects = ({
           })
         })
         .catch(error => {
-          if (error.response?.status === 412) {
-            setConfirmData({
-              item: project,
-              title: `Delete project "${project.metadata.name}"?`,
-              description:
-                'The project is not empty. Deleting it will also delete all of its resources, such as jobs, ' +
-                'artifacts, and features.',
-              btnConfirmLabel: 'Delete',
-              btnConfirmClassNames: 'btn_danger',
-              rejectHandler: () => {
-                setConfirmData(null)
-              },
-              confirmHandler: project => {
-                handleDeleteProject(project, true)
-              }
-            })
-          } else {
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              retry: () => handleDeleteProject(project),
-              message: failedProjectDeletingMessage
-            })
-          }
+          handleDeleteProjectError(
+            error,
+            handleDeleteProject,
+            project,
+            setConfirmData,
+            setNotification
+          )
         })
     },
     [deleteProject, fetchProjects, setNotification]
@@ -283,11 +260,6 @@ const Projects = ({
       convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
       createProject={createProject}
-      fetchProjectDataSets={fetchProjectDataSets}
-      fetchProjectFailedJobs={fetchProjectFailedJobs}
-      fetchProjectFunctions={fetchProjectFunctions}
-      fetchProjectModels={fetchProjectModels}
-      fetchProjectRunningJobs={fetchProjectRunningJobs}
       filterByName={filterByName}
       filteredProjects={filteredProjects}
       filterMatches={filterMatches}
@@ -296,7 +268,6 @@ const Projects = ({
       isDescendingOrder={isDescendingOrder}
       isEmptyValue={isEmptyValue}
       match={match}
-      nuclioStore={nuclioStore}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}
@@ -318,9 +289,8 @@ Projects.propTypes = {
 }
 
 export default connect(
-  (projectStore, nuclioStore) => ({
-    ...projectStore,
-    ...nuclioStore
+  projectStore => ({
+    ...projectStore
   }),
   {
     ...projectsAction,
