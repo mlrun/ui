@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import ProjectCardView from './ProjectCardView'
 
 import { generateProjectStatistic } from './projectCard.util'
+import projectsAction from '../../actions/projects'
 
 const ProjectCard = ({
   actionsMenu,
-  fetchProjectDataSets,
+  fetchProjectFeatureSets,
   fetchProjectFailedJobs,
   fetchProjectFunctions,
   fetchProjectModels,
@@ -17,9 +19,9 @@ const ProjectCard = ({
   projectStore
 }) => {
   const [failedJobs, setFailedJobs] = useState([])
-  const [features, setFeatures] = useState([])
+  const [featureSets, setFeatureSets] = useState([])
   const [fetchFailedJobsFailure, setFetchFailedJobsFailure] = useState(false)
-  const [fetchFeaturesFailure, setFetchFeaturesFailure] = useState(false)
+  const [fetchFeatureSetsFailure, setFetchFeatureSetsFailure] = useState(false)
   const [fetchFunctionsFailure, setFetchFunctionsFailure] = useState(false)
   const [
     fetchNuclioFunctionsFailure,
@@ -64,15 +66,15 @@ const ProjectCard = ({
         setModels(models)
       })
       .catch(() => setFetchModelsFailure(true))
-    fetchProjectDataSets(project.metadata.name)
-      .then(datasets => {
-        if (fetchFeaturesFailure) {
-          setFetchFeaturesFailure(false)
+    fetchProjectFeatureSets(project.metadata.name)
+      .then(featureSets => {
+        if (fetchFeatureSetsFailure) {
+          setFetchFeatureSetsFailure(false)
         }
 
-        setFeatures(datasets)
+        setFeatureSets(featureSets)
       })
-      .catch(() => setFetchFeaturesFailure(true))
+      .catch(() => setFetchFeatureSetsFailure(true))
     fetchProjectFunctions(project.metadata.name)
       .then(funcs => {
         if (fetchFunctionsFailure) {
@@ -84,12 +86,12 @@ const ProjectCard = ({
       .catch(() => setFetchFunctionsFailure(true))
   }, [
     fetchFailedJobsFailure,
-    fetchFeaturesFailure,
+    fetchFeatureSetsFailure,
     fetchFunctionsFailure,
     fetchModelsFailure,
     fetchNuclioFunctionsFailure,
-    fetchProjectDataSets,
     fetchProjectFailedJobs,
+    fetchProjectFeatureSets,
     fetchProjectFunctions,
     fetchProjectModels,
     fetchProjectRunningJobs,
@@ -128,10 +130,10 @@ const ProjectCard = ({
     return generateProjectStatistic(
       failedJobs,
       projectStore.project.failedJobs.loading,
-      features,
-      projectStore.project.dataSets.loading,
+      featureSets,
+      projectStore.project.featureSets.loading,
       fetchFailedJobsFailure,
-      fetchFeaturesFailure,
+      fetchFeatureSetsFailure,
       fetchFunctionsFailure,
       fetchModelsFailure,
       fetchNuclioFunctionsFailure,
@@ -147,9 +149,9 @@ const ProjectCard = ({
     )
   }, [
     failedJobs,
-    features,
+    featureSets,
     fetchFailedJobsFailure,
-    fetchFeaturesFailure,
+    fetchFeatureSetsFailure,
     fetchFunctionsFailure,
     fetchModelsFailure,
     fetchNuclioFunctionsFailure,
@@ -159,8 +161,8 @@ const ProjectCard = ({
     nuclioStore.functions,
     nuclioStore.loading,
     project.metadata.name,
-    projectStore.project.dataSets.loading,
     projectStore.project.failedJobs.loading,
+    projectStore.project.featureSets.loading,
     projectStore.project.functions.loading,
     projectStore.project.models.loading,
     projectStore.project.runningJobs.loading,
@@ -181,14 +183,15 @@ const ProjectCard = ({
 
 ProjectCard.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
-  fetchProjectDataSets: PropTypes.func.isRequired,
-  fetchProjectFailedJobs: PropTypes.func.isRequired,
-  fetchProjectFunctions: PropTypes.func.isRequired,
-  fetchProjectModels: PropTypes.func.isRequired,
-  fetchProjectRunningJobs: PropTypes.func.isRequired,
-  nuclioStore: PropTypes.shape({}).isRequired,
-  project: PropTypes.shape({}).isRequired,
-  projectStore: PropTypes.shape({}).isRequired
+  project: PropTypes.shape({}).isRequired
 }
 
-export default ProjectCard
+export default connect(
+  (projectStore, nuclioStore) => ({
+    ...projectStore,
+    ...nuclioStore
+  }),
+  {
+    ...projectsAction
+  }
+)(ProjectCard)

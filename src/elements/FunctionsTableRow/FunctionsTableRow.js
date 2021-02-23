@@ -6,8 +6,8 @@ import classnames from 'classnames'
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
-import functionsData from '../../components/FunctionsPage/functionsData'
 import { formatDatetime } from '../../utils'
+import { detailsMenu } from '../../components/FunctionsPage/functions.util'
 
 const FunctionsTableRow = ({
   actionsMenu,
@@ -94,7 +94,7 @@ const FunctionsTableRow = ({
                           }${
                             match.params.tab
                               ? `/${match.params.tab}`
-                              : `/${functionsData.detailsMenu[0]}`
+                              : `/${detailsMenu[0]}`
                           }`
                         }
                         key={value.value + i}
@@ -140,7 +140,7 @@ const FunctionsTableRow = ({
                     currentContentItem?.hash}/${
                     match.params.tab
                       ? match.params.tab
-                      : `${functionsData.detailsMenu[0].toLowerCase()}`
+                      : `${detailsMenu[0].toLowerCase()}`
                   }`
                 }
                 match={match}

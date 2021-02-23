@@ -69,3 +69,36 @@ export const projectsSortOptions = [
 ]
 export const successProjectDeletingMessage = 'Project deleted successfully'
 export const failedProjectDeletingMessage = 'Failed to delete project'
+
+export const handleDeleteProjectError = (
+  error,
+  handleDeleteProject,
+  project,
+  setConfirmData,
+  setNotification
+) => {
+  if (error.response?.status === 412) {
+    setConfirmData({
+      item: project,
+      title: `Delete project "${project.metadata.name}"?`,
+      description:
+        'The project is not empty. Deleting it will also delete all of its resources, such as jobs, ' +
+        'artifacts, and features.',
+      btnConfirmLabel: 'Delete',
+      btnConfirmClassNames: 'btn_danger',
+      rejectHandler: () => {
+        setConfirmData(null)
+      },
+      confirmHandler: project => {
+        handleDeleteProject(project, true)
+      }
+    })
+  } else {
+    setNotification({
+      status: 400,
+      id: Math.random(),
+      retry: () => handleDeleteProject(project),
+      message: failedProjectDeletingMessage
+    })
+  }
+}

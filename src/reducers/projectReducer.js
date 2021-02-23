@@ -48,7 +48,10 @@ import {
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
   SET_NEW_PROJECT_NAME,
-  SET_PROJECT_LABELS
+  SET_PROJECT_LABELS,
+  FETCH_PROJECT_FEATURE_SETS_BEGIN,
+  FETCH_PROJECT_FEATURE_SETS_SUCCESS,
+  FETCH_PROJECT_FEATURE_SETS_FAILURE
 } from '../constants'
 
 const initialState = {
@@ -71,6 +74,11 @@ const initialState = {
       data: [],
       error: null,
       loading: false
+    },
+    featureSets: {
+      data: null,
+      loading: false,
+      error: null
     },
     files: {
       data: null,
@@ -199,6 +207,11 @@ export default (state = initialState, { type, payload }) => {
             error: null,
             loading: false
           },
+          featureSets: {
+            data: null,
+            error: null,
+            loading: false
+          },
           files: {
             data: null,
             error: null,
@@ -273,6 +286,41 @@ export default (state = initialState, { type, payload }) => {
         project: {
           ...state.project,
           dataSets: {
+            data: payload,
+            loading: false,
+            error: null
+          }
+        }
+      }
+    case FETCH_PROJECT_FEATURE_SETS_BEGIN:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          featureSets: {
+            ...state.project.featureSets,
+            loading: true
+          }
+        }
+      }
+    case FETCH_PROJECT_FEATURE_SETS_FAILURE:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          featureSets: {
+            data: [],
+            error: payload,
+            loading: false
+          }
+        }
+      }
+    case FETCH_PROJECT_FEATURE_SETS_SUCCESS:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          featureSets: {
             data: payload,
             loading: false,
             error: null
@@ -624,6 +672,11 @@ export default (state = initialState, { type, payload }) => {
             loading: false
           },
           failedJobs: {
+            data: [],
+            error: null,
+            loading: false
+          },
+          featureSets: {
             data: [],
             error: null,
             loading: false

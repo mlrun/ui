@@ -4,9 +4,7 @@ import classnames from 'classnames'
 
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
@@ -17,6 +15,7 @@ import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
+import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 
 import { pageData, projectsSortOptions, projectsStates } from './projectsData'
 
@@ -31,11 +30,6 @@ const ProjectsView = ({
   convertedYaml,
   convertToYaml,
   createProject,
-  fetchProjectDataSets,
-  fetchProjectFailedJobs,
-  fetchProjectFunctions,
-  fetchProjectModels,
-  fetchProjectRunningJobs,
   filterByName,
   filteredProjects,
   filterMatches,
@@ -44,7 +38,6 @@ const ProjectsView = ({
   isDescendingOrder,
   isEmptyValue,
   match,
-  nuclioStore,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -67,59 +60,14 @@ const ProjectsView = ({
     <div className={projectsClassNames}>
       {projectStore.loading && <Loader />}
       {createProject && (
-        <PopUpDialog
-          headerText="Create new project"
-          closePopUp={closeNewProjectPopUp}
-        >
-          <form onSubmit={handleCreateProject} noValidate>
-            <div className="pop-up-dialog__form">
-              <Input
-                className="pop-up-dialog__form-input"
-                floatingLabel
-                label="Name"
-                maxLength={63}
-                onChange={name => setNewProjectName(name)}
-                required={
-                  isEmptyValue && projectStore.newProject.name.length === 0
-                }
-                requiredText="Name is required"
-                pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
-                tip="&bull; Valid characters: a-z, 0-9, -&#13;&#10;&bull; Must being and end with: a-z, 0-9&#13;&#10;&bull; Length - max: 63"
-                type="text"
-                value={projectStore.newProject.name}
-              />
-              <Input
-                className="pop-up-dialog__form-input"
-                floatingLabel
-                label="Description"
-                onChange={description => setNewProjectDescription(description)}
-                type="text"
-                value={projectStore.newProject.description}
-              />
-            </div>
-            <div className="pop-up-dialog__footer-container">
-              {projectStore.newProject.error && (
-                <ErrorMessage
-                  closeError={() => {
-                    if (projectStore.newProject.error) {
-                      removeNewProjectError()
-                    }
-                  }}
-                  message={projectStore.newProject.error}
-                />
-              )}
-              <button
-                className="btn_default pop-up-dialog__btn_cancel"
-                onClick={closeNewProjectPopUp}
-              >
-                Cancel
-              </button>
-              <button className="btn_primary" type="submit">
-                Create
-              </button>
-            </div>
-          </form>
-        </PopUpDialog>
+        <CreateProjectDialog
+          closeNewProjectPopUp={closeNewProjectPopUp}
+          handleCreateProject={handleCreateProject}
+          isEmptyValue={isEmptyValue}
+          removeNewProjectError={removeNewProjectError}
+          setNewProjectDescription={setNewProjectDescription}
+          setNewProjectName={setNewProjectName}
+        />
       )}
       {confirmData && (
         <PopUpDialog
@@ -200,15 +148,8 @@ const ProjectsView = ({
                   return (
                     <ProjectCard
                       actionsMenu={actionsMenu}
-                      fetchProjectDataSets={fetchProjectDataSets}
-                      fetchProjectFailedJobs={fetchProjectFailedJobs}
-                      fetchProjectFunctions={fetchProjectFunctions}
-                      fetchProjectModels={fetchProjectModels}
-                      fetchProjectRunningJobs={fetchProjectRunningJobs}
                       key={project.id || project.metadata.name}
-                      nuclioStore={nuclioStore}
                       project={project}
-                      projectStore={projectStore}
                     />
                   )
                 })
@@ -241,11 +182,6 @@ ProjectsView.propTypes = {
   convertedYaml: PropTypes.string.isRequired,
   convertToYaml: PropTypes.func.isRequired,
   createProject: PropTypes.bool.isRequired,
-  fetchProjectDataSets: PropTypes.func.isRequired,
-  fetchProjectFailedJobs: PropTypes.func.isRequired,
-  fetchProjectFunctions: PropTypes.func.isRequired,
-  fetchProjectModels: PropTypes.func.isRequired,
-  fetchProjectRunningJobs: PropTypes.func.isRequired,
   filterByName: PropTypes.string.isRequired,
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -253,8 +189,6 @@ ProjectsView.propTypes = {
   handleSearchOnChange: PropTypes.func.isRequired,
   isEmptyValue: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
-  nuclioStore: PropTypes.shape({}).isRequired,
-  projectStore: PropTypes.shape({}).isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,

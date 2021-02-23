@@ -20,7 +20,7 @@ export const datasetsInfoHeaders = [
   { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
-  { label: 'Path', id: 'path' },
+  { label: 'Path', id: 'target_path' },
   { label: 'Tree', id: 'tree' },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' },
