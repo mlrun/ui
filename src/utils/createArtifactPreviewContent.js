@@ -1,6 +1,6 @@
 export const createArtifactPreviewContent = res => {
   const artifact = {}
-  console.log(res)
+
   if (res.headers['content-type'].includes('text/csv')) {
     const data = res.data.split('\n')
     if (data[0].includes('state')) {
@@ -38,7 +38,7 @@ export const createArtifactPreviewContent = res => {
   } else if (res.headers['content-type'].includes('image')) {
     artifact.type = 'image'
     artifact.data = {
-      content: URL.createObjectURL(new Blob([res.data]))
+      content: URL.createObjectURL(res.data)
     }
   } else {
     artifact.type = 'unknown'

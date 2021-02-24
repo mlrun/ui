@@ -15,7 +15,7 @@ export const fetchPreviewFromAnalysis = (
       value.replace(/:\/\/.*$/g, '://'),
       value.replace(/.*:\/\//g, ''),
       artifact.user || artifact.producer?.owner,
-      key
+      value.replace(/.*\./g, '')
     )
       .then(content => {
         setPreview(prevState => [...prevState, { ...content, header: key }])

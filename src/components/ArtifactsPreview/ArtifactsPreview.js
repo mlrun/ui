@@ -29,9 +29,8 @@ const ArtifactsPreview = ({ artifact }) => {
   const [showError, setShowError] = useState(false)
   const [noData, setNoData] = useState(false)
 
-  const getArtifactPreview = useCallback((schema, path, user, key) => {
-    return api.getArtifactPreview(schema, path, user).then(res => {
-      console.log(key)
+  const getArtifactPreview = useCallback((schema, path, user, fileFormat) => {
+    return api.getArtifactPreview(schema, path, user, fileFormat).then(res => {
       return createArtifactPreviewContent(res)
     })
   }, [])
