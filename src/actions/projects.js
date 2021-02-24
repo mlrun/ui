@@ -18,6 +18,9 @@ import {
   FETCH_PROJECT_FAILED_JOBS_FAILURE,
   FETCH_PROJECT_FAILED_JOBS_SUCCESS,
   FETCH_PROJECT_FAILURE,
+  FETCH_PROJECT_FEATURE_SETS_BEGIN,
+  FETCH_PROJECT_FEATURE_SETS_FAILURE,
+  FETCH_PROJECT_FEATURE_SETS_SUCCESS,
   FETCH_PROJECT_FILES_BEGIN,
   FETCH_PROJECT_FILES_FAILURE,
   FETCH_PROJECT_FILES_SUCCESS,
@@ -202,6 +205,37 @@ const projectsAction = {
         dispatch(projectsAction.fetchProjectFilesFailure(error.message))
       })
   },
+  fetchProjectFeatureSets: project => dispatch => {
+    dispatch(projectsAction.fetchProjectFeatureSetsBegin())
+
+    return projectsApi
+      .getProjectFeatureSets(project)
+      .then(response => {
+        dispatch(
+          projectsAction.fetchProjectFeatureSetsSuccess(
+            response.data?.feature_sets
+          )
+        )
+
+        return response.data?.feature_sets
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectFeatureSetsFailure(error.message))
+
+        throw error.message
+      })
+  },
+  fetchProjectFeatureSetsBegin: () => ({
+    type: FETCH_PROJECT_FEATURE_SETS_BEGIN
+  }),
+  fetchProjectFeatureSetsFailure: error => ({
+    type: FETCH_PROJECT_FEATURE_SETS_FAILURE,
+    payload: error
+  }),
+  fetchProjectFeatureSetsSuccess: featureSets => ({
+    type: FETCH_PROJECT_FEATURE_SETS_SUCCESS,
+    payload: featureSets
+  }),
   fetchProjectFilesBegin: () => ({ type: FETCH_PROJECT_FILES_BEGIN }),
   fetchProjectFilesFailure: error => ({
     type: FETCH_PROJECT_FILES_FAILURE,

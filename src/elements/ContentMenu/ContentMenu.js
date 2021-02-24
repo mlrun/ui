@@ -23,6 +23,9 @@ const ContentMenu = ({ activeTab, match, screen, tabs }) => {
                 }/${screen.toLowerCase()}/${tab.id}`}
               >
                 {tab.label ?? tab.id}
+                {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
+                  <span className="content-menu__item__preview"> (Beta)</span>
+                )}
               </Link>
             </li>
           )

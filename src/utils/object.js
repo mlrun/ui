@@ -9,7 +9,7 @@ export const parseKeyValues = (object = {}) =>
                   ` ${arrayItemKey}: ${arrayItemValue} `
               )}} `
             })}]`
-          : typeof value === 'object'
+          : typeof value === 'object' && value !== null
           ? `${key}: {${Object.entries(value).map(
               ([valueKey, valueContent]) => ` ${valueKey}: ${valueContent} `
             )}}`

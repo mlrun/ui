@@ -2,10 +2,10 @@ import { FILES_PAGE } from '../../constants'
 
 export const infoHeaders = [
   { label: 'Hash', id: 'hash' },
-  { label: 'Key', id: 'key' },
+  { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
-  { label: 'Path', id: 'path' },
+  { label: 'Path', id: 'target_path' },
   { label: 'Tree', id: 'tree' },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' },

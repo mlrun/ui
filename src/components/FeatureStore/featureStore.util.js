@@ -20,7 +20,7 @@ export const datasetsInfoHeaders = [
   { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
-  { label: 'Path', id: 'path' },
+  { label: 'Path', id: 'target_path' },
   { label: 'Tree', id: 'tree' },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' },
@@ -195,9 +195,9 @@ export const featuresTableHeaders = [
   }
 ]
 export const tabs = [
-  { id: 'feature-sets', label: 'Feature sets' },
-  { id: 'features', label: 'Features' },
-  { id: 'feature-vectors', label: 'Feature vectors' },
+  { id: 'feature-sets', label: 'Feature sets', preview: true },
+  { id: 'features', label: 'Features', preview: true },
+  { id: 'feature-vectors', label: 'Feature vectors', preview: true },
   { id: 'datasets', label: 'Datasets' }
 ]
 

@@ -35,5 +35,10 @@
       color: $cornflowerBlue;
       border-bottom: $activeJobTabBorder;
     }
+
+    &__preview {
+      color: $spunPearl;
+      font-size: 10px;
+    }
   }
 }
