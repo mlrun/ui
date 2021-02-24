@@ -50,7 +50,6 @@ const Details = ({
   const detailsRef = useRef()
 
   const handlePreview = () => {
-    history.push(`/projects/${match.params.projectName}/artifacts`)
     dispatch(
       artifactActions.showArtifactsPreview({
         isPreview: true,

@@ -227,12 +227,7 @@ export const renderContent = (
         (selectedItem.kind === 'dataset' && selectedItem.extra_data) ||
         selectedItem.analysis
       ) {
-        return (
-          <DetailsAnalysis
-            artifact={selectedItem}
-            handlePreview={handlePreview}
-          />
-        )
+        return <DetailsAnalysis artifact={selectedItem} />
       } else return null
     case DETAILS_STATISTICS_TAB:
       if (selectedItem.stats) {

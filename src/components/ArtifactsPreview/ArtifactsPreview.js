@@ -17,10 +17,11 @@ import {
   setPreviewFromPreviewData,
   setPreviewFromSchema
 } from './artifactPreview.util'
+import { DETAILS_ANALYSIS_TAB } from '../../constants'
 
 import './artifactaPreview.scss'
 
-const ArtifactsPreview = ({ artifact }) => {
+const ArtifactsPreview = ({ artifact, tab }) => {
   const [error, setError] = useState({
     text: '',
     body: ''
@@ -36,74 +37,72 @@ const ArtifactsPreview = ({ artifact }) => {
   }, [])
 
   useEffect(() => {
-    if (artifact.analysis && preview.length === 0) {
-      fetchPreviewFromAnalysis(
-        artifact,
-        error,
-        getArtifactPreview,
-        noData,
-        setError,
-        setNoData,
-        setPreview,
-        setShowError
-      )
-    } else if (artifact.schema && !artifact.extra_data) {
-      setPreviewFromSchema(
-        artifact,
-        error,
-        noData,
-        setError,
-        setNoData,
-        setPreview,
-        setShowError
-      )
-    } else if (
-      artifact.preview.length > 0 &&
-      !artifact.target_path &&
-      !artifact.analysis
-    ) {
-      setPreviewFromPreviewData(
-        artifact,
-        error,
-        noData,
-        setError,
-        setNoData,
-        setPreview,
-        setShowError
-      )
-    } else if (artifact.preview.length > 0 && !artifact.analysis) {
-      fetchPreviewFromPreviewData(
-        artifact,
-        error,
-        getArtifactPreview,
-        noData,
-        setError,
-        setNoData,
-        setPreview,
-        setShowError
-      )
-    } else if (
-      isEveryObjectValueEmpty(error) &&
-      preview.length === 0 &&
-      !artifact.target_path
-    ) {
-      setNoData(true)
-    } else if (
-      isEveryObjectValueEmpty(error) &&
-      artifact.preview.length === 0
-    ) {
-      fetchPreviewFromTargetPath(
-        artifact,
-        error,
-        getArtifactPreview,
-        noData,
-        setError,
-        setNoData,
-        setPreview,
-        setShowError
-      )
+    if (preview.length === 0) {
+      if (artifact.analysis && tab === DETAILS_ANALYSIS_TAB) {
+        fetchPreviewFromAnalysis(
+          artifact,
+          error,
+          getArtifactPreview,
+          noData,
+          setError,
+          setNoData,
+          setPreview,
+          setShowError
+        )
+      } else if (artifact.schema && !artifact.extra_data) {
+        setPreviewFromSchema(
+          artifact,
+          error,
+          noData,
+          setError,
+          setNoData,
+          setPreview,
+          setShowError
+        )
+      } else if (artifact.preview?.length > 0 && !artifact.target_path) {
+        setPreviewFromPreviewData(
+          artifact,
+          error,
+          noData,
+          setError,
+          setNoData,
+          setPreview,
+          setShowError
+        )
+      } else if (artifact.preview?.length > 0) {
+        fetchPreviewFromPreviewData(
+          artifact,
+          error,
+          getArtifactPreview,
+          noData,
+          setError,
+          setNoData,
+          setPreview,
+          setShowError
+        )
+      } else if (
+        isEveryObjectValueEmpty(error) &&
+        preview.length === 0 &&
+        !artifact.target_path
+      ) {
+        setNoData(true)
+      } else if (
+        isEveryObjectValueEmpty(error) &&
+        (artifact.preview?.length === 0 || !artifact.preview)
+      ) {
+        fetchPreviewFromTargetPath(
+          artifact,
+          error,
+          getArtifactPreview,
+          noData,
+          setError,
+          setNoData,
+          setPreview,
+          setShowError
+        )
+      }
     }
-  }, [artifact, error, getArtifactPreview, noData, preview.length])
+  }, [artifact, error, getArtifactPreview, noData, preview.length, tab])
 
   return error.text.length > 0 ? (
     <PreviewError
@@ -129,8 +128,13 @@ const ArtifactsPreview = ({ artifact }) => {
   )
 }
 
+ArtifactsPreview.defaultProps = {
+  tab: ''
+}
+
 ArtifactsPreview.propTypes = {
-  artifact: PropTypes.shape({}).isRequired
+  artifact: PropTypes.shape({}).isRequired,
+  tab: PropTypes.string
 }
 
 export default React.memo(
