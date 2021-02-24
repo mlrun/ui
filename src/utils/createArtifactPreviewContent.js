@@ -1,4 +1,4 @@
-export const createArtifactPreviewContent = res => {
+export const createArtifactPreviewContent = (res, fileFormat) => {
   const artifact = {}
 
   if (res.headers['content-type'].includes('text/csv')) {
@@ -39,6 +39,11 @@ export const createArtifactPreviewContent = res => {
     artifact.type = 'image'
     artifact.data = {
       content: URL.createObjectURL(res.data)
+    }
+  } else if (fileFormat === 'yaml' || fileFormat === 'yml') {
+    artifact.type = 'yaml'
+    artifact.data = {
+      content: res.data
     }
   } else {
     artifact.type = 'unknown'

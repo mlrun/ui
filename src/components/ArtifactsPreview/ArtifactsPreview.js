@@ -31,7 +31,7 @@ const ArtifactsPreview = ({ artifact }) => {
 
   const getArtifactPreview = useCallback((schema, path, user, fileFormat) => {
     return api.getArtifactPreview(schema, path, user, fileFormat).then(res => {
-      return createArtifactPreviewContent(res)
+      return createArtifactPreviewContent(res, fileFormat)
     })
   }, [])
 

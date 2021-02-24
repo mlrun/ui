@@ -88,6 +88,21 @@ const ArtifactsPreviewView = ({ preview, setShowError, showError }) => (
             </pre>
           </div>
         )}
+        {preview?.type === 'yaml' && (
+          <div className="json">
+            <pre className="json-content">
+              <code
+                dangerouslySetInnerHTML={{
+                  __html: Prism.highlight(
+                    preview?.data.content,
+                    Prism.languages.yaml,
+                    'yaml'
+                  )
+                }}
+              />
+            </pre>
+          </div>
+        )}
         {preview?.type === 'image' && (
           <img
             className="preview-image"
