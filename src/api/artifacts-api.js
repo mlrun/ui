@@ -50,10 +50,17 @@ const fetchFeatureStoreData = (item, tab, config) => {
 }
 
 export default {
-  getArtifactPreview: (schema, path, user) =>
-    mainHttpClient.get('/files', {
+  getArtifactPreview: (schema, path, user, fileFormat) => {
+    const config = {
       params: schema ? { schema, path, user } : { path, user }
-    }),
+    }
+
+    if (['png', 'jpg', 'jpeg'].includes(fileFormat)) {
+      config.responseType = 'blob'
+    }
+
+    return mainHttpClient.get('/files', config)
+  },
   getArtifactTag: project =>
     mainHttpClient.get(`/projects/${project}/artifact-tags`),
   getArtifacts: item => {
