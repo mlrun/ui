@@ -7,12 +7,12 @@ export const generateProjectScreens = match => [
   {
     label: 'Real-time functions',
     id: 'Real-time functions',
-    link: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/functions`
+    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
   },
   {
     label: 'API gateways',
     id: 'API gateways',
-    link: `${process.env.REACT_APP_NUCLIO_UI_URL}/projects/${match.params.projectName}/api-gateways`
+    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
   }
 ]
 
