@@ -26,6 +26,7 @@ COPY nginx/run_nginx /etc/nginx/
 EXPOSE 80
 
 ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:80}" \
+    MLRUN_BETA_MODE="${MLRUN_BETA_MODE:-enabled})" \
     MLRUN_FUNCTION_CATALOG_URL="${MLRUN_FUNCTION_CATALOG_URL:-https://raw.githubusercontent.com/mlrun/functions/master}" \
     MLRUN_NUCLIO_API_URL="${MLRUN_NUCLIO_API_URL:-http://localhost:8070}" \
     MLRUN_NUCLIO_MODE="${MLRUN_NUCLIO_MODE:-disabled}" \

@@ -18,7 +18,7 @@ import {
   handleApplyDetailsChanges,
   handleFetchData,
   navigateToDetailsPane
-} from './feaureStore.util'
+} from './featureStore.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import {
   DATASETS_TAB,
