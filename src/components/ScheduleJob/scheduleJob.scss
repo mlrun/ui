@@ -16,7 +16,7 @@
       font-weight: bold;
       cursor: pointer;
 
-      &.active {
+      &_active {
         color: $cornflowerBlue;
         border-bottom: 3px solid $cornflowerBlue;
       }

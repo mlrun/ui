@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom'
 import ProjectView from './ProjectView'
 
 import projectsAction from '../../actions/projects'
-import nuclioActions from '../../actions/nuclio'
 import projectsApi from '../../api/projects-api'
 import { getLinks, generateCreateNewOptions } from './project.utils'
 import { parseKeyValues } from '../../utils'
@@ -16,15 +15,10 @@ import './project.scss'
 const Project = ({
   addProjectLabel,
   editProjectLabels,
-  fetchApiGateways,
-  fetchNuclioFunctions,
   fetchProject,
   fetchProjectFeatureSets,
   fetchProjectFiles,
-  fetchProjectJobs,
   fetchProjectModels,
-  fetchProjectScheduledJobs,
-  fetchProjectWorkflows,
   match,
   projectStore,
   removeProjectData
@@ -303,16 +297,11 @@ const Project = ({
   return (
     <ProjectView
       artifactKind={artifactKind}
-      fetchApiGateways={fetchApiGateways}
       createNewOptions={createNewOptions}
       editProject={editProject}
-      fetchNuclioFunctions={fetchNuclioFunctions}
       fetchProjectFeatureSets={fetchProjectFeatureSets}
       fetchProjectFiles={fetchProjectFiles}
-      fetchProjectJobs={fetchProjectJobs}
       fetchProjectModels={fetchProjectModels}
-      fetchProjectScheduledJobs={fetchProjectScheduledJobs}
-      fetchProjectWorkflows={fetchProjectWorkflows}
       handleAddProjectLabel={handleAddProjectLabel}
       handleEditProject={handleEditProject}
       handleLaunchIDE={handleLaunchIDE}
@@ -340,7 +329,6 @@ export default connect(
     ...projectStore
   }),
   {
-    ...projectsAction,
-    ...nuclioActions
+    ...projectsAction
   }
 )(Project)
