@@ -16,6 +16,8 @@ const DetailsArtifactsView = ({
   artifactsIndexes,
   content,
   match,
+  noData,
+  preview,
   showArtifact,
   showPreview
 }) => (
@@ -85,7 +87,10 @@ const DetailsArtifactsView = ({
                   }}
                 />
               </Tooltip>
-              <ArtifactsPreview artifact={artifact} />
+              <ArtifactsPreview
+                noData={noData}
+                preview={preview[index] || []}
+              />
             </div>
           )}
         </div>
@@ -98,6 +103,8 @@ DetailsArtifactsView.propTypes = {
   artifactsIndexes: PropTypes.array.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   match: PropTypes.shape({}).isRequired,
+  noData: PropTypes.bool.isRequired,
+  preview: PropTypes.shape({}).isRequired,
   showArtifact: PropTypes.func.isRequired,
   showPreview: PropTypes.func.isRequired
 }

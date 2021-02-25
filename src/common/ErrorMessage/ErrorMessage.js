@@ -6,9 +6,9 @@ import { ReactComponent as Close } from '../../images/close.svg'
 
 import './errorMessage.scss'
 
-const ErrorMessage = ({ message, closeError }) => {
+const ErrorMessage = ({ closeError, message }) => {
   return (
-    <div data-testid="error-message" className="error-container">
+    <div data-testid="error-message" className="error-message">
       <UnsuccessAlert className="error-icon" />
       {message}
       {closeError && (
@@ -25,8 +25,8 @@ ErrorMessage.defaultProps = {
 }
 
 ErrorMessage.propTypes = {
-  message: PropTypes.string.isRequired,
-  closeError: PropTypes.func
+  closeError: PropTypes.func,
+  message: PropTypes.string.isRequired
 }
 
 export default ErrorMessage

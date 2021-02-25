@@ -38,7 +38,7 @@ const ProjectDataCard = ({
       {content.loading ? (
         <Loader />
       ) : content.error ? (
-        <div className="error_container">
+        <div className="error-container">
           <h1>{content.error}</h1>
         </div>
       ) : isEmpty(content.data) ? (
