@@ -275,10 +275,16 @@ const projectsAction = {
   fetchProjectJobs: project => dispatch => {
     dispatch(projectsAction.fetchProjectJobsBegin())
 
-    projectsApi
+    return projectsApi
       .getJobsAndWorkflows(project)
       .then(response => {
-        dispatch(projectsAction.fetchProjectJobsSuccess(response?.data.runs))
+        dispatch(
+          projectsAction.fetchProjectJobsSuccess(
+            response?.data.runs.filter(job => job.metadata.iteration === 0)
+          )
+        )
+
+        return response?.data.runs
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectJobsFailure(error.message))

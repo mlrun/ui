@@ -33,15 +33,10 @@ const ProjectView = React.forwardRef(
     {
       artifactKind,
       createNewOptions,
-      fetchApiGateways,
       editProject,
-      fetchNuclioFunctions,
       fetchProjectFeatureSets,
       fetchProjectFiles,
-      fetchProjectJobs,
       fetchProjectModels,
-      fetchProjectScheduledJobs,
-      fetchProjectWorkflows,
       handleAddProjectLabel,
       handleEditProject,
       handleLaunchIDE,
@@ -209,20 +204,8 @@ const ProjectView = React.forwardRef(
                 />
               </div>
               <div className="main-info__statistics-section">
-                <ProjectJobs
-                  fetchProjectJobs={fetchProjectJobs}
-                  fetchProjectScheduledJobs={fetchProjectScheduledJobs}
-                  fetchProjectWorkflows={fetchProjectWorkflows}
-                  jobs={project.jobs}
-                  match={match}
-                  scheduledJobs={project.scheduledJobs}
-                  workflows={project.workflows}
-                />
-                <ProjectFunctions
-                  fetchApiGateways={fetchApiGateways}
-                  fetchNuclioFunctions={fetchNuclioFunctions}
-                  match={match}
-                />
+                <ProjectJobs match={match} />
+                <ProjectFunctions match={match} />
               </div>
             </div>
           </div>
@@ -254,13 +237,9 @@ ProjectView.propTypes = {
   artifactKind: PropTypes.string.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
-  fetchNuclioFunctions: PropTypes.func.isRequired,
   fetchProjectFeatureSets: PropTypes.func.isRequired,
   fetchProjectFiles: PropTypes.func.isRequired,
-  fetchProjectJobs: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
-  fetchProjectScheduledJobs: PropTypes.func.isRequired,
-  fetchProjectWorkflows: PropTypes.func.isRequired,
   handleAddProjectLabel: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,

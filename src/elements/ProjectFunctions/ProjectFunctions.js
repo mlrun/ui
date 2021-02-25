@@ -2,18 +2,19 @@ import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { lowerCase, upperFirst } from 'lodash'
-import { useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
+import nuclioActions from '../../actions/nuclio'
+
 const ProjectFunctions = ({
   fetchApiGateways,
   fetchNuclioFunctions,
-  match
+  match,
+  nuclioStore
 }) => {
-  const functionsStore = useSelector(store => store.nuclioStore)
-
   useEffect(() => {
     fetchNuclioFunctions(match.params.projectName)
   }, [fetchNuclioFunctions, match.params.projectName])
@@ -23,19 +24,19 @@ const ProjectFunctions = ({
   }, [fetchApiGateways, match.params.projectName])
 
   const functions = useMemo(() => {
-    const grouppedFunctionsRunning = groupByUniqName(
-      functionsStore.currentProjectFunctions,
+    const groupeFunctionsRunning = groupByUniqName(
+      nuclioStore.currentProjectFunctions,
       'metadata.name'
     )
 
-    const functionsRunning = grouppedFunctionsRunning.reduce(
+    const functionsRunning = groupeFunctionsRunning.reduce(
       (prev, curr) =>
         !curr.spec.disable && curr.status.state === 'ready'
           ? (prev += 1)
           : prev,
       0
     )
-    const functionsFailed = grouppedFunctionsRunning.reduce(
+    const functionsFailed = groupeFunctionsRunning.reduce(
       (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
       0
     )
@@ -54,16 +55,20 @@ const ProjectFunctions = ({
         href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`
       },
       apiGateways: {
-        value: functionsStore.apiGateways,
+        value: nuclioStore.apiGateways,
         label: 'API gateways',
-        className: functionsStore.apiGateways > 0 ? 'running' : 'default',
+        className: nuclioStore.apiGateways > 0 ? 'running' : 'default',
         href: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
       }
     }
-  }, [functionsStore, match.params.projectName])
+  }, [
+    match.params.projectName,
+    nuclioStore.apiGateways,
+    nuclioStore.currentProjectFunctions
+  ])
 
   const functionsTable = useMemo(() => {
-    if (functionsStore.currentProjectFunctions.length > 0) {
+    if (nuclioStore.currentProjectFunctions.length > 0) {
       const functionsTableHeaders = [
         {
           value: 'Name',
@@ -72,7 +77,7 @@ const ProjectFunctions = ({
         { value: 'Status', className: 'table-cell_small' }
       ]
 
-      const functionsTableBody = functionsStore.currentProjectFunctions
+      const functionsTableBody = nuclioStore.currentProjectFunctions
         .slice(0, 5)
         .map(func => {
           const funcClassName = classnames(
@@ -109,14 +114,14 @@ const ProjectFunctions = ({
         body: functionsTableBody
       }
     }
-  }, [functionsStore.currentProjectFunctions, match.params.projectName])
+  }, [match.params.projectName, nuclioStore.currentProjectFunctions])
 
   return (
     <ProjectDataCard
       content={{
-        data: functionsStore.currentProjectFunctions,
-        error: functionsStore.error,
-        loading: functionsStore.loading
+        data: nuclioStore.currentProjectFunctions,
+        error: nuclioStore.error,
+        loading: nuclioStore.loading
       }}
       headerLink={`${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`}
       href={`${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`}
@@ -134,4 +139,11 @@ ProjectFunctions.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default React.memo(ProjectFunctions)
+export default connect(
+  nuclioStore => ({
+    ...nuclioStore
+  }),
+  {
+    ...nuclioActions
+  }
+)(React.memo(ProjectFunctions))
