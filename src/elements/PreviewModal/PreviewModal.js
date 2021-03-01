@@ -35,7 +35,9 @@ const PreviewModal = ({ item }) => {
             {item.db_key || item.key}
           </div>
           <div className="item-data item-data__path">
-            {item.target_path?.path}
+            {`${
+              item.target_path?.schema ? `${item.target_path?.schema}://` : ''
+            }${item.target_path?.path}`}
           </div>
           {item.size && (
             <div className="item-data">

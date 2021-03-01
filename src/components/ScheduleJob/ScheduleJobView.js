@@ -40,7 +40,8 @@ const ScheduleJobView = ({
       <div className="schedule_tabs">
         {tabs.map(tab => (
           <div
-            className={`schedule_tabs_item ${activeTab === tab.id && 'active'}`}
+            className={`schedule_tabs_item ${activeTab === tab.id &&
+              'schedule_tabs_item_active'}`}
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
           >

@@ -26,6 +26,14 @@ const DetailsArtifactsView = ({
       const targetPath = `${
         artifact.target_path.schema ? `${artifact.target_path.schema}://` : ''
       }${artifact.target_path.path}`
+      const artifactScreenLinks = {
+        model: `/projects/${
+          match.params.projectName
+        }/models/models/${artifact.db_key || artifact.key}/overview`,
+        dataset: `/projects/${
+          match.params.projectName
+        }/feature-store/datasets/${artifact.db_key || artifact.key}/overview`
+      }
 
       return (
         <div className="item-artifacts__row-wrapper" key={index}>
@@ -57,9 +65,12 @@ const DetailsArtifactsView = ({
               <Tooltip template={<TextTooltipTemplate text="Show Details" />}>
                 <Link
                   target="_blank"
-                  to={`/projects/${
-                    match.params.projectName
-                  }/artifacts/${artifact.db_key || artifact.key}/overview`}
+                  to={
+                    artifactScreenLinks[artifact.kind] ??
+                    `/projects/${
+                      match.params.projectName
+                    }/files/${artifact.db_key || artifact.key}/overview`
+                  }
                 >
                   <DetailsIcon />
                 </Link>

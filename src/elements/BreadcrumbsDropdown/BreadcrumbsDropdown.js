@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
+
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
 import './breadcrumbsDropdown.scss'
@@ -52,7 +55,9 @@ const BreadcrumbsDropdown = ({
             className={dropdownItemClassNames}
             onClick={onClick}
           >
-            {listItem.label}
+            <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
+              {listItem.label}
+            </Tooltip>
           </Link>
         )
       })}

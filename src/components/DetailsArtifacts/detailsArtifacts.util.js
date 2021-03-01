@@ -49,6 +49,7 @@ export const generateContent = selectedJob => {
     const generatedArtifact = {
       date: formatDatetime(selectedJob.startTime),
       key: artifact.key,
+      kind: artifact.kind,
       db_key: artifact.db_key,
       preview: generatedPreviewData.preview,
       size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
