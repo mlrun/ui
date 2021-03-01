@@ -20,7 +20,7 @@ const ProjectArtifacts = ({
           {title}
         </div>
         {artifacts.error ? (
-          <div className="error_container">
+          <div className="error-container">
             <h1>{artifacts.error}</h1>
           </div>
         ) : (

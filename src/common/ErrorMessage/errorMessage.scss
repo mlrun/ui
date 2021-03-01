@@ -1,8 +1,7 @@
-@import '../../scss/colors';
 @import '../../scss/borders';
 
 .error {
-  &-container {
+  &-message {
     display: flex;
     align-items: center;
     padding: 10px 14px;

@@ -7,28 +7,32 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import PreviewError from './PreviewError/PreviewError'
 
-const ArtifactsPreviewView = ({ preview, setShowError, showError }) => (
-  <div className="item-artifacts__preview-content">
-    {preview.header && <h2 className="preview-header">{preview.header}</h2>}
-    {preview.error?.text?.length > 0 ? (
+import './artifactaPreview.scss'
+
+const ArtifactsPreviewView = ({ preview, setShowErrorBody, showErrorBody }) => (
+  <div className="artifact-preview">
+    {preview.header && (
+      <h2 className="artifact-preview__header">{preview.header}</h2>
+    )}
+    {preview?.type === 'error' ? (
       <PreviewError
         error={preview.error}
-        setShowError={setShowError}
-        showError={showError}
+        setShowErrorBody={setShowErrorBody}
+        showErrorBody={showErrorBody}
       />
     ) : (
       <>
         {preview?.type === 'table-results' && (
-          <div className="preview-table">
+          <div className="artifact-preview__table">
             <DetailsResults job={preview} />
           </div>
         )}
         {preview?.type === 'table' && (
-          <div className="preview-table">
-            <div className="preview-table__row table-header">
+          <div className="artifact-preview__table">
+            <div className="artifact-preview__table-row artifact-preview__table-header">
               {preview.data.headers.map(header => {
                 return (
-                  <div key={header} className="preview-table__content">
+                  <div key={header} className="artifact-preview__table-content">
                     <Tooltip template={<TextTooltipTemplate text={header} />}>
                       {header}
                     </Tooltip>
@@ -36,16 +40,16 @@ const ArtifactsPreviewView = ({ preview, setShowError, showError }) => (
                 )
               })}
             </div>
-            <div className="preview-table__body">
+            <div className="artifact-preview__table-body">
               {preview.data.content.map(contentItem => (
                 <div
                   key={contentItem + Math.random()}
-                  className="preview-table__row"
+                  className="artifact-preview__table-row"
                 >
                   {Array.isArray(contentItem) ? (
                     contentItem.map(value => (
                       <Tooltip
-                        className="preview-table__content"
+                        className="artifact-preview__table-content"
                         key={value + Math.random()}
                         template={<TextTooltipTemplate text={`${value}`} />}
                       >
@@ -54,7 +58,7 @@ const ArtifactsPreviewView = ({ preview, setShowError, showError }) => (
                     ))
                   ) : (
                     <Tooltip
-                      className="preview-table__content"
+                      className="artifact-preview__table-content"
                       template={<TextTooltipTemplate text={contentItem} />}
                     >
                       {contentItem}
@@ -105,7 +109,7 @@ const ArtifactsPreviewView = ({ preview, setShowError, showError }) => (
         )}
         {preview?.type === 'image' && (
           <img
-            className="preview-image"
+            className="artifact-preview__image"
             src={preview?.data?.content}
             alt="preview"
           />
@@ -118,8 +122,8 @@ const ArtifactsPreviewView = ({ preview, setShowError, showError }) => (
 
 ArtifactsPreviewView.propTypes = {
   preview: PropTypes.shape({}).isRequired,
-  setShowError: PropTypes.func.isRequired,
-  showError: PropTypes.bool.isRequired
+  setShowErrorBody: PropTypes.func.isRequired,
+  showErrorBody: PropTypes.bool.isRequired
 }
 
 export default ArtifactsPreviewView

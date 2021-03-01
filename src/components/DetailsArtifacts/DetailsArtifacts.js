@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import prettyBytes from 'pretty-bytes'
 import { connect, useDispatch } from 'react-redux'
 
 import DetailsArtifactsView from './DetailsArtifactsView'
 
-import { formatDatetime, parseKeyValues } from '../../utils'
 import artifactAction from '../../actions/artifacts'
-import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 import jobsActions from '../../actions/jobs'
 import { detailsActions } from '../DetailsInfo/detailsReducer'
+import { getArtifactPreview } from '../../utils/getArtifactPreview'
+import {
+  generateContent,
+  getJobAccordingIteration
+} from './detailsArtifacts.util'
 
 const DetailsArtifacts = ({
   detailsDispatch,
@@ -20,6 +22,9 @@ const DetailsArtifacts = ({
 }) => {
   const [content, setContent] = useState([])
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
+  const [preview, setPreview] = useState({})
+  const [noData, setNoData] = useState(false)
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -28,69 +33,19 @@ const DetailsArtifacts = ({
     setArtifactsIndexes([])
 
     if (iteration !== '0') {
-      selectedJob =
-        jobsStore.allJobsData.find(
-          job =>
-            job.metadata.uid === selectedItem.uid &&
-            job.metadata.iteration === +iteration
-        ) || {}
-      selectedJob.artifacts = selectedJob.status?.artifacts || []
-      selectedJob.startTime = formatDatetime(
-        new Date(selectedJob.status?.start_time)
+      selectedJob = getJobAccordingIteration(
+        iteration,
+        jobsStore.allJobsData,
+        selectedItem
       )
-      selectedJob.labels = parseKeyValues(selectedJob.metadata?.labels || {})
     }
 
-    const generatedContent = selectedJob.artifacts.map(artifact => {
-      const indexOfSchema = artifact.target_path.indexOf('://')
-      const schema =
-        indexOfSchema > 0 ? artifact.target_path.slice(0, indexOfSchema) : ''
-      let generatedPreviewData = {
-        preview: [],
-        extraDataPath: ''
-      }
+    setContent(generateContent(selectedJob))
 
-      if (artifact.extra_data) {
-        generatedPreviewData = generateArtifactPreviewData(
-          artifact.extra_data,
-          schema
-        )
-      }
-
-      const target_path = {
-        schema: schema,
-        path: generatedPreviewData.extraDataPath
-          ? generatedPreviewData.extraDataPath
-          : indexOfSchema > 0
-          ? artifact.target_path.slice(indexOfSchema + '://'.length)
-          : artifact.target_path
-      }
-      const generatedArtifact = {
-        date: formatDatetime(selectedJob.startTime),
-        key: artifact.key,
-        db_key: artifact.db_key,
-        preview: generatedPreviewData.preview,
-        size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
-        target_path: target_path,
-        user: selectedJob?.labels
-          ?.find(item => item.match(/v3io_user|owner/g))
-          .replace(/(v3io_user|owner): /, ''),
-        kind: artifact.kind
-      }
-
-      if (artifact.schema) {
-        return {
-          ...generatedArtifact,
-          header: artifact.header,
-          preview: artifact.preview,
-          schema: artifact.schema
-        }
-      }
-
-      return generatedArtifact
-    })
-
-    setContent(generatedContent)
+    return () => {
+      setContent([])
+      setPreview({})
+    }
   }, [iteration, jobsStore.allJobsData, selectedItem])
 
   useEffect(() => {
@@ -112,6 +67,23 @@ const DetailsArtifacts = ({
       }))
     })
   }, [detailsDispatch, jobsStore.allJobsData, selectedItem.uid])
+
+  useEffect(() => {
+    if (artifactsIndexes.length > 0) {
+      artifactsIndexes.forEach(artifactIndex => {
+        if (!preview[artifactIndex]) {
+          getArtifactPreview(
+            content[artifactIndex],
+            noData,
+            setNoData,
+            setPreview,
+            true,
+            artifactIndex
+          )
+        }
+      })
+    }
+  })
 
   const showPreview = artifact => {
     dispatch(
@@ -142,6 +114,8 @@ const DetailsArtifacts = ({
       artifactsIndexes={artifactsIndexes}
       content={content}
       match={match}
+      noData={noData}
+      preview={preview}
       showArtifact={showArtifact}
       showPreview={showPreview}
     />
