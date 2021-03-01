@@ -74,7 +74,8 @@ const DetailsArtifacts = ({
         target_path: target_path,
         user: selectedJob?.labels
           ?.find(item => item.match(/v3io_user|owner/g))
-          .replace(/(v3io_user|owner): /, '')
+          .replace(/(v3io_user|owner): /, ''),
+        kind: artifact.kind
       }
 
       if (artifact.schema) {

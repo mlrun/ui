@@ -11,7 +11,6 @@ import Loader from './common/Loader/Loader'
 
 import './scss/main.scss'
 
-const Artifacts = React.lazy(() => import('./components/Artifacts/Artifacts'))
 const CreateJobPage = React.lazy(() =>
   import('./components/CreateJobPage/CreateJobPage')
 )
@@ -58,16 +57,6 @@ const App = () => {
               exact
               strict
               render={routeProps => <Jobs {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/artifacts/:name/:tab"
-              render={routeProps => <Artifacts {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/artifacts"
-              render={routeProps => <Artifacts {...routeProps} />}
             />
             <Route
               exact
