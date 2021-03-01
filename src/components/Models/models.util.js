@@ -20,8 +20,8 @@ export const modelsDetailsMenu = ['overview', 'preview']
 export const modelEndpointsDetailsMenu = ['overview']
 export const modelsFilters = [
   { type: 'tree', label: 'Tree:' },
-  { type: 'labels', label: 'Labels:' },
-  { type: 'name', label: 'Name:' }
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
 ]
 export const modelEndpointsFilters = [{ type: 'labels', label: 'Labels:' }]
 export const page = MODELS_PAGE
