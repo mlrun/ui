@@ -64,7 +64,7 @@ const DetailsArtifactsView = ({
                 <Link
                   target="_blank"
                   to={
-                    artifactScreenLinks[artifact.kind] ||
+                    artifactScreenLinks[artifact.kind] ??
                     `/projects/${
                       match.params.projectName
                     }/files/${artifact.db_key || artifact.key}/overview`
