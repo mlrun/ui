@@ -104,9 +104,9 @@ const FilterMenu = ({
       )
     }
 
-    if (filter === 'status') {
+    if (filter.type === 'status') {
       setStateFilter(item)
-    } else if (filter === 'groupBy') {
+    } else if (filter.type === 'groupBy') {
       setGroupFilter(item)
     }
   }
