@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
 import { ReactComponent as Popout } from '../../images/popout.svg'
 
@@ -21,7 +23,9 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
     <div className="preview_container">
       {artifact.target_path && (
         <button onClick={() => handlePreview()} className="preview_popout">
-          <Popout />
+          <Tooltip template={<TextTooltipTemplate text="Pop-out" />}>
+            <Popout />
+          </Tooltip>
         </button>
       )}
       <ArtifactsPreview noData={noData} preview={preview} />
