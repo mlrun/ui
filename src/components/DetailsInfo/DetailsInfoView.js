@@ -157,24 +157,20 @@ const DetailsInfoView = React.forwardRef(
               <>
                 <h3 className="item-info__header">Producer</h3>
                 <ul className="item-info__details">
-                  {Object.keys(selectedItem.producer).map(header => {
+                  {Object.entries(selectedItem.producer).map(([key, value]) => {
                     let url = ''
 
-                    if (header === 'uri') {
-                      const [project, hash] = selectedItem.producer.uri.split(
-                        '/'
-                      )
-                      url = `/projects/${project}/jobs/monitor/${hash}/overview`
+                    if (key === 'uri') {
+                      // value is in the form of: project/uid-iteration
+                      const [project, rest] = value.split('/')
+                      const [uid] = rest.split('-')
+                      url = `/projects/${project}/jobs/monitor/${uid}/overview`
                     }
 
                     return (
-                      <li className="details-item" key={header}>
-                        <div className="details-item__header">{header}</div>
-                        <DetailsInfoItem
-                          link={url}
-                          info={selectedItem.producer[header]}
-                          page={pageData.page}
-                        />
+                      <li className="details-item" key={key}>
+                        <div className="details-item__header">{key}</div>
+                        <DetailsInfoItem link={url} info={value} />
                       </li>
                     )
                   })}
