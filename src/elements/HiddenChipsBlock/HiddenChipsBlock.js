@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import Chip from '../../common/Chip/Chip'
 
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
+import { getFirstScrollableParent } from '../../utils/getFirstScrollableParent'
 
 import './hiddenChipsBlock.scss'
 
@@ -22,22 +24,34 @@ const HiddenChipsBlock = ({
   setEditConfig
 }) => {
   const [isTop, setIsTop] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
   const hiddenRef = useRef()
   const offset = 28
+  const hiddenChipsBlockClassNames = classnames(
+    'chip-block-hidden',
+    isTop ? 'chip-block-hidden_top' : 'chip-block-hidden_bottom',
+    isVisible && 'chip-block-hidden_visible'
+  )
 
   useEffect(() => {
     if (hiddenRef?.current) {
-      const { height } = hiddenRef.current.getBoundingClientRect()
+      const scrollableParent = getFirstScrollableParent(
+        hiddenRef.current.offsetParent
+      )
+      const { height, top } = hiddenRef.current.getBoundingClientRect()
 
       if (
         hiddenRef.current.offsetParent.getBoundingClientRect().top -
           hiddenRef.current.offsetParent.clientHeight -
           height -
           offset <
-        0
+          0 ||
+        scrollableParent.getBoundingClientRect().top > top
       ) {
         setIsTop(true)
       }
+
+      setIsVisible(true)
     }
   }, [hiddenRef, offset])
 
@@ -48,10 +62,7 @@ const HiddenChipsBlock = ({
   })
 
   return (
-    <div
-      ref={hiddenRef}
-      className={`chip-block-hidden ${!isTop ? 'top' : 'bottom'}`}
-    >
+    <div ref={hiddenRef} className={hiddenChipsBlockClassNames}>
       {chips?.map((element, index) => {
         const { chipLabel, chipValue } = getChipLabelAndValue(element)
 

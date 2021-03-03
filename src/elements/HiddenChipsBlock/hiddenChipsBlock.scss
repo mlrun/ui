@@ -7,19 +7,20 @@
 .chip-block-hidden {
   position: absolute;
   right: 0;
-  z-index: 4;
+  z-index: 6;
   flex-direction: column;
   width: 250px;
   padding: 10px;
   background-color: $white;
   border-radius: $mainBorderRadius;
   box-shadow: $hiddenChipsBlockShadow;
+  opacity: 0;
 
   &__chip {
     border: $parametersBorder;
   }
 
-  &.top {
+  &_bottom {
     bottom: 112%;
 
     &::after {
@@ -36,7 +37,7 @@
     }
   }
 
-  &.bottom {
+  &_top {
     top: 112%;
 
     &::before {
@@ -51,5 +52,9 @@
       transform: rotate(-45deg);
       content: '';
     }
+  }
+
+  &_visible {
+    opacity: 1;
   }
 }
