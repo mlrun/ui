@@ -10,6 +10,7 @@ export const modelsInfoHeaders = [
   { label: 'Kind', id: 'kind' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
+  { label: 'Model file', id: 'model_file' },
   { label: 'Tree', id: 'tree' },
   { label: 'Updated', id: 'updated' },
   { label: 'Framework', id: 'framework' },
