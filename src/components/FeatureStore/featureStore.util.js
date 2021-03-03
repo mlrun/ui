@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { maxBy } from 'lodash'
 
 import {
   DATASETS_TAB,
@@ -354,15 +355,18 @@ export const navigateToDetailsPane = (
       )
     } else {
       if (match.params.pageTab === DATASETS_TAB) {
-        const [dataSet] = selectedArtifact.data.filter(item => {
-          if (selectedArtifact.link_iteration) {
-            const { link_iteration } = selectedArtifact.link_iteration
+        const dataSet = maxBy(
+          selectedArtifact.data.filter(item => {
+            if (selectedArtifact.link_iteration) {
+              const { link_iteration } = selectedArtifact.link_iteration
 
-            return link_iteration === item.iter
-          }
+              return link_iteration === item.iter
+            }
 
-          return true
-        })
+            return true
+          }),
+          'updated'
+        )
 
         return setSelectedItem({ item: dataSet })
       }

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { maxBy } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -80,15 +81,18 @@ const Files = ({
       if (!searchItem) {
         history.push(`/projects/${match.params.projectName}/files`)
       } else {
-        const [file] = searchItem.data.filter(item => {
-          if (searchItem.link_iteration) {
-            const { link_iteration } = searchItem.link_iteration
+        const file = maxBy(
+          searchItem.data.filter(item => {
+            if (searchItem.link_iteration) {
+              const { link_iteration } = searchItem.link_iteration
 
-            return link_iteration === item.iter
-          }
+              return link_iteration === item.iter
+            }
 
-          return true
-        })
+            return true
+          }),
+          'updated'
+        )
 
         setSelectedFile({ item: file })
       }

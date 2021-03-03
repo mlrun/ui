@@ -122,7 +122,9 @@ const TableCell = ({
         <Tooltip template={<TextTooltipTemplate text="Download" />}>
           <Download
             fileName={item?.db_key || item?.key}
-            path={item?.target_path.path}
+            path={`${item?.target_path.path}${
+              item?.model_file ? item.model_file : ''
+            }`}
             schema={item?.target_path.schema}
             user={item?.producer?.owner || item.user}
           />

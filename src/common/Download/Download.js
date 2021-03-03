@@ -61,16 +61,12 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
         },
         cancelToken: new axios.CancelToken(cancel => {
           downloadRef.current.cancel = cancel
-        })
+        }),
+        params: schema ? { schema, path, user } : { path, user }
       }
 
       mainHttpClient
-        .get(
-          schema
-            ? `/files?schema=${schema}&path=${path}&user=${user}`
-            : `/files?path=${path}&user=${user}`,
-          config
-        )
+        .get('/files', config)
         .then(response => {
           downloadFile(fileName, response)
           setNotification({
@@ -130,7 +126,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
   }, [downloadCallback, downloadRef])
 
   const handleClick = () => {
-    if (downloadRef.current && downloadRef.current.cancel) {
+    if (downloadRef.current?.cancel) {
       return downloadRef.current.cancel('cancel')
     }
     setDownload(!isDownload)

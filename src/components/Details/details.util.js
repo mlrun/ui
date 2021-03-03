@@ -86,6 +86,9 @@ export const generateArtifactsContent = (
       target_path: {
         value: selectedItem.target_path
       },
+      model_file: {
+        value: selectedItem.model_file
+      },
       tree: {
         value: selectedItem.tree
       },

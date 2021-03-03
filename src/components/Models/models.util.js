@@ -1,6 +1,7 @@
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
+import { maxBy } from 'lodash'
 
 export const modelsInfoHeaders = [
   { label: 'Hash', id: 'hash' },
@@ -176,15 +177,18 @@ export const checkForSelectedModel = (
       `/projects/${match.params.projectName}/models/${match.params.pageTab}`
     )
   } else {
-    const [model] = searchItem.data.filter(item => {
-      if (searchItem.link_iteration) {
-        const { link_iteration } = searchItem.link_iteration
+    const model = maxBy(
+      searchItem.data.filter(item => {
+        if (searchItem.link_iteration) {
+          const { link_iteration } = searchItem.link_iteration
 
-        return link_iteration === item.iter
-      }
+          return link_iteration === item.iter
+        }
 
-      return true
-    })
+        return true
+      }),
+      'updated'
+    )
 
     setSelectedModel({ item: model })
   }
