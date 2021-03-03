@@ -53,7 +53,9 @@ const PreviewModal = ({ item }) => {
           <div className="preview-body__download">
             <Download
               fileName={item.db_key || item.key}
-              path={item.target_path?.path}
+              path={`${item.target_path?.path}${
+                item.model_file ? item.model_file : ''
+              }`}
               schema={item.target_path?.schema}
               user={item.user ?? item.producer?.owner}
             />

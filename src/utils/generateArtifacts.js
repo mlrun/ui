@@ -24,12 +24,15 @@ export const generateArtifacts = artifacts =>
 
           generatedArtifact.preview = generatedPreviewData.preview
 
-          if (generatedPreviewData.extraDataPath) {
-            generatedArtifact.target_path.path =
-              generatedPreviewData.extraDataPath
-          }
+          // @erann March 2, 2021
+          // Not sure why we have this. Commenting out for now.
+          //
+          // if (generatedPreviewData.extraDataPath) {
+          //   generatedArtifact.target_path.path =
+          //     generatedPreviewData.extraDataPath
+          // }
         } else {
-          generatedArtifact.preview = generatedArtifact.preview ?? []
+          generatedArtifact.preview ??= []
         }
       }
 
