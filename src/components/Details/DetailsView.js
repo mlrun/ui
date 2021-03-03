@@ -128,7 +128,6 @@ const DetailsView = React.forwardRef(
             ) && (
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
                 <Download
-                  fileName={selectedItem.db_key || selectedItem.key}
                   path={`${selectedItem.target_path?.path}${
                     selectedItem.model_file ? selectedItem.model_file : ''
                   }`}

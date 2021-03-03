@@ -52,7 +52,6 @@ const PreviewModal = ({ item }) => {
           </div>
           <div className="preview-body__download">
             <Download
-              fileName={item.db_key || item.key}
               path={`${item.target_path?.path}${
                 item.model_file ? item.model_file : ''
               }`}

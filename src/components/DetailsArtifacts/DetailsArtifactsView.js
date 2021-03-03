@@ -79,7 +79,6 @@ const DetailsArtifactsView = ({
             <div className="item-artifacts__row-item item-artifacts__row-item_short">
               <Download
                 className="icon-download"
-                fileName={artifact.db_key || artifact.key}
                 path={artifact.target_path.path}
                 schema={artifact.target_path.schema}
                 user={artifact.user}
