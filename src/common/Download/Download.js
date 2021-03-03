@@ -12,6 +12,8 @@ import { DOWNLOAD_PROGRESS_RING } from '../../colorConstants'
 
 import './download.scss'
 
+const DEFAULT_FILE_NAME = 'mlrun-file'
+
 const Download = ({ fileName, path, schema, setNotification, user }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
@@ -21,9 +23,10 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
   const progressRingRadius = '20'
   const progressRingStroke = '3'
 
-  let file = path.match(/\b(\/)([\w]+\.[\w\d]+)\b/gi)
-    ? path.match(/\b(\/)([\w]+\.[\w\d]+)\b/gi)[0]
-    : null
+  let file =
+    fileName ??
+    path.match(/\/(?<filename>[^/]+)$/)?.groups?.filename ??
+    DEFAULT_FILE_NAME
 
   const retryDownload = useCallback(
     item => {
@@ -68,7 +71,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
       mainHttpClient
         .get('/files', config)
         .then(response => {
-          downloadFile(fileName, response)
+          downloadFile(file, response)
           setNotification({
             status: response.status,
             url: response.config.url,
@@ -104,16 +107,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
           if (downloadRef.current) downloadRef.current.cancel = null
         })
     }
-  }, [
-    isDownload,
-    schema,
-    path,
-    user,
-    fileName,
-    setNotification,
-    file,
-    retryDownload
-  ])
+  }, [isDownload, schema, path, user, setNotification, file, retryDownload])
 
   useEffect(() => {
     let cancelFetch = downloadRef.current
@@ -186,9 +180,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
 }
 
 Download.defaultProps = {
-  fileName: '',
-  path: '',
-  schema: ''
+  path: ''
 }
 
 Download.propTypes = {

@@ -1,4 +1,4 @@
-export default (file, response) => {
+const downloadFile = (fileName, response) => {
   const url = URL.createObjectURL(new Blob([response.data]))
   const handleClick = function() {
     setTimeout(() => {
@@ -9,7 +9,9 @@ export default (file, response) => {
   }
   const link = document.createElement('a')
   link.href = url
-  link.download = file
+  link.download = fileName
   link.addEventListener('click', handleClick, false)
   link.click()
 }
+
+export default downloadFile
