@@ -147,8 +147,8 @@ const Models = ({
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
           artifactFilter={artifactsStore.filter}
+          artifactKind={pageData.page.slice(0, -1)}
           match={match}
-          pageData={pageData}
           refresh={fetchData}
           setIsPopupDialogOpen={setIsPopupDialogOpen}
           title={pageData.registerArtifactDialogTitle}

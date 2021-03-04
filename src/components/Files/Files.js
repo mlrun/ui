@@ -134,8 +134,8 @@ const Files = ({
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
           artifactFilter={artifactsStore.filter}
+          artifactKind={''}
           match={match}
-          pageData={pageData}
           refresh={fetchData}
           setIsPopupDialogOpen={setIsPopupDialogOpen}
           title={pageData.registerArtifactDialogTitle}

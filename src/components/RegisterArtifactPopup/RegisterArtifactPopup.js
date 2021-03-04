@@ -7,12 +7,11 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import { v4 as uuidv4 } from 'uuid'
 
 import artifactApi from '../../api/artifacts-api'
-import { FILES_PAGE } from '../../constants'
 
 const RegisterArtifactPopup = ({
   artifactFilter,
+  artifactKind,
   match,
-  pageData,
   refresh,
   setIsPopupDialogOpen,
   title
@@ -37,27 +36,16 @@ const RegisterArtifactPopup = ({
   })
 
   useEffect(() => {
-    if (pageData.pageKind) {
+    if (artifactKind) {
       setRegisterArtifactData(state => ({
         ...state,
         kind: {
           ...state.kind,
-          value:
-            pageData.page === FILES_PAGE
-              ? ''
-              : pageData.pageKind.slice(0, pageData.pageKind.length - 1)
-        }
-      }))
-    } else {
-      setRegisterArtifactData(state => ({
-        ...state,
-        kind: {
-          ...state.kind,
-          value: 'general'
+          value: artifactKind.toLowerCase()
         }
       }))
     }
-  }, [pageData.page, pageData.pageKind])
+  }, [artifactKind])
 
   const resetRegisterArtifactForm = useCallback(() => {
     setRegisterArtifactData({
@@ -190,7 +178,7 @@ const RegisterArtifactPopup = ({
       <RegisterArtifactForm
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
-        showType={!pageData.pageKind}
+        showType={!artifactKind}
       />
       <div className="pop-up-dialog__footer-container">
         {registerArtifactData.error.message && (
@@ -219,8 +207,8 @@ RegisterArtifactPopup.defaultProps = {
 
 RegisterArtifactPopup.propTypes = {
   artifactFilter: PropTypes.shape({}).isRequired,
+  artifactKind: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
-  pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   title: PropTypes.string

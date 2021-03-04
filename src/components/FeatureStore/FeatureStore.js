@@ -323,8 +323,8 @@ const FeatureStore = ({
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
           artifactFilter={artifactsStore.filter}
+          artifactKind={match.params.pageTab.slice(0, -1)}
           match={match}
-          pageData={pageData}
           refresh={fetchData}
           setIsPopupDialogOpen={setIsPopupDialogOpen}
           title={pageData.registerArtifactDialogTitle}
