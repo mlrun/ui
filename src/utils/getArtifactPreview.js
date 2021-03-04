@@ -15,8 +15,8 @@ export const setArtifactPreviewFromSchema = (
     {
       type: 'table',
       data: {
-        headers: artifact.header,
-        content: artifact.preview
+        headers: artifact.header ?? artifact.preview[0],
+        content: artifact.header ? artifact.preview : artifact.preview.slice(1)
       }
     }
   ])
