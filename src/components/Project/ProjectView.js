@@ -213,10 +213,8 @@ const ProjectView = React.forwardRef(
         {isPopupDialogOpen && (
           <RegisterArtifactPopup
             artifactFilter={{}}
+            artifactKind={artifactKind}
             match={match}
-            pageData={{
-              pageKind: `${artifactKind}s`
-            }}
             refresh={() => {
               history.push(registerArtifactLink)
             }}
