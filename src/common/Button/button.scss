@@ -1,0 +1,182 @@
+@import '../../scss/variables';
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.eye-svg {
+  margin: 0 4px;
+
+  &_color {
+    fill: $white;
+  }
+}
+
+[class^="btn"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 36px;
+  color: $white;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  line-height: 16px;
+  border: 0;
+  border-radius: $mainBorderRadius;
+}
+
+.btn {
+  svg {
+    margin-right: 5px;
+
+    path {
+      fill: $white;
+    }
+  }
+
+  &-primary {
+    background: $brightTurquoise;
+
+    &:focus {
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    &:hover {
+      background: #1fcc9e;
+    }
+
+    &:active {
+      background: #1db284;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    &:disabled {
+      color: $spunPearl;
+      background: $white;
+      border: 1px solid #0fddaf;
+
+      .eye-svg_color {
+        fill: $topaz;
+      }
+    }
+  }
+
+  &-tertiary {
+    color: $primary;
+    background: $white;
+    border: $primaryBorder;
+
+    svg {
+      path {
+        fill: #4b4760;
+      }
+    }
+
+    &:focus {
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    &:hover {
+      background: #f8f7f8;
+    }
+
+    &:active {
+      background: #e7e7e7;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    &:disabled {
+      color: $spunPearl;
+      background: $white;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+
+      svg {
+        path {
+          fill: #4b4760;
+        }
+      }
+    }
+  }
+
+  &-secondary {
+    background: $malibu;
+
+    &:focus {
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    &:hover {
+      background: #6279e7;
+    }
+
+    &:active {
+      background: #5468c7;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    &:disabled {
+      color: $spunPearl;
+      background: $white;
+      border: 1px solid #869cff;
+
+      svg {
+        path {
+          fill: #4b4760;
+        }
+      }
+    }
+  }
+
+  &-danger {
+    color: $white;
+    background: #ea336a;
+
+    &:focus {
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    &:hover {
+      background: #d22a5d;
+    }
+
+    &:active {
+      background: #bc2553;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    &:disabled {
+      color: $spunPearl;
+      background: $white;
+      border: 1px solid #ea336a;
+
+      svg {
+        path {
+          fill: #4b4760;
+        }
+      }
+    }
+  }
+
+  &-label {
+    color: $primary;
+    background: $white;
+    border: 0;
+
+    &:focus {
+      border: 1px solid rgba(72, 63, 86, 0.12);
+    }
+
+    &:hover {
+      color: $topaz;
+    }
+
+    &:active {
+      color: $black;
+    }
+
+    &:disabled {
+      color: $spunPearl;
+    }
+  }
+}

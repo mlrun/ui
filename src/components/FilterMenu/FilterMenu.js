@@ -9,6 +9,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
+import { Button } from '../../common/Button/Button.js'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
@@ -191,7 +192,7 @@ const FilterMenu = ({
         )}
       </div>
       {actionButtonTitle && (
-        <button className="btn_primary btn_small">{actionButtonTitle}</button>
+        <Button label={actionButtonTitle} type="secondary" />
       )}
       <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>

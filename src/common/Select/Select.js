@@ -10,8 +10,9 @@ import './select.scss'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import PopUpDialog from '../PopUpDialog/PopUpDialog'
+import { Button } from '../Button/Button.js'
 
-const Select = ({
+export const Select = ({
   className,
   disabled,
   disabledOptions,
@@ -126,23 +127,22 @@ const Select = ({
         >
           <div>{selectedItemAction.confirm.description}</div>
           <div className="pop-up-dialog__footer-container">
-            <button
-              className="btn_default pop-up-dialog__btn_cancel"
+            <Button
+              label="Cancel222"
+              type="tertiary"
+              addClass="pop-up-dialog__btn_cancel"
               onClick={() => {
                 setConfirmDialogOpen(false)
               }}
-            >
-              Cancel
-            </button>
-            <button
-              className={selectedItemAction.confirm.btnConfirmClassNames}
+            />
+            <Button
+              type="danger"
+              label={selectedItemAction.confirm.btnConfirmLabel}
               onClick={() => {
                 selectedItemAction.handler(selectedId)
                 setConfirmDialogOpen(false)
               }}
-            >
-              {selectedItemAction.confirm.btnConfirmLabel}
-            </button>
+            />
           </div>
         </PopUpDialog>
       )}

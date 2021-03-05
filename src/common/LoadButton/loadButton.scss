@@ -1,0 +1,75 @@
+@import '../../scss/variables';
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+[class^='btn-load'] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 32px;
+  color: $primary;
+  font-weight: 500;
+  font-size: 14px;
+  font-style: normal;
+  line-height: 16px;
+  background: $white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: $mainBorderRadius;
+}
+
+.btn-load {
+  &-primary {
+    border-bottom: 4px solid $brightTurquoise;
+
+    &:hover {
+      background: #f8f7f8;
+    }
+
+    &:active {
+      background: #ededed;
+    }
+
+    &:disabled {
+      color: $spunPearl;
+      background: $white;
+      border-bottom: 4px solid #c5f7ec;
+    }
+  }
+
+  &-secondary {
+    border-bottom: 4px solid $malibu;
+
+    &:hover {
+      background: #f8f7f8;
+    }
+
+    &:active {
+      background: #ededed;
+    }
+
+    &:disabled {
+      color: $spunPearl;
+      background: $white;
+      border-bottom: 4px solid #e2e7ff;
+    }
+  }
+
+  &-tertiary {
+    border-bottom: 4px solid $spunPearl;
+
+    &:hover {
+      background: #f8f7f8;
+    }
+
+    &:active {
+      background: #ededed;
+    }
+
+    &:disabled {
+      color: $spunPearl;
+      background: $white;
+      border-bottom: 4px solid #ebebec;
+    }
+  }
+}

@@ -16,6 +16,7 @@ import { SCHEDULE_TAB } from '../../constants'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import { Button } from '../../common/Button/Button.js'
 
 const Jobs = ({
   fetchJobs,
@@ -215,18 +216,17 @@ const Jobs = ({
         >
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
-            <button
-              className="btn_default pop-up-dialog__btn_cancel"
+            <Button
+              label="Cancel"
+              type="tertiary"
               onClick={confirmData.rejectHandler}
-            >
-              Cancel
-            </button>
-            <button
-              className={confirmData.btnConfirmClassNames}
+              addClass="pop-up-dialog__btn_cancel"
+            />
+            <Button
+              type="danger"
+              label={confirmData.btnConfirmLabel}
               onClick={() => confirmData.confirmHandler(confirmData.item)}
-            >
-              {confirmData.btnConfirmLabel}
-            </button>
+            />
           </div>
         </PopUpDialog>
       )}

@@ -16,6 +16,7 @@ import Sort from '../../common/Sort/Sort'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
+import { Button } from '../../common/Button/Button.js'
 
 import { pageData, projectsSortOptions, projectsStates } from './projectsData'
 
@@ -76,18 +77,17 @@ const ProjectsView = ({
         >
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
-            <button
-              className="btn_default pop-up-dialog__btn_cancel"
+            <Button
+              label="Cancel"
+              type="tertiary"
+              addClass="pop-up-dialog__btn_cancel"
               onClick={confirmData.rejectHandler}
-            >
-              Cancel
-            </button>
-            <button
-              className={confirmData.btnConfirmClassNames}
+            />
+            <Button
+              label={confirmData.btnConfirmLabel}
+              type="danger"
               onClick={() => confirmData.confirmHandler(confirmData.item)}
-            >
-              {confirmData.btnConfirmLabel}
-            </button>
+            />
           </div>
         </PopUpDialog>
       )}
