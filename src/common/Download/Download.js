@@ -8,9 +8,9 @@ import ProgressRing from '../ProgressRing/ProgressRing'
 import { mainHttpClient } from '../../httpClient'
 import notificationActions from '../../actions/notification'
 import downloadFile from '../../utils/downloadFile'
-import { DOWNLOAD_PROGRESS_RING } from '../../colorConstants'
 
 import './download.scss'
+import colors from '../../scss/colors.scss'
 
 const DEFAULT_FILE_NAME = 'mlrun-file'
 
@@ -132,7 +132,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
         radius={progressRingRadius}
         stroke={progressRingStroke}
         progress={progress}
-        color={progress !== 0 ? DOWNLOAD_PROGRESS_RING : 'transparent'}
+        color={progress !== 0 ? colors.mulledWine : 'transparent'}
       >
         <g className={!isDownload ? 'download' : 'downloading'}>
           <circle r="12" cx="20px" cy="20px" />

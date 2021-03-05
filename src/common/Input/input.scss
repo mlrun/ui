@@ -45,8 +45,8 @@
   &__tip {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
     right: 4px;
+    transform: translateY(-50%);
   }
 
   &.active-input {

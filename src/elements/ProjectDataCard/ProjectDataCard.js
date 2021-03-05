@@ -36,7 +36,7 @@ const ProjectDataCard = ({
         )}
       </div>
       {content.loading ? (
-        <Loader />
+        <Loader section />
       ) : content.error ? (
         <div className="error-container">
           <h1>{content.error}</h1>

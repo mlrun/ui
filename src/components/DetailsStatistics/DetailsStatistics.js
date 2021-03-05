@@ -1,15 +1,21 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import { generateStatistics } from './detailsStatistics.util'
+import {
+  generateStatistics,
+  getHistogramChartConfig
+} from './detailsStatistics.util'
 
+import MlChart from '../../common/Chart/MlChart'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import './detailsStatistics.scss'
+import colors from '../../scss/colors.scss'
 
 const DetailsStatistics = ({ selectedItem }) => {
   const statistics = generateStatistics(selectedItem)
+  const chartConfig = useMemo(getHistogramChartConfig, [])
   const headers = Object.keys(statistics[0])
 
   return (
@@ -38,14 +44,35 @@ const DetailsStatistics = ({ selectedItem }) => {
                   key={Date.now() + index}
                   className={`details-statistics__table-item statistics-cell_${headers[index]}`}
                 >
-                  <Tooltip
-                    className="data-ellipsis"
-                    template={
-                      <TextTooltipTemplate text={`${statisticsValue.value}`} />
-                    }
-                  >
-                    {statisticsValue.value}
-                  </Tooltip>
+                  {statisticsValue.type === 'chart' &&
+                  statisticsValue.value[1]?.length > 0 ? (
+                    <MlChart
+                      config={{
+                        ...chartConfig,
+                        data: {
+                          labels: statisticsValue.value[1],
+                          datasets: [
+                            {
+                              data: statisticsValue.value[0],
+                              showLine: false,
+                              backgroundColor: [colors.amethyst]
+                            }
+                          ]
+                        }
+                      }}
+                    />
+                  ) : (
+                    <Tooltip
+                      className="data-ellipsis"
+                      template={
+                        <TextTooltipTemplate
+                          text={`${statisticsValue.value}`}
+                        />
+                      }
+                    >
+                      {statisticsValue.value}
+                    </Tooltip>
+                  )}
                 </div>
               ))}
             </div>

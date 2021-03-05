@@ -1,3 +1,5 @@
+import { generateCustomTooltip } from '../../common/Chart/mlChart.util'
+
 export const generateStatistics = selectedItem => {
   return selectedItem.entities
     ? generateStatisticFromEntities(selectedItem)
@@ -54,6 +56,11 @@ export const generateStatisticFromEntities = selectedItem => {
           value: selectedItem?.stats?.[item.name]?.freq ?? '',
           type: 'text',
           visible: true
+        },
+        histogram: {
+          value: selectedItem?.stats?.[item.name]?.hist ?? [[], []],
+          type: 'chart',
+          visible: true
         }
       }
     })
@@ -109,4 +116,35 @@ export const generateStatisticFromFeatures = selectedItem => {
       }
     }
   })
+}
+
+export const getHistogramChartConfig = () => {
+  return {
+    type: 'bar',
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: {
+        padding: 5
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: false,
+          external: generateCustomTooltip,
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            title: () => ''
+          }
+        }
+      },
+      scales: {
+        x: { display: false },
+        y: { display: false }
+      }
+    }
+  }
 }

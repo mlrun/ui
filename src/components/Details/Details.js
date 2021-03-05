@@ -1,4 +1,10 @@
-import React, { useEffect, useReducer, useCallback, useRef } from 'react'
+import React, {
+  useEffect,
+  useMemo,
+  useReducer,
+  useCallback,
+  useRef
+} from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -49,7 +55,7 @@ const Details = ({
   let pathname = useRef()
   const detailsRef = useRef()
 
-  const handlePreview = () => {
+  const handlePreview = useCallback(() => {
     dispatch(
       artifactActions.showArtifactsPreview({
         isPreview: true,
@@ -57,7 +63,7 @@ const Details = ({
       })
     )
     handleCancel()
-  }
+  }, [dispatch, handleCancel, selectedItem])
 
   const handleEditInput = useCallback(
     (value, field) => {
@@ -260,17 +266,16 @@ const Details = ({
     }
   }
 
-  const tabsContent = useCallback(
-    renderContent(
+  const tabsContent = useMemo(() => {
+    return renderContent(
       match,
       detailsState,
       detailsDispatch,
       selectedItem,
       pageData,
       handlePreview
-    ),
-    [detailsState, handlePreview, match, pageData, selectedItem]
-  )
+    )
+  }, [detailsState, handlePreview, match, pageData, selectedItem])
 
   return (
     <DetailsView
