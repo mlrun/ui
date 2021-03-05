@@ -23,9 +23,13 @@ const JobsPanelParametersView = ({
   handleDeleteParameter,
   handleEditParameter,
   isHyperTypeExist,
+  nameNotValid,
   parameters,
   parametersDispatch,
   parametersState,
+  selectorCriteria,
+  setNewJobSelectorCriteria,
+  setNewJobSelectorResult,
   setTuningStrategy,
   setUrl,
   tableContent,
@@ -33,11 +37,11 @@ const JobsPanelParametersView = ({
   url
 }) => {
   const urlTypeClassName = classnames(
-    'parameters-additional-settings__url-type',
+    'parameters-additional-settings__input-wrapper',
     isHyperTypeExist && 'disabled'
   )
   const tuningStrategyClassName = classnames(
-    'parameters-additional-settings__tuning-strategy',
+    'parameters-additional-settings__select-wrapper',
     !isHyperTypeExist && !url && 'disabled'
   )
 
@@ -52,6 +56,7 @@ const JobsPanelParametersView = ({
           handleDeleteParameter={handleDeleteParameter}
           handleEditParameter={handleEditParameter}
           headers={panelData.parameters['table-headers']}
+          nameValidation={nameNotValid}
           selectedItem={parametersState.selectedParameter}
           setSelectedItem={selectedParam =>
             parametersDispatch({
@@ -74,6 +79,8 @@ const JobsPanelParametersView = ({
                   label="Name"
                   className="input-row__item"
                   floatingLabel
+                  required={nameNotValid(parametersState.newParameter.name)}
+                  requiredText="Names already exists"
                   type="text"
                 />
                 <Select
@@ -114,6 +121,7 @@ const JobsPanelParametersView = ({
               </div>
               <button
                 className="add-input btn-add"
+                disabled={nameNotValid(parametersState.newParameter.name)}
                 onClick={() => handleAddNewItem(true)}
               >
                 <Tooltip template={<TextTooltipTemplate text="Add item" />}>
@@ -142,13 +150,11 @@ const JobsPanelParametersView = ({
           <div className="parameters-additional-settings">
             <div className={urlTypeClassName}>
               <Input
-                label="URL"
+                label="Read hyper params from a file"
                 className="default-input"
                 type="text"
                 floatingLabel
-                onChange={value => {
-                  setUrl(value)
-                }}
+                onChange={setUrl}
               />
             </div>
             <div className={tuningStrategyClassName}>
@@ -156,9 +162,26 @@ const JobsPanelParametersView = ({
                 selectedId={tuningStrategy}
                 options={selectOptions.hyperStrategyType}
                 label="Tuning Strategy:"
-                onClick={value => {
-                  setTuningStrategy(value)
-                }}
+                onClick={setTuningStrategy}
+              />
+            </div>
+          </div>
+          <div className="parameters-additional-settings">
+            <div className="parameters-additional-settings__input-wrapper">
+              <Input
+                label="Result"
+                className="default-input"
+                type="text"
+                floatingLabel
+                onChange={setNewJobSelectorResult}
+              />
+            </div>
+            <div className="parameters-additional-settings__select-wrapper">
+              <Select
+                selectedId={selectorCriteria}
+                options={selectOptions.selectorCriteria}
+                label="Criteria:"
+                onClick={setNewJobSelectorCriteria}
               />
             </div>
           </div>
@@ -175,11 +198,16 @@ JobsPanelParametersView.propTypes = {
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   isHyperTypeExist: PropTypes.bool.isRequired,
+  nameNotValid: PropTypes.func.isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,
   parametersState: PropTypes.shape({}).isRequired,
+  selectorCriteria: PropTypes.string.isRequired,
+  setNewJobSelectorCriteria: PropTypes.func.isRequired,
+  setNewJobSelectorResult: PropTypes.func.isRequired,
   setTuningStrategy: PropTypes.func.isRequired,
   setUrl: PropTypes.func.isRequired,
+  tableContent: PropTypes.shape({}).isRequired,
   tuningStrategy: PropTypes.string,
   url: PropTypes.string
 }

@@ -1,5 +1,6 @@
 import React, { useReducer, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import JobsPanelParametersView from './JobsPanelParametersView'
 
@@ -12,16 +13,20 @@ import {
 import {
   convertParamValue,
   editHyperParams,
-  generateTableData
+  generateTableData,
+  setHyperParams
 } from './jobsPanelParameters.util'
 import { panelActions } from '../JobsPanel/panelReducer'
+import jobsActions from '../../actions/jobs'
 
 const JobsPanelParameters = ({
-  newJobTaskSpecObj,
+  jobsStore,
   panelDispatch,
   panelState,
   setNewJobHyperParameters,
   setNewJobParameters,
+  setNewJobSelectorCriteria,
+  setNewJobSelectorResult,
   setTuningStrategy,
   setUrl
 }) => {
@@ -31,11 +36,11 @@ const JobsPanelParameters = ({
   )
 
   const disabledOptions = useMemo(() => {
-    if (newJobTaskSpecObj.param_file) {
+    if (jobsStore.newJob.task.spec.param_file) {
       return ['hyper']
     }
     return []
-  }, [newJobTaskSpecObj.param_file])
+  }, [jobsStore.newJob.task.spec.param_file])
 
   const checkParameter = useCallback(
     item => {
@@ -46,20 +51,21 @@ const JobsPanelParameters = ({
           if (
             parameter.data.parameterType !== panelData.newParameterType[0].id
           ) {
-            setNewJobHyperParameters({
-              ...newJobTaskSpecObj.hyperparams,
-              [parameter.data.name]: `${parameter.data.value}`.split(',')
-            })
+            setHyperParams(
+              parameter.data,
+              jobsStore.newJob.task.spec.hyperparams,
+              setNewJobHyperParameters
+            )
           }
 
           setNewJobParameters({
-            ...newJobTaskSpecObj.parameters,
+            ...jobsStore.newJob.task.spec.parameters,
             [parameter.data.name]: parameter.data.value
           })
         } else if (parameter.isChecked && parameter.data.name === item) {
           parameter.isChecked = false
 
-          const params = { ...newJobTaskSpecObj.parameters }
+          const params = { ...jobsStore.newJob.task.spec.parameters }
 
           delete params[parameter.data.name]
 
@@ -70,7 +76,7 @@ const JobsPanelParameters = ({
           if (
             parameter.data.parameterType !== panelData.newParameterType[0].id
           ) {
-            const hyperParams = { ...newJobTaskSpecObj.hyperparams }
+            const hyperParams = { ...jobsStore.newJob.task.spec.hyperparams }
 
             delete hyperParams[parameter.data.name]
 
@@ -93,8 +99,8 @@ const JobsPanelParameters = ({
       })
     },
     [
-      newJobTaskSpecObj.hyperparams,
-      newJobTaskSpecObj.parameters,
+      jobsStore.newJob.task.spec.hyperparams,
+      jobsStore.newJob.task.spec.parameters,
       panelDispatch,
       panelState.tableData.parameters,
       setNewJobHyperParameters,
@@ -118,7 +124,7 @@ const JobsPanelParameters = ({
     }
 
     setNewJobParameters({
-      ...newJobTaskSpecObj.parameters,
+      ...jobsStore.newJob.task.spec.parameters,
       [parametersState.newParameter.name]: convertParamValue(
         parametersState.newParameter.value,
         parametersState.newParameter.valueType
@@ -146,11 +152,11 @@ const JobsPanelParameters = ({
       parametersState.newParameter.parameterType !==
       panelData.newParameterType[0].id
     ) {
-      setNewJobHyperParameters({
-        ...newJobTaskSpecObj.hyperparams,
-        [parametersState.newParameter
-          .name]: parametersState.newParameter.value.split(',')
-      })
+      setHyperParams(
+        parametersState.newParameter,
+        jobsStore.newJob.task.spec.hyperparams,
+        setNewJobHyperParameters
+      )
     }
 
     panelDispatch({
@@ -180,8 +186,8 @@ const JobsPanelParameters = ({
   }
 
   const handleEditParameter = () => {
-    const params = { ...newJobTaskSpecObj.parameters }
-    const hyperParamsObj = { ...newJobTaskSpecObj.hyperparams }
+    const params = { ...jobsStore.newJob.task.spec.parameters }
+    const hyperParamsObj = { ...jobsStore.newJob.task.spec.hyperparams }
     const convertedValue = convertParamValue(
       parametersState.selectedParameter.data.value,
       parametersState.selectedParameter.data.valueType
@@ -203,7 +209,8 @@ const JobsPanelParameters = ({
         editHyperParams(
           hyperParamsObj,
           parametersState.selectedParameter.data,
-          parametersState.selectedParameter.newName
+          parametersState.selectedParameter.newName,
+          convertedValue
         )
       )
     }
@@ -252,12 +259,12 @@ const JobsPanelParameters = ({
   }
 
   const handleDeleteParameter = item => {
-    const newParameters = { ...newJobTaskSpecObj.parameters }
+    const newParameters = { ...jobsStore.newJob.task.spec.parameters }
 
     delete newParameters[item.data.name]
 
     if (item.data.parameterType !== panelData.newParameterType[0].id) {
-      const newHyperParameters = { ...newJobTaskSpecObj.hyperparams }
+      const newHyperParameters = { ...jobsStore.newJob.task.spec.hyperparams }
 
       delete newHyperParameters[item.data.name]
 
@@ -290,8 +297,15 @@ const JobsPanelParameters = ({
     [panelState.tableData.parameters]
   )
 
+  const nameNotValid = name => {
+    return !!panelState.tableData.parameters.find(
+      parameter => parameter.data.name === name
+    )
+  }
+
   return (
     <JobsPanelParametersView
+      nameNotValid={nameNotValid}
       checkParameter={checkParameter}
       disabledOptions={disabledOptions}
       handleAddNewItem={handleAddNewParameter}
@@ -301,23 +315,23 @@ const JobsPanelParameters = ({
       parameters={panelState.tableData.parameters}
       parametersDispatch={parametersDispatch}
       parametersState={parametersState}
+      selectorCriteria={jobsStore.newJob.task.spec.selector.criteria}
+      setNewJobSelectorCriteria={setNewJobSelectorCriteria}
+      setNewJobSelectorResult={setNewJobSelectorResult}
       setTuningStrategy={setTuningStrategy}
       setUrl={setUrl}
       tableContent={tableContent}
-      tuningStrategy={newJobTaskSpecObj.tuning_strategy}
-      url={newJobTaskSpecObj.param_file}
+      tuningStrategy={jobsStore.newJob.task.spec.tuning_strategy}
+      url={jobsStore.newJob.task.spec.param_file}
     />
   )
 }
 
 JobsPanelParameters.propTypes = {
-  newJobTaskSpecObj: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
-  panelState: PropTypes.shape({}).isRequired,
-  setNewJobHyperParameters: PropTypes.func.isRequired,
-  setNewJobParameters: PropTypes.func.isRequired,
-  setTuningStrategy: PropTypes.func.isRequired,
-  setUrl: PropTypes.func.isRequired
+  panelState: PropTypes.shape({}).isRequired
 }
 
-export default JobsPanelParameters
+export default connect(jobsStore => ({ ...jobsStore }), { ...jobsActions })(
+  JobsPanelParameters
+)

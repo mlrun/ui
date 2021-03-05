@@ -61,6 +61,10 @@ main {
       outline: none;
       box-shadow: none;
     }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
 
   [class*='btn'] {

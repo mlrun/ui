@@ -7,27 +7,37 @@ export const convertParamValue = (value, type) =>
     ? false
     : String(value)
 
-export const editHyperParams = (hyperParams, selectedParameter, newName) => {
+export const editHyperParams = (
+  hyperParams,
+  selectedParameter,
+  newName,
+  convertedValue
+) => {
+  const value =
+    typeof convertedValue === 'string'
+      ? convertedValue.split(',')
+      : [convertedValue]
+
   if (newName) {
     if (hyperParams[selectedParameter.name]) {
       return {
         ...hyperParams,
-        [newName]: selectedParameter.value.split(',')
+        [newName]: value
       }
     } else {
       delete hyperParams[selectedParameter.name]
-      hyperParams[newName] = selectedParameter.value.split(',')
+      hyperParams[newName] = value
 
       return { ...hyperParams }
     }
   } else if (hyperParams[selectedParameter.name]) {
-    hyperParams[selectedParameter.name] = selectedParameter.value.split(',')
+    hyperParams[selectedParameter.name] = value
 
     return { ...hyperParams }
   } else {
     return {
       ...hyperParams,
-      [selectedParameter.name]: selectedParameter.value.split(',')
+      [selectedParameter.name]: value
     }
   }
 }
@@ -93,5 +103,24 @@ export const selectOptions = {
       label: 'Random',
       id: 'random'
     }
+  ],
+  selectorCriteria: [
+    {
+      label: 'Max',
+      id: 'max'
+    },
+    {
+      label: 'Min',
+      id: 'min'
+    }
   ]
+}
+
+export const setHyperParams = (data, hyperparams, setNewJobHyperParameters) => {
+  const value = convertParamValue(data.value, data.valueType)
+
+  setNewJobHyperParameters({
+    ...hyperparams,
+    [data.name]: typeof value === 'string' ? value.split(',') : [value]
+  })
 }

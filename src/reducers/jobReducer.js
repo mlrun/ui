@@ -21,7 +21,9 @@ import {
   SET_NEW_JOB_SECRET_SOURCES,
   SET_NEW_JOB,
   SET_TUNING_STRATEGY,
-  SET_URL
+  SET_URL,
+  SET_NEW_JOB_SELECTOR_CRITERIA,
+  SET_NEW_JOB_SELECTOR_RESULT
 } from '../constants'
 
 const initialState = {
@@ -38,6 +40,10 @@ const initialState = {
         hyperparams: {},
         secret_sources: [],
         param_file: '',
+        selector: {
+          criteria: 'max',
+          result: ''
+        },
         tuning_strategy: 'list'
       }
     },
@@ -53,34 +59,10 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case FETCH_JOBS_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_JOBS_SUCCESS:
-      return {
-        ...state,
-        jobs: payload,
-        loading: false
-      }
-    case FETCH_JOBS_FAILURE:
-      return {
-        ...state,
-        jobs: [],
-        loading: false,
-        error: payload
-      }
     case FETCH_JOB_LOGS_BEGIN:
       return {
         ...state,
         loading: true
-      }
-    case FETCH_JOB_LOGS_SUCCESS:
-      return {
-        ...state,
-        logs: payload,
-        loading: false
       }
     case FETCH_JOB_LOGS_FAILURE:
       return {
@@ -89,15 +71,93 @@ export default (state = initialState, { type, payload }) => {
         loading: false,
         error: payload
       }
+    case FETCH_JOB_LOGS_SUCCESS:
+      return {
+        ...state,
+        logs: payload,
+        loading: false
+      }
+    case FETCH_JOBS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_JOBS_FAILURE:
+      return {
+        ...state,
+        jobs: [],
+        loading: false,
+        error: payload
+      }
+    case FETCH_JOBS_SUCCESS:
+      return {
+        ...state,
+        jobs: payload,
+        loading: false
+      }
     case REMOVE_JOB_LOGS:
       return {
         ...state,
         logs: ''
       }
+    case REMOVE_JOB_ERROR:
+      return {
+        ...state,
+        error: null
+      }
+    case REMOVE_NEW_JOB:
+      return {
+        ...state,
+        newJob: {
+          ...initialState.newJob
+        }
+      }
+    case RUN_NEW_JOB_FAILURE:
+      return {
+        ...state,
+        error: payload
+      }
+    case REMOVE_SCHEDULED_JOB_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
     case SET_ALL_JOBS_DATA:
       return {
         ...state,
         allJobsData: payload
+      }
+    case SET_LOADING: {
+      return {
+        ...state,
+        loading: payload
+      }
+    }
+    case SET_NEW_JOB:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              parameters: payload.parameters,
+              inputs: payload.inputs,
+              secret_sources: payload.secret_sources
+            }
+          },
+          function: {
+            ...state.newJob.function,
+            spec: {
+              ...state.newJob.function.spec,
+              volume_mounts: payload.volume_mounts,
+              volumes: payload.volumes,
+              env: payload.environmentVariables
+            }
+          }
+        }
       }
     case SET_NEW_JOB_ENVIRONMENT_VARIABLES:
       return {
@@ -127,7 +187,20 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
-
+    case SET_NEW_JOB_PARAMETERS:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              parameters: payload
+            }
+          }
+        }
+      }
     case SET_NEW_JOB_SECRET_SOURCES:
       return {
         ...state,
@@ -138,20 +211,6 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.newJob.task.spec,
               secret_sources: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_VOLUMES:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              volumes: payload
             }
           }
         }
@@ -170,53 +229,16 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
-    case REMOVE_JOB_ERROR:
-      return {
-        ...state,
-        error: null
-      }
-    case REMOVE_NEW_JOB:
-      return {
-        ...state,
-        newJob: {
-          task: {
-            spec: {
-              parameters: {},
-              inputs: {},
-              hyperparams: {},
-              secret_sources: []
-            }
-          },
-          function: {
-            spec: {
-              volumes: [],
-              volume_mounts: [],
-              env: []
-            }
-          }
-        }
-      }
-    case REMOVE_SCHEDULED_JOB_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: payload
-      }
-    case RUN_NEW_JOB_FAILURE:
-      return {
-        ...state,
-        error: payload
-      }
-    case SET_NEW_JOB_PARAMETERS:
+    case SET_NEW_JOB_VOLUMES:
       return {
         ...state,
         newJob: {
           ...state.newJob,
-          task: {
-            ...state.newJob.task,
+          function: {
+            ...state.newJob.function,
             spec: {
-              ...state.newJob.task.spec,
-              parameters: payload
+              ...state.newJob.function.spec,
+              volumes: payload
             }
           }
         }
@@ -235,7 +257,7 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
-    case SET_NEW_JOB:
+    case SET_NEW_JOB_SELECTOR_CRITERIA: {
       return {
         ...state,
         newJob: {
@@ -244,23 +266,16 @@ export default (state = initialState, { type, payload }) => {
             ...state.newJob.task,
             spec: {
               ...state.newJob.task.spec,
-              parameters: payload.parameters,
-              inputs: payload.inputs,
-              secret_sources: payload.secret_sources
-            }
-          },
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              volume_mounts: payload.volume_mounts,
-              volumes: payload.volumes,
-              env: payload.environmentVariables
+              selector: {
+                ...state.newJob.task.spec.selector,
+                criteria: payload
+              }
             }
           }
         }
       }
-    case SET_URL: {
+    }
+    case SET_NEW_JOB_SELECTOR_RESULT: {
       return {
         ...state,
         newJob: {
@@ -269,7 +284,10 @@ export default (state = initialState, { type, payload }) => {
             ...state.newJob.task,
             spec: {
               ...state.newJob.task.spec,
-              param_file: payload
+              selector: {
+                ...state.newJob.task.spec.selector,
+                result: payload
+              }
             }
           }
         }
@@ -290,10 +308,19 @@ export default (state = initialState, { type, payload }) => {
         }
       }
     }
-    case SET_LOADING: {
+    case SET_URL: {
       return {
         ...state,
-        loading: payload
+        newJob: {
+          ...state.newJob,
+          task: {
+            ...state.newJob.task,
+            spec: {
+              ...state.newJob.task.spec,
+              param_file: payload
+            }
+          }
+        }
       }
     }
     default:
