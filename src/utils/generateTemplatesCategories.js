@@ -10,7 +10,7 @@ const aliasToCategory = {
   test: 'other',
   utils: 'other'
 }
-const excludeCategoryKinds = ['serving', 'nuclio']
+const excludeCategoryKinds = ['serving', 'nuclio', 'remote']
 export const generateCategories = templates => {
   const templatesCategories = {}
 
