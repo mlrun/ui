@@ -133,7 +133,7 @@ const FilterMenu = ({
                 <Input
                   type="text"
                   label={filter.label}
-                  placeholder="key or key=value"
+                  placeholder="key1,key2=value,..."
                   key={filter.type}
                   onChange={setLabels}
                   value={labels}
