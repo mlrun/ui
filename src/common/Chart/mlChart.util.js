@@ -1,3 +1,5 @@
+import { round } from 'lodash'
+
 export const generateCustomTooltip = context => {
   // Tooltip Element
   let tooltipEl = document.getElementById('chartjs-tooltip')
@@ -22,15 +24,33 @@ export const generateCustomTooltip = context => {
 
   // Set Text
   if (tooltipModel.dataPoints) {
-    let dataPoints = tooltipModel.dataPoints.map(dataPoint => {
-      return { x: dataPoint.label, y: dataPoint.formattedValue }
+    const labels = context.chart.config._config.data?.labels
+    const dataPoints = tooltipModel.dataPoints.map(dataPoint => {
+      const labelFormatted = isFinite(dataPoint.label)
+        ? round(dataPoint.label, 2)
+        : dataPoint.label
+      const nextLabel = labels?.[dataPoint.dataIndex + 1]
+      const nextLabelFormatted = isFinite(nextLabel)
+        ? round(nextLabel, 2)
+        : nextLabel
+
+      return {
+        x: nextLabelFormatted
+          ? [labelFormatted, nextLabelFormatted]
+          : labelFormatted,
+        y: dataPoint.formattedValue
+      }
     })
     let innerHtml = '<tbody>'
 
     dataPoints.forEach(dataPoint => {
       for (let name in dataPoint) {
         if (Object.prototype.hasOwnProperty.call(dataPoint, name)) {
-          innerHtml += `<tr><td>${name}: ${dataPoint[name]}</td></tr>`
+          if (Array.isArray(dataPoint[name])) {
+            innerHtml += `<tr><td>${name}: ${dataPoint[name][0]} - ${dataPoint[name][1]}</td></tr>`
+          } else {
+            innerHtml += `<tr><td>${name}: ${dataPoint[name]}</td></tr>`
+          }
         }
       }
     })
