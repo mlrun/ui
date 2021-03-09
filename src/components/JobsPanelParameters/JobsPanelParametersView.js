@@ -151,6 +151,7 @@ const JobsPanelParametersView = ({
             <div className={urlTypeClassName}>
               <Input
                 label="Read hyper params from a file"
+                placeholder="v3io:///projects/my-proj/param.txt"
                 className="default-input"
                 type="text"
                 floatingLabel
