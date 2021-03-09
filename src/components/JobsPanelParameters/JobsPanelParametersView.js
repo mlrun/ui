@@ -80,7 +80,7 @@ const JobsPanelParametersView = ({
                   className="input-row__item"
                   floatingLabel
                   required={nameNotValid(parametersState.newParameter.name)}
-                  requiredText="Names already exists"
+                  requiredText="Name already exists"
                   type="text"
                 />
                 <Select

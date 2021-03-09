@@ -298,7 +298,7 @@ const JobsPanelParameters = ({
   )
 
   const nameNotValid = name => {
-    return !!panelState.tableData.parameters.find(
+    return panelState.tableData.parameters.some(
       parameter => parameter.data.name === name
     )
   }
