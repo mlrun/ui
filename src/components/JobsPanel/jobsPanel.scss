@@ -236,27 +236,9 @@
   }
 
   .btn {
-    &__schedule-for-later {
-      margin: 0 10px;
-      color: $primary;
-      background-color: transparent;
-    }
-
-    &_primary {
-      svg {
-        margin-right: 5px;
-
-        path {
-          fill: $white;
-        }
-      }
-    }
-
     &__schedule {
       margin-top: 16px;
       margin-left: auto;
-      padding: 10px 16px;
-      font-weight: 500;
     }
   }
 

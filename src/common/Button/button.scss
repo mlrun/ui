@@ -1,0 +1,150 @@
+@import '../../scss/variables';
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 36px;
+  padding: 0 16px;
+  color: $white;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  line-height: 16px;
+  border: 0;
+  border-radius: $mainBorderRadius;
+
+  svg {
+    margin: 0 5px;
+
+    path {
+      fill: $white;
+    }
+  }
+
+  &:focus {
+    border: 1px solid rgba($black, 0.4);
+  }
+
+  &:active {
+    border: 1px solid rgba($black, 0.4);
+  }
+
+  &:disabled {
+    color: $spunPearl;
+    background: $white;
+    cursor: not-allowed;
+
+    svg {
+      path {
+        fill: $alto;
+      }
+    }
+  }
+
+  &-primary {
+    background: $brightTurquoise;
+
+    &:hover {
+      background: $javaLight;
+    }
+
+    &:active {
+      background: $mountainMeadow;
+    }
+
+    &:disabled {
+      border: 1px solid $brightTurquoise;
+    }
+  }
+
+  &-tertiary {
+    color: $primary;
+    background: $white;
+    border: $primaryBorder;
+
+    svg {
+      path {
+        fill: $primary;
+      }
+    }
+
+    &:hover {
+      background: $alabaster;
+    }
+
+    &:active {
+      background: $mercury;
+    }
+
+    &:disabled {
+      border: $primaryBorder;
+    }
+  }
+
+  &-secondary {
+    background: $malibu;
+
+    &:hover {
+      background: $cornflowerBlue;
+    }
+
+    &:active {
+      background: $indigo;
+    }
+
+    &:disabled {
+      border: 1px solid $malibu;
+    }
+  }
+
+  &-danger {
+    color: $white;
+    background: $amaranth;
+
+    &:hover {
+      background: $ceriseRed;
+    }
+
+    &:active {
+      background: $maroonFlash;
+    }
+
+    &:disabled {
+      border: 1px solid $amaranth;
+    }
+  }
+
+  &-label {
+    color: $primary;
+    background: $white;
+    border: 0;
+
+    svg {
+      path {
+        fill: $primary;
+      }
+    }
+
+    &:focus {
+      border: $dividerBorder;
+    }
+
+    &:hover {
+      color: $topaz;
+    }
+
+    &:active {
+      color: $black;
+      border: 0;
+    }
+
+    &:disabled {
+      border: 0;
+    }
+  }
+}

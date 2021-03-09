@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import Button from '../Button/Button'
 
 const PageActionsMenu = ({
   createJob,
@@ -14,21 +15,20 @@ const PageActionsMenu = ({
       {createJob && (
         <div data-testid="actions-link" className="page-actions-container">
           <Link
-            className="btn_secondary btn_small"
             to={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}/create-new-job`}
           >
-            New Job
+            <Button type="primary" label="New Job" />
           </Link>
         </div>
       )}
       {registerDialog && (
         <div data-testid="actions-button" className="page-actions-container">
-          <button
-            className="btn_secondary btn_small btn_register"
+          <Button
+            type="primary"
+            label={registerDialogHeader}
+            classList="btn_register"
             onClick={onClick}
-          >
-            {registerDialogHeader}
-          </button>
+          />
         </div>
       )}
     </>

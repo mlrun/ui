@@ -141,7 +141,7 @@ const Projects = ({
           "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that " +
           "before setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
         btnConfirmLabel: 'Archive',
-        btnConfirmClassNames: 'btn_primary',
+        btnConfirmType: 'primary',
         rejectHandler: () => {
           setConfirmData(null)
         },
@@ -158,7 +158,7 @@ const Projects = ({
         title: `Delete project "${project.metadata.name}"?`,
         description: 'Deleted projects can not be restored.',
         btnConfirmLabel: 'Delete',
-        btnConfirmClassNames: 'btn_danger',
+        btnConfirmType: 'danger',
         rejectHandler: () => {
           setConfirmData(null)
         },

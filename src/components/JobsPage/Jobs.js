@@ -16,6 +16,7 @@ import { SCHEDULE_TAB } from '../../constants'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import Button from '../../common/Button/Button'
 
 const Jobs = ({
   fetchJobs,
@@ -74,7 +75,7 @@ const Jobs = ({
       title: `Delete scheduled job "${scheduledJob.name}"?`,
       description: 'Deleted scheduled jobs can not be restored.',
       btnConfirmLabel: 'Delete',
-      btnConfirmClassNames: 'btn_danger',
+      btnConfirmType: 'danger',
       rejectHandler: () => {
         setConfirmData(null)
       },
@@ -215,18 +216,17 @@ const Jobs = ({
         >
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
-            <button
-              className="btn_default pop-up-dialog__btn_cancel"
+            <Button
+              type="tertiary"
+              label="Cancel"
               onClick={confirmData.rejectHandler}
-            >
-              Cancel
-            </button>
-            <button
-              className={confirmData.btnConfirmClassNames}
+              classList="pop-up-dialog__btn_cancel"
+            />
+            <Button
+              type={confirmData.btnConfirmType}
+              label={confirmData.btnConfirmLabel}
               onClick={() => confirmData.confirmHandler(confirmData.item)}
-            >
-              {confirmData.btnConfirmLabel}
-            </button>
+            />
           </div>
         </PopUpDialog>
       )}

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import Input from '../../../common/Input/Input'
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
+import Button from '../../../common/Button/Button'
 
 const CreateProjectDialog = ({
   closeNewProjectPopUp,
@@ -21,7 +22,7 @@ const CreateProjectDialog = ({
       headerText="Create new project"
       closePopUp={closeNewProjectPopUp}
     >
-      <form onSubmit={handleCreateProject} noValidate>
+      <form noValidate>
         <div className="pop-up-dialog__form">
           <Input
             className="pop-up-dialog__form-input"
@@ -56,15 +57,17 @@ const CreateProjectDialog = ({
               message={projectStore.newProject.error}
             />
           )}
-          <button
-            className="btn_default pop-up-dialog__btn_cancel"
+          <Button
+            type="tertiary"
+            label="Cancel"
+            classList="pop-up-dialog__btn_cancel"
             onClick={closeNewProjectPopUp}
-          >
-            Cancel
-          </button>
-          <button className="btn_primary" type="submit">
-            Create
-          </button>
+          />
+          <Button
+            type="secondary"
+            label="Create"
+            onClick={handleCreateProject}
+          />
         </div>
       </form>
     </PopUpDialog>
