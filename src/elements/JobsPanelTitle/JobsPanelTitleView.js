@@ -165,11 +165,11 @@ const JobsPanelTitleView = ({
       {editMode && (
         <div className="job-panel__title-buttons-container">
           <Button
-            type="tertiary"
+            variant="tertiary"
             label="Cancel"
             onClick={event => handleFinishEdit(event, true)}
           />
-          <Button type="primary" label="Done" onClick={handleFinishEdit} />
+          <Button variant="primary" label="Done" onClick={handleFinishEdit} />
         </div>
       )}
       <button onClick={() => closePanel({})} className="job-panel__btn_close">

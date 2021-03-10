@@ -74,7 +74,7 @@ const ScheduleJobView = ({
         )}
       </div>
       <Button
-        type="secondary"
+        variant="secondary"
         label={
           <>
             <Schedule />

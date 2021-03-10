@@ -192,7 +192,7 @@ const FilterMenu = ({
         )}
       </div>
       {actionButtonTitle && (
-        <Button type="secondary" label={actionButtonTitle} />
+        <Button variant="secondary" label={actionButtonTitle} />
       )}
       <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>

@@ -4,8 +4,8 @@ import classNames from 'classnames'
 
 import './button.scss'
 
-const Button = ({ classList, disabled, label, onClick, type }) => {
-  const buttonClassName = classNames('btn', `btn-${type}`, classList)
+const Button = ({ classList, disabled, label, onClick, variant }) => {
+  const buttonClassName = classNames('btn', `btn-${variant}`, classList)
 
   return (
     <button
@@ -31,7 +31,13 @@ Button.propTypes = {
   disabled: PropTypes.bool,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   onClick: PropTypes.func,
-  type: PropTypes.string.isRequired
+  variant: PropTypes.PropTypes.oneOf([
+    'primary',
+    'secondary',
+    'tertiary',
+    'danger',
+    'label'
+  ]).isRequired
 }
 
 export default Button

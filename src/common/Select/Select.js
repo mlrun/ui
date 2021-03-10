@@ -129,7 +129,7 @@ const Select = ({
           <div>{selectedItemAction.confirm.description}</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              type="tertiary"
+              variant="tertiary"
               label="Cancel"
               classList="pop-up-dialog__btn_cancel"
               onClick={() => {
@@ -137,7 +137,7 @@ const Select = ({
               }}
             />
             <Button
-              type={selectedItemAction.confirm.btnConfirmType}
+              variant={selectedItemAction.confirm.btnConfirmType}
               label={selectedItemAction.confirm.btnConfirmLabel}
               onClick={() => {
                 selectedItemAction.handler(selectedId)

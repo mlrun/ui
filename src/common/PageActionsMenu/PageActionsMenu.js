@@ -17,14 +17,14 @@ const PageActionsMenu = ({
           <Link
             to={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}/create-new-job`}
           >
-            <Button type="primary" label="New Job" />
+            <Button variant="primary" label="New Job" />
           </Link>
         </div>
       )}
       {registerDialog && (
         <div data-testid="actions-button" className="page-actions-container">
           <Button
-            type="primary"
+            variant="primary"
             label={registerDialogHeader}
             classList="btn_register"
             onClick={onClick}

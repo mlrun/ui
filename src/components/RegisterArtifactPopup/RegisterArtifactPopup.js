@@ -189,12 +189,12 @@ const RegisterArtifactPopup = ({
           />
         )}
         <Button
-          type="tertiary"
+          variant="tertiary"
           label="Cancel"
           classList="pop-up-dialog__btn_cancel"
           onClick={closePopupDialog}
         />
-        <Button type="primary" label="Register" onClick={registerArtifact} />
+        <Button variant="primary" label="Register" onClick={registerArtifact} />
       </div>
     </PopUpDialog>
   )

@@ -217,13 +217,13 @@ const Jobs = ({
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              type="tertiary"
+              variant="tertiary"
               label="Cancel"
               onClick={confirmData.rejectHandler}
               classList="pop-up-dialog__btn_cancel"
             />
             <Button
-              type={confirmData.btnConfirmType}
+              variant={confirmData.btnConfirmType}
               label={confirmData.btnConfirmLabel}
               onClick={() => confirmData.confirmHandler(confirmData.item)}
             />

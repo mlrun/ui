@@ -80,7 +80,7 @@ const DetailsView = React.forwardRef(
           {pageData.page === FEATURE_STORE_PAGE && (
             <>
               <Button
-                type="label"
+                variant="label"
                 label="Cancel"
                 onClick={cancelChanges}
                 disabled={detailsState.changes.counter === 0}
@@ -95,7 +95,7 @@ const DetailsView = React.forwardRef(
                 }
               >
                 <LoadButton
-                  type="primary"
+                  variant="primary"
                   label="Apply Changes"
                   classList="btn_apply-changes"
                   onClick={applyChanges}
@@ -183,7 +183,7 @@ const DetailsView = React.forwardRef(
           >
             <div className="pop-up-dialog__footer-container">
               <Button
-                type="tertiary"
+                variant="tertiary"
                 label="Don't Leave"
                 onClick={() => {
                   handleShowWarning(false)
@@ -194,7 +194,7 @@ const DetailsView = React.forwardRef(
                 }}
               />
               <Button
-                type="primary"
+                variant="primary"
                 label="Leave"
                 classList="pop-up-dialog__btn_cancel"
                 onClick={leavePage}

@@ -78,13 +78,13 @@ const ProjectsView = ({
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              type="tertiary"
+              variant="tertiary"
               label="Cancel"
               classList="pop-up-dialog__btn_cancel"
               onClick={confirmData.rejectHandler}
             />
             <Button
-              type={confirmData.btnConfirmType}
+              variant={confirmData.btnConfirmType}
               label={confirmData.btnConfirmLabel}
               onClick={() => confirmData.confirmHandler(confirmData.item)}
             />
