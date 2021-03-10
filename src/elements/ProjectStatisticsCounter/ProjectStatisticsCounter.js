@@ -17,10 +17,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
         className={`project-data-card__statistics-value statistics_${counterObject.className}`}
       >
         {counterObject.loading ? (
-          <Loader
-            loaderClassName="project-data-card__statistics-loader"
-            wrapperClassName="project-data-card__statistics-loader-wrapper"
-          />
+          <Loader section small secondary />
         ) : (
           <>
             {counterObject.value}
@@ -44,10 +41,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
         className={`project-data-card__statistics-value statistics_${counterObject.className}`}
       >
         {counterObject.loading ? (
-          <Loader
-            loaderClassName="project-data-card__statistics-loader"
-            wrapperClassName="project-data-card__statistics-loader-wrapper"
-          />
+          <Loader section small secondary />
         ) : (
           <>
             {counterObject.value}

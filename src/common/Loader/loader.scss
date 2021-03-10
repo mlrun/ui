@@ -1,6 +1,6 @@
 @import '../../scss/colors';
 
-.wrapper {
+.loader-wrapper {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,21 +11,43 @@
   width: 100%;
   height: 100%;
   background-color: rgba($black, 0.16);
-}
 
-.loader {
-  position: relative;
-  z-index: 2;
-  width: 120px;
-  height: 120px;
-  margin: -25px 0 0 -25px;
-  animation: rotate 2s linear infinite;
+  .loader {
+    display: flex;
 
-  .path {
-    animation: dash 1.5s ease-in-out infinite;
-    stroke: $cornflowerBlue;
-    stroke-linecap: round;
-    stroke-width: 3;
+    &::after {
+      display: block;
+      width: 64px;
+      height: 64px;
+      border: 6px solid $cornflowerBlue;
+      border-color: $cornflowerBlue transparent $cornflowerBlue transparent;
+      border-radius: 50%;
+      animation: rotate 1.5s linear infinite;
+      content: " ";
+    }
+  }
+
+  &.section-loader {
+    position: relative;
+    background-color: transparent;
+  }
+
+  &.small-loader {
+    .loader {
+      &::after {
+        width: 20px;
+        height: 20px;
+        border-width: 2px;
+      }
+    }
+  }
+
+  &.secondary-loader {
+    .loader {
+      &::after {
+        border-color: $spunPearl transparent $spunPearl transparent;
+      }
+    }
   }
 }
 
@@ -34,21 +56,3 @@
     transform: rotate(360deg);
   }
 }
-
-@keyframes dash {
-  0% {
-    stroke-dasharray: 1, 150;
-    stroke-dashoffset: 0;
-  }
-
-  50% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -35;
-  }
-
-  100% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -124;
-  }
-}
-
