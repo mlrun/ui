@@ -12,9 +12,10 @@ import {
 } from './jobsPanelParametersReducer'
 import {
   convertParamValue,
-  editHyperParams,
   generateTableData,
-  setHyperParams
+  setHyperParams,
+  editNewJobParams,
+  setTableData
 } from './jobsPanelParameters.util'
 import { panelActions } from '../JobsPanel/panelReducer'
 import jobsActions from '../../actions/jobs'
@@ -186,33 +187,21 @@ const JobsPanelParameters = ({
   }
 
   const handleEditParameter = () => {
-    const params = { ...jobsStore.newJob.task.spec.parameters }
     const hyperParamsObj = { ...jobsStore.newJob.task.spec.hyperparams }
     const convertedValue = convertParamValue(
       parametersState.selectedParameter.data.value,
       parametersState.selectedParameter.data.valueType
     )
 
-    if (parametersState.selectedParameter.newName) {
-      delete params[parametersState.selectedParameter.data.name]
-      params[parametersState.selectedParameter.newName] = convertedValue
-    } else {
-      params[parametersState.selectedParameter.data.name] = convertedValue
-    }
-
-    if (
-      parametersState.selectedParameter.data.parameterType !==
-        panelData.newParameterType[0].id &&
-      parametersState.selectedParameter.isChecked
-    ) {
-      setNewJobHyperParameters(
-        editHyperParams(
-          hyperParamsObj,
-          parametersState.selectedParameter.data,
-          parametersState.selectedParameter.newName,
-          convertedValue
+    if (parametersState.selectedParameter.isChecked) {
+      setNewJobParameters({
+        ...editNewJobParams(
+          parametersState.selectedParameter,
+          jobsStore.newJob.task.spec,
+          convertedValue,
+          setNewJobHyperParameters
         )
-      )
+      })
     }
 
     if (
@@ -225,37 +214,12 @@ const JobsPanelParameters = ({
       setNewJobHyperParameters({ ...hyperParamsObj })
     }
 
-    const newParametersArray = panelState.tableData.parameters.map(param => {
-      if (param.data.name === parametersState.selectedParameter.data.name) {
-        if (parametersState.selectedParameter.newName) {
-          param.data.name = parametersState.selectedParameter.newName
-        }
-
-        param.data.value = parametersState.selectedParameter.data.value
-        param.data.valueType = parametersState.selectedParameter.data.valueType
-        param.data.parameterType =
-          parametersState.selectedParameter.data.parameterType
-      }
-
-      return param
-    })
-
-    if (parametersState.selectedParameter.isChecked) {
-      setNewJobParameters({ ...params })
-    }
-
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
-      payload: newParametersArray
-    })
-    parametersDispatch({
-      type: parametersActions.SET_SELECTED_PARAMETER,
-      payload: {}
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_PARAMETERS,
-      payload: newParametersArray
-    })
+    setTableData(
+      panelState,
+      panelDispatch,
+      parametersState.selectedParameter,
+      parametersDispatch
+    )
   }
 
   const handleDeleteParameter = item => {
