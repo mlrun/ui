@@ -23,11 +23,16 @@
       border-bottom: $secondaryBorder;
 
       &__header {
+        display: flex;
         min-width: 100px;
         font-weight: bold;
         font-size: 14px;
         line-height: 24px;
         text-transform: capitalize;
+      }
+
+      &__tip {
+        margin-left: 5px;
       }
 
       &__data {

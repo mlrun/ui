@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
+import Tip from '../../common/Tip/Tip'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
@@ -126,7 +127,12 @@ const DetailsInfoView = React.forwardRef(
 
               return (
                 <li className="details-item" key={header.id}>
-                  <div className="details-item__header">{header.label}</div>
+                  <div className="details-item__header">
+                    {header.label}
+                    {header.tip && (
+                      <Tip className="details-item__tip" text={header.tip} />
+                    )}
+                  </div>
                   <DetailsInfoItem
                     chipsClassName={chipsClassName}
                     chipsData={chipsData}

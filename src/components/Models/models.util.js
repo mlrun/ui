@@ -4,14 +4,24 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { maxBy } from 'lodash'
 
 export const modelsInfoHeaders = [
-  { label: 'Hash', id: 'hash' },
+  {
+    label: 'Hash',
+    id: 'hash',
+    tip:
+      'Represents hash of the data. when the data changes the hash would change'
+  },
   { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
   { label: 'Kind', id: 'kind' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
   { label: 'Model file', id: 'model_file' },
-  { label: 'Tree', id: 'tree' },
+  {
+    label: 'UID',
+    id: 'tree',
+    tip:
+      'Unique identifier representing the job or the workflow that generated the artifact'
+  },
   { label: 'Updated', id: 'updated' },
   { label: 'Framework', id: 'framework' },
   { label: 'Labels', id: 'labels' },
