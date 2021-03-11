@@ -57,7 +57,12 @@ const FilterMenu = ({
     ) {
       selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
     }
-  }, [page])
+
+    return () => {
+      setLabels('')
+      setName('')
+    }
+  }, [page, match.params.pageTab])
 
   const onKeyDown = event => {
     if (event.keyCode === 13) {
