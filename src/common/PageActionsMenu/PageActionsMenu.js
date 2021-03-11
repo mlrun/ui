@@ -26,7 +26,7 @@ const PageActionsMenu = ({
           <Button
             variant="primary"
             label={registerDialogHeader}
-            classList="btn_register"
+            className="btn_register"
             onClick={onClick}
           />
         </div>

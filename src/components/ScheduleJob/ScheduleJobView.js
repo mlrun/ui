@@ -82,7 +82,7 @@ const ScheduleJobView = ({
           </>
         }
         onClick={onSchedule}
-        classList="btn__schedule"
+        className="btn__schedule"
       />
     </div>
   )

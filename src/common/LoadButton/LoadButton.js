@@ -4,20 +4,15 @@ import classNames from 'classnames'
 
 import './loadButton.scss'
 
-const LoadButton = ({ classList, disabled, label, onClick, variant }) => {
+const LoadButton = ({ className, label, variant, ...restProps }) => {
   const buttonClassName = classNames(
     'btn-load',
     `btn-load-${variant}`,
-    classList
+    className
   )
 
   return (
-    <button
-      className={buttonClassName}
-      disabled={disabled}
-      onClick={onClick}
-      type="button"
-    >
+    <button {...restProps} className={buttonClassName}>
       {label}
     </button>
   )
@@ -25,16 +20,12 @@ const LoadButton = ({ classList, disabled, label, onClick, variant }) => {
 
 LoadButton.defaultProps = {
   classList: '',
-  disabled: false,
-  label: 'Button',
-  onClick: () => {}
+  label: 'Load button'
 }
 
 LoadButton.propTypes = {
   classList: PropTypes.string,
-  disabled: PropTypes.bool,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  onClick: PropTypes.func,
   variant: PropTypes.PropTypes.oneOf(['primary', 'secondary', 'tertiary'])
     .isRequired
 }

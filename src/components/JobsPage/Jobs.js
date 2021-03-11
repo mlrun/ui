@@ -220,7 +220,7 @@ const Jobs = ({
               variant="tertiary"
               label="Cancel"
               onClick={confirmData.rejectHandler}
-              classList="pop-up-dialog__btn_cancel"
+              className="pop-up-dialog__btn_cancel"
             />
             <Button
               variant={confirmData.btnConfirmType}

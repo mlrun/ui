@@ -7,34 +7,43 @@ export default {
   component: Button
 }
 
+const commonArgs = {
+  disabled: false
+}
+
 const Template = args => <Button {...args} />
 
 export const Primary = Template.bind({})
 Primary.args = {
-  label: 'Button',
+  ...commonArgs,
+  label: 'Primary button',
   variant: 'primary'
 }
 
 export const Secondary = Template.bind({})
 Secondary.args = {
-  label: 'Button',
+  ...commonArgs,
+  label: 'Secondary button',
   variant: 'secondary'
 }
 
 export const Tertiary = Template.bind({})
 Tertiary.args = {
-  label: 'Button',
+  ...commonArgs,
+  label: 'Tertiary button',
   variant: 'tertiary'
 }
 
 export const Danger = Template.bind({})
 Danger.args = {
-  label: 'Button',
+  ...commonArgs,
+  label: 'Danger button',
   variant: 'danger'
 }
 
 export const Label = Template.bind({})
 Label.args = {
-  label: 'Button',
+  ...commonArgs,
+  label: 'Label button',
   variant: 'label'
 }

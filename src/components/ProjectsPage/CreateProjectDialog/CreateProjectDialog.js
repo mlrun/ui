@@ -60,7 +60,7 @@ const CreateProjectDialog = ({
           <Button
             variant="tertiary"
             label="Cancel"
-            classList="pop-up-dialog__btn_cancel"
+            className="pop-up-dialog__btn_cancel"
             onClick={closeNewProjectPopUp}
           />
           <Button

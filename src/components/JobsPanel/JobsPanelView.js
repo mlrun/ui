@@ -128,7 +128,7 @@ const JobsPanelView = ({
               <Button
                 variant="tertiary"
                 label="Schedule for later"
-                classList="pop-up-dialog__btn_cancel"
+                className="pop-up-dialog__btn_cancel"
                 onClick={() => isTitleValid() && setOpenScheduleJob(true)}
               />
               <Button

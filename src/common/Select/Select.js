@@ -131,7 +131,7 @@ const Select = ({
             <Button
               variant="tertiary"
               label="Cancel"
-              classList="pop-up-dialog__btn_cancel"
+              className="pop-up-dialog__btn_cancel"
               onClick={() => {
                 setConfirmDialogOpen(false)
               }}

@@ -4,33 +4,24 @@ import classNames from 'classnames'
 
 import './button.scss'
 
-const Button = ({ classList, disabled, label, onClick, variant }) => {
-  const buttonClassName = classNames('btn', `btn-${variant}`, classList)
+const Button = ({ className, label, variant, ...restProps }) => {
+  const buttonClassName = classNames('btn', `btn-${variant}`, className)
 
   return (
-    <button
-      className={buttonClassName}
-      disabled={disabled}
-      onClick={onClick}
-      type="button"
-    >
+    <button {...restProps} className={buttonClassName}>
       {label}
     </button>
   )
 }
 
 Button.defaultProps = {
-  classList: '',
-  disabled: false,
-  label: 'Button',
-  onClick: () => {}
+  className: '',
+  label: 'Button'
 }
 
 Button.propTypes = {
-  classList: PropTypes.string,
-  disabled: PropTypes.bool,
+  className: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  onClick: PropTypes.func,
   variant: PropTypes.PropTypes.oneOf([
     'primary',
     'secondary',

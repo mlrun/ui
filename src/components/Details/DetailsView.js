@@ -97,7 +97,7 @@ const DetailsView = React.forwardRef(
                 <LoadButton
                   variant="primary"
                   label="Apply Changes"
-                  classList="btn_apply-changes"
+                  className="btn_apply-changes"
                   onClick={applyChanges}
                   disabled={detailsState.changes.counter === 0}
                 />
@@ -196,7 +196,7 @@ const DetailsView = React.forwardRef(
               <Button
                 variant="primary"
                 label="Leave"
-                classList="pop-up-dialog__btn_cancel"
+                className="pop-up-dialog__btn_cancel"
                 onClick={leavePage}
               />
             </div>

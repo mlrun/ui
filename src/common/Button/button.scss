@@ -15,7 +15,7 @@
   font-family: Roboto, sans-serif;
   font-style: normal;
   line-height: 16px;
-  border: 0;
+  border: 1px solid transparent;
   border-radius: $mainBorderRadius;
 
   svg {
@@ -27,11 +27,11 @@
   }
 
   &:focus {
-    border: 1px solid rgba($black, 0.4);
+    border-color: rgba($black, 0.4);
   }
 
   &:active {
-    border: 1px solid rgba($black, 0.4);
+    border-color: rgba($black, 0.4);
   }
 
   &:disabled {
@@ -140,11 +140,11 @@
 
     &:active {
       color: $black;
-      border: 0;
+      border-color: transparent;
     }
 
     &:disabled {
-      border: 0;
+      border-color: transparent;
     }
   }
 }
