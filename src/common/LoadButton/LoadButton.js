@@ -20,7 +20,8 @@ const LoadButton = ({ className, label, variant, ...restProps }) => {
 
 LoadButton.defaultProps = {
   classList: '',
-  label: 'Load button'
+  label: 'Load button',
+  variant: 'tertiary'
 }
 
 LoadButton.propTypes = {

@@ -19,8 +19,6 @@
   border-radius: $mainBorderRadius;
 
   svg {
-    margin: 0 5px;
-
     path {
       fill: $white;
     }
@@ -44,6 +42,10 @@
         fill: $alto;
       }
     }
+  }
+
+  :first-child {
+    margin-right: 5px;
   }
 
   &-primary {

@@ -16,7 +16,8 @@ const Button = ({ className, label, variant, ...restProps }) => {
 
 Button.defaultProps = {
   className: '',
-  label: 'Button'
+  label: 'Button',
+  variant: 'tertiary'
 }
 
 Button.propTypes = {
