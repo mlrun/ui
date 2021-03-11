@@ -39,12 +39,12 @@ const DetailsArtifactsView = ({
         <div className="item-artifacts__row-wrapper" key={index}>
           <div className="item-artifacts__row">
             <div className="item-artifacts__row-item">
-              <span
+              <Tooltip
                 className="item-artifacts__name"
-                onClick={() => showArtifact(index)}
+                template={<TextTooltipTemplate text={artifact.key} />}
               >
-                {artifact.key}
-              </span>
+                <span onClick={() => showArtifact(index)}>{artifact.key}</span>
+              </Tooltip>
             </div>
             <div className="item-artifacts__row-item item-artifacts__row-item_long">
               <Tooltip template={<TextTooltipTemplate text={targetPath} />}>
