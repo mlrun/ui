@@ -7,6 +7,7 @@ import Accordion from '../../common/Accordion/Accordion'
 import Select from '../../common/Select/Select'
 import Input from '../../common/Input/Input'
 import ChipCell from '../../common/ChipCell/ChipCell'
+import Button from '../../common/Button/Button'
 
 import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -163,15 +164,12 @@ const JobsPanelTitleView = ({
       )}
       {editMode && (
         <div className="job-panel__title-buttons-container">
-          <button
-            className="btn_default btn_small"
+          <Button
+            variant="tertiary"
+            label="Cancel"
             onClick={event => handleFinishEdit(event, true)}
-          >
-            Cancel
-          </button>
-          <button className="btn_primary btn_small" onClick={handleFinishEdit}>
-            Done
-          </button>
+          />
+          <Button variant="primary" label="Done" onClick={handleFinishEdit} />
         </div>
       )}
       <button onClick={() => closePanel({})} className="job-panel__btn_close">

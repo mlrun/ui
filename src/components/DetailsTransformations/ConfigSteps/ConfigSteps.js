@@ -134,7 +134,7 @@ const ConfigSteps = ({
           //     title: `Delete step ${selectedStep}?`,
           //     description: 'Deleted steps cannot be restored.',
           //     btnConfirmLabel: 'Delete',
-          //     btnConfirmClassNames: 'btn_danger'
+          //     btnConfirmType: 'danger'
           //   },
           //   handler: deleteSelectedStep
           // }}

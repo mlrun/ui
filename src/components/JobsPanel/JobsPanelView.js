@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
 
 import Accordion from '../../common/Accordion/Accordion'
 import JobsPanelDataInputs from '../JobsPanelDataInputs/JobsPanelDataInputs'
@@ -11,6 +10,7 @@ import ScheduleJob from '../ScheduleJob/ScheduleJob'
 import JobsPanelAdvanced from '../JobsPanelAdvanced/JobsPanelAdvanced'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import Loader from '../../common/Loader/Loader'
+import Button from '../../common/Button/Button'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -34,18 +34,6 @@ const JobsPanelView = ({
   setNewJobVolumes,
   setOpenScheduleJob
 }) => {
-  const scheduleForLaterClassNames = classnames(
-    'btn_default',
-    'btn_small',
-    'btn__schedule-for-later',
-    !isTitleValid() && 'disabled'
-  )
-  const runNowClassNames = classnames(
-    'btn_primary',
-    'btn_small',
-    !isTitleValid() && 'disabled'
-  )
-
   return (
     <div className="job-panel-container">
       <div className="job-panel">
@@ -128,19 +116,21 @@ const JobsPanelView = ({
                   message={jobsStore.error}
                 />
               )}
-              <button
-                className={scheduleForLaterClassNames}
+              <Button
+                variant="tertiary"
+                label="Schedule for later"
+                className="pop-up-dialog__btn_cancel"
                 onClick={() => isTitleValid() && setOpenScheduleJob(true)}
-              >
-                Schedule for later
-              </button>
-              <button
-                className={runNowClassNames}
+              />
+              <Button
+                variant="secondary"
+                label={
+                  <>
+                    <Run /> <span> Run now </span>
+                  </>
+                }
                 onClick={() => isTitleValid() && handleRunJob()}
-              >
-                <Run className="schedule-run-icon" />
-                Run now
-              </button>
+              />
             </div>
           </div>
         ) : (

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import Button from '../../common/Button/Button'
 
 import { v4 as uuidv4 } from 'uuid'
 
@@ -187,15 +188,13 @@ const RegisterArtifactPopup = ({
             message={registerArtifactData.error.message}
           />
         )}
-        <button
-          className="btn_default pop-up-dialog__btn_cancel"
+        <Button
+          variant="tertiary"
+          label="Cancel"
+          className="pop-up-dialog__btn_cancel"
           onClick={closePopupDialog}
-        >
-          Cancel
-        </button>
-        <button className="btn_primary btn_success" onClick={registerArtifact}>
-          Register
-        </button>
+        />
+        <Button variant="primary" label="Register" onClick={registerArtifact} />
       </div>
     </PopUpDialog>
   )

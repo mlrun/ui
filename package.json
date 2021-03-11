@@ -44,7 +44,9 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "test:coverage": "npm run test -- --coverage --watchAll=false",
-    "docker": "docker build -t ${MLRUN_DOCKER_REGISTRY}${MLRUN_DOCKER_REPO:-mlrun}/mlrun-ui:${MLRUN_DOCKER_TAG:-latest} --build-arg COMMIT_HASH=\"`git rev-parse --short HEAD`\" --build-arg DATE=\"`date -u`\" -f Dockerfile ."
+    "docker": "docker build -t ${MLRUN_DOCKER_REGISTRY}${MLRUN_DOCKER_REPO:-mlrun}/mlrun-ui:${MLRUN_DOCKER_TAG:-latest} --build-arg COMMIT_HASH=\"`git rev-parse --short HEAD`\" --build-arg DATE=\"`date -u`\" -f Dockerfile .",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -64,6 +66,11 @@
   "devDependencies": {
     "@babel/core": "7.6.0",
     "@babel/plugin-proposal-logical-assignment-operators": "^7.12.1",
+    "@storybook/addon-actions": "^6.1.20",
+    "@storybook/addon-essentials": "^6.1.20",
+    "@storybook/addon-links": "^6.1.20",
+    "@storybook/react": "^6.1.20",
+    "@storybook/preset-scss": "^1.0.3",
     "@svgr/webpack": "^5.4.0",
     "@testing-library/react": "^11.0.2",
     "@typescript-eslint/eslint-plugin": "^2.2.0",

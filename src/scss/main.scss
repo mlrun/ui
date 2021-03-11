@@ -66,57 +66,6 @@ main {
       cursor: not-allowed;
     }
   }
-
-  [class*='btn'] {
-    display: flex;
-    align-items: center;
-    height: 49px;
-    padding: 10px 16px;
-    font-size: 14px;
-    border-radius: $mainBorderRadius;
-
-    &.disabled,
-    &.disabled:hover {
-      cursor: not-allowed;
-    }
-  }
-
-  .btn {
-    &_primary {
-      color: $white;
-      background: $malibu;
-    }
-
-    &_secondary {
-      color: $white;
-      background-color: $brightTurquoise;
-    }
-
-    &_danger {
-      color: $white;
-      background-color: $amaranth;
-    }
-
-    &_default {
-      background-color: $white;
-      border: $primaryBorder;
-
-      &:hover {
-        background-color: $alabaster;
-        cursor: pointer;
-      }
-    }
-
-    &_small {
-      height: 36px;
-    }
-
-    &_border-bottom {
-      height: 36px;
-      border: $primaryBorder;
-      border-bottom: $applyBtnBorder;
-    }
-  }
 }
 
 .completed,
