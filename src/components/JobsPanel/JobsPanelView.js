@@ -28,15 +28,11 @@ const JobsPanelView = ({
   panelState,
   removeJobError,
   setNewJobEnvironmentVariables,
-  setNewJobHyperParameters,
   setNewJobInputs,
-  setNewJobParameters,
   setNewJobSecretSources,
   setNewJobVolumeMounts,
   setNewJobVolumes,
-  setOpenScheduleJob,
-  setTuningStrategy,
-  setUrl
+  setOpenScheduleJob
 }) => {
   const scheduleForLaterClassNames = classnames(
     'btn_default',
@@ -87,13 +83,8 @@ const JobsPanelView = ({
               openByDefault
             >
               <JobsPanelParameters
-                newJobTaskSpecObj={jobsStore.newJob.task.spec}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
-                setNewJobHyperParameters={setNewJobHyperParameters}
-                setNewJobParameters={setNewJobParameters}
-                setTuningStrategy={setTuningStrategy}
-                setUrl={setUrl}
               />
             </Accordion>
             <Accordion
@@ -175,15 +166,11 @@ JobsPanelView.propTypes = {
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   removeJobError: PropTypes.func.isRequired,
-  setNewJobHyperParameters: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired,
-  setNewJobParameters: PropTypes.func.isRequired,
   setNewJobSecretSources: PropTypes.func.isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,
   setNewJobVolumes: PropTypes.func.isRequired,
-  setOpenScheduleJob: PropTypes.func.isRequired,
-  setTuningStrategy: PropTypes.func.isRequired,
-  setUrl: PropTypes.func.isRequired
+  setOpenScheduleJob: PropTypes.func.isRequired
 }
 
 export default JobsPanelView

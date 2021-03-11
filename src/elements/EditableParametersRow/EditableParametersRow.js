@@ -11,6 +11,7 @@ import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 const EditableParametersRow = ({
   disabledOptions,
   handleEdit,
+  nameValidation,
   selectedParameter,
   setSelectedParameter
 }) => {
@@ -39,6 +40,11 @@ const EditableParametersRow = ({
               }}
               type="text"
               value={selectedParameter.newName || selectedParameter.data.name}
+              required={
+                selectedParameter.newName !== selectedParameter.data.name &&
+                nameValidation(selectedParameter.newName)
+              }
+              requiredText="Name already exists"
             />
           </div>
           <div className="table__cell table__cell_edit">
@@ -89,6 +95,10 @@ const EditableParametersRow = ({
       <div className="table__cell table__cell-actions">
         <button
           className="apply-edit-btn"
+          disabled={
+            selectedParameter.newName !== selectedParameter.data.name &&
+            nameValidation(selectedParameter.newName)
+          }
           onClick={() => handleEdit(selectedParameter, false)}
         >
           <Checkmark />
@@ -101,6 +111,7 @@ const EditableParametersRow = ({
 EditableParametersRow.propTypes = {
   disabledOptions: PropTypes.array,
   handleEdit: PropTypes.func.isRequired,
+  nameValidation: PropTypes.func.isRequired,
   selectedParameter: PropTypes.shape({}).isRequired,
   setSelectedParameter: PropTypes.func.isRequired
 }

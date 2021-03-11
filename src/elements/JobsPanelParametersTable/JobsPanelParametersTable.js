@@ -16,6 +16,7 @@ const JobsPanelParametersTable = ({
   handleDeleteParameter,
   handleEditParameter,
   headers,
+  nameValidation,
   selectedItem,
   setSelectedItem,
   tableContent
@@ -67,6 +68,7 @@ const JobsPanelParametersTable = ({
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEdit}
       headers={headers}
+      nameValidation={nameValidation}
       selectedItem={selectedItem}
       setSelectedItem={setSelectedItem}
       tableContent={tableContent}
@@ -93,6 +95,7 @@ JobsPanelParametersTable.propTypes = {
   handleDeleteParameter: PropTypes.func,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
+  nameValidation: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   tableContent: PropTypes.shape({}).isRequired

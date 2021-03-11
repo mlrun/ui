@@ -22,7 +22,9 @@ import {
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB_VOLUME_MOUNTS,
   SET_TUNING_STRATEGY,
-  SET_URL
+  SET_URL,
+  SET_NEW_JOB_SELECTOR_CRITERIA,
+  SET_NEW_JOB_SELECTOR_RESULT
 } from '../constants'
 
 const jobsActions = {
@@ -80,6 +82,8 @@ const jobsActions = {
     type: FETCH_JOBS_SUCCESS,
     payload: jobsList
   }),
+  handleRunScheduledJob: (postData, project, job) => () =>
+    jobsApi.runScheduledJob(postData, project, job),
   removeJobError: () => ({
     type: REMOVE_JOB_ERROR
   }),
@@ -104,11 +108,13 @@ const jobsActions = {
     type: RUN_NEW_JOB_FAILURE,
     payload: error
   }),
-  handleRunScheduledJob: (postData, project, job) => () =>
-    jobsApi.runScheduledJob(postData, project, job),
   setAllJobsData: data => ({
     type: SET_ALL_JOBS_DATA,
     payload: data
+  }),
+  setLoading: isLoading => ({
+    type: SET_LOADING,
+    payload: isLoading
   }),
   setNewJob: newJob => ({
     type: SET_NEW_JOB,
@@ -134,6 +140,14 @@ const jobsActions = {
     type: SET_NEW_JOB_SECRET_SOURCES,
     payload: secretSources
   }),
+  setNewJobSelectorCriteria: criteria => ({
+    type: SET_NEW_JOB_SELECTOR_CRITERIA,
+    payload: criteria
+  }),
+  setNewJobSelectorResult: result => ({
+    type: SET_NEW_JOB_SELECTOR_RESULT,
+    payload: result
+  }),
   setNewJobVolumes: volumes => ({
     type: SET_NEW_JOB_VOLUMES,
     payload: volumes
@@ -145,10 +159,6 @@ const jobsActions = {
   setTuningStrategy: strategy => ({
     type: SET_TUNING_STRATEGY,
     payload: strategy
-  }),
-  setLoading: isLoading => ({
-    type: SET_LOADING,
-    payload: isLoading
   }),
   setUrl: url => ({
     type: SET_URL,

@@ -318,10 +318,11 @@ export const generateRequestData = (
       },
       spec: {
         ...jobsStore.newJob.task.spec,
-        output_path: panelState.outputPath,
-        input_path: panelState.inputPath,
         function: func,
-        handler: panelState.currentFunctionInfo.method
+        handler: panelState.currentFunctionInfo.method,
+        input_path: panelState.inputPath,
+        output_path: panelState.outputPath,
+        selector: `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
       }
     }
   }
