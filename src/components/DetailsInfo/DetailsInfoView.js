@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { capitalize } from 'lodash'
 
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
@@ -175,7 +176,9 @@ const DetailsInfoView = React.forwardRef(
 
                     return (
                       <li className="details-item" key={key}>
-                        <div className="details-item__header">{key}</div>
+                        <div className="details-item__header">
+                          {capitalize(key)}
+                        </div>
                         <DetailsInfoItem link={url} info={value} />
                       </li>
                     )
