@@ -1,10 +1,15 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-import { getJobsStatistics, getJobsTableData } from './projectJobs.utils'
+import {
+  getJobsStatistics,
+  getJobsTableData,
+  groupByName,
+  sortByDate
+} from './projectJobs.utils'
 import projectsAction from '../../actions/projects'
 
 const ProjectJobs = ({
@@ -14,6 +19,16 @@ const ProjectJobs = ({
   match,
   projectStore
 }) => {
+  const [groupedLatestItem, setGroupedLatestItem] = useState([])
+
+  useEffect(() => {
+    if (projectStore.project.jobs.data) {
+      setGroupedLatestItem(
+        sortByDate(groupByName(projectStore.project.jobs.data))
+      )
+    }
+  }, [projectStore.project.jobs.data])
+
   useEffect(() => {
     fetchProjectJobs(match.params.projectName)
     fetchProjectScheduledJobs(match.params.projectName)
@@ -32,13 +47,14 @@ const ProjectJobs = ({
       projectStore.project.scheduledJobs,
       projectStore.project.workflows
     )
-    const table = getJobsTableData(projectStore.project.jobs, match)
+    const table = getJobsTableData(groupedLatestItem, match)
 
     return {
       statistics,
       table
     }
   }, [
+    groupedLatestItem,
     match,
     projectStore.project.jobs,
     projectStore.project.scheduledJobs,
