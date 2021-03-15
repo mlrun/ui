@@ -77,6 +77,10 @@ main {
   @include jobStatus($brightTurquoise);
 }
 
+.pending {
+  @include jobStatus($topaz);
+}
+
 .warn {
   @include jobStatus($grandis);
 }
