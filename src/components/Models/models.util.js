@@ -25,6 +25,7 @@ export const modelsInfoHeaders = [
   { label: 'Updated', id: 'updated' },
   { label: 'Framework', id: 'framework' },
   { label: 'Labels', id: 'labels' },
+  { label: 'Metrics', id: 'metrics' },
   { label: 'Sources', id: 'sources' }
 ]
 export const modelEndpointsInfoHeaders = [{ label: 'Class', id: 'model_class' }]
@@ -46,7 +47,7 @@ export const modelsTableHeaders = [
   },
   {
     header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_extra-small'
   },
   {
     header: 'Producer',
@@ -59,6 +60,10 @@ export const modelsTableHeaders = [
   {
     header: 'Updated',
     class: 'artifacts_small'
+  },
+  {
+    header: 'Metrics',
+    class: 'artifacts_big'
   },
   {
     header: '',

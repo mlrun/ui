@@ -61,6 +61,8 @@
       }
 
       &_extra-small {
+        max-width: 85px;
+
         @include tableColumnFlex(0.3, 65px);
       }
 

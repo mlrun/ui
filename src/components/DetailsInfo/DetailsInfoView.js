@@ -93,6 +93,8 @@ const DetailsInfoView = React.forwardRef(
                       ? changes.data[header.id]
                         ? changes.data[header.id]
                         : parseKeyValues(selectedItem.labels)
+                      : content[header.id]?.value === selectedItem.metrics
+                      ? parseKeyValues(selectedItem.metrics)
                       : content[header.id]?.value === selectedItem.relations
                       ? parseKeyValues(selectedItem.relations)
                       : [],

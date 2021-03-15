@@ -111,7 +111,7 @@ const createModelsRowData = artifact => {
     },
     labels: {
       value: parseKeyValues(artifact.labels),
-      class: 'artifacts_big',
+      class: 'artifacts_extra-small',
       type: 'labels'
     },
     producer: {
@@ -129,6 +129,11 @@ const createModelsRowData = artifact => {
         ? formatDatetime(new Date(artifact.updated), 'N/A')
         : 'N/A',
       class: 'artifacts_small'
+    },
+    metrics: {
+      value: parseKeyValues(artifact.metrics),
+      class: 'artifacts_big',
+      type: 'metrics'
     },
     buttonPopout: {
       value: '',

@@ -86,6 +86,9 @@ export const generateArtifactsContent = (
       target_path: {
         value: selectedItem.target_path
       },
+      metrics: {
+        value: selectedItem.metrics ?? []
+      },
       model_file: {
         value: selectedItem.model_file
       },
