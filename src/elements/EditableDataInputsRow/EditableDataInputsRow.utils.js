@@ -28,8 +28,8 @@ export const applyEditButtonHandler = (
     ].includes(selectedDataInput.data.path.pathType)
   ) {
     if (
-      !selectedDataInput.data.path.value.split('/')[1] ||
-      selectedDataInput.data.path.value.split('/')[1]?.length === 0
+      !selectedDataInput.data.path.value.split('/')[2] ||
+      selectedDataInput.data.path.value.split('/')[2]?.length === 0
     ) {
       return setRequiredField(state => ({ ...state, path: true }))
     }
@@ -45,7 +45,7 @@ export const applyEditButtonHandler = (
     setRequiredField({
       name: inputName.length > 0,
       path:
-        selectedDataInput.data.path.value.split('/')[1]?.length > 0 ||
+        selectedDataInput.data.path.value.split('/')[2]?.length > 0 ||
         selectedDataInput.data.path.url.length > 0
     })
   }
@@ -86,15 +86,21 @@ export const handleEditInputPath = (
   }
 
   const pathItems = path.split('/')
-  const artifactIsEntered = inputsState.artifacts.find(
-    artifact => artifact.id === pathItems[1]
-  )
 
-  if (isNil(pathItems[1]) && inputsState.artifacts.length > 0) {
-    inputsDispatch({
-      type: inputsActions.SET_ARTIFACTS,
-      payload: []
-    })
+  if (isNil(pathItems[2])) {
+    if (inputsState.artifacts.length > 0) {
+      inputsDispatch({
+        type: inputsActions.SET_ARTIFACTS,
+        payload: []
+      })
+    }
+
+    if (inputsState.featureVectors.length > 0) {
+      inputsDispatch({
+        type: inputsActions.SET_FEATURE_VECTORS,
+        payload: []
+      })
+    }
   }
 
   if (path !== selectedDataInput.data.path.value) {
@@ -110,13 +116,22 @@ export const handleEditInputPath = (
       }
     })
   }
+  const projectItems =
+    inputsState[pathItems[0] === 'artifacts' ? 'artifacts' : 'featureVectors']
+  const projectItemIsEntered = projectItems.find(
+    projectItem => projectItem.id === pathItems[2]
+  )
 
   inputsDispatch({
-    type: inputsActions.SET_INPUT_PROJECT_PATH_ENTERED,
+    type: inputsActions.SET_INPUT_STORE_PATH_TYPE_ENTERED,
     payload: typeof pathItems[1] === 'string'
   })
   inputsDispatch({
-    type: inputsActions.SET_INPUT_ARTIFACT_PATH_ENTERED,
-    payload: !!artifactIsEntered
+    type: inputsActions.SET_INPUT_PROJECT_PATH_ENTERED,
+    payload: typeof pathItems[2] === 'string'
+  })
+  inputsDispatch({
+    type: inputsActions.SET_INPUT_PROJECT_ITEM_PATH_ENTERED,
+    payload: Boolean(projectItemIsEntered)
   })
 }

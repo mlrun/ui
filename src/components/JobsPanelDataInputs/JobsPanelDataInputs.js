@@ -24,6 +24,7 @@ import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 const JobsPanelDataInputs = ({
   fetchArtifacts,
+  fetchFeatureVectors,
   inputs,
   match,
   panelDispatch,
@@ -38,74 +39,94 @@ const JobsPanelDataInputs = ({
 
   useEffect(() => {
     if (
-      inputsState.newInput.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ||
-      inputsState.selectedDataInput.data.path.pathType ===
-        MLRUN_STORAGE_INPUT_PATH_SCHEME
-    ) {
-      if (
-        inputsState.projects.length === 0 ||
+      inputsState.inputStorePathTypeEntered &&
+      (inputsState.projects.length === 0 ||
         inputsState.newInput.path.project.length === 0 ||
         (!isEveryObjectValueEmpty(inputsState.selectedDataInput) &&
-          inputsState.selectedDataInput.data.path.value.length === 0)
-      ) {
-        const projectsList = projectStore.projects.map(project => ({
-          label:
-            project.metadata.name === match.params.projectName
-              ? 'Current project'
-              : project.metadata.name,
-          id: project.metadata.name
-        }))
+          inputsState.selectedDataInput.data.path.value.split('/')[1]
+            ?.length === 0))
+    ) {
+      const projectsList = projectStore.projects.map(project => ({
+        label:
+          project.metadata.name === match.params.projectName
+            ? 'Current project'
+            : project.metadata.name,
+        id: project.metadata.name
+      }))
 
-        inputsDispatch({
-          type: inputsActions.SET_PROJECTS,
-          payload: projectsList
-        })
-      }
+      inputsDispatch({
+        type: inputsActions.SET_PROJECTS,
+        payload: projectsList
+      })
     }
   }, [
     inputsState.newInput.path.project.length,
     inputsState.projects.length,
     match.params.projectName,
     projectStore.projects,
-    inputsState.newInput.path.pathType,
     inputsState.selectedDataInput.data.path.value,
-    inputsState.selectedDataInput
+    inputsState.selectedDataInput,
+    inputsState.inputStorePathTypeEntered,
+    inputsState.newInput.path.project
   ])
 
   useEffect(() => {
-    if (
-      inputsState.artifacts.length === 0 &&
-      inputsState.inputProjectPathEntered
-    ) {
-      fetchArtifacts({
-        project:
-          inputsState.newInput.path.project ||
-          inputsState.selectedDataInput.data.path.value.split('/')[0]
-      }).then(artifacts => {
-        const artifactsList = artifacts
-          .map(artifact => {
-            const key = artifact.link_iteration
-              ? artifact.link_iteration.db_key
-              : artifact.key ?? ''
-            return {
-              label: key,
-              id: key
-            }
-          })
-          .filter(artifact => artifact.label !== '')
+    if (inputsState.inputProjectPathEntered) {
+      const projectName =
+        inputsState.newInput.path?.project ||
+        inputsState.selectedDataInput.data.path.value.split('/')[1]
+      const storePathType =
+        inputsState.newInput.path.storePathType ||
+        inputsState.selectedDataInput.data.path.value.split('/')[0]
+      if (storePathType === 'artifacts' && inputsState.artifacts.length === 0) {
+        fetchArtifacts({
+          project: projectName
+        }).then(artifacts => {
+          const artifactsList = artifacts
+            .map(artifact => {
+              const key = artifact.link_iteration
+                ? artifact.link_iteration.db_key
+                : artifact.key ?? ''
+              return {
+                label: key,
+                id: key
+              }
+            })
+            .filter(artifact => artifact.label !== '')
 
-        inputsDispatch({
-          type: inputsActions.SET_ARTIFACTS,
-          payload: artifactsList
+          inputsDispatch({
+            type: inputsActions.SET_ARTIFACTS,
+            payload: artifactsList
+          })
         })
-      })
+      } else if (
+        storePathType === 'feature-vectors' &&
+        inputsState.featureVectors.length === 0
+      ) {
+        fetchFeatureVectors({
+          project: projectName
+        }).then(featureVectors => {
+          inputsDispatch({
+            type: inputsActions.SET_FEATURE_VECTORS,
+            payload: featureVectors.map(featureVector => {
+              return {
+                label: featureVector.metadata.name,
+                id: featureVector.metadata.name
+              }
+            })
+          })
+        })
+      }
     }
   }, [
     fetchArtifacts,
     inputsState.artifacts.length,
+    inputsState.featureVectors.length,
     inputsState.newInput.path.project,
     inputsState.inputProjectPathEntered,
-    inputsState.selectedDataInput.data.path.value
+    inputsState.selectedDataInput.data.path.value,
+    inputsState.newInput.path,
+    fetchFeatureVectors
   ])
 
   useEffect(() => {
@@ -118,7 +139,10 @@ const JobsPanelDataInputs = ({
         type: inputsActions.SET_COMBOBOX_MATCHES,
         payload: generateComboboxMatchesList(
           inputsState.artifacts,
+          inputsState.featureVectors,
+          inputsState.inputStorePathTypeEntered,
           inputsState.inputProjectPathEntered,
+          inputsState.inputProjectItemPathEntered,
           inputsState.newInput,
           inputsState.projects,
           match.params.projectName,
@@ -128,7 +152,10 @@ const JobsPanelDataInputs = ({
     }
   }, [
     inputsState.artifacts,
+    inputsState.featureVectors,
+    inputsState.inputProjectItemPathEntered,
     inputsState.inputProjectPathEntered,
+    inputsState.inputStorePathTypeEntered,
     inputsState.newInput,
     inputsState.projects,
     inputsState.selectedDataInput.data.path,

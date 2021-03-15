@@ -11,6 +11,7 @@ const Combobox = ({
   inputDefaultValue,
   inputOnChange,
   matches,
+  maxSuggestedMatches,
   selectDefaultValue,
   selectDropdownList,
   selectOnChange,
@@ -99,7 +100,7 @@ const Combobox = ({
     const inputValueItems = inputValue.split('/')
 
     inputValueItems[inputValueItems.length - 1] =
-      inputValueItems.length > 1 ? option : `${option}/`
+      inputValueItems.length > maxSuggestedMatches - 1 ? option : `${option}/`
 
     if (searchIsFocused) {
       setSearchIsFocused(false)
@@ -113,7 +114,7 @@ const Combobox = ({
     inputOnChange(inputValueItems.join('/'))
     inputRef.current.focus()
 
-    if (inputValueItems.length > 1) {
+    if (inputValueItems.length > maxSuggestedMatches - 1) {
       setShowMatchesDropdown(false)
     }
   }
@@ -170,6 +171,10 @@ const Combobox = ({
     }
 
     setInputValue(target.value)
+
+    if (dropdownList.length > 0) {
+      setShowMatchesDropdown(true)
+    }
   }
 
   const matchesSearchOnChange = event => {
@@ -213,6 +218,7 @@ Combobox.defaultProps = {
   comboboxClassName: '',
   inputDefaultValue: '',
   inputPlaceholder: '',
+  maxSuggestedMatches: 1,
   selectDefaultValue: null,
   selectPlaceholder: ''
 }
@@ -223,6 +229,7 @@ Combobox.propTypes = {
   inputOnChange: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string,
   matches: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  maxSuggestedMatches: PropTypes.number,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectOnChange: PropTypes.func.isRequired,
   selectDefaultValue: PropTypes.shape({}),
