@@ -166,6 +166,7 @@ const EditableDataInputsRow = ({
               setSelectedDataInput
             )
           }}
+          hideSearchInput={!inputsState.inputStorePathTypeEntered}
           selectDefaultValue={selectDefaultValue}
           selectDropdownList={comboboxSelectList}
           selectOnChange={path => selectOnChangeComboboxHandler(path)}

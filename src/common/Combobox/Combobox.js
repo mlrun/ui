@@ -10,6 +10,7 @@ const Combobox = ({
   inputPlaceholder,
   inputDefaultValue,
   inputOnChange,
+  hideSearchInput,
   matches,
   maxSuggestedMatches,
   selectDefaultValue,
@@ -195,6 +196,7 @@ const Combobox = ({
       handleInputOnChange={handleInputOnChange}
       handleMatchesOptionClick={handleMatchesOptionClick}
       handleSelectOptionOnClick={handleSelectOptionOnClick}
+      hideSearchInput={hideSearchInput}
       inputOnFocus={inputOnFocus}
       inputPlaceholder={inputPlaceholder}
       inputValue={inputValue}
@@ -218,6 +220,7 @@ Combobox.defaultProps = {
   comboboxClassName: '',
   inputDefaultValue: '',
   inputPlaceholder: '',
+  hideSearchInput: false,
   maxSuggestedMatches: 1,
   selectDefaultValue: null,
   selectPlaceholder: ''
@@ -228,6 +231,7 @@ Combobox.propTypes = {
   inputDefaultValue: PropTypes.string,
   inputOnChange: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string,
+  hideSearchInput: PropTypes.bool,
   matches: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   maxSuggestedMatches: PropTypes.number,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

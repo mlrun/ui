@@ -15,6 +15,7 @@ const ComboboxView = React.forwardRef(
       handleInputOnChange,
       handleMatchesOptionClick,
       handleSelectOptionOnClick,
+      hideSearchInput,
       inputOnFocus,
       inputPlaceholder,
       inputValue,
@@ -91,16 +92,18 @@ const ComboboxView = React.forwardRef(
             ...dropdownStyle
           }}
         >
-          <div className="combobox-dropdown__search">
-            <input
-              className="combobox-dropdown__search-input input border-none"
-              onChange={event => matchesSearchOnChange(event)}
-              onFocus={() => setSearchIsFocused(true)}
-              placeholder="Type to search"
-              type="text"
-            />
-            <SearchIcon />
-          </div>
+          {!hideSearchInput && (
+            <div className="combobox-dropdown__search">
+              <input
+                className="combobox-dropdown__search-input input border-none"
+                onChange={event => matchesSearchOnChange(event)}
+                onFocus={() => setSearchIsFocused(true)}
+                placeholder="Type to search"
+                type="text"
+              />
+              <SearchIcon />
+            </div>
+          )}
           <ul className="combobox-dropdown__list combobox-list">
             {searchIsFocused && dropdownList.length === 0 ? (
               <li className="combobox-list__option" key="no data">
@@ -132,6 +135,7 @@ ComboboxView.propTypes = {
   handleInputOnChange: PropTypes.func.isRequired,
   handleMatchesOptionClick: PropTypes.func.isRequired,
   handleSelectOptionOnClick: PropTypes.func.isRequired,
+  hideSearchInput: PropTypes.bool.isRequired,
   inputOnFocus: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string.isRequired,
   inputValue: PropTypes.string.isRequired,

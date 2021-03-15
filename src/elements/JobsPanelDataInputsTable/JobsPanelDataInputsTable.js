@@ -102,6 +102,7 @@ export const JobsPanelDataInputsTable = ({
               inputOnChange={path => {
                 handlePathChange(path)
               }}
+              hideSearchInput={!inputsState.inputStorePathTypeEntered}
               selectDropdownList={comboboxSelectList}
               selectOnChange={path => {
                 handlePathTypeChange(path)
