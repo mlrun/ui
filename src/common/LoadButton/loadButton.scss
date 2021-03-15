@@ -1,0 +1,80 @@
+@import '../../scss/variables';
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.btn-load {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 40px;
+  padding: 0 16px;
+  color: $primary;
+  font-weight: 500;
+  font-size: 14px;
+  font-style: normal;
+  line-height: 16px;
+  background: $white;
+  border: $primaryBorder;
+  border-radius: $mainBorderRadius;
+
+  svg {
+    path {
+      fill: $white;
+    }
+  }
+
+  &:active {
+    background: $gallery;
+  }
+
+  &:hover {
+    background: $alabaster;
+  }
+
+  &:disabled {
+    color: $spunPearl;
+    background: $white;
+    cursor: not-allowed;
+
+    svg {
+      path {
+        fill: $alto;
+      }
+    }
+  }
+
+  :first-child {
+    margin-right: 5px;
+  }
+
+  &-primary {
+    border-bottom: $applyBtnBorder;
+
+    &:disabled {
+      border-bottom: 4px solid $hummingBird;
+    }
+  }
+
+  &-secondary {
+    border-bottom: 4px solid $malibu;
+
+    &:disabled {
+      border-bottom: 4px solid $titanWhite;
+    }
+  }
+
+  &-tertiary {
+    border-bottom: 4px solid $spunPearl;
+
+    svg {
+      path {
+        fill: $primary;
+      }
+    }
+
+    &:disabled {
+      border-bottom: 4px solid $athensGray;
+    }
+  }
+}

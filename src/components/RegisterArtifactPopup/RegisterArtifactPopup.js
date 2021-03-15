@@ -3,16 +3,16 @@ import PropTypes from 'prop-types'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import Button from '../../common/Button/Button'
 
 import { v4 as uuidv4 } from 'uuid'
 
 import artifactApi from '../../api/artifacts-api'
-import { FILES_PAGE } from '../../constants'
 
 const RegisterArtifactPopup = ({
   artifactFilter,
+  artifactKind,
   match,
-  pageData,
   refresh,
   setIsPopupDialogOpen,
   title
@@ -37,27 +37,16 @@ const RegisterArtifactPopup = ({
   })
 
   useEffect(() => {
-    if (pageData.pageKind) {
+    if (artifactKind) {
       setRegisterArtifactData(state => ({
         ...state,
         kind: {
           ...state.kind,
-          value:
-            pageData.page === FILES_PAGE
-              ? ''
-              : pageData.pageKind.slice(0, pageData.pageKind.length - 1)
-        }
-      }))
-    } else {
-      setRegisterArtifactData(state => ({
-        ...state,
-        kind: {
-          ...state.kind,
-          value: 'general'
+          value: artifactKind.toLowerCase()
         }
       }))
     }
-  }, [pageData.page, pageData.pageKind])
+  }, [artifactKind])
 
   const resetRegisterArtifactForm = useCallback(() => {
     setRegisterArtifactData({
@@ -190,7 +179,7 @@ const RegisterArtifactPopup = ({
       <RegisterArtifactForm
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
-        showType={!pageData.pageKind}
+        showType={!artifactKind}
       />
       <div className="pop-up-dialog__footer-container">
         {registerArtifactData.error.message && (
@@ -199,15 +188,13 @@ const RegisterArtifactPopup = ({
             message={registerArtifactData.error.message}
           />
         )}
-        <button
-          className="btn_default pop-up-dialog__btn_cancel"
+        <Button
+          variant="tertiary"
+          label="Cancel"
+          className="pop-up-dialog__btn_cancel"
           onClick={closePopupDialog}
-        >
-          Cancel
-        </button>
-        <button className="btn_primary btn_success" onClick={registerArtifact}>
-          Register
-        </button>
+        />
+        <Button variant="primary" label="Register" onClick={registerArtifact} />
       </div>
     </PopUpDialog>
   )
@@ -219,8 +206,8 @@ RegisterArtifactPopup.defaultProps = {
 
 RegisterArtifactPopup.propTypes = {
   artifactFilter: PropTypes.shape({}).isRequired,
+  artifactKind: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
-  pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   title: PropTypes.string

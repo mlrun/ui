@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { capitalize } from 'lodash'
 
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
+import Tip from '../../common/Tip/Tip'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
@@ -126,7 +128,12 @@ const DetailsInfoView = React.forwardRef(
 
               return (
                 <li className="details-item" key={header.id}>
-                  <div className="details-item__header">{header.label}</div>
+                  <div className="details-item__header">
+                    {header.label}
+                    {header.tip && (
+                      <Tip className="details-item__tip" text={header.tip} />
+                    )}
+                  </div>
                   <DetailsInfoItem
                     chipsClassName={chipsClassName}
                     chipsData={chipsData}
@@ -169,7 +176,9 @@ const DetailsInfoView = React.forwardRef(
 
                     return (
                       <li className="details-item" key={key}>
-                        <div className="details-item__header">{key}</div>
+                        <div className="details-item__header">
+                          {capitalize(key)}
+                        </div>
                         <DetailsInfoItem link={url} info={value} />
                       </li>
                     )

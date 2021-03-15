@@ -33,10 +33,8 @@ const ProjectTable = ({ match, table }) => {
                   const tableValueClassName = classnames(
                     'project-data-card__table-cell',
                     body[key].className,
-                    key === 'status' &&
-                      `status_${body[key].value.toLowerCase()} capitalize`
+                    key === 'status' && 'status-cell'
                   )
-
                   return key === 'type' ? (
                     <TableTypeCell
                       key={body[key].value + index}
@@ -83,6 +81,22 @@ const ProjectTable = ({ match, table }) => {
                             </Tooltip>
                           </Link>
                         )
+                      ) : key === 'status' ? (
+                        <>
+                          {Array.isArray(body.status.value) &&
+                            body.status.value.map((status, index) => {
+                              return (
+                                <Tooltip
+                                  key={index}
+                                  template={
+                                    <TextTooltipTemplate text={status} />
+                                  }
+                                >
+                                  <i className={`${status} status-icon`} />
+                                </Tooltip>
+                              )
+                            })}
+                        </>
                       ) : (
                         <Tooltip
                           template={

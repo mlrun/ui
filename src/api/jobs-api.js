@@ -9,22 +9,19 @@ export default {
   filterByStatus: (project, state) =>
     mainHttpClient.get(`/runs?project=${project}&state=${state}`),
   getAll: (project, state, event) => {
-    let url = `/runs?project=${project}`
+    const params = {
+      project
+    }
 
     if (event?.labels) {
-      let labels = event?.labels
-        ?.split(',')
-        .map(item => `label=${item}`)
-        .join('&')
-
-      url = `${url}&${labels}`
+      params.label = event.labels.split(',')
     }
 
     if (event?.name) {
-      url = `${url}&name=${event.name}`
+      params.name = event.name
     }
 
-    return mainHttpClient.get(url)
+    return mainHttpClient.get('/runs', { params })
   },
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
   getScheduled: (project, status, event) => {
@@ -41,7 +38,7 @@ export default {
     }
 
     if (event?.labels) {
-      params.labels = event?.labels
+      params.labels = event.labels?.split(',')
     }
 
     return mainHttpClient.get(`/projects/${project}/schedules`, { params })

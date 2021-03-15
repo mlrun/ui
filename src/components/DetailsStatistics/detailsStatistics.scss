@@ -42,12 +42,16 @@
     &-row {
       display: flex;
       flex-direction: row;
-      padding: 10px 0;
+      height: 55px;
       border-bottom: $secondaryBorder;
     }
 
     .statistics-cell {
       &_name {
+        flex: 1.5;
+      }
+
+      &_histogram {
         flex: 1.5;
       }
 

@@ -45,14 +45,10 @@ const JobsPanel = ({
   runNewJobFailure,
   setNewJob,
   setNewJobEnvironmentVariables,
-  setNewJobHyperParameters,
   setNewJobInputs,
-  setNewJobParameters,
   setNewJobSecretSources,
   setNewJobVolumeMounts,
-  setNewJobVolumes,
-  setTuningStrategy,
-  setUrl
+  setNewJobVolumes
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
@@ -325,15 +321,11 @@ const JobsPanel = ({
       panelState={panelState}
       removeJobError={removeJobError}
       setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
-      setNewJobHyperParameters={setNewJobHyperParameters}
       setNewJobInputs={setNewJobInputs}
-      setNewJobParameters={setNewJobParameters}
       setNewJobSecretSources={setNewJobSecretSources}
       setNewJobVolumeMounts={setNewJobVolumeMounts}
       setNewJobVolumes={setNewJobVolumes}
       setOpenScheduleJob={setOpenScheduleJob}
-      setTuningStrategy={setTuningStrategy}
-      setUrl={setUrl}
     />
   )
 }

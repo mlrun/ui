@@ -18,14 +18,6 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
       id: 'chart'
     },
     {
-      label: 'Dataset',
-      id: 'dataset'
-    },
-    {
-      label: 'Model',
-      id: 'model'
-    },
-    {
       label: 'Plot',
       id: 'plot'
     },

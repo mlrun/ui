@@ -141,6 +141,7 @@
     .parameters-additional-settings {
       display: flex;
       flex-direction: row;
+      margin-bottom: 10px;
 
       &-container {
         display: flex;
@@ -159,13 +160,13 @@
         }
       }
 
-      &__url-type {
+      &__input-wrapper {
         align-items: flex-end;
 
         @include tableDisplay(2);
       }
 
-      &__tuning-strategy {
+      &__select-wrapper {
         flex-direction: column;
 
         &__label {
@@ -236,27 +237,9 @@
   }
 
   .btn {
-    &__schedule-for-later {
-      margin: 0 10px;
-      color: $primary;
-      background-color: transparent;
-    }
-
-    &_primary {
-      svg {
-        margin-right: 5px;
-
-        path {
-          fill: $white;
-        }
-      }
-    }
-
     &__schedule {
       margin-top: 16px;
       margin-left: auto;
-      padding: 10px 16px;
-      font-weight: 500;
     }
   }
 

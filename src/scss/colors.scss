@@ -1,11 +1,14 @@
-$alabaster: #f7f7f7;
-$amaranth: #e54158;
+$alabaster: #f8f7f8;
+$alto: #dadada;
+$amaranth: #ea336a;
 $amethyst: #a44cc5;
+$athensGray: #ebebec;
 $black: #000;
 $bombay: #b1b1b7;
 $brightTurquoise: #0fddaf;
 $burntSienna: #eb5757;
 $burntSiennaTwo: #ea7f54;
+$ceriseRed: #d22a5d;
 $chateauGreen: #49af53;
 $cornflowerBlue: #6279e7;
 $cornflowerBlueTwo: #5871f4;
@@ -17,12 +20,18 @@ $gallery: #eee;
 $grandis: #ffd077;
 $gunsmoke: #7f8d89;
 $hotPink: #ff75bf;
+$hummingBird: #c5f7ec;
+$indigo: #5468c7;
 $iron: #dfe2e5;
 $java: #13bbb1;
+$javaLight: #1fcc9e;
 $malibu: #869cff;
+$maroonFlash: #bc2553;
+$mercury: #e7e7e7;
 $mineshaft: #333;
 $mineshaftTwo: rgba($mineshaft, 0.75);
 $mischka: #e9e8eb;
+$mountainMeadow: #1db284;
 $mulledWine: #483f56;
 $mulledWineThree: rgba($mulledWine, 0.12);
 $mulledWineTwo: rgba($mulledWine, 0.87);
@@ -38,6 +47,12 @@ $silver: #c4c4c4;
 $sorbus: #f98b0a;
 $spunPearl: #adabb0;
 $supernova: #ffc700;
+$titanWhite: #e2e7ff;
 $topaz: #7f7989;
 $white: #fff;
 $wildSand: #f5f5f5;
+
+:export {
+  amethyst: $amethyst;
+  mulledWine: $mulledWine;
+}

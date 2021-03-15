@@ -85,7 +85,7 @@ export const handleDeleteProjectError = (
         'The project is not empty. Deleting it will also delete all of its resources, such as jobs, ' +
         'artifacts, and features.',
       btnConfirmLabel: 'Delete',
-      btnConfirmClassNames: 'btn_danger',
+      btnConfirmType: 'danger',
       rejectHandler: () => {
         setConfirmData(null)
       },

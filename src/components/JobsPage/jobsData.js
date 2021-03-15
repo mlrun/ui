@@ -102,8 +102,8 @@ export const filters = [
   { type: 'period', label: 'Period:' },
   { type: 'status', label: 'Status:' },
   { type: 'groupBy', label: 'Group by:' },
-  { type: 'labels', label: 'Labels:' },
-  { type: 'name', label: 'Name:' }
+  { type: 'name', label: 'Name:' },
+  { type: 'labels', label: 'Labels:' }
 ]
 export const initialStateFilter = 'all'
 export const initialGroupFilter = 'name'

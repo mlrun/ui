@@ -18,6 +18,7 @@ const JobsPanelParametersTableView = ({
   handleDeleteParameter,
   handleEditParameter,
   headers,
+  nameValidation,
   selectedItem,
   setSelectedItem,
   tableContent
@@ -57,6 +58,7 @@ const JobsPanelParametersTableView = ({
                     disabledOptions={disabledOptions}
                     handleEdit={handleEditParameter}
                     key={`${contentItem.data.name}${index}`}
+                    nameValidation={nameValidation}
                     selectedParameter={selectedItem}
                     setSelectedParameter={setSelectedItem}
                   />
@@ -100,6 +102,7 @@ JobsPanelParametersTableView.propTypes = {
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
+  nameValidation: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   tableContent: PropTypes.shape({}).isRequired

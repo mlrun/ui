@@ -11,6 +11,8 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Select from '../../common/Select/Select'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import Button from '../../common/Button/Button'
+import LoadButton from '../../common/LoadButton/LoadButton'
 
 import { formatDatetime } from '../../utils'
 import {
@@ -49,11 +51,6 @@ const DetailsView = React.forwardRef(
       'table__item',
       detailsState.showWarning && 'pop-up-dialog-opened'
     )
-    const applyChangesBtnClassNames = classnames(
-      'btn_apply-changes',
-      'btn_border-bottom',
-      detailsState.changes.counter === 0 && 'btn_apply-changes_default'
-    )
     const state = selectedItem.state || selectedItem.endpoint?.status?.state
 
     return (
@@ -82,13 +79,12 @@ const DetailsView = React.forwardRef(
         <div className="item-header__buttons">
           {pageData.page === FEATURE_STORE_PAGE && (
             <>
-              <button
+              <Button
+                variant="label"
+                label="Cancel"
                 onClick={cancelChanges}
-                className="btn_cancel"
                 disabled={detailsState.changes.counter === 0}
-              >
-                Cancel
-              </button>
+              />
               <Tooltip
                 template={
                   <TextTooltipTemplate
@@ -98,13 +94,13 @@ const DetailsView = React.forwardRef(
                   />
                 }
               >
-                <button
+                <LoadButton
+                  variant="primary"
+                  label="Apply Changes"
+                  className="btn_apply-changes"
                   onClick={applyChanges}
-                  className={applyChangesBtnClassNames}
                   disabled={detailsState.changes.counter === 0}
-                >
-                  Apply Changes
-                </button>
+                />
               </Tooltip>
             </>
           )}
@@ -186,8 +182,9 @@ const DetailsView = React.forwardRef(
             }}
           >
             <div className="pop-up-dialog__footer-container">
-              <button
-                className="btn_default"
+              <Button
+                variant="tertiary"
+                label="Don't Leave"
                 onClick={() => {
                   handleShowWarning(false)
                   detailsDispatch({
@@ -195,15 +192,13 @@ const DetailsView = React.forwardRef(
                     payload: false
                   })
                 }}
-              >
-                Don't Leave
-              </button>
-              <button
-                className="pop-up-dialog__btn_cancel btn_primary btn_success"
+              />
+              <Button
+                variant="primary"
+                label="Leave"
+                className="pop-up-dialog__btn_cancel"
                 onClick={leavePage}
-              >
-                Leave
-              </button>
+              />
             </div>
           </PopUpDialog>
         )}

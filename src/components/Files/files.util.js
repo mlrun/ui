@@ -1,12 +1,22 @@
 import { FILES_PAGE } from '../../constants'
 
 export const infoHeaders = [
-  { label: 'Hash', id: 'hash' },
+  {
+    label: 'Hash',
+    id: 'hash',
+    tip:
+      'Represents hash of the data. when the data changes the hash would change'
+  },
   { label: 'Key', id: 'db_key' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
-  { label: 'Tree', id: 'tree' },
+  {
+    label: 'UID',
+    id: 'tree',
+    tip:
+      'Unique identifier representing the job or the workflow that generated the artifact'
+  },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }

@@ -59,6 +59,10 @@
         border-right: $dividerBorder;
         content: '';
       }
+
+      .loader-wrapper {
+        height: 37px;
+      }
     }
 
     &-label {
@@ -96,22 +100,6 @@
       .tooltip {
         font-size: 12px;
         line-height: 16px;
-      }
-    }
-
-    &-loader {
-      width: 27px;
-      height: 27px;
-      margin: 0;
-
-      &-wrapper {
-        position: relative;
-        height: 37px;
-        background-color: transparent;
-      }
-
-      .path {
-        stroke: $spunPearl;
       }
     }
   }

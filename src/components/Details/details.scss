@@ -56,25 +56,6 @@
           .table-actions-container {
             display: block;
           }
-
-          .btn_cancel {
-            color: $topaz;
-          }
-
-          .btn_apply-changes {
-            &_default {
-              cursor: default;
-              opacity: 0.5;
-            }
-
-            &:not(.btn_apply-changes_default):hover {
-              background-color: $alabaster;
-            }
-
-            &:not(.btn_apply-changes_default):active {
-              background-color: $gallery;
-            }
-          }
         }
       }
 

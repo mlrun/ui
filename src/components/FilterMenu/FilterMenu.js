@@ -9,6 +9,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
+import Button from '../../common/Button/Button'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
@@ -57,7 +58,12 @@ const FilterMenu = ({
     ) {
       selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
     }
-  }, [page])
+
+    return () => {
+      setLabels('')
+      setName('')
+    }
+  }, [page, match.params.pageTab])
 
   const onKeyDown = event => {
     if (event.keyCode === 13) {
@@ -133,7 +139,7 @@ const FilterMenu = ({
                 <Input
                   type="text"
                   label={filter.label}
-                  placeholder="key or key=value"
+                  placeholder="key1,key2=value,..."
                   key={filter.type}
                   onChange={setLabels}
                   value={labels}
@@ -191,7 +197,7 @@ const FilterMenu = ({
         )}
       </div>
       {actionButtonTitle && (
-        <button className="btn_primary btn_small">{actionButtonTitle}</button>
+        <Button variant="secondary" label={actionButtonTitle} />
       )}
       <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>

@@ -45,8 +45,8 @@
   &__tip {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
     right: 4px;
+    transform: translateY(-50%);
   }
 
   &.active-input {
@@ -55,7 +55,7 @@
 
   &__label {
     position: absolute;
-    top: 9px;
+    top: 10px;
     left: 10px;
     color: $topaz;
     text-transform: capitalize;

@@ -6,33 +6,28 @@ import {
 } from '../constants'
 
 const fetchArtifacts = (item, path) => {
-  let url = path
+  const params = {}
 
   if (item?.labels) {
-    let labels = item?.labels
-      ?.split(',')
-      .map(item => `label=${item}`)
-      .join('&')
-
-    url = `${url}&${labels}`
+    params.label = item.labels?.split(',')
   }
 
   if (item?.tag && !/latest/i.test(item.tag)) {
-    url = `${url}&tag=${item.tag}`
+    params.tag = item.tag
   }
 
   if (item?.name) {
-    url = `${url}&name=${item.name}`
+    params.name = item.name
   }
 
-  return mainHttpClient.get(url)
+  return mainHttpClient.get(path, { params })
 }
 
 const fetchFeatureStoreData = (item, tab, config) => {
   const params = {}
 
   if (item?.labels) {
-    params.labels = item.labels
+    params.label = item.labels?.split(',')
   }
 
   if (item?.tag && !/latest/i.test(item.tag)) {
@@ -88,7 +83,7 @@ export default {
     const params = {}
 
     if (item?.labels) {
-      params.labels = item.labels
+      params.label = item.labels?.split(',')
     }
 
     if (item?.tag) {
@@ -113,7 +108,7 @@ export default {
     const params = {}
 
     if (item?.labels) {
-      params.labels = item.labels
+      params.label = item.labels?.split(',')
     }
 
     return mainHttpClient.get(`/projects/${item.project}/model-endpoints`, {

@@ -17,6 +17,7 @@ import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import JobsPanel from '../JobsPanel/JobsPanel'
+import Button from '../../common/Button/Button'
 
 const Jobs = ({
   editJob,
@@ -81,7 +82,7 @@ const Jobs = ({
       title: `Delete scheduled job "${scheduledJob.name}"?`,
       description: 'Deleted scheduled jobs can not be restored.',
       btnConfirmLabel: 'Delete',
-      btnConfirmClassNames: 'btn_danger',
+      btnConfirmType: 'danger',
       rejectHandler: () => {
         setConfirmData(null)
       },
@@ -244,18 +245,17 @@ const Jobs = ({
         >
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
-            <button
-              className="btn_default pop-up-dialog__btn_cancel"
+            <Button
+              variant="tertiary"
+              label="Cancel"
               onClick={confirmData.rejectHandler}
-            >
-              Cancel
-            </button>
-            <button
-              className={confirmData.btnConfirmClassNames}
+              className="pop-up-dialog__btn_cancel"
+            />
+            <Button
+              variant={confirmData.btnConfirmType}
+              label={confirmData.btnConfirmLabel}
               onClick={() => confirmData.confirmHandler(confirmData.item)}
-            >
-              {confirmData.btnConfirmLabel}
-            </button>
+            />
           </div>
         </PopUpDialog>
       )}

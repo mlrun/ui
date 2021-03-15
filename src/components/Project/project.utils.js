@@ -72,7 +72,7 @@ export const generateCreateNewOptions = (
     id: 'registerFile',
     handler: () => {
       setIsPopupDialogOpen(true)
-      setArtifactKind('file')
+      setArtifactKind('')
     }
   },
   {
