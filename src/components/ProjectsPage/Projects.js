@@ -250,6 +250,7 @@ const Projects = ({
   const refreshProjects = () => {
     removeProjects()
     fetchProjects()
+    fetchNuclioFunctions()
   }
 
   return (
