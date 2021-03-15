@@ -303,7 +303,7 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
     value: selectedItem.tag
   },
   updated: {
-    value: formatDatetime(selectedItem.updated, 'N/A')
+    value: formatDatetime(new Date(selectedItem.updated), 'N/A')
   },
   timestamp_key: {
     value: selectedItem.timestamp_field ?? ''
