@@ -9,6 +9,7 @@ import './jobsPanelTitle.scss'
 
 const JobsPanelTitle = ({
   closePanel,
+  editModeEnabled,
   functionData,
   isTitleValid,
   openScheduleJob,
@@ -93,6 +94,7 @@ const JobsPanelTitle = ({
     <JobsPanelTitleView
       closePanel={closePanel}
       currentFunctionInfo={panelState.currentFunctionInfo}
+      editModeEnabled={editModeEnabled}
       editMode={panelState.editMode}
       editTitle={editTitle}
       handleFinishEdit={handleFinishEdit}
@@ -108,8 +110,13 @@ const JobsPanelTitle = ({
   )
 }
 
+JobsPanelTitle.defaultProps = {
+  editModeEnabled: true
+}
+
 JobsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
+  editModeEnabled: PropTypes.bool,
   functionData: PropTypes.shape({}).isRequired,
   isTitleValid: PropTypes.func.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,

@@ -1,5 +1,6 @@
 import jobsApi from '../api/jobs-api'
 import {
+  EDIT_JOB_FAILURE,
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
@@ -26,6 +27,11 @@ import {
 } from '../constants'
 
 const jobsActions = {
+  editJob: (postData, project) => () => jobsApi.editJob(postData, project),
+  editJobFailure: error => ({
+    type: EDIT_JOB_FAILURE,
+    payload: error
+  }),
   fetchJobLogs: (id, project) => dispatch => {
     dispatch(jobsActions.fetchJobLogsBegin())
 

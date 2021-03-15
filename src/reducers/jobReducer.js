@@ -21,7 +21,8 @@ import {
   SET_NEW_JOB_SECRET_SOURCES,
   SET_NEW_JOB,
   SET_TUNING_STRATEGY,
-  SET_URL
+  SET_URL,
+  EDIT_JOB_FAILURE
 } from '../constants'
 
 const initialState = {
@@ -53,6 +54,11 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case EDIT_JOB_FAILURE:
+      return {
+        ...state,
+        error: payload
+      }
     case FETCH_JOBS_BEGIN:
       return {
         ...state,

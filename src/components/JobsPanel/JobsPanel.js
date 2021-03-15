@@ -19,7 +19,8 @@ import {
   getVersionOptions,
   getDefaultMethodAndVersion,
   generateTableData,
-  generateRequestData
+  generateRequestData,
+  generateTableDataFromDefaultData
 } from './jobsPanel.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { initialState, panelReducer, panelActions } from './panelReducer'
@@ -29,11 +30,13 @@ import './jobsPanel.scss'
 
 const JobsPanel = ({
   closePanel,
+  defaultData,
   fetchFunctionTemplate,
   functionsStore,
   groupedFunctions,
   jobsStore,
   match,
+  onEditJob,
   project,
   removeFunctionTemplate,
   removeJobError,
@@ -53,8 +56,9 @@ const JobsPanel = ({
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
+  const [defaultDataIsLoaded, setDefaultDataIsLoaded] = useState(false)
   const [selectedFunction, setSelectedFunction] = useState(
-    !isEmpty(functionsStore.template)
+    !isEmpty(functionsStore.template) && !defaultData
       ? functionsStore.template.functions
       : groupedFunctions.functions || {}
   )
@@ -62,15 +66,21 @@ const JobsPanel = ({
   const dispatch = useDispatch()
 
   useLayoutEffect(() => {
-    if (!groupedFunctions.name && !functionsStore.template.name) {
+    if (
+      !groupedFunctions.name &&
+      !functionsStore.template.name &&
+      !defaultData
+    ) {
       fetchFunctionTemplate(groupedFunctions.metadata.versions.latest).then(
         result => {
           setSelectedFunction(result.functions)
         }
       )
     }
+
     return () => functionsStore.template.name && removeFunctionTemplate()
   }, [
+    defaultData,
     fetchFunctionTemplate,
     functionsStore.template,
     groupedFunctions,
@@ -118,11 +128,29 @@ const JobsPanel = ({
         setNewJob,
         panelState.limits
       )
+    } else if (
+      !panelState.editMode &&
+      isEveryObjectValueEmpty(panelState.tableData) &&
+      defaultData &&
+      !defaultDataIsLoaded
+    ) {
+      generateTableDataFromDefaultData(
+        defaultData,
+        panelDispatch,
+        panelState.limits,
+        panelState.requests,
+        setNewJob,
+        setDefaultDataIsLoaded
+      )
     }
   }, [
+    defaultData,
+    defaultDataIsLoaded,
+    panelState.currentFunctionInfo,
     panelState.currentFunctionInfo.method,
     panelState.editMode,
     panelState.limits,
+    panelState.requests,
     panelState.tableData,
     selectedFunction,
     setNewJob
@@ -180,13 +208,36 @@ const JobsPanel = ({
         methodOptions,
         versionOptions
       }
+    } else if (defaultData) {
+      panelDispatch({
+        type: panelActions.SET_CURRENT_FUNCTION_INFO,
+        payload: {
+          labels: parseKeyValues(defaultData.task.metadata.labels || []),
+          name: defaultData.task.metadata.name,
+          method: '',
+          methodDescription: '',
+          version: ''
+        }
+      })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_TITLE_INFO,
+        payload: {
+          method: '',
+          version: ''
+        }
+      })
     }
 
     return {
       methodOptions: [],
       versionOptions: []
     }
-  }, [functionsStore.template.name, groupedFunctions.name, selectedFunction])
+  }, [
+    defaultData,
+    functionsStore.template.name,
+    groupedFunctions.name,
+    selectedFunction
+  ])
 
   const handleRunJob = (event, cronString) => {
     const selectedFunction = functionsStore.template.name
@@ -229,6 +280,26 @@ const JobsPanel = ({
       })
   }
 
+  const handleEditJob = (event, cronString) => {
+    const postData = generateRequestData(
+      jobsStore,
+      cronString,
+      panelState,
+      project,
+      defaultData.task.metadata.labels,
+      match,
+      selectedFunction,
+      false,
+      defaultData.task.spec.function
+    )
+
+    if (jobsStore.error) {
+      removeJobError()
+    }
+
+    onEditJob(event, postData)
+  }
+
   const isTitleValid = () => {
     return (
       panelState.currentFunctionInfo.name.trim() !== '' &&
@@ -241,7 +312,9 @@ const JobsPanel = ({
   return (
     <JobsPanelView
       closePanel={closePanel}
+      defaultData={defaultData}
       functionData={functionData}
+      handleEditJob={handleEditJob}
       handleRunJob={handleRunJob}
       isTitleValid={isTitleValid}
       jobsStore={jobsStore}
@@ -265,10 +338,18 @@ const JobsPanel = ({
   )
 }
 
+JobsPanel.defaultProps = {
+  defaultData: null,
+  groupedFunctions: {},
+  onEditJob: () => {}
+}
+
 JobsPanel.propTypes = {
   closePanel: PropTypes.func.isRequired,
-  groupedFunctions: PropTypes.shape({}).isRequired,
+  defaultData: PropTypes.shape({}),
+  groupedFunctions: PropTypes.shape({}),
   match: PropTypes.shape({}).isRequired,
+  onEditJob: PropTypes.func,
   project: PropTypes.string.isRequired,
   runNewJob: PropTypes.func.isRequired
 }

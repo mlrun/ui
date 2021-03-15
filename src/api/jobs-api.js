@@ -1,6 +1,11 @@
 import { mainHttpClient } from '../httpClient'
 
 export default {
+  editJob: (postData, project) =>
+    mainHttpClient.put(
+      `/projects/${project}/schedules/${postData.task.metadata.name}`,
+      postData
+    ),
   filterByStatus: (project, state) =>
     mainHttpClient.get(`/runs?project=${project}&state=${state}`),
   getAll: (project, state, event) => {
