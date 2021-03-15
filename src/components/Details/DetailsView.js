@@ -21,7 +21,8 @@ import {
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FUNCTIONS_PAGE,
-  FEATURE_VECTORS_TAB
+  FEATURE_VECTORS_TAB,
+  MODEL_ENDPOINTS_TAB
 } from '../../constants'
 import { detailsActions } from '../DetailsInfo/detailsReducer'
 
@@ -51,7 +52,7 @@ const DetailsView = React.forwardRef(
       'table__item',
       detailsState.showWarning && 'pop-up-dialog-opened'
     )
-    const state = selectedItem.state || selectedItem.endpoint?.status?.state
+    const state = selectedItem.state || selectedItem?.status?.state
 
     return (
       <div className={detailsPanelClassNames} ref={ref}>
@@ -59,7 +60,7 @@ const DetailsView = React.forwardRef(
           <h3>
             {selectedItem.name ||
               selectedItem.db_key ||
-              selectedItem.endpoint?.id}
+              selectedItem.metadata?.uid?.split('.')?.[0]}
           </h3>
           <span>
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
@@ -69,6 +70,8 @@ const DetailsView = React.forwardRef(
                 )
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
+              : selectedItem?.metadata?.uid?.includes('.')
+              ? selectedItem.metadata.uid.split('.')?.[1]
               : ''}
             {state && (
               <Tooltip
@@ -122,9 +125,11 @@ const DetailsView = React.forwardRef(
             />
           )}
           {![JOBS_PAGE, FUNCTIONS_PAGE].includes(pageData.page) &&
-            ![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
-              match.params.pageTab
-            ) && (
+            ![
+              FEATURE_SETS_TAB,
+              FEATURE_VECTORS_TAB,
+              MODEL_ENDPOINTS_TAB
+            ].includes(match.params.pageTab) && (
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
                 <Download
                   path={`${selectedItem.target_path?.path}${

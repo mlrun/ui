@@ -3,6 +3,7 @@ import React from 'react'
 import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
 import { ReactComponent as SeverityError } from '../images/severity-error.svg'
+import { parseUri, truncateUid } from '../utils'
 
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
@@ -217,68 +218,84 @@ const createFilesRowData = artifact => {
 }
 
 const driftStatusIcons = {
-  '-1': {
+  NO_DRIFT: {
     value: <SeverityOk />,
     tooltip: 'No drift'
   },
-  '0': {
+  POSSIBLE_DRIFT: {
     value: <SeverityWarning />,
     tooltip: 'Possible drift'
   },
-  '1': {
+  DRIFT_DETECTED: {
     value: <SeverityError />,
     tooltip: 'Drift detected'
   }
 }
 
 const createModelEndpointsRowData = artifact => {
+  const { name, uid } =
+    (artifact.metadata?.uid ?? '').match(/^(?<name>.*?)\.(?<uid>.*)$/)
+      ?.groups ?? {}
+  const { key: modelArtifact, project } = parseUri(
+    artifact.spec?.model_artifact
+  )
+  const modelArtifactLink = `/projects/${project}/files/${modelArtifact}/overview`
   return {
     key: {
-      value: artifact.endpoint?.id,
+      value: name,
       class: 'artifacts_medium',
       link: 'overview'
     },
     state: {
-      value: artifact.endpoint?.status?.state,
+      value: artifact.status?.state,
       class: 'artifacts_extra-small',
       type: 'hidden'
     },
     tag: {
-      value: artifact.endpoint?.metadata?.tag,
-      class: 'artifacts_extra-small'
+      value: truncateUid(uid),
+      class: 'artifacts_extra-small',
+      tooltip: uid
     },
     modelClass: {
-      value: artifact.endpoint?.spec?.model_class,
+      value: artifact.spec?.model_class,
       class: 'artifacts_small'
     },
+    modelArtifact: {
+      value: modelArtifact,
+      class: 'artifacts_small',
+      link: modelArtifactLink,
+      tooltip: artifact.spec?.model_artifact
+    },
     labels: {
-      value: parseKeyValues(artifact.endpoint?.metadata?.labels),
+      value: parseKeyValues(artifact.metadata?.labels),
       class: 'artifacts_big',
       type: 'labels'
     },
     firstRequest: {
-      value: artifact.first_request
-        ? formatDatetime(new Date(artifact.first_request), 'N/A')
+      value: artifact.status?.first_request
+        ? formatDatetime(new Date(artifact.status?.first_request), '-')
         : 'N/A',
       class: 'artifacts_small'
     },
     lastRequest: {
-      value: artifact.last_request
-        ? formatDatetime(new Date(artifact.last_request), 'N/A')
+      value: artifact.status?.last_request
+        ? formatDatetime(new Date(artifact.status?.last_request), '-')
         : 'N/A',
       class: 'artifacts_small'
     },
     errorCount: {
-      value: artifact.error_count,
+      value: artifact.status?.error_count ?? '-',
       class: 'artifacts_small'
     },
     driftStatus: {
-      value: driftStatusIcons[artifact.drift_status]?.value,
+      value: driftStatusIcons[artifact.status?.drift_status]?.value,
       class: 'artifacts_extra-small',
-      tooltip: driftStatusIcons[artifact.drift_status]?.tooltip
+      tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip
     },
     accuracy: {
-      value: artifact.accuracy ? `${Math.round(artifact.accuracy * 100)}%` : '',
+      value: artifact.status?.accuracy
+        ? `${Math.round(artifact.status?.accuracy * 100)}%`
+        : '-',
       class: 'artifacts_extra-small'
     }
   }

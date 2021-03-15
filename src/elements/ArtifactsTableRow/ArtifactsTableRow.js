@@ -8,7 +8,7 @@ import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import artifactsData from '../../components/Artifacts/artifactsData'
-import { FEATURES_TAB } from '../../constants'
+import { FEATURES_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
 
 const ArtifactsTableRow = ({
   actionsMenu,
@@ -33,8 +33,7 @@ const ArtifactsTableRow = ({
     ((selectedItem?.db_key &&
       selectedItem?.db_key === content[index]?.db_key) ||
       (selectedItem?.name && selectedItem?.name === content[index]?.name) ||
-      (selectedItem?.endpoint &&
-        selectedItem?.endpoint?.id === content[index]?.endpoint?.id)) &&
+      selectedItem?.metadata?.uid === content[index]?.metadata?.uid) &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -181,7 +180,10 @@ const ArtifactsTableRow = ({
             return (
               content[index] && (
                 <TableCell
-                  expandLink={Array.isArray(tableContent)}
+                  expandLink={
+                    Array.isArray(tableContent) &&
+                    match.params.pageTab !== MODEL_ENDPOINTS_TAB
+                  }
                   handleExpandRow={handleExpandRow}
                   data={value}
                   item={content[index]}
