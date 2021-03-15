@@ -1,6 +1,7 @@
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
 import { groupByUniqName } from '../../utils/groupByUniqName'
+import { orderBy } from 'lodash'
 
 export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
   let jobsRunning = 0
@@ -58,33 +59,33 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
 }
 
 export const getJobsTableData = (jobs, match) => {
-  if (jobs.data) {
-    const tableBody = jobs.data.slice(0, 5).map(job => {
+  if (jobs) {
+    const tableBody = jobs.slice(0, 5).map(job => {
       return {
         name: {
-          value: job.metadata.name,
-          link: `/projects/${match.params.projectName}/jobs/monitor/${job.metadata.uid}/overview`,
+          value: job[0].metadata.name,
+          link: `/projects/${match.params.projectName}/jobs/monitor/${job[0].metadata.uid}/overview`,
           className: 'table-cell_big'
         },
         type: {
-          value: job.metadata.kind ?? '',
+          value: job[0].metadata.kind ?? '',
           class: 'project-data-card__table-cell table-cell_small'
         },
         status: {
-          value: job.status.state === 'error' ? 'failed' : job.status.state,
+          value: job.map(item => item.status.state),
           className: 'table-cell_medium'
         },
         startTime: {
           value: formatDatetime(
-            new Date(job.status.start_time),
+            new Date(job[0].status.start_time),
             'Not yet started'
           ),
           className: 'table-cell_big'
         },
         duration: {
           value: measureTime(
-            new Date(job.status.start_time),
-            new Date(job.status.last_update)
+            new Date(job[0].status.start_time),
+            new Date(job[0].status.last_update)
           ),
           className: 'table-cell_small'
         }
@@ -104,4 +105,22 @@ export const getJobsTableData = (jobs, match) => {
       body: tableBody
     }
   }
+}
+
+export const groupByName = content => {
+  const groupedItems = {}
+
+  content.forEach(contentItem => {
+    groupedItems[contentItem.metadata.name]
+      ? groupedItems[contentItem.metadata.name].push(contentItem)
+      : (groupedItems[contentItem.metadata.name] = [contentItem])
+  })
+
+  return Object.values(groupedItems)
+}
+
+export const sortByDate = groups => {
+  return groups.map(group =>
+    orderBy(group, ['status.last_update'], 'desc').slice(0, 5)
+  )
 }
