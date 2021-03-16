@@ -13,36 +13,44 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 export const generateComboboxMatchesList = (
   artifacts,
+  featureVectors,
+  inputStorePathTypeEntered,
   inputProjectPathEntered,
+  inputProjectItemPathEntered,
   newInput,
   projects,
   projectName,
   selectedDataInputPath
 ) => {
-  if (inputProjectPathEntered) {
-    return artifacts.filter(artifact => {
-      return isEveryObjectValueEmpty(selectedDataInputPath)
-        ? artifact.id.startsWith(newInput.path.artifact)
-        : artifact.id.startsWith(selectedDataInputPath.value.split('/')[1])
-    })
-  } else if (
-    (newInput.path.project.length > 0 &&
-      newInput.path.project !== projectName) ||
-    (selectedDataInputPath.value.length > 0 &&
-      selectedDataInputPath.value.split('/')[0] !== projectName)
-  ) {
+  if (!inputStorePathTypeEntered) {
+    return storePathTypes
+  } else if (!inputProjectPathEntered) {
     return projects.filter(project => {
       return isEveryObjectValueEmpty(selectedDataInputPath)
         ? project.id.startsWith(newInput.path.project)
-        : project.id.startsWith(selectedDataInputPath.value.split('/')[0])
+        : project.id.startsWith(selectedDataInputPath.value.split('/')[1])
     })
-  } else if (
-    newInput.path.pathType.length === 0 &&
-    selectedDataInputPath.pathType === 0
-  ) {
-    return [...artifacts]
+  } else if (!inputProjectItemPathEntered) {
+    const selectedStorePathType =
+      newInput.path.storePathType || selectedDataInputPath.value.split('/')[0]
+    const projectItems =
+      selectedStorePathType === 'artifacts'
+        ? artifacts
+        : selectedStorePathType === 'feature-vectors'
+        ? featureVectors
+        : null
+
+    return projectItems
+      ? projectItems.filter(projectItem => {
+          return isEveryObjectValueEmpty(selectedDataInputPath)
+            ? projectItem.id.startsWith(newInput.path.projectItem)
+            : projectItem.id.startsWith(
+                selectedDataInputPath.value.split('/')[2]
+              )
+        })
+      : []
   } else {
-    return [...projects]
+    return []
   }
 }
 
@@ -64,10 +72,11 @@ export const handleAddItem = (
 ) => {
   if (
     newItemObj.name.length === 0 ||
-    ((newItemObj.path.pathType.length === 0 ||
-      newItemObj.path.project.length === 0 ||
-      newItemObj.path.artifact.length === 0) &&
-      !newInputUrlPath)
+    (!newInputUrlPath &&
+      (newItemObj.path.pathType.length === 0 ||
+        newItemObj.path.storePathType.length === 0 ||
+        newItemObj.path.project.length === 0 ||
+        newItemObj.path.projectItem.length === 0))
   ) {
     inputsDispatch({
       type: removeNewItemObj
@@ -106,7 +115,7 @@ export const handleAddItem = (
             pathType: newItemObj.path.pathType,
             value: newInputUrlPath
               ? ''
-              : `${newItemObj.path.project}/${newItemObj.path.artifact}`,
+              : `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}`,
             url: newInputUrlPath ?? ''
           }
         }
@@ -125,7 +134,7 @@ export const handleAddItem = (
             pathType: newItemObj.path.pathType,
             value: newInputUrlPath
               ? ''
-              : `${newItemObj.path.project}/${newItemObj.path.artifact}`,
+              : `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}`,
             url: newInputUrlPath ?? ''
           }
         }
@@ -151,7 +160,7 @@ export const handleAddItem = (
     ...newJobData,
     [newItemObj.name]: isUrlPath
       ? newItemObj.path.pathType + newInputUrlPath
-      : `${newItemObj.path.pathType}${newItemObj.path.project}/${newItemObj.path.artifact}`
+      : `${newItemObj.path.pathType}${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}`
   })
 }
 
@@ -280,7 +289,18 @@ export const comboboxSelectList = [
   }
 ]
 
-export const typesPlaceholders = {
+export const storePathTypes = [
+  {
+    label: 'Artifacts',
+    id: 'artifacts'
+  },
+  {
+    label: 'Feature vectors',
+    id: 'feature-vectors'
+  }
+]
+
+export const pathPlaceholders = {
   [S3_INPUT_PATH_SCHEME]: 'bucket/path',
   [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
   [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
@@ -309,7 +329,7 @@ export const handleInputPathTypeChange = (
 
   inputsDispatch({
     type: inputsActions.SET_PATH_PLACEHOLDER,
-    payload: typesPlaceholders[pathType] || ''
+    payload: pathPlaceholders[pathType] || ''
   })
   inputsDispatch({
     type: inputsActions.SET_NEW_INPUT_URL_PATH,
@@ -319,8 +339,9 @@ export const handleInputPathTypeChange = (
     type: inputsActions.SET_NEW_INPUT_PATH,
     payload: {
       pathType: pathType,
+      storePathType: '',
       project: '',
-      artifact: ''
+      projectItem: ''
     }
   })
 }
@@ -341,9 +362,6 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
   }
 
   const pathItems = path.split('/')
-  const artifactIsEntered = inputsState.artifacts.find(
-    artifact => artifact.id === pathItems[1]
-  )
 
   if (path.length === 0 && inputsState.newInputDefaultPathProject.length > 0) {
     inputsDispatch({
@@ -352,34 +370,48 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
     })
   }
 
-  if (isNil(pathItems[1]) && inputsState.artifacts.length > 0) {
-    inputsDispatch({
-      type: inputsActions.SET_ARTIFACTS,
-      payload: []
-    })
-  }
+  if (isNil(pathItems[2])) {
+    if (inputsState.artifacts.length > 0) {
+      inputsDispatch({
+        type: inputsActions.SET_ARTIFACTS,
+        payload: []
+      })
+    }
 
-  if (
-    pathItems[0] !== inputsState.newInput.path.project ||
-    (!isNil(pathItems[1]) &&
-      pathItems[1] !== inputsState.newInput.path.artifact)
-  ) {
-    inputsDispatch({
-      type: inputsActions.SET_NEW_INPUT_PATH,
-      payload: {
-        ...inputsState.newInput.path,
-        project: pathItems[0],
-        artifact: pathItems[1] ?? inputsState.newInput.path.artifact
-      }
-    })
+    if (inputsState.featureVectors.length > 0) {
+      inputsDispatch({
+        type: inputsActions.SET_FEATURE_VECTORS,
+        payload: []
+      })
+    }
   }
 
   inputsDispatch({
-    type: inputsActions.SET_INPUT_PROJECT_PATH_ENTERED,
+    type: inputsActions.SET_NEW_INPUT_PATH,
+    payload: {
+      ...inputsState.newInput.path,
+      storePathType: pathItems[0] ?? inputsState.newInput.path.storePathType,
+      project: pathItems[1] ?? inputsState.newInput.path.project,
+      projectItem: pathItems[2] ?? inputsState.newInput.path.projectItem
+    }
+  })
+
+  const projectItems =
+    inputsState[pathItems[0] === 'artifacts' ? 'artifacts' : 'featureVectors']
+  const projectItemIsEntered = projectItems.find(
+    projectItem => projectItem.id === pathItems[2]
+  )
+
+  inputsDispatch({
+    type: inputsActions.SET_INPUT_STORE_PATH_TYPE_ENTERED,
     payload: typeof pathItems[1] === 'string'
   })
   inputsDispatch({
-    type: inputsActions.SET_INPUT_ARTIFACT_PATH_ENTERED,
-    payload: !!artifactIsEntered
+    type: inputsActions.SET_INPUT_PROJECT_PATH_ENTERED,
+    payload: typeof pathItems[2] === 'string'
+  })
+  inputsDispatch({
+    type: inputsActions.SET_INPUT_PROJECT_ITEM_PATH_ENTERED,
+    payload: Boolean(projectItemIsEntered)
   })
 }

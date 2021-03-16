@@ -7,9 +7,10 @@ import Combobox from '../../common/Combobox/Combobox'
 
 import {
   comboboxSelectList,
-  typesPlaceholders
+  pathPlaceholders
 } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import {
   applyEditButtonHandler,
   handleEditInputPath
@@ -103,7 +104,7 @@ const EditableDataInputsRow = ({
   const selectOnChangeComboboxHandler = path => {
     inputsDispatch({
       type: inputsActions.SET_PATH_PLACEHOLDER,
-      payload: typesPlaceholders[path] || ''
+      payload: pathPlaceholders[path] || ''
     })
     setSelectedDataInput({
       ...selectedDataInput,
@@ -147,6 +148,12 @@ const EditableDataInputsRow = ({
           comboboxClassName={comboboxClassNames}
           inputPlaceholder={inputsState.pathPlaceholder}
           matches={comboboxMatchesList}
+          maxSuggestedMatches={
+            inputsState.selectedDataInput.data.path.pathType ===
+            MLRUN_STORAGE_INPUT_PATH_SCHEME
+              ? 3
+              : 2
+          }
           inputDefaultValue={
             selectedDataInput.data.path.value || selectedDataInput.data.path.url
           }
@@ -159,6 +166,7 @@ const EditableDataInputsRow = ({
               setSelectedDataInput
             )
           }}
+          hideSearchInput={!inputsState.inputStorePathTypeEntered}
           selectDefaultValue={selectDefaultValue}
           selectDropdownList={comboboxSelectList}
           selectOnChange={path => selectOnChangeComboboxHandler(path)}

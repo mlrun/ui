@@ -92,16 +92,17 @@ export const JobsPanelDataInputsTable = ({
               comboboxClassName="input-row__item"
               inputPlaceholder={inputsState.pathPlaceholder}
               matches={comboboxMatchesList}
-              inputDefaultValue={
+              maxSuggestedMatches={
                 inputsState.newInput.path.pathType ===
-                  MLRUN_STORAGE_INPUT_PATH_SCHEME &&
-                inputsState.newInput.path.project.length === 0
-                  ? inputsState.newInputDefaultPathProject
-                  : ''
+                MLRUN_STORAGE_INPUT_PATH_SCHEME
+                  ? 3
+                  : 2
               }
+              inputDefaultValue=""
               inputOnChange={path => {
                 handlePathChange(path)
               }}
+              hideSearchInput={!inputsState.inputStorePathTypeEntered}
               selectDropdownList={comboboxSelectList}
               selectOnChange={path => {
                 handlePathTypeChange(path)
