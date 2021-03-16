@@ -321,7 +321,7 @@ const getParameterType = parameter => {
   return typeof parameter === 'string' && parameter.match(',')
     ? 'list'
     : typeof parameter === 'number' && parameter % 1 !== 0
-    ? 'int'
+    ? 'float'
     : parameterTypes[typeof parameter] ?? ''
 }
 

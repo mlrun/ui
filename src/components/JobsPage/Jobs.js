@@ -216,7 +216,10 @@ const Jobs = ({
   }
 
   const onEditJob = (event, postData) => {
-    editJob(postData, match.params.projectName)
+    editJob(
+      { scheduled_object: postData, cron_trigger: postData.schedule },
+      match.params.projectName
+    )
       .then(() => {
         removeNewJob()
 

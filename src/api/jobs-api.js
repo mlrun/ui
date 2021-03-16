@@ -3,7 +3,7 @@ import { mainHttpClient } from '../httpClient'
 export default {
   editJob: (postData, project) =>
     mainHttpClient.put(
-      `/projects/${project}/schedules/${postData.task.metadata.name}`,
+      `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
       postData
     ),
   filterByStatus: (project, state) =>
