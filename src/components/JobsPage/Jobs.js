@@ -227,12 +227,7 @@ const Jobs = ({
           `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
         )
         setEditableItem(null)
-        fetchJobs(
-          match.params.projectName,
-          stateFilter !== initialStateFilter && stateFilter,
-          event,
-          match.params.pageTab === SCHEDULE_TAB
-        )
+        refreshJobs()
       })
       .catch(error => {
         dispatch(editJobFailure(error.message))
