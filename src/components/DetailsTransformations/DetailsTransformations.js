@@ -154,6 +154,9 @@ const DetailsTransformations = ({ selectedItem }) => {
     setTimeout(() => {
       if (reactFlowInstance) {
         reactFlowInstance.fitView()
+        const { position, zoom } = reactFlowInstance.toObject()
+
+        reactFlowInstance.setTransform({ x: position[0], y: 50, zoom: zoom })
       }
     }, 100)
   }, [reactFlowInstance])
