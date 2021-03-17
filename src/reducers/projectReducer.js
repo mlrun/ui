@@ -122,7 +122,7 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case ADD_PROJECT_LABEL: {
+    case ADD_PROJECT_LABEL:
       return {
         ...state,
         project: {
@@ -138,7 +138,6 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
-    }
     case CHANGE_PROJECT_STATE_BEGIN:
       return {
         ...state,

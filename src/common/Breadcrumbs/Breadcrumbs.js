@@ -66,7 +66,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
   }, [handleCloseDropdown])
 
   useEffect(() => {
-    if (projectStore.projects.length === 0) {
+    if (projectStore.projects.length === 0 && projectsList.length === 0) {
       fetchProjects()
     }
   }, [fetchProjects, projectStore.projects.length, projectsList.length])
