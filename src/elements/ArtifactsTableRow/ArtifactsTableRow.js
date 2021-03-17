@@ -169,32 +169,34 @@ const ArtifactsTableRow = ({
         <>
           {Object.values(rowItem).map((value, i) => {
             return (
-              <TableCell
-                expandLink={Array.isArray(tableContent)}
-                handleExpandRow={handleExpandRow}
-                data={value}
-                item={content[index]}
-                key={Math.random() + i}
-                link={
-                  value.link === 'overview'
-                    ? `/projects/${
-                        match.params.projectName
-                      }/${pageData.page.toLowerCase()}${
-                        match.params.pageTab ? `/${match.params.pageTab}` : ''
-                      }/${rowItem.key.value}/${
-                        match.params.tab
-                          ? match.params.tab
-                          : `${artifactsData.detailsMenu[0]}`
-                      }`
-                    : value.link
-                }
-                match={match}
-                selectedItem={selectedItem}
-                selectItem={handleSelectItem}
-                selectedRowId={selectedRowId}
-                setSelectedRowId={setSelectedRowId}
-                withCheckbox={withCheckbox}
-              />
+              content[index] && (
+                <TableCell
+                  expandLink={Array.isArray(tableContent)}
+                  handleExpandRow={handleExpandRow}
+                  data={value}
+                  item={content[index]}
+                  key={Math.random() + i}
+                  link={
+                    value.link === 'overview'
+                      ? `/projects/${
+                          match.params.projectName
+                        }/${pageData.page.toLowerCase()}${
+                          match.params.pageTab ? `/${match.params.pageTab}` : ''
+                        }/${rowItem.key.value}/${
+                          match.params.tab
+                            ? match.params.tab
+                            : `${artifactsData.detailsMenu[0]}`
+                        }`
+                      : value.link
+                  }
+                  match={match}
+                  selectedItem={selectedItem}
+                  selectItem={handleSelectItem}
+                  selectedRowId={selectedRowId}
+                  setSelectedRowId={setSelectedRowId}
+                  withCheckbox={withCheckbox}
+                />
+              )
             )
           })}
           <div className="table-body__cell action_cell">
