@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import ChipForm from '../../components/ChipForm/ChipForm'
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 
@@ -71,9 +69,7 @@ const Chip = ({
             className="item-icon-close"
             onClick={() => handleRemoveChip(chipIndex)}
           >
-            <Tooltip template={<TextTooltipTemplate text="Close" />}>
-              <Close />
-            </Tooltip>
+            <Close />
           </button>
         )}
       </span>
