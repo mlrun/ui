@@ -4,6 +4,9 @@ import prettyBytes from 'pretty-bytes'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
 
@@ -70,7 +73,9 @@ const PreviewModal = ({ item }) => {
               )
             }}
           >
-            <Close />
+            <Tooltip template={<TextTooltipTemplate text="Close" />}>
+              <Close />
+            </Tooltip>
           </div>
         </div>
         <div className="item-artifacts__preview">

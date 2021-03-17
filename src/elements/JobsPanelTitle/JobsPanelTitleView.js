@@ -8,6 +8,8 @@ import Select from '../../common/Select/Select'
 import Input from '../../common/Input/Input'
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Button from '../../common/Button/Button'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -177,7 +179,9 @@ const JobsPanelTitleView = ({
         </div>
       )}
       <button onClick={() => closePanel({})} className="job-panel__btn_close">
-        <Close />
+        <Tooltip template={<TextTooltipTemplate text="Close" />}>
+          <Close />
+        </Tooltip>
       </button>
     </div>
   )
