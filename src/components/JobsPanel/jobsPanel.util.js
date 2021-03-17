@@ -265,6 +265,174 @@ export const generateTableData = (
   }
 }
 
+const generateDefaultParameters = parameters => {
+  return parameters.map(([key, value]) => ({
+    isChecked: true,
+    isDefault: true,
+    data: {
+      name: key ?? '',
+      valueType: getParameterType(value),
+      parameterType: 'Simple',
+      value: value
+    }
+  }))
+}
+
+const generateDefaultDataInputs = dataInputs => {
+  return dataInputs.map(([key, value]) => {
+    const inputPath = {
+      pathType: value?.replace(/:\/\/.*$/g, '://') ?? ''
+    }
+
+    if (
+      [
+        AZURE_STORAGE_INPUT_PATH_SCHEME,
+        GOOGLE_STORAGE_INPUT_PATH_SCHEME,
+        S3_INPUT_PATH_SCHEME,
+        V3IO_INPUT_PATH_SCHEME
+      ].includes(inputPath.pathType)
+    ) {
+      inputPath.url = value?.replace(/.*:\/\//g, '')
+      inputPath.value = ''
+    } else {
+      inputPath.value = value?.replace(/.*:\/\//g, '') ?? ''
+      inputPath.url = ''
+    }
+
+    return {
+      isDefault: true,
+      data: {
+        name: key,
+        path: {
+          ...inputPath
+        }
+      }
+    }
+  })
+}
+
+const parameterTypes = {
+  string: 'str',
+  number: 'int',
+  bool: 'bool'
+}
+
+const getParameterType = parameter => {
+  return typeof parameter === 'string' && parameter.match(',')
+    ? 'list'
+    : typeof parameter === 'number' && parameter % 1 !== 0
+    ? 'float'
+    : parameterTypes[typeof parameter] ?? ''
+}
+
+export const generateTableDataFromDefaultData = (
+  defaultData,
+  panelDispatch,
+  panelLimits,
+  panelRequests,
+  setNewJob,
+  setDefaultDataIsLoaded
+) => {
+  const parameters = generateDefaultParameters(
+    Object.entries(defaultData.task.spec.parameters)
+  )
+  const dataInputs = generateDefaultDataInputs(
+    Object.entries(defaultData.task.spec.inputs)
+  )
+  const { limits, requests } = defaultData.function.spec.resources
+  const secrets = defaultData.task.spec.secret_sources
+  const volumeMounts = defaultData.function.spec.volume_mounts.map(
+    volume_mounts => {
+      return {
+        data: {
+          name: volume_mounts?.name,
+          mountPath: volume_mounts?.mountPath
+        },
+        isDefault: true
+      }
+    }
+  )
+
+  if (
+    limits?.memory?.match(/[a-zA-Z]/) ||
+    requests?.memory?.match(/[a-zA-Z]/)
+  ) {
+    const limitsMemoryUnit = limits.memory.replace(/\d+/g, '') + 'B'
+    const requestsMemoryUnit = requests.memory.replace(/\d+/g, '') + 'B'
+
+    panelDispatch({
+      type: panelActions.SET_MEMORY_UNIT,
+      payload: limitsMemoryUnit || requestsMemoryUnit
+    })
+  } else if (limits?.memory?.length > 0 || requests?.memory?.length > 0) {
+    panelDispatch({
+      type: panelActions.SET_MEMORY_UNIT,
+      payload: 'Bytes'
+    })
+  }
+
+  if (limits?.cpu?.match(/m/) || requests?.cpu?.match(/m/)) {
+    panelDispatch({
+      type: panelActions.SET_CPU_UNIT,
+      payload: 'millicpu'
+    })
+  } else if (limits?.cpu?.length > 0 || requests?.cpu?.length > 0) {
+    panelDispatch({
+      type: panelActions.SET_CPU_UNIT,
+      payload: 'cpu'
+    })
+  }
+
+  panelDispatch({
+    type: panelActions.SET_TABLE_DATA,
+    payload: {
+      dataInputs,
+      parameters,
+      volume_mounts: volumeMounts,
+      volumes: defaultData.function.spec.volumes,
+      environmentVariables: defaultData.function.spec.env.map(env => ({
+        data: {
+          name: env.name,
+          value: env.value ?? ''
+        }
+      })),
+      secretSources: secrets
+    }
+  })
+  setNewJob({
+    inputs: parseDefaultDataInputsContent(dataInputs),
+    parameters: parseDefaultContent(parameters),
+    volume_mounts: volumeMounts.length
+      ? volumeMounts.map(volumeMounts => volumeMounts.data)
+      : [],
+    volumes: defaultData.function.spec.volumes,
+    environmentVariables: defaultData.function.spec.env,
+    secret_sources: secrets
+  })
+
+  if (limits) {
+    panelDispatch({
+      type: panelActions.SET_LIMITS,
+      payload: {
+        ...panelLimits,
+        ...limits
+      }
+    })
+  }
+
+  if (requests) {
+    panelDispatch({
+      type: panelActions.SET_REQUESTS,
+      payload: {
+        ...panelRequests,
+        ...requests
+      }
+    })
+  }
+
+  setDefaultDataIsLoaded(true)
+}
+
 export const generateRequestData = (
   jobsStore,
   cronString,
@@ -273,9 +441,12 @@ export const generateRequestData = (
   labels,
   match,
   selectedFunction,
-  isFunctionTemplate
+  isFunctionTemplate,
+  defaultFunc
 ) => {
-  const func = isFunctionTemplate
+  const func = defaultFunc
+    ? defaultFunc
+    : isFunctionTemplate
     ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
     : `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
   const resources = {

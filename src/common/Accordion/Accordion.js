@@ -5,6 +5,7 @@ import classnames from 'classnames'
 import './accordion.scss'
 
 const Accordion = ({
+  alwaysOpened,
   accordionClassName,
   children,
   closeOnBlur,
@@ -38,7 +39,7 @@ const Accordion = ({
   }, [accordionRef, handleOnBlur])
 
   const handleOpenAccordion = () => {
-    setOpen(!open)
+    !alwaysOpened && setOpen(state => !state)
   }
 
   const accordionClassNames = classnames(
@@ -75,12 +76,14 @@ const Accordion = ({
 }
 
 Accordion.defaultProps = {
+  alwaysOpened: false,
   closeOnBlur: null,
   openByDefault: false
 }
 
 Accordion.propTypes = {
   accordionClassName: PropTypes.string,
+  alwaysOpened: PropTypes.bool,
   closeOnBlur: PropTypes.func,
   icon: PropTypes.element,
   iconClassName: PropTypes.string,

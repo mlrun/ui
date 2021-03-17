@@ -1,6 +1,7 @@
 /*=========== JOBS =============*/
 
 export const AZURE_STORAGE_INPUT_PATH_SCHEME = 'az://'
+export const EDIT_JOB_FAILURE = 'EDIT_JOB_FAILURE'
 export const FETCH_JOB_LOGS_BEGIN = 'FETCH_JOB_LOGS_BEGIN'
 export const FETCH_JOB_LOGS_FAILURE = 'FETCH_JOB_LOGS_FAILURE'
 export const FETCH_JOB_LOGS_SUCCESS = 'FETCH_JOB_LOGS_SUCCESS'

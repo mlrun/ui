@@ -2,6 +2,7 @@ import React from 'react'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
+import { ReactComponent as Edit } from '../../images/edit.svg'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -113,7 +114,8 @@ export const tabs = [
 export const generatePageData = (
   scheduled,
   removeScheduledJob,
-  handleSubmitJob
+  handleSubmitJob,
+  setEditableItem
 ) => {
   let jobFilters = []
 
@@ -127,7 +129,8 @@ export const generatePageData = (
   }
   return {
     actionsMenu:
-      scheduled && generateActionsMenu(removeScheduledJob, handleSubmitJob),
+      scheduled &&
+      generateActionsMenu(removeScheduledJob, handleSubmitJob, setEditableItem),
     detailsMenu,
     filters: jobFilters,
     page,
@@ -136,7 +139,11 @@ export const generatePageData = (
     infoHeaders
   }
 }
-export const generateActionsMenu = (removeScheduledJob, handleSubmitJob) => [
+export const generateActionsMenu = (
+  removeScheduledJob,
+  handleSubmitJob,
+  setEditableItem
+) => [
   {
     label: 'Remove',
     icon: <Delete />,
@@ -146,5 +153,10 @@ export const generateActionsMenu = (removeScheduledJob, handleSubmitJob) => [
     label: 'Run now',
     icon: <Dropdown className="action_cell__run-icon" />,
     onClick: handleSubmitJob
+  },
+  {
+    label: 'Edit',
+    icon: <Edit />,
+    onClick: setEditableItem
   }
 ]

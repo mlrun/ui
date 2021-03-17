@@ -19,6 +19,7 @@ const JobsPanelTitleView = ({
   closePanel,
   currentFunctionInfo,
   editMode,
+  editModeEnabled,
   editTitle,
   handleFinishEdit,
   handleFunctionInfoChange,
@@ -62,17 +63,20 @@ const JobsPanelTitleView = ({
         )}
         <Accordion
           accordionClassName="job-panel__title-accordion"
+          alwaysOpened={!editModeEnabled}
           closeOnBlur={!isTitleValid() ? null : () => setEditTitle(false)}
           icon={
-            <Edit
-              onClick={() => {
-                setEditTitle(true)
-              }}
-            />
+            editModeEnabled ? (
+              <Edit
+                onClick={() => {
+                  setEditTitle(true)
+                }}
+              />
+            ) : null
           }
           iconClassName={accordionIconClassNames}
         >
-          {openScheduleJob ? (
+          {openScheduleJob || !editModeEnabled ? (
             <div className="job-panel__title-name">
               {currentFunctionInfo.name}
             </div>
@@ -136,7 +140,7 @@ const JobsPanelTitleView = ({
           )}
         </Accordion>
       </div>
-      {!openScheduleJob && (
+      {!openScheduleJob && versionOptions.length !== 0 && (
         <div className="job-panel__title-select-container">
           <Select
             floatingLabel
@@ -183,6 +187,7 @@ JobsPanelTitleView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   currentFunctionInfo: PropTypes.shape({}).isRequired,
   editMode: PropTypes.bool.isRequired,
+  editModeEnabled: PropTypes.bool.isRequired,
   editTitle: PropTypes.bool.isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   handleFunctionInfoChange: PropTypes.func.isRequired,
