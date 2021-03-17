@@ -101,7 +101,7 @@ const TableLinkCell = ({
               ? `${item?.name}-${item.metadata.name}`
               : item?.name
               ? item?.name
-              : item.key.value
+              : item?.key.value
           }}
           selectedId={selectedRowId}
         />
