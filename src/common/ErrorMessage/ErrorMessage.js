@@ -1,6 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
 import { ReactComponent as UnsuccessAlert } from '../../images/unsuccess_alert.svg'
 import { ReactComponent as Close } from '../../images/close.svg'
 
@@ -13,7 +16,9 @@ const ErrorMessage = ({ closeError, message }) => {
       {message}
       {closeError && (
         <button data-testid="close" onClick={closeError}>
-          <Close />
+          <Tooltip template={<TextTooltipTemplate text="Close" />}>
+            <Close />
+          </Tooltip>
         </button>
       )}
     </div>
