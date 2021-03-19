@@ -22,6 +22,7 @@ import Button from '../../common/Button/Button'
 const Jobs = ({
   editJob,
   editJobFailure,
+  appStore,
   fetchJobs,
   fetchProjectWorkflows,
   jobsStore,
@@ -49,6 +50,14 @@ const Jobs = ({
     })
 
     setConfirmData(null)
+  }
+
+  const handleMonitoring = item => {
+    let redirectUrl = appStore.frontendSpec.jobs_dashboard_url
+      .replace('{filter_name}', item ? 'uid' : 'project')
+      .replace('{filter_value}', item ? item.uid : match.params.projectName)
+
+    window.open(redirectUrl, '_blank')
   }
 
   const handleRunJob = job => {
@@ -97,9 +106,11 @@ const Jobs = ({
       match.params.pageTab === SCHEDULE_TAB,
       onRemoveScheduledJob,
       handleRunJob,
-      setEditableItem
+      setEditableItem,
+      handleMonitoring,
+      appStore.frontendSpec.jobs_dashboard_url
     ),
-    [match.params.pageTab]
+    [match.params.pageTab, appStore.frontendSpec.jobs_dashboard_url]
   )
 
   const refreshJobs = useCallback(
@@ -296,6 +307,10 @@ Jobs.propTypes = {
 }
 
 export default connect(
-  ({ jobsStore, workflowsStore }) => ({ jobsStore, workflowsStore }),
+  ({ appStore, jobsStore, workflowsStore }) => ({
+    appStore,
+    jobsStore,
+    workflowsStore
+  }),
   { ...jobsActions, ...projectActions, ...notificationActions }
 )(React.memo(Jobs))

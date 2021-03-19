@@ -1,3 +1,7 @@
+/*=========== APP =============*/
+
+export const FETCH_FRONTEND_SPEC_SUCCESS = 'FETCH_FRONTEND_SPEC_SUCCESS'
+
 /*=========== JOBS =============*/
 
 export const AZURE_STORAGE_INPUT_PATH_SCHEME = 'az://'
