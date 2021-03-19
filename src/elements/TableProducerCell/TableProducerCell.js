@@ -10,7 +10,7 @@ import { detailsMenu } from '../../components/JobsPage/jobsData'
 const TableProducerCell = ({ data, match }) => {
   return (
     <div className={`table-body__cell ${data.class}`}>
-      {data.value.uri && (
+      {data.value?.uri && (
         <Tooltip
           template={
             <ProducerTooltipTemplate

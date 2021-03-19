@@ -9,6 +9,7 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import artifactsAction from '../../actions/artifacts'
 import {
   checkTabIsValid,
+  fetchDataSetRowData,
   fetchFeatureRowData,
   fetchFeatureVectorRowData,
   generateDataSetsDetailsMenu,
@@ -31,6 +32,7 @@ import './featureStore.scss'
 
 const FeatureStore = ({
   artifactsStore,
+  fetchDataSet,
   fetchDataSets,
   fetchFeature,
   fetchFeatureSets,
@@ -39,6 +41,7 @@ const FeatureStore = ({
   fetchFeatures,
   history,
   match,
+  removeDataSet,
   removeDataSets,
   removeFeature,
   removeFeatureSets,
@@ -121,13 +124,25 @@ const FeatureStore = ({
     [artifactsStore.features.selectedRowData, removeFeature]
   )
 
+  const handleRemoveDataSet = useCallback(
+    dataSet => {
+      const newSelectedRowData = {
+        ...artifactsStore.dataSets.selectedRowData
+      }
+
+      delete newSelectedRowData[dataSet.db_key]
+
+      removeDataSet(newSelectedRowData)
+    },
+    [artifactsStore.dataSets.selectedRowData, removeDataSet]
+  )
+
   const handleRequestOnExpand = useCallback(
     async item => {
       if (match.params.pageTab === FEATURES_TAB) {
         await fetchFeatureRowData(
           fetchFeature,
           item,
-          match,
           setPageData,
           setYamlContent
         )
@@ -135,21 +150,24 @@ const FeatureStore = ({
         await fetchFeatureVectorRowData(
           fetchFeatureVector,
           item,
-          match,
+          setPageData,
+          setYamlContent
+        )
+      } else if (match.params.pageTab === DATASETS_TAB) {
+        await fetchDataSetRowData(
+          fetchDataSet,
+          item,
           setPageData,
           setYamlContent
         )
       }
     },
-    [fetchFeature, fetchFeatureVector, match]
+    [fetchDataSet, fetchFeature, fetchFeatureVector, match.params.pageTab]
   )
 
   const handleExpandRow = useCallback(
     (item, isCollapse) => {
-      if (
-        [FEATURE_VECTORS_TAB, FEATURES_TAB].includes(match.params.pageTab) &&
-        isCollapse
-      ) {
+      if (match.params.pageTab !== FEATURE_SETS_TAB && isCollapse) {
         setYamlContent(state => ({
           ...state,
           selectedRowData: []
@@ -189,7 +207,9 @@ const FeatureStore = ({
   useEffect(() => {
     if (
       match.params.pageTab === FEATURE_SETS_TAB ||
-      ([FEATURES_TAB, FEATURE_VECTORS_TAB].includes(match.params.pageTab) &&
+      ([FEATURES_TAB, FEATURE_VECTORS_TAB, DATASETS_TAB].includes(
+        match.params.pageTab
+      ) &&
         artifactsStore.filter.tag === 'latest')
     ) {
       setGroupFilter('name')
@@ -199,25 +219,31 @@ const FeatureStore = ({
   }, [match.params.pageTab, groupFilter.length, artifactsStore.filter])
 
   useEffect(() => {
-    setPageData(
-      generatePageData(
-        match.params.pageTab,
-        handleRequestOnExpand,
-        match.params.pageTab === FEATURE_VECTORS_TAB
-          ? handleRemoveFeatureVector
-          : handleRemoveFeature
-      )
-    )
+    setPageData(state => {
+      return {
+        ...state,
+        ...generatePageData(
+          match.params.pageTab,
+          handleRequestOnExpand,
+          match.params.pageTab === FEATURE_VECTORS_TAB
+            ? handleRemoveFeatureVector
+            : match.params.pageTab === FEATURES_TAB
+            ? handleRemoveFeature
+            : handleRemoveDataSet
+        )
+      }
+    })
   }, [
     handleRemoveFeatureVector,
     handleRequestOnExpand,
     handleRemoveFeature,
-    match.params.pageTab
+    match.params.pageTab,
+    handleRemoveDataSet
   ])
 
   useEffect(() => {
     navigateToDetailsPane(artifactsStore, history, match, setSelectedItem)
-  }, [artifactsStore.artifacts, history, artifactsStore, match])
+  }, [history, artifactsStore, match])
 
   useEffect(() => {
     checkTabIsValid(history, match, selectedItem)

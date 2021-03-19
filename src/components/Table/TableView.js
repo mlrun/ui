@@ -149,7 +149,11 @@ const TableView = ({
                     tableContent={group}
                   />
                 )
-              } else if (pageData.page === FEATURE_STORE_PAGE) {
+              } else if (
+                pageData.page === FEATURE_STORE_PAGE ||
+                pageData.page === FILES_PAGE ||
+                pageData.page === MODELS_PAGE
+              ) {
                 return (
                   <ArtifactsTableRow
                     actionsMenu={actionsMenu}

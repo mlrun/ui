@@ -14,6 +14,7 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import {
   ARTIFACTS_PAGE,
+  DATASETS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURES_TAB,
@@ -120,7 +121,7 @@ const Content = ({
     }
   }, [groupFilter, handleGroupByName, handleGroupByWorkflow, handleGroupByNone])
 
-  const toggleConvertToYaml = (item, subRow) => {
+  const toggleConvertToYaml = item => {
     if (convertedYaml.length > 0) {
       return setConvertedYaml('')
     }
@@ -145,18 +146,26 @@ const Content = ({
     let artifactJson = null
 
     if (
-      pageData.page === ARTIFACTS_PAGE ||
       pageData.page === FILES_PAGE ||
-      pageData.page === MODELS_PAGE
+      pageData.page === MODELS_PAGE ||
+      (pageData.page === FEATURE_STORE_PAGE &&
+        match.params.pageTab === DATASETS_TAB)
     ) {
-      artifactJson = yamlContent.filter(yamlContentItem =>
-        item.db_key
-          ? isEqual(yamlContentItem.db_key, item.db_key)
-          : isEqual(yamlContentItem.endpoint?.id, item.endpoint?.id)
-      )
+      const currentYamlContent =
+        yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
+      const key = item.db_key ? 'db_key' : 'key'
+
+      artifactJson = yamlContent[currentYamlContent].filter(yamlContentItem => {
+        return (
+          isEqual(yamlContentItem[key], item[key]) &&
+          isEqual(yamlContentItem.tag, item.tag) &&
+          isEqual(yamlContentItem.iter, item.iter)
+        )
+      })
     } else if (pageData.page === FEATURE_STORE_PAGE) {
       if (match.params.pageTab === FEATURES_TAB) {
-        const currentYamlContent = subRow ? 'selectedRowData' : 'allData'
+        const currentYamlContent =
+          yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
 
         artifactJson = yamlContent[currentYamlContent].filter(
           yamlContentItem => {

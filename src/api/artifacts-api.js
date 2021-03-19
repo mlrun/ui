@@ -5,43 +5,26 @@ import {
   FEATURES_TAB
 } from '../constants'
 
-const fetchArtifacts = (item, path) => {
+const fetchArtifacts = (item, path, config, withLatestTag) => {
   const params = {}
 
   if (item?.labels) {
     params.label = item.labels?.split(',')
   }
 
-  if (item?.tag && !/latest/i.test(item.tag)) {
-    params.tag = item.tag
+  if (item?.tag) {
+    if (withLatestTag) {
+      params.tag = item.tag
+    } else if (!/latest/i.test(item.tag)) {
+      params.tag = item.tag
+    }
   }
 
   if (item?.name) {
     params.name = item.name
   }
 
-  return mainHttpClient.get(path, { params })
-}
-
-const fetchFeatureStoreData = (item, tab, config) => {
-  const params = {}
-
-  if (item?.labels) {
-    params.label = item.labels?.split(',')
-  }
-
-  if (item?.tag && !/latest/i.test(item.tag)) {
-    params.tag = item.tag
-  }
-
-  if (item?.name) {
-    params.name = item.name
-  }
-
-  return mainHttpClient.get(`/projects/${item.project}/${tab}`, {
-    ...config,
-    params
-  })
+  return mainHttpClient.get(path, { ...config, params })
 }
 
 export default {
@@ -61,47 +44,57 @@ export default {
   getArtifacts: item => {
     return fetchArtifacts(item, `/artifacts?project=${item.project}`)
   },
+  getDataSet: item => {
+    return fetchArtifacts(
+      item,
+      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
+    )
+  },
   getDataSets: item => {
     return fetchArtifacts(
       item,
-      `/artifacts?project=${item.project}&category=dataset`
+      `/artifacts?project=${item.project}&category=dataset`,
+      {},
+      true
     )
   },
   getFeatureSets: (item, config) => {
-    return fetchFeatureStoreData(item, FEATURE_SETS_TAB, config)
+    return fetchArtifacts(
+      item,
+      `/projects/${item.project}/${FEATURE_SETS_TAB}`,
+      config
+    )
   },
   getFeatureVector: (featureVector, project) =>
     mainHttpClient.get(
       `/projects/${project}/feature-vectors?name=${featureVector}`
     ),
   getFeatureVectors: item => {
-    return fetchFeatureStoreData(item, FEATURE_VECTORS_TAB)
+    return fetchArtifacts(
+      item,
+      `/projects/${item.project}/${FEATURE_VECTORS_TAB}`
+    )
   },
   getFeature: (project, feature) =>
     mainHttpClient.get(`/projects/${project}/features?name=${feature}`),
-  getFeatures: item => {
-    const params = {}
-
-    if (item?.labels) {
-      params.label = item.labels?.split(',')
-    }
-
-    if (item?.tag) {
-      params.tag = item.tag
-    }
-
-    if (item?.name) {
-      params.name = item.name
-    }
-
-    return mainHttpClient.get(`/projects/${item.project}/${FEATURES_TAB}`, {
-      params
-    })
+  getFeatures: item =>
+    fetchArtifacts(item, `/projects/${item.project}/${FEATURES_TAB}`, {}, true),
+  getFile: item => {
+    return fetchArtifacts(
+      item,
+      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
+    )
   },
   getFiles: item => {
     return fetchArtifacts(
       item,
       `/artifacts?project=${item.project}&category=other`
+    )
+  },
+  getModel: item => {
+    return fetchArtifacts(
+      item,
+      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
     )
   },
   getModelEndpoints: item => {

@@ -5,7 +5,7 @@ import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
 
 import './tableActionsMenu.scss'
 
-const TableActionsMenu = ({ item, menu, subRow, time }) => {
+const TableActionsMenu = ({ item, menu, time }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   let idTimeout = null
 
@@ -48,7 +48,7 @@ const TableActionsMenu = ({ item, menu, subRow, time }) => {
                   data-testid="actions-menu-item"
                   className="table-actions-container__option"
                   onClick={() => {
-                    menuItem.onClick(item, subRow)
+                    menuItem.onClick(item)
                   }}
                   key={menuItem.label}
                 >

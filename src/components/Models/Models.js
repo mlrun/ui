@@ -15,13 +15,17 @@ import {
 } from './models.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { MODEL_ENDPOINTS_TAB, MODELS_TAB } from '../../constants'
+import { generateArtifacts } from '../../utils/generateArtifacts'
+import { filterArtifacts } from '../../utils/filterArtifacts'
 
 const Models = ({
   artifactsStore,
+  fetchModel,
   fetchModelEndpoints,
   fetchModels,
   history,
   match,
+  removeModel,
   removeModels,
   setArtifactFilter,
   getModelsEndpoints
@@ -29,7 +33,11 @@ const Models = ({
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
-  const [yamlContent, setYamlContent] = useState([])
+  const [groupFilter, setGroupFilter] = useState('')
+  const [yamlContent, setYamlContent] = useState({
+    allData: [],
+    selectedRowData: []
+  })
   const [pageData, setPageData] = useState({
     detailsMenu: [],
     filters: [],
@@ -50,32 +58,125 @@ const Models = ({
 
       if (data.content) {
         setContent(data.content)
-        setYamlContent(data.yamlContent)
+        setYamlContent(state => ({
+          ...state,
+          allData: data.yamlContent
+        }))
       }
 
-      return data.content
+      return data.yamlContent
     },
     [fetchModelEndpoints, fetchModels, match.params.pageTab]
   )
 
+  const handleRemoveModel = useCallback(
+    model => {
+      const newSelectedRowData = {
+        ...artifactsStore.models.selectedRowData
+      }
+
+      delete newSelectedRowData[model.db_key]
+
+      removeModel(newSelectedRowData)
+    },
+    [artifactsStore.models.selectedRowData, removeModel]
+  )
+
+  const handleRequestOnExpand = useCallback(
+    async item => {
+      setPageData(state => ({
+        ...state,
+        selectedRowData: {
+          ...state.selectedRowData,
+          [item.db_key]: {
+            loading: true
+          }
+        }
+      }))
+
+      const result = await fetchModel(item).catch(error => {
+        setPageData(state => ({
+          ...state,
+          selectedRowData: {
+            ...state.selectedRowData,
+            [item.db_key]: {
+              ...state.selectedRowData[item.db_key],
+              error,
+              loading: false
+            }
+          }
+        }))
+      })
+
+      if (result?.length > 0) {
+        setYamlContent(state => ({
+          ...state,
+          selectedRowData: result
+        }))
+        setPageData(state => {
+          return {
+            ...state,
+            selectedRowData: {
+              ...state.selectedRowData,
+              [item.db_key]: {
+                content: [...generateArtifacts(filterArtifacts(result))],
+                error: null,
+                loading: false
+              }
+            }
+          }
+        })
+      }
+    },
+    [fetchModel]
+  )
+
+  const handleExpandRow = useCallback((item, isCollapse) => {
+    if (isCollapse) {
+      setYamlContent(state => ({
+        ...state,
+        selectedRowData: []
+      }))
+    }
+  }, [])
+
   useEffect(() => {
-    fetchData({ project: match.params.projectName })
+    fetchData({ project: match.params.projectName, onEntering: true })
 
     return () => {
       setContent([])
       removeModels()
       setSelectedModel({})
+      setYamlContent({
+        allData: [],
+        selectedRowData: []
+      })
     }
   }, [fetchData, getModelsEndpoints, match.params.projectName, removeModels])
 
   useEffect(() => {
-    setPageData(generatePageData(match.params.pageTab))
-  }, [match.params.pageTab])
+    setPageData(state => ({
+      ...state,
+      ...generatePageData(
+        match.params.pageTab,
+        handleRequestOnExpand,
+        handleRemoveModel
+      )
+    }))
+  }, [handleRemoveModel, handleRequestOnExpand, match.params.pageTab])
+
+  useEffect(() => {
+    if (artifactsStore.filter.tag === 'latest') {
+      setGroupFilter('name')
+    } else if (groupFilter.length > 0) {
+      setGroupFilter('')
+    }
+  }, [match.params.pageTab, groupFilter.length, artifactsStore.filter])
 
   useEffect(() => {
     if (
       match.params.name &&
-      (artifactsStore.models.length > 0 ||
+      (artifactsStore.models.allData.length > 0 ||
         artifactsStore.modelEndpoints.length > 0)
     ) {
       const { name } = match.params
@@ -104,10 +205,10 @@ const Models = ({
     match.params,
     artifactsStore.artifacts,
     history,
-    artifactsStore.models,
     artifactsStore.modelEndpoints.length,
     artifactsStore.modelEndpoints,
-    match
+    match,
+    artifactsStore.models
   ])
 
   const handleModelTreeFilterChange = useCallback(
@@ -133,6 +234,8 @@ const Models = ({
       {artifactsStore.loading && <Loader />}
       <Content
         content={content}
+        expandRow={handleExpandRow}
+        groupFilter={groupFilter}
         handleArtifactFilterTree={handleModelTreeFilterChange}
         handleCancel={() => setSelectedModel({})}
         handleSelectItem={item => setSelectedModel({ item })}
