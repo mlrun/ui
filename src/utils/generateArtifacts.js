@@ -41,5 +41,5 @@ export const generateArtifacts = artifacts =>
 
         return generatedArtifacts
       })
-      .filter(generatedArtifact => !!generatedArtifact)
+      .filter(generatedArtifact => Boolean(generatedArtifact))
   )

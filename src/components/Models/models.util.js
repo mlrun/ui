@@ -194,14 +194,7 @@ export const checkForSelectedModel = (
   modelName,
   setSelectedModel
 ) => {
-  let artifacts = []
-
-  if (models.selectedRowData.content[modelName]) {
-    artifacts = models.selectedRowData.content[modelName]
-  } else {
-    artifacts = models.allData
-  }
-
+  const artifacts = models.selectedRowData.content[modelName] || models.allData
   const [searchItem] = artifacts.filter(item => item.db_key === modelName)
 
   if (!searchItem) {

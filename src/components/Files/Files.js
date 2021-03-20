@@ -82,6 +82,8 @@ const Files = ({
 
   const handleRequestOnExpand = useCallback(
     async item => {
+      let result = []
+
       setPageData(state => ({
         ...state,
         selectedRowData: {
@@ -92,7 +94,9 @@ const Files = ({
         }
       }))
 
-      const result = await fetchFile(item).catch(error => {
+      try {
+        result = await fetchFile(item)
+      } catch (error) {
         setPageData(state => ({
           ...state,
           selectedRowData: {
@@ -104,7 +108,7 @@ const Files = ({
             }
           }
         }))
-      })
+      }
 
       if (result?.length > 0) {
         setYamlContent(state => ({
@@ -172,13 +176,10 @@ const Files = ({
   useEffect(() => {
     if (match.params.name) {
       const { name } = match.params
-      let artifacts = []
+      const artifacts =
+        artifactsStore.files.selectedRowData.content[name] ||
+        artifactsStore.files.allData
 
-      if (artifactsStore.files.selectedRowData.content[name]) {
-        artifacts = artifactsStore.files.selectedRowData.content[name]
-      } else {
-        artifacts = artifactsStore.files.allData
-      }
       if (artifacts.length !== 0) {
         const [searchItem] = artifacts.filter(item => item.db_key === name)
 

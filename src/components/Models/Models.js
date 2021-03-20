@@ -84,6 +84,8 @@ const Models = ({
 
   const handleRequestOnExpand = useCallback(
     async item => {
+      let result = []
+
       setPageData(state => ({
         ...state,
         selectedRowData: {
@@ -94,7 +96,9 @@ const Models = ({
         }
       }))
 
-      const result = await fetchModel(item).catch(error => {
+      try {
+        result = await fetchModel(item)
+      } catch (error) {
         setPageData(state => ({
           ...state,
           selectedRowData: {
@@ -106,7 +110,7 @@ const Models = ({
             }
           }
         }))
-      })
+      }
 
       if (result?.length > 0) {
         setYamlContent(state => ({

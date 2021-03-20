@@ -603,6 +603,8 @@ export const fetchDataSetRowData = async (
   setPageData,
   setYamlContent
 ) => {
+  let result = []
+
   setPageData(state => ({
     ...state,
     selectedRowData: {
@@ -613,7 +615,9 @@ export const fetchDataSetRowData = async (
     }
   }))
 
-  const result = await fetchDataSet(item).catch(error => {
+  try {
+    result = await fetchDataSet(item)
+  } catch (error) {
     setPageData(state => ({
       ...state,
       selectedRowData: {
@@ -625,7 +629,7 @@ export const fetchDataSetRowData = async (
         }
       }
     }))
-  })
+  }
 
   if (result?.length > 0) {
     setYamlContent(state => ({

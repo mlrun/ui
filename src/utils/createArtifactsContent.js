@@ -111,6 +111,9 @@ const createModelsRowData = artifact => {
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
+      },
+      rowExpanded: {
+        link: false
       }
     },
     labels: {
@@ -166,6 +169,9 @@ const createFilesRowData = artifact => {
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
+      },
+      rowExpanded: {
+        link: false
       }
     },
     kind: {
@@ -287,6 +293,9 @@ const createDatasetsRowData = (artifact, project) => {
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
+      },
+      rowExpanded: {
+        link: false
       }
     },
     labels: {

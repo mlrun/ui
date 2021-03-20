@@ -90,7 +90,7 @@ const ArtifactsTableRow = ({
                   selectedItem={selectedItem}
                   expandLink={index === 0}
                   firstRow={index === 0}
-                  link={data.link && data.link}
+                  link={data.rowExpanded.link ? data.link && data.link : false}
                   selectedRowId={selectedRowId}
                   setSelectedRowId={setSelectedRowId}
                   withCheckbox={withCheckbox}

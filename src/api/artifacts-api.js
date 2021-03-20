@@ -12,12 +12,8 @@ const fetchArtifacts = (item, path, config, withLatestTag) => {
     params.label = item.labels?.split(',')
   }
 
-  if (item?.tag) {
-    if (withLatestTag) {
-      params.tag = item.tag
-    } else if (!/latest/i.test(item.tag)) {
-      params.tag = item.tag
-    }
+  if (item?.tag && (withLatestTag || !/latest/i.test(item.tag))) {
+    params.tag = item.tag
   }
 
   if (item?.name) {
@@ -88,7 +84,9 @@ export default {
   getFiles: item => {
     return fetchArtifacts(
       item,
-      `/artifacts?project=${item.project}&category=other`
+      `/artifacts?project=${item.project}&category=other`,
+      {},
+      true
     )
   },
   getModel: item => {
@@ -111,7 +109,9 @@ export default {
   getModels: item => {
     return fetchArtifacts(
       item,
-      `/artifacts?project=${item.project}&category=model`
+      `/artifacts?project=${item.project}&category=model`,
+      {},
+      true
     )
   },
   registerArtifact: (project, data) =>

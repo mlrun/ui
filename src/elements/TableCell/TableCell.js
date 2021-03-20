@@ -63,7 +63,18 @@ const TableCell = ({
             />
           </Tooltip>
         )}
-        <span className="cell_name">{data && data.value}</span>
+        <span className="cell_name data-ellipsis">
+          {data && (
+            <Tooltip
+              className="text_small"
+              template={
+                <TextTooltipTemplate text={data.tooltip || data.value} />
+              }
+            >
+              {data.value}
+            </Tooltip>
+          )}
+        </span>
         <Arrow
           onClick={e => handleExpandRow(e, item)}
           className="expand-arrow"
