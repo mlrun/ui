@@ -115,9 +115,18 @@ export const generatePageData = (
   scheduled,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem
+  setEditableItem,
+  handleMonitoring,
+  jobsDashboardUrl
 ) => {
   let jobFilters = []
+  let filterMenuActionButton = {
+    label: 'Resource monitoring',
+    tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
+    variant: 'tertiary',
+    disabled: !jobsDashboardUrl,
+    onClick: event => handleMonitoring()
+  }
 
   if (scheduled) {
     jobFilters = [
@@ -128,10 +137,16 @@ export const generatePageData = (
     jobFilters = [...filters]
   }
   return {
-    actionsMenu:
-      scheduled &&
-      generateActionsMenu(removeScheduledJob, handleSubmitJob, setEditableItem),
+    actionsMenu: generateActionsMenu(
+      scheduled,
+      removeScheduledJob,
+      handleSubmitJob,
+      setEditableItem,
+      handleMonitoring,
+      jobsDashboardUrl
+    ),
     detailsMenu,
+    filterMenuActionButton: !scheduled && filterMenuActionButton,
     filters: jobFilters,
     page,
     tableHeaders: generateTableHeaders(scheduled),
@@ -140,23 +155,37 @@ export const generatePageData = (
   }
 }
 export const generateActionsMenu = (
+  scheduled,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem
-) => [
-  {
-    label: 'Remove',
-    icon: <Delete />,
-    onClick: removeScheduledJob
-  },
-  {
-    label: 'Run now',
-    icon: <Dropdown className="action_cell__run-icon" />,
-    onClick: handleSubmitJob
-  },
-  {
-    label: 'Edit',
-    icon: <Edit />,
-    onClick: setEditableItem
-  }
-]
+  setEditableItem,
+  handleMonitoring,
+  jobsDashboardUrl
+) => {
+  return scheduled
+    ? [
+        {
+          label: 'Remove',
+          icon: <Delete />,
+          onClick: removeScheduledJob
+        },
+        {
+          label: 'Run now',
+          icon: <Dropdown className="action_cell__run-icon" />,
+          onClick: handleSubmitJob
+        },
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: setEditableItem
+        }
+      ]
+    : [
+        {
+          label: 'Monitoring',
+          tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
+          disabled: !jobsDashboardUrl,
+          onClick: handleMonitoring
+        }
+      ]
+}

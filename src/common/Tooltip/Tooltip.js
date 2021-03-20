@@ -5,7 +5,7 @@ import classnames from 'classnames'
 
 import './tooltip.scss'
 
-const Tooltip = ({ children, template, className, textShow = false }) => {
+const Tooltip = ({ children, className, hidden, template, textShow }) => {
   const [show, setShow] = useState(false)
   const [style, setStyle] = useState({})
   const tooltipClassNames = classnames(
@@ -39,16 +39,18 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
   const handleMouseEnter = useCallback(
     event => {
       const [child] = parentRef.current.childNodes
-      let show = textShow
-        ? true
-        : !child
-        ? false
-        : child.nodeType !== Node.TEXT_NODE ||
-          /*
+      let show =
+        !hidden &&
+        (textShow
+          ? true
+          : !child
+          ? false
+          : child.nodeType !== Node.TEXT_NODE ||
+            /*
           If the child node is a text node and the text of the child node inside the container is greater than the width of the container, then show tooltip.
         */
-          (child.nodeType === Node.TEXT_NODE &&
-            parentRef.current.scrollWidth > parentRef.current.offsetWidth)
+            (child.nodeType === Node.TEXT_NODE &&
+              parentRef.current.scrollWidth > parentRef.current.offsetWidth))
       if (show) {
         setShow(true)
         let { height, top, bottom } = parentRef?.current
@@ -79,7 +81,7 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
         }
       }
     },
-    [textShow]
+    [hidden, textShow]
   )
 
   useEffect(() => {
@@ -131,9 +133,16 @@ const Tooltip = ({ children, template, className, textShow = false }) => {
   )
 }
 
+Tooltip.defaultProps = {
+  hidden: false,
+  textShow: false
+}
+
 Tooltip.propTypes = {
+  className: PropTypes.string,
+  hidden: PropTypes.bool,
   template: PropTypes.element.isRequired,
-  className: PropTypes.string
+  textShow: PropTypes.bool
 }
 
 export default React.memo(Tooltip)

@@ -231,7 +231,11 @@ export const generatePageData = (
   } else if (pageTab === FEATURES_TAB) {
     data.filters = featuresFilters
     data.tableHeaders = featuresTableHeaders
-    data.filterMenuActionButtonTitle = 'Add to feature vector'
+    data.filterMenuActionButton = {
+      label: 'Add to feature vector',
+      variant: 'secondary',
+      onClick: event => {}
+    }
     data.handleRequestOnExpand = handleRequestOnExpand
     data.mainRowItemsCount = 2
   } else if (pageTab === FEATURE_VECTORS_TAB) {

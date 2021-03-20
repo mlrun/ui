@@ -8,7 +8,8 @@ export default {
 }
 
 const commonArgs = {
-  disabled: false
+  disabled: false,
+  tooltip: ''
 }
 
 const Template = args => <Button {...args} />
