@@ -18,9 +18,15 @@ import { getFormatTime } from '../../utils'
 
 import './scheduleJob.scss'
 
-const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
+const ScheduleJob = ({
+  defaultCron,
+  handleEditJob,
+  handleRunJob,
+  match,
+  setOpenScheduleJob
+}) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
-  const [cron, setCron] = useState('10 * * * *')
+  const [cron, setCron] = useState(defaultCron || '10 * * * *')
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [isRecurring, setIsRecurring] = useState('recurring')
@@ -73,10 +79,15 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
 
   const onSchedule = useCallback(
     event => {
-      handleRunJob(event, cron)
+      if (defaultCron) {
+        handleEditJob(event, cron)
+      } else {
+        handleRunJob(event, cron)
+      }
+
       setOpenScheduleJob(false)
     },
-    [cron, handleRunJob, setOpenScheduleJob]
+    [cron, defaultCron, handleEditJob, handleRunJob, setOpenScheduleJob]
   )
 
   useEffect(() => {
@@ -132,6 +143,75 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
     recurringState.scheduleRepeat.minute
   ])
 
+  useEffect(() => {
+    if (defaultCron) {
+      let cron = defaultCron.split(' ')
+
+      if (cron[4] !== '*') {
+        const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION,
+          payload: 'week'
+        })
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_DAYS_OF_WEEK,
+          payload: cron[4].split(',').map(day => weekDays[day])
+        })
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_WEEK_TIME,
+          payload: `${cron[1] >= 10 ? cron[1] : `0${cron[1]}`}:${
+            cron[0] >= 10 ? cron[0] : `0${cron[0]}`
+          }`
+        })
+      } else if (cron[2] !== '*') {
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION,
+          payload: 'month'
+        })
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_MONTH_TIME,
+          payload: `${cron[1] >= 10 ? cron[1] : `0${cron[1]}`}:${
+            cron[0] >= 10 ? cron[0] : `0${cron[0]}`
+          }`
+        })
+      } else if (cron[1] !== '*' && cron[1].match('/')) {
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION,
+          payload: 'hour'
+        })
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_MINUTE,
+          payload: 0
+        })
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_HOUR,
+          payload: Number(cron[1].replace(/.*\*\//g, ''))
+        })
+      } else if (cron[1] !== '*') {
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION,
+          payload: 'day'
+        })
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_DAY_TIME,
+          payload: `${cron[1] >= 10 ? cron[1] : `0${cron[1]}`}:${
+            cron[0] >= 10 ? cron[0] : `0${cron[0]}`
+          }`
+        })
+      } else {
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION,
+          payload: 'minute'
+        })
+        recurringDispatch({
+          type: scheduleActionType.SCHEDULE_REPEAT_MINUTE,
+          payload: Number(cron[0].replace(/.*\*\//g, ''))
+        })
+      }
+    }
+  }, [defaultCron])
+
   return (
     <ScheduleJobView
       activeTab={activeTab}
@@ -156,7 +236,14 @@ const ScheduleJob = ({ handleRunJob, match, setOpenScheduleJob }) => {
   )
 }
 
+ScheduleJob.defaultProps = {
+  defaultCron: '',
+  handleEditJob: () => {}
+}
+
 ScheduleJob.propTypes = {
+  defaultCron: PropTypes.string,
+  handleEditJob: PropTypes.func,
   handleRunJob: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired

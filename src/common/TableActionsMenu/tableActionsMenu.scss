@@ -28,5 +28,27 @@
     &:hover {
       background-color: $alabaster;
     }
+
+    &_disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &__icon {
+    display: none;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+
+    svg {
+      path:first-child {
+        fill: $topaz;
+      }
+    }
+
+    &_visible {
+      display: flex;
+    }
   }
 }

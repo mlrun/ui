@@ -279,7 +279,7 @@ const Content = ({
         )}
         <div className="content__action-bar">
           <FilterMenu
-            actionButtonTitle={pageData.filterMenuActionButtonTitle}
+            actionButton={pageData.filterMenuActionButton}
             expand={expand}
             filters={pageData.filters}
             groupFilter={pageData.handleRequestOnExpand ? null : groupFilter}

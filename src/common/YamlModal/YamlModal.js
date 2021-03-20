@@ -3,6 +3,9 @@ import Prism from 'prismjs'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
 import { ReactComponent as Close } from '../../images/close.svg'
 
 import './yamlmodal.scss'
@@ -21,7 +24,9 @@ const YamlModal = ({ convertedYaml, toggleConvertToYaml }) => {
       <pre>
         <code dangerouslySetInnerHTML={{ __html: html }} />
         <button onClick={toggleConvertToYaml}>
-          <Close />
+          <Tooltip template={<TextTooltipTemplate text="Close" />}>
+            <Close />
+          </Tooltip>
         </button>
       </pre>
     </div>

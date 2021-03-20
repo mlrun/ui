@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import jobsActions from '../../actions/jobs'
@@ -16,15 +16,20 @@ import { SCHEDULE_TAB } from '../../constants'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import JobsPanel from '../JobsPanel/JobsPanel'
 import Button from '../../common/Button/Button'
 
 const Jobs = ({
+  editJob,
+  editJobFailure,
+  appStore,
   fetchJobs,
   fetchProjectWorkflows,
   jobsStore,
   handleRunScheduledJob,
   history,
   match,
+  removeNewJob,
   removeScheduledJob,
   setLoading,
   setNotification,
@@ -35,6 +40,9 @@ const Jobs = ({
   const [selectedJob, setSelectedJob] = useState({})
   const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const [groupFilter, setGroupFilter] = useState(initialGroupFilter)
+  const [editableItem, setEditableItem] = useState(null)
+
+  const dispatch = useDispatch()
 
   const handleRemoveScheduledJob = schedule => {
     removeScheduledJob(match.params.projectName, schedule.name).then(() => {
@@ -42,6 +50,14 @@ const Jobs = ({
     })
 
     setConfirmData(null)
+  }
+
+  const handleMonitoring = item => {
+    let redirectUrl = appStore.frontendSpec.jobs_dashboard_url
+      .replace('{filter_name}', item ? 'uid' : 'project')
+      .replace('{filter_value}', item ? item.uid : match.params.projectName)
+
+    window.open(redirectUrl, '_blank')
   }
 
   const handleRunJob = job => {
@@ -89,9 +105,12 @@ const Jobs = ({
     generatePageData(
       match.params.pageTab === SCHEDULE_TAB,
       onRemoveScheduledJob,
-      handleRunJob
+      handleRunJob,
+      setEditableItem,
+      handleMonitoring,
+      appStore.frontendSpec.jobs_dashboard_url
     ),
-    [match.params.pageTab]
+    [match.params.pageTab, appStore.frontendSpec.jobs_dashboard_url]
   )
 
   const refreshJobs = useCallback(
@@ -207,6 +226,25 @@ const Jobs = ({
     setStateFilter(id || initialStateFilter)
   }
 
+  const onEditJob = (event, postData) => {
+    editJob(
+      { scheduled_object: postData, cron_trigger: postData.schedule },
+      match.params.projectName
+    )
+      .then(() => {
+        removeNewJob()
+
+        history.push(
+          `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
+        )
+        setEditableItem(null)
+        refreshJobs()
+      })
+      .catch(error => {
+        dispatch(editJobFailure(error.message))
+      })
+  }
+
   return (
     <>
       {confirmData && (
@@ -247,6 +285,18 @@ const Jobs = ({
         stateFilter={stateFilter}
         yamlContent={jobsStore.jobs}
       />
+      {editableItem && (
+        <JobsPanel
+          closePanel={() => {
+            setEditableItem(null)
+            removeNewJob()
+          }}
+          defaultData={editableItem.scheduled_object}
+          match={match}
+          onEditJob={onEditJob}
+          project={match.params.projectName}
+        />
+      )}
     </>
   )
 }
@@ -257,6 +307,10 @@ Jobs.propTypes = {
 }
 
 export default connect(
-  ({ jobsStore, workflowsStore }) => ({ jobsStore, workflowsStore }),
+  ({ appStore, jobsStore, workflowsStore }) => ({
+    appStore,
+    jobsStore,
+    workflowsStore
+  }),
   { ...jobsActions, ...projectActions, ...notificationActions }
 )(React.memo(Jobs))

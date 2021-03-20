@@ -17,7 +17,9 @@ import { ReactComponent as Run } from '../../images/run.svg'
 
 const JobsPanelView = ({
   closePanel,
+  defaultData,
   functionData,
+  handleEditJob,
   handleRunJob,
   isTitleValid,
   jobsStore,
@@ -40,6 +42,7 @@ const JobsPanelView = ({
         {loading && <Loader />}
         <JobsPanelTitle
           closePanel={closePanel}
+          editModeEnabled={!defaultData}
           functionData={functionData}
           isTitleValid={isTitleValid}
           match={match}
@@ -122,19 +125,29 @@ const JobsPanelView = ({
                 className="pop-up-dialog__btn_cancel"
                 onClick={() => isTitleValid() && setOpenScheduleJob(true)}
               />
-              <Button
-                variant="secondary"
-                label={
-                  <>
-                    <Run /> <span> Run now </span>
-                  </>
-                }
-                onClick={() => isTitleValid() && handleRunJob()}
-              />
+              {defaultData ? (
+                <Button
+                  variant="secondary"
+                  label="Save"
+                  onClick={event => handleEditJob(event, defaultData.schedule)}
+                />
+              ) : (
+                <Button
+                  variant="secondary"
+                  label={
+                    <>
+                      <Run /> <span> Run now </span>
+                    </>
+                  }
+                  onClick={() => isTitleValid() && handleRunJob()}
+                />
+              )}
             </div>
           </div>
         ) : (
           <ScheduleJob
+            defaultCron={defaultData?.schedule}
+            handleEditJob={handleEditJob}
             handleRunJob={handleRunJob}
             match={match}
             setOpenScheduleJob={setOpenScheduleJob}
@@ -145,9 +158,15 @@ const JobsPanelView = ({
   )
 }
 
+JobsPanelView.defaultProps = {
+  defaultData: null
+}
+
 JobsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
+  defaultData: PropTypes.shape({}),
   functionData: PropTypes.shape({}).isRequired,
+  handleEditJob: PropTypes.func.isRequired,
   handleRunJob: PropTypes.func.isRequired,
   jobsStore: PropTypes.shape({}).isRequired,
   loading: PropTypes.bool.isRequired,

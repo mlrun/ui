@@ -2,6 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
 import { ReactComponent as Close } from '../../images/close.svg'
 
 import './popUpDialog.scss'
@@ -26,7 +29,9 @@ const PopUpDialog = ({ children, className, closePopUp, headerText }) => {
             </div>
           )}
           <div className="pop-up-dialog__header-close">
-            <Close data-testid="pop-up-close-btn" onClick={closePopUp} />
+            <Tooltip template={<TextTooltipTemplate text="Close" />}>
+              <Close data-testid="pop-up-close-btn" onClick={closePopUp} />
+            </Tooltip>
           </div>
         </div>
         {children}
