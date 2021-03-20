@@ -8,7 +8,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
 import './tableActionsMenu.scss'
 
-const TableActionsMenu = ({ item, menu, subRow, time }) => {
+const TableActionsMenu = ({ item, menu, time }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   let idTimeout = null
@@ -70,7 +70,7 @@ const TableActionsMenu = ({ item, menu, subRow, time }) => {
                         'table-actions-container__option_disabled'
                     )}
                     onClick={() => {
-                      !menuItem.disabled && menuItem.onClick(item, subRow)
+                      !menuItem.disabled && menuItem.onClick(item)
                     }}
                   >
                     <span className={iconClassNames}>{menuItem.icon}</span>
@@ -88,14 +88,12 @@ const TableActionsMenu = ({ item, menu, subRow, time }) => {
 
 TableActionsMenu.defaultProps = {
   item: {},
-  subRow: false,
   time: 100
 }
 
 TableActionsMenu.propTypes = {
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
   menu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  subRow: PropTypes.bool,
   time: PropTypes.number
 }
 

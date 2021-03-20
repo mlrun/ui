@@ -4,6 +4,7 @@ import {
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
+  FETCH_DATA_SET_SUCCESS,
   FETCH_DATASETS_BEGIN,
   FETCH_DATASETS_FAILURE,
   FETCH_DATASETS_SUCCESS,
@@ -18,23 +19,28 @@ import {
   FETCH_FEATURES_BEGIN,
   FETCH_FEATURES_FAILURE,
   FETCH_FEATURES_SUCCESS,
+  FETCH_FILE_SUCCESS,
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
   FETCH_MODEL_ENDPOINTS_BEGIN,
   FETCH_MODEL_ENDPOINTS_FAILURE,
   FETCH_MODEL_ENDPOINTS_SUCCESS,
+  FETCH_MODEL_SUCCESS,
   FETCH_MODELS_BEGIN,
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
+  REMOVE_DATASET,
   REMOVE_DATASETS,
   REMOVE_FEATURE,
   REMOVE_FEATURE_SETS,
   REMOVE_FEATURE_VECTOR,
   REMOVE_FEATURE_VECTORS,
   REMOVE_FEATURES,
+  REMOVE_FILE,
   REMOVE_FILES,
+  REMOVE_MODEL,
   REMOVE_MODELS,
   SET_ARTIFACT_FILTER,
   SHOW_ARTIFACT_PREVIEW
@@ -42,6 +48,7 @@ import {
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
+import { generateArtifacts } from '../utils/generateArtifacts'
 
 const artifactsAction = {
   closeArtifactsPreview: item => ({
@@ -75,15 +82,39 @@ const artifactsAction = {
     type: FETCH_ARTIFACTS_SUCCESS,
     payload: artifactsList
   }),
+  fetchDataSet: dataSet => dispatch => {
+    return artifactsApi
+      .getDataSet(dataSet)
+      .then(response => {
+        dispatch(
+          artifactsAction.fetchDataSetSuccess({
+            [dataSet.db_key]: generateArtifacts(
+              filterArtifacts(response.data.artifacts)
+            )
+          })
+        )
+
+        return response.data.artifacts
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchDataSetSuccess: dataSets => ({
+    type: FETCH_DATA_SET_SUCCESS,
+    payload: dataSets
+  }),
   fetchDataSets: project => dispatch => {
     dispatch(artifactsAction.fetchDataSetsBegin())
 
     return artifactsApi
       .getDataSets(project)
       .then(({ data }) => {
-        let dataSets = filterArtifacts(data.artifacts)
-
-        dispatch(artifactsAction.fetchDataSetsSuccess(dataSets))
+        dispatch(
+          artifactsAction.fetchDataSetsSuccess(
+            generateArtifacts(filterArtifacts(data.artifacts))
+          )
+        )
 
         return data.artifacts
       })
@@ -225,15 +256,39 @@ const artifactsAction = {
     type: FETCH_FEATURES_SUCCESS,
     payload: features
   }),
+  fetchFile: file => dispatch => {
+    return artifactsApi
+      .getFile(file)
+      .then(response => {
+        dispatch(
+          artifactsAction.fetchFileSuccess({
+            [file.db_key]: generateArtifacts(
+              filterArtifacts(response.data.artifacts)
+            )
+          })
+        )
+
+        return response.data.artifacts
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchFileSuccess: files => ({
+    type: FETCH_FILE_SUCCESS,
+    payload: files
+  }),
   fetchFiles: project => dispatch => {
     dispatch(artifactsAction.fetchFilesBegin())
 
     return artifactsApi
       .getFiles(project)
       .then(({ data }) => {
-        let files = filterArtifacts(data.artifacts)
-
-        dispatch(artifactsAction.fetchFilesSuccess(files))
+        dispatch(
+          artifactsAction.fetchFilesSuccess(
+            generateArtifacts(filterArtifacts(data.artifacts))
+          )
+        )
 
         return data.artifacts
       })
@@ -275,15 +330,39 @@ const artifactsAction = {
     type: FETCH_MODEL_ENDPOINTS_SUCCESS,
     payload: models
   }),
+  fetchModel: model => dispatch => {
+    return artifactsApi
+      .getModel({ db_key: model.db_key, project: model.project })
+      .then(response => {
+        dispatch(
+          artifactsAction.fetchModelSuccess({
+            [model.db_key]: generateArtifacts(
+              filterArtifacts(response.data.artifacts)
+            )
+          })
+        )
+
+        return response.data.artifacts
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchModelSuccess: models => ({
+    type: FETCH_MODEL_SUCCESS,
+    payload: models
+  }),
   fetchModels: project => dispatch => {
     dispatch(artifactsAction.fetchModelsBegin())
 
     return artifactsApi
       .getModels(project)
       .then(({ data }) => {
-        let models = filterArtifacts(data.artifacts)
-
-        dispatch(artifactsAction.fetchModelsSuccess(models))
+        dispatch(
+          artifactsAction.fetchModelsSuccess(
+            generateArtifacts(filterArtifacts(data.artifacts))
+          )
+        )
 
         return data.artifacts
       })
@@ -303,6 +382,10 @@ const artifactsAction = {
   }),
   removeArtifacts: () => ({
     type: REMOVE_ARTIFACTS
+  }),
+  removeDataSet: dataSets => ({
+    type: REMOVE_DATASET,
+    payload: dataSets
   }),
   removeDataSets: () => ({
     type: REMOVE_DATASETS
@@ -324,8 +407,16 @@ const artifactsAction = {
   removeFeatures: () => ({
     type: REMOVE_FEATURES
   }),
+  removeFile: files => ({
+    type: REMOVE_FILE,
+    payload: files
+  }),
   removeFiles: () => ({
     type: REMOVE_FILES
+  }),
+  removeModel: models => ({
+    type: REMOVE_MODEL,
+    payload: models
   }),
   removeModels: () => ({
     type: REMOVE_MODELS

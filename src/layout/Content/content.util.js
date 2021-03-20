@@ -13,18 +13,23 @@ export const generateGroupedItems = (content, selectedRowData) => {
         selectedRowData[
           `${contentItem.name}-${contentItem.metadata.name}`
         ]?.content
+    } else if (selectedRowData?.[contentItem.db_key]?.content) {
+      groupedItems[contentItem.db_key] =
+        selectedRowData[contentItem.db_key]?.content
     } else if (contentItem.metadata) {
-      groupedItems[`${contentItem.name}-${contentItem.metadata.name}`]
-        ? groupedItems[`${contentItem.name}-${contentItem.metadata.name}`].push(
-            contentItem
-          )
-        : (groupedItems[`${contentItem.name}-${contentItem.metadata.name}`] = [
-            contentItem
-          ])
+      groupedItems[`${contentItem.name}-${contentItem.metadata.name}`] ??= []
+      groupedItems[`${contentItem.name}-${contentItem.metadata.name}`].push(
+        contentItem
+      )
+    } else if (contentItem.name) {
+      groupedItems[contentItem.name] ??= []
+      groupedItems[contentItem.name].push(contentItem)
+    } else if (contentItem.db_key) {
+      groupedItems[contentItem.db_key] ??= []
+      groupedItems[contentItem.db_key].push(contentItem)
     } else {
-      groupedItems[contentItem.name]
-        ? groupedItems[contentItem.name].push(contentItem)
-        : (groupedItems[contentItem.name] = [contentItem])
+      groupedItems[contentItem.key] ??= []
+      groupedItems[contentItem.key].push(contentItem)
     }
   })
 

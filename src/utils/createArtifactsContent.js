@@ -43,7 +43,7 @@ const createArtifactsContent = (artifacts, page, pageTab, project) => {
       rowData = createFilesRowData(artifact)
     } else if (page === FEATURE_STORE_PAGE) {
       if (pageTab === DATASETS_TAB) {
-        rowData = createDatasetsRowData(artifact)
+        rowData = createDatasetsRowData(artifact, project)
       } else if (pageTab === FEATURE_SETS_TAB) {
         rowData = createFeatureSetsRowData(artifact, project)
       } else if (pageTab === FEATURES_TAB) {
@@ -107,7 +107,14 @@ const createModelsRowData = artifact => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: 'overview'
+      link: 'overview',
+      expandedCellContent: {
+        class: 'artifacts_medium',
+        value: artifact.tag
+      },
+      rowExpanded: {
+        link: false
+      }
     },
     labels: {
       value: parseKeyValues(artifact.labels),
@@ -135,6 +142,11 @@ const createModelsRowData = artifact => {
       class: 'artifacts_big',
       type: 'metrics'
     },
+    version: {
+      value: artifact.tag,
+      class: 'artifacts_small',
+      type: 'hidden'
+    },
     buttonPopout: {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
@@ -153,7 +165,14 @@ const createFilesRowData = artifact => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: 'overview'
+      link: 'overview',
+      expandedCellContent: {
+        class: 'artifacts_medium',
+        value: artifact.tag
+      },
+      rowExpanded: {
+        link: false
+      }
     },
     kind: {
       value: artifact.kind,
@@ -265,12 +284,19 @@ const createModelEndpointsRowData = artifact => {
   }
 }
 
-const createDatasetsRowData = artifact => {
+const createDatasetsRowData = (artifact, project) => {
   return {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: 'overview'
+      link: `/projects/${project}/feature-store/datasets/${artifact.db_key}/${artifact.tag}/overview`,
+      expandedCellContent: {
+        class: 'artifacts_medium',
+        value: artifact.tag
+      },
+      rowExpanded: {
+        link: false
+      }
     },
     labels: {
       value: parseKeyValues(artifact.labels),
@@ -296,6 +322,11 @@ const createDatasetsRowData = artifact => {
     size: {
       value: convertBytes(artifact.size || 0),
       class: 'artifacts_small'
+    },
+    version: {
+      value: artifact.tag,
+      class: 'artifacts_small',
+      type: 'hidden'
     },
     buttonPopout: {
       value: '',
