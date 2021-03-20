@@ -2,6 +2,7 @@ import React from 'react'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
+import { ReactComponent as Edit } from '../../images/edit.svg'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -113,9 +114,19 @@ export const tabs = [
 export const generatePageData = (
   scheduled,
   removeScheduledJob,
-  handleSubmitJob
+  handleSubmitJob,
+  setEditableItem,
+  handleMonitoring,
+  jobsDashboardUrl
 ) => {
   let jobFilters = []
+  let filterMenuActionButton = {
+    label: 'Resource monitoring',
+    tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
+    variant: 'tertiary',
+    disabled: !jobsDashboardUrl,
+    onClick: event => handleMonitoring()
+  }
 
   if (scheduled) {
     jobFilters = [
@@ -126,9 +137,16 @@ export const generatePageData = (
     jobFilters = [...filters]
   }
   return {
-    actionsMenu:
-      scheduled && generateActionsMenu(removeScheduledJob, handleSubmitJob),
+    actionsMenu: generateActionsMenu(
+      scheduled,
+      removeScheduledJob,
+      handleSubmitJob,
+      setEditableItem,
+      handleMonitoring,
+      jobsDashboardUrl
+    ),
     detailsMenu,
+    filterMenuActionButton: !scheduled && filterMenuActionButton,
     filters: jobFilters,
     page,
     tableHeaders: generateTableHeaders(scheduled),
@@ -136,15 +154,38 @@ export const generatePageData = (
     infoHeaders
   }
 }
-export const generateActionsMenu = (removeScheduledJob, handleSubmitJob) => [
-  {
-    label: 'Remove',
-    icon: <Delete />,
-    onClick: removeScheduledJob
-  },
-  {
-    label: 'Run now',
-    icon: <Dropdown className="action_cell__run-icon" />,
-    onClick: handleSubmitJob
-  }
-]
+export const generateActionsMenu = (
+  scheduled,
+  removeScheduledJob,
+  handleSubmitJob,
+  setEditableItem,
+  handleMonitoring,
+  jobsDashboardUrl
+) => {
+  return scheduled
+    ? [
+        {
+          label: 'Remove',
+          icon: <Delete />,
+          onClick: removeScheduledJob
+        },
+        {
+          label: 'Run now',
+          icon: <Dropdown className="action_cell__run-icon" />,
+          onClick: handleSubmitJob
+        },
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: setEditableItem
+        }
+      ]
+    : [
+        {
+          label: 'Monitoring',
+          tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
+          disabled: !jobsDashboardUrl,
+          onClick: handleMonitoring
+        }
+      ]
+}

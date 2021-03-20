@@ -19,13 +19,13 @@ const LoadButton = ({ className, label, variant, ...restProps }) => {
 }
 
 LoadButton.defaultProps = {
-  classList: '',
+  className: '',
   label: 'Load button',
   variant: 'tertiary'
 }
 
 LoadButton.propTypes = {
-  classList: PropTypes.string,
+  className: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   variant: PropTypes.PropTypes.oneOf(['primary', 'secondary', 'tertiary'])
     .isRequired

@@ -1,4 +1,5 @@
 import {
+  EDIT_JOB_FAILURE,
   FETCH_JOB_LOGS_BEGIN,
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
@@ -59,6 +60,11 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case EDIT_JOB_FAILURE:
+      return {
+        ...state,
+        error: payload
+      }
     case FETCH_JOB_LOGS_BEGIN:
       return {
         ...state,

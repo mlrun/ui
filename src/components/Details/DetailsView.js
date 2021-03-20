@@ -148,7 +148,9 @@ const DetailsView = React.forwardRef(
               }
             }}
           >
-            <Close />
+            <Tooltip template={<TextTooltipTemplate text="Close" />}>
+              <Close />
+            </Tooltip>
           </Link>
         </div>
         <ul className="item-menu">
