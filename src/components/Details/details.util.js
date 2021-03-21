@@ -116,7 +116,10 @@ export const generateJobsContent = selectedItem => ({
     value: selectedItem.uid
   },
   startTime: {
-    value: formatDatetime(selectedItem.startTime, 'Not yet started')
+    value: formatDatetime(
+      selectedItem.startTime,
+      selectedItem.state === 'aborted' ? 'N/A' : 'Not yet started'
+    )
   },
   updated: {
     value: formatDatetime(selectedItem.updated, 'N/A')
