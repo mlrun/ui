@@ -27,7 +27,12 @@ export const modelsInfoHeaders = [
   { label: 'Metrics', id: 'metrics' },
   { label: 'Sources', id: 'sources' }
 ]
-export const modelEndpointsInfoHeaders = [{ label: 'Class', id: 'model_class' }]
+export const modelEndpointsInfoHeaders = [
+  { label: 'Model class', id: 'model_class' },
+  { label: 'Model artifact', id: 'model_artifact' },
+  { label: 'Function URI', id: 'function_uri' },
+  { label: 'Stream path', id: 'stream_path' }
+]
 export const modelsDetailsMenu = ['overview', 'preview']
 export const modelEndpointsDetailsMenu = ['overview']
 export const modelsFilters = [
@@ -91,6 +96,10 @@ export const modelEndpointsTableHeaders = [
     class: 'artifacts_small'
   },
   {
+    header: 'Model',
+    class: 'artifacts_small'
+  },
+  {
     header: 'Labels',
     class: 'artifacts_big'
   },
@@ -103,7 +112,7 @@ export const modelEndpointsTableHeaders = [
     class: 'artifacts_small'
   },
   {
-    header: 'Error ration',
+    header: 'Error count',
     class: 'artifacts_small'
   },
   {
@@ -213,8 +222,8 @@ export const checkForSelectedModelEndpoint = (
   modelEndpointId,
   setSelectedModel
 ) => {
-  const [searchItem] = modelEndpoints.filter(
-    item => item.endpoint?.id === modelEndpointId
+  const [searchItem] = modelEndpoints.filter(item =>
+    item.metadata?.uid?.includes(modelEndpointId)
   )
   if (!searchItem) {
     history.push(

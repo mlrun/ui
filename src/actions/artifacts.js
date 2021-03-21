@@ -311,10 +311,10 @@ const artifactsAction = {
 
     return artifactsApi
       .getModelEndpoints(item)
-      .then(({ data }) => {
-        dispatch(artifactsAction.fetchModelEndpointsSuccess(data.endpoints))
+      .then(({ data: { endpoints = [] } }) => {
+        dispatch(artifactsAction.fetchModelEndpointsSuccess(endpoints))
 
-        return data.endpoints
+        return endpoints
       })
       .catch(err => {
         dispatch(artifactsAction.fetchModelEndpointsFailure(err))

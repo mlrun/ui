@@ -53,7 +53,7 @@ const TableLinkCell = ({
         <div className="name-wrapper data-ellipsis">
           <Tooltip
             className={itemNameCLassNames}
-            template={<TextTooltipTemplate text={data.value} />}
+            template={<TextTooltipTemplate text={data.tooltip || data.value} />}
           >
             {data.value}
           </Tooltip>

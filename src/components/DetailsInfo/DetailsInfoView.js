@@ -147,6 +147,7 @@ const DetailsInfoView = React.forwardRef(
                     isFieldInEditMode={
                       detailsInfoState.editMode.field === header.id
                     }
+                    link={content[header.id]?.link}
                     match={match}
                     onClick={handleInfoItemClick}
                     ref={ref}
