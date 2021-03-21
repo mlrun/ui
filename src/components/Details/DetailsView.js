@@ -63,7 +63,10 @@ const DetailsView = React.forwardRef(
           </h3>
           <span>
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
-              ? formatDatetime(selectedItem?.startTime, 'Not yet started')
+              ? formatDatetime(
+                  selectedItem?.startTime,
+                  state === 'aborted' ? 'N/A' : 'Not yet started'
+                )
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
               : ''}
