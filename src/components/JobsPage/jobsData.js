@@ -3,6 +3,7 @@ import React from 'react'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
+import { ReactComponent as Run } from '../../images/run.svg'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -116,6 +117,7 @@ export const generatePageData = (
   removeScheduledJob,
   handleSubmitJob,
   setEditableItem,
+  handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl
 ) => {
@@ -142,6 +144,7 @@ export const generatePageData = (
       removeScheduledJob,
       handleSubmitJob,
       setEditableItem,
+      handleRerunJob,
       handleMonitoring,
       jobsDashboardUrl
     ),
@@ -159,10 +162,11 @@ export const generateActionsMenu = (
   removeScheduledJob,
   handleSubmitJob,
   setEditableItem,
+  handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl
-) => {
-  return scheduled
+) =>
+  scheduled
     ? [
         {
           label: 'Remove',
@@ -182,10 +186,25 @@ export const generateActionsMenu = (
       ]
     : [
         {
+          label: 'Rerun',
+          icon: <Run />,
+          onClick: handleRerunJob
+        },
+        {
           label: 'Monitoring',
           tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
           disabled: !jobsDashboardUrl,
           onClick: handleMonitoring
         }
       ]
+
+export const getChipsValues = chips => {
+  const result = {}
+  chips.forEach(param => {
+    const [key, value] = param.split(': ')
+
+    result[key] = value
+  })
+
+  return result
 }

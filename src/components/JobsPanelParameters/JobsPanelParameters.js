@@ -111,72 +111,67 @@ const JobsPanelParameters = ({
 
   const handleAddNewParameter = () => {
     if (
-      !parametersState.newParameter.name.length ||
-      !parametersState.newParameter.value.length
+      parametersState.newParameter.name.length &&
+      parametersState.newParameter.value.length
     ) {
-      parametersDispatch({
-        type: parametersActions.REMOVE_NEW_PARAMETER_DATA
-      })
+      if (
+        parametersState.newParameter.parameterType ===
+        panelData.newParameterType[0].id
+      ) {
+        setNewJobParameters({
+          ...jobsStore.newJob.task.spec.parameters,
+          [parametersState.newParameter.name]: convertParamValue(
+            parametersState.newParameter.value,
+            parametersState.newParameter.valueType
+          )
+        })
+        panelDispatch({
+          type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
+          payload: [
+            ...panelState.previousPanelData.tableData.parameters,
+            {
+              doc: '',
+              isDefault: false,
+              isChecked: true,
+              data: {
+                name: parametersState.newParameter.name,
+                valueType: parametersState.newParameter.valueType,
+                parameterType: parametersState.newParameter.parameterType,
+                value: parametersState.newParameter.value
+              }
+            }
+          ]
+        })
+      } else if (
+        parametersState.newParameter.parameterType !==
+        panelData.newParameterType[0].id
+      ) {
+        setHyperParams(
+          parametersState.newParameter,
+          jobsStore.newJob.task.spec.hyperparams,
+          setNewJobHyperParameters
+        )
+      }
 
-      return parametersDispatch({
-        type: parametersActions.SET_ADD_NEW_PARAMETER,
-        payload: false
-      })
-    }
-
-    setNewJobParameters({
-      ...jobsStore.newJob.task.spec.parameters,
-      [parametersState.newParameter.name]: convertParamValue(
-        parametersState.newParameter.value,
-        parametersState.newParameter.valueType
-      )
-    })
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS,
-      payload: [
-        ...panelState.previousPanelData.tableData.parameters,
-        {
-          doc: '',
-          isDefault: false,
-          isChecked: true,
-          data: {
-            name: parametersState.newParameter.name,
-            valueType: parametersState.newParameter.valueType,
-            parameterType: parametersState.newParameter.parameterType,
-            value: parametersState.newParameter.value
+      panelDispatch({
+        type: panelActions.SET_TABLE_DATA_PARAMETERS,
+        payload: [
+          ...panelState.tableData.parameters,
+          {
+            data: {
+              name: parametersState.newParameter.name,
+              valueType: parametersState.newParameter.valueType,
+              parameterType: parametersState.newParameter.parameterType,
+              value: parametersState.newParameter.value
+            },
+            doc: '',
+            isDefault: false,
+            isChecked: true
           }
-        }
-      ]
-    })
-
-    if (
-      parametersState.newParameter.parameterType !==
-      panelData.newParameterType[0].id
-    ) {
-      setHyperParams(
-        parametersState.newParameter,
-        jobsStore.newJob.task.spec.hyperparams,
-        setNewJobHyperParameters
-      )
+        ]
+      })
     }
 
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_PARAMETERS,
-      payload: [
-        ...panelState.tableData.parameters,
-        {
-          data: {
-            name: parametersState.newParameter.name,
-            valueType: parametersState.newParameter.valueType,
-            parameterType: parametersState.newParameter.parameterType,
-            value: parametersState.newParameter.value
-          },
-          doc: '',
-          isDefault: false,
-          isChecked: true
-        }
-      ]
-    })
     parametersDispatch({
       type: parametersActions.SET_ADD_NEW_PARAMETER,
       payload: false

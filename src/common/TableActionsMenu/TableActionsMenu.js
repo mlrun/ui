@@ -6,6 +6,7 @@ import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
+
 import './tableActionsMenu.scss'
 
 const TableActionsMenu = ({ item, menu, time }) => {
