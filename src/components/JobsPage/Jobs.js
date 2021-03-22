@@ -18,10 +18,22 @@ import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import Button from '../../common/Button/Button'
+import {
+  getDefaultData,
+  getDefaultMethodAndVersion,
+  getEnvironmentVariables,
+  getMethodOptions,
+  getParameters,
+  getResources,
+  getVersionOptions,
+  getVolume,
+  getVolumeMounts
+} from '../JobsPanel/jobsPanel.util'
 
 const Jobs = ({
   editJob,
   editJobFailure,
+  fetchJobFunction,
   fetchJobs,
   fetchProjectWorkflows,
   jobsStore,
@@ -92,12 +104,93 @@ const Jobs = ({
     })
   }
 
+  const handleRerunJob = async job => {
+    const functionParts = job.function.split('/')
+    const functionName = functionParts[1].replace(/@.*$/g, '')
+    const functionHash = functionParts[1].replace(/.*@/g, '')
+    const functionData = await fetchJobFunction(
+      functionParts[0],
+      functionName,
+      functionHash
+    )
+
+    console.log(functionName)
+
+    const versionOptions = getVersionOptions([functionData])
+    const methodOptions = getMethodOptions([functionData])
+    const {
+      defaultMethod,
+      defaultVersion
+    } = getDefaultMethodAndVersion(versionOptions, [functionData])
+
+    const functionParameters = getParameters(
+      [functionData],
+      defaultMethod || (methodOptions[0]?.id ?? '')
+    )
+    const [{ limits, requests }] = getResources([functionData])
+    const environmentVariables = getEnvironmentVariables([functionData])
+
+    const { parameters, dataInputs } = getDefaultData(functionParameters)
+    const volumeMounts = getVolumeMounts([functionData])
+    const volumes = getVolume([functionData])
+    const labels = parseKeyValues(functionData?.metadata.labels || [])
+    const name = functionData?.metadata.name
+    const project = functionData?.metadata.project
+    const func = job.function
+    const handler = defaultMethod || (methodOptions[0]?.id ?? '')
+    //const hyperparams
+
+    console.log('functionData: ', functionData)
+    console.log('default version: ', defaultVersion)
+    console.log('parameters : ', parameters)
+    console.log('limits : ', limits)
+    console.log('requests : ', requests)
+    console.log('environmentVariables : ', environmentVariables)
+    console.log('dataInputs : ', dataInputs)
+    console.log('volumeMounts : ', volumeMounts)
+    console.log('volumes : ', volumes)
+    console.log('labels : ', labels)
+    console.log('name : ', name)
+    console.log('project : ', project)
+    console.log('func : ', func)
+    console.log('handler : ', handler)
+    //function: {
+    // spec:
+    // env: (3) [{…}, {…}, {…}]
+    // resources: {limits: {…}, requests: {…}}
+    // volume_mounts: [{…}]
+    // volumes: [{…}]
+    // }
+    // schedule: undefined
+    // task:
+    // metadata: {
+    // labels: {}
+    // name: "my-trainer"
+    // project: "default"
+    // }
+    // spec: {
+    // function: "default/my-trainer@5abba780832d7144359431289ba82c6caba9f460"
+    // handler: "training"
+    // hyperparams: {}
+    // input_path: ""
+    // inputs: {}
+    // output_path: "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
+    // param_file: ""
+    // parameters: {context: "", p1: 1, p2: 2}
+    // secret_sources: []
+    // selector: "max."
+    // tuning_strategy: "list"
+    // }
+    console.log(job)
+  }
+
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab === SCHEDULE_TAB,
       onRemoveScheduledJob,
       handleRunJob,
-      setEditableItem
+      setEditableItem,
+      handleRerunJob
     ),
     [match.params.pageTab]
   )

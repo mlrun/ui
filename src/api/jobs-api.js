@@ -23,6 +23,8 @@ export default {
 
     return mainHttpClient.get('/runs', { params })
   },
+  getJobFunction: (project, functionName, hash) =>
+    mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
   getScheduled: (project, status, event) => {
     const params = {

@@ -61,6 +61,8 @@ const TableView = ({
         }
       ]
 
+  console.log(actionsMenu)
+
   return (
     <div className="table">
       <div className="table__content">

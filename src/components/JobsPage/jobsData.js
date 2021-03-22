@@ -3,6 +3,7 @@ import React from 'react'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
+import { ReactComponent as Run } from '../../images/run.svg'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -115,7 +116,8 @@ export const generatePageData = (
   scheduled,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem
+  setEditableItem,
+  handleRerunJob
 ) => {
   let jobFilters = []
 
@@ -128,9 +130,13 @@ export const generatePageData = (
     jobFilters = [...filters]
   }
   return {
-    actionsMenu:
-      scheduled &&
-      generateActionsMenu(removeScheduledJob, handleSubmitJob, setEditableItem),
+    actionsMenu: generateActionsMenu(
+      scheduled,
+      removeScheduledJob,
+      handleSubmitJob,
+      setEditableItem,
+      handleRerunJob
+    ),
     detailsMenu,
     filters: jobFilters,
     page,
@@ -140,23 +146,34 @@ export const generatePageData = (
   }
 }
 export const generateActionsMenu = (
+  scheduled,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem
-) => [
-  {
-    label: 'Remove',
-    icon: <Delete />,
-    onClick: removeScheduledJob
-  },
-  {
-    label: 'Run now',
-    icon: <Dropdown className="action_cell__run-icon" />,
-    onClick: handleSubmitJob
-  },
-  {
-    label: 'Edit',
-    icon: <Edit />,
-    onClick: setEditableItem
-  }
-]
+  setEditableItem,
+  handleRerunJob
+) =>
+  scheduled
+    ? [
+        {
+          label: 'Remove',
+          icon: <Delete />,
+          onClick: removeScheduledJob
+        },
+        {
+          label: 'Run now',
+          icon: <Dropdown className="action_cell__run-icon" />,
+          onClick: handleSubmitJob
+        },
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: setEditableItem
+        }
+      ]
+    : [
+        {
+          label: 'Rerun',
+          icon: <Run />,
+          onClick: handleRerunJob
+        }
+      ]

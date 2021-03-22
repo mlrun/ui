@@ -34,6 +34,10 @@ const jobsActions = {
     type: EDIT_JOB_FAILURE,
     payload: error
   }),
+  fetchJobFunction: (project, functionName, hash) => () =>
+    jobsApi
+      .getJobFunction(project, functionName, hash)
+      .then(res => res.data.func),
   fetchJobLogs: (id, project) => dispatch => {
     dispatch(jobsActions.fetchJobLogsBegin())
 
