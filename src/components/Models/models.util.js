@@ -204,10 +204,13 @@ export const checkForSelectedModel = (
   match,
   models,
   modelName,
-  setSelectedModel
+  setSelectedModel,
+  tag
 ) => {
   const artifacts = models.selectedRowData.content[modelName] || models.allData
-  const [searchItem] = artifacts.filter(item => item.db_key === modelName)
+  const [searchItem] = artifacts.filter(
+    item => item.db_key === modelName && item.tag === tag
+  )
 
   if (!searchItem) {
     history.push(

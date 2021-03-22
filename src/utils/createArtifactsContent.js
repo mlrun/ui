@@ -36,12 +36,12 @@ const createArtifactsContent = (artifacts, page, pageTab, project) => {
       rowData = createArtifactsRowData(artifact)
     } else if (page === MODELS_PAGE) {
       if (pageTab === MODELS_TAB) {
-        rowData = createModelsRowData(artifact)
+        rowData = createModelsRowData(artifact, project)
       } else if (pageTab === MODEL_ENDPOINTS_TAB) {
         rowData = createModelEndpointsRowData(artifact)
       }
     } else if (page === FILES_PAGE) {
-      rowData = createFilesRowData(artifact)
+      rowData = createFilesRowData(artifact, project)
     } else if (page === FEATURE_STORE_PAGE) {
       if (pageTab === DATASETS_TAB) {
         rowData = createDatasetsRowData(artifact, project)
@@ -103,12 +103,12 @@ const createArtifactsRowData = artifact => {
   }
 }
 
-const createModelsRowData = artifact => {
+const createModelsRowData = (artifact, project) => {
   return {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: 'overview',
+      link: `/projects/${project}/models/models/${artifact.db_key}/${artifact.tag}/overview`,
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
@@ -161,12 +161,12 @@ const createModelsRowData = artifact => {
   }
 }
 
-const createFilesRowData = artifact => {
+const createFilesRowData = (artifact, project) => {
   return {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: 'overview',
+      link: `/projects/${project}/files/${artifact.db_key}/${artifact.tag}/overview`,
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
@@ -174,6 +174,11 @@ const createFilesRowData = artifact => {
       rowExpanded: {
         link: false
       }
+    },
+    version: {
+      value: artifact.tag,
+      class: 'artifacts_small',
+      type: 'hidden'
     },
     kind: {
       value: artifact.kind,

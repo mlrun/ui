@@ -175,13 +175,15 @@ const Files = ({
 
   useEffect(() => {
     if (match.params.name) {
-      const { name } = match.params
+      const { name, tag } = match.params
       const artifacts =
         artifactsStore.files.selectedRowData.content[name] ||
         artifactsStore.files.allData
 
       if (artifacts.length !== 0) {
-        const [searchItem] = artifacts.filter(item => item.db_key === name)
+        const [searchItem] = artifacts.filter(
+          item => item.db_key === name && item.tag === tag
+        )
 
         if (!searchItem) {
           history.push(`/projects/${match.params.projectName}/files`)
