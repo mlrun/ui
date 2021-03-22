@@ -1,7 +1,6 @@
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import { maxBy } from 'lodash'
 
 export const modelsInfoHeaders = [
   {
@@ -28,7 +27,12 @@ export const modelsInfoHeaders = [
   { label: 'Metrics', id: 'metrics' },
   { label: 'Sources', id: 'sources' }
 ]
-export const modelEndpointsInfoHeaders = [{ label: 'Class', id: 'model_class' }]
+export const modelEndpointsInfoHeaders = [
+  { label: 'Model class', id: 'model_class' },
+  { label: 'Model artifact', id: 'model_artifact' },
+  { label: 'Function URI', id: 'function_uri' },
+  { label: 'Stream path', id: 'stream_path' }
+]
 export const modelsDetailsMenu = ['overview', 'preview']
 export const modelEndpointsDetailsMenu = ['overview']
 export const modelsFilters = [
@@ -92,6 +96,10 @@ export const modelEndpointsTableHeaders = [
     class: 'artifacts_small'
   },
   {
+    header: 'Model',
+    class: 'artifacts_small'
+  },
+  {
     header: 'Labels',
     class: 'artifacts_big'
   },
@@ -104,7 +112,7 @@ export const modelEndpointsTableHeaders = [
     class: 'artifacts_small'
   },
   {
-    header: 'Error ration',
+    header: 'Error count',
     class: 'artifacts_small'
   },
   {
@@ -137,12 +145,15 @@ export const handleFetchData = async (
   }
   let result = null
 
+  if (item.onEntering) {
+    item.tag = 'latest'
+  }
+
   if (pageTab === MODELS_TAB) {
     result = await fetchModels(item)
 
     if (result) {
-      const filteredModels = filterArtifacts(result)
-      data.content = generateArtifacts(filteredModels)
+      data.content = generateArtifacts(filterArtifacts(result))
       data.yamlContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
@@ -157,7 +168,11 @@ export const handleFetchData = async (
   return data
 }
 
-export const generatePageData = pageTab => {
+export const generatePageData = (
+  pageTab,
+  handleRequestOnExpand,
+  handleRemoveRequestData
+) => {
   const data = {
     page,
     tabs
@@ -169,6 +184,8 @@ export const generatePageData = pageTab => {
     data.registerArtifactDialogTitle = registerArtifactDialogTitle
     data.tableHeaders = modelsTableHeaders
     data.infoHeaders = modelsInfoHeaders
+    data.handleRequestOnExpand = handleRequestOnExpand
+    data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     data.detailsMenu = modelEndpointsDetailsMenu
     data.filters = modelEndpointsFilters
@@ -186,27 +203,15 @@ export const checkForSelectedModel = (
   modelName,
   setSelectedModel
 ) => {
-  const [searchItem] = models.filter(item => item.key === modelName)
+  const artifacts = models.selectedRowData.content[modelName] || models.allData
+  const [searchItem] = artifacts.filter(item => item.db_key === modelName)
 
   if (!searchItem) {
     history.push(
       `/projects/${match.params.projectName}/models/${match.params.pageTab}`
     )
   } else {
-    const model = maxBy(
-      searchItem.data.filter(item => {
-        if (searchItem.link_iteration) {
-          const { link_iteration } = searchItem.link_iteration
-
-          return link_iteration === item.iter
-        }
-
-        return true
-      }),
-      'updated'
-    )
-
-    setSelectedModel({ item: model })
+    setSelectedModel({ item: searchItem })
   }
 }
 
@@ -217,8 +222,8 @@ export const checkForSelectedModelEndpoint = (
   modelEndpointId,
   setSelectedModel
 ) => {
-  const [searchItem] = modelEndpoints.filter(
-    item => item.endpoint?.id === modelEndpointId
+  const [searchItem] = modelEndpoints.filter(item =>
+    item.metadata?.uid?.includes(modelEndpointId)
   )
   if (!searchItem) {
     history.push(

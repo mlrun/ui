@@ -51,11 +51,11 @@
   &-primary {
     background: $brightTurquoise;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $javaLight;
     }
 
-    &:active {
+    &:active:not(:disabled) {
       background: $mountainMeadow;
     }
 
@@ -75,11 +75,11 @@
       }
     }
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $alabaster;
     }
 
-    &:active {
+    &:active:not(:disabled) {
       background: $mercury;
     }
 
@@ -91,11 +91,11 @@
   &-secondary {
     background: $malibu;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $cornflowerBlue;
     }
 
-    &:active {
+    &:active:not(:disabled) {
       background: $indigo;
     }
 
@@ -108,11 +108,11 @@
     color: $white;
     background: $amaranth;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $ceriseRed;
     }
 
-    &:active {
+    &:active:not(:disabled) {
       background: $maroonFlash;
     }
 
@@ -132,15 +132,15 @@
       }
     }
 
-    &:focus {
+    &:focus:not(:disabled) {
       border: $dividerBorder;
     }
 
-    &:hover {
+    &:hover:not(:disabled) {
       color: $topaz;
     }
 
-    &:active {
+    &:active:not(:disabled) {
       color: $black;
       border-color: transparent;
     }

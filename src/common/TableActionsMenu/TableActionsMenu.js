@@ -1,13 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
+
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
 
 import './tableActionsMenu.scss'
 
-const TableActionsMenu = ({ item, menu, subRow, time }) => {
+const TableActionsMenu = ({ item, menu, time }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
+  const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   let idTimeout = null
+
+  useEffect(() => {
+    setIsIconDisplayed(menu.some(menuItem => menuItem.icon))
+  }, [menu])
+
+  const iconClassNames = classnames(
+    'table-actions-container__icon',
+    isIconDisplayed && 'table-actions-container__icon_visible'
+  )
 
   const showActionsList = () => {
     setIsShowMenu(!isShowMenu)
@@ -44,19 +58,26 @@ const TableActionsMenu = ({ item, menu, subRow, time }) => {
           {menu.map(menuItem => {
             return (
               (menuItem.visible ?? true) && (
-                <div
-                  data-testid="actions-menu-item"
-                  className="table-actions-container__option"
-                  onClick={() => {
-                    menuItem.onClick(item, subRow)
-                  }}
+                <Tooltip
+                  template={<TextTooltipTemplate text={menuItem.tooltip} />}
+                  hidden={!menuItem.tooltip}
                   key={menuItem.label}
                 >
-                  <span className="table-actions-container__icon">
-                    {menuItem.icon}
-                  </span>
-                  {menuItem.label}
-                </div>
+                  <div
+                    data-testid="actions-menu-item"
+                    className={classnames(
+                      'table-actions-container__option',
+                      menuItem.disabled &&
+                        'table-actions-container__option_disabled'
+                    )}
+                    onClick={() => {
+                      !menuItem.disabled && menuItem.onClick(item)
+                    }}
+                  >
+                    <span className={iconClassNames}>{menuItem.icon}</span>
+                    {menuItem.label}
+                  </div>
+                </Tooltip>
               )
             )
           })}
@@ -68,14 +89,12 @@ const TableActionsMenu = ({ item, menu, subRow, time }) => {
 
 TableActionsMenu.defaultProps = {
   item: {},
-  subRow: false,
   time: 100
 }
 
 TableActionsMenu.propTypes = {
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
   menu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  subRow: PropTypes.bool,
   time: PropTypes.number
 }
 

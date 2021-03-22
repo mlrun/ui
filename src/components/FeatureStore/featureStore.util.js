@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { maxBy } from 'lodash'
 
 import {
   DATASETS_TAB,
@@ -231,7 +230,11 @@ export const generatePageData = (
   } else if (pageTab === FEATURES_TAB) {
     data.filters = featuresFilters
     data.tableHeaders = featuresTableHeaders
-    data.filterMenuActionButtonTitle = 'Add to feature vector'
+    data.filterMenuActionButton = {
+      label: 'Add to feature vector',
+      variant: 'secondary',
+      onClick: event => {}
+    }
     data.handleRequestOnExpand = handleRequestOnExpand
     data.mainRowItemsCount = 2
   } else if (pageTab === FEATURE_VECTORS_TAB) {
@@ -246,6 +249,8 @@ export const generatePageData = (
     data.infoHeaders = datasetsInfoHeaders
     data.tableHeaders = datasetsTableHeaders
     data.registerArtifactDialogTitle = registerDatasetsTitle
+    data.handleRequestOnExpand = handleRequestOnExpand
+    data.handleRemoveRequestData = handleRemoveRequestData
   }
 
   return data
@@ -267,11 +272,14 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === DATASETS_TAB) {
+    if (item.onEntering) {
+      item.tag = 'latest'
+    }
+
     result = await fetchDataSets(item)
 
     if (result) {
-      const dataSets = filterArtifacts(result)
-      data.content = generateArtifacts(dataSets)
+      data.content = generateArtifacts(filterArtifacts(result))
       data.yamlContent = result
     }
   } else if (pageTab === FEATURE_SETS_TAB) {
@@ -328,12 +336,16 @@ export const navigateToDetailsPane = (
     match.params.pageTab === FEATURES_TAB &&
     artifactsStore.features.allData.length > 0
   ) {
-    artifacts = artifactsStore.features
+    artifacts = artifactsStore.features.allData
   } else if (
     match.params.pageTab === DATASETS_TAB &&
-    artifactsStore.dataSets.length > 0
+    artifactsStore.dataSets.allData.length > 0
   ) {
-    artifacts = artifactsStore.dataSets
+    if (artifactsStore.dataSets.selectedRowData.content[name]) {
+      artifacts = artifactsStore.dataSets.selectedRowData.content[name]
+    } else {
+      artifacts = artifactsStore.dataSets.allData
+    }
   } else if (
     match.params.pageTab === FEATURE_VECTORS_TAB &&
     artifactsStore.featureVectors.allData.length > 0
@@ -347,11 +359,12 @@ export const navigateToDetailsPane = (
 
   if (match.params.name && artifacts.length !== 0) {
     const [selectedArtifact] = artifacts.filter(artifact => {
-      const searchKey = artifact.name ? 'name' : 'key'
+      const searchKey = artifact.name ? 'name' : 'db_key'
 
       if (
         match.params.pageTab === FEATURE_SETS_TAB ||
-        match.params.pageTab === FEATURE_VECTORS_TAB
+        match.params.pageTab === FEATURE_VECTORS_TAB ||
+        match.params.pageTab === DATASETS_TAB
       ) {
         return artifact[searchKey] === name && artifact.tag === tag
       } else {
@@ -364,23 +377,6 @@ export const navigateToDetailsPane = (
         `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
       )
     } else {
-      if (match.params.pageTab === DATASETS_TAB) {
-        const dataSet = maxBy(
-          selectedArtifact.data.filter(item => {
-            if (selectedArtifact.link_iteration) {
-              const { link_iteration } = selectedArtifact.link_iteration
-
-              return link_iteration === item.iter
-            }
-
-            return true
-          }),
-          'updated'
-        )
-
-        return setSelectedItem({ item: dataSet })
-      }
-
       setSelectedItem({ item: selectedArtifact })
     }
   } else {
@@ -514,7 +510,6 @@ export const generateDataSetsDetailsMenu = selectedItem => {
 export const fetchFeatureRowData = async (
   fetchFeature,
   item,
-  match,
   setPageData,
   setYamlContent
 ) => {
@@ -528,7 +523,7 @@ export const fetchFeatureRowData = async (
     }
   }))
 
-  const result = await fetchFeature(match.params.projectName, item).catch(
+  const result = await fetchFeature(item.metadata.project, item).catch(
     error => {
       setPageData(state => ({
         ...state,
@@ -562,7 +557,6 @@ export const fetchFeatureRowData = async (
 export const fetchFeatureVectorRowData = async (
   fetchFeatureVector,
   item,
-  match,
   setPageData,
   setYamlContent
 ) => {
@@ -576,22 +570,21 @@ export const fetchFeatureVectorRowData = async (
     }
   }))
 
-  const result = await fetchFeatureVector(
-    item.name,
-    match.params.projectName
-  ).catch(error => {
-    setPageData(state => ({
-      ...state,
-      selectedRowData: {
-        ...state.selectedRowData,
-        [item.name]: {
-          ...state.selectedRowData[item.name],
-          error,
-          loading: false
+  const result = await fetchFeatureVector(item.name, item.project).catch(
+    error => {
+      setPageData(state => ({
+        ...state,
+        selectedRowData: {
+          ...state.selectedRowData,
+          [item.name]: {
+            ...state.selectedRowData[item.name],
+            error,
+            loading: false
+          }
         }
-      }
-    }))
-  })
+      }))
+    }
+  )
 
   if (result?.length > 0) {
     setYamlContent(state => ({ ...state, selectedRowData: result }))
@@ -605,5 +598,60 @@ export const fetchFeatureVectorRowData = async (
         }
       }
     }))
+  }
+}
+
+export const fetchDataSetRowData = async (
+  fetchDataSet,
+  item,
+  setPageData,
+  setYamlContent
+) => {
+  let result = []
+
+  setPageData(state => ({
+    ...state,
+    selectedRowData: {
+      ...state.selectedRowData,
+      [item.db_key]: {
+        loading: true
+      }
+    }
+  }))
+
+  try {
+    result = await fetchDataSet(item)
+  } catch (error) {
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        ...state.selectedRowData,
+        [item.db_key]: {
+          ...state.selectedRowData[item.db_key],
+          error,
+          loading: false
+        }
+      }
+    }))
+  }
+
+  if (result?.length > 0) {
+    setYamlContent(state => ({
+      ...state,
+      selectedRowData: result
+    }))
+    setPageData(state => {
+      return {
+        ...state,
+        selectedRowData: {
+          ...state.selectedRowData,
+          [item.db_key]: {
+            content: [...generateArtifacts(filterArtifacts(result))],
+            error: null,
+            loading: false
+          }
+        }
+      }
+    })
   }
 }

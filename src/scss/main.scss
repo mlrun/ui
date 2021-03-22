@@ -92,7 +92,8 @@ main {
 .failed,
 .fail,
 .error,
-.broken {
+.broken,
+.aborted {
   @include jobStatus($burntSienna);
 }
 

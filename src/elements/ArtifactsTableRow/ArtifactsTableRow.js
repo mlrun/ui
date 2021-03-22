@@ -8,7 +8,7 @@ import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import artifactsData from '../../components/Artifacts/artifactsData'
-import { FEATURES_TAB } from '../../constants'
+import { FEATURES_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
 
 const ArtifactsTableRow = ({
   actionsMenu,
@@ -33,8 +33,7 @@ const ArtifactsTableRow = ({
     ((selectedItem?.db_key &&
       selectedItem?.db_key === content[index]?.db_key) ||
       (selectedItem?.name && selectedItem?.name === content[index]?.name) ||
-      (selectedItem?.endpoint &&
-        selectedItem?.endpoint?.id === content[index]?.endpoint?.id)) &&
+      selectedItem?.metadata?.uid === content[index]?.metadata?.uid) &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -50,6 +49,19 @@ const ArtifactsTableRow = ({
           `${artifact.key?.value}-${artifact.feature_set?.value}`
       )
     } else {
+      if (pageData.selectedRowData?.[artifact.key.value]?.content) {
+        return pageData.selectedRowData?.[artifact.key.value]?.content.find(
+          contentItem => {
+            const key = contentItem.db_key ? 'db_key' : 'name'
+
+            return artifact.version
+              ? contentItem[key] === artifact.key.value &&
+                  contentItem.tag === artifact.version.value
+              : contentItem[key] === artifact.key.value
+          }
+        )
+      }
+
       return content.find(contentItem => {
         const key = contentItem.db_key ? 'db_key' : 'name'
 
@@ -69,7 +81,7 @@ const ArtifactsTableRow = ({
             {mainRowData.map((data, index) => {
               return index < mainRowItemsCount ? (
                 <TableCell
-                  key={data.value}
+                  key={data.value || index}
                   handleExpandRow={handleExpandRow}
                   data={data}
                   item={rowItem}
@@ -77,7 +89,7 @@ const ArtifactsTableRow = ({
                   selectedItem={selectedItem}
                   expandLink={index === 0}
                   firstRow={index === 0}
-                  link={data.link && data.link}
+                  link={data.rowExpanded.link ? data.link && data.link : false}
                   selectedRowId={selectedRowId}
                   setSelectedRowId={setSelectedRowId}
                   withCheckbox={withCheckbox}
@@ -90,9 +102,10 @@ const ArtifactsTableRow = ({
             const subRowClassNames = classnames(
               'table-body__row',
               ((selectedItem?.db_key &&
-                selectedItem?.db_key === currentItem.db_key) ||
+                selectedItem?.db_key === currentItem?.db_key &&
+                selectedItem.tag === currentItem?.tag) ||
                 (selectedItem?.name &&
-                  selectedItem?.name === currentItem.name)) &&
+                  selectedItem?.name === currentItem?.name)) &&
                 'row_active'
             )
 
@@ -146,18 +159,14 @@ const ArtifactsTableRow = ({
                               : value.link)
                           }
                           match={match}
-                          key={value.value + i}
+                          key={value.value + i ?? Date.now()}
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
                         />
                       )
                     })}
                     <div className="table-body__cell action_cell">
-                      <TableActionsMenu
-                        item={currentItem}
-                        menu={actionsMenu}
-                        subRow
-                      />
+                      <TableActionsMenu item={currentItem} menu={actionsMenu} />
                     </div>
                   </>
                 )}
@@ -171,7 +180,10 @@ const ArtifactsTableRow = ({
             return (
               content[index] && (
                 <TableCell
-                  expandLink={Array.isArray(tableContent)}
+                  expandLink={
+                    Array.isArray(tableContent) &&
+                    match.params.pageTab !== MODEL_ENDPOINTS_TAB
+                  }
                   handleExpandRow={handleExpandRow}
                   data={value}
                   item={content[index]}

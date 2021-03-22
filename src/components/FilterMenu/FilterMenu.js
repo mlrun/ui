@@ -29,7 +29,7 @@ import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 import './filterMenu.scss'
 
 const FilterMenu = ({
-  actionButtonTitle,
+  actionButton,
   expand,
   filters,
   groupFilter,
@@ -196,8 +196,14 @@ const FilterMenu = ({
           />
         )}
       </div>
-      {actionButtonTitle && (
-        <Button variant="secondary" label={actionButtonTitle} />
+      {actionButton && (
+        <Button
+          variant={actionButton.variant}
+          label={actionButton.label}
+          tooltip={actionButton.tooltip}
+          disabled={actionButton.disabled}
+          onClick={actionButton.onClick}
+        />
       )}
       <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
@@ -234,7 +240,7 @@ const FilterMenu = ({
 }
 
 FilterMenu.defaultProps = {
-  actionButtonTitle: '',
+  actionButton: null,
   groupFilter: '',
   handleArtifactFilterTree: null,
   setGroupFilter: null,
@@ -245,7 +251,7 @@ FilterMenu.defaultProps = {
 }
 
 FilterMenu.propTypes = {
-  actionButtonTitle: PropTypes.string,
+  actionButton: PropTypes.shape({}),
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,

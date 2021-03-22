@@ -53,7 +53,7 @@ const TableLinkCell = ({
         <div className="name-wrapper data-ellipsis">
           <Tooltip
             className={itemNameCLassNames}
-            template={<TextTooltipTemplate text={data.value} />}
+            template={<TextTooltipTemplate text={data.tooltip || data.value} />}
           >
             {data.value}
           </Tooltip>
@@ -76,7 +76,10 @@ const TableLinkCell = ({
                 {data.type !== 'date' &&
                   (link.match(/functions/)
                     ? formatDatetime(item.updated, 'N/A')
-                    : formatDatetime(item.startTime, 'Not yet started'))}
+                    : formatDatetime(
+                        item.startTime,
+                        state === 'aborted' ? 'N/A' : 'Not yet started'
+                      ))}
               </span>
             )}
             <span>{truncateUid(item.uid || item.hash)}</span>

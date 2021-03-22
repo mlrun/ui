@@ -117,9 +117,18 @@ export const generatePageData = (
   removeScheduledJob,
   handleSubmitJob,
   setEditableItem,
-  handleRerunJob
+  handleRerunJob,
+  handleMonitoring,
+  jobsDashboardUrl
 ) => {
   let jobFilters = []
+  let filterMenuActionButton = {
+    label: 'Resource monitoring',
+    tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
+    variant: 'tertiary',
+    disabled: !jobsDashboardUrl,
+    onClick: event => handleMonitoring()
+  }
 
   if (scheduled) {
     jobFilters = [
@@ -135,9 +144,12 @@ export const generatePageData = (
       removeScheduledJob,
       handleSubmitJob,
       setEditableItem,
-      handleRerunJob
+      handleRerunJob,
+      handleMonitoring,
+      jobsDashboardUrl
     ),
     detailsMenu,
+    filterMenuActionButton: !scheduled && filterMenuActionButton,
     filters: jobFilters,
     page,
     tableHeaders: generateTableHeaders(scheduled),
@@ -150,7 +162,9 @@ export const generateActionsMenu = (
   removeScheduledJob,
   handleSubmitJob,
   setEditableItem,
-  handleRerunJob
+  handleRerunJob,
+  handleMonitoring,
+  jobsDashboardUrl
 ) =>
   scheduled
     ? [
@@ -175,5 +189,22 @@ export const generateActionsMenu = (
           label: 'Rerun',
           icon: <Run />,
           onClick: handleRerunJob
+        },
+        {
+          label: 'Monitoring',
+          tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
+          disabled: !jobsDashboardUrl,
+          onClick: handleMonitoring
         }
       ]
+
+export const getChipsValues = chips => {
+  const result = {}
+  chips.forEach(param => {
+    const [key, value] = param.split(': ')
+
+    result[key] = value
+  })
+
+  return result
+}

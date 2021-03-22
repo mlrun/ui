@@ -8,7 +8,8 @@ import projectActions from '../../actions/projects'
 import {
   generatePageData,
   initialStateFilter,
-  initialGroupFilter
+  initialGroupFilter,
+  getChipsValues
 } from './jobsData'
 import { parseKeyValues } from '../../utils'
 import { SCHEDULE_TAB } from '../../constants'
@@ -18,19 +19,9 @@ import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import Button from '../../common/Button/Button'
-import {
-  getDefaultData,
-  getDefaultMethodAndVersion,
-  getEnvironmentVariables,
-  getMethodOptions,
-  getParameters,
-  getResources,
-  getVersionOptions,
-  getVolume,
-  getVolumeMounts
-} from '../JobsPanel/jobsPanel.util'
 
 const Jobs = ({
+  appStore,
   editJob,
   editJobFailure,
   fetchJobFunction,
@@ -42,6 +33,7 @@ const Jobs = ({
   match,
   removeNewJob,
   removeScheduledJob,
+  runNewJob,
   setLoading,
   setNotification,
   workflowsStore
@@ -61,6 +53,14 @@ const Jobs = ({
     })
 
     setConfirmData(null)
+  }
+
+  const handleMonitoring = item => {
+    let redirectUrl = appStore.frontendSpec.jobs_dashboard_url
+      .replace('{filter_name}', item ? 'uid' : 'project')
+      .replace('{filter_value}', item ? item.uid : match.params.projectName)
+
+    window.open(redirectUrl, '_blank')
   }
 
   const handleRunJob = job => {
@@ -106,82 +106,71 @@ const Jobs = ({
 
   const handleRerunJob = async job => {
     const functionParts = job.function.split('/')
-    const functionName = functionParts[1].replace(/@.*$/g, '')
-    const functionHash = functionParts[1].replace(/.*@/g, '')
     const functionData = await fetchJobFunction(
       functionParts[0],
-      functionName,
-      functionHash
+      functionParts[1].replace(/@.*$/g, ''),
+      functionParts[1].replace(/.*@/g, '')
     )
 
-    console.log(functionName)
+    if (functionData) {
+      const postData = {
+        function: {
+          spec: {
+            env: functionData?.spec.env,
+            resources: functionData?.spec.resources,
+            volume_mounts: functionData?.spec.volume_mounts,
+            volumes: functionData?.spec.volumes
+          }
+        },
+        schedule: null,
+        task: {
+          metadata: {
+            labels: getChipsValues(job.labels ?? {}),
+            name: job.name,
+            project: job.project
+          },
+          spec: {
+            function: job.function,
+            handler:
+              Object.values(functionData?.spec.entry_points)?.[0]?.name ?? '',
+            hyperparams: job.hyperparams,
+            input_path: job.input_path ?? '',
+            inputs: job.inputs ?? {},
+            output_path: job.outputPath,
+            param_file: job.param_file ?? '',
+            parameters: getChipsValues(job.parameters ?? {}),
+            secret_sources: job.secret_sources ?? [],
+            selector: job.selector ?? 'max.',
+            tuning_strategy: job.tuning_strategy ?? 'list'
+          }
+        }
+      }
 
-    const versionOptions = getVersionOptions([functionData])
-    const methodOptions = getMethodOptions([functionData])
-    const {
-      defaultMethod,
-      defaultVersion
-    } = getDefaultMethodAndVersion(versionOptions, [functionData])
-
-    const functionParameters = getParameters(
-      [functionData],
-      defaultMethod || (methodOptions[0]?.id ?? '')
-    )
-    const [{ limits, requests }] = getResources([functionData])
-    const environmentVariables = getEnvironmentVariables([functionData])
-
-    const { parameters, dataInputs } = getDefaultData(functionParameters)
-    const volumeMounts = getVolumeMounts([functionData])
-    const volumes = getVolume([functionData])
-    const labels = parseKeyValues(functionData?.metadata.labels || [])
-    const name = functionData?.metadata.name
-    const project = functionData?.metadata.project
-    const func = job.function
-    const handler = defaultMethod || (methodOptions[0]?.id ?? '')
-    //const hyperparams
-
-    console.log('functionData: ', functionData)
-    console.log('default version: ', defaultVersion)
-    console.log('parameters : ', parameters)
-    console.log('limits : ', limits)
-    console.log('requests : ', requests)
-    console.log('environmentVariables : ', environmentVariables)
-    console.log('dataInputs : ', dataInputs)
-    console.log('volumeMounts : ', volumeMounts)
-    console.log('volumes : ', volumes)
-    console.log('labels : ', labels)
-    console.log('name : ', name)
-    console.log('project : ', project)
-    console.log('func : ', func)
-    console.log('handler : ', handler)
-    //function: {
-    // spec:
-    // env: (3) [{…}, {…}, {…}]
-    // resources: {limits: {…}, requests: {…}}
-    // volume_mounts: [{…}]
-    // volumes: [{…}]
-    // }
-    // schedule: undefined
-    // task:
-    // metadata: {
-    // labels: {}
-    // name: "my-trainer"
-    // project: "default"
-    // }
-    // spec: {
-    // function: "default/my-trainer@5abba780832d7144359431289ba82c6caba9f460"
-    // handler: "training"
-    // hyperparams: {}
-    // input_path: ""
-    // inputs: {}
-    // output_path: "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}"
-    // param_file: ""
-    // parameters: {context: "", p1: 1, p2: 2}
-    // secret_sources: []
-    // selector: "max."
-    // tuning_strategy: "list"
-    // }
-    console.log(job)
+      runNewJob(postData)
+        .then(() => {
+          refreshJobs()
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Job is successfully rerunning'
+          })
+        })
+        .catch(error => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            retry: () => handleRerunJob(job),
+            message: 'Rerunning job is failed'
+          })
+        })
+    } else {
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        retry: () => handleRerunJob(job),
+        message: 'Rerunning job is failed'
+      })
+    }
   }
 
   const pageData = useCallback(
@@ -190,9 +179,11 @@ const Jobs = ({
       onRemoveScheduledJob,
       handleRunJob,
       setEditableItem,
-      handleRerunJob
+      handleRerunJob,
+      handleMonitoring,
+      appStore.frontendSpec.jobs_dashboard_url
     ),
-    [match.params.pageTab]
+    [match.params.pageTab, appStore.frontendSpec.jobs_dashboard_url]
   )
 
   const refreshJobs = useCallback(
@@ -237,7 +228,8 @@ const Jobs = ({
               owner: job.metadata.labels?.owner,
               updated: new Date(job.status.last_update),
               function: job?.spec?.function ?? '',
-              project: job.metadata.project
+              project: job.metadata.project,
+              hyperparams: job.spec?.hyperparams || {}
             }
           }
         })
@@ -389,6 +381,10 @@ Jobs.propTypes = {
 }
 
 export default connect(
-  ({ jobsStore, workflowsStore }) => ({ jobsStore, workflowsStore }),
+  ({ appStore, jobsStore, workflowsStore }) => ({
+    appStore,
+    jobsStore,
+    workflowsStore
+  }),
   { ...jobsActions, ...projectActions, ...notificationActions }
 )(React.memo(Jobs))

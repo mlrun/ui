@@ -23,7 +23,7 @@ import {
   DETAILS_TRANSFORMATIONS_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
-import { formatDatetime } from '../../utils'
+import { formatDatetime, parseUri } from '../../utils'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
@@ -60,7 +60,25 @@ export const generateArtifactsContent = (
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     return {
       model_class: {
-        value: selectedItem.endpoint?.spec?.model_class
+        value: selectedItem?.spec?.model_class
+      },
+      stream_path: {
+        value: selectedItem?.spec?.stream_path
+      },
+      model_artifact: {
+        value: selectedItem?.spec?.model_artifact?.replace(
+          /^store:\/\/artifacts\//,
+          ''
+        ),
+        link: (() => {
+          const { key: modelArtifact, project } = parseUri(
+            selectedItem?.spec?.model_artifact
+          )
+          return `/projects/${project}/files/${modelArtifact}/overview`
+        })()
+      },
+      function_uri: {
+        value: selectedItem?.spec?.function_uri
       }
     }
   } else {
@@ -116,7 +134,10 @@ export const generateJobsContent = selectedItem => ({
     value: selectedItem.uid
   },
   startTime: {
-    value: formatDatetime(selectedItem.startTime, 'Not yet started')
+    value: formatDatetime(
+      selectedItem.startTime,
+      selectedItem.state === 'aborted' ? 'N/A' : 'Not yet started'
+    )
   },
   updated: {
     value: formatDatetime(selectedItem.updated, 'N/A')
