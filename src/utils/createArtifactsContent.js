@@ -3,7 +3,7 @@ import React from 'react'
 import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
 import { ReactComponent as SeverityError } from '../images/severity-error.svg'
-import { parseUri, truncateUid } from '../utils'
+import { parseUri } from '../utils'
 
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
@@ -233,12 +233,10 @@ const driftStatusIcons = {
 }
 
 const createModelEndpointsRowData = artifact => {
-  const { name, uid } =
-    (artifact.metadata?.uid ?? '').match(/^(?<name>.*?)\.(?<uid>.*)$/)
-      ?.groups ?? {}
-  const { key: modelArtifact, project } = parseUri(
-    artifact.spec?.model_artifact
-  )
+  const { name, tag } =
+    (artifact.spec?.model ?? '').match(/^(?<name>.*?):(?<tag>.*)$/)?.groups ??
+    {}
+  const { key: modelArtifact, project } = parseUri(artifact.spec?.model_uri)
   const modelArtifactLink = `/projects/${project}/files/${modelArtifact}/overview`
   return {
     key: {
@@ -252,9 +250,8 @@ const createModelEndpointsRowData = artifact => {
       type: 'hidden'
     },
     tag: {
-      value: truncateUid(uid),
-      class: 'artifacts_extra-small',
-      tooltip: uid
+      value: tag,
+      class: 'artifacts_extra-small'
     },
     modelClass: {
       value: artifact.spec?.model_class,
@@ -264,7 +261,7 @@ const createModelEndpointsRowData = artifact => {
       value: modelArtifact,
       class: 'artifacts_small',
       link: modelArtifactLink,
-      tooltip: artifact.spec?.model_artifact
+      tooltip: artifact.spec?.model_uri
     },
     labels: {
       value: parseKeyValues(artifact.metadata?.labels),

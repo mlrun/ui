@@ -60,7 +60,8 @@ const DetailsView = React.forwardRef(
           <h3>
             {selectedItem.name ||
               selectedItem.db_key ||
-              selectedItem.metadata?.uid?.split('.')?.[0]}
+              selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
+            }
           </h3>
           <span>
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
@@ -70,8 +71,8 @@ const DetailsView = React.forwardRef(
                 )
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
-              : selectedItem?.metadata?.uid?.includes('.')
-              ? selectedItem.metadata.uid.split('.')?.[1]
+              : selectedItem?.spec?.model // 'model-key:model-tag'
+              ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
               : ''}
             {state && (
               <Tooltip

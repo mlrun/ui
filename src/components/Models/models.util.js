@@ -31,6 +31,9 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Model class', id: 'model_class' },
   { label: 'Model artifact', id: 'model_artifact' },
   { label: 'Function URI', id: 'function_uri' },
+  { label: 'Last prediction', id: 'last_prediction' },
+  { label: 'Error count', id: 'error_count' },
+  { label: 'Accuracy', id: 'accuracy' },
   { label: 'Stream path', id: 'stream_path' }
 ]
 export const modelsDetailsMenu = ['overview', 'preview']
@@ -223,7 +226,7 @@ export const checkForSelectedModelEndpoint = (
   setSelectedModel
 ) => {
   const [searchItem] = modelEndpoints.filter(item =>
-    item.metadata?.uid?.includes(modelEndpointId)
+    item.spec?.model?.includes(modelEndpointId)
   )
   if (!searchItem) {
     history.push(
