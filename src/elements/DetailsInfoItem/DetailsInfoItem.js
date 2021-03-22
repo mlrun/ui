@@ -89,6 +89,15 @@ const DetailsInfoItem = React.forwardRef(
           <span onClick={() => copyToClipboard(path)}>{path}</span>
         </Tooltip>
       )
+    } else if (currentField === 'target_uri') {
+      return (
+        <Tooltip
+          className="details-item__data details-item__uri"
+          template={<TextTooltipTemplate text="Click to copy" />}
+        >
+          <span onClick={() => copyToClipboard(info)}>{info}</span>
+        </Tooltip>
+      )
     } else if (state) {
       return (
         <div className="details-item__data details-item__status">

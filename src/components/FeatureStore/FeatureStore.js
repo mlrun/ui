@@ -60,6 +60,7 @@ const FeatureStore = ({
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
+    actionsMenu: [],
     detailsMenu: [],
     filters: [],
     infoHeaders: [],

@@ -54,6 +54,7 @@ export const SET_FUNCTIONS_TEMPLATES = 'SET_FUNCTIONS_TEMPLATES'
 
 /*=========== ARTIFACTS =============*/
 
+export const ARTIFACTS = 'artifacts'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
 export const CLOSE_ARTIFACT_PREVIEW = 'CLOSE_ARTIFACT_PREVIEW'
 export const FETCH_ARTIFACTS_BEGIN = 'FETCH_ARTIFACTS_BEGIN'
