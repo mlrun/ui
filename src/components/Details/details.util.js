@@ -60,25 +60,40 @@ export const generateArtifactsContent = (
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     return {
       model_class: {
-        value: selectedItem?.spec?.model_class
+        value: selectedItem?.spec?.model_class ?? '-'
       },
       stream_path: {
-        value: selectedItem?.spec?.stream_path
+        value: selectedItem?.spec?.stream_path ?? '-'
       },
       model_artifact: {
-        value: selectedItem?.spec?.model_artifact?.replace(
+        value: selectedItem?.spec?.model_uri?.replace(
           /^store:\/\/artifacts\//,
           ''
         ),
         link: (() => {
           const { key: modelArtifact, project } = parseUri(
-            selectedItem?.spec?.model_artifact
+            selectedItem?.spec?.model_uri
           )
           return `/projects/${project}/files/${modelArtifact}/overview`
         })()
       },
       function_uri: {
-        value: selectedItem?.spec?.function_uri
+        value: selectedItem?.spec?.function_uri,
+        link: (() => {
+          const { key: functionName, project } = parseUri(
+            `store://functions/${selectedItem?.spec?.function_uri}`
+          )
+          return `/projects/${project}/functions/${functionName}/overview`
+        })()
+      },
+      last_prediction: {
+        value: formatDatetime(new Date(selectedItem?.status?.last_request), '-')
+      },
+      error_count: {
+        value: selectedItem?.status?.error_count ?? '-'
+      },
+      accuracy: {
+        value: selectedItem?.status?.accuracy ?? '-'
       }
     }
   } else {

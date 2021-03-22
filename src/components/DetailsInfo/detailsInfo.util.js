@@ -9,10 +9,10 @@ import { isNil } from 'lodash'
 
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
-    const { name, uid } =
-      (selectedItem?.metadata?.uid ?? '').match(/^(?<name>.*?)\.(?<uid>.*)$/)
+    const { name, tag } =
+      (selectedItem?.metadata?.uid ?? '').match(/^(?<name>.*?):(?<tag>.*)$/)
         ?.groups ?? {}
-    return [uid, name]
+    return [tag, name]
   } else
     return [
       selectedItem.hash ?? '',
