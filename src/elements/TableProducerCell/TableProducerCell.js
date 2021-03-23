@@ -20,6 +20,7 @@ const TableProducerCell = ({ data, match }) => {
           }
         >
           <Link
+            className="link"
             to={`/projects/${match.params.projectName}/jobs/monitor/${data.value
               .uri && data.value.uri.split('/')[1]}/${detailsMenu[0]}`}
           >

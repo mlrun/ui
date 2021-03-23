@@ -34,7 +34,7 @@ const ScheduleCron = ({ cron, error, setCron, setEditMode }) => {
       <div>
         You can use{' '}
         <a
-          className="cron-link"
+          className="link cron-link"
           rel="noopener noreferrer"
           target="_blank"
           href="https://www.freeformatter.com/cron-expression-generator-quartz.html"

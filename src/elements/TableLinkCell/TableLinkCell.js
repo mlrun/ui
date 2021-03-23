@@ -29,6 +29,7 @@ const TableLinkCell = ({
     data.type === 'date' ? 'jobs_medium' : data.class
   )
   const itemNameCLassNames = classnames(
+    'link',
     'item-name',
     'data-ellipsis',
     link.match(/functions/) && 'function-name'
@@ -48,7 +49,7 @@ const TableLinkCell = ({
       <Link
         to={link}
         onClick={() => selectItem(item)}
-        className="link data-ellipsis"
+        className="data-ellipsis"
       >
         <div className="name-wrapper data-ellipsis">
           <Tooltip

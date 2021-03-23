@@ -50,12 +50,12 @@ const ProjectDataCard = ({
             <a
               href={href}
               target="_top"
-              className="project-data-card__see-all-link"
+              className="link project-data-card__see-all-link"
             >
               See all
             </a>
           ) : (
-            <Link className="project-data-card__see-all-link" to={link}>
+            <Link className="link project-data-card__see-all-link" to={link}>
               See all
             </Link>
           )}
