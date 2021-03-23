@@ -14,6 +14,8 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
+import { generateUri } from '../../utils/generateUri'
+import { copyToClipboard } from '../../utils/copyToClipboard'
 
 export const datasetsInfoHeaders = [
   {
@@ -26,6 +28,7 @@ export const datasetsInfoHeaders = [
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
+  { label: 'URI', id: 'target_uri' },
   {
     label: 'UID',
     id: 'tree',
@@ -42,6 +45,7 @@ export const featureSetsInfoHeaders = [
   { label: 'Version', id: 'tag' },
   { label: 'Last updated', id: 'updated' },
   { label: 'Entities', id: 'entities' },
+  { label: 'URI', id: 'target_uri' },
   { label: 'Partition keys', id: 'partition_keys' },
   { label: 'Timestamp Key', id: 'timestamp_key' },
   { label: 'Relations', id: 'relations' },
@@ -51,6 +55,7 @@ export const featureVectorsInfoHeaders = [
   { label: 'Description', id: 'description' },
   { label: 'Labels', id: 'labels' },
   { label: 'Version', id: 'tag' },
+  { label: 'URI', id: 'target_uri' },
   { label: 'Last updated', id: 'updated' },
   { label: 'Timestamp Key', id: 'timestamp_key' },
   { label: 'Label column', id: 'label_column' }
@@ -211,6 +216,13 @@ export const tabs = [
   { id: 'datasets', label: 'Datasets' }
 ]
 
+const generateActionsMenu = tab => [
+  {
+    label: 'Copy URI',
+    onClick: item => copyToClipboard(generateUri(item, tab))
+  }
+]
+
 export const generatePageData = (
   pageTab,
   handleRequestOnExpand,
@@ -223,6 +235,7 @@ export const generatePageData = (
   }
 
   if (pageTab === FEATURE_SETS_TAB) {
+    data.actionsMenu = generateActionsMenu(FEATURE_SETS_TAB)
     data.filters = featureSetsFilters
     data.infoHeaders = featureSetsInfoHeaders
     data.tableHeaders = featureSetsTableHeaders
@@ -238,6 +251,7 @@ export const generatePageData = (
     data.handleRequestOnExpand = handleRequestOnExpand
     data.mainRowItemsCount = 2
   } else if (pageTab === FEATURE_VECTORS_TAB) {
+    data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders
     data.handleRequestOnExpand = handleRequestOnExpand
@@ -245,6 +259,7 @@ export const generatePageData = (
     data.infoHeaders = featureVectorsInfoHeaders
     data.registerArtifactDialogTitle = createFeatureVectorTitle
   } else {
+    data.actionsMenu = generateActionsMenu(DATASETS_TAB)
     data.filters = datasetsFilters
     data.infoHeaders = datasetsInfoHeaders
     data.tableHeaders = datasetsTableHeaders
@@ -377,6 +392,7 @@ export const navigateToDetailsPane = (
         `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
       )
     } else {
+      selectedArtifact.URI = generateUri(selectedArtifact, match.params.pageTab)
       setSelectedItem({ item: selectedArtifact })
     }
   } else {

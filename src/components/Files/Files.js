@@ -14,10 +14,14 @@ import {
   page,
   registerArtifactDialogTitle,
   tableHeaders,
-  infoHeaders
+  infoHeaders,
+  actionsMenu
 } from './files.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { filterArtifacts } from '../../utils/filterArtifacts'
+
+import { ARTIFACTS } from '../../constants'
+import { generateUri } from '../../utils/generateUri'
 
 const Files = ({
   artifactsStore,
@@ -38,6 +42,7 @@ const Files = ({
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
+    actionsMenu,
     detailsMenu,
     filters,
     page,
@@ -186,6 +191,7 @@ const Files = ({
         if (!searchItem) {
           history.push(`/projects/${match.params.projectName}/files`)
         } else {
+          searchItem.URI = generateUri(searchItem, ARTIFACTS)
           setSelectedFile({ item: searchItem })
         }
       } else {

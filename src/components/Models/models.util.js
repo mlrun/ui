@@ -1,6 +1,8 @@
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
+import { generateUri } from '../../utils/generateUri'
+import { copyToClipboard } from '../../utils/copyToClipboard'
 
 export const modelsInfoHeaders = [
   {
@@ -14,6 +16,7 @@ export const modelsInfoHeaders = [
   { label: 'Kind', id: 'kind' },
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
+  { label: 'URI', id: 'target_uri' },
   { label: 'Model file', id: 'model_file' },
   {
     label: 'UID',
@@ -136,6 +139,13 @@ export const tabs = [
   { id: 'model-endpoints', label: 'Model endpoints' }
 ]
 
+const actionsMenu = [
+  {
+    label: 'Copy URI',
+    onClick: item => copyToClipboard(generateUri(item, MODELS_TAB))
+  }
+]
+
 export const handleFetchData = async (
   fetchModelEndpoints,
   fetchModels,
@@ -182,6 +192,7 @@ export const generatePageData = (
   }
 
   if (pageTab === MODELS_TAB) {
+    data.actionsMenu = actionsMenu
     data.detailsMenu = modelsDetailsMenu
     data.filters = modelsFilters
     data.registerArtifactDialogTitle = registerArtifactDialogTitle
@@ -214,6 +225,7 @@ export const checkForSelectedModel = (
       `/projects/${match.params.projectName}/models/${match.params.pageTab}`
     )
   } else {
+    searchItem.URI = generateUri(searchItem, MODELS_TAB)
     setSelectedModel({ item: searchItem })
   }
 }

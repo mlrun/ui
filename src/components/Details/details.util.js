@@ -119,6 +119,9 @@ export const generateArtifactsContent = (
       target_path: {
         value: selectedItem.target_path
       },
+      target_uri: {
+        value: selectedItem.URI
+      },
       metrics: {
         value: selectedItem.metrics ?? []
       },
@@ -317,6 +320,9 @@ export const generateFeatureSetsOverviewContent = (
   entities: {
     value: selectedItem.entities?.map(entity => entity.name)
   },
+  target_uri: {
+    value: selectedItem.URI
+  },
   partition_keys: {
     value: (selectedItem.partition_keys || []).map(key => key)
   },
@@ -340,6 +346,9 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   },
   tag: {
     value: selectedItem.tag
+  },
+  target_uri: {
+    value: selectedItem.URI
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
