@@ -334,10 +334,10 @@ export const generateTableDataFromDefaultData = (
   setDefaultDataIsLoaded
 ) => {
   const parameters = generateDefaultParameters(
-    Object.entries(defaultData.task.spec.parameters ?? [])
+    Object.entries(defaultData.task.spec.parameters ?? {})
   )
   const dataInputs = generateDefaultDataInputs(
-    Object.entries(defaultData.task.spec.inputs ?? [])
+    Object.entries(defaultData.task.spec.inputs ?? {})
   )
   const { limits, requests } = defaultData.function?.spec.resources ?? {
     limits: {},
