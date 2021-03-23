@@ -4,6 +4,7 @@ import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
+import { ReactComponent as Cancel } from '../../images/close.svg'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -119,7 +120,8 @@ export const generatePageData = (
   setEditableItem,
   handleRerunJob,
   handleMonitoring,
-  jobsDashboardUrl
+  jobsDashboardUrl,
+  handleAbortJob
 ) => {
   let jobFilters = []
   let filterMenuActionButton = {
@@ -146,7 +148,8 @@ export const generatePageData = (
       setEditableItem,
       handleRerunJob,
       handleMonitoring,
-      jobsDashboardUrl
+      jobsDashboardUrl,
+      handleAbortJob
     ),
     detailsMenu,
     filterMenuActionButton: !scheduled && filterMenuActionButton,
@@ -164,7 +167,8 @@ export const generateActionsMenu = (
   setEditableItem,
   handleRerunJob,
   handleMonitoring,
-  jobsDashboardUrl
+  jobsDashboardUrl,
+  handleAbortJob
 ) =>
   scheduled
     ? [
@@ -195,6 +199,11 @@ export const generateActionsMenu = (
           tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
           disabled: !jobsDashboardUrl,
           onClick: handleMonitoring
+        },
+        {
+          label: 'Abort',
+          icon: <Cancel />,
+          onClick: handleAbortJob
         }
       ]
 
