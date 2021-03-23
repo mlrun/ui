@@ -33,7 +33,8 @@ const ArtifactsTableRow = ({
     ((selectedItem?.db_key &&
       selectedItem?.db_key === content[index]?.db_key) ||
       (selectedItem?.name && selectedItem?.name === content[index]?.name) ||
-      selectedItem?.metadata?.uid === content[index]?.metadata?.uid) &&
+      (selectedItem?.metadata &&
+        selectedItem?.metadata?.uid === content[index]?.metadata?.uid)) &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&

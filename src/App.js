@@ -111,12 +111,17 @@ const App = () => {
             />
             <Route
               exact
+              path="/projects/:projectName/models/:pageTab/:name/:tag/:tab"
+              render={routeProps => <Models {...routeProps} />}
+            />
+            <Route
+              exact
               path="/projects/:projectName/files"
               render={routeProps => <Files {...routeProps} />}
             />
             <Route
               exact
-              path="/projects/:projectName/files/:name/:tab"
+              path="/projects/:projectName/files/:name/:tag/:tab"
               render={routeProps => <Files {...routeProps} />}
             />
             <Redirect to="/projects" />

@@ -183,7 +183,7 @@ const Models = ({
       (artifactsStore.models.allData.length > 0 ||
         artifactsStore.modelEndpoints.length > 0)
     ) {
-      const { name } = match.params
+      const { name, tag } = match.params
 
       if (match.params.pageTab === MODELS_TAB) {
         checkForSelectedModel(
@@ -191,7 +191,8 @@ const Models = ({
           match,
           artifactsStore.models,
           name,
-          setSelectedModel
+          setSelectedModel,
+          tag
         )
       } else if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
         checkForSelectedModelEndpoint(
