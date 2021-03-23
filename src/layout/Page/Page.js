@@ -8,6 +8,10 @@ import appActions from '../../actions/app'
 const Page = ({ fetchFrontendSpec, children }) => {
   useEffect(() => {
     fetchFrontendSpec()
+
+    const interval = setInterval(fetchFrontendSpec, 60000)
+
+    return () => clearInterval(interval)
   }, [fetchFrontendSpec])
   return <PageView>{children}</PageView>
 }
