@@ -533,7 +533,7 @@ export const fetchFeatureRowData = async (
     ...state,
     selectedRowData: {
       ...state.selectedRowData,
-      [`${item.name}-${item.metadata.name}`]: {
+      [`${item.name}-${item.metadata?.name}`]: {
         loading: true
       }
     }
