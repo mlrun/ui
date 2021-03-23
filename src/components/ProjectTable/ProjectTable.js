@@ -50,7 +50,7 @@ const ProjectTable = ({ match, table }) => {
                           <a
                             href={body[key].href}
                             target="_top"
-                            className="project-data-card__table-link"
+                            className="link project-data-card__table-link"
                           >
                             <Tooltip
                               template={
@@ -69,7 +69,7 @@ const ProjectTable = ({ match, table }) => {
                           </a>
                         ) : (
                           <Link
-                            className="project-data-card__table-link"
+                            className="link project-data-card__table-link"
                             to={body[key].link}
                           >
                             <Tooltip

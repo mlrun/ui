@@ -188,3 +188,11 @@ textarea {
     }
   }
 }
+
+.link {
+  color: $cornflowerBlue;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

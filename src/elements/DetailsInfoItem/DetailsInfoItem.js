@@ -114,6 +114,7 @@ const DetailsInfoItem = React.forwardRef(
           template={<TextTooltipTemplate text={funcStr} />}
         >
           <Link
+            className="link"
             to={`/projects/${match.params.projectName}/functions/${funcStr}/overview`}
           >
             {funcStr}
@@ -122,7 +123,7 @@ const DetailsInfoItem = React.forwardRef(
       )
     } else if (link) {
       return (
-        <Link className="details-item__data details-item__link" to={link}>
+        <Link className="link details-item__data details-item__link" to={link}>
           {info}
         </Link>
       )
