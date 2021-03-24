@@ -118,6 +118,7 @@ const Content = ({
       setGroupedByName({})
       setGroupedByWorkflow({})
       setExpand(false)
+      setConvertedYaml('')
     }
   }, [groupFilter, handleGroupByName, handleGroupByWorkflow, handleGroupByNone])
 
