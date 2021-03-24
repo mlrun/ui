@@ -70,12 +70,12 @@ export const featureSetsFilters = [
   { type: 'labels', label: 'Label:' }
 ]
 export const featureVectorsFilters = [
-  { type: 'tree', label: 'Tag:' },
+  { type: 'tag', label: 'Tag:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
 ]
 export const featuresFilters = [
-  { type: 'tree', label: 'Tag:' },
+  { type: 'tag', label: 'Tag:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
 ]
