@@ -17,6 +17,7 @@ import {
   DATASETS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
+  FEATURE_VECTORS_TAB,
   FEATURES_TAB,
   FILES_PAGE,
   FUNCTIONS_PAGE,
@@ -175,7 +176,8 @@ const Content = ({
         )
       } else {
         artifactJson = yamlContent.allData.filter(yamlContentItem =>
-          match.params.pageTab === FEATURE_SETS_TAB
+          match.params.pageTab === FEATURE_SETS_TAB ||
+          match.params.pageTab === FEATURE_VECTORS_TAB
             ? isEqual(yamlContentItem.metadata.name, item.name) &&
               isEqual(yamlContentItem.metadata.tag, item.tag)
             : isEqual(yamlContentItem.db_key, item.db_key)
