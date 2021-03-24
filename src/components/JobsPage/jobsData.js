@@ -121,7 +121,7 @@ export const generatePageData = (
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
-  handleAbortJob
+  onAbortJob
 ) => {
   let jobFilters = []
   let filterMenuActionButton = {
@@ -149,7 +149,7 @@ export const generatePageData = (
       handleRerunJob,
       handleMonitoring,
       jobsDashboardUrl,
-      handleAbortJob
+      onAbortJob
     ),
     detailsMenu,
     filterMenuActionButton: !scheduled && filterMenuActionButton,
@@ -168,7 +168,7 @@ export const generateActionsMenu = (
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
-  handleAbortJob
+  onAbortJob
 ) =>
   scheduled
     ? [
@@ -203,7 +203,10 @@ export const generateActionsMenu = (
         {
           label: 'Abort',
           icon: <Cancel />,
-          onClick: handleAbortJob
+          onClick: onAbortJob,
+          hiddenRules: {
+            status: ['completed', 'error', 'aborted']
+          }
         }
       ]
 

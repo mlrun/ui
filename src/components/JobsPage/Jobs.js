@@ -192,6 +192,22 @@ const Jobs = ({
           message: 'Aborting job is failed'
         })
       })
+    setConfirmData(null)
+  }
+
+  const onAbortJob = job => {
+    setConfirmData({
+      item: job,
+      title: `Abort job "${job.name}"?`,
+      btnConfirmLabel: 'Abort',
+      btnConfirmType: 'danger',
+      rejectHandler: () => {
+        setConfirmData(null)
+      },
+      confirmHandler: () => {
+        handleAbortJob(job)
+      }
+    })
   }
 
   const pageData = useCallback(
@@ -203,7 +219,7 @@ const Jobs = ({
       handleRerunJob,
       handleMonitoring,
       appStore.frontendSpec.jobs_dashboard_url,
-      handleAbortJob
+      onAbortJob
     ),
     [match.params.pageTab, appStore.frontendSpec.jobs_dashboard_url]
   )
