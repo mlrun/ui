@@ -148,6 +148,17 @@ const Content = ({
     let artifactJson = null
 
     if (
+      pageData.page === MODELS_PAGE &&
+      match.params.pageTab === MODEL_ENDPOINTS_TAB
+    ) {
+      const currentYamlContent =
+        yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
+
+      artifactJson =
+        yamlContent[currentYamlContent].find(
+          yamlContentItem => yamlContentItem.metadata.uid === item.metadata.uid
+        ) ?? {}
+    } else if (
       pageData.page === FILES_PAGE ||
       pageData.page === MODELS_PAGE ||
       (pageData.page === FEATURE_STORE_PAGE &&

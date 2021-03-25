@@ -31,6 +31,7 @@ export const modelsInfoHeaders = [
   { label: 'Sources', id: 'sources' }
 ]
 export const modelEndpointsInfoHeaders = [
+  { label: 'UID', id: 'uid' },
   { label: 'Model class', id: 'model_class' },
   { label: 'Model artifact', id: 'model_artifact' },
   { label: 'Function URI', id: 'function_uri' },
@@ -219,8 +220,8 @@ export const checkForSelectedModel = (
   tag
 ) => {
   const artifacts = models.selectedRowData.content[modelName] || models.allData
-  const [searchItem] = artifacts.filter(
-    item => item.db_key === modelName && item.tag === tag
+  const searchItem = artifacts.find(
+    item => item.db_key === modelName && (item.tag === tag || item.tree === tag)
   )
 
   if (!searchItem) {
@@ -237,11 +238,11 @@ export const checkForSelectedModelEndpoint = (
   history,
   match,
   modelEndpoints,
-  modelEndpointId,
+  modelEndpointUid,
   setSelectedModel
 ) => {
-  const [searchItem] = modelEndpoints.filter(item =>
-    item.spec?.model?.includes(modelEndpointId)
+  const searchItem = modelEndpoints.find(
+    item => item.metadata?.uid === modelEndpointUid
   )
   if (!searchItem) {
     history.push(
