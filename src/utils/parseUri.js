@@ -53,4 +53,22 @@ const parseUri = (uri = '') =>
     /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<uid>.+))?$/
   )?.groups ?? {}
 
-export { parseUri }
+const kindToScreen = {
+  artifacts: 'files',
+  datasets: 'feature-store/datasets',
+  'feature-sets': 'feature-store/feature-sets',
+  'feature-vectors': 'feature-store/feature-vectors',
+  functions: 'functions',
+  jobs: 'jobs/monitor',
+  models: 'models/models'
+}
+const generateLinkPath = (uri = '') => {
+  const { kind, project, key, tag, uid } = parseUri(uri)
+  const screen = kindToScreen[kind] ?? 'files'
+  const reference = tag ?? uid
+  return `/projects/${project}/${screen}/${key}${
+    reference ? `/${reference}` : ''
+  }`
+}
+
+export { generateLinkPath, parseUri }
