@@ -3,8 +3,10 @@ export const handleArtifactTreeFilterChange = (
   filter,
   item,
   project,
-  setFilter
+  setFilter,
+  setContent
 ) => {
+  setContent([])
   fetchData({
     tag: item.toLowerCase(),
     project: project,

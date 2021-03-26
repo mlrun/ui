@@ -159,8 +159,9 @@ const Files = ({
         allData: [],
         selectedRowData: []
       })
+      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
     }
-  }, [fetchData, match.params.projectName, removeFiles])
+  }, [fetchData, match.params.projectName, removeFiles, setArtifactFilter])
 
   useEffect(() => {
     if (artifactsStore.filter.tag === 'latest') {
@@ -215,7 +216,8 @@ const Files = ({
         artifactsStore.filter,
         item,
         match.params.projectName,
-        setArtifactFilter
+        setArtifactFilter,
+        setFiles
       )
     },
     [

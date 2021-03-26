@@ -182,6 +182,7 @@ const FeatureStore = ({
     fetchData({ project: match.params.projectName, onEntering: true })
 
     return () => {
+      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
       setContent([])
       setYamlContent({
         allData: [],
@@ -192,7 +193,6 @@ const FeatureStore = ({
       removeFeatureSets()
       removeFeatureVectors()
       setSelectedItem({})
-      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
       setSelectedRowId('')
     }
   }, [
@@ -286,13 +286,13 @@ const FeatureStore = ({
         )
       }
 
-      setContent([])
       handleArtifactTreeFilterChange(
         fetchData,
         artifactsStore.filter,
         item,
         match.params.projectName,
-        setArtifactFilter
+        setArtifactFilter,
+        setContent
       )
     },
     [
