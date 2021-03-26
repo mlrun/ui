@@ -54,6 +54,7 @@ export const generateContent = selectedJob => {
       preview: generatedPreviewData.preview,
       size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
       target_path: target_path,
+      tree: artifact.tree,
       user: selectedJob?.labels
         ?.find(item => item.match(/v3io_user|owner/g))
         ?.replace(/(v3io_user|owner): /, '')

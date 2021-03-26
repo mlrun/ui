@@ -373,15 +373,19 @@ export const navigateToDetailsPane = (
   }
 
   if (match.params.name && artifacts.length !== 0) {
-    const [selectedArtifact] = artifacts.filter(artifact => {
+    const selectedArtifact = artifacts.find(artifact => {
       const searchKey = artifact.name ? 'name' : 'db_key'
 
       if (
         match.params.pageTab === FEATURE_SETS_TAB ||
-        match.params.pageTab === FEATURE_VECTORS_TAB ||
-        match.params.pageTab === DATASETS_TAB
+        match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
         return artifact[searchKey] === name && artifact.tag === tag
+      } else if (match.params.pageTab === DATASETS_TAB) {
+        return (
+          artifact[searchKey] === name &&
+          (artifact.tag === tag || artifact.tree === tag)
+        )
       } else {
         return artifact[searchKey] === name
       }

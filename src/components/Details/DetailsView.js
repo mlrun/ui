@@ -71,8 +71,10 @@ const DetailsView = React.forwardRef(
                 )
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
-              : selectedItem?.spec?.model // 'model-key:model-tag'
+              : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
               ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
+              : selectedItem?.spec?.model
+              ? selectedItem?.metadata?.uid
               : ''}
             {state && (
               <Tooltip

@@ -161,6 +161,7 @@ const Models = ({
     fetchData,
     getModelsEndpoints,
     match.params.projectName,
+    match.params.pageTab,
     removeModels,
     setArtifactFilter
   ])
@@ -177,7 +178,9 @@ const Models = ({
   }, [handleRemoveModel, handleRequestOnExpand, match.params.pageTab])
 
   useEffect(() => {
-    if (artifactsStore.filter.tag === 'latest') {
+    if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
+      setGroupFilter('')
+    } else if (artifactsStore.filter.tag === 'latest') {
       setGroupFilter('name')
     } else if (groupFilter.length > 0) {
       setGroupFilter('')
@@ -187,8 +190,10 @@ const Models = ({
   useEffect(() => {
     if (
       match.params.name &&
-      (artifactsStore.models.allData.length > 0 ||
-        artifactsStore.modelEndpoints.length > 0)
+      ((match.params.pageTab === MODELS_TAB &&
+        artifactsStore.models.allData.length > 0) ||
+        (match.params.pageTab === MODEL_ENDPOINTS_TAB &&
+          artifactsStore.modelEndpoints.length > 0))
     ) {
       const { name, tag } = match.params
 
@@ -206,7 +211,7 @@ const Models = ({
           history,
           match,
           artifactsStore.modelEndpoints,
-          name,
+          tag,
           setSelectedModel
         )
       }

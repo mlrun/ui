@@ -187,8 +187,9 @@ const Files = ({
         artifactsStore.files.allData
 
       if (artifacts.length !== 0) {
-        const [searchItem] = artifacts.filter(
-          item => item.db_key === name && item.tag === tag
+        const searchItem = artifacts.find(
+          item =>
+            item.db_key === name && (item.tag === tag || item.tree === tag)
         )
 
         if (!searchItem) {

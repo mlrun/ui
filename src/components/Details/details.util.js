@@ -59,6 +59,9 @@ export const generateArtifactsContent = (
     return generateFeatureVectorsOverviewContent(selectedItem)
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     return {
+      uid: {
+        value: selectedItem?.metadata?.uid ?? '-'
+      },
       model_class: {
         value: selectedItem?.spec?.model_class ?? '-'
       },

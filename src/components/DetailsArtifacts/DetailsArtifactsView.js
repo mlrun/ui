@@ -71,7 +71,8 @@ const DetailsArtifactsView = ({
                     artifactScreenLinks[artifact.kind] ??
                     `/projects/${
                       match.params.projectName
-                    }/files/${artifact.db_key || artifact.key}/overview`
+                    }/files/${artifact.db_key || artifact.key}/${artifact.tag ||
+                      artifact.tree}/overview`
                   }
                 >
                   <DetailsIcon />

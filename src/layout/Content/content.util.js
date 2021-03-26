@@ -16,7 +16,7 @@ export const generateGroupedItems = (content, selectedRowData) => {
     } else if (selectedRowData?.[contentItem.db_key]?.content) {
       groupedItems[contentItem.db_key] =
         selectedRowData[contentItem.db_key]?.content
-    } else if (contentItem.metadata) {
+    } else if (contentItem.metadata?.name) {
       groupedItems[`${contentItem.name}-${contentItem.metadata.name}`] ??= []
       groupedItems[`${contentItem.name}-${contentItem.metadata.name}`].push(
         contentItem
