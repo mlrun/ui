@@ -4,6 +4,7 @@
 envsubst '${MLRUN_API_PROXY_URL} \
           ${MLRUN_BETA_MODE} \
           ${MLRUN_FUNCTION_CATALOG_URL} \
+          ${MLRUN_FUNCTION_CATALOG_URI} \
           ${MLRUN_NUCLIO_API_URL} \
           ${MLRUN_NUCLIO_MODE} \
           ${MLRUN_NUCLIO_UI_URL} \
