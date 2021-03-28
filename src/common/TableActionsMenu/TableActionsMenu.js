@@ -12,11 +12,16 @@ import './tableActionsMenu.scss'
 const TableActionsMenu = ({ item, menu, time }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
+  const [actioMenu, setActionMenu] = useState([])
   let idTimeout = null
 
   useEffect(() => {
-    setIsIconDisplayed(menu.some(menuItem => menuItem.icon))
-  }, [menu])
+    setActionMenu(typeof menu === 'function' ? menu(item) : menu)
+  }, [item, menu])
+
+  useEffect(() => {
+    setIsIconDisplayed(actioMenu.some(menuItem => menuItem.icon))
+  }, [actioMenu])
 
   const iconClassNames = classnames(
     'table-actions-container__icon',
@@ -55,7 +60,7 @@ const TableActionsMenu = ({ item, menu, time }) => {
           className="table-actions-container__body"
           onClick={() => setIsShowMenu(false)}
         >
-          {menu.map(menuItem => {
+          {actioMenu.map(menuItem => {
             return (
               (menuItem.visible ?? true) && (
                 <Tooltip
@@ -94,7 +99,10 @@ TableActionsMenu.defaultProps = {
 
 TableActionsMenu.propTypes = {
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
-  menu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  menu: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.func
+  ]).isRequired,
   time: PropTypes.number
 }
 

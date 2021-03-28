@@ -135,9 +135,9 @@ const DetailsView = React.forwardRef(
             ].includes(match.params.pageTab) && (
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
                 <Download
-                  path={`${selectedItem.target_path?.path}${
-                    selectedItem.model_file ? selectedItem.model_file : ''
-                  }`}
+                  path={`${
+                    selectedItem.target_path?.path
+                  }${selectedItem.model_file || ''}`}
                   schema={selectedItem.target_path?.schema}
                   user={selectedItem.producer?.owner}
                 />

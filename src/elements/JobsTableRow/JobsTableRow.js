@@ -105,7 +105,7 @@ const JobsTableRow = ({
                               : `/${detailsMenu[0]}`
                           }`
                         }
-                        key={cellContentObj.value + index}
+                        key={`${cellContentObj.value}${index}`}
                         selectItem={handleSelectItem}
                         selectedItem={selectedItem}
                       />
@@ -140,7 +140,7 @@ const JobsTableRow = ({
                 handleExpandRow={handleExpandRow}
                 isGroupedByWorkflow={isGroupedByWorkflow}
                 item={currentItem}
-                key={new Date().getTime() + index}
+                key={`${new Date().getTime()}${index}`}
                 link={rowItemProp.link}
                 selectItem={handleSelectItem}
                 selectedItem={selectedItem}
