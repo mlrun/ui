@@ -1,9 +1,6 @@
 # build stage
 FROM node:lts-alpine as build-stage
 
-ARG COMMIT_HASH
-ARG DATE
-
 WORKDIR /app
 
 COPY package*.json ./
@@ -12,6 +9,8 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+ARG COMMIT_HASH
+ARG DATE
 RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
     echo ${DATE} > ./build/BUILD_DATE
 
