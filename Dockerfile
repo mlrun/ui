@@ -28,7 +28,7 @@ EXPOSE 80
 ENV MLRUN_API_PROXY_URL="${MLRUN_API_PROXY_URL:-http://localhost:80}" \
     MLRUN_BETA_MODE="${MLRUN_BETA_MODE:-enabled}" \
     MLRUN_FUNCTION_CATALOG_URL="${MLRUN_FUNCTION_CATALOG_URL:-https://raw.githubusercontent.com}" \
-    MLRUN_FUNCTION_CATALOG_URI="${MLRUN_FUNCTION_CATALOG_URI:-/mlrun/functions/master}" \
+    MLRUN_FUNCTION_CATALOG_PATH="${MLRUN_FUNCTION_CATALOG_PATH:-/mlrun/functions/master}" \
     MLRUN_NUCLIO_API_URL="${MLRUN_NUCLIO_API_URL:-http://localhost:8070}" \
     MLRUN_NUCLIO_MODE="${MLRUN_NUCLIO_MODE:-disabled}" \
     MLRUN_NUCLIO_UI_URL="${MLRUN_NUCLIO_UI_URL:-http://localhost:8070}" \

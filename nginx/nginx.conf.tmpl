@@ -12,7 +12,7 @@ server {
   # https://raw.githubusercontent.com
   set $function_catalog ${MLRUN_FUNCTION_CATALOG_URL};
   location /function-catalog {
-    rewrite /function-catalog/(.*) ${MLRUN_FUNCTION_CATALOG_URI}/$1 break;
+    rewrite /function-catalog/(.*) ${MLRUN_FUNCTION_CATALOG_PATH}/$1 break;
     proxy_pass $function_catalog;
   }
 
