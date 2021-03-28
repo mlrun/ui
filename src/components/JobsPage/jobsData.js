@@ -165,7 +165,7 @@ export const generateActionsMenu = (
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl
-) =>
+) => job =>
   scheduled
     ? [
         {
@@ -192,7 +192,11 @@ export const generateActionsMenu = (
         },
         {
           label: 'Monitoring',
-          tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
+          tooltip: !jobsDashboardUrl
+            ? 'Grafana service unavailable'
+            : job.labels?.includes('kind: dask')
+            ? 'Unavailable for Dask jobs'
+            : '',
           disabled: !jobsDashboardUrl,
           onClick: handleMonitoring
         }
