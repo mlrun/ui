@@ -173,7 +173,10 @@ JobsTableRow.defaultProps = {
 }
 
 JobsTableRow.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.func
+  ]).isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,

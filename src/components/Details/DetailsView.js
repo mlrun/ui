@@ -226,7 +226,10 @@ DetailsView.defaultProps = {
 }
 
 DetailsView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.func
+  ]).isRequired,
   applyChanges: PropTypes.func.isRequired,
   cancelChanges: PropTypes.func.isRequired,
   detailsDispatch: PropTypes.func.isRequired,
