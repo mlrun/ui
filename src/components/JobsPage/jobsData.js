@@ -135,7 +135,7 @@ export const generatePageData = (
       { type: 'name', label: 'Name:' },
       { type: 'labels', label: 'Labels:' }
     ]
-    filterMenuActionButton = {}
+    filterMenuActionButton = null
   } else {
     jobFilters = [...filters]
   }
