@@ -306,7 +306,10 @@ Details.defaultProps = {
 }
 
 Details.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.func
+  ]).isRequired,
   applyDetailsChanges: PropTypes.func,
   cancelRequest: PropTypes.func,
   detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,

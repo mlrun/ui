@@ -135,6 +135,7 @@ export const generatePageData = (
       { type: 'name', label: 'Name:' },
       { type: 'labels', label: 'Labels:' }
     ]
+    filterMenuActionButton = {}
   } else {
     jobFilters = [...filters]
   }
@@ -149,7 +150,7 @@ export const generatePageData = (
       jobsDashboardUrl
     ),
     detailsMenu,
-    filterMenuActionButton: !scheduled && filterMenuActionButton,
+    filterMenuActionButton,
     filters: jobFilters,
     page,
     tableHeaders: generateTableHeaders(scheduled),
