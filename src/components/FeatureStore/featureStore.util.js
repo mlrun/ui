@@ -241,6 +241,7 @@ export const generatePageData = (
     data.tableHeaders = featureSetsTableHeaders
     data.registerArtifactDialogTitle = createFeatureSetTitle
   } else if (pageTab === FEATURES_TAB) {
+    data.actionsMenu = []
     data.filters = featuresFilters
     data.tableHeaders = featuresTableHeaders
     data.filterMenuActionButton = {
