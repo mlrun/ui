@@ -173,8 +173,10 @@ const DetailsInfoView = React.forwardRef(
                     if (key === 'uri') {
                       // value is in the form of: project/uid-iteration
                       const [project, rest] = value.split('/')
-                      const [uid] = rest.split('-')
-                      url = `/projects/${project}/jobs/monitor/${uid}/overview`
+                      const [uid] = rest?.split('-') ?? []
+                      if (uid) {
+                        url = `/projects/${project}/jobs/monitor/${uid}/overview`
+                      }
                     }
 
                     return (
