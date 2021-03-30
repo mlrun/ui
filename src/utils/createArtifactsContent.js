@@ -27,6 +27,8 @@ import { ReactComponent as Nosql } from '../images/nosql.svg'
 import { ReactComponent as Stream } from '../images/stream.svg'
 import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
 import { ReactComponent as DbIcon } from '../images/db-icon.svg'
+import { copyToClipboard } from './copyToClipboard'
+import { generateUri } from './generateUri'
 
 const createArtifactsContent = (artifacts, page, pageTab, project) => {
   return artifacts.map(artifact => {
@@ -157,6 +159,12 @@ const createModelsRowData = (artifact, project) => {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonDownload'
+    },
+    buttonCopy: {
+      value: '',
+      class: 'artifacts_extra-small artifacts__icon',
+      type: 'buttonCopyURI',
+      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
     }
   }
 }
@@ -218,6 +226,13 @@ const createFilesRowData = (artifact, project) => {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonDownload'
+    },
+    buttonCopy: {
+      value: '',
+      class: 'artifacts_extra-small artifacts__icon',
+      type: 'buttonCopyURI',
+      actionHandler: (item, tab) =>
+        copyToClipboard(generateUri(item, tab ?? 'artifacts'))
     }
   }
 }
@@ -352,6 +367,12 @@ const createDatasetsRowData = (artifact, project) => {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonDownload'
+    },
+    buttonCopy: {
+      value: '',
+      class: 'artifacts_extra-small artifacts__icon',
+      type: 'buttonCopyURI',
+      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
     }
   }
 }
@@ -385,7 +406,13 @@ const createFeatureSetsRowData = (artifact, project) => {
       value: artifact.entities ? artifact.entities[0]?.name : '',
       class: 'artifacts_small'
     },
-    targets: getFeatureSetTargetCellValue(artifact.targets)
+    targets: getFeatureSetTargetCellValue(artifact.targets),
+    buttonCopy: {
+      value: '',
+      class: 'artifacts_extra-small artifacts__icon',
+      type: 'buttonCopyURI',
+      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+    }
   }
 }
 
@@ -492,6 +519,12 @@ const createFeatureVectorsRowData = (artifact, project) => ({
       ? formatDatetime(new Date(artifact.updated), 'N/A')
       : 'N/A',
     class: 'artifacts_small'
+  },
+  buttonCopy: {
+    value: '',
+    class: 'artifacts_extra-small artifacts__icon',
+    type: 'buttonCopyURI',
+    actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
   }
 })
 
