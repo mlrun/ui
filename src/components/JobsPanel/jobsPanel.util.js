@@ -344,7 +344,7 @@ export const generateTableDataFromDefaultData = (
     requests: {}
   }
   const secrets = (defaultData.task.spec.secret_sources ?? []).map(secret => ({
-    data: secret.data || secret
+    data: secret
   }))
   const volumeMounts = defaultData.function?.spec.volume_mounts.map(
     volume_mounts => {
@@ -413,7 +413,7 @@ export const generateTableDataFromDefaultData = (
       : [],
     volumes: defaultData.function?.spec.volumes ?? [],
     environmentVariables: defaultData.function?.spec.env ?? [],
-    secret_sources: secrets
+    secret_sources: defaultData.task.spec.secret_sources ?? []
   })
 
   if (limits) {
