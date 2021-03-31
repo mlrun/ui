@@ -187,7 +187,7 @@ export const generateActionsMenu = (
       ]
     : [
         {
-          label: 'Rerun',
+          label: 'Re-run',
           icon: <Run />,
           onClick: handleRerunJob
         },
