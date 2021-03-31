@@ -19,7 +19,7 @@ const ProjectDataCard = ({
 }) => {
   return (
     <div className="project-data-card">
-      <div className="project-data-card__header">
+      <div className="project-data-card__header table-header">
         <div className="project-data-card__header-text data-ellipsis">
           {href ? (
             <a href={href} target="_top">
