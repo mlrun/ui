@@ -36,7 +36,11 @@ const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
         </span>
       )}
       {item.status && <span className={`status ${item.status}`} />}
-      {item.label}
+      <div className="data-ellipsis">
+        <Tooltip template={<TextTooltipTemplate text={item.label} />}>
+          {item.label}
+        </Tooltip>
+      </div>
       {item.subLabel && (
         <Tooltip
           className="sub-label"
