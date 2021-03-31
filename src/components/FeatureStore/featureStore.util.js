@@ -240,6 +240,7 @@ export const generatePageData = (
     data.infoHeaders = featureSetsInfoHeaders
     data.tableHeaders = featureSetsTableHeaders
     data.registerArtifactDialogTitle = createFeatureSetTitle
+    data.filterMenuActionButton = null
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
     data.filters = featuresFilters
@@ -259,6 +260,7 @@ export const generatePageData = (
     data.handleRemoveRequestData = handleRemoveRequestData
     data.infoHeaders = featureVectorsInfoHeaders
     data.registerArtifactDialogTitle = createFeatureVectorTitle
+    data.filterMenuActionButton = null
   } else {
     data.actionsMenu = generateActionsMenu(DATASETS_TAB)
     data.filters = datasetsFilters
@@ -267,6 +269,7 @@ export const generatePageData = (
     data.registerArtifactDialogTitle = registerDatasetsTitle
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
+    data.filterMenuActionButton = null
   }
 
   return data

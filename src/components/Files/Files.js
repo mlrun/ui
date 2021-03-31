@@ -53,10 +53,6 @@ const Files = ({
 
   const fetchData = useCallback(
     item => {
-      if (item.onEntering) {
-        item.tag = 'latest'
-      }
-
       fetchFiles(item).then(result => {
         if (result) {
           setFiles(generateArtifacts(filterArtifacts(result)))
@@ -148,7 +144,10 @@ const Files = ({
   }, [])
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName, onEntering: true })
+    fetchData({
+      project: match.params.projectName,
+      tag: artifactsStore.filter.tag
+    })
 
     return () => {
       setGroupFilter('')
@@ -160,7 +159,12 @@ const Files = ({
         selectedRowData: []
       })
     }
-  }, [fetchData, match.params.projectName, removeFiles])
+  }, [
+    artifactsStore.filter.tag,
+    fetchData,
+    match.params.projectName,
+    removeFiles
+  ])
 
   useEffect(() => {
     if (artifactsStore.filter.tag === 'latest') {
@@ -248,7 +252,7 @@ const Files = ({
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
           artifactFilter={artifactsStore.filter}
-          artifactKind={''}
+          artifactKind="file"
           match={match}
           refresh={fetchData}
           setIsPopupDialogOpen={setIsPopupDialogOpen}
