@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import axios from 'axios'
 
 import ProjectCardView from './ProjectCardView'
 
@@ -33,11 +34,12 @@ const ProjectCard = ({
   const [models, setModels] = useState([])
   const [runningJobs, setRunningJobs] = useState([])
   const [showActionsList, setShowActionsList] = useState(false)
+  const [source] = useState(axios.CancelToken.source())
 
   const actionsMenuRef = React.createRef()
 
   useEffect(() => {
-    fetchProjectRunningJobs(project.metadata.name)
+    fetchProjectRunningJobs(project.metadata.name, source.token)
       .then(jobs => {
         if (fetchRunningJobsFailure) {
           setFetchRunningJobsFailure(false)
@@ -48,7 +50,7 @@ const ProjectCard = ({
       .catch(() => {
         setFetchRunningJobsFailure(true)
       })
-    fetchProjectFailedJobs(project.metadata.name)
+    fetchProjectFailedJobs(project.metadata.name, source.token)
       .then(jobs => {
         if (fetchFailedJobsFailure) {
           setFetchFailedJobsFailure(false)
@@ -57,7 +59,7 @@ const ProjectCard = ({
         setFailedJobs(jobs)
       })
       .catch(() => setFetchFailedJobsFailure(true))
-    fetchProjectModels(project.metadata.name)
+    fetchProjectModels(project.metadata.name, source.token)
       .then(models => {
         if (fetchModelsFailure) {
           setFetchModelsFailure(false)
@@ -66,7 +68,7 @@ const ProjectCard = ({
         setModels(models)
       })
       .catch(() => setFetchModelsFailure(true))
-    fetchProjectFeatureSets(project.metadata.name)
+    fetchProjectFeatureSets(project.metadata.name, source.token)
       .then(featureSets => {
         if (fetchFeatureSetsFailure) {
           setFetchFeatureSetsFailure(false)
@@ -75,7 +77,7 @@ const ProjectCard = ({
         setFeatureSets(featureSets)
       })
       .catch(() => setFetchFeatureSetsFailure(true))
-    fetchProjectFunctions(project.metadata.name)
+    fetchProjectFunctions(project.metadata.name, source.token)
       .then(funcs => {
         if (fetchFunctionsFailure) {
           setFetchFunctionsFailure(false)
@@ -96,8 +98,15 @@ const ProjectCard = ({
     fetchProjectModels,
     fetchProjectRunningJobs,
     fetchRunningJobsFailure,
-    project.metadata.name
+    project.metadata.name,
+    source.token
   ])
+
+  useEffect(() => {
+    return () => {
+      source.cancel('canceled')
+    }
+  }, [source])
 
   useEffect(() => {
     setFetchNuclioFunctionsFailure(
