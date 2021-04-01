@@ -150,6 +150,9 @@ const ProjectsView = ({
                       actionsMenu={actionsMenu}
                       key={project.id || project.metadata.name}
                       project={project}
+                      projectSummary={projectStore.projectsSummary.data.find(
+                        item => item.name === project.metadata.name
+                      )}
                     />
                   )
                 })

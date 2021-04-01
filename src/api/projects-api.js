@@ -52,6 +52,36 @@ export default {
   getProjectScheduledJobs: project =>
     mainHttpClient.get(`/projects/${project}/schedules`),
   getProjects: () => mainHttpClient.get('/projects'),
+  getProjectsSummary: cancelToken =>
+    // mainHttpClient.get('/projects?format=summary', { cancelToken }),
+    Promise.resolve({
+      projects: [
+        {
+          name: 'default',
+          functions_count: 32,
+          feature_sets_count: 45,
+          models_count: 29,
+          runs_failed_recent_count: 3,
+          runs_running_count: 93
+        },
+        {
+          name: 'long-long-long-long-long-long-long-long-long-long',
+          functions_count: 32,
+          feature_sets_count: 45,
+          models_count: 29,
+          runs_failed_recent_count: 3,
+          runs_running_count: 93
+        },
+        {
+          name: 'test',
+          functions_count: 32,
+          feature_sets_count: 45,
+          models_count: 29,
+          runs_failed_recent_count: 3,
+          runs_running_count: 93
+        }
+      ]
+    }),
   getProjectWorkflows: project => {
     return mainHttpClient.get(`/projects/${project}/pipelines`)
   },
