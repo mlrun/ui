@@ -421,10 +421,10 @@ const projectsAction = {
 
     return projectsApi
       .getProjectsSummary(cancelToken)
-      .then(response => {
-        dispatch(projectsAction.fetchProjectsSummarySuccess(response.projects))
+      .then(({ data: { projects } }) => {
+        dispatch(projectsAction.fetchProjectsSummarySuccess(projects))
 
-        return response.projects
+        return projects
       })
       .catch(err => {
         dispatch(projectsAction.fetchProjectsSummaryFailure(err))
