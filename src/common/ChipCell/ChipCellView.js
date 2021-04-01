@@ -37,27 +37,24 @@ const ChipCellView = React.forwardRef(
             <div className={'chip-block'} key={`${chip.value}${index}`}>
               <Tooltip
                 className="tooltip-wrapper"
+                hidden={editConfig.isEdit || /^\+ [\d]+/g.test(chip.value)}
                 key={chip.value}
                 template={
-                  editConfig.isEdit ? (
-                    <span />
-                  ) : (
-                    <TextTooltipTemplate
-                      text={
-                        chip.delimiter && !chip.value.match(/^\+ [\d]+/g) ? (
-                          <span>
-                            {chipLabel}
-                            <span className="chip__delimiter">
-                              {chip.delimiter}
-                            </span>
-                            {chipValue}
+                  <TextTooltipTemplate
+                    text={
+                      chip.delimiter ? (
+                        <span>
+                          {chipLabel}
+                          <span className="chip__delimiter">
+                            {chip.delimiter}
                           </span>
-                        ) : (
-                          chip.value
-                        )
-                      }
-                    />
-                  )
+                          {chipValue}
+                        </span>
+                      ) : (
+                        chip.value
+                      )
+                    }
+                  />
                 }
               >
                 <Chip

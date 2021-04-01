@@ -53,12 +53,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
         className="project-data-card__statistics-label"
         key={counterObject.label + Math.random()}
       >
-        <Tooltip
-          className={counterObject.labelClassName || ''}
-          template={<TextTooltipTemplate text={counterObject.label} />}
-        >
-          {counterObject.label}
-        </Tooltip>
+        {counterObject.label}
       </div>
     ]
   )

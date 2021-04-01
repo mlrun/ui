@@ -261,6 +261,10 @@
             font-size: 20px;
             line-height: 23px;
           }
+
+          &.table-header {
+            min-height: 180px;
+          }
         }
 
         &_small {
