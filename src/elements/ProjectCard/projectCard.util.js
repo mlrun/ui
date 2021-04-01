@@ -1,7 +1,7 @@
 import { groupByUniqName } from '../../utils/groupByUniqName'
 
 export const generateProjectStatistic = (
-  projectSummary,
+  projectSummary = {},
   fetchProjectsSummaryFailure,
   projectsSummaryLoading,
   fetchNuclioFunctionsFailure,
