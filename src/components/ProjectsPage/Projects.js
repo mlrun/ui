@@ -261,6 +261,7 @@ const Projects = ({
     removeProjects()
     fetchProjects()
     fetchNuclioFunctions()
+    fetchProjectsSummary(source.token)
   }
 
   return (
