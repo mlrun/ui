@@ -51,7 +51,10 @@ import {
   SET_PROJECT_LABELS,
   FETCH_PROJECT_FEATURE_SETS_BEGIN,
   FETCH_PROJECT_FEATURE_SETS_SUCCESS,
-  FETCH_PROJECT_FEATURE_SETS_FAILURE
+  FETCH_PROJECT_FEATURE_SETS_FAILURE,
+  FETCH_PROJECTS_SUMMARY_BEGIN,
+  FETCH_PROJECTS_SUMMARY_FAILURE,
+  FETCH_PROJECTS_SUMMARY_SUCCESS
 } from '../constants'
 
 const initialState = {
@@ -117,7 +120,12 @@ const initialState = {
       loading: false
     }
   },
-  projects: []
+  projects: [],
+  projectsSummary: {
+    error: null,
+    loading: false,
+    data: []
+  }
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -612,6 +620,32 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         projects: payload,
         loading: false
+      }
+    case FETCH_PROJECTS_SUMMARY_BEGIN:
+      return {
+        ...state,
+        projectsSummary: {
+          ...state.projectsSummary,
+          loading: true
+        }
+      }
+    case FETCH_PROJECTS_SUMMARY_FAILURE:
+      return {
+        ...state,
+        projectsSummary: {
+          data: [],
+          loading: false,
+          error: payload
+        }
+      }
+    case FETCH_PROJECTS_SUMMARY_SUCCESS:
+      return {
+        ...state,
+        projectsSummary: {
+          ...state.projectsSummary,
+          data: payload,
+          loading: false
+        }
       }
     case FETCH_PROJECT_WORKFLOWS_BEGIN:
       return {

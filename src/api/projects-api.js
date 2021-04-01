@@ -52,6 +52,13 @@ export default {
   getProjectScheduledJobs: project =>
     mainHttpClient.get(`/projects/${project}/schedules`),
   getProjects: () => mainHttpClient.get('/projects'),
+  getProjectsSummary: cancelToken =>
+    mainHttpClient.get('/projects', {
+      cancelToken,
+      params: {
+        format: 'summary'
+      }
+    }),
   getProjectWorkflows: project => {
     return mainHttpClient.get(`/projects/${project}/pipelines`)
   },

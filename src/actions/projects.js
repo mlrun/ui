@@ -40,6 +40,9 @@ import {
   FETCH_PROJECT_SCHEDULED_JOBS_FAILURE,
   FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS,
   FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECTS_SUMMARY_BEGIN,
+  FETCH_PROJECTS_SUMMARY_FAILURE,
+  FETCH_PROJECTS_SUMMARY_SUCCESS,
   FETCH_PROJECT_WORKFLOWS_BEGIN,
   FETCH_PROJECT_WORKFLOWS_FAILURE,
   FETCH_PROJECT_WORKFLOWS_SUCCESS,
@@ -412,6 +415,29 @@ const projectsAction = {
   fetchProjectsSuccess: projectsList => ({
     type: FETCH_PROJECTS_SUCCESS,
     payload: projectsList
+  }),
+  fetchProjectsSummary: cancelToken => dispatch => {
+    dispatch(projectsAction.fetchProjectsSummaryBegin())
+
+    return projectsApi
+      .getProjectsSummary(cancelToken)
+      .then(({ data: { projects } }) => {
+        dispatch(projectsAction.fetchProjectsSummarySuccess(projects))
+
+        return projects
+      })
+      .catch(err => {
+        dispatch(projectsAction.fetchProjectsSummaryFailure(err))
+      })
+  },
+  fetchProjectsSummaryBegin: () => ({ type: FETCH_PROJECTS_SUMMARY_BEGIN }),
+  fetchProjectsSummaryFailure: error => ({
+    type: FETCH_PROJECTS_SUMMARY_FAILURE,
+    payload: error
+  }),
+  fetchProjectsSummarySuccess: summary => ({
+    type: FETCH_PROJECTS_SUMMARY_SUCCESS,
+    payload: summary
   }),
   fetchProjectWorkflows: project => dispatch => {
     dispatch(projectsAction.fetchProjectWorkflowsBegin())
