@@ -1,7 +1,8 @@
+import { isEmpty } from 'lodash'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 
 export const generateProjectStatistic = (
-  projectSummary,
+  projectSummary = {},
   fetchProjectsSummaryFailure,
   projectsSummaryLoading,
   fetchNuclioFunctionsFailure,
@@ -36,15 +37,15 @@ export const generateProjectStatistic = (
       value:
         fetchProjectsSummaryFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
+          : isEmpty(projectSummary)
+          ? '-'
           : projectSummary.runs_running_count + runningNuclioFunctions
     },
     failedJobs: {
       className:
         !fetchProjectsSummaryFailure &&
         !fetchNuclioFunctionsFailure &&
-        projectSummary.runs_failed_recent_count?.length +
-          failedNuclioFunctions >
-          0
+        projectSummary.runs_failed_recent_count + failedNuclioFunctions > 0
           ? 'failed'
           : 'default',
       counterTooltip: 'ML jobs and Nuclio functions',
@@ -54,13 +55,19 @@ export const generateProjectStatistic = (
       value:
         fetchProjectsSummaryFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
+          : isEmpty(projectSummary)
+          ? '-'
           : projectSummary.runs_failed_recent_count + failedNuclioFunctions
     },
     models: {
       className: 'default',
       label: 'Models',
       loading: projectsSummaryLoading,
-      value: fetchProjectsSummaryFailure ? 'N/A' : projectSummary.models_count
+      value: fetchProjectsSummaryFailure
+        ? 'N/A'
+        : isEmpty(projectSummary)
+        ? '-'
+        : projectSummary.models_count
     },
     featureSets: {
       className: 'default',
@@ -68,6 +75,8 @@ export const generateProjectStatistic = (
       loading: projectsSummaryLoading,
       value: fetchProjectsSummaryFailure
         ? 'N/A'
+        : isEmpty(projectSummary)
+        ? '-'
         : projectSummary.feature_sets_count
     },
     functions: {
@@ -76,6 +85,8 @@ export const generateProjectStatistic = (
       loading: projectsSummaryLoading,
       value: fetchProjectsSummaryFailure
         ? 'N/A'
+        : isEmpty(projectSummary)
+        ? '-'
         : projectSummary.functions_count
     }
   }
