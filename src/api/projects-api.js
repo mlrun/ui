@@ -22,22 +22,33 @@ export default {
   getProject: project => mainHttpClient.get(`/projects/${project}`),
   getProjectDataSets: project =>
     mainHttpClient.get(`/artifacts?project=${project}&category=dataset`),
-  getProjectFailedJobs: project =>
+  getProjectFailedJobs: (project, cancelToken) =>
     mainHttpClient.get(
       `/runs?project=${project}&state=error&start_time_from=${new Date(
         Date.now() - 24 * 60 * 60 * 1000
-      ).toISOString()}`
+      ).toISOString()}`,
+      {
+        cancelToken: cancelToken
+      }
     ),
-  getProjectFeatureSets: project =>
-    mainHttpClient.get(`/projects/${project}/feature-sets`),
+  getProjectFeatureSets: (project, cancelToken) =>
+    mainHttpClient.get(`/projects/${project}/feature-sets`, {
+      cancelToken: cancelToken
+    }),
   getProjectFiles: project =>
     mainHttpClient.get(`/artifacts?project=${project}&category=other`),
-  getProjectFunctions: project =>
-    mainHttpClient.get(`/funcs?project=${project}`),
-  getProjectModels: project =>
-    mainHttpClient.get(`/artifacts?project=${project}&category=model`),
-  getProjectRunningJobs: project =>
-    mainHttpClient.get(`/runs?project=${project}&state=running`),
+  getProjectFunctions: (project, cancelToken) =>
+    mainHttpClient.get(`/funcs?project=${project}`, {
+      cancelToken: cancelToken
+    }),
+  getProjectModels: (project, cancelToken) =>
+    mainHttpClient.get(`/artifacts?project=${project}&category=model`, {
+      cancelToken: cancelToken
+    }),
+  getProjectRunningJobs: (project, cancelToken) =>
+    mainHttpClient.get(`/runs?project=${project}&state=running`, {
+      cancelToken: cancelToken
+    }),
   getProjectScheduledJobs: project =>
     mainHttpClient.get(`/projects/${project}/schedules`),
   getProjects: () => mainHttpClient.get('/projects'),
