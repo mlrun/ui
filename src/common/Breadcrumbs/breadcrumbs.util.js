@@ -18,6 +18,6 @@ export const generateProjectScreens = match => [
 
 export const generateProjectsList = projects =>
   projects.map(project => ({
-    label: project.metadata.name,
-    id: project.metadata.name
+    label: project,
+    id: project
   }))
