@@ -21,93 +21,92 @@ const DetailsTransformations = ({ selectedItem }) => {
   const [selectedAfterStep, setSelectedAfterStep] = useState('')
   const [selectedErrorStep, setSelectedErrorStep] = useState('')
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
+  const [selectedItemUid, setSelectedItemUid] = useState(null)
 
   const generateGraphData = useCallback(() => {
-    if (states) {
-      let edgesMap = {}
-      let errorsMap = {}
-      let stepsList = []
-      let nodes = map(states, (stepItem, stepName) => {
-        let nodeItem = {
-          id: stepName,
-          data: { label: stepName },
-          className: selectedStep === stepName ? 'selected' : '',
-          position: { x: 0, y: 0 }
-        }
-
-        if (stepItem.after) {
-          edgesMap[stepName] = stepItem.after[0]
-        } else if (!find(states, ['on_error', stepName])) {
-          edgesMap[stepName] = 'Source'
-        }
-
-        if (stepItem.on_error) {
-          errorsMap[stepName] = stepItem.on_error
-        }
-
-        stepsList.push({
-          id: stepName,
-          label: stepName
-        })
-
-        return nodeItem
-      })
-
-      nodes.unshift({
-        id: 'Source',
-        data: { label: 'Source' },
-        type: 'input',
+    let edgesMap = {}
+    let errorsMap = {}
+    let stepsList = []
+    let nodes = map(states, (stepItem, stepName) => {
+      let nodeItem = {
+        id: stepName,
+        data: { label: stepName },
+        className: selectedStep === stepName ? 'selected' : '',
         position: { x: 0, y: 0 }
+      }
+
+      if (stepItem.after) {
+        edgesMap[stepName] = stepItem.after[0]
+      } else if (!find(states, ['on_error', stepName])) {
+        edgesMap[stepName] = 'Source'
+      }
+
+      if (stepItem.on_error) {
+        errorsMap[stepName] = stepItem.on_error
+      }
+
+      stepsList.push({
+        id: stepName,
+        label: stepName
       })
 
-      let nodesEdges = map(edgesMap, (source, target) => {
-        return {
-          id: `e.${source}.${target}`,
-          source: source,
-          target: target,
+      return nodeItem
+    })
+
+    nodes.unshift({
+      id: 'Source',
+      data: { label: 'Source' },
+      type: 'input',
+      position: { x: 0, y: 0 }
+    })
+
+    let nodesEdges = map(edgesMap, (source, target) => {
+      return {
+        id: `e.${source}.${target}`,
+        source: source,
+        target: target,
+        type: 'smoothstep',
+        animated: false,
+        arrowHeadType: 'arrowclosed'
+      }
+    })
+
+    forEach(targets, target => {
+      if (target.after_state) {
+        nodes.push({
+          id: target.name,
+          data: { label: target.name },
+          position: { x: 0, y: 0 },
+          type: 'output'
+        })
+        nodesEdges.push({
+          id: `e.${target.after_state}.${target.name}`,
+          source: target.after_state,
+          target: target.name,
           type: 'smoothstep',
-          animated: false,
           arrowHeadType: 'arrowclosed'
-        }
-      })
+        })
+      }
+    })
 
-      forEach(targets, target => {
-        if (target.after_state) {
-          nodes.push({
-            id: target.name,
-            data: { label: target.name },
-            position: { x: 0, y: 0 },
-            type: 'output'
-          })
-          nodesEdges.push({
-            id: `e.${target.after_state}.${target.name}`,
-            source: target.after_state,
-            target: target.name,
-            type: 'smoothstep',
-            arrowHeadType: 'arrowclosed'
-          })
-        }
-      })
+    let errorEdges = map(errorsMap, (target, source) => {
+      let errorHandlerElement = find(nodes, ['id', target])
+      errorHandlerElement.className += ' error-handler'
 
-      let errorEdges = map(errorsMap, (target, source) => {
-        let errorHandlerElement = find(nodes, ['id', target])
-        errorHandlerElement.className += ' error-handler'
+      return {
+        id: `e.${source}.${target}`,
+        source: source,
+        target: target,
+        type: 'smoothstep',
+        arrowHeadType: 'arrowclosed',
+        animated: true
+      }
+    })
 
-        return {
-          id: `e.${source}.${target}`,
-          source: source,
-          target: target,
-          type: 'smoothstep',
-          arrowHeadType: 'arrowclosed',
-          animated: true
-        }
-      })
-
-      setElements(getLayoutedElements(concat(nodes, nodesEdges, errorEdges)))
-      setSteps(stepsList)
-      setAfterSteps(stepsList)
-      setErrorSteps(stepsList)
-    }
+    setElements(getLayoutedElements(concat(nodes, nodesEdges, errorEdges)))
+    setSteps(stepsList)
+    setAfterSteps(stepsList)
+    setErrorSteps(stepsList)
   }, [states, targets, selectedStep])
 
   const onLoad = reactFlowInstance => {
@@ -151,6 +150,16 @@ const DetailsTransformations = ({ selectedItem }) => {
   }, [selectedStep])
 
   useEffect(() => {
+    generateGraphData()
+  }, [generateGraphData])
+
+  useEffect(() => {
+    if (selectedItem.uid !== selectedItemUid) {
+      setSelectedItemUid(selectedItem.uid)
+    }
+  }, [selectedItem, selectedItemUid])
+
+  useEffect(() => {
     setTimeout(() => {
       if (reactFlowInstance) {
         reactFlowInstance.fitView()
@@ -159,11 +168,7 @@ const DetailsTransformations = ({ selectedItem }) => {
         reactFlowInstance.setTransform({ x: position[0], y: 50, zoom: zoom })
       }
     }, 100)
-  }, [reactFlowInstance])
-
-  useEffect(() => {
-    generateGraphData()
-  }, [generateGraphData])
+  }, [reactFlowInstance, selectedItemUid])
 
   return (
     <div className="transformations-tab">

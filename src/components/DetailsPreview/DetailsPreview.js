@@ -14,10 +14,8 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const [noData, setNoData] = useState(false)
 
   useEffect(() => {
-    if (preview.length === 0) {
-      getArtifactPreview(artifact, noData, setNoData, setPreview)
-    }
-  }, [artifact, noData, preview.length])
+    getArtifactPreview(artifact, noData, setNoData, setPreview)
+  }, [artifact, noData])
 
   return (
     <div className="preview_container">
