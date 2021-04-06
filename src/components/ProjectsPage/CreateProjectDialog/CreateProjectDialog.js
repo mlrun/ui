@@ -7,6 +7,8 @@ import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
 import Button from '../../../common/Button/Button'
 
+import './createProjectDialog.scss'
+
 const CreateProjectDialog = ({
   closeNewProjectPopUp,
   handleCreateProject,
@@ -20,6 +22,7 @@ const CreateProjectDialog = ({
   return (
     <PopUpDialog
       headerText="Create new project"
+      className="create-project-dialog"
       closePopUp={closeNewProjectPopUp}
     >
       <form noValidate>

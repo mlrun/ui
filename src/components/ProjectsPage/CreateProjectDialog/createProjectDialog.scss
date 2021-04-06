@@ -1,0 +1,11 @@
+.create-project-dialog {
+  .pop-up-dialog {
+    &__footer-container {
+      align-items: center;
+    }
+  }
+
+  .error-message {
+    max-width: 235px;
+  }
+}
