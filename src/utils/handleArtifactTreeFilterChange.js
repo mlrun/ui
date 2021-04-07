@@ -8,7 +8,7 @@ export const handleArtifactTreeFilterChange = (
 ) => {
   setContent([])
   fetchData({
-    tag: item.toLowerCase(),
+    tag: (item || 'latest').toLowerCase(),
     project: project,
     labels: filter.labels,
     name: filter.name

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
 import { orderBy } from 'lodash'
+import axios from 'axios'
 
 import ProjectsView from './ProjectsView'
 
@@ -22,6 +23,7 @@ const Projects = ({
   deleteProject,
   fetchNuclioFunctions,
   fetchProjects,
+  fetchProjectsSummary,
   match,
   projectStore,
   removeNewProject,
@@ -44,6 +46,7 @@ const Projects = ({
     'allProjects'
   )
   const [sortProjectId, setSortProjectId] = useState('byName')
+  const [source] = useState(axios.CancelToken.source())
 
   const isValidProjectState = useCallback(
     project => {
@@ -189,7 +192,14 @@ const Projects = ({
   useEffect(() => {
     fetchProjects()
     fetchNuclioFunctions()
-  }, [fetchNuclioFunctions, fetchProjects])
+    fetchProjectsSummary(source.token)
+  }, [fetchNuclioFunctions, fetchProjects, fetchProjectsSummary, source.token])
+
+  useEffect(() => {
+    return () => {
+      source.cancel('canceled')
+    }
+  }, [source])
 
   useEffect(() => {
     setFilteredProjects(
@@ -251,6 +261,7 @@ const Projects = ({
     removeProjects()
     fetchProjects()
     fetchNuclioFunctions()
+    fetchProjectsSummary(source.token)
   }
 
   return (

@@ -14,7 +14,6 @@ const JobsTableRow = ({
   content,
   handleExpandRow,
   handleSelectItem,
-  index,
   isGroupedByWorkflow,
   match,
   rowItem,
@@ -33,6 +32,17 @@ const JobsTableRow = ({
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
       'parent-row-expanded'
+  )
+
+  const currentItem = isGroupedByWorkflow
+    ? workflows.find(workflow => workflow.id === rowItem.uid.value)
+    : content.find(contentItemObj =>
+        match.params.pageTab === MONITOR_TAB
+          ? contentItemObj.uid === rowItem.uid?.value
+          : contentItemObj.name === rowItem.name.value
+      )
+  const filteredActions = actionsMenu(currentItem).filter(
+    action => !action.hiddenRules?.status.includes(currentItem.state)
   )
 
   return (
@@ -71,6 +81,17 @@ const JobsTableRow = ({
           )}
           <>
             {tableContent.map((job, index) => {
+              const groupCurrentItem =
+                content.length > 0 &&
+                content.find(item => item.uid === job.uid.value)
+
+              const groupFilteredActionsMenu = actionsMenu(
+                groupCurrentItem
+              ).filter(
+                action =>
+                  !action.hiddenRules?.status.includes(groupCurrentItem.state)
+              )
+
               return (
                 <div
                   className={
@@ -83,10 +104,6 @@ const JobsTableRow = ({
                   key={index}
                 >
                   {Object.values(job).map((cellContentObj, index) => {
-                    const currentItem =
-                      content.length > 0 &&
-                      content.find(item => item.uid === job.uid.value)
-
                     return (
                       <TableCell
                         data={
@@ -94,18 +111,18 @@ const JobsTableRow = ({
                             ? { class: 'jobs_medium' }
                             : cellContentObj
                         }
-                        item={currentItem}
+                        item={groupCurrentItem}
                         link={
                           index === 0 &&
                           `/projects/${match.params.projectName}/jobs/${
                             match.params.pageTab
-                          }/${currentItem.uid}${
+                          }/${groupCurrentItem.uid}${
                             match.params.tab
                               ? `/${match.params.tab}`
                               : `/${detailsMenu[0]}`
                           }`
                         }
-                        key={cellContentObj.value + index}
+                        key={`${cellContentObj.value}${index}`}
                         selectItem={handleSelectItem}
                         selectedItem={selectedItem}
                       />
@@ -113,8 +130,8 @@ const JobsTableRow = ({
                   })}
                   <div className="table-body__cell action_cell">
                     <TableActionsMenu
-                      item={content[index]}
-                      menu={actionsMenu}
+                      item={groupCurrentItem}
+                      menu={groupFilteredActionsMenu}
                     />
                   </div>
                 </div>
@@ -125,14 +142,6 @@ const JobsTableRow = ({
       ) : (
         <>
           {Object.values(rowItem).map((rowItemProp, index) => {
-            const currentItem = isGroupedByWorkflow
-              ? workflows.find(workflow => workflow.id === rowItem.uid.value)
-              : content.find(contentItemObj =>
-                  match.params.pageTab === MONITOR_TAB
-                    ? contentItemObj.uid === rowItem.uid?.value
-                    : contentItemObj.name === rowItem.name.value
-                )
-
             return (
               <TableCell
                 data={rowItemProp}
@@ -140,7 +149,7 @@ const JobsTableRow = ({
                 handleExpandRow={handleExpandRow}
                 isGroupedByWorkflow={isGroupedByWorkflow}
                 item={currentItem}
-                key={new Date().getTime() + index}
+                key={`${new Date().getTime()}${index}`}
                 link={rowItemProp.link}
                 selectItem={handleSelectItem}
                 selectedItem={selectedItem}
@@ -148,7 +157,7 @@ const JobsTableRow = ({
             )
           })}
           <div className="table-body__cell action_cell">
-            <TableActionsMenu item={content[index]} menu={actionsMenu} />
+            <TableActionsMenu item={currentItem} menu={filteredActions} />
           </div>
         </>
       )}
@@ -164,12 +173,14 @@ JobsTableRow.defaultProps = {
 }
 
 JobsTableRow.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.func
+  ]).isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   isGroupedByWorkflow: PropTypes.bool,
-  index: PropTypes.number.isRequired,
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

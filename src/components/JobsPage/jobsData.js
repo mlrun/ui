@@ -135,6 +135,7 @@ export const generatePageData = (
       { type: 'name', label: 'Name:' },
       { type: 'labels', label: 'Labels:' }
     ]
+    filterMenuActionButton = null
   } else {
     jobFilters = [...filters]
   }
@@ -149,7 +150,7 @@ export const generatePageData = (
       jobsDashboardUrl
     ),
     detailsMenu,
-    filterMenuActionButton: !scheduled && filterMenuActionButton,
+    filterMenuActionButton,
     filters: jobFilters,
     page,
     tableHeaders: generateTableHeaders(scheduled),
@@ -165,7 +166,7 @@ export const generateActionsMenu = (
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl
-) =>
+) => job =>
   scheduled
     ? [
         {
@@ -186,13 +187,17 @@ export const generateActionsMenu = (
       ]
     : [
         {
-          label: 'Rerun',
+          label: 'Re-run',
           icon: <Run />,
           onClick: handleRerunJob
         },
         {
           label: 'Monitoring',
-          tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
+          tooltip: !jobsDashboardUrl
+            ? 'Grafana service unavailable'
+            : job.labels?.includes('kind: dask')
+            ? 'Unavailable for Dask jobs'
+            : '',
           disabled: !jobsDashboardUrl,
           onClick: handleMonitoring
         }

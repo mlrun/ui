@@ -9,7 +9,7 @@
 
   &_medium {
     flex: 0.7;
-    min-width: 100px;
+    min-width: 75px;
   }
 
   &_small {
@@ -46,6 +46,41 @@
       padding: 10px 5px 10px 0;
       color: $primary;
       line-height: 24px;
+
+      &.status {
+        color: $supernova;
+        text-transform: none;
+
+        &_completed,
+        &_ready,
+        &_running {
+          color: $java;
+        }
+
+        &-nuclio {
+          &_ready {
+            color: $brightTurquoise;
+
+            &.disabled {
+              color: $topaz;
+            }
+          }
+
+          &_scaledToZero {
+            color: $topaz;
+          }
+        }
+
+        &_failed,
+        &_error,
+        &_unhealthy {
+          color: $amaranth;
+        }
+
+        &_imported {
+          color: $topaz;
+        }
+      }
 
       .tooltip-wrapper {
         min-width: 8px;

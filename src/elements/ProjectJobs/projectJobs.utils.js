@@ -87,7 +87,7 @@ export const getJobsTableData = (jobs, match) => {
             new Date(job[0].status.start_time),
             new Date(job[0].status.last_update)
           ),
-          className: 'table-cell_small'
+          className: 'table-cell_medium'
         }
       }
     })
@@ -97,7 +97,7 @@ export const getJobsTableData = (jobs, match) => {
       { value: 'Type', className: 'table-cell_small' },
       { value: 'Status', className: 'table-cell_medium' },
       { value: 'Started at', className: 'table-cell_big' },
-      { value: 'Duration', className: 'table-cell_small' }
+      { value: 'Duration', className: 'table-cell_medium' }
     ]
 
     return {

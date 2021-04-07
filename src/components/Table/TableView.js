@@ -44,22 +44,15 @@ const TableView = ({
   toggleConvertToYaml,
   workflows
 }) => {
-  const actionsMenu = pageData.actionsMenu
-    ? [
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertToYaml
-        },
-        ...pageData.actionsMenu
-      ]
-    : [
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: toggleConvertToYaml
-        }
-      ]
+  const viewYamlAction = {
+    label: 'View YAML',
+    icon: <Yaml />,
+    onClick: toggleConvertToYaml
+  }
+  const actionsMenu =
+    typeof pageData.actionsMenu === 'function'
+      ? item => [viewYamlAction, ...(pageData.actionsMenu(item) ?? [])]
+      : [viewYamlAction, ...(pageData.actionsMenu ?? [])]
 
   return (
     <div className="table">
@@ -68,7 +61,7 @@ const TableView = ({
           {pageData.tableHeaders.map((item, index) => (
             <div
               className={`table-head__item ${item.class}`}
-              key={item.header + index}
+              key={`${item.header}${index}`}
             >
               <Tooltip template={<TextTooltipTemplate text={item.header} />}>
                 {item.header}
@@ -122,7 +115,6 @@ const TableView = ({
                       key={i}
                       content={content}
                       handleSelectItem={handleSelectItem}
-                      index={i}
                       match={match}
                       rowItem={rowItem}
                       selectedItem={selectedItem}
@@ -181,7 +173,6 @@ const TableView = ({
                     content={content}
                     handleExpandRow={handleExpandRow}
                     handleSelectItem={handleSelectItem}
-                    index={i}
                     isGroupedByWorkflow={!isEmpty(groupedByWorkflow)}
                     match={match}
                     rowItem={groupLatestItem[i]}

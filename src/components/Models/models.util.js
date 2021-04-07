@@ -159,10 +159,6 @@ export const handleFetchData = async (
   }
   let result = null
 
-  if (item.onEntering) {
-    item.tag = 'latest'
-  }
-
   if (pageTab === MODELS_TAB) {
     result = await fetchModels(item)
 
