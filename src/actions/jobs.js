@@ -29,6 +29,9 @@ import {
 } from '../constants'
 
 const jobsActions = {
+  abortJob: (project, job) => () => {
+    return jobsApi.abortJob(project, job.uid, job.iteration)
+  },
   editJob: (postData, project) => () => jobsApi.editJob(postData, project),
   editJobFailure: error => ({
     type: EDIT_JOB_FAILURE,

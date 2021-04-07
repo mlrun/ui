@@ -1,6 +1,21 @@
 import { mainHttpClient } from '../httpClient'
 
 export default {
+  abortJob: (project, jobId, iter) => {
+    const params = {}
+
+    if (!isNaN(iter)) {
+      params.iter = iter
+    }
+
+    return mainHttpClient.patch(
+      `/run/${project}/${jobId}`,
+      {
+        'status.state': 'aborted'
+      },
+      { params }
+    )
+  },
   editJob: (postData, project) =>
     mainHttpClient.put(
       `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
