@@ -15,7 +15,6 @@ import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
 import { generateUri } from '../../utils/generateUri'
-import { copyToClipboard } from '../../utils/copyToClipboard'
 
 export const datasetsInfoHeaders = [
   {
@@ -120,6 +119,10 @@ export const datasetsTableHeaders = [
   },
   {
     header: '',
+    class: 'artifacts_extra-small'
+  },
+  {
+    header: '',
     class: 'action_cell'
   }
 ]
@@ -146,6 +149,10 @@ export const featureSetsTableHeaders = [
   },
   {
     header: '',
+    class: 'artifacts_extra-small'
+  },
+  {
+    header: '',
     class: 'action_cell'
   }
 ]
@@ -165,6 +172,10 @@ export const featureVectorsTableHeaders = [
   {
     header: 'Updated',
     class: 'artifacts_small'
+  },
+  {
+    header: '',
+    class: 'artifacts_extra-small'
   },
   {
     header: '',
@@ -216,12 +227,7 @@ export const tabs = [
   { id: 'datasets', label: 'Datasets' }
 ]
 
-const generateActionsMenu = tab => [
-  {
-    label: 'Copy URI',
-    onClick: item => copyToClipboard(generateUri(item, tab))
-  }
-]
+const generateActionsMenu = tab => []
 
 export const generatePageData = (
   pageTab,

@@ -12,6 +12,7 @@ import TableProducerCell from '../TableProducerCell/TableProducerCell'
 
 import { ReactComponent as ArtifactView } from '../../images/eye.svg'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
 
 import artifactAction from '../../actions/artifacts'
 import { truncateUid } from '../../utils'
@@ -139,6 +140,16 @@ const TableCell = ({
             user={item?.producer?.owner || item.user}
           />
         </Tooltip>
+      </div>
+    )
+  } else if (data.type === 'buttonCopyURI') {
+    return (
+      <div className={`table-body__cell ${data.class}`}>
+        <button onClick={() => data.actionHandler(item, match.params.pageTab)}>
+          <Tooltip template={<TextTooltipTemplate text="Copy URI" />}>
+            <Copy />
+          </Tooltip>
+        </button>
       </div>
     )
   } else if (data.type === 'hash') {
