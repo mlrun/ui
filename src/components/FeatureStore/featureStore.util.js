@@ -304,7 +304,7 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureSets(item, config)
+    result = await fetchFeatureSets({ ...item, tag: null }, config)
 
     if (result) {
       data.content = parseFeatureStoreDataRequest(result)
