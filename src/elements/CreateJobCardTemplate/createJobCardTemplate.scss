@@ -3,7 +3,9 @@
 
 .card-template {
   flex: 0 0 40%;
+  min-width: 270px;
   max-width: 325px;
+  min-height: 130px;
   max-height: 140px;
   margin-right: 16px;
   margin-bottom: 16px;
@@ -31,5 +33,10 @@
     color: $topaz;
     font-size: 13px;
     line-height: 21px;
+  }
+
+  &.small {
+    min-width: 290px;
+    min-height: 90px;
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
@@ -8,10 +9,16 @@ import { truncateUid } from '../../utils'
 
 import './createJobCardTemplate.scss'
 
-const CreateJobCardTemplate = ({ func, handleSelectGroupFunctions }) => {
+const CreateJobCardTemplate = ({
+  className,
+  func,
+  handleSelectGroupFunctions
+}) => {
+  const templateClassName = classnames('card-template', className)
+
   return (
     <div
-      className="card-template"
+      className={templateClassName}
       onClick={() => handleSelectGroupFunctions(func)}
     >
       <h6 className="card-template__header">
@@ -35,7 +42,12 @@ const CreateJobCardTemplate = ({ func, handleSelectGroupFunctions }) => {
   )
 }
 
+CreateJobCardTemplate.defaultProps = {
+  className: ''
+}
+
 CreateJobCardTemplate.propTypes = {
+  className: PropTypes.string,
   func: PropTypes.shape({}).isRequired,
   handleSelectGroupFunctions: PropTypes.func.isRequired
 }
