@@ -291,10 +291,6 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === DATASETS_TAB) {
-    if (item.onEntering) {
-      item.tag = 'latest'
-    }
-
     result = await fetchDataSets(item)
 
     if (result) {
@@ -315,10 +311,6 @@ export const handleFetchData = async (
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
-    if (item.onEntering) {
-      item.tag = 'latest'
-    }
-
     result = await fetchFeatures(item)
 
     if (result) {

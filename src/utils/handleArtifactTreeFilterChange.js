@@ -15,6 +15,6 @@ export const handleArtifactTreeFilterChange = (
   })
   setFilter({
     ...filter,
-    tag: item.toLowerCase()
+    tag: (item || 'latest').toLowerCase()
   })
 }

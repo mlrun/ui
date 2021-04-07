@@ -179,7 +179,7 @@ const FeatureStore = ({
   )
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName, onEntering: true })
+    fetchData({ project: match.params.projectName, tag: 'latest' })
 
     return () => {
       setArtifactFilter({ tag: 'latest', labels: '', name: '' })

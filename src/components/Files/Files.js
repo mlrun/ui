@@ -53,10 +53,6 @@ const Files = ({
 
   const fetchData = useCallback(
     item => {
-      if (item.onEntering) {
-        item.tag = 'latest'
-      }
-
       fetchFiles(item).then(result => {
         if (result) {
           setFiles(generateArtifacts(filterArtifacts(result)))
@@ -148,7 +144,7 @@ const Files = ({
   }, [])
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName, onEntering: true })
+    fetchData({ project: match.params.projectName, tag: 'latest' })
 
     return () => {
       setGroupFilter('')

@@ -58,7 +58,8 @@ export default {
     return fetchArtifacts(
       item,
       `/projects/${item.project}/${FEATURE_SETS_TAB}`,
-      config
+      config,
+      true
     )
   },
   getFeatureVector: (featureVector, project) =>
@@ -68,7 +69,9 @@ export default {
   getFeatureVectors: item => {
     return fetchArtifacts(
       item,
-      `/projects/${item.project}/${FEATURE_VECTORS_TAB}`
+      `/projects/${item.project}/${FEATURE_VECTORS_TAB}`,
+      {},
+      true
     )
   },
   getFeature: (project, feature) =>
