@@ -147,7 +147,7 @@ const Models = ({
   useEffect(() => {
     fetchData({
       project: match.params.projectName,
-      tag: artifactsStore.filter.tag
+      tag: 'latest'
     })
 
     return () => {
@@ -158,14 +158,15 @@ const Models = ({
         allData: [],
         selectedRowData: []
       })
+      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
     }
   }, [
-    artifactsStore.filter.tag,
     fetchData,
     getModelsEndpoints,
-    match.params.pageTab,
     match.params.projectName,
-    removeModels
+    match.params.pageTab,
+    removeModels,
+    setArtifactFilter
   ])
 
   useEffect(() => {
@@ -237,7 +238,8 @@ const Models = ({
         artifactsStore.filter,
         item,
         match.params.projectName,
-        setArtifactFilter
+        setArtifactFilter,
+        setContent
       )
     },
     [

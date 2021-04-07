@@ -47,6 +47,7 @@ const FilterMenu = ({
   const [labels, setLabels] = useState('')
   const [owner, setOwner] = useState('')
   const [name, setName] = useState('')
+  const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
   const history = useHistory()
   const artifactFilter = useSelector(store => store.artifactsStore.filter)
   const dispatch = useDispatch()
@@ -64,6 +65,24 @@ const FilterMenu = ({
       setName('')
     }
   }, [page, match.params.pageTab])
+
+  useEffect(() => {
+    if (filters.find(filter => filter.type === 'tree')) {
+      dispatch(
+        artifactsAction.fetchArtifactTags(match.params.projectName)
+      ).then(({ data }) => {
+        setTreeOptions(state => [
+          ...state,
+          ...data.tags
+            .filter(tag => tag !== 'latest')
+            .map(tag => ({
+              label: tag,
+              id: tag
+            }))
+        ])
+      })
+    }
+  }, [dispatch, filters, match.params.projectName])
 
   const onKeyDown = event => {
     if (event.keyCode === 13) {
@@ -123,9 +142,10 @@ const FilterMenu = ({
         {filters.map(filter => {
           switch (filter.type) {
             case 'tree':
+            case 'tag':
               return (
                 <ArtifactFilterTree
-                  filterTreeOptions={filterTreeOptions}
+                  filterTreeOptions={treeOptions}
                   key={filter.type}
                   label={filter.label}
                   match={match}

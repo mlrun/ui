@@ -82,6 +82,7 @@ const artifactsAction = {
     type: FETCH_ARTIFACTS_SUCCESS,
     payload: artifactsList
   }),
+  fetchArtifactTags: project => () => artifactsApi.getArtifactTag(project),
   fetchDataSet: dataSet => dispatch => {
     return artifactsApi
       .getDataSet(dataSet)

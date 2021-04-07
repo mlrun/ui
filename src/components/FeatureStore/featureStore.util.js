@@ -69,12 +69,12 @@ export const featureSetsFilters = [
   { type: 'labels', label: 'Label:' }
 ]
 export const featureVectorsFilters = [
-  { type: 'tree', label: 'Tag:' },
+  { type: 'tag', label: 'Tag:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
 ]
 export const featuresFilters = [
-  { type: 'tree', label: 'Tag:' },
+  { type: 'tag', label: 'Tag:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
 ]
@@ -297,10 +297,6 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === DATASETS_TAB) {
-    if (item.onEntering) {
-      item.tag = 'latest'
-    }
-
     result = await fetchDataSets(item)
 
     if (result) {
@@ -314,17 +310,13 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureSets(item, config)
+    result = await fetchFeatureSets({ ...item, tag: null }, config)
 
     if (result) {
       data.content = parseFeatureStoreDataRequest(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
-    if (item.onEntering) {
-      item.tag = 'latest'
-    }
-
     result = await fetchFeatures(item)
 
     if (result) {
