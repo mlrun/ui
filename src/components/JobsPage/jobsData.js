@@ -198,7 +198,7 @@ export const generateActionsMenu = (
             : job.labels?.includes('kind: dask')
             ? 'Unavailable for Dask jobs'
             : '',
-          disabled: !jobsDashboardUrl,
+          disabled: !jobsDashboardUrl || job.labels?.includes('kind: dask'),
           onClick: handleMonitoring
         }
       ]
