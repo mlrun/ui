@@ -7,8 +7,11 @@ import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
-import artifactsData from '../../components/Artifacts/artifactsData'
-import { FEATURES_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
+import {
+  DETAILS_OVERVIEW_TAB,
+  FEATURES_TAB,
+  MODEL_ENDPOINTS_TAB
+} from '../../constants'
 
 const ArtifactsTableRow = ({
   actionsMenu,
@@ -90,7 +93,13 @@ const ArtifactsTableRow = ({
                   selectedItem={selectedItem}
                   expandLink={index === 0}
                   firstRow={index === 0}
-                  link={data.rowExpanded?.link ? data.link && data.link : false}
+                  link={
+                    data.rowExpanded?.getLink
+                      ? data.rowExpanded.getLink(
+                          match.params.tab ?? DETAILS_OVERVIEW_TAB
+                        )
+                      : ''
+                  }
                   selectedRowId={selectedRowId}
                   setSelectedRowId={setSelectedRowId}
                   withCheckbox={withCheckbox}
@@ -143,22 +152,9 @@ const ArtifactsTableRow = ({
                               : value
                           }
                           item={currentItem}
-                          link={
-                            value.link &&
-                            (value.link === 'overview'
-                              ? `/projects/${
-                                  match.params.projectName
-                                }/${pageData.page.toLowerCase()}${
-                                  match.params.pageTab
-                                    ? `/${match.params.pageTab}`
-                                    : ''
-                                }/${rowItem.key.value}/${
-                                  match.params.tab
-                                    ? match.params.tab
-                                    : `${artifactsData.detailsMenu[0]}`
-                                }`
-                              : value.link)
-                          }
+                          link={value.getLink?.(
+                            match.params.tab ?? DETAILS_OVERVIEW_TAB
+                          )}
                           match={match}
                           key={value.value + i ?? Date.now()}
                           selectItem={handleSelectItem}
@@ -189,19 +185,9 @@ const ArtifactsTableRow = ({
                   data={value}
                   item={content[index]}
                   key={Math.random() + i}
-                  link={
-                    value.link === 'overview'
-                      ? `/projects/${
-                          match.params.projectName
-                        }/${pageData.page.toLowerCase()}${
-                          match.params.pageTab ? `/${match.params.pageTab}` : ''
-                        }/${rowItem.key.value}/${
-                          match.params.tab
-                            ? match.params.tab
-                            : `${artifactsData.detailsMenu[0]}`
-                        }`
-                      : value.link
-                  }
+                  link={value.getLink?.(
+                    match.params.tab ?? DETAILS_OVERVIEW_TAB
+                  )}
                   match={match}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}

@@ -4,6 +4,7 @@ import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
 import { ReactComponent as SeverityError } from '../images/severity-error.svg'
 import { generateLinkPath, parseUri } from '../utils'
+import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
@@ -108,13 +109,21 @@ const createModelsRowData = (artifact, project) => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: `/projects/${project}/models/models/${artifact.db_key}/${artifact.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          MODELS_TAB,
+          MODELS_TAB,
+          artifact.db_key,
+          artifact.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
       },
       rowExpanded: {
-        link: false
+        getLink: false
       }
     },
     labels: {
@@ -166,13 +175,21 @@ const createFilesRowData = (artifact, project) => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: `/projects/${project}/files/${artifact.db_key}/${artifact.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          FILES_PAGE,
+          null,
+          artifact.db_key,
+          artifact.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
       },
       rowExpanded: {
-        link: false
+        getLink: false
       }
     },
     version: {
@@ -247,7 +264,15 @@ const createModelEndpointsRowData = (artifact, project) => {
     key: {
       value: name,
       class: 'artifacts_medium',
-      link: `/projects/${project}/models/model-endpoints/${name}/${artifact.metadata?.uid}/overview`
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          MODELS_TAB,
+          MODEL_ENDPOINTS_TAB,
+          name,
+          artifact.metadata?.uid,
+          tab
+        )
     },
     state: {
       value: artifact.status?.state,
@@ -304,13 +329,21 @@ const createDatasetsRowData = (artifact, project) => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: `/projects/${project}/feature-store/datasets/${artifact.db_key}/${artifact.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          FEATURE_STORE_PAGE,
+          DATASETS_TAB,
+          artifact.db_key,
+          artifact.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
       },
       rowExpanded: {
-        link: false
+        getLink: false
       }
     },
     labels: {
@@ -361,7 +394,15 @@ const createFeatureSetsRowData = (artifact, project) => {
     key: {
       value: artifact.name,
       class: 'artifacts_medium',
-      link: `/projects/${project}/feature-store/feature-sets/${artifact.name}/${artifact.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          FEATURE_STORE_PAGE,
+          FEATURE_SETS_TAB,
+          artifact.name,
+          artifact.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
@@ -402,7 +443,15 @@ const createFeaturesRowData = artifact => {
     feature_set: {
       value: artifact.metadata?.name,
       class: 'artifacts_small',
-      link: `/projects/${artifact.metadata?.project}/feature-store/feature-sets/${artifact.metadata?.name}/${artifact.metadata?.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          artifact.metadata?.project,
+          FEATURE_STORE_PAGE,
+          FEATURE_SETS_TAB,
+          artifact.metadata?.name,
+          artifact.metadata?.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_small',
         value: ''
@@ -467,7 +516,15 @@ const createFeatureVectorsRowData = (artifact, project) => ({
   key: {
     value: artifact.name,
     class: 'artifacts_medium',
-    link: `/projects/${project}/feature-store/feature-vectors/${artifact.name}/${artifact.tag}/overview`,
+    getLink: tab =>
+      generateLinkToDetailsPanel(
+        project,
+        FEATURE_STORE_PAGE,
+        FEATURE_VECTORS_TAB,
+        artifact.name,
+        artifact.tag,
+        tab
+      ),
     expandedCellContent: {
       class: 'artifacts_medium',
       value: artifact.tag
