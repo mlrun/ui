@@ -37,7 +37,7 @@ const RegisterArtifactPopup = ({
   })
 
   useEffect(() => {
-    if (artifactKind) {
+    if (artifactKind !== 'file') {
       setRegisterArtifactData(state => ({
         ...state,
         kind: {
@@ -132,7 +132,7 @@ const RegisterArtifactPopup = ({
         setIsPopupDialogOpen(false)
         refresh({
           project: match.params.projectName,
-          tag: artifactFilter.tag !== 'latest' ? artifactFilter.tag : '',
+          tag: artifactFilter.tag,
           labels: artifactFilter.labels,
           name: artifactFilter.name
         })
@@ -179,7 +179,7 @@ const RegisterArtifactPopup = ({
       <RegisterArtifactForm
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
-        showType={!artifactKind}
+        showType={artifactKind === 'file'}
       />
       <div className="pop-up-dialog__footer-container">
         {registerArtifactData.error.message && (

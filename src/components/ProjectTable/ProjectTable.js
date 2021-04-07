@@ -33,7 +33,10 @@ const ProjectTable = ({ match, table }) => {
                   const tableValueClassName = classnames(
                     'project-data-card__table-cell',
                     body[key].className,
-                    key === 'status' && 'status-cell'
+                    key === 'status' && 'status-cell',
+                    key === 'status' &&
+                      !Array.isArray(body[key].value) &&
+                      `status_${body[key].value.toLowerCase()} capitalize`
                   )
                   return key === 'type' ? (
                     <TableTypeCell
@@ -50,7 +53,7 @@ const ProjectTable = ({ match, table }) => {
                           <a
                             href={body[key].href}
                             target="_top"
-                            className="project-data-card__table-link"
+                            className="link project-data-card__table-link"
                           >
                             <Tooltip
                               template={
@@ -69,7 +72,7 @@ const ProjectTable = ({ match, table }) => {
                           </a>
                         ) : (
                           <Link
-                            className="project-data-card__table-link"
+                            className="link project-data-card__table-link"
                             to={body[key].link}
                           >
                             <Tooltip
@@ -83,7 +86,7 @@ const ProjectTable = ({ match, table }) => {
                         )
                       ) : key === 'status' ? (
                         <>
-                          {Array.isArray(body.status.value) &&
+                          {Array.isArray(body.status.value) ? (
                             body.status.value.map((status, index) => {
                               return (
                                 <Tooltip
@@ -95,7 +98,16 @@ const ProjectTable = ({ match, table }) => {
                                   <i className={`${status} status-icon`} />
                                 </Tooltip>
                               )
-                            })}
+                            })
+                          ) : (
+                            <Tooltip
+                              template={
+                                <TextTooltipTemplate text={body[key].value} />
+                              }
+                            >
+                              {body[key].value}
+                            </Tooltip>
+                          )}
                         </>
                       ) : (
                         <Tooltip

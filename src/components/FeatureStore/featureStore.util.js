@@ -240,7 +240,9 @@ export const generatePageData = (
     data.infoHeaders = featureSetsInfoHeaders
     data.tableHeaders = featureSetsTableHeaders
     data.registerArtifactDialogTitle = createFeatureSetTitle
+    data.filterMenuActionButton = null
   } else if (pageTab === FEATURES_TAB) {
+    data.actionsMenu = []
     data.filters = featuresFilters
     data.tableHeaders = featuresTableHeaders
     data.filterMenuActionButton = {
@@ -258,6 +260,7 @@ export const generatePageData = (
     data.handleRemoveRequestData = handleRemoveRequestData
     data.infoHeaders = featureVectorsInfoHeaders
     data.registerArtifactDialogTitle = createFeatureVectorTitle
+    data.filterMenuActionButton = null
   } else {
     data.actionsMenu = generateActionsMenu(DATASETS_TAB)
     data.filters = datasetsFilters
@@ -266,6 +269,7 @@ export const generatePageData = (
     data.registerArtifactDialogTitle = registerDatasetsTitle
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
+    data.filterMenuActionButton = null
   }
 
   return data
@@ -373,15 +377,19 @@ export const navigateToDetailsPane = (
   }
 
   if (match.params.name && artifacts.length !== 0) {
-    const [selectedArtifact] = artifacts.filter(artifact => {
+    const selectedArtifact = artifacts.find(artifact => {
       const searchKey = artifact.name ? 'name' : 'db_key'
 
       if (
         match.params.pageTab === FEATURE_SETS_TAB ||
-        match.params.pageTab === FEATURE_VECTORS_TAB ||
-        match.params.pageTab === DATASETS_TAB
+        match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
         return artifact[searchKey] === name && artifact.tag === tag
+      } else if (match.params.pageTab === DATASETS_TAB) {
+        return (
+          artifact[searchKey] === name &&
+          (artifact.tag === tag || artifact.tree === tag)
+        )
       } else {
         return artifact[searchKey] === name
       }
@@ -533,7 +541,7 @@ export const fetchFeatureRowData = async (
     ...state,
     selectedRowData: {
       ...state.selectedRowData,
-      [`${item.name}-${item.metadata.name}`]: {
+      [`${item.name}-${item.metadata?.name}`]: {
         loading: true
       }
     }

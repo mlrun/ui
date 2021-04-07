@@ -71,8 +71,10 @@ const DetailsView = React.forwardRef(
                 )
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
-              : selectedItem?.spec?.model // 'model-key:model-tag'
+              : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
               ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
+              : selectedItem?.spec?.model
+              ? selectedItem?.metadata?.uid
               : ''}
             {state && (
               <Tooltip
@@ -133,9 +135,9 @@ const DetailsView = React.forwardRef(
             ].includes(match.params.pageTab) && (
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
                 <Download
-                  path={`${selectedItem.target_path?.path}${
-                    selectedItem.model_file ? selectedItem.model_file : ''
-                  }`}
+                  path={`${
+                    selectedItem.target_path?.path
+                  }${selectedItem.model_file || ''}`}
                   schema={selectedItem.target_path?.schema}
                   user={selectedItem.producer?.owner}
                 />
@@ -224,7 +226,10 @@ DetailsView.defaultProps = {
 }
 
 DetailsView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.func
+  ]).isRequired,
   applyChanges: PropTypes.func.isRequired,
   cancelChanges: PropTypes.func.isRequired,
   detailsDispatch: PropTypes.func.isRequired,

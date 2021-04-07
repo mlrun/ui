@@ -65,14 +65,14 @@ const Artifacts = ({
     if (match.params.name && artifactsStore.artifacts.length !== 0) {
       const { name } = match.params
 
-      const [searchItem] = artifactsStore.artifacts.filter(
+      const searchItem = artifactsStore.artifacts.find(
         item => item.key === name
       )
 
       if (!searchItem) {
         history.push(`/projects/${match.params.projectName}/artifacts`)
       } else {
-        const [artifact] = searchItem.data.filter(item => {
+        const artifact = searchItem.data.find(item => {
           if (searchItem.link_iteration) {
             const { link_iteration } = searchItem.link_iteration
             return link_iteration === item.iter

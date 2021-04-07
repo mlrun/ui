@@ -17,6 +17,7 @@ import {
   DATASETS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
+  FEATURE_VECTORS_TAB,
   FEATURES_TAB,
   FILES_PAGE,
   FUNCTIONS_PAGE,
@@ -118,6 +119,7 @@ const Content = ({
       setGroupedByName({})
       setGroupedByWorkflow({})
       setExpand(false)
+      setConvertedYaml('')
     }
   }, [groupFilter, handleGroupByName, handleGroupByWorkflow, handleGroupByNone])
 
@@ -146,6 +148,17 @@ const Content = ({
     let artifactJson = null
 
     if (
+      pageData.page === MODELS_PAGE &&
+      match.params.pageTab === MODEL_ENDPOINTS_TAB
+    ) {
+      const currentYamlContent =
+        yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
+
+      artifactJson =
+        yamlContent[currentYamlContent].find(
+          yamlContentItem => yamlContentItem.metadata.uid === item.metadata.uid
+        ) ?? {}
+    } else if (
       pageData.page === FILES_PAGE ||
       pageData.page === MODELS_PAGE ||
       (pageData.page === FEATURE_STORE_PAGE &&
@@ -174,7 +187,8 @@ const Content = ({
         )
       } else {
         artifactJson = yamlContent.allData.filter(yamlContentItem =>
-          match.params.pageTab === FEATURE_SETS_TAB
+          match.params.pageTab === FEATURE_SETS_TAB ||
+          match.params.pageTab === FEATURE_VECTORS_TAB
             ? isEqual(yamlContentItem.metadata.name, item.name) &&
               isEqual(yamlContentItem.metadata.tag, item.tag)
             : isEqual(yamlContentItem.db_key, item.db_key)

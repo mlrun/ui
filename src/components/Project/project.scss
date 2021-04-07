@@ -169,7 +169,6 @@
 
         &-link {
           margin-bottom: 15px;
-          color: $cornflowerBlue;
         }
       }
 
@@ -262,6 +261,10 @@
             font-size: 20px;
             line-height: 23px;
           }
+
+          &.table-header {
+            min-height: 180px;
+          }
         }
 
         &_small {
@@ -279,7 +282,6 @@
 
         &__see-all-link {
           margin: 15px 20px 25px auto;
-          color: $cornflowerBlue;
         }
 
         &:last-child {

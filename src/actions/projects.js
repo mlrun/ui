@@ -40,6 +40,9 @@ import {
   FETCH_PROJECT_SCHEDULED_JOBS_FAILURE,
   FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS,
   FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECTS_SUMMARY_BEGIN,
+  FETCH_PROJECTS_SUMMARY_FAILURE,
+  FETCH_PROJECTS_SUMMARY_SUCCESS,
   FETCH_PROJECT_WORKFLOWS_BEGIN,
   FETCH_PROJECT_WORKFLOWS_FAILURE,
   FETCH_PROJECT_WORKFLOWS_SUCCESS,
@@ -158,11 +161,11 @@ const projectsAction = {
     type: FETCH_PROJECT_DATASETS_SUCCESS,
     payload: datasets
   }),
-  fetchProjectFailedJobs: project => dispatch => {
+  fetchProjectFailedJobs: (project, cancelToken) => dispatch => {
     dispatch(projectsAction.fetchProjectFailedJobsBegin())
 
     return projectsApi
-      .getProjectFailedJobs(project)
+      .getProjectFailedJobs(project, cancelToken)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectFailedJobsSuccess(response?.data.runs)
@@ -205,11 +208,11 @@ const projectsAction = {
         dispatch(projectsAction.fetchProjectFilesFailure(error.message))
       })
   },
-  fetchProjectFeatureSets: project => dispatch => {
+  fetchProjectFeatureSets: (project, cancelToken) => dispatch => {
     dispatch(projectsAction.fetchProjectFeatureSetsBegin())
 
     return projectsApi
-      .getProjectFeatureSets(project)
+      .getProjectFeatureSets(project, cancelToken)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectFeatureSetsSuccess(
@@ -245,11 +248,11 @@ const projectsAction = {
     type: FETCH_PROJECT_FILES_SUCCESS,
     payload: files
   }),
-  fetchProjectFunctions: project => dispatch => {
+  fetchProjectFunctions: (project, cancelToken) => dispatch => {
     dispatch(projectsAction.fetchProjectFunctionsBegin())
 
     return projectsApi
-      .getProjectFunctions(project)
+      .getProjectFunctions(project, cancelToken)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectFunctionsSuccess(response?.data.funcs)
@@ -299,11 +302,11 @@ const projectsAction = {
     type: FETCH_PROJECT_JOBS_SUCCESS,
     payload: jobs
   }),
-  fetchProjectModels: project => dispatch => {
+  fetchProjectModels: (project, cancelToken) => dispatch => {
     dispatch(projectsAction.fetchProjectModelsBegin())
 
     return projectsApi
-      .getProjectModels(project)
+      .getProjectModels(project, cancelToken)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectModelsSuccess(response?.data.artifacts)
@@ -326,11 +329,11 @@ const projectsAction = {
     type: FETCH_PROJECT_MODELS_SUCCESS,
     payload: models
   }),
-  fetchProjectRunningJobs: project => dispatch => {
+  fetchProjectRunningJobs: (project, cancelToken) => dispatch => {
     dispatch(projectsAction.fetchProjectRunningJobsBegin())
 
     return projectsApi
-      .getProjectRunningJobs(project)
+      .getProjectRunningJobs(project, cancelToken)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectRunningJobsSuccess(response?.data.runs)
@@ -412,6 +415,29 @@ const projectsAction = {
   fetchProjectsSuccess: projectsList => ({
     type: FETCH_PROJECTS_SUCCESS,
     payload: projectsList
+  }),
+  fetchProjectsSummary: cancelToken => dispatch => {
+    dispatch(projectsAction.fetchProjectsSummaryBegin())
+
+    return projectsApi
+      .getProjectsSummary(cancelToken)
+      .then(({ data: { projects } }) => {
+        dispatch(projectsAction.fetchProjectsSummarySuccess(projects))
+
+        return projects
+      })
+      .catch(err => {
+        dispatch(projectsAction.fetchProjectsSummaryFailure(err))
+      })
+  },
+  fetchProjectsSummaryBegin: () => ({ type: FETCH_PROJECTS_SUMMARY_BEGIN }),
+  fetchProjectsSummaryFailure: error => ({
+    type: FETCH_PROJECTS_SUMMARY_FAILURE,
+    payload: error
+  }),
+  fetchProjectsSummarySuccess: summary => ({
+    type: FETCH_PROJECTS_SUMMARY_SUCCESS,
+    payload: summary
   }),
   fetchProjectWorkflows: project => dispatch => {
     dispatch(projectsAction.fetchProjectWorkflowsBegin())

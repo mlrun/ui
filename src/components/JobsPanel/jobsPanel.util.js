@@ -127,9 +127,7 @@ export const getVolume = selectedFunction => {
 
 export const getMethodOptions = selectedFunctions => {
   return _.chain(selectedFunctions)
-    .map(func =>
-      func.spec.entry_points ? Object.values(func.spec.entry_points) : []
-    )
+    .map(func => Object.values(func.spec?.entry_points ?? {}))
     .flatten()
     .map(entry_point => ({
       label: entry_point.name,
@@ -334,14 +332,19 @@ export const generateTableDataFromDefaultData = (
   setDefaultDataIsLoaded
 ) => {
   const parameters = generateDefaultParameters(
-    Object.entries(defaultData.task.spec.parameters)
+    Object.entries(defaultData.task.spec.parameters ?? {})
   )
   const dataInputs = generateDefaultDataInputs(
-    Object.entries(defaultData.task.spec.inputs)
+    Object.entries(defaultData.task.spec.inputs ?? {})
   )
-  const { limits, requests } = defaultData.function.spec.resources
-  const secrets = defaultData.task.spec.secret_sources
-  const volumeMounts = defaultData.function.spec.volume_mounts.map(
+  const { limits, requests } = defaultData.function?.spec.resources ?? {
+    limits: {},
+    requests: {}
+  }
+  const secrets = (defaultData.task.spec.secret_sources ?? []).map(secret => ({
+    data: secret
+  }))
+  const volumeMounts = defaultData.function?.spec.volume_mounts.map(
     volume_mounts => {
       return {
         data: {
@@ -388,26 +391,27 @@ export const generateTableDataFromDefaultData = (
     payload: {
       dataInputs,
       parameters,
-      volume_mounts: volumeMounts,
-      volumes: defaultData.function.spec.volumes,
-      environmentVariables: defaultData.function.spec.env.map(env => ({
-        data: {
-          name: env.name,
-          value: env.value ?? ''
-        }
-      })),
+      volume_mounts: volumeMounts ?? [],
+      volumes: defaultData.function?.spec.volumes ?? [],
+      environmentVariables:
+        defaultData.function?.spec.env.map(env => ({
+          data: {
+            name: env.name,
+            value: env.value ?? ''
+          }
+        })) ?? [],
       secretSources: secrets
     }
   })
   setNewJob({
     inputs: parseDefaultDataInputsContent(dataInputs),
     parameters: parseDefaultContent(parameters),
-    volume_mounts: volumeMounts.length
+    volume_mounts: volumeMounts?.length
       ? volumeMounts.map(volumeMounts => volumeMounts.data)
       : [],
-    volumes: defaultData.function.spec.volumes,
-    environmentVariables: defaultData.function.spec.env,
-    secret_sources: secrets
+    volumes: defaultData.function?.spec.volumes ?? [],
+    environmentVariables: defaultData.function?.spec.env ?? [],
+    secret_sources: defaultData.task.spec.secret_sources ?? []
   })
 
   if (limits) {

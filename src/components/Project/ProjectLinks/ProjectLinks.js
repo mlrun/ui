@@ -12,7 +12,7 @@ const ProjectLinks = ({ links }) => {
             <a
               href={link}
               target="_top"
-              className="general-info__links-link"
+              className="link general-info__links-link"
               key={label}
             >
               {label}
@@ -21,7 +21,7 @@ const ProjectLinks = ({ links }) => {
         }
 
         return (
-          <Link key={label} className="general-info__links-link" to={link}>
+          <Link key={label} className="link general-info__links-link" to={link}>
             {label}
           </Link>
         )

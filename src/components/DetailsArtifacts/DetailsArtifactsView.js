@@ -43,7 +43,9 @@ const DetailsArtifactsView = ({
                 className="item-artifacts__name"
                 template={<TextTooltipTemplate text={artifact.key} />}
               >
-                <span onClick={() => showArtifact(index)}>{artifact.key}</span>
+                <span className="link" onClick={() => showArtifact(index)}>
+                  {artifact.key}
+                </span>
               </Tooltip>
             </div>
             <div className="item-artifacts__row-item item-artifacts__row-item_long">
@@ -69,7 +71,8 @@ const DetailsArtifactsView = ({
                     artifactScreenLinks[artifact.kind] ??
                     `/projects/${
                       match.params.projectName
-                    }/files/${artifact.db_key || artifact.key}/overview`
+                    }/files/${artifact.db_key || artifact.key}/${artifact.tag ||
+                      artifact.tree}/overview`
                   }
                 >
                   <DetailsIcon />

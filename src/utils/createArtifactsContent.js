@@ -3,7 +3,7 @@ import React from 'react'
 import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
 import { ReactComponent as SeverityError } from '../images/severity-error.svg'
-import { parseUri } from '../utils'
+import { generateLinkPath, parseUri } from '../utils'
 
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
@@ -38,7 +38,7 @@ const createArtifactsContent = (artifacts, page, pageTab, project) => {
       if (pageTab === MODELS_TAB) {
         rowData = createModelsRowData(artifact, project)
       } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-        rowData = createModelEndpointsRowData(artifact)
+        rowData = createModelEndpointsRowData(artifact, project)
       }
     } else if (page === FILES_PAGE) {
       rowData = createFilesRowData(artifact, project)
@@ -237,17 +237,17 @@ const driftStatusIcons = {
   }
 }
 
-const createModelEndpointsRowData = artifact => {
-  const { name, tag } =
-    (artifact.spec?.model ?? '').match(/^(?<name>.*?):(?<tag>.*)$/)?.groups ??
-    {}
-  const { key: modelArtifact, project } = parseUri(artifact.spec?.model_uri)
-  const modelArtifactLink = `/projects/${project}/files/${modelArtifact}/overview`
+const createModelEndpointsRowData = (artifact, project) => {
+  const { name, tag = '-' } =
+    (artifact.spec?.model ?? '').match(/^(?<name>.*?)(:(?<tag>.*))?$/)
+      ?.groups ?? {}
+  const { key: modelArtifact } = parseUri(artifact.spec?.model_uri)
+
   return {
     key: {
       value: name,
       class: 'artifacts_medium',
-      link: 'overview'
+      link: `/projects/${project}/models/model-endpoints/${name}/${artifact.metadata?.uid}/overview`
     },
     state: {
       value: artifact.status?.state,
@@ -265,7 +265,7 @@ const createModelEndpointsRowData = artifact => {
     modelArtifact: {
       value: modelArtifact,
       class: 'artifacts_small',
-      link: modelArtifactLink,
+      link: `${generateLinkPath(artifact.spec?.model_uri)}/overview`,
       tooltip: artifact.spec?.model_uri
     },
     labels: {
@@ -274,15 +274,11 @@ const createModelEndpointsRowData = artifact => {
       type: 'labels'
     },
     firstRequest: {
-      value: artifact.status?.first_request
-        ? formatDatetime(new Date(artifact.status?.first_request), '-')
-        : 'N/A',
+      value: formatDatetime(new Date(artifact.status?.first_request), '-'),
       class: 'artifacts_small'
     },
     lastRequest: {
-      value: artifact.status?.last_request
-        ? formatDatetime(new Date(artifact.status?.last_request), '-')
-        : 'N/A',
+      value: formatDatetime(new Date(artifact.status?.last_request), '-'),
       class: 'artifacts_small'
     },
     errorCount: {
@@ -296,7 +292,7 @@ const createModelEndpointsRowData = artifact => {
     },
     accuracy: {
       value: artifact.status?.accuracy
-        ? `${Math.round(artifact.status?.accuracy * 100)}%`
+        ? `${Math.round(artifact.status.accuracy * 100)}%`
         : '-',
       class: 'artifacts_extra-small'
     }

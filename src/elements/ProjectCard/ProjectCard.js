@@ -9,95 +9,18 @@ import projectsAction from '../../actions/projects'
 
 const ProjectCard = ({
   actionsMenu,
-  fetchProjectFeatureSets,
-  fetchProjectFailedJobs,
-  fetchProjectFunctions,
-  fetchProjectModels,
-  fetchProjectRunningJobs,
   nuclioStore,
   project,
-  projectStore
+  projectStore,
+  projectSummary
 }) => {
-  const [failedJobs, setFailedJobs] = useState([])
-  const [featureSets, setFeatureSets] = useState([])
-  const [fetchFailedJobsFailure, setFetchFailedJobsFailure] = useState(false)
-  const [fetchFeatureSetsFailure, setFetchFeatureSetsFailure] = useState(false)
-  const [fetchFunctionsFailure, setFetchFunctionsFailure] = useState(false)
   const [
     fetchNuclioFunctionsFailure,
     setFetchNuclioFunctionsFailure
   ] = useState(false)
-  const [fetchModelsFailure, setFetchModelsFailure] = useState(false)
-  const [fetchRunningJobsFailure, setFetchRunningJobsFailure] = useState(false)
-  const [functions, setFunctions] = useState([])
-  const [models, setModels] = useState([])
-  const [runningJobs, setRunningJobs] = useState([])
   const [showActionsList, setShowActionsList] = useState(false)
 
   const actionsMenuRef = React.createRef()
-
-  useEffect(() => {
-    fetchProjectRunningJobs(project.metadata.name)
-      .then(jobs => {
-        if (fetchRunningJobsFailure) {
-          setFetchRunningJobsFailure(false)
-        }
-
-        setRunningJobs(jobs)
-      })
-      .catch(() => {
-        setFetchRunningJobsFailure(true)
-      })
-    fetchProjectFailedJobs(project.metadata.name)
-      .then(jobs => {
-        if (fetchFailedJobsFailure) {
-          setFetchFailedJobsFailure(false)
-        }
-
-        setFailedJobs(jobs)
-      })
-      .catch(() => setFetchFailedJobsFailure(true))
-    fetchProjectModels(project.metadata.name)
-      .then(models => {
-        if (fetchModelsFailure) {
-          setFetchModelsFailure(false)
-        }
-
-        setModels(models)
-      })
-      .catch(() => setFetchModelsFailure(true))
-    fetchProjectFeatureSets(project.metadata.name)
-      .then(featureSets => {
-        if (fetchFeatureSetsFailure) {
-          setFetchFeatureSetsFailure(false)
-        }
-
-        setFeatureSets(featureSets)
-      })
-      .catch(() => setFetchFeatureSetsFailure(true))
-    fetchProjectFunctions(project.metadata.name)
-      .then(funcs => {
-        if (fetchFunctionsFailure) {
-          setFetchFunctionsFailure(false)
-        }
-
-        setFunctions(funcs)
-      })
-      .catch(() => setFetchFunctionsFailure(true))
-  }, [
-    fetchFailedJobsFailure,
-    fetchFeatureSetsFailure,
-    fetchFunctionsFailure,
-    fetchModelsFailure,
-    fetchNuclioFunctionsFailure,
-    fetchProjectFailedJobs,
-    fetchProjectFeatureSets,
-    fetchProjectFunctions,
-    fetchProjectModels,
-    fetchProjectRunningJobs,
-    fetchRunningJobsFailure,
-    project.metadata.name
-  ])
 
   useEffect(() => {
     setFetchNuclioFunctionsFailure(
@@ -128,45 +51,21 @@ const ProjectCard = ({
 
   const statistics = useMemo(() => {
     return generateProjectStatistic(
-      failedJobs,
-      projectStore.project.failedJobs.loading,
-      featureSets,
-      projectStore.project.featureSets.loading,
-      fetchFailedJobsFailure,
-      fetchFeatureSetsFailure,
-      fetchFunctionsFailure,
-      fetchModelsFailure,
+      projectSummary,
+      projectStore.projectsSummary.error,
+      projectStore.projectsSummary.loading,
       fetchNuclioFunctionsFailure,
-      fetchRunningJobsFailure,
-      functions,
-      projectStore.project.functions.loading,
-      models,
-      projectStore.project.models.loading,
       nuclioStore.functions[project.metadata.name],
-      nuclioStore.loading,
-      runningJobs,
-      projectStore.project.runningJobs.loading
+      nuclioStore.loading
     )
   }, [
-    failedJobs,
-    featureSets,
-    fetchFailedJobsFailure,
-    fetchFeatureSetsFailure,
-    fetchFunctionsFailure,
-    fetchModelsFailure,
     fetchNuclioFunctionsFailure,
-    fetchRunningJobsFailure,
-    functions,
-    models,
     nuclioStore.functions,
     nuclioStore.loading,
     project.metadata.name,
-    projectStore.project.failedJobs.loading,
-    projectStore.project.featureSets.loading,
-    projectStore.project.functions.loading,
-    projectStore.project.models.loading,
-    projectStore.project.runningJobs.loading,
-    runningJobs
+    projectStore.projectsSummary.error,
+    projectStore.projectsSummary.loading,
+    projectSummary
   ])
 
   return (

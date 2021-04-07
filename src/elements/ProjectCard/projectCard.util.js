@@ -1,24 +1,13 @@
+import { isEmpty } from 'lodash'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 
 export const generateProjectStatistic = (
-  failedJobs,
-  failedJobsLoading,
-  featureSets,
-  featuresLoading,
-  fetchFailedJobsFailure,
-  fetchFeatureSetsFailure,
-  fetchFunctionsFailure,
-  fetchModelsFailure,
+  projectSummary = {},
+  fetchProjectsSummaryFailure,
+  projectsSummaryLoading,
   fetchNuclioFunctionsFailure,
-  fetchRunningJobsFailure,
-  functions,
-  functionsLoading,
-  models,
-  modelsLoading,
   nuclioFunctions = [],
-  nuclioFunctionsLoading,
-  runningJobs,
-  runningJobsLoading
+  nuclioFunctionsLoading
 ) => {
   const grouppedNuclioFunctions = groupByUniqName(
     nuclioFunctions,
@@ -37,62 +26,68 @@ export const generateProjectStatistic = (
   return {
     runningJobs: {
       className:
-        groupByUniqName(runningJobs, 'metadata.name').length +
-          runningNuclioFunctions >
-          0 &&
-        !fetchRunningJobsFailure &&
-        !fetchNuclioFunctionsFailure
+        !fetchProjectsSummaryFailure &&
+        !fetchNuclioFunctionsFailure &&
+        projectSummary.runs_running_count + runningNuclioFunctions > 0
           ? 'running'
           : 'default',
       counterTooltip: 'ML jobs and Nuclio functions',
       label: 'Running',
-      loading: runningJobsLoading || nuclioFunctionsLoading,
+      loading: projectsSummaryLoading || nuclioFunctionsLoading,
       value:
-        fetchRunningJobsFailure || fetchNuclioFunctionsFailure
+        fetchProjectsSummaryFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
-          : groupByUniqName(runningJobs, 'metadata.name').length +
-            runningNuclioFunctions
+          : isEmpty(projectSummary)
+          ? '-'
+          : projectSummary.runs_running_count + runningNuclioFunctions
     },
     failedJobs: {
       className:
-        failedJobs.length + failedNuclioFunctions > 0 &&
-        !fetchFailedJobsFailure &&
-        !fetchNuclioFunctionsFailure
+        !fetchProjectsSummaryFailure &&
+        !fetchNuclioFunctionsFailure &&
+        projectSummary.runs_failed_recent_count + failedNuclioFunctions > 0
           ? 'failed'
           : 'default',
       counterTooltip: 'ML jobs and Nuclio functions',
       label: 'Failed (24hrs)',
       labelClassName: 'wrap',
-      loading: failedJobsLoading || nuclioFunctionsLoading,
+      loading: projectsSummaryLoading || nuclioFunctionsLoading,
       value:
-        fetchFailedJobsFailure || fetchNuclioFunctionsFailure
+        fetchProjectsSummaryFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
-          : groupByUniqName(failedJobs, 'metadata.name').length +
-            failedNuclioFunctions
+          : isEmpty(projectSummary)
+          ? '-'
+          : projectSummary.runs_failed_recent_count + failedNuclioFunctions
     },
     models: {
       className: 'default',
       label: 'Models',
-      loading: modelsLoading,
-      value: fetchModelsFailure
+      loading: projectsSummaryLoading,
+      value: fetchProjectsSummaryFailure
         ? 'N/A'
-        : groupByUniqName(models, 'db_key').length
+        : isEmpty(projectSummary)
+        ? '-'
+        : projectSummary.models_count
     },
     featureSets: {
       className: 'default',
       label: 'Feature sets',
-      loading: featuresLoading,
-      value: fetchFeatureSetsFailure
+      loading: projectsSummaryLoading,
+      value: fetchProjectsSummaryFailure
         ? 'N/A'
-        : groupByUniqName(featureSets, 'metadata.name').length
+        : isEmpty(projectSummary)
+        ? '-'
+        : projectSummary.feature_sets_count
     },
     functions: {
       className: 'default',
       label: 'ML functions',
-      loading: functionsLoading,
-      value: fetchFunctionsFailure
+      loading: projectsSummaryLoading,
+      value: fetchProjectsSummaryFailure
         ? 'N/A'
-        : groupByUniqName(functions, 'metadata.name').length
+        : isEmpty(projectSummary)
+        ? '-'
+        : projectSummary.functions_count
     }
   }
 }

@@ -41,7 +41,7 @@ const JobsTableRow = ({
           ? contentItemObj.uid === rowItem.uid?.value
           : contentItemObj.name === rowItem.name.value
       )
-  const filteredActions = actionsMenu.filter(
+  const filteredActions = actionsMenu(currentItem).filter(
     action => !action.hiddenRules?.status.includes(currentItem.state)
   )
 
@@ -85,7 +85,9 @@ const JobsTableRow = ({
                 content.length > 0 &&
                 content.find(item => item.uid === job.uid.value)
 
-              const groupFilteredActionsMenu = actionsMenu.filter(
+              const groupFilteredActionsMenu = actionsMenu(
+                groupCurrentItem
+              ).filter(
                 action =>
                   !action.hiddenRules?.status.includes(groupCurrentItem.state)
               )
@@ -120,7 +122,7 @@ const JobsTableRow = ({
                               : `/${detailsMenu[0]}`
                           }`
                         }
-                        key={cellContentObj.value + index}
+                        key={`${cellContentObj.value}${index}`}
                         selectItem={handleSelectItem}
                         selectedItem={selectedItem}
                       />
@@ -147,7 +149,7 @@ const JobsTableRow = ({
                 handleExpandRow={handleExpandRow}
                 isGroupedByWorkflow={isGroupedByWorkflow}
                 item={currentItem}
-                key={new Date().getTime() + index}
+                key={`${new Date().getTime()}${index}`}
                 link={rowItemProp.link}
                 selectItem={handleSelectItem}
                 selectedItem={selectedItem}
@@ -171,7 +173,10 @@ JobsTableRow.defaultProps = {
 }
 
 JobsTableRow.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.func
+  ]).isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
