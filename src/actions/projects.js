@@ -55,7 +55,10 @@ import {
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
   SET_NEW_PROJECT_NAME,
-  SET_PROJECT_LABELS
+  SET_PROJECT_LABELS,
+  FETCH_PROJECTS_NAMES_BEGIN,
+  FETCH_PROJECTS_NAMES_FAILURE,
+  FETCH_PROJECTS_NAMES_SUCCESS
 } from '../constants'
 
 const projectsAction = {
@@ -411,6 +414,29 @@ const projectsAction = {
   fetchProjectsFailure: error => ({
     type: FETCH_PROJECTS_FAILURE,
     payload: error
+  }),
+  fetchProjectsNames: () => dispatch => {
+    dispatch(projectsAction.fetchProjectsNamesBegin())
+
+    return projectsApi
+      .getProjectsNames()
+      .then(({ data: { projects } }) => {
+        dispatch(projectsAction.fetchProjectsNamesSuccess(projects))
+
+        return projects
+      })
+      .catch(err => {
+        dispatch(projectsAction.fetchProjectsNamesFailure(err))
+      })
+  },
+  fetchProjectsNamesBegin: () => ({ type: FETCH_PROJECTS_NAMES_BEGIN }),
+  fetchProjectsNamesFailure: error => ({
+    type: FETCH_PROJECTS_NAMES_FAILURE,
+    payload: error
+  }),
+  fetchProjectsNamesSuccess: summary => ({
+    type: FETCH_PROJECTS_NAMES_SUCCESS,
+    payload: summary
   }),
   fetchProjectsSuccess: projectsList => ({
     type: FETCH_PROJECTS_SUCCESS,

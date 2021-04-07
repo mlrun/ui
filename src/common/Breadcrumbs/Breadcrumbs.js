@@ -18,11 +18,11 @@ import projectsAction from '../../actions/projects'
 
 import './breadcrums.scss'
 
-const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
+const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
   const [projectsList, setProjectsList] = useState(
-    generateProjectsList(projectStore.projects)
+    generateProjectsList(projectStore.projectsNames.data)
   )
   const [searchValue, setSearchValue] = useState('')
 
@@ -66,20 +66,23 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjects }) => {
   }, [handleCloseDropdown])
 
   useEffect(() => {
-    if (projectStore.projects.length === 0 && projectsList.length === 0) {
-      fetchProjects()
+    if (projectsList.length === 0 && match.path !== '/projects') {
+      fetchProjectsNames()
     }
-  }, [fetchProjects, projectStore.projects.length, projectsList.length])
+  }, [fetchProjectsNames, match.path, projectsList.length])
 
   useEffect(() => {
     if (searchValue.length > 0) {
       setProjectsList(state =>
         state.filter(project => project.id.startsWith(searchValue))
       )
-    } else if (searchValue.length === 0 && projectStore.projects.length > 0) {
-      setProjectsList(generateProjectsList(projectStore.projects))
+    } else if (
+      searchValue.length === 0 &&
+      projectStore.projectsNames.data.length > 0
+    ) {
+      setProjectsList(generateProjectsList(projectStore.projectsNames.data))
     }
-  }, [projectStore.projects, searchValue])
+  }, [projectStore.projectsNames.data, searchValue])
 
   const handleSeparatorClick = (nextItem, separatorRef, param) => {
     if (
