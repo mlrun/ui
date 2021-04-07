@@ -33,7 +33,7 @@ Button.propTypes = {
   className: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   tooltip: PropTypes.string,
-  variant: PropTypes.PropTypes.oneOf([
+  variant: PropTypes.oneOf([
     'primary',
     'secondary',
     'tertiary',

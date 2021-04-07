@@ -67,6 +67,11 @@ const CreateProjectDialog = ({
             onClick={closeNewProjectPopUp}
           />
           <Button
+            disabled={
+              !projectStore.newProject.name.match(
+                /^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
+              )
+            }
             variant="secondary"
             label="Create"
             onClick={handleCreateProject}
