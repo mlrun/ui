@@ -15,7 +15,7 @@
   font-family: Roboto, sans-serif;
   font-style: normal;
   line-height: 16px;
-  border: 1px solid transparent;
+  border: $transparentBorder;
   border-radius: $mainBorderRadius;
 
   svg {

@@ -21,19 +21,31 @@ export default {
       `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
       postData
     ),
-  filterByStatus: (project, state) =>
-    mainHttpClient.get(`/runs?project=${project}&state=${state}`),
-  getAll: (project, state, event) => {
+  getAllJobs: (project, state, filters) => {
     const params = {
       project
     }
 
-    if (event?.labels) {
-      params.label = event.labels.split(',')
+    if (filters?.labels) {
+      params.label = filters.labels.split(',')
     }
 
-    if (event?.name) {
-      params.name = event.name
+    if (filters?.name) {
+      params.name = filters.name
+    }
+
+    if (state) {
+      params.state = state
+    }
+
+    if (filters?.dates) {
+      if (filters.dates[0]) {
+        params.start_time_from = filters.dates[0].toISOString()
+      }
+
+      if (filters.dates[1]) {
+        params.start_time_to = filters.dates[1].toISOString()
+      }
     }
 
     return mainHttpClient.get('/runs', { params })
@@ -41,21 +53,21 @@ export default {
   getJobFunction: (project, functionName, hash) =>
     mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
-  getScheduled: (project, status, event) => {
+  getScheduledJobs: (project, status, filters) => {
     const params = {
       include_last_run: 'yes'
     }
 
-    if (event?.owner) {
-      params.owner = event.owner
+    if (filters?.owner) {
+      params.owner = filters.owner
     }
 
-    if (event?.name) {
-      params.name = event.name
+    if (filters?.name) {
+      params.name = filters.name
     }
 
-    if (event?.labels) {
-      params.labels = event.labels?.split(',')
+    if (filters?.labels) {
+      params.labels = filters.labels?.split(',')
     }
 
     return mainHttpClient.get(`/projects/${project}/schedules`, { params })

@@ -62,16 +62,12 @@ const jobsActions = {
     type: FETCH_JOB_LOGS_SUCCESS,
     payload: logs
   }),
-  fetchJobs: (project, status, event, scheduled) => dispatch => {
-    const getJobs = scheduled
-      ? jobsApi.getScheduled
-      : status
-      ? jobsApi.filterByStatus
-      : jobsApi.getAll
+  fetchJobs: (project, status, filters, scheduled) => dispatch => {
+    const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getAllJobs
 
     dispatch(jobsActions.fetchJobsBegin())
 
-    return getJobs(project, status && status, event)
+    return getJobs(project, status && status, filters)
       .then(({ data }) => {
         const newJobs = scheduled
           ? (data || {}).schedules

@@ -225,11 +225,11 @@ const Jobs = ({
   )
 
   const refreshJobs = useCallback(
-    event => {
+    filters => {
       fetchJobs(
         match.params.projectName,
         stateFilter !== initialStateFilter && stateFilter,
-        event,
+        filters,
         match.params.pageTab === SCHEDULE_TAB
       ).then(jobs => {
         const newJobs = jobs.map(job => {

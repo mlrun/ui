@@ -26,6 +26,8 @@ import {
 import artifactsAction from '../../actions/artifacts'
 import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 
+import DatePicker from '../../common/DatePicker/DatePicker'
+
 import './filterMenu.scss'
 
 const FilterMenu = ({
@@ -47,6 +49,7 @@ const FilterMenu = ({
   const [labels, setLabels] = useState('')
   const [owner, setOwner] = useState('')
   const [name, setName] = useState('')
+  const [dates, setDates] = useState(['', ''])
   const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
   const history = useHistory()
   const artifactFilter = useSelector(store => store.artifactsStore.filter)
@@ -84,39 +87,37 @@ const FilterMenu = ({
     }
   }, [dispatch, filters, match.params.projectName])
 
-  const onKeyDown = event => {
-    if (event.keyCode === 13) {
-      if (match.params.jobId || match.params.name) {
-        history.push(
-          `/projects/${match.params.projectName}/${page.toLowerCase()}${
-            match.params.pageTab ? `/${match.params.pageTab}` : ''
-          }`
-        )
-      }
+  const applyChanges = () => {
+    if (match.params.jobId || match.params.name) {
+      history.push(
+        `/projects/${match.params.projectName}/${page.toLowerCase()}${
+          match.params.pageTab ? `/${match.params.pageTab}` : ''
+        }`
+      )
+    }
 
-      if (
-        [ARTIFACTS_PAGE, FILES_PAGE, MODELS_PAGE, FEATURE_STORE_PAGE].includes(
-          page
-        )
-      ) {
-        dispatch(
-          artifactsAction.setArtifactFilter({
-            ...artifactFilter,
-            labels,
-            name
-          })
-        )
-        onChange({
-          tag: artifactFilter.tag,
-          project: match.params.projectName,
+    if (
+      [ARTIFACTS_PAGE, FILES_PAGE, MODELS_PAGE, FEATURE_STORE_PAGE].includes(
+        page
+      )
+    ) {
+      dispatch(
+        artifactsAction.setArtifactFilter({
+          ...artifactFilter,
           labels,
           name
         })
-      } else {
-        page === JOBS_PAGE
-          ? onChange({ labels, name, owner })
-          : onChange({ name })
-      }
+      )
+      onChange({
+        tag: artifactFilter.tag,
+        project: match.params.projectName,
+        labels,
+        name
+      })
+    } else {
+      page === JOBS_PAGE
+        ? onChange({ labels, name, owner, dates })
+        : onChange({ name })
     }
   }
 
@@ -135,6 +136,17 @@ const FilterMenu = ({
       setGroupFilter(item)
     }
   }
+
+  const onKeyDown = event => {
+    if (event.keyCode === 13) {
+      applyChanges()
+    }
+  }
+
+  useEffect(() => {
+    applyChanges()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dates])
 
   return (
     <>
@@ -188,6 +200,18 @@ const FilterMenu = ({
                   onKeyDown={onKeyDown}
                 />
               )
+            case 'date-range-time':
+              return (
+                <DatePicker
+                  key={filter.type}
+                  label={filter.label}
+                  onChange={setDates}
+                  splitCharacter="."
+                  date={dates[0]}
+                  dateTo={dates[1]}
+                  type="date-range-time"
+                />
+              )
             default:
               return (
                 <Select
@@ -236,7 +260,7 @@ const FilterMenu = ({
                     labels,
                     name
                   })
-                : onChange({ labels, name })
+                : onChange({ labels, name, dates })
             }}
             id="refresh"
           >
