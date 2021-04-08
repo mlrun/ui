@@ -97,6 +97,7 @@ const CreateJobPageView = ({
             ) : (
               functions.map(func => (
                 <CreateJobCardTemplate
+                  className="small"
                   func={func}
                   handleSelectGroupFunctions={handleSelectGroupFunctions}
                   key={func.name}

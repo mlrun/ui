@@ -19,7 +19,7 @@ export const selectOptions = {
 
 export const filterTreeOptions = [
   {
-    label: 'Latest',
+    label: 'latest',
     id: 'latest'
   }
 ]

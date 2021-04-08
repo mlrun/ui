@@ -4,6 +4,7 @@ import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
+import { ReactComponent as Cancel } from '../../images/close.svg'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -119,7 +120,8 @@ export const generatePageData = (
   setEditableItem,
   handleRerunJob,
   handleMonitoring,
-  jobsDashboardUrl
+  jobsDashboardUrl,
+  onAbortJob
 ) => {
   let jobFilters = []
   let filterMenuActionButton = {
@@ -147,7 +149,8 @@ export const generatePageData = (
       setEditableItem,
       handleRerunJob,
       handleMonitoring,
-      jobsDashboardUrl
+      jobsDashboardUrl,
+      onAbortJob
     ),
     detailsMenu,
     filterMenuActionButton,
@@ -165,7 +168,8 @@ export const generateActionsMenu = (
   setEditableItem,
   handleRerunJob,
   handleMonitoring,
-  jobsDashboardUrl
+  jobsDashboardUrl,
+  onAbortJob
 ) => job =>
   scheduled
     ? [
@@ -198,8 +202,16 @@ export const generateActionsMenu = (
             : job.labels?.includes('kind: dask')
             ? 'Unavailable for Dask jobs'
             : '',
-          disabled: !jobsDashboardUrl,
+          disabled: !jobsDashboardUrl || job.labels?.includes('kind: dask'),
           onClick: handleMonitoring
+        },
+        {
+          label: 'Abort',
+          icon: <Cancel />,
+          onClick: onAbortJob,
+          hiddenRules: {
+            status: ['completed', 'error', 'aborted']
+          }
         }
       ]
 

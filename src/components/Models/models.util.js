@@ -2,7 +2,6 @@ import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generateUri } from '../../utils/generateUri'
-import { copyToClipboard } from '../../utils/copyToClipboard'
 
 export const modelsInfoHeaders = [
   {
@@ -86,6 +85,10 @@ export const modelsTableHeaders = [
   },
   {
     header: '',
+    class: 'artifacts_extra-small'
+  },
+  {
+    header: '',
     class: 'action_cell'
   }
 ]
@@ -140,12 +143,7 @@ export const tabs = [
   { id: 'model-endpoints', label: 'Model endpoints' }
 ]
 
-const actionsMenu = [
-  {
-    label: 'Copy URI',
-    onClick: item => copyToClipboard(generateUri(item, MODELS_TAB))
-  }
-]
+const actionsMenu = []
 
 export const handleFetchData = async (
   fetchModelEndpoints,

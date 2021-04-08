@@ -1,6 +1,4 @@
-import { FILES_PAGE, ARTIFACTS } from '../../constants'
-import { generateUri } from '../../utils/generateUri'
-import { copyToClipboard } from '../../utils/copyToClipboard'
+import { FILES_PAGE } from '../../constants'
 
 export const infoHeaders = [
   {
@@ -73,13 +71,12 @@ export const tableHeaders = [
   },
   {
     header: '',
+    class: 'artifacts_extra-small'
+  },
+  {
+    header: '',
     class: 'action_cell'
   }
 ]
 
-export const actionsMenu = [
-  {
-    label: 'Copy URI',
-    onClick: item => copyToClipboard(generateUri(item, ARTIFACTS))
-  }
-]
+export const actionsMenu = []

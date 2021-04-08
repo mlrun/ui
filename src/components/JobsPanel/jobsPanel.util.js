@@ -127,9 +127,7 @@ export const getVolume = selectedFunction => {
 
 export const getMethodOptions = selectedFunctions => {
   return _.chain(selectedFunctions)
-    .map(func =>
-      func.spec.entry_points ? Object.values(func.spec.entry_points) : []
-    )
+    .map(func => Object.values(func.spec?.entry_points ?? {}))
     .flatten()
     .map(entry_point => ({
       label: entry_point.name,

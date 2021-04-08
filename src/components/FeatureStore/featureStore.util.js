@@ -15,7 +15,6 @@ import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
 import { generateUri } from '../../utils/generateUri'
-import { copyToClipboard } from '../../utils/copyToClipboard'
 
 export const datasetsInfoHeaders = [
   {
@@ -70,12 +69,12 @@ export const featureSetsFilters = [
   { type: 'labels', label: 'Label:' }
 ]
 export const featureVectorsFilters = [
-  { type: 'tree', label: 'Tag:' },
+  { type: 'tag', label: 'Tag:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
 ]
 export const featuresFilters = [
-  { type: 'tree', label: 'Tag:' },
+  { type: 'tag', label: 'Tag:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
 ]
@@ -120,6 +119,10 @@ export const datasetsTableHeaders = [
   },
   {
     header: '',
+    class: 'artifacts_extra-small'
+  },
+  {
+    header: '',
     class: 'action_cell'
   }
 ]
@@ -146,6 +149,10 @@ export const featureSetsTableHeaders = [
   },
   {
     header: '',
+    class: 'artifacts_extra-small'
+  },
+  {
+    header: '',
     class: 'action_cell'
   }
 ]
@@ -165,6 +172,10 @@ export const featureVectorsTableHeaders = [
   {
     header: 'Updated',
     class: 'artifacts_small'
+  },
+  {
+    header: '',
+    class: 'artifacts_extra-small'
   },
   {
     header: '',
@@ -216,12 +227,7 @@ export const tabs = [
   { id: 'datasets', label: 'Datasets' }
 ]
 
-const generateActionsMenu = tab => [
-  {
-    label: 'Copy URI',
-    onClick: item => copyToClipboard(generateUri(item, tab))
-  }
-]
+const generateActionsMenu = tab => []
 
 export const generatePageData = (
   pageTab,
@@ -291,10 +297,6 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === DATASETS_TAB) {
-    if (item.onEntering) {
-      item.tag = 'latest'
-    }
-
     result = await fetchDataSets(item)
 
     if (result) {
@@ -308,17 +310,13 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureSets(item, config)
+    result = await fetchFeatureSets({ ...item, tag: null }, config)
 
     if (result) {
       data.content = parseFeatureStoreDataRequest(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
-    if (item.onEntering) {
-      item.tag = 'latest'
-    }
-
     result = await fetchFeatures(item)
 
     if (result) {

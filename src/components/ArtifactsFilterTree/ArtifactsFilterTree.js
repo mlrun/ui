@@ -65,7 +65,7 @@ const ArtifactFilterTree = ({
         )
       }
 
-      setFilterTree(searchItem?.label || event.target.value)
+      setFilterTree(searchItem?.label || event.target.value || 'latest')
       onChange(searchItem?.id || event.target.value)
       event.target.blur()
       setIsDropDownMenu(false)

@@ -4,6 +4,7 @@ import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
 import { ReactComponent as SeverityError } from '../images/severity-error.svg'
 import { generateLinkPath, parseUri } from '../utils'
+import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
@@ -27,6 +28,8 @@ import { ReactComponent as Nosql } from '../images/nosql.svg'
 import { ReactComponent as Stream } from '../images/stream.svg'
 import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
 import { ReactComponent as DbIcon } from '../images/db-icon.svg'
+import { copyToClipboard } from './copyToClipboard'
+import { generateUri } from './generateUri'
 
 const createArtifactsContent = (artifacts, page, pageTab, project) => {
   return artifacts.map(artifact => {
@@ -108,13 +111,21 @@ const createModelsRowData = (artifact, project) => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: `/projects/${project}/models/models/${artifact.db_key}/${artifact.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          MODELS_TAB,
+          MODELS_TAB,
+          artifact.db_key,
+          artifact.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
       },
       rowExpanded: {
-        link: false
+        getLink: false
       }
     },
     labels: {
@@ -157,6 +168,12 @@ const createModelsRowData = (artifact, project) => {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonDownload'
+    },
+    buttonCopy: {
+      value: '',
+      class: 'artifacts_extra-small artifacts__icon',
+      type: 'buttonCopyURI',
+      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
     }
   }
 }
@@ -166,13 +183,21 @@ const createFilesRowData = (artifact, project) => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: `/projects/${project}/files/${artifact.db_key}/${artifact.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          FILES_PAGE,
+          null,
+          artifact.db_key,
+          artifact.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
       },
       rowExpanded: {
-        link: false
+        getLink: false
       }
     },
     version: {
@@ -218,6 +243,13 @@ const createFilesRowData = (artifact, project) => {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonDownload'
+    },
+    buttonCopy: {
+      value: '',
+      class: 'artifacts_extra-small artifacts__icon',
+      type: 'buttonCopyURI',
+      actionHandler: (item, tab) =>
+        copyToClipboard(generateUri(item, tab ?? 'artifacts'))
     }
   }
 }
@@ -247,7 +279,15 @@ const createModelEndpointsRowData = (artifact, project) => {
     key: {
       value: name,
       class: 'artifacts_medium',
-      link: `/projects/${project}/models/model-endpoints/${name}/${artifact.metadata?.uid}/overview`
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          MODELS_TAB,
+          MODEL_ENDPOINTS_TAB,
+          name,
+          artifact.metadata?.uid,
+          tab
+        )
     },
     state: {
       value: artifact.status?.state,
@@ -304,13 +344,21 @@ const createDatasetsRowData = (artifact, project) => {
     key: {
       value: artifact.db_key,
       class: 'artifacts_medium',
-      link: `/projects/${project}/feature-store/datasets/${artifact.db_key}/${artifact.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          FEATURE_STORE_PAGE,
+          DATASETS_TAB,
+          artifact.db_key,
+          artifact.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
       },
       rowExpanded: {
-        link: false
+        getLink: false
       }
     },
     labels: {
@@ -352,6 +400,12 @@ const createDatasetsRowData = (artifact, project) => {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonDownload'
+    },
+    buttonCopy: {
+      value: '',
+      class: 'artifacts_extra-small artifacts__icon',
+      type: 'buttonCopyURI',
+      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
     }
   }
 }
@@ -361,7 +415,15 @@ const createFeatureSetsRowData = (artifact, project) => {
     key: {
       value: artifact.name,
       class: 'artifacts_medium',
-      link: `/projects/${project}/feature-store/feature-sets/${artifact.name}/${artifact.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          project,
+          FEATURE_STORE_PAGE,
+          FEATURE_SETS_TAB,
+          artifact.name,
+          artifact.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
@@ -385,7 +447,13 @@ const createFeatureSetsRowData = (artifact, project) => {
       value: artifact.entities ? artifact.entities[0]?.name : '',
       class: 'artifacts_small'
     },
-    targets: getFeatureSetTargetCellValue(artifact.targets)
+    targets: getFeatureSetTargetCellValue(artifact.targets),
+    buttonCopy: {
+      value: '',
+      class: 'artifacts_extra-small artifacts__icon',
+      type: 'buttonCopyURI',
+      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+    }
   }
 }
 
@@ -402,7 +470,15 @@ const createFeaturesRowData = artifact => {
     feature_set: {
       value: artifact.metadata?.name,
       class: 'artifacts_small',
-      link: `/projects/${artifact.metadata?.project}/feature-store/feature-sets/${artifact.metadata?.name}/${artifact.metadata?.tag}/overview`,
+      getLink: tab =>
+        generateLinkToDetailsPanel(
+          artifact.metadata?.project,
+          FEATURE_STORE_PAGE,
+          FEATURE_SETS_TAB,
+          artifact.metadata?.name,
+          artifact.metadata?.tag,
+          tab
+        ),
       expandedCellContent: {
         class: 'artifacts_small',
         value: ''
@@ -467,7 +543,15 @@ const createFeatureVectorsRowData = (artifact, project) => ({
   key: {
     value: artifact.name,
     class: 'artifacts_medium',
-    link: `/projects/${project}/feature-store/feature-vectors/${artifact.name}/${artifact.tag}/overview`,
+    getLink: tab =>
+      generateLinkToDetailsPanel(
+        project,
+        FEATURE_STORE_PAGE,
+        FEATURE_VECTORS_TAB,
+        artifact.name,
+        artifact.tag,
+        tab
+      ),
     expandedCellContent: {
       class: 'artifacts_medium',
       value: artifact.tag
@@ -492,6 +576,12 @@ const createFeatureVectorsRowData = (artifact, project) => ({
       ? formatDatetime(new Date(artifact.updated), 'N/A')
       : 'N/A',
     class: 'artifacts_small'
+  },
+  buttonCopy: {
+    value: '',
+    class: 'artifacts_extra-small artifacts__icon',
+    type: 'buttonCopyURI',
+    actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
   }
 })
 

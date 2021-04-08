@@ -21,6 +21,7 @@ import JobsPanel from '../JobsPanel/JobsPanel'
 import Button from '../../common/Button/Button'
 
 const Jobs = ({
+  abortJob,
   appStore,
   editJob,
   editJobFailure,
@@ -173,6 +174,42 @@ const Jobs = ({
     }
   }
 
+  const handleAbortJob = job => {
+    abortJob(match.params.projectName, job)
+      .then(() => {
+        refreshJobs()
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job is successfully aborted'
+        })
+      })
+      .catch(error => {
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          retry: () => handleAbortJob(job),
+          message: 'Aborting job is failed'
+        })
+      })
+    setConfirmData(null)
+  }
+
+  const onAbortJob = job => {
+    setConfirmData({
+      item: job,
+      title: `Abort job "${job.name}"?`,
+      btnConfirmLabel: 'Abort',
+      btnConfirmType: 'danger',
+      rejectHandler: () => {
+        setConfirmData(null)
+      },
+      confirmHandler: () => {
+        handleAbortJob(job)
+      }
+    })
+  }
+
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab === SCHEDULE_TAB,
@@ -181,7 +218,8 @@ const Jobs = ({
       setEditableItem,
       handleRerunJob,
       handleMonitoring,
-      appStore.frontendSpec.jobs_dashboard_url
+      appStore.frontendSpec.jobs_dashboard_url,
+      onAbortJob
     ),
     [match.params.pageTab, appStore.frontendSpec.jobs_dashboard_url]
   )

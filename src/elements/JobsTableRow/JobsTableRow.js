@@ -6,8 +6,7 @@ import classnames from 'classnames'
 import TableCell from '../TableCell/TableCell'
 import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
 
-import { detailsMenu } from '../../components/JobsPage/jobsData'
-import { MONITOR_TAB } from '../../constants'
+import { DETAILS_OVERVIEW_TAB, MONITOR_TAB } from '../../constants'
 
 const JobsTableRow = ({
   actionsMenu,
@@ -112,16 +111,9 @@ const JobsTableRow = ({
                             : cellContentObj
                         }
                         item={groupCurrentItem}
-                        link={
-                          index === 0 &&
-                          `/projects/${match.params.projectName}/jobs/${
-                            match.params.pageTab
-                          }/${groupCurrentItem.uid}${
-                            match.params.tab
-                              ? `/${match.params.tab}`
-                              : `/${detailsMenu[0]}`
-                          }`
-                        }
+                        link={cellContentObj.getLink?.(
+                          match.params.tab ?? DETAILS_OVERVIEW_TAB
+                        )}
                         key={`${cellContentObj.value}${index}`}
                         selectItem={handleSelectItem}
                         selectedItem={selectedItem}
@@ -150,7 +142,13 @@ const JobsTableRow = ({
                 isGroupedByWorkflow={isGroupedByWorkflow}
                 item={currentItem}
                 key={`${new Date().getTime()}${index}`}
-                link={rowItemProp.link}
+                link={
+                  rowItemProp.getLink
+                    ? rowItemProp.getLink?.(
+                        match.params.tab ?? DETAILS_OVERVIEW_TAB
+                      )
+                    : ''
+                }
                 selectItem={handleSelectItem}
                 selectedItem={selectedItem}
               />
