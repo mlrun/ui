@@ -205,8 +205,20 @@
           &:not(.parent-row_without-actions) {
             &:hover {
               .action_cell {
-                .table-actions-container {
-                  display: block;
+                .actions-menu {
+                  &__container {
+                    display: block;
+
+                    .btn {
+                      min-width: 24px;
+                      padding: 0;
+                      border: none;
+
+                      &:hover {
+                        background-color: transparent;
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -244,8 +256,10 @@
               background-color: $alabaster;
 
               .action_cell {
-                .table-actions-container {
-                  display: block;
+                .actions-menu {
+                  &__container {
+                    display: block;
+                  }
                 }
               }
             }

@@ -1,0 +1,49 @@
+@import '../../scss/shadows';
+
+.actions-menu {
+  &__icon {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+
+    svg {
+      path:first-child {
+        fill: $topaz;
+      }
+    }
+
+    &_visible {
+      display: flex;
+    }
+  }
+
+  &__option {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 5px 10px 10px;
+    color: $primary;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $alabaster;
+    }
+
+    &_disabled {
+      color: $spunPearl;
+      cursor: not-allowed;
+
+      .action-menu__icon {
+        svg {
+          path:first-child {
+            fill: rgba($black, 0.2);
+          }
+        }
+      }
+    }
+  }
+}

@@ -78,5 +78,3 @@ export const tableHeaders = [
     class: 'action_cell'
   }
 ]
-
-export const actionsMenu = []

@@ -4,7 +4,7 @@ import { isEqual } from 'lodash'
 import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
-import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 import { formatDatetime } from '../../utils'
 import { detailsMenu } from '../../components/FunctionsPage/functions.util'
@@ -104,10 +104,7 @@ const FunctionsTableRow = ({
                     )
                   })}
                   <div className="table-body__cell action_cell">
-                    <TableActionsMenu
-                      item={content[index]}
-                      menu={actionsMenu}
-                    />
+                    <ActionsMenu dataItem={content[index]} menu={actionsMenu} />
                   </div>
                 </div>
               )
@@ -150,7 +147,7 @@ const FunctionsTableRow = ({
             )
           })}
           <div className="table-body__cell action_cell">
-            <TableActionsMenu item={content[index]} menu={actionsMenu} />
+            <ActionsMenu dataItem={content[index]} menu={actionsMenu} />
           </div>
         </>
       )}

@@ -1,28 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import classnames from 'classnames'
 
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 
-import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
-
 import './projectCard.scss'
 
 const ProjectCardView = React.forwardRef(
-  (
-    { actionsMenu, project, setShowActionsList, showActionsList, statistics },
-    ref
-  ) => {
+  ({ actionsMenu, project, statistics }, ref) => {
     const history = useHistory()
-    const menuItemClasses = classnames(
-      'project-card__actions-menu-item',
-      actionsMenu[project.metadata.name].some(
-        action => !action.hidden && action.icon
-      ) && 'with-icon'
-    )
 
     return (
       <div
@@ -57,30 +46,10 @@ const ProjectCardView = React.forwardRef(
           <ProjectStatistics statistics={statistics} />
         </div>
         <div className="project-card__actions-menu" ref={ref}>
-          <button onClick={() => setShowActionsList(state => !state)}>
-            <ActionMenu />
-          </button>
-          {showActionsList && (
-            <div className="project-card__actions-menu-body">
-              {actionsMenu[project.metadata.name]
-                .filter(menuItem => !menuItem.hidden)
-                .map(menuItem => (
-                  <div
-                    className={menuItemClasses}
-                    onClick={() => {
-                      setShowActionsList(false)
-                      menuItem.onClick(project)
-                    }}
-                    key={menuItem.label}
-                  >
-                    <span className="project-card__actions-menu-item-icon">
-                      {menuItem.icon}
-                    </span>
-                    {menuItem.label}
-                  </div>
-                ))}
-            </div>
-          )}
+          <ActionsMenu
+            dataItem={project}
+            menu={actionsMenu[project.metadata.name]}
+          />
         </div>
       </div>
     )
@@ -90,8 +59,6 @@ const ProjectCardView = React.forwardRef(
 ProjectCardView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
   project: PropTypes.shape({}).isRequired,
-  setShowActionsList: PropTypes.func.isRequired,
-  showActionsList: PropTypes.bool.isRequired,
   statistics: PropTypes.shape({}).isRequired
 }
 

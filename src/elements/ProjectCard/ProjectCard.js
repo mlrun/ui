@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -18,7 +18,6 @@ const ProjectCard = ({
     fetchNuclioFunctionsFailure,
     setFetchNuclioFunctionsFailure
   ] = useState(false)
-  const [showActionsList, setShowActionsList] = useState(false)
 
   const actionsMenuRef = React.createRef()
 
@@ -27,27 +26,6 @@ const ProjectCard = ({
       nuclioStore.error && !nuclioStore.functions[project.metadata.name]
     )
   }, [project.metadata.name, nuclioStore.functions, nuclioStore.error])
-
-  const closeActionsMenu = useCallback(
-    event => {
-      if (
-        actionsMenuRef.current &&
-        !actionsMenuRef.current.contains(event.target) &&
-        showActionsList
-      ) {
-        setShowActionsList(false)
-      }
-    },
-    [actionsMenuRef, showActionsList]
-  )
-
-  useEffect(() => {
-    window.addEventListener('click', closeActionsMenu)
-
-    return () => {
-      window.removeEventListener('click', closeActionsMenu)
-    }
-  }, [closeActionsMenu])
 
   const statistics = useMemo(() => {
     return generateProjectStatistic(
@@ -72,8 +50,6 @@ const ProjectCard = ({
     <ProjectCardView
       actionsMenu={actionsMenu}
       project={project}
-      setShowActionsList={setShowActionsList}
-      showActionsList={showActionsList}
       statistics={statistics}
       ref={actionsMenuRef}
     />

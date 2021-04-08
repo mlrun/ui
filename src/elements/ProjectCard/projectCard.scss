@@ -80,45 +80,21 @@
 
   &__actions-menu {
     position: absolute;
-    top: 18px;
+    top: 10px;
     right: 0;
     z-index: 4;
 
-    &-body {
-      position: absolute;
-      right: 15px;
-      z-index: 4;
-      width: 150px;
-      background: $white;
-      border: $primaryBorder;
-      border-radius: 2px;
-      box-shadow: $filterShadow;
-    }
+    .actions-menu {
+      &__container {
+        display: block;
 
-    &-item {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      padding: 10px;
-      cursor: pointer;
+        .btn {
+          padding: 0;
+          border: none;
 
-      &:hover {
-        background-color: $alabaster;
-      }
-
-      &-icon {
-        display: none;
-        width: 24px;
-
-        svg {
-          width: 24px;
-          margin-right: 5px;
-        }
-      }
-
-      &.with-icon {
-        .project-card__actions-menu-item-icon {
-          display: inline-block;
+          &:hover {
+            background-color: transparent;
+          }
         }
       }
     }

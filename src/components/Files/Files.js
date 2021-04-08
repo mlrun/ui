@@ -14,8 +14,7 @@ import {
   page,
   registerArtifactDialogTitle,
   tableHeaders,
-  infoHeaders,
-  actionsMenu
+  infoHeaders
 } from './files.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -42,7 +41,6 @@ const Files = ({
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
-    actionsMenu,
     detailsMenu,
     filters,
     page,

@@ -6,7 +6,7 @@ import classnames from 'classnames'
 
 import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
 import Download from '../../common/Download/Download'
-import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Select from '../../common/Select/Select'
@@ -143,7 +143,7 @@ const DetailsView = React.forwardRef(
                 />
               </Tooltip>
             )}
-          <TableActionsMenu item={selectedItem} time={500} menu={actionsMenu} />
+          <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
           <Link
             data-testid="details-close-btn"
             to={`/projects/${

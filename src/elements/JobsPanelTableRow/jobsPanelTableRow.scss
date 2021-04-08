@@ -63,8 +63,19 @@
 
       .table__cell {
         &-actions {
-          .table-actions-container {
-            display: block;
+          .actions-menu {
+            &__container {
+              display: block;
+
+              .btn {
+                padding: 0;
+                border: none;
+
+                &:hover {
+                  background-color: transparent;
+                }
+              }
+            }
           }
         }
 

@@ -56,6 +56,26 @@
           .table-actions-container {
             display: block;
           }
+
+          .actions-menu {
+            &__container {
+              bottom: 2px;
+              display: block;
+
+              .btn {
+                padding: 0;
+                border: none;
+
+                &:hover {
+                  background-color: transparent;
+                }
+
+                :first-child {
+                  margin-right: 0;
+                }
+              }
+            }
+          }
         }
       }
 

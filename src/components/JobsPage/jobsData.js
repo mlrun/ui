@@ -209,9 +209,10 @@ export const generateActionsMenu = (
           label: 'Abort',
           icon: <Cancel />,
           onClick: onAbortJob,
-          hiddenRules: {
-            status: ['completed', 'error', 'aborted']
-          }
+          hidden:
+            job.state === 'completed' ||
+            job.state === 'error' ||
+            job.state === 'aborted'
         }
       ]
 
