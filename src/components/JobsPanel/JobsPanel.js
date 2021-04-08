@@ -38,6 +38,7 @@ const JobsPanel = ({
   match,
   onEditJob,
   project,
+  redirectToDetailsPane,
   removeFunctionTemplate,
   removeJobError,
   removeNewJob,
@@ -264,11 +265,19 @@ const JobsPanel = ({
     }
 
     runNewJob(postData)
-      .then(() => {
+      .then(result => {
         removeNewJob()
 
+        if (redirectToDetailsPane) {
+          return history.push(
+            `/projects/${project}/jobs/${cronString ? 'schedule' : 'monitor'}/${
+              result.data.data.metadata.uid
+            }/overview`
+          )
+        }
+
         history.push(
-          `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
+          `/projects/${project}/jobs/${cronString ? 'schedule' : 'monitor'}`
         )
       })
       .catch(error => {
@@ -333,7 +342,8 @@ const JobsPanel = ({
 JobsPanel.defaultProps = {
   defaultData: null,
   groupedFunctions: {},
-  onEditJob: () => {}
+  onEditJob: () => {},
+  redirectToDetailsPane: false
 }
 
 JobsPanel.propTypes = {
@@ -343,6 +353,7 @@ JobsPanel.propTypes = {
   match: PropTypes.shape({}).isRequired,
   onEditJob: PropTypes.func,
   project: PropTypes.string.isRequired,
+  redirectToDetailsPane: PropTypes.bool,
   runNewJob: PropTypes.func.isRequired
 }
 
