@@ -5,6 +5,7 @@ import { chain, isEqual, isEmpty } from 'lodash'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
+import JobsPanel from '../JobsPanel/JobsPanel'
 
 import {
   detailsMenu,
@@ -16,8 +17,10 @@ import {
 } from './functions.util'
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
+import jobsActions from '../../actions/jobs'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Run } from '../../images/run.svg'
 
 const Functions = ({
   deleteFunction,
@@ -25,11 +28,13 @@ const Functions = ({
   functionsStore,
   history,
   match,
+  removeNewJob,
   setLoading,
   setNotification
 }) => {
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
+  const [editableItem, setEditableItem] = useState(null)
   const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const pageData = {
@@ -38,6 +43,11 @@ const Functions = ({
         label: 'Delete',
         icon: <Delete />,
         onClick: func => removeFunction(func)
+      },
+      {
+        label: 'Run',
+        icon: <Run />,
+        onClick: func => setEditableItem(func)
       }
     ],
     detailsMenu,
@@ -201,6 +211,23 @@ const Functions = ({
         toggleShowUntagged={toggleShowUntagged}
         yamlContent={functionsStore.functions}
       />
+      {editableItem && (
+        <JobsPanel
+          closePanel={() => {
+            setEditableItem(null)
+            removeNewJob()
+          }}
+          groupedFunctions={{
+            name: editableItem.name,
+            functions: functionsStore.functions.filter(
+              func => func.metadata.name === editableItem.name
+            )
+          }}
+          match={match}
+          project={match.params.projectName}
+          redirectToDetailsPane
+        />
+      )}
     </>
   )
 }
@@ -212,5 +239,6 @@ Functions.propTypes = {
 
 export default connect(functionsStore => functionsStore, {
   ...functionsActions,
-  ...notificationActions
+  ...notificationActions,
+  ...jobsActions
 })(React.memo(Functions))
