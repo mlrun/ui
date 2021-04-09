@@ -25,19 +25,24 @@ export const formatDate = (isRange, isTime, splitCharacter, date, dateTo) => {
   let dateString = formatSingleDate(isTime, splitCharacter, date)
 
   if (isRange) {
-    dateString +=
-      datesDivider + formatSingleDate(isTime, splitCharacter, dateTo)
+    dateString += `${datesDivider}${formatSingleDate(
+      isTime,
+      splitCharacter,
+      dateTo
+    )}`
   }
 
   return dateString
 }
 
 const formatSingleDate = (isTime, splitCharacter, date) => {
-  let dateString = `${
-    date.getMonth() < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
-  }${splitCharacter}${
-    date.getDate() < 10 ? `0${date?.getDate()}` : date.getDate()
-  }${splitCharacter}${date.getFullYear()}`
+  let dateString = `${String(date.getMonth() + 1).padStart(
+    2,
+    '0'
+  )}${splitCharacter}${String(date.getDate()).padStart(
+    2,
+    '0'
+  )}${splitCharacter}${date.getFullYear()}`
 
   if (isTime) {
     dateString += ` ${String(date.getHours()).padStart(2, '0')}:${String(
@@ -113,7 +118,7 @@ export const getDatePipe = (isRange, isTime) => {
   }
 
   if (isRange) {
-    datePipe += datesDivider + datePipe
+    datePipe += `${datesDivider}${datePipe}`
   }
 
   return datePipe
@@ -127,7 +132,7 @@ export const getDateRegEx = dateMask => {
       value === ' '
         ? '\\s'
         : typeof value === 'string'
-        ? '\\' + value
+        ? `\\${value}`
         : trim(value, '/')
   })
 

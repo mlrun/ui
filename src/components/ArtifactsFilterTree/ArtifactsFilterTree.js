@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import ArtifactFilterTreeDropDown from './ArtifactsFilterTreeDropDown'
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
+import { KEY_CODES } from '../../constants'
 
 import './artifactsFilterTree.scss'
 
@@ -50,7 +51,7 @@ const ArtifactFilterTree = ({
   }
 
   const handleKeyDown = event => {
-    if (event.keyCode === 13) {
+    if (event.keyCode === KEY_CODES.ENTER) {
       event.preventDefault()
 
       let searchItem = filterTreeOptions.find(tree => {

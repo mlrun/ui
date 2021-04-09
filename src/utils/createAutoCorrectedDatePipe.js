@@ -36,6 +36,8 @@ export const createAutoCorrectedDatePipe = (
         indexesOfPipedChars,
         maxValue
       )
+
+      conformedValueStrings[index] = conformedValueItem.join('')
     })
 
     // Check for invalid date
@@ -58,7 +60,7 @@ export const createAutoCorrectedDatePipe = (
 
     return {
       value: datesDivider
-        ? conformedValueStrings[0] + datesDivider + conformedValueStrings[1]
+        ? `${conformedValueStrings[0]}${datesDivider}${conformedValueStrings[1]}`
         : conformedValueStrings[0],
       indexesOfPipedChars: datesDivider
         ? indexesOfPipedChars[0].concat(

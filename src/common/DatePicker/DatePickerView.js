@@ -103,7 +103,7 @@ const DatePickerView = React.forwardRef(
                     {weekDay.map((day, index) => {
                       return (
                         <div
-                          key={day + index}
+                          key={`${day}${index}`}
                           className="date-picker__weeks-day"
                         >
                           {day.label}
@@ -113,14 +113,12 @@ const DatePickerView = React.forwardRef(
                   </div>
                   {item.calendar.map(({ week }, index) => (
                     <div
-                      key={week[0].day.getMonth() + index}
+                      key={`${week[0].day.getMonth()}${index}`}
                       className="date-picker__week"
                     >
                       {week.map(({ day }) => (
                         <div
-                          key={
-                            day.getMonth() + day.getDate() + day.getFullYear()
-                          }
+                          key={`${day.getMonth()}${day.getDate()}${day.getFullYear()}`}
                           className={classnames(
                             'date-picker__week-day-wrapper',
                             item.id === 'configFrom'

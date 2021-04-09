@@ -367,6 +367,7 @@ const DatePicker = ({
 }
 DatePicker.defaultProps = {
   label: 'Date',
+  splitCharacter: '/',
   type: 'date'
 }
 
@@ -376,7 +377,7 @@ DatePicker.propTypes = {
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   label: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  splitCharacter: PropTypes.oneOf(['/', '.']).isRequired,
+  splitCharacter: PropTypes.oneOf(['/', '.']),
   type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time'])
 }
 

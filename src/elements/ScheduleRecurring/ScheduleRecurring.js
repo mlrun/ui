@@ -137,7 +137,6 @@ const ScheduleRecurring = ({
                 payload: item
               })
             }
-            splitCharacter="."
             date={date}
           />
         )}

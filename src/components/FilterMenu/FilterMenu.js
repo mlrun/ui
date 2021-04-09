@@ -21,6 +21,7 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
+  KEY_CODES,
   MODELS_PAGE
 } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
@@ -138,7 +139,7 @@ const FilterMenu = ({
   }
 
   const onKeyDown = event => {
-    if (event.keyCode === 13) {
+    if (event.keyCode === KEY_CODES.ENTER) {
       applyChanges()
     }
   }
@@ -206,7 +207,6 @@ const FilterMenu = ({
                   key={filter.type}
                   label={filter.label}
                   onChange={setDates}
-                  splitCharacter="."
                   date={dates[0]}
                   dateTo={dates[1]}
                   type="date-range-time"
