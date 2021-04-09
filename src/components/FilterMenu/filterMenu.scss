@@ -15,6 +15,12 @@
       width: 200px;
       height: 38px;
       padding: 10px 10px 10px 64px;
+
+      &.date-picker__input {
+        &.long-input {
+          width: 330px;
+        }
+      }
     }
   }
 

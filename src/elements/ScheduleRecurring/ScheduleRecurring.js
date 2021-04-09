@@ -137,8 +137,7 @@ const ScheduleRecurring = ({
                 payload: item
               })
             }
-            splitCharacter="."
-            value={date}
+            date={date}
           />
         )}
         {scheduleRepeatEndActiveOption === 'after' && (

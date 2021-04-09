@@ -25,7 +25,7 @@ const ScheduleJobSimple = ({
   return (
     <>
       <div className="input_container">
-        <DatePicker onChange={setDate} splitCharacter="." value={date} />
+        <DatePicker onChange={setDate} date={date} />
         <TimePicker onChange={setTime} value={time} />
       </div>
       <div className="checkbox_container">

@@ -33,7 +33,7 @@
       display: flex;
       flex: 1;
       flex-direction: row;
-      border-bottom: $tableBorderSecond;
+      border-bottom: $tertiaryBorder;
     }
 
     &-link {
@@ -105,7 +105,7 @@
       flex: 1;
       font-size: 14px;
       line-height: 24px;
-      border-bottom: $tableBorderSecond;
+      border-bottom: $tertiaryBorder;
 
       .table-header__item {
         padding-top: 20px;

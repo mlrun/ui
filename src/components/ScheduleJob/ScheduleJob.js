@@ -69,8 +69,8 @@ const ScheduleJob = ({
     })
   }
 
-  const onHandleDateChange = date => {
-    setDate(date)
+  const onHandleDateChange = dates => {
+    setDate(dates[0])
   }
 
   const onHandleTimeChange = time => {

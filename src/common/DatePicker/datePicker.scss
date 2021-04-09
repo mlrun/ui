@@ -2,120 +2,195 @@
 @import '../../scss/borders';
 @import '../../scss/shadows';
 
-.date-picker {
-  &-container {
+.date-picker-container {
+  position: relative;
+
+  .date-picker__input-wrapper {
     position: relative;
 
-    .date-picker {
-      &_body {
-        position: absolute;
-        z-index: 5;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 323px;
-        padding: 24px;
-        background-color: $white;
-        border-radius: 2px;
-        box-shadow: $previewBoxShadow;
+    .date-picker__input {
+      &.long-input {
+        width: 300px;
+      }
+    }
 
-        &.positionTop {
-          bottom: calc(100% + 5px);
+    input:focus {
+      border: 1px solid $malibu;
+    }
+  }
+
+  .date-picker {
+    position: absolute;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px 15px;
+    background-color: $white;
+    border-radius: 4px;
+    box-shadow: $previewBoxShadow;
+
+    &.positionTop {
+      bottom: calc(100% + 5px);
+    }
+
+    &.positionBottom {
+      top: calc(100% + 5px);
+    }
+  }
+
+  .date-picker__calendars {
+    display: flex;
+  }
+
+  .date-picker__calendar {
+    margin: 0 15px;
+  }
+
+  .date-picker__header {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    color: $primary;
+    font-size: 20px;
+
+    .date-picker__header-label {
+      color: $spunPearl;
+    }
+
+    .date-picker__header-month {
+      margin-right: 5px;
+    }
+
+    .date-picker__header-previous-month {
+      transform: rotate(180deg);
+      cursor: pointer;
+    }
+
+    .date-picker__header-next-month {
+      cursor: pointer;
+    }
+  }
+
+  .date-picker__weeks {
+    display: flex;
+    flex: 1;
+    margin: 10px 0;
+
+    .date-picker__weeks-day {
+      flex: 1;
+      height: 32px;
+      color: $spunPearl;
+      font-size: 12px;
+      line-height: 32px;
+      text-align: center;
+      border-bottom: $dividerBorder;
+    }
+  }
+
+  .date-picker__week {
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    margin: 2px 0;
+
+    .date-picker__week-day-wrapper {
+      width: 32px;
+      line-height: 32px;
+      text-align: center;
+      border-top: $transparentBorder;
+      border-bottom: $transparentBorder;
+
+      &.not-current-month {
+        color: rgba($black, 0.2);
+        cursor: default;
+
+        &.in-range {
+          border-top: $tertiaryBorder;
+          border-bottom: $tertiaryBorder;
         }
 
-        &.positionBottom {
-          top: calc(100% + 5px);
+        &.selected-from {
+          border-left: $tertiaryBorder;
+          border-radius: 50% 0 0 50%;
         }
 
-        &_weeks {
-          display: flex;
-          flex: 1;
-
-          &_day {
-            flex: 1;
-            height: 32px;
-            color: $primary;
-            font-weight: 500;
-            line-height: 32px;
-            text-align: center;
-          }
+        &.selected-to {
+          border-right: $tertiaryBorder;
+          border-radius: 0 50% 50% 0;
         }
+      }
 
-        &_week {
-          display: flex;
-          flex: 1;
-          justify-content: space-around;
+      &.current-month {
+        color: $topaz;
 
-          &_day {
-            width: 32px;
-            line-height: 32px;
-            text-align: center;
-          }
-        }
-
-        .not-current-month {
-          color: $spunPearl;
-          cursor: default;
-        }
-
-        .current-month {
-          color: $topaz;
-
-          &:hover {
+        &:hover {
+          .date-picker__week-day {
             color: $white;
             background-color: $malibu;
-            border-radius: 16px;
+            border-radius: 50%;
             cursor: pointer;
           }
         }
 
-        .selected {
-          color: $white;
-          background-color: $malibu;
-          border-radius: 16px;
+        &.calendar-from.selected-from,
+        &.calendar-to.selected-to {
+          border-radius: 50%;
+
+          .date-picker__week-day {
+            color: $white;
+            background-color: $malibu;
+            border-radius: 16px;
+          }
+        }
+
+        &:not(.invalid) {
+          &.selected-to,
+          &.selected-from,
+          &.in-range {
+            color: $malibu;
+            background-color: rgba($malibu, 0.2);
+          }
+        }
+
+        &.calendar-from.selected-from.in-range:not(.selected-to),
+        &.calendar-to.selected-from.in-range:not(.selected-to) {
+          border-radius: 50% 0 0 50%;
+        }
+
+        &.calendar-from.selected-to.in-range:not(.selected-from),
+        &.calendar-to.selected-to.in-range:not(.selected-from) {
+          border-radius: 0 50% 50% 0;
         }
       }
-
-      &-header {
-        display: flex;
-        flex: 1;
-        align-items: center;
-        justify-content: space-between;
-        color: $topaz;
-
-        &_month {
-          margin-right: 5px;
-          letter-spacing: 0.03em;
-          text-transform: uppercase;
-        }
-
-        .previous-month {
-          cursor: pointer;
-        }
-
-        .next-month {
-          transform: rotate(180deg);
-          cursor: pointer;
-        }
-      }
-    }
-
-    .btn-date-picker {
-      margin-top: 10px;
-      margin-left: auto;
-      color: $cornflowerBlue;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 24px;
-      text-transform: uppercase;
     }
   }
 
-  &_input {
-    position: relative;
+  .date-picker__time {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
 
-    input:focus {
-      border: 1px solid $malibu !important;
+    .time-picker-container {
+      width: 100px;
+
+      input {
+        width: 100%;
+        margin: 0;
+      }
+    }
+  }
+
+  .date-picker__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 45px;
+    margin: 10px 15px 0;
+
+    .date-picker__apply-btn {
+      margin-left: 15px;
     }
   }
 }

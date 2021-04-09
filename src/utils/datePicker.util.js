@@ -1,3 +1,58 @@
+import { trim } from 'lodash'
+
+export const datesDivider = ' - '
+
+export const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
+
+export const formatDate = (isRange, isTime, splitCharacter, date, dateTo) => {
+  if (!date) {
+    return ''
+  }
+
+  let dateString = formatSingleDate(isTime, splitCharacter, date)
+
+  if (isRange) {
+    dateString += `${datesDivider}${formatSingleDate(
+      isTime,
+      splitCharacter,
+      dateTo
+    )}`
+  }
+
+  return dateString
+}
+
+const formatSingleDate = (isTime, splitCharacter, date) => {
+  let dateString = `${String(date.getMonth() + 1).padStart(
+    2,
+    '0'
+  )}${splitCharacter}${String(date.getDate()).padStart(
+    2,
+    '0'
+  )}${splitCharacter}${date.getFullYear()}`
+
+  if (isTime) {
+    dateString += ` ${String(date.getHours()).padStart(2, '0')}:${String(
+      date.getMinutes()
+    ).padStart(2, '0')}`
+  }
+
+  return dateString
+}
+
 export const generateCalendar = (date, startWeek) => {
   let firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
   let lastDayInPreviousMonth = new Date(date.getFullYear(), date.getMonth(), 0)
@@ -30,21 +85,58 @@ export const generateCalendar = (date, startWeek) => {
   return month
 }
 
-export const getWeekStart = region => {
-  if (
-    'AGARASAUBDBRBSBTBWBZCACNCODMDOETGTGUHKHNIDILINJMJPKEKHKRLAMHMMMOMTMXMZNINPPAPEPHPKPRPTPYSASGSVTHTTTWUMUSVEVIWSYEZAZW'
-      .match(/../g)
-      .includes(region)
-  ) {
-    return 'sun'
+export const getDateMask = (isRange, isTime, splitCharacter) => {
+  let dateMask = [
+    /\d/,
+    /\d/,
+    splitCharacter,
+    /\d/,
+    /\d/,
+    splitCharacter,
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/
+  ]
+
+  if (isTime) {
+    dateMask.push(' ', /\d/, /\d/, ':', /\d/, /\d/)
   }
-  return 'mon'
+
+  if (isRange) {
+    dateMask.push(...datesDivider.split(''), ...dateMask)
+  }
+
+  return dateMask
 }
 
-export const decodeLocale = locale => {
-  return locale.match(
-    /^([a-zA-Z]{2,3})(?:[_-]+([a-zA-Z]{3})(?=$|[_-]+))?(?:[_-]+([a-zA-Z]{4})(?=$|[_-]+))?(?:[_-]+([a-zA-Z]{2}|\d{3})(?=$|[_-]+))?/
-  )[4]
+export const getDatePipe = (isRange, isTime) => {
+  let datePipe = 'mm/dd/yyyy'
+
+  if (isTime) {
+    datePipe += ' HH:MM'
+  }
+
+  if (isRange) {
+    datePipe += `${datesDivider}${datePipe}`
+  }
+
+  return datePipe
+}
+
+export const getDateRegEx = dateMask => {
+  let regExpString = ''
+
+  dateMask.forEach(value => {
+    regExpString +=
+      value === ' '
+        ? '\\s'
+        : typeof value === 'string'
+        ? `\\${value}`
+        : trim(value, '/')
+  })
+
+  return regExpString
 }
 
 export const getWeekDays = startWeek => {
@@ -65,28 +157,19 @@ export const getWeekDays = startWeek => {
   return weekDays
 }
 
-export const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-]
-
-export const formatDate = (date, splitCharacter = '.') => {
-  if (!date) {
-    return ''
+export const getWeekStart = region => {
+  if (
+    'AGARASAUBDBRBSBTBWBZCACNCODMDOETGTGUHKHNIDILINJMJPKEKHKRLAMHMMMOMTMXMZNINPPAPEPHPKPRPTPYSASGSVTHTTTWUMUSVEVIWSYEZAZW'
+      .match(/../g)
+      .includes(region)
+  ) {
+    return 'sun'
   }
-  return `${
-    date.getMonth() < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
-  }${splitCharacter}${
-    date.getDate() < 10 ? `0${date?.getDate()}` : date.getDate()
-  }${splitCharacter}${date.getFullYear()}`
+  return 'mon'
+}
+
+export const decodeLocale = locale => {
+  return locale.match(
+    /^([a-zA-Z]{2,3})(?:[_-]+([a-zA-Z]{3})(?=$|[_-]+))?(?:[_-]+([a-zA-Z]{4})(?=$|[_-]+))?(?:[_-]+([a-zA-Z]{2}|\d{3})(?=$|[_-]+))?/
+  )[4]
 }

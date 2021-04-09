@@ -9,6 +9,7 @@ import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import { getLinks, generateCreateNewOptions } from './project.utils'
 import { parseKeyValues } from '../../utils'
+import { KEY_CODES } from '../../constants'
 
 import './project.scss'
 
@@ -234,7 +235,7 @@ const Project = ({
 
   const handleOnKeyDown = useCallback(
     event => {
-      if (event.keyCode === 13) {
+      if (event.keyCode === KEY_CODES.ENTER) {
         handleSetProjectData()
       }
     },
