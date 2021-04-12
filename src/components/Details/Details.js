@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 
 import artifactActions from '../../actions/artifacts'
 import {
@@ -39,6 +39,7 @@ const Details = ({
   applyDetailsChanges,
   cancelRequest,
   detailsMenu,
+  detailsStore,
   handleCancel,
   match,
   pageData,
@@ -286,6 +287,7 @@ const Details = ({
       detailsMenu={detailsMenu}
       detailsMenuClick={detailsMenuClick}
       detailsState={detailsState}
+      detailsStore={detailsStore}
       handleCancel={handleCancel}
       handleShowWarning={handleShowWarning}
       leavePage={leavePage}
@@ -320,4 +322,6 @@ Details.propTypes = {
   selectedItem: PropTypes.shape({}).isRequired
 }
 
-export default Details
+export default connect(({ detailsStore }) => ({
+  detailsStore
+}))(Details)

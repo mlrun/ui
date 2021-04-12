@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import projectActions from '../../actions/projects'
+import detailsActions from '../../actions/details'
 import {
   generatePageData,
   initialStateFilter,
@@ -12,7 +14,7 @@ import {
   getChipsValues
 } from './jobsData'
 import { parseKeyValues } from '../../utils'
-import { SCHEDULE_TAB } from '../../constants'
+import { MONITOR_TAB, SCHEDULE_TAB } from '../../constants'
 
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
@@ -27,12 +29,14 @@ const Jobs = ({
   editJobFailure,
   fetchJobFunction,
   fetchJobs,
+  fetchJobPods,
   fetchProjectWorkflows,
   jobsStore,
   handleRunScheduledJob,
   history,
   match,
   removeNewJob,
+  removePods,
   removeScheduledJob,
   runNewJob,
   setLoading,
@@ -283,6 +287,25 @@ const Jobs = ({
   }, [fetchProjectWorkflows, match.params.projectName])
 
   useEffect(() => {
+    if (!isEmpty(selectedJob) && match.params.pageTab === MONITOR_TAB) {
+      removePods()
+      fetchJobPods(match.params.projectName, selectedJob.uid)
+
+      const interval = setInterval(() => {
+        fetchJobPods(match.params.projectName, selectedJob.uid)
+      }, 30000)
+
+      return () => clearInterval(interval)
+    }
+  }, [
+    fetchJobPods,
+    match.params.pageTab,
+    match.params.projectName,
+    removePods,
+    selectedJob
+  ])
+
+  useEffect(() => {
     refreshJobs()
 
     return () => {
@@ -419,10 +442,16 @@ Jobs.propTypes = {
 }
 
 export default connect(
-  ({ appStore, jobsStore, workflowsStore }) => ({
+  ({ appStore, jobsStore, detailsStore, workflowsStore }) => ({
     appStore,
+    detailsStore,
     jobsStore,
     workflowsStore
   }),
-  { ...jobsActions, ...projectActions, ...notificationActions }
+  {
+    ...jobsActions,
+    ...projectActions,
+    ...detailsActions,
+    ...notificationActions
+  }
 )(React.memo(Jobs))
