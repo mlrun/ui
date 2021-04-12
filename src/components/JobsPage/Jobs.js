@@ -34,7 +34,6 @@ const Jobs = ({
   match,
   removeNewJob,
   removeScheduledJob,
-  runNewJob,
   setLoading,
   setNotification,
   workflowsStore
@@ -89,6 +88,16 @@ const Jobs = ({
       })
   }
 
+  const handleSuccessRerunJob = () => {
+    refreshJobs()
+    setEditableItem(null)
+    setNotification({
+      status: 200,
+      id: Math.random(),
+      message: 'Job is successfully rerunning'
+    })
+  }
+
   const onRemoveScheduledJob = scheduledJob => {
     setConfirmData({
       item: scheduledJob,
@@ -113,8 +122,8 @@ const Jobs = ({
       functionParts[1].replace(/.*@/g, '')
     )
 
-    if (functionData) {
-      const postData = {
+    setEditableItem({
+      rerun_object: {
         function: {
           spec: {
             env: functionData?.spec.env,
@@ -146,32 +155,7 @@ const Jobs = ({
           }
         }
       }
-
-      runNewJob(postData)
-        .then(() => {
-          refreshJobs()
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Job is successfully rerunning'
-          })
-        })
-        .catch(error => {
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            retry: () => handleRerunJob(job),
-            message: 'Rerunning job is failed'
-          })
-        })
-    } else {
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        retry: () => handleRerunJob(job),
-        message: 'Rerunning job is failed'
-      })
-    }
+    })
   }
 
   const handleAbortJob = job => {
@@ -289,7 +273,7 @@ const Jobs = ({
       setSelectedJob({})
       setJobs([])
     }
-  }, [getWorkflows, history, match.params.pageTab, refreshJobs])
+  }, [getWorkflows, match.params.pageTab, refreshJobs])
 
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
@@ -403,10 +387,19 @@ const Jobs = ({
             setEditableItem(null)
             removeNewJob()
           }}
-          defaultData={editableItem.scheduled_object}
+          defaultData={
+            editableItem.scheduled_object || editableItem.rerun_object
+          }
+          handleRunNewJob={{}}
           match={match}
           onEditJob={onEditJob}
+          onSuccessRun={() => {
+            if (editableItem) {
+              handleSuccessRerunJob()
+            }
+          }}
           project={match.params.projectName}
+          withSaveChanges={Boolean(editableItem.scheduled_object)}
         />
       )}
     </>

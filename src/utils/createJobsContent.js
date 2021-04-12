@@ -51,7 +51,7 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           },
           labels: {
             value: parseKeyValues(
-              contentItem.scheduled_object.task.metadata.labels || {}
+              contentItem.scheduled_object?.task.metadata.labels || {}
             ),
             class: 'jobs_big',
             type: 'labels'
