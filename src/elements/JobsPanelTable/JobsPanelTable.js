@@ -66,7 +66,7 @@ const JobsPanelTable = ({
       {
         label: 'Remove',
         icon: <Delete />,
-        visible: !rowItem.isDefault,
+        hidden: rowItem.isDefault,
         onClick: selectedItem => {
           handleDelete(selectedItem)
         }

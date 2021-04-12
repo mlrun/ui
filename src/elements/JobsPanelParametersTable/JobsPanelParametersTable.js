@@ -46,7 +46,7 @@ const JobsPanelParametersTable = ({
       {
         label: 'Remove',
         icon: <Delete />,
-        visible: !rowItem.isDefault,
+        hidden: rowItem.isDefault,
         onClick: selectedItem => {
           handleDeleteParameter(selectedItem)
         }

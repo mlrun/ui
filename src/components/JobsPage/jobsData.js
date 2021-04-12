@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { JOB_STEADY_STATES } from './jobsPage.utils'
+
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
@@ -210,9 +212,7 @@ export const generateActionsMenu = (
           label: 'Abort',
           icon: <Cancel />,
           onClick: onAbortJob,
-          hiddenRules: {
-            status: ['completed', 'error', 'aborted']
-          }
+          hidden: JOB_STEADY_STATES.includes(job.state)
         }
       ]
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
-import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
@@ -163,7 +163,7 @@ const ArtifactsTableRow = ({
                       )
                     })}
                     <div className="table-body__cell action_cell">
-                      <TableActionsMenu item={currentItem} menu={actionsMenu} />
+                      <ActionsMenu dataItem={currentItem} menu={actionsMenu} />
                     </div>
                   </>
                 )}
@@ -199,7 +199,7 @@ const ArtifactsTableRow = ({
             )
           })}
           <div className="table-body__cell action_cell">
-            <TableActionsMenu item={content[index]} menu={actionsMenu} />
+            <ActionsMenu dataItem={content[index]} menu={actionsMenu} />
           </div>
         </>
       )}

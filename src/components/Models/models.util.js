@@ -143,8 +143,6 @@ export const tabs = [
   { id: 'model-endpoints', label: 'Model endpoints' }
 ]
 
-const actionsMenu = []
-
 export const handleFetchData = async (
   fetchModelEndpoints,
   fetchModels,
@@ -187,7 +185,6 @@ export const generatePageData = (
   }
 
   if (pageTab === MODELS_TAB) {
-    data.actionsMenu = actionsMenu
     data.detailsMenu = modelsDetailsMenu
     data.filters = modelsFilters
     data.registerArtifactDialogTitle = registerArtifactDialogTitle

@@ -5,7 +5,7 @@ import classnames from 'classnames'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
-import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tip from '../../common/Tip/Tip'
 import CheckBox from '../../common/CheckBox/CheckBox'
 
@@ -93,7 +93,7 @@ const JobsPanelTableRow = ({
         })}
         <div className="table__cell table__cell-actions">
           {section === 'volumes' ? (
-            <TableActionsMenu item={contentItem} menu={actionsMenu} />
+            <ActionsMenu menu={actionsMenu} dataItem={contentItem} />
           ) : (
             !contentItem.isDefault && (
               <button

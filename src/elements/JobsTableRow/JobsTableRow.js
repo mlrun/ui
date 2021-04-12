@@ -4,7 +4,7 @@ import { map, isEmpty } from 'lodash'
 import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
-import TableActionsMenu from '../../common/TableActionsMenu/TableActionsMenu'
+import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 import { DETAILS_OVERVIEW_TAB, MONITOR_TAB } from '../../constants'
 
@@ -40,9 +40,6 @@ const JobsTableRow = ({
           ? contentItemObj.uid === rowItem.uid?.value
           : contentItemObj.name === rowItem.name.value
       )
-  const filteredActions = actionsMenu(currentItem).filter(
-    action => !action.hiddenRules?.status.includes(currentItem.state)
-  )
 
   return (
     <div className={rowClassNames} ref={parent}>
@@ -121,9 +118,9 @@ const JobsTableRow = ({
                     )
                   })}
                   <div className="table-body__cell action_cell">
-                    <TableActionsMenu
-                      item={groupCurrentItem}
+                    <ActionsMenu
                       menu={groupFilteredActionsMenu}
+                      dataItem={groupCurrentItem}
                     />
                   </div>
                 </div>
@@ -155,7 +152,7 @@ const JobsTableRow = ({
             )
           })}
           <div className="table-body__cell action_cell">
-            <TableActionsMenu item={currentItem} menu={filteredActions} />
+            <ActionsMenu dataItem={currentItem} menu={actionsMenu} />
           </div>
         </>
       )}
