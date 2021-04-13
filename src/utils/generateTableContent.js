@@ -19,12 +19,9 @@ export const generateTableContent = (
   groupedByWorkflow,
   groupFilter,
   page,
-  match,
-  setLoading
+  match
 ) => {
   if (!isEmpty(groupedByName) && groupFilter === 'name') {
-    setLoading(true)
-
     return map(groupedByName, group =>
       page === JOBS_PAGE
         ? createJobsContent(group, false)
@@ -38,12 +35,8 @@ export const generateTableContent = (
           )
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
-    setLoading(true)
-
     return map(groupedByWorkflow, group => createJobsContent(group, true))
   } else if (groupFilter === 'none' || !groupFilter) {
-    setLoading && setLoading(true)
-
     return page === JOBS_PAGE
       ? createJobsContent(content, false, match.params.pageTab === SCHEDULE_TAB)
       : page === ARTIFACTS_PAGE ||

@@ -55,8 +55,7 @@ const Table = ({
       groupedByWorkflow,
       groupFilter,
       pageData.page,
-      match,
-      setLoading
+      match
     )
 
     if (groupFilter === 'name') {
@@ -101,12 +100,6 @@ const Table = ({
     workflows,
     pageData.mainRowItemsCount
   ])
-
-  useEffect(() => {
-    if (tableContent.content.length && setLoading) {
-      setLoading(false)
-    }
-  }, [setLoading, tableContent])
 
   return (
     <>
