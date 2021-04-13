@@ -40,7 +40,7 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Stream path', id: 'stream_path' }
 ]
 export const modelsDetailsMenu = ['overview', 'preview']
-export const modelEndpointsDetailsMenu = ['overview']
+export const modelEndpointsDetailsMenu = ['overview', 'drift analysis']
 export const modelsFilters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },
@@ -240,6 +240,7 @@ export const checkForSelectedModelEndpoint = (
       `/projects/${match.params.projectName}/models/${match.params.pageTab}`
     )
   } else {
+    searchItem.name = searchItem.spec.model.split(':')[0]
     setSelectedModel({ item: searchItem })
   }
 }

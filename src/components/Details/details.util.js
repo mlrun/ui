@@ -21,7 +21,8 @@ import {
   DETAILS_REQUESTED_FEATURES_TAB,
   DETAILS_RETURNED_FEATURES_TAB,
   DETAILS_TRANSFORMATIONS_TAB,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  DETAILS_DRIFT_ANALYSIS_TAB
 } from '../../constants'
 import { formatDatetime, parseUri } from '../../utils'
 
@@ -37,6 +38,7 @@ import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
 import DetailsStatistics from '../DetailsStatistics/DetailsStatistics'
 import DetailsRequestedFeatures from '../DetailsRequestedFeatures/DetailsRequestedFeatures'
 import DetailsTransformations from '../DetailsTransformations/DetailsTransformations'
+import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 
 export const generateArtifactsContent = (
   editDescription,
@@ -239,6 +241,8 @@ export const renderContent = (
           selectedItem={selectedItem}
         />
       )
+    case DETAILS_DRIFT_ANALYSIS_TAB:
+      return <DetailsDriftAnalysis selectedItem={selectedItem} />
     case DETAILS_PREVIEW_TAB:
       return (
         <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
