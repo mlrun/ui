@@ -7,7 +7,7 @@ export const generatePods = (uid, pods) => {
   let podsList = []
   let podsTooltip = []
 
-  if (pods && pods[uid]) {
+  if (pods?.[uid]) {
     podsList = pods[uid].pod_resources
     podsTooltip = map(podsList, (value, index) => (
       <p key={index}>
