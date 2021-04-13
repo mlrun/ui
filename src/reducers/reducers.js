@@ -4,6 +4,7 @@ import appStore from './appReducer'
 import artifactsStore from './artifactReducer'
 import functionsStore from './functionReducer'
 import jobsStore from './jobReducer'
+import detailsStore from './detailsReducer'
 import notificationStore from './notificationReducer'
 import nuclioStore from './nuclioReducer'
 import projectStore from './projectReducer'
@@ -14,6 +15,7 @@ export default combineReducers({
   artifactsStore,
   functionsStore,
   jobsStore,
+  detailsStore,
   notificationStore,
   nuclioStore,
   projectStore,
