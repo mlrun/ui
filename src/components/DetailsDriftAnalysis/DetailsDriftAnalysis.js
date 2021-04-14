@@ -8,8 +8,8 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 
 import './detailsDriftAnalysis.scss'
 
-const DetailsDriftAnalysis = ({ selectedItem }) => {
-  const table = generateDriftAnalysis(selectedItem)
+const DetailsDriftAnalysis = ({ detailsStore }) => {
+  const table = generateDriftAnalysis(detailsStore)
 
   return (
     <div className="drift-analysis">
@@ -51,7 +51,7 @@ const DetailsDriftAnalysis = ({ selectedItem }) => {
 }
 
 DetailsDriftAnalysis.propTypes = {
-  selectedItem: PropTypes.shape({}).isRequired
+  detailsStore: PropTypes.shape({}).isRequired
 }
 
 export default DetailsDriftAnalysis

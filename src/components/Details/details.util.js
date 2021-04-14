@@ -227,7 +227,8 @@ export const renderContent = (
   detailsDispatch,
   selectedItem,
   pageData,
-  handlePreview
+  handlePreview,
+  detailsStore
 ) => {
   switch (match.params.tab?.toUpperCase()) {
     case DETAILS_OVERVIEW_TAB:
@@ -242,7 +243,7 @@ export const renderContent = (
         />
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
-      return <DetailsDriftAnalysis selectedItem={selectedItem} />
+      return <DetailsDriftAnalysis detailsStore={detailsStore} />
     case DETAILS_PREVIEW_TAB:
       return (
         <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
