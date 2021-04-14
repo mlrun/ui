@@ -1,4 +1,5 @@
 export const detailsMenu = ['overview', 'code']
+export const FUNCTIONS_FAILED_STATES = ['failed', 'error']
 export const page = 'FUNCTIONS'
 export const tableHeaders = [
   {
