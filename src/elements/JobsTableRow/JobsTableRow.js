@@ -81,12 +81,7 @@ const JobsTableRow = ({
                 content.length > 0 &&
                 content.find(item => item.uid === job.uid.value)
 
-              const groupFilteredActionsMenu = actionsMenu(
-                groupCurrentItem
-              ).filter(
-                action =>
-                  !action.hiddenRules?.status.includes(groupCurrentItem.state)
-              )
+              const groupFilteredActionsMenu = actionsMenu(groupCurrentItem)
 
               return (
                 <div
