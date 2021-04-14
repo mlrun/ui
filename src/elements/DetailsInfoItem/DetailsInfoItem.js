@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import Prism from 'prismjs'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Tooltip from '../../common/Tooltip/Tooltip'
@@ -97,6 +98,21 @@ const DetailsInfoItem = React.forwardRef(
         >
           <span onClick={() => copyToClipboard(info)}>{info}</span>
         </Tooltip>
+      )
+    } else if (currentField === 'usage_example') {
+      return (
+        <div className="details-item__data details-item__usage-example">
+          <p>{info.title}</p>
+          <pre>
+            <code
+              dangerouslySetInnerHTML={{
+                __html:
+                  info.code &&
+                  Prism.highlight(info.code, Prism.languages.py, 'py')
+              }}
+            />
+          </pre>
+        </div>
       )
     } else if (state) {
       return (
