@@ -22,8 +22,8 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 const Models = ({
   artifactsStore,
   fetchModel,
-  fetchModelEndpoints,
   fetchModelEndpointWithAnalysis,
+  fetchModelEndpoints,
   fetchModels,
   history,
   match,
@@ -172,12 +172,6 @@ const Models = ({
   ])
 
   useEffect(() => {
-    if (match.params.pageTab === MODEL_ENDPOINTS_TAB && selectedModel.item) {
-      fetchModelEndpointWithAnalysis(selectedModel.item.metadata.uid)
-    }
-  }, [fetchModelEndpointWithAnalysis, match.params.pageTab, selectedModel.item])
-
-  useEffect(() => {
     setPageData(state => ({
       ...state,
       ...generatePageData(
@@ -219,6 +213,7 @@ const Models = ({
         )
       } else if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
         checkForSelectedModelEndpoint(
+          fetchModelEndpointWithAnalysis,
           history,
           match,
           artifactsStore.modelEndpoints,
@@ -236,7 +231,8 @@ const Models = ({
     artifactsStore.modelEndpoints.length,
     artifactsStore.modelEndpoints,
     match,
-    artifactsStore.models
+    artifactsStore.models,
+    fetchModelEndpointWithAnalysis
   ])
 
   const handleModelTreeFilterChange = useCallback(
