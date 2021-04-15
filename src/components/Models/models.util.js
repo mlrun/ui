@@ -226,6 +226,7 @@ export const checkForSelectedModel = (
 }
 
 export const checkForSelectedModelEndpoint = (
+  fetchModelEndpointWithAnalysis,
   history,
   match,
   modelEndpoints,
@@ -241,6 +242,8 @@ export const checkForSelectedModelEndpoint = (
     )
   } else {
     searchItem.name = searchItem.spec.model.split(':')[0]
+
+    fetchModelEndpointWithAnalysis(searchItem.metadata.uid)
     setSelectedModel({ item: searchItem })
   }
 }

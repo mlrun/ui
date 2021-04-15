@@ -14,9 +14,11 @@ const initialState = {
     podsTooltip: [],
     error: null
   },
-  modelEndpoint: {},
-  loading: false,
-  error: null
+  modelEndpoint: {
+    data: {},
+    error: null,
+    loading: false
+  }
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -45,20 +47,28 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN:
       return {
         ...state,
-        loading: true
+        modelEndpoint: {
+          ...state.modelEndpoint,
+          loading: true
+        }
       }
     case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE:
       return {
         ...state,
-        error: payload,
-        modelEndpoint: {},
-        loading: false
+        modelEndpoint: {
+          data: {},
+          error: payload,
+          loading: false
+        }
       }
     case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS:
       return {
         ...state,
-        modelEndpoint: payload,
-        loading: false
+        modelEndpoint: {
+          error: null,
+          data: { ...payload },
+          loading: false
+        }
       }
     default:
       return state
