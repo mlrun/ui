@@ -1,10 +1,8 @@
 import { FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../constants'
 
 export const generateUsageSnippets = pageTab => {
-  let snippetsData = {}
-
   if (pageTab === FEATURE_SETS_TAB) {
-    snippetsData = {
+    return {
       title: 'Get offline features for training:',
       code: `features = [
               "<feature set>.*",
@@ -20,7 +18,7 @@ export const generateUsageSnippets = pageTab => {
   }
 
   if (pageTab === FEATURE_VECTORS_TAB) {
-    snippetsData = {
+    return {
       title: 'Getting online features:',
       code: `svc = get_online_feature_service(vector_uri)
               resp = svc.get([{"key": "value"}, {"key": "value"}])
@@ -31,6 +29,4 @@ export const generateUsageSnippets = pageTab => {
               print(resp)`
     }
   }
-
-  return snippetsData
 }

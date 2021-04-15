@@ -2,7 +2,10 @@ import detailsApi from '../api/details-api'
 import {
   FETCH_JOB_PODS_SUCCESS,
   FETCH_JOB_PODS_FAILURE,
-  REMOVE_JOB_PODS
+  REMOVE_JOB_PODS,
+  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN,
+  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE,
+  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
 
@@ -31,6 +34,30 @@ const detailsActions = {
   }),
   removePods: () => ({
     type: REMOVE_JOB_PODS
+  }),
+  fetchModelEndpointWithAnalysis: uid => dispatch => {
+    dispatch(detailsActions.fetchModelEndpointWithAnalysisBegin())
+
+    return detailsApi
+      .getModelEndpoint(uid)
+      .then(({ data }) => {
+        dispatch(detailsActions.fetchModelEndpointWithAnalysisSuccess(data))
+
+        return data
+      })
+      .catch(err => {
+        dispatch(detailsActions.fetchModelEndpointWithAnalysisFailure(err))
+      })
+  },
+  fetchModelEndpointWithAnalysisBegin: () => ({
+    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN
+  }),
+  fetchModelEndpointWithAnalysisFailure: () => ({
+    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE
+  }),
+  fetchModelEndpointWithAnalysisSuccess: model => ({
+    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
+    payload: model
   })
 }
 

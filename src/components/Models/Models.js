@@ -7,6 +7,7 @@ import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 
 import artifactsAction from '../../actions/artifacts'
+import detailsActions from '../../actions/details'
 import {
   handleFetchData,
   generatePageData,
@@ -22,6 +23,7 @@ const Models = ({
   artifactsStore,
   fetchModel,
   fetchModelEndpoints,
+  fetchModelEndpointWithAnalysis,
   fetchModels,
   history,
   match,
@@ -170,6 +172,12 @@ const Models = ({
   ])
 
   useEffect(() => {
+    if (match.params.pageTab === MODEL_ENDPOINTS_TAB && selectedModel.item) {
+      fetchModelEndpointWithAnalysis(selectedModel.item.metadata.uid)
+    }
+  }, [fetchModelEndpointWithAnalysis, match.params.pageTab, selectedModel.item])
+
+  useEffect(() => {
     setPageData(state => ({
       ...state,
       ...generatePageData(
@@ -287,5 +295,6 @@ Models.propTypes = {
 }
 
 export default connect(artifactsStore => artifactsStore, {
-  ...artifactsAction
+  ...artifactsAction,
+  ...detailsActions
 })(Models)

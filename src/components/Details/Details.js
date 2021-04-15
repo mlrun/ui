@@ -274,9 +274,10 @@ const Details = ({
       detailsDispatch,
       selectedItem,
       pageData,
-      handlePreview
+      handlePreview,
+      detailsStore
     )
-  }, [detailsState, handlePreview, match, pageData, selectedItem])
+  }, [detailsState, detailsStore, handlePreview, match, pageData, selectedItem])
 
   return (
     <DetailsView

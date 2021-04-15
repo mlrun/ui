@@ -1,0 +1,53 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.drift-analysis {
+  padding: 20px;
+
+  .drift-analysis__table {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    .drift-analysis__table-header {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      display: flex;
+      padding-bottom: 10px;
+      color: $topaz;
+      font-weight: bold;
+      background-color: $white;
+      border-bottom: $secondaryBorder;
+    }
+
+    .drift-analysis__table-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .drift-analysis__table-row {
+      display: flex;
+      flex-direction: row;
+      height: 55px;
+      border-bottom: $secondaryBorder;
+    }
+
+    .drift-analysis__table-cell {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      min-width: 70px;
+      padding: 0 5px;
+
+      .drift-analysis__table-cell_big {
+        min-width: 140px;
+      }
+
+      .drift-analysis__table-cell_medium {
+        min-width: 100px;
+      }
+    }
+  }
+}
