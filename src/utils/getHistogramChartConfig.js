@@ -1,6 +1,6 @@
 import { round } from 'lodash'
 
-export const generateCustomTooltip = context => {
+const generateCustomTooltip = context => {
   // Tooltip Element
   let tooltipEl = document.getElementById('chartjs-tooltip')
 
@@ -71,4 +71,35 @@ export const generateCustomTooltip = context => {
     tooltipModel.padding + 'px ' + tooltipModel.padding + 'px'
 
   tooltipEl.classList.remove('hidden')
+}
+
+export const getHistogramChartConfig = () => {
+  return {
+    type: 'bar',
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: {
+        padding: 5
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: false,
+          external: generateCustomTooltip,
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            title: () => ''
+          }
+        }
+      },
+      scales: {
+        x: { display: false },
+        y: { display: false }
+      }
+    }
+  }
 }
