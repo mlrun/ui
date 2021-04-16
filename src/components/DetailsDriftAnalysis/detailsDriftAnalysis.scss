@@ -4,6 +4,10 @@
 .drift-analysis {
   padding: 20px;
 
+  .drift-analysis__error {
+    font-size: 20px;
+  }
+
   .drift-analysis__table {
     display: flex;
     flex: 1;

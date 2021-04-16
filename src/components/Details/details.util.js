@@ -5,24 +5,24 @@ import {
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
   DETAILS_CODE_TAB,
-  DETAILS_OVERVIEW_TAB,
+  DETAILS_DRIFT_ANALYSIS_TAB,
   DETAILS_INPUTS_TAB,
   DETAILS_LOGS_TAB,
   DETAILS_METADATA_TAB,
   DETAILS_FEATURES_TAB,
+  DETAILS_OVERVIEW_TAB,
   DETAILS_PREVIEW_TAB,
+  DETAILS_REQUESTED_FEATURES_TAB,
   DETAILS_RESULTS_TAB,
+  DETAILS_RETURNED_FEATURES_TAB,
   DETAILS_STATISTICS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
-  FILES_PAGE,
-  MODELS_PAGE,
-  FEATURE_VECTORS_TAB,
-  DETAILS_REQUESTED_FEATURES_TAB,
-  DETAILS_RETURNED_FEATURES_TAB,
   DETAILS_TRANSFORMATIONS_TAB,
+  FEATURE_VECTORS_TAB,
+  FILES_PAGE,
   MODEL_ENDPOINTS_TAB,
-  DETAILS_DRIFT_ANALYSIS_TAB
+  MODELS_PAGE
 } from '../../constants'
 import { formatDatetime, parseUri } from '../../utils'
 
@@ -243,7 +243,7 @@ export const renderContent = (
         />
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
-      return <DetailsDriftAnalysis detailsStore={detailsStore} />
+      return <DetailsDriftAnalysis />
     case DETAILS_PREVIEW_TAB:
       return (
         <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
