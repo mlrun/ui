@@ -22,7 +22,7 @@ const DetailsCode = ({ code }) => {
       {decoded.length > 0 ? (
         <div className="table__item_code__content">
           <pre>
-            <code dangerouslySetInnerHTML={{ __html: html }}></code>
+            <code dangerouslySetInnerHTML={{ __html: html }} />
           </pre>
         </div>
       ) : (

@@ -15,6 +15,7 @@ import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
 import { generateUri } from '../../utils/generateUri'
+import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 
 export const datasetsInfoHeaders = [
   {
@@ -48,7 +49,8 @@ export const featureSetsInfoHeaders = [
   { label: 'Partition keys', id: 'partition_keys' },
   { label: 'Timestamp Key', id: 'timestamp_key' },
   { label: 'Relations', id: 'relations' },
-  { label: 'Label column', id: 'label_column' }
+  { label: 'Label column', id: 'label_column' },
+  { label: 'Usage example', id: 'usage_example' }
 ]
 export const featureVectorsInfoHeaders = [
   { label: 'Description', id: 'description' },
@@ -57,7 +59,8 @@ export const featureVectorsInfoHeaders = [
   { label: 'URI', id: 'target_uri' },
   { label: 'Last updated', id: 'updated' },
   { label: 'Timestamp Key', id: 'timestamp_key' },
-  { label: 'Label column', id: 'label_column' }
+  { label: 'Label column', id: 'label_column' },
+  { label: 'Usage example', id: 'usage_example' }
 ]
 export const datasetsFilters = [
   { type: 'tree', label: 'Tree:' },
@@ -398,6 +401,15 @@ export const navigateToDetailsPane = (
         `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
       )
     } else {
+      if (
+        match.params.pageTab === FEATURE_SETS_TAB ||
+        match.params.pageTab === FEATURE_VECTORS_TAB
+      ) {
+        selectedArtifact.usage_example = generateUsageSnippets(
+          match.params.pageTab
+        )
+      }
+
       selectedArtifact.URI = generateUri(selectedArtifact, match.params.pageTab)
       setSelectedItem({ item: selectedArtifact })
     }

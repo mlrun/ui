@@ -325,6 +325,9 @@ export const generateFeatureSetsOverviewContent = (
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
   },
+  usage_example: {
+    value: selectedItem.usage_example ?? ''
+  },
   entities: {
     value: selectedItem.entities?.map(entity => entity.name)
   },
@@ -360,6 +363,9 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+  },
+  usage_example: {
+    value: selectedItem.usage_example ?? ''
   },
   timestamp_key: {
     value: selectedItem.timestamp_field ?? ''
