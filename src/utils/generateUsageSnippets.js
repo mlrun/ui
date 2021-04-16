@@ -5,11 +5,11 @@ export const generateUsageSnippets = pageTab => {
     return {
       title: 'Get offline features for training:',
       code: `features = [
-"<feature set>.*",
+    "<feature set>.*",
 ]
 vector = FeatureVector(features=features)
 resp = get_offline_features(
-vector, entity_rows=<entity>, entity_timestamp_column="<entity timestamp column"
+    vector, entity_rows=<entity>, entity_timestamp_column="<entity timestamp column"
 )
 print(resp.to_dataframe())
 print(vector.get_stats_table())
