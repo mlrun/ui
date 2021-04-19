@@ -40,7 +40,11 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Stream path', id: 'stream_path' }
 ]
 export const modelsDetailsMenu = ['overview', 'preview']
-export const modelEndpointsDetailsMenu = ['overview', 'drift analysis']
+export const modelEndpointsDetailsMenu = [
+  'overview',
+  'drift analysis',
+  'features analysis'
+]
 export const modelsFilters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },

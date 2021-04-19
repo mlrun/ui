@@ -1,0 +1,84 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.features-analysis {
+  padding: 20px;
+
+  &__table {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    &-header {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      display: flex;
+      padding-bottom: 10px;
+      color: $topaz;
+      font-weight: bold;
+      background-color: $white;
+      border-bottom: $secondaryBorder;
+    }
+
+    &-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-row {
+      display: flex;
+      flex-direction: row;
+      height: 55px;
+      border-bottom: $secondaryBorder;
+    }
+
+    &-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 50px;
+      padding: 0 5px;
+
+      &-chart {
+        height: 54px;
+      }
+
+      &_split {
+        flex-direction: column;
+      }
+
+      &_bottom {
+        display: flex;
+        width: 100%;
+
+        .features-analysis__table-cell_small {
+          min-width: 45px;
+          font-weight: normal;
+          font-size: 12px;
+        }
+      }
+
+      &_huge {
+        flex: 1.5;
+        min-width: 150px;
+      }
+
+      &_big {
+        flex: 1;
+        min-width: 100px;
+      }
+
+      &_medium {
+        flex: 0.75;
+        min-width: 75px;
+      }
+
+      &_small {
+        flex: 0.5;
+        min-width: 50px;
+        text-align: center;
+      }
+    }
+  }
+}

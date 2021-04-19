@@ -9,6 +9,7 @@ import {
   DETAILS_INPUTS_TAB,
   DETAILS_LOGS_TAB,
   DETAILS_METADATA_TAB,
+  DETAILS_FEATURES_ANALYSIS_TAB,
   DETAILS_FEATURES_TAB,
   DETAILS_OVERVIEW_TAB,
   DETAILS_PREVIEW_TAB,
@@ -16,9 +17,9 @@ import {
   DETAILS_RESULTS_TAB,
   DETAILS_RETURNED_FEATURES_TAB,
   DETAILS_STATISTICS_TAB,
+  DETAILS_TRANSFORMATIONS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
-  DETAILS_TRANSFORMATIONS_TAB,
   FEATURE_VECTORS_TAB,
   FILES_PAGE,
   MODEL_ENDPOINTS_TAB,
@@ -39,6 +40,7 @@ import DetailsStatistics from '../DetailsStatistics/DetailsStatistics'
 import DetailsRequestedFeatures from '../DetailsRequestedFeatures/DetailsRequestedFeatures'
 import DetailsTransformations from '../DetailsTransformations/DetailsTransformations'
 import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
+import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 
 export const generateArtifactsContent = (
   editDescription,
@@ -244,6 +246,8 @@ export const renderContent = (
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
       return <DetailsDriftAnalysis />
+    case DETAILS_FEATURES_ANALYSIS_TAB:
+      return <DetailsFeatureAnalysis />
     case DETAILS_PREVIEW_TAB:
       return (
         <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />

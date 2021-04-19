@@ -1,14 +1,12 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import {
-  generateStatistics,
-  getHistogramChartConfig
-} from './detailsStatistics.util'
-
 import MlChart from '../../common/Chart/MlChart'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
+import { generateStatistics } from './detailsStatistics.util'
+import { getHistogramChartConfig } from '../../utils/getHistogramChartConfig'
 
 import './detailsStatistics.scss'
 import colors from '../../scss/colors.scss'

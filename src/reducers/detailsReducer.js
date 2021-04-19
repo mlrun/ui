@@ -66,7 +66,7 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         modelEndpoint: {
           error: null,
-          data: { ...payload },
+          data: payload,
           loading: false
         }
       }
