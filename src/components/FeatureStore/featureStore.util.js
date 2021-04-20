@@ -17,6 +17,15 @@ import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataR
 import { generateUri } from '../../utils/generateUri'
 import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 
+export const pageDataInitialState = {
+  actionsMenu: [],
+  detailsMenu: [],
+  filters: [],
+  infoHeaders: [],
+  page: '',
+  registerArtifactDialogTitle: '',
+  tabs: []
+}
 export const datasetsInfoHeaders = [
   {
     label: 'Hash',
