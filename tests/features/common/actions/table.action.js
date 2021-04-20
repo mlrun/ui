@@ -3,26 +3,20 @@ import { expect } from 'chai'
 function getColumnValues(driver, table, columnName) {
   return driver
     .findElements(table.tableColumns[columnName])
-    .then(async function(elements) {
-      return await Promise.all(
-        elements.map(async function(element) {
-          return await element.getText()
-        })
-      )
+    .then(function(elements) {
+      return Promise.all(elements.map(element => element.getText()))
     })
 }
 
 const action = {
   getColumnValues: getColumnValues,
   isContainsValueInColumn: async function(driver, table, columnName, value) {
-    await getColumnValues(driver, table, columnName)
-      .then(arr => arr.includes(value))
-      .then(flag => expect(flag).equal(true))
+    const arr = await getColumnValues(driver, table, columnName)
+    expect(arr.includes(value)).equal(true)
   },
   isNotContainsValueInColumn: async function(driver, table, columnName, value) {
-    await getColumnValues(driver, table, columnName)
-      .then(arr => arr.includes(value))
-      .then(flag => expect(flag).equal(false))
+    const arr = await getColumnValues(driver, table, columnName)
+    expect(arr.includes(value)).equal(false)
   },
   findRowIndexesByColumnValue: async function(
     driver,
@@ -30,15 +24,14 @@ const action = {
     columnName,
     value
   ) {
-    return await getColumnValues(driver, table, columnName).then(arr => {
-      let indexes = []
-      for (let indx in arr) {
-        if (arr[indx] === value) {
-          indexes.push(parseInt(indx) + 1)
-        }
+    const arr = await getColumnValues(driver, table, columnName)
+    const indexes = []
+    for (let indx in arr) {
+      if (arr[indx] === value) {
+        indexes.push(parseInt(indx) + 1)
       }
-      return indexes
-    })
+    }
+    return indexes
   },
   openActionMenuByIndex: async function(driver, table, index) {
     const elements = await driver.findElements(

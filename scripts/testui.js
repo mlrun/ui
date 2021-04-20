@@ -1,7 +1,7 @@
 'use strict';
 
 const { report } = require('../tests/config');
-var fs = require('fs');
+const fs = require('fs');
 
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.BABEL_ENV = 'test';
@@ -18,15 +18,15 @@ process.on('unhandledRejection', err => {
 require('../config/env');
 
 const execSync = require('child_process').execSync;
-let argv = process.argv.slice(2);
+const argv = process.argv.slice(2);
 
 // build cucumber executive command
-let cucumberCommand = 'cucumber-js --require-module @babel/register --require-module @babel/polyfill ' +
+const cucumberCommand = 'cucumber-js --require-module @babel/register --require-module @babel/polyfill ' +
     '-f json:' + report + '.json -f html:' + report +'_default.html tests ' +
     argv.join(' ');
 
 // check and create report folder
-let reportDir = report.split('/').slice(0, -1).join('/');
+const reportDir = report.split('/').slice(0, -1).join('/');
 console.log(reportDir);
 if (!fs.existsSync(reportDir)) {
     fs.mkdirSync(reportDir);

@@ -2,7 +2,7 @@ import { By } from 'selenium-webdriver'
 import commonTable from './components/table.component'
 import dropdownComponent from './components/dropdown.component'
 
-let ProjectsTableSelector = {
+const ProjectsTableSelector = {
   root: 'div.projects-content',
   header: {},
   body: {
@@ -25,7 +25,7 @@ let ProjectsTableSelector = {
   }
 }
 
-let projectsTypeDropdown = {
+const projectsTypeDropdown = {
   root: 'div.projects-content-header div.project-types-select',
   dropdownElements: {
     open_button: 'div.select__value',

@@ -2,33 +2,25 @@ import actionMenu from '../components/action-menu.component'
 
 const action = {
   openActionMenu: async function(driver, selector) {
-    let action_menu = actionMenu(selector.value)
-    await driver
-      .findElements(action_menu.options)
-      .then(elements => {
-        if (elements.length === 0) {
-          return driver.findElement(action_menu.open_button)
-        }
-      })
-      .then(element => {
-        if (element) {
+    const action_menu = actionMenu(selector.value)
+    const elements = await driver.findElements(action_menu.options)
+    if (elements.length === 0) {
+      const element = await driver.findElement(action_menu.open_button)
+      if (element) {
+        element.click()
+      }
+    }
+  },
+  selectOptionInActionMenu: async function(driver, selector, option) {
+    const action_menu = actionMenu(selector.value)
+    const elements = await driver.findElements(action_menu.options)
+    for (const element of elements) {
+      element.getText().then(txt => {
+        if (txt === option) {
           element.click()
         }
       })
-  },
-  selectOptionInActionMenu: async function(driver, selector, option) {
-    let action_menu = actionMenu(selector.value)
-    await driver.findElements(action_menu.options).then(elements => {
-      if (elements.length > 0) {
-        for (let indx in elements) {
-          elements[indx].getText().then(txt => {
-            if (txt === option) {
-              elements[indx].click()
-            }
-          })
-        }
-      }
-    })
+    }
   }
 }
 

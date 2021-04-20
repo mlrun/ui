@@ -10,7 +10,7 @@ const action = {
   },
   waitPageLoad: async function(driver, loader) {
     await driver.wait(async function(driver) {
-      let found = await driver.findElements(loader)
+      const found = await driver.findElements(loader)
       return found.length === 0
     })
   },
@@ -18,44 +18,41 @@ const action = {
     await driver.wait(until.elementLocated(component), timeout)
   },
   clickOnComponent: async function(driver, component) {
-    await driver.findElement(component).then(element => element.click())
+    const element = await driver.findElement(component)
+    element.click()
   },
   componentIsPresent: async function(driver, component) {
-    await driver
-      .findElements(component)
-      .then(elements => expect(elements.length).above(0))
+    const elements = await driver.findElements(component)
+    expect(elements.length).above(0)
   },
   componentIsNotPresent: async function(driver, component) {
-    await driver
-      .findElements(component)
-      .then(elements => expect(elements.length).equal(0))
+    const elements = await driver.findElements(component)
+    expect(elements.length).equal(0)
   },
   componentIsVisible: async function(driver, component) {
-    await driver
-      .findElement(component)
-      .then(element => element.isDisplayed())
-      .then(flag => expect(flag).equal(true))
+    const element = await driver.findElement(component)
+    const displayed = await element.isDisplayed()
+    expect(displayed).equal(true)
   },
   componentIsNotVisible: async function(driver, component) {
-    await driver
-      .findElement(component)
-      .then(element => element.isDisplayed())
-      .then(flag => expect(flag).equal(false))
+    const element = await driver.findElement(component)
+    const displayed = await element.isDisplayed()
+    expect(displayed).equal(false)
   },
   typeIntoInputField: async function(driver, component, value) {
-    await driver.findElement(component).then(element => element.sendKeys(value))
+    const element = await driver.findElement(component)
+    return element.sendKeys(value)
   },
   verifyTypedText: async function(driver, component, value) {
-    await driver
-      .findElement(component)
-      .then(element => element.getAttribute('value'))
-      .then(txt => expect(txt).equal(value))
+    const element = await driver.findElement(component)
+    const txt = await element.getAttribute('value')
+    expect(txt).equal(value)
   },
   deleteAPIMLProject: async function(mlProjectName, expectedStatusCode) {
     const options = {
       host: test_url,
       port: test_port,
-      path: '/api/projects/' + mlProjectName,
+      path: `/api/projects/${mlProjectName}`,
       method: 'DELETE'
     }
 
@@ -67,7 +64,7 @@ const action = {
     })
   },
   createAPIMLProject: async function(mlProjectName, expectedStatusCode) {
-    let project_data = JSON.stringify({
+    const project_data = JSON.stringify({
       metadata: {
         name: mlProjectName
       },

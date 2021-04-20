@@ -30,7 +30,7 @@ import {
 } from '../common/actions/dropdown.action'
 
 Given('open url', async function() {
-  await navigateToPage(this.driver, 'http://' + test_url + ':' + test_port)
+  await navigateToPage(this.driver, `http://${test_url}:${test_port}`)
 })
 
 Then('click on {string} element on {string} wizard', async function(
@@ -84,15 +84,14 @@ Then(
 Then(
   'open action menu on {string} wizard in {string} table at row with {string} value in {string} column',
   async function(wizard, table, value, column) {
-    const indx = await findRowIndexesByColumnValue(
+    const arr = await findRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
       value
-    ).then(async function(arr) {
-      return arr[0]
-    })
-    let actionMenuSel = await getCellByIndexColumn(
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
       this.driver,
       pageObjects[wizard][table],
       indx,
@@ -112,7 +111,7 @@ Then(
       value
     )
     const indx = arr[0]
-    let actionMenuSel = await getCellByIndexColumn(
+    const actionMenuSel = await getCellByIndexColumn(
       this.driver,
       pageObjects[wizard][table],
       indx,
