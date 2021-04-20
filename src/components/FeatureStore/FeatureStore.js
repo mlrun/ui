@@ -18,7 +18,8 @@ import {
   generatePageData,
   handleApplyDetailsChanges,
   handleFetchData,
-  navigateToDetailsPane
+  navigateToDetailsPane,
+  pageDataInitialState
 } from './featureStore.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import {
@@ -59,15 +60,7 @@ const FeatureStore = ({
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
-  const [pageData, setPageData] = useState({
-    actionsMenu: [],
-    detailsMenu: [],
-    filters: [],
-    infoHeaders: [],
-    page: '',
-    registerArtifactDialogTitle: '',
-    tabs: []
-  })
+  const [pageData, setPageData] = useState(pageDataInitialState)
   const [selectedRowId, setSelectedRowId] = useState('')
   const featureStoreRef = useRef(null)
 
@@ -194,6 +187,7 @@ const FeatureStore = ({
       removeFeatureVectors()
       setSelectedItem({})
       setSelectedRowId('')
+      setPageData(pageDataInitialState)
     }
   }, [
     fetchData,
