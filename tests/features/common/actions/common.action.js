@@ -33,37 +33,23 @@ const action = {
   componentIsVisible: async function(driver, component) {
     await driver
       .findElement(component)
-      .then(element => {
-        return element.isDisplayed()
-      })
-      .then(flag => {
-        expect(flag).equal(true)
-      })
+      .then(element => element.isDisplayed())
+      .then(flag => expect(flag).equal(true))
   },
   componentIsNotVisible: async function(driver, component) {
     await driver
       .findElement(component)
-      .then(element => {
-        return element.isDisplayed()
-      })
-      .then(flag => {
-        expect(flag).equal(false)
-      })
+      .then(element => element.isDisplayed())
+      .then(flag => expect(flag).equal(false))
   },
   typeIntoInputField: async function(driver, component, value) {
-    await driver.findElement(component).then(element => {
-      element.sendKeys(value)
-    })
+    await driver.findElement(component).then(element => element.sendKeys(value))
   },
   verifyTypedText: async function(driver, component, value) {
     await driver
       .findElement(component)
-      .then(element => {
-        return element.getAttribute('value')
-      })
-      .then(txt => {
-        expect(txt).equal(value)
-      })
+      .then(element => element.getAttribute('value'))
+      .then(txt => expect(txt).equal(value))
   },
   deleteAPIMLProject: async function(mlProjectName, expectedStatusCode) {
     const options = {

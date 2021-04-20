@@ -8,10 +8,7 @@ module.exports = function(rootLocator) {
     ),
     option: function(index) {
       return By.css(
-        rootLocator +
-          ' div.actions-menu__container div.actions-menu__option:nth-of-type(' +
-          index +
-          ')'
+        `${rootLocator} div.actions-menu__container div.actions-menu__option:nth-of-type(${index})`
       )
     }
   }

@@ -16,16 +16,12 @@ const action = {
   getColumnValues: getColumnValues,
   isContainsValueInColumn: async function(driver, table, columnName, value) {
     await getColumnValues(driver, table, columnName)
-      .then(arr => {
-        return arr.includes(value)
-      })
+      .then(arr => arr.includes(value))
       .then(flag => expect(flag).equal(true))
   },
   isNotContainsValueInColumn: async function(driver, table, columnName, value) {
     await getColumnValues(driver, table, columnName)
-      .then(arr => {
-        return arr.includes(value)
-      })
+      .then(arr => arr.includes(value))
       .then(flag => expect(flag).equal(false))
   },
   findRowIndexesByColumnValue: async function(
@@ -45,23 +41,19 @@ const action = {
     })
   },
   openActionMenuByIndex: async function(driver, table, index) {
-    return await driver
-      .findElements(table.tableFields['action_menu'](index))
-      .then(elements => {
-        if (elements.length === 0) {
-          return driver.findElement(
-            table.tableFields['action_menu_button'](index)
-          )
-        }
-      })
-      .then(element => {
-        if (element) {
-          return element.click()
-        }
-      })
-      .then(() => {
+    const elements = await driver.findElements(
+      table.tableFields['action_menu'](index)
+    )
+    if (elements.length === 0) {
+      const element = await driver.findElement(
+        table.tableFields['action_menu_button'](index)
+      )
+
+      if (element) {
+        await element.click()
         return table.tableFields['action_menu'](index)
-      })
+      }
+    }
   },
   getCellByIndexColumn: async function(driver, table, index, column) {
     return await table.tableFields[column](index)

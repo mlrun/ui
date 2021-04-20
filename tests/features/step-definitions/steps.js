@@ -31,7 +31,6 @@ import {
 
 Given('open url', async function() {
   await navigateToPage(this.driver, 'http://' + test_url + ':' + test_port)
-  // await this.driver.sleep(10000)
 })
 
 Then('click on {string} element on {string} wizard', async function(
@@ -44,7 +43,6 @@ Then('click on {string} element on {string} wizard', async function(
 
 Then('verify if {string} popup dialog appears', async function(popup) {
   await waiteUntilComponent(this.driver, pageObjects[popup]['Title'])
-
   await componentIsPresent(this.driver, pageObjects[popup]['Title'])
   await componentIsVisible(this.driver, pageObjects[popup]['Title'])
 })
@@ -53,7 +51,6 @@ Then(
   'type into {string} on {string} popup dialog {string} value',
   async function(component, wizard, value) {
     await typeIntoInputField(this.driver, pageObjects[wizard][component], value)
-
     await verifyTypedText(this.driver, pageObjects[wizard][component], value)
   }
 )
@@ -108,14 +105,13 @@ Then(
 Then(
   'select {string} option in action menu on {string} wizard in {string} table at row with {string} value in {string} column',
   async function(option, wizard, table, value, column) {
-    const indx = await findRowIndexesByColumnValue(
+    const arr = await findRowIndexesByColumnValue(
       this.driver,
       pageObjects[wizard][table],
       column,
       value
-    ).then(async function(arr) {
-      return arr[0]
-    })
+    )
+    const indx = arr[0]
     let actionMenuSel = await getCellByIndexColumn(
       this.driver,
       pageObjects[wizard][table],

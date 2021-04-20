@@ -33,9 +33,7 @@ const action = {
   checkDropdownSelectedOption: async function(driver, dropdown, option) {
     await driver
       .findElement(dropdown.open_button)
-      .then(element => {
-        return element.getText()
-      })
+      .then(element => element.getText())
       .then(txt => expect(txt).equal(option))
   }
 }
