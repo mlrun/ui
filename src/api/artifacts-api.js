@@ -24,6 +24,8 @@ const fetchArtifacts = (item, path, config, withLatestTag) => {
 }
 
 export default {
+  createFeatureSet: (data, project) =>
+    mainHttpClient.post(`/projects/${project}/feature-sets`, data),
   getArtifactPreview: (schema, path, user, fileFormat) => {
     const config = {
       params: schema ? { schema, path, user } : { path, user }

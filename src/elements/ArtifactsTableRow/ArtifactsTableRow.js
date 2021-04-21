@@ -43,7 +43,7 @@ const ArtifactsTableRow = ({
     parent.current?.classList.value.includes('parent-row-expanded') &&
       'parent-row-expanded'
   )
-  const mainRowData = Object.values(rowItem)
+  const mainRowData = Object.values(rowItem ?? {})
 
   const findCurrentItem = artifact => {
     if (match.params.pageTab === FEATURES_TAB) {
@@ -173,7 +173,7 @@ const ArtifactsTableRow = ({
         </div>
       ) : (
         <>
-          {Object.values(rowItem).map((value, i) => {
+          {Object.values(rowItem ?? {}).map((value, i) => {
             return (
               content[index] && (
                 <TableCell

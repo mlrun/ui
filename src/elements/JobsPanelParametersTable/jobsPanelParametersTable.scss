@@ -3,7 +3,7 @@
 @import '../../scss/mixins';
 
 .job-panel__parameters-table {
-  @include jobsPanelTable;
+  @include newItemSidePanelTable;
 
   margin-bottom: 35px;
 

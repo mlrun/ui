@@ -37,8 +37,8 @@ const JobsPanelView = ({
   setOpenScheduleJob
 }) => {
   return (
-    <div className="job-panel-container">
-      <div className="job-panel">
+    <div className="new-item-side-panel-container">
+      <div className="job-panel new-item-side-panel">
         {loading && <Loader />}
         <JobsPanelTitle
           closePanel={closePanel}
@@ -52,11 +52,11 @@ const JobsPanelView = ({
           setOpenScheduleJob={setOpenScheduleJob}
         />
         {!openScheduleJob ? (
-          <div className="job_panel__body">
+          <div className="new-item-side-panel__body">
             <Accordion
-              accordionClassName="job-panel__accordion"
+              accordionClassName="new-item-side-panel__accordion"
               icon={<Arrow />}
-              iconClassName="job-panel__expand-icon"
+              iconClassName="new-item-side-panel__expand-icon"
               openByDefault
             >
               <JobsPanelDataInputs
@@ -68,9 +68,9 @@ const JobsPanelView = ({
               />
             </Accordion>
             <Accordion
-              accordionClassName="job-panel__accordion"
+              accordionClassName="new-item-side-panel__accordion"
               icon={<Arrow />}
-              iconClassName="job-panel__expand-icon"
+              iconClassName="new-item-side-panel__expand-icon"
               openByDefault
             >
               <JobsPanelParameters
@@ -79,9 +79,9 @@ const JobsPanelView = ({
               />
             </Accordion>
             <Accordion
-              accordionClassName="job-panel__accordion"
+              accordionClassName="new-item-side-panel__accordion"
               icon={<Arrow />}
-              iconClassName="job-panel__expand-icon"
+              iconClassName="new-item-side-panel__expand-icon"
             >
               <JobsPanelResources
                 match={match}
@@ -94,9 +94,9 @@ const JobsPanelView = ({
               />
             </Accordion>
             <Accordion
-              accordionClassName="job-panel__accordion"
+              accordionClassName="new-item-side-panel__accordion"
               icon={<Arrow />}
-              iconClassName="job-panel__expand-icon"
+              iconClassName="new-item-side-panel__expand-icon"
             >
               <JobsPanelAdvanced
                 environmentVariables={jobsStore.newJob.function.spec.env}
@@ -108,7 +108,7 @@ const JobsPanelView = ({
                 setNewJobSecretSources={setNewJobSecretSources}
               />
             </Accordion>
-            <div className="job-panel__buttons-container">
+            <div className="new-item-side-panel__buttons-container">
               {jobsStore.error && (
                 <ErrorMessage
                   closeError={() => {

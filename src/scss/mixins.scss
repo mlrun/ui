@@ -100,7 +100,7 @@
   min-width: $minWidth;
 }
 
-@mixin jobsPanelTable {
+@mixin newItemSidePanelTable {
   position: relative;
   width: 100%;
   border-bottom: $secondaryBorder;
@@ -130,13 +130,84 @@
       text-transform: capitalize;
     }
 
-    &__row-add-item {
+    &__cell {
       display: flex;
+      flex: 1;
       align-items: center;
+      min-width: 5px;
+      padding: 10px;
+      color: $primary;
 
-      input {
-        border: none;
-        border-radius: unset;
+      &_disabled {
+        color: $spunPearl;
+      }
+
+      &-checkbox {
+        flex: 0.16;
+        padding: 0;
+
+        svg {
+          margin: 0;
+        }
+      }
+
+      &-actions {
+        width: 44px;
+        max-width: 44px;
+      }
+    }
+
+    &__row {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height: 55px;
+      border-top: $secondaryBorder;
+
+      .tip-container {
+        display: none;
+      }
+
+      &:hover {
+        background-color: $alabaster;
+
+        .table__cell {
+          &-actions {
+            .actions-menu {
+              &__container {
+                display: block;
+
+                .btn {
+                  padding: 0;
+                  border: none;
+
+                  &:hover {
+                    background-color: transparent;
+                  }
+                }
+              }
+            }
+          }
+
+          .btn_delete {
+            display: block;
+          }
+        }
+
+        .tip-container {
+          display: flex;
+        }
+      }
+
+      &-add-item {
+        display: flex;
+        align-items: center;
+
+        input {
+          border: none;
+          border-radius: unset;
+        }
       }
     }
   }
@@ -241,6 +312,403 @@
 
     &:hover {
       background-color: transparent;
+    }
+  }
+}
+
+@mixin newItemSidePanel {
+  .new-item-side-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    width: 900px;
+    height: 100%;
+    overflow-y: scroll;
+    background-color: $wildSand;
+
+    &-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 5;
+      width: 100%;
+      height: 100%;
+      background: rgba($mineshaft, 0.75);
+    }
+
+    &__body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    &__accordion {
+      margin: 16px 40px 0;
+      background-color: $white;
+      border: $primaryBorder;
+      border-radius: 4px;
+
+      &.accordion__container.open {
+        height: auto;
+
+        .accordion__body {
+          min-height: 400px;
+          overflow: visible;
+        }
+      }
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 16px;
+      }
+    }
+
+    &__expand-icon {
+      position: absolute;
+      top: 16px;
+      left: -16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: $malibu;
+      border-radius: 50%;
+
+      &:hover {
+        background-color: $cornflowerBlue;
+      }
+
+      svg {
+        path {
+          fill: $white;
+        }
+      }
+
+      &.open {
+        svg {
+          margin-bottom: -3px;
+        }
+      }
+    }
+
+    &__item {
+      z-index: 1;
+      height: 100%;
+      min-height: 64px;
+      padding: 22px 25px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+    }
+
+    &__buttons-container {
+      display: flex;
+      flex: 0.1;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 16px;
+      margin-bottom: 16px;
+      padding: 0 40px;
+    }
+
+    .add-input {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 44px;
+      padding: 10px;
+      color: $cornflowerBlue;
+      font-size: 15px;
+      line-height: 18px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      rect {
+        fill: $cornflowerBlue;
+      }
+    }
+
+    .no-border {
+      border-bottom: none;
+
+      &_top {
+        border-top: none;
+      }
+    }
+
+    .btn {
+      &__schedule {
+        margin-top: 16px;
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+@mixin panelTitle {
+  position: relative;
+  margin: 36px 90px 33px 55px;
+
+  .panel-title {
+    &__container {
+      width: 100%;
+    }
+
+    &__input {
+      width: 100%;
+      margin-bottom: 5px;
+      padding: 4px;
+      font-weight: 300;
+      font-size: 36px;
+      line-height: 42px;
+      border: $primaryBorder;
+
+      &:disabled {
+        border: none;
+        user-select: none;
+      }
+
+      &-wrapper {
+        user-select: none;
+
+        &::after {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 2;
+          display: block;
+          width: 100%;
+          height: 100%;
+          content: '';
+        }
+      }
+    }
+
+    &__name {
+      margin-bottom: 6px;
+      font-weight: 300;
+      font-size: 36px;
+      line-height: 42px;
+    }
+
+    &__labels {
+      &-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 0 15px;
+        border: $primaryBorder;
+        border-radius: 4px;
+
+        .chip-block {
+          .tooltip-wrapper {
+            max-width: initial;
+          }
+        }
+      }
+
+      &-text {
+        margin-right: 10px;
+        color: $primary;
+        font-size: 15px;
+        line-height: 18px;
+      }
+
+      &-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+
+        .chips-wrapper {
+          flex-wrap: wrap;
+
+          .chip_short {
+            max-width: 200px;
+            color: $primary;
+            cursor: pointer;
+          }
+        }
+      }
+
+      &-item {
+        &:hover {
+          color: $white;
+          background-color: $amethyst;
+
+          .chip_short {
+            color: $white;
+          }
+
+          .item-icon-close {
+            svg {
+              path {
+                fill: $white;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &__schedule {
+      display: flex;
+      align-items: center;
+      margin-bottom: 18px;
+
+      svg {
+        margin-right: 18px;
+        cursor: pointer;
+      }
+    }
+
+    &__btn_close {
+      position: absolute;
+      top: -20px;
+      right: -75px;
+      height: 24px;
+    }
+  }
+}
+
+@mixin panelSection {
+  .panel-section {
+    &__title {
+      display: flex;
+      margin-bottom: 22px;
+
+      h5 {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        color: $primary;
+        font-weight: bold;
+        font-size: 17px;
+        line-height: 20px;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+    }
+
+    &__body {
+      position: relative;
+      display: flex;
+      flex-flow: row wrap;
+      margin-bottom: 45px;
+    }
+
+    &:last-child {
+      .item-section__body {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+@mixin schedule {
+  margin: 0 40px;
+
+  .schedule {
+    &-tabs {
+      display: flex;
+      flex: 1;
+
+      &__item {
+        padding: 10px 24px;
+        color: $topaz;
+        font-weight: bold;
+        cursor: pointer;
+
+        &_active {
+          color: $cornflowerBlue;
+          border-bottom: 3px solid $cornflowerBlue;
+        }
+      }
+    }
+
+    &-content {
+      position: relative;
+      padding: 24px;
+      background-color: $white;
+      border: $primaryBorder;
+      border-radius: 4px;
+
+      h3 {
+        color: $primary;
+        text-transform: uppercase;
+      }
+
+      .input {
+        min-width: 230px;
+
+        &-container {
+          display: none;
+        }
+      }
+
+      .select {
+        min-width: 190px;
+        height: auto;
+      }
+
+      .checkbox-container {
+        display: none;
+        margin: 23px 0;
+        padding: 10px 10px 10px 0;
+      }
+
+      .input-container,
+      .date-picker-container {
+        .input-wrapper {
+          margin-right: 15px;
+        }
+      }
+
+      .cron {
+        &-error {
+          position: relative;
+          display: none;
+          padding: 13px 48px;
+          color: #e54158;
+          background: rgba($amaranth, 0.1);
+          border: 1px solid $amaranth;
+          border-radius: 2px;
+
+          &.show-error {
+            display: block;
+          }
+
+          .error-icon {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            width: 24px;
+            height: 24px;
+            padding: 6px;
+            background: $amaranth;
+            border-radius: 15px;
+          }
+        }
+
+        &-string {
+          min-width: 100%;
+          border: $primaryBorder;
+          border-radius: 4px;
+        }
+
+        &-link {
+          display: inline-block;
+          margin: 8px 0;
+        }
+      }
     }
   }
 }

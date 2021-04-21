@@ -1,0 +1,40 @@
+@import '../../../scss/colors';
+@import '../../../scss/borders';
+@import '../../../scss/mixins';
+
+.feature-sets-panel__title {
+  @include panelTitle;
+
+  .panel-title__input {
+    padding: 15px;
+    font-size: 20px;
+    line-height: 23px;
+
+    &.active-input {
+      padding: 23px 15px 7px;
+    }
+  }
+
+  .text-area {
+    &_active {
+      padding: 23px 15px 7px;
+    }
+  }
+
+  &-required-info {
+    display: flex;
+  }
+
+  .input-wrapper {
+    &.name {
+      display: flex;
+      flex: 1;
+      margin-right: 16px;
+    }
+
+    &.version {
+      display: flex;
+      flex: 0.2;
+    }
+  }
+}

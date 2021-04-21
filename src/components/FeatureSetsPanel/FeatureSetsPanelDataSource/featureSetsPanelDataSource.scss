@@ -1,0 +1,92 @@
+@import '../../../scss/colors';
+
+.data-source {
+  &__inputs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 15px;
+
+    &-item {
+      height: 50px;
+
+      &_url {
+        min-width: 280px;
+      }
+    }
+
+    .inputs-item-wrapper.input-wrapper {
+      flex: unset;
+    }
+
+    .select {
+      min-width: 150px;
+    }
+
+    .input {
+      max-width: 140px;
+    }
+  }
+
+  &__table {
+    z-index: 1;
+
+    .input-wrapper {
+      flex: 1;
+
+      &:first-child {
+        max-width: 220px;
+      }
+    }
+
+    .table {
+      &__cell:first-child {
+        max-width: 220px;
+      }
+    }
+  }
+
+  .schedule {
+    position: absolute;
+    left: 0;
+    min-width: 780px;
+    margin: 0;
+    padding: 16px;
+    background-color: $wildSand;
+    box-shadow: 0 6px 26px rgba($black, 0.24);
+
+    &-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    &-title {
+      margin-bottom: 25px;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 23px;
+    }
+
+    &-tumbler {
+      display: flex;
+      align-items: center;
+      padding: 0;
+      color: $malibu;
+      background-color: transparent;
+      border: none;
+
+      &:hover {
+        background-color: transparent;
+      }
+
+      &__icon {
+        margin: 8px;
+
+        path {
+          fill: $topaz;
+        }
+      }
+    }
+  }
+}

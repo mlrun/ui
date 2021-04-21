@@ -266,9 +266,7 @@ const Content = ({
               MODELS_PAGE,
               FEATURE_STORE_PAGE
             ].includes(pageData.page) &&
-            ![FEATURES_TAB, FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(
-              match.params.pageTab
-            )
+            ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab)
           }
           registerDialogHeader={
             pageData.page === PROJECTS_PAGE

@@ -1,38 +1,7 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/mixins';
 
-.schedule {
-  &_container {
-    margin: 0 40px;
-  }
-
-  &_tabs {
-    display: flex;
-    flex: 1;
-
-    &_item {
-      padding: 10px 24px;
-      color: $topaz;
-      font-weight: bold;
-      cursor: pointer;
-
-      &_active {
-        color: $cornflowerBlue;
-        border-bottom: 3px solid $cornflowerBlue;
-      }
-    }
-  }
-
-  &-content {
-    position: relative;
-    padding: 24px;
-    background-color: $white;
-    border: $primaryBorder;
-    border-radius: 4px;
-
-    h3 {
-      color: $primary;
-      text-transform: uppercase;
-    }
-  }
+.jobs-panel__schedule {
+  @include schedule;
 }

@@ -30,7 +30,10 @@ CheckBox.defaultProps = {
 
 CheckBox.propTypes = {
   className: PropTypes.string,
-  item: PropTypes.shape({}).isRequired,
+  item: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string
+  }).isRequired,
   onChange: PropTypes.func.isRequired,
   selectedId: PropTypes.string.isRequired
 }

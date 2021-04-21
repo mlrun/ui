@@ -3,7 +3,7 @@
 @import '../../scss/mixins';
 
 .job-panel__table {
-  @include jobsPanelTable;
+  @include newItemSidePanelTable;
 
   &:not(.data-inputs) {
     .input-wrapper {

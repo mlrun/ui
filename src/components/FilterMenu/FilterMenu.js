@@ -144,11 +144,6 @@ const FilterMenu = ({
     }
   }
 
-  useEffect(() => {
-    applyChanges()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dates])
-
   return (
     <>
       <div className="filters">
@@ -206,7 +201,10 @@ const FilterMenu = ({
                 <DatePicker
                   key={filter.type}
                   label={filter.label}
-                  onChange={setDates}
+                  onChange={dates => {
+                    onChange({ labels, name, owner, dates })
+                    setDates(dates)
+                  }}
                   date={dates[0]}
                   dateTo={dates[1]}
                   type="date-range-time"
