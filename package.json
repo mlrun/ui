@@ -8,6 +8,7 @@
     "camelcase": "^5.2.0",
     "chart.js": "^3.0.0-beta.11",
     "classnames": "^2.2.6",
+    "concurrently": "^6.0.1",
     "cronstrue": "^1.103.0",
     "dagre": "^0.8.5",
     "dotenv": "6.2.0",
@@ -46,7 +47,11 @@
     "test:coverage": "npm run test -- --coverage --watchAll=false",
     "docker": "docker build -t ${MLRUN_DOCKER_REGISTRY}${MLRUN_DOCKER_REPO:-mlrun}/mlrun-ui:${MLRUN_DOCKER_TAG:-latest} --build-arg COMMIT_HASH=\"`git rev-parse --short HEAD`\" --build-arg DATE=\"`date -u`\" -f Dockerfile .",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "test:ui": "node scripts/testui.js",
+    "report": "node tests/report.js",
+    "test:regression": "npm run test:ui && npm run report",
+    "start:regression": "concurrently \"npm:start\" \"npm:test:regression\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -64,13 +69,18 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.6.0",
+    "@babel/core": "^7.13.14",
     "@babel/plugin-proposal-logical-assignment-operators": "^7.12.1",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.13.12",
+    "@babel/preset-react": "^7.13.13",
+    "@babel/register": "^7.13.14",
+    "@cucumber/cucumber": "^7.0.0",
     "@storybook/addon-actions": "^6.1.20",
     "@storybook/addon-essentials": "^6.1.20",
     "@storybook/addon-links": "^6.1.20",
-    "@storybook/react": "^6.1.20",
     "@storybook/preset-scss": "^1.0.3",
+    "@storybook/react": "^6.1.20",
     "@svgr/webpack": "^5.4.0",
     "@testing-library/react": "^11.0.2",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
@@ -84,7 +94,10 @@
     "babel-plugin-react-remove-properties": "^0.3.0",
     "babel-preset-react-app": "^9.0.2",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "chai": "^4.3.4",
+    "chromedriver": "^89.0.0",
     "css-loader": "2.1.1",
+    "cucumber-html-reporter": "^5.3.0",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
     "eslint-config-react-app": "^5.0.2",
@@ -97,6 +110,7 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-loader": "3.0.1",
+    "geckodriver": "^1.22.2",
     "html-webpack-plugin": "4.0.0-beta.5",
     "http-proxy-middleware": "^1.0.3",
     "jest": "24.9.0",
@@ -113,8 +127,10 @@
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
     "prettier": "^1.19.1",
+    "react-scripts": "^1.0.7",
     "resolve-url-loader": "3.1.0",
     "sass-loader": "7.2.0",
+    "selenium-webdriver": "^4.0.0-beta.2",
     "style-loader": "1.0.0",
     "stylelint": "^13.3.3",
     "stylelint-config-rational-order": "^0.1.2",
@@ -148,7 +164,9 @@
   },
   "babel": {
     "presets": [
-      "react-app"
+      "react-app",
+      "@babel/preset-react",
+      "@babel/preset-env"
     ],
     "plugins": [
       "@babel/plugin-proposal-logical-assignment-operators",
