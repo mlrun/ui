@@ -80,11 +80,7 @@ const FeatureSetsPanelView = ({
               className="pop-up-dialog__btn_cancel"
               onClick={closePanel}
             />
-            <Button
-              variant="secondary"
-              label="Save definitions"
-              onClick={handleSave}
-            />
+            <Button variant="secondary" label="Save" onClick={handleSave} />
           </div>
         </div>
       </div>
