@@ -100,7 +100,8 @@ export const detailsMenu = [
   'inputs',
   'artifacts',
   'results',
-  'logs'
+  'logs',
+  'pods'
 ]
 export const filters = [
   { type: 'period', label: 'Period:' },

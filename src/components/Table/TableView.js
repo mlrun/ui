@@ -195,7 +195,6 @@ const TableView = ({
           cancelRequest={cancelRequest}
           detailsMenu={pageData.detailsMenu}
           handleCancel={handleCancel}
-          handleSelectItem={handleSelectItem}
           match={match}
           pageData={pageData}
           retryRequest={retryRequest}

@@ -12,6 +12,7 @@ import {
   DETAILS_FEATURES_ANALYSIS_TAB,
   DETAILS_FEATURES_TAB,
   DETAILS_OVERVIEW_TAB,
+  DETAILS_PODS_TAB,
   DETAILS_PREVIEW_TAB,
   DETAILS_REQUESTED_FEATURES_TAB,
   DETAILS_RESULTS_TAB,
@@ -41,6 +42,7 @@ import DetailsRequestedFeatures from '../DetailsRequestedFeatures/DetailsRequest
 import DetailsTransformations from '../DetailsTransformations/DetailsTransformations'
 import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
+import DetailsPods from '../DetailsPods/DetailsPods'
 
 export const generateArtifactsContent = (
   editDescription,
@@ -229,8 +231,7 @@ export const renderContent = (
   detailsDispatch,
   selectedItem,
   pageData,
-  handlePreview,
-  detailsStore
+  handlePreview
 ) => {
   switch (match.params.tab?.toUpperCase()) {
     case DETAILS_OVERVIEW_TAB:
@@ -246,6 +247,8 @@ export const renderContent = (
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
       return <DetailsDriftAnalysis />
+    case DETAILS_PODS_TAB:
+      return <DetailsPods match={match} />
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
     case DETAILS_PREVIEW_TAB:
