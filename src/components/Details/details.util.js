@@ -5,23 +5,25 @@ import {
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
   DETAILS_CODE_TAB,
-  DETAILS_OVERVIEW_TAB,
+  DETAILS_DRIFT_ANALYSIS_TAB,
   DETAILS_INPUTS_TAB,
   DETAILS_LOGS_TAB,
   DETAILS_METADATA_TAB,
+  DETAILS_FEATURES_ANALYSIS_TAB,
   DETAILS_FEATURES_TAB,
+  DETAILS_OVERVIEW_TAB,
   DETAILS_PREVIEW_TAB,
+  DETAILS_REQUESTED_FEATURES_TAB,
   DETAILS_RESULTS_TAB,
+  DETAILS_RETURNED_FEATURES_TAB,
   DETAILS_STATISTICS_TAB,
+  DETAILS_TRANSFORMATIONS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
-  FILES_PAGE,
-  MODELS_PAGE,
   FEATURE_VECTORS_TAB,
-  DETAILS_REQUESTED_FEATURES_TAB,
-  DETAILS_RETURNED_FEATURES_TAB,
-  DETAILS_TRANSFORMATIONS_TAB,
-  MODEL_ENDPOINTS_TAB
+  FILES_PAGE,
+  MODEL_ENDPOINTS_TAB,
+  MODELS_PAGE
 } from '../../constants'
 import { formatDatetime, parseUri } from '../../utils'
 
@@ -37,6 +39,8 @@ import DetailsAnalysis from '../DetailsAnalysis/DetailsAnalysis'
 import DetailsStatistics from '../DetailsStatistics/DetailsStatistics'
 import DetailsRequestedFeatures from '../DetailsRequestedFeatures/DetailsRequestedFeatures'
 import DetailsTransformations from '../DetailsTransformations/DetailsTransformations'
+import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
+import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 
 export const generateArtifactsContent = (
   editDescription,
@@ -225,7 +229,8 @@ export const renderContent = (
   detailsDispatch,
   selectedItem,
   pageData,
-  handlePreview
+  handlePreview,
+  detailsStore
 ) => {
   switch (match.params.tab?.toUpperCase()) {
     case DETAILS_OVERVIEW_TAB:
@@ -239,6 +244,10 @@ export const renderContent = (
           selectedItem={selectedItem}
         />
       )
+    case DETAILS_DRIFT_ANALYSIS_TAB:
+      return <DetailsDriftAnalysis />
+    case DETAILS_FEATURES_ANALYSIS_TAB:
+      return <DetailsFeatureAnalysis />
     case DETAILS_PREVIEW_TAB:
       return (
         <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
@@ -320,6 +329,9 @@ export const generateFeatureSetsOverviewContent = (
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
   },
+  usage_example: {
+    value: selectedItem.usage_example ?? ''
+  },
   entities: {
     value: selectedItem.entities?.map(entity => entity.name)
   },
@@ -355,6 +367,9 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
+  },
+  usage_example: {
+    value: selectedItem.usage_example ?? ''
   },
   timestamp_key: {
     value: selectedItem.timestamp_field ?? ''

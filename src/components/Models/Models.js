@@ -7,6 +7,7 @@ import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 
 import artifactsAction from '../../actions/artifacts'
+import detailsActions from '../../actions/details'
 import {
   handleFetchData,
   generatePageData,
@@ -21,6 +22,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 const Models = ({
   artifactsStore,
   fetchModel,
+  fetchModelEndpointWithAnalysis,
   fetchModelEndpoints,
   fetchModels,
   history,
@@ -211,6 +213,7 @@ const Models = ({
         )
       } else if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
         checkForSelectedModelEndpoint(
+          fetchModelEndpointWithAnalysis,
           history,
           match,
           artifactsStore.modelEndpoints,
@@ -228,7 +231,8 @@ const Models = ({
     artifactsStore.modelEndpoints.length,
     artifactsStore.modelEndpoints,
     match,
-    artifactsStore.models
+    artifactsStore.models,
+    fetchModelEndpointWithAnalysis
   ])
 
   const handleModelTreeFilterChange = useCallback(
@@ -287,5 +291,6 @@ Models.propTypes = {
 }
 
 export default connect(artifactsStore => artifactsStore, {
-  ...artifactsAction
+  ...artifactsAction,
+  ...detailsActions
 })(Models)

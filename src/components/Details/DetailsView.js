@@ -14,6 +14,8 @@ import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Button from '../../common/Button/Button'
 import LoadButton from '../../common/LoadButton/LoadButton'
 
+import { isEmpty } from 'lodash'
+
 import { formatDatetime } from '../../utils'
 import {
   JOBS_PAGE,
@@ -38,6 +40,7 @@ const DetailsView = React.forwardRef(
       detailsMenu,
       detailsMenuClick,
       detailsState,
+      detailsStore,
       handleCancel,
       handleShowWarning,
       leavePage,
@@ -82,6 +85,24 @@ const DetailsView = React.forwardRef(
               >
                 <i className={state} />
               </Tooltip>
+            )}
+            {!isEmpty(detailsStore.pods.podsPending) && (
+              <Tooltip
+                template={
+                  <TextTooltipTemplate
+                    text={<div>{detailsStore.pods.podsTooltip}</div>}
+                  />
+                }
+              >
+                <span>
+                  {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
+                </span>
+              </Tooltip>
+            )}
+            {detailsStore.pods.error && (
+              <span className="item-header__pods-error">
+                Failed to load pods
+              </span>
             )}
           </span>
         </div>

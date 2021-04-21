@@ -59,6 +59,7 @@ const FeatureSetsPanelSchemaView = ({
             setNewFeatureSetSchemaTimestampKey(event.target.value)
           }}
           placeholder="Timestamp key"
+          type="text"
         />
       </FeatureSetsPanelSection>
     </div>

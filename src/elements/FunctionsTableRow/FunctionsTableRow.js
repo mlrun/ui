@@ -156,7 +156,7 @@ const FunctionsTableRow = ({
 }
 
 FunctionsTableRow.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: PropTypes.func.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,

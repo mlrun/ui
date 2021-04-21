@@ -71,7 +71,7 @@ const FeatureSetsPanelView = ({
                     removeArtifactsError()
                   }
                 }}
-                message={error.message}
+                message={error}
               />
             )}
             <Button
@@ -93,12 +93,13 @@ const FeatureSetsPanelView = ({
 }
 
 FeatureSetsPanelView.defaultProps = {
-  defaultData: null
+  defaultData: null,
+  error: false
 }
 
 FeatureSetsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
-  error: PropTypes.shape({}),
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   handleSave: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   isUrlValid: PropTypes.bool.isRequired,

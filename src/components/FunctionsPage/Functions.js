@@ -10,6 +10,7 @@ import JobsPanel from '../JobsPanel/JobsPanel'
 import {
   detailsMenu,
   filters,
+  FUNCTIONS_FAILED_STATES,
   infoHeaders,
   initialGroupFilter,
   page,
@@ -38,7 +39,7 @@ const Functions = ({
   const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const pageData = {
-    actionsMenu: [
+    actionsMenu: item => [
       {
         label: 'Delete',
         icon: <Delete />,
@@ -47,7 +48,8 @@ const Functions = ({
       {
         label: 'Run',
         icon: <Run />,
-        onClick: func => setEditableItem(func)
+        onClick: func => setEditableItem(func),
+        hidden: FUNCTIONS_FAILED_STATES.includes(item.state)
       }
     ],
     detailsMenu,

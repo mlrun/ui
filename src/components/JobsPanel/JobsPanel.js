@@ -37,6 +37,7 @@ const JobsPanel = ({
   jobsStore,
   match,
   onEditJob,
+  onSuccessRun,
   project,
   redirectToDetailsPane,
   removeFunctionTemplate,
@@ -49,7 +50,8 @@ const JobsPanel = ({
   setNewJobInputs,
   setNewJobSecretSources,
   setNewJobVolumeMounts,
-  setNewJobVolumes
+  setNewJobVolumes,
+  withSaveChanges
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
@@ -239,9 +241,11 @@ const JobsPanel = ({
   const handleRunJob = (event, cronString) => {
     const selectedFunction = functionsStore.template.name
       ? functionsStore.template.functions[0]
-      : groupedFunctions.functions.find(
+      : groupedFunctions.functions
+      ? groupedFunctions.functions.find(
           func => func.metadata.tag === panelState.currentFunctionInfo.version
         )
+      : defaultData
     const isFunctionTemplate = !isEmpty(functionsStore.template)
     const labels = {}
 
@@ -257,7 +261,8 @@ const JobsPanel = ({
       labels,
       match,
       selectedFunction,
-      isFunctionTemplate
+      isFunctionTemplate,
+      defaultData?.task.spec.function
     )
 
     if (jobsStore.error) {
@@ -267,6 +272,7 @@ const JobsPanel = ({
     runNewJob(postData)
       .then(result => {
         removeNewJob()
+        onSuccessRun && onSuccessRun()
 
         if (redirectToDetailsPane) {
           return history.push(
@@ -335,6 +341,7 @@ const JobsPanel = ({
       setNewJobVolumeMounts={setNewJobVolumeMounts}
       setNewJobVolumes={setNewJobVolumes}
       setOpenScheduleJob={setOpenScheduleJob}
+      withSaveChanges={withSaveChanges}
     />
   )
 }
@@ -343,7 +350,8 @@ JobsPanel.defaultProps = {
   defaultData: null,
   groupedFunctions: {},
   onEditJob: () => {},
-  redirectToDetailsPane: false
+  redirectToDetailsPane: false,
+  withSaveChanges: false
 }
 
 JobsPanel.propTypes = {
@@ -354,7 +362,8 @@ JobsPanel.propTypes = {
   onEditJob: PropTypes.func,
   project: PropTypes.string.isRequired,
   redirectToDetailsPane: PropTypes.bool,
-  runNewJob: PropTypes.func.isRequired
+  runNewJob: PropTypes.func.isRequired,
+  withSaveChanges: PropTypes.bool
 }
 
 export default connect(

@@ -34,7 +34,8 @@ const JobsPanelView = ({
   setNewJobSecretSources,
   setNewJobVolumeMounts,
   setNewJobVolumes,
-  setOpenScheduleJob
+  setOpenScheduleJob,
+  withSaveChanges
 }) => {
   return (
     <div className="new-item-side-panel-container">
@@ -125,7 +126,7 @@ const JobsPanelView = ({
                 className="pop-up-dialog__btn_cancel"
                 onClick={() => isTitleValid() && setOpenScheduleJob(true)}
               />
-              {defaultData ? (
+              {withSaveChanges ? (
                 <Button
                   variant="secondary"
                   label="Save"
@@ -179,7 +180,8 @@ JobsPanelView.propTypes = {
   setNewJobSecretSources: PropTypes.func.isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,
   setNewJobVolumes: PropTypes.func.isRequired,
-  setOpenScheduleJob: PropTypes.func.isRequired
+  setOpenScheduleJob: PropTypes.func.isRequired,
+  withSaveChanges: PropTypes.bool.isRequired
 }
 
 export default JobsPanelView

@@ -59,6 +59,7 @@ const FeatureSetsPanelDataSourceView = ({
             onChange={handleUrlOnChange}
             required={!isUrlValid}
             requiredText="URL is required"
+            type="text"
             value={data.url}
             wrapperClassName="inputs-item-wrapper"
           />
@@ -75,6 +76,7 @@ const FeatureSetsPanelDataSourceView = ({
                 key
               }))
             }}
+            type="text"
             value={data.key}
             wrapperClassName="inputs-item-wrapper"
           />
@@ -91,6 +93,7 @@ const FeatureSetsPanelDataSourceView = ({
                 time
               }))
             }}
+            type="text"
             value={data.time}
             wrapperClassName="inputs-item-wrapper"
           />

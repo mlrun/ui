@@ -19,7 +19,8 @@ import {
   generatePageData,
   handleApplyDetailsChanges,
   handleFetchData,
-  navigateToDetailsPane
+  navigateToDetailsPane,
+  pageDataInitialState
 } from './featureStore.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import {
@@ -62,15 +63,7 @@ const FeatureStore = ({
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
-  const [pageData, setPageData] = useState({
-    actionsMenu: [],
-    detailsMenu: [],
-    filters: [],
-    infoHeaders: [],
-    page: '',
-    registerArtifactDialogTitle: '',
-    tabs: []
-  })
+  const [pageData, setPageData] = useState(pageDataInitialState)
   const [selectedRowId, setSelectedRowId] = useState('')
   const featureStoreRef = useRef(null)
 
@@ -197,6 +190,7 @@ const FeatureStore = ({
       removeFeatureVectors()
       setSelectedItem({})
       setSelectedRowId('')
+      setPageData(pageDataInitialState)
     }
   }, [
     fetchData,
@@ -330,6 +324,20 @@ const FeatureStore = ({
     }
   }
 
+  const createFeatureSetSuccess = () => {
+    setFeatureSetsPanelIsOpen(false)
+
+    return fetchData({ project: match.params.projectName, tag: 'latest' }).then(
+      () => {
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Feature set successfully created'
+        })
+      }
+    )
+  }
+
   return (
     <div ref={featureStoreRef} className="feature-store-container">
       {artifactsStore.loading && <Loader />}
@@ -371,9 +379,7 @@ const FeatureStore = ({
       {featureSetsPanelIsOpen && (
         <FeatureSetsPanel
           closePanel={() => setFeatureSetsPanelIsOpen(false)}
-          createFeatureSetSuccess={() => {
-            fetchData({ project: match.params.projectName, tag: 'latest' })
-          }}
+          createFeatureSetSuccess={createFeatureSetSuccess}
           project={match.params.projectName}
         />
       )}

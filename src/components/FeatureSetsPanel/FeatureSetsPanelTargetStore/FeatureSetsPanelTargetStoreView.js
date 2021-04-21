@@ -72,6 +72,7 @@ const FeatureSetsPanelTargetStoreView = ({
               onBlur={handleOtherKindPathOnBlur}
               onChange={path => setOtherKindData(state => ({ ...state, path }))}
               placeholder="s3://bucket/path"
+              type="text"
               value={otherKindData.path}
               wrapperClassName="url"
             />

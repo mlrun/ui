@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
@@ -11,6 +11,7 @@ const FeatureSetsPanel = ({
   artifactsStore,
   closePanel,
   createNewFeatureSet,
+  createNewFeatureSetError,
   createFeatureSetSuccess,
   project,
   removeArtifactsError
@@ -19,6 +20,7 @@ const FeatureSetsPanel = ({
   const [isVersionValid, setVersionValid] = useState(true)
   const [isUrlValid, setUrlValid] = useState(true)
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const handleSave = () => {
     if (isNameValid && isVersionValid && isUrlValid) {
@@ -44,13 +46,17 @@ const FeatureSetsPanel = ({
           ...artifactsStore.newFeatureSet
         },
         project
-      ).then(result => {
-        createFeatureSetSuccess && createFeatureSetSuccess()
-        closePanel()
-        history.push(
-          `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
-        )
-      })
+      )
+        .then(result => {
+          createFeatureSetSuccess().then(() => {
+            history.push(
+              `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
+            )
+          })
+        })
+        .catch(error => {
+          dispatch(createNewFeatureSetError(error.message))
+        })
     }
   }
 

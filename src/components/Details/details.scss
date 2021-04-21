@@ -21,6 +21,12 @@
 
     .item {
       &-header {
+        &__pods {
+          &-error {
+            color: $spunPearl
+          }
+        }
+
         &__data {
           h3 {
             margin: 27px 24px 10px;

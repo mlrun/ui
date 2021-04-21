@@ -8,13 +8,15 @@ import {
 import { isNil } from 'lodash'
 
 export const generateUri = (item, tab) => {
-  let uri = `store://${tab}/${item.project}/${item.name ? item.name : item.key}`
+  let uri = `store://${tab}/${item.project}/`
 
   if (tab === MODELS_TAB || tab === DATASETS_TAB || tab === ARTIFACTS) {
-    if (!isNil(item.iter)) uri += `-${item.iter}`
+    uri += item.db_key
+    if (!isNil(item.iter)) uri += `#${item.iter}`
     if (item.tag) uri += `:${item.tag}`
     else if (item.tree) uri += `@${item.tree}`
   } else if (tab === FEATURE_SETS_TAB || tab === FEATURE_VECTORS_TAB) {
+    uri += item.name
     if (item.tag) uri += `:${item.tag}`
     else if (item.uid) uri += `@${item.uid}`
   }

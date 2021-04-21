@@ -42,7 +42,7 @@ const FeatureSetsPanelSchema = ({
 
     setData(state => ({
       ...state,
-      newEntity: { name: '', value_type: '' }
+      newEntity: { name: '', value_type: 'str' }
     }))
     setAddNewItem(false)
     setEntityNameValid(true)
