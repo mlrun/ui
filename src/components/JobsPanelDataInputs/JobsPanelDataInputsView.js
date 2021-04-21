@@ -22,7 +22,7 @@ const JobsPanelDataInputsView = ({
   panelState
 }) => {
   return (
-    <div className="job-panel__item">
+    <div className="job-panel__item new-item-side-panel__item">
       <JobsPanelSection title="Data inputs">
         <JobsPanelDataInputsTable
           comboboxMatchesList={comboboxMatchesList}

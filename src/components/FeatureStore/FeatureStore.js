@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 
 import artifactsAction from '../../actions/artifacts'
 import {
@@ -29,6 +30,7 @@ import {
   FEATURES_TAB
 } from '../../constants'
 import notificationActions from '../../actions/notification'
+
 import './featureStore.scss'
 
 const FeatureStore = ({
@@ -60,6 +62,7 @@ const FeatureStore = ({
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [pageData, setPageData] = useState(pageDataInitialState)
   const [selectedRowId, setSelectedRowId] = useState('')
   const featureStoreRef = useRef(null)
@@ -194,7 +197,6 @@ const FeatureStore = ({
     match.params.projectName,
     removeDataSets,
     removeFeatureSets,
-    featureStoreRef,
     removeFeatureVectors,
     setArtifactFilter
   ])
@@ -311,6 +313,31 @@ const FeatureStore = ({
     )
   }
 
+  const openPopupDialog = () => {
+    switch (match.params.pageTab) {
+      case DATASETS_TAB:
+        return setIsPopupDialogOpen(true)
+      case FEATURE_SETS_TAB:
+        return setFeatureSetsPanelIsOpen(true)
+      default:
+        return null
+    }
+  }
+
+  const createFeatureSetSuccess = () => {
+    setFeatureSetsPanelIsOpen(false)
+
+    return fetchData({ project: match.params.projectName, tag: 'latest' }).then(
+      () => {
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Feature set successfully created'
+        })
+      }
+    )
+  }
+
   return (
     <div ref={featureStoreRef} className="feature-store-container">
       {artifactsStore.loading && <Loader />}
@@ -327,9 +354,7 @@ const FeatureStore = ({
         handleCancel={() => setSelectedItem({})}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() =>
-          match.params.pageTab === DATASETS_TAB && setIsPopupDialogOpen(true)
-        }
+        openPopupDialog={openPopupDialog}
         pageData={pageData}
         refresh={item => {
           fetchData(item)
@@ -349,6 +374,13 @@ const FeatureStore = ({
           refresh={fetchData}
           setIsPopupDialogOpen={setIsPopupDialogOpen}
           title={pageData.registerArtifactDialogTitle}
+        />
+      )}
+      {featureSetsPanelIsOpen && (
+        <FeatureSetsPanel
+          closePanel={() => setFeatureSetsPanelIsOpen(false)}
+          createFeatureSetSuccess={createFeatureSetSuccess}
+          project={match.params.projectName}
         />
       )}
     </div>

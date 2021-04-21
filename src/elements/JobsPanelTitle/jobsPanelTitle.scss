@@ -1,198 +1,68 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/mixins';
 
-.job-panel {
-  &__title {
-    position: relative;
-    margin: 36px 90px 33px 55px;
+.job-panel__title {
+  @include panelTitle;
 
-    &-container {
-      width: 100%;
-    }
+  &-accordion {
+    border-bottom: $primaryBorder;
 
-    &-accordion {
-      border-bottom: $primaryBorder;
-
-      .accordion {
-        &__body {
-          overflow: visible;
-        }
-      }
-    }
-
-    &-edit-icon {
-      position: absolute;
-      top: 0;
-      right: 0;
-
-      &.open {
-        display: none;
-      }
-
-      &_disabled {
-        display: none;
-      }
-    }
-
-    &-input {
-      width: 100%;
-      margin-bottom: 5px;
-      padding: 4px;
-      font-weight: 300;
-      font-size: 36px;
-      line-height: 42px;
-      border: $primaryBorder;
-
-      &_disabled {
-        border: none;
-        user-select: none;
-      }
-
-      &-wrapper {
-        user-select: none;
-
-        &::after {
-          position: absolute;
-          top: 0;
-          left: 0;
-          z-index: 2;
-          display: block;
-          width: 100%;
-          height: 100%;
-          content: '';
-        }
-      }
-    }
-
-    &-name {
-      margin-bottom: 6px;
-      font-weight: 300;
-      font-size: 36px;
-      line-height: 42px;
-    }
-
-    &-labels {
-      width: 100%;
-      margin: 15px 0;
-      padding: 18px 60px;
-      border: $primaryBorder;
-
-      & ~ .input__label {
-        top: 33px;
-      }
-    }
-
-    &-buttons-container {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-
-    &-select {
-      &-container {
-        display: flex;
-        flex: 1;
-        height: 55px;
-        margin: 16px 0;
-
-        .select {
-          width: 100%;
-          height: auto;
-          background-color: $white;
-
-          &__header {
-            .sub-label {
-              display: none;
-            }
-          }
-
-          &.job-methods {
-            margin-left: 16px;
-          }
-        }
-
-        .tooltip {
-          max-width: 300px;
-          white-space: inherit;
-          word-break: break-word;
-        }
-      }
-    }
-
-    &-schedule {
-      display: flex;
-      align-items: center;
-      margin-bottom: 18px;
-
-      svg {
-        margin-right: 18px;
-        cursor: pointer;
-      }
-    }
-
-    .job-labels {
-      &-container {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        padding: 0 15px;
-        border: $primaryBorder;
-        border-radius: 4px;
-
-        .chip-block {
-          .tooltip-wrapper {
-            max-width: initial;
-          }
-        }
-      }
-
-      &__text {
-        margin-right: 10px;
-        color: $primary;
-        font-size: 15px;
-        line-height: 18px;
-      }
-
-      &-wrapper {
-        display: flex;
-        flex-wrap: wrap;
-
-        .chips-wrapper {
-          flex-wrap: wrap;
-
-          .chip_short {
-            max-width: 200px;
-            color: $primary;
-            cursor: pointer;
-          }
-        }
-      }
-
-      &__item {
-        &:hover {
-          color: $white;
-          background-color: $amethyst;
-
-          .chip_short {
-            color: $white;
-          }
-
-          .item-icon-close {
-            svg {
-              path {
-                fill: $white;
-              }
-            }
-          }
-        }
+    .accordion {
+      &__body {
+        overflow: visible;
       }
     }
   }
 
-  &__btn_close {
+  &-edit-icon {
     position: absolute;
-    top: -20px;
-    right: -75px;
-    height: 24px;
+    top: 0;
+    right: 0;
+
+    &.open {
+      display: none;
+    }
+
+    &_disabled {
+      display: none;
+    }
+  }
+
+  &-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  &-select {
+    &-container {
+      display: flex;
+      flex: 1;
+      height: 55px;
+      margin: 16px 0;
+
+      .select {
+        width: 100%;
+        height: auto;
+        background-color: $white;
+
+        &__header {
+          .sub-label {
+            display: none;
+          }
+        }
+
+        &.job-methods {
+          margin-left: 16px;
+        }
+      }
+
+      .tooltip {
+        max-width: 300px;
+        white-space: inherit;
+        word-break: break-word;
+      }
+    }
   }
 }

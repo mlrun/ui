@@ -24,7 +24,7 @@ const JobsPanelParametersTableView = ({
   tableContent
 }) => {
   const tableClassNames = classnames(
-    'job-panel__parameters-table',
+    'new-item-side-panel__table job-panel__parameters-table',
     addNewItem && 'no-border',
     className
   )

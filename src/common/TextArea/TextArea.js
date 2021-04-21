@@ -19,6 +19,7 @@ const TextArea = React.forwardRef(
       iconClass,
       textAreaIcon,
       label,
+      onBlur,
       onChange,
       onKeyDown,
       placeholder,
@@ -101,6 +102,7 @@ const TextArea = React.forwardRef(
           className={textAreaClassNames}
           data-testid="text-area"
           disabled={disabled}
+          onBlur={onBlur}
           onChange={handleClick}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
@@ -139,6 +141,7 @@ TextArea.defaultProps = {
   iconClass: '',
   inputIcon: null,
   label: '',
+  onBlur: () => {},
   onChange: () => {},
   onKeyDown: () => {},
   placeholder: '',
@@ -157,6 +160,7 @@ TextArea.propTypes = {
   iconClass: PropTypes.string,
   inputIcon: PropTypes.element,
   label: PropTypes.string,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func,
   onKeyDown: PropTypes.func,
   placeholder: PropTypes.string,

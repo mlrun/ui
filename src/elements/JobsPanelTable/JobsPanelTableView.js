@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import EditableDataInputsRow from '../EditableDataInputsRow/EditableDataInputsRow'
 import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
@@ -25,10 +26,15 @@ const JobsPanelTableView = ({
   setEditItem,
   setSelectedItem
 }) => {
+  const tableClassNames = classnames(
+    'new-item-side-panel__table',
+    'job-panel__table',
+    addNewItem && 'no-border',
+    className
+  )
+
   return (
-    <div
-      className={`job-panel__table ${addNewItem && 'no-border'} ${className}`}
-    >
+    <div className={tableClassNames}>
       {headers.length > 0 && (
         <div className="table__header table__row no-hover">
           {headers.map((header, index) => (

@@ -33,11 +33,6 @@ const JobsPanelTitleView = ({
   setOpenScheduleJob,
   versionOptions
 }) => {
-  const funcTitleClassNames = classnames(
-    'job-panel__title-input',
-    !editTitle && 'job-panel__title-input_disabled'
-  )
-
   const accordionIconClassNames = classnames(
     'job-panel__title-edit-icon',
     openScheduleJob && 'job-panel__title-edit-icon_disabled'
@@ -55,10 +50,10 @@ const JobsPanelTitleView = ({
   )
 
   return (
-    <div className="job-panel__title">
-      <div className="job-panel__title-container">
+    <div className="panel-title job-panel__title">
+      <div className="panel-title__container">
         {openScheduleJob && (
-          <div className="job-panel__title-schedule">
+          <div className="panel-title__schedule">
             <BackArrow onClick={() => setOpenScheduleJob(false)} />
             <span>Schedule Job</span>
           </div>
@@ -79,13 +74,11 @@ const JobsPanelTitleView = ({
           iconClassName={accordionIconClassNames}
         >
           {openScheduleJob || !editModeEnabled ? (
-            <div className="job-panel__title-name">
-              {currentFunctionInfo.name}
-            </div>
+            <div className="panel-title__name">{currentFunctionInfo.name}</div>
           ) : (
             <>
               <Input
-                className={funcTitleClassNames}
+                className="panel-title__input"
                 disabled={!editTitle}
                 onChange={name =>
                   panelDispatch({
@@ -105,13 +98,13 @@ const JobsPanelTitleView = ({
                 type="text"
                 value={currentFunctionInfo.name}
                 wrapperClassName={
-                  !editTitle ? 'job-panel__title-input-wrapper' : ''
+                  !editTitle ? 'panel-title__input-wrapper' : ''
                 }
               />
               {editTitle && (
-                <div className="job-labels-container">
-                  <div className="job-labels__text">Labels</div>
-                  <div className="job-labels-wrapper">
+                <div className="panel-title__labels-container">
+                  <div className="panel-title__labels-text">Labels</div>
+                  <div className="panel-title__labels-wrapper">
                     <ChipCell
                       addChip={(label, labels) =>
                         panelDispatch({
@@ -119,7 +112,7 @@ const JobsPanelTitleView = ({
                           payload: [...labels, label]
                         })
                       }
-                      className="job-labels__item"
+                      className="panel-title__labels-item"
                       editChip={chips =>
                         panelDispatch({
                           type: panelActions.EDIT_JOB_LABEL,
@@ -178,7 +171,7 @@ const JobsPanelTitleView = ({
           <Button variant="primary" label="Done" onClick={handleFinishEdit} />
         </div>
       )}
-      <button onClick={() => closePanel({})} className="job-panel__btn_close">
+      <button onClick={() => closePanel({})} className="panel-title__btn_close">
         <Tooltip template={<TextTooltipTemplate text="Close" />}>
           <Close />
         </Tooltip>

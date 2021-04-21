@@ -197,7 +197,13 @@ Select.propTypes = {
   hideSelectedOption: PropTypes.bool,
   label: PropTypes.string,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  options: PropTypes.array.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+      className: PropTypes.string
+    })
+  ).isRequired,
   selectType: PropTypes.string,
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   withoutBorder: PropTypes.bool

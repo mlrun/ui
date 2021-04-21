@@ -7,6 +7,7 @@ import DatePicker from '../../common/DatePicker/DatePicker'
 import TimePicker from '../../common/TimePicker/TimePicker'
 
 import { scheduleActionType } from '../../components/ScheduleJob/recurringReducer'
+import { selectOptions } from './scheduleRecurring.util'
 
 import './scheduleRecurring.scss'
 
@@ -14,8 +15,7 @@ const ScheduleRecurring = ({
   daysOfWeek,
   handleDaysOfWeek,
   recurringDispatch,
-  recurringState,
-  selectOptions
+  recurringState
 }) => {
   const {
     scheduleRepeat: { activeOption: scheduleRepeatActiveOption, week },
@@ -41,7 +41,7 @@ const ScheduleRecurring = ({
   }
 
   return (
-    <div className="recurring_container">
+    <div className="recurring-container">
       <p>Note: all times are interpreted in UTC timezone</p>
       <div className="repeat_container">
         <Select
@@ -158,12 +158,11 @@ const ScheduleRecurring = ({
   )
 }
 
-PropTypes.propTypes = {
+ScheduleRecurring.propTypes = {
   daysOfWeek: PropTypes.array.isRequired,
   handleDaysOfWeek: PropTypes.func.isRequired,
   recurringDispatch: PropTypes.func.isRequired,
-  recurringState: PropTypes.shape({}).isRequired,
-  selectOptions: PropTypes.shape({}).isRequired
+  recurringState: PropTypes.shape({}).isRequired
 }
 
 export default React.memo(ScheduleRecurring)
