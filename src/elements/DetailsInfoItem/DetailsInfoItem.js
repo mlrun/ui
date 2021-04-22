@@ -40,7 +40,7 @@ const DetailsInfoItem = React.forwardRef(
             <Input onChange={item.onChange} value={info} type="text" focused />
             <Checkmark
               className="details-item__input-btn"
-              onClick={event => handleFinishEdit(event, currentField)}
+              onClick={() => handleFinishEdit(currentField)}
             />
           </div>
         )
@@ -60,7 +60,7 @@ const DetailsInfoItem = React.forwardRef(
             />
             <Checkmark
               className="details-item__input-btn"
-              onClick={event => handleFinishEdit(event, currentField)}
+              onClick={() => handleFinishEdit(currentField)}
             />
           </div>
         )

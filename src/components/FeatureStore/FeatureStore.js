@@ -52,7 +52,7 @@ const FeatureStore = ({
   removeFeatureVectors,
   setArtifactFilter,
   setNotification,
-  updateFeatureSetData
+  updateFeatureStoreData
 }) => {
   const [content, setContent] = useState([])
   const [yamlContent, setYamlContent] = useState({
@@ -309,7 +309,7 @@ const FeatureStore = ({
       match,
       selectedItem,
       setNotification,
-      updateFeatureSetData
+      updateFeatureStoreData
     )
   }
 

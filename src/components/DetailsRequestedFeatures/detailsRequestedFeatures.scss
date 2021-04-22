@@ -24,6 +24,26 @@
     }
 
     .cell {
+      &_alias {
+        &__input-wrapper {
+          display: flex;
+          align-items: center;
+          width: 100%;
+        }
+
+        &__input-btn {
+          height: 30px;
+          margin-left: 10px;
+          padding: 0;
+          cursor: pointer;
+        }
+
+        .input {
+          width: 90%;
+          padding: 8px 17px;
+        }
+      }
+
       &_project-name {
         max-width: 180px;
       }
@@ -35,6 +55,13 @@
 
       &_tag {
         color: $topaz;
+      }
+
+      &_delete {
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        opacity: 0;
       }
     }
 
@@ -48,6 +75,13 @@
       display: flex;
       padding: 18px;
       border-bottom: $secondaryBorder;
+
+      &:hover {
+        .cell_delete {
+          opacity: 1;
+          transition: all 0.3s;
+        }
+      }
     }
   }
 }
