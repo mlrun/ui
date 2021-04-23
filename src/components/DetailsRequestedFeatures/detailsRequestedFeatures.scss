@@ -58,8 +58,7 @@
       }
 
       &_delete {
-        position: absolute;
-        right: 10px;
+        width: 30px;
         cursor: pointer;
         opacity: 0;
       }
@@ -68,6 +67,11 @@
     .header {
       &_project-name {
         max-width: 180px;
+      }
+
+      &_delete {
+        flex: 0 0 30px;
+        min-width: auto;
       }
     }
 
