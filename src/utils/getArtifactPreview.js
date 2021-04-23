@@ -180,7 +180,10 @@ export const getArtifactPreview = (
             )
           : setPreview(state => [...state, previewContent])
     )
-  } else if (artifact.preview?.length === 0 || !artifact.preview) {
+  } else if (
+    (artifact.preview?.length === 0 || !artifact.preview) &&
+    artifact.target_path
+  ) {
     fetchArtifactPreviewFromTargetPath(
       artifact,
       noData,
