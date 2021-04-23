@@ -1,0 +1,131 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.features-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 500px;
+  height: 100%;
+
+  .features-panel__content {
+    padding: 10px 15px;
+  }
+
+  .features-panel__header {
+    padding: 5px 15px;
+  }
+
+  .features-panel__header-project {
+    margin-bottom: 5px;
+    color: $topaz;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .features-panel__header-vector {
+    display: flex;
+    justify-content: space-between;
+
+    .features-panel__header-vector-name {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .features-panel__header-vector-tag {
+      margin-left: 5px;
+      color: $topaz;
+      font-weight: normal;
+      font-size: 16px;
+    }
+
+    .features-panel__header-vector-actions {
+      display: inline-flex;
+    }
+  }
+
+  .features-panel__current-project {
+    padding: 5px 15px;
+  }
+
+  .features-panel__sub-title {
+    padding: 0 15px;
+  }
+
+  .features-panel__buttons {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 10px 15px;
+    background-color: $white;
+  }
+
+  .features-panel__divider {
+    width: 100%;
+    height: 1px;
+    margin: 15px 0;
+    border-bottom: $dividerBorder;
+  }
+
+  .features-panel__expand-item {
+    height: unset;
+
+    .features-panel__expand-title {
+      margin-left: 40px;
+      padding: 15px 0;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .features-panel__expand-content {
+      display: none;
+      margin: 10px 15px 10px 40px;
+    }
+
+    &.open {
+      height: auto;
+
+      .features-panel__expand-content {
+        display: block;
+      }
+    }
+
+    .features-panel__empty-content {
+      color: $topaz;
+    }
+
+    .accordion__body {
+      overflow: visible;
+    }
+
+    .features-panel__expand-icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 40px;
+      height: 50px;
+    }
+  }
+
+  .features-panel__feature-row {
+    display: flex;
+    align-content: center;
+    font-size: 15px;
+
+    .feature-row__feature-set-tag {
+      color: $mineshaft;
+    }
+
+    .feature-row__feature-alias-preposition {
+      color: $spunPearl;
+    }
+
+    .feature-row__actions {
+      width: 50px;
+    }
+  }
+}

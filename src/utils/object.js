@@ -15,3 +15,16 @@ export const parseKeyValues = (object = {}) =>
             )}}`
           : `${key}: ${value}`
       })
+
+// ['key: value'] -> {key: 'value'}
+export const generateKeyValues = (chips = []) => {
+  const keyValuePairs = {}
+
+  chips.forEach(chip => {
+    const [key, value] = chip.split(': ')
+
+    keyValuePairs[key] = value
+  })
+
+  return keyValuePairs
+}

@@ -13,7 +13,6 @@ import NoData from '../../common/NoData/NoData'
 import {
   ARTIFACTS_PAGE,
   FEATURE_STORE_PAGE,
-  FEATURES_TAB,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -35,12 +34,13 @@ const TableView = ({
   handleSelectItem,
   mainRowItemsCount,
   match,
+  isTablePanelOpen,
   pageData,
   retryRequest,
   selectedItem,
-  selectedRowId,
-  setSelectedRowId,
   tableContent,
+  tablePanelRef,
+  tableHeadRef,
   toggleConvertToYaml,
   workflows
 }) => {
@@ -57,17 +57,22 @@ const TableView = ({
   return (
     <div className="table">
       <div className="table__content">
-        <div className="table-head">
-          {pageData.tableHeaders.map((item, index) => (
-            <div
-              className={`table-head__item ${item.class}`}
-              key={`${item.header}${index}`}
-            >
-              <Tooltip template={<TextTooltipTemplate text={item.header} />}>
-                {item.header}
-              </Tooltip>
-            </div>
-          ))}
+        <div className="table-head" ref={tableHeadRef}>
+          {pageData.tableHeaders.map(
+            (item, index) =>
+              !item.hidden && (
+                <div
+                  className={`table-head__item ${item.class}`}
+                  key={`${item.header}${index}`}
+                >
+                  <Tooltip
+                    template={<TextTooltipTemplate text={item.header} />}
+                  >
+                    {item.header}
+                  </Tooltip>
+                </div>
+              )
+          )}
         </div>
         <div className="table-body">
           {!groupFilter ||
@@ -90,9 +95,6 @@ const TableView = ({
                       rowItem={rowItem}
                       pageData={pageData}
                       selectedItem={selectedItem}
-                      selectedRowId={selectedRowId}
-                      setSelectedRowId={setSelectedRowId}
-                      withCheckbox={match.params.pageTab === FEATURES_TAB}
                     />
                   )
                 case FUNCTIONS_PAGE:
@@ -160,9 +162,6 @@ const TableView = ({
                     pageData={pageData}
                     selectedItem={selectedItem}
                     tableContent={group}
-                    selectedRowId={selectedRowId}
-                    setSelectedRowId={setSelectedRowId}
-                    withCheckbox={match.params.pageTab === FEATURES_TAB}
                   />
                 )
               } else {
@@ -188,6 +187,11 @@ const TableView = ({
           )}
         </div>
       </div>
+      {isTablePanelOpen && (
+        <div className="table__panel-container" ref={tablePanelRef}>
+          <div className="table__panel">{pageData.tablePanel}</div>
+        </div>
+      )}
       {!isEmpty(selectedItem) && (
         <Details
           actionsMenu={actionsMenu}
@@ -208,10 +212,7 @@ const TableView = ({
 
 TableView.defaultProps = {
   applyDetailsChanges: () => {},
-  groupLatestJob: {},
-  selectedRowId: '',
-  setSelectedRowId: () => {},
-  withCheckbox: false
+  groupLatestJob: {}
 }
 
 TableView.propTypes = {
@@ -219,17 +220,17 @@ TableView.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
+  isTablePanelOpen: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  selectedRowId: PropTypes.string,
-  setSelectedRowId: PropTypes.func,
   tableContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
   ]).isRequired,
-  toggleConvertToYaml: PropTypes.func.isRequired,
-  withCheckbox: PropTypes.bool
+  tableHeadRef: PropTypes.shape({}),
+  tablePanelRef: PropTypes.shape({}),
+  toggleConvertToYaml: PropTypes.func.isRequired
 }
 
 export default TableView

@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
+
 import './detailsRequestedFeatures.scss'
 
 const DetailsRequestedFeatures = ({ projectName, selectedItem }) => {
@@ -25,24 +27,20 @@ const DetailsRequestedFeatures = ({ projectName, selectedItem }) => {
           ))}
         </div>
         <div className="item-requested-features__table-body">
-          {selectedItem.specFeatures.map(feature => {
-            const project =
-              feature.indexOf('/') > 0 ? feature.split('/')[0] : ''
-            const featureSet = feature.match(/(?<=\/)(.*?)(?=\.)/)
-              ? feature.match(/(?<=\/)(.*?)(?=\.)/)[0].split(':')[0]
-              : feature.split('.')[0]
-            const tag = feature.match(/(?<=\/)(.*?)(?=\.)/)
-              ? feature.match(/(?<=\/)(.*?)(?=\.)/)[0].split(':')[1]
-              : ''
-            const featureName = feature.match(/(?<=\.)(.*?)(?=as)/)
-              ? feature.match(/(?<=\.)(.*?)(?=as)/)[0]
-              : feature.split('.')[1]
-            const alias = feature.match(/(?<=as)(.*?)(&|$)/)
-              ? feature.match(/(?<=as)(.*?)(&|$)/)[0]
-              : ''
+          {selectedItem.specFeatures.map(featureTemplate => {
+            const {
+              project,
+              featureSet,
+              tag,
+              feature,
+              alias
+            } = parseFeatureTemplate(featureTemplate)
 
             return (
-              <div className="item-requested-features__table-row" key={feature}>
+              <div
+                className="item-requested-features__table-row"
+                key={featureTemplate}
+              >
                 <div className="item-requested-features__table-cell cell_project-name">
                   {project !== projectName && project}
                 </div>
@@ -55,7 +53,7 @@ const DetailsRequestedFeatures = ({ projectName, selectedItem }) => {
                   )}
                 </div>
                 <div className="item-requested-features__table-cell cell_feature">
-                  {featureName}
+                  {feature}
                 </div>
                 <div className="item-requested-features__table-cell cell_alias">
                   {alias}

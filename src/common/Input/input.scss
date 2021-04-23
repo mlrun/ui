@@ -1,5 +1,6 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/shadows';
 
 .input {
   position: relative;
@@ -21,6 +22,29 @@
 
       & ~ .input__warning {
         display: block;
+      }
+    }
+
+    .suggestion-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 5;
+      margin: 0;
+      padding: 7px 0;
+      background-color: $white;
+      border-radius: 4px;
+      box-shadow: $previewBoxShadow;
+
+      .suggestion-item {
+        padding: 7px 15px;
+        color: $mulledWine;
+        list-style-type: none;
+
+        &:hover {
+          background-color: $alabaster;
+          cursor: pointer;
+        }
       }
     }
   }

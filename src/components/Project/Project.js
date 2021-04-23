@@ -8,7 +8,7 @@ import ProjectView from './ProjectView'
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import { getLinks, generateCreateNewOptions } from './project.utils'
-import { parseKeyValues } from '../../utils'
+import { generateKeyValues, parseKeyValues } from '../../utils'
 import { KEY_CODES } from '../../constants'
 
 import './project.scss'
@@ -166,14 +166,7 @@ const Project = ({
   }, [editProject, handleDocumentClick])
 
   const handleAddProjectLabel = (label, labels) => {
-    const objectLabels = {}
-
-    labels.forEach(label => {
-      const labelParts = label.split(': ')
-
-      objectLabels[labelParts[0]] = labelParts[1]
-    })
-
+    const objectLabels = generateKeyValues(labels)
     const newLabel = {
       [label.split(':')[0]]: label.split(':')[1].replace(' ', '')
     }

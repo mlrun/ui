@@ -20,6 +20,7 @@ const Input = React.forwardRef(
       infoLabel,
       inputIcon,
       label,
+      suggestionList,
       maxLength,
       onBlur,
       onChange,
@@ -37,39 +38,59 @@ const Input = React.forwardRef(
     ref
   ) => {
     const [inputIsFocused, setInputIsFocused] = useState(false)
+    const [typedValue, setTypedValue] = useState(value ?? '')
     const input = React.createRef()
     const inputClassNames = classnames(
       'input',
       className,
-      (inputIsFocused || placeholder) && floatingLabel && 'active-input',
+      (inputIsFocused || placeholder || typedValue.length > 0) &&
+        floatingLabel &&
+        'active-input',
       required && 'input_required'
     )
     const labelClassNames = classnames(
       'input__label',
       floatingLabel && 'input__label-floating',
-      (inputIsFocused || placeholder) && floatingLabel && 'active-label',
+      (inputIsFocused || placeholder || typedValue.length > 0) &&
+        floatingLabel &&
+        'active-label',
       infoLabel && 'input__label_info'
     )
     const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
 
     useEffect(() => {
-      if (input.current.value.length > 0) {
-        setInputIsFocused(true)
-      }
-
       if (focused) {
         input.current.focus()
+        setInputIsFocused(true)
       }
     }, [input, focused])
 
-    const handleClick = event => {
-      if (event.target.value.length > 0) {
-        setInputIsFocused(true)
-      } else {
-        setInputIsFocused(false)
-      }
+    const matchOnClick = item => {
+      setTypedValue(item)
+      setInputIsFocused(false)
+      onChange(item)
+    }
 
+    const onInputBlur = event => {
+      if (
+        !event.relatedTarget ||
+        !event.relatedTarget?.closest('.suggestion-list')
+      ) {
+        setInputIsFocused(false)
+
+        if (onBlur) {
+          onBlur()
+        }
+      }
+    }
+
+    const onInputChange = event => {
+      setTypedValue(event.target.value)
       onChange(event.target.value)
+    }
+
+    const onInputFocus = event => {
+      setInputIsFocused(true)
     }
 
     return (
@@ -77,12 +98,13 @@ const Input = React.forwardRef(
         <input
           data-testid="input"
           className={inputClassNames}
-          onChange={handleClick}
+          onChange={onInputChange}
+          onFocus={onInputFocus}
+          onBlur={onInputBlur}
           ref={input}
           {...{
             disabled,
             maxLength,
-            onBlur,
             onKeyDown,
             pattern,
             placeholder,
@@ -119,6 +141,28 @@ const Input = React.forwardRef(
           <span data-testid="input-icon" className={iconClass}>
             {inputIcon}
           </span>
+        )}
+
+        {suggestionList?.length > 0 && inputIsFocused && (
+          <ul className="suggestion-list">
+            {suggestionList.map((item, index) => {
+              return (
+                <li
+                  className="suggestion-item"
+                  key={item + index}
+                  onClick={() => {
+                    matchOnClick(item)
+                  }}
+                  tabIndex={index}
+                  dangerouslySetInnerHTML={{
+                    __html: item.replace(new RegExp(typedValue, 'gi'), match =>
+                      match ? `<b>${match}</b>` : match
+                    )
+                  }}
+                />
+              )
+            })}
+          </ul>
         )}
       </div>
     )

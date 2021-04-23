@@ -19,7 +19,8 @@ export const generateTableContent = (
   groupedByWorkflow,
   groupFilter,
   page,
-  match
+  match,
+  isTablePanelOpen
 ) => {
   if (!isEmpty(groupedByName) && groupFilter === 'name') {
     return map(groupedByName, group =>
@@ -31,7 +32,8 @@ export const generateTableContent = (
             group,
             page,
             match.params.pageTab,
-            match.params.projectName
+            match.params.projectName,
+            isTablePanelOpen
           )
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
@@ -47,7 +49,8 @@ export const generateTableContent = (
           content,
           page,
           match.params.pageTab,
-          match.params.projectName
+          match.params.projectName,
+          isTablePanelOpen
         )
       : createFunctionsContent(content)
   } else return []

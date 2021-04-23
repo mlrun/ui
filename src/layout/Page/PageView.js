@@ -7,7 +7,7 @@ export default function PageView({ children }) {
   return (
     <div className="App">
       {headerShown && <Header />}
-      <main>{children}</main>
+      <main id="main">{children}</main>
     </div>
   )
 }

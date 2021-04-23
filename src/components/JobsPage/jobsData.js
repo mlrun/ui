@@ -215,14 +215,3 @@ export const generateActionsMenu = (
           hidden: JOB_STEADY_STATES.includes(job.state)
         }
       ]
-
-export const getChipsValues = chips => {
-  const result = {}
-  chips.forEach(param => {
-    const [key, value] = param.split(': ')
-
-    result[key] = value
-  })
-
-  return result
-}

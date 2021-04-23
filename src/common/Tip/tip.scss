@@ -1,62 +1,65 @@
 @import '../../scss/colors';
+$arrowLength: 10px;
+$iconLength: 16px;
+$arrowOffset: 20px;
 
 .tip-container {
   position: relative;
   display: inline-flex;
   align-items: center;
+}
 
-  .tip {
-    position: absolute;
-    z-index: 6;
-    padding: 6px 8px;
-    color: $white;
-    white-space: pre-line;
-    background: $primary;
-    border-radius: 2px;
+.tip {
+  position: absolute;
+  z-index: 10;
+  display: block;
+  padding: 6px 8px;
+  color: $white;
+  white-space: pre-line;
+  background: $primary;
+  border-radius: 4px;
 
-    &_top {
-      bottom: calc(100% + 10px);
-      left: -10px;
-
-      &::after {
-        bottom: -4px;
-      }
-    }
-
-    &_bottom {
-      &::after {
-        top: -4px;
-      }
-    }
-
-    &_left {
-      &::after {
-        left: 13px;
-      }
-    }
-
-    &_right {
-      &::after {
-        right: 13px;
-      }
-    }
-
-    &_small {
-      min-width: 125px;
-    }
-
-    &_big {
-      min-width: 300px;
-    }
-
+  &_top {
     &::after {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: $primary;
-      transform: rotate(45deg);
-      content: '';
+      bottom: calc(-#{$arrowLength / 2});
     }
+  }
+
+  &_bottom {
+    &::after {
+      top: calc(-#{$arrowLength / 2});
+    }
+  }
+
+  &_left {
+    &::after {
+      right: calc(#{$arrowOffset});
+    }
+  }
+
+  &_right {
+    &::after {
+      left: calc(#{$arrowOffset});
+    }
+  }
+
+  &_small {
+    min-width: 100px;
+    max-width: 200px;
+  }
+
+  &_big {
+    min-width: 200px;
+    max-width: 400px;
+  }
+
+  &::after {
+    position: absolute;
+    width: $arrowLength;
+    height: $arrowLength;
+    background: $primary;
+    transform: rotate(45deg);
+    content: '';
   }
 }
 
@@ -76,4 +79,10 @@
 .fade-exit-active {
   opacity: 0;
   transition: opacity 200ms;
+}
+
+:export {
+  arrowlength: $arrowLength;
+  iconlength: $iconLength;
+  arrowoffset: $arrowOffset;
 }

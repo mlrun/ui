@@ -54,8 +54,6 @@ const Content = ({
   showUntagged,
   stateFilter,
   toggleShowUntagged,
-  selectedRowId,
-  setSelectedRowId,
   yamlContent
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
@@ -329,8 +327,6 @@ const Content = ({
               applyDetailsChanges={applyDetailsChanges}
               cancelRequest={cancelRequest}
               retryRequest={refresh}
-              selectedRowId={selectedRowId}
-              setSelectedRowId={setSelectedRowId}
             />
           ) : loading ? null : (
             <NoData />
@@ -347,8 +343,6 @@ Content.defaultProps = {
   groupFilter: null,
   handleSelectItem: () => {},
   selectedItem: {},
-  selectedRowId: '',
-  setSelectedRowId: () => {},
   setGroupFilter: () => {},
   setLoading: () => {},
   setStateFilter: () => {},
@@ -369,8 +363,6 @@ Content.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  selectedRowId: PropTypes.string,
-  setSelectedRowId: PropTypes.func,
   setGroupFilter: PropTypes.func,
   setLoading: PropTypes.func,
   setStateFilter: PropTypes.func,

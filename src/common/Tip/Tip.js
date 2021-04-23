@@ -2,83 +2,67 @@ import React, { useState, useRef, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 import classnames from 'classnames'
+import { createPortal } from 'react-dom'
 
 import { ReactComponent as QuestionMarkIcon } from '../../images/question-mark.svg'
 
 import './tip.scss'
+import tipStyle from './tip.scss'
+
+const arrowOffset = parseInt(tipStyle.arrowoffset)
+const arrowLength = parseInt(tipStyle.arrowlength)
+const iconLength = parseInt(tipStyle.iconlength)
+const minTextLength = 40
 
 const Tip = ({ className, text }) => {
   const [isShow, setIsShow] = useState(false)
-  const [style, setStyle] = useState({
-    left: -10
-  })
   const [tipClassName, setTipClassName] = useState('tip_top tip_left')
 
-  const tipRef = useRef()
-  const parentRef = useRef()
+  const iconRef = useRef()
   const tipBodyRef = useRef()
 
-  const offset = 25
-  const minTextLength = 40
-  const initialLeftStyle = -10
-
   const tipContainerClassNames = classnames(className, 'tip-container')
-  const tipCLassNames = classnames(
+  const tipClassNames = classnames(
     'tip',
     tipClassName,
     text.length <= minTextLength ? 'tip_small' : 'tip_big'
   )
 
-  const handleMouseEnter = useCallback(
-    event => {
-      setIsShow(true)
-      let { height, top } = parentRef?.current
-        ? parentRef?.current.getBoundingClientRect()
-        : {}
+  const handleMouseEnter = useCallback(event => {
+    setIsShow(true)
 
-      const {
-        height: tipHeight,
-        width: tipWidth
-      } = tipBodyRef?.current?.getBoundingClientRect() ?? {
-        height: 0,
-        width: 0
-      }
+    const iconRect = iconRef.current.getBoundingClientRect()
+    const tipRect = tipBodyRef.current.getBoundingClientRect()
+    const widthPosition =
+      iconRect.left > tipRect.width - arrowOffset ? 'tip_left' : 'tip_right'
+    const heightPosition =
+      iconRect.top > tipRect.height + arrowLength ? 'tip_top' : 'tip_bottom'
 
-      const left =
-        event.x + tipWidth > window.innerWidth
-          ? event.x - (tipWidth + event.x - offset)
-          : style.left
+    setTipClassName(`${heightPosition} ${widthPosition}`)
 
-      if (top - height - tipHeight <= 10) {
-        setTipClassName(
-          left !== initialLeftStyle
-            ? 'tip_bottom tip_right'
-            : 'tip_bottom tip_left'
-        )
-        setStyle({
-          top: offset,
-          left
-        })
-      } else {
-        setTipClassName(
-          left !== initialLeftStyle ? 'tip_top tip_right' : 'tip_top tip_left'
-        )
-        setStyle({
-          top: 'unset',
-          left
-        })
-      }
-    },
-    [initialLeftStyle, style.left]
-  )
+    if (widthPosition === 'tip_left') {
+      const computedArrowOffset = arrowOffset + (iconLength + arrowLength) / 2
+      tipBodyRef.current.style.left = `${iconRect.left -
+        (tipRect.width - computedArrowOffset)}px`
+    } else {
+      const computedArrowOffset = arrowOffset - (iconLength - arrowLength) / 2
+      tipBodyRef.current.style.left = `${iconRect.left - computedArrowOffset}px`
+    }
+
+    tipBodyRef.current.style.top =
+      heightPosition === 'tip_top'
+        ? iconRect.top - tipRect.height - arrowLength + 'px'
+        : iconRect.bottom + arrowLength + 'px'
+  }, [])
 
   const handleMouseLeave = () => {
     setIsShow(false)
   }
 
   useEffect(() => {
-    const node = tipRef.current
-    if (node) {
+    const node = iconRef.current
+
+    if (iconRef.current) {
       node.addEventListener('mouseenter', handleMouseEnter)
       node.addEventListener('mouseleave', handleMouseLeave)
 
@@ -90,18 +74,25 @@ const Tip = ({ className, text }) => {
   }, [handleMouseEnter, isShow])
 
   return (
-    <div data-testid="tip" className={tipContainerClassNames} ref={parentRef}>
-      <QuestionMarkIcon data-testid="tip-icon" ref={tipRef} />
-      <CSSTransition in={isShow} timeout={200} classNames="fade" unmountOnExit>
-        <div
-          ref={tipBodyRef}
-          data-testid="tip-text"
-          className={tipCLassNames}
-          style={{ ...style }}
+    <div data-testid="tip" className={tipContainerClassNames}>
+      <QuestionMarkIcon data-testid="tip-icon" ref={iconRef} />
+      {createPortal(
+        <CSSTransition
+          in={isShow}
+          timeout={200}
+          classNames="fade"
+          unmountOnExit
         >
-          {text}
-        </div>
-      </CSSTransition>
+          <div
+            ref={tipBodyRef}
+            data-testid="tip-text"
+            className={tipClassNames}
+          >
+            {text}
+          </div>
+        </CSSTransition>,
+        document.getElementById('root')
+      )}
     </div>
   )
 }

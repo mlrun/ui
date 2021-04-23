@@ -44,27 +44,27 @@ main {
   &:not(:first-child) {
     margin-top: 64px;
   }
+}
 
-  a {
-    color: inherit;
-    text-decoration: none;
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: Roboto, sans-serif;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  &:active,
+  &:focus {
+    outline: none;
+    box-shadow: none;
   }
 
-  button {
-    font-family: Roboto, sans-serif;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-
-    &:active,
-    &:focus {
-      outline: none;
-      box-shadow: none;
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-    }
+  &:disabled {
+    cursor: not-allowed;
   }
 }
 
