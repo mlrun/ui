@@ -5,7 +5,7 @@ export const generatePods = (pods = {}) => {
           value: pod.name,
           className: 'link',
           status: pod.status,
-          pending: !!pods.podsPending.find(item => item.name === pod.name)
+          pending: pods.podsPending.some(item => item.name === pod.name)
         }
       })
     : []

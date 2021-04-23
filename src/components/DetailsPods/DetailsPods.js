@@ -13,16 +13,22 @@ import { generatePods } from './detailsPods.util'
 import './detailsPods.scss'
 
 const DetailsPods = ({ detailsStore, match }) => {
-  const [selectedPod, setSelectedPod] = useState({})
+  const [selectedPod, setSelectedPod] = useState(null)
   const [table, setTable] = useState([])
 
   useEffect(() => {
     setTable(generatePods(detailsStore.pods))
 
     return () => {
-      setSelectedPod({})
+      setSelectedPod(null)
     }
   }, [detailsStore.pods, match.params.jobId])
+
+  useEffect(() => {
+    if (!selectedPod) {
+      setSelectedPod(table[0])
+    }
+  }, [selectedPod, table])
 
   return (
     <div className="pods">
@@ -66,7 +72,7 @@ const DetailsPods = ({ detailsStore, match }) => {
             </div>
           </div>
           <div className="pods__status">
-            {selectedPod?.status ? (
+            {selectedPod?.status && (
               <div className="pods__status-view">
                 <div className="json">
                   <pre className="json-content">
@@ -82,8 +88,6 @@ const DetailsPods = ({ detailsStore, match }) => {
                   </pre>
                 </div>
               </div>
-            ) : (
-              <div>Select a pod to see its status here...</div>
             )}
           </div>
         </>
