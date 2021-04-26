@@ -131,18 +131,22 @@ const DetailsRequestedFeatures = ({
     })
   }
 
-  const generateChangedArray = (index, changedAlias) =>
-    currentData.map((item, idx) => {
+  const generateChangedArray = (index, changedAlias) => {
+    return currentData.map((item, idx) => {
       if (idx === index) {
-        item = selectedItem.specFeatures[index].match(/(?<=as)(.*?)(&|$)/)
-          ? selectedItem.specFeatures[index].replace(
-              /(?<=as)(.*?)(&|$)/,
-              changedAlias
-            )
-          : `${selectedItem.specFeatures[index]} as${changedAlias}`
+        if (currentData?.[index].match(/\s+as\s+(?<alias>.*)$/)) {
+          item = currentData?.[index].replace(
+            /\s+as\s+(?<alias>.*)$/,
+            changedAlias === '' ? '' : ` as ${changedAlias}`
+          )
+        } else if (changedAlias !== '') {
+          item = `${currentData?.[index]} as ${changedAlias}`
+        }
       }
+
       return item
     })
+  }
 
   return (
     <div className="item-requested-features">
@@ -229,9 +233,7 @@ const DetailsRequestedFeatures = ({
                 <div className="cell_delete">
                   <Tooltip template={<TextTooltipTemplate text="Delete" />}>
                     <Delete
-                      onClick={() =>
-                        setConfirmDialogData({ index, feature })
-                      }
+                      onClick={() => setConfirmDialogData({ index, feature })}
                     />
                   </Tooltip>
                 </div>

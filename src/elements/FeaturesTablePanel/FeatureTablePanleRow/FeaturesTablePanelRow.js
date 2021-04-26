@@ -53,14 +53,25 @@ const FeaturesTablePanelRow = ({
             <div className={`action unset-as-label ${actionClassNames}`}>
               <CrossedTarget
                 onClick={() =>
-                  isEditEnabled && toggleLabelFeature(feature.feature)
+                  isEditEnabled && toggleLabelFeature(labelFeature)
                 }
               />
             </div>
           ))}
         <div className={`action remove ${actionClassNames}`}>
           <Delete
-            onClick={() => isEditEnabled && deleteFeature(feature.feature)}
+            onClick={() => {
+              if (isEditEnabled) {
+                if (
+                  labelFeature === feature.feature ||
+                  labelFeature === feature.originalTemplate
+                ) {
+                  toggleLabelFeature(labelFeature)
+                }
+
+                deleteFeature(feature.feature)
+              }
+            }}
           />
         </div>
       </div>

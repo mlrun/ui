@@ -11,6 +11,7 @@ import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureV
 
 import tableActions from '../../actions/table'
 import artifactsAction from '../../actions/artifacts'
+import notificationActions from '../../actions/notification'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
@@ -21,6 +22,7 @@ const FeaturesTablePanel = ({
   createNewFeatureVector,
   setTablePanelOpen,
   tableStore,
+  setNotification,
   updateFeatureVector,
   updateFeatureVectorData,
   updateGroupedFeatures
@@ -36,6 +38,7 @@ const FeaturesTablePanel = ({
 
   const addFeatures = () => {
     let featureVector = cloneDeep(tableStore.features.featureVector)
+    let addFeaturesPromise = null
 
     featureVector.spec.features = tableStore.features.groupedFeatures[
       tableStore.features.currentProject
@@ -43,10 +46,27 @@ const FeaturesTablePanel = ({
     featureVector.spec.label_feature = labelFeature
 
     if (tableStore.features.isNewFeatureVector) {
-      createNewFeatureVector(featureVector)
+      addFeaturesPromise = createNewFeatureVector(featureVector)
     } else {
-      updateFeatureVectorData(featureVector)
+      addFeaturesPromise = updateFeatureVectorData(featureVector)
     }
+
+    addFeaturesPromise
+      .then(response => {
+        setNotification({
+          status: response.status,
+          id: Math.random(),
+          message: 'Features successfully added'
+        })
+      })
+      .catch(() => {
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Failed to add features',
+          retry: addFeatures
+        })
+      })
 
     setTablePanelOpen(false)
   }
@@ -208,5 +228,5 @@ export default connect(
   tableStore => ({
     ...tableStore
   }),
-  { ...tableActions, ...artifactsAction }
+  { ...tableActions, ...artifactsAction, ...notificationActions }
 )(FeaturesTablePanel)
