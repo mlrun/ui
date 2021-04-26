@@ -18,11 +18,7 @@ import {
   JOBS_PAGE,
   MODELS_PAGE
 } from '../../constants'
-import {
-  detailsActions,
-  detailsReducer,
-  initialState
-} from '../DetailsInfo/detailsReducer'
+import { detailsActions, detailsReducer, initialState } from './detailsReducer'
 import {
   generateArtifactsContent,
   generateFunctionsContent,
@@ -274,9 +270,19 @@ const Details = ({
       detailsDispatch,
       selectedItem,
       pageData,
-      handlePreview
+      handlePreview,
+      detailsStore,
+      handleEditInput
     )
-  }, [detailsState, handlePreview, match, pageData, selectedItem])
+  }, [
+    detailsState,
+    detailsStore,
+    handleEditInput,
+    handlePreview,
+    match,
+    pageData,
+    selectedItem
+  ])
 
   return (
     <DetailsView

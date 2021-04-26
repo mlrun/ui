@@ -1,13 +1,15 @@
 import React, { useReducer, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
+import { handleFinishEdit } from '../Details/details.util'
+
 import {
   detailsInfoActions,
   detailsInfoReducer,
   initialState
 } from './detailsInfoReducer'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { detailsActions } from './detailsReducer'
+import { detailsActions } from '../Details/detailsReducer'
 
 import DetailsInfoView from './DetailsInfoView'
 
@@ -78,45 +80,6 @@ const DetailsInfo = ({
     }
   }, [onBlurEditField])
 
-  const handleFinishEdit = (event, field) => {
-    detailsInfoDispatch({
-      type: detailsInfoActions.SET_EDIT_MODE,
-      payload: {
-        field: '',
-        fieldType: ''
-      }
-    })
-
-    if (
-      detailsInfoState.fieldsData[field].initialFieldValue ===
-      changes.data[field]
-    ) {
-      const fieldsData = { ...detailsInfoState.fieldsData }
-      const changesData = { ...changes.data }
-
-      delete fieldsData[field]
-      delete changesData[field]
-
-      detailsDispatch({
-        type: detailsActions.SET_CHANGES_COUNTER,
-        payload: fieldsData.length || 0
-      })
-      detailsInfoDispatch({
-        type: detailsInfoActions.SET_FIELDS_DATA,
-        payload: { ...fieldsData }
-      })
-      detailsDispatch({
-        type: detailsActions.SET_CHANGES_DATA,
-        payload: { ...changesData }
-      })
-    } else {
-      detailsDispatch({
-        type: detailsActions.SET_CHANGES_COUNTER,
-        payload: Object.keys(changes.data).length
-      })
-    }
-  }
-
   const handleInfoItemClick = (field, fieldType, info) => {
     detailsInfoDispatch({
       type: detailsInfoActions.SET_EDIT_MODE,
@@ -166,7 +129,17 @@ const DetailsInfo = ({
       changes={changes}
       content={content}
       detailsInfoState={detailsInfoState}
-      handleFinishEdit={handleFinishEdit}
+      handleFinishEdit={field =>
+        handleFinishEdit(
+          field,
+          changes,
+          detailsInfoActions,
+          detailsInfoDispatch,
+          detailsInfoState,
+          detailsDispatch,
+          detailsActions
+        )
+      }
       handleInfoItemClick={handleInfoItemClick}
       match={match}
       pageData={pageData}
