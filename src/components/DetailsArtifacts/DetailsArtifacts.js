@@ -6,7 +6,7 @@ import DetailsArtifactsView from './DetailsArtifactsView'
 
 import artifactAction from '../../actions/artifacts'
 import jobsActions from '../../actions/jobs'
-import { detailsActions } from '../DetailsInfo/detailsReducer'
+import { detailsActions } from '../Details/detailsReducer'
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
 import {
   generateContent,

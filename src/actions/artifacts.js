@@ -507,8 +507,20 @@ const artifactsAction = {
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
   }),
-  updateFeatureSetData: (projectName, featureSet, tag, data) => () => {
-    return artifactsApi.updateFeatureSetData(projectName, featureSet, tag, data)
+  updateFeatureStoreData: (
+    projectName,
+    featureData,
+    tag,
+    data,
+    pageTab
+  ) => () => {
+    return artifactsApi.updateFeatureStoreData(
+      projectName,
+      featureData,
+      tag,
+      data,
+      pageTab
+    )
   },
   updateFeatureVectorData: data => () => {
     return artifactsApi.updateFeatureVectorData(data)

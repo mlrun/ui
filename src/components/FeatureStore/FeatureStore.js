@@ -54,7 +54,7 @@ const FeatureStore = ({
   setArtifactFilter,
   setNotification,
   tableStore,
-  updateFeatureSetData
+  updateFeatureStoreData
 }) => {
   const [content, setContent] = useState([])
   const [yamlContent, setYamlContent] = useState({
@@ -326,7 +326,7 @@ const FeatureStore = ({
       match,
       selectedItem,
       setNotification,
-      updateFeatureSetData
+      updateFeatureStoreData
     )
   }
 

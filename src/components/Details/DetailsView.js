@@ -26,7 +26,7 @@ import {
   FEATURE_VECTORS_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
-import { detailsActions } from '../DetailsInfo/detailsReducer'
+import { detailsActions } from './detailsReducer'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 

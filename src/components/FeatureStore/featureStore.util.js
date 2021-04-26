@@ -457,7 +457,7 @@ export const handleApplyDetailsChanges = (
   match,
   selectedItem,
   setNotification,
-  updateFeatureSetData
+  updateFeatureStoreData
 ) => {
   const data = {
     spec: {
@@ -477,11 +477,12 @@ export const handleApplyDetailsChanges = (
     data.spec.labels = { ...objectLabels }
   }
 
-  return updateFeatureSetData(
+  return updateFeatureStoreData(
     match.params.projectName,
     match.params.name,
     selectedItem.item.tag,
-    data
+    data,
+    match.params.pageTab
   )
     .then(response => {
       return fetchData({ project: match.params.projectName }).then(() => {
