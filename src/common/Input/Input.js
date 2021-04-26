@@ -78,9 +78,7 @@ const Input = React.forwardRef(
       ) {
         setInputIsFocused(false)
 
-        if (onBlur) {
-          onBlur()
-        }
+        onBlur()
       }
     }
 
@@ -149,7 +147,7 @@ const Input = React.forwardRef(
               return (
                 <li
                   className="suggestion-item"
-                  key={item + index}
+                  key={`${item}${index}`}
                   onClick={() => {
                     matchOnClick(item)
                   }}

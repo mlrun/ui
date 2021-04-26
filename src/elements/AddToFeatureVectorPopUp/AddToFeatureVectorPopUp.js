@@ -50,21 +50,19 @@ const AddToFeatureVectorPopUp = ({
 
   const onSelectProject = projectName => {
     setSelectedProject(projectName)
-    setTimeout(() => {
-      fetchFeatureVectors({ project: projectName }).then(result => {
-        const featureVectorsOptions = result.map(featureVector => {
-          return {
-            id: featureVector.metadata.name,
-            label: featureVector.metadata.name
-          }
-        })
-
-        setFeatureVectors(result)
-        setFeatureVectorsList(uniqBy(featureVectorsOptions, 'id'))
-        setFeatureVectorTagsList([])
-        setSelectedFeatureVector('')
-        setSelectedFeatureVectorTag('')
+    fetchFeatureVectors({ project: projectName }).then(result => {
+      const featureVectorsOptions = result.map(featureVector => {
+        return {
+          id: featureVector.metadata.name,
+          label: featureVector.metadata.name
+        }
       })
+
+      setFeatureVectors(result)
+      setFeatureVectorsList(uniqBy(featureVectorsOptions, 'id'))
+      setFeatureVectorTagsList([])
+      setSelectedFeatureVector('')
+      setSelectedFeatureVectorTag('')
     })
   }
 
@@ -160,6 +158,7 @@ const AddToFeatureVectorPopUp = ({
         tooltip={action.tooltip}
         disabled={action.disabled}
         onClick={() => {
+          !selectedProject && onSelectProject(currentProject)
           setIsPopUpOpen(!isPopUpOpen)
         }}
       />

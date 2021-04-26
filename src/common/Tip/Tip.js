@@ -51,8 +51,8 @@ const Tip = ({ className, text }) => {
 
     tipBodyRef.current.style.top =
       heightPosition === 'tip_top'
-        ? iconRect.top - tipRect.height - arrowLength + 'px'
-        : iconRect.bottom + arrowLength + 'px'
+        ? `${iconRect.top - tipRect.height - arrowLength}px`
+        : `${iconRect.bottom + arrowLength}px`
   }, [])
 
   const handleMouseLeave = () => {

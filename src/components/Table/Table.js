@@ -61,8 +61,8 @@ const Table = ({
     const calculatePanelHeight = () => {
       if (tableHeadRef && tablePanelRef.current) {
         const cords = tableHeadRef.current.getBoundingClientRect()
-        tablePanelRef.current.style.height =
-          window.innerHeight - cords.top + 'px'
+        tablePanelRef.current.style.height = `${window.innerHeight -
+          cords.top}px`
       }
     }
 
