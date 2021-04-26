@@ -137,7 +137,7 @@ const DetailsRequestedFeatures = ({
               /(?<=as)(.*?)(&|$)/,
               changedAlias
             )
-          : `${selectedItem.specFeatures[index]} as ${changedAlias}`
+          : `${selectedItem.specFeatures[index]} as${changedAlias}`
       }
       return item
     })
