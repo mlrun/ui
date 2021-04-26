@@ -112,6 +112,17 @@
     box-shadow: $filterShadow;
   }
 
+  &__search {
+    width: 100%;
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-bottom: $primaryBorder;
+    }
+  }
+
   .actions {
     position: absolute;
     right: 25px;

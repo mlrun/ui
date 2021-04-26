@@ -10,10 +10,9 @@ import detailsActions from '../../actions/details'
 import {
   generatePageData,
   initialStateFilter,
-  initialGroupFilter,
-  getChipsValues
+  initialGroupFilter
 } from './jobsData'
-import { parseKeyValues } from '../../utils'
+import { generateKeyValues, parseKeyValues } from '../../utils'
 import { MONITOR_TAB, SCHEDULE_TAB } from '../../constants'
 
 import Content from '../../layout/Content/Content'
@@ -139,7 +138,7 @@ const Jobs = ({
         schedule: null,
         task: {
           metadata: {
-            labels: getChipsValues(job.labels ?? {}),
+            labels: generateKeyValues(job.labels ?? {}),
             name: job.name,
             project: job.project
           },
@@ -152,7 +151,7 @@ const Jobs = ({
             inputs: job.inputs ?? {},
             output_path: job.outputPath,
             param_file: job.param_file ?? '',
-            parameters: getChipsValues(job.parameters ?? {}),
+            parameters: generateKeyValues(job.parameters ?? {}),
             secret_sources: job.secret_sources ?? [],
             selector: job.selector ?? 'max.',
             tuning_strategy: job.tuning_strategy ?? 'list'

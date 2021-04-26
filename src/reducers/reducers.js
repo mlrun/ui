@@ -8,6 +8,7 @@ import detailsStore from './detailsReducer'
 import notificationStore from './notificationReducer'
 import nuclioStore from './nuclioReducer'
 import projectStore from './projectReducer'
+import tableStore from './tableReducer'
 import workflowsStore from './workflowReducer'
 
 export default combineReducers({
@@ -19,5 +20,6 @@ export default combineReducers({
   notificationStore,
   nuclioStore,
   projectStore,
+  tableStore,
   workflowsStore
 })

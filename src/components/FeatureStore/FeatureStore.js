@@ -6,8 +6,10 @@ import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
+import AddToFeatureVectorPopUp from '../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
 
 import artifactsAction from '../../actions/artifacts'
+import notificationActions from '../../actions/notification'
 import {
   checkTabIsValid,
   fetchDataSetRowData,
@@ -29,7 +31,6 @@ import {
   FEATURE_VECTORS_TAB,
   FEATURES_TAB
 } from '../../constants'
-import notificationActions from '../../actions/notification'
 
 import './featureStore.scss'
 
@@ -52,6 +53,7 @@ const FeatureStore = ({
   removeFeatureVectors,
   setArtifactFilter,
   setNotification,
+  tableStore,
   updateFeatureStoreData
 }) => {
   const [content, setContent] = useState([])
@@ -64,7 +66,6 @@ const FeatureStore = ({
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [pageData, setPageData] = useState(pageDataInitialState)
-  const [selectedRowId, setSelectedRowId] = useState('')
   const featureStoreRef = useRef(null)
 
   const fetchData = useCallback(
@@ -93,6 +94,19 @@ const FeatureStore = ({
       fetchFeatures,
       fetchFeatureVectors
     ]
+  )
+
+  const getPopUpTemplate = useCallback(
+    action => {
+      return (
+        <AddToFeatureVectorPopUp
+          action={action}
+          currentProject={match.params.projectName}
+          fetchFeatureVectors={fetchFeatureVectors}
+        />
+      )
+    },
+    [fetchFeatureVectors, match.params.projectName]
   )
 
   const handleRemoveFeatureVector = useCallback(
@@ -189,7 +203,6 @@ const FeatureStore = ({
       removeFeatureSets()
       removeFeatureVectors()
       setSelectedItem({})
-      setSelectedRowId('')
       setPageData(pageDataInitialState)
     }
   }, [
@@ -226,7 +239,9 @@ const FeatureStore = ({
             ? handleRemoveFeatureVector
             : match.params.pageTab === FEATURES_TAB
             ? handleRemoveFeature
-            : handleRemoveDataSet
+            : handleRemoveDataSet,
+          getPopUpTemplate,
+          tableStore.isTablePanelOpen
         )
       }
     })
@@ -235,7 +250,9 @@ const FeatureStore = ({
     handleRequestOnExpand,
     handleRemoveFeature,
     match.params.pageTab,
-    handleRemoveDataSet
+    handleRemoveDataSet,
+    getPopUpTemplate,
+    tableStore.isTablePanelOpen
   ])
 
   useEffect(() => {
@@ -360,10 +377,6 @@ const FeatureStore = ({
           fetchData(item)
         }}
         selectedItem={selectedItem.item}
-        selectedRowId={selectedRowId}
-        setSelectedRowId={id =>
-          setSelectedRowId(selectedRowId === id ? '' : id)
-        }
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (
@@ -391,7 +404,10 @@ FeatureStore.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(artifactsStore => artifactsStore, {
-  ...artifactsAction,
-  ...notificationActions
-})(FeatureStore)
+export default connect(
+  ({ artifactsStore, tableStore }) => ({ artifactsStore, tableStore }),
+  {
+    ...artifactsAction,
+    ...notificationActions
+  }
+)(FeatureStore)

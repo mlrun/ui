@@ -250,15 +250,18 @@ const FilterMenu = ({
           />
         )}
       </div>
-      {actionButton && (
-        <Button
-          variant={actionButton.variant}
-          label={actionButton.label}
-          tooltip={actionButton.tooltip}
-          disabled={actionButton.disabled}
-          onClick={actionButton.onClick}
-        />
-      )}
+      {actionButton &&
+        (actionButton.getCustomTemplate ? (
+          actionButton.getCustomTemplate(actionButton)
+        ) : (
+          <Button
+            variant={actionButton.variant}
+            label={actionButton.label}
+            tooltip={actionButton.tooltip}
+            disabled={actionButton.disabled}
+            onClick={actionButton.onClick}
+          />
+        ))}
       <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button

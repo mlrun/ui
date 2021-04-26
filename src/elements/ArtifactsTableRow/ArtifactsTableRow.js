@@ -8,6 +8,7 @@ import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import {
+  ACTION_CELL_ID,
   DETAILS_OVERVIEW_TAB,
   FEATURES_TAB,
   MODEL_ENDPOINTS_TAB
@@ -24,10 +25,7 @@ const ArtifactsTableRow = ({
   rowItem,
   pageData,
   selectedItem,
-  selectedRowId,
-  setSelectedRowId,
-  tableContent,
-  withCheckbox
+  tableContent
 }) => {
   const parent = useRef()
   const rowClassNames = classnames(
@@ -100,9 +98,6 @@ const ArtifactsTableRow = ({
                         )
                       : ''
                   }
-                  selectedRowId={selectedRowId}
-                  setSelectedRowId={setSelectedRowId}
-                  withCheckbox={withCheckbox}
                 />
               ) : null
             })}
@@ -145,26 +140,35 @@ const ArtifactsTableRow = ({
                   <>
                     {Object.values(artifact).map((value, i) => {
                       return (
-                        <TableCell
-                          data={
-                            value.expandedCellContent
-                              ? value.expandedCellContent
-                              : value
-                          }
-                          item={currentItem}
-                          link={value.getLink?.(
-                            match.params.tab ?? DETAILS_OVERVIEW_TAB
-                          )}
-                          match={match}
-                          key={value.value + i ?? Date.now()}
-                          selectItem={handleSelectItem}
-                          selectedItem={selectedItem}
-                        />
+                        !value.hidden && (
+                          <TableCell
+                            data={
+                              value.expandedCellContent
+                                ? value.expandedCellContent
+                                : value
+                            }
+                            item={currentItem}
+                            link={value.getLink?.(
+                              match.params.tab ?? DETAILS_OVERVIEW_TAB
+                            )}
+                            match={match}
+                            key={value.value + i ?? Date.now()}
+                            selectItem={handleSelectItem}
+                            selectedItem={selectedItem}
+                          />
+                        )
                       )
                     })}
-                    <div className="table-body__cell action_cell">
-                      <ActionsMenu dataItem={currentItem} menu={actionsMenu} />
-                    </div>
+                    {!pageData.tableHeaders.find(
+                      header => header.id === ACTION_CELL_ID
+                    )?.hidden && (
+                      <div className="table-body__cell action_cell">
+                        <ActionsMenu
+                          dataItem={currentItem}
+                          menu={actionsMenu}
+                        />
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -175,7 +179,8 @@ const ArtifactsTableRow = ({
         <>
           {Object.values(rowItem ?? {}).map((value, i) => {
             return (
-              content[index] && (
+              content[index] &&
+              !value.hidden && (
                 <TableCell
                   expandLink={
                     Array.isArray(tableContent) &&
@@ -191,16 +196,16 @@ const ArtifactsTableRow = ({
                   match={match}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
-                  selectedRowId={selectedRowId}
-                  setSelectedRowId={setSelectedRowId}
-                  withCheckbox={withCheckbox}
                 />
               )
             )
           })}
-          <div className="table-body__cell action_cell">
-            <ActionsMenu dataItem={content[index]} menu={actionsMenu} />
-          </div>
+          {!pageData.tableHeaders.find(header => header.id === ACTION_CELL_ID)
+            ?.hidden && (
+            <div className="table-body__cell action_cell">
+              <ActionsMenu dataItem={content[index]} menu={actionsMenu} />
+            </div>
+          )}
         </>
       )}
     </div>
@@ -210,10 +215,7 @@ const ArtifactsTableRow = ({
 ArtifactsTableRow.defaultProps = {
   handleExpandRow: null,
   tableContent: null,
-  mainRowItemsCount: 1,
-  selectedRowId: '',
-  setSelectedRowId: () => {},
-  withCheckbox: false
+  mainRowItemsCount: 1
 }
 
 ArtifactsTableRow.propTypes = {
@@ -226,10 +228,7 @@ ArtifactsTableRow.propTypes = {
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  selectedRowId: PropTypes.string,
-  setSelectedRowId: PropTypes.func,
-  tableContent: PropTypes.arrayOf(PropTypes.shape({})),
-  withCheckbox: PropTypes.bool
+  tableContent: PropTypes.arrayOf(PropTypes.shape({}))
 }
 
 export default React.memo(ArtifactsTableRow)

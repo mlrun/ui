@@ -1,6 +1,8 @@
 import React, { useEffect, useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
 
+import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
+
 import Input from '../../common/Input/Input'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Button from '../../common/Button/Button'
@@ -129,18 +131,22 @@ const DetailsRequestedFeatures = ({
     })
   }
 
-  const generateChangedArray = (index, changedAlias) =>
-    currentData.map((item, idx) => {
+  const generateChangedArray = (index, changedAlias) => {
+    return currentData.map((item, idx) => {
       if (idx === index) {
-        item = selectedItem.specFeatures[index].match(/(?<=as)(.*?)(&|$)/)
-          ? selectedItem.specFeatures[index].replace(
-              /(?<=as)(.*?)(&|$)/,
-              changedAlias
-            )
-          : `${selectedItem.specFeatures[index]} as${changedAlias}`
+        if (currentData?.[index].match(/\s+as\s+(?<alias>.*)$/)) {
+          item = currentData?.[index].replace(
+            /\s+as\s+(?<alias>.*)$/,
+            changedAlias === '' ? '' : ` as ${changedAlias}`
+          )
+        } else if (changedAlias !== '') {
+          item = `${currentData?.[index]} as ${changedAlias}`
+        }
       }
+
       return item
     })
+  }
 
   return (
     <div className="item-requested-features">
@@ -156,24 +162,20 @@ const DetailsRequestedFeatures = ({
           ))}
         </div>
         <div className="item-requested-features__table-body">
-          {currentData.map((feature, index) => {
-            const project =
-              feature.indexOf('/') > 0 ? feature.split('/')[0] : ''
-            const featureSet = feature.match(/(?<=\/)(.*?)(?=\.)/)
-              ? feature.match(/(?<=\/)(.*?)(?=\.)/)[0].split(':')[0]
-              : feature.split('.')[0]
-            const tag = feature.match(/(?<=\/)(.*?)(?=\.)/)
-              ? feature.match(/(?<=\/)(.*?)(?=\.)/)[0].split(':')[1]
-              : ''
-            const featureName = feature.match(/(?<=\.)(.*?)(?=as)/)
-              ? feature.match(/(?<=\.)(.*?)(?=as)/)[0]
-              : feature.split('.')[1]
-            const alias = feature.match(/(?<=as)(.*?)(&|$)/)
-              ? feature.match(/(?<=as)(.*?)(&|$)/)[0]
-              : ''
+          {currentData.map((featureTemplate, index) => {
+            const {
+              project,
+              featureSet,
+              tag,
+              feature,
+              alias
+            } = parseFeatureTemplate(featureTemplate)
 
             return (
-              <div className="item-requested-features__table-row" key={feature}>
+              <div
+                className="item-requested-features__table-row"
+                key={featureTemplate}
+              >
                 <div className="item-requested-features__table-cell cell_project-name">
                   {project !== match.params.projectName && project}
                 </div>
@@ -186,7 +188,7 @@ const DetailsRequestedFeatures = ({
                   )}
                 </div>
                 <div className="item-requested-features__table-cell cell_feature">
-                  {featureName}
+                  {feature}
                 </div>
                 {editableItem === index ? (
                   <div className="item-requested-features__table-cell cell_alias">
@@ -231,9 +233,7 @@ const DetailsRequestedFeatures = ({
                 <div className="cell_delete">
                   <Tooltip template={<TextTooltipTemplate text="Delete" />}>
                     <Delete
-                      onClick={() =>
-                        setConfirmDialogData({ index, featureName })
-                      }
+                      onClick={() => setConfirmDialogData({ index, feature })}
                     />
                   </Tooltip>
                 </div>

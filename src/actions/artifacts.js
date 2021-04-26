@@ -72,6 +72,7 @@ const artifactsAction = {
   }),
   createNewFeatureSet: (data, project) => () =>
     artifactsApi.createFeatureSet(data, project),
+  createNewFeatureVector: data => () => artifactsApi.createFeatureVector(data),
   createNewFeatureSetError: error => ({
     type: CREATE_NEW_FEATURE_SET_FAILURE,
     payload: error
@@ -520,6 +521,9 @@ const artifactsAction = {
       data,
       pageTab
     )
+  },
+  updateFeatureVectorData: data => () => {
+    return artifactsApi.updateFeatureVectorData(data)
   }
 }
 

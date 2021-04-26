@@ -10,10 +10,8 @@ import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsD
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import { PROJECTS_PAGE } from '../../constants'
-import {
-  generateProjectScreens,
-  generateProjectsList
-} from './breadcrumbs.util'
+import { generateProjectScreens } from './breadcrumbs.util'
+import { generateProjectsList } from '../../utils/projects'
 import projectsAction from '../../actions/projects'
 
 import './breadcrums.scss'

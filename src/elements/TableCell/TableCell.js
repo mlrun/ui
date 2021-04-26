@@ -27,10 +27,7 @@ const TableCell = ({
   link,
   match,
   selectItem,
-  selectedItem,
-  selectedRowId,
-  setSelectedRowId,
-  withCheckbox
+  selectedItem
 }) => {
   const dispatch = useDispatch()
 
@@ -44,9 +41,6 @@ const TableCell = ({
         link={link}
         selectItem={selectItem}
         selectedItem={selectedItem}
-        selectedRowId={selectedRowId}
-        setSelectedRowId={setSelectedRowId}
-        withCheckbox={withCheckbox}
       />
     )
   } else if (firstRow || (link && isGroupedByWorkflow)) {
@@ -188,10 +182,7 @@ TableCell.defaultProps = {
     schema: ''
   },
   link: '',
-  match: null,
-  selectedRowId: '',
-  setSelectedRowId: () => {},
-  withCheckbox: false
+  match: null
 }
 
 TableCell.propTypes = {
@@ -204,10 +195,7 @@ TableCell.propTypes = {
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   match: PropTypes.shape({}),
   selectItem: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  selectedRowId: PropTypes.string,
-  setSelectedRowId: PropTypes.func,
-  withCheckbox: PropTypes.bool
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default TableCell

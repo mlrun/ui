@@ -26,6 +26,11 @@ const fetchArtifacts = (item, path, config, withLatestTag) => {
 export default {
   createFeatureSet: (data, project) =>
     mainHttpClient.post(`/projects/${project}/feature-sets`, data),
+  createFeatureVector: data =>
+    mainHttpClient.post(
+      `/projects/${data.metadata.project}/feature-vectors`,
+      data
+    ),
   getArtifactPreview: (schema, path, user, fileFormat) => {
     const config = {
       params: schema ? { schema, path, user } : { path, user }
@@ -124,6 +129,11 @@ export default {
   updateFeatureStoreData: (projectName, featureData, tag, data, pageTab) =>
     mainHttpClient.patch(
       `/projects/${projectName}/${pageTab}/${featureData}/references/${tag}`,
+      data
+    ),
+  updateFeatureVectorData: data =>
+    mainHttpClient.put(
+      `/projects/${data.metadata.project}/feature-vectors/${data.metadata.name}/references/${data.metadata.tag}`,
       data
     )
 }

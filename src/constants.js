@@ -270,3 +270,11 @@ export const FETCH_ALL_NUCLIO_FUNCTIONS_SUCCESS =
 export const KEY_CODES = {
   ENTER: 13
 }
+
+/*=========== TABLE =============*/
+
+export const ACTION_CELL_ID = 'action-cell'
+export const SET_TABLE_PANEL_OPEN = 'SET_TABLE_PANEL_OPEN'
+export const SET_FEATURES_PANEL_DATA = 'SET_FEATURES_PANEL_DATA'
+export const UPDATE_GROUPED_FEATURES = 'UPDATE_GROUPED_FEATURES'
+export const UPDATE_FEATURE_VECTOR = 'UPDATE_FEATURE_VECTOR'

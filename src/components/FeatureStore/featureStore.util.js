@@ -1,6 +1,10 @@
+import React from 'react'
 import axios from 'axios'
 
+import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
+
 import {
+  ACTION_CELL_ID,
   DATASETS_TAB,
   DETAILS_ANALYSIS_TAB,
   DETAILS_METADATA_TAB,
@@ -194,44 +198,61 @@ export const featureVectorsTableHeaders = [
     class: 'action_cell'
   }
 ]
-export const featuresTableHeaders = [
-  {
-    header: 'Feature Name',
-    class: 'artifacts_medium'
-  },
-  {
-    header: 'Feature set',
-    class: 'artifacts_small'
-  },
-  {
-    header: 'Type',
-    class: 'artifacts_extra-small'
-  },
-  {
-    header: 'Entity',
-    class: 'artifacts_small'
-  },
-  {
-    header: 'Description',
-    class: 'artifacts_medium'
-  },
-  {
-    header: 'Labels',
-    class: 'artifacts_big'
-  },
-  {
-    header: 'Targets',
-    class: 'artifacts_small'
-  },
-  {
-    header: 'Validator',
-    class: 'artifacts_medium'
-  },
-  {
-    header: '',
-    class: 'action_cell'
-  }
-]
+
+const generateFeaturesTableHeaders = isTablePanelOpen => {
+  return [
+    {
+      header: 'Feature Name',
+      class: 'artifacts_medium'
+    },
+    {
+      header: 'Feature set',
+      class: 'artifacts_small'
+    },
+    {
+      header: 'Type',
+      class: 'artifacts_extra-small'
+    },
+    {
+      header: 'Entity',
+      class: 'artifacts_small'
+    },
+    {
+      header: 'Description',
+      class: 'artifacts_medium'
+    },
+    {
+      header: 'Labels',
+      class: 'artifacts_big'
+    },
+    {
+      header: 'Targets',
+      class: 'artifacts_small',
+      hidden: isTablePanelOpen
+    },
+    {
+      header: 'Validator',
+      class: 'artifacts_medium',
+      hidden: isTablePanelOpen
+    },
+    {
+      header: '',
+      id: ACTION_CELL_ID,
+      class: 'action_cell',
+      hidden: isTablePanelOpen
+    },
+    {
+      header: '',
+      class: 'artifacts_extra-small align-right',
+      hidden: !isTablePanelOpen
+    }
+  ]
+}
+
+const getFeaturesTablePanel = () => {
+  return <FeaturesTablePanel />
+}
+
 export const tabs = [
   { id: 'feature-sets', label: 'Feature sets', preview: true },
   { id: 'features', label: 'Features', preview: true },
@@ -244,7 +265,9 @@ const generateActionsMenu = tab => []
 export const generatePageData = (
   pageTab,
   handleRequestOnExpand,
-  handleRemoveRequestData
+  handleRemoveRequestData,
+  getPopUpTemplate,
+  isTablePanelOpen
 ) => {
   let data = {
     detailsMenu: [],
@@ -262,11 +285,12 @@ export const generatePageData = (
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
     data.filters = featuresFilters
-    data.tableHeaders = featuresTableHeaders
+    data.tableHeaders = generateFeaturesTableHeaders(isTablePanelOpen)
+    data.tablePanel = getFeaturesTablePanel()
     data.filterMenuActionButton = {
       label: 'Add to feature vector',
       variant: 'secondary',
-      onClick: event => {}
+      getCustomTemplate: getPopUpTemplate
     }
     data.handleRequestOnExpand = handleRequestOnExpand
     data.mainRowItemsCount = 2
