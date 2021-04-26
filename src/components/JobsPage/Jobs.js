@@ -290,13 +290,15 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    refreshJobs()
+    if (match.params.pageTab === SCHEDULE_TAB) {
+      refreshJobs()
+    }
 
     return () => {
       setSelectedJob({})
       setJobs([])
     }
-  }, [getWorkflows, match.params.pageTab, refreshJobs])
+  }, [match.params.pageTab, refreshJobs])
 
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {

@@ -22,7 +22,8 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   KEY_CODES,
-  MODELS_PAGE
+  MODELS_PAGE,
+  MONITOR_TAB
 } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
 import { selectOptions, filterTreeOptions } from './filterMenu.settings'
@@ -87,6 +88,17 @@ const FilterMenu = ({
       })
     }
   }, [dispatch, filters, match.params.projectName])
+
+  useEffect(() => {
+    if (match.params.pageTab === MONITOR_TAB) {
+      const currentDate = new Date()
+      const yesterdayDate = new Date()
+
+      yesterdayDate.setDate(currentDate.getDate() - 1)
+      onChange({ dates: [yesterdayDate, currentDate] })
+      setDates([yesterdayDate, currentDate])
+    }
+  }, [match.params.pageTab, onChange])
 
   const applyChanges = () => {
     if (match.params.jobId || match.params.name) {
