@@ -169,7 +169,7 @@ const AddToFeatureVectorPopUp = ({
               className="project-name"
               floatingLabel
               options={projectsList}
-              label="Projects"
+              label="Project name"
               search
               selectedId={selectedProject}
               onClick={onSelectProject}
