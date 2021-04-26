@@ -1,9 +1,9 @@
 import { roundFloats } from '../../utils/roundFloats'
 
 export const generateDriftAnalysis = (measures = {}) => {
-  const currentStats = measures.current_stats
-  const driftMeasures = measures.drift_measures
-  const featureStats = measures.feature_stats
+  const currentStats = measures?.current_stats ?? {}
+  const driftMeasures = measures?.drift_measures ?? {}
+  const featureStats = measures?.feature_stats ?? {}
 
   const tableHeaders = [
     {
@@ -71,12 +71,12 @@ export const generateDriftAnalysis = (measures = {}) => {
         className: 'features-analysis__table-cell_big',
         contentArray: [
           {
-            value: roundFloats(value.mean, 2) ?? '-',
+            value: roundFloats(value?.mean, 2) ?? '-',
             type: 'text',
             className: 'features-analysis__table-cell_small'
           },
           {
-            value: roundFloats(currentStats[key].mean, 2) ?? '-',
+            value: roundFloats(currentStats[key]?.mean, 2) ?? '-',
             type: 'text',
             className: 'features-analysis__table-cell_small'
           }
@@ -86,12 +86,12 @@ export const generateDriftAnalysis = (measures = {}) => {
         className: 'features-analysis__table-cell_big',
         contentArray: [
           {
-            value: roundFloats(value.std, 2) ?? '-',
+            value: roundFloats(value?.std, 2) ?? '-',
             type: 'text',
             className: 'features-analysis__table-cell_small'
           },
           {
-            value: roundFloats(currentStats[key].std, 2) ?? '-',
+            value: roundFloats(currentStats[key]?.std, 2) ?? '-',
             type: 'text',
             className: 'features-analysis__table-cell_small'
           }
@@ -101,12 +101,12 @@ export const generateDriftAnalysis = (measures = {}) => {
         className: 'features-analysis__table-cell_big',
         contentArray: [
           {
-            value: roundFloats(value.min, 2) ?? '-',
+            value: roundFloats(value?.min, 2) ?? '-',
             type: 'text',
             className: 'features-analysis__table-cell_small'
           },
           {
-            value: roundFloats(currentStats[key].min, 2) ?? '-',
+            value: roundFloats(currentStats[key]?.min, 2) ?? '-',
             type: 'text',
             className: 'features-analysis__table-cell_small'
           }
@@ -116,29 +116,29 @@ export const generateDriftAnalysis = (measures = {}) => {
         className: 'features-analysis__table-cell_big',
         contentArray: [
           {
-            value: roundFloats(value.max, 2) ?? '-',
+            value: roundFloats(value?.max, 2) ?? '-',
             type: 'text',
             className: 'features-analysis__table-cell_small'
           },
           {
-            value: roundFloats(currentStats[key].max, 2) ?? '-',
+            value: roundFloats(currentStats[key]?.max, 2) ?? '-',
             type: 'text',
             className: 'features-analysis__table-cell_small'
           }
         ]
       },
       tvd: {
-        value: roundFloats(driftMeasures[key].tvd, 2) ?? '-',
+        value: roundFloats(driftMeasures[key]?.tvd, 2) ?? '-',
         type: 'text',
         className: 'features-analysis__table-cell_small'
       },
       hellinger: {
-        value: roundFloats(driftMeasures[key].hellinger, 2) ?? '-',
+        value: roundFloats(driftMeasures[key]?.hellinger, 2) ?? '-',
         type: 'text',
         className: 'features-analysis__table-cell_medium'
       },
       kld: {
-        value: roundFloats(driftMeasures[key].kld, 2) ?? '-',
+        value: roundFloats(driftMeasures[key]?.kld, 2) ?? '-',
         type: 'text',
         className: 'features-analysis__table-cell_small'
       },
@@ -146,13 +146,13 @@ export const generateDriftAnalysis = (measures = {}) => {
         className: 'features-analysis__table-cell_huge',
         contentArray: [
           {
-            value: value.hist ?? [[], []],
+            value: value?.hist ?? [[], []],
             type: 'chart',
             className:
               'features-analysis__table-cell_medium features-analysis__table-cell-chart'
           },
           {
-            value: currentStats[key].hist ?? [[], []],
+            value: currentStats[key]?.hist ?? [[], []],
             type: 'chart',
             className:
               'features-analysis__table-cell_medium features-analysis__table-cell-chart'

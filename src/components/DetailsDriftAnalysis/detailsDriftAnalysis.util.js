@@ -1,6 +1,7 @@
 import { roundFloats } from '../../utils/roundFloats'
 
-export const generateDriftAnalysis = (measures = {}) => {
+export const generateDriftAnalysis = measures => {
+  measures ??= {}
   const tableHeaders = [
     { value: 'Metric', className: 'drift-analysis__table-cell_big' },
     { value: 'TVD', className: 'drift-analysis__table-cell_medium' },
