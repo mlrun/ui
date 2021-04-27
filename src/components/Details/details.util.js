@@ -231,7 +231,8 @@ export const renderContent = (
   detailsDispatch,
   selectedItem,
   pageData,
-  handlePreview
+  handlePreview,
+  detailsStore
 ) => {
   switch (match.params.tab?.toUpperCase()) {
     case DETAILS_OVERVIEW_TAB:
