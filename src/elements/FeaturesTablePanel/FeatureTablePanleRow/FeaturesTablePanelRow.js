@@ -2,6 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import Tooltip from '../../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../TooltipTemplate/TextTooltipTemplate'
+
 import { ReactComponent as Delete } from '../../../images/delete.svg'
 import { ReactComponent as Target } from '../../../images/ic_target-with-dart.svg'
 import { ReactComponent as CrossedTarget } from '../../../images/ic_target-with-arrow-unset.svg'
@@ -41,38 +44,44 @@ const FeaturesTablePanelRow = ({
       <div className="feature-row__actions">
         {!labelFeature && (
           <div className={`action set-as-label ${actionClassNames}`}>
-            <Target
-              onClick={() =>
-                isEditEnabled && toggleLabelFeature(feature.originalTemplate)
-              }
-            />
+            <Tooltip template={<TextTooltipTemplate text="Set as label" />}>
+              <Target
+                onClick={() =>
+                  isEditEnabled && toggleLabelFeature(feature.originalTemplate)
+                }
+              />
+            </Tooltip>
           </div>
         )}
         {labelFeature === feature.feature ||
           (labelFeature === feature.originalTemplate && (
             <div className={`action unset-as-label ${actionClassNames}`}>
-              <CrossedTarget
-                onClick={() =>
-                  isEditEnabled && toggleLabelFeature(labelFeature)
-                }
-              />
+              <Tooltip template={<TextTooltipTemplate text="Unset as label" />}>
+                <CrossedTarget
+                  onClick={() =>
+                    isEditEnabled && toggleLabelFeature(labelFeature)
+                  }
+                />
+              </Tooltip>
             </div>
           ))}
         <div className={`action remove ${actionClassNames}`}>
-          <Delete
-            onClick={() => {
-              if (isEditEnabled) {
-                if (
-                  labelFeature === feature.feature ||
-                  labelFeature === feature.originalTemplate
-                ) {
-                  toggleLabelFeature(labelFeature)
-                }
+          <Tooltip template={<TextTooltipTemplate text="Remove from vector" />}>
+            <Delete
+              onClick={() => {
+                if (isEditEnabled) {
+                  if (
+                    labelFeature === feature.feature ||
+                    labelFeature === feature.originalTemplate
+                  ) {
+                    toggleLabelFeature(labelFeature)
+                  }
 
-                deleteFeature(feature.feature)
-              }
-            }}
-          />
+                  deleteFeature(feature.feature)
+                }
+              }}
+            />
+          </Tooltip>
         </div>
       </div>
     </div>
