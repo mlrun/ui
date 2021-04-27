@@ -38,7 +38,7 @@ const Input = React.forwardRef(
     ref
   ) => {
     const [inputIsFocused, setInputIsFocused] = useState(false)
-    const [typedValue, setTypedValue] = useState(value ?? '')
+    const [typedValue, setTypedValue] = useState('')
     const input = React.createRef()
     const inputClassNames = classnames(
       'input',
@@ -57,6 +57,10 @@ const Input = React.forwardRef(
       infoLabel && 'input__label_info'
     )
     const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
+
+    useEffect(() => {
+      setTypedValue(String(value ?? '')) // convert from number to string
+    }, [value])
 
     useEffect(() => {
       if (focused) {

@@ -185,7 +185,10 @@ export const generateTableData = (
   const [{ limits, requests }] = getResources(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
 
-  if (limits?.memory.match(/[a-zA-Z]/) || requests?.memory.match(/[a-zA-Z]/)) {
+  if (
+    limits?.memory?.match(/[a-zA-Z]/) ||
+    requests?.memory?.match(/[a-zA-Z]/)
+  ) {
     const limitsMemoryUnit = limits.memory.replace(/\d+/g, '') + 'B'
     const requestsMemoryUnit = requests.memory.replace(/\d+/g, '') + 'B'
 
@@ -193,19 +196,19 @@ export const generateTableData = (
       type: panelActions.SET_MEMORY_UNIT,
       payload: limitsMemoryUnit || requestsMemoryUnit
     })
-  } else if (limits?.memory.length > 0 || requests?.memory.length > 0) {
+  } else if (limits?.memory?.length > 0 || requests?.memory?.length > 0) {
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
       payload: 'Bytes'
     })
   }
 
-  if (limits?.cpu.match(/m/) || requests?.cpu.match(/m/)) {
+  if (limits?.cpu?.match(/m/) || requests?.cpu?.match(/m/)) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'millicpu'
     })
-  } else if (limits?.cpu.length > 0 || requests?.cpu.length > 0) {
+  } else if (limits?.cpu?.length > 0 || requests?.cpu?.length > 0) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'cpu'
