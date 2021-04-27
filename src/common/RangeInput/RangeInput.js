@@ -72,7 +72,7 @@ RangeInput.propTypes = {
   max: PropTypes.number,
   min: PropTypes.number,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 }
 
 export default React.memo(RangeInput)
