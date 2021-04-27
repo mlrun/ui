@@ -1,0 +1,57 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.pods {
+  display: flex;
+  padding: 0 20px 0 0;
+
+  .pods__error {
+    font-size: 20px;
+  }
+
+  .pods__table {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    .pods__table-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .pods__table-row {
+      display: flex;
+      align-items: center;
+      min-width: 150px;
+      height: 55px;
+      padding: 0 20px;
+      border-bottom: $secondaryBorder;
+
+      &:hover {
+        background-color: $alabaster;
+      }
+
+      .link {
+        margin-right: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .pods__status {
+    display: flex;
+    flex: 1.5;
+    align-items: center;
+    margin-left: 10px;
+
+    .pods__status-view {
+      display: flex;
+      width: 100%;
+    }
+  }
+
+  .json-content {
+    white-space: pre-wrap;
+  }
+}

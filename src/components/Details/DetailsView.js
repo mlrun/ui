@@ -87,17 +87,9 @@ const DetailsView = React.forwardRef(
               </Tooltip>
             )}
             {!isEmpty(detailsStore.pods.podsPending) && (
-              <Tooltip
-                template={
-                  <TextTooltipTemplate
-                    text={<div>{detailsStore.pods.podsTooltip}</div>}
-                  />
-                }
-              >
-                <span>
-                  {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
-                </span>
-              </Tooltip>
+              <span>
+                {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
+              </span>
             )}
             {detailsStore.pods.error && (
               <span className="item-header__pods-error">
