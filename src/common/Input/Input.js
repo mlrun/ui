@@ -82,7 +82,7 @@ const Input = React.forwardRef(
       ) {
         setInputIsFocused(false)
 
-        onBlur()
+        onBlur(event)
       }
     }
 

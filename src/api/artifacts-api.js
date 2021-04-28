@@ -126,6 +126,14 @@ export default {
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data),
+  startIngest: (project, featureSet, uid, source, targets) =>
+    mainHttpClient.post(
+      `/projects/${project}/feature-sets/${featureSet}/references/${uid}/ingest`,
+      {
+        source: { ...source, name: 'source' },
+        targets
+      }
+    ),
   updateFeatureStoreData: (projectName, featureData, tag, data, pageTab) =>
     mainHttpClient.patch(
       `/projects/${projectName}/${pageTab}/${featureData}/references/${tag}`,

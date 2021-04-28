@@ -6,6 +6,11 @@
   justify-content: space-between;
   width: 100%;
 
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
+
   .radio-button {
     display: inline-flex;
     align-items: center;
@@ -45,6 +50,11 @@
           display: block;
         }
       }
+    }
+
+    &__info {
+      margin: 10px 25px;
+      color: $topaz;
     }
   }
 

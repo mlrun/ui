@@ -14,7 +14,7 @@ export const typeOptions = [
 
 export const tableHeaders = [
   {
-    label: 'Entitiy name'
+    label: 'Entity name'
   },
   {
     label: 'Type'

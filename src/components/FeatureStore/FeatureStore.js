@@ -45,12 +45,14 @@ const FeatureStore = ({
   fetchFeatures,
   history,
   match,
+  removeArtifactsError,
   removeDataSet,
   removeDataSets,
   removeFeature,
   removeFeatureSets,
   removeFeatureVector,
   removeFeatureVectors,
+  removeNewFeatureSet,
   setArtifactFilter,
   setNotification,
   tableStore,
@@ -343,6 +345,7 @@ const FeatureStore = ({
 
   const createFeatureSetSuccess = () => {
     setFeatureSetsPanelIsOpen(false)
+    removeNewFeatureSet()
 
     return fetchData({ project: match.params.projectName, tag: 'latest' }).then(
       () => {
@@ -353,6 +356,15 @@ const FeatureStore = ({
         })
       }
     )
+  }
+
+  const closePanel = () => {
+    setFeatureSetsPanelIsOpen(false)
+    removeNewFeatureSet()
+
+    if (artifactsStore.error) {
+      removeArtifactsError()
+    }
   }
 
   return (
@@ -391,7 +403,7 @@ const FeatureStore = ({
       )}
       {featureSetsPanelIsOpen && (
         <FeatureSetsPanel
-          closePanel={() => setFeatureSetsPanelIsOpen(false)}
+          closePanel={closePanel}
           createFeatureSetSuccess={createFeatureSetSuccess}
           project={match.params.projectName}
         />

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import './radioButtons.scss'
-import classnames from 'classnames'
 
 const RadioButtons = ({
   className,
@@ -31,17 +31,22 @@ const RadioButtons = ({
   return (
     <div className={radioButtonsClassNames}>
       {elements.map((element, index) => (
-        <label className="radio-button" key={index}>
-          <input
-            type="radio"
-            value={element.value}
-            disabled={disabled}
-            checked={checked === element.value}
-            onChange={onChange}
-          />
-          <span className="checkmark" />
-          <span>{element.label}</span>
-        </label>
+        <div key={index} className="radio-buttons__content">
+          <label className="radio-button">
+            <input
+              type="radio"
+              value={element.value}
+              disabled={disabled}
+              checked={checked === element.value}
+              onChange={onChange}
+            />
+            <span className="checkmark" />
+            <span className="radio-button__label">{element.label}</span>
+          </label>
+          {element.info && (
+            <span className="radio-button__info">{element.info}</span>
+          )}
+        </div>
       ))}
     </div>
   )
@@ -58,7 +63,13 @@ RadioButtons.defaultProps = {
 RadioButtons.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  elements: PropTypes.array.isRequired,
+  elements: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+      info: PropTypes.string
+    }).isRequired
+  ).isRequired,
   onChangeCallback: PropTypes.func.isRequired,
   selectedValue: PropTypes.string
 }

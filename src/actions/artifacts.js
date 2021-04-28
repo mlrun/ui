@@ -1,7 +1,9 @@
 import artifactsApi from '../api/artifacts-api'
 import {
   CLOSE_ARTIFACT_PREVIEW,
+  CREATE_NEW_FEATURE_SET_BEGIN,
   CREATE_NEW_FEATURE_SET_FAILURE,
+  CREATE_NEW_FEATURE_SET_SUCCESS,
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
@@ -44,6 +46,7 @@ import {
   REMOVE_FILES,
   REMOVE_MODEL,
   REMOVE_MODELS,
+  REMOVE_NEW_FEATURE_SET,
   SET_ARTIFACT_FILTER,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
@@ -58,7 +61,9 @@ import {
   SET_NEW_FEATURE_SET_SCHEMA_TIMESTAMP_KEY,
   SET_NEW_FEATURE_SET_TARGET,
   SET_NEW_FEATURE_SET_VERSION,
-  SHOW_ARTIFACT_PREVIEW
+  SHOW_ARTIFACT_PREVIEW,
+  START_FEATURE_SET_INGEST_BEGIN,
+  START_FEATURE_SET_INGEST_SUCCESS
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
@@ -70,13 +75,32 @@ const artifactsAction = {
     type: CLOSE_ARTIFACT_PREVIEW,
     payload: item
   }),
-  createNewFeatureSet: (data, project) => () =>
-    artifactsApi.createFeatureSet(data, project),
-  createNewFeatureVector: data => () => artifactsApi.createFeatureVector(data),
-  createNewFeatureSetError: error => ({
+  createNewFeatureSet: (data, project) => dispatch => {
+    dispatch(artifactsAction.createNewFeatureSetBegin())
+
+    return artifactsApi
+      .createFeatureSet(data, project)
+      .then(result => {
+        dispatch(artifactsAction.createNewFeatureSetSuccess())
+        return result
+      })
+      .catch(error => {
+        dispatch(artifactsAction.createNewFeatureSetFailure(error.message))
+
+        throw error
+      })
+  },
+  createNewFeatureSetBegin: () => ({
+    type: CREATE_NEW_FEATURE_SET_BEGIN
+  }),
+  createNewFeatureSetFailure: error => ({
     type: CREATE_NEW_FEATURE_SET_FAILURE,
     payload: error
   }),
+  createNewFeatureSetSuccess: () => ({
+    type: CREATE_NEW_FEATURE_SET_SUCCESS
+  }),
+  createNewFeatureVector: data => () => artifactsApi.createFeatureVector(data),
   fetchArtifacts: item => dispatch => {
     dispatch(artifactsAction.fetchArtifactsBegin())
 
@@ -447,6 +471,9 @@ const artifactsAction = {
   removeModels: () => ({
     type: REMOVE_MODELS
   }),
+  removeNewFeatureSet: () => ({
+    type: REMOVE_NEW_FEATURE_SET
+  }),
   setArtifactFilter: filter => ({
     type: SET_ARTIFACT_FILTER,
     payload: filter
@@ -506,6 +533,34 @@ const artifactsAction = {
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
+  }),
+  startFeatureSetIngest: (
+    project,
+    featureSet,
+    uid,
+    source,
+    targets
+  ) => dispatch => {
+    dispatch(artifactsAction.startFeatureSetIngestBegin())
+
+    return artifactsApi
+      .startIngest(project, featureSet, uid, source, targets)
+      .then(result => {
+        dispatch(artifactsAction.startFeatureSetIngestSuccess())
+
+        return result
+      })
+      .catch(error => {
+        dispatch(artifactsAction.createNewFeatureSetFailure(error.message))
+
+        throw error
+      })
+  },
+  startFeatureSetIngestBegin: () => ({
+    type: START_FEATURE_SET_INGEST_BEGIN
+  }),
+  startFeatureSetIngestSuccess: () => ({
+    type: START_FEATURE_SET_INGEST_SUCCESS
   }),
   updateFeatureStoreData: (
     projectName,

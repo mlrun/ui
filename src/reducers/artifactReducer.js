@@ -1,6 +1,8 @@
 import {
   CLOSE_ARTIFACT_PREVIEW,
+  CREATE_NEW_FEATURE_SET_BEGIN,
   CREATE_NEW_FEATURE_SET_FAILURE,
+  CREATE_NEW_FEATURE_SET_SUCCESS,
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
@@ -43,6 +45,7 @@ import {
   REMOVE_FILES,
   REMOVE_MODEL,
   REMOVE_MODELS,
+  REMOVE_NEW_FEATURE_SET,
   SET_ARTIFACT_FILTER,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
@@ -57,7 +60,9 @@ import {
   SET_NEW_FEATURE_SET_SCHEMA_TIMESTAMP_KEY,
   SET_NEW_FEATURE_SET_TARGET,
   SET_NEW_FEATURE_SET_VERSION,
-  SHOW_ARTIFACT_PREVIEW
+  SHOW_ARTIFACT_PREVIEW,
+  START_FEATURE_SET_INGEST_BEGIN,
+  START_FEATURE_SET_INGEST_SUCCESS
 } from '../constants'
 
 const initialState = {
@@ -118,7 +123,7 @@ const initialState = {
         schedule: '',
         time_field: ''
       },
-      target: [],
+      targets: [],
       timestamp_key: '',
       features: []
     },
@@ -134,10 +139,22 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         preview: payload
       }
+    case CREATE_NEW_FEATURE_SET_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
     case CREATE_NEW_FEATURE_SET_FAILURE:
       return {
         ...state,
-        error: payload
+        error: payload,
+        loading: false
+      }
+    case CREATE_NEW_FEATURE_SET_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loading: false
       }
     case FETCH_ARTIFACTS_BEGIN:
       return {
@@ -480,6 +497,11 @@ export default (state = initialState, { type, payload }) => {
           ...initialState.models
         }
       }
+    case REMOVE_NEW_FEATURE_SET:
+      return {
+        ...state,
+        newFeatureSet: { ...initialState.newFeatureSet }
+      }
     case SET_ARTIFACT_FILTER:
       return {
         ...state,
@@ -631,7 +653,7 @@ export default (state = initialState, { type, payload }) => {
           ...state.newFeatureSet,
           spec: {
             ...state.newFeatureSet.spec,
-            target: payload
+            targets: payload
           }
         }
       }
@@ -650,6 +672,17 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         preview: payload
+      }
+    case START_FEATURE_SET_INGEST_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case START_FEATURE_SET_INGEST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null
       }
     default:
       return state

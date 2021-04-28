@@ -1,28 +1,31 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
 import artifactsAction from '../../actions/artifacts'
+import { TRANSFORMATIONS_DEFAULT_VALUE } from './featureSetsPanel.util'
 
 const FeatureSetsPanel = ({
   artifactsStore,
   closePanel,
   createNewFeatureSet,
-  createNewFeatureSetError,
   createFeatureSetSuccess,
   project,
-  removeArtifactsError
+  removeArtifactsError,
+  startFeatureSetIngest
 }) => {
   const [isNameValid, setNameValid] = useState(true)
   const [isVersionValid, setVersionValid] = useState(true)
   const [isUrlValid, setUrlValid] = useState(true)
+  const [transformationsValue, setTransformationsValue] = useState(
+    TRANSFORMATIONS_DEFAULT_VALUE
+  )
   const history = useHistory()
-  const dispatch = useDispatch()
 
-  const handleSave = () => {
+  const handleSave = startIngestion => {
     if (isNameValid && isVersionValid && isUrlValid) {
       if (artifactsStore.newFeatureSet.metadata.name.length === 0) {
         return setNameValid(false)
@@ -46,18 +49,34 @@ const FeatureSetsPanel = ({
           ...artifactsStore.newFeatureSet
         },
         project
-      )
-        .then(result => {
-          createFeatureSetSuccess().then(() => {
-            history.push(
-              `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
-            )
-          })
+      ).then(result => {
+        if (startIngestion) {
+          return handleStartFeatureSetIngest(result)
+        }
+
+        createFeatureSetSuccess().then(() => {
+          history.push(
+            `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
+          )
         })
-        .catch(error => {
-          dispatch(createNewFeatureSetError(error.message))
-        })
+      })
     }
+  }
+
+  const handleStartFeatureSetIngest = result => {
+    return startFeatureSetIngest(
+      project,
+      result.data.metadata.name,
+      result.data.metadata.uid,
+      result.data.spec.source,
+      result.data.spec.targets
+    ).then(() => {
+      createFeatureSetSuccess().then(() => {
+        history.push(
+          `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
+        )
+      })
+    })
   }
 
   return (
@@ -68,10 +87,13 @@ const FeatureSetsPanel = ({
       isNameValid={isNameValid}
       isUrlValid={isUrlValid}
       isVersionValid={isVersionValid}
+      loading={artifactsStore.loading}
       removeArtifactsError={removeArtifactsError}
       setNameValid={setNameValid}
       setUrlValid={setUrlValid}
       setVersionValid={setVersionValid}
+      setTransformationsValue={setTransformationsValue}
+      transformationsValue={transformationsValue}
     />
   )
 }
