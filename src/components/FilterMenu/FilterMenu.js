@@ -10,6 +10,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Button from '../../common/Button/Button'
+import DatePicker from '../../common/DatePicker/DatePicker'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
@@ -26,9 +27,11 @@ import {
   MONITOR_TAB
 } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
-import { selectOptions, filterTreeOptions } from './filterMenu.settings'
-
-import DatePicker from '../../common/DatePicker/DatePicker'
+import {
+  selectOptions,
+  filterTreeOptions,
+  initialStateFilter
+} from './filterMenu.settings'
 
 import './filterMenu.scss'
 
@@ -43,9 +46,7 @@ const FilterMenu = ({
   onChange,
   page,
   setGroupFilter,
-  setStateFilter,
   showUntagged,
-  stateFilter,
   toggleShowUntagged
 }) => {
   const [labels, setLabels] = useState('')
@@ -53,6 +54,7 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [dates, setDates] = useState(['', ''])
   const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
+  const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const history = useHistory()
   const artifactFilter = useSelector(store => store.artifactsStore.filter)
   const dispatch = useDispatch()
@@ -90,7 +92,7 @@ const FilterMenu = ({
   }, [dispatch, filters, match.params.projectName])
 
   useEffect(() => {
-    if (match.params.pageTab === MONITOR_TAB) {
+    if (match.params.pageTab === MONITOR_TAB && dates[0].length === 0) {
       const currentDate = new Date()
       const yesterdayDate = new Date()
 
@@ -98,7 +100,7 @@ const FilterMenu = ({
       onChange({ dates: [yesterdayDate, currentDate] })
       setDates([yesterdayDate, currentDate])
     }
-  }, [match.params.pageTab, onChange])
+  }, [dates, match.params.pageTab, onChange])
 
   const applyChanges = () => {
     if (match.params.jobId || match.params.name) {
@@ -129,7 +131,13 @@ const FilterMenu = ({
       })
     } else {
       page === JOBS_PAGE
-        ? onChange({ labels, name, owner, dates })
+        ? onChange({
+            labels,
+            name,
+            owner,
+            dates,
+            state: stateFilter !== initialStateFilter && stateFilter
+          })
         : onChange({ name })
     }
   }
@@ -145,6 +153,13 @@ const FilterMenu = ({
 
     if (filter.type === 'status') {
       setStateFilter(item)
+      onChange({
+        labels,
+        name,
+        owner,
+        dates,
+        state: item !== initialStateFilter && item
+      })
     } else if (filter.type === 'groupBy') {
       setGroupFilter(item)
     }
@@ -301,9 +316,7 @@ FilterMenu.defaultProps = {
   groupFilter: '',
   handleArtifactFilterTree: null,
   setGroupFilter: null,
-  setStateFilter: null,
   showUntagged: '',
-  stateFilter: '',
   toggleShowUntagged: null
 }
 
@@ -313,9 +326,7 @@ FilterMenu.propTypes = {
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,
   setGroupFilter: PropTypes.func,
-  setStateFilter: PropTypes.func,
   showUntagged: PropTypes.string,
-  stateFilter: PropTypes.string,
   toggleShowUntagged: PropTypes.func
 }
 
