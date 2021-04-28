@@ -9,6 +9,7 @@ export const selectOptions = {
     { label: 'All', id: 'all', status: 'all' },
     { label: 'Completed', id: 'completed', status: 'completed' },
     { label: 'Running', id: 'running', status: 'running' },
+    { label: 'Pending', id: 'pending', status: 'pending' },
     { label: 'Error', id: 'error', status: 'error' }
   ],
   groupBy: [
@@ -23,3 +24,5 @@ export const filterTreeOptions = [
     id: 'latest'
   }
 ]
+
+export const initialStateFilter = 'all'

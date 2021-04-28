@@ -21,7 +21,7 @@ export default {
       `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
       postData
     ),
-  getAllJobs: (project, state, filters) => {
+  getAllJobs: (project, filters) => {
     const params = {
       project
     }
@@ -34,8 +34,8 @@ export default {
       params.name = filters.name
     }
 
-    if (state) {
-      params.state = state
+    if (filters.state) {
+      params.state = filters.state
     }
 
     if (filters?.dates) {

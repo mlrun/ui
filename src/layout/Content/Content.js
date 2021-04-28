@@ -50,9 +50,7 @@ const Content = ({
   selectedItem,
   setGroupFilter,
   setLoading,
-  setStateFilter,
   showUntagged,
-  stateFilter,
   toggleShowUntagged,
   yamlContent
 }) => {
@@ -299,9 +297,7 @@ const Content = ({
             onChange={refresh}
             page={pageData.page}
             setGroupFilter={setGroupFilter}
-            setStateFilter={setStateFilter}
             showUntagged={showUntagged}
-            stateFilter={stateFilter}
             toggleShowUntagged={toggleShowUntagged}
           />
         </div>
@@ -345,9 +341,7 @@ Content.defaultProps = {
   selectedItem: {},
   setGroupFilter: () => {},
   setLoading: () => {},
-  setStateFilter: () => {},
   showUntagged: '',
-  stateFilter: null,
   toggleShowUntagged: null
 }
 
@@ -365,9 +359,7 @@ Content.propTypes = {
   selectedItem: PropTypes.shape({}),
   setGroupFilter: PropTypes.func,
   setLoading: PropTypes.func,
-  setStateFilter: PropTypes.func,
   showUntagged: PropTypes.string,
-  stateFilter: PropTypes.string,
   toggleShowUntagged: PropTypes.func,
   yamlContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
