@@ -38,7 +38,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
             status: response.status,
             url: response.config.url,
             id: Math.random(),
-            message: 'Your download was successful'
+            message: 'Downloaded successfully'
           })
         })
         .catch(() => {
@@ -47,7 +47,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
             url: item.url,
             file: item.file,
             id: Math.random(),
-            message: 'Your download was unsuccessful'
+            message: 'Failed to download'
           })
         })
     },
@@ -76,7 +76,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
             status: response.status,
             url: response.config.url,
             id: Math.random(),
-            message: 'Your download was successful'
+            message: 'Downloaded successfully'
           })
           if (downloadRef.current) {
             setDownload(false)
@@ -96,7 +96,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
             file,
             id: Math.random(),
             retry: item => retryDownload(item),
-            message: 'Your download was unsuccessful'
+            message: 'Failed to download'
           })
           if (downloadRef.current) {
             setDownload(false)
