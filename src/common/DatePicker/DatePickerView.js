@@ -43,13 +43,10 @@ const DatePickerView = React.forwardRef(
     const inputClassNames = classnames(
       'input',
       'date-picker__input',
-      !isValueEmpty && 'active-input',
+      'active-input',
       isRange && 'long-input'
     )
-    const inputLabelClassNames = classnames(
-      'input__label',
-      !isValueEmpty && 'active-label'
-    )
+    const inputLabelClassNames = classnames('input__label', 'active-label')
 
     return (
       <>
@@ -69,7 +66,10 @@ const DatePickerView = React.forwardRef(
             value={valueDatePickerInput}
           />
           <span className={inputLabelClassNames}>
-            {isValueEmpty ? 'Any time' : label}
+            {label}
+            {isValueEmpty && (
+              <span className="input__label-value">&nbsp;Any time</span>
+            )}
           </span>
         </div>
         {isDatePickerOptionsOpened && (

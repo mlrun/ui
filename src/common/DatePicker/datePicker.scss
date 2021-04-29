@@ -19,6 +19,12 @@
     }
   }
 
+  .input__label {
+    .input__label-value {
+      font-size: 14px;
+    }
+  }
+
   .date-picker__pop-up {
     position: absolute;
     z-index: 5;
