@@ -7,11 +7,7 @@ import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import projectActions from '../../actions/projects'
 import detailsActions from '../../actions/details'
-import {
-  generatePageData,
-  initialStateFilter,
-  initialGroupFilter
-} from './jobsData'
+import { generatePageData, initialGroupFilter } from './jobsData'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { MONITOR_TAB, SCHEDULE_TAB } from '../../constants'
 
@@ -44,7 +40,6 @@ const Jobs = ({
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
   const [selectedJob, setSelectedJob] = useState({})
-  const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const [groupFilter, setGroupFilter] = useState(initialGroupFilter)
   const [editableItem, setEditableItem] = useState(null)
 
@@ -97,7 +92,7 @@ const Jobs = ({
     setNotification({
       status: 200,
       id: Math.random(),
-      message: 'Job is successfully rerunning'
+      message: 'Job started successfully'
     })
   }
 
@@ -176,7 +171,7 @@ const Jobs = ({
           status: 400,
           id: Math.random(),
           retry: () => handleAbortJob(job),
-          message: 'Aborting job is failed'
+          message: 'Aborting job failed'
         })
       })
     setConfirmData(null)
@@ -215,7 +210,6 @@ const Jobs = ({
     filters => {
       fetchJobs(
         match.params.projectName,
-        stateFilter !== initialStateFilter && stateFilter,
         filters,
         match.params.pageTab === SCHEDULE_TAB
       ).then(jobs => {
@@ -262,7 +256,7 @@ const Jobs = ({
         return setJobs(newJobs)
       })
     },
-    [fetchJobs, match.params.pageTab, match.params.projectName, stateFilter]
+    [fetchJobs, match.params.pageTab, match.params.projectName]
   )
 
   const getWorkflows = useCallback(() => {
@@ -342,10 +336,6 @@ const Jobs = ({
     setSelectedJob({})
   }
 
-  const onStateFilterChange = id => {
-    setStateFilter(id || initialStateFilter)
-  }
-
   const onEditJob = (event, postData) => {
     editJob(
       { scheduled_object: postData, cron_trigger: postData.schedule },
@@ -401,8 +391,6 @@ const Jobs = ({
         selectedItem={selectedJob}
         setGroupFilter={setGroupFilter}
         setLoading={setLoading}
-        setStateFilter={onStateFilterChange}
-        stateFilter={stateFilter}
         yamlContent={jobsStore.jobs}
       />
       {editableItem && (

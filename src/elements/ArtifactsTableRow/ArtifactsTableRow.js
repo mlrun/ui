@@ -31,9 +31,10 @@ const ArtifactsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    ((selectedItem?.db_key &&
-      selectedItem?.db_key === content[index]?.db_key) ||
-      (selectedItem?.name && selectedItem?.name === content[index]?.name) ||
+    ((selectedItem?.db_key && selectedItem?.db_key === rowItem.key.value) ||
+      (selectedItem?.name &&
+        selectedItem.name === rowItem.key.value &&
+        selectedItem.tag === rowItem.version.value) ||
       (selectedItem?.metadata &&
         selectedItem?.metadata?.uid === content[index]?.metadata?.uid)) &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -110,7 +111,8 @@ const ArtifactsTableRow = ({
                 selectedItem?.db_key === currentItem?.db_key &&
                 selectedItem.tag === currentItem?.tag) ||
                 (selectedItem?.name &&
-                  selectedItem?.name === currentItem?.name)) &&
+                  selectedItem?.name === currentItem?.name &&
+                  selectedItem?.tag === currentItem?.tag)) &&
                 'row_active'
             )
 
@@ -188,7 +190,7 @@ const ArtifactsTableRow = ({
                   }
                   handleExpandRow={handleExpandRow}
                   data={value}
-                  item={content[index]}
+                  item={findCurrentItem(rowItem)}
                   key={Math.random() + i}
                   link={value.getLink?.(
                     match.params.tab ?? DETAILS_OVERVIEW_TAB

@@ -111,7 +111,6 @@ export const filters = [
   { type: 'labels', label: 'Labels:' },
   { type: 'date-range-time', label: 'Start time:' }
 ]
-export const initialStateFilter = 'all'
 export const initialGroupFilter = 'name'
 export const tabs = [
   { id: 'monitor', label: 'Monitor' },

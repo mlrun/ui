@@ -25,6 +25,7 @@ export const generateGroupLatestItem = (page, tableContent, pageTab) =>
       : Array.isArray(group) &&
         [FEATURE_STORE_PAGE].includes(page) &&
         ![FEATURES_TAB].includes(pageTab)
-      ? group.find(groupItem => groupItem.version?.value === 'latest')
+      ? group.find(groupItem => groupItem.version?.value === 'latest') ??
+        group[0]
       : group[0]
   )
