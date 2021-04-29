@@ -92,7 +92,7 @@ const FilterMenu = ({
   }, [dispatch, filters, match.params.projectName])
 
   useEffect(() => {
-    if (match.params.pageTab === MONITOR_TAB && dates[0].length === 0) {
+    if (match.params.pageTab === MONITOR_TAB) {
       const currentDate = new Date()
       const yesterdayDate = new Date()
 
@@ -100,7 +100,7 @@ const FilterMenu = ({
       onChange({ dates: [yesterdayDate, currentDate] })
       setDates([yesterdayDate, currentDate])
     }
-  }, [dates, match.params.pageTab, onChange])
+  }, [match.params.pageTab, onChange])
 
   const applyChanges = () => {
     if (match.params.jobId || match.params.name) {
