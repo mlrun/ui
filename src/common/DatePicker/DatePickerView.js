@@ -19,12 +19,12 @@ const DatePickerView = React.forwardRef(
       isCalendarInvalid,
       isDatePickerOpened,
       isDatePickerOptionsOpened,
-      isOptionsEnabled,
       isRange,
       isRangeDateValid,
       isSameDate,
       isTime,
       isTopPosition,
+      isValueEmpty,
       label,
       months,
       onApplyChanges,
@@ -43,12 +43,12 @@ const DatePickerView = React.forwardRef(
     const inputClassNames = classnames(
       'input',
       'date-picker__input',
-      !isOptionsEnabled && 'active-input',
+      !isValueEmpty && 'active-input',
       isRange && 'long-input'
     )
     const inputLabelClassNames = classnames(
       'input__label',
-      !isOptionsEnabled && 'active-label'
+      !isValueEmpty && 'active-label'
     )
 
     return (
@@ -62,14 +62,14 @@ const DatePickerView = React.forwardRef(
             className={inputClassNames}
             keepCharPositions={true}
             mask={dateMask}
-            disabled={isOptionsEnabled}
-            showMask={!isOptionsEnabled}
+            disabled={isValueEmpty}
+            showMask={!isValueEmpty}
             onChange={onInputChange}
             pipe={autoCorrectedDatePipe}
             value={valueDatePickerInput}
           />
           <span className={inputLabelClassNames}>
-            {isOptionsEnabled ? 'Any time' : label}
+            {isValueEmpty ? 'Any time' : label}
           </span>
         </div>
         {isDatePickerOptionsOpened && (
@@ -223,12 +223,12 @@ DatePickerView.propTypes = {
   isCalendarInvalid: PropTypes.bool.isRequired,
   isDatePickerOpened: PropTypes.bool.isRequired,
   isDatePickerOptionsOpened: PropTypes.bool.isRequired,
-  isOptionsEnabled: PropTypes.bool.isRequired,
   isRangeDateValid: PropTypes.func.isRequired,
   isRange: PropTypes.bool.isRequired,
   isSameDate: PropTypes.func.isRequired,
   isTime: PropTypes.bool.isRequired,
   isTopPosition: PropTypes.bool.isRequired,
+  isValueEmpty: PropTypes.bool.isRequired,
   label: PropTypes.string,
   months: PropTypes.array.isRequired,
   onApplyChanges: PropTypes.func.isRequired,

@@ -19,6 +19,11 @@ export const months = [
 
 export const datePickerOptions = [
   {
+    id: 'anyTime',
+    label: 'Any time',
+    handler: () => ['', '']
+  },
+  {
     id: 'pastHour',
     label: 'Past hour',
     handler: () => {

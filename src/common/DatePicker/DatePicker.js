@@ -49,10 +49,10 @@ const DatePicker = ({
   const [isDatePickerOptionsOpened, setIsDatePickerOptionsOpened] = useState(
     false
   )
-  const [isOptionsEnabled, setIsOptionsEnabled] = useState(withOptions)
   const [isRange] = useState(type.includes('range'))
   const [isTime] = useState(type.includes('time'))
   const [isTopPosition, setIsTopPosition] = useState(false)
+  const [isValueEmpty, setIsValueEmpty] = useState(true)
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
     formatDate(isRange, isTime, splitCharacter, date, dateTo)
   )
@@ -145,18 +145,16 @@ const DatePicker = ({
   }, [dateTo])
 
   useEffect(() => {
-    if (date) {
-      setValueDatePickerInput(
-        formatDate(isRange, isTime, splitCharacter, date, dateTo)
-      )
-    }
+    setValueDatePickerInput(
+      formatDate(isRange, isTime, splitCharacter, date, dateTo)
+    )
   }, [date, dateTo, isRange, isTime, splitCharacter])
 
   useEffect(() => {
-    const isValueEmpty = getInputValueValidity(valueDatePickerInput)
-    setIsOptionsEnabled(withOptions && isValueEmpty)
+    const isInputValueEmpty = getInputValueValidity(valueDatePickerInput)
+    setIsValueEmpty(withOptions && isInputValueEmpty)
 
-    isValueEmpty && setIsDatePickerOpened(false)
+    isInputValueEmpty && setIsDatePickerOpened(false)
   }, [getInputValueValidity, valueDatePickerInput, withOptions])
 
   useEffect(() => {
@@ -293,7 +291,7 @@ const DatePicker = ({
 
   const onInputDatePickerChange = event => {
     setValueDatePickerInput(event.target.value)
-    !isDatePickerOpened && setIsDatePickerOpened(true)
+    isDatePickerOptionsOpened && setIsDatePickerOptionsOpened(false)
     let isValueEmpty = getInputValueValidity(event.target.value)
 
     if (new RegExp(dateRegEx).test(event.target.value) || isValueEmpty) {
@@ -310,7 +308,7 @@ const DatePicker = ({
   }
 
   const onInputDatePickerClick = () => {
-    if (isOptionsEnabled && !isDatePickerOpened) {
+    if (withOptions && !isDatePickerOpened) {
       setIsDatePickerOptionsOpened(true)
     } else {
       setIsDatePickerOpened(true)
@@ -393,12 +391,12 @@ const DatePicker = ({
         isCalendarInvalid={isCalendarInvalid}
         isDatePickerOpened={isDatePickerOpened}
         isDatePickerOptionsOpened={isDatePickerOptionsOpened}
-        isOptionsEnabled={isOptionsEnabled}
         isRange={isRange}
         isRangeDateValid={isRangeDateValid}
         isSameDate={isSameDate}
         isTime={isTime}
         isTopPosition={isTopPosition}
+        isValueEmpty={isValueEmpty}
         label={label}
         months={months}
         onApplyChanges={onDatePickerChange}
@@ -419,7 +417,8 @@ const DatePicker = ({
 DatePicker.defaultProps = {
   label: 'Date',
   splitCharacter: '/',
-  type: 'date'
+  type: 'date',
+  withOptions: false
 }
 
 DatePicker.propTypes = {
@@ -429,7 +428,8 @@ DatePicker.propTypes = {
   label: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   splitCharacter: PropTypes.oneOf(['/', '.']),
-  type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time'])
+  type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time']),
+  withOptions: PropTypes.bool
 }
 
 export default React.memo(DatePicker, (prev, next) => prev.date === next.date)
