@@ -11,6 +11,7 @@ module.exports = function(app) {
           'x-v3io-session-key',
           process.env.REACT_APP_MLRUN_V3IO_ACCESS_KEY
         )
+        proxyReq.setHeader('x-remote-user', 'admin')
       }
     })
   )

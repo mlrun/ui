@@ -18,10 +18,10 @@ const FeatureSetsPanelTargetStore = ({
   })
 
   const handleSelectTargetKind = kindId => {
-    let newTarget = artifactsStore.newFeatureSet.spec.target
+    let newTargets = artifactsStore.newFeatureSet.spec.targets
 
     if (selectedTargetKind.find(kind => kind === kindId)) {
-      newTarget = newTarget.filter(
+      newTargets = newTargets.filter(
         kind => kind.name !== checkboxModels[kindId].data.name
       )
       setSelectedTargetKind(state => state.filter(kind => kind !== kindId))
@@ -30,7 +30,7 @@ const FeatureSetsPanelTargetStore = ({
         setOtherTargetExists(false)
       }
     } else {
-      newTarget.push(checkboxModels[kindId].data)
+      newTargets.push(checkboxModels[kindId].data)
       setSelectedTargetKind(state => [...state, kindId])
 
       if (kindId === checkboxModels.other.id) {
@@ -38,12 +38,12 @@ const FeatureSetsPanelTargetStore = ({
       }
     }
 
-    setNewFeatureSetTarget(newTarget)
+    setNewFeatureSetTarget(newTargets)
   }
 
   const handleOtherKindPathOnBlur = event => {
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.target.map(targetKind => {
+      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === 'other') {
           targetKind.path = event.target.value
         }
@@ -56,7 +56,7 @@ const FeatureSetsPanelTargetStore = ({
   const handleOtherKindTypeChange = kind => {
     setOtherKindData(state => ({ ...state, kind }))
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.target.map(targetKind => {
+      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === 'other') {
           targetKind.kind = kind
         }

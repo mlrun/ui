@@ -114,8 +114,8 @@ const DetailsTransformations = ({ selectedItem }) => {
   }
 
   useEffect(() => {
-    setStates(cloneDeep(selectedItem.graph.states))
-  }, [selectedItem.graph.states])
+    setStates(cloneDeep(selectedItem.graph?.states))
+  }, [selectedItem.graph])
 
   useEffect(() => {
     setTargets(cloneDeep(selectedItem.targets))
