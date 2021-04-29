@@ -92,7 +92,7 @@ const Jobs = ({
     setNotification({
       status: 200,
       id: Math.random(),
-      message: 'Job is successfully rerunning'
+      message: 'Job started successfully'
     })
   }
 
@@ -171,7 +171,7 @@ const Jobs = ({
           status: 400,
           id: Math.random(),
           retry: () => handleAbortJob(job),
-          message: 'Aborting job is failed'
+          message: 'Aborting job failed'
         })
       })
     setConfirmData(null)

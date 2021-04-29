@@ -499,7 +499,7 @@ export const handleApplyDetailsChanges = (
       setNotification({
         status: 400,
         id: Math.random(),
-        message: 'Fail to update',
+        message: 'Failed to update',
         retry: handleApplyDetailsChanges
       })
     })
