@@ -12,7 +12,7 @@ import './detailsMetadata.scss'
 const DetailsMetadata = ({ selectedItem }) => {
   const { primaryKey } = selectedItem.schema ?? { primaryKey: '' }
   const metadata = generateMetadata(selectedItem, primaryKey)
-  const headers = Object.keys(metadata[0]).map(key => ({
+  const headers = Object.keys(metadata[0] ?? {}).map(key => ({
     value: key,
     visible: metadata.some(metadataItem => metadataItem[key].visible)
   }))
