@@ -17,6 +17,68 @@ export const months = [
   'December'
 ]
 
+export const datePickerOptions = [
+  {
+    id: 'pastHour',
+    label: 'Past hour',
+    handler: () => {
+      return getPastDate((fromDate, toDate) => {
+        fromDate.setHours(toDate.getHours() - 1)
+      })
+    }
+  },
+  {
+    id: 'past24hours',
+    label: 'Past 24 hours',
+    handler: () => {
+      return getPastDate((fromDate, toDate) => {
+        fromDate.setDate(toDate.getDate() - 1)
+      })
+    }
+  },
+  {
+    id: 'pastWeek',
+    label: 'Past week',
+    handler: () => {
+      return getPastDate((fromDate, toDate) => {
+        fromDate.setDate(toDate.getDate() - 7)
+      })
+    }
+  },
+  {
+    id: 'pastMonth',
+    label: 'Past month',
+    handler: () => {
+      return getPastDate((fromDate, toDate) => {
+        fromDate.setMonth(toDate.getMonth() - 1)
+      })
+    }
+  },
+  {
+    id: 'pastYear',
+    label: 'Past year',
+    handler: () => {
+      return getPastDate((fromDate, toDate) => {
+        fromDate.setFullYear(toDate.getFullYear() - 1)
+      })
+    }
+  },
+  {
+    id: 'customRange',
+    label: 'Custom range',
+    handler: null
+  }
+]
+
+const getPastDate = setDate => {
+  let fromDate = new Date()
+  let toDate = new Date()
+
+  setDate(fromDate, toDate)
+
+  return [fromDate, toDate]
+}
+
 export const formatDate = (isRange, isTime, splitCharacter, date, dateTo) => {
   if (!date) {
     return ''

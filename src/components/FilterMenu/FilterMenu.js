@@ -220,6 +220,7 @@ const FilterMenu = ({
                   date={dates[0]}
                   dateTo={dates[1]}
                   type="date-range-time"
+                  withOptions
                 />
               )
             default:

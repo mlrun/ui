@@ -7,6 +7,7 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import Button from '../Button/Button'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import TimePicker from '../TimePicker/TimePicker'
+import SelectOption from '../../elements/SelectOption/SelectOption'
 
 const DatePickerView = React.forwardRef(
   (
@@ -14,7 +15,11 @@ const DatePickerView = React.forwardRef(
       autoCorrectedDatePipe,
       config,
       dateMask,
+      datePickerOptions,
       isCalendarInvalid,
+      isDatePickerOpened,
+      isDatePickerOptionsOpened,
+      isOptionsEnabled,
       isRange,
       isRangeDateValid,
       isSameDate,
@@ -27,8 +32,8 @@ const DatePickerView = React.forwardRef(
       onInputClick,
       onNextMonth,
       onPreviousMonth,
+      onSelectOption,
       onTimeChange,
-      openDatePicker,
       setSelectedDate,
       valueDatePickerInput,
       weekDay
@@ -38,10 +43,13 @@ const DatePickerView = React.forwardRef(
     const inputClassNames = classnames(
       'input',
       'date-picker__input',
-      'active-input',
+      !isOptionsEnabled && 'active-input',
       isRange && 'long-input'
     )
-    const inputLabelClassNames = classnames('input__label', 'active-label')
+    const inputLabelClassNames = classnames(
+      'input__label',
+      !isOptionsEnabled && 'active-label'
+    )
 
     return (
       <>
@@ -54,17 +62,37 @@ const DatePickerView = React.forwardRef(
             className={inputClassNames}
             keepCharPositions={true}
             mask={dateMask}
-            showMask={true}
+            disabled={isOptionsEnabled}
+            showMask={!isOptionsEnabled}
             onChange={onInputChange}
             pipe={autoCorrectedDatePipe}
             value={valueDatePickerInput}
           />
-          <span className={inputLabelClassNames}>{label}</span>
+          <span className={inputLabelClassNames}>
+            {isOptionsEnabled ? 'Any time' : label}
+          </span>
         </div>
-        {openDatePicker && (
+        {isDatePickerOptionsOpened && (
           <div
             ref={ref}
-            className={`date-picker ${
+            className={`date-picker__pop-up ${
+              isTopPosition ? 'positionTop' : 'positionBottom'
+            }`}
+          >
+            {datePickerOptions.map(option => (
+              <SelectOption
+                item={option}
+                key={option.id}
+                onClick={() => onSelectOption(option.handler)}
+                selectType=""
+              />
+            ))}
+          </div>
+        )}
+        {isDatePickerOpened && (
+          <div
+            ref={ref}
+            className={`date-picker__pop-up date-picker ${
               isTopPosition ? 'positionTop' : 'positionBottom'
             }`}
           >
@@ -190,8 +218,12 @@ DatePickerView.propTypes = {
   autoCorrectedDatePipe: PropTypes.func.isRequired,
   config: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   dateMask: PropTypes.array.isRequired,
+  datePickerOptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   floatingLabel: PropTypes.bool,
   isCalendarInvalid: PropTypes.bool.isRequired,
+  isDatePickerOpened: PropTypes.bool.isRequired,
+  isDatePickerOptionsOpened: PropTypes.bool.isRequired,
+  isOptionsEnabled: PropTypes.bool.isRequired,
   isRangeDateValid: PropTypes.func.isRequired,
   isRange: PropTypes.bool.isRequired,
   isSameDate: PropTypes.func.isRequired,
@@ -204,8 +236,8 @@ DatePickerView.propTypes = {
   onInputClick: PropTypes.func.isRequired,
   onNextMonth: PropTypes.func.isRequired,
   onPreviousMonth: PropTypes.func.isRequired,
+  onSelectOption: PropTypes.func.isRequired,
   onTimeChange: PropTypes.func.isRequired,
-  openDatePicker: PropTypes.bool.isRequired,
   setSelectedDate: PropTypes.func.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,
   weekDay: PropTypes.array.isRequired

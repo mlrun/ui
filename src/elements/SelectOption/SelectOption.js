@@ -54,14 +54,15 @@ const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
 }
 
 SelectOption.defaultProps = {
-  onClick: () => {}
+  onClick: () => {},
+  selectType: ''
 }
 
 SelectOption.propTypes = {
   disabled: PropTypes.bool,
   item: PropTypes.shape({}).isRequired,
   onClick: PropTypes.func,
-  selectType: PropTypes.string.isRequired,
+  selectType: PropTypes.string,
   selectedId: PropTypes.string
 }
 
