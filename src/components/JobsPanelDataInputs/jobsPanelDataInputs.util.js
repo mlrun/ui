@@ -301,6 +301,7 @@ export const storePathTypes = [
 ]
 
 export const pathPlaceholders = {
+  [MLRUN_STORAGE_INPUT_PATH_SCHEME]: 'artifacts/my-project/my-artifact:my-tag',
   [S3_INPUT_PATH_SCHEME]: 'bucket/path',
   [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
   [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
