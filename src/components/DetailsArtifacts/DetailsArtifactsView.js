@@ -23,9 +23,6 @@ const DetailsArtifactsView = ({
 }) => (
   <div className="item-artifacts">
     {content.map((artifact, index) => {
-      const targetPath = `${
-        artifact.target_path.schema ? `${artifact.target_path.schema}://` : ''
-      }${artifact.target_path.path}`
       const artifactScreenLinks = {
         model: `/projects/${
           match.params.projectName
@@ -49,8 +46,10 @@ const DetailsArtifactsView = ({
               </Tooltip>
             </div>
             <div className="item-artifacts__row-item item-artifacts__row-item_long">
-              <Tooltip template={<TextTooltipTemplate text={targetPath} />}>
-                {targetPath}
+              <Tooltip
+                template={<TextTooltipTemplate text={artifact.target_path} />}
+              >
+                {artifact.target_path}
               </Tooltip>
             </div>
             <div className="item-artifacts__row-item">
@@ -82,8 +81,7 @@ const DetailsArtifactsView = ({
             <div className="item-artifacts__row-item item-artifacts__row-item_short">
               <Download
                 className="icon-download"
-                path={artifact.target_path.path}
-                schema={artifact.target_path.schema}
+                path={artifact.target_path}
                 user={artifact.user}
               />
             </div>

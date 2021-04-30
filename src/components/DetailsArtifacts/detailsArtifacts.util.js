@@ -25,27 +25,15 @@ export const getJobAccordingIteration = (
 
 export const generateContent = selectedJob => {
   return selectedJob.artifacts.map(artifact => {
-    const schema = artifact.target_path.includes('://')
-      ? artifact.target_path.replace(/:\/\/.*$/g, '')
-      : ''
     let generatedPreviewData = {
       preview: [],
       extraDataPath: ''
     }
 
     if (artifact.extra_data) {
-      generatedPreviewData = generateArtifactPreviewData(
-        artifact.extra_data,
-        schema
-      )
+      generatedPreviewData = generateArtifactPreviewData(artifact.extra_data)
     }
 
-    const target_path = {
-      schema: schema,
-      path: generatedPreviewData.extraDataPath
-        ? generatedPreviewData.extraDataPath
-        : artifact.target_path.replace(/.*:\/\//g, '')
-    }
     const generatedArtifact = {
       date: formatDatetime(selectedJob.startTime),
       key: artifact.key,
@@ -53,7 +41,7 @@ export const generateContent = selectedJob => {
       db_key: artifact.db_key,
       preview: generatedPreviewData.preview,
       size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
-      target_path: target_path,
+      target_path: artifact.target_path,
       tree: artifact.tree,
       user: selectedJob?.labels
         ?.find(item => item.match(/v3io_user|owner/g))
