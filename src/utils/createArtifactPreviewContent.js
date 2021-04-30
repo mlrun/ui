@@ -38,7 +38,7 @@ export const createArtifactPreviewContent = (res, fileFormat) => {
   } else if (res.headers['content-type'].includes('image')) {
     artifact.type = 'image'
     artifact.data = {
-      content: URL.createObjectURL(res.data)
+      content: URL.createObjectURL(new Blob([res.data]))
     }
   } else if (fileFormat === 'yaml' || fileFormat === 'yml') {
     artifact.type = 'yaml'

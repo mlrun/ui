@@ -10,8 +10,8 @@ const DetailsAnalysis = ({ artifact }) => {
   const [preview, setPreview] = useState([])
   const [noData, setNoData] = useState(false)
 
-  const getArtifactPreview = useCallback((schema, path, user, fileFormat) => {
-    return api.getArtifactPreview(schema, path, user, fileFormat).then(res => {
+  const getArtifactPreview = useCallback((path, user, fileFormat) => {
+    return api.getArtifactPreview(path, user, fileFormat).then(res => {
       return createArtifactPreviewContent(res, fileFormat)
     })
   }, [])
@@ -19,9 +19,9 @@ const DetailsAnalysis = ({ artifact }) => {
   const fetchPreviewFromAnalysis = useCallback(() => {
     Object.entries(artifact.analysis).forEach(([key, value]) => {
       getArtifactPreview(
-        value.replace(/:\/\/.*$/g, '://'),
-        value.replace(/.*:\/\//g, ''),
-        artifact.user || artifact.producer?.owner,
+        value,
+        value.startsWith('/User') &&
+          (artifact.user || artifact.producer?.owner),
         value.replace(/.*\./g, '')
       )
         .then(content => {

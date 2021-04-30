@@ -31,9 +31,13 @@ export default {
       `/projects/${data.metadata.project}/feature-vectors`,
       data
     ),
-  getArtifactPreview: (schema, path, user, fileFormat) => {
+  getArtifactPreview: (path, user, fileFormat) => {
     const config = {
-      params: schema ? { schema, path, user } : { path, user }
+      params: { path }
+    }
+
+    if (user) {
+      config.params.user = user
     }
 
     if (['png', 'jpg', 'jpeg'].includes(fileFormat)) {
