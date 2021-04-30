@@ -79,9 +79,7 @@ const DetailsInfoItem = React.forwardRef(
         </div>
       )
     } else if (!isEmpty(target_path)) {
-      const path = `${target_path.schema ? `${target_path.schema}://` : ''}${
-        target_path.path
-      }${target_path.modelFile ? target_path.modelFile : ''}`
+      const path = `${target_path}${target_path.modelFile ?? ''}`
       return (
         <Tooltip
           className="details-item__data details-item__path"
@@ -183,7 +181,7 @@ DetailsInfoItem.defaultProps = {
   match: {},
   onClick: null,
   state: '',
-  target_path: {}
+  target_path: ''
 }
 
 DetailsInfoItem.propTypes = {
@@ -203,7 +201,7 @@ DetailsInfoItem.propTypes = {
   match: PropTypes.shape({}),
   onClick: PropTypes.func,
   state: PropTypes.string,
-  target_path: PropTypes.shape({})
+  target_path: PropTypes.string
 }
 
 export default DetailsInfoItem
