@@ -34,7 +34,7 @@ export default {
       params.name = filters.name
     }
 
-    if (filters.state) {
+    if (filters?.state) {
       params.state = filters.state
     }
 
