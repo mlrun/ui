@@ -212,6 +212,10 @@ export const generateActionsMenu = (
           label: 'Abort',
           icon: <Cancel />,
           onClick: onAbortJob,
+          tooltip: job.labels?.includes('kind: dask')
+            ? 'Cannot abort dask jobs'
+            : '',
+          disabled: job.labels?.includes('kind: dask'),
           hidden: JOB_STEADY_STATES.includes(job.state)
         }
       ]
