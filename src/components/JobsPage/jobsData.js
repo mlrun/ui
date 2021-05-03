@@ -167,10 +167,10 @@ export const generatePageData = (
   }
 }
 
-const isJobAbortable = (job = { labels: [] }, abortableFunctionKinds = []) =>
-  abortableFunctionKinds
+const isJobAbortable = (job, abortableFunctionKinds) =>
+  (abortableFunctionKinds ?? [])
     .map(kind => `kind: ${kind}`)
-    .some(kindLabel => job.labels.includes(kindLabel))
+    .some(kindLabel => job?.labels?.includes(kindLabel))
 
 export const generateActionsMenu = (
   scheduled,
