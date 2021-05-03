@@ -144,7 +144,7 @@ export const modelEndpointsTableHeaders = [
 ]
 export const tabs = [
   { id: 'models', label: 'Models' },
-  { id: 'model-endpoints', label: 'Model endpoints' }
+  { id: 'model-endpoints', label: 'Model endpoints', preview: true }
 ]
 
 export const handleFetchData = async (

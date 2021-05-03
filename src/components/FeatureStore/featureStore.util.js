@@ -254,9 +254,9 @@ const getFeaturesTablePanel = () => {
 }
 
 export const tabs = [
-  { id: 'feature-sets', label: 'Feature sets', preview: true },
-  { id: 'features', label: 'Features', preview: true },
-  { id: 'feature-vectors', label: 'Feature vectors', preview: true },
+  { id: 'feature-sets', label: 'Feature sets' },
+  { id: 'features', label: 'Features' },
+  { id: 'feature-vectors', label: 'Feature vectors' },
   { id: 'datasets', label: 'Datasets' }
 ]
 
