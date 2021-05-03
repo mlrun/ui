@@ -201,7 +201,8 @@ const Jobs = ({
       handleRerunJob,
       handleMonitoring,
       appStore.frontendSpec.jobs_dashboard_url,
-      onAbortJob
+      onAbortJob,
+      appStore.frontendSpec.abortable_function_kinds
     ),
     [match.params.pageTab, appStore.frontendSpec.jobs_dashboard_url]
   )

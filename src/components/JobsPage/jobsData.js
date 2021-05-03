@@ -124,7 +124,8 @@ export const generatePageData = (
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
-  onAbortJob
+  onAbortJob,
+  abortableFunctionKinds
 ) => {
   let jobFilters = []
   let filterMenuActionButton = {
@@ -153,7 +154,8 @@ export const generatePageData = (
       handleRerunJob,
       handleMonitoring,
       jobsDashboardUrl,
-      onAbortJob
+      onAbortJob,
+      abortableFunctionKinds
     ),
     detailsMenu,
     filterMenuActionButton,
@@ -164,6 +166,12 @@ export const generatePageData = (
     infoHeaders
   }
 }
+
+const isJobAbortable = (job = { labels: [] }, abortableFunctionKinds = []) =>
+  abortableFunctionKinds
+    .map(kind => `kind: ${kind}`)
+    .some(kindLabel => job.labels.includes(kindLabel))
+
 export const generateActionsMenu = (
   scheduled,
   removeScheduledJob,
@@ -172,7 +180,8 @@ export const generateActionsMenu = (
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
-  onAbortJob
+  onAbortJob,
+  abortableFunctionKinds
 ) => job =>
   scheduled
     ? [
@@ -212,10 +221,10 @@ export const generateActionsMenu = (
           label: 'Abort',
           icon: <Cancel />,
           onClick: onAbortJob,
-          tooltip: job.labels?.includes('kind: dask')
-            ? 'Cannot abort dask jobs'
-            : '',
-          disabled: job.labels?.includes('kind: dask'),
+          tooltip: isJobAbortable(job, abortableFunctionKinds)
+            ? ''
+            : 'Cannot abort jobs of this kind',
+          disabled: !isJobAbortable(job, abortableFunctionKinds),
           hidden: JOB_STEADY_STATES.includes(job.state)
         }
       ]
