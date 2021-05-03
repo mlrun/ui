@@ -247,7 +247,10 @@ export const checkForSelectedModelEndpoint = (
   } else {
     searchItem.name = searchItem.spec.model.split(':')[0]
 
-    fetchModelEndpointWithAnalysis(searchItem.metadata.uid)
+    fetchModelEndpointWithAnalysis(
+      match.params.projectName,
+      searchItem.metadata.uid
+    )
     setSelectedModel({ item: searchItem })
   }
 }
