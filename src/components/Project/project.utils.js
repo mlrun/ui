@@ -22,7 +22,9 @@ export const getLinks = match => [
     link: `/projects/${match.params.projectName}/models`
   },
   {
-    label: 'Feature store',
+    label: `Feature store${
+      window.mlrunConfig.betaMode === 'enabled' ? ' (Beta)' : ''
+    }`,
     link: `/projects/${match.params.projectName}/feature-store`
   },
   {
