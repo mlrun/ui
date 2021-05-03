@@ -300,7 +300,7 @@ const createModelEndpointsRowData = (artifact, project) => {
       class: 'artifacts_extra-small',
       type: 'hidden'
     },
-    tag: {
+    version: {
       value: tag,
       class: 'artifacts_extra-small'
     },
