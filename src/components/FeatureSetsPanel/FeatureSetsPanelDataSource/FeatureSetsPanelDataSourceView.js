@@ -32,7 +32,7 @@ const FeatureSetsPanelDataSourceView = ({
   showSchedule,
   setNewFeatureSetSchedule
 }) => {
-  const httpKind = 'http'
+  // const httpKind = 'http', disabling temporarily until backend supports scheduling
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
       <FeatureSetsPanelSection title="Data Source">
@@ -98,7 +98,7 @@ const FeatureSetsPanelDataSourceView = ({
             wrapperClassName="inputs-item-wrapper"
           />
         </div>
-        {data.kind !== httpKind && (
+        {false && ( // was: data.kind !== httpKind, disabling temporarily until backend supports scheduling
           <div className="schedule-content">
             <Button
               className="schedule-tumbler"
