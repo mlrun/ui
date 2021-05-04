@@ -3,7 +3,6 @@ import React from 'react'
 import { ReactComponent as DB } from '../../../images/db-icon.svg'
 import { ReactComponent as TSDB } from '../../../images/tsdb-icon.svg'
 import { ReactComponent as NoSQL } from '../../../images/nosql.svg'
-import { ReactComponent as Stream } from '../../../images/stream.svg'
 
 export const checkboxModels = {
   online: {
@@ -32,7 +31,7 @@ export const otherKindOptions = [
   { label: 'TSDB', id: 'tsdb', icon: <TSDB /> },
   { label: 'Parquet', id: 'parquet', icon: <DB /> },
   { label: 'NoSql', id: 'nosql', icon: <NoSQL /> },
-  { label: 'Stream', id: 'stream', icon: <Stream /> },
+  // { label: 'Stream', id: 'stream', icon: <Stream /> }, @erann 2021-05-04 removed until further notice
   { label: 'Dataframe', id: 'dataframe', icon: <DB /> },
   { label: 'Custom', id: 'custom', icon: <DB /> }
 ]
