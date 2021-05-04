@@ -18,7 +18,7 @@ RUN echo ${COMMIT_HASH} > ./build/COMMIT_HASH && \
 FROM nginx:stable-alpine as production-stage
 
 COPY --from=build-stage /app/build /usr/share/nginx/html
-COPY config.js.tmpl /usr/share/nginx/html/
+COPY config.json.tmpl /usr/share/nginx/html/
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf.tmpl /etc/nginx/conf.d/
 COPY nginx/run_nginx /etc/nginx/
