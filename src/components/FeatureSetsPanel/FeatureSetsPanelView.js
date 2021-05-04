@@ -99,7 +99,7 @@ const FeatureSetsPanelView = ({
             {transformationsValue === TRANSFORMATIONS_DEFAULT_VALUE && (
               <Button
                 className="btn_start-ingestion"
-                label="Start ingestion"
+                label="Save and ingest"
                 onClick={() => handleSave(true)}
                 variant="secondary"
               />
