@@ -41,15 +41,15 @@ const Functions = ({
   const pageData = {
     actionsMenu: item => [
       {
-        label: 'Delete',
-        icon: <Delete />,
-        onClick: func => removeFunction(func)
-      },
-      {
         label: 'Run',
         icon: <Run />,
         onClick: func => setEditableItem(func),
         hidden: FUNCTIONS_FAILED_STATES.includes(item.state)
+      },
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        onClick: func => removeFunction(func)
       }
     ],
     detailsMenu,
