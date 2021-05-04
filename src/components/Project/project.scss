@@ -161,6 +161,7 @@
       &__links {
         display: flex;
         flex-direction: column;
+        align-items: flex-start;
 
         &-label {
           margin-bottom: 16px;
