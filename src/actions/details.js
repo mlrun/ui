@@ -14,7 +14,7 @@ const detailsActions = {
     return detailsApi
       .getJobPods(project)
       .then(({ data }) => {
-        let podsData = generatePods(uid, data)
+        let podsData = generatePods(project, uid, data)
 
         dispatch(detailsActions.fetchPodsSuccess(podsData))
 

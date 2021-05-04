@@ -22,7 +22,7 @@ const DetailsFeaturesAnalysis = ({ detailsStore }) => {
       {detailsStore.modelEndpoint.loading && <Loader />}
       {detailsStore.modelEndpoint.error ? (
         <div className="features-analysis__error">
-          Failed fetched data from model endpoint analysis. Please, try again
+          Failed to fetch data from model endpoint analysis. Please try again
           later.
         </div>
       ) : (

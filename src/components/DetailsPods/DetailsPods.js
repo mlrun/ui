@@ -34,7 +34,7 @@ const DetailsPods = ({ detailsStore, match }) => {
     <div className="pods">
       {detailsStore.pods.error ? (
         <div className="pods__error">
-          Failed fetched data. Please, try again later.
+          Failed to fetch data. Please try again later.
         </div>
       ) : table.length ? (
         <>
