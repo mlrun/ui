@@ -103,15 +103,17 @@ const DetailsInfoItem = React.forwardRef(
         <div className="details-item__data details-item__usage-example">
           {info.map((item, index) => (
             <div key={index}>
-              <button
-                className="details-item__btn-copy"
-                onClick={() => copyToClipboard(item.code)}
-              >
-                <Tooltip template={<TextTooltipTemplate text="copy" />}>
-                  <Copy />
-                </Tooltip>
-              </button>
-              <p>{item.title}</p>
+              <p>
+                {item.title}
+                <button
+                  className="details-item__btn-copy"
+                  onClick={() => copyToClipboard(item.code)}
+                >
+                  <Tooltip template={<TextTooltipTemplate text="copy" />}>
+                    <Copy />
+                  </Tooltip>
+                </button>
+              </p>
               <pre>
                 <code
                   dangerouslySetInnerHTML={{
