@@ -93,12 +93,8 @@ const FilterMenu = ({
 
   useEffect(() => {
     if (match.params.pageTab === MONITOR_TAB) {
-      const currentDate = new Date()
-      const yesterdayDate = new Date()
-
-      yesterdayDate.setDate(currentDate.getDate() - 1)
-      onChange({ dates: [yesterdayDate, currentDate] })
-      setDates([yesterdayDate, currentDate])
+      onChange({ dates: ['', ''] })
+      setDates(['', ''])
     }
   }, [match.params.pageTab, onChange])
 
