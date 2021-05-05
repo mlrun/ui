@@ -12,6 +12,7 @@ import { copyToClipboard } from '../../utils/copyToClipboard'
 import Input from '../../common/Input/Input'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
 
 const DetailsInfoItem = React.forwardRef(
   (
@@ -100,16 +101,30 @@ const DetailsInfoItem = React.forwardRef(
     } else if (currentField === 'usage_example') {
       return (
         <div className="details-item__data details-item__usage-example">
-          <p>{info.title}</p>
-          <pre>
-            <code
-              dangerouslySetInnerHTML={{
-                __html:
-                  info.code &&
-                  Prism.highlight(info.code, Prism.languages.py, 'py')
-              }}
-            />
-          </pre>
+          {info.map((item, index) => (
+            <div key={index}>
+              <p>
+                {item.title}
+                <button
+                  className="details-item__btn-copy"
+                  onClick={() => copyToClipboard(item.code)}
+                >
+                  <Tooltip template={<TextTooltipTemplate text="copy" />}>
+                    <Copy />
+                  </Tooltip>
+                </button>
+              </p>
+              <pre>
+                <code
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      item.code &&
+                      Prism.highlight(item.code, Prism.languages.py, 'py')
+                  }}
+                />
+              </pre>
+            </div>
+          ))}
         </div>
       )
     } else if (state) {
