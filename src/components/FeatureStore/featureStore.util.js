@@ -439,7 +439,8 @@ export const navigateToDetailsPane = (
         match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
         selectedArtifact.usage_example = generateUsageSnippets(
-          match.params.pageTab
+          match.params,
+          artifactsStore
         )
       }
 

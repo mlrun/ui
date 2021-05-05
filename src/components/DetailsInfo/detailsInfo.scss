@@ -20,7 +20,15 @@
       flex-direction: row;
       align-items: center;
       padding: 18px;
+      overflow-x: auto;
       border-bottom: $secondaryBorder;
+
+      &__btn {
+        &-copy {
+          position: absolute;
+          right: 25px;
+        }
+      }
 
       &__header {
         display: flex;
