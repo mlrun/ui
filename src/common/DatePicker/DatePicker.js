@@ -432,4 +432,7 @@ DatePicker.propTypes = {
   withOptions: PropTypes.bool
 }
 
-export default React.memo(DatePicker, (prev, next) => prev.date === next.date)
+export default React.memo(
+  DatePicker,
+  (prev, next) => prev.date === next.date && prev.onChange === next.onChange
+)

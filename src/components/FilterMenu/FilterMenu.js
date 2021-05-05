@@ -225,7 +225,13 @@ const FilterMenu = ({
                   key={filter.type}
                   label={filter.label}
                   onChange={dates => {
-                    onChange({ labels, name, owner, dates })
+                    onChange({
+                      labels,
+                      name,
+                      owner,
+                      dates,
+                      state: stateFilter !== initialStateFilter && stateFilter
+                    })
                     setDates(dates)
                   }}
                   date={dates[0]}
