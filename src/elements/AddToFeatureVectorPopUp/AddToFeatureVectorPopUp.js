@@ -8,6 +8,7 @@ import Button from '../../common/Button/Button'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Select from '../../common/Select/Select'
 import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
+
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import { generateProjectsList } from '../../utils/projects'
 import tableActions from '../../actions/table'
@@ -39,13 +40,16 @@ const AddToFeatureVectorPopUp = ({
   )
 
   useEffect(() => {
-    setProjectsList(
-      generateProjectsList(projectStore.projectsNames.data, currentProject)
-    )
-  }, [currentProject, projectStore.projectsNames.data])
+    if (projectsList.length === 0) {
+      setProjectsList(
+        generateProjectsList(projectStore.projectsNames.data, currentProject)
+      )
+    }
+  }, [currentProject, projectStore.projectsNames.data, projectsList.length])
 
   const closePopUp = () => {
     setIsPopUpOpen(false)
+    resetData()
   }
 
   const onSelectProject = projectName => {
@@ -150,6 +154,16 @@ const AddToFeatureVectorPopUp = ({
     }
   }
 
+  const handleAddToFeatureVector = () => {
+    if (!isPopUpOpen) {
+      onSelectProject(currentProject)
+    } else {
+      resetData()
+    }
+
+    setIsPopUpOpen(state => !state)
+  }
+
   return (
     <div className="add-to-feature-vector">
       <Button
@@ -157,10 +171,7 @@ const AddToFeatureVectorPopUp = ({
         label={action.label}
         tooltip={action.tooltip}
         disabled={action.disabled}
-        onClick={() => {
-          !selectedProject && onSelectProject(currentProject)
-          setIsPopUpOpen(!isPopUpOpen)
-        }}
+        onClick={handleAddToFeatureVector}
       />
       {isPopUpOpen && (
         <PopUpDialog headerText="Select feature vector" closePopUp={closePopUp}>

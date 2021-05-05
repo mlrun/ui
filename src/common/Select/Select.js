@@ -74,6 +74,13 @@ const Select = ({
     }
   }, [])
 
+  const handleSelectOptionClick = (selectedOption, option) => {
+    if (selectedOption !== selectedId) {
+      option.handler && option.handler()
+      onClick && onClick(selectedOption)
+    }
+  }
+
   return (
     <div
       data-testid="select"
@@ -185,8 +192,7 @@ const Select = ({
                     item={option}
                     key={option.id}
                     onClick={selectedOption => {
-                      option.handler && option.handler()
-                      onClick && onClick(selectedOption)
+                      handleSelectOptionClick(selectedOption, option)
                     }}
                     selectType={selectType}
                     selectedId={selectedId}
