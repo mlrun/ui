@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker'
 import store from './store/store'
 import { Provider } from 'react-redux'
 
-fetch('config.json', { cache: 'no-store' })
+fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
   .then(response => response.json())
   .then(json => {
     window.mlrunConfig = json
