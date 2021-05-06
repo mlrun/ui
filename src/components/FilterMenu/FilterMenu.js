@@ -174,7 +174,13 @@ const FilterMenu = ({
       generatedDates.push(new Date())
     }
 
-    onChange({ labels, name, owner, dates })
+    onChange({
+      labels,
+      name,
+      owner,
+      dates,
+      state: stateFilter !== initialStateFilter && stateFilter
+    })
     setDates(generatedDates)
   }
 
