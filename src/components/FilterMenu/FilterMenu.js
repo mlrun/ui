@@ -167,6 +167,17 @@ const FilterMenu = ({
     }
   }
 
+  const handleChangeDates = dates => {
+    const generatedDates = [...dates]
+
+    if (generatedDates.length === 1) {
+      generatedDates.push(new Date())
+    }
+
+    onChange({ labels, name, owner, dates })
+    setDates(generatedDates)
+  }
+
   return (
     <>
       <div className="filters">
@@ -224,10 +235,7 @@ const FilterMenu = ({
                 <DatePicker
                   key={filter.type}
                   label={filter.label}
-                  onChange={dates => {
-                    onChange({ labels, name, owner, dates })
-                    setDates(dates)
-                  }}
+                  onChange={handleChangeDates}
                   date={dates[0]}
                   dateTo={dates[1]}
                   type="date-range-time"
