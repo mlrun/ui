@@ -166,7 +166,7 @@ const Jobs = ({
           message: 'Job is successfully aborted'
         })
       })
-      .catch(error => {
+      .catch(() => {
         setNotification({
           status: 400,
           id: Math.random(),
