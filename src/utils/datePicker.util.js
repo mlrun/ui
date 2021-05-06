@@ -81,7 +81,7 @@ const getPastDate = setDate => {
 
   setDate(fromDate, toDate)
 
-  return [fromDate, toDate]
+  return [fromDate]
 }
 
 export const formatDate = (isRange, isTime, splitCharacter, date, dateTo) => {
