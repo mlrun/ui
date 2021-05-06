@@ -1,4 +1,7 @@
 import {
+  ABORT_JOB_BEGIN,
+  ABORT_JOB_FAILURE,
+  ABORT_JOB_SUCCESS,
   EDIT_JOB_FAILURE,
   FETCH_JOB_LOGS_BEGIN,
   FETCH_JOB_LOGS_FAILURE,
@@ -60,6 +63,23 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case ABORT_JOB_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case ABORT_JOB_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case ABORT_JOB_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null
+      }
     case EDIT_JOB_FAILURE:
       return {
         ...state,
