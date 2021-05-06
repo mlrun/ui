@@ -415,6 +415,7 @@ const DatePicker = ({
   )
 }
 DatePicker.defaultProps = {
+  dateTo: new Date(),
   label: 'Date',
   splitCharacter: '/',
   type: 'date',
