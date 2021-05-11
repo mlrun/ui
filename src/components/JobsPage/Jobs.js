@@ -7,13 +7,8 @@ import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import projectActions from '../../actions/projects'
 import detailsActions from '../../actions/details'
-import {
-  generatePageData,
-  initialStateFilter,
-  initialGroupFilter,
-  getChipsValues
-} from './jobsData'
-import { parseKeyValues } from '../../utils'
+import { generatePageData, initialGroupFilter } from './jobsData'
+import { generateKeyValues, parseKeyValues } from '../../utils'
 import { MONITOR_TAB, SCHEDULE_TAB } from '../../constants'
 
 import Content from '../../layout/Content/Content'
@@ -45,7 +40,6 @@ const Jobs = ({
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
   const [selectedJob, setSelectedJob] = useState({})
-  const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const [groupFilter, setGroupFilter] = useState(initialGroupFilter)
   const [editableItem, setEditableItem] = useState(null)
 
@@ -98,7 +92,7 @@ const Jobs = ({
     setNotification({
       status: 200,
       id: Math.random(),
-      message: 'Job is successfully rerunning'
+      message: 'Job started successfully'
     })
   }
 
@@ -139,7 +133,7 @@ const Jobs = ({
         schedule: null,
         task: {
           metadata: {
-            labels: getChipsValues(job.labels ?? {}),
+            labels: generateKeyValues(job.labels ?? {}),
             name: job.name,
             project: job.project
           },
@@ -152,7 +146,7 @@ const Jobs = ({
             inputs: job.inputs ?? {},
             output_path: job.outputPath,
             param_file: job.param_file ?? '',
-            parameters: getChipsValues(job.parameters ?? {}),
+            parameters: generateKeyValues(job.parameters ?? {}),
             secret_sources: job.secret_sources ?? [],
             selector: job.selector ?? 'max.',
             tuning_strategy: job.tuning_strategy ?? 'list'
@@ -172,12 +166,12 @@ const Jobs = ({
           message: 'Job is successfully aborted'
         })
       })
-      .catch(error => {
+      .catch(() => {
         setNotification({
           status: 400,
           id: Math.random(),
           retry: () => handleAbortJob(job),
-          message: 'Aborting job is failed'
+          message: 'Aborting job failed'
         })
       })
     setConfirmData(null)
@@ -207,7 +201,8 @@ const Jobs = ({
       handleRerunJob,
       handleMonitoring,
       appStore.frontendSpec.jobs_dashboard_url,
-      onAbortJob
+      onAbortJob,
+      appStore.frontendSpec.abortable_function_kinds
     ),
     [match.params.pageTab, appStore.frontendSpec.jobs_dashboard_url]
   )
@@ -216,7 +211,6 @@ const Jobs = ({
     filters => {
       fetchJobs(
         match.params.projectName,
-        stateFilter !== initialStateFilter && stateFilter,
         filters,
         match.params.pageTab === SCHEDULE_TAB
       ).then(jobs => {
@@ -263,7 +257,7 @@ const Jobs = ({
         return setJobs(newJobs)
       })
     },
-    [fetchJobs, match.params.pageTab, match.params.projectName, stateFilter]
+    [fetchJobs, match.params.pageTab, match.params.projectName]
   )
 
   const getWorkflows = useCallback(() => {
@@ -290,13 +284,15 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    refreshJobs()
+    if (match.params.pageTab === SCHEDULE_TAB) {
+      refreshJobs()
+    }
 
     return () => {
       setSelectedJob({})
       setJobs([])
     }
-  }, [getWorkflows, match.params.pageTab, refreshJobs])
+  }, [match.params.pageTab, refreshJobs])
 
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
@@ -339,10 +335,6 @@ const Jobs = ({
 
   const handleCancel = () => {
     setSelectedJob({})
-  }
-
-  const onStateFilterChange = id => {
-    setStateFilter(id || initialStateFilter)
   }
 
   const onEditJob = (event, postData) => {
@@ -400,8 +392,6 @@ const Jobs = ({
         selectedItem={selectedJob}
         setGroupFilter={setGroupFilter}
         setLoading={setLoading}
-        setStateFilter={onStateFilterChange}
-        stateFilter={stateFilter}
         yamlContent={jobsStore.jobs}
       />
       {editableItem && (

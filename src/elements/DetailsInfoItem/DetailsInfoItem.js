@@ -12,6 +12,7 @@ import { copyToClipboard } from '../../utils/copyToClipboard'
 import Input from '../../common/Input/Input'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
 
 const DetailsInfoItem = React.forwardRef(
   (
@@ -40,7 +41,7 @@ const DetailsInfoItem = React.forwardRef(
             <Input onChange={item.onChange} value={info} type="text" focused />
             <Checkmark
               className="details-item__input-btn"
-              onClick={event => handleFinishEdit(event, currentField)}
+              onClick={() => handleFinishEdit(currentField)}
             />
           </div>
         )
@@ -60,7 +61,7 @@ const DetailsInfoItem = React.forwardRef(
             />
             <Checkmark
               className="details-item__input-btn"
-              onClick={event => handleFinishEdit(event, currentField)}
+              onClick={() => handleFinishEdit(currentField)}
             />
           </div>
         )
@@ -79,9 +80,7 @@ const DetailsInfoItem = React.forwardRef(
         </div>
       )
     } else if (!isEmpty(target_path)) {
-      const path = `${target_path.schema ? `${target_path.schema}://` : ''}${
-        target_path.path
-      }${target_path.modelFile ? target_path.modelFile : ''}`
+      const path = `${target_path}${target_path.modelFile ?? ''}`
       return (
         <Tooltip
           className="details-item__data details-item__path"
@@ -102,16 +101,30 @@ const DetailsInfoItem = React.forwardRef(
     } else if (currentField === 'usage_example') {
       return (
         <div className="details-item__data details-item__usage-example">
-          <p>{info.title}</p>
-          <pre>
-            <code
-              dangerouslySetInnerHTML={{
-                __html:
-                  info.code &&
-                  Prism.highlight(info.code, Prism.languages.py, 'py')
-              }}
-            />
-          </pre>
+          {info.map((item, index) => (
+            <div key={index}>
+              <p>
+                {item.title}
+                <button
+                  className="details-item__btn-copy"
+                  onClick={() => copyToClipboard(item.code)}
+                >
+                  <Tooltip template={<TextTooltipTemplate text="copy" />}>
+                    <Copy />
+                  </Tooltip>
+                </button>
+              </p>
+              <pre>
+                <code
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      item.code &&
+                      Prism.highlight(item.code, Prism.languages.py, 'py')
+                  }}
+                />
+              </pre>
+            </div>
+          ))}
         </div>
       )
     } else if (state) {
@@ -183,7 +196,7 @@ DetailsInfoItem.defaultProps = {
   match: {},
   onClick: null,
   state: '',
-  target_path: {}
+  target_path: ''
 }
 
 DetailsInfoItem.propTypes = {
@@ -203,7 +216,7 @@ DetailsInfoItem.propTypes = {
   match: PropTypes.shape({}),
   onClick: PropTypes.func,
   state: PropTypes.string,
-  target_path: PropTypes.shape({})
+  target_path: PropTypes.string
 }
 
 export default DetailsInfoItem

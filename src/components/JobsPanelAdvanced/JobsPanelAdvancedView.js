@@ -17,7 +17,7 @@ const JobsPanelAdvancedView = ({
   panelState
 }) => {
   return (
-    <div className="job-panel__item advanced">
+    <div className="job-panel__item advanced new-item-side-panel__item">
       <JobsPanelSection title="Advanced" />
       <JobsPanelSection title="Environment Variables">
         <JobsPanelAdvancedTable

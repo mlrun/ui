@@ -1,32 +1,48 @@
 import { FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../constants'
+import { generateUri } from './generateUri'
 
-export const generateUsageSnippets = pageTab => {
+export const generateUsageSnippets = (
+  { pageTab, name, tag },
+  { featureSets, featureVectors }
+) => {
+  const [currentFeatureSet] = featureSets.filter(
+    featureSet =>
+      featureSet.metadata.name === name && featureSet.metadata.tag === tag
+  )
+  const [currentFeatureVector] = featureVectors.allData.filter(
+    featureVector => featureVector.name === name && featureVector.tag === tag
+  )
+
   if (pageTab === FEATURE_SETS_TAB) {
-    return {
-      title: 'Get offline features for training:',
-      code: `features = [
-    "<feature set>.*",
+    return [
+      {
+        title: 'Get offline features for training:',
+        code: `features = [
+    "${currentFeatureSet.metadata.name}.*",
 ]
-vector = FeatureVector(features=features)
-resp = get_offline_features(
-    vector, entity_rows=<entity>, entity_timestamp_column="<entity timestamp column"
-)
-print(resp.to_dataframe())
-print(vector.get_stats_table())
-resp.to_parquet("./out.parquet")`
-    }
+
+vector = fs.FeatureVector("<vector-name>",features=features,description="this is my vector")
+resp = fs.get_offline_features(vector))`
+      },
+      {
+        title: 'Getting online features:',
+        code: `svc = fs.get_online_feature_service("<vector-uri>")
+resp = svc.get([{"customer_id": "42"}, {"customer_id": "50"}])`
+      }
+    ]
   }
 
   if (pageTab === FEATURE_VECTORS_TAB) {
-    return {
-      title: 'Getting online features:',
-      code: `svc = get_online_feature_service(vector_uri)
-resp = svc.get([{"key": "value"}, {"key": "value"}])
-print(resp)
-              
-              
-resp = svc.get([{"key": "value"}], as_list=True)
-print(resp)`
-    }
+    const uri = generateUri(currentFeatureVector, pageTab)
+
+    return [
+      {
+        title: 'Getting offline & online features:',
+        code: `resp = fs.get_offline_features("${uri}")
+
+svc = fs.get_online_feature_service("${uri}")
+resp = svc.get([{"customer_id": "42"}, {"customer_id": "50"}])`
+      }
+    ]
   }
 }

@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { uniqBy } from 'lodash'
 
 import JobsPanelDataInputsView from './JobsPanelDataInputsView'
 
@@ -108,12 +109,12 @@ const JobsPanelDataInputs = ({
         }).then(featureVectors => {
           inputsDispatch({
             type: inputsActions.SET_FEATURE_VECTORS,
-            payload: featureVectors.map(featureVector => {
-              return {
+            payload: uniqBy(featureVectors, 'metadata.name').map(
+              featureVector => ({
                 label: featureVector.metadata.name,
                 id: featureVector.metadata.name
-              }
-            })
+              })
+            )
           })
         })
       }

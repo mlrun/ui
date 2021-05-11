@@ -10,10 +10,8 @@ import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsD
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import { PROJECTS_PAGE } from '../../constants'
-import {
-  generateProjectScreens,
-  generateProjectsList
-} from './breadcrumbs.util'
+import { betaBreadcrumbs, generateProjectScreens } from './breadcrumbs.util'
+import { generateProjectsList } from '../../utils/projects'
 import projectsAction from '../../actions/projects'
 
 import './breadcrums.scss'
@@ -139,11 +137,18 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
       <ul className="breadcrumbs__list">
         {urlItems.map((item, i) => {
           const param = pathItems[i]?.startsWith(':')
-          const label = param
-            ? match.params.tab === item || match.params.pageTab === item
-              ? startCase(item)
-              : item
-            : startCase(item)
+          const label = `${
+            param
+              ? match.params.tab === item || match.params.pageTab === item
+                ? startCase(item)
+                : item
+              : startCase(item)
+          }${
+            window.mlrunConfig.betaMode === 'enabled' &&
+            betaBreadcrumbs.includes(item)
+              ? ' (Beta)'
+              : ''
+          }`
           const to = `/${urlItems.slice(0, i + 1).join('/')}`
           const last = i === urlItems.length - 1
           const id =

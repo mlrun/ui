@@ -5,6 +5,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  overflow-x: auto;
 
   &__header {
     margin: 30px 0;

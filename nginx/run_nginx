@@ -16,8 +16,8 @@ envsubst '${MLRUN_API_PROXY_URL} \
 envsubst '${MLRUN_BETA_MODE} \
           ${MLRUN_NUCLIO_MODE} \
           ${MLRUN_NUCLIO_UI_URL}' \
-< /usr/share/nginx/html/config.js.tmpl \
-> /usr/share/nginx/html/config.js
+< /usr/share/nginx/html/config.json.tmpl \
+> /usr/share/nginx/html/config.json
 
 # start nginx in the foreground
 nginx -g 'daemon off;'

@@ -107,9 +107,21 @@
     max-height: 250px;
     overflow-y: auto;
     color: $mulledWineTwo;
+    background-color: $white;
     border: $primaryBorder;
     border-radius: 2px;
     box-shadow: $filterShadow;
+  }
+
+  &__search {
+    width: 100%;
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-bottom: $primaryBorder;
+    }
   }
 
   .actions {

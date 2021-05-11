@@ -26,7 +26,7 @@ import {
   FEATURE_VECTORS_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
-import { detailsActions } from '../DetailsInfo/detailsReducer'
+import { detailsActions } from './detailsReducer'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 
@@ -87,17 +87,9 @@ const DetailsView = React.forwardRef(
               </Tooltip>
             )}
             {!isEmpty(detailsStore.pods.podsPending) && (
-              <Tooltip
-                template={
-                  <TextTooltipTemplate
-                    text={<div>{detailsStore.pods.podsTooltip}</div>}
-                  />
-                }
-              >
-                <span>
-                  {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
-                </span>
-              </Tooltip>
+              <span>
+                {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
+              </span>
             )}
             {detailsStore.pods.error && (
               <span className="item-header__pods-error">
@@ -156,10 +148,8 @@ const DetailsView = React.forwardRef(
             ].includes(match.params.pageTab) && (
               <Tooltip template={<TextTooltipTemplate text="Download" />}>
                 <Download
-                  path={`${
-                    selectedItem.target_path?.path
-                  }${selectedItem.model_file || ''}`}
-                  schema={selectedItem.target_path?.schema}
+                  path={`${selectedItem.target_path}${selectedItem.model_file ||
+                    ''}`}
                   user={selectedItem.producer?.owner}
                 />
               </Tooltip>

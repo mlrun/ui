@@ -46,7 +46,7 @@ const JobsPanelParametersView = ({
   )
 
   return (
-    <div className="job-panel__item">
+    <div className="job-panel__item new-item-side-panel__item">
       <JobsPanelSection title="Parameters">
         <JobsPanelParametersTable
           addNewItem={parametersState.addNewParameter}

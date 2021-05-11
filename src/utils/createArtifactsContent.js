@@ -1,13 +1,8 @@
 import React from 'react'
 
-import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
-import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
-import { ReactComponent as SeverityError } from '../images/severity-error.svg'
-import { generateLinkPath, parseUri } from '../utils'
-import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import AddFeatureButton from '../elements/AddFeatureButton/AddFeatureButton'
+import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
 
-import { parseKeyValues } from './object'
-import { formatDatetime } from './datetime'
 import {
   ARTIFACTS_PAGE,
   DATASETS_TAB,
@@ -20,18 +15,29 @@ import {
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB
 } from '../constants'
+import { parseKeyValues } from './object'
+import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
+import { copyToClipboard } from './copyToClipboard'
+import { generateUri } from './generateUri'
+import { generateLinkPath, parseUri } from '../utils'
+import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
-import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
-
+import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
+import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
+import { ReactComponent as SeverityError } from '../images/severity-error.svg'
 import { ReactComponent as Nosql } from '../images/nosql.svg'
 import { ReactComponent as Stream } from '../images/stream.svg'
 import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
 import { ReactComponent as DbIcon } from '../images/db-icon.svg'
-import { copyToClipboard } from './copyToClipboard'
-import { generateUri } from './generateUri'
 
-const createArtifactsContent = (artifacts, page, pageTab, project) => {
+const createArtifactsContent = (
+  artifacts,
+  page,
+  pageTab,
+  project,
+  isTablePanelOpen
+) => {
   return artifacts.map(artifact => {
     let rowData = []
 
@@ -51,7 +57,7 @@ const createArtifactsContent = (artifacts, page, pageTab, project) => {
       } else if (pageTab === FEATURE_SETS_TAB) {
         rowData = createFeatureSetsRowData(artifact, project)
       } else if (pageTab === FEATURES_TAB) {
-        rowData = createFeaturesRowData(artifact)
+        rowData = createFeaturesRowData(artifact, isTablePanelOpen)
       } else if (pageTab === FEATURE_VECTORS_TAB) {
         rowData = createFeatureVectorsRowData(artifact, project)
       }
@@ -294,7 +300,7 @@ const createModelEndpointsRowData = (artifact, project) => {
       class: 'artifacts_extra-small',
       type: 'hidden'
     },
-    tag: {
+    version: {
       value: tag,
       class: 'artifacts_extra-small'
     },
@@ -457,7 +463,7 @@ const createFeatureSetsRowData = (artifact, project) => {
   }
 }
 
-const createFeaturesRowData = artifact => {
+const createFeaturesRowData = (artifact, isTablePanelOpen) => {
   return {
     key: {
       value: artifact.name,
@@ -501,11 +507,21 @@ const createFeaturesRowData = artifact => {
       class: 'artifacts_big',
       type: 'labels'
     },
-    targets: getFeatureSetTargetCellValue(artifact.targets),
+    targets: {
+      ...getFeatureSetTargetCellValue(artifact.targets),
+      hidden: isTablePanelOpen
+    },
     validator: {
       value: <FeatureValidator validator={artifact.validator} />,
       class: 'artifacts_medium',
-      type: 'component'
+      type: 'component',
+      hidden: isTablePanelOpen
+    },
+    addFeature: {
+      value: <AddFeatureButton feature={artifact} />,
+      class: 'artifacts_extra-small align-right',
+      type: 'component',
+      hidden: !isTablePanelOpen
     }
   }
 }

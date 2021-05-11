@@ -1,5 +1,5 @@
 import React from 'react'
-import { isEmpty } from 'lodash'
+import { isEmpty, isEqual } from 'lodash'
 
 import {
   DETAILS_ANALYSIS_TAB,
@@ -12,6 +12,7 @@ import {
   DETAILS_FEATURES_ANALYSIS_TAB,
   DETAILS_FEATURES_TAB,
   DETAILS_OVERVIEW_TAB,
+  DETAILS_PODS_TAB,
   DETAILS_PREVIEW_TAB,
   DETAILS_REQUESTED_FEATURES_TAB,
   DETAILS_RESULTS_TAB,
@@ -41,6 +42,7 @@ import DetailsRequestedFeatures from '../DetailsRequestedFeatures/DetailsRequest
 import DetailsTransformations from '../DetailsTransformations/DetailsTransformations'
 import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
+import DetailsPods from '../DetailsPods/DetailsPods'
 
 export const generateArtifactsContent = (
   editDescription,
@@ -230,7 +232,8 @@ export const renderContent = (
   selectedItem,
   pageData,
   handlePreview,
-  detailsStore
+  detailsStore,
+  handleEditInput
 ) => {
   switch (match.params.tab?.toUpperCase()) {
     case DETAILS_OVERVIEW_TAB:
@@ -246,6 +249,8 @@ export const renderContent = (
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
       return <DetailsDriftAnalysis />
+    case DETAILS_PODS_TAB:
+      return <DetailsPods match={match} />
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
     case DETAILS_PREVIEW_TAB:
@@ -293,8 +298,12 @@ export const renderContent = (
     case DETAILS_REQUESTED_FEATURES_TAB:
       return (
         <DetailsRequestedFeatures
+          changes={detailsState.changes}
+          detailsDispatch={detailsDispatch}
+          detailsState={detailsState}
+          match={match}
           selectedItem={selectedItem}
-          projectName={match.params.projectName}
+          handleEditInput={(value, field) => handleEditInput(value, field)}
         />
       )
     default:
@@ -378,3 +387,51 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
     value: selectedItem.label_column ?? ''
   }
 })
+export const handleFinishEdit = (
+  field,
+  changes,
+  detailsTabActions,
+  detailsTabDispatch,
+  detailsTabState,
+  detailsDispatch,
+  detailsActions
+) => {
+  detailsTabDispatch({
+    type: detailsTabActions.SET_EDIT_MODE,
+    payload: {
+      field: '',
+      fieldType: ''
+    }
+  })
+
+  if (
+    isEqual(
+      detailsTabState.fieldsData[field]?.initialFieldValue,
+      changes.data[field]
+    )
+  ) {
+    const fieldsData = { ...detailsTabState.fieldsData }
+    const changesData = { ...changes.data }
+
+    delete fieldsData[field]
+    delete changesData[field]
+
+    detailsDispatch({
+      type: detailsActions.SET_CHANGES_COUNTER,
+      payload: fieldsData.length || 0
+    })
+    detailsTabDispatch({
+      type: detailsTabState.SET_FIELDS_DATA,
+      payload: { ...fieldsData }
+    })
+    detailsDispatch({
+      type: detailsActions.SET_CHANGES_DATA,
+      payload: { ...changesData }
+    })
+  } else {
+    detailsDispatch({
+      type: detailsActions.SET_CHANGES_COUNTER,
+      payload: Object.keys(changes.data).length
+    })
+  }
+}

@@ -1,5 +1,8 @@
 import {
   CLOSE_ARTIFACT_PREVIEW,
+  CREATE_NEW_FEATURE_SET_BEGIN,
+  CREATE_NEW_FEATURE_SET_FAILURE,
+  CREATE_NEW_FEATURE_SET_SUCCESS,
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
@@ -30,6 +33,7 @@ import {
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
+  REMOVE_ARTIFACTS_ERROR,
   REMOVE_DATASET,
   REMOVE_DATASETS,
   REMOVE_FEATURE,
@@ -41,8 +45,24 @@ import {
   REMOVE_FILES,
   REMOVE_MODEL,
   REMOVE_MODELS,
+  REMOVE_NEW_FEATURE_SET,
   SET_ARTIFACT_FILTER,
-  SHOW_ARTIFACT_PREVIEW
+  SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_KEY,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_KIND,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_TIME,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
+  SET_NEW_FEATURE_SET_DESCRIPTION,
+  SET_NEW_FEATURE_SET_LABELS,
+  SET_NEW_FEATURE_SET_NAME,
+  SET_NEW_FEATURE_SET_SCHEDULE,
+  SET_NEW_FEATURE_SET_SCHEMA_TIMESTAMP_KEY,
+  SET_NEW_FEATURE_SET_TARGET,
+  SET_NEW_FEATURE_SET_VERSION,
+  SHOW_ARTIFACT_PREVIEW,
+  START_FEATURE_SET_INGEST_BEGIN,
+  START_FEATURE_SET_INGEST_SUCCESS
 } from '../constants'
 
 const initialState = {
@@ -86,6 +106,29 @@ const initialState = {
       content: {}
     }
   },
+  newFeatureSet: {
+    metadata: {
+      labels: {},
+      name: '',
+      tag: ''
+    },
+    spec: {
+      description: '',
+      entities: [],
+      source: {
+        attributes: {},
+        key_field: '',
+        kind: 'http',
+        path: '',
+        schedule: '',
+        time_field: ''
+      },
+      targets: [],
+      timestamp_key: '',
+      features: []
+    },
+    status: {}
+  },
   preview: {}
 }
 
@@ -95,6 +138,23 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         preview: payload
+      }
+    case CREATE_NEW_FEATURE_SET_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case CREATE_NEW_FEATURE_SET_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case CREATE_NEW_FEATURE_SET_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loading: false
       }
     case FETCH_ARTIFACTS_BEGIN:
       return {
@@ -329,6 +389,11 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         artifacts: []
       }
+    case REMOVE_ARTIFACTS_ERROR:
+      return {
+        ...state,
+        error: null
+      }
     case REMOVE_DATASET:
       return {
         ...state,
@@ -432,15 +497,192 @@ export default (state = initialState, { type, payload }) => {
           ...initialState.models
         }
       }
+    case REMOVE_NEW_FEATURE_SET:
+      return {
+        ...state,
+        newFeatureSet: { ...initialState.newFeatureSet }
+      }
     case SET_ARTIFACT_FILTER:
       return {
         ...state,
         filter: payload
       }
+    case SET_NEW_FEATURE_SET_NAME:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          metadata: {
+            ...state.newFeatureSet.metadata,
+            name: payload
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              attributes: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            entities: payload
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_KEY:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              key_field: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_KIND:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              kind: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_TIME:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              time_field: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_URL:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              path: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DESCRIPTION:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            description: payload
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_LABELS:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          metadata: {
+            ...state.newFeatureSet.metadata,
+            labels: payload
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_SCHEDULE:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              schedule: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_SCHEMA_TIMESTAMP_KEY:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            timestamp_key: payload
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_TARGET:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            targets: payload
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_VERSION:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          metadata: {
+            ...state.newFeatureSet.metadata,
+            tag: payload
+          }
+        }
+      }
     case SHOW_ARTIFACT_PREVIEW:
       return {
         ...state,
         preview: payload
+      }
+    case START_FEATURE_SET_INGEST_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case START_FEATURE_SET_INGEST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null
       }
     default:
       return state

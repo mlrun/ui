@@ -22,7 +22,7 @@ const JobsPanelResourcesView = ({
   resourcesDispatch,
   resourcesState
 }) => (
-  <div className="job-panel__item resources">
+  <div className="job-panel__item resources new-item-side-panel__item">
     <JobsPanelSection title="Resources" />
     <JobsPanelSection title="Volumes">
       <JobsPanelVolumesTable

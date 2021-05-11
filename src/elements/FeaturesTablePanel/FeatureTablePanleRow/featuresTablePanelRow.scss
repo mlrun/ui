@@ -1,0 +1,62 @@
+@import '../../../scss/colors';
+
+.feature-row {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 15px;
+
+  &:hover {
+    .feature-row__actions {
+      .action:not(.readonly) {
+        &.set-as-label,
+        &.remove {
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  .feature-row__feature-template {
+    display: flex;
+    align-items: center;
+  }
+
+  .feature-row__feature-set-tag {
+    color: $mineshaft;
+  }
+
+  .feature-row__feature-alias-preposition {
+    color: $spunPearl;
+  }
+
+  .feature-row__actions {
+    display: flex;
+    justify-content: flex-end;
+    width: 60px;
+
+    .action {
+      margin: 0 5px;
+      cursor: pointer;
+
+      svg {
+        path {
+          fill: $malibu;
+        }
+
+        &:hover {
+          path {
+            fill: $cornflowerBlue;
+          }
+        }
+      }
+
+      &.set-as-label,
+      &.remove {
+        visibility: hidden;
+      }
+    }
+  }
+}
+

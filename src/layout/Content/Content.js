@@ -50,12 +50,8 @@ const Content = ({
   selectedItem,
   setGroupFilter,
   setLoading,
-  setStateFilter,
   showUntagged,
-  stateFilter,
   toggleShowUntagged,
-  selectedRowId,
-  setSelectedRowId,
   yamlContent
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
@@ -266,9 +262,7 @@ const Content = ({
               MODELS_PAGE,
               FEATURE_STORE_PAGE
             ].includes(pageData.page) &&
-            ![FEATURES_TAB, FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(
-              match.params.pageTab
-            )
+            ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab)
           }
           registerDialogHeader={
             pageData.page === PROJECTS_PAGE
@@ -303,9 +297,7 @@ const Content = ({
             onChange={refresh}
             page={pageData.page}
             setGroupFilter={setGroupFilter}
-            setStateFilter={setStateFilter}
             showUntagged={showUntagged}
-            stateFilter={stateFilter}
             toggleShowUntagged={toggleShowUntagged}
           />
         </div>
@@ -331,8 +323,6 @@ const Content = ({
               applyDetailsChanges={applyDetailsChanges}
               cancelRequest={cancelRequest}
               retryRequest={refresh}
-              selectedRowId={selectedRowId}
-              setSelectedRowId={setSelectedRowId}
             />
           ) : loading ? null : (
             <NoData />
@@ -349,13 +339,9 @@ Content.defaultProps = {
   groupFilter: null,
   handleSelectItem: () => {},
   selectedItem: {},
-  selectedRowId: '',
-  setSelectedRowId: () => {},
   setGroupFilter: () => {},
   setLoading: () => {},
-  setStateFilter: () => {},
   showUntagged: '',
-  stateFilter: null,
   toggleShowUntagged: null
 }
 
@@ -371,13 +357,9 @@ Content.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  selectedRowId: PropTypes.string,
-  setSelectedRowId: PropTypes.func,
   setGroupFilter: PropTypes.func,
   setLoading: PropTypes.func,
-  setStateFilter: PropTypes.func,
   showUntagged: PropTypes.string,
-  stateFilter: PropTypes.string,
   toggleShowUntagged: PropTypes.func,
   yamlContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),

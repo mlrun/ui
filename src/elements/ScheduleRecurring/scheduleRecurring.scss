@@ -1,7 +1,7 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
 
-.recurring_container {
+.recurring-container {
   user-select: none;
 
   span {
@@ -55,7 +55,7 @@
 
   .select {
     &__header {
-      min-width: 218px;
+      min-width: 190px;
       height: 55px;
     }
 

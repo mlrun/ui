@@ -6,8 +6,6 @@ import ScheduleRecurring from '../../elements/ScheduleRecurring/ScheduleRecurrin
 import DatePicker from '../../common/DatePicker/DatePicker'
 import TimePicker from '../../common/TimePicker/TimePicker'
 
-import './scheduleJobSimple.scss'
-
 const ScheduleJobSimple = ({
   date,
   daysOfWeek,
@@ -16,7 +14,6 @@ const ScheduleJobSimple = ({
   match,
   recurringDispatch,
   recurringState,
-  selectOptions,
   setDate,
   setIsRecurring,
   setTime,
@@ -24,11 +21,11 @@ const ScheduleJobSimple = ({
 }) => {
   return (
     <>
-      <div className="input_container">
+      <div className="input-container">
         <DatePicker onChange={setDate} date={date} />
         <TimePicker onChange={setTime} value={time} />
       </div>
-      <div className="checkbox_container">
+      <div className="checkbox-container">
         <CheckBox
           item={{ label: 'Recurring', id: 'recurring' }}
           onChange={recurring =>
@@ -44,7 +41,6 @@ const ScheduleJobSimple = ({
           match={match}
           recurringDispatch={recurringDispatch}
           recurringState={recurringState}
-          selectOptions={selectOptions}
         />
       )}
     </>
@@ -59,7 +55,6 @@ ScheduleJobSimple.propTypes = {
   match: PropTypes.shape({}).isRequired,
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
-  selectOptions: PropTypes.shape({}).isRequired,
   setDate: PropTypes.func.isRequired,
   setIsRecurring: PropTypes.func.isRequired,
   setTime: PropTypes.func.isRequired,

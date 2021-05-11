@@ -144,7 +144,7 @@ export const modelEndpointsTableHeaders = [
 ]
 export const tabs = [
   { id: 'models', label: 'Models' },
-  { id: 'model-endpoints', label: 'Model endpoints' }
+  { id: 'model-endpoints', label: 'Model endpoints', preview: true }
 ]
 
 export const handleFetchData = async (
@@ -247,7 +247,10 @@ export const checkForSelectedModelEndpoint = (
   } else {
     searchItem.name = searchItem.spec.model.split(':')[0]
 
-    fetchModelEndpointWithAnalysis(searchItem.metadata.uid)
+    fetchModelEndpointWithAnalysis(
+      match.params.projectName,
+      searchItem.metadata.uid
+    )
     setSelectedModel({ item: searchItem })
   }
 }

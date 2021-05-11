@@ -5,11 +5,11 @@ import './jobsPanelSection.scss'
 
 const JobsPanelSection = ({ children, title, className }) => {
   return (
-    <div className={`item-section ${className}`}>
-      <div className="item-section__title">
+    <div className={`panel-section job-panel__section ${className}`}>
+      <div className="panel-section__title">
         <h5>{title}</h5>
       </div>
-      {children && <div className="item-section__body">{children}</div>}
+      {children && <div className="panel-section__body">{children}</div>}
     </div>
   )
 }

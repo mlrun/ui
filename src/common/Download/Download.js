@@ -14,7 +14,7 @@ import colors from '../../scss/colors.scss'
 
 const DEFAULT_FILE_NAME = 'mlrun-file'
 
-const Download = ({ fileName, path, schema, setNotification, user }) => {
+const Download = ({ fileName, path, setNotification, user }) => {
   const [progress, setProgress] = useState(0)
   const [isDownload, setDownload] = useState(false)
 
@@ -38,7 +38,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
             status: response.status,
             url: response.config.url,
             id: Math.random(),
-            message: 'Your download was successful'
+            message: 'Downloaded successfully'
           })
         })
         .catch(() => {
@@ -47,7 +47,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
             url: item.url,
             file: item.file,
             id: Math.random(),
-            message: 'Your download was unsuccessful'
+            message: 'Failed to download'
           })
         })
     },
@@ -65,7 +65,11 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
         cancelToken: new axios.CancelToken(cancel => {
           downloadRef.current.cancel = cancel
         }),
-        params: schema ? { schema, path, user } : { path, user }
+        params: { path }
+      }
+
+      if (path.startsWith('/User')) {
+        config.params.user = user
       }
 
       mainHttpClient
@@ -76,7 +80,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
             status: response.status,
             url: response.config.url,
             id: Math.random(),
-            message: 'Your download was successful'
+            message: 'Downloaded successfully'
           })
           if (downloadRef.current) {
             setDownload(false)
@@ -90,13 +94,11 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
           }
           setNotification({
             status: 400,
-            url: schema
-              ? `/files?schema=${schema}&path=${path}&user=${user}`
-              : `/files?path=${path}&user=${user}`,
+            url: `/files?path=${path}&user=${user}`,
             file,
             id: Math.random(),
             retry: item => retryDownload(item),
-            message: 'Your download was unsuccessful'
+            message: 'Failed to download'
           })
           if (downloadRef.current) {
             setDownload(false)
@@ -107,7 +109,7 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
           if (downloadRef.current) downloadRef.current.cancel = null
         })
     }
-  }, [isDownload, schema, path, user, setNotification, file, retryDownload])
+  }, [isDownload, path, user, setNotification, file, retryDownload])
 
   useEffect(() => {
     let cancelFetch = downloadRef.current
@@ -179,14 +181,9 @@ const Download = ({ fileName, path, schema, setNotification, user }) => {
   )
 }
 
-Download.defaultProps = {
-  path: ''
-}
-
 Download.propTypes = {
   fileName: PropTypes.string,
-  path: PropTypes.string.isRequired,
-  schema: PropTypes.string
+  path: PropTypes.string.isRequired
 }
 
 export default React.memo(connect(null, notificationActions)(Download))

@@ -15,6 +15,10 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
 
   useEffect(() => {
     getArtifactPreview(artifact, noData, setNoData, setPreview)
+
+    return () => {
+      setPreview([])
+    }
   }, [artifact, noData])
 
   return (

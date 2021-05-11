@@ -10,11 +10,14 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
 
   if (jobs.data) {
     jobsRunning = groupByUniqName(jobs.data, 'metadata.name').reduce(
-      (prev, curr) => (curr.status.state === 'running' ? (prev += 1) : prev),
+      (prev, curr) => (curr.status.state === 'running' ? prev + 1 : prev),
       0
     )
     jobsFailed = groupByUniqName(jobs.data, 'metadata.name').reduce(
-      (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
+      (prev, curr) =>
+        curr.status.state === 'error' || curr.status.state === 'aborted'
+          ? prev + 1
+          : prev,
       0
     )
   }

@@ -1,6 +1,9 @@
 import artifactsApi from '../api/artifacts-api'
 import {
   CLOSE_ARTIFACT_PREVIEW,
+  CREATE_NEW_FEATURE_SET_BEGIN,
+  CREATE_NEW_FEATURE_SET_FAILURE,
+  CREATE_NEW_FEATURE_SET_SUCCESS,
   FETCH_ARTIFACTS_BEGIN,
   FETCH_ARTIFACTS_FAILURE,
   FETCH_ARTIFACTS_SUCCESS,
@@ -31,6 +34,7 @@ import {
   FETCH_MODELS_FAILURE,
   FETCH_MODELS_SUCCESS,
   REMOVE_ARTIFACTS,
+  REMOVE_ARTIFACTS_ERROR,
   REMOVE_DATASET,
   REMOVE_DATASETS,
   REMOVE_FEATURE,
@@ -42,8 +46,24 @@ import {
   REMOVE_FILES,
   REMOVE_MODEL,
   REMOVE_MODELS,
+  REMOVE_NEW_FEATURE_SET,
   SET_ARTIFACT_FILTER,
-  SHOW_ARTIFACT_PREVIEW
+  SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_KEY,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_KIND,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_TIME,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
+  SET_NEW_FEATURE_SET_DESCRIPTION,
+  SET_NEW_FEATURE_SET_LABELS,
+  SET_NEW_FEATURE_SET_NAME,
+  SET_NEW_FEATURE_SET_SCHEDULE,
+  SET_NEW_FEATURE_SET_SCHEMA_TIMESTAMP_KEY,
+  SET_NEW_FEATURE_SET_TARGET,
+  SET_NEW_FEATURE_SET_VERSION,
+  SHOW_ARTIFACT_PREVIEW,
+  START_FEATURE_SET_INGEST_BEGIN,
+  START_FEATURE_SET_INGEST_SUCCESS
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
@@ -55,6 +75,32 @@ const artifactsAction = {
     type: CLOSE_ARTIFACT_PREVIEW,
     payload: item
   }),
+  createNewFeatureSet: (data, project) => dispatch => {
+    dispatch(artifactsAction.createNewFeatureSetBegin())
+
+    return artifactsApi
+      .createFeatureSet(data, project)
+      .then(result => {
+        dispatch(artifactsAction.createNewFeatureSetSuccess())
+        return result
+      })
+      .catch(error => {
+        dispatch(artifactsAction.createNewFeatureSetFailure(error.message))
+
+        throw error
+      })
+  },
+  createNewFeatureSetBegin: () => ({
+    type: CREATE_NEW_FEATURE_SET_BEGIN
+  }),
+  createNewFeatureSetFailure: error => ({
+    type: CREATE_NEW_FEATURE_SET_FAILURE,
+    payload: error
+  }),
+  createNewFeatureSetSuccess: () => ({
+    type: CREATE_NEW_FEATURE_SET_SUCCESS
+  }),
+  createNewFeatureVector: data => () => artifactsApi.createFeatureVector(data),
   fetchArtifacts: item => dispatch => {
     dispatch(artifactsAction.fetchArtifactsBegin())
 
@@ -384,6 +430,9 @@ const artifactsAction = {
   removeArtifacts: () => ({
     type: REMOVE_ARTIFACTS
   }),
+  removeArtifactsError: () => ({
+    type: REMOVE_ARTIFACTS_ERROR
+  }),
   removeDataSet: dataSets => ({
     type: REMOVE_DATASET,
     payload: dataSets
@@ -422,16 +471,114 @@ const artifactsAction = {
   removeModels: () => ({
     type: REMOVE_MODELS
   }),
+  removeNewFeatureSet: () => ({
+    type: REMOVE_NEW_FEATURE_SET
+  }),
   setArtifactFilter: filter => ({
     type: SET_ARTIFACT_FILTER,
     payload: filter
+  }),
+  setNewFeatureSetDataSourceAttributes: attributes => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
+    payload: attributes
+  }),
+  setNewFeatureSetDataSourceEntities: entities => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
+    payload: entities
+  }),
+  setNewFeatureSetDataSourceKey: key => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_KEY,
+    payload: key
+  }),
+  setNewFeatureSetDataSourceKind: kind => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_KIND,
+    payload: kind
+  }),
+  setNewFeatureSetDataSourceTime: time => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_TIME,
+    payload: time
+  }),
+  setNewFeatureSetDataSourceUrl: url => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
+    payload: url
+  }),
+  setNewFeatureSetDescription: description => ({
+    type: SET_NEW_FEATURE_SET_DESCRIPTION,
+    payload: description
+  }),
+  setNewFeatureSetLabels: labels => ({
+    type: SET_NEW_FEATURE_SET_LABELS,
+    payload: labels
+  }),
+  setNewFeatureSetName: name => ({
+    type: SET_NEW_FEATURE_SET_NAME,
+    payload: name
+  }),
+  setNewFeatureSetSchedule: schedule => ({
+    type: SET_NEW_FEATURE_SET_SCHEDULE,
+    payload: schedule
+  }),
+  setNewFeatureSetSchemaTimestampKey: timestamp_key => ({
+    type: SET_NEW_FEATURE_SET_SCHEMA_TIMESTAMP_KEY,
+    payload: timestamp_key
+  }),
+  setNewFeatureSetTarget: target => ({
+    type: SET_NEW_FEATURE_SET_TARGET,
+    payload: target
+  }),
+  setNewFeatureSetVersion: version => ({
+    type: SET_NEW_FEATURE_SET_VERSION,
+    payload: version
   }),
   showArtifactsPreview: item => ({
     type: SHOW_ARTIFACT_PREVIEW,
     payload: item
   }),
-  updateFeatureSetData: (projectName, featureSet, tag, data) => () => {
-    return artifactsApi.updateFeatureSetData(projectName, featureSet, tag, data)
+  startFeatureSetIngest: (
+    project,
+    featureSet,
+    uid,
+    source,
+    targets
+  ) => dispatch => {
+    dispatch(artifactsAction.startFeatureSetIngestBegin())
+
+    return artifactsApi
+      .startIngest(project, featureSet, uid, source, targets)
+      .then(result => {
+        dispatch(artifactsAction.startFeatureSetIngestSuccess())
+
+        return result
+      })
+      .catch(error => {
+        dispatch(artifactsAction.createNewFeatureSetFailure(error.message))
+
+        throw error
+      })
+  },
+  startFeatureSetIngestBegin: () => ({
+    type: START_FEATURE_SET_INGEST_BEGIN
+  }),
+  startFeatureSetIngestSuccess: () => ({
+    type: START_FEATURE_SET_INGEST_SUCCESS
+  }),
+  updateFeatureStoreData: (
+    projectName,
+    featureData,
+    tag,
+    data,
+    pageTab
+  ) => () => {
+    return artifactsApi.updateFeatureStoreData(
+      projectName,
+      featureData,
+      tag,
+      data,
+      pageTab
+    )
+  },
+  updateFeatureVectorData: data => () => {
+    return artifactsApi.updateFeatureVectorData(data)
   }
 }
 

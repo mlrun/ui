@@ -74,14 +74,16 @@ const ArtifactFilterTree = ({
   }
 
   const handleSelectFilter = tree => {
-    if (match.params.jobId || match.params.name) {
-      history.push(
-        `/projects/${match.params.projectName}/${page.toLowerCase()}`
-      )
-    }
+    if (tree.id !== filterTree) {
+      if (match.params.jobId || match.params.name) {
+        history.push(
+          `/projects/${match.params.projectName}/${page.toLowerCase()}`
+        )
+      }
 
-    setFilterTree(tree.label)
-    onChange(tree.id)
+      setFilterTree(tree.label)
+      onChange(tree.id)
+    }
   }
 
   useEffect(() => {

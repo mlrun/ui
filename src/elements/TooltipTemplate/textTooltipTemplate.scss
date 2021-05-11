@@ -5,8 +5,9 @@
   &__text {
     padding: 6px 8px;
     color: $white;
+    white-space: pre-wrap;
     background-color: $primary;
-    border-radius: 2px;
+    border-radius: 4px;
   }
 
   &__warning {

@@ -1,5 +1,8 @@
 import jobsApi from '../api/jobs-api'
 import {
+  ABORT_JOB_BEGIN,
+  ABORT_JOB_FAILURE,
+  ABORT_JOB_SUCCESS,
   EDIT_JOB_FAILURE,
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
@@ -29,9 +32,27 @@ import {
 } from '../constants'
 
 const jobsActions = {
-  abortJob: (project, job) => () => {
-    return jobsApi.abortJob(project, job.uid, job.iteration)
+  abortJob: (project, job) => dispatch => {
+    dispatch(jobsActions.abortJobBegin())
+
+    return jobsApi
+      .abortJob(project, job.uid, job.iteration)
+      .then(() => dispatch(jobsActions.abortJobSuccess()))
+      .catch(error => {
+        dispatch(jobsActions.abortJobFailure(error.message))
+        throw error
+      })
   },
+  abortJobBegin: () => ({
+    type: ABORT_JOB_BEGIN
+  }),
+  abortJobFailure: error => ({
+    type: ABORT_JOB_FAILURE,
+    payload: error
+  }),
+  abortJobSuccess: () => ({
+    type: ABORT_JOB_SUCCESS
+  }),
   editJob: (postData, project) => () => jobsApi.editJob(postData, project),
   editJobFailure: error => ({
     type: EDIT_JOB_FAILURE,
@@ -62,12 +83,12 @@ const jobsActions = {
     type: FETCH_JOB_LOGS_SUCCESS,
     payload: logs
   }),
-  fetchJobs: (project, status, filters, scheduled) => dispatch => {
+  fetchJobs: (project, filters, scheduled) => dispatch => {
     const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getAllJobs
 
     dispatch(jobsActions.fetchJobsBegin())
 
-    return getJobs(project, status && status, filters)
+    return getJobs(project, filters)
       .then(({ data }) => {
         const newJobs = scheduled
           ? (data || {}).schedules

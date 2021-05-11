@@ -25,7 +25,6 @@ import {
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { initialState, panelReducer, panelActions } from './panelReducer'
 import { parseKeyValues } from '../../utils'
-import notificationActions from '../../actions/notification'
 
 import './jobsPanel.scss'
 
@@ -369,5 +368,5 @@ JobsPanel.propTypes = {
 
 export default connect(
   ({ jobsStore, functionsStore }) => ({ jobsStore, functionsStore }),
-  { ...jobsActions, ...functionActions, ...notificationActions }
+  { ...jobsActions, ...functionActions }
 )(JobsPanel)

@@ -110,7 +110,7 @@ const DetailsInfoView = React.forwardRef(
                 target_path =
                   content[header.id]?.value === selectedItem.target_path
                     ? selectedItem.target_path
-                    : {}
+                    : ''
 
                 if (header.id === 'sources') {
                   return (

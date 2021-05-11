@@ -25,14 +25,18 @@ const CheckBox = ({ children, className, item, onChange, selectedId }) => {
 }
 
 CheckBox.defaultProps = {
-  className: ''
+  className: '',
+  selectedId: ''
 }
 
 CheckBox.propTypes = {
   className: PropTypes.string,
-  item: PropTypes.shape({}).isRequired,
+  item: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string
+  }).isRequired,
   onChange: PropTypes.func.isRequired,
-  selectedId: PropTypes.string.isRequired
+  selectedId: PropTypes.string
 }
 
 export default React.memo(CheckBox)

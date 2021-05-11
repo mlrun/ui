@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { isEmpty, map } from 'lodash'
 
 import TableView from './TableView'
@@ -11,6 +11,7 @@ import createJobsContent from '../../utils/createJobsContent'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
+import tableActions from '../../actions/table'
 
 import './table.scss'
 
@@ -28,9 +29,9 @@ const Table = ({
   pageData,
   retryRequest,
   selectedItem,
-  selectedRowId,
-  setSelectedRowId,
   setLoading,
+  tableStore,
+  setTablePanelOpen,
   toggleConvertToYaml
 }) => {
   const [tableContent, setTableContent] = useState({
@@ -39,6 +40,8 @@ const Table = ({
     content: [],
     mainRowItemsCount: 1
   })
+  const tablePanelRef = useRef(null)
+  const tableHeadRef = useRef(null)
 
   const previewArtifact = useSelector(
     state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
@@ -49,13 +52,43 @@ const Table = ({
   )
 
   useEffect(() => {
+    return () => {
+      setTablePanelOpen(false)
+    }
+  }, [setTablePanelOpen])
+
+  useEffect(() => {
+    const calculatePanelHeight = () => {
+      if (tableHeadRef && tablePanelRef.current) {
+        const cords = tableHeadRef.current.getBoundingClientRect()
+        tablePanelRef.current.style.height = `${window.innerHeight -
+          cords.top}px`
+      }
+    }
+
+    if (tableStore.isTablePanelOpen && tablePanelRef.current) {
+      calculatePanelHeight()
+
+      document
+        .getElementById('main')
+        .addEventListener('scroll', calculatePanelHeight)
+      window.addEventListener('resize', calculatePanelHeight)
+    }
+    return () => {
+      window.removeEventListener('scroll', calculatePanelHeight)
+      window.removeEventListener('resize', calculatePanelHeight)
+    }
+  }, [tableStore.isTablePanelOpen])
+
+  useEffect(() => {
     const generatedTableContent = generateTableContent(
       content,
       groupedByName,
       groupedByWorkflow,
       groupFilter,
       pageData.page,
-      match
+      match,
+      tableStore.isTablePanelOpen
     )
 
     if (groupFilter === 'name') {
@@ -98,7 +131,8 @@ const Table = ({
     pageData.page,
     setLoading,
     workflows,
-    pageData.mainRowItemsCount
+    pageData.mainRowItemsCount,
+    tableStore.isTablePanelOpen
   ])
 
   return (
@@ -118,14 +152,15 @@ const Table = ({
         handleCancel={handleCancel}
         handleExpandRow={handleExpandRow}
         handleSelectItem={handleSelectItem}
+        isTablePanelOpen={tableStore.isTablePanelOpen}
         mainRowItemsCount={tableContent.mainRowItemsCount}
         match={match}
         pageData={pageData}
         retryRequest={retryRequest}
         selectedItem={selectedItem}
-        selectedRowId={selectedRowId}
-        setSelectedRowId={setSelectedRowId}
         tableContent={tableContent.content}
+        tableHeadRef={tableHeadRef}
+        tablePanelRef={tablePanelRef}
         toggleConvertToYaml={toggleConvertToYaml}
         workflows={workflows}
       />
@@ -144,8 +179,6 @@ Table.defaultProps = {
   groupLatestJob: [],
   handleExpandRow: () => {},
   selectedItem: {},
-  selectedRowId: '',
-  setSelectedRowId: () => {},
   setLoading: null
 }
 
@@ -160,10 +193,10 @@ Table.propTypes = {
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
-  selectedRowId: PropTypes.string,
-  setSelectedRowId: PropTypes.func,
   setLoading: PropTypes.func,
   toggleConvertToYaml: PropTypes.func.isRequired
 }
 
-export default Table
+export default connect(tableStore => ({ ...tableStore }), { ...tableActions })(
+  Table
+)

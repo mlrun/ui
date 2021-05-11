@@ -108,7 +108,7 @@ export const generateArtifactMetadataFromEntities = selectedItem => {
             </Tooltip>
           ),
           type: 'icon icon-partition',
-          visible: !!selectedItem.partition_keys.includes(item.name)
+          visible: !!selectedItem.partition_keys?.includes(item.name)
         },
         timestampKeyIcon: {
           value: (

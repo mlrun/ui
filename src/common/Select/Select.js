@@ -22,6 +22,7 @@ const Select = ({
   label,
   onClick,
   options,
+  search,
   selectType,
   selectedId,
   selectedItemAction,
@@ -29,6 +30,7 @@ const Select = ({
 }) => {
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [isOpen, setOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
   const selectClassName = classNames(
     'select',
     className,
@@ -63,10 +65,21 @@ const Select = ({
   const handleCloseSelectBody = useCallback(event => {
     event.stopPropagation()
 
-    if (!event.target.classList.contains('disabled')) {
+    if (
+      !event.target.classList.contains('disabled') &&
+      !event.target.closest('.select__search')
+    ) {
       setOpen(false)
+      setSearchValue('')
     }
   }, [])
+
+  const handleSelectOptionClick = (selectedOption, option) => {
+    if (selectedOption !== selectedId) {
+      option.handler && option.handler()
+      onClick && onClick(selectedOption)
+    }
+  }
 
   return (
     <div
@@ -155,21 +168,37 @@ const Select = ({
             className="select__body"
             onClick={handleCloseSelectBody}
           >
-            {options.map(option => {
-              return (
-                <SelectOption
-                  disabled={disabledOptions.includes(option.id.toLowerCase())}
-                  item={option}
-                  key={option.id}
-                  onClick={selectedOption => {
-                    option.handler && option.handler()
-                    onClick && onClick(selectedOption)
-                  }}
-                  selectType={selectType}
-                  selectedId={selectedId}
+            {search && (
+              <div className="select__search">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchValue}
+                  onChange={event => setSearchValue(event.target.value)}
                 />
-              )
-            })}
+              </div>
+            )}
+            {options
+              .filter(option => {
+                return (
+                  !search ||
+                  option.label.toLowerCase().includes(searchValue.toLowerCase())
+                )
+              })
+              .map(option => {
+                return (
+                  <SelectOption
+                    disabled={disabledOptions.includes(option.id.toLowerCase())}
+                    item={option}
+                    key={option.id}
+                    onClick={selectedOption => {
+                      handleSelectOptionClick(selectedOption, option)
+                    }}
+                    selectType={selectType}
+                    selectedId={selectedId}
+                  />
+                )
+              })}
           </div>
         </>
       )}
@@ -184,6 +213,7 @@ Select.defaultProps = {
   hideSelectedOption: false,
   label: '',
   onClick: null,
+  search: false,
   selectType: '',
   selectedId: '',
   withoutBorder: false
@@ -197,7 +227,14 @@ Select.propTypes = {
   hideSelectedOption: PropTypes.bool,
   label: PropTypes.string,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  options: PropTypes.array.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+      className: PropTypes.string
+    })
+  ).isRequired,
+  search: PropTypes.bool,
   selectType: PropTypes.string,
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   withoutBorder: PropTypes.bool

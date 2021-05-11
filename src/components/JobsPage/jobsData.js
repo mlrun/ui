@@ -100,7 +100,8 @@ export const detailsMenu = [
   'inputs',
   'artifacts',
   'results',
-  'logs'
+  'logs',
+  'pods'
 ]
 export const filters = [
   { type: 'period', label: 'Period:' },
@@ -110,7 +111,6 @@ export const filters = [
   { type: 'labels', label: 'Labels:' },
   { type: 'date-range-time', label: 'Start time:' }
 ]
-export const initialStateFilter = 'all'
 export const initialGroupFilter = 'name'
 export const tabs = [
   { id: 'monitor', label: 'Monitor' },
@@ -124,7 +124,8 @@ export const generatePageData = (
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
-  onAbortJob
+  onAbortJob,
+  abortableFunctionKinds
 ) => {
   let jobFilters = []
   let filterMenuActionButton = {
@@ -153,7 +154,8 @@ export const generatePageData = (
       handleRerunJob,
       handleMonitoring,
       jobsDashboardUrl,
-      onAbortJob
+      onAbortJob,
+      abortableFunctionKinds
     ),
     detailsMenu,
     filterMenuActionButton,
@@ -164,6 +166,12 @@ export const generatePageData = (
     infoHeaders
   }
 }
+
+const isJobAbortable = (job, abortableFunctionKinds) =>
+  (abortableFunctionKinds ?? [])
+    .map(kind => `kind: ${kind}`)
+    .some(kindLabel => job?.labels?.includes(kindLabel))
+
 export const generateActionsMenu = (
   scheduled,
   removeScheduledJob,
@@ -172,7 +180,8 @@ export const generateActionsMenu = (
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
-  onAbortJob
+  onAbortJob,
+  abortableFunctionKinds
 ) => job =>
   scheduled
     ? [
@@ -212,17 +221,10 @@ export const generateActionsMenu = (
           label: 'Abort',
           icon: <Cancel />,
           onClick: onAbortJob,
+          tooltip: isJobAbortable(job, abortableFunctionKinds)
+            ? ''
+            : 'Cannot abort jobs of this kind',
+          disabled: !isJobAbortable(job, abortableFunctionKinds),
           hidden: JOB_STEADY_STATES.includes(job.state)
         }
       ]
-
-export const getChipsValues = chips => {
-  const result = {}
-  chips.forEach(param => {
-    const [key, value] = param.split(': ')
-
-    result[key] = value
-  })
-
-  return result
-}

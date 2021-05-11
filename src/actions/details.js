@@ -14,7 +14,7 @@ const detailsActions = {
     return detailsApi
       .getJobPods(project)
       .then(({ data }) => {
-        let podsData = generatePods(uid, data)
+        let podsData = generatePods(project, uid, data)
 
         dispatch(detailsActions.fetchPodsSuccess(podsData))
 
@@ -35,11 +35,11 @@ const detailsActions = {
   removePods: () => ({
     type: REMOVE_JOB_PODS
   }),
-  fetchModelEndpointWithAnalysis: uid => dispatch => {
+  fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
     dispatch(detailsActions.fetchModelEndpointWithAnalysisBegin())
 
     return detailsApi
-      .getModelEndpoint(uid)
+      .getModelEndpoint(project, uid)
       .then(({ data }) => {
         dispatch(detailsActions.fetchModelEndpointWithAnalysisSuccess(data))
 

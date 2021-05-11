@@ -3,19 +3,8 @@
 
 .table {
   &__cell {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    min-width: 5px;
-    padding: 10px;
-    color: $primary;
-
     &.add-input {
       padding: 0;
-    }
-
-    &_disabled {
-      color: $spunPearl;
     }
 
     .btn_delete {
@@ -30,65 +19,9 @@
     .apply-edit-btn {
       padding: 0;
     }
-
-    &-checkbox {
-      flex: 0.16;
-      padding: 0;
-
-      svg {
-        margin: 0;
-      }
-    }
   }
 
   &__row {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 55px;
-    border-top: $secondaryBorder;
-
-    .table__cell-actions {
-      width: 44px;
-      max-width: 44px;
-    }
-
-    .tip-container {
-      display: none;
-    }
-
-    &:hover {
-      background-color: $alabaster;
-
-      .table__cell {
-        &-actions {
-          .actions-menu {
-            &__container {
-              display: block;
-
-              .btn {
-                padding: 0;
-                border: none;
-
-                &:hover {
-                  background-color: transparent;
-                }
-              }
-            }
-          }
-        }
-
-        .btn_delete {
-          display: block;
-        }
-      }
-
-      .tip-container {
-        display: flex;
-      }
-    }
-
     &-create-parameter {
       display: flex;
     }

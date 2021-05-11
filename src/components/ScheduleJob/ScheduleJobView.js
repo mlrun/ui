@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import ScheduleJobSimple from '../ScheduleJobSimple/ScheduleJobSimple'
 import ScheduleCron from '../ScheduleCron/ScheduleCron'
@@ -7,14 +8,15 @@ import Button from '../../common/Button/Button'
 
 import { ReactComponent as Schedule } from '../../images/clock.svg'
 
-import { selectOptions, tabs } from './scheduleJobData'
+import { tabs } from './scheduleJobData'
+
+import './scheduleJob.scss'
 
 const ScheduleJobView = ({
   activeTab,
   cron,
   date,
   daysOfWeek,
-  error,
   handleDaysOfWeek,
   isRecurring,
   match,
@@ -24,24 +26,29 @@ const ScheduleJobView = ({
   setActiveTab,
   setCron,
   setDate,
-  setError,
   setIsRecurring,
   setTime,
   time
 }) => {
   return (
-    <div className="schedule_container">
-      <div className="schedule_tabs">
-        {tabs.map(tab => (
-          <div
-            className={`schedule_tabs_item ${activeTab === tab.id &&
-              'schedule_tabs_item_active'}`}
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.label}
-          </div>
-        ))}
+    <div className="schedule jobs-panel__schedule">
+      <div className="schedule-tabs">
+        {tabs.map(tab => {
+          const tabItemClassNames = classnames(
+            'schedule-tabs__item',
+            activeTab === tab.id && 'schedule-tabs__item_active'
+          )
+
+          return (
+            <div
+              className={tabItemClassNames}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </div>
+          )
+        })}
       </div>
       <div className="schedule-content">
         <h3>
@@ -57,7 +64,6 @@ const ScheduleJobView = ({
             match={match}
             recurringDispatch={recurringDispatch}
             recurringState={recurringState}
-            selectOptions={selectOptions}
             setDate={setDate}
             setIsRecurring={setIsRecurring}
             setTime={setTime}
@@ -65,12 +71,7 @@ const ScheduleJobView = ({
           />
         )}
         {activeTab === tabs[1].id && (
-          <ScheduleCron
-            cron={cron}
-            error={error}
-            setCron={setCron}
-            setError={setError}
-          />
+          <ScheduleCron cron={cron} setCron={setCron} />
         )}
       </div>
       <Button

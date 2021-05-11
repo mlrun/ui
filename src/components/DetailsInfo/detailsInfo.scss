@@ -18,9 +18,14 @@
     .details-item {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: baseline;
       padding: 18px;
+      overflow-x: auto;
       border-bottom: $secondaryBorder;
+
+      &__btn-copy {
+        vertical-align: middle;
+      }
 
       &__header {
         display: flex;

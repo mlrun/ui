@@ -5,8 +5,11 @@ import PropTypes from 'prop-types'
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
+import AddToFeatureVectorPopUp from '../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
 
 import artifactsAction from '../../actions/artifacts'
+import notificationActions from '../../actions/notification'
 import {
   checkTabIsValid,
   fetchDataSetRowData,
@@ -28,7 +31,7 @@ import {
   FEATURE_VECTORS_TAB,
   FEATURES_TAB
 } from '../../constants'
-import notificationActions from '../../actions/notification'
+
 import './featureStore.scss'
 
 const FeatureStore = ({
@@ -42,15 +45,18 @@ const FeatureStore = ({
   fetchFeatures,
   history,
   match,
+  removeArtifactsError,
   removeDataSet,
   removeDataSets,
   removeFeature,
   removeFeatureSets,
   removeFeatureVector,
   removeFeatureVectors,
+  removeNewFeatureSet,
   setArtifactFilter,
   setNotification,
-  updateFeatureSetData
+  tableStore,
+  updateFeatureStoreData
 }) => {
   const [content, setContent] = useState([])
   const [yamlContent, setYamlContent] = useState({
@@ -60,8 +66,8 @@ const FeatureStore = ({
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [pageData, setPageData] = useState(pageDataInitialState)
-  const [selectedRowId, setSelectedRowId] = useState('')
   const featureStoreRef = useRef(null)
 
   const fetchData = useCallback(
@@ -90,6 +96,19 @@ const FeatureStore = ({
       fetchFeatures,
       fetchFeatureVectors
     ]
+  )
+
+  const getPopUpTemplate = useCallback(
+    action => {
+      return (
+        <AddToFeatureVectorPopUp
+          action={action}
+          currentProject={match.params.projectName}
+          fetchFeatureVectors={fetchFeatureVectors}
+        />
+      )
+    },
+    [fetchFeatureVectors, match.params.projectName]
   )
 
   const handleRemoveFeatureVector = useCallback(
@@ -186,7 +205,6 @@ const FeatureStore = ({
       removeFeatureSets()
       removeFeatureVectors()
       setSelectedItem({})
-      setSelectedRowId('')
       setPageData(pageDataInitialState)
     }
   }, [
@@ -194,7 +212,6 @@ const FeatureStore = ({
     match.params.projectName,
     removeDataSets,
     removeFeatureSets,
-    featureStoreRef,
     removeFeatureVectors,
     setArtifactFilter
   ])
@@ -224,7 +241,9 @@ const FeatureStore = ({
             ? handleRemoveFeatureVector
             : match.params.pageTab === FEATURES_TAB
             ? handleRemoveFeature
-            : handleRemoveDataSet
+            : handleRemoveDataSet,
+          getPopUpTemplate,
+          tableStore.isTablePanelOpen
         )
       }
     })
@@ -233,7 +252,9 @@ const FeatureStore = ({
     handleRequestOnExpand,
     handleRemoveFeature,
     match.params.pageTab,
-    handleRemoveDataSet
+    handleRemoveDataSet,
+    getPopUpTemplate,
+    tableStore.isTablePanelOpen
   ])
 
   useEffect(() => {
@@ -307,8 +328,43 @@ const FeatureStore = ({
       match,
       selectedItem,
       setNotification,
-      updateFeatureSetData
+      updateFeatureStoreData
     )
+  }
+
+  const openPopupDialog = () => {
+    switch (match.params.pageTab) {
+      case DATASETS_TAB:
+        return setIsPopupDialogOpen(true)
+      case FEATURE_SETS_TAB:
+        return setFeatureSetsPanelIsOpen(true)
+      default:
+        return null
+    }
+  }
+
+  const createFeatureSetSuccess = () => {
+    setFeatureSetsPanelIsOpen(false)
+    removeNewFeatureSet()
+
+    return fetchData({ project: match.params.projectName, tag: 'latest' }).then(
+      () => {
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Feature set successfully created'
+        })
+      }
+    )
+  }
+
+  const closePanel = () => {
+    setFeatureSetsPanelIsOpen(false)
+    removeNewFeatureSet()
+
+    if (artifactsStore.error) {
+      removeArtifactsError()
+    }
   }
 
   return (
@@ -327,18 +383,12 @@ const FeatureStore = ({
         handleCancel={() => setSelectedItem({})}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() =>
-          match.params.pageTab === DATASETS_TAB && setIsPopupDialogOpen(true)
-        }
+        openPopupDialog={openPopupDialog}
         pageData={pageData}
         refresh={item => {
           fetchData(item)
         }}
         selectedItem={selectedItem.item}
-        selectedRowId={selectedRowId}
-        setSelectedRowId={id =>
-          setSelectedRowId(selectedRowId === id ? '' : id)
-        }
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (
@@ -351,6 +401,13 @@ const FeatureStore = ({
           title={pageData.registerArtifactDialogTitle}
         />
       )}
+      {featureSetsPanelIsOpen && (
+        <FeatureSetsPanel
+          closePanel={closePanel}
+          createFeatureSetSuccess={createFeatureSetSuccess}
+          project={match.params.projectName}
+        />
+      )}
     </div>
   )
 }
@@ -359,7 +416,10 @@ FeatureStore.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(artifactsStore => artifactsStore, {
-  ...artifactsAction,
-  ...notificationActions
-})(FeatureStore)
+export default connect(
+  ({ artifactsStore, tableStore }) => ({ artifactsStore, tableStore }),
+  {
+    ...artifactsAction,
+    ...notificationActions
+  }
+)(FeatureStore)

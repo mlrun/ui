@@ -10,6 +10,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Button from '../../common/Button/Button'
+import DatePicker from '../../common/DatePicker/DatePicker'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
@@ -22,12 +23,15 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   KEY_CODES,
-  MODELS_PAGE
+  MODELS_PAGE,
+  MONITOR_TAB
 } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
-import { selectOptions, filterTreeOptions } from './filterMenu.settings'
-
-import DatePicker from '../../common/DatePicker/DatePicker'
+import {
+  selectOptions,
+  filterTreeOptions,
+  initialStateFilter
+} from './filterMenu.settings'
 
 import './filterMenu.scss'
 
@@ -42,9 +46,7 @@ const FilterMenu = ({
   onChange,
   page,
   setGroupFilter,
-  setStateFilter,
   showUntagged,
-  stateFilter,
   toggleShowUntagged
 }) => {
   const [labels, setLabels] = useState('')
@@ -52,6 +54,7 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [dates, setDates] = useState(['', ''])
   const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
+  const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const history = useHistory()
   const artifactFilter = useSelector(store => store.artifactsStore.filter)
   const dispatch = useDispatch()
@@ -88,6 +91,13 @@ const FilterMenu = ({
     }
   }, [dispatch, filters, match.params.projectName])
 
+  useEffect(() => {
+    if (match.params.pageTab === MONITOR_TAB) {
+      onChange({ dates: ['', ''] })
+      setDates(['', ''])
+    }
+  }, [match.params.pageTab, onChange])
+
   const applyChanges = () => {
     if (match.params.jobId || match.params.name) {
       history.push(
@@ -117,7 +127,13 @@ const FilterMenu = ({
       })
     } else {
       page === JOBS_PAGE
-        ? onChange({ labels, name, owner, dates })
+        ? onChange({
+            labels,
+            name,
+            owner,
+            dates,
+            state: stateFilter !== initialStateFilter && stateFilter
+          })
         : onChange({ name })
     }
   }
@@ -133,6 +149,13 @@ const FilterMenu = ({
 
     if (filter.type === 'status') {
       setStateFilter(item)
+      onChange({
+        labels,
+        name,
+        owner,
+        dates,
+        state: item !== initialStateFilter && item
+      })
     } else if (filter.type === 'groupBy') {
       setGroupFilter(item)
     }
@@ -144,10 +167,22 @@ const FilterMenu = ({
     }
   }
 
-  useEffect(() => {
-    applyChanges()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dates])
+  const handleChangeDates = dates => {
+    const generatedDates = [...dates]
+
+    if (generatedDates.length === 1) {
+      generatedDates.push(new Date())
+    }
+
+    onChange({
+      labels,
+      name,
+      owner,
+      dates,
+      state: stateFilter !== initialStateFilter && stateFilter
+    })
+    setDates(generatedDates)
+  }
 
   return (
     <>
@@ -206,10 +241,11 @@ const FilterMenu = ({
                 <DatePicker
                   key={filter.type}
                   label={filter.label}
-                  onChange={setDates}
+                  onChange={handleChangeDates}
                   date={dates[0]}
                   dateTo={dates[1]}
                   type="date-range-time"
+                  withOptions
                 />
               )
             default:
@@ -240,15 +276,18 @@ const FilterMenu = ({
           />
         )}
       </div>
-      {actionButton && (
-        <Button
-          variant={actionButton.variant}
-          label={actionButton.label}
-          tooltip={actionButton.tooltip}
-          disabled={actionButton.disabled}
-          onClick={actionButton.onClick}
-        />
-      )}
+      {actionButton &&
+        (actionButton.getCustomTemplate ? (
+          actionButton.getCustomTemplate(actionButton)
+        ) : (
+          <Button
+            variant={actionButton.variant}
+            label={actionButton.label}
+            tooltip={actionButton.tooltip}
+            disabled={actionButton.disabled}
+            onClick={actionButton.onClick}
+          />
+        ))}
       <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button
@@ -288,9 +327,7 @@ FilterMenu.defaultProps = {
   groupFilter: '',
   handleArtifactFilterTree: null,
   setGroupFilter: null,
-  setStateFilter: null,
   showUntagged: '',
-  stateFilter: '',
   toggleShowUntagged: null
 }
 
@@ -300,9 +337,7 @@ FilterMenu.propTypes = {
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,
   setGroupFilter: PropTypes.func,
-  setStateFilter: PropTypes.func,
   showUntagged: PropTypes.string,
-  stateFilter: PropTypes.string,
   toggleShowUntagged: PropTypes.func
 }
 

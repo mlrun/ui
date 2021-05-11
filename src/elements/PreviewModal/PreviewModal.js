@@ -37,11 +37,7 @@ const PreviewModal = ({ item }) => {
           <div className="item-data item-data__name">
             {item.db_key || item.key}
           </div>
-          <div className="item-data item-data__path">
-            {`${
-              item.target_path?.schema ? `${item.target_path?.schema}://` : ''
-            }${item.target_path?.path}`}
-          </div>
+          <div className="item-data item-data__path">{item.target_path}</div>
           {item.size && (
             <div className="item-data">
               size:
@@ -55,10 +51,9 @@ const PreviewModal = ({ item }) => {
           </div>
           <div className="preview-body__download">
             <Download
-              path={`${item.target_path?.path}${
+              path={`${item.target_path}${
                 item.model_file ? item.model_file : ''
               }`}
-              schema={item.target_path?.schema}
               user={item.user ?? item.producer?.owner}
             />
           </div>

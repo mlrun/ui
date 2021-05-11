@@ -13,7 +13,8 @@
   &__overlay {
     position: fixed;
     top: 0;
-    z-index: 5;
+    left: 0;
+    z-index: 6;
     display: flex;
     align-items: center;
     justify-content: center;

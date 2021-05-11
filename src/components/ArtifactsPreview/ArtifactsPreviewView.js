@@ -41,19 +41,18 @@ const ArtifactsPreviewView = ({ preview, setShowErrorBody, showErrorBody }) => (
               })}
             </div>
             <div className="artifact-preview__table-body">
-              {preview.data.content.map(contentItem => (
-                <div
-                  key={contentItem + Math.random()}
-                  className="artifact-preview__table-row"
-                >
+              {preview.data.content.map((contentItem, index) => (
+                <div key={index} className="artifact-preview__table-row">
                   {Array.isArray(contentItem) ? (
                     contentItem.map(value => (
                       <Tooltip
                         className="artifact-preview__table-content"
-                        key={value + Math.random()}
+                        key={`${value}${Math.random()}`}
                         template={<TextTooltipTemplate text={`${value}`} />}
                       >
-                        {value}
+                        {typeof value === 'object' && value !== null
+                          ? JSON.stringify(value)
+                          : value}
                       </Tooltip>
                     ))
                   ) : (

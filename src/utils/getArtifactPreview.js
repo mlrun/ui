@@ -51,9 +51,10 @@ export const fetchArtifactPreviewFromPreviewData = (
 ) => {
   artifact.preview.forEach(previewItem => {
     fetchArtifactPreview(
-      previewItem.schema,
       previewItem.path,
-      artifact.user || artifact.producer.owner
+      previewItem.path.startsWith('/User') &&
+        (artifact.user || artifact.producer.owner),
+      previewItem.path.replace(/.*\./g, '')
     )
       .then(content => {
         setPreview({ ...content, header: previewItem.header })
@@ -83,9 +84,10 @@ export const fetchArtifactPreviewFromTargetPath = (
   setPreview
 ) => {
   fetchArtifactPreview(
-    artifact.target_path?.schema,
-    artifact.target_path?.path,
-    artifact.user || artifact.producer?.owner
+    artifact.target_path,
+    artifact.target_path.startsWith('/User') &&
+      (artifact.user || artifact.producer?.owner),
+    artifact.target_path.replace(/.*\./g, '')
   )
     .then(content => {
       setPreview([content])
@@ -108,8 +110,8 @@ export const fetchArtifactPreviewFromTargetPath = (
     })
 }
 
-export const fetchArtifactPreview = (schema, path, user, fileFormat) => {
-  return api.getArtifactPreview(schema, path, user, fileFormat).then(res => {
+export const fetchArtifactPreview = (path, user, fileFormat) => {
+  return api.getArtifactPreview(path, user, fileFormat).then(res => {
     return createArtifactPreviewContent(res, fileFormat)
   })
 }
@@ -180,7 +182,10 @@ export const getArtifactPreview = (
             )
           : setPreview(state => [...state, previewContent])
     )
-  } else if (artifact.preview?.length === 0 || !artifact.preview) {
+  } else if (
+    (artifact.preview?.length === 0 || !artifact.preview) &&
+    artifact.target_path
+  ) {
     fetchArtifactPreviewFromTargetPath(
       artifact,
       noData,

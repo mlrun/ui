@@ -1,22 +1,20 @@
-export const generateArtifactPreviewData = (extraData, schema) => {
+export const generateArtifactPreviewData = extraData => {
   const previewItems = []
   let path = ''
 
   Object.entries(extraData).forEach(([key, value]) => {
     if (value.match(/html/)) {
-      path = value.replace(/^.*:\/\//, '')
+      path = value
 
       previewItems.push({
-        schema: schema,
-        path: value.replace(/^.*:\/\//, ''),
+        path: value,
         header: key
       })
     }
 
     if (value.match(/json|yaml|png|jpg|jpeg|gif|csv/)) {
       previewItems.push({
-        schema: schema,
-        path: value.replace(/^.*:\/\//, ''),
+        path: value,
         header: key
       })
     }

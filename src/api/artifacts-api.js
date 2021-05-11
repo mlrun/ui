@@ -24,9 +24,20 @@ const fetchArtifacts = (item, path, config, withLatestTag) => {
 }
 
 export default {
-  getArtifactPreview: (schema, path, user, fileFormat) => {
+  createFeatureSet: (data, project) =>
+    mainHttpClient.post(`/projects/${project}/feature-sets`, data),
+  createFeatureVector: data =>
+    mainHttpClient.post(
+      `/projects/${data.metadata.project}/feature-vectors`,
+      data
+    ),
+  getArtifactPreview: (path, user, fileFormat) => {
     const config = {
-      params: schema ? { schema, path, user } : { path, user }
+      params: { path }
+    }
+
+    if (user) {
+      config.params.user = user
     }
 
     if (['png', 'jpg', 'jpeg'].includes(fileFormat)) {
@@ -119,9 +130,22 @@ export default {
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data),
-  updateFeatureSetData: (projectName, featureSet, tag, data) =>
+  startIngest: (project, featureSet, uid, source, targets) =>
+    mainHttpClient.post(
+      `/projects/${project}/feature-sets/${featureSet}/references/${uid}/ingest`,
+      {
+        source: { ...source, name: 'source' },
+        targets
+      }
+    ),
+  updateFeatureStoreData: (projectName, featureData, tag, data, pageTab) =>
     mainHttpClient.patch(
-      `/projects/${projectName}/feature-sets/${featureSet}/references/${tag}`,
+      `/projects/${projectName}/${pageTab}/${featureData}/references/${tag}`,
+      data
+    ),
+  updateFeatureVectorData: data =>
+    mainHttpClient.put(
+      `/projects/${data.metadata.project}/feature-vectors/${data.metadata.name}/references/${data.metadata.tag}`,
       data
     )
 }
