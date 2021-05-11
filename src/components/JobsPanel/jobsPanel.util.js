@@ -1,4 +1,4 @@
-import _, { isEmpty } from 'lodash'
+import { chain, isEmpty, unionBy } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -62,7 +62,7 @@ export const getDefaultData = functionParameters => {
 }
 
 export const getParameters = (selectedFunction, method) => {
-  return _.chain(selectedFunction)
+  return chain(selectedFunction)
     .map(func => {
       return func.spec.entry_points
         ? func.spec.entry_points[method]?.parameters ?? []
@@ -73,7 +73,7 @@ export const getParameters = (selectedFunction, method) => {
     .value()
 }
 export const getResources = selectedFunction => {
-  return _.chain(selectedFunction)
+  return chain(selectedFunction)
     .map(func => {
       return func.spec.resources ?? {}
     })
@@ -83,7 +83,7 @@ export const getResources = selectedFunction => {
 }
 
 export const getEnvironmentVariables = selectedFunction => {
-  return _.chain(selectedFunction)
+  return chain(selectedFunction)
     .map(func => {
       return func.spec.env ?? {}
     })
@@ -97,7 +97,7 @@ export const getVolumeMounts = selectedFunction => {
     return []
   }
 
-  return _.chain(selectedFunction)
+  return chain(selectedFunction)
     .map(func => func.spec.volume_mounts)
     .flatten()
     .unionBy('name')
@@ -118,7 +118,7 @@ export const getVolume = selectedFunction => {
     return []
   }
 
-  return _.chain(selectedFunction)
+  return chain(selectedFunction)
     .map(func => func.spec.volumes)
     .flatten()
     .unionBy('name')
@@ -126,7 +126,7 @@ export const getVolume = selectedFunction => {
 }
 
 export const getMethodOptions = selectedFunctions => {
-  return _.chain(selectedFunctions)
+  return chain(selectedFunctions)
     .map(func => Object.values(func.spec?.entry_points ?? {}))
     .flatten()
     .map(entry_point => ({
@@ -139,7 +139,7 @@ export const getMethodOptions = selectedFunctions => {
 }
 
 export const getVersionOptions = selectedFunctions => {
-  const versionOptions = _.unionBy(
+  const versionOptions = unionBy(
     selectedFunctions.map(func => {
       return {
         label:

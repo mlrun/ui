@@ -221,6 +221,7 @@ const Functions = ({
           }}
           groupedFunctions={{
             name: editableItem.name,
+            tag: editableItem.tag,
             functions: functionsStore.functions.filter(
               func => func.metadata.name === editableItem.name
             )
