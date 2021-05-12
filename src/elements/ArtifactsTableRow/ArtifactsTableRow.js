@@ -57,9 +57,11 @@ const ArtifactsTableRow = ({
           contentItem => {
             const key = contentItem.db_key ? 'db_key' : 'name'
 
-            return artifact.version
+            return artifact.version.value
               ? contentItem[key] === artifact.key.value &&
                   contentItem.tag === artifact.version.value
+              : contentItem.uid
+              ? contentItem.uid === artifact.uid.value
               : contentItem[key] === artifact.key.value
           }
         )
@@ -109,9 +111,10 @@ const ArtifactsTableRow = ({
               'table-body__row',
               ((selectedItem?.db_key &&
                 selectedItem?.db_key === currentItem?.db_key &&
-                selectedItem.tag === currentItem?.tag) ||
-                (selectedItem?.name &&
-                  selectedItem?.name === currentItem?.name &&
+                (selectedItem?.tag === currentItem?.tag ||
+                  selectedItem?.uid === currentItem?.uid)) ||
+                (selectedItem?.uid &&
+                  selectedItem?.uid === currentItem?.uid &&
                   selectedItem?.tag === currentItem?.tag)) &&
                 'row_active'
             )

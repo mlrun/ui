@@ -52,7 +52,7 @@ const TableLinkCell = ({
             className={itemNameCLassNames}
             template={<TextTooltipTemplate text={data.tooltip || data.value} />}
           >
-            {data.value}
+            <span className="link">{data.value}</span>
           </Tooltip>
           {link.match(/functions|feature-sets|feature-vectors/) &&
             data.value !== item.tag && (

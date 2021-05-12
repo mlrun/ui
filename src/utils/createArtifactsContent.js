@@ -20,7 +20,7 @@ import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
 import { copyToClipboard } from './copyToClipboard'
 import { generateUri } from './generateUri'
-import { generateLinkPath, parseUri } from '../utils'
+import { generateLinkPath, parseUri, truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
@@ -566,11 +566,12 @@ const createFeatureVectorsRowData = (artifact, project) => ({
         FEATURE_VECTORS_TAB,
         artifact.name,
         artifact.tag,
-        tab
+        tab,
+        artifact.uid
       ),
     expandedCellContent: {
       class: 'artifacts_medium',
-      value: artifact.tag
+      value: artifact.tag || truncateUid(artifact.uid)
     }
   },
   description: {
@@ -598,6 +599,11 @@ const createFeatureVectorsRowData = (artifact, project) => ({
     class: 'artifacts_extra-small artifacts__icon',
     type: 'buttonCopyURI',
     actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+  },
+  uid: {
+    value: artifact.uid,
+    class: 'artifacts_small',
+    type: 'hidden'
   }
 })
 

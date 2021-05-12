@@ -4,8 +4,9 @@ export const generateLinkToDetailsPanel = (
   tab,
   key,
   version,
-  detailsTab
+  detailsTab,
+  uid
 ) =>
   `/projects/${project}/${screen.toLowerCase()}${tab ? `/${tab}` : ''}/${key}${
-    version ? `/${version}` : ''
+    version ? `/${version}` : uid ? `/${uid}` : ''
   }/${detailsTab.toLowerCase()}`
