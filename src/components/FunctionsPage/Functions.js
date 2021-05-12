@@ -6,6 +6,7 @@ import { chain, isEqual, isEmpty } from 'lodash'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
+import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 
 import {
   detailsMenu,
@@ -38,6 +39,7 @@ const Functions = ({
   const [editableItem, setEditableItem] = useState(null)
   const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
+  const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   const pageData = {
     actionsMenu: item => [
       {
@@ -56,7 +58,12 @@ const Functions = ({
     filters,
     page,
     tableHeaders,
-    infoHeaders
+    infoHeaders,
+    filterMenuActionButton: {
+      label: 'New',
+      onClick: () => setFunctionsPanelIsOpen(true),
+      variant: 'secondary'
+    }
   }
 
   const refreshFunctions = useCallback(
@@ -195,6 +202,15 @@ const Functions = ({
     setShowUntagged(state => (state === showUntagged ? '' : showUntagged))
   }
 
+  const closePanel = () => {
+    setFunctionsPanelIsOpen(false)
+    // removeNewFeatureSet()
+
+    // if (artifactsStore.error) {
+    //   removeArtifactsError()
+    // }
+  }
+
   return (
     <>
       {functionsStore.loading && <Loader />}
@@ -228,6 +244,12 @@ const Functions = ({
           match={match}
           project={match.params.projectName}
           redirectToDetailsPane
+        />
+      )}
+      {functionsPanelIsOpen && (
+        <FunctionsPanel
+          closePanel={closePanel}
+          project={match.params.projectName}
         />
       )}
     </>

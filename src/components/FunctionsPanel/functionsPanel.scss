@@ -1,0 +1,15 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/mixins';
+
+@include newItemSidePanel;
+
+.funcrions-panel {
+  .accordion {
+    &__container.open {
+      .accordion__body {
+        min-height: 270px;
+      }
+    }
+  }
+}

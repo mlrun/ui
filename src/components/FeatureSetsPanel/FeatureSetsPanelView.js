@@ -11,10 +11,11 @@ import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSe
 import FeatureSetsPanelTransformations from './FeatureSetsPanelTransformations/FeatureSetsPanelTransformations'
 import Loader from '../../common/Loader/Loader'
 
+import { TRANSFORMATIONS_DEFAULT_VALUE } from './featureSetsPanel.util'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './featureSetsPanel.scss'
-import { TRANSFORMATIONS_DEFAULT_VALUE } from './featureSetsPanel.util'
 
 const FeatureSetsPanelView = ({
   closePanel,

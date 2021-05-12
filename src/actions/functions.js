@@ -9,7 +9,12 @@ import {
   FETCH_FUNCTION_TEMPLATE_SUCCESS,
   REMOVE_FUNCTION_TEMPLATE,
   SET_FUNCTIONS_TEMPLATES,
-  SET_LOADING
+  SET_LOADING,
+  SET_NEW_FUNCTION_NAME,
+  SET_NEW_FUNCTION_TAG,
+  SET_NEW_FUNCTION_TYPE,
+  SET_NEW_FUNCTION_DESCRIPTION,
+  SET_NEW_FUNCTION_LABELS
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -108,6 +113,26 @@ const functionsActions = {
   setLoading: loading => ({
     type: SET_LOADING,
     payload: loading
+  }),
+  setNewFunctionDescription: description => ({
+    type: SET_NEW_FUNCTION_DESCRIPTION,
+    payload: description
+  }),
+  setNewFunctionLabels: labels => ({
+    type: SET_NEW_FUNCTION_LABELS,
+    payload: labels
+  }),
+  setNewFunctionName: name => ({
+    type: SET_NEW_FUNCTION_NAME,
+    payload: name
+  }),
+  setNewFunctionTag: tag => ({
+    type: SET_NEW_FUNCTION_TAG,
+    payload: tag
+  }),
+  setNewFunctionType: type => ({
+    type: SET_NEW_FUNCTION_TYPE,
+    payload: type
   })
 }
 

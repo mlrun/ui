@@ -1,0 +1,103 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.general {
+  &__required-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .select {
+      height: 56px;
+    }
+
+    .name {
+      .input {
+        width: 100%;
+      }
+    }
+
+    .type {
+      flex: 0.3;
+      max-width: 150px;
+      margin: 0 10px;
+    }
+
+    .tag {
+      flex: 0.3;
+      max-width: 150px;
+
+      .input {
+        width: 100%;
+      }
+    }
+  }
+
+  .description {
+    width: 100%;
+    margin: 10px 0;
+
+    textarea {
+      width: 100%;
+    }
+  }
+
+  &__labels {
+    &-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 0 15px;
+      border: $primaryBorder;
+      border-radius: 4px;
+
+      .chip-block {
+        .tooltip-wrapper {
+          max-width: initial;
+        }
+      }
+    }
+
+    &-text {
+      margin-right: 10px;
+      color: $primary;
+      font-size: 15px;
+      line-height: 18px;
+    }
+
+    &-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+
+      .chips-wrapper {
+        flex-wrap: wrap;
+
+        .chip_short {
+          max-width: 200px;
+          color: $primary;
+          cursor: pointer;
+        }
+      }
+    }
+
+    &-item {
+      &:hover {
+        color: $white;
+        background-color: $amethyst;
+
+        .chip_short {
+          color: $white;
+        }
+
+        .item-icon-close {
+          svg {
+            path {
+              fill: $white;
+            }
+          }
+        }
+      }
+    }
+  }
+}

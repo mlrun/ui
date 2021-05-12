@@ -1,0 +1,6 @@
+@import '../../scss/colors';
+@import '../../scss/mixins';
+
+.functions-panel__section {
+  @include panelSection;
+}
