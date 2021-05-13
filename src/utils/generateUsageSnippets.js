@@ -9,8 +9,12 @@ export const generateUsageSnippets = (
     featureSet =>
       featureSet.metadata.name === name && featureSet.metadata.tag === tag
   )
-  const [currentFeatureVector] = featureVectors.allData.filter(
-    featureVector => featureVector.name === name && featureVector.tag === tag
+  const currentFeatureVectorData =
+    featureVectors.selectedRowData.content[name] ?? featureVectors.allData
+  const [currentFeatureVector] = currentFeatureVectorData.filter(
+    featureVector =>
+      featureVector.name === name &&
+      (featureVector.tag === tag || featureVector.uid === tag)
   )
 
   if (pageTab === FEATURE_SETS_TAB) {
