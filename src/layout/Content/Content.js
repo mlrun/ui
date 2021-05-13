@@ -182,11 +182,16 @@ const Content = ({
           }
         )
       } else {
-        artifactJson = yamlContent.allData.filter(yamlContentItem =>
+        const currentYamlContent =
+          yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
+
+        artifactJson = yamlContent[currentYamlContent].filter(yamlContentItem =>
           match.params.pageTab === FEATURE_SETS_TAB ||
           match.params.pageTab === FEATURE_VECTORS_TAB
-            ? isEqual(yamlContentItem.metadata.name, item.name) &&
-              isEqual(yamlContentItem.metadata.tag, item.tag)
+            ? (item.tag &&
+                isEqual(yamlContentItem.metadata.name, item.name) &&
+                isEqual(yamlContentItem.metadata.tag, item.tag)) ||
+              isEqual(yamlContentItem.metadata.uid, item.uid)
             : isEqual(yamlContentItem.db_key, item.db_key)
         )
       }
