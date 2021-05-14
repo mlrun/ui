@@ -21,7 +21,7 @@
   &__caret {
     position: absolute;
     top: 50%;
-    right: 2px;
+    right: 10px;
     transform: translate(0%, -50%);
   }
 
@@ -39,19 +39,10 @@
     }
   }
 
-  &.disabled {
-    cursor: not-allowed;
-
-    .select__label,
-    .select__value {
-      color: $spunPearl;
-    }
-  }
-
   &__label {
     top: 15px;
     left: 0;
-    padding: 0 5px 0 15px;
+    padding: 0 5px 0 16px;
     color: $topaz;
     font-size: 15px;
     text-transform: capitalize;
@@ -59,9 +50,13 @@
 
     &_floating {
       position: absolute;
-      top: 7px;
+      top: 0;
       left: 0;
+      padding-top: 9px;
+      font-weight: 700;
       font-size: 10px;
+      line-height: 12px;
+      letter-spacing: 0.5px;
       transition: 200ms ease;
     }
   }
@@ -69,15 +64,25 @@
   &__value {
     min-width: 96px;
     min-height: 1em;
+    padding-right: 50px;
     overflow: hidden;
     color: $mulledWine;
     white-space: nowrap;
     text-overflow: ellipsis;
 
     &_floating {
-      position: absolute;
-      top: 25px;
+      position: relative;
+      top: 6px;
       left: 16px;
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+
+    .select__label,
+    .select__value {
+      color: $spunPearl;
     }
   }
 
@@ -151,5 +156,33 @@
   .pop-up-dialog__overlay {
     top: 100%;
     right: calc(100% + 10px);
+  }
+
+  &-dense {
+    height: 40px;
+
+    .select__label_floating {
+      padding-top: 6px;
+    }
+  }
+
+  &-normal {
+    height: 48px;
+  }
+
+  &-medium {
+    height: 52px;
+
+    .select__label_floating {
+      padding-top: 11px;
+    }
+  }
+
+  &-chunky {
+    height: 56px;
+
+    .select__label_floating {
+      padding-top: 13px;
+    }
   }
 }

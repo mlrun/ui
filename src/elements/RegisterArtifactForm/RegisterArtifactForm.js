@@ -31,6 +31,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
     <div className="artifact-register-form">
       <Input
         className="pop-up-dialog__form-input"
+        density="chunky"
         floatingLabel
         label="Name"
         onChange={value =>
@@ -47,6 +48,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
       />
       <Input
         className="pop-up-dialog__form-input"
+        density="chunky"
         floatingLabel
         label="Target Path"
         onChange={value =>
@@ -62,6 +64,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
       />
       <Input
         className="pop-up-dialog__form-input"
+        density="chunky"
         floatingLabel
         label="Description"
         onChange={value =>
@@ -75,6 +78,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
       />
       {showType && (
         <Select
+          density="chunky"
           label="Type:"
           onClick={value =>
             onChange(prevData => ({
