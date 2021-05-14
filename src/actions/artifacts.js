@@ -1,4 +1,5 @@
 import artifactsApi from '../api/artifacts-api'
+import functionsApi from '../api/functions-api'
 import {
   CLOSE_ARTIFACT_PREVIEW,
   CREATE_NEW_FEATURE_SET_BEGIN,
@@ -26,6 +27,9 @@ import {
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
+  FETCH_FUNCTIONS_BEGIN,
+  FETCH_FUNCTIONS_FAILURE,
+  FETCH_FUNCTIONS_SUCCESS,
   FETCH_MODEL_ENDPOINTS_BEGIN,
   FETCH_MODEL_ENDPOINTS_FAILURE,
   FETCH_MODEL_ENDPOINTS_SUCCESS,
@@ -352,6 +356,30 @@ const artifactsAction = {
   fetchFilesSuccess: files => ({
     type: FETCH_FILES_SUCCESS,
     payload: files
+  }),
+  fetchFunctions: projectName => dispatch => {
+    dispatch(artifactsAction.fetchFunctionsBegin())
+
+    return functionsApi
+      .getAll(projectName)
+      .then(({ data }) => {
+        dispatch(artifactsAction.fetchFunctionsSuccess())
+
+        return data.funcs
+      })
+      .catch(err => {
+        dispatch(artifactsAction.fetchFunctionsFailure(err))
+      })
+  },
+  fetchFunctionsBegin: () => ({
+    type: FETCH_FUNCTIONS_BEGIN
+  }),
+  fetchFunctionsFailure: error => ({
+    type: FETCH_FUNCTIONS_FAILURE,
+    payload: error
+  }),
+  fetchFunctionsSuccess: () => ({
+    type: FETCH_FUNCTIONS_SUCCESS
   }),
   fetchModelEndpoints: item => dispatch => {
     dispatch(artifactsAction.fetchModelEndpointsBegin())
