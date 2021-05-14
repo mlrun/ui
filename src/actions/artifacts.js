@@ -1,6 +1,9 @@
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
 import {
+  BUILD_FUNCTION_BEGIN,
+  BUILD_FUNCTION_FAILURE,
+  BUILD_FUNCTION_SUCCESS,
   CLOSE_ARTIFACT_PREVIEW,
   CREATE_NEW_FEATURE_SET_BEGIN,
   CREATE_NEW_FEATURE_SET_FAILURE,
@@ -75,6 +78,30 @@ import { parseFeatures } from '../utils/parseFeatures'
 import { generateArtifacts } from '../utils/generateArtifacts'
 
 const artifactsAction = {
+  buildFunction: func => dispatch => {
+    dispatch(artifactsAction.buildFunctionBegin())
+
+    return artifactsApi
+      .buildFunction(func)
+      .then(result => {
+        dispatch(artifactsAction.buildFunctionSuccess())
+
+        return result
+      })
+      .catch(err => {
+        dispatch(artifactsAction.buildFunctionFailure(err))
+      })
+  },
+  buildFunctionBegin: () => ({
+    type: BUILD_FUNCTION_BEGIN
+  }),
+  buildFunctionFailure: error => ({
+    type: BUILD_FUNCTION_FAILURE,
+    payload: error
+  }),
+  buildFunctionSuccess: () => ({
+    type: BUILD_FUNCTION_SUCCESS
+  }),
   closeArtifactsPreview: item => ({
     type: CLOSE_ARTIFACT_PREVIEW,
     payload: item

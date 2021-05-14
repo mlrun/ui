@@ -1,4 +1,7 @@
 import {
+  BUILD_FUNCTION_BEGIN,
+  BUILD_FUNCTION_FAILURE,
+  BUILD_FUNCTION_SUCCESS,
   CLOSE_ARTIFACT_PREVIEW,
   CREATE_NEW_FEATURE_SET_BEGIN,
   CREATE_NEW_FEATURE_SET_FAILURE,
@@ -137,6 +140,23 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case BUILD_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case BUILD_FUNCTION_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case BUILD_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        loading: false
+      }
     case CLOSE_ARTIFACT_PREVIEW:
       return {
         ...state,

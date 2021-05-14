@@ -9,7 +9,6 @@ import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Select from '../../common/Select/Select'
 import Input from '../../common/Input/Input'
 
-import artifactsApi from '../../api/artifacts-api'
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/generateUri'
@@ -17,6 +16,7 @@ import { MODELS_TAB } from '../../constants'
 import './deployModelPopUp.scss'
 
 const DeployModelPopUp = ({
+  buildFunction,
   closePopUp,
   fetchFunctions,
   model,
@@ -87,8 +87,7 @@ const DeployModelPopUp = ({
       kind: 'task'
     }
 
-    artifactsApi
-      .buildFunction({ function: servingFunction })
+    buildFunction({ function: servingFunction })
       .then(response => {
         setNotification({
           status: response.status,
