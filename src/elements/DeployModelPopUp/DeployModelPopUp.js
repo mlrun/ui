@@ -114,7 +114,7 @@ const DeployModelPopUp = ({
 
   return (
     <div className="deploy-model">
-      <PopUpDialog headerText="Select serving function" closePopUp={closePopUp}>
+      <PopUpDialog headerText="Deploy model" closePopUp={closePopUp}>
         <div className="select-row">
           <Select
             label="Serving function"
