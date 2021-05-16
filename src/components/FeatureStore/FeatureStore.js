@@ -397,7 +397,7 @@ const FeatureStore = ({
           artifactKind={match.params.pageTab.slice(0, -1)}
           match={match}
           refresh={fetchData}
-          setIsPopupDialogOpen={setIsPopupDialogOpen}
+          setIsPopupOpen={setIsPopupDialogOpen}
           title={pageData.registerArtifactDialogTitle}
         />
       )}

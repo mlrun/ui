@@ -180,6 +180,7 @@ export const handleFetchData = async (
 
 export const generatePageData = (
   pageTab,
+  handleDeployModel,
   handleRequestOnExpand,
   handleRemoveRequestData
 ) => {
@@ -194,6 +195,7 @@ export const generatePageData = (
     data.registerArtifactDialogTitle = registerArtifactDialogTitle
     data.tableHeaders = modelsTableHeaders
     data.infoHeaders = modelsInfoHeaders
+    data.actionsMenu = generateModelsActionMenu(handleDeployModel)
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
@@ -204,6 +206,15 @@ export const generatePageData = (
   }
 
   return data
+}
+
+export const generateModelsActionMenu = handleDeployModel => {
+  return [
+    {
+      label: 'Deploy',
+      onClick: handleDeployModel
+    }
+  ]
 }
 
 export const checkForSelectedModel = (

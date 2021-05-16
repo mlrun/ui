@@ -1,4 +1,7 @@
 import {
+  BUILD_FUNCTION_BEGIN,
+  BUILD_FUNCTION_FAILURE,
+  BUILD_FUNCTION_SUCCESS,
   CLOSE_ARTIFACT_PREVIEW,
   CREATE_NEW_FEATURE_SET_BEGIN,
   CREATE_NEW_FEATURE_SET_FAILURE,
@@ -25,6 +28,9 @@ import {
   FETCH_FILES_BEGIN,
   FETCH_FILES_FAILURE,
   FETCH_FILES_SUCCESS,
+  FETCH_FUNCTIONS_BEGIN,
+  FETCH_FUNCTIONS_FAILURE,
+  FETCH_FUNCTIONS_SUCCESS,
   FETCH_MODEL_ENDPOINTS_BEGIN,
   FETCH_MODEL_ENDPOINTS_FAILURE,
   FETCH_MODEL_ENDPOINTS_SUCCESS,
@@ -134,6 +140,23 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case BUILD_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case BUILD_FUNCTION_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case BUILD_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        loading: false
+      }
     case CLOSE_ARTIFACT_PREVIEW:
       return {
         ...state,
@@ -330,6 +353,23 @@ export default (state = initialState, { type, payload }) => {
           ...state.files,
           allData: payload
         },
+        loading: false
+      }
+    case FETCH_FUNCTIONS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_FUNCTIONS_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case FETCH_FUNCTIONS_SUCCESS:
+      return {
+        ...state,
+        error: false,
         loading: false
       }
     case FETCH_MODEL_ENDPOINTS_BEGIN:

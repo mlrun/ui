@@ -171,7 +171,7 @@ const Artifacts = ({
           match={match}
           pageData={pageData}
           refresh={fetchData}
-          setIsPopupDialogOpen={setIsPopupDialogOpen}
+          setIsPopupOpen={setIsPopupDialogOpen}
           title={pageData.registerArtifactDialogTitle}
         />
       )}

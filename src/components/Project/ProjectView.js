@@ -218,7 +218,7 @@ const ProjectView = React.forwardRef(
             refresh={() => {
               history.push(registerArtifactLink)
             }}
-            setIsPopupDialogOpen={setIsPopupDialogOpen}
+            setIsPopupOpen={setIsPopupDialogOpen}
             title={`Register ${artifactKind}`}
           />
         )}

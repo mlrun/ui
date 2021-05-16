@@ -24,6 +24,7 @@ const fetchArtifacts = (item, path, config, withLatestTag) => {
 }
 
 export default {
+  buildFunction: data => mainHttpClient.post('/build/function', data),
   createFeatureSet: (data, project) =>
     mainHttpClient.post(`/projects/${project}/feature-sets`, data),
   createFeatureVector: data =>

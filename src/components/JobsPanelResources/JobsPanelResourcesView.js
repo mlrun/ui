@@ -14,7 +14,7 @@ const JobsPanelResourcesView = ({
   handleDeleteItems,
   handleEditItems,
   handleSelectMemoryUnit,
-  handleSelectСpuUnit,
+  handleSelectCpuUnit,
   match,
   panelDispatch,
   panelState,
@@ -81,7 +81,7 @@ const JobsPanelResourcesView = ({
       <Select
         label="Unit"
         options={selectTypeOptions.unitCpu}
-        onClick={value => handleSelectСpuUnit(value)}
+        onClick={value => handleSelectCpuUnit(value)}
         selectedId={panelState.cpuUnit}
       />
       <RangeInput
@@ -128,7 +128,7 @@ JobsPanelResourcesView.propTypes = {
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
-  handleSelectСpuUnit: PropTypes.func.isRequired,
+  handleSelectCpuUnit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,

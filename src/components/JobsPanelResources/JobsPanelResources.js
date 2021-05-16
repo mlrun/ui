@@ -84,7 +84,7 @@ const JobsPanelResources = ({
     })
   }
 
-  const handleSelectСpuUnit = value => {
+  const handleSelectCpuUnit = value => {
     if (value.match(/m/)) {
       if (panelState.requests.cpu > 0) {
         panelDispatch({
@@ -241,7 +241,7 @@ const JobsPanelResources = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
-      handleSelectСpuUnit={handleSelectСpuUnit}
+      handleSelectCpuUnit={handleSelectCpuUnit}
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
