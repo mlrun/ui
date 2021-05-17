@@ -25,12 +25,13 @@ const ConfigTargets = ({ steps, targets }) => {
             <div className="target-name">{target.name}</div>
             <div className="target-after">
               <Select
-                label="After:"
-                withoutBorder
+                density="dense"
                 disabled
+                label="After:"
                 onClick={step => onSelectTargetAfterStep(target.name, step)}
                 options={steps}
                 selectedId={target.after_state}
+                withoutBorder
               />
             </div>
           </div>

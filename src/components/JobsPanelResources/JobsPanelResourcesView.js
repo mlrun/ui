@@ -27,22 +27,24 @@ const JobsPanelResourcesView = ({
     <JobsPanelSection title="Volumes">
       <JobsPanelVolumesTable
         handleAddNewItem={handleAddNewItem}
-        handleEditItems={handleEditItems}
         handleDeleteItems={handleDeleteItems}
-        resourcesDispatch={resourcesDispatch}
-        resourcesState={resourcesState}
+        handleEditItems={handleEditItems}
         match={match}
         panelState={panelState}
+        resourcesDispatch={resourcesDispatch}
+        resourcesState={resourcesState}
       />
     </JobsPanelSection>
     <JobsPanelSection title="Memory">
       <Select
+        density="chunky"
         label="Unit"
-        options={selectTypeOptions.unitMemory}
         onClick={value => handleSelectMemoryUnit(value)}
+        options={selectTypeOptions.unitMemory}
         selectedId={panelState.memoryUnit}
       />
       <RangeInput
+        density="chunky"
         floatingLabel
         label="Request"
         onChange={value =>
@@ -60,6 +62,7 @@ const JobsPanelResourcesView = ({
         value={resourcesData.requestsMemory}
       />
       <RangeInput
+        density="chunky"
         floatingLabel
         label="Limit"
         onChange={value =>
@@ -79,12 +82,14 @@ const JobsPanelResourcesView = ({
     </JobsPanelSection>
     <JobsPanelSection title="Cpu">
       <Select
+        density="chunky"
         label="Unit"
         options={selectTypeOptions.unitCpu}
         onClick={value => handleSelectCpuUnit(value)}
         selectedId={panelState.cpuUnit}
       />
       <RangeInput
+        density="chunky"
         floatingLabel
         label="Request"
         onChange={value =>
@@ -96,6 +101,7 @@ const JobsPanelResourcesView = ({
         value={resourcesData.requestsCpu}
       />
       <RangeInput
+        density="chunky"
         floatingLabel
         label="Limit"
         onChange={value =>
@@ -109,6 +115,7 @@ const JobsPanelResourcesView = ({
     </JobsPanelSection>
     <JobsPanelSection title="Gpu" className="section-gpu">
       <RangeInput
+        density="chunky"
         floatingLabel
         label="Limit"
         onChange={value =>

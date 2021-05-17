@@ -205,45 +205,48 @@ const FilterMenu = ({
             case 'labels':
               return (
                 <Input
-                  type="text"
-                  label={filter.label}
-                  placeholder="key1,key2=value,..."
+                  density="dense"
                   key={filter.type}
+                  label={filter.label}
                   onChange={setLabels}
-                  value={labels}
                   onKeyDown={onKeyDown}
+                  placeholder="key1,key2=value,..."
+                  type="text"
+                  value={labels}
                 />
               )
             case 'name':
               return (
                 <Input
-                  type="text"
-                  label={filter.label}
+                  density="dense"
                   key={filter.type}
+                  label={filter.label}
                   onChange={setName}
-                  value={name}
                   onKeyDown={onKeyDown}
+                  type="text"
+                  value={name}
                 />
               )
             case 'owner':
               return (
                 <Input
-                  type="text"
-                  label={filter.label}
+                  density="dense"
                   key={filter.type}
+                  label={filter.label}
                   onChange={setOwner}
-                  value={owner}
                   onKeyDown={onKeyDown}
+                  value={owner}
+                  type="text"
                 />
               )
             case 'date-range-time':
               return (
                 <DatePicker
+                  date={dates[0]}
+                  dateTo={dates[1]}
                   key={filter.type}
                   label={filter.label}
                   onChange={handleChangeDates}
-                  date={dates[0]}
-                  dateTo={dates[1]}
                   type="date-range-time"
                   withOptions
                 />
@@ -251,15 +254,16 @@ const FilterMenu = ({
             default:
               return (
                 <Select
+                  density="dense"
                   className={filter.type === 'period' ? 'period-filter' : ''}
-                  options={selectOptions[filter.type]}
                   label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
                   key={filter.type}
+                  onClick={item => handleSelectOption(item, filter)}
+                  options={selectOptions[filter.type]}
                   selectedId={
                     (filter.type === 'status' && stateFilter) ||
                     (filter.type === 'groupBy' && groupFilter)
                   }
-                  onClick={item => handleSelectOption(item, filter)}
                 />
               )
           }

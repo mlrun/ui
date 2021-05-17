@@ -21,6 +21,7 @@ const EditableAdvancedRow = ({
       <div className="table__cell table__cell_edit">
         {table === 'env' ? (
           <Input
+            density="dense"
             onChange={name =>
               setSelectedItem({
                 ...selectedItem,
@@ -32,16 +33,17 @@ const EditableAdvancedRow = ({
           />
         ) : (
           <Select
+            density="dense"
+            label={
+              selectedItem.newKind
+                ? selectedItem.newKind
+                : selectedItem.data.kind
+            }
             onClick={kind =>
               setSelectedItem({
                 ...selectedItem,
                 newKind: kind
               })
-            }
-            label={
-              selectedItem.newKind
-                ? selectedItem.newKind
-                : selectedItem.data.kind
             }
             options={selectOptions.secretKind}
           />
@@ -49,6 +51,7 @@ const EditableAdvancedRow = ({
       </div>
       <div className="table__cell table__cell_edit">
         <Input
+          density="dense"
           onChange={value =>
             setSelectedItem({
               ...selectedItem,
