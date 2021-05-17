@@ -16,7 +16,6 @@ import {
   tableHeaders,
   infoHeaders
 } from './files.util'
-import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 
 import { ARTIFACTS } from '../../constants'
@@ -51,7 +50,7 @@ const Files = ({
 
   const fetchData = useCallback(
     item => {
-      fetchFiles(item).then(result => {
+      fetchFiles(item, match.params.projectName).then(result => {
         if (result) {
           setFiles(generateArtifacts(filterArtifacts(result)))
           setYamlContent(state => ({
@@ -63,7 +62,7 @@ const Files = ({
         return result
       })
     },
-    [fetchFiles]
+    [fetchFiles, match.params.projectName]
   )
 
   const handleRemoveFile = useCallback(
@@ -142,7 +141,7 @@ const Files = ({
   }, [])
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName, tag: 'latest' })
+    fetchData({ tag: 'latest', iter: 'iter' })
 
     return () => {
       setGroupFilter('')
@@ -153,7 +152,7 @@ const Files = ({
         allData: [],
         selectedRowData: []
       })
-      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
+      setArtifactFilter({ tag: 'latest', labels: '', name: '', iter: 'iter' })
     }
   }, [fetchData, match.params.projectName, removeFiles, setArtifactFilter])
 
@@ -204,25 +203,6 @@ const Files = ({
     match.params
   ])
 
-  const handleFilesTreeFilterChange = useCallback(
-    item => {
-      handleArtifactTreeFilterChange(
-        fetchData,
-        artifactsStore.filter,
-        item,
-        match.params.projectName,
-        setArtifactFilter,
-        setFiles
-      )
-    },
-    [
-      artifactsStore.filter,
-      fetchData,
-      match.params.projectName,
-      setArtifactFilter
-    ]
-  )
-
   return (
     <>
       {artifactsStore.loading && <Loader />}
@@ -230,7 +210,6 @@ const Files = ({
         content={files}
         expandRow={handleExpandRow}
         groupFilter={groupFilter}
-        handleArtifactFilterTree={handleFilesTreeFilterChange}
         handleCancel={() => setSelectedFile({})}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}

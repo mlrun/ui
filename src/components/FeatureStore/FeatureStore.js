@@ -24,7 +24,7 @@ import {
   navigateToDetailsPane,
   pageDataInitialState
 } from './featureStore.util'
-import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
+
 import {
   DATASETS_TAB,
   FEATURE_SETS_TAB,
@@ -79,6 +79,7 @@ const FeatureStore = ({
         fetchFeatures,
         fetchFeatureVectors,
         item,
+        match.params.projectName,
         match.params.pageTab
       )
 
@@ -94,7 +95,8 @@ const FeatureStore = ({
       fetchDataSets,
       fetchFeatureSets,
       fetchFeatures,
-      fetchFeatureVectors
+      fetchFeatureVectors,
+      match.params.projectName
     ]
   )
 
@@ -191,10 +193,13 @@ const FeatureStore = ({
   )
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName, tag: 'latest' })
+    fetchData({
+      tag: 'latest',
+      iter: match.params.pageTab === DATASETS_TAB && 'iter'
+    })
 
     return () => {
-      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
+      setArtifactFilter({ tag: 'latest', labels: '', name: '', iter: 'iter' })
       setContent([])
       setYamlContent({
         allData: [],
@@ -209,7 +214,9 @@ const FeatureStore = ({
     }
   }, [
     fetchData,
+    match.params.pageTab,
     match.params.projectName,
+    match.params.tab,
     removeDataSets,
     removeFeatureSets,
     removeFeatureVectors,
@@ -293,34 +300,6 @@ const FeatureStore = ({
     match
   ])
 
-  const handleTreeFilterChange = useCallback(
-    item => {
-      if (match.params.name) {
-        history.push(
-          `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
-        )
-      }
-
-      handleArtifactTreeFilterChange(
-        fetchData,
-        artifactsStore.filter,
-        item,
-        match.params.projectName,
-        setArtifactFilter,
-        setContent
-      )
-    },
-    [
-      artifactsStore.filter,
-      fetchData,
-      history,
-      match.params.name,
-      match.params.pageTab,
-      match.params.projectName,
-      setArtifactFilter
-    ]
-  )
-
   const applyDetailsChanges = changes => {
     return handleApplyDetailsChanges(
       changes,
@@ -379,15 +358,12 @@ const FeatureStore = ({
         content={content}
         expandRow={handleExpandRow}
         groupFilter={groupFilter}
-        handleArtifactFilterTree={handleTreeFilterChange}
         handleCancel={() => setSelectedItem({})}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={openPopupDialog}
         pageData={pageData}
-        refresh={item => {
-          fetchData(item)
-        }}
+        refresh={fetchData}
         selectedItem={selectedItem.item}
         yamlContent={yamlContent}
       />

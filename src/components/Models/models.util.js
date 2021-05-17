@@ -48,7 +48,8 @@ export const modelEndpointsDetailsMenu = [
 export const modelsFilters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' }
+  { type: 'labels', label: 'Labels:' },
+  { type: 'iterations', label: 'Show iterations' }
 ]
 export const modelEndpointsFilters = [{ type: 'labels', label: 'Labels:' }]
 export const page = MODELS_PAGE
@@ -151,6 +152,7 @@ export const handleFetchData = async (
   fetchModelEndpoints,
   fetchModels,
   item,
+  project,
   pageTab
 ) => {
   let data = {
@@ -160,14 +162,14 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === MODELS_TAB) {
-    result = await fetchModels(item)
+    result = await fetchModels(item, project)
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
       data.yamlContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-    result = await fetchModelEndpoints(item)
+    result = await fetchModelEndpoints(item, project)
 
     if (result) {
       data.content = result

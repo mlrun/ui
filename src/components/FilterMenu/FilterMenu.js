@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
@@ -40,7 +40,6 @@ const FilterMenu = ({
   expand,
   filters,
   groupFilter,
-  handleArtifactFilterTree,
   handleExpandAll,
   match,
   onChange,
@@ -52,12 +51,19 @@ const FilterMenu = ({
   const [labels, setLabels] = useState('')
   const [owner, setOwner] = useState('')
   const [name, setName] = useState('')
+  const [iter, setIter] = useState('')
+  const [tag, setTag] = useState('latest')
   const [dates, setDates] = useState(['', ''])
   const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
   const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const history = useHistory()
-  const artifactFilter = useSelector(store => store.artifactsStore.filter)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (filters.find(filter => filter.type === 'iterations')) {
+      setIter('iter')
+    }
+  }, [filters])
 
   useEffect(() => {
     if (
@@ -70,6 +76,8 @@ const FilterMenu = ({
     return () => {
       setLabels('')
       setName('')
+      setIter('')
+      setTag('latest')
     }
   }, [page, match.params.pageTab])
 
@@ -98,7 +106,7 @@ const FilterMenu = ({
     }
   }, [match.params.pageTab, onChange])
 
-  const applyChanges = () => {
+  const applyChanges = data => {
     if (match.params.jobId || match.params.name) {
       history.push(
         `/projects/${match.params.projectName}/${page.toLowerCase()}${
@@ -112,58 +120,51 @@ const FilterMenu = ({
         page
       )
     ) {
-      dispatch(
-        artifactsAction.setArtifactFilter({
-          ...artifactFilter,
-          labels,
-          name
-        })
-      )
-      onChange({
-        tag: artifactFilter.tag,
-        project: match.params.projectName,
-        labels,
-        name
-      })
+      onChange(data)
     } else {
-      page === JOBS_PAGE
-        ? onChange({
-            labels,
-            name,
-            owner,
-            dates,
-            state: stateFilter !== initialStateFilter && stateFilter
-          })
-        : onChange({ name })
+      page === JOBS_PAGE ? onChange(data) : onChange({ name })
     }
   }
 
   const handleSelectOption = (item, filter) => {
-    if (match.params.jobId || match.params.name) {
-      history.push(
-        `/projects/${match.params.projectName}/${page.toLowerCase()}${
-          match.params.pageTab ? `/${match.params.pageTab}` : ''
-        }`
-      )
-    }
-
     if (filter.type === 'status') {
       setStateFilter(item)
-      onChange({
+      applyChanges({
         labels,
         name,
         owner,
         dates,
-        state: item !== initialStateFilter && item
+        state: item !== initialStateFilter && item,
+        iter,
+        tag
       })
     } else if (filter.type === 'groupBy') {
       setGroupFilter(item)
     }
   }
 
+  const handleSelectTree = filter => {
+    applyChanges({
+      tag: filter,
+      labels,
+      name,
+      dates,
+      state: stateFilter !== initialStateFilter && stateFilter,
+      iter
+    })
+    setTag(filter)
+  }
+
   const onKeyDown = event => {
     if (event.keyCode === KEY_CODES.ENTER) {
-      applyChanges()
+      applyChanges({
+        tag,
+        labels,
+        name,
+        dates,
+        state: stateFilter !== initialStateFilter && stateFilter,
+        iter
+      })
     }
   }
 
@@ -174,12 +175,14 @@ const FilterMenu = ({
       generatedDates.push(new Date())
     }
 
-    onChange({
+    applyChanges({
+      tag,
       labels,
       name,
       owner,
       dates,
-      state: stateFilter !== initialStateFilter && stateFilter
+      state: stateFilter !== initialStateFilter && stateFilter,
+      iter
     })
     setDates(generatedDates)
   }
@@ -197,9 +200,9 @@ const FilterMenu = ({
                   key={filter.type}
                   label={filter.label}
                   match={match}
-                  onChange={handleArtifactFilterTree}
+                  onChange={handleSelectTree}
                   page={page}
-                  value={artifactFilter.tag}
+                  value={tag}
                 />
               )
             case 'labels':
@@ -248,6 +251,26 @@ const FilterMenu = ({
                   withOptions
                 />
               )
+            case 'iterations':
+              return (
+                <CheckBox
+                  key={filter.type}
+                  item={{ label: filter.label, id: '' }}
+                  onChange={iteration => {
+                    applyChanges({
+                      labels,
+                      name,
+                      owner,
+                      dates,
+                      tag,
+                      state: stateFilter !== initialStateFilter && stateFilter,
+                      iter: iter === iteration && 'iter'
+                    })
+                    setIter(state => (state === iteration ? 'iter' : iteration))
+                  }}
+                  selectedId={iter}
+                />
+              )
             default:
               return (
                 <Select
@@ -293,13 +316,13 @@ const FilterMenu = ({
           <button
             onClick={() => {
               ![JOBS_PAGE, FUNCTIONS_PAGE].includes(page)
-                ? onChange({
-                    tag: artifactFilter.tag,
-                    project: match.params.projectName,
+                ? applyChanges({
+                    tag,
                     labels,
-                    name
+                    name,
+                    iter
                   })
-                : onChange({ labels, name, dates })
+                : applyChanges({ labels, name, dates })
             }}
             id="refresh"
           >
@@ -325,7 +348,6 @@ const FilterMenu = ({
 FilterMenu.defaultProps = {
   actionButton: null,
   groupFilter: '',
-  handleArtifactFilterTree: null,
   setGroupFilter: null,
   showUntagged: '',
   toggleShowUntagged: null
@@ -335,7 +357,6 @@ FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   groupFilter: PropTypes.string,
-  handleArtifactFilterTree: PropTypes.func,
   setGroupFilter: PropTypes.func,
   showUntagged: PropTypes.string,
   toggleShowUntagged: PropTypes.func

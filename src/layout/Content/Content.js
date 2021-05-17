@@ -39,7 +39,6 @@ const Content = ({
   content,
   expandRow,
   groupFilter,
-  handleArtifactFilterTree,
   handleCancel,
   handleSelectItem,
   loading,
@@ -296,7 +295,6 @@ const Content = ({
             expand={expand}
             filters={pageData.filters}
             groupFilter={pageData.handleRequestOnExpand ? null : groupFilter}
-            handleArtifactFilterTree={handleArtifactFilterTree}
             handleExpandAll={handleExpandAll}
             match={match}
             onChange={refresh}
@@ -354,7 +352,6 @@ Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   expandRow: PropTypes.func,
   groupFilter: PropTypes.string,
-  handleArtifactFilterTree: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,

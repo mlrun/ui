@@ -15,7 +15,6 @@ import {
   checkForSelectedModel,
   checkForSelectedModelEndpoint
 } from './models.util'
-import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { MODEL_ENDPOINTS_TAB, MODELS_TAB } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -61,6 +60,7 @@ const Models = ({
         fetchModelEndpoints,
         fetchModels,
         item,
+        match.params.projectName,
         match.params.pageTab
       )
 
@@ -74,7 +74,12 @@ const Models = ({
 
       return data.yamlContent
     },
-    [fetchModelEndpoints, fetchModels, match.params.pageTab]
+    [
+      fetchModelEndpoints,
+      fetchModels,
+      match.params.pageTab,
+      match.params.projectName
+    ]
   )
 
   const closeDeployModelPopUp = () => {
@@ -164,8 +169,8 @@ const Models = ({
 
   useEffect(() => {
     fetchData({
-      project: match.params.projectName,
-      tag: 'latest'
+      tag: 'latest',
+      iter: match.params.pageTab === MODELS_TAB && 'iter'
     })
 
     return () => {
@@ -176,7 +181,7 @@ const Models = ({
         allData: [],
         selectedRowData: []
       })
-      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
+      setArtifactFilter({ tag: 'latest', labels: '', name: '', iter: 'iter' })
     }
   }, [
     fetchData,
@@ -257,25 +262,6 @@ const Models = ({
     fetchModelEndpointWithAnalysis
   ])
 
-  const handleModelTreeFilterChange = useCallback(
-    item => {
-      handleArtifactTreeFilterChange(
-        fetchData,
-        artifactsStore.filter,
-        item,
-        match.params.projectName,
-        setArtifactFilter,
-        setContent
-      )
-    },
-    [
-      artifactsStore.filter,
-      fetchData,
-      match.params.projectName,
-      setArtifactFilter
-    ]
-  )
-
   return (
     <>
       {artifactsStore.loading && <Loader />}
@@ -283,7 +269,6 @@ const Models = ({
         content={content}
         expandRow={handleExpandRow}
         groupFilter={groupFilter}
-        handleArtifactFilterTree={handleModelTreeFilterChange}
         handleCancel={() => setSelectedModel({})}
         handleSelectItem={item => setSelectedModel({ item })}
         loading={artifactsStore.loading}

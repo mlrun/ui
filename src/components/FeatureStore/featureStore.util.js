@@ -78,7 +78,8 @@ export const featureVectorsInfoHeaders = [
 export const datasetsFilters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' }
+  { type: 'labels', label: 'Label:' },
+  { type: 'iterations', label: 'Show iterations' }
 ]
 export const featureSetsFilters = [
   { type: 'name', label: 'Name:' },
@@ -324,6 +325,7 @@ export const handleFetchData = async (
   fetchFeatures,
   fetchFeatureVectors,
   item,
+  project,
   pageTab
 ) => {
   let data = {
@@ -333,7 +335,7 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === DATASETS_TAB) {
-    result = await fetchDataSets(item)
+    result = await fetchDataSets(item, project)
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
@@ -346,21 +348,21 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureSets({ ...item, tag: null }, config)
+    result = await fetchFeatureSets({ ...item, tag: null }, config, project)
 
     if (result) {
       data.content = parseFeatureStoreDataRequest(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
-    result = await fetchFeatures(item)
+    result = await fetchFeatures(item, project)
 
     if (result) {
       data.content = parseFeatures(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    result = await fetchFeatureVectors(item)
+    result = await fetchFeatureVectors(item, project)
 
     if (result) {
       data.content = parseFeatureVectors(result)

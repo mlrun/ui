@@ -12,6 +12,10 @@ const fetchArtifacts = (item, path, config, withLatestTag) => {
     params.label = item.labels?.split(',')
   }
 
+  if (item?.iter) {
+    params.iter = 0
+  }
+
   if (item?.tag && (withLatestTag || !/latest/i.test(item.tag))) {
     params.tag = item.tag
   }
@@ -58,18 +62,18 @@ export default {
       `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
     )
   },
-  getDataSets: item => {
+  getDataSets: (item, project) => {
     return fetchArtifacts(
       item,
-      `/artifacts?project=${item.project}&category=dataset`,
+      `/artifacts?project=${project}&category=dataset`,
       {},
       true
     )
   },
-  getFeatureSets: (item, config) => {
+  getFeatureSets: (item, config, project) => {
     return fetchArtifacts(
       item,
-      `/projects/${item.project}/${FEATURE_SETS_TAB}`,
+      `/projects/${project}/${FEATURE_SETS_TAB}`,
       config,
       true
     )
@@ -78,28 +82,28 @@ export default {
     mainHttpClient.get(
       `/projects/${project}/feature-vectors?name=${featureVector}`
     ),
-  getFeatureVectors: item => {
+  getFeatureVectors: (item, project) => {
     return fetchArtifacts(
       item,
-      `/projects/${item.project}/${FEATURE_VECTORS_TAB}`,
+      `/projects/${project}/${FEATURE_VECTORS_TAB}`,
       {},
       true
     )
   },
   getFeature: (project, feature) =>
     mainHttpClient.get(`/projects/${project}/features?name=${feature}`),
-  getFeatures: item =>
-    fetchArtifacts(item, `/projects/${item.project}/${FEATURES_TAB}`, {}, true),
+  getFeatures: (item, project) =>
+    fetchArtifacts(item, `/projects/${project}/${FEATURES_TAB}`, {}, true),
   getFile: item => {
     return fetchArtifacts(
       item,
       `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
     )
   },
-  getFiles: item => {
+  getFiles: (item, project) => {
     return fetchArtifacts(
       item,
-      `/artifacts?project=${item.project}&category=other`,
+      `/artifacts?project=${project}&category=other`,
       {},
       true
     )
@@ -121,10 +125,10 @@ export default {
       params
     })
   },
-  getModels: item => {
+  getModels: (item, project) => {
     return fetchArtifacts(
       item,
-      `/artifacts?project=${item.project}&category=model`,
+      `/artifacts?project=${project}&category=model`,
       {},
       true
     )
