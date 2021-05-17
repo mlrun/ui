@@ -39,7 +39,7 @@ const DetailsRequestedFeatures = ({
   const [currentData, setCurrentData] = useState([])
   const [confirmDialogData, setConfirmDialogData] = useState({
     index: null,
-    featureName: null
+    feature: null
   })
   const [editableItem, setEditableItem] = useState(null)
 
@@ -47,7 +47,7 @@ const DetailsRequestedFeatures = ({
     setCurrentData(changes.data.features ?? selectedItem.specFeatures)
 
     return () => {
-      setConfirmDialogData({ index: null, featureName: null })
+      setConfirmDialogData({ index: null, feature: null })
       setCurrentData([])
     }
   }, [changes.data, detailsDispatch, selectedItem])
@@ -118,7 +118,7 @@ const DetailsRequestedFeatures = ({
     let editedArr = [...currentData]
 
     editedArr.splice(index, 1)
-    setConfirmDialogData({ index: null, featureName: null })
+    setConfirmDialogData({ index: null, feature: null })
     detailsDispatch({
       type: detailsActions.SET_CHANGES,
       payload: {
@@ -237,11 +237,11 @@ const DetailsRequestedFeatures = ({
                     />
                   </Tooltip>
                 </div>
-                {confirmDialogData.featureName && (
+                {confirmDialogData.feature && (
                   <PopUpDialog
-                    headerText={`Delete feature ${confirmDialogData.featureName} from vector ${match.params.name}?`}
+                    headerText={`Delete feature ${confirmDialogData.feature} from vector ${match.params.name}?`}
                     closePopUp={() => {
-                      setConfirmDialogData({ index: null, featureName: null })
+                      setConfirmDialogData({ index: null, feature: null })
                     }}
                   >
                     <div>The feature could be added back later.</div>
@@ -253,7 +253,7 @@ const DetailsRequestedFeatures = ({
                         onClick={() => {
                           setConfirmDialogData({
                             index: null,
-                            featureName: null
+                            feature: null
                           })
                         }}
                       />
