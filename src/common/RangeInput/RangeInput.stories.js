@@ -8,7 +8,10 @@ export default {
 }
 
 const commonArgs = {
-  floatingLabel: true
+  floatingLabel: true,
+  max: 10,
+  min: 0,
+  value: ''
 }
 
 const Template = args => <RangeInput {...args} />
@@ -17,16 +20,14 @@ export const Dense = Template.bind({})
 Dense.args = {
   ...commonArgs,
   density: 'dense',
-  label: 'Dense label',
-  value: ''
+  label: 'Dense label'
 }
 
 export const Normal = Template.bind({})
 Normal.args = {
   ...commonArgs,
   density: 'normal',
-  label: 'Normal label',
-  value: ''
+  label: 'Normal label'
 }
 
 export const Medium = Template.bind({})

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -19,18 +19,21 @@ const RangeInput = ({
   onChange,
   value
 }) => {
+  const [inputValue, setInputValue] = useState(value)
   const rangeClassName = classNames('range', `range-${density}`)
 
   const handleIncrease = () => {
-    if (value >= max) return
+    if (inputValue >= max) return
 
-    onChange(++value)
+    setInputValue(prev => ++prev)
+    onChange(+inputValue + 1)
   }
 
   const handleDecrease = () => {
-    if (value <= 0 || value <= min) return
+    if (inputValue <= 0 || inputValue <= min) return
 
-    onChange(--value)
+    setInputValue(prev => --prev)
+    onChange(+inputValue - 1)
   }
 
   return (
@@ -42,9 +45,12 @@ const RangeInput = ({
         floatingLabel={floatingLabel}
         infoLabel={infoLabel}
         label={label}
-        onChange={onChange}
+        onChange={value => {
+          setInputValue(value)
+          onChange(value)
+        }}
         type="number"
-        value={value}
+        value={inputValue}
       />
       <div className="range__buttons">
         <button

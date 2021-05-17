@@ -84,8 +84,8 @@ const JobsPanelResourcesView = ({
       <Select
         density="chunky"
         label="Unit"
-        onClick={value => handleSelectСpuUnit(value)}
         options={selectTypeOptions.unitCpu}
+        onClick={value => handleSelectСpuUnit(value)}
         selectedId={panelState.cpuUnit}
       />
       <RangeInput
