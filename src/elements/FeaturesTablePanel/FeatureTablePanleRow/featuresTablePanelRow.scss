@@ -7,13 +7,36 @@
   padding: 5px 0;
   font-size: 15px;
 
-  &:hover {
-    .feature-row__actions {
-      .action:not(.readonly) {
-        &.set-as-label,
-        &.remove {
-          visibility: visible;
+  &.selected-feature {
+    .set-as-label {
+      visibility: visible;
+    }
+
+    .label-actions {
+      &:hover {
+        .set-as-label {
+          display: none;
         }
+
+        .unset-as-label {
+          display: block;
+        }
+      }
+    }
+  }
+
+  &:hover {
+    .action:not(.readonly) {
+      &.remove {
+        visibility: visible;
+      }
+    }
+  }
+
+  &:not(.selected-feature-exists):hover {
+    .action:not(.readonly) {
+      &.set-as-label {
+        visibility: visible;
       }
     }
   }
@@ -34,29 +57,35 @@
   .feature-row__actions {
     display: flex;
     justify-content: flex-end;
-    width: 60px;
+
+    .label-actions {
+      margin: 0 10px;
+    }
 
     .action {
-      margin: 0 5px;
       cursor: pointer;
 
-      svg {
-        path {
-          fill: $malibu;
-        }
-
-        &:hover {
-          path {
-            fill: $cornflowerBlue;
-          }
-        }
+      path,
+      rect {
+        fill: $malibu;
       }
 
-      &.set-as-label,
-      &.remove {
-        visibility: hidden;
+      &:hover {
+        path,
+        rect {
+          fill: $cornflowerBlue;
+        }
       }
     }
+  }
+
+  .unset-as-label {
+    display: none;
+  }
+
+  .set-as-label,
+  .remove {
+    visibility: hidden;
   }
 }
 
