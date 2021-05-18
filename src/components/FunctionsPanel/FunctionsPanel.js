@@ -1,100 +1,77 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-// import { useHistory } from 'react-router-dom'
 
 import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 
 const FunctionsPanel = ({
-  artifactsStore,
+  functionsStore,
   closePanel,
-  createNewFeatureSet,
-  createFeatureSetSuccess,
+  createFunctionSuccess,
+  deployFunction,
+  handleDeployFunctionFailure,
+  handleDeployFunctionSuccess,
   project,
-  removeArtifactsError,
-  startFeatureSetIngest
+  removeFunctionsError,
+  createNewFunction
 }) => {
   const [isNameValid, setNameValid] = useState(true)
   const [isTagValid, setTagValid] = useState(true)
 
-  // const history = useHistory()
+  const handleSave = deploy => {
+    if (isNameValid && isTagValid) {
+      if (functionsStore.newFunction.metadata.name.length === 0) {
+        return setNameValid(false)
+      }
 
-  // const handleSave = startIngestion => {
-  //   if (isNameValid && isVersionValid && isUrlValid) {
-  //     if (artifactsStore.newFeatureSet.metadata.name.length === 0) {
-  //       return setNameValid(false)
-  //     }
-  //
-  //     if (artifactsStore.newFeatureSet.metadata.tag.length === 0) {
-  //       return setVersionValid(false)
-  //     }
-  //
-  //     if (artifactsStore.newFeatureSet.spec.source.path.length === 0) {
-  //       return setUrlValid(false)
-  //     }
-  //
-  //     if (artifactsStore.error) {
-  //       removeArtifactsError()
-  //     }
-  //
-  //     createNewFeatureSet(
-  //       {
-  //         kind: 'FeatureSet',
-  //         ...artifactsStore.newFeatureSet
-  //       },
-  //       project
-  //     ).then(result => {
-  //       if (startIngestion) {
-  //         return handleStartFeatureSetIngest(result)
-  //       }
-  //
-  //       createFeatureSetSuccess().then(() => {
-  //         history.push(
-  //           `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
-  //         )
-  //       })
-  //     })
-  //   }
-  // }
+      if (functionsStore.newFunction.metadata.tag.length === 0) {
+        return setTagValid(false)
+      }
 
-  // const handleStartFeatureSetIngest = result => {
-  //   return startFeatureSetIngest(
-  //     project,
-  //     result.data.metadata.name,
-  //     result.data.metadata.uid,
-  //     result.data.spec.source,
-  //     result.data.spec.targets
-  //   ).then(() => {
-  //     createFeatureSetSuccess().then(() => {
-  //       history.push(
-  //         `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
-  //       )
-  //     })
-  //   })
-  // }
+      if (functionsStore.error) {
+        removeFunctionsError()
+      }
+
+      createNewFunction(project, functionsStore.newFunction).then(() => {
+        if (deploy) {
+          return handleDeploy(functionsStore.newFunction)
+        }
+
+        createFunctionSuccess()
+      })
+    }
+  }
+
+  const handleDeploy = func => {
+    deployFunction(func)
+      .then(() => {
+        handleDeployFunctionSuccess()
+      })
+      .catch(error => {
+        handleDeployFunctionFailure(error)
+      })
+  }
 
   return (
     <FunctionsPanelView
       closePanel={closePanel}
-      // error={artifactsStore.error}
-      // handleSave={handleSave}
+      error={functionsStore.error}
+      handleSave={handleSave}
       isNameValid={isNameValid}
       isTagValid={isTagValid}
-      // loading={artifactsStore.loading}
-      // removeArtifactsError={removeArtifactsError}
+      loading={functionsStore.loading}
+      removeFunctionsError={removeFunctionsError}
       setNameValid={setNameValid}
       setTagValid={setTagValid}
-      // setTransformationsValue={setTransformationsValue}
-      // transformationsValue={transformationsValue}
     />
   )
 }
 
 FunctionsPanel.propTypes = {
   closePanel: PropTypes.func.isRequired,
-  createFeatureSetSuccess: PropTypes.func.isRequired,
+  createFunctionSuccess: PropTypes.func.isRequired,
   project: PropTypes.string.isRequired
 }
 

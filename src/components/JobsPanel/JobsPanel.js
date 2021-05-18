@@ -192,7 +192,7 @@ const JobsPanel = ({
           name: functionsStore.template.name || groupedFunctions.name,
           method: defaultMethod || (methodOptions[0]?.id ?? ''),
           methodDescription: methodOptions[0]?.subLabel ?? '',
-          version: defaultVersion
+          version: groupedFunctions.tag || defaultVersion
         }
       })
       panelDispatch({
@@ -235,6 +235,7 @@ const JobsPanel = ({
     defaultData,
     functionsStore.template.name,
     groupedFunctions.name,
+    groupedFunctions.tag,
     selectedFunction
   ])
 

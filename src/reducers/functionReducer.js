@@ -19,7 +19,16 @@ import {
   SET_NEW_FUNCTION_COMMANDS,
   SET_NEW_FUNCTION_VOLUME_MOUNTS,
   SET_NEW_FUNCTION_VOLUMES,
-  SET_NEW_FUNCTION_RESOURCES
+  SET_NEW_FUNCTION_RESOURCES,
+  SET_NEW_FUNCTION_ENV,
+  REMOVE_NEW_FUNCTION,
+  CREATE_NEW_FUNCTION_BEGIN,
+  CREATE_NEW_FUNCTION_FAILURE,
+  CREATE_NEW_FUNCTION_SUCCESS,
+  REMOVE_FUNCTIONS_ERROR,
+  DEPLOY_FUNCTION_BEGIN,
+  DEPLOY_FUNCTION_FAILURE,
+  DEPLOY_FUNCTION_SUCCESS
 } from '../constants'
 
 const initialState = {
@@ -27,7 +36,7 @@ const initialState = {
   loading: false,
   error: null,
   newFunction: {
-    kind: '',
+    kind: 'local',
     metadata: {
       labels: {},
       name: '',
@@ -38,7 +47,8 @@ const initialState = {
       build: {
         base_image: '',
         commands: [],
-        functionSourceCode: ''
+        functionSourceCode: '',
+        image: 'mlrun/mlrun'
       },
       default_handler: '',
       description: '',
@@ -58,6 +68,39 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case CREATE_NEW_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case CREATE_NEW_FUNCTION_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case CREATE_NEW_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loading: false
+      }
+    case DEPLOY_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case DEPLOY_FUNCTION_FAILURE:
+      return {
+        ...state,
+        loading: false
+      }
+    case DEPLOY_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loading: false
+      }
     case FETCH_FUNCTIONS_BEGIN:
       return {
         ...state,
@@ -104,6 +147,16 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         template: {}
       }
+    case REMOVE_FUNCTIONS_ERROR:
+      return {
+        ...state,
+        error: null
+      }
+    case REMOVE_NEW_FUNCTION:
+      return {
+        ...state,
+        newFunction: initialState.newFunction
+      }
     case SET_NEW_FUNCTION_BASE_IMAGE:
       return {
         ...state,
@@ -140,6 +193,17 @@ export default (state = initialState, { type, payload }) => {
           spec: {
             ...state.newFunction.spec,
             description: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_ENV:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            env: payload
           }
         }
       }

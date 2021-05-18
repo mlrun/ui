@@ -45,6 +45,7 @@ const ScheduleRecurring = ({
       <p>Note: all times are interpreted in UTC timezone</p>
       <div className="repeat_container">
         <Select
+          density="chunky"
           onClick={item => {
             recurringDispatch({
               type: scheduleActionType.SCHEDULE_REPEAT_ACTIVE_OPTION,
@@ -73,6 +74,7 @@ const ScheduleRecurring = ({
         {['minute', 'hour'].includes(scheduleRepeatActiveOption) && (
           <div className="schedule-repeat">
             <Select
+              density="chunky"
               label="Every"
               onClick={option => handleScheduleRepeatChange(option, null)}
               options={selectOptions[scheduleRepeatActiveOption]}
@@ -120,6 +122,7 @@ const ScheduleRecurring = ({
       {/* <span>Ends</span> */}
       <div className="repeat_end_container">
         <Select
+          density="chunky"
           onClick={item =>
             recurringDispatch({
               type: scheduleActionType.SCHEDULE_REPEAT_END_ACTIVE_OPTION,
@@ -131,13 +134,13 @@ const ScheduleRecurring = ({
         />
         {scheduleRepeatEndActiveOption === 'onDate' && (
           <DatePicker
+            date={date}
             onChange={item =>
               recurringDispatch({
                 type: scheduleActionType.SCHEDULE_REPEAT_END_DATE,
                 payload: item
               })
             }
-            date={date}
           />
         )}
         {scheduleRepeatEndActiveOption === 'after' && (

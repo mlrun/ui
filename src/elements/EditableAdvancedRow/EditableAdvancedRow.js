@@ -2,14 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
+import Select from '../../common/Select/Select'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
-import Select from '../../common/Select/Select'
+
 import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
 
 const EditableAdvancedRow = ({
   handleEdit,
-  match,
   selectedItem,
   setSelectedItem,
   table
@@ -21,6 +21,7 @@ const EditableAdvancedRow = ({
       <div className="table__cell table__cell_edit">
         {table === 'env' ? (
           <Input
+            density="dense"
             onChange={name =>
               setSelectedItem({
                 ...selectedItem,
@@ -32,16 +33,17 @@ const EditableAdvancedRow = ({
           />
         ) : (
           <Select
+            density="dense"
+            label={
+              selectedItem.newKind
+                ? selectedItem.newKind
+                : selectedItem.data.kind
+            }
             onClick={kind =>
               setSelectedItem({
                 ...selectedItem,
                 newKind: kind
               })
-            }
-            label={
-              selectedItem.newKind
-                ? selectedItem.newKind
-                : selectedItem.data.kind
             }
             options={selectOptions.secretKind}
           />
@@ -49,6 +51,7 @@ const EditableAdvancedRow = ({
       </div>
       <div className="table__cell table__cell_edit">
         <Input
+          density="dense"
           onChange={value =>
             setSelectedItem({
               ...selectedItem,

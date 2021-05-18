@@ -17,8 +17,6 @@
     &.resources {
       .select {
         flex: 1;
-        height: auto;
-        margin-right: 16px;
 
         &__body {
           top: 60px;
@@ -80,10 +78,6 @@
         &__label {
           margin-bottom: 5px;
           color: $primary;
-        }
-
-        .select {
-          height: 56px;
         }
 
         @include tableDisplay(1);

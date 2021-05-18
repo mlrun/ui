@@ -30,6 +30,8 @@ const Functions = ({
   functionsStore,
   history,
   match,
+  removeFunctionsError,
+  removeNewFunction,
   removeNewJob,
   setLoading,
   setNotification
@@ -68,26 +70,28 @@ const Functions = ({
 
   const refreshFunctions = useCallback(
     items => {
-      fetchFunctions(match.params.projectName, items?.name).then(functions => {
-        const newFunctions = chain(functions)
-          .orderBy('metadata.updated', 'desc')
-          .map(func => ({
-            name: func.metadata.name,
-            type: func.kind,
-            tag: func.metadata.tag,
-            hash: func.metadata.hash,
-            codeOrigin: func.spec?.build?.code_origin ?? '',
-            updated: new Date(func.metadata.updated),
-            command: func.spec?.command,
-            image: func.spec?.image,
-            description: func.spec?.description,
-            state: func.status?.state ?? '',
-            functionSourceCode: func.spec?.build?.functionSourceCode ?? ''
-          }))
-          .value()
+      return fetchFunctions(match.params.projectName, items?.name).then(
+        functions => {
+          const newFunctions = chain(functions)
+            .orderBy('metadata.updated', 'desc')
+            .map(func => ({
+              name: func.metadata.name,
+              type: func.kind,
+              tag: func.metadata.tag,
+              hash: func.metadata.hash,
+              codeOrigin: func.spec?.build?.code_origin ?? '',
+              updated: new Date(func.metadata.updated),
+              command: func.spec?.command,
+              image: func.spec?.image,
+              description: func.spec?.description,
+              state: func.status?.state ?? '',
+              functionSourceCode: func.spec?.build?.functionSourceCode ?? ''
+            }))
+            .value()
 
-        return setFunctions(newFunctions)
-      })
+          return setFunctions(newFunctions)
+        }
+      )
     },
     [fetchFunctions, match.params.projectName]
   )
@@ -204,11 +208,52 @@ const Functions = ({
 
   const closePanel = () => {
     setFunctionsPanelIsOpen(false)
-    // removeNewFeatureSet()
+    removeNewFunction()
 
-    // if (artifactsStore.error) {
-    //   removeArtifactsError()
-    // }
+    if (functionsStore.error) {
+      removeFunctionsError()
+    }
+  }
+
+  const createFunctionSuccess = () => {
+    setFunctionsPanelIsOpen(false)
+    removeNewFunction()
+
+    return refreshFunctions().then(() => {
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Function created successfully'
+      })
+    })
+  }
+
+  const handleDeployFunctionSuccess = () => {
+    setFunctionsPanelIsOpen(false)
+    removeNewFunction()
+
+    return refreshFunctions().then(() => {
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Function deployment initiated successfully'
+      })
+    })
+  }
+
+  const handleDeployFunctionFailure = error => {
+    setFunctionsPanelIsOpen(false)
+    removeNewFunction()
+
+    // console.log(error)
+
+    return refreshFunctions().then(() => {
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Function deployment failed to initiate'
+      })
+    })
   }
 
   return (
@@ -237,6 +282,7 @@ const Functions = ({
           }}
           groupedFunctions={{
             name: editableItem.name,
+            tag: editableItem.tag,
             functions: functionsStore.functions.filter(
               func => func.metadata.name === editableItem.name
             )
@@ -249,6 +295,9 @@ const Functions = ({
       {functionsPanelIsOpen && (
         <FunctionsPanel
           closePanel={closePanel}
+          createFunctionSuccess={createFunctionSuccess}
+          handleDeployFunctionFailure={handleDeployFunctionFailure}
+          handleDeployFunctionSuccess={handleDeployFunctionSuccess}
           project={match.params.projectName}
         />
       )}

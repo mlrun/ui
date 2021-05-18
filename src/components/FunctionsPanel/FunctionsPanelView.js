@@ -7,6 +7,9 @@ import Accordion from '../../common/Accordion/Accordion'
 import FunctionsPanelGeneral from '../../elements/FunctionsPanelGeneral/FunctionsPanelGeneral'
 import FunctionsPanelCode from '../../elements/FunctionsPanelCode/FunctionsPanelCode'
 import FunctionsPanelResources from '../../elements/FunctionsPanelResources/FunctionsPanelResources'
+import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnvironmentVariables/FunctionsPanelEnvironmentVariables'
+import Button from '../../common/Button/Button'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -14,9 +17,12 @@ import './functionsPanel.scss'
 
 const FunctionsPanelView = ({
   closePanel,
+  error,
+  handleSave,
   isNameValid,
   isTagValid,
   loading,
+  removeFunctionsError,
   setNameValid,
   setTagValid
 }) => {
@@ -55,17 +61,61 @@ const FunctionsPanelView = ({
           >
             <FunctionsPanelResources />
           </Accordion>
+          <Accordion
+            accordionClassName="new-item-side-panel__accordion"
+            icon={<Arrow />}
+            iconClassName="new-item-side-panel__expand-icon"
+            openByDefault
+          >
+            <FunctionsPanelEnvironmentVariables />
+          </Accordion>
+          <div className="new-item-side-panel__buttons-container">
+            {error && (
+              <ErrorMessage
+                closeError={() => {
+                  if (error) {
+                    removeFunctionsError()
+                  }
+                }}
+                message={error}
+              />
+            )}
+            <Button
+              className="btn_cancel"
+              variant="label"
+              label="Cancel"
+              onClick={closePanel}
+            />
+            <Button
+              className="btn_save"
+              variant="tertiary"
+              label="Save"
+              onClick={() => handleSave()}
+            />
+            <Button
+              variant="secondary"
+              label="Deploy"
+              onClick={() => handleSave(true)}
+            />
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
+FunctionsPanelView.defaultProps = {
+  error: ''
+}
+
 FunctionsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  handleSave: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   isTagValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
+  removeFunctionsError: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired,
   setTagValid: PropTypes.func.isRequired
 }

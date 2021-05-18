@@ -1,0 +1,13 @@
+.env {
+  width: 100%;
+
+  .table-cell {
+    &__key {
+      width: 30%;
+    }
+
+    &__value {
+      width: 70%;
+    }
+  }
+}

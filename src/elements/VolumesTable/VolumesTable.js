@@ -70,8 +70,6 @@ export const VolumesTable = ({
     [setSelectedVolume, volumes]
   )
 
-  console.log(newVolume)
-
   const deleteVolume = useCallback(
     selectedItem => {
       handleDelete(
@@ -122,8 +120,6 @@ export const VolumesTable = ({
     })
     setShowAddNewVolumeRow(false)
   }
-
-  console.log(selectedVolume)
 
   const editVolume = () => {
     const generatedVolumes = volumes.map(volume => {

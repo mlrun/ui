@@ -121,9 +121,10 @@ const ConfigSteps = ({
       <div className="config-item__title">Steps</div>
       <div className="config-item__content">
         <Select
+          density="chunky"
+          disabled={steps.length === 0}
           floatingLabel
           label="Selected step"
-          disabled={steps.length === 0}
           onClick={onSelectStep}
           options={steps}
           selectedId={selectedStep}
@@ -149,17 +150,19 @@ const ConfigSteps = ({
         </div>
         <div className="row select-row">
           <Select
+            density="chunky"
+            disabled
             floatingLabel
             label="After"
-            disabled
             onClick={onSelectAfterStep}
             options={afterSteps}
             selectedId={selectedAfterStep}
           />
           <Select
+            density="chunky"
+            disabled
             floatingLabel
             label="On error (optional)"
-            disabled
             onClick={onSelectErrorStep}
             options={errorSteps}
             selectedId={selectedErrorStep}

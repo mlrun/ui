@@ -22,14 +22,74 @@ import {
   SET_NEW_FUNCTION_COMMANDS,
   SET_NEW_FUNCTION_VOLUME_MOUNTS,
   SET_NEW_FUNCTION_VOLUMES,
-  SET_NEW_FUNCTION_RESOURCES
+  SET_NEW_FUNCTION_RESOURCES,
+  SET_NEW_FUNCTION_ENV,
+  REMOVE_NEW_FUNCTION,
+  CREATE_NEW_FUNCTION_BEGIN,
+  CREATE_NEW_FUNCTION_FAILURE,
+  CREATE_NEW_FUNCTION_SUCCESS,
+  REMOVE_FUNCTIONS_ERROR,
+  DEPLOY_FUNCTION_BEGIN,
+  DEPLOY_FUNCTION_FAILURE,
+  DEPLOY_FUNCTION_SUCCESS
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
 const functionsActions = {
-  deleteFunction: (func, project) => dispatch => {
+  createNewFunction: (project, data) => dispatch => {
+    dispatch(functionsActions.createNewFunctionBegin())
+
+    return functionsApi
+      .createNewFunction(project, data)
+      .then(result => {
+        dispatch(functionsActions.createNewFunctionSuccess())
+
+        return result
+      })
+      .catch(error => {
+        dispatch(functionsActions.createNewFunctionFailure(error.message))
+
+        throw error
+      })
+  },
+  createNewFunctionBegin: () => ({
+    type: CREATE_NEW_FUNCTION_BEGIN
+  }),
+  createNewFunctionFailure: error => ({
+    type: CREATE_NEW_FUNCTION_FAILURE,
+    payload: error
+  }),
+  createNewFunctionSuccess: () => ({
+    type: CREATE_NEW_FUNCTION_SUCCESS
+  }),
+  deleteFunction: (func, project) => () => {
     return functionsApi.deleteSelectedFunction(func, project)
   },
+  deployFunction: func => dispatch => {
+    dispatch(functionsActions.deployFunctionBegin())
+
+    return functionsApi
+      .deployFunction(func)
+      .then(result => {
+        dispatch(functionsActions.deployFunctionSuccess())
+
+        return result
+      })
+      .catch(error => {
+        dispatch(functionsActions.deployFunctionFailure())
+
+        throw error
+      })
+  },
+  deployFunctionBegin: () => ({
+    type: DEPLOY_FUNCTION_BEGIN
+  }),
+  deployFunctionFailure: () => ({
+    type: DEPLOY_FUNCTION_FAILURE
+  }),
+  deployFunctionSuccess: () => ({
+    type: DEPLOY_FUNCTION_SUCCESS
+  }),
   fetchFunctions: (project, name) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
 
@@ -114,6 +174,12 @@ const functionsActions = {
   removeFunctionTemplate: () => ({
     type: REMOVE_FUNCTION_TEMPLATE
   }),
+  removeFunctionsError: () => ({
+    type: REMOVE_FUNCTIONS_ERROR
+  }),
+  removeNewFunction: () => ({
+    type: REMOVE_NEW_FUNCTION
+  }),
   setFunctionsTemplates: templates => ({
     type: SET_FUNCTIONS_TEMPLATES,
     payload: templates
@@ -133,6 +199,10 @@ const functionsActions = {
   setNewFunctionDescription: description => ({
     type: SET_NEW_FUNCTION_DESCRIPTION,
     payload: description
+  }),
+  setNewFunctionEnv: env => ({
+    type: SET_NEW_FUNCTION_ENV,
+    payload: env
   }),
   setNewFunctionHandler: handler => ({
     type: SET_NEW_FUNCTION_HANDLER,

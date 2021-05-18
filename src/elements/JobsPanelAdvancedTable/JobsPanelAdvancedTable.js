@@ -46,24 +46,27 @@ export const JobsPanelAdvancedTable = ({
           <div className="input-row-wrapper">
             {section.includes('secrets') ? (
               <Select
+                density="medium"
                 onClick={setNewItemName}
                 label={selectedId.length ? selectedId : 'Kind'}
                 options={selectOptions.secretKind}
               />
             ) : (
               <Input
-                onChange={setNewItemName}
-                label="Name"
                 className="input-row__item"
+                density="medium"
                 floatingLabel
+                label="Name"
+                onChange={setNewItemName}
                 type="text"
               />
             )}
             <Input
-              onChange={setNewItemValue}
-              label="Value"
               className="input-row__item input-row__item_edit"
+              density="medium"
               floatingLabel
+              label="Value"
+              onChange={setNewItemValue}
               type="text"
             />
           </div>

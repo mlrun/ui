@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+import DeployModelPopUp from '../../elements/DeployModelPopUp/DeployModelPopUp'
 
 import artifactsAction from '../../actions/artifacts'
 import detailsActions from '../../actions/details'
@@ -34,7 +35,12 @@ const Models = ({
 }) => {
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
-  const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [deployModel, setDeployModel] = useState({})
+  const [
+    isRegisterArtifactPopupOpen,
+    setIsRegisterArtifactPopupOpen
+  ] = useState(false)
+  const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
   const [groupFilter, setGroupFilter] = useState('')
   const [yamlContent, setYamlContent] = useState({
     allData: [],
@@ -70,6 +76,16 @@ const Models = ({
     },
     [fetchModelEndpoints, fetchModels, match.params.pageTab]
   )
+
+  const closeDeployModelPopUp = () => {
+    setDeployModel({})
+    setIsDeployPopupOpen(false)
+  }
+
+  const handleDeployModel = useCallback(model => {
+    setDeployModel(model)
+    setIsDeployPopupOpen(true)
+  }, [])
 
   const handleRemoveModel = useCallback(
     model => {
@@ -176,11 +192,17 @@ const Models = ({
       ...state,
       ...generatePageData(
         match.params.pageTab,
+        handleDeployModel,
         handleRequestOnExpand,
         handleRemoveModel
       )
     }))
-  }, [handleRemoveModel, handleRequestOnExpand, match.params.pageTab])
+  }, [
+    handleDeployModel,
+    handleRemoveModel,
+    handleRequestOnExpand,
+    match.params.pageTab
+  ])
 
   useEffect(() => {
     if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
@@ -266,20 +288,26 @@ const Models = ({
         handleSelectItem={item => setSelectedModel({ item })}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() => setIsPopupDialogOpen(true)}
+        openPopupDialog={() => setIsRegisterArtifactPopupOpen(true)}
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
         yamlContent={yamlContent}
       />
-      {isPopupDialogOpen && (
+      {isRegisterArtifactPopupOpen && (
         <RegisterArtifactPopup
           artifactFilter={artifactsStore.filter}
           artifactKind={pageData.page.slice(0, -1)}
           match={match}
           refresh={fetchData}
-          setIsPopupDialogOpen={setIsPopupDialogOpen}
+          setIsPopupOpen={setIsRegisterArtifactPopupOpen}
           title={pageData.registerArtifactDialogTitle}
+        />
+      )}
+      {isDeployPopupOpen && (
+        <DeployModelPopUp
+          closePopUp={closeDeployModelPopUp}
+          model={deployModel}
         />
       )}
     </>

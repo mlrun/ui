@@ -12,4 +12,14 @@
       }
     }
   }
+
+  .btn {
+    &_cancel {
+      margin-right: 10px;
+    }
+
+    &_save {
+      margin-right: 10px;
+    }
+  }
 }
