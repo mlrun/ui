@@ -58,24 +58,24 @@ const FunctionsPanelResources = ({
 
     if (data.requests.memory.length > 0 || data.limits.memory.length > 0) {
       setNewFunctionResources({
-        requests: {
-          ...functionsStore.newFunction.spec.resources.requests,
-          memory:
-            data.requests.memory.length > 0
-              ? `${Number.parseInt(data.requests.memory)}${
+        requests:
+          data.requests.memory.length > 0
+            ? {
+                ...functionsStore.newFunction.spec.resources.requests,
+                memory: `${Number.parseInt(data.requests.memory)}${
                   value !== 'Bytes' ? unit : ''
                 }`
-              : data.requests.memory
-        },
-        limits: {
-          ...functionsStore.newFunction.spec.resources.limits,
-          memory:
-            data.limits.memory.length > 0
-              ? `${Number.parseInt(data.limits.memory)}${
+              }
+            : functionsStore.newFunction.spec.resources.requests,
+        limits:
+          data.limits.memory.length > 0
+            ? {
+                ...functionsStore.newFunction.spec.resources.limits,
+                memory: `${Number.parseInt(data.limits.memory)}${
                   value !== 'Bytes' ? unit : ''
                 }`
-              : data.limits.memory
-        }
+              }
+            : functionsStore.newFunction.spec.resources.limits
       })
     }
   }
@@ -108,42 +108,54 @@ const FunctionsPanelResources = ({
     setData(state => ({
       ...state,
       cpuUnit: value,
-      requests: {
-        ...state.requests,
-        cpu: value.match(/m/)
-          ? state.requests.cpu + value.slice(0, 1)
-          : state.requests.cpu.match(/m/)
-          ? String(Number.parseInt(state.requests.cpu))
-          : state.requests.cpu
-      },
-      limits: {
-        ...state.limits,
-        cpu: value.match(/m/)
-          ? state.limits.cpu + value.slice(0, 1)
-          : state.limits.cpu.match(/m/)
-          ? String(Number.parseInt(state.limits.cpu))
-          : state.limits.cpu
-      }
+      requests:
+        state.requests.cpu.length > 0
+          ? {
+              ...state.requests,
+              cpu: value.match(/m/)
+                ? state.requests.cpu + value.slice(0, 1)
+                : state.requests.cpu.match(/m/)
+                ? String(Number.parseInt(state.requests.cpu))
+                : state.requests.cpu
+            }
+          : state.requests,
+      limits:
+        state.limits.cpu.length > 0
+          ? {
+              ...state.limits,
+              cpu: value.match(/m/)
+                ? state.limits.cpu + value.slice(0, 1)
+                : state.limits.cpu.match(/m/)
+                ? String(Number.parseInt(state.limits.cpu))
+                : state.limits.cpu
+            }
+          : state.limits
     }))
 
     if (data.requests.cpu.length > 0 || data.limits.cpu.length > 0) {
       setNewFunctionResources({
-        requests: {
-          ...functionsStore.newFunction.spec.resources.requests,
-          cpu: value.match(/m/)
-            ? data.requests.cpu + value.slice(0, 1)
-            : data.requests.cpu.match(/m/)
-            ? String(Number.parseInt(data.requests.cpu))
-            : data.requests.cpu
-        },
-        limits: {
-          ...functionsStore.newFunction.spec.resources.limits,
-          cpu: value.match(/m/)
-            ? data.limits.cpu + value.slice(0, 1)
-            : data.limits.cpu.match(/m/)
-            ? String(Number.parseInt(data.limits.cpu))
-            : data.limits.cpu
-        }
+        requests:
+          data.requests.cpu.length > 0
+            ? {
+                ...functionsStore.newFunction.spec.resources.requests,
+                cpu: value.match(/m/)
+                  ? data.requests.cpu + value.slice(0, 1)
+                  : data.requests.cpu.match(/m/)
+                  ? String(Number.parseInt(data.requests.cpu))
+                  : data.requests.cpu
+              }
+            : functionsStore.newFunction.spec.resources.requests,
+        limits:
+          data.limits.cpu.length > 0
+            ? {
+                ...functionsStore.newFunction.spec.resources.limits,
+                cpu: value.match(/m/)
+                  ? data.limits.cpu + value.slice(0, 1)
+                  : data.limits.cpu.match(/m/)
+                  ? String(Number.parseInt(data.limits.cpu))
+                  : data.limits.cpu
+              }
+            : functionsStore.newFunction.spec.resources.limits
       })
     }
   }
@@ -156,6 +168,13 @@ const FunctionsPanelResources = ({
         cpu: `${value}${state.cpuUnit === 'millicpu' ? 'm' : ''}`
       }
     }))
+    setNewFunctionResources({
+      ...functionsStore.newFunction.spec.resources,
+      [type]: {
+        ...functionsStore.newFunction.spec.resources[type],
+        cpu: `${value}${data.cpuUnit === 'millicpu' ? 'm' : ''}`
+      }
+    })
   }
 
   const handleAddNewVolume = newVolume => {

@@ -245,8 +245,6 @@ const Functions = ({
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
 
-    // console.log(error)
-
     return refreshFunctions().then(() => {
       setNotification({
         status: 400,

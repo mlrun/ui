@@ -72,6 +72,8 @@ const FunctionsPanel = ({
 FunctionsPanel.propTypes = {
   closePanel: PropTypes.func.isRequired,
   createFunctionSuccess: PropTypes.func.isRequired,
+  handleDeployFunctionFailure: PropTypes.func.isRequired,
+  handleDeployFunctionSuccess: PropTypes.func.isRequired,
   project: PropTypes.string.isRequired
 }
 

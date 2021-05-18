@@ -26,7 +26,6 @@ const FunctionsPanelView = ({
   setNameValid,
   setTagValid
 }) => {
-  console.log(isNameValid, isTagValid)
   return (
     <div className="new-item-side-panel-container">
       <div className="functions-panel new-item-side-panel">

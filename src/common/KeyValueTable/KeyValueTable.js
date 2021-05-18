@@ -126,12 +126,19 @@ const KeyValueTable = ({
       })}
       {isAddNewItem ? (
         <div className="table-row no-hover">
-          <Input onChange={setKey} label={keyLabel} floatingLabel type="text" />
           <Input
+            floatingLabel
+            onChange={setKey}
+            label={keyLabel}
+            type="text"
+            wrapperClassName="table-cell__key"
+          />
+          <Input
+            floatingLabel
             onChange={setValue}
             label={valueLabel}
-            floatingLabel
             type="text"
+            wrapperClassName="table-cell__value"
           />
           <button onClick={saveNewItem}>
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
