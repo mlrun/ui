@@ -23,6 +23,7 @@ const FunctionsPanelGeneral = ({ closePanel }) => {
           <a
             href="https://docs.mlrun.org/en/latest/tutorial/01-mlrun-basics.html#gs-tutorial-1-step-create-basic-function"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {' '}
             Read more{' '}
