@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Select from '../../common/Select/Select'
-import ArtifactFilterTree from '../ArtifactsFilterTree/ArtifactsFilterTree'
+import ArtifactFilterTree from '../../elements/ArtifactsFilterTree/ArtifactsFilterTree'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Input from '../../common/Input/Input'

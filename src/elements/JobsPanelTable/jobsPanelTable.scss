@@ -17,18 +17,6 @@
     }
   }
 
-  &.volumes {
-    .table__body {
-      .select {
-        margin-right: 0;
-
-        &__value {
-          min-width: unset;
-        }
-      }
-    }
-  }
-
   &.data-inputs {
     .path-type {
       &-store {

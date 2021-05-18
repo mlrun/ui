@@ -2,14 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
+import Select from '../../common/Select/Select'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
-import Select from '../../common/Select/Select'
+
 import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
 
 const EditableAdvancedRow = ({
   handleEdit,
-  match,
   selectedItem,
   setSelectedItem,
   table

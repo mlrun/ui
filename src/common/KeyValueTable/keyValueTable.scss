@@ -67,9 +67,14 @@
   .input-wrapper {
     width: 100%;
 
-    input {
+    .input {
       border: none;
       border-radius: unset;
+
+      &_edit {
+        width: 100%;
+        border: $primaryBorder;
+      }
     }
   }
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import ChipForm from '../../components/ChipForm/ChipForm'
+import ChipForm from '../../elements/ChipForm/ChipForm'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 

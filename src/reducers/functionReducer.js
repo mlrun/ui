@@ -6,19 +6,103 @@ import {
   FETCH_FUNCTION_TEMPLATE_FAILURE,
   FETCH_FUNCTION_TEMPLATE_SUCCESS,
   REMOVE_FUNCTION_TEMPLATE,
-  SET_FUNCTIONS_TEMPLATES
+  SET_FUNCTIONS_TEMPLATES,
+  SET_NEW_FUNCTION_NAME,
+  SET_NEW_FUNCTION_TAG,
+  SET_NEW_FUNCTION_TYPE,
+  SET_NEW_FUNCTION_DESCRIPTION,
+  SET_NEW_FUNCTION_LABELS,
+  SET_NEW_FUNCTION_SOURCE_CODE,
+  SET_NEW_FUNCTION_HANDLER,
+  SET_NEW_FUNCTION_IMAGE,
+  SET_NEW_FUNCTION_BASE_IMAGE,
+  SET_NEW_FUNCTION_COMMANDS,
+  SET_NEW_FUNCTION_VOLUME_MOUNTS,
+  SET_NEW_FUNCTION_VOLUMES,
+  SET_NEW_FUNCTION_RESOURCES,
+  SET_NEW_FUNCTION_ENV,
+  REMOVE_NEW_FUNCTION,
+  CREATE_NEW_FUNCTION_BEGIN,
+  CREATE_NEW_FUNCTION_FAILURE,
+  CREATE_NEW_FUNCTION_SUCCESS,
+  REMOVE_FUNCTIONS_ERROR,
+  DEPLOY_FUNCTION_BEGIN,
+  DEPLOY_FUNCTION_FAILURE,
+  DEPLOY_FUNCTION_SUCCESS,
+  SET_NEW_FUNCTION_SECRETS
 } from '../constants'
 
 const initialState = {
   functions: [],
   loading: false,
   error: null,
+  newFunction: {
+    kind: 'local',
+    metadata: {
+      labels: {},
+      name: '',
+      tag: ''
+    },
+    spec: {
+      args: [],
+      build: {
+        base_image: '',
+        commands: [],
+        functionSourceCode: '',
+        image: 'mlrun/mlrun'
+      },
+      default_handler: '',
+      description: '',
+      env: [],
+      image: '',
+      volume_mounts: [],
+      volumes: [],
+      resources: {
+        limits: {},
+        requests: {}
+      },
+      secret_sources: []
+    }
+  },
   templatesCatalog: {},
   template: {}
 }
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case CREATE_NEW_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case CREATE_NEW_FUNCTION_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case CREATE_NEW_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loading: false
+      }
+    case DEPLOY_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case DEPLOY_FUNCTION_FAILURE:
+      return {
+        ...state,
+        loading: false
+      }
+    case DEPLOY_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loading: false
+      }
     case FETCH_FUNCTIONS_BEGIN:
       return {
         ...state,
@@ -64,6 +148,187 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         template: {}
+      }
+    case REMOVE_FUNCTIONS_ERROR:
+      return {
+        ...state,
+        error: null
+      }
+    case REMOVE_NEW_FUNCTION:
+      return {
+        ...state,
+        newFunction: initialState.newFunction
+      }
+    case SET_NEW_FUNCTION_BASE_IMAGE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              base_image: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_COMMANDS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              commands: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_DESCRIPTION:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            description: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_ENV:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            env: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_HANDLER:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            default_handler: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_IMAGE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            image: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_LABELS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          metadata: {
+            ...state.newFunction.metadata,
+            labels: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_NAME:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          metadata: {
+            ...state.newFunction.metadata,
+            name: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_RESOURCES:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            resources: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_SECRETS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            secret_sources: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_SOURCE_CODE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              functionSourceCode: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_TAG:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          metadata: {
+            ...state.newFunction.metadata,
+            tag: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_TYPE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          kind: payload
+        }
+      }
+    case SET_NEW_FUNCTION_VOLUME_MOUNTS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            volume_mounts: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_VOLUMES:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            volumes: payload
+          }
+        }
       }
     default:
       return state

@@ -2,30 +2,38 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import FeatureSetsPanelTitleView from './FeatureSetsPanelTitleView'
+import FunctionsPanelGeneralView from './FunctionsPanelGeneralView'
 
-import artifactsAction from '../../../actions/artifacts'
+import functionsActions from '../../actions/functions'
+import { DEFAULT_TYPE } from './functionsPanelGeneral.util'
 
-const FeatureSetsPanelTitle = ({
-  closePanel,
+const FunctionsPanelGeneral = ({
   isNameValid,
-  isVersionValid,
+  isTagValid,
   setNameValid,
-  setNewFeatureSetDescription,
-  setNewFeatureSetLabels,
-  setNewFeatureSetName,
-  setNewFeatureSetVersion,
-  setVersionValid
+  setNewFunctionDescription,
+  setNewFunctionLabels,
+  setNewFunctionName,
+  setNewFunctionTag,
+  setNewFunctionType,
+  setTagValid
 }) => {
   const [data, setData] = useState({
     name: '',
     description: '',
-    version: '',
-    labels: []
+    type: DEFAULT_TYPE,
+    labels: [],
+    tag: ''
   })
 
   const handleNameChange = name => {
-    if (!isNameValid && name.length > 0) {
+    const pattern = /^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/
+
+    if (isNameValid && !pattern.test(name)) {
+      setNameValid(false)
+    }
+
+    if (!isNameValid && name.length > 0 && pattern.test(name)) {
       setNameValid(true)
     }
 
@@ -39,26 +47,26 @@ const FeatureSetsPanelTitle = ({
     if (event.target.value.length === 0) {
       setNameValid(false)
     } else {
-      setNewFeatureSetName(event.target.value)
+      setNewFunctionName(event.target.value)
     }
   }
 
-  const handleVersionChange = version => {
-    if (!isVersionValid && version.length > 0) {
-      setVersionValid(true)
+  const handleTagChange = tag => {
+    if (!isTagValid && tag.length > 0) {
+      setTagValid(true)
     }
 
     setData(state => ({
       ...state,
-      version
+      tag
     }))
   }
 
-  const handleVersionOnBlur = event => {
+  const handleTagOnBlur = event => {
     if (event.target.value.length === 0) {
-      setVersionValid(false)
+      setTagValid(false)
     } else {
-      setNewFeatureSetVersion(event.target.value)
+      setNewFunctionTag(event.target.value)
     }
   }
 
@@ -70,7 +78,7 @@ const FeatureSetsPanelTitle = ({
       label => (newLabels[label.split(':')[0]] = label.split(':')[1].slice(1))
     )
 
-    setNewFeatureSetLabels(newLabels)
+    setNewFunctionLabels(newLabels)
     setData(state => ({
       ...state,
       labels: [...labels, label]
@@ -84,7 +92,7 @@ const FeatureSetsPanelTitle = ({
       label => (newLabels[label.split(':')[0]] = label.split(':')[1].slice(1))
     )
 
-    setNewFeatureSetLabels(newLabels)
+    setNewFunctionLabels(newLabels)
     setData(state => ({
       ...state,
       labels
@@ -92,31 +100,30 @@ const FeatureSetsPanelTitle = ({
   }
 
   return (
-    <FeatureSetsPanelTitleView
-      closePanel={closePanel}
+    <FunctionsPanelGeneralView
       data={data}
       handleAddLabel={handleAddLabel}
       handleChangeLabels={handleChangeLabels}
       handleNameChange={handleNameChange}
       handleNameOnBlur={handleNameOnBlur}
-      handleVersionChange={handleVersionChange}
-      handleVersionOnBlur={handleVersionOnBlur}
+      handleTagChange={handleTagChange}
+      handleTagOnBlur={handleTagOnBlur}
       isNameValid={isNameValid}
-      isVersionValid={isVersionValid}
+      isTagValid={isTagValid}
       setData={setData}
-      setNewFeatureSetDescription={setNewFeatureSetDescription}
+      setNewFunctionDescription={setNewFunctionDescription}
+      setNewFunctionType={setNewFunctionType}
     />
   )
 }
 
-FeatureSetsPanelTitle.propTypes = {
-  closePanel: PropTypes.func.isRequired,
+FunctionsPanelGeneral.propTypes = {
   isNameValid: PropTypes.bool.isRequired,
-  isVersionValid: PropTypes.bool.isRequired,
+  isTagValid: PropTypes.bool.isRequired,
   setNameValid: PropTypes.func.isRequired,
-  setVersionValid: PropTypes.func.isRequired
+  setTagValid: PropTypes.func.isRequired
 }
 
-export default connect(artifactsStore => ({ ...artifactsStore }), {
-  ...artifactsAction
-})(FeatureSetsPanelTitle)
+export default connect(functionsStore => ({ ...functionsStore }), {
+  ...functionsActions
+})(FunctionsPanelGeneral)
