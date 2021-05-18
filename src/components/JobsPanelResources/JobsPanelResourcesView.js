@@ -4,35 +4,31 @@ import PropTypes from 'prop-types'
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import Select from '../../common/Select/Select'
 import RangeInput from '../../common/RangeInput/RangeInput'
+import { VolumesTable } from '../../elements/VolumesTable/VolumesTable'
 
 import { panelActions } from '../JobsPanel/panelReducer'
-import { JobsPanelVolumesTable } from '../../elements/JobsPanelVolumesTable/JobsPanelVolumesTable'
-import { selectMemoryOptions as selectTypeOptions } from './jobsPanelResources.util'
+import { selectMemoryOptions as selectTypeOptions } from '../../utils/panelResources.util'
 
 const JobsPanelResourcesView = ({
-  handleAddNewItem,
-  handleDeleteItems,
-  handleEditItems,
-  handleSelectMemoryUnit,
+  handleAddNewVolume,
+  handleDeleteVolume,
+  handleEditVolume,
   handleSelectСpuUnit,
-  match,
+  handleSelectMemoryUnit,
   panelDispatch,
   panelState,
-  resourcesData,
-  resourcesDispatch,
-  resourcesState
+  resourcesData
 }) => (
   <div className="job-panel__item resources new-item-side-panel__item">
     <JobsPanelSection title="Resources" />
     <JobsPanelSection title="Volumes">
-      <JobsPanelVolumesTable
-        handleAddNewItem={handleAddNewItem}
-        handleEditItems={handleEditItems}
-        handleDeleteItems={handleDeleteItems}
-        resourcesDispatch={resourcesDispatch}
-        resourcesState={resourcesState}
-        match={match}
-        panelState={panelState}
+      <VolumesTable
+        handleAddNewVolume={handleAddNewVolume}
+        handleDelete={handleDeleteVolume}
+        handleEdit={handleEditVolume}
+        className={'data-inputs volumes'}
+        volumeMounts={panelState.tableData.volume_mounts}
+        volumes={panelState.tableData.volumes}
       />
     </JobsPanelSection>
     <JobsPanelSection title="Memory">
@@ -124,17 +120,14 @@ const JobsPanelResourcesView = ({
 )
 
 JobsPanelResourcesView.propTypes = {
-  handleAddNewItem: PropTypes.func.isRequired,
-  handleDeleteItems: PropTypes.func.isRequired,
-  handleEditItems: PropTypes.func.isRequired,
-  handleSelectMemoryUnit: PropTypes.func.isRequired,
+  handleAddNewVolume: PropTypes.func.isRequired,
+  handleDeleteVolume: PropTypes.func.isRequired,
+  handleEditVolume: PropTypes.func.isRequired,
   handleSelectСpuUnit: PropTypes.func.isRequired,
-  match: PropTypes.shape({}).isRequired,
+  handleSelectMemoryUnit: PropTypes.func.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  resourcesData: PropTypes.shape({}).isRequired,
-  resourcesDispatch: PropTypes.func.isRequired,
-  resourcesState: PropTypes.shape({}).isRequired
+  resourcesData: PropTypes.shape({}).isRequired
 }
 
 export default JobsPanelResourcesView

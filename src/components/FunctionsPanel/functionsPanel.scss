@@ -4,11 +4,11 @@
 
 @include newItemSidePanel;
 
-.funcrions-panel {
+.functions-panel {
   .accordion {
     &__container.open {
       .accordion__body {
-        min-height: 270px;
+        min-height: 290px;
       }
     }
   }

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import FunctionsPanelGeneralView from './FunctionsPanelGeneralView'
-import functionsActions from '../../actions/functions'
 
-// import artifactsAction from '../../../actions/artifacts'
+import functionsActions from '../../actions/functions'
+import { DEFAULT_TYPE } from './functionsPanelGeneral.util'
 
 const FunctionsPanelGeneral = ({
   isNameValid,
@@ -21,7 +21,7 @@ const FunctionsPanelGeneral = ({
   const [data, setData] = useState({
     name: '',
     description: '',
-    type: 'local',
+    type: DEFAULT_TYPE,
     labels: [],
     tag: ''
   })
@@ -112,11 +112,10 @@ const FunctionsPanelGeneral = ({
 }
 
 FunctionsPanelGeneral.propTypes = {
-  closePanel: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  isVersionValid: PropTypes.bool.isRequired,
+  isTagValid: PropTypes.bool.isRequired,
   setNameValid: PropTypes.func.isRequired,
-  setVersionValid: PropTypes.func.isRequired
+  setTagValid: PropTypes.func.isRequired
 }
 
 export default connect(functionsStore => ({ ...functionsStore }), {

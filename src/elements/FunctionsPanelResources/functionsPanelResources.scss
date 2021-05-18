@@ -1,0 +1,22 @@
+.resources {
+  .volumes,
+  .memory,
+  .cpu {
+    margin-bottom: 45px;
+  }
+
+  &__inputs {
+    //display: flex;
+    //
+    .range {
+      //max-width: 75px;
+      margin-right: 16px;
+    }
+
+    .select {
+      flex: 1 1;
+      height: auto;
+      margin-right: 16px;
+    }
+  }
+}

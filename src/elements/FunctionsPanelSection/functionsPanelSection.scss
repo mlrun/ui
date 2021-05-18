@@ -3,4 +3,10 @@
 
 .functions-panel__section {
   @include panelSection;
+
+  .panel-section {
+    &__body {
+      margin-bottom: 0;
+    }
+  }
 }

@@ -9,3 +9,5 @@ export const typeOptions = [
   { label: 'Serving', id: 'serving' },
   { label: 'Local', id: 'local' }
 ]
+
+export const DEFAULT_TYPE = 'local'

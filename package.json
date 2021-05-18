@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "/mlrun",
   "dependencies": {
+    "@monaco-editor/react": "^4.1.3",
     "axios": "^0.21.1",
     "camelcase": "^5.2.0",
     "chart.js": "^3.0.0-beta.11",

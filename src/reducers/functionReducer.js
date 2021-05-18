@@ -11,7 +11,15 @@ import {
   SET_NEW_FUNCTION_TAG,
   SET_NEW_FUNCTION_TYPE,
   SET_NEW_FUNCTION_DESCRIPTION,
-  SET_NEW_FUNCTION_LABELS
+  SET_NEW_FUNCTION_LABELS,
+  SET_NEW_FUNCTION_SOURCE_CODE,
+  SET_NEW_FUNCTION_HANDLER,
+  SET_NEW_FUNCTION_IMAGE,
+  SET_NEW_FUNCTION_BASE_IMAGE,
+  SET_NEW_FUNCTION_COMMANDS,
+  SET_NEW_FUNCTION_VOLUME_MOUNTS,
+  SET_NEW_FUNCTION_VOLUMES,
+  SET_NEW_FUNCTION_RESOURCES
 } from '../constants'
 
 const initialState = {
@@ -25,10 +33,10 @@ const initialState = {
       name: '',
       tag: ''
     },
-
     spec: {
       args: [],
       build: {
+        base_image: '',
         commands: [],
         functionSourceCode: ''
       },
@@ -37,7 +45,11 @@ const initialState = {
       env: [],
       image: '',
       volume_mounts: [],
-      volumes: []
+      volumes: [],
+      resources: {
+        limits: {},
+        requests: {}
+      }
     }
   },
   templatesCatalog: {},
@@ -92,6 +104,34 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         template: {}
       }
+    case SET_NEW_FUNCTION_BASE_IMAGE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              base_image: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_COMMANDS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              commands: payload
+            }
+          }
+        }
+      }
     case SET_NEW_FUNCTION_DESCRIPTION:
       return {
         ...state,
@@ -100,6 +140,28 @@ export default (state = initialState, { type, payload }) => {
           spec: {
             ...state.newFunction.spec,
             description: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_HANDLER:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            default_handler: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_IMAGE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            image: payload
           }
         }
       }
@@ -125,6 +187,31 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case SET_NEW_FUNCTION_RESOURCES:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            resources: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_SOURCE_CODE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              functionSourceCode: payload
+            }
+          }
+        }
+      }
     case SET_NEW_FUNCTION_TAG:
       return {
         ...state,
@@ -142,6 +229,28 @@ export default (state = initialState, { type, payload }) => {
         newFunction: {
           ...state.newFunction,
           kind: payload
+        }
+      }
+    case SET_NEW_FUNCTION_VOLUME_MOUNTS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            volume_mounts: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_VOLUMES:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            volumes: payload
+          }
         }
       }
     default:

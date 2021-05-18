@@ -2,15 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
-
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
 
 import { typeOptions } from './functionsPanelGeneral.util'
-// import Tooltip from '../../../common/Tooltip/Tooltip'
-// import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import './functionsPanelGeneral.scss'
 
@@ -126,12 +123,13 @@ FunctionsPanelGeneralView.propTypes = {
   handleChangeLabels: PropTypes.func.isRequired,
   handleNameChange: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
-  handleVersionChange: PropTypes.func.isRequired,
-  handleVersionOnBlur: PropTypes.func.isRequired,
+  handleTagChange: PropTypes.func.isRequired,
+  handleTagOnBlur: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   isTagValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
-  setNewFunctionDescription: PropTypes.func.isRequired
+  setNewFunctionDescription: PropTypes.func.isRequired,
+  setNewFunctionType: PropTypes.func.isRequired
 }
 
 export default FunctionsPanelGeneralView
