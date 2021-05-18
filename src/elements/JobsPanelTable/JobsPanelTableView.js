@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import EditableDataInputsRow from '../EditableDataInputsRow/EditableDataInputsRow'
-import EditableVolumesRow from '../EditableVolumesRow/EditableVolumesRow'
 import JobsPanelTableRow from '../JobsPanelTableRow/JobsPanelTableRow'
 import EditableAdvancedRow from '../EditableAdvancedRow/EditableAdvancedRow'
 
@@ -64,7 +63,7 @@ const JobsPanelTableView = ({
               setEditItem={setEditItem}
               setSelectedDataInput={setSelectedItem}
             />
-          ) : section.includes('advanced') ? (
+          ) : (
             <EditableAdvancedRow
               handleEdit={handleEdit}
               key={index}
@@ -72,13 +71,6 @@ const JobsPanelTableView = ({
               selectedItem={selectedItem}
               setSelectedItem={setSelectedItem}
               table={section.includes('secrets') ? 'secrets' : 'env'}
-            />
-          ) : (
-            <EditableVolumesRow
-              handleEdit={handleEdit}
-              key={index}
-              selectedVolume={selectedItem}
-              setSelectedVolume={setSelectedItem}
             />
           )
         } else {

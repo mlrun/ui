@@ -11,7 +11,6 @@ import {
 import { createNewVolume } from '../../utils/createNewVolume'
 
 const JobsPanelResources = ({
-  match,
   panelDispatch,
   panelState,
   setNewJobVolumeMounts,
@@ -192,7 +191,6 @@ const JobsPanelResources = ({
       handleEditVolume={handleEditVolume}
       handleSelectСpuUnit={handleSelectСpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
-      match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
       resourcesData={generateResourcesData()}
@@ -201,7 +199,6 @@ const JobsPanelResources = ({
 }
 
 JobsPanelResources.propTypes = {
-  match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,

@@ -33,20 +33,11 @@ const JobsPanelTable = ({
         setEditItem(false)
         handleEditItems(section.includes('env'))
       } else {
-        section === 'volumes'
-          ? handleSetSelectedVolume(item)
-          : setSelectedItem(item)
-
+        setSelectedItem(item)
         setEditItem(true)
       }
     },
-    [
-      editItem,
-      handleEditItems,
-      handleSetSelectedVolume,
-      section,
-      setSelectedItem
-    ]
+    [editItem, handleEditItems, section, setSelectedItem]
   )
 
   const handleDelete = useCallback(

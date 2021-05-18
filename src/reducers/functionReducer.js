@@ -28,7 +28,8 @@ import {
   REMOVE_FUNCTIONS_ERROR,
   DEPLOY_FUNCTION_BEGIN,
   DEPLOY_FUNCTION_FAILURE,
-  DEPLOY_FUNCTION_SUCCESS
+  DEPLOY_FUNCTION_SUCCESS,
+  SET_NEW_FUNCTION_SECRETS
 } from '../constants'
 
 const initialState = {
@@ -59,7 +60,8 @@ const initialState = {
       resources: {
         limits: {},
         requests: {}
-      }
+      },
+      secret_sources: []
     }
   },
   templatesCatalog: {},
@@ -259,6 +261,17 @@ export default (state = initialState, { type, payload }) => {
           spec: {
             ...state.newFunction.spec,
             resources: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_SECRETS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            secret_sources: payload
           }
         }
       }

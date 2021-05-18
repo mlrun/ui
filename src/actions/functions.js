@@ -31,7 +31,8 @@ import {
   REMOVE_FUNCTIONS_ERROR,
   DEPLOY_FUNCTION_BEGIN,
   DEPLOY_FUNCTION_FAILURE,
-  DEPLOY_FUNCTION_SUCCESS
+  DEPLOY_FUNCTION_SUCCESS,
+  SET_NEW_FUNCTION_SECRETS
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -223,6 +224,10 @@ const functionsActions = {
   setNewFunctionResources: resources => ({
     type: SET_NEW_FUNCTION_RESOURCES,
     payload: resources
+  }),
+  setNewFunctionSecretSources: secrets => ({
+    type: SET_NEW_FUNCTION_SECRETS,
+    payload: secrets
   }),
   setNewFunctionSourceCode: code => ({
     type: SET_NEW_FUNCTION_SOURCE_CODE,

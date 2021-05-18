@@ -5,6 +5,7 @@ import classnames from 'classnames'
 import Input from '../Input/Input'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Select from '../Select/Select'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -21,6 +22,8 @@ const KeyValueTable = ({
   editItem,
   keyHeader,
   keyLabel,
+  keyOptions,
+  keyType,
   valueHeader,
   valueLabel,
   withEditMode
@@ -63,18 +66,32 @@ const KeyValueTable = ({
         return isEditMode && contentItem.key === selectedItem.key ? (
           <div className="table-row table-row_edit" key={index}>
             <div className="table-cell table-cell__key">
-              <Input
-                density="dense"
-                className="input_edit"
-                onChange={key =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    newKey: key
-                  })
-                }
-                type="text"
-                value={selectedItem.newKey ?? selectedItem.key}
-              />
+              {keyType === 'select' ? (
+                <Select
+                  density="dense"
+                  onClick={key =>
+                    setSelectedItem({
+                      ...selectedItem,
+                      newKey: key
+                    })
+                  }
+                  options={keyOptions}
+                  selectedId={selectedItem.newKey ?? selectedItem.key}
+                />
+              ) : (
+                <Input
+                  density="dense"
+                  className="input_edit"
+                  onChange={key =>
+                    setSelectedItem({
+                      ...selectedItem,
+                      newKey: key
+                    })
+                  }
+                  type="text"
+                  value={selectedItem.newKey ?? selectedItem.key}
+                />
+              )}
             </div>
             <div className="table-cell table-cell__value">
               <Input
@@ -126,13 +143,24 @@ const KeyValueTable = ({
       })}
       {isAddNewItem ? (
         <div className="table-row no-hover">
-          <Input
-            floatingLabel
-            onChange={setKey}
-            label={keyLabel}
-            type="text"
-            wrapperClassName="table-cell__key"
-          />
+          {keyType === 'select' ? (
+            <Select
+              className="table-cell__key"
+              density="dense"
+              label={key || keyLabel}
+              onClick={setKey}
+              options={keyOptions}
+            />
+          ) : (
+            <Input
+              floatingLabel
+              onChange={setKey}
+              label={keyLabel}
+              type="text"
+              wrapperClassName="table-cell__key"
+            />
+          )}
+
           <Input
             floatingLabel
             onChange={setValue}

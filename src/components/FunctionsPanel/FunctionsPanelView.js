@@ -10,6 +10,7 @@ import FunctionsPanelResources from '../../elements/FunctionsPanelResources/Func
 import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnvironmentVariables/FunctionsPanelEnvironmentVariables'
 import Button from '../../common/Button/Button'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import FunctionsPanelSecrets from '../../elements/FunctionsPanelSecrets/FunctionsPanelSecrets'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -68,6 +69,14 @@ const FunctionsPanelView = ({
             openByDefault
           >
             <FunctionsPanelEnvironmentVariables />
+          </Accordion>
+          <Accordion
+            accordionClassName="new-item-side-panel__accordion"
+            icon={<Arrow />}
+            iconClassName="new-item-side-panel__expand-icon"
+            openByDefault
+          >
+            <FunctionsPanelSecrets />
           </Accordion>
           <div className="new-item-side-panel__buttons-container">
             {error && (

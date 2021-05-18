@@ -87,7 +87,7 @@ export const VolumesTable = ({
       {
         label: 'Edit',
         icon: <Edit />,
-        onClick: param => handleSetSelectedVolume(param)
+        onClick: volume => handleSetSelectedVolume(volume)
       },
       {
         label: 'Remove',
