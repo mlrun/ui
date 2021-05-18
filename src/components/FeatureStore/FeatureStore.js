@@ -195,7 +195,7 @@ const FeatureStore = ({
   useEffect(() => {
     fetchData({
       tag: 'latest',
-      iter: match.params.pageTab === DATASETS_TAB && 'iter'
+      iter: match.params.pageTab === DATASETS_TAB ? 'iter' : ''
     })
 
     return () => {

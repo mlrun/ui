@@ -170,7 +170,7 @@ const Models = ({
   useEffect(() => {
     fetchData({
       tag: 'latest',
-      iter: match.params.pageTab === MODELS_TAB && 'iter'
+      iter: match.params.pageTab === MODELS_TAB ? 'iter' : ''
     })
 
     return () => {

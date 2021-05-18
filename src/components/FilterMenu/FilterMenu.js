@@ -264,7 +264,7 @@ const FilterMenu = ({
                       dates,
                       tag,
                       state: stateFilter !== initialStateFilter && stateFilter,
-                      iter: iter === iteration && 'iter'
+                      iter: iter === iteration ? 'iter' : ''
                     })
                     setIter(state => (state === iteration ? 'iter' : iteration))
                   }}
