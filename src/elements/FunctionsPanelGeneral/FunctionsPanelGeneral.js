@@ -27,7 +27,13 @@ const FunctionsPanelGeneral = ({
   })
 
   const handleNameChange = name => {
-    if (!isNameValid && name.length > 0) {
+    const pattern = /^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/
+
+    if (isNameValid && !pattern.test(name)) {
+      setNameValid(false)
+    }
+
+    if (!isNameValid && name.length > 0 && pattern.test(name)) {
       setNameValid(true)
     }
 

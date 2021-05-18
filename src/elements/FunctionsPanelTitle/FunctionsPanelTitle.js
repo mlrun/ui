@@ -19,9 +19,10 @@ const FunctionsPanelGeneral = ({ closePanel }) => {
         <p>
           Functions could be based on different run times and can be used for
           data preparation, model training, model serving, notification & alerts
-          and etc.{' '}
+          and etc.
           <a href="https://docs.mlrun.org/en/latest/tutorial/01-mlrun-basics.html#gs-tutorial-1-step-create-basic-function">
-            Read more
+            {' '}
+            Read more{' '}
           </a>
           about MLRun functions
         </p>

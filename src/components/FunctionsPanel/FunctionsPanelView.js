@@ -26,6 +26,7 @@ const FunctionsPanelView = ({
   setNameValid,
   setTagValid
 }) => {
+  console.log(isNameValid, isTagValid)
   return (
     <div className="new-item-side-panel-container">
       <div className="functions-panel new-item-side-panel">
@@ -88,6 +89,7 @@ const FunctionsPanelView = ({
             />
             <Button
               className="btn_save"
+              disabled={!isTagValid || !isNameValid}
               variant="tertiary"
               label="Save"
               onClick={() => handleSave()}
@@ -96,6 +98,7 @@ const FunctionsPanelView = ({
               variant="secondary"
               label="Deploy"
               onClick={() => handleSave(true)}
+              disabled={!isTagValid || !isNameValid}
             />
           </div>
         </div>
