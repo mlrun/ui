@@ -3,6 +3,9 @@ import {
   ABORT_JOB_FAILURE,
   ABORT_JOB_SUCCESS,
   EDIT_JOB_FAILURE,
+  FETCH_JOB_FUNCTION_BEGIN,
+  FETCH_JOB_FUNCTION_FAILURE,
+  FETCH_JOB_FUNCTION_SUCCESS,
   FETCH_JOB_LOGS_BEGIN,
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
@@ -89,6 +92,23 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: true
+      }
+    case FETCH_JOB_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_JOB_FUNCTION_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case FETCH_JOB_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null
       }
     case FETCH_JOB_LOGS_FAILURE:
       return {

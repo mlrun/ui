@@ -7,6 +7,9 @@ import {
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
+  FETCH_JOB_FUNCTION_BEGIN,
+  FETCH_JOB_FUNCTION_FAILURE,
+  FETCH_JOB_FUNCTION_SUCCESS,
   FETCH_JOB_LOGS_BEGIN,
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
@@ -58,10 +61,30 @@ const jobsActions = {
     type: EDIT_JOB_FAILURE,
     payload: error
   }),
-  fetchJobFunction: (project, functionName, hash) => () =>
-    jobsApi
+  fetchJobFunction: (project, functionName, hash) => dispatch => {
+    dispatch(jobsActions.fetchJobFunctionBegin())
+
+    return jobsApi
       .getJobFunction(project, functionName, hash)
-      .then(res => res.data.func),
+      .then(res => {
+        dispatch(jobsActions.fetchJobFunctionSuccess())
+
+        return res.data.func
+      })
+      .catch(error => {
+        dispatch(jobsActions.fetchJobFunctionFailure(error.message))
+      })
+  },
+  fetchJobFunctionBegin: () => ({
+    type: FETCH_JOB_FUNCTION_BEGIN
+  }),
+  fetchJobFunctionFailure: error => ({
+    type: FETCH_JOB_FUNCTION_FAILURE,
+    payload: error
+  }),
+  fetchJobFunctionSuccess: () => ({
+    type: FETCH_JOB_FUNCTION_SUCCESS
+  }),
   fetchJobLogs: (id, project) => dispatch => {
     dispatch(jobsActions.fetchJobLogsBegin())
 
