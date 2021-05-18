@@ -12,7 +12,7 @@ const fetchArtifacts = (item, path, config, withLatestTag) => {
     params.label = item.labels?.split(',')
   }
 
-  if (item?.iter) {
+  if (item?.iter === 'iter') {
     params.iter = 0
   }
 

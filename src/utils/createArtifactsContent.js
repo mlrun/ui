@@ -128,7 +128,14 @@ const createModelsRowData = (artifact, project) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value: artifact.tag
+        value:
+          artifact.tag ||
+          `${truncateUid(artifact.tree)}${
+            artifact.iter ? ` #${artifact.iter}` : ''
+          }`,
+        tooltip:
+          artifact.tag ||
+          `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
       },
       rowExpanded: {
         getLink: false
@@ -200,7 +207,14 @@ const createFilesRowData = (artifact, project) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value: artifact.tag
+        value:
+          artifact.tag ||
+          `${truncateUid(artifact.tree)}${
+            artifact.iter ? ` #${artifact.iter}` : ''
+          }`,
+        tooltip:
+          artifact.tag ||
+          `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
       },
       rowExpanded: {
         getLink: false
@@ -361,7 +375,14 @@ const createDatasetsRowData = (artifact, project) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value: artifact.tag
+        value:
+          artifact.tag ||
+          `${truncateUid(artifact.tree)}${
+            artifact.iter ? ` #${artifact.iter}` : ''
+          }`,
+        tooltip:
+          artifact.tag ||
+          `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
       },
       rowExpanded: {
         getLink: false
@@ -571,7 +592,8 @@ const createFeatureVectorsRowData = (artifact, project) => ({
       ),
     expandedCellContent: {
       class: 'artifacts_medium',
-      value: artifact.tag || truncateUid(artifact.uid)
+      value: artifact.tag || truncateUid(artifact.uid),
+      tooltip: artifact.tag || artifact.uid
     }
   },
   description: {

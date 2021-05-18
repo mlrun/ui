@@ -215,8 +215,6 @@ const FeatureStore = ({
   }, [
     fetchData,
     match.params.pageTab,
-    match.params.projectName,
-    match.params.tab,
     removeDataSets,
     removeFeatureSets,
     removeFeatureVectors,

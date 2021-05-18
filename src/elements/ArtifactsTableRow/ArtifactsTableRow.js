@@ -112,7 +112,8 @@ const ArtifactsTableRow = ({
               ((selectedItem?.db_key &&
                 selectedItem?.db_key === currentItem?.db_key &&
                 (selectedItem?.tag === currentItem?.tag ||
-                  selectedItem?.uid === currentItem?.uid)) ||
+                  (selectedItem.uid &&
+                    selectedItem?.uid === currentItem?.uid))) ||
                 (selectedItem?.uid &&
                   selectedItem?.uid === currentItem?.uid &&
                   selectedItem?.tag === currentItem?.tag)) &&
