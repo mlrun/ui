@@ -121,6 +121,12 @@ const Details = ({
         payload: '0'
       })
     }
+
+    return () => {
+      detailsDispatch({
+        type: detailsActions.RESET_CHANGES
+      })
+    }
   }, [pageData.page, selectedItem.uid])
 
   useEffect(() => {

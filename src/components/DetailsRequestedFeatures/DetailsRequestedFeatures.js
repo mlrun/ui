@@ -44,13 +44,22 @@ const DetailsRequestedFeatures = ({
   const [editableItem, setEditableItem] = useState(null)
 
   useEffect(() => {
+    return () => {
+      setEditableItem(null)
+    }
+  }, [selectedItem])
+
+  useEffect(() => {
     setCurrentData(changes.data.features ?? selectedItem.specFeatures)
 
     return () => {
       setConfirmDialogData({ index: null, feature: null })
       setCurrentData([])
+      detailsRequestedFeaturesDispatch({
+        type: detailsRequestedFeaturesActions.RESET_EDIT_MODE
+      })
     }
-  }, [changes.data, detailsDispatch, selectedItem])
+  }, [changes.data.features, selectedItem.specFeatures])
 
   const handleItemClick = (field, fieldType, info, index) => {
     setEditableItem(index)
