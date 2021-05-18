@@ -192,15 +192,18 @@ const KeyValueTable = ({
 }
 
 KeyValueTable.defaultProps = {
-  class: '',
+  className: '',
   keyLabel: 'Key',
-  valueLabel: 'Value'
+  keyOptions: [],
+  keyType: 'input',
+  valueLabel: 'Value',
+  withEditMode: false
 }
 
 KeyValueTable.propTypes = {
   addNewItem: PropTypes.func.isRequired,
   addNewItemLabel: PropTypes.string.isRequired,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
   content: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string,
@@ -208,10 +211,19 @@ KeyValueTable.propTypes = {
     })
   ).isRequired,
   deleteItem: PropTypes.func.isRequired,
+  editItem: PropTypes.func.isRequired,
   keyHeader: PropTypes.string.isRequired,
   keyLabel: PropTypes.string,
+  keyOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired
+    })
+  ),
+  keyType: PropTypes.string,
   valueHeader: PropTypes.string.isRequired,
-  valueLabel: PropTypes.string
+  valueLabel: PropTypes.string,
+  withEditMode: PropTypes.bool
 }
 
 export default KeyValueTable
