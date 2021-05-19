@@ -9,13 +9,11 @@ import artifactsAction from '../../../actions/artifacts'
 const FeatureSetsPanelTitle = ({
   closePanel,
   isNameValid,
-  isVersionValid,
   setNameValid,
   setNewFeatureSetDescription,
   setNewFeatureSetLabels,
   setNewFeatureSetName,
-  setNewFeatureSetVersion,
-  setVersionValid
+  setNewFeatureSetVersion
 }) => {
   const [data, setData] = useState({
     name: '',
@@ -40,25 +38,6 @@ const FeatureSetsPanelTitle = ({
       setNameValid(false)
     } else {
       setNewFeatureSetName(event.target.value)
-    }
-  }
-
-  const handleVersionChange = version => {
-    if (!isVersionValid && version.length > 0) {
-      setVersionValid(true)
-    }
-
-    setData(state => ({
-      ...state,
-      version
-    }))
-  }
-
-  const handleVersionOnBlur = event => {
-    if (event.target.value.length === 0) {
-      setVersionValid(false)
-    } else {
-      setNewFeatureSetVersion(event.target.value)
     }
   }
 
@@ -99,12 +78,10 @@ const FeatureSetsPanelTitle = ({
       handleChangeLabels={handleChangeLabels}
       handleNameChange={handleNameChange}
       handleNameOnBlur={handleNameOnBlur}
-      handleVersionChange={handleVersionChange}
-      handleVersionOnBlur={handleVersionOnBlur}
       isNameValid={isNameValid}
-      isVersionValid={isVersionValid}
       setData={setData}
       setNewFeatureSetDescription={setNewFeatureSetDescription}
+      setNewFeatureSetVersion={setNewFeatureSetVersion}
     />
   )
 }
@@ -112,9 +89,7 @@ const FeatureSetsPanelTitle = ({
 FeatureSetsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  isVersionValid: PropTypes.bool.isRequired,
-  setNameValid: PropTypes.func.isRequired,
-  setVersionValid: PropTypes.func.isRequired
+  setNameValid: PropTypes.func.isRequired
 }
 
 export default connect(artifactsStore => ({ ...artifactsStore }), {
