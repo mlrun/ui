@@ -21,6 +21,7 @@ const FunctionsPanelCodeView = ({
   setData,
   setEditCode,
   setNewFunctionBaseImage,
+  setNewFunctionBuildImage,
   setNewFunctionCommands,
   setNewFunctionHandler,
   setNewFunctionImage,
@@ -67,6 +68,7 @@ const FunctionsPanelCodeView = ({
             wrapperClassName="handler"
           />
           <Input
+            disabled={data.base_image.length > 0 || data.build_image.length > 0}
             floatingLabel
             label="Image name"
             onChange={image => setData(state => ({ ...state, image }))}
@@ -76,6 +78,19 @@ const FunctionsPanelCodeView = ({
             wrapperClassName="image-name"
           />
           <Input
+            disabled={data.image.length > 0}
+            floatingLabel
+            label="Build image"
+            onChange={build_image =>
+              setData(state => ({ ...state, build_image }))
+            }
+            onBlur={() => setNewFunctionBuildImage(data.build_image)}
+            type="text"
+            value={data.build_image}
+            wrapperClassName="build-image"
+          />
+          <Input
+            disabled={data.image.length > 0}
             floatingLabel
             label="Base image"
             onChange={base_image =>
@@ -127,6 +142,7 @@ FunctionsPanelCodeView.propTypes = {
   setData: PropTypes.func.isRequired,
   setEditCode: PropTypes.func.isRequired,
   setNewFunctionBaseImage: PropTypes.func.isRequired,
+  setNewFunctionBuildImage: PropTypes.func.isRequired,
   setNewFunctionCommands: PropTypes.func.isRequired,
   setNewFunctionHandler: PropTypes.func.isRequired,
   setNewFunctionImage: PropTypes.func.isRequired,

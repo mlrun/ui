@@ -14,6 +14,10 @@
     border: $errorBorder;
   }
 
+  &:disabled {
+    cursor: not-allowed;
+  }
+
   &-wrapper {
     position: relative;
 

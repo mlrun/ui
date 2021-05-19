@@ -41,7 +41,7 @@ const FunctionsPanelGeneralView = ({
         <div className="general__required-info">
           <Input
             floatingLabel
-            label="Feature Set Name"
+            label="Function Name"
             onChange={handleNameChange}
             onBlur={handleNameOnBlur}
             maxLength={63}
