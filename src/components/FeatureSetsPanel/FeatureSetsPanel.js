@@ -18,7 +18,6 @@ const FeatureSetsPanel = ({
   startFeatureSetIngest
 }) => {
   const [isNameValid, setNameValid] = useState(true)
-  const [isVersionValid, setVersionValid] = useState(true)
   const [isUrlValid, setUrlValid] = useState(true)
   const [transformationsValue, setTransformationsValue] = useState(
     TRANSFORMATIONS_DEFAULT_VALUE
@@ -26,13 +25,9 @@ const FeatureSetsPanel = ({
   const history = useHistory()
 
   const handleSave = startIngestion => {
-    if (isNameValid && isVersionValid && isUrlValid) {
+    if (isNameValid && isUrlValid) {
       if (artifactsStore.newFeatureSet.metadata.name.length === 0) {
         return setNameValid(false)
-      }
-
-      if (artifactsStore.newFeatureSet.metadata.tag.length === 0) {
-        return setVersionValid(false)
       }
 
       if (artifactsStore.newFeatureSet.spec.source.path.length === 0) {
@@ -86,12 +81,10 @@ const FeatureSetsPanel = ({
       handleSave={handleSave}
       isNameValid={isNameValid}
       isUrlValid={isUrlValid}
-      isVersionValid={isVersionValid}
       loading={artifactsStore.loading}
       removeArtifactsError={removeArtifactsError}
       setNameValid={setNameValid}
       setUrlValid={setUrlValid}
-      setVersionValid={setVersionValid}
       setTransformationsValue={setTransformationsValue}
       transformationsValue={transformationsValue}
     />
