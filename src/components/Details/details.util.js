@@ -406,7 +406,7 @@ export const handleFinishEdit = (
 
   if (
     isEqual(
-      detailsTabState.fieldsData[field]?.initialFieldValue,
+      detailsTabState.fieldsData[field]?.previousFieldValue,
       changes.data[field]
     )
   ) {

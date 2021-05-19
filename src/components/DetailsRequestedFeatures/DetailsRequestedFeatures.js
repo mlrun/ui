@@ -111,6 +111,7 @@ const DetailsRequestedFeatures = ({
 
   const handleDelete = index => {
     if (editableItem) setEditableItem(null)
+
     if (!detailsRequestedFeaturesState.fieldsData.features) {
       detailsRequestedFeaturesDispatch({
         type: detailsRequestedFeaturesActions.SET_FIELDS_DATA,

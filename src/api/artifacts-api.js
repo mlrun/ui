@@ -78,11 +78,11 @@ export default {
     mainHttpClient.get(
       `/projects/${project}/feature-vectors?name=${featureVector}`
     ),
-  getFeatureVectors: item => {
+  getFeatureVectors: (item, config) => {
     return fetchArtifacts(
       item,
       `/projects/${item.project}/${FEATURE_VECTORS_TAB}`,
-      {},
+      config,
       true
     )
   },

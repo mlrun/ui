@@ -360,7 +360,13 @@ export const handleFetchData = async (
       data.yamlContent = result
     }
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    result = await fetchFeatureVectors(item)
+    const config = {
+      cancelToken: new axios.CancelToken(cancel => {
+        featureStoreRef.current.cancel = cancel
+      })
+    }
+
+    result = await fetchFeatureVectors(item, config)
 
     if (result) {
       data.content = parseFeatureVectors(result)
