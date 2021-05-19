@@ -32,7 +32,8 @@ import {
   DEPLOY_FUNCTION_BEGIN,
   DEPLOY_FUNCTION_FAILURE,
   DEPLOY_FUNCTION_SUCCESS,
-  SET_NEW_FUNCTION_SECRETS
+  SET_NEW_FUNCTION_SECRETS,
+  SET_NEW_FUNCTION_BUILD_IMAGE
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -192,6 +193,10 @@ const functionsActions = {
   setNewFunctionBaseImage: base_image => ({
     type: SET_NEW_FUNCTION_BASE_IMAGE,
     payload: base_image
+  }),
+  setNewFunctionBuildImage: build_image => ({
+    type: SET_NEW_FUNCTION_BUILD_IMAGE,
+    payload: build_image
   }),
   setNewFunctionCommands: commands => ({
     type: SET_NEW_FUNCTION_COMMANDS,

@@ -9,6 +9,7 @@ import { DEFAULT_ENTRY } from './functionsPanelCode.util'
 const FunctionsPanelCode = ({
   functionsStore,
   setNewFunctionBaseImage,
+  setNewFunctionBuildImage,
   setNewFunctionCommands,
   setNewFunctionHandler,
   setNewFunctionImage,
@@ -19,7 +20,8 @@ const FunctionsPanelCode = ({
     handler: '',
     image: '',
     base_image: '',
-    commands: ''
+    commands: '',
+    build_image: ''
   })
   const [editCode, setEditCode] = useState(false)
 
@@ -29,6 +31,7 @@ const FunctionsPanelCode = ({
       functionsStore={functionsStore}
       setData={setData}
       setNewFunctionBaseImage={setNewFunctionBaseImage}
+      setNewFunctionBuildImage={setNewFunctionBuildImage}
       setNewFunctionCommands={setNewFunctionCommands}
       setNewFunctionHandler={setNewFunctionHandler}
       setNewFunctionImage={setNewFunctionImage}

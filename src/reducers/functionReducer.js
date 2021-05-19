@@ -29,7 +29,8 @@ import {
   DEPLOY_FUNCTION_BEGIN,
   DEPLOY_FUNCTION_FAILURE,
   DEPLOY_FUNCTION_SUCCESS,
-  SET_NEW_FUNCTION_SECRETS
+  SET_NEW_FUNCTION_SECRETS,
+  SET_NEW_FUNCTION_BUILD_IMAGE
 } from '../constants'
 
 const initialState = {
@@ -49,7 +50,7 @@ const initialState = {
         base_image: '',
         commands: [],
         functionSourceCode: '',
-        image: 'mlrun/mlrun'
+        image: ''
       },
       default_handler: '',
       description: '',
@@ -169,6 +170,20 @@ export default (state = initialState, { type, payload }) => {
             build: {
               ...state.newFunction.spec.build,
               base_image: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_BUILD_IMAGE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              image: payload
             }
           }
         }
