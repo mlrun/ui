@@ -54,7 +54,7 @@ export default {
   },
   getDataSet: item => {
     return fetchArtifacts(
-      item,
+      {},
       `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
     )
   },
