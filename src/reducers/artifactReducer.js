@@ -129,7 +129,12 @@ const initialState = {
         schedule: '',
         time_field: ''
       },
-      targets: [],
+      targets: [
+        {
+          kind: 'parquet',
+          name: 'parquet'
+        }
+      ],
       timestamp_key: '',
       features: []
     },

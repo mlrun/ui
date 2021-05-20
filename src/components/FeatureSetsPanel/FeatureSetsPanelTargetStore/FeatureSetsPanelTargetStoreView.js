@@ -30,15 +30,6 @@ const FeatureSetsPanelTargetStoreView = ({
       <FeatureSetsPanelSection title="Target store">
         <div className="target-store__checkbox-container">
           <CheckBox
-            item={checkboxModels.online}
-            onChange={handleSelectTargetKind}
-            selectedId={selectedTargetKind.find(
-              kind => checkboxModels.online.id === kind
-            )}
-          >
-            <Online /> Online
-          </CheckBox>
-          <CheckBox
             item={checkboxModels.offline}
             onChange={handleSelectTargetKind}
             selectedId={selectedTargetKind.find(
@@ -46,6 +37,15 @@ const FeatureSetsPanelTargetStoreView = ({
             )}
           >
             <Offline /> Offline
+          </CheckBox>
+          <CheckBox
+            item={checkboxModels.online}
+            onChange={handleSelectTargetKind}
+            selectedId={selectedTargetKind.find(
+              kind => checkboxModels.online.id === kind
+            )}
+          >
+            <Online /> Online
           </CheckBox>
           <CheckBox
             item={checkboxModels.other}
