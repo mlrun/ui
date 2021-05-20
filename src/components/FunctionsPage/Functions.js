@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { chain, isEqual, isEmpty } from 'lodash'
 
+import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
+import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 
 import {
   detailsMenu,
@@ -36,6 +38,7 @@ const Functions = ({
   setLoading,
   setNotification
 }) => {
+  const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
@@ -53,7 +56,7 @@ const Functions = ({
       {
         label: 'Delete',
         icon: <Delete />,
-        onClick: func => removeFunction(func)
+        onClick: onRemoveFunction
       }
     ],
     detailsMenu,
@@ -195,6 +198,22 @@ const Functions = ({
           message: 'Function failed to delete'
         })
       })
+
+    setConfirmData(null)
+  }
+
+  const onRemoveFunction = func => {
+    setConfirmData({
+      item: func,
+      title: `Delete function "${func.name}"?`,
+      description: 'Deleted functions cannot be restored.',
+      btnCancelLabel: 'Cancel',
+      btnCancelVariant: 'label',
+      btnConfirmLabel: 'Delete',
+      btnConfirmVariant: 'danger',
+      rejectHandler: () => setConfirmData(null),
+      confirmHandler: () => removeFunction(func)
+    })
   }
 
   const toggleShowUntagged = showUntagged => {
@@ -256,6 +275,26 @@ const Functions = ({
 
   return (
     <>
+      {confirmData && (
+        <PopUpDialog
+          headerText={confirmData.title}
+          closePopUp={confirmData.rejectHandler}
+        >
+          <div>{confirmData.description}</div>
+          <div className="pop-up-dialog__footer-container">
+            <Button
+              label={confirmData.btnCancelLabel}
+              onClick={confirmData.rejectHandler}
+              variant={confirmData.btnCancelVariant}
+            />
+            <Button
+              label={confirmData.btnConfirmLabel}
+              onClick={() => confirmData.confirmHandler(confirmData.item)}
+              variant={confirmData.btnConfirmVariant}
+            />
+          </div>
+        </PopUpDialog>
+      )}
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
