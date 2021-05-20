@@ -129,7 +129,17 @@ const initialState = {
         schedule: '',
         time_field: ''
       },
-      targets: [],
+      targets: [
+        {
+          name: 'nosql',
+          kind: 'nosql',
+          online: true
+        },
+        {
+          kind: 'parquet',
+          name: 'parquet'
+        }
+      ],
       timestamp_key: '',
       features: []
     },
