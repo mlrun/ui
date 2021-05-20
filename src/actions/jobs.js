@@ -31,7 +31,9 @@ import {
   SET_TUNING_STRATEGY,
   SET_URL,
   SET_NEW_JOB_SELECTOR_CRITERIA,
-  SET_NEW_JOB_SELECTOR_RESULT
+  SET_NEW_JOB_SELECTOR_RESULT,
+  RUN_NEW_JOB_BEGIN,
+  RUN_NEW_JOB_SUCCESS
 } from '../constants'
 
 const jobsActions = {
@@ -156,10 +158,31 @@ const jobsActions = {
     type: REMOVE_SCHEDULED_JOB_FAILURE,
     payload: error
   }),
-  runNewJob: postData => () => jobsApi.runJob(postData),
+  runNewJob: postData => dispatch => {
+    dispatch(jobsActions.runNewJobBegin())
+
+    return jobsApi
+      .runJob(postData)
+      .then(result => {
+        dispatch(jobsActions.runNewJobSuccess())
+
+        return result
+      })
+      .catch(error => {
+        dispatch(jobsActions.runNewJobFailure(error.message))
+
+        throw error
+      })
+  },
+  runNewJobBegin: () => ({
+    type: RUN_NEW_JOB_BEGIN
+  }),
   runNewJobFailure: error => ({
     type: RUN_NEW_JOB_FAILURE,
     payload: error
+  }),
+  runNewJobSuccess: () => ({
+    type: RUN_NEW_JOB_SUCCESS
   }),
   setAllJobsData: data => ({
     type: SET_ALL_JOBS_DATA,

@@ -23,8 +23,7 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   KEY_CODES,
-  MODELS_PAGE,
-  MONITOR_TAB
+  MODELS_PAGE
 } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
 import {
@@ -90,13 +89,6 @@ const FilterMenu = ({
       })
     }
   }, [dispatch, filters, match.params.projectName])
-
-  useEffect(() => {
-    if (match.params.pageTab === MONITOR_TAB) {
-      onChange({ dates: ['', ''] })
-      setDates(['', ''])
-    }
-  }, [match.params.pageTab, onChange])
 
   const applyChanges = () => {
     if (match.params.jobId || match.params.name) {
