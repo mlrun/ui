@@ -26,7 +26,7 @@ export const generateUsageSnippets = (
 ]
 
 vector = fs.FeatureVector("<vector-name>",features=features,description="this is my vector")
-resp = fs.get_offline_features(vector))`
+resp = fs.get_offline_features(vector)`
       },
       {
         title: 'Getting online features:',
