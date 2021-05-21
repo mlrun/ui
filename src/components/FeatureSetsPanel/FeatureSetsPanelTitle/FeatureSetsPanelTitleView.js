@@ -18,12 +18,10 @@ const FeatureSetsPanelTitleView = ({
   handleChangeLabels,
   handleNameChange,
   handleNameOnBlur,
-  handleVersionChange,
-  handleVersionOnBlur,
   isNameValid,
-  isVersionValid,
   setData,
-  setNewFeatureSetDescription
+  setNewFeatureSetDescription,
+  setNewFeatureSetVersion
 }) => {
   const titleValidationTip = (
     <>
@@ -62,10 +60,17 @@ const FeatureSetsPanelTitleView = ({
             className="panel-title__input"
             floatingLabel
             label="Version"
-            onChange={handleVersionChange}
-            onBlur={handleVersionOnBlur}
-            required={!isVersionValid}
-            requiredText="This field is required"
+            onChange={version =>
+              setData(state => ({
+                ...state,
+                version
+              }))
+            }
+            onBlur={event => {
+              if (event.target.length > 0) {
+                setNewFeatureSetVersion(event.target.value)
+              }
+            }}
             type="text"
             value={data.version}
             wrapperClassName="version"
@@ -117,12 +122,10 @@ FeatureSetsPanelTitleView.propTypes = {
   handleChangeLabels: PropTypes.func.isRequired,
   handleNameChange: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
-  handleVersionChange: PropTypes.func.isRequired,
-  handleVersionOnBlur: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  isVersionValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
-  setNewFeatureSetDescription: PropTypes.func.isRequired
+  setNewFeatureSetDescription: PropTypes.func.isRequired,
+  setNewFeatureSetVersion: PropTypes.func.isRequired
 }
 
 export default FeatureSetsPanelTitleView

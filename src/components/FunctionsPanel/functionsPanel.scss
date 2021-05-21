@@ -1,0 +1,25 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/mixins';
+
+@include newItemSidePanel;
+
+.functions-panel {
+  .accordion {
+    &__container.open {
+      .accordion__body {
+        min-height: 290px;
+      }
+    }
+  }
+
+  .btn {
+    &_cancel {
+      margin-right: 10px;
+    }
+
+    &_save {
+      margin-right: 10px;
+    }
+  }
+}

@@ -65,6 +65,7 @@ const FeatureStore = ({
   })
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
+  const [iter, setIter] = useState('')
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [pageData, setPageData] = useState(pageDataInitialState)
@@ -83,7 +84,7 @@ const FeatureStore = ({
         match.params.pageTab
       )
 
-      if (data.content) {
+      if (data.content?.length > 0) {
         setContent(data.content)
         setYamlContent(state => ({ ...state, allData: data.yamlContent }))
       }
@@ -173,11 +174,12 @@ const FeatureStore = ({
           fetchDataSet,
           item,
           setPageData,
-          setYamlContent
+          setYamlContent,
+          iter
         )
       }
     },
-    [fetchDataSet, fetchFeature, fetchFeatureVector, match.params.pageTab]
+    [fetchDataSet, fetchFeature, fetchFeatureVector, iter, match.params.pageTab]
   )
 
   const handleExpandRow = useCallback(
@@ -197,10 +199,12 @@ const FeatureStore = ({
       tag: 'latest',
       iter: match.params.pageTab === DATASETS_TAB ? 'iter' : ''
     })
+    setIter(match.params.pageTab === DATASETS_TAB ? 'iter' : '')
 
     return () => {
       setArtifactFilter({ tag: 'latest', labels: '', name: '', iter: 'iter' })
       setContent([])
+      setIter('iter')
       setYamlContent({
         allData: [],
         selectedRowData: []
@@ -363,6 +367,7 @@ const FeatureStore = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedItem.item}
+        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (

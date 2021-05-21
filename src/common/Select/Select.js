@@ -15,6 +15,7 @@ import Button from '../Button/Button'
 
 const Select = ({
   className,
+  density,
   disabled,
   disabledOptions,
   floatingLabel,
@@ -34,6 +35,7 @@ const Select = ({
   const selectClassName = classNames(
     'select',
     className,
+    `select-${density}`,
     isOpen && 'select_active',
     withoutBorder && 'without-border',
     disabled && 'disabled'
@@ -208,6 +210,7 @@ const Select = ({
 
 Select.defaultProps = {
   className: '',
+  density: 'normal',
   disabled: false,
   disabledOptions: [],
   hideSelectedOption: false,
@@ -221,6 +224,7 @@ Select.defaultProps = {
 
 Select.propTypes = {
   className: PropTypes.string,
+  density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
   disabled: PropTypes.bool,
   disabledOptions: PropTypes.array,
   floatingLabel: PropTypes.bool,

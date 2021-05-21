@@ -3,9 +3,12 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { chain, isEqual, isEmpty } from 'lodash'
 
+import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
+import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
+import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 
 import {
   detailsMenu,
@@ -29,15 +32,19 @@ const Functions = ({
   functionsStore,
   history,
   match,
+  removeFunctionsError,
+  removeNewFunction,
   removeNewJob,
   setLoading,
   setNotification
 }) => {
+  const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
+  const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   const pageData = {
     actionsMenu: item => [
       {
@@ -49,38 +56,45 @@ const Functions = ({
       {
         label: 'Delete',
         icon: <Delete />,
-        onClick: func => removeFunction(func)
+        onClick: onRemoveFunction
       }
     ],
     detailsMenu,
     filters,
     page,
     tableHeaders,
-    infoHeaders
+    infoHeaders,
+    filterMenuActionButton: {
+      label: 'New',
+      onClick: () => setFunctionsPanelIsOpen(true),
+      variant: 'secondary'
+    }
   }
 
   const refreshFunctions = useCallback(
     items => {
-      fetchFunctions(match.params.projectName, items?.name).then(functions => {
-        const newFunctions = chain(functions)
-          .orderBy('metadata.updated', 'desc')
-          .map(func => ({
-            name: func.metadata.name,
-            type: func.kind,
-            tag: func.metadata.tag,
-            hash: func.metadata.hash,
-            codeOrigin: func.spec?.build?.code_origin ?? '',
-            updated: new Date(func.metadata.updated),
-            command: func.spec?.command,
-            image: func.spec?.image,
-            description: func.spec?.description,
-            state: func.status?.state ?? '',
-            functionSourceCode: func.spec?.build?.functionSourceCode ?? ''
-          }))
-          .value()
+      return fetchFunctions(match.params.projectName, items?.name).then(
+        functions => {
+          const newFunctions = chain(functions)
+            .orderBy('metadata.updated', 'desc')
+            .map(func => ({
+              name: func.metadata.name,
+              type: func.kind,
+              tag: func.metadata.tag,
+              hash: func.metadata.hash,
+              codeOrigin: func.spec?.build?.code_origin ?? '',
+              updated: new Date(func.metadata.updated),
+              command: func.spec?.command,
+              image: func.spec?.image,
+              description: func.spec?.description,
+              state: func.status?.state ?? '',
+              functionSourceCode: func.spec?.build?.functionSourceCode ?? ''
+            }))
+            .value()
 
-        return setFunctions(newFunctions)
-      })
+          return setFunctions(newFunctions)
+        }
+      )
     },
     [fetchFunctions, match.params.projectName]
   )
@@ -184,6 +198,22 @@ const Functions = ({
           message: 'Function failed to delete'
         })
       })
+
+    setConfirmData(null)
+  }
+
+  const onRemoveFunction = func => {
+    setConfirmData({
+      item: func,
+      title: `Delete function "${func.name}"?`,
+      description: 'Deleted functions cannot be restored.',
+      btnCancelLabel: 'Cancel',
+      btnCancelVariant: 'label',
+      btnConfirmLabel: 'Delete',
+      btnConfirmVariant: 'danger',
+      rejectHandler: () => setConfirmData(null),
+      confirmHandler: () => removeFunction(func)
+    })
   }
 
   const toggleShowUntagged = showUntagged => {
@@ -195,8 +225,76 @@ const Functions = ({
     setShowUntagged(state => (state === showUntagged ? '' : showUntagged))
   }
 
+  const closePanel = () => {
+    setFunctionsPanelIsOpen(false)
+    removeNewFunction()
+
+    if (functionsStore.error) {
+      removeFunctionsError()
+    }
+  }
+
+  const createFunctionSuccess = () => {
+    setFunctionsPanelIsOpen(false)
+    removeNewFunction()
+
+    return refreshFunctions().then(() => {
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Function created successfully'
+      })
+    })
+  }
+
+  const handleDeployFunctionSuccess = () => {
+    setFunctionsPanelIsOpen(false)
+    removeNewFunction()
+
+    return refreshFunctions().then(() => {
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Function deployment initiated successfully'
+      })
+    })
+  }
+
+  const handleDeployFunctionFailure = error => {
+    setFunctionsPanelIsOpen(false)
+    removeNewFunction()
+
+    return refreshFunctions().then(() => {
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Function deployment failed to initiate'
+      })
+    })
+  }
+
   return (
     <>
+      {confirmData && (
+        <PopUpDialog
+          headerText={confirmData.title}
+          closePopUp={confirmData.rejectHandler}
+        >
+          <div>{confirmData.description}</div>
+          <div className="pop-up-dialog__footer-container">
+            <Button
+              label={confirmData.btnCancelLabel}
+              onClick={confirmData.rejectHandler}
+              variant={confirmData.btnCancelVariant}
+            />
+            <Button
+              label={confirmData.btnConfirmLabel}
+              onClick={() => confirmData.confirmHandler(confirmData.item)}
+              variant={confirmData.btnConfirmVariant}
+            />
+          </div>
+        </PopUpDialog>
+      )}
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
@@ -229,6 +327,15 @@ const Functions = ({
           match={match}
           project={match.params.projectName}
           redirectToDetailsPane
+        />
+      )}
+      {functionsPanelIsOpen && (
+        <FunctionsPanel
+          closePanel={closePanel}
+          createFunctionSuccess={createFunctionSuccess}
+          handleDeployFunctionFailure={handleDeployFunctionFailure}
+          handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+          project={match.params.projectName}
         />
       )}
     </>

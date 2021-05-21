@@ -7,6 +7,7 @@ export const initialState = {
 }
 
 export const detailsRequestedFeaturesActions = {
+  RESET_EDIT_MODE: 'RESET_EDIT_MODE',
   SET_EDIT_MODE: 'SET_EDIT_MODE',
   SET_EDIT_MODE_FIELD_TYPE: 'SET_EDIT_MODE_FIELD_TYPE',
   SET_FIELDS_DATA: 'SET_FIELDS_DATA'
@@ -14,6 +15,11 @@ export const detailsRequestedFeaturesActions = {
 
 export const detailsRequestedFeaturesReducer = (state, { type, payload }) => {
   switch (type) {
+    case detailsRequestedFeaturesActions.RESET_EDIT_MODE:
+      return {
+        ...state,
+        editMode: initialState.editMode
+      }
     case detailsRequestedFeaturesActions.SET_EDIT_MODE:
       return {
         ...state,

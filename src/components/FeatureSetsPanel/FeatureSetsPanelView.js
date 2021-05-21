@@ -11,10 +11,11 @@ import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSe
 import FeatureSetsPanelTransformations from './FeatureSetsPanelTransformations/FeatureSetsPanelTransformations'
 import Loader from '../../common/Loader/Loader'
 
+import { TRANSFORMATIONS_DEFAULT_VALUE } from './featureSetsPanel.util'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './featureSetsPanel.scss'
-import { TRANSFORMATIONS_DEFAULT_VALUE } from './featureSetsPanel.util'
 
 const FeatureSetsPanelView = ({
   closePanel,
@@ -22,12 +23,10 @@ const FeatureSetsPanelView = ({
   handleSave,
   isNameValid,
   isUrlValid,
-  isVersionValid,
   loading,
   removeArtifactsError,
   setNameValid,
   setUrlValid,
-  setVersionValid,
   setTransformationsValue,
   transformationsValue
 }) => {
@@ -38,9 +37,7 @@ const FeatureSetsPanelView = ({
         <FeatureSetsPanelTitle
           closePanel={closePanel}
           isNameValid={isNameValid}
-          isVersionValid={isVersionValid}
           setNameValid={setNameValid}
-          setVersionValid={setVersionValid}
         />
         <div className="new-item-side-panel__body">
           <Accordion
@@ -122,12 +119,10 @@ FeatureSetsPanelView.propTypes = {
   handleSave: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   isUrlValid: PropTypes.bool.isRequired,
-  isVersionValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   removeArtifactsError: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired,
   setUrlValid: PropTypes.func.isRequired,
-  setVersionValid: PropTypes.func.isRequired,
   setTransformationsValue: PropTypes.func.isRequired,
   transformationsValue: PropTypes.string.isRequired
 }

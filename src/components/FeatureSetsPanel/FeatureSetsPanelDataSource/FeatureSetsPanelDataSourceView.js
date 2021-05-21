@@ -39,6 +39,7 @@ const FeatureSetsPanelDataSourceView = ({
         <div className="data-source__inputs">
           <Select
             className="data-source__inputs-item"
+            density="medium"
             floatingLabel
             label="Kind"
             onClick={kind => {

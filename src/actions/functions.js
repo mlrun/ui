@@ -9,14 +9,89 @@ import {
   FETCH_FUNCTION_TEMPLATE_SUCCESS,
   REMOVE_FUNCTION_TEMPLATE,
   SET_FUNCTIONS_TEMPLATES,
-  SET_LOADING
+  SET_LOADING,
+  SET_NEW_FUNCTION_NAME,
+  SET_NEW_FUNCTION_TAG,
+  SET_NEW_FUNCTION_TYPE,
+  SET_NEW_FUNCTION_DESCRIPTION,
+  SET_NEW_FUNCTION_LABELS,
+  SET_NEW_FUNCTION_SOURCE_CODE,
+  SET_NEW_FUNCTION_HANDLER,
+  SET_NEW_FUNCTION_IMAGE,
+  SET_NEW_FUNCTION_BASE_IMAGE,
+  SET_NEW_FUNCTION_COMMANDS,
+  SET_NEW_FUNCTION_VOLUME_MOUNTS,
+  SET_NEW_FUNCTION_VOLUMES,
+  SET_NEW_FUNCTION_RESOURCES,
+  SET_NEW_FUNCTION_ENV,
+  REMOVE_NEW_FUNCTION,
+  CREATE_NEW_FUNCTION_BEGIN,
+  CREATE_NEW_FUNCTION_FAILURE,
+  CREATE_NEW_FUNCTION_SUCCESS,
+  REMOVE_FUNCTIONS_ERROR,
+  DEPLOY_FUNCTION_BEGIN,
+  DEPLOY_FUNCTION_FAILURE,
+  DEPLOY_FUNCTION_SUCCESS,
+  SET_NEW_FUNCTION_SECRETS,
+  SET_NEW_FUNCTION_BUILD_IMAGE
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
 const functionsActions = {
-  deleteFunction: (func, project) => dispatch => {
+  createNewFunction: (project, data) => dispatch => {
+    dispatch(functionsActions.createNewFunctionBegin())
+
+    return functionsApi
+      .createNewFunction(project, data)
+      .then(result => {
+        dispatch(functionsActions.createNewFunctionSuccess())
+
+        return result
+      })
+      .catch(error => {
+        dispatch(functionsActions.createNewFunctionFailure(error.message))
+
+        throw error
+      })
+  },
+  createNewFunctionBegin: () => ({
+    type: CREATE_NEW_FUNCTION_BEGIN
+  }),
+  createNewFunctionFailure: error => ({
+    type: CREATE_NEW_FUNCTION_FAILURE,
+    payload: error
+  }),
+  createNewFunctionSuccess: () => ({
+    type: CREATE_NEW_FUNCTION_SUCCESS
+  }),
+  deleteFunction: (func, project) => () => {
     return functionsApi.deleteSelectedFunction(func, project)
   },
+  deployFunction: func => dispatch => {
+    dispatch(functionsActions.deployFunctionBegin())
+
+    return functionsApi
+      .deployFunction(func)
+      .then(result => {
+        dispatch(functionsActions.deployFunctionSuccess())
+
+        return result
+      })
+      .catch(error => {
+        dispatch(functionsActions.deployFunctionFailure())
+
+        throw error
+      })
+  },
+  deployFunctionBegin: () => ({
+    type: DEPLOY_FUNCTION_BEGIN
+  }),
+  deployFunctionFailure: () => ({
+    type: DEPLOY_FUNCTION_FAILURE
+  }),
+  deployFunctionSuccess: () => ({
+    type: DEPLOY_FUNCTION_SUCCESS
+  }),
   fetchFunctions: (project, name) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
 
@@ -101,6 +176,12 @@ const functionsActions = {
   removeFunctionTemplate: () => ({
     type: REMOVE_FUNCTION_TEMPLATE
   }),
+  removeFunctionsError: () => ({
+    type: REMOVE_FUNCTIONS_ERROR
+  }),
+  removeNewFunction: () => ({
+    type: REMOVE_NEW_FUNCTION
+  }),
   setFunctionsTemplates: templates => ({
     type: SET_FUNCTIONS_TEMPLATES,
     payload: templates
@@ -108,6 +189,70 @@ const functionsActions = {
   setLoading: loading => ({
     type: SET_LOADING,
     payload: loading
+  }),
+  setNewFunctionBaseImage: base_image => ({
+    type: SET_NEW_FUNCTION_BASE_IMAGE,
+    payload: base_image
+  }),
+  setNewFunctionBuildImage: build_image => ({
+    type: SET_NEW_FUNCTION_BUILD_IMAGE,
+    payload: build_image
+  }),
+  setNewFunctionCommands: commands => ({
+    type: SET_NEW_FUNCTION_COMMANDS,
+    payload: commands
+  }),
+  setNewFunctionDescription: description => ({
+    type: SET_NEW_FUNCTION_DESCRIPTION,
+    payload: description
+  }),
+  setNewFunctionEnv: env => ({
+    type: SET_NEW_FUNCTION_ENV,
+    payload: env
+  }),
+  setNewFunctionHandler: handler => ({
+    type: SET_NEW_FUNCTION_HANDLER,
+    payload: handler
+  }),
+  setNewFunctionImage: image => ({
+    type: SET_NEW_FUNCTION_IMAGE,
+    payload: image
+  }),
+  setNewFunctionLabels: labels => ({
+    type: SET_NEW_FUNCTION_LABELS,
+    payload: labels
+  }),
+  setNewFunctionName: name => ({
+    type: SET_NEW_FUNCTION_NAME,
+    payload: name
+  }),
+  setNewFunctionResources: resources => ({
+    type: SET_NEW_FUNCTION_RESOURCES,
+    payload: resources
+  }),
+  setNewFunctionSecretSources: secrets => ({
+    type: SET_NEW_FUNCTION_SECRETS,
+    payload: secrets
+  }),
+  setNewFunctionSourceCode: code => ({
+    type: SET_NEW_FUNCTION_SOURCE_CODE,
+    payload: code
+  }),
+  setNewFunctionTag: tag => ({
+    type: SET_NEW_FUNCTION_TAG,
+    payload: tag
+  }),
+  setNewFunctionType: type => ({
+    type: SET_NEW_FUNCTION_TYPE,
+    payload: type
+  }),
+  setNewFunctionVolumeMounts: volumeMounts => ({
+    type: SET_NEW_FUNCTION_VOLUME_MOUNTS,
+    payload: volumeMounts
+  }),
+  setNewFunctionVolumes: volumes => ({
+    type: SET_NEW_FUNCTION_VOLUMES,
+    payload: volumes
   })
 }
 

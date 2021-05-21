@@ -128,6 +128,7 @@ const EditableDataInputsRow = ({
         <div className="table__cell table__cell_edit">
           <Input
             className={inputNameClassNames}
+            density="dense"
             onChange={name => {
               setInputName(name)
               setSelectedDataInput({

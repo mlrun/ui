@@ -138,6 +138,7 @@ const JobsPanelTitleView = ({
       {!openScheduleJob && versionOptions.length !== 0 && (
         <div className="job-panel__title-select-container">
           <Select
+            density="chunky"
             floatingLabel
             label="Version"
             onClick={version => handleFunctionInfoChange(version)}
@@ -147,6 +148,7 @@ const JobsPanelTitleView = ({
           {methodOptions.length !== 0 && (
             <Select
               className="job-methods"
+              density="chunky"
               floatingLabel
               label="Method"
               onClick={method => handleFunctionInfoChange(method, true)}
@@ -164,9 +166,9 @@ const JobsPanelTitleView = ({
       {editMode && (
         <div className="job-panel__title-buttons-container">
           <Button
-            variant="tertiary"
             label="Cancel"
             onClick={event => handleFinishEdit(event, true)}
+            variant="tertiary"
           />
           <Button variant="primary" label="Done" onClick={handleFinishEdit} />
         </div>

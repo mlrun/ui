@@ -6,9 +6,8 @@ import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import Input from '../../common/Input/Input'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Button from '../../common/Button/Button'
-// @eran-nussbaum 2021-05-04 disbaling temporarily
-// import Tooltip from '../../common/Tooltip/Tooltip'
-// import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { headers } from './detailsRequestedFeatures.utils.js'
 import { handleFinishEdit } from '../Details/details.util.js'
@@ -21,8 +20,7 @@ import {
 import { detailsActions } from '../Details/detailsReducer'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
-// @eran-nussbaum 2021-05-04 disbaling temporarily
-// import { ReactComponent as Delete } from '../../images/delete.svg'
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 import './detailsRequestedFeatures.scss'
 
@@ -41,23 +39,29 @@ const DetailsRequestedFeatures = ({
   const [currentData, setCurrentData] = useState([])
   const [confirmDialogData, setConfirmDialogData] = useState({
     index: null,
-    featureName: null
+    feature: null
   })
   const [editableItem, setEditableItem] = useState(null)
+
+  useEffect(() => {
+    return () => {
+      setEditableItem(null)
+    }
+  }, [selectedItem])
 
   useEffect(() => {
     setCurrentData(changes.data.features ?? selectedItem.specFeatures)
 
     return () => {
-      setConfirmDialogData({ index: null, featureName: null })
+      setConfirmDialogData({ index: null, feature: null })
       setCurrentData([])
+      detailsRequestedFeaturesDispatch({
+        type: detailsRequestedFeaturesActions.RESET_EDIT_MODE
+      })
     }
-  }, [changes.data, detailsDispatch, selectedItem])
+  }, [changes.data.features, selectedItem.specFeatures])
 
   const handleItemClick = (field, fieldType, info, index) => {
-    /*
-    @eran-nussbaum 2021-05-04 disbaling temporarily
-
     setEditableItem(index)
     detailsRequestedFeaturesDispatch({
       type: detailsRequestedFeaturesActions.SET_EDIT_MODE,
@@ -90,7 +94,6 @@ const DetailsRequestedFeatures = ({
         }
       })
     }
-    */
   }
 
   const onFinishEdit = field => {
@@ -108,6 +111,7 @@ const DetailsRequestedFeatures = ({
 
   const handleDelete = index => {
     if (editableItem) setEditableItem(null)
+
     if (!detailsRequestedFeaturesState.fieldsData.features) {
       detailsRequestedFeaturesDispatch({
         type: detailsRequestedFeaturesActions.SET_FIELDS_DATA,
@@ -124,7 +128,7 @@ const DetailsRequestedFeatures = ({
     let editedArr = [...currentData]
 
     editedArr.splice(index, 1)
-    setConfirmDialogData({ index: null, featureName: null })
+    setConfirmDialogData({ index: null, feature: null })
     detailsDispatch({
       type: detailsActions.SET_CHANGES,
       payload: {
@@ -229,29 +233,25 @@ const DetailsRequestedFeatures = ({
                       )
                     }
                   >
-                    {/* @eran-nussbaum 2021-05-04 disbaling temporarily
                     <Tooltip
                       template={<TextTooltipTemplate text="Click to edit" />}
-                    > */}
-                    <div>{alias}</div>
-                    {/* @eran-nussbaum 2021-05-04 disbaling temporarily
-                    </Tooltip> */}
+                    >
+                      <div>{alias}</div>
+                    </Tooltip>
                   </div>
                 )}
-                {/*
-                @eran-nussbaum 2021-05-04 disbaling temporarily
                 <div className="cell_delete">
                   <Tooltip template={<TextTooltipTemplate text="Delete" />}>
                     <Delete
                       onClick={() => setConfirmDialogData({ index, feature })}
                     />
                   </Tooltip>
-                </div> */}
-                {confirmDialogData.featureName && (
+                </div>
+                {confirmDialogData.feature && (
                   <PopUpDialog
-                    headerText={`Delete feature ${confirmDialogData.featureName} from vector ${match.params.name}?`}
+                    headerText={`Delete feature ${confirmDialogData.feature} from vector ${match.params.name}?`}
                     closePopUp={() => {
-                      setConfirmDialogData({ index: null, featureName: null })
+                      setConfirmDialogData({ index: null, feature: null })
                     }}
                   >
                     <div>The feature could be added back later.</div>
@@ -263,7 +263,7 @@ const DetailsRequestedFeatures = ({
                         onClick={() => {
                           setConfirmDialogData({
                             index: null,
-                            featureName: null
+                            feature: null
                           })
                         }}
                       />

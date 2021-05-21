@@ -1,0 +1,50 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/mixins';
+
+.volumes-table {
+  @include newItemSidePanelTable;
+
+  .table {
+    &__body {
+      .select {
+        margin-right: 0;
+
+        &__value {
+          min-width: unset;
+        }
+      }
+    }
+
+    &__cell {
+      &:first-child {
+        max-width: 220px;
+      }
+    }
+  }
+
+  .input-row-wrapper {
+    .input-wrapper,
+    .select {
+      &:first-child {
+        max-width: 220px;
+      }
+    }
+
+    .input-row__item_edit {
+      padding: 18px 10px;
+
+      + .input__label {
+        left: 10px;
+      }
+
+      &.active-input {
+        padding: 27px 10px 9px;
+      }
+    }
+
+    .select__header {
+      padding: 17px;
+    }
+  }
+}

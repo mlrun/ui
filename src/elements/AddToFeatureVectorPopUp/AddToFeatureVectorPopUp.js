@@ -178,25 +178,28 @@ const AddToFeatureVectorPopUp = ({
           <div className="select-row">
             <Select
               className="project-name"
+              density="chunky"
               floatingLabel
-              options={projectsList}
               label="Project name"
+              onClick={onSelectProject}
+              options={projectsList}
               search
               selectedId={selectedProject}
-              onClick={onSelectProject}
             />
             <Select
               className="vector-name"
+              density="chunky"
+              disabled={featureVectorsList.length === 0}
               floatingLabel
-              options={featureVectorsList}
               label="Vector name"
               search
-              disabled={featureVectorsList.length === 0}
               selectedId={selectedFeatureVector}
               onClick={onSelectFeatureVector}
+              options={featureVectorsList}
             />
             <Select
               className="vector-tag"
+              density="chunky"
               floatingLabel
               options={featureVectorTagsList}
               label="Tag"

@@ -18,7 +18,7 @@ const FeatureSetsPanelTargetStore = ({
   })
 
   const handleSelectTargetKind = kindId => {
-    let newTargets = artifactsStore.newFeatureSet.spec.targets
+    let newTargets = [...artifactsStore.newFeatureSet.spec.targets]
 
     if (selectedTargetKind.find(kind => kind === kindId)) {
       newTargets = newTargets.filter(

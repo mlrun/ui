@@ -362,7 +362,13 @@ export const handleFetchData = async (
       data.yamlContent = result
     }
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    result = await fetchFeatureVectors(item, project)
+    const config = {
+      cancelToken: new axios.CancelToken(cancel => {
+        featureStoreRef.current.cancel = cancel
+      })
+    }
+
+    result = await fetchFeatureVectors(item, project, config)
 
     if (result) {
       data.content = parseFeatureVectors(result)
@@ -680,7 +686,8 @@ export const fetchDataSetRowData = async (
   fetchDataSet,
   item,
   setPageData,
-  setYamlContent
+  setYamlContent,
+  iter
 ) => {
   let result = []
 
@@ -695,7 +702,7 @@ export const fetchDataSetRowData = async (
   }))
 
   try {
-    result = await fetchDataSet(item)
+    result = await fetchDataSet(item, iter)
   } catch (error) {
     setPageData(state => ({
       ...state,

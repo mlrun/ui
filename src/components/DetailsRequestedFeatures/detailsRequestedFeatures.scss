@@ -58,6 +58,9 @@
       }
 
       &_delete {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         width: 30px;
         cursor: pointer;
         opacity: 0;

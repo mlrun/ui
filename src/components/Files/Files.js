@@ -39,6 +39,7 @@ const Files = ({
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [iter, setIter] = useState('')
   const [pageData, setPageData] = useState({
     detailsMenu,
     filters,
@@ -93,7 +94,7 @@ const Files = ({
       }))
 
       try {
-        result = await fetchFile(item)
+        result = await fetchFile(item, iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -128,7 +129,7 @@ const Files = ({
         })
       }
     },
-    [fetchFile]
+    [fetchFile, iter]
   )
 
   const handleExpandRow = useCallback((item, isCollapse) => {
@@ -142,10 +143,12 @@ const Files = ({
 
   useEffect(() => {
     fetchData({ tag: 'latest', iter: 'iter' })
+    setIter('iter')
 
     return () => {
       setGroupFilter('')
       setFiles([])
+      setIter('iter')
       removeFiles()
       setSelectedFile({})
       setYamlContent({
@@ -218,6 +221,7 @@ const Files = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedFile.item}
+        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (

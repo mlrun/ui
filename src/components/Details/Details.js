@@ -121,6 +121,12 @@ const Details = ({
         payload: '0'
       })
     }
+
+    return () => {
+      detailsDispatch({
+        type: detailsActions.RESET_CHANGES
+      })
+    }
   }, [pageData.page, selectedItem.uid])
 
   useEffect(() => {
@@ -170,8 +176,8 @@ const Details = ({
     selectedItem
   ])
 
-  useEffect(() => {
-    window.addEventListener('click', event => {
+  const handleRefreshClick = useCallback(
+    event => {
       if (
         detailsState.changes.counter > 0 &&
         document.getElementById('refresh')?.contains(event.target)
@@ -183,8 +189,17 @@ const Details = ({
           payload: true
         })
       }
-    })
-  }, [cancelRequest, detailsState.changes.counter])
+    },
+    [cancelRequest, detailsState.changes]
+  )
+
+  useEffect(() => {
+    window.addEventListener('click', handleRefreshClick)
+
+    return () => {
+      window.removeEventListener('click', handleRefreshClick)
+    }
+  }, [handleRefreshClick])
 
   const blockRootChange = useCallback(() => {
     if (!unblockRootChange.current) {

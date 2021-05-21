@@ -48,6 +48,7 @@ const Content = ({
   refresh,
   selectedItem,
   setGroupFilter,
+  setIter,
   setLoading,
   showUntagged,
   toggleShowUntagged,
@@ -236,11 +237,11 @@ const Content = ({
     }
   }
 
-  const handleExpandAll = () => {
+  const handleExpandAll = exp => {
     if (groupFilter !== 'none') {
       const rows = [...document.getElementsByClassName('parent-row')]
 
-      if (expand) {
+      if (exp || expand) {
         rows.forEach(row => row.classList.remove('parent-row-expanded'))
 
         setExpand(false)
@@ -300,6 +301,7 @@ const Content = ({
             onChange={refresh}
             page={pageData.page}
             setGroupFilter={setGroupFilter}
+            setIteration={setIter}
             showUntagged={showUntagged}
             toggleShowUntagged={toggleShowUntagged}
           />
@@ -343,6 +345,7 @@ Content.defaultProps = {
   handleSelectItem: () => {},
   selectedItem: {},
   setGroupFilter: () => {},
+  setIter: () => {},
   setLoading: () => {},
   showUntagged: '',
   toggleShowUntagged: null
@@ -360,6 +363,7 @@ Content.propTypes = {
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
   setGroupFilter: PropTypes.func,
+  setIter: PropTypes.func,
   setLoading: PropTypes.func,
   showUntagged: PropTypes.string,
   toggleShowUntagged: PropTypes.func,

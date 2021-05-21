@@ -1,26 +1,16 @@
-import React, { useReducer, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelResourcesView from './JobsPanelResourcesView'
 
 import { panelActions } from '../JobsPanel/panelReducer'
 import {
-  createVolumeOfNewJob,
-  handleAddItem,
-  handleEdit,
-  handleDelete,
   generateCpuValue,
   generateMemoryValue
-} from './jobsPanelResources.util'
-import {
-  jobsPanelResourcesReducer,
-  initialState,
-  resourcesActions
-} from './jobsPanelResourcesReducer'
-import { inputsActions } from '../JobsPanelDataInputs/jobsPanelDataInputsReducer'
+} from '../../utils/panelResources.util'
+import { createNewVolume } from '../../utils/createNewVolume'
 
 const JobsPanelResources = ({
-  match,
   panelDispatch,
   panelState,
   setNewJobVolumeMounts,
@@ -28,11 +18,6 @@ const JobsPanelResources = ({
   volumeMounts,
   volumes
 }) => {
-  const [resourcesState, resourcesDispatch] = useReducer(
-    jobsPanelResourcesReducer,
-    initialState
-  )
-
   const generateResourcesData = useCallback(
     () => ({
       limitsCpu: generateCpuValue(panelState.limits.cpu),
@@ -84,7 +69,7 @@ const JobsPanelResources = ({
     })
   }
 
-  const handleSelectCpuUnit = value => {
+  const handleSelectСpuUnit = value => {
     if (value.match(/m/)) {
       if (panelState.requests.cpu > 0) {
         panelDispatch({
@@ -121,139 +106,99 @@ const JobsPanelResources = ({
     })
   }
 
-  const handleAddNewItem = () => {
-    const newItemObj = {
-      name: resourcesState.newVolume.name,
-      type: resourcesState.newVolume.type,
-      path: resourcesState.newVolume.path
-    }
-
-    handleAddItem(
-      panelState.tableData.volume_mounts,
-      resourcesDispatch,
-      newItemObj,
-      volumeMounts,
-      panelDispatch,
-      panelState.previousPanelData.tableData.volume_mounts,
-      resourcesActions.REMOVE_NEW_VOLUME_DATA,
-      resourcesActions.SET_ADD_NEW_VOLUME,
-      panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
-      panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
-      setNewJobVolumeMounts
-    )
-
-    const newItem = createVolumeOfNewJob(resourcesState.newVolume)
-
-    setNewJobVolumes([...volumes, newItem])
-    panelDispatch({
-      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
-      payload: [...panelState.previousPanelData.tableData.volumes, newItem]
-    })
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA_VOLUMES,
-      payload: [...panelState.tableData.volumes, newItem]
-    })
-  }
-
-  const handleEditVolume = () => {
-    const currentVolumes = panelState.tableData.volumes.map(volume => {
-      if (volume.name === resourcesState.selectedVolume.data.name) {
-        volume.name =
-          resourcesState.selectedVolume.newName ||
-          resourcesState.selectedVolume.data.name
-
-        switch (resourcesState.selectedVolume.type.value) {
-          case 'Config Map':
-            volume.configMap.name = resourcesState.selectedVolume.type.name
-            break
-          case 'PVC':
-            volume.persistentVolumeClaim.claimName =
-              resourcesState.selectedVolume.type.name
-            break
-          case 'Secret':
-            volume.secret.secretName = resourcesState.selectedVolume.type.name
-            break
-          default:
-            volume.flexVolume.options = {
-              container: resourcesState.selectedVolume.type.name,
-              accessKey: resourcesState.selectedVolume.type.accessKey,
-              subPath: resourcesState.selectedVolume.type.subPath
-            }
-        }
+  const handleAddNewVolume = newVolume => {
+    const newVolumeMount = {
+      isDefault: false,
+      data: {
+        name: newVolume.name,
+        mountPath: newVolume.path
       }
+    }
+    const generatedVolume = createNewVolume(newVolume)
 
-      return volume
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
+      payload: [
+        ...panelState.previousPanelData.tableData.volume_mounts,
+        newVolumeMount
+      ]
     })
-
-    setNewJobVolumes([...currentVolumes])
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
+      payload: [...panelState.tableData.volume_mounts, newVolumeMount]
+    })
+    setNewJobVolumeMounts([...volumeMounts, newVolumeMount.data])
+    setNewJobVolumes([...volumes, generatedVolume])
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
-      payload: currentVolumes
+      payload: [
+        ...panelState.previousPanelData.tableData.volumes,
+        generatedVolume
+      ]
     })
     panelDispatch({
       type: panelActions.SET_TABLE_DATA_VOLUMES,
-      payload: currentVolumes
+      payload: [...panelState.tableData.volumes, generatedVolume]
     })
   }
 
-  const handleEditItems = () => {
-    handleEditVolume()
-    handleEdit(
-      volumeMounts,
-      panelState.tableData.volume_mounts,
-      resourcesDispatch,
-      resourcesState.selectedVolume.newName,
-      panelDispatch,
-      inputsActions.SET_SELECTED_VOLUME,
-      resourcesState.selectedVolume.data,
-      setNewJobVolumeMounts,
-      panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
-      panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS
-    )
+  const handleEditVolume = (volumes, volumeMounts) => {
+    setNewJobVolumes([...volumes])
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
+      payload: volumes
+    })
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_VOLUMES,
+      payload: volumes
+    })
+    setNewJobVolumeMounts(volumeMounts.map(volume => volume.data))
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
+      payload: volumeMounts
+    })
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
+      payload: volumeMounts
+    })
   }
 
-  const handleDeleteItems = item => {
-    handleDelete(
-      volumes,
-      panelState.tableData.volumes,
-      panelDispatch,
-      panelState.previousPanelData.tableData.volumes,
-      item,
-      setNewJobVolumes,
-      panelActions.SET_TABLE_DATA_VOLUMES,
-      panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES
-    )
-    handleDelete(
-      volumeMounts,
-      panelState.tableData.volume_mounts,
-      panelDispatch,
-      panelState.previousPanelData.tableData.volume_mounts,
-      item,
-      setNewJobVolumeMounts,
-      panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
-      panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS
-    )
+  const handleDeleteVolume = (volumes, volumeMounts) => {
+    setNewJobVolumes(volumes)
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
+      payload: volumes
+    })
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_VOLUMES,
+      payload: volumes
+    })
+    setNewJobVolumeMounts(volumeMounts.map(volumeMount => volumeMount.data))
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
+      payload: volumeMounts
+    })
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
+      payload: volumeMounts
+    })
   }
 
   return (
     <JobsPanelResourcesView
-      handleAddNewItem={handleAddNewItem}
-      handleDeleteItems={handleDeleteItems}
-      handleEditItems={handleEditItems}
+      handleAddNewVolume={handleAddNewVolume}
+      handleDeleteVolume={handleDeleteVolume}
+      handleEditVolume={handleEditVolume}
+      handleSelectСpuUnit={handleSelectСpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
-      handleSelectCpuUnit={handleSelectCpuUnit}
-      match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
       resourcesData={generateResourcesData()}
-      resourcesDispatch={resourcesDispatch}
-      resourcesState={resourcesState}
     />
   )
 }
 
 JobsPanelResources.propTypes = {
-  match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   setNewJobVolumeMounts: PropTypes.func.isRequired,

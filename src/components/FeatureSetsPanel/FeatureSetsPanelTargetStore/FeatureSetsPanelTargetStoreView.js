@@ -60,6 +60,7 @@ const FeatureSetsPanelTargetStoreView = ({
         {isOtherTargetExists && (
           <div className="target-store__inputs-container">
             <Select
+              density="medium"
               floatingLabel
               label="File type"
               onClick={handleOtherKindTypeChange}

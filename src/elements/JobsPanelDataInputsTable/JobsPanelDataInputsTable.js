@@ -77,19 +77,25 @@ export const JobsPanelDataInputsTable = ({
         <div className="table__row-add-item">
           <div className="input-row-wrapper" ref={addItemRowRef}>
             <Input
+              className="input-row__item"
+              density="medium"
+              floatingLabel
+              label="Input name"
               onChange={name =>
                 inputsDispatch({
                   type: inputsActions.SET_NEW_INPUT_NAME,
                   payload: name
                 })
               }
-              label="Input name"
-              className="input-row__item"
-              floatingLabel
               type="text"
             />
             <Combobox
               comboboxClassName="input-row__item"
+              hideSearchInput={!inputsState.inputStorePathTypeEntered}
+              inputDefaultValue=""
+              inputOnChange={path => {
+                handlePathChange(path)
+              }}
               inputPlaceholder={inputsState.pathPlaceholder}
               matches={comboboxMatchesList}
               maxSuggestedMatches={
@@ -98,11 +104,6 @@ export const JobsPanelDataInputsTable = ({
                   ? 3
                   : 2
               }
-              inputDefaultValue=""
-              inputOnChange={path => {
-                handlePathChange(path)
-              }}
-              hideSearchInput={!inputsState.inputStorePathTypeEntered}
               selectDropdownList={comboboxSelectList}
               selectOnChange={path => {
                 handlePathTypeChange(path)

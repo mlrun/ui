@@ -10,7 +10,8 @@ export const selectOptions = {
     { label: 'Completed', id: 'completed', status: 'completed' },
     { label: 'Running', id: 'running', status: 'running' },
     { label: 'Pending', id: 'pending', status: 'pending' },
-    { label: 'Error', id: 'error', status: 'error' }
+    { label: 'Error', id: 'error', status: 'error' },
+    { label: 'Aborted', id: 'aborted', status: 'aborted' }
   ],
   groupBy: [
     { label: 'None', id: 'none' },

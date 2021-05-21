@@ -128,6 +128,7 @@ const DetailsView = React.forwardRef(
           )}
           {match.params.tab?.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
             <Select
+              density="dense"
               key="Iteration"
               label="Iteration:"
               onClick={option => {

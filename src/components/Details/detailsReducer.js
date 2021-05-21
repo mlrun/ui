@@ -38,10 +38,7 @@ export const detailsReducer = (state, { type, payload }) => {
     case detailsActions.RESET_CHANGES:
       return {
         ...state,
-        changes: {
-          counter: 0,
-          data: {}
-        }
+        changes: initialState.changes
       }
     case detailsActions.SET_CHANGES_COUNTER:
       return {

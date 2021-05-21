@@ -1,0 +1,21 @@
+.env {
+  width: 100%;
+
+  .table-cell {
+    &__key {
+      width: 30%;
+
+      &.input-wrapper {
+        flex: unset;
+      }
+    }
+
+    &__value {
+      width: 70%;
+
+      &.input-wrapper {
+        flex: unset;
+      }
+    }
+  }
+}

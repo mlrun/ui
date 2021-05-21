@@ -6,7 +6,7 @@ import { isEmpty } from 'lodash'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
-import ProjectTable from '../../components/ProjectTable/ProjectTable'
+import ProjectTable from '../ProjectTable/ProjectTable'
 
 const ProjectDataCard = ({
   content,

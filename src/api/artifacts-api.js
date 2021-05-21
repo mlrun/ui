@@ -56,10 +56,12 @@ export default {
   getArtifacts: item => {
     return fetchArtifacts(item, `/artifacts?project=${item.project}`)
   },
-  getDataSet: item => {
+  getDataSet: (item, iter) => {
     return fetchArtifacts(
-      item,
-      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
+      {},
+      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*${
+        iter === 'iter' ? '&iter=0' : ''
+      }`
     )
   },
   getDataSets: (item, project) => {
@@ -82,11 +84,11 @@ export default {
     mainHttpClient.get(
       `/projects/${project}/feature-vectors?name=${featureVector}`
     ),
-  getFeatureVectors: (item, project) => {
+  getFeatureVectors: (item, project, config) => {
     return fetchArtifacts(
       item,
       `/projects/${project}/${FEATURE_VECTORS_TAB}`,
-      {},
+      config,
       true
     )
   },
@@ -94,10 +96,12 @@ export default {
     mainHttpClient.get(`/projects/${project}/features?name=${feature}`),
   getFeatures: (item, project) =>
     fetchArtifacts(item, `/projects/${project}/${FEATURES_TAB}`, {}, true),
-  getFile: item => {
+  getFile: (item, iter) => {
     return fetchArtifacts(
       item,
-      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
+      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*${
+        iter === 'iter' ? '&iter=0' : ''
+      }`
     )
   },
   getFiles: (item, project) => {
@@ -108,10 +112,12 @@ export default {
       true
     )
   },
-  getModel: item => {
+  getModel: (item, iter) => {
     return fetchArtifacts(
       item,
-      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
+      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*${
+        iter === 'iter' ? '&iter=0' : ''
+      }`
     )
   },
   getModelEndpoints: item => {
