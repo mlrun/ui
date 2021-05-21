@@ -16,6 +16,7 @@ import {
   tableHeaders,
   infoHeaders
 } from './files.util'
+import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 
 import { ARTIFACTS } from '../../constants'
@@ -155,9 +156,9 @@ const Files = ({
         allData: [],
         selectedRowData: []
       })
-      setArtifactFilter({ tag: 'latest', labels: '', name: '', iter: 'iter' })
+      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
     }
-  }, [fetchData, match.params.projectName, removeFiles, setArtifactFilter])
+  }, [fetchData, removeFiles, setArtifactFilter])
 
   useEffect(() => {
     if (artifactsStore.filter.tag === 'latest') {
@@ -206,6 +207,18 @@ const Files = ({
     match.params
   ])
 
+  const handleFilesTreeFilterChange = useCallback(
+    item => {
+      handleArtifactTreeFilterChange(
+        fetchData,
+        item,
+        setArtifactFilter,
+        setFiles
+      )
+    },
+    [fetchData, setArtifactFilter]
+  )
+
   return (
     <>
       {artifactsStore.loading && <Loader />}
@@ -213,6 +226,7 @@ const Files = ({
         content={files}
         expandRow={handleExpandRow}
         groupFilter={groupFilter}
+        handleArtifactFilterTree={handleFilesTreeFilterChange}
         handleCancel={() => setSelectedFile({})}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}

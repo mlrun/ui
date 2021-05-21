@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../../elements/ArtifactsFilterTree/ArtifactsFilterTree'
@@ -23,8 +23,7 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   KEY_CODES,
-  MODELS_PAGE,
-  MONITOR_TAB
+  MODELS_PAGE
 } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
 import {
@@ -41,6 +40,7 @@ const FilterMenu = ({
   filters,
   groupFilter,
   handleExpandAll,
+  handleArtifactFilterTree,
   match,
   onChange,
   page,
@@ -58,6 +58,7 @@ const FilterMenu = ({
   const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
   const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const history = useHistory()
+  const artifactFilter = useSelector(store => store.artifactsStore.filter)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -100,15 +101,8 @@ const FilterMenu = ({
     }
   }, [dispatch, filters, match.params.projectName])
 
-  useEffect(() => {
-    if (match.params.pageTab === MONITOR_TAB) {
-      onChange({ dates: ['', ''] })
-      setDates(['', ''])
-    }
-  }, [match.params.pageTab, onChange])
-
-  const applyChanges = data => {
-    if (match.params.jobId || match.params.name) {
+  const applyChanges = (data, isRefreshed) => {
+    if ((match.params.jobId || match.params.name) && !isRefreshed) {
       history.push(
         `/projects/${match.params.projectName}/${page.toLowerCase()}${
           match.params.pageTab ? `/${match.params.pageTab}` : ''
@@ -121,6 +115,13 @@ const FilterMenu = ({
         page
       )
     ) {
+      dispatch(
+        artifactsAction.setArtifactFilter({
+          ...artifactFilter,
+          labels,
+          name
+        })
+      )
       onChange(data)
     } else {
       page === JOBS_PAGE ? onChange(data) : onChange({ name })
@@ -145,13 +146,14 @@ const FilterMenu = ({
   }
 
   const handleSelectTree = filter => {
-    applyChanges({
-      tag: filter,
+    handleArtifactFilterTree({
       labels,
       name,
+      owner,
       dates,
       state: stateFilter !== initialStateFilter && stateFilter,
-      iter
+      iter,
+      tag: filter
     })
     setTag(filter)
   }
@@ -188,6 +190,21 @@ const FilterMenu = ({
     setDates(generatedDates)
   }
 
+  const handleIterClick = iteration => {
+    handleExpandAll(true)
+    applyChanges({
+      labels,
+      name,
+      owner,
+      dates,
+      tag,
+      state: stateFilter !== initialStateFilter && stateFilter,
+      iter: iter === iteration ? 'iter' : ''
+    })
+    setIter(state => (state === iteration ? 'iter' : iteration))
+    setIteration(state => (state === iteration ? 'iter' : iteration))
+  }
+
   return (
     <>
       <div className="filters">
@@ -203,7 +220,7 @@ const FilterMenu = ({
                   match={match}
                   onChange={handleSelectTree}
                   page={page}
-                  value={tag}
+                  value={artifactFilter.tag}
                 />
               )
             case 'labels':
@@ -260,22 +277,7 @@ const FilterMenu = ({
                 <CheckBox
                   key={filter.type}
                   item={{ label: filter.label, id: '' }}
-                  onChange={iteration => {
-                    handleExpandAll(true)
-                    applyChanges({
-                      labels,
-                      name,
-                      owner,
-                      dates,
-                      tag,
-                      state: stateFilter !== initialStateFilter && stateFilter,
-                      iter: iter === iteration ? 'iter' : ''
-                    })
-                    setIter(state => (state === iteration ? 'iter' : iteration))
-                    setIteration(state =>
-                      state === iteration ? 'iter' : iteration
-                    )
-                  }}
+                  onChange={handleIterClick}
                   selectedId={iter}
                 />
               )
@@ -325,13 +327,16 @@ const FilterMenu = ({
           <button
             onClick={() => {
               ![JOBS_PAGE, FUNCTIONS_PAGE].includes(page)
-                ? onChange({
-                    tag,
-                    labels,
-                    name,
-                    iter
-                  })
-                : onChange({ labels, name, dates })
+                ? applyChanges(
+                    {
+                      tag,
+                      labels,
+                      name,
+                      iter
+                    },
+                    true
+                  )
+                : applyChanges({ labels, name, dates }, true)
             }}
             id="refresh"
           >
@@ -357,7 +362,9 @@ const FilterMenu = ({
 FilterMenu.defaultProps = {
   actionButton: null,
   groupFilter: '',
+  handleArtifactFilterTree: null,
   setGroupFilter: null,
+  setIteration: () => {},
   showUntagged: '',
   toggleShowUntagged: null
 }
@@ -366,7 +373,9 @@ FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   groupFilter: PropTypes.string,
+  handleArtifactFilterTree: PropTypes.func,
   setGroupFilter: PropTypes.func,
+  setIteration: () => {},
   showUntagged: PropTypes.string,
   toggleShowUntagged: PropTypes.func
 }

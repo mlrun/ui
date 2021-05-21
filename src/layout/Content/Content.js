@@ -39,6 +39,7 @@ const Content = ({
   content,
   expandRow,
   groupFilter,
+  handleArtifactFilterTree,
   handleCancel,
   handleSelectItem,
   loading,
@@ -237,11 +238,11 @@ const Content = ({
     }
   }
 
-  const handleExpandAll = exp => {
+  const handleExpandAll = colapsRows => {
     if (groupFilter !== 'none') {
       const rows = [...document.getElementsByClassName('parent-row')]
 
-      if (exp || expand) {
+      if (colapsRows || expand) {
         rows.forEach(row => row.classList.remove('parent-row-expanded'))
 
         setExpand(false)
@@ -296,6 +297,7 @@ const Content = ({
             expand={expand}
             filters={pageData.filters}
             groupFilter={pageData.handleRequestOnExpand ? null : groupFilter}
+            handleArtifactFilterTree={handleArtifactFilterTree}
             handleExpandAll={handleExpandAll}
             match={match}
             onChange={refresh}

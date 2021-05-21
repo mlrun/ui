@@ -11,6 +11,7 @@ import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
 import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
+import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 
 import './artifacts.scss'
 
@@ -130,11 +131,30 @@ const Artifacts = ({
     selectedArtifact.item
   ])
 
+  const handleArtifactFilterTree = useCallback(
+    item => {
+      handleArtifactTreeFilterChange(
+        fetchData,
+        artifactsStore.filter,
+        item,
+        match.params.projectName,
+        setArtifactFilter
+      )
+    },
+    [
+      artifactsStore.filter,
+      fetchData,
+      match.params.projectName,
+      setArtifactFilter
+    ]
+  )
+
   return (
     <>
       {artifactsStore.loading && <Loader />}
       <Content
         content={artifacts}
+        handleArtifactFilterTree={handleArtifactFilterTree}
         handleCancel={() => setSelectedArtifact({})}
         handleSelectItem={item => setSelectedArtifact({ item })}
         loading={artifactsStore.loading}

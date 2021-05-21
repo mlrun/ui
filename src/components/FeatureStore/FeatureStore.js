@@ -24,7 +24,7 @@ import {
   navigateToDetailsPane,
   pageDataInitialState
 } from './featureStore.util'
-
+import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import {
   DATASETS_TAB,
   FEATURE_SETS_TAB,
@@ -202,7 +202,7 @@ const FeatureStore = ({
     setIter(match.params.pageTab === DATASETS_TAB ? 'iter' : '')
 
     return () => {
-      setArtifactFilter({ tag: 'latest', labels: '', name: '', iter: 'iter' })
+      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
       setContent([])
       setIter('iter')
       setYamlContent({
@@ -237,7 +237,7 @@ const FeatureStore = ({
     } else if (groupFilter.length > 0) {
       setGroupFilter('')
     }
-  }, [match.params.pageTab, groupFilter.length, artifactsStore.filter])
+  }, [artifactsStore.filter.tag, groupFilter.length, match.params.pageTab])
 
   useEffect(() => {
     setPageData(state => {
@@ -302,6 +302,31 @@ const FeatureStore = ({
     match
   ])
 
+  const handleTreeFilterChange = useCallback(
+    item => {
+      if (match.params.name) {
+        history.push(
+          `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
+        )
+      }
+
+      handleArtifactTreeFilterChange(
+        fetchData,
+        item,
+        setArtifactFilter,
+        setContent
+      )
+    },
+    [
+      fetchData,
+      history,
+      match.params.name,
+      match.params.pageTab,
+      match.params.projectName,
+      setArtifactFilter
+    ]
+  )
+
   const applyDetailsChanges = changes => {
     return handleApplyDetailsChanges(
       changes,
@@ -360,6 +385,7 @@ const FeatureStore = ({
         content={content}
         expandRow={handleExpandRow}
         groupFilter={groupFilter}
+        handleArtifactFilterTree={handleTreeFilterChange}
         handleCancel={() => setSelectedItem({})}
         loading={artifactsStore.loading}
         match={match}

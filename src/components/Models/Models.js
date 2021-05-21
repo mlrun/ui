@@ -15,6 +15,7 @@ import {
   checkForSelectedModel,
   checkForSelectedModelEndpoint
 } from './models.util'
+import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { MODEL_ENDPOINTS_TAB, MODELS_TAB } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -183,17 +184,10 @@ const Models = ({
         allData: [],
         selectedRowData: []
       })
+      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
       setIter('iter')
-      setArtifactFilter({ tag: 'latest', labels: '', name: '', iter: 'iter' })
     }
-  }, [
-    fetchData,
-    getModelsEndpoints,
-    match.params.projectName,
-    match.params.pageTab,
-    removeModels,
-    setArtifactFilter
-  ])
+  }, [fetchData, match.params.pageTab, removeModels, setArtifactFilter])
 
   useEffect(() => {
     setPageData(state => ({
@@ -265,6 +259,18 @@ const Models = ({
     fetchModelEndpointWithAnalysis
   ])
 
+  const handleModelTreeFilterChange = useCallback(
+    item => {
+      handleArtifactTreeFilterChange(
+        fetchData,
+        item,
+        setArtifactFilter,
+        setContent
+      )
+    },
+    [fetchData, setArtifactFilter]
+  )
+
   return (
     <>
       {artifactsStore.loading && <Loader />}
@@ -272,6 +278,7 @@ const Models = ({
         content={content}
         expandRow={handleExpandRow}
         groupFilter={groupFilter}
+        handleArtifactFilterTree={handleModelTreeFilterChange}
         handleCancel={() => setSelectedModel({})}
         handleSelectItem={item => setSelectedModel({ item })}
         loading={artifactsStore.loading}

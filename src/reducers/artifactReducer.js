@@ -99,12 +99,12 @@ const initialState = {
       content: {}
     }
   },
+  loading: false,
   filter: {
     tag: 'latest',
     labels: '',
     name: ''
   },
-  loading: false,
   modelEndpoints: [],
   models: {
     allData: [],
