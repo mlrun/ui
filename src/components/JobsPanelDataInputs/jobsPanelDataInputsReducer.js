@@ -2,11 +2,14 @@ export const initialState = {
   addNewInput: false,
   projects: [],
   artifacts: [],
+  artifactsReferences: [],
   featureVectors: [],
+  featureVectorsReferences: [],
   comboboxMatches: [],
   inputStorePathTypeEntered: false,
   inputProjectPathEntered: false,
   inputProjectItemPathEntered: false,
+  inputProjectItemReferencePathEntered: false,
   newInputDefaultPathProject: '',
   newInputUrlPath: '',
   pathPlaceholder: '',
@@ -16,7 +19,8 @@ export const initialState = {
       pathType: '',
       storePathType: '',
       project: '',
-      projectItem: ''
+      projectItem: '',
+      projectItemReference: ''
     }
   },
   selectedDataInput: {
@@ -33,14 +37,19 @@ export const initialState = {
 
 export const inputsActions = {
   REMOVE_NEW_INPUT_DATA: 'REMOVE_NEW_INPUT_DATA',
+  REMOVE_SELECTED_INPUT: 'REMOVE_SELECTED_INPUT',
   SET_ADD_NEW_INPUT: 'SET_ADD_NEW_INPUT',
   SET_ARTIFACTS: 'SET_ARTIFACTS',
+  SET_ARTIFACTS_REFERENCES: 'SET_ARTIFACTS_REFERENCES',
   SET_FEATURE_VECTORS: 'SET_FEATURE_VECTORS',
+  SET_FEATURE_VECTORS_REFERENCES: 'SET_FEATURE_VECTORS_REFERENCES',
   SET_COMBOBOX_MATCHES: 'SET_COMBOBOX_MATCHES',
   SET_NEW_INPUT_DEFAULT_PATH_PROJECT: 'SET_NEW_INPUT_DEFAULT_PATH_PROJECT',
   SET_NEW_INPUT_NAME: 'SET_NEW_INPUT_NAME',
   SET_NEW_INPUT_PATH: 'SET_NEW_INPUT_PATH',
   SET_INPUT_PROJECT_ITEM_PATH_ENTERED: 'SET_INPUT_PROJECT_ITEM_PATH_ENTERED',
+  SET_INPUT_PROJECT_ITEM_REFERENCE_PATH_ENTERED:
+    'SET_INPUT_PROJECT_ITEM_REFERENCE_PATH_ENTERED',
   SET_INPUT_PROJECT_PATH_ENTERED: 'SET_INPUT_PROJECT_PATH_ENTERED',
   SET_INPUT_STORE_PATH_TYPE_ENTERED: 'SET_INPUT_STORE_PATH_TYPE_ENTERED',
   SET_NEW_INPUT_URL_PATH: 'SET_NEW_INPUT_URL_PATH',
@@ -60,9 +69,44 @@ export const jobsPanelDataInputsReducer = (state, { type, payload }) => {
             pathType: '',
             storePathType: '',
             project: '',
-            projectItem: ''
+            projectItem: '',
+            projectItemReference: ''
           }
-        }
+        },
+        projects: [],
+        artifacts: [],
+        artifactsReferences: [],
+        featureVectors: [],
+        featureVectorsReferences: [],
+        comboboxMatches: [],
+        inputStorePathTypeEntered: false,
+        inputProjectPathEntered: false,
+        inputProjectItemPathEntered: false,
+        inputProjectItemReferencePathEntered: false
+      }
+    case inputsActions.REMOVE_SELECTED_INPUT:
+      return {
+        ...state,
+        selectedDataInput: {
+          data: {
+            name: '',
+            path: {
+              pathType: '',
+              value: '',
+              url: ''
+            }
+          }
+        },
+        projects: [],
+        artifacts: [],
+        artifactsReferences: [],
+        featureVectors: [],
+        featureVectorsReferences: [],
+        comboboxMatches: [],
+        inputStorePathTypeEntered: false,
+        inputProjectPathEntered: false,
+        inputProjectItemPathEntered: false,
+        inputProjectItemReferencePathEntered: false
       }
     case inputsActions.SET_ADD_NEW_INPUT:
       return {
@@ -74,10 +118,20 @@ export const jobsPanelDataInputsReducer = (state, { type, payload }) => {
         ...state,
         artifacts: payload
       }
+    case inputsActions.SET_ARTIFACTS_REFERENCES:
+      return {
+        ...state,
+        artifactsReferences: payload
+      }
     case inputsActions.SET_FEATURE_VECTORS:
       return {
         ...state,
         featureVectors: payload
+      }
+    case inputsActions.SET_FEATURE_VECTORS_REFERENCES:
+      return {
+        ...state,
+        featureVectorsReferences: payload
       }
     case inputsActions.SET_COMBOBOX_MATCHES:
       return {
@@ -88,6 +142,11 @@ export const jobsPanelDataInputsReducer = (state, { type, payload }) => {
       return {
         ...state,
         inputProjectItemPathEntered: payload
+      }
+    case inputsActions.SET_INPUT_PROJECT_ITEM_REFERENCE_PATH_ENTERED:
+      return {
+        ...state,
+        inputProjectItemReferencePathEntered: payload
       }
     case inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT:
       return {
@@ -111,7 +170,8 @@ export const jobsPanelDataInputsReducer = (state, { type, payload }) => {
         },
         inputStorePathTypeEntered: false,
         inputProjectPathEntered: false,
-        inputProjectItemPathEntered: false
+        inputProjectItemPathEntered: false,
+        inputProjectItemReferencePathEntered: false
       }
     case inputsActions.SET_INPUT_STORE_PATH_TYPE_ENTERED:
       return {

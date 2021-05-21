@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react'
+import React, { useReducer, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { uniqBy } from 'lodash'
@@ -22,6 +22,11 @@ import {
 import artifactsAction from '../../actions/artifacts'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import {
+  getArtifactReference,
+  getFeatureReference,
+  getParsedResource
+} from '../../utils/resources'
 
 const JobsPanelDataInputs = ({
   fetchArtifacts,
@@ -36,6 +41,25 @@ const JobsPanelDataInputs = ({
   const [inputsState, inputsDispatch] = useReducer(
     jobsPanelDataInputsReducer,
     initialState
+  )
+
+  const getInputValue = useCallback(
+    inputItem => {
+      const inputItems = ['storePathType', 'project', 'projectItem']
+
+      let value =
+        inputsState.newInput.path?.[inputItem] ||
+        inputsState.selectedDataInput.data.path.value.split('/')[
+          inputItems.indexOf(inputItem)
+        ]
+
+      if (inputItem === 'projectItem') {
+        value = getParsedResource(value)[0]
+      }
+
+      return value
+    },
+    [inputsState.newInput.path, inputsState.selectedDataInput.data.path.value]
   )
 
   useEffect(() => {
@@ -61,24 +85,19 @@ const JobsPanelDataInputs = ({
       })
     }
   }, [
+    inputsState.inputStorePathTypeEntered,
     inputsState.newInput.path.project.length,
     inputsState.projects.length,
-    match.params.projectName,
-    projectStore.projects,
-    inputsState.selectedDataInput.data.path.value,
     inputsState.selectedDataInput,
-    inputsState.inputStorePathTypeEntered,
-    inputsState.newInput.path.project
+    match.params.projectName,
+    projectStore.projects
   ])
 
   useEffect(() => {
     if (inputsState.inputProjectPathEntered) {
-      const projectName =
-        inputsState.newInput.path?.project ||
-        inputsState.selectedDataInput.data.path.value.split('/')[1]
-      const storePathType =
-        inputsState.newInput.path.storePathType ||
-        inputsState.selectedDataInput.data.path.value.split('/')[0]
+      const storePathType = getInputValue('storePathType')
+      const projectName = getInputValue('project')
+
       if (storePathType === 'artifacts' && inputsState.artifacts.length === 0) {
         fetchArtifacts({
           project: projectName
@@ -121,13 +140,93 @@ const JobsPanelDataInputs = ({
     }
   }, [
     fetchArtifacts,
+    fetchFeatureVectors,
+    getInputValue,
     inputsState.artifacts.length,
     inputsState.featureVectors.length,
-    inputsState.newInput.path.project,
-    inputsState.inputProjectPathEntered,
-    inputsState.selectedDataInput.data.path.value,
+    inputsState.inputProjectPathEntered
+  ])
+
+  useEffect(() => {
+    if (inputsState.inputProjectItemPathEntered) {
+      const storePathType = getInputValue('storePathType')
+      const projectName = getInputValue('project')
+      const projectItem = getInputValue('projectItem')
+
+      if (
+        storePathType === 'artifacts' &&
+        inputsState.artifactsReferences.length === 0
+      ) {
+        fetchArtifacts({
+          project: projectName,
+          name: projectItem
+        }).then(artifacts => {
+          const artifactsReferencesList = artifacts?.[0].data
+            .map(artifact => {
+              let artifactReference = getArtifactReference(artifact)
+
+              return {
+                label: artifactReference,
+                id: artifactReference,
+                customDelimiter: artifactReference[0]
+              }
+            })
+            .filter(reference => reference.label !== '')
+            .sort((prevRef, nextRef) => {
+              const [prevRefIter, prevRefTree] = prevRef.id.split('@')
+              const [nextRefIter, nextRefTree] = nextRef.id.split('@')
+
+              if (prevRefTree === nextRefTree) {
+                return prevRefIter < nextRefIter ? -1 : 1
+              } else {
+                return prevRefTree < nextRefTree ? -1 : 1
+              }
+            })
+
+          inputsDispatch({
+            type: inputsActions.SET_ARTIFACTS_REFERENCES,
+            payload: artifactsReferencesList
+          })
+        })
+      } else if (
+        storePathType === 'feature-vectors' &&
+        inputsState.featureVectorsReferences.length === 0
+      ) {
+        fetchFeatureVectors({
+          project: projectName,
+          name: projectItem
+        }).then(featureVectors => {
+          const featureVectorsReferencesList = featureVectors
+            .map(featureVector => {
+              let featureVectorReference = getFeatureReference(
+                featureVector.metadata
+              )
+
+              return {
+                label: featureVectorReference,
+                id: featureVectorReference,
+                customDelimiter: featureVectorReference[0]
+              }
+            })
+            .filter(featureVector => featureVector.label !== '')
+            .sort((prevRef, nextRef) => (prevRef.id < nextRef.id ? -1 : 1))
+
+          inputsDispatch({
+            type: inputsActions.SET_FEATURE_VECTORS_REFERENCES,
+            payload: featureVectorsReferencesList
+          })
+        })
+      }
+    }
+  }, [
+    fetchArtifacts,
+    fetchFeatureVectors,
+    getInputValue,
+    inputsState.artifactsReferences.length,
+    inputsState.featureVectorsReferences.length,
+    inputsState.inputProjectItemPathEntered,
     inputsState.newInput.path,
-    fetchFeatureVectors
+    inputsState.selectedDataInput.data.path.value
   ])
 
   useEffect(() => {
@@ -140,10 +239,13 @@ const JobsPanelDataInputs = ({
         type: inputsActions.SET_COMBOBOX_MATCHES,
         payload: generateComboboxMatchesList(
           inputsState.artifacts,
+          inputsState.artifactsReferences,
           inputsState.featureVectors,
+          inputsState.featureVectorsReferences,
           inputsState.inputStorePathTypeEntered,
           inputsState.inputProjectPathEntered,
           inputsState.inputProjectItemPathEntered,
+          inputsState.inputProjectItemReferencePathEntered,
           inputsState.newInput,
           inputsState.projects,
           match.params.projectName,
@@ -153,8 +255,11 @@ const JobsPanelDataInputs = ({
     }
   }, [
     inputsState.artifacts,
+    inputsState.artifactsReferences,
     inputsState.featureVectors,
+    inputsState.featureVectorsReferences,
     inputsState.inputProjectItemPathEntered,
+    inputsState.inputProjectItemReferencePathEntered,
     inputsState.inputProjectPathEntered,
     inputsState.inputStorePathTypeEntered,
     inputsState.newInput,
@@ -188,7 +293,7 @@ const JobsPanelDataInputs = ({
       panelState.tableData.dataInputs,
       inputsDispatch,
       panelDispatch,
-      inputsActions.SET_SELECTED_INPUT,
+      inputsActions.REMOVE_SELECTED_INPUT,
       inputsState.selectedDataInput.data,
       setNewJobInputs,
       panelActions.SET_TABLE_DATA_INPUTS,

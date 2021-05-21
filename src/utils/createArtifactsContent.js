@@ -19,7 +19,7 @@ import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
 import { copyToClipboard } from './copyToClipboard'
-import { generateUri } from './generateUri'
+import { generateUri } from './resources'
 import { generateLinkPath, parseUri, truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 

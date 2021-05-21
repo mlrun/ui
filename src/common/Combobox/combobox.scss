@@ -16,6 +16,7 @@
 
     &__option {
       padding: 8px 15px;
+      word-break: break-all;
       cursor: pointer;
 
       &:hover {
@@ -29,7 +30,7 @@
     top: 40px;
     z-index: 5;
     display: none;
-    max-width: 220px;
+    max-width: 350px;
     background-color: $white;
     box-shadow: $previewBoxShadow;
     opacity: 0;
@@ -51,6 +52,7 @@
       border-bottom: $dividerBorder;
 
       &-input {
+        width: 100%;
         padding: 12px 0 10px;
 
         &::placeholder {
@@ -116,7 +118,7 @@
     display: flex;
     flex: 3 1;
     width: 100%;
-    padding: 18px 0;
+    padding: 18px 5px 18px 0;
 
     &__label {
       position: absolute;

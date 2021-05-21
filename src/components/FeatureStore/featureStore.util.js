@@ -18,7 +18,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
-import { generateUri } from '../../utils/generateUri'
+import { generateUri } from '../../utils/resources'
 import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 
 export const pageDataInitialState = {

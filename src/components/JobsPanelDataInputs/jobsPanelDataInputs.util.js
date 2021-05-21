@@ -10,13 +10,17 @@ import {
   V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { getParsedResource } from '../../utils/resources'
 
 export const generateComboboxMatchesList = (
   artifacts,
+  artifactsReferences,
   featureVectors,
+  featureVectorsReferences,
   inputStorePathTypeEntered,
   inputProjectPathEntered,
   inputProjectItemPathEntered,
+  inputProjectItemReferencePathEntered,
   newInput,
   projects,
   projectName,
@@ -49,6 +53,25 @@ export const generateComboboxMatchesList = (
               )
         })
       : []
+  } else if (!inputProjectItemReferencePathEntered) {
+    const selectedStorePathType =
+      newInput.path.storePathType || selectedDataInputPath.value.split('/')[0]
+    const projectItemsReferences =
+      selectedStorePathType === 'artifacts'
+        ? artifactsReferences
+        : selectedStorePathType === 'feature-vectors'
+        ? featureVectorsReferences
+        : null
+
+    return projectItemsReferences
+      ? projectItemsReferences.filter(projectItem => {
+          return isEveryObjectValueEmpty(selectedDataInputPath)
+            ? projectItem.id.startsWith(newInput.path.projectItemReference)
+            : projectItem.id.startsWith(
+                getParsedResource(selectedDataInputPath.value.split('/')[2])[1]
+              )
+        })
+      : []
   } else {
     return []
   }
@@ -76,7 +99,8 @@ export const handleAddItem = (
       (newItemObj.path.pathType.length === 0 ||
         newItemObj.path.storePathType.length === 0 ||
         newItemObj.path.project.length === 0 ||
-        newItemObj.path.projectItem.length === 0))
+        newItemObj.path.projectItem.length === 0 ||
+        newItemObj.path.projectItemReference.length === 0))
   ) {
     inputsDispatch({
       type: removeNewItemObj
@@ -115,7 +139,7 @@ export const handleAddItem = (
             pathType: newItemObj.path.pathType,
             value: newInputUrlPath
               ? ''
-              : `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}`,
+              : `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}${newItemObj.path.projectItemReference}`,
             url: newInputUrlPath ?? ''
           }
         }
@@ -134,7 +158,7 @@ export const handleAddItem = (
             pathType: newItemObj.path.pathType,
             value: newInputUrlPath
               ? ''
-              : `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}`,
+              : `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}${newItemObj.path.projectItemReference}`,
             url: newInputUrlPath ?? ''
           }
         }
@@ -160,7 +184,7 @@ export const handleAddItem = (
     ...newJobData,
     [newItemObj.name]: isUrlPath
       ? newItemObj.path.pathType + newInputUrlPath
-      : `${newItemObj.path.pathType}${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}`
+      : `${newItemObj.path.pathType}${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}${newItemObj.path.projectItemReference}`
   })
 }
 
@@ -209,17 +233,7 @@ export const handleEdit = (
     payload: newDataArray
   })
   inputsDispatch({
-    type: removeSelectedItem,
-    payload: {
-      data: {
-        name: '',
-        path: {
-          pathType: '',
-          value: '',
-          url: ''
-        }
-      }
-    }
+    type: removeSelectedItem
   })
 }
 
@@ -342,7 +356,8 @@ export const handleInputPathTypeChange = (
       pathType: pathType,
       storePathType: '',
       project: '',
-      projectItem: ''
+      projectItem: '',
+      projectItemReference: ''
     }
   })
 }
@@ -360,16 +375,31 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
       type: inputsActions.SET_NEW_INPUT_URL_PATH,
       payload: path
     })
-  }
+  } else if (
+    inputsState.newInput.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
+  ) {
+    if (
+      path.length === 0 &&
+      inputsState.newInputDefaultPathProject.length > 0
+    ) {
+      inputsDispatch({
+        type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
+        payload: ''
+      })
+    }
 
+    handleStoreInputPathChange(true, inputsDispatch, inputsState, path)
+  }
+}
+
+export const handleStoreInputPathChange = (
+  isNewInput,
+  inputsDispatch,
+  inputsState,
+  path
+) => {
   const pathItems = path.split('/')
-
-  if (path.length === 0 && inputsState.newInputDefaultPathProject.length > 0) {
-    inputsDispatch({
-      type: inputsActions.SET_NEW_INPUT_DEFAULT_PATH_PROJECT,
-      payload: ''
-    })
-  }
+  const [projectItem, projectItemReference] = getParsedResource(pathItems[2])
 
   if (isNil(pathItems[2])) {
     if (inputsState.artifacts.length > 0) {
@@ -387,20 +417,49 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
     }
   }
 
-  inputsDispatch({
-    type: inputsActions.SET_NEW_INPUT_PATH,
-    payload: {
-      ...inputsState.newInput.path,
-      storePathType: pathItems[0] ?? inputsState.newInput.path.storePathType,
-      project: pathItems[1] ?? inputsState.newInput.path.project,
-      projectItem: pathItems[2] ?? inputsState.newInput.path.projectItem
+  if (!projectItemReference) {
+    if (inputsState.artifactsReferences.length > 0) {
+      inputsDispatch({
+        type: inputsActions.SET_ARTIFACTS_REFERENCES,
+        payload: []
+      })
     }
-  })
+
+    if (inputsState.featureVectorsReferences.length > 0) {
+      inputsDispatch({
+        type: inputsActions.SET_FEATURE_VECTORS_REFERENCES,
+        payload: []
+      })
+    }
+  }
+
+  if (isNewInput) {
+    inputsDispatch({
+      type: inputsActions.SET_NEW_INPUT_PATH,
+      payload: {
+        ...inputsState.newInput.path,
+        storePathType: pathItems[0] ?? inputsState.newInput.path.storePathType,
+        project: pathItems[1] ?? inputsState.newInput.path.project,
+        projectItem: projectItem ?? inputsState.newInput.path.projectItem,
+        projectItemReference:
+          projectItemReference ?? inputsState.newInput.path.projectItemReference
+      }
+    })
+  }
 
   const projectItems =
     inputsState[pathItems[0] === 'artifacts' ? 'artifacts' : 'featureVectors']
   const projectItemIsEntered = projectItems.find(
-    projectItem => projectItem.id === pathItems[2]
+    project => project.id === projectItem
+  )
+  const projectItemsReferences =
+    inputsState[
+      pathItems[0] === 'artifacts'
+        ? 'artifactsReferences'
+        : 'featureVectorsReferences'
+    ]
+  const projectItemReferenceIsEntered = projectItemsReferences.find(
+    projectItemRef => projectItemRef.id === projectItemReference
   )
 
   inputsDispatch({
@@ -414,5 +473,9 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
   inputsDispatch({
     type: inputsActions.SET_INPUT_PROJECT_ITEM_PATH_ENTERED,
     payload: Boolean(projectItemIsEntered)
+  })
+  inputsDispatch({
+    type: inputsActions.SET_INPUT_PROJECT_ITEM_REFERENCE_PATH_ENTERED,
+    payload: Boolean(projectItemReferenceIsEntered)
   })
 }
