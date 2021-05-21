@@ -1,19 +1,37 @@
 .resources {
-  .volumes,
-  .memory,
-  .cpu {
+  .volumes {
     margin-bottom: 45px;
   }
 
+  .memory,
+  .cpu {
+    margin-right: 40px;
+
+    .panel-section__body {
+      align-items: center;
+    }
+  }
+
   &__inputs {
+    display: flex;
+
     .range {
-      margin-right: 16px;
+      max-width: 75px;
+      margin-right: 5px;
+
+      .input {
+        width: 100%;
+
+        &-wrapper {
+          width: 100%;
+        }
+      }
     }
 
     .select {
       flex: 1 1;
-      height: auto;
-      margin-right: 16px;
+      max-width: 120px;
+      margin-right: 5px;
     }
   }
 }

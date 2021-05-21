@@ -15,8 +15,8 @@ const FunctionsPanelResources = ({
   const [data, setData] = useState({
     volumeMounts: functionsStore.newFunction.spec.volume_mounts,
     volumes: functionsStore.newFunction.spec.volumes,
-    memoryUnit: '',
-    cpuUnit: '',
+    memoryUnit: 'Bytes',
+    cpuUnit: 'cpu',
     limits: {
       cpu: '',
       memory: '',

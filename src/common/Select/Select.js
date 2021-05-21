@@ -3,15 +3,14 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import SelectOption from '../../elements/SelectOption/SelectOption'
-
-import { ReactComponent as Caret } from '../../images/dropdown.svg'
-
-import './select.scss'
-
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import PopUpDialog from '../PopUpDialog/PopUpDialog'
 import Button from '../Button/Button'
+
+import { ReactComponent as Caret } from '../../images/dropdown.svg'
+
+import './select.scss'
 
 const Select = ({
   className,
@@ -21,6 +20,7 @@ const Select = ({
   floatingLabel,
   hideSelectedOption,
   label,
+  labelAtTop,
   onClick,
   options,
   search,
@@ -42,7 +42,8 @@ const Select = ({
   )
   const selectLabelClassName = classNames(
     'select__label',
-    selectedId && floatingLabel && 'select__label_floating'
+    selectedId && floatingLabel && !labelAtTop && 'select__label_floating',
+    labelAtTop && 'select__label_top'
   )
   const selectValueClassName = classNames(
     'select__value',
@@ -215,6 +216,7 @@ Select.defaultProps = {
   disabledOptions: [],
   hideSelectedOption: false,
   label: '',
+  labelAtTop: false,
   onClick: null,
   search: false,
   selectType: '',
@@ -230,6 +232,7 @@ Select.propTypes = {
   floatingLabel: PropTypes.bool,
   hideSelectedOption: PropTypes.bool,
   label: PropTypes.string,
+  labelAtTop: PropTypes.bool,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   options: PropTypes.arrayOf(
     PropTypes.shape({

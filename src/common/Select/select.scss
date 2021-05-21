@@ -39,6 +39,30 @@
     }
   }
 
+  &__header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__value {
+    min-width: 96px;
+    min-height: 1em;
+    padding-right: 50px;
+    overflow: hidden;
+    color: $mulledWine;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &_floating {
+      position: relative;
+      top: 6px;
+      left: 16px;
+    }
+  }
+
   &__label {
     top: 15px;
     left: 0;
@@ -59,21 +83,19 @@
       letter-spacing: 0.5px;
       transition: 200ms ease;
     }
-  }
 
-  &__value {
-    min-width: 96px;
-    min-height: 1em;
-    padding-right: 50px;
-    overflow: hidden;
-    color: $mulledWine;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    &_top {
+      position: absolute;
+      top: -20px;
+      left: 0;
+      padding: 0;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 15px;
 
-    &_floating {
-      position: relative;
-      top: 6px;
-      left: 16px;
+      & + .select__value {
+        padding-left: 15px;
+      }
     }
   }
 
@@ -92,15 +114,6 @@
     color: $topaz;
     white-space: nowrap;
     text-overflow: ellipsis;
-  }
-
-  &__header {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
   }
 
   &__body {
