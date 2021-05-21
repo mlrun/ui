@@ -86,8 +86,11 @@ const Jobs = ({
       })
   }
 
-  const handleSuccessRerunJob = () => {
-    refreshJobs()
+  const handleSuccessRerunJob = tab => {
+    if (tab === match.params.pageTab) {
+      refreshJobs()
+    }
+
     setEditableItem(null)
     setNotification({
       status: 200,
@@ -284,15 +287,13 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    if (match.params.pageTab === SCHEDULE_TAB) {
-      refreshJobs()
-    }
+    refreshJobs()
 
     return () => {
       setSelectedJob({})
       setJobs([])
     }
-  }, [match.params.pageTab, refreshJobs])
+  }, [refreshJobs])
 
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
@@ -406,9 +407,9 @@ const Jobs = ({
           handleRunNewJob={{}}
           match={match}
           onEditJob={onEditJob}
-          onSuccessRun={() => {
+          onSuccessRun={tab => {
             if (editableItem) {
-              handleSuccessRerunJob()
+              handleSuccessRerunJob(tab)
             }
           }}
           project={match.params.projectName}

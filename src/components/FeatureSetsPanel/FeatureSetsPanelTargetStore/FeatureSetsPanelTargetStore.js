@@ -10,7 +10,7 @@ const FeatureSetsPanelTargetStore = ({
   artifactsStore,
   setNewFeatureSetTarget
 }) => {
-  const [selectedTargetKind, setSelectedTargetKind] = useState([])
+  const [selectedTargetKind, setSelectedTargetKind] = useState(['offline'])
   const [isOtherTargetExists, setOtherTargetExists] = useState(false)
   const [otherKindData, setOtherKindData] = useState({
     kind: 'csv',
