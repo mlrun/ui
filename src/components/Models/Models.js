@@ -41,6 +41,7 @@ const Models = ({
     setIsRegisterArtifactPopupOpen
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
+  const [iter, setIter] = useState('')
   const [groupFilter, setGroupFilter] = useState('')
   const [yamlContent, setYamlContent] = useState({
     allData: [],
@@ -61,6 +62,7 @@ const Models = ({
         fetchModelEndpoints,
         fetchModels,
         item,
+        match.params.projectName,
         match.params.pageTab
       )
 
@@ -74,7 +76,12 @@ const Models = ({
 
       return data.yamlContent
     },
-    [fetchModelEndpoints, fetchModels, match.params.pageTab]
+    [
+      fetchModelEndpoints,
+      fetchModels,
+      match.params.pageTab,
+      match.params.projectName
+    ]
   )
 
   const closeDeployModelPopUp = () => {
@@ -115,7 +122,7 @@ const Models = ({
       }))
 
       try {
-        result = await fetchModel(item)
+        result = await fetchModel(item, iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -150,7 +157,7 @@ const Models = ({
         })
       }
     },
-    [fetchModel]
+    [fetchModel, iter]
   )
 
   const handleExpandRow = useCallback((item, isCollapse) => {
@@ -164,9 +171,10 @@ const Models = ({
 
   useEffect(() => {
     fetchData({
-      project: match.params.projectName,
-      tag: 'latest'
+      tag: 'latest',
+      iter: match.params.pageTab === MODELS_TAB ? 'iter' : ''
     })
+    setIter(match.params.pageTab === MODELS_TAB ? 'iter' : '')
 
     return () => {
       setContent([])
@@ -177,15 +185,9 @@ const Models = ({
         selectedRowData: []
       })
       setArtifactFilter({ tag: 'latest', labels: '', name: '' })
+      setIter('iter')
     }
-  }, [
-    fetchData,
-    getModelsEndpoints,
-    match.params.projectName,
-    match.params.pageTab,
-    removeModels,
-    setArtifactFilter
-  ])
+  }, [fetchData, match.params.pageTab, removeModels, setArtifactFilter])
 
   useEffect(() => {
     setPageData(state => ({
@@ -261,19 +263,12 @@ const Models = ({
     item => {
       handleArtifactTreeFilterChange(
         fetchData,
-        artifactsStore.filter,
         item,
-        match.params.projectName,
         setArtifactFilter,
         setContent
       )
     },
-    [
-      artifactsStore.filter,
-      fetchData,
-      match.params.projectName,
-      setArtifactFilter
-    ]
+    [fetchData, setArtifactFilter]
   )
 
   return (
@@ -292,6 +287,7 @@ const Models = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
+        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isRegisterArtifactPopupOpen && (

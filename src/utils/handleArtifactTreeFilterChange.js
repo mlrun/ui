@@ -1,20 +1,17 @@
 export const handleArtifactTreeFilterChange = (
   fetchData,
-  filter,
   item,
-  project,
   setFilter,
   setContent
 ) => {
   setContent([])
   fetchData({
-    tag: (item || 'latest').toLowerCase(),
-    project: project,
-    labels: filter.labels,
-    name: filter.name
+    ...item,
+    tag: (item.tag || 'latest').toLowerCase()
   })
   setFilter({
-    ...filter,
-    tag: (item || 'latest').toLowerCase()
+    name: item.name,
+    labels: item.labels,
+    tag: (item.tag || 'latest').toLowerCase()
   })
 }

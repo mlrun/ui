@@ -65,6 +65,7 @@ const FeatureStore = ({
   })
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
+  const [iter, setIter] = useState('')
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [pageData, setPageData] = useState(pageDataInitialState)
@@ -79,6 +80,7 @@ const FeatureStore = ({
         fetchFeatures,
         fetchFeatureVectors,
         item,
+        match.params.projectName,
         match.params.pageTab
       )
 
@@ -94,7 +96,8 @@ const FeatureStore = ({
       fetchDataSets,
       fetchFeatureSets,
       fetchFeatures,
-      fetchFeatureVectors
+      fetchFeatureVectors,
+      match.params.projectName
     ]
   )
 
@@ -171,11 +174,12 @@ const FeatureStore = ({
           fetchDataSet,
           item,
           setPageData,
-          setYamlContent
+          setYamlContent,
+          iter
         )
       }
     },
-    [fetchDataSet, fetchFeature, fetchFeatureVector, match.params.pageTab]
+    [fetchDataSet, fetchFeature, fetchFeatureVector, iter, match.params.pageTab]
   )
 
   const handleExpandRow = useCallback(
@@ -191,11 +195,16 @@ const FeatureStore = ({
   )
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName, tag: 'latest' })
+    fetchData({
+      tag: 'latest',
+      iter: match.params.pageTab === DATASETS_TAB ? 'iter' : ''
+    })
+    setIter(match.params.pageTab === DATASETS_TAB ? 'iter' : '')
 
     return () => {
       setArtifactFilter({ tag: 'latest', labels: '', name: '' })
       setContent([])
+      setIter('iter')
       setYamlContent({
         allData: [],
         selectedRowData: []
@@ -209,7 +218,7 @@ const FeatureStore = ({
     }
   }, [
     fetchData,
-    match.params.projectName,
+    match.params.pageTab,
     removeDataSets,
     removeFeatureSets,
     removeFeatureVectors,
@@ -228,7 +237,7 @@ const FeatureStore = ({
     } else if (groupFilter.length > 0) {
       setGroupFilter('')
     }
-  }, [match.params.pageTab, groupFilter.length, artifactsStore.filter])
+  }, [artifactsStore.filter.tag, groupFilter.length, match.params.pageTab])
 
   useEffect(() => {
     setPageData(state => {
@@ -303,15 +312,12 @@ const FeatureStore = ({
 
       handleArtifactTreeFilterChange(
         fetchData,
-        artifactsStore.filter,
         item,
-        match.params.projectName,
         setArtifactFilter,
         setContent
       )
     },
     [
-      artifactsStore.filter,
       fetchData,
       history,
       match.params.name,
@@ -385,10 +391,9 @@ const FeatureStore = ({
         match={match}
         openPopupDialog={openPopupDialog}
         pageData={pageData}
-        refresh={item => {
-          fetchData(item)
-        }}
+        refresh={fetchData}
         selectedItem={selectedItem.item}
+        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (

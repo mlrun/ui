@@ -40,6 +40,7 @@ const Files = ({
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [iter, setIter] = useState('')
   const [pageData, setPageData] = useState({
     detailsMenu,
     filters,
@@ -51,7 +52,7 @@ const Files = ({
 
   const fetchData = useCallback(
     item => {
-      fetchFiles(item).then(result => {
+      fetchFiles(item, match.params.projectName).then(result => {
         if (result) {
           setFiles(generateArtifacts(filterArtifacts(result)))
           setYamlContent(state => ({
@@ -63,7 +64,7 @@ const Files = ({
         return result
       })
     },
-    [fetchFiles]
+    [fetchFiles, match.params.projectName]
   )
 
   const handleRemoveFile = useCallback(
@@ -94,7 +95,7 @@ const Files = ({
       }))
 
       try {
-        result = await fetchFile(item)
+        result = await fetchFile(item, iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -129,7 +130,7 @@ const Files = ({
         })
       }
     },
-    [fetchFile]
+    [fetchFile, iter]
   )
 
   const handleExpandRow = useCallback((item, isCollapse) => {
@@ -142,11 +143,13 @@ const Files = ({
   }, [])
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName, tag: 'latest' })
+    fetchData({ tag: 'latest', iter: 'iter' })
+    setIter('iter')
 
     return () => {
       setGroupFilter('')
       setFiles([])
+      setIter('iter')
       removeFiles()
       setSelectedFile({})
       setYamlContent({
@@ -155,7 +158,7 @@ const Files = ({
       })
       setArtifactFilter({ tag: 'latest', labels: '', name: '' })
     }
-  }, [fetchData, match.params.projectName, removeFiles, setArtifactFilter])
+  }, [fetchData, removeFiles, setArtifactFilter])
 
   useEffect(() => {
     if (artifactsStore.filter.tag === 'latest') {
@@ -208,19 +211,12 @@ const Files = ({
     item => {
       handleArtifactTreeFilterChange(
         fetchData,
-        artifactsStore.filter,
         item,
-        match.params.projectName,
         setArtifactFilter,
         setFiles
       )
     },
-    [
-      artifactsStore.filter,
-      fetchData,
-      match.params.projectName,
-      setArtifactFilter
-    ]
+    [fetchData, setArtifactFilter]
   )
 
   return (
@@ -239,6 +235,7 @@ const Files = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedFile.item}
+        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (

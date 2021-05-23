@@ -160,9 +160,9 @@ const artifactsAction = {
     payload: artifactsList
   }),
   fetchArtifactTags: project => () => artifactsApi.getArtifactTag(project),
-  fetchDataSet: dataSet => dispatch => {
+  fetchDataSet: (dataSet, iter) => dispatch => {
     return artifactsApi
-      .getDataSet(dataSet)
+      .getDataSet(dataSet, iter)
       .then(response => {
         dispatch(
           artifactsAction.fetchDataSetSuccess({
@@ -182,11 +182,11 @@ const artifactsAction = {
     type: FETCH_DATA_SET_SUCCESS,
     payload: dataSets
   }),
-  fetchDataSets: project => dispatch => {
+  fetchDataSets: (item, project) => dispatch => {
     dispatch(artifactsAction.fetchDataSetsBegin())
 
     return artifactsApi
-      .getDataSets(project)
+      .getDataSets(item, project)
       .then(({ data }) => {
         dispatch(
           artifactsAction.fetchDataSetsSuccess(
@@ -210,11 +210,11 @@ const artifactsAction = {
     type: FETCH_DATASETS_SUCCESS,
     payload: dataSets
   }),
-  fetchFeatureSets: (project, config) => dispatch => {
+  fetchFeatureSets: (item, config, project) => dispatch => {
     dispatch(artifactsAction.fetchFeatureSetsBegin())
 
     return artifactsApi
-      .getFeatureSets(project, config)
+      .getFeatureSets(item, config, project)
       .then(response => {
         dispatch(
           artifactsAction.fetchFeatureSetsSuccess(response.data?.feature_sets)
@@ -259,11 +259,11 @@ const artifactsAction = {
     type: FETCH_FEATURE_VECTOR_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureVectors: (project, config) => dispatch => {
+  fetchFeatureVectors: (item, project) => dispatch => {
     dispatch(artifactsAction.fetchFeatureVectorsBegin())
 
     return artifactsApi
-      .getFeatureVectors(project, config)
+      .getFeatureVectors(item, project)
       .then(response => {
         let featureVectors = parseFeatureVectors(response.data.feature_vectors)
 
@@ -309,11 +309,11 @@ const artifactsAction = {
     type: FETCH_FEATURE_SUCCESS,
     payload: features
   }),
-  fetchFeatures: item => dispatch => {
+  fetchFeatures: (item, project) => dispatch => {
     dispatch(artifactsAction.fetchFeaturesBegin())
 
     return artifactsApi
-      .getFeatures(item)
+      .getFeatures(item, project)
       .then(response => {
         dispatch(artifactsAction.fetchFeaturesSuccess(response.data.features))
 
@@ -334,9 +334,9 @@ const artifactsAction = {
     type: FETCH_FEATURES_SUCCESS,
     payload: features
   }),
-  fetchFile: file => dispatch => {
+  fetchFile: (file, iter) => dispatch => {
     return artifactsApi
-      .getFile(file)
+      .getFile(file, iter)
       .then(response => {
         dispatch(
           artifactsAction.fetchFileSuccess({
@@ -356,11 +356,11 @@ const artifactsAction = {
     type: FETCH_FILE_SUCCESS,
     payload: files
   }),
-  fetchFiles: project => dispatch => {
+  fetchFiles: (item, project) => dispatch => {
     dispatch(artifactsAction.fetchFilesBegin())
 
     return artifactsApi
-      .getFiles(project)
+      .getFiles(item, project)
       .then(({ data }) => {
         dispatch(
           artifactsAction.fetchFilesSuccess(
@@ -432,9 +432,9 @@ const artifactsAction = {
     type: FETCH_MODEL_ENDPOINTS_SUCCESS,
     payload: models
   }),
-  fetchModel: model => dispatch => {
+  fetchModel: (model, iter) => dispatch => {
     return artifactsApi
-      .getModel({ db_key: model.db_key, project: model.project })
+      .getModel({ db_key: model.db_key, project: model.project }, iter)
       .then(response => {
         dispatch(
           artifactsAction.fetchModelSuccess({
@@ -454,11 +454,11 @@ const artifactsAction = {
     type: FETCH_MODEL_SUCCESS,
     payload: models
   }),
-  fetchModels: project => dispatch => {
+  fetchModels: (item, project) => dispatch => {
     dispatch(artifactsAction.fetchModelsBegin())
 
     return artifactsApi
-      .getModels(project)
+      .getModels(item, project)
       .then(({ data }) => {
         dispatch(
           artifactsAction.fetchModelsSuccess(
