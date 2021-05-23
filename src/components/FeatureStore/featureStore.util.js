@@ -360,7 +360,13 @@ export const handleFetchData = async (
       data.yamlContent = result
     }
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    result = await fetchFeatureVectors(item)
+    const config = {
+      cancelToken: new axios.CancelToken(cancel => {
+        featureStoreRef.current.cancel = cancel
+      })
+    }
+
+    result = await fetchFeatureVectors(item, config)
 
     if (result) {
       data.content = parseFeatureVectors(result)
@@ -418,7 +424,10 @@ export const navigateToDetailsPane = (
         match.params.pageTab === FEATURE_SETS_TAB ||
         match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
-        return artifact[searchKey] === name && artifact.tag === tag
+        return (
+          artifact[searchKey] === name &&
+          (artifact.tag === tag || artifact.uid === tag)
+        )
       } else if (match.params.pageTab === DATASETS_TAB) {
         return (
           artifact[searchKey] === name &&
@@ -660,6 +669,7 @@ export const fetchFeatureVectorRowData = async (
     setPageData(state => ({
       ...state,
       selectedRowData: {
+        ...state.selectedRowData,
         [item.name]: {
           content: [...parseFeatureVectors(result)],
           error: null,

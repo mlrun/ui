@@ -1,8 +1,15 @@
 import { functionTemplatesHttpClient, mainHttpClient } from '../httpClient'
 
 export default {
+  createNewFunction: (project, data) =>
+    mainHttpClient.post(
+      `/func/${project}/${data.metadata.name}?tag=${data.metadata.tag}`,
+      data
+    ),
   deleteSelectedFunction: (func, project) =>
     mainHttpClient.delete(`/projects/${project}/functions/${func}`),
+  deployFunction: func =>
+    mainHttpClient.post('/build/function', { function: func }),
   getAll: (project, name) => {
     const params = {
       project

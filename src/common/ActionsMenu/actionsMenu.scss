@@ -18,19 +18,4 @@
     border-radius: $mainBorderRadius;
     box-shadow: $filterShadow;
   }
-
-  &__btn {
-    min-width: 20px;
-    background: transparent;
-
-    &:hover {
-      background: transparent;
-    }
-
-    svg {
-      path {
-        fill: $gunsmoke;
-      }
-    }
-  }
 }

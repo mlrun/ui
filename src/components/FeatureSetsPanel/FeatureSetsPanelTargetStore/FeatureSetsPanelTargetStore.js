@@ -10,7 +10,7 @@ const FeatureSetsPanelTargetStore = ({
   artifactsStore,
   setNewFeatureSetTarget
 }) => {
-  const [selectedTargetKind, setSelectedTargetKind] = useState([])
+  const [selectedTargetKind, setSelectedTargetKind] = useState(['offline'])
   const [isOtherTargetExists, setOtherTargetExists] = useState(false)
   const [otherKindData, setOtherKindData] = useState({
     kind: 'csv',
@@ -18,7 +18,7 @@ const FeatureSetsPanelTargetStore = ({
   })
 
   const handleSelectTargetKind = kindId => {
-    let newTargets = artifactsStore.newFeatureSet.spec.targets
+    let newTargets = [...artifactsStore.newFeatureSet.spec.targets]
 
     if (selectedTargetKind.find(kind => kind === kindId)) {
       newTargets = newTargets.filter(

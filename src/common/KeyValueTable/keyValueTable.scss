@@ -1,0 +1,80 @@
+@import '../../scss/borders';
+
+.key-value-table {
+  .table-row {
+    display: flex;
+    align-items: center;
+    height: 55px;
+    border-bottom: $primaryBorder;
+
+    &:not(.no-hover):hover {
+      background-color: $alabaster;
+
+      .delete-btn {
+        visibility: visible;
+      }
+    }
+  }
+
+  .delete-btn {
+    visibility: hidden;
+  }
+
+  .table-row__header {
+    font-weight: bold;
+    border-top: $primaryBorder;
+  }
+
+  .table-cell {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: $primary;
+  }
+
+  .table-cell__key {
+    width: 50%;
+  }
+
+  .table-cell__value {
+    width: 50%;
+  }
+
+  .table-cell__actions {
+    width: 40px;
+  }
+
+  .add-new-item-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 44px;
+    padding: 10px;
+    color: $cornflowerBlue;
+    font-size: 15px;
+    line-height: 18px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+
+      rect {
+        fill: $cornflowerBlue;
+      }
+    }
+  }
+
+  .input-wrapper {
+    width: 100%;
+
+    .input {
+      border: none;
+      border-radius: unset;
+
+      &_edit {
+        width: 100%;
+        border: $primaryBorder;
+      }
+    }
+  }
+}

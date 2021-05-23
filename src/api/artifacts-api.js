@@ -24,6 +24,7 @@ const fetchArtifacts = (item, path, config, withLatestTag) => {
 }
 
 export default {
+  buildFunction: data => mainHttpClient.post('/build/function', data),
   createFeatureSet: (data, project) =>
     mainHttpClient.post(`/projects/${project}/feature-sets`, data),
   createFeatureVector: data =>
@@ -53,7 +54,7 @@ export default {
   },
   getDataSet: item => {
     return fetchArtifacts(
-      item,
+      {},
       `/artifacts?project=${item.project}&name=${item.db_key}&tag=*`
     )
   },
@@ -77,11 +78,11 @@ export default {
     mainHttpClient.get(
       `/projects/${project}/feature-vectors?name=${featureVector}`
     ),
-  getFeatureVectors: item => {
+  getFeatureVectors: (item, config) => {
     return fetchArtifacts(
       item,
       `/projects/${item.project}/${FEATURE_VECTORS_TAB}`,
-      {},
+      config,
       true
     )
   },

@@ -3,10 +3,12 @@
 
 .range {
   position: relative;
+  display: flex;
+  border: $primaryBorder;
+  border-radius: 4px;
 
   &__input {
-    border: $primaryBorder;
-    border-radius: 4px;
+    border: none;
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
@@ -14,21 +16,100 @@
     }
   }
 
-  &__icon {
+  &__buttons {
+    position: relative;
+    left: 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 28px;
+  }
+
+  &__button {
     position: absolute;
     right: 0;
-    z-index: 2;
-    width: 30px;
-    height: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: calc(50% + 1px);
+    padding: 0;
+    background-color: $wildSand;
+    border: $primaryBorder;
     cursor: pointer;
 
-    &.increase {
-      top: 8px;
+    svg {
+      path {
+        fill: $topaz;
+      }
     }
 
-    &.decrease {
-      bottom: 8px;
+    &:hover {
+      background-color: $mercury;
+
+      svg {
+        path {
+          fill: $primary;
+        }
+      }
+    }
+
+    &:focus {
+      border: $focusBorder;
+    }
+
+    &:active {
+      background-color: rgba($black, 0.2);
+      border: $focusBorder;
+
+      svg {
+        path {
+          fill: $primary;
+        }
+      }
+    }
+
+    &:disabled {
+      svg {
+        path {
+          fill: $spunPearl;
+        }
+      }
+    }
+
+    &-increase {
+      top: -1px;
+      border-bottom: $transparentBorder;
+      border-left: $transparentBorder;
+      border-top-right-radius: 4px;
+    }
+
+    &-decrease {
+      bottom: -1px;
+      border-top: $transparentBorder;
+      border-left: $transparentBorder;
+      border-bottom-right-radius: 4px;
+    }
+
+    .decrease {
       transform: rotate(180deg);
     }
+  }
+
+  &-dense {
+    height: 40px;
+  }
+
+  &-normal {
+    height: 48px;
+  }
+
+  &-medium {
+    height: 52px;
+  }
+
+  &-chunky {
+    height: 56px;
   }
 }

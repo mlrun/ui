@@ -3,6 +3,9 @@ import {
   ABORT_JOB_FAILURE,
   ABORT_JOB_SUCCESS,
   EDIT_JOB_FAILURE,
+  FETCH_JOB_FUNCTION_BEGIN,
+  FETCH_JOB_FUNCTION_FAILURE,
+  FETCH_JOB_FUNCTION_SUCCESS,
   FETCH_JOB_LOGS_BEGIN,
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
@@ -27,7 +30,9 @@ import {
   SET_TUNING_STRATEGY,
   SET_URL,
   SET_NEW_JOB_SELECTOR_CRITERIA,
-  SET_NEW_JOB_SELECTOR_RESULT
+  SET_NEW_JOB_SELECTOR_RESULT,
+  RUN_NEW_JOB_BEGIN,
+  RUN_NEW_JOB_SUCCESS
 } from '../constants'
 
 const initialState = {
@@ -90,6 +95,23 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         loading: true
       }
+    case FETCH_JOB_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_JOB_FUNCTION_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case FETCH_JOB_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null
+      }
     case FETCH_JOB_LOGS_FAILURE:
       return {
         ...state,
@@ -138,10 +160,22 @@ export default (state = initialState, { type, payload }) => {
           ...initialState.newJob
         }
       }
+    case RUN_NEW_JOB_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
     case RUN_NEW_JOB_FAILURE:
       return {
         ...state,
-        error: payload
+        error: payload,
+        loading: false
+      }
+    case RUN_NEW_JOB_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loading: false
       }
     case REMOVE_SCHEDULED_JOB_FAILURE:
       return {

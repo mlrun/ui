@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import ActionsMenuItem from '../../elements/ActionMenuItem/ActionsMenuItem'
-import Button from '../Button/Button'
 
 import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
 
@@ -44,11 +43,9 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
     >
-      <Button
-        className="actions-menu__btn"
-        label={<ActionMenu />}
-        onClick={showActionsList}
-      />
+      <button onClick={showActionsList}>
+        <ActionMenu />
+      </button>
       {isShowMenu && (
         <div
           data-testid="actions-drop-down-menu"

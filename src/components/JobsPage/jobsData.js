@@ -186,11 +186,6 @@ export const generateActionsMenu = (
   scheduled
     ? [
         {
-          label: 'Remove',
-          icon: <Delete />,
-          onClick: removeScheduledJob
-        },
-        {
           label: 'Run now',
           icon: <Dropdown className="action_cell__run-icon" />,
           onClick: handleSubmitJob
@@ -199,6 +194,11 @@ export const generateActionsMenu = (
           label: 'Edit',
           icon: <Edit />,
           onClick: setEditableItem
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          onClick: removeScheduledJob
         }
       ]
     : [

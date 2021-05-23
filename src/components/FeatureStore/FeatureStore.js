@@ -82,7 +82,7 @@ const FeatureStore = ({
         match.params.pageTab
       )
 
-      if (data.content) {
+      if (data.content?.length > 0) {
         setContent(data.content)
         setYamlContent(state => ({ ...state, allData: data.yamlContent }))
       }
@@ -397,7 +397,7 @@ const FeatureStore = ({
           artifactKind={match.params.pageTab.slice(0, -1)}
           match={match}
           refresh={fetchData}
-          setIsPopupDialogOpen={setIsPopupDialogOpen}
+          setIsPopupOpen={setIsPopupDialogOpen}
           title={pageData.registerArtifactDialogTitle}
         />
       )}

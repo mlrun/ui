@@ -21,7 +21,7 @@ const NotificationView = ({ item, status, retry, transitionStyles }) =>
           </div>
         </div>
         {item.message}
-        {status !== 200 && (
+        {status !== 200 && item.retry && (
           <div
             className="notification_body_button"
             onClick={() => {

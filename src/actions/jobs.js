@@ -7,6 +7,9 @@ import {
   FETCH_JOBS_BEGIN,
   FETCH_JOBS_FAILURE,
   FETCH_JOBS_SUCCESS,
+  FETCH_JOB_FUNCTION_BEGIN,
+  FETCH_JOB_FUNCTION_FAILURE,
+  FETCH_JOB_FUNCTION_SUCCESS,
   FETCH_JOB_LOGS_BEGIN,
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
@@ -28,7 +31,9 @@ import {
   SET_TUNING_STRATEGY,
   SET_URL,
   SET_NEW_JOB_SELECTOR_CRITERIA,
-  SET_NEW_JOB_SELECTOR_RESULT
+  SET_NEW_JOB_SELECTOR_RESULT,
+  RUN_NEW_JOB_BEGIN,
+  RUN_NEW_JOB_SUCCESS
 } from '../constants'
 
 const jobsActions = {
@@ -58,10 +63,30 @@ const jobsActions = {
     type: EDIT_JOB_FAILURE,
     payload: error
   }),
-  fetchJobFunction: (project, functionName, hash) => () =>
-    jobsApi
+  fetchJobFunction: (project, functionName, hash) => dispatch => {
+    dispatch(jobsActions.fetchJobFunctionBegin())
+
+    return jobsApi
       .getJobFunction(project, functionName, hash)
-      .then(res => res.data.func),
+      .then(res => {
+        dispatch(jobsActions.fetchJobFunctionSuccess())
+
+        return res.data.func
+      })
+      .catch(error => {
+        dispatch(jobsActions.fetchJobFunctionFailure(error.message))
+      })
+  },
+  fetchJobFunctionBegin: () => ({
+    type: FETCH_JOB_FUNCTION_BEGIN
+  }),
+  fetchJobFunctionFailure: error => ({
+    type: FETCH_JOB_FUNCTION_FAILURE,
+    payload: error
+  }),
+  fetchJobFunctionSuccess: () => ({
+    type: FETCH_JOB_FUNCTION_SUCCESS
+  }),
   fetchJobLogs: (id, project) => dispatch => {
     dispatch(jobsActions.fetchJobLogsBegin())
 
@@ -133,10 +158,31 @@ const jobsActions = {
     type: REMOVE_SCHEDULED_JOB_FAILURE,
     payload: error
   }),
-  runNewJob: postData => () => jobsApi.runJob(postData),
+  runNewJob: postData => dispatch => {
+    dispatch(jobsActions.runNewJobBegin())
+
+    return jobsApi
+      .runJob(postData)
+      .then(result => {
+        dispatch(jobsActions.runNewJobSuccess())
+
+        return result
+      })
+      .catch(error => {
+        dispatch(jobsActions.runNewJobFailure(error.message))
+
+        throw error
+      })
+  },
+  runNewJobBegin: () => ({
+    type: RUN_NEW_JOB_BEGIN
+  }),
   runNewJobFailure: error => ({
     type: RUN_NEW_JOB_FAILURE,
     payload: error
+  }),
+  runNewJobSuccess: () => ({
+    type: RUN_NEW_JOB_SUCCESS
   }),
   setAllJobsData: data => ({
     type: SET_ALL_JOBS_DATA,

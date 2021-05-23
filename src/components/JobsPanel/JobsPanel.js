@@ -6,7 +6,7 @@ import React, {
   useEffect
 } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
@@ -62,7 +62,6 @@ const JobsPanel = ({
       : groupedFunctions.functions || {}
   )
   const history = useHistory()
-  const dispatch = useDispatch()
 
   useLayoutEffect(() => {
     if (
@@ -192,7 +191,7 @@ const JobsPanel = ({
           name: functionsStore.template.name || groupedFunctions.name,
           method: defaultMethod || (methodOptions[0]?.id ?? ''),
           methodDescription: methodOptions[0]?.subLabel ?? '',
-          version: defaultVersion
+          version: groupedFunctions.tag || defaultVersion
         }
       })
       panelDispatch({
@@ -235,6 +234,7 @@ const JobsPanel = ({
     defaultData,
     functionsStore.template.name,
     groupedFunctions.name,
+    groupedFunctions.tag,
     selectedFunction
   ])
 
@@ -272,7 +272,6 @@ const JobsPanel = ({
     runNewJob(postData)
       .then(result => {
         removeNewJob()
-        onSuccessRun && onSuccessRun()
 
         if (redirectToDetailsPane) {
           return history.push(
@@ -282,12 +281,12 @@ const JobsPanel = ({
           )
         }
 
-        history.push(
+        return history.push(
           `/projects/${project}/jobs/${cronString ? 'schedule' : 'monitor'}`
         )
       })
-      .catch(error => {
-        dispatch(runNewJobFailure(error.message))
+      .then(() => {
+        onSuccessRun && onSuccessRun(cronString ? 'schedule' : 'monitor')
       })
   }
 
@@ -329,7 +328,7 @@ const JobsPanel = ({
       handleRunJob={handleRunJob}
       isTitleValid={isTitleValid}
       jobsStore={jobsStore}
-      loading={functionsStore.loading}
+      loading={jobsStore.loading || functionsStore.loading}
       match={match}
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}

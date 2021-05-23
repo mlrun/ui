@@ -14,7 +14,7 @@ const RegisterArtifactPopup = ({
   artifactKind,
   match,
   refresh,
-  setIsPopupDialogOpen,
+  setIsPopupOpen,
   title
 }) => {
   const [registerArtifactData, setRegisterArtifactData] = useState({
@@ -129,7 +129,7 @@ const RegisterArtifactPopup = ({
       .registerArtifact(match.params.projectName, data)
       .then(() => {
         resetRegisterArtifactForm()
-        setIsPopupDialogOpen(false)
+        setIsPopupOpen(false)
         refresh({
           project: match.params.projectName,
           tag: artifactFilter.tag,
@@ -152,13 +152,13 @@ const RegisterArtifactPopup = ({
     refresh,
     registerArtifactData,
     resetRegisterArtifactForm,
-    setIsPopupDialogOpen
+    setIsPopupOpen
   ])
 
   const closePopupDialog = useCallback(() => {
-    setIsPopupDialogOpen(false)
+    setIsPopupOpen(false)
     resetRegisterArtifactForm()
-  }, [resetRegisterArtifactForm, setIsPopupDialogOpen])
+  }, [resetRegisterArtifactForm, setIsPopupOpen])
 
   const closeErrorMessage = useCallback(() => {
     setRegisterArtifactData(prevData => ({
@@ -209,7 +209,7 @@ RegisterArtifactPopup.propTypes = {
   artifactKind: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
-  setIsPopupDialogOpen: PropTypes.func.isRequired,
+  setIsPopupOpen: PropTypes.func.isRequired,
   title: PropTypes.string
 }
 

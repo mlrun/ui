@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -14,6 +14,7 @@ const Input = React.forwardRef(
   (
     {
       className,
+      density,
       disabled,
       floatingLabel,
       iconClass,
@@ -40,9 +41,12 @@ const Input = React.forwardRef(
     const [inputIsFocused, setInputIsFocused] = useState(false)
     const [typedValue, setTypedValue] = useState('')
     const input = React.createRef()
+    const inputLabel = useRef(null)
+    const [labelWidth, setLabelWidth] = useState(0)
     const inputClassNames = classnames(
       'input',
       className,
+      `input-${density}`,
       (inputIsFocused || placeholder || typedValue.length > 0) &&
         floatingLabel &&
         'active-input',
@@ -68,6 +72,12 @@ const Input = React.forwardRef(
         setInputIsFocused(true)
       }
     }, [input, focused])
+
+    useEffect(() => {
+      if (inputLabel) {
+        setLabelWidth(inputLabel.current?.clientWidth)
+      }
+    }, [label])
 
     const matchOnClick = item => {
       setTypedValue(item)
@@ -100,9 +110,9 @@ const Input = React.forwardRef(
         <input
           data-testid="input"
           className={inputClassNames}
+          onBlur={onInputBlur}
           onChange={onInputChange}
           onFocus={onInputFocus}
-          onBlur={onInputBlur}
           ref={input}
           {...{
             disabled,
@@ -114,11 +124,13 @@ const Input = React.forwardRef(
             type,
             value
           }}
+          style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px` }}
         />
         {label && (
           <label
             data-testid="label"
             className={labelClassNames}
+            ref={inputLabel}
             style={
               infoLabel
                 ? {
@@ -132,8 +144,8 @@ const Input = React.forwardRef(
         )}
         {required && (
           <Tooltip
-            template={<TextTooltipTemplate text={requiredText} warning />}
             className="input__warning"
+            template={<TextTooltipTemplate text={requiredText} warning />}
           >
             <Warning />
           </Tooltip>
@@ -172,6 +184,7 @@ const Input = React.forwardRef(
 )
 Input.defaultProps = {
   className: '',
+  density: 'normal',
   disabled: false,
   floatingLabel: false,
   focused: false,
@@ -193,6 +206,7 @@ Input.defaultProps = {
 
 Input.propTypes = {
   className: PropTypes.string,
+  density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
   disabled: PropTypes.bool,
   floatingLabel: PropTypes.bool,
   focused: PropTypes.bool,

@@ -247,7 +247,7 @@ const Files = ({
           artifactKind="file"
           match={match}
           refresh={fetchData}
-          setIsPopupDialogOpen={setIsPopupDialogOpen}
+          setIsPopupOpen={setIsPopupDialogOpen}
           title={pageData.registerArtifactDialogTitle}
         />
       )}

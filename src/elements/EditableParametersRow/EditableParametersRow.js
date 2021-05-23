@@ -32,23 +32,25 @@ const EditableParametersRow = ({
         <>
           <div className="table__cell table__cell_edit">
             <Input
+              density="dense"
               onChange={name => {
                 setSelectedParameter({
                   ...selectedParameter,
                   newName: name
                 })
               }}
-              type="text"
-              value={selectedParameter.newName || selectedParameter.data.name}
               required={
                 selectedParameter.newName !== selectedParameter.data.name &&
                 nameValidation(selectedParameter.newName)
               }
               requiredText="Name already exists"
+              type="text"
+              value={selectedParameter.newName || selectedParameter.data.name}
             />
           </div>
           <div className="table__cell table__cell_edit">
             <Select
+              density="dense"
               label={selectedParameter.data.valueType}
               onClick={valueType =>
                 setSelectedParameter({
@@ -66,6 +68,7 @@ const EditableParametersRow = ({
       )}
       <div className="table__cell table__cell_edit">
         <Select
+          density="dense"
           disabledOptions={disabledOptions}
           label={selectedParameter.data.parameterType}
           onClick={parameterType =>
@@ -79,6 +82,7 @@ const EditableParametersRow = ({
       </div>
       <div className="table__cell table__cell_edit">
         <Input
+          density="dense"
           onChange={value => {
             setSelectedParameter({
               ...selectedParameter,

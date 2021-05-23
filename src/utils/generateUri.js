@@ -12,9 +12,11 @@ export const generateUri = (item, tab) => {
 
   if (tab === MODELS_TAB || tab === DATASETS_TAB || tab === ARTIFACTS) {
     uri += item.db_key
-    if (!isNil(item.iter)) uri += `#${item.iter}`
     if (item.tag) uri += `:${item.tag}`
-    else if (item.tree) uri += `@${item.tree}`
+    else {
+      if (!isNil(item.iter)) uri += `#${item.iter}`
+      if (item.tree) uri += `@${item.tree}`
+    }
   } else if (tab === FEATURE_SETS_TAB || tab === FEATURE_VECTORS_TAB) {
     uri += item.name
     if (item.tag) uri += `:${item.tag}`

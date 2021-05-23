@@ -70,21 +70,23 @@ const JobsPanelParametersView = ({
             <div className="table__row-add-item">
               <div className="input-row-wrapper">
                 <Input
+                  className="input-row__item"
+                  density="chunky"
+                  floatingLabel
+                  label="Name"
                   onChange={value =>
                     parametersDispatch({
                       type: parametersActions.SET_NEW_PARAMETER_NAME,
                       payload: value
                     })
                   }
-                  label="Name"
-                  className="input-row__item"
-                  floatingLabel
                   required={nameNotValid(parametersState.newParameter.name)}
                   requiredText="Name already exists"
                   type="text"
                 />
                 <Select
                   className="parameters-value-type"
+                  density="chunky"
                   label={parametersState.newParameter.valueType}
                   onClick={value =>
                     parametersDispatch({
@@ -96,6 +98,7 @@ const JobsPanelParametersView = ({
                 />
                 <Select
                   className="select-parameters-type"
+                  density="chunky"
                   disabledOptions={disabledOptions}
                   label={parametersState.newParameter.parameterType}
                   onClick={value =>
@@ -107,15 +110,16 @@ const JobsPanelParametersView = ({
                   options={selectOptions.parameterType}
                 />
                 <Input
+                  className="input-row__item parameter-value"
+                  density="chunky"
+                  floatingLabel
+                  label="Value/s"
                   onChange={value =>
                     parametersDispatch({
                       type: parametersActions.SET_NEW_PARAMETER_VALUE,
                       payload: value
                     })
                   }
-                  label="Value/s"
-                  className="input-row__item parameter-value"
-                  floatingLabel
                   type="text"
                 />
               </div>
@@ -150,39 +154,43 @@ const JobsPanelParametersView = ({
           <div className="parameters-additional-settings">
             <div className={urlTypeClassName}>
               <Input
-                label="Read hyper params from a file"
-                placeholder="v3io:///projects/my-proj/param.txt"
                 className="default-input"
-                type="text"
+                density="chunky"
                 floatingLabel
+                label="Read hyper params from a file"
                 onChange={setUrl}
+                placeholder="v3io:///projects/my-proj/param.txt"
+                type="text"
               />
             </div>
             <div className={tuningStrategyClassName}>
               <Select
-                selectedId={tuningStrategy}
-                options={selectOptions.hyperStrategyType}
+                density="chunky"
                 label="Tuning Strategy:"
                 onClick={setTuningStrategy}
+                options={selectOptions.hyperStrategyType}
+                selectedId={tuningStrategy}
               />
             </div>
           </div>
           <div className="parameters-additional-settings">
             <div className="parameters-additional-settings__input-wrapper">
               <Input
-                label="Result"
                 className="default-input"
-                type="text"
+                density="chunky"
                 floatingLabel
+                label="Result"
                 onChange={setNewJobSelectorResult}
+                type="text"
               />
             </div>
             <div className="parameters-additional-settings__select-wrapper">
               <Select
-                selectedId={selectorCriteria}
-                options={selectOptions.selectorCriteria}
+                density="chunky"
                 label="Criteria:"
                 onClick={setNewJobSelectorCriteria}
+                options={selectOptions.selectorCriteria}
+                selectedId={selectorCriteria}
               />
             </div>
           </div>

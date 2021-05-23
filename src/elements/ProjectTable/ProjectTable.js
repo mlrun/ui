@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 
-import TableTypeCell from '../../elements/TableTypeCell/TableTypeCell'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import TableTypeCell from '../TableTypeCell/TableTypeCell'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
 
 import './projectTable.scss'

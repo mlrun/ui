@@ -165,6 +165,7 @@ const ProjectView = React.forwardRef(
                 </Tooltip>
                 <Select
                   className="main-info__toolbar-menu launch-menu"
+                  density="dense"
                   hideSelectedOption
                   label="Launch IDE"
                   onClick={handleLaunchIDE}
@@ -172,6 +173,7 @@ const ProjectView = React.forwardRef(
                 />
                 <Select
                   className="main-info__toolbar-menu create-new-menu"
+                  density="dense"
                   hideSelectedOption
                   label="Create new"
                   options={createNewOptions}
@@ -218,7 +220,7 @@ const ProjectView = React.forwardRef(
             refresh={() => {
               history.push(registerArtifactLink)
             }}
-            setIsPopupDialogOpen={setIsPopupDialogOpen}
+            setIsPopupOpen={setIsPopupDialogOpen}
             title={`Register ${artifactKind}`}
           />
         )}

@@ -9,8 +9,12 @@ export const generateUsageSnippets = (
     featureSet =>
       featureSet.metadata.name === name && featureSet.metadata.tag === tag
   )
-  const [currentFeatureVector] = featureVectors.allData.filter(
-    featureVector => featureVector.name === name && featureVector.tag === tag
+  const currentFeatureVectorData =
+    featureVectors.selectedRowData.content[name] ?? featureVectors.allData
+  const [currentFeatureVector] = currentFeatureVectorData.filter(
+    featureVector =>
+      featureVector.name === name &&
+      (featureVector.tag === tag || featureVector.uid === tag)
   )
 
   if (pageTab === FEATURE_SETS_TAB) {
@@ -22,7 +26,7 @@ export const generateUsageSnippets = (
 ]
 
 vector = fs.FeatureVector("<vector-name>",features=features,description="this is my vector")
-resp = fs.get_offline_features(vector))`
+resp = fs.get_offline_features(vector)`
       },
       {
         title: 'Getting online features:',
