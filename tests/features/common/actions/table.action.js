@@ -1,4 +1,5 @@
 import { expect } from 'chai'
+import { differenceWith, isEqual } from 'lodash'
 
 function getColumnValues(driver, table, columnName) {
   return driver
@@ -50,6 +51,27 @@ const action = {
   },
   getCellByIndexColumn: async function(driver, table, index, column) {
     return await table.tableFields[column](index)
+  },
+  isTableColumnSorted: async function(
+    driver,
+    table,
+    columnName,
+    order = 'asc'
+  ) {
+    const columnArray = await getColumnValues(driver, table, columnName)
+    let sortedArr = []
+    if (order === 'asc') {
+      sortedArr = columnArray.sort()
+    }
+    if (order === 'desc') {
+      sortedArr = columnArray.reverse()
+    }
+    expect(sortedArr).equal(columnArray)
+  },
+  checkTableColumnValues: async function(driver, table, columnName, values) {
+    const arr = await getColumnValues(driver, table, columnName)
+    // console.log('debug: ', arr)
+    expect(differenceWith(arr, values, isEqual).length).equal(0)
   }
 }
 
