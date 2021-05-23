@@ -1,75 +1,33 @@
 import { By } from 'selenium-webdriver'
-import commonTable from './components/table.component'
-import dropdownComponent from './components/dropdown.component'
 
-const ProjectsTableSelector = {
-  root: 'div.projects-content',
-  header: {},
-  body: {
-    row: {
-      root: 'div.project-card',
-      fields: {
-        name: 'div.project-card__header div.data-ellipsis',
-        description: 'div.project-card_description',
-        running: 'div.project-card__statistic div.statistics_running',
-        failed: 'div.project-card__statistic div.statistics_failed',
-        models:
-          'div.project-card__statistic div.project-data-card__statistics-item:nth-of-type(3) div.statistics_default',
-        features:
-          'div.project-card__statistic div.project-data-card__statistics-item:nth-of-type(4) div.statistics_default',
-        ml_functions:
-          'div.project-card__statistic div.project-data-card__statistics-item:nth-of-type(5) div.statistics_default',
-        action_menu: 'div.project-card__actions-menu'
-      }
-    }
-  }
-}
-
-const projectsTypeDropdown = {
-  root: 'div.projects-content-header div.project-types-select',
-  dropdownElements: {
-    open_button: 'div.select__value',
-    options: 'div.select__body div.select__item'
-  }
-}
+import project from './page-objects/project.po'
+import projects from './page-objects/projects.po'
+import featureStore from './page-objects/feature-store.po'
+import infoPane from './page-objects/info-pane.po'
+import interactivePopup from './page-objects/interactive-popup.po'
+import sidePanel from './page-objects/side-panel.po'
 
 module.exports = {
-  Projects: {
+  commonPagesHeader: {
     loader: By.css('div.loader-wrapper div.loader'),
-    New_Project_Button: By.css('div.projects button.btn'),
-    Refresh_Projects_Button: By.css(
-      'div.projects-content-header div.data-ellipsis button'
-    ),
-    Projects_Table: commonTable(ProjectsTableSelector),
-    Projects_Dropdown: dropdownComponent(projectsTypeDropdown)
+    See_On_Github: By.css('header.header a.header__link'),
+    Common_Hint: By.css('div.tip')
   },
-  Create_New_Project: {
-    Title: By.css('div.pop-up-dialog div.pop-up-dialog__header-text'),
-    Name_Input: By.css('div.pop-up-dialog input[pattern]'),
-    Description_Input: By.css('div.pop-up-dialog input:not([pattern])'),
-    Cross_Cancel_Button: By.css(
-      'div.pop-up-dialog .pop-up-dialog__header-close'
-    ),
-    Cancel_Button: By.css('div.pop-up-dialog button.pop-up-dialog__btn_cancel'),
-    Create_Button: By.css('div.pop-up-dialog button.btn-secondary'),
-    Error_Message: By.css('div.pop-up-dialog div.error-container')
-  },
-  Archive_Project: {
-    Title: By.css('div.pop-up-dialog div.pop-up-dialog__header-text'),
-    Description: By.css('div.pop-up-dialog div.pop-up-dialog__header-text'),
-    Cross_Cancel_Button: By.css(
-      'div.pop-up-dialog div.pop-up-dialog__header-close'
-    ),
-    Cancel_Button: By.css('div.pop-up-dialog button.pop-up-dialog__btn_cancel'),
-    Archive_Button: By.css('div.pop-up-dialog button.btn-primary')
-  },
-  Delete_Project: {
-    Title: By.css('div.pop-up-dialog div.pop-up-dialog__header-text'),
-    Description: By.css('div.pop-up-dialog div.pop-up-dialog__header-text'),
-    Cross_Cancel_Button: By.css(
-      'div.pop-up-dialog div.pop-up-dialog__header-close'
-    ),
-    Cancel_Button: By.css('div.pop-up-dialog button.pop-up-dialog__btn_cancel'),
-    Delete_Button: By.css('div.pop-up-dialog button.btn-danger')
-  }
+  Projects: projects,
+  Project: project,
+  Create_New_Project: interactivePopup['createNewProject'],
+  Archive_Project: interactivePopup['archiveProject'],
+  Delete_Project: interactivePopup['deleteProject'],
+  Feature_Store_Feature_Sets_Tab: featureStore['featureSetsTab'],
+  Feature_Store_Features_Tab: featureStore['featuresTab'],
+  Feature_Store_Features_Vectors_Tab: featureStore['featureVectorsTab'],
+  Feature_Store_Datasets_Tab: featureStore['datasets'],
+  Feature_Sets_Info_Pane: infoPane['featureSetsInfoPane'],
+  Features_Info_Pane: infoPane['featuresInfoPane'],
+  Transformations_Info_Pane: infoPane['transformationsInfoPane'],
+  Preview_Info_Pane: infoPane['previewInfoPane'],
+  Statistics_Info_Pane: infoPane['statisticsInfoPane'],
+  Analysis_Info_Pane: infoPane['analysisInfoPane'],
+  Register_Dataset: interactivePopup['registerDataset'],
+  New_Feature_Set: sidePanel['newFeatureSet']
 }

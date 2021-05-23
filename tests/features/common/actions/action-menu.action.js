@@ -1,19 +1,15 @@
-import actionMenu from '../components/action-menu.component'
-
 const action = {
-  openActionMenu: async function(driver, selector) {
-    const action_menu = actionMenu(selector.value)
-    const elements = await driver.findElements(action_menu.options)
+  openActionMenu: async function(driver, actionMenu) {
+    const elements = await driver.findElements(actionMenu.options)
     if (elements.length === 0) {
-      const element = await driver.findElement(action_menu.open_button)
+      const element = await driver.findElement(actionMenu.open_button)
       if (element) {
         element.click()
       }
     }
   },
-  selectOptionInActionMenu: async function(driver, selector, option) {
-    const action_menu = actionMenu(selector.value)
-    const elements = await driver.findElements(action_menu.options)
+  selectOptionInActionMenu: async function(driver, actionMenu, option) {
+    const elements = await driver.findElements(actionMenu.options)
     for (const element of elements) {
       element.getText().then(txt => {
         if (txt === option) {
