@@ -14,6 +14,7 @@ const RangeInput = ({
   floatingLabel,
   infoLabel,
   label,
+  labelAtTop,
   max,
   min,
   onChange,
@@ -38,13 +39,14 @@ const RangeInput = ({
 
   return (
     <div data-testid="range-input-container" className={rangeClassName}>
+      {labelAtTop && <label className="range__label">{label}</label>}
       <Input
         className="range__input"
         density={density}
         disabled={disabled}
-        floatingLabel={floatingLabel}
+        floatingLabel={!labelAtTop && floatingLabel}
         infoLabel={infoLabel}
-        label={label}
+        label={!labelAtTop ? label : ''}
         onChange={value => {
           setInputValue(value)
           onChange(value)
@@ -80,6 +82,7 @@ RangeInput.defaultProps = {
   floatingLabel: false,
   infoLabel: false,
   label: '',
+  labelAtTop: false,
   max: undefined,
   min: 0
 }
@@ -90,6 +93,7 @@ RangeInput.propTypes = {
   floatingLabel: PropTypes.bool,
   infoLabel: PropTypes.bool,
   label: PropTypes.string,
+  labelAtTop: PropTypes.bool,
   max: PropTypes.number,
   min: PropTypes.number,
   onChange: PropTypes.func.isRequired,
