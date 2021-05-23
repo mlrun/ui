@@ -11,6 +11,7 @@ import Combobox from '../../common/Combobox/Combobox'
 import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { COMBOBOX_MATCHES } from '../../types'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
@@ -136,7 +137,7 @@ export const JobsPanelDataInputsTable = ({
 }
 
 JobsPanelDataInputsTable.propTypes = {
-  comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  comboboxMatchesList: COMBOBOX_MATCHES.isRequired,
   comboboxSelectList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,

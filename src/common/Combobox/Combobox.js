@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import ComboboxView from './ComboboxView'
 
+import { COMBOBOX_MATCHES } from '../../types'
 import './combobox.scss'
 
 const Combobox = ({
@@ -99,9 +100,17 @@ const Combobox = ({
 
   const handleMatchesOptionClick = option => {
     const inputValueItems = inputValue.split('/')
+    const valueIndex = inputValueItems.length - 1
+    let formattedValue = option.customDelimiter
+      ? inputValueItems[valueIndex].replace(
+          new RegExp(`${option.customDelimiter}.*`),
+          ''
+        ) + option.id
+      : option.id
 
-    inputValueItems[inputValueItems.length - 1] =
-      inputValueItems.length > maxSuggestedMatches - 1 ? option : `${option}/`
+    if (inputValueItems.length <= maxSuggestedMatches - 1) formattedValue += '/'
+
+    inputValueItems[valueIndex] = formattedValue
 
     if (searchIsFocused) {
       setSearchIsFocused(false)
@@ -114,10 +123,6 @@ const Combobox = ({
     setShowMatchesDropdown(false)
     inputOnChange(inputValueItems.join('/'))
     inputRef.current.focus()
-
-    if (inputValueItems.length > maxSuggestedMatches - 1) {
-      setShowMatchesDropdown(false)
-    }
   }
 
   const handleSelectOptionOnClick = option => {
@@ -163,7 +168,7 @@ const Combobox = ({
     inputOnChange(target.value)
 
     setDropdownStyle({
-      left: `${target.selectionStart}ch`,
+      left: `${target.selectionStart < 30 ? target.selectionStart : 30}ch`,
       paddingTop: '0'
     })
 
@@ -232,7 +237,7 @@ Combobox.propTypes = {
   inputOnChange: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string,
   hideSearchInput: PropTypes.bool,
-  matches: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  matches: COMBOBOX_MATCHES.isRequired,
   maxSuggestedMatches: PropTypes.number,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectOnChange: PropTypes.func.isRequired,

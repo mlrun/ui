@@ -2,6 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
+import { COMBOBOX_MATCHES } from '../../types'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
@@ -114,7 +115,7 @@ const ComboboxView = React.forwardRef(
                 <li
                   className="combobox-list__option"
                   key={value.id}
-                  onClick={() => handleMatchesOptionClick(value.id)}
+                  onClick={() => handleMatchesOptionClick(value)}
                 >
                   {value.label}
                 </li>
@@ -129,7 +130,7 @@ const ComboboxView = React.forwardRef(
 
 ComboboxView.propTypes = {
   comboboxClassName: PropTypes.string.isRequired,
-  dropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  dropdownList: COMBOBOX_MATCHES.isRequired,
   dropdownStyle: PropTypes.shape({}).isRequired,
   handleIconClick: PropTypes.func.isRequired,
   handleInputOnChange: PropTypes.func.isRequired,

@@ -20,7 +20,7 @@ import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFi
 import { filterArtifacts } from '../../utils/filterArtifacts'
 
 import { ARTIFACTS } from '../../constants'
-import { generateUri } from '../../utils/generateUri'
+import { generateUri } from '../../utils/resources'
 
 const Files = ({
   artifactsStore,

@@ -11,7 +11,7 @@ import Input from '../../common/Input/Input'
 
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
-import { generateUri } from '../../utils/generateUri'
+import { generateUri } from '../../utils/resources'
 import { MODELS_TAB } from '../../constants'
 import './deployModelPopUp.scss'
 

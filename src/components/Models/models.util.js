@@ -1,7 +1,7 @@
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import { generateUri } from '../../utils/generateUri'
+import { generateUri } from '../../utils/resources'
 
 export const modelsInfoHeaders = [
   {

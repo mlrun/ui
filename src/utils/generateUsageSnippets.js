@@ -1,5 +1,5 @@
 import { FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../constants'
-import { generateUri } from './generateUri'
+import { generateUri } from './resources'
 
 export const generateUsageSnippets = (
   { pageTab, name, tag },
