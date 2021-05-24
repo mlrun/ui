@@ -31,7 +31,7 @@ export default {
     }
 
     if (filters?.name) {
-      params.name = filters.name
+      params.name = `~${filters.name}`
     }
 
     if (filters?.state) {
@@ -63,7 +63,7 @@ export default {
     }
 
     if (filters?.name) {
-      params.name = filters.name
+      params.name = `~${filters.name}`
     }
 
     if (filters?.labels) {

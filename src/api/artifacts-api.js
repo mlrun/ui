@@ -21,7 +21,7 @@ const fetchArtifacts = (item, path, config, withLatestTag) => {
   }
 
   if (item?.name) {
-    params.name = item.name
+    params.name = `~${item.name}`
   }
 
   return mainHttpClient.get(path, { ...config, params })

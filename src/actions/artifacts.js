@@ -259,11 +259,11 @@ const artifactsAction = {
     type: FETCH_FEATURE_VECTOR_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureVectors: (item, project) => dispatch => {
+  fetchFeatureVectors: (item, project, config) => dispatch => {
     dispatch(artifactsAction.fetchFeatureVectorsBegin())
 
     return artifactsApi
-      .getFeatureVectors(item, project)
+      .getFeatureVectors(item, project, config)
       .then(response => {
         let featureVectors = parseFeatureVectors(response.data.feature_vectors)
 
