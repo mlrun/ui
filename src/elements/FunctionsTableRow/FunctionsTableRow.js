@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
 import classnames from 'classnames'
@@ -14,14 +14,13 @@ const FunctionsTableRow = ({
   content,
   handleExpandRow,
   handleSelectItem,
-  index,
   match,
   rowItem,
   selectedItem,
   tableContent
 }) => {
+  const [currentItem, setCurrentItem] = useState(null)
   const parent = useRef()
-
   const selectedItemDate =
     selectedItem.updated && formatDatetime(new Date(selectedItem.updated))
   const indentUpdatedOnMainRow = isEqual(
@@ -40,6 +39,19 @@ const FunctionsTableRow = ({
       'parent-row-expanded'
   )
 
+  useEffect(() => {
+    setCurrentItem(
+      content.find(
+        contentItem =>
+          isEqual(contentItem.hash, rowItem.hash.value) &&
+          isEqual(
+            formatDatetime(new Date(contentItem.updated)),
+            rowItem.updated.value
+          )
+      )
+    )
+  }, [content, rowItem.hash.value, rowItem.updated.value])
+
   return (
     <div className={rowClassNames} ref={parent}>
       {parent.current?.classList.contains('parent-row-expanded') ? (
@@ -57,6 +69,14 @@ const FunctionsTableRow = ({
           </div>
           <>
             {tableContent.map((func, index) => {
+              const subRowCurrentItem =
+                content.length > 0 &&
+                content.find(item => {
+                  return (
+                    formatDatetime(new Date(item.updated)) ===
+                      func.updated.value && item.hash === func.hash.value
+                  )
+                })
               const indentUpdatedOnSubRow = isEqual(
                 selectedItemDate,
                 func.updated.value
@@ -74,23 +94,14 @@ const FunctionsTableRow = ({
                   key={index}
                 >
                   {Object.values(func).map((value, i) => {
-                    const currentItem =
-                      content.length > 0 &&
-                      content.find(item => {
-                        return (
-                          formatDatetime(new Date(item.updated)) ===
-                            func.updated.value && item.hash === func.hash.value
-                        )
-                      })
-
                     return (
                       <TableCell
                         data={i === 0 ? func.updated : value}
-                        item={currentItem}
+                        item={subRowCurrentItem}
                         link={
                           i === 0 &&
                           `/projects/${match.params.projectName}/functions/${
-                            currentItem?.hash
+                            subRowCurrentItem?.hash
                           }${
                             match.params.tab
                               ? `/${match.params.tab}`
@@ -104,7 +115,10 @@ const FunctionsTableRow = ({
                     )
                   })}
                   <div className="table-body__cell action_cell">
-                    <ActionsMenu dataItem={content[index]} menu={actionsMenu} />
+                    <ActionsMenu
+                      dataItem={subRowCurrentItem}
+                      menu={actionsMenu}
+                    />
                   </div>
                 </div>
               )
@@ -114,40 +128,34 @@ const FunctionsTableRow = ({
       ) : (
         <>
           {Object.values(rowItem).map((value, i) => {
-            const currentContentItem = content.filter(
-              contentItem =>
-                isEqual(contentItem.hash, rowItem.hash.value) &&
-                isEqual(
-                  formatDatetime(new Date(contentItem.updated)),
-                  rowItem.updated.value
-                )
-            )[0]
             return (
-              <TableCell
-                data={value}
-                expandLink={Array.isArray(tableContent)}
-                handleExpandRow={handleExpandRow}
-                item={currentContentItem}
-                key={value.value + i}
-                link={
-                  i === 0 &&
-                  `/projects/${
-                    match.params.projectName
-                  }/functions/${content.length > 0 &&
-                    currentContentItem?.hash}/${
-                    match.params.tab
-                      ? match.params.tab
-                      : `${detailsMenu[0].toLowerCase()}`
-                  }`
-                }
-                match={match}
-                selectedItem={selectedItem}
-                selectItem={handleSelectItem}
-              />
+              currentItem &&
+              !value.hidden && (
+                <TableCell
+                  data={value}
+                  expandLink={Array.isArray(tableContent)}
+                  handleExpandRow={handleExpandRow}
+                  item={currentItem}
+                  key={value.value + i}
+                  link={
+                    i === 0 &&
+                    `/projects/${
+                      match.params.projectName
+                    }/functions/${content.length > 0 && currentItem?.hash}/${
+                      match.params.tab
+                        ? match.params.tab
+                        : `${detailsMenu[0].toLowerCase()}`
+                    }`
+                  }
+                  match={match}
+                  selectedItem={selectedItem}
+                  selectItem={handleSelectItem}
+                />
+              )
             )
           })}
           <div className="table-body__cell action_cell">
-            <ActionsMenu dataItem={content[index]} menu={actionsMenu} />
+            <ActionsMenu dataItem={currentItem} menu={actionsMenu} />
           </div>
         </>
       )}
@@ -159,7 +167,6 @@ FunctionsTableRow.propTypes = {
   actionsMenu: PropTypes.func.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired,
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
