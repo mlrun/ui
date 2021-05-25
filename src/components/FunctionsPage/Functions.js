@@ -256,7 +256,7 @@ const Functions = ({
     removeNewFunction()
 
     return refreshFunctions().then(functions => {
-      const [currentItem] = functions.filter(
+      const currentItem = functions.find(
         func => func.name === name && func.tag === tag
       )
 
@@ -278,7 +278,7 @@ const Functions = ({
     removeNewFunction()
 
     return refreshFunctions().then(functions => {
-      const [currentItem] = functions.filter(
+      const currentItem = functions.find(
         func => func.name === name && func.tag === tag
       )
 
