@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import FunctionsPanelView from './FunctionsPanelView'
 
@@ -19,6 +20,7 @@ const FunctionsPanel = ({
 }) => {
   const [isNameValid, setNameValid] = useState(true)
   const [isTagValid, setTagValid] = useState(true)
+  const history = useHistory()
 
   const handleSave = deploy => {
     if (isNameValid && isTagValid) {
@@ -34,12 +36,16 @@ const FunctionsPanel = ({
         removeFunctionsError()
       }
 
-      createNewFunction(project, functionsStore.newFunction).then(() => {
+      createNewFunction(project, functionsStore.newFunction).then(result => {
         if (deploy) {
           return handleDeploy(functionsStore.newFunction)
         }
 
-        createFunctionSuccess()
+        createFunctionSuccess().then(() => {
+          history.push(
+            `/projects/${project}/functions/${result.data.hash_key}/overview`
+          )
+        })
       })
     }
   }
@@ -49,8 +55,8 @@ const FunctionsPanel = ({
       .then(() => {
         handleDeployFunctionSuccess()
       })
-      .catch(error => {
-        handleDeployFunctionFailure(error)
+      .catch(() => {
+        handleDeployFunctionFailure()
       })
   }
 

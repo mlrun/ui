@@ -92,7 +92,9 @@ const Functions = ({
             }))
             .value()
 
-          return setFunctions(newFunctions)
+          setFunctions(newFunctions)
+
+          return newFunctions
         }
       )
     },
@@ -248,10 +250,19 @@ const Functions = ({
   }
 
   const handleDeployFunctionSuccess = () => {
+    const { name, tag } = functionsStore.newFunction.metadata
+
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
 
-    return refreshFunctions().then(() => {
+    return refreshFunctions().then(functions => {
+      const currentItem = functions.find(
+        func => func.name === name && func.tag === tag
+      )
+
+      history.push(
+        `/projects/${match.params.projectName}/functions/${currentItem.hash}/overview`
+      )
       setNotification({
         status: 200,
         id: Math.random(),
@@ -260,11 +271,20 @@ const Functions = ({
     })
   }
 
-  const handleDeployFunctionFailure = error => {
+  const handleDeployFunctionFailure = () => {
+    const { name, tag } = functionsStore.newFunction.metadata
+
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
 
-    return refreshFunctions().then(() => {
+    return refreshFunctions().then(functions => {
+      const currentItem = functions.find(
+        func => func.name === name && func.tag === tag
+      )
+
+      history.push(
+        `/projects/${match.params.projectName}/functions/${currentItem.hash}/overview`
+      )
       setNotification({
         status: 400,
         id: Math.random(),
