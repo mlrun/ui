@@ -84,7 +84,7 @@ const FeatureStore = ({
         match.params.pageTab
       )
 
-      if (data.content?.length > 0) {
+      if (data.content) {
         setContent(data.content)
         setYamlContent(state => ({ ...state, allData: data.yamlContent }))
       }

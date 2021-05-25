@@ -16,7 +16,7 @@ export default {
     }
 
     if (name) {
-      params.name = name
+      params.name = `~${name}`
     }
 
     return mainHttpClient.get('/funcs', { params })
