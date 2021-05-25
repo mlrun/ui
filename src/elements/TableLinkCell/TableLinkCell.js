@@ -27,7 +27,6 @@ const TableLinkCell = ({
   const itemNameCLassNames = classnames(
     'link',
     'item-name',
-    'data-ellipsis',
     link.match(/functions/) && 'function-name'
   )
   const state = item.state || item.endpoint?.status?.state
@@ -47,12 +46,12 @@ const TableLinkCell = ({
         onClick={() => selectItem(item)}
         className="data-ellipsis"
       >
-        <div className="name-wrapper data-ellipsis">
+        <div className="name-wrapper">
           <Tooltip
             className={itemNameCLassNames}
             template={<TextTooltipTemplate text={data.tooltip || data.value} />}
           >
-            <span className="link">{data.value}</span>
+            <span className="link data-ellipsis">{data.value}</span>
           </Tooltip>
           {link.match(/functions|feature-sets|feature-vectors/) &&
             data.value !== item.tag && (
