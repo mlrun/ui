@@ -324,7 +324,7 @@ export const handleFetchData = async (
   fetchFeatureSets,
   fetchFeatures,
   fetchFeatureVectors,
-  item,
+  filters,
   project,
   pageTab
 ) => {
@@ -335,7 +335,7 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === DATASETS_TAB) {
-    result = await fetchDataSets(item, project)
+    result = await fetchDataSets(project, filters)
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
@@ -348,14 +348,14 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureSets({ ...item, tag: null }, config, project)
+    result = await fetchFeatureSets(project, { ...filters, tag: null }, config)
 
     if (result) {
       data.content = parseFeatureStoreDataRequest(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
-    result = await fetchFeatures(item, project)
+    result = await fetchFeatures(project, filters)
 
     if (result) {
       data.content = parseFeatures(result)
@@ -368,7 +368,7 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureVectors(item, project, config)
+    result = await fetchFeatureVectors(project, filters, config)
 
     if (result) {
       data.content = parseFeatureVectors(result)
@@ -500,7 +500,7 @@ export const handleApplyDetailsChanges = (
     match.params.pageTab
   )
     .then(response => {
-      return fetchData({ project: match.params.projectName }).then(() => {
+      return fetchData().then(() => {
         setNotification({
           status: response.status,
           id: Math.random(),
@@ -606,21 +606,23 @@ export const fetchFeatureRowData = async (
     }
   }))
 
-  const result = await fetchFeature(item.metadata.project, item).catch(
-    error => {
-      setPageData(state => ({
-        ...state,
-        selectedRowData: {
-          ...state.selectedRowData,
-          [`${item.name}-${item.metadata.name}`]: {
-            ...state.selectedRowData[`${item.name}-${item.metadata.name}`],
-            error,
-            loading: false
-          }
+  const result = await fetchFeature(
+    item.metadata.project,
+    item.name,
+    item.metadata.name
+  ).catch(error => {
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        ...state.selectedRowData,
+        [`${item.name}-${item.metadata.name}`]: {
+          ...state.selectedRowData[`${item.name}-${item.metadata.name}`],
+          error,
+          loading: false
         }
-      }))
-    }
-  )
+      }
+    }))
+  })
 
   if (result?.length > 0) {
     setYamlContent(state => ({ ...state, selectedRowData: result }))
@@ -653,7 +655,7 @@ export const fetchFeatureVectorRowData = async (
     }
   }))
 
-  const result = await fetchFeatureVector(item.name, item.project).catch(
+  const result = await fetchFeatureVector(item.project, item.name).catch(
     error => {
       setPageData(state => ({
         ...state,
@@ -705,7 +707,7 @@ export const fetchDataSetRowData = async (
   }))
 
   try {
-    result = await fetchDataSet(item, iter)
+    result = await fetchDataSet(item.project, item.db_key, iter)
   } catch (error) {
     setPageData(state => ({
       ...state,

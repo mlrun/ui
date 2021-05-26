@@ -151,7 +151,7 @@ export const tabs = [
 export const handleFetchData = async (
   fetchModelEndpoints,
   fetchModels,
-  item,
+  filters,
   project,
   pageTab
 ) => {
@@ -162,14 +162,14 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === MODELS_TAB) {
-    result = await fetchModels(item, project)
+    result = await fetchModels(project, filters)
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
       data.yamlContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-    result = await fetchModelEndpoints(item, project)
+    result = await fetchModelEndpoints(project, filters)
 
     if (result) {
       data.content = result

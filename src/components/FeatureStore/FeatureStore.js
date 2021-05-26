@@ -72,14 +72,14 @@ const FeatureStore = ({
   const featureStoreRef = useRef(null)
 
   const fetchData = useCallback(
-    async item => {
+    async filters => {
       const data = await handleFetchData(
         featureStoreRef,
         fetchDataSets,
         fetchFeatureSets,
         fetchFeatures,
         fetchFeatureVectors,
-        item,
+        filters,
         match.params.projectName,
         match.params.pageTab
       )
@@ -353,15 +353,13 @@ const FeatureStore = ({
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
 
-    return fetchData({ project: match.params.projectName, tag: 'latest' }).then(
-      () => {
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Feature set successfully created'
-        })
-      }
-    )
+    return fetchData({ tag: 'latest' }).then(() => {
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Feature set successfully created'
+      })
+    })
   }
 
   const closePanel = () => {

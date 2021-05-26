@@ -51,8 +51,8 @@ const Files = ({
   })
 
   const fetchData = useCallback(
-    item => {
-      fetchFiles(item, match.params.projectName).then(result => {
+    filters => {
+      fetchFiles(match.params.projectName, filters).then(result => {
         if (result) {
           setFiles(generateArtifacts(filterArtifacts(result)))
           setYamlContent(state => ({
@@ -95,7 +95,7 @@ const Files = ({
       }))
 
       try {
-        result = await fetchFile(item, iter)
+        result = await fetchFile(item.project, item.db_key, iter)
       } catch (error) {
         setPageData(state => ({
           ...state,

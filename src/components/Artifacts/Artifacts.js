@@ -36,8 +36,8 @@ const Artifacts = ({
   const [selectedArtifact, setSelectedArtifact] = useState({})
 
   const fetchData = useCallback(
-    item => {
-      fetchArtifacts(item).then(data => {
+    filters => {
+      fetchArtifacts(match.params.projectName, filters).then(data => {
         let artifacts = []
 
         if (data) {
@@ -49,11 +49,11 @@ const Artifacts = ({
         return artifacts
       })
     },
-    [fetchArtifacts]
+    [fetchArtifacts, match.params.projectName]
   )
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName })
+    fetchData()
 
     return () => {
       setArtifacts([])
@@ -132,21 +132,15 @@ const Artifacts = ({
   ])
 
   const handleArtifactFilterTree = useCallback(
-    item => {
+    filters => {
       handleArtifactTreeFilterChange(
         fetchData,
-        artifactsStore.filter,
-        item,
-        match.params.projectName,
-        setArtifactFilter
+        filters,
+        setArtifactFilter,
+        setArtifacts
       )
     },
-    [
-      artifactsStore.filter,
-      fetchData,
-      match.params.projectName,
-      setArtifactFilter
-    ]
+    [fetchData, setArtifactFilter]
   )
 
   return (

@@ -72,8 +72,8 @@ const Functions = ({
   }
 
   const refreshFunctions = useCallback(
-    items => {
-      return fetchFunctions(match.params.projectName, items?.name).then(
+    filters => {
+      return fetchFunctions(match.params.projectName, filters?.name).then(
         functions => {
           const newFunctions = chain(functions)
             .orderBy('metadata.updated', 'desc')

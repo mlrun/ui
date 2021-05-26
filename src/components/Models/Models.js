@@ -30,8 +30,7 @@ const Models = ({
   match,
   removeModel,
   removeModels,
-  setArtifactFilter,
-  getModelsEndpoints
+  setArtifactFilter
 }) => {
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
@@ -57,11 +56,11 @@ const Models = ({
   })
 
   const fetchData = useCallback(
-    async item => {
+    async filters => {
       const data = await handleFetchData(
         fetchModelEndpoints,
         fetchModels,
-        item,
+        filters,
         match.params.projectName,
         match.params.pageTab
       )
@@ -122,7 +121,7 @@ const Models = ({
       }))
 
       try {
-        result = await fetchModel(item, iter)
+        result = await fetchModel(item.project, item.db_key, iter)
       } catch (error) {
         setPageData(state => ({
           ...state,

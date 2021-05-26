@@ -270,7 +270,7 @@ const Details = ({
     history.push(pathname.current)
 
     if (detailsState.refreshWasHandled) {
-      retryRequest({ project: match.params.projectName })
+      retryRequest()
       detailsDispatch({
         type: detailsActions.SET_REFRESH_WAS_HANDLED,
         payload: false
