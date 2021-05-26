@@ -33,6 +33,7 @@ const JobsPanel = ({
   closePanel,
   defaultData,
   fetchFunctionTemplate,
+  fetchFunctionTemplateFailure,
   functionsStore,
   groupedFunctions,
   jobsStore,
@@ -72,17 +73,20 @@ const JobsPanel = ({
       !defaultData &&
       !functionsStore.error
     ) {
-      fetchFunctionTemplate(groupedFunctions.metadata.versions.latest).then(
-        result => {
+      fetchFunctionTemplate(groupedFunctions.metadata.versions.latest)
+        .then(result => {
           setSelectedFunction(result.functions)
-        }
-      )
+        })
+        .catch(error => {
+          fetchFunctionTemplateFailure(error)
+        })
     }
 
     return () => functionsStore.template.name && removeFunctionTemplate()
   }, [
     defaultData,
     fetchFunctionTemplate,
+    fetchFunctionTemplateFailure,
     functionsStore.error,
     functionsStore.template.name,
     groupedFunctions,
