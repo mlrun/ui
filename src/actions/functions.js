@@ -160,8 +160,6 @@ const functionsActions = {
       })
       .catch(err => {
         dispatch(functionsActions.fetchFunctionTemplateFailure(err))
-
-        throw err
       })
   },
   fetchFunctionTemplateSuccess: selectFunction => ({
