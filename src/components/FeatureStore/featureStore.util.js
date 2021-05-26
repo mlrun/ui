@@ -373,6 +373,9 @@ export const handleFetchData = async (
     if (result) {
       data.content = parseFeatureVectors(result)
       data.yamlContent = result
+    } else {
+      data.content = null
+      data.yamlContent = null
     }
   }
 

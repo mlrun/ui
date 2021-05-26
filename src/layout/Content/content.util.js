@@ -9,7 +9,6 @@ import {
   JOBS_PAGE,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
-  MODELS_TAB,
   SCHEDULE_TAB
 } from '../../constants'
 import {
@@ -56,7 +55,7 @@ export const generateGroupedItems = (content, selectedRowData) => {
   return groupedItems
 }
 
-const findCurrentArtifactItem = (item, yamlContent) => {
+const findCurrentArtifactItem = (yamlContent, item) => {
   const key = item.db_key ? 'db_key' : 'key'
 
   return yamlContent.find(yamlContentItem => {
@@ -68,7 +67,7 @@ const findCurrentArtifactItem = (item, yamlContent) => {
   })
 }
 
-const findCurrentFeatureItem = (item, pageTab, yamlContent) => {
+const findCurrentFeatureItem = (pageTab, yamlContent, item) => {
   if (pageTab === FEATURES_TAB) {
     return yamlContent.find(yamlContentItem => {
       return isEqual(yamlContentItem.feature?.name, item.name)
@@ -87,14 +86,14 @@ const findCurrentFeatureItem = (item, pageTab, yamlContent) => {
   }
 }
 
-const getJobJson = (page, yamlContent, pageTab, item) =>
+const getJobJson = (pageTab, yamlContent, item) =>
   yamlContent.find(job =>
     pageTab !== SCHEDULE_TAB
       ? isEqual(job.metadata.uid, item.uid)
       : isEqual(job.name, item.name)
   )
 
-const getFunctionJson = (page, yamlContent, item) =>
+const getFunctionJson = (yamlContent, item) =>
   yamlContent.find(
     func =>
       isEqual(func.metadata.hash, item.hash) &&
@@ -104,34 +103,34 @@ const getFunctionJson = (page, yamlContent, item) =>
       )
   )
 
-const getArtifactJson = (pageTab, yamlContent, item, page) => {
-  let artifactJson = null
+const getModelEndpointJson = (yamlContent, item) => {
   const currentYamlContent =
     yamlContent?.selectedRowData?.length > 0 ? 'selectedRowData' : 'allData'
 
-  if (pageTab === MODEL_ENDPOINTS_TAB) {
-    artifactJson = yamlContent[currentYamlContent].find(
+  let modelEndpointsJson = yamlContent[currentYamlContent].find(
+    yamlContentItem => yamlContentItem.metadata.uid === item.metadata.uid
+  )
+
+  if (!modelEndpointsJson) {
+    modelEndpointsJson = yamlContent.allData.find(
       yamlContentItem => yamlContentItem.metadata.uid === item.metadata.uid
     )
+  }
 
-    if (!artifactJson) {
-      artifactJson = yamlContent.allData.find(
-        yamlContentItem => yamlContentItem.metadata.uid === item.metadata.uid
-      )
-    }
-  } else if (
-    page === FILES_PAGE ||
-    pageTab === MODELS_TAB ||
-    pageTab === DATASETS_TAB
-  ) {
-    artifactJson = findCurrentArtifactItem(
-      item,
-      yamlContent[currentYamlContent]
-    )
+  return modelEndpointsJson
+}
 
-    if (!artifactJson) {
-      artifactJson = findCurrentArtifactItem(item, yamlContent.allData)
-    }
+const getArtifactJson = (page, pageTab, yamlContent, item) => {
+  const currentYamlContent =
+    yamlContent?.selectedRowData?.length > 0 ? 'selectedRowData' : 'allData'
+
+  let artifactJson = findCurrentArtifactItem(
+    yamlContent[currentYamlContent],
+    item
+  )
+
+  if (!artifactJson) {
+    artifactJson = findCurrentArtifactItem(yamlContent.allData, item)
   }
 
   return artifactJson
@@ -142,16 +141,16 @@ const getFeatureStoreJson = (pageTab, yamlContent, item) => {
     yamlContent?.selectedRowData?.length > 0 ? 'selectedRowData' : 'allData'
 
   let featureStoreJson = findCurrentFeatureItem(
-    item,
     pageTab,
-    yamlContent[currentYamlContent]
+    yamlContent[currentYamlContent],
+    item
   )
 
   if (!featureStoreJson) {
     featureStoreJson = findCurrentFeatureItem(
-      item,
       pageTab,
-      yamlContent.allData
+      yamlContent.allData,
+      item
     )
   }
 
@@ -160,14 +159,16 @@ const getFeatureStoreJson = (pageTab, yamlContent, item) => {
 
 export const getJson = (page, pageTab, yamlContent, item) => {
   return page === JOBS_PAGE
-    ? getJobJson(page, yamlContent, pageTab, item)
+    ? getJobJson(pageTab, yamlContent, item)
+    : pageTab === MODEL_ENDPOINTS_TAB
+    ? getModelEndpointJson(yamlContent, item)
     : page === FEATURE_STORE_PAGE && pageTab !== DATASETS_TAB
     ? getFeatureStoreJson(pageTab, yamlContent, item)
     : [ARTIFACTS_PAGE, FILES_PAGE, MODELS_PAGE, FEATURE_STORE_PAGE].includes(
         page
       )
-    ? getArtifactJson(pageTab, yamlContent, item, page)
+    ? getArtifactJson(page, pageTab, yamlContent, item)
     : page === FUNCTIONS_PAGE
-    ? getFunctionJson(page, yamlContent, item)
+    ? getFunctionJson(yamlContent, item)
     : []
 }

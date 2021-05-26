@@ -67,7 +67,7 @@ const FeatureSetsPanelTitleView = ({
               }))
             }
             onBlur={event => {
-              if (event.target.length > 0) {
+              if (event.target.value.length > 0) {
                 setNewFeatureSetVersion(event.target.value)
               }
             }}
