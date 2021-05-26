@@ -193,6 +193,7 @@ const KeyValueTable = ({
 
 KeyValueTable.defaultProps = {
   className: '',
+  editItem: () => {},
   keyLabel: 'Key',
   keyOptions: [],
   keyType: 'input',
@@ -211,7 +212,7 @@ KeyValueTable.propTypes = {
     })
   ).isRequired,
   deleteItem: PropTypes.func.isRequired,
-  editItem: PropTypes.func.isRequired,
+  editItem: PropTypes.func,
   keyHeader: PropTypes.string.isRequired,
   keyLabel: PropTypes.string,
   keyOptions: PropTypes.arrayOf(
