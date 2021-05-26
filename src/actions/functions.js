@@ -158,9 +158,9 @@ const functionsActions = {
 
         return templates
       })
-      .catch(err =>
+      .catch(err => {
         dispatch(functionsActions.fetchFunctionTemplateFailure(err))
-      )
+      })
   },
   fetchFunctionTemplateSuccess: selectFunction => ({
     type: FETCH_FUNCTION_TEMPLATE_SUCCESS,

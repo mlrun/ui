@@ -25,6 +25,7 @@ import {
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { initialState, panelReducer, panelActions } from './panelReducer'
 import { parseKeyValues } from '../../utils'
+import notificationActions from '../../actions/notification'
 
 import './jobsPanel.scss'
 
@@ -41,16 +42,17 @@ const JobsPanel = ({
   project,
   redirectToDetailsPane,
   removeFunctionTemplate,
+  removeFunctionsError,
   removeJobError,
   removeNewJob,
   runNewJob,
-  runNewJobFailure,
   setNewJob,
   setNewJobEnvironmentVariables,
   setNewJobInputs,
   setNewJobSecretSources,
   setNewJobVolumeMounts,
   setNewJobVolumes,
+  setNotification,
   withSaveChanges
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
@@ -67,11 +69,14 @@ const JobsPanel = ({
     if (
       !groupedFunctions.name &&
       !functionsStore.template.name &&
-      !defaultData
+      !defaultData &&
+      !functionsStore.error
     ) {
       fetchFunctionTemplate(groupedFunctions.metadata.versions.latest).then(
         result => {
-          setSelectedFunction(result.functions)
+          if (result) {
+            setSelectedFunction(result.functions)
+          }
         }
       )
     }
@@ -80,9 +85,28 @@ const JobsPanel = ({
   }, [
     defaultData,
     fetchFunctionTemplate,
-    functionsStore.template,
+    functionsStore.error,
+    functionsStore.template.name,
     groupedFunctions,
     removeFunctionTemplate
+  ])
+
+  useEffect(() => {
+    if (!functionsStore.template.name && functionsStore.error) {
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Function template could not be loaded'
+      })
+      closePanel()
+      removeFunctionsError()
+    }
+  }, [
+    closePanel,
+    functionsStore.error,
+    functionsStore.template.name,
+    removeFunctionsError,
+    setNotification
   ])
 
   useEffect(() => {
@@ -366,6 +390,9 @@ JobsPanel.propTypes = {
 }
 
 export default connect(
-  ({ jobsStore, functionsStore }) => ({ jobsStore, functionsStore }),
-  { ...jobsActions, ...functionActions }
+  ({ jobsStore, functionsStore }) => ({
+    jobsStore,
+    functionsStore
+  }),
+  { ...jobsActions, ...functionActions, ...notificationActions }
 )(JobsPanel)

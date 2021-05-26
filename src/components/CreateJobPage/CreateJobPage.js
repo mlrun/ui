@@ -5,6 +5,7 @@ import { includes, isEmpty } from 'lodash'
 
 import CreateJobPageView from './CreateJobPageView'
 import JobsPanel from '../JobsPanel/JobsPanel'
+import Notification from '../../common/Notification/Notification'
 
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
@@ -36,6 +37,7 @@ const CreateJobPage = ({
     functionsStore.templatesCatalog
   )
   const [templates, setTemplates] = useState([])
+  const [showPanel, setShowPanel] = useState(false)
 
   useEffect(() => {
     if (!selectedProject) {
@@ -119,10 +121,7 @@ const CreateJobPage = ({
 
   const handleSelectGroupFunctions = item => {
     setSelectedGroupFunctions(item)
-
-    if (!Object.keys(item).length) {
-      removeNewJob()
-    }
+    setShowPanel(true)
   }
 
   const selectProject = projectName => {
@@ -170,14 +169,18 @@ const CreateJobPage = ({
           !isEmpty(filteredTemplates) ? filteredTemplates : templatesCategories
         }
       />
-      {Object.values(selectedGroupFunctions).length > 0 && (
+      {showPanel && (
         <JobsPanel
-          closePanel={handleSelectGroupFunctions}
+          closePanel={() => {
+            setShowPanel(false)
+            removeNewJob()
+          }}
           groupedFunctions={selectedGroupFunctions}
           match={match}
           project={selectedProject}
         />
       )}
+      <Notification />
     </>
   )
 }
