@@ -54,7 +54,7 @@ const AddToFeatureVectorPopUp = ({
 
   const onSelectProject = projectName => {
     setSelectedProject(projectName)
-    fetchFeatureVectors({}, projectName).then(result => {
+    fetchFeatureVectors(projectName).then(result => {
       const featureVectorsOptions = result.map(featureVector => {
         return {
           id: featureVector.metadata.name,

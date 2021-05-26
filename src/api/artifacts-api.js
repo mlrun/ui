@@ -5,31 +5,34 @@ import {
   FEATURES_TAB
 } from '../constants'
 
-const fetchArtifacts = (item, path, config, withLatestTag) => {
+const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
   const params = {}
 
-  if (item?.labels) {
-    params.label = item.labels?.split(',')
+  if (filters?.labels) {
+    params.label = filters.labels?.split(',')
   }
 
-  if (item?.iter === 'iter') {
+  if (filters?.iter === 'iter') {
     params.iter = 0
   }
 
-  if (item?.tag && (withLatestTag || !/latest/i.test(item.tag))) {
-    params.tag = item.tag
+  if (filters?.tag && (withLatestTag || !/latest/i.test(filters.tag))) {
+    params.tag = filters.tag
   }
 
-  if (item?.name) {
-    params.name = `~${item.name}`
+  if (filters?.name) {
+    params.name = `~${filters.name}`
   }
 
-  return mainHttpClient.get(path, { ...config, params })
+  return mainHttpClient.get(path, {
+    ...config,
+    params: { ...config.params, ...params }
+  })
 }
 
 export default {
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  createFeatureSet: (data, project) =>
+  createFeatureSet: (project, data) =>
     mainHttpClient.post(`/projects/${project}/feature-sets`, data),
   createFeatureVector: data =>
     mainHttpClient.post(
@@ -53,89 +56,95 @@ export default {
   },
   getArtifactTag: project =>
     mainHttpClient.get(`/projects/${project}/artifact-tags`),
-  getArtifacts: item => {
-    return fetchArtifacts(item, `/artifacts?project=${item.project}`)
+  getArtifact: (project, artifact) => {
+    return mainHttpClient.get('/artifacts', {
+      params: { project, name: artifact }
+    })
   },
-  getDataSet: (item, iter) => {
+  getArtifacts: (project, filters) => {
+    return fetchArtifacts('/artifacts', filters, {
+      params: { project }
+    })
+  },
+  getDataSet: (project, dataSet, iter) => {
     return fetchArtifacts(
-      {},
-      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*${
-        iter === 'iter' ? '&iter=0' : ''
-      }`
+      '/artifacts',
+      { iter },
+      { params: { project, name: dataSet, tag: '*' } }
     )
   },
-  getDataSets: (item, project) => {
+  getDataSets: (project, filters) => {
     return fetchArtifacts(
-      item,
-      `/artifacts?project=${project}&category=dataset`,
-      {},
+      '/artifacts',
+      filters,
+      { params: { project, category: 'dataset' } },
       true
     )
   },
-  getFeatureSets: (item, config, project) => {
+  getFeatureSets: (project, filters, config) => {
     return fetchArtifacts(
-      item,
       `/projects/${project}/${FEATURE_SETS_TAB}`,
+      filters,
       config,
       true
     )
   },
-  getFeatureVector: (featureVector, project) =>
-    mainHttpClient.get(
-      `/projects/${project}/feature-vectors?name=${featureVector}`
-    ),
-  getFeatureVectors: (item, project, config) => {
+  getFeatureVector: (project, featureVector) =>
+    mainHttpClient.get(`/projects/${project}/feature-vectors`, {
+      params: { name: featureVector }
+    }),
+  getFeatureVectors: (project, filters, config) => {
     return fetchArtifacts(
-      item,
       `/projects/${project}/${FEATURE_VECTORS_TAB}`,
+      filters,
       config,
       true
     )
   },
   getFeature: (project, feature) =>
-    mainHttpClient.get(`/projects/${project}/features?name=${feature}`),
-  getFeatures: (item, project) =>
-    fetchArtifacts(item, `/projects/${project}/${FEATURES_TAB}`, {}, true),
-  getFile: (item, iter) => {
+    mainHttpClient.get(`/projects/${project}/features`, {
+      params: { name: feature }
+    }),
+  getFeatures: (project, filters) =>
+    fetchArtifacts(`/projects/${project}/${FEATURES_TAB}`, filters, {}, true),
+  getFile: (project, file, iter) => {
     return fetchArtifacts(
-      item,
-      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*${
-        iter === 'iter' ? '&iter=0' : ''
-      }`
+      '/artifacts',
+      { iter },
+      { params: { project, name: file, tag: '*' } }
     )
   },
-  getFiles: (item, project) => {
+  getFiles: (project, filters) => {
     return fetchArtifacts(
-      item,
-      `/artifacts?project=${project}&category=other`,
-      {},
+      '/artifacts',
+      filters,
+      { params: { project, category: 'other' } },
       true
     )
   },
-  getModel: (item, iter) => {
+  getModel: (project, model, iter) => {
     return fetchArtifacts(
-      item,
-      `/artifacts?project=${item.project}&name=${item.db_key}&tag=*${
-        iter === 'iter' ? '&iter=0' : ''
-      }`
+      '/artifacts',
+      { iter },
+      { params: { project, name: model, tag: '*' } }
     )
   },
-  getModelEndpoints: item => {
+  getModelEndpoints: (project, filters) => {
     const params = {}
 
-    if (item?.labels) {
-      params.label = item.labels?.split(',')
+    if (filters?.labels) {
+      params.label = filters.labels?.split(',')
     }
 
-    return mainHttpClient.get(`/projects/${item.project}/model-endpoints`, {
+    return mainHttpClient.get(`/projects/${project}/model-endpoints`, {
       params
     })
   },
-  getModels: (item, project) => {
+  getModels: (project, filters) => {
     return fetchArtifacts(
-      item,
-      `/artifacts?project=${project}&category=model`,
-      {},
+      '/artifacts',
+      filters,
+      { params: { project, category: 'model' } },
       true
     )
   },

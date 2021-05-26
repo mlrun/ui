@@ -38,13 +38,10 @@ const FeatureSetsPanel = ({
         removeArtifactsError()
       }
 
-      createNewFeatureSet(
-        {
-          kind: 'FeatureSet',
-          ...artifactsStore.newFeatureSet
-        },
-        project
-      ).then(result => {
+      createNewFeatureSet(project, {
+        kind: 'FeatureSet',
+        ...artifactsStore.newFeatureSet
+      }).then(result => {
         if (startIngestion) {
           return handleStartFeatureSetIngest(result)
         }

@@ -29,7 +29,9 @@ import {
 } from '../../utils/resources'
 
 const JobsPanelDataInputs = ({
+  fetchArtifact,
   fetchArtifacts,
+  fetchFeatureVector,
   fetchFeatureVectors,
   inputs,
   match,
@@ -99,9 +101,7 @@ const JobsPanelDataInputs = ({
       const projectName = getInputValue('project')
 
       if (storePathType === 'artifacts' && inputsState.artifacts.length === 0) {
-        fetchArtifacts({
-          project: projectName
-        }).then(artifacts => {
+        fetchArtifacts(projectName).then(artifacts => {
           const artifactsList = artifacts
             .map(artifact => {
               const key = artifact.link_iteration
@@ -123,9 +123,7 @@ const JobsPanelDataInputs = ({
         storePathType === 'feature-vectors' &&
         inputsState.featureVectors.length === 0
       ) {
-        fetchFeatureVectors({
-          project: projectName
-        }).then(featureVectors => {
+        fetchFeatureVectors(projectName).then(featureVectors => {
           inputsDispatch({
             type: inputsActions.SET_FEATURE_VECTORS,
             payload: uniqBy(featureVectors, 'metadata.name').map(
@@ -157,10 +155,7 @@ const JobsPanelDataInputs = ({
         storePathType === 'artifacts' &&
         inputsState.artifactsReferences.length === 0
       ) {
-        fetchArtifacts({
-          project: projectName,
-          name: projectItem
-        }).then(artifacts => {
+        fetchArtifact(projectName, projectItem).then(artifacts => {
           const artifactsReferencesList = artifacts?.[0].data
             .map(artifact => {
               let artifactReference = getArtifactReference(artifact)
@@ -192,10 +187,7 @@ const JobsPanelDataInputs = ({
         storePathType === 'feature-vectors' &&
         inputsState.featureVectorsReferences.length === 0
       ) {
-        fetchFeatureVectors({
-          project: projectName,
-          name: projectItem
-        }).then(featureVectors => {
+        fetchFeatureVector(projectName, projectItem).then(featureVectors => {
           const featureVectorsReferencesList = featureVectors
             .map(featureVector => {
               let featureVectorReference = getFeatureReference(
@@ -219,7 +211,9 @@ const JobsPanelDataInputs = ({
       }
     }
   }, [
+    fetchArtifact,
     fetchArtifacts,
+    fetchFeatureVector,
     fetchFeatureVectors,
     getInputValue,
     inputsState.artifactsReferences.length,

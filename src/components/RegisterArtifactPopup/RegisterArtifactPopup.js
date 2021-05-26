@@ -131,7 +131,6 @@ const RegisterArtifactPopup = ({
         resetRegisterArtifactForm()
         setIsPopupOpen(false)
         refresh({
-          project: match.params.projectName,
           tag: artifactFilter.tag,
           labels: artifactFilter.labels,
           name: artifactFilter.name
