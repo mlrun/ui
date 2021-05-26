@@ -73,13 +73,21 @@ const JobsPanelDataInputs = ({
           inputsState.selectedDataInput.data.path.value.split('/')[1]
             ?.length === 0))
     ) {
-      const projectsList = projectStore.projects.map(project => ({
-        label:
-          project.metadata.name === match.params.projectName
-            ? 'Current project'
-            : project.metadata.name,
-        id: project.metadata.name
-      }))
+      const projectsList = projectStore.projects
+        .map(project => ({
+          label:
+            project.metadata.name === match.params.projectName
+              ? 'Current project'
+              : project.metadata.name,
+          id: project.metadata.name
+        }))
+        .sort((prevProject, nextProject) => {
+          return prevProject.id === match.params.projectName
+            ? -1
+            : nextProject.id === match.params.projectName
+            ? 1
+            : prevProject.id.localeCompare(nextProject.id)
+        })
 
       inputsDispatch({
         type: inputsActions.SET_PROJECTS,
@@ -113,6 +121,9 @@ const JobsPanelDataInputs = ({
               }
             })
             .filter(artifact => artifact.label !== '')
+            .sort((prevArtifact, nextArtifact) =>
+              prevArtifact.id.localeCompare(nextArtifact.id)
+            )
 
           inputsDispatch({
             type: inputsActions.SET_ARTIFACTS,
@@ -124,14 +135,18 @@ const JobsPanelDataInputs = ({
         inputsState.featureVectors.length === 0
       ) {
         fetchFeatureVectors(projectName).then(featureVectors => {
+          const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
+            .map(featureVector => ({
+              label: featureVector.metadata.name,
+              id: featureVector.metadata.name
+            }))
+            .sort((prevFeatureVector, nextFeatureVector) =>
+              prevFeatureVector.id.localeCompare(nextFeatureVector.id)
+            )
+
           inputsDispatch({
             type: inputsActions.SET_FEATURE_VECTORS,
-            payload: uniqBy(featureVectors, 'metadata.name').map(
-              featureVector => ({
-                label: featureVector.metadata.name,
-                id: featureVector.metadata.name
-              })
-            )
+            payload: featureVectorsList
           })
         })
       }
@@ -172,9 +187,9 @@ const JobsPanelDataInputs = ({
               const [nextRefIter, nextRefTree] = nextRef.id.split('@')
 
               if (prevRefTree === nextRefTree) {
-                return prevRefIter < nextRefIter ? -1 : 1
+                return prevRefIter.localeCompare(nextRefIter)
               } else {
-                return prevRefTree < nextRefTree ? -1 : 1
+                return prevRefTree.localeCompare(nextRefTree)
               }
             })
 
@@ -201,7 +216,7 @@ const JobsPanelDataInputs = ({
               }
             })
             .filter(featureVector => featureVector.label !== '')
-            .sort((prevRef, nextRef) => (prevRef.id < nextRef.id ? -1 : 1))
+            .sort((prevRef, nextRef) => prevRef.id.localeCompare(nextRef.id))
 
           inputsDispatch({
             type: inputsActions.SET_FEATURE_VECTORS_REFERENCES,
