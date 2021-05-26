@@ -30,9 +30,9 @@ podTemplate(
                     dockerx.images_push_multi_registries(
                                 ["${gitProjectUser}/mlrun-ui:${dockerTag}"],
                                 [
-                                    pipelinex.DockerRepo.ARTIFACTORY_IGUAZIO,
-                                    pipelinex.DockerRepo.MLRUN_DOCKER_HUB,
-                                    pipelinex.DockerRepo.MLRUN_QUAY_IO
+                                    DockerRepo.ARTIFACTORY_IGUAZIO,
+                                    DockerRepo.MLRUN_DOCKER_HUB,
+                                    DockerRepo.MLRUN_QUAY_IO
                                 ]
                     )
                 }
