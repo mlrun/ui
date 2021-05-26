@@ -17,23 +17,25 @@ podTemplate(
         hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
     ],
 ) {
-    common.notify_slack {
-        container('base-build') {
+    node(podLabel){
+        common.notify_slack {
+            container('base-build') {
 
-            stage("git clone") {
-                checkout scm
-            }
+                stage("git clone") {
+                    checkout scm
+                }
 
-            common.reportStage('Build mlrun/ui') {
-                println(common.shellc("MLRUN_DOCKER_TAG=${dockerTag} npm run docker"))
-                // dockerx.images_push_multi_registries(
-                //             ["${gitProjectUser}/mlrun-ui:${dockerTag}"],
-                //             [
-                //                 pipelinex.DockerRepo.ARTIFACTORY_IGUAZIO,
-                //                 pipelinex.DockerRepo.MLRUN_DOCKER_HUB,
-                //                 pipelinex.DockerRepo.MLRUN_QUAY_IO
-                //             ]
-                // )
+                common.reportStage('Build mlrun/ui') {
+                    println(common.shellc("MLRUN_DOCKER_TAG=${dockerTag} npm run docker"))
+                    // dockerx.images_push_multi_registries(
+                    //             ["${gitProjectUser}/mlrun-ui:${dockerTag}"],
+                    //             [
+                    //                 pipelinex.DockerRepo.ARTIFACTORY_IGUAZIO,
+                    //                 pipelinex.DockerRepo.MLRUN_DOCKER_HUB,
+                    //                 pipelinex.DockerRepo.MLRUN_QUAY_IO
+                    //             ]
+                    // )
+                }
             }
         }
     }
