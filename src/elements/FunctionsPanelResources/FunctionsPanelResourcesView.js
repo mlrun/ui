@@ -20,7 +20,7 @@ const FunctionsPanelResourcesView = ({
   handleDeleteVolume,
   handleEditVolume,
   handleSelectMemoryUnit,
-  handleSelectСpuUnit,
+  handleSelectCpuUnit,
   setMemoryValue,
   setCpuValue,
   setGpuValue
@@ -68,7 +68,7 @@ const FunctionsPanelResourcesView = ({
           label="Unit"
           labelAtTop
           options={selectMemoryOptions.unitCpu}
-          onClick={value => handleSelectСpuUnit(value)}
+          onClick={value => handleSelectCpuUnit(value)}
           selectedId={data.cpuUnit}
         />
         <RangeInput
@@ -105,7 +105,7 @@ FunctionsPanelResourcesView.propTypes = {
   handleDeleteVolume: PropTypes.func.isRequired,
   handleEditVolume: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
-  handleSelectСpuUnit: PropTypes.func.isRequired,
+  handleSelectCpuUnit: PropTypes.func.isRequired,
   setMemoryValue: PropTypes.func.isRequired,
   setCpuValue: PropTypes.func.isRequired,
   setGpuValue: PropTypes.func.isRequired

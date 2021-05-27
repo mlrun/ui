@@ -148,7 +148,8 @@ const JobsPanel = ({
         selectedFunction,
         panelDispatch,
         setNewJob,
-        panelState.limits
+        panelState.limits,
+        panelState.requests
       )
     } else if (
       !panelState.editMode &&
