@@ -104,7 +104,7 @@ const FunctionsPanelResources = ({
     })
   }
 
-  const handleSelectСpuUnit = value => {
+  const handleSelectCpuUnit = value => {
     setData(state => ({
       ...state,
       cpuUnit: value,
@@ -243,7 +243,7 @@ const FunctionsPanelResources = ({
       handleSelectMemoryUnit={handleSelectMemoryUnit}
       setData={setData}
       setMemoryValue={setMemoryValue}
-      handleSelectСpuUnit={handleSelectСpuUnit}
+      handleSelectCpuUnit={handleSelectCpuUnit}
       setCpuValue={setCpuValue}
       setGpuValue={setGpuValue}
     />

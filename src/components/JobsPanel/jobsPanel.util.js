@@ -164,9 +164,10 @@ export const getDefaultMethodAndVersion = (
     item => item.metadata.tag === 'latest'
   )?.spec.default_handler
 
-  const defaultVersion = !versionOptions.length
-    ? versionOptions[0].id
-    : versionOptions.find(version => version.id === 'latest').id
+  const defaultVersion =
+    versionOptions.length === 1
+      ? versionOptions[0].id
+      : versionOptions.find(version => version.id === 'latest').id
 
   return {
     defaultMethod,
@@ -179,7 +180,8 @@ export const generateTableData = (
   selectedFunction,
   panelDispatch,
   setNewJob,
-  stateLimits
+  stateLimits,
+  stateRequests
 ) => {
   const functionParameters = getParameters(selectedFunction, method)
   const [{ limits, requests }] = getResources(selectedFunction)
@@ -248,7 +250,7 @@ export const generateTableData = (
     })
   }
 
-  if (limits) {
+  if (limits && !isEveryObjectValueEmpty(limits)) {
     panelDispatch({
       type: panelActions.SET_LIMITS,
       payload: {
@@ -258,10 +260,10 @@ export const generateTableData = (
     })
   }
 
-  if (requests) {
+  if (requests && !isEveryObjectValueEmpty(requests)) {
     panelDispatch({
       type: panelActions.SET_REQUESTS,
-      payload: requests
+      payload: { ...stateRequests, ...requests }
     })
   }
 }

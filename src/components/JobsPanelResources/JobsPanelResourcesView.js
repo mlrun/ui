@@ -13,7 +13,7 @@ const JobsPanelResourcesView = ({
   handleAddNewVolume,
   handleDeleteVolume,
   handleEditVolume,
-  handleSelectСpuUnit,
+  handleSelectCpuUnit,
   handleSelectMemoryUnit,
   panelDispatch,
   panelState,
@@ -81,7 +81,7 @@ const JobsPanelResourcesView = ({
         density="chunky"
         label="Unit"
         options={selectTypeOptions.unitCpu}
-        onClick={value => handleSelectСpuUnit(value)}
+        onClick={value => handleSelectCpuUnit(value)}
         selectedId={panelState.cpuUnit}
       />
       <RangeInput
@@ -130,7 +130,7 @@ JobsPanelResourcesView.propTypes = {
   handleAddNewVolume: PropTypes.func.isRequired,
   handleDeleteVolume: PropTypes.func.isRequired,
   handleEditVolume: PropTypes.func.isRequired,
-  handleSelectСpuUnit: PropTypes.func.isRequired,
+  handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
