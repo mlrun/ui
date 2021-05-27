@@ -116,21 +116,29 @@ const Jobs = ({
   }
 
   const handleRerunJob = async job => {
-    const functionParts = job.function.split('/')
+    const [project, func] = job.function ? job.function.split('/') : ['', '']
     const functionData = await fetchJobFunction(
-      functionParts[0],
-      functionParts[1].replace(/@.*$/g, ''),
-      functionParts[1].replace(/.*@/g, '')
+      project,
+      func.replace(/@.*$/g, ''),
+      func.replace(/.*@/g, '')
     )
+
+    if (!functionData) {
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Job’s function failed to load'
+      })
+    }
 
     setEditableItem({
       rerun_object: {
         function: {
           spec: {
-            env: functionData?.spec.env,
+            env: functionData?.spec.env ?? [],
             resources: functionData?.spec.resources,
-            volume_mounts: functionData?.spec.volume_mounts,
-            volumes: functionData?.spec.volumes
+            volume_mounts: functionData?.spec.volume_mounts ?? [],
+            volumes: functionData?.spec.volumes ?? []
           }
         },
         schedule: null,
@@ -142,8 +150,9 @@ const Jobs = ({
           },
           spec: {
             function: job.function,
-            handler:
-              Object.values(functionData?.spec.entry_points)?.[0]?.name ?? '',
+            handler: functionData?.spec?.entry_points
+              ? Object.values(functionData?.spec.entry_points)?.[0]?.name
+              : '',
             hyperparams: job.hyperparams,
             input_path: job.input_path ?? '',
             inputs: job.inputs ?? {},
