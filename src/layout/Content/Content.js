@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
-import { isEqual } from 'lodash'
 import classnames from 'classnames'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -14,24 +13,18 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import {
   ARTIFACTS_PAGE,
-  DATASETS_TAB,
-  FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
-  FEATURE_VECTORS_TAB,
   FEATURES_TAB,
   FILES_PAGE,
-  FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
-  PROJECTS_PAGE,
-  SCHEDULE_TAB
+  PROJECTS_PAGE
 } from '../../constants'
 
-import { formatDatetime } from '../../utils'
+import { generateGroupedItems, getJson } from './content.util'
 
 import './content.scss'
-import { generateGroupedItems } from './content.util'
 
 const Content = ({
   applyDetailsChanges,
@@ -125,94 +118,9 @@ const Content = ({
       return setConvertedYaml('')
     }
 
-    const jobJson =
-      pageData.page === JOBS_PAGE &&
-      yamlContent.filter(job =>
-        match.params.pageTab !== SCHEDULE_TAB
-          ? isEqual(job.metadata.uid, item.uid)
-          : isEqual(job.name, item.name)
-      )[0]
-    const functionJson =
-      pageData.page === FUNCTIONS_PAGE &&
-      yamlContent.filter(
-        func =>
-          isEqual(func.metadata.hash, item.hash) &&
-          isEqual(
-            formatDatetime(new Date(func.metadata.updated)),
-            formatDatetime(new Date(item.updated))
-          )
-      )[0]
-    let artifactJson = null
+    const json = getJson(pageData.page, match.params.pageTab, yamlContent, item)
 
-    if (
-      pageData.page === MODELS_PAGE &&
-      match.params.pageTab === MODEL_ENDPOINTS_TAB
-    ) {
-      const currentYamlContent =
-        yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
-
-      artifactJson =
-        yamlContent[currentYamlContent].find(
-          yamlContentItem => yamlContentItem.metadata.uid === item.metadata.uid
-        ) ?? {}
-    } else if (
-      pageData.page === FILES_PAGE ||
-      pageData.page === MODELS_PAGE ||
-      (pageData.page === FEATURE_STORE_PAGE &&
-        match.params.pageTab === DATASETS_TAB)
-    ) {
-      const currentYamlContent =
-        yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
-      const key = item.db_key ? 'db_key' : 'key'
-
-      artifactJson = yamlContent[currentYamlContent].filter(yamlContentItem => {
-        return (
-          isEqual(yamlContentItem[key], item[key]) &&
-          isEqual(yamlContentItem.tag, item.tag) &&
-          isEqual(yamlContentItem.iter, item.iter)
-        )
-      })
-    } else if (pageData.page === FEATURE_STORE_PAGE) {
-      if (match.params.pageTab === FEATURES_TAB) {
-        const currentYamlContent =
-          yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
-
-        artifactJson = yamlContent[currentYamlContent].filter(
-          yamlContentItem => {
-            return isEqual(yamlContentItem.feature?.name, item.name)
-          }
-        )
-      } else {
-        const currentYamlContent =
-          yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
-
-        artifactJson = yamlContent[currentYamlContent].filter(yamlContentItem =>
-          match.params.pageTab === FEATURE_SETS_TAB ||
-          match.params.pageTab === FEATURE_VECTORS_TAB
-            ? (item.tag &&
-                isEqual(yamlContentItem.metadata.name, item.name) &&
-                isEqual(yamlContentItem.metadata.tag, item.tag)) ||
-              isEqual(yamlContentItem.metadata.uid, item.uid)
-            : isEqual(yamlContentItem.db_key, item.db_key)
-        )
-      }
-    }
-
-    setConvertedYaml(
-      yaml.dump(
-        pageData.page === JOBS_PAGE
-          ? jobJson
-          : [
-              ARTIFACTS_PAGE,
-              FILES_PAGE,
-              MODELS_PAGE,
-              FEATURE_STORE_PAGE
-            ].includes(pageData.page)
-          ? artifactJson
-          : functionJson,
-        { lineWidth: -1 }
-      )
-    )
+    setConvertedYaml(yaml.dump(json, { lineWidth: -1 }))
   }
 
   const handleExpandRow = (e, item) => {

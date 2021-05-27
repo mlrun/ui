@@ -51,7 +51,7 @@ const Functions = ({
         label: 'Run',
         icon: <Run />,
         onClick: func => setEditableItem(func),
-        hidden: FUNCTIONS_FAILED_STATES.includes(item.state)
+        hidden: FUNCTIONS_FAILED_STATES.includes(item?.state)
       },
       {
         label: 'Delete',
@@ -170,6 +170,7 @@ const Functions = ({
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
     }
+
     setSelectedFunction(item)
   }
 

@@ -24,11 +24,9 @@ export const generateUri = (item, tab) => {
 export const getArtifactReference = item => {
   let reference = ''
 
-  if (item.tag) reference += `:${item.tag}`
-  else {
-    if (!isNil(item.iter)) reference += `#${item.iter}`
-    if (item.tree) reference += `@${item.tree}`
-  }
+  if (!isNil(item.iter)) reference += `#${item.iter}`
+  if (!isNil(item.tag)) reference += `:${item.tag}`
+  if (!isNil(item.tree)) reference += `@${item.tree}`
 
   return reference
 }
