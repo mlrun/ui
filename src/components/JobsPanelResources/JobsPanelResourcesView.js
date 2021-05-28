@@ -31,98 +31,109 @@ const JobsPanelResourcesView = ({
         volumes={panelState.tableData.volumes}
       />
     </JobsPanelSection>
-    <JobsPanelSection title="Memory">
-      <Select
-        density="chunky"
-        label="Unit"
-        onClick={value => handleSelectMemoryUnit(value)}
-        options={selectTypeOptions.unitMemory}
-        selectedId={panelState.memoryUnit}
-      />
-      <RangeInput
-        density="chunky"
-        floatingLabel
-        label="Request"
-        onChange={value =>
-          panelDispatch({
-            type: panelActions.SET_REQUESTS_MEMORY,
-            payload: `${value}${
-              !panelState.memoryUnit.length || panelState.memoryUnit === 'Bytes'
-                ? ''
-                : panelState.memoryUnit.match(/i/)
-                ? panelState.memoryUnit.slice(0, 2)
-                : panelState.memoryUnit.slice(0, 1)
-            }`
-          })
-        }
-        value={resourcesData.requestsMemory}
-      />
-      <RangeInput
-        density="chunky"
-        floatingLabel
-        label="Limit"
-        onChange={value =>
-          panelDispatch({
-            type: panelActions.SET_LIMITS_MEMORY,
-            payload: `${value}${
-              !panelState.memoryUnit.length || panelState.memoryUnit === 'Bytes'
-                ? ''
-                : panelState.memoryUnit.match(/i/)
-                ? panelState.memoryUnit.slice(0, 2)
-                : panelState.memoryUnit.slice(0, 1)
-            }`
-          })
-        }
-        value={resourcesData.limitsMemory}
-      />
-    </JobsPanelSection>
-    <JobsPanelSection title="Cpu">
-      <Select
-        density="chunky"
-        label="Unit"
-        options={selectTypeOptions.unitCpu}
-        onClick={value => handleSelectCpuUnit(value)}
-        selectedId={panelState.cpuUnit}
-      />
-      <RangeInput
-        density="chunky"
-        floatingLabel
-        label="Request"
-        onChange={value =>
-          panelDispatch({
-            type: panelActions.SET_REQUESTS_CPU,
-            payload: `${value}${panelState.cpuUnit === 'millicpu' ? 'm' : ''}`
-          })
-        }
-        value={resourcesData.requestsCpu}
-      />
-      <RangeInput
-        density="chunky"
-        floatingLabel
-        label="Limit"
-        onChange={value =>
-          panelDispatch({
-            type: panelActions.SET_LIMITS_CPU,
-            payload: `${value}${panelState.cpuUnit === 'millicpu' ? 'm' : ''}`
-          })
-        }
-        value={resourcesData.limitsCpu}
-      />
-    </JobsPanelSection>
-    <JobsPanelSection title="Gpu" className="section-gpu">
-      <RangeInput
-        density="chunky"
-        floatingLabel
-        label="Limit"
-        onChange={value =>
-          panelDispatch({
-            type: panelActions.SET_LIMITS_NVIDIA_GPU,
-            payload: `${value}`
-          })
-        }
-        value={panelState.limits['nvidia.com/gpu']}
-      />
-    </JobsPanelSection>
+    <div className="inputs">
+      <JobsPanelSection title="Memory" className="memory">
+        <Select
+          density="dense"
+          label="Unit"
+          labelAtTop
+          onClick={value => handleSelectMemoryUnit(value)}
+          options={selectTypeOptions.unitMemory}
+          selectedId={panelState.memoryUnit}
+        />
+        <RangeInput
+          density="dense"
+          floatingLabel
+          label="Request"
+          labelAtTop
+          onChange={value =>
+            panelDispatch({
+              type: panelActions.SET_REQUESTS_MEMORY,
+              payload: `${value}${
+                !panelState.memoryUnit.length ||
+                panelState.memoryUnit === 'Bytes'
+                  ? ''
+                  : panelState.memoryUnit.match(/i/)
+                  ? panelState.memoryUnit.slice(0, 2)
+                  : panelState.memoryUnit.slice(0, 1)
+              }`
+            })
+          }
+          value={resourcesData.requestsMemory}
+        />
+        <RangeInput
+          density="dense"
+          floatingLabel
+          label="Limit"
+          labelAtTop
+          onChange={value =>
+            panelDispatch({
+              type: panelActions.SET_LIMITS_MEMORY,
+              payload: `${value}${
+                !panelState.memoryUnit.length ||
+                panelState.memoryUnit === 'Bytes'
+                  ? ''
+                  : panelState.memoryUnit.match(/i/)
+                  ? panelState.memoryUnit.slice(0, 2)
+                  : panelState.memoryUnit.slice(0, 1)
+              }`
+            })
+          }
+          value={resourcesData.limitsMemory}
+        />
+      </JobsPanelSection>
+      <JobsPanelSection title="Cpu" className="cpu">
+        <Select
+          density="dense"
+          label="Unit"
+          labelAtTop
+          options={selectTypeOptions.unitCpu}
+          onClick={value => handleSelectCpuUnit(value)}
+          selectedId={panelState.cpuUnit}
+        />
+        <RangeInput
+          density="dense"
+          floatingLabel
+          label="Request"
+          labelAtTop
+          onChange={value =>
+            panelDispatch({
+              type: panelActions.SET_REQUESTS_CPU,
+              payload: `${value}${panelState.cpuUnit === 'millicpu' ? 'm' : ''}`
+            })
+          }
+          value={resourcesData.requestsCpu}
+        />
+        <RangeInput
+          density="dense"
+          floatingLabel
+          label="Limit"
+          labelAtTop
+          onChange={value =>
+            panelDispatch({
+              type: panelActions.SET_LIMITS_CPU,
+              payload: `${value}${panelState.cpuUnit === 'millicpu' ? 'm' : ''}`
+            })
+          }
+          value={resourcesData.limitsCpu}
+        />
+      </JobsPanelSection>
+      <JobsPanelSection title="Gpu" className="section-gpu">
+        <RangeInput
+          density="dense"
+          floatingLabel
+          label="Limit"
+          labelAtTop
+          onChange={value =>
+            panelDispatch({
+              type: panelActions.SET_LIMITS_NVIDIA_GPU,
+              payload: `${value}`
+            })
+          }
+          value={panelState.limits['nvidia.com/gpu']}
+        />
+      </JobsPanelSection>
+    </div>
   </div>
 )
 

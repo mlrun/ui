@@ -1,5 +1,5 @@
 export const initialState = {
-  cpuUnit: '',
+  cpuUnit: 'cpu',
   currentFunctionInfo: {
     labels: [],
     method: '',
@@ -14,7 +14,7 @@ export const initialState = {
     memory: '',
     'nvidia.com/gpu': ''
   },
-  memoryUnit: '',
+  memoryUnit: 'Bytes',
   outputPath: 'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}',
   previousPanelData: {
     tableData: {
