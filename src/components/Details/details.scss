@@ -232,16 +232,6 @@
       }
     }
 
-    .pop-up-dialog {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-
-      &__overlay {
-        position: absolute;
-      }
-    }
-
     &.pop-up-dialog-opened {
       overflow-y: hidden;
     }
