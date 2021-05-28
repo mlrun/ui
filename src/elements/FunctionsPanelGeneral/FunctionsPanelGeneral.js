@@ -9,14 +9,12 @@ import { DEFAULT_TYPE } from './functionsPanelGeneral.util'
 
 const FunctionsPanelGeneral = ({
   isNameValid,
-  isTagValid,
   setNameValid,
   setNewFunctionDescription,
   setNewFunctionLabels,
   setNewFunctionName,
   setNewFunctionTag,
-  setNewFunctionType,
-  setTagValid
+  setNewFunctionType
 }) => {
   const [data, setData] = useState({
     name: '',
@@ -27,7 +25,7 @@ const FunctionsPanelGeneral = ({
   })
 
   const handleNameChange = name => {
-    const pattern = /^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/
+    const pattern = /^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 
     if (isNameValid && !pattern.test(name)) {
       setNameValid(false)
@@ -52,10 +50,6 @@ const FunctionsPanelGeneral = ({
   }
 
   const handleTagChange = tag => {
-    if (!isTagValid && tag.length > 0) {
-      setTagValid(true)
-    }
-
     setData(state => ({
       ...state,
       tag
@@ -63,9 +57,7 @@ const FunctionsPanelGeneral = ({
   }
 
   const handleTagOnBlur = event => {
-    if (event.target.value.length === 0) {
-      setTagValid(false)
-    } else {
+    if (event.target.value.length > 0) {
       setNewFunctionTag(event.target.value)
     }
   }
@@ -109,7 +101,6 @@ const FunctionsPanelGeneral = ({
       handleTagChange={handleTagChange}
       handleTagOnBlur={handleTagOnBlur}
       isNameValid={isNameValid}
-      isTagValid={isTagValid}
       setData={setData}
       setNewFunctionDescription={setNewFunctionDescription}
       setNewFunctionType={setNewFunctionType}
@@ -119,9 +110,7 @@ const FunctionsPanelGeneral = ({
 
 FunctionsPanelGeneral.propTypes = {
   isNameValid: PropTypes.bool.isRequired,
-  isTagValid: PropTypes.bool.isRequired,
-  setNameValid: PropTypes.func.isRequired,
-  setTagValid: PropTypes.func.isRequired
+  setNameValid: PropTypes.func.isRequired
 }
 
 export default connect(functionsStore => ({ ...functionsStore }), {

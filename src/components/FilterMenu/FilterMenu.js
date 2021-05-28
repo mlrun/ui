@@ -349,7 +349,7 @@ const FilterMenu = ({
               <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
             }
           >
-            <button onClick={handleExpandAll}>
+            <button onClick={() => handleExpandAll()}>
               {expand ? <Collapse /> : <Expand />}
             </button>
           </Tooltip>

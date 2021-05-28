@@ -356,6 +356,7 @@ const Functions = ({
           createFunctionSuccess={createFunctionSuccess}
           handleDeployFunctionFailure={handleDeployFunctionFailure}
           handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+          match={match}
           project={match.params.projectName}
         />
       )}

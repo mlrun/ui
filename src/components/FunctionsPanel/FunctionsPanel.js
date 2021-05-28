@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -15,21 +15,33 @@ const FunctionsPanel = ({
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   project,
+  match,
   removeFunctionsError,
-  createNewFunction
+  createNewFunction,
+  setNewFunctionProject
 }) => {
   const [isNameValid, setNameValid] = useState(true)
-  const [isTagValid, setTagValid] = useState(true)
+  const [isHandlerValid, setHandlerValid] = useState(true)
   const history = useHistory()
 
+  useEffect(() => {
+    if (!functionsStore.newFunction.metadata.project) {
+      setNewFunctionProject(match.params.projectName)
+    }
+  }, [
+    functionsStore.newFunction.metadata.project,
+    match.params.projectName,
+    setNewFunctionProject
+  ])
+
   const handleSave = deploy => {
-    if (isNameValid && isTagValid) {
+    if (isNameValid && isHandlerValid) {
       if (functionsStore.newFunction.metadata.name.length === 0) {
         return setNameValid(false)
       }
 
-      if (functionsStore.newFunction.metadata.tag.length === 0) {
-        return setTagValid(false)
+      if (functionsStore.newFunction.spec.default_handler.length === 0) {
+        return setHandlerValid(false)
       }
 
       if (functionsStore.error) {
@@ -65,12 +77,12 @@ const FunctionsPanel = ({
       closePanel={closePanel}
       error={functionsStore.error}
       handleSave={handleSave}
+      isHandlerValid={isHandlerValid}
       isNameValid={isNameValid}
-      isTagValid={isTagValid}
       loading={functionsStore.loading}
       removeFunctionsError={removeFunctionsError}
+      setHandlerValid={setHandlerValid}
       setNameValid={setNameValid}
-      setTagValid={setTagValid}
     />
   )
 }
@@ -80,6 +92,7 @@ FunctionsPanel.propTypes = {
   createFunctionSuccess: PropTypes.func.isRequired,
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
+  match: PropTypes.shape({}).isRequired,
   project: PropTypes.string.isRequired
 }
 

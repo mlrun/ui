@@ -20,12 +20,12 @@ const FunctionsPanelView = ({
   closePanel,
   error,
   handleSave,
+  isHandlerValid,
   isNameValid,
-  isTagValid,
   loading,
   removeFunctionsError,
-  setNameValid,
-  setTagValid
+  setHandlerValid,
+  setNameValid
 }) => {
   return (
     <div className="new-item-side-panel-container">
@@ -41,9 +41,7 @@ const FunctionsPanelView = ({
           >
             <FunctionsPanelGeneral
               isNameValid={isNameValid}
-              isTagValid={isTagValid}
               setNameValid={setNameValid}
-              setTagValid={setTagValid}
             />
           </Accordion>
           <Accordion
@@ -52,7 +50,10 @@ const FunctionsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FunctionsPanelCode />
+            <FunctionsPanelCode
+              isHandlerValid={isHandlerValid}
+              setHandlerValid={setHandlerValid}
+            />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -97,7 +98,7 @@ const FunctionsPanelView = ({
             />
             <Button
               className="btn_save"
-              disabled={!isTagValid || !isNameValid}
+              disabled={!isNameValid || !isHandlerValid}
               variant="tertiary"
               label="Save"
               onClick={() => handleSave()}
@@ -106,7 +107,7 @@ const FunctionsPanelView = ({
               variant="secondary"
               label="Deploy"
               onClick={() => handleSave(true)}
-              disabled={!isTagValid || !isNameValid}
+              disabled={!isNameValid || !isHandlerValid}
             />
           </div>
         </div>
@@ -123,12 +124,12 @@ FunctionsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   error: PropTypes.string,
   handleSave: PropTypes.func.isRequired,
+  isHandlerValid: PropTypes.bool.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  isTagValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired,
-  setTagValid: PropTypes.func.isRequired
+  setHandlerValid: PropTypes.func.isRequired,
+  setNameValid: PropTypes.func.isRequired
 }
 
 export default FunctionsPanelView
