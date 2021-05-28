@@ -489,6 +489,8 @@ export const generateRequestData = (
 
   if (jobsStore.newJob.task.spec.selector.result.length > 0) {
     spec.selector = `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
+  } else {
+    delete spec.selector
   }
 
   return {
