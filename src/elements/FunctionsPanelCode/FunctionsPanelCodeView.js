@@ -18,12 +18,14 @@ const FunctionsPanelCodeView = ({
   data,
   editCode,
   functionsStore,
+  handleHandlerChange,
+  handleHandlerOnBlur,
+  isHandlerValid,
   setData,
   setEditCode,
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
   setNewFunctionCommands,
-  setNewFunctionHandler,
   setNewFunctionImage,
   setNewFunctionSourceCode
 }) => {
@@ -61,8 +63,10 @@ const FunctionsPanelCodeView = ({
           <Input
             floatingLabel
             label="Handler"
-            onChange={handler => setData(state => ({ ...state, handler }))}
-            onBlur={() => setNewFunctionHandler(data.handler)}
+            onChange={handleHandlerChange}
+            onBlur={handleHandlerOnBlur}
+            required={!isHandlerValid}
+            requiredText="This field is required"
             type="text"
             value={data.handler}
             wrapperClassName="handler"
@@ -139,12 +143,14 @@ FunctionsPanelCodeView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   editCode: PropTypes.bool.isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
+  handleHandlerChange: PropTypes.func.isRequired,
+  handleHandlerOnBlur: PropTypes.func.isRequired,
+  isHandlerValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
   setEditCode: PropTypes.func.isRequired,
   setNewFunctionBaseImage: PropTypes.func.isRequired,
   setNewFunctionBuildImage: PropTypes.func.isRequired,
   setNewFunctionCommands: PropTypes.func.isRequired,
-  setNewFunctionHandler: PropTypes.func.isRequired,
   setNewFunctionImage: PropTypes.func.isRequired,
   setNewFunctionSourceCode: PropTypes.func.isRequired
 }

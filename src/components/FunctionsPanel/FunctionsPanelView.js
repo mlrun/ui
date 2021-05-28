@@ -20,9 +20,11 @@ const FunctionsPanelView = ({
   closePanel,
   error,
   handleSave,
+  isHandlerValid,
   isNameValid,
   loading,
   removeFunctionsError,
+  setHandlerValid,
   setNameValid
 }) => {
   return (
@@ -48,7 +50,10 @@ const FunctionsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FunctionsPanelCode />
+            <FunctionsPanelCode
+              isHandlerValid={isHandlerValid}
+              setHandlerValid={setHandlerValid}
+            />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -93,7 +98,7 @@ const FunctionsPanelView = ({
             />
             <Button
               className="btn_save"
-              disabled={!isNameValid}
+              disabled={!isNameValid || !isHandlerValid}
               variant="tertiary"
               label="Save"
               onClick={() => handleSave()}
@@ -102,7 +107,7 @@ const FunctionsPanelView = ({
               variant="secondary"
               label="Deploy"
               onClick={() => handleSave(true)}
-              disabled={!isNameValid}
+              disabled={!isNameValid || !isHandlerValid}
             />
           </div>
         </div>
@@ -119,9 +124,11 @@ FunctionsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   error: PropTypes.string,
   handleSave: PropTypes.func.isRequired,
+  isHandlerValid: PropTypes.bool.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
+  setHandlerValid: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired
 }
 

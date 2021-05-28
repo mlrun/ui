@@ -21,6 +21,7 @@ const FunctionsPanel = ({
   setNewFunctionProject
 }) => {
   const [isNameValid, setNameValid] = useState(true)
+  const [isHandlerValid, setHandlerValid] = useState(true)
   const history = useHistory()
 
   useEffect(() => {
@@ -34,9 +35,13 @@ const FunctionsPanel = ({
   ])
 
   const handleSave = deploy => {
-    if (isNameValid) {
+    if (isNameValid && isHandlerValid) {
       if (functionsStore.newFunction.metadata.name.length === 0) {
         return setNameValid(false)
+      }
+
+      if (functionsStore.newFunction.spec.default_handler.length === 0) {
+        return setHandlerValid(false)
       }
 
       if (functionsStore.error) {
@@ -72,9 +77,11 @@ const FunctionsPanel = ({
       closePanel={closePanel}
       error={functionsStore.error}
       handleSave={handleSave}
+      isHandlerValid={isHandlerValid}
       isNameValid={isNameValid}
       loading={functionsStore.loading}
       removeFunctionsError={removeFunctionsError}
+      setHandlerValid={setHandlerValid}
       setNameValid={setNameValid}
     />
   )
