@@ -15,26 +15,35 @@
     }
 
     &.resources {
-      .select {
-        flex: 1;
-        margin-right: 16px;
+      .inputs {
+        display: flex;
+      }
 
-        &__body {
-          top: 60px;
-          max-height: 290px;
-          overflow-y: auto;
-        }
+      .memory,
+      .cpu {
+        margin-right: 40px;
 
-        &__value {
-          min-width: 140px;
+        .panel-section__body {
+          align-items: center;
         }
       }
 
+      .select {
+        flex: 1 1;
+        max-width: 120px;
+        margin-right: 5px;
+      }
+
       .range {
-        margin-right: 16px;
+        max-width: 75px;
+        margin-right: 5px;
 
         .input {
-          min-width: 230px;
+          width: 100%;
+
+          &-wrapper {
+            width: 100%;
+          }
         }
       }
     }
