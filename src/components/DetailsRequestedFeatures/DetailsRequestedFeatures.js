@@ -247,39 +247,39 @@ const DetailsRequestedFeatures = ({
                     />
                   </Tooltip>
                 </div>
-                {confirmDialogData.feature && (
-                  <PopUpDialog
-                    headerText={`Delete feature ${confirmDialogData.feature} from vector ${match.params.name}?`}
-                    closePopUp={() => {
-                      setConfirmDialogData({ index: null, feature: null })
-                    }}
-                  >
-                    <div>The feature could be added back later.</div>
-                    <div className="pop-up-dialog__footer-container">
-                      <Button
-                        variant="tertiary"
-                        label="Cancel"
-                        className="pop-up-dialog__btn_cancel"
-                        onClick={() => {
-                          setConfirmDialogData({
-                            index: null,
-                            feature: null
-                          })
-                        }}
-                      />
-                      <Button
-                        label="Delete"
-                        onClick={() => handleDelete(confirmDialogData.index)}
-                        variant="danger"
-                      />
-                    </div>
-                  </PopUpDialog>
-                )}
               </div>
             )
           })}
         </div>
       </div>
+      {confirmDialogData.feature && (
+        <PopUpDialog
+          headerText={`Delete feature ${confirmDialogData.feature} from vector ${match.params.name}?`}
+          closePopUp={() => {
+            setConfirmDialogData({ index: null, feature: null })
+          }}
+        >
+          <div>The feature could be added back later.</div>
+          <div className="pop-up-dialog__footer-container">
+            <Button
+              variant="tertiary"
+              label="Cancel"
+              className="pop-up-dialog__btn_cancel"
+              onClick={() => {
+                setConfirmDialogData({
+                  index: null,
+                  feature: null
+                })
+              }}
+            />
+            <Button
+              label="Delete"
+              onClick={() => handleDelete(confirmDialogData.index)}
+              variant="danger"
+            />
+          </div>
+        </PopUpDialog>
+      )}
     </div>
   )
 }
