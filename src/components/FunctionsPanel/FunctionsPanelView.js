@@ -21,11 +21,9 @@ const FunctionsPanelView = ({
   error,
   handleSave,
   isNameValid,
-  isTagValid,
   loading,
   removeFunctionsError,
-  setNameValid,
-  setTagValid
+  setNameValid
 }) => {
   return (
     <div className="new-item-side-panel-container">
@@ -41,9 +39,7 @@ const FunctionsPanelView = ({
           >
             <FunctionsPanelGeneral
               isNameValid={isNameValid}
-              isTagValid={isTagValid}
               setNameValid={setNameValid}
-              setTagValid={setTagValid}
             />
           </Accordion>
           <Accordion
@@ -97,7 +93,7 @@ const FunctionsPanelView = ({
             />
             <Button
               className="btn_save"
-              disabled={!isTagValid || !isNameValid}
+              disabled={!isNameValid}
               variant="tertiary"
               label="Save"
               onClick={() => handleSave()}
@@ -106,7 +102,7 @@ const FunctionsPanelView = ({
               variant="secondary"
               label="Deploy"
               onClick={() => handleSave(true)}
-              disabled={!isTagValid || !isNameValid}
+              disabled={!isNameValid}
             />
           </div>
         </div>
@@ -124,11 +120,9 @@ FunctionsPanelView.propTypes = {
   error: PropTypes.string,
   handleSave: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  isTagValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired,
-  setTagValid: PropTypes.func.isRequired
+  setNameValid: PropTypes.func.isRequired
 }
 
 export default FunctionsPanelView

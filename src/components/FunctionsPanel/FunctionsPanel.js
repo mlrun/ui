@@ -19,17 +19,12 @@ const FunctionsPanel = ({
   createNewFunction
 }) => {
   const [isNameValid, setNameValid] = useState(true)
-  const [isTagValid, setTagValid] = useState(true)
   const history = useHistory()
 
   const handleSave = deploy => {
-    if (isNameValid && isTagValid) {
+    if (isNameValid) {
       if (functionsStore.newFunction.metadata.name.length === 0) {
         return setNameValid(false)
-      }
-
-      if (functionsStore.newFunction.metadata.tag.length === 0) {
-        return setTagValid(false)
       }
 
       if (functionsStore.error) {
@@ -66,11 +61,9 @@ const FunctionsPanel = ({
       error={functionsStore.error}
       handleSave={handleSave}
       isNameValid={isNameValid}
-      isTagValid={isTagValid}
       loading={functionsStore.loading}
       removeFunctionsError={removeFunctionsError}
       setNameValid={setNameValid}
-      setTagValid={setTagValid}
     />
   )
 }
