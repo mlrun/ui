@@ -479,6 +479,20 @@ export const generateRequestData = (
     }
   }
 
+  const spec = {
+    ...jobsStore.newJob.task.spec,
+    function: func,
+    handler: panelState.currentFunctionInfo.method,
+    input_path: panelState.inputPath,
+    output_path: panelState.outputPath
+  }
+
+  if (jobsStore.newJob.task.spec.selector.result.length > 0) {
+    spec.selector = `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
+  } else {
+    delete spec.selector
+  }
+
   return {
     ...jobsStore.newJob,
     schedule: cronString,
@@ -496,14 +510,7 @@ export const generateRequestData = (
         project,
         labels
       },
-      spec: {
-        ...jobsStore.newJob.task.spec,
-        function: func,
-        handler: panelState.currentFunctionInfo.method,
-        input_path: panelState.inputPath,
-        output_path: panelState.outputPath,
-        selector: `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
-      }
+      spec
     }
   }
 }
