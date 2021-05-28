@@ -104,10 +104,10 @@ const JobsPanelDataInputs = ({
   ])
 
   useEffect(() => {
-    if (inputsState.inputProjectPathEntered) {
-      const storePathType = getInputValue('storePathType')
-      const projectName = getInputValue('project')
+    const storePathType = getInputValue('storePathType')
+    const projectName = getInputValue('project')
 
+    if (inputsState.inputProjectPathEntered && storePathType && projectName) {
       if (storePathType === 'artifacts' && inputsState.artifacts.length === 0) {
         fetchArtifacts(projectName).then(artifacts => {
           const artifactsList = artifacts
@@ -161,42 +161,49 @@ const JobsPanelDataInputs = ({
   ])
 
   useEffect(() => {
-    if (inputsState.inputProjectItemPathEntered) {
-      const storePathType = getInputValue('storePathType')
-      const projectName = getInputValue('project')
-      const projectItem = getInputValue('projectItem')
+    const storePathType = getInputValue('storePathType')
+    const projectName = getInputValue('project')
+    const projectItem = getInputValue('projectItem')
 
+    if (
+      inputsState.inputProjectItemPathEntered &&
+      storePathType &&
+      projectName &&
+      projectItem
+    ) {
       if (
         storePathType === 'artifacts' &&
         inputsState.artifactsReferences.length === 0
       ) {
         fetchArtifact(projectName, projectItem).then(artifacts => {
-          const artifactsReferencesList = artifacts?.[0].data
-            .map(artifact => {
-              let artifactReference = getArtifactReference(artifact)
+          if (artifacts.length > 0 && artifacts[0].data) {
+            const artifactsReferencesList = artifacts[0].data
+              .map(artifact => {
+                let artifactReference = getArtifactReference(artifact)
 
-              return {
-                label: artifactReference,
-                id: artifactReference,
-                customDelimiter: artifactReference[0]
-              }
+                return {
+                  label: artifactReference,
+                  id: artifactReference,
+                  customDelimiter: artifactReference[0]
+                }
+              })
+              .filter(reference => reference.label !== '')
+              .sort((prevRef, nextRef) => {
+                const [prevRefIter, prevRefTree] = prevRef.id.split('@')
+                const [nextRefIter, nextRefTree] = nextRef.id.split('@')
+
+                if (prevRefTree === nextRefTree) {
+                  return prevRefIter.localeCompare(nextRefIter)
+                } else {
+                  return prevRefTree.localeCompare(nextRefTree)
+                }
+              })
+
+            inputsDispatch({
+              type: inputsActions.SET_ARTIFACTS_REFERENCES,
+              payload: artifactsReferencesList
             })
-            .filter(reference => reference.label !== '')
-            .sort((prevRef, nextRef) => {
-              const [prevRefIter, prevRefTree] = prevRef.id.split('@')
-              const [nextRefIter, nextRefTree] = nextRef.id.split('@')
-
-              if (prevRefTree === nextRefTree) {
-                return prevRefIter.localeCompare(nextRefIter)
-              } else {
-                return prevRefTree.localeCompare(nextRefTree)
-              }
-            })
-
-          inputsDispatch({
-            type: inputsActions.SET_ARTIFACTS_REFERENCES,
-            payload: artifactsReferencesList
-          })
+          }
         })
       } else if (
         storePathType === 'feature-vectors' &&
