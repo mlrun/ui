@@ -116,7 +116,7 @@ const Jobs = ({
   }
 
   const handleRerunJob = async job => {
-    const [project, func] = job.function ? job.function.split('/') : ['', '']
+    const [project = '', func = ''] = job?.function?.split('/') ?? []
     const functionData = await fetchJobFunction(
       project,
       func.replace(/@.*$/g, ''),
@@ -150,9 +150,9 @@ const Jobs = ({
           },
           spec: {
             function: job.function,
-            handler: functionData?.spec?.entry_points
-              ? Object.values(functionData?.spec.entry_points)?.[0]?.name
-              : '',
+            handler:
+              Object.values(functionData?.spec?.entry_points ?? {})[0]?.name ??
+              '',
             hyperparams: job.hyperparams,
             input_path: job.input_path ?? '',
             inputs: job.inputs ?? {},
