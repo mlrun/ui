@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -15,11 +15,23 @@ const FunctionsPanel = ({
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   project,
+  match,
   removeFunctionsError,
-  createNewFunction
+  createNewFunction,
+  setNewFunctionProject
 }) => {
   const [isNameValid, setNameValid] = useState(true)
   const history = useHistory()
+
+  useEffect(() => {
+    if (!functionsStore.newFunction.metadata.project) {
+      setNewFunctionProject(match.params.projectName)
+    }
+  }, [
+    functionsStore.newFunction.metadata.project,
+    match.params.projectName,
+    setNewFunctionProject
+  ])
 
   const handleSave = deploy => {
     if (isNameValid) {
@@ -73,6 +85,7 @@ FunctionsPanel.propTypes = {
   createFunctionSuccess: PropTypes.func.isRequired,
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
+  match: PropTypes.shape({}).isRequired,
   project: PropTypes.string.isRequired
 }
 

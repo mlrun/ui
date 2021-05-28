@@ -146,11 +146,11 @@ const Content = ({
     }
   }
 
-  const handleExpandAll = colapsRows => {
+  const handleExpandAll = collapseRows => {
     if (groupFilter !== 'none') {
       const rows = [...document.getElementsByClassName('parent-row')]
 
-      if (colapsRows || expand) {
+      if (collapseRows || expand) {
         rows.forEach(row => row.classList.remove('parent-row-expanded'))
 
         setExpand(false)

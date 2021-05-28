@@ -30,7 +30,8 @@ import {
   DEPLOY_FUNCTION_FAILURE,
   DEPLOY_FUNCTION_SUCCESS,
   SET_NEW_FUNCTION_SECRETS,
-  SET_NEW_FUNCTION_BUILD_IMAGE
+  SET_NEW_FUNCTION_BUILD_IMAGE,
+  SET_NEW_FUNCTION_PROJECT
 } from '../constants'
 
 const initialState = {
@@ -265,6 +266,17 @@ export default (state = initialState, { type, payload }) => {
           metadata: {
             ...state.newFunction.metadata,
             name: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_PROJECT:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          metadata: {
+            ...state.newFunction.metadata,
+            project: payload
           }
         }
       }

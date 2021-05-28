@@ -33,7 +33,8 @@ import {
   DEPLOY_FUNCTION_FAILURE,
   DEPLOY_FUNCTION_SUCCESS,
   SET_NEW_FUNCTION_SECRETS,
-  SET_NEW_FUNCTION_BUILD_IMAGE
+  SET_NEW_FUNCTION_BUILD_IMAGE,
+  SET_NEW_FUNCTION_PROJECT
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -225,6 +226,10 @@ const functionsActions = {
   setNewFunctionName: name => ({
     type: SET_NEW_FUNCTION_NAME,
     payload: name
+  }),
+  setNewFunctionProject: project => ({
+    type: SET_NEW_FUNCTION_PROJECT,
+    payload: project
   }),
   setNewFunctionResources: resources => ({
     type: SET_NEW_FUNCTION_RESOURCES,
