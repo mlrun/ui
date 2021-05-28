@@ -346,7 +346,7 @@ const FilterMenu = ({
         {groupFilter && groupFilter?.toLowerCase() !== 'none' && (
           <Tooltip
             template={
-              <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
+              <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand all'} />
             }
           >
             <button onClick={handleExpandAll}>
