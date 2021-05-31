@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
 import classnames from 'classnames'
@@ -13,12 +14,14 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 
 import {
   ARTIFACTS_PAGE,
-  FEATURE_STORE_PAGE,
   FEATURES_TAB,
+  FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE,
+  FEATURE_VECTORS_TAB,
   FILES_PAGE,
   JOBS_PAGE,
-  MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
+  MODEL_ENDPOINTS_TAB,
   PROJECTS_PAGE
 } from '../../constants'
 
@@ -53,12 +56,35 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedByName, setGroupedByName] = useState({})
   const [groupedByWorkflow, setGroupedByWorkflow] = useState({})
+  const [showRegisterDialog, setShowRegosterDialog] = useState(false)
+  const location = useLocation()
 
   const contentClassName = classnames(
     'content',
     [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
       'content_with-menu'
   )
+
+  useEffect(() => {
+    if (
+      [
+        PROJECTS_PAGE,
+        ARTIFACTS_PAGE,
+        FILES_PAGE,
+        MODELS_PAGE,
+        FEATURE_STORE_PAGE
+      ].includes(pageData.page) &&
+      ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
+      (![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
+        match.params.pageTab
+      ) ||
+        new URLSearchParams(location.search).get('demo') === 'true')
+    ) {
+      setShowRegosterDialog(true)
+    } else if (showRegisterDialog) {
+      setShowRegosterDialog(false)
+    }
+  }, [location.search, match.params.pageTab, pageData.page, showRegisterDialog])
 
   const handleGroupByName = useCallback(() => {
     setGroupedByName(generateGroupedItems(content, pageData.selectedRowData))
@@ -168,16 +194,7 @@ const Content = ({
         <Breadcrumbs match={match} />
         <PageActionsMenu
           createJob={pageData.page === JOBS_PAGE}
-          registerDialog={
-            [
-              PROJECTS_PAGE,
-              ARTIFACTS_PAGE,
-              FILES_PAGE,
-              MODELS_PAGE,
-              FEATURE_STORE_PAGE
-            ].includes(pageData.page) &&
-            ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab)
-          }
+          registerDialog={showRegisterDialog}
           registerDialogHeader={
             pageData.page === PROJECTS_PAGE
               ? 'New Project'
