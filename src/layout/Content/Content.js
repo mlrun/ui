@@ -78,7 +78,7 @@ const Content = ({
       (![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
         match.params.pageTab
       ) ||
-        location.search.includes('demo=true'))
+        new URLSearchParams(location.search).get('demo') === 'true')
     ) {
       setShowRegosterDialog(true)
     } else if (showRegisterDialog) {
