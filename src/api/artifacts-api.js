@@ -150,9 +150,9 @@ export default {
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data),
-  startIngest: (project, featureSet, uid, source, targets) =>
+  startIngest: (project, featureSet, reference, source, targets) =>
     mainHttpClient.post(
-      `/projects/${project}/feature-sets/${featureSet}/references/${uid}/ingest`,
+      `/projects/${project}/feature-sets/${featureSet}/references/${reference}/ingest`,
       {
         source: { ...source, name: 'source' },
         targets

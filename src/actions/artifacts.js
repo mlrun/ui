@@ -593,14 +593,14 @@ const artifactsAction = {
   startFeatureSetIngest: (
     project,
     featureSet,
-    uid,
+    reference,
     source,
     targets
   ) => dispatch => {
     dispatch(artifactsAction.startFeatureSetIngestBegin())
 
     return artifactsApi
-      .startIngest(project, featureSet, uid, source, targets)
+      .startIngest(project, featureSet, reference, source, targets)
       .then(result => {
         dispatch(artifactsAction.startFeatureSetIngestSuccess())
 
