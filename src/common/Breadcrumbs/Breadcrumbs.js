@@ -39,20 +39,22 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
         breadcrumbsRef.current &&
         !breadcrumbsRef.current.contains(event.target)
       ) {
-        const activeSeparator = document.getElementsByClassName(
+        const [activeSeparator] = document.getElementsByClassName(
           'breadcrumbs__separator_active'
-        )[0]
+        )
 
         if (activeSeparator) {
           activeSeparator.classList.remove('breadcrumbs__separator_active')
         }
+
+        if (searchValue) setSearchValue('')
 
         if (showScreensList) setShowScreensList(false)
 
         if (showProjectsList) setShowProjectsList(false)
       }
     },
-    [breadcrumbsRef, showProjectsList, showScreensList]
+    [breadcrumbsRef, searchValue, showProjectsList, showScreensList]
   )
 
   useEffect(() => {
@@ -87,9 +89,9 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
       (nextItem === screen && !param) ||
       nextItem === match.params.projectName
     ) {
-      const activeSeparator = document.getElementsByClassName(
+      const [activeSeparator] = document.getElementsByClassName(
         'breadcrumbs__separator_active'
-      )[0]
+      )
 
       if (
         activeSeparator &&
@@ -121,13 +123,11 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
   }
 
   const handleSelectDropdownItem = separatorRef => {
-    if (showProjectsList) {
-      setShowProjectsList(false)
-    }
+    if (showProjectsList) setShowProjectsList(false)
 
-    if (showScreensList) {
-      setShowScreensList(false)
-    }
+    if (showScreensList) setShowScreensList(false)
+
+    if (searchValue) setSearchValue('')
 
     separatorRef.current.classList.remove('breadcrumbs__separator_active')
   }

@@ -109,7 +109,7 @@ const ProjectView = React.forwardRef(
                   handleEditProject={handleEditProject}
                   handleOnChangeProject={handleOnChangeProject}
                   handleOnKeyDown={handleOnKeyDown}
-                  projectGoals={project.data.spec.goals}
+                  projectGoals={project.data.spec.goals ?? ''}
                   ref={ref}
                 />
               </div>
@@ -133,7 +133,7 @@ const ProjectView = React.forwardRef(
                 handleEditProject={handleEditProject}
                 handleOnChangeProject={handleOnChangeProject}
                 handleOnKeyDown={handleOnKeyDown}
-                projectSource={project.data.spec.source}
+                projectSource={project.data.spec.source ?? ''}
                 ref={ref}
               />
               <div className="general-info__divider" />
