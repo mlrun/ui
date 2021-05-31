@@ -56,16 +56,18 @@ const FeatureSetsPanel = ({
   }
 
   const handleStartFeatureSetIngest = result => {
+    const reference = result.data.metadata.tag || result.data.metadata.uid
+
     return startFeatureSetIngest(
       project,
       result.data.metadata.name,
-      result.data.metadata.uid,
+      reference,
       result.data.spec.source,
       result.data.spec.targets
     ).then(() => {
       createFeatureSetSuccess().then(() => {
         history.push(
-          `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
+          `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${reference}/overview`
         )
       })
     })

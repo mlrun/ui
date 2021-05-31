@@ -7,7 +7,8 @@ export const generateUsageSnippets = (
 ) => {
   const [currentFeatureSet] = featureSets.filter(
     featureSet =>
-      featureSet.metadata.name === name && featureSet.metadata.tag === tag
+      featureSet.metadata.name === name &&
+      (featureSet.metadata.tag === tag || featureSet.metadata.uid === tag)
   )
   const currentFeatureVectorData =
     featureVectors.selectedRowData.content[name] ?? featureVectors.allData

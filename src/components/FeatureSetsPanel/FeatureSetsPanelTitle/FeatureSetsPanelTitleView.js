@@ -71,6 +71,7 @@ const FeatureSetsPanelTitleView = ({
                 setNewFeatureSetVersion(event.target.value)
               }
             }}
+            placeholder="latest"
             type="text"
             value={data.version}
             wrapperClassName="version"
