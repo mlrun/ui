@@ -40,7 +40,6 @@ const Models = ({
     setIsRegisterArtifactPopupOpen
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
-  const [iter, setIter] = useState('')
   const [groupFilter, setGroupFilter] = useState('')
   const [yamlContent, setYamlContent] = useState({
     allData: [],
@@ -121,7 +120,7 @@ const Models = ({
       }))
 
       try {
-        result = await fetchModel(item.project, item.db_key, iter)
+        result = await fetchModel(item.project, item.db_key)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -156,7 +155,7 @@ const Models = ({
         })
       }
     },
-    [fetchModel, iter]
+    [fetchModel]
   )
 
   const handleExpandRow = useCallback((item, isCollapse) => {
@@ -173,7 +172,6 @@ const Models = ({
       tag: 'latest',
       iter: match.params.pageTab === MODELS_TAB ? 'iter' : ''
     })
-    setIter(match.params.pageTab === MODELS_TAB ? 'iter' : '')
 
     return () => {
       setContent([])
@@ -184,7 +182,6 @@ const Models = ({
         selectedRowData: []
       })
       setArtifactFilter({ tag: 'latest', labels: '', name: '' })
-      setIter('iter')
     }
   }, [fetchData, match.params.pageTab, removeModels, setArtifactFilter])
 
@@ -286,7 +283,6 @@ const Models = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
-        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isRegisterArtifactPopupOpen && (

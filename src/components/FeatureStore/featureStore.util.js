@@ -691,8 +691,7 @@ export const fetchDataSetRowData = async (
   fetchDataSet,
   item,
   setPageData,
-  setYamlContent,
-  iter
+  setYamlContent
 ) => {
   let result = []
 
@@ -707,7 +706,7 @@ export const fetchDataSetRowData = async (
   }))
 
   try {
-    result = await fetchDataSet(item.project, item.db_key, iter)
+    result = await fetchDataSet(item.project, item.db_key)
   } catch (error) {
     setPageData(state => ({
       ...state,

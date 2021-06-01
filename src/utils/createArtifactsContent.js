@@ -38,7 +38,18 @@ const createArtifactsContent = (
   project,
   isTablePanelOpen
 ) => {
-  return artifacts.map(artifact => {
+  let filteredArtifacts = artifacts
+
+  if (
+    filteredArtifacts.length > 1 &&
+    ([MODELS_TAB, DATASETS_TAB].includes(pageTab) || page === FILES_PAGE)
+  ) {
+    filteredArtifacts = artifacts.filter(
+      artifact => artifact.iter !== 0 && !artifact.link_iteration
+    )
+  }
+
+  return filteredArtifacts.map(artifact => {
     let rowData = []
 
     if (page === ARTIFACTS_PAGE) {

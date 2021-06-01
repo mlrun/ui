@@ -13,7 +13,7 @@ const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
   }
 
   if (filters?.iter === 'iter') {
-    params.iter = 0
+    params['best-iteration'] = true
   }
 
   if (filters?.tag && (withLatestTag || !/latest/i.test(filters.tag))) {
@@ -66,10 +66,10 @@ export default {
       params: { project }
     })
   },
-  getDataSet: (project, dataSet, iter) => {
+  getDataSet: (project, dataSet) => {
     return fetchArtifacts(
       '/artifacts',
-      { iter },
+      {},
       { params: { project, name: dataSet, tag: '*' } }
     )
   },
@@ -107,10 +107,10 @@ export default {
     }),
   getFeatures: (project, filters) =>
     fetchArtifacts(`/projects/${project}/${FEATURES_TAB}`, filters, {}, true),
-  getFile: (project, file, iter) => {
+  getFile: (project, file) => {
     return fetchArtifacts(
       '/artifacts',
-      { iter },
+      {},
       { params: { project, name: file, tag: '*' } }
     )
   },
@@ -122,10 +122,10 @@ export default {
       true
     )
   },
-  getModel: (project, model, iter) => {
+  getModel: (project, model) => {
     return fetchArtifacts(
       '/artifacts',
-      { iter },
+      {},
       { params: { project, name: model, tag: '*' } }
     )
   },
