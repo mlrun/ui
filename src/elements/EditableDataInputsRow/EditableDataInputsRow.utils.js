@@ -1,11 +1,9 @@
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { handleStoreInputPathChange } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
-import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 import {
-  HTTP_STORAGE_INPUT_PATH_SCHEME,
-  HTTPS_STORAGE_INPUT_PATH_SCHEME,
-  MLRUN_STORAGE_INPUT_PATH_SCHEME
-} from '../../constants'
+  handleStoreInputPathChange,
+  isPathInputValid
+} from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 export const applyEditButtonHandler = (
   handleEdit,
@@ -16,33 +14,16 @@ export const applyEditButtonHandler = (
   setRequiredField
 ) => {
   if (
-    [
-      HTTP_STORAGE_INPUT_PATH_SCHEME,
-      HTTPS_STORAGE_INPUT_PATH_SCHEME,
-      MLRUN_STORAGE_INPUT_PATH_SCHEME
-    ].includes(selectedDataInput.data.path.pathType)
+    !isPathInputValid(
+      selectedDataInput.data.path.pathType,
+      selectedDataInput.data.path.value
+    )
   ) {
-    if (
-      !selectedDataInput.data.path.value.split('/')[2] ||
-      selectedDataInput.data.path.value.split('/')[2]?.length === 0
-    ) {
-      return setRequiredField(state => ({ ...state, path: true }))
-    }
-  } else if (selectedDataInput.data.path.url.length === 0) {
     return setRequiredField(state => ({ ...state, path: true }))
   }
 
   if (inputName.length === 0) {
     return setRequiredField(state => ({ ...state, name: true }))
-  }
-
-  if (!isEveryObjectValueEmpty(requiredField)) {
-    setRequiredField({
-      name: inputName.length > 0,
-      path:
-        selectedDataInput.data.path.value.split('/')[2]?.length > 0 ||
-        selectedDataInput.data.path.url.length > 0
-    })
   }
 
   inputsDispatch({

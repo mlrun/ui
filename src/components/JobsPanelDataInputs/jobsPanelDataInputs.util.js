@@ -5,6 +5,8 @@ import { joinDataOfArrayOrObject } from '../../utils'
 import {
   AZURE_STORAGE_INPUT_PATH_SCHEME,
   GOOGLE_STORAGE_INPUT_PATH_SCHEME,
+  HTTP_STORAGE_INPUT_PATH_SCHEME,
+  HTTPS_STORAGE_INPUT_PATH_SCHEME,
   MLRUN_STORAGE_INPUT_PATH_SCHEME,
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
@@ -93,39 +95,41 @@ export const handleAddItem = (
   newInputUrlPath,
   setNewInputUrl
 ) => {
-  if (
-    newItemObj.name.length === 0 ||
-    (!newInputUrlPath &&
-      (newItemObj.path.pathType.length === 0 ||
-        newItemObj.path.storePathType.length === 0 ||
-        newItemObj.path.project.length === 0 ||
-        newItemObj.path.projectItem.length === 0 ||
-        newItemObj.path.projectItemReference.length === 0))
-  ) {
-    inputsDispatch({
-      type: removeNewItemObj
-    })
-    inputsDispatch({
-      type: setPathPlaceholder,
-      payload: ''
-    })
+  const isMlRunStorePath =
+    newItemObj.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
+  let mlRunStorePath = ''
+
+  if (isMlRunStorePath) {
+    mlRunStorePath = `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}${newItemObj.path.projectItemReference}`
+
     inputsDispatch({
       type: setNewInputUrl,
       payload: ''
     })
-
-    return inputsDispatch({
-      type: setAddNewItem,
-      payload: false
-    })
   }
 
-  const isUrlPath = [
-    AZURE_STORAGE_INPUT_PATH_SCHEME,
-    GOOGLE_STORAGE_INPUT_PATH_SCHEME,
-    S3_INPUT_PATH_SCHEME,
-    V3IO_INPUT_PATH_SCHEME
-  ].includes(newItemObj.path.pathType)
+  const pathInputIsValid = isPathInputValid(
+    newItemObj.path.pathType,
+    isMlRunStorePath ? mlRunStorePath : newInputUrlPath
+  )
+
+  inputsDispatch({
+    type: removeNewItemObj
+  })
+
+  inputsDispatch({
+    type: setPathPlaceholder,
+    payload: ''
+  })
+
+  inputsDispatch({
+    type: setAddNewItem,
+    payload: false
+  })
+
+  if (newItemObj.name.length === 0 || !pathInputIsValid) {
+    return
+  }
 
   panelDispatch({
     type: setPreviousData,
@@ -137,10 +141,7 @@ export const handleAddItem = (
           name: newItemObj.name,
           path: {
             pathType: newItemObj.path.pathType,
-            value: newInputUrlPath
-              ? ''
-              : `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}${newItemObj.path.projectItemReference}`,
-            url: newInputUrlPath ?? ''
+            value: isMlRunStorePath ? mlRunStorePath : newInputUrlPath
           }
         }
       }
@@ -156,35 +157,21 @@ export const handleAddItem = (
           name: newItemObj.name,
           path: {
             pathType: newItemObj.path.pathType,
-            value: newInputUrlPath
-              ? ''
-              : `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}${newItemObj.path.projectItemReference}`,
-            url: newInputUrlPath ?? ''
+            value: isMlRunStorePath ? mlRunStorePath : newInputUrlPath
           }
         }
       }
     ]
   })
-  inputsDispatch({
-    type: setAddNewItem,
-    payload: false
-  })
-  inputsDispatch({
-    type: removeNewItemObj
-  })
-  inputsDispatch({
-    type: setPathPlaceholder,
-    payload: ''
+  setNewJobData({
+    ...newJobData,
+    [newItemObj.name]: isMlRunStorePath
+      ? `${newItemObj.path.pathType}${mlRunStorePath}`
+      : `${newItemObj.path.pathType}${newInputUrlPath}`
   })
   inputsDispatch({
     type: inputsActions.SET_COMBOBOX_MATCHES,
     payload: []
-  })
-  setNewJobData({
-    ...newJobData,
-    [newItemObj.name]: isUrlPath
-      ? newItemObj.path.pathType + newInputUrlPath
-      : `${newItemObj.path.pathType}${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}${newItemObj.path.projectItemReference}`
   })
 }
 
@@ -363,21 +350,7 @@ export const handleInputPathTypeChange = (
 }
 
 export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
-  if (
-    [
-      AZURE_STORAGE_INPUT_PATH_SCHEME,
-      GOOGLE_STORAGE_INPUT_PATH_SCHEME,
-      S3_INPUT_PATH_SCHEME,
-      V3IO_INPUT_PATH_SCHEME
-    ].includes(inputsState.newInput.path.pathType)
-  ) {
-    return inputsDispatch({
-      type: inputsActions.SET_NEW_INPUT_URL_PATH,
-      payload: path
-    })
-  } else if (
-    inputsState.newInput.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
-  ) {
+  if (inputsState.newInput.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
     if (
       path.length === 0 &&
       inputsState.newInputDefaultPathProject.length > 0
@@ -389,6 +362,11 @@ export const handleInputPathChange = (inputsDispatch, inputsState, path) => {
     }
 
     handleStoreInputPathChange(true, inputsDispatch, inputsState, path)
+  } else {
+    return inputsDispatch({
+      type: inputsActions.SET_NEW_INPUT_URL_PATH,
+      payload: path
+    })
   }
 }
 
@@ -478,4 +456,18 @@ export const handleStoreInputPathChange = (
     type: inputsActions.SET_INPUT_PROJECT_ITEM_REFERENCE_PATH_ENTERED,
     payload: Boolean(projectItemReferenceIsEntered)
   })
+}
+
+export const isPathInputValid = (pathInputType, pathInputValue) => {
+  switch (pathInputType) {
+    case MLRUN_STORAGE_INPUT_PATH_SCHEME:
+      return /^(artifacts|feature-vectors)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(
+        pathInputValue
+      )
+    case HTTP_STORAGE_INPUT_PATH_SCHEME:
+    case HTTPS_STORAGE_INPUT_PATH_SCHEME:
+      return pathInputValue.split('/')?.[1]?.length > 0
+    default:
+      return pathInputValue.length > 0
+  }
 }
