@@ -42,7 +42,7 @@ podTemplate(
                         string(credentialsId: "iguazio-prod-git-user-token", variable: 'GIT_TOKEN')
                     ]) {
                         container('jnlp') {
-                            github.update_release_status("mlrun", "mlrun", env.TAG_NAME, GIT_TOKEN)
+                            github.update_release_status(gitProject, gitProjectUser, env.TAG_NAME, GIT_TOKEN)
                         }
                     }
                 }
