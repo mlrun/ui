@@ -37,7 +37,7 @@ const KeyValueTable = ({
   const tableClassNames = classnames('key-value-table', className)
 
   const saveNewItem = () => {
-    if (key !== '' && value !== '' && !content.find(item => item.key === key)) {
+    if (key !== '' && value !== '') {
       addNewItem({ key, value })
     }
 
@@ -53,6 +53,10 @@ const KeyValueTable = ({
 
     setEditMode(false)
     setSelectedItem(null)
+  }
+
+  const isKeyNotUnique = (newKey, keys) => {
+    return keys.some(({ key }) => newKey === key)
   }
 
   return (
@@ -88,6 +92,11 @@ const KeyValueTable = ({
                       newKey: key
                     })
                   }
+                  required={
+                    selectedItem.newKey !== selectedItem.key &&
+                    isKeyNotUnique(selectedItem.newKey, content)
+                  }
+                  requiredText="Name already exists"
                   type="text"
                   value={selectedItem.newKey ?? selectedItem.key}
                 />
@@ -108,7 +117,14 @@ const KeyValueTable = ({
               />
             </div>
             <div className="table-cell table-cell__actions">
-              <button className="delete-btn" onClick={handleEditItem}>
+              <button
+                className="delete-btn"
+                onClick={handleEditItem}
+                disabled={
+                  selectedItem.newKey !== selectedItem.key &&
+                  isKeyNotUnique(selectedItem.newKey, content)
+                }
+              >
                 <Checkmark />
               </button>
             </div>
@@ -158,6 +174,8 @@ const KeyValueTable = ({
               label={keyLabel}
               type="text"
               wrapperClassName="table-cell__key"
+              required={isKeyNotUnique(key, content)}
+              requiredText="Name already exists"
             />
           )}
 
@@ -168,7 +186,7 @@ const KeyValueTable = ({
             type="text"
             wrapperClassName="table-cell__value"
           />
-          <button onClick={saveNewItem}>
+          <button onClick={saveNewItem} disabled={isKeyNotUnique(key, content)}>
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
             </Tooltip>

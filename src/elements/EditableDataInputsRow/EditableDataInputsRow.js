@@ -15,11 +15,13 @@ import {
   applyEditButtonHandler,
   handleEditInputPath
 } from './EditableDataInputsRow.utils'
+import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableDataInputsRow = ({
   comboboxMatchesList,
+  content,
   handleEdit,
   inputsDispatch,
   inputsState,
@@ -139,6 +141,11 @@ const EditableDataInputsRow = ({
                 }
               })
             }}
+            required={
+              inputName !== selectedDataInput.data.name &&
+              isNameNotUnique(inputName, content)
+            }
+            requiredText="Name already exists"
             type="text"
             value={inputName}
           />
@@ -175,6 +182,10 @@ const EditableDataInputsRow = ({
       <div className="table__cell table__cell-actions">
         <button
           className="apply-edit-btn"
+          disabled={
+            inputName !== selectedDataInput.data.name &&
+            isNameNotUnique(inputName, content)
+          }
           onClick={() => {
             applyEditButtonHandler(
               handleEdit,
@@ -195,6 +206,7 @@ const EditableDataInputsRow = ({
 
 EditableDataInputsRow.propTypes = {
   comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,

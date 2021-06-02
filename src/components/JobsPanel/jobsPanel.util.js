@@ -491,3 +491,7 @@ export const parseDefaultDataInputsContent = inputs => {
     }
   }, {})
 }
+
+export const isNameNotUnique = (newName, content) => {
+  return content.some(item => newName === item?.data.name && newName !== '')
+}

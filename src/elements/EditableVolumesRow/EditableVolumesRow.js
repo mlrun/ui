@@ -3,11 +3,14 @@ import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
 
+import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
+
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 import './editableVolumesRow.scss'
 
 const EditableVolumesRow = ({
+  content,
   handleEdit,
   selectedVolume,
   setSelectedVolume
@@ -28,6 +31,11 @@ const EditableVolumesRow = ({
                   newName: name
                 })
               }
+              required={
+                selectedVolume.newName !== selectedVolume.data.name &&
+                isNameNotUnique(selectedVolume.newName, content)
+              }
+              requiredText="Name already exists"
               type="text"
               value={selectedVolume.newName ?? selectedVolume.data.name}
             />
@@ -66,7 +74,14 @@ const EditableVolumesRow = ({
           />
         </div>
         <div className="table__cell table__cell-actions">
-          <button className="apply-edit-btn" onClick={handleEdit}>
+          <button
+            className="apply-edit-btn"
+            onClick={handleEdit}
+            disabled={
+              selectedVolume.newName !== selectedVolume.data.name &&
+              isNameNotUnique(selectedVolume.newName, content)
+            }
+          >
             <Checkmark />
           </button>
         </div>
@@ -109,6 +124,7 @@ const EditableVolumesRow = ({
 }
 
 EditableVolumesRow.propTypes = {
+  content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
   selectedVolume: PropTypes.shape({}).isRequired,
   setSelectedVolume: PropTypes.func.isRequired

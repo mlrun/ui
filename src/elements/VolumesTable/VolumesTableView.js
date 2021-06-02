@@ -13,6 +13,7 @@ import Select from '../../common/Select/Select'
 
 import { selectTypeOptions, tableHeaders } from './volumesTable.util'
 import { joinDataOfArrayOrObject } from '../../utils'
+import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
@@ -63,6 +64,7 @@ const VolumesTableView = ({
         ) {
           return (
             <EditableVolumesRow
+              content={volumeMounts}
               handleEdit={editVolume}
               key={index}
               selectedVolume={selectedVolume}
@@ -121,6 +123,8 @@ const VolumesTableView = ({
                 label="Name"
                 className="input-row__item"
                 floatingLabel
+                required={isNameNotUnique(newVolume.name, volumeMounts)}
+                requiredText="Name already exists"
                 type="text"
               />
               <Input
@@ -179,7 +183,11 @@ const VolumesTableView = ({
               </div>
             )}
           </div>
-          <button className="add-input btn-add" onClick={addVolume}>
+          <button
+            className="add-input btn-add"
+            disabled={isNameNotUnique(newVolume.name, volumeMounts)}
+            onClick={addVolume}
+          >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
             </Tooltip>

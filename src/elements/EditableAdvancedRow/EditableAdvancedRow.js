@@ -4,11 +4,13 @@ import PropTypes from 'prop-types'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
+import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
+import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
+
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
-import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
-
 const EditableAdvancedRow = ({
+  content,
   handleEdit,
   selectedItem,
   setSelectedItem,
@@ -28,8 +30,13 @@ const EditableAdvancedRow = ({
                 newName: name
               })
             }
+            required={
+              selectedItem.newName !== selectedItem.data.name &&
+              isNameNotUnique(selectedItem.newName, content)
+            }
+            requiredText="Name already exists"
             type="text"
-            value={selectedItem.newName || selectedItem.data.name}
+            value={selectedItem.newName ?? selectedItem.data.name}
           />
         ) : (
           <Select
@@ -65,6 +72,10 @@ const EditableAdvancedRow = ({
       <div className="table__cell table__cell-actions">
         <button
           className="apply-edit-btn"
+          disabled={
+            selectedItem.newName !== selectedItem.data.name &&
+            isNameNotUnique(selectedItem.newName, content)
+          }
           onClick={() => handleEdit(selectedItem.data, table === 'env')}
         >
           <Checkmark />
@@ -75,6 +86,7 @@ const EditableAdvancedRow = ({
 }
 
 EditableAdvancedRow.propTypes = {
+  content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

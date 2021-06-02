@@ -8,18 +8,21 @@ import JobsPanelTableAddItemRow from '../JobsPanelTableAddItemRow/JobsPanelTable
 import JobsPanelTable from '../JobsPanelTable/JobsPanelTable'
 import Select from '../../common/Select/Select'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
 import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
+import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
+
+import { ReactComponent as Plus } from '../../images/plus.svg'
 
 export const JobsPanelAdvancedTable = ({
   addNewItem,
   className,
   content,
   handleAddNewItem,
-  handleEditItems,
   handleDeleteItems,
+  handleEditItems,
   headers,
   match,
+  newName,
   section,
   selectedId,
   selectedItem,
@@ -58,6 +61,8 @@ export const JobsPanelAdvancedTable = ({
                 floatingLabel
                 label="Name"
                 onChange={setNewItemName}
+                required={isNameNotUnique(newName, content)}
+                requiredText="Name already exists"
                 type="text"
               />
             )}
@@ -72,6 +77,7 @@ export const JobsPanelAdvancedTable = ({
           </div>
           <button
             className="add-input btn-add"
+            disabled={isNameNotUnique(newName, content)}
             onClick={() => handleAddNewItem(section.includes('env') && true)}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
@@ -91,6 +97,7 @@ export const JobsPanelAdvancedTable = ({
 
 JobsPanelAdvancedTable.defaultProps = {
   className: '',
+  newName: '',
   selectedId: ''
 }
 
@@ -99,10 +106,11 @@ JobsPanelAdvancedTable.propTypes = {
   className: PropTypes.string,
   content: PropTypes.arrayOf(PropTypes.shape).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
-  handleEditItems: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
+  handleEditItems: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape).isRequired,
   match: PropTypes.shape({}).isRequired,
+  newName: PropTypes.string,
   section: PropTypes.string.isRequired,
   selectedId: PropTypes.string,
   selectedItem: PropTypes.shape({}).isRequired,
