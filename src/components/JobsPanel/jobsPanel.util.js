@@ -2,12 +2,6 @@ import { chain, isEmpty, unionBy } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import {
-  AZURE_STORAGE_INPUT_PATH_SCHEME,
-  GOOGLE_STORAGE_INPUT_PATH_SCHEME,
-  S3_INPUT_PATH_SCHEME,
-  V3IO_INPUT_PATH_SCHEME
-} from '../../constants'
 
 export const getDefaultData = functionParameters => {
   const parameters = functionParameters
@@ -31,20 +25,7 @@ export const getDefaultData = functionParameters => {
         pathType: input.path?.replace(/:\/\/.*$/g, '://') ?? ''
       }
 
-      if (
-        [
-          AZURE_STORAGE_INPUT_PATH_SCHEME,
-          GOOGLE_STORAGE_INPUT_PATH_SCHEME,
-          S3_INPUT_PATH_SCHEME,
-          V3IO_INPUT_PATH_SCHEME
-        ].includes(inputPath.pathType)
-      ) {
-        inputPath.url = input.path?.replace(/.*:\/\//g, '')
-        inputPath.value = ''
-      } else {
-        inputPath.value = input.path?.replace(/.*:\/\//g, '') ?? ''
-        inputPath.url = ''
-      }
+      inputPath.value = input.path?.replace(/.*:\/\//g, '') ?? ''
 
       return {
         doc: input.doc,
@@ -287,20 +268,7 @@ const generateDefaultDataInputs = dataInputs => {
       pathType: value?.replace(/:\/\/.*$/g, '://') ?? ''
     }
 
-    if (
-      [
-        AZURE_STORAGE_INPUT_PATH_SCHEME,
-        GOOGLE_STORAGE_INPUT_PATH_SCHEME,
-        S3_INPUT_PATH_SCHEME,
-        V3IO_INPUT_PATH_SCHEME
-      ].includes(inputPath.pathType)
-    ) {
-      inputPath.url = value?.replace(/.*:\/\//g, '')
-      inputPath.value = ''
-    } else {
-      inputPath.value = value?.replace(/.*:\/\//g, '') ?? ''
-      inputPath.url = ''
-    }
+    inputPath.value = value?.replace(/.*:\/\//g, '') ?? ''
 
     return {
       isDefault: true,
@@ -519,8 +487,7 @@ export const parseDefaultDataInputsContent = inputs => {
   return inputs.reduce((prev, curr) => {
     return {
       ...prev,
-      [curr.data.name]:
-        curr.data.path.pathType + (curr.data.path.url || curr.data.path.value)
+      [curr.data.name]: curr.data.path.pathType + curr.data.path.value
     }
   }, {})
 }

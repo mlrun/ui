@@ -28,8 +28,7 @@ export const initialState = {
       name: '',
       path: {
         pathType: '',
-        value: '',
-        url: ''
+        value: ''
       }
     }
   }
@@ -92,8 +91,7 @@ export const jobsPanelDataInputsReducer = (state, { type, payload }) => {
             name: '',
             path: {
               pathType: '',
-              value: '',
-              url: ''
+              value: ''
             }
           }
         },

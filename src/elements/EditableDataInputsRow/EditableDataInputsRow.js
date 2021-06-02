@@ -155,9 +155,7 @@ const EditableDataInputsRow = ({
               ? 3
               : 2
           }
-          inputDefaultValue={
-            selectedDataInput.data.path.value || selectedDataInput.data.path.url
-          }
+          inputDefaultValue={selectedDataInput.data.path.value}
           inputOnChange={path => {
             handleEditInputPath(
               inputsDispatch,
