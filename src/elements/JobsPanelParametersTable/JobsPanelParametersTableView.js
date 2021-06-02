@@ -9,16 +9,16 @@ import './jobsPanelParametersTable.scss'
 
 const JobsPanelParametersTableView = ({
   addNewItem,
-  children,
   checkParameter,
+  children,
   className,
+  content,
   disabledOptions,
   editItem,
   generateActionsMenu,
   handleDeleteParameter,
   handleEditParameter,
   headers,
-  nameValidation,
   selectedItem,
   setSelectedItem,
   tableContent
@@ -58,7 +58,7 @@ const JobsPanelParametersTableView = ({
                     disabledOptions={disabledOptions}
                     handleEdit={handleEditParameter}
                     key={`${contentItem.data.name}${index}`}
-                    nameValidation={nameValidation}
+                    content={content}
                     selectedParameter={selectedItem}
                     setSelectedParameter={setSelectedItem}
                   />
@@ -102,7 +102,6 @@ JobsPanelParametersTableView.propTypes = {
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
-  nameValidation: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   tableContent: PropTypes.shape({}).isRequired

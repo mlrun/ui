@@ -55,6 +55,7 @@ const JobsPanelTableView = ({
           return section === 'data-inputs' ? (
             <EditableDataInputsRow
               comboboxMatchesList={sectionData.comboboxMatchesList}
+              content={content}
               handleEdit={handleEdit}
               inputsDispatch={sectionDispatch}
               inputsState={sectionState}
@@ -65,6 +66,7 @@ const JobsPanelTableView = ({
             />
           ) : (
             <EditableAdvancedRow
+              content={content}
               handleEdit={handleEdit}
               key={index}
               match={match}

@@ -12,6 +12,7 @@ import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { COMBOBOX_MATCHES } from '../../types'
+import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
@@ -75,8 +76,8 @@ export const JobsPanelDataInputsTable = ({
       }}
     >
       {inputsState.addNewInput ? (
-        <div className="table__row-add-item">
-          <div className="input-row-wrapper" ref={addItemRowRef}>
+        <div className="table__row-add-item" ref={addItemRowRef}>
+          <div className="input-row-wrapper">
             <Input
               className="input-row__item"
               density="medium"
@@ -88,6 +89,11 @@ export const JobsPanelDataInputsTable = ({
                   payload: name
                 })
               }
+              required={isNameNotUnique(
+                inputsState.newInput.name,
+                panelState.tableData.dataInputs
+              )}
+              requiredText="Name already exists"
               type="text"
             />
             <Combobox
@@ -114,6 +120,10 @@ export const JobsPanelDataInputsTable = ({
           </div>
           <button
             className="add-input btn-add"
+            disabled={isNameNotUnique(
+              inputsState.newInput.name,
+              panelState.tableData.dataInputs
+            )}
             onClick={() => handleAddNewItem(true)}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>

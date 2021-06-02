@@ -8,11 +8,11 @@ import panelData from '../JobsPanel/panelData'
 import { advancedActions } from './jobsPanelAdvancedReducer'
 
 const JobsPanelAdvancedView = ({
+  advancedDispatch,
+  advancedState,
   handleAddNewItem,
   handleDeleteItems,
   handleEditItems,
-  advancedDispatch,
-  advancedState,
   match,
   panelState
 }) => {
@@ -29,6 +29,7 @@ const JobsPanelAdvancedView = ({
           handleDeleteItems={handleDeleteItems}
           headers={panelData['env']['table-headers']}
           match={match}
+          newName={advancedState.newEnvironmentVariable.name}
           panelState={panelState}
           section="advanced env"
           selectedItem={advancedState.selectedEnvironmentVariable}
@@ -103,11 +104,11 @@ const JobsPanelAdvancedView = ({
 }
 
 JobsPanelAdvancedView.propTypes = {
+  advancedDispatch: PropTypes.func.isRequired,
+  advancedState: PropTypes.shape({}).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
-  advancedDispatch: PropTypes.func.isRequired,
-  advancedState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   panelState: PropTypes.shape({}).isRequired
 }

@@ -5,13 +5,14 @@ import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
 import { selectOptions as selectOption } from '../../components/JobsPanelParameters/jobsPanelParameters.util'
+import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableParametersRow = ({
+  content,
   disabledOptions,
   handleEdit,
-  nameValidation,
   selectedParameter,
   setSelectedParameter
 }) => {
@@ -41,11 +42,11 @@ const EditableParametersRow = ({
               }}
               required={
                 selectedParameter.newName !== selectedParameter.data.name &&
-                nameValidation(selectedParameter.newName)
+                isNameNotUnique(selectedParameter.newName, content)
               }
               requiredText="Name already exists"
               type="text"
-              value={selectedParameter.newName || selectedParameter.data.name}
+              value={selectedParameter.newName ?? selectedParameter.data.name}
             />
           </div>
           <div className="table__cell table__cell_edit">
@@ -101,7 +102,7 @@ const EditableParametersRow = ({
           className="apply-edit-btn"
           disabled={
             selectedParameter.newName !== selectedParameter.data.name &&
-            nameValidation(selectedParameter.newName)
+            isNameNotUnique(selectedParameter.newName, content)
           }
           onClick={() => handleEdit(selectedParameter, false)}
         >
@@ -113,9 +114,9 @@ const EditableParametersRow = ({
 }
 
 EditableParametersRow.propTypes = {
+  content: PropTypes.array.isRequired,
   disabledOptions: PropTypes.array,
   handleEdit: PropTypes.func.isRequired,
-  nameValidation: PropTypes.func.isRequired,
   selectedParameter: PropTypes.shape({}).isRequired,
   setSelectedParameter: PropTypes.func.isRequired
 }
