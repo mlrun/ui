@@ -487,7 +487,7 @@ export const parseDefaultDataInputsContent = inputs => {
   return inputs.reduce((prev, curr) => {
     return {
       ...prev,
-      [curr.data.name]: curr.data.path.pathType + curr.data.path.value
+      [curr.data.name]: `${curr.data.path.pathType}${curr.data.path.value}`
     }
   }, {})
 }

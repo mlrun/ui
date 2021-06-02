@@ -167,7 +167,7 @@ export const handleAddItem = (
     ...newJobData,
     [newItemObj.name]: isMlRunStorePath
       ? `${newItemObj.path.pathType}${mlRunStorePath}`
-      : newItemObj.path.pathType + newInputUrlPath
+      : `${newItemObj.path.pathType}${newInputUrlPath}`
   })
   inputsDispatch({
     type: inputsActions.SET_COMBOBOX_MATCHES,
@@ -466,10 +466,7 @@ export const isPathInputValid = (pathInputType, pathInputValue) => {
       )
     case HTTP_STORAGE_INPUT_PATH_SCHEME:
     case HTTPS_STORAGE_INPUT_PATH_SCHEME:
-      return (
-        pathInputValue.split('/')[1] &&
-        pathInputValue.split('/')[1]?.length !== 0
-      )
+      return pathInputValue.split('/')?.[1]?.length > 0
     default:
       return pathInputValue.length > 0
   }
