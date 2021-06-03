@@ -45,6 +45,7 @@ const FilterMenu = ({
   onChange,
   page,
   setGroupFilter,
+  setIteration,
   showUntagged,
   toggleShowUntagged
 }) => {
@@ -201,6 +202,7 @@ const FilterMenu = ({
       iter: iter === iteration ? 'iter' : ''
     })
     setIter(state => (state === iteration ? 'iter' : iteration))
+    setIteration(state => (state === iteration ? 'iter' : iteration))
   }
 
   return (
@@ -362,6 +364,7 @@ FilterMenu.defaultProps = {
   groupFilter: '',
   handleArtifactFilterTree: null,
   setGroupFilter: null,
+  setIteration: () => {},
   showUntagged: '',
   toggleShowUntagged: null
 }
@@ -372,6 +375,7 @@ FilterMenu.propTypes = {
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,
   setGroupFilter: PropTypes.func,
+  setIteration: PropTypes.func,
   showUntagged: PropTypes.string,
   toggleShowUntagged: PropTypes.func
 }

@@ -2,6 +2,7 @@ import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generateUri } from '../../utils/resources'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
 
 export const modelsInfoHeaders = [
   {
@@ -225,12 +226,11 @@ export const checkForSelectedModel = (
   models,
   modelName,
   setSelectedModel,
-  tag
+  tag,
+  iter
 ) => {
   const artifacts = models.selectedRowData.content[modelName] || models.allData
-  const searchItem = artifacts.find(
-    item => item.db_key === modelName && (item.tag === tag || item.tree === tag)
-  )
+  const searchItem = searchArtifactItem(artifacts, modelName, tag, iter)
 
   if (!searchItem) {
     history.push(

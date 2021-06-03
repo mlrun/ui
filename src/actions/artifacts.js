@@ -165,14 +165,15 @@ const artifactsAction = {
     payload: artifactsList
   }),
   fetchArtifactTags: project => () => artifactsApi.getArtifactTag(project),
-  fetchDataSet: (project, dataSet) => dispatch => {
+  fetchDataSet: (project, dataSet, iter) => dispatch => {
     return artifactsApi
       .getDataSet(project, dataSet)
       .then(response => {
         dispatch(
           artifactsAction.fetchDataSetSuccess({
             [dataSet]: generateArtifacts(
-              filterArtifacts(response.data.artifacts)
+              filterArtifacts(response.data.artifacts),
+              iter
             )
           })
         )
@@ -339,13 +340,16 @@ const artifactsAction = {
     type: FETCH_FEATURES_SUCCESS,
     payload: features
   }),
-  fetchFile: (project, file) => dispatch => {
+  fetchFile: (project, file, iter) => dispatch => {
     return artifactsApi
       .getFile(project, file)
       .then(response => {
         dispatch(
           artifactsAction.fetchFileSuccess({
-            [file]: generateArtifacts(filterArtifacts(response.data.artifacts))
+            [file]: generateArtifacts(
+              filterArtifacts(response.data.artifacts),
+              iter
+            )
           })
         )
 
@@ -435,13 +439,16 @@ const artifactsAction = {
     type: FETCH_MODEL_ENDPOINTS_SUCCESS,
     payload: models
   }),
-  fetchModel: (project, model) => dispatch => {
+  fetchModel: (project, model, iter) => dispatch => {
     return artifactsApi
       .getModel(project, model)
       .then(response => {
         dispatch(
           artifactsAction.fetchModelSuccess({
-            [model]: generateArtifacts(filterArtifacts(response.data.artifacts))
+            [model]: generateArtifacts(
+              filterArtifacts(response.data.artifacts),
+              iter
+            )
           })
         )
 

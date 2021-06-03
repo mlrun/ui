@@ -65,6 +65,7 @@ const FeatureStore = ({
   })
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
+  const [iter, setIter] = useState('')
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [pageData, setPageData] = useState(pageDataInitialState)
@@ -173,11 +174,12 @@ const FeatureStore = ({
           fetchDataSet,
           item,
           setPageData,
-          setYamlContent
+          setYamlContent,
+          iter
         )
       }
     },
-    [fetchDataSet, fetchFeature, fetchFeatureVector, match.params.pageTab]
+    [fetchDataSet, fetchFeature, fetchFeatureVector, iter, match.params.pageTab]
   )
 
   const handleExpandRow = useCallback(
@@ -387,6 +389,7 @@ const FeatureStore = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedItem.item}
+        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (

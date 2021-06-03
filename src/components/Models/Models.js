@@ -40,6 +40,7 @@ const Models = ({
     setIsRegisterArtifactPopupOpen
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
+  const [iter, setIter] = useState('')
   const [groupFilter, setGroupFilter] = useState('')
   const [yamlContent, setYamlContent] = useState({
     allData: [],
@@ -120,7 +121,7 @@ const Models = ({
       }))
 
       try {
-        result = await fetchModel(item.project, item.db_key)
+        result = await fetchModel(item.project, item.db_key, iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -146,7 +147,7 @@ const Models = ({
             selectedRowData: {
               ...state.selectedRowData,
               [item.db_key]: {
-                content: [...generateArtifacts(filterArtifacts(result))],
+                content: [...generateArtifacts(filterArtifacts(result), iter)],
                 error: null,
                 loading: false
               }
@@ -155,7 +156,7 @@ const Models = ({
         })
       }
     },
-    [fetchModel]
+    [fetchModel, iter]
   )
 
   const handleExpandRow = useCallback((item, isCollapse) => {
@@ -220,7 +221,7 @@ const Models = ({
         (match.params.pageTab === MODEL_ENDPOINTS_TAB &&
           artifactsStore.modelEndpoints.length > 0))
     ) {
-      const { name, tag } = match.params
+      const { name, tag, iter } = match.params
 
       if (match.params.pageTab === MODELS_TAB) {
         checkForSelectedModel(
@@ -229,7 +230,8 @@ const Models = ({
           artifactsStore.models,
           name,
           setSelectedModel,
-          tag
+          tag,
+          iter
         )
       } else if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
         checkForSelectedModelEndpoint(
@@ -283,6 +285,7 @@ const Models = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
+        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isRegisterArtifactPopupOpen && (

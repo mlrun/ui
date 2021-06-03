@@ -388,7 +388,7 @@ export const navigateToDetailsPane = (
   match,
   setSelectedItem
 ) => {
-  const { name, tag } = match.params
+  const { name, tag, iter } = match.params
   let artifacts = []
 
   if (
@@ -434,10 +434,12 @@ export const navigateToDetailsPane = (
           (artifact.tag === tag || artifact.uid === tag)
         )
       } else if (match.params.pageTab === DATASETS_TAB) {
-        return (
-          artifact[searchKey] === name &&
-          (artifact.tag === tag || artifact.tree === tag)
-        )
+        return iter
+          ? iter === artifact.iter &&
+              artifact[searchKey] === name &&
+              (artifact.tag === tag || artifact.tree === tag)
+          : artifact[searchKey] === name &&
+              (artifact.tag === tag || artifact.tree === tag)
       } else {
         return artifact[searchKey] === name
       }
@@ -691,7 +693,8 @@ export const fetchDataSetRowData = async (
   fetchDataSet,
   item,
   setPageData,
-  setYamlContent
+  setYamlContent,
+  iter
 ) => {
   let result = []
 
@@ -706,7 +709,7 @@ export const fetchDataSetRowData = async (
   }))
 
   try {
-    result = await fetchDataSet(item.project, item.db_key)
+    result = await fetchDataSet(item.project, item.db_key, iter)
   } catch (error) {
     setPageData(state => ({
       ...state,
@@ -732,7 +735,7 @@ export const fetchDataSetRowData = async (
         selectedRowData: {
           ...state.selectedRowData,
           [item.db_key]: {
-            content: [...generateArtifacts(filterArtifacts(result))],
+            content: [...generateArtifacts(filterArtifacts(result), iter)],
             error: null,
             loading: false
           }

@@ -18,9 +18,10 @@ import {
 } from './files.util'
 import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { filterArtifacts } from '../../utils/filterArtifacts'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import { generateUri } from '../../utils/resources'
 
 import { ARTIFACTS } from '../../constants'
-import { generateUri } from '../../utils/resources'
 
 const Files = ({
   artifactsStore,
@@ -40,6 +41,7 @@ const Files = ({
   const [groupFilter, setGroupFilter] = useState('')
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [iter, setIter] = useState('')
   const [pageData, setPageData] = useState({
     detailsMenu,
     filters,
@@ -94,7 +96,7 @@ const Files = ({
       }))
 
       try {
-        result = await fetchFile(item.project, item.db_key)
+        result = await fetchFile(item.project, item.db_key, iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -120,7 +122,7 @@ const Files = ({
             selectedRowData: {
               ...state.selectedRowData,
               [item.db_key]: {
-                content: [...generateArtifacts(filterArtifacts(result))],
+                content: [...generateArtifacts(filterArtifacts(result), iter)],
                 error: null,
                 loading: false
               }
@@ -129,7 +131,7 @@ const Files = ({
         })
       }
     },
-    [fetchFile]
+    [fetchFile, iter]
   )
 
   const handleExpandRow = useCallback((item, isCollapse) => {
@@ -175,16 +177,13 @@ const Files = ({
 
   useEffect(() => {
     if (match.params.name) {
-      const { name, tag } = match.params
+      const { name, tag, iter } = match.params
       const artifacts =
         artifactsStore.files.selectedRowData.content[name] ||
         artifactsStore.files.allData
 
-      if (artifacts.length !== 0) {
-        const searchItem = artifacts.find(
-          item =>
-            item.db_key === name && (item.tag === tag || item.tree === tag)
-        )
+      if (artifacts.length) {
+        const searchItem = searchArtifactItem(artifacts, name, tag, iter)
 
         if (!searchItem) {
           history.push(`/projects/${match.params.projectName}/files`)
@@ -197,11 +196,14 @@ const Files = ({
       }
     }
   }, [
+    artifactsStore,
     artifactsStore.dataSets.allData,
     artifactsStore.dataSets.selectedRowData.content,
     artifactsStore.files,
     history,
-    match.params
+    match,
+    match.params,
+    pageData
   ])
 
   const handleFilesTreeFilterChange = useCallback(
@@ -232,6 +234,7 @@ const Files = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedFile.item}
+        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (

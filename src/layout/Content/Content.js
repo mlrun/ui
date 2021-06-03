@@ -46,6 +46,7 @@ const Content = ({
   refresh,
   selectedItem,
   setGroupFilter,
+  setIter,
   setLoading,
   showUntagged,
   toggleShowUntagged,
@@ -228,6 +229,7 @@ const Content = ({
             onChange={refresh}
             page={pageData.page}
             setGroupFilter={setGroupFilter}
+            setIteration={setIter}
             showUntagged={showUntagged}
             toggleShowUntagged={toggleShowUntagged}
           />
@@ -272,6 +274,7 @@ Content.defaultProps = {
   handleSelectItem: () => {},
   selectedItem: {},
   setGroupFilter: () => {},
+  setIter: () => {},
   setLoading: () => {},
   showUntagged: '',
   toggleShowUntagged: null
@@ -289,6 +292,7 @@ Content.propTypes = {
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
   setGroupFilter: PropTypes.func,
+  setIter: PropTypes.func,
   setLoading: PropTypes.func,
   showUntagged: PropTypes.string,
   toggleShowUntagged: PropTypes.func,
