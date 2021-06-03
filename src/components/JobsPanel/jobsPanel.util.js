@@ -421,11 +421,10 @@ export const generateRequestData = (
   isFunctionTemplate,
   defaultFunc
 ) => {
-  const func = defaultFunc
-    ? defaultFunc
-    : isFunctionTemplate
+  const func = isFunctionTemplate
     ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
-    : `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+    : defaultFunc ??
+      `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
   const resources = {
     limits: {},
     requests: {}
