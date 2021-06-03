@@ -39,7 +39,7 @@ const initialState = {
   loading: false,
   error: null,
   newFunction: {
-    kind: 'local',
+    kind: 'job',
     metadata: {
       labels: {},
       name: '',
