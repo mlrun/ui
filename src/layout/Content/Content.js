@@ -57,7 +57,7 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedByName, setGroupedByName] = useState({})
   const [groupedByWorkflow, setGroupedByWorkflow] = useState({})
-  const [showRegisterDialog, setShowRegosterDialog] = useState(false)
+  const [showRegisterDialog, setShowRegisterDialog] = useState(false)
   const location = useLocation()
 
   const contentClassName = classnames(
@@ -81,9 +81,9 @@ const Content = ({
       ) ||
         new URLSearchParams(location.search).get('demo') === 'true')
     ) {
-      setShowRegosterDialog(true)
+      setShowRegisterDialog(true)
     } else if (showRegisterDialog) {
-      setShowRegosterDialog(false)
+      setShowRegisterDialog(false)
     }
   }, [location.search, match.params.pageTab, pageData.page, showRegisterDialog])
 

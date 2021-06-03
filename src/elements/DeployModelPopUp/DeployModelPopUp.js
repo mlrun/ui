@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { chain, keyBy, mapValues } from 'lodash'
@@ -22,58 +22,67 @@ const DeployModelPopUp = ({
   model,
   setNotification
 }) => {
-  const [functionsResponse, setFunctionsResponse] = useState([])
+  const [functionList, setFunctionList] = useState([])
   const [modelName, setModelName] = useState(model.db_key)
   const [className, setClassName] = useState('')
   const [classArgumentsList, setClassArgumentsList] = useState([])
-  const [functionsList, setFunctionsList] = useState([])
-  const [tagsList, setTagsList] = useState([])
-  const [selectedFunction, setSelectedFunction] = useState('')
+  const [functionOptionList, setFunctionOptionList] = useState([])
+  const [tagOptionList, setTagOptionList] = useState([])
+  const [selectedFunctionName, setSelectedFunctionName] = useState('')
   const [selectedTag, setSelectedTag] = useState('')
 
-  const generateTagsList = useCallback(
-    (functionsResponse, selectedFunction) => {
-      let tags = chain(functionsResponse)
-        .filter(
-          func =>
-            func.metadata.name === selectedFunction && func.metadata.tag !== ''
-        )
-        .uniqBy('metadata.tag')
-        .map(func => ({
-          label: func.metadata.tag,
-          id: func.metadata.tag
-        }))
-        .value()
-
-      setTagsList(tags)
-      setSelectedTag(tags[0].id)
-    },
-    []
-  )
-
   useEffect(() => {
-    if (functionsList.length === 0) {
-      fetchFunctions(model.project).then(response => {
-        let functions = chain(response)
+    if (functionOptionList.length === 0) {
+      fetchFunctions(model.project).then(functions => {
+        const functionOptions = chain(functions)
           .filter(func => func.kind === 'serving')
           .uniqBy('metadata.name')
           .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
           .value()
 
-        if (functions.length !== 0) {
-          setFunctionsResponse(response)
-          setFunctionsList(functions)
-          setSelectedFunction(functions[0].id)
-          generateTagsList(response, functions[0].id)
+        if (functionOptions.length !== 0) {
+          setFunctionList(functions)
+          setFunctionOptionList(functionOptions)
+          setSelectedFunctionName(functionOptions[0].id)
         }
       })
     }
-  }, [fetchFunctions, functionsList.length, generateTagsList, model.project])
+  }, [fetchFunctions, functionOptionList.length, model.project])
+
+  useEffect(() => {
+    const tags = chain(functionList)
+      .filter(
+        func =>
+          func.metadata.name === selectedFunctionName &&
+          func.metadata.tag !== ''
+      )
+      .uniqBy('metadata.tag')
+      .map(func => ({
+        label: func.metadata.tag,
+        id: func.metadata.tag
+      }))
+      .value()
+
+    setTagOptionList(tags)
+    setSelectedTag(tags[0]?.id)
+  }, [functionList, selectedFunctionName])
+
+  useEffect(() => {
+    const selectedFunction = functionList.find(
+      func =>
+        func.metadata.name === selectedFunctionName &&
+        func.metadata.tag === selectedTag
+    )
+
+    if (selectedFunction) {
+      setClassName(selectedFunction.spec.default_class)
+    }
+  }, [functionList, selectedFunctionName, selectedTag])
 
   const deployModel = () => {
-    const servingFunction = functionsResponse.find(
+    const servingFunction = functionList.find(
       func =>
-        func.metadata.name === selectedFunction &&
+        func.metadata.name === selectedFunctionName &&
         func.metadata.tag === selectedTag
     )
     const classArguments = mapValues(keyBy(classArgumentsList, 'key'), 'value')
@@ -107,9 +116,12 @@ const DeployModelPopUp = ({
     closePopUp()
   }
 
-  const onSelectFunction = functionId => {
-    setSelectedFunction(functionId)
-    generateTagsList(functionsResponse, functionId)
+  const onSelectFunction = functionName => {
+    setSelectedFunctionName(functionName)
+  }
+
+  const handleTagSelect = tag => {
+    setSelectedTag(tag)
   }
 
   return (
@@ -119,19 +131,19 @@ const DeployModelPopUp = ({
           <Select
             label="Serving function"
             floatingLabel
-            disabled={functionsList.length === 0}
-            options={functionsList}
-            selectedId={selectedFunction}
+            disabled={functionOptionList.length === 0}
+            options={functionOptionList}
+            selectedId={selectedFunctionName}
             onClick={onSelectFunction}
           />
           <Select
             label="Tag"
             floatingLabel
             search
-            disabled={tagsList.length === 0}
-            options={tagsList}
+            disabled={tagOptionList.length === 0}
+            options={tagOptionList}
             selectedId={selectedTag}
-            onClick={() => {}}
+            onClick={handleTagSelect}
           />
         </div>
         <div className="input-row">
@@ -177,7 +189,7 @@ const DeployModelPopUp = ({
           <Button
             variant="primary"
             disabled={[
-              selectedFunction,
+              selectedFunctionName,
               selectedTag,
               modelName,
               className
