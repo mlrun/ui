@@ -375,7 +375,7 @@ FilterMenu.propTypes = {
   groupFilter: PropTypes.string,
   handleArtifactFilterTree: PropTypes.func,
   setGroupFilter: PropTypes.func,
-  setIteration: () => {},
+  setIteration: PropTypes.func,
   showUntagged: PropTypes.string,
   toggleShowUntagged: PropTypes.func
 }

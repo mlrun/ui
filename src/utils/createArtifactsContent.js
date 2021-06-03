@@ -19,7 +19,7 @@ import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
 import { copyToClipboard } from './copyToClipboard'
-import { generateUri } from './resources'
+import { generateUri, getArtifactReference } from './resources'
 import { generateLinkPath, parseUri, truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
@@ -38,7 +38,16 @@ const createArtifactsContent = (
   project,
   isTablePanelOpen
 ) => {
-  return artifacts.map(artifact => {
+  let filteredArtifacts = artifacts
+
+  if (
+    filteredArtifacts.length > 1 &&
+    ([MODELS_TAB, DATASETS_TAB].includes(pageTab) || page === FILES_PAGE)
+  ) {
+    filteredArtifacts = artifacts.filter(artifact => !artifact.link_iteration)
+  }
+
+  return filteredArtifacts.map(artifact => {
     let rowData = []
 
     if (page === ARTIFACTS_PAGE) {
@@ -115,6 +124,7 @@ const createArtifactsRowData = artifact => {
 const createModelsRowData = (artifact, project) => {
   return {
     key: {
+      uniqueReference: getArtifactReference(artifact),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -124,15 +134,17 @@ const createModelsRowData = (artifact, project) => {
           MODELS_TAB,
           artifact.db_key,
           artifact.tag,
-          tab
+          tab,
+          artifact.tree,
+          artifact.iter
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value:
-          artifact.tag ||
-          `${truncateUid(artifact.tree)}${
-            artifact.iter ? ` #${artifact.iter}` : ''
-          }`,
+        value: artifact.tag
+          ? `${artifact.tag} #${artifact.iter}`
+          : `${truncateUid(artifact.tree)}${
+              artifact.iter ? ` #${artifact.iter}` : ''
+            }`,
         tooltip:
           artifact.tag ||
           `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
@@ -194,6 +206,7 @@ const createModelsRowData = (artifact, project) => {
 const createFilesRowData = (artifact, project) => {
   return {
     key: {
+      uniqueReference: getArtifactReference(artifact),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -203,15 +216,17 @@ const createFilesRowData = (artifact, project) => {
           null,
           artifact.db_key,
           artifact.tag,
-          tab
+          tab,
+          artifact.tree,
+          artifact.iter
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value:
-          artifact.tag ||
-          `${truncateUid(artifact.tree)}${
-            artifact.iter ? ` #${artifact.iter}` : ''
-          }`,
+        value: artifact.tag
+          ? `${artifact.tag} #${artifact.iter}`
+          : `${truncateUid(artifact.tree)}${
+              artifact.iter ? ` #${artifact.iter}` : ''
+            }`,
         tooltip:
           artifact.tag ||
           `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
@@ -362,6 +377,7 @@ const createModelEndpointsRowData = (artifact, project) => {
 const createDatasetsRowData = (artifact, project) => {
   return {
     key: {
+      uniqueReference: getArtifactReference(artifact),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -371,15 +387,17 @@ const createDatasetsRowData = (artifact, project) => {
           DATASETS_TAB,
           artifact.db_key,
           artifact.tag,
-          tab
+          tab,
+          artifact.tree,
+          artifact.iter
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value:
-          artifact.tag ||
-          `${truncateUid(artifact.tree)}${
-            artifact.iter ? ` #${artifact.iter}` : ''
-          }`,
+        value: artifact.tag
+          ? `${artifact.tag} #${artifact.iter}`
+          : `${truncateUid(artifact.tree)}${
+              artifact.iter ? ` #${artifact.iter}` : ''
+            }`,
         tooltip:
           artifact.tag ||
           `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`

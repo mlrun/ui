@@ -5,8 +5,9 @@ export const generateLinkToDetailsPanel = (
   key,
   version,
   detailsTab,
-  uid
+  uid,
+  iter
 ) =>
   `/projects/${project}/${screen.toLowerCase()}${tab ? `/${tab}` : ''}/${key}${
     version ? `/${version}` : uid ? `/${uid}` : ''
-  }/${detailsTab.toLowerCase()}`
+  }${iter ? `/${iter}` : ''}/${detailsTab.toLowerCase()}`

@@ -147,7 +147,7 @@ const Models = ({
             selectedRowData: {
               ...state.selectedRowData,
               [item.db_key]: {
-                content: [...generateArtifacts(filterArtifacts(result))],
+                content: [...generateArtifacts(filterArtifacts(result), iter)],
                 error: null,
                 loading: false
               }
@@ -173,7 +173,6 @@ const Models = ({
       tag: 'latest',
       iter: match.params.pageTab === MODELS_TAB ? 'iter' : ''
     })
-    setIter(match.params.pageTab === MODELS_TAB ? 'iter' : '')
 
     return () => {
       setContent([])
@@ -184,7 +183,6 @@ const Models = ({
         selectedRowData: []
       })
       setArtifactFilter({ tag: 'latest', labels: '', name: '' })
-      setIter('iter')
     }
   }, [fetchData, match.params.pageTab, removeModels, setArtifactFilter])
 
@@ -223,7 +221,7 @@ const Models = ({
         (match.params.pageTab === MODEL_ENDPOINTS_TAB &&
           artifactsStore.modelEndpoints.length > 0))
     ) {
-      const { name, tag } = match.params
+      const { name, tag, iter } = match.params
 
       if (match.params.pageTab === MODELS_TAB) {
         checkForSelectedModel(
@@ -232,7 +230,8 @@ const Models = ({
           artifactsStore.models,
           name,
           setSelectedModel,
-          tag
+          tag,
+          iter
         )
       } else if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
         checkForSelectedModelEndpoint(

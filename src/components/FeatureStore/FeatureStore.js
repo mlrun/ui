@@ -199,12 +199,10 @@ const FeatureStore = ({
       tag: 'latest',
       iter: match.params.pageTab === DATASETS_TAB ? 'iter' : ''
     })
-    setIter(match.params.pageTab === DATASETS_TAB ? 'iter' : '')
 
     return () => {
       setArtifactFilter({ tag: 'latest', labels: '', name: '' })
       setContent([])
-      setIter('iter')
       setYamlContent({
         allData: [],
         selectedRowData: []

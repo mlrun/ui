@@ -9,10 +9,14 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import {
   ACTION_CELL_ID,
+  DATASETS_TAB,
   DETAILS_OVERVIEW_TAB,
   FEATURES_TAB,
-  MODEL_ENDPOINTS_TAB
+  FILES_PAGE,
+  MODEL_ENDPOINTS_TAB,
+  MODELS_TAB
 } from '../../constants'
+import { getArtifactReference } from '../../utils/resources'
 
 const ArtifactsTableRow = ({
   actionsMenu,
@@ -56,6 +60,16 @@ const ArtifactsTableRow = ({
             contentItem => {
               const key = contentItem.db_key ? 'db_key' : 'name'
 
+              if (
+                [MODELS_TAB, DATASETS_TAB].includes(match.params.pageTab) ||
+                pageData.page === FILES_PAGE
+              ) {
+                return (
+                  contentItem.db_key + getArtifactReference(contentItem) ===
+                  artifact.key.value + artifact.key.uniqueReference
+                )
+              }
+
               return artifact.version.value
                 ? contentItem[key] === artifact.key.value &&
                     contentItem.tag === artifact.version.value
@@ -76,7 +90,7 @@ const ArtifactsTableRow = ({
         })
       }
     },
-    [content, match.params.pageTab, pageData.selectedRowData]
+    [content, match.params.pageTab, pageData.page, pageData.selectedRowData]
   )
 
   useEffect(() => {
@@ -112,11 +126,16 @@ const ArtifactsTableRow = ({
           </div>
           {tableContent.map((artifact, index) => {
             const subRowCurrentItem = findCurrentItem(artifact)
+            const selectedItemReference = selectedItem.iter
+              ? getArtifactReference(selectedItem)
+              : ''
+            const subRowCurrentItemReference = getArtifactReference(
+              subRowCurrentItem ?? {}
+            )
+
             const subRowClassNames = classnames(
               'table-body__row',
-              ((selectedItem?.db_key &&
-                selectedItem?.db_key === subRowCurrentItem?.db_key &&
-                selectedItem?.tag === subRowCurrentItem?.tag) ||
+              (selectedItemReference === subRowCurrentItemReference ||
                 (selectedItem.uid &&
                   selectedItem?.uid === subRowCurrentItem?.uid &&
                   selectedItem?.tag === subRowCurrentItem?.tag)) &&
