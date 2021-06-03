@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Select from '../../common/Select/Select'
@@ -57,9 +57,22 @@ const FilterMenu = ({
   const [dates, setDates] = useState(['', ''])
   const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
   const [stateFilter, setStateFilter] = useState(initialStateFilter)
+  const [showActionButton, setShowActionButton] = useState(false)
+  const location = useLocation()
   const history = useHistory()
   const artifactFilter = useSelector(store => store.artifactsStore.filter)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (
+      page !== FUNCTIONS_PAGE ||
+      new URLSearchParams(location.search).get('demo') === 'true'
+    ) {
+      setShowActionButton(true)
+    } else if (showActionButton) {
+      setShowActionButton(false)
+    }
+  }, [location.search, page, showActionButton])
 
   useEffect(() => {
     if (filters.find(filter => filter.type === 'iterations')) {
@@ -313,7 +326,7 @@ const FilterMenu = ({
       {actionButton &&
         (actionButton.getCustomTemplate ? (
           actionButton.getCustomTemplate(actionButton)
-        ) : (
+        ) : showActionButton ? (
           <Button
             variant={actionButton.variant}
             label={actionButton.label}
@@ -321,7 +334,7 @@ const FilterMenu = ({
             disabled={actionButton.disabled}
             onClick={actionButton.onClick}
           />
-        ))}
+        ) : null)}
       <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button
