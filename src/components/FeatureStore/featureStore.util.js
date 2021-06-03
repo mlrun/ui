@@ -435,7 +435,7 @@ export const navigateToDetailsPane = (
         )
       } else if (match.params.pageTab === DATASETS_TAB) {
         return iter
-          ? iter === artifact.iter &&
+          ? Number(iter) === artifact.iter &&
               artifact[searchKey] === name &&
               (artifact.tag === tag || artifact.tree === tag)
           : artifact[searchKey] === name &&

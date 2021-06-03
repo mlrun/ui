@@ -140,11 +140,11 @@ const createModelsRowData = (artifact, project) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value:
-          artifact.tag ||
-          `${truncateUid(artifact.tree)}${
-            artifact.iter ? ` #${artifact.iter}` : ''
-          }`,
+        value: artifact.tag
+          ? `${artifact.tag} #${artifact.iter}`
+          : `${truncateUid(artifact.tree)}${
+              artifact.iter ? ` #${artifact.iter}` : ''
+            }`,
         tooltip:
           artifact.tag ||
           `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
@@ -222,11 +222,11 @@ const createFilesRowData = (artifact, project) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value:
-          artifact.tag ||
-          `${truncateUid(artifact.tree)}${
-            artifact.iter ? ` #${artifact.iter}` : ''
-          }`,
+        value: artifact.tag
+          ? `${artifact.tag} #${artifact.iter}`
+          : `${truncateUid(artifact.tree)}${
+              artifact.iter ? ` #${artifact.iter}` : ''
+            }`,
         tooltip:
           artifact.tag ||
           `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
@@ -393,11 +393,11 @@ const createDatasetsRowData = (artifact, project) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value:
-          artifact.tag ||
-          `${truncateUid(artifact.tree)}${
-            artifact.iter ? ` #${artifact.iter}` : ''
-          }`,
+        value: artifact.tag
+          ? `${artifact.tag} #${artifact.iter}`
+          : `${truncateUid(artifact.tree)}${
+              artifact.iter ? ` #${artifact.iter}` : ''
+            }`,
         tooltip:
           artifact.tag ||
           `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
