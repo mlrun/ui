@@ -471,7 +471,8 @@ const createFeatureSetsRowData = (artifact, project) => {
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value: artifact.tag
+        value: artifact.tag || truncateUid(artifact.uid),
+        tooltip: artifact.tag || artifact.uid
       }
     },
     description: {
