@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
@@ -29,31 +29,6 @@ export const JobsPanelDataInputsTable = ({
   match,
   panelState
 }) => {
-  const addItemRowRef = useRef(null)
-
-  const handleDocumentClick = useCallback(
-    event => {
-      if (!addItemRowRef.current?.contains(event.target)) {
-        handleAddNewItem(true)
-        inputsDispatch({
-          type: inputsActions.SET_PATH_PLACEHOLDER,
-          payload: ''
-        })
-      }
-    },
-    [handleAddNewItem, inputsDispatch]
-  )
-
-  useEffect(() => {
-    if (addItemRowRef.current) {
-      document.addEventListener('click', handleDocumentClick)
-
-      return () => {
-        document.removeEventListener('click', handleDocumentClick)
-      }
-    }
-  }, [handleDocumentClick, addItemRowRef])
-
   return (
     <JobsPanelTable
       addNewItem={inputsState.addNewInput}
@@ -76,7 +51,7 @@ export const JobsPanelDataInputsTable = ({
       }}
     >
       {inputsState.addNewInput ? (
-        <div className="table__row-add-item" ref={addItemRowRef}>
+        <div className="table__row-add-item">
           <div className="input-row-wrapper">
             <Input
               className="input-row__item"

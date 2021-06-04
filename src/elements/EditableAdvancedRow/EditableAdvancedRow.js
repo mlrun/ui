@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
@@ -13,13 +13,36 @@ const EditableAdvancedRow = ({
   content,
   handleEdit,
   selectedItem,
+  setEditItem,
   setSelectedItem,
   table
 }) => {
   const dataValue = table === 'env' ? 'value' : 'source'
 
+  const tableRowRef = useRef(null)
+
+  const handleDocumentClick = useCallback(
+    event => {
+      if (!tableRowRef.current?.contains(event.target)) {
+        setEditItem(false)
+        setSelectedItem({})
+      }
+    },
+    [setEditItem, setSelectedItem]
+  )
+
+  useEffect(() => {
+    if (tableRowRef.current) {
+      document.addEventListener('click', handleDocumentClick)
+
+      return () => {
+        document.removeEventListener('click', handleDocumentClick)
+      }
+    }
+  }, [handleDocumentClick, tableRowRef])
+
   return (
-    <div className="table__row edit-row">
+    <div className="table__row edit-row" ref={tableRowRef}>
       <div className="table__cell table__cell_edit">
         {table === 'env' ? (
           <Input
@@ -90,6 +113,7 @@ EditableAdvancedRow.propTypes = {
   handleEdit: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  setEditItem: PropTypes.func.isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   table: PropTypes.string.isRequired
 }

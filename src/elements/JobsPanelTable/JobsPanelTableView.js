@@ -71,6 +71,7 @@ const JobsPanelTableView = ({
               key={index}
               match={match}
               selectedItem={selectedItem}
+              setEditItem={setEditItem}
               setSelectedItem={setSelectedItem}
               table={section.includes('secrets') ? 'secrets' : 'env'}
             />
@@ -79,9 +80,10 @@ const JobsPanelTableView = ({
           return (
             <JobsPanelTableRow
               actionsMenu={generateActionsMenu(contentItem)}
+              contentItem={contentItem}
+              editItem={editItem}
               handleDelete={handleDelete}
               handleEdit={handleEdit}
-              contentItem={contentItem}
               key={index}
               section={section}
             />

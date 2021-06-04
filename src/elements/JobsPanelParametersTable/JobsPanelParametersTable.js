@@ -57,8 +57,8 @@ const JobsPanelParametersTable = ({
   return (
     <JobsPanelParametersTableView
       addNewItem={addNewItem}
-      children={children}
       checkParameter={checkParameter}
+      children={children}
       className={className}
       content={content}
       disabledOptions={disabledOptions}
@@ -68,6 +68,7 @@ const JobsPanelParametersTable = ({
       handleEditParameter={handleEdit}
       headers={headers}
       selectedItem={selectedItem}
+      setEditItem={setEditItem}
       setSelectedItem={setSelectedItem}
       tableContent={tableContent}
     />
