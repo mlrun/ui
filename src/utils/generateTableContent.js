@@ -7,7 +7,8 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODELS_PAGE,
-  SCHEDULE_TAB
+  SCHEDULE_TAB,
+  INIT_GROUP_FILTER
 } from '../constants'
 import createJobsContent from './createJobsContent'
 import createFunctionsContent from './createFunctionsContent'
@@ -22,7 +23,7 @@ export const generateTableContent = (
   match,
   isTablePanelOpen
 ) => {
-  if (!isEmpty(groupedByName) && groupFilter === 'name') {
+    if (!isEmpty(groupedByName) && groupFilter === INIT_GROUP_FILTER) {
     return map(groupedByName, group =>
       page === JOBS_PAGE
         ? createJobsContent(group, false)

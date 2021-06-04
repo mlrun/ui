@@ -474,7 +474,8 @@ export const handleApplyDetailsChanges = (
   match,
   selectedItem,
   setNotification,
-  updateFeatureStoreData
+  updateFeatureStoreData,
+  filters
 ) => {
   const data = {
     spec: {
@@ -502,7 +503,7 @@ export const handleApplyDetailsChanges = (
     match.params.pageTab
   )
     .then(response => {
-      return fetchData().then(() => {
+      return fetchData(filters).then(() => {
         setNotification({
           status: response.status,
           id: Math.random(),

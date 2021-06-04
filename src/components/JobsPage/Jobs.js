@@ -3,19 +3,20 @@ import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import jobsActions from '../../actions/jobs'
-import notificationActions from '../../actions/notification'
-import projectActions from '../../actions/projects'
-import detailsActions from '../../actions/details'
-import { generatePageData, initialGroupFilter } from './jobsData'
-import { generateKeyValues, parseKeyValues } from '../../utils'
-import { MONITOR_TAB, SCHEDULE_TAB } from '../../constants'
-
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import Button from '../../common/Button/Button'
+
+import jobsActions from '../../actions/jobs'
+import notificationActions from '../../actions/notification'
+import projectActions from '../../actions/projects'
+import detailsActions from '../../actions/details'
+import { generatePageData } from './jobsData'
+import { generateKeyValues, parseKeyValues } from '../../utils'
+import { MONITOR_TAB, SCHEDULE_TAB, INIT_GROUP_FILTER } from '../../constants'
+import filtersActions from '../../actions/filters'
 
 const Jobs = ({
   abortJob,
@@ -33,6 +34,7 @@ const Jobs = ({
   removeNewJob,
   removePods,
   removeScheduledJob,
+  setFilters,
   setLoading,
   setNotification,
   workflowsStore
@@ -40,7 +42,6 @@ const Jobs = ({
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
   const [selectedJob, setSelectedJob] = useState({})
-  const [groupFilter, setGroupFilter] = useState(initialGroupFilter)
   const [editableItem, setEditableItem] = useState(null)
 
   const dispatch = useDispatch()
@@ -306,12 +307,12 @@ const Jobs = ({
 
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
-      setGroupFilter('none')
+      setFilters({ groupBy: 'none' })
     } else if (match.params.pageTab !== SCHEDULE_TAB) {
       getWorkflows()
-      setGroupFilter(initialGroupFilter)
+      setFilters({ groupBy: INIT_GROUP_FILTER })
     }
-  }, [getWorkflows, match.params.pageTab])
+  }, [getWorkflows, match.params.pageTab, setFilters])
 
   useEffect(() => {
     if (match.params.jobId && jobs.some(job => job.uid) && jobs.length > 0) {
@@ -392,7 +393,6 @@ const Jobs = ({
       {(jobsStore.loading || workflowsStore.loading) && <Loader />}
       <Content
         content={jobs}
-        groupFilter={groupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectJob}
         loading={jobsStore.loading}
@@ -400,7 +400,6 @@ const Jobs = ({
         pageData={pageData}
         refresh={refreshJobs}
         selectedItem={selectedJob}
-        setGroupFilter={setGroupFilter}
         setLoading={setLoading}
         yamlContent={jobsStore.jobs}
       />
@@ -445,6 +444,7 @@ export default connect(
     ...jobsActions,
     ...projectActions,
     ...detailsActions,
-    ...notificationActions
+    ...notificationActions,
+    ...filtersActions
   }
 )(React.memo(Jobs))

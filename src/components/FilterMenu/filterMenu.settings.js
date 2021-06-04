@@ -25,5 +25,3 @@ export const filterTreeOptions = [
     id: 'latest'
   }
 ]
-
-export const initialStateFilter = 'all'

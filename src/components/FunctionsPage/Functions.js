@@ -15,7 +15,6 @@ import {
   filters,
   FUNCTIONS_FAILED_STATES,
   infoHeaders,
-  initialGroupFilter,
   page,
   tableHeaders
 } from './functions.util'
@@ -319,7 +318,6 @@ const Functions = ({
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
-        groupFilter={initialGroupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
