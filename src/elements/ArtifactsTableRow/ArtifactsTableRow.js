@@ -135,7 +135,8 @@ const ArtifactsTableRow = ({
 
             const subRowClassNames = classnames(
               'table-body__row',
-              (selectedItemReference === subRowCurrentItemReference ||
+              ((selectedItemReference &&
+                selectedItemReference === subRowCurrentItemReference) ||
                 (selectedItem.uid &&
                   selectedItem?.uid === subRowCurrentItem?.uid &&
                   selectedItem?.tag === subRowCurrentItem?.tag)) &&
