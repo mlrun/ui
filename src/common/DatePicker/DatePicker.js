@@ -34,6 +34,7 @@ import './datePicker.scss'
 const DatePicker = ({
   date,
   dateTo,
+  disabled,
   label,
   onChange,
   splitCharacter,
@@ -308,20 +309,22 @@ const DatePicker = ({
   }
 
   const onInputDatePickerClick = () => {
-    if (withOptions && !isDatePickerOpened) {
-      setIsDatePickerOptionsOpened(true)
-    } else {
-      setIsDatePickerOpened(true)
-      datePickerDispatch({
-        type: datePickerActions.UPDATE_SELECTED_DATE_FROM,
-        payload: date || new Date()
-      })
-
-      if (isRange) {
+    if (!disabled) {
+      if (withOptions && !isDatePickerOpened) {
+        setIsDatePickerOptionsOpened(true)
+      } else {
+        setIsDatePickerOpened(true)
         datePickerDispatch({
-          type: datePickerActions.UPDATE_SELECTED_DATE_TO,
-          payload: dateTo || new Date()
+          type: datePickerActions.UPDATE_SELECTED_DATE_FROM,
+          payload: date || new Date()
         })
+
+        if (isRange) {
+          datePickerDispatch({
+            type: datePickerActions.UPDATE_SELECTED_DATE_TO,
+            payload: dateTo || new Date()
+          })
+        }
       }
     }
   }
@@ -388,6 +391,7 @@ const DatePicker = ({
         }
         dateMask={dateMask}
         datePickerOptions={datePickerOptions}
+        disabled={disabled}
         isCalendarInvalid={isCalendarInvalid}
         isDatePickerOpened={isDatePickerOpened}
         isDatePickerOptionsOpened={isDatePickerOptionsOpened}
@@ -416,6 +420,7 @@ const DatePicker = ({
 }
 DatePicker.defaultProps = {
   dateTo: new Date(),
+  disabled: false,
   label: 'Date',
   splitCharacter: '/',
   type: 'date',
@@ -426,6 +431,7 @@ DatePicker.propTypes = {
   date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string])
     .isRequired,
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
+  disabled: PropTypes.bool,
   label: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   splitCharacter: PropTypes.oneOf(['/', '.']),

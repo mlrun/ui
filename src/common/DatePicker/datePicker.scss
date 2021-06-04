@@ -9,6 +9,15 @@
     position: relative;
 
     .date-picker__input {
+      &_empty {
+        cursor: pointer;
+      }
+
+      &_disabled {
+        border: $disabledBorder;
+        cursor: not-allowed;
+      }
+
       &.long-input {
         width: 300px;
       }

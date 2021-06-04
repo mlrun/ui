@@ -3,11 +3,12 @@ import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
 import classnames from 'classnames'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import Button from '../Button/Button'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import TimePicker from '../TimePicker/TimePicker'
 import SelectOption from '../../elements/SelectOption/SelectOption'
+
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 const DatePickerView = React.forwardRef(
   (
@@ -16,6 +17,7 @@ const DatePickerView = React.forwardRef(
       config,
       dateMask,
       datePickerOptions,
+      disabled,
       isCalendarInvalid,
       isDatePickerOpened,
       isDatePickerOptionsOpened,
@@ -44,7 +46,9 @@ const DatePickerView = React.forwardRef(
       'input',
       'date-picker__input',
       'active-input',
-      isRange && 'long-input'
+      isRange && 'long-input',
+      isValueEmpty && 'date-picker__input_empty',
+      disabled && 'date-picker__input_disabled'
     )
     const inputLabelClassNames = classnames('input__label', 'active-label')
 
@@ -59,7 +63,7 @@ const DatePickerView = React.forwardRef(
             className={inputClassNames}
             keepCharPositions={true}
             mask={dateMask}
-            disabled={isValueEmpty}
+            disabled={isValueEmpty || disabled}
             showMask={!isValueEmpty}
             onChange={onInputChange}
             pipe={autoCorrectedDatePipe}
@@ -219,6 +223,7 @@ DatePickerView.propTypes = {
   config: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   dateMask: PropTypes.array.isRequired,
   datePickerOptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  disabled: PropTypes.bool.isRequired,
   floatingLabel: PropTypes.bool,
   isCalendarInvalid: PropTypes.bool.isRequired,
   isDatePickerOpened: PropTypes.bool.isRequired,
