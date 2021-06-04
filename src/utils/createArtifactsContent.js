@@ -467,11 +467,13 @@ const createFeatureSetsRowData = (artifact, project) => {
           FEATURE_SETS_TAB,
           artifact.name,
           artifact.tag,
-          tab
+          tab,
+          artifact.uid
         ),
       expandedCellContent: {
         class: 'artifacts_medium',
-        value: artifact.tag
+        value: artifact.tag || truncateUid(artifact.uid),
+        tooltip: artifact.tag || artifact.uid
       }
     },
     description: {
