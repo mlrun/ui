@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
@@ -14,10 +14,33 @@ const EditableParametersRow = ({
   disabledOptions,
   handleEdit,
   selectedParameter,
+  setEditItem,
   setSelectedParameter
 }) => {
+  const tableRowRef = useRef(null)
+
+  const handleDocumentClick = useCallback(
+    event => {
+      if (!tableRowRef.current?.contains(event.target)) {
+        setEditItem(false)
+        setSelectedParameter({})
+      }
+    },
+    [setEditItem, setSelectedParameter]
+  )
+
+  useEffect(() => {
+    if (tableRowRef.current) {
+      document.addEventListener('click', handleDocumentClick)
+
+      return () => {
+        document.removeEventListener('click', handleDocumentClick)
+      }
+    }
+  }, [handleDocumentClick, tableRowRef])
+
   return (
-    <div className="table__row edit-row">
+    <div className="table__row edit-row" ref={tableRowRef}>
       {selectedParameter.isDefault ? (
         <>
           <div className="table__cell table__cell_disabled">
@@ -118,6 +141,7 @@ EditableParametersRow.propTypes = {
   disabledOptions: PropTypes.array,
   handleEdit: PropTypes.func.isRequired,
   selectedParameter: PropTypes.shape({}).isRequired,
+  setEditItem: PropTypes.func.isRequired,
   setSelectedParameter: PropTypes.func.isRequired
 }
 

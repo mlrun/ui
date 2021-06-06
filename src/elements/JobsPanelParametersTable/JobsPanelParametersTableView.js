@@ -20,6 +20,7 @@ const JobsPanelParametersTableView = ({
   handleEditParameter,
   headers,
   selectedItem,
+  setEditItem,
   setSelectedItem,
   tableContent
 }) => {
@@ -55,11 +56,12 @@ const JobsPanelParametersTableView = ({
               ) {
                 return (
                   <EditableParametersRow
+                    content={content}
                     disabledOptions={disabledOptions}
                     handleEdit={handleEditParameter}
                     key={`${contentItem.data.name}${index}`}
-                    content={content}
                     selectedParameter={selectedItem}
+                    setEditItem={setEditItem}
                     setSelectedParameter={setSelectedItem}
                   />
                 )
@@ -74,6 +76,7 @@ const JobsPanelParametersTableView = ({
                     checkboxOnChange={checkParameter}
                     className={tableRowClassNames}
                     contentItem={contentItem}
+                    editItem={editItem}
                     handleDelete={handleDeleteParameter}
                     handleEdit={handleEditParameter}
                     key={`${contentItem.data.name}${index}`}
@@ -103,6 +106,7 @@ JobsPanelParametersTableView.propTypes = {
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  setEditItem: PropTypes.func.isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   tableContent: PropTypes.shape({}).isRequired
 }
