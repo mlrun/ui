@@ -26,7 +26,7 @@ import {
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE
 } from '../../constants'
-import { formatDatetime, parseUri } from '../../utils'
+import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
@@ -137,6 +137,10 @@ export const generateArtifactsContent = (
       model_file: {
         value: selectedItem.model_file
       },
+      feature_vector: {
+        value: selectedItem.feature_vector,
+        link: `${generateLinkPath(selectedItem.feature_vector)}/overview`
+      },
       tree: {
         value: selectedItem.tree
       },
@@ -145,6 +149,9 @@ export const generateArtifactsContent = (
       },
       framework: {
         value: page === MODELS_PAGE ? selectedItem.framework ?? '' : null
+      },
+      algorithm: {
+        value: selectedItem.algorithm
       },
       labels: {
         value: selectedItem.labels ?? []
