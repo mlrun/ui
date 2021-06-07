@@ -18,6 +18,7 @@ export const modelsInfoHeaders = [
   { label: 'Path', id: 'target_path' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Model file', id: 'model_file' },
+  { label: 'Feature vector', id: 'feature_vector' },
   {
     label: 'UID',
     id: 'tree',
@@ -26,6 +27,7 @@ export const modelsInfoHeaders = [
   },
   { label: 'Updated', id: 'updated' },
   { label: 'Framework', id: 'framework' },
+  { label: 'Algorithm', id: 'algorithm' },
   { label: 'Labels', id: 'labels' },
   { label: 'Metrics', id: 'metrics' },
   { label: 'Sources', id: 'sources' }
