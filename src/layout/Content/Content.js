@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
 import classnames from 'classnames'
+import { connect } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -35,8 +36,7 @@ const Content = ({
   cancelRequest,
   content,
   expandRow,
-  groupFilter,
-  handleArtifactFilterTree,
+  filtersStore,
   handleCancel,
   handleSelectItem,
   loading,
@@ -45,8 +45,6 @@ const Content = ({
   pageData,
   refresh,
   selectedItem,
-  setGroupFilter,
-  setIter,
   setLoading,
   showUntagged,
   toggleShowUntagged,
@@ -124,11 +122,11 @@ const Content = ({
   }, [content])
 
   useEffect(() => {
-    if (groupFilter === 'name') {
+    if (filtersStore.groupBy === 'name') {
       handleGroupByName()
-    } else if (groupFilter === 'none') {
+    } else if (filtersStore.groupBy === 'none') {
       handleGroupByNone()
-    } else if (groupFilter === 'workflow') {
+    } else if (filtersStore.groupBy === 'workflow') {
       handleGroupByWorkflow()
     }
 
@@ -138,7 +136,12 @@ const Content = ({
       setExpand(false)
       setConvertedYaml('')
     }
-  }, [groupFilter, handleGroupByName, handleGroupByWorkflow, handleGroupByNone])
+  }, [
+    handleGroupByName,
+    handleGroupByWorkflow,
+    handleGroupByNone,
+    filtersStore.groupBy
+  ])
 
   const toggleConvertToYaml = item => {
     if (convertedYaml.length > 0) {
@@ -174,7 +177,7 @@ const Content = ({
   }
 
   const handleExpandAll = collapseRows => {
-    if (groupFilter !== 'none') {
+    if (filtersStore.groupBy !== 'none') {
       const rows = [...document.getElementsByClassName('parent-row')]
 
       if (collapseRows || expand) {
@@ -222,16 +225,13 @@ const Content = ({
             actionButton={pageData.filterMenuActionButton}
             expand={expand}
             filters={pageData.filters}
-            groupFilter={pageData.handleRequestOnExpand ? null : groupFilter}
-            handleArtifactFilterTree={handleArtifactFilterTree}
             handleExpandAll={handleExpandAll}
             match={match}
             onChange={refresh}
             page={pageData.page}
-            setGroupFilter={setGroupFilter}
-            setIteration={setIter}
             showUntagged={showUntagged}
             toggleShowUntagged={toggleShowUntagged}
+            withoutExpandButton={Boolean(pageData.handleRequestOnExpand)}
           />
         </div>
         <YamlModal
@@ -242,7 +242,6 @@ const Content = ({
           {content.length !== 0 ? (
             <Table
               content={content}
-              groupFilter={groupFilter}
               groupedByName={groupedByName}
               groupedByWorkflow={groupedByWorkflow}
               handleCancel={handleCancel}
@@ -270,11 +269,8 @@ const Content = ({
 Content.defaultProps = {
   activeScreenTab: '',
   expandRow: null,
-  groupFilter: null,
   handleSelectItem: () => {},
   selectedItem: {},
-  setGroupFilter: () => {},
-  setIter: () => {},
   setLoading: () => {},
   showUntagged: '',
   toggleShowUntagged: null
@@ -283,7 +279,6 @@ Content.defaultProps = {
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   expandRow: PropTypes.func,
-  groupFilter: PropTypes.string,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
@@ -291,8 +286,6 @@ Content.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  setGroupFilter: PropTypes.func,
-  setIter: PropTypes.func,
   setLoading: PropTypes.func,
   showUntagged: PropTypes.string,
   toggleShowUntagged: PropTypes.func,
@@ -302,4 +295,4 @@ Content.propTypes = {
   ]).isRequired
 }
 
-export default Content
+export default connect(({ filtersStore }) => ({ filtersStore }), null)(Content)

@@ -214,7 +214,6 @@ const ProjectView = React.forwardRef(
         )}
         {isPopupDialogOpen && (
           <RegisterArtifactPopup
-            artifactFilter={{}}
             artifactKind={artifactKind}
             match={match}
             refresh={() => {

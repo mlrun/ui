@@ -16,32 +16,30 @@ import {
   tableHeaders,
   infoHeaders
 } from './files.util'
-import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateUri } from '../../utils/resources'
-
-import { ARTIFACTS } from '../../constants'
+import { ARTIFACTS, INIT_TAG_FILTER, INIT_GROUP_FILTER } from '../../constants'
+import filtersActions from '../../actions/filters'
 
 const Files = ({
   artifactsStore,
   fetchFile,
   fetchFiles,
+  filtersStore,
   history,
   match,
   removeFile,
   removeFiles,
-  setArtifactFilter
+  setFilters
 }) => {
   const [files, setFiles] = useState([])
   const [yamlContent, setYamlContent] = useState({
     allData: [],
     selectedRowData: []
   })
-  const [groupFilter, setGroupFilter] = useState('')
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
-  const [iter, setIter] = useState('')
   const [pageData, setPageData] = useState({
     detailsMenu,
     filters,
@@ -96,7 +94,7 @@ const Files = ({
       }))
 
       try {
-        result = await fetchFile(item.project, item.db_key, iter)
+        result = await fetchFile(item.project, item.db_key, !filtersStore.iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -122,7 +120,12 @@ const Files = ({
             selectedRowData: {
               ...state.selectedRowData,
               [item.db_key]: {
-                content: [...generateArtifacts(filterArtifacts(result), iter)],
+                content: [
+                  ...generateArtifacts(
+                    filterArtifacts(result),
+                    !filtersStore.iter
+                  )
+                ],
                 error: null,
                 loading: false
               }
@@ -131,7 +134,7 @@ const Files = ({
         })
       }
     },
-    [fetchFile, iter]
+    [fetchFile, filtersStore.iter]
   )
 
   const handleExpandRow = useCallback((item, isCollapse) => {
@@ -144,10 +147,9 @@ const Files = ({
   }, [])
 
   useEffect(() => {
-    fetchData({ tag: 'latest', iter: 'iter' })
+    fetchData({ tag: INIT_TAG_FILTER, iter: 'iter' })
 
     return () => {
-      setGroupFilter('')
       setFiles([])
       removeFiles()
       setSelectedFile({})
@@ -155,17 +157,16 @@ const Files = ({
         allData: [],
         selectedRowData: []
       })
-      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
     }
-  }, [fetchData, removeFiles, setArtifactFilter])
+  }, [fetchData, removeFiles])
 
   useEffect(() => {
-    if (artifactsStore.filter.tag === 'latest') {
-      setGroupFilter('name')
-    } else if (groupFilter.length > 0) {
-      setGroupFilter('')
+    if (filtersStore.tag === INIT_TAG_FILTER) {
+      setFilters({ groupBy: INIT_GROUP_FILTER })
+    } else if (filtersStore.groupBy === INIT_GROUP_FILTER) {
+      setFilters({ groupBy: 'none' })
     }
-  }, [match.params.pageTab, groupFilter.length, artifactsStore.filter])
+  }, [match.params.pageTab, filtersStore.tag, filtersStore.groupBy, setFilters])
 
   useEffect(() => {
     setPageData(state => ({
@@ -206,17 +207,7 @@ const Files = ({
     pageData
   ])
 
-  const handleFilesTreeFilterChange = useCallback(
-    item => {
-      handleArtifactTreeFilterChange(
-        fetchData,
-        item,
-        setArtifactFilter,
-        setFiles
-      )
-    },
-    [fetchData, setArtifactFilter]
-  )
+  useEffect(() => setFiles([]), [filtersStore.tag])
 
   return (
     <>
@@ -224,8 +215,6 @@ const Files = ({
       <Content
         content={files}
         expandRow={handleExpandRow}
-        groupFilter={groupFilter}
-        handleArtifactFilterTree={handleFilesTreeFilterChange}
         handleCancel={() => setSelectedFile({})}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
@@ -234,12 +223,10 @@ const Files = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedFile.item}
-        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
-          artifactFilter={artifactsStore.filter}
           artifactKind="file"
           match={match}
           refresh={fetchData}
@@ -255,6 +242,10 @@ Files.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(artifactsStore => artifactsStore, {
-  ...artifactsAction
-})(Files)
+export default connect(
+  ({ artifactsStore, filtersStore }) => ({
+    artifactsStore,
+    filtersStore
+  }),
+  { ...artifactsAction, ...filtersActions }
+)(Files)

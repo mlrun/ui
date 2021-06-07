@@ -54,7 +54,6 @@ import {
   REMOVE_MODEL,
   REMOVE_MODELS,
   REMOVE_NEW_FEATURE_SET,
-  SET_ARTIFACT_FILTER,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_KEY,
@@ -536,10 +535,6 @@ const artifactsAction = {
   }),
   removeNewFeatureSet: () => ({
     type: REMOVE_NEW_FEATURE_SET
-  }),
-  setArtifactFilter: filter => ({
-    type: SET_ARTIFACT_FILTER,
-    payload: filter
   }),
   setNewFeatureSetDataSourceAttributes: attributes => ({
     type: SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,

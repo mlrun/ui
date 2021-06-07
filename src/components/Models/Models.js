@@ -9,14 +9,19 @@ import DeployModelPopUp from '../../elements/DeployModelPopUp/DeployModelPopUp'
 
 import artifactsAction from '../../actions/artifacts'
 import detailsActions from '../../actions/details'
+import filtersActions from '../../actions/filters'
 import {
   handleFetchData,
   generatePageData,
   checkForSelectedModel,
   checkForSelectedModelEndpoint
 } from './models.util'
-import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
-import { MODEL_ENDPOINTS_TAB, MODELS_TAB } from '../../constants'
+import {
+  INIT_GROUP_FILTER,
+  INIT_TAG_FILTER,
+  MODELS_TAB,
+  MODEL_ENDPOINTS_TAB
+} from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 
@@ -26,11 +31,12 @@ const Models = ({
   fetchModelEndpointWithAnalysis,
   fetchModelEndpoints,
   fetchModels,
+  filtersStore,
   history,
   match,
   removeModel,
   removeModels,
-  setArtifactFilter
+  setFilters
 }) => {
   const [content, setContent] = useState([])
   const [selectedModel, setSelectedModel] = useState({})
@@ -40,8 +46,6 @@ const Models = ({
     setIsRegisterArtifactPopupOpen
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
-  const [iter, setIter] = useState('')
-  const [groupFilter, setGroupFilter] = useState('')
   const [yamlContent, setYamlContent] = useState({
     allData: [],
     selectedRowData: []
@@ -121,7 +125,7 @@ const Models = ({
       }))
 
       try {
-        result = await fetchModel(item.project, item.db_key, iter)
+        result = await fetchModel(item.project, item.db_key, !filtersStore.iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -147,7 +151,12 @@ const Models = ({
             selectedRowData: {
               ...state.selectedRowData,
               [item.db_key]: {
-                content: [...generateArtifacts(filterArtifacts(result), iter)],
+                content: [
+                  ...generateArtifacts(
+                    filterArtifacts(result),
+                    !filtersStore.iter
+                  )
+                ],
                 error: null,
                 loading: false
               }
@@ -156,7 +165,7 @@ const Models = ({
         })
       }
     },
-    [fetchModel, iter]
+    [fetchModel, filtersStore.iter]
   )
 
   const handleExpandRow = useCallback((item, isCollapse) => {
@@ -170,7 +179,7 @@ const Models = ({
 
   useEffect(() => {
     fetchData({
-      tag: 'latest',
+      tag: INIT_TAG_FILTER,
       iter: match.params.pageTab === MODELS_TAB ? 'iter' : ''
     })
 
@@ -182,9 +191,8 @@ const Models = ({
         allData: [],
         selectedRowData: []
       })
-      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
     }
-  }, [fetchData, match.params.pageTab, removeModels, setArtifactFilter])
+  }, [fetchData, match.params.pageTab, removeModels])
 
   useEffect(() => {
     setPageData(state => ({
@@ -205,13 +213,13 @@ const Models = ({
 
   useEffect(() => {
     if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
-      setGroupFilter('')
-    } else if (artifactsStore.filter.tag === 'latest') {
-      setGroupFilter('name')
-    } else if (groupFilter.length > 0) {
-      setGroupFilter('')
+      setFilters({ groupBy: 'none' })
+    } else if (filtersStore.tag === INIT_TAG_FILTER) {
+      setFilters({ groupBy: INIT_GROUP_FILTER })
+    } else {
+      setFilters({ groupBy: 'none' })
     }
-  }, [match.params.pageTab, groupFilter.length, artifactsStore.filter])
+  }, [match.params.pageTab, filtersStore.tag, setFilters])
 
   useEffect(() => {
     if (
@@ -257,17 +265,7 @@ const Models = ({
     fetchModelEndpointWithAnalysis
   ])
 
-  const handleModelTreeFilterChange = useCallback(
-    item => {
-      handleArtifactTreeFilterChange(
-        fetchData,
-        item,
-        setArtifactFilter,
-        setContent
-      )
-    },
-    [fetchData, setArtifactFilter]
-  )
+  useEffect(() => setContent([]), [filtersStore.tag])
 
   return (
     <>
@@ -275,8 +273,6 @@ const Models = ({
       <Content
         content={content}
         expandRow={handleExpandRow}
-        groupFilter={groupFilter}
-        handleArtifactFilterTree={handleModelTreeFilterChange}
         handleCancel={() => setSelectedModel({})}
         handleSelectItem={item => setSelectedModel({ item })}
         loading={artifactsStore.loading}
@@ -285,12 +281,10 @@ const Models = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
-        setIter={setIter}
         yamlContent={yamlContent}
       />
       {isRegisterArtifactPopupOpen && (
         <RegisterArtifactPopup
-          artifactFilter={artifactsStore.filter}
           artifactKind={pageData.page.slice(0, -1)}
           match={match}
           refresh={fetchData}
@@ -312,7 +306,14 @@ Models.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(artifactsStore => artifactsStore, {
-  ...artifactsAction,
-  ...detailsActions
-})(Models)
+export default connect(
+  ({ artifactsStore, filtersStore }) => ({
+    artifactsStore,
+    filtersStore
+  }),
+  {
+    ...artifactsAction,
+    ...detailsActions,
+    ...filtersActions
+  }
+)(Models)

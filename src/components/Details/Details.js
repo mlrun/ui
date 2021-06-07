@@ -36,6 +36,7 @@ const Details = ({
   cancelRequest,
   detailsMenu,
   detailsStore,
+  filtersStore,
   handleCancel,
   match,
   pageData,
@@ -270,7 +271,7 @@ const Details = ({
     history.push(pathname.current)
 
     if (detailsState.refreshWasHandled) {
-      retryRequest()
+      retryRequest(filtersStore)
       detailsDispatch({
         type: detailsActions.SET_REFRESH_WAS_HANDLED,
         payload: false
@@ -343,6 +344,7 @@ Details.propTypes = {
   selectedItem: PropTypes.shape({}).isRequired
 }
 
-export default connect(({ detailsStore }) => ({
-  detailsStore
+export default connect(({ detailsStore, filtersStore }) => ({
+  detailsStore,
+  filtersStore
 }))(Details)
