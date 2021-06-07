@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useDispatch, connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
@@ -46,8 +46,6 @@ const FilterMenu = ({
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
   const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
-  const [showActionButton, setShowActionButton] = useState(false)
-  const location = useLocation()
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -59,18 +57,6 @@ const FilterMenu = ({
       setTreeOptions(filterTreeOptions)
     }
   }, [removeFilters, match.params.pageTab])
-
-  useEffect(() => {
-    //TODO
-    if (
-      page !== FUNCTIONS_PAGE ||
-      new URLSearchParams(location.search).get('demo') === 'true'
-    ) {
-      setShowActionButton(true)
-    } else if (showActionButton) {
-      setShowActionButton(false)
-    }
-  }, [location.search, page, showActionButton])
 
   useEffect(() => {
     if (filters.find(filter => filter.type === 'iterations')) {
@@ -246,6 +232,7 @@ const FilterMenu = ({
                 <CheckBox
                   key={filter.type}
                   item={{ label: filter.label, id: '' }}
+                  onChange={handleIterClick}
                   selectedId={filtersStore.iter}
                 />
               )
@@ -279,9 +266,10 @@ const FilterMenu = ({
         )}
       </div>
       {actionButton &&
+        actionButton.visible &&
         (actionButton.getCustomTemplate ? (
           actionButton.getCustomTemplate(actionButton)
-        ) : showActionButton ? (
+        ) : (
           <Button
             variant={actionButton.variant}
             label={actionButton.label}
@@ -289,7 +277,7 @@ const FilterMenu = ({
             disabled={actionButton.disabled}
             onClick={actionButton.onClick}
           />
-        ) : null)}
+        ))}
       <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
           <button onClick={() => applyChanges(filtersStore, true)} id="refresh">

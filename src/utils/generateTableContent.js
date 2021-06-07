@@ -23,7 +23,7 @@ export const generateTableContent = (
   match,
   isTablePanelOpen
 ) => {
-    if (!isEmpty(groupedByName) && groupFilter === INIT_GROUP_FILTER) {
+  if (!isEmpty(groupedByName) && groupFilter === INIT_GROUP_FILTER) {
     return map(groupedByName, group =>
       page === JOBS_PAGE
         ? createJobsContent(group, false)

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { chain, isEqual, isEmpty } from 'lodash'
+import { useLocation } from 'react-router-dom'
 
 import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
@@ -44,6 +45,7 @@ const Functions = ({
   const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
+  const location = useLocation()
   const pageData = {
     actionsMenu: item => [
       {
@@ -66,7 +68,8 @@ const Functions = ({
     filterMenuActionButton: {
       label: 'New',
       onClick: () => setFunctionsPanelIsOpen(true),
-      variant: 'secondary'
+      variant: 'secondary',
+      visible: new URLSearchParams(location.search).get('demo') === 'true'
     }
   }
 

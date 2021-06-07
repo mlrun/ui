@@ -125,7 +125,7 @@ const Models = ({
       }))
 
       try {
-        result = await fetchModel(item.project, item.db_key, filtersStore.iter)
+        result = await fetchModel(item.project, item.db_key, !filtersStore.iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -154,7 +154,7 @@ const Models = ({
                 content: [
                   ...generateArtifacts(
                     filterArtifacts(result),
-                    filtersStore.iter
+                    !filtersStore.iter
                   )
                 ],
                 error: null,

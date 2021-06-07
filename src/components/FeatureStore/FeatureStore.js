@@ -176,7 +176,7 @@ const FeatureStore = ({
           item,
           setPageData,
           setYamlContent,
-          filtersStore.iter
+          !filtersStore.iter
         )
       }
     },

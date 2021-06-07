@@ -94,7 +94,7 @@ const Files = ({
       }))
 
       try {
-        result = await fetchFile(item.project, item.db_key, filtersStore.iter)
+        result = await fetchFile(item.project, item.db_key, !filtersStore.iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -123,7 +123,7 @@ const Files = ({
                 content: [
                   ...generateArtifacts(
                     filterArtifacts(result),
-                    filtersStore.iter
+                    !filtersStore.iter
                   )
                 ],
                 error: null,
