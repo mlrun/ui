@@ -179,6 +179,16 @@ const createModelsRowData = (artifact, project) => {
       class: 'artifacts_big',
       type: 'metrics'
     },
+    frameWorkAndAlgorithm: {
+      value: (
+        <span>
+          <span>{artifact.framework}</span>
+          <br />
+          <span>{artifact.algorithm}</span>
+        </span>
+      ),
+      class: 'artifacts_small'
+    },
     version: {
       value: artifact.tag,
       class: 'artifacts_small',
