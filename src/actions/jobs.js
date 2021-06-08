@@ -33,7 +33,8 @@ import {
   SET_NEW_JOB_SELECTOR_CRITERIA,
   SET_NEW_JOB_SELECTOR_RESULT,
   RUN_NEW_JOB_BEGIN,
-  RUN_NEW_JOB_SUCCESS
+  RUN_NEW_JOB_SUCCESS,
+  SET_NEW_JOB_NODE_SELECTOR
 } from '../constants'
 
 const jobsActions = {
@@ -207,6 +208,10 @@ const jobsActions = {
   setNewJobInputs: inputs => ({
     type: SET_NEW_JOB_INPUTS,
     payload: inputs
+  }),
+  setNewJobNodeSelector: nodeSelector => ({
+    type: SET_NEW_JOB_NODE_SELECTOR,
+    payload: nodeSelector
   }),
   setNewJobParameters: parameters => ({
     type: SET_NEW_JOB_PARAMETERS,

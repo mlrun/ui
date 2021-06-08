@@ -56,7 +56,7 @@ const KeyValueTable = ({
   }
 
   const isKeyNotUnique = (newKey, keys) => {
-    return keys.some(({ key }) => newKey === key)
+    return keyType !== 'select' && keys.some(({ key }) => newKey === key)
   }
 
   return (
@@ -148,7 +148,7 @@ const KeyValueTable = ({
               <button
                 className="delete-btn"
                 onClick={() => {
-                  deleteItem(index)
+                  deleteItem(index, contentItem)
                 }}
               >
                 <Delete />

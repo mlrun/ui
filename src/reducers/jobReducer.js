@@ -32,7 +32,8 @@ import {
   SET_NEW_JOB_SELECTOR_CRITERIA,
   SET_NEW_JOB_SELECTOR_RESULT,
   RUN_NEW_JOB_BEGIN,
-  RUN_NEW_JOB_SUCCESS
+  RUN_NEW_JOB_SUCCESS,
+  SET_NEW_JOB_NODE_SELECTOR
 } from '../constants'
 
 const initialState = {
@@ -60,7 +61,8 @@ const initialState = {
       spec: {
         volumes: [],
         volume_mounts: [],
-        env: []
+        env: [],
+        node_selector: {}
       }
     }
   }
@@ -214,7 +216,8 @@ export default (state = initialState, { type, payload }) => {
               ...state.newJob.function.spec,
               volume_mounts: payload.volume_mounts,
               volumes: payload.volumes,
-              env: payload.environmentVariables
+              env: payload.environmentVariables,
+              node_selector: payload.node_selector
             }
           }
         }
@@ -243,6 +246,20 @@ export default (state = initialState, { type, payload }) => {
             spec: {
               ...state.newJob.task.spec,
               inputs: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_JOB_NODE_SELECTOR:
+      return {
+        ...state,
+        newJob: {
+          ...state.newJob,
+          function: {
+            ...state.newJob.function,
+            spec: {
+              ...state.newJob.function.spec,
+              node_selector: payload
             }
           }
         }

@@ -362,8 +362,6 @@ const JobsPanel = ({
       setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobInputs={setNewJobInputs}
       setNewJobSecretSources={setNewJobSecretSources}
-      setNewJobVolumeMounts={setNewJobVolumeMounts}
-      setNewJobVolumes={setNewJobVolumes}
       setOpenScheduleJob={setOpenScheduleJob}
       withSaveChanges={withSaveChanges}
     />

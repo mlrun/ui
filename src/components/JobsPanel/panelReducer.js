@@ -23,7 +23,8 @@ export const initialState = {
       volumes: [],
       volume_mounts: [],
       environmentVariables: [],
-      secretSources: []
+      secretSources: [],
+      node_selector: []
     },
     titleInfo: {
       method: '',
@@ -40,7 +41,8 @@ export const initialState = {
     volume_mounts: [],
     volumes: [],
     environmentVariables: [],
-    secretSources: []
+    secretSources: [],
+    node_selector: []
   }
 }
 
@@ -68,6 +70,8 @@ export const panelActions = {
     'SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES',
   SET_PREVIOUS_PANEL_DATA_INPUTS: 'SET_PREVIOUS_PANEL_DATA_INPUTS',
   SET_PREVIOUS_PANEL_DATA_METHOD: 'SET_PREVIOUS_PANEL_DATA_METHOD',
+  SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR:
+    'SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR',
   SET_PREVIOUS_PANEL_DATA_PARAMETERS: 'SET_PREVIOUS_PANEL_DATA_PARAMETERS',
   SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES:
     'SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES',
@@ -83,6 +87,7 @@ export const panelActions = {
   SET_TABLE_DATA: 'SET_TABLE_DATA',
   SET_TABLE_DATA_ENVIRONMENT_VARIABLES: 'SET_TABLE_DATA_ENVIRONMENT_VARIABLES',
   SET_TABLE_DATA_INPUTS: 'SET_TABLE_DATA_INPUTS',
+  SET_TABLE_DATA_NODE_SELECTOR: 'SET_TABLE_DATA_NODE_SELECTOR',
   SET_TABLE_DATA_PARAMETERS: 'SET_TABLE_DATA_PARAMETERS',
   SET_TABLE_DATA_SECRET_SOURCES: 'SET_TABLE_DATA_SECRET_SOURCES',
   SET_TABLE_DATA_VOLUMES: 'SET_TABLE_DATA_VOLUMES',
@@ -264,6 +269,17 @@ export const panelReducer = (state, { type, payload }) => {
           }
         }
       }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          tableData: {
+            ...state.previousPanelData.tableData,
+            node_selector: payload
+          }
+        }
+      }
     case panelActions.SET_PREVIOUS_PANEL_DATA_PARAMETERS:
       return {
         ...state,
@@ -360,6 +376,7 @@ export const panelReducer = (state, { type, payload }) => {
         }
       }
     case panelActions.SET_TABLE_DATA:
+      console.log(payload)
       return {
         ...state,
         tableData: payload
@@ -378,6 +395,14 @@ export const panelReducer = (state, { type, payload }) => {
         tableData: {
           ...state.tableData,
           dataInputs: payload
+        }
+      }
+    case panelActions.SET_TABLE_DATA_NODE_SELECTOR:
+      return {
+        ...state,
+        tableData: {
+          ...state.tableData,
+          node_selector: payload
         }
       }
     case panelActions.SET_TABLE_DATA_PARAMETERS:

@@ -73,6 +73,26 @@ export const getEnvironmentVariables = selectedFunction => {
     .value()
 }
 
+export const getNodeSelectors = selectedFunction => {
+  return chain(selectedFunction)
+    .map(func => {
+      return func.spec.node_selector ?? {}
+    })
+    .flatten()
+    .unionBy('key')
+    .map(selector => {
+      return Object.entries(selector)
+    })
+    .flatten()
+    .map(([key, value]) => {
+      return {
+        key,
+        value
+      }
+    })
+    .value()
+}
+
 export const getVolumeMounts = selectedFunction => {
   if (!selectedFunction.some(func => func.spec.volume_mounts)) {
     return []
@@ -167,6 +187,7 @@ export const generateTableData = (
   const functionParameters = getParameters(selectedFunction, method)
   const [{ limits, requests }] = getResources(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
+  const node_selector = getNodeSelectors(selectedFunction)
 
   if (
     limits?.memory?.match(/[a-zA-Z]/) ||
@@ -216,18 +237,20 @@ export const generateTableData = (
             value: env.value ?? ''
           }
         })),
-        secretSources: []
+        secretSources: [],
+        node_selector
       }
     })
     setNewJob({
       inputs: parseDefaultDataInputsContent(dataInputs),
       parameters: parseDefaultContent(parameters),
-      volume_mounts: volumeMounts.length
-        ? volumeMounts.map(volumeMounts => volumeMounts.data)
-        : [],
+      volume_mounts: (volumeMounts || []).map(
+        volumeMounts => volumeMounts.data
+      ),
       volumes,
       environmentVariables,
-      secret_sources: []
+      secret_sources: [],
+      node_selector: parseDefaultNodeSelectorContent(node_selector)
     })
   }
 
@@ -373,18 +396,25 @@ export const generateTableDataFromDefaultData = (
             value: env.value ?? ''
           }
         })) ?? [],
-      secretSources: secrets
+      secretSources: secrets,
+      node_selector: Object.entries(
+        defaultData.function?.spec.node_selector ?? {}
+      ).map(([key, value]) => ({
+        key,
+        value
+      }))
     }
   })
   setNewJob({
-    inputs: parseDefaultDataInputsContent(dataInputs),
-    parameters: parseDefaultContent(parameters),
+    inputs: defaultData.task.spec.inputs ?? {},
+    parameters: defaultData.task.spec.parameters ?? {},
     volume_mounts: volumeMounts?.length
       ? volumeMounts.map(volumeMounts => volumeMounts.data)
       : [],
     volumes: defaultData.function?.spec.volumes ?? [],
     environmentVariables: defaultData.function?.spec.env ?? [],
-    secret_sources: defaultData.task.spec.secret_sources ?? []
+    secret_sources: defaultData.task.spec.secret_sources ?? [],
+    node_selector: defaultData.function?.spec.node_selector ?? {}
   })
 
   if (limits) {
@@ -446,7 +476,7 @@ export const generateRequestData = (
     }
   }
 
-  const spec = {
+  const taskSpec = {
     ...jobsStore.newJob.task.spec,
     function: func,
     handler: panelState.currentFunctionInfo.method,
@@ -455,9 +485,9 @@ export const generateRequestData = (
   }
 
   if (jobsStore.newJob.task.spec.selector.result.length > 0) {
-    spec.selector = `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
+    taskSpec.selector = `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
   } else {
-    delete spec.selector
+    delete taskSpec.selector
   }
 
   return {
@@ -477,7 +507,7 @@ export const generateRequestData = (
         project,
         labels
       },
-      spec
+      spec: { ...taskSpec }
     }
   }
 }
@@ -487,6 +517,15 @@ export const parseDefaultDataInputsContent = inputs => {
     return {
       ...prev,
       [curr.data.name]: `${curr.data.path.pathType}${curr.data.path.value}`
+    }
+  }, {})
+}
+
+export const parseDefaultNodeSelectorContent = nodeSelector => {
+  return nodeSelector.reduce((prev, curr) => {
+    return {
+      ...prev,
+      [curr.key]: curr.value
     }
   }, {})
 }
