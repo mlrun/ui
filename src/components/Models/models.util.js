@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
@@ -82,6 +84,16 @@ export const modelsTableHeaders = [
   {
     header: 'Metrics',
     class: 'artifacts_big'
+  },
+  {
+    header: (
+      <span>
+        <span>Framework &</span>
+        <br />
+        <span>Algorithm</span>
+      </span>
+    ),
+    class: 'artifacts_small'
   },
   {
     header: '',
