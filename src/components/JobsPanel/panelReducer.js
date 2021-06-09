@@ -376,7 +376,6 @@ export const panelReducer = (state, { type, payload }) => {
         }
       }
     case panelActions.SET_TABLE_DATA:
-      console.log(payload)
       return {
         ...state,
         tableData: payload

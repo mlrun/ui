@@ -244,7 +244,7 @@ export const generateTableData = (
     setNewJob({
       inputs: parseDefaultDataInputsContent(dataInputs),
       parameters: parseDefaultContent(parameters),
-      volume_mounts: (volumeMounts || []).map(
+      volume_mounts: (volumeMounts ?? []).map(
         volumeMounts => volumeMounts.data
       ),
       volumes,
