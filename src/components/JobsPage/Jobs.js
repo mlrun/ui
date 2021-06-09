@@ -139,7 +139,8 @@ const Jobs = ({
             env: functionData?.spec.env ?? [],
             resources: functionData?.spec.resources,
             volume_mounts: functionData?.spec.volume_mounts ?? [],
-            volumes: functionData?.spec.volumes ?? []
+            volumes: functionData?.spec.volumes ?? [],
+            node_selector: functionData?.spec.node_selector ?? {}
           }
         },
         schedule: null,

@@ -5,13 +5,17 @@ import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import Select from '../../common/Select/Select'
 import RangeInput from '../../common/RangeInput/RangeInput'
 import { VolumesTable } from '../../elements/VolumesTable/VolumesTable'
+import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 
 import { panelActions } from '../JobsPanel/panelReducer'
 import { selectMemoryOptions as selectTypeOptions } from '../../utils/panelResources.util'
 
 const JobsPanelResourcesView = ({
   handleAddNewVolume,
+  handleAddNewNodeSelector,
+  handleDeleteNodeSelector,
   handleDeleteVolume,
+  handleEditNodeSelector,
   handleEditVolume,
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
@@ -21,6 +25,20 @@ const JobsPanelResourcesView = ({
 }) => (
   <div className="job-panel__item resources new-item-side-panel__item">
     <JobsPanelSection title="Resources" />
+    <JobsPanelSection title="Node selectors">
+      <KeyValueTable
+        addNewItem={handleAddNewNodeSelector}
+        addNewItemLabel="Add node selector"
+        className="node-selector"
+        content={panelState.tableData.node_selector}
+        deleteItem={handleDeleteNodeSelector}
+        editItem={handleEditNodeSelector}
+        keyHeader="Key"
+        keyType="input"
+        valueHeader="Value"
+        withEditMode
+      />
+    </JobsPanelSection>
     <JobsPanelSection title="Volumes">
       <VolumesTable
         handleAddNewVolume={handleAddNewVolume}
@@ -138,8 +156,11 @@ const JobsPanelResourcesView = ({
 )
 
 JobsPanelResourcesView.propTypes = {
+  handleAddNewNodeSelector: PropTypes.func.isRequired,
+  handleDeleteNodeSelector: PropTypes.func.isRequired,
   handleAddNewVolume: PropTypes.func.isRequired,
   handleDeleteVolume: PropTypes.func.isRequired,
+  handleEditNodeSelector: PropTypes.func.isRequired,
   handleEditVolume: PropTypes.func.isRequired,
   handleSelectCpuUnit: PropTypes.func.isRequired,
   handleSelectMemoryUnit: PropTypes.func.isRequired,
