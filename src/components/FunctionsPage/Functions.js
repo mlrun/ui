@@ -19,9 +19,13 @@ import {
   page,
   tableHeaders
 } from './functions.util'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
+
+import { FUNCTIONS_PAGE } from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -117,6 +121,17 @@ const Functions = ({
       !showUntagged ? functions.filter(func => func.tag.length) : functions
     )
   }, [showUntagged, functions])
+
+  useEffect(() => {
+    if (match.params.hash && pageData.detailsMenu.length > 0) {
+      isDetailsTabExists(
+        FUNCTIONS_PAGE,
+        match.params,
+        pageData.detailsMenu,
+        history
+      )
+    }
+  }, [history, match.params, pageData.detailsMenu])
 
   useEffect(() => {
     let item = {}

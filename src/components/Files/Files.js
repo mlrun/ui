@@ -19,7 +19,14 @@ import {
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateUri } from '../../utils/resources'
-import { ARTIFACTS, INIT_TAG_FILTER, INIT_GROUP_FILTER } from '../../constants'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+
+import {
+  ARTIFACTS,
+  INIT_TAG_FILTER,
+  INIT_GROUP_FILTER,
+  FILES_PAGE
+} from '../../constants'
 import filtersActions from '../../actions/filters'
 
 const Files = ({
@@ -145,6 +152,21 @@ const Files = ({
       }))
     }
   }, [])
+
+  useEffect(() => {
+    if (
+      match.params.name &&
+      match.params.tag &&
+      pageData.detailsMenu.length > 0
+    ) {
+      isDetailsTabExists(
+        FILES_PAGE,
+        match.params,
+        pageData.detailsMenu,
+        history
+      )
+    }
+  }, [history, match.params, pageData.detailsMenu])
 
   useEffect(() => {
     fetchData({ tag: INIT_TAG_FILTER, iter: 'iter' })

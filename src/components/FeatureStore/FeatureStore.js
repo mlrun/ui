@@ -25,13 +25,15 @@ import {
   navigateToDetailsPane,
   pageDataInitialState
 } from './featureStore.util'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import {
   DATASETS_TAB,
   FEATURES_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   INIT_GROUP_FILTER,
-  INIT_TAG_FILTER
+  INIT_TAG_FILTER,
+  FEATURE_STORE_PAGE
 } from '../../constants'
 
 import './featureStore.scss'
@@ -268,6 +270,21 @@ const FeatureStore = ({
   useEffect(() => {
     navigateToDetailsPane(artifactsStore, history, match, setSelectedItem)
   }, [history, artifactsStore, match])
+
+  useEffect(() => {
+    if (
+      match.params.name &&
+      match.params.tag &&
+      pageData.detailsMenu.length > 0
+    ) {
+      isDetailsTabExists(
+        FEATURE_STORE_PAGE,
+        match.params,
+        pageData.detailsMenu,
+        history
+      )
+    }
+  }, [history, match.params, pageData.detailsMenu])
 
   useEffect(() => {
     checkTabIsValid(history, match, selectedItem)

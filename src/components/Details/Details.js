@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useMemo,
-  useReducer,
-  useCallback,
-  useRef
-} from 'react'
+import React, { useEffect, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { connect, useDispatch } from 'react-redux'
@@ -16,15 +10,16 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODELS_PAGE
+  MODELS_PAGE,
+  MODELS_TAB
 } from '../../constants'
-import { detailsActions, detailsReducer, initialState } from './detailsReducer'
 import {
   generateArtifactsContent,
   generateFunctionsContent,
   generateJobsContent,
   renderContent
 } from './details.util'
+import detailsActions from '../../actions/details'
 
 import DetailsView from './DetailsView'
 
@@ -40,13 +35,20 @@ const Details = ({
   handleCancel,
   match,
   pageData,
+  removeInfoContent,
+  removeModelFeatureVector,
+  resetChanges,
   retryRequest,
-  selectedItem
+  selectedItem,
+  setChanges,
+  setChangesCounter,
+  setChangesData,
+  setInfoContent,
+  setIteration,
+  setIterationOption,
+  setRefreshWasHandled,
+  showWarning
 }) => {
-  const [detailsState, detailsDispatch] = useReducer(
-    detailsReducer,
-    initialState
-  )
   const history = useHistory()
   const dispatch = useDispatch()
   let unblockRootChange = useRef()
@@ -65,86 +67,65 @@ const Details = ({
 
   const handleEditInput = useCallback(
     (value, field) => {
-      detailsDispatch({
-        type: detailsActions.SET_CHANGES_DATA,
-        payload: {
-          ...detailsState.changes.data,
-          [field]: value
-        }
+      setChangesData({
+        ...detailsStore.changes.data,
+        [field]: value
       })
     },
-    [detailsState.changes.data]
+    [detailsStore.changes.data, setChangesData]
   )
 
   const handleEditChips = useCallback(
     (chips, field) => {
-      detailsDispatch({
-        type: detailsActions.SET_CHANGES_DATA,
-        payload: {
-          ...detailsState.changes.data,
-          [field]: chips
-        }
+      setChangesData({
+        ...detailsStore.changes.data,
+        [field]: chips
       })
     },
-    [detailsState.changes.data]
+    [detailsStore.changes.data, setChangesData]
   )
 
   const handleAddChip = useCallback(
     (chip, chips, field) => {
-      detailsDispatch({
-        type: detailsActions.SET_CHANGES_DATA,
-        payload: {
-          ...detailsState.changes.data,
-          [field]: [...chips, ...chip]
-        }
+      setChangesData({
+        ...detailsStore.changes.data,
+        [field]: [...chips, ...chip]
       })
     },
-    [detailsState.changes.data]
+    [detailsStore.changes.data, setChangesData]
   )
 
   const handleDeleteChip = useCallback(
     (chips, field) => {
-      detailsDispatch({
-        type: detailsActions.SET_CHANGES_DATA,
-        payload: {
-          ...detailsState.changes.data,
-          [field]: chips
-        }
+      setChangesData({
+        ...detailsStore.changes.data,
+        [field]: chips
       })
     },
-    [detailsState.changes.data]
+    [detailsStore.changes.data, setChangesData]
   )
 
   useEffect(() => {
     if (pageData.page === JOBS_PAGE) {
-      detailsDispatch({
-        type: detailsActions.SET_ITERATION,
-        payload: '0'
-      })
+      setIteration('0')
     }
 
     return () => {
-      detailsDispatch({
-        type: detailsActions.RESET_CHANGES
-      })
+      resetChanges()
     }
-  }, [pageData.page, selectedItem.uid])
+  }, [pageData.page, resetChanges, selectedItem.uid, setIteration])
 
   useEffect(() => {
     if (pageData.page === JOBS_PAGE) {
-      detailsDispatch({
-        type: detailsActions.SET_INFO_CONTENT,
-        payload: generateJobsContent(selectedItem)
-      })
+      setInfoContent(generateJobsContent(selectedItem))
     } else if (
       pageData.page === ARTIFACTS_PAGE ||
       pageData.page === FILES_PAGE ||
       pageData.page === MODELS_PAGE ||
       pageData.page === FEATURE_STORE_PAGE
     ) {
-      detailsDispatch({
-        type: detailsActions.SET_INFO_CONTENT,
-        payload: generateArtifactsContent(
+      setInfoContent(
+        generateArtifactsContent(
           handleEditInput,
           pageData.page,
           match.params.pageTab,
@@ -153,45 +134,56 @@ const Details = ({
           handleAddChip,
           handleDeleteChip
         )
-      })
+      )
     } else if (pageData.page === FUNCTIONS_PAGE) {
-      detailsDispatch({
-        type: detailsActions.SET_INFO_CONTENT,
-        payload: generateFunctionsContent(selectedItem)
-      })
+      setInfoContent(generateFunctionsContent(selectedItem))
     }
 
     return () => {
-      detailsDispatch({
-        type: detailsActions.REMOVE_INFO_CONTENT
-      })
+      if (match.params.pageTab === MODELS_TAB) {
+        removeModelFeatureVector()
+      }
+
+      removeInfoContent()
     }
   }, [
-    detailsState.changes.counter,
+    detailsStore.changes.counter,
     handleAddChip,
     handleDeleteChip,
     handleEditChips,
     handleEditInput,
     match.params.pageTab,
     pageData.page,
-    selectedItem
+    removeInfoContent,
+    removeModelFeatureVector,
+    selectedItem,
+    setInfoContent
   ])
+
+  const handleShowWarning = useCallback(
+    show => {
+      showWarning(show)
+    },
+    [showWarning]
+  )
 
   const handleRefreshClick = useCallback(
     event => {
       if (
-        detailsState.changes.counter > 0 &&
+        detailsStore.changes.counter > 0 &&
         document.getElementById('refresh')?.contains(event.target)
       ) {
         cancelRequest('cancel')
         handleShowWarning(true)
-        detailsDispatch({
-          type: detailsActions.SET_REFRESH_WAS_HANDLED,
-          payload: true
-        })
+        setRefreshWasHandled(true)
       }
     },
-    [cancelRequest, detailsState.changes]
+    [
+      cancelRequest,
+      detailsStore.changes.counter,
+      handleShowWarning,
+      setRefreshWasHandled
+    ]
   )
 
   useEffect(() => {
@@ -211,13 +203,13 @@ const Details = ({
         return false
       })
     }
-  }, [history])
+  }, [handleShowWarning, history])
 
   useEffect(() => {
-    if (detailsState.changes.counter > 0 && !unblockRootChange.current) {
+    if (detailsStore.changes.counter > 0 && !unblockRootChange.current) {
       blockRootChange()
     } else if (
-      detailsState.changes.counter === 0 &&
+      detailsStore.changes.counter === 0 &&
       unblockRootChange.current
     ) {
       unblockRootChange.current()
@@ -232,30 +224,19 @@ const Details = ({
   }
 
   const applyChanges = () => {
-    applyDetailsChanges(detailsState.changes).then(() => {
-      detailsDispatch({
-        type: detailsActions.RESET_CHANGES
-      })
+    applyDetailsChanges(detailsStore.changes).then(() => {
+      resetChanges()
       unblockRootChange.current()
       unblockRootChange.current = null
     })
   }
 
   const cancelChanges = () => {
-    if (detailsState.changes.counter > 0) {
-      detailsDispatch({
-        type: detailsActions.RESET_CHANGES
-      })
+    if (detailsStore.changes.counter > 0) {
+      resetChanges()
       unblockRootChange.current()
       unblockRootChange.current = null
     }
-  }
-
-  const handleShowWarning = show => {
-    detailsDispatch({
-      type: detailsActions.SHOW_WARNING,
-      payload: show
-    })
   }
 
   const leavePage = () => {
@@ -270,34 +251,37 @@ const Details = ({
 
     history.push(pathname.current)
 
-    if (detailsState.refreshWasHandled) {
+    if (detailsStore.refreshWasHandled) {
       retryRequest(filtersStore)
-      detailsDispatch({
-        type: detailsActions.SET_REFRESH_WAS_HANDLED,
-        payload: false
-      })
+      setRefreshWasHandled(false)
     }
   }
 
   const tabsContent = useMemo(() => {
     return renderContent(
       match,
-      detailsState,
-      detailsDispatch,
+      detailsStore,
       selectedItem,
       pageData,
       handlePreview,
       detailsStore,
-      handleEditInput
+      handleEditInput,
+      setChanges,
+      setChangesData,
+      setChangesCounter,
+      setIterationOption
     )
   }, [
-    detailsState,
     detailsStore,
     handleEditInput,
     handlePreview,
     match,
     pageData,
-    selectedItem
+    selectedItem,
+    setChanges,
+    setChangesCounter,
+    setChangesData,
+    setIterationOption
   ])
 
   return (
@@ -305,10 +289,8 @@ const Details = ({
       actionsMenu={actionsMenu}
       applyChanges={applyChanges}
       cancelChanges={cancelChanges}
-      detailsDispatch={detailsDispatch}
       detailsMenu={detailsMenu}
       detailsMenuClick={detailsMenuClick}
-      detailsState={detailsState}
       detailsStore={detailsStore}
       handleCancel={handleCancel}
       handleShowWarning={handleShowWarning}
@@ -317,6 +299,8 @@ const Details = ({
       pageData={pageData}
       ref={detailsRef}
       selectedItem={selectedItem}
+      setIteration={setIteration}
+      setRefreshWasHandled={setRefreshWasHandled}
       tabsContent={tabsContent}
     />
   )
@@ -326,7 +310,8 @@ Details.defaultProps = {
   applyDetailsChanges: () => {},
   cancelRequest: () => {},
   item: {},
-  retryRequest: () => {}
+  retryRequest: () => {},
+  removeModelFeatureVector: () => {}
 }
 
 Details.propTypes = {
@@ -340,11 +325,15 @@ Details.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  removeModelFeatureVector: PropTypes.func,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}).isRequired
 }
 
-export default connect(({ detailsStore, filtersStore }) => ({
-  detailsStore,
-  filtersStore
-}))(Details)
+export default connect(
+  ({ detailsStore, filtersStore }) => ({
+    detailsStore,
+    filtersStore
+  }),
+  { ...detailsActions }
+)(Details)

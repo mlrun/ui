@@ -44,7 +44,30 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Accuracy', id: 'accuracy' },
   { label: 'Stream path', id: 'stream_path' }
 ]
-export const modelsDetailsMenu = ['overview', 'preview']
+export const generateModelsDetailsMenu = selectedModel => {
+  const modelsDetailsMenu = [
+    {
+      header: 'overview',
+      visible: true
+    },
+    {
+      header: 'preview',
+      visible: true
+    },
+    {
+      header: 'returned features',
+      visible: Boolean(selectedModel.item?.feature_vector)
+    },
+    {
+      header: 'statistics',
+      visible: Boolean(selectedModel.item?.feature_vector)
+    }
+  ]
+
+  return selectedModel.item
+    ? modelsDetailsMenu.filter(item => item.visible).map(item => item.header)
+    : []
+}
 export const modelEndpointsDetailsMenu = [
   'overview',
   'drift analysis',
@@ -196,6 +219,7 @@ export const handleFetchData = async (
 }
 
 export const generatePageData = (
+  selectedModel,
   pageTab,
   handleDeployModel,
   handleRequestOnExpand,
@@ -207,7 +231,7 @@ export const generatePageData = (
   }
 
   if (pageTab === MODELS_TAB) {
-    data.detailsMenu = modelsDetailsMenu
+    data.detailsMenu = generateModelsDetailsMenu(selectedModel)
     data.filters = modelsFilters
     data.registerArtifactDialogTitle = registerArtifactDialogTitle
     data.tableHeaders = modelsTableHeaders
@@ -280,4 +304,12 @@ export const checkForSelectedModelEndpoint = (
     )
     setSelectedModel({ item: searchItem })
   }
+}
+
+export const getFeatureVectorData = uri => {
+  const separrator = uri?.indexOf('@') > 0 ? '@' : ':'
+  const name = uri.slice(uri.lastIndexOf('/') + 1, uri.lastIndexOf(separrator))
+  const tag = uri.slice(uri.lastIndexOf(separrator) + 1)
+
+  return { tag, name }
 }

@@ -560,7 +560,9 @@ export const generateFeatureSetsDetailsMenu = selectedItem => {
     { header: 'analysis', visible: true }
   ]
 
-  return detailsMenu.filter(item => item.visible).map(item => item.header)
+  return selectedItem.item
+    ? detailsMenu.filter(item => item.visible).map(item => item.header)
+    : ''
 }
 
 export const generateFeatureVectorsDetailsMenu = selectedItem => {
@@ -579,7 +581,9 @@ export const generateFeatureVectorsDetailsMenu = selectedItem => {
     { header: 'analysis', visible: true }
   ]
 
-  return detailsMenu.filter(item => item.visible).map(item => item.header)
+  return selectedItem.item
+    ? detailsMenu.filter(item => item.visible).map(item => item.header)
+    : ''
 }
 
 export const generateDataSetsDetailsMenu = selectedItem => {
@@ -590,7 +594,9 @@ export const generateDataSetsDetailsMenu = selectedItem => {
     { header: 'analysis', visible: Boolean(selectedItem.item?.extra_data) }
   ]
 
-  return detailsMenu.filter(item => item.visible).map(item => item.header)
+  return selectedItem.item
+    ? detailsMenu.filter(item => item.visible).map(item => item.header)
+    : ''
 }
 
 export const fetchFeatureRowData = async (

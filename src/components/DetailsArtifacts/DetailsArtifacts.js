@@ -6,7 +6,6 @@ import DetailsArtifactsView from './DetailsArtifactsView'
 
 import artifactAction from '../../actions/artifacts'
 import jobsActions from '../../actions/jobs'
-import { detailsActions } from '../Details/detailsReducer'
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
 import {
   generateContent,
@@ -14,11 +13,11 @@ import {
 } from './detailsArtifacts.util'
 
 const DetailsArtifacts = ({
-  detailsDispatch,
   iteration,
   jobsStore,
   match,
-  selectedItem
+  selectedItem,
+  setIterationOption
 }) => {
   const [content, setContent] = useState([])
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
@@ -59,14 +58,13 @@ const DetailsArtifacts = ({
       }
     })
 
-    detailsDispatch({
-      type: detailsActions.SET_ITERATION_OPTIONS,
-      payload: iterationsList.sort().map(iteration => ({
+    setIterationOption(
+      iterationsList.sort().map(iteration => ({
         label: iteration === 0 ? 'Main' : `${iteration}`,
         id: `${iteration}`
       }))
-    })
-  }, [detailsDispatch, jobsStore.allJobsData, selectedItem.uid])
+    )
+  }, [dispatch, jobsStore.allJobsData, selectedItem.uid, setIterationOption])
 
   useEffect(() => {
     if (artifactsIndexes.length > 0) {
@@ -123,10 +121,10 @@ const DetailsArtifacts = ({
 }
 
 DetailsArtifacts.propTypes = {
-  detailsDispatch: PropTypes.func.isRequired,
   iteration: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  setIterationOption: PropTypes.func.isRequired
 }
 
 export default connect(({ jobsStore }) => ({ jobsStore }), { ...jobsActions })(
