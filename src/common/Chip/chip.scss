@@ -4,15 +4,25 @@
 @import '../../scss/mixins';
 
 .chip {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   margin: 2px 4px;
   padding: 4px 8px;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 16px;
-  white-space: nowrap;
-  border-radius: 20px;
   cursor: default;
+
+  &__content {
+    display: flex;
+  }
+
+  &__delimiter {
+    margin-right: 5px;
+  }
+
+  &__value {
+    min-width: 10px;
+  }
 
   &.editable {
     cursor: pointer;
@@ -34,101 +44,24 @@
     }
   }
 
-  &-density {
-    &_dense {
-      height: 24px;
-      padding: 4px 8px;
-      font-size: 14px;
-    }
-
-    &_normal {
-      height: 32px;
-      padding: 8px 15px;
-    }
-
-    &_medium {
-      height: 34px;
-      padding: 8px 15px;
-      font-size: 15px;
-
-      .item-icon-close {
-        transform: scale(1.2);
-      }
-    }
+  &-background {
+    @include chipBackground(false);
   }
 
-  &-square {
-    border-radius: 4px;
+  &-border {
+    @include chipBorder();
+  }
+
+  &-density {
+    @include chipDensity(false, false);
+  }
+
+  &-font {
+    @include chipsFont(Chip);
   }
 
   &-value_bold {
     font-weight: 700;
     font-size: 15px;
-  }
-
-  &-background {
-    &_none {
-      background-color: transparent;
-    }
-
-    &_green {
-      background-color: $javaTwo;
-    }
-
-    &_grey {
-      background-color: $mulledWineThree;
-    }
-
-    &_orange {
-      background-color: $grandisTwo;
-    }
-
-    &_purple {
-      background-color: $amethystTwo;
-    }
-  }
-
-  &-border {
-    &_none {
-      border: $transparentBorder;
-    }
-
-    &_green {
-      border: $resultsBorder;
-    }
-
-    &_grey {
-      border: $secondaryBorder;
-    }
-
-    &_orange {
-      border: $parametersBorder;
-    }
-
-    &_purple {
-      border: $labelBorder;
-    }
-  }
-
-  &-font {
-    &_primary {
-      @include ChipColor($primary);
-    }
-
-    &_green {
-      @include ChipColor($chateauGreen);
-    }
-
-    &_white {
-      @include ChipColor($white);
-    }
-
-    &_orange {
-      @include ChipColor($sorbus);
-    }
-
-    &_purple {
-      @include ChipColor($amethyst);
-    }
   }
 }

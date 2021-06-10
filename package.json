@@ -89,6 +89,7 @@
     "babel-eslint": "10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.0.6",
+    "babel-plugin-inline-react-svg": "^2.0.1",
     "babel-plugin-jest-hoist": "^26.2.0",
     "babel-plugin-named-asset-import": "^0.3.4",
     "babel-plugin-prismjs": "^2.0.1",

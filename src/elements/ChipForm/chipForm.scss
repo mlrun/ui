@@ -2,21 +2,18 @@
 @import '../../scss/borders';
 @import '../../scss/mixins';
 
-.edit-label {
+.edit-chip {
   &-container {
     display: inline-flex;
-    margin: 5px 2px;
-    padding: 0 9px;
+    margin: 2px 4px;
+    padding: 0 8px;
     font-size: 14px;
-
-    &_edited {
-      padding-right: 18px;
-    }
+    line-height: 22px;
 
     input {
       display: flex;
-      margin: 0 5px;
       padding: 0;
+      font-size: 14px;
       background-color: transparent;
       border: none;
 
@@ -31,98 +28,25 @@
       }
     }
 
-    &-font {
-      &_primary {
-        @include ChipFormFont($primary);
-      }
-
-      &_green {
-        @include ChipFormFont($chateauGreen);
-      }
-
-      &_white {
-        @include ChipFormFont($white);
-      }
-
-      &_orange {
-        @include ChipFormFont($sorbus);
-      }
-
-      &_purple {
-        @include ChipFormFont($amethyst);
-      }
+    &-background {
+      @include chipBackground(false);
     }
 
     &-border {
-      &_none {
-        border: $transparentBorder;
-      }
-
-      &_green {
-        border: $resultsBorder;
-      }
-
-      &_grey {
-        border: $secondaryBorder;
-      }
-
-      &_orange {
-        border: $parametersBorder;
-      }
-
-      &_purple {
-        border: $labelBorder;
-      }
-    }
-
-    &-background {
-      &_none {
-        background-color: transparent;
-      }
-
-      &_green {
-        background-color: $javaTwo;
-      }
-
-      &_grey {
-        background-color: $mulledWineThree;
-      }
-
-      &_orange {
-        background-color: $grandisTwo;
-      }
-
-      &_purple {
-        background-color: $amethystTwo;
-      }
+      @include chipBorder();
     }
 
     &-density {
-      &_dense {
-        height: 24px;
-      }
-
-      &_normal {
-        height: 32px;
-        padding: 8px 15px;
-      }
-
-      &_medium {
-        height: 34px;
-        padding: 8px 15px;
-        font-size: 15px;
-      }
+      @include chipDensity(true, false);
     }
 
-    &-form {
-      &_square {
-        border-radius: 4px;
-      }
-
-      &_round {
-        border-radius: 20px;
-      }
+    &-font {
+      @include chipsFont(EditableChip);
     }
+  }
+
+  &-separator {
+    margin-right: 5px;
   }
 
   &__icon-close {

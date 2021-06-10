@@ -56,7 +56,7 @@
   border-radius: 50%;
 }
 
-@mixin ChipColor($color) {
+@mixin chipFont($color) {
   color: $color;
 
   .item-icon-close {
@@ -68,7 +68,7 @@
   }
 }
 
-@mixin ChipFormFont($fontColor) {
+@mixin editableChipFont($fontColor) {
   color: $fontColor;
 
   .input-label-key {
@@ -84,7 +84,7 @@
   }
 }
 
-@mixin ChipButtonAddFont($color) {
+@mixin chipButtonAddColor($color) {
   svg {
     rect,
     path {
@@ -102,7 +102,7 @@
   }
 }
 
-@mixin ChipButtonAddBackground($color, $hoverColor) {
+@mixin chipButtonAddBackground($color, $hoverColor) {
   background-color: $color;
 
   &:hover {
@@ -110,9 +110,188 @@
   }
 }
 
-@mixin ChipButtonAddSize($size) {
+@mixin chipButtonAddSize($size) {
   width: $size;
   height: $size;
+}
+
+@mixin chipBackground($isChipButtonAdd) {
+  @if $isChipButtonAdd == true {
+    &_orange {
+      @include chipButtonAddBackground($grandisTwo, $sorbus);
+    }
+
+    &_purple {
+      @include chipButtonAddBackground($amethystTwo, $amethyst);
+    }
+
+    &_green {
+      @include chipButtonAddBackground($javaTwo, $java);
+    }
+
+    &_grey {
+      @include chipButtonAddBackground($mulledWineThree, $topaz);
+    }
+  } @else {
+    &_none {
+      background-color: transparent;
+    }
+
+    &_green {
+      background-color: $javaTwo;
+    }
+
+    &_grey {
+      background-color: $mulledWineThree;
+    }
+
+    &_orange {
+      background-color: $grandisTwo;
+    }
+
+    &_purple {
+      background-color: $amethystTwo;
+    }
+
+    &_amethyst {
+      background-color: $amethyst;
+    }
+
+    &_sorbus {
+      background-color: $sorbus;
+    }
+
+    &_java {
+      background-color: $java;
+    }
+  }
+}
+
+@mixin chipBorder() {
+  &_transparent {
+    border: $transparentBorder;
+  }
+
+  &_green {
+    border: $resultsBorder;
+  }
+
+  &_grey {
+    border: $primaryBorder;
+  }
+
+  &_orange {
+    border: $parametersBorder;
+  }
+
+  &_purple {
+    border: $labelBorder;
+  }
+
+  &_primary {
+    border-radius: 4px;
+  }
+
+  &_secondary {
+    border-radius: 20px;
+  }
+}
+
+@mixin chipDensity($isEditMode, $isChipAddButton) {
+  @if $isChipAddButton == true {
+    &_dense {
+      @include chipButtonAddSize(26px);
+    }
+
+    &_normal {
+      @include chipButtonAddSize(32px);
+    }
+
+    &_medium {
+      @include chipButtonAddSize(34px);
+    }
+  } @else {
+    &_dense {
+      height: 26px;
+    }
+
+    &_normal {
+      height: 32px;
+      padding: 8px 15px;
+    }
+
+    &_medium {
+      height: 34px;
+      padding: 8px 15px;
+      font-size: 15px;
+
+      @if $isEditMode == false {
+        .item-icon-close {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+}
+
+@mixin chipsFont($component) {
+  @if $component == EditableChip {
+    &_primary {
+      @include editableChipFont($primary);
+    }
+
+    &_green {
+      @include editableChipFont($chateauGreen);
+    }
+
+    &_white {
+      @include editableChipFont($white);
+    }
+
+    &_orange {
+      @include editableChipFont($sorbus);
+    }
+
+    &_purple {
+      @include editableChipFont($amethyst);
+    }
+  } @else if $component == Chip {
+    &_white {
+      @include chipFont($white);
+    }
+
+    &_green {
+      @include chipFont($chateauGreen);
+    }
+
+    &_purple {
+      @include chipFont($amethyst);
+    }
+
+    &_primary {
+      @include chipFont($primary);
+    }
+
+    &_orange {
+      @include chipFont($sorbus);
+    }
+  } @else if $component == ButtonAddChip {
+    &_primary {
+      @include chipButtonAddColor($topaz);
+    }
+
+    &_green {
+      @include chipButtonAddColor($chateauGreen);
+    }
+
+    &_orange {
+      @include chipButtonAddColor($sorbus);
+    }
+
+    &_purple {
+      @include chipButtonAddColor($amethyst);
+    }
+  }
 }
 
 @mixin tableColumn($flex) {
@@ -568,12 +747,6 @@
         padding: 0 15px;
         border: $primaryBorder;
         border-radius: 4px;
-
-        .chip-block {
-          .tooltip-wrapper {
-            max-width: initial;
-          }
-        }
       }
 
       &-text {
@@ -586,12 +759,13 @@
       &-wrapper {
         display: flex;
         flex-wrap: wrap;
+        width: 650px;
 
         .chips-wrapper {
           flex-wrap: wrap;
+          width: 100%;
 
           .chip_short {
-            max-width: 200px;
             cursor: pointer;
           }
         }

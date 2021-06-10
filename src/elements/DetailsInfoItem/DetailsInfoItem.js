@@ -10,6 +10,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import Input from '../../common/Input/Input'
+import { CHIP_OPTIONS } from '../../types'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
@@ -18,7 +19,7 @@ const DetailsInfoItem = React.forwardRef(
   (
     {
       chipsClassName,
-      chipViewOptions,
+      chipOptions,
       chipsData,
       currentField,
       editableFieldType,
@@ -48,10 +49,10 @@ const DetailsInfoItem = React.forwardRef(
         )
       } else if (editableFieldType === 'chips') {
         return (
-          <div className="details-item__data">
+          <div className="details-item__data details-item__data-chips">
             <ChipCell
               addChip={(chip, chips) => item.onAdd(chip, chips, currentField)}
-              chipViewOptions={chipViewOptions}
+              chipOptions={chipOptions}
               className={`details-item__${chipsClassName}`}
               delimiter={chipsData.delimiter}
               editChip={chips => {
@@ -72,7 +73,7 @@ const DetailsInfoItem = React.forwardRef(
       return (
         <div className="details-item__data">
           <ChipCell
-            chipViewOptions={chipViewOptions}
+            chipOptions={chipOptions}
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
             elements={chipsData.chips}
@@ -189,7 +190,6 @@ DetailsInfoItem.defaultProps = {
     chips: [],
     delimiter: null
   },
-  chipViewOptions: {},
   currentField: '',
   editableFieldType: null,
   func: '',
@@ -210,7 +210,7 @@ DetailsInfoItem.propTypes = {
     chips: PropTypes.arrayOf(PropTypes.string),
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),
-  chipViewOptions: PropTypes.shape({}),
+  chipOptions: CHIP_OPTIONS.isRequired,
   currentField: PropTypes.string,
   editableFieldType: PropTypes.string,
   func: PropTypes.string,

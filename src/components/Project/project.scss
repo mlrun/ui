@@ -19,6 +19,7 @@
       display: flex;
       flex: 1;
       flex-direction: column;
+      width: 250px;
       padding-right: 64px;
 
       &__main-data {
@@ -91,10 +92,10 @@
         }
 
         .chip-block-hidden {
-          left: 0;
+          right: unset;
 
           &::after {
-            right: 220px;
+            left: 15px;
           }
         }
       }

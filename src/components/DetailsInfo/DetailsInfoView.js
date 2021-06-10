@@ -19,7 +19,7 @@ import {
 import { parseKeyValues } from '../../utils'
 
 import { ReactComponent as RightArrow } from '../../images/ic_arrow-right.svg'
-import { getChipViewParams } from '../../utils/getChipViewParams'
+import { getChipOptions } from '../../utils/getChipOptions'
 
 const DetailsInfoView = React.forwardRef(
   (
@@ -50,7 +50,7 @@ const DetailsInfoView = React.forwardRef(
             {pageData.infoHeaders?.map(header => {
               let chipsData = {
                 chips: [],
-                chipViewOptions: {},
+                chipOptions: {},
                 delimiter: null
               }
               let chipsClassName = ''
@@ -62,18 +62,15 @@ const DetailsInfoView = React.forwardRef(
               if (pageData.page === JOBS_PAGE) {
                 if (content[header.id]?.value === selectedItem.parameters) {
                   chipsData.chips = selectedItem.parameters
-                  chipsData.chipViewOptions = getChipViewParams('parameters')
-                  chipsClassName = 'parameters'
+                  chipsData.chipOptions = getChipOptions('parameters')
                 } else if (
                   content[header.id]?.value === selectedItem.resultsChips
                 ) {
                   chipsData.chips = selectedItem.resultsChips
-                  chipsData.chipViewOptions = getChipViewParams('results')
-                  chipsClassName = 'results'
+                  chipsData.chipOptions = getChipOptions('results')
                 } else if (content[header.id]?.value === selectedItem.labels) {
                   chipsData.chips = selectedItem.labels
-                  chipsData.chipViewOptions = getChipViewParams('labels')
-                  chipsClassName = 'labels'
+                  chipsData.chipOptions = getChipOptions('labels')
                 }
 
                 func =
@@ -95,19 +92,16 @@ const DetailsInfoView = React.forwardRef(
                   chipsData.chips = changes.data[header.id]
                     ? changes.data[header.id]
                     : parseKeyValues(selectedItem.labels)
-                  chipsData.chipViewOptions = getChipViewParams('labels')
-                  chipsClassName = 'labels'
+                  chipsData.chipOptions = getChipOptions('labels')
                 } else if (content[header.id]?.value === selectedItem.metrics) {
                   chipsData.chips = parseKeyValues(selectedItem.metrics)
-                  chipsData.chipViewOptions = getChipViewParams('metrics')
-                  chipsClassName = 'metrics'
+                  chipsData.chipOptions = getChipOptions('metrics')
                 } else if (
                   content[header.id]?.value === selectedItem.relations
                 ) {
                   chipsData.chips = parseKeyValues(selectedItem.relations)
-                  chipsData.chipViewOptions = getChipViewParams('relations')
+                  chipsData.chipOptions = getChipOptions('relations')
                   chipsData.delimiter = <RightArrow />
-                  chipsClassName = 'relations'
                 }
 
                 info = changes.data[header.id]
@@ -145,7 +139,7 @@ const DetailsInfoView = React.forwardRef(
                   <DetailsInfoItem
                     chipsClassName={chipsClassName}
                     chipsData={chipsData}
-                    chipViewOptions={chipsData.chipViewOptions}
+                    chipOptions={chipsData.chipOptions}
                     currentField={header.id}
                     editableFieldType={detailsInfoState.editMode.fieldType}
                     func={func}

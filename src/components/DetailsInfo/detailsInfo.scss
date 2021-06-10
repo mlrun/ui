@@ -18,9 +18,10 @@
     .details-item {
       display: flex;
       flex-direction: row;
-      align-items: baseline;
+      align-items: center;
+      min-width: 400px;
+      max-width: calc(100vw - 300px);
       padding: 18px;
-      overflow-x: auto;
       border-bottom: $secondaryBorder;
 
       &__btn-copy {
@@ -82,8 +83,9 @@
         }
 
         &-btn {
+          display: block;
+          min-width: 30px;
           height: 30px;
-          margin-left: 10px;
           padding: 0;
           cursor: pointer;
         }

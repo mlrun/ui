@@ -16,7 +16,7 @@ import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
 
 import artifactAction from '../../actions/artifacts'
 import { truncateUid } from '../../utils'
-import { getChipViewParams } from '../../utils/getChipViewParams'
+import { getChipOptions } from '../../utils/getChipOptions'
 
 const TableCell = ({
   data,
@@ -96,7 +96,7 @@ const TableCell = ({
     return (
       <div className={`table-body__cell ${data.class}`}>
         <ChipCell
-          chipViewOptions={getChipViewParams(data.type)}
+          chipOptions={getChipOptions(data.type)}
           elements={data.value}
           tooltip
         />

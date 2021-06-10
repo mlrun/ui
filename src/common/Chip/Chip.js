@@ -7,113 +7,120 @@ import ChipForm from '../../elements/ChipForm/ChipForm'
 import { ReactComponent as Close } from '../../images/close.svg'
 
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
+import { CHIP_OPTIONS } from '../../types'
 
 import './chip.scss'
 
-const Chip = ({
-  background,
-  boldValues,
-  border,
-  chip,
-  chipIndex,
-  className,
-  density,
-  editConfig,
-  font,
-  form,
-  handleEditChip,
-  handleIsEdit,
-  handleRemoveChip,
-  hiddenChips,
-  isEditMode,
-  onClick,
-  setEditConfig
-}) => {
-  const chipClassNames = classnames(
-    'chip',
-    className && className,
-    density && `chip-density_${density}`,
-    form && `chip-${form}`,
-    background && `chip-background_${background}`,
-    border && `chip-border_${border}`,
-    font && `chip-font_${font}`,
-    isEditMode && 'editable'
-  )
-  const chipContentClassNames = classnames(
-    'chip_short',
-    'data-ellipsis',
-    hiddenChips && 'chip_hidden'
-  )
-  const chipValueClassNames = classnames(
-    'chip__value',
-    boldValues && 'chip-value_bold'
-  )
-  const { chipLabel, chipValue } = getChipLabelAndValue(chip)
+const Chip = React.forwardRef(
+  (
+    {
+      chip,
+      chipIndex,
+      chipOptions,
+      className,
+      editConfig,
+      handleEditChip,
+      handleIsEdit,
+      handleRemoveChip,
+      hiddenChips,
+      isEditMode,
+      onClick,
+      setEditConfig
+    },
+    ref
+  ) => {
+    const chipRef = React.useRef()
+    const { chipLabel, chipValue } = getChipLabelAndValue(chip)
+    const {
+      background,
+      boldValue,
+      borderColor,
+      density,
+      font,
+      borderRadius
+    } = chipOptions
 
-  if (!chip.value.match(/^\+ [\d]+/g)) {
-    return isEditMode && chipIndex === editConfig.chipIndex ? (
-      <ChipForm
-        background={background}
-        border={border}
-        className="input-label-key"
-        density={density}
-        editConfig={editConfig}
-        font={font}
-        form={form}
-        key={chip.value}
-        onChange={handleEditChip}
-        setEditConfig={setEditConfig}
-        value={chip.value.match(/^(?<key>|.+?):\s?(?<value>|.+?)$/)?.groups}
-      />
-    ) : (
-      <span className={chipClassNames}>
-        <div
-          className={chipContentClassNames}
-          onClick={event => handleIsEdit(event, chipIndex)}
-        >
-          {chip.delimiter ? (
-            <span>
-              {chipLabel}
-              <span className="chip__delimiter">{chip.delimiter}</span>
-              <span className={chipValueClassNames}>{chipValue}</span>
-            </span>
-          ) : (
-            <span>
-              {chip.value.indexOf(':') && (
-                <span className="chip__label">{`${chipLabel}: `}</span>
-              )}
-              <span className={chipValueClassNames}>{chipValue}</span>
-            </span>
+    const chipClassNames = classnames(
+      'chip',
+      'chip-block',
+      className && className,
+      density && `chip-density_${density}`,
+      borderRadius && `chip-border_${borderRadius}`,
+      background && `chip-background_${background}`,
+      borderColor && `chip-border_${borderColor}`,
+      font && `chip-font_${font}`,
+      isEditMode && 'editable'
+    )
+    const chipContentClassNames = classnames(
+      'chip_short',
+      'data-ellipsis',
+      hiddenChips && 'chip_hidden'
+    )
+    const chipValueClassNames = classnames(
+      'chip__value',
+      'data-ellipsis',
+      boldValue && 'chip-value_bold'
+    )
+
+    if (!chip.value.match(/^\+ [\d]+/g)) {
+      return isEditMode && chipIndex === editConfig.chipIndex ? (
+        <ChipForm
+          chipOptions={chipOptions}
+          className="input-label-key"
+          editConfig={editConfig}
+          key={chip.value}
+          onChange={handleEditChip}
+          ref={ref}
+          setEditConfig={setEditConfig}
+          value={chip.value.match(/^(?<key>|.+?):\s?(?<value>|.+?)$/)?.groups}
+        />
+      ) : (
+        <div className={chipClassNames} ref={chipRef}>
+          <div
+            className={chipContentClassNames}
+            onClick={event => handleIsEdit(event, chipIndex)}
+          >
+            {chip.delimiter ? (
+              <span>
+                {chipLabel}
+                <span className="chip__delimiter">{chip.delimiter}</span>
+                <span className={chipValueClassNames}>{chipValue}</span>
+              </span>
+            ) : (
+              <div className="chip__content">
+                {chip.value.indexOf(':') && (
+                  <>
+                    <div className="chip__label data-ellipsis">{chipLabel}</div>
+                    <div className="chip__delimiter">:</div>
+                  </>
+                )}
+                <div className={chipValueClassNames}>{chipValue}</div>
+              </div>
+            )}
+          </div>
+          {isEditMode && (
+            <button
+              className="item-icon-close"
+              onClick={() => handleRemoveChip(chipIndex)}
+            >
+              <Close />
+            </button>
           )}
         </div>
-        {isEditMode && (
-          <button
-            className="item-icon-close"
-            onClick={() => handleRemoveChip(chipIndex)}
-          >
-            <Close />
-          </button>
-        )}
+      )
+    }
+
+    return (
+      <span className={`${chipClassNames} chips_button`} onClick={onClick}>
+        {chip.value}
       </span>
     )
   }
-
-  return (
-    <span className={`${chipClassNames} chips_button`} onClick={onClick}>
-      {chip.value}
-    </span>
-  )
-}
+)
 
 Chip.defaultProps = {
-  background: 'purple',
-  boldValues: false,
-  border: 'none',
   chipIndex: null,
-  density: 'dense',
   editConfig: {},
-  font: 'purple',
-  form: 'square',
   handleEditChip: () => {},
   handleIsEdit: () => {},
   handleRemoveChip: () => {},
@@ -124,16 +131,11 @@ Chip.defaultProps = {
 }
 
 Chip.propTypes = {
-  background: PropTypes.oneOf(['none', 'orange', 'green', 'purple', 'grey']),
-  boldValues: PropTypes.bool,
-  font: PropTypes.oneOf(['primary', 'white', 'green', 'purple', 'orange']),
-  border: PropTypes.oneOf(['none', 'orange', 'green', 'purple', 'grey']),
   chip: PropTypes.shape({}).isRequired,
   chipIndex: PropTypes.number,
+  chipOptions: CHIP_OPTIONS.isRequired,
   className: PropTypes.string,
-  density: PropTypes.oneOf(['dense', 'normal', 'medium']),
   editConfig: PropTypes.shape({}),
-  form: PropTypes.oneOf(['round', 'square']),
   handleEditChip: PropTypes.func,
   handleIsEdit: PropTypes.func,
   handleRemoveChip: PropTypes.func,

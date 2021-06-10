@@ -10,11 +10,12 @@
   z-index: 6;
   flex-direction: column;
   min-width: 250px;
+  max-width: 45vw;
   padding: 10px;
   background-color: $white;
   border-radius: $mainBorderRadius;
+  box-shadow: $hiddenChipsBlockShadow;
   opacity: 0;
-  filter: drop-shadow($hiddenChipsBlockShadow);
 
   &__chip {
     border: $parametersBorder;
@@ -51,6 +52,14 @@
       background-color: $white;
       transform: rotate(-45deg);
       content: '';
+    }
+  }
+
+  .chip {
+    display: inline-flex;
+
+    .chip_short {
+      max-width: 100%;
     }
   }
 

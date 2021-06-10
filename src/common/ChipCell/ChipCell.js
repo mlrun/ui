@@ -5,12 +5,13 @@ import ChipCellView from './ChipCellView'
 
 import { cutChips } from '../../utils/cutChips'
 import { sizeChips } from './SizeChips'
+import { CHIP_OPTIONS } from '../../types'
 
 import './chipCell.scss'
 
 const ChipCell = ({
   addChip,
-  chipViewOptions,
+  chipOptions,
   className,
   delimiter,
   editChip,
@@ -32,7 +33,8 @@ const ChipCell = ({
   const chipRef = useRef()
 
   let chips = useMemo(() => {
-    return isEditMode && !visibleChipsMaxLength
+    return (isEditMode && !visibleChipsMaxLength) ||
+      visibleChipsMaxLength === 'all'
       ? {
           visibleChips: elements.map(chip => ({
             value: chip,
@@ -41,13 +43,6 @@ const ChipCell = ({
         }
       : sizeContainer <= 1000 && !visibleChipsMaxLength
       ? sizeChips[sizeContainer](elements, delimiter)
-      : visibleChipsMaxLength === 'all'
-      ? {
-          visibleChips: elements.map(chip => ({
-            value: chip,
-            delimiter
-          }))
-        }
       : cutChips(
           elements,
           visibleChipsMaxLength ? visibleChipsMaxLength : 8,
@@ -81,7 +76,7 @@ const ChipCell = ({
 
   useEffect(() => {
     handleResize()
-  }, [handleResize])
+  }, [handleResize, chipRef])
 
   useEffect(() => {
     if (!isEditMode) {
@@ -205,7 +200,7 @@ const ChipCell = ({
   return (
     <ChipCellView
       chips={chips}
-      chipViewOptions={chipViewOptions}
+      chipOptions={chipOptions}
       className={className}
       editConfig={editConfig}
       handleAddNewChip={handleAddNewChip}
@@ -223,13 +218,13 @@ const ChipCell = ({
 
 ChipCell.defaultProps = {
   addChip: () => {},
-  chipViewOptions: {
-    boldValues: false,
+  chipOptions: {
     background: 'purple',
-    border: 'none',
+    boldValue: false,
+    borderRadius: 'primary',
+    borderColor: 'transparent',
     density: 'dense',
-    font: 'purple',
-    form: 'square'
+    font: 'purple'
   },
   delimiter: null,
   editChip: () => {},
@@ -242,7 +237,7 @@ ChipCell.defaultProps = {
 
 ChipCell.propTypes = {
   addChip: PropTypes.func,
-  chipViewOptions: PropTypes.shape({}),
+  chipOptions: CHIP_OPTIONS,
   className: PropTypes.string,
   delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   editChip: PropTypes.func,

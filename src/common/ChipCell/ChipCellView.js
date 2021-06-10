@@ -11,12 +11,13 @@ import { ReactComponent as Add } from '../../images/add.svg'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
+import { CHIP_OPTIONS } from '../../types'
 
 const ChipCellView = React.forwardRef(
   (
     {
       chips,
-      chipViewOptions,
+      chipOptions,
       className,
       editConfig,
       handleAddNewChip,
@@ -30,19 +31,14 @@ const ChipCellView = React.forwardRef(
     },
     ref
   ) => {
-    const {
-      background = 'purple',
-      border = 'none',
-      density = 'dense',
-      font = 'purple'
-    } = chipViewOptions
     const buttonAddClassNames = classnames(
       'button-add',
       className && className,
-      background && `button-add-background_${background}`,
-      border && `button-add-border_${border}`,
-      font && `button-add-font_${font}`,
-      density && `button-add-density_${density}`
+      chipOptions.background &&
+        `button-add-background_${chipOptions.background}`,
+      chipOptions.borderColor && `button-add-border_${chipOptions.borderColor}`,
+      chipOptions.font && `button-add-font_${chipOptions.font}`,
+      chipOptions.density && `button-add-density_${chipOptions.density}`
     )
 
     return (
@@ -78,25 +74,21 @@ const ChipCellView = React.forwardRef(
                   <Chip
                     chip={chip}
                     chipIndex={index}
+                    chipOptions={chipOptions}
                     className={className}
-                    background={chipViewOptions.background}
-                    boldValues={chipViewOptions.boldValues}
-                    border={chipViewOptions.border}
-                    density={chipViewOptions.density}
                     editConfig={editConfig}
-                    font={chipViewOptions.font}
-                    form={chipViewOptions.form}
                     handleEditChip={handleEditChip}
                     handleIsEdit={handleIsEdit}
                     handleRemoveChip={handleRemoveChip}
                     isEditMode={isEditMode}
                     onClick={handleShowElements}
                     setEditConfig={setEditConfig}
+                    ref={ref}
                   />
                 </Tooltip>
                 {chips.visibleChips.length - 1 === index && show && (
                   <HiddenChipsBlock
-                    chipViewOptions={chipViewOptions}
+                    chipOptions={chipOptions}
                     className={className}
                     chips={chips.hiddenChips}
                     chipIndex={index}
@@ -128,7 +120,6 @@ const ChipCellView = React.forwardRef(
 
 ChipCellView.defaultProps = {
   chips: {},
-  chipViewOptions: {},
   className: '',
   editChip: () => {},
   editConfig: {},
@@ -143,7 +134,7 @@ ChipCellView.defaultProps = {
 
 ChipCellView.propTypes = {
   chips: PropTypes.shape({}),
-  chipViewOptions: PropTypes.shape({}),
+  chipOptions: CHIP_OPTIONS.isRequired,
   className: PropTypes.string,
   editConfig: PropTypes.shape({}),
   handleAddNewChip: PropTypes.func,

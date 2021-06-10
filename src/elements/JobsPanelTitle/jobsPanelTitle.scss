@@ -66,6 +66,15 @@
   }
 
   .panel-title__labels-wrapper {
+    width: 640px;
     margin: 10px 0;
+
+    .chips-wrapper {
+      max-width: 100%;
+
+      .chip-block {
+        max-width: 100%;
+      }
+    }
   }
 }
