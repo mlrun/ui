@@ -1,17 +1,16 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/mixins';
 
 .edit-label {
   &-container {
     display: inline-flex;
     margin: 5px 2px;
-    padding: 7px 9px;
-    border: $labelBorder;
-    border-radius: 20px;
+    padding: 0 9px;
+    font-size: 14px;
 
     &_edited {
       padding-right: 18px;
-      border: $labelEditBorder;
     }
 
     input {
@@ -31,10 +30,99 @@
         color: $primary;
       }
     }
-  }
 
-  &-separator {
-    color: $spunPearl;
+    &-font {
+      &_primary {
+        @include ChipFormFont($primary);
+      }
+
+      &_green {
+        @include ChipFormFont($chateauGreen);
+      }
+
+      &_white {
+        @include ChipFormFont($white);
+      }
+
+      &_orange {
+        @include ChipFormFont($sorbus);
+      }
+
+      &_purple {
+        @include ChipFormFont($amethyst);
+      }
+    }
+
+    &-border {
+      &_none {
+        border: $transparentBorder;
+      }
+
+      &_green {
+        border: $resultsBorder;
+      }
+
+      &_grey {
+        border: $secondaryBorder;
+      }
+
+      &_orange {
+        border: $parametersBorder;
+      }
+
+      &_purple {
+        border: $labelBorder;
+      }
+    }
+
+    &-background {
+      &_none {
+        background-color: transparent;
+      }
+
+      &_green {
+        background-color: $javaTwo;
+      }
+
+      &_grey {
+        background-color: $mulledWineThree;
+      }
+
+      &_orange {
+        background-color: $grandisTwo;
+      }
+
+      &_purple {
+        background-color: $amethystTwo;
+      }
+    }
+
+    &-density {
+      &_dense {
+        height: 24px;
+      }
+
+      &_normal {
+        height: 32px;
+        padding: 8px 15px;
+      }
+
+      &_medium {
+        height: 34px;
+        padding: 8px 15px;
+        font-size: 15px;
+      }
+    }
+
+    &-form {
+      &_square {
+        border-radius: 4px;
+      }
+
+      &_round {
+        border-radius: 20px;
+      }
+    }
   }
 
   &__icon-close {

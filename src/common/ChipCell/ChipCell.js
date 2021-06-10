@@ -10,6 +10,7 @@ import './chipCell.scss'
 
 const ChipCell = ({
   addChip,
+  chipViewOptions,
   className,
   delimiter,
   editChip,
@@ -40,6 +41,13 @@ const ChipCell = ({
         }
       : sizeContainer <= 1000 && !visibleChipsMaxLength
       ? sizeChips[sizeContainer](elements, delimiter)
+      : visibleChipsMaxLength === 'all'
+      ? {
+          visibleChips: elements.map(chip => ({
+            value: chip,
+            delimiter
+          }))
+        }
       : cutChips(
           elements,
           visibleChipsMaxLength ? visibleChipsMaxLength : 8,
@@ -197,6 +205,7 @@ const ChipCell = ({
   return (
     <ChipCellView
       chips={chips}
+      chipViewOptions={chipViewOptions}
       className={className}
       editConfig={editConfig}
       handleAddNewChip={handleAddNewChip}
@@ -214,6 +223,14 @@ const ChipCell = ({
 
 ChipCell.defaultProps = {
   addChip: () => {},
+  chipViewOptions: {
+    boldValues: false,
+    background: 'purple',
+    border: 'none',
+    density: 'dense',
+    font: 'purple',
+    form: 'square'
+  },
   delimiter: null,
   editChip: () => {},
   elements: [],
@@ -225,6 +242,7 @@ ChipCell.defaultProps = {
 
 ChipCell.propTypes = {
   addChip: PropTypes.func,
+  chipViewOptions: PropTypes.shape({}),
   className: PropTypes.string,
   delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   editChip: PropTypes.func,
@@ -232,7 +250,10 @@ ChipCell.propTypes = {
   isEditMode: PropTypes.bool,
   onClick: PropTypes.func,
   removeChip: PropTypes.func,
-  visibleChipsMaxLength: PropTypes.number
+  visibleChipsMaxLength: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ])
 }
 
 export default React.memo(ChipCell)

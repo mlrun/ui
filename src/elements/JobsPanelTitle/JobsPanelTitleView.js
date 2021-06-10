@@ -16,6 +16,7 @@ import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
 import { panelActions } from '../../components/JobsPanel/panelReducer'
+import { getChipViewParams } from '../../utils/getChipViewParams'
 
 const JobsPanelTitleView = ({
   closePanel,
@@ -113,6 +114,7 @@ const JobsPanelTitleView = ({
                         })
                       }
                       className="panel-title__labels-item"
+                      chipViewOptions={getChipViewParams('labels')}
                       editChip={chips =>
                         panelDispatch({
                           type: panelActions.EDIT_JOB_LABEL,

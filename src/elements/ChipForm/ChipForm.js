@@ -5,11 +5,16 @@ import classnames from 'classnames'
 import './chipForm.scss'
 
 const ChipForm = ({
+  background,
+  border,
   className,
+  density,
   editConfig,
-  value,
+  font,
+  form,
   onChange,
-  setEditConfig
+  setEditConfig,
+  value
 }) => {
   const [chip, setChip] = useState({
     ...value,
@@ -30,6 +35,11 @@ const ChipForm = ({
   )
   const labelContainerClassName = classnames(
     'edit-label-container',
+    background && `edit-label-container-background_${background}`,
+    border && `edit-label-container-border_${border}`,
+    font && `edit-label-container-font_${font}`,
+    density && `edit-label-container-density_${density}`,
+    form && `edit-label-container-form_${form}`,
     (editConfig.isEdit || editConfig.isNewChip) && 'edit-label-container_edited'
   )
   const labelValueClassName = classnames(
@@ -233,7 +243,12 @@ ChipForm.defaultProps = {
 }
 
 ChipForm.propTypes = {
+  background: PropTypes.string.isRequired,
+  border: PropTypes.string.isRequired,
+  density: PropTypes.string.isRequired,
   editConfig: PropTypes.shape({}).isRequired,
+  font: PropTypes.string.isRequired,
+  form: PropTypes.string.isRequired,
   label: PropTypes.shape({}),
   onChange: PropTypes.func.isRequired,
   setEditConfig: PropTypes.func.isRequired

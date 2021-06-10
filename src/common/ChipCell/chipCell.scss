@@ -1,5 +1,6 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/mixins';
 
 .chips {
   &-wrapper {
@@ -9,18 +10,13 @@
 
     .chip {
       &_short {
-        max-width: 100px;
         margin: 0;
         font-style: normal;
       }
 
       &-block {
         position: relative;
-        display: inline-block;
-
-        .tooltip-wrapper {
-          max-width: 230px;
-        }
+        display: block;
       }
 
       &__delimiter {
@@ -28,30 +24,84 @@
           margin-bottom: -7px;
         }
       }
-
-      &_hidden {
-        max-width: 195px;
-      }
     }
 
     .button-add {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 30px;
       margin: 10px 0 10px 10px;
-      border: $labelBorder;
       border-radius: 32px;
 
-      &:hover {
-        background-color: $amethyst;
+      &-background {
+        &_orange {
+          @include ChipButtonAddBackground($grandisTwo, $sorbus);
+        }
 
-        svg {
-          rect,
-          path {
-            fill: $white;
-          }
+        &_purple {
+          @include ChipButtonAddBackground($amethystTwo, $amethyst);
+        }
+
+        &_green {
+          @include ChipButtonAddBackground($javaTwo, $java);
+        }
+
+        &_grey {
+          @include ChipButtonAddBackground($mulledWineThree, $topaz);
+        }
+      }
+
+      &_border {
+        &_none {
+          border: $transparentBorder;
+        }
+
+        &_green {
+          border: $resultsBorder;
+        }
+
+        &_grey {
+          border: $secondaryBorder;
+        }
+
+        &_orange {
+          border: $parametersBorder;
+        }
+
+        &_purple {
+          border: $labelBorder;
+        }
+      }
+
+      &-density {
+        &_dense {
+          @include ChipButtonAddSize(24px);
+        }
+
+        &_normal {
+          @include ChipButtonAddSize(32px);
+        }
+
+        &_medium {
+          @include ChipButtonAddSize(34px);
+        }
+      }
+
+      &-font {
+        &_primary {
+          @include ChipButtonAddFont($topaz);
+        }
+
+        &_green {
+          @include ChipButtonAddFont($chateauGreen);
+        }
+
+        &_orange {
+          @include ChipButtonAddFont($sorbus);
+        }
+
+        &_purple {
+          @include ChipButtonAddFont($amethyst);
         }
       }
     }

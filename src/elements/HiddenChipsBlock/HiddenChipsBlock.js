@@ -14,6 +14,7 @@ import './hiddenChipsBlock.scss'
 const HiddenChipsBlock = ({
   chipIndex,
   chips,
+  chipViewOptions,
   className,
   editConfig,
   handleEditChip,
@@ -88,10 +89,16 @@ const HiddenChipsBlock = ({
             }
           >
             <Chip
-              chipIndex={index + chipIndex}
+              background={chipViewOptions.background}
+              boldValues={chipViewOptions.boldValues}
+              border={chipViewOptions.border}
               chip={element}
+              chipIndex={index + chipIndex}
               className={className}
+              density={chipViewOptions.density}
               editConfig={editConfig}
+              font={chipViewOptions.font}
+              form={chipViewOptions.form}
               handleEditChip={handleEditChip}
               handleIsEdit={handleIsEdit}
               handleRemoveChip={handleRemoveChip}
@@ -108,6 +115,7 @@ const HiddenChipsBlock = ({
 
 HiddenChipsBlock.defaultProps = {
   chips: [],
+  chipViewOptions: {},
   chipIndex: 0,
   editChip: () => {},
   editConfig: {},
@@ -120,6 +128,7 @@ HiddenChipsBlock.defaultProps = {
 HiddenChipsBlock.propTypes = {
   className: PropTypes.string,
   chips: PropTypes.arrayOf(PropTypes.shape({})),
+  chipViewOptions: PropTypes.shape({}),
   chipIndex: PropTypes.number,
   editConfig: PropTypes.shape({}),
   handleEditChip: PropTypes.func,

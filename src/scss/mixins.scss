@@ -56,6 +56,65 @@
   border-radius: 50%;
 }
 
+@mixin ChipColor($color) {
+  color: $color;
+
+  .item-icon-close {
+    svg {
+      path {
+        fill: $color;
+      }
+    }
+  }
+}
+
+@mixin ChipFormFont($fontColor) {
+  color: $fontColor;
+
+  .input-label-key {
+    color: $fontColor;
+  }
+
+  .input-label-value {
+    color: $fontColor;
+  }
+
+  .edit-label-separator {
+    color: $fontColor;
+  }
+}
+
+@mixin ChipButtonAddFont($color) {
+  svg {
+    rect,
+    path {
+      fill: $color;
+    }
+  }
+
+  &:hover {
+    svg {
+      rect,
+      path {
+        fill: $white;
+      }
+    }
+  }
+}
+
+@mixin ChipButtonAddBackground($color, $hoverColor) {
+  background-color: $color;
+
+  &:hover {
+    background-color: $hoverColor;
+  }
+}
+
+@mixin ChipButtonAddSize($size) {
+  width: $size;
+  height: $size;
+}
+
 @mixin tableColumn($flex) {
   &_container {
     display: flex;
@@ -533,27 +592,7 @@
 
           .chip_short {
             max-width: 200px;
-            color: $primary;
             cursor: pointer;
-          }
-        }
-      }
-
-      &-item {
-        &:hover {
-          color: $white;
-          background-color: $amethyst;
-
-          .chip_short {
-            color: $white;
-          }
-
-          .item-icon-close {
-            svg {
-              path {
-                fill: $white;
-              }
-            }
           }
         }
       }

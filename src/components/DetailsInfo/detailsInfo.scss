@@ -64,18 +64,6 @@
         }
       }
 
-      &__parameters {
-        border: $parametersBorder;
-      }
-
-      &__labels {
-        border: $labelBorder;
-      }
-
-      &__results {
-        border: $resultsBorder;
-      }
-
       &__input {
         &-wrapper {
           display: flex;
