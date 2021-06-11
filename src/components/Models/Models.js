@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -13,6 +14,7 @@ import filtersActions from '../../actions/filters'
 import {
   handleFetchData,
   generatePageData,
+  getFeatureVectorData,
   checkForSelectedModel,
   checkForSelectedModelEndpoint
 } from './models.util'
@@ -20,16 +22,20 @@ import {
   INIT_GROUP_FILTER,
   INIT_TAG_FILTER,
   MODELS_TAB,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  MODELS_PAGE
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 
 const Models = ({
   artifactsStore,
+  detailsStore,
   fetchModel,
   fetchModelEndpointWithAnalysis,
   fetchModelEndpoints,
+  fetchModelFeatureVector,
   fetchModels,
   filtersStore,
   history,
@@ -198,6 +204,7 @@ const Models = ({
     setPageData(state => ({
       ...state,
       ...generatePageData(
+        selectedModel,
         match.params.pageTab,
         handleDeployModel,
         handleRequestOnExpand,
@@ -208,7 +215,8 @@ const Models = ({
     handleDeployModel,
     handleRemoveModel,
     handleRequestOnExpand,
-    match.params.pageTab
+    match.params.pageTab,
+    selectedModel
   ])
 
   useEffect(() => {
@@ -255,17 +263,50 @@ const Models = ({
       setSelectedModel({})
     }
   }, [
-    match.params,
-    artifactsStore.artifacts,
-    history,
-    artifactsStore.modelEndpoints.length,
     artifactsStore.modelEndpoints,
-    match,
     artifactsStore.models,
-    fetchModelEndpointWithAnalysis
+    fetchModelEndpointWithAnalysis,
+    history,
+    match
   ])
 
   useEffect(() => setContent([]), [filtersStore.tag])
+
+  useEffect(() => {
+    if (
+      match.params.name &&
+      match.params.tag &&
+      pageData.detailsMenu.length > 0
+    ) {
+      isDetailsTabExists(
+        MODELS_PAGE,
+        match.params,
+        pageData.detailsMenu,
+        history
+      )
+    }
+  }, [history, match.params, pageData.detailsMenu])
+
+  useEffect(() => {
+    if (
+      match.params.pageTab === MODELS_TAB &&
+      selectedModel.item?.feature_vector &&
+      !detailsStore.modelFeatureVectorData.error &&
+      isEmpty(detailsStore.modelFeatureVectorData)
+    ) {
+      const { name, tag } = getFeatureVectorData(
+        selectedModel.item.feature_vector
+      )
+      fetchModelFeatureVector(match.params.projectName, name, tag)
+    }
+  }, [
+    detailsStore.modelFeatureVectorData,
+    detailsStore.modelFeatureVectorData.error,
+    fetchModelFeatureVector,
+    match.params.pageTab,
+    match.params.projectName,
+    selectedModel.item
+  ])
 
   return (
     <>
@@ -274,7 +315,6 @@ const Models = ({
         content={content}
         expandRow={handleExpandRow}
         handleCancel={() => setSelectedModel({})}
-        handleSelectItem={item => setSelectedModel({ item })}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={() => setIsRegisterArtifactPopupOpen(true)}
@@ -307,9 +347,10 @@ Models.propTypes = {
 }
 
 export default connect(
-  ({ artifactsStore, filtersStore }) => ({
+  ({ artifactsStore, filtersStore, detailsStore }) => ({
     artifactsStore,
-    filtersStore
+    filtersStore,
+    detailsStore
   }),
   {
     ...artifactsAction,
