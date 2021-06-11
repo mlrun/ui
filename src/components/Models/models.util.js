@@ -55,7 +55,7 @@ export const generateModelsDetailsMenu = selectedModel => {
       visible: true
     },
     {
-      header: 'returned features',
+      header: 'features',
       visible: Boolean(selectedModel.item?.feature_vector)
     },
     {
