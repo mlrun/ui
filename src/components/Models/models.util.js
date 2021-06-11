@@ -307,9 +307,9 @@ export const checkForSelectedModelEndpoint = (
 }
 
 export const getFeatureVectorData = uri => {
-  const separrator = uri?.indexOf('@') > 0 ? '@' : ':'
-  const name = uri.slice(uri.lastIndexOf('/') + 1, uri.lastIndexOf(separrator))
-  const tag = uri.slice(uri.lastIndexOf(separrator) + 1)
+  const separator = uri?.indexOf('@') > 0 ? '@' : ':'
+  const name = uri.slice(uri.lastIndexOf('/') + 1, uri.lastIndexOf(separator))
+  const tag = uri.slice(uri.lastIndexOf(separator) + 1)
 
   return { tag, name }
 }
