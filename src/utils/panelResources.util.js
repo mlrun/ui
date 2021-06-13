@@ -20,10 +20,12 @@ export const selectMemoryOptions = {
   ]
 }
 
-export const generateCpuValue = cpu =>
-  cpu.match(/m/) ? cpu.slice(0, cpu.length - 1) : cpu
+export const generateCpuValue = (cpu = '') =>
+  cpu.toString().match(/m/)
+    ? cpu.toString().slice(0, cpu.toString().length - 1)
+    : cpu
 
-export const generateMemoryValue = memory =>
-  memory.match(/[a-zA-Z]/)
-    ? memory.slice(0, memory.match(/[a-zA-Z]/).index)
+export const generateMemoryValue = (memory = '') =>
+  memory.toString().match(/[a-zA-Z]/)
+    ? memory.slice(0, memory.toString().match(/[a-zA-Z]/).index)
     : memory
