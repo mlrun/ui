@@ -25,20 +25,6 @@ const JobsPanelResourcesView = ({
 }) => (
   <div className="job-panel__item resources new-item-side-panel__item">
     <JobsPanelSection title="Resources" />
-    <JobsPanelSection title="Node selectors">
-      <KeyValueTable
-        addNewItem={handleAddNewNodeSelector}
-        addNewItemLabel="Add node selector"
-        className="node-selector"
-        content={panelState.tableData.node_selector}
-        deleteItem={handleDeleteNodeSelector}
-        editItem={handleEditNodeSelector}
-        keyHeader="Key"
-        keyType="input"
-        valueHeader="Value"
-        withEditMode
-      />
-    </JobsPanelSection>
     <JobsPanelSection title="Volumes">
       <VolumesTable
         handleAddNewVolume={handleAddNewVolume}
@@ -152,6 +138,20 @@ const JobsPanelResourcesView = ({
         />
       </JobsPanelSection>
     </div>
+    <JobsPanelSection title="Node selector">
+      <KeyValueTable
+        addNewItem={handleAddNewNodeSelector}
+        addNewItemLabel="Add entry"
+        className="node-selector"
+        content={panelState.tableData.node_selector}
+        deleteItem={handleDeleteNodeSelector}
+        editItem={handleEditNodeSelector}
+        keyHeader="Key"
+        keyType="input"
+        valueHeader="Value"
+        withEditMode
+      />
+    </JobsPanelSection>
   </div>
 )
 
