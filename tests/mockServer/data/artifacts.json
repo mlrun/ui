@@ -1,0 +1,2451 @@
+{
+    "artifacts": [
+        {
+            "key": "mydf",
+            "kind": "dataset",
+            "iter": 1,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/1/mydf",
+            "hash": "206b214545f15d676d8c731f7453c551917e80e1",
+            "format": "",
+            "size": 2254,
+            "db_key": "my-training_mydf",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "A",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "B",
+                        "type": "integer"
+                    }
+                ],
+                "primaryKey": [
+                    "index"
+                ],
+                "pandas_version": "0.20.0"
+            },
+            "header": [
+                "index",
+                "A",
+                "B"
+            ],
+            "length": 3,
+            "preview": [
+                [
+                    0,
+                    10,
+                    100
+                ],
+                [
+                    1,
+                    11,
+                    110
+                ],
+                [
+                    2,
+                    12,
+                    120
+                ]
+            ],
+            "stats": {
+                "A": {
+                    "count": 3.0,
+                    "mean": 11.0,
+                    "std": 1.0,
+                    "min": 10.0,
+                    "25%": 10.5,
+                    "50%": 11.0,
+                    "75%": 11.5,
+                    "max": 12.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            10.0,
+                            10.1,
+                            10.2,
+                            10.3,
+                            10.4,
+                            10.5,
+                            10.6,
+                            10.7,
+                            10.8,
+                            10.9,
+                            11.0,
+                            11.1,
+                            11.2,
+                            11.3,
+                            11.4,
+                            11.5,
+                            11.6,
+                            11.7,
+                            11.8,
+                            11.9,
+                            12.0
+                        ]
+                    ]
+                },
+                "B": {
+                    "count": 3.0,
+                    "mean": 110.0,
+                    "std": 10.0,
+                    "min": 100.0,
+                    "25%": 105.0,
+                    "50%": 110.0,
+                    "75%": 115.0,
+                    "max": 120.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            100.0,
+                            101.0,
+                            102.0,
+                            103.0,
+                            104.0,
+                            105.0,
+                            106.0,
+                            107.0,
+                            108.0,
+                            109.0,
+                            110.0,
+                            111.0,
+                            112.0,
+                            113.0,
+                            114.0,
+                            115.0,
+                            116.0,
+                            117.0,
+                            118.0,
+                            119.0,
+                            120.0
+                        ]
+                    ]
+                }
+            },
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-1",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:10.104164+00:00"
+        },
+        {
+            "key": "mymodel",
+            "kind": "model",
+            "iter": 1,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/models/1/",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-training_mymodel",
+            "model_file": "model.txt",
+            "metrics": {
+                "accuracy": 1.0,
+                "test-error": 0.0,
+                "auc-micro": 1.0,
+                "auc-weighted": 1.0,
+                "f1-score": 1.0,
+                "precision_score": 1.0,
+                "recall_score": 1.0
+            },
+            "parameters": {
+                "xx": "abc"
+            },
+            "inputs": [],
+            "outputs": [],
+            "framework": "",
+            "labels": {
+                "framework": "xgboost"
+            },
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-1",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:10.277179+00:00"
+        },
+        {
+            "key": "somefile",
+            "kind": "",
+            "iter": 1,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "src_path": "myfile.txt",
+            "target_path": "/User/mlrun-repo/examples/data/1/myfile.txt",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-training_somefile",
+            "metrics": {
+                "accuracy": 1.0,
+                "test-error": 0.0,
+                "auc-micro": 1.0,
+                "auc-weighted": 1.0,
+                "f1-score": 1.0,
+                "precision_score": 1.0,
+                "recall_score": 1.0
+            },
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-1",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:09.906955+00:00"
+        },
+        {
+            "key": "mydf",
+            "kind": "dataset",
+            "iter": 2,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/2/mydf",
+            "hash": "206b214545f15d676d8c731f7453c551917e80e1",
+            "format": "",
+            "size": 2254,
+            "db_key": "my-training_mydf",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "A",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "B",
+                        "type": "integer"
+                    }
+                ],
+                "primaryKey": [
+                    "index"
+                ],
+                "pandas_version": "0.20.0"
+            },
+            "header": [
+                "index",
+                "A",
+                "B"
+            ],
+            "length": 3,
+            "preview": [
+                [
+                    0,
+                    10,
+                    100
+                ],
+                [
+                    1,
+                    11,
+                    110
+                ],
+                [
+                    2,
+                    12,
+                    120
+                ]
+            ],
+            "stats": {
+                "A": {
+                    "count": 3.0,
+                    "mean": 11.0,
+                    "std": 1.0,
+                    "min": 10.0,
+                    "25%": 10.5,
+                    "50%": 11.0,
+                    "75%": 11.5,
+                    "max": 12.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            10.0,
+                            10.1,
+                            10.2,
+                            10.3,
+                            10.4,
+                            10.5,
+                            10.6,
+                            10.7,
+                            10.8,
+                            10.9,
+                            11.0,
+                            11.1,
+                            11.2,
+                            11.3,
+                            11.4,
+                            11.5,
+                            11.6,
+                            11.7,
+                            11.8,
+                            11.9,
+                            12.0
+                        ]
+                    ]
+                },
+                "B": {
+                    "count": 3.0,
+                    "mean": 110.0,
+                    "std": 10.0,
+                    "min": 100.0,
+                    "25%": 105.0,
+                    "50%": 110.0,
+                    "75%": 115.0,
+                    "max": 120.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            100.0,
+                            101.0,
+                            102.0,
+                            103.0,
+                            104.0,
+                            105.0,
+                            106.0,
+                            107.0,
+                            108.0,
+                            109.0,
+                            110.0,
+                            111.0,
+                            112.0,
+                            113.0,
+                            114.0,
+                            115.0,
+                            116.0,
+                            117.0,
+                            118.0,
+                            119.0,
+                            120.0
+                        ]
+                    ]
+                }
+            },
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-2",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:12.079862+00:00"
+        },
+        {
+            "key": "mymodel",
+            "kind": "model",
+            "iter": 2,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/models/2/",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-training_mymodel",
+            "model_file": "model.txt",
+            "metrics": {
+                "accuracy": 0.85
+            },
+            "parameters": {
+                "xx": "abc"
+            },
+            "inputs": [],
+            "outputs": [],
+            "framework": "",
+            "labels": {
+                "framework": "xgboost"
+            },
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-2",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:12.144996+00:00"
+        },
+        {
+            "key": "somefile",
+            "kind": "",
+            "iter": 2,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "src_path": "myfile.txt",
+            "target_path": "/User/mlrun-repo/examples/data/2/myfile.txt",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-training_somefile",
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-2",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:12.000313+00:00"
+        },
+        {
+            "key": "mydf",
+            "kind": "dataset",
+            "iter": 3,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/3/mydf",
+            "hash": "206b214545f15d676d8c731f7453c551917e80e1",
+            "format": "",
+            "size": 2254,
+            "db_key": "my-training_mydf",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "A",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "B",
+                        "type": "integer"
+                    }
+                ],
+                "primaryKey": [
+                    "index"
+                ],
+                "pandas_version": "0.20.0"
+            },
+            "header": [
+                "index",
+                "A",
+                "B"
+            ],
+            "length": 3,
+            "preview": [
+                [
+                    0,
+                    10,
+                    100
+                ],
+                [
+                    1,
+                    11,
+                    110
+                ],
+                [
+                    2,
+                    12,
+                    120
+                ]
+            ],
+            "stats": {
+                "A": {
+                    "count": 3.0,
+                    "mean": 11.0,
+                    "std": 1.0,
+                    "min": 10.0,
+                    "25%": 10.5,
+                    "50%": 11.0,
+                    "75%": 11.5,
+                    "max": 12.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            10.0,
+                            10.1,
+                            10.2,
+                            10.3,
+                            10.4,
+                            10.5,
+                            10.6,
+                            10.7,
+                            10.8,
+                            10.9,
+                            11.0,
+                            11.1,
+                            11.2,
+                            11.3,
+                            11.4,
+                            11.5,
+                            11.6,
+                            11.7,
+                            11.8,
+                            11.9,
+                            12.0
+                        ]
+                    ]
+                },
+                "B": {
+                    "count": 3.0,
+                    "mean": 110.0,
+                    "std": 10.0,
+                    "min": 100.0,
+                    "25%": 105.0,
+                    "50%": 110.0,
+                    "75%": 115.0,
+                    "max": 120.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            100.0,
+                            101.0,
+                            102.0,
+                            103.0,
+                            104.0,
+                            105.0,
+                            106.0,
+                            107.0,
+                            108.0,
+                            109.0,
+                            110.0,
+                            111.0,
+                            112.0,
+                            113.0,
+                            114.0,
+                            115.0,
+                            116.0,
+                            117.0,
+                            118.0,
+                            119.0,
+                            120.0
+                        ]
+                    ]
+                }
+            },
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-3",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:12.466315+00:00"
+        },
+        {
+            "key": "mymodel",
+            "kind": "model",
+            "iter": 3,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/models/3/",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-training_mymodel",
+            "model_file": "model.txt",
+            "metrics": {
+                "accuracy": 0.85
+            },
+            "parameters": {
+                "xx": "abc"
+            },
+            "inputs": [],
+            "outputs": [],
+            "framework": "",
+            "labels": {
+                "framework": "xgboost"
+            },
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-3",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:12.534941+00:00"
+        },
+        {
+            "key": "somefile",
+            "kind": "",
+            "iter": 3,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "src_path": "myfile.txt",
+            "target_path": "/User/mlrun-repo/examples/data/3/myfile.txt",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-training_somefile",
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-3",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:12.389107+00:00"
+        },
+        {
+            "key": "mydf",
+            "kind": "dataset",
+            "iter": 4,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/4/mydf",
+            "hash": "206b214545f15d676d8c731f7453c551917e80e1",
+            "format": "",
+            "size": 2254,
+            "db_key": "my-training_mydf",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "A",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "B",
+                        "type": "integer"
+                    }
+                ],
+                "primaryKey": [
+                    "index"
+                ],
+                "pandas_version": "0.20.0"
+            },
+            "header": [
+                "index",
+                "A",
+                "B"
+            ],
+            "length": 3,
+            "preview": [
+                [
+                    0,
+                    10,
+                    100
+                ],
+                [
+                    1,
+                    11,
+                    110
+                ],
+                [
+                    2,
+                    12,
+                    120
+                ]
+            ],
+            "stats": {
+                "A": {
+                    "count": 3.0,
+                    "mean": 11.0,
+                    "std": 1.0,
+                    "min": 10.0,
+                    "25%": 10.5,
+                    "50%": 11.0,
+                    "75%": 11.5,
+                    "max": 12.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            10.0,
+                            10.1,
+                            10.2,
+                            10.3,
+                            10.4,
+                            10.5,
+                            10.6,
+                            10.7,
+                            10.8,
+                            10.9,
+                            11.0,
+                            11.1,
+                            11.2,
+                            11.3,
+                            11.4,
+                            11.5,
+                            11.6,
+                            11.7,
+                            11.8,
+                            11.9,
+                            12.0
+                        ]
+                    ]
+                },
+                "B": {
+                    "count": 3.0,
+                    "mean": 110.0,
+                    "std": 10.0,
+                    "min": 100.0,
+                    "25%": 105.0,
+                    "50%": 110.0,
+                    "75%": 115.0,
+                    "max": 120.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            100.0,
+                            101.0,
+                            102.0,
+                            103.0,
+                            104.0,
+                            105.0,
+                            106.0,
+                            107.0,
+                            108.0,
+                            109.0,
+                            110.0,
+                            111.0,
+                            112.0,
+                            113.0,
+                            114.0,
+                            115.0,
+                            116.0,
+                            117.0,
+                            118.0,
+                            119.0,
+                            120.0
+                        ]
+                    ]
+                }
+            },
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-4",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:12.837879+00:00"
+        },
+        {
+            "key": "mymodel",
+            "kind": "model",
+            "iter": 4,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/models/4/",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-training_mymodel",
+            "model_file": "model.txt",
+            "metrics": {
+                "accuracy": 1.0,
+                "test-error": 0.0,
+                "auc-micro": 1.0,
+                "auc-weighted": 1.0,
+                "f1-score": 1.0,
+                "precision_score": 1.0,
+                "recall_score": 1.0
+            },
+            "parameters": {
+                "xx": "abc"
+            },
+            "inputs": [],
+            "outputs": [],
+            "framework": "",
+            "labels": {
+                "framework": "xgboost"
+            },
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-4",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:12.904131+00:00"
+        },
+        {
+            "key": "somefile",
+            "kind": "",
+            "iter": 4,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "src_path": "myfile.txt",
+            "target_path": "/User/mlrun-repo/examples/data/4/myfile.txt",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-training_somefile",
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753-4",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:12.763024+00:00"
+        },
+        {
+            "uid": "1b27e893-3555-4abb-89a0-81b5fa20730a",
+            "key": "Test-y",
+            "db_key": "Test-y",
+            "tree": "1b27e893-3555-4abb-89a0-81b5fa20730a",
+            "target_path": "test",
+            "description": "",
+            "kind": "dataset",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-05-24T15:45:16.578031+00:00"
+        },
+        {
+            "uid": "457bd51a-c10b-418e-b65e-76614b6bfc63",
+            "key": "blafoobar",
+            "db_key": "blafoobar",
+            "tree": "457bd51a-c10b-418e-b65e-76614b6bfc63",
+            "target_path": "path",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-05-27T12:23:51.706417+00:00"
+        },
+        {
+            "uid": "25c9d034-2cad-440c-8824-6219af731fb2",
+            "key": "dataset-name",
+            "db_key": "dataset-name",
+            "tree": "25c9d034-2cad-440c-8824-6219af731fb2",
+            "target_path": "dataset-path",
+            "description": "dataset-description",
+            "kind": "dataset",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-03-31T12:26:13.394979+00:00"
+        },
+        {
+            "uid": "9d9391f4-cc66-45a4-b523-4cb7740c43ab",
+            "key": "file-name",
+            "db_key": "file-name",
+            "tree": "9d9391f4-cc66-45a4-b523-4cb7740c43ab",
+            "target_path": "file-path",
+            "description": "file-description",
+            "kind": "table",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-03-31T12:26:47.996541+00:00"
+        },
+        {
+            "uid": "891eb07e-e45b-4fae-b42f-276d7cc251f7",
+            "key": "ma-trainer_mydf",
+            "db_key": "ma-trainer_mydf",
+            "tree": "891eb07e-e45b-4fae-b42f-276d7cc251f7",
+            "target_path": "latest",
+            "description": "",
+            "kind": "dataset",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-05-24T14:55:29.230764+00:00"
+        },
+        {
+            "key": "mydf",
+            "kind": "dataset",
+            "iter": 0,
+            "tree": "226dd4edcaea4a7e9edac734670ffbc2",
+            "target_path": "/User/mlrun-repo/examples/data/mydf.csv",
+            "hash": "8b6edc4fb4d71af093ff98f7c8f879416409eba5",
+            "format": "csv",
+            "size": 32,
+            "db_key": "mlrun-507882-training_mydf",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "A",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "B",
+                        "type": "integer"
+                    }
+                ],
+                "primaryKey": [
+                    "index"
+                ],
+                "pandas_version": "0.20.0"
+            },
+            "header": [
+                "index",
+                "A",
+                "B"
+            ],
+            "length": 3,
+            "preview": [
+                [
+                    0,
+                    10,
+                    100
+                ],
+                [
+                    1,
+                    11,
+                    110
+                ],
+                [
+                    2,
+                    12,
+                    120
+                ]
+            ],
+            "stats": {
+                "A": {
+                    "count": 3.0,
+                    "mean": 11.0,
+                    "std": 1.0,
+                    "min": 10.0,
+                    "25%": 10.5,
+                    "50%": 11.0,
+                    "75%": 11.5,
+                    "max": 12.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            10.0,
+                            10.1,
+                            10.2,
+                            10.3,
+                            10.4,
+                            10.5,
+                            10.6,
+                            10.7,
+                            10.8,
+                            10.9,
+                            11.0,
+                            11.1,
+                            11.2,
+                            11.3,
+                            11.4,
+                            11.5,
+                            11.6,
+                            11.7,
+                            11.8,
+                            11.9,
+                            12.0
+                        ]
+                    ]
+                },
+                "B": {
+                    "count": 3.0,
+                    "mean": 110.0,
+                    "std": 10.0,
+                    "min": 100.0,
+                    "25%": 105.0,
+                    "50%": 110.0,
+                    "75%": 115.0,
+                    "max": 120.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            100.0,
+                            101.0,
+                            102.0,
+                            103.0,
+                            104.0,
+                            105.0,
+                            106.0,
+                            107.0,
+                            108.0,
+                            109.0,
+                            110.0,
+                            111.0,
+                            112.0,
+                            113.0,
+                            114.0,
+                            115.0,
+                            116.0,
+                            117.0,
+                            118.0,
+                            119.0,
+                            120.0
+                        ]
+                    ]
+                }
+            },
+            "producer": {
+                "name": "mlrun-507882-training",
+                "kind": "run",
+                "uri": "default/226dd4edcaea4a7e9edac734670ffbc2",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2020-12-28T13:38:08.085028+00:00"
+        },
+        {
+            "uid": "9d6e9146-a40b-412c-bd22-2d598052c2d8",
+            "key": "mlrun-507882-training_mymodel",
+            "db_key": "mlrun-507882-training_mymodel",
+            "tree": "9d6e9146-a40b-412c-bd22-2d598052c2d8",
+            "target_path": "/foo/",
+            "extra_data": {
+                "image": "v3io:///users/admin/pipe.png",
+                "missing": "not-found",
+                "json": "v3io:///users/admin/feature-set-graph.json",
+                "csv": "v3io:///users/admin/artifacts/default/mydf.csv",
+                "yaml": "v3io:///users/admin/artifacts/default/models/model_spec.yaml",
+                "text": "v3io:///users/admin/test.txt"
+            },
+            "feature_vector": "store://feature-vectors/default/my-vec:latest",
+            "algorithm": "xgboost",
+            "framework": "pandas",
+            "description": "demo description",
+            "kind": "model",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "model_file": "bar",
+            "updated": "2021-04-30T12:42:05.547312+00:00"
+        },
+        {
+            "key": "somefile",
+            "kind": "",
+            "iter": 0,
+            "tree": "226dd4edcaea4a7e9edac734670ffbc2",
+            "src_path": "myfile.txt",
+            "target_path": "/User/mlrun-repo/examples/data/myfile.txt",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "mlrun-507882-training_somefile",
+            "producer": {
+                "name": "mlrun-507882-training",
+                "kind": "run",
+                "uri": "default/226dd4edcaea4a7e9edac734670ffbc2",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2020-12-28T13:38:08.008522+00:00"
+        },
+        {
+            "key": "validation",
+            "kind": "",
+            "iter": 0,
+            "tree": "cbbb0ecd94a14a4d931d3ea5c7393f72",
+            "target_path": "/User/mlrun-repo/examples/data/validation.html",
+            "hash": "b241f6f3175963f7382e527e37c9f376685afce5",
+            "viewer": "web-app",
+            "format": "html",
+            "size": 18,
+            "db_key": "mlrun-a6a423-validation_validation",
+            "producer": {
+                "name": "mlrun-a6a423-validation",
+                "kind": "run",
+                "uri": "default/cbbb0ecd94a14a4d931d3ea5c7393f72",
+                "owner": "admin"
+            },
+            "sources": [
+                {
+                    "name": "model",
+                    "path": "/User/mlrun-repo/examples/data/models/"
+                }
+            ],
+            "project": "default",
+            "updated": "2020-12-28T13:38:08.597830+00:00"
+        },
+        {
+            "key": "mydf",
+            "kind": "dataset",
+            "iter": 0,
+            "tree": "8d59c1b8403c4a49bdd2c4803f9e92b7",
+            "target_path": "/User/mlrun-repo/examples/data/mydf.csv",
+            "hash": "8b6edc4fb4d71af093ff98f7c8f879416409eba5",
+            "format": "csv",
+            "size": 32,
+            "db_key": "mlrun-bc154e-training_mydf",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "A",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "B",
+                        "type": "integer"
+                    }
+                ],
+                "primaryKey": [
+                    "index"
+                ],
+                "pandas_version": "0.20.0"
+            },
+            "header": [
+                "index",
+                "A",
+                "B"
+            ],
+            "length": 3,
+            "preview": [
+                [
+                    0,
+                    10,
+                    100
+                ],
+                [
+                    1,
+                    11,
+                    110
+                ],
+                [
+                    2,
+                    12,
+                    120
+                ]
+            ],
+            "stats": {
+                "A": {
+                    "count": 3.0,
+                    "mean": 11.0,
+                    "std": 1.0,
+                    "min": 10.0,
+                    "25%": 10.5,
+                    "50%": 11.0,
+                    "75%": 11.5,
+                    "max": 12.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            10.0,
+                            10.1,
+                            10.2,
+                            10.3,
+                            10.4,
+                            10.5,
+                            10.6,
+                            10.7,
+                            10.8,
+                            10.9,
+                            11.0,
+                            11.1,
+                            11.2,
+                            11.3,
+                            11.4,
+                            11.5,
+                            11.6,
+                            11.7,
+                            11.8,
+                            11.9,
+                            12.0
+                        ]
+                    ]
+                },
+                "B": {
+                    "count": 3.0,
+                    "mean": 110.0,
+                    "std": 10.0,
+                    "min": 100.0,
+                    "25%": 105.0,
+                    "50%": 110.0,
+                    "75%": 115.0,
+                    "max": 120.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            100.0,
+                            101.0,
+                            102.0,
+                            103.0,
+                            104.0,
+                            105.0,
+                            106.0,
+                            107.0,
+                            108.0,
+                            109.0,
+                            110.0,
+                            111.0,
+                            112.0,
+                            113.0,
+                            114.0,
+                            115.0,
+                            116.0,
+                            117.0,
+                            118.0,
+                            119.0,
+                            120.0
+                        ]
+                    ]
+                }
+            },
+            "producer": {
+                "name": "mlrun-bc154e-training",
+                "kind": "run",
+                "uri": "default/8d59c1b8403c4a49bdd2c4803f9e92b7",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2020-12-29T14:29:17.581220+00:00"
+        },
+        {
+            "key": "mymodel",
+            "kind": "model",
+            "iter": 0,
+            "tree": "8d59c1b8403c4a49bdd2c4803f9e92b7",
+            "target_path": "/User/mlrun-repo/examples/data/models/",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "mlrun-bc154e-training_mymodel",
+            "model_file": "model.txt",
+            "metrics": {
+                "accuracy": 0.85
+            },
+            "parameters": {
+                "xx": "abc",
+                "one_more": 5
+            },
+            "inputs": [],
+            "outputs": [],
+            "framework": "",
+            "updated": "2020-12-29T14:29:17.670869+00:00",
+            "labels": {
+                "framework": "xgboost"
+            },
+            "producer": {
+                "name": "mlrun-bc154e-training",
+                "kind": "run",
+                "uri": "default/8d59c1b8403c4a49bdd2c4803f9e92b7",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default"
+        },
+        {
+            "key": "somefile",
+            "kind": "",
+            "iter": 0,
+            "tree": "8d59c1b8403c4a49bdd2c4803f9e92b7",
+            "src_path": "myfile.txt",
+            "target_path": "/User/mlrun-repo/examples/data/myfile.txt",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "mlrun-bc154e-training_somefile",
+            "producer": {
+                "name": "mlrun-bc154e-training",
+                "kind": "run",
+                "uri": "default/8d59c1b8403c4a49bdd2c4803f9e92b7",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2020-12-29T14:29:17.486508+00:00"
+        },
+        {
+            "key": "validation",
+            "kind": "",
+            "iter": 0,
+            "tree": "cf441b6df70b41719ec3fd603b7e6c71",
+            "target_path": "/User/mlrun-repo/examples/data/validation.html",
+            "hash": "b241f6f3175963f7382e527e37c9f376685afce5",
+            "viewer": "web-app",
+            "format": "html",
+            "size": 18,
+            "db_key": "mlrun-e76bd6-validation_validation",
+            "producer": {
+                "name": "mlrun-e76bd6-validation",
+                "kind": "run",
+                "uri": "default/cf441b6df70b41719ec3fd603b7e6c71",
+                "owner": "admin"
+            },
+            "sources": [
+                {
+                    "name": "model",
+                    "path": "/User/mlrun-repo/examples/data/models/"
+                }
+            ],
+            "project": "default",
+            "updated": "2020-12-29T14:29:18.038491+00:00"
+        },
+        {
+            "uid": "8f7a94f0-b87e-4dd2-8c83-cdcb2e69981e",
+            "key": "model",
+            "db_key": "model",
+            "tree": "8f7a94f0-b87e-4dd2-8c83-cdcb2e69981e",
+            "description": "model",
+            "kind": "model",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "model_file": "model",
+            "updated": "2021-03-31T12:25:46.144561+00:00"
+        },
+        {
+            "key": "mydf",
+            "kind": "dataset",
+            "iter": 0,
+            "tree": "e2133e46-4b73-4a5a-ba2c-aad88a677181",
+            "target_path": "v3io:///users/admin/kfp/e2133e46-4b73-4a5a-ba2c-aad88a677181/mydf.csv",
+            "hash": "8b6edc4fb4d71af093ff98f7c8f879416409eba5",
+            "format": "csv",
+            "size": 32,
+            "db_key": "my-trainer-training_mydf",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "A",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "B",
+                        "type": "integer"
+                    }
+                ],
+                "primaryKey": [
+                    "index"
+                ],
+                "pandas_version": "0.20.0"
+            },
+            "header": [
+                "index",
+                "A",
+                "B"
+            ],
+            "length": 3,
+            "preview": [
+                [
+                    0,
+                    10,
+                    100
+                ],
+                [
+                    1,
+                    11,
+                    110
+                ],
+                [
+                    2,
+                    12,
+                    120
+                ]
+            ],
+            "stats": {
+                "A": {
+                    "count": 3.0,
+                    "mean": 11.0,
+                    "std": 1.0,
+                    "min": 10.0,
+                    "25%": 10.5,
+                    "50%": 11.0,
+                    "75%": 11.5,
+                    "max": 12.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            10.0,
+                            10.1,
+                            10.2,
+                            10.3,
+                            10.4,
+                            10.5,
+                            10.6,
+                            10.7,
+                            10.8,
+                            10.9,
+                            11.0,
+                            11.1,
+                            11.2,
+                            11.3,
+                            11.4,
+                            11.5,
+                            11.6,
+                            11.7,
+                            11.8,
+                            11.9,
+                            12.0
+                        ]
+                    ]
+                },
+                "B": {
+                    "count": 3.0,
+                    "mean": 110.0,
+                    "std": 10.0,
+                    "min": 100.0,
+                    "25%": 105.0,
+                    "50%": 110.0,
+                    "75%": 115.0,
+                    "max": 120.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            100.0,
+                            101.0,
+                            102.0,
+                            103.0,
+                            104.0,
+                            105.0,
+                            106.0,
+                            107.0,
+                            108.0,
+                            109.0,
+                            110.0,
+                            111.0,
+                            112.0,
+                            113.0,
+                            114.0,
+                            115.0,
+                            116.0,
+                            117.0,
+                            118.0,
+                            119.0,
+                            120.0
+                        ]
+                    ]
+                }
+            },
+            "producer": {
+                "name": "my-trainer-training",
+                "kind": "run",
+                "uri": "default/3c680165ab154a2ab04a504fb4af75b4",
+                "owner": "admin",
+                "workflow": "e2133e46-4b73-4a5a-ba2c-aad88a677181"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2020-12-29T14:31:29.376574+00:00"
+        },
+        {
+            "key": "mymodel",
+            "kind": "model",
+            "iter": 0,
+            "tree": "e2133e46-4b73-4a5a-ba2c-aad88a677181",
+            "target_path": "v3io:///users/admin/kfp/e2133e46-4b73-4a5a-ba2c-aad88a677181/models/",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-trainer-training_mymodel",
+            "model_file": "model.txt",
+            "metrics": {
+                "accuracy": 0.85
+            },
+            "parameters": {
+                "xx": "abc",
+                "one_more": 5
+            },
+            "inputs": [],
+            "outputs": [],
+            "framework": "",
+            "updated": "2020-12-29T14:31:29.440302+00:00",
+            "labels": {
+                "framework": "xgboost"
+            },
+            "producer": {
+                "name": "my-trainer-training",
+                "kind": "run",
+                "uri": "default/3c680165ab154a2ab04a504fb4af75b4",
+                "owner": "admin",
+                "workflow": "e2133e46-4b73-4a5a-ba2c-aad88a677181"
+            },
+            "sources": [],
+            "project": "default"
+        },
+        {
+            "key": "somefile",
+            "kind": "",
+            "iter": 0,
+            "tree": "e2133e46-4b73-4a5a-ba2c-aad88a677181",
+            "src_path": "myfile.txt",
+            "target_path": "v3io:///users/admin/kfp/e2133e46-4b73-4a5a-ba2c-aad88a677181/myfile.txt",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-trainer-training_somefile",
+            "producer": {
+                "name": "my-trainer-training",
+                "kind": "run",
+                "uri": "default/3c680165ab154a2ab04a504fb4af75b4",
+                "owner": "admin",
+                "workflow": "e2133e46-4b73-4a5a-ba2c-aad88a677181"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2020-12-29T14:31:29.299450+00:00"
+        },
+        {
+            "key": "validation",
+            "kind": "",
+            "iter": 0,
+            "tree": "e2133e46-4b73-4a5a-ba2c-aad88a677181",
+            "target_path": "v3io:///users/admin/kfp/e2133e46-4b73-4a5a-ba2c-aad88a677181/validation.html",
+            "hash": "b241f6f3175963f7382e527e37c9f376685afce5",
+            "viewer": "web-app",
+            "format": "html",
+            "size": 18,
+            "db_key": "my-trainer-validation_validation",
+            "producer": {
+                "name": "my-trainer-validation",
+                "kind": "run",
+                "uri": "default/5b8214775c4b46a289682093ea61e60b",
+                "owner": "admin",
+                "workflow": "e2133e46-4b73-4a5a-ba2c-aad88a677181"
+            },
+            "sources": [
+                {
+                    "name": "model",
+                    "path": "v3io:///users/admin/kfp/e2133e46-4b73-4a5a-ba2c-aad88a677181/models/"
+                }
+            ],
+            "project": "default",
+            "updated": "2020-12-29T14:31:42.501160+00:00"
+        },
+        {
+            "key": "mydf",
+            "kind": "dataset",
+            "iter": 0,
+            "tree": "6806735465994aea92f8cabe15f9698a",
+            "target_path": "v3io:///projects/default/artifacts/6806735465994aea92f8cabe15f9698a/mydf",
+            "hash": "206b214545f15d676d8c731f7453c551917e80e1",
+            "format": "",
+            "size": 2254,
+            "db_key": "my-trainer_mydf",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "index",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "A",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "B",
+                        "type": "integer"
+                    }
+                ],
+                "primaryKey": [
+                    "index"
+                ],
+                "pandas_version": "0.20.0"
+            },
+            "header": [
+                "index",
+                "A",
+                "B"
+            ],
+            "length": 3,
+            "preview": [
+                [
+                    0,
+                    10,
+                    100
+                ],
+                [
+                    1,
+                    11,
+                    110
+                ],
+                [
+                    2,
+                    12,
+                    120
+                ]
+            ],
+            "stats": {
+                "A": {
+                    "count": 3.0,
+                    "mean": 11.0,
+                    "std": 1.0,
+                    "min": 10.0,
+                    "25%": 10.5,
+                    "50%": 11.0,
+                    "75%": 11.5,
+                    "max": 12.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            10.0,
+                            10.1,
+                            10.2,
+                            10.3,
+                            10.4,
+                            10.5,
+                            10.6,
+                            10.7,
+                            10.8,
+                            10.9,
+                            11.0,
+                            11.1,
+                            11.2,
+                            11.3,
+                            11.4,
+                            11.5,
+                            11.6,
+                            11.7,
+                            11.8,
+                            11.9,
+                            12.0
+                        ]
+                    ]
+                },
+                "B": {
+                    "count": 3.0,
+                    "mean": 110.0,
+                    "std": 10.0,
+                    "min": 100.0,
+                    "25%": 105.0,
+                    "50%": 110.0,
+                    "75%": 115.0,
+                    "max": 120.0,
+                    "hist": [
+                        [
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            100.0,
+                            101.0,
+                            102.0,
+                            103.0,
+                            104.0,
+                            105.0,
+                            106.0,
+                            107.0,
+                            108.0,
+                            109.0,
+                            110.0,
+                            111.0,
+                            112.0,
+                            113.0,
+                            114.0,
+                            115.0,
+                            116.0,
+                            117.0,
+                            118.0,
+                            119.0,
+                            120.0
+                        ]
+                    ]
+                }
+            },
+            "producer": {
+                "name": "my-trainer",
+                "kind": "run",
+                "uri": "default/6806735465994aea92f8cabe15f9698a",
+                "owner": "pipelines"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-03-09T09:33:33.611207+00:00"
+        },
+        {
+            "key": "mymodel",
+            "kind": "model",
+            "iter": 0,
+            "tree": "6806735465994aea92f8cabe15f9698a",
+            "target_path": "v3io:///projects/default/artifacts/6806735465994aea92f8cabe15f9698a/models/",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-trainer_mymodel",
+            "model_file": "model.txt",
+            "metrics": {
+                "accuracy": 0.85
+            },
+            "parameters": {
+                "xx": "abc"
+            },
+            "inputs": [],
+            "outputs": [],
+            "framework": "",
+            "labels": {
+                "framework": "xgboost"
+            },
+            "producer": {
+                "name": "my-trainer",
+                "kind": "run",
+                "uri": "default/6806735465994aea92f8cabe15f9698a",
+                "owner": "pipelines"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-03-09T09:33:34.295763+00:00"
+        },
+        {
+            "key": "somefile",
+            "kind": "",
+            "iter": 0,
+            "tree": "6806735465994aea92f8cabe15f9698a",
+            "src_path": "myfile.txt",
+            "target_path": "v3io:///projects/default/artifacts/6806735465994aea92f8cabe15f9698a/myfile.txt",
+            "hash": "8170b9a53bbb1f4d52733bc6824955e3a362d4a1",
+            "size": 10,
+            "db_key": "my-trainer_somefile",
+            "producer": {
+                "name": "my-trainer",
+                "kind": "run",
+                "uri": "default/6806735465994aea92f8cabe15f9698a",
+                "owner": "pipelines"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-03-09T09:33:33.471856+00:00"
+        },
+        {
+            "key": "iteration_results",
+            "kind": "table",
+            "iter": 0,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "src_path": "iteration_results.csv",
+            "target_path": "/User/mlrun-repo/examples/data/iteration_results.csv",
+            "hash": "21951f01ce907a5ed8e807b5566630faf3ce2bf4",
+            "viewer": "table",
+            "size": 121,
+            "db_key": "my-training_iteration_results",
+            "header": [
+                "state",
+                "iter",
+                "param.p1",
+                "output.accuracy",
+                "output.loss"
+            ],
+            "producer": {
+                "name": "my-training",
+                "kind": "run",
+                "uri": "default/287c18ff72394206a6b7990ceeae8753",
+                "owner": "admin"
+            },
+            "sources": [],
+            "project": "default",
+            "updated": "2021-02-23T15:38:13.291788+00:00"
+        },
+        {
+            "key": "mydf",
+            "kind": "link",
+            "iter": 0,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/1/mydf",
+            "db_key": "my-training_mydf",
+            "link_iteration": 1,
+            "sources": [],
+            "project": "",
+            "updated": "2021-02-23T15:38:13.167019+00:00"
+        },
+        {
+            "key": "mymodel",
+            "kind": "link",
+            "iter": 0,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/models/1/",
+            "db_key": "my-training_mymodel",
+            "link_iteration": 1,
+            "sources": [],
+            "project": "",
+            "updated": "2021-02-23T15:38:13.222503+00:00"
+        },
+        {
+            "key": "somefile",
+            "kind": "link",
+            "iter": 0,
+            "tree": "287c18ff72394206a6b7990ceeae8753",
+            "target_path": "/User/mlrun-repo/examples/data/1/myfile.txt",
+            "db_key": "my-training_somefile",
+            "link_iteration": 1,
+            "sources": [],
+            "metrics": {
+                "accuracy": 1.0,
+                "test-error": 0.0,
+                "auc-micro": 1.0,
+                "auc-weighted": 1.0,
+                "f1-score": 1.0,
+                "precision_score": 1.0,
+                "recall_score": 1.0
+            },
+            "project": "",
+            "updated": "2021-02-23T15:38:13.109188+00:00"
+        },
+        {
+            "uid": "b79bd5e8-2b3c-468e-9825-0a22fc793e29",
+            "key": "new-dataset",
+            "db_key": "new-dataset",
+            "tree": "b79bd5e8-2b3c-468e-9825-0a22fc793e29",
+            "target_path": "/foo/bar",
+            "description": "some domo description",
+            "kind": "dataset",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-04-30T10:53:33.483890+00:00"
+        },
+        {
+            "uid": "4d98009a-859a-458e-ae1d-07123670656c",
+            "key": "new-file",
+            "db_key": "new-file",
+            "tree": "4d98009a-859a-458e-ae1d-07123670656c",
+            "target_path": "a",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-04-07T16:08:00.033091+00:00"
+        },
+        {
+            "uid": "8db7adda-91ff-4649-a615-c72b148d5557",
+            "key": "new-model",
+            "db_key": "new-model",
+            "tree": "8db7adda-91ff-4649-a615-c72b148d5557",
+            "description": "dkjaskdasdjas",
+            "kind": "model",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "model_file": "aksdjasd",
+            "updated": "2021-05-27T08:48:16.942210+00:00"
+        },
+        {
+            "uid": "253c374c-9bb8-4ddb-b8e5-7dc58ef6b850",
+            "key": "qwe",
+            "db_key": "qwe",
+            "tree": "253c374c-9bb8-4ddb-b8e5-7dc58ef6b850",
+            "target_path": "eqw",
+            "description": "eqweq",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-05-24T08:49:36.726157+00:00"
+        },
+        {
+            "uid": "32d64343-4457-4142-823d-2cee4d52a733",
+            "key": "ref sefse",
+            "db_key": "ref sefse",
+            "tree": "32d64343-4457-4142-823d-2cee4d52a733",
+            "target_path": "sdf",
+            "description": "",
+            "kind": "dataset",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-04-30T10:36:20.770218+00:00"
+        },
+        {
+            "uid": "55484bb1-4dba-4ade-8f0f-590ee46b080a",
+            "key": "test",
+            "db_key": "test",
+            "tree": "55484bb1-4dba-4ade-8f0f-590ee46b080a",
+            "target_path": "asdasd",
+            "description": "",
+            "kind": "dataset",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-05-24T10:47:21.670967+00:00"
+        },
+        {
+            "uid": "e481250f-43bb-41ec-b691-b993429857f2",
+            "key": "test-b",
+            "db_key": "test-b",
+            "tree": "e481250f-43bb-41ec-b691-b993429857f2",
+            "target_path": "targetPath",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-04-07T14:18:29.829990+00:00"
+        },
+        {
+            "uid": "b5d92f98-46cf-4e8b-982f-8d3e7ce1efb0",
+            "key": "test-d",
+            "db_key": "test-d",
+            "tree": "b5d92f98-46cf-4e8b-982f-8d3e7ce1efb0",
+            "target_path": "path",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-04-07T14:18:43.628607+00:00"
+        },
+        {
+            "uid": "1308bcb9-fb6b-49e0-930d-74e2c8611995",
+            "key": "test-i",
+            "db_key": "test-i",
+            "tree": "1308bcb9-fb6b-49e0-930d-74e2c8611995",
+            "target_path": "testpath",
+            "description": "desc",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-05-31T12:16:32.252499+00:00"
+        },
+        {
+            "uid": "76ae908f-fe4a-488c-8dc4-6c93cd1a5a6f",
+            "key": "test-m",
+            "db_key": "test-m",
+            "tree": "76ae908f-fe4a-488c-8dc4-6c93cd1a5a6f",
+            "description": "",
+            "kind": "model",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "model_file": "default",
+            "updated": "2021-06-02T12:37:00.422559+00:00"
+        },
+        {
+            "uid": "fbbf4ece-b657-4fe7-813a-5759dcd30d2f",
+            "key": "test-m-ml",
+            "db_key": "test-m-ml",
+            "tree": "fbbf4ece-b657-4fe7-813a-5759dcd30d2f",
+            "description": "",
+            "kind": "model",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "model_file": "test",
+            "updated": "2021-06-02T12:39:33.818875+00:00"
+        },
+        {
+            "uid": "4ec8e782-f998-478f-8838-251746554ecf",
+            "key": "test-model",
+            "db_key": "test-model",
+            "tree": "4ec8e782-f998-478f-8838-251746554ecf",
+            "description": "test descr",
+            "kind": "model",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "model_file": "test path",
+            "updated": "2021-03-03T15:03:08.332598+00:00"
+        },
+        {
+            "uid": "1d1715c8-292b-4d36-9331-8636f20a3677",
+            "key": "test-w",
+            "db_key": "test-w",
+            "tree": "1d1715c8-292b-4d36-9331-8636f20a3677",
+            "target_path": "f",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-04-07T14:24:32.929836+00:00"
+        },
+        {
+            "uid": "1fccf8b7-ca36-4784-9eaf-c0bc1a459042",
+            "key": "test-y",
+            "db_key": "test-y",
+            "tree": "1fccf8b7-ca36-4784-9eaf-c0bc1a459042",
+            "target_path": "a",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-04-07T14:24:16.130000+00:00"
+        },
+        {
+            "uid": "8a70f48a-6728-4ed2-9d22-4d4ee0104984",
+            "key": "test1",
+            "db_key": "test1",
+            "tree": "8a70f48a-6728-4ed2-9d22-4d4ee0104984",
+            "target_path": "path",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-06-02T15:21:45.249099+00:00"
+        },
+        {
+            "uid": "03e2e5e4-f737-4c66-816d-355267f302d9",
+            "key": "test2",
+            "db_key": "test2",
+            "tree": "03e2e5e4-f737-4c66-816d-355267f302d9",
+            "target_path": "testpath",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-06-02T15:27:20.274737+00:00"
+        },
+        {
+            "uid": "932b0243-bbb7-4035-86eb-0d9586382c87",
+            "key": "test3",
+            "db_key": "test3",
+            "tree": "932b0243-bbb7-4035-86eb-0d9586382c87",
+            "target_path": "3",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-06-02T15:29:23.025166+00:00"
+        },
+        {
+            "uid": "40b44646-1797-45b5-a31c-40e2bf33c999",
+            "key": "test5",
+            "db_key": "test5",
+            "tree": "40b44646-1797-45b5-a31c-40e2bf33c999",
+            "target_path": "5",
+            "description": "",
+            "kind": "",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-06-02T15:35:45.721142+00:00"
+        },
+        {
+            "uid": "91bc2633-ee81-46f1-a5ba-f46acabc947b",
+            "key": "testY",
+            "db_key": "testY",
+            "tree": "91bc2633-ee81-46f1-a5ba-f46acabc947b",
+            "description": "",
+            "kind": "model",
+            "project": "default",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "model_file": "path",
+            "updated": "2021-05-27T08:48:50.341801+00:00"
+        },
+        {
+            "uid": "47a319eb-2deb-4cd7-953f-32b3226a9a6f",
+            "key": "demo00",
+            "db_key": "demo00",
+            "tree": "47a319eb-2deb-4cd7-953f-32b3226a9a6f",
+            "target_path": "/demo/",
+            "description": "demo00 description",
+            "kind": "model",
+            "project": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "model_file": "path/",
+            "updated": "2021-05-26T10:55:13.198386+00:00"
+        },
+        {
+            "uid": "c6ed390b-260a-4526-9425-bf7bfd9c9979",
+            "key": "demo_dataset00",
+            "db_key": "demo_dataset00",
+            "tree": "c6ed390b-260a-4526-9425-bf7bfd9c9979",
+            "target_path": "/demo/dataset00/",
+            "description": "description",
+            "kind": "dataset",
+            "project": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "producer": {
+                "kind": "api",
+                "uri": "localhost:3000"
+            },
+            "updated": "2021-05-26T12:06:55.267149+00:00"
+        }
+    ]
+}

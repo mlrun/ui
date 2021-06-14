@@ -1,0 +1,223 @@
+{
+    "projects": [
+        {
+            "kind": "project",
+            "metadata": {
+                "name": "test",
+                "created": "2020-12-20T12:56:43.864588",
+                "labels": {
+                    "34534423": "345345",
+                    "key2": "value3",
+                    "key3": "value3",
+                    "key5": "value4",
+                    "abc": "def"
+                },
+                "annotations": null,
+                "label": null
+            },
+            "spec": {
+                "description": "abc",
+                "goals": "test goal2",
+                "params": null,
+                "functions": null,
+                "workflows": null,
+                "artifacts": null,
+                "artifact_path": null,
+                "conda": null,
+                "source": "http://example.com",
+                "subpath": null,
+                "origin_url": null,
+                "desired_state": "online"
+            },
+            "status": {
+                "state": "online"
+            }
+        },
+        {
+            "kind": "project",
+            "metadata": {
+                "name": "default",
+                "created": "2020-12-28T11:49:47.463195",
+                "labels": {
+                    "key1": "value1",
+                    "test": "test",
+                    "yes": "no"
+                },
+                "annotations": null
+            },
+            "spec": {
+                "description": "default description1",
+                "goals": "asdfa2",
+                "params": null,
+                "functions": null,
+                "workflows": null,
+                "artifacts": null,
+                "artifact_path": null,
+                "conda": null,
+                "source": "",
+                "subpath": null,
+                "origin_url": null,
+                "desired_state": "online"
+            },
+            "status": {
+                "state": "online"
+            }
+        },
+        {
+            "kind": "project",
+            "metadata": {
+                "name": "hhhh",
+                "created": "2021-01-05T18:54:57.101178",
+                "labels": null,
+                "annotations": null
+            },
+            "spec": {
+                "description": "hhhh",
+                "goals": null,
+                "params": null,
+                "functions": null,
+                "workflows": null,
+                "artifacts": null,
+                "artifact_path": null,
+                "conda": null,
+                "source": null,
+                "subpath": null,
+                "origin_url": null,
+                "desired_state": "archived"
+            },
+            "status": {
+                "state": "archived"
+            }
+        },
+        {
+            "kind": "project",
+            "metadata": {
+                "name": "test5",
+                "created": "2021-01-26T14:56:04.352956",
+                "labels": null,
+                "annotations": null
+            },
+            "spec": {
+                "description": "",
+                "goals": null,
+                "params": null,
+                "functions": null,
+                "workflows": null,
+                "artifacts": null,
+                "artifact_path": null,
+                "conda": null,
+                "source": null,
+                "subpath": null,
+                "origin_url": null,
+                "desired_state": "archived"
+            },
+            "status": {
+                "state": "archived"
+            }
+        },
+        {
+            "kind": "project",
+            "metadata": {
+                "name": "long-long-long-long-long-long-long-long-long-long",
+                "created": "2021-02-09T12:14:09.449762",
+                "labels": null,
+                "annotations": null
+            },
+            "spec": {
+                "description": "",
+                "goals": null,
+                "params": null,
+                "functions": null,
+                "workflows": null,
+                "artifacts": null,
+                "artifact_path": null,
+                "conda": null,
+                "source": null,
+                "subpath": null,
+                "origin_url": null,
+                "desired_state": "online"
+            },
+            "status": {
+                "state": "online"
+            }
+        },
+        {
+            "kind": "project",
+            "metadata": {
+                "name": "test7",
+                "created": "2021-02-19T18:01:18.639452",
+                "labels": null,
+                "annotations": null
+            },
+            "spec": {
+                "description": "",
+                "goals": null,
+                "params": null,
+                "functions": null,
+                "workflows": null,
+                "artifacts": null,
+                "artifact_path": null,
+                "conda": null,
+                "source": null,
+                "subpath": null,
+                "origin_url": null,
+                "desired_state": "archived"
+            },
+            "status": {
+                "state": "archived"
+            }
+        },
+        {
+            "kind": "project",
+            "metadata": {
+                "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "created": "2021-05-26T09:36:15.846762",
+                "labels": null,
+                "annotations": null
+            },
+            "spec": {
+                "description": "gfdhfghfdghfgh",
+                "goals": null,
+                "params": null,
+                "functions": null,
+                "workflows": null,
+                "artifacts": null,
+                "artifact_path": null,
+                "conda": null,
+                "source": null,
+                "subpath": null,
+                "origin_url": null,
+                "desired_state": "online"
+            },
+            "status": {
+                "state": "online"
+            }
+        },
+        {
+            "kind": "project",
+            "metadata": {
+                "name": "test-erann",
+                "created": "2021-05-27T16:11:25.739737",
+                "labels": null,
+                "annotations": null
+            },
+            "spec": {
+                "description": "",
+                "goals": null,
+                "params": null,
+                "functions": null,
+                "workflows": null,
+                "artifacts": null,
+                "artifact_path": null,
+                "conda": null,
+                "source": null,
+                "subpath": null,
+                "origin_url": null,
+                "desired_state": "online"
+            },
+            "status": {
+                "state": "online"
+            }
+        }
+    ]
+}
