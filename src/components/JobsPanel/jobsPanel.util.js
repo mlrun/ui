@@ -189,16 +189,15 @@ export const generateTableData = (
   const environmentVariables = getEnvironmentVariables(selectedFunction)
   const node_selector = getNodeSelectors(selectedFunction)
 
-  if (
-    limits?.memory?.match(/[a-zA-Z]/) ||
-    requests?.memory?.match(/[a-zA-Z]/)
-  ) {
-    const limitsMemoryUnit = limits.memory.replace(/\d+/g, '') + 'B'
-    const requestsMemoryUnit = requests.memory.replace(/\d+/g, '') + 'B'
-
+  if (limits?.memory?.match(/[a-zA-Z]/)) {
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
-      payload: limitsMemoryUnit || requestsMemoryUnit
+      payload: `${limits.memory.replace(/\d+/g, '')}B`
+    })
+  } else if (requests?.memory?.match(/[a-zA-Z]/)) {
+    panelDispatch({
+      type: panelActions.SET_MEMORY_UNIT,
+      payload: `${requests.memory.replace(/\d+/g, '')}B`
     })
   } else if (limits?.memory?.length > 0 || requests?.memory?.length > 0) {
     panelDispatch({
@@ -207,7 +206,7 @@ export const generateTableData = (
     })
   }
 
-  if (limits?.cpu?.match(/m/) || requests?.cpu?.match(/m/)) {
+  if (limits?.cpu?.match?.(/m/) || requests?.cpu?.match?.(/m/)) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'millicpu'
