@@ -3,4 +3,8 @@
 
 .job-panel__section {
   @include panelSection;
+
+  .panel-section__tip {
+    margin-left: 5px;
+  }
 }

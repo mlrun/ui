@@ -50,8 +50,6 @@ const JobsPanel = ({
   setNewJobEnvironmentVariables,
   setNewJobInputs,
   setNewJobSecretSources,
-  setNewJobVolumeMounts,
-  setNewJobVolumes,
   setNotification,
   withSaveChanges
 }) => {

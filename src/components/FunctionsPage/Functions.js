@@ -73,7 +73,7 @@ const Functions = ({
       label: 'New',
       onClick: () => setFunctionsPanelIsOpen(true),
       variant: 'secondary',
-      visible: new URLSearchParams(location.search).get('demo') === 'true'
+      hidden: new URLSearchParams(location.search).get('demo') !== 'true'
     }
   }
 

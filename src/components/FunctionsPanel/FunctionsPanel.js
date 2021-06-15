@@ -18,7 +18,8 @@ const FunctionsPanel = ({
   match,
   removeFunctionsError,
   createNewFunction,
-  setNewFunctionProject
+  setNewFunctionProject,
+  setNewFunctionSourceCode
 }) => {
   const [isNameValid, setNameValid] = useState(true)
   const [isHandlerValid, setHandlerValid] = useState(true)

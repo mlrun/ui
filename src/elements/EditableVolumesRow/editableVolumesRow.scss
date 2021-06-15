@@ -5,10 +5,14 @@
         padding-top: 20px;
 
         &__label {
-          top: 5px;
           left: 10px;
         }
       }
     }
   }
+}
+
+.flex-row {
+  display: flex;
+  justify-content: space-between;
 }

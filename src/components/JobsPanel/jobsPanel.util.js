@@ -93,7 +93,7 @@ export const getNodeSelectors = selectedFunction => {
     .value()
 }
 
-export const getVolumeMounts = selectedFunction => {
+export const getVolumeMounts = (selectedFunction, volumes) => {
   if (!selectedFunction.some(func => func.spec.volume_mounts)) {
     return []
   }
@@ -103,8 +103,13 @@ export const getVolumeMounts = selectedFunction => {
     .flatten()
     .unionBy('name')
     .map(volume_mounts => {
+      const currentVolume = volumes.find(
+        volume => volume.name === volume_mounts?.name
+      )
+
       return {
         data: {
+          type: getVolumeType(currentVolume),
           name: volume_mounts?.name,
           mountPath: volume_mounts?.mountPath
         },
@@ -220,8 +225,8 @@ export const generateTableData = (
 
   if (!isEmpty(functionParameters)) {
     const { parameters, dataInputs } = getDefaultData(functionParameters)
-    const volumeMounts = getVolumeMounts(selectedFunction)
     const volumes = getVolume(selectedFunction)
+    const volumeMounts = getVolumeMounts(selectedFunction, volumes)
 
     panelDispatch({
       type: panelActions.SET_TABLE_DATA,
@@ -243,9 +248,10 @@ export const generateTableData = (
     setNewJob({
       inputs: parseDefaultDataInputsContent(dataInputs),
       parameters: parseDefaultContent(parameters),
-      volume_mounts: (volumeMounts ?? []).map(
-        volumeMounts => volumeMounts.data
-      ),
+      volume_mounts: (volumeMounts ?? []).map(volumeMounts => ({
+        name: volumeMounts.data.name,
+        mountPath: volumeMounts.data.mountPath
+      })),
       volumes,
       environmentVariables,
       secret_sources: [],
@@ -407,7 +413,10 @@ export const generateTableDataFromDefaultData = (
     inputs: defaultData.task.spec.inputs ?? {},
     parameters: defaultData.task.spec.parameters ?? {},
     volume_mounts: volumeMounts?.length
-      ? volumeMounts.map(volumeMounts => volumeMounts.data)
+      ? volumeMounts.map(volumeMounts => ({
+          name: volumeMounts.data.name,
+          mountPath: volumeMounts.data.mountPath
+        }))
       : [],
     volumes: defaultData.function?.spec.volumes ?? [],
     environmentVariables: defaultData.function?.spec.env ?? [],
@@ -530,4 +539,16 @@ export const parseDefaultNodeSelectorContent = nodeSelector => {
 
 export const isNameNotUnique = (newName, content) => {
   return content.some(item => newName === item?.data.name && newName !== '')
+}
+
+const getVolumeType = volume => {
+  if (volume.configMap) {
+    return 'Config Map'
+  } else if (volume.persistentVolumeClaim) {
+    return 'PVC'
+  } else if (volume.secret) {
+    return 'Secret'
+  } else {
+    return 'V3IO'
+  }
 }

@@ -31,7 +31,8 @@ import {
   DEPLOY_FUNCTION_SUCCESS,
   SET_NEW_FUNCTION_SECRETS,
   SET_NEW_FUNCTION_BUILD_IMAGE,
-  SET_NEW_FUNCTION_PROJECT
+  SET_NEW_FUNCTION_PROJECT,
+  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
 } from '../constants'
 
 const initialState = {
@@ -160,6 +161,22 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         newFunction: initialState.newFunction
+      }
+    case RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              base_image: '',
+              commands: '',
+              image: ''
+            }
+          }
+        }
       }
     case SET_NEW_FUNCTION_BASE_IMAGE:
       return {

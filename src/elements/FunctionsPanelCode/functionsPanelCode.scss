@@ -39,14 +39,47 @@
 
     .input {
       max-width: 180px;
+
+      &__wide {
+        width: 100%;
+        max-width: 100%;
+      }
     }
   }
 
   .commands {
-    width: 100%;
+    width: 73%;
+    margin-right: 0;
+    margin-left: auto;
 
     .text-area {
       width: 100%;
     }
+  }
+
+  &__existing-image {
+    display: flex;
+    width: 73%;
+  }
+
+  &__images-inputs {
+    width: 346px;
+
+    div:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+
+  &__handler {
+    margin-right: 25px;
+  }
+}
+
+.radio-buttons__block {
+  display: block;
+  width: 200px;
+
+  div:first-child {
+    margin: 10px 0 50px 0;
   }
 }

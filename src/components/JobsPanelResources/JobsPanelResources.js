@@ -112,6 +112,7 @@ const JobsPanelResources = ({
     const newVolumeMount = {
       isDefault: false,
       data: {
+        type: newVolume.type,
         name: newVolume.name,
         mountPath: newVolume.path
       }
@@ -131,7 +132,10 @@ const JobsPanelResources = ({
     })
     setNewJobVolumeMounts([
       ...jobsStore.newJob.function.spec.volume_mounts,
-      newVolumeMount.data
+      {
+        name: newVolumeMount.data.name,
+        mountPath: newVolumeMount.data.mountPath
+      }
     ])
     setNewJobVolumes([
       ...jobsStore.newJob.function.spec.volumes,
@@ -160,7 +164,12 @@ const JobsPanelResources = ({
       type: panelActions.SET_TABLE_DATA_VOLUMES,
       payload: volumes
     })
-    setNewJobVolumeMounts(volumeMounts.map(volume => volume.data))
+    setNewJobVolumeMounts(
+      volumeMounts.map(volume => ({
+        name: volume.data.name,
+        mountPath: volume.data.mountPath
+      }))
+    )
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
       payload: volumeMounts
@@ -181,7 +190,12 @@ const JobsPanelResources = ({
       type: panelActions.SET_TABLE_DATA_VOLUMES,
       payload: volumes
     })
-    setNewJobVolumeMounts(volumeMounts.map(volumeMount => volumeMount.data))
+    setNewJobVolumeMounts(
+      volumeMounts.map(volumeMount => ({
+        name: volumeMount.data.name,
+        mountPath: volumeMount.data.mountPath
+      }))
+    )
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
       payload: volumeMounts
