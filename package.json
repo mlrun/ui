@@ -49,7 +49,7 @@
     "docker": "docker build -t ${MLRUN_DOCKER_REGISTRY}${MLRUN_DOCKER_REPO:-mlrun}/mlrun-ui:${MLRUN_DOCKER_TAG:-latest} --build-arg COMMIT_HASH=\"`git rev-parse --short HEAD`\" --build-arg DATE=\"`date -u`\" -f Dockerfile .",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "mock-server": "node --require @babel/register tests/mockServer/mock.js",
+    "mock-server": "node scripts/mockServer.js",
     "test:ui": "node scripts/testui.js",
     "report": "node tests/report.js",
     "test:regression": "npm run test:ui && npm run report",

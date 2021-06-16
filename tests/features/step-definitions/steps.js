@@ -57,7 +57,7 @@ Given('open url', async function() {
 
 When('turn on demo mode', async function() {
   const url = await this.driver.getCurrentUrl()
-  await navigateToPage(this.driver, url + '?demo=true')
+  await navigateToPage(this.driver, `${url}?demo=true`)
 })
 
 Then('wait load page', async function() {
