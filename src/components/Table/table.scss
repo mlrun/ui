@@ -41,9 +41,9 @@
 
     .artifacts {
       &_medium {
-        max-width: 235px;
+        max-width: 240px;
 
-        @include tableColumnFlex(1, 200px);
+        @include tableColumnFlex(1, 235px);
       }
 
       &_small {
