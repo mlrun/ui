@@ -43,7 +43,7 @@ const Chip = React.forwardRef(
     const chipClassNames = classnames(
       'chip',
       'chip-block',
-      className && className,
+      className,
       density && `chip-density_${density}`,
       borderRadius && `chip-border_${borderRadius}`,
       background && `chip-background_${background}`,

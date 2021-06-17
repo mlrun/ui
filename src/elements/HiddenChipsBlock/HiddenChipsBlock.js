@@ -91,7 +91,7 @@ const HiddenChipsBlock = ({
           >
             <Chip
               chip={element}
-              chipIndex={index + chipIndex}
+              chipIndex={`${index}${chipIndex}`}
               chipOptions={chipOptions}
               className={className}
               editConfig={editConfig}

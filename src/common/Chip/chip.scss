@@ -18,6 +18,13 @@
 
   &__delimiter {
     margin-right: 5px;
+
+    svg {
+      position: relative;
+      top: -1px;
+      height: 20px;
+      margin-left: 5px;
+    }
   }
 
   &__value {

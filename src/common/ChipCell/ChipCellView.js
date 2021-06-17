@@ -33,7 +33,7 @@ const ChipCellView = React.forwardRef(
   ) => {
     const buttonAddClassNames = classnames(
       'button-add',
-      className && className,
+      className,
       chipOptions.background &&
         `button-add-background_${chipOptions.background}`,
       chipOptions.borderColor && `button-add-border_${chipOptions.borderColor}`,
