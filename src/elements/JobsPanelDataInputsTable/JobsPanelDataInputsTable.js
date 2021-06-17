@@ -57,6 +57,11 @@ export const JobsPanelDataInputsTable = ({
               className="input-row__item"
               density="medium"
               floatingLabel
+              invalid={isNameNotUnique(
+                inputsState.newInput.name,
+                panelState.tableData.dataInputs
+              )}
+              invalidText="Name already exists"
               label="Input name"
               onChange={name =>
                 inputsDispatch({
@@ -64,11 +69,6 @@ export const JobsPanelDataInputsTable = ({
                   payload: name
                 })
               }
-              required={isNameNotUnique(
-                inputsState.newInput.name,
-                panelState.tableData.dataInputs
-              )}
-              requiredText="Name already exists"
               type="text"
             />
             <Combobox

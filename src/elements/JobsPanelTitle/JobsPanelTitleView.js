@@ -81,6 +81,8 @@ const JobsPanelTitleView = ({
               <Input
                 className="panel-title__input"
                 disabled={!editTitle}
+                invalid={!isTitleValid()}
+                invalidText="This field is invalid"
                 onChange={name =>
                   panelDispatch({
                     type: panelActions.SET_CURRENT_FUNCTION_INFO_NAME,
@@ -89,12 +91,8 @@ const JobsPanelTitleView = ({
                 }
                 maxLength={63}
                 pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
-                required={!isTitleValid()}
-                requiredText={
-                  currentFunctionInfo.name.length === 0
-                    ? 'This field is required'
-                    : 'This field is invalid'
-                }
+                required
+                requiredText="This field is required"
                 tip={titleValidationTip}
                 type="text"
                 value={currentFunctionInfo.name}

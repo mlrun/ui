@@ -40,16 +40,14 @@ const FunctionsPanelGeneralView = ({
         <div className="general__required-info">
           <Input
             floatingLabel
+            invalid={!isNameValid}
+            invalidText="This field is invalid"
             label="Function Name"
+            maxLength={63}
             onChange={handleNameChange}
             onBlur={handleNameOnBlur}
-            maxLength={63}
-            required={!isNameValid}
-            requiredText={
-              data.name.length === 0
-                ? 'This field is required'
-                : 'This field is invalid'
-            }
+            required
+            requiredText="This field is required"
             tip={nameValidationTip}
             type="text"
             value={data.name}

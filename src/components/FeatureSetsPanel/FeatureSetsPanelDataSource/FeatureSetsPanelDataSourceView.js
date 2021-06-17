@@ -55,10 +55,12 @@ const FeatureSetsPanelDataSourceView = ({
           <Input
             className="data-source__inputs-item data-source__inputs-item_url"
             floatingLabel
+            invalid={!isUrlValid}
+            invalidText="URL is invalid"
             label="URL"
             onBlur={handleUrlOnBlur}
             onChange={handleUrlOnChange}
-            required={!isUrlValid}
+            required
             requiredText="URL is required"
             type="text"
             value={data.url}

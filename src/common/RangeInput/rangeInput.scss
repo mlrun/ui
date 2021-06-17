@@ -4,6 +4,7 @@
 .range {
   position: relative;
   display: flex;
+  margin-right: 22px;
   border: $primaryBorder;
   border-radius: 4px;
 
@@ -27,6 +28,10 @@
     text-transform: capitalize;
     background-color: transparent;
     pointer-events: none;
+
+    &-mandatory {
+      color: $amaranth;
+    }
   }
 
   &__buttons {
@@ -124,5 +129,50 @@
 
   &-chunky {
     height: 56px;
+  }
+
+  &-warning {
+    border: $errorBorder;
+
+    &_asterisk {
+      position: absolute;
+      top: 50%;
+      right: 35px;
+      color: $amaranth;
+      transform: translateY(-50%);
+    }
+
+    .range__button {
+      &-increase {
+        border-top: $errorBorder;
+        border-right: $errorBorder;
+      }
+
+      &-decrease {
+        border-right: $errorBorder;
+        border-bottom: $errorBorder;
+      }
+    }
+  }
+
+  &__warning-icon {
+    position: absolute;
+    top: 50%;
+    right: -20px;
+    transform: translateY(-50%);
+  }
+
+  .input-wrapper {
+    .input {
+      margin-right: 0;
+    }
+
+    .input_invalid {
+      border: none;
+    }
+
+    .tooltip-wrapper.input__warning {
+      display: none;
+    }
   }
 }

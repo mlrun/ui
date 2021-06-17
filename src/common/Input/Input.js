@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import { ReactComponent as Warning } from '../../images/warning.svg'
+import { ReactComponent as Invalid } from '../../images/invalid.svg'
 
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -20,6 +20,8 @@ const Input = React.forwardRef(
       iconClass,
       infoLabel,
       inputIcon,
+      invalid,
+      invalidText,
       label,
       suggestionList,
       maxLength,
@@ -39,10 +41,11 @@ const Input = React.forwardRef(
     ref
   ) => {
     const [inputIsFocused, setInputIsFocused] = useState(false)
+    const [labelWidth, setLabelWidth] = useState(0)
+    const [isRequired, setIsRequired] = useState(false)
     const [typedValue, setTypedValue] = useState('')
     const input = React.createRef()
     const inputLabel = useRef(null)
-    const [labelWidth, setLabelWidth] = useState(0)
     const inputClassNames = classnames(
       'input',
       className,
@@ -50,7 +53,7 @@ const Input = React.forwardRef(
       (inputIsFocused || placeholder || typedValue.length > 0) &&
         floatingLabel &&
         'active-input',
-      required && 'input_required'
+      (invalid || isRequired) && 'input_invalid'
     )
     const labelClassNames = classnames(
       'input__label',
@@ -85,7 +88,7 @@ const Input = React.forwardRef(
       onChange(item)
     }
 
-    const onInputBlur = event => {
+    const inputOnBlur = event => {
       if (
         !event.relatedTarget ||
         !event.relatedTarget?.closest('.suggestion-list')
@@ -96,12 +99,16 @@ const Input = React.forwardRef(
       }
     }
 
-    const onInputChange = event => {
+    const inputOnChange = event => {
       setTypedValue(event.target.value)
       onChange(event.target.value)
+
+      if (required && event.target.value.length === 0) {
+        setIsRequired(true)
+      }
     }
 
-    const onInputFocus = event => {
+    const inputOnFocus = event => {
       setInputIsFocused(true)
     }
 
@@ -110,17 +117,17 @@ const Input = React.forwardRef(
         <input
           data-testid="input"
           className={inputClassNames}
-          onBlur={onInputBlur}
-          onChange={onInputChange}
-          onFocus={onInputFocus}
+          onBlur={inputOnBlur}
+          onChange={inputOnChange}
+          onFocus={inputOnFocus}
           ref={input}
+          required={isRequired}
           {...{
             disabled,
             maxLength,
             onKeyDown,
             pattern,
             placeholder,
-            required,
             type,
             value
           }}
@@ -140,17 +147,23 @@ const Input = React.forwardRef(
             }
           >
             {label}
+            {required && <span className="input__label-mandatory"> *</span>}
           </label>
         )}
-        {required && (
+        {(invalid || isRequired) && (
           <Tooltip
             className="input__warning"
-            template={<TextTooltipTemplate text={requiredText} warning />}
+            template={
+              <TextTooltipTemplate
+                text={required && !typedValue ? requiredText : invalidText}
+                warning
+              />
+            }
           >
-            <Warning />
+            <Invalid />
           </Tooltip>
         )}
-        {tip && !required && <Tip text={tip} className="input__tip" />}
+        {tip && <Tip text={tip} className="input__tip" />}
         {inputIcon && (
           <span data-testid="input-icon" className={iconClass}>
             {inputIcon}
@@ -191,6 +204,8 @@ Input.defaultProps = {
   iconClass: '',
   infoLabel: false,
   inputIcon: null,
+  invalid: false,
+  invalidText: '',
   label: '',
   maxLength: null,
   onBlur: () => {},
@@ -213,6 +228,8 @@ Input.propTypes = {
   iconClass: PropTypes.string,
   infoLabel: PropTypes.bool,
   inputIcon: PropTypes.element,
+  invalid: PropTypes.bool,
+  invalidText: PropTypes.string,
   label: PropTypes.string,
   maxLength: PropTypes.number,
   onBlur: PropTypes.func,

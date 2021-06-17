@@ -50,9 +50,8 @@ const JobsPanelResourcesView = ({
         />
         <RangeInput
           density="dense"
-          floatingLabel
           label="Request"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={value =>
             panelDispatch({
               type: panelActions.SET_REQUESTS_MEMORY,
@@ -70,9 +69,8 @@ const JobsPanelResourcesView = ({
         />
         <RangeInput
           density="dense"
-          floatingLabel
           label="Limit"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={value =>
             panelDispatch({
               type: panelActions.SET_LIMITS_MEMORY,
@@ -100,9 +98,8 @@ const JobsPanelResourcesView = ({
         />
         <RangeInput
           density="dense"
-          floatingLabel
           label="Request"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={value =>
             panelDispatch({
               type: panelActions.SET_REQUESTS_CPU,
@@ -113,9 +110,8 @@ const JobsPanelResourcesView = ({
         />
         <RangeInput
           density="dense"
-          floatingLabel
           label="Limit"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={value =>
             panelDispatch({
               type: panelActions.SET_LIMITS_CPU,
@@ -128,9 +124,8 @@ const JobsPanelResourcesView = ({
       <JobsPanelSection title="Gpu" className="section-gpu">
         <RangeInput
           density="dense"
-          floatingLabel
           label="Limit"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={value =>
             panelDispatch({
               type: panelActions.SET_LIMITS_NVIDIA_GPU,

@@ -3,25 +3,35 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import Input from '../Input/Input'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../Tooltip/Tooltip'
 
 import { ReactComponent as Arrow } from '../../images/range-arrow-small.svg'
+import { ReactComponent as Invalid } from '../../images/invalid.svg'
 
 import './rangeInput.scss'
 
 const RangeInput = ({
   density,
   disabled,
-  floatingLabel,
-  infoLabel,
+  invalid,
+  invalidText,
   label,
-  labelAtTop,
+  labelType,
   max,
   min,
   onChange,
+  required,
+  requiredText,
   value
 }) => {
   const [inputValue, setInputValue] = useState(value)
-  const rangeClassName = classNames('range', `range-${density}`)
+  const [isRequired, setIsRequired] = useState(false)
+  const rangeClassName = classNames(
+    'range',
+    `range-${density}`,
+    (isRequired || invalid) && 'range-warning'
+  )
 
   const handleIncrease = () => {
     if (inputValue >= max) return
@@ -37,20 +47,41 @@ const RangeInput = ({
     onChange(+inputValue - 1)
   }
 
+  const rangeOnFocus = event => {
+    setIsRequired(false)
+  }
+
+  const rangeOnBlur = event => {
+    if (required && inputValue.length === 0) {
+      setIsRequired(true)
+    }
+  }
+
   return (
-    <div data-testid="range-input-container" className={rangeClassName}>
-      {labelAtTop && <label className="range__label">{label}</label>}
+    <div
+      data-testid="range-input-container"
+      className={rangeClassName}
+      onFocus={rangeOnFocus}
+      onBlur={rangeOnBlur}
+    >
+      {labelType === 'labelAtTop' && (
+        <label className="range__label">
+          {label}
+          {required && <span className="range__label-mandatory"> *</span>}
+        </label>
+      )}
       <Input
         className="range__input"
         density={density}
         disabled={disabled}
-        floatingLabel={!labelAtTop && floatingLabel}
-        infoLabel={infoLabel}
-        label={!labelAtTop ? label : ''}
+        floatingLabel={labelType === 'floatingLabel'}
+        infoLabel={labelType === 'infoLabel'}
+        label={labelType !== 'labelAtTop' && labelType !== 'none' ? label : ''}
         onChange={value => {
           setInputValue(value)
           onChange(value)
         }}
+        required={required}
         type="number"
         value={inputValue}
       />
@@ -72,6 +103,22 @@ const RangeInput = ({
           <Arrow className="decrease" />
         </button>
       </div>
+      {(isRequired || invalid) && (
+        <Tooltip
+          className="range__warning"
+          template={
+            <TextTooltipTemplate
+              text={invalid ? invalidText : requiredText}
+              warning
+            />
+          }
+        >
+          <Invalid className="range__warning-icon" />
+        </Tooltip>
+      )}
+      {required && labelType === 'none' && (
+        <span className="range-required_asterisk"> *</span>
+      )}
     </div>
   )
 }
@@ -79,24 +126,32 @@ const RangeInput = ({
 RangeInput.defaultProps = {
   density: 'normal',
   disabled: false,
-  floatingLabel: false,
-  infoLabel: false,
+  invalid: false,
+  invalidText: 'invalid',
   label: '',
-  labelAtTop: false,
+  labelType: 'labelAtTop',
   max: undefined,
-  min: 0
+  min: 0,
+  required: false,
+  requiredText: 'required'
 }
 
 RangeInput.propTypes = {
   density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
   disabled: PropTypes.bool,
-  floatingLabel: PropTypes.bool,
-  infoLabel: PropTypes.bool,
+  invalid: PropTypes.bool,
+  invalidText: PropTypes.string,
   label: PropTypes.string,
-  labelAtTop: PropTypes.bool,
+  labelType: PropTypes.oneOf([
+    'none',
+    'floatingLabel',
+    'infoLabel',
+    'labelAtTop'
+  ]),
   max: PropTypes.number,
   min: PropTypes.number,
   onChange: PropTypes.func.isRequired,
+  required: PropTypes.bool,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 }
 

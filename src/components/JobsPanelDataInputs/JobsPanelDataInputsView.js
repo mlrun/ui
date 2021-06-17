@@ -55,13 +55,13 @@ const JobsPanelDataInputsView = ({
         <Input
           label="Default artifact path"
           className="default-input"
+          floatingLabel
           onChange={inputValue => {
             panelDispatch({
               type: panelActions.SET_OUTPUT_PATH,
               payload: inputValue
             })
           }}
-          floatingLabel
           required={panelState.outputPath.length === 0}
           requiredText="This field is required"
           value={panelState.outputPath}

@@ -31,12 +31,12 @@ export const FeatureSetsPanelDataSourceTable = ({
         <div className="table__row-add-item">
           <div className="input-row-wrapper">
             <Input
-              onChange={setNewItemName}
-              label="Attribute name"
               className="input-row__item"
               floatingLabel
-              required={!isAttributeNameValid}
-              requiredText="Attribute name already exists"
+              invalid={!isAttributeNameValid}
+              invalidText="Attribute name already exists"
+              label="Attribute name"
+              onChange={setNewItemName}
               type="text"
             />
             <Input

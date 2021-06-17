@@ -76,7 +76,7 @@
         border: $primaryBorder;
       }
 
-      &_required {
+      &_invalid {
         border: $errorBorder;
       }
     }

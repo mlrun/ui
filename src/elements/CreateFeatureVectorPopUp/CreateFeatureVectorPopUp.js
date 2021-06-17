@@ -42,6 +42,8 @@ const CreateFeatureVectorPopUp = ({
           floatingLabel
           label="Vector name"
           onChange={setFeatureVectorName}
+          required
+          requiredText="Vector name is required"
           type="text"
           value={featureVectorName}
         />
@@ -51,6 +53,8 @@ const CreateFeatureVectorPopUp = ({
           floatingLabel
           label="Tag"
           onChange={setFeatureVectorTag}
+          required
+          requiredText="Vector tag is required"
           type="text"
           value={featureVectorTag}
         />

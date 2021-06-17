@@ -73,10 +73,12 @@ const FunctionsPanelCodeView = ({
           <div className="code__handler">
             <Input
               floatingLabel
+              invalid={!isHandlerValid}
+              invalidText="This field is invalid"
               label="Handler"
               onChange={handleHandlerChange}
               onBlur={handleHandlerOnBlur}
-              required={!isHandlerValid}
+              required
               requiredText="This field is required"
               type="text"
               value={data.handler}

@@ -72,6 +72,11 @@ const JobsPanelParametersView = ({
                   className="input-row__item"
                   density="chunky"
                   floatingLabel
+                  invalid={isNameNotUnique(
+                    parametersState.newParameter.name,
+                    parameters
+                  )}
+                  invalidText="Name already exists"
                   label="Name"
                   onChange={value =>
                     parametersDispatch({
@@ -79,11 +84,6 @@ const JobsPanelParametersView = ({
                       payload: value
                     })
                   }
-                  required={isNameNotUnique(
-                    parametersState.newParameter.name,
-                    parameters
-                  )}
-                  requiredText="Name already exists"
                   type="text"
                 />
                 <Select

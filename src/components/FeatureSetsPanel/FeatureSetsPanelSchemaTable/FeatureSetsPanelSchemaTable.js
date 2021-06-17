@@ -45,12 +45,12 @@ export const FeatureSetsPanelSchemaTable = ({
         <div className="table__row-add-item">
           <div className="input-row-wrapper">
             <Input
-              onChange={setNewItemName}
-              label="Attribute name"
               className="input-row__item"
               floatingLabel
-              required={!isEntityNameValid}
-              requiredText="Entity name already exists"
+              invalid={!isEntityNameValid}
+              invalidText="Entity name already exists"
+              label="Attribute name"
+              onChange={setNewItemName}
               type="text"
             />
             <Select

@@ -57,17 +57,17 @@ const EditableParametersRow = ({
           <div className="table__cell table__cell_edit">
             <Input
               density="dense"
+              invalid={
+                selectedParameter.newName !== selectedParameter.data.name &&
+                isNameNotUnique(selectedParameter.newName, content)
+              }
+              invalidText="Name already exists"
               onChange={name => {
                 setSelectedParameter({
                   ...selectedParameter,
                   newName: name
                 })
               }}
-              required={
-                selectedParameter.newName !== selectedParameter.data.name &&
-                isNameNotUnique(selectedParameter.newName, content)
-              }
-              requiredText="Name already exists"
               type="text"
               value={selectedParameter.newName ?? selectedParameter.data.name}
             />
