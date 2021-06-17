@@ -57,6 +57,7 @@ const FunctionsPanelGeneralView = ({
           />
           <Select
             className="type"
+            disabled
             floatingLabel
             label="Runtime type"
             onClick={type => {

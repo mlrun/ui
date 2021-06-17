@@ -25,7 +25,10 @@ const JobsPanelResourcesView = ({
 }) => (
   <div className="job-panel__item resources new-item-side-panel__item">
     <JobsPanelSection title="Resources" />
-    <JobsPanelSection title="Volumes">
+    <JobsPanelSection
+      title="Volumes"
+      tip="Volumes that define data paths and the required information for accessing the data from the function"
+    >
       <VolumesTable
         handleAddNewVolume={handleAddNewVolume}
         handleDelete={handleDeleteVolume}

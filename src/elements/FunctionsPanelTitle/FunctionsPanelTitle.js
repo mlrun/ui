@@ -17,9 +17,8 @@ const FunctionsPanelGeneral = ({ closePanel }) => {
           function in your project.
         </h5>
         <p>
-          Functions could be based on different run times and can be used for
-          data preparation, model training, model serving, notification & alerts
-          and etc.
+          Functions can be used for data preparation, model training, model
+          serving, notification & alerts and etc.
           <a
             href="https://docs.mlrun.org/en/latest/tutorial/01-mlrun-basics.html#gs-tutorial-1-step-create-basic-function"
             target="_blank"

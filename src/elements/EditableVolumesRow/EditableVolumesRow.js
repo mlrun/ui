@@ -18,6 +18,7 @@ const EditableVolumesRow = ({
   return (
     <>
       <div className="table__row edit-row">
+        <div className="table__cell">{selectedVolume.type.value}</div>
         {selectedVolume.isDefault ? (
           <div className="table__cell">{selectedVolume.data.name}</div>
         ) : (
@@ -57,8 +58,7 @@ const EditableVolumesRow = ({
         </div>
         <div className="table__cell-actions" />
       </div>
-      <div className="table__row edit-row">
-        <div className="table__cell">{selectedVolume.type.value}</div>
+      <div className="table__row edit-row flex-row">
         <div className="table__cell table__cell-input">
           <Input
             floatingLabel

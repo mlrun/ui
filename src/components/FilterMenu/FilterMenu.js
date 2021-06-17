@@ -266,7 +266,7 @@ const FilterMenu = ({
         )}
       </div>
       {actionButton &&
-        actionButton.visible &&
+        !actionButton.hidden &&
         (actionButton.getCustomTemplate ? (
           actionButton.getCustomTemplate(actionButton)
         ) : (

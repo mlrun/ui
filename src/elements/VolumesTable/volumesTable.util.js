@@ -1,4 +1,5 @@
 export const tableHeaders = [
+  { label: 'Type', id: 'type' },
   { label: 'Volume name', id: 'name' },
   { label: 'Path', id: 'path' }
 ]
