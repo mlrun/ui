@@ -166,7 +166,7 @@ const VolumesTableView = ({
                 disabled={newVolume.type.length === 0}
                 floatingLabel
                 type="text"
-                tip={volumeTypeNameLabel.tip ?? volumeTypeNameLabel.tip}
+                tip={volumeTypeNameLabel.tip}
               />
               {newVolume.type === 'V3IO' && (
                 <Input
