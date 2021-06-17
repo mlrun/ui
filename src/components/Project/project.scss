@@ -99,6 +99,31 @@
         }
       }
 
+      &__data {
+        margin-bottom: 13px;
+        color: $primary;
+
+        &-label {
+          margin-right: 15px;
+          font-size: 14px;
+          line-height: 16px;
+        }
+      }
+
+      &__status {
+        &-icon {
+          margin-right: 10px;
+        }
+
+        &-name {
+          text-transform: capitalize;
+        }
+      }
+
+      &__owner {
+        display: none;
+      }
+
       &__description {
         margin-top: 16px;
         color: rgba($mulledWine, 0.88);
@@ -127,34 +152,6 @@
         &-text {
           max-width: 185px;
           margin: 3px 0;
-        }
-      }
-
-      &__status {
-        margin-bottom: 13px;
-        color: $primary;
-
-        &-label {
-          margin-right: 15px;
-          font-size: 14px;
-          line-height: 16px;
-        }
-
-        &-icon {
-          margin-right: 10px;
-        }
-
-        &-name {
-          text-transform: capitalize;
-        }
-      }
-
-      &__owner {
-        display: none;
-        color: $primary;
-
-        &-label {
-          margin-right: 15px;
         }
       }
 

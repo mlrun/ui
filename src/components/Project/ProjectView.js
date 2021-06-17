@@ -7,6 +7,7 @@ import classnames from 'classnames'
 
 import { launchIDEOptions } from './project.utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
+import { formatDatetime } from '../../utils'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
@@ -115,16 +116,22 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="general-info__divider" />
               {project.data.status.state && (
-                <div className="general-info__status">
-                  <span className="general-info__status-label">Status:</span>
+                <div className="general-info__data general-info__status">
+                  <span className="general-info__data-label">Status:</span>
                   <i className={statusClassName} />
                   <span className="general-info__status-name">
                     {project.data.status.state}
                   </span>
                 </div>
               )}
-              <div className="general-info__owner">
-                <span className="general-info__owner-label">Owner:</span>
+              <div className="general-info__data">
+                <span className="general-info__data-label">Created at:</span>
+                <span>
+                  {formatDatetime(new Date(project.data.metadata.created), '-')}
+                </span>
+              </div>
+              <div className="general-info__data general-info__owner">
+                <span className="general-info__data-label">Owner:</span>
                 <span>{project.data.owner}</span>
               </div>
               <div className="general-info__divider" />
