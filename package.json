@@ -49,10 +49,11 @@
     "docker": "docker build -t ${MLRUN_DOCKER_REGISTRY}${MLRUN_DOCKER_REPO:-mlrun}/mlrun-ui:${MLRUN_DOCKER_TAG:-latest} --build-arg COMMIT_HASH=\"`git rev-parse --short HEAD`\" --build-arg DATE=\"`date -u`\" -f Dockerfile .",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
+    "mock-server": "node scripts/mockServer.js",
     "test:ui": "node scripts/testui.js",
     "report": "node tests/report.js",
     "test:regression": "npm run test:ui && npm run report",
-    "start:regression": "concurrently \"npm:start\" \"npm:test:regression\""
+    "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -94,9 +95,10 @@
     "babel-plugin-prismjs": "^2.0.1",
     "babel-plugin-react-remove-properties": "^0.3.0",
     "babel-preset-react-app": "^9.0.2",
+    "body-parser": "^1.19.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "chai": "^4.3.4",
-    "chromedriver": "^89.0.0",
+    "chromedriver": "^91.0.0",
     "css-loader": "2.1.1",
     "cucumber-html-reporter": "^5.3.0",
     "eslint": "^6.7.2",
@@ -110,6 +112,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.6.1",
+    "express": "^4.17.1",
     "file-loader": "3.0.1",
     "geckodriver": "^1.22.2",
     "html-webpack-plugin": "4.0.0-beta.5",

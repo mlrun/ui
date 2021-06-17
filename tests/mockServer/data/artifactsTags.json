@@ -1,0 +1,43 @@
+[
+    {
+        "project": "default",
+        "tags": [
+            "latest",
+            "some-tag"
+        ]
+    },
+    {
+        "project": "long-long-long-long-long-long-long-long-long-long",
+        "tags": []
+    },
+    {
+        "project": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "tags": [
+            "latest"
+        ]
+    },
+    {
+        "project": "test-erann",
+        "tags": [
+            "latest"
+        ]
+    },
+    {
+        "project": "hhhh",
+        "tags": []
+    },
+    {
+        "project": "test7",
+        "tags": []
+    },
+    {
+        "project": "test5",
+        "tags": []
+    },
+    {
+        "project": "test",
+        "tags": [
+            "latest"
+        ]
+    }
+]

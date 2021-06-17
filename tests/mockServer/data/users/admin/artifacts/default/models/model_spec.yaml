@@ -1,0 +1,25 @@
+key: mymodel
+kind: model
+iter: 0
+tree: ed88cf75d07546aba2df5e5f3d53a51c
+target_path: v3io:///users/admin/artifacts/default/models/
+hash: 8170b9a53bbb1f4d52733bc6824955e3a362d4a1
+size: 10
+db_key: my-trainer_mymodel
+model_file: model.txt
+metrics:
+  accuracy: 0.85
+parameters:
+  xx: abc
+inputs: []
+outputs: []
+framework: ''
+labels:
+  framework: xgboost
+producer:
+  name: my-trainer
+  kind: run
+  uri: default/ed88cf75d07546aba2df5e5f3d53a51c
+  owner: admin
+sources: []
+project: default

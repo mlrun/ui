@@ -1,0 +1,68 @@
+{
+    "projects": [
+        {
+            "name": "test",
+            "functions_count": 3,
+            "feature_sets_count": 2,
+            "models_count": 1,
+            "runs_failed_recent_count": 0,
+            "runs_running_count": 2
+        },
+        {
+            "name": "default",
+            "functions_count": 14,
+            "feature_sets_count": 44,
+            "models_count": 14,
+            "runs_failed_recent_count": 2,
+            "runs_running_count": 10
+        },
+        {
+            "name": "hhhh",
+            "functions_count": 0,
+            "feature_sets_count": 0,
+            "models_count": 0,
+            "runs_failed_recent_count": 0,
+            "runs_running_count": 1
+        },
+        {
+            "name": "test5",
+            "functions_count": 0,
+            "feature_sets_count": 0,
+            "models_count": 0,
+            "runs_failed_recent_count": 0,
+            "runs_running_count": 0
+        },
+        {
+            "name": "long-long-long-long-long-long-long-long-long-long",
+            "functions_count": 0,
+            "feature_sets_count": 0,
+            "models_count": 0,
+            "runs_failed_recent_count": 0,
+            "runs_running_count": 0
+        },
+        {
+            "name": "test7",
+            "functions_count": 0,
+            "feature_sets_count": 0,
+            "models_count": 0,
+            "runs_failed_recent_count": 0,
+            "runs_running_count": 0
+        },
+        {
+            "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "functions_count": 1,
+            "feature_sets_count": 1,
+            "models_count": 1,
+            "runs_failed_recent_count": 0,
+            "runs_running_count": 0
+        },
+        {
+            "name": "test-erann",
+            "functions_count": 0,
+            "feature_sets_count": 0,
+            "models_count": 0,
+            "runs_failed_recent_count": 0,
+            "runs_running_count": 0
+        }
+    ]
+}
