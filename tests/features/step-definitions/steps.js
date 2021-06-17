@@ -45,13 +45,19 @@ import {
 } from '../common/actions/input-group.action'
 import {
   checkCheckbox,
-  isCheckboxUnchecked
+  isCheckboxUnchecked,
+  isCheckboxChecked
 } from '../common/actions/checkbox.action'
 
 import { isRadioButtonSelected } from '../common/actions/radio-button.action'
 
 Given('open url', async function() {
   await navigateToPage(this.driver, `http://${test_url}:${test_port}`)
+})
+
+When('turn on demo mode', async function() {
+  const url = await this.driver.getCurrentUrl()
+  await navigateToPage(this.driver, `${url}?demo=true`)
 })
 
 Then('wait load page', async function() {
@@ -78,6 +84,31 @@ Then(
   async function(component, wizard, value) {
     await typeValue(this.driver, pageObjects[wizard][component], value)
     await verifyTypedValue(this.driver, pageObjects[wizard][component], value)
+  }
+)
+
+Then('type value {string} to {string} field on {string} wizard', async function(
+  value,
+  inputField,
+  wizard
+) {
+  await typeValue(this.driver, pageObjects[wizard][inputField], value)
+  await verifyTypedValue(this.driver, pageObjects[wizard][inputField], value)
+})
+
+Then(
+  'type value {string} to {string} field on {string} on {string} wizard',
+  async function(value, inputField, accordion, wizard) {
+    await typeValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      value
+    )
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      value
+    )
   }
 )
 
@@ -541,6 +572,16 @@ Then(
   '{string} element should be unchecked in {string} on {string} wizard',
   async function(checkbox, accordion, wizard) {
     await isCheckboxUnchecked(
+      this.driver,
+      pageObjects[wizard][accordion][checkbox]
+    )
+  }
+)
+
+Then(
+  '{string} element should be checked in {string} on {string} wizard',
+  async function(checkbox, accordion, wizard) {
+    await isCheckboxChecked(
       this.driver,
       pageObjects[wizard][accordion][checkbox]
     )
