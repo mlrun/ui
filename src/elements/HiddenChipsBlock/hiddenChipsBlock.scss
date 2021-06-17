@@ -8,8 +8,10 @@
   position: absolute;
   right: 0;
   z-index: 6;
-  flex-direction: column;
-  width: 250px;
+  display: flex;
+  flex-flow: row wrap;
+  min-width: 250px;
+  max-width: 45vw;
   padding: 10px;
   background-color: $white;
   border-radius: $mainBorderRadius;
@@ -51,6 +53,14 @@
       background-color: $white;
       transform: rotate(-45deg);
       content: '';
+    }
+  }
+
+  .chip {
+    display: inline-flex;
+
+    .chip_short {
+      max-width: 100%;
     }
   }
 
