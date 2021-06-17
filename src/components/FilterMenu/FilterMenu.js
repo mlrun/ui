@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import ArtifactFilterTree from '../../elements/ArtifactsFilterTree/ArtifactsFilterTree'
@@ -17,20 +17,14 @@ import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
 import {
-  ARTIFACTS_PAGE,
-  FEATURE_STORE_PAGE,
-  FILES_PAGE,
   FUNCTIONS_PAGE,
+  INIT_TAG_FILTER,
   JOBS_PAGE,
-  KEY_CODES,
-  MODELS_PAGE
+  KEY_CODES
 } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
-import {
-  selectOptions,
-  filterTreeOptions,
-  initialStateFilter
-} from './filterMenu.settings'
+import filtersActions from '../../actions/filters'
+import { selectOptions, filterTreeOptions } from './filterMenu.settings'
 
 import './filterMenu.scss'
 
@@ -38,25 +32,37 @@ const FilterMenu = ({
   actionButton,
   expand,
   filters,
-  groupFilter,
-  handleArtifactFilterTree,
+  filtersStore,
   handleExpandAll,
   match,
   onChange,
   page,
-  setGroupFilter,
+  removeFilters,
+  setFilters,
   showUntagged,
-  toggleShowUntagged
+  toggleShowUntagged,
+  withoutExpandButton
 }) => {
   const [labels, setLabels] = useState('')
-  const [owner, setOwner] = useState('')
   const [name, setName] = useState('')
-  const [dates, setDates] = useState(['', ''])
   const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
-  const [stateFilter, setStateFilter] = useState(initialStateFilter)
   const history = useHistory()
-  const artifactFilter = useSelector(store => store.artifactsStore.filter)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    return () => {
+      removeFilters()
+      setLabels('')
+      setName('')
+      setTreeOptions(filterTreeOptions)
+    }
+  }, [removeFilters, match.params.pageTab])
+
+  useEffect(() => {
+    if (filters.find(filter => filter.type === 'iterations')) {
+      setFilters({ iter: 'iter' })
+    }
+  }, [filters, setFilters])
 
   useEffect(() => {
     if (
@@ -65,12 +71,7 @@ const FilterMenu = ({
     ) {
       selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
     }
-
-    return () => {
-      setLabels('')
-      setName('')
-    }
-  }, [page, match.params.pageTab])
+  }, [page])
 
   useEffect(() => {
     if (filters.find(filter => filter.type === 'tree')) {
@@ -80,7 +81,7 @@ const FilterMenu = ({
         setTreeOptions(state => [
           ...state,
           ...data.tags
-            .filter(tag => tag !== 'latest')
+            .filter(tag => tag !== INIT_TAG_FILTER)
             .map(tag => ({
               label: tag,
               id: tag
@@ -90,8 +91,8 @@ const FilterMenu = ({
     }
   }, [dispatch, filters, match.params.projectName])
 
-  const applyChanges = () => {
-    if (match.params.jobId || match.params.name) {
+  const applyChanges = (data, isRefreshed) => {
+    if ((match.params.jobId || match.params.name) && !isRefreshed) {
       history.push(
         `/projects/${match.params.projectName}/${page.toLowerCase()}${
           match.params.pageTab ? `/${match.params.pageTab}` : ''
@@ -99,64 +100,49 @@ const FilterMenu = ({
       )
     }
 
-    if (
-      [ARTIFACTS_PAGE, FILES_PAGE, MODELS_PAGE, FEATURE_STORE_PAGE].includes(
-        page
-      )
-    ) {
-      dispatch(
-        artifactsAction.setArtifactFilter({
-          ...artifactFilter,
-          labels,
-          name
-        })
-      )
-      onChange({
-        tag: artifactFilter.tag,
-        project: match.params.projectName,
-        labels,
-        name
-      })
-    } else {
-      page === JOBS_PAGE
-        ? onChange({
-            labels,
-            name,
-            owner,
-            dates,
-            state: stateFilter !== initialStateFilter && stateFilter
-          })
-        : onChange({ name })
-    }
+    onChange(data)
   }
 
   const handleSelectOption = (item, filter) => {
-    if (match.params.jobId || match.params.name) {
-      history.push(
-        `/projects/${match.params.projectName}/${page.toLowerCase()}${
-          match.params.pageTab ? `/${match.params.pageTab}` : ''
-        }`
-      )
-    }
-
     if (filter.type === 'status') {
-      setStateFilter(item)
-      onChange({
-        labels,
-        name,
-        owner,
-        dates,
-        state: item !== initialStateFilter && item
+      setFilters({ state: item })
+      applyChanges({
+        ...filtersStore,
+        state: item
       })
     } else if (filter.type === 'groupBy') {
-      setGroupFilter(item)
+      setFilters({ groupBy: item })
+    } else if (
+      (filter.type === 'tree' || filter.type === 'tag') &&
+      item !== filtersStore.tag
+    ) {
+      setFilters({ tag: item.toLowerCase() })
+      applyChanges({
+        ...filtersStore,
+        tag: item.toLowerCase()
+      })
     }
   }
 
   const onKeyDown = event => {
     if (event.keyCode === KEY_CODES.ENTER) {
-      applyChanges()
+      setFilters({
+        labels,
+        name
+      })
+      applyChanges({
+        ...filtersStore,
+        labels,
+        name
+      })
     }
+  }
+
+  const onBlur = () => {
+    setFilters({
+      labels,
+      name
+    })
   }
 
   const handleChangeDates = dates => {
@@ -166,14 +152,22 @@ const FilterMenu = ({
       generatedDates.push(new Date())
     }
 
-    onChange({
-      labels,
-      name,
-      owner,
-      dates,
-      state: stateFilter !== initialStateFilter && stateFilter
+    setFilters({ dates: generatedDates })
+    applyChanges({
+      ...filtersStore,
+      dates: generatedDates
     })
-    setDates(generatedDates)
+  }
+
+  const handleIterClick = iteration => {
+    handleExpandAll(true)
+    applyChanges({
+      ...filtersStore,
+      iter: filtersStore.iter === iteration ? 'iter' : ''
+    })
+    setFilters(
+      filtersStore.iter === iteration ? { iter: 'iter' } : { iter: iteration }
+    )
   }
 
   return (
@@ -189,9 +183,9 @@ const FilterMenu = ({
                   key={filter.type}
                   label={filter.label}
                   match={match}
-                  onChange={handleArtifactFilterTree}
+                  onChange={item => handleSelectOption(item, filter)}
                   page={page}
-                  value={artifactFilter.tag}
+                  value={filtersStore.tag}
                 />
               )
             case 'labels':
@@ -201,6 +195,7 @@ const FilterMenu = ({
                   key={filter.type}
                   label={filter.label}
                   onChange={setLabels}
+                  onBlur={onBlur}
                   onKeyDown={onKeyDown}
                   placeholder="key1,key2=value,..."
                   type="text"
@@ -214,33 +209,31 @@ const FilterMenu = ({
                   key={filter.type}
                   label={filter.label}
                   onChange={setName}
+                  onBlur={onBlur}
                   onKeyDown={onKeyDown}
                   type="text"
                   value={name}
                 />
               )
-            case 'owner':
-              return (
-                <Input
-                  density="dense"
-                  key={filter.type}
-                  label={filter.label}
-                  onChange={setOwner}
-                  onKeyDown={onKeyDown}
-                  value={owner}
-                  type="text"
-                />
-              )
             case 'date-range-time':
               return (
                 <DatePicker
-                  date={dates[0]}
-                  dateTo={dates[1]}
+                  date={filtersStore.dates[0]}
+                  dateTo={filtersStore.dates[1]}
                   key={filter.type}
                   label={filter.label}
                   onChange={handleChangeDates}
                   type="date-range-time"
                   withOptions
+                />
+              )
+            case 'iterations':
+              return (
+                <CheckBox
+                  key={filter.type}
+                  item={{ label: filter.label, id: '' }}
+                  onChange={handleIterClick}
+                  selectedId={filtersStore.iter}
                 />
               )
             default:
@@ -253,8 +246,8 @@ const FilterMenu = ({
                   onClick={item => handleSelectOption(item, filter)}
                   options={selectOptions[filter.type]}
                   selectedId={
-                    (filter.type === 'status' && stateFilter) ||
-                    (filter.type === 'groupBy' && groupFilter)
+                    (filter.type === 'status' && filtersStore.state) ||
+                    (filter.type === 'groupBy' && filtersStore.groupBy)
                   }
                 />
               )
@@ -273,6 +266,7 @@ const FilterMenu = ({
         )}
       </div>
       {actionButton &&
+        !actionButton.hidden &&
         (actionButton.getCustomTemplate ? (
           actionButton.getCustomTemplate(actionButton)
         ) : (
@@ -286,29 +280,17 @@ const FilterMenu = ({
         ))}
       <div className="actions">
         <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
-          <button
-            onClick={() => {
-              ![JOBS_PAGE, FUNCTIONS_PAGE].includes(page)
-                ? onChange({
-                    tag: artifactFilter.tag,
-                    project: match.params.projectName,
-                    labels,
-                    name
-                  })
-                : onChange({ labels, name, dates })
-            }}
-            id="refresh"
-          >
+          <button onClick={() => applyChanges(filtersStore, true)} id="refresh">
             <Refresh />
           </button>
         </Tooltip>
-        {groupFilter && groupFilter?.toLowerCase() !== 'none' && (
+        {!withoutExpandButton && filtersStore.groupBy !== 'none' && (
           <Tooltip
             template={
-              <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand'} />
+              <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand all'} />
             }
           >
-            <button onClick={handleExpandAll}>
+            <button onClick={() => handleExpandAll()}>
               {expand ? <Collapse /> : <Expand />}
             </button>
           </Tooltip>
@@ -320,21 +302,22 @@ const FilterMenu = ({
 
 FilterMenu.defaultProps = {
   actionButton: null,
-  groupFilter: '',
-  handleArtifactFilterTree: null,
-  setGroupFilter: null,
   showUntagged: '',
-  toggleShowUntagged: null
+  toggleShowUntagged: null,
+  withoutExpandButton: false
 }
 
 FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  groupFilter: PropTypes.string,
-  handleArtifactFilterTree: PropTypes.func,
-  setGroupFilter: PropTypes.func,
   showUntagged: PropTypes.string,
-  toggleShowUntagged: PropTypes.func
+  toggleShowUntagged: PropTypes.func,
+  withoutExpandButton: PropTypes.bool
 }
 
-export default FilterMenu
+export default connect(
+  ({ filtersStore }) => ({
+    filtersStore
+  }),
+  filtersActions
+)(FilterMenu)

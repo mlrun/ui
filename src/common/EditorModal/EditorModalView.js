@@ -13,6 +13,7 @@ const EditorModalView = ({ closeModal, data, handleSaveCode, setData }) =>
     <div className="editor-modal-container">
       <div className="editor-modal">
         <div className="editor-modal__header">
+          <span>Code must be written in Python</span>
           <Button label="Cancel" onClick={closeModal} variant="tertiary" />
           <Button
             label="Save"

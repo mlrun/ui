@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import JobsPanelResourcesView from './JobsPanelResourcesView'
 
@@ -9,14 +10,15 @@ import {
   generateMemoryValue
 } from '../../utils/panelResources.util'
 import { createNewVolume } from '../../utils/createNewVolume'
+import jobsActions from '../../actions/jobs'
 
 const JobsPanelResources = ({
+  jobsStore,
   panelDispatch,
   panelState,
+  setNewJobNodeSelector,
   setNewJobVolumeMounts,
-  setNewJobVolumes,
-  volumeMounts,
-  volumes
+  setNewJobVolumes
 }) => {
   const generateResourcesData = useCallback(
     () => ({
@@ -69,7 +71,7 @@ const JobsPanelResources = ({
     })
   }
 
-  const handleSelectСpuUnit = value => {
+  const handleSelectCpuUnit = value => {
     if (value.match(/m/)) {
       if (panelState.requests.cpu > 0) {
         panelDispatch({
@@ -110,6 +112,7 @@ const JobsPanelResources = ({
     const newVolumeMount = {
       isDefault: false,
       data: {
+        type: newVolume.type,
         name: newVolume.name,
         mountPath: newVolume.path
       }
@@ -127,8 +130,17 @@ const JobsPanelResources = ({
       type: panelActions.SET_TABLE_DATA_VOLUME_MOUNTS,
       payload: [...panelState.tableData.volume_mounts, newVolumeMount]
     })
-    setNewJobVolumeMounts([...volumeMounts, newVolumeMount.data])
-    setNewJobVolumes([...volumes, generatedVolume])
+    setNewJobVolumeMounts([
+      ...jobsStore.newJob.function.spec.volume_mounts,
+      {
+        name: newVolumeMount.data.name,
+        mountPath: newVolumeMount.data.mountPath
+      }
+    ])
+    setNewJobVolumes([
+      ...jobsStore.newJob.function.spec.volumes,
+      generatedVolume
+    ])
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUMES,
       payload: [
@@ -152,7 +164,12 @@ const JobsPanelResources = ({
       type: panelActions.SET_TABLE_DATA_VOLUMES,
       payload: volumes
     })
-    setNewJobVolumeMounts(volumeMounts.map(volume => volume.data))
+    setNewJobVolumeMounts(
+      volumeMounts.map(volume => ({
+        name: volume.data.name,
+        mountPath: volume.data.mountPath
+      }))
+    )
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
       payload: volumeMounts
@@ -173,7 +190,12 @@ const JobsPanelResources = ({
       type: panelActions.SET_TABLE_DATA_VOLUMES,
       payload: volumes
     })
-    setNewJobVolumeMounts(volumeMounts.map(volumeMount => volumeMount.data))
+    setNewJobVolumeMounts(
+      volumeMounts.map(volumeMount => ({
+        name: volumeMount.data.name,
+        mountPath: volumeMount.data.mountPath
+      }))
+    )
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_VOLUME_MOUNTS,
       payload: volumeMounts
@@ -184,12 +206,87 @@ const JobsPanelResources = ({
     })
   }
 
+  const handleAddNewNodeSelector = newNodeSelector => {
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR,
+      payload: [
+        ...panelState.previousPanelData.tableData.node_selector,
+        newNodeSelector
+      ]
+    })
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_NODE_SELECTOR,
+      payload: [...panelState.tableData.node_selector, newNodeSelector]
+    })
+    setNewJobNodeSelector({
+      ...jobsStore.newJob.function.spec.node_selector,
+      [newNodeSelector.key]: newNodeSelector.value
+    })
+  }
+
+  const handleEditNodeSelector = nodeSelector => {
+    const newNodeSelector = { ...jobsStore.newJob.function.spec.node_selector }
+    const newTableData = [...panelState.tableData.node_selector].map(
+      dataItem => {
+        if (dataItem.key === nodeSelector.key) {
+          dataItem.key = nodeSelector.newKey || nodeSelector.key
+          dataItem.value = nodeSelector.value
+        }
+
+        return dataItem
+      }
+    )
+
+    if (nodeSelector.newKey) {
+      delete newNodeSelector[nodeSelector.key]
+    }
+
+    newNodeSelector[nodeSelector.newKey || nodeSelector.key] =
+      nodeSelector.value
+
+    setNewJobNodeSelector(newNodeSelector)
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR,
+      payload: newTableData
+    })
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_NODE_SELECTOR,
+      payload: newTableData
+    })
+  }
+
+  const handleDeleteNodeSelector = (index, nodeSelector) => {
+    const newNodeSelector = { ...jobsStore.newJob.function.spec.node_selector }
+
+    delete newNodeSelector[nodeSelector.key]
+    setNewJobNodeSelector(newNodeSelector)
+    panelDispatch({
+      type: panelActions.SET_PREVIOUS_PANEL_DATA_NODE_SELECTOR,
+      payload: [
+        ...panelState.previousPanelData.tableData.node_selector.filter(
+          item => item.key !== nodeSelector.key
+        )
+      ]
+    })
+    panelDispatch({
+      type: panelActions.SET_TABLE_DATA_NODE_SELECTOR,
+      payload: [
+        ...panelState.tableData.node_selector.filter(
+          item => item.key !== nodeSelector.key
+        )
+      ]
+    })
+  }
+
   return (
     <JobsPanelResourcesView
       handleAddNewVolume={handleAddNewVolume}
+      handleAddNewNodeSelector={handleAddNewNodeSelector}
+      handleDeleteNodeSelector={handleDeleteNodeSelector}
       handleDeleteVolume={handleDeleteVolume}
+      handleEditNodeSelector={handleEditNodeSelector}
       handleEditVolume={handleEditVolume}
-      handleSelectСpuUnit={handleSelectСpuUnit}
+      handleSelectCpuUnit={handleSelectCpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
       panelDispatch={panelDispatch}
       panelState={panelState}
@@ -200,11 +297,9 @@ const JobsPanelResources = ({
 
 JobsPanelResources.propTypes = {
   panelDispatch: PropTypes.func.isRequired,
-  panelState: PropTypes.shape({}).isRequired,
-  setNewJobVolumeMounts: PropTypes.func.isRequired,
-  setNewJobVolumes: PropTypes.func.isRequired,
-  volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  volumes: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  panelState: PropTypes.shape({}).isRequired
 }
 
-export default JobsPanelResources
+export default connect(jobsStore => jobsStore, { ...jobsActions })(
+  JobsPanelResources
+)

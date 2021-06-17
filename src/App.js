@@ -94,6 +94,11 @@ const App = () => {
               path="/projects/:projectName/feature-store/:pageTab/:name/:tag/:tab"
               render={routeProps => <FeatureStore {...routeProps} />}
             />
+            <Route
+              exact
+              path="/projects/:projectName/feature-store/:pageTab/:name/:tag/:iter/:tab"
+              render={routeProps => <FeatureStore {...routeProps} />}
+            />
             <Redirect
               exact
               from="/projects/:projectName/models"
@@ -116,12 +121,22 @@ const App = () => {
             />
             <Route
               exact
+              path="/projects/:projectName/models/:pageTab/:name/:tag/:iter/:tab"
+              render={routeProps => <Models {...routeProps} />}
+            />
+            <Route
+              exact
               path="/projects/:projectName/files"
               render={routeProps => <Files {...routeProps} />}
             />
             <Route
               exact
               path="/projects/:projectName/files/:name/:tag/:tab"
+              render={routeProps => <Files {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/files/:name/:tag/:iter/:tab"
               render={routeProps => <Files {...routeProps} />}
             />
             <Redirect to="/projects" />

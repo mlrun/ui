@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { chain, isEqual, isEmpty } from 'lodash'
+import { useLocation } from 'react-router-dom'
 
 import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
@@ -15,13 +16,16 @@ import {
   filters,
   FUNCTIONS_FAILED_STATES,
   infoHeaders,
-  initialGroupFilter,
   page,
   tableHeaders
 } from './functions.util'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
+
+import { FUNCTIONS_PAGE } from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -45,13 +49,14 @@ const Functions = ({
   const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
+  const location = useLocation()
   const pageData = {
     actionsMenu: item => [
       {
         label: 'Run',
         icon: <Run />,
         onClick: func => setEditableItem(func),
-        hidden: FUNCTIONS_FAILED_STATES.includes(item.state)
+        hidden: FUNCTIONS_FAILED_STATES.includes(item?.state)
       },
       {
         label: 'Delete',
@@ -67,13 +72,14 @@ const Functions = ({
     filterMenuActionButton: {
       label: 'New',
       onClick: () => setFunctionsPanelIsOpen(true),
-      variant: 'secondary'
+      variant: 'secondary',
+      hidden: new URLSearchParams(location.search).get('demo') !== 'true'
     }
   }
 
   const refreshFunctions = useCallback(
-    items => {
-      return fetchFunctions(match.params.projectName, items?.name).then(
+    filters => {
+      return fetchFunctions(match.params.projectName, filters?.name).then(
         functions => {
           const newFunctions = chain(functions)
             .orderBy('metadata.updated', 'desc')
@@ -92,7 +98,9 @@ const Functions = ({
             }))
             .value()
 
-          return setFunctions(newFunctions)
+          setFunctions(newFunctions)
+
+          return newFunctions
         }
       )
     },
@@ -113,6 +121,17 @@ const Functions = ({
       !showUntagged ? functions.filter(func => func.tag.length) : functions
     )
   }, [showUntagged, functions])
+
+  useEffect(() => {
+    if (match.params.hash && pageData.detailsMenu.length > 0) {
+      isDetailsTabExists(
+        FUNCTIONS_PAGE,
+        match.params,
+        pageData.detailsMenu,
+        history
+      )
+    }
+  }, [history, match.params, pageData.detailsMenu])
 
   useEffect(() => {
     let item = {}
@@ -168,6 +187,7 @@ const Functions = ({
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
     }
+
     setSelectedFunction(item)
   }
 
@@ -248,10 +268,19 @@ const Functions = ({
   }
 
   const handleDeployFunctionSuccess = () => {
+    const { name, tag } = functionsStore.newFunction.metadata
+
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
 
-    return refreshFunctions().then(() => {
+    return refreshFunctions().then(functions => {
+      const currentItem = functions.find(
+        func => func.name === name && func.tag === tag
+      )
+
+      history.push(
+        `/projects/${match.params.projectName}/functions/${currentItem.hash}/overview`
+      )
       setNotification({
         status: 200,
         id: Math.random(),
@@ -260,11 +289,20 @@ const Functions = ({
     })
   }
 
-  const handleDeployFunctionFailure = error => {
+  const handleDeployFunctionFailure = () => {
+    const { name, tag } = functionsStore.newFunction.metadata
+
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
 
-    return refreshFunctions().then(() => {
+    return refreshFunctions().then(functions => {
+      const currentItem = functions.find(
+        func => func.name === name && func.tag === tag
+      )
+
+      history.push(
+        `/projects/${match.params.projectName}/functions/${currentItem.hash}/overview`
+      )
       setNotification({
         status: 400,
         id: Math.random(),
@@ -298,7 +336,6 @@ const Functions = ({
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
-        groupFilter={initialGroupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
@@ -335,6 +372,7 @@ const Functions = ({
           createFunctionSuccess={createFunctionSuccess}
           handleDeployFunctionFailure={handleDeployFunctionFailure}
           handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+          match={match}
           project={match.params.projectName}
         />
       )}

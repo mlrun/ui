@@ -11,7 +11,6 @@ import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
 import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 
 import './artifacts.scss'
 
@@ -20,8 +19,7 @@ const Artifacts = ({
   fetchArtifacts,
   history,
   match,
-  removeArtifacts,
-  setArtifactFilter
+  removeArtifacts
 }) => {
   const [artifacts, setArtifacts] = useState([])
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
@@ -36,8 +34,8 @@ const Artifacts = ({
   const [selectedArtifact, setSelectedArtifact] = useState({})
 
   const fetchData = useCallback(
-    item => {
-      fetchArtifacts(item).then(data => {
+    filters => {
+      fetchArtifacts(match.params.projectName, filters).then(data => {
         let artifacts = []
 
         if (data) {
@@ -49,11 +47,11 @@ const Artifacts = ({
         return artifacts
       })
     },
-    [fetchArtifacts]
+    [fetchArtifacts, match.params.projectName]
   )
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName })
+    fetchData()
 
     return () => {
       setArtifacts([])
@@ -131,30 +129,11 @@ const Artifacts = ({
     selectedArtifact.item
   ])
 
-  const handleArtifactFilterTree = useCallback(
-    item => {
-      handleArtifactTreeFilterChange(
-        fetchData,
-        artifactsStore.filter,
-        item,
-        match.params.projectName,
-        setArtifactFilter
-      )
-    },
-    [
-      artifactsStore.filter,
-      fetchData,
-      match.params.projectName,
-      setArtifactFilter
-    ]
-  )
-
   return (
     <>
       {artifactsStore.loading && <Loader />}
       <Content
         content={artifacts}
-        handleArtifactFilterTree={handleArtifactFilterTree}
         handleCancel={() => setSelectedArtifact({})}
         handleSelectItem={item => setSelectedArtifact({ item })}
         loading={artifactsStore.loading}
@@ -167,7 +146,6 @@ const Artifacts = ({
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
-          artifactFilter={artifactsStore.filter}
           match={match}
           pageData={pageData}
           refresh={fetchData}

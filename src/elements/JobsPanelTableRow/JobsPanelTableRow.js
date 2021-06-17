@@ -20,6 +20,7 @@ const JobsPanelTableRow = ({
   checkboxOnChange,
   className,
   contentItem,
+  editItem,
   handleDelete,
   handleEdit,
   section,
@@ -66,7 +67,9 @@ const JobsPanelTableRow = ({
               className={tableCellClassName}
               key={property}
               onClick={
-                isEditable ? () => handleEdit(contentItem, isInputsOrEnv) : null
+                isEditable && !editItem
+                  ? () => handleEdit(contentItem, isInputsOrEnv)
+                  : null
               }
             >
               <Tooltip
@@ -121,6 +124,7 @@ JobsPanelTableRow.defaultProps = {
 JobsPanelTableRow.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   contentItem: PropTypes.shape({}).isRequired,
+  editItem: PropTypes.bool.isRequired,
   handleDelete: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
   section: PropTypes.string.isRequired,

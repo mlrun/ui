@@ -1,11 +1,25 @@
 import detailsApi from '../api/details-api'
 import {
-  FETCH_JOB_PODS_SUCCESS,
   FETCH_JOB_PODS_FAILURE,
+  FETCH_JOB_PODS_SUCCESS,
   FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN,
   FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE,
   FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
-  REMOVE_JOB_PODS
+  FETCH_MODEL_FEATURE_VECTOR_BEGIN,
+  FETCH_MODEL_FEATURE_VECTOR_FAILURE,
+  FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
+  REMOVE_INFO_CONTENT,
+  REMOVE_JOB_PODS,
+  REMOVE_MODEL_FEATURE_VECTOR,
+  RESET_CHANGES,
+  SET_CHANGES,
+  SET_CHANGES_COUNTER,
+  SET_CHANGES_DATA,
+  SET_INFO_CONTENT,
+  SET_ITERATION,
+  SET_ITERATION_OPTIONS,
+  SET_REFRESH_WAS_HANDLED,
+  SHOW_WARNING
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
 
@@ -24,17 +38,6 @@ const detailsActions = {
         dispatch(detailsActions.fetchPodsFailure(err))
       })
   },
-  fetchPodsSuccess: pods => ({
-    type: FETCH_JOB_PODS_SUCCESS,
-    payload: pods
-  }),
-  fetchPodsFailure: error => ({
-    type: FETCH_JOB_PODS_FAILURE,
-    payload: error
-  }),
-  removePods: () => ({
-    type: REMOVE_JOB_PODS
-  }),
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
     dispatch(detailsActions.fetchModelEndpointWithAnalysisBegin())
 
@@ -58,6 +61,85 @@ const detailsActions = {
   fetchModelEndpointWithAnalysisSuccess: model => ({
     type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
     payload: model
+  }),
+  fetchModelFeatureVector: (project, name, reference) => dispatch => {
+    dispatch(detailsActions.fetchModelFeatureVectorBegin())
+
+    return detailsApi
+      .getModelFeatureVector(project, name, reference)
+      .then(response => {
+        dispatch(
+          detailsActions.fetchModelFeatureVectorSuccess(response.data.status)
+        )
+
+        return response.data.status
+      })
+      .catch(err => {
+        dispatch(detailsActions.fetchModelFeatureVectorFailure(err))
+      })
+  },
+  fetchModelFeatureVectorBegin: () => ({
+    type: FETCH_MODEL_FEATURE_VECTOR_BEGIN
+  }),
+  fetchModelFeatureVectorFailure: error => ({
+    type: FETCH_MODEL_FEATURE_VECTOR_FAILURE,
+    payload: error
+  }),
+  fetchModelFeatureVectorSuccess: featureSets => ({
+    type: FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
+    payload: featureSets
+  }),
+  fetchPodsSuccess: pods => ({
+    type: FETCH_JOB_PODS_SUCCESS,
+    payload: pods
+  }),
+  fetchPodsFailure: error => ({
+    type: FETCH_JOB_PODS_FAILURE,
+    payload: error
+  }),
+  setChanges: data => ({
+    type: SET_CHANGES,
+    payload: data
+  }),
+  setChangesCounter: counter => ({
+    type: SET_CHANGES_COUNTER,
+    payload: counter
+  }),
+  setChangesData: data => ({
+    type: SET_CHANGES_DATA,
+    payload: data
+  }),
+  setInfoContent: content => ({
+    type: SET_INFO_CONTENT,
+    payload: content
+  }),
+  setIteration: iteration => ({
+    type: SET_ITERATION,
+    payload: iteration
+  }),
+  setIterationOption: option => ({
+    type: SET_ITERATION_OPTIONS,
+    payload: option
+  }),
+  setRefreshWasHandled: isHandled => ({
+    type: SET_REFRESH_WAS_HANDLED,
+    payload: isHandled
+  }),
+  showWarning: show => ({
+    type: SHOW_WARNING,
+    payload: show
+  }),
+  removeInfoContent: () => ({
+    type: REMOVE_INFO_CONTENT
+  }),
+  removeModelFeatureVector: () => ({
+    type: REMOVE_MODEL_FEATURE_VECTOR
+  }),
+  removePods: () => ({
+    type: REMOVE_JOB_PODS
+  }),
+  resetChanges: () => ({
+    type: RESET_CHANGES
   })
 }
 

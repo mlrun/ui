@@ -1,23 +1,19 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/mixins';
 
-.edit-label {
+.edit-chip {
   &-container {
     display: inline-flex;
-    margin: 5px 2px;
-    padding: 7px 9px;
-    border: $labelBorder;
-    border-radius: 20px;
-
-    &_edited {
-      padding-right: 18px;
-      border: $labelEditBorder;
-    }
+    margin: 2px 4px;
+    padding: 0 8px;
+    font-size: 14px;
+    line-height: 22px;
 
     input {
       display: flex;
-      margin: 0 5px;
       padding: 0;
+      font-size: 14px;
       background-color: transparent;
       border: none;
 
@@ -31,10 +27,26 @@
         color: $primary;
       }
     }
+
+    &-background {
+      @include chipBackground(false);
+    }
+
+    &-border {
+      @include chipBorder();
+    }
+
+    &-density {
+      @include chipDensity(true, false);
+    }
+
+    &-font {
+      @include chipsFont(EditableChip);
+    }
   }
 
   &-separator {
-    color: $spunPearl;
+    margin-right: 5px;
   }
 
   &__icon-close {

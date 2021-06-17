@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
-import { isEqual } from 'lodash'
 import classnames from 'classnames'
+import { connect } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -11,35 +12,31 @@ import Table from '../../components/Table/Table'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
+import Notification from '../../common/Notification/Notification'
 
 import {
   ARTIFACTS_PAGE,
-  DATASETS_TAB,
+  FEATURES_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
-  FEATURES_TAB,
   FILES_PAGE,
-  FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
-  PROJECTS_PAGE,
-  SCHEDULE_TAB
+  MODEL_ENDPOINTS_TAB,
+  PROJECTS_PAGE
 } from '../../constants'
 
-import { formatDatetime } from '../../utils'
+import { generateGroupedItems, getJson } from './content.util'
 
 import './content.scss'
-import { generateGroupedItems } from './content.util'
 
 const Content = ({
   applyDetailsChanges,
   cancelRequest,
   content,
   expandRow,
-  groupFilter,
-  handleArtifactFilterTree,
+  filtersStore,
   handleCancel,
   handleSelectItem,
   loading,
@@ -48,7 +45,6 @@ const Content = ({
   pageData,
   refresh,
   selectedItem,
-  setGroupFilter,
   setLoading,
   showUntagged,
   toggleShowUntagged,
@@ -59,12 +55,35 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedByName, setGroupedByName] = useState({})
   const [groupedByWorkflow, setGroupedByWorkflow] = useState({})
+  const [showRegisterDialog, setShowRegisterDialog] = useState(false)
+  const location = useLocation()
 
   const contentClassName = classnames(
     'content',
     [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
       'content_with-menu'
   )
+
+  useEffect(() => {
+    if (
+      [
+        PROJECTS_PAGE,
+        ARTIFACTS_PAGE,
+        FILES_PAGE,
+        MODELS_PAGE,
+        FEATURE_STORE_PAGE
+      ].includes(pageData.page) &&
+      ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
+      (![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
+        match.params.pageTab
+      ) ||
+        new URLSearchParams(location.search).get('demo') === 'true')
+    ) {
+      setShowRegisterDialog(true)
+    } else if (showRegisterDialog) {
+      setShowRegisterDialog(false)
+    }
+  }, [location.search, match.params.pageTab, pageData.page, showRegisterDialog])
 
   const handleGroupByName = useCallback(() => {
     setGroupedByName(generateGroupedItems(content, pageData.selectedRowData))
@@ -103,11 +122,11 @@ const Content = ({
   }, [content])
 
   useEffect(() => {
-    if (groupFilter === 'name') {
+    if (filtersStore.groupBy === 'name') {
       handleGroupByName()
-    } else if (groupFilter === 'none') {
+    } else if (filtersStore.groupBy === 'none') {
       handleGroupByNone()
-    } else if (groupFilter === 'workflow') {
+    } else if (filtersStore.groupBy === 'workflow') {
       handleGroupByWorkflow()
     }
 
@@ -117,101 +136,21 @@ const Content = ({
       setExpand(false)
       setConvertedYaml('')
     }
-  }, [groupFilter, handleGroupByName, handleGroupByWorkflow, handleGroupByNone])
+  }, [
+    handleGroupByName,
+    handleGroupByWorkflow,
+    handleGroupByNone,
+    filtersStore.groupBy
+  ])
 
   const toggleConvertToYaml = item => {
     if (convertedYaml.length > 0) {
       return setConvertedYaml('')
     }
 
-    const jobJson =
-      pageData.page === JOBS_PAGE &&
-      yamlContent.filter(job =>
-        match.params.pageTab !== SCHEDULE_TAB
-          ? isEqual(job.metadata.uid, item.uid)
-          : isEqual(job.name, item.name)
-      )[0]
-    const functionJson =
-      pageData.page === FUNCTIONS_PAGE &&
-      yamlContent.filter(
-        func =>
-          isEqual(func.metadata.hash, item.hash) &&
-          isEqual(
-            formatDatetime(new Date(func.metadata.updated)),
-            formatDatetime(new Date(item.updated))
-          )
-      )[0]
-    let artifactJson = null
+    const json = getJson(pageData.page, match.params.pageTab, yamlContent, item)
 
-    if (
-      pageData.page === MODELS_PAGE &&
-      match.params.pageTab === MODEL_ENDPOINTS_TAB
-    ) {
-      const currentYamlContent =
-        yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
-
-      artifactJson =
-        yamlContent[currentYamlContent].find(
-          yamlContentItem => yamlContentItem.metadata.uid === item.metadata.uid
-        ) ?? {}
-    } else if (
-      pageData.page === FILES_PAGE ||
-      pageData.page === MODELS_PAGE ||
-      (pageData.page === FEATURE_STORE_PAGE &&
-        match.params.pageTab === DATASETS_TAB)
-    ) {
-      const currentYamlContent =
-        yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
-      const key = item.db_key ? 'db_key' : 'key'
-
-      artifactJson = yamlContent[currentYamlContent].filter(yamlContentItem => {
-        return (
-          isEqual(yamlContentItem[key], item[key]) &&
-          isEqual(yamlContentItem.tag, item.tag) &&
-          isEqual(yamlContentItem.iter, item.iter)
-        )
-      })
-    } else if (pageData.page === FEATURE_STORE_PAGE) {
-      if (match.params.pageTab === FEATURES_TAB) {
-        const currentYamlContent =
-          yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
-
-        artifactJson = yamlContent[currentYamlContent].filter(
-          yamlContentItem => {
-            return isEqual(yamlContentItem.feature?.name, item.name)
-          }
-        )
-      } else {
-        const currentYamlContent =
-          yamlContent.selectedRowData.length > 0 ? 'selectedRowData' : 'allData'
-
-        artifactJson = yamlContent[currentYamlContent].filter(yamlContentItem =>
-          match.params.pageTab === FEATURE_SETS_TAB ||
-          match.params.pageTab === FEATURE_VECTORS_TAB
-            ? (item.tag &&
-                isEqual(yamlContentItem.metadata.name, item.name) &&
-                isEqual(yamlContentItem.metadata.tag, item.tag)) ||
-              isEqual(yamlContentItem.metadata.uid, item.uid)
-            : isEqual(yamlContentItem.db_key, item.db_key)
-        )
-      }
-    }
-
-    setConvertedYaml(
-      yaml.dump(
-        pageData.page === JOBS_PAGE
-          ? jobJson
-          : [
-              ARTIFACTS_PAGE,
-              FILES_PAGE,
-              MODELS_PAGE,
-              FEATURE_STORE_PAGE
-            ].includes(pageData.page)
-          ? artifactJson
-          : functionJson,
-        { lineWidth: -1 }
-      )
-    )
+    setConvertedYaml(yaml.dump(json, { lineWidth: -1 }))
   }
 
   const handleExpandRow = (e, item) => {
@@ -237,11 +176,11 @@ const Content = ({
     }
   }
 
-  const handleExpandAll = () => {
-    if (groupFilter !== 'none') {
+  const handleExpandAll = collapseRows => {
+    if (filtersStore.groupBy !== 'none') {
       const rows = [...document.getElementsByClassName('parent-row')]
 
-      if (expand) {
+      if (collapseRows || expand) {
         rows.forEach(row => row.classList.remove('parent-row-expanded'))
 
         setExpand(false)
@@ -259,16 +198,7 @@ const Content = ({
         <Breadcrumbs match={match} />
         <PageActionsMenu
           createJob={pageData.page === JOBS_PAGE}
-          registerDialog={
-            [
-              PROJECTS_PAGE,
-              ARTIFACTS_PAGE,
-              FILES_PAGE,
-              MODELS_PAGE,
-              FEATURE_STORE_PAGE
-            ].includes(pageData.page) &&
-            ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab)
-          }
+          registerDialog={showRegisterDialog}
           registerDialogHeader={
             pageData.page === PROJECTS_PAGE
               ? 'New Project'
@@ -295,15 +225,13 @@ const Content = ({
             actionButton={pageData.filterMenuActionButton}
             expand={expand}
             filters={pageData.filters}
-            groupFilter={pageData.handleRequestOnExpand ? null : groupFilter}
-            handleArtifactFilterTree={handleArtifactFilterTree}
             handleExpandAll={handleExpandAll}
             match={match}
             onChange={refresh}
             page={pageData.page}
-            setGroupFilter={setGroupFilter}
             showUntagged={showUntagged}
             toggleShowUntagged={toggleShowUntagged}
+            withoutExpandButton={Boolean(pageData.handleRequestOnExpand)}
           />
         </div>
         <YamlModal
@@ -314,7 +242,6 @@ const Content = ({
           {content.length !== 0 ? (
             <Table
               content={content}
-              groupFilter={groupFilter}
               groupedByName={groupedByName}
               groupedByWorkflow={groupedByWorkflow}
               handleCancel={handleCancel}
@@ -333,6 +260,7 @@ const Content = ({
             <NoData />
           )}
         </div>
+        <Notification />
       </div>
     </>
   )
@@ -341,10 +269,8 @@ const Content = ({
 Content.defaultProps = {
   activeScreenTab: '',
   expandRow: null,
-  groupFilter: null,
   handleSelectItem: () => {},
   selectedItem: {},
-  setGroupFilter: () => {},
   setLoading: () => {},
   showUntagged: '',
   toggleShowUntagged: null
@@ -353,8 +279,6 @@ Content.defaultProps = {
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   expandRow: PropTypes.func,
-  groupFilter: PropTypes.string,
-  handleArtifactFilterTree: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
@@ -362,7 +286,6 @@ Content.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  setGroupFilter: PropTypes.func,
   setLoading: PropTypes.func,
   showUntagged: PropTypes.string,
   toggleShowUntagged: PropTypes.func,
@@ -372,4 +295,4 @@ Content.propTypes = {
   ]).isRequired
 }
 
-export default Content
+export default connect(({ filtersStore }) => ({ filtersStore }), null)(Content)

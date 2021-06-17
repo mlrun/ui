@@ -1,5 +1,6 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/mixins';
 
 .chips {
   &-wrapper {
@@ -9,18 +10,13 @@
 
     .chip {
       &_short {
-        max-width: 100px;
         margin: 0;
         font-style: normal;
       }
 
       &-block {
         position: relative;
-        display: inline-block;
-
-        .tooltip-wrapper {
-          max-width: 230px;
-        }
+        max-width: 100%;
       }
 
       &__delimiter {
@@ -28,31 +24,29 @@
           margin-bottom: -7px;
         }
       }
-
-      &_hidden {
-        max-width: 195px;
-      }
     }
 
     .button-add {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 30px;
-      margin: 10px 0 10px 10px;
-      border: $labelBorder;
+      margin: 2px 0 2px 10px;
       border-radius: 32px;
 
-      &:hover {
-        background-color: $amethyst;
+      &-background {
+        @include chipBackground(true);
+      }
 
-        svg {
-          rect,
-          path {
-            fill: $white;
-          }
-        }
+      &_border {
+        @include chipBorder();
+      }
+
+      &-density {
+        @include chipDensity(false, true);
+      }
+
+      &-font {
+        @include chipsFont(ButtonAddChip);
       }
     }
   }

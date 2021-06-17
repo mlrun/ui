@@ -20,16 +20,15 @@ const FunctionsPanelGeneralView = ({
   handleTagChange,
   handleTagOnBlur,
   isNameValid,
-  isTagValid,
   setData,
   setNewFunctionDescription,
   setNewFunctionType
 }) => {
   const nameValidationTip = (
     <>
-      <span>&bull; Valid characters: A-Z, a-z, 0-9, -, _, .</span>
+      <span>&bull; Valid characters: a-z, 0-9, -</span>
       <br />
-      <span>&bull; Must begin and end with: A-Z, a-z, 0-9</span>
+      <span>&bull; Must begin and end with: a-z, 0-9</span>
       <br />
       <span>&bull; Length - max: 63</span>
     </>
@@ -45,7 +44,6 @@ const FunctionsPanelGeneralView = ({
             onChange={handleNameChange}
             onBlur={handleNameOnBlur}
             maxLength={63}
-            pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
             required={!isNameValid}
             requiredText={
               data.name.length === 0
@@ -59,6 +57,7 @@ const FunctionsPanelGeneralView = ({
           />
           <Select
             className="type"
+            disabled
             floatingLabel
             label="Runtime type"
             onClick={type => {
@@ -76,8 +75,7 @@ const FunctionsPanelGeneralView = ({
             label="Tag"
             onChange={handleTagChange}
             onBlur={handleTagOnBlur}
-            required={!isTagValid}
-            requiredText="This field is required"
+            placeholder="latest"
             type="text"
             value={data.version}
             wrapperClassName="tag"
@@ -126,7 +124,6 @@ FunctionsPanelGeneralView.propTypes = {
   handleTagChange: PropTypes.func.isRequired,
   handleTagOnBlur: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  isTagValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
   setNewFunctionDescription: PropTypes.func.isRequired,
   setNewFunctionType: PropTypes.func.isRequired

@@ -75,6 +75,10 @@
         width: 100%;
         border: $primaryBorder;
       }
+
+      &_required {
+        border: $errorBorder;
+      }
     }
   }
 }

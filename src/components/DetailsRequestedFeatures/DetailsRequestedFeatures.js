@@ -17,7 +17,6 @@ import {
   detailsRequestedFeaturesReducer,
   initialState
 } from './detailsRequestedFeaturesReducer.js'
-import { detailsActions } from '../Details/detailsReducer'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -26,11 +25,13 @@ import './detailsRequestedFeatures.scss'
 
 const DetailsRequestedFeatures = ({
   changes,
-  detailsDispatch,
   detailsState,
   handleEditInput,
   match,
-  selectedItem
+  selectedItem,
+  setChanges,
+  setChangesData,
+  setChangesCounter
 }) => {
   const [
     detailsRequestedFeaturesState,
@@ -104,8 +105,8 @@ const DetailsRequestedFeatures = ({
       detailsRequestedFeaturesActions,
       detailsRequestedFeaturesDispatch,
       detailsRequestedFeaturesState,
-      detailsDispatch,
-      detailsActions
+      setChangesData,
+      setChangesCounter
     )
   }
 
@@ -129,15 +130,12 @@ const DetailsRequestedFeatures = ({
 
     editedArr.splice(index, 1)
     setConfirmDialogData({ index: null, feature: null })
-    detailsDispatch({
-      type: detailsActions.SET_CHANGES,
-      payload: {
-        ...detailsState.changes,
-        data: {
-          features: editedArr
-        },
-        counter: Object.keys(changes.data).length + 1
-      }
+    setChanges({
+      ...detailsState.changes,
+      data: {
+        features: editedArr
+      },
+      counter: Object.keys(changes.data).length + 1
     })
   }
 
@@ -247,46 +245,45 @@ const DetailsRequestedFeatures = ({
                     />
                   </Tooltip>
                 </div>
-                {confirmDialogData.feature && (
-                  <PopUpDialog
-                    headerText={`Delete feature ${confirmDialogData.feature} from vector ${match.params.name}?`}
-                    closePopUp={() => {
-                      setConfirmDialogData({ index: null, feature: null })
-                    }}
-                  >
-                    <div>The feature could be added back later.</div>
-                    <div className="pop-up-dialog__footer-container">
-                      <Button
-                        variant="tertiary"
-                        label="Cancel"
-                        className="pop-up-dialog__btn_cancel"
-                        onClick={() => {
-                          setConfirmDialogData({
-                            index: null,
-                            feature: null
-                          })
-                        }}
-                      />
-                      <Button
-                        label="Delete"
-                        onClick={() => handleDelete(confirmDialogData.index)}
-                        variant="danger"
-                      />
-                    </div>
-                  </PopUpDialog>
-                )}
               </div>
             )
           })}
         </div>
       </div>
+      {confirmDialogData.feature && (
+        <PopUpDialog
+          headerText={`Delete feature ${confirmDialogData.feature} from vector ${match.params.name}?`}
+          closePopUp={() => {
+            setConfirmDialogData({ index: null, feature: null })
+          }}
+        >
+          <div>The feature could be added back later.</div>
+          <div className="pop-up-dialog__footer-container">
+            <Button
+              variant="tertiary"
+              label="Cancel"
+              className="pop-up-dialog__btn_cancel"
+              onClick={() => {
+                setConfirmDialogData({
+                  index: null,
+                  feature: null
+                })
+              }}
+            />
+            <Button
+              label="Delete"
+              onClick={() => handleDelete(confirmDialogData.index)}
+              variant="danger"
+            />
+          </div>
+        </PopUpDialog>
+      )}
     </div>
   )
 }
 
 DetailsRequestedFeatures.propTypes = {
   changes: PropTypes.object.isRequired,
-  detailsDispatch: PropTypes.func.isRequired,
   detailsState: PropTypes.object.isRequired,
   handleEditInput: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,

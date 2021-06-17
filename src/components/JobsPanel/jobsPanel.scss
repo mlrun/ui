@@ -15,28 +15,41 @@
     }
 
     &.resources {
+      .inputs {
+        display: flex;
+      }
+
+      .memory,
+      .cpu {
+        margin-right: 40px;
+
+        .panel-section__body {
+          align-items: center;
+        }
+      }
+
       .select {
-        flex: 1;
-        margin-right: 16px;
-
-        &__body {
-          top: 60px;
-          max-height: 290px;
-          overflow-y: auto;
-        }
-
-        &__value {
-          min-width: 140px;
-        }
+        flex: 1 1;
+        max-width: 120px;
+        margin-right: 5px;
       }
 
       .range {
-        margin-right: 16px;
+        max-width: 75px;
+        margin-right: 5px;
 
         .input {
-          min-width: 230px;
+          width: 100%;
+
+          &-wrapper {
+            width: 100%;
+          }
         }
       }
+    }
+
+    .node-selector {
+      width: 100%;
     }
 
     .section-gpu {

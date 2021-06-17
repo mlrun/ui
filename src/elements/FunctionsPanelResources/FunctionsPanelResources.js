@@ -15,8 +15,8 @@ const FunctionsPanelResources = ({
   const [data, setData] = useState({
     volumeMounts: functionsStore.newFunction.spec.volume_mounts,
     volumes: functionsStore.newFunction.spec.volumes,
-    memoryUnit: '',
-    cpuUnit: '',
+    memoryUnit: 'MiB',
+    cpuUnit: 'cpu',
     limits: {
       cpu: '',
       memory: '',
@@ -104,7 +104,7 @@ const FunctionsPanelResources = ({
     })
   }
 
-  const handleSelectСpuUnit = value => {
+  const handleSelectCpuUnit = value => {
     setData(state => ({
       ...state,
       cpuUnit: value,
@@ -182,6 +182,7 @@ const FunctionsPanelResources = ({
     const generatedVolumeMount = {
       isDefault: false,
       data: {
+        type: newVolume.type,
         name: newVolume.name,
         mountPath: newVolume.path
       }
@@ -194,7 +195,10 @@ const FunctionsPanelResources = ({
     }))
     setNewFunctionVolumeMounts([
       ...functionsStore.newFunction.spec.volume_mounts,
-      generatedVolumeMount.data
+      {
+        name: generatedVolumeMount.data.name,
+        mountPath: generatedVolumeMount.data.mountPath
+      }
     ])
     setNewFunctionVolumes([
       ...functionsStore.newFunction.spec.volumes,
@@ -204,7 +208,12 @@ const FunctionsPanelResources = ({
 
   const handleEditVolume = (volumes, volumeMounts) => {
     setNewFunctionVolumes([...volumes])
-    setNewFunctionVolumeMounts(volumeMounts.map(volume => volume.data))
+    setNewFunctionVolumeMounts(
+      volumeMounts.map(volume => ({
+        name: volume.data.name,
+        mountPath: volume.data.mountPath
+      }))
+    )
   }
 
   const handleDeleteVolume = (volumes, volumeMounts) => {
@@ -213,7 +222,12 @@ const FunctionsPanelResources = ({
       volumeMounts,
       volumes
     }))
-    setNewFunctionVolumeMounts(volumeMounts.map(volume => volume.data))
+    setNewFunctionVolumeMounts(
+      volumeMounts.map(volume => ({
+        name: volume.data.name,
+        mountPath: volume.data.mountPath
+      }))
+    )
     setNewFunctionVolumes(volumes)
   }
 
@@ -243,7 +257,7 @@ const FunctionsPanelResources = ({
       handleSelectMemoryUnit={handleSelectMemoryUnit}
       setData={setData}
       setMemoryValue={setMemoryValue}
-      handleSelectСpuUnit={handleSelectСpuUnit}
+      handleSelectCpuUnit={handleSelectCpuUnit}
       setCpuValue={setCpuValue}
       setGpuValue={setGpuValue}
     />

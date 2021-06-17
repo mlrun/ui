@@ -1,7 +1,10 @@
+import React from 'react'
+
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import { generateUri } from '../../utils/generateUri'
+import { generateUri } from '../../utils/resources'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
 
 export const modelsInfoHeaders = [
   {
@@ -17,6 +20,7 @@ export const modelsInfoHeaders = [
   { label: 'Path', id: 'target_path' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Model file', id: 'model_file' },
+  { label: 'Feature vector', id: 'feature_vector' },
   {
     label: 'UID',
     id: 'tree',
@@ -25,6 +29,7 @@ export const modelsInfoHeaders = [
   },
   { label: 'Updated', id: 'updated' },
   { label: 'Framework', id: 'framework' },
+  { label: 'Algorithm', id: 'algorithm' },
   { label: 'Labels', id: 'labels' },
   { label: 'Metrics', id: 'metrics' },
   { label: 'Sources', id: 'sources' }
@@ -39,7 +44,30 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Accuracy', id: 'accuracy' },
   { label: 'Stream path', id: 'stream_path' }
 ]
-export const modelsDetailsMenu = ['overview', 'preview']
+export const generateModelsDetailsMenu = selectedModel => {
+  const modelsDetailsMenu = [
+    {
+      header: 'overview',
+      visible: true
+    },
+    {
+      header: 'preview',
+      visible: true
+    },
+    {
+      header: 'features',
+      visible: Boolean(selectedModel.item?.feature_vector)
+    },
+    {
+      header: 'statistics',
+      visible: Boolean(selectedModel.item?.feature_vector)
+    }
+  ]
+
+  return selectedModel.item
+    ? modelsDetailsMenu.filter(item => item.visible).map(item => item.header)
+    : []
+}
 export const modelEndpointsDetailsMenu = [
   'overview',
   'drift analysis',
@@ -48,7 +76,8 @@ export const modelEndpointsDetailsMenu = [
 export const modelsFilters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' }
+  { type: 'labels', label: 'Labels:' },
+  { type: 'iterations', label: 'Show iterations' }
 ]
 export const modelEndpointsFilters = [{ type: 'labels', label: 'Labels:' }]
 export const page = MODELS_PAGE
@@ -78,6 +107,16 @@ export const modelsTableHeaders = [
   {
     header: 'Metrics',
     class: 'artifacts_big'
+  },
+  {
+    header: (
+      <span>
+        <span>Framework &</span>
+        <br />
+        <span>Algorithm</span>
+      </span>
+    ),
+    class: 'artifacts_small'
   },
   {
     header: '',
@@ -150,7 +189,8 @@ export const tabs = [
 export const handleFetchData = async (
   fetchModelEndpoints,
   fetchModels,
-  item,
+  filters,
+  project,
   pageTab
 ) => {
   let data = {
@@ -160,14 +200,14 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === MODELS_TAB) {
-    result = await fetchModels(item)
+    result = await fetchModels(project, filters)
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
       data.yamlContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-    result = await fetchModelEndpoints(item)
+    result = await fetchModelEndpoints(project, filters)
 
     if (result) {
       data.content = result
@@ -179,6 +219,7 @@ export const handleFetchData = async (
 }
 
 export const generatePageData = (
+  selectedModel,
   pageTab,
   handleDeployModel,
   handleRequestOnExpand,
@@ -190,7 +231,7 @@ export const generatePageData = (
   }
 
   if (pageTab === MODELS_TAB) {
-    data.detailsMenu = modelsDetailsMenu
+    data.detailsMenu = generateModelsDetailsMenu(selectedModel)
     data.filters = modelsFilters
     data.registerArtifactDialogTitle = registerArtifactDialogTitle
     data.tableHeaders = modelsTableHeaders
@@ -223,12 +264,11 @@ export const checkForSelectedModel = (
   models,
   modelName,
   setSelectedModel,
-  tag
+  tag,
+  iter
 ) => {
   const artifacts = models.selectedRowData.content[modelName] || models.allData
-  const searchItem = artifacts.find(
-    item => item.db_key === modelName && (item.tag === tag || item.tree === tag)
-  )
+  const searchItem = searchArtifactItem(artifacts, modelName, tag, iter)
 
   if (!searchItem) {
     history.push(
@@ -264,4 +304,12 @@ export const checkForSelectedModelEndpoint = (
     )
     setSelectedModel({ item: searchItem })
   }
+}
+
+export const getFeatureVectorData = uri => {
+  const separator = uri?.indexOf('@') > 0 ? '@' : ':'
+  const name = uri.slice(uri.lastIndexOf('/') + 1, uri.lastIndexOf(separator))
+  const tag = uri.slice(uri.lastIndexOf(separator) + 1)
+
+  return { tag, name }
 }

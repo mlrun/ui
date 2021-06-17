@@ -9,17 +9,18 @@ import './jobsPanelParametersTable.scss'
 
 const JobsPanelParametersTableView = ({
   addNewItem,
-  children,
   checkParameter,
+  children,
   className,
+  content,
   disabledOptions,
   editItem,
   generateActionsMenu,
   handleDeleteParameter,
   handleEditParameter,
   headers,
-  nameValidation,
   selectedItem,
+  setEditItem,
   setSelectedItem,
   tableContent
 }) => {
@@ -55,11 +56,12 @@ const JobsPanelParametersTableView = ({
               ) {
                 return (
                   <EditableParametersRow
+                    content={content}
                     disabledOptions={disabledOptions}
                     handleEdit={handleEditParameter}
                     key={`${contentItem.data.name}${index}`}
-                    nameValidation={nameValidation}
                     selectedParameter={selectedItem}
+                    setEditItem={setEditItem}
                     setSelectedParameter={setSelectedItem}
                   />
                 )
@@ -74,6 +76,7 @@ const JobsPanelParametersTableView = ({
                     checkboxOnChange={checkParameter}
                     className={tableRowClassNames}
                     contentItem={contentItem}
+                    editItem={editItem}
                     handleDelete={handleDeleteParameter}
                     handleEdit={handleEditParameter}
                     key={`${contentItem.data.name}${index}`}
@@ -102,8 +105,8 @@ JobsPanelParametersTableView.propTypes = {
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
-  nameValidation: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  setEditItem: PropTypes.func.isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   tableContent: PropTypes.shape({}).isRequired
 }

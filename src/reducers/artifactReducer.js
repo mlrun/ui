@@ -52,7 +52,6 @@ import {
   REMOVE_MODEL,
   REMOVE_MODELS,
   REMOVE_NEW_FEATURE_SET,
-  SET_ARTIFACT_FILTER,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_KEY,
@@ -98,11 +97,6 @@ const initialState = {
     selectedRowData: {
       content: {}
     }
-  },
-  filter: {
-    tag: 'latest',
-    labels: '',
-    name: ''
   },
   loading: false,
   modelEndpoints: [],
@@ -546,11 +540,6 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         newFeatureSet: { ...initialState.newFeatureSet }
-      }
-    case SET_ARTIFACT_FILTER:
-      return {
-        ...state,
-        filter: payload
       }
     case SET_NEW_FEATURE_SET_NAME:
       return {

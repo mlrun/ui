@@ -10,11 +10,12 @@ import JobsPanelTableAddItemRow from '../../elements/JobsPanelTableAddItemRow/Jo
 import JobsPanelParametersTable from '../../elements/JobsPanelParametersTable/JobsPanelParametersTable'
 import Select from '../../common/Select/Select'
 
-import { ReactComponent as Plus } from '../../images/plus.svg'
-
 import panelData from '../JobsPanel/panelData'
 import { parametersActions } from './jobsPanelParametersReducer'
 import { selectOptions } from './jobsPanelParameters.util'
+import { isNameNotUnique } from '../JobsPanel/jobsPanel.util'
+
+import { ReactComponent as Plus } from '../../images/plus.svg'
 
 const JobsPanelParametersView = ({
   checkParameter,
@@ -23,7 +24,6 @@ const JobsPanelParametersView = ({
   handleDeleteParameter,
   handleEditParameter,
   isHyperTypeExist,
-  nameNotValid,
   parameters,
   parametersDispatch,
   parametersState,
@@ -56,7 +56,6 @@ const JobsPanelParametersView = ({
           handleDeleteParameter={handleDeleteParameter}
           handleEditParameter={handleEditParameter}
           headers={panelData.parameters['table-headers']}
-          nameValidation={nameNotValid}
           selectedItem={parametersState.selectedParameter}
           setSelectedItem={selectedParam =>
             parametersDispatch({
@@ -80,7 +79,10 @@ const JobsPanelParametersView = ({
                       payload: value
                     })
                   }
-                  required={nameNotValid(parametersState.newParameter.name)}
+                  required={isNameNotUnique(
+                    parametersState.newParameter.name,
+                    parameters
+                  )}
                   requiredText="Name already exists"
                   type="text"
                 />
@@ -125,7 +127,10 @@ const JobsPanelParametersView = ({
               </div>
               <button
                 className="add-input btn-add"
-                disabled={nameNotValid(parametersState.newParameter.name)}
+                disabled={isNameNotUnique(
+                  parametersState.newParameter.name,
+                  parameters
+                )}
                 onClick={() => handleAddNewItem(true)}
               >
                 <Tooltip template={<TextTooltipTemplate text="Add item" />}>
@@ -207,7 +212,6 @@ JobsPanelParametersView.propTypes = {
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   isHyperTypeExist: PropTypes.bool.isRequired,
-  nameNotValid: PropTypes.func.isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,
   parametersState: PropTypes.shape({}).isRequired,

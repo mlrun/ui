@@ -2,12 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import './jobsPanelSection.scss'
+import Tip from '../../common/Tip/Tip'
 
-const JobsPanelSection = ({ children, title, className }) => {
+const JobsPanelSection = ({ children, tip, title, className }) => {
   return (
     <div className={`panel-section job-panel__section ${className}`}>
       <div className="panel-section__title">
         <h5>{title}</h5>
+        {tip && <Tip className="panel-section__tip" text={tip} />}
       </div>
       {children && <div className="panel-section__body">{children}</div>}
     </div>
@@ -15,11 +17,13 @@ const JobsPanelSection = ({ children, title, className }) => {
 }
 
 JobsPanelSection.defaultProps = {
-  className: ''
+  className: '',
+  tip: ''
 }
 
 JobsPanelSection.propTypes = {
   className: PropTypes.string,
+  tip: PropTypes.string,
   title: PropTypes.string.isRequired
 }
 

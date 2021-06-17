@@ -1,12 +1,14 @@
 import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { maxBy, flatten } from 'lodash'
 
-export const generateArtifacts = artifacts =>
+export const generateArtifacts = (artifacts, iter) =>
   flatten(
     artifacts
       .map(artifact => {
         const { link_iteration } = artifact.link_iteration ?? {}
-        let generatedArtifacts = artifact.link_iteration
+        let generatedArtifacts = iter
+          ? artifact.data
+          : artifact.link_iteration
           ? artifact.data.filter(dataItem => dataItem.iter === link_iteration)
           : [maxBy(artifact.data, 'updated')]
 

@@ -1,17 +1,18 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { v4 as uuidv4 } from 'uuid'
+
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import Button from '../../common/Button/Button'
 
-import { v4 as uuidv4 } from 'uuid'
-
 import artifactApi from '../../api/artifacts-api'
 
 const RegisterArtifactPopup = ({
-  artifactFilter,
   artifactKind,
+  filtersStore,
   match,
   refresh,
   setIsPopupOpen,
@@ -130,12 +131,7 @@ const RegisterArtifactPopup = ({
       .then(() => {
         resetRegisterArtifactForm()
         setIsPopupOpen(false)
-        refresh({
-          project: match.params.projectName,
-          tag: artifactFilter.tag,
-          labels: artifactFilter.labels,
-          name: artifactFilter.name
-        })
+        refresh(filtersStore)
       })
       .catch(err => {
         setRegisterArtifactData(prevData => ({
@@ -147,7 +143,7 @@ const RegisterArtifactPopup = ({
         }))
       })
   }, [
-    artifactFilter,
+    filtersStore,
     match.params.projectName,
     refresh,
     registerArtifactData,
@@ -205,7 +201,6 @@ RegisterArtifactPopup.defaultProps = {
 }
 
 RegisterArtifactPopup.propTypes = {
-  artifactFilter: PropTypes.shape({}).isRequired,
   artifactKind: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
@@ -213,4 +208,9 @@ RegisterArtifactPopup.propTypes = {
   title: PropTypes.string
 }
 
-export default RegisterArtifactPopup
+export default connect(
+  ({ filtersStore }) => ({
+    filtersStore
+  }),
+  null
+)(RegisterArtifactPopup)

@@ -16,28 +16,35 @@ import {
   tableHeaders,
   infoHeaders
 } from './files.util'
-import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
 import { filterArtifacts } from '../../utils/filterArtifacts'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import { generateUri } from '../../utils/resources'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 
-import { ARTIFACTS } from '../../constants'
-import { generateUri } from '../../utils/generateUri'
+import {
+  ARTIFACTS,
+  INIT_TAG_FILTER,
+  INIT_GROUP_FILTER,
+  FILES_PAGE
+} from '../../constants'
+import filtersActions from '../../actions/filters'
 
 const Files = ({
   artifactsStore,
   fetchFile,
   fetchFiles,
+  filtersStore,
   history,
   match,
   removeFile,
   removeFiles,
-  setArtifactFilter
+  setFilters
 }) => {
   const [files, setFiles] = useState([])
   const [yamlContent, setYamlContent] = useState({
     allData: [],
     selectedRowData: []
   })
-  const [groupFilter, setGroupFilter] = useState('')
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
@@ -50,8 +57,8 @@ const Files = ({
   })
 
   const fetchData = useCallback(
-    item => {
-      fetchFiles(item).then(result => {
+    filters => {
+      fetchFiles(match.params.projectName, filters).then(result => {
         if (result) {
           setFiles(generateArtifacts(filterArtifacts(result)))
           setYamlContent(state => ({
@@ -63,7 +70,7 @@ const Files = ({
         return result
       })
     },
-    [fetchFiles]
+    [fetchFiles, match.params.projectName]
   )
 
   const handleRemoveFile = useCallback(
@@ -94,7 +101,7 @@ const Files = ({
       }))
 
       try {
-        result = await fetchFile(item)
+        result = await fetchFile(item.project, item.db_key, !filtersStore.iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -120,7 +127,12 @@ const Files = ({
             selectedRowData: {
               ...state.selectedRowData,
               [item.db_key]: {
-                content: [...generateArtifacts(filterArtifacts(result))],
+                content: [
+                  ...generateArtifacts(
+                    filterArtifacts(result),
+                    !filtersStore.iter
+                  )
+                ],
                 error: null,
                 loading: false
               }
@@ -129,7 +141,7 @@ const Files = ({
         })
       }
     },
-    [fetchFile]
+    [fetchFile, filtersStore.iter]
   )
 
   const handleExpandRow = useCallback((item, isCollapse) => {
@@ -142,10 +154,24 @@ const Files = ({
   }, [])
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName, tag: 'latest' })
+    if (
+      match.params.name &&
+      match.params.tag &&
+      pageData.detailsMenu.length > 0
+    ) {
+      isDetailsTabExists(
+        FILES_PAGE,
+        match.params,
+        pageData.detailsMenu,
+        history
+      )
+    }
+  }, [history, match.params, pageData.detailsMenu])
+
+  useEffect(() => {
+    fetchData({ tag: INIT_TAG_FILTER, iter: 'iter' })
 
     return () => {
-      setGroupFilter('')
       setFiles([])
       removeFiles()
       setSelectedFile({})
@@ -153,17 +179,16 @@ const Files = ({
         allData: [],
         selectedRowData: []
       })
-      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
     }
-  }, [fetchData, match.params.projectName, removeFiles, setArtifactFilter])
+  }, [fetchData, removeFiles])
 
   useEffect(() => {
-    if (artifactsStore.filter.tag === 'latest') {
-      setGroupFilter('name')
-    } else if (groupFilter.length > 0) {
-      setGroupFilter('')
+    if (filtersStore.tag === INIT_TAG_FILTER) {
+      setFilters({ groupBy: INIT_GROUP_FILTER })
+    } else if (filtersStore.groupBy === INIT_GROUP_FILTER) {
+      setFilters({ groupBy: 'none' })
     }
-  }, [match.params.pageTab, groupFilter.length, artifactsStore.filter])
+  }, [match.params.pageTab, filtersStore.tag, filtersStore.groupBy, setFilters])
 
   useEffect(() => {
     setPageData(state => ({
@@ -175,16 +200,13 @@ const Files = ({
 
   useEffect(() => {
     if (match.params.name) {
-      const { name, tag } = match.params
+      const { name, tag, iter } = match.params
       const artifacts =
         artifactsStore.files.selectedRowData.content[name] ||
         artifactsStore.files.allData
 
-      if (artifacts.length !== 0) {
-        const searchItem = artifacts.find(
-          item =>
-            item.db_key === name && (item.tag === tag || item.tree === tag)
-        )
+      if (artifacts.length) {
+        const searchItem = searchArtifactItem(artifacts, name, tag, iter)
 
         if (!searchItem) {
           history.push(`/projects/${match.params.projectName}/files`)
@@ -197,31 +219,17 @@ const Files = ({
       }
     }
   }, [
+    artifactsStore,
     artifactsStore.dataSets.allData,
     artifactsStore.dataSets.selectedRowData.content,
     artifactsStore.files,
     history,
-    match.params
+    match,
+    match.params,
+    pageData
   ])
 
-  const handleFilesTreeFilterChange = useCallback(
-    item => {
-      handleArtifactTreeFilterChange(
-        fetchData,
-        artifactsStore.filter,
-        item,
-        match.params.projectName,
-        setArtifactFilter,
-        setFiles
-      )
-    },
-    [
-      artifactsStore.filter,
-      fetchData,
-      match.params.projectName,
-      setArtifactFilter
-    ]
-  )
+  useEffect(() => setFiles([]), [filtersStore.tag])
 
   return (
     <>
@@ -229,8 +237,6 @@ const Files = ({
       <Content
         content={files}
         expandRow={handleExpandRow}
-        groupFilter={groupFilter}
-        handleArtifactFilterTree={handleFilesTreeFilterChange}
         handleCancel={() => setSelectedFile({})}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
@@ -243,7 +249,6 @@ const Files = ({
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
-          artifactFilter={artifactsStore.filter}
           artifactKind="file"
           match={match}
           refresh={fetchData}
@@ -259,6 +264,10 @@ Files.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(artifactsStore => artifactsStore, {
-  ...artifactsAction
-})(Files)
+export default connect(
+  ({ artifactsStore, filtersStore }) => ({
+    artifactsStore,
+    filtersStore
+  }),
+  { ...artifactsAction, ...filtersActions }
+)(Files)

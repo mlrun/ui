@@ -3,19 +3,28 @@ import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import jobsActions from '../../actions/jobs'
-import notificationActions from '../../actions/notification'
-import projectActions from '../../actions/projects'
-import detailsActions from '../../actions/details'
-import { generatePageData, initialGroupFilter } from './jobsData'
-import { generateKeyValues, parseKeyValues } from '../../utils'
-import { MONITOR_TAB, SCHEDULE_TAB } from '../../constants'
-
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import Button from '../../common/Button/Button'
+
+import filtersActions from '../../actions/filters'
+import jobsActions from '../../actions/jobs'
+import notificationActions from '../../actions/notification'
+import projectActions from '../../actions/projects'
+import detailsActions from '../../actions/details'
+
+import { generatePageData } from './jobsData'
+import { generateKeyValues, parseKeyValues } from '../../utils'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+
+import {
+  MONITOR_TAB,
+  SCHEDULE_TAB,
+  INIT_GROUP_FILTER,
+  JOBS_PAGE
+} from '../../constants'
 
 const Jobs = ({
   abortJob,
@@ -33,6 +42,7 @@ const Jobs = ({
   removeNewJob,
   removePods,
   removeScheduledJob,
+  setFilters,
   setLoading,
   setNotification,
   workflowsStore
@@ -40,7 +50,6 @@ const Jobs = ({
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
   const [selectedJob, setSelectedJob] = useState({})
-  const [groupFilter, setGroupFilter] = useState(initialGroupFilter)
   const [editableItem, setEditableItem] = useState(null)
 
   const dispatch = useDispatch()
@@ -116,21 +125,30 @@ const Jobs = ({
   }
 
   const handleRerunJob = async job => {
-    const functionParts = job.function.split('/')
+    const [project = '', func = ''] = job?.function?.split('/') ?? []
     const functionData = await fetchJobFunction(
-      functionParts[0],
-      functionParts[1].replace(/@.*$/g, ''),
-      functionParts[1].replace(/.*@/g, '')
+      project,
+      func.replace(/@.*$/g, ''),
+      func.replace(/.*@/g, '')
     )
+
+    if (!functionData) {
+      setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Job’s function failed to load'
+      })
+    }
 
     setEditableItem({
       rerun_object: {
         function: {
           spec: {
-            env: functionData?.spec.env,
+            env: functionData?.spec.env ?? [],
             resources: functionData?.spec.resources,
-            volume_mounts: functionData?.spec.volume_mounts,
-            volumes: functionData?.spec.volumes
+            volume_mounts: functionData?.spec.volume_mounts ?? [],
+            volumes: functionData?.spec.volumes ?? [],
+            node_selector: functionData?.spec.node_selector ?? {}
           }
         },
         schedule: null,
@@ -143,7 +161,8 @@ const Jobs = ({
           spec: {
             function: job.function,
             handler:
-              Object.values(functionData?.spec.entry_points)?.[0]?.name ?? '',
+              Object.values(functionData?.spec?.entry_points ?? {})[0]?.name ??
+              '',
             hyperparams: job.hyperparams,
             input_path: job.input_path ?? '',
             inputs: job.inputs ?? {},
@@ -287,6 +306,12 @@ const Jobs = ({
   ])
 
   useEffect(() => {
+    if (match.params.jobId && pageData.detailsMenu.length > 0) {
+      isDetailsTabExists(JOBS_PAGE, match.params, pageData.detailsMenu, history)
+    }
+  }, [history, match.params, pageData.detailsMenu])
+
+  useEffect(() => {
     refreshJobs()
 
     return () => {
@@ -297,12 +322,12 @@ const Jobs = ({
 
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
-      setGroupFilter('none')
+      setFilters({ groupBy: 'none' })
     } else if (match.params.pageTab !== SCHEDULE_TAB) {
       getWorkflows()
-      setGroupFilter(initialGroupFilter)
+      setFilters({ groupBy: INIT_GROUP_FILTER })
     }
-  }, [getWorkflows, match.params.pageTab])
+  }, [getWorkflows, match.params.pageTab, setFilters])
 
   useEffect(() => {
     if (match.params.jobId && jobs.some(job => job.uid) && jobs.length > 0) {
@@ -383,7 +408,6 @@ const Jobs = ({
       {(jobsStore.loading || workflowsStore.loading) && <Loader />}
       <Content
         content={jobs}
-        groupFilter={groupFilter}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectJob}
         loading={jobsStore.loading}
@@ -391,7 +415,6 @@ const Jobs = ({
         pageData={pageData}
         refresh={refreshJobs}
         selectedItem={selectedJob}
-        setGroupFilter={setGroupFilter}
         setLoading={setLoading}
         yamlContent={jobsStore.jobs}
       />
@@ -436,6 +459,7 @@ export default connect(
     ...jobsActions,
     ...projectActions,
     ...detailsActions,
-    ...notificationActions
+    ...notificationActions,
+    ...filtersActions
   }
 )(React.memo(Jobs))

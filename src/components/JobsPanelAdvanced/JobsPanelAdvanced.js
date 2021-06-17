@@ -125,11 +125,11 @@ const JobsPanelAdvanced = ({
 
   return (
     <JobsPanelAdvancedView
+      advancedDispatch={advancedDispatch}
+      advancedState={advancedState}
       handleAddNewItem={handleAddNewItem}
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
-      advancedState={advancedState}
-      advancedDispatch={advancedDispatch}
       match={match}
       panelState={panelState}
     />

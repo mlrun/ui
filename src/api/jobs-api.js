@@ -1,4 +1,5 @@
 import { mainHttpClient } from '../httpClient'
+import { INIT_STATE_FILTER } from '../constants'
 
 export default {
   abortJob: (project, jobId, iter) => {
@@ -31,10 +32,10 @@ export default {
     }
 
     if (filters?.name) {
-      params.name = filters.name
+      params.name = `~${filters.name}`
     }
 
-    if (filters?.state) {
+    if (filters?.state && filters.state !== INIT_STATE_FILTER) {
       params.state = filters.state
     }
 
@@ -63,7 +64,7 @@ export default {
     }
 
     if (filters?.name) {
-      params.name = filters.name
+      params.name = `~${filters.name}`
     }
 
     if (filters?.labels) {

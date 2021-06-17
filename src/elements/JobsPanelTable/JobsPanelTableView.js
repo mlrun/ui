@@ -55,6 +55,7 @@ const JobsPanelTableView = ({
           return section === 'data-inputs' ? (
             <EditableDataInputsRow
               comboboxMatchesList={sectionData.comboboxMatchesList}
+              content={content}
               handleEdit={handleEdit}
               inputsDispatch={sectionDispatch}
               inputsState={sectionState}
@@ -65,10 +66,12 @@ const JobsPanelTableView = ({
             />
           ) : (
             <EditableAdvancedRow
+              content={content}
               handleEdit={handleEdit}
               key={index}
               match={match}
               selectedItem={selectedItem}
+              setEditItem={setEditItem}
               setSelectedItem={setSelectedItem}
               table={section.includes('secrets') ? 'secrets' : 'env'}
             />
@@ -77,9 +80,10 @@ const JobsPanelTableView = ({
           return (
             <JobsPanelTableRow
               actionsMenu={generateActionsMenu(contentItem)}
+              contentItem={contentItem}
+              editItem={editItem}
               handleDelete={handleDelete}
               handleEdit={handleEdit}
-              contentItem={contentItem}
               key={index}
               section={section}
             />

@@ -16,6 +16,19 @@
     }
   }
 
+  &__label {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    color: $topaz;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 15px;
+    text-transform: capitalize;
+    background-color: transparent;
+    pointer-events: none;
+  }
+
   &__buttons {
     position: relative;
     left: 1px;

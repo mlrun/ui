@@ -10,6 +10,7 @@ import nuclioStore from './nuclioReducer'
 import projectStore from './projectReducer'
 import tableStore from './tableReducer'
 import workflowsStore from './workflowReducer'
+import filtersStore from './filtersReducer'
 
 export default combineReducers({
   appStore,
@@ -21,5 +22,6 @@ export default combineReducers({
   nuclioStore,
   projectStore,
   tableStore,
-  workflowsStore
+  workflowsStore,
+  filtersStore
 })

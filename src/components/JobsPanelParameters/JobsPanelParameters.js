@@ -256,15 +256,8 @@ const JobsPanelParameters = ({
     [panelState.tableData.parameters]
   )
 
-  const nameNotValid = name => {
-    return panelState.tableData.parameters.some(
-      parameter => parameter.data.name === name
-    )
-  }
-
   return (
     <JobsPanelParametersView
-      nameNotValid={nameNotValid}
       checkParameter={checkParameter}
       disabledOptions={disabledOptions}
       handleAddNewItem={handleAddNewParameter}

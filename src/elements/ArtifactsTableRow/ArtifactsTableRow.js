@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -9,17 +9,20 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import {
   ACTION_CELL_ID,
+  DATASETS_TAB,
   DETAILS_OVERVIEW_TAB,
   FEATURES_TAB,
-  MODEL_ENDPOINTS_TAB
+  FILES_PAGE,
+  MODEL_ENDPOINTS_TAB,
+  MODELS_TAB
 } from '../../constants'
+import { getArtifactReference } from '../../utils/resources'
 
 const ArtifactsTableRow = ({
   actionsMenu,
   content,
   handleExpandRow,
   handleSelectItem,
-  index,
   mainRowItemsCount,
   match,
   rowItem,
@@ -27,6 +30,7 @@ const ArtifactsTableRow = ({
   selectedItem,
   tableContent
 }) => {
+  const [currentItem, setCurrentItem] = useState(null)
   const parent = useRef()
   const rowClassNames = classnames(
     'table-body__row',
@@ -34,9 +38,7 @@ const ArtifactsTableRow = ({
     ((selectedItem?.db_key && selectedItem?.db_key === rowItem.key.value) ||
       (selectedItem?.name &&
         selectedItem.name === rowItem.key.value &&
-        selectedItem.tag === rowItem.version.value) ||
-      (selectedItem?.metadata &&
-        selectedItem?.metadata?.uid === content[index]?.metadata?.uid)) &&
+        selectedItem.tag === rowItem.version.value)) &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -44,39 +46,56 @@ const ArtifactsTableRow = ({
   )
   const mainRowData = Object.values(rowItem ?? {})
 
-  const findCurrentItem = artifact => {
-    if (match.params.pageTab === FEATURES_TAB) {
-      return content.find(
-        item =>
-          `${item.name}-${item.metadata?.name}` ===
-          `${artifact.key?.value}-${artifact.feature_set?.value}`
-      )
-    } else {
-      if (pageData.selectedRowData?.[artifact.key.value]?.content) {
-        return pageData.selectedRowData?.[artifact.key.value]?.content.find(
-          contentItem => {
-            const key = contentItem.db_key ? 'db_key' : 'name'
-
-            return artifact.version.value
-              ? contentItem[key] === artifact.key.value &&
-                  contentItem.tag === artifact.version.value
-              : contentItem.uid
-              ? contentItem.uid === artifact.uid.value
-              : contentItem[key] === artifact.key.value
-          }
+  const findCurrentItem = useCallback(
+    artifact => {
+      if (match.params.pageTab === FEATURES_TAB) {
+        return content.find(
+          item =>
+            `${item.name}-${item.metadata?.name}` ===
+            `${artifact.key?.value}-${artifact.feature_set?.value}`
         )
+      } else {
+        if (pageData.selectedRowData?.[artifact.key.value]?.content) {
+          return pageData.selectedRowData?.[artifact.key.value]?.content.find(
+            contentItem => {
+              const key = contentItem.db_key ? 'db_key' : 'name'
+
+              if (
+                [MODELS_TAB, DATASETS_TAB].includes(match.params.pageTab) ||
+                pageData.page === FILES_PAGE
+              ) {
+                return (
+                  contentItem.db_key + getArtifactReference(contentItem) ===
+                  artifact.key.value + artifact.key.uniqueReference
+                )
+              }
+
+              return artifact.version.value
+                ? contentItem[key] === artifact.key.value &&
+                    contentItem.tag === artifact.version.value
+                : contentItem.uid
+                ? contentItem.uid === artifact.uid.value
+                : contentItem[key] === artifact.key.value
+            }
+          )
+        }
+
+        return content.find(contentItem => {
+          const key = contentItem.db_key ? 'db_key' : 'name'
+
+          return (
+            contentItem[key] === artifact.key.value &&
+            contentItem.tag === artifact.version?.value
+          )
+        })
       }
+    },
+    [content, match.params.pageTab, pageData.page, pageData.selectedRowData]
+  )
 
-      return content.find(contentItem => {
-        const key = contentItem.db_key ? 'db_key' : 'name'
-
-        return (
-          contentItem[key] === artifact.key.value &&
-          contentItem.tag === artifact.version?.value
-        )
-      })
-    }
-  }
+  useEffect(() => {
+    setCurrentItem(findCurrentItem(rowItem))
+  }, [findCurrentItem, rowItem])
 
   return (
     <div className={rowClassNames} ref={parent}>
@@ -106,16 +125,21 @@ const ArtifactsTableRow = ({
             })}
           </div>
           {tableContent.map((artifact, index) => {
-            const currentItem = findCurrentItem(artifact)
+            const subRowCurrentItem = findCurrentItem(artifact)
+            const selectedItemReference = selectedItem.iter
+              ? getArtifactReference(selectedItem)
+              : ''
+            const subRowCurrentItemReference = getArtifactReference(
+              subRowCurrentItem ?? {}
+            )
+
             const subRowClassNames = classnames(
               'table-body__row',
-              ((selectedItem?.db_key &&
-                selectedItem?.db_key === currentItem?.db_key &&
-                (selectedItem?.tag === currentItem?.tag ||
-                  selectedItem?.uid === currentItem?.uid)) ||
-                (selectedItem?.uid &&
-                  selectedItem?.uid === currentItem?.uid &&
-                  selectedItem?.tag === currentItem?.tag)) &&
+              ((selectedItemReference &&
+                selectedItemReference === subRowCurrentItemReference) ||
+                (selectedItem.uid &&
+                  selectedItem?.uid === subRowCurrentItem?.uid &&
+                  selectedItem?.tag === subRowCurrentItem?.tag)) &&
                 'row_active'
             )
 
@@ -152,7 +176,7 @@ const ArtifactsTableRow = ({
                                 ? value.expandedCellContent
                                 : value
                             }
-                            item={currentItem}
+                            item={subRowCurrentItem}
                             link={value.getLink?.(
                               match.params.tab ?? DETAILS_OVERVIEW_TAB
                             )}
@@ -169,7 +193,7 @@ const ArtifactsTableRow = ({
                     )?.hidden && (
                       <div className="table-body__cell action_cell">
                         <ActionsMenu
-                          dataItem={currentItem}
+                          dataItem={subRowCurrentItem}
                           menu={actionsMenu}
                         />
                       </div>
@@ -184,7 +208,7 @@ const ArtifactsTableRow = ({
         <>
           {Object.values(rowItem ?? {}).map((value, i) => {
             return (
-              content[index] &&
+              currentItem &&
               !value.hidden && (
                 <TableCell
                   expandLink={
@@ -193,7 +217,7 @@ const ArtifactsTableRow = ({
                   }
                   handleExpandRow={handleExpandRow}
                   data={value}
-                  item={findCurrentItem(rowItem)}
+                  item={currentItem}
                   key={Math.random() + i}
                   link={value.getLink?.(
                     match.params.tab ?? DETAILS_OVERVIEW_TAB
@@ -208,7 +232,7 @@ const ArtifactsTableRow = ({
           {!pageData.tableHeaders.find(header => header.id === ACTION_CELL_ID)
             ?.hidden && (
             <div className="table-body__cell action_cell">
-              <ActionsMenu dataItem={content[index]} menu={actionsMenu} />
+              <ActionsMenu dataItem={currentItem} menu={actionsMenu} />
             </div>
           )}
         </>
@@ -228,7 +252,6 @@ ArtifactsTableRow.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired,
   mainRowItemsCount: PropTypes.number,
   match: PropTypes.shape({}).isRequired,
   rowItem: PropTypes.shape({}).isRequired,

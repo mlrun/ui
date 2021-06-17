@@ -26,7 +26,8 @@ export const detailsMenu = ['overview', 'preview']
 export const filters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' }
+  { type: 'labels', label: 'Labels:' },
+  { type: 'iterations', label: 'Show iterations' }
 ]
 export const page = FILES_PAGE
 export const sources = ['name', 'path']

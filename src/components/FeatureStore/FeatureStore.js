@@ -9,6 +9,7 @@ import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import AddToFeatureVectorPopUp from '../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
 
 import artifactsAction from '../../actions/artifacts'
+import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
 import {
   checkTabIsValid,
@@ -24,12 +25,15 @@ import {
   navigateToDetailsPane,
   pageDataInitialState
 } from './featureStore.util'
-import { handleArtifactTreeFilterChange } from '../../utils/handleArtifactTreeFilterChange'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import {
   DATASETS_TAB,
+  FEATURES_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
-  FEATURES_TAB
+  INIT_GROUP_FILTER,
+  INIT_TAG_FILTER,
+  FEATURE_STORE_PAGE
 } from '../../constants'
 
 import './featureStore.scss'
@@ -43,6 +47,7 @@ const FeatureStore = ({
   fetchFeatureVector,
   fetchFeatureVectors,
   fetchFeatures,
+  filtersStore,
   history,
   match,
   removeArtifactsError,
@@ -53,7 +58,7 @@ const FeatureStore = ({
   removeFeatureVector,
   removeFeatureVectors,
   removeNewFeatureSet,
-  setArtifactFilter,
+  setFilters,
   setNotification,
   tableStore,
   updateFeatureStoreData
@@ -63,7 +68,6 @@ const FeatureStore = ({
     allData: [],
     selectedRowData: []
   })
-  const [groupFilter, setGroupFilter] = useState('')
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
@@ -71,18 +75,19 @@ const FeatureStore = ({
   const featureStoreRef = useRef(null)
 
   const fetchData = useCallback(
-    async item => {
+    async filters => {
       const data = await handleFetchData(
         featureStoreRef,
         fetchDataSets,
         fetchFeatureSets,
         fetchFeatures,
         fetchFeatureVectors,
-        item,
+        filters,
+        match.params.projectName,
         match.params.pageTab
       )
 
-      if (data.content?.length > 0) {
+      if (data.content) {
         setContent(data.content)
         setYamlContent(state => ({ ...state, allData: data.yamlContent }))
       }
@@ -94,7 +99,8 @@ const FeatureStore = ({
       fetchDataSets,
       fetchFeatureSets,
       fetchFeatures,
-      fetchFeatureVectors
+      fetchFeatureVectors,
+      match.params.projectName
     ]
   )
 
@@ -171,11 +177,18 @@ const FeatureStore = ({
           fetchDataSet,
           item,
           setPageData,
-          setYamlContent
+          setYamlContent,
+          !filtersStore.iter
         )
       }
     },
-    [fetchDataSet, fetchFeature, fetchFeatureVector, match.params.pageTab]
+    [
+      fetchDataSet,
+      fetchFeature,
+      fetchFeatureVector,
+      filtersStore.iter,
+      match.params.pageTab
+    ]
   )
 
   const handleExpandRow = useCallback(
@@ -191,16 +204,17 @@ const FeatureStore = ({
   )
 
   useEffect(() => {
-    fetchData({ project: match.params.projectName, tag: 'latest' })
+    fetchData({
+      tag: INIT_TAG_FILTER,
+      iter: match.params.pageTab === DATASETS_TAB ? 'iter' : ''
+    })
 
     return () => {
-      setArtifactFilter({ tag: 'latest', labels: '', name: '' })
       setContent([])
       setYamlContent({
         allData: [],
         selectedRowData: []
       })
-      setGroupFilter('')
       removeDataSets()
       removeFeatureSets()
       removeFeatureVectors()
@@ -209,26 +223,22 @@ const FeatureStore = ({
     }
   }, [
     fetchData,
-    match.params.projectName,
+    match.params.pageTab,
     removeDataSets,
     removeFeatureSets,
-    removeFeatureVectors,
-    setArtifactFilter
+    removeFeatureVectors
   ])
 
   useEffect(() => {
     if (
       match.params.pageTab === FEATURE_SETS_TAB ||
-      ([FEATURES_TAB, FEATURE_VECTORS_TAB, DATASETS_TAB].includes(
-        match.params.pageTab
-      ) &&
-        artifactsStore.filter.tag === 'latest')
+      filtersStore.tag === INIT_TAG_FILTER
     ) {
-      setGroupFilter('name')
-    } else if (groupFilter.length > 0) {
-      setGroupFilter('')
+      setFilters({ groupBy: INIT_GROUP_FILTER })
+    } else if (filtersStore.groupBy === INIT_GROUP_FILTER) {
+      setFilters({ groupBy: 'none' })
     }
-  }, [match.params.pageTab, groupFilter.length, artifactsStore.filter])
+  }, [filtersStore.groupBy, filtersStore.tag, match.params.pageTab, setFilters])
 
   useEffect(() => {
     setPageData(state => {
@@ -262,6 +272,21 @@ const FeatureStore = ({
   }, [history, artifactsStore, match])
 
   useEffect(() => {
+    if (
+      match.params.name &&
+      match.params.tag &&
+      pageData.detailsMenu.length > 0
+    ) {
+      isDetailsTabExists(
+        FEATURE_STORE_PAGE,
+        match.params,
+        pageData.detailsMenu,
+        history
+      )
+    }
+  }, [history, match.params, pageData.detailsMenu])
+
+  useEffect(() => {
     checkTabIsValid(history, match, selectedItem)
 
     setPageData(state => {
@@ -293,33 +318,7 @@ const FeatureStore = ({
     match
   ])
 
-  const handleTreeFilterChange = useCallback(
-    item => {
-      if (match.params.name) {
-        history.push(
-          `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
-        )
-      }
-
-      handleArtifactTreeFilterChange(
-        fetchData,
-        artifactsStore.filter,
-        item,
-        match.params.projectName,
-        setArtifactFilter,
-        setContent
-      )
-    },
-    [
-      artifactsStore.filter,
-      fetchData,
-      history,
-      match.params.name,
-      match.params.pageTab,
-      match.params.projectName,
-      setArtifactFilter
-    ]
-  )
+  useEffect(() => setContent([]), [filtersStore.tag])
 
   const applyDetailsChanges = changes => {
     return handleApplyDetailsChanges(
@@ -328,7 +327,8 @@ const FeatureStore = ({
       match,
       selectedItem,
       setNotification,
-      updateFeatureStoreData
+      updateFeatureStoreData,
+      filtersStore
     )
   }
 
@@ -347,15 +347,16 @@ const FeatureStore = ({
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
 
-    return fetchData({ project: match.params.projectName, tag: 'latest' }).then(
-      () => {
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Feature set successfully created'
-        })
-      }
-    )
+    return fetchData({
+      project: match.params.projectName,
+      tag: INIT_TAG_FILTER
+    }).then(() => {
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Feature set successfully created'
+      })
+    })
   }
 
   const closePanel = () => {
@@ -378,22 +379,17 @@ const FeatureStore = ({
         }}
         content={content}
         expandRow={handleExpandRow}
-        groupFilter={groupFilter}
-        handleArtifactFilterTree={handleTreeFilterChange}
         handleCancel={() => setSelectedItem({})}
         loading={artifactsStore.loading}
         match={match}
         openPopupDialog={openPopupDialog}
         pageData={pageData}
-        refresh={item => {
-          fetchData(item)
-        }}
+        refresh={fetchData}
         selectedItem={selectedItem.item}
         yamlContent={yamlContent}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
-          artifactFilter={artifactsStore.filter}
           artifactKind={match.params.pageTab.slice(0, -1)}
           match={match}
           refresh={fetchData}
@@ -417,9 +413,14 @@ FeatureStore.propTypes = {
 }
 
 export default connect(
-  ({ artifactsStore, tableStore }) => ({ artifactsStore, tableStore }),
+  ({ artifactsStore, tableStore, filtersStore }) => ({
+    artifactsStore,
+    tableStore,
+    filtersStore
+  }),
   {
     ...artifactsAction,
-    ...notificationActions
+    ...notificationActions,
+    ...filtersActions
   }
 )(FeatureStore)

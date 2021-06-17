@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
@@ -11,6 +11,8 @@ import Combobox from '../../common/Combobox/Combobox'
 import panelData from '../../components/JobsPanel/panelData'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { COMBOBOX_MATCHES } from '../../types'
+import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
@@ -27,31 +29,6 @@ export const JobsPanelDataInputsTable = ({
   match,
   panelState
 }) => {
-  const addItemRowRef = useRef(null)
-
-  const handleDocumentClick = useCallback(
-    event => {
-      if (!addItemRowRef.current?.contains(event.target)) {
-        handleAddNewItem(true)
-        inputsDispatch({
-          type: inputsActions.SET_PATH_PLACEHOLDER,
-          payload: ''
-        })
-      }
-    },
-    [handleAddNewItem, inputsDispatch]
-  )
-
-  useEffect(() => {
-    if (addItemRowRef.current) {
-      document.addEventListener('click', handleDocumentClick)
-
-      return () => {
-        document.removeEventListener('click', handleDocumentClick)
-      }
-    }
-  }, [handleDocumentClick, addItemRowRef])
-
   return (
     <JobsPanelTable
       addNewItem={inputsState.addNewInput}
@@ -75,7 +52,7 @@ export const JobsPanelDataInputsTable = ({
     >
       {inputsState.addNewInput ? (
         <div className="table__row-add-item">
-          <div className="input-row-wrapper" ref={addItemRowRef}>
+          <div className="input-row-wrapper">
             <Input
               className="input-row__item"
               density="medium"
@@ -87,6 +64,11 @@ export const JobsPanelDataInputsTable = ({
                   payload: name
                 })
               }
+              required={isNameNotUnique(
+                inputsState.newInput.name,
+                panelState.tableData.dataInputs
+              )}
+              requiredText="Name already exists"
               type="text"
             />
             <Combobox
@@ -113,6 +95,10 @@ export const JobsPanelDataInputsTable = ({
           </div>
           <button
             className="add-input btn-add"
+            disabled={isNameNotUnique(
+              inputsState.newInput.name,
+              panelState.tableData.dataInputs
+            )}
             onClick={() => handleAddNewItem(true)}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
@@ -136,7 +122,7 @@ export const JobsPanelDataInputsTable = ({
 }
 
 JobsPanelDataInputsTable.propTypes = {
-  comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  comboboxMatchesList: COMBOBOX_MATCHES.isRequired,
   comboboxSelectList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,

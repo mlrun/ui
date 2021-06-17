@@ -1,5 +1,5 @@
 import { FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../constants'
-import { generateUri } from './generateUri'
+import { generateUri } from './resources'
 
 export const generateUsageSnippets = (
   { pageTab, name, tag },
@@ -7,7 +7,8 @@ export const generateUsageSnippets = (
 ) => {
   const [currentFeatureSet] = featureSets.filter(
     featureSet =>
-      featureSet.metadata.name === name && featureSet.metadata.tag === tag
+      featureSet.metadata.name === name &&
+      (featureSet.metadata.tag === tag || featureSet.metadata.uid === tag)
   )
   const currentFeatureVectorData =
     featureVectors.selectedRowData.content[name] ?? featureVectors.allData

@@ -18,7 +18,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
-import { generateUri } from '../../utils/generateUri'
+import { generateUri } from '../../utils/resources'
 import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 
 export const pageDataInitialState = {
@@ -78,7 +78,8 @@ export const featureVectorsInfoHeaders = [
 export const datasetsFilters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' }
+  { type: 'labels', label: 'Label:' },
+  { type: 'iterations', label: 'Show iterations' }
 ]
 export const featureSetsFilters = [
   { type: 'name', label: 'Name:' },
@@ -323,7 +324,8 @@ export const handleFetchData = async (
   fetchFeatureSets,
   fetchFeatures,
   fetchFeatureVectors,
-  item,
+  filters,
+  project,
   pageTab
 ) => {
   let data = {
@@ -333,7 +335,7 @@ export const handleFetchData = async (
   let result = null
 
   if (pageTab === DATASETS_TAB) {
-    result = await fetchDataSets(item)
+    result = await fetchDataSets(project, filters)
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
@@ -346,14 +348,14 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureSets({ ...item, tag: null }, config)
+    result = await fetchFeatureSets(project, { ...filters, tag: null }, config)
 
     if (result) {
       data.content = parseFeatureStoreDataRequest(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
-    result = await fetchFeatures(item)
+    result = await fetchFeatures(project, filters)
 
     if (result) {
       data.content = parseFeatures(result)
@@ -366,11 +368,14 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureVectors(item, config)
+    result = await fetchFeatureVectors(project, filters, config)
 
     if (result) {
       data.content = parseFeatureVectors(result)
       data.yamlContent = result
+    } else {
+      data.content = null
+      data.yamlContent = null
     }
   }
 
@@ -383,7 +388,7 @@ export const navigateToDetailsPane = (
   match,
   setSelectedItem
 ) => {
-  const { name, tag } = match.params
+  const { name, tag, iter } = match.params
   let artifacts = []
 
   if (
@@ -429,10 +434,12 @@ export const navigateToDetailsPane = (
           (artifact.tag === tag || artifact.uid === tag)
         )
       } else if (match.params.pageTab === DATASETS_TAB) {
-        return (
-          artifact[searchKey] === name &&
-          (artifact.tag === tag || artifact.tree === tag)
-        )
+        return iter
+          ? Number(iter) === artifact.iter &&
+              artifact[searchKey] === name &&
+              (artifact.tag === tag || artifact.tree === tag)
+          : artifact[searchKey] === name &&
+              (artifact.tag === tag || artifact.tree === tag)
       } else {
         return artifact[searchKey] === name
       }
@@ -467,7 +474,8 @@ export const handleApplyDetailsChanges = (
   match,
   selectedItem,
   setNotification,
-  updateFeatureStoreData
+  updateFeatureStoreData,
+  filters
 ) => {
   const data = {
     spec: {
@@ -495,7 +503,7 @@ export const handleApplyDetailsChanges = (
     match.params.pageTab
   )
     .then(response => {
-      return fetchData({ project: match.params.projectName }).then(() => {
+      return fetchData(filters).then(() => {
         setNotification({
           status: response.status,
           id: Math.random(),
@@ -552,7 +560,9 @@ export const generateFeatureSetsDetailsMenu = selectedItem => {
     { header: 'analysis', visible: true }
   ]
 
-  return detailsMenu.filter(item => item.visible).map(item => item.header)
+  return selectedItem.item
+    ? detailsMenu.filter(item => item.visible).map(item => item.header)
+    : ''
 }
 
 export const generateFeatureVectorsDetailsMenu = selectedItem => {
@@ -571,7 +581,9 @@ export const generateFeatureVectorsDetailsMenu = selectedItem => {
     { header: 'analysis', visible: true }
   ]
 
-  return detailsMenu.filter(item => item.visible).map(item => item.header)
+  return selectedItem.item
+    ? detailsMenu.filter(item => item.visible).map(item => item.header)
+    : ''
 }
 
 export const generateDataSetsDetailsMenu = selectedItem => {
@@ -582,7 +594,9 @@ export const generateDataSetsDetailsMenu = selectedItem => {
     { header: 'analysis', visible: Boolean(selectedItem.item?.extra_data) }
   ]
 
-  return detailsMenu.filter(item => item.visible).map(item => item.header)
+  return selectedItem.item
+    ? detailsMenu.filter(item => item.visible).map(item => item.header)
+    : ''
 }
 
 export const fetchFeatureRowData = async (
@@ -601,21 +615,23 @@ export const fetchFeatureRowData = async (
     }
   }))
 
-  const result = await fetchFeature(item.metadata.project, item).catch(
-    error => {
-      setPageData(state => ({
-        ...state,
-        selectedRowData: {
-          ...state.selectedRowData,
-          [`${item.name}-${item.metadata.name}`]: {
-            ...state.selectedRowData[`${item.name}-${item.metadata.name}`],
-            error,
-            loading: false
-          }
+  const result = await fetchFeature(
+    item.metadata.project,
+    item.name,
+    item.metadata.name
+  ).catch(error => {
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        ...state.selectedRowData,
+        [`${item.name}-${item.metadata.name}`]: {
+          ...state.selectedRowData[`${item.name}-${item.metadata.name}`],
+          error,
+          loading: false
         }
-      }))
-    }
-  )
+      }
+    }))
+  })
 
   if (result?.length > 0) {
     setYamlContent(state => ({ ...state, selectedRowData: result }))
@@ -648,7 +664,7 @@ export const fetchFeatureVectorRowData = async (
     }
   }))
 
-  const result = await fetchFeatureVector(item.name, item.project).catch(
+  const result = await fetchFeatureVector(item.project, item.name).catch(
     error => {
       setPageData(state => ({
         ...state,
@@ -684,7 +700,8 @@ export const fetchDataSetRowData = async (
   fetchDataSet,
   item,
   setPageData,
-  setYamlContent
+  setYamlContent,
+  iter
 ) => {
   let result = []
 
@@ -699,7 +716,7 @@ export const fetchDataSetRowData = async (
   }))
 
   try {
-    result = await fetchDataSet(item)
+    result = await fetchDataSet(item.project, item.db_key, iter)
   } catch (error) {
     setPageData(state => ({
       ...state,
@@ -725,7 +742,7 @@ export const fetchDataSetRowData = async (
         selectedRowData: {
           ...state.selectedRowData,
           [item.db_key]: {
-            content: [...generateArtifacts(filterArtifacts(result))],
+            content: [...generateArtifacts(filterArtifacts(result), iter)],
             error: null,
             loading: false
           }

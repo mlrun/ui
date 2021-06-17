@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
+import JobsPanelParametersTableView from './JobsPanelParametersTableView'
+
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
-
-import JobsPanelParametersTableView from './JobsPanelParametersTableView'
 
 const JobsPanelParametersTable = ({
   addNewItem,
@@ -16,7 +16,6 @@ const JobsPanelParametersTable = ({
   handleDeleteParameter,
   handleEditParameter,
   headers,
-  nameValidation,
   selectedItem,
   setSelectedItem,
   tableContent
@@ -58,8 +57,8 @@ const JobsPanelParametersTable = ({
   return (
     <JobsPanelParametersTableView
       addNewItem={addNewItem}
-      children={children}
       checkParameter={checkParameter}
+      children={children}
       className={className}
       content={content}
       disabledOptions={disabledOptions}
@@ -68,8 +67,8 @@ const JobsPanelParametersTable = ({
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEdit}
       headers={headers}
-      nameValidation={nameValidation}
       selectedItem={selectedItem}
+      setEditItem={setEditItem}
       setSelectedItem={setSelectedItem}
       tableContent={tableContent}
     />
@@ -95,7 +94,6 @@ JobsPanelParametersTable.propTypes = {
   handleDeleteParameter: PropTypes.func,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
-  nameValidation: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   tableContent: PropTypes.shape({}).isRequired

@@ -2,10 +2,12 @@ import { functionTemplatesHttpClient, mainHttpClient } from '../httpClient'
 
 export default {
   createNewFunction: (project, data) =>
-    mainHttpClient.post(
-      `/func/${project}/${data.metadata.name}?tag=${data.metadata.tag}`,
-      data
-    ),
+    mainHttpClient.post(`/func/${project}/${data.metadata.name}`, data, {
+      params: {
+        tag: data.metadata.tag,
+        versioned: true
+      }
+    }),
   deleteSelectedFunction: (func, project) =>
     mainHttpClient.delete(`/projects/${project}/functions/${func}`),
   deployFunction: func =>
@@ -16,7 +18,7 @@ export default {
     }
 
     if (name) {
-      params.name = name
+      params.name = `~${name}`
     }
 
     return mainHttpClient.get('/funcs', { params })

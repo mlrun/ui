@@ -30,7 +30,9 @@ import {
   DEPLOY_FUNCTION_FAILURE,
   DEPLOY_FUNCTION_SUCCESS,
   SET_NEW_FUNCTION_SECRETS,
-  SET_NEW_FUNCTION_BUILD_IMAGE
+  SET_NEW_FUNCTION_BUILD_IMAGE,
+  SET_NEW_FUNCTION_PROJECT,
+  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
 } from '../constants'
 
 const initialState = {
@@ -38,7 +40,7 @@ const initialState = {
   loading: false,
   error: null,
   newFunction: {
-    kind: 'local',
+    kind: 'job',
     metadata: {
       labels: {},
       name: '',
@@ -160,6 +162,22 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         newFunction: initialState.newFunction
       }
+    case RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            build: {
+              ...state.newFunction.spec.build,
+              base_image: '',
+              commands: '',
+              image: ''
+            }
+          }
+        }
+      }
     case SET_NEW_FUNCTION_BASE_IMAGE:
       return {
         ...state,
@@ -265,6 +283,17 @@ export default (state = initialState, { type, payload }) => {
           metadata: {
             ...state.newFunction.metadata,
             name: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_PROJECT:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          metadata: {
+            ...state.newFunction.metadata,
+            project: payload
           }
         }
       }

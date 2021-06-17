@@ -1,20 +1,35 @@
 @import '../../scss/variables';
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/mixins';
 
 .chip {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  margin: 2px;
-  padding: 8px 14px;
-  color: $mulledWine;
-  font-size: 15px;
+  margin: 2px 4px;
+  padding: 4px 8px;
+  font-size: 14px;
   line-height: 16px;
-  white-space: nowrap;
-  background-color: transparent;
-  border: $labelBorder;
-  border-radius: 20px;
   cursor: default;
+
+  &__content {
+    display: flex;
+  }
+
+  &__delimiter {
+    margin-right: 5px;
+
+    svg {
+      position: relative;
+      top: -1px;
+      height: 20px;
+      margin-left: 5px;
+    }
+  }
+
+  &__value {
+    min-width: 10px;
+  }
 
   &.editable {
     cursor: pointer;
@@ -34,5 +49,26 @@
     svg {
       transform: scale(0.7);
     }
+  }
+
+  &-background {
+    @include chipBackground(false);
+  }
+
+  &-border {
+    @include chipBorder();
+  }
+
+  &-density {
+    @include chipDensity(false, false);
+  }
+
+  &-font {
+    @include chipsFont(Chip);
+  }
+
+  &-value_bold {
+    font-weight: 700;
+    font-size: 15px;
   }
 }

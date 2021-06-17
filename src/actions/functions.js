@@ -33,7 +33,9 @@ import {
   DEPLOY_FUNCTION_FAILURE,
   DEPLOY_FUNCTION_SUCCESS,
   SET_NEW_FUNCTION_SECRETS,
-  SET_NEW_FUNCTION_BUILD_IMAGE
+  SET_NEW_FUNCTION_BUILD_IMAGE,
+  SET_NEW_FUNCTION_PROJECT,
+  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -158,9 +160,9 @@ const functionsActions = {
 
         return templates
       })
-      .catch(err =>
+      .catch(err => {
         dispatch(functionsActions.fetchFunctionTemplateFailure(err))
-      )
+      })
   },
   fetchFunctionTemplateSuccess: selectFunction => ({
     type: FETCH_FUNCTION_TEMPLATE_SUCCESS,
@@ -181,6 +183,9 @@ const functionsActions = {
   }),
   removeNewFunction: () => ({
     type: REMOVE_NEW_FUNCTION
+  }),
+  resetNewFunctionCodeCustomImage: () => ({
+    type: RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
   }),
   setFunctionsTemplates: templates => ({
     type: SET_FUNCTIONS_TEMPLATES,
@@ -225,6 +230,10 @@ const functionsActions = {
   setNewFunctionName: name => ({
     type: SET_NEW_FUNCTION_NAME,
     payload: name
+  }),
+  setNewFunctionProject: project => ({
+    type: SET_NEW_FUNCTION_PROJECT,
+    payload: project
   }),
   setNewFunctionResources: resources => ({
     type: SET_NEW_FUNCTION_RESOURCES,

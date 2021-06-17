@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { capitalize } from 'lodash'
 import classnames from 'classnames'
+import { isEmpty } from 'lodash'
 
 import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
 import Download from '../../common/Download/Download'
@@ -13,8 +14,8 @@ import Select from '../../common/Select/Select'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Button from '../../common/Button/Button'
 import LoadButton from '../../common/LoadButton/LoadButton'
-
-import { isEmpty } from 'lodash'
+import Loader from '../../common/Loader/Loader'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { formatDatetime } from '../../utils'
 import {
@@ -26,7 +27,6 @@ import {
   FEATURE_VECTORS_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
-import { detailsActions } from './detailsReducer'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 
@@ -36,10 +36,8 @@ const DetailsView = React.forwardRef(
       actionsMenu,
       applyChanges,
       cancelChanges,
-      detailsDispatch,
       detailsMenu,
       detailsMenuClick,
-      detailsState,
       detailsStore,
       handleCancel,
       handleShowWarning,
@@ -47,18 +45,24 @@ const DetailsView = React.forwardRef(
       match,
       pageData,
       selectedItem,
+      setIteration,
+      setRefreshWasHandled,
       tabsContent
     },
     ref
   ) => {
     const detailsPanelClassNames = classnames(
       'table__item',
-      detailsState.showWarning && 'pop-up-dialog-opened'
+      detailsStore.showWarning && 'pop-up-dialog-opened'
     )
     const state = selectedItem.state || selectedItem?.status?.state
 
     return (
       <div className={detailsPanelClassNames} ref={ref}>
+        {detailsStore.loading && <Loader />}
+        {detailsStore.error && (
+          <ErrorMessage message={detailsStore.error.message} />
+        )}
         <div className="item-header__data">
           <h3>
             {selectedItem.name ||
@@ -105,13 +109,13 @@ const DetailsView = React.forwardRef(
                 variant="label"
                 label="Cancel"
                 onClick={cancelChanges}
-                disabled={detailsState.changes.counter === 0}
+                disabled={detailsStore.changes.counter === 0}
               />
               <Tooltip
                 template={
                   <TextTooltipTemplate
-                    text={`${detailsState.changes.counter} change${
-                      detailsState.changes.counter === 1 ? '' : 's'
+                    text={`${detailsStore.changes.counter} change${
+                      detailsStore.changes.counter === 1 ? '' : 's'
                     } pending`}
                   />
                 }
@@ -121,7 +125,7 @@ const DetailsView = React.forwardRef(
                   label="Apply Changes"
                   className="btn_apply-changes"
                   onClick={applyChanges}
-                  disabled={detailsState.changes.counter === 0}
+                  disabled={detailsStore.changes.counter === 0}
                 />
               </Tooltip>
             </>
@@ -132,13 +136,10 @@ const DetailsView = React.forwardRef(
               key="Iteration"
               label="Iteration:"
               onClick={option => {
-                detailsDispatch({
-                  type: detailsActions.SET_ITERATION,
-                  payload: option
-                })
+                setIteration(option)
               }}
-              options={detailsState.iterationOptions}
-              selectedId={detailsState.iteration}
+              options={detailsStore.iterationOptions}
+              selectedId={detailsStore.iteration}
             />
           )}
           {![JOBS_PAGE, FUNCTIONS_PAGE].includes(pageData.page) &&
@@ -164,7 +165,7 @@ const DetailsView = React.forwardRef(
               match.params.pageTab ? `/${match.params.pageTab}` : ''
             }`}
             onClick={() => {
-              if (detailsState.changes.counter > 0) {
+              if (detailsStore.changes.counter > 0) {
                 handleShowWarning(true)
               } else {
                 handleCancel()
@@ -191,19 +192,16 @@ const DetailsView = React.forwardRef(
           ))}
         </ul>
         {tabsContent}
-        {detailsState.showWarning && (
+        {detailsStore.showWarning && (
           <PopUpDialog
             headerText={`You have unsaved changes. ${
-              detailsState.refreshWasHandled
+              detailsStore.refreshWasHandled
                 ? 'Refreshing the list'
                 : 'Leaving this page'
             } will discard your changes.`}
             closePopUp={() => {
               handleShowWarning(false)
-              detailsDispatch({
-                type: detailsActions.SET_REFRESH_WAS_HANDLED,
-                payload: false
-              })
+              setRefreshWasHandled(false)
             }}
           >
             <div className="pop-up-dialog__footer-container">
@@ -212,10 +210,7 @@ const DetailsView = React.forwardRef(
                 label="Don't Leave"
                 onClick={() => {
                   handleShowWarning(false)
-                  detailsDispatch({
-                    type: detailsActions.SET_REFRESH_WAS_HANDLED,
-                    payload: false
-                  })
+                  setRefreshWasHandled(false)
                 }}
               />
               <Button
@@ -244,16 +239,17 @@ DetailsView.propTypes = {
   ]).isRequired,
   applyChanges: PropTypes.func.isRequired,
   cancelChanges: PropTypes.func.isRequired,
-  detailsDispatch: PropTypes.func.isRequired,
   detailsMenu: PropTypes.array.isRequired,
   detailsMenuClick: PropTypes.func,
-  detailsState: PropTypes.shape({}).isRequired,
+  detailsStore: PropTypes.shape({}).isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleShowWarning: PropTypes.func.isRequired,
   leavePage: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
+  setIteration: PropTypes.func.isRequired,
+  setRefreshWasHandled: PropTypes.func.isRequired,
   tabsContent: PropTypes.element
 }
 

@@ -7,6 +7,7 @@ import { JobsPanelDataInputsTable } from '../../elements/JobsPanelDataInputsTabl
 
 import { panelActions } from '../JobsPanel/panelReducer'
 import { comboboxSelectList } from './jobsPanelDataInputs.util'
+import { COMBOBOX_MATCHES } from '../../types'
 
 const JobsPanelDataInputsView = ({
   comboboxMatchesList,
@@ -72,7 +73,7 @@ const JobsPanelDataInputsView = ({
 }
 
 JobsPanelDataInputsView.propTypes = {
-  comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  comboboxMatchesList: COMBOBOX_MATCHES.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,

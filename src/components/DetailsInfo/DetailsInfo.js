@@ -9,7 +9,6 @@ import {
   initialState
 } from './detailsInfoReducer'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { detailsActions } from '../Details/detailsReducer'
 
 import DetailsInfoView from './DetailsInfoView'
 
@@ -18,10 +17,11 @@ import './detailsInfo.scss'
 const DetailsInfo = ({
   changes,
   content,
-  detailsDispatch,
   match,
   pageData,
-  selectedItem
+  selectedItem,
+  setChangesData,
+  setChangesCounter
 }) => {
   const [detailsInfoState, detailsInfoDispatch] = useReducer(
     detailsInfoReducer,
@@ -33,23 +33,17 @@ const DetailsInfo = ({
     event => {
       if (editItemRef.current && !editItemRef.current.contains(event.target)) {
         if (changes.counter === 0 && !isEveryObjectValueEmpty(changes.data)) {
-          detailsDispatch({
-            type: detailsActions.SET_CHANGES_DATA,
-            payload: {}
-          })
+          setChangesData({})
           detailsInfoDispatch({
             type: detailsInfoActions.SET_FIELDS_DATA,
             payload: {}
           })
         } else if (changes.data[detailsInfoState.editMode.field]) {
-          detailsDispatch({
-            type: detailsActions.SET_CHANGES_DATA,
-            payload: {
-              ...changes.data,
-              [detailsInfoState.editMode.field]:
-                detailsInfoState.fieldsData[detailsInfoState.editMode.field]
-                  .previousFieldValue
-            }
+          setChangesData({
+            ...changes.data,
+            [detailsInfoState.editMode.field]:
+              detailsInfoState.fieldsData[detailsInfoState.editMode.field]
+                .previousFieldValue
           })
         }
 
@@ -65,10 +59,10 @@ const DetailsInfo = ({
     [
       changes.counter,
       changes.data,
-      detailsDispatch,
       detailsInfoState.editMode.field,
       detailsInfoState.fieldsData,
-      editItemRef
+      editItemRef,
+      setChangesData
     ]
   )
 
@@ -136,8 +130,8 @@ const DetailsInfo = ({
           detailsInfoActions,
           detailsInfoDispatch,
           detailsInfoState,
-          detailsDispatch,
-          detailsActions
+          setChangesData,
+          setChangesCounter
         )
       }
       handleInfoItemClick={handleInfoItemClick}
@@ -152,7 +146,6 @@ const DetailsInfo = ({
 DetailsInfo.propTypes = {
   changes: PropTypes.shape({}).isRequired,
   content: PropTypes.shape({}).isRequired,
-  detailsDispatch: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired

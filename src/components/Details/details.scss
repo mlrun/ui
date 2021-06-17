@@ -232,12 +232,6 @@
       }
     }
 
-    .pop-up-dialog {
-      &__overlay {
-        position: absolute;
-      }
-    }
-
     &.pop-up-dialog-opened {
       overflow-y: hidden;
     }
@@ -245,6 +239,7 @@
     .chips {
       &-wrapper {
         flex-wrap: wrap;
+        width: 100%;
       }
     }
   }

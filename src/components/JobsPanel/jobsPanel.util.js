@@ -2,12 +2,6 @@ import { chain, isEmpty, unionBy } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import {
-  AZURE_STORAGE_INPUT_PATH_SCHEME,
-  GOOGLE_STORAGE_INPUT_PATH_SCHEME,
-  S3_INPUT_PATH_SCHEME,
-  V3IO_INPUT_PATH_SCHEME
-} from '../../constants'
 
 export const getDefaultData = functionParameters => {
   const parameters = functionParameters
@@ -31,20 +25,7 @@ export const getDefaultData = functionParameters => {
         pathType: input.path?.replace(/:\/\/.*$/g, '://') ?? ''
       }
 
-      if (
-        [
-          AZURE_STORAGE_INPUT_PATH_SCHEME,
-          GOOGLE_STORAGE_INPUT_PATH_SCHEME,
-          S3_INPUT_PATH_SCHEME,
-          V3IO_INPUT_PATH_SCHEME
-        ].includes(inputPath.pathType)
-      ) {
-        inputPath.url = input.path?.replace(/.*:\/\//g, '')
-        inputPath.value = ''
-      } else {
-        inputPath.value = input.path?.replace(/.*:\/\//g, '') ?? ''
-        inputPath.url = ''
-      }
+      inputPath.value = input.path?.replace(/.*:\/\//g, '') ?? ''
 
       return {
         doc: input.doc,
@@ -92,7 +73,27 @@ export const getEnvironmentVariables = selectedFunction => {
     .value()
 }
 
-export const getVolumeMounts = selectedFunction => {
+export const getNodeSelectors = selectedFunction => {
+  return chain(selectedFunction)
+    .map(func => {
+      return func.spec.node_selector ?? {}
+    })
+    .flatten()
+    .unionBy('key')
+    .map(selector => {
+      return Object.entries(selector)
+    })
+    .flatten()
+    .map(([key, value]) => {
+      return {
+        key,
+        value
+      }
+    })
+    .value()
+}
+
+export const getVolumeMounts = (selectedFunction, volumes) => {
   if (!selectedFunction.some(func => func.spec.volume_mounts)) {
     return []
   }
@@ -102,8 +103,13 @@ export const getVolumeMounts = selectedFunction => {
     .flatten()
     .unionBy('name')
     .map(volume_mounts => {
+      const currentVolume = volumes.find(
+        volume => volume.name === volume_mounts?.name
+      )
+
       return {
         data: {
+          type: getVolumeType(currentVolume),
           name: volume_mounts?.name,
           mountPath: volume_mounts?.mountPath
         },
@@ -164,9 +170,10 @@ export const getDefaultMethodAndVersion = (
     item => item.metadata.tag === 'latest'
   )?.spec.default_handler
 
-  const defaultVersion = !versionOptions.length
-    ? versionOptions[0].id
-    : versionOptions.find(version => version.id === 'latest').id
+  const defaultVersion =
+    versionOptions.length === 1
+      ? versionOptions[0].id
+      : versionOptions.find(version => version.id === 'latest').id
 
   return {
     defaultMethod,
@@ -179,22 +186,23 @@ export const generateTableData = (
   selectedFunction,
   panelDispatch,
   setNewJob,
-  stateLimits
+  stateLimits,
+  stateRequests
 ) => {
   const functionParameters = getParameters(selectedFunction, method)
   const [{ limits, requests }] = getResources(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
+  const node_selector = getNodeSelectors(selectedFunction)
 
-  if (
-    limits?.memory?.match(/[a-zA-Z]/) ||
-    requests?.memory?.match(/[a-zA-Z]/)
-  ) {
-    const limitsMemoryUnit = limits.memory.replace(/\d+/g, '') + 'B'
-    const requestsMemoryUnit = requests.memory.replace(/\d+/g, '') + 'B'
-
+  if (limits?.memory?.match(/[a-zA-Z]/)) {
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
-      payload: limitsMemoryUnit || requestsMemoryUnit
+      payload: `${limits.memory.replace(/\d+/g, '')}B`
+    })
+  } else if (requests?.memory?.match(/[a-zA-Z]/)) {
+    panelDispatch({
+      type: panelActions.SET_MEMORY_UNIT,
+      payload: `${requests.memory.replace(/\d+/g, '')}B`
     })
   } else if (limits?.memory?.length > 0 || requests?.memory?.length > 0) {
     panelDispatch({
@@ -203,7 +211,7 @@ export const generateTableData = (
     })
   }
 
-  if (limits?.cpu?.match(/m/) || requests?.cpu?.match(/m/)) {
+  if (limits?.cpu?.match?.(/m/) || requests?.cpu?.match?.(/m/)) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'millicpu'
@@ -217,8 +225,8 @@ export const generateTableData = (
 
   if (!isEmpty(functionParameters)) {
     const { parameters, dataInputs } = getDefaultData(functionParameters)
-    const volumeMounts = getVolumeMounts(selectedFunction)
     const volumes = getVolume(selectedFunction)
+    const volumeMounts = getVolumeMounts(selectedFunction, volumes)
 
     panelDispatch({
       type: panelActions.SET_TABLE_DATA,
@@ -233,22 +241,25 @@ export const generateTableData = (
             value: env.value ?? ''
           }
         })),
-        secretSources: []
+        secretSources: [],
+        node_selector
       }
     })
     setNewJob({
       inputs: parseDefaultDataInputsContent(dataInputs),
       parameters: parseDefaultContent(parameters),
-      volume_mounts: volumeMounts.length
-        ? volumeMounts.map(volumeMounts => volumeMounts.data)
-        : [],
+      volume_mounts: (volumeMounts ?? []).map(volumeMounts => ({
+        name: volumeMounts.data.name,
+        mountPath: volumeMounts.data.mountPath
+      })),
       volumes,
       environmentVariables,
-      secret_sources: []
+      secret_sources: [],
+      node_selector: parseDefaultNodeSelectorContent(node_selector)
     })
   }
 
-  if (limits) {
+  if (limits && !isEveryObjectValueEmpty(limits)) {
     panelDispatch({
       type: panelActions.SET_LIMITS,
       payload: {
@@ -258,10 +269,10 @@ export const generateTableData = (
     })
   }
 
-  if (requests) {
+  if (requests && !isEveryObjectValueEmpty(requests)) {
     panelDispatch({
       type: panelActions.SET_REQUESTS,
-      payload: requests
+      payload: { ...stateRequests, ...requests }
     })
   }
 }
@@ -285,20 +296,7 @@ const generateDefaultDataInputs = dataInputs => {
       pathType: value?.replace(/:\/\/.*$/g, '://') ?? ''
     }
 
-    if (
-      [
-        AZURE_STORAGE_INPUT_PATH_SCHEME,
-        GOOGLE_STORAGE_INPUT_PATH_SCHEME,
-        S3_INPUT_PATH_SCHEME,
-        V3IO_INPUT_PATH_SCHEME
-      ].includes(inputPath.pathType)
-    ) {
-      inputPath.url = value?.replace(/.*:\/\//g, '')
-      inputPath.value = ''
-    } else {
-      inputPath.value = value?.replace(/.*:\/\//g, '') ?? ''
-      inputPath.url = ''
-    }
+    inputPath.value = value?.replace(/.*:\/\//g, '') ?? ''
 
     return {
       isDefault: true,
@@ -359,16 +357,15 @@ export const generateTableDataFromDefaultData = (
     }
   )
 
-  if (
-    limits?.memory?.match(/[a-zA-Z]/) ||
-    requests?.memory?.match(/[a-zA-Z]/)
-  ) {
-    const limitsMemoryUnit = limits.memory.replace(/\d+/g, '') + 'B'
-    const requestsMemoryUnit = requests.memory.replace(/\d+/g, '') + 'B'
-
+  if (limits?.memory?.match(/[a-zA-Z]/)) {
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
-      payload: limitsMemoryUnit || requestsMemoryUnit
+      payload: `${limits.memory.replace(/\d+/g, '')}B`
+    })
+  } else if (requests?.memory?.match(/[a-zA-Z]/)) {
+    panelDispatch({
+      type: panelActions.SET_MEMORY_UNIT,
+      payload: `${requests.memory.replace(/\d+/g, '')}B`
     })
   } else if (limits?.memory?.length > 0 || requests?.memory?.length > 0) {
     panelDispatch({
@@ -377,7 +374,7 @@ export const generateTableDataFromDefaultData = (
     })
   }
 
-  if (limits?.cpu?.match(/m/) || requests?.cpu?.match(/m/)) {
+  if (limits?.cpu?.match?.(/m/) || requests?.cpu?.match?.(/m/)) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'millicpu'
@@ -403,18 +400,28 @@ export const generateTableDataFromDefaultData = (
             value: env.value ?? ''
           }
         })) ?? [],
-      secretSources: secrets
+      secretSources: secrets,
+      node_selector: Object.entries(
+        defaultData.function?.spec.node_selector ?? {}
+      ).map(([key, value]) => ({
+        key,
+        value
+      }))
     }
   })
   setNewJob({
-    inputs: parseDefaultDataInputsContent(dataInputs),
-    parameters: parseDefaultContent(parameters),
+    inputs: defaultData.task.spec.inputs ?? {},
+    parameters: defaultData.task.spec.parameters ?? {},
     volume_mounts: volumeMounts?.length
-      ? volumeMounts.map(volumeMounts => volumeMounts.data)
+      ? volumeMounts.map(volumeMounts => ({
+          name: volumeMounts.data.name,
+          mountPath: volumeMounts.data.mountPath
+        }))
       : [],
     volumes: defaultData.function?.spec.volumes ?? [],
     environmentVariables: defaultData.function?.spec.env ?? [],
-    secret_sources: defaultData.task.spec.secret_sources ?? []
+    secret_sources: defaultData.task.spec.secret_sources ?? [],
+    node_selector: defaultData.function?.spec.node_selector ?? {}
   })
 
   if (limits) {
@@ -451,11 +458,10 @@ export const generateRequestData = (
   isFunctionTemplate,
   defaultFunc
 ) => {
-  const func = defaultFunc
-    ? defaultFunc
-    : isFunctionTemplate
+  const func = isFunctionTemplate
     ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
-    : `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+    : defaultFunc ??
+      `${match.params.projectName}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
   const resources = {
     limits: {},
     requests: {}
@@ -477,6 +483,20 @@ export const generateRequestData = (
     }
   }
 
+  const taskSpec = {
+    ...jobsStore.newJob.task.spec,
+    function: func,
+    handler: panelState.currentFunctionInfo.method,
+    input_path: panelState.inputPath,
+    output_path: panelState.outputPath
+  }
+
+  if (jobsStore.newJob.task.spec.selector.result.length > 0) {
+    taskSpec.selector = `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
+  } else {
+    delete taskSpec.selector
+  }
+
   return {
     ...jobsStore.newJob,
     schedule: cronString,
@@ -494,14 +514,7 @@ export const generateRequestData = (
         project,
         labels
       },
-      spec: {
-        ...jobsStore.newJob.task.spec,
-        function: func,
-        handler: panelState.currentFunctionInfo.method,
-        input_path: panelState.inputPath,
-        output_path: panelState.outputPath,
-        selector: `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
-      }
+      spec: { ...taskSpec }
     }
   }
 }
@@ -510,8 +523,32 @@ export const parseDefaultDataInputsContent = inputs => {
   return inputs.reduce((prev, curr) => {
     return {
       ...prev,
-      [curr.data.name]:
-        curr.data.path.pathType + (curr.data.path.url || curr.data.path.value)
+      [curr.data.name]: `${curr.data.path.pathType}${curr.data.path.value}`
     }
   }, {})
+}
+
+export const parseDefaultNodeSelectorContent = nodeSelector => {
+  return nodeSelector.reduce((prev, curr) => {
+    return {
+      ...prev,
+      [curr.key]: curr.value
+    }
+  }, {})
+}
+
+export const isNameNotUnique = (newName, content) => {
+  return content.some(item => newName === item?.data.name && newName !== '')
+}
+
+const getVolumeType = volume => {
+  if (volume.configMap) {
+    return 'Config Map'
+  } else if (volume.persistentVolumeClaim) {
+    return 'PVC'
+  } else if (volume.secret) {
+    return 'Secret'
+  } else {
+    return 'V3IO'
+  }
 }

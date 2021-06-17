@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { isEqual } from 'lodash'
 
 import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
 import Select from '../../common/Select/Select'
@@ -7,8 +8,15 @@ import Button from '../../common/Button/Button'
 import EditorModal from '../../common/EditorModal/EditorModal'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
+import RadioButtons from '../../common/RadioButtons/RadioButtons'
 
-import { DEFAULT_ENTRY, entryOptions } from './functionsPanelCode.util'
+import {
+  DEFAULT_ENTRY,
+  entryOptions,
+  codeOptions,
+  NEW_IMAGE,
+  EXISTING_IMAGE
+} from './functionsPanelCode.util'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
@@ -18,12 +26,16 @@ const FunctionsPanelCodeView = ({
   data,
   editCode,
   functionsStore,
+  handleHandlerChange,
+  handleHandlerOnBlur,
+  imageType,
+  isHandlerValid,
   setData,
   setEditCode,
+  setImageType,
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
   setNewFunctionCommands,
-  setNewFunctionHandler,
   setNewFunctionImage,
   setNewFunctionSourceCode
 }) => {
@@ -58,51 +70,92 @@ const FunctionsPanelCodeView = ({
           )}
         </div>
         <div className="code__info">
-          <Input
-            floatingLabel
-            label="Handler"
-            onChange={handler => setData(state => ({ ...state, handler }))}
-            onBlur={() => setNewFunctionHandler(data.handler)}
-            type="text"
-            value={data.handler}
-            wrapperClassName="handler"
-          />
-          <Input
-            disabled={data.base_image.length > 0 || data.build_image.length > 0}
-            floatingLabel
-            label="Image name"
-            onChange={image => setData(state => ({ ...state, image }))}
-            onBlur={() => setNewFunctionImage(data.image)}
-            type="text"
-            value={data.image}
-            wrapperClassName="image-name"
-          />
-          <Input
-            disabled={data.image.length > 0}
-            floatingLabel
-            label="Build image"
-            onChange={build_image =>
-              setData(state => ({ ...state, build_image }))
-            }
-            onBlur={() => setNewFunctionBuildImage(data.build_image)}
-            type="text"
-            value={data.build_image}
-            wrapperClassName="build-image"
-          />
-          <Input
-            disabled={data.image.length > 0}
-            floatingLabel
-            label="Base image"
-            onChange={base_image =>
-              setData(state => ({ ...state, base_image }))
-            }
-            onBlur={() => setNewFunctionBaseImage(data.base_image)}
-            type="text"
-            value={data.base_image}
-            wrapperClassName="base-image"
-          />
+          <div className="code__handler">
+            <Input
+              floatingLabel
+              label="Handler"
+              onChange={handleHandlerChange}
+              onBlur={handleHandlerOnBlur}
+              required={!isHandlerValid}
+              requiredText="This field is required"
+              type="text"
+              value={data.handler}
+              wrapperClassName="handler"
+            />
+          </div>
+          <div className="code__existing-image">
+            <RadioButtons
+              className="radio-buttons__block"
+              elements={codeOptions}
+              onChangeCallback={setImageType}
+              selectedValue={imageType}
+            />
+            <div className="code__images-inputs">
+              <Input
+                className="input__wide"
+                disabled={imageType !== EXISTING_IMAGE}
+                floatingLabel
+                label="Image name"
+                onBlur={event => {
+                  if (
+                    event.target.value !== functionsStore.newFunction.spec.image
+                  ) {
+                    setNewFunctionImage(data.image)
+                  }
+                }}
+                onChange={image => setData(state => ({ ...state, image }))}
+                tip="The name of the function‘s container image"
+                type="text"
+                value={data.image}
+                wrapperClassName="image-name"
+              />
+              <Input
+                className="input__wide"
+                disabled={imageType !== NEW_IMAGE}
+                floatingLabel
+                label="Resulting Image"
+                onBlur={event => {
+                  if (
+                    event.target.value !==
+                    functionsStore.newFunction.spec.build.image
+                  ) {
+                    setNewFunctionBuildImage(data.build_image)
+                  }
+                }}
+                onChange={build_image =>
+                  setData(state => ({ ...state, build_image }))
+                }
+                tip="The name of the built container image"
+                type="text"
+                value={data.build_image}
+                wrapperClassName="build-image"
+              />
+              <Input
+                className="input__wide"
+                disabled={imageType !== NEW_IMAGE}
+                floatingLabel
+                label="Base image"
+                onBlur={event => {
+                  if (
+                    event.target.value !==
+                    functionsStore.newFunction.spec.build.base_image
+                  ) {
+                    setNewFunctionBaseImage(data.base_image)
+                  }
+                }}
+                onChange={base_image =>
+                  setData(state => ({ ...state, base_image }))
+                }
+                tip="The name of a base container image from which to build the function's processor image"
+                type="text"
+                value={data.base_image}
+                wrapperClassName="base-image"
+              />
+            </div>
+          </div>
         </div>
         <TextArea
+          disabled={imageType !== NEW_IMAGE}
           floatingLabel
           label="Build commands"
           onChange={commands =>
@@ -111,8 +164,16 @@ const FunctionsPanelCodeView = ({
               commands
             }))
           }
-          onBlur={() => {
-            setNewFunctionCommands(data.commands.split('\n'))
+          onBlur={event => {
+            if (
+              event.target.value.length > 0 &&
+              !isEqual(
+                event.target.value.split('\n'),
+                functionsStore.newFunction.spec.build.commands
+              )
+            ) {
+              setNewFunctionCommands(data.commands.split('\n'))
+            }
           }}
           type="text"
           value={data.commands}
@@ -139,12 +200,16 @@ FunctionsPanelCodeView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   editCode: PropTypes.bool.isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
+  handleHandlerChange: PropTypes.func.isRequired,
+  handleHandlerOnBlur: PropTypes.func.isRequired,
+  imageType: PropTypes.string.isRequired,
+  isHandlerValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
   setEditCode: PropTypes.func.isRequired,
+  setImageType: PropTypes.func.isRequired,
   setNewFunctionBaseImage: PropTypes.func.isRequired,
   setNewFunctionBuildImage: PropTypes.func.isRequired,
   setNewFunctionCommands: PropTypes.func.isRequired,
-  setNewFunctionHandler: PropTypes.func.isRequired,
   setNewFunctionImage: PropTypes.func.isRequired,
   setNewFunctionSourceCode: PropTypes.func.isRequired
 }

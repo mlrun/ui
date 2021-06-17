@@ -5,7 +5,6 @@ import { isEmpty, map } from 'lodash'
 
 import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
-import Notification from '../../common/Notification/Notification'
 
 import createJobsContent from '../../utils/createJobsContent'
 import { generateTableContent } from '../../utils/generateTableContent'
@@ -19,7 +18,7 @@ const Table = ({
   applyDetailsChanges,
   cancelRequest,
   content,
-  groupFilter,
+  filtersStore,
   groupedByName,
   groupedByWorkflow,
   handleCancel,
@@ -85,13 +84,13 @@ const Table = ({
       content,
       groupedByName,
       groupedByWorkflow,
-      groupFilter,
+      filtersStore.groupBy,
       pageData.page,
       match,
       tableStore.isTablePanelOpen
     )
 
-    if (groupFilter === 'name') {
+    if (filtersStore.groupBy === 'name') {
       setTableContent({
         content: generatedTableContent,
         groupLatestItem: generateGroupLatestItem(
@@ -102,7 +101,7 @@ const Table = ({
         groupWorkflowItems: [],
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
-    } else if (groupFilter === 'workflow') {
+    } else if (filtersStore.groupBy === 'workflow') {
       let groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
         workflows.find(workflow => workflow.id === workflowId)
       )
@@ -115,7 +114,7 @@ const Table = ({
           groupedByWorkflow
         )
       })
-    } else if (!groupFilter || groupFilter === 'none') {
+    } else if (filtersStore.groupBy === 'none') {
       setTableContent({
         groupLatestItem: [],
         groupWorkflowItems: [],
@@ -124,7 +123,6 @@ const Table = ({
     }
   }, [
     content,
-    groupFilter,
     groupedByWorkflow,
     groupedByName,
     match,
@@ -132,7 +130,8 @@ const Table = ({
     setLoading,
     workflows,
     pageData.mainRowItemsCount,
-    tableStore.isTablePanelOpen
+    tableStore.isTablePanelOpen,
+    filtersStore.groupBy
   ])
 
   return (
@@ -141,7 +140,7 @@ const Table = ({
         applyDetailsChanges={applyDetailsChanges}
         cancelRequest={cancelRequest}
         content={content}
-        groupFilter={groupFilter}
+        groupFilter={filtersStore.groupBy}
         groupLatestItem={
           isEmpty(tableContent.groupLatestItem)
             ? tableContent.groupWorkflowItems
@@ -164,7 +163,6 @@ const Table = ({
         toggleConvertToYaml={toggleConvertToYaml}
         workflows={workflows}
       />
-      <Notification />
       {previewArtifact.isPreview && (
         <PreviewModal item={previewArtifact.selectedItem} />
       )}
@@ -175,7 +173,6 @@ const Table = ({
 Table.defaultProps = {
   applyDetailsChanges: () => {},
   groupedByName: {},
-  groupFilter: null,
   groupLatestJob: [],
   handleExpandRow: () => {},
   selectedItem: {},
@@ -185,7 +182,6 @@ Table.defaultProps = {
 Table.propTypes = {
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  groupFilter: PropTypes.string,
   groupedByName: PropTypes.shape({}),
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
@@ -197,6 +193,12 @@ Table.propTypes = {
   toggleConvertToYaml: PropTypes.func.isRequired
 }
 
-export default connect(tableStore => ({ ...tableStore }), { ...tableActions })(
-  Table
-)
+export default connect(
+  ({ tableStore, filtersStore }) => ({
+    tableStore,
+    filtersStore
+  }),
+  {
+    ...tableActions
+  }
+)(Table)
