@@ -118,7 +118,7 @@ const initialState = {
       source: {
         attributes: {},
         key_field: '',
-        kind: 'http',
+        kind: 'csv',
         path: '',
         schedule: '',
         time_field: ''
@@ -153,7 +153,7 @@ export default (state = initialState, { type, payload }) => {
     case BUILD_FUNCTION_SUCCESS:
       return {
         ...state,
-        error: false,
+        error: null,
         loading: false
       }
     case CLOSE_ARTIFACT_PREVIEW:
@@ -224,7 +224,7 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_DATASETS_SUCCESS:
       return {
         ...state,
-        error: false,
+        error: null,
         dataSets: {
           ...state.dataSets,
           allData: payload
@@ -245,7 +245,7 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_FEATURE_SETS_SUCCESS:
       return {
         ...state,
-        error: false,
+        error: null,
         featureSets: payload,
         loading: false
       }
@@ -277,7 +277,7 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_FEATURE_VECTORS_SUCCESS:
       return {
         ...state,
-        error: false,
+        error: null,
         featureVectors: {
           ...state.featureVectors,
           allData: payload
@@ -312,7 +312,7 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_FEATURES_SUCCESS:
       return {
         ...state,
-        error: false,
+        error: null,
         features: {
           ...state.features,
           allData: payload
@@ -347,7 +347,7 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_FILES_SUCCESS:
       return {
         ...state,
-        error: false,
+        error: null,
         files: {
           ...state.files,
           allData: payload
@@ -368,7 +368,7 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_FUNCTIONS_SUCCESS:
       return {
         ...state,
-        error: false,
+        error: null,
         loading: false
       }
     case FETCH_MODEL_ENDPOINTS_BEGIN:

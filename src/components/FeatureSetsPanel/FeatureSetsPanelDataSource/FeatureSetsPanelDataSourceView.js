@@ -19,15 +19,13 @@ const FeatureSetsPanelDataSourceView = ({
   addNewItem,
   data,
   handleAddNewItem,
+  handleKindOnChange,
   handleUrlOnBlur,
   handleUrlOnChange,
   isAttributeNameValid,
   isUrlValid,
   setAddNewItem,
   setData,
-  setNewFeatureSetDataSourceKey,
-  setNewFeatureSetDataSourceKind,
-  setNewFeatureSetDataSourceTime,
   setShowSchedule,
   showSchedule,
   setNewFeatureSetSchedule
@@ -42,61 +40,22 @@ const FeatureSetsPanelDataSourceView = ({
             density="medium"
             floatingLabel
             label="Kind"
-            onClick={kind => {
-              setNewFeatureSetDataSourceKind(kind)
-              setData(state => ({
-                ...state,
-                kind
-              }))
-            }}
+            onClick={handleKindOnChange}
             options={kindOptions}
             selectedId={data.kind}
           />
           <Input
-            className="data-source__inputs-item data-source__inputs-item_url"
+            className="data-source__inputs-item"
             floatingLabel
             label="URL"
             onBlur={handleUrlOnBlur}
             onChange={handleUrlOnChange}
             required={!isUrlValid}
             requiredText="URL is required"
+            tip="For Parquet files the path could be either a file or a folder. For CSV it must be a file."
             type="text"
             value={data.url}
-            wrapperClassName="inputs-item-wrapper"
-          />
-          <Input
-            className="data-source__inputs-item"
-            floatingLabel
-            label="Key field"
-            onBlur={event => {
-              setNewFeatureSetDataSourceKey(event.target.value)
-            }}
-            onChange={key => {
-              setData(state => ({
-                ...state,
-                key
-              }))
-            }}
-            type="text"
-            value={data.key}
-            wrapperClassName="inputs-item-wrapper"
-          />
-          <Input
-            className="data-source__inputs-item"
-            floatingLabel
-            label="Time field"
-            onBlur={event => {
-              setNewFeatureSetDataSourceTime(event.target.value)
-            }}
-            onChange={time => {
-              setData(state => ({
-                ...state,
-                time
-              }))
-            }}
-            type="text"
-            value={data.time}
-            wrapperClassName="inputs-item-wrapper"
+            wrapperClassName="url"
           />
         </div>
         {false && ( // was: data.kind !== httpKind, disabling temporarily until backend supports scheduling
@@ -125,6 +84,10 @@ const FeatureSetsPanelDataSourceView = ({
             )}
           </div>
         )}
+        <p>
+          Users can add attributes to be used for various operations on the
+          source data.
+        </p>
         <FeatureSetsPanelDataSourceTable
           addNewItem={addNewItem}
           className="data-source__table"
@@ -161,15 +124,13 @@ FeatureSetsPanelDataSourceView.propTypes = {
   addNewItem: PropTypes.bool.isRequired,
   data: PropTypes.shape({}).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
+  handleKindOnChange: PropTypes.func.isRequired,
   handleUrlOnBlur: PropTypes.func.isRequired,
   handleUrlOnChange: PropTypes.func.isRequired,
   isAttributeNameValid: PropTypes.bool.isRequired,
   isUrlValid: PropTypes.bool.isRequired,
   setAddNewItem: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
-  setNewFeatureSetDataSourceKey: PropTypes.func.isRequired,
-  setNewFeatureSetDataSourceKind: PropTypes.func.isRequired,
-  setNewFeatureSetDataSourceTime: PropTypes.func.isRequired,
   setShowSchedule: PropTypes.func.isRequired,
   showSchedule: PropTypes.bool.isRequired,
   setNewFeatureSetSchedule: PropTypes.func.isRequired

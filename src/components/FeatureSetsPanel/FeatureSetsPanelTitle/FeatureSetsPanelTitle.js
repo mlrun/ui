@@ -7,6 +7,7 @@ import FeatureSetsPanelTitleView from './FeatureSetsPanelTitleView'
 import artifactsAction from '../../../actions/artifacts'
 
 const FeatureSetsPanelTitle = ({
+  artifactsStore,
   closePanel,
   isNameValid,
   setNameValid,
@@ -33,11 +34,11 @@ const FeatureSetsPanelTitle = ({
     }))
   }
 
-  const handleNameOnBlur = event => {
-    if (event.target.value.length === 0) {
+  const handleNameOnBlur = () => {
+    if (data.name.length === 0) {
       setNameValid(false)
-    } else {
-      setNewFeatureSetName(event.target.value)
+    } else if (data.name !== artifactsStore.newFeatureSet.metadata.name) {
+      setNewFeatureSetName(data.name)
     }
   }
 
