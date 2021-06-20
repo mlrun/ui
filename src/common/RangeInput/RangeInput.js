@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -20,8 +20,12 @@ const RangeInput = ({
   onChange,
   value
 }) => {
-  const [inputValue, setInputValue] = useState(value)
+  const [inputValue, setInputValue] = useState('')
   const rangeClassName = classNames('range', `range-${density}`)
+
+  useEffect(() => {
+    setInputValue(value)
+  }, [value])
 
   const handleIncrease = () => {
     if (inputValue >= max) return
