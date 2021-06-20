@@ -102,7 +102,7 @@ const ProjectView = React.forwardRef(
                   handleEditProject={handleEditProject}
                   handleOnChangeProject={handleOnChangeProject}
                   handleOnKeyDown={handleOnKeyDown}
-                  projectDescription={project.data.spec.description}
+                  projectDescription={project.data.spec.description ?? ''}
                   ref={ref}
                 />
                 <ProjectGoals
