@@ -26,7 +26,7 @@ const FeatureSetsPanelDataSource = ({
 
   const handleAddNewItem = attribute => {
     setNewFeatureSetDataSourceAttributes({
-      ...artifactsStore.newFeatureSet.spec.source.attribute,
+      ...artifactsStore.newFeatureSet.spec.source.attributes,
       [attribute.key]: attribute.value
     })
     setData(state => ({
@@ -37,7 +37,7 @@ const FeatureSetsPanelDataSource = ({
 
   const handleDeleteAttribute = (index, attribute) => {
     const storeAttributes = {
-      ...artifactsStore.newFeatureSet.spec.source.attribute
+      ...artifactsStore.newFeatureSet.spec.source.attributes
     }
 
     delete storeAttributes[attribute.key]
@@ -50,7 +50,7 @@ const FeatureSetsPanelDataSource = ({
 
   const handleEditAttribute = attribute => {
     const storeAttributes = {
-      ...artifactsStore.newFeatureSet.spec.source.attribute
+      ...artifactsStore.newFeatureSet.spec.source.attributes
     }
 
     if (attribute.newKey) {
@@ -88,22 +88,16 @@ const FeatureSetsPanelDataSource = ({
         kind === 'parquet'
           ? [
               {
-                data: {
-                  key: 'time_field',
-                  value: ''
-                }
+                key: 'time_field',
+                value: ''
               },
               {
-                data: {
-                  key: 'start_time',
-                  value: ''
-                }
+                key: 'start_time',
+                value: ''
               },
               {
-                data: {
-                  key: 'end_time',
-                  value: ''
-                }
+                key: 'end_time',
+                value: ''
               }
             ]
           : []
