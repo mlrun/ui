@@ -8,10 +8,8 @@ import FeatureSetsPanelTitle from './FeatureSetsPanelTitle/FeatureSetsPanelTitle
 import FeatureSetsPanelDataSource from './FeatureSetsPanelDataSource/FeatureSetsPanelDataSource'
 import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSchema'
 import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSetsPanelTargetStore'
-import FeatureSetsPanelTransformations from './FeatureSetsPanelTransformations/FeatureSetsPanelTransformations'
 import Loader from '../../common/Loader/Loader'
-
-import { TRANSFORMATIONS_DEFAULT_VALUE } from './featureSetsPanel.util'
+import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -19,21 +17,40 @@ import './featureSetsPanel.scss'
 
 const FeatureSetsPanelView = ({
   closePanel,
+  confirmDialog,
   error,
   handleSave,
+  handleSaveOnClick,
   isNameValid,
+  isOfflineTargetsPathValid,
+  isOnlineTargetsPathValid,
+  isOtherTargetsPathValid,
   isUrlValid,
   loading,
   removeArtifactsError,
+  setConfirmDialog,
   setNameValid,
-  setUrlValid,
-  setTransformationsValue,
-  transformationsValue
+  setOfflineTargetsPathValid,
+  setOnlineTargetsPathValid,
+  setOtherTargetsPathValid,
+  setUrlValid
 }) => {
   return (
     <div className="new-item-side-panel-container">
       <div className="feature-set-panel new-item-side-panel">
         {loading && <Loader />}
+        {confirmDialog && (
+          <PopUpDialog closePopUp={() => setConfirmDialog(null)}>
+            <div>
+              Note that data will be ingested to the feature set without any
+              transformation and therefore you won't be able to add a
+              transformation graph unless you delete the data first.
+            </div>
+            <div className="pop-up-dialog__footer-container">
+              <Button variant="primary" label="Okay" onClick={handleSave} />
+            </div>
+          </PopUpDialog>
+        )}
         <FeatureSetsPanelTitle
           closePanel={closePanel}
           isNameValid={isNameValid}
@@ -65,12 +82,15 @@ const FeatureSetsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FeatureSetsPanelTargetStore />
+            <FeatureSetsPanelTargetStore
+              isOfflineTargetsPathValid={isOfflineTargetsPathValid}
+              isOnlineTargetsPathValid={isOnlineTargetsPathValid}
+              isOtherTargetsPathValid={isOtherTargetsPathValid}
+              setOfflineTargetsPathValid={setOfflineTargetsPathValid}
+              setOnlineTargetsPathValid={setOnlineTargetsPathValid}
+              setOtherTargetsPathValid={setOtherTargetsPathValid}
+            />
           </Accordion>
-          <FeatureSetsPanelTransformations
-            setTransformationsValue={setTransformationsValue}
-            transformationsValue={transformationsValue}
-          />
           <div className="new-item-side-panel__buttons-container">
             {error && (
               <ErrorMessage
@@ -91,16 +111,14 @@ const FeatureSetsPanelView = ({
             <Button
               variant="secondary"
               label="Save"
-              onClick={() => handleSave(false)}
+              onClick={() => handleSaveOnClick(false)}
             />
-            {transformationsValue === TRANSFORMATIONS_DEFAULT_VALUE && (
-              <Button
-                className="btn_start-ingestion"
-                label="Save and ingest"
-                onClick={() => handleSave(true)}
-                variant="secondary"
-              />
-            )}
+            <Button
+              className="btn_start-ingestion"
+              label="Save and ingest"
+              onClick={() => handleSaveOnClick(true)}
+              variant="secondary"
+            />
           </div>
         </div>
       </div>
@@ -109,22 +127,30 @@ const FeatureSetsPanelView = ({
 }
 
 FeatureSetsPanelView.defaultProps = {
+  confirmDialog: null,
   defaultData: null,
   error: false
 }
 
 FeatureSetsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
+  confirmDialog: PropTypes.shape({ action: PropTypes.string.isRequired }),
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   handleSave: PropTypes.func.isRequired,
+  handleSaveOnClick: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
+  isOfflineTargetsPathValid: PropTypes.bool.isRequired,
+  isOnlineTargetsPathValid: PropTypes.bool.isRequired,
+  isOtherTargetsPathValid: PropTypes.bool.isRequired,
   isUrlValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   removeArtifactsError: PropTypes.func.isRequired,
+  setConfirmDialog: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired,
-  setUrlValid: PropTypes.func.isRequired,
-  setTransformationsValue: PropTypes.func.isRequired,
-  transformationsValue: PropTypes.string.isRequired
+  setOfflineTargetsPathValid: PropTypes.func.isRequired,
+  setOnlineTargetsPathValid: PropTypes.func.isRequired,
+  setOtherTargetsPathValid: PropTypes.func.isRequired,
+  setUrlValid: PropTypes.func.isRequired
 }
 
 export default FeatureSetsPanelView

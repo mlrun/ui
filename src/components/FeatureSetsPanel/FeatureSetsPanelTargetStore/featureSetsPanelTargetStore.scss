@@ -1,13 +1,19 @@
 @import '../../../scss/colors';
 
 .target-store {
-  &__checkbox-container {
+  &__item {
     display: flex;
     width: 100%;
-    margin-bottom: 25px;
+  }
+
+  &__checkbox-container {
+    display: flex;
+    width: 20%;
+    height: 48px;
+    margin-bottom: 15px;
 
     .checkbox {
-      margin-right: 50px;
+      margin-right: 10px;
 
       .unchecked {
         path {
@@ -19,13 +25,16 @@
 
   &__inputs-container {
     display: flex;
-    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 80%;
 
     .select {
       display: flex;
       flex: 0.25;
       min-width: 150px;
       margin-right: 10px;
+      margin-bottom: 5px;
     }
 
     .input {
@@ -33,11 +42,24 @@
 
       &-wrapper {
         &.url {
-          display: flex;
-          flex: 1;
-          height: 50px;
+          flex: unset;
+          width: 300px;
+          margin-right: 5px;
+          margin-bottom: 5px;
+        }
+
+        &.offline-path,
+        &.partition-cols {
+          flex: unset;
+          width: 300px;
+          margin: 5px 5px 5px 0;
         }
       }
+    }
+
+    .range {
+      width: 225px;
+      margin: 5px 5px 5px 0;
     }
   }
 }

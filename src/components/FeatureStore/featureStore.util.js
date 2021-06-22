@@ -383,7 +383,10 @@ export const handleFetchData = async (
 }
 
 export const navigateToDetailsPane = (
-  artifactsStore,
+  featureSets,
+  features,
+  dataSets,
+  featureVectors,
   history,
   match,
   setSelectedItem
@@ -391,33 +394,27 @@ export const navigateToDetailsPane = (
   const { name, tag, iter } = match.params
   let artifacts = []
 
-  if (
-    match.params.pageTab === FEATURE_SETS_TAB &&
-    artifactsStore.featureSets.length > 0
-  ) {
-    artifacts = parseFeatureStoreDataRequest(artifactsStore.featureSets)
-  } else if (
-    match.params.pageTab === FEATURES_TAB &&
-    artifactsStore.features.allData.length > 0
-  ) {
-    artifacts = artifactsStore.features.allData
+  if (match.params.pageTab === FEATURE_SETS_TAB && featureSets.length > 0) {
+    artifacts = parseFeatureStoreDataRequest(featureSets)
+  } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
+    artifacts = features
   } else if (
     match.params.pageTab === DATASETS_TAB &&
-    artifactsStore.dataSets.allData.length > 0
+    dataSets.allData.length > 0
   ) {
-    if (artifactsStore.dataSets.selectedRowData.content[name]) {
-      artifacts = artifactsStore.dataSets.selectedRowData.content[name]
+    if (dataSets.selectedRowData.content[name]) {
+      artifacts = dataSets.selectedRowData.content[name]
     } else {
-      artifacts = artifactsStore.dataSets.allData
+      artifacts = dataSets.allData
     }
   } else if (
     match.params.pageTab === FEATURE_VECTORS_TAB &&
-    artifactsStore.featureVectors.allData.length > 0
+    featureVectors.allData.length > 0
   ) {
-    if (artifactsStore.featureVectors.selectedRowData.content[name]) {
-      artifacts = artifactsStore.featureVectors.selectedRowData.content[name]
+    if (featureVectors.selectedRowData.content[name]) {
+      artifacts = featureVectors.selectedRowData.content[name]
     } else {
-      artifacts = artifactsStore.featureVectors.allData
+      artifacts = featureVectors.allData
     }
   }
 
@@ -456,7 +453,8 @@ export const navigateToDetailsPane = (
       ) {
         selectedArtifact.usage_example = generateUsageSnippets(
           match.params,
-          artifactsStore
+          featureSets,
+          featureVectors
         )
       }
 

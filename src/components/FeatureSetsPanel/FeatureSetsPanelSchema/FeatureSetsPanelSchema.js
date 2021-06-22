@@ -11,69 +11,33 @@ const FeatureSetsPanelSchema = ({
   setNewFeatureSetSchemaTimestampKey
 }) => {
   const [data, setData] = useState({
-    entities: [],
-    newEntity: {
-      name: '',
-      value_type: 'str'
-    },
+    entities: '',
     timestamp_key: ''
   })
-  const [isEntityNameValid, setEntityNameValid] = useState(true)
-  const [addNewItem, setAddNewItem] = useState(false)
 
-  const handleAddNewItem = () => {
-    if (data.newEntity.name.length > 0 && nameNotValid(data.newEntity.name)) {
-      return setEntityNameValid(false)
-    } else if (data.newEntity.name.length > 0) {
-      setNewFeatureSetDataSourceEntities([
-        ...artifactsStore.newFeatureSet.spec.entities,
-        { ...data.newEntity }
-      ])
-      setData(state => ({
-        ...state,
-        entities: [
-          ...state.entities,
-          {
-            data: state.newEntity
-          }
-        ]
-      }))
+  const handleEntitiesOnBlur = () => {
+    const entitiesArray = data.entities
+      .split(',')
+      .map(entity => ({ name: entity, value_type: 'str' }))
+
+    if (
+      data.entities.length > 0 &&
+      JSON.stringify(entitiesArray) !==
+        JSON.stringify(artifactsStore.newFeatureSet.spec.entities)
+    ) {
+      setNewFeatureSetDataSourceEntities(entitiesArray)
+    } else if (
+      data.entities.length === 0 &&
+      artifactsStore.newFeatureSet.spec.entities.length > 0
+    ) {
+      setNewFeatureSetDataSourceEntities([])
     }
-
-    setData(state => ({
-      ...state,
-      newEntity: { name: '', value_type: 'str' }
-    }))
-    setAddNewItem(false)
-    setEntityNameValid(true)
-  }
-
-  const handleDeleteEntity = selectedEntity => {
-    setNewFeatureSetDataSourceEntities(
-      artifactsStore.newFeatureSet.spec.entities.filter(
-        entity => entity.name !== selectedEntity.data.name
-      )
-    )
-    setData(state => ({
-      ...state,
-      entities: state.entities.filter(
-        entity => entity.data.name !== selectedEntity.data.name
-      )
-    }))
-  }
-
-  const nameNotValid = name => {
-    return data.entities.some(entity => entity.data.name === name)
   }
 
   return (
     <FeatureSetsPanelSchemaView
-      addNewItem={addNewItem}
       data={data}
-      isEntityNameValid={isEntityNameValid}
-      handleAddNewItem={handleAddNewItem}
-      handleDeleteEntity={handleDeleteEntity}
-      setAddNewItem={setAddNewItem}
+      handleEntitiesOnBlur={handleEntitiesOnBlur}
       setData={setData}
       setNewFeatureSetSchemaTimestampKey={setNewFeatureSetSchemaTimestampKey}
     />

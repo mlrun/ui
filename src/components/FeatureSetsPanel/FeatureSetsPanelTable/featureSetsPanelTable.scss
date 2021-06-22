@@ -1,7 +1,0 @@
-@import '../../../scss/colors';
-@import '../../../scss/borders';
-@import '../../../scss/mixins';
-
-.feature-set-panel__table {
-  @include newItemSidePanelTable;
-}
