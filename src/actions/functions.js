@@ -34,7 +34,8 @@ import {
   DEPLOY_FUNCTION_SUCCESS,
   SET_NEW_FUNCTION_SECRETS,
   SET_NEW_FUNCTION_BUILD_IMAGE,
-  SET_NEW_FUNCTION_PROJECT
+  SET_NEW_FUNCTION_PROJECT,
+  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -182,6 +183,9 @@ const functionsActions = {
   }),
   removeNewFunction: () => ({
     type: REMOVE_NEW_FUNCTION
+  }),
+  resetNewFunctionCodeCustomImage: () => ({
+    type: RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
   }),
   setFunctionsTemplates: templates => ({
     type: SET_FUNCTIONS_TEMPLATES,

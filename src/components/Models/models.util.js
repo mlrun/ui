@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
@@ -42,7 +44,30 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Accuracy', id: 'accuracy' },
   { label: 'Stream path', id: 'stream_path' }
 ]
-export const modelsDetailsMenu = ['overview', 'preview']
+export const generateModelsDetailsMenu = selectedModel => {
+  const modelsDetailsMenu = [
+    {
+      header: 'overview',
+      visible: true
+    },
+    {
+      header: 'preview',
+      visible: true
+    },
+    {
+      header: 'features',
+      visible: Boolean(selectedModel.item?.feature_vector)
+    },
+    {
+      header: 'statistics',
+      visible: Boolean(selectedModel.item?.feature_vector)
+    }
+  ]
+
+  return selectedModel.item
+    ? modelsDetailsMenu.filter(item => item.visible).map(item => item.header)
+    : []
+}
 export const modelEndpointsDetailsMenu = [
   'overview',
   'drift analysis',
@@ -82,6 +107,16 @@ export const modelsTableHeaders = [
   {
     header: 'Metrics',
     class: 'artifacts_big'
+  },
+  {
+    header: (
+      <span>
+        <span>Framework &</span>
+        <br />
+        <span>Algorithm</span>
+      </span>
+    ),
+    class: 'artifacts_small'
   },
   {
     header: '',
@@ -184,6 +219,7 @@ export const handleFetchData = async (
 }
 
 export const generatePageData = (
+  selectedModel,
   pageTab,
   handleDeployModel,
   handleRequestOnExpand,
@@ -195,7 +231,7 @@ export const generatePageData = (
   }
 
   if (pageTab === MODELS_TAB) {
-    data.detailsMenu = modelsDetailsMenu
+    data.detailsMenu = generateModelsDetailsMenu(selectedModel)
     data.filters = modelsFilters
     data.registerArtifactDialogTitle = registerArtifactDialogTitle
     data.tableHeaders = modelsTableHeaders
@@ -268,4 +304,12 @@ export const checkForSelectedModelEndpoint = (
     )
     setSelectedModel({ item: searchItem })
   }
+}
+
+export const getFeatureVectorData = uri => {
+  const separator = uri?.indexOf('@') > 0 ? '@' : ':'
+  const name = uri.slice(uri.lastIndexOf('/') + 1, uri.lastIndexOf(separator))
+  const tag = uri.slice(uri.lastIndexOf(separator) + 1)
+
+  return { tag, name }
 }

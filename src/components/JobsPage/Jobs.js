@@ -9,14 +9,22 @@ import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import Button from '../../common/Button/Button'
 
+import filtersActions from '../../actions/filters'
 import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import projectActions from '../../actions/projects'
 import detailsActions from '../../actions/details'
+
 import { generatePageData } from './jobsData'
 import { generateKeyValues, parseKeyValues } from '../../utils'
-import { MONITOR_TAB, SCHEDULE_TAB, INIT_GROUP_FILTER } from '../../constants'
-import filtersActions from '../../actions/filters'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+
+import {
+  MONITOR_TAB,
+  SCHEDULE_TAB,
+  INIT_GROUP_FILTER,
+  JOBS_PAGE
+} from '../../constants'
 
 const Jobs = ({
   abortJob,
@@ -139,7 +147,8 @@ const Jobs = ({
             env: functionData?.spec.env ?? [],
             resources: functionData?.spec.resources,
             volume_mounts: functionData?.spec.volume_mounts ?? [],
-            volumes: functionData?.spec.volumes ?? []
+            volumes: functionData?.spec.volumes ?? [],
+            node_selector: functionData?.spec.node_selector ?? {}
           }
         },
         schedule: null,
@@ -295,6 +304,12 @@ const Jobs = ({
     removePods,
     selectedJob
   ])
+
+  useEffect(() => {
+    if (match.params.jobId && pageData.detailsMenu.length > 0) {
+      isDetailsTabExists(JOBS_PAGE, match.params, pageData.detailsMenu, history)
+    }
+  }, [history, match.params, pageData.detailsMenu])
 
   useEffect(() => {
     refreshJobs()

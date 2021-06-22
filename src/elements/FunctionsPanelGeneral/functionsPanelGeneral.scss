@@ -47,12 +47,6 @@
       padding: 0 15px;
       border: $primaryBorder;
       border-radius: 4px;
-
-      .chip-block {
-        .tooltip-wrapper {
-          max-width: initial;
-        }
-      }
     }
 
     &-text {
@@ -65,33 +59,13 @@
     &-wrapper {
       display: flex;
       flex-wrap: wrap;
+      width: 650px;
 
       .chips-wrapper {
         flex-wrap: wrap;
 
         .chip_short {
-          max-width: 200px;
-          color: $primary;
           cursor: pointer;
-        }
-      }
-    }
-
-    &-item {
-      &:hover {
-        color: $white;
-        background-color: $amethyst;
-
-        .chip_short {
-          color: $white;
-        }
-
-        .item-icon-close {
-          svg {
-            path {
-              fill: $white;
-            }
-          }
         }
       }
     }

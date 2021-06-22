@@ -276,7 +276,7 @@ Feature: Feature Store Page
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display "Input_Hint"."Feature_Set_Name_Hint"
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
         # Then verify input to tooltip regex rules
-        Then verify "Version_Input" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
+        # Then verify "Version_Input" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "URL_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."URL_Field_Require"
         Then verify "Kind_Dropdown" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Kind_Options"
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -298,7 +298,7 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Checkbox" element should be checked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Other_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "Other_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -388,3 +388,60 @@ Feature: Feature Store Page
         Then verify values in "Schema_Attributes_Table" table in "Schema_Accordion" on "New_Feature_Set" wizard
             | entity_name |
             |   entity2   |
+
+    @demo_mode
+    Scenario: Save new Feature Store Feature Set new item wizard
+        * create "automation-test-name3" MLRun Project with code 200
+        Given open url
+        And wait load page
+        And click on cell with value "automation-test-name3" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
+        And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And turn on demo mode
+        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "demo_feature_set" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then type value "0.0.1" to "Version_Input" field on "New_Feature_Set" wizard
+        Then type value "Some demo description" to "Description_Input" field on "New_Feature_Set" wizard
+        When add rows to "Labels_Table" table on "New_Feature_Set" wizard
+            | key_input | value_input |
+            |    key1   |    value1   |
+            |    key2   |    value2   |
+            |    key3   |    value3   |
+        Then verify values in "Labels_Table" table on "New_Feature_Set" wizard
+            |     label    |
+            | key1: value1 |
+            | key2: value2 |
+            | key3: value3 |
+        Then type value "Some demo description" to "URL_Input" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When add rows to "Attributes_Table" table in "Data_Source_Accordion" on "New_Feature_Set" wizard
+            | attribute_name_input | value_input |
+            |      attribute1      |    value1   |
+            |      attribute2      |    value2   |
+            |      attribute3      |    value3   |
+        Then verify values in "Attributes_Table" table in "Data_Source_Accordion" on "New_Feature_Set" wizard
+            | attribute_name | value  |
+            |   attribute1   | value1 |
+            |   attribute2   | value2 |
+            |   attribute3   | value3 |
+        When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When add rows to "Schema_Attributes_Table" table in "Schema_Accordion" on "New_Feature_Set" wizard
+            | entity_name_input |
+            |      entity1      |
+            |      entity2      |
+            |      entity3      |
+        Then verify values in "Schema_Attributes_Table" table in "Schema_Accordion" on "New_Feature_Set" wizard
+            | entity_name |
+            |   entity1   |
+            |   entity2   |
+            |   entity3   |
+        When collapse "Schema_Accordion" on "New_Feature_Set" wizard
+        When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Save_Batton" element on "New_Feature_Set" wizard
+        Then click on "Cross_Close_Button" element on "Features_Info_Pane" wizard
+        Then verify values in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+            |       name       |      description      |
+            | demo_feature_set | Some demo description |
+        And remove "automation-test-name3" MLRun Project with code 204

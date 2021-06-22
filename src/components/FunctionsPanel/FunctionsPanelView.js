@@ -72,7 +72,7 @@ const FunctionsPanelView = ({
             <FunctionsPanelEnvironmentVariables />
           </Accordion>
           <Accordion
-            accordionClassName="new-item-side-panel__accordion"
+            accordionClassName="new-item-side-panel__accordion hidden"
             icon={<Arrow />}
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault

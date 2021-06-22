@@ -50,8 +50,6 @@ const JobsPanel = ({
   setNewJobEnvironmentVariables,
   setNewJobInputs,
   setNewJobSecretSources,
-  setNewJobVolumeMounts,
-  setNewJobVolumes,
   setNotification,
   withSaveChanges
 }) => {
@@ -362,8 +360,6 @@ const JobsPanel = ({
       setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobInputs={setNewJobInputs}
       setNewJobSecretSources={setNewJobSecretSources}
-      setNewJobVolumeMounts={setNewJobVolumeMounts}
-      setNewJobVolumes={setNewJobVolumes}
       setOpenScheduleJob={setOpenScheduleJob}
       withSaveChanges={withSaveChanges}
     />

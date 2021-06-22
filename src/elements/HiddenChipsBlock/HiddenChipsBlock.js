@@ -8,12 +8,14 @@ import Chip from '../../common/Chip/Chip'
 
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import { getFirstScrollableParent } from '../../utils/getFirstScrollableParent'
+import { CHIP_OPTIONS } from '../../types'
 
 import './hiddenChipsBlock.scss'
 
 const HiddenChipsBlock = ({
   chipIndex,
   chips,
+  chipOptions,
   className,
   editConfig,
   handleEditChip,
@@ -88,8 +90,9 @@ const HiddenChipsBlock = ({
             }
           >
             <Chip
-              chipIndex={index + chipIndex}
               chip={element}
+              chipIndex={`${index}${chipIndex}`}
+              chipOptions={chipOptions}
               className={className}
               editConfig={editConfig}
               handleEditChip={handleEditChip}
@@ -97,6 +100,7 @@ const HiddenChipsBlock = ({
               handleRemoveChip={handleRemoveChip}
               hiddenChips
               isEditMode={isEditMode}
+              ref={hiddenRef}
               setEditConfig={setEditConfig}
             />
           </Tooltip>
@@ -120,6 +124,7 @@ HiddenChipsBlock.defaultProps = {
 HiddenChipsBlock.propTypes = {
   className: PropTypes.string,
   chips: PropTypes.arrayOf(PropTypes.shape({})),
+  chipOptions: CHIP_OPTIONS.isRequired,
   chipIndex: PropTypes.number,
   editConfig: PropTypes.shape({}),
   handleEditChip: PropTypes.func,

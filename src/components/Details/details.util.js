@@ -235,12 +235,15 @@ export const generateFunctionsContent = selectedItem => ({
 export const renderContent = (
   match,
   detailsState,
-  detailsDispatch,
   selectedItem,
   pageData,
   handlePreview,
   detailsStore,
-  handleEditInput
+  handleEditInput,
+  setChanges,
+  setChangesData,
+  setChangesCounter,
+  setIterationOption
 ) => {
   switch (match.params.tab?.toUpperCase()) {
     case DETAILS_OVERVIEW_TAB:
@@ -248,10 +251,11 @@ export const renderContent = (
         <DetailsInfo
           changes={detailsState.changes}
           content={detailsState.infoContent}
-          detailsDispatch={detailsDispatch}
           match={match}
           pageData={pageData}
           selectedItem={selectedItem}
+          setChangesData={setChangesData}
+          setChangesCounter={setChangesCounter}
         />
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
@@ -269,10 +273,10 @@ export const renderContent = (
     case DETAILS_ARTIFACTS_TAB:
       return (
         <DetailsArtifacts
-          detailsDispatch={detailsDispatch}
           iteration={detailsState.iteration}
           match={match}
           selectedItem={selectedItem}
+          setIterationOption={setIterationOption}
         />
       )
     case DETAILS_RESULTS_TAB:
@@ -284,10 +288,17 @@ export const renderContent = (
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
     case DETAILS_RETURNED_FEATURES_TAB:
-      return selectedItem.schema ||
-        selectedItem.entities ||
-        selectedItem.features ? (
-        <DetailsMetadata selectedItem={selectedItem} />
+      return detailsStore.modelFeatureVectorData.features ??
+        (selectedItem.schema ||
+          selectedItem.entities ||
+          selectedItem.features) ? (
+        <DetailsMetadata
+          selectedItem={
+            detailsStore.modelFeatureVectorData.features
+              ? detailsStore.modelFeatureVectorData
+              : selectedItem
+          }
+        />
       ) : null
     case DETAILS_TRANSFORMATIONS_TAB:
       return <DetailsTransformations selectedItem={selectedItem} />
@@ -299,18 +310,28 @@ export const renderContent = (
         return <DetailsAnalysis artifact={selectedItem} />
       } else return null
     case DETAILS_STATISTICS_TAB:
-      if (selectedItem.stats) {
-        return <DetailsStatistics selectedItem={selectedItem} />
+      if (detailsStore.modelFeatureVectorData.stats || selectedItem.stats) {
+        return (
+          <DetailsStatistics
+            selectedItem={
+              detailsStore.modelFeatureVectorData.stats
+                ? detailsStore.modelFeatureVectorData
+                : selectedItem
+            }
+          />
+        )
       } else return null
     case DETAILS_REQUESTED_FEATURES_TAB:
       return (
         <DetailsRequestedFeatures
           changes={detailsState.changes}
-          detailsDispatch={detailsDispatch}
           detailsState={detailsState}
           match={match}
           selectedItem={selectedItem}
           handleEditInput={(value, field) => handleEditInput(value, field)}
+          setChanges={setChanges}
+          setChangesData={setChangesData}
+          setChangesCounter={setChangesCounter}
         />
       )
     default:
@@ -400,8 +421,8 @@ export const handleFinishEdit = (
   detailsTabActions,
   detailsTabDispatch,
   detailsTabState,
-  detailsDispatch,
-  detailsActions
+  setChangesData,
+  setChangesCounter
 ) => {
   detailsTabDispatch({
     type: detailsTabActions.SET_EDIT_MODE,
@@ -423,22 +444,13 @@ export const handleFinishEdit = (
     delete fieldsData[field]
     delete changesData[field]
 
-    detailsDispatch({
-      type: detailsActions.SET_CHANGES_COUNTER,
-      payload: fieldsData.length || 0
-    })
+    setChangesCounter(fieldsData.length || 0)
     detailsTabDispatch({
       type: detailsTabState.SET_FIELDS_DATA,
       payload: { ...fieldsData }
     })
-    detailsDispatch({
-      type: detailsActions.SET_CHANGES_DATA,
-      payload: { ...changesData }
-    })
+    setChangesData({ ...changesData })
   } else {
-    detailsDispatch({
-      type: detailsActions.SET_CHANGES_COUNTER,
-      payload: Object.keys(changes.data).length
-    })
+    setChangesCounter(Object.keys(changes.data).length)
   }
 }

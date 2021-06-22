@@ -179,6 +179,16 @@ const createModelsRowData = (artifact, project) => {
       class: 'artifacts_big',
       type: 'metrics'
     },
+    frameWorkAndAlgorithm: {
+      value: (
+        <span>
+          <span>{artifact.framework}</span>
+          <br />
+          <span>{artifact.algorithm}</span>
+        </span>
+      ),
+      class: 'artifacts_small'
+    },
     version: {
       value: artifact.tag,
       class: 'artifacts_small',
@@ -536,7 +546,7 @@ const createFeaturesRowData = (artifact, isTablePanelOpen) => {
       class: 'artifacts_extra-small'
     },
     entity: {
-      value: artifact.spec?.entities[0]?.name,
+      value: artifact.spec?.entities?.[0]?.name,
       class: 'artifacts_small'
     },
     description: {

@@ -10,6 +10,7 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import Input from '../../common/Input/Input'
+import { CHIP_OPTIONS } from '../../types'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
@@ -18,6 +19,7 @@ const DetailsInfoItem = React.forwardRef(
   (
     {
       chipsClassName,
+      chipOptions,
       chipsData,
       currentField,
       editableFieldType,
@@ -47,17 +49,18 @@ const DetailsInfoItem = React.forwardRef(
         )
       } else if (editableFieldType === 'chips') {
         return (
-          <div className="details-item__data">
+          <div className="details-item__data details-item__data-chips">
             <ChipCell
               addChip={(chip, chips) => item.onAdd(chip, chips, currentField)}
-              removeChip={chips => item.handleDelete(chips, currentField)}
-              elements={chipsData.chips}
+              chipOptions={chipOptions}
               className={`details-item__${chipsClassName}`}
               delimiter={chipsData.delimiter}
-              isEditMode={true}
               editChip={chips => {
                 item.onChange(chips, currentField)
               }}
+              elements={chipsData.chips}
+              isEditMode={true}
+              removeChip={chips => item.handleDelete(chips, currentField)}
             />
             <Checkmark
               className="details-item__input-btn"
@@ -70,12 +73,14 @@ const DetailsInfoItem = React.forwardRef(
       return (
         <div className="details-item__data">
           <ChipCell
-            elements={chipsData.chips}
+            chipOptions={chipOptions}
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
+            elements={chipsData.chips}
             onClick={() =>
               onClick(currentField, item?.editModeType, chipsData.chips)
             }
+            visibleChipsMaxLength="all"
           />
         </div>
       )
@@ -205,6 +210,7 @@ DetailsInfoItem.propTypes = {
     chips: PropTypes.arrayOf(PropTypes.string),
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),
+  chipOptions: CHIP_OPTIONS.isRequired,
   currentField: PropTypes.string,
   editableFieldType: PropTypes.string,
   func: PropTypes.string,

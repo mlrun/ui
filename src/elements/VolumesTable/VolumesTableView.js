@@ -34,11 +34,18 @@ const VolumesTableView = ({
 }) => {
   const volumeTypeNameLabel =
     newVolume.type === 'V3IO'
-      ? 'Container'
+      ? {
+          label: 'Container',
+          tip: 'The name of the data container that contains the data'
+        }
       : newVolume.type === 'PVC'
-      ? 'Claim name'
+      ? {
+          label: 'Claim name'
+        }
       : newVolume.type.length > 0
-      ? `${newVolume.type} name`
+      ? {
+          label: `${newVolume.type} name`
+        }
       : ''
   const tableClassNames = classnames(
     'new-item-side-panel__table',
@@ -118,6 +125,16 @@ const VolumesTableView = ({
         <div className="table__body">
           <div className="table__body-column">
             <div className="input-row-wrapper no-border">
+              <Select
+                label={newVolume.type.length ? newVolume.type : 'Type'}
+                options={selectTypeOptions.volumeType}
+                onClick={type => {
+                  setNewVolume(state => ({
+                    ...state,
+                    type: find(selectTypeOptions.volumeType, ['id', type]).id
+                  }))
+                }}
+              />
               <Input
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
                 label="Name"
@@ -133,35 +150,25 @@ const VolumesTableView = ({
                 className="input-row__item input-row__item_edit"
                 floatingLabel
                 type="text"
+                tip="A mount path for referencing the data from the function"
               />
             </div>
             <div
-              className={`input-row-wrapper
+              className={`input-row-wrapper no-border_top
                   ${newVolume.type === 'V3IO' && 'no-border'}`}
             >
-              <Select
-                onClick={type => {
-                  setNewVolume(state => ({
-                    ...state,
-                    type: find(selectTypeOptions.volumeType, ['id', type]).id
-                  }))
-                }}
-                options={selectTypeOptions.volumeType}
-                label={newVolume.type.length ? newVolume.type : 'Type'}
-              />
               <Input
                 onChange={typeName =>
                   setNewVolume(state => ({ ...state, typeName }))
                 }
-                label={volumeTypeNameLabel}
-                className="input-row__item input-row__item_edit"
+                label={volumeTypeNameLabel.label}
+                className="input-row__item"
                 disabled={newVolume.type.length === 0}
                 floatingLabel
                 type="text"
+                tip={volumeTypeNameLabel.tip}
               />
-            </div>
-            {newVolume.type === 'V3IO' && (
-              <div className="input-row-wrapper">
+              {newVolume.type === 'V3IO' && (
                 <Input
                   onChange={accessKey =>
                     setNewVolume(state => ({ ...state, accessKey }))
@@ -170,15 +177,21 @@ const VolumesTableView = ({
                   className="input-row__item"
                   floatingLabel
                   type="text"
+                  tip="A platform data-access key"
                 />
+              )}
+            </div>
+            {newVolume.type === 'V3IO' && (
+              <div className="input-row-wrapper no-border_top">
                 <Input
                   onChange={subPath =>
                     setNewVolume(state => ({ ...state, subPath }))
                   }
                   label="Resource path"
-                  className="input-row__item input-row__item_edit"
+                  className="input-row__item"
                   floatingLabel
                   type="text"
+                  tip="A relative directory path within the data container"
                 />
               </div>
             )}

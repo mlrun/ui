@@ -69,7 +69,7 @@ const featureSetsTable = {
       fields: {
         expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
         name:
-          'div.table-body__cell:nth-of-type(1) a div.data-ellipsis div.data-ellipsis:nth-of-type(1)',
+          'div.table-body__cell:nth-of-type(1) a div.data-ellipsis:nth-of-type(1) span',
         description: 'div.table-body__cell:nth-of-type(2) > div.data-ellipsis',
         labels_table: {
           componentType: commonTable,

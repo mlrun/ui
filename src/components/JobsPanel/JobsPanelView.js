@@ -32,8 +32,6 @@ const JobsPanelView = ({
   setNewJobEnvironmentVariables,
   setNewJobInputs,
   setNewJobSecretSources,
-  setNewJobVolumeMounts,
-  setNewJobVolumes,
   setOpenScheduleJob,
   withSaveChanges
 }) => {
@@ -85,13 +83,8 @@ const JobsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
             >
               <JobsPanelResources
-                match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
-                setNewJobVolumeMounts={setNewJobVolumeMounts}
-                setNewJobVolumes={setNewJobVolumes}
-                volumeMounts={jobsStore.newJob.function.spec.volume_mounts}
-                volumes={jobsStore.newJob.function.spec.volumes}
               />
             </Accordion>
             <Accordion
@@ -178,8 +171,6 @@ JobsPanelView.propTypes = {
   removeJobError: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired,
   setNewJobSecretSources: PropTypes.func.isRequired,
-  setNewJobVolumeMounts: PropTypes.func.isRequired,
-  setNewJobVolumes: PropTypes.func.isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired,
   withSaveChanges: PropTypes.bool.isRequired
 }

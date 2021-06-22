@@ -1,0 +1,8 @@
+{
+    "jobs_dashboard_url": null,
+    "abortable_function_kinds": [
+        "job","spark",
+        "remote-spark",
+        "mpijob"
+    ]
+}

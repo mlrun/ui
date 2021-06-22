@@ -41,9 +41,9 @@
 
     .artifacts {
       &_medium {
-        max-width: 235px;
+        max-width: 240px;
 
-        @include tableColumnFlex(1, 200px);
+        @include tableColumnFlex(1, 235px);
       }
 
       &_small {
@@ -218,6 +218,10 @@
       .path-tooltip {
         cursor: pointer;
       }
+
+      .chip_short {
+        max-width: 100px;
+      }
     }
 
     &__row {
@@ -302,18 +306,6 @@
         left: 8px;
         margin: 0;
       }
-    }
-
-    &__parameters {
-      border: $parametersBorder;
-    }
-
-    &__results {
-      border: $resultsBorder;
-    }
-
-    &__labels {
-      border: $labelBorder;
     }
   }
 

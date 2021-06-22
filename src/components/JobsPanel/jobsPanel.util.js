@@ -73,7 +73,27 @@ export const getEnvironmentVariables = selectedFunction => {
     .value()
 }
 
-export const getVolumeMounts = selectedFunction => {
+export const getNodeSelectors = selectedFunction => {
+  return chain(selectedFunction)
+    .map(func => {
+      return func.spec.node_selector ?? {}
+    })
+    .flatten()
+    .unionBy('key')
+    .map(selector => {
+      return Object.entries(selector)
+    })
+    .flatten()
+    .map(([key, value]) => {
+      return {
+        key,
+        value
+      }
+    })
+    .value()
+}
+
+export const getVolumeMounts = (selectedFunction, volumes) => {
   if (!selectedFunction.some(func => func.spec.volume_mounts)) {
     return []
   }
@@ -83,8 +103,13 @@ export const getVolumeMounts = selectedFunction => {
     .flatten()
     .unionBy('name')
     .map(volume_mounts => {
+      const currentVolume = volumes.find(
+        volume => volume.name === volume_mounts?.name
+      )
+
       return {
         data: {
+          type: getVolumeType(currentVolume),
           name: volume_mounts?.name,
           mountPath: volume_mounts?.mountPath
         },
@@ -167,17 +192,17 @@ export const generateTableData = (
   const functionParameters = getParameters(selectedFunction, method)
   const [{ limits, requests }] = getResources(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
+  const node_selector = getNodeSelectors(selectedFunction)
 
-  if (
-    limits?.memory?.match(/[a-zA-Z]/) ||
-    requests?.memory?.match(/[a-zA-Z]/)
-  ) {
-    const limitsMemoryUnit = limits.memory.replace(/\d+/g, '') + 'B'
-    const requestsMemoryUnit = requests.memory.replace(/\d+/g, '') + 'B'
-
+  if (limits?.memory?.match(/[a-zA-Z]/)) {
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
-      payload: limitsMemoryUnit || requestsMemoryUnit
+      payload: `${limits.memory.replace(/\d+/g, '')}B`
+    })
+  } else if (requests?.memory?.match(/[a-zA-Z]/)) {
+    panelDispatch({
+      type: panelActions.SET_MEMORY_UNIT,
+      payload: `${requests.memory.replace(/\d+/g, '')}B`
     })
   } else if (limits?.memory?.length > 0 || requests?.memory?.length > 0) {
     panelDispatch({
@@ -186,7 +211,7 @@ export const generateTableData = (
     })
   }
 
-  if (limits?.cpu?.match(/m/) || requests?.cpu?.match(/m/)) {
+  if (limits?.cpu?.match?.(/m/) || requests?.cpu?.match?.(/m/)) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'millicpu'
@@ -200,8 +225,8 @@ export const generateTableData = (
 
   if (!isEmpty(functionParameters)) {
     const { parameters, dataInputs } = getDefaultData(functionParameters)
-    const volumeMounts = getVolumeMounts(selectedFunction)
     const volumes = getVolume(selectedFunction)
+    const volumeMounts = getVolumeMounts(selectedFunction, volumes)
 
     panelDispatch({
       type: panelActions.SET_TABLE_DATA,
@@ -216,18 +241,21 @@ export const generateTableData = (
             value: env.value ?? ''
           }
         })),
-        secretSources: []
+        secretSources: [],
+        node_selector
       }
     })
     setNewJob({
       inputs: parseDefaultDataInputsContent(dataInputs),
       parameters: parseDefaultContent(parameters),
-      volume_mounts: volumeMounts.length
-        ? volumeMounts.map(volumeMounts => volumeMounts.data)
-        : [],
+      volume_mounts: (volumeMounts ?? []).map(volumeMounts => ({
+        name: volumeMounts.data.name,
+        mountPath: volumeMounts.data.mountPath
+      })),
       volumes,
       environmentVariables,
-      secret_sources: []
+      secret_sources: [],
+      node_selector: parseDefaultNodeSelectorContent(node_selector)
     })
   }
 
@@ -329,16 +357,15 @@ export const generateTableDataFromDefaultData = (
     }
   )
 
-  if (
-    limits?.memory?.match(/[a-zA-Z]/) ||
-    requests?.memory?.match(/[a-zA-Z]/)
-  ) {
-    const limitsMemoryUnit = limits.memory.replace(/\d+/g, '') + 'B'
-    const requestsMemoryUnit = requests.memory.replace(/\d+/g, '') + 'B'
-
+  if (limits?.memory?.match(/[a-zA-Z]/)) {
     panelDispatch({
       type: panelActions.SET_MEMORY_UNIT,
-      payload: limitsMemoryUnit || requestsMemoryUnit
+      payload: `${limits.memory.replace(/\d+/g, '')}B`
+    })
+  } else if (requests?.memory?.match(/[a-zA-Z]/)) {
+    panelDispatch({
+      type: panelActions.SET_MEMORY_UNIT,
+      payload: `${requests.memory.replace(/\d+/g, '')}B`
     })
   } else if (limits?.memory?.length > 0 || requests?.memory?.length > 0) {
     panelDispatch({
@@ -347,7 +374,7 @@ export const generateTableDataFromDefaultData = (
     })
   }
 
-  if (limits?.cpu?.match(/m/) || requests?.cpu?.match(/m/)) {
+  if (limits?.cpu?.match?.(/m/) || requests?.cpu?.match?.(/m/)) {
     panelDispatch({
       type: panelActions.SET_CPU_UNIT,
       payload: 'millicpu'
@@ -373,18 +400,28 @@ export const generateTableDataFromDefaultData = (
             value: env.value ?? ''
           }
         })) ?? [],
-      secretSources: secrets
+      secretSources: secrets,
+      node_selector: Object.entries(
+        defaultData.function?.spec.node_selector ?? {}
+      ).map(([key, value]) => ({
+        key,
+        value
+      }))
     }
   })
   setNewJob({
-    inputs: parseDefaultDataInputsContent(dataInputs),
-    parameters: parseDefaultContent(parameters),
+    inputs: defaultData.task.spec.inputs ?? {},
+    parameters: defaultData.task.spec.parameters ?? {},
     volume_mounts: volumeMounts?.length
-      ? volumeMounts.map(volumeMounts => volumeMounts.data)
+      ? volumeMounts.map(volumeMounts => ({
+          name: volumeMounts.data.name,
+          mountPath: volumeMounts.data.mountPath
+        }))
       : [],
     volumes: defaultData.function?.spec.volumes ?? [],
     environmentVariables: defaultData.function?.spec.env ?? [],
-    secret_sources: defaultData.task.spec.secret_sources ?? []
+    secret_sources: defaultData.task.spec.secret_sources ?? [],
+    node_selector: defaultData.function?.spec.node_selector ?? {}
   })
 
   if (limits) {
@@ -446,7 +483,7 @@ export const generateRequestData = (
     }
   }
 
-  const spec = {
+  const taskSpec = {
     ...jobsStore.newJob.task.spec,
     function: func,
     handler: panelState.currentFunctionInfo.method,
@@ -455,9 +492,9 @@ export const generateRequestData = (
   }
 
   if (jobsStore.newJob.task.spec.selector.result.length > 0) {
-    spec.selector = `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
+    taskSpec.selector = `${jobsStore.newJob.task.spec.selector.criteria}.${jobsStore.newJob.task.spec.selector.result}`
   } else {
-    delete spec.selector
+    delete taskSpec.selector
   }
 
   return {
@@ -477,7 +514,7 @@ export const generateRequestData = (
         project,
         labels
       },
-      spec
+      spec: { ...taskSpec }
     }
   }
 }
@@ -491,6 +528,27 @@ export const parseDefaultDataInputsContent = inputs => {
   }, {})
 }
 
+export const parseDefaultNodeSelectorContent = nodeSelector => {
+  return nodeSelector.reduce((prev, curr) => {
+    return {
+      ...prev,
+      [curr.key]: curr.value
+    }
+  }, {})
+}
+
 export const isNameNotUnique = (newName, content) => {
   return content.some(item => newName === item?.data.name && newName !== '')
+}
+
+const getVolumeType = volume => {
+  if (volume.configMap) {
+    return 'Config Map'
+  } else if (volume.persistentVolumeClaim) {
+    return 'PVC'
+  } else if (volume.secret) {
+    return 'Secret'
+  } else {
+    return 'V3IO'
+  }
 }

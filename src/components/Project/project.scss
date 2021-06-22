@@ -19,6 +19,7 @@
       display: flex;
       flex: 1;
       flex-direction: column;
+      width: 250px;
       padding-right: 64px;
 
       &__main-data {
@@ -91,12 +92,37 @@
         }
 
         .chip-block-hidden {
-          left: 0;
+          right: unset;
 
           &::after {
-            right: 220px;
+            left: 15px;
           }
         }
+      }
+
+      &__data {
+        margin-bottom: 13px;
+        color: $primary;
+
+        &-label {
+          margin-right: 15px;
+          font-size: 14px;
+          line-height: 16px;
+        }
+      }
+
+      &__status {
+        &-icon {
+          margin-right: 10px;
+        }
+
+        &-name {
+          text-transform: capitalize;
+        }
+      }
+
+      &__owner {
+        display: none;
       }
 
       &__description {
@@ -127,34 +153,6 @@
         &-text {
           max-width: 185px;
           margin: 3px 0;
-        }
-      }
-
-      &__status {
-        margin-bottom: 13px;
-        color: $primary;
-
-        &-label {
-          margin-right: 15px;
-          font-size: 14px;
-          line-height: 16px;
-        }
-
-        &-icon {
-          margin-right: 10px;
-        }
-
-        &-name {
-          text-transform: capitalize;
-        }
-      }
-
-      &__owner {
-        display: none;
-        color: $primary;
-
-        &-label {
-          margin-right: 15px;
         }
       }
 

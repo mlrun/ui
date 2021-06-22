@@ -27,7 +27,10 @@ const FunctionsPanelResourcesView = ({
 }) => (
   <div className="functions-panel__item resources new-item-side-panel__item">
     <FunctionsPanelSection title="Resources" />
-    <FunctionsPanelSection title="Volumes">
+    <FunctionsPanelSection
+      title="Volumes"
+      tip="Volumes that define data paths and the required information for accessing the data from the function"
+    >
       <VolumesTable
         handleAddNewVolume={handleAddNewVolume}
         handleDelete={handleDeleteVolume}

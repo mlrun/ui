@@ -28,6 +28,17 @@ module.exports = function(app) {
   )
 
   app.use(
+    '/iguazio',
+    createProxyMiddleware({
+      target: process.env.REACT_APP_IGUAZIO_API_URL,
+      pathRewrite: {
+        '^/iguazio': ''
+      },
+      changeOrigin: true
+    })
+  )
+
+  app.use(
     '/function-catalog',
     createProxyMiddleware({
       target: process.env.REACT_APP_FUNCTION_CATALOG_URL,
