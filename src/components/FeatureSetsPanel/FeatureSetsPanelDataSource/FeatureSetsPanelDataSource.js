@@ -76,11 +76,15 @@ const FeatureSetsPanelDataSource = ({
 
   const handleKindOnChange = kind => {
     setNewFeatureSetDataSourceKind(kind)
-    setNewFeatureSetDataSourceAttributes({
-      time_field: '',
-      start_time: '',
-      end_time: ''
-    })
+    setNewFeatureSetDataSourceAttributes(
+      kind === 'parquet'
+        ? {
+            time_field: '',
+            start_time: '',
+            end_time: ''
+          }
+        : {}
+    )
     setData(state => ({
       ...state,
       kind,
