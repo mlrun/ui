@@ -20,44 +20,58 @@ const FeatureSetsPanelDataSource = ({
     kind: 'csv',
     url: '',
     attributes: [],
-    newAttribute: {
-      key: '',
-      value: ''
-    },
     schedule: ''
   })
-  const [isAttributeNameValid, setAttributeNameValid] = useState(true)
-  const [addNewItem, setAddNewItem] = useState(false)
   const [showSchedule, setShowSchedule] = useState(false)
 
-  const handleAddNewItem = () => {
-    if (
-      data.newAttribute.key.length > 0 &&
-      nameNotValid(data.newAttribute.key)
-    ) {
-      return setAttributeNameValid(false)
-    } else if (data.newAttribute.key.length > 0) {
-      setNewFeatureSetDataSourceAttributes({
-        ...artifactsStore.newFeatureSet.spec.source.attribute,
-        [data.newAttribute.key]: data.newAttribute.value
-      })
-      setData(state => ({
-        ...state,
-        attributes: [
-          ...state.attributes,
-          {
-            data: state.newAttribute
-          }
-        ]
-      }))
-    }
-
+  const handleAddNewItem = attribute => {
+    setNewFeatureSetDataSourceAttributes({
+      ...artifactsStore.newFeatureSet.spec.source.attribute,
+      [attribute.key]: attribute.value
+    })
     setData(state => ({
       ...state,
-      newAttribute: { key: '', value: '' }
+      attributes: [...state.attributes, attribute]
     }))
-    setAddNewItem(false)
-    setAttributeNameValid(true)
+  }
+
+  const handleDeleteAttribute = (index, attribute) => {
+    const storeAttributes = {
+      ...artifactsStore.newFeatureSet.spec.source.attribute
+    }
+
+    delete storeAttributes[attribute.key]
+    setNewFeatureSetDataSourceAttributes(storeAttributes)
+    setData(state => ({
+      ...state,
+      attributes: state.attributes.filter(attr => attr.key !== attribute.key)
+    }))
+  }
+
+  const handleEditAttribute = attribute => {
+    const storeAttributes = {
+      ...artifactsStore.newFeatureSet.spec.source.attribute
+    }
+
+    if (attribute.newKey) {
+      delete storeAttributes[attribute.key]
+      storeAttributes[attribute.newKey] = attribute.value
+    } else {
+      storeAttributes[attribute.key] = attribute.value
+    }
+
+    setNewFeatureSetDataSourceAttributes(storeAttributes)
+    setData(state => ({
+      ...state,
+      attributes: state.attributes.map(attr => {
+        if (attr.key === attribute.key) {
+          attr.key = attribute.newKey ?? attribute.key
+          attr.value = attribute.value
+        }
+
+        return attr
+      })
+    }))
   }
 
   const handleKindOnChange = kind => {
@@ -115,21 +129,16 @@ const FeatureSetsPanelDataSource = ({
     }))
   }
 
-  const nameNotValid = name => {
-    return data.attributes.some(attribute => attribute.data.name === name)
-  }
-
   return (
     <FeatureSetsPanelDataSourceView
-      addNewItem={addNewItem}
       data={data}
       handleAddNewItem={handleAddNewItem}
+      handleDeleteAttribute={handleDeleteAttribute}
+      handleEditAttribute={handleEditAttribute}
       handleKindOnChange={handleKindOnChange}
       handleUrlOnBlur={handleUrlOnBlur}
       handleUrlOnChange={handleUrlOnChange}
-      isAttributeNameValid={isAttributeNameValid}
       isUrlValid={isUrlValid}
-      setAddNewItem={setAddNewItem}
       setData={setData}
       setNewFeatureSetDataSourceAttributes={
         setNewFeatureSetDataSourceAttributes
