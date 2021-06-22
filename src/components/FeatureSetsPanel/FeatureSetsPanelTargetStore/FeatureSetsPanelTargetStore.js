@@ -176,15 +176,18 @@ const FeatureSetsPanelTargetStore = ({
     const targetKind = artifactsStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === kind
     )
+    const partition_cols =
+      kind === 'parquet'
+        ? offlineKindData.partition_cols
+        : otherKindData.partition_cols
 
-    if (
-      offlineKindData.partition_cols &&
-      targetKind.partition_cols !== offlineKindData.partition_cols
-    ) {
+    if (partition_cols && targetKind.partition_cols !== partition_cols) {
       setNewFeatureSetTarget(
         artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
-          if (targetKind.name === 'parquet') {
-            targetKind.partition_cols = offlineKindData.partition_cols
+          if (targetKind.name === kind) {
+            targetKind.partition_cols = partition_cols
+              .split(',')
+              .map(partition_col => partition_col.trim())
           }
 
           return targetKind

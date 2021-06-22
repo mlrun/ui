@@ -32,18 +32,22 @@ const FeatureSetsPanel = ({
     createNewFeatureSet(project, {
       kind: 'FeatureSet',
       ...artifactsStore.newFeatureSet
-    }).then(result => {
-      if (confirmDialog.action === 'save and ingest') {
-        return handleStartFeatureSetIngest(result)
-      }
-
-      setConfirmDialog(null)
-      createFeatureSetSuccess().then(() => {
-        history.push(
-          `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
-        )
-      })
     })
+      .then(result => {
+        if (confirmDialog.action === 'save and ingest') {
+          return handleStartFeatureSetIngest(result)
+        }
+
+        setConfirmDialog(null)
+        createFeatureSetSuccess().then(() => {
+          history.push(
+            `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
+          )
+        })
+      })
+      .catch(() => {
+        setConfirmDialog(null)
+      })
   }
 
   const handleSaveOnClick = startIngestion => {
