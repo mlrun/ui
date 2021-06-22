@@ -268,8 +268,23 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    navigateToDetailsPane(artifactsStore, history, match, setSelectedItem)
-  }, [history, artifactsStore, match])
+    navigateToDetailsPane(
+      artifactsStore.featureSets,
+      artifactsStore.features.allData,
+      artifactsStore.dataSets,
+      artifactsStore.featureVectors,
+      history,
+      match,
+      setSelectedItem
+    )
+  }, [
+    artifactsStore.dataSets,
+    artifactsStore.featureSets,
+    artifactsStore.featureVectors,
+    artifactsStore.features.allData,
+    history,
+    match
+  ])
 
   useEffect(() => {
     if (

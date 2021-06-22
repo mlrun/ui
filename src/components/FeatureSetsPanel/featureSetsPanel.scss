@@ -18,4 +18,11 @@
       margin: 0 10px;
     }
   }
+
+  .pop-up-dialog__header {
+    &-close {
+      position: absolute;
+      right: 0;
+    }
+  }
 }

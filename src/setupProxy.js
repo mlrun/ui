@@ -16,36 +16,42 @@ module.exports = function(app) {
     })
   )
 
-  app.use(
-    '/nuclio',
-    createProxyMiddleware({
-      target: process.env.REACT_APP_NUCLIO_API_URL,
-      pathRewrite: {
-        '^/nuclio': ''
-      },
-      changeOrigin: true
-    })
-  )
+  if (process.env.REACT_APP_NUCLIO_API_URL) {
+    app.use(
+      '/nuclio',
+      createProxyMiddleware({
+        target: process.env.REACT_APP_NUCLIO_API_URL,
+        pathRewrite: {
+          '^/nuclio': ''
+        },
+        changeOrigin: true
+      })
+    )
+  }
 
-  app.use(
-    '/iguazio',
-    createProxyMiddleware({
-      target: process.env.REACT_APP_IGUAZIO_API_URL,
-      pathRewrite: {
-        '^/iguazio': ''
-      },
-      changeOrigin: true
-    })
-  )
+  if (process.env.REACT_APP_IGUAZIO_API_URL) {
+    app.use(
+      '/iguazio',
+      createProxyMiddleware({
+        target: process.env.REACT_APP_IGUAZIO_API_URL,
+        pathRewrite: {
+          '^/iguazio': ''
+        },
+        changeOrigin: true
+      })
+    )
+  }
 
-  app.use(
-    '/function-catalog',
-    createProxyMiddleware({
-      target: process.env.REACT_APP_FUNCTION_CATALOG_URL,
-      pathRewrite: {
-        '^/function-catalog': ''
-      },
-      changeOrigin: true
-    })
-  )
+  if (process.env.REACT_APP_FUNCTION_CATALOG_URL) {
+    app.use(
+      '/function-catalog',
+      createProxyMiddleware({
+        target: process.env.REACT_APP_FUNCTION_CATALOG_URL,
+        pathRewrite: {
+          '^/function-catalog': ''
+        },
+        changeOrigin: true
+      })
+    )
+  }
 }

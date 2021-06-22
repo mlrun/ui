@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -21,17 +21,22 @@ const RangeInput = ({
   max,
   min,
   onChange,
+  tip,
   required,
   requiredText,
   value
 }) => {
-  const [inputValue, setInputValue] = useState(value)
+  const [inputValue, setInputValue] = useState('')
   const [isRequired, setIsRequired] = useState(false)
   const rangeClassName = classNames(
     'range',
     `range-${density}`,
     (isRequired || invalid) && 'range-warning'
   )
+
+  useEffect(() => {
+    setInputValue(value)
+  }, [value])
 
   const handleIncrease = () => {
     if (inputValue >= max) return
@@ -81,6 +86,7 @@ const RangeInput = ({
           setInputValue(value)
           onChange(value)
         }}
+        tip={tip}
         required={required}
         type="number"
         value={inputValue}
@@ -132,6 +138,7 @@ RangeInput.defaultProps = {
   labelType: 'labelAtTop',
   max: undefined,
   min: 0,
+  tip: '',
   required: false,
   requiredText: 'required'
 }
@@ -151,6 +158,7 @@ RangeInput.propTypes = {
   max: PropTypes.number,
   min: PropTypes.number,
   onChange: PropTypes.func.isRequired,
+  tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   required: PropTypes.bool,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 }

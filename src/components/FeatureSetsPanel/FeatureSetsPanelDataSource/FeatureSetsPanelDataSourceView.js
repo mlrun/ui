@@ -5,29 +5,26 @@ import cronstrue from 'cronstrue'
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import Select from '../../../common/Select/Select'
 import Input from '../../../common/Input/Input'
-import { FeatureSetsPanelDataSourceTable } from '../FeatureSetsPanelDataSourceTable/FeatureSetsPanelDataSourceTable'
 import Button from '../../../common/Button/Button'
 import ScheduleFeatureSet from '../ScheduleFeatureSet/ScheduleFeatureSet'
+import KeyValueTable from '../../../common/KeyValueTable/KeyValueTable'
 
-import { kindOptions, tableHeaders } from './featureSetsPanelDataSource.util'
+import { kindOptions } from './featureSetsPanelDataSource.util'
 
 import { ReactComponent as Pencil } from '../../../images/edit.svg'
 
 import './featureSetsPanelDataSource.scss'
 
 const FeatureSetsPanelDataSourceView = ({
-  addNewItem,
   data,
   handleAddNewItem,
+  handleDeleteAttribute,
+  handleEditAttribute,
+  handleKindOnChange,
   handleUrlOnBlur,
   handleUrlOnChange,
-  isAttributeNameValid,
   isUrlValid,
-  setAddNewItem,
   setData,
-  setNewFeatureSetDataSourceKey,
-  setNewFeatureSetDataSourceKind,
-  setNewFeatureSetDataSourceTime,
   setShowSchedule,
   showSchedule,
   setNewFeatureSetSchedule
@@ -42,18 +39,12 @@ const FeatureSetsPanelDataSourceView = ({
             density="medium"
             floatingLabel
             label="Kind"
-            onClick={kind => {
-              setNewFeatureSetDataSourceKind(kind)
-              setData(state => ({
-                ...state,
-                kind
-              }))
-            }}
+            onClick={handleKindOnChange}
             options={kindOptions}
             selectedId={data.kind}
           />
           <Input
-            className="data-source__inputs-item data-source__inputs-item_url"
+            className="data-source__inputs-item"
             floatingLabel
             invalid={!isUrlValid}
             invalidText="URL is invalid"
@@ -62,43 +53,10 @@ const FeatureSetsPanelDataSourceView = ({
             onChange={handleUrlOnChange}
             required
             requiredText="URL is required"
+            tip="For Parquet files the path could be either a file or a folder. For CSV it must be a file."
             type="text"
             value={data.url}
-            wrapperClassName="inputs-item-wrapper"
-          />
-          <Input
-            className="data-source__inputs-item"
-            floatingLabel
-            label="Key field"
-            onBlur={event => {
-              setNewFeatureSetDataSourceKey(event.target.value)
-            }}
-            onChange={key => {
-              setData(state => ({
-                ...state,
-                key
-              }))
-            }}
-            type="text"
-            value={data.key}
-            wrapperClassName="inputs-item-wrapper"
-          />
-          <Input
-            className="data-source__inputs-item"
-            floatingLabel
-            label="Time field"
-            onBlur={event => {
-              setNewFeatureSetDataSourceTime(event.target.value)
-            }}
-            onChange={time => {
-              setData(state => ({
-                ...state,
-                time
-              }))
-            }}
-            type="text"
-            value={data.time}
-            wrapperClassName="inputs-item-wrapper"
+            wrapperClassName="url"
           />
         </div>
         {false && ( // was: data.kind !== httpKind, disabling temporarily until backend supports scheduling
@@ -127,32 +85,22 @@ const FeatureSetsPanelDataSourceView = ({
             )}
           </div>
         )}
-        <FeatureSetsPanelDataSourceTable
-          addNewItem={addNewItem}
+        <p>
+          Users can add attributes to be used for various operations on the
+          source data.
+        </p>
+        <KeyValueTable
+          addNewItem={handleAddNewItem}
+          addNewItemLabel="Add variable"
           className="data-source__table"
           content={data.attributes}
-          handleAddNewItem={handleAddNewItem}
-          headers={tableHeaders}
-          isAttributeNameValid={isAttributeNameValid}
-          setAddNewItem={setAddNewItem}
-          setNewItemName={key => {
-            setData(state => ({
-              ...state,
-              newAttribute: {
-                ...state.newAttribute,
-                key
-              }
-            }))
-          }}
-          setNewItemValue={value => {
-            setData(state => ({
-              ...state,
-              newAttribute: {
-                ...state.newAttribute,
-                value
-              }
-            }))
-          }}
+          deleteItem={handleDeleteAttribute}
+          editItem={handleEditAttribute}
+          keyHeader="Attribute name"
+          keyLabel="Name"
+          valueHeader="Value"
+          valueLabel="Value"
+          withEditMode
         />
       </FeatureSetsPanelSection>
     </div>
@@ -160,18 +108,15 @@ const FeatureSetsPanelDataSourceView = ({
 }
 
 FeatureSetsPanelDataSourceView.propTypes = {
-  addNewItem: PropTypes.bool.isRequired,
   data: PropTypes.shape({}).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
+  handleDeleteAttribute: PropTypes.func.isRequired,
+  handleEditAttribute: PropTypes.func.isRequired,
+  handleKindOnChange: PropTypes.func.isRequired,
   handleUrlOnBlur: PropTypes.func.isRequired,
   handleUrlOnChange: PropTypes.func.isRequired,
-  isAttributeNameValid: PropTypes.bool.isRequired,
   isUrlValid: PropTypes.bool.isRequired,
-  setAddNewItem: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
-  setNewFeatureSetDataSourceKey: PropTypes.func.isRequired,
-  setNewFeatureSetDataSourceKind: PropTypes.func.isRequired,
-  setNewFeatureSetDataSourceTime: PropTypes.func.isRequired,
   setShowSchedule: PropTypes.func.isRequired,
   showSchedule: PropTypes.bool.isRequired,
   setNewFeatureSetSchedule: PropTypes.func.isRequired
