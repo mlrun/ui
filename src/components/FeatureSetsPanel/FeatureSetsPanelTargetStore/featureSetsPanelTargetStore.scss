@@ -34,6 +34,7 @@
       flex: 0.25;
       min-width: 150px;
       margin-right: 10px;
+      margin-bottom: 5px;
     }
 
     .input {
@@ -51,14 +52,14 @@
         &.partition-cols {
           flex: unset;
           width: 300px;
-          margin-right: 5px;
-          margin-bottom: 5px;
+          margin: 5px 5px 5px 0;
         }
       }
     }
 
     .range {
-      margin-right: 5px;
+      width: 225px;
+      margin: 5px 5px 5px 0;
     }
   }
 }

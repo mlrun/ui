@@ -5,6 +5,7 @@ import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanel
 import CheckBox from '../../../common/CheckBox/CheckBox'
 import Select from '../../../common/Select/Select'
 import Input from '../../../common/Input/Input'
+import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
 
 import { ReactComponent as Online } from '../../../images/nosql.svg'
 import { ReactComponent as Offline } from '../../../images/db-icon.svg'
@@ -15,7 +16,6 @@ import {
 } from './featureSetsPanelTargetStore.util'
 
 import './featureSetsPanelTargetStore.scss'
-import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
 
 const FeatureSetsPanelTargetStoreView = ({
   handleKeyBucketingNumberChange,
@@ -141,7 +141,7 @@ const FeatureSetsPanelTargetStoreView = ({
           ) && (
             <div className="target-store__inputs-container">
               <Select
-                density="medium"
+                density="normal"
                 floatingLabel
                 label="File type"
                 onClick={handleOtherKindTypeChange}
