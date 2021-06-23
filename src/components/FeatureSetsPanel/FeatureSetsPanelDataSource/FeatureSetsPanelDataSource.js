@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 
 import FeatureSetsPanelDataSourceView from './FeatureSetsPanelDataSourceView'
 
@@ -18,53 +17,95 @@ const FeatureSetsPanelDataSource = ({
   setUrlValid
 }) => {
   const [data, setData] = useState({
-    kind: 'http',
+    kind: 'csv',
     url: '',
-    key: '',
-    time: '',
     attributes: [],
-    newAttribute: {
-      key: '',
-      value: ''
-    },
     schedule: ''
   })
-  const [isAttributeNameValid, setAttributeNameValid] = useState(true)
-  const [addNewItem, setAddNewItem] = useState(false)
   const [showSchedule, setShowSchedule] = useState(false)
 
-  const handleAddNewItem = () => {
-    if (
-      data.newAttribute.key.length > 0 &&
-      nameNotValid(data.newAttribute.key)
-    ) {
-      return setAttributeNameValid(false)
-    } else if (data.newAttribute.key.length > 0) {
-      setNewFeatureSetDataSourceAttributes({
-        ...artifactsStore.newFeatureSet.spec.source.attribute,
-        [data.newAttribute.key]: data.newAttribute.value
-      })
-      setData(state => ({
-        ...state,
-        attributes: [
-          ...state.attributes,
-          {
-            data: state.newAttribute
-          }
-        ]
-      }))
-    }
-
+  const handleAddNewItem = attribute => {
+    setNewFeatureSetDataSourceAttributes({
+      ...artifactsStore.newFeatureSet.spec.source.attributes,
+      [attribute.key]: attribute.value
+    })
     setData(state => ({
       ...state,
-      newAttribute: { key: '', value: '' }
+      attributes: [...state.attributes, attribute]
     }))
-    setAddNewItem(false)
-    setAttributeNameValid(true)
   }
 
-  const nameNotValid = name => {
-    return data.attributes.some(attribute => attribute.data.name === name)
+  const handleDeleteAttribute = (index, attribute) => {
+    const storeAttributes = {
+      ...artifactsStore.newFeatureSet.spec.source.attributes
+    }
+
+    delete storeAttributes[attribute.key]
+    setNewFeatureSetDataSourceAttributes(storeAttributes)
+    setData(state => ({
+      ...state,
+      attributes: state.attributes.filter(attr => attr.key !== attribute.key)
+    }))
+  }
+
+  const handleEditAttribute = attribute => {
+    const storeAttributes = {
+      ...artifactsStore.newFeatureSet.spec.source.attributes
+    }
+
+    if (attribute.newKey) {
+      delete storeAttributes[attribute.key]
+      storeAttributes[attribute.newKey] = attribute.value
+    } else {
+      storeAttributes[attribute.key] = attribute.value
+    }
+
+    setNewFeatureSetDataSourceAttributes(storeAttributes)
+    setData(state => ({
+      ...state,
+      attributes: state.attributes.map(attr => {
+        if (attr.key === attribute.key) {
+          attr.key = attribute.newKey ?? attribute.key
+          attr.value = attribute.value
+        }
+
+        return attr
+      })
+    }))
+  }
+
+  const handleKindOnChange = kind => {
+    setNewFeatureSetDataSourceKind(kind)
+    setNewFeatureSetDataSourceAttributes(
+      kind === 'parquet'
+        ? {
+            time_field: '',
+            start_time: '',
+            end_time: ''
+          }
+        : {}
+    )
+    setData(state => ({
+      ...state,
+      kind,
+      attributes:
+        kind === 'parquet'
+          ? [
+              {
+                key: 'time_field',
+                value: ''
+              },
+              {
+                key: 'start_time',
+                value: ''
+              },
+              {
+                key: 'end_time',
+                value: ''
+              }
+            ]
+          : []
+    }))
   }
 
   const handleUrlOnBlur = event => {
@@ -88,15 +129,18 @@ const FeatureSetsPanelDataSource = ({
 
   return (
     <FeatureSetsPanelDataSourceView
-      addNewItem={addNewItem}
       data={data}
       handleAddNewItem={handleAddNewItem}
+      handleDeleteAttribute={handleDeleteAttribute}
+      handleEditAttribute={handleEditAttribute}
+      handleKindOnChange={handleKindOnChange}
       handleUrlOnBlur={handleUrlOnBlur}
       handleUrlOnChange={handleUrlOnChange}
-      isAttributeNameValid={isAttributeNameValid}
       isUrlValid={isUrlValid}
-      setAddNewItem={setAddNewItem}
       setData={setData}
+      setNewFeatureSetDataSourceAttributes={
+        setNewFeatureSetDataSourceAttributes
+      }
       setNewFeatureSetDataSourceKey={setNewFeatureSetDataSourceKey}
       setNewFeatureSetDataSourceKind={setNewFeatureSetDataSourceKind}
       setNewFeatureSetDataSourceTime={setNewFeatureSetDataSourceTime}
@@ -105,11 +149,6 @@ const FeatureSetsPanelDataSource = ({
       setNewFeatureSetSchedule={setNewFeatureSetSchedule}
     />
   )
-}
-
-FeatureSetsPanelDataSource.propTypes = {
-  isUrlValid: PropTypes.bool.isRequired,
-  setUrlValid: PropTypes.func.isRequired
 }
 
 export default connect(artifactsStore => ({ ...artifactsStore }), {

@@ -1,19 +1,12 @@
 .schema {
-  &__table {
-    margin-bottom: 15px;
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 
-    .input-wrapper {
-      flex: 1;
-
-      &:first-child {
-        max-width: 220px;
-      }
-    }
-
-    .table {
-      &__cell:first-child {
-        max-width: 220px;
-      }
+    .input {
+      width: 100%;
+      margin-bottom: 10px;
     }
   }
 }

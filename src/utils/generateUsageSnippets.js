@@ -3,7 +3,8 @@ import { generateUri } from './resources'
 
 export const generateUsageSnippets = (
   { pageTab, name, tag },
-  { featureSets, featureVectors }
+  featureSets,
+  featureVectors
 ) => {
   const [currentFeatureSet] = featureSets.filter(
     featureSet =>
