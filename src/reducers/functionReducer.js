@@ -32,11 +32,16 @@ import {
   SET_NEW_FUNCTION_SECRETS,
   SET_NEW_FUNCTION_BUILD_IMAGE,
   SET_NEW_FUNCTION_PROJECT,
-  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
+  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE,
+  FETCH_FUNCTION_LOGS_BEGIN,
+  FETCH_FUNCTION_LOGS_FAILURE,
+  FETCH_FUNCTION_LOGS_SUCCESS,
+  REMOVE_FUNCTION_LOGS
 } from '../constants'
 
 const initialState = {
   functions: [],
+  logs: '',
   loading: false,
   error: null,
   newFunction: {
@@ -124,6 +129,24 @@ export default (state = initialState, { type, payload }) => {
         loading: false,
         error: payload
       }
+    case FETCH_FUNCTION_LOGS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_FUNCTION_LOGS_FAILURE:
+      return {
+        ...state,
+        logs: initialState.logs,
+        loading: false,
+        error: payload
+      }
+    case FETCH_FUNCTION_LOGS_SUCCESS:
+      return {
+        ...state,
+        logs: `${state.logs}${payload}`,
+        loading: false
+      }
     case SET_FUNCTIONS_TEMPLATES:
       return {
         ...state,
@@ -146,6 +169,11 @@ export default (state = initialState, { type, payload }) => {
         loading: false,
         template: {},
         error: payload
+      }
+    case REMOVE_FUNCTION_LOGS:
+      return {
+        ...state,
+        logs: initialState.logs
       }
     case REMOVE_FUNCTION_TEMPLATE:
       return {

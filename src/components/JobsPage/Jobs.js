@@ -32,13 +32,15 @@ const Jobs = ({
   editJob,
   editJobFailure,
   fetchJobFunction,
-  fetchJobs,
+  fetchJobLogs,
   fetchJobPods,
+  fetchJobs,
   fetchProjectWorkflows,
-  jobsStore,
   handleRunScheduledJob,
   history,
+  jobsStore,
   match,
+  removeJobLogs,
   removeNewJob,
   removePods,
   removeScheduledJob,
@@ -224,7 +226,9 @@ const Jobs = ({
       handleMonitoring,
       appStore.frontendSpec.jobs_dashboard_url,
       onAbortJob,
-      appStore.frontendSpec.abortable_function_kinds
+      appStore.frontendSpec.abortable_function_kinds,
+      fetchJobLogs,
+      removeJobLogs
     ),
     [match.params.pageTab, appStore.frontendSpec.jobs_dashboard_url]
   )

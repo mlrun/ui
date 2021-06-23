@@ -32,15 +32,15 @@ const TableView = ({
   handleCancel,
   handleExpandRow,
   handleSelectItem,
+  isTablePanelOpen,
   mainRowItemsCount,
   match,
-  isTablePanelOpen,
   pageData,
   retryRequest,
   selectedItem,
   tableContent,
-  tablePanelRef,
   tableHeadRef,
+  tablePanelRef,
   toggleConvertToYaml,
   workflows
 }) => {

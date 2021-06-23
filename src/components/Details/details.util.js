@@ -282,7 +282,15 @@ export const renderContent = (
     case DETAILS_RESULTS_TAB:
       return <DetailsResults job={selectedItem} />
     case DETAILS_LOGS_TAB:
-      return <DetailsLogs match={match} item={selectedItem} />
+      return (
+        <DetailsLogs
+          item={selectedItem}
+          match={match}
+          refreshLogs={pageData.refreshLogs}
+          removeLogs={pageData.removeLogs}
+          withLogsRefreshBtn={pageData.withLogsRefreshBtn}
+        />
+      )
     case DETAILS_CODE_TAB:
       return <DetailsCode code={selectedItem.functionSourceCode} />
     case DETAILS_METADATA_TAB:
