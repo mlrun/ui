@@ -35,7 +35,7 @@ export default {
       params.offset = offset
     }
 
-    return mainHttpClient.get('/build/status?', { params })
+    return mainHttpClient.get('/build/status', { params })
   },
   getFunctionTemplate: path => functionTemplatesHttpClient.get(path),
   getFunctionTemplatesCatalog: () =>

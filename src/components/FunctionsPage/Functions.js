@@ -17,7 +17,8 @@ import {
   FUNCTIONS_FAILED_STATES,
   infoHeaders,
   page,
-  tableHeaders
+  tableHeaders,
+  TRANSIENT_FUNCTION_STATUSES
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 
@@ -58,8 +59,9 @@ const Functions = ({
     (projectName, name, tag, offset) => {
       return fetchFunctionLogs(projectName, name, tag, offset).then(result => {
         if (
-          result.headers?.['x-mlrun-function-status'] === 'pending' ||
-          result.headers?.['x-mlrun-function-status'] === 'running'
+          TRANSIENT_FUNCTION_STATUSES.includes(
+            result.headers?.['x-mlrun-function-status']
+          )
         ) {
           fetchFunctionLogsTimeout.current = setTimeout(() => {
             let currentOffset = offset
