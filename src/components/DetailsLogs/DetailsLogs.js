@@ -1,49 +1,79 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-
-import jobsActions from '../../actions/jobs'
 
 import NoData from '../../common/NoData/NoData'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
 const DetailsLogs = ({
-  jobsStore,
-  fetchJobLogs,
-  match,
   item,
-  removeJobLogs
+  match,
+  refreshLogs,
+  functionsStore,
+  jobsStore,
+  removeLogs,
+  withLogsRefreshBtn
 }) => {
-  const refreshLogs = useCallback(() => {
-    fetchJobLogs(item.uid, match.params.projectName)
-  }, [fetchJobLogs, item.uid, match.params.projectName])
+  const [detailsLogs, setDetailsLogs] = useState('')
 
   useEffect(() => {
-    refreshLogs()
+    setDetailsLogs(jobsStore.logs || functionsStore.logs)
+
     return () => {
-      removeJobLogs()
+      setDetailsLogs('')
     }
-  }, [refreshLogs, removeJobLogs])
+  }, [functionsStore.logs, jobsStore.logs])
+
+  useEffect(() => {
+    if (withLogsRefreshBtn) {
+      refreshLogs(item.uid, match.params.projectName)
+    } else {
+      refreshLogs(match.params.projectName, item.name, item.tag)
+    }
+
+    return () => {
+      removeLogs()
+    }
+  }, [
+    item.name,
+    item.tag,
+    item.uid,
+    match.params.projectName,
+    refreshLogs,
+    removeLogs,
+    withLogsRefreshBtn
+  ])
+
   return (
     <div className="table__item_logs">
-      {jobsStore.logs.length > 0 ? (
-        <div className="table__item_logs__content">{jobsStore.logs}</div>
-      ) : jobsStore.loading ? null : (
+      {detailsLogs.length > 0 ? (
+        <div className="table__item_logs__content">{detailsLogs}</div>
+      ) : functionsStore.loading || jobsStore.loading ? null : (
         <NoData />
       )}
-      <button onClick={refreshLogs} className="logs_refresh">
-        <Refresh />
-        Refresh
-      </button>
+      {withLogsRefreshBtn && (
+        <button
+          onClick={() => refreshLogs(item.uid, match.params.projectName)}
+          className="logs_refresh"
+        >
+          <Refresh />
+          Refresh
+        </button>
+      )}
     </div>
   )
 }
 
 DetailsLogs.propTypes = {
-  fetchJobLogs: PropTypes.func.isRequired,
-  jobsStore: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired
+  item: PropTypes.object.isRequired,
+  match: PropTypes.shape({}).isRequired,
+  refreshLogs: PropTypes.func.isRequired,
+  removeLogs: PropTypes.func.isRequired,
+  withLogsRefreshBtn: PropTypes.bool.isRequired
 }
 
-export default connect(jobsStore => jobsStore, jobsActions)(DetailsLogs)
+export default connect(({ functionsStore, jobsStore }) => ({
+  functionsStore,
+  jobsStore
+}))(DetailsLogs)

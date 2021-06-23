@@ -18,8 +18,7 @@ const FunctionsPanel = ({
   match,
   removeFunctionsError,
   createNewFunction,
-  setNewFunctionProject,
-  setNewFunctionSourceCode
+  setNewFunctionProject
 }) => {
   const [isNameValid, setNameValid] = useState(true)
   const [isHandlerValid, setHandlerValid] = useState(true)
@@ -65,8 +64,8 @@ const FunctionsPanel = ({
 
   const handleDeploy = func => {
     deployFunction(func)
-      .then(() => {
-        handleDeployFunctionSuccess()
+      .then(response => {
+        handleDeployFunctionSuccess(response.data.ready)
       })
       .catch(() => {
         handleDeployFunctionFailure()
