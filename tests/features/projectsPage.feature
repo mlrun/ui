@@ -17,7 +17,7 @@ Feature: MLRun Projects Page
     Scenario: Sort projects in ascending and decending order
         Given open url
         And wait load page
-        Then select "By name" option in "Projects_Sort_Dropdown" dropdown on "Projects" wizard
+        When select "By name" option in "Projects_Sort_Dropdown" dropdown on "Projects" wizard
         Then sort projects in ascending order
         Then sort projects in descending order
 
@@ -38,7 +38,7 @@ Feature: MLRun Projects Page
     Scenario: Verify all mandatory components on Archive ML Project
         Given open url
         And wait load page
-        Then select "Archive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "test" value in "name" column
+        Then select "Archive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "new-proj" value in "name" column
         Then verify if "Archive_Project" popup dialog appears
         Then "Description" component on "Archive_Project" should contains "Descriptions"."Archive_Project"
         Then verify "Cancel_Button" element visibility on "Archive_Project" wizard
@@ -48,7 +48,7 @@ Feature: MLRun Projects Page
     Scenario: Verify all mandatory components on Delete existing ML Project
         Given open url
         And wait load page
-        Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "test" value in "name" column
+        Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "new-proj" value in "name" column
         Then verify if "Delete_Project" popup dialog appears
         Then "Description" component on "Delete_Project" should contains "Descriptions"."Delete_Project"
         Then verify "Cancel_Button" element visibility on "Delete_Project" wizard
@@ -76,7 +76,7 @@ Feature: MLRun Projects Page
         Then verify if "Archive_Project" popup dialog appears
         Then click on "Archive_Button" element on "Archive_Project" wizard
         Then check "automation-test-name1" value not in "name" column in "Projects_Table" table on "Projects" wizard
-        Then select "Archived Projects" option in "Projects_Dropdown" dropdown on "Projects" wizard
+        When select "Archived Projects" option in "Projects_Dropdown" dropdown on "Projects" wizard
         Then check "automation-test-name1" value in "name" column in "Projects_Table" table on "Projects" wizard
         And remove "automation-test-name1" MLRun Project with code 204
 

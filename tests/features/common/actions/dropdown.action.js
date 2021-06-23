@@ -27,11 +27,23 @@ const action = {
         if (txt === option) {
           await element.click()
           await driver.sleep(500)
+          break
         }
       }
     } else {
       selectedElement.click()
       await driver.sleep(500)
+    }
+  },
+  selectOptionInDropdownWithoutCheck: async function(driver, dropdown, option) {
+    const elements = await driver.findElements(dropdown.options)
+    for (const element of elements) {
+      const txt = await element.getText()
+      if (txt === option) {
+        await element.click()
+        await driver.sleep(500)
+        break
+      }
     }
   },
   checkDropdownSelectedOption: async function(driver, dropdown, option) {
