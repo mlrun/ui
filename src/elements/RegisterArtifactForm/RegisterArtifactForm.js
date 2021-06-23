@@ -33,6 +33,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
         className="pop-up-dialog__form-input"
         density="chunky"
         floatingLabel
+        invalid={key.required}
         label="Name"
         onChange={value =>
           onChange(prevData => ({
@@ -50,6 +51,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
         className="pop-up-dialog__form-input"
         density="chunky"
         floatingLabel
+        invalid={target_path.required}
         label="Target Path"
         onChange={value =>
           onChange(prevData => ({

@@ -42,7 +42,7 @@ const Input = React.forwardRef(
   ) => {
     const [inputIsFocused, setInputIsFocused] = useState(false)
     const [labelWidth, setLabelWidth] = useState(0)
-    const [isRequired, setIsRequired] = useState(false)
+    const [isInvalid, setIsInvalid] = useState(false)
     const [typedValue, setTypedValue] = useState('')
     const input = React.createRef()
     const inputLabel = useRef(null)
@@ -53,7 +53,7 @@ const Input = React.forwardRef(
       (inputIsFocused || placeholder || typedValue.length > 0) &&
         floatingLabel &&
         'active-input',
-      (invalid || isRequired) && 'input_invalid'
+      isInvalid && 'input_invalid'
     )
     const labelClassNames = classnames(
       'input__label',
@@ -68,6 +68,12 @@ const Input = React.forwardRef(
     useEffect(() => {
       setTypedValue(String(value ?? '')) // convert from number to string
     }, [value])
+
+    useEffect(() => {
+      if (isInvalid !== invalid) {
+        setIsInvalid(invalid)
+      }
+    }, [invalid, isInvalid])
 
     useEffect(() => {
       if (focused) {
@@ -104,7 +110,7 @@ const Input = React.forwardRef(
       onChange(event.target.value)
 
       if (required && event.target.value.length === 0) {
-        setIsRequired(true)
+        setIsInvalid(true)
       }
     }
 
@@ -121,7 +127,7 @@ const Input = React.forwardRef(
           onChange={inputOnChange}
           onFocus={inputOnFocus}
           ref={input}
-          required={isRequired}
+          required={isInvalid}
           {...{
             disabled,
             maxLength,
@@ -150,7 +156,7 @@ const Input = React.forwardRef(
             {required && <span className="input__label-mandatory"> *</span>}
           </label>
         )}
-        {(invalid || isRequired) && (
+        {isInvalid && (
           <Tooltip
             className="input__warning"
             template={

@@ -30,6 +30,7 @@ const CreateProjectDialog = ({
           <Input
             className="pop-up-dialog__form-input"
             floatingLabel
+            invalid={isEmptyValue && projectStore.newProject.name.length === 0}
             label="Name"
             maxLength={63}
             onChange={setNewProjectName}

@@ -175,8 +175,7 @@ const KeyValueTable = ({
               type="text"
               wrapperClassName="table-cell__key"
               invalid={isKeyNotUnique(key, content)}
-              required
-              requiredText="Name already exists"
+              invalidText="Name already exists"
             />
           )}
 
