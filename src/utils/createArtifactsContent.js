@@ -539,6 +539,17 @@ const createFeaturesRowData = (artifact, isTablePanelOpen) => {
       expandedCellContent: {
         class: 'artifacts_small',
         value: ''
+      },
+      rowExpanded: {
+        getLink: tab =>
+          generateLinkToDetailsPanel(
+            artifact.metadata?.project,
+            FEATURE_STORE_PAGE,
+            FEATURE_SETS_TAB,
+            artifact.metadata?.name,
+            artifact.metadata?.tag,
+            tab
+          )
       }
     },
     type: {
