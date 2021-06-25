@@ -214,9 +214,9 @@ const Files = ({
           searchItem.URI = generateUri(searchItem, ARTIFACTS)
           setSelectedFile({ item: searchItem })
         }
-      } else {
-        setSelectedFile({})
       }
+    } else {
+      setSelectedFile({})
     }
   }, [
     artifactsStore,
