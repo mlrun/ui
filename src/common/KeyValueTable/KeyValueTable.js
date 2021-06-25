@@ -140,9 +140,19 @@ const KeyValueTable = ({
               }
             }}
           >
-            <div className="table-cell table-cell__key">{contentItem.key}</div>
+            <div className="table-cell table-cell__key">
+              <Tooltip
+                template={<TextTooltipTemplate text={contentItem.key} />}
+              >
+                {contentItem.key}
+              </Tooltip>
+            </div>
             <div className="table-cell table-cell__value">
-              {contentItem.value}
+              <Tooltip
+                template={<TextTooltipTemplate text={contentItem.value} />}
+              >
+                {contentItem.value}
+              </Tooltip>
             </div>
             <div className="table-cell table-cell__actions">
               <button
