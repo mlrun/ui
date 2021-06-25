@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -12,103 +12,136 @@ import { CHIP_OPTIONS } from '../../types'
 
 import './hiddenChipsBlock.scss'
 
-const HiddenChipsBlock = ({
-  chipIndex,
-  chips,
-  chipOptions,
-  className,
-  editConfig,
-  handleEditChip,
-  handleIsEdit,
-  handleRemoveChip,
-  handleShowElements,
-  isEditMode,
-  setEditConfig
-}) => {
-  const [isTop, setIsTop] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-  const hiddenRef = useRef()
-  const offset = 28
-  const hiddenChipsBlockClassNames = classnames(
-    'chip-block-hidden',
-    isTop ? 'chip-block-hidden_top' : 'chip-block-hidden_bottom',
-    isVisible && 'chip-block-hidden_visible'
-  )
+const HiddenChipsBlock = React.forwardRef(
+  (
+    {
+      chipIndex,
+      chips,
+      chipOptions,
+      className,
+      editConfig,
+      handleEditChip,
+      handleIsEdit,
+      handleRemoveChip,
+      handleShowElements,
+      isEditMode,
+      setEditConfig
+    },
+    ref
+  ) => {
+    const [isTop, setIsTop] = useState(false)
+    const [isRight, setIsRight] = useState(true)
+    const [isVisible, setIsVisible] = useState(false)
+    const [windowHalfWidth, setWindowHalfWidth] = useState(
+      window.innerWidth / 2
+    )
 
-  useEffect(() => {
-    if (hiddenRef?.current) {
-      const scrollableParent = getFirstScrollableParent(
-        hiddenRef.current.offsetParent
-      )
-      const { height, top } = hiddenRef.current.getBoundingClientRect()
+    const hiddenRef = useRef()
 
-      if (
-        hiddenRef.current.offsetParent.getBoundingClientRect().top -
-          hiddenRef.current.offsetParent.clientHeight -
-          height -
-          offset <
-          0 ||
-        scrollableParent.getBoundingClientRect().top > top
-      ) {
-        setIsTop(true)
+    const offset = 28
+
+    const hiddenChipsBlockClassNames = classnames(
+      'chip-block-hidden',
+      isTop ? 'chip-block-hidden_top' : 'chip-block-hidden_bottom',
+      isRight ? 'chip-block-hidden_right' : 'chip-block-hidden_left',
+      isVisible && 'chip-block-hidden_visible'
+    )
+
+    const handleResize = useCallback(() => {
+      if (hiddenRef?.current) {
+        setWindowHalfWidth(parseInt(window.innerWidth / 2))
       }
+    }, [hiddenRef])
 
-      setIsVisible(true)
-    }
-  }, [hiddenRef, offset])
+    useEffect(() => {
+      handleResize()
+    }, [handleResize])
 
-  useEffect(() => {
-    if (chips.length === 0) {
-      handleShowElements()
-    }
-  })
+    useEffect(() => {
+      if (hiddenRef?.current) {
+        window.addEventListener('resize', handleResize)
 
-  return (
-    <div ref={hiddenRef} className={hiddenChipsBlockClassNames}>
-      {chips?.map((element, index) => {
-        const { chipLabel, chipValue } = getChipLabelAndValue(element)
+        return () => window.removeEventListener('resize', handleResize)
+      }
+    }, [handleResize, hiddenRef])
 
-        return (
-          <Tooltip
-            key={element.value}
-            template={
-              <TextTooltipTemplate
-                text={
-                  element.delimiter ? (
-                    <span>
-                      {chipLabel}
-                      <span className="chip__delimiter">
-                        {element.delimiter}
-                      </span>
-                      {chipValue}
-                    </span>
-                  ) : (
-                    element.value
-                  )
-                }
-              />
-            }
-          >
-            <Chip
-              chip={element}
-              chipIndex={`${index}${chipIndex}`}
-              chipOptions={chipOptions}
-              className={className}
-              editConfig={editConfig}
-              handleEditChip={handleEditChip}
-              handleIsEdit={handleIsEdit}
-              handleRemoveChip={handleRemoveChip}
-              hiddenChips
-              isEditMode={isEditMode}
-              ref={hiddenRef}
-              setEditConfig={setEditConfig}
-            />
-          </Tooltip>
+    useEffect(() => {
+      if (hiddenRef?.current) {
+        const scrollableParent = getFirstScrollableParent(
+          hiddenRef.current.offsetParent
         )
-      })}
-    </div>
-  )
-}
+        const { height, top } = hiddenRef.current.getBoundingClientRect()
+        const { right } = ref.current.getBoundingClientRect()
+
+        if (
+          hiddenRef.current.offsetParent.getBoundingClientRect().top -
+            hiddenRef.current.offsetParent.clientHeight -
+            height -
+            offset <
+            0 ||
+          scrollableParent.getBoundingClientRect().top > top
+        ) {
+          setIsTop(true)
+        }
+
+        setIsRight(right <= windowHalfWidth)
+        setIsVisible(true)
+      }
+    }, [hiddenRef, isRight, offset, ref, windowHalfWidth])
+
+    useEffect(() => {
+      if (chips.length === 0) {
+        handleShowElements()
+      }
+    })
+
+    return (
+      <div ref={hiddenRef} className={hiddenChipsBlockClassNames}>
+        {chips?.map((element, index) => {
+          const { chipLabel, chipValue } = getChipLabelAndValue(element)
+
+          return (
+            <Tooltip
+              key={element.value}
+              template={
+                <TextTooltipTemplate
+                  text={
+                    element.delimiter ? (
+                      <span>
+                        {chipLabel}
+                        <span className="chip__delimiter">
+                          {element.delimiter}
+                        </span>
+                        {chipValue}
+                      </span>
+                    ) : (
+                      element.value
+                    )
+                  }
+                />
+              }
+            >
+              <Chip
+                chip={element}
+                chipIndex={index + chipIndex}
+                chipOptions={chipOptions}
+                className={className}
+                editConfig={editConfig}
+                handleEditChip={handleEditChip}
+                handleIsEdit={handleIsEdit}
+                handleRemoveChip={handleRemoveChip}
+                hiddenChips
+                isEditMode={isEditMode}
+                ref={hiddenRef}
+                setEditConfig={setEditConfig}
+              />
+            </Tooltip>
+          )
+        })}
+      </div>
+    )
+  }
+)
 
 HiddenChipsBlock.defaultProps = {
   chips: [],

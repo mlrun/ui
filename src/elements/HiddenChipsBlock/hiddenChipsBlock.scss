@@ -3,6 +3,7 @@
 @import '../../scss/shadows';
 @import '../../scss/borders';
 @import '../../scss/mixins';
+@import '../../scss/mixins';
 
 .chip-block-hidden {
   position: absolute;
@@ -26,16 +27,9 @@
     bottom: 112%;
 
     &::after {
-      position: absolute;
-      right: 20px;
+      @include hiddenChipBlockArrow();
+
       bottom: -6px;
-      z-index: -10;
-      display: block;
-      width: 12px;
-      height: 12px;
-      background-color: $white;
-      transform: rotate(-45deg);
-      content: '';
     }
   }
 
@@ -43,17 +37,24 @@
     top: 112%;
 
     &::before {
-      position: absolute;
+      @include hiddenChipBlockArrow();
+
       top: -6px;
-      right: 20px;
-      z-index: -10;
-      display: block;
-      width: 12px;
-      height: 12px;
-      background-color: $white;
-      transform: rotate(-45deg);
-      content: '';
     }
+  }
+
+  &_left {
+    &::before {
+      right: 20px;
+    }
+
+    &::after {
+      right: 20px;
+    }
+  }
+
+  &_right {
+    right: unset;
   }
 
   .chip {

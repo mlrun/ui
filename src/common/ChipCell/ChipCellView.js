@@ -99,6 +99,7 @@ const ChipCellView = React.forwardRef(
                     handleShowElements={handleShowElements}
                     isEditMode={isEditMode}
                     setEditConfig={setEditConfig}
+                    ref={ref}
                   />
                 )}
               </div>
