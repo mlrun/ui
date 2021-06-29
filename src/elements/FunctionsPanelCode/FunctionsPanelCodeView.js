@@ -75,7 +75,7 @@ const FunctionsPanelCodeView = ({
               floatingLabel
               label="Handler"
               onChange={handleHandlerChange}
-              onBlur={handleHandlerOnBlur}
+              onBlur={event => handleHandlerOnBlur(event)}
               required={!isHandlerValid}
               requiredText="This field is required"
               type="text"
