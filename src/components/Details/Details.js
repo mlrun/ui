@@ -62,8 +62,7 @@ const Details = ({
         selectedItem
       })
     )
-    handleCancel()
-  }, [dispatch, handleCancel, selectedItem])
+  }, [dispatch, selectedItem])
 
   const handleEditInput = useCallback(
     (value, field) => {
