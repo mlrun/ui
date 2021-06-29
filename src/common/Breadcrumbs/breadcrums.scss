@@ -20,6 +20,7 @@
 
   &__item {
     position: relative;
+    max-width: 700px;
     color: $topaz;
 
     &:last-child {

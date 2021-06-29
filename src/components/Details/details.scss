@@ -21,6 +21,10 @@
 
     .item {
       &-header {
+        &__title {
+          max-width: calc(100% - 370px);
+        }
+
         &__pods {
           &-error {
             color: $spunPearl;
