@@ -122,6 +122,8 @@ const createArtifactsRowData = artifact => {
 }
 
 const createModelsRowData = (artifact, project) => {
+  const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+
   return {
     key: {
       uniqueReference: getArtifactReference(artifact),
@@ -141,13 +143,11 @@ const createModelsRowData = (artifact, project) => {
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
-          ? `${artifact.tag} #${artifact.iter}`
-          : `${truncateUid(artifact.tree)}${
-              artifact.iter ? ` #${artifact.iter}` : ''
-            }`,
-        tooltip:
-          artifact.tag ||
-          `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
+          ? `${artifact.tag}${iter}`
+          : `${truncateUid(artifact.tree)}${iter}`,
+        tooltip: artifact.tag
+          ? `${artifact.tag}${iter}`
+          : `${artifact.tree}${iter}`
       },
       rowExpanded: {
         getLink: false
@@ -214,6 +214,8 @@ const createModelsRowData = (artifact, project) => {
 }
 
 const createFilesRowData = (artifact, project) => {
+  const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+
   return {
     key: {
       uniqueReference: getArtifactReference(artifact),
@@ -233,13 +235,11 @@ const createFilesRowData = (artifact, project) => {
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
-          ? `${artifact.tag} #${artifact.iter}`
-          : `${truncateUid(artifact.tree)}${
-              artifact.iter ? ` #${artifact.iter}` : ''
-            }`,
-        tooltip:
-          artifact.tag ||
-          `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
+          ? `${artifact.tag}${iter}`
+          : `${truncateUid(artifact.tree)}${iter}`,
+        tooltip: artifact.tag
+          ? `${artifact.tag}${iter}`
+          : `${artifact.tree}${iter}`
       },
       rowExpanded: {
         getLink: false
@@ -385,6 +385,8 @@ const createModelEndpointsRowData = (artifact, project) => {
 }
 
 const createDatasetsRowData = (artifact, project) => {
+  const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+
   return {
     key: {
       uniqueReference: getArtifactReference(artifact),
@@ -404,13 +406,11 @@ const createDatasetsRowData = (artifact, project) => {
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
-          ? `${artifact.tag} #${artifact.iter}`
-          : `${truncateUid(artifact.tree)}${
-              artifact.iter ? ` #${artifact.iter}` : ''
-            }`,
-        tooltip:
-          artifact.tag ||
-          `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
+          ? `${artifact.tag}${iter}`
+          : `${truncateUid(artifact.tree)}${iter}`,
+        tooltip: artifact.tag
+          ? `${artifact.tag}${iter}`
+          : `${artifact.tree}${iter}`
       },
       rowExpanded: {
         getLink: false
