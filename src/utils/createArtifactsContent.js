@@ -558,15 +558,11 @@ const createFeaturesRowData = (artifact, isTablePanelOpen) => {
       class: 'artifacts_big',
       type: 'labels'
     },
-    targets: {
-      ...getFeatureSetTargetCellValue(artifact.targets),
-      hidden: isTablePanelOpen
-    },
     validator: {
       value: <FeatureValidator validator={artifact.validator} />,
       class: 'artifacts_medium',
       type: 'component',
-      hidden: isTablePanelOpen
+      hidden: true
     },
     addFeature: {
       value: <AddFeatureButton feature={artifact} />,
