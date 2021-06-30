@@ -19,9 +19,10 @@ import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
 import { copyToClipboard } from './copyToClipboard'
-import { generateUri, getArtifactReference } from './resources'
+import { generateUri } from './resources'
 import { generateLinkPath, parseUri, truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import getArtifactIdentifier from './getArtifactIdentifier'
 
 import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
@@ -126,7 +127,7 @@ const createModelsRowData = (artifact, project) => {
 
   return {
     key: {
-      uniqueReference: getArtifactReference(artifact),
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -218,7 +219,7 @@ const createFilesRowData = (artifact, project) => {
 
   return {
     key: {
-      uniqueReference: getArtifactReference(artifact),
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -322,6 +323,7 @@ const createModelEndpointsRowData = (artifact, project) => {
 
   return {
     key: {
+      identifier: getArtifactIdentifier(artifact),
       value: name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -389,7 +391,7 @@ const createDatasetsRowData = (artifact, project) => {
 
   return {
     key: {
-      uniqueReference: getArtifactReference(artifact),
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -468,6 +470,7 @@ const createDatasetsRowData = (artifact, project) => {
 const createFeatureSetsRowData = (artifact, project) => {
   return {
     key: {
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -517,6 +520,7 @@ const createFeatureSetsRowData = (artifact, project) => {
 const createFeaturesRowData = (artifact, isTablePanelOpen) => {
   return {
     key: {
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.name,
       class: 'artifacts_medium',
       expandedCellContent: {
@@ -604,6 +608,7 @@ const getFeatureSetTargetCellValue = targets => ({
 
 const createFeatureVectorsRowData = (artifact, project) => ({
   key: {
+    identifier: getArtifactIdentifier(artifact),
     value: artifact.name,
     class: 'artifacts_medium',
     getLink: tab =>
