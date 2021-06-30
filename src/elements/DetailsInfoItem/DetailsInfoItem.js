@@ -190,6 +190,7 @@ DetailsInfoItem.defaultProps = {
     chips: [],
     delimiter: null
   },
+  chipOptions: {},
   currentField: '',
   editableFieldType: null,
   func: '',
@@ -210,7 +211,7 @@ DetailsInfoItem.propTypes = {
     chips: PropTypes.arrayOf(PropTypes.string),
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),
-  chipOptions: CHIP_OPTIONS.isRequired,
+  chipOptions: CHIP_OPTIONS,
   currentField: PropTypes.string,
   editableFieldType: PropTypes.string,
   func: PropTypes.string,
