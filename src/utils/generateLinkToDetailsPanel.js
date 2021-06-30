@@ -10,4 +10,4 @@ export const generateLinkToDetailsPanel = (
 ) =>
   `/projects/${project}/${screen.toLowerCase()}${tab ? `/${tab}` : ''}/${key}${
     version ? `/${version}` : uid ? `/${uid}` : ''
-  }${iter ? `/${iter}` : ''}/${detailsTab.toLowerCase()}`
+  }${isNaN(parseInt(iter)) ? '' : `/${iter}`}/${detailsTab.toLowerCase()}`

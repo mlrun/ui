@@ -194,6 +194,7 @@ const DetailsView = React.forwardRef(
             <DetailsMenuItem
               hash={selectedItem.hash}
               id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
+              iter={selectedItem.iter}
               key={link}
               match={match}
               name={selectedItem.db_key || selectedItem.name}
