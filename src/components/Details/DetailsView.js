@@ -64,11 +64,23 @@ const DetailsView = React.forwardRef(
           <ErrorMessage message={detailsStore.error.message} />
         )}
         <div className="item-header__data">
-          <h3>
-            {selectedItem.name ||
-              selectedItem.db_key ||
-              selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
-            }
+          <h3 className="item-header__title">
+            <Tooltip
+              template={
+                <TextTooltipTemplate
+                  text={
+                    selectedItem.name ||
+                    selectedItem.db_key ||
+                    selectedItem.spec?.model?.replace(/:.*$/, '')
+                  }
+                />
+              }
+            >
+              {selectedItem.name ||
+                selectedItem.db_key ||
+                selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
+              }
+            </Tooltip>
           </h3>
           <span>
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
@@ -182,6 +194,7 @@ const DetailsView = React.forwardRef(
             <DetailsMenuItem
               hash={selectedItem.hash}
               id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
+              iter={selectedItem.iter}
               key={link}
               match={match}
               name={selectedItem.db_key || selectedItem.name}

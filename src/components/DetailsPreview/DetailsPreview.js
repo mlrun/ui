@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -21,6 +22,10 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
     }
   }, [artifact, noData])
 
+  const artifactsPreviewClassNames = classnames(
+    artifact.target_path && 'artifact-preview__with-popout'
+  )
+
   return (
     <div className="preview_container">
       {artifact.target_path && (
@@ -30,7 +35,11 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
           </Tooltip>
         </button>
       )}
-      <ArtifactsPreview noData={noData} preview={preview} />
+      <ArtifactsPreview
+        className={artifactsPreviewClassNames}
+        noData={noData}
+        preview={preview}
+      />
     </div>
   )
 }

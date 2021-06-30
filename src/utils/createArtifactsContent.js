@@ -19,9 +19,10 @@ import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { convertBytes } from './convertBytes'
 import { copyToClipboard } from './copyToClipboard'
-import { generateUri, getArtifactReference } from './resources'
+import { generateUri } from './resources'
 import { generateLinkPath, parseUri, truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import getArtifactIdentifier from './getArtifactIdentifier'
 
 import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
@@ -122,9 +123,11 @@ const createArtifactsRowData = artifact => {
 }
 
 const createModelsRowData = (artifact, project) => {
+  const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+
   return {
     key: {
-      uniqueReference: getArtifactReference(artifact),
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -141,13 +144,11 @@ const createModelsRowData = (artifact, project) => {
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
-          ? `${artifact.tag} #${artifact.iter}`
-          : `${truncateUid(artifact.tree)}${
-              artifact.iter ? ` #${artifact.iter}` : ''
-            }`,
-        tooltip:
-          artifact.tag ||
-          `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
+          ? `${artifact.tag}${iter}`
+          : `${truncateUid(artifact.tree)}${iter}`,
+        tooltip: artifact.tag
+          ? `${artifact.tag}${iter}`
+          : `${artifact.tree}${iter}`
       },
       rowExpanded: {
         getLink: false
@@ -180,13 +181,16 @@ const createModelsRowData = (artifact, project) => {
       type: 'metrics'
     },
     frameWorkAndAlgorithm: {
-      value: (
-        <span>
-          <span>{artifact.framework}</span>
-          <br />
-          <span>{artifact.algorithm}</span>
-        </span>
-      ),
+      value:
+        artifact.framework || artifact.algorithm ? (
+          <span>
+            <span>{artifact.framework}</span>
+            <br />
+            <span>{artifact.algorithm}</span>
+          </span>
+        ) : (
+          ''
+        ),
       class: 'artifacts_small'
     },
     version: {
@@ -214,9 +218,11 @@ const createModelsRowData = (artifact, project) => {
 }
 
 const createFilesRowData = (artifact, project) => {
+  const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+
   return {
     key: {
-      uniqueReference: getArtifactReference(artifact),
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -233,13 +239,11 @@ const createFilesRowData = (artifact, project) => {
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
-          ? `${artifact.tag} #${artifact.iter}`
-          : `${truncateUid(artifact.tree)}${
-              artifact.iter ? ` #${artifact.iter}` : ''
-            }`,
-        tooltip:
-          artifact.tag ||
-          `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
+          ? `${artifact.tag}${iter}`
+          : `${truncateUid(artifact.tree)}${iter}`,
+        tooltip: artifact.tag
+          ? `${artifact.tag}${iter}`
+          : `${artifact.tree}${iter}`
       },
       rowExpanded: {
         getLink: false
@@ -322,6 +326,7 @@ const createModelEndpointsRowData = (artifact, project) => {
 
   return {
     key: {
+      identifier: getArtifactIdentifier(artifact),
       value: name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -385,9 +390,11 @@ const createModelEndpointsRowData = (artifact, project) => {
 }
 
 const createDatasetsRowData = (artifact, project) => {
+  const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+
   return {
     key: {
-      uniqueReference: getArtifactReference(artifact),
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -404,13 +411,11 @@ const createDatasetsRowData = (artifact, project) => {
       expandedCellContent: {
         class: 'artifacts_medium',
         value: artifact.tag
-          ? `${artifact.tag} #${artifact.iter}`
-          : `${truncateUid(artifact.tree)}${
-              artifact.iter ? ` #${artifact.iter}` : ''
-            }`,
-        tooltip:
-          artifact.tag ||
-          `${artifact.tree}${artifact.iter ? ` #${artifact.iter}` : ''}`
+          ? `${artifact.tag}${iter}`
+          : `${truncateUid(artifact.tree)}${iter}`,
+        tooltip: artifact.tag
+          ? `${artifact.tag}${iter}`
+          : `${artifact.tree}${iter}`
       },
       rowExpanded: {
         getLink: false
@@ -468,6 +473,7 @@ const createDatasetsRowData = (artifact, project) => {
 const createFeatureSetsRowData = (artifact, project) => {
   return {
     key: {
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -517,6 +523,7 @@ const createFeatureSetsRowData = (artifact, project) => {
 const createFeaturesRowData = (artifact, isTablePanelOpen) => {
   return {
     key: {
+      identifier: getArtifactIdentifier(artifact),
       value: artifact.name,
       class: 'artifacts_medium',
       expandedCellContent: {
@@ -539,6 +546,17 @@ const createFeaturesRowData = (artifact, isTablePanelOpen) => {
       expandedCellContent: {
         class: 'artifacts_small',
         value: ''
+      },
+      rowExpanded: {
+        getLink: tab =>
+          generateLinkToDetailsPanel(
+            artifact.metadata?.project,
+            FEATURE_STORE_PAGE,
+            FEATURE_SETS_TAB,
+            artifact.metadata?.name,
+            artifact.metadata?.tag,
+            tab
+          )
       }
     },
     type: {
@@ -558,15 +576,11 @@ const createFeaturesRowData = (artifact, isTablePanelOpen) => {
       class: 'artifacts_big',
       type: 'labels'
     },
-    targets: {
-      ...getFeatureSetTargetCellValue(artifact.targets),
-      hidden: isTablePanelOpen
-    },
     validator: {
       value: <FeatureValidator validator={artifact.validator} />,
       class: 'artifacts_medium',
       type: 'component',
-      hidden: isTablePanelOpen
+      hidden: true
     },
     addFeature: {
       value: <AddFeatureButton feature={artifact} />,
@@ -608,6 +622,7 @@ const getFeatureSetTargetCellValue = targets => ({
 
 const createFeatureVectorsRowData = (artifact, project) => ({
   key: {
+    identifier: getArtifactIdentifier(artifact),
     value: artifact.name,
     class: 'artifacts_medium',
     getLink: tab =>

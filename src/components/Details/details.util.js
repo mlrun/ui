@@ -384,7 +384,7 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.URI
   },
   partition_keys: {
-    value: (selectedItem.partition_keys || []).map(key => key)
+    value: selectedItem.partition_keys?.toString() ?? ''
   },
   timestamp_key: {
     value: selectedItem.timestamp_key ?? ''

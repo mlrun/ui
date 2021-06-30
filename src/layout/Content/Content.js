@@ -133,7 +133,6 @@ const Content = ({
     return () => {
       setGroupedByName({})
       setGroupedByWorkflow({})
-      setExpand(false)
       setConvertedYaml('')
     }
   }, [

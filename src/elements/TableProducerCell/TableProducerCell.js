@@ -7,10 +7,13 @@ import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 
 import { detailsMenu } from '../../components/JobsPage/jobsData'
 
-const TableProducerCell = ({ data, match }) => {
+const TableProducerCell = ({ data }) => {
+  const [project, uid] = data.value.uri?.split('/') || []
+  const [overviewTab] = detailsMenu || []
+
   return (
     <div className={`table-body__cell ${data.class}`}>
-      {data.value?.uri && (
+      {data.value.name && uid && (
         <Tooltip
           template={
             <ProducerTooltipTemplate
@@ -21,8 +24,9 @@ const TableProducerCell = ({ data, match }) => {
         >
           <Link
             className="link"
-            to={`/projects/${match.params.projectName}/jobs/monitor/${data.value
-              .uri && data.value.uri.split('/')[1]}/${detailsMenu[0]}`}
+            to={`/projects/${project}/jobs/monitor/${
+              uid.split('-')[0]
+            }/${overviewTab}`}
           >
             {data.value.name}
           </Link>
@@ -33,8 +37,7 @@ const TableProducerCell = ({ data, match }) => {
 }
 
 TableProducerCell.propTypes = {
-  data: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired
+  data: PropTypes.shape({}).isRequired
 }
 
 export default TableProducerCell

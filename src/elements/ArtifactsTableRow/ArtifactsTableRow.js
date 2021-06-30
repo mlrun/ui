@@ -9,14 +9,11 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import {
   ACTION_CELL_ID,
-  DATASETS_TAB,
   DETAILS_OVERVIEW_TAB,
   FEATURES_TAB,
-  FILES_PAGE,
-  MODEL_ENDPOINTS_TAB,
-  MODELS_TAB
+  MODEL_ENDPOINTS_TAB
 } from '../../constants'
-import { getArtifactReference } from '../../utils/resources'
+import getArtifactIdentifier from '../../utils/getArtifactIdentifier'
 
 const ArtifactsTableRow = ({
   actionsMenu,
@@ -35,10 +32,8 @@ const ArtifactsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    ((selectedItem?.db_key && selectedItem?.db_key === rowItem.key.value) ||
-      (selectedItem?.name &&
-        selectedItem.name === rowItem.key.value &&
-        selectedItem.tag === rowItem.version.value)) &&
+    match.params.pageTab !== FEATURES_TAB &&
+      getArtifactIdentifier(selectedItem) === rowItem.key.identifier &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -55,42 +50,16 @@ const ArtifactsTableRow = ({
             `${artifact.key?.value}-${artifact.feature_set?.value}`
         )
       } else {
-        if (pageData.selectedRowData?.[artifact.key.value]?.content) {
-          return pageData.selectedRowData?.[artifact.key.value]?.content.find(
-            contentItem => {
-              const key = contentItem.db_key ? 'db_key' : 'name'
+        const currentContent =
+          pageData.selectedRowData?.[artifact.key.value]?.content || content
 
-              if (
-                [MODELS_TAB, DATASETS_TAB].includes(match.params.pageTab) ||
-                pageData.page === FILES_PAGE
-              ) {
-                return (
-                  contentItem.db_key + getArtifactReference(contentItem) ===
-                  artifact.key.value + artifact.key.uniqueReference
-                )
-              }
-
-              return artifact.version.value
-                ? contentItem[key] === artifact.key.value &&
-                    contentItem.tag === artifact.version.value
-                : contentItem.uid
-                ? contentItem.uid === artifact.uid.value
-                : contentItem[key] === artifact.key.value
-            }
-          )
-        }
-
-        return content.find(contentItem => {
-          const key = contentItem.db_key ? 'db_key' : 'name'
-
-          return (
-            contentItem[key] === artifact.key.value &&
-            contentItem.tag === artifact.version?.value
-          )
-        })
+        return currentContent.find(
+          contentItem =>
+            getArtifactIdentifier(contentItem) === artifact.key.identifier
+        )
       }
     },
-    [content, match.params.pageTab, pageData.page, pageData.selectedRowData]
+    [content, match.params.pageTab, pageData.selectedRowData]
   )
 
   useEffect(() => {
@@ -126,21 +95,10 @@ const ArtifactsTableRow = ({
           </div>
           {tableContent.map((artifact, index) => {
             const subRowCurrentItem = findCurrentItem(artifact)
-            const selectedItemReference = selectedItem.iter
-              ? getArtifactReference(selectedItem)
-              : ''
-            const subRowCurrentItemReference = getArtifactReference(
-              subRowCurrentItem ?? {}
-            )
-
             const subRowClassNames = classnames(
               'table-body__row',
-              ((selectedItemReference &&
-                selectedItemReference === subRowCurrentItemReference) ||
-                (selectedItem.uid &&
-                  selectedItem?.uid === subRowCurrentItem?.uid &&
-                  selectedItem?.tag === subRowCurrentItem?.tag)) &&
-                'row_active'
+              getArtifactIdentifier(subRowCurrentItem) ===
+                getArtifactIdentifier(selectedItem) && 'row_active'
             )
 
             return (

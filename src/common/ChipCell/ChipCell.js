@@ -22,7 +22,7 @@ const ChipCell = ({
   visibleChipsMaxLength
 }) => {
   const [sizeContainer, setSizeContainer] = useState(0)
-  const [show, setShow] = useState(false)
+  const [showHiddenChips, setShowHiddenChips] = useState(false)
   const [editConfig, setEditConfig] = useState({
     chipIndex: null,
     isEdit: false,
@@ -52,16 +52,16 @@ const ChipCell = ({
 
   const handleShowElements = useCallback(() => {
     if (!isEditMode || (isEditMode && visibleChipsMaxLength)) {
-      setShow(!show)
+      setShowHiddenChips(state => !state)
     }
-  }, [isEditMode, show, visibleChipsMaxLength])
+  }, [isEditMode, visibleChipsMaxLength])
 
   useEffect(() => {
-    if (show) {
+    if (showHiddenChips) {
       window.addEventListener('click', handleShowElements)
       return () => window.removeEventListener('click', handleShowElements)
     }
-  }, [show, handleShowElements])
+  }, [showHiddenChips, handleShowElements])
 
   const handleResize = useCallback(() => {
     if (!isEditMode) {
@@ -92,6 +92,10 @@ const ChipCell = ({
         addChip(chip, elements)
       }
 
+      if (showHiddenChips) {
+        setShowHiddenChips(false)
+      }
+
       setEditConfig({
         chipIndex: elements.length,
         isEdit: true,
@@ -100,7 +104,13 @@ const ChipCell = ({
         isNewChip: true
       })
     },
-    [editConfig.isEdit, editConfig.chipIndex, elements, addChip]
+    [
+      editConfig.isEdit,
+      editConfig.chipIndex,
+      showHiddenChips,
+      elements,
+      addChip
+    ]
   )
 
   const handleRemoveChip = useCallback(
@@ -211,7 +221,7 @@ const ChipCell = ({
       isEditMode={isEditMode}
       ref={chipRef}
       setEditConfig={setEditConfig}
-      show={show}
+      showHiddenChips={showHiddenChips}
     />
   )
 }

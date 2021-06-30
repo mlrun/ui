@@ -62,9 +62,13 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
           height: 0,
           width: 0
         }
+        const leftPosition =
+          event.x - (event.x + tooltipWidth - window.innerWidth + offset)
         const left =
           event.x + tooltipWidth > window.innerWidth
-            ? event.x - (event.x + tooltipWidth - window.innerWidth + offset)
+            ? leftPosition > offset
+              ? leftPosition
+              : offset
             : event.x
 
         if (top + height + offset + tooltipHeight >= window.innerHeight) {
