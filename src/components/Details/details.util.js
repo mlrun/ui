@@ -416,9 +416,6 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   usage_example: {
     value: selectedItem.usage_example ?? ''
   },
-  timestamp_key: {
-    value: selectedItem.timestamp_field ?? ''
-  },
   label_column: {
     value: selectedItem.label_column ?? ''
   }

@@ -71,7 +71,6 @@ export const featureVectorsInfoHeaders = [
   { label: 'Version', id: 'tag' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Last updated', id: 'updated' },
-  { label: 'Timestamp Key', id: 'timestamp_key' },
   { label: 'Label column', id: 'label_column' },
   { label: 'Usage example', id: 'usage_example' }
 ]
@@ -566,12 +565,12 @@ export const generateFeatureVectorsDetailsMenu = selectedItem => {
       header: 'returned features',
       visible: Boolean(selectedItem.item?.features)
     },
-    { header: 'preview', visible: true },
+    { header: 'preview', visible: false },
     {
       header: 'statistics',
       visible: Boolean(selectedItem.item?.stats && selectedItem.item?.features)
     },
-    { header: 'analysis', visible: true }
+    { header: 'analysis', visible: false }
   ]
 
   return selectedItem.item
