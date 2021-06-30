@@ -13,7 +13,7 @@ const TableProducerCell = ({ data }) => {
 
   return (
     <div className={`table-body__cell ${data.class}`}>
-      {data.value.name && (
+      {data.value.name && uid && (
         <Tooltip
           template={
             <ProducerTooltipTemplate
