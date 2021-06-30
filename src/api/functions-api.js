@@ -23,6 +23,20 @@ export default {
 
     return mainHttpClient.get('/funcs', { params })
   },
+  getFunctionLogs: (project, name, tag, offset) => {
+    const params = {
+      project,
+      name,
+      tag,
+      logs: true
+    }
+
+    if (offset > 0) {
+      params.offset = offset
+    }
+
+    return mainHttpClient.get('/build/status', { params })
+  },
   getFunctionTemplate: path => functionTemplatesHttpClient.get(path),
   getFunctionTemplatesCatalog: () =>
     functionTemplatesHttpClient.get('catalog.json')

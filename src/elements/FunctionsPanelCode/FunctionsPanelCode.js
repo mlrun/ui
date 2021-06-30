@@ -47,10 +47,12 @@ const FunctionsPanelCode = ({
     }))
   }
 
-  const handleHandlerOnBlur = () => {
+  const handleHandlerOnBlur = event => {
     if (data.handler.length === 0) {
       setHandlerValid(false)
-    } else {
+    } else if (
+      functionsStore.newFunction.spec.default_handler !== event.target.value
+    ) {
       setNewFunctionHandler(data.handler)
     }
   }

@@ -7,6 +7,10 @@
   flex-direction: column;
   overflow-x: auto;
 
+  &__with-popout {
+    margin-right: 33px;
+  }
+
   &__header {
     margin: 30px 0;
   }

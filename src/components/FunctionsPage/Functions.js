@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { chain, isEqual, isEmpty } from 'lodash'
@@ -17,7 +17,8 @@ import {
   FUNCTIONS_FAILED_STATES,
   infoHeaders,
   page,
-  tableHeaders
+  tableHeaders,
+  TRANSIENT_FUNCTION_STATUSES
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 
@@ -32,10 +33,12 @@ import { ReactComponent as Run } from '../../images/run.svg'
 
 const Functions = ({
   deleteFunction,
+  fetchFunctionLogs,
   fetchFunctions,
   functionsStore,
   history,
   match,
+  removeFunctionLogs,
   removeFunctionsError,
   removeNewFunction,
   removeNewJob,
@@ -50,6 +53,36 @@ const Functions = ({
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   const location = useLocation()
+  let fetchFunctionLogsTimeout = useRef(null)
+
+  const handleFetchFunctionLogs = useCallback(
+    (projectName, name, tag, offset) => {
+      return fetchFunctionLogs(projectName, name, tag, offset).then(result => {
+        if (
+          TRANSIENT_FUNCTION_STATUSES.includes(
+            result.headers?.['x-mlrun-function-status']
+          )
+        ) {
+          fetchFunctionLogsTimeout.current = setTimeout(() => {
+            let currentOffset = offset
+              ? offset + result.data.length
+              : result.data.length
+
+            handleFetchFunctionLogs(projectName, name, tag, currentOffset)
+          }, 2000)
+        } else {
+          clearTimeout(fetchFunctionLogsTimeout.current)
+        }
+      })
+    },
+    [fetchFunctionLogs]
+  )
+
+  const handleRemoveLogs = useCallback(() => {
+    clearTimeout(fetchFunctionLogsTimeout.current)
+    removeFunctionLogs()
+  }, [fetchFunctionLogsTimeout, removeFunctionLogs])
+
   const pageData = {
     actionsMenu: item => [
       {
@@ -74,7 +107,10 @@ const Functions = ({
       onClick: () => setFunctionsPanelIsOpen(true),
       variant: 'secondary',
       hidden: new URLSearchParams(location.search).get('demo') !== 'true'
-    }
+    },
+    refreshLogs: handleFetchFunctionLogs,
+    removeLogs: handleRemoveLogs,
+    withLogsRefreshBtn: false
   }
 
   const refreshFunctions = useCallback(
@@ -139,32 +175,16 @@ const Functions = ({
     if (match.params.hash && functions.length > 0) {
       const funcTagIndex = match.params.hash.indexOf(':')
 
-      if (selectedFunction.updated) {
-        item = functions.find(func => {
-          if (funcTagIndex > 0) {
-            return (
-              isEqual(func.updated, selectedFunction.updated) &&
-              isEqual(func.tag, selectedFunction.tag)
-            )
-          } else {
-            return (
-              isEqual(func.updated, selectedFunction.updated) &&
-              isEqual(func.hash, selectedFunction.hash)
-            )
-          }
-        })
-      } else {
-        item = functions.find(func => {
-          if (funcTagIndex > 0) {
-            return isEqual(func.tag, match.params.hash.slice(funcTagIndex + 1))
-          } else {
-            return isEqual(
-              func.hash,
-              match.params.hash.slice(match.params.hash.indexOf('@') + 1)
-            )
-          }
-        })
-      }
+      item = functions.find(func => {
+        if (funcTagIndex > 0) {
+          return isEqual(func.tag, match.params.hash.slice(funcTagIndex + 1))
+        } else {
+          return isEqual(
+            func.hash,
+            match.params.hash.slice(match.params.hash.indexOf('@') + 1)
+          )
+        }
+      })
 
       if (!item || Object.keys(item).length === 0) {
         return history.push(`/projects/${match.params.projectName}/functions`)
@@ -172,16 +192,7 @@ const Functions = ({
     }
 
     setSelectedFunction(item)
-  }, [
-    functions,
-    match.params.hash,
-    setSelectedFunction,
-    history,
-    match.params.projectName,
-    selectedFunction.updated,
-    selectedFunction.hash,
-    selectedFunction.tag
-  ])
+  }, [functions, history, match.params.hash, match.params.projectName])
 
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {
@@ -267,8 +278,9 @@ const Functions = ({
     })
   }
 
-  const handleDeployFunctionSuccess = () => {
+  const handleDeployFunctionSuccess = ready => {
     const { name, tag } = functionsStore.newFunction.metadata
+    const tab = ready === false ? 'logs' : 'overview'
 
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
@@ -279,7 +291,7 @@ const Functions = ({
       )
 
       history.push(
-        `/projects/${match.params.projectName}/functions/${currentItem.hash}/overview`
+        `/projects/${match.params.projectName}/functions/${currentItem.hash}/${tab}`
       )
       setNotification({
         status: 200,

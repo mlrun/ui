@@ -179,7 +179,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
               <li
                 data-testid="breadcrumbs-id"
                 key={`${i}${item}`}
-                className="breadcrumbs__item"
+                className="breadcrumbs__item data-ellipsis"
               >
                 {label}
               </li>,

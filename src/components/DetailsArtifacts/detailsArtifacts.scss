@@ -69,9 +69,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: auto;
     padding: 21px 26px;
-    overflow: auto;
     border-bottom: $secondaryBorder;
   }
 }

@@ -33,15 +33,15 @@
   }
 
   .table-cell__key {
-    width: 50%;
+    width: 47%;
   }
 
   .table-cell__value {
-    width: 50%;
+    width: 47%;
   }
 
   .table-cell__actions {
-    width: 40px;
+    width: 2%;
   }
 
   .add-new-item-btn {
@@ -68,11 +68,11 @@
     width: 100%;
 
     .input {
+      width: 100%;
       border: none;
       border-radius: unset;
 
       &_edit {
-        width: 100%;
         border: $primaryBorder;
       }
 

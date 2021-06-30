@@ -103,7 +103,7 @@ const TableCell = ({
       </div>
     )
   } else if (data.type === 'producer') {
-    return <TableProducerCell data={data} match={match} />
+    return <TableProducerCell data={data} />
   } else if (data.type === 'buttonPopout') {
     return (
       <div className={`table-body__cell ${data.class}`}>

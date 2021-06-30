@@ -77,8 +77,8 @@ const FunctionsPanelCodeView = ({
               invalidText="This field is invalid"
               label="Handler"
               onChange={handleHandlerChange}
-              onBlur={handleHandlerOnBlur}
-              required
+              onBlur={event => handleHandlerOnBlur(event)}
+              required={!isHandlerValid}
               requiredText="This field is required"
               type="text"
               value={data.handler}

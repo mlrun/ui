@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
 import Input from '../../common/Input/Input'
@@ -13,6 +14,7 @@ import './functionsPanelGeneral.scss'
 
 const FunctionsPanelGeneralView = ({
   data,
+  functionsStore,
   handleAddLabel,
   handleChangeLabels,
   handleNameChange,
@@ -89,7 +91,11 @@ const FunctionsPanelGeneralView = ({
             }))
           }
           onBlur={event => {
-            setNewFunctionDescription(event.target.value)
+            if (
+              functionsStore.newFunction.spec.description !== event.target.value
+            ) {
+              setNewFunctionDescription(event.target.value)
+            }
           }}
           type="text"
           value={data.description}
@@ -127,4 +133,6 @@ FunctionsPanelGeneralView.propTypes = {
   setNewFunctionType: PropTypes.func.isRequired
 }
 
-export default FunctionsPanelGeneralView
+export default connect(({ functionsStore }) => ({ functionsStore }))(
+  FunctionsPanelGeneralView
+)

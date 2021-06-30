@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import Input from '../../../common/Input/Input'
 import ChipCell from '../../../common/ChipCell/ChipCell'
@@ -12,6 +13,7 @@ import { ReactComponent as Close } from '../../../images/close.svg'
 import './featureSetsPanelTitle.scss'
 
 const FeatureSetsPanelTitleView = ({
+  artifactsStore,
   closePanel,
   data,
   handleAddLabel,
@@ -65,7 +67,9 @@ const FeatureSetsPanelTitleView = ({
               }))
             }
             onBlur={event => {
-              if (event.target.value.length > 0) {
+              if (
+                artifactsStore.newFeatureSet.metadata.tag !== event.target.value
+              ) {
                 setNewFeatureSetVersion(event.target.value)
               }
             }}
@@ -86,7 +90,12 @@ const FeatureSetsPanelTitleView = ({
             }))
           }
           onBlur={event => {
-            setNewFeatureSetDescription(event.target.value)
+            if (
+              artifactsStore.newFeatureSet.spec.description !==
+              event.target.value
+            ) {
+              setNewFeatureSetDescription(event.target.value)
+            }
           }}
           type="text"
           value={data.description}
@@ -127,4 +136,6 @@ FeatureSetsPanelTitleView.propTypes = {
   setNewFeatureSetVersion: PropTypes.func.isRequired
 }
 
-export default FeatureSetsPanelTitleView
+export default connect(({ artifactsStore }) => ({
+  artifactsStore
+}))(FeatureSetsPanelTitleView)

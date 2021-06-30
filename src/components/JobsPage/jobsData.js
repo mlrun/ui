@@ -125,7 +125,9 @@ export const generatePageData = (
   handleMonitoring,
   jobsDashboardUrl,
   onAbortJob,
-  abortableFunctionKinds
+  abortableFunctionKinds,
+  fetchJobLogs,
+  removeJobLogs
 ) => {
   let jobFilters = []
   let filterMenuActionButton = {
@@ -163,7 +165,10 @@ export const generatePageData = (
     page,
     tableHeaders: generateTableHeaders(scheduled),
     tabs,
-    infoHeaders
+    infoHeaders,
+    refreshLogs: fetchJobLogs,
+    removeLogs: removeJobLogs,
+    withLogsRefreshBtn: true
   }
 }
 
