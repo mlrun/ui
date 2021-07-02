@@ -35,9 +35,12 @@ const ArtifactsPreviewView = ({
         {preview?.type === 'table' && (
           <div className="artifact-preview__table">
             <div className="artifact-preview__table-row artifact-preview__table-header">
-              {preview.data.headers.map(header => {
+              {preview.data.headers.map((header, index) => {
                 return (
-                  <div key={header} className="artifact-preview__table-content">
+                  <div
+                    key={`${header}${index}`}
+                    className="artifact-preview__table-content"
+                  >
                     <Tooltip template={<TextTooltipTemplate text={header} />}>
                       {header}
                     </Tooltip>
