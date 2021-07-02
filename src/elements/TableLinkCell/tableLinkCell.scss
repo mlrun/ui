@@ -1,0 +1,48 @@
+@import '../../scss/colors';
+
+.table-body__cell {
+  .name-wrapper {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .item {
+      &-name {
+        min-width: 100%;
+        max-width: 125px;
+
+        &.function-name {
+          max-width: 120px;
+        }
+      }
+
+      &-tag {
+        max-width: 150px;
+        margin-left: 10px;
+
+        span {
+          display: inline;
+        }
+      }
+    }
+  }
+
+  .link-subtext {
+    color: $topaz;
+  }
+
+  .date-uid-row {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    font-size: 12px;
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    line-height: 14px;
+
+    span:last-child {
+      margin-left: 10px;
+    }
+  }
+}

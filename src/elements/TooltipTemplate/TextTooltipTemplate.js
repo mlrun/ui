@@ -1,15 +1,34 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import './textTooltipTemplate.scss'
 
 const TextTooltipTemplate = ({ text, warning }) => {
+  const [style, setStyle] = useState({})
+  const textRef = useRef()
+  const horizontalPadding = 8
   const tooltipClassNames = classnames(
     'tooltip__text',
     warning && 'tooltip__warning'
   )
-  return <div className={tooltipClassNames}>{text}</div>
+
+  useEffect(() => {
+    if (textRef?.current) {
+      const { width } = textRef.current?.getBoundingClientRect()
+
+      setStyle({
+        padding: `6px ${horizontalPadding}px`,
+        width: width + horizontalPadding * 2
+      })
+    }
+  }, [])
+
+  return (
+    <div className={tooltipClassNames} style={style}>
+      <span ref={textRef}>{text}</span>
+    </div>
+  )
 }
 
 TextTooltipTemplate.propTypes = {
