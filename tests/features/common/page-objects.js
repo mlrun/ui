@@ -6,6 +6,7 @@ import featureStore from './page-objects/feature-store.po'
 import infoPane from './page-objects/info-pane.po'
 import interactivePopup from './page-objects/interactive-popup.po'
 import sidePanel from './page-objects/side-panel.po'
+import jobsAndWorkflows from './page-objects/jobs-and-workflows.po'
 
 module.exports = {
   commonPagesHeader: {
@@ -29,5 +30,8 @@ module.exports = {
   Statistics_Info_Pane: infoPane['statisticsInfoPane'],
   Analysis_Info_Pane: infoPane['analysisInfoPane'],
   Register_Dataset: interactivePopup['registerDataset'],
-  New_Feature_Set: sidePanel['newFeatureSet']
+  New_Feature_Set: sidePanel['newFeatureSet'],
+  Jobs_Monitor_Tab: jobsAndWorkflows['JobsMonitorTab'],
+  Create_Feature_Set_Popup_Dialog:
+    interactivePopup['createFeatureSetPopupDialog']
 }

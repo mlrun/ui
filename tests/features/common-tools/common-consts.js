@@ -37,5 +37,19 @@ module.exports = {
       "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that before " +
       "setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
     Delete_Project: 'Deleted projects can not be restored.'
+  },
+  Jobs_And_Workflows: {
+    Tab_List: ['Monitor', 'Schedule']
+  },
+  Jobs_Monitor_Tab: {
+    'Any time': 'Any time',
+    'Past hour': 3600000,
+    'Past 24 hours': 86400000,
+    'Past week': 604800000,
+    'Past month': 2419200000,
+    'Past year': 31536000000
+  },
+  Date_Time_Picker: {
+    Error_Message: '“To” must be later than “From”'
   }
 }

@@ -71,7 +71,7 @@ module.exports = function(tableStructure) {
       )
       columnSelector[key] = By.css(subRoot)
 
-      const subComponent = table.body.row.fields[key].structure
+      const subComponent = { ...table.body.row.fields[key].structure }
       fieldSelector[key] = index => {
         subComponent.root = fieldBuilder(
           table.root,
@@ -103,16 +103,20 @@ module.exports = function(tableStructure) {
         )
     }
   }
+
   const resultTable = {
     root: root,
     headerSorters: sorters,
     rowRoot: row,
     tableColumns: columnSelector,
-    tableFields: fieldSelector
+    tableFields: fieldSelector,
+    tableCulumnNames: Object.keys(table.body.row.fields)
   }
+
   if (table.body.add_row_btn) {
     resultTable.add_row_btn = By.css(`${table.root} ${table.body.add_row_btn}`)
   }
+
   return resultTable
 }
 

@@ -12,7 +12,6 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Expand_Rows_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
@@ -38,7 +37,7 @@ Feature: Feature Store Page
         Then verify "Features_Table" element visibility on "Feature_Store_Features_Tab" wizard
 
     @passive
-    Scenario: Check all mandatory components on Features tab
+    Scenario: Check all mandatory components on Feature Vectors tab
         Given open url
         And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -48,6 +47,7 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature Vectors" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Feature_Store"."Tab_List"
+        And turn on demo mode
         Then verify "Create_Vector_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Table_Label_Filter_Input" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
@@ -218,6 +218,7 @@ Feature: Feature Store Page
         Then verify "Archive_Button" element visibility on "Register_Dataset" wizard
 
     @passive
+    @inProgress
     Scenario: Check all mandatory components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
@@ -227,6 +228,8 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And turn on demo mode
+        Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" element visibility on "New_Feature_Set" wizard
@@ -236,16 +239,12 @@ Feature: Feature Store Page
         Then verify "Accordion_Header" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Collapse_Button" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Input" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "Key_Input" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "Time_Input" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "Kind_Dropdown" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Attributes_Table" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Data_Source_Accordion" is collapsed on "New_Feature_Set" wizard
         Then verify "Accordion_Header" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Collapse_Button" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Timestamp_Input" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
-        Then verify "Schema_Attributes_Table" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Schema_Accordion" is collapsed on "New_Feature_Set" wizard
         Then verify "Accordion_Header" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -255,8 +254,6 @@ Feature: Feature Store Page
         Then verify "Other_Checkbox" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "Target_Store_Accordion" is collapsed on "New_Feature_Set" wizard
-        Then verify "No_Transformation_Radiobutton" element visibility on "New_Feature_Set" wizard
-        Then verify "Add_Transformation_Via_API_Radiobutton" element visibility on "New_Feature_Set" wizard
         Then verify "Cancel_Batton" element visibility on "New_Feature_Set" wizard
         Then verify "Save_Batton" element visibility on "New_Feature_Set" wizard
         Then verify "Save_And_Ingest_Button" element visibility on "New_Feature_Set" wizard
@@ -272,11 +269,10 @@ Feature: Feature Store Page
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And turn on demo mode
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display "Input_Hint"."Feature_Set_Name_Hint"
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
-        # Then verify input to tooltip regex rules
-        # Then verify "Version_Input" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "URL_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."URL_Field_Require"
         Then verify "Kind_Dropdown" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Kind_Options"
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -295,6 +291,7 @@ Feature: Feature Store Page
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And turn on demo mode
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
@@ -305,7 +302,7 @@ Feature: Feature Store Page
         Then verify "File_Type_Dropdown" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Input" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then is "No_Transformation_Radiobutton" on "New_Feature_Set" selected
+        # Then is "No_Transformation_Radiobutton" on "New_Feature_Set" selected
         # This scenario will be finised after adding some selet attribute to radiobutton component
 
     @passive
@@ -318,6 +315,7 @@ Feature: Feature Store Page
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And turn on demo mode
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When add rows to "Labels_Table" table on "New_Feature_Set" wizard
             | key_input | value_input |
@@ -326,16 +324,16 @@ Feature: Feature Store Page
             |    key3   |    value3   |
         Then verify values in "Labels_Table" table on "New_Feature_Set" wizard
             |     label    |
-            | key1: value1 |
-            | key2: value2 |
-            | key3: value3 |
+            | key1\n:\nvalue1 |
+            | key2\n:\nvalue2 |
+            | key3\n:\nvalue3 |
         When click on "remove_btn" in "Labels_Table" table on "New_Feature_Set" wizard
             |     label    |
-            | key1: value1 |
-            | key3: value3 |
+            | key1\n:\nvalue1 |
+            | key3\n:\nvalue3 |
         Then verify values in "Labels_Table" table on "New_Feature_Set" wizard
             |     label    |
-            | key2: value2 |
+            | key2\n:\nvalue2 |
 
     @passive
     Scenario: Test rows on Attributes Table on Feature Store Feature Set new item wizard
@@ -347,6 +345,7 @@ Feature: Feature Store Page
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And turn on demo mode
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When add rows to "Attributes_Table" table in "Data_Source_Accordion" on "New_Feature_Set" wizard
             | attribute_name_input | value_input |
@@ -359,37 +358,7 @@ Feature: Feature Store Page
             |   attribute2   | value2 |
             |   attribute3   | value3 |
 
-    @passive
-    Scenario: Test rows on Schema Attributes Table on Feature Store Feature Set new item wizard
-        Given open url
-        And wait load page
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-        And wait load page
-        And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
-        When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
-        When add rows to "Schema_Attributes_Table" table in "Schema_Accordion" on "New_Feature_Set" wizard
-            | entity_name_input |
-            |      entity1      |
-            |      entity2      |
-            |      entity3      |
-        Then verify values in "Schema_Attributes_Table" table in "Schema_Accordion" on "New_Feature_Set" wizard
-            | entity_name |
-            |   entity1   |
-            |   entity2   |
-            |   entity3   |
-        When click on "remove_btn" in "Schema_Attributes_Table" table in "Schema_Accordion" on "New_Feature_Set" wizard
-            | entity_name |
-            |   entity1   |
-            |   entity3   |
-        Then verify values in "Schema_Attributes_Table" table in "Schema_Accordion" on "New_Feature_Set" wizard
-            | entity_name |
-            |   entity2   |
-
-    @demo_mode
+    @inProgress
     Scenario: Save new Feature Store Feature Set new item wizard
         * create "automation-test-name3" MLRun Project with code 200
         Given open url
@@ -412,9 +381,9 @@ Feature: Feature Store Page
             |    key3   |    value3   |
         Then verify values in "Labels_Table" table on "New_Feature_Set" wizard
             |     label    |
-            | key1: value1 |
-            | key2: value2 |
-            | key3: value3 |
+            | key1\n:\nvalue1 |
+            | key2\n:\nvalue2 |
+            | key3\n:\nvalue3 |
         Then type value "Some demo description" to "URL_Input" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         When add rows to "Attributes_Table" table in "Data_Source_Accordion" on "New_Feature_Set" wizard
             | attribute_name_input | value_input |
@@ -427,19 +396,11 @@ Feature: Feature Store Page
             |   attribute2   | value2 |
             |   attribute3   | value3 |
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
-        When add rows to "Schema_Attributes_Table" table in "Schema_Accordion" on "New_Feature_Set" wizard
-            | entity_name_input |
-            |      entity1      |
-            |      entity2      |
-            |      entity3      |
-        Then verify values in "Schema_Attributes_Table" table in "Schema_Accordion" on "New_Feature_Set" wizard
-            | entity_name |
-            |   entity1   |
-            |   entity2   |
-            |   entity3   |
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
+        When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Batton" element on "New_Feature_Set" wizard
+        Then click on "OK_Button" element on "Create_Feature_Set_Popup_Dialog" wizard
         Then click on "Cross_Close_Button" element on "Features_Info_Pane" wizard
         Then verify values in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
             |       name       |      description      |

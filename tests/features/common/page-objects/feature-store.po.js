@@ -41,7 +41,7 @@ const labelsTable = {
 }
 
 const labelsDropdown = {
-  root: 'div.table-body__cell:nth-of-type(3) ',
+  root: 'div.table-body__cell:nth-of-type(3)',
   dropdownElements: {
     open_button: 'div.chip-block span.chips_button',
     options:
@@ -235,7 +235,7 @@ module.exports = {
       'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(1) input'
     ),
     Table_Label_Filter_Input: By.css(
-      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(1) input'
+      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2) input'
     ),
     Feature_Sets_Table: commonTable(featureSetsTable),
     Feature_Store_Tab_Selector: featureStoreTabSelector
