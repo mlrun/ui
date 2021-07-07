@@ -20,9 +20,9 @@ const DetailsAnalysis = ({ artifact }) => {
     Object.entries(artifact.analysis).forEach(([key, value]) => {
       getArtifactPreview(
         value,
-        value.startsWith('/User') &&
+        String(value).startsWith('/User') &&
           (artifact.user || artifact.producer?.owner),
-        value.replace(/.*\./g, '')
+        String(value).replace(/.*\./g, '')
       )
         .then(content => {
           setPreview(prevState => [...prevState, { ...content, header: key }])
