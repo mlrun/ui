@@ -1,6 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import _ from 'lodash'
+import { cloneDeep, remove } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
@@ -13,6 +13,11 @@ import runs from './data/runs.json'
 import pipelines from './data/pipelines.json'
 import schedules from './data/schedules.json'
 import artifactTags from './data/artifactsTags.json'
+import funcs from './data/funcs.json'
+import logs from './data/logs.json'
+
+import nuclioFunctions from './data/nuclioFunctions.json'
+import nuclioAPIGateways from './data/nuclioAPIGateways.json'
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -54,7 +59,9 @@ const projectExistsConflict = {
 // Mock consts
 const mockHome = process.cwd() + '/tests/mockServer'
 const mlrunAPIIngress =
-  '/mlrun-api-ingress.default-tenant.app.ui-dev.iguazio-cd0.com'
+  '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
+const nuclioApiUrl =
+  '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const port = 30000
 
 // Support function
@@ -131,12 +138,12 @@ function createNewProject(req, res) {
   )
 
   if (!collectedProjects.length) {
-    const project = _.cloneDeep(projectTemplate)
+    const project = cloneDeep(projectTemplate)
     project.metadata.name = req.body.metadata.name
     project.metadata.created = currentDate.toISOString()
     project.spec.description = req.body.spec.description
     projects.projects.push(project)
-    const summary = _.cloneDeep(summuryTemplate)
+    const summary = cloneDeep(summuryTemplate)
     summary.name = req.body.metadata.name
     projectsSummary.projects.push(summary)
     data = project
@@ -150,24 +157,32 @@ function createNewProject(req, res) {
 
 function deleteProject(req, res) {
   // TODO: improve that hendler acording to the real rooles of deleting
-  _.remove(
-    projects.projects,
+  const collectedProject = projects.projects.filter(
     project => project.metadata.name === req.params['project']
   )
-  _.remove(
-    projectsSummary.projects,
-    project => project.name === req.params['project']
-  )
-  _.remove(
-    featureSets.feature_sets,
-    featureSet => featureSet.metadata.project === req.params['project']
-  )
-  _.remove(
-    artifacts.artifacts,
-    artifact => artifact.project === req.params['project']
-  )
+  if (collectedProject.length) {
+    remove(
+      projects.projects,
+      project => project.metadata.name === req.params['project']
+    )
+    remove(
+      projectsSummary.projects,
+      project => project.name === req.params['project']
+    )
+    remove(
+      featureSets.feature_sets,
+      featureSet => featureSet.metadata.project === req.params['project']
+    )
+    remove(
+      artifacts.artifacts,
+      artifact => artifact.project === req.params['project']
+    )
 
-  res.statusCode = 204
+    res.statusCode = 204
+  } else {
+    res.statusCode = 500
+  }
+
   res.send({})
 }
 
@@ -196,6 +211,21 @@ function getRuns(req, res) {
   let collectedRuns = runs.runs.filter(
     run => run.metadata.project === req.query['project']
   )
+
+  if (req.query['start_time_from']) {
+    collectedRuns = collectedRuns.filter(
+      run =>
+        Date.parse(run.status.start_time) >=
+        Date.parse(req.query['start_time_from'])
+    )
+  }
+  if (req.query['start_time_from']) {
+    collectedRuns = collectedRuns.filter(
+      run =>
+        Date.parse(run.status.start_time) <=
+        Date.parse(req.query['start_time_to'])
+    )
+  }
 
   res.send({ runs: collectedRuns })
 }
@@ -288,11 +318,35 @@ function getArtifacts(req, res) {
   res.send({ artifacts: collectedArtifacts })
 }
 
+function getFuncs(req, res) {
+  const collectedFuncs = funcs.funcs.filter(
+    func => func.metadata.project === req.query['project']
+  )
+  res.send({ funcs: collectedFuncs })
+}
+
 function getFile(req, res) {
   const dataRoot = mockHome + '/data/'
   const filePath = dataRoot + req.query['path'].substring(8)
 
   res.sendFile(filePath)
+}
+
+function getLog(req, res) {
+  const collectedLog = logs.logs.find(log => log.uid === req.params['uid'])
+  res.send(collectedLog.log)
+}
+
+function getRuntimeResources(req, res) {
+  res.send({})
+}
+
+function getNuclioFunctions(req, res) {
+  res.send(nuclioFunctions)
+}
+
+function getNuclioAPIGateways(req, res) {
+  res.send(nuclioAPIGateways)
 }
 
 // REQUESTS
@@ -334,7 +388,20 @@ app.get(
 )
 app.get(`${mlrunAPIIngress}/api/artifacts`, getArtifacts)
 
+app.get(`${mlrunAPIIngress}/api/funcs`, getFuncs)
+
 app.get(`${mlrunAPIIngress}/api/files`, getFile)
+
+app.get(`${mlrunAPIIngress}/api/log/:project/:uid`, getLog)
+
+app.get(
+  `${mlrunAPIIngress}/api/projects/:project/runtime-resources`,
+  getRuntimeResources
+)
+
+app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)
+
+app.get(`${nuclioApiUrl}/api/api_gateways`, getNuclioAPIGateways)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

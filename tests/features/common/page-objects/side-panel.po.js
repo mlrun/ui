@@ -76,25 +76,25 @@ const dataSorceKindDropdown = {
 }
 
 const dataSorceAttributesTable = {
-  root: 'div.new-item-side-panel__table',
+  root: 'div.data-source__table',
   header: {
-    root: 'div.table__header',
+    root: 'div.table-row__header',
     sorters: {
-      attribute_name: 'div.table__cell:nth-of-type(1)',
-      value: 'div.table__cell:nth-of-type(2)'
+      attribute_name: 'div.table-cell__key',
+      value: 'div.table-cell__value'
     }
   },
   body: {
-    add_row_btn: 'div.table__row button.add-input',
+    add_row_btn: 'div.table-row button.add-new-item-btn',
     offset: 1,
     row: {
-      root: 'div[class^=table__row]',
+      root: 'div[class*=table-row]:not([class*=table-row__header])',
       fields: {
-        attribute_name: 'div.table__cell:nth-of-type(1) div.data-ellipsis',
-        value: 'div.table__cell:nth-of-type(2) div.data-ellipsis',
-        action: 'div.table__cell:nth-of-type(3)',
-        attribute_name_input: 'div.input-wrapper:nth-of-type(1) input',
-        value_input: 'div.input-wrapper:nth-of-type(2) input',
+        attribute_name: 'div.table-cell__key',
+        value: 'div.table-cell__value',
+        action: 'div.table-cell__actions',
+        attribute_name_input: 'div.table-cell__key input',
+        value_input: 'div.table-cell__value input',
         add_row_btn: 'button'
       }
     }
@@ -235,7 +235,7 @@ module.exports = {
       ),
       Online_Checkbox: checkboxComponent({
         root:
-          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__checkbox-container span.checkbox:nth-of-type(1)',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(1) span.checkbox',
         elements: {
           checkbox: 'svg[class]',
           name: '',
@@ -244,7 +244,7 @@ module.exports = {
       }),
       Offline_Checkbox: checkboxComponent({
         root:
-          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__checkbox-container span.checkbox:nth-of-type(2)',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(2) span.checkbox',
         elements: {
           checkbox: 'svg[class]',
           name: '',
@@ -253,7 +253,7 @@ module.exports = {
       }),
       Other_Checkbox: checkboxComponent({
         root:
-          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__checkbox-container span.checkbox:nth-of-type(3)',
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(3) span.checkbox',
         elements: {
           checkbox: 'svg[class]',
           name: '',
