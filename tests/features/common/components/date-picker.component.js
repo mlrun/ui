@@ -1,7 +1,7 @@
 import { By } from 'selenium-webdriver'
 import { locatorBuilder } from '../../common-tools/common-tools'
 
-import _ from 'lodash'
+import { cloneDeep } from 'lodash'
 
 module.exports = function(datepickerStructure) {
   const datepickerRoot = locatorBuilder`${0} ${1}`
@@ -23,7 +23,7 @@ module.exports = function(datepickerStructure) {
     options(datepickerStructure.root, datepickerStructure.error_message)
   )
 
-  const fromCalendarTable = _.cloneDeep(
+  const fromCalendarTable = cloneDeep(
     datepickerStructure.fromDatePicker.elements.calendar.structure
   )
   fromCalendarTable.root = options(fromRoot, fromCalendarTable.root)
@@ -54,7 +54,7 @@ module.exports = function(datepickerStructure) {
     )
   }
 
-  const toCalendarTable = _.cloneDeep(
+  const toCalendarTable = cloneDeep(
     datepickerStructure.toDatePicker.elements.calendar.structure
   )
   toCalendarTable.root = options(toRoot, toCalendarTable.root)

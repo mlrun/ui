@@ -1,6 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import _ from 'lodash'
+import { cloneDeep, remove } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
@@ -138,12 +138,12 @@ function createNewProject(req, res) {
   )
 
   if (!collectedProjects.length) {
-    const project = _.cloneDeep(projectTemplate)
+    const project = cloneDeep(projectTemplate)
     project.metadata.name = req.body.metadata.name
     project.metadata.created = currentDate.toISOString()
     project.spec.description = req.body.spec.description
     projects.projects.push(project)
-    const summary = _.cloneDeep(summuryTemplate)
+    const summary = cloneDeep(summuryTemplate)
     summary.name = req.body.metadata.name
     projectsSummary.projects.push(summary)
     data = project
@@ -161,19 +161,19 @@ function deleteProject(req, res) {
     project => project.metadata.name === req.params['project']
   )
   if (collectedProject.length) {
-    _.remove(
+    remove(
       projects.projects,
       project => project.metadata.name === req.params['project']
     )
-    _.remove(
+    remove(
       projectsSummary.projects,
       project => project.name === req.params['project']
     )
-    _.remove(
+    remove(
       featureSets.feature_sets,
       featureSet => featureSet.metadata.project === req.params['project']
     )
-    _.remove(
+    remove(
       artifacts.artifacts,
       artifact => artifact.project === req.params['project']
     )
