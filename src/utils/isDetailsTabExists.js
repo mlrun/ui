@@ -3,9 +3,7 @@ export const isDetailsTabExists = (page, params, tabsList, history) => {
     history.push(
       `/projects/${params.projectName}/${page.toLowerCase()}/${
         params.pageTab
-      }/${params.jobId ??
-        params.jobId ??
-        `${params.name}/${params.tag}`}/overview`
+      }/${params.jobId ?? `${params.name}/${params.tag}`}/overview`
     )
   }
 }
