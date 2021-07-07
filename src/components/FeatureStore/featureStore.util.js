@@ -60,7 +60,7 @@ export const featureSetsInfoHeaders = [
   { label: 'Entities', id: 'entities' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Partition keys', id: 'partition_keys' },
-  { label: 'Timestamp Key', id: 'timestamp_key' },
+  { label: 'Timestamp key', id: 'timestamp_key' },
   { label: 'Relations', id: 'relations' },
   { label: 'Label column', id: 'label_column' },
   { label: 'Usage example', id: 'usage_example' }
@@ -71,7 +71,6 @@ export const featureVectorsInfoHeaders = [
   { label: 'Version', id: 'tag' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Last updated', id: 'updated' },
-  { label: 'Timestamp Key', id: 'timestamp_key' },
   { label: 'Label column', id: 'label_column' },
   { label: 'Usage example', id: 'usage_example' }
 ]
@@ -227,14 +226,9 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
       class: 'artifacts_big'
     },
     {
-      header: 'Targets',
-      class: 'artifacts_small',
-      hidden: isTablePanelOpen
-    },
-    {
       header: 'Validator',
       class: 'artifacts_medium',
-      hidden: isTablePanelOpen
+      hidden: true
     },
     {
       header: '',
@@ -571,12 +565,12 @@ export const generateFeatureVectorsDetailsMenu = selectedItem => {
       header: 'returned features',
       visible: Boolean(selectedItem.item?.features)
     },
-    { header: 'preview', visible: true },
+    { header: 'preview', visible: false },
     {
       header: 'statistics',
       visible: Boolean(selectedItem.item?.stats && selectedItem.item?.features)
     },
-    { header: 'analysis', visible: true }
+    { header: 'analysis', visible: false }
   ]
 
   return selectedItem.item

@@ -133,7 +133,6 @@ const Content = ({
     return () => {
       setGroupedByName({})
       setGroupedByWorkflow({})
-      setExpand(false)
       setConvertedYaml('')
     }
   }, [
@@ -241,6 +240,8 @@ const Content = ({
         <div className="table-container">
           {content.length !== 0 ? (
             <Table
+              applyDetailsChanges={applyDetailsChanges}
+              cancelRequest={cancelRequest}
               content={content}
               groupedByName={groupedByName}
               groupedByWorkflow={groupedByWorkflow}
@@ -249,12 +250,10 @@ const Content = ({
               handleSelectItem={handleSelectItem}
               match={match}
               pageData={pageData}
+              retryRequest={refresh}
               selectedItem={selectedItem}
               setLoading={setLoading}
               toggleConvertToYaml={toggleConvertToYaml}
-              applyDetailsChanges={applyDetailsChanges}
-              cancelRequest={cancelRequest}
-              retryRequest={refresh}
             />
           ) : loading ? null : (
             <NoData />

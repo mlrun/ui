@@ -90,14 +90,6 @@
         .chips-wrapper {
           flex-wrap: wrap;
         }
-
-        .chip-block-hidden {
-          right: unset;
-
-          &::after {
-            left: 15px;
-          }
-        }
       }
 
       &__data {

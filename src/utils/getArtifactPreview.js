@@ -130,7 +130,9 @@ const handleSetArtifactPreviewObject = (
     } else {
       return {
         ...state,
-        [artifactIndex]: previewContent
+        [artifactIndex]: Array.isArray(previewContent)
+          ? previewContent
+          : [previewContent]
       }
     }
   })

@@ -185,7 +185,7 @@ const DetailsRequestedFeatures = ({
                 key={featureTemplate}
               >
                 <div className="item-requested-features__table-cell cell_project-name">
-                  {project !== match.params.projectName && project}
+                  {project || match.params.projectName}
                 </div>
                 <div className="item-requested-features__table-cell">
                   <span className="cell_feature-set">{featureSet}</span>

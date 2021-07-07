@@ -7,10 +7,15 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import PreviewError from './PreviewError/PreviewError'
 
-import './artifactaPreview.scss'
+import './artifactsPreview.scss'
 
-const ArtifactsPreviewView = ({ preview, setShowErrorBody, showErrorBody }) => (
-  <div className="artifact-preview">
+const ArtifactsPreviewView = ({
+  className,
+  preview,
+  setShowErrorBody,
+  showErrorBody
+}) => (
+  <div className={className}>
     {preview.header && (
       <h2 className="artifact-preview__header">{preview.header}</h2>
     )}
@@ -30,9 +35,12 @@ const ArtifactsPreviewView = ({ preview, setShowErrorBody, showErrorBody }) => (
         {preview?.type === 'table' && (
           <div className="artifact-preview__table">
             <div className="artifact-preview__table-row artifact-preview__table-header">
-              {preview.data.headers.map(header => {
+              {preview.data.headers.map((header, index) => {
                 return (
-                  <div key={header} className="artifact-preview__table-content">
+                  <div
+                    key={`${header}${index}`}
+                    className="artifact-preview__table-content"
+                  >
                     <Tooltip template={<TextTooltipTemplate text={header} />}>
                       {header}
                     </Tooltip>
@@ -120,6 +128,7 @@ const ArtifactsPreviewView = ({ preview, setShowErrorBody, showErrorBody }) => (
 )
 
 ArtifactsPreviewView.propTypes = {
+  className: PropTypes.string.isRequired,
   preview: PropTypes.shape({}).isRequired,
   setShowErrorBody: PropTypes.func.isRequired,
   showErrorBody: PropTypes.bool.isRequired

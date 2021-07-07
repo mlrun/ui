@@ -27,7 +27,7 @@ const ChipCellView = React.forwardRef(
       handleShowElements,
       isEditMode,
       setEditConfig,
-      show
+      showHiddenChips
     },
     ref
   ) => {
@@ -86,7 +86,7 @@ const ChipCellView = React.forwardRef(
                     ref={ref}
                   />
                 </Tooltip>
-                {chips.visibleChips.length - 1 === index && show && (
+                {chips.visibleChips.length - 1 === index && showHiddenChips && (
                   <HiddenChipsBlock
                     chipOptions={chipOptions}
                     className={className}
@@ -99,6 +99,7 @@ const ChipCellView = React.forwardRef(
                     handleShowElements={handleShowElements}
                     isEditMode={isEditMode}
                     setEditConfig={setEditConfig}
+                    ref={ref}
                   />
                 )}
               </div>

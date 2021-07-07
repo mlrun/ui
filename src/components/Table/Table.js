@@ -29,8 +29,8 @@ const Table = ({
   retryRequest,
   selectedItem,
   setLoading,
-  tableStore,
   setTablePanelOpen,
+  tableStore,
   toggleConvertToYaml
 }) => {
   const [tableContent, setTableContent] = useState({

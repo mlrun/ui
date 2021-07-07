@@ -35,7 +35,11 @@ import {
   SET_NEW_FUNCTION_SECRETS,
   SET_NEW_FUNCTION_BUILD_IMAGE,
   SET_NEW_FUNCTION_PROJECT,
-  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE
+  RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE,
+  FETCH_FUNCTION_LOGS_SUCCESS,
+  FETCH_FUNCTION_LOGS_FAILURE,
+  FETCH_FUNCTION_LOGS_BEGIN,
+  REMOVE_FUNCTION_LOGS
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -94,6 +98,31 @@ const functionsActions = {
   deployFunctionSuccess: () => ({
     type: DEPLOY_FUNCTION_SUCCESS
   }),
+  fetchFunctionLogs: (project, name, tag, offset) => dispatch => {
+    dispatch(functionsActions.fetchFunctionLogsBegin())
+
+    return functionsApi
+      .getFunctionLogs(project, name, tag, offset)
+      .then(result => {
+        dispatch(functionsActions.fetchFunctionLogsSuccess(result.data))
+
+        return result
+      })
+      .catch(error =>
+        dispatch(functionsActions.fetchFunctionLogsFailure(error))
+      )
+  },
+  fetchFunctionLogsBegin: () => ({
+    type: FETCH_FUNCTION_LOGS_BEGIN
+  }),
+  fetchFunctionLogsFailure: error => ({
+    type: FETCH_FUNCTION_LOGS_FAILURE,
+    payload: error
+  }),
+  fetchFunctionLogsSuccess: logs => ({
+    type: FETCH_FUNCTION_LOGS_SUCCESS,
+    payload: logs
+  }),
   fetchFunctions: (project, name) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
 
@@ -109,13 +138,13 @@ const functionsActions = {
   fetchFunctionsBegin: () => ({
     type: FETCH_FUNCTIONS_BEGIN
   }),
-  fetchFunctionsSuccess: funcs => ({
-    type: FETCH_FUNCTIONS_SUCCESS,
-    payload: funcs
-  }),
   fetchFunctionsFailure: error => ({
     type: FETCH_FUNCTIONS_FAILURE,
     payload: error
+  }),
+  fetchFunctionsSuccess: funcs => ({
+    type: FETCH_FUNCTIONS_SUCCESS,
+    payload: funcs
   }),
   fetchFunctionsTemplates: () => dispatch => {
     return functionsApi
@@ -174,6 +203,9 @@ const functionsActions = {
   fetchFunctionTemplateFailure: err => ({
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
+  }),
+  removeFunctionLogs: () => ({
+    type: REMOVE_FUNCTION_LOGS
   }),
   removeFunctionTemplate: () => ({
     type: REMOVE_FUNCTION_TEMPLATE

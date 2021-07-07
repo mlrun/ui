@@ -79,12 +79,7 @@ export const generateArtifactsContent = (
           /^store:\/\/artifacts\//,
           ''
         ),
-        link: (() => {
-          const { key: modelArtifact, project } = parseUri(
-            selectedItem?.spec?.model_uri
-          )
-          return `/projects/${project}/files/${modelArtifact}/overview`
-        })()
+        link: `${generateLinkPath(selectedItem?.spec?.model_uri)}/overview`
       },
       function_uri: {
         value: selectedItem?.spec?.function_uri,
@@ -282,7 +277,15 @@ export const renderContent = (
     case DETAILS_RESULTS_TAB:
       return <DetailsResults job={selectedItem} />
     case DETAILS_LOGS_TAB:
-      return <DetailsLogs match={match} item={selectedItem} />
+      return (
+        <DetailsLogs
+          item={selectedItem}
+          match={match}
+          refreshLogs={pageData.refreshLogs}
+          removeLogs={pageData.removeLogs}
+          withLogsRefreshBtn={pageData.withLogsRefreshBtn}
+        />
+      )
     case DETAILS_CODE_TAB:
       return <DetailsCode code={selectedItem.functionSourceCode} />
     case DETAILS_METADATA_TAB:
@@ -376,7 +379,7 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.URI
   },
   partition_keys: {
-    value: (selectedItem.partition_keys || []).map(key => key)
+    value: selectedItem.partition_keys?.toString() ?? ''
   },
   timestamp_key: {
     value: selectedItem.timestamp_key ?? ''
@@ -407,9 +410,6 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   },
   usage_example: {
     value: selectedItem.usage_example ?? ''
-  },
-  timestamp_key: {
-    value: selectedItem.timestamp_field ?? ''
   },
   label_column: {
     value: selectedItem.label_column ?? ''
