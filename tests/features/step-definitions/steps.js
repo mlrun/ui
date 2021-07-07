@@ -33,6 +33,7 @@ import {
 import {
   openDropdown,
   selectOptionInDropdown,
+  selectOptionInDropdownWithoutCheck,
   checkDropdownSelectedOption,
   checkDropdownOptions
 } from '../common/actions/dropdown.action'
@@ -45,9 +46,15 @@ import {
 } from '../common/actions/input-group.action'
 import {
   checkCheckbox,
+  uncheckCheckbox,
   isCheckboxUnchecked,
   isCheckboxChecked
 } from '../common/actions/checkbox.action'
+import {
+  verifyTimeFilterBand,
+  pickUpCustomDatetimeRange,
+  applyDatetimePickerRange
+} from '../common/actions/date-picker.action'
 
 import { isRadioButtonSelected } from '../common/actions/radio-button.action'
 
@@ -70,6 +77,7 @@ Then('click on {string} element on {string} wizard', async function(
 ) {
   await waiteUntilComponent(this.driver, pageObjects[wizard][component])
   await clickOnComponent(this.driver, pageObjects[wizard][component])
+  await this.driver.sleep(250)
 })
 
 Then('verify if {string} popup dialog appears', async function(popup) {
@@ -333,7 +341,7 @@ When(
   }
 )
 
-Then(
+When(
   'select {string} option in {string} dropdown on {string} wizard',
   async function(option, dropdown, wizard) {
     await openDropdown(this.driver, pageObjects[wizard][dropdown])
@@ -347,6 +355,81 @@ Then(
       this.driver,
       pageObjects[wizard][dropdown],
       option
+    )
+  }
+)
+
+When(
+  'select {string} option in {string} filter dropdown on {string} wizard',
+  async function(option, dropdown, wizard) {
+    await openDropdown(this.driver, pageObjects[wizard][dropdown])
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][dropdown],
+      option
+    )
+  }
+)
+
+Then(
+  'verify {string} filter band in {string} filter dropdown on {string} wizard',
+  async function(option, dropdown, wizard) {
+    await verifyTimeFilterBand(
+      this.driver,
+      pageObjects[wizard][dropdown],
+      pageObjectsConsts[wizard][option]
+    )
+  }
+)
+
+When(
+  'pick up {string} from {string} to {string} in {string} via {string} on {string} wizard',
+  async function(
+    option,
+    fromDatetime,
+    toDatetime,
+    datetimePicker,
+    dropdown,
+    wizard
+  ) {
+    await openDropdown(this.driver, pageObjects[wizard][dropdown])
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][dropdown],
+      option
+    )
+    await this.driver.sleep(100)
+    await pickUpCustomDatetimeRange(
+      this.driver,
+      pageObjects[wizard][datetimePicker],
+      fromDatetime,
+      toDatetime
+    )
+    await applyDatetimePickerRange(
+      this.driver,
+      pageObjects[wizard][datetimePicker]
+    )
+  }
+)
+
+Then(
+  'verify from {string} to {string} filter band in {string} filter dropdown on {string} wizard',
+  async function(fromDatetime, toDatetime, dropdown, wizard) {
+    await verifyTimeFilterBand(
+      this.driver,
+      pageObjects[wizard][dropdown],
+      Date.parse(fromDatetime) - Date.parse(toDatetime)
+    )
+  }
+)
+
+Then(
+  'verify error mesege in {string} on {string} wizard with value {string}.{string}',
+  async function(datetimePicker, wizard, constStorage, constValue) {
+    await verifyText(
+      this.driver,
+      pageObjects[wizard][datetimePicker].errorMessage,
+      pageObjectsConsts[constStorage][constValue]
     )
   }
 )
@@ -566,6 +649,14 @@ When('check {string} element in {string} on {string} wizard', async function(
   wizard
 ) {
   await checkCheckbox(this.driver, pageObjects[wizard][accordion][checkbox])
+})
+
+When('uncheck {string} element in {string} on {string} wizard', async function(
+  checkbox,
+  accordion,
+  wizard
+) {
+  await uncheckCheckbox(this.driver, pageObjects[wizard][accordion][checkbox])
 })
 
 Then(

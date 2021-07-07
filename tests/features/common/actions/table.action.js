@@ -72,6 +72,29 @@ const action = {
     const arr = await getColumnValues(driver, table, columnName)
     // console.log('debug: ', arr)
     expect(differenceWith(arr, values, isEqual).length).equal(0)
+  },
+  getAllCellsWithAttribute: async function(driver, table, attribute) {
+    let result = []
+
+    for (const column of table.tableCulumnNames) {
+      const classes = await driver
+        .findElements(table.tableColumns[column])
+        .then(days =>
+          Promise.all(days.map(day => day.getAttribute(attribute.attribute)))
+        )
+
+      result.push(
+        ...classes
+          .map((item, index) => {
+            if (item.includes(attribute.value)) {
+              return index
+            }
+          })
+          .filter(element => element >= 0)
+          .map(dayNum => [column, dayNum])
+      )
+    }
+    return result
   }
 }
 

@@ -83,5 +83,10 @@ module.exports = {
     ),
     Cancel_Button: commonCancelButton,
     Archive_Button: By.css('div.pop-up-dialog button.btn-primary')
+  },
+  createFeatureSetPopupDialog: {
+    Cross_Cancel_Button: commonCrossCancelButton,
+    Description: By.css('div.pop-up-dialog > div:not([class])'),
+    OK_Button: By.css('div.pop-up-dialog button.btn-primary')
   }
 }
