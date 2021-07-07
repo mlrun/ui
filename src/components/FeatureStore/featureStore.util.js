@@ -60,7 +60,7 @@ export const featureSetsInfoHeaders = [
   { label: 'Entities', id: 'entities' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Partition keys', id: 'partition_keys' },
-  { label: 'Timestamp Key', id: 'timestamp_key' },
+  { label: 'Timestamp key', id: 'timestamp_key' },
   { label: 'Relations', id: 'relations' },
   { label: 'Label column', id: 'label_column' },
   { label: 'Usage example', id: 'usage_example' }

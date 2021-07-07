@@ -79,12 +79,7 @@ export const generateArtifactsContent = (
           /^store:\/\/artifacts\//,
           ''
         ),
-        link: (() => {
-          const { key: modelArtifact, project } = parseUri(
-            selectedItem?.spec?.model_uri
-          )
-          return `/projects/${project}/files/${modelArtifact}/overview`
-        })()
+        link: `${generateLinkPath(selectedItem?.spec?.model_uri)}/overview`
       },
       function_uri: {
         value: selectedItem?.spec?.function_uri,
