@@ -227,7 +227,7 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
     {
       header: 'Validator',
       class: 'artifacts_medium',
-      hidden: true
+      hidden: isTablePanelOpen
     },
     {
       header: '',

@@ -580,7 +580,7 @@ const createFeaturesRowData = (artifact, isTablePanelOpen) => {
       value: <FeatureValidator validator={artifact.validator} />,
       class: 'artifacts_medium',
       type: 'component',
-      hidden: true
+      hidden: isTablePanelOpen
     },
     addFeature: {
       value: <AddFeatureButton feature={artifact} />,
