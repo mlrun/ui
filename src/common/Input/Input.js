@@ -53,7 +53,8 @@ const Input = React.forwardRef(
       (inputIsFocused || placeholder || typedValue.length > 0) &&
         floatingLabel &&
         'active-input',
-      isInvalid && 'input_invalid'
+      isInvalid && 'input_invalid',
+      tip && 'input-short'
     )
     const labelClassNames = classnames(
       'input__label',

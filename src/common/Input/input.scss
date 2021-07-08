@@ -5,7 +5,6 @@
 .input {
   position: relative;
   width: 100%;
-  margin-right: 22px;
   padding: 18px 16px;
   color: $primary;
   background-color: transparent;
@@ -23,13 +22,21 @@
   &__warning {
     position: absolute;
     top: 50%;
-    right: 0;
+    right: 10px;
     display: block;
     transform: translateY(-45%);
 
     svg {
       width: 12px;
       height: 12px;
+    }
+  }
+
+  &-short {
+    margin-right: 22px;
+
+    & ~ .input__warning {
+      right: 30px;
     }
   }
 
@@ -77,7 +84,7 @@
   &__tip {
     position: absolute;
     top: 50%;
-    right: 30px;
+    right: 0;
     transform: translateY(-50%);
   }
 
