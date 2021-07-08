@@ -59,7 +59,6 @@ export const featureSetsInfoHeaders = [
   { label: 'Last updated', id: 'updated' },
   { label: 'Entities', id: 'entities' },
   { label: 'URI', id: 'target_uri' },
-  { label: 'Partition keys', id: 'partition_keys' },
   { label: 'Timestamp key', id: 'timestamp_key' },
   { label: 'Relations', id: 'relations' },
   { label: 'Label column', id: 'label_column' },
