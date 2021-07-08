@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { Transition } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 import classnames from 'classnames'
 
 import './tooltip.scss'
@@ -19,13 +19,7 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
   const offset = 10
 
   const defaultStyle = {
-    transition: `opacity ${duration}ms ease-in-out`
-  }
-
-  const transitionStyles = {
-    entering: { opacity: 0 },
-    entered: { opacity: 1 },
-    exiting: { opacity: 0 }
+    transition: `opacity ${duration}ms ease-in-out ${duration}ms`
   }
 
   const handleScroll = () => {
@@ -116,22 +110,24 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
       >
         {children}
       </div>
-      <Transition in={show} timeout={duration} unmountOnExit>
-        {state => (
-          <div
-            data-testid="tooltip"
-            ref={tooltipRef}
-            style={{
-              ...defaultStyle,
-              ...transitionStyles[state],
-              ...style
-            }}
-            className="tooltip"
-          >
-            {template}
-          </div>
-        )}
-      </Transition>
+      <CSSTransition
+        in={show}
+        timeout={duration}
+        classNames="fade"
+        unmountOnExit
+      >
+        <div
+          data-testid="tooltip"
+          ref={tooltipRef}
+          style={{
+            ...defaultStyle,
+            ...style
+          }}
+          className="tooltip"
+        >
+          {template}
+        </div>
+      </CSSTransition>
     </>
   )
 }
