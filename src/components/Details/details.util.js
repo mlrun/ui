@@ -373,7 +373,7 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.usage_example ?? ''
   },
   entities: {
-    value: selectedItem.entities?.map(entity => entity.name)
+    value: selectedItem.entities?.map(entity => entity.name).join(', ')
   },
   target_uri: {
     value: selectedItem.URI
