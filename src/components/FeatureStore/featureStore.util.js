@@ -437,7 +437,7 @@ export const navigateToDetailsPane = (
     })
 
     if (!selectedArtifact) {
-      history.push(
+      history.replace(
         `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
       )
     } else {

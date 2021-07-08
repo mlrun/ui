@@ -68,7 +68,7 @@ const Artifacts = ({
       )
 
       if (!searchItem) {
-        history.push(`/projects/${match.params.projectName}/artifacts`)
+        history.replace(`/projects/${match.params.projectName}/artifacts`)
       } else {
         const artifact = searchItem.data.find(item => {
           if (searchItem.link_iteration) {

@@ -271,7 +271,7 @@ export const checkForSelectedModel = (
   const searchItem = searchArtifactItem(artifacts, modelName, tag, iter)
 
   if (!searchItem) {
-    history.push(
+    history.replace(
       `/projects/${match.params.projectName}/models/${match.params.pageTab}`
     )
   } else {
@@ -292,7 +292,7 @@ export const checkForSelectedModelEndpoint = (
     item => item.metadata?.uid === modelEndpointUid
   )
   if (!searchItem) {
-    history.push(
+    history.replace(
       `/projects/${match.params.projectName}/models/${match.params.pageTab}`
     )
   } else {

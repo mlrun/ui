@@ -209,7 +209,7 @@ const Files = ({
         const searchItem = searchArtifactItem(artifacts, name, tag, iter)
 
         if (!searchItem) {
-          history.push(`/projects/${match.params.projectName}/files`)
+          history.replace(`/projects/${match.params.projectName}/files`)
         } else {
           searchItem.URI = generateUri(searchItem, ARTIFACTS)
           setSelectedFile({ item: searchItem })
