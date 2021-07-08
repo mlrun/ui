@@ -187,7 +187,9 @@ const Functions = ({
       })
 
       if (!item || Object.keys(item).length === 0) {
-        return history.push(`/projects/${match.params.projectName}/functions`)
+        return history.replace(
+          `/projects/${match.params.projectName}/functions`
+        )
       }
     }
 
@@ -211,7 +213,7 @@ const Functions = ({
       .then(() => {
         if (!isEmpty(selectedFunction)) {
           setSelectedFunction({})
-          history.push(`/projects/${match.params.projectName}/functions`)
+          history.replace(`/projects/${match.params.projectName}/functions`)
         }
 
         setNotification({

@@ -338,7 +338,7 @@ const Jobs = ({
       let item = jobs.find(item => item.uid === match.params.jobId)
 
       if (!item) {
-        return history.push(
+        return history.replace(
           `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
         )
       }
