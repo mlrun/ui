@@ -31,6 +31,8 @@ const RangeInput = ({
   const rangeClassName = classNames(
     'range',
     `range-${density}`,
+    labelType === 'none' && 'range__label-none',
+    tip && 'range__input-tip',
     (isRequired || invalid) && 'range-warning'
   )
 
@@ -123,7 +125,7 @@ const RangeInput = ({
         </Tooltip>
       )}
       {required && labelType === 'none' && (
-        <span className="range-required_asterisk"> *</span>
+        <span className="range-required_asterisk">*</span>
       )}
     </div>
   )

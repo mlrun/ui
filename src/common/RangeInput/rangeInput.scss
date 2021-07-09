@@ -4,18 +4,9 @@
 .range {
   position: relative;
   display: flex;
-  margin-right: 22px;
+  margin-right: 5px;
   border: $primaryBorder;
   border-radius: 4px;
-
-  &__input {
-    border: none;
-
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-    }
-  }
 
   &__label {
     position: absolute;
@@ -31,6 +22,35 @@
 
     &-mandatory {
       color: $amaranth;
+    }
+
+    &-none {
+      margin-right: 15px;
+
+      .range-required_asterisk {
+        position: absolute;
+        top: 55%;
+        right: -10px;
+        color: $amaranth;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  &__input {
+    border: none;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    &-tip {
+      margin-right: 28px;
+
+      .input__tip {
+        right: -53px;
+      }
     }
   }
 
@@ -158,7 +178,7 @@
   &__warning-icon {
     position: absolute;
     top: 50%;
-    right: -20px;
+    right: 30px;
     transform: translateY(-50%);
   }
 
