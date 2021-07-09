@@ -17,7 +17,7 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
-import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
+import { parseFeatureSets } from '../../utils/parseFeatureSets'
 import { generateUri } from '../../utils/resources'
 import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 
@@ -344,7 +344,7 @@ export const handleFetchData = async (
     result = await fetchFeatureSets(project, { ...filters, tag: null }, config)
 
     if (result) {
-      data.content = parseFeatureStoreDataRequest(result)
+      data.content = parseFeatureSets(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
@@ -388,7 +388,7 @@ export const navigateToDetailsPane = (
   let artifacts = []
 
   if (match.params.pageTab === FEATURE_SETS_TAB && featureSets.length > 0) {
-    artifacts = parseFeatureStoreDataRequest(featureSets)
+    artifacts = parseFeatureSets(featureSets)
   } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
     artifacts = features
   } else if (

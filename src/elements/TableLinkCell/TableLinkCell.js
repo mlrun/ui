@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { capitalize } from 'lodash'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
@@ -31,16 +30,16 @@ const TableLinkCell = ({
     'item-name',
     link.match(/functions/) && 'function-name'
   )
-  const state = item.state || item.endpoint?.status?.state
+  const { value: stateValue, label: stateLabel } = item.state ?? {}
 
   return (
     <div className={tableCellClassNames}>
-      {state && (
+      {stateValue && stateLabel && (
         <Tooltip
           className="status"
-          template={<TextTooltipTemplate text={capitalize(state)} />}
+          template={<TextTooltipTemplate text={stateLabel} />}
         >
-          <i className={state} />
+          <i className={stateValue} />
         </Tooltip>
       )}
       <Link
@@ -76,7 +75,7 @@ const TableLinkCell = ({
                     ? formatDatetime(item.updated, 'N/A')
                     : formatDatetime(
                         item.startTime,
-                        state === 'aborted' ? 'N/A' : 'Not yet started'
+                        stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                       ))}
               </span>
             )}
