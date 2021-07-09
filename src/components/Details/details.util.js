@@ -381,9 +381,10 @@ export const generateFeatureSetsOverviewContent = (
   timestamp_key: {
     value: selectedItem.timestamp_key ?? ''
   },
-  relations: {
-    value: isEmpty(selectedItem.relations) ? [] : selectedItem.relations
-  },
+  // temporary hidden
+  // relations: {
+  //   value: isEmpty(selectedItem.relations) ? [] : selectedItem.relations
+  // },
   label_column: {
     value: selectedItem.label_column ?? ''
   }

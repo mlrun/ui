@@ -30,7 +30,6 @@ export const filters = [
   { type: 'iterations', label: 'Show iterations' }
 ]
 export const page = FILES_PAGE
-export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register file'
 export const tableHeaders = [
   {

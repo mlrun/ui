@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { capitalize } from 'lodash'
+import classnames from 'classnames'
 
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
@@ -54,6 +55,10 @@ const DetailsInfoView = React.forwardRef(
                 delimiter: null
               }
               let chipsClassName = ''
+              const detailsItemClassNames = classnames(
+                'details-item',
+                header.hidden && 'details-item_hidden'
+              )
               let func = ''
               let state = ''
               let info = null
@@ -111,16 +116,6 @@ const DetailsInfoView = React.forwardRef(
                   content[header.id]?.value === selectedItem.target_path
                     ? selectedItem.target_path
                     : ''
-
-                if (header.id === 'sources') {
-                  return (
-                    <ArtifactInfoSources
-                      sources={sources}
-                      header={header.label}
-                      key={header.id}
-                    />
-                  )
-                }
               } else if (pageData.page === FUNCTIONS_PAGE) {
                 info =
                   header.id === 'kind'
@@ -129,33 +124,45 @@ const DetailsInfoView = React.forwardRef(
               }
 
               return (
-                <li className="details-item" key={header.id}>
-                  <div className="details-item__header">
-                    {header.label}
-                    {header.tip && (
-                      <Tip className="details-item__tip" text={header.tip} />
-                    )}
-                  </div>
-                  <DetailsInfoItem
-                    chipsClassName={chipsClassName}
-                    chipsData={chipsData}
-                    chipOptions={chipsData.chipOptions}
-                    currentField={header.id}
-                    editableFieldType={detailsInfoState.editMode.fieldType}
-                    func={func}
-                    handleFinishEdit={handleFinishEdit}
-                    info={info}
-                    isFieldInEditMode={
-                      detailsInfoState.editMode.field === header.id
-                    }
-                    link={content[header.id]?.link}
-                    match={match}
-                    onClick={handleInfoItemClick}
-                    ref={ref}
-                    state={state}
-                    target_path={target_path}
-                    item={content[header.id]}
-                  />
+                <li className={detailsItemClassNames} key={header.id}>
+                  {header.id === 'sources' ? (
+                    <ArtifactInfoSources
+                      header={header.label}
+                      sources={sources}
+                    />
+                  ) : (
+                    <>
+                      <div className="details-item__header">
+                        {header.label}
+                        {header.tip && (
+                          <Tip
+                            className="details-item__tip"
+                            text={header.tip}
+                          />
+                        )}
+                      </div>
+                      <DetailsInfoItem
+                        chipsClassName={chipsClassName}
+                        chipsData={chipsData}
+                        chipOptions={chipsData.chipOptions}
+                        currentField={header.id}
+                        editableFieldType={detailsInfoState.editMode.fieldType}
+                        func={func}
+                        handleFinishEdit={handleFinishEdit}
+                        info={info}
+                        isFieldInEditMode={
+                          detailsInfoState.editMode.field === header.id
+                        }
+                        link={content[header.id]?.link}
+                        match={match}
+                        onClick={handleInfoItemClick}
+                        ref={ref}
+                        state={state}
+                        target_path={target_path}
+                        item={content[header.id]}
+                      />
+                    </>
+                  )}
                 </li>
               )
             })}

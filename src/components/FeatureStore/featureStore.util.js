@@ -60,7 +60,7 @@ export const featureSetsInfoHeaders = [
   { label: 'Entities', id: 'entities' },
   { label: 'URI', id: 'target_uri' },
   { label: 'Timestamp key', id: 'timestamp_key' },
-  { label: 'Relations', id: 'relations' },
+  { label: 'Relations', id: 'relations', hidden: true },
   { label: 'Label column', id: 'label_column' },
   { label: 'Usage example', id: 'usage_example' }
 ]
@@ -94,7 +94,6 @@ export const featuresFilters = [
   { type: 'labels', label: 'Label:' }
 ]
 export const page = 'FEATURE-STORE'
-export const sources = ['name', 'path']
 export const registerDatasetsTitle = 'Register dataset'
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
