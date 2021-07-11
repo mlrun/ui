@@ -5,6 +5,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generateUri } from '../../utils/resources'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import getState from '../../utils/getState'
 
 export const modelsInfoHeaders = [
   {
@@ -210,7 +211,12 @@ export const handleFetchData = async (
     result = await fetchModelEndpoints(project, filters)
 
     if (result) {
-      data.content = result
+      data.content = result.map(endpoint => {
+        return {
+          ...endpoint,
+          state: getState(endpoint.status.state)
+        }
+      })
       data.yamlContent = result
     }
   }

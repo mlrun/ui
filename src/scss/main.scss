@@ -75,19 +75,22 @@ button {
 .active,
 .created,
 .info {
-  @include jobStatus($brightTurquoise);
+  @include statusState($brightTurquoise);
 }
 
-.pending {
-  @include jobStatus($topaz);
+.empty {
+  @include statusState($topaz);
 }
 
 .warn {
-  @include jobStatus($grandis);
+  @include statusState($grandis);
 }
 
+.deploying,
+.build,
+.pending,
 .running {
-  @include jobStatus($pictonBlue);
+  @include statusState($pictonBlue);
 }
 
 .failed,
@@ -95,7 +98,7 @@ button {
 .error,
 .broken,
 .aborted {
-  @include jobStatus($burntSienna);
+  @include statusState($burntSienna);
 }
 
 iframe {

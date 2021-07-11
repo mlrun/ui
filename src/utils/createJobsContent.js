@@ -103,8 +103,8 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           duration: {
             value: measureTime(
               contentItem.startTime || new Date(contentItem.created_at),
-              (contentItem.state !== 'running' && contentItem.updated) ||
-                (contentItem.status !== 'error' &&
+              (contentItem.state.value !== 'running' && contentItem.updated) ||
+                (contentItem.state.value !== 'error' &&
                   new Date(contentItem.finished_at))
             ),
             class: 'jobs_extra-small',
