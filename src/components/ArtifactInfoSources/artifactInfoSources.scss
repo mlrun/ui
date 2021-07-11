@@ -3,110 +3,96 @@
 @import '../../scss/mixins';
 @import '../../scss/borders';
 
-.table__item_details_item {
-  .wrapper_sources {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+.info-sources {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-left: -6px;
+  padding: 0;
 
-    .sources_header_container {
-      position: relative;
+  &-row {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 18px 25px;
+    cursor: pointer;
+
+    &__header {
+      min-width: 100px;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 24px;
+    }
+
+    &__data {
+      display: flex;
+      padding-left: 16px;
+    }
+
+    svg {
+      position: absolute;
+      left: 0;
+      cursor: pointer;
+
+      &.collapsed {
+        transform: rotate(0);
+        transform-origin: center center;
+        transition: transform 200ms linear;
+      }
+
+      &.expanded {
+        transform: rotate(90deg);
+        transform-origin: center center;
+        transition: transform 200ms linear;
+      }
+    }
+  }
+
+  &-table {
+    padding: 0 18px;
+
+    &__header {
       display: flex;
       flex-direction: row;
       align-items: center;
-      padding: 18px 25px;
-      cursor: pointer;
-
-      .sources {
-        &_header {
-          min-width: 100px;
-          font-weight: bold;
-          font-size: 14px;
-          line-height: 24px;
-        }
-
-        &_value {
-          display: flex;
-          padding-left: 16px;
-        }
-      }
-
-      svg {
-        position: absolute;
-        left: 0;
-        cursor: pointer;
-
-        &.close {
-          transform: rotate(0);
-          transform-origin: center center;
-          transition: transform 200ms linear;
-        }
-
-        &.open {
-          transform: rotate(90deg);
-          transform-origin: center center;
-          transition: transform 200ms linear;
-        }
-      }
-    }
-  }
-
-  .source_table {
-    padding: 0 18px;
-
-    .source {
-      &_item {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        height: 56px;
-        border-bottom: $secondaryBorder;
-
-        &_header {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          padding: 18px;
-
-          &_name {
-            min-width: 200px;
-            text-transform: capitalize;
-
-            @include detailsItem;
-          }
-
-          &_path {
-            min-width: 100px;
-            text-transform: capitalize;
-
-            @include detailsItem;
-          }
-        }
-
-        &:last-child {
-          border: none;
-        }
-      }
-
-      &_item {
-        .source_item_header {
-          min-width: 220px;
-          padding-left: 18px;
-        }
-      }
-    }
-
-    > .source_item_header {
+      padding: 18px;
       border-bottom: $secondaryBorder;
+
+      &-item {
+        text-transform: capitalize;
+
+        @include detailsItem;
+      }
+
+      .name {
+        min-width: 200px;
+      }
+
+      .path {
+        min-width: 100px;
+      }
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height: 56px;
+      border-bottom: $secondaryBorder;
+
+      &:last-child {
+        border: none;
+      }
+
+      &-key {
+        min-width: 220px;
+        padding-left: 18px;
+      }
     }
   }
 
-  &.sources {
-    margin-left: -6px;
-    padding: 0;
-
-    &.shadow {
-      box-shadow: $previewBoxShadow;
-    }
+  &_expanded {
+    box-shadow: $previewBoxShadow;
   }
 }

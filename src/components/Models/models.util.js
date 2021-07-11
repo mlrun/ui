@@ -82,7 +82,6 @@ export const modelsFilters = [
 ]
 export const modelEndpointsFilters = [{ type: 'labels', label: 'Labels:' }]
 export const page = MODELS_PAGE
-export const sources = ['name', 'path']
 export const registerArtifactDialogTitle = 'Register model'
 export const modelsTableHeaders = [
   {
