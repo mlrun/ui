@@ -16,7 +16,6 @@ const ConfigTargets = ({ steps, targets }) => {
       accordionClassName="config-item targets"
       icon={<Arrow />}
       iconClassName="expand-icon"
-      openByDefault
     >
       <div className="config-item__title">Targets</div>
       <div className="config-item__content">
