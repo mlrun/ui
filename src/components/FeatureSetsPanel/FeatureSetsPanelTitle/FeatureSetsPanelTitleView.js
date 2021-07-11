@@ -42,17 +42,15 @@ const FeatureSetsPanelTitleView = ({
           <Input
             className="panel-title__input"
             floatingLabel
+            invalid={!isNameValid}
+            invalidText="This field is invalid"
             label="Feature Set Name"
+            maxLength={63}
             onChange={handleNameChange}
             onBlur={handleNameOnBlur}
-            maxLength={63}
             pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
-            required={!isNameValid}
-            requiredText={
-              data.name.length === 0
-                ? 'This field is required'
-                : 'This field is invalid'
-            }
+            required
+            requiredText="This field is required"
             tip={titleValidationTip}
             type="text"
             value={data.name}

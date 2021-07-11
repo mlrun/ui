@@ -62,10 +62,11 @@ const FeatureSetsPanelTargetStoreView = ({
               <Input
                 density="normal"
                 floatingLabel
+                invalid={!isOnlineTargetsPathValid}
                 onBlur={handleOnlineKindPathOnBlur}
                 onChange={handleOnlineKindPathOnChange}
                 label="Path"
-                required={!isOnlineTargetsPathValid}
+                required
                 requiredText="This field is required"
                 type="text"
                 value={onlineKindPath}
@@ -92,10 +93,11 @@ const FeatureSetsPanelTargetStoreView = ({
               <Input
                 density="normal"
                 floatingLabel
+                invalid={!isOfflineTargetsPathValid}
                 onBlur={handleOfflineKindPathOnBlur}
                 onChange={handleOfflineKindPathOnChange}
                 label="Path"
-                required={!isOfflineTargetsPathValid}
+                required
                 requiredText="This field is required"
                 type="text"
                 value={offlineKindData.path}

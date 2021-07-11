@@ -46,10 +46,12 @@ const FeatureSetsPanelDataSourceView = ({
           <Input
             className="data-source__inputs-item"
             floatingLabel
+            invalid={!isUrlValid}
+            invalidText="URL is invalid"
             label="URL"
             onBlur={handleUrlOnBlur}
             onChange={handleUrlOnChange}
-            required={!isUrlValid}
+            required
             requiredText="URL is required"
             tip="For Parquet files the path could be either a file or a folder. For CSV it must be a file."
             type="text"

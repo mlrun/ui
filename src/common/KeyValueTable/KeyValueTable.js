@@ -86,17 +86,17 @@ const KeyValueTable = ({
                 <Input
                   density="dense"
                   className="input_edit"
+                  invalid={
+                    selectedItem.newKey !== selectedItem.key &&
+                    isKeyNotUnique(selectedItem.newKey, content)
+                  }
+                  invalidText="Name already exists"
                   onChange={key =>
                     setSelectedItem({
                       ...selectedItem,
                       newKey: key
                     })
                   }
-                  required={
-                    selectedItem.newKey !== selectedItem.key &&
-                    isKeyNotUnique(selectedItem.newKey, content)
-                  }
-                  requiredText="Name already exists"
                   type="text"
                   value={selectedItem.newKey ?? selectedItem.key}
                 />
@@ -184,8 +184,8 @@ const KeyValueTable = ({
               label={keyLabel}
               type="text"
               wrapperClassName="table-cell__key"
-              required={isKeyNotUnique(key, content)}
-              requiredText="Name already exists"
+              invalid={isKeyNotUnique(key, content)}
+              invalidText="Name already exists"
             />
           )}
 
