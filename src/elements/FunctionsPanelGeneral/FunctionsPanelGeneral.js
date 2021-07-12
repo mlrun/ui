@@ -6,8 +6,10 @@ import FunctionsPanelGeneralView from './FunctionsPanelGeneralView'
 
 import functionsActions from '../../actions/functions'
 import { DEFAULT_TYPE } from './functionsPanelGeneral.util'
+import { parseKeyValues } from '../../utils'
 
 const FunctionsPanelGeneral = ({
+  defaultData,
   isNameValid,
   setNameValid,
   setNewFunctionDescription,
@@ -17,11 +19,11 @@ const FunctionsPanelGeneral = ({
   setNewFunctionType
 }) => {
   const [data, setData] = useState({
-    name: '',
-    description: '',
-    type: DEFAULT_TYPE,
-    labels: [],
-    tag: ''
+    name: defaultData.name ?? '',
+    description: defaultData.delete ?? '',
+    type: defaultData.type ?? DEFAULT_TYPE,
+    labels: parseKeyValues(defaultData.labels) ?? [],
+    tag: defaultData.tag ?? ''
   })
 
   const handleNameChange = name => {
@@ -108,7 +110,12 @@ const FunctionsPanelGeneral = ({
   )
 }
 
+FunctionsPanelGeneral.defaultProps = {
+  defaultData: {}
+}
+
 FunctionsPanelGeneral.propTypes = {
+  defaultData: PropTypes.shape({}),
   isNameValid: PropTypes.bool.isRequired,
   setNameValid: PropTypes.func.isRequired
 }

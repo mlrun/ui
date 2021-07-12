@@ -31,6 +31,7 @@ import { FUNCTIONS_PAGE } from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
+import { ReactComponent as Edit } from '../../images/edit.svg'
 
 const Functions = ({
   deleteFunction,
@@ -93,6 +94,15 @@ const Functions = ({
         hidden: FUNCTIONS_FAILED_STATES.includes(item?.state?.value)
       },
       {
+        label: 'Edit',
+        icon: <Edit />,
+        onClick: func => {
+          setFunctionsPanelIsOpen(true)
+          setEditableItem(func)
+        },
+        hidden: item?.type !== 'job'
+      },
+      {
         label: 'Delete',
         icon: <Delete />,
         onClick: onRemoveFunction
@@ -121,17 +131,25 @@ const Functions = ({
           const newFunctions = chain(functions)
             .orderBy('metadata.updated', 'desc')
             .map(func => ({
-              name: func.metadata.name,
-              type: func.kind,
-              tag: func.metadata.tag,
-              hash: func.metadata.hash,
-              codeOrigin: func.spec?.build?.code_origin ?? '',
-              updated: new Date(func.metadata.updated),
+              args: func.spec?.args ?? [],
+              build: func.spec?.build ?? {},
               command: func.spec?.command,
-              image: func.spec?.image,
-              description: func.spec?.description,
+              description: func.spec?.description ?? '',
+              default_handler: func.spec?.default_handler ?? '',
+              env: func.spec?.env ?? [],
+              hash: func.metadata.hash,
+              image: func.spec?.image ?? '',
+              labels: func.metadata?.labels ?? {},
+              name: func.metadata.name,
+              project: func.metadata?.project || match.params.projectName,
+              resources: func.spec?.resources ?? {},
+              secret_sources: func.spec?.secret_sources ?? [],
               state: getState(func.status?.state, page),
-              functionSourceCode: func.spec?.build?.functionSourceCode ?? ''
+              tag: func.metadata.tag,
+              type: func.kind,
+              volume_mounts: func.spec?.volume_mounts ?? [],
+              volumes: func.spec?.volumes ?? [],
+              updated: new Date(func.metadata.updated)
             }))
             .value()
 
@@ -261,6 +279,7 @@ const Functions = ({
 
   const closePanel = () => {
     setFunctionsPanelIsOpen(false)
+    setEditableItem(null)
     removeNewFunction()
 
     if (functionsStore.error) {
@@ -270,6 +289,7 @@ const Functions = ({
 
   const createFunctionSuccess = () => {
     setFunctionsPanelIsOpen(false)
+    setEditableItem(null)
     removeNewFunction()
 
     return refreshFunctions().then(() => {
@@ -286,6 +306,7 @@ const Functions = ({
     const tab = ready === false ? 'logs' : 'overview'
 
     setFunctionsPanelIsOpen(false)
+    setEditableItem(null)
     removeNewFunction()
 
     return refreshFunctions().then(functions => {
@@ -363,7 +384,7 @@ const Functions = ({
         toggleShowUntagged={toggleShowUntagged}
         yamlContent={functionsStore.functions}
       />
-      {editableItem && (
+      {editableItem && !functionsPanelIsOpen && (
         <JobsPanel
           closePanel={() => {
             setEditableItem(null)
@@ -385,6 +406,7 @@ const Functions = ({
         <FunctionsPanel
           closePanel={closePanel}
           createFunctionSuccess={createFunctionSuccess}
+          defaultData={editableItem}
           handleDeployFunctionFailure={handleDeployFunctionFailure}
           handleDeployFunctionSuccess={handleDeployFunctionSuccess}
           match={match}

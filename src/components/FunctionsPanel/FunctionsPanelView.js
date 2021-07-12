@@ -18,6 +18,7 @@ import './functionsPanel.scss'
 
 const FunctionsPanelView = ({
   closePanel,
+  defaultData,
   error,
   handleSave,
   isHandlerValid,
@@ -40,6 +41,7 @@ const FunctionsPanelView = ({
             openByDefault
           >
             <FunctionsPanelGeneral
+              defaultData={defaultData}
               isNameValid={isNameValid}
               setNameValid={setNameValid}
             />
@@ -51,6 +53,7 @@ const FunctionsPanelView = ({
             openByDefault
           >
             <FunctionsPanelCode
+              defaultData={defaultData}
               isHandlerValid={isHandlerValid}
               setHandlerValid={setHandlerValid}
             />
@@ -61,7 +64,7 @@ const FunctionsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FunctionsPanelResources />
+            <FunctionsPanelResources defaultData={defaultData} />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -69,7 +72,7 @@ const FunctionsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FunctionsPanelEnvironmentVariables />
+            <FunctionsPanelEnvironmentVariables defaultData={defaultData} />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion hidden"
@@ -117,11 +120,13 @@ const FunctionsPanelView = ({
 }
 
 FunctionsPanelView.defaultProps = {
+  defaultData: {},
   error: ''
 }
 
 FunctionsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
+  defaultData: PropTypes.shape({}),
   error: PropTypes.string,
   handleSave: PropTypes.func.isRequired,
   isHandlerValid: PropTypes.bool.isRequired,

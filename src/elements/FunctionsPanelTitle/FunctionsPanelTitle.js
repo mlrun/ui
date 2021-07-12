@@ -8,7 +8,7 @@ import { ReactComponent as Close } from '../../images/close.svg'
 
 import './functinsPanelTitle.scss'
 
-const FunctionsPanelGeneral = ({ closePanel }) => {
+const FunctionsPanelTitle = ({ closePanel }) => {
   return (
     <div className="panel-title functions-panel__title">
       <div className="panel-title__container">
@@ -39,8 +39,8 @@ const FunctionsPanelGeneral = ({ closePanel }) => {
   )
 }
 
-FunctionsPanelGeneral.propTypes = {
+FunctionsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired
 }
 
-export default FunctionsPanelGeneral
+export default FunctionsPanelTitle

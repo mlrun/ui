@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { isNil } from 'lodash'
 
 import FunctionsPanelCodeView from './FunctionsPanelCodeView'
 
@@ -10,10 +11,12 @@ import {
   DEFAULT_HANDLER,
   DEFAULT_IMAGE,
   DEFAULT_SOURCE_CODE,
-  EXISTING_IMAGE
+  EXISTING_IMAGE,
+  NEW_IMAGE
 } from './functionsPanelCode.util'
 
 const FunctionsPanelCode = ({
+  defaultData,
   functionsStore,
   isHandlerValid,
   resetNewFunctionCodeCustomImage,
@@ -27,14 +30,18 @@ const FunctionsPanelCode = ({
 }) => {
   const [data, setData] = useState({
     entry: DEFAULT_ENTRY,
-    handler: DEFAULT_HANDLER,
-    image: DEFAULT_IMAGE,
-    base_image: '',
-    commands: '',
-    build_image: ''
+    handler: defaultData.default_handler ?? DEFAULT_HANDLER,
+    image: defaultData.image ?? DEFAULT_IMAGE,
+    base_image: defaultData.build?.base_image ?? '',
+    commands: (defaultData.build?.commands || []).join('\n') ?? '',
+    build_image: defaultData.build?.image ?? ''
   })
   const [editCode, setEditCode] = useState(false)
-  const [imageType, setImageType] = useState(EXISTING_IMAGE)
+  const [imageType, setImageType] = useState(
+    defaultData.build?.image || defaultData.build?.base_image
+      ? NEW_IMAGE
+      : EXISTING_IMAGE
+  )
 
   const handleHandlerChange = handler => {
     if (!isHandlerValid && handler.length > 0) {
@@ -58,23 +65,34 @@ const FunctionsPanelCode = ({
   }
 
   useEffect(() => {
-    if (!functionsStore.newFunction.spec.build.functionSourceCode) {
+    if (
+      !functionsStore.newFunction.spec.build.functionSourceCode &&
+      isNil(defaultData.build?.functionSourceCode)
+    ) {
       setNewFunctionSourceCode(DEFAULT_SOURCE_CODE)
     }
   }, [
+    defaultData.build,
     functionsStore.newFunction.spec.build.functionSourceCode,
     setNewFunctionSourceCode
   ])
 
   useEffect(() => {
-    if (!functionsStore.newFunction.spec.default_handler) {
+    if (
+      !functionsStore.newFunction.spec.default_handler &&
+      isNil(defaultData.default_handler)
+    ) {
       setNewFunctionHandler(DEFAULT_HANDLER)
     }
-  }, [functionsStore.newFunction.spec.default_handler, setNewFunctionHandler])
+  }, [
+    defaultData.default_handler,
+    functionsStore.newFunction.spec.default_handler,
+    setNewFunctionHandler
+  ])
 
   useEffect(() => {
     if (imageType === EXISTING_IMAGE) {
-      setNewFunctionImage(DEFAULT_IMAGE)
+      setNewFunctionImage(defaultData.image ?? DEFAULT_IMAGE)
       resetNewFunctionCodeCustomImage()
       setData(state => ({
         ...state,
@@ -90,7 +108,12 @@ const FunctionsPanelCode = ({
         image: ''
       }))
     }
-  }, [imageType, resetNewFunctionCodeCustomImage, setNewFunctionImage])
+  }, [
+    defaultData.image,
+    imageType,
+    resetNewFunctionCodeCustomImage,
+    setNewFunctionImage
+  ])
 
   return (
     <FunctionsPanelCodeView
@@ -113,7 +136,12 @@ const FunctionsPanelCode = ({
   )
 }
 
+FunctionsPanelCode.defaultProps = {
+  defaultData: {}
+}
+
 FunctionsPanelCode.propTypes = {
+  defaultData: PropTypes.shape({}),
   isHandlerValid: PropTypes.bool.isRequired,
   setHandlerValid: PropTypes.func.isRequired
 }

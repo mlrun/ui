@@ -36,7 +36,8 @@ import {
   FETCH_FUNCTION_LOGS_BEGIN,
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_SUCCESS,
-  REMOVE_FUNCTION_LOGS
+  REMOVE_FUNCTION_LOGS,
+  SET_NEW_FUNCTION
 } from '../constants'
 
 const initialState = {
@@ -205,6 +206,11 @@ export default (state = initialState, { type, payload }) => {
             }
           }
         }
+      }
+    case SET_NEW_FUNCTION:
+      return {
+        ...state,
+        newFunction: payload
       }
     case SET_NEW_FUNCTION_BASE_IMAGE:
       return {
