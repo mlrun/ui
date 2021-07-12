@@ -33,7 +33,7 @@ const FunctionsPanelCode = ({
     handler: defaultData.default_handler ?? DEFAULT_HANDLER,
     image: defaultData.image ?? DEFAULT_IMAGE,
     base_image: defaultData.build?.base_image ?? '',
-    commands: defaultData.build?.commands.join('\n') ?? '',
+    commands: (defaultData.build?.commands || []).join('\n') ?? '',
     build_image: defaultData.build?.image ?? ''
   })
   const [editCode, setEditCode] = useState(false)
