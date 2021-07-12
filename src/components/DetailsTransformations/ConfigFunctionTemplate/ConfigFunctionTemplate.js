@@ -10,7 +10,6 @@ const ConfigFunctionTemplate = ({ selectedItem }) => {
       accordionClassName="config-item"
       icon={<Arrow />}
       iconClassName="expand-icon"
-      openByDefault
     >
       <div className="config-item__title">Function template</div>
       <div className="config-item__content">

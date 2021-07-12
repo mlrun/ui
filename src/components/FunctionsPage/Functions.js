@@ -21,6 +21,7 @@ import {
   TRANSIENT_FUNCTION_STATUSES
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import getState from '../../utils/getState.js'
 
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
@@ -90,7 +91,7 @@ const Functions = ({
         label: 'Run',
         icon: <Run />,
         onClick: func => setEditableItem(func),
-        hidden: FUNCTIONS_FAILED_STATES.includes(item?.state)
+        hidden: FUNCTIONS_FAILED_STATES.includes(item?.state?.value)
       },
       {
         label: 'Delete',
@@ -143,7 +144,7 @@ const Functions = ({
               project: func.metadata?.project || match.params.projectName,
               resources: func.spec?.resources ?? {},
               secret_sources: func.spec?.secret_sources ?? [],
-              state: func.status?.state ?? '',
+              state: getState(func.status?.state, page),
               tag: func.metadata.tag,
               type: func.kind,
               volume_mounts: func.spec?.volume_mounts ?? [],

@@ -34,7 +34,7 @@
     .all {
       margin: 0;
 
-      @include jobStatus(none);
+      @include statusState(none);
     }
   }
 }

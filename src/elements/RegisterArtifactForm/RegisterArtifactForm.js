@@ -33,6 +33,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
         className="pop-up-dialog__form-input"
         density="chunky"
         floatingLabel
+        invalid={key.required}
         label="Name"
         onChange={value =>
           onChange(prevData => ({
@@ -40,7 +41,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
             key: { value, required: !value }
           }))
         }
-        required={key.required}
+        required
         requiredText="This field is required"
         tip="Artifact names in the same project must be unique"
         type="text"
@@ -50,6 +51,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
         className="pop-up-dialog__form-input"
         density="chunky"
         floatingLabel
+        invalid={target_path.required}
         label="Target Path"
         onChange={value =>
           onChange(prevData => ({
@@ -57,7 +59,7 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
             target_path: { value, required: !value }
           }))
         }
-        required={target_path.required}
+        required
         requiredText="This field is required"
         type="text"
         value={target_path.value}

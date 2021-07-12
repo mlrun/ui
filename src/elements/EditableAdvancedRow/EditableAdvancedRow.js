@@ -47,17 +47,17 @@ const EditableAdvancedRow = ({
         {table === 'env' ? (
           <Input
             density="dense"
+            invalid={
+              selectedItem.newName !== selectedItem.data.name &&
+              isNameNotUnique(selectedItem.newName, content)
+            }
+            invalidText="Name already exists"
             onChange={name =>
               setSelectedItem({
                 ...selectedItem,
                 newName: name
               })
             }
-            required={
-              selectedItem.newName !== selectedItem.data.name &&
-              isNameNotUnique(selectedItem.newName, content)
-            }
-            requiredText="Name already exists"
             type="text"
             value={selectedItem.newName ?? selectedItem.data.name}
           />

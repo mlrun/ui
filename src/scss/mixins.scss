@@ -48,7 +48,7 @@
   }
 }
 
-@mixin jobStatus($color) {
+@mixin statusState($color) {
   display: inline-block;
   width: 8px;
   height: 8px;
@@ -500,7 +500,7 @@
       border: $primaryBorder;
       border-radius: 2px;
 
-      &_required {
+      &_invalid {
         border: 1px solid $amaranth;
       }
     }

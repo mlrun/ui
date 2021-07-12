@@ -22,7 +22,6 @@
     { "type": "labels", "label": "Labels:" }
   ],
   "page": "ARTIFACTS",
-  "sources": ["name", "path"],
   "tableHeaders": [
     {
       "header": "Name",

@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { capitalize } from 'lodash'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
@@ -55,7 +54,7 @@ const DetailsView = React.forwardRef(
       'table__item',
       detailsStore.showWarning && 'pop-up-dialog-opened'
     )
-    const state = selectedItem.state || selectedItem?.status?.state
+    const { value: statusValue, label: statusLabel } = selectedItem.state || {}
 
     return (
       <div className={detailsPanelClassNames} ref={ref}>
@@ -86,7 +85,7 @@ const DetailsView = React.forwardRef(
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
               ? formatDatetime(
                   selectedItem?.startTime,
-                  state === 'aborted' ? 'N/A' : 'Not yet started'
+                  statusValue === 'aborted' ? 'N/A' : 'Not yet started'
                 )
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
@@ -95,11 +94,9 @@ const DetailsView = React.forwardRef(
               : selectedItem?.spec?.model
               ? selectedItem?.metadata?.uid
               : ''}
-            {state && (
-              <Tooltip
-                template={<TextTooltipTemplate text={capitalize(state)} />}
-              >
-                <i className={state} />
+            {statusValue && statusLabel && (
+              <Tooltip template={<TextTooltipTemplate text={statusLabel} />}>
+                <i className={statusValue} />
               </Tooltip>
             )}
             {!isEmpty(detailsStore.pods.podsPending) && (

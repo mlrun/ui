@@ -30,10 +30,11 @@ const CreateProjectDialog = ({
           <Input
             className="pop-up-dialog__form-input"
             floatingLabel
+            invalid={isEmptyValue && projectStore.newProject.name.length === 0}
             label="Name"
             maxLength={63}
             onChange={setNewProjectName}
-            required={isEmptyValue && projectStore.newProject.name.length === 0}
+            required
             requiredText="Name is required"
             pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
             tip="&bull; Valid characters: a-z, 0-9, -&#13;&#10;&bull; Must being and end with: a-z, 0-9&#13;&#10;&bull; Length - max: 63"

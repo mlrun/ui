@@ -145,7 +145,7 @@ const ScheduleRecurring = ({
         )}
         {scheduleRepeatEndActiveOption === 'after' && (
           <RangeInput
-            infoLabel
+            labelType="infoLabel"
             label={occurrences.length < 10 ? 'occurrences' : ''}
             onChange={item =>
               recurringDispatch({

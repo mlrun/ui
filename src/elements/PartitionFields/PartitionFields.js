@@ -18,8 +18,9 @@ const PartitionFields = ({
     <>
       <RangeInput
         density="normal"
-        floatingLabel
+        labelType="floatingLabel"
         label="Key Bucketing Number"
+        required
         min={0}
         onChange={rangeOnChange}
         tip={

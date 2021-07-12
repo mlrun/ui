@@ -13,7 +13,6 @@ const ConfigSource = ({ selectedItem }) => {
       accordionClassName="config-item"
       icon={<Arrow />}
       iconClassName="expand-icon"
-      openByDefault
     >
       <div className="config-item__title">Source</div>
       <div className="config-item__content">

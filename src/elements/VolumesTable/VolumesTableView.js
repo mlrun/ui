@@ -136,12 +136,12 @@ const VolumesTableView = ({
                 }}
               />
               <Input
-                onChange={name => setNewVolume(state => ({ ...state, name }))}
-                label="Name"
                 className="input-row__item"
                 floatingLabel
-                required={isNameNotUnique(newVolume.name, volumeMounts)}
-                requiredText="Name already exists"
+                invalid={isNameNotUnique(newVolume.name, volumeMounts)}
+                invalidText="Name already exists"
+                label="Name"
+                onChange={name => setNewVolume(state => ({ ...state, name }))}
                 type="text"
               />
               <Input

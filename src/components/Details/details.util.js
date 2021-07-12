@@ -165,14 +165,14 @@ export const generateJobsContent = selectedItem => ({
   startTime: {
     value: formatDatetime(
       selectedItem.startTime,
-      selectedItem.state === 'aborted' ? 'N/A' : 'Not yet started'
+      selectedItem.state.value === 'aborted' ? 'N/A' : 'Not yet started'
     )
   },
   updated: {
     value: formatDatetime(selectedItem.updated, 'N/A')
   },
   state: {
-    value: selectedItem.state
+    value: selectedItem.state.value
   },
   parameters: {
     value: selectedItem.parameters
@@ -223,7 +223,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.description
   },
   state: {
-    value: selectedItem.state
+    value: selectedItem.state.value
   }
 })
 
@@ -381,9 +381,10 @@ export const generateFeatureSetsOverviewContent = (
   timestamp_key: {
     value: selectedItem.timestamp_key ?? ''
   },
-  relations: {
-    value: isEmpty(selectedItem.relations) ? [] : selectedItem.relations
-  },
+  // temporary hidden
+  // relations: {
+  //   value: isEmpty(selectedItem.relations) ? [] : selectedItem.relations
+  // },
   label_column: {
     value: selectedItem.label_column ?? ''
   }

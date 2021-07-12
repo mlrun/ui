@@ -59,10 +59,10 @@ export const JobsPanelAdvancedTable = ({
                 className="input-row__item"
                 density="medium"
                 floatingLabel
+                invalid={isNameNotUnique(newName, content)}
+                invalidText="Name already exists"
                 label="Name"
                 onChange={setNewItemName}
-                required={isNameNotUnique(newName, content)}
-                requiredText="Name already exists"
                 type="text"
               />
             )}
