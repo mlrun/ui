@@ -39,7 +39,8 @@ import {
   FETCH_FUNCTION_LOGS_SUCCESS,
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_BEGIN,
-  REMOVE_FUNCTION_LOGS
+  REMOVE_FUNCTION_LOGS,
+  SET_NEW_FUNCTION
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -226,6 +227,10 @@ const functionsActions = {
   setLoading: loading => ({
     type: SET_LOADING,
     payload: loading
+  }),
+  setNewFunction: func => ({
+    type: SET_NEW_FUNCTION,
+    payload: func
   }),
   setNewFunctionBaseImage: base_image => ({
     type: SET_NEW_FUNCTION_BASE_IMAGE,

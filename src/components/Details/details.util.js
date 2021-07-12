@@ -208,7 +208,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.hash
   },
   codeOrigin: {
-    value: selectedItem.codeOrigin
+    value: selectedItem.build.codeOrigin ?? ''
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
@@ -287,7 +287,7 @@ export const renderContent = (
         />
       )
     case DETAILS_CODE_TAB:
-      return <DetailsCode code={selectedItem.functionSourceCode} />
+      return <DetailsCode code={selectedItem.build.functionSourceCode} />
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
     case DETAILS_RETURNED_FEATURES_TAB:

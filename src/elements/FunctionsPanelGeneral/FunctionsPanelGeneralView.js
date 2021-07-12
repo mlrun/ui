@@ -79,7 +79,7 @@ const FunctionsPanelGeneralView = ({
             onBlur={handleTagOnBlur}
             placeholder="latest"
             type="text"
-            value={data.version}
+            value={data.tag}
             wrapperClassName="tag"
           />
         </div>
