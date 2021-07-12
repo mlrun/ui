@@ -94,11 +94,6 @@ const Functions = ({
         hidden: FUNCTIONS_FAILED_STATES.includes(item?.state?.value)
       },
       {
-        label: 'Delete',
-        icon: <Delete />,
-        onClick: onRemoveFunction
-      },
-      {
         label: 'Edit',
         icon: <Edit />,
         onClick: func => {
@@ -106,6 +101,11 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden: item?.type !== 'job'
+      },
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        onClick: onRemoveFunction
       }
     ],
     detailsMenu,
