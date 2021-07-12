@@ -19,12 +19,16 @@ import {
   typeIntoInputField
 } from '../common/actions/common.action'
 import {
+  getTableRows,
   isContainsValueInColumn,
   isNotContainsValueInColumn,
   findRowIndexesByColumnValue,
   getCellByIndexColumn,
   isTableColumnSorted,
-  checkTableColumnValues
+  checkTableColumnValues,
+  isContainsSubstringInColumnCels,
+  isContainsSubstringInColumnDropdownCels,
+  isDatetimeCelsValueInRange
 } from '../common/actions/table.action'
 import {
   openActionMenu,
@@ -55,6 +59,10 @@ import {
   pickUpCustomDatetimeRange,
   applyDatetimePickerRange
 } from '../common/actions/date-picker.action'
+import {
+  typeSearchebleValue,
+  isContainsSubstringInSuggestedOptions
+} from '../common/actions/input-with-autocomplete.action'
 
 import { isRadioButtonSelected } from '../common/actions/radio-button.action'
 
@@ -103,6 +111,28 @@ Then('type value {string} to {string} field on {string} wizard', async function(
   await typeValue(this.driver, pageObjects[wizard][inputField], value)
   await verifyTypedValue(this.driver, pageObjects[wizard][inputField], value)
 })
+
+When(
+  'type searchable fragment {string} into {string} on {string} wizard',
+  async function(subName, inputGroup, wizard) {
+    await typeSearchebleValue(
+      this.driver,
+      pageObjects[wizard][inputGroup],
+      subName
+    )
+  }
+)
+
+Then(
+  'searchable fragment {string} should be in every sugested option into {string} on {string} wizard',
+  async function(subName, inputGroup, wizard) {
+    await isContainsSubstringInSuggestedOptions(
+      this.driver,
+      pageObjects[wizard][inputGroup],
+      subName
+    )
+  }
+)
 
 Then(
   'type value {string} to {string} field on {string} on {string} wizard',
@@ -341,6 +371,106 @@ When(
   }
 )
 
+Then(
+  'value in {string} column with {string} in {string} on {string} wizard should contains {string}',
+  async function(column, type, table, wizard, substring) {
+    if (type === 'text') {
+      await isContainsSubstringInColumnCels(
+        this.driver,
+        pageObjects[wizard][table],
+        column,
+        substring
+      )
+    }
+    if (type === 'dropdowns') {
+      await isContainsSubstringInColumnDropdownCels(
+        this.driver,
+        pageObjects[wizard][table],
+        column,
+        substring
+      )
+    }
+  }
+)
+
+Then(
+  'value in {string} column with {string} in {string} in {string} on {string} wizard should contains {string}',
+  async function(column, type, table, accordion, wizard, substring) {
+    if (type === 'text') {
+      await isContainsSubstringInColumnCels(
+        this.driver,
+        pageObjects[wizard][accordion][table],
+        column,
+        substring
+      )
+    }
+    if (type === 'dropdowns') {
+      await isContainsSubstringInColumnDropdownCels(
+        this.driver,
+        pageObjects[wizard][accordion][table],
+        column,
+        substring
+      )
+    }
+  }
+)
+
+Then(
+  'subtable column {string} in {string} in {string} on {string} wizard should contains {string} in {string} column',
+  async function(subTable, table, accordion, wizard, subString, subColumn) {
+    const numOfRows = await getTableRows(
+      this.driver,
+      pageObjects[wizard][accordion][table]
+    )
+    for (let i = 1; i <= numOfRows; i++) {
+      const cellTable = await getCellByIndexColumn(
+        this.driver,
+        pageObjects[wizard][accordion][table],
+        i,
+        subTable
+      )
+      await isContainsSubstringInColumnCels(
+        this.driver,
+        cellTable,
+        subColumn,
+        subString
+      )
+    }
+  }
+)
+
+When(
+  'expand each row in {string} in {string} on {string} wizard',
+  async function(table, accordion, wizard) {
+    const numOfRows = await getTableRows(
+      this.driver,
+      pageObjects[wizard][accordion][table]
+    )
+    for (let i = 1; i <= numOfRows; i++) {
+      const expandBtn = await getCellByIndexColumn(
+        this.driver,
+        pageObjects[wizard][accordion][table],
+        i,
+        'expand_btn'
+      )
+      await clickOnComponent(this.driver, expandBtn)
+    }
+  }
+)
+
+Then(
+  'value in {string} column in {string} on {string} wizard should be from {string} to {string}',
+  async function(column, table, wizard, fromDateTime, toDateTime) {
+    await isDatetimeCelsValueInRange(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      fromDateTime,
+      toDateTime
+    )
+  }
+)
+
 When(
   'select {string} option in {string} dropdown on {string} wizard',
   async function(option, dropdown, wizard) {
@@ -418,7 +548,7 @@ Then(
     await verifyTimeFilterBand(
       this.driver,
       pageObjects[wizard][dropdown],
-      Date.parse(fromDatetime) - Date.parse(toDatetime)
+      Date.parse(toDatetime) - Date.parse(fromDatetime)
     )
   }
 )
@@ -597,6 +727,18 @@ Then(
     await checkHintText(
       this.driver,
       pageObjects[wizard][inputField],
+      pageObjects['commonPagesHeader']['Common_Hint'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} element in {string} on {string} wizard should display hint {string}.{string}',
+  async function(inputField, accordion, wizard, constStorage, constValue) {
+    await checkHintText(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
       pageObjects['commonPagesHeader']['Common_Hint'],
       pageObjectsConsts[constStorage][constValue]
     )
