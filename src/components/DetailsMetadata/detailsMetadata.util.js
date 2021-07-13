@@ -30,58 +30,48 @@ export const generateArtifactDefaultMetadata = (selectedItem, primaryKey) =>
             <Primary />
           </Tooltip>
         ),
-        type: 'icon icon-key',
-        visible: primaryKey.includes(field.name)
+        type: 'icon',
+        hidden: !primaryKey.includes(field.name)
       },
       name: {
         value: field.name,
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       type: {
         value: field.type,
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       count: {
         value: selectedItem?.stats?.[field.name]?.count ?? '',
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       mean: {
         value: selectedItem?.stats?.[field.name]?.mean ?? '',
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       std: {
         value: selectedItem?.stats?.[field.name]?.std?.toFixed(8) ?? '',
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       min: {
         value: selectedItem?.stats?.[field.name]?.min ?? '',
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       '25%': {
         value: selectedItem?.stats?.[field.name]?.['25%'] ?? '',
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       '50%': {
         value: selectedItem?.stats?.[field.name]?.['50%'] ?? '',
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       '75%': {
         value: selectedItem?.stats?.[field.name]?.['75%'] ?? '',
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       max: {
         value: selectedItem?.stats?.[field.name]?.max ?? '',
-        type: 'text',
-        visible: true
+        type: 'text'
       }
     }
   })
@@ -98,8 +88,8 @@ export const generateArtifactMetadataFromEntities = selectedItem => {
               <Primary />
             </Tooltip>
           ),
-          type: 'icon icon-key',
-          visible: !!item.entity
+          type: 'icon',
+          hidden: !item.entity
         },
         partitionIcon: {
           value: (
@@ -107,8 +97,8 @@ export const generateArtifactMetadataFromEntities = selectedItem => {
               <Partition />
             </Tooltip>
           ),
-          type: 'icon icon-partition',
-          visible: !!selectedItem.partition_keys?.includes(item.name)
+          type: 'icon',
+          hidden: !selectedItem.partition_keys?.includes(item.name)
         },
         timestampKeyIcon: {
           value: (
@@ -116,10 +106,10 @@ export const generateArtifactMetadataFromEntities = selectedItem => {
               <TimestampKey />
             </Tooltip>
           ),
-          type: 'icon icon-timestamp-key',
-          visible:
-            selectedItem.timestamp_key === item.name ||
-            selectedItem.timestamp_field === item.name
+          type: 'icon',
+          hidden:
+            selectedItem.timestamp_key !== item.name &&
+            selectedItem.timestamp_field !== item.name
         },
         labelColumnIcon: {
           value: (
@@ -127,34 +117,29 @@ export const generateArtifactMetadataFromEntities = selectedItem => {
               <LabelColumn />
             </Tooltip>
           ),
-          type: 'icon icon-label-column',
-          visible: selectedItem.label_column === item.name
+          type: 'icon',
+          hidden: selectedItem.label_column !== item.name
         },
         name: {
           value: item.name,
-          type: 'text',
-          visible: true
+          type: 'text'
         },
         type: {
           value: item.value_type,
-          type: 'text',
-          visible: true
+          type: 'text'
         },
         description: {
           value: item.description,
-          type: 'text',
-          visible: true
+          type: 'text'
         },
         labels: {
           value: parseKeyValues(item.labels),
           type: 'chip',
-          visible: true,
           className: 'table-body__labels'
         },
         validators: {
           value: <FeatureValidator validator={item.validator} />,
-          type: 'html',
-          visible: true
+          type: 'html'
         }
       }
     })
@@ -169,10 +154,10 @@ export const generateArtifactMetadataFromFeatures = selectedItem =>
             <TimestampKey />
           </Tooltip>
         ),
-        type: 'icon icon-timestamp-key',
-        visible:
-          selectedItem.timestamp_key === item.name ||
-          selectedItem.timestamp_field === item.name
+        type: 'icon',
+        hidden:
+          selectedItem.timestamp_key !== item.name &&
+          selectedItem.timestamp_field !== item.name
       },
       labelColumnIcon: {
         value: (
@@ -180,28 +165,24 @@ export const generateArtifactMetadataFromFeatures = selectedItem =>
             <LabelColumn />
           </Tooltip>
         ),
-        type: 'icon icon-label-column',
-        visible: selectedItem.label_column === item.name
+        type: 'icon',
+        hidden: selectedItem.label_column !== item.name
       },
       name: {
         value: item.name,
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       type: {
         value: item.value_type,
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       description: {
         value: item.description,
-        type: 'text',
-        visible: true
+        type: 'text'
       },
       labels: {
         value: parseKeyValues(item.labels),
         type: 'chip',
-        visible: true,
         className: 'table-body__labels'
       },
       validators: {
@@ -209,7 +190,7 @@ export const generateArtifactMetadataFromFeatures = selectedItem =>
           <FeatureValidator validator={item.validator} />
         ),
         type: 'html',
-        visible: !!item.validator
+        hidden: !item.validator
       }
     }
   })
