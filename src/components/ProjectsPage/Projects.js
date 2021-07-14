@@ -223,6 +223,13 @@ const Projects = ({
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
+  const refreshProjects = () => {
+    removeProjects()
+    fetchProjects()
+    fetchNuclioFunctions()
+    fetchProjectsSummary(source.token)
+  }
+
   const handleCreateProject = e => {
     e.preventDefault()
 
@@ -248,20 +255,13 @@ const Projects = ({
       if (result) {
         setCreateProject(false)
         removeNewProject()
-        fetchProjects()
+        refreshProjects()
       }
     })
   }
 
   const handleSearchOnChange = value => {
     setFilterByName(value)
-  }
-
-  const refreshProjects = () => {
-    removeProjects()
-    fetchProjects()
-    fetchNuclioFunctions()
-    fetchProjectsSummary(source.token)
   }
 
   return (
