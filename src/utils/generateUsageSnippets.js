@@ -33,7 +33,8 @@ resp = fs.get_offline_features(vector)`
       {
         title: 'Getting online features:',
         code: `svc = fs.get_online_feature_service("<vector-uri>")
-resp = svc.get([{"${currentFeatureSet.spec.entities[0].name ?? ''}": <value>}])`
+resp = svc.get([{"${currentFeatureSet.spec.entities[0]?.name ??
+          ''}": <value>}])`
       }
     ]
   }
