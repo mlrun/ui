@@ -44,26 +44,8 @@ import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 import DetailsPods from '../DetailsPods/DetailsPods'
 
-export const generateArtifactsContent = (
-  editDescription,
-  page,
-  pageTab,
-  selectedItem,
-  editChips,
-  addChip,
-  deleteChip
-) => {
-  if (pageTab === FEATURE_SETS_TAB) {
-    return generateFeatureSetsOverviewContent(
-      addChip,
-      deleteChip,
-      editChips,
-      editDescription,
-      selectedItem
-    )
-  } else if (pageTab === FEATURE_VECTORS_TAB) {
-    return generateFeatureVectorsOverviewContent(selectedItem)
-  } else if (pageTab === MODEL_ENDPOINTS_TAB) {
+export const generateArtifactsContent = (page, pageTab, selectedItem) => {
+  if (pageTab === MODEL_ENDPOINTS_TAB) {
     return {
       uid: {
         value: selectedItem?.metadata?.uid ?? '-'
@@ -155,6 +137,27 @@ export const generateArtifactsContent = (
         value: selectedItem.sources
       }
     }
+  }
+}
+
+export const generateFeatureStoreContent = (
+  addChip,
+  deleteChip,
+  editChips,
+  editDescription,
+  pageTab,
+  selectedItem
+) => {
+  if (pageTab === FEATURE_SETS_TAB) {
+    return generateFeatureSetsOverviewContent(
+      addChip,
+      deleteChip,
+      editChips,
+      editDescription,
+      selectedItem
+    )
+  } else if (pageTab === FEATURE_VECTORS_TAB) {
+    return generateFeatureVectorsOverviewContent(selectedItem)
   }
 }
 

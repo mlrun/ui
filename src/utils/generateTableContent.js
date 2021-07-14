@@ -2,6 +2,7 @@ import { isEmpty, map } from 'lodash'
 
 import {
   ARTIFACTS_PAGE,
+  DATASETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTIONS_PAGE,
@@ -13,6 +14,7 @@ import {
 import createJobsContent from './createJobsContent'
 import createFunctionsContent from './createFunctionsContent'
 import createArtifactsContent from './createArtifactsContent'
+import { createFeatureStoreContent } from './createFeatureStoreContent'
 
 export const generateTableContent = (
   content,
@@ -20,8 +22,9 @@ export const generateTableContent = (
   groupedByWorkflow,
   groupFilter,
   page,
-  match,
-  isTablePanelOpen
+  isTablePanelOpen,
+  pageTab,
+  projectName
 ) => {
   if (!isEmpty(groupedByName) && groupFilter === INIT_GROUP_FILTER) {
     return map(groupedByName, group =>
@@ -29,28 +32,30 @@ export const generateTableContent = (
         ? createJobsContent(group, false)
         : page === FUNCTIONS_PAGE
         ? createFunctionsContent(group)
-        : createArtifactsContent(
+        : page === FEATURE_STORE_PAGE && pageTab !== DATASETS_TAB
+        ? createFeatureStoreContent(
             group,
-            page,
-            match.params.pageTab,
-            match.params.projectName,
+            pageTab,
+            projectName,
             isTablePanelOpen
           )
+        : createArtifactsContent(group, page, pageTab, projectName)
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
     return map(groupedByWorkflow, group => createJobsContent(group, true))
   } else if (groupFilter === 'none' || !groupFilter) {
     return page === JOBS_PAGE
-      ? createJobsContent(content, false, match.params.pageTab === SCHEDULE_TAB)
+      ? createJobsContent(content, false, pageTab === SCHEDULE_TAB)
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
         page === MODELS_PAGE ||
-        page === FEATURE_STORE_PAGE
-      ? createArtifactsContent(
+        pageTab === DATASETS_TAB
+      ? createArtifactsContent(content, page, pageTab, projectName)
+      : page === FEATURE_STORE_PAGE
+      ? createFeatureStoreContent(
           content,
-          page,
-          match.params.pageTab,
-          match.params.projectName,
+          pageTab,
+          projectName,
           isTablePanelOpen
         )
       : createFunctionsContent(content)

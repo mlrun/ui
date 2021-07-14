@@ -7,14 +7,10 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
-import {
-  ACTION_CELL_ID,
-  DETAILS_OVERVIEW_TAB,
-  MODEL_ENDPOINTS_TAB
-} from '../../constants'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { ACTION_CELL_ID, DETAILS_OVERVIEW_TAB } from '../../constants'
+import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 
-const ArtifactsTableRow = ({
+const FeatureStoreTableRow = ({
   actionsMenu,
   content,
   handleExpandRow,
@@ -31,7 +27,7 @@ const ArtifactsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    getArtifactIdentifier(selectedItem) === rowItem.key.identifier &&
+    getFeatureIdentifier(selectedItem) === rowItem.key?.identifier &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -40,14 +36,14 @@ const ArtifactsTableRow = ({
   const mainRowData = Object.values(rowItem ?? {})
 
   const findCurrentItem = useCallback(
-    artifact => {
+    feature => {
       const currentContent =
-        pageData.selectedRowData?.[artifact.key.value]?.content || content
+        pageData.selectedRowData?.[feature.key.value]?.content || content
 
       return (
         currentContent.find(
           contentItem =>
-            getArtifactIdentifier(contentItem) === artifact.key.identifier
+            getFeatureIdentifier(contentItem) === feature.key.identifier
         ) ?? {}
       )
     },
@@ -85,30 +81,41 @@ const ArtifactsTableRow = ({
               ) : null
             })}
           </div>
-          {tableContent.map((artifact, index) => {
-            const subRowCurrentItem = findCurrentItem(artifact)
+          {tableContent.map((tableContentItem, index) => {
+            const subRowCurrentItem = findCurrentItem(tableContentItem)
             const subRowClassNames = classnames(
               'table-body__row',
-              getArtifactIdentifier(subRowCurrentItem) ===
-                getArtifactIdentifier(selectedItem) && 'row_active'
+              getFeatureIdentifier(selectedItem) ===
+                getFeatureIdentifier(subRowCurrentItem) && 'row_active'
             )
 
             return (
               <div className={subRowClassNames} key={index}>
                 {pageData.selectedRowData &&
-                pageData.selectedRowData[artifact.key?.value]?.loading ? (
+                (pageData.selectedRowData[tableContentItem.key?.value]
+                  ?.loading ||
+                  pageData.selectedRowData[
+                    `${tableContentItem.key?.value}-${tableContentItem.feature_set?.value}`
+                  ]?.loading) ? (
                   <Loader key={index} />
                 ) : pageData.selectedRowData &&
-                  pageData.selectedRowData[artifact.key?.value]?.error ? (
+                  (pageData.selectedRowData[tableContentItem.key?.value]
+                    ?.error ||
+                    pageData.selectedRowData[
+                      `${tableContentItem.key.value}-${tableContentItem.feature_set?.value}`
+                    ]?.error) ? (
                   <ErrorMessage
                     message={
-                      pageData.selectedRowData[artifact.key?.value]?.error
-                        ?.message
+                      pageData.selectedRowData[tableContentItem.key?.value]
+                        ?.error?.message ||
+                      pageData.selectedRowData[
+                        `${tableContentItem.key.value}-${tableContentItem.feature_set?.value}`
+                      ]?.error.message
                     }
                   />
                 ) : (
                   <>
-                    {Object.values(artifact).map((value, i) => {
+                    {Object.values(tableContentItem).map((value, i) => {
                       return (
                         !value.hidden && (
                           <TableCell
@@ -152,10 +159,7 @@ const ArtifactsTableRow = ({
               currentItem &&
               !value.hidden && (
                 <TableCell
-                  expandLink={
-                    Array.isArray(tableContent) &&
-                    match.params.pageTab !== MODEL_ENDPOINTS_TAB
-                  }
+                  expandLink={Array.isArray(tableContent)}
                   handleExpandRow={handleExpandRow}
                   data={value}
                   item={currentItem}
@@ -182,13 +186,13 @@ const ArtifactsTableRow = ({
   )
 }
 
-ArtifactsTableRow.defaultProps = {
+FeatureStoreTableRow.defaultProps = {
   handleExpandRow: null,
   tableContent: null,
   mainRowItemsCount: 1
 }
 
-ArtifactsTableRow.propTypes = {
+FeatureStoreTableRow.propTypes = {
   actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
@@ -200,4 +204,4 @@ ArtifactsTableRow.propTypes = {
   tableContent: PropTypes.arrayOf(PropTypes.shape({}))
 }
 
-export default React.memo(ArtifactsTableRow)
+export default React.memo(FeatureStoreTableRow)

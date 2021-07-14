@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 
 import FeatureSetsPanelDataSourceView from './FeatureSetsPanelDataSourceView'
 
-import artifactsAction from '../../../actions/artifacts'
+import featureStoreActions from '../../../actions/featureStore'
 
 const FeatureSetsPanelDataSource = ({
-  artifactsStore,
+  featureStore,
   isUrlValid,
   setNewFeatureSetDataSourceAttributes,
   setNewFeatureSetDataSourceKey,
@@ -26,7 +26,7 @@ const FeatureSetsPanelDataSource = ({
 
   const handleAddNewItem = attribute => {
     setNewFeatureSetDataSourceAttributes({
-      ...artifactsStore.newFeatureSet.spec.source.attributes,
+      ...featureStore.newFeatureSet.spec.source.attributes,
       [attribute.key]: attribute.value
     })
     setData(state => ({
@@ -37,7 +37,7 @@ const FeatureSetsPanelDataSource = ({
 
   const handleDeleteAttribute = (index, attribute) => {
     const storeAttributes = {
-      ...artifactsStore.newFeatureSet.spec.source.attributes
+      ...featureStore.newFeatureSet.spec.source.attributes
     }
 
     delete storeAttributes[attribute.key]
@@ -50,7 +50,7 @@ const FeatureSetsPanelDataSource = ({
 
   const handleEditAttribute = attribute => {
     const storeAttributes = {
-      ...artifactsStore.newFeatureSet.spec.source.attributes
+      ...featureStore.newFeatureSet.spec.source.attributes
     }
 
     if (attribute.newKey) {
@@ -151,6 +151,6 @@ const FeatureSetsPanelDataSource = ({
   )
 }
 
-export default connect(artifactsStore => ({ ...artifactsStore }), {
-  ...artifactsAction
+export default connect(featureStore => ({ ...featureStore }), {
+  ...featureStoreActions
 })(FeatureSetsPanelDataSource)

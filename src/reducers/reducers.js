@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 import appStore from './appReducer'
 import artifactsStore from './artifactReducer'
+import featureStore from './featureStoreReducer'
 import functionsStore from './functionReducer'
 import jobsStore from './jobReducer'
 import detailsStore from './detailsReducer'
@@ -15,6 +16,7 @@ import filtersStore from './filtersReducer'
 export default combineReducers({
   appStore,
   artifactsStore,
+  featureStore,
   functionsStore,
   jobsStore,
   detailsStore,

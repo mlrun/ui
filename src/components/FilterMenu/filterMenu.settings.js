@@ -19,7 +19,7 @@ export const selectOptions = {
   ]
 }
 
-export const filterTreeOptions = [
+export const tagFilterOptions = [
   {
     label: 'latest',
     id: 'latest'

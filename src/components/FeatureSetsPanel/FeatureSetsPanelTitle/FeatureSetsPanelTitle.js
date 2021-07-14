@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 
 import FeatureSetsPanelTitleView from './FeatureSetsPanelTitleView'
 
-import artifactsAction from '../../../actions/artifacts'
+import featureStoreActions from '../../../actions/featureStore'
 
 const FeatureSetsPanelTitle = ({
-  artifactsStore,
+  featureStore,
   closePanel,
   isNameValid,
   setNameValid,
@@ -37,7 +37,7 @@ const FeatureSetsPanelTitle = ({
   const handleNameOnBlur = () => {
     if (data.name.length === 0) {
       setNameValid(false)
-    } else if (data.name !== artifactsStore.newFeatureSet.metadata.name) {
+    } else if (data.name !== featureStore.newFeatureSet.metadata.name) {
       setNewFeatureSetName(data.name)
     }
   }
@@ -75,6 +75,7 @@ const FeatureSetsPanelTitle = ({
     <FeatureSetsPanelTitleView
       closePanel={closePanel}
       data={data}
+      featureStore={featureStore}
       handleAddLabel={handleAddLabel}
       handleChangeLabels={handleChangeLabels}
       handleNameChange={handleNameChange}
@@ -93,6 +94,6 @@ FeatureSetsPanelTitle.propTypes = {
   setNameValid: PropTypes.func.isRequired
 }
 
-export default connect(artifactsStore => ({ ...artifactsStore }), {
-  ...artifactsAction
+export default connect(featureStore => ({ ...featureStore }), {
+  ...featureStoreActions
 })(FeatureSetsPanelTitle)

@@ -10,7 +10,7 @@ import FeaturesTablePanelRow from './FeatureTablePanleRow/FeaturesTablePanelRow'
 import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
 
 import tableActions from '../../actions/table'
-import artifactsAction from '../../actions/artifacts'
+import featureStoreActions from '../../actions/featureStore'
 import notificationActions from '../../actions/notification'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
@@ -228,5 +228,5 @@ export default connect(
   tableStore => ({
     ...tableStore
   }),
-  { ...tableActions, ...artifactsAction, ...notificationActions }
+  { ...tableActions, ...featureStoreActions, ...notificationActions }
 )(FeaturesTablePanel)

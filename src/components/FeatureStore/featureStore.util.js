@@ -280,6 +280,7 @@ export const generatePageData = (
     data.filters = featuresFilters
     data.tableHeaders = generateFeaturesTableHeaders(isTablePanelOpen)
     data.tablePanel = getFeaturesTablePanel()
+    data.handleRemoveRequestData = handleRemoveRequestData
     data.filterMenuActionButton = {
       label: 'Add to feature vector',
       variant: 'secondary',
@@ -384,57 +385,57 @@ export const navigateToDetailsPane = (
   setSelectedItem
 ) => {
   const { name, tag, iter } = match.params
-  let artifacts = []
+  let content = []
 
   if (match.params.pageTab === FEATURE_SETS_TAB && featureSets.length > 0) {
-    artifacts = parseFeatureSets(featureSets)
+    content = parseFeatureSets(featureSets)
   } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
-    artifacts = features
+    content = features
   } else if (
     match.params.pageTab === DATASETS_TAB &&
     dataSets.allData.length > 0
   ) {
     if (dataSets.selectedRowData.content[name]) {
-      artifacts = dataSets.selectedRowData.content[name]
+      content = dataSets.selectedRowData.content[name]
     } else {
-      artifacts = dataSets.allData
+      content = dataSets.allData
     }
   } else if (
     match.params.pageTab === FEATURE_VECTORS_TAB &&
     featureVectors.allData.length > 0
   ) {
     if (featureVectors.selectedRowData.content[name]) {
-      artifacts = featureVectors.selectedRowData.content[name]
+      content = featureVectors.selectedRowData.content[name]
     } else {
-      artifacts = featureVectors.allData
+      content = featureVectors.allData
     }
   }
 
-  if (match.params.name && artifacts.length !== 0) {
-    const selectedArtifact = artifacts.find(artifact => {
-      const searchKey = artifact.name ? 'name' : 'db_key'
+  if (match.params.name && content.length !== 0) {
+    const selectedItem = content.find(contentItem => {
+      const searchKey = contentItem.name ? 'name' : 'db_key'
 
       if (
         match.params.pageTab === FEATURE_SETS_TAB ||
         match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
         return (
-          artifact[searchKey] === name &&
-          (artifact.tag === tag || artifact.uid === tag)
+          contentItem[searchKey] === name &&
+          (contentItem.tag === tag || contentItem.uid === tag)
         )
       } else if (match.params.pageTab === DATASETS_TAB) {
         return iter
-          ? Number(iter) === artifact.iter &&
-              artifact[searchKey] === name &&
-              (artifact.tag === tag || artifact.tree === tag)
-          : artifact[searchKey] === name &&
-              (artifact.tag === tag || artifact.tree === tag)
+          ? Number(iter) === contentItem.iter &&
+              contentItem[searchKey] === name &&
+              (contentItem.tag === tag || contentItem.tree === tag)
+          : contentItem[searchKey] === name &&
+              (contentItem.tag === tag || contentItem.tree === tag)
       } else {
-        return artifact[searchKey] === name
+        return contentItem[searchKey] === name
       }
     })
 
-    if (!selectedArtifact) {
+    if (!selectedItem) {
       history.replace(
         `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
       )
@@ -443,15 +444,15 @@ export const navigateToDetailsPane = (
         match.params.pageTab === FEATURE_SETS_TAB ||
         match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
-        selectedArtifact.usage_example = generateUsageSnippets(
+        selectedItem.usage_example = generateUsageSnippets(
           match.params,
           featureSets,
           featureVectors
         )
       }
 
-      selectedArtifact.URI = generateUri(selectedArtifact, match.params.pageTab)
-      setSelectedItem({ item: selectedArtifact })
+      selectedItem.URI = generateUri(selectedItem, match.params.pageTab)
+      setSelectedItem({ item: selectedItem })
     }
   } else {
     setSelectedItem({})

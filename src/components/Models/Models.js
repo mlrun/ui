@@ -105,15 +105,25 @@ const Models = ({
 
   const handleRemoveModel = useCallback(
     model => {
-      const newSelectedRowData = {
-        ...artifactsStore.models.selectedRowData
+      const newStoreSelectedRowData = {
+        ...artifactsStore.models.selectedRowData.content
       }
+      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
 
-      delete newSelectedRowData[model.db_key]
+      delete newStoreSelectedRowData[model.key.value]
+      delete newPageDataSelectedRowData[model.key.value]
 
-      removeModel(newSelectedRowData)
+      removeModel(newStoreSelectedRowData)
+      setPageData(state => ({
+        ...state,
+        selectedRowData: newPageDataSelectedRowData
+      }))
     },
-    [artifactsStore.models.selectedRowData, removeModel]
+    [
+      artifactsStore.models.selectedRowData.content,
+      pageData.selectedRowData,
+      removeModel
+    ]
   )
 
   const handleRequestOnExpand = useCallback(

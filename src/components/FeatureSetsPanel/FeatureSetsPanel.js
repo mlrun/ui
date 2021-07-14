@@ -5,15 +5,15 @@ import { useHistory } from 'react-router-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
-import artifactsAction from '../../actions/artifacts'
+import featureStoreActions from '../../actions/featureStore'
 
 const FeatureSetsPanel = ({
-  artifactsStore,
   closePanel,
-  createNewFeatureSet,
   createFeatureSetSuccess,
+  createNewFeatureSet,
+  featureStore,
   project,
-  removeArtifactsError,
+  removeFeatureStoreError,
   startFeatureSetIngest
 }) => {
   const [isNameValid, setNameValid] = useState(true)
@@ -25,13 +25,13 @@ const FeatureSetsPanel = ({
   const history = useHistory()
 
   const handleSave = () => {
-    if (artifactsStore.error) {
-      removeArtifactsError()
+    if (featureStore.error) {
+      removeFeatureStoreError()
     }
 
     createNewFeatureSet(project, {
       kind: 'FeatureSet',
-      ...artifactsStore.newFeatureSet
+      ...featureStore.newFeatureSet
     })
       .then(result => {
         if (confirmDialog.action === 'save and ingest') {
@@ -51,21 +51,21 @@ const FeatureSetsPanel = ({
   }
 
   const handleSaveOnClick = startIngestion => {
-    const onlineTarget = artifactsStore.newFeatureSet.spec.targets.find(
+    const onlineTarget = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === 'nosql'
     )
-    const offlineTarget = artifactsStore.newFeatureSet.spec.targets.find(
+    const offlineTarget = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === 'parquet'
     )
-    const otherTarget = artifactsStore.newFeatureSet.spec.targets.find(
+    const otherTarget = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === 'other'
     )
 
-    if (artifactsStore.newFeatureSet.metadata.name.length === 0) {
+    if (featureStore.newFeatureSet.metadata.name.length === 0) {
       return setNameValid(false)
     }
 
-    if (artifactsStore.newFeatureSet.spec.source.path.length === 0) {
+    if (featureStore.newFeatureSet.spec.source.path.length === 0) {
       return setUrlValid(false)
     }
 
@@ -113,7 +113,7 @@ const FeatureSetsPanel = ({
     <FeatureSetsPanelView
       closePanel={closePanel}
       confirmDialog={confirmDialog}
-      error={artifactsStore.error}
+      error={featureStore.error}
       handleSave={handleSave}
       handleSaveOnClick={handleSaveOnClick}
       isNameValid={isNameValid}
@@ -121,8 +121,8 @@ const FeatureSetsPanel = ({
       isOnlineTargetsPathValid={isOnlineTargetsPathValid}
       isOtherTargetsPathValid={isOtherTargetsPathValid}
       isUrlValid={isUrlValid}
-      loading={artifactsStore.loading}
-      removeArtifactsError={removeArtifactsError}
+      loading={featureStore.loading}
+      removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
       setNameValid={setNameValid}
       setOfflineTargetsPathValid={setOfflineTargetsPathValid}
@@ -139,6 +139,6 @@ FeatureSetsPanel.propTypes = {
   project: PropTypes.string.isRequired
 }
 
-export default connect(({ artifactsStore }) => ({ artifactsStore }), {
-  ...artifactsAction
+export default connect(({ featureStore }) => ({ featureStore }), {
+  ...featureStoreActions
 })(FeatureSetsPanel)

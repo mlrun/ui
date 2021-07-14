@@ -9,6 +9,7 @@ import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRo
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import NoData from '../../common/NoData/NoData'
+import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 
 import {
   ARTIFACTS_PAGE,
@@ -16,7 +17,8 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODELS_PAGE
+  MODELS_PAGE,
+  DATASETS_TAB
 } from '../../constants'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
@@ -83,9 +85,32 @@ const TableView = ({
                 case ARTIFACTS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
-                case FEATURE_STORE_PAGE:
                   return (
                     <ArtifactsTableRow
+                      actionsMenu={actionsMenu}
+                      content={content}
+                      handleSelectItem={handleSelectItem}
+                      key={i}
+                      match={match}
+                      rowItem={rowItem}
+                      pageData={pageData}
+                      selectedItem={selectedItem}
+                    />
+                  )
+                case FEATURE_STORE_PAGE:
+                  return match.params.pageTab === DATASETS_TAB ? (
+                    <ArtifactsTableRow
+                      actionsMenu={actionsMenu}
+                      content={content}
+                      handleSelectItem={handleSelectItem}
+                      key={i}
+                      match={match}
+                      rowItem={rowItem}
+                      pageData={pageData}
+                      selectedItem={selectedItem}
+                    />
+                  ) : (
+                    <FeatureStoreTableRow
                       actionsMenu={actionsMenu}
                       content={content}
                       handleSelectItem={handleSelectItem}
@@ -126,56 +151,85 @@ const TableView = ({
             })
           ) : groupLatestItem.find(latestItem => !isEmpty(latestItem)) ? (
             tableContent.map((group, i) => {
-              if (pageData.page === FUNCTIONS_PAGE) {
-                return (
-                  <FunctionsTableRow
-                    actionsMenu={actionsMenu}
-                    key={i}
-                    content={content}
-                    handleExpandRow={handleExpandRow}
-                    handleSelectItem={handleSelectItem}
-                    match={match}
-                    rowItem={groupLatestItem[i]}
-                    selectedItem={selectedItem}
-                    tableContent={group}
-                  />
-                )
-              } else if (
-                pageData.page === FEATURE_STORE_PAGE ||
-                pageData.page === FILES_PAGE ||
-                pageData.page === MODELS_PAGE
-              ) {
-                return (
-                  <ArtifactsTableRow
-                    actionsMenu={actionsMenu}
-                    content={content}
-                    handleSelectItem={handleSelectItem}
-                    handleExpandRow={handleExpandRow}
-                    key={i}
-                    mainRowItemsCount={mainRowItemsCount}
-                    match={match}
-                    rowItem={groupLatestItem[i]}
-                    pageData={pageData}
-                    selectedItem={selectedItem}
-                    tableContent={group}
-                  />
-                )
-              } else {
-                return (
-                  <JobsTableRow
-                    actionsMenu={actionsMenu}
-                    key={i}
-                    content={content}
-                    handleExpandRow={handleExpandRow}
-                    handleSelectItem={handleSelectItem}
-                    isGroupedByWorkflow={!isEmpty(groupedByWorkflow)}
-                    match={match}
-                    rowItem={groupLatestItem[i]}
-                    selectedItem={selectedItem}
-                    tableContent={group}
-                    workflows={workflows}
-                  />
-                )
+              switch (pageData.page) {
+                case ARTIFACTS_PAGE:
+                case FILES_PAGE:
+                case MODELS_PAGE:
+                  return (
+                    <ArtifactsTableRow
+                      actionsMenu={actionsMenu}
+                      content={content}
+                      handleSelectItem={handleSelectItem}
+                      handleExpandRow={handleExpandRow}
+                      key={i}
+                      mainRowItemsCount={mainRowItemsCount}
+                      match={match}
+                      rowItem={groupLatestItem[i]}
+                      pageData={pageData}
+                      selectedItem={selectedItem}
+                      tableContent={group}
+                    />
+                  )
+                case FUNCTIONS_PAGE:
+                  return (
+                    <FunctionsTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      handleExpandRow={handleExpandRow}
+                      handleSelectItem={handleSelectItem}
+                      match={match}
+                      rowItem={groupLatestItem[i]}
+                      selectedItem={selectedItem}
+                      tableContent={group}
+                    />
+                  )
+                case FEATURE_STORE_PAGE:
+                  return match.params.pageTab === DATASETS_TAB ? (
+                    <ArtifactsTableRow
+                      actionsMenu={actionsMenu}
+                      content={content}
+                      handleSelectItem={handleSelectItem}
+                      handleExpandRow={handleExpandRow}
+                      key={i}
+                      mainRowItemsCount={mainRowItemsCount}
+                      match={match}
+                      rowItem={groupLatestItem[i]}
+                      pageData={pageData}
+                      selectedItem={selectedItem}
+                      tableContent={group}
+                    />
+                  ) : (
+                    <FeatureStoreTableRow
+                      actionsMenu={actionsMenu}
+                      content={content}
+                      handleSelectItem={handleSelectItem}
+                      handleExpandRow={handleExpandRow}
+                      key={i}
+                      mainRowItemsCount={mainRowItemsCount}
+                      match={match}
+                      rowItem={groupLatestItem[i]}
+                      pageData={pageData}
+                      selectedItem={selectedItem}
+                      tableContent={group}
+                    />
+                  )
+                default:
+                  return (
+                    <JobsTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      handleExpandRow={handleExpandRow}
+                      handleSelectItem={handleSelectItem}
+                      isGroupedByWorkflow={!isEmpty(groupedByWorkflow)}
+                      match={match}
+                      rowItem={groupLatestItem[i]}
+                      selectedItem={selectedItem}
+                      tableContent={group}
+                      workflows={workflows}
+                    />
+                  )
               }
             })
           ) : (

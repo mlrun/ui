@@ -75,15 +75,25 @@ const Files = ({
 
   const handleRemoveFile = useCallback(
     file => {
-      const newSelectedRowData = {
-        ...artifactsStore.files.selectedRowData
+      const newStoreSelectedRowData = {
+        ...artifactsStore.files.selectedRowData.content
       }
+      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
 
-      delete newSelectedRowData[file.db_key]
+      delete newStoreSelectedRowData[file.key.value]
+      delete newPageDataSelectedRowData[file.key.value]
 
-      removeFile(newSelectedRowData)
+      removeFile(newStoreSelectedRowData)
+      setPageData(state => ({
+        ...state,
+        selectedRowData: newPageDataSelectedRowData
+      }))
     },
-    [artifactsStore.files.selectedRowData, removeFile]
+    [
+      artifactsStore.files.selectedRowData.content,
+      pageData.selectedRowData,
+      removeFile
+    ]
   )
 
   const handleRequestOnExpand = useCallback(
@@ -219,12 +229,9 @@ const Files = ({
       setSelectedFile({})
     }
   }, [
-    artifactsStore,
-    artifactsStore.dataSets.allData,
-    artifactsStore.dataSets.selectedRowData.content,
-    artifactsStore.files,
+    artifactsStore.files.allData,
+    artifactsStore.files.selectedRowData.content,
     history,
-    match,
     match.params,
     pageData
   ])

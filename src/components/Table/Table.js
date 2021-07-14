@@ -86,8 +86,9 @@ const Table = ({
       groupedByWorkflow,
       filtersStore.groupBy,
       pageData.page,
-      match,
-      tableStore.isTablePanelOpen
+      tableStore.isTablePanelOpen,
+      match.params.pageTab,
+      match.params.projectName
     )
 
     if (filtersStore.groupBy === 'name') {
@@ -125,13 +126,14 @@ const Table = ({
     content,
     groupedByWorkflow,
     groupedByName,
-    match,
     pageData.page,
     setLoading,
     workflows,
     pageData.mainRowItemsCount,
     tableStore.isTablePanelOpen,
-    filtersStore.groupBy
+    filtersStore.groupBy,
+    match.params.pageTab,
+    match.params.projectName
   ])
 
   return (

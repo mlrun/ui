@@ -7,6 +7,7 @@ import artifactActions from '../../actions/artifacts'
 import {
   ARTIFACTS_PAGE,
   FEATURE_STORE_PAGE,
+  DATASETS_TAB,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -15,6 +16,7 @@ import {
 } from '../../constants'
 import {
   generateArtifactsContent,
+  generateFeatureStoreContent,
   generateFunctionsContent,
   generateJobsContent,
   renderContent
@@ -121,21 +123,28 @@ const Details = ({
       pageData.page === ARTIFACTS_PAGE ||
       pageData.page === FILES_PAGE ||
       pageData.page === MODELS_PAGE ||
-      pageData.page === FEATURE_STORE_PAGE
+      match.params.pageTab === DATASETS_TAB
     ) {
       setInfoContent(
         generateArtifactsContent(
-          handleEditInput,
           pageData.page,
           match.params.pageTab,
-          selectedItem,
-          handleEditChips,
-          handleAddChip,
-          handleDeleteChip
+          selectedItem
         )
       )
     } else if (pageData.page === FUNCTIONS_PAGE) {
       setInfoContent(generateFunctionsContent(selectedItem))
+    } else if (pageData.page === FEATURE_STORE_PAGE) {
+      setInfoContent(
+        generateFeatureStoreContent(
+          handleAddChip,
+          handleDeleteChip,
+          handleEditChips,
+          handleEditInput,
+          match.params.pageTab,
+          selectedItem
+        )
+      )
     }
 
     return () => {

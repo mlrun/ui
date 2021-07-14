@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 
 import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
 
-import artifactsAction from '../../../actions/artifacts'
+import featureStoreActions from '../../../actions/featureStore'
 import {
   checkboxModels,
   OTHER_KIND_DEFAULT_FILE_TYPE
 } from './featureSetsPanelTargetStore.util'
 
 const FeatureSetsPanelTargetStore = ({
-  artifactsStore,
+  featureStore,
   isOfflineTargetsPathValid,
   isOnlineTargetsPathValid,
   isOtherTargetsPathValid,
@@ -45,7 +45,7 @@ const FeatureSetsPanelTargetStore = ({
     }
 
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
           targetKind.key_bucketing_number = key_bucketing_number
         }
@@ -56,7 +56,7 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleOfflineKindPathOnBlur = () => {
-    const offlineTarget = artifactsStore.newFeatureSet.spec.targets.find(
+    const offlineTarget = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === 'parquet'
     )
 
@@ -64,7 +64,7 @@ const FeatureSetsPanelTargetStore = ({
       setOfflineTargetsPathValid(false)
     } else if (offlineTarget.path !== offlineKindData.path) {
       setNewFeatureSetTarget(
-        artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+        featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === 'parquet') {
             targetKind.path = offlineKindData.path
           }
@@ -76,7 +76,7 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleOnlineKindPathOnBlur = () => {
-    const onlineTarget = artifactsStore.newFeatureSet.spec.targets.find(
+    const onlineTarget = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === 'nosql'
     )
 
@@ -84,7 +84,7 @@ const FeatureSetsPanelTargetStore = ({
       setOnlineTargetsPathValid(false)
     } else if (onlineTarget.path !== onlineKindPath) {
       setNewFeatureSetTarget(
-        artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+        featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === 'nosql') {
             targetKind.path = onlineKindPath
           }
@@ -96,7 +96,7 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleOtherKindPathOnBlur = event => {
-    const otherTarget = artifactsStore.newFeatureSet.spec.targets.find(
+    const otherTarget = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === 'other'
     )
 
@@ -104,7 +104,7 @@ const FeatureSetsPanelTargetStore = ({
       setOtherTargetsPathValid(false)
     } else if (otherTarget.path !== otherKindData.path) {
       setNewFeatureSetTarget(
-        artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+        featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === 'other') {
             targetKind.path = event.target.value
           }
@@ -155,7 +155,7 @@ const FeatureSetsPanelTargetStore = ({
       time_partitioning_granularity: 'hour'
     }))
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === 'other') {
           targetKind.kind = kind
 
@@ -173,7 +173,7 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handlePartitionColsOnBlur = kind => {
-    const targetKind = artifactsStore.newFeatureSet.spec.targets.find(
+    const targetKind = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === kind
     )
     const partition_cols =
@@ -183,7 +183,7 @@ const FeatureSetsPanelTargetStore = ({
 
     if (partition_cols && targetKind.partition_cols !== partition_cols) {
       setNewFeatureSetTarget(
-        artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+        featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === kind) {
             targetKind.partition_cols = partition_cols
               .split(',')
@@ -197,7 +197,7 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleSelectTargetKind = kindId => {
-    let newTargets = [...artifactsStore.newFeatureSet.spec.targets]
+    let newTargets = [...featureStore.newFeatureSet.spec.targets]
 
     if (selectedTargetKind.find(kind => kind === kindId)) {
       newTargets = newTargets.filter(
@@ -235,7 +235,7 @@ const FeatureSetsPanelTargetStore = ({
     }
 
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
           targetKind.time_partitioning_granularity = time_partitioning_granularity
         }
@@ -259,7 +259,7 @@ const FeatureSetsPanelTargetStore = ({
     }
 
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
           if (
             (kind === 'parquet' && offlineKindData.partitioned !== id) ||
@@ -308,6 +308,6 @@ const FeatureSetsPanelTargetStore = ({
   )
 }
 
-export default connect(artifactsStore => ({ ...artifactsStore }), {
-  ...artifactsAction
+export default connect(featureStore => ({ ...featureStore }), {
+  ...featureStoreActions
 })(React.memo(FeatureSetsPanelTargetStore))
