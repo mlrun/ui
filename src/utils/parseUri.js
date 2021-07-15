@@ -1,6 +1,6 @@
 /**
  * Parses a URI of MLRun store and returns an object with the different URI parts, all as strings.
- * `kind` should be one of: `'artifacts'`, `'models'`, `'datasets'`, `'feature-vectors'`, or `'feature-sets'`.
+ * `kind` should be one of: `'artifacts'`, `'models'`, `'datasets'`, `'feature-vectors'`, `'feature-sets'`, `'jobs'` or `'functions'`.
  * Usually, either `tag` or `uid` is present, not both. However, the function will corectly parse both of them if both
  * are present.
  * `iteration` is relevant to `feature-sets` and `feature-vectors` kinds only. Note its value type string, not number.
