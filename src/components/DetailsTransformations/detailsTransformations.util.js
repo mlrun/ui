@@ -1,3 +1,4 @@
+import React from 'react'
 import dagre from 'dagre'
 import { isNode } from 'react-flow-renderer'
 
@@ -23,6 +24,14 @@ export const getLayoutedElements = (elements, direction = 'TB') => {
       el.targetPosition = isHorizontal ? 'left' : 'top'
       el.sourcePosition = isHorizontal ? 'right' : 'bottom'
 
+      el.data.label = (
+        <div className="react-flow__node-label" data-title={el.data.label}>
+          <div className="data-ellipsis">{el.data.label}</div>
+        </div>
+      )
+      el.style = {
+        pointerEvents: 'all'
+      }
       // unfortunately we need this little hack to pass a slighltiy different position
       // in order to notify react flow about the change
       el.position = {
