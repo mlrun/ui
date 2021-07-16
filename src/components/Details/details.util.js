@@ -410,7 +410,7 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
     value: selectedItem.usage_example ?? ''
   },
   label_column: {
-    value: selectedItem.label_column ?? ''
+    value: selectedItem.label_feature ?? ''
   }
 })
 export const handleFinishEdit = (
