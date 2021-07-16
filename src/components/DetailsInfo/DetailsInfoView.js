@@ -83,8 +83,8 @@ const DetailsInfoView = React.forwardRef(
                     ? selectedItem.function
                     : ''
                 state =
-                  content[header.id]?.value === selectedItem.state.value
-                    ? selectedItem.state.value
+                  content[header.id]?.value === selectedItem.state?.value
+                    ? selectedItem.state?.value
                     : ''
                 info = content[header.id]?.value
               } else if (

@@ -16,12 +16,7 @@ import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
-import {
-  FUNCTIONS_PAGE,
-  INIT_TAG_FILTER,
-  JOBS_PAGE,
-  KEY_CODES
-} from '../../constants'
+import { INIT_TAG_FILTER, JOBS_PAGE, KEY_CODES } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
 import filtersActions from '../../actions/filters'
 import { selectOptions, filterTreeOptions } from './filterMenu.settings'
@@ -39,8 +34,6 @@ const FilterMenu = ({
   page,
   removeFilters,
   setFilters,
-  showUntagged,
-  toggleShowUntagged,
   withoutExpandButton
 }) => {
   const [labels, setLabels] = useState('')
@@ -56,13 +49,7 @@ const FilterMenu = ({
       setName('')
       setTreeOptions(filterTreeOptions)
     }
-  }, [removeFilters, match.params.pageTab])
-
-  useEffect(() => {
-    if (filters.find(filter => filter.type === 'iterations')) {
-      setFilters({ iter: 'iter' })
-    }
-  }, [filters, setFilters])
+  }, [removeFilters, match.params.pageTab, match.params.projectName, page])
 
   useEffect(() => {
     if (
@@ -159,15 +146,29 @@ const FilterMenu = ({
     })
   }
 
-  const handleIterClick = iteration => {
+  const handleIter = iteration => {
+    const iterValue = filtersStore.iter === iteration ? 'iter' : ''
+
     handleExpandAll(true)
+    setFilters({
+      iter: iterValue
+    })
     applyChanges({
       ...filtersStore,
-      iter: filtersStore.iter === iteration ? 'iter' : ''
+      iter: iterValue
     })
-    setFilters(
-      filtersStore.iter === iteration ? { iter: 'iter' } : { iter: iteration }
-    )
+  }
+
+  const handleShowUntagged = showUntagged => {
+    const showUntaggedValue =
+      filtersStore.showUntagged === showUntagged ? '' : showUntagged
+    setFilters({
+      showUntagged: showUntaggedValue
+    })
+    applyChanges({
+      ...filtersStore,
+      showUntagged: showUntaggedValue
+    })
   }
 
   return (
@@ -232,8 +233,18 @@ const FilterMenu = ({
                 <CheckBox
                   key={filter.type}
                   item={{ label: filter.label, id: '' }}
-                  onChange={handleIterClick}
+                  onChange={handleIter}
                   selectedId={filtersStore.iter}
+                />
+              )
+            case 'show-untagged':
+              return (
+                <CheckBox
+                  key={filter.type}
+                  className="filters-checkbox"
+                  item={{ label: filter.label, id: 'showUntagged' }}
+                  onChange={handleShowUntagged}
+                  selectedId={filtersStore.showUntagged}
                 />
               )
             default:
@@ -253,17 +264,6 @@ const FilterMenu = ({
               )
           }
         })}
-        {page === FUNCTIONS_PAGE && (
-          <CheckBox
-            className="filters-checkbox"
-            item={{
-              label: 'Show untagged',
-              id: 'showUntagged'
-            }}
-            onChange={toggleShowUntagged}
-            selectedId={showUntagged}
-          />
-        )}
       </div>
       {actionButton &&
         !actionButton.hidden &&
@@ -302,16 +302,12 @@ const FilterMenu = ({
 
 FilterMenu.defaultProps = {
   actionButton: null,
-  showUntagged: '',
-  toggleShowUntagged: null,
   withoutExpandButton: false
 }
 
 FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  showUntagged: PropTypes.string,
-  toggleShowUntagged: PropTypes.func,
   withoutExpandButton: PropTypes.bool
 }
 
