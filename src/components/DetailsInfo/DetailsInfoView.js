@@ -93,19 +93,18 @@ const DetailsInfoView = React.forwardRef(
                 pageData.page === MODELS_PAGE ||
                 pageData.page === FEATURE_STORE_PAGE
               ) {
-                if (content[header.id]?.value === selectedItem.labels) {
+                if (header.id === 'labels') {
                   chipsData.chips = changes.data[header.id]
                     ? changes.data[header.id]
-                    : parseKeyValues(selectedItem.labels)
-                  chipsData.chipOptions = getChipOptions('labels')
-                } else if (content[header.id]?.value === selectedItem.metrics) {
-                  chipsData.chips = parseKeyValues(selectedItem.metrics)
-                  chipsData.chipOptions = getChipOptions('metrics')
-                } else if (
-                  content[header.id]?.value === selectedItem.relations
-                ) {
-                  chipsData.chips = parseKeyValues(selectedItem.relations)
-                  chipsData.chipOptions = getChipOptions('relations')
+                    : parseKeyValues(content[header.id]?.value)
+                  chipsData.chipOptions = getChipOptions(header.id)
+                }
+                if (header.id === 'metrics') {
+                  chipsData.chips = parseKeyValues(content[header.id]?.value)
+                  chipsData.chipOptions = getChipOptions(header.id)
+                } else if (header.id === 'relations') {
+                  chipsData.chips = parseKeyValues(content[header.id]?.value)
+                  chipsData.chipOptions = getChipOptions(header.id)
                   chipsData.delimiter = <RightArrow />
                 }
 
