@@ -8,12 +8,13 @@ import {
 
 const initialState = {
   dates: ['', ''],
-  iter: '',
+  iter: 'iter',
   labels: '',
   name: '',
   groupBy: INIT_GROUP_FILTER,
   state: INIT_STATE_FILTER,
-  tag: INIT_TAG_FILTER
+  tag: INIT_TAG_FILTER,
+  showUntagged: ''
 }
 
 export default (state = initialState, { type, payload }) => {

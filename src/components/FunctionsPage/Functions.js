@@ -37,6 +37,7 @@ const Functions = ({
   deleteFunction,
   fetchFunctionLogs,
   fetchFunctions,
+  filtersStore,
   functionsStore,
   history,
   match,
@@ -51,7 +52,6 @@ const Functions = ({
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
-  const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   const location = useLocation()
@@ -173,9 +173,11 @@ const Functions = ({
 
   useEffect(() => {
     setTaggedFunctions(
-      !showUntagged ? functions.filter(func => func.tag.length) : functions
+      !filtersStore.showUntagged
+        ? functions.filter(func => func.tag.length)
+        : functions
     )
-  }, [showUntagged, functions])
+  }, [filtersStore.showUntagged, functions])
 
   useEffect(() => {
     if (match.params.hash && pageData.detailsMenu.length > 0) {
@@ -214,6 +216,18 @@ const Functions = ({
 
     setSelectedFunction(item)
   }, [functions, history, match.params.hash, match.params.projectName])
+
+  const filtersChangeCallback = filters => {
+    if (
+      !filters.showUntagged &&
+      filters.showUntagged !== filtersStore.showUntagged &&
+      selectedFunction.hash
+    ) {
+      history.push(`/projects/${match.params.projectName}/functions`)
+    } else if (filters.showUntagged === filtersStore.showUntagged) {
+      refreshFunctions(filters)
+    }
+  }
 
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {
@@ -266,15 +280,6 @@ const Functions = ({
       rejectHandler: () => setConfirmData(null),
       confirmHandler: () => removeFunction(func)
     })
-  }
-
-  const toggleShowUntagged = showUntagged => {
-    const pathLangsOnFuncScreen = 4
-    if (history.location.pathname.split('/').length > pathLangsOnFuncScreen) {
-      history.push(`/projects/${match.params.projectName}/functions`)
-    }
-
-    setShowUntagged(state => (state === showUntagged ? '' : showUntagged))
   }
 
   const closePanel = () => {
@@ -372,6 +377,7 @@ const Functions = ({
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
+        filtersChangeCallback={filtersChangeCallback}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
@@ -380,8 +386,6 @@ const Functions = ({
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
         setLoading={setLoading}
-        showUntagged={showUntagged}
-        toggleShowUntagged={toggleShowUntagged}
         yamlContent={functionsStore.functions}
       />
       {editableItem && !functionsPanelIsOpen && (
@@ -422,8 +426,11 @@ Functions.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(functionsStore => functionsStore, {
-  ...functionsActions,
-  ...notificationActions,
-  ...jobsActions
-})(React.memo(Functions))
+export default connect(
+  ({ functionsStore, filtersStore }) => ({ functionsStore, filtersStore }),
+  {
+    ...functionsActions,
+    ...notificationActions,
+    ...jobsActions
+  }
+)(React.memo(Functions))

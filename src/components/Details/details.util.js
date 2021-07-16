@@ -165,14 +165,14 @@ export const generateJobsContent = selectedItem => ({
   startTime: {
     value: formatDatetime(
       selectedItem.startTime,
-      selectedItem.state.value === 'aborted' ? 'N/A' : 'Not yet started'
+      selectedItem.state?.value === 'aborted' ? 'N/A' : 'Not yet started'
     )
   },
   updated: {
     value: formatDatetime(selectedItem.updated, 'N/A')
   },
   state: {
-    value: selectedItem.state.value
+    value: selectedItem.state?.value
   },
   parameters: {
     value: selectedItem.parameters
@@ -223,7 +223,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.description
   },
   state: {
-    value: selectedItem.state.value
+    value: selectedItem.state?.value
   }
 })
 
