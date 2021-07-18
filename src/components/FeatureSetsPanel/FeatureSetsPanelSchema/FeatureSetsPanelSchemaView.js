@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import Input from '../../../common/Input/Input'
@@ -8,8 +7,8 @@ import Input from '../../../common/Input/Input'
 import './featureSetsPanelSchema.scss'
 
 const FeatureSetsPanelSchemaView = ({
-  artifactsStore,
   data,
+  featureStore,
   handleEntitiesOnBlur,
   setData,
   setNewFeatureSetSchemaTimestampKey
@@ -38,7 +37,7 @@ const FeatureSetsPanelSchemaView = ({
             }
             onBlur={event => {
               if (
-                artifactsStore.newFeatureSet.spec.timestamp_key !==
+                featureStore.newFeatureSet.spec.timestamp_key !==
                 event.target.value
               ) {
                 setNewFeatureSetSchemaTimestampKey(event.target.value)
@@ -55,11 +54,10 @@ const FeatureSetsPanelSchemaView = ({
 
 FeatureSetsPanelSchemaView.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  featureStore: PropTypes.shape({}).isRequired,
   handleEntitiesOnBlur: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
   setNewFeatureSetSchemaTimestampKey: PropTypes.func.isRequired
 }
 
-export default connect(({ artifactsStore }) => ({
-  artifactsStore
-}))(FeatureSetsPanelSchemaView)
+export default FeatureSetsPanelSchemaView

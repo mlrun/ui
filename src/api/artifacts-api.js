@@ -1,9 +1,4 @@
 import { mainHttpClient } from '../httpClient'
-import {
-  FEATURE_SETS_TAB,
-  FEATURE_VECTORS_TAB,
-  FEATURES_TAB
-} from '../constants'
 
 const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
   const params = {}
@@ -32,13 +27,6 @@ const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
 
 export default {
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  createFeatureSet: (project, data) =>
-    mainHttpClient.post(`/projects/${project}/feature-sets`, data),
-  createFeatureVector: data =>
-    mainHttpClient.post(
-      `/projects/${data.metadata.project}/feature-vectors`,
-      data
-    ),
   getArtifactPreview: (path, user, fileFormat) => {
     const config = {
       params: { path }
@@ -81,32 +69,6 @@ export default {
       true
     )
   },
-  getFeatureSets: (project, filters, config) => {
-    return fetchArtifacts(
-      `/projects/${project}/${FEATURE_SETS_TAB}`,
-      filters,
-      config,
-      true
-    )
-  },
-  getFeatureVector: (project, featureVector) =>
-    mainHttpClient.get(`/projects/${project}/feature-vectors`, {
-      params: { name: featureVector }
-    }),
-  getFeatureVectors: (project, filters, config) => {
-    return fetchArtifacts(
-      `/projects/${project}/${FEATURE_VECTORS_TAB}`,
-      filters,
-      config,
-      true
-    )
-  },
-  getFeature: (project, feature) =>
-    mainHttpClient.get(`/projects/${project}/features`, {
-      params: { name: feature }
-    }),
-  getFeatures: (project, filters) =>
-    fetchArtifacts(`/projects/${project}/${FEATURES_TAB}`, filters, {}, true),
   getFile: (project, file) => {
     return fetchArtifacts(
       '/artifacts',
@@ -149,23 +111,5 @@ export default {
     )
   },
   registerArtifact: (project, data) =>
-    mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data),
-  startIngest: (project, featureSet, reference, source, targets) =>
-    mainHttpClient.post(
-      `/projects/${project}/feature-sets/${featureSet}/references/${reference}/ingest`,
-      {
-        source: { ...source, name: 'source' },
-        targets
-      }
-    ),
-  updateFeatureStoreData: (projectName, featureData, tag, data, pageTab) =>
-    mainHttpClient.patch(
-      `/projects/${projectName}/${pageTab}/${featureData}/references/${tag}`,
-      data
-    ),
-  updateFeatureVectorData: data =>
-    mainHttpClient.put(
-      `/projects/${data.metadata.project}/feature-vectors/${data.metadata.name}/references/${data.metadata.tag}`,
-      data
-    )
+    mainHttpClient.post(`/artifact/${project}/${data.uid}/${data.key}`, data)
 }

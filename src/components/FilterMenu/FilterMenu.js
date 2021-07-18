@@ -4,13 +4,13 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch, connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
-import ArtifactFilterTree from '../../elements/ArtifactsFilterTree/ArtifactsFilterTree'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
+import TagFilter from '../../common/TagFilter/TagFilter'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
@@ -19,7 +19,7 @@ import { ReactComponent as Expand } from '../../images/expand.svg'
 import { INIT_TAG_FILTER, JOBS_PAGE, KEY_CODES } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
 import filtersActions from '../../actions/filters'
-import { selectOptions, filterTreeOptions } from './filterMenu.settings'
+import { selectOptions, tagFilterOptions } from './filterMenu.settings'
 
 import './filterMenu.scss'
 
@@ -38,7 +38,7 @@ const FilterMenu = ({
 }) => {
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
-  const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
+  const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -47,7 +47,7 @@ const FilterMenu = ({
       removeFilters()
       setLabels('')
       setName('')
-      setTreeOptions(filterTreeOptions)
+      setTagOptions(tagFilterOptions)
     }
   }, [removeFilters, match.params.pageTab, match.params.projectName, page])
 
@@ -65,7 +65,7 @@ const FilterMenu = ({
       dispatch(
         artifactsAction.fetchArtifactTags(match.params.projectName)
       ).then(({ data }) => {
-        setTreeOptions(state => [
+        setTagOptions(state => [
           ...state,
           ...data.tags
             .filter(tag => tag !== INIT_TAG_FILTER)
@@ -179,13 +179,13 @@ const FilterMenu = ({
             case 'tree':
             case 'tag':
               return (
-                <ArtifactFilterTree
-                  filterTreeOptions={treeOptions}
+                <TagFilter
                   key={filter.type}
                   label={filter.label}
                   match={match}
                   onChange={item => handleSelectOption(item, filter)}
                   page={page}
+                  tagFilterOptions={tagOptions}
                   value={filtersStore.tag}
                 />
               )

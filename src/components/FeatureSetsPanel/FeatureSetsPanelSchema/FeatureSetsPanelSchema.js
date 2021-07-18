@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 
 import FeatureSetsPanelSchemaView from './FeatureSetsPanelSchemaView'
 
-import artifactsAction from '../../../actions/artifacts'
+import featureStoreActions from '../../../actions/featureStore'
 
 const FeatureSetsPanelSchema = ({
-  artifactsStore,
+  featureStore,
   setNewFeatureSetDataSourceEntities,
   setNewFeatureSetSchemaTimestampKey
 }) => {
@@ -23,12 +23,12 @@ const FeatureSetsPanelSchema = ({
     if (
       data.entities.length > 0 &&
       JSON.stringify(entitiesArray) !==
-        JSON.stringify(artifactsStore.newFeatureSet.spec.entities)
+        JSON.stringify(featureStore.newFeatureSet.spec.entities)
     ) {
       setNewFeatureSetDataSourceEntities(entitiesArray)
     } else if (
       data.entities.length === 0 &&
-      artifactsStore.newFeatureSet.spec.entities.length > 0
+      featureStore.newFeatureSet.spec.entities.length > 0
     ) {
       setNewFeatureSetDataSourceEntities([])
     }
@@ -37,6 +37,7 @@ const FeatureSetsPanelSchema = ({
   return (
     <FeatureSetsPanelSchemaView
       data={data}
+      featureStore={featureStore}
       handleEntitiesOnBlur={handleEntitiesOnBlur}
       setData={setData}
       setNewFeatureSetSchemaTimestampKey={setNewFeatureSetSchemaTimestampKey}
@@ -44,6 +45,6 @@ const FeatureSetsPanelSchema = ({
   )
 }
 
-export default connect(artifactsStore => ({ ...artifactsStore }), {
-  ...artifactsAction
+export default connect(featureStore => ({ ...featureStore }), {
+  ...featureStoreActions
 })(FeatureSetsPanelSchema)

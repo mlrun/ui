@@ -13,9 +13,9 @@ import { ReactComponent as Close } from '../../../images/close.svg'
 import './featureSetsPanelTitle.scss'
 
 const FeatureSetsPanelTitleView = ({
-  artifactsStore,
   closePanel,
   data,
+  featureStore,
   handleAddLabel,
   handleChangeLabels,
   handleNameChange,
@@ -68,7 +68,7 @@ const FeatureSetsPanelTitleView = ({
             }
             onBlur={event => {
               if (
-                artifactsStore.newFeatureSet.metadata.tag !== event.target.value
+                featureStore.newFeatureSet.metadata.tag !== event.target.value
               ) {
                 setNewFeatureSetVersion(event.target.value)
               }
@@ -91,8 +91,7 @@ const FeatureSetsPanelTitleView = ({
           }
           onBlur={event => {
             if (
-              artifactsStore.newFeatureSet.spec.description !==
-              event.target.value
+              featureStore.newFeatureSet.spec.description !== event.target.value
             ) {
               setNewFeatureSetDescription(event.target.value)
             }
@@ -126,6 +125,7 @@ const FeatureSetsPanelTitleView = ({
 FeatureSetsPanelTitleView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   data: PropTypes.shape({}).isRequired,
+  featureStore: PropTypes.shape({}).isRequired,
   handleAddLabel: PropTypes.func.isRequired,
   handleChangeLabels: PropTypes.func.isRequired,
   handleNameChange: PropTypes.func.isRequired,

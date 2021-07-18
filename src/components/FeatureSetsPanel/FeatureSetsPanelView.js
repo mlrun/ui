@@ -27,7 +27,7 @@ const FeatureSetsPanelView = ({
   isOtherTargetsPathValid,
   isUrlValid,
   loading,
-  removeArtifactsError,
+  removeFeatureStoreError,
   setConfirmDialog,
   setNameValid,
   setOfflineTargetsPathValid,
@@ -96,7 +96,7 @@ const FeatureSetsPanelView = ({
               <ErrorMessage
                 closeError={() => {
                   if (error) {
-                    removeArtifactsError()
+                    removeFeatureStoreError()
                   }
                 }}
                 message={error}
@@ -144,7 +144,7 @@ FeatureSetsPanelView.propTypes = {
   isOtherTargetsPathValid: PropTypes.bool.isRequired,
   isUrlValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
-  removeArtifactsError: PropTypes.func.isRequired,
+  removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired,
   setOfflineTargetsPathValid: PropTypes.func.isRequired,
