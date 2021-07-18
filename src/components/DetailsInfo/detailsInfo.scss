@@ -47,6 +47,10 @@
         min-width: 60px;
         padding-left: 16px;
         word-break: break-word;
+
+        &-edit-placeholder {
+          color: $spunPearl;
+        }
       }
 
       &__uri,
