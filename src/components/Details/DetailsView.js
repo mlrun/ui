@@ -81,7 +81,7 @@ const DetailsView = React.forwardRef(
               }
             </Tooltip>
           </h3>
-          <span>
+          <span className="left-margin">
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
               ? formatDatetime(
                   selectedItem?.startTime,
@@ -100,12 +100,12 @@ const DetailsView = React.forwardRef(
               </Tooltip>
             )}
             {!isEmpty(detailsStore.pods.podsPending) && (
-              <span>
+              <span className="left-margin">
                 {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
               </span>
             )}
             {detailsStore.pods.error && (
-              <span className="item-header__pods-error">
+              <span className="item-header__pods-error left-margin">
                 Failed to load pods
               </span>
             )}
