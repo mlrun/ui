@@ -75,7 +75,10 @@ const createFeatureSetsRowData = (featureSet, project) => {
       type: 'hidden'
     },
     entity: {
-      value: featureSet.entities ? featureSet.entities[0]?.name : '',
+      value: featureSet.entities[0]?.name
+        ? `${featureSet.entities[0]?.name} ${featureSet.entities[1]?.name ??
+            ''}`
+        : '',
       class: 'artifacts_small'
     },
     targets: getFeatureSetTargetCellValue(featureSet.targets),
