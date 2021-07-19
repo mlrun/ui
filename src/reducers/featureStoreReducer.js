@@ -73,7 +73,16 @@ const initialState = {
       targets: [
         {
           kind: 'parquet',
-          name: 'parquet'
+          name: 'parquet',
+          path:
+            'v3io:///projects/my-proj/FeatureStore/my-fs/parquet/sets/my-fs-my-tag'
+        },
+        {
+          name: 'nosql',
+          kind: 'nosql',
+          online: true,
+          path:
+            'v3io:///projects/my-proj/FeatureStore/my-fs/nosql/sets/my-fs-my-tag'
         }
       ],
       timestamp_key: '',
