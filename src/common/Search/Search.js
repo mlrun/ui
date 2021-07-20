@@ -10,10 +10,11 @@ const Search = ({
   className,
   matches,
   onChange,
+  value,
   placeholder,
   searchWhileTyping
 }) => {
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useState(value ?? '')
   const [label, setLabel] = useState('')
   const [inputIsFocused, setInputFocused] = useState(false)
   const searchRef = React.createRef()
@@ -27,6 +28,10 @@ const Search = ({
     },
     [searchRef]
   )
+
+  useEffect(() => {
+    setLabel(matches.find(item => item.startsWith(searchValue)) ?? '')
+  }, [searchValue, matches])
 
   useEffect(() => {
     window.addEventListener('click', handleSearchOnBlur)

@@ -126,6 +126,7 @@ const ProjectsView = ({
                   className="projects-search"
                   matches={filterMatches}
                   onChange={value => handleSearchOnChange(value)}
+                  value={filterByName}
                   placeholder="Search projects..."
                   setMatches={setFilterMatches}
                 />
