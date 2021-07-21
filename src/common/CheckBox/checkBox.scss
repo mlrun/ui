@@ -6,8 +6,17 @@
   color: $primary;
   cursor: pointer;
 
+  &__label {
+    flex: 1;
+    font-size: 14px;
+
+    &-tip {
+      margin-left: 5px;
+    }
+  }
+
   svg {
-    margin-right: 11px;
+    margin-right: 5px;
 
     &.checked {
       path {
