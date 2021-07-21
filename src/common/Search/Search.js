@@ -10,9 +10,9 @@ const Search = ({
   className,
   matches,
   onChange,
-  value,
   placeholder,
-  searchWhileTyping
+  searchWhileTyping,
+  value
 }) => {
   const [searchValue, setSearchValue] = useState(value ?? '')
   const [label, setLabel] = useState('')
@@ -30,8 +30,10 @@ const Search = ({
   )
 
   useEffect(() => {
-    setLabel(matches.find(item => item.startsWith(searchValue)) ?? '')
-  }, [searchValue, matches])
+    if (matches.length > 0 && searchValue.length > 0) {
+      setLabel(matches.find(item => item.startsWith(searchValue)) ?? '')
+    }
+  }, [matches, searchValue])
 
   useEffect(() => {
     window.addEventListener('click', handleSearchOnBlur)
@@ -42,17 +44,6 @@ const Search = ({
   }, [handleSearchOnBlur])
 
   const searchOnChange = event => {
-    if (matches.length > 0) {
-      const itemStartsWithValue = matches.find(item =>
-        item.startsWith(event.target.value)
-      )
-      if (itemStartsWithValue && event.target.value.length > 0) {
-        setLabel(itemStartsWithValue)
-      } else if (label.length > 0) {
-        setLabel('')
-      }
-    }
-
     if (event.target.value.length === 0 && label.length > 0) {
       setLabel('')
     }
@@ -131,7 +122,8 @@ Search.defaultProps = {
   className: '',
   matches: [],
   placeholder: '',
-  searchWhileTyping: false
+  searchWhileTyping: false,
+  value: ''
 }
 
 Search.propTypes = {
@@ -139,7 +131,8 @@ Search.propTypes = {
   matches: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  searchWhileTyping: PropTypes.bool
+  searchWhileTyping: PropTypes.bool,
+  value: PropTypes.string
 }
 
 export default Search
