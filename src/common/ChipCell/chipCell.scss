@@ -10,20 +10,9 @@
     max-width: 100%;
 
     .chip {
-      &_short {
-        margin: 0;
-        font-style: normal;
-      }
-
       &-block {
         position: relative;
         max-width: 100%;
-      }
-
-      &__delimiter {
-        svg {
-          margin-bottom: -7px;
-        }
       }
     }
 

@@ -7,9 +7,14 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import './selectOption.scss'
+import { SELECT_OPTION } from '../../types'
 
-const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
-  const selectClassName = classnames('select__item', disabled && 'disabled')
+const SelectOption = ({ item, onClick, selectType, selectedId }) => {
+  const selectClassName = classnames(
+    'select__item',
+    item.hidden && 'hidden',
+    item.disabled && 'disabled'
+  )
 
   if (selectType === 'checkbox') {
     return (
@@ -27,7 +32,7 @@ const SelectOption = ({ disabled, item, onClick, selectType, selectedId }) => {
       data-testid="select-option"
       className={selectClassName}
       onClick={() => {
-        !disabled && onClick(item.id)
+        !item.disabled && onClick(item.id)
       }}
     >
       {item.icon && (
@@ -60,7 +65,7 @@ SelectOption.defaultProps = {
 
 SelectOption.propTypes = {
   disabled: PropTypes.bool,
-  item: PropTypes.shape({}).isRequired,
+  item: SELECT_OPTION.isRequired,
   onClick: PropTypes.func,
   selectType: PropTypes.string,
   selectedId: PropTypes.string

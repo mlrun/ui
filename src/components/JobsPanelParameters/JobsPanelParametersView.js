@@ -14,16 +14,17 @@ import panelData from '../JobsPanel/panelData'
 import { parametersActions } from './jobsPanelParametersReducer'
 import { selectOptions } from './jobsPanelParameters.util'
 import { isNameNotUnique } from '../JobsPanel/jobsPanel.util'
+import { SELECT_OPTIONS } from '../../types'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
 const JobsPanelParametersView = ({
   checkParameter,
-  disabledOptions,
   handleAddNewItem,
   handleDeleteParameter,
   handleEditParameter,
   isHyperTypeExist,
+  parameterTypeOptions,
   parameters,
   parametersDispatch,
   parametersState,
@@ -52,10 +53,10 @@ const JobsPanelParametersView = ({
           addNewItem={parametersState.addNewParameter}
           checkParameter={checkParameter}
           content={parameters}
-          disabledOptions={disabledOptions}
           handleDeleteParameter={handleDeleteParameter}
           handleEditParameter={handleEditParameter}
           headers={panelData.parameters['table-headers']}
+          parameterTypeOptions={parameterTypeOptions}
           selectedItem={parametersState.selectedParameter}
           setSelectedItem={selectedParam =>
             parametersDispatch({
@@ -101,7 +102,6 @@ const JobsPanelParametersView = ({
                 <Select
                   className="select-parameters-type"
                   density="chunky"
-                  disabledOptions={disabledOptions}
                   label={parametersState.newParameter.parameterType}
                   onClick={value =>
                     parametersDispatch({
@@ -109,7 +109,7 @@ const JobsPanelParametersView = ({
                       payload: value
                     })
                   }
-                  options={selectOptions.parameterType}
+                  options={parameterTypeOptions}
                 />
                 <Input
                   className="input-row__item parameter-value"
@@ -207,11 +207,11 @@ const JobsPanelParametersView = ({
 
 JobsPanelParametersView.propTypes = {
   checkParameter: PropTypes.func.isRequired,
-  disabledOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   isHyperTypeExist: PropTypes.bool.isRequired,
+  parameterTypeOptions: SELECT_OPTIONS.isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   parametersDispatch: PropTypes.func.isRequired,
   parametersState: PropTypes.shape({}).isRequired,

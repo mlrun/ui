@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -38,6 +38,7 @@ const AddToFeatureVectorPopUp = ({
   const [projectsList, setProjectsList] = useState(
     generateProjectsList(projectStore.projectsNames.data)
   )
+  const addToFeatureVectorBtn = useRef(null)
 
   useEffect(() => {
     if (projectsList.length === 0) {
@@ -167,6 +168,7 @@ const AddToFeatureVectorPopUp = ({
   return (
     <div className="add-to-feature-vector">
       <Button
+        ref={addToFeatureVectorBtn}
         variant={action.variant}
         label={action.label}
         tooltip={action.tooltip}
@@ -174,7 +176,14 @@ const AddToFeatureVectorPopUp = ({
         onClick={handleAddToFeatureVector}
       />
       {isPopUpOpen && (
-        <PopUpDialog headerText="Select feature vector" closePopUp={closePopUp}>
+        <PopUpDialog
+          headerText="Select feature vector"
+          customPosition={{
+            element: addToFeatureVectorBtn,
+            position: 'bottom-left'
+          }}
+          closePopUp={closePopUp}
+        >
           <div className="select-row">
             <Select
               className="project-name"

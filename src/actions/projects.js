@@ -122,7 +122,7 @@ const projectsAction = {
   editProjectLabels: (projectName, data, labels) => dispatch => {
     dispatch(projectsAction.setProjectLabels(labels))
 
-    return projectsApi.editProjectLabels(projectName, { ...data })
+    return projectsApi.editProject(projectName, { ...data })
   },
   fetchProject: project => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())

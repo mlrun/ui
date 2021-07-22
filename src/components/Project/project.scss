@@ -92,31 +92,6 @@
         }
       }
 
-      &__data {
-        margin-bottom: 13px;
-        color: $primary;
-
-        &-label {
-          margin-right: 15px;
-          font-size: 14px;
-          line-height: 16px;
-        }
-      }
-
-      &__status {
-        &-icon {
-          margin-right: 10px;
-        }
-
-        &-name {
-          text-transform: capitalize;
-        }
-      }
-
-      &__owner {
-        display: none;
-      }
-
       &__description {
         margin-top: 16px;
         color: rgba($mulledWine, 0.88);
@@ -145,6 +120,33 @@
         &-text {
           max-width: 185px;
           margin: 3px 0;
+        }
+      }
+
+      &__row {
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 0;
+        color: $primary;
+
+        .row-label {
+          display: inline-block;
+          width: 80px;
+        }
+
+        .row-action {
+          cursor: pointer;
+        }
+
+        &.status-row {
+          .row-name {
+            text-transform: capitalize;
+          }
+        }
+
+        &.owner-row,
+        &.members-row {
+          color: $topaz;
         }
       }
 

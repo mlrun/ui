@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
-import classnames from 'classnames'
 
 import { launchIDEOptions } from './project.utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
@@ -25,6 +24,8 @@ import ProjectDescription from './ProjectDescription/ProjectDescription'
 import ProjectGoals from './ProjectGoals/ProjectGoals'
 import ProjectSource from './ProjectSource/ProjectSource'
 import ProjectLinks from './ProjectLinks/ProjectLinks'
+import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
+import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
@@ -33,11 +34,14 @@ const ProjectView = React.forwardRef(
   (
     {
       artifactKind,
+      changeMembersCallback,
+      changeOwnerCallback,
       createNewOptions,
       editProject,
       fetchProjectFeatureSets,
       fetchProjectFiles,
       fetchProjectModels,
+      frontendSpec,
       handleAddProjectLabel,
       handleEditProject,
       handleLaunchIDE,
@@ -47,9 +51,15 @@ const ProjectView = React.forwardRef(
       isPopupDialogOpen,
       links,
       match,
+      membersDispatch,
+      membersState,
       projectLabels,
       refresh,
       setIsPopupDialogOpen,
+      setShowChangeOwner,
+      setShowManageMembers,
+      showChangeOwner,
+      showManageMembers,
       visibleChipsMaxLength
     },
     ref
@@ -65,10 +75,6 @@ const ProjectView = React.forwardRef(
         ? 'files'
         : 'artifacts'
     }`
-    const statusClassName = classnames(
-      'general-info__status-icon',
-      project.data?.status.state
-    )
 
     return (
       <>
@@ -116,24 +122,58 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="general-info__divider" />
               {project.data.status.state && (
-                <div className="general-info__data general-info__status">
-                  <span className="general-info__data-label">Status:</span>
-                  <i className={statusClassName} />
-                  <span className="general-info__status-name">
-                    {project.data.status.state}
-                  </span>
+                <div className="general-info__row status-row">
+                  <div className="row-value">
+                    <span className="row-label">Status:</span>
+                    <span className="row-name">
+                      {project.data.status.state}
+                    </span>
+                  </div>
                 </div>
               )}
-              <div className="general-info__data">
-                <span className="general-info__data-label">Created at:</span>
-                <span>
-                  {formatDatetime(new Date(project.data.metadata.created), '-')}
-                </span>
+              <div className="general-info__row created-at-row">
+                <div className="row-value">
+                  <span className="row-label">Created at:</span>
+                  <span className="row-name">
+                    {formatDatetime(
+                      new Date(project.data.metadata.created),
+                      '-'
+                    )}
+                  </span>
+                </div>
               </div>
-              <div className="general-info__data general-info__owner">
-                <span className="general-info__data-label">Owner:</span>
-                <span>{project.data.owner}</span>
-              </div>
+              {frontendSpec?.feature_flags?.project_membership ===
+                'enabled' && (
+                <>
+                  <div className="general-info__row owner-row">
+                    <div className="row-value">
+                      <span className="row-label">Owner:</span>
+                      <span>{membersState.projectInfo?.owner?.username}</span>
+                    </div>
+                    <span
+                      className="row-action link"
+                      onClick={() => setShowChangeOwner(true)}
+                    >
+                      Change
+                    </span>
+                  </div>
+                  <div className="general-info__row members-row">
+                    <div className="row-value">
+                      <span className="row-label">Members:</span>
+                      <span>
+                        {membersState.users.length +
+                          membersState.userGroups.length}
+                      </span>
+                    </div>
+                    <span
+                      className="row-action link"
+                      onClick={() => setShowManageMembers(true)}
+                    >
+                      Manage
+                    </span>
+                  </div>
+                </>
+              )}
               <div className="general-info__divider" />
               <ProjectSource
                 editSourceData={editProject.source}
@@ -230,6 +270,21 @@ const ProjectView = React.forwardRef(
             title={`Register ${artifactKind}`}
           />
         )}
+        {showManageMembers && (
+          <MembersPopUp
+            changeMembersCallback={changeMembersCallback}
+            closePopUp={() => setShowManageMembers(false)}
+            membersState={membersState}
+            membersDispatch={membersDispatch}
+          />
+        )}
+        {showChangeOwner && (
+          <ChangeOwnerPopUp
+            changeOwnerCallback={changeOwnerCallback}
+            closePopUp={() => setShowChangeOwner(false)}
+            projectId={membersState.projectInfo.id}
+          />
+        )}
       </>
     )
   }
@@ -241,6 +296,8 @@ ProjectView.defaultProps = {
 
 ProjectView.propTypes = {
   artifactKind: PropTypes.string.isRequired,
+  changeMembersCallback: PropTypes.func.isRequired,
+  changeOwnerCallback: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
   fetchProjectFeatureSets: PropTypes.func.isRequired,
@@ -255,8 +312,14 @@ ProjectView.propTypes = {
   isPopupDialogOpen: PropTypes.bool.isRequired,
   links: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,
+  membersDispatch: PropTypes.func.isRequired,
+  membersState: PropTypes.shape({}).isRequired,
   projectLabels: PropTypes.array.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
+  setShowChangeOwner: PropTypes.func.isRequired,
+  setShowManageMembers: PropTypes.func.isRequired,
+  showChangeOwner: PropTypes.bool,
+  showManageMembers: PropTypes.bool,
   visibleChipsMaxLength: PropTypes.number
 }
 

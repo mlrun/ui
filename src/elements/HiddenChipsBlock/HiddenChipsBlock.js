@@ -8,7 +8,7 @@ import Chip from '../../common/Chip/Chip'
 
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import { getFirstScrollableParent } from '../../utils/getFirstScrollableParent'
-import { CHIP_OPTIONS } from '../../types'
+import { CHIP_OPTIONS, CHIPS } from '../../types'
 
 import './hiddenChipsBlock.scss'
 
@@ -107,7 +107,7 @@ const HiddenChipsBlock = React.forwardRef(
                 <TextTooltipTemplate
                   text={
                     element.delimiter ? (
-                      <span>
+                      <span className="chip__content">
                         {chipLabel}
                         <span className="chip__delimiter">
                           {element.delimiter}
@@ -156,7 +156,7 @@ HiddenChipsBlock.defaultProps = {
 
 HiddenChipsBlock.propTypes = {
   className: PropTypes.string,
-  chips: PropTypes.arrayOf(PropTypes.shape({})),
+  chips: CHIPS,
   chipOptions: CHIP_OPTIONS.isRequired,
   chipIndex: PropTypes.number,
   editConfig: PropTypes.shape({}),

@@ -7,7 +7,7 @@ import ChipForm from '../../elements/ChipForm/ChipForm'
 import { ReactComponent as Close } from '../../images/close.svg'
 
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
-import { CHIP_OPTIONS } from '../../types'
+import { CHIP, CHIP_OPTIONS } from '../../types'
 
 import './chip.scss'
 
@@ -23,9 +23,11 @@ const Chip = React.forwardRef(
       handleIsEdit,
       handleRemoveChip,
       hiddenChips,
+      isDeleteMode,
       isEditMode,
       onClick,
-      setEditConfig
+      setEditConfig,
+      shortChip
     },
     ref
   ) => {
@@ -42,20 +44,19 @@ const Chip = React.forwardRef(
 
     const chipClassNames = classnames(
       'chip',
-      'chip-block',
-      className,
+      'chip__content',
+      'data-ellipsis',
+      shortChip && 'chip_short',
+      hiddenChips && 'chip_hidden',
       density && `chip-density_${density}`,
       borderRadius && `chip-border_${borderRadius}`,
       background && `chip-background_${background}`,
       borderColor && `chip-border_${borderColor}`,
       font && `chip-font_${font}`,
-      isEditMode && 'editable'
+      isEditMode && 'editable',
+      className
     )
-    const chipContentClassNames = classnames(
-      'chip_short',
-      'data-ellipsis',
-      hiddenChips && 'chip_hidden'
-    )
+    const chipLabelClassNames = classnames('chip__label', 'data-ellipsis')
     const chipValueClassNames = classnames(
       'chip__value',
       'data-ellipsis',
@@ -75,30 +76,19 @@ const Chip = React.forwardRef(
           value={chip.value.match(/^(?<key>|.+?):\s?(?<value>|.+?)$/)?.groups}
         />
       ) : (
-        <div className={chipClassNames} ref={chipRef}>
-          <div
-            className={chipContentClassNames}
-            onClick={event => handleIsEdit(event, chipIndex)}
-          >
-            {chip.delimiter ? (
-              <span>
-                {chipLabel}
-                <span className="chip__delimiter">{chip.delimiter}</span>
-                <span className={chipValueClassNames}>{chipValue}</span>
-              </span>
-            ) : (
-              <div className="chip__content">
-                {chip.value.indexOf(':') && (
-                  <>
-                    <div className="chip__label data-ellipsis">{chipLabel}</div>
-                    <div className="chip__delimiter">:</div>
-                  </>
-                )}
-                <div className={chipValueClassNames}>{chipValue}</div>
-              </div>
-            )}
-          </div>
-          {isEditMode && (
+        <div
+          className={chipClassNames}
+          ref={chipRef}
+          onClick={event => handleIsEdit(event, chipIndex)}
+        >
+          {chipLabel && <div className={chipLabelClassNames}>{chipLabel}</div>}
+          {chipValue && (
+            <>
+              <div className="chip__delimiter">{chip.delimiter ?? ':'}</div>
+              <div className={chipValueClassNames}>{chipValue}</div>
+            </>
+          )}
+          {(isEditMode || isDeleteMode) && (
             <button
               className="item-icon-close"
               onClick={() => handleRemoveChip(chipIndex)}
@@ -125,13 +115,15 @@ Chip.defaultProps = {
   handleIsEdit: () => {},
   handleRemoveChip: () => {},
   hiddenChips: false,
+  isDeleteMode: false,
   isEditMode: false,
   onClick: null,
-  setEditConfig: () => {}
+  setEditConfig: () => {},
+  shortChip: false
 }
 
 Chip.propTypes = {
-  chip: PropTypes.shape({}).isRequired,
+  chip: CHIP.isRequired,
   chipIndex: PropTypes.number,
   chipOptions: CHIP_OPTIONS.isRequired,
   className: PropTypes.string,
@@ -140,9 +132,11 @@ Chip.propTypes = {
   handleIsEdit: PropTypes.func,
   handleRemoveChip: PropTypes.func,
   hiddenChips: PropTypes.bool,
+  isDeleteMode: PropTypes.bool,
   isEditMode: PropTypes.bool,
   onClick: PropTypes.func,
-  setEditConfig: PropTypes.func
+  setEditConfig: PropTypes.func,
+  shortChip: PropTypes.bool
 }
 
 export default Chip
