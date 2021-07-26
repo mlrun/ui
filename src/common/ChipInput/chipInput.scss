@@ -1,0 +1,68 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/variables';
+
+.chips-input-container {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 40px;
+  padding: 4px 0;
+  background-color: $white;
+  border: $primaryBorder;
+  border-radius: $mainBorderRadius;
+
+  .suggestion-list {
+    position: absolute;
+    top: calc(100% + 5px);
+    z-index: 5;
+    width: 100%;
+    background-color: $white;
+    border: $primaryBorder;
+    border-radius: $mainBorderRadius;
+
+    .suggestion-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 15px;
+
+      &:not(.disabled):hover {
+        background-color: $alabaster;
+        cursor: pointer;
+      }
+
+      &.disabled {
+        .suggestion-row-value {
+          color: $spunPearl;
+        }
+      }
+
+      .suggestion-row-value {
+        display: flex;
+        align-items: center;
+      }
+
+      .suggestion-row-sub-label {
+        color: $spunPearl;
+        font-style: italic;
+      }
+
+      .suggestion-row-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 25px;
+        margin-right: 5px;
+
+        svg {
+          rect,
+          path {
+            fill: rgba($black, 0.2);
+          }
+        }
+      }
+    }
+  }
+}

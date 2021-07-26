@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -7,20 +7,22 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 
 import './button.scss'
 
-const Button = ({ className, label, tooltip, variant, ...restProps }) => {
-  const buttonClassName = classNames('btn', `btn-${variant}`, className)
+const Button = forwardRef(
+  ({ className, label, tooltip, variant, ...restProps }, ref) => {
+    const buttonClassName = classNames('btn', `btn-${variant}`, className)
 
-  return (
-    <Tooltip
-      template={<TextTooltipTemplate text={tooltip} />}
-      hidden={!tooltip}
-    >
-      <button {...restProps} className={buttonClassName}>
-        {label}
-      </button>
-    </Tooltip>
-  )
-}
+    return (
+      <Tooltip
+        template={<TextTooltipTemplate text={tooltip} />}
+        hidden={!tooltip}
+      >
+        <button {...restProps} className={buttonClassName} ref={ref}>
+          {label}
+        </button>
+      </Tooltip>
+    )
+  }
+)
 
 Button.defaultProps = {
   className: '',

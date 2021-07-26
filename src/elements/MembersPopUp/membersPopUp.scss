@@ -1,0 +1,251 @@
+@import '../../scss/variables';
+@import '../../scss/borders';
+
+.manage-members__pop-up {
+  .pop-up-dialog {
+    width: 700px;
+    max-height: 100vh;
+    overflow-y: auto;
+    background-color: $wildSand;
+
+    &__header-text {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: $dividerBorder;
+
+      .members-overview {
+        display: flex;
+        align-items: center;
+
+        .member-overview {
+          color: $spunPearl;
+
+          .member-count {
+            color: $primary;
+            font-weight: bold;
+          }
+        }
+
+        .tip-container {
+          margin: 0 10px;
+        }
+      }
+
+      .invite-new-members-btn {
+        display: flex;
+        align-items: center;
+        color: $cornflowerBlue;
+        cursor: pointer;
+
+        &.disabled {
+          color: $spunPearl;
+
+          .add-icon {
+            rect {
+              fill: $spunPearl;
+            }
+          }
+        }
+
+        .add-icon {
+          margin-right: 10px;
+
+          rect {
+            fill: $cornflowerBlue;
+          }
+        }
+      }
+    }
+
+    .invite-new-members {
+      margin-top: 20px;
+      background-color: $white;
+      border-radius: $mainBorderRadius;
+
+      .new-members-title {
+        padding: 15px;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .new-members-row {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px;
+
+        .new-member-name,
+        .new-member-role {
+          margin-right: 7px;
+        }
+
+        .new-member-name {
+          width: 70%;
+        }
+
+        .new-member-role {
+          width: 30%;
+        }
+      }
+    }
+
+    .members-table {
+      position: relative;
+      min-height: 250px;
+      max-height: 315px;
+      margin: 20px 0;
+      padding: 0 20px;
+      overflow-y: auto;
+      background-color: $white;
+      border-radius: $mainBorderRadius;
+
+      &.inactive {
+        background-color: transparent;
+
+        .table-header {
+          background-color: $wildSand;
+        }
+      }
+
+      .member-info {
+        display: flex;
+        align-items: center;
+        width: 70%;
+      }
+
+      .member-roles {
+        width: 30%;
+
+        .select {
+          width: 150px;
+        }
+      }
+
+      .member-actions {
+        width: 30px;
+        visibility: hidden;
+      }
+
+      .table-header {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 5px 0;
+        background-color: $white;
+        border-bottom: $primaryBorder;
+      }
+
+      .table-body {
+        .table-row {
+          display: flex;
+          justify-content: space-between;
+          padding: 15px 5px;
+
+          &:not(:last-child) {
+            border-bottom: $dividerBorder;
+          }
+
+          &:hover {
+            cursor: pointer;
+
+            .member-actions {
+              visibility: visible;
+            }
+          }
+
+          .member-info {
+            .member-status {
+              width: 8px;
+              height: 8px;
+              margin-right: 8px;
+              background-color: $brightTurquoise;
+              border-radius: 50%;
+              visibility: hidden;
+
+              &.visible {
+                visibility: visible;
+              }
+            }
+
+            .member-symbol {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 30px;
+              height: 30px;
+              margin-right: 15px;
+              color: $white;
+              font-size: 14px;
+              background-color: $kimberly;
+              border-radius: 50%;
+            }
+
+            .member-icon {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 25px;
+              height: 25px;
+              margin-right: 5px;
+
+              path {
+                fill: rgba($black, 0.2);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .footer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding: 15px 0;
+      border-bottom: $dividerBorder;
+
+      .apply-discard-buttons {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .footer-annotation {
+      color: $topaz;
+      font-size: 12px;
+      white-space: pre-line;
+    }
+  }
+}
+
+.delete-member__pop-up {
+  .pop-up-dialog {
+    width: 200px;
+    color: $white;
+    background-color: $primary;
+    box-shadow: unset;
+
+    &__header {
+      margin-top: 0;
+      margin-bottom: 5px;
+    }
+
+    &__header-text {
+      color: $white;
+      font-weight: normal;
+    }
+
+    &__footer-container {
+      justify-content: center;
+    }
+  }
+}

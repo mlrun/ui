@@ -6,13 +6,14 @@ import Select from '../../common/Select/Select'
 
 import { selectOptions as selectOption } from '../../components/JobsPanelParameters/jobsPanelParameters.util'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
+import { SELECT_OPTIONS } from '../../types'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
 const EditableParametersRow = ({
   content,
-  disabledOptions,
   handleEdit,
+  parameterTypeOptions,
   selectedParameter,
   setEditItem,
   setSelectedParameter
@@ -93,7 +94,6 @@ const EditableParametersRow = ({
       <div className="table__cell table__cell_edit">
         <Select
           density="dense"
-          disabledOptions={disabledOptions}
           label={selectedParameter.data.parameterType}
           onClick={parameterType =>
             setSelectedParameter({
@@ -101,7 +101,7 @@ const EditableParametersRow = ({
               data: { ...selectedParameter.data, parameterType: parameterType }
             })
           }
-          options={selectOption.parameterType}
+          options={parameterTypeOptions}
         />
       </div>
       <div className="table__cell table__cell_edit">
@@ -138,8 +138,8 @@ const EditableParametersRow = ({
 
 EditableParametersRow.propTypes = {
   content: PropTypes.array.isRequired,
-  disabledOptions: PropTypes.array,
   handleEdit: PropTypes.func.isRequired,
+  parameterTypeOptions: SELECT_OPTIONS.isRequired,
   selectedParameter: PropTypes.shape({}).isRequired,
   setEditItem: PropTypes.func.isRequired,
   setSelectedParameter: PropTypes.func.isRequired

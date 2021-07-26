@@ -11,6 +11,10 @@
   border: $primaryBorder;
   border-radius: 4px;
 
+  &.without-border {
+    border: none;
+  }
+
   &:invalid {
     border: $errorBorder;
   }
