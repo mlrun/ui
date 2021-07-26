@@ -9,9 +9,10 @@ import { groupBy } from 'lodash'
  * - useGroups                : the list of user-group members (original list from response)
  * - membersOriginal          : the list of users and user-groups that is used to revert changes
  * - members                  : the list of users and user-groups that is displayed in the table of the `Member` dialog
- * - groupedVisibleMembers    : grouped members list by their role, which is used to generate the request body. Also is used to
- *                              display the number of users/user-groups for each role at the top of `Member` dialog
+ * - groupedOriginalMembers   : grouped members list by their role, which is used to display the number of
+ *                              users/user-groups for each role at the top of `Member` dialog
  *                              (ex: 2 editors, 3 viewers, 1 admins)
+ * - groupedVisibleMembers    : grouped members list by their role, which is used to generate the request body.
  * */
 export const initialMembersState = {
   projectInfo: {
@@ -28,6 +29,7 @@ export const initialMembersState = {
   userGroups: [],
   membersOriginal: [],
   members: [],
+  groupedOriginalMembers: [],
   groupedVisibleMembers: []
 }
 
@@ -66,7 +68,8 @@ export const membersReducer = (state, { type, payload }) => {
     case membersActions.SET_MEMBERS_ORIGINAL:
       return {
         ...state,
-        membersOriginal: payload
+        membersOriginal: payload,
+        groupedOriginalMembers: groupBy(payload, item => item.role)
       }
     case membersActions.SET_MEMBERS:
       return {

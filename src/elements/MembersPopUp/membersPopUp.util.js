@@ -1,3 +1,4 @@
+export const initialNewMembersRole = 'Viewer'
 export const getRoleOptions = (memberRole = '', allOption = false) => {
   return [
     { id: 'All', label: 'All', hidden: !allOption },

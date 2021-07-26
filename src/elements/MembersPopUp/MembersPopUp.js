@@ -12,7 +12,7 @@ import Tip from '../../common/Tip/Tip'
 import ChipInput from '../../common/ChipInput/ChipInput'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { getRoleOptions } from './membersPopUp.util'
+import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
 import { membersActions } from './membersReducer'
 
 import { ReactComponent as Add } from '../../images/add.svg'
@@ -35,7 +35,7 @@ const MembersPopUp = ({
   const [notifyByEmail, setNotifyByEmail] = useState(false)
   const [newMembersSuggestionList, setNewMembersSuggestionList] = useState([])
   const [newMembers, setNewMembers] = useState([])
-  const [newMembersRole, setNewMembersRole] = useState('')
+  const [newMembersRole, setNewMembersRole] = useState(initialNewMembersRole)
   const [filters, setFilters] = useState({
     name: '',
     role: 'All'
@@ -75,7 +75,7 @@ const MembersPopUp = ({
     })
 
     setNewMembers([])
-    setNewMembersRole('')
+    setNewMembersRole(initialNewMembersRole)
     setInviteNewMembers(false)
 
     membersDispatch({
@@ -246,19 +246,19 @@ const MembersPopUp = ({
           <div className="members-overview">
             <span className="member-overview">
               <span className="member-count">
-                {membersState.groupedVisibleMembers.Editor?.length ?? 0}
+                {membersState.groupedOriginalMembers.Editor?.length ?? 0}
               </span>
               &nbsp;editors,&nbsp;
             </span>
             <span className="member-overview">
               <span className="member-count">
-                {membersState.groupedVisibleMembers.Viewer?.length ?? 0}
+                {membersState.groupedOriginalMembers.Viewer?.length ?? 0}
               </span>
               &nbsp;viewers,&nbsp;
             </span>
             <span className="member-overview">
               <span className="member-count">
-                {membersState.groupedVisibleMembers.Admin?.length ?? 0}
+                {membersState.groupedOriginalMembers.Admin?.length ?? 0}
               </span>
               &nbsp;admins&nbsp;
             </span>
