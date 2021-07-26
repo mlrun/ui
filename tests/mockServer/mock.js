@@ -248,8 +248,7 @@ function getRuns(req, res) {
   }
 
   if (req.query['label']) {
-    let key, value
-    ;[key, value] = req.query['label'].split('=')
+    let [key, value] = req.query['label'].split('=')
     collectedRuns = collectedRuns.filter(run => run.metadata.labels[key])
     if (req.query['label'].includes('=')) {
       collectedRuns = collectedRuns.filter(
