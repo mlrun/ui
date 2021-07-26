@@ -23,11 +23,12 @@ import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { getFeatureReference, getParsedResource } from '../../utils/resources'
 import {
-  getArtifactReference,
-  getFeatureReference,
-  getParsedResource
-} from '../../utils/resources'
+  generateArtifactsList,
+  generateArtifactsReferencesList,
+  generateProjectsList
+} from '../../utils/panelPathScheme'
 
 const JobsPanelDataInputs = ({
   fetchArtifact,
@@ -74,25 +75,12 @@ const JobsPanelDataInputs = ({
           inputsState.selectedDataInput.data.path.value.split('/')[1]
             ?.length === 0))
     ) {
-      const projectsList = projectStore.projects
-        .map(project => ({
-          label:
-            project.metadata.name === match.params.projectName
-              ? 'Current project'
-              : project.metadata.name,
-          id: project.metadata.name
-        }))
-        .sort((prevProject, nextProject) => {
-          return prevProject.id === match.params.projectName
-            ? -1
-            : nextProject.id === match.params.projectName
-            ? 1
-            : prevProject.id.localeCompare(nextProject.id)
-        })
-
       inputsDispatch({
         type: inputsActions.SET_PROJECTS,
-        payload: projectsList
+        payload: generateProjectsList(
+          projectStore.projects,
+          match.params.projectName
+        )
       })
     }
   }, [
@@ -111,24 +99,9 @@ const JobsPanelDataInputs = ({
     if (inputsState.inputProjectPathEntered && storePathType && projectName) {
       if (storePathType === 'artifacts' && inputsState.artifacts.length === 0) {
         fetchArtifacts(projectName).then(artifacts => {
-          const artifactsList = artifacts
-            .map(artifact => {
-              const key = artifact.link_iteration
-                ? artifact.link_iteration.db_key
-                : artifact.key ?? ''
-              return {
-                label: key,
-                id: key
-              }
-            })
-            .filter(artifact => artifact.label !== '')
-            .sort((prevArtifact, nextArtifact) =>
-              prevArtifact.id.localeCompare(nextArtifact.id)
-            )
-
           inputsDispatch({
             type: inputsActions.SET_ARTIFACTS,
-            payload: artifactsList
+            payload: generateArtifactsList(artifacts)
           })
         })
       } else if (
@@ -178,31 +151,9 @@ const JobsPanelDataInputs = ({
       ) {
         fetchArtifact(projectName, projectItem).then(artifacts => {
           if (artifacts.length > 0 && artifacts[0].data) {
-            const artifactsReferencesList = artifacts[0].data
-              .map(artifact => {
-                let artifactReference = getArtifactReference(artifact)
-
-                return {
-                  label: artifactReference,
-                  id: artifactReference,
-                  customDelimiter: artifactReference[0]
-                }
-              })
-              .filter(reference => reference.label !== '')
-              .sort((prevRef, nextRef) => {
-                const [prevRefIter, prevRefTree] = prevRef.id.split('@')
-                const [nextRefIter, nextRefTree] = nextRef.id.split('@')
-
-                if (prevRefTree === nextRefTree) {
-                  return prevRefIter.localeCompare(nextRefIter)
-                } else {
-                  return prevRefTree.localeCompare(nextRefTree)
-                }
-              })
-
             inputsDispatch({
               type: inputsActions.SET_ARTIFACTS_REFERENCES,
-              payload: artifactsReferencesList
+              payload: generateArtifactsReferencesList(artifacts[0].data)
             })
           }
         })

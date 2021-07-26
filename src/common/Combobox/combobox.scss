@@ -8,6 +8,12 @@
   flex: 1;
   align-items: center;
   width: 100%;
+  border: $primaryBorder;
+  border-radius: 4px;
+
+  &_invalid {
+    border: $errorBorder;
+  }
 
   &-list {
     min-width: 140px;
@@ -54,6 +60,8 @@
       &-input {
         width: 100%;
         padding: 12px 0 10px;
+        border: none;
+        border-radius: unset;
 
         &::placeholder {
           font-style: italic;
@@ -65,7 +73,7 @@
   &-select {
     position: relative;
     display: flex;
-    max-width: 90px;
+    max-width: 95px;
 
     &_short {
       max-width: 32px;
@@ -94,6 +102,10 @@
         color: $topaz;
         user-select: none;
         pointer-events: none;
+
+        &_mandatory {
+          color: $amaranth;
+        }
       }
     }
 
@@ -119,6 +131,8 @@
     flex: 3 1;
     width: 100%;
     padding: 18px 5px 18px 0;
+    border: none;
+    border-radius: unset;
 
     &__label {
       position: absolute;
@@ -131,6 +145,19 @@
 
     &:disabled {
       background-color: transparent;
+    }
+  }
+
+  &-warning {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    display: block;
+    transform: translateY(-45%);
+
+    svg {
+      width: 12px;
+      height: 12px;
     }
   }
 }

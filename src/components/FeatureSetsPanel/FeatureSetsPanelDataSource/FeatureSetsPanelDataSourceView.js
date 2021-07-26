@@ -4,31 +4,39 @@ import cronstrue from 'cronstrue'
 
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import Select from '../../../common/Select/Select'
-import Input from '../../../common/Input/Input'
 import Button from '../../../common/Button/Button'
 import ScheduleFeatureSet from '../ScheduleFeatureSet/ScheduleFeatureSet'
 import KeyValueTable from '../../../common/KeyValueTable/KeyValueTable'
+import Combobox from '../../../common/Combobox/Combobox'
 
-import { kindOptions } from './featureSetsPanelDataSource.util'
-
+import {
+  comboboxSelectList,
+  kindOptions
+} from './featureSetsPanelDataSource.util'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
+import { pathPlaceholders } from '../../../utils/panelPathScheme'
 import { ReactComponent as Pencil } from '../../../images/edit.svg'
 
 import './featureSetsPanelDataSource.scss'
 
 const FeatureSetsPanelDataSourceView = ({
+  comboboxMatches,
   data,
   handleAddNewItem,
   handleDeleteAttribute,
   handleEditAttribute,
   handleKindOnChange,
   handleUrlOnBlur,
-  handleUrlOnChange,
+  handleUrlPathTypeChange,
+  handleUrlPathChange,
   isUrlValid,
   setData,
   setShowSchedule,
   showSchedule,
-  setNewFeatureSetSchedule
+  setNewFeatureSetSchedule,
+  urlProjectItemTypeEntered
 }) => {
+  console.log(isUrlValid)
   // const httpKind = 'http', disabling temporarily until backend supports scheduling
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
@@ -43,20 +51,32 @@ const FeatureSetsPanelDataSourceView = ({
             options={kindOptions}
             selectedId={data.kind}
           />
-          <Input
-            className="data-source__inputs-item"
-            floatingLabel
+          <Combobox
+            comboboxClassName="url"
+            hideSearchInput={!urlProjectItemTypeEntered}
+            inputDefaultValue={
+              data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
+                ? data.url.projectItemType
+                : ''
+            }
+            inputOnChange={path => {
+              handleUrlPathChange(path)
+            }}
+            inputPlaceholder={data.url.placeholder}
             invalid={!isUrlValid}
-            invalidText="URL is invalid"
-            label="URL"
+            invalidText={`Field must be in "${
+              pathPlaceholders[data.url.pathType]
+            }" format`}
+            matches={comboboxMatches}
+            maxSuggestedMatches={3}
             onBlur={handleUrlOnBlur}
-            onChange={handleUrlOnChange}
             required
-            requiredText="URL is required"
-            tip="For Parquet files the path could be either a file or a folder. For CSV it must be a file."
-            type="text"
-            value={data.url}
-            wrapperClassName="url"
+            requiredText="This field is required"
+            selectDropdownList={comboboxSelectList}
+            selectOnChange={path => {
+              handleUrlPathTypeChange(path)
+            }}
+            selectPlaceholder="Path Scheme"
           />
         </div>
         {false && ( // was: data.kind !== httpKind, disabling temporarily until backend supports scheduling
@@ -108,18 +128,21 @@ const FeatureSetsPanelDataSourceView = ({
 }
 
 FeatureSetsPanelDataSourceView.propTypes = {
+  comboboxMatches: PropTypes.arrayOf(PropTypes.shape({}).isRequired),
   data: PropTypes.shape({}).isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteAttribute: PropTypes.func.isRequired,
   handleEditAttribute: PropTypes.func.isRequired,
   handleKindOnChange: PropTypes.func.isRequired,
   handleUrlOnBlur: PropTypes.func.isRequired,
-  handleUrlOnChange: PropTypes.func.isRequired,
+  handleUrlPathTypeChange: PropTypes.func.isRequired,
+  handleUrlPathChange: PropTypes.func.isRequired,
   isUrlValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
   setShowSchedule: PropTypes.func.isRequired,
   showSchedule: PropTypes.bool.isRequired,
-  setNewFeatureSetSchedule: PropTypes.func.isRequired
+  setNewFeatureSetSchedule: PropTypes.func.isRequired,
+  urlProjectItemTypeEntered: PropTypes.bool.isRequired
 }
 
 export default FeatureSetsPanelDataSourceView

@@ -122,6 +122,7 @@ const FeatureSetsPanel = ({
       isOtherTargetsPathValid={isOtherTargetsPathValid}
       isUrlValid={isUrlValid}
       loading={featureStore.loading}
+      project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
       setNameValid={setNameValid}

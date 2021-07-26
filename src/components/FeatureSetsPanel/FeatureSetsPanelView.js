@@ -27,6 +27,7 @@ const FeatureSetsPanelView = ({
   isOtherTargetsPathValid,
   isUrlValid,
   loading,
+  project,
   removeFeatureStoreError,
   setConfirmDialog,
   setNameValid,
@@ -65,6 +66,7 @@ const FeatureSetsPanelView = ({
           >
             <FeatureSetsPanelDataSource
               isUrlValid={isUrlValid}
+              project={project}
               setUrlValid={setUrlValid}
             />
           </Accordion>
@@ -144,6 +146,7 @@ FeatureSetsPanelView.propTypes = {
   isOtherTargetsPathValid: PropTypes.bool.isRequired,
   isUrlValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
+  project: PropTypes.string.isRequired,
   removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired,

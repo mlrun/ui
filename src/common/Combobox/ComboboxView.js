@@ -2,9 +2,14 @@ import React from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+
 import { COMBOBOX_MATCHES } from '../../types'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
+import { ReactComponent as Invalid } from '../../images/invalid.svg'
 
 const ComboboxView = React.forwardRef(
   (
@@ -20,7 +25,11 @@ const ComboboxView = React.forwardRef(
       inputOnFocus,
       inputPlaceholder,
       inputValue,
+      invalidText,
+      isInvalid,
       matchesSearchOnChange,
+      required,
+      requiredText,
       searchIsFocused,
       selectDropdownList,
       selectPlaceholder,
@@ -31,7 +40,11 @@ const ComboboxView = React.forwardRef(
     },
     ref
   ) => {
-    const comboboxClassNames = classnames(comboboxClassName, 'combobox')
+    const comboboxClassNames = classnames(
+      comboboxClassName,
+      'combobox',
+      isInvalid && 'combobox_invalid'
+    )
     const iconClassNames = classnames(
       showSelectDropdown && 'combobox-icon_open',
       'combobox-icon'
@@ -60,6 +73,11 @@ const ComboboxView = React.forwardRef(
             {selectValue.id.length === 0 && (
               <span className="combobox-select__header-label">
                 {selectPlaceholder}
+                {required && (
+                  <span className="combobox-select__header-label_mandatory">
+                    *
+                  </span>
+                )}
               </span>
             )}
           </div>
@@ -123,6 +141,23 @@ const ComboboxView = React.forwardRef(
             )}
           </ul>
         </div>
+        {isInvalid && (
+          <Tooltip
+            className="combobox-warning"
+            template={
+              <TextTooltipTemplate
+                text={
+                  required && selectValue.id.length === 0
+                    ? requiredText
+                    : invalidText
+                }
+                warning
+              />
+            }
+          >
+            <Invalid />
+          </Tooltip>
+        )}
       </div>
     )
   }
@@ -140,7 +175,11 @@ ComboboxView.propTypes = {
   inputOnFocus: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string.isRequired,
   inputValue: PropTypes.string.isRequired,
+  invalidText: PropTypes.string.isRequired,
+  isInvalid: PropTypes.bool.isRequired,
   matchesSearchOnChange: PropTypes.func.isRequired,
+  required: PropTypes.bool.isRequired,
+  requiredText: PropTypes.string.isRequired,
   searchIsFocused: PropTypes.bool.isRequired,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectPlaceholder: PropTypes.string.isRequired,

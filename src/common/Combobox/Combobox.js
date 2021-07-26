@@ -4,16 +4,22 @@ import PropTypes from 'prop-types'
 import ComboboxView from './ComboboxView'
 
 import { COMBOBOX_MATCHES } from '../../types'
+
 import './combobox.scss'
 
 const Combobox = ({
   comboboxClassName,
+  hideSearchInput,
   inputPlaceholder,
   inputDefaultValue,
   inputOnChange,
-  hideSearchInput,
+  invalid,
+  invalidText,
   matches,
   maxSuggestedMatches,
+  onBlur,
+  required,
+  requiredText,
   selectDefaultValue,
   selectDropdownList,
   selectOnChange,
@@ -33,6 +39,7 @@ const Combobox = ({
   const [showMatchesDropdown, setShowMatchesDropdown] = useState(false)
   const [dropdownList, setDropdownList] = useState(matches)
   const [searchIsFocused, setSearchIsFocused] = useState(false)
+  const [isInvalid, setIsInvalid] = useState(false)
   const comboboxRef = React.createRef()
   const inputRef = React.createRef()
 
@@ -69,17 +76,35 @@ const Combobox = ({
     }
   }, [dropdownList, matches, searchIsFocused])
 
-  const handleOnBlur = useCallback(
+  useEffect(() => {
+    if (isInvalid !== invalid) {
+      setIsInvalid(invalid)
+    }
+  }, [invalid, isInvalid])
+
+  const handleOutsideClick = useCallback(
     event => {
       if (comboboxRef.current && !comboboxRef.current.contains(event.target)) {
         event.preventDefault()
 
         if (showSelectDropdown) {
           setShowSelectDropdown(false)
+
+          if (selectValue.id.length === 0 && required) {
+            setIsInvalid(true)
+          }
+
+          onBlur && onBlur(selectValue.id, inputValue)
         }
 
         if (showMatchesDropdown) {
           setShowMatchesDropdown(false)
+
+          if (inputValue.length === 0 && required) {
+            setIsInvalid(true)
+          }
+
+          onBlur && onBlur(selectValue.id, inputValue)
         }
 
         if (searchIsFocused) {
@@ -87,16 +112,25 @@ const Combobox = ({
         }
       }
     },
-    [comboboxRef, searchIsFocused, showMatchesDropdown, showSelectDropdown]
+    [
+      comboboxRef,
+      inputValue,
+      onBlur,
+      required,
+      searchIsFocused,
+      selectValue.id,
+      showMatchesDropdown,
+      showSelectDropdown
+    ]
   )
 
   useEffect(() => {
-    window.addEventListener('click', handleOnBlur)
+    window.addEventListener('click', handleOutsideClick)
 
     return () => {
-      window.removeEventListener('click', handleOnBlur)
+      window.removeEventListener('click', handleOutsideClick)
     }
-  }, [handleOnBlur])
+  }, [handleOutsideClick])
 
   const handleMatchesOptionClick = option => {
     const inputValueItems = inputValue.split('/')
@@ -134,6 +168,10 @@ const Combobox = ({
       setInputValue('')
     }
 
+    if (isInvalid) {
+      setIsInvalid(false)
+    }
+
     setSelectValue(option)
     selectOnChange(option.id)
     setShowSelectDropdown(false)
@@ -169,7 +207,7 @@ const Combobox = ({
 
     setDropdownStyle({
       left: `${target.selectionStart < 30 ? target.selectionStart : 30}ch`,
-      paddingTop: '0'
+      paddingTop: '10px'
     })
 
     if (searchIsFocused) {
@@ -205,11 +243,15 @@ const Combobox = ({
       inputOnFocus={inputOnFocus}
       inputPlaceholder={inputPlaceholder}
       inputValue={inputValue}
+      invalidText={invalidText}
+      isInvalid={isInvalid}
       matchesSearchOnChange={matchesSearchOnChange}
       ref={{
         comboboxRef: comboboxRef,
         inputRef: inputRef
       }}
+      required={required}
+      requiredText={requiredText}
       searchIsFocused={searchIsFocused}
       selectDropdownList={selectDropdownList}
       selectPlaceholder={selectPlaceholder}
@@ -223,22 +265,32 @@ const Combobox = ({
 
 Combobox.defaultProps = {
   comboboxClassName: '',
+  hideSearchInput: false,
   inputDefaultValue: '',
   inputPlaceholder: '',
-  hideSearchInput: false,
+  invalid: false,
+  invalidText: '',
   maxSuggestedMatches: 1,
+  onBlur: null,
+  required: false,
+  requiredText: '',
   selectDefaultValue: null,
   selectPlaceholder: ''
 }
 
 Combobox.propTypes = {
   comboboxClassName: PropTypes.string,
+  hideSearchInput: PropTypes.bool,
   inputDefaultValue: PropTypes.string,
   inputOnChange: PropTypes.func.isRequired,
   inputPlaceholder: PropTypes.string,
-  hideSearchInput: PropTypes.bool,
+  invalid: PropTypes.bool,
+  invalidText: PropTypes.string,
   matches: COMBOBOX_MATCHES.isRequired,
   maxSuggestedMatches: PropTypes.number,
+  onBlur: PropTypes.func,
+  required: PropTypes.bool,
+  requiredText: PropTypes.string,
   selectDropdownList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   selectOnChange: PropTypes.func.isRequired,
   selectDefaultValue: PropTypes.shape({}),
