@@ -26,12 +26,15 @@
     display: flex;
     flex: 1;
     flex-direction: column;
+    align-items: flex-start;
+    overflow-x: auto;
 
     &-header {
       position: sticky;
       top: 0;
       z-index: 3;
       display: flex;
+      min-width: 100%;
       padding-bottom: 10px;
       color: $topaz;
       font-weight: bold;
@@ -43,9 +46,14 @@
       }
     }
 
+    &-body {
+      min-width: 100%;
+    }
+
     &-item {
       display: flex;
       align-items: center;
+      width: 70px;
       min-width: 70px;
       padding: 0 5px;
     }
@@ -53,6 +61,7 @@
     &-row {
       display: flex;
       flex-direction: row;
+      min-width: 100%;
       height: 55px;
       border-bottom: $secondaryBorder;
     }
@@ -170,7 +179,9 @@
     &_grey {
       @include chipButtonAddBackground($mulledWineThree, $topaz);
     }
-  } @else {
+  }
+
+  @else {
     &_none {
       background-color: transparent;
     }
@@ -248,7 +259,9 @@
     &_medium {
       @include chipButtonAddSize(34px);
     }
-  } @else {
+  }
+
+  @else {
     &_dense {
       height: 26px;
     }
@@ -293,7 +306,9 @@
     &_purple {
       @include editableChipFont($amethyst);
     }
-  } @else if $component == Chip {
+  }
+
+  @else if $component == Chip {
     &_white {
       @include chipFont($white);
     }
@@ -313,7 +328,9 @@
     &_orange {
       @include chipFont($sorbus);
     }
-  } @else if $component == ButtonAddChip {
+  }
+
+  @else if $component == ButtonAddChip {
     &_primary {
       @include chipButtonAddColor($topaz);
     }

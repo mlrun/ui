@@ -43,7 +43,7 @@ const DetailsStatistics = ({ selectedItem }) => {
             )
           })}
         </div>
-        <div>
+        <div className="details-statistics__table-body">
           {statistics.map((statisticsItem, statisticsItemIndex) => {
             return (
               <div

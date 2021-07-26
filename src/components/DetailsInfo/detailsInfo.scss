@@ -46,6 +46,7 @@
         align-items: center;
         min-width: 60px;
         padding-left: 16px;
+        overflow-x: auto;
         word-break: break-word;
 
         &-edit-placeholder {
