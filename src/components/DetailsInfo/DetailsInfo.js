@@ -1,5 +1,6 @@
 import React, { useReducer, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { isNil } from 'lodash'
 
 import { handleFinishEdit } from '../Details/details.util'
 
@@ -14,134 +15,121 @@ import DetailsInfoView from './DetailsInfoView'
 
 import './detailsInfo.scss'
 
-const DetailsInfo = ({
-  changes,
-  content,
-  match,
-  pageData,
-  selectedItem,
-  setChangesData,
-  setChangesCounter
-}) => {
-  const [detailsInfoState, detailsInfoDispatch] = useReducer(
-    detailsInfoReducer,
-    initialState
-  )
-  const editItemRef = React.createRef()
+const DetailsInfo = React.forwardRef(
+  (
+    {
+      changes,
+      content,
+      match,
+      pageData,
+      selectedItem,
+      setChangesData,
+      setChangesCounter
+    },
+    applyChangesRef
+  ) => {
+    const [detailsInfoState, detailsInfoDispatch] = useReducer(
+      detailsInfoReducer,
+      initialState
+    )
+    const editItemRef = React.createRef()
 
-  const onBlurEditField = useCallback(
-    event => {
-      if (editItemRef.current && !editItemRef.current.contains(event.target)) {
-        if (changes.counter === 0 && !isEveryObjectValueEmpty(changes.data)) {
-          setChangesData({})
+    const onApplyChanges = useCallback(
+      event => {
+        if (
+          applyChangesRef.current &&
+          applyChangesRef.current.contains(event.target)
+        ) {
           detailsInfoDispatch({
-            type: detailsInfoActions.SET_FIELDS_DATA,
-            payload: {}
-          })
-        } else if (changes.data[detailsInfoState.editMode.field]) {
-          setChangesData({
-            ...changes.data,
-            [detailsInfoState.editMode.field]:
-              detailsInfoState.fieldsData[detailsInfoState.editMode.field]
-                .previousFieldValue
+            type: detailsInfoActions.RESET_EDIT_MODE
           })
         }
+      },
+      [applyChangesRef]
+    )
 
+    const handleInfoItemClick = (field, fieldType, info) => {
+      if (isEveryObjectValueEmpty(detailsInfoState.editMode)) {
         detailsInfoDispatch({
           type: detailsInfoActions.SET_EDIT_MODE,
           payload: {
-            field: '',
-            fieldType: ''
+            field,
+            fieldType
           }
         })
-      }
-    },
-    [
-      changes.counter,
-      changes.data,
-      detailsInfoState.editMode.field,
-      detailsInfoState.fieldsData,
-      editItemRef,
-      setChangesData
-    ]
-  )
 
-  useEffect(() => {
-    window.addEventListener('click', onBlurEditField)
-
-    return () => {
-      window.removeEventListener('click', onBlurEditField)
-    }
-  }, [onBlurEditField])
-
-  const handleInfoItemClick = (field, fieldType, info) => {
-    detailsInfoDispatch({
-      type: detailsInfoActions.SET_EDIT_MODE,
-      payload: {
-        field,
-        fieldType
-      }
-    })
-
-    if (!detailsInfoState.fieldsData[field]?.initialFieldValue) {
-      detailsInfoDispatch({
-        type: detailsInfoActions.SET_FIELDS_DATA,
-        payload: {
-          ...detailsInfoState.fieldsData,
-          [field]: {
-            previousFieldValue: info,
-            initialFieldValue: info
-          }
+        if (isNil(changes.data[field]?.initialFieldValue)) {
+          setChangesData({
+            ...changes.data,
+            [field]: {
+              initialFieldValue: info,
+              currentFieldValue: info,
+              previousFieldValue: info
+            }
+          })
+        } else {
+          setChangesData({
+            ...changes.data,
+            [field]: {
+              ...changes.data[field],
+              currentFieldValue: info
+            }
+          })
         }
-      })
-    } else {
-      detailsInfoDispatch({
-        type: detailsInfoActions.SET_FIELDS_DATA,
-        payload: {
-          ...detailsInfoState.fieldsData,
-          [field]: {
-            ...detailsInfoState.fieldsData[field],
-            previousFieldValue: info
-          }
-        }
-      })
+      }
     }
+
+    const sources = Array.isArray(selectedItem.sources)
+      ? selectedItem.sources.reduce((prev, cur) => {
+          let source = {}
+          source[cur.name] = cur.path
+
+          return { ...prev, ...source }
+        }, {})
+      : selectedItem.sources
+
+    useEffect(() => {
+      return () => {
+        detailsInfoDispatch({
+          type: detailsInfoActions.RESET_EDIT_MODE
+        })
+      }
+    }, [match.params.name])
+
+    useEffect(() => {
+      window.addEventListener('click', onApplyChanges)
+
+      return () => {
+        window.removeEventListener('click', onApplyChanges)
+      }
+    }, [onApplyChanges])
+
+    return (
+      <DetailsInfoView
+        changes={changes}
+        content={content}
+        detailsInfoState={detailsInfoState}
+        handleFinishEdit={field =>
+          handleFinishEdit(
+            field,
+            changes,
+            detailsInfoActions,
+            detailsInfoDispatch,
+            detailsInfoState,
+            setChangesData,
+            setChangesCounter
+          )
+        }
+        handleInfoItemClick={handleInfoItemClick}
+        match={match}
+        pageData={pageData}
+        ref={editItemRef}
+        selectedItem={selectedItem}
+        sources={sources}
+      />
+    )
   }
-
-  const sources = Array.isArray(selectedItem.sources)
-    ? selectedItem.sources.reduce((prev, cur) => {
-        let source = {}
-        source[cur.name] = cur.path
-
-        return { ...prev, ...source }
-      }, {})
-    : selectedItem.sources
-
-  return (
-    <DetailsInfoView
-      ref={editItemRef}
-      changes={changes}
-      content={content}
-      detailsInfoState={detailsInfoState}
-      handleFinishEdit={field =>
-        handleFinishEdit(
-          field,
-          changes,
-          detailsInfoActions,
-          detailsInfoDispatch,
-          detailsInfoState,
-          setChangesData,
-          setChangesCounter
-        )
-      }
-      handleInfoItemClick={handleInfoItemClick}
-      match={match}
-      pageData={pageData}
-      selectedItem={selectedItem}
-      sources={sources}
-    />
-  )
-}
+)
 
 DetailsInfo.propTypes = {
   changes: PropTypes.shape({}).isRequired,

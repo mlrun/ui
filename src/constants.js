@@ -336,7 +336,9 @@ export const FETCH_ALL_NUCLIO_FUNCTIONS_SUCCESS =
 /*=========== KEY CODES =============*/
 
 export const KEY_CODES = {
-  ENTER: 13
+  ENTER: 13,
+  DELETE: 46,
+  BACKSPACE: 8
 }
 
 /*=========== TABLE =============*/

@@ -10,6 +10,7 @@ const FeatureSetsPanelSchemaView = ({
   data,
   featureStore,
   handleEntitiesOnBlur,
+  isSchemaEntitiesValid,
   setData,
   setNewFeatureSetSchemaTimestampKey
 }) => {
@@ -19,6 +20,7 @@ const FeatureSetsPanelSchemaView = ({
         <div className="schema__inputs">
           <Input
             floatingLabel
+            invalid={!isSchemaEntitiesValid}
             label="Entities"
             onBlur={handleEntitiesOnBlur}
             onChange={entities => {
@@ -28,6 +30,8 @@ const FeatureSetsPanelSchemaView = ({
               }))
             }}
             placeholder="entity1,entity2,entity3"
+            required
+            requiredText="This field is required"
             type="text"
             value={data.entities}
           />
@@ -56,6 +60,7 @@ FeatureSetsPanelSchemaView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   featureStore: PropTypes.shape({}).isRequired,
   handleEntitiesOnBlur: PropTypes.func.isRequired,
+  isSchemaEntitiesValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
   setNewFeatureSetSchemaTimestampKey: PropTypes.func.isRequired
 }

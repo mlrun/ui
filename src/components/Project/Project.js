@@ -1,20 +1,38 @@
-import React, { useCallback, useState, useEffect, useMemo } from 'react'
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useMemo,
+  useReducer,
+  createRef
+} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { forEach, groupBy } from 'lodash'
 
 import ProjectView from './ProjectView'
 
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
+import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getLinks, generateCreateNewOptions } from './project.utils'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { KEY_CODES } from '../../constants'
+import {
+  initialMembersState,
+  membersActions,
+  membersReducer
+} from '../../elements/MembersPopUp/membersReducer'
+
+import { ReactComponent as User } from '../../images/user.svg'
+import { ReactComponent as Users } from '../../images/users.svg'
 
 import './project.scss'
 
 const Project = ({
   addProjectLabel,
+  appStore,
   editProjectLabels,
   fetchProject,
   fetchProjectFeatureSets,
@@ -24,6 +42,10 @@ const Project = ({
   projectStore,
   removeProjectData
 }) => {
+  const [membersState, membersDispatch] = useReducer(
+    membersReducer,
+    initialMembersState
+  )
   const [artifactKind, setArtifactKind] = useState('')
   const [editProject, setEditProject] = useState({
     name: {
@@ -44,6 +66,8 @@ const Project = ({
     }
   })
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [showManageMembers, setShowManageMembers] = useState(false)
+  const [showChangeOwner, setShowChangeOwner] = useState(false)
   const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
   const history = useHistory()
   const inputRef = React.createRef()
@@ -62,14 +86,6 @@ const Project = ({
       createNewOptions
     }
   }, [history, match, setIsPopupDialogOpen])
-
-  useEffect(() => {
-    fetchProject(match.params.projectName)
-
-    return () => {
-      removeProjectData()
-    }
-  }, [fetchProject, match.params.projectName, removeProjectData])
 
   const closeEditMode = useCallback(() => {
     setEditProject(prevState => ({
@@ -93,6 +109,126 @@ const Project = ({
       }
     }))
   }, [projectStore.project])
+
+  const fetchProjectIdAndOwner = useCallback(() => {
+    return projectsIguazioApi
+      .getProjects({
+        params: { 'filter[name]': match.params.projectName, include: 'owner' }
+      })
+      .then(projects => {
+        const currentProjectInfo = projects.data
+        const currentProjectData = currentProjectInfo.data?.[0]
+        const projectId = currentProjectData.id
+        const ownerId = currentProjectData.relationships?.owner?.data?.id ?? ''
+        const ownerInfo = currentProjectInfo.included.find(
+          data => data.id === ownerId
+        )
+        const {
+          attributes: {
+            username = '',
+            first_name: firstName = '',
+            last_name: lastName = ''
+          } = {}
+        } = ownerInfo ?? {}
+
+        membersDispatch({
+          type: membersActions.SET_PROJECT_INFO,
+          payload: {
+            id: projectId,
+            owner: { id: ownerId, username, firstName, lastName }
+          }
+        })
+
+        return projectId
+      })
+  }, [match.params.projectName])
+
+  const fetchProjectMembers = projectId => {
+    return projectsIguazioApi
+      .getProjectMembers(projectId)
+      .then(membersResponse => {
+        const members = []
+        const {
+          project_authorization_role: projectAuthorizationRoles = [],
+          user: users = [],
+          user_group: userGroups = []
+        } = groupBy(membersResponse.data.included, includeItem => {
+          return includeItem.type
+        })
+
+        membersDispatch({
+          type: membersActions.SET_PROJECT_AUTHORIZATION_ROLES,
+          payload: projectAuthorizationRoles
+        })
+        membersDispatch({
+          type: membersActions.SET_USERS,
+          payload: users
+        })
+        membersDispatch({
+          type: membersActions.SET_USER_GROUPS,
+          payload: userGroups
+        })
+
+        projectAuthorizationRoles.forEach(role => {
+          if (role.relationships) {
+            forEach(role.relationships, relationData => {
+              relationData.data.forEach(identity => {
+                const identityList =
+                  identity.type === 'user' ? users : userGroups
+
+                const {
+                  attributes: { name, username },
+                  id,
+                  type
+                } = identityList.find(identityData => {
+                  return identityData.id === identity.id
+                })
+
+                members.push({
+                  name: type === 'user' ? username : name,
+                  id: id,
+                  type: type,
+                  initialRole: role.attributes.name,
+                  role: role.attributes.name,
+                  icon: type === 'user' ? <User /> : <Users />,
+                  modification: '',
+                  actionElement: createRef()
+                })
+              })
+            })
+          }
+        })
+
+        membersDispatch({
+          type: membersActions.SET_MEMBERS_ORIGINAL,
+          payload: members
+        })
+        membersDispatch({
+          type: membersActions.SET_MEMBERS,
+          payload: members
+        })
+      })
+  }
+
+  const fetchProjectData = useCallback(() => {
+    fetchProject(match.params.projectName)
+    fetchProjectIdAndOwner().then(fetchProjectMembers)
+  }, [fetchProject, fetchProjectIdAndOwner, match.params.projectName])
+
+  const resetProjectData = useCallback(() => {
+    removeProjectData()
+    membersDispatch({
+      type: membersActions.RESET_MEMBERS_STATE
+    })
+  }, [removeProjectData])
+
+  useEffect(() => {
+    fetchProjectData()
+
+    return () => {
+      resetProjectData()
+    }
+  }, [fetchProjectData, removeProjectData, resetProjectData])
 
   const handleSetProjectData = useCallback(() => {
     const data = {
@@ -164,6 +300,14 @@ const Project = ({
       document.removeEventListener('click', handleDocumentClick)
     }
   }, [editProject, handleDocumentClick])
+
+  const changeMembersCallback = () => {
+    fetchProjectMembers(membersState.projectInfo.id)
+  }
+
+  const changeOwnerCallback = () => {
+    fetchProjectIdAndOwner()
+  }
 
   const handleAddProjectLabel = (label, labels) => {
     const objectLabels = generateKeyValues(labels)
@@ -237,7 +381,7 @@ const Project = ({
 
   const handleRefresh = () => {
     removeProjectData()
-    fetchProject(match.params.projectName)
+    fetchProjectData()
   }
 
   const handleUpdateProjectLabels = labels => {
@@ -291,11 +435,14 @@ const Project = ({
   return (
     <ProjectView
       artifactKind={artifactKind}
+      changeMembersCallback={changeMembersCallback}
+      changeOwnerCallback={changeOwnerCallback}
       createNewOptions={createNewOptions}
       editProject={editProject}
       fetchProjectFeatureSets={fetchProjectFeatureSets}
       fetchProjectFiles={fetchProjectFiles}
       fetchProjectModels={fetchProjectModels}
+      frontendSpec={appStore.frontendSpec}
       handleAddProjectLabel={handleAddProjectLabel}
       handleEditProject={handleEditProject}
       handleLaunchIDE={handleLaunchIDE}
@@ -305,10 +452,16 @@ const Project = ({
       isPopupDialogOpen={isPopupDialogOpen}
       links={links}
       match={match}
+      membersDispatch={membersDispatch}
+      membersState={membersState}
       projectLabels={projectLabels}
       ref={inputRef}
       refresh={handleRefresh}
       setIsPopupDialogOpen={setIsPopupDialogOpen}
+      setShowChangeOwner={setShowChangeOwner}
+      setShowManageMembers={setShowManageMembers}
+      showChangeOwner={showChangeOwner}
+      showManageMembers={showManageMembers}
       visibleChipsMaxLength={visibleChipsMaxLength}
     />
   )
@@ -319,8 +472,9 @@ Project.propTypes = {
 }
 
 export default connect(
-  projectStore => ({
-    ...projectStore
+  ({ appStore, projectStore }) => ({
+    projectStore,
+    appStore
   }),
   {
     ...projectsAction

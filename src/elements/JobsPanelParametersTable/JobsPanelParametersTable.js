@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import JobsPanelParametersTableView from './JobsPanelParametersTableView'
 
+import { SELECT_OPTIONS } from '../../types'
+
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 
@@ -12,10 +14,10 @@ const JobsPanelParametersTable = ({
   checkParameter,
   className,
   content,
-  disabledOptions,
   handleDeleteParameter,
   handleEditParameter,
   headers,
+  parameterTypeOptions,
   selectedItem,
   setSelectedItem,
   tableContent
@@ -61,12 +63,12 @@ const JobsPanelParametersTable = ({
       children={children}
       className={className}
       content={content}
-      disabledOptions={disabledOptions}
       editItem={editItem}
       generateActionsMenu={generateActionsMenu}
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEdit}
       headers={headers}
+      parameterTypeOptions={parameterTypeOptions}
       selectedItem={selectedItem}
       setEditItem={setEditItem}
       setSelectedItem={setSelectedItem}
@@ -90,10 +92,10 @@ JobsPanelParametersTable.propTypes = {
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.shape({})
   ]).isRequired,
-  disabledOptions: PropTypes.array,
   handleDeleteParameter: PropTypes.func,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
+  parameterTypeOptions: SELECT_OPTIONS.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   tableContent: PropTypes.shape({}).isRequired

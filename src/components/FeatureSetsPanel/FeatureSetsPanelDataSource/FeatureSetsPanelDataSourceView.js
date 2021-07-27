@@ -106,8 +106,8 @@ const FeatureSetsPanelDataSourceView = ({
           </div>
         )}
         <p>
-          Users can add attributes to be used for various operations on the
-          source data.
+          Users can add the following parameters to filter the data. using start
+          time and end time filter the selected time "between" those two fields.
         </p>
         <KeyValueTable
           addNewItem={handleAddNewItem}

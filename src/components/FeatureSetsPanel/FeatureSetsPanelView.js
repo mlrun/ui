@@ -21,19 +21,16 @@ const FeatureSetsPanelView = ({
   error,
   handleSave,
   handleSaveOnClick,
+  isExternalOfflineTargetsPathValid,
   isNameValid,
-  isOfflineTargetsPathValid,
-  isOnlineTargetsPathValid,
-  isOtherTargetsPathValid,
+  isSchemaEntitiesValid,
   isUrlValid,
   loading,
   project,
   removeFeatureStoreError,
   setConfirmDialog,
+  setExternalOfflineTargetsPathValid,
   setNameValid,
-  setOfflineTargetsPathValid,
-  setOnlineTargetsPathValid,
-  setOtherTargetsPathValid,
   setUrlValid
 }) => {
   return (
@@ -76,7 +73,9 @@ const FeatureSetsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FeatureSetsPanelSchema />
+            <FeatureSetsPanelSchema
+              isSchemaEntitiesValid={isSchemaEntitiesValid}
+            />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -85,12 +84,12 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelTargetStore
-              isOfflineTargetsPathValid={isOfflineTargetsPathValid}
-              isOnlineTargetsPathValid={isOnlineTargetsPathValid}
-              isOtherTargetsPathValid={isOtherTargetsPathValid}
-              setOfflineTargetsPathValid={setOfflineTargetsPathValid}
-              setOnlineTargetsPathValid={setOnlineTargetsPathValid}
-              setOtherTargetsPathValid={setOtherTargetsPathValid}
+              isExternalOfflineTargetsPathValid={
+                isExternalOfflineTargetsPathValid
+              }
+              setExternalOfflineTargetsPathValid={
+                setExternalOfflineTargetsPathValid
+              }
             />
           </Accordion>
           <div className="new-item-side-panel__buttons-container">
@@ -140,19 +139,16 @@ FeatureSetsPanelView.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   handleSave: PropTypes.func.isRequired,
   handleSaveOnClick: PropTypes.func.isRequired,
+  isExternalOfflineTargetsPathValid: PropTypes.bool.isRequired,
   isNameValid: PropTypes.bool.isRequired,
-  isOfflineTargetsPathValid: PropTypes.bool.isRequired,
-  isOnlineTargetsPathValid: PropTypes.bool.isRequired,
-  isOtherTargetsPathValid: PropTypes.bool.isRequired,
+  isSchemaEntitiesValid: PropTypes.bool.isRequired,
   isUrlValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   project: PropTypes.string.isRequired,
   removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
+  setExternalOfflineTargetsPathValid: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired,
-  setOfflineTargetsPathValid: PropTypes.func.isRequired,
-  setOnlineTargetsPathValid: PropTypes.func.isRequired,
-  setOtherTargetsPathValid: PropTypes.func.isRequired,
   setUrlValid: PropTypes.func.isRequired
 }
 

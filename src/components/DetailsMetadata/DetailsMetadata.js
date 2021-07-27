@@ -5,6 +5,7 @@ import classnames from 'classnames'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import ChipCell from '../../common/ChipCell/ChipCell'
+import NoData from '../../common/NoData/NoData'
 
 import { generateMetadata } from './detailsMetadata.util'
 
@@ -13,13 +14,15 @@ import './detailsMetadata.scss'
 const DetailsMetadata = ({ selectedItem }) => {
   const { primaryKey } = selectedItem.schema ?? { primaryKey: '' }
   const metadata = generateMetadata(selectedItem, primaryKey)
-  const headers = Object.entries(metadata[0]).map(([label, value]) => ({
+  const headers = Object.entries(metadata[0] ?? {}).map(([label, value]) => ({
     label,
     type: value.type,
     hidden: metadata.every(statisticsItem => statisticsItem[label].hidden)
   }))
 
-  return (
+  return metadata.length === 0 ? (
+    <NoData />
+  ) : (
     <div className="details-metadata">
       <div className="details-metadata__table">
         <div className="details-metadata__table-header">

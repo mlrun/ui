@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import FeatureSetsPanelSchemaView from './FeatureSetsPanelSchemaView'
 
@@ -7,6 +8,7 @@ import featureStoreActions from '../../../actions/featureStore'
 
 const FeatureSetsPanelSchema = ({
   featureStore,
+  isSchemaEntitiesValid,
   setNewFeatureSetDataSourceEntities,
   setNewFeatureSetSchemaTimestampKey
 }) => {
@@ -39,10 +41,15 @@ const FeatureSetsPanelSchema = ({
       data={data}
       featureStore={featureStore}
       handleEntitiesOnBlur={handleEntitiesOnBlur}
+      isSchemaEntitiesValid={isSchemaEntitiesValid}
       setData={setData}
       setNewFeatureSetSchemaTimestampKey={setNewFeatureSetSchemaTimestampKey}
     />
   )
+}
+
+FeatureSetsPanelSchema.propTypes = {
+  isSchemaEntitiesValid: PropTypes.bool.isRequired
 }
 
 export default connect(featureStore => ({ ...featureStore }), {

@@ -154,7 +154,7 @@ export const featureSetsTableHeaders = [
     class: 'artifacts_big'
   },
   {
-    header: 'Entity',
+    header: 'Entities',
     class: 'artifacts_small'
   },
   {
@@ -469,10 +469,12 @@ export const handleApplyDetailsChanges = (
   filters
 ) => {
   const data = {
-    spec: {
-      ...changes.data
-    }
+    spec: {}
   }
+
+  Object.keys(changes.data).forEach(
+    key => (data.spec[key] = changes.data[key].previousFieldValue)
+  )
 
   if (data.spec.labels) {
     const objectLabels = {}

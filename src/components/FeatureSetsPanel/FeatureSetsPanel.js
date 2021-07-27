@@ -18,9 +18,11 @@ const FeatureSetsPanel = ({
 }) => {
   const [isNameValid, setNameValid] = useState(true)
   const [isUrlValid, setUrlValid] = useState(true)
-  const [isOnlineTargetsPathValid, setOnlineTargetsPathValid] = useState(true)
-  const [isOfflineTargetsPathValid, setOfflineTargetsPathValid] = useState(true)
-  const [isOtherTargetsPathValid, setOtherTargetsPathValid] = useState(true)
+  const [
+    isExternalOfflineTargetsPathValid,
+    setExternalOfflineTargetsPathValid
+  ] = useState(true)
+  const [isSchemaEntitiesValid, setIsSchemaEntitiesValid] = useState(true)
   const [confirmDialog, setConfirmDialog] = useState(null)
   const history = useHistory()
 
@@ -51,14 +53,8 @@ const FeatureSetsPanel = ({
   }
 
   const handleSaveOnClick = startIngestion => {
-    const onlineTarget = featureStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === 'nosql'
-    )
-    const offlineTarget = featureStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === 'parquet'
-    )
-    const otherTarget = featureStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === 'other'
+    const externalOfflineTarget = featureStore.newFeatureSet.spec.targets.find(
+      targetKind => targetKind.name === 'externalOffline'
     )
 
     if (featureStore.newFeatureSet.metadata.name.length === 0) {
@@ -69,25 +65,20 @@ const FeatureSetsPanel = ({
       return setUrlValid(false)
     }
 
-    if (
-      onlineTarget &&
-      (!onlineTarget.path || onlineTarget.path.length === 0)
-    ) {
-      return setOnlineTargetsPathValid(false)
+    if (featureStore.newFeatureSet.spec.entities.length === 0) {
+      return setIsSchemaEntitiesValid(false)
     }
 
     if (
-      offlineTarget &&
-      (!offlineTarget.path || offlineTarget.path.length === 0)
+      externalOfflineTarget &&
+      (!externalOfflineTarget.path || externalOfflineTarget.path.length === 0)
     ) {
-      return setOfflineTargetsPathValid(false)
+      return setExternalOfflineTargetsPathValid(false)
     }
 
-    if (otherTarget && (!otherTarget.path || otherTarget.path.length === 0)) {
-      return setOtherTargetsPathValid(false)
-    }
-
-    setConfirmDialog({ action: startIngestion ? 'save and ingest' : 'save' })
+    setConfirmDialog({
+      action: startIngestion ? 'save and ingest' : 'save'
+    })
   }
 
   const handleStartFeatureSetIngest = result => {
@@ -116,19 +107,16 @@ const FeatureSetsPanel = ({
       error={featureStore.error}
       handleSave={handleSave}
       handleSaveOnClick={handleSaveOnClick}
+      isExternalOfflineTargetsPathValid={isExternalOfflineTargetsPathValid}
       isNameValid={isNameValid}
-      isOfflineTargetsPathValid={isOfflineTargetsPathValid}
-      isOnlineTargetsPathValid={isOnlineTargetsPathValid}
-      isOtherTargetsPathValid={isOtherTargetsPathValid}
+      isSchemaEntitiesValid={isSchemaEntitiesValid}
       isUrlValid={isUrlValid}
       loading={featureStore.loading}
       project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
       setNameValid={setNameValid}
-      setOfflineTargetsPathValid={setOfflineTargetsPathValid}
-      setOnlineTargetsPathValid={setOnlineTargetsPathValid}
-      setOtherTargetsPathValid={setOtherTargetsPathValid}
+      setExternalOfflineTargetsPathValid={setExternalOfflineTargetsPathValid}
       setUrlValid={setUrlValid}
     />
   )

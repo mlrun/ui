@@ -4,19 +4,21 @@ import classNames from 'classnames'
 
 import './loadButton.scss'
 
-const LoadButton = ({ className, label, variant, ...restProps }) => {
-  const buttonClassName = classNames(
-    'btn-load',
-    `btn-load-${variant}`,
-    className
-  )
+const LoadButton = React.forwardRef(
+  ({ className, label, variant, ...restProps }, ref) => {
+    const buttonClassName = classNames(
+      'btn-load',
+      `btn-load-${variant}`,
+      className
+    )
 
-  return (
-    <button {...restProps} className={buttonClassName}>
-      {label}
-    </button>
-  )
-}
+    return (
+      <button ref={ref} {...restProps} className={buttonClassName}>
+        {label}
+      </button>
+    )
+  }
+)
 
 LoadButton.defaultProps = {
   className: '',
