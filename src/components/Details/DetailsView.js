@@ -34,6 +34,7 @@ const DetailsView = React.forwardRef(
     {
       actionsMenu,
       applyChanges,
+      applyChangesRef,
       cancelChanges,
       detailsMenu,
       detailsMenuClick,
@@ -130,6 +131,7 @@ const DetailsView = React.forwardRef(
                 }
               >
                 <LoadButton
+                  ref={applyChangesRef}
                   variant="primary"
                   label="Apply Changes"
                   className="btn_apply-changes"

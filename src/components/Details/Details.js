@@ -51,6 +51,7 @@ const Details = ({
   setRefreshWasHandled,
   showWarning
 }) => {
+  const applyChangesRef = useRef()
   const history = useHistory()
   const dispatch = useDispatch()
   let unblockRootChange = useRef()
@@ -66,44 +67,45 @@ const Details = ({
     )
   }, [dispatch, selectedItem])
 
-  const handleEditInput = useCallback(
+  const setNewChangesData = useCallback(
     (value, field) => {
       setChangesData({
         ...detailsStore.changes.data,
-        [field]: value
+        [field]: {
+          ...detailsStore.changes.data[field],
+          currentFieldValue: value
+        }
       })
     },
     [detailsStore.changes.data, setChangesData]
+  )
+
+  const handleEditInput = useCallback(
+    (value, field) => {
+      setNewChangesData(value, field)
+    },
+    [setNewChangesData]
   )
 
   const handleEditChips = useCallback(
     (chips, field) => {
-      setChangesData({
-        ...detailsStore.changes.data,
-        [field]: chips
-      })
+      setNewChangesData(chips, field)
     },
-    [detailsStore.changes.data, setChangesData]
+    [setNewChangesData]
   )
 
   const handleAddChip = useCallback(
     (chip, chips, field) => {
-      setChangesData({
-        ...detailsStore.changes.data,
-        [field]: [...chips, ...chip]
-      })
+      setNewChangesData([...chips, ...chip], field)
     },
-    [detailsStore.changes.data, setChangesData]
+    [setNewChangesData]
   )
 
   const handleDeleteChip = useCallback(
     (chips, field) => {
-      setChangesData({
-        ...detailsStore.changes.data,
-        [field]: chips
-      })
+      setNewChangesData(chips, field)
     },
-    [detailsStore.changes.data, setChangesData]
+    [setNewChangesData]
   )
 
   useEffect(() => {
@@ -115,6 +117,12 @@ const Details = ({
       resetChanges()
     }
   }, [pageData.page, resetChanges, selectedItem.uid, setIteration])
+
+  useEffect(() => {
+    return () => {
+      setChangesData({})
+    }
+  }, [match.params.name, setChangesData])
 
   useEffect(() => {
     if (pageData.page === JOBS_PAGE) {
@@ -225,6 +233,18 @@ const Details = ({
   })
 
   const detailsMenuClick = () => {
+    let changesData = {}
+
+    Object.keys(detailsStore.changes.data).forEach(key => {
+      changesData[key] = {
+        initialFieldValue: detailsStore.changes.data[key].initialFieldValue,
+        previousFieldValue: detailsStore.changes.data[key].previousFieldValue,
+        currentFieldValue: detailsStore.changes.data[key].previousFieldValue
+      }
+    })
+
+    setChangesData({ ...changesData })
+
     if (unblockRootChange.current) {
       unblockRootChange.current()
       unblockRootChange.current = null
@@ -267,6 +287,7 @@ const Details = ({
 
   const tabsContent = useMemo(() => {
     return renderContent(
+      applyChangesRef,
       match,
       detailsStore,
       selectedItem,
@@ -296,6 +317,7 @@ const Details = ({
     <DetailsView
       actionsMenu={actionsMenu}
       applyChanges={applyChanges}
+      applyChangesRef={applyChangesRef}
       cancelChanges={cancelChanges}
       detailsMenu={detailsMenu}
       detailsMenuClick={detailsMenuClick}

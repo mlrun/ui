@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { capitalize } from 'lodash'
+import { capitalize, isNil } from 'lodash'
 import classnames from 'classnames'
 
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
@@ -94,8 +94,8 @@ const DetailsInfoView = React.forwardRef(
                 pageData.page === FEATURE_STORE_PAGE
               ) {
                 if (header.id === 'labels') {
-                  chipsData.chips = changes.data[header.id]
-                    ? changes.data[header.id]
+                  chipsData.chips = !isNil(changes.data[header.id])
+                    ? changes.data[header.id].currentFieldValue
                     : parseKeyValues(content[header.id]?.value)
                   chipsData.chipOptions = getChipOptions(header.id)
                 }
@@ -108,8 +108,8 @@ const DetailsInfoView = React.forwardRef(
                   chipsData.delimiter = <RightArrow />
                 }
 
-                info = changes.data[header.id]
-                  ? changes.data[header.id]
+                info = !isNil(changes.data[header.id])
+                  ? changes.data[header.id].currentFieldValue
                   : selectedItem && content[header.id]?.value
                 target_path =
                   content[header.id]?.value === selectedItem.target_path

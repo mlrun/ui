@@ -231,6 +231,7 @@ export const generateFunctionsContent = selectedItem => ({
 })
 
 export const renderContent = (
+  applyChangesRef,
   match,
   detailsState,
   selectedItem,
@@ -251,6 +252,7 @@ export const renderContent = (
           content={detailsState.infoContent}
           match={match}
           pageData={pageData}
+          ref={applyChangesRef}
           selectedItem={selectedItem}
           setChangesData={setChangesData}
           setChangesCounter={setChangesCounter}
@@ -435,23 +437,25 @@ export const handleFinishEdit = (
 
   if (
     isEqual(
-      detailsTabState.fieldsData[field]?.previousFieldValue,
-      changes.data[field]
+      changes.data[field]?.initialFieldValue,
+      changes.data[field]?.currentFieldValue
     )
   ) {
-    const fieldsData = { ...detailsTabState.fieldsData }
     const changesData = { ...changes.data }
 
-    delete fieldsData[field]
     delete changesData[field]
 
-    setChangesCounter(fieldsData.length || 0)
-    detailsTabDispatch({
-      type: detailsTabState.SET_FIELDS_DATA,
-      payload: { ...fieldsData }
-    })
+    setChangesCounter(changes.data.length || 0)
     setChangesData({ ...changesData })
   } else {
     setChangesCounter(Object.keys(changes.data).length)
+    setChangesData({
+      ...changes.data,
+      [field]: {
+        initialFieldValue: changes.data[field].initialFieldValue,
+        currentFieldValue: changes.data[field].currentFieldValue,
+        previousFieldValue: changes.data[field].currentFieldValue
+      }
+    })
   }
 }
