@@ -3,7 +3,7 @@ import { FUNCTIONS_PAGE } from '../constants'
 const getState = (state, page) => {
   if (page === FUNCTIONS_PAGE) {
     return {
-      value: state || 'empty',
+      value: state || '-',
       label: state ? functionStateLabels[state] : 'Created'
     }
   } else {
