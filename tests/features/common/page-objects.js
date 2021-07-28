@@ -33,5 +33,6 @@ module.exports = {
   New_Feature_Set: sidePanel['newFeatureSet'],
   Jobs_Monitor_Tab: jobsAndWorkflows['JobsMonitorTab'],
   Create_Feature_Set_Popup_Dialog:
-    interactivePopup['createFeatureSetPopupDialog']
+    interactivePopup['createFeatureSetPopupDialog'],
+  Create_Job: jobsAndWorkflows['CreateJob']
 }

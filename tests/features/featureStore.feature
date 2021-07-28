@@ -39,7 +39,7 @@ Feature: Feature Store Page
     @passive
     Scenario: Check all mandatory components on Feature Vectors tab
         Given open url
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
@@ -58,7 +58,7 @@ Feature: Feature Store Page
     @passive
     Scenario: Check all mandatory components on Datasets tab
         Given open url
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
@@ -138,7 +138,7 @@ Feature: Feature Store Page
     @passive
     Scenario: Check all mandatory components in Item infopane on Preview tab table
         Given open url
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
@@ -154,28 +154,6 @@ Feature: Feature Store Page
         Then verify "Apply_Changes_Button" element visibility on "Preview_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Preview_Info_Pane" wizard
         Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Preview_Info_Pane" wizard
-
-    @passive
-    @inProgress
-    Scenario: Check all mandatory components in Item infopane on Statistics tab table
-        Given open url
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
-        And wait load page
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard  
-        Then select "Statistics" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
-        Then verify "Statistics" tab is activ in "Info_Pane_Tab_Selector" on "Statistics_Info_Pane" wizard
-        Then verify "Info_Pane_Tab_Selector" on "Statistics_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
-        Then verify "Info_Pane_Tab_Selector" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Header" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Updated" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Cross_Close_Button" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Statistics_Tab_Info_Pane_Table" element visibility on "Statistics_Info_Pane" wizard
-        # TO DO: histogramm verification for future
 
     @passive
     @inProgress
@@ -216,6 +194,54 @@ Feature: Feature Store Page
         Then verify "Description_Input" element visibility on "Register_Dataset" wizard
         Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
         Then verify "Archive_Button" element visibility on "Register_Dataset" wizard
+
+    @passive
+    Scenario: Check filtering by Name on Feature Store Feature Sets Tab
+        Given open url
+        And click on cell with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then value in "name" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "ea"
+
+    @passive
+    Scenario: Check filtering by Name on Feature Store Features Tab
+        Given open url
+        And click on cell with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        Then value in "feature_name" column with "text" in "Features_Table" on "Feature_Store_Features_Tab" wizard should contains "ea"
+
+    @passive
+    Scenario: Check filtering by Name on Feature Store Feature Vectors Tab
+        Given open url
+        And click on cell with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "io" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "io"
+
+    @passive
+    Scenario: Check filtering by Name on Feature Store Datasets Tab
+        Given open url
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Datasets_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Feature_Store_Datasets_Tab" wizard
+        Then value in "name" column with "text" in "Feature_Datasets_Table" on "Feature_Store_Datasets_Tab" wizard should contains "ea"
 
     @passive
     @inProgress
@@ -281,8 +307,24 @@ Feature: Feature Store Page
         Then verify "File_Type_Dropdown" element in "Target_Store_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Target_Store_File_Type"
 
     @passive
+    Scenario: Check Input and Dropdown components on Feature Store Feature Set new item wizard
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
+        And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And turn on demo mode
+        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then verify "Entities_Input" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
+        Then verify "Timestamp_Input" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
+
+    @passive
     @inProgress
-    Scenario: Check Checkbox and Radiobutton components on Feature Store Feature Set new item wizard
+    Scenario: Check Target Store Accordion components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
         And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -295,15 +337,23 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
+        Then "Online_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When check "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Online_Checkbox" element should be checked in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify "Online_Path_Input" element in "Target_Store_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then "Offline_Checkbox" element should be checked in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify "Offline_Path_Input" element in "Target_Store_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then "Offline_Partition_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When check "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify "Offline_Partition_Key_Buckering_Number_Input" element in "Target_Store_Accordion" on "New_Feature_Set" wizard should display hint "Input_Hint"."Key_Buckering_Number_Hint"
+        # TODO: add verivication for number input field for "Partition_Key_Buckering_Number_Input"
+        Then verify "Offline_Partition_Columns_Input" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify "Offline_Partition_Granularity_Dropdown" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Other_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "Other_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "File_Type_Dropdown" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Input" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
-        # Then is "No_Transformation_Radiobutton" on "New_Feature_Set" selected
-        # This scenario will be finised after adding some selet attribute to radiobutton component
 
     @passive
     Scenario: Test rows Labels on Feature Store Feature Set new item wizard

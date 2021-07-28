@@ -87,6 +87,12 @@ function getFeatureSet(req, res) {
     featureSet => featureSet.metadata.project === req.params['project']
   )
 
+  if (req.query['name']) {
+    collectedFeatureSets = collectedFeatureSets.filter(featureSet =>
+      featureSet.metadata.name.includes(req.query['name'].slice(1))
+    )
+  }
+
   res.send({ feature_sets: collectedFeatureSets })
 }
 
@@ -207,6 +213,20 @@ function archiveProject(req, res) {
   res.send(project)
 }
 
+function putProject(req, res) {
+  for (const i in projects.projects) {
+    if (projects.projects[i].metadata.name === req.body.metadata.name) {
+      projects.projects[i] = req.body
+    }
+  }
+
+  res.send(
+    projects.projects.find(
+      project => project.metadata.name === req.params['project']
+    )
+  )
+}
+
 function getRuns(req, res) {
   let collectedRuns = runs.runs.filter(
     run => run.metadata.project === req.query['project']
@@ -227,6 +247,32 @@ function getRuns(req, res) {
     )
   }
 
+  if (req.query['label']) {
+    let [key, value] = req.query['label'].split('=')
+    collectedRuns = collectedRuns.filter(run => run.metadata.labels[key])
+    if (req.query['label'].includes('=')) {
+      collectedRuns = collectedRuns.filter(
+        run => run.metadata.labels[key] === value
+      )
+    }
+  }
+
+  if (req.query['name']) {
+    collectedRuns = collectedRuns.filter(run => {
+      if (req.query['name'].includes('~')) {
+        return run.metadata.name.includes(req.query['name'].slice(1))
+      } else {
+        return run.metadata.name === req.query['name']
+      }
+    })
+  }
+
+  if (req.query['state']) {
+    collectedRuns = collectedRuns.filter(
+      run => run.status.state === req.query['state']
+    )
+  }
+
   res.send({ runs: collectedRuns })
 }
 
@@ -241,7 +287,7 @@ function getProjectsShedules(req, res) {
 
 function getProjectsPipelines(req, res) {
   let collectedPipelines = pipelines[req.params['project']]
-    ? { runs: pipelines[req.params['project']] }
+    ? pipelines[req.params['project']]
     : pipelines['_empty']
 
   res.send(collectedPipelines)
@@ -261,9 +307,13 @@ function getProjectsFeatures(req, res) {
     }
 
     if (req.query['name']) {
-      collectedFeatures = collectedFeatures.filter(
-        feature => feature.feature.name === req.query['name']
-      )
+      collectedFeatures = collectedFeatures.filter(feature => {
+        if (req.query['name'].includes('~')) {
+          return feature.feature.name.includes(req.query['name'].slice(1))
+        } else {
+          return feature.feature.name === req.query['name']
+        }
+      })
     }
   }
 
@@ -282,9 +332,13 @@ function getProjectsFeatureVectors(req, res) {
       )
     }
     if (req.query['name']) {
-      featureVector = featureVector.filter(
-        vector => vector.metadata.name === req.query['name']
-      )
+      featureVector = featureVector.filter(vector => {
+        if (req.query['name'].includes('~')) {
+          return vector.metadata.name.includes(req.query['name'].slice(1))
+        } else {
+          return vector.metadata.name === req.query['name']
+        }
+      })
     }
   }
 
@@ -300,19 +354,45 @@ function getProjectsArtifactTags(req, res) {
 }
 
 function getArtifacts(req, res) {
+  // console.log('requests log: ', req.method, req.url)
+  // console.log('debug: ', req.params, req.query, req.body)
   const categories = {
     dataset: ['dataset'],
     model: ['model'],
     other: ['', 'table', 'link']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
-    artifact => artifact.project === req.query['project']
+    artifact =>
+      artifact.project === '' || artifact.project === req.query['project']
   )
 
   if (req.query['category']) {
     collectedArtifacts = collectedArtifacts.filter(artifact =>
       categories[req.query['category']].includes(artifact.kind)
     )
+  }
+
+  if (req.query['name']) {
+    collectedArtifacts = collectedArtifacts.filter(artifact => {
+      if (req.query['name'].includes('~')) {
+        return artifact.db_key.includes(req.query['name'].slice(1))
+      } else {
+        return artifact.db_key === req.query['name']
+      }
+    })
+  }
+
+  if (req.query['tag']) {
+    switch (req.query['tag']) {
+      case '*':
+        collectedArtifacts = collectedArtifacts.filter(artifact => artifact.tag)
+        break
+      default:
+        collectedArtifacts = collectedArtifacts.filter(
+          artifact => artifact.tag === req.query['tag']
+        )
+        break
+    }
   }
 
   res.send({ artifacts: collectedArtifacts })
@@ -358,11 +438,12 @@ app.post(
   createProjectsFeatureSet
 )
 
-app.get(`${mlrunAPIIngress}/api/projects/:project`, getProject)
 app.get(`${mlrunAPIIngress}/api/projects`, getProjects)
 app.post(`${mlrunAPIIngress}/api/projects`, createNewProject)
+app.get(`${mlrunAPIIngress}/api/projects/:project`, getProject)
 app.delete(`${mlrunAPIIngress}/api/projects/:project`, deleteProject)
 app.patch(`${mlrunAPIIngress}/api/projects/:project`, archiveProject)
+app.put(`${mlrunAPIIngress}/api/projects/:project`, putProject)
 
 app.get(`${mlrunAPIIngress}/api/runs`, getRuns)
 
