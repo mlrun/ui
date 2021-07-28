@@ -5,8 +5,10 @@ import actionMenu from '../components/action-menu.component'
 import datepicker from '../components/date-picker.component'
 import inputGroup from '../components/input-group.component'
 import inputWithAutocomplete from '../components/input-with-autocomplete.component'
-
-import { generateInputGroup } from '../../common-tools/common-tools'
+import {
+  generateInputGroup,
+  generateDropdownGroup
+} from '../../common-tools/common-tools'
 
 // Monitor tab
 const tabSelector = {
@@ -20,44 +22,6 @@ const tabSelector = {
         tab: 'a'
       }
     }
-  }
-}
-
-const statusFilterDropdown = {
-  root: 'div.content__action-bar div.filters div.select:nth-of-type(2)',
-  dropdownElements: {
-    open_button: 'div.select__header',
-    options: 'div.select__body div.select__item',
-    option_name: 'div.data-ellipsis div.data-ellipsis'
-  }
-}
-
-const groupByNameFilterDropdown = {
-  root: 'div.content__action-bar div.filters div.select:nth-of-type(3)',
-  dropdownElements: {
-    open_button: 'div.select__header',
-    options: 'div.select__body div.select__item',
-    option_name: 'div.data-ellipsis div.data-ellipsis'
-  }
-}
-
-const labelsDropdown = {
-  root: 'div.table-body__cell:nth-of-type(5)',
-  dropdownElements: {
-    open_button: 'div.chip-block span.chips_button',
-    options:
-      'div.chip-block div.chip-block-hidden_visible div.data-ellipsis.tooltip-wrapper',
-    option_name: ''
-  }
-}
-
-const parametersDropdown = {
-  root: 'div.table-body__cell:nth-of-type(6)',
-  dropdownElements: {
-    open_button: 'div.chip-block span.chips_button',
-    options:
-      'div.chip-block div.chip-block-hidden_visible div.data-ellipsis.tooltip-wrapper',
-    option_name: ''
   }
 }
 
@@ -113,11 +77,21 @@ const jobsMonitorTable = {
         owner: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
         labels: {
           componentType: dropdownComponent,
-          structure: labelsDropdown
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(5)',
+            '.chip-block span.chips_button',
+            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false
+          )
         },
         parameters: {
           componentType: dropdownComponent,
-          structure: parametersDropdown
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(6)',
+            '.chip-block span.chips_button',
+            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false
+          )
         },
         results: {
           componentType: commonTable,
@@ -260,7 +234,7 @@ const functionsTemplates = {
       root: 'div.accordion__container',
       fields: {
         expand_btn: 'button',
-        name: 'div.accordion__body > h6 span',
+        name: 'div.accordion__body > h6',
         templates_list: {
           componentType: commonTable,
           structure: predefinedFunctionsTemplates
@@ -290,8 +264,22 @@ module.exports = {
     Table_Expand_Rows_Button: By.css(
       'div.content__action-bar div.actions div.data-ellipsis:nth-of-type(2) button'
     ),
-    Status_Filter_Dropdown: dropdownComponent(statusFilterDropdown),
-    Group_By_Name_Filter_Dropdown: dropdownComponent(groupByNameFilterDropdown),
+    Status_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '.content__action-bar .filters .select:nth-of-type(2)',
+        '.select__header', // Open Component
+        '.select__body .select__item', // Options
+        '.data-ellipsis .data-ellipsis' // Option value
+      )
+    ),
+    Group_By_Name_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        'div.content__action-bar div.filters div.select:nth-of-type(3)',
+        'div.select__header', // Open Component
+        'div.select__body div.select__item', // Options
+        'div.data-ellipsis div.data-ellipsis' // Option value
+      )
+    ),
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
         'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(4)',
