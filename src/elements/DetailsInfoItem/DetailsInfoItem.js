@@ -18,8 +18,8 @@ import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
 const DetailsInfoItem = React.forwardRef(
   (
     {
-      chipsClassName,
       chipOptions,
+      chipsClassName,
       chipsData,
       currentField,
       editableFieldType,
@@ -173,7 +173,13 @@ const DetailsInfoItem = React.forwardRef(
                 }
               }}
             >
-              {info}
+              {info.length === 0 ? (
+                <span className="details-item__data-edit-placeholder">
+                  Click to edit
+                </span>
+              ) : (
+                info
+              )}
             </div>
           </Tooltip>
         )
@@ -185,12 +191,12 @@ const DetailsInfoItem = React.forwardRef(
 )
 
 DetailsInfoItem.defaultProps = {
+  chipOptions: {},
   chipsClassName: '',
   chipsData: {
     chips: [],
     delimiter: null
   },
-  chipOptions: {},
   currentField: '',
   editableFieldType: null,
   func: '',
@@ -206,12 +212,12 @@ DetailsInfoItem.defaultProps = {
 }
 
 DetailsInfoItem.propTypes = {
+  chipOptions: CHIP_OPTIONS,
   chipsClassName: PropTypes.string,
   chipsData: PropTypes.shape({
     chips: PropTypes.arrayOf(PropTypes.string),
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),
-  chipOptions: CHIP_OPTIONS,
   currentField: PropTypes.string,
   editableFieldType: PropTypes.string,
   func: PropTypes.string,

@@ -27,7 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    width: 80%;
+    width: 85%;
 
     .select {
       display: flex;
@@ -48,7 +48,12 @@
           margin-bottom: 5px;
         }
 
-        &.offline-path,
+        &.offline-path {
+          flex: unset;
+          width: 515px;
+          margin: 5px 5px 5px 0;
+        }
+
         &.partition-cols {
           flex: unset;
           width: 300px;
@@ -59,7 +64,6 @@
 
     .range {
       width: 225px;
-      margin: 5px 5px 5px 0;
     }
   }
 }

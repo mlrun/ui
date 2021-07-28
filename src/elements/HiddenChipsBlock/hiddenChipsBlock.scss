@@ -19,10 +19,6 @@
   box-shadow: $hiddenChipsBlockShadow;
   opacity: 0;
 
-  &__chip {
-    border: $parametersBorder;
-  }
-
   &_bottom {
     bottom: 112%;
 
@@ -55,14 +51,6 @@
 
   &_right {
     right: unset;
-  }
-
-  .chip {
-    display: inline-flex;
-
-    .chip_short {
-      max-width: 100%;
-    }
   }
 
   &_visible {

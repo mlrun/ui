@@ -4,11 +4,16 @@
 
 .input {
   position: relative;
+  width: 100%;
   padding: 18px 16px;
   color: $primary;
   background-color: transparent;
   border: $primaryBorder;
   border-radius: 4px;
+
+  &.without-border {
+    border: none;
+  }
 
   &:invalid {
     border: $errorBorder;
@@ -18,10 +23,32 @@
     cursor: not-allowed;
   }
 
+  &__warning {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    display: block;
+    transform: translateY(-45%);
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  &-short {
+    margin-right: 22px;
+
+    & ~ .input__warning {
+      right: 30px;
+    }
+  }
+
   &-wrapper {
     position: relative;
+    display: flex;
 
-    .input.input_required {
+    .input.input_invalid {
       border: $errorBorder;
 
       & ~ .input__warning {
@@ -58,22 +85,10 @@
     transform: translate(0, -40%);
   }
 
-  &__warning {
-    position: absolute;
-    top: 35%;
-    right: 16px;
-    display: none;
-
-    svg {
-      width: 15px;
-      height: 15px;
-    }
-  }
-
   &__tip {
     position: absolute;
     top: 50%;
-    right: 4px;
+    right: 0;
     transform: translateY(-50%);
   }
 
@@ -90,11 +105,19 @@
     background-color: transparent;
     pointer-events: none;
 
+    &-mandatory {
+      color: $amaranth;
+    }
+
     &.active-label {
       top: 9px;
       font-weight: 700;
       font-size: 10px;
       line-height: 12px;
+
+      .input__label-mandatory {
+        color: $topaz;
+      }
     }
 
     &-floating {

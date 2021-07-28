@@ -13,6 +13,10 @@
     height: 49px;
     padding: 0 15px;
 
+    &.hidden {
+      display: none;
+    }
+
     .checkbox {
       flex: 1;
       height: 100%;
@@ -34,7 +38,7 @@
     .all {
       margin: 0;
 
-      @include jobStatus(none);
+      @include statusState(none);
     }
   }
 }

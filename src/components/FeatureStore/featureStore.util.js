@@ -17,7 +17,7 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 import { parseFeatures } from '../../utils/parseFeatures'
-import { parseFeatureStoreDataRequest } from '../../utils/parseFeatureStoreDataRequest'
+import { parseFeatureSets } from '../../utils/parseFeatureSets'
 import { generateUri } from '../../utils/resources'
 import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 
@@ -59,9 +59,8 @@ export const featureSetsInfoHeaders = [
   { label: 'Last updated', id: 'updated' },
   { label: 'Entities', id: 'entities' },
   { label: 'URI', id: 'target_uri' },
-  { label: 'Partition keys', id: 'partition_keys' },
   { label: 'Timestamp key', id: 'timestamp_key' },
-  { label: 'Relations', id: 'relations' },
+  { label: 'Relations', id: 'relations', hidden: true },
   { label: 'Label column', id: 'label_column' },
   { label: 'Usage example', id: 'usage_example' }
 ]
@@ -95,7 +94,6 @@ export const featuresFilters = [
   { type: 'labels', label: 'Label:' }
 ]
 export const page = 'FEATURE-STORE'
-export const sources = ['name', 'path']
 export const registerDatasetsTitle = 'Register dataset'
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
@@ -156,7 +154,7 @@ export const featureSetsTableHeaders = [
     class: 'artifacts_big'
   },
   {
-    header: 'Entity',
+    header: 'Entities',
     class: 'artifacts_small'
   },
   {
@@ -228,7 +226,7 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
     {
       header: 'Validator',
       class: 'artifacts_medium',
-      hidden: true
+      hidden: isTablePanelOpen
     },
     {
       header: '',
@@ -282,6 +280,7 @@ export const generatePageData = (
     data.filters = featuresFilters
     data.tableHeaders = generateFeaturesTableHeaders(isTablePanelOpen)
     data.tablePanel = getFeaturesTablePanel()
+    data.handleRemoveRequestData = handleRemoveRequestData
     data.filterMenuActionButton = {
       label: 'Add to feature vector',
       variant: 'secondary',
@@ -345,7 +344,7 @@ export const handleFetchData = async (
     result = await fetchFeatureSets(project, { ...filters, tag: null }, config)
 
     if (result) {
-      data.content = parseFeatureStoreDataRequest(result)
+      data.content = parseFeatureSets(result)
       data.yamlContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
@@ -386,58 +385,58 @@ export const navigateToDetailsPane = (
   setSelectedItem
 ) => {
   const { name, tag, iter } = match.params
-  let artifacts = []
+  let content = []
 
   if (match.params.pageTab === FEATURE_SETS_TAB && featureSets.length > 0) {
-    artifacts = parseFeatureStoreDataRequest(featureSets)
+    content = parseFeatureSets(featureSets)
   } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
-    artifacts = features
+    content = features
   } else if (
     match.params.pageTab === DATASETS_TAB &&
     dataSets.allData.length > 0
   ) {
     if (dataSets.selectedRowData.content[name]) {
-      artifacts = dataSets.selectedRowData.content[name]
+      content = dataSets.selectedRowData.content[name]
     } else {
-      artifacts = dataSets.allData
+      content = dataSets.allData
     }
   } else if (
     match.params.pageTab === FEATURE_VECTORS_TAB &&
     featureVectors.allData.length > 0
   ) {
     if (featureVectors.selectedRowData.content[name]) {
-      artifacts = featureVectors.selectedRowData.content[name]
+      content = featureVectors.selectedRowData.content[name]
     } else {
-      artifacts = featureVectors.allData
+      content = featureVectors.allData
     }
   }
 
-  if (match.params.name && artifacts.length !== 0) {
-    const selectedArtifact = artifacts.find(artifact => {
-      const searchKey = artifact.name ? 'name' : 'db_key'
+  if (match.params.name && content.length !== 0) {
+    const selectedItem = content.find(contentItem => {
+      const searchKey = contentItem.name ? 'name' : 'db_key'
 
       if (
         match.params.pageTab === FEATURE_SETS_TAB ||
         match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
         return (
-          artifact[searchKey] === name &&
-          (artifact.tag === tag || artifact.uid === tag)
+          contentItem[searchKey] === name &&
+          (contentItem.tag === tag || contentItem.uid === tag)
         )
       } else if (match.params.pageTab === DATASETS_TAB) {
         return iter
-          ? Number(iter) === artifact.iter &&
-              artifact[searchKey] === name &&
-              (artifact.tag === tag || artifact.tree === tag)
-          : artifact[searchKey] === name &&
-              (artifact.tag === tag || artifact.tree === tag)
+          ? Number(iter) === contentItem.iter &&
+              contentItem[searchKey] === name &&
+              (contentItem.tag === tag || contentItem.tree === tag)
+          : contentItem[searchKey] === name &&
+              (contentItem.tag === tag || contentItem.tree === tag)
       } else {
-        return artifact[searchKey] === name
+        return contentItem[searchKey] === name
       }
     })
 
-    if (!selectedArtifact) {
-      history.push(
+    if (!selectedItem) {
+      history.replace(
         `/projects/${match.params.projectName}/feature-store/${match.params.pageTab}`
       )
     } else {
@@ -445,15 +444,15 @@ export const navigateToDetailsPane = (
         match.params.pageTab === FEATURE_SETS_TAB ||
         match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
-        selectedArtifact.usage_example = generateUsageSnippets(
+        selectedItem.usage_example = generateUsageSnippets(
           match.params,
           featureSets,
           featureVectors
         )
       }
 
-      selectedArtifact.URI = generateUri(selectedArtifact, match.params.pageTab)
-      setSelectedItem({ item: selectedArtifact })
+      selectedItem.URI = generateUri(selectedItem, match.params.pageTab)
+      setSelectedItem({ item: selectedItem })
     }
   } else {
     setSelectedItem({})
@@ -470,10 +469,12 @@ export const handleApplyDetailsChanges = (
   filters
 ) => {
   const data = {
-    spec: {
-      ...changes.data
-    }
+    spec: {}
   }
+
+  Object.keys(changes.data).forEach(
+    key => (data.spec[key] = changes.data[key].previousFieldValue)
+  )
 
   if (data.spec.labels) {
     const objectLabels = {}

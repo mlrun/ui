@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { capitalize } from 'lodash'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
@@ -35,6 +34,7 @@ const DetailsView = React.forwardRef(
     {
       actionsMenu,
       applyChanges,
+      applyChangesRef,
       cancelChanges,
       detailsMenu,
       detailsMenuClick,
@@ -55,7 +55,7 @@ const DetailsView = React.forwardRef(
       'table__item',
       detailsStore.showWarning && 'pop-up-dialog-opened'
     )
-    const state = selectedItem.state || selectedItem?.status?.state
+    const { value: statusValue, label: statusLabel } = selectedItem.state || {}
 
     return (
       <div className={detailsPanelClassNames} ref={ref}>
@@ -82,11 +82,11 @@ const DetailsView = React.forwardRef(
               }
             </Tooltip>
           </h3>
-          <span>
+          <span className="left-margin">
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
               ? formatDatetime(
                   selectedItem?.startTime,
-                  state === 'aborted' ? 'N/A' : 'Not yet started'
+                  statusValue === 'aborted' ? 'N/A' : 'Not yet started'
                 )
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
@@ -95,20 +95,18 @@ const DetailsView = React.forwardRef(
               : selectedItem?.spec?.model
               ? selectedItem?.metadata?.uid
               : ''}
-            {state && (
-              <Tooltip
-                template={<TextTooltipTemplate text={capitalize(state)} />}
-              >
-                <i className={state} />
+            {statusValue && statusLabel && (
+              <Tooltip template={<TextTooltipTemplate text={statusLabel} />}>
+                <i className={statusValue} />
               </Tooltip>
             )}
             {!isEmpty(detailsStore.pods.podsPending) && (
-              <span>
+              <span className="left-margin">
                 {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
               </span>
             )}
             {detailsStore.pods.error && (
-              <span className="item-header__pods-error">
+              <span className="item-header__pods-error left-margin">
                 Failed to load pods
               </span>
             )}
@@ -133,6 +131,7 @@ const DetailsView = React.forwardRef(
                 }
               >
                 <LoadButton
+                  ref={applyChangesRef}
                   variant="primary"
                   label="Apply Changes"
                   className="btn_apply-changes"

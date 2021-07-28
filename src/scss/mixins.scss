@@ -21,6 +21,44 @@
   }
 }
 
+@mixin detailsMetadataStatisticsTable {
+  &__table {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    &-header {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      display: flex;
+      padding-bottom: 10px;
+      color: $topaz;
+      font-weight: bold;
+      background-color: $white;
+      border-bottom: $secondaryBorder;
+
+      .header-item {
+        text-transform: capitalize;
+      }
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      min-width: 70px;
+      padding: 0 5px;
+    }
+
+    &-row {
+      display: flex;
+      flex-direction: row;
+      height: 55px;
+      border-bottom: $secondaryBorder;
+    }
+  }
+}
+
 @mixin detailsItem {
   color: $topaz;
   font-weight: bold;
@@ -48,7 +86,7 @@
   }
 }
 
-@mixin jobStatus($color) {
+@mixin statusState($color) {
   display: inline-block;
   width: 8px;
   height: 8px;
@@ -500,7 +538,7 @@
       border: $primaryBorder;
       border-radius: 2px;
 
-      &_required {
+      &_invalid {
         border: 1px solid $amaranth;
       }
     }

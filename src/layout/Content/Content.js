@@ -37,6 +37,7 @@ const Content = ({
   content,
   expandRow,
   filtersStore,
+  filtersChangeCallback,
   handleCancel,
   handleSelectItem,
   loading,
@@ -46,8 +47,6 @@ const Content = ({
   refresh,
   selectedItem,
   setLoading,
-  showUntagged,
-  toggleShowUntagged,
   yamlContent
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
@@ -226,10 +225,8 @@ const Content = ({
             filters={pageData.filters}
             handleExpandAll={handleExpandAll}
             match={match}
-            onChange={refresh}
+            onChange={filtersChangeCallback ?? refresh}
             page={pageData.page}
-            showUntagged={showUntagged}
-            toggleShowUntagged={toggleShowUntagged}
             withoutExpandButton={Boolean(pageData.handleRequestOnExpand)}
           />
         </div>
@@ -268,16 +265,16 @@ const Content = ({
 Content.defaultProps = {
   activeScreenTab: '',
   expandRow: null,
+  filtersChangeCallback: null,
   handleSelectItem: () => {},
   selectedItem: {},
-  setLoading: () => {},
-  showUntagged: '',
-  toggleShowUntagged: null
+  setLoading: () => {}
 }
 
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   expandRow: PropTypes.func,
+  filtersChangeCallback: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
@@ -286,8 +283,6 @@ Content.propTypes = {
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
   setLoading: PropTypes.func,
-  showUntagged: PropTypes.string,
-  toggleShowUntagged: PropTypes.func,
   yamlContent: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.shape({})

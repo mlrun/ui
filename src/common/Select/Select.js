@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -11,12 +11,12 @@ import Button from '../Button/Button'
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
 import './select.scss'
+import { SELECT_OPTIONS } from '../../types'
 
 const Select = ({
   className,
   density,
   disabled,
-  disabledOptions,
   floatingLabel,
   hideSelectedOption,
   label,
@@ -29,6 +29,7 @@ const Select = ({
   selectedItemAction,
   withoutBorder
 }) => {
+  const selectRef = useRef()
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [isOpen, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
@@ -52,18 +53,22 @@ const Select = ({
   const selectedOption = options.find(option => option.id === selectedId)
 
   useEffect(() => {
-    window.addEventListener('scroll', handlerScroll)
+    window.addEventListener('click', clickHandler)
 
     return () => {
-      window.removeEventListener('scroll', handlerScroll)
+      window.removeEventListener('click', clickHandler)
     }
   }, [isOpen])
 
-  const handlerScroll = () => {
-    setOpen(false)
+  const clickHandler = event => {
+    if (selectRef.current !== event.target.closest('.select')) {
+      setOpen(false)
+    }
   }
 
-  const toggleOpen = disabled => (disabled ? null : setOpen(!isOpen))
+  const toggleOpen = () => {
+    !disabled && setOpen(!isOpen)
+  }
 
   const handleCloseSelectBody = useCallback(event => {
     event.stopPropagation()
@@ -87,8 +92,9 @@ const Select = ({
   return (
     <div
       data-testid="select"
+      ref={selectRef}
       className={selectClassName}
-      onClick={() => toggleOpen(disabled)}
+      onClick={() => toggleOpen()}
     >
       <div data-testid="select-header" className="select__header">
         {label && (
@@ -164,46 +170,42 @@ const Select = ({
         </PopUpDialog>
       )}
       {isOpen && (
-        <>
-          <div className="overall" />
-          <div
-            data-testid="select-body"
-            className="select__body"
-            onClick={handleCloseSelectBody}
-          >
-            {search && (
-              <div className="select__search">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchValue}
-                  onChange={event => setSearchValue(event.target.value)}
+        <div
+          data-testid="select-body"
+          className="select__body"
+          onClick={handleCloseSelectBody}
+        >
+          {search && (
+            <div className="select__search">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={event => setSearchValue(event.target.value)}
+              />
+            </div>
+          )}
+          {options
+            .filter(option => {
+              return (
+                !search ||
+                option.label.toLowerCase().includes(searchValue.toLowerCase())
+              )
+            })
+            .map(option => {
+              return (
+                <SelectOption
+                  item={option}
+                  key={option.id}
+                  onClick={selectedOption => {
+                    handleSelectOptionClick(selectedOption, option)
+                  }}
+                  selectType={selectType}
+                  selectedId={selectedId}
                 />
-              </div>
-            )}
-            {options
-              .filter(option => {
-                return (
-                  !search ||
-                  option.label.toLowerCase().includes(searchValue.toLowerCase())
-                )
-              })
-              .map(option => {
-                return (
-                  <SelectOption
-                    disabled={disabledOptions.includes(option.id.toLowerCase())}
-                    item={option}
-                    key={option.id}
-                    onClick={selectedOption => {
-                      handleSelectOptionClick(selectedOption, option)
-                    }}
-                    selectType={selectType}
-                    selectedId={selectedId}
-                  />
-                )
-              })}
-          </div>
-        </>
+              )
+            })}
+        </div>
       )}
     </div>
   )
@@ -213,7 +215,6 @@ Select.defaultProps = {
   className: '',
   density: 'normal',
   disabled: false,
-  disabledOptions: [],
   hideSelectedOption: false,
   label: '',
   labelAtTop: false,
@@ -228,19 +229,12 @@ Select.propTypes = {
   className: PropTypes.string,
   density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
   disabled: PropTypes.bool,
-  disabledOptions: PropTypes.array,
   floatingLabel: PropTypes.bool,
   hideSelectedOption: PropTypes.bool,
   label: PropTypes.string,
   labelAtTop: PropTypes.bool,
   onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-      className: PropTypes.string
-    })
-  ).isRequired,
+  options: SELECT_OPTIONS.isRequired,
   search: PropTypes.bool,
   selectType: PropTypes.string,
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),

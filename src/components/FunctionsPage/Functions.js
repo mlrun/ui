@@ -21,6 +21,7 @@ import {
   TRANSIENT_FUNCTION_STATUSES
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import getState from '../../utils/getState.js'
 
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
@@ -30,11 +31,13 @@ import { FUNCTIONS_PAGE } from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
+import { ReactComponent as Edit } from '../../images/edit.svg'
 
 const Functions = ({
   deleteFunction,
   fetchFunctionLogs,
   fetchFunctions,
+  filtersStore,
   functionsStore,
   history,
   match,
@@ -49,7 +52,6 @@ const Functions = ({
   const [functions, setFunctions] = useState([])
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
-  const [showUntagged, setShowUntagged] = useState('')
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   const location = useLocation()
@@ -89,7 +91,16 @@ const Functions = ({
         label: 'Run',
         icon: <Run />,
         onClick: func => setEditableItem(func),
-        hidden: FUNCTIONS_FAILED_STATES.includes(item?.state)
+        hidden: FUNCTIONS_FAILED_STATES.includes(item?.state?.value)
+      },
+      {
+        label: 'Edit',
+        icon: <Edit />,
+        onClick: func => {
+          setFunctionsPanelIsOpen(true)
+          setEditableItem(func)
+        },
+        hidden: item?.type !== 'job'
       },
       {
         label: 'Delete',
@@ -120,17 +131,25 @@ const Functions = ({
           const newFunctions = chain(functions)
             .orderBy('metadata.updated', 'desc')
             .map(func => ({
-              name: func.metadata.name,
-              type: func.kind,
-              tag: func.metadata.tag,
-              hash: func.metadata.hash,
-              codeOrigin: func.spec?.build?.code_origin ?? '',
-              updated: new Date(func.metadata.updated),
+              args: func.spec?.args ?? [],
+              build: func.spec?.build ?? {},
               command: func.spec?.command,
-              image: func.spec?.image,
-              description: func.spec?.description,
-              state: func.status?.state ?? '',
-              functionSourceCode: func.spec?.build?.functionSourceCode ?? ''
+              description: func.spec?.description ?? '',
+              default_handler: func.spec?.default_handler ?? '',
+              env: func.spec?.env ?? [],
+              hash: func.metadata.hash,
+              image: func.spec?.image ?? '',
+              labels: func.metadata?.labels ?? {},
+              name: func.metadata.name,
+              project: func.metadata?.project || match.params.projectName,
+              resources: func.spec?.resources ?? {},
+              secret_sources: func.spec?.secret_sources ?? [],
+              state: getState(func.status?.state, page),
+              tag: func.metadata.tag,
+              type: func.kind,
+              volume_mounts: func.spec?.volume_mounts ?? [],
+              volumes: func.spec?.volumes ?? [],
+              updated: new Date(func.metadata.updated)
             }))
             .value()
 
@@ -154,9 +173,11 @@ const Functions = ({
 
   useEffect(() => {
     setTaggedFunctions(
-      !showUntagged ? functions.filter(func => func.tag.length) : functions
+      !filtersStore.showUntagged
+        ? functions.filter(func => func.tag.length)
+        : functions
     )
-  }, [showUntagged, functions])
+  }, [filtersStore.showUntagged, functions])
 
   useEffect(() => {
     if (match.params.hash && pageData.detailsMenu.length > 0) {
@@ -187,12 +208,26 @@ const Functions = ({
       })
 
       if (!item || Object.keys(item).length === 0) {
-        return history.push(`/projects/${match.params.projectName}/functions`)
+        return history.replace(
+          `/projects/${match.params.projectName}/functions`
+        )
       }
     }
 
     setSelectedFunction(item)
   }, [functions, history, match.params.hash, match.params.projectName])
+
+  const filtersChangeCallback = filters => {
+    if (
+      !filters.showUntagged &&
+      filters.showUntagged !== filtersStore.showUntagged &&
+      selectedFunction.hash
+    ) {
+      history.push(`/projects/${match.params.projectName}/functions`)
+    } else if (filters.showUntagged === filtersStore.showUntagged) {
+      refreshFunctions(filters)
+    }
+  }
 
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {
@@ -211,7 +246,7 @@ const Functions = ({
       .then(() => {
         if (!isEmpty(selectedFunction)) {
           setSelectedFunction({})
-          history.push(`/projects/${match.params.projectName}/functions`)
+          history.replace(`/projects/${match.params.projectName}/functions`)
         }
 
         setNotification({
@@ -247,17 +282,9 @@ const Functions = ({
     })
   }
 
-  const toggleShowUntagged = showUntagged => {
-    const pathLangsOnFuncScreen = 4
-    if (history.location.pathname.split('/').length > pathLangsOnFuncScreen) {
-      history.push(`/projects/${match.params.projectName}/functions`)
-    }
-
-    setShowUntagged(state => (state === showUntagged ? '' : showUntagged))
-  }
-
   const closePanel = () => {
     setFunctionsPanelIsOpen(false)
+    setEditableItem(null)
     removeNewFunction()
 
     if (functionsStore.error) {
@@ -267,6 +294,7 @@ const Functions = ({
 
   const createFunctionSuccess = () => {
     setFunctionsPanelIsOpen(false)
+    setEditableItem(null)
     removeNewFunction()
 
     return refreshFunctions().then(() => {
@@ -283,6 +311,7 @@ const Functions = ({
     const tab = ready === false ? 'logs' : 'overview'
 
     setFunctionsPanelIsOpen(false)
+    setEditableItem(null)
     removeNewFunction()
 
     return refreshFunctions().then(functions => {
@@ -348,6 +377,7 @@ const Functions = ({
       {functionsStore.loading && <Loader />}
       <Content
         content={taggedFunctions}
+        filtersChangeCallback={filtersChangeCallback}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectFunction}
         loading={functionsStore.loading}
@@ -356,11 +386,9 @@ const Functions = ({
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
         setLoading={setLoading}
-        showUntagged={showUntagged}
-        toggleShowUntagged={toggleShowUntagged}
         yamlContent={functionsStore.functions}
       />
-      {editableItem && (
+      {editableItem && !functionsPanelIsOpen && (
         <JobsPanel
           closePanel={() => {
             setEditableItem(null)
@@ -382,6 +410,7 @@ const Functions = ({
         <FunctionsPanel
           closePanel={closePanel}
           createFunctionSuccess={createFunctionSuccess}
+          defaultData={editableItem}
           handleDeployFunctionFailure={handleDeployFunctionFailure}
           handleDeployFunctionSuccess={handleDeployFunctionSuccess}
           match={match}
@@ -397,8 +426,11 @@ Functions.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
-export default connect(functionsStore => functionsStore, {
-  ...functionsActions,
-  ...notificationActions,
-  ...jobsActions
-})(React.memo(Functions))
+export default connect(
+  ({ functionsStore, filtersStore }) => ({ functionsStore, filtersStore }),
+  {
+    ...functionsActions,
+    ...notificationActions,
+    ...jobsActions
+  }
+)(React.memo(Functions))

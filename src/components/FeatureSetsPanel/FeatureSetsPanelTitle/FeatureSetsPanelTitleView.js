@@ -13,9 +13,9 @@ import { ReactComponent as Close } from '../../../images/close.svg'
 import './featureSetsPanelTitle.scss'
 
 const FeatureSetsPanelTitleView = ({
-  artifactsStore,
   closePanel,
   data,
+  featureStore,
   handleAddLabel,
   handleChangeLabels,
   handleNameChange,
@@ -42,17 +42,15 @@ const FeatureSetsPanelTitleView = ({
           <Input
             className="panel-title__input"
             floatingLabel
+            invalid={!isNameValid}
+            invalidText="This field is invalid"
             label="Feature Set Name"
+            maxLength={63}
             onChange={handleNameChange}
             onBlur={handleNameOnBlur}
-            maxLength={63}
             pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
-            required={!isNameValid}
-            requiredText={
-              data.name.length === 0
-                ? 'This field is required'
-                : 'This field is invalid'
-            }
+            required
+            requiredText="This field is required"
             tip={titleValidationTip}
             type="text"
             value={data.name}
@@ -70,7 +68,7 @@ const FeatureSetsPanelTitleView = ({
             }
             onBlur={event => {
               if (
-                artifactsStore.newFeatureSet.metadata.tag !== event.target.value
+                featureStore.newFeatureSet.metadata.tag !== event.target.value
               ) {
                 setNewFeatureSetVersion(event.target.value)
               }
@@ -93,8 +91,7 @@ const FeatureSetsPanelTitleView = ({
           }
           onBlur={event => {
             if (
-              artifactsStore.newFeatureSet.spec.description !==
-              event.target.value
+              featureStore.newFeatureSet.spec.description !== event.target.value
             ) {
               setNewFeatureSetDescription(event.target.value)
             }
@@ -128,6 +125,7 @@ const FeatureSetsPanelTitleView = ({
 FeatureSetsPanelTitleView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   data: PropTypes.shape({}).isRequired,
+  featureStore: PropTypes.shape({}).isRequired,
   handleAddLabel: PropTypes.func.isRequired,
   handleChangeLabels: PropTypes.func.isRequired,
   handleNameChange: PropTypes.func.isRequired,

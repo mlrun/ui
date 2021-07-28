@@ -12,9 +12,10 @@ import {
 } from './jobsPanelParametersReducer'
 import {
   convertParamValue,
-  generateTableData,
-  setHyperParams,
   editNewJobParams,
+  generateTableData,
+  getParameterTypeOptions,
+  setHyperParams,
   setTableData
 } from './jobsPanelParameters.util'
 import { panelActions } from '../JobsPanel/panelReducer'
@@ -35,12 +36,8 @@ const JobsPanelParameters = ({
     jobsPanelParametersReducer,
     initialState
   )
-
-  const disabledOptions = useMemo(() => {
-    if (jobsStore.newJob.task.spec.param_file) {
-      return ['hyper']
-    }
-    return []
+  const parameterTypeOptions = useMemo(() => {
+    return getParameterTypeOptions(jobsStore.newJob.task.spec.param_file)
   }, [jobsStore.newJob.task.spec.param_file])
 
   const checkParameter = useCallback(
@@ -259,11 +256,11 @@ const JobsPanelParameters = ({
   return (
     <JobsPanelParametersView
       checkParameter={checkParameter}
-      disabledOptions={disabledOptions}
       handleAddNewItem={handleAddNewParameter}
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
       isHyperTypeExist={isHyperTypeExist}
+      parameterTypeOptions={parameterTypeOptions}
       parameters={panelState.tableData.parameters}
       parametersDispatch={parametersDispatch}
       parametersState={parametersState}

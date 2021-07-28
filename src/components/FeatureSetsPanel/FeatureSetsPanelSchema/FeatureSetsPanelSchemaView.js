@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import Input from '../../../common/Input/Input'
@@ -8,9 +7,10 @@ import Input from '../../../common/Input/Input'
 import './featureSetsPanelSchema.scss'
 
 const FeatureSetsPanelSchemaView = ({
-  artifactsStore,
   data,
+  featureStore,
   handleEntitiesOnBlur,
+  isSchemaEntitiesValid,
   setData,
   setNewFeatureSetSchemaTimestampKey
 }) => {
@@ -20,6 +20,7 @@ const FeatureSetsPanelSchemaView = ({
         <div className="schema__inputs">
           <Input
             floatingLabel
+            invalid={!isSchemaEntitiesValid}
             label="Entities"
             onBlur={handleEntitiesOnBlur}
             onChange={entities => {
@@ -29,6 +30,8 @@ const FeatureSetsPanelSchemaView = ({
               }))
             }}
             placeholder="entity1,entity2,entity3"
+            required
+            requiredText="This field is required"
             type="text"
             value={data.entities}
           />
@@ -38,7 +41,7 @@ const FeatureSetsPanelSchemaView = ({
             }
             onBlur={event => {
               if (
-                artifactsStore.newFeatureSet.spec.timestamp_key !==
+                featureStore.newFeatureSet.spec.timestamp_key !==
                 event.target.value
               ) {
                 setNewFeatureSetSchemaTimestampKey(event.target.value)
@@ -55,11 +58,11 @@ const FeatureSetsPanelSchemaView = ({
 
 FeatureSetsPanelSchemaView.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  featureStore: PropTypes.shape({}).isRequired,
   handleEntitiesOnBlur: PropTypes.func.isRequired,
+  isSchemaEntitiesValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
   setNewFeatureSetSchemaTimestampKey: PropTypes.func.isRequired
 }
 
-export default connect(({ artifactsStore }) => ({
-  artifactsStore
-}))(FeatureSetsPanelSchemaView)
+export default FeatureSetsPanelSchemaView

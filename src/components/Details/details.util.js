@@ -44,26 +44,8 @@ import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 import DetailsPods from '../DetailsPods/DetailsPods'
 
-export const generateArtifactsContent = (
-  editDescription,
-  page,
-  pageTab,
-  selectedItem,
-  editChips,
-  addChip,
-  deleteChip
-) => {
-  if (pageTab === FEATURE_SETS_TAB) {
-    return generateFeatureSetsOverviewContent(
-      addChip,
-      deleteChip,
-      editChips,
-      editDescription,
-      selectedItem
-    )
-  } else if (pageTab === FEATURE_VECTORS_TAB) {
-    return generateFeatureVectorsOverviewContent(selectedItem)
-  } else if (pageTab === MODEL_ENDPOINTS_TAB) {
+export const generateArtifactsContent = (page, pageTab, selectedItem) => {
+  if (pageTab === MODEL_ENDPOINTS_TAB) {
     return {
       uid: {
         value: selectedItem?.metadata?.uid ?? '-'
@@ -158,6 +140,27 @@ export const generateArtifactsContent = (
   }
 }
 
+export const generateFeatureStoreContent = (
+  addChip,
+  deleteChip,
+  editChips,
+  editDescription,
+  pageTab,
+  selectedItem
+) => {
+  if (pageTab === FEATURE_SETS_TAB) {
+    return generateFeatureSetsOverviewContent(
+      addChip,
+      deleteChip,
+      editChips,
+      editDescription,
+      selectedItem
+    )
+  } else if (pageTab === FEATURE_VECTORS_TAB) {
+    return generateFeatureVectorsOverviewContent(selectedItem)
+  }
+}
+
 export const generateJobsContent = selectedItem => ({
   uid: {
     value: selectedItem.uid
@@ -165,14 +168,14 @@ export const generateJobsContent = selectedItem => ({
   startTime: {
     value: formatDatetime(
       selectedItem.startTime,
-      selectedItem.state === 'aborted' ? 'N/A' : 'Not yet started'
+      selectedItem.state?.value === 'aborted' ? 'N/A' : 'Not yet started'
     )
   },
   updated: {
     value: formatDatetime(selectedItem.updated, 'N/A')
   },
   state: {
-    value: selectedItem.state
+    value: selectedItem.state?.value
   },
   parameters: {
     value: selectedItem.parameters
@@ -208,7 +211,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.hash
   },
   codeOrigin: {
-    value: selectedItem.codeOrigin
+    value: selectedItem.build.codeOrigin ?? ''
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
@@ -223,11 +226,12 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.description
   },
   state: {
-    value: selectedItem.state
+    value: selectedItem.state?.value
   }
 })
 
 export const renderContent = (
+  applyChangesRef,
   match,
   detailsState,
   selectedItem,
@@ -248,6 +252,7 @@ export const renderContent = (
           content={detailsState.infoContent}
           match={match}
           pageData={pageData}
+          ref={applyChangesRef}
           selectedItem={selectedItem}
           setChangesData={setChangesData}
           setChangesCounter={setChangesCounter}
@@ -287,7 +292,7 @@ export const renderContent = (
         />
       )
     case DETAILS_CODE_TAB:
-      return <DetailsCode code={selectedItem.functionSourceCode} />
+      return <DetailsCode code={selectedItem.build.functionSourceCode} />
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
     case DETAILS_RETURNED_FEATURES_TAB:
@@ -373,20 +378,18 @@ export const generateFeatureSetsOverviewContent = (
     value: selectedItem.usage_example ?? ''
   },
   entities: {
-    value: selectedItem.entities?.map(entity => entity.name)
+    value: selectedItem.entities?.map(entity => entity.name).join(', ')
   },
   target_uri: {
     value: selectedItem.URI
   },
-  partition_keys: {
-    value: selectedItem.partition_keys?.toString() ?? ''
-  },
   timestamp_key: {
     value: selectedItem.timestamp_key ?? ''
   },
-  relations: {
-    value: isEmpty(selectedItem.relations) ? [] : selectedItem.relations
-  },
+  // temporary hidden
+  // relations: {
+  //   value: isEmpty(selectedItem.relations) ? [] : selectedItem.relations
+  // },
   label_column: {
     value: selectedItem.label_column ?? ''
   }
@@ -412,7 +415,7 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
     value: selectedItem.usage_example ?? ''
   },
   label_column: {
-    value: selectedItem.label_column ?? ''
+    value: selectedItem.label_feature ?? ''
   }
 })
 export const handleFinishEdit = (
@@ -434,23 +437,25 @@ export const handleFinishEdit = (
 
   if (
     isEqual(
-      detailsTabState.fieldsData[field]?.previousFieldValue,
-      changes.data[field]
+      changes.data[field]?.initialFieldValue,
+      changes.data[field]?.currentFieldValue
     )
   ) {
-    const fieldsData = { ...detailsTabState.fieldsData }
     const changesData = { ...changes.data }
 
-    delete fieldsData[field]
     delete changesData[field]
 
-    setChangesCounter(fieldsData.length || 0)
-    detailsTabDispatch({
-      type: detailsTabState.SET_FIELDS_DATA,
-      payload: { ...fieldsData }
-    })
+    setChangesCounter(changes.data.length || 0)
     setChangesData({ ...changesData })
   } else {
     setChangesCounter(Object.keys(changes.data).length)
+    setChangesData({
+      ...changes.data,
+      [field]: {
+        initialFieldValue: changes.data[field].initialFieldValue,
+        currentFieldValue: changes.data[field].currentFieldValue,
+        previousFieldValue: changes.data[field].currentFieldValue
+      }
+    })
   }
 }

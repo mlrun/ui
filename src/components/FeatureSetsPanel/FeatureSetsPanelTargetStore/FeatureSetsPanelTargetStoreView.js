@@ -6,10 +6,12 @@ import CheckBox from '../../../common/CheckBox/CheckBox'
 import Select from '../../../common/Select/Select'
 import Input from '../../../common/Input/Input'
 import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
+import Tip from '../../../common/Tip/Tip'
+import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 
 import { ReactComponent as Online } from '../../../images/nosql.svg'
 import { ReactComponent as Offline } from '../../../images/db-icon.svg'
-import { ReactComponent as Other } from '../../../images/other.svg'
+import { ReactComponent as ExternalOffline } from '../../../images/other.svg'
 import {
   checkboxModels,
   otherKindOptions
@@ -18,26 +20,23 @@ import {
 import './featureSetsPanelTargetStore.scss'
 
 const FeatureSetsPanelTargetStoreView = ({
+  externalOfflineKindData,
+  handleExternalOfflineKindPathOnBlur,
+  handleExternalOfflineKindPathOnChange,
   handleKeyBucketingNumberChange,
   handleOfflineKindPathOnBlur,
   handleOnlineKindPathOnBlur,
-  handleOtherKindPathOnBlur,
-  handleOfflineKindPathOnChange,
-  handleOnlineKindPathOnChange,
-  handleOtherKindPathOnChange,
-  handleOtherKindTypeChange,
+  handleExternalOfflineKindTypeChange,
   handlePartitionColsOnBlur,
   handleSelectTargetKind,
   handleTimePartitioningGranularityChange,
-  isOfflineTargetsPathValid,
-  isOnlineTargetsPathValid,
-  isOtherTargetsPathValid,
+  isExternalOfflineTargetsPathValid,
   offlineKindData,
   onlineKindPath,
-  otherKindData,
   selectedTargetKind,
+  setExternalOfflineKindData,
   setOfflineKindData,
-  setOtherKindData,
+  setOnlineKindPath,
   triggerOfflinePartition
 }) => {
   return (
@@ -53,6 +52,10 @@ const FeatureSetsPanelTargetStoreView = ({
               )}
             >
               <Online /> Online
+              <Tip
+                className="checkbox__label-tip"
+                text="Store the feature set in Iguazio NoSQL database"
+              />
             </CheckBox>
           </div>
           {selectedTargetKind.find(
@@ -62,11 +65,10 @@ const FeatureSetsPanelTargetStoreView = ({
               <Input
                 density="normal"
                 floatingLabel
-                onBlur={handleOnlineKindPathOnBlur}
-                onChange={handleOnlineKindPathOnChange}
                 label="Path"
-                required={!isOnlineTargetsPathValid}
-                requiredText="This field is required"
+                onBlur={handleOnlineKindPathOnBlur}
+                onChange={path => setOnlineKindPath(path)}
+                placeholder={checkboxModels.online.data.path}
                 type="text"
                 value={onlineKindPath}
               />
@@ -83,6 +85,10 @@ const FeatureSetsPanelTargetStoreView = ({
               )}
             >
               <Offline /> Offline
+              <Tip
+                className="checkbox__label-tip"
+                text="Store the feature set as a Parquet file in Iguazio object store"
+              />
             </CheckBox>
           </div>
           {selectedTargetKind.find(
@@ -92,11 +98,15 @@ const FeatureSetsPanelTargetStoreView = ({
               <Input
                 density="normal"
                 floatingLabel
-                onBlur={handleOfflineKindPathOnBlur}
-                onChange={handleOfflineKindPathOnChange}
                 label="Path"
-                required={!isOfflineTargetsPathValid}
-                requiredText="This field is required"
+                onBlur={handleOfflineKindPathOnBlur}
+                onChange={path =>
+                  setOfflineKindData(state => ({
+                    ...state,
+                    path
+                  }))
+                }
+                placeholder={checkboxModels.offline.data.path}
                 type="text"
                 value={offlineKindData.path}
                 wrapperClassName="offline-path"
@@ -127,89 +137,102 @@ const FeatureSetsPanelTargetStoreView = ({
         <div className="target-store__item">
           <div className="target-store__checkbox-container">
             <CheckBox
-              item={checkboxModels.other}
+              item={checkboxModels.externalOffline}
               onChange={handleSelectTargetKind}
               selectedId={selectedTargetKind.find(
-                kind => checkboxModels.other.id === kind
+                kind => checkboxModels.externalOffline.id === kind
               )}
             >
-              <Other /> Other
+              <ExternalOffline />
+              <span className="checkbox__label">External offline</span>
+              <Tip
+                className="checkbox__label-tip"
+                text="Store the feature set in a remote object store (e.g. AWS S3 or Azure storage)"
+              />
             </CheckBox>
           </div>
           {selectedTargetKind.find(
-            kind => checkboxModels.other.id === kind
+            kind => checkboxModels.externalOffline.id === kind
           ) && (
             <div className="target-store__inputs-container">
               <Select
                 density="normal"
                 floatingLabel
                 label="File type"
-                onClick={handleOtherKindTypeChange}
+                onClick={handleExternalOfflineKindTypeChange}
                 options={otherKindOptions}
-                selectedId={otherKindData.kind}
+                selectedId={externalOfflineKindData.kind}
               />
               <Input
                 density="normal"
                 floatingLabel
+                invalid={!isExternalOfflineTargetsPathValid}
                 label="URL"
-                onBlur={handleOtherKindPathOnBlur}
-                onChange={handleOtherKindPathOnChange}
+                onBlur={handleExternalOfflineKindPathOnBlur}
+                onChange={handleExternalOfflineKindPathOnChange}
                 placeholder="s3://bucket/path"
-                required={!isOtherTargetsPathValid}
+                required
                 requiredText="This field is required"
                 type="text"
-                value={otherKindData.path}
+                value={externalOfflineKindData.path}
                 wrapperClassName="url"
               />
-              {otherKindData.kind === 'parquet' && (
+              {externalOfflineKindData.kind === 'parquet' && (
                 <CheckBox
                   item={{ id: 'partitioned', label: 'Partition' }}
-                  onChange={id => triggerOfflinePartition(id, 'other')}
-                  selectedId={otherKindData.partitioned}
+                  onChange={id =>
+                    triggerOfflinePartition(id, 'externalOffline')
+                  }
+                  selectedId={externalOfflineKindData.partitioned}
                 />
               )}
-              {otherKindData.partitioned && (
+              {externalOfflineKindData.partitioned && (
                 <PartitionFields
-                  data={otherKindData}
-                  partitionColsOnBlur={() => handlePartitionColsOnBlur('other')}
-                  rangeOnChange={value =>
-                    handleKeyBucketingNumberChange(value, 'other')
+                  data={externalOfflineKindData}
+                  partitionColsOnBlur={() =>
+                    handlePartitionColsOnBlur('externalOffline')
                   }
-                  setData={setOtherKindData}
+                  rangeOnChange={value =>
+                    handleKeyBucketingNumberChange(value, 'externalOffline')
+                  }
+                  setData={setExternalOfflineKindData}
                   timePartitioningGranularityChange={value =>
-                    handleTimePartitioningGranularityChange(value, 'other')
+                    handleTimePartitioningGranularityChange(
+                      value,
+                      'externalOffline'
+                    )
                   }
                 />
               )}
             </div>
           )}
         </div>
+        {!selectedTargetKind.length && (
+          <ErrorMessage message="Must select at least one" />
+        )}
       </FeatureSetsPanelSection>
     </div>
   )
 }
 
 FeatureSetsPanelTargetStoreView.propTypes = {
+  externalOfflineKindData: PropTypes.shape({}).isRequired,
+  handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,
+  handleExternalOfflineKindPathOnChange: PropTypes.func.isRequired,
+  handleExternalOfflineKindTypeChange: PropTypes.func.isRequired,
   handleKeyBucketingNumberChange: PropTypes.func.isRequired,
   handleOfflineKindPathOnBlur: PropTypes.func.isRequired,
   handleOnlineKindPathOnBlur: PropTypes.func.isRequired,
-  handleOtherKindPathOnBlur: PropTypes.func.isRequired,
-  handleOfflineKindPathOnChange: PropTypes.func.isRequired,
-  handleOnlineKindPathOnChange: PropTypes.func.isRequired,
-  handleOtherKindPathOnChange: PropTypes.func.isRequired,
-  handleOtherKindTypeChange: PropTypes.func.isRequired,
   handlePartitionColsOnBlur: PropTypes.func.isRequired,
   handleSelectTargetKind: PropTypes.func.isRequired,
   handleTimePartitioningGranularityChange: PropTypes.func.isRequired,
-  isOfflineTargetsPathValid: PropTypes.bool.isRequired,
-  isOnlineTargetsPathValid: PropTypes.bool.isRequired,
-  isOtherTargetsPathValid: PropTypes.bool.isRequired,
+  isExternalOfflineTargetsPathValid: PropTypes.bool.isRequired,
   offlineKindData: PropTypes.shape({}).isRequired,
   onlineKindPath: PropTypes.string.isRequired,
-  otherKindData: PropTypes.shape({}).isRequired,
   selectedTargetKind: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setExternalOfflineKindData: PropTypes.func.isRequired,
   setOfflineKindData: PropTypes.func.isRequired,
-  setOtherKindData: PropTypes.func.isRequired,
+  setOnlineKindPath: PropTypes.func.isRequired,
   triggerOfflinePartition: PropTypes.func.isRequired
 }
 

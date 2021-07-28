@@ -1,69 +1,77 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import classnames from 'classnames'
 
-import artifactData from '../Artifacts/artifactsData.json'
+import { artifactInfoSourcesHeaders } from './artifactInfoSources.utils'
 
 import './artifactInfoSources.scss'
 
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
+
 const ArtifactInfoSources = ({ header, sources }) => {
-  const [isShow, setIsShow] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  const sourcesClassNames = classnames(
+    'info-sources',
+    isExpanded && 'info-sources_expanded'
+  )
 
   const sourcesLength = Object.values(sources).length
 
   useEffect(() => {
-    if (sourcesLength === 0 && isShow === true) {
-      setIsShow(false)
+    if (sourcesLength === 0) {
+      setIsExpanded(false)
     }
-  }, [sourcesLength, isShow])
+  }, [sourcesLength, isExpanded])
 
   return (
-    <li
-      key={header}
-      className={`${
-        !isShow
-          ? 'table__item_details_item sources'
-          : 'table__item_details_item sources shadow'
-      }`}
-    >
-      <div className="wrapper_sources">
-        <div
-          className="sources_header_container"
-          onClick={() => {
-            if (sourcesLength !== 0) setIsShow(!isShow)
-          }}
-        >
-          {sourcesLength !== 0 && (
-            <Arrow className={isShow ? 'open' : 'close'} />
-          )}
-
-          <div className="sources_header">{header}</div>
-          <div className="sources_value">
-            {`${Object.values(sources).length} ${
-              Object.values(sources).length <= 1 ? 'item' : 'items'
-            }`}
-          </div>
-        </div>
-
-        {isShow && (
-          <div className="source_table">
-            <div className="source_item_header">
-              {artifactData.sources.map(item => (
-                <div key={item} className={`source_item_header_${item}`}>
-                  {item}
-                </div>
-              ))}
-            </div>
-            {Object.entries(sources).map(([key, value], index) => (
-              <div key={`${key}-${index}`} className="source_item">
-                <div className="source_item_header">{key}</div>
-                <div className="source_item_value">{value}</div>
-              </div>
-            ))}
-          </div>
+    <div className={sourcesClassNames}>
+      <div
+        className="info-sources-row"
+        onClick={() => {
+          if (sourcesLength !== 0) setIsExpanded(prevState => !prevState)
+        }}
+      >
+        {sourcesLength !== 0 && (
+          <Arrow className={isExpanded ? 'expanded' : 'collapsed'} />
         )}
+
+        <div className="info-sources-row__header">{header}</div>
+        <div className="info-sources-row__data">
+          {`${Object.values(sources).length} ${
+            Object.values(sources).length <= 1 ? 'item' : 'items'
+          }`}
+        </div>
       </div>
-    </li>
+
+      {isExpanded && (
+        <div className="info-sources-table">
+          <div className="info-sources-table__header">
+            {artifactInfoSourcesHeaders.map(({ label, id, className }) => {
+              const tableItemClassNames = classnames(
+                'info-sources-table__header-item',
+                className
+              )
+
+              return (
+                <div key={id} className={tableItemClassNames}>
+                  {label}
+                </div>
+              )
+            })}
+          </div>
+          {Object.entries(sources).map(([key, value], index) => (
+            <div
+              key={`${key}-${index}`}
+              className="info-sources-table__content"
+            >
+              <div className="info-sources-table__content-key">{key}</div>
+              <div className="info-sources-table__content-value">{value}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 

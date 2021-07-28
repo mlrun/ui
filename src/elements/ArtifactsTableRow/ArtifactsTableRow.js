@@ -10,10 +10,9 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import {
   ACTION_CELL_ID,
   DETAILS_OVERVIEW_TAB,
-  FEATURES_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
-import getArtifactIdentifier from '../../utils/getArtifactIdentifier'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 const ArtifactsTableRow = ({
   actionsMenu,
@@ -32,8 +31,7 @@ const ArtifactsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    match.params.pageTab !== FEATURES_TAB &&
-      getArtifactIdentifier(selectedItem) === rowItem.key.identifier &&
+    getArtifactIdentifier(selectedItem) === rowItem.key.identifier &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -43,23 +41,17 @@ const ArtifactsTableRow = ({
 
   const findCurrentItem = useCallback(
     artifact => {
-      if (match.params.pageTab === FEATURES_TAB) {
-        return content.find(
-          item =>
-            `${item.name}-${item.metadata?.name}` ===
-            `${artifact.key?.value}-${artifact.feature_set?.value}`
-        )
-      } else {
-        const currentContent =
-          pageData.selectedRowData?.[artifact.key.value]?.content || content
+      const currentContent =
+        pageData.selectedRowData?.[artifact.key.value]?.content || content
 
-        return currentContent.find(
+      return (
+        currentContent.find(
           contentItem =>
             getArtifactIdentifier(contentItem) === artifact.key.identifier
-        )
-      }
+        ) ?? {}
+      )
     },
-    [content, match.params.pageTab, pageData.selectedRowData]
+    [content, pageData.selectedRowData]
   )
 
   useEffect(() => {
@@ -104,23 +96,14 @@ const ArtifactsTableRow = ({
             return (
               <div className={subRowClassNames} key={index}>
                 {pageData.selectedRowData &&
-                (pageData.selectedRowData[artifact.key?.value]?.loading ||
-                  pageData.selectedRowData[
-                    `${artifact.key?.value}-${artifact.feature_set?.value}`
-                  ]?.loading) ? (
+                pageData.selectedRowData[artifact.key?.value]?.loading ? (
                   <Loader key={index} />
                 ) : pageData.selectedRowData &&
-                  (pageData.selectedRowData[artifact.key?.value]?.error ||
-                    pageData.selectedRowData[
-                      `${artifact.key.value}-${artifact.feature_set?.value}`
-                    ]?.error) ? (
+                  pageData.selectedRowData[artifact.key?.value]?.error ? (
                   <ErrorMessage
                     message={
                       pageData.selectedRowData[artifact.key?.value]?.error
-                        ?.message ||
-                      pageData.selectedRowData[
-                        `${artifact.key.value}-${artifact.feature_set?.value}`
-                      ]?.error.message
+                        ?.message
                     }
                   />
                 ) : (
@@ -164,7 +147,7 @@ const ArtifactsTableRow = ({
         </div>
       ) : (
         <>
-          {Object.values(rowItem ?? {}).map((value, i) => {
+          {mainRowData.map((value, i) => {
             return (
               currentItem &&
               !value.hidden && (

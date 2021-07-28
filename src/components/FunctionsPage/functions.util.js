@@ -46,6 +46,9 @@ export const infoHeaders = [
   { label: 'Description', id: 'description' },
   { label: 'State', id: 'state' }
 ]
-export const filters = [{ type: 'name', label: 'Name:' }]
+export const filters = [
+  { type: 'name', label: 'Name:' },
+  { type: 'show-untagged', label: 'Show untagged' }
+]
 
 export const TRANSIENT_FUNCTION_STATUSES = ['pending', 'running']

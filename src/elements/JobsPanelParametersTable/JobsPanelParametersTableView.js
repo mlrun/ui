@@ -5,6 +5,8 @@ import classnames from 'classnames'
 import EditableParametersRow from '../EditableParametersRow/EditableParametersRow'
 import JobsPanelTableRow from '../JobsPanelTableRow/JobsPanelTableRow'
 
+import { SELECT_OPTIONS } from '../../types'
+
 import './jobsPanelParametersTable.scss'
 
 const JobsPanelParametersTableView = ({
@@ -13,12 +15,12 @@ const JobsPanelParametersTableView = ({
   children,
   className,
   content,
-  disabledOptions,
   editItem,
   generateActionsMenu,
   handleDeleteParameter,
   handleEditParameter,
   headers,
+  parameterTypeOptions,
   selectedItem,
   setEditItem,
   setSelectedItem,
@@ -57,9 +59,9 @@ const JobsPanelParametersTableView = ({
                 return (
                   <EditableParametersRow
                     content={content}
-                    disabledOptions={disabledOptions}
                     handleEdit={handleEditParameter}
                     key={`${contentItem.data.name}${index}`}
+                    parameterTypeOptions={parameterTypeOptions}
                     selectedParameter={selectedItem}
                     setEditItem={setEditItem}
                     setSelectedParameter={setSelectedItem}
@@ -99,12 +101,12 @@ JobsPanelParametersTableView.propTypes = {
   children: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
   content: PropTypes.array.isRequired,
-  disabledOptions: PropTypes.array,
   editItem: PropTypes.bool.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
+  parameterTypeOptions: SELECT_OPTIONS.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setEditItem: PropTypes.func.isRequired,
   setSelectedItem: PropTypes.func.isRequired,

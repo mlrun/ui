@@ -4,14 +4,6 @@
   position: relative;
 
   .pop-up-dialog__overlay {
-    position: absolute;
-    top: calc(100% + 5px);
-    right: 0;
-    left: unset;
-    width: auto;
-    height: auto;
-    background: unset;
-
     .pop-up-dialog {
       width: 545px;
       border: 1px solid rgba($black, 0.2);

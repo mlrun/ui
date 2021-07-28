@@ -29,3 +29,15 @@ export const generateMemoryValue = (memory = '') =>
   memory.toString().match(/[a-zA-Z]/)
     ? memory.slice(0, memory.toString().match(/[a-zA-Z]/).index)
     : memory
+
+export const getVolumeType = volume => {
+  if (volume.configMap) {
+    return 'Config Map'
+  } else if (volume.persistentVolumeClaim) {
+    return 'PVC'
+  } else if (volume.secret) {
+    return 'Secret'
+  } else {
+    return 'V3IO'
+  }
+}

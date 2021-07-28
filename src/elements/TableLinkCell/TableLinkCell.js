@@ -2,12 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { capitalize } from 'lodash'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { formatDatetime, truncateUid } from '../../utils'
+
+import './tableLinkCell.scss'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -29,16 +30,16 @@ const TableLinkCell = ({
     'item-name',
     link.match(/functions/) && 'function-name'
   )
-  const state = item.state || item.endpoint?.status?.state
+  const { value: stateValue, label: stateLabel } = item.state ?? {}
 
   return (
     <div className={tableCellClassNames}>
-      {state && (
+      {stateValue && stateLabel && (
         <Tooltip
           className="status"
-          template={<TextTooltipTemplate text={capitalize(state)} />}
+          template={<TextTooltipTemplate text={stateLabel} />}
         >
-          <i className={state} />
+          <i className={stateValue} />
         </Tooltip>
       )}
       <Link
@@ -59,26 +60,28 @@ const TableLinkCell = ({
                 className="item-tag"
                 template={<TextTooltipTemplate text={item.tag} />}
               >
-                <span>{item.tag}</span>
+                <span className="link-subtext">{item.tag}</span>
               </Tooltip>
             )}
         </div>
         {(link.match(/jobs/) ||
           (link.match(/functions/) &&
             Object.values(selectedItem).length !== 0)) && (
-          <div className="date__uid_row">
+          <div className="date-uid-row">
             {(item.startTime || item.updated) && (
-              <span>
+              <span className="link-subtext">
                 {data.type !== 'date' &&
                   (link.match(/functions/)
                     ? formatDatetime(item.updated, 'N/A')
                     : formatDatetime(
                         item.startTime,
-                        state === 'aborted' ? 'N/A' : 'Not yet started'
+                        stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                       ))}
               </span>
             )}
-            <span>{truncateUid(item.uid || item.hash)}</span>
+            <span className="link-subtext">
+              {truncateUid(item.uid || item.hash)}
+            </span>
           </div>
         )}
       </Link>

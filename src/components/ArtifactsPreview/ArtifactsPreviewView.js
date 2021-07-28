@@ -60,7 +60,7 @@ const ArtifactsPreviewView = ({
                       >
                         {typeof value === 'object' && value !== null
                           ? JSON.stringify(value)
-                          : value}
+                          : String(value)}
                       </Tooltip>
                     ))
                   ) : (

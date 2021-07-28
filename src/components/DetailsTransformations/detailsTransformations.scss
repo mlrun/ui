@@ -27,6 +27,31 @@
           box-shadow: unset;
         }
 
+        .react-flow__node-label {
+          position: relative;
+
+          &::before {
+            position: absolute;
+            bottom: 25px;
+            left: 30%;
+            z-index: 10;
+            min-width: 30px;
+            padding: 6px 8px;
+            color: $white;
+            font-weight: 400;
+            font-size: 15px;
+            background-color: $primary;
+            border-radius: 4px;
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+            content: attr(data-title);
+          }
+
+          &:hover::before {
+            opacity: 1;
+          }
+        }
+
         &.react-flow__node-input {
           color: $white;
           background-color: $hotPink;
@@ -100,6 +125,7 @@
     flex-direction: column;
     width: 25%;
     min-width: 320px;
+    overflow: hidden;
     background: $white;
     border: $secondaryBorder;
     box-shadow: 0 0 30px rgba($black, 0.15);

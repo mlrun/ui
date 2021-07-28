@@ -18,7 +18,7 @@
     .details-item {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: baseline;
       min-width: 400px;
       max-width: calc(100vw - 300px);
       padding: 18px;
@@ -47,6 +47,10 @@
         min-width: 60px;
         padding-left: 16px;
         word-break: break-word;
+
+        &-edit-placeholder {
+          color: $spunPearl;
+        }
       }
 
       &__uri,
@@ -91,6 +95,10 @@
           padding: 0;
           cursor: pointer;
         }
+      }
+
+      &_hidden {
+        display: none;
       }
     }
   }

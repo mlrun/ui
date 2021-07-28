@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { chain } from 'lodash'
 
 import FunctionsPanelView from './FunctionsPanelView'
 
@@ -11,6 +12,7 @@ const FunctionsPanel = ({
   functionsStore,
   closePanel,
   createFunctionSuccess,
+  defaultData,
   deployFunction,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
@@ -18,11 +20,50 @@ const FunctionsPanel = ({
   match,
   removeFunctionsError,
   createNewFunction,
+  setNewFunction,
   setNewFunctionProject
 }) => {
   const [isNameValid, setNameValid] = useState(true)
   const [isHandlerValid, setHandlerValid] = useState(true)
   const history = useHistory()
+
+  useEffect(() => {
+    if (defaultData) {
+      setNewFunction({
+        kind: defaultData.type,
+        metadata: {
+          labels: defaultData.labels,
+          name: defaultData.name,
+          project: defaultData.project,
+          tag: defaultData.tag
+        },
+        spec: {
+          args: defaultData.args,
+          build: {
+            base_image: defaultData.build?.base_image ?? '',
+            commands: defaultData.build?.commands ?? [],
+            functionSourceCode: defaultData.build?.functionSourceCode ?? '',
+            image: defaultData.build?.image ?? ''
+          },
+          default_handler: defaultData.default_handler,
+          description: defaultData.description,
+          env: defaultData.env,
+          image: defaultData.image,
+          volume_mounts:
+            chain(defaultData.volume_mounts)
+              .flatten()
+              .unionBy('name')
+              .value() ?? [],
+          volumes: defaultData.volumes,
+          resources: {
+            limits: defaultData.resources.limits ?? {},
+            requests: defaultData.resources.requests ?? {}
+          },
+          secret_sources: defaultData.secret_sources
+        }
+      })
+    }
+  }, [defaultData, setNewFunction])
 
   useEffect(() => {
     if (!functionsStore.newFunction.metadata.project) {
@@ -75,6 +116,7 @@ const FunctionsPanel = ({
   return (
     <FunctionsPanelView
       closePanel={closePanel}
+      defaultData={defaultData ?? {}}
       error={functionsStore.error}
       handleSave={handleSave}
       isHandlerValid={isHandlerValid}
@@ -87,9 +129,14 @@ const FunctionsPanel = ({
   )
 }
 
+FunctionsPanel.defaultProps = {
+  defaultData: null
+}
+
 FunctionsPanel.propTypes = {
   closePanel: PropTypes.func.isRequired,
   createFunctionSuccess: PropTypes.func.isRequired,
+  defaultData: PropTypes.shape({}),
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,

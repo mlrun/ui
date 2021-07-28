@@ -1,30 +1,48 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import FunctionsPanelResourcesView from './FunctionsPanelResourcesView'
 
 import { createNewVolume } from '../../utils/createNewVolume'
 import functionsActions from '../../actions/functions'
+import {
+  getDefaultCpuUnit,
+  getDefaultMemoryUnit,
+  getDefaultVolumeMounts
+} from './functionsPanelResources.util'
 
 const FunctionsPanelResources = ({
+  defaultData,
   functionsStore,
   setNewFunctionVolumeMounts,
   setNewFunctionVolumes,
   setNewFunctionResources
 }) => {
   const [data, setData] = useState({
-    volumeMounts: functionsStore.newFunction.spec.volume_mounts,
-    volumes: functionsStore.newFunction.spec.volumes,
-    memoryUnit: 'MiB',
-    cpuUnit: 'cpu',
+    volumeMounts: getDefaultVolumeMounts(
+      defaultData.volume_mounts ?? [],
+      defaultData.volumes ?? []
+    ),
+    volumes: defaultData.volumes ?? [],
+    memoryUnit:
+      getDefaultMemoryUnit(
+        defaultData.resources?.limits ?? {},
+        defaultData.resources?.requests ?? {}
+      ) ?? 'MiB',
+    cpuUnit:
+      getDefaultCpuUnit(
+        defaultData.resources?.limits ?? {},
+        defaultData.resources?.requests ?? {}
+      ) ?? 'cpu',
     limits: {
-      cpu: '',
-      memory: '',
-      'nvidia.com/gpu': ''
+      cpu: defaultData.resources?.limits?.cpu ?? '',
+      memory: defaultData.resources?.limits?.memory ?? '',
+      'nvidia.com/gpu': defaultData.resources?.limits?.['nvidia.com/gpu'] ?? ''
     },
     requests: {
-      cpu: '',
-      memory: ''
+      cpu: defaultData.resources?.requests?.cpu ?? '',
+      memory: defaultData.resources?.requests?.memory ?? ''
     }
   })
 
@@ -264,7 +282,13 @@ const FunctionsPanelResources = ({
   )
 }
 
-FunctionsPanelResources.propTypes = {}
+FunctionsPanelResources.defaultProp = {
+  defaultData: {}
+}
+
+FunctionsPanelResources.propTypes = {
+  defaultData: PropTypes.shape({})
+}
 
 export default connect(functionsStore => ({ ...functionsStore }), {
   ...functionsActions

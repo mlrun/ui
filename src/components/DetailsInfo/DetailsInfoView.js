@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { capitalize } from 'lodash'
+import { capitalize, isNil } from 'lodash'
+import classnames from 'classnames'
 
 import ArtifactInfoSources from '../ArtifactInfoSources/ArtifactInfoSources'
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
@@ -54,6 +55,10 @@ const DetailsInfoView = React.forwardRef(
                 delimiter: null
               }
               let chipsClassName = ''
+              const detailsItemClassNames = classnames(
+                'details-item',
+                header.hidden && 'details-item_hidden'
+              )
               let func = ''
               let state = ''
               let info = null
@@ -78,8 +83,8 @@ const DetailsInfoView = React.forwardRef(
                     ? selectedItem.function
                     : ''
                 state =
-                  content[header.id]?.value === selectedItem.state
-                    ? selectedItem.state
+                  content[header.id]?.value === selectedItem.state?.value
+                    ? selectedItem.state?.value
                     : ''
                 info = content[header.id]?.value
               } else if (
@@ -88,39 +93,28 @@ const DetailsInfoView = React.forwardRef(
                 pageData.page === MODELS_PAGE ||
                 pageData.page === FEATURE_STORE_PAGE
               ) {
-                if (content[header.id]?.value === selectedItem.labels) {
-                  chipsData.chips = changes.data[header.id]
-                    ? changes.data[header.id]
-                    : parseKeyValues(selectedItem.labels)
-                  chipsData.chipOptions = getChipOptions('labels')
-                } else if (content[header.id]?.value === selectedItem.metrics) {
-                  chipsData.chips = parseKeyValues(selectedItem.metrics)
-                  chipsData.chipOptions = getChipOptions('metrics')
-                } else if (
-                  content[header.id]?.value === selectedItem.relations
-                ) {
-                  chipsData.chips = parseKeyValues(selectedItem.relations)
-                  chipsData.chipOptions = getChipOptions('relations')
+                if (header.id === 'labels') {
+                  chipsData.chips = !isNil(changes.data[header.id])
+                    ? changes.data[header.id].currentFieldValue
+                    : parseKeyValues(content[header.id]?.value)
+                  chipsData.chipOptions = getChipOptions(header.id)
+                }
+                if (header.id === 'metrics') {
+                  chipsData.chips = parseKeyValues(content[header.id]?.value)
+                  chipsData.chipOptions = getChipOptions(header.id)
+                } else if (header.id === 'relations') {
+                  chipsData.chips = parseKeyValues(content[header.id]?.value)
+                  chipsData.chipOptions = getChipOptions(header.id)
                   chipsData.delimiter = <RightArrow />
                 }
 
-                info = changes.data[header.id]
-                  ? changes.data[header.id]
+                info = !isNil(changes.data[header.id])
+                  ? changes.data[header.id].currentFieldValue
                   : selectedItem && content[header.id]?.value
                 target_path =
                   content[header.id]?.value === selectedItem.target_path
                     ? selectedItem.target_path
                     : ''
-
-                if (header.id === 'sources') {
-                  return (
-                    <ArtifactInfoSources
-                      sources={sources}
-                      header={header.label}
-                      key={header.id}
-                    />
-                  )
-                }
               } else if (pageData.page === FUNCTIONS_PAGE) {
                 info =
                   header.id === 'kind'
@@ -129,33 +123,45 @@ const DetailsInfoView = React.forwardRef(
               }
 
               return (
-                <li className="details-item" key={header.id}>
-                  <div className="details-item__header">
-                    {header.label}
-                    {header.tip && (
-                      <Tip className="details-item__tip" text={header.tip} />
-                    )}
-                  </div>
-                  <DetailsInfoItem
-                    chipsClassName={chipsClassName}
-                    chipsData={chipsData}
-                    chipOptions={chipsData.chipOptions}
-                    currentField={header.id}
-                    editableFieldType={detailsInfoState.editMode.fieldType}
-                    func={func}
-                    handleFinishEdit={handleFinishEdit}
-                    info={info}
-                    isFieldInEditMode={
-                      detailsInfoState.editMode.field === header.id
-                    }
-                    link={content[header.id]?.link}
-                    match={match}
-                    onClick={handleInfoItemClick}
-                    ref={ref}
-                    state={state}
-                    target_path={target_path}
-                    item={content[header.id]}
-                  />
+                <li className={detailsItemClassNames} key={header.id}>
+                  {header.id === 'sources' ? (
+                    <ArtifactInfoSources
+                      header={header.label}
+                      sources={sources}
+                    />
+                  ) : (
+                    <>
+                      <div className="details-item__header">
+                        {header.label}
+                        {header.tip && (
+                          <Tip
+                            className="details-item__tip"
+                            text={header.tip}
+                          />
+                        )}
+                      </div>
+                      <DetailsInfoItem
+                        chipsClassName={chipsClassName}
+                        chipsData={chipsData}
+                        chipOptions={chipsData.chipOptions}
+                        currentField={header.id}
+                        editableFieldType={detailsInfoState.editMode.fieldType}
+                        func={func}
+                        handleFinishEdit={handleFinishEdit}
+                        info={info}
+                        isFieldInEditMode={
+                          detailsInfoState.editMode.field === header.id
+                        }
+                        link={content[header.id]?.link}
+                        match={match}
+                        onClick={handleInfoItemClick}
+                        ref={ref}
+                        state={state}
+                        target_path={target_path}
+                        item={content[header.id]}
+                      />
+                    </>
+                  )}
                 </li>
               )
             })}

@@ -1,81 +1,35 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
+@import '../../scss/mixins';
 
 .details-statistics {
   padding: 20px;
 
+  @include detailsMetadataStatisticsTable;
+
   &__table {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
-    &-header {
-      position: sticky;
-      top: 0;
-      z-index: 3;
-      display: flex;
-      padding-bottom: 10px;
-      color: $topaz;
-      font-weight: bold;
-      background-color: $white;
-      border-bottom: $secondaryBorder;
-
-      .header-item {
-        text-transform: capitalize;
-      }
-    }
-
-    &__body {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-    }
-
-    &-item {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      min-width: 70px;
-      padding: 0 5px;
-    }
-
-    &-row {
-      display: flex;
-      flex-direction: row;
-      height: 55px;
-      border-bottom: $secondaryBorder;
-    }
-
     .statistics-cell {
-      &_name {
+      &__type {
+        &_icon {
+          flex: 0.1;
+          min-width: 33px;
+        }
+
+        &_text {
+          flex: 1;
+        }
+
+        &_chart {
+          flex: 1.5;
+        }
+      }
+
+      &__name {
         flex: 1.5;
       }
 
-      &_histogram {
-        flex: 1.5;
-      }
-
-      &_icon {
-        flex: 0.1;
-        min-width: 33px;
-      }
-
-      &_type {
-        flex: 0.5;
-      }
-
-      &_validators {
-        flex: 2;
-
-        .body {
-          display: flex;
-          align-items: center;
-        }
-
-        .status {
-          display: inline-block;
-          margin-right: 5px;
-        }
+      &_hidden {
+        display: none;
       }
     }
   }

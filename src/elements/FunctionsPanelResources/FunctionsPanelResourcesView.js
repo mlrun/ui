@@ -53,14 +53,14 @@ const FunctionsPanelResourcesView = ({
         <RangeInput
           density="dense"
           label="Request"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={value => setMemoryValue(value, 'requests')}
           value={generateMemoryValue(data.requests.memory)}
         />
         <RangeInput
           density="dense"
           label="Limit"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={value => setMemoryValue(value, 'limits')}
           value={generateMemoryValue(data.limits.memory)}
         />
@@ -77,14 +77,14 @@ const FunctionsPanelResourcesView = ({
         <RangeInput
           density="dense"
           label="Request"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={value => setCpuValue(value, 'requests')}
           value={generateCpuValue(data.requests.cpu)}
         />
         <RangeInput
           density="dense"
           label="Limit"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={value => setCpuValue(value, 'limits')}
           value={generateCpuValue(data.limits.cpu)}
         />
@@ -93,7 +93,7 @@ const FunctionsPanelResourcesView = ({
         <RangeInput
           density="dense"
           label="Limit"
-          labelAtTop
+          labelType="labelAtTop"
           onChange={setGpuValue}
           value={data.limits['nvidia.com/gpu']}
         />

@@ -1,51 +1,47 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
 
-import artifactsAction from '../../../actions/artifacts'
+import featureStoreActions from '../../../actions/featureStore'
 import {
   checkboxModels,
+  externalOfflineKindDataInitialState,
+  offlineKindDataInitialState,
+  onlineKindDataInitialState,
   OTHER_KIND_DEFAULT_FILE_TYPE
 } from './featureSetsPanelTargetStore.util'
 
 const FeatureSetsPanelTargetStore = ({
-  artifactsStore,
-  isOfflineTargetsPathValid,
-  isOnlineTargetsPathValid,
-  isOtherTargetsPathValid,
-  setNewFeatureSetTarget,
-  setOfflineTargetsPathValid,
-  setOnlineTargetsPathValid,
-  setOtherTargetsPathValid
+  featureStore,
+  isExternalOfflineTargetsPathValid,
+  setExternalOfflineTargetsPathValid,
+  setNewFeatureSetTarget
 }) => {
-  const [selectedTargetKind, setSelectedTargetKind] = useState(['offline'])
-  const [otherKindData, setOtherKindData] = useState({
-    kind: OTHER_KIND_DEFAULT_FILE_TYPE,
-    path: '',
-    partitioned: '',
-    key_bucketing_number: '',
-    partition_cols: '',
-    time_partitioning_granularity: 'hour'
-  })
-  const [offlineKindData, setOfflineKindData] = useState({
-    path: '',
-    partitioned: '',
-    key_bucketing_number: '',
-    partition_cols: '',
-    time_partitioning_granularity: 'hour'
-  })
-  const [onlineKindPath, setOnlineKindPath] = useState('')
+  const [selectedTargetKind, setSelectedTargetKind] = useState([
+    'offline',
+    'online'
+  ])
+  const [externalOfflineKindData, setExternalOfflineKindData] = useState(
+    externalOfflineKindDataInitialState
+  )
+  const [offlineKindData, setOfflineKindData] = useState(
+    offlineKindDataInitialState
+  )
+  const [onlineKindPath, setOnlineKindPath] = useState(
+    onlineKindDataInitialState
+  )
 
   const handleKeyBucketingNumberChange = (key_bucketing_number, kind) => {
-    if (kind === 'other') {
-      setOtherKindData(state => ({ ...state, key_bucketing_number }))
+    if (kind === 'externalOffline') {
+      setExternalOfflineKindData(state => ({ ...state, key_bucketing_number }))
     } else {
       setOfflineKindData(state => ({ ...state, key_bucketing_number }))
     }
 
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
           targetKind.key_bucketing_number = key_bucketing_number
         }
@@ -56,15 +52,13 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleOfflineKindPathOnBlur = () => {
-    const offlineTarget = artifactsStore.newFeatureSet.spec.targets.find(
+    const offlineTarget = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === 'parquet'
     )
 
-    if (offlineKindData.path.length === 0) {
-      setOfflineTargetsPathValid(false)
-    } else if (offlineTarget.path !== offlineKindData.path) {
+    if (offlineTarget.path !== offlineKindData.path) {
       setNewFeatureSetTarget(
-        artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+        featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === 'parquet') {
             targetKind.path = offlineKindData.path
           }
@@ -76,15 +70,13 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleOnlineKindPathOnBlur = () => {
-    const onlineTarget = artifactsStore.newFeatureSet.spec.targets.find(
+    const onlineTarget = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === 'nosql'
     )
 
-    if (onlineKindPath.length === 0) {
-      setOnlineTargetsPathValid(false)
-    } else if (onlineTarget.path !== onlineKindPath) {
+    if (onlineTarget.path !== onlineKindPath) {
       setNewFeatureSetTarget(
-        artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+        featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === 'nosql') {
             targetKind.path = onlineKindPath
           }
@@ -95,17 +87,17 @@ const FeatureSetsPanelTargetStore = ({
     }
   }
 
-  const handleOtherKindPathOnBlur = event => {
-    const otherTarget = artifactsStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === 'other'
+  const handleExternalOfflineKindPathOnBlur = event => {
+    const otherTarget = featureStore.newFeatureSet.spec.targets.find(
+      targetKind => targetKind.name === 'externalOffline'
     )
 
-    if (otherKindData.path.length === 0) {
-      setOtherTargetsPathValid(false)
-    } else if (otherTarget.path !== otherKindData.path) {
+    if (externalOfflineKindData.path.length === 0) {
+      setExternalOfflineTargetsPathValid(false)
+    } else if (otherTarget.path !== externalOfflineKindData.path) {
       setNewFeatureSetTarget(
-        artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
-          if (targetKind.name === 'other') {
+        featureStore.newFeatureSet.spec.targets.map(targetKind => {
+          if (targetKind.name === 'externalOffline') {
             targetKind.path = event.target.value
           }
 
@@ -115,38 +107,19 @@ const FeatureSetsPanelTargetStore = ({
     }
   }
 
-  const handleOfflineKindPathOnChange = path => {
-    if (!isOfflineTargetsPathValid && path.length > 0) {
-      setOfflineTargetsPathValid(true)
+  const handleExternalOfflineKindPathOnChange = path => {
+    if (!isExternalOfflineTargetsPathValid && path.length > 0) {
+      setExternalOfflineTargetsPathValid(true)
     }
 
-    setOfflineKindData(state => ({
+    setExternalOfflineKindData(state => ({
       ...state,
       path
     }))
   }
 
-  const handleOnlineKindPathOnChange = path => {
-    if (!isOnlineTargetsPathValid && path.length > 0) {
-      setOnlineTargetsPathValid(true)
-    }
-
-    setOnlineKindPath(path)
-  }
-
-  const handleOtherKindPathOnChange = path => {
-    if (!isOtherTargetsPathValid && path.length > 0) {
-      setOtherTargetsPathValid(true)
-    }
-
-    setOtherKindData(state => ({
-      ...state,
-      path
-    }))
-  }
-
-  const handleOtherKindTypeChange = kind => {
-    setOtherKindData(state => ({
+  const handleExternalOfflineKindTypeChange = kind => {
+    setExternalOfflineKindData(state => ({
       kind,
       path: state.path,
       partitioned: '',
@@ -155,8 +128,8 @@ const FeatureSetsPanelTargetStore = ({
       time_partitioning_granularity: 'hour'
     }))
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
-        if (targetKind.name === 'other') {
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
+        if (targetKind.name === 'externalOffline') {
           targetKind.kind = kind
 
           if (kind === OTHER_KIND_DEFAULT_FILE_TYPE) {
@@ -173,17 +146,17 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handlePartitionColsOnBlur = kind => {
-    const targetKind = artifactsStore.newFeatureSet.spec.targets.find(
+    const targetKind = featureStore.newFeatureSet.spec.targets.find(
       targetKind => targetKind.name === kind
     )
     const partition_cols =
       kind === 'parquet'
         ? offlineKindData.partition_cols
-        : otherKindData.partition_cols
+        : externalOfflineKindData.partition_cols
 
     if (partition_cols && targetKind.partition_cols !== partition_cols) {
       setNewFeatureSetTarget(
-        artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+        featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === kind) {
             targetKind.partition_cols = partition_cols
               .split(',')
@@ -197,7 +170,7 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleSelectTargetKind = kindId => {
-    let newTargets = [...artifactsStore.newFeatureSet.spec.targets]
+    let newTargets = [...featureStore.newFeatureSet.spec.targets]
 
     if (selectedTargetKind.find(kind => kind === kindId)) {
       newTargets = newTargets.filter(
@@ -205,16 +178,11 @@ const FeatureSetsPanelTargetStore = ({
       )
       setSelectedTargetKind(state => state.filter(kind => kind !== kindId))
 
-      if (kindId === checkboxModels.other.id && !isOtherTargetsPathValid) {
-        setOtherTargetsPathValid(true)
-      }
-
-      if (kindId === checkboxModels.online.id && !isOnlineTargetsPathValid) {
-        setOnlineTargetsPathValid(true)
-      }
-
-      if (kindId === checkboxModels.offline.id && !isOfflineTargetsPathValid) {
-        setOfflineTargetsPathValid(true)
+      if (
+        kindId === checkboxModels.externalOffline.id &&
+        !isExternalOfflineTargetsPathValid
+      ) {
+        setExternalOfflineTargetsPathValid(true)
       }
     } else {
       newTargets.push(checkboxModels[kindId].data)
@@ -228,14 +196,17 @@ const FeatureSetsPanelTargetStore = ({
     time_partitioning_granularity,
     kind
   ) => {
-    if (kind === 'other') {
-      setOtherKindData(state => ({ ...state, time_partitioning_granularity }))
+    if (kind === 'externalOffline') {
+      setExternalOfflineKindData(state => ({
+        ...state,
+        time_partitioning_granularity
+      }))
     } else {
       setOfflineKindData(state => ({ ...state, time_partitioning_granularity }))
     }
 
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
           targetKind.time_partitioning_granularity = time_partitioning_granularity
         }
@@ -246,8 +217,8 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const triggerOfflinePartition = (id, kind) => {
-    if (kind === 'other') {
-      setOtherKindData(state => ({
+    if (kind === 'externalOffline') {
+      setExternalOfflineKindData(state => ({
         ...state,
         partitioned: state.partitioned === id ? '' : id
       }))
@@ -259,14 +230,31 @@ const FeatureSetsPanelTargetStore = ({
     }
 
     setNewFeatureSetTarget(
-      artifactsStore.newFeatureSet.spec.targets.map(targetKind => {
+      featureStore.newFeatureSet.spec.targets.map(targetKind => {
         if (targetKind.name === kind) {
           if (
             (kind === 'parquet' && offlineKindData.partitioned !== id) ||
-            (kind === 'other' && otherKindData.partitioned !== id)
+            (kind === 'externalOffline' &&
+              externalOfflineKindData.partitioned !== id)
           ) {
             targetKind.partitioned = true
           } else {
+            if (kind === 'parquet') {
+              setOfflineKindData(state => ({
+                ...state,
+                key_bucketing_number: '',
+                partition_cols: '',
+                time_partitioning_granularity: 'hour'
+              }))
+            } else if (kind === 'externalOffline') {
+              setExternalOfflineKindData(state => ({
+                ...state,
+                key_bucketing_number: '',
+                partition_cols: '',
+                time_partitioning_granularity: 'hour'
+              }))
+            }
+
             delete targetKind.partitioned
             delete targetKind.key_bucketing_number
             delete targetKind.partition_cols
@@ -281,33 +269,37 @@ const FeatureSetsPanelTargetStore = ({
 
   return (
     <FeatureSetsPanelTargetStoreView
+      externalOfflineKindData={externalOfflineKindData}
+      handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}
+      handleExternalOfflineKindPathOnChange={
+        handleExternalOfflineKindPathOnChange
+      }
+      handleExternalOfflineKindTypeChange={handleExternalOfflineKindTypeChange}
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
       handleOfflineKindPathOnBlur={handleOfflineKindPathOnBlur}
       handleOnlineKindPathOnBlur={handleOnlineKindPathOnBlur}
-      handleOtherKindPathOnBlur={handleOtherKindPathOnBlur}
-      handleOfflineKindPathOnChange={handleOfflineKindPathOnChange}
-      handleOnlineKindPathOnChange={handleOnlineKindPathOnChange}
-      handleOtherKindPathOnChange={handleOtherKindPathOnChange}
-      handleOtherKindTypeChange={handleOtherKindTypeChange}
       handlePartitionColsOnBlur={handlePartitionColsOnBlur}
       handleSelectTargetKind={handleSelectTargetKind}
       handleTimePartitioningGranularityChange={
         handleTimePartitioningGranularityChange
       }
-      isOfflineTargetsPathValid={isOfflineTargetsPathValid}
-      isOnlineTargetsPathValid={isOnlineTargetsPathValid}
-      isOtherTargetsPathValid={isOtherTargetsPathValid}
+      isExternalOfflineTargetsPathValid={isExternalOfflineTargetsPathValid}
       offlineKindData={offlineKindData}
       onlineKindPath={onlineKindPath}
-      otherKindData={otherKindData}
       selectedTargetKind={selectedTargetKind}
+      setExternalOfflineKindData={setExternalOfflineKindData}
       setOfflineKindData={setOfflineKindData}
-      setOtherKindData={setOtherKindData}
+      setOnlineKindPath={setOnlineKindPath}
       triggerOfflinePartition={triggerOfflinePartition}
     />
   )
 }
 
-export default connect(artifactsStore => ({ ...artifactsStore }), {
-  ...artifactsAction
+FeatureSetsPanelTargetStore.propTypes = {
+  isExternalOfflineTargetsPathValid: PropTypes.bool.isRequired,
+  setExternalOfflineTargetsPathValid: PropTypes.func.isRequired
+}
+
+export default connect(featureStore => ({ ...featureStore }), {
+  ...featureStoreActions
 })(React.memo(FeatureSetsPanelTargetStore))

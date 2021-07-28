@@ -4,27 +4,22 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch, connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
-import ArtifactFilterTree from '../../elements/ArtifactsFilterTree/ArtifactsFilterTree'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
+import TagFilter from '../../common/TagFilter/TagFilter'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
-import {
-  FUNCTIONS_PAGE,
-  INIT_TAG_FILTER,
-  JOBS_PAGE,
-  KEY_CODES
-} from '../../constants'
+import { INIT_TAG_FILTER, JOBS_PAGE, KEY_CODES } from '../../constants'
 import artifactsAction from '../../actions/artifacts'
 import filtersActions from '../../actions/filters'
-import { selectOptions, filterTreeOptions } from './filterMenu.settings'
+import { selectOptions, tagFilterOptions } from './filterMenu.settings'
 
 import './filterMenu.scss'
 
@@ -39,13 +34,11 @@ const FilterMenu = ({
   page,
   removeFilters,
   setFilters,
-  showUntagged,
-  toggleShowUntagged,
   withoutExpandButton
 }) => {
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
-  const [treeOptions, setTreeOptions] = useState(filterTreeOptions)
+  const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -54,15 +47,9 @@ const FilterMenu = ({
       removeFilters()
       setLabels('')
       setName('')
-      setTreeOptions(filterTreeOptions)
+      setTagOptions(tagFilterOptions)
     }
-  }, [removeFilters, match.params.pageTab])
-
-  useEffect(() => {
-    if (filters.find(filter => filter.type === 'iterations')) {
-      setFilters({ iter: 'iter' })
-    }
-  }, [filters, setFilters])
+  }, [removeFilters, match.params.pageTab, match.params.projectName, page])
 
   useEffect(() => {
     if (
@@ -78,7 +65,7 @@ const FilterMenu = ({
       dispatch(
         artifactsAction.fetchArtifactTags(match.params.projectName)
       ).then(({ data }) => {
-        setTreeOptions(state => [
+        setTagOptions(state => [
           ...state,
           ...data.tags
             .filter(tag => tag !== INIT_TAG_FILTER)
@@ -159,15 +146,29 @@ const FilterMenu = ({
     })
   }
 
-  const handleIterClick = iteration => {
+  const handleIter = iteration => {
+    const iterValue = filtersStore.iter === iteration ? 'iter' : ''
+
     handleExpandAll(true)
+    setFilters({
+      iter: iterValue
+    })
     applyChanges({
       ...filtersStore,
-      iter: filtersStore.iter === iteration ? 'iter' : ''
+      iter: iterValue
     })
-    setFilters(
-      filtersStore.iter === iteration ? { iter: 'iter' } : { iter: iteration }
-    )
+  }
+
+  const handleShowUntagged = showUntagged => {
+    const showUntaggedValue =
+      filtersStore.showUntagged === showUntagged ? '' : showUntagged
+    setFilters({
+      showUntagged: showUntaggedValue
+    })
+    applyChanges({
+      ...filtersStore,
+      showUntagged: showUntaggedValue
+    })
   }
 
   return (
@@ -178,13 +179,13 @@ const FilterMenu = ({
             case 'tree':
             case 'tag':
               return (
-                <ArtifactFilterTree
-                  filterTreeOptions={treeOptions}
+                <TagFilter
                   key={filter.type}
                   label={filter.label}
                   match={match}
                   onChange={item => handleSelectOption(item, filter)}
                   page={page}
+                  tagFilterOptions={tagOptions}
                   value={filtersStore.tag}
                 />
               )
@@ -232,8 +233,18 @@ const FilterMenu = ({
                 <CheckBox
                   key={filter.type}
                   item={{ label: filter.label, id: '' }}
-                  onChange={handleIterClick}
+                  onChange={handleIter}
                   selectedId={filtersStore.iter}
+                />
+              )
+            case 'show-untagged':
+              return (
+                <CheckBox
+                  key={filter.type}
+                  className="filters-checkbox"
+                  item={{ label: filter.label, id: 'showUntagged' }}
+                  onChange={handleShowUntagged}
+                  selectedId={filtersStore.showUntagged}
                 />
               )
             default:
@@ -253,17 +264,6 @@ const FilterMenu = ({
               )
           }
         })}
-        {page === FUNCTIONS_PAGE && (
-          <CheckBox
-            className="filters-checkbox"
-            item={{
-              label: 'Show untagged',
-              id: 'showUntagged'
-            }}
-            onChange={toggleShowUntagged}
-            selectedId={showUntagged}
-          />
-        )}
       </div>
       {actionButton &&
         !actionButton.hidden &&
@@ -302,16 +302,12 @@ const FilterMenu = ({
 
 FilterMenu.defaultProps = {
   actionButton: null,
-  showUntagged: '',
-  toggleShowUntagged: null,
   withoutExpandButton: false
 }
 
 FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  showUntagged: PropTypes.string,
-  toggleShowUntagged: PropTypes.func,
   withoutExpandButton: PropTypes.bool
 }
 

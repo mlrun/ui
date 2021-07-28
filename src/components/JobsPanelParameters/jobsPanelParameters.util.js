@@ -63,11 +63,14 @@ export const generateTableData = parameters => {
   return content
 }
 
-export const selectOptions = {
-  parameterType: [
+export const getParameterTypeOptions = paramFile => {
+  return [
     { label: 'Simple', id: 'Simple' },
-    { label: 'Hyper', id: 'Hyper' }
-  ],
+    { label: 'Hyper', id: 'Hyper', disabled: Boolean(paramFile) }
+  ]
+}
+
+export const selectOptions = {
   parametersValueType: [
     {
       label: 'str',

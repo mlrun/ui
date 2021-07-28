@@ -17,6 +17,7 @@ import detailsActions from '../../actions/details'
 
 import { generatePageData } from './jobsData'
 import { generateKeyValues, parseKeyValues } from '../../utils'
+import getState from '../../utils/getState.js'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 
 import {
@@ -250,7 +251,7 @@ const Jobs = ({
               lastRunUri: job.last_run_uri,
               scheduled_object: job.scheduled_object,
               start_time: new Date(job.last_run?.status.start_time),
-              state: job.last_run?.status.state,
+              state: getState(job.last_run?.status.state),
               type: job.kind === 'pipeline' ? 'workflow' : job.kind,
               project: job.project
             }
@@ -261,7 +262,7 @@ const Jobs = ({
               iterationStats: job.status.iterations || [],
               iterations: [],
               startTime: new Date(job.status.start_time),
-              state: job.status.state,
+              state: getState(job.status.state),
               name: job.metadata.name,
               labels: parseKeyValues(job.metadata.labels || {}),
               logLevel: job.spec.log_level,
@@ -338,7 +339,7 @@ const Jobs = ({
       let item = jobs.find(item => item.uid === match.params.jobId)
 
       if (!item) {
-        return history.push(
+        return history.replace(
           `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
         )
       }

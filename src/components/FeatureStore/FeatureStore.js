@@ -9,6 +9,7 @@ import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import AddToFeatureVectorPopUp from '../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
 
 import artifactsAction from '../../actions/artifacts'
+import featureStoreActions from '../../actions/featureStore'
 import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
 import {
@@ -40,6 +41,7 @@ import './featureStore.scss'
 
 const FeatureStore = ({
   artifactsStore,
+  featureStore,
   fetchDataSet,
   fetchDataSets,
   fetchFeature,
@@ -50,11 +52,12 @@ const FeatureStore = ({
   filtersStore,
   history,
   match,
-  removeArtifactsError,
   removeDataSet,
   removeDataSets,
   removeFeature,
+  removeFeatures,
   removeFeatureSets,
+  removeFeatureStoreError,
   removeFeatureVector,
   removeFeatureVectors,
   removeNewFeatureSet,
@@ -119,41 +122,72 @@ const FeatureStore = ({
 
   const handleRemoveFeatureVector = useCallback(
     featureVector => {
-      const newSelectedRowData = {
-        ...artifactsStore.featureVectors.selectedRowData
+      const newStoreSelectedRowData = {
+        ...featureStore.featureVectors.selectedRowData.content
       }
+      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
 
-      delete newSelectedRowData[featureVector.name]
+      delete newStoreSelectedRowData[featureVector.key.value]
+      delete newPageDataSelectedRowData[featureVector.key.value]
 
-      removeFeatureVector(newSelectedRowData)
+      removeFeatureVector(newStoreSelectedRowData)
+      setPageData(state => ({
+        ...state,
+        selectedRowData: newPageDataSelectedRowData
+      }))
     },
-    [artifactsStore.featureVectors.selectedRowData, removeFeatureVector]
+    [
+      featureStore.featureVectors.selectedRowData.content,
+      pageData.selectedRowData,
+      removeFeatureVector
+    ]
   )
 
   const handleRemoveFeature = useCallback(
     feature => {
-      const newSelectedRowData = {
-        ...artifactsStore.features.selectedRowData
+      const key = `${feature.key.value}-${feature.feature_set.value}`
+      const newStoreSelectedRowData = {
+        ...featureStore.features.selectedRowData.content
       }
+      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
 
-      delete newSelectedRowData[`${feature.name}-${feature.metadata.name}`]
+      delete newStoreSelectedRowData[key]
+      delete newPageDataSelectedRowData[key]
 
-      removeFeature(newSelectedRowData)
+      removeFeature(newStoreSelectedRowData)
+      setPageData(state => ({
+        ...state,
+        selectedRowData: newPageDataSelectedRowData
+      }))
     },
-    [artifactsStore.features.selectedRowData, removeFeature]
+    [
+      featureStore.features.selectedRowData.content,
+      pageData.selectedRowData,
+      removeFeature
+    ]
   )
 
   const handleRemoveDataSet = useCallback(
     dataSet => {
-      const newSelectedRowData = {
-        ...artifactsStore.dataSets.selectedRowData
+      const newStoreSelectedRowData = {
+        ...artifactsStore.dataSets.selectedRowData.content
       }
+      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
 
-      delete newSelectedRowData[dataSet.db_key]
+      delete newStoreSelectedRowData[dataSet.key.value]
+      delete newPageDataSelectedRowData[dataSet.key.value]
 
-      removeDataSet(newSelectedRowData)
+      removeDataSet(newStoreSelectedRowData)
+      setPageData(state => ({
+        ...state,
+        selectedRowData: newPageDataSelectedRowData
+      }))
     },
-    [artifactsStore.dataSets.selectedRowData, removeDataSet]
+    [
+      artifactsStore.dataSets.selectedRowData.content,
+      pageData.selectedRowData,
+      removeDataSet
+    ]
   )
 
   const handleRequestOnExpand = useCallback(
@@ -216,6 +250,7 @@ const FeatureStore = ({
         selectedRowData: []
       })
       removeDataSets()
+      removeFeatures()
       removeFeatureSets()
       removeFeatureVectors()
       setSelectedItem({})
@@ -226,7 +261,8 @@ const FeatureStore = ({
     match.params.pageTab,
     removeDataSets,
     removeFeatureSets,
-    removeFeatureVectors
+    removeFeatureVectors,
+    removeFeatures
   ])
 
   useEffect(() => {
@@ -269,19 +305,19 @@ const FeatureStore = ({
 
   useEffect(() => {
     navigateToDetailsPane(
-      artifactsStore.featureSets,
-      artifactsStore.features.allData,
+      featureStore.featureSets,
+      featureStore.features.allData,
       artifactsStore.dataSets,
-      artifactsStore.featureVectors,
+      featureStore.featureVectors,
       history,
       match,
       setSelectedItem
     )
   }, [
     artifactsStore.dataSets,
-    artifactsStore.featureSets,
-    artifactsStore.featureVectors,
-    artifactsStore.features.allData,
+    featureStore.featureSets,
+    featureStore.featureVectors,
+    featureStore.features.allData,
     history,
     match
   ])
@@ -378,14 +414,14 @@ const FeatureStore = ({
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
 
-    if (artifactsStore.error) {
-      removeArtifactsError()
+    if (featureStore.error) {
+      removeFeatureStoreError()
     }
   }
 
   return (
     <div ref={featureStoreRef} className="feature-store-container">
-      {artifactsStore.loading && <Loader />}
+      {(featureStore.loading || artifactsStore.loading) && <Loader />}
       <Content
         applyDetailsChanges={applyDetailsChanges}
         cancelRequest={message => {
@@ -395,7 +431,11 @@ const FeatureStore = ({
         content={content}
         expandRow={handleExpandRow}
         handleCancel={() => setSelectedItem({})}
-        loading={artifactsStore.loading}
+        loading={
+          match.params.pageTab === DATASETS_TAB
+            ? artifactsStore.loading
+            : featureStore.loading
+        }
         match={match}
         openPopupDialog={openPopupDialog}
         pageData={pageData}
@@ -428,13 +468,15 @@ FeatureStore.propTypes = {
 }
 
 export default connect(
-  ({ artifactsStore, tableStore, filtersStore }) => ({
+  ({ artifactsStore, tableStore, filtersStore, featureStore }) => ({
     artifactsStore,
     tableStore,
-    filtersStore
+    filtersStore,
+    featureStore
   }),
   {
     ...artifactsAction,
+    ...featureStoreActions,
     ...notificationActions,
     ...filtersActions
   }

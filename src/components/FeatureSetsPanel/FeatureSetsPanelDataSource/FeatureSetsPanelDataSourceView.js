@@ -46,10 +46,12 @@ const FeatureSetsPanelDataSourceView = ({
           <Input
             className="data-source__inputs-item"
             floatingLabel
+            invalid={!isUrlValid}
+            invalidText="URL is invalid"
             label="URL"
             onBlur={handleUrlOnBlur}
             onChange={handleUrlOnChange}
-            required={!isUrlValid}
+            required
             requiredText="URL is required"
             tip="For Parquet files the path could be either a file or a folder. For CSV it must be a file."
             type="text"
@@ -84,8 +86,8 @@ const FeatureSetsPanelDataSourceView = ({
           </div>
         )}
         <p>
-          Users can add attributes to be used for various operations on the
-          source data.
+          Users can add the following parameters to filter the data. using start
+          time and end time filter the selected time "between" those two fields.
         </p>
         <KeyValueTable
           addNewItem={handleAddNewItem}

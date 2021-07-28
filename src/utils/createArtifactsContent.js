@@ -1,15 +1,9 @@
 import React from 'react'
 
-import AddFeatureButton from '../elements/AddFeatureButton/AddFeatureButton'
-import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
-
 import {
   ARTIFACTS_PAGE,
   DATASETS_TAB,
-  FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
-  FEATURE_VECTORS_TAB,
-  FEATURES_TAB,
   FILES_PAGE,
   MODELS_PAGE,
   MODEL_ENDPOINTS_TAB,
@@ -22,59 +16,30 @@ import { copyToClipboard } from './copyToClipboard'
 import { generateUri } from './resources'
 import { generateLinkPath, parseUri, truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
-import getArtifactIdentifier from './getArtifactIdentifier'
+import { getArtifactIdentifier } from './getUniqueIdentifier'
 
 import { ReactComponent as SeverityOk } from '../images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from '../images/severity-warning.svg'
 import { ReactComponent as SeverityError } from '../images/severity-error.svg'
-import { ReactComponent as Nosql } from '../images/nosql.svg'
-import { ReactComponent as Stream } from '../images/stream.svg'
-import { ReactComponent as TsdbIcon } from '../images/tsdb-icon.svg'
-import { ReactComponent as DbIcon } from '../images/db-icon.svg'
 
-const createArtifactsContent = (
-  artifacts,
-  page,
-  pageTab,
-  project,
-  isTablePanelOpen
-) => {
-  let filteredArtifacts = artifacts
-
-  if (
-    filteredArtifacts.length > 1 &&
-    ([MODELS_TAB, DATASETS_TAB].includes(pageTab) || page === FILES_PAGE)
-  ) {
-    filteredArtifacts = artifacts.filter(artifact => !artifact.link_iteration)
-  }
-
-  return filteredArtifacts.map(artifact => {
-    let rowData = []
-
-    if (page === ARTIFACTS_PAGE) {
-      rowData = createArtifactsRowData(artifact)
-    } else if (page === MODELS_PAGE) {
-      if (pageTab === MODELS_TAB) {
-        rowData = createModelsRowData(artifact, project)
-      } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-        rowData = createModelEndpointsRowData(artifact, project)
+export const createArtifactsContent = (artifacts, page, pageTab, project) => {
+  return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(
+    artifact => {
+      if (page === ARTIFACTS_PAGE) {
+        return createArtifactsRowData(artifact)
+      } else if (page === MODELS_PAGE) {
+        if (pageTab === MODELS_TAB) {
+          return createModelsRowData(artifact, project)
+        } else if (pageTab === MODEL_ENDPOINTS_TAB) {
+          return createModelEndpointsRowData(artifact, project)
+        }
+      } else if (page === FILES_PAGE) {
+        return createFilesRowData(artifact, project)
       }
-    } else if (page === FILES_PAGE) {
-      rowData = createFilesRowData(artifact, project)
-    } else if (page === FEATURE_STORE_PAGE) {
-      if (pageTab === DATASETS_TAB) {
-        rowData = createDatasetsRowData(artifact, project)
-      } else if (pageTab === FEATURE_SETS_TAB) {
-        rowData = createFeatureSetsRowData(artifact, project)
-      } else if (pageTab === FEATURES_TAB) {
-        rowData = createFeaturesRowData(artifact, isTablePanelOpen)
-      } else if (pageTab === FEATURE_VECTORS_TAB) {
-        rowData = createFeatureVectorsRowData(artifact, project)
-      }
+
+      return createDatasetsRowData(artifact, project)
     }
-
-    return rowData
-  })
+  )
 }
 
 const createArtifactsRowData = artifact => {
@@ -469,209 +434,5 @@ const createDatasetsRowData = (artifact, project) => {
     }
   }
 }
-
-const createFeatureSetsRowData = (artifact, project) => {
-  return {
-    key: {
-      identifier: getArtifactIdentifier(artifact),
-      value: artifact.name,
-      class: 'artifacts_medium',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          project,
-          FEATURE_STORE_PAGE,
-          FEATURE_SETS_TAB,
-          artifact.name,
-          artifact.tag,
-          tab,
-          artifact.uid
-        ),
-      expandedCellContent: {
-        class: 'artifacts_medium',
-        value: artifact.tag || truncateUid(artifact.uid),
-        tooltip: artifact.tag || artifact.uid
-      }
-    },
-    description: {
-      value: artifact.description,
-      class: 'artifacts_medium'
-    },
-    labels: {
-      value: parseKeyValues(artifact.labels),
-      class: 'artifacts_big',
-      type: 'labels'
-    },
-    version: {
-      value: artifact.tag,
-      class: 'artifacts_small',
-      type: 'hidden'
-    },
-    entity: {
-      value: artifact.entities ? artifact.entities[0]?.name : '',
-      class: 'artifacts_small'
-    },
-    targets: getFeatureSetTargetCellValue(artifact.targets),
-    buttonCopy: {
-      value: '',
-      class: 'artifacts_extra-small artifacts__icon',
-      type: 'buttonCopyURI',
-      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
-    }
-  }
-}
-
-const createFeaturesRowData = (artifact, isTablePanelOpen) => {
-  return {
-    key: {
-      identifier: getArtifactIdentifier(artifact),
-      value: artifact.name,
-      class: 'artifacts_medium',
-      expandedCellContent: {
-        class: 'artifacts_medium',
-        value: artifact.metadata?.tag
-      }
-    },
-    feature_set: {
-      value: artifact.metadata?.name,
-      class: 'artifacts_small',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          artifact.metadata?.project,
-          FEATURE_STORE_PAGE,
-          FEATURE_SETS_TAB,
-          artifact.metadata?.name,
-          artifact.metadata?.tag,
-          tab
-        ),
-      expandedCellContent: {
-        class: 'artifacts_small',
-        value: ''
-      },
-      rowExpanded: {
-        getLink: tab =>
-          generateLinkToDetailsPanel(
-            artifact.metadata?.project,
-            FEATURE_STORE_PAGE,
-            FEATURE_SETS_TAB,
-            artifact.metadata?.name,
-            artifact.metadata?.tag,
-            tab
-          )
-      }
-    },
-    type: {
-      value: artifact.value_type,
-      class: 'artifacts_extra-small'
-    },
-    entity: {
-      value: artifact.spec?.entities?.[0]?.name,
-      class: 'artifacts_small'
-    },
-    description: {
-      value: artifact.description,
-      class: 'artifacts_medium'
-    },
-    labels: {
-      value: parseKeyValues(artifact.labels),
-      class: 'artifacts_big',
-      type: 'labels'
-    },
-    validator: {
-      value: <FeatureValidator validator={artifact.validator} />,
-      class: 'artifacts_medium',
-      type: 'component',
-      hidden: true
-    },
-    addFeature: {
-      value: <AddFeatureButton feature={artifact} />,
-      class: 'artifacts_extra-small align-right',
-      type: 'component',
-      hidden: !isTablePanelOpen
-    }
-  }
-}
-
-const kindToIcon = {
-  nosql: {
-    icon: <Nosql />,
-    tooltip: 'NoSql'
-  },
-  stream: {
-    icon: <Stream />,
-    tooltip: 'Stream'
-  },
-  tsdb: {
-    icon: <TsdbIcon />,
-    tooltip: 'TSDB'
-  }
-}
-
-const getFeatureSetTargetCellValue = targets => ({
-  value: (targets ?? [])
-    .map(
-      target =>
-        kindToIcon[target.kind] ?? {
-          icon: <DbIcon />,
-          tooltip: target.kind
-        }
-    )
-    .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
-  class: 'artifacts_small artifacts__targets-icon',
-  type: 'icons'
-})
-
-const createFeatureVectorsRowData = (artifact, project) => ({
-  key: {
-    identifier: getArtifactIdentifier(artifact),
-    value: artifact.name,
-    class: 'artifacts_medium',
-    getLink: tab =>
-      generateLinkToDetailsPanel(
-        project,
-        FEATURE_STORE_PAGE,
-        FEATURE_VECTORS_TAB,
-        artifact.name,
-        artifact.tag,
-        tab,
-        artifact.uid
-      ),
-    expandedCellContent: {
-      class: 'artifacts_medium',
-      value: artifact.tag || truncateUid(artifact.uid),
-      tooltip: artifact.tag || artifact.uid
-    }
-  },
-  description: {
-    value: artifact.description,
-    class: 'artifacts_medium'
-  },
-  labels: {
-    value: parseKeyValues(artifact.labels),
-    class: 'artifacts_big',
-    type: 'labels'
-  },
-  version: {
-    value: artifact.tag,
-    class: 'artifacts_small',
-    type: 'hidden'
-  },
-  updated: {
-    value: artifact.updated
-      ? formatDatetime(new Date(artifact.updated), 'N/A')
-      : 'N/A',
-    class: 'artifacts_small'
-  },
-  buttonCopy: {
-    value: '',
-    class: 'artifacts_extra-small artifacts__icon',
-    type: 'buttonCopyURI',
-    actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
-  },
-  uid: {
-    value: artifact.uid,
-    class: 'artifacts_small',
-    type: 'hidden'
-  }
-})
 
 export default createArtifactsContent

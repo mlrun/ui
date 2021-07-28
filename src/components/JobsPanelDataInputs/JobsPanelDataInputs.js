@@ -20,6 +20,7 @@ import {
   handleInputPathTypeChange
 } from './jobsPanelDataInputs.util'
 import artifactsAction from '../../actions/artifacts'
+import featureStoreActions from '../../actions/featureStore'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import {
@@ -377,6 +378,7 @@ JobsPanelDataInputs.propTypes = {
   setNewJobInputs: PropTypes.func.isRequired
 }
 
-export default connect(projectStore => projectStore, { ...artifactsAction })(
-  JobsPanelDataInputs
-)
+export default connect(projectStore => projectStore, {
+  ...artifactsAction,
+  ...featureStoreActions
+})(JobsPanelDataInputs)

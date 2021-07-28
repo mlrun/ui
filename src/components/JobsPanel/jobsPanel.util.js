@@ -2,6 +2,7 @@ import { chain, isEmpty, unionBy } from 'lodash'
 import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { getVolumeType } from '../../utils/panelResources.util'
 
 export const getDefaultData = functionParameters => {
   const parameters = functionParameters
@@ -539,16 +540,4 @@ export const parseDefaultNodeSelectorContent = nodeSelector => {
 
 export const isNameNotUnique = (newName, content) => {
   return content.some(item => newName === item?.data.name && newName !== '')
-}
-
-const getVolumeType = volume => {
-  if (volume.configMap) {
-    return 'Config Map'
-  } else if (volume.persistentVolumeClaim) {
-    return 'PVC'
-  } else if (volume.secret) {
-    return 'Secret'
-  } else {
-    return 'V3IO'
-  }
 }

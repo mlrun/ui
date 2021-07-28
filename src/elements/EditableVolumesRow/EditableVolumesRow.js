@@ -25,6 +25,11 @@ const EditableVolumesRow = ({
           <div className="table__cell table__cell-input">
             <Input
               floatingLabel
+              invalid={
+                selectedVolume.newName !== selectedVolume.data.name &&
+                isNameNotUnique(selectedVolume.newName, content)
+              }
+              invalidText="Name already exists"
               label="Name"
               onChange={name =>
                 setSelectedVolume({
@@ -32,11 +37,6 @@ const EditableVolumesRow = ({
                   newName: name
                 })
               }
-              required={
-                selectedVolume.newName !== selectedVolume.data.name &&
-                isNameNotUnique(selectedVolume.newName, content)
-              }
-              requiredText="Name already exists"
               type="text"
               value={selectedVolume.newName ?? selectedVolume.data.name}
             />

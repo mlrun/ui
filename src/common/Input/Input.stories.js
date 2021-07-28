@@ -40,3 +40,39 @@ Chunky.args = {
   density: 'chunky',
   label: 'Chunky'
 }
+
+export const DenseMandatory = Template.bind({})
+DenseMandatory.args = {
+  ...commonArgs,
+  density: 'dense',
+  label: 'Field is required',
+  required: true,
+  requiredText: 'Field is required'
+}
+
+export const NormalMandatory = Template.bind({})
+NormalMandatory.args = {
+  ...commonArgs,
+  density: 'normal',
+  label: 'Field is required',
+  required: true,
+  requiredText: 'Field is required'
+}
+
+export const MediumMandatory = Template.bind({})
+MediumMandatory.args = {
+  ...commonArgs,
+  density: 'medium',
+  label: 'Field is required',
+  required: true,
+  requiredText: 'Field is required'
+}
+
+export const ChunkyMandatory = Template.bind({})
+ChunkyMandatory.args = {
+  ...commonArgs,
+  density: 'chunky',
+  label: 'Field is required',
+  required: true,
+  requiredText: 'Field is required'
+}

@@ -131,6 +131,11 @@ const EditableDataInputsRow = ({
           <Input
             className={inputNameClassNames}
             density="dense"
+            invalid={
+              inputName !== selectedDataInput.data.name &&
+              isNameNotUnique(inputName, content)
+            }
+            invalidText="Name already exists"
             onChange={name => {
               setInputName(name)
               setSelectedDataInput({
@@ -141,11 +146,6 @@ const EditableDataInputsRow = ({
                 }
               })
             }}
-            required={
-              inputName !== selectedDataInput.data.name &&
-              isNameNotUnique(inputName, content)
-            }
-            requiredText="Name already exists"
             type="text"
             value={inputName}
           />

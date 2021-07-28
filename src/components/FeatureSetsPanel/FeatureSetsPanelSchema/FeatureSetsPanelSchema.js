@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import FeatureSetsPanelSchemaView from './FeatureSetsPanelSchemaView'
 
-import artifactsAction from '../../../actions/artifacts'
+import featureStoreActions from '../../../actions/featureStore'
 
 const FeatureSetsPanelSchema = ({
-  artifactsStore,
+  featureStore,
+  isSchemaEntitiesValid,
   setNewFeatureSetDataSourceEntities,
   setNewFeatureSetSchemaTimestampKey
 }) => {
@@ -23,12 +25,12 @@ const FeatureSetsPanelSchema = ({
     if (
       data.entities.length > 0 &&
       JSON.stringify(entitiesArray) !==
-        JSON.stringify(artifactsStore.newFeatureSet.spec.entities)
+        JSON.stringify(featureStore.newFeatureSet.spec.entities)
     ) {
       setNewFeatureSetDataSourceEntities(entitiesArray)
     } else if (
       data.entities.length === 0 &&
-      artifactsStore.newFeatureSet.spec.entities.length > 0
+      featureStore.newFeatureSet.spec.entities.length > 0
     ) {
       setNewFeatureSetDataSourceEntities([])
     }
@@ -37,13 +39,19 @@ const FeatureSetsPanelSchema = ({
   return (
     <FeatureSetsPanelSchemaView
       data={data}
+      featureStore={featureStore}
       handleEntitiesOnBlur={handleEntitiesOnBlur}
+      isSchemaEntitiesValid={isSchemaEntitiesValid}
       setData={setData}
       setNewFeatureSetSchemaTimestampKey={setNewFeatureSetSchemaTimestampKey}
     />
   )
 }
 
-export default connect(artifactsStore => ({ ...artifactsStore }), {
-  ...artifactsAction
+FeatureSetsPanelSchema.propTypes = {
+  isSchemaEntitiesValid: PropTypes.bool.isRequired
+}
+
+export default connect(featureStore => ({ ...featureStore }), {
+  ...featureStoreActions
 })(FeatureSetsPanelSchema)

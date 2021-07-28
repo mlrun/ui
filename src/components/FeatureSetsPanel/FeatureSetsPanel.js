@@ -5,33 +5,35 @@ import { useHistory } from 'react-router-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
-import artifactsAction from '../../actions/artifacts'
+import featureStoreActions from '../../actions/featureStore'
 
 const FeatureSetsPanel = ({
-  artifactsStore,
   closePanel,
-  createNewFeatureSet,
   createFeatureSetSuccess,
+  createNewFeatureSet,
+  featureStore,
   project,
-  removeArtifactsError,
+  removeFeatureStoreError,
   startFeatureSetIngest
 }) => {
   const [isNameValid, setNameValid] = useState(true)
   const [isUrlValid, setUrlValid] = useState(true)
-  const [isOnlineTargetsPathValid, setOnlineTargetsPathValid] = useState(true)
-  const [isOfflineTargetsPathValid, setOfflineTargetsPathValid] = useState(true)
-  const [isOtherTargetsPathValid, setOtherTargetsPathValid] = useState(true)
+  const [
+    isExternalOfflineTargetsPathValid,
+    setExternalOfflineTargetsPathValid
+  ] = useState(true)
+  const [isSchemaEntitiesValid, setIsSchemaEntitiesValid] = useState(true)
   const [confirmDialog, setConfirmDialog] = useState(null)
   const history = useHistory()
 
   const handleSave = () => {
-    if (artifactsStore.error) {
-      removeArtifactsError()
+    if (featureStore.error) {
+      removeFeatureStoreError()
     }
 
     createNewFeatureSet(project, {
       kind: 'FeatureSet',
-      ...artifactsStore.newFeatureSet
+      ...featureStore.newFeatureSet
     })
       .then(result => {
         if (confirmDialog.action === 'save and ingest') {
@@ -51,43 +53,32 @@ const FeatureSetsPanel = ({
   }
 
   const handleSaveOnClick = startIngestion => {
-    const onlineTarget = artifactsStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === 'nosql'
-    )
-    const offlineTarget = artifactsStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === 'parquet'
-    )
-    const otherTarget = artifactsStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === 'other'
+    const externalOfflineTarget = featureStore.newFeatureSet.spec.targets.find(
+      targetKind => targetKind.name === 'externalOffline'
     )
 
-    if (artifactsStore.newFeatureSet.metadata.name.length === 0) {
+    if (featureStore.newFeatureSet.metadata.name.length === 0) {
       return setNameValid(false)
     }
 
-    if (artifactsStore.newFeatureSet.spec.source.path.length === 0) {
+    if (featureStore.newFeatureSet.spec.source.path.length === 0) {
       return setUrlValid(false)
     }
 
-    if (
-      onlineTarget &&
-      (!onlineTarget.path || onlineTarget.path.length === 0)
-    ) {
-      return setOnlineTargetsPathValid(false)
+    if (featureStore.newFeatureSet.spec.entities.length === 0) {
+      return setIsSchemaEntitiesValid(false)
     }
 
     if (
-      offlineTarget &&
-      (!offlineTarget.path || offlineTarget.path.length === 0)
+      externalOfflineTarget &&
+      (!externalOfflineTarget.path || externalOfflineTarget.path.length === 0)
     ) {
-      return setOfflineTargetsPathValid(false)
+      return setExternalOfflineTargetsPathValid(false)
     }
 
-    if (otherTarget && (!otherTarget.path || otherTarget.path.length === 0)) {
-      return setOtherTargetsPathValid(false)
-    }
-
-    setConfirmDialog({ action: startIngestion ? 'save and ingest' : 'save' })
+    setConfirmDialog({
+      action: startIngestion ? 'save and ingest' : 'save'
+    })
   }
 
   const handleStartFeatureSetIngest = result => {
@@ -113,21 +104,18 @@ const FeatureSetsPanel = ({
     <FeatureSetsPanelView
       closePanel={closePanel}
       confirmDialog={confirmDialog}
-      error={artifactsStore.error}
+      error={featureStore.error}
       handleSave={handleSave}
       handleSaveOnClick={handleSaveOnClick}
+      isExternalOfflineTargetsPathValid={isExternalOfflineTargetsPathValid}
       isNameValid={isNameValid}
-      isOfflineTargetsPathValid={isOfflineTargetsPathValid}
-      isOnlineTargetsPathValid={isOnlineTargetsPathValid}
-      isOtherTargetsPathValid={isOtherTargetsPathValid}
+      isSchemaEntitiesValid={isSchemaEntitiesValid}
       isUrlValid={isUrlValid}
-      loading={artifactsStore.loading}
-      removeArtifactsError={removeArtifactsError}
+      loading={featureStore.loading}
+      removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
       setNameValid={setNameValid}
-      setOfflineTargetsPathValid={setOfflineTargetsPathValid}
-      setOnlineTargetsPathValid={setOnlineTargetsPathValid}
-      setOtherTargetsPathValid={setOtherTargetsPathValid}
+      setExternalOfflineTargetsPathValid={setExternalOfflineTargetsPathValid}
       setUrlValid={setUrlValid}
     />
   )
@@ -139,6 +127,6 @@ FeatureSetsPanel.propTypes = {
   project: PropTypes.string.isRequired
 }
 
-export default connect(({ artifactsStore }) => ({ artifactsStore }), {
-  ...artifactsAction
+export default connect(({ featureStore }) => ({ featureStore }), {
+  ...featureStoreActions
 })(FeatureSetsPanel)

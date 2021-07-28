@@ -21,6 +21,12 @@
     width: 100%;
     height: 100%;
     background: $mineshaftTwo;
+
+    &.custom-position {
+      width: auto;
+      height: auto;
+      background: unset;
+    }
   }
 
   &__header {
