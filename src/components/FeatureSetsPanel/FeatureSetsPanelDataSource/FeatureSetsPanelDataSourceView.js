@@ -36,7 +36,6 @@ const FeatureSetsPanelDataSourceView = ({
   setNewFeatureSetSchedule,
   urlProjectItemTypeEntered
 }) => {
-  console.log(isUrlValid)
   // const httpKind = 'http', disabling temporarily until backend supports scheduling
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
