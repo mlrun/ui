@@ -38,7 +38,7 @@ Feature: MLRun Projects Page
     Scenario: Verify all mandatory components on Archive ML Project
         Given open url
         And wait load page
-        Then select "Archive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "new-proj" value in "name" column
+        Then select "Archive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "network-operations" value in "name" column
         Then verify if "Archive_Project" popup dialog appears
         Then "Description" component on "Archive_Project" should contains "Descriptions"."Archive_Project"
         Then verify "Cancel_Button" element visibility on "Archive_Project" wizard
@@ -48,7 +48,7 @@ Feature: MLRun Projects Page
     Scenario: Verify all mandatory components on Delete existing ML Project
         Given open url
         And wait load page
-        Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "new-proj" value in "name" column
+        Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "network-operations" value in "name" column
         Then verify if "Delete_Project" popup dialog appears
         Then "Description" component on "Delete_Project" should contains "Descriptions"."Delete_Project"
         Then verify "Cancel_Button" element visibility on "Delete_Project" wizard
