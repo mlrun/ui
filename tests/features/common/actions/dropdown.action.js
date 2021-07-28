@@ -8,14 +8,13 @@ async function getOptionValues(driver, options) {
 }
 
 const action = {
+  getOptionValues: getOptionValues,
   openDropdown: async function(driver, dropdown) {
     const element = await driver.findElement(dropdown.open_button)
     if (element) {
       await element.click()
     }
     await driver.sleep(500)
-    const elements = await driver.findElements(dropdown.options)
-    expect(elements.length > 0).equal(true)
   },
   selectOptionInDropdown: async function(driver, dropdown, option) {
     const selectedElement = await driver.findElement(dropdown.open_button)
