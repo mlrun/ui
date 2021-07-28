@@ -43,7 +43,7 @@ export const generateArtifactsList = artifacts =>
 export const generateArtifactsReferencesList = artifacts =>
   artifacts
     .map(artifact => {
-      let artifactReference = getArtifactReference(artifact)
+      const artifactReference = getArtifactReference(artifact)
 
       return {
         label: artifactReference,

@@ -73,23 +73,14 @@ const FeatureSetsPanelDataSource = ({
       urlProjectItemTypeEntered &&
       projects.length === 0
     ) {
-      let projectsList = []
-
-      if (projectStore.projects.length === 0) {
-        fetchProjects().then(projects => {
-          projectsList = projects
-        })
-      } else {
-        projectsList = projectStore.projects
-      }
-
-      setProjects(generateProjectsList(projectsList, project))
+      fetchProjects().then(projects => {
+        setProjects(generateProjectsList(projects, project))
+      })
     }
   }, [
     data.url.pathType,
     fetchProjects,
     project,
-    projectStore.projects,
     projects.length,
     urlProjectItemTypeEntered
   ])
@@ -213,18 +204,16 @@ const FeatureSetsPanelDataSource = ({
       }))
 
       setUrlProjectItemTypeEntered(
-        Boolean(projectItemsPathTypes.find(type => type.id === pathItems[0])) &&
+        projectItemsPathTypes.some(type => type.id === pathItems[0]) &&
           typeof pathItems[1] === 'string'
       )
       setUrlProjectPathEntered(typeof pathItems[2] === 'string')
       setUrlArtifactPathEntered(
-        Boolean(artifacts.find(artifactItem => artifactItem.id === artifact))
+        artifacts.some(artifactItem => artifactItem.id === artifact)
       )
       setUrlArtifactReferencePathEntered(
-        Boolean(
-          artifactsReferences.find(
-            projectItemRef => projectItemRef.id === artifactReference
-          )
+        artifactsReferences.some(
+          projectItemRef => projectItemRef.id === artifactReference
         )
       )
     } else {

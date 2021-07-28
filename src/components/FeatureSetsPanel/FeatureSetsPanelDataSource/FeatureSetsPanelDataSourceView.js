@@ -76,7 +76,7 @@ const FeatureSetsPanelDataSourceView = ({
             selectOnChange={path => {
               handleUrlPathTypeChange(path)
             }}
-            selectPlaceholder="Path Scheme"
+            selectPlaceholder="URL"
           />
         </div>
         {false && ( // was: data.kind !== httpKind, disabling temporarily until backend supports scheduling

@@ -40,15 +40,11 @@ export const generateComboboxMatchesList = (
   urlProjectItemTypeEntered
 ) => {
   if (!urlProjectItemTypeEntered) {
-    if (
-      projectItemsPathTypes.find(type =>
-        type.id.startsWith(url.projectItemType)
-      )
-    ) {
-      return projectItemsPathTypes
-    } else {
-      return []
-    }
+    return projectItemsPathTypes.some(type =>
+      type.id.startsWith(url.projectItemType)
+    )
+      ? projectItemsPathTypes
+      : []
   } else if (!urlProjectPathEntered) {
     return projects.filter(project => {
       return project.id.startsWith(url.project)
@@ -61,9 +57,9 @@ export const generateComboboxMatchesList = (
     return (artifactsReferences ?? []).filter(projectItem => {
       return projectItem.id.startsWith(url.artifactReference)
     })
-  } else {
-    return []
   }
+
+  return []
 }
 
 export const projectItemsPathTypes = [
