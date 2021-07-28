@@ -3,16 +3,13 @@ import { isNil } from 'lodash'
 
 import { joinDataOfArrayOrObject } from '../../utils'
 import {
-  AZURE_STORAGE_INPUT_PATH_SCHEME,
-  GOOGLE_STORAGE_INPUT_PATH_SCHEME,
   HTTP_STORAGE_INPUT_PATH_SCHEME,
   HTTPS_STORAGE_INPUT_PATH_SCHEME,
-  MLRUN_STORAGE_INPUT_PATH_SCHEME,
-  S3_INPUT_PATH_SCHEME,
-  V3IO_INPUT_PATH_SCHEME
+  MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from '../../constants'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getParsedResource } from '../../utils/resources'
+import { pathPlaceholders } from '../../utils/panelPathScheme'
 
 export const generateComboboxMatchesList = (
   artifacts,
@@ -301,20 +298,11 @@ export const storePathTypes = [
   }
 ]
 
-export const pathPlaceholders = {
-  [MLRUN_STORAGE_INPUT_PATH_SCHEME]: 'artifacts/my-project/my-artifact:my-tag',
-  [S3_INPUT_PATH_SCHEME]: 'bucket/path',
-  [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
-  [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
-  [V3IO_INPUT_PATH_SCHEME]: '/container-name/file'
-}
-
 export const handleInputPathTypeChange = (
   inputsDispatch,
   newInput,
   pathType,
   pathPlaceholder,
-  newInputDefaultPathProject,
   currentProject
 ) => {
   if (pathType !== MLRUN_STORAGE_INPUT_PATH_SCHEME) {
