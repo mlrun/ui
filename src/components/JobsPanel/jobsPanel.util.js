@@ -348,12 +348,17 @@ export const generateTableDataFromDefaultData = (
   }))
   const volumeMounts = defaultData.function?.spec.volume_mounts.map(
     volume_mounts => {
+      const currentVolume = defaultData.function?.spec.volumes.find(
+        volume => volume.name === volume_mounts?.name
+      )
+
       return {
         data: {
+          type: currentVolume ? getVolumeType(currentVolume) : '',
           name: volume_mounts?.name,
           mountPath: volume_mounts?.mountPath
         },
-        isDefault: true
+        isDefault: false
       }
     }
   )
