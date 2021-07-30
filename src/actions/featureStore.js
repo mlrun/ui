@@ -35,7 +35,11 @@ import {
   SET_NEW_FEATURE_SET_TARGET,
   SET_NEW_FEATURE_SET_VERSION,
   START_FEATURE_SET_INGEST_BEGIN,
-  START_FEATURE_SET_INGEST_SUCCESS
+  START_FEATURE_SET_INGEST_SUCCESS,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME
 } from '../constants'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
@@ -244,6 +248,22 @@ const featureStoreActions = {
   setNewFeatureSetDataSourceTime: time => ({
     type: SET_NEW_FEATURE_SET_DATA_SOURCE_TIME,
     payload: time
+  }),
+  setNewFeatureSetDataSourceEndTime: endTIme => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
+    payload: endTIme
+  }),
+  setNewFeatureSetDataSourceParseDates: parseDates => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES,
+    payload: parseDates
+  }),
+  setNewFeatureSetDataSourceStartTime: startTime => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
+    payload: startTime
+  }),
+  setNewFeatureSetDataSourceTimestampColumn: timestampKEy => ({
+    type: SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN,
+    payload: timestampKEy
   }),
   setNewFeatureSetDataSourceUrl: url => ({
     type: SET_NEW_FEATURE_SET_DATA_SOURCE_URL,

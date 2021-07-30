@@ -4,14 +4,16 @@ import cronstrue from 'cronstrue'
 
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import Select from '../../../common/Select/Select'
+import Input from '../../../common/Input/Input'
 import Button from '../../../common/Button/Button'
 import ScheduleFeatureSet from '../ScheduleFeatureSet/ScheduleFeatureSet'
-import KeyValueTable from '../../../common/KeyValueTable/KeyValueTable'
 import Combobox from '../../../common/Combobox/Combobox'
 
 import {
   comboboxSelectList,
-  kindOptions
+  CSV,
+  kindOptions,
+  PARQUET
 } from './featureSetsPanelDataSource.util'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
 import { pathPlaceholders } from '../../../utils/panelPathScheme'
@@ -22,21 +24,22 @@ import './featureSetsPanelDataSource.scss'
 const FeatureSetsPanelDataSourceView = ({
   comboboxMatches,
   data,
-  handleAddNewItem,
-  handleDeleteAttribute,
-  handleEditAttribute,
+  featureStore,
+  handleFilterParametersOnBlur,
+  handleFilterParametersOnChange,
   handleKindOnChange,
   handleUrlOnBlur,
   handleUrlPathTypeChange,
   handleUrlPathChange,
-  isUrlValid,
   setData,
+  setNewFeatureSetDataSourceParseDates,
   setShowSchedule,
+  setValidation,
   showSchedule,
   setNewFeatureSetSchedule,
-  urlProjectItemTypeEntered
+  urlProjectItemTypeEntered,
+  validation
 }) => {
-  console.log(isUrlValid)
   // const httpKind = 'http', disabling temporarily until backend supports scheduling
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
@@ -63,7 +66,7 @@ const FeatureSetsPanelDataSourceView = ({
               handleUrlPathChange(path)
             }}
             inputPlaceholder={data.url.placeholder}
-            invalid={!isUrlValid}
+            invalid={!validation.isUrlValid}
             invalidText={`Field must be in "${
               pathPlaceholders[data.url.pathType]
             }" format`}
@@ -105,23 +108,118 @@ const FeatureSetsPanelDataSourceView = ({
             )}
           </div>
         )}
-        <p>
+        <p className="data-source__description">
           Users can add the following parameters to filter the data. using start
           time and end time filter the selected time "between" those two fields.
         </p>
-        <KeyValueTable
-          addNewItem={handleAddNewItem}
-          addNewItemLabel="Add variable"
-          className="data-source__table"
-          content={data.attributes}
-          deleteItem={handleDeleteAttribute}
-          editItem={handleEditAttribute}
-          keyHeader="Attribute name"
-          keyLabel="Name"
-          valueHeader="Value"
-          valueLabel="Value"
-          withEditMode
-        />
+        {data.kind === CSV && (
+          <Input
+            className="data-source__inputs-item"
+            floatingLabel
+            label="Parse Dates"
+            onBlur={event => {
+              if (
+                featureStore.newFeatureSet.spec.source.parse_dates !==
+                event.target.value
+              ) {
+                setNewFeatureSetDataSourceParseDates(event.target.value)
+              }
+            }}
+            onChange={parseDates =>
+              setData(state => ({
+                ...state,
+                parseDates
+              }))
+            }
+            placeholder="col_name1,col_name2,..."
+            type="text"
+          />
+        )}
+        {data.kind === PARQUET && (
+          <FeatureSetsPanelSection title="Filter Parameters">
+            <span className="data-source__kind-description">
+              Users can add the following parameters to filter the data.
+            </span>
+            <div className="data-source__inputs-container">
+              <Input
+                className="data-source__inputs-item"
+                floatingLabel
+                invalid={!validation.isTimeFieldValid}
+                invalidText="Timestamp key is invalid"
+                label="Timestamp column"
+                onBlur={event =>
+                  handleFilterParametersOnBlur(event, 'timeField')
+                }
+                onChange={value =>
+                  handleFilterParametersOnChange(value, 'timeField')
+                }
+                required={Boolean(
+                  data.timeField || data.startTime || data.endTime
+                )}
+                requiredText="Timestamp key is required"
+                setInvalid={value =>
+                  setValidation(state => ({
+                    ...state,
+                    isTimeFieldValid: value
+                  }))
+                }
+                tip="The field name for filtering the source data."
+                type="text"
+                value={data.timeField}
+              />
+              <Input
+                className="data-source__inputs-item"
+                floatingLabel
+                invalid={!validation.isStartTimeValid}
+                invalidText="Start time is invalid"
+                label="Start time"
+                onBlur={event =>
+                  handleFilterParametersOnBlur(event, 'startTime')
+                }
+                onChange={value =>
+                  handleFilterParametersOnChange(value, 'startTime')
+                }
+                required={Boolean(
+                  (data.timeField || data.startTime) && !data.endTime
+                )}
+                requiredText="Start time is required"
+                setInvalid={value =>
+                  setValidation(state => ({
+                    ...state,
+                    isStartTimeValid: value
+                  }))
+                }
+                tip="Filter data by start date >= value"
+                type="text"
+                value={data.startTime}
+              />
+              <Input
+                className="data-source__inputs-item"
+                floatingLabel
+                invalid={!validation.isEndTimeValid}
+                invalidText="End time is invalid"
+                label="End time"
+                onBlur={event => handleFilterParametersOnBlur(event, 'endTime')}
+                onChange={value =>
+                  handleFilterParametersOnChange(value, 'endTime')
+                }
+                required={Boolean(
+                  (data.timeField || data.endTime) && !data.startTime
+                )}
+                requiredText="End time is required"
+                setInvalid={value =>
+                  setValidation(state => ({
+                    ...state,
+                    isEndTimeValid: value
+                  }))
+                }
+                tip="Filter data by start date <= value"
+                type="text"
+                value={data.endTime}
+              />
+            </div>
+          </FeatureSetsPanelSection>
+        )}
       </FeatureSetsPanelSection>
     </div>
   )
@@ -130,19 +228,21 @@ const FeatureSetsPanelDataSourceView = ({
 FeatureSetsPanelDataSourceView.propTypes = {
   comboboxMatches: PropTypes.arrayOf(PropTypes.shape({}).isRequired),
   data: PropTypes.shape({}).isRequired,
-  handleAddNewItem: PropTypes.func.isRequired,
-  handleDeleteAttribute: PropTypes.func.isRequired,
-  handleEditAttribute: PropTypes.func.isRequired,
+  featureStore: PropTypes.shape({}).isRequired,
+  handleFilterParametersOnBlur: PropTypes.func.isRequired,
+  handleFilterParametersOnChange: PropTypes.func.isRequired,
   handleKindOnChange: PropTypes.func.isRequired,
   handleUrlOnBlur: PropTypes.func.isRequired,
   handleUrlPathTypeChange: PropTypes.func.isRequired,
   handleUrlPathChange: PropTypes.func.isRequired,
-  isUrlValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
+  setNewFeatureSetDataSourceParseDates: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
   setShowSchedule: PropTypes.func.isRequired,
   showSchedule: PropTypes.bool.isRequired,
   setNewFeatureSetSchedule: PropTypes.func.isRequired,
-  urlProjectItemTypeEntered: PropTypes.bool.isRequired
+  urlProjectItemTypeEntered: PropTypes.bool.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default FeatureSetsPanelDataSourceView

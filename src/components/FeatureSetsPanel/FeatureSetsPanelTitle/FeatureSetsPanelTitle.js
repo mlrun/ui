@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import FeatureSetsPanelTitleView from './FeatureSetsPanelTitleView'
 
 import featureStoreActions from '../../../actions/featureStore'
+import { nameValidationPattern } from '../featureSetPanel.util'
 
 const FeatureSetsPanelTitle = ({
   featureStore,
@@ -24,8 +25,11 @@ const FeatureSetsPanelTitle = ({
   })
 
   const handleNameChange = name => {
-    if (!isNameValid && name.length > 0) {
-      setNameValid(true)
+    if (!isNameValid && name.length > 0 && nameValidationPattern.test(name)) {
+      setNameValid(prevState => ({
+        ...prevState,
+        isNameValid: true
+      }))
     }
 
     setData(state => ({
@@ -35,9 +39,7 @@ const FeatureSetsPanelTitle = ({
   }
 
   const handleNameOnBlur = () => {
-    if (data.name.length === 0) {
-      setNameValid(false)
-    } else if (data.name !== featureStore.newFeatureSet.metadata.name) {
+    if (data.name !== featureStore.newFeatureSet.metadata.name) {
       setNewFeatureSetName(data.name)
     }
   }
@@ -84,6 +86,7 @@ const FeatureSetsPanelTitle = ({
       setData={setData}
       setNewFeatureSetDescription={setNewFeatureSetDescription}
       setNewFeatureSetVersion={setNewFeatureSetVersion}
+      setNameValid={setNameValid}
     />
   )
 }

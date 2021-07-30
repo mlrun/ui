@@ -62,6 +62,59 @@ export const generateComboboxMatchesList = (
   return []
 }
 
+export const handleTimestampColumnOnBlur = (
+  value,
+  timeField,
+  type,
+  setData,
+  setValidation,
+  setNewFeatureSetDataSourceTimestampColumn
+) => {
+  if (timeField !== value) {
+    setNewFeatureSetDataSourceTimestampColumn(value)
+    setData(state => ({
+      ...state,
+      [type]: value
+    }))
+  }
+}
+
+export const handleStartTimeOnBlur = (
+  data,
+  value,
+  startTime,
+  type,
+  setData,
+  setValidation,
+  setNewFeatureSetDataSourceStartTime
+) => {
+  if (startTime !== value) {
+    setNewFeatureSetDataSourceStartTime(value)
+    setData(state => ({
+      ...state,
+      [type]: value
+    }))
+  }
+}
+
+export const handleEndTimeOnBlur = (
+  data,
+  value,
+  endTime,
+  type,
+  setData,
+  setValidation,
+  setNewFeatureSetDataSourceEndTime
+) => {
+  if (endTime !== value) {
+    setNewFeatureSetDataSourceEndTime(value)
+    setData(state => ({
+      ...state,
+      [type]: value
+    }))
+  }
+}
+
 export const projectItemsPathTypes = [
   {
     label: 'Artifacts',
@@ -79,3 +132,9 @@ export const isUrlInputValid = (pathInputType, pathInputValue) => {
       return pathInputValue.length > 0
   }
 }
+
+export const TIME_FIELD = 'timeField'
+export const START_TIME = 'startTime'
+export const END_TIME = 'endTime'
+export const CSV = 'csv'
+export const PARQUET = 'parquet'

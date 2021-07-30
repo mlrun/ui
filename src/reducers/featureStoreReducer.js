@@ -21,10 +21,14 @@ import {
   REMOVE_FEATURE_VECTORS,
   REMOVE_NEW_FEATURE_SET,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_KEY,
   SET_NEW_FEATURE_SET_DATA_SOURCE_KIND,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_TIME,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
   SET_NEW_FEATURE_SET_DESCRIPTION,
   SET_NEW_FEATURE_SET_LABELS,
@@ -64,10 +68,13 @@ const initialState = {
       entities: [],
       source: {
         attributes: {},
+        end_time: '',
         key_field: '',
-        kind: 'http',
+        kind: 'csv',
+        parse_dates: '',
         path: '',
         schedule: '',
+        start_time: '',
         time_field: ''
       },
       targets: [
@@ -263,6 +270,62 @@ export default (state = initialState, { type, payload }) => {
           metadata: {
             ...state.newFeatureSet.metadata,
             name: payload
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              end_time: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              parse_dates: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              start_time: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              time_field: payload
+            }
           }
         }
       }
