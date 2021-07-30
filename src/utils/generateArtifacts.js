@@ -1,8 +1,8 @@
 import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { maxBy, flatten } from 'lodash'
 
-export const generateArtifacts = (artifacts, iter) =>
-  flatten(
+export const generateArtifacts = (artifacts, iter) => {
+  return flatten(
     artifacts
       .map(artifact => {
         const { link_iteration } = artifact.link_iteration ?? {}
@@ -31,6 +31,10 @@ export const generateArtifacts = (artifacts, iter) =>
               item.preview ??= []
             }
 
+            item.ui = {
+              originalContent: generatedArtifact
+            }
+
             return item
           })
         }
@@ -39,3 +43,4 @@ export const generateArtifacts = (artifacts, iter) =>
       })
       .filter(generatedArtifact => Boolean(generatedArtifact))
   )
+}

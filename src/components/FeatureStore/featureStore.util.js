@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { flatten } from 'lodash'
 
 import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
 
@@ -20,6 +21,11 @@ import { parseFeatures } from '../../utils/parseFeatures'
 import { parseFeatureSets } from '../../utils/parseFeatureSets'
 import { generateUri } from '../../utils/resources'
 import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
+import {
+  getArtifactIdentifier,
+  getFeatureIdentifier,
+  getFeatureVectorIdentifier
+} from '../../utils/getUniqueIdentifier'
 
 export const pageDataInitialState = {
   actionsMenu: [],
@@ -316,6 +322,7 @@ export const handleFetchData = async (
   fetchDataSets,
   fetchFeatureSets,
   fetchFeatures,
+  fetchEntities,
   fetchFeatureVectors,
   filters,
   project,
@@ -323,7 +330,7 @@ export const handleFetchData = async (
 ) => {
   let data = {
     content: [],
-    yamlContent: []
+    originalContent: []
   }
   let result = null
 
@@ -332,7 +339,7 @@ export const handleFetchData = async (
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
-      data.yamlContent = result
+      data.originalContent = result
     }
   } else if (pageTab === FEATURE_SETS_TAB) {
     const config = {
@@ -345,14 +352,18 @@ export const handleFetchData = async (
 
     if (result) {
       data.content = parseFeatureSets(result)
-      data.yamlContent = result
+      data.originalContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
-    result = await fetchFeatures(project, filters)
+    const allResult = await Promise.all([
+      fetchFeatures(project, filters),
+      fetchEntities(project, filters)
+    ])
+    result = flatten(allResult)
 
     if (result) {
       data.content = parseFeatures(result)
-      data.yamlContent = result
+      data.originalContent = result
     }
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     const config = {
@@ -365,10 +376,10 @@ export const handleFetchData = async (
 
     if (result) {
       data.content = parseFeatureVectors(result)
-      data.yamlContent = result
+      data.originalContent = result
     } else {
       data.content = null
-      data.yamlContent = null
+      data.originalContent = null
     }
   }
 
@@ -378,6 +389,7 @@ export const handleFetchData = async (
 export const navigateToDetailsPane = (
   featureSets,
   features,
+  entities,
   dataSets,
   featureVectors,
   history,
@@ -390,7 +402,7 @@ export const navigateToDetailsPane = (
   if (match.params.pageTab === FEATURE_SETS_TAB && featureSets.length > 0) {
     content = parseFeatureSets(featureSets)
   } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
-    content = features
+    content = [...features, ...entities]
   } else if (
     match.params.pageTab === DATASETS_TAB &&
     dataSets.allData.length > 0
@@ -592,33 +604,30 @@ export const generateDataSetsDetailsMenu = selectedItem => {
     : ''
 }
 
-export const fetchFeatureRowData = async (
-  fetchFeature,
-  item,
-  setPageData,
-  setYamlContent
-) => {
+export const fetchFeatureRowData = async (fetchData, feature, setPageData) => {
+  const featureIdentifier = getFeatureIdentifier(feature)
+
   setPageData(state => ({
     ...state,
     selectedRowData: {
       ...state.selectedRowData,
-      [`${item.name}-${item.metadata?.name}`]: {
+      [featureIdentifier]: {
         loading: true
       }
     }
   }))
 
-  const result = await fetchFeature(
-    item.metadata.project,
-    item.name,
-    item.metadata.name
+  const result = await fetchData(
+    feature.metadata.project,
+    feature.name,
+    feature.metadata.name
   ).catch(error => {
     setPageData(state => ({
       ...state,
       selectedRowData: {
         ...state.selectedRowData,
-        [`${item.name}-${item.metadata.name}`]: {
-          ...state.selectedRowData[`${item.name}-${item.metadata.name}`],
+        [featureIdentifier]: {
+          ...state.selectedRowData[featureIdentifier],
           error,
           loading: false
         }
@@ -627,11 +636,11 @@ export const fetchFeatureRowData = async (
   })
 
   if (result?.length > 0) {
-    setYamlContent(state => ({ ...state, selectedRowData: result }))
     setPageData(state => ({
       ...state,
       selectedRowData: {
-        [`${item.name}-${item.metadata.name}`]: {
+        ...state.selectedRowData,
+        [featureIdentifier]: {
           content: [...parseFeatures(result)],
           error: null,
           loading: false
@@ -643,43 +652,44 @@ export const fetchFeatureRowData = async (
 
 export const fetchFeatureVectorRowData = async (
   fetchFeatureVector,
-  item,
-  setPageData,
-  setYamlContent
+  featureVector,
+  setPageData
 ) => {
+  const featureVectorIdentifier = getFeatureVectorIdentifier(featureVector)
+
   setPageData(state => ({
     ...state,
     selectedRowData: {
       ...state.selectedRowData,
-      [item.name]: {
+      [featureVectorIdentifier]: {
         loading: true
       }
     }
   }))
 
-  const result = await fetchFeatureVector(item.project, item.name).catch(
-    error => {
-      setPageData(state => ({
-        ...state,
-        selectedRowData: {
-          ...state.selectedRowData,
-          [item.name]: {
-            ...state.selectedRowData[item.name],
-            error,
-            loading: false
-          }
-        }
-      }))
-    }
-  )
-
-  if (result?.length > 0) {
-    setYamlContent(state => ({ ...state, selectedRowData: result }))
+  const result = await fetchFeatureVector(
+    featureVector.project,
+    featureVector.name
+  ).catch(error => {
     setPageData(state => ({
       ...state,
       selectedRowData: {
         ...state.selectedRowData,
-        [item.name]: {
+        [featureVectorIdentifier]: {
+          ...state.selectedRowData[featureVectorIdentifier],
+          error,
+          loading: false
+        }
+      }
+    }))
+  })
+
+  if (result?.length > 0) {
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        ...state.selectedRowData,
+        [featureVectorIdentifier]: {
           content: [...parseFeatureVectors(result)],
           error: null,
           loading: false
@@ -691,32 +701,32 @@ export const fetchFeatureVectorRowData = async (
 
 export const fetchDataSetRowData = async (
   fetchDataSet,
-  item,
+  dataSet,
   setPageData,
-  setYamlContent,
   iter
 ) => {
+  const dataSetIdentifier = getArtifactIdentifier(dataSet)
   let result = []
 
   setPageData(state => ({
     ...state,
     selectedRowData: {
       ...state.selectedRowData,
-      [item.db_key]: {
+      [dataSetIdentifier]: {
         loading: true
       }
     }
   }))
 
   try {
-    result = await fetchDataSet(item.project, item.db_key, iter)
+    result = await fetchDataSet(dataSet.project, dataSet.db_key, iter)
   } catch (error) {
     setPageData(state => ({
       ...state,
       selectedRowData: {
         ...state.selectedRowData,
-        [item.db_key]: {
-          ...state.selectedRowData[item.db_key],
+        [dataSetIdentifier]: {
+          ...state.selectedRowData[dataSetIdentifier],
           error,
           loading: false
         }
@@ -725,16 +735,12 @@ export const fetchDataSetRowData = async (
   }
 
   if (result?.length > 0) {
-    setYamlContent(state => ({
-      ...state,
-      selectedRowData: result
-    }))
     setPageData(state => {
       return {
         ...state,
         selectedRowData: {
           ...state.selectedRowData,
-          [item.db_key]: {
+          [dataSetIdentifier]: {
             content: [...generateArtifacts(filterArtifacts(result), iter)],
             error: null,
             loading: false

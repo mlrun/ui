@@ -38,6 +38,7 @@ import {
 } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
+import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
 
 const artifactsAction = {
   buildFunction: func => dispatch => {
@@ -106,12 +107,14 @@ const artifactsAction = {
     return artifactsApi
       .getDataSet(project, dataSet)
       .then(response => {
+        const generatedArtifacts = generateArtifacts(
+          filterArtifacts(response.data.artifacts),
+          iter
+        )
+
         dispatch(
           artifactsAction.fetchDataSetSuccess({
-            [dataSet]: generateArtifacts(
-              filterArtifacts(response.data.artifacts),
-              iter
-            )
+            [getArtifactIdentifier(generatedArtifacts[0])]: generatedArtifacts
           })
         )
 
@@ -157,12 +160,14 @@ const artifactsAction = {
     return artifactsApi
       .getFile(project, file)
       .then(response => {
+        const generatedArtifacts = generateArtifacts(
+          filterArtifacts(response.data.artifacts),
+          iter
+        )
+
         dispatch(
-          artifactsAction.fetchFileSuccess({
-            [file]: generateArtifacts(
-              filterArtifacts(response.data.artifacts),
-              iter
-            )
+          artifactsAction.fetchDataSetSuccess({
+            [getArtifactIdentifier(generatedArtifacts[0])]: generatedArtifacts
           })
         )
 
@@ -256,12 +261,14 @@ const artifactsAction = {
     return artifactsApi
       .getModel(project, model)
       .then(response => {
+        const generatedArtifacts = generateArtifacts(
+          filterArtifacts(response.data.artifacts),
+          iter
+        )
+
         dispatch(
           artifactsAction.fetchModelSuccess({
-            [model]: generateArtifacts(
-              filterArtifacts(response.data.artifacts),
-              iter
-            )
+            [getArtifactIdentifier(generatedArtifacts[0])]: generatedArtifacts
           })
         )
 

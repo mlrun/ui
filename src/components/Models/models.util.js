@@ -195,7 +195,7 @@ export const handleFetchData = async (
 ) => {
   let data = {
     content: [],
-    yamlContent: []
+    originalContent: []
   }
   let result = null
 
@@ -204,7 +204,7 @@ export const handleFetchData = async (
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
-      data.yamlContent = result
+      data.originalContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     result = await fetchModelEndpoints(project, filters)
@@ -213,10 +213,13 @@ export const handleFetchData = async (
       data.content = result.map(endpoint => {
         return {
           ...endpoint,
-          state: getState(endpoint.status.state)
+          state: getState(endpoint.status.state),
+          ui: {
+            originalContent: endpoint
+          }
         }
       })
-      data.yamlContent = result
+      data.originalContent = result
     }
   }
 

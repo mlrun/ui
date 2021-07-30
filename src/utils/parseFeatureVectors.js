@@ -7,6 +7,9 @@ export const parseFeatureVectors = featureVectors => {
     ...featureVector.spec,
     state: getState(featureVector.status.state),
     specFeatures: featureVector.spec.features,
-    features: featureVector.status.features
+    features: featureVector.status.features,
+    ui: {
+      originalContent: featureVector
+    }
   }))
 }

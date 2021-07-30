@@ -1,11 +1,14 @@
 import { formatDatetime } from './datetime'
+import { getFunctionIdentifier } from './getUniqueIdentifier'
 
 const createFunctionsContent = functions =>
   functions.map(func => {
     return {
       name: {
         value: func.name,
-        class: 'functions_medium'
+        class: 'functions_medium',
+        identifier: getFunctionIdentifier(func),
+        identifierUnique: getFunctionIdentifier(func, true)
       },
       kind: {
         value: func.type,

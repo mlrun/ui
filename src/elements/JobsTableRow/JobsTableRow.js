@@ -1,12 +1,13 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import { map, isEmpty } from 'lodash'
+import { isEmpty, map } from 'lodash'
 import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
-import { DETAILS_OVERVIEW_TAB, MONITOR_TAB } from '../../constants'
+import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
+import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
 const JobsTableRow = ({
   actionsMenu,
@@ -25,8 +26,7 @@ const JobsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    rowItem.name?.value === selectedItem.name &&
-      rowItem.uid?.value === selectedItem.uid &&
+    getJobIdentifier(selectedItem, true) === rowItem.name?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -35,10 +35,9 @@ const JobsTableRow = ({
 
   const currentItem = isGroupedByWorkflow
     ? workflows.find(workflow => workflow.id === rowItem.uid.value)
-    : content.find(contentItemObj =>
-        match.params.pageTab === MONITOR_TAB
-          ? contentItemObj.uid === rowItem.uid?.value
-          : contentItemObj.name === rowItem.name.value
+    : content.find(
+        contentItem =>
+          getJobIdentifier(contentItem, true) === rowItem.name?.identifierUnique
       )
 
   return (
@@ -79,7 +78,11 @@ const JobsTableRow = ({
             {tableContent.map((job, index) => {
               const groupCurrentItem =
                 content.length > 0 &&
-                content.find(item => item.uid === job.uid.value)
+                content.find(
+                  contentItem =>
+                    getJobIdentifier(contentItem, true) ===
+                    job.name?.identifierUnique
+                )
 
               const groupFilteredActionsMenu = actionsMenu(groupCurrentItem)
 
