@@ -208,7 +208,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.hash
   },
   codeOrigin: {
-    value: selectedItem.build.codeOrigin ?? ''
+    value: selectedItem.build.code_origin ?? ''
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
