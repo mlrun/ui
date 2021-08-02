@@ -9,6 +9,7 @@ import notificationAction from '../../actions/notification'
 const Notification = ({ notificationStore, removeNotification }) => {
   const defaultStyle = {
     position: 'fixed',
+    right: '24px',
     bottom: '-100px',
     opacity: 0,
     zIndex: '1000'
