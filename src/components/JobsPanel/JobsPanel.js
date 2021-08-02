@@ -37,6 +37,7 @@ const JobsPanel = ({
   groupedFunctions,
   jobsStore,
   match,
+  mode,
   onEditJob,
   onSuccessRun,
   project,
@@ -117,7 +118,10 @@ const JobsPanel = ({
           panelState.currentFunctionInfo.method,
           selectedFunction,
           panelDispatch,
-          setNewJob
+          setNewJob,
+          panelState.limits,
+          panelState.requests,
+          mode
         )
       } else {
         panelDispatch({
@@ -127,10 +131,13 @@ const JobsPanel = ({
       }
     }
   }, [
+    mode,
     panelState.currentFunctionInfo.method,
     panelState.editMode,
+    panelState.limits,
     panelState.previousPanelData.tableData,
     panelState.previousPanelData.titleInfo.method,
+    panelState.requests,
     selectedFunction,
     setNewJob
   ])
@@ -147,7 +154,8 @@ const JobsPanel = ({
         panelDispatch,
         setNewJob,
         panelState.limits,
-        panelState.requests
+        panelState.requests,
+        mode
       )
     } else if (
       !panelState.editMode &&
@@ -161,12 +169,14 @@ const JobsPanel = ({
         panelState.limits,
         panelState.requests,
         setNewJob,
-        setDefaultDataIsLoaded
+        setDefaultDataIsLoaded,
+        mode
       )
     }
   }, [
     defaultData,
     defaultDataIsLoaded,
+    mode,
     panelState.currentFunctionInfo,
     panelState.currentFunctionInfo.method,
     panelState.editMode,
@@ -379,6 +389,7 @@ JobsPanel.propTypes = {
   defaultData: PropTypes.shape({}),
   groupedFunctions: PropTypes.shape({}),
   match: PropTypes.shape({}).isRequired,
+  mode: PropTypes.string.isRequired,
   onEditJob: PropTypes.func,
   project: PropTypes.string.isRequired,
   redirectToDetailsPane: PropTypes.bool,

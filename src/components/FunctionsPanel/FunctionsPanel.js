@@ -18,6 +18,7 @@ const FunctionsPanel = ({
   handleDeployFunctionSuccess,
   project,
   match,
+  mode,
   removeFunctionsError,
   createNewFunction,
   setNewFunction,
@@ -122,6 +123,7 @@ const FunctionsPanel = ({
       isHandlerValid={isHandlerValid}
       isNameValid={isNameValid}
       loading={functionsStore.loading}
+      mode={mode}
       removeFunctionsError={removeFunctionsError}
       setHandlerValid={setHandlerValid}
       setNameValid={setNameValid}
@@ -140,6 +142,7 @@ FunctionsPanel.propTypes = {
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
+  mode: PropTypes.string.isRequired,
   project: PropTypes.string.isRequired
 }
 

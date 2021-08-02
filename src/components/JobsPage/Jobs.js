@@ -14,17 +14,16 @@ import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import projectActions from '../../actions/projects'
 import detailsActions from '../../actions/details'
-
 import { generatePageData } from './jobsData'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import getState from '../../utils/getState.js'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-
 import {
   MONITOR_TAB,
   SCHEDULE_TAB,
   INIT_GROUP_FILTER,
-  JOBS_PAGE
+  JOBS_PAGE,
+  PANEL_EDIT_MODE
 } from '../../constants'
 
 const Jobs = ({
@@ -434,6 +433,7 @@ const Jobs = ({
           }
           handleRunNewJob={{}}
           match={match}
+          mode={PANEL_EDIT_MODE}
           onEditJob={onEditJob}
           onSuccessRun={tab => {
             if (editableItem) {

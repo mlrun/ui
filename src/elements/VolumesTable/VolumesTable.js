@@ -92,7 +92,7 @@ export const VolumesTable = ({
       {
         label: 'Remove',
         icon: <Delete />,
-        hidden: rowItem.isDefault,
+        hidden: rowItem.isDefault && !rowItem.canBeModified,
         onClick: selectedItem => {
           deleteVolume(selectedItem)
         }
