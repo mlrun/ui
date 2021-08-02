@@ -262,7 +262,7 @@ const MembersPopUp = ({
               </span>
               &nbsp;admins&nbsp;
             </span>
-            <Tip text="Some of the users might be user groups" />
+            <Tip text="Some of the members might be user groups" />
           </div>
           <div
             className={inviteMembersBtnClassNames}
