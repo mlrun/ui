@@ -102,7 +102,9 @@ const Functions = ({
           setFunctionsPanelIsOpen(true)
           setEditableItem(func)
         },
-        hidden: item?.type !== 'job'
+        hidden:
+          new URLSearchParams(location.search).get('demo') !== 'true' ||
+          item?.type !== 'job'
       },
       {
         label: 'Delete',
