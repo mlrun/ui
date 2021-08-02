@@ -11,6 +11,7 @@ import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
 import { generateProjectsList } from './createJobPage.util'
+import { PANEL_CREATE_MODE } from '../../constants'
 
 const CreateJobPage = ({
   fetchFunctions,
@@ -177,6 +178,7 @@ const CreateJobPage = ({
           }}
           groupedFunctions={selectedGroupFunctions}
           match={match}
+          mode={PANEL_CREATE_MODE}
           project={selectedProject}
         />
       )}

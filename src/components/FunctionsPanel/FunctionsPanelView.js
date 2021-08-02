@@ -24,6 +24,7 @@ const FunctionsPanelView = ({
   isHandlerValid,
   isNameValid,
   loading,
+  mode,
   removeFunctionsError,
   setHandlerValid,
   setNameValid
@@ -64,7 +65,7 @@ const FunctionsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FunctionsPanelResources defaultData={defaultData} />
+            <FunctionsPanelResources defaultData={defaultData} mode={mode} />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -132,6 +133,7 @@ FunctionsPanelView.propTypes = {
   isHandlerValid: PropTypes.bool.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
+  mode: PropTypes.string.isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
   setHandlerValid: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired
