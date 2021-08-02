@@ -55,7 +55,8 @@ const DetailsView = React.forwardRef(
       'table__item',
       detailsStore.showWarning && 'pop-up-dialog-opened'
     )
-    const { value: statusValue, label: statusLabel } = selectedItem.state || {}
+    const { value: stateValue, label: stateLabel, className: stateClassName } =
+      selectedItem.state || {}
 
     return (
       <div className={detailsPanelClassNames} ref={ref}>
@@ -86,7 +87,7 @@ const DetailsView = React.forwardRef(
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
               ? formatDatetime(
                   selectedItem?.startTime,
-                  statusValue === 'aborted' ? 'N/A' : 'Not yet started'
+                  stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                 )
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
@@ -95,9 +96,9 @@ const DetailsView = React.forwardRef(
               : selectedItem?.spec?.model
               ? selectedItem?.metadata?.uid
               : ''}
-            {statusValue && statusLabel && (
-              <Tooltip template={<TextTooltipTemplate text={statusLabel} />}>
-                <i className={statusValue} />
+            {stateValue && stateLabel && (
+              <Tooltip template={<TextTooltipTemplate text={stateLabel} />}>
+                <i className={stateClassName} />
               </Tooltip>
             )}
             {!isEmpty(detailsStore.pods.podsPending) && (

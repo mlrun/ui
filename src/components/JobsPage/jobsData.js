@@ -13,7 +13,6 @@ export const infoHeaders = [
   { label: 'UID', id: 'uid' },
   { label: 'Start time', id: 'startTime' },
   { label: 'Last Updated', id: 'updated' },
-  { label: 'Status', id: 'state' },
   { label: 'Parameters', id: 'parameters' },
   { label: 'Function', id: 'function' },
   { label: 'Results', id: 'resultsChips' },

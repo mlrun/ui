@@ -147,7 +147,7 @@ const Functions = ({
               project: func.metadata?.project || match.params.projectName,
               resources: func.spec?.resources ?? {},
               secret_sources: func.spec?.secret_sources ?? [],
-              state: getState(func.status?.state, page),
+              state: getState(func.status?.state, page, 'function'),
               tag: func.metadata.tag,
               type: func.kind,
               volume_mounts: func.spec?.volume_mounts ?? [],
@@ -313,8 +313,10 @@ const Functions = ({
   }
 
   const handleDeployFunctionSuccess = ready => {
-    const { name, tag } = functionsStore.newFunction.metadata
+    let { name, tag } = functionsStore.newFunction.metadata
     const tab = ready === false ? 'logs' : 'overview'
+
+    tag ||= 'latest'
 
     setFunctionsPanelIsOpen(false)
     setEditableItem(null)

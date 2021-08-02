@@ -69,35 +69,36 @@ button {
   }
 }
 
-.completed,
-.ready,
-.succeeded,
-.active,
-.created,
-.info {
+[class^=completed],
+[class^=ready],
+[class^=succeeded],
+[class^=active],
+[class^=created],
+[class^=info] {
   @include statusState($brightTurquoise);
 }
 
-.empty {
+.created-job,
+.created-function {
   @include statusState($topaz);
 }
 
-.warn {
+[class^=warn] {
   @include statusState($grandis);
 }
 
-.deploying,
-.build,
-.pending,
-.running {
+[class^=deploying],
+[class^=build],
+[class^=pending],
+[class^=running] {
   @include statusState($pictonBlue);
 }
 
-.failed,
-.fail,
-.error,
-.broken,
-.aborted {
+[class^=failed],
+[class^=fail],
+[class^=error],
+[class^=broken],
+[class^=aborted] {
   @include statusState($burntSienna);
 }
 

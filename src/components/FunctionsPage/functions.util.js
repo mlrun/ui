@@ -43,8 +43,7 @@ export const infoHeaders = [
   { label: 'Updated', id: 'updated' },
   { label: 'Command', id: 'command' },
   { label: 'Image', id: 'image' },
-  { label: 'Description', id: 'description' },
-  { label: 'State', id: 'state' }
+  { label: 'Description', id: 'description' }
 ]
 export const filters = [
   { type: 'name', label: 'Name:' },
