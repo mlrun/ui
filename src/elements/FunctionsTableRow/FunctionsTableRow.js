@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { isEqual } from 'lodash'
 import classnames from 'classnames'
 
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-
-import { formatDatetime } from '../../utils'
+import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { detailsMenu } from '../../components/FunctionsPage/functions.util'
 
 const FunctionsTableRow = ({
@@ -21,18 +19,11 @@ const FunctionsTableRow = ({
 }) => {
   const [currentItem, setCurrentItem] = useState(null)
   const parent = useRef()
-  const selectedItemDate =
-    selectedItem.updated && formatDatetime(new Date(selectedItem.updated))
-  const indentUpdatedOnMainRow = isEqual(
-    rowItem.updated.value,
-    selectedItemDate
-  )
-  const indentHashOnMainRow = isEqual(rowItem.hash.value, selectedItem.hash)
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    indentUpdatedOnMainRow &&
-      indentHashOnMainRow &&
+    getFunctionIdentifier(selectedItem, true) ===
+      rowItem.name.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -43,14 +34,11 @@ const FunctionsTableRow = ({
     setCurrentItem(
       content.find(
         contentItem =>
-          isEqual(contentItem.hash, rowItem.hash.value) &&
-          isEqual(
-            formatDatetime(new Date(contentItem.updated)),
-            rowItem.updated.value
-          )
+          getFunctionIdentifier(contentItem, true) ===
+          rowItem.name.identifierUnique
       )
     )
-  }, [content, rowItem.hash.value, rowItem.updated.value])
+  }, [content, rowItem.name.identifierUnique, selectedItem])
 
   return (
     <div className={rowClassNames} ref={parent}>
@@ -73,23 +61,17 @@ const FunctionsTableRow = ({
                 content.length > 0 &&
                 content.find(item => {
                   return (
-                    formatDatetime(new Date(item.updated)) ===
-                      func.updated.value && item.hash === func.hash.value
+                    getFunctionIdentifier(item, true) ===
+                    func.name.identifierUnique
                   )
                 })
-              const indentUpdatedOnSubRow = isEqual(
-                selectedItemDate,
-                func.updated.value
-              )
-              const indexHashOnSubRow = isEqual(
-                func.hash.value,
-                selectedItem.hash
-              )
+              const isActiveSubRow =
+                getFunctionIdentifier(selectedItem, true) ===
+                func.name.identifierUnique
 
               return (
                 <div
-                  className={`table-body__row ${indentUpdatedOnSubRow &&
-                    indexHashOnSubRow &&
+                  className={`table-body__row ${isActiveSubRow &&
                     'row_active'}`}
                   key={index}
                 >

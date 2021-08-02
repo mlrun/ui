@@ -93,6 +93,7 @@ const createModelsRowData = (artifact, project) => {
   return {
     key: {
       identifier: getArtifactIdentifier(artifact),
+      identifierUnique: getArtifactIdentifier(artifact, true),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -188,6 +189,7 @@ const createFilesRowData = (artifact, project) => {
   return {
     key: {
       identifier: getArtifactIdentifier(artifact),
+      identifierUnique: getArtifactIdentifier(artifact, true),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -292,6 +294,7 @@ const createModelEndpointsRowData = (artifact, project) => {
   return {
     key: {
       identifier: getArtifactIdentifier(artifact),
+      identifierUnique: getArtifactIdentifier(artifact, true),
       value: name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -360,6 +363,7 @@ const createDatasetsRowData = (artifact, project) => {
   return {
     key: {
       identifier: getArtifactIdentifier(artifact),
+      identifierUnique: getArtifactIdentifier(artifact, true),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>

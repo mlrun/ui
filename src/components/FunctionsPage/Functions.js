@@ -21,6 +21,7 @@ import {
   TRANSIENT_FUNCTION_STATUSES
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import getState from '../../utils/getState.js'
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
@@ -151,7 +152,10 @@ const Functions = ({
               type: func.kind,
               volume_mounts: func.spec?.volume_mounts ?? [],
               volumes: func.spec?.volumes ?? [],
-              updated: new Date(func.metadata.updated)
+              updated: new Date(func.metadata.updated),
+              ui: {
+                originalContent: func
+              }
             }))
             .value()
 
@@ -388,7 +392,7 @@ const Functions = ({
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
         setLoading={setLoading}
-        yamlContent={functionsStore.functions}
+        getIdentifier={getFunctionIdentifier}
       />
       {editableItem && !functionsPanelIsOpen && (
         <JobsPanel

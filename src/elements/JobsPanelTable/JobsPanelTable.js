@@ -15,7 +15,6 @@ const JobsPanelTable = ({
   content,
   handleDeleteItems,
   handleEditItems,
-  handleSetSelectedVolume,
   headers,
   match,
   section,
@@ -41,10 +40,10 @@ const JobsPanelTable = ({
   )
 
   const handleDelete = useCallback(
-    item => {
-      handleDeleteItems(item, section.includes('env'))
+    (item, section, index) => {
+      handleDeleteItems(item, section, index)
     },
-    [handleDeleteItems, section]
+    [handleDeleteItems]
   )
 
   const generateActionsMenu = useCallback(

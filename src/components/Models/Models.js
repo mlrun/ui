@@ -28,6 +28,7 @@ import {
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 const Models = ({
   artifactsStore,
@@ -52,10 +53,6 @@ const Models = ({
     setIsRegisterArtifactPopupOpen
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
-  const [yamlContent, setYamlContent] = useState({
-    allData: [],
-    selectedRowData: []
-  })
   const [pageData, setPageData] = useState({
     detailsMenu: [],
     filters: [],
@@ -77,13 +74,9 @@ const Models = ({
 
       if (data.content) {
         setContent(data.content)
-        setYamlContent(state => ({
-          ...state,
-          allData: data.yamlContent
-        }))
       }
 
-      return data.yamlContent
+      return data.originalContent
     },
     [
       fetchModelEndpoints,
@@ -127,28 +120,33 @@ const Models = ({
   )
 
   const handleRequestOnExpand = useCallback(
-    async item => {
+    async model => {
+      const modelIdentifier = getArtifactIdentifier(model)
       let result = []
 
       setPageData(state => ({
         ...state,
         selectedRowData: {
           ...state.selectedRowData,
-          [item.db_key]: {
+          [modelIdentifier]: {
             loading: true
           }
         }
       }))
 
       try {
-        result = await fetchModel(item.project, item.db_key, !filtersStore.iter)
+        result = await fetchModel(
+          model.project,
+          model.db_key,
+          !filtersStore.iter
+        )
       } catch (error) {
         setPageData(state => ({
           ...state,
           selectedRowData: {
             ...state.selectedRowData,
-            [item.db_key]: {
-              ...state.selectedRowData[item.db_key],
+            [modelIdentifier]: {
+              ...state.selectedRowData[modelIdentifier],
               error,
               loading: false
             }
@@ -157,16 +155,12 @@ const Models = ({
       }
 
       if (result?.length > 0) {
-        setYamlContent(state => ({
-          ...state,
-          selectedRowData: result
-        }))
         setPageData(state => {
           return {
             ...state,
             selectedRowData: {
               ...state.selectedRowData,
-              [item.db_key]: {
+              [modelIdentifier]: {
                 content: [
                   ...generateArtifacts(
                     filterArtifacts(result),
@@ -184,14 +178,13 @@ const Models = ({
     [fetchModel, filtersStore.iter]
   )
 
-  const handleExpandRow = useCallback((item, isCollapse) => {
-    if (isCollapse) {
-      setYamlContent(state => ({
-        ...state,
-        selectedRowData: []
-      }))
-    }
-  }, [])
+  useEffect(() => {
+    removeModel({})
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {}
+    }))
+  }, [filtersStore.iter, removeModel])
 
   useEffect(() => {
     fetchData({
@@ -203,10 +196,6 @@ const Models = ({
       setContent([])
       removeModels()
       setSelectedModel({})
-      setYamlContent({
-        allData: [],
-        selectedRowData: []
-      })
     }
   }, [fetchData, match.params.pageTab, removeModels])
 
@@ -323,7 +312,6 @@ const Models = ({
       {artifactsStore.loading && <Loader />}
       <Content
         content={content}
-        expandRow={handleExpandRow}
         handleCancel={() => setSelectedModel({})}
         loading={artifactsStore.loading}
         match={match}
@@ -331,7 +319,7 @@ const Models = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
-        yamlContent={yamlContent}
+        getIdentifier={getArtifactIdentifier}
       />
       {isRegisterArtifactPopupOpen && (
         <RegisterArtifactPopup

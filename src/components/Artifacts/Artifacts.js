@@ -11,6 +11,7 @@ import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
 import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 import './artifacts.scss'
 
@@ -142,7 +143,7 @@ const Artifacts = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedArtifact.item}
-        yamlContent={artifactsStore.artifacts}
+        getIdentifier={getArtifactIdentifier}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup

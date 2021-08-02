@@ -14,10 +14,13 @@ import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import projectActions from '../../actions/projects'
 import detailsActions from '../../actions/details'
+
 import { generatePageData } from './jobsData'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import getState from '../../utils/getState.js'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
+
 import {
   MONITOR_TAB,
   SCHEDULE_TAB,
@@ -252,7 +255,10 @@ const Jobs = ({
               start_time: new Date(job.last_run?.status.start_time),
               state: getState(job.last_run?.status.state),
               type: job.kind === 'pipeline' ? 'workflow' : job.kind,
-              project: job.project
+              project: job.project,
+              ui: {
+                originalContent: job
+              }
             }
           } else {
             return {
@@ -275,7 +281,10 @@ const Jobs = ({
               updated: new Date(job.status.last_update),
               function: job?.spec?.function ?? '',
               project: job.metadata.project,
-              hyperparams: job.spec?.hyperparams || {}
+              hyperparams: job.spec?.hyperparams || {},
+              ui: {
+                originalContent: job
+              }
             }
           }
         })
@@ -420,7 +429,7 @@ const Jobs = ({
         refresh={refreshJobs}
         selectedItem={selectedJob}
         setLoading={setLoading}
-        yamlContent={jobsStore.jobs}
+        getIdentifier={getJobIdentifier}
       />
       {editableItem && (
         <JobsPanel

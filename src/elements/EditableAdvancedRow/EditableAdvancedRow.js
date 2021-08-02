@@ -33,10 +33,10 @@ const EditableAdvancedRow = ({
 
   useEffect(() => {
     if (tableRowRef.current) {
-      document.addEventListener('click', handleDocumentClick)
+      window.addEventListener('click', handleDocumentClick)
 
       return () => {
-        document.removeEventListener('click', handleDocumentClick)
+        window.removeEventListener('click', handleDocumentClick)
       }
     }
   }, [handleDocumentClick, tableRowRef])

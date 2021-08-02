@@ -3,6 +3,7 @@ import measureTime from './measureTime'
 import cronstrue from 'cronstrue'
 import { parseKeyValues } from './object'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import { getJobIdentifier } from './getUniqueIdentifier'
 
 import { FUNCTIONS_PAGE, JOBS_PAGE, MONITOR_TAB } from '../constants'
 
@@ -23,6 +24,8 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           name: {
             value: contentItem.name,
             class: 'jobs_big',
+            identifier: getJobIdentifier(contentItem),
+            identifierUnique: getJobIdentifier(contentItem, true),
             getLink: tab =>
               generateLinkToDetailsPanel(
                 contentItem.project,
@@ -80,6 +83,8 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           name: {
             value: contentItem.name,
             class: 'jobs_medium',
+            identifier: getJobIdentifier(contentItem),
+            identifierUnique: getJobIdentifier(contentItem, true),
             getLink: tab =>
               generateLinkToDetailsPanel(
                 contentItem.project,
