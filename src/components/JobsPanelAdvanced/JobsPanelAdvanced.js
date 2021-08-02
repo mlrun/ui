@@ -95,12 +95,12 @@ const JobsPanelAdvanced = ({
     }
   }
 
-  const handleDeleteItems = (item, isEnv) => {
-    if (isEnv) {
+  const handleDeleteItems = (item, section, index) => {
+    if (section.includes('env')) {
       handleDelete(
         environmentVariables,
         panelState.tableData.environmentVariables,
-        isEnv,
+        index,
         panelDispatch,
         panelState.previousPanelData.tableData.environmentVariables,
         item,
@@ -112,7 +112,7 @@ const JobsPanelAdvanced = ({
       handleDelete(
         secretSources,
         panelState.tableData.secretSources,
-        isEnv,
+        index,
         panelDispatch,
         panelState.previousPanelData.tableData.secretSources,
         item,

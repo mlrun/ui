@@ -81,6 +81,7 @@ const JobsPanelParametersTableView = ({
                     editItem={editItem}
                     handleDelete={handleDeleteParameter}
                     handleEdit={handleEditParameter}
+                    index={index}
                     key={`${contentItem.data.name}${index}`}
                     section="parameters"
                     withCheckbox

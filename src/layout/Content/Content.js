@@ -154,24 +154,26 @@ const Content = ({
 
   const handleExpandRow = (e, item) => {
     const parentRow = e.target.closest('.parent-row')
+    let newArray = []
 
     if (parentRow.classList.contains('parent-row-expanded')) {
-      const newArray = expandedItems.filter(
-        expanded =>
-          expanded.name?.value !== item.name?.value ||
-          expanded.name !== item.name ||
-          expanded.name !== item.key.value
+      newArray = expandedItems.filter(expanded =>
+        item.key?.value
+          ? expanded.name !== item.key?.value
+          : expanded.name !== item.name?.value
       )
 
       parentRow.classList.remove('parent-row-expanded')
       pageData.handleRemoveRequestData && pageData.handleRemoveRequestData(item)
-      setExpandedItems(newArray)
     } else {
       parentRow.classList.remove('row_active')
       parentRow.classList.add('parent-row-expanded')
       pageData.handleRequestOnExpand && pageData.handleRequestOnExpand(item)
-      setExpandedItems([...expandedItems, item])
+      newArray = [...expandedItems, item]
     }
+
+    setExpandedItems(newArray)
+    setExpand(newArray.length === Object.keys(groupedByName).length)
   }
 
   const handleExpandAll = collapseRows => {
