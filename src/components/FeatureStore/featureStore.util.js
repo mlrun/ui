@@ -1,6 +1,5 @@
 import React from 'react'
 import axios from 'axios'
-import { flatten } from 'lodash'
 
 import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
 
@@ -355,11 +354,13 @@ export const handleFetchData = async (
       data.originalContent = result
     }
   } else if (pageTab === FEATURES_TAB) {
-    const allResult = await Promise.all([
+    const allSettledResult = await Promise.allSettled([
       fetchFeatures(project, filters),
       fetchEntities(project, filters)
     ])
-    result = flatten(allResult)
+    const result = allSettledResult.reduce((prevValue, nextValue) => {
+      return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
+    }, [])
 
     if (result) {
       data.content = parseFeatures(result)
