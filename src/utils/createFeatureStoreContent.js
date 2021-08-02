@@ -13,7 +13,11 @@ import { formatDatetime } from './datetime'
 import { copyToClipboard } from './copyToClipboard'
 import { generateUri } from './resources'
 import { truncateUid } from '../utils'
-import { getFeatureIdentifier } from './getUniqueIdentifier'
+import {
+  getFeatureIdentifier,
+  getFeatureSetIdentifier,
+  getFeatureVectorIdentifier
+} from './getUniqueIdentifier'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 
 import { ReactComponent as Nosql } from '../images/nosql.svg'
@@ -41,7 +45,8 @@ export const createFeatureStoreContent = (
 const createFeatureSetsRowData = (featureSet, project) => {
   return {
     key: {
-      identifier: getFeatureIdentifier(featureSet),
+      identifier: getFeatureSetIdentifier(featureSet),
+      identifierUnique: getFeatureSetIdentifier(featureSet, true),
       value: featureSet.name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -96,6 +101,8 @@ const createFeaturesRowData = (feature, isTablePanelOpen) => {
   return {
     key: {
       identifier: getFeatureIdentifier(feature),
+      identifierUnique: getFeatureIdentifier(feature, true),
+      type: feature.ui.type,
       value: feature.name,
       class: 'artifacts_medium',
       expandedCellContent: {
@@ -198,7 +205,8 @@ const getFeatureSetTargetCellValue = targets => ({
 
 const createFeatureVectorsRowData = (featureVector, project) => ({
   key: {
-    identifier: getFeatureIdentifier(featureVector),
+    identifier: getFeatureVectorIdentifier(featureVector),
+    identifierUnique: getFeatureVectorIdentifier(featureVector, true),
     value: featureVector.name,
     class: 'artifacts_medium',
     getLink: tab =>
