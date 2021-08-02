@@ -23,12 +23,14 @@ import {
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import getState from '../../utils/getState.js'
-
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
-
-import { FUNCTIONS_PAGE } from '../../constants'
+import {
+  FUNCTIONS_PAGE,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE
+} from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -406,6 +408,7 @@ const Functions = ({
             )
           }}
           match={match}
+          mode={PANEL_EDIT_MODE}
           project={match.params.projectName}
           redirectToDetailsPane
         />
@@ -418,6 +421,7 @@ const Functions = ({
           handleDeployFunctionFailure={handleDeployFunctionFailure}
           handleDeployFunctionSuccess={handleDeployFunctionSuccess}
           match={match}
+          mode={editableItem ? PANEL_EDIT_MODE : PANEL_CREATE_MODE}
           project={match.params.projectName}
         />
       )}

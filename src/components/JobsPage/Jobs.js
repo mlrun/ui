@@ -25,7 +25,8 @@ import {
   MONITOR_TAB,
   SCHEDULE_TAB,
   INIT_GROUP_FILTER,
-  JOBS_PAGE
+  JOBS_PAGE,
+  PANEL_EDIT_MODE
 } from '../../constants'
 
 const Jobs = ({
@@ -441,6 +442,7 @@ const Jobs = ({
           }
           handleRunNewJob={{}}
           match={match}
+          mode={PANEL_EDIT_MODE}
           onEditJob={onEditJob}
           onSuccessRun={tab => {
             if (editableItem) {
