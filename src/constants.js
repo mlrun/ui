@@ -2,6 +2,9 @@
 
 export const FETCH_FRONTEND_SPEC_SUCCESS = 'FETCH_FRONTEND_SPEC_SUCCESS'
 
+export const PANEL_EDIT_MODE = 'EDIT'
+export const PANEL_CREATE_MODE = 'CREATE'
+
 /*=========== JOBS =============*/
 
 export const ABORT_JOB_BEGIN = 'ABORT_JOB_BEGIN'

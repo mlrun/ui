@@ -1,7 +1,8 @@
 import { chain } from 'lodash'
 import { getVolumeType } from '../../utils/panelResources.util'
+import { PANEL_EDIT_MODE } from '../../constants'
 
-export const getDefaultVolumeMounts = (volume_mounts, volumes) =>
+export const getDefaultVolumeMounts = (volume_mounts, volumes, mode) =>
   chain(volume_mounts)
     .flatten()
     .unionBy('name')
@@ -13,7 +14,8 @@ export const getDefaultVolumeMounts = (volume_mounts, volumes) =>
         ),
         name: volumeMount.name,
         mountPath: volumeMount.mountPath
-      }
+      },
+      canBeModified: mode === PANEL_EDIT_MODE
     }))
     .value()
 

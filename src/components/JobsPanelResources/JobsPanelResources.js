@@ -115,7 +115,8 @@ const JobsPanelResources = ({
         type: newVolume.type,
         name: newVolume.name,
         mountPath: newVolume.path
-      }
+      },
+      canBeModified: true
     }
     const generatedVolume = createNewVolume(newVolume)
 

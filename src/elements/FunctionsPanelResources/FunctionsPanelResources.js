@@ -15,6 +15,7 @@ import {
 const FunctionsPanelResources = ({
   defaultData,
   functionsStore,
+  mode,
   setNewFunctionVolumeMounts,
   setNewFunctionVolumes,
   setNewFunctionResources
@@ -22,7 +23,8 @@ const FunctionsPanelResources = ({
   const [data, setData] = useState({
     volumeMounts: getDefaultVolumeMounts(
       defaultData.volume_mounts ?? [],
-      defaultData.volumes ?? []
+      defaultData.volumes ?? [],
+      mode
     ),
     volumes: defaultData.volumes ?? [],
     memoryUnit:
@@ -203,7 +205,8 @@ const FunctionsPanelResources = ({
         type: newVolume.type,
         name: newVolume.name,
         mountPath: newVolume.path
-      }
+      },
+      canBeModified: true
     }
 
     setData(state => ({
@@ -287,7 +290,8 @@ FunctionsPanelResources.defaultProp = {
 }
 
 FunctionsPanelResources.propTypes = {
-  defaultData: PropTypes.shape({})
+  defaultData: PropTypes.shape({}),
+  mode: PropTypes.string.isRequired
 }
 
 export default connect(functionsStore => ({ ...functionsStore }), {
