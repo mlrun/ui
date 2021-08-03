@@ -108,7 +108,7 @@ const ChipForm = React.forwardRef(
         const elementPath = event.path ?? event.composedPath?.()
 
         if (!elementPath.includes(refInputContainer.current)) {
-          onChange(chip, 'Click')
+          onChange(event, chip, 'Click')
         }
       },
       [chip, onChange, refInputContainer]
@@ -133,13 +133,13 @@ const ChipForm = React.forwardRef(
           event.key === 'Tab' &&
           editConfig.isValueFocused
         ) {
-          onChange(chip, 'Tab')
+          onChange(event, chip, 'Tab')
         } else if (
           event.shiftKey &&
           event.key === 'Tab' &&
           editConfig.isKeyFocused
         ) {
-          onChange(chip, 'Tab+Shift')
+          onChange(event, chip, 'Tab+Shift')
         }
 
         if (event.key === 'Backspace' || event.key === 'Delete') {
