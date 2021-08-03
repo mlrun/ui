@@ -352,6 +352,9 @@ export const handleFetchData = async (
     if (result) {
       data.content = parseFeatureSets(result)
       data.originalContent = result
+    } else {
+      data.content = null
+      data.originalContent = null
     }
   } else if (pageTab === FEATURES_TAB) {
     const allSettledResult = await Promise.allSettled([

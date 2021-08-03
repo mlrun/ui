@@ -219,7 +219,11 @@ const DetailsView = React.forwardRef(
             <div className="pop-up-dialog__footer-container">
               <Button
                 variant="tertiary"
-                label="Don't Leave"
+                label={
+                  detailsStore.refreshWasHandled
+                    ? "Don't refresh"
+                    : "Don't Leave"
+                }
                 onClick={() => {
                   handleShowWarning(false)
                   setRefreshWasHandled(false)
@@ -227,7 +231,7 @@ const DetailsView = React.forwardRef(
               />
               <Button
                 variant="primary"
-                label="Leave"
+                label={detailsStore.refreshWasHandled ? 'Refresh' : 'Leave'}
                 className="pop-up-dialog__btn_cancel"
                 onClick={leavePage}
               />
