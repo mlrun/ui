@@ -14,7 +14,7 @@ import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import {
   detailsMenu,
   filters,
-  FUNCTIONS_FAILED_STATES,
+  FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
   tableHeaders,
@@ -94,7 +94,7 @@ const Functions = ({
         label: 'Run',
         icon: <Run />,
         onClick: func => setEditableItem(func),
-        hidden: FUNCTIONS_FAILED_STATES.includes(item?.state?.value)
+        hidden: !FUNCTIONS_READY_STATES.includes(item?.state?.value)
       },
       {
         label: 'Edit',
