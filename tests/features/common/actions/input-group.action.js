@@ -1,15 +1,26 @@
 import { expect } from 'chai'
+import { Key } from 'selenium-webdriver'
+
+async function clearManualy(inputField) {
+  const existValue = await inputField.getAttribute('value')
+  for (let i = 0; i <= existValue.length; i++) {
+    await inputField.sendKeys(Key.BACK_SPACE, Key.DELETE)
+  }
+}
 
 const action = {
+  clearManualy: clearManualy,
   typeValue: async function(driver, inputGroup, value) {
     // console.log('debug: ', inputGroup.inputField)
     const inputField = await driver.findElement(inputGroup.inputField)
-    return inputField.sendKeys(value)
+    await clearManualy(inputField)
+    return await inputField.sendKeys(value)
   },
   checkHintText: async function(driver, inputGroup, hintComponent, text) {
     // console.log('debug: ', inputGroup.hintButton)
     const hintButton = await driver.findElement(inputGroup.hintButton)
     await hintButton.click()
+    await driver.sleep(250)
     const hint = await driver.findElement(hintComponent)
     const hintText = await hint.getText()
     expect(hintText).equal(text)

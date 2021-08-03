@@ -62,7 +62,7 @@ async function selectCalendarDay(driver, dateTimePicker, datetimePoint) {
 async function setPickerTime(driver, dateTimePicker, datetimePoint) {
   const datetime = new Date(datetimePoint)
   const timeInput = await driver.findElement(dateTimePicker.timeInput)
-  const timeString = `${datetime.getHours()}:${datetime.getMinutes()}`
+  const timeString = datetime.toString().slice(16, 21)
 
   await timeInput.clear()
   await timeInput.sendKeys(timeString)
@@ -76,7 +76,12 @@ const action = {
     const datetimeDiff =
       Date.parse(datetimePoints[1]) - Date.parse(datetimePoints[0])
 
-    const result = datetimeDiff - diff >= 0
+    let result = -1
+    if (typeof diff === 'object') {
+      result = datetimeDiff >= diff.min && datetimeDiff <= diff.max
+    } else {
+      result = datetimeDiff - diff === 0
+    }
     expect(result).to.equal(true)
   },
   pickUpCustomDatetimeRange: async function(

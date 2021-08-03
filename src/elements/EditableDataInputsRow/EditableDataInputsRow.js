@@ -5,10 +5,7 @@ import classNames from 'classnames'
 import Input from '../../common/Input/Input'
 import Combobox from '../../common/Combobox/Combobox'
 
-import {
-  comboboxSelectList,
-  pathPlaceholders
-} from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import { comboboxSelectList } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import {
@@ -16,6 +13,7 @@ import {
   handleEditInputPath
 } from './EditableDataInputsRow.utils'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
+import { pathPlaceholders } from '../../utils/panelPathScheme'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 

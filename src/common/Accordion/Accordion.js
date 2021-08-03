@@ -34,7 +34,7 @@ const Accordion = ({
     }
 
     return () => {
-      window.addEventListener('click', handleOnBlur)
+      window.removeEventListener('click', handleOnBlur)
     }
   }, [accordionRef, handleOnBlur])
 

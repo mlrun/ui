@@ -2,6 +2,8 @@ import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
+import inputGroup from '../components/input-group.component'
+import { generateInputGroup } from '../../common-tools/common-tools'
 
 // Feature Sets
 const tabSelector = {
@@ -161,7 +163,7 @@ const featureVectorTable = {
       root: 'div.table-body__row',
       fields: {
         expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name: 'div.table-body__cell:nth-of-type(1) div.data-ellipsis',
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
         description: 'div.table-body__cell:nth-of-type(2) div.data-ellipsis',
         labels_table: {
           componentType: commonTable,
@@ -194,8 +196,7 @@ const datasetsTable = {
       root: 'div.table-body__row',
       fields: {
         expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        name:
-          'div.table-body__cell:nth-of-type(1) div.data-ellipsis div.data-ellipsis',
+        name: 'div.table-body__cell:nth-of-type(1) div.data-ellipsis span.link',
         labels: 'div.table-body__cell:nth-of-type(2)',
         producer:
           'div.table-body__cell:nth-of-type(3) div.data-ellipsis a.link',
@@ -218,7 +219,7 @@ const datasetsTable = {
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
-  'div.feature-store-container div.content__action-bar div.data-ellipsis:nth-of-type(1) button'
+  'div.feature-store-container div.content__action-bar div.actions button#refresh'
 )
 const pageHeaderButton = By.css(
   'div.content__header div.page-actions-container button'
@@ -231,11 +232,19 @@ module.exports = {
     Table_Expand_Rows_Button: By.css(
       'div.feature-store-container div.content__action-bar div.data-ellipsis:nth-of-type(2) button'
     ),
-    Table_Name_Filter_Input: By.css(
-      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(1) input'
+    Table_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(1)',
+        true,
+        false
+      )
     ),
-    Table_Label_Filter_Input: By.css(
-      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2) input'
+    Table_Label_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2)',
+        true,
+        false
+      )
     ),
     Feature_Sets_Table: commonTable(featureSetsTable),
     Feature_Store_Tab_Selector: featureStoreTabSelector
@@ -243,13 +252,21 @@ module.exports = {
   featuresTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Add_To_Feature_Vector_Button: By.css(
-      'div.feature-store-container div.content__action-bar > div.data-ellipsis button'
+      'div.feature-store-container div.content__action-bar div.add-to-feature-vector button'
     ),
-    Table_Name_Filter_Input: By.css(
-      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2) input'
+    Table_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2)',
+        true,
+        false
+      )
     ),
-    Table_Label_Filter_Input: By.css(
-      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(3) input'
+    Table_Label_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(3)',
+        true,
+        false
+      )
     ),
     Table_Tag_Filter_Dropdown: dropdownComponent(tagFilterDropdown),
     Table_Refresh_Button: tableRefreshButton,
@@ -258,11 +275,19 @@ module.exports = {
   featureVectorsTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Create_Vector_Button: pageHeaderButton,
-    Table_Name_Filter_Input: By.css(
-      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2) input'
+    Table_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2)',
+        true,
+        false
+      )
     ),
-    Table_Label_Filter_Input: By.css(
-      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(3) input'
+    Table_Label_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(3)',
+        true,
+        false
+      )
     ),
     Table_Tag_Filter_Dropdown: dropdownComponent(tagFilterDropdown),
     Table_Refresh_Button: tableRefreshButton,
@@ -271,11 +296,19 @@ module.exports = {
   datasets: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Register_Dataset_Button: pageHeaderButton,
-    Table_Name_Filter_Input: By.css(
-      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2) input'
+    Table_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2)',
+        true,
+        false
+      )
     ),
-    Table_Label_Filter_Input: By.css(
-      'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(3) input'
+    Table_Label_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(3)',
+        true,
+        false
+      )
     ),
     Table_Tree_Filter_Dropdown: dropdownComponent(tagFilterDropdown),
     Table_Refresh_Button: tableRefreshButton,

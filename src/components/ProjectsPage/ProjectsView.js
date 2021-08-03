@@ -128,6 +128,7 @@ const ProjectsView = ({
                   onChange={value => handleSearchOnChange(value)}
                   placeholder="Search projects..."
                   setMatches={setFilterMatches}
+                  value={filterByName}
                 />
                 <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
                   <button onClick={refreshProjects}>

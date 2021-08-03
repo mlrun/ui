@@ -1,24 +1,67 @@
-import React from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
+import { POP_UP_CUSTOM_POSITION } from '../../types'
 import { ReactComponent as Close } from '../../images/close.svg'
 
 import './popUpDialog.scss'
 
-const PopUpDialog = ({ children, className, closePopUp, headerText }) => {
-  const popUpClassNames = classnames(className, 'pop-up-dialog__overlay')
+const PopUpDialog = ({
+  children,
+  className,
+  closePopUp,
+  customPosition,
+  headerText
+}) => {
+  const popUpOverlayRef = useRef(null)
+  const popUpClassNames = classnames(
+    className,
+    'pop-up-dialog__overlay',
+    customPosition.element && 'custom-position'
+  )
+
+  const calculateCustomPopUpPosition = useCallback(() => {
+    if (customPosition.element) {
+      const elementRect = customPosition.element.current.getBoundingClientRect()
+      const popUpRect = popUpOverlayRef.current.getBoundingClientRect()
+      const [
+        verticalPosition,
+        horizontalPosition
+      ] = customPosition.position.split('-')
+
+      const topPosition =
+        verticalPosition === 'top'
+          ? elementRect.top - popUpRect.height - 5
+          : elementRect.bottom + 5
+      const leftPosition =
+        horizontalPosition === 'left'
+          ? elementRect.right - popUpRect.width
+          : elementRect.left
+
+      popUpOverlayRef.current.style.top = `${topPosition}px`
+      popUpOverlayRef.current.style.left = `${leftPosition}px`
+    }
+  }, [customPosition])
+
+  useLayoutEffect(() => {
+    calculateCustomPopUpPosition()
+  }, [calculateCustomPopUpPosition])
+
+  useEffect(() => {
+    window.addEventListener('resize', calculateCustomPopUpPosition)
+
+    return () => {
+      window.removeEventListener('resize', calculateCustomPopUpPosition)
+    }
+  })
 
   return (
-    <div className={popUpClassNames}>
-      <div
-        data-testid="pop-up-dialog"
-        className="pop-up-dialog"
-        onClick={event => event.stopPropagation()}
-      >
+    <div ref={popUpOverlayRef} className={popUpClassNames}>
+      <div data-testid="pop-up-dialog" className="pop-up-dialog">
         <div className="pop-up-dialog__header">
           {headerText && (
             <div
@@ -42,12 +85,14 @@ const PopUpDialog = ({ children, className, closePopUp, headerText }) => {
 
 PopUpDialog.defaultProps = {
   className: '',
+  customPosition: {},
   headerText: ''
 }
 
 PopUpDialog.propTypes = {
   className: PropTypes.string,
   closePopUp: PropTypes.func.isRequired,
+  customPosition: POP_UP_CUSTOM_POSITION,
   headerText: PropTypes.string
 }
 

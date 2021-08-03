@@ -29,6 +29,10 @@
     align-items: flex-start;
     overflow-x: auto;
 
+    &-wrapper {
+      min-width: 100%;
+    }
+
     &-header {
       position: sticky;
       top: 0;
@@ -46,14 +50,9 @@
       }
     }
 
-    &-body {
-      min-width: 100%;
-    }
-
     &-item {
       display: flex;
       align-items: center;
-      width: 70px;
       min-width: 70px;
       padding: 0 5px;
     }

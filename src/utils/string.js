@@ -12,3 +12,7 @@ export const joinDataOfArrayOrObject = (data, splitCharacter = ',') => {
 
   return data.toString()
 }
+
+export const deleteUnsafeHtml = unsafeStr => {
+  return unsafeStr.replace(/[&<>"']/g, '')
+}

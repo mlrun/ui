@@ -3,6 +3,10 @@ import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
 import datepicker from '../components/date-picker.component'
+import inputGroup from '../components/input-group.component'
+import inputWithAutocomplete from '../components/input-with-autocomplete.component'
+
+import { generateInputGroup } from '../../common-tools/common-tools'
 
 // Monitor tab
 const tabSelector = {
@@ -43,7 +47,7 @@ const labelsDropdown = {
     open_button: 'div.chip-block span.chips_button',
     options:
       'div.chip-block div.chip-block-hidden_visible div.data-ellipsis.tooltip-wrapper',
-    option_name: 'span.chip > div.chip_short'
+    option_name: ''
   }
 }
 
@@ -53,7 +57,7 @@ const parametersDropdown = {
     open_button: 'div.chip-block span.chips_button',
     options:
       'div.chip-block div.chip-block-hidden_visible div.data-ellipsis.tooltip-wrapper',
-    option_name: 'span.chip > div.chip_short'
+    option_name: ''
   }
 }
 
@@ -208,6 +212,64 @@ const dateTimePickerCalendars = {
 }
 // datepicker end
 
+// Create job
+const selectFunctionFromDropdown = {
+  root:
+    'div.create-container div.create-container__data  div.accordion__container.functions-wrapper div.data-header__select',
+  dropdownElements: {
+    open_button: 'div.select__header div.select__value',
+    options: 'div.select__body div.select__item',
+    option_name: 'div.data-ellipsis div.data-ellipsis'
+  }
+}
+
+const selectedFunctionsTemplates = {
+  root:
+    'div.create-container div.create-container__data  div.accordion__container.functions-wrapper div.create-container__data-list',
+  header: {},
+  body: {
+    row: {
+      root: 'div.card-template',
+      fields: {
+        name: '.card-template__header'
+      }
+    }
+  }
+}
+
+const predefinedFunctionsTemplates = {
+  root: 'div.create-container__data-list',
+  header: {},
+  body: {
+    row: {
+      root: 'div.card-template',
+      fields: {
+        name: '.card-template__header',
+        description: '.card-template__description'
+      }
+    }
+  }
+}
+
+const functionsTemplates = {
+  root:
+    'div.create-container div.create-container__data > div.accordion__container:nth-of-type(3) div.accordion__body div.data-wrapper div.templates-container',
+  header: {},
+  body: {
+    row: {
+      root: 'div.accordion__container',
+      fields: {
+        expand_btn: 'button',
+        name: 'div.accordion__body > h6 span',
+        templates_list: {
+          componentType: commonTable,
+          structure: predefinedFunctionsTemplates
+        }
+      }
+    }
+  }
+}
+
 // Common components
 const pageHeaderButton = By.css(
   'div.content__header div.page-actions-container button'
@@ -230,14 +292,60 @@ module.exports = {
     ),
     Status_Filter_Dropdown: dropdownComponent(statusFilterDropdown),
     Group_By_Name_Filter_Dropdown: dropdownComponent(groupByNameFilterDropdown),
-    Table_Name_Filter_Input: By.xpath(
-      '//div[contains(@class,"filters")]//label[contains(text(),"Name")]/preceding-sibling::input'
+    Table_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(4)',
+        true,
+        false
+      )
     ),
-    Table_Labels_Filter_Input: By.xpath(
-      '//div[contains(@class,"filters")]//label[contains(text(),"Labels")]/preceding-sibling::input'
+    Table_Labels_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(5)',
+        true,
+        false
+      )
     ),
     Start_Time_Filter_Dropdown: dropdownComponent(startTimeFilterDropdown),
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Jobs_Monitor_Table: commonTable(jobsMonitorTable)
+  },
+  CreateJob: {
+    Back_Arrow_Button: By.css(
+      'div.create-container div.create-container__header div.header-link a.header-link__icon'
+    ),
+    Create_Job_Header: By.css(
+      'div.create-container div.create-container__header div.header-link h3.header-link__title'
+    ),
+    Search_Input: inputWithAutocomplete({
+      root:
+        'div.create-container div.create-container__data  div.search-container',
+      elements: {
+        input: 'input',
+        options: 'ul.search-matches li.search-matches__item',
+        option_name: ''
+      }
+    }),
+    Select_Functions_From_Accordion: {
+      Accordion_Header: By.css(
+        'div.create-container div.create-container__data div.accordion__container.functions-wrapper h5.data-header__title span'
+      ),
+      Collapse_Button: By.css(
+        'div.create-container div.create-container__data div.accordion__container.functions-wrapper button.accordion__icon'
+      ),
+      Select_Function_From_Dropdown: dropdownComponent(
+        selectFunctionFromDropdown
+      ),
+      Selected_Functions_Templates: commonTable(selectedFunctionsTemplates)
+    },
+    Function_Templates_Accordion: {
+      Accordion_Header: By.css(
+        'div.create-container div.create-container__data > div.accordion__container:nth-of-type(3) h5.data-header__title'
+      ),
+      Collapse_Button: By.css(
+        'div.create-container div.create-container__data > div.accordion__container:nth-of-type(3) > button.accordion__icon'
+      ),
+      Functions_Templates_Table: commonTable(functionsTemplates)
+    }
   }
 }

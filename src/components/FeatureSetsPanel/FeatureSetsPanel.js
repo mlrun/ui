@@ -112,6 +112,7 @@ const FeatureSetsPanel = ({
       isSchemaEntitiesValid={isSchemaEntitiesValid}
       isUrlValid={isUrlValid}
       loading={featureStore.loading}
+      project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
       setNameValid={setNameValid}

@@ -36,6 +36,7 @@ const Input = React.forwardRef(
       tip,
       type,
       value,
+      withoutBorder,
       wrapperClassName
     },
     ref
@@ -54,7 +55,8 @@ const Input = React.forwardRef(
         floatingLabel &&
         'active-input',
       isInvalid && 'input_invalid',
-      tip && 'input-short'
+      tip && 'input-short',
+      withoutBorder && 'without-border'
     )
     const labelClassNames = classnames(
       'input__label',
@@ -223,6 +225,7 @@ Input.defaultProps = {
   requiredText: '',
   tip: '',
   value: undefined,
+  withoutBorder: false,
   wrapperClassName: ''
 }
 
@@ -249,6 +252,7 @@ Input.propTypes = {
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  withoutBorder: PropTypes.bool,
   wrapperClassName: PropTypes.string
 }
 

@@ -3,31 +3,8 @@ import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
 import checkboxComponent from '../components/checkbox.component'
 import radiobuttonComponent from '../components/radio-button.component'
+import { generateInputGroup } from '../../common-tools/common-tools'
 const { By } = require('selenium-webdriver')
-
-function generateInputGroup(
-  root,
-  label = false,
-  hint = false,
-  warning = false
-) {
-  const structure = { elements: {} }
-  structure.root = root
-  structure.elements.input = 'input'
-  if (label) {
-    structure.elements.label = 'label'
-  }
-  // console.log('debug1: ', hint)
-  if (hint) {
-    // console.log('debug1: ', root, 'div.tip-container svg')
-    structure.elements.hint = 'div.tip-container svg'
-  }
-  if (warning) {
-    structure.elements.warningHint = 'div.input__warning svg'
-    structure.elements.warningText = 'div.tooltip div.tooltip__text'
-  }
-  return structure
-}
 
 const labelsTable = {
   root: 'div.panel-title__labels-container div.panel-title__labels-wrapper',
@@ -101,49 +78,19 @@ const dataSorceAttributesTable = {
   }
 }
 
-const schemaCellTypeDropdown = {
-  root: 'div.select ',
+const partitionGranularityDropdown = {
+  root:
+    'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.select',
   dropdownElements: {
     open_button: 'div.select__header div.select__value',
     options: 'div.select__body div.select__item',
-    option_name: 'div.data-ellipsis div.data-ellipsis'
-  }
-}
-
-const schemaAttributesTable = {
-  root:
-    'div.feature-set-panel div.accordion__container:nth-of-type(2) div.panel-section__body div.schema__table',
-  header: {
-    root: 'div.table__header',
-    sorters: {
-      attribute_name: 'div.table__cell:nth-of-type(1)',
-      type: 'div.table__cell:nth-of-type(2)'
-    }
-  },
-  body: {
-    offset: 1,
-    add_row_btn: 'div.table__row button.add-input',
-    row: {
-      root: 'div[class^=table__row]',
-      fields: {
-        entity_name: 'div.table__cell:nth-of-type(1) div.data-ellipsis',
-        type: 'div.table__cell:nth-of-type(2) div.data-ellipsis',
-        remove_btn:
-          'div.table__cell:nth-of-type(3) div.data-ellipsis .btn_delete',
-        entity_name_input: 'div.input-wrapper input',
-        type_dropdown: {
-          componentType: dropdownComponent,
-          structure: schemaCellTypeDropdown
-        },
-        add_row_btn: 'button'
-      }
-    }
+    option_name: 'div.data-ellipsis > div.data-ellipsis'
   }
 }
 
 const fileTypeDropdown = {
   root:
-    'div.feature-set-panel div.accordion__container:nth-of-type(3) .target-store__inputs-container div.select',
+    'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(3) div.select',
   dropdownElements: {
     open_button: 'div.select__header div.select__value',
     options: 'div.select__body div.select__item',
@@ -221,10 +168,12 @@ module.exports = {
       Collapse_Button: By.css(
         'div.feature-set-panel div.accordion__container:nth-of-type(2) button.new-item-side-panel__expand-icon'
       ),
-      Timestamp_Input: By.css(
-        'div.feature-set-panel div.accordion__container:nth-of-type(2) div.input-wrapper input'
+      Entities_Input: By.css(
+        'div.feature-set-panel div.accordion__container:nth-of-type(2) div.input-wrapper:nth-of-type(2) input'
       ),
-      Schema_Attributes_Table: commonTable(schemaAttributesTable)
+      Timestamp_Input: By.css(
+        'div.feature-set-panel div.accordion__container:nth-of-type(2) div.input-wrapper:nth-of-type(2) input'
+      )
     },
     Target_Store_Accordion: {
       Accordion_Header: By.css(
@@ -233,6 +182,7 @@ module.exports = {
       Collapse_Button: By.css(
         'div.feature-set-panel div.accordion__container:nth-of-type(3) button.new-item-side-panel__expand-icon'
       ),
+      // online group
       Online_Checkbox: checkboxComponent({
         root:
           'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(1) span.checkbox',
@@ -242,6 +192,15 @@ module.exports = {
           icon: 'svg:not([class])'
         }
       }),
+      Online_Path_Input: inputGroup(
+        generateInputGroup(
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(1) div.input-wrapper',
+          true,
+          false,
+          true
+        )
+      ),
+      // Offline group
       Offline_Checkbox: checkboxComponent({
         root:
           'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(2) span.checkbox',
@@ -251,6 +210,43 @@ module.exports = {
           icon: 'svg:not([class])'
         }
       }),
+      Offline_Path_Input: inputGroup(
+        generateInputGroup(
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.input-wrapper',
+          true,
+          false,
+          true
+        )
+      ),
+      Offline_Partition_Checkbox: checkboxComponent({
+        root:
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.target-store__inputs-container span.checkbox',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: 'svg:not([class])'
+        }
+      }),
+      Offline_Partition_Key_Buckering_Number_Input: inputGroup(
+        generateInputGroup(
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.input-wrapper',
+          true,
+          'div.input__tip svg',
+          false
+        )
+      ),
+      Offline_Partition_Columns_Input: inputGroup(
+        generateInputGroup(
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.target-store__inputs-container > div.partition-cols.input-wrapper',
+          true,
+          false,
+          false
+        )
+      ),
+      Offline_Partition_Granularity_Dropdown: dropdownComponent(
+        partitionGranularityDropdown
+      ),
+      // Other group
       Other_Checkbox: checkboxComponent({
         root:
           'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(3) span.checkbox',

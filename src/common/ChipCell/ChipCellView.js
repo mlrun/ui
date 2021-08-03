@@ -11,7 +11,7 @@ import { ReactComponent as Add } from '../../images/add.svg'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
-import { CHIP_OPTIONS } from '../../types'
+import { CHIP_OPTIONS, CHIPS } from '../../types'
 
 const ChipCellView = React.forwardRef(
   (
@@ -27,6 +27,7 @@ const ChipCellView = React.forwardRef(
       handleShowElements,
       isEditMode,
       setEditConfig,
+      shortChips,
       showHiddenChips
     },
     ref
@@ -48,7 +49,7 @@ const ChipCellView = React.forwardRef(
             const { chipLabel, chipValue } = getChipLabelAndValue(chip)
 
             return (
-              <div className={'chip-block'} key={`${chip.value}${index}`}>
+              <div className="chip-block" key={`${chip.value}${index}`}>
                 <Tooltip
                   className="tooltip-wrapper"
                   hidden={editConfig.isEdit || /^\+ [\d]+/g.test(chip.value)}
@@ -57,7 +58,7 @@ const ChipCellView = React.forwardRef(
                     <TextTooltipTemplate
                       text={
                         chip.delimiter ? (
-                          <span>
+                          <span className="chip__content">
                             {chipLabel}
                             <span className="chip__delimiter">
                               {chip.delimiter}
@@ -83,6 +84,7 @@ const ChipCellView = React.forwardRef(
                     isEditMode={isEditMode}
                     onClick={handleShowElements}
                     setEditConfig={setEditConfig}
+                    shortChip={shortChips}
                     ref={ref}
                   />
                 </Tooltip>
@@ -134,7 +136,7 @@ ChipCellView.defaultProps = {
 }
 
 ChipCellView.propTypes = {
-  chips: PropTypes.shape({}),
+  chips: PropTypes.shape({ visibleChips: CHIPS, hiddenChips: CHIPS }),
   chipOptions: CHIP_OPTIONS.isRequired,
   className: PropTypes.string,
   editConfig: PropTypes.shape({}),
@@ -145,6 +147,7 @@ ChipCellView.propTypes = {
   handleShowElements: PropTypes.func,
   isEditMode: PropTypes.bool,
   setEditConfig: PropTypes.func,
+  shortChips: PropTypes.bool,
   show: PropTypes.bool
 }
 

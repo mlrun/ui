@@ -1,16 +1,27 @@
 import { expect } from 'chai'
 import { differenceWith, isEqual } from 'lodash'
+import { openDropdown, getOptionValues } from './dropdown.action'
 
-function getColumnValues(driver, table, columnName) {
-  return driver
+async function getColumnValues(driver, table, columnName) {
+  return await driver
     .findElements(table.tableColumns[columnName])
     .then(function(elements) {
       return Promise.all(elements.map(element => element.getText()))
     })
 }
 
+async function getTableRows(driver, table) {
+  const arr = await driver
+    .findElements(table.tableColumns[table.tableCulumnNames[0]])
+    .then(function(elements) {
+      return Promise.all(elements.map(element => element))
+    })
+  return await arr.length
+}
+
 const action = {
   getColumnValues: getColumnValues,
+  getTableRows: getTableRows,
   isContainsValueInColumn: async function(driver, table, columnName, value) {
     const arr = await getColumnValues(driver, table, columnName)
     expect(arr.includes(value)).equal(true)
@@ -18,6 +29,47 @@ const action = {
   isNotContainsValueInColumn: async function(driver, table, columnName, value) {
     const arr = await getColumnValues(driver, table, columnName)
     expect(arr.includes(value)).equal(false)
+  },
+  isContainsSubstringInColumnCels: async function(
+    driver,
+    table,
+    columnName,
+    value
+  ) {
+    const arr = await getColumnValues(driver, table, columnName)
+    expect(arr.length > 0).equal(true)
+    expect(arr.every(item => item.includes(value))).equal(true)
+  },
+  isContainsSubstringInColumnDropdownCels: async function(
+    driver,
+    table,
+    column,
+    value
+  ) {
+    const subStirng = value.replace('=', '\n:\n')
+    const rows = await getTableRows(driver, table)
+    expect(rows).not.equal(0)
+    let flag = true
+    for (let i = 1; i <= rows; i++) {
+      await openDropdown(driver, table.tableFields[column](i))
+      const options = await getOptionValues(
+        driver,
+        table.tableFields[column](i).options
+      )
+      flag = flag && options.some(item => item.includes(subStirng))
+    }
+    expect(flag).equal(true)
+  },
+  isDatetimeCelsValueInRange: async function(
+    driver,
+    table,
+    column,
+    fromDateTime,
+    toDateTime
+  ) {
+    // const arr = await getColumnValues(driver, table, column)
+    // TODO: wait while defect with year will be fixed
+    console.log('Should be implemented')
   },
   findRowIndexesByColumnValue: async function(
     driver,

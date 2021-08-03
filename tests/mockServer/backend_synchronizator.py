@@ -11,8 +11,8 @@ save_folder = 'tests/mockServer/data'
 endpoint_frontend_spec = '/api/frontend-spec'
 endpoint_projects_summary = '/api/projects?format=summary'
 endpoint_projects = '/api/projects/'
-endpoint_artifacts = '/api/artifacts'
 
+endpoint_artifacts = '/api/artifacts?project={project}&tag=*'
 endpoint_project_feature_sets = '/api/projects/{project}/feature-sets'
 endpoint_project_schedules = '/api/projects/{project}/schedules'
 endpoint_project_pipelines = '/api/projects/{project}/pipelines'
@@ -83,11 +83,11 @@ if __name__ == '__main__':
     projects = get_json(react_app_mlrun_api_url, endpoint_projects)
     projects_summary = get_json(react_app_mlrun_api_url, endpoint_projects_summary)
     frontend_spec = get_json(react_app_mlrun_api_url, endpoint_frontend_spec)
-    artifacts = get_json(react_app_mlrun_api_url, endpoint_artifacts)
 
     project_dict = json.loads(projects)
     project_names = [item['metadata']['name'] for item in project_dict['projects']]
 
+    artifacts_arr = get_jsons(react_app_mlrun_api_url, endpoint_artifacts, *project_names)
     feature_sets_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_feature_sets, *project_names)
     schedules_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_schedules, *project_names)
     features_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_features, *project_names)
@@ -96,6 +96,7 @@ if __name__ == '__main__':
     funcs_arr = get_jsons(react_app_mlrun_api_url, endpoint_funcs, *project_names)
     runs_arr = get_jsons(react_app_mlrun_api_url, endpoint_runs, *project_names)
 
+    artifacts_all = convert_array_to_json(*artifacts_arr)
     feature_sets_all = convert_array_to_json(*feature_sets_arr)
     schedules_all = convert_array_to_json(*schedules_arr)
     features_all = convert_array_to_json(*features_arr)
@@ -123,9 +124,9 @@ if __name__ == '__main__':
     clear_data_folder(save_folder + '/*')
     save_dict_to_json(save_folder + '/projects.json', **json.loads(projects))
     save_dict_to_json(save_folder + '/summary.json', **json.loads(projects_summary))
-    save_dict_to_json(save_folder + '/artifacts.json', **json.loads(artifacts))
     save_dict_to_json(save_folder + '/frontendSpec.json', **json.loads(frontend_spec))
 
+    save_dict_to_json(save_folder + '/artifacts.json', **artifacts_all)
     save_dict_to_json(save_folder + '/features.json', **features_all)
     save_dict_to_json(save_folder + '/featureSets.json', **feature_sets_all)
     save_dict_to_json(save_folder + '/featureVectors.json', **feature_vectors_all)

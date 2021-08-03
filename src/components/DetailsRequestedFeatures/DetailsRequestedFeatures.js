@@ -1,5 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
+import { isNil } from 'lodash'
 
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 
@@ -51,7 +52,11 @@ const DetailsRequestedFeatures = ({
   }, [selectedItem])
 
   useEffect(() => {
-    setCurrentData(changes.data.features ?? selectedItem.specFeatures)
+    setCurrentData(
+      !isNil(changes.data.features)
+        ? changes.data.features.currentFieldValue
+        : selectedItem.specFeatures
+    )
 
     return () => {
       setConfirmDialogData({ index: null, feature: null })
@@ -63,37 +68,32 @@ const DetailsRequestedFeatures = ({
   }, [changes.data.features, selectedItem.specFeatures])
 
   const handleItemClick = (field, fieldType, info, index) => {
-    setEditableItem(index)
-    detailsRequestedFeaturesDispatch({
-      type: detailsRequestedFeaturesActions.SET_EDIT_MODE,
-      payload: {
-        field,
-        fieldType
-      }
-    })
+    if (isNil(editableItem)) {
+      setEditableItem(index)
+      detailsRequestedFeaturesDispatch({
+        type: detailsRequestedFeaturesActions.SET_EDIT_MODE,
+        payload: {
+          field,
+          fieldType
+        }
+      })
 
-    if (!detailsRequestedFeaturesState.fieldsData[field]?.initialFieldValue) {
-      detailsRequestedFeaturesDispatch({
-        type: detailsRequestedFeaturesActions.SET_FIELDS_DATA,
-        payload: {
-          ...detailsRequestedFeaturesState.fieldsData,
+      if (isNil(changes.data[field]?.initialFieldValue)) {
+        setChangesData({
           [field]: {
-            previousFieldValue: info,
-            initialFieldValue: info
+            initialFieldValue: selectedItem.specFeatures,
+            currentFieldValue: selectedItem.specFeatures,
+            previousFieldValue: selectedItem.specFeatures
           }
-        }
-      })
-    } else {
-      detailsRequestedFeaturesDispatch({
-        type: detailsRequestedFeaturesActions.SET_FIELDS_DATA,
-        payload: {
-          ...detailsRequestedFeaturesState.fieldsData,
+        })
+      } else {
+        setChangesData({
           [field]: {
-            ...detailsRequestedFeaturesState.fieldsData[field],
-            previousFieldValue: info
+            ...changes.data[field],
+            currentFieldValue: changes.data[field].previousFieldValue
           }
-        }
-      })
+        })
+      }
     }
   }
 
@@ -113,15 +113,12 @@ const DetailsRequestedFeatures = ({
   const handleDelete = index => {
     if (editableItem) setEditableItem(null)
 
-    if (!detailsRequestedFeaturesState.fieldsData.features) {
-      detailsRequestedFeaturesDispatch({
-        type: detailsRequestedFeaturesActions.SET_FIELDS_DATA,
-        payload: {
-          ...detailsRequestedFeaturesState.fieldsData,
-          features: {
-            previousFieldValue: selectedItem.specFeatures,
-            initialFieldValue: selectedItem.specFeatures
-          }
+    if (!changes.data.features) {
+      setChangesData({
+        features: {
+          initialFieldValue: selectedItem.specFeatures,
+          currentFieldValue: selectedItem.specFeatures,
+          previousFieldValue: selectedItem.specFeatures
         }
       })
     }
@@ -133,7 +130,11 @@ const DetailsRequestedFeatures = ({
     setChanges({
       ...detailsState.changes,
       data: {
-        features: editedArr
+        features: {
+          initialFieldValue: selectedItem.specFeatures,
+          currentFieldValue: editedArr,
+          previousFieldValue: editedArr
+        }
       },
       counter: Object.keys(changes.data).length + 1
     })
@@ -223,12 +224,7 @@ const DetailsRequestedFeatures = ({
                   <div
                     className="item-requested-features__table-cell cell_alias"
                     onClick={() =>
-                      handleItemClick(
-                        'features',
-                        'input',
-                        selectedItem.specFeatures,
-                        index
-                      )
+                      handleItemClick('features', 'input', currentData, index)
                     }
                   >
                     <Tooltip
