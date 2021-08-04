@@ -253,7 +253,7 @@ const Jobs = ({
               lastRunUri: job.last_run_uri,
               scheduled_object: job.scheduled_object,
               start_time: new Date(job.last_run?.status.start_time),
-              state: getState(job.last_run?.status.state),
+              state: getState(job.last_run?.status.state, JOBS_PAGE, 'job'),
               type: job.kind === 'pipeline' ? 'workflow' : job.kind,
               project: job.project,
               ui: {
@@ -267,7 +267,7 @@ const Jobs = ({
               iterationStats: job.status.iterations || [],
               iterations: [],
               startTime: new Date(job.status.start_time),
-              state: getState(job.status.state),
+              state: getState(job.status.state, JOBS_PAGE, 'job'),
               name: job.metadata.name,
               labels: parseKeyValues(job.metadata.labels || {}),
               logLevel: job.spec.log_level,
