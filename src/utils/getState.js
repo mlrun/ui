@@ -5,13 +5,13 @@ const getState = (state, page, kind) => {
     return {
       value: state || 'created',
       label: state ? functionStateLabels[state] : 'Created',
-      className: `${state || 'created'}${kind ? '-' + kind : ''}`
+      className: `state-${state || 'created'}${kind ? '-' + kind : ''}`
     }
   } else {
     return {
       value: state ?? null,
       label: state ? commonStateLabels[state] : '',
-      className: `${state ?? ''}${kind ? '-' + kind : ''}`
+      className: `state-${state ?? ''}${kind ? '-' + kind : ''}`
     }
   }
 }

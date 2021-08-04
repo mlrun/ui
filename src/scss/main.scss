@@ -69,36 +69,36 @@ button {
   }
 }
 
-[class^=completed],
-[class^=ready],
-[class^=succeeded],
-[class^=active],
-[class^=created],
-[class^=info] {
+[class^=state-completed],
+[class^=state-ready],
+[class^=state-succeeded],
+[class^=state-active],
+[class^=state-created],
+[class^=state-info] {
   @include statusState($brightTurquoise);
 }
 
-.created-job,
-.created-function {
+.state-created-job,
+.state-created-function {
   @include statusState($topaz);
 }
 
-[class^=warn] {
+[class^=state-warn] {
   @include statusState($grandis);
 }
 
-[class^=deploying],
-[class^=build],
-[class^=pending],
-[class^=running] {
+[class^=state-deploying],
+[class^=state-build],
+[class^=state-pending],
+[class^=state-running] {
   @include statusState($pictonBlue);
 }
 
-[class^=failed],
-[class^=fail],
-[class^=error],
-[class^=broken],
-[class^=aborted] {
+[class^=state-failed],
+[class^=state-fail],
+[class^=state-error],
+[class^=state-broken],
+[class^=state-aborted] {
   @include statusState($burntSienna);
 }
 
