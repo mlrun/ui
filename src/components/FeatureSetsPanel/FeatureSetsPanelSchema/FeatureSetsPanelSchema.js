@@ -19,7 +19,8 @@ const FeatureSetsPanelSchema = ({
 
   const handleEntitiesOnBlur = () => {
     const entitiesArray = data.entities
-      .split(',')
+      .trim()
+      .split(/[, ]+/)
       .map(entity => ({ name: entity, value_type: 'str' }))
 
     if (
