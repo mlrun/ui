@@ -87,7 +87,7 @@ const FunctionsTableRow = ({
                           }${
                             match.params.tab
                               ? `/${match.params.tab}`
-                              : `/${detailsMenu[0]}`
+                              : `/${detailsMenu[0].id}`
                           }`
                         }
                         key={value.value + i}
@@ -126,7 +126,7 @@ const FunctionsTableRow = ({
                     }/functions/${content.length > 0 && currentItem?.hash}/${
                       match.params.tab
                         ? match.params.tab
-                        : `${detailsMenu[0].toLowerCase()}`
+                        : `${detailsMenu[0].id}`
                     }`
                   }
                   match={match}

@@ -4,6 +4,7 @@ import { isEmpty, isEqual } from 'lodash'
 import {
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
+  DETAILS_BUILD_LOG_TAB,
   DETAILS_CODE_TAB,
   DETAILS_DRIFT_ANALYSIS_TAB,
   DETAILS_INPUTS_TAB,
@@ -238,7 +239,7 @@ export const renderContent = (
   setChangesCounter,
   setIterationOption
 ) => {
-  switch (match.params.tab?.toUpperCase()) {
+  switch (match.params.tab) {
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
@@ -276,6 +277,7 @@ export const renderContent = (
     case DETAILS_RESULTS_TAB:
       return <DetailsResults job={selectedItem} />
     case DETAILS_LOGS_TAB:
+    case DETAILS_BUILD_LOG_TAB:
       return (
         <DetailsLogs
           item={selectedItem}

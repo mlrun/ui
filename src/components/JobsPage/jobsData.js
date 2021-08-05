@@ -95,12 +95,30 @@ export const generateTableHeaders = scheduled => {
   ]
 }
 export const detailsMenu = [
-  'overview',
-  'inputs',
-  'artifacts',
-  'results',
-  'logs',
-  'pods'
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'inputs',
+    id: 'inputs'
+  },
+  {
+    label: 'artifacts',
+    id: 'artifacts'
+  },
+  {
+    label: 'results',
+    id: 'results'
+  },
+  {
+    label: 'logs',
+    id: 'logs'
+  },
+  {
+    label: 'pods',
+    id: 'pods'
+  }
 ]
 export const filters = [
   { type: 'period', label: 'Period:' },

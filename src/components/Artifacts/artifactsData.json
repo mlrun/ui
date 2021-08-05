@@ -11,7 +11,16 @@
     { "label": "Labels", "id": "labels" },
     { "label": "Sources", "id": "sources" }
   ],
-  "detailsMenu": ["overview", "preview"],
+  "detailsMenu": [
+    {
+      "label": "overview",
+      "id": "overview"
+    },
+    {
+      "label": "preview",
+      "id": "preview"
+    }
+  ],
   "filters": [
     {
       "type": "period",
