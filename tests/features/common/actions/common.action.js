@@ -83,6 +83,14 @@ const action = {
       await element.click()
     }
   },
+  expandAccorditionSection: async function(driver, collapseComponet) {
+    const element = await driver.findElement(collapseComponet)
+    const attributes = await element.getAttribute('class')
+    const flag = attributes.includes('open')
+    if (!flag) {
+      await element.click()
+    }
+  },
   isAccorditionSectionExpanded: async function(driver, collapseComponet) {
     const element = await driver.findElement(collapseComponet)
     const attributes = await element.getAttribute('class')

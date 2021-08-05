@@ -30,11 +30,16 @@ module.exports = {
     Feature_Set_Name_Hint:
       '• Valid characters: A-Z, a-z, 0-9, -, _, .\n• Must begin and end with: A-Z, a-z, 0-9\n• Length - max: 63',
     Input_Field_Require: 'This field is required',
+    Input_Field_Invalid: 'This field is invalid',
     URL_Field_Require: 'URL is required',
     Key_Buckering_Number_Hint:
       'If you partition by key and the number of unique keys is very high it is recommended to use buckets for ' +
       'better performance. In this case the path would be path/bucket-num/year=/month=/day= etc.. In case the ' +
       'value is 0 then no bucketing will be done and your data will be partitioned by key.'
+  },
+  Label_Hint: {
+    New_Job_Volumes:
+      'Volumes that define data paths and the required information for accessing the data from the function'
   },
   Descriptions: {
     Archive_Project:

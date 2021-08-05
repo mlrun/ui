@@ -95,8 +95,7 @@ const featureSetsTable = {
 
 // Features
 const tagFilterDropdown = {
-  root:
-    'div.feature-store-container div.content__action-bar div.filters div.artifact_filter_tree_container',
+  root: '.feature-store-container .content__action-bar .filters .tag-filter',
   dropdownElements: {
     open_button: 'input.artifact_filter_tree',
     options: 'div.drop_down_menu div.drop_down_menu_item',
