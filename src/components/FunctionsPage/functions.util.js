@@ -1,4 +1,17 @@
-export const detailsMenu = ['overview', 'code', 'build log']
+export const detailsMenu = [
+  {
+    id: 'overview',
+    label: 'overview'
+  },
+  {
+    id: 'code',
+    label: 'code'
+  },
+  {
+    id: 'build-log',
+    label: 'build log'
+  }
+]
 export const FUNCTIONS_FAILED_STATES = ['failed', 'error']
 export const page = 'FUNCTIONS'
 export const tableHeaders = [

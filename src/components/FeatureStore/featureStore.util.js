@@ -8,6 +8,7 @@ import {
   DATASETS_TAB,
   DETAILS_ANALYSIS_TAB,
   DETAILS_METADATA_TAB,
+  DETAILS_OVERVIEW_TAB,
   DETAILS_STATISTICS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
@@ -534,13 +535,13 @@ export const handleApplyDetailsChanges = (
 
 export const checkTabIsValid = (history, match, selectedItem) => {
   if (
-    (match.params.tab?.toUpperCase() === DETAILS_METADATA_TAB &&
+    (match.params.tab === DETAILS_METADATA_TAB &&
       !selectedItem.item?.schema &&
       !selectedItem.item?.entities) ||
-    (match.params.tab?.toUpperCase() === DETAILS_ANALYSIS_TAB &&
+    (match.params.tab === DETAILS_ANALYSIS_TAB &&
       ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab) &&
       !selectedItem.item?.extra_data) ||
-    (match.params.tab?.toUpperCase() === DETAILS_STATISTICS_TAB &&
+    (match.params.tab === DETAILS_STATISTICS_TAB &&
       ![FEATURE_VECTORS_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab) &&
       !selectedItem.item?.stats)
   ) {
@@ -549,64 +550,89 @@ export const checkTabIsValid = (history, match, selectedItem) => {
         match.params.pageTab
       }/${match.params.name}${
         match.params.tag ? `/${match.params.tag}` : ''
-      }/overview`
+      }/${DETAILS_OVERVIEW_TAB}`
     )
   }
 }
 
-export const generateFeatureSetsDetailsMenu = selectedItem => {
-  const detailsMenu = [
-    { header: 'overview', visible: true },
-    {
-      header: 'features',
-      visible: Boolean(
-        selectedItem.item?.entities && selectedItem.item?.features
-      )
-    },
-    { header: 'transformations', visible: true },
-    { header: 'preview', visible: true },
-    { header: 'statistics', visible: Boolean(selectedItem.item?.stats) },
-    { header: 'analysis', visible: true }
-  ]
+export const generateFeatureSetsDetailsMenu = selectedItem => [
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'features',
+    id: 'features',
+    hidden: !selectedItem.item?.entities && !selectedItem.item?.features
+  },
+  {
+    label: 'transformations',
+    id: 'transformations'
+  },
+  {
+    label: 'preview',
+    id: 'preview'
+  },
+  {
+    label: 'statistics',
+    id: 'statistics',
+    hidden: !selectedItem.item?.stats
+  },
+  {
+    label: 'analysis',
+    id: 'analysis'
+  }
+]
 
-  return selectedItem.item
-    ? detailsMenu.filter(item => item.visible).map(item => item.header)
-    : ''
-}
+export const generateFeatureVectorsDetailsMenu = selectedItem => [
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'requested features',
+    id: 'requested-features'
+  },
+  {
+    label: 'returned features',
+    id: 'returned-features',
+    hidden: !selectedItem.item?.features
+  },
+  {
+    label: 'preview',
+    id: 'preview'
+  },
+  {
+    label: 'statistics',
+    id: 'statistics',
+    hidden: !selectedItem.item?.stats && !selectedItem.item?.features
+  },
+  {
+    label: 'analysis',
+    id: 'analysis'
+  }
+]
 
-export const generateFeatureVectorsDetailsMenu = selectedItem => {
-  const detailsMenu = [
-    { header: 'overview', visible: true },
-    { header: 'requested features', visible: true },
-    {
-      header: 'returned features',
-      visible: Boolean(selectedItem.item?.features)
-    },
-    { header: 'preview', visible: false },
-    {
-      header: 'statistics',
-      visible: Boolean(selectedItem.item?.stats && selectedItem.item?.features)
-    },
-    { header: 'analysis', visible: false }
-  ]
-
-  return selectedItem.item
-    ? detailsMenu.filter(item => item.visible).map(item => item.header)
-    : ''
-}
-
-export const generateDataSetsDetailsMenu = selectedItem => {
-  const detailsMenu = [
-    { header: 'overview', visible: true },
-    { header: 'preview', visible: true },
-    { header: 'metadata', visible: Boolean(selectedItem.item?.schema) },
-    { header: 'analysis', visible: Boolean(selectedItem.item?.extra_data) }
-  ]
-
-  return selectedItem.item
-    ? detailsMenu.filter(item => item.visible).map(item => item.header)
-    : ''
-}
+export const generateDataSetsDetailsMenu = selectedItem => [
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'preview',
+    id: 'preview'
+  },
+  {
+    label: 'metadata',
+    id: 'metadata',
+    hidden: !selectedItem.item?.schema
+  },
+  {
+    label: 'analysis',
+    id: 'analysis',
+    hidden: !selectedItem.item?.extra_data
+  }
+]
 
 export const fetchFeatureRowData = async (fetchData, feature, setPageData) => {
   const featureIdentifier = getFeatureIdentifier(feature)

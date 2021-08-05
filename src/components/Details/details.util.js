@@ -245,7 +245,7 @@ export const renderContent = (
   setChangesCounter,
   setIterationOption
 ) => {
-  switch (match.params.tab?.toUpperCase()) {
+  switch (match.params.tab) {
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo

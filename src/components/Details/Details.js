@@ -351,7 +351,13 @@ Details.propTypes = {
   ]).isRequired,
   applyDetailsChanges: PropTypes.func,
   cancelRequest: PropTypes.func,
-  detailsMenu: PropTypes.arrayOf(PropTypes.string).isRequired,
+  detailsMenu: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      hidden: PropTypes.bool
+    })
+  ).isRequired,
   handleCancel: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,

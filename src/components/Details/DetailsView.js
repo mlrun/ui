@@ -141,7 +141,7 @@ const DetailsView = React.forwardRef(
               </Tooltip>
             </>
           )}
-          {match.params.tab?.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
+          {match.params.tab === DETAILS_ARTIFACTS_TAB && (
             <Select
               density="dense"
               key="Iteration"
@@ -189,19 +189,22 @@ const DetailsView = React.forwardRef(
           </Link>
         </div>
         <ul className="item-menu">
-          {detailsMenu.map(link => (
-            <DetailsMenuItem
-              hash={selectedItem.hash}
-              id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
-              iter={selectedItem.iter}
-              key={link}
-              match={match}
-              name={selectedItem.db_key || selectedItem.name}
-              onClick={detailsMenuClick}
-              page={pageData.page}
-              tab={link}
-            />
-          ))}
+          {detailsMenu.map(
+            detailsMenuItem =>
+              !detailsMenuItem.hidden && (
+                <DetailsMenuItem
+                  hash={selectedItem.hash}
+                  id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
+                  iter={selectedItem.iter}
+                  key={detailsMenuItem.id}
+                  match={match}
+                  name={selectedItem.db_key || selectedItem.name}
+                  onClick={detailsMenuClick}
+                  page={pageData.page}
+                  tab={detailsMenuItem}
+                />
+              )
+          )}
         </ul>
         {tabsContent}
         {detailsStore.showWarning && (

@@ -6,10 +6,12 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 
 import { detailsMenu } from '../../components/JobsPage/jobsData'
+import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
 const TableProducerCell = ({ data }) => {
   const [project, uid] = data.value.uri?.split('/') || []
-  const [overviewTab] = detailsMenu || []
+  const overviewTab =
+    detailsMenu.find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
 
   return (
     <div className={`table-body__cell ${data.class}`}>
@@ -24,9 +26,9 @@ const TableProducerCell = ({ data }) => {
         >
           <Link
             className="link"
-            to={`/projects/${project}/jobs/monitor/${
-              uid.split('-')[0]
-            }/${overviewTab}`}
+            to={`/projects/${project}/jobs/monitor/${uid.split('-')[0]}/${
+              overviewTab.id
+            }`}
           >
             {data.value.name}
           </Link>

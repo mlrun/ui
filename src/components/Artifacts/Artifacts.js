@@ -107,14 +107,20 @@ const Artifacts = ({
       const newDetailsMenu = [...artifactsData.detailsMenu]
 
       if (selectedArtifact.item?.schema) {
-        newDetailsMenu.push('metadata')
+        newDetailsMenu.push({
+          label: 'metadata',
+          id: 'metadata'
+        })
       }
 
       if (
         selectedArtifact.item?.kind === 'dataset' &&
         selectedArtifact.item?.extra_data
       ) {
-        newDetailsMenu.push('analysis')
+        newDetailsMenu.push({
+          label: 'analysis',
+          id: 'analysis'
+        })
       }
 
       return {
