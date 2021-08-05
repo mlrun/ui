@@ -103,7 +103,9 @@ const Functions = ({
           setFunctionsPanelIsOpen(true)
           setEditableItem(func)
         },
-        hidden: !['job', ''].includes(item?.type)
+        hidden:
+          !['job', ''].includes(item?.type) ||
+          !FUNCTIONS_READY_STATES.includes(item?.state?.value)
       },
       {
         label: 'Delete',
