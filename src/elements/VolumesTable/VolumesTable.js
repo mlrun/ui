@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import VolumesTableView from './VolumesTableView'
+import { CONFIG_MAP, PVC, SECRET, V3IO } from './volumesTable.util'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -35,7 +36,7 @@ export const VolumesTable = ({
         return setSelectedVolume({
           ...selectedVolume,
           type: {
-            value: 'Config Map',
+            value: CONFIG_MAP,
             name: searchItem.configMap.name
           }
         })
@@ -43,7 +44,7 @@ export const VolumesTable = ({
         return setSelectedVolume({
           ...selectedVolume,
           type: {
-            value: 'PVC',
+            value: PVC,
             name: searchItem.persistentVolumeClaim.claimName
           }
         })
@@ -51,7 +52,7 @@ export const VolumesTable = ({
         return setSelectedVolume({
           ...selectedVolume,
           type: {
-            value: 'Secret',
+            value: SECRET,
             name: searchItem.secret.secretName
           }
         })
@@ -59,7 +60,7 @@ export const VolumesTable = ({
         return setSelectedVolume({
           ...selectedVolume,
           type: {
-            value: 'V3IO',
+            value: V3IO,
             name: searchItem.flexVolume.options.container,
             accessKey: searchItem.flexVolume.options.accessKey,
             subPath: searchItem.flexVolume.options.subPath
@@ -127,13 +128,13 @@ export const VolumesTable = ({
         volume.name = selectedVolume.newName || selectedVolume.data.name
 
         switch (selectedVolume.type.value) {
-          case 'Config Map':
+          case CONFIG_MAP:
             volume.configMap.name = selectedVolume.type.name
             break
-          case 'PVC':
+          case PVC:
             volume.persistentVolumeClaim.claimName = selectedVolume.type.name
             break
-          case 'Secret':
+          case SECRET:
             volume.secret.secretName = selectedVolume.type.name
             break
           default:

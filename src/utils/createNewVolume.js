@@ -1,6 +1,12 @@
+import {
+  CONFIG_MAP,
+  SECRET,
+  V3IO
+} from '../elements/VolumesTable/volumesTable.util'
+
 export const createNewVolume = newVolume => {
   switch (newVolume.type) {
-    case 'V3IO':
+    case V3IO:
       return {
         name: newVolume.name,
         flexVolume: {
@@ -12,14 +18,14 @@ export const createNewVolume = newVolume => {
           }
         }
       }
-    case 'Config Map':
+    case CONFIG_MAP:
       return {
         name: newVolume.name,
         configMap: {
           name: newVolume.typeName
         }
       }
-    case 'Secret':
+    case SECRET:
       return {
         name: newVolume.name,
         secret: {

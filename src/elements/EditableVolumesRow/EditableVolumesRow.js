@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
 
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
+import { getVolumeTypeInput, V3IO } from '../VolumesTable/volumesTable.util'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
@@ -15,6 +16,11 @@ const EditableVolumesRow = ({
   selectedVolume,
   setSelectedVolume
 }) => {
+  const volumeTypeInput = useMemo(
+    () => getVolumeTypeInput(selectedVolume.type.value),
+    [selectedVolume.type.value]
+  )
+
   return (
     <>
       <div className="table__row edit-row">
@@ -62,7 +68,7 @@ const EditableVolumesRow = ({
         <div className="table__cell table__cell-input">
           <Input
             floatingLabel
-            label="Container"
+            label={volumeTypeInput.label}
             onChange={typeName =>
               setSelectedVolume({
                 ...selectedVolume,
@@ -86,7 +92,7 @@ const EditableVolumesRow = ({
           </button>
         </div>
       </div>
-      {selectedVolume.type.value === 'V3IO' && (
+      {selectedVolume.type.value === V3IO && (
         <div className="table__row edit-row">
           <div className="table__cell table__cell-input">
             <Input

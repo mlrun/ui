@@ -1,3 +1,10 @@
+import {
+  CONFIG_MAP,
+  PVC,
+  SECRET,
+  V3IO
+} from '../elements/VolumesTable/volumesTable.util'
+
 export const selectMemoryOptions = {
   unitCpu: [
     { label: 'cpu', id: 'cpu' },
@@ -32,12 +39,12 @@ export const generateMemoryValue = (memory = '') =>
 
 export const getVolumeType = volume => {
   if (volume.configMap) {
-    return 'Config Map'
+    return CONFIG_MAP
   } else if (volume.persistentVolumeClaim) {
-    return 'PVC'
+    return PVC
   } else if (volume.secret) {
-    return 'Secret'
+    return SECRET
   } else {
-    return 'V3IO'
+    return V3IO
   }
 }
