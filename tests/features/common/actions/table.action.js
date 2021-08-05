@@ -69,7 +69,7 @@ const action = {
   ) {
     // const arr = await getColumnValues(driver, table, column)
     // TODO: wait while defect with year will be fixed
-    console.log('Should be implemented')
+    console.log('TODO: Should be implemented')
   },
   findRowIndexesByColumnValue: async function(
     driver,
