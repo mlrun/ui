@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { find, has, map } from 'lodash'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
@@ -11,7 +11,12 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
-import { selectTypeOptions, tableHeaders } from './volumesTable.util'
+import {
+  getVolumeTypeInput,
+  selectTypeOptions,
+  tableHeaders,
+  V3IO
+} from './volumesTable.util'
 import { joinDataOfArrayOrObject } from '../../utils'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
@@ -32,21 +37,9 @@ const VolumesTableView = ({
   setShowAddNewVolumeRow,
   showAddNewVolumeRow
 }) => {
-  const volumeTypeNameLabel =
-    newVolume.type === 'V3IO'
-      ? {
-          label: 'Container',
-          tip: 'The name of the data container that contains the data'
-        }
-      : newVolume.type === 'PVC'
-      ? {
-          label: 'Claim name'
-        }
-      : newVolume.type.length > 0
-      ? {
-          label: `${newVolume.type} name`
-        }
-      : ''
+  const volumeTypeInput = useMemo(() => getVolumeTypeInput(newVolume.type), [
+    newVolume.type
+  ])
   const tableClassNames = classnames(
     'new-item-side-panel__table',
     'volumes-table',
@@ -155,20 +148,20 @@ const VolumesTableView = ({
             </div>
             <div
               className={`input-row-wrapper no-border_top
-                  ${newVolume.type === 'V3IO' && 'no-border'}`}
+                  ${newVolume.type === V3IO && 'no-border'}`}
             >
               <Input
                 onChange={typeName =>
                   setNewVolume(state => ({ ...state, typeName }))
                 }
-                label={volumeTypeNameLabel.label}
+                label={volumeTypeInput.label}
                 className="input-row__item"
                 disabled={newVolume.type.length === 0}
                 floatingLabel
                 type="text"
-                tip={volumeTypeNameLabel.tip}
+                tip={volumeTypeInput.tip}
               />
-              {newVolume.type === 'V3IO' && (
+              {newVolume.type === V3IO && (
                 <Input
                   onChange={accessKey =>
                     setNewVolume(state => ({ ...state, accessKey }))
@@ -181,7 +174,7 @@ const VolumesTableView = ({
                 />
               )}
             </div>
-            {newVolume.type === 'V3IO' && (
+            {newVolume.type === V3IO && (
               <div className="input-row-wrapper no-border_top">
                 <Input
                   onChange={subPath =>
