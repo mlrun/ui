@@ -26,7 +26,7 @@ const infoPaneTabSelector = {
 
 // Features Info Pane Table
 const featuresInfoPaneTable = {
-  root: 'div.table__item div.artifact-metadata div.artifact-metadata__table',
+  root: '.table__item .details-metadata .details-metadata__table',
   header: {
     root: 'div.artifact-metadata__table-header',
     sorters: {

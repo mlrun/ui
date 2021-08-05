@@ -23,7 +23,6 @@ Feature: Jobs and workflows
         Then verify "Start_Time_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
-
     @passive
     Scenario: Check date picker dropdown options on Jobs Monitor tab
         Given open url
@@ -113,8 +112,8 @@ Feature: Jobs and workflows
         And wait load page
         Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
         Then verify "Search_Input" element visibility on "Create_Job" wizard
-        Then verify "Select_Function_From_Dropdown" element visibility in "Select_Functions_From" on "Create_Job" wizard
-        Then verify "Collapse_Button" element visibility in "Functions_Template" on "Create_Job" wizard
+        Then verify "Select_Function_From_Dropdown" element visibility in "Select_Functions_From_Accordion" on "Create_Job" wizard
+        Then verify "Collapse_Button" element visibility in "Function_Templates_Accordion" on "Create_Job" wizard
 
     @passive
     Scenario: verify mandatory elements starttime on Jobs Monitor tab
@@ -130,3 +129,122 @@ Feature: Jobs and workflows
         Then value in "name" column with "text" in "Selected_Functions_Templates" in "Select_Functions_From_Accordion" on "Create_Job" wizard should contains "server"
         When expand each row in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
         Then subtable column "templates_list" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard should contains "server" in "name" column
+
+    @passive
+    Scenario: verify mandatory elements on Create New Jobs side panel except accordions
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        Then click on "Name_Edit_Button" element on "New_JobTemplate_Edit" wizard
+        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display "Input_Hint"."Feature_Set_Name_Hint"
+        Then type value "" to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
+        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then type value "   " to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
+        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Shedule_For_Later_Button" element visibility on "New_JobTemplate_Edit" wizard
+        Then verify "Run_Now_Button" element visibility on "New_JobTemplate_Edit" wizard
+
+    @passive
+    Scenario: verify mandatory elements in Data Inputs Accordion on Create New Jobs side panel
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        Then verify "Default_Input_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Default_Artifact_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+
+    @passive
+    Scenario: verify mandatory elements in Parameters Accordion on Create New Jobs side panel
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        And wait load page
+        Then verify "Job_Predefined_Parameters_Table" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Job_Custom_Parameters_Table" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Parameters_Additional_Settings_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Result_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Turning_Stratedgy_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Criteria_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+
+    @passive
+    Scenario: verify mandatory elements in Resouces Accordion on Create New Jobs side panel
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Volumes_Subheader" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Volumes_Subheader" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
+        Then verify "Volume_Paths_Table" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Unit_Dropdown" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Request_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "0" to "Memory_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "Memory_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Memory_Limit_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "1" to "Memory_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "Memory_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "Memory_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Unit_Dropdown" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Request_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "2" to "CPU_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "CPU_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "CPU_Request_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "CPU_Limit_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "3" to "CPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "CPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "CPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "GPU_Limit_Number_Input" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then type value "4" to "GPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Resources_Node_Selector_Table" element visibility in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+
+    @passive
+    Scenario: verify mandatory elements in Advanced Accordion on Create New Jobs side panel
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Advanced_Environment_Variables_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Advanced_Secrets_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
