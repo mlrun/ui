@@ -135,15 +135,19 @@ const VolumesTableView = ({
                 invalidText="Name already exists"
                 label="Name"
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
+                required
+                requiredText="This field is required"
                 type="text"
               />
               <Input
-                onChange={path => setNewVolume(state => ({ ...state, path }))}
-                label="Path"
                 className="input-row__item input-row__item_edit"
                 floatingLabel
-                type="text"
+                label="Path"
+                onChange={path => setNewVolume(state => ({ ...state, path }))}
+                required
+                requiredText="This field is required"
                 tip="A mount path for referencing the data from the function"
+                type="text"
               />
             </div>
             <div
@@ -151,40 +155,46 @@ const VolumesTableView = ({
                   ${newVolume.type === V3IO && 'no-border'}`}
             >
               <Input
-                onChange={typeName =>
-                  setNewVolume(state => ({ ...state, typeName }))
-                }
-                label={volumeTypeInput.label}
                 className="input-row__item"
                 disabled={newVolume.type.length === 0}
                 floatingLabel
-                type="text"
+                label={volumeTypeInput.label}
+                onChange={typeName =>
+                  setNewVolume(state => ({ ...state, typeName }))
+                }
+                required
+                requiredText="This field is required"
                 tip={volumeTypeInput.tip}
+                type="text"
               />
               {newVolume.type === V3IO && (
                 <Input
+                  className="input-row__item"
+                  floatingLabel
+                  label="Access Key"
                   onChange={accessKey =>
                     setNewVolume(state => ({ ...state, accessKey }))
                   }
-                  label="Access Key"
-                  className="input-row__item"
-                  floatingLabel
-                  type="text"
+                  required
+                  requiredText="This field is required"
                   tip="A platform data-access key"
+                  type="text"
                 />
               )}
             </div>
             {newVolume.type === V3IO && (
               <div className="input-row-wrapper no-border_top">
                 <Input
+                  className="input-row__item"
+                  floatingLabel
+                  label="Resource path"
                   onChange={subPath =>
                     setNewVolume(state => ({ ...state, subPath }))
                   }
-                  label="Resource path"
-                  className="input-row__item"
-                  floatingLabel
-                  type="text"
+                  required
+                  requiredText="This field is required"
                   tip="A relative directory path within the data container"
+                  type="text"
                 />
               </div>
             )}
