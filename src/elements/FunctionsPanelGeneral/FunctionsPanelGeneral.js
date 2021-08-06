@@ -20,7 +20,7 @@ const FunctionsPanelGeneral = ({
 }) => {
   const [data, setData] = useState({
     name: defaultData.name ?? '',
-    description: defaultData.delete ?? '',
+    description: defaultData.description ?? '',
     type: defaultData.type ?? DEFAULT_TYPE,
     labels: parseKeyValues(defaultData.labels) ?? [],
     tag: defaultData.tag ?? ''

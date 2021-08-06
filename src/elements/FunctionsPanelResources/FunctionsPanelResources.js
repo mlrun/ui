@@ -11,6 +11,7 @@ import {
   getDefaultMemoryUnit,
   getDefaultVolumeMounts
 } from './functionsPanelResources.util'
+import { FUNCTION_PANEL_MODE } from '../../types'
 
 const FunctionsPanelResources = ({
   defaultData,
@@ -291,7 +292,7 @@ FunctionsPanelResources.defaultProp = {
 
 FunctionsPanelResources.propTypes = {
   defaultData: PropTypes.shape({}),
-  mode: PropTypes.string.isRequired
+  mode: FUNCTION_PANEL_MODE.isRequired
 }
 
 export default connect(functionsStore => ({ ...functionsStore }), {
