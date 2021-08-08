@@ -11,6 +11,7 @@ import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnv
 import Button from '../../common/Button/Button'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FunctionsPanelSecrets from '../../elements/FunctionsPanelSecrets/FunctionsPanelSecrets'
+import { FUNCTION_PANEL_MODE } from '../../types'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -133,7 +134,7 @@ FunctionsPanelView.propTypes = {
   isHandlerValid: PropTypes.bool.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
-  mode: PropTypes.string.isRequired,
+  mode: FUNCTION_PANEL_MODE.isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
   setHandlerValid: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired

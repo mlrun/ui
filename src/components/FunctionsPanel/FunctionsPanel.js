@@ -7,6 +7,7 @@ import { chain } from 'lodash'
 import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
+import { FUNCTION_PANEL_MODE } from '../../types'
 
 const FunctionsPanel = ({
   functionsStore,
@@ -142,7 +143,7 @@ FunctionsPanel.propTypes = {
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  mode: PropTypes.string.isRequired,
+  mode: FUNCTION_PANEL_MODE.isRequired,
   project: PropTypes.string.isRequired
 }
 
