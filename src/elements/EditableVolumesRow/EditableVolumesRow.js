@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
+import { forEach } from 'lodash'
 
 import Input from '../../common/Input/Input'
 
@@ -21,6 +22,19 @@ const EditableVolumesRow = ({
     [selectedVolume.type.value]
   )
 
+  const isVolumeInvalid = selectedVolume => {
+    forEach(selectedVolume.data, value => {
+      if (!value) {
+        return true
+      }
+    })
+    forEach(selectedVolume.type, value => {
+      if (!value) {
+        return true
+      }
+    })
+  }
+
   return (
     <>
       <div className="table__row edit-row">
@@ -37,6 +51,8 @@ const EditableVolumesRow = ({
               }
               invalidText="Name already exists"
               label="Name"
+              required
+              requiredText="This field is required"
               onChange={name =>
                 setSelectedVolume({
                   ...selectedVolume,
@@ -52,6 +68,8 @@ const EditableVolumesRow = ({
           <Input
             floatingLabel
             label="Path"
+            required
+            requiredText="This field is required"
             onChange={path =>
               setSelectedVolume({
                 ...selectedVolume,
@@ -69,6 +87,8 @@ const EditableVolumesRow = ({
           <Input
             floatingLabel
             label={volumeTypeInput.label}
+            required
+            requiredText="This field is required"
             onChange={typeName =>
               setSelectedVolume({
                 ...selectedVolume,
@@ -84,8 +104,9 @@ const EditableVolumesRow = ({
             className="apply-edit-btn"
             onClick={handleEdit}
             disabled={
-              selectedVolume.newName !== selectedVolume.data.name &&
-              isNameNotUnique(selectedVolume.newName, content)
+              (selectedVolume.newName !== selectedVolume.data.name &&
+                isNameNotUnique(selectedVolume.newName, content)) ||
+              isVolumeInvalid(selectedVolume)
             }
           >
             <Checkmark />
@@ -98,6 +119,8 @@ const EditableVolumesRow = ({
             <Input
               floatingLabel
               label="Access Key"
+              required
+              requiredText="This field is required"
               onChange={accessKey =>
                 setSelectedVolume({
                   ...selectedVolume,
@@ -112,6 +135,8 @@ const EditableVolumesRow = ({
             <Input
               floatingLabel
               label="Resource Path"
+              required
+              requiredText="This field is required"
               onChange={subPath =>
                 setSelectedVolume({
                   ...selectedVolume,

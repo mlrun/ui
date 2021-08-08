@@ -103,11 +103,20 @@ export const VolumesTable = ({
   )
 
   const addVolume = () => {
-    if (
+    let volumeIsValid =
       newVolume.name.length > 0 &&
       newVolume.path.length > 0 &&
-      newVolume.type.length > 0
-    ) {
+      newVolume.type.length > 0 &&
+      newVolume.typeName.length > 0
+
+    if (newVolume.type === V3IO) {
+      volumeIsValid =
+        volumeIsValid &&
+        newVolume.accessKey.length > 0 &&
+        newVolume.subPath.length > 0
+    }
+
+    if (volumeIsValid) {
       handleAddNewVolume(newVolume)
     }
 
