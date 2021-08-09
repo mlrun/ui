@@ -161,7 +161,8 @@ export const VolumesTable = ({
       if (volumeMount.data.name === selectedVolume.data.name) {
         volumeMount.data.name =
           selectedVolume.newName || selectedVolume.data.name
-        volumeMount.data.mountPath = selectedVolume.data.mountPath
+        volumeMount.data.mountPath =
+          selectedVolume.newPath || selectedVolume.data.mountPath
       }
 
       return volumeMount

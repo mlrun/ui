@@ -35,3 +35,7 @@ export const getVolumeTypeInput = type => {
     tip: volumeTypeInputTips[type]
   }
 }
+
+export const isPathNotUnique = (path, volumeMounts) => {
+  return volumeMounts.some(volumeMount => volumeMount.data.mountPath === path)
+}
