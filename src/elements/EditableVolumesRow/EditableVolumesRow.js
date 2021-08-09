@@ -5,7 +5,11 @@ import { forEach } from 'lodash'
 import Input from '../../common/Input/Input'
 
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
-import { getVolumeTypeInput, V3IO } from '../VolumesTable/volumesTable.util'
+import {
+  getVolumeTypeInput,
+  isPathNotUnique,
+  V3IO
+} from '../VolumesTable/volumesTable.util'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
@@ -68,16 +72,21 @@ const EditableVolumesRow = ({
           <Input
             floatingLabel
             label="Path"
-            required
-            requiredText="This field is required"
+            invalid={
+              selectedVolume.newPath !== selectedVolume.data.mountPath &&
+              isPathNotUnique(selectedVolume.newPath, content)
+            }
+            invalidText="Multiple volumes cannot share the same path"
             onChange={path =>
               setSelectedVolume({
                 ...selectedVolume,
-                data: { ...selectedVolume.data, mountPath: path }
+                newPath: path
               })
             }
+            required
+            requiredText="This field is required"
             type="text"
-            value={selectedVolume.data.mountPath}
+            value={selectedVolume.newPath ?? selectedVolume.data.mountPath}
           />
         </div>
         <div className="table__cell-actions" />
@@ -106,6 +115,8 @@ const EditableVolumesRow = ({
             disabled={
               (selectedVolume.newName !== selectedVolume.data.name &&
                 isNameNotUnique(selectedVolume.newName, content)) ||
+              (selectedVolume.newPath !== selectedVolume.data.mountPath &&
+                isPathNotUnique(selectedVolume.newPath, content)) ||
               isVolumeInvalid(selectedVolume)
             }
           >

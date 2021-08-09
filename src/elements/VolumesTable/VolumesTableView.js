@@ -13,6 +13,7 @@ import Select from '../../common/Select/Select'
 
 import {
   getVolumeTypeInput,
+  isPathNotUnique,
   selectTypeOptions,
   tableHeaders,
   V3IO
@@ -142,6 +143,8 @@ const VolumesTableView = ({
               <Input
                 className="input-row__item input-row__item_edit"
                 floatingLabel
+                invalid={isPathNotUnique(newVolume.path, volumeMounts)}
+                invalidText="Multiple volumes cannot share the same path"
                 label="Path"
                 onChange={path => setNewVolume(state => ({ ...state, path }))}
                 required
@@ -201,7 +204,10 @@ const VolumesTableView = ({
           </div>
           <button
             className="add-input btn-add"
-            disabled={isNameNotUnique(newVolume.name, volumeMounts)}
+            disabled={
+              isNameNotUnique(newVolume.name, volumeMounts) ||
+              isPathNotUnique(newVolume.path, volumeMounts)
+            }
             onClick={addVolume}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
