@@ -16,7 +16,7 @@ import {
 
 const PartitionFields = ({
   data,
-  handlePartitionRadioButtons,
+  handlePartitionRadioButtonClick,
   partitionColsOnBlur,
   partitionColsOnChange,
   partitionRadioButtonsState,
@@ -28,39 +28,22 @@ const PartitionFields = ({
   return (
     <>
       <div className="partition-fields__checkbox-container">
-        <CheckBox
-          item={{ id: 'byKey' }}
-          onChange={id => triggerPartitionAdvancedCheckboxes(id)}
-          selectedId={selectedPartitionKind.find(
-            kind => partitionCheckboxTargetKind.byKey.id === kind
-          )}
-        >
-          By key
-        </CheckBox>
-        <CheckBox
-          item={{ id: 'byTime' }}
-          onChange={id => triggerPartitionAdvancedCheckboxes(id)}
-          selectedId={selectedPartitionKind.find(
-            kind => partitionCheckboxTargetKind.byTime.id === kind
-          )}
-        >
-          By time
-        </CheckBox>
-        <CheckBox
-          item={{ id: 'byColumns' }}
-          onChange={id => triggerPartitionAdvancedCheckboxes(id)}
-          selectedId={selectedPartitionKind.find(
-            kind => partitionCheckboxTargetKind.byColumns.id === kind
-          )}
-        >
-          By columns
-        </CheckBox>
+        {Object.keys(partitionCheckboxTargetKind).map((type, index) => (
+          <CheckBox
+            item={{ id: type, label: partitionCheckboxTargetKind[type].label }}
+            key={index}
+            onChange={id => triggerPartitionAdvancedCheckboxes(id)}
+            selectedId={selectedPartitionKind.find(
+              kind => partitionCheckboxTargetKind[type].id === kind
+            )}
+          />
+        ))}
       </div>
       {selectedPartitionKind.includes('byKey') && (
         <div className="radio-buttons-container">
           <RadioButtons
             elements={partitionRadioButtonsData}
-            onChangeCallback={value => handlePartitionRadioButtons(value)}
+            onChangeCallback={handlePartitionRadioButtonClick}
             selectedValue={partitionRadioButtonsState}
           />
         </div>
@@ -127,7 +110,7 @@ PartitionFields.propTypes = {
     partition_cols: PropTypes.string.isRequired,
     time_partitioning_granularity: PropTypes.string.isRequired
   }).isRequired,
-  handlePartitionRadioButtons: PropTypes.func.isRequired,
+  handlePartitionRadioButtonClick: PropTypes.func.isRequired,
   partitionColsOnBlur: PropTypes.func.isRequired,
   partitionColsOnChange: PropTypes.func.isRequired,
   partitionRadioButtonsState: PropTypes.string.isRequired,

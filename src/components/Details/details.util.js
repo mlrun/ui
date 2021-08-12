@@ -4,6 +4,7 @@ import { isEmpty, isEqual } from 'lodash'
 import {
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
+  DETAILS_BUILD_LOG_TAB,
   DETAILS_CODE_TAB,
   DETAILS_DRIFT_ANALYSIS_TAB,
   DETAILS_INPUTS_TAB,
@@ -174,9 +175,6 @@ export const generateJobsContent = selectedItem => ({
   updated: {
     value: formatDatetime(selectedItem.updated, 'N/A')
   },
-  state: {
-    value: selectedItem.state?.value
-  },
   parameters: {
     value: selectedItem.parameters
   },
@@ -211,7 +209,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.hash
   },
   codeOrigin: {
-    value: selectedItem.build.codeOrigin ?? ''
+    value: selectedItem.build.code_origin ?? ''
   },
   updated: {
     value: formatDatetime(new Date(selectedItem.updated), 'N/A')
@@ -224,9 +222,6 @@ export const generateFunctionsContent = selectedItem => ({
   },
   description: {
     value: selectedItem.description
-  },
-  state: {
-    value: selectedItem.state?.value
   }
 })
 
@@ -244,7 +239,7 @@ export const renderContent = (
   setChangesCounter,
   setIterationOption
 ) => {
-  switch (match.params.tab?.toUpperCase()) {
+  switch (match.params.tab) {
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
@@ -282,6 +277,7 @@ export const renderContent = (
     case DETAILS_RESULTS_TAB:
       return <DetailsResults job={selectedItem} />
     case DETAILS_LOGS_TAB:
+    case DETAILS_BUILD_LOG_TAB:
       return (
         <DetailsLogs
           item={selectedItem}

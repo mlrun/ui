@@ -117,9 +117,6 @@ const Input = React.forwardRef(
     }
 
     const inputOnBlur = event => {
-      event.persist()
-      setTypedValue(event.target.value)
-
       if (
         !event.relatedTarget ||
         !event.relatedTarget?.closest('.suggestion-list')
@@ -245,7 +242,7 @@ Input.defaultProps = {
   infoLabel: false,
   inputIcon: null,
   invalid: false,
-  invalidText: '',
+  invalidText: 'This field is invalid',
   label: '',
   maxLength: null,
   onBlur: () => {},
@@ -253,7 +250,7 @@ Input.defaultProps = {
   onKeyDown: () => {},
   placeholder: '',
   required: false,
-  requiredText: '',
+  requiredText: 'This field is required',
   setInvalid: () => {},
   tip: '',
   value: undefined,

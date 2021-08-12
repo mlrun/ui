@@ -24,7 +24,7 @@ import './featureSetsPanelTargetStore.scss'
 
 const FeatureSetsPanelTargetStoreView = ({
   data,
-  handleAdvancedFieldsLink,
+  handleAdvancedLinkClick,
   handleExternalOfflineKindPathOnBlur,
   handleExternalOfflineKindPathOnChange,
   handleKeyBucketingNumberChange,
@@ -33,16 +33,16 @@ const FeatureSetsPanelTargetStoreView = ({
   handleExternalOfflineKindTypeChange,
   handlePartitionColsOnBlur,
   handlePartitionColsOnChange,
-  handlePartitionRadioButtons,
+  handlePartitionRadioButtonClick,
   handleSelectTargetKind,
   handleTimePartitioningGranularityChange,
-  isShowAdvanced,
   isTargetsPathValid,
   partitionRadioButtonsState,
   selectedPartitionKind,
   selectedTargetKind,
   setData,
   setTargetsPathValid,
+  showAdvanced,
   triggerPartitionAdvancedCheckboxes,
   triggerPartitionCheckbox
 }) => {
@@ -132,12 +132,12 @@ const FeatureSetsPanelTargetStoreView = ({
                 <div className="partition-fields">
                   <span
                     className="link show-advanced"
-                    onClick={() => handleAdvancedFieldsLink(PARQUET)}
+                    onClick={() => handleAdvancedLinkClick(PARQUET)}
                   >
-                    {isShowAdvanced.parquet ? 'Hide advanced' : 'Show advanced'}
+                    {showAdvanced.parquet ? 'Hide advanced' : 'Show advanced'}
                   </span>
                   <CSSTransition
-                    in={isShowAdvanced.parquet}
+                    in={showAdvanced.parquet}
                     timeout={200}
                     classNames="fade"
                     unmountOnExit
@@ -157,8 +157,8 @@ const FeatureSetsPanelTargetStoreView = ({
                         handleKeyBucketingNumberChange(value, PARQUET)
                       }
                       selectedPartitionKind={selectedPartitionKind.parquet}
-                      handlePartitionRadioButtons={value =>
-                        handlePartitionRadioButtons(value, PARQUET)
+                      handlePartitionRadioButtonClick={value =>
+                        handlePartitionRadioButtonClick(value, PARQUET)
                       }
                       timePartitioningGranularityChange={value =>
                         handleTimePartitioningGranularityChange(value, PARQUET)
@@ -235,14 +235,14 @@ const FeatureSetsPanelTargetStoreView = ({
                 <div className="partition-fields">
                   <span
                     className="link show-advanced"
-                    onClick={() => handleAdvancedFieldsLink(EXTERNAL_OFFLINE)}
+                    onClick={() => handleAdvancedLinkClick(EXTERNAL_OFFLINE)}
                   >
-                    {isShowAdvanced.externalOffline
+                    {showAdvanced.externalOffline
                       ? 'Hide advanced'
                       : 'Show advanced'}
                   </span>
                   <CSSTransition
-                    in={isShowAdvanced.externalOffline}
+                    in={showAdvanced.externalOffline}
                     timeout={200}
                     classNames="fade"
                     unmountOnExit
@@ -264,8 +264,8 @@ const FeatureSetsPanelTargetStoreView = ({
                       selectedPartitionKind={
                         selectedPartitionKind.externalOffline
                       }
-                      handlePartitionRadioButtons={value =>
-                        handlePartitionRadioButtons(value, EXTERNAL_OFFLINE)
+                      handlePartitionRadioButtonClick={value =>
+                        handlePartitionRadioButtonClick(value, EXTERNAL_OFFLINE)
                       }
                       timePartitioningGranularityChange={value =>
                         handleTimePartitioningGranularityChange(
@@ -296,7 +296,7 @@ const FeatureSetsPanelTargetStoreView = ({
 
 FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
-  handleAdvancedFieldsLink: PropTypes.func.isRequired,
+  handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnChange: PropTypes.func.isRequired,
   handleExternalOfflineKindTypeChange: PropTypes.func.isRequired,
@@ -305,16 +305,25 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   handleOnlineKindPathOnBlur: PropTypes.func.isRequired,
   handlePartitionColsOnBlur: PropTypes.func.isRequired,
   handlePartitionColsOnChange: PropTypes.func.isRequired,
-  handlePartitionRadioButtons: PropTypes.func.isRequired,
+  handlePartitionRadioButtonClick: PropTypes.func.isRequired,
   handleSelectTargetKind: PropTypes.func.isRequired,
   handleTimePartitioningGranularityChange: PropTypes.func.isRequired,
-  isShowAdvanced: PropTypes.shape({}).isRequired,
   isTargetsPathValid: PropTypes.bool.isRequired,
-  partitionRadioButtonsState: PropTypes.shape({}).isRequired,
-  selectedPartitionKind: PropTypes.shape({}).isRequired,
+  partitionRadioButtonsState: PropTypes.shape({
+    parquet: PropTypes.string.isRequired,
+    externalOffline: PropTypes.string.isRequired
+  }).isRequired,
+  selectedPartitionKind: PropTypes.shape({
+    parquet: PropTypes.arrayOf(PropTypes.string).isRequired,
+    externalOffline: PropTypes.arrayOf(PropTypes.string).isRequired
+  }).isRequired,
   selectedTargetKind: PropTypes.arrayOf(PropTypes.string).isRequired,
   setData: PropTypes.func.isRequired,
   setTargetsPathValid: PropTypes.func.isRequired,
+  showAdvanced: PropTypes.shape({
+    parquet: PropTypes.bool.isRequired,
+    externalOffline: PropTypes.bool.isRequired
+  }).isRequired,
   triggerPartitionAdvancedCheckboxes: PropTypes.func.isRequired,
   triggerPartitionCheckbox: PropTypes.func.isRequired
 }

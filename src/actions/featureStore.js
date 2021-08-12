@@ -3,6 +3,10 @@ import {
   CREATE_NEW_FEATURE_SET_BEGIN,
   CREATE_NEW_FEATURE_SET_FAILURE,
   CREATE_NEW_FEATURE_SET_SUCCESS,
+  FETCH_ENTITIES_BEGIN,
+  FETCH_ENTITIES_FAILURE,
+  FETCH_ENTITIES_SUCCESS,
+  FETCH_ENTITY_SUCCESS,
   FETCH_FEATURES_BEGIN,
   FETCH_FEATURES_FAILURE,
   FETCH_FEATURES_SUCCESS,
@@ -14,6 +18,8 @@ import {
   FETCH_FEATURE_VECTORS_FAILURE,
   FETCH_FEATURE_VECTORS_SUCCESS,
   FETCH_FEATURE_VECTOR_SUCCESS,
+  REMOVE_ENTITIES,
+  REMOVE_ENTITY,
   REMOVE_FEATURE,
   REMOVE_FEATURES,
   REMOVE_FEATURES_ERROR,
@@ -43,6 +49,10 @@ import {
 } from '../constants'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
+import {
+  getFeatureIdentifier,
+  getFeatureVectorIdentifier
+} from '../utils/getUniqueIdentifier'
 
 const featureStoreActions = {
   createNewFeatureSet: (project, data) => dispatch => {
@@ -73,6 +83,59 @@ const featureStoreActions = {
   }),
   createNewFeatureVector: data => () =>
     featureStoreApi.createFeatureVector(data),
+  fetchEntity: (project, entityName, entityMetadataName) => dispatch => {
+    return featureStoreApi
+      .getEntity(project, entityName)
+      .then(response => {
+        const filteredEntities = response.data.entities.filter(
+          responseItem =>
+            responseItem.feature_set_digest.metadata.name === entityMetadataName
+        )
+        const parsedEntities = parseFeatures(filteredEntities)
+
+        dispatch(
+          featureStoreActions.fetchEntitySuccess({
+            [getFeatureIdentifier(parsedEntities[0])]: parsedEntities
+          })
+        )
+
+        return filteredEntities
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchEntitySuccess: entities => ({
+    type: FETCH_ENTITY_SUCCESS,
+    payload: entities
+  }),
+  fetchEntities: (project, filters) => dispatch => {
+    dispatch(featureStoreActions.fetchEntitiesBegin())
+
+    return featureStoreApi
+      .getEntities(project, filters)
+      .then(response => {
+        dispatch(
+          featureStoreActions.fetchEntitiesSuccess(response.data.entities)
+        )
+
+        return response.data.entities
+      })
+      .catch(err => {
+        dispatch(featureStoreActions.fetchEntitiesFailure(err))
+      })
+  },
+  fetchEntitiesBegin: () => ({
+    type: FETCH_ENTITIES_BEGIN
+  }),
+  fetchEntitiesFailure: error => ({
+    type: FETCH_ENTITIES_FAILURE,
+    payload: error
+  }),
+  fetchEntitiesSuccess: entities => ({
+    type: FETCH_ENTITIES_SUCCESS,
+    payload: entities
+  }),
   fetchFeatureSets: (project, filters, config) => dispatch => {
     dispatch(featureStoreActions.fetchFeatureSetsBegin())
 
@@ -108,7 +171,9 @@ const featureStoreActions = {
       .then(response => {
         dispatch(
           featureStoreActions.fetchFeatureVectorSuccess({
-            [featureVector]: parseFeatureVectors(response.data?.feature_vectors)
+            [getFeatureVectorIdentifier(featureVector)]: parseFeatureVectors(
+              response.data?.feature_vectors
+            )
           })
         )
 
@@ -160,12 +225,11 @@ const featureStoreActions = {
             responseItem.feature_set_digest.metadata.name ===
             featureMetadataName
         )
+        const parsedFeatures = parseFeatures(filteredFeatures)
 
         dispatch(
           featureStoreActions.fetchFeatureSuccess({
-            [`${featureName}-${featureMetadataName}`]: parseFeatures(
-              filteredFeatures
-            )
+            [getFeatureIdentifier(parsedFeatures[0])]: parsedFeatures
           })
         )
 
@@ -205,6 +269,14 @@ const featureStoreActions = {
   fetchFeaturesSuccess: features => ({
     type: FETCH_FEATURES_SUCCESS,
     payload: features
+  }),
+
+  removeEntity: entities => ({
+    type: REMOVE_ENTITY,
+    payload: entities
+  }),
+  removeEntities: () => ({
+    type: REMOVE_ENTITIES
   }),
   removeFeatureSets: () => ({
     type: REMOVE_FEATURE_SETS

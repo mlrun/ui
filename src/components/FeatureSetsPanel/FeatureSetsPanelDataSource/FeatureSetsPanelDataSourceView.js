@@ -12,8 +12,11 @@ import Combobox from '../../../common/Combobox/Combobox'
 import {
   comboboxSelectList,
   CSV,
+  END_TIME,
   kindOptions,
-  PARQUET
+  PARQUET,
+  START_TIME,
+  TIME_FIELD
 } from './featureSetsPanelDataSource.util'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
 import { pathPlaceholders } from '../../../utils/panelPathScheme'
@@ -26,7 +29,6 @@ const FeatureSetsPanelDataSourceView = ({
   data,
   featureStore,
   handleFilterParametersOnBlur,
-  handleFilterParametersOnChange,
   handleKindOnChange,
   handleUrlOnBlur,
   handleUrlPathTypeChange,
@@ -137,7 +139,7 @@ const FeatureSetsPanelDataSourceView = ({
         )}
         {data.kind === PARQUET && (
           <FeatureSetsPanelSection title="Filter Parameters">
-            <span className="data-source__kind-description">
+            <span className="data-source__description">
               Users can add the following parameters to filter the data.
             </span>
             <div className="data-source__inputs-container">
@@ -148,13 +150,18 @@ const FeatureSetsPanelDataSourceView = ({
                 invalidText="Timestamp key is invalid"
                 label="Timestamp column"
                 onBlur={event =>
-                  handleFilterParametersOnBlur(event, 'timeField')
+                  handleFilterParametersOnBlur(event, TIME_FIELD)
                 }
                 onChange={value =>
-                  handleFilterParametersOnChange(value, 'timeField')
+                  setData(state => ({
+                    ...state,
+                    [TIME_FIELD]: value
+                  }))
                 }
                 required={Boolean(
-                  data.timeField || data.startTime || data.endTime
+                  data.timeField.length > 0 ||
+                    data.startTime.length > 0 ||
+                    data.endTime.length > 0
                 )}
                 requiredText="Timestamp key is required"
                 setInvalid={value =>
@@ -174,13 +181,17 @@ const FeatureSetsPanelDataSourceView = ({
                 invalidText="Start time is invalid"
                 label="Start time"
                 onBlur={event =>
-                  handleFilterParametersOnBlur(event, 'startTime')
+                  handleFilterParametersOnBlur(event, START_TIME)
                 }
                 onChange={value =>
-                  handleFilterParametersOnChange(value, 'startTime')
+                  setData(state => ({
+                    ...state,
+                    [START_TIME]: value
+                  }))
                 }
                 required={Boolean(
-                  (data.timeField || data.startTime) && !data.endTime
+                  (data.timeField.length > 0 || data.startTime.length > 0) &&
+                    data.endTime.length === 0
                 )}
                 requiredText="Start time is required"
                 setInvalid={value =>
@@ -199,12 +210,16 @@ const FeatureSetsPanelDataSourceView = ({
                 invalid={!validation.isEndTimeValid}
                 invalidText="End time is invalid"
                 label="End time"
-                onBlur={event => handleFilterParametersOnBlur(event, 'endTime')}
+                onBlur={event => handleFilterParametersOnBlur(event, END_TIME)}
                 onChange={value =>
-                  handleFilterParametersOnChange(value, 'endTime')
+                  setData(state => ({
+                    ...state,
+                    [END_TIME]: value
+                  }))
                 }
                 required={Boolean(
-                  (data.timeField || data.endTime) && !data.startTime
+                  (data.timeField.length > 0 || data.endTime.length > 0) &&
+                    data.startTime.length === 0
                 )}
                 requiredText="End time is required"
                 setInvalid={value =>
@@ -230,7 +245,6 @@ FeatureSetsPanelDataSourceView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   featureStore: PropTypes.shape({}).isRequired,
   handleFilterParametersOnBlur: PropTypes.func.isRequired,
-  handleFilterParametersOnChange: PropTypes.func.isRequired,
   handleKindOnChange: PropTypes.func.isRequired,
   handleUrlOnBlur: PropTypes.func.isRequired,
   handleUrlPathTypeChange: PropTypes.func.isRequired,

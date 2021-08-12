@@ -30,7 +30,8 @@ const TableLinkCell = ({
     'item-name',
     link.match(/functions/) && 'function-name'
   )
-  const { value: stateValue, label: stateLabel } = item.state ?? {}
+  const { value: stateValue, label: stateLabel, className: stateClassName } =
+    item.state ?? {}
 
   return (
     <div className={tableCellClassNames}>
@@ -39,7 +40,7 @@ const TableLinkCell = ({
           className="status"
           template={<TextTooltipTemplate text={stateLabel} />}
         >
-          <i className={stateValue} />
+          <i className={stateClassName} />
         </Tooltip>
       )}
       <Link

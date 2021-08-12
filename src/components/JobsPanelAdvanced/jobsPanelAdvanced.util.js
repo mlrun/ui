@@ -112,7 +112,7 @@ export const handleEdit = (
 export const handleDelete = (
   currentPanelData,
   currentTableData,
-  isEnv,
+  index,
   panelDispatch,
   previousPanelData,
   selectedItem,
@@ -120,23 +120,19 @@ export const handleDelete = (
   setCurrentTableData,
   setPreviousPanelData
 ) => {
-  const dataName = isEnv ? 'name' : 'kind'
-
   setCurrentPanelData(
-    currentPanelData.filter(
-      dataItem => dataItem[dataName] !== selectedItem.data[dataName]
-    )
+    currentPanelData.filter((dataItem, dataIndex) => dataIndex !== index)
   )
   panelDispatch({
     type: setPreviousPanelData,
     payload: previousPanelData.filter(
-      dataItem => dataItem.data[dataName] !== selectedItem.data[dataName]
+      (dataItem, dataIndex) => dataIndex !== index
     )
   })
   panelDispatch({
     type: setCurrentTableData,
     payload: currentTableData.filter(
-      dataItem => dataItem.data[dataName] !== selectedItem.data[dataName]
+      (dataItem, dataIndex) => dataIndex !== index
     )
   })
 }

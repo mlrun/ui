@@ -22,7 +22,16 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Sources', id: 'sources' }
 ]
-export const detailsMenu = ['overview', 'preview']
+export const detailsMenu = [
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'preview',
+    id: 'preview'
+  }
+]
 export const filters = [
   { type: 'tree', label: 'Tree:' },
   { type: 'name', label: 'Name:' },

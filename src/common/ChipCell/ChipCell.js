@@ -115,7 +115,9 @@ const ChipCell = ({
   )
 
   const handleRemoveChip = useCallback(
-    chipIndex => {
+    (event, chipIndex) => {
+      event.stopPropagation()
+
       const newChips = elements.filter((value, index) => index !== chipIndex)
 
       removeChip(newChips)
@@ -124,7 +126,7 @@ const ChipCell = ({
   )
 
   const handleEditChip = useCallback(
-    (chip, nameEvent) => {
+    (event, chip, nameEvent) => {
       const isChipNotEmpty = !!(chip.key && chip.value)
 
       if (isChipNotEmpty) {
@@ -136,7 +138,7 @@ const ChipCell = ({
 
       if (nameEvent === 'Click') {
         if (editConfig.isNewChip && !isChipNotEmpty) {
-          handleRemoveChip(editConfig.chipIndex)
+          handleRemoveChip(event, editConfig.chipIndex)
         }
 
         setEditConfig({
@@ -148,7 +150,7 @@ const ChipCell = ({
         })
       } else if (nameEvent === 'Tab') {
         if (editConfig.isNewChip && !isChipNotEmpty) {
-          handleRemoveChip(editConfig.chipIndex)
+          handleRemoveChip(event, editConfig.chipIndex)
         }
 
         setEditConfig(prevState => {
@@ -165,7 +167,7 @@ const ChipCell = ({
         })
       } else if (nameEvent === 'Tab+Shift') {
         if (editConfig.isNewChip && !isChipNotEmpty) {
-          handleRemoveChip(editConfig.chipIndex)
+          handleRemoveChip(event, editConfig.chipIndex)
         }
 
         setEditConfig(prevState => {

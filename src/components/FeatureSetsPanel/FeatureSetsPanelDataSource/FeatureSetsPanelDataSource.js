@@ -329,24 +329,17 @@ const FeatureSetsPanelDataSource = ({
         isStartTimeValid: true,
         isEndTimeValid: true
       }))
-    } else if (data.timeField && data.startTime) {
+    } else if (data.timeField.length > 0 && data.startTime.length > 0) {
       setValidation(prevState => ({
         ...prevState,
         isEndTimeValid: true
       }))
-    } else if (data.timeField && data.endTime) {
+    } else if (data.timeField.length > 0 && data.endTime.length > 0) {
       setValidation(prevState => ({
         ...prevState,
         isStartTimeValid: true
       }))
     }
-  }
-
-  const handleFilterParametersOnChange = (value, type) => {
-    setData(state => ({
-      ...state,
-      [type]: value
-    }))
   }
 
   return (
@@ -359,7 +352,6 @@ const FeatureSetsPanelDataSource = ({
       data={data}
       featureStore={featureStore}
       handleFilterParametersOnBlur={handleFilterParametersOnBlur}
-      handleFilterParametersOnChange={handleFilterParametersOnChange}
       handleKindOnChange={handleKindOnChange}
       handleUrlOnBlur={handleUrlOnBlur}
       handleUrlPathTypeChange={handleUrlPathTypeChange}

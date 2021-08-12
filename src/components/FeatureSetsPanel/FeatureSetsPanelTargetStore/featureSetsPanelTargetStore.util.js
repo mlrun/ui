@@ -4,6 +4,7 @@ import { ReactComponent as DB } from '../../../images/db-icon.svg'
 
 export const PARQUET = 'parquet'
 export const EXTERNAL_OFFLINE = 'externalOffline'
+export const EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE = 'csv'
 
 export const checkboxModels = {
   online: {
@@ -45,12 +46,10 @@ export const timePartitioningGranularityOptions = [
   { label: 'Year', id: 'year' }
 ]
 
-export const EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE = 'csv'
-
 export const partitionCheckboxTargetKind = {
-  byKey: { id: 'byKey' },
-  byTime: { id: 'byTime' },
-  byColumns: { id: 'byColumns' }
+  byKey: { id: 'byKey', label: 'By key' },
+  byTime: { id: 'byTime', label: 'By time' },
+  byColumns: { id: 'byColumns', label: 'By columns' }
 }
 
 export const partitionRadioButtonsData = [
@@ -80,4 +79,37 @@ export const isShowAdvancedInitialState = {
 export const partitionRadioButtonsInitialState = {
   parquet: 'districtKeys',
   externalOffline: 'districtKeys'
+}
+
+export const onlineKindDataInitialState = {
+  name: 'nosql',
+  kind: 'nosql',
+  online: true,
+  path: 'v3io:///projects/my-proj/FeatureStore/my-fs/nosql/sets/my-fs-my-tag'
+}
+
+export const offlineKindDataInitialState = {
+  name: 'parquet',
+  kind: 'parquet',
+  path: 'v3io:///projects/my-proj/FeatureStore/my-fs/parquet/sets/my-fs-my-tag',
+  partitioned: '',
+  key_bucketing_number: '',
+  partition_cols: '',
+  time_partitioning_granularity: 'hour'
+}
+
+export const externalOfflineKindDataInitialState = {
+  name: 'externalOffline',
+  kind: EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
+  path: '',
+  partitioned: '',
+  key_bucketing_number: '',
+  partition_cols: '',
+  time_partitioning_granularity: 'hour'
+}
+
+export const dataInitialState = {
+  online: onlineKindDataInitialState,
+  parquet: offlineKindDataInitialState,
+  externalOffline: externalOfflineKindDataInitialState
 }

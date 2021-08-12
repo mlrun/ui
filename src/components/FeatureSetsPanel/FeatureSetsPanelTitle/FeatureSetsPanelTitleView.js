@@ -18,7 +18,6 @@ const FeatureSetsPanelTitleView = ({
   featureStore,
   handleAddLabel,
   handleChangeLabels,
-  handleNameChange,
   handleNameOnBlur,
   isNameValid,
   setData,
@@ -47,16 +46,13 @@ const FeatureSetsPanelTitleView = ({
             invalidText="This field is invalid"
             label="Feature Set Name"
             maxLength={63}
-            onChange={handleNameChange}
+            onChange={name => setData(state => ({ ...state, name }))}
             onBlur={handleNameOnBlur}
             pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
             required
             requiredText="This field is required"
             setInvalid={value =>
-              setNameValid(state => ({
-                ...state,
-                isNameValid: value
-              }))
+              setNameValid(state => ({ ...state, isNameValid: value }))
             }
             tip={titleValidationTip}
             type="text"
@@ -135,7 +131,6 @@ FeatureSetsPanelTitleView.propTypes = {
   featureStore: PropTypes.shape({}).isRequired,
   handleAddLabel: PropTypes.func.isRequired,
   handleChangeLabels: PropTypes.func.isRequired,
-  handleNameChange: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,

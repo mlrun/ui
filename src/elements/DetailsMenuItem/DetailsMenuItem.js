@@ -19,15 +19,15 @@ const DetailsMenuItem = ({
     match.params.pageTab ? `${match.params.pageTab}/` : ''
   }${page === FUNCTIONS_PAGE ? hash : id || name}/${
     match.params.tag ? `${match.params.tag}/` : ''
-  }${isNaN(parseInt(iter)) ? '' : `${iter}/`}${tab}`
+  }${isNaN(parseInt(iter)) ? '' : `${iter}/`}${tab.id}`
   const tabClassNames = classnames(
     'menu-tab',
-    match.params.tab === tab && 'active-tab'
+    match.params.tab === tab.id && 'active-tab'
   )
 
   return (
     <Link to={link} onClick={onClick}>
-      <li className={tabClassNames}>{tab}</li>
+      <li className={tabClassNames}>{tab.label}</li>
     </Link>
   )
 }
@@ -48,7 +48,11 @@ DetailsMenuItem.propTypes = {
   name: PropTypes.string,
   onClick: PropTypes.func,
   page: PropTypes.string.isRequired,
-  tab: PropTypes.string.isRequired
+  tab: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    hidden: PropTypes.bool
+  }).isRequired
 }
 
 export default DetailsMenuItem

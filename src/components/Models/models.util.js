@@ -45,34 +45,40 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Accuracy', id: 'accuracy' },
   { label: 'Stream path', id: 'stream_path' }
 ]
-export const generateModelsDetailsMenu = selectedModel => {
-  const modelsDetailsMenu = [
-    {
-      header: 'overview',
-      visible: true
-    },
-    {
-      header: 'preview',
-      visible: true
-    },
-    {
-      header: 'features',
-      visible: Boolean(selectedModel.item?.feature_vector)
-    },
-    {
-      header: 'statistics',
-      visible: Boolean(selectedModel.item?.feature_vector)
-    }
-  ]
+export const generateModelsDetailsMenu = selectedModel => [
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'preview',
+    id: 'preview'
+  },
+  {
+    label: 'features',
+    id: 'features',
+    hidden: !selectedModel.item?.feature_vector
+  },
+  {
+    label: 'statistics',
+    id: 'statistics',
+    hidden: !selectedModel.item?.feature_vector
+  }
+]
 
-  return selectedModel.item
-    ? modelsDetailsMenu.filter(item => item.visible).map(item => item.header)
-    : []
-}
 export const modelEndpointsDetailsMenu = [
-  'overview',
-  'drift analysis',
-  'features analysis'
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'drift analysis',
+    id: 'drift-analysis'
+  },
+  {
+    label: 'features analysis',
+    id: 'features-analysis'
+  }
 ]
 export const modelsFilters = [
   { type: 'tree', label: 'Tree:' },
@@ -195,7 +201,7 @@ export const handleFetchData = async (
 ) => {
   let data = {
     content: [],
-    yamlContent: []
+    originalContent: []
   }
   let result = null
 
@@ -204,7 +210,7 @@ export const handleFetchData = async (
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
-      data.yamlContent = result
+      data.originalContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     result = await fetchModelEndpoints(project, filters)
@@ -213,10 +219,13 @@ export const handleFetchData = async (
       data.content = result.map(endpoint => {
         return {
           ...endpoint,
-          state: getState(endpoint.status.state)
+          state: getState(endpoint.status.state),
+          ui: {
+            originalContent: endpoint
+          }
         }
       })
-      data.yamlContent = result
+      data.originalContent = result
     }
   }
 

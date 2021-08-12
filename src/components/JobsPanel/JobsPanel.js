@@ -37,6 +37,7 @@ const JobsPanel = ({
   groupedFunctions,
   jobsStore,
   match,
+  mode,
   onEditJob,
   onSuccessRun,
   project,
@@ -61,6 +62,10 @@ const JobsPanel = ({
       ? functionsStore.template.functions
       : groupedFunctions.functions || {}
   )
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isArtifactPathValid: true
+  })
   const history = useHistory()
 
   useLayoutEffect(() => {
@@ -86,7 +91,8 @@ const JobsPanel = ({
     functionsStore.error,
     functionsStore.template.name,
     groupedFunctions,
-    removeFunctionTemplate
+    removeFunctionTemplate,
+    setSelectedFunction
   ])
 
   useEffect(() => {
@@ -117,7 +123,10 @@ const JobsPanel = ({
           panelState.currentFunctionInfo.method,
           selectedFunction,
           panelDispatch,
-          setNewJob
+          setNewJob,
+          panelState.limits,
+          panelState.requests,
+          mode
         )
       } else {
         panelDispatch({
@@ -127,10 +136,13 @@ const JobsPanel = ({
       }
     }
   }, [
+    mode,
     panelState.currentFunctionInfo.method,
     panelState.editMode,
+    panelState.limits,
     panelState.previousPanelData.tableData,
     panelState.previousPanelData.titleInfo.method,
+    panelState.requests,
     selectedFunction,
     setNewJob
   ])
@@ -147,7 +159,8 @@ const JobsPanel = ({
         panelDispatch,
         setNewJob,
         panelState.limits,
-        panelState.requests
+        panelState.requests,
+        mode
       )
     } else if (
       !panelState.editMode &&
@@ -161,12 +174,14 @@ const JobsPanel = ({
         panelState.limits,
         panelState.requests,
         setNewJob,
-        setDefaultDataIsLoaded
+        setDefaultDataIsLoaded,
+        mode
       )
     }
   }, [
     defaultData,
     defaultDataIsLoaded,
+    mode,
     panelState.currentFunctionInfo,
     panelState.currentFunctionInfo.method,
     panelState.editMode,
@@ -333,15 +348,6 @@ const JobsPanel = ({
     onEditJob(event, postData)
   }
 
-  const isTitleValid = () => {
-    return (
-      panelState.currentFunctionInfo.name.trim() !== '' &&
-      /^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/.test(
-        panelState.currentFunctionInfo.name
-      )
-    )
-  }
-
   return (
     <JobsPanelView
       closePanel={closePanel}
@@ -349,7 +355,6 @@ const JobsPanel = ({
       functionData={functionData}
       handleEditJob={handleEditJob}
       handleRunJob={handleRunJob}
-      isTitleValid={isTitleValid}
       jobsStore={jobsStore}
       loading={jobsStore.loading || functionsStore.loading}
       match={match}
@@ -361,6 +366,8 @@ const JobsPanel = ({
       setNewJobInputs={setNewJobInputs}
       setNewJobSecretSources={setNewJobSecretSources}
       setOpenScheduleJob={setOpenScheduleJob}
+      setValidation={setValidation}
+      validation={validation}
       withSaveChanges={withSaveChanges}
     />
   )
@@ -379,6 +386,7 @@ JobsPanel.propTypes = {
   defaultData: PropTypes.shape({}),
   groupedFunctions: PropTypes.shape({}),
   match: PropTypes.shape({}).isRequired,
+  mode: PropTypes.string.isRequired,
   onEditJob: PropTypes.func,
   project: PropTypes.string.isRequired,
   redirectToDetailsPane: PropTypes.bool,

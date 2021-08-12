@@ -84,6 +84,7 @@ const JobsPanelTableView = ({
               editItem={editItem}
               handleDelete={handleDelete}
               handleEdit={handleEdit}
+              index={index}
               key={index}
               section={section}
             />

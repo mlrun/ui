@@ -13,7 +13,6 @@ export const infoHeaders = [
   { label: 'UID', id: 'uid' },
   { label: 'Start time', id: 'startTime' },
   { label: 'Last Updated', id: 'updated' },
-  { label: 'Status', id: 'state' },
   { label: 'Parameters', id: 'parameters' },
   { label: 'Function', id: 'function' },
   { label: 'Results', id: 'resultsChips' },
@@ -96,12 +95,30 @@ export const generateTableHeaders = scheduled => {
   ]
 }
 export const detailsMenu = [
-  'overview',
-  'inputs',
-  'artifacts',
-  'results',
-  'logs',
-  'pods'
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'inputs',
+    id: 'inputs'
+  },
+  {
+    label: 'artifacts',
+    id: 'artifacts'
+  },
+  {
+    label: 'results',
+    id: 'results'
+  },
+  {
+    label: 'logs',
+    id: 'logs'
+  },
+  {
+    label: 'pods',
+    id: 'pods'
+  }
 ]
 export const filters = [
   { type: 'period', label: 'Period:' },

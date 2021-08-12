@@ -5,7 +5,12 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
     targetKind => targetKind.name === 'externalOffline'
   )
 
-  if (!validation.isNameValid) {
+  if (newFeatureSet.metadata.name.length === 0 || !validation.isNameValid) {
+    setValidation(prevState => ({
+      ...prevState,
+      isNameValid: false
+    }))
+
     return false
   }
 
@@ -53,7 +58,12 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
     }
   }
 
-  if (!validation.isEntitiesValid) {
+  if (newFeatureSet.spec.entities.length === 0 || !validation.isEntitiesValid) {
+    setValidation(prevState => ({
+      ...prevState,
+      isEntitiesValid: false
+    }))
+
     return false
   }
 

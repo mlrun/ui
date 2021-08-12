@@ -13,7 +13,8 @@ import {
   partitionRadioButtonsInitialState,
   selectedTargetKindInitialState,
   PARQUET,
-  EXTERNAL_OFFLINE
+  EXTERNAL_OFFLINE,
+  dataInitialState
 } from './featureSetsPanelTargetStore.util'
 
 const FeatureSetsPanelTargetStore = ({
@@ -22,38 +23,20 @@ const FeatureSetsPanelTargetStore = ({
   setTargetsPathValid,
   setNewFeatureSetTarget
 }) => {
+  const [data, setData] = useState(dataInitialState)
   const [selectedTargetKind, setSelectedTargetKind] = useState(
     selectedTargetKindInitialState
   )
   const [selectedPartitionKind, setSelectedPartitionKind] = useState(
     selectedPartitionKindInitialState
   )
-  const [isShowAdvanced, setShowAdvanced] = useState(isShowAdvancedInitialState)
+  const [showAdvanced, setShowAdvanced] = useState(isShowAdvancedInitialState)
   const [partitionRadioButtonsState, setPartitionRadioButtonsState] = useState(
     partitionRadioButtonsInitialState
   )
-  const [data, setData] = useState({
-    online: {
-      name: 'nosql',
-      kind: 'nosql',
-      online: true,
-      path:
-        'v3io:///projects/my-proj/FeatureStore/my-fs/nosql/sets/my-fs-my-tag'
-    },
-    parquet: {
-      name: 'parquet',
-      kind: 'parquet',
-      path:
-        'v3io:///projects/my-proj/FeatureStore/my-fs/parquet/sets/my-fs-my-tag'
-    },
-    externalOffline: { name: 'externalOffline', kind: 'csv', path: '' }
-  })
 
-  const handleAdvancedFieldsLink = kind => {
-    if (
-      !isShowAdvanced[kind] &&
-      selectedPartitionKind[kind].includes('byTime')
-    ) {
+  const handleAdvancedLinkClick = kind => {
+    if (!showAdvanced[kind] && selectedPartitionKind[kind].includes('byTime')) {
       setNewFeatureSetTarget(
         featureStore.newFeatureSet.spec.targets.map(targetKind => {
           if (targetKind.name === kind) {
@@ -78,10 +61,7 @@ const FeatureSetsPanelTargetStore = ({
       setData(state => ({
         ...state,
         [kind]: {
-          ...checkboxModels[kind].data,
-          partitioned: 'partitioned',
-          path: state[kind].path,
-          kind: PARQUET,
+          ...data[kind],
           key_bucketing_number: '',
           partition_cols: '',
           time_partitioning_granularity: 'hour'
@@ -192,12 +172,9 @@ const FeatureSetsPanelTargetStore = ({
     setData(state => ({
       ...state,
       externalOffline: {
+        ...dataInitialState.externalOffline,
         kind,
-        path: state.externalOffline.path,
-        partitioned: '',
-        key_bucketing_number: '',
-        partition_cols: '',
-        time_partitioning_granularity: ''
+        path: state.externalOffline.path
       }
     }))
     setNewFeatureSetTarget(
@@ -269,7 +246,7 @@ const FeatureSetsPanelTargetStore = ({
       ) {
         setData(state => ({
           ...state,
-          [kindId]: { ...checkboxModels[kindId].data }
+          [kindId]: { ...dataInitialState[kindId] }
         }))
         setShowAdvanced({
           ...isShowAdvancedInitialState,
@@ -290,38 +267,38 @@ const FeatureSetsPanelTargetStore = ({
       if (kindId === checkboxModels[kindId].id) {
         setData(state => ({
           ...state,
-          [kindId]: { ...checkboxModels[kindId].data }
+          [kindId]: { ...dataInitialState[kindId] }
         }))
       }
 
-      newTargets.push({ ...checkboxModels[kindId].data })
+      newTargets.push({ ...dataInitialState[kindId] })
       setSelectedTargetKind(state => [...state, kindId])
     }
 
     setNewFeatureSetTarget(newTargets)
   }
 
-  const handlePartitionRadioButtons = (value, kind) => {
+  const handlePartitionRadioButtonClick = (value, targetKind) => {
     const keyBucketingNumber = value === 'districtKeys' ? 0 : 1
 
     setPartitionRadioButtonsState(state => ({
       ...state,
-      [kind]: value
+      [targetKind]: value
     }))
     setData(state => ({
       ...state,
-      [kind]: {
-        ...state[kind],
+      [targetKind]: {
+        ...state[targetKind],
         key_bucketing_number: keyBucketingNumber
       }
     }))
     setNewFeatureSetTarget(
-      featureStore.newFeatureSet.spec.targets.map(targetKind => {
-        if (targetKind.name === kind) {
-          targetKind.key_bucketing_number = value === 'districtKeys' ? 0 : 1
+      featureStore.newFeatureSet.spec.targets.map(target => {
+        if (target.name === targetKind) {
+          target.key_bucketing_number = keyBucketingNumber
         }
 
-        return targetKind
+        return target
       })
     )
   }
@@ -430,7 +407,7 @@ const FeatureSetsPanelTargetStore = ({
           ? {
               ...state,
               [kind]: {
-                ...checkboxModels[kind].data,
+                ...dataInitialState[kind],
                 path: state[kind].path,
                 kind: PARQUET
               }
@@ -448,10 +425,7 @@ const FeatureSetsPanelTargetStore = ({
       })
 
       if (data[kind].partitioned) {
-        setShowAdvanced({
-          ...isShowAdvancedInitialState,
-          [kind]: false
-        })
+        setShowAdvanced(state => ({ ...state, [kind]: false }))
         setPartitionRadioButtonsState(state => ({
           ...state,
           [kind]: 'districtKeys'
@@ -497,7 +471,7 @@ const FeatureSetsPanelTargetStore = ({
   return (
     <FeatureSetsPanelTargetStoreView
       data={data}
-      handleAdvancedFieldsLink={handleAdvancedFieldsLink}
+      handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}
       handleExternalOfflineKindPathOnChange={
         handleExternalOfflineKindPathOnChange
@@ -508,18 +482,18 @@ const FeatureSetsPanelTargetStore = ({
       handleOnlineKindPathOnBlur={handleOnlineKindPathOnBlur}
       handlePartitionColsOnChange={handlePartitionColsOnChange}
       handlePartitionColsOnBlur={handlePartitionColsOnBlur}
-      handlePartitionRadioButtons={handlePartitionRadioButtons}
+      handlePartitionRadioButtonClick={handlePartitionRadioButtonClick}
       handleSelectTargetKind={handleSelectTargetKind}
       handleTimePartitioningGranularityChange={
         handleTimePartitioningGranularityChange
       }
       isTargetsPathValid={isTargetsPathValid}
-      isShowAdvanced={isShowAdvanced}
       partitionRadioButtonsState={partitionRadioButtonsState}
       selectedPartitionKind={selectedPartitionKind}
       selectedTargetKind={selectedTargetKind}
       setData={setData}
       setTargetsPathValid={setTargetsPathValid}
+      showAdvanced={showAdvanced}
       triggerPartitionAdvancedCheckboxes={triggerPartitionAdvancedCheckboxes}
       triggerPartitionCheckbox={triggerPartitionCheckbox}
     />

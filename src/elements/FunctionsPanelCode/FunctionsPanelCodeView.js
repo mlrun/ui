@@ -26,12 +26,12 @@ const FunctionsPanelCodeView = ({
   data,
   editCode,
   functionsStore,
-  handleHandlerChange,
   handleHandlerOnBlur,
   imageType,
   isHandlerValid,
   setData,
   setEditCode,
+  setHandlerValid,
   setImageType,
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
@@ -76,10 +76,13 @@ const FunctionsPanelCodeView = ({
               invalid={!isHandlerValid}
               invalidText="This field is invalid"
               label="Handler"
-              onChange={handleHandlerChange}
-              onBlur={event => handleHandlerOnBlur(event)}
-              required={!isHandlerValid}
+              onChange={handler => setData(state => ({ ...state, handler }))}
+              onBlur={handleHandlerOnBlur}
+              required
               requiredText="This field is required"
+              setInvalid={value =>
+                setHandlerValid(state => ({ ...state, isHandlerValid: value }))
+              }
               type="text"
               value={data.handler}
               wrapperClassName="handler"
@@ -202,12 +205,12 @@ FunctionsPanelCodeView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   editCode: PropTypes.bool.isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
-  handleHandlerChange: PropTypes.func.isRequired,
   handleHandlerOnBlur: PropTypes.func.isRequired,
   imageType: PropTypes.string.isRequired,
   isHandlerValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
   setEditCode: PropTypes.func.isRequired,
+  setHandlerValid: PropTypes.func.isRequired,
   setImageType: PropTypes.func.isRequired,
   setNewFunctionBaseImage: PropTypes.func.isRequired,
   setNewFunctionBuildImage: PropTypes.func.isRequired,

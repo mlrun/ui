@@ -53,7 +53,7 @@
     &-row {
       display: flex;
       flex-direction: row;
-      height: 55px;
+      height: 32px;
       border-bottom: $secondaryBorder;
     }
   }
@@ -370,7 +370,7 @@
 }
 
 @mixin tableHeader($sidePadding) {
-  padding: 10px $sidePadding;
+  padding: 5px $sidePadding;
   color: $topaz;
   font-weight: bold;
   font-size: 14px;
@@ -641,7 +641,7 @@
         height: auto;
 
         .accordion__body {
-          min-height: 400px;
+          min-height: 100px;
           overflow: visible;
         }
       }
@@ -865,11 +865,11 @@
       flex-flow: row wrap;
       margin-bottom: 45px;
     }
+  }
 
-    &:last-child {
-      .item-section__body {
-        margin-bottom: 0;
-      }
+  &:last-child {
+    .panel-section__body {
+      margin-bottom: 0;
     }
   }
 }
