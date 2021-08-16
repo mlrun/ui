@@ -80,10 +80,10 @@ const FunctionsPanelCodeView = ({
               onBlur={handleHandlerOnBlur}
               required
               requiredText="This field is required"
-              tip="Enter the function handler name (e.g. for the default sample function the name should be `handler`)"
               setInvalid={value =>
                 setHandlerValid(state => ({ ...state, isHandlerValid: value }))
               }
+              tip="Enter the function handler name (e.g. for the default sample function the name should be `handler`)"
               type="text"
               value={data.handler}
               wrapperClassName="handler"
