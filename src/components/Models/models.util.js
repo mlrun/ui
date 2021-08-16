@@ -147,15 +147,19 @@ export const modelEndpointsTableHeaders = [
     class: 'artifacts_medium'
   },
   {
+    header: 'Function',
+    class: 'artifacts_small'
+  },
+  {
+    header: 'Model',
+    class: 'artifacts_small'
+  },
+  {
     header: 'Version',
     class: 'artifacts_extra-small'
   },
   {
     header: 'Class',
-    class: 'artifacts_small'
-  },
-  {
-    header: 'Model',
     class: 'artifacts_small'
   },
   {
@@ -171,15 +175,15 @@ export const modelEndpointsTableHeaders = [
     class: 'artifacts_small'
   },
   {
+    header: 'Average latency',
+    class: 'artifacts_small'
+  },
+  {
     header: 'Error count',
     class: 'artifacts_small'
   },
   {
     header: 'Drift',
-    class: 'artifacts_extra-small'
-  },
-  {
-    header: 'Accuracy',
     class: 'artifacts_extra-small'
   },
   {
