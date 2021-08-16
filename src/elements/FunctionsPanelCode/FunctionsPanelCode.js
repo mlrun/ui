@@ -8,7 +8,6 @@ import FunctionsPanelCodeView from './FunctionsPanelCodeView'
 import functionsActions from '../../actions/functions'
 import {
   DEFAULT_ENTRY,
-  DEFAULT_HANDLER,
   DEFAULT_IMAGE,
   DEFAULT_SOURCE_CODE,
   EXISTING_IMAGE,
@@ -30,7 +29,7 @@ const FunctionsPanelCode = ({
 }) => {
   const [data, setData] = useState({
     entry: DEFAULT_ENTRY,
-    handler: defaultData.default_handler ?? DEFAULT_HANDLER,
+    handler: defaultData.default_handler ?? '',
     image: defaultData.image ?? DEFAULT_IMAGE,
     base_image: defaultData.build?.base_image ?? '',
     commands: (defaultData.build?.commands || []).join('\n') ?? '',
@@ -75,19 +74,6 @@ const FunctionsPanelCode = ({
     defaultData.build,
     functionsStore.newFunction.spec.build.functionSourceCode,
     setNewFunctionSourceCode
-  ])
-
-  useEffect(() => {
-    if (
-      !functionsStore.newFunction.spec.default_handler &&
-      isNil(defaultData.default_handler)
-    ) {
-      setNewFunctionHandler(DEFAULT_HANDLER)
-    }
-  }, [
-    defaultData.default_handler,
-    functionsStore.newFunction.spec.default_handler,
-    setNewFunctionHandler
   ])
 
   useEffect(() => {
