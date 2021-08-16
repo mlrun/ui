@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import Tip from '../Tip/Tip'
+
+import { RADIO_BUTTONS_ELEMENTS } from '../../types'
+
 import './radioButtons.scss'
 
 const RadioButtons = ({
@@ -41,8 +45,12 @@ const RadioButtons = ({
               onChange={onChange}
             />
             <span className="checkmark" />
-            <span className="radio-button__label">{element.label}</span>
+            <span className="radio-button__label">
+              {element.label}
+              {element.tip && <Tip text={element.tip} />}
+            </span>
           </label>
+
           {element.info && (
             <span className="radio-button__info">{element.info}</span>
           )}
@@ -63,13 +71,7 @@ RadioButtons.defaultProps = {
 RadioButtons.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  elements: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      value: PropTypes.string.isRequired,
-      info: PropTypes.string
-    }).isRequired
-  ).isRequired,
+  elements: RADIO_BUTTONS_ELEMENTS.isRequired,
   onChangeCallback: PropTypes.func.isRequired,
   selectedValue: PropTypes.string
 }

@@ -21,17 +21,12 @@ const FeatureSetsPanelView = ({
   error,
   handleSave,
   handleSaveOnClick,
-  isExternalOfflineTargetsPathValid,
-  isNameValid,
-  isSchemaEntitiesValid,
-  isUrlValid,
   loading,
   project,
   removeFeatureStoreError,
   setConfirmDialog,
-  setExternalOfflineTargetsPathValid,
-  setNameValid,
-  setUrlValid
+  setValidation,
+  validation
 }) => {
   return (
     <div className="new-item-side-panel-container">
@@ -51,8 +46,8 @@ const FeatureSetsPanelView = ({
         )}
         <FeatureSetsPanelTitle
           closePanel={closePanel}
-          isNameValid={isNameValid}
-          setNameValid={setNameValid}
+          isNameValid={validation.isNameValid}
+          setNameValid={setValidation}
         />
         <div className="new-item-side-panel__body">
           <Accordion
@@ -62,9 +57,9 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelDataSource
-              isUrlValid={isUrlValid}
               project={project}
-              setUrlValid={setUrlValid}
+              setValidation={setValidation}
+              validation={validation}
             />
           </Accordion>
           <Accordion
@@ -74,7 +69,8 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelSchema
-              isSchemaEntitiesValid={isSchemaEntitiesValid}
+              isEntitiesValid={validation.isEntitiesValid}
+              setEntitiesValid={setValidation}
             />
           </Accordion>
           <Accordion
@@ -84,12 +80,8 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelTargetStore
-              isExternalOfflineTargetsPathValid={
-                isExternalOfflineTargetsPathValid
-              }
-              setExternalOfflineTargetsPathValid={
-                setExternalOfflineTargetsPathValid
-              }
+              isTargetsPathValid={validation.isTargetsPathValid}
+              setTargetsPathValid={setValidation}
             />
           </Accordion>
           <div className="new-item-side-panel__buttons-container">
@@ -139,17 +131,12 @@ FeatureSetsPanelView.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   handleSave: PropTypes.func.isRequired,
   handleSaveOnClick: PropTypes.func.isRequired,
-  isExternalOfflineTargetsPathValid: PropTypes.bool.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
-  isSchemaEntitiesValid: PropTypes.bool.isRequired,
-  isUrlValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   project: PropTypes.string.isRequired,
   removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
-  setExternalOfflineTargetsPathValid: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired,
-  setUrlValid: PropTypes.func.isRequired
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default FeatureSetsPanelView

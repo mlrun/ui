@@ -23,25 +23,8 @@ const FeatureSetsPanelTitle = ({
     labels: []
   })
 
-  const handleNameChange = name => {
-    const pattern = /^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/
-
-    if (!isNameValid && name.length > 0 && pattern.test(name)) {
-      setNameValid(true)
-    } else if (!pattern.test(name)) {
-      setNameValid(false)
-    }
-
-    setData(state => ({
-      ...state,
-      name
-    }))
-  }
-
   const handleNameOnBlur = () => {
-    if (data.name.length === 0) {
-      setNameValid(false)
-    } else if (data.name !== featureStore.newFeatureSet.metadata.name) {
+    if (data.name !== featureStore.newFeatureSet.metadata.name) {
       setNewFeatureSetName(data.name)
     }
   }
@@ -82,12 +65,12 @@ const FeatureSetsPanelTitle = ({
       featureStore={featureStore}
       handleAddLabel={handleAddLabel}
       handleChangeLabels={handleChangeLabels}
-      handleNameChange={handleNameChange}
       handleNameOnBlur={handleNameOnBlur}
       isNameValid={isNameValid}
       setData={setData}
       setNewFeatureSetDescription={setNewFeatureSetDescription}
       setNewFeatureSetVersion={setNewFeatureSetVersion}
+      setNameValid={setNameValid}
     />
   )
 }

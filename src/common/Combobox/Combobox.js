@@ -85,8 +85,6 @@ const Combobox = ({
   const handleOutsideClick = useCallback(
     event => {
       if (comboboxRef.current && !comboboxRef.current.contains(event.target)) {
-        event.preventDefault()
-
         if (showSelectDropdown) {
           setShowSelectDropdown(false)
 

@@ -21,7 +21,6 @@ const JobsPanelView = ({
   functionData,
   handleEditJob,
   handleRunJob,
-  isTitleValid,
   jobsStore,
   loading,
   match,
@@ -33,6 +32,8 @@ const JobsPanelView = ({
   setNewJobInputs,
   setNewJobSecretSources,
   setOpenScheduleJob,
+  setValidation,
+  validation,
   withSaveChanges
 }) => {
   return (
@@ -43,11 +44,12 @@ const JobsPanelView = ({
           closePanel={closePanel}
           editModeEnabled={!defaultData}
           functionData={functionData}
-          isTitleValid={isTitleValid}
+          isNameValid={validation.isNameValid}
           match={match}
           openScheduleJob={openScheduleJob}
           panelState={panelState}
           panelDispatch={panelDispatch}
+          setNameValid={setValidation}
           setOpenScheduleJob={setOpenScheduleJob}
         />
         {!openScheduleJob ? (
@@ -60,9 +62,11 @@ const JobsPanelView = ({
             >
               <JobsPanelDataInputs
                 inputs={jobsStore.newJob.task.spec.inputs}
+                isArtifactPathValid={validation.isArtifactPathValid}
                 match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
+                setArtifactPathValid={setValidation}
                 setNewJobInputs={setNewJobInputs}
               />
             </Accordion>
@@ -117,7 +121,11 @@ const JobsPanelView = ({
                 variant="tertiary"
                 label="Schedule for later"
                 className="pop-up-dialog__btn_cancel"
-                onClick={() => isTitleValid() && setOpenScheduleJob(true)}
+                onClick={() =>
+                  validation.isNameValid &&
+                  validation.isArtifactPathValid &&
+                  setOpenScheduleJob(true)
+                }
               />
               {withSaveChanges ? (
                 <Button
@@ -133,7 +141,11 @@ const JobsPanelView = ({
                       <Run /> <span> Run now </span>
                     </>
                   }
-                  onClick={() => isTitleValid() && handleRunJob()}
+                  onClick={() =>
+                    validation.isNameValid &&
+                    validation.isArtifactPathValid &&
+                    handleRunJob()
+                  }
                 />
               )}
             </div>
@@ -172,6 +184,8 @@ JobsPanelView.propTypes = {
   setNewJobInputs: PropTypes.func.isRequired,
   setNewJobSecretSources: PropTypes.func.isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired,
   withSaveChanges: PropTypes.bool.isRequired
 }
 

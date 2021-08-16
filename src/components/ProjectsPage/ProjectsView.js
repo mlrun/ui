@@ -37,7 +37,7 @@ const ProjectsView = ({
   handleCreateProject,
   handleSearchOnChange,
   isDescendingOrder,
-  isEmptyValue,
+  isNameValid,
   match,
   projectStore,
   refreshProjects,
@@ -46,6 +46,7 @@ const ProjectsView = ({
   setCreateProject,
   setFilterMatches,
   setIsDescendingOrder,
+  setNameValid,
   setNewProjectDescription,
   setNewProjectName,
   setSelectedProjectsState,
@@ -64,8 +65,9 @@ const ProjectsView = ({
         <CreateProjectDialog
           closeNewProjectPopUp={closeNewProjectPopUp}
           handleCreateProject={handleCreateProject}
-          isEmptyValue={isEmptyValue}
+          isNameValid={isNameValid}
           removeNewProjectError={removeNewProjectError}
+          setNameValid={setNameValid}
           setNewProjectDescription={setNewProjectDescription}
           setNewProjectName={setNewProjectName}
         />
@@ -191,7 +193,7 @@ ProjectsView.propTypes = {
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
   handleSearchOnChange: PropTypes.func.isRequired,
-  isEmptyValue: PropTypes.bool.isRequired,
+  isNameValid: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
@@ -200,6 +202,7 @@ ProjectsView.propTypes = {
   setFilterMatches: PropTypes.func.isRequired,
   setIsDescendingOrder: PropTypes.func.isRequired,
   setNewProjectDescription: PropTypes.func.isRequired,
+  setNameValid: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
   setSortProjectId: PropTypes.func.isRequired,
