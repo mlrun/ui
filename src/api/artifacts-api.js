@@ -98,6 +98,10 @@ export default {
       params.label = filters.labels?.split(',')
     }
 
+    if (filters?.metrics) {
+      params.metric.push(filters.metrics)
+    }
+
     return mainHttpClient.get(`/projects/${project}/model-endpoints`, {
       params
     })

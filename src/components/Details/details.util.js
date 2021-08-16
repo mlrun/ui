@@ -27,7 +27,7 @@ import {
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE
 } from '../../constants'
-import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
+import { formatDatetime, generateLinkPath } from '../../utils'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
@@ -66,12 +66,11 @@ export const generateArtifactsContent = (page, pageTab, selectedItem) => {
       },
       function_uri: {
         value: selectedItem?.spec?.function_uri,
-        link: (() => {
-          const { key: functionName, project } = parseUri(
-            `store://functions/${selectedItem?.spec?.function_uri}`
-          )
-          return `/projects/${project}/functions/${functionName}/overview`
-        })()
+        link: selectedItem?.spec?.function_uri
+          ? `${generateLinkPath(
+              `store://functions/${selectedItem?.spec?.function_uri}`
+            )}/overview`
+          : ''
       },
       last_prediction: {
         value: formatDatetime(new Date(selectedItem?.status?.last_request), '-')
