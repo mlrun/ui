@@ -10,9 +10,15 @@ import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
 import artifactsAction from '../../../actions/artifacts'
 import { getParsedResource } from '../../../utils/resources'
 import {
+  END_TIME,
   generateComboboxMatchesList,
+  handleEndTimeOnBlur,
+  handleStartTimeOnBlur,
+  handleTimestampColumnOnBlur,
   isUrlInputValid,
-  projectItemsPathTypes
+  projectItemsPathTypes,
+  START_TIME,
+  TIME_FIELD
 } from './featureSetsPanelDataSource.util'
 import projectsAction from '../../../actions/projects'
 import {
@@ -27,19 +33,24 @@ const FeatureSetsPanelDataSource = ({
   fetchArtifact,
   fetchArtifacts,
   fetchProjects,
-  isUrlValid,
   project,
-  projectStore,
-  setNewFeatureSetDataSourceAttributes,
-  setNewFeatureSetDataSourceKey,
+  setNewFeatureSetDataSourceEndTime,
   setNewFeatureSetDataSourceKind,
-  setNewFeatureSetDataSourceTime,
+  setNewFeatureSetDataSourceParseDates,
+  setNewFeatureSetDataSourceStartTime,
+  setNewFeatureSetDataSourceTimestampColumn,
   setNewFeatureSetDataSourceUrl,
   setNewFeatureSetSchedule,
-  setUrlValid
+  setValidation,
+  validation
 }) => {
   const [data, setData] = useState({
+    attributes: [],
+    timeField: '',
+    startTime: '',
+    endTime: '',
     kind: 'csv',
+    parseDates: '',
     url: {
       pathType: '',
       projectItemType: '',
@@ -49,7 +60,6 @@ const FeatureSetsPanelDataSource = ({
       path: '',
       artifactReference: ''
     },
-    attributes: [],
     schedule: ''
   })
   const [showSchedule, setShowSchedule] = useState(false)
@@ -227,104 +237,108 @@ const FeatureSetsPanelDataSource = ({
     }
   }
 
-  const handleAddNewItem = attribute => {
-    setNewFeatureSetDataSourceAttributes({
-      ...featureStore.newFeatureSet.spec.source.attributes,
-      [attribute.key]: attribute.value
-    })
-    setData(state => ({
-      ...state,
-      attributes: [...state.attributes, attribute]
-    }))
-  }
-
-  const handleDeleteAttribute = (index, attribute) => {
-    const storeAttributes = {
-      ...featureStore.newFeatureSet.spec.source.attributes
-    }
-
-    delete storeAttributes[attribute.key]
-    setNewFeatureSetDataSourceAttributes(storeAttributes)
-    setData(state => ({
-      ...state,
-      attributes: state.attributes.filter(attr => attr.key !== attribute.key)
-    }))
-  }
-
-  const handleEditAttribute = attribute => {
-    const storeAttributes = {
-      ...featureStore.newFeatureSet.spec.source.attributes
-    }
-
-    if (attribute.newKey) {
-      delete storeAttributes[attribute.key]
-      storeAttributes[attribute.newKey] = attribute.value
-    } else {
-      storeAttributes[attribute.key] = attribute.value
-    }
-
-    setNewFeatureSetDataSourceAttributes(storeAttributes)
-    setData(state => ({
-      ...state,
-      attributes: state.attributes.map(attr => {
-        if (attr.key === attribute.key) {
-          attr.key = attribute.newKey ?? attribute.key
-          attr.value = attribute.value
-        }
-
-        return attr
-      })
-    }))
-  }
-
   const handleKindOnChange = kind => {
+    if (kind === 'csv') {
+      setValidation(prevState => ({
+        ...prevState,
+        isTimeFieldValid: true,
+        isStartTimeValid: true,
+        isEndTimeValid: true
+      }))
+      setNewFeatureSetDataSourceTimestampColumn('')
+      setNewFeatureSetDataSourceStartTime('')
+      setNewFeatureSetDataSourceEndTime('')
+    } else if (kind === 'parquet') {
+      setNewFeatureSetDataSourceParseDates('')
+    }
+
     setNewFeatureSetDataSourceKind(kind)
-    setNewFeatureSetDataSourceAttributes(
-      kind === 'parquet'
-        ? {
-            time_field: '',
-            start_time: '',
-            end_time: ''
-          }
-        : {}
-    )
     setData(state => ({
       ...state,
       kind,
-      attributes:
-        kind === 'parquet'
-          ? [
-              {
-                key: 'time_field',
-                value: ''
-              },
-              {
-                key: 'start_time',
-                value: ''
-              },
-              {
-                key: 'end_time',
-                value: ''
-              }
-            ]
-          : []
+      endTime: '',
+      startTime: '',
+      timeField: '',
+      parseDates: ''
     }))
   }
 
   const handleUrlOnBlur = (selectValue, inputValue) => {
     if (!isUrlInputValid(selectValue, inputValue)) {
-      setUrlValid(false)
+      setValidation(prevState => ({
+        ...prevState,
+        isUrlValid: false
+      }))
     } else {
       const url =
         data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
           ? `${data.url.pathType}${data.url.projectItemType}/${data.url.project}/${data.url.artifact}/${data.url.artifactReference}`
           : `${data.url.pathType}${data.url.path}`
 
-      if (!isUrlValid) {
-        setUrlValid(true)
+      if (!validation.isUrlValid) {
+        setValidation(prevState => ({
+          ...prevState,
+          isUrlValid: true
+        }))
       }
 
       setNewFeatureSetDataSourceUrl(url)
+    }
+  }
+
+  const handleFilterParametersOnBlur = (event, type) => {
+    if (type === TIME_FIELD) {
+      handleTimestampColumnOnBlur(
+        event.target.value,
+        featureStore.newFeatureSet.spec.source.time_field,
+        type,
+        setData,
+        setValidation,
+        setNewFeatureSetDataSourceTimestampColumn
+      )
+    } else if (type === START_TIME) {
+      handleStartTimeOnBlur(
+        data,
+        event.target.value,
+        featureStore.newFeatureSet.spec.source.start_time,
+        type,
+        setValidation,
+        setData,
+        setNewFeatureSetDataSourceStartTime
+      )
+    } else if (type === END_TIME) {
+      handleEndTimeOnBlur(
+        data,
+        event.target.value,
+        featureStore.newFeatureSet.spec.source.end_time,
+        type,
+        setData,
+        setValidation,
+        setNewFeatureSetDataSourceEndTime
+      )
+    }
+
+    if (
+      data.endTime.length === 0 &&
+      data.startTime.length === 0 &&
+      data.timeField.length === 0
+    ) {
+      setValidation(prevState => ({
+        ...prevState,
+        isTimeFieldValid: true,
+        isStartTimeValid: true,
+        isEndTimeValid: true
+      }))
+    } else if (data.timeField.length > 0 && data.startTime.length > 0) {
+      setValidation(prevState => ({
+        ...prevState,
+        isEndTimeValid: true
+      }))
+    } else if (data.timeField.length > 0 && data.endTime.length > 0) {
+      setValidation(prevState => ({
+        ...prevState,
+        isStartTimeValid: true
+      }))
     }
   }
 
@@ -336,33 +350,30 @@ const FeatureSetsPanelDataSource = ({
           : []
       }
       data={data}
-      handleAddNewItem={handleAddNewItem}
-      handleDeleteAttribute={handleDeleteAttribute}
-      handleEditAttribute={handleEditAttribute}
+      featureStore={featureStore}
+      handleFilterParametersOnBlur={handleFilterParametersOnBlur}
       handleKindOnChange={handleKindOnChange}
       handleUrlOnBlur={handleUrlOnBlur}
       handleUrlPathTypeChange={handleUrlPathTypeChange}
       handleUrlPathChange={handleUrlPathChange}
-      isUrlValid={isUrlValid}
       setData={setData}
-      setNewFeatureSetDataSourceAttributes={
-        setNewFeatureSetDataSourceAttributes
+      setNewFeatureSetDataSourceParseDates={
+        setNewFeatureSetDataSourceParseDates
       }
-      setNewFeatureSetDataSourceKey={setNewFeatureSetDataSourceKey}
-      setNewFeatureSetDataSourceKind={setNewFeatureSetDataSourceKind}
-      setNewFeatureSetDataSourceTime={setNewFeatureSetDataSourceTime}
       setShowSchedule={setShowSchedule}
+      setValidation={setValidation}
       showSchedule={showSchedule}
       setNewFeatureSetSchedule={setNewFeatureSetSchedule}
       urlProjectItemTypeEntered={urlProjectItemTypeEntered}
+      validation={validation}
     />
   )
 }
 
 FeatureSetsPanelDataSource.propTypes = {
-  isUrlValid: PropTypes.bool.isRequired,
   project: PropTypes.string.isRequired,
-  setUrlValid: PropTypes.func.isRequired
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(

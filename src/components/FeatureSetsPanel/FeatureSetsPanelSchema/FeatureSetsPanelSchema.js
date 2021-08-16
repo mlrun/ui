@@ -8,20 +8,25 @@ import featureStoreActions from '../../../actions/featureStore'
 
 const FeatureSetsPanelSchema = ({
   featureStore,
-  isSchemaEntitiesValid,
+  isEntitiesValid,
   setNewFeatureSetDataSourceEntities,
-  setNewFeatureSetSchemaTimestampKey
+  setNewFeatureSetSchemaTimestampKey,
+  setEntitiesValid
 }) => {
   const [data, setData] = useState({
     entities: '',
     timestamp_key: ''
   })
 
-  const handleEntitiesOnBlur = () => {
+  const handleEntitiesOnBlur = event => {
     const entitiesArray = data.entities
       .trim()
       .split(/[, ]+/)
-      .map(entity => ({ name: entity, value_type: 'str' }))
+      .map(entity => ({
+        name: entity,
+        value_type: 'str'
+      }))
+      .filter(item => item.name)
 
     if (
       data.entities.length > 0 &&
@@ -29,6 +34,10 @@ const FeatureSetsPanelSchema = ({
         JSON.stringify(featureStore.newFeatureSet.spec.entities)
     ) {
       setNewFeatureSetDataSourceEntities(entitiesArray)
+      setEntitiesValid(prevState => ({
+        ...prevState,
+        isEntitiesValid: true
+      }))
     } else if (
       data.entities.length === 0 &&
       featureStore.newFeatureSet.spec.entities.length > 0
@@ -37,20 +46,37 @@ const FeatureSetsPanelSchema = ({
     }
   }
 
+  const handleEntitiesOnChange = entities => {
+    if (!isEntitiesValid && entities.length > 0) {
+      setEntitiesValid(prevState => ({
+        ...prevState,
+        isEntitiesValid: true
+      }))
+    }
+
+    setData(state => ({
+      ...state,
+      entities
+    }))
+  }
+
   return (
     <FeatureSetsPanelSchemaView
       data={data}
       featureStore={featureStore}
       handleEntitiesOnBlur={handleEntitiesOnBlur}
-      isSchemaEntitiesValid={isSchemaEntitiesValid}
+      handleEntitiesOnChange={handleEntitiesOnChange}
+      isEntitiesValid={isEntitiesValid}
       setData={setData}
+      setEntitiesValid={setEntitiesValid}
       setNewFeatureSetSchemaTimestampKey={setNewFeatureSetSchemaTimestampKey}
     />
   )
 }
 
 FeatureSetsPanelSchema.propTypes = {
-  isSchemaEntitiesValid: PropTypes.bool.isRequired
+  isEntitiesValid: PropTypes.bool.isRequired,
+  setEntitiesValid: PropTypes.func.isRequired
 }
 
 export default connect(featureStore => ({ ...featureStore }), {

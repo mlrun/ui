@@ -11,10 +11,11 @@ const JobsPanelTitle = ({
   closePanel,
   editModeEnabled,
   functionData,
-  isTitleValid,
+  isNameValid,
   openScheduleJob,
   panelDispatch,
   panelState,
+  setNameValid,
   setOpenScheduleJob
 }) => {
   const [editTitle, setEditTitle] = useState(false)
@@ -99,11 +100,12 @@ const JobsPanelTitle = ({
       editTitle={editTitle}
       handleFinishEdit={handleFinishEdit}
       handleFunctionInfoChange={handleFunctionInfoChange}
-      isTitleValid={isTitleValid}
+      isNameValid={isNameValid}
       methodOptions={functionData.methodOptions}
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}
       setEditTitle={setEditTitle}
+      setNameValid={setNameValid}
       setOpenScheduleJob={setOpenScheduleJob}
       versionOptions={functionData.versionOptions}
     />
@@ -118,10 +120,11 @@ JobsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
   editModeEnabled: PropTypes.bool,
   functionData: PropTypes.shape({}).isRequired,
-  isTitleValid: PropTypes.func.isRequired,
+  isNameValid: PropTypes.bool.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
+  setNameValid: PropTypes.func.isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired
 }
 

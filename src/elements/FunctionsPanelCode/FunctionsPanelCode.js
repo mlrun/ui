@@ -43,23 +43,8 @@ const FunctionsPanelCode = ({
       : EXISTING_IMAGE
   )
 
-  const handleHandlerChange = handler => {
-    if (!isHandlerValid && handler.length > 0) {
-      setHandlerValid(true)
-    }
-
-    setData(state => ({
-      ...state,
-      handler
-    }))
-  }
-
   const handleHandlerOnBlur = event => {
-    if (data.handler.length === 0) {
-      setHandlerValid(false)
-    } else if (
-      functionsStore.newFunction.spec.default_handler !== event.target.value
-    ) {
+    if (functionsStore.newFunction.spec.default_handler !== data.handler) {
       setNewFunctionHandler(data.handler)
     }
   }
@@ -120,12 +105,12 @@ const FunctionsPanelCode = ({
       data={data}
       editCode={editCode}
       functionsStore={functionsStore}
-      handleHandlerChange={handleHandlerChange}
       handleHandlerOnBlur={handleHandlerOnBlur}
       imageType={imageType}
       isHandlerValid={isHandlerValid}
       setData={setData}
       setEditCode={setEditCode}
+      setHandlerValid={setHandlerValid}
       setImageType={setImageType}
       setNewFunctionBaseImage={setNewFunctionBaseImage}
       setNewFunctionBuildImage={setNewFunctionBuildImage}

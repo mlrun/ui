@@ -2,6 +2,10 @@ import React from 'react'
 
 import { ReactComponent as DB } from '../../../images/db-icon.svg'
 
+export const PARQUET = 'parquet'
+export const EXTERNAL_OFFLINE = 'externalOffline'
+export const EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE = 'csv'
+
 export const checkboxModels = {
   online: {
     id: 'online',
@@ -13,8 +17,8 @@ export const checkboxModels = {
         'v3io:///projects/my-proj/FeatureStore/my-fs/nosql/sets/my-fs-my-tag'
     }
   },
-  offline: {
-    id: 'offline',
+  parquet: {
+    id: 'parquet',
     data: {
       name: 'parquet',
       kind: 'parquet',
@@ -24,11 +28,11 @@ export const checkboxModels = {
   },
   externalOffline: {
     id: 'externalOffline',
-    data: { name: 'externalOffline', kind: 'csv' }
+    data: { name: 'externalOffline', kind: 'csv', path: '' }
   }
 }
 
-export const otherKindOptions = [
+export const externalOfflineKindOptions = [
   { label: 'CSV', id: 'csv', icon: <DB /> },
   { label: 'Parquet', id: 'parquet', icon: <DB /> }
 ]
@@ -42,18 +46,51 @@ export const timePartitioningGranularityOptions = [
   { label: 'Year', id: 'year' }
 ]
 
-export const OTHER_KIND_DEFAULT_FILE_TYPE = 'csv'
+export const partitionCheckboxTargetKind = {
+  byKey: { id: 'byKey', label: 'By key' },
+  byTime: { id: 'byTime', label: 'By time' },
+  byColumns: { id: 'byColumns', label: 'By columns' }
+}
 
-export const externalOfflineKindDataInitialState = {
-  kind: OTHER_KIND_DEFAULT_FILE_TYPE,
-  path: '',
-  partitioned: '',
-  key_bucketing_number: '',
-  partition_cols: '',
-  time_partitioning_granularity: 'hour'
+export const partitionRadioButtonsData = [
+  {
+    value: 'districtKeys',
+    label: 'Distinct keys',
+    tip: 'The partition is based on key.'
+  },
+  {
+    value: 'numberOfBuckets',
+    label: 'Number of Buckets'
+  }
+]
+
+export const selectedTargetKindInitialState = ['parquet', 'online']
+
+export const selectedPartitionKindInitialState = {
+  parquet: ['byTime'],
+  externalOffline: ['byTime']
+}
+
+export const isShowAdvancedInitialState = {
+  parquet: false,
+  externalOffline: false
+}
+
+export const partitionRadioButtonsInitialState = {
+  parquet: 'districtKeys',
+  externalOffline: 'districtKeys'
+}
+
+export const onlineKindDataInitialState = {
+  name: 'nosql',
+  kind: 'nosql',
+  online: true,
+  path: 'v3io:///projects/my-proj/FeatureStore/my-fs/nosql/sets/my-fs-my-tag'
 }
 
 export const offlineKindDataInitialState = {
+  name: 'parquet',
+  kind: 'parquet',
   path: 'v3io:///projects/my-proj/FeatureStore/my-fs/parquet/sets/my-fs-my-tag',
   partitioned: '',
   key_bucketing_number: '',
@@ -61,5 +98,18 @@ export const offlineKindDataInitialState = {
   time_partitioning_granularity: 'hour'
 }
 
-export const onlineKindDataInitialState =
-  'v3io:///projects/my-proj/FeatureStore/my-fs/nosql/sets/my-fs-my-tag'
+export const externalOfflineKindDataInitialState = {
+  name: 'externalOffline',
+  kind: EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
+  path: '',
+  partitioned: '',
+  key_bucketing_number: '',
+  partition_cols: '',
+  time_partitioning_granularity: 'hour'
+}
+
+export const dataInitialState = {
+  online: onlineKindDataInitialState,
+  parquet: offlineKindDataInitialState,
+  externalOffline: externalOfflineKindDataInitialState
+}

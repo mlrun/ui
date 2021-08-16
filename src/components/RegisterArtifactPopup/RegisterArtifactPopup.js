@@ -19,94 +19,74 @@ const RegisterArtifactPopup = ({
   title
 }) => {
   const [registerArtifactData, setRegisterArtifactData] = useState({
-    description: {
-      value: '',
-      required: false
-    },
-    kind: { value: 'general', required: false },
-    key: {
-      value: '',
-      required: false
-    },
-    target_path: {
-      value: '',
-      required: false
-    },
-    error: {
-      message: ''
-    }
+    description: '',
+    kind: 'general',
+    key: '',
+    target_path: '',
+    error: ''
+  })
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isTargetPathValid: true
   })
 
   useEffect(() => {
     if (artifactKind !== 'file') {
       setRegisterArtifactData(state => ({
         ...state,
-        kind: {
-          ...state.kind,
-          value: artifactKind.toLowerCase()
-        }
+        kind: artifactKind.toLowerCase()
       }))
     }
   }, [artifactKind])
 
   const resetRegisterArtifactForm = useCallback(() => {
     setRegisterArtifactData({
-      description: {
-        value: '',
-        required: false
-      },
-      kind: { value: 'general', required: false },
-      key: {
-        value: '',
-        required: false
-      },
-      target_path: {
-        value: '',
-        required: false
-      },
-      error: {
-        message: ''
-      }
+      description: '',
+      kind: 'general',
+      key: '',
+      target_path: '',
+      error: ''
     })
   }, [])
 
   const registerArtifact = useCallback(() => {
     if (
-      !registerArtifactData.key.value ||
-      !registerArtifactData.target_path.value
+      registerArtifactData.key.trim().length === 0 ||
+      registerArtifactData.key.trim().length === 0
     ) {
-      return setRegisterArtifactData(prevData => ({
-        ...prevData,
-        key: {
-          ...prevData.key,
-          required: !registerArtifactData.key.value
-        },
-        target_path: {
-          ...prevData.target_path,
-          required: !registerArtifactData.target_path.value
-        }
+      return setValidation(state => ({
+        ...state,
+        isNameValid: false,
+        isTargetPathValid: false
       }))
+    } else if (
+      registerArtifactData.key.trim().length === 0 ||
+      !validation.isNameValid
+    ) {
+      return setValidation(state => ({ ...state, isNameValid: false }))
+    } else if (
+      registerArtifactData.target_path.trim().length === 0 ||
+      !validation.isTargetPathValid
+    ) {
+      return setValidation(state => ({ ...state, isTargetPathValid: false }))
     }
 
-    if (registerArtifactData.error.message) {
-      setRegisterArtifactData(prevData => ({
-        ...prevData,
-        error: { ...prevData.error, message: '' }
-      }))
+    if (registerArtifactData.error.length > 0) {
+      setRegisterArtifactData(prevData => ({ ...prevData, error: '' }))
     }
 
     const uid = uuidv4()
     const data = {
       uid: uid,
-      key: registerArtifactData.key.value,
-      db_key: registerArtifactData.key.value,
+      key: registerArtifactData.key,
+      db_key: registerArtifactData.key,
       tree: uid,
-      target_path: registerArtifactData.target_path.value,
-      description: registerArtifactData.description.value,
+      target_path: registerArtifactData.target_path,
+      description: registerArtifactData.description,
       kind:
-        registerArtifactData.kind.value === 'general'
+        registerArtifactData.kind === 'general'
           ? ''
-          : registerArtifactData.kind.value,
+          : registerArtifactData.kind,
       project: match.params.projectName,
       producer: {
         kind: 'api',
@@ -114,11 +94,11 @@ const RegisterArtifactPopup = ({
       }
     }
 
-    if (registerArtifactData.kind.value === 'model') {
+    if (registerArtifactData.kind === 'model') {
       const {
         target_path,
         model_file
-      } = registerArtifactData.target_path.value.match(
+      } = registerArtifactData.target_path.match(
         /^(?:(?<target_path>.+\/))?(?<model_file>.+)$/
       )?.groups
 
@@ -136,19 +116,22 @@ const RegisterArtifactPopup = ({
       .catch(err => {
         setRegisterArtifactData(prevData => ({
           ...prevData,
-          error: {
-            ...prevData.error,
-            message: err.message
-          }
+          error: err.message
         }))
       })
   }, [
     filtersStore,
     match.params.projectName,
     refresh,
-    registerArtifactData,
+    registerArtifactData.description,
+    registerArtifactData.error.length,
+    registerArtifactData.key,
+    registerArtifactData.kind,
+    registerArtifactData.target_path,
     resetRegisterArtifactForm,
-    setIsPopupOpen
+    setIsPopupOpen,
+    validation.isNameValid,
+    validation.isTargetPathValid
   ])
 
   const closePopupDialog = useCallback(() => {
@@ -157,13 +140,7 @@ const RegisterArtifactPopup = ({
   }, [resetRegisterArtifactForm, setIsPopupOpen])
 
   const closeErrorMessage = useCallback(() => {
-    setRegisterArtifactData(prevData => ({
-      ...prevData,
-      error: {
-        ...prevData.error,
-        message: ''
-      }
-    }))
+    setRegisterArtifactData(prevData => ({ ...prevData, error: '' }))
   }, [])
 
   return (
@@ -175,13 +152,15 @@ const RegisterArtifactPopup = ({
       <RegisterArtifactForm
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
+        setValidation={setValidation}
         showType={artifactKind === 'file'}
+        validation={validation}
       />
       <div className="pop-up-dialog__footer-container">
-        {registerArtifactData.error.message && (
+        {registerArtifactData.error && (
           <ErrorMessage
             closeError={closeErrorMessage}
-            message={registerArtifactData.error.message}
+            message={registerArtifactData.error}
           />
         )}
         <Button
