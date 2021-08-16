@@ -1,5 +1,5 @@
 import React from 'react'
-import { isEmpty, isEqual } from 'lodash'
+import { isEmpty, isEqual, cloneDeep } from 'lodash'
 
 import {
   DETAILS_ANALYSIS_TAB,
@@ -328,7 +328,6 @@ export const renderContent = (
       return (
         <DetailsRequestedFeatures
           changes={detailsState.changes}
-          detailsState={detailsState}
           match={match}
           selectedItem={selectedItem}
           handleEditInput={(value, field) => handleEditInput(value, field)}
@@ -414,7 +413,7 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   }
 })
 export const handleFinishEdit = (
-  field,
+  fields,
   changes,
   detailsTabActions,
   detailsTabDispatch,
@@ -430,27 +429,27 @@ export const handleFinishEdit = (
     }
   })
 
-  if (
-    isEqual(
-      changes.data[field]?.initialFieldValue,
-      changes.data[field]?.currentFieldValue
-    )
-  ) {
-    const changesData = { ...changes.data }
+  const changesData = cloneDeep(changes.data)
 
-    delete changesData[field]
-
-    setChangesCounter(changes.data.length || 0)
-    setChangesData({ ...changesData })
-  } else {
-    setChangesCounter(Object.keys(changes.data).length)
-    setChangesData({
-      ...changes.data,
-      [field]: {
-        initialFieldValue: changes.data[field].initialFieldValue,
-        currentFieldValue: changes.data[field].currentFieldValue,
-        previousFieldValue: changes.data[field].currentFieldValue
+  fields.forEach(field => {
+    if (changes.data[field]) {
+      if (
+        isEqual(
+          changesData[field]?.initialFieldValue,
+          changesData[field]?.currentFieldValue
+        )
+      ) {
+        delete changesData[field]
+      } else {
+        changesData[field] = {
+          initialFieldValue: changesData[field].initialFieldValue,
+          currentFieldValue: changesData[field].currentFieldValue,
+          previousFieldValue: changesData[field].currentFieldValue
+        }
       }
-    })
-  }
+    }
+  })
+
+  setChangesCounter(Object.keys(changesData).length)
+  setChangesData({ ...changesData })
 }
