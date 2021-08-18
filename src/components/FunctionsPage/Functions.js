@@ -14,6 +14,7 @@ import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import {
   detailsMenu,
   filters,
+  FUNCTIONS_EDITABLE_STATES,
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
@@ -105,7 +106,7 @@ const Functions = ({
         },
         hidden:
           !['job', ''].includes(item?.type) ||
-          !FUNCTIONS_READY_STATES.includes(item?.state?.value)
+          !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
         label: 'Delete',

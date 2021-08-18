@@ -12,6 +12,7 @@ export const detailsMenu = [
     label: 'build log'
   }
 ]
+export const FUNCTIONS_EDITABLE_STATES = ['created', 'ready']
 export const FUNCTIONS_FAILED_STATES = ['failed', 'error']
 export const FUNCTIONS_READY_STATES = ['ready']
 export const page = 'FUNCTIONS'
