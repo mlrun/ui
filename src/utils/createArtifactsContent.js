@@ -329,7 +329,7 @@ const createModelEndpointsRowData = (artifact, project) => {
       type: 'hidden'
     },
     version: {
-      value: artifact.children ? 'Router' : tag,
+      value: artifact?.status?.children ? 'Router' : tag,
       class: 'artifacts_extra-small'
     },
     modelClass: {
