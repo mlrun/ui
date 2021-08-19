@@ -1,0 +1,38 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/mixins';
+
+.model-table {
+  @include newItemSidePanelTable;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 18px 10px 10px;
+    color: $primary;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .edit-row {
+    .table__cell {
+      padding: 0;
+    }
+
+    .input-wrapper {
+      margin-right: 5px;
+
+      .input {
+        padding-top: 20px;
+
+        &__label {
+          left: 10px;
+        }
+      }
+    }
+  }
+}

@@ -10,9 +10,9 @@ import {
   DEFAULT_ENTRY,
   DEFAULT_HANDLER,
   DEFAULT_IMAGE,
-  DEFAULT_SOURCE_CODE,
   EXISTING_IMAGE,
-  NEW_IMAGE
+  NEW_IMAGE,
+  sourceCodeInBase64
 } from './functionsPanelCode.util'
 
 const FunctionsPanelCode = ({
@@ -69,10 +69,13 @@ const FunctionsPanelCode = ({
       !functionsStore.newFunction.spec.build.functionSourceCode &&
       isNil(defaultData.build?.functionSourceCode)
     ) {
-      setNewFunctionSourceCode(DEFAULT_SOURCE_CODE)
+      setNewFunctionSourceCode(
+        sourceCodeInBase64[functionsStore.newFunction.kind]
+      )
     }
   }, [
     defaultData.build,
+    functionsStore.newFunction.kind,
     functionsStore.newFunction.spec.build.functionSourceCode,
     setNewFunctionSourceCode
   ])

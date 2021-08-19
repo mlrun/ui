@@ -5,23 +5,21 @@ import { connect } from 'react-redux'
 import FunctionsPanelGeneralView from './FunctionsPanelGeneralView'
 
 import functionsActions from '../../actions/functions'
-import { DEFAULT_TYPE } from './functionsPanelGeneral.util'
 import { parseKeyValues } from '../../utils'
 
 const FunctionsPanelGeneral = ({
   defaultData,
+  functionsStore,
   isNameValid,
   setNameValid,
   setNewFunctionDescription,
   setNewFunctionLabels,
   setNewFunctionName,
-  setNewFunctionTag,
-  setNewFunctionType
+  setNewFunctionTag
 }) => {
   const [data, setData] = useState({
     name: defaultData.name ?? '',
     description: defaultData.description ?? '',
-    type: defaultData.type ?? DEFAULT_TYPE,
     labels: parseKeyValues(defaultData.labels) ?? [],
     tag: defaultData.tag ?? ''
   })
@@ -96,6 +94,7 @@ const FunctionsPanelGeneral = ({
   return (
     <FunctionsPanelGeneralView
       data={data}
+      functionsStore={functionsStore}
       handleAddLabel={handleAddLabel}
       handleChangeLabels={handleChangeLabels}
       handleNameChange={handleNameChange}
@@ -105,7 +104,6 @@ const FunctionsPanelGeneral = ({
       isNameValid={isNameValid}
       setData={setData}
       setNewFunctionDescription={setNewFunctionDescription}
-      setNewFunctionType={setNewFunctionType}
     />
   )
 }

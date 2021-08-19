@@ -13,15 +13,10 @@
       }
     }
 
-    .type {
-      flex: 0.3;
-      max-width: 150px;
-      margin: 0 10px;
-    }
-
     .tag {
       flex: 0.3;
       max-width: 150px;
+      margin-left: 10px;
 
       .input {
         width: 100%;

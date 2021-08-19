@@ -1,0 +1,68 @@
+@import '../../scss/mixins';
+
+.parameters-table {
+  @include newItemSidePanelTable;
+
+  .table {
+    &__body {
+      &-column {
+        .input-wrapper {
+          &:first-child {
+            max-width: 236px;
+          }
+        }
+
+        .range {
+          margin-top: 3px;
+
+          &:not(.range-warning) {
+            border: none;
+
+            .range__button {
+              border: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .edit-row {
+    .input-wrapper {
+      margin-right: 5px;
+
+      .input {
+        padding-top: 20px;
+
+        &__label {
+          left: 10px;
+        }
+      }
+    }
+
+    .range {
+      .input {
+        margin: 0;
+        border: none;
+
+        &-wrapper {
+          margin: 0;
+        }
+      }
+    }
+
+    .select {
+      margin-right: 5px;
+      padding-left: 10px;
+    }
+  }
+
+  .parameter-type.select {
+    max-width: 236px;
+    padding: 10px;
+  }
+
+  .checkbox {
+    margin-left: 8px;
+  }
+}

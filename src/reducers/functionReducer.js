@@ -9,7 +9,6 @@ import {
   SET_FUNCTIONS_TEMPLATES,
   SET_NEW_FUNCTION_NAME,
   SET_NEW_FUNCTION_TAG,
-  SET_NEW_FUNCTION_TYPE,
   SET_NEW_FUNCTION_DESCRIPTION,
   SET_NEW_FUNCTION_LABELS,
   SET_NEW_FUNCTION_SOURCE_CODE,
@@ -37,7 +36,12 @@ import {
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_SUCCESS,
   REMOVE_FUNCTION_LOGS,
-  SET_NEW_FUNCTION
+  SET_NEW_FUNCTION,
+  SET_NEW_FUNCTION_KIND,
+  SET_NEW_FUNCTION_GRAPH,
+  SET_NEW_FUNCTION_TRACK_MODELS,
+  SET_NEW_FUNCTION_PARAMETERS,
+  SET_NEW_FUNCTION_ERROR_STREAM
 } from '../constants'
 
 const initialState = {
@@ -64,13 +68,15 @@ const initialState = {
       description: '',
       env: [],
       image: '',
+      parameters: {},
       volume_mounts: [],
       volumes: [],
       resources: {
         limits: {},
         requests: {}
       },
-      secret_sources: []
+      secret_sources: [],
+      track_models: false
     }
   },
   templatesCatalog: {},
@@ -276,6 +282,28 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case SET_NEW_FUNCTION_ERROR_STREAM:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            error_stream: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_GRAPH:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            graph: payload
+          }
+        }
+      }
     case SET_NEW_FUNCTION_HANDLER:
       return {
         ...state,
@@ -298,6 +326,14 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case SET_NEW_FUNCTION_KIND:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          kind: payload
+        }
+      }
     case SET_NEW_FUNCTION_LABELS:
       return {
         ...state,
@@ -317,6 +353,17 @@ export default (state = initialState, { type, payload }) => {
           metadata: {
             ...state.newFunction.metadata,
             name: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_PARAMETERS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            parameters: payload
           }
         }
       }
@@ -378,12 +425,15 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
-    case SET_NEW_FUNCTION_TYPE:
+    case SET_NEW_FUNCTION_TRACK_MODELS:
       return {
         ...state,
         newFunction: {
           ...state.newFunction,
-          kind: payload
+          spec: {
+            ...state.newFunction.spec,
+            track_models: payload
+          }
         }
       }
     case SET_NEW_FUNCTION_VOLUME_MOUNTS:

@@ -1,14 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
 import Input from '../../common/Input/Input'
-import Select from '../../common/Select/Select'
 import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
-
-import { typeOptions } from './functionsPanelGeneral.util'
 
 import './functionsPanelGeneral.scss'
 
@@ -23,8 +19,7 @@ const FunctionsPanelGeneralView = ({
   handleTagOnBlur,
   isNameValid,
   setData,
-  setNewFunctionDescription,
-  setNewFunctionType
+  setNewFunctionDescription
 }) => {
   const nameValidationTip = (
     <>
@@ -54,21 +49,6 @@ const FunctionsPanelGeneralView = ({
             type="text"
             value={data.name}
             wrapperClassName="name"
-          />
-          <Select
-            className="type"
-            disabled
-            floatingLabel
-            label="Runtime type"
-            onClick={type => {
-              setNewFunctionType(type)
-              setData(state => ({
-                ...state,
-                type
-              }))
-            }}
-            options={typeOptions}
-            selectedId={data.type}
           />
           <Input
             floatingLabel
@@ -121,6 +101,7 @@ const FunctionsPanelGeneralView = ({
 
 FunctionsPanelGeneralView.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  functionsStore: PropTypes.shape({}).isRequired,
   handleAddLabel: PropTypes.func.isRequired,
   handleChangeLabels: PropTypes.func.isRequired,
   handleNameChange: PropTypes.func.isRequired,
@@ -129,10 +110,7 @@ FunctionsPanelGeneralView.propTypes = {
   handleTagOnBlur: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
-  setNewFunctionDescription: PropTypes.func.isRequired,
-  setNewFunctionType: PropTypes.func.isRequired
+  setNewFunctionDescription: PropTypes.func.isRequired
 }
 
-export default connect(({ functionsStore }) => ({ functionsStore }))(
-  FunctionsPanelGeneralView
-)
+export default FunctionsPanelGeneralView

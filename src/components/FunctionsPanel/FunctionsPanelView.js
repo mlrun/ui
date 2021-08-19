@@ -10,8 +10,10 @@ import FunctionsPanelResources from '../../elements/FunctionsPanelResources/Func
 import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnvironmentVariables/FunctionsPanelEnvironmentVariables'
 import Button from '../../common/Button/Button'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import FunctionsPanelSecrets from '../../elements/FunctionsPanelSecrets/FunctionsPanelSecrets'
+import FunctionsPanelRuntime from '../../elements/FunctionsPanelRuntime/FunctionsPanelRuntime'
+
 import { FUNCTION_PANEL_MODE } from '../../types'
+import { runtimeSections } from './functionsPanel.util'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -26,6 +28,7 @@ const FunctionsPanelView = ({
   isNameValid,
   loading,
   mode,
+  newFunction,
   removeFunctionsError,
   setHandlerValid,
   setNameValid
@@ -76,14 +79,18 @@ const FunctionsPanelView = ({
           >
             <FunctionsPanelEnvironmentVariables />
           </Accordion>
-          <Accordion
-            accordionClassName="new-item-side-panel__accordion hidden"
-            icon={<Arrow />}
-            iconClassName="new-item-side-panel__expand-icon"
-            openByDefault
-          >
-            <FunctionsPanelSecrets />
-          </Accordion>
+          {runtimeSections[newFunction.kind] && (
+            <Accordion
+              accordionClassName="new-item-side-panel__accordion"
+              icon={<Arrow />}
+              iconClassName="new-item-side-panel__expand-icon"
+              openByDefault
+            >
+              <FunctionsPanelRuntime
+                sections={runtimeSections[newFunction.kind]}
+              />
+            </Accordion>
+          )}
           <div className="new-item-side-panel__buttons-container">
             {error && (
               <ErrorMessage
@@ -135,6 +142,7 @@ FunctionsPanelView.propTypes = {
   isNameValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   mode: FUNCTION_PANEL_MODE.isRequired,
+  newFunction: PropTypes.shape({}).isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
   setHandlerValid: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired

@@ -10,6 +10,7 @@ import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
   detailsMenu,
@@ -88,6 +89,19 @@ const Functions = ({
     removeFunctionLogs()
   }, [fetchFunctionLogsTimeout, removeFunctionLogs])
 
+  const getPopUpTemplate = useCallback(
+    action => {
+      return (
+        <NewFunctionPopUp
+          action={action}
+          currentProject={match.params.projectName}
+          setFunctionsPanelIsOpen={setFunctionsPanelIsOpen}
+        />
+      )
+    },
+    [match.params.projectName]
+  )
+
   const pageData = {
     actionsMenu: item => [
       {
@@ -119,10 +133,10 @@ const Functions = ({
     tableHeaders,
     infoHeaders,
     filterMenuActionButton: {
+      getCustomTemplate: getPopUpTemplate,
+      hidden: new URLSearchParams(location.search).get('demo') !== 'true',
       label: 'New',
-      onClick: () => setFunctionsPanelIsOpen(true),
-      variant: 'secondary',
-      hidden: new URLSearchParams(location.search).get('demo') !== 'true'
+      variant: 'secondary'
     },
     refreshLogs: handleFetchFunctionLogs,
     removeLogs: handleRemoveLogs,

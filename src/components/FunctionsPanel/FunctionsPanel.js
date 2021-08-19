@@ -125,6 +125,7 @@ const FunctionsPanel = ({
       isNameValid={isNameValid}
       loading={functionsStore.loading}
       mode={mode}
+      newFunction={functionsStore.newFunction}
       removeFunctionsError={removeFunctionsError}
       setHandlerValid={setHandlerValid}
       setNameValid={setNameValid}
