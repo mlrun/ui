@@ -111,8 +111,7 @@ const FeatureSetsPanelDataSourceView = ({
           </div>
         )}
         <p className="data-source__description">
-          Users can add the following parameters to filter the data. using start
-          time and end time filter the selected time "between" those two fields.
+          Users can add the following parameters to filter the data.
         </p>
         {data.kind === CSV && (
           <Input
