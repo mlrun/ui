@@ -26,11 +26,12 @@ const JobsPanelTitleView = ({
   editTitle,
   handleFinishEdit,
   handleFunctionInfoChange,
-  isTitleValid,
+  isNameValid,
   methodOptions,
   openScheduleJob,
   panelDispatch,
   setEditTitle,
+  setNameValid,
   setOpenScheduleJob,
   versionOptions
 }) => {
@@ -62,7 +63,7 @@ const JobsPanelTitleView = ({
         <Accordion
           accordionClassName="job-panel__title-accordion"
           alwaysOpened={!editModeEnabled}
-          closeOnBlur={!isTitleValid() ? null : () => setEditTitle(false)}
+          closeOnBlur={!isNameValid ? null : () => setEditTitle(false)}
           icon={
             editModeEnabled ? (
               <Edit
@@ -81,7 +82,7 @@ const JobsPanelTitleView = ({
               <Input
                 className="panel-title__input"
                 disabled={!editTitle}
-                invalid={!isTitleValid()}
+                invalid={!isNameValid}
                 invalidText="This field is invalid"
                 onChange={name =>
                   panelDispatch({
@@ -93,6 +94,9 @@ const JobsPanelTitleView = ({
                 pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
                 required
                 requiredText="This field is required"
+                setInvalid={value =>
+                  setNameValid(state => ({ ...state, isNameValid: value }))
+                }
                 tip={titleValidationTip}
                 type="text"
                 value={currentFunctionInfo.name}
@@ -190,11 +194,12 @@ JobsPanelTitleView.propTypes = {
   editTitle: PropTypes.bool.isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   handleFunctionInfoChange: PropTypes.func.isRequired,
-  isTitleValid: PropTypes.func.isRequired,
+  isNameValid: PropTypes.bool.isRequired,
   methodOptions: PropTypes.array.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   setEditTitle: PropTypes.func.isRequired,
+  setNameValid: PropTypes.func.isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired,
   versionOptions: PropTypes.array.isRequired
 }

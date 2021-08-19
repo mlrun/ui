@@ -1,14 +1,16 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 import FunctionPanelTopologyModelTableView from './FunctionPanelTopologyModelTableView'
 
 import functionsActions from '../../actions/functions'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 
 const FunctionPanelTopologyModelTable = ({
+  defaultData,
   functionsStore,
   setNewFunctionGraph
 }) => {
@@ -20,6 +22,21 @@ const FunctionPanelTopologyModelTable = ({
   })
   const [showAddNewRouteRow, setShowAddNewRouteRow] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(null)
+
+  useEffect(() => {
+    if (!isEveryObjectValueEmpty(defaultData.graph?.routes ?? {})) {
+      setData(
+        Object.entries(defaultData.graph.routes).map(([key, value]) => ({
+          isDefault: true,
+          data: {
+            name: key,
+            class_name: value.class_name,
+            model_path: value.class_args.model_path
+          }
+        }))
+      )
+    }
+  }, [defaultData.graph])
 
   const addRoute = () => {
     const generatedRoutes = { ...functionsStore.newFunction.spec.graph.routes }

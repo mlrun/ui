@@ -70,3 +70,16 @@ export const setFunctionParameters = (
       })
   }
 }
+
+export const getParameterType = parameterValue => {
+  switch (typeof parameterValue) {
+    case STRING_TYPE:
+      return STRING_TYPE
+    case NUMBER_TYPE:
+      return NUMBER_TYPE
+    case BOOLEAN_TYPE:
+      return BOOLEAN_TYPE
+    default:
+      return JSON_TYPE
+  }
+}

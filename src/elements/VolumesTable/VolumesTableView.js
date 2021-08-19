@@ -36,7 +36,9 @@ const VolumesTableView = ({
   setNewVolume,
   setSelectedVolume,
   setShowAddNewVolumeRow,
-  showAddNewVolumeRow
+  setValidation,
+  showAddNewVolumeRow,
+  validation
 }) => {
   const volumeTypeInput = useMemo(() => getVolumeTypeInput(newVolume.type), [
     newVolume.type
@@ -70,6 +72,8 @@ const VolumesTableView = ({
               key={index}
               selectedVolume={selectedVolume}
               setSelectedVolume={setSelectedVolume}
+              setValidation={setValidation}
+              validation={validation}
             />
           )
         } else {
@@ -127,28 +131,54 @@ const VolumesTableView = ({
                     ...state,
                     type: find(selectTypeOptions.volumeType, ['id', type]).id
                   }))
+                  setValidation(state => ({
+                    ...state,
+                    isTypeValid: true,
+                    isAccessKeyValid: true,
+                    isSubPathValid: true
+                  }))
                 }}
               />
               <Input
                 className="input-row__item"
                 floatingLabel
-                invalid={isNameNotUnique(newVolume.name, volumeMounts)}
-                invalidText="Name already exists"
+                invalid={
+                  isNameNotUnique(newVolume.name, volumeMounts) ||
+                  !validation.isNameValid
+                }
+                invalidText={
+                  isNameNotUnique(newVolume.name, volumeMounts)
+                    ? 'Name already exists'
+                    : 'This field is invalid'
+                }
                 label="Name"
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
                 required
                 requiredText="This field is required"
+                setInvalid={value =>
+                  setValidation(state => ({ ...state, isNameValid: value }))
+                }
                 type="text"
               />
               <Input
                 className="input-row__item input-row__item_edit"
                 floatingLabel
-                invalid={isPathNotUnique(newVolume.path, volumeMounts)}
-                invalidText="Multiple volumes cannot share the same path"
+                invalid={
+                  isPathNotUnique(newVolume.path, volumeMounts) ||
+                  !validation.isPathValid
+                }
+                invalidText={
+                  isPathNotUnique(newVolume.path, volumeMounts)
+                    ? 'Multiple volumes cannot share the same path'
+                    : 'This field is invalid'
+                }
                 label="Path"
                 onChange={path => setNewVolume(state => ({ ...state, path }))}
                 required
                 requiredText="This field is required"
+                setInvalid={value =>
+                  setValidation(state => ({ ...state, isPathValid: value }))
+                }
                 tip="A mount path for referencing the data from the function"
                 type="text"
               />
@@ -161,12 +191,16 @@ const VolumesTableView = ({
                 className="input-row__item"
                 disabled={newVolume.type.length === 0}
                 floatingLabel
+                invalid={!validation.isTypeNameValid}
                 label={volumeTypeInput.label}
                 onChange={typeName =>
                   setNewVolume(state => ({ ...state, typeName }))
                 }
                 required
                 requiredText="This field is required"
+                setInvalid={value =>
+                  setValidation(state => ({ ...state, isTypeNameValid: value }))
+                }
                 tip={volumeTypeInput.tip}
                 type="text"
               />
@@ -174,12 +208,19 @@ const VolumesTableView = ({
                 <Input
                   className="input-row__item"
                   floatingLabel
+                  invalid={!validation.isAccessKeyValid}
                   label="Access Key"
                   onChange={accessKey =>
                     setNewVolume(state => ({ ...state, accessKey }))
                   }
                   required
                   requiredText="This field is required"
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isAccessKeyValid: value
+                    }))
+                  }
                   tip="A platform data-access key"
                   type="text"
                 />
@@ -190,12 +231,19 @@ const VolumesTableView = ({
                 <Input
                   className="input-row__item"
                   floatingLabel
+                  invalid={!validation.isSubPathValid}
                   label="Resource path"
                   onChange={subPath =>
                     setNewVolume(state => ({ ...state, subPath }))
                   }
                   required
                   requiredText="This field is required"
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isSubPathValid: value
+                    }))
+                  }
                   tip="A relative directory path within the data container"
                   type="text"
                 />
@@ -243,7 +291,9 @@ VolumesTableView.propTypes = {
   setNewVolume: PropTypes.func.isRequired,
   setSelectedVolume: PropTypes.func.isRequired,
   setShowAddNewVolumeRow: PropTypes.func.isRequired,
-  showAddNewVolumeRow: PropTypes.bool.isRequired
+  setValidation: PropTypes.func.isRequired,
+  showAddNewVolumeRow: PropTypes.bool.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default VolumesTableView

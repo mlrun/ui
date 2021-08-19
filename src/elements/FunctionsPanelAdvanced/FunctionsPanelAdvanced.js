@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import FunctionsPanelParameters from '../FunctionsPanelParameters/FunctionsPanelParameters'
 import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
@@ -8,16 +9,17 @@ import Input from '../../common/Input/Input'
 import functionsActions from '../../actions/functions'
 
 const FunctionsPanelAdvanced = ({
+  defaultData,
   functionsStore,
   setNewFunctionErrorStream
 }) => {
   const [data, setData] = useState({
-    error_stream: ''
+    error_stream: defaultData.error_stream ?? ''
   })
 
   return (
     <FunctionsPanelSection title="Advanced" className="advanced">
-      <FunctionsPanelParameters />
+      <FunctionsPanelParameters defaultData={defaultData} />
       <Input
         floatingLabel
         label="Stream Path"
@@ -33,9 +35,14 @@ const FunctionsPanelAdvanced = ({
             setNewFunctionErrorStream(data.error_stream)
           }
         }}
+        type="text"
       />
     </FunctionsPanelSection>
   )
+}
+
+FunctionsPanelAdvanced.propTypes = {
+  defaultData: PropTypes.shape({}).isRequired
 }
 
 export default connect(

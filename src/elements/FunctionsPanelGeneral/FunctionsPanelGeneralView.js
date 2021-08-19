@@ -13,12 +13,11 @@ const FunctionsPanelGeneralView = ({
   functionsStore,
   handleAddLabel,
   handleChangeLabels,
-  handleNameChange,
   handleNameOnBlur,
-  handleTagChange,
   handleTagOnBlur,
   isNameValid,
   setData,
+  setNameValid,
   setNewFunctionDescription
 }) => {
   const nameValidationTip = (
@@ -41,10 +40,14 @@ const FunctionsPanelGeneralView = ({
             invalidText="This field is invalid"
             label="Function Name"
             maxLength={63}
-            onChange={handleNameChange}
+            onChange={name => setData(state => ({ ...state, name }))}
             onBlur={handleNameOnBlur}
+            pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
             required
             requiredText="This field is required"
+            setInvalid={value =>
+              setNameValid(state => ({ ...state, isNameValid: value }))
+            }
             tip={nameValidationTip}
             type="text"
             value={data.name}
@@ -53,7 +56,7 @@ const FunctionsPanelGeneralView = ({
           <Input
             floatingLabel
             label="Tag"
-            onChange={handleTagChange}
+            onChange={tag => setData(state => ({ ...state, tag }))}
             onBlur={handleTagOnBlur}
             placeholder="latest"
             type="text"
@@ -104,12 +107,11 @@ FunctionsPanelGeneralView.propTypes = {
   functionsStore: PropTypes.shape({}).isRequired,
   handleAddLabel: PropTypes.func.isRequired,
   handleChangeLabels: PropTypes.func.isRequired,
-  handleNameChange: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
-  handleTagChange: PropTypes.func.isRequired,
   handleTagOnBlur: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
+  setNameValid: PropTypes.func.isRequired,
   setNewFunctionDescription: PropTypes.func.isRequired
 }
 

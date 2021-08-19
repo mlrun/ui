@@ -19,7 +19,9 @@ const EditableVolumesRow = ({
   content,
   handleEdit,
   selectedVolume,
-  setSelectedVolume
+  setSelectedVolume,
+  setValidation,
+  validation
 }) => {
   const volumeTypeInput = useMemo(
     () => getVolumeTypeInput(selectedVolume.type.value),
@@ -50,18 +52,26 @@ const EditableVolumesRow = ({
             <Input
               floatingLabel
               invalid={
-                selectedVolume.newName !== selectedVolume.data.name &&
-                isNameNotUnique(selectedVolume.newName, content)
+                (selectedVolume.newName !== selectedVolume.data.name &&
+                  isNameNotUnique(selectedVolume.newName, content)) ||
+                !validation.isNameValid
               }
-              invalidText="Name already exists"
+              invalidText={
+                isNameNotUnique(selectedVolume.newName, content)
+                  ? 'Name already exists'
+                  : 'This field is invalid'
+              }
               label="Name"
-              required
-              requiredText="This field is required"
               onChange={name =>
                 setSelectedVolume({
                   ...selectedVolume,
                   newName: name
                 })
+              }
+              required
+              requiredText="This field is required"
+              setInvalid={value =>
+                setValidation(state => ({ ...state, isNameValid: value }))
               }
               type="text"
               value={selectedVolume.newName ?? selectedVolume.data.name}
@@ -73,10 +83,15 @@ const EditableVolumesRow = ({
             floatingLabel
             label="Path"
             invalid={
-              selectedVolume.newPath !== selectedVolume.data.mountPath &&
-              isPathNotUnique(selectedVolume.newPath, content)
+              (selectedVolume.newPath !== selectedVolume.data.mountPath &&
+                isPathNotUnique(selectedVolume.newPath, content)) ||
+              !validation.isPathValid
             }
-            invalidText="Multiple volumes cannot share the same path"
+            invalidText={
+              isPathNotUnique(selectedVolume.newPath, content)
+                ? 'Multiple volumes cannot share the same path'
+                : 'This field is invalid'
+            }
             onChange={path =>
               setSelectedVolume({
                 ...selectedVolume,
@@ -85,6 +100,9 @@ const EditableVolumesRow = ({
             }
             required
             requiredText="This field is required"
+            setInvalid={value =>
+              setValidation(state => ({ ...state, isPathValid: value }))
+            }
             type="text"
             value={selectedVolume.newPath ?? selectedVolume.data.mountPath}
           />
@@ -95,14 +113,19 @@ const EditableVolumesRow = ({
         <div className="table__cell table__cell-input">
           <Input
             floatingLabel
+            invalid={!validation.isTypeValid}
+            invalidText="This field is invalid"
             label={volumeTypeInput.label}
-            required
-            requiredText="This field is required"
             onChange={typeName =>
               setSelectedVolume({
                 ...selectedVolume,
                 type: { ...selectedVolume.type, name: typeName }
               })
+            }
+            required
+            requiredText="This field is invalid"
+            setInvalid={value =>
+              setValidation(state => ({ ...state, isTypeValid: value }))
             }
             type="text"
             value={selectedVolume.type.name}
@@ -117,7 +140,12 @@ const EditableVolumesRow = ({
                 isNameNotUnique(selectedVolume.newName, content)) ||
               (selectedVolume.newPath !== selectedVolume.data.mountPath &&
                 isPathNotUnique(selectedVolume.newPath, content)) ||
-              isVolumeInvalid(selectedVolume)
+              isVolumeInvalid(selectedVolume) ||
+              !validation.isNameValid ||
+              !validation.isPathValid ||
+              !validation.isTypeValid ||
+              !validation.isAccessKeyValid ||
+              !validation.isSubPathValid
             }
           >
             <Checkmark />
@@ -129,14 +157,19 @@ const EditableVolumesRow = ({
           <div className="table__cell table__cell-input">
             <Input
               floatingLabel
+              invalid={!validation.isAccessKeyValid}
+              invalidText="This field is invalid"
               label="Access Key"
-              required
-              requiredText="This field is required"
               onChange={accessKey =>
                 setSelectedVolume({
                   ...selectedVolume,
                   type: { ...selectedVolume.type, accessKey: accessKey }
                 })
+              }
+              required
+              requiredText="This field is required"
+              setInvalid={value =>
+                setValidation(state => ({ ...state, isAccessKeyValid: value }))
               }
               type="text"
               value={selectedVolume.type.accessKey}
@@ -145,14 +178,19 @@ const EditableVolumesRow = ({
           <div className="table__cell table__cell-input">
             <Input
               floatingLabel
+              invalid={!validation.isSubPathValid}
+              invalidText="This field is invalid"
               label="Resource Path"
-              required
-              requiredText="This field is required"
               onChange={subPath =>
                 setSelectedVolume({
                   ...selectedVolume,
                   type: { ...selectedVolume.type, subPath: subPath }
                 })
+              }
+              required
+              requiredText="This field is required"
+              setInvalid={value =>
+                setValidation(state => ({ ...state, isSubPathValid: value }))
               }
               type="text"
               value={selectedVolume.type.subPath}
@@ -169,7 +207,9 @@ EditableVolumesRow.propTypes = {
   content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
   selectedVolume: PropTypes.shape({}).isRequired,
-  setSelectedVolume: PropTypes.func.isRequired
+  setSelectedVolume: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default EditableVolumesRow

@@ -15,6 +15,7 @@ import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import {
   detailsMenu,
   filters,
+  FUNCTIONS_EDITABLE_STATES,
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
@@ -118,8 +119,8 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          !['job', ''].includes(item?.type) ||
-          !FUNCTIONS_READY_STATES.includes(item?.state?.value)
+          !['job', 'serving'].includes(item?.type) ||
+          !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
         label: 'Delete',
@@ -156,15 +157,19 @@ const Functions = ({
               description: func.spec?.description ?? '',
               default_handler: func.spec?.default_handler ?? '',
               env: func.spec?.env ?? [],
+              error_stream: func.spec?.error_stream ?? '',
+              graph: func.spec?.graph ?? {},
               hash: func.metadata.hash,
               image: func.spec?.image ?? '',
               labels: func.metadata?.labels ?? {},
               name: func.metadata.name,
+              parameters: func.spec?.parameters ?? {},
               project: func.metadata?.project || match.params.projectName,
               resources: func.spec?.resources ?? {},
               secret_sources: func.spec?.secret_sources ?? [],
               state: getState(func.status?.state, page, 'function'),
               tag: func.metadata.tag,
+              track_models: func.spec?.track_models ?? false,
               type: func.kind,
               volume_mounts: func.spec?.volume_mounts ?? [],
               volumes: func.spec?.volumes ?? [],

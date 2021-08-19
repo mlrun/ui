@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { isNil } from 'lodash'
 
 import FunctionsPanelTopologyView from './FunctionsPanelTopologyView'
 
@@ -13,13 +14,15 @@ const FunctionsPanelTopology = ({
   setNewFunctionTrackModels
 }) => {
   const [data, setData] = useState({
-    class_name: defaultData.class_name ?? 'none',
-    track_models: defaultData.track_models ?? false
+    class_name: defaultData.graph?.class_name ?? 'none',
+    track_models: defaultData.track_models ? 'trackModels' : ''
   })
 
   useEffect(() => {
-    setNewFunctionGraph({ kind: 'router' })
-  }, [setNewFunctionGraph])
+    if (isNil(defaultData)) {
+      setNewFunctionGraph({ kind: 'router' })
+    }
+  }, [defaultData, setNewFunctionGraph])
 
   const selectRouterType = type => {
     const newFunctionGraph = functionsStore.newFunction.spec.graph
@@ -48,18 +51,15 @@ const FunctionsPanelTopology = ({
   return (
     <FunctionsPanelTopologyView
       data={data}
+      defaultData={defaultData}
       handleTrackModels={handleTrackModels}
       selectRouterType={selectRouterType}
     />
   )
 }
 
-FunctionsPanelTopology.defaultProps = {
-  defaultData: {}
-}
-
 FunctionsPanelTopology.propTypes = {
-  defaultData: PropTypes.shape({})
+  defaultData: PropTypes.shape({}).isRequired
 }
 
 export default connect(functionsStore => ({ ...functionsStore }), {

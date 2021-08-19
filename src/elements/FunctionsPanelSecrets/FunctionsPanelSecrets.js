@@ -42,7 +42,7 @@ const FunctionsPanelSecrets = ({
       handleAddNewSecretSource={handleAddNewSecretSource}
       handleDeleteSecretSource={handleDeleteSecretSource}
       handleEditSecretSource={handleEditSecretSource}
-      secretSources={functionsStore.newFunction.spec.secret_sources.map(
+      secretSources={(functionsStore.newFunction.spec.secret_sources ?? []).map(
         secretSource => ({
           key: secretSource.kind,
           value: secretSource.source

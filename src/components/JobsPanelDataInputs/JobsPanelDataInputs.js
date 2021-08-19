@@ -36,10 +36,12 @@ const JobsPanelDataInputs = ({
   fetchFeatureVector,
   fetchFeatureVectors,
   inputs,
+  isArtifactPathValid,
   match,
   panelDispatch,
   panelState,
   projectStore,
+  setArtifactPathValid,
   setNewJobInputs
 }) => {
   const [inputsState, inputsDispatch] = useReducer(
@@ -314,18 +316,22 @@ const JobsPanelDataInputs = ({
       handlePathTypeChange={handlePathTypeChange}
       inputsState={inputsState}
       inputsDispatch={inputsDispatch}
+      isArtifactPathValid={isArtifactPathValid}
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
+      setArtifactPathValid={setArtifactPathValid}
     />
   )
 }
 
 JobsPanelDataInputs.propTypes = {
   inputs: PropTypes.shape({}).isRequired,
+  isArtifactPathValid: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
+  setArtifactPathValid: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired
 }
 

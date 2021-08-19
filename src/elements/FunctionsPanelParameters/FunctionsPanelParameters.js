@@ -1,15 +1,22 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import FunctionsPanelParametersView from './FunctionsPanelParametersView'
 
-import { setFunctionParameters } from './functionsPanelParameters.util'
+import {
+  getParameterType,
+  JSON_TYPE,
+  setFunctionParameters
+} from './functionsPanelParameters.util'
 import functionsActions from '../../actions/functions'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const FunctionsPanelParameters = ({
+  defaultData,
   functionsStore,
   setNewFunctionParameters
 }) => {
@@ -21,6 +28,24 @@ const FunctionsPanelParameters = ({
   })
   const [selectedParameter, setSelectedParameter] = useState(null)
   const [parameters, setParameters] = useState([])
+
+  useEffect(() => {
+    if (!isEveryObjectValueEmpty(defaultData.parameters ?? {})) {
+      setParameters(
+        Object.entries(defaultData.parameters).map(([key, value]) => ({
+          data: {
+            name: key,
+            type: getParameterType(value),
+            value:
+              getParameterType(value) === JSON_TYPE
+                ? JSON.stringify(value)
+                : String(value)
+          },
+          isDefault: true
+        }))
+      )
+    }
+  }, [defaultData.parameters])
 
   const handleAddNewParameter = () => {
     setFunctionParameters(
@@ -130,6 +155,10 @@ const FunctionsPanelParameters = ({
       generateActionsMenu={generateActionsMenu}
     />
   )
+}
+
+FunctionsPanelParameters.propTypes = {
+  defaultData: PropTypes.shape({}).isRequired
 }
 
 export default connect(functionsStore => ({ ...functionsStore }), {

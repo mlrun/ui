@@ -8,7 +8,6 @@ import FunctionsPanelCodeView from './FunctionsPanelCodeView'
 import functionsActions from '../../actions/functions'
 import {
   DEFAULT_ENTRY,
-  DEFAULT_HANDLER,
   DEFAULT_IMAGE,
   EXISTING_IMAGE,
   NEW_IMAGE,
@@ -30,7 +29,7 @@ const FunctionsPanelCode = ({
 }) => {
   const [data, setData] = useState({
     entry: DEFAULT_ENTRY,
-    handler: defaultData.default_handler ?? DEFAULT_HANDLER,
+    handler: defaultData.default_handler ?? '',
     image: defaultData.image ?? DEFAULT_IMAGE,
     base_image: defaultData.build?.base_image ?? '',
     commands: (defaultData.build?.commands || []).join('\n') ?? '',
@@ -43,23 +42,8 @@ const FunctionsPanelCode = ({
       : EXISTING_IMAGE
   )
 
-  const handleHandlerChange = handler => {
-    if (!isHandlerValid && handler.length > 0) {
-      setHandlerValid(true)
-    }
-
-    setData(state => ({
-      ...state,
-      handler
-    }))
-  }
-
   const handleHandlerOnBlur = event => {
-    if (data.handler.length === 0) {
-      setHandlerValid(false)
-    } else if (
-      functionsStore.newFunction.spec.default_handler !== event.target.value
-    ) {
+    if (functionsStore.newFunction.spec.default_handler !== data.handler) {
       setNewFunctionHandler(data.handler)
     }
   }
@@ -78,19 +62,6 @@ const FunctionsPanelCode = ({
     functionsStore.newFunction.kind,
     functionsStore.newFunction.spec.build.functionSourceCode,
     setNewFunctionSourceCode
-  ])
-
-  useEffect(() => {
-    if (
-      !functionsStore.newFunction.spec.default_handler &&
-      isNil(defaultData.default_handler)
-    ) {
-      setNewFunctionHandler(DEFAULT_HANDLER)
-    }
-  }, [
-    defaultData.default_handler,
-    functionsStore.newFunction.spec.default_handler,
-    setNewFunctionHandler
   ])
 
   useEffect(() => {
@@ -123,12 +94,12 @@ const FunctionsPanelCode = ({
       data={data}
       editCode={editCode}
       functionsStore={functionsStore}
-      handleHandlerChange={handleHandlerChange}
       handleHandlerOnBlur={handleHandlerOnBlur}
       imageType={imageType}
       isHandlerValid={isHandlerValid}
       setData={setData}
       setEditCode={setEditCode}
+      setHandlerValid={setHandlerValid}
       setImageType={setImageType}
       setNewFunctionBaseImage={setNewFunctionBaseImage}
       setNewFunctionBuildImage={setNewFunctionBuildImage}

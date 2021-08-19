@@ -8,6 +8,7 @@ import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
+import { FUNCTION_TYPE_SERVING } from '../../constants'
 
 const FunctionsPanel = ({
   functionsStore,
@@ -25,13 +26,15 @@ const FunctionsPanel = ({
   setNewFunction,
   setNewFunctionProject
 }) => {
-  const [isNameValid, setNameValid] = useState(true)
-  const [isHandlerValid, setHandlerValid] = useState(true)
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isHandlerValid: true
+  })
   const history = useHistory()
 
   useEffect(() => {
     if (defaultData) {
-      setNewFunction({
+      let data = {
         kind: defaultData.type,
         metadata: {
           labels: defaultData.labels,
@@ -51,19 +54,31 @@ const FunctionsPanel = ({
           description: defaultData.description,
           env: defaultData.env,
           image: defaultData.image,
+          resources: {
+            limits: defaultData.resources.limits ?? {},
+            requests: defaultData.resources.requests ?? {}
+          },
           volume_mounts:
             chain(defaultData.volume_mounts)
               .flatten()
               .unionBy('name')
               .value() ?? [],
-          volumes: defaultData.volumes,
-          resources: {
-            limits: defaultData.resources.limits ?? {},
-            requests: defaultData.resources.requests ?? {}
-          },
-          secret_sources: defaultData.secret_sources
+          volumes: defaultData.volumes
         }
-      })
+      }
+
+      if (defaultData.type === FUNCTION_TYPE_SERVING) {
+        data = {
+          ...data,
+          error_stream: defaultData.error_stream ?? '',
+          graph: defaultData.graph ?? {},
+          parameters: defaultData.parameters ?? {},
+          secret_sources: defaultData.secret_sources,
+          track_models: defaultData.track_models ?? false
+        }
+      }
+
+      setNewFunction(data)
     }
   }, [defaultData, setNewFunction])
 
@@ -78,13 +93,13 @@ const FunctionsPanel = ({
   ])
 
   const handleSave = deploy => {
-    if (isNameValid && isHandlerValid) {
+    if (validation.isNameValid && validation.isHandlerValid) {
       if (functionsStore.newFunction.metadata.name.length === 0) {
-        return setNameValid(false)
+        return setValidation(state => ({ ...state, isNameValid: false }))
       }
 
       if (functionsStore.newFunction.spec.default_handler.length === 0) {
-        return setHandlerValid(false)
+        return setValidation(state => ({ ...state, isHandlerValid: false }))
       }
 
       if (functionsStore.error) {
@@ -121,14 +136,12 @@ const FunctionsPanel = ({
       defaultData={defaultData ?? {}}
       error={functionsStore.error}
       handleSave={handleSave}
-      isHandlerValid={isHandlerValid}
-      isNameValid={isNameValid}
       loading={functionsStore.loading}
       mode={mode}
       newFunction={functionsStore.newFunction}
       removeFunctionsError={removeFunctionsError}
-      setHandlerValid={setHandlerValid}
-      setNameValid={setNameValid}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }

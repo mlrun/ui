@@ -24,40 +24,14 @@ const FunctionsPanelGeneral = ({
     tag: defaultData.tag ?? ''
   })
 
-  const handleNameChange = name => {
-    const pattern = /^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
-
-    if (isNameValid && !pattern.test(name)) {
-      setNameValid(false)
-    }
-
-    if (!isNameValid && name.length > 0 && pattern.test(name)) {
-      setNameValid(true)
-    }
-
-    setData(state => ({
-      ...state,
-      name
-    }))
-  }
-
   const handleNameOnBlur = event => {
-    if (event.target.value.length === 0) {
-      setNameValid(false)
-    } else {
+    if (data.name !== functionsStore.newFunction.metadata.name) {
       setNewFunctionName(event.target.value)
     }
   }
 
-  const handleTagChange = tag => {
-    setData(state => ({
-      ...state,
-      tag
-    }))
-  }
-
   const handleTagOnBlur = event => {
-    if (event.target.value.length > 0) {
+    if (data.tag !== functionsStore.newFunction.metadata.tag) {
       setNewFunctionTag(event.target.value)
     }
   }
@@ -97,12 +71,11 @@ const FunctionsPanelGeneral = ({
       functionsStore={functionsStore}
       handleAddLabel={handleAddLabel}
       handleChangeLabels={handleChangeLabels}
-      handleNameChange={handleNameChange}
       handleNameOnBlur={handleNameOnBlur}
-      handleTagChange={handleTagChange}
       handleTagOnBlur={handleTagOnBlur}
       isNameValid={isNameValid}
       setData={setData}
+      setNameValid={setNameValid}
       setNewFunctionDescription={setNewFunctionDescription}
     />
   )

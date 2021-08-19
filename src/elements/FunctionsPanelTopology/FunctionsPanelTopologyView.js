@@ -11,6 +11,7 @@ import { routerTypeOptions } from './functionsPanelTopology.util'
 import './functionsPanelTopology.scss'
 
 const FunctionsPanelTopologyView = ({
+  defaultData,
   data,
   handleTrackModels,
   selectRouterType
@@ -28,7 +29,7 @@ const FunctionsPanelTopologyView = ({
           selectedId={data.class_name}
         />
       </div>
-      <FunctionPanelTopologyModelTable />
+      <FunctionPanelTopologyModelTable defaultData={defaultData} />
       <CheckBox
         className="topology__model-tracking"
         item={{ id: 'trackModels', label: 'Model Tracking' }}
@@ -40,6 +41,7 @@ const FunctionsPanelTopologyView = ({
 }
 
 FunctionsPanelTopologyView.propTypes = {
+  defaultData: PropTypes.shape({}).isRequired,
   data: PropTypes.shape({}).isRequired,
   handleTrackModels: PropTypes.func.isRequired,
   selectRouterType: PropTypes.func.isRequired

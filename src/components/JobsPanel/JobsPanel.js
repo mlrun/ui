@@ -62,6 +62,10 @@ const JobsPanel = ({
       ? functionsStore.template.functions
       : groupedFunctions.functions || {}
   )
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isArtifactPathValid: true
+  })
   const history = useHistory()
 
   useLayoutEffect(() => {
@@ -87,7 +91,8 @@ const JobsPanel = ({
     functionsStore.error,
     functionsStore.template.name,
     groupedFunctions,
-    removeFunctionTemplate
+    removeFunctionTemplate,
+    setSelectedFunction
   ])
 
   useEffect(() => {
@@ -343,15 +348,6 @@ const JobsPanel = ({
     onEditJob(event, postData)
   }
 
-  const isTitleValid = () => {
-    return (
-      panelState.currentFunctionInfo.name.trim() !== '' &&
-      /^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/.test(
-        panelState.currentFunctionInfo.name
-      )
-    )
-  }
-
   return (
     <JobsPanelView
       closePanel={closePanel}
@@ -359,7 +355,6 @@ const JobsPanel = ({
       functionData={functionData}
       handleEditJob={handleEditJob}
       handleRunJob={handleRunJob}
-      isTitleValid={isTitleValid}
       jobsStore={jobsStore}
       loading={jobsStore.loading || functionsStore.loading}
       match={match}
@@ -371,6 +366,8 @@ const JobsPanel = ({
       setNewJobInputs={setNewJobInputs}
       setNewJobSecretSources={setNewJobSecretSources}
       setOpenScheduleJob={setOpenScheduleJob}
+      setValidation={setValidation}
+      validation={validation}
       withSaveChanges={withSaveChanges}
     />
   )

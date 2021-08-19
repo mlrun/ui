@@ -68,15 +68,13 @@ const initialState = {
       description: '',
       env: [],
       image: '',
-      parameters: {},
       volume_mounts: [],
       volumes: [],
       resources: {
         limits: {},
         requests: {}
       },
-      secret_sources: [],
-      track_models: false
+      secret_sources: []
     }
   },
   templatesCatalog: {},

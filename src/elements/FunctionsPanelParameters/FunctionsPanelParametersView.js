@@ -100,13 +100,17 @@ const FunctionsPanelParametersView = ({
   )
 }
 
+FunctionsPanelParametersView.defaultProps = {
+  selectedParameter: null
+}
+
 FunctionsPanelParametersView.propTypes = {
   editParameter: PropTypes.func.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
   newParameter: PropTypes.shape({}).isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  selectedParameter: PropTypes.shape({}).isRequired,
+  selectedParameter: PropTypes.shape({}),
   setNewParameter: PropTypes.func.isRequired,
   setSelectedParameter: PropTypes.func.isRequired,
   setShowAddNewParameterRow: PropTypes.func.isRequired,

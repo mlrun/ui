@@ -78,3 +78,12 @@ export const SELECT_OPTION = PropTypes.shape({
 })
 
 export const SELECT_OPTIONS = PropTypes.arrayOf(SELECT_OPTION)
+
+export const RADIO_BUTTONS_ELEMENT = PropTypes.shape({
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  info: PropTypes.string,
+  tip: PropTypes.string
+})
+
+export const RADIO_BUTTONS_ELEMENTS = PropTypes.arrayOf(RADIO_BUTTONS_ELEMENT)

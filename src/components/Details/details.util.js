@@ -1,5 +1,5 @@
 import React from 'react'
-import { isEmpty, isEqual } from 'lodash'
+import { isEmpty, isEqual, cloneDeep } from 'lodash'
 
 import {
   DETAILS_ANALYSIS_TAB,
@@ -27,7 +27,7 @@ import {
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE
 } from '../../constants'
-import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
+import { formatDatetime, generateLinkPath } from '../../utils'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsPreview from '../DetailsPreview/DetailsPreview'
@@ -66,12 +66,11 @@ export const generateArtifactsContent = (page, pageTab, selectedItem) => {
       },
       function_uri: {
         value: selectedItem?.spec?.function_uri,
-        link: (() => {
-          const { key: functionName, project } = parseUri(
-            `store://functions/${selectedItem?.spec?.function_uri}`
-          )
-          return `/projects/${project}/functions/${functionName}/overview`
-        })()
+        link: selectedItem?.spec?.function_uri
+          ? `${generateLinkPath(
+              `store://functions/${selectedItem?.spec?.function_uri}`
+            )}/overview`
+          : ''
       },
       last_prediction: {
         value: formatDatetime(new Date(selectedItem?.status?.last_request), '-')
@@ -329,7 +328,6 @@ export const renderContent = (
       return (
         <DetailsRequestedFeatures
           changes={detailsState.changes}
-          detailsState={detailsState}
           match={match}
           selectedItem={selectedItem}
           handleEditInput={(value, field) => handleEditInput(value, field)}
@@ -415,7 +413,7 @@ export const generateFeatureVectorsOverviewContent = selectedItem => ({
   }
 })
 export const handleFinishEdit = (
-  field,
+  fields,
   changes,
   detailsTabActions,
   detailsTabDispatch,
@@ -431,27 +429,27 @@ export const handleFinishEdit = (
     }
   })
 
-  if (
-    isEqual(
-      changes.data[field]?.initialFieldValue,
-      changes.data[field]?.currentFieldValue
-    )
-  ) {
-    const changesData = { ...changes.data }
+  const changesData = cloneDeep(changes.data)
 
-    delete changesData[field]
-
-    setChangesCounter(changes.data.length || 0)
-    setChangesData({ ...changesData })
-  } else {
-    setChangesCounter(Object.keys(changes.data).length)
-    setChangesData({
-      ...changes.data,
-      [field]: {
-        initialFieldValue: changes.data[field].initialFieldValue,
-        currentFieldValue: changes.data[field].currentFieldValue,
-        previousFieldValue: changes.data[field].currentFieldValue
+  fields.forEach(field => {
+    if (changes.data[field]) {
+      if (
+        isEqual(
+          changesData[field]?.initialFieldValue,
+          changesData[field]?.currentFieldValue
+        )
+      ) {
+        delete changesData[field]
+      } else {
+        changesData[field] = {
+          initialFieldValue: changesData[field].initialFieldValue,
+          currentFieldValue: changesData[field].currentFieldValue,
+          previousFieldValue: changesData[field].currentFieldValue
+        }
       }
-    })
-  }
+    }
+  })
+
+  setChangesCounter(Object.keys(changesData).length)
+  setChangesData({ ...changesData })
 }

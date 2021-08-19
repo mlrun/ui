@@ -8,7 +8,11 @@ import FunctionsPanelAdvanced from '../FunctionsPanelAdvanced/FunctionsPanelAdva
 
 import './functionsPanelRuntime.scss'
 
-const FunctionsPanelRuntimeView = ({ functionsStore, sections }) => {
+const FunctionsPanelRuntimeView = ({
+  defaultData,
+  functionsStore,
+  sections
+}) => {
   return (
     <div className="functions-panel__item new-item-side-panel__item runtime">
       <FunctionsPanelSection
@@ -16,11 +20,17 @@ const FunctionsPanelRuntimeView = ({ functionsStore, sections }) => {
       >
         {sections.map(section =>
           section.id === 'topology' ? (
-            <FunctionsPanelTopology key={section.id} />
+            <FunctionsPanelTopology
+              defaultData={defaultData}
+              key={section.id}
+            />
           ) : section.id === 'secrets' ? (
-            <FunctionsPanelSecrets key={section.id} />
+            <FunctionsPanelSecrets defaultData={defaultData} key={section.id} />
           ) : section.id === 'advanced' ? (
-            <FunctionsPanelAdvanced />
+            <FunctionsPanelAdvanced
+              defaultData={defaultData}
+              key={section.id}
+            />
           ) : null
         )}
       </FunctionsPanelSection>
@@ -29,6 +39,7 @@ const FunctionsPanelRuntimeView = ({ functionsStore, sections }) => {
 }
 
 FunctionsPanelRuntimeView.propTypes = {
+  defaultData: PropTypes.shape({}).isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
   sections: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
