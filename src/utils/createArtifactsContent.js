@@ -294,6 +294,8 @@ const createModelEndpointsRowData = (artifact, project) => {
     ? `store://functions/${artifact.spec.function_uri}`
     : ''
   const { key: functionName } = parseUri(functionUri)
+  const averageLatency =
+    artifact.status?.metrics?.latency_avg_1h?.values?.[0]?.[1]
 
   return {
     key: {
@@ -350,7 +352,7 @@ const createModelEndpointsRowData = (artifact, project) => {
       class: 'artifacts_small'
     },
     averageLatency: {
-      value: artifact.status?.metrics?.latency_avg_1h?.values?.[0] ?? '-',
+      value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
       class: 'artifacts_small'
     },
     errorCount: {
