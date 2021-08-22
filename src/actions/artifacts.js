@@ -39,6 +39,7 @@ import {
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
+import { generateModelEndpoints } from '../utils/generateModelEndpoints'
 
 const artifactsAction = {
   buildFunction: func => dispatch => {
@@ -239,7 +240,11 @@ const artifactsAction = {
     return artifactsApi
       .getModelEndpoints(project, filters, params)
       .then(({ data: { endpoints = [] } }) => {
-        dispatch(artifactsAction.fetchModelEndpointsSuccess(endpoints))
+        dispatch(
+          artifactsAction.fetchModelEndpointsSuccess(
+            generateModelEndpoints(endpoints)
+          )
+        )
 
         return endpoints
       })
