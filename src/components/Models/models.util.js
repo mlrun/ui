@@ -217,7 +217,10 @@ export const handleFetchData = async (
       data.originalContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-    result = await fetchModelEndpoints(project, filters)
+    result = await fetchModelEndpoints(project, filters, {
+      metric: 'latency_avg_1h',
+      start: 'now-10m'
+    })
 
     if (result) {
       data.content = result.map(endpoint => {

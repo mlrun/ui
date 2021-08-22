@@ -233,11 +233,11 @@ const artifactsAction = {
   fetchFunctionsSuccess: () => ({
     type: FETCH_FUNCTIONS_SUCCESS
   }),
-  fetchModelEndpoints: (project, filters) => dispatch => {
+  fetchModelEndpoints: (project, filters, params) => dispatch => {
     dispatch(artifactsAction.fetchModelEndpointsBegin())
 
     return artifactsApi
-      .getModelEndpoints(project, filters)
+      .getModelEndpoints(project, filters, params)
       .then(({ data: { endpoints = [] } }) => {
         dispatch(artifactsAction.fetchModelEndpointsSuccess(endpoints))
 
