@@ -17,6 +17,7 @@ const BreadcrumbsDropdown = ({
   screen,
   searchOnChange,
   selectedItem,
+  tab,
   withSearch
 }) => {
   return (
@@ -49,7 +50,9 @@ const BreadcrumbsDropdown = ({
           </a>
         ) : (
           <Link
-            to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}`}
+            to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${
+              tab ? `/${tab}` : ''
+            }`}
             data-testid="breadcrumbs-dropdown-item"
             key={listItem.id}
             className={dropdownItemClassNames}
@@ -69,6 +72,7 @@ BreadcrumbsDropdown.defaultProps = {
   onClick: () => {},
   screen: '',
   searchOnChange: () => {},
+  tab: '',
   withSearch: false
 }
 
@@ -79,6 +83,7 @@ BreadcrumbsDropdown.propTypes = {
   screen: PropTypes.string,
   searchOnChange: PropTypes.func,
   selectedItem: PropTypes.string.isRequired,
+  tab: PropTypes.string,
   withSearch: PropTypes.bool
 }
 
