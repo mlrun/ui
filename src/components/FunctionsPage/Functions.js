@@ -105,6 +105,7 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
+          new URLSearchParams(location.search).get('demo') !== 'true' ||
           !['job', ''].includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
