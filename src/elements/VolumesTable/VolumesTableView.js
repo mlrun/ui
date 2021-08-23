@@ -134,8 +134,7 @@ const VolumesTableView = ({
                   setValidation(state => ({
                     ...state,
                     isTypeValid: true,
-                    isAccessKeyValid: true,
-                    isSubPathValid: true
+                    isAccessKeyValid: true
                   }))
                 }}
               />
@@ -196,7 +195,7 @@ const VolumesTableView = ({
                 onChange={typeName =>
                   setNewVolume(state => ({ ...state, typeName }))
                 }
-                required
+                required={newVolume.type !== V3IO}
                 requiredText="This field is required"
                 setInvalid={value =>
                   setValidation(state => ({ ...state, isTypeNameValid: value }))
@@ -231,18 +230,9 @@ const VolumesTableView = ({
                 <Input
                   className="input-row__item"
                   floatingLabel
-                  invalid={!validation.isSubPathValid}
                   label="Resource path"
                   onChange={subPath =>
                     setNewVolume(state => ({ ...state, subPath }))
-                  }
-                  required
-                  requiredText="This field is required"
-                  setInvalid={value =>
-                    setValidation(state => ({
-                      ...state,
-                      isSubPathValid: value
-                    }))
                   }
                   tip="A relative directory path within the data container"
                   type="text"
