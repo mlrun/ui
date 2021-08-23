@@ -28,8 +28,7 @@ export const VolumesTable = ({
     isTypeValid: true,
     isTypeNameValid: true,
     isPathValid: true,
-    isAccessKeyValid: true,
-    isSubPathValid: true
+    isAccessKeyValid: true
   })
   const [showAddNewVolumeRow, setShowAddNewVolumeRow] = useState(false)
   const [selectedVolume, setSelectedVolume] = useState(null)
@@ -123,11 +122,14 @@ export const VolumesTable = ({
 
     if (newVolume.type === V3IO) {
       volumeIsValid =
-        volumeIsValid &&
+        newVolume.name.length > 0 &&
+        validation.isNameValid &&
+        newVolume.path.length > 0 &&
+        validation.isPathValid &&
+        newVolume.type.length > 0 &&
+        validation.isTypeValid &&
         newVolume.accessKey.length > 0 &&
-        validation.isAccessKeyValid &&
-        newVolume.subPath.length > 0 &&
-        validation.isSubPathValid
+        validation.isAccessKeyValid
     }
 
     if (volumeIsValid) {
@@ -148,8 +150,7 @@ export const VolumesTable = ({
       isTypeValid: true,
       isTypeNameValid: true,
       isPathValid: true,
-      isAccessKeyValid: true,
-      isSubPathValid: true
+      isAccessKeyValid: true
     })
   }
 
