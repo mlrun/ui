@@ -61,7 +61,7 @@ const EditableVolumesRow = ({
                   ? 'Name already exists'
                   : 'This field is invalid'
               }
-              label="Name"
+              label="Volume Name"
               onChange={name =>
                 setSelectedVolume({
                   ...selectedVolume,
