@@ -48,8 +48,8 @@
  *         tag:       undefined,
  *         uid:       '24fce79e709f9b3fe5e8251a39e67c678d94c20c' }
  */
-const parseUri = (uri = '') =>
-  uri.match(
+const parseUri = uri =>
+  (uri ?? '').match(
     /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<uid>.+))?$/
   )?.groups ?? {}
 

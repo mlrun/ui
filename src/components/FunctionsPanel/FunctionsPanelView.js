@@ -11,6 +11,7 @@ import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnv
 import Button from '../../common/Button/Button'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FunctionsPanelSecrets from '../../elements/FunctionsPanelSecrets/FunctionsPanelSecrets'
+import { FUNCTION_PANEL_MODE } from '../../types'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -21,12 +22,11 @@ const FunctionsPanelView = ({
   defaultData,
   error,
   handleSave,
-  isHandlerValid,
-  isNameValid,
   loading,
+  mode,
   removeFunctionsError,
-  setHandlerValid,
-  setNameValid
+  setValidation,
+  validation
 }) => {
   return (
     <div className="new-item-side-panel-container">
@@ -42,8 +42,8 @@ const FunctionsPanelView = ({
           >
             <FunctionsPanelGeneral
               defaultData={defaultData}
-              isNameValid={isNameValid}
-              setNameValid={setNameValid}
+              isNameValid={validation.isNameValid}
+              setNameValid={setValidation}
             />
           </Accordion>
           <Accordion
@@ -54,8 +54,8 @@ const FunctionsPanelView = ({
           >
             <FunctionsPanelCode
               defaultData={defaultData}
-              isHandlerValid={isHandlerValid}
-              setHandlerValid={setHandlerValid}
+              isHandlerValid={validation.isHandlerValid}
+              setHandlerValid={setValidation}
             />
           </Accordion>
           <Accordion
@@ -64,7 +64,7 @@ const FunctionsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FunctionsPanelResources defaultData={defaultData} />
+            <FunctionsPanelResources defaultData={defaultData} mode={mode} />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -72,7 +72,7 @@ const FunctionsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FunctionsPanelEnvironmentVariables defaultData={defaultData} />
+            <FunctionsPanelEnvironmentVariables />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion hidden"
@@ -101,7 +101,7 @@ const FunctionsPanelView = ({
             />
             <Button
               className="btn_save"
-              disabled={!isNameValid || !isHandlerValid}
+              disabled={!validation.isNameValid || !validation.isHandlerValid}
               variant="tertiary"
               label="Save"
               onClick={() => handleSave()}
@@ -110,7 +110,7 @@ const FunctionsPanelView = ({
               variant="secondary"
               label="Deploy"
               onClick={() => handleSave(true)}
-              disabled={!isNameValid || !isHandlerValid}
+              disabled={!validation.isNameValid || !validation.isHandlerValid}
             />
           </div>
         </div>
@@ -129,12 +129,11 @@ FunctionsPanelView.propTypes = {
   defaultData: PropTypes.shape({}),
   error: PropTypes.string,
   handleSave: PropTypes.func.isRequired,
-  isHandlerValid: PropTypes.bool.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
+  mode: FUNCTION_PANEL_MODE.isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
-  setHandlerValid: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({})
 }
 
 export default FunctionsPanelView

@@ -4,6 +4,7 @@
 
 .details-statistics {
   padding: 20px;
+
   @include detailsMetadataStatisticsTable;
 
   &__table {

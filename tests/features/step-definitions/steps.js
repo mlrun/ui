@@ -14,11 +14,13 @@ import {
   createAPIMLProject,
   isComponentContainsAttributeValue,
   collapseAccorditionSection,
+  expandAccorditionSection,
   isAccorditionSectionCollapsed,
   clickNearComponent,
   typeIntoInputField
 } from '../common/actions/common.action'
 import {
+  getColumnValues,
   getTableRows,
   isContainsValueInColumn,
   isNotContainsValueInColumn,
@@ -44,10 +46,15 @@ import {
 import { isTabActive } from '../common/actions/tab-selector.action'
 import {
   typeValue,
+  getInputValue,
   checkHintText,
   verifyTypedValue,
   checkWarningHintText
 } from '../common/actions/input-group.action'
+import {
+  incrementValue,
+  decrementValue
+} from '../common/actions/number-input-group.action'
 import {
   checkCheckbox,
   uncheckCheckbox,
@@ -77,6 +84,7 @@ When('turn on demo mode', async function() {
 
 Then('wait load page', async function() {
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
+  await this.driver.sleep(250)
 })
 
 Then('click on {string} element on {string} wizard', async function(
@@ -130,6 +138,48 @@ Then(
       this.driver,
       pageObjects[wizard][inputGroup],
       subName
+    )
+  }
+)
+
+Then(
+  'increase value on {int} points in {string} field on {string} on {string} wizard',
+  async function(value, inputField, accordion, wizard) {
+    const txt = await getInputValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField]
+    )
+    const result = Number.parseInt(txt) + value
+    await incrementValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      value
+    )
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      result.toString()
+    )
+  }
+)
+
+Then(
+  'decrease value on {int} points in {string} field on {string} on {string} wizard',
+  async function(value, inputField, accordion, wizard) {
+    const txt = await getInputValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField]
+    )
+    const result = Number.parseInt(txt) - value
+    await decrementValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      value
+    )
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      result.toString()
     )
   }
 )
@@ -458,6 +508,73 @@ When(
   }
 )
 
+When(
+  'expand row with {string} at {string} in {string} in {string} on {string} wizard',
+  async function(value, column, table, accordion, wizard) {
+    // TODO: without creating link to the table component step works unstable
+    await this.driver.sleep(500)
+    const tableElement = pageObjects[wizard][accordion][table]
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      tableElement,
+      column,
+      value
+    )
+    const indx = arr[0]
+    const expandBtn = await getCellByIndexColumn(
+      this.driver,
+      tableElement,
+      indx,
+      'expand_btn'
+    )
+    // console.log('debug path: ', expandBtn)
+    await clickOnComponent(this.driver, expandBtn)
+  }
+)
+
+When(
+  'select {string} in subcolumn {string} at {string} column in {string} row by {string} at {string} in {string} on {string} wizard',
+  async function(
+    value,
+    subColumn,
+    subTable,
+    rowValue,
+    searchColumn,
+    table,
+    accordion,
+    wizard
+  ) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][accordion][table],
+      searchColumn,
+      rowValue
+    )
+    const indx = arr[0]
+    const cellTable = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][accordion][table],
+      indx,
+      subTable
+    )
+
+    const subArr = await findRowIndexesByColumnValue(
+      this.driver,
+      cellTable,
+      searchColumn,
+      value
+    )
+    const subIndx = subArr[0]
+    const option = await getCellByIndexColumn(
+      this.driver,
+      cellTable,
+      subIndx,
+      subColumn
+    )
+    await clickOnComponent(this.driver, option)
+  }
+)
+
 Then(
   'value in {string} column in {string} on {string} wizard should be from {string} to {string}',
   async function(column, table, wizard, fromDateTime, toDateTime) {
@@ -600,6 +717,14 @@ Then(
 
 When('collapse {string} on {string} wizard', async function(accordion, wizard) {
   collapseAccorditionSection(
+    this.driver,
+    pageObjects[wizard][accordion]['Collapse_Button']
+  )
+  await this.driver.sleep(100)
+})
+
+When('expand {string} on {string} wizard', async function(accordion, wizard) {
+  expandAccorditionSection(
     this.driver,
     pageObjects[wizard][accordion]['Collapse_Button']
   )

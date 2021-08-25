@@ -34,5 +34,6 @@ module.exports = {
   Jobs_Monitor_Tab: jobsAndWorkflows['JobsMonitorTab'],
   Create_Feature_Set_Popup_Dialog:
     interactivePopup['createFeatureSetPopupDialog'],
-  Create_Job: jobsAndWorkflows['CreateJob']
+  Create_Job: jobsAndWorkflows['CreateJob'],
+  New_JobTemplate_Edit: sidePanel['newJobTemplateEdit']
 }

@@ -111,7 +111,7 @@ const DetailsInfo = React.forwardRef(
         detailsInfoState={detailsInfoState}
         handleFinishEdit={field =>
           handleFinishEdit(
-            field,
+            [field],
             changes,
             detailsInfoActions,
             detailsInfoDispatch,

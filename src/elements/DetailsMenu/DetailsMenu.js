@@ -152,29 +152,32 @@ const DetailsMenu = ({
             transform: `translateX(${-scrolledWidth}px)`
           }}
         >
-          {detailsMenu.map(tab => (
-            <Link
-              to={`/projects/${
-                match.params.projectName
-              }/${page.toLowerCase()}/${
-                match.params.pageTab ? `${match.params.pageTab}/` : ''
-              }${page === FUNCTIONS_PAGE ? hash : id || name}/${
-                match.params.tag ? `${match.params.tag}/` : ''
-              }${isNaN(parseInt(iter)) ? '' : `${iter}/`}${tab}`}
-              onClick={onClick}
-              key={tab}
-            >
-              <li
-                data-tab={tab}
-                className={classnames(
-                  'details-menu__tab',
-                  match.params.tab === tab && 'details-menu__tab_active'
-                )}
-              >
-                {tab}
-              </li>
-            </Link>
-          ))}
+          {detailsMenu.map(
+            tab =>
+              !tab.hidden && (
+                <Link
+                  to={`/projects/${
+                    match.params.projectName
+                  }/${page.toLowerCase()}/${
+                    match.params.pageTab ? `${match.params.pageTab}/` : ''
+                  }${page === FUNCTIONS_PAGE ? hash : id || name}/${
+                    match.params.tag ? `${match.params.tag}/` : ''
+                  }${isNaN(parseInt(iter)) ? '' : `${iter}/`}${tab.id}`}
+                  onClick={onClick}
+                  key={tab.id}
+                >
+                  <li
+                    data-tab={tab.id}
+                    className={classnames(
+                      'details-menu__tab',
+                      match.params.tab === tab.id && 'details-menu__tab_active'
+                    )}
+                  >
+                    {tab.label}
+                  </li>
+                </Link>
+              )
+          )}
         </div>
       </div>
       <Arrow

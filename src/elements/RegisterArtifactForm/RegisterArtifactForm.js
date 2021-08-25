@@ -6,7 +6,13 @@ import Select from '../../common/Select/Select'
 
 import './registerArtifactForm.scss'
 
-const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
+const RegisterArtifactForm = ({
+  onChange,
+  registerArtifactData,
+  setValidation,
+  showType,
+  validation
+}) => {
   const { description, key, kind, target_path } = registerArtifactData
   const kindOptions = [
     {
@@ -33,36 +39,36 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
         className="pop-up-dialog__form-input"
         density="chunky"
         floatingLabel
-        invalid={key.required}
+        invalid={!validation.isNameValid}
+        invalidText="This field is invalid"
         label="Name"
-        onChange={value =>
-          onChange(prevData => ({
-            ...prevData,
-            key: { value, required: !value }
-          }))
-        }
+        onChange={value => onChange(prevData => ({ ...prevData, key: value }))}
         required
         requiredText="This field is required"
+        setInvalid={value =>
+          setValidation(state => ({ ...state, isNameValid: value }))
+        }
         tip="Artifact names in the same project must be unique"
         type="text"
-        value={key.value}
+        value={key}
       />
       <Input
         className="pop-up-dialog__form-input"
         density="chunky"
         floatingLabel
-        invalid={target_path.required}
+        invalid={!validation.isTargetPathValid}
+        invalidText="This field is invalid"
         label="Target Path"
         onChange={value =>
-          onChange(prevData => ({
-            ...prevData,
-            target_path: { value, required: !value }
-          }))
+          onChange(prevData => ({ ...prevData, target_path: value }))
         }
         required
         requiredText="This field is required"
+        setInvalid={value =>
+          setValidation(state => ({ ...state, isTargetPathValid: value }))
+        }
         type="text"
-        value={target_path.value}
+        value={target_path}
       />
       <Input
         className="pop-up-dialog__form-input"
@@ -70,29 +76,20 @@ const RegisterArtifactForm = ({ onChange, registerArtifactData, showType }) => {
         floatingLabel
         label="Description"
         onChange={value =>
-          onChange(prevData => ({
-            ...prevData,
-            description: { ...prevData, value }
-          }))
+          onChange(prevData => ({ ...prevData, description: value }))
         }
         type="text"
-        value={description.value}
+        value={description}
       />
       {showType && (
         <Select
           density="chunky"
           label="Type:"
           onClick={value =>
-            onChange(prevData => ({
-              ...prevData,
-              kind: {
-                ...prevData,
-                value
-              }
-            }))
+            onChange(prevData => ({ ...prevData, kind: value }))
           }
           options={kindOptions}
-          selectedId={kind.value}
+          selectedId={kind}
         />
       )}
     </div>
@@ -106,7 +103,9 @@ RegisterArtifactForm.defaultProps = {
 RegisterArtifactForm.propTypes = {
   onChange: PropTypes.func.isRequired,
   registerArtifactData: PropTypes.shape({}).isRequired,
-  showType: PropTypes.bool
+  setValidation: PropTypes.func.isRequired,
+  showType: PropTypes.bool,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default RegisterArtifactForm

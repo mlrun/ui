@@ -8,16 +8,21 @@ async function clearManualy(inputField) {
   }
 }
 
+async function getInputValue(driver, inputGroup) {
+  const inputField = await driver.findElement(inputGroup.inputField)
+  const tmp = await inputField.getAttribute('value')
+  return tmp
+}
+
 const action = {
   clearManualy: clearManualy,
+  getInputValue: getInputValue,
   typeValue: async function(driver, inputGroup, value) {
-    // console.log('debug: ', inputGroup.inputField)
     const inputField = await driver.findElement(inputGroup.inputField)
     await clearManualy(inputField)
     return await inputField.sendKeys(value)
   },
   checkHintText: async function(driver, inputGroup, hintComponent, text) {
-    // console.log('debug: ', inputGroup.hintButton)
     const hintButton = await driver.findElement(inputGroup.hintButton)
     await hintButton.click()
     await driver.sleep(250)
@@ -39,8 +44,7 @@ const action = {
     expect(hintText).equal(text)
   },
   verifyTypedValue: async function(driver, inputGroup, value) {
-    const inputField = await driver.findElement(inputGroup.inputField)
-    const txt = await inputField.getAttribute('value')
+    const txt = await getInputValue(driver, inputGroup)
     expect(txt).equal(value)
   }
 }

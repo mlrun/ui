@@ -5,7 +5,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generateUri } from '../../utils/resources'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
-import getState from '../../utils/getState'
+import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
 
 export const modelsInfoHeaders = [
   {
@@ -45,34 +45,40 @@ export const modelEndpointsInfoHeaders = [
   { label: 'Accuracy', id: 'accuracy' },
   { label: 'Stream path', id: 'stream_path' }
 ]
-export const generateModelsDetailsMenu = selectedModel => {
-  const modelsDetailsMenu = [
-    {
-      header: 'overview',
-      visible: true
-    },
-    {
-      header: 'preview',
-      visible: true
-    },
-    {
-      header: 'features',
-      visible: Boolean(selectedModel.item?.feature_vector)
-    },
-    {
-      header: 'statistics',
-      visible: Boolean(selectedModel.item?.feature_vector)
-    }
-  ]
+export const generateModelsDetailsMenu = selectedModel => [
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'preview',
+    id: 'preview'
+  },
+  {
+    label: 'features',
+    id: 'features',
+    hidden: !selectedModel.item?.feature_vector
+  },
+  {
+    label: 'statistics',
+    id: 'statistics',
+    hidden: !selectedModel.item?.feature_vector
+  }
+]
 
-  return selectedModel.item
-    ? modelsDetailsMenu.filter(item => item.visible).map(item => item.header)
-    : []
-}
 export const modelEndpointsDetailsMenu = [
-  'overview',
-  'drift analysis',
-  'features analysis'
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'drift analysis',
+    id: 'drift-analysis'
+  },
+  {
+    label: 'features analysis',
+    id: 'features-analysis'
+  }
 ]
 export const modelsFilters = [
   { type: 'tree', label: 'Tree:' },
@@ -141,15 +147,19 @@ export const modelEndpointsTableHeaders = [
     class: 'artifacts_medium'
   },
   {
+    header: 'Function',
+    class: 'artifacts_small'
+  },
+  {
+    header: 'Model',
+    class: 'artifacts_small'
+  },
+  {
     header: 'Version',
     class: 'artifacts_extra-small'
   },
   {
     header: 'Class',
-    class: 'artifacts_small'
-  },
-  {
-    header: 'Model',
     class: 'artifacts_small'
   },
   {
@@ -165,15 +175,15 @@ export const modelEndpointsTableHeaders = [
     class: 'artifacts_small'
   },
   {
+    header: 'Average latency',
+    class: 'artifacts_small'
+  },
+  {
     header: 'Error count',
     class: 'artifacts_small'
   },
   {
     header: 'Drift',
-    class: 'artifacts_extra-small'
-  },
-  {
-    header: 'Accuracy',
     class: 'artifacts_extra-small'
   },
   {
@@ -195,7 +205,7 @@ export const handleFetchData = async (
 ) => {
   let data = {
     content: [],
-    yamlContent: []
+    originalContent: []
   }
   let result = null
 
@@ -204,19 +214,17 @@ export const handleFetchData = async (
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
-      data.yamlContent = result
+      data.originalContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-    result = await fetchModelEndpoints(project, filters)
+    result = await fetchModelEndpoints(project, filters, {
+      metric: 'latency_avg_1h',
+      start: 'now-10m'
+    })
 
     if (result) {
-      data.content = result.map(endpoint => {
-        return {
-          ...endpoint,
-          state: getState(endpoint.status.state)
-        }
-      })
-      data.yamlContent = result
+      data.content = generateModelEndpoints(result)
+      data.originalContent = result
     }
   }
 

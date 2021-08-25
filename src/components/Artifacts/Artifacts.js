@@ -11,6 +11,7 @@ import artifactsAction from '../../actions/artifacts'
 import artifactsData from './artifactsData'
 import { DETAILS_ANALYSIS_TAB, DETAILS_METADATA_TAB } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 import './artifacts.scss'
 
@@ -106,14 +107,20 @@ const Artifacts = ({
       const newDetailsMenu = [...artifactsData.detailsMenu]
 
       if (selectedArtifact.item?.schema) {
-        newDetailsMenu.push('metadata')
+        newDetailsMenu.push({
+          label: 'metadata',
+          id: 'metadata'
+        })
       }
 
       if (
         selectedArtifact.item?.kind === 'dataset' &&
         selectedArtifact.item?.extra_data
       ) {
-        newDetailsMenu.push('analysis')
+        newDetailsMenu.push({
+          label: 'analysis',
+          id: 'analysis'
+        })
       }
 
       return {
@@ -142,7 +149,7 @@ const Artifacts = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedArtifact.item}
-        yamlContent={artifactsStore.artifacts}
+        getIdentifier={getArtifactIdentifier}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup

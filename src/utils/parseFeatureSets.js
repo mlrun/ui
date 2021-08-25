@@ -5,5 +5,8 @@ export const parseFeatureSets = featureSets =>
     ...featureSet.metadata,
     ...featureSet.status,
     ...featureSet.spec,
-    state: getState(featureSet.status.state)
+    state: getState(featureSet.status.state),
+    ui: {
+      originalContent: featureSet
+    }
   }))

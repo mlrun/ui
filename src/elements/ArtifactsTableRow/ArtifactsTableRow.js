@@ -31,7 +31,9 @@ const ArtifactsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    getArtifactIdentifier(selectedItem) === rowItem.key.identifier &&
+    selectedItem.name &&
+      getArtifactIdentifier(selectedItem, true) ===
+        rowItem.key.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -47,7 +49,8 @@ const ArtifactsTableRow = ({
       return (
         currentContent.find(
           contentItem =>
-            getArtifactIdentifier(contentItem) === artifact.key.identifier
+            getArtifactIdentifier(contentItem, true) ===
+            artifact.key.identifierUnique
         ) ?? {}
       )
     },
@@ -89,8 +92,8 @@ const ArtifactsTableRow = ({
             const subRowCurrentItem = findCurrentItem(artifact)
             const subRowClassNames = classnames(
               'table-body__row',
-              getArtifactIdentifier(subRowCurrentItem) ===
-                getArtifactIdentifier(selectedItem) && 'row_active'
+              getArtifactIdentifier(subRowCurrentItem, true) ===
+                getArtifactIdentifier(selectedItem, true) && 'row_active'
             )
 
             return (

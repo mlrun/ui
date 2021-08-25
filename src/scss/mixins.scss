@@ -61,7 +61,7 @@
       display: flex;
       flex-direction: row;
       min-width: 100%;
-      height: 55px;
+      height: 32px;
       border-bottom: $secondaryBorder;
     }
   }
@@ -178,9 +178,7 @@
     &_grey {
       @include chipButtonAddBackground($mulledWineThree, $topaz);
     }
-  }
-
-  @else {
+  } @else {
     &_none {
       background-color: transparent;
     }
@@ -258,9 +256,7 @@
     &_medium {
       @include chipButtonAddSize(34px);
     }
-  }
-
-  @else {
+  } @else {
     &_dense {
       height: 26px;
     }
@@ -305,9 +301,7 @@
     &_purple {
       @include editableChipFont($amethyst);
     }
-  }
-
-  @else if $component == Chip {
+  } @else if $component == Chip {
     &_white {
       @include chipFont($white);
     }
@@ -327,9 +321,7 @@
     &_orange {
       @include chipFont($sorbus);
     }
-  }
-
-  @else if $component == ButtonAddChip {
+  } @else if $component == ButtonAddChip {
     &_primary {
       @include chipButtonAddColor($topaz);
     }
@@ -386,7 +378,7 @@
 }
 
 @mixin tableHeader($sidePadding) {
-  padding: 10px $sidePadding;
+  padding: 5px $sidePadding;
   color: $topaz;
   font-weight: bold;
   font-size: 14px;
@@ -657,7 +649,7 @@
         height: auto;
 
         .accordion__body {
-          min-height: 400px;
+          min-height: 100px;
           overflow: visible;
         }
       }
@@ -774,7 +766,6 @@
       font-weight: 300;
       font-size: 36px;
       line-height: 42px;
-      border: $primaryBorder;
 
       &:disabled {
         border: none;
@@ -882,11 +873,11 @@
       flex-flow: row wrap;
       margin-bottom: 45px;
     }
+  }
 
-    &:last-child {
-      .item-section__body {
-        margin-bottom: 0;
-      }
+  &:last-child {
+    .panel-section__body {
+      margin-bottom: 0;
     }
   }
 }

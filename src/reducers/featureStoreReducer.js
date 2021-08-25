@@ -2,6 +2,10 @@ import {
   CREATE_NEW_FEATURE_SET_BEGIN,
   CREATE_NEW_FEATURE_SET_FAILURE,
   CREATE_NEW_FEATURE_SET_SUCCESS,
+  FETCH_ENTITIES_BEGIN,
+  FETCH_ENTITIES_FAILURE,
+  FETCH_ENTITIES_SUCCESS,
+  FETCH_ENTITY_SUCCESS,
   FETCH_FEATURES_BEGIN,
   FETCH_FEATURES_FAILURE,
   FETCH_FEATURES_SUCCESS,
@@ -13,6 +17,8 @@ import {
   FETCH_FEATURE_VECTORS_FAILURE,
   FETCH_FEATURE_VECTORS_SUCCESS,
   FETCH_FEATURE_VECTOR_SUCCESS,
+  REMOVE_ENTITIES,
+  REMOVE_ENTITY,
   REMOVE_FEATURE,
   REMOVE_FEATURES,
   REMOVE_FEATURES_ERROR,
@@ -21,10 +27,14 @@ import {
   REMOVE_FEATURE_VECTORS,
   REMOVE_NEW_FEATURE_SET,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_ENTITIES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_KEY,
   SET_NEW_FEATURE_SET_DATA_SOURCE_KIND,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_TIME,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN,
+  SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
   SET_NEW_FEATURE_SET_DESCRIPTION,
   SET_NEW_FEATURE_SET_LABELS,
@@ -52,6 +62,12 @@ const initialState = {
       content: {}
     }
   },
+  entities: {
+    allData: [],
+    selectedRowData: {
+      content: {}
+    }
+  },
   loading: false,
   newFeatureSet: {
     metadata: {
@@ -64,10 +80,13 @@ const initialState = {
       entities: [],
       source: {
         attributes: {},
+        end_time: '',
         key_field: '',
-        kind: 'http',
+        kind: 'csv',
+        parse_dates: '',
         path: '',
         schedule: '',
+        start_time: '',
         time_field: ''
       },
       targets: [
@@ -110,6 +129,20 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         error: null,
         loading: false
+      }
+    case FETCH_ENTITY_SUCCESS:
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          selectedRowData: {
+            ...state.entities.selectedRowData,
+            content: {
+              ...state.entities.selectedRowData.content,
+              ...payload
+            }
+          }
+        }
       }
     case FETCH_FEATURE_SETS_BEGIN:
       return {
@@ -199,6 +232,49 @@ export default (state = initialState, { type, payload }) => {
         },
         loading: false
       }
+    case FETCH_ENTITIES_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_ENTITIES_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+    case FETCH_ENTITIES_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        entities: {
+          ...state.entities,
+          allData: payload
+        },
+        loading: false
+      }
+    case REMOVE_ENTITY:
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          selectedRowData: {
+            content: payload,
+            error: null,
+            loading: false
+          }
+        }
+      }
+    case REMOVE_ENTITIES:
+      return {
+        ...state,
+        entities: {
+          allData: [],
+          selectedRowData: {
+            content: {}
+          }
+        }
+      }
     case REMOVE_FEATURE_SETS:
       return {
         ...state,
@@ -263,6 +339,62 @@ export default (state = initialState, { type, payload }) => {
           metadata: {
             ...state.newFeatureSet.metadata,
             name: payload
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              end_time: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              parse_dates: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              start_time: payload
+            }
+          }
+        }
+      }
+    case SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          spec: {
+            ...state.newFeatureSet.spec,
+            source: {
+              ...state.newFeatureSet.spec.source,
+              time_field: payload
+            }
           }
         }
       }

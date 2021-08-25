@@ -41,7 +41,7 @@ const Projects = ({
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [isDescendingOrder, setIsDescendingOrder] = useState(false)
-  const [isEmptyValue, setIsEmptyValue] = useState(false)
+  const [isNameValid, setNameValid] = useState(true)
   const [selectedProjectsState, setSelectedProjectsState] = useState(
     'allProjects'
   )
@@ -219,7 +219,7 @@ const Projects = ({
     }
 
     removeNewProject()
-    setIsEmptyValue(false)
+    setNameValid(true)
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
@@ -238,10 +238,10 @@ const Projects = ({
     }
 
     if (projectStore.newProject.name.length === 0) {
-      setIsEmptyValue(true)
+      setNameValid(false)
       return false
-    } else if (isEmptyValue) {
-      setIsEmptyValue(false)
+    } else if (isNameValid) {
+      setNameValid(true)
     }
 
     createNewProject({
@@ -278,7 +278,7 @@ const Projects = ({
       handleCreateProject={handleCreateProject}
       handleSearchOnChange={handleSearchOnChange}
       isDescendingOrder={isDescendingOrder}
-      isEmptyValue={isEmptyValue}
+      isNameValid={isNameValid}
       match={match}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
@@ -287,6 +287,7 @@ const Projects = ({
       setCreateProject={setCreateProject}
       setFilterMatches={setFilterMatches}
       setIsDescendingOrder={setIsDescendingOrder}
+      setNameValid={setNameValid}
       setNewProjectDescription={setNewProjectDescription}
       setNewProjectName={setNewProjectName}
       setSelectedProjectsState={setSelectedProjectsState}

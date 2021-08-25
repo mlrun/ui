@@ -1,13 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 
 import FunctionsPanelEnvironmentVariablesView from './FunctionsPanelEnvironmentVariablesView'
 
 import functionsActions from '../../actions/functions'
 
 const FunctionsPanelEnvironmentVariables = ({
-  defaultData,
   functionsStore,
   setNewFunctionEnv
 }) => {
@@ -41,25 +39,15 @@ const FunctionsPanelEnvironmentVariables = ({
 
   return (
     <FunctionsPanelEnvironmentVariablesView
-      env={(defaultData.env || functionsStore.newFunction.spec.env).map(
-        env => ({
-          key: env.name,
-          value: env.value
-        })
-      )}
+      env={functionsStore.newFunction.spec.env.map(env => ({
+        key: env.name,
+        value: env.value
+      }))}
       handleAddNewEnv={handleAddNewEnv}
       handleDeleteEnv={handleDeleteEnv}
       handleEditEnv={handleEditEnv}
     />
   )
-}
-
-FunctionsPanelEnvironmentVariables.defaultProps = {
-  defaultData: {}
-}
-
-FunctionsPanelEnvironmentVariables.propTypes = {
-  defaultData: PropTypes.shape({})
 }
 
 export default connect(
