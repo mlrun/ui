@@ -14,7 +14,7 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
     return false
   }
 
-  if (newFeatureSet.spec.source.path.length === 0) {
+  if (newFeatureSet.spec.source.path.length === 0 || !validation.isUrlValid) {
     setValidation(prevState => ({
       ...prevState,
       isUrlValid: false
