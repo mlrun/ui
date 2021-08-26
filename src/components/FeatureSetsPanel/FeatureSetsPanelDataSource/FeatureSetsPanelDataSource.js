@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { isNil } from 'lodash'
 import PropTypes from 'prop-types'
@@ -58,7 +58,8 @@ const FeatureSetsPanelDataSource = ({
       artifact: '',
       placeholder: '',
       path: '',
-      artifactReference: ''
+      artifactReference: '',
+      fullPath: ''
     },
     schedule: ''
   })
@@ -102,7 +103,7 @@ const FeatureSetsPanelDataSource = ({
       artifacts.length === 0
     ) {
       fetchArtifacts(data.url.project).then(artifacts => {
-        if (artifacts.length > 0) {
+        if (artifacts?.length > 0) {
           setArtifacts(generateArtifactsList(artifacts))
         }
       })
@@ -182,6 +183,10 @@ const FeatureSetsPanelDataSource = ({
         projectItemType: 'artifacts'
       }
     }))
+    setValidation(state => ({
+      ...state,
+      isUrlValid: true
+    }))
     setUrlProjectItemTypeEntered(false)
     setUrlProjectPathEntered(false)
     setUrlArtifactPathEntered(false)
@@ -237,44 +242,65 @@ const FeatureSetsPanelDataSource = ({
     }
   }
 
-  const handleKindOnChange = kind => {
-    if (kind === 'csv') {
-      setValidation(prevState => ({
-        ...prevState,
-        isTimeFieldValid: true,
-        isStartTimeValid: true,
-        isEndTimeValid: true
-      }))
-      setNewFeatureSetDataSourceTimestampColumn('')
-      setNewFeatureSetDataSourceStartTime('')
-      setNewFeatureSetDataSourceEndTime('')
-    } else if (kind === 'parquet') {
-      setNewFeatureSetDataSourceParseDates('')
-    }
+  const handleKindOnChange = useCallback(
+    kind => {
+      const url =
+        data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
+          ? data.url.fullPath.replace(/:\/\/.*$/g, '')
+          : data.url.path
 
-    setNewFeatureSetDataSourceKind(kind)
-    setData(state => ({
-      ...state,
-      kind,
-      endTime: '',
-      startTime: '',
-      timeField: '',
-      parseDates: ''
-    }))
-  }
+      if (kind === 'csv') {
+        setValidation(prevState => ({
+          ...prevState,
+          isTimeFieldValid: true,
+          isStartTimeValid: true,
+          isEndTimeValid: true,
+          isUrlValid:
+            url.length > 0
+              ? isUrlInputValid(data.url.pathType, url, kind)
+              : true
+        }))
+        setNewFeatureSetDataSourceTimestampColumn('')
+        setNewFeatureSetDataSourceStartTime('')
+        setNewFeatureSetDataSourceEndTime('')
+      } else if (kind === 'parquet') {
+        setNewFeatureSetDataSourceParseDates('')
+        setValidation(state => ({
+          ...state,
+          isUrlValid: true
+        }))
+      }
+
+      setNewFeatureSetDataSourceKind(kind)
+      setData(state => ({
+        ...state,
+        kind,
+        endTime: '',
+        startTime: '',
+        timeField: '',
+        parseDates: ''
+      }))
+    },
+    [
+      data.url.fullPath,
+      data.url.path,
+      data.url.pathType,
+      setNewFeatureSetDataSourceEndTime,
+      setNewFeatureSetDataSourceKind,
+      setNewFeatureSetDataSourceParseDates,
+      setNewFeatureSetDataSourceStartTime,
+      setNewFeatureSetDataSourceTimestampColumn,
+      setValidation
+    ]
+  )
 
   const handleUrlOnBlur = (selectValue, inputValue) => {
-    if (!isUrlInputValid(selectValue, inputValue)) {
+    if (!isUrlInputValid(selectValue, inputValue, data.kind)) {
       setValidation(prevState => ({
         ...prevState,
         isUrlValid: false
       }))
     } else {
-      const url =
-        data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
-          ? `${data.url.pathType}${data.url.projectItemType}/${data.url.project}/${data.url.artifact}/${data.url.artifactReference}`
-          : `${data.url.pathType}${data.url.path}`
-
       if (!validation.isUrlValid) {
         setValidation(prevState => ({
           ...prevState,
@@ -282,7 +308,14 @@ const FeatureSetsPanelDataSource = ({
         }))
       }
 
-      setNewFeatureSetDataSourceUrl(url)
+      setNewFeatureSetDataSourceUrl(`${selectValue}${inputValue}`)
+      setData(state => ({
+        ...state,
+        url: {
+          ...state.url,
+          fullPath: `${selectValue}${inputValue}`
+        }
+      }))
     }
   }
 

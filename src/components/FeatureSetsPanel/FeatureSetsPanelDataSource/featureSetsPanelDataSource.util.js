@@ -122,14 +122,23 @@ export const projectItemsPathTypes = [
   }
 ]
 
-export const isUrlInputValid = (pathInputType, pathInputValue) => {
+export const isUrlInputValid = (
+  pathInputType,
+  pathInputValue,
+  dataSourceKind
+) => {
+  const regExp =
+    dataSourceKind === CSV
+      ? /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?(?<!\/)$/
+      : /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
+
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
-      return /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(
-        pathInputValue
-      )
+      return regExp.test(pathInputValue)
     default:
-      return pathInputValue.length > 0
+      return dataSourceKind === CSV
+        ? pathInputValue.length > 0 && !pathInputValue.endsWith('/')
+        : pathInputValue.length > 0
   }
 }
 
