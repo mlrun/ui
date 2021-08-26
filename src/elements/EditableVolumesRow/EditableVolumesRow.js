@@ -109,7 +109,7 @@ const EditableVolumesRow = ({
         </div>
         <div className="table__cell-actions" />
       </div>
-      <div className="table__row edit-row flex-row">
+      <div className="table__row edit-row flex-row no-border_top">
         <div className="table__cell table__cell-input">
           <Input
             floatingLabel
@@ -153,7 +153,7 @@ const EditableVolumesRow = ({
         </div>
       </div>
       {selectedVolume.type.value === V3IO && (
-        <div className="table__row edit-row">
+        <div className="table__row edit-row no-border_top">
           <div className="table__cell table__cell-input">
             <Input
               floatingLabel
