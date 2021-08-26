@@ -150,7 +150,7 @@ const VolumesTableView = ({
                     ? 'Name already exists'
                     : 'This field is invalid'
                 }
-                label="Name"
+                label="Volume Name"
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
                 required
                 requiredText="This field is required"
