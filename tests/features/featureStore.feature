@@ -77,6 +77,7 @@ Feature: Feature Store Page
     @inProgress
     Scenario: Check all mandatory components in Item infopane on Overview tab table
         Given open url
+        And wait load page
         And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
@@ -299,7 +300,8 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display "Input_Hint"."Feature_Set_Name_Hint"
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "URL_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."URL_Field_Require"
+        Then type value "#$@" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Kind_Dropdown" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Kind_Options"
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
@@ -343,7 +345,9 @@ Feature: Feature Store Page
         Then "Offline_Partition_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "Offline_Partition_Key_Buckering_Number_Input" element in "Target_Store_Accordion" on "New_Feature_Set" wizard should display hint "Input_Hint"."Key_Buckering_Number_Hint"
-        # TODO: add verivication for number input field for "Partition_Key_Buckering_Number_Input"
+        Then type value "432493" to "Offline_Partition_Key_Buckering_Number_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then increase value on 15 points in "Offline_Partition_Key_Buckering_Number_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then decrease value on 15 points in "Offline_Partition_Key_Buckering_Number_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "Offline_Partition_Columns_Input" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "Offline_Partition_Granularity_Dropdown" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Other_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -351,9 +355,9 @@ Feature: Feature Store Page
         Then verify "File_Type_Dropdown" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Input" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
+        And wait load page
 
     @passive
-    @failed
     Scenario: Test rows Labels on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
@@ -371,16 +375,16 @@ Feature: Feature Store Page
             |    key2   |    value2   |
             |    key3   |    value3   |
         Then verify values in "Labels_Table" table on "New_Feature_Set" wizard
-            |     label    |
+            |      label      |
             | key1\n:\nvalue1 |
             | key2\n:\nvalue2 |
             | key3\n:\nvalue3 |
         When click on "remove_btn" in "Labels_Table" table on "New_Feature_Set" wizard
-            |     label    |
+            |      label      |
             | key1\n:\nvalue1 |
             | key3\n:\nvalue3 |
         Then verify values in "Labels_Table" table on "New_Feature_Set" wizard
-            |     label    |
+            |      label      |
             | key2\n:\nvalue2 |
 
     @passive
@@ -432,7 +436,10 @@ Feature: Feature Store Page
             | key1\n:\nvalue1 |
             | key2\n:\nvalue2 |
             | key3\n:\nvalue3 |
-        Then type value "Some demo description" to "URL_Input" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When select "MLRun store" option in "URL_Input" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When select "Artifacts" option in "URL_Input" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When select "Current project" option in "URL_Input" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When select "train_model" option in "URL_Input" combobox suggestion on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When add rows to "Attributes_Table" table in "Data_Source_Accordion" on "New_Feature_Set" wizard
             | attribute_name_input | value_input |
             |      attribute1      |    value1   |

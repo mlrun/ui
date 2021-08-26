@@ -6,6 +6,7 @@ import checkboxComponent from '../components/checkbox.component'
 import radiobuttonComponent from '../components/radio-button.component'
 import labelComponent from '../components/label.component'
 import actionMenu from '../components/action-menu.component'
+import comboBox from '../components/combo-box.component'
 import {
   generateInputGroup,
   generateNumberInputGroup,
@@ -460,14 +461,32 @@ module.exports = {
       Collapse_Button: By.css(
         'div.feature-set-panel div.accordion__container:nth-of-type(1) button.new-item-side-panel__expand-icon'
       ),
-      URL_Input: inputGroup(
-        generateInputGroup(
-          'div.feature-set-panel div.accordion__container:nth-of-type(1) div.panel-section__body div.input-wrapper:nth-of-type(2)',
-          true,
-          false,
-          true
-        )
-      ),
+      URL_Input: comboBox({
+        root:
+          '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .combobox',
+        elements: {
+          dropdown: generateDropdownGroup(
+            '.combobox-select',
+            '.combobox-select__header', // Open Component
+            '.combobox-select__body .combobox-list .combobox-list__option', // Options
+            '' // Option value
+          ),
+          comboDropdown: {
+            dropdown: generateDropdownGroup(
+              '.combobox-dropdown',
+              '', // Open Component
+              '.combobox-dropdown__list .combobox-list__option', // Options
+              '' // Option value
+            ),
+            searchInput: generateInputGroup(
+              '.combobox-dropdown__search-input',
+              false,
+              false,
+              false
+            )
+          }
+        }
+      }),
       Key_Input: inputGroup(
         generateInputGroup(
           'div.feature-set-panel div.accordion__container:nth-of-type(1) div.panel-section__body div.input-wrapper:nth-of-type(3)',
@@ -570,12 +589,12 @@ module.exports = {
           icon: 'svg:not([class])'
         }
       }),
-      Offline_Partition_Key_Buckering_Number_Input: inputGroup(
-        generateInputGroup(
-          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.input-wrapper',
+      Offline_Partition_Key_Buckering_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.feature-set-panel div.accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .range-normal',
+          false,
           true,
-          'div.input__tip svg',
-          false
+          true
         )
       ),
       Offline_Partition_Columns_Input: inputGroup(
