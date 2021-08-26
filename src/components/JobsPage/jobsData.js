@@ -247,6 +247,6 @@ export const generateActionsMenu = (
             ? ''
             : 'Cannot abort jobs of this kind',
           disabled: !isJobAbortable(job, abortableFunctionKinds),
-          hidden: JOB_STEADY_STATES.includes(job.state?.value)
+          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
         }
       ]
