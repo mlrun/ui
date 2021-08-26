@@ -49,6 +49,10 @@ const VolumesTableView = ({
     showAddNewVolumeRow && 'no-border',
     className
   )
+  const volumeTypeInputRowWrapperClassNames = classnames(
+    'input-row-wrapper',
+    newVolume.type === V3IO && 'no-border'
+  )
 
   return (
     <div className={tableClassNames}>
@@ -182,10 +186,7 @@ const VolumesTableView = ({
                 type="text"
               />
             </div>
-            <div
-              className={`input-row-wrapper no-border_top
-                  ${newVolume.type === V3IO && 'no-border'}`}
-            >
+            <div className={volumeTypeInputRowWrapperClassNames}>
               <Input
                 className="input-row__item"
                 disabled={newVolume.type.length === 0}
@@ -226,7 +227,7 @@ const VolumesTableView = ({
               )}
             </div>
             {newVolume.type === V3IO && (
-              <div className="input-row-wrapper no-border_top">
+              <div className="input-row-wrapper">
                 <Input
                   className="input-row__item"
                   floatingLabel
