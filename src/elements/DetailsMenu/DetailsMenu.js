@@ -58,13 +58,11 @@ const DetailsMenu = ({
           tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth
       }
     } else {
-      scrollWidth =
+      scrollWidth = Math.max(
+        0,
         scrolledWidth -
-          tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth <
-        0
-          ? 0
-          : scrolledWidth -
-            tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth
+          tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth
+      )
 
       setRightArrowDisabled(false)
     }
@@ -126,6 +124,8 @@ const DetailsMenu = ({
 
   useEffect(() => {
     window.addEventListener('resize', moveToSelectedTab)
+
+    return () => window.removeEventListener('resize', moveToSelectedTab)
   }, [moveToSelectedTab])
 
   useEffect(() => {
