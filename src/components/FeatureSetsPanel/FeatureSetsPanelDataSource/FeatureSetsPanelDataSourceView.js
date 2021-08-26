@@ -110,9 +110,6 @@ const FeatureSetsPanelDataSourceView = ({
             )}
           </div>
         )}
-        <p className="data-source__description">
-          Users can add the following parameters to filter the data.
-        </p>
         {data.kind === CSV && (
           <Input
             className="data-source__inputs-item"
