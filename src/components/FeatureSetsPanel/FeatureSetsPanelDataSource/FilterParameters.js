@@ -138,9 +138,7 @@ const FilterParameters = ({
             }))
           }
           required={Boolean(
-            data.timeField.length > 0 ||
-              data.startTime.length > 0 ||
-              data.endTime.length > 0
+            data.timeField.length > 0 || data.startTime || data.endTime
           )}
           requiredText="Timestamp key is required"
           setInvalid={value =>

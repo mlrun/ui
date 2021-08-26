@@ -151,6 +151,8 @@ const JobsPanel = ({
     if (
       !panelState.editMode &&
       isEveryObjectValueEmpty(panelState.tableData) &&
+      isEveryObjectValueEmpty(panelState.requests) &&
+      isEveryObjectValueEmpty(panelState.limits) &&
       !isEveryObjectValueEmpty(selectedFunction)
     ) {
       generateTableData(

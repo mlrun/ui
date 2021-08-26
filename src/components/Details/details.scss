@@ -86,33 +86,6 @@
           }
         }
       }
-
-      &-menu {
-        position: sticky;
-        top: 0;
-        z-index: 4;
-        display: flex;
-        align-items: center;
-        margin: 29px 0 0;
-        padding: 7px 0 0;
-        list-style-type: none;
-        background-color: $white;
-        border-bottom: $secondaryBorder;
-
-        .menu-tab {
-          padding: 8px 24px;
-          color: $topaz;
-          font-weight: bold;
-          text-transform: capitalize;
-          border-bottom: 3px solid transparent;
-          cursor: pointer;
-
-          &.active-tab {
-            color: $cornflowerBlue;
-            border-bottom-color: $cornflowerBlue;
-          }
-        }
-      }
     }
 
     &_inputs {

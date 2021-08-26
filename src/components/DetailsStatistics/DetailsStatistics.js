@@ -24,26 +24,26 @@ const DetailsStatistics = ({ selectedItem }) => {
   return (
     <div className="details-statistics">
       <div className="details-statistics__table">
-        <div className="details-statistics__table-header">
-          {headers.map(({ label, type, hidden }) => {
-            const statisticsHeaderClassNames = classnames(
-              'details-statistics__table-item',
-              'header-item',
-              `statistics-cell__${label}`,
-              `statistics-cell__type_${type}`,
-              hidden && 'statistics-cell_hidden'
-            )
+        <div className="details-statistics__table-wrapper">
+          <div className="details-statistics__table-header">
+            {headers.map(({ label, type, hidden }) => {
+              const statisticsHeaderClassNames = classnames(
+                'details-statistics__table-item',
+                'header-item',
+                `statistics-cell__${label}`,
+                `statistics-cell__type_${type}`,
+                hidden && 'statistics-cell_hidden'
+              )
 
-            return (
-              <div className={statisticsHeaderClassNames} key={label}>
-                <Tooltip template={<TextTooltipTemplate text={label} />}>
-                  {type !== 'icon' && label}
-                </Tooltip>
-              </div>
-            )
-          })}
-        </div>
-        <div>
+              return (
+                <div className={statisticsHeaderClassNames} key={label}>
+                  <Tooltip template={<TextTooltipTemplate text={label} />}>
+                    {type !== 'icon' && label}
+                  </Tooltip>
+                </div>
+              )
+            })}
+          </div>
           {statistics.map((statisticsItem, statisticsItemIndex) => {
             return (
               <div

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
-import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
+import DetailsMenu from '../../elements/DetailsMenu/DetailsMenu'
 import Download from '../../common/Download/Download'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
@@ -189,24 +189,16 @@ const DetailsView = React.forwardRef(
             </Tooltip>
           </Link>
         </div>
-        <ul className="item-menu">
-          {detailsMenu.map(
-            detailsMenuItem =>
-              !detailsMenuItem.hidden && (
-                <DetailsMenuItem
-                  hash={selectedItem.hash}
-                  id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
-                  iter={selectedItem.iter}
-                  key={detailsMenuItem.id}
-                  match={match}
-                  name={selectedItem.db_key || selectedItem.name}
-                  onClick={detailsMenuClick}
-                  page={pageData.page}
-                  tab={detailsMenuItem}
-                />
-              )
-          )}
-        </ul>
+        <DetailsMenu
+          detailsMenu={detailsMenu}
+          hash={selectedItem.hash}
+          id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
+          iter={selectedItem.iter}
+          match={match}
+          name={selectedItem.db_key || selectedItem.name}
+          onClick={detailsMenuClick}
+          page={pageData.page}
+        />
         {tabsContent}
         {detailsStore.showWarning && (
           <PopUpDialog

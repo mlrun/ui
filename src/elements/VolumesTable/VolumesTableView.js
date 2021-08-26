@@ -49,6 +49,10 @@ const VolumesTableView = ({
     showAddNewVolumeRow && 'no-border',
     className
   )
+  const volumeTypeInputRowWrapperClassNames = classnames(
+    'input-row-wrapper',
+    newVolume.type === V3IO && 'no-border'
+  )
 
   return (
     <div className={tableClassNames}>
@@ -134,8 +138,7 @@ const VolumesTableView = ({
                   setValidation(state => ({
                     ...state,
                     isTypeValid: true,
-                    isAccessKeyValid: true,
-                    isSubPathValid: true
+                    isAccessKeyValid: true
                   }))
                 }}
               />
@@ -151,7 +154,7 @@ const VolumesTableView = ({
                     ? 'Name already exists'
                     : 'This field is invalid'
                 }
-                label="Name"
+                label="Volume Name"
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
                 required
                 requiredText="This field is required"
@@ -183,10 +186,7 @@ const VolumesTableView = ({
                 type="text"
               />
             </div>
-            <div
-              className={`input-row-wrapper no-border_top
-                  ${newVolume.type === V3IO && 'no-border'}`}
-            >
+            <div className={volumeTypeInputRowWrapperClassNames}>
               <Input
                 className="input-row__item"
                 disabled={newVolume.type.length === 0}
@@ -196,7 +196,7 @@ const VolumesTableView = ({
                 onChange={typeName =>
                   setNewVolume(state => ({ ...state, typeName }))
                 }
-                required
+                required={newVolume.type !== V3IO}
                 requiredText="This field is required"
                 setInvalid={value =>
                   setValidation(state => ({ ...state, isTypeNameValid: value }))
@@ -227,22 +227,13 @@ const VolumesTableView = ({
               )}
             </div>
             {newVolume.type === V3IO && (
-              <div className="input-row-wrapper no-border_top">
+              <div className="input-row-wrapper">
                 <Input
                   className="input-row__item"
                   floatingLabel
-                  invalid={!validation.isSubPathValid}
                   label="Resource path"
                   onChange={subPath =>
                     setNewVolume(state => ({ ...state, subPath }))
-                  }
-                  required
-                  requiredText="This field is required"
-                  setInvalid={value =>
-                    setValidation(state => ({
-                      ...state,
-                      isSubPathValid: value
-                    }))
                   }
                   tip="A relative directory path within the data container"
                   type="text"
