@@ -7,20 +7,31 @@ import Button from '../Button/Button'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import TimePicker from '../TimePicker/TimePicker'
 import SelectOption from '../../elements/SelectOption/SelectOption'
+import Tip from '../Tip/Tip'
+import Tooltip from '../Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as Invalid } from '../../images/invalid.svg'
+
+import './datePicker.scss'
 
 const DatePickerView = React.forwardRef(
   (
     {
       autoCorrectedDatePipe,
+      className,
       config,
       dateMask,
+      datePickerInputOnBlur,
       datePickerOptions,
       disabled,
+      getInputValueValidity,
+      invalidText,
       isCalendarInvalid,
       isDatePickerOpened,
       isDatePickerOptionsOpened,
+      isInvalid,
       isRange,
       isRangeDateValid,
       isSameDate,
@@ -36,24 +47,33 @@ const DatePickerView = React.forwardRef(
       onPreviousMonth,
       onSelectOption,
       onTimeChange,
+      required,
+      requiredText,
       setSelectedDate,
+      tip,
       valueDatePickerInput,
       weekDay
     },
     ref
   ) => {
+    const datePickerClassNames = classnames('date-picker-container', className)
     const inputClassNames = classnames(
       'input',
       'date-picker__input',
       'active-input',
       isRange && 'long-input',
       isValueEmpty && 'date-picker__input_empty',
-      disabled && 'date-picker__input_disabled'
+      disabled && 'date-picker__input_disabled',
+      isInvalid && 'input_invalid'
     )
     const inputLabelClassNames = classnames('input__label', 'active-label')
 
     return (
-      <>
+      <div
+        data-testid="date-picker-container"
+        className={datePickerClassNames}
+        ref={ref.datePickerRef}
+      >
         <div
           data-testid="date-picker-input"
           className="date-picker__input-wrapper input-wrapper"
@@ -65,6 +85,7 @@ const DatePickerView = React.forwardRef(
             mask={dateMask}
             disabled={isValueEmpty || disabled}
             showMask={!isValueEmpty}
+            onBlur={datePickerInputOnBlur}
             onChange={onInputChange}
             pipe={autoCorrectedDatePipe}
             value={valueDatePickerInput}
@@ -74,11 +95,29 @@ const DatePickerView = React.forwardRef(
             {isValueEmpty && (
               <span className="input__label-value">&nbsp;Any time</span>
             )}
+            {required && <span className="input__label-mandatory"> *</span>}
           </span>
+          {isInvalid && (
+            <Tooltip
+              className="input__warning"
+              template={
+                <TextTooltipTemplate
+                  text={
+                    required && getInputValueValidity(valueDatePickerInput)
+                      ? requiredText
+                      : invalidText
+                  }
+                  warning
+                />
+              }
+            >
+              <Invalid />
+            </Tooltip>
+          )}
         </div>
         {isDatePickerOptionsOpened && (
           <div
-            ref={ref}
+            ref={ref.datePickerViewRef}
             className={`date-picker__pop-up ${
               isTopPosition ? 'positionTop' : 'positionBottom'
             }`}
@@ -95,7 +134,7 @@ const DatePickerView = React.forwardRef(
         )}
         {isDatePickerOpened && (
           <div
-            ref={ref}
+            ref={ref.datePickerViewRef}
             className={`date-picker__pop-up date-picker ${
               isTopPosition ? 'positionTop' : 'positionBottom'
             }`}
@@ -198,7 +237,6 @@ const DatePickerView = React.forwardRef(
                 </div>
               ))}
             </div>
-
             <div className="date-picker__footer">
               {isCalendarInvalid && (
                 <ErrorMessage message="“To” must be later than “From”" />
@@ -213,23 +251,29 @@ const DatePickerView = React.forwardRef(
             </div>
           </div>
         )}
-      </>
+        {tip && <Tip text={tip} className="input__tip" />}
+      </div>
     )
   }
 )
 
 DatePickerView.propTypes = {
   autoCorrectedDatePipe: PropTypes.func.isRequired,
+  className: PropTypes.string.isRequired,
   config: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   dateMask: PropTypes.array.isRequired,
+  datePickerInputOnBlur: PropTypes.func.isRequired,
   datePickerOptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   disabled: PropTypes.bool.isRequired,
+  getInputValueValidity: PropTypes.func.isRequired,
+  invalidText: PropTypes.string.isRequired,
   floatingLabel: PropTypes.bool,
   isCalendarInvalid: PropTypes.bool.isRequired,
   isDatePickerOpened: PropTypes.bool.isRequired,
   isDatePickerOptionsOpened: PropTypes.bool.isRequired,
-  isRangeDateValid: PropTypes.func.isRequired,
+  isInvalid: PropTypes.bool.isRequired,
   isRange: PropTypes.bool.isRequired,
+  isRangeDateValid: PropTypes.func.isRequired,
   isSameDate: PropTypes.func.isRequired,
   isTime: PropTypes.bool.isRequired,
   isTopPosition: PropTypes.bool.isRequired,
@@ -243,7 +287,10 @@ DatePickerView.propTypes = {
   onPreviousMonth: PropTypes.func.isRequired,
   onSelectOption: PropTypes.func.isRequired,
   onTimeChange: PropTypes.func.isRequired,
+  required: PropTypes.bool.isRequired,
+  requiredText: PropTypes.string.isRequired,
   setSelectedDate: PropTypes.func.isRequired,
+  tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,
   weekDay: PropTypes.array.isRequired
 }

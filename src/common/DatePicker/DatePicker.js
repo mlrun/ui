@@ -29,15 +29,21 @@ import {
   datePickerReducer
 } from './datePickerReducer'
 
-import './datePicker.scss'
-
 const DatePicker = ({
+  className,
   date,
   dateTo,
   disabled,
+  invalid,
+  invalidText,
   label,
+  onBlur,
   onChange,
+  required,
+  requiredText,
+  setInvalid,
   splitCharacter,
+  tip,
   type,
   withOptions
 }) => {
@@ -57,6 +63,7 @@ const DatePicker = ({
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
     formatDate(isRange, isTime, splitCharacter, date, dateTo)
   )
+  const [isInvalid, setIsInvalid] = useState(false)
 
   const datePickerRef = React.createRef()
   const datePickerViewRef = useRef()
@@ -210,6 +217,24 @@ const DatePicker = ({
     isDatePickerOptionsOpened
   ])
 
+  useEffect(() => {
+    if (isInvalid !== invalid) {
+      if (required && getInputValueValidity(valueDatePickerInput)) {
+        setIsInvalid(true)
+        setInvalid && setInvalid(false)
+      } else {
+        setIsInvalid(invalid)
+      }
+    }
+  }, [
+    getInputValueValidity,
+    invalid,
+    isInvalid,
+    required,
+    setInvalid,
+    valueDatePickerInput
+  ])
+
   const isRangeDateValid = day => {
     const dateFromMs = new Date(
       datePickerState.configFrom.selectedDate
@@ -280,6 +305,8 @@ const DatePicker = ({
       )
     )
     setIsDatePickerOpened(false)
+    setIsInvalid(false)
+    setInvalid && setInvalid(true)
 
     let dates = [new Date(datePickerState.configFrom.selectedDate)]
 
@@ -302,9 +329,31 @@ const DatePicker = ({
         dates = event.target.value
           .split(datesDivider)
           .map(date => new Date(date))
+
+        setIsInvalid(false)
+        setInvalid && setInvalid(true)
+      } else if (required) {
+        setIsInvalid(true)
+        setInvalid && setInvalid(false)
       }
 
       onChange(dates)
+    }
+  }
+
+  const datePickerInputOnBlur = event => {
+    let isValueEmpty = getInputValueValidity(event.target.value)
+
+    if (new RegExp(dateRegEx).test(event.target.value) || isValueEmpty) {
+      let dates = ['', '']
+
+      if (!isValueEmpty) {
+        dates = event.target.value
+          .split(datesDivider)
+          .map(date => new Date(date))
+      }
+
+      onBlur(dates)
     }
   }
 
@@ -377,64 +426,82 @@ const DatePicker = ({
   }
 
   return (
-    <div
-      data-testid="date-picker-container"
-      className="date-picker-container"
-      ref={datePickerRef}
-    >
-      <DatePickerView
-        autoCorrectedDatePipe={autoCorrectedDatePipe}
-        config={
-          isRange
-            ? [datePickerState.configFrom, datePickerState.configTo]
-            : [datePickerState.configFrom]
-        }
-        dateMask={dateMask}
-        datePickerOptions={datePickerOptions}
-        disabled={disabled}
-        isCalendarInvalid={isCalendarInvalid}
-        isDatePickerOpened={isDatePickerOpened}
-        isDatePickerOptionsOpened={isDatePickerOptionsOpened}
-        isRange={isRange}
-        isRangeDateValid={isRangeDateValid}
-        isSameDate={isSameDate}
-        isTime={isTime}
-        isTopPosition={isTopPosition}
-        isValueEmpty={isValueEmpty}
-        label={label}
-        months={months}
-        onApplyChanges={onDatePickerChange}
-        onInputChange={onInputDatePickerChange}
-        onInputClick={onInputDatePickerClick}
-        onNextMonth={onChangeNextMonth}
-        onPreviousMonth={onChangePreviousMonth}
-        onSelectOption={onSelectOption}
-        onTimeChange={onTimeChange}
-        ref={datePickerViewRef}
-        setSelectedDate={setSelectedDate}
-        valueDatePickerInput={valueDatePickerInput}
-        weekDay={getWeekDays(startWeek)}
-      />
-    </div>
+    <DatePickerView
+      autoCorrectedDatePipe={autoCorrectedDatePipe}
+      className={className}
+      config={
+        isRange
+          ? [datePickerState.configFrom, datePickerState.configTo]
+          : [datePickerState.configFrom]
+      }
+      dateMask={dateMask}
+      datePickerInputOnBlur={datePickerInputOnBlur}
+      datePickerOptions={datePickerOptions}
+      disabled={disabled}
+      getInputValueValidity={getInputValueValidity}
+      invalidText={invalidText}
+      isCalendarInvalid={isCalendarInvalid}
+      isDatePickerOpened={isDatePickerOpened}
+      isDatePickerOptionsOpened={isDatePickerOptionsOpened}
+      isInvalid={isInvalid}
+      isRange={isRange}
+      isRangeDateValid={isRangeDateValid}
+      isSameDate={isSameDate}
+      isTime={isTime}
+      isTopPosition={isTopPosition}
+      isValueEmpty={isValueEmpty}
+      label={label}
+      months={months}
+      onApplyChanges={onDatePickerChange}
+      onInputChange={onInputDatePickerChange}
+      onInputClick={onInputDatePickerClick}
+      onNextMonth={onChangeNextMonth}
+      onPreviousMonth={onChangePreviousMonth}
+      onSelectOption={onSelectOption}
+      onTimeChange={onTimeChange}
+      ref={{ datePickerRef, datePickerViewRef }}
+      required={required}
+      requiredText={requiredText}
+      setSelectedDate={setSelectedDate}
+      tip={tip}
+      valueDatePickerInput={valueDatePickerInput}
+      weekDay={getWeekDays(startWeek)}
+    />
   )
 }
 DatePicker.defaultProps = {
+  className: '',
   dateTo: new Date(),
   disabled: false,
+  invalid: false,
+  invalidText: 'This field is invalid',
   label: 'Date',
+  onBlur: () => {},
+  required: false,
+  requiredText: 'This field is required',
+  setInvalid: () => {},
   splitCharacter: '/',
+  tip: '',
   type: 'date',
   withOptions: false
 }
 
 DatePicker.propTypes = {
+  className: PropTypes.string,
   date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string])
     .isRequired,
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
+  invalid: PropTypes.bool,
+  invalidText: PropTypes.string,
   label: PropTypes.string,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func.isRequired,
+  required: PropTypes.bool,
+  requiredText: PropTypes.string,
+  setInvalid: PropTypes.func,
   splitCharacter: PropTypes.oneOf(['/', '.']),
+  tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time']),
   withOptions: PropTypes.bool
 }
