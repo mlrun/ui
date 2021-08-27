@@ -136,7 +136,7 @@ const DetailsInfoItem = React.forwardRef(
       return (
         <div className="details-item__data details-item__status">
           {state}
-          <i className={`status-icon ${state}`} />
+          <i className={`state-${state}-job status-icon`} />
         </div>
       )
     } else if (!isEmpty(func)) {
