@@ -176,7 +176,7 @@ const FilterParameters = ({
             }))
           }
           tip="Filter data by start date >= value"
-          type="date"
+          type="date-time"
         />
         <DatePicker
           className="data-source__inputs-item"
@@ -196,7 +196,7 @@ const FilterParameters = ({
             }))
           }
           tip="Filter data by start date <= value"
-          type="date"
+          type="date-time"
         />
       </div>
     </FeatureSetsPanelSection>
