@@ -51,12 +51,14 @@ const TextArea = React.forwardRef(
     useEffect(() => {
       if (textArea.current.value.length > 0) {
         setTextAreaIsFocused(true)
+      } else if (textAreaIsFocused && textArea.current.value.length === 0) {
+        setTextAreaIsFocused(false)
       }
 
       if (focused) {
         textArea.current.focus()
       }
-    }, [focused, textArea])
+    }, [focused, textArea, textAreaIsFocused])
 
     const handleTextAreaScroll = useCallback(
       event => {
