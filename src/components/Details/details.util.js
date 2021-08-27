@@ -202,7 +202,7 @@ export const generateFunctionsContent = selectedItem => ({
     value: selectedItem.name
   },
   type: {
-    value: selectedItem.type
+    value: selectedItem.type || 'Local'
   },
   hash: {
     value: selectedItem.hash
