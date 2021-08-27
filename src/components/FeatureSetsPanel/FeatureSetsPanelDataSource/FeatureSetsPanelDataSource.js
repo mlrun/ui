@@ -205,7 +205,6 @@ const FeatureSetsPanelDataSource = ({
           artifactReference: artifactReference ?? ''
         }
       }))
-
       setUrlProjectItemTypeEntered(
         projectItemsPathTypes.some(type => type.id === pathItems[0]) &&
           typeof pathItems[1] === 'string'
