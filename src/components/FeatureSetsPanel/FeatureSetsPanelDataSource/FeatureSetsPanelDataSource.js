@@ -10,15 +10,9 @@ import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
 import artifactsAction from '../../../actions/artifacts'
 import { getParsedResource } from '../../../utils/resources'
 import {
-  END_TIME,
   generateComboboxMatchesList,
-  handleEndTimeOnBlur,
-  handleStartTimeOnBlur,
-  handleTimestampColumnOnBlur,
   isUrlInputValid,
-  projectItemsPathTypes,
-  START_TIME,
-  TIME_FIELD
+  projectItemsPathTypes
 } from './featureSetsPanelDataSource.util'
 import projectsAction from '../../../actions/projects'
 import {
@@ -34,11 +28,8 @@ const FeatureSetsPanelDataSource = ({
   fetchArtifacts,
   fetchProjects,
   project,
-  setNewFeatureSetDataSourceEndTime,
   setNewFeatureSetDataSourceKind,
   setNewFeatureSetDataSourceParseDates,
-  setNewFeatureSetDataSourceStartTime,
-  setNewFeatureSetDataSourceTimestampColumn,
   setNewFeatureSetDataSourceUrl,
   setNewFeatureSetSchedule,
   setValidation,
@@ -46,9 +37,6 @@ const FeatureSetsPanelDataSource = ({
 }) => {
   const [data, setData] = useState({
     attributes: [],
-    timeField: '',
-    startTime: '',
-    endTime: '',
     kind: 'csv',
     parseDates: '',
     url: {
@@ -217,7 +205,6 @@ const FeatureSetsPanelDataSource = ({
           artifactReference: artifactReference ?? ''
         }
       }))
-
       setUrlProjectItemTypeEntered(
         projectItemsPathTypes.some(type => type.id === pathItems[0]) &&
           typeof pathItems[1] === 'string'
@@ -246,23 +233,17 @@ const FeatureSetsPanelDataSource = ({
     kind => {
       const url =
         data.url.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
-          ? data.url.fullPath.replace(/:\/\/.*$/g, '')
+          ? data.url.fullPath.replace(/.*:\/\//g, '')
           : data.url.path
 
       if (kind === 'csv') {
         setValidation(prevState => ({
           ...prevState,
-          isTimeFieldValid: true,
-          isStartTimeValid: true,
-          isEndTimeValid: true,
           isUrlValid:
             url.length > 0
               ? isUrlInputValid(data.url.pathType, url, kind)
               : true
         }))
-        setNewFeatureSetDataSourceTimestampColumn('')
-        setNewFeatureSetDataSourceStartTime('')
-        setNewFeatureSetDataSourceEndTime('')
       } else if (kind === 'parquet') {
         setNewFeatureSetDataSourceParseDates('')
         setValidation(state => ({
@@ -275,9 +256,6 @@ const FeatureSetsPanelDataSource = ({
       setData(state => ({
         ...state,
         kind,
-        endTime: '',
-        startTime: '',
-        timeField: '',
         parseDates: ''
       }))
     },
@@ -285,11 +263,8 @@ const FeatureSetsPanelDataSource = ({
       data.url.fullPath,
       data.url.path,
       data.url.pathType,
-      setNewFeatureSetDataSourceEndTime,
       setNewFeatureSetDataSourceKind,
       setNewFeatureSetDataSourceParseDates,
-      setNewFeatureSetDataSourceStartTime,
-      setNewFeatureSetDataSourceTimestampColumn,
       setValidation
     ]
   )
@@ -309,70 +284,15 @@ const FeatureSetsPanelDataSource = ({
       }
 
       setNewFeatureSetDataSourceUrl(`${selectValue}${inputValue}`)
-      setData(state => ({
-        ...state,
-        url: {
-          ...state.url,
-          fullPath: `${selectValue}${inputValue}`
-        }
-      }))
-    }
-  }
-
-  const handleFilterParametersOnBlur = (event, type) => {
-    if (type === TIME_FIELD) {
-      handleTimestampColumnOnBlur(
-        event.target.value,
-        featureStore.newFeatureSet.spec.source.time_field,
-        type,
-        setData,
-        setValidation,
-        setNewFeatureSetDataSourceTimestampColumn
-      )
-    } else if (type === START_TIME) {
-      handleStartTimeOnBlur(
-        data,
-        event.target.value,
-        featureStore.newFeatureSet.spec.source.start_time,
-        type,
-        setValidation,
-        setData,
-        setNewFeatureSetDataSourceStartTime
-      )
-    } else if (type === END_TIME) {
-      handleEndTimeOnBlur(
-        data,
-        event.target.value,
-        featureStore.newFeatureSet.spec.source.end_time,
-        type,
-        setData,
-        setValidation,
-        setNewFeatureSetDataSourceEndTime
-      )
     }
 
-    if (
-      data.endTime.length === 0 &&
-      data.startTime.length === 0 &&
-      data.timeField.length === 0
-    ) {
-      setValidation(prevState => ({
-        ...prevState,
-        isTimeFieldValid: true,
-        isStartTimeValid: true,
-        isEndTimeValid: true
-      }))
-    } else if (data.timeField.length > 0 && data.startTime.length > 0) {
-      setValidation(prevState => ({
-        ...prevState,
-        isEndTimeValid: true
-      }))
-    } else if (data.timeField.length > 0 && data.endTime.length > 0) {
-      setValidation(prevState => ({
-        ...prevState,
-        isStartTimeValid: true
-      }))
-    }
+    setData(state => ({
+      ...state,
+      url: {
+        ...state.url,
+        fullPath: `${selectValue}${inputValue}`
+      }
+    }))
   }
 
   return (
@@ -384,7 +304,6 @@ const FeatureSetsPanelDataSource = ({
       }
       data={data}
       featureStore={featureStore}
-      handleFilterParametersOnBlur={handleFilterParametersOnBlur}
       handleKindOnChange={handleKindOnChange}
       handleUrlOnBlur={handleUrlOnBlur}
       handleUrlPathTypeChange={handleUrlPathTypeChange}
