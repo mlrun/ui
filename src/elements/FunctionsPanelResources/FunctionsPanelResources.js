@@ -9,7 +9,8 @@ import functionsActions from '../../actions/functions'
 import {
   getDefaultCpuUnit,
   getDefaultMemoryUnit,
-  getDefaultVolumeMounts
+  getDefaultVolumeMounts,
+  setRangeInputValidation
 } from './functionsPanelResources.util'
 import { FUNCTION_PANEL_MODE } from '../../types'
 
@@ -19,7 +20,9 @@ const FunctionsPanelResources = ({
   mode,
   setNewFunctionVolumeMounts,
   setNewFunctionVolumes,
-  setNewFunctionResources
+  setNewFunctionResources,
+  setValidation,
+  validation
 }) => {
   const [data, setData] = useState({
     volumeMounts: getDefaultVolumeMounts(
@@ -123,6 +126,14 @@ const FunctionsPanelResources = ({
         memory
       }
     })
+    setRangeInputValidation(
+      data,
+      setValidation,
+      value,
+      type,
+      'memory',
+      'isMemoryRequestValid'
+    )
   }
 
   const handleSelectCpuUnit = value => {
@@ -196,6 +207,14 @@ const FunctionsPanelResources = ({
         cpu: `${value}${data.cpuUnit === 'millicpu' ? 'm' : ''}`
       }
     })
+    setRangeInputValidation(
+      data,
+      setValidation,
+      value,
+      type,
+      'cpu',
+      'isCPURequestValid'
+    )
   }
 
   const handleAddNewVolume = newVolume => {
@@ -282,6 +301,7 @@ const FunctionsPanelResources = ({
       handleSelectCpuUnit={handleSelectCpuUnit}
       setCpuValue={setCpuValue}
       setGpuValue={setGpuValue}
+      validation={validation}
     />
   )
 }
@@ -292,7 +312,9 @@ FunctionsPanelResources.defaultProp = {
 
 FunctionsPanelResources.propTypes = {
   defaultData: PropTypes.shape({}),
-  mode: FUNCTION_PANEL_MODE.isRequired
+  mode: FUNCTION_PANEL_MODE.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({})
 }
 
 export default connect(functionsStore => ({ ...functionsStore }), {

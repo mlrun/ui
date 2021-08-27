@@ -11,6 +11,7 @@ import {
 } from '../../utils/panelResources.util'
 import { createNewVolume } from '../../utils/createNewVolume'
 import jobsActions from '../../actions/jobs'
+import { setRangeInputValidation } from './jobsPanelResources.util'
 
 const JobsPanelResources = ({
   jobsStore,
@@ -18,7 +19,9 @@ const JobsPanelResources = ({
   panelState,
   setNewJobNodeSelector,
   setNewJobVolumeMounts,
-  setNewJobVolumes
+  setNewJobVolumes,
+  setValidation,
+  validation
 }) => {
   const generateResourcesData = useCallback(
     () => ({
@@ -279,6 +282,42 @@ const JobsPanelResources = ({
     })
   }
 
+  const setCpuValue = (value, data, type) => {
+    panelDispatch({
+      type: panelActions[`SET_${type}_CPU`],
+      payload: `${value}${panelState.cpuUnit === 'millicpu' ? 'm' : ''}`
+    })
+    setRangeInputValidation(
+      data,
+      setValidation,
+      value,
+      type,
+      'Cpu',
+      'isCPURequestValid'
+    )
+  }
+
+  const setMemoryValue = (value, data, type) => {
+    panelDispatch({
+      type: panelActions[`SET_${type}_MEMORY`],
+      payload: `${value}${
+        panelState.memoryUnit.length === 0 || panelState.memoryUnit === 'Bytes'
+          ? ''
+          : panelState.memoryUnit.match(/i/)
+          ? panelState.memoryUnit.slice(0, 2)
+          : panelState.memoryUnit.slice(0, 1)
+      }`
+    })
+    setRangeInputValidation(
+      data,
+      setValidation,
+      value,
+      type,
+      'Memory',
+      'isMemoryRequestValid'
+    )
+  }
+
   return (
     <JobsPanelResourcesView
       handleAddNewVolume={handleAddNewVolume}
@@ -292,13 +331,18 @@ const JobsPanelResources = ({
       panelDispatch={panelDispatch}
       panelState={panelState}
       resourcesData={generateResourcesData()}
+      setCpuValue={setCpuValue}
+      setMemoryValue={setMemoryValue}
+      validation={validation}
     />
   )
 }
 
 JobsPanelResources.propTypes = {
   panelDispatch: PropTypes.func.isRequired,
-  panelState: PropTypes.shape({}).isRequired
+  panelState: PropTypes.shape({}).isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(jobsStore => jobsStore, { ...jobsActions })(

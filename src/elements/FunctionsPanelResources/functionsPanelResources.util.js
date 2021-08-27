@@ -2,6 +2,9 @@ import { chain } from 'lodash'
 import { getVolumeType } from '../../utils/panelResources.util'
 import { PANEL_EDIT_MODE } from '../../constants'
 
+export const REQUESTS = 'requests'
+export const LIMITS = 'limits'
+
 export const getDefaultVolumeMounts = (volume_mounts, volumes, mode) =>
   chain(volume_mounts)
     .flatten()
@@ -35,4 +38,25 @@ export const getDefaultCpuUnit = (limits, requests) => {
   } else if (limits.cpu?.length > 0 || requests.cpu?.length > 0) {
     return 'cpu'
   } else return null
+}
+
+export const setRangeInputValidation = (
+  data,
+  setValidation,
+  value,
+  type,
+  kind,
+  validationField
+) => {
+  if (type === REQUESTS && data.limits[kind].length > 0) {
+    setValidation(prevState => ({
+      ...prevState,
+      [validationField]: value <= Number.parseInt(data.limits[kind])
+    }))
+  } else if (type === LIMITS && data.requests[kind].length > 0) {
+    setValidation(prevState => ({
+      ...prevState,
+      [validationField]: value >= Number.parseInt(data.requests[kind])
+    }))
+  }
 }
