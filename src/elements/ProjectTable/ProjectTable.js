@@ -95,7 +95,9 @@ const ProjectTable = ({ match, table }) => {
                                     <TextTooltipTemplate text={status} />
                                   }
                                 >
-                                  <i className={`${status} status-icon`} />
+                                  <i
+                                    className={`state-${status}-job status-icon`}
+                                  />
                                 </Tooltip>
                               )
                             })
