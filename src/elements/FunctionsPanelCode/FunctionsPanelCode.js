@@ -37,7 +37,9 @@ const FunctionsPanelCode = ({
   })
   const [editCode, setEditCode] = useState(false)
   const [imageType, setImageType] = useState(
-    defaultData.build?.image || defaultData.build?.base_image
+    defaultData.build?.image ||
+      defaultData.build?.base_image ||
+      defaultData.build?.commands
       ? NEW_IMAGE
       : EXISTING_IMAGE
   )
@@ -63,7 +65,7 @@ const FunctionsPanelCode = ({
 
   useEffect(() => {
     if (imageType === EXISTING_IMAGE) {
-      setNewFunctionImage(defaultData.image ?? DEFAULT_IMAGE)
+      setNewFunctionImage(defaultData.image || DEFAULT_IMAGE)
       resetNewFunctionCodeCustomImage()
       setData(state => ({
         ...state,
