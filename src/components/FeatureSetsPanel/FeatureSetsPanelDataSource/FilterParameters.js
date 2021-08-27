@@ -111,6 +111,12 @@ const FilterParameters = ({
       }
     } else {
       setTime('')
+      setValidation(prevState => ({
+        ...prevState,
+        isTimeFieldValid: true,
+        isStartTimeValid: true,
+        isEndTimeValid: true
+      }))
     }
 
     setData(state => ({

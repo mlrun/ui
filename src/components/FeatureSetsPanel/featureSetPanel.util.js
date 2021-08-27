@@ -50,6 +50,13 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
         }))
 
         return false
+      } else if (time_field.length === 0) {
+        setValidation(prevState => ({
+          ...prevState,
+          isTimeFieldValid: false
+        }))
+
+        return false
       }
 
       if (!validation.isStartTimeValid || !validation.isEndTimeValid) {
