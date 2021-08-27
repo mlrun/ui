@@ -22,17 +22,19 @@ const JobsPanelTable = ({
   sectionDispatch,
   sectionState,
   selectedItem,
-  setSelectedItem
+  setSelectedItem,
+  setValidation,
+  validation
 }) => {
   const [editItem, setEditItem] = useState(false)
 
   const handleEdit = useCallback(
-    item => {
+    (item, index) => {
       if (editItem) {
         setEditItem(false)
-        handleEditItems(section.includes('env'))
+        handleEditItems(section.includes('env'), index)
       } else {
-        setSelectedItem(item)
+        setSelectedItem({ ...item, index })
         setEditItem(true)
       }
     },
@@ -47,11 +49,11 @@ const JobsPanelTable = ({
   )
 
   const generateActionsMenu = useCallback(
-    rowItem => [
+    (rowItem, index) => [
       {
         label: 'Edit',
         icon: <Edit />,
-        onClick: param => handleEdit(param)
+        onClick: param => handleEdit(param, index)
       },
       {
         label: 'Remove',
@@ -84,6 +86,8 @@ const JobsPanelTable = ({
       selectedItem={selectedItem}
       setEditItem={setEditItem}
       setSelectedItem={setSelectedItem}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }
@@ -95,7 +99,9 @@ JobsPanelTable.defaultProps = {
   handleSetSelectedVolume: null,
   sectionData: {},
   sectionDispatch: () => {},
-  sectionState: {}
+  sectionState: {},
+  setValidation: () => {},
+  validation: {}
 }
 
 JobsPanelTable.propTypes = {
@@ -115,7 +121,9 @@ JobsPanelTable.propTypes = {
   sectionDispatch: PropTypes.func,
   sectionState: PropTypes.shape({}),
   selectedItem: PropTypes.shape({}).isRequired,
-  setSelectedItem: PropTypes.func.isRequired
+  setSelectedItem: PropTypes.func.isRequired,
+  setValidation: PropTypes.func,
+  validation: PropTypes.object
 }
 
 export default JobsPanelTable

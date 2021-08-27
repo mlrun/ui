@@ -1,6 +1,10 @@
 @import '../../scss/borders';
 
 .key-value-table {
+  &__btn {
+    visibility: hidden;
+  }
+
   .table-row {
     display: flex;
     align-items: center;
@@ -10,14 +14,10 @@
     &:not(.no-hover):hover {
       background-color: $alabaster;
 
-      .delete-btn {
+      .key-value-table__btn {
         visibility: visible;
       }
     }
-  }
-
-  .delete-btn {
-    visibility: hidden;
   }
 
   .table-row__header {

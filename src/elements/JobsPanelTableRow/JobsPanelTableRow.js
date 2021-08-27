@@ -27,8 +27,6 @@ const JobsPanelTableRow = ({
   section,
   withCheckbox
 }) => {
-  const isInputsOrEnv =
-    section.includes('data-inputs') || section.includes('env')
   const rowClassNames = classnames('table__row', className)
 
   return (
@@ -69,7 +67,7 @@ const JobsPanelTableRow = ({
               key={property}
               onClick={
                 isEditable && !editItem
-                  ? () => handleEdit(contentItem, isInputsOrEnv)
+                  ? () => handleEdit(contentItem, index)
                   : null
               }
             >

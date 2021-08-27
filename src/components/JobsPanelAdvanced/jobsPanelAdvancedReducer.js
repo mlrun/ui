@@ -66,7 +66,7 @@ export const jobsPanelAdvancedReducer = (state, { type, payload }) => {
       return {
         ...state,
         newSecret: {
-          ...state.newVolume,
+          ...state.newSecret,
           kind: payload
         }
       }

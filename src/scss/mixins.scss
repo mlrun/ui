@@ -742,6 +742,13 @@
     }
 
     .btn {
+      &-add {
+        rect {
+          min-width: 44px;
+          fill: $cornflowerBlue;
+        }
+      }
+
       &__schedule {
         margin-top: 16px;
         margin-left: auto;

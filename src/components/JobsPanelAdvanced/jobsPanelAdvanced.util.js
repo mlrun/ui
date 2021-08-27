@@ -1,5 +1,3 @@
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-
 export const handleAddItem = (
   advancedDispatch,
   currentTableData,
@@ -12,54 +10,69 @@ export const handleAddItem = (
   setAddNewItem,
   setCurrentTableData,
   setPreviousData,
-  setNewJobData
+  setNewJobData,
+  setValidation,
+  validation
 ) => {
   let data = {}
+  const isValid = isEnv
+    ? newItemObj.name.length > 0 &&
+      validation.envVariablesName &&
+      newItemObj.value.length > 0 &&
+      validation.envVariablesValue
+    : newItemObj.source.length > 0 && validation.secretsSourceValue
 
-  if (isEveryObjectValueEmpty(newItemObj)) {
-    advancedDispatch({
-      type: removeNewItemObj
+  if (isValid) {
+    if (isEnv) {
+      data = {
+        name: newItemObj.name,
+        value: newItemObj.value
+      }
+    } else {
+      data = {
+        kind: newItemObj.kind,
+        source: newItemObj.source
+      }
+    }
+
+    const generatedTableData = {
+      isDefault: false,
+      data
+    }
+
+    setNewJobData([...newJobData, { ...data }])
+    panelDispatch({
+      type: setPreviousData,
+      payload: [...previousData, generatedTableData]
     })
-
-    return advancedDispatch({
+    panelDispatch({
+      type: setCurrentTableData,
+      payload: [...currentTableData, generatedTableData]
+    })
+    advancedDispatch({
       type: setAddNewItem,
       payload: false
+    })
+    advancedDispatch({
+      type: removeNewItemObj
     })
   }
 
   if (isEnv) {
-    data = {
-      name: newItemObj.name,
-      value: newItemObj.value
-    }
+    setValidation(state => ({
+      ...state,
+      envVariablesName:
+        newItemObj.name.length > 0 && validation.envVariablesName,
+      envVariablesValue:
+        newItemObj.value.length > 0 && validation.envVariablesValue
+    }))
   } else {
-    data = {
-      kind: newItemObj.kind,
-      source: newItemObj.source
-    }
+    setValidation(state => ({
+      ...state,
+      secretsSourceValue:
+        newItemObj.source.length > 0 && validation.secretsSourceValue
+    }))
   }
-
-  const generatedTableData = {
-    isDefault: false,
-    data
-  }
-
-  setNewJobData([...newJobData, { ...data }])
-  panelDispatch({
-    type: setPreviousData,
-    payload: [...previousData, generatedTableData]
-  })
-  panelDispatch({
-    type: setCurrentTableData,
-    payload: [...currentTableData, generatedTableData]
-  })
-  advancedDispatch({
-    type: setAddNewItem,
-    payload: false
-  })
-  advancedDispatch({
-    type: removeNewItemObj
-  })
 }
 
 export const handleEdit = (
@@ -73,26 +86,21 @@ export const handleEdit = (
   selectedItem,
   setCurrentPanelData,
   setCurrentTableData,
-  setPreviousPanelData
+  setPreviousPanelData,
+  index
 ) => {
   const dataName = isEnv ? 'name' : 'kind'
   const dataValue = isEnv ? 'value' : 'source'
-  const newData = currentPanelData.map(dataItem => {
-    if (dataItem[dataName] === selectedItem[dataName]) {
-      dataItem[dataName] = newName || selectedItem[dataName]
-      dataItem[dataValue] = selectedItem[dataValue]
-    }
-
-    return dataItem
-  })
-  const newTableData = currentTableData.map(dataItem => {
-    if (dataItem.data[dataName] === selectedItem[dataName]) {
-      dataItem.data[dataName] = newName || selectedItem[dataName]
-      dataItem.data[dataValue] = selectedItem[dataValue]
-    }
-
-    return dataItem
-  })
+  const newData = [...currentPanelData]
+  newData[index] = {
+    [dataName]: newName || selectedItem[dataName],
+    [dataValue]: selectedItem[dataValue]
+  }
+  const newTableData = [...currentTableData]
+  newTableData[index].data = {
+    [dataName]: newName || selectedItem[dataName],
+    [dataValue]: selectedItem[dataValue]
+  }
 
   setCurrentPanelData(newData)
   panelDispatch({
@@ -134,6 +142,26 @@ export const handleDelete = (
     payload: currentTableData.filter(
       (dataItem, dataIndex) => dataIndex !== index
     )
+  })
+}
+
+export const handleReset = (
+  advancedDispatch,
+  removeNewItemObj,
+  setAddNewItem,
+  setValidation
+) => {
+  advancedDispatch({
+    type: setAddNewItem,
+    payload: false
+  })
+  advancedDispatch({
+    type: removeNewItemObj
+  })
+  setValidation({
+    secretsSourceValue: true,
+    envVariablesName: true,
+    envVariablesValue: true
   })
 }
 
