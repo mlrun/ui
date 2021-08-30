@@ -43,6 +43,7 @@ const FunctionsPanelView = ({
             <FunctionsPanelGeneral
               defaultData={defaultData}
               isNameValid={validation.isNameValid}
+              mode={mode}
               setNameValid={setValidation}
             />
           </Accordion>
