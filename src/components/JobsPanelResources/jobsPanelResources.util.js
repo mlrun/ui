@@ -5,18 +5,38 @@ export const setRangeInputValidation = (
   setValidation,
   value,
   type,
-  kind,
-  validationField
+  validationField,
+  kind
 ) => {
-  if (type === REQUESTS && data[`limits${kind}`].length > 0) {
+  const limitsValue = parseInt(data[`limits${kind}`])
+  const requestsValue = parseInt(data[`requests${kind}`])
+  let isValid =
+    type === REQUESTS
+      ? value <= limitsValue && limitsValue > 0
+      : value >= requestsValue && requestsValue > 0
+
+  if (value > 0) {
+    if (
+      (type === REQUESTS && data[`limits${kind}`].length > 0) ||
+      (type === LIMITS && data[`requests${kind}`].length > 0)
+    ) {
+      setValidation(prevState => ({
+        ...prevState,
+        [`is${kind}RequestValid`]: isValid,
+        [`is${kind}LimitValid`]: isValid
+      }))
+    } else {
+      setValidation(prevState => ({ ...prevState, [validationField]: true }))
+    }
+  } else if (value.length === 0) {
     setValidation(prevState => ({
       ...prevState,
-      [validationField]: value <= Number.parseInt(data[`limits${kind}`])
+      [`is${kind}RequestValid`]:
+        type === REQUESTS || !requestsValue ? true : requestsValue > 0,
+      [`is${kind}LimitValid`]:
+        type === LIMITS || !limitsValue ? true : limitsValue > 0
     }))
-  } else if (type === LIMITS && data[`requests${kind}`].length > 0) {
-    setValidation(prevState => ({
-      ...prevState,
-      [validationField]: value >= Number.parseInt(data[`requests${kind}`])
-    }))
+  } else {
+    setValidation(prevState => ({ ...prevState, [validationField]: false }))
   }
 }

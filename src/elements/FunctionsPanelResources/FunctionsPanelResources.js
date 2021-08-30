@@ -104,14 +104,17 @@ const FunctionsPanelResources = ({
     }
   }
 
-  const setMemoryValue = (value, type) => {
-    const memory = `${value}${
-      data.memoryUnit.length === 0 || data.memoryUnit === 'Bytes'
+  const setMemoryValue = (value, type, validationField) => {
+    const memory =
+      value.length === 0
         ? ''
-        : data.memoryUnit.match(/i/)
-        ? data.memoryUnit.slice(0, 2)
-        : data.memoryUnit.slice(0, 1)
-    }`
+        : `${value}${
+            data.memoryUnit.length === 0 || data.memoryUnit === 'Bytes'
+              ? ''
+              : data.memoryUnit.match(/i/)
+              ? data.memoryUnit.slice(0, 2)
+              : data.memoryUnit.slice(0, 1)
+          }`
     setData(state => ({
       ...state,
       [type]: {
@@ -131,8 +134,8 @@ const FunctionsPanelResources = ({
       setValidation,
       value,
       type,
-      'memory',
-      'isMemoryRequestValid'
+      validationField,
+      'memory'
     )
   }
 
@@ -192,7 +195,7 @@ const FunctionsPanelResources = ({
     }
   }
 
-  const setCpuValue = (value, type) => {
+  const setCpuValue = (value, type, validationField) => {
     setData(state => ({
       ...state,
       [type]: {
@@ -212,8 +215,8 @@ const FunctionsPanelResources = ({
       setValidation,
       value,
       type,
-      'cpu',
-      'isCPURequestValid'
+      validationField,
+      'cpu'
     )
   }
 
@@ -273,6 +276,12 @@ const FunctionsPanelResources = ({
   }
 
   const setGpuValue = value => {
+    let isValid = true
+
+    if (value && Number(value) <= 0) {
+      isValid = false
+    }
+
     setData(state => ({
       ...state,
       limits: {
@@ -287,6 +296,7 @@ const FunctionsPanelResources = ({
         'nvidia.com/gpu': String(value)
       }
     })
+    setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
   }
 
   return (

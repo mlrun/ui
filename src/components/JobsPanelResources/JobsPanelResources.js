@@ -282,7 +282,7 @@ const JobsPanelResources = ({
     })
   }
 
-  const setCpuValue = (value, data, type) => {
+  const setCpuValue = (value, data, type, validationField) => {
     panelDispatch({
       type: panelActions[`SET_${type}_CPU`],
       payload: `${value}${panelState.cpuUnit === 'millicpu' ? 'm' : ''}`
@@ -292,12 +292,12 @@ const JobsPanelResources = ({
       setValidation,
       value,
       type,
-      'Cpu',
-      'isCPURequestValid'
+      validationField,
+      'Cpu'
     )
   }
 
-  const setMemoryValue = (value, data, type) => {
+  const setMemoryValue = (value, data, type, validationField) => {
     panelDispatch({
       type: panelActions[`SET_${type}_MEMORY`],
       payload: `${value}${
@@ -313,9 +313,23 @@ const JobsPanelResources = ({
       setValidation,
       value,
       type,
-      'Memory',
-      'isMemoryRequestValid'
+      validationField,
+      'Memory'
     )
+  }
+
+  const setGpuValue = value => {
+    let isValid = true
+
+    if (value && Number(value) <= 0) {
+      isValid = false
+    }
+
+    panelDispatch({
+      type: panelActions.SET_LIMITS_NVIDIA_GPU,
+      payload: `${value}`
+    })
+    setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
   }
 
   return (
@@ -328,10 +342,10 @@ const JobsPanelResources = ({
       handleEditVolume={handleEditVolume}
       handleSelectCpuUnit={handleSelectCpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
-      panelDispatch={panelDispatch}
       panelState={panelState}
       resourcesData={generateResourcesData()}
       setCpuValue={setCpuValue}
+      setGpuValue={setGpuValue}
       setMemoryValue={setMemoryValue}
       validation={validation}
     />

@@ -29,7 +29,10 @@ const FunctionsPanel = ({
     isNameValid: true,
     isHandlerValid: true,
     isMemoryRequestValid: true,
-    isCPURequestValid: true
+    isMemoryLimitValid: true,
+    isCpuRequestValid: true,
+    isCpuLimitValid: true,
+    isGpuLimitValid: true
   })
   const history = useHistory()
 
@@ -86,7 +89,10 @@ const FunctionsPanel = ({
       validation.isNameValid &&
       validation.isHandlerValid &&
       validation.isMemoryRequestValid &&
-      validation.isCPURequestValid
+      validation.isMemoryLimitValid &&
+      validation.isCpuRequestValid &&
+      validation.isCpuLimitValid &&
+      validation.isGpuLimitValid
     )
   }
 

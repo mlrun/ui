@@ -45,18 +45,39 @@ export const setRangeInputValidation = (
   setValidation,
   value,
   type,
-  kind,
-  validationField
+  validationField,
+  kind
 ) => {
-  if (type === REQUESTS && data.limits[kind].length > 0) {
+  const validationKind = kind.charAt(0).toUpperCase() + kind.slice(1)
+  const limitsValue = Number.parseInt(data.limits[kind])
+  const requestsValue = Number.parseInt(data.requests[kind])
+  const isValid =
+    type === REQUESTS
+      ? value <= limitsValue && limitsValue > 0
+      : value >= requestsValue && requestsValue > 0
+
+  if (value > 0) {
+    if (
+      (type === REQUESTS && data.limits[kind].length > 0) ||
+      (type === LIMITS && data.requests[kind].length > 0)
+    ) {
+      setValidation(prevState => ({
+        ...prevState,
+        [`is${validationKind}RequestValid`]: isValid,
+        [`is${validationKind}LimitValid`]: isValid
+      }))
+    } else {
+      setValidation(prevState => ({ ...prevState, [validationField]: true }))
+    }
+  } else if (value.length === 0) {
     setValidation(prevState => ({
       ...prevState,
-      [validationField]: value <= Number.parseInt(data.limits[kind])
+      [`is${validationKind}LimitValid`]:
+        type === LIMITS || !limitsValue ? true : limitsValue > 0,
+      [`is${validationKind}RequestValid`]:
+        type === REQUESTS || !requestsValue ? true : requestsValue > 0
     }))
-  } else if (type === LIMITS && data.requests[kind].length > 0) {
-    setValidation(prevState => ({
-      ...prevState,
-      [validationField]: value >= Number.parseInt(data.requests[kind])
-    }))
+  } else {
+    setValidation(prevState => ({ ...prevState, [validationField]: false }))
   }
 }

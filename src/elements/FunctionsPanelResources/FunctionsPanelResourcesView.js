@@ -56,19 +56,25 @@ const FunctionsPanelResourcesView = ({
           <RangeInput
             density="dense"
             invalid={!validation.isMemoryRequestValid}
-            invalidText="Request must be less than or equal to Limit"
+            invalidText="Request must be less than or equal to Limit and not be less than 1"
             label="Request"
             labelType="labelAtTop"
             min={1}
-            onChange={value => setMemoryValue(value, REQUESTS)}
+            onChange={value =>
+              setMemoryValue(value, REQUESTS, 'isMemoryRequestValid')
+            }
             value={generateMemoryValue(data.requests.memory)}
           />
           <RangeInput
             density="dense"
+            invalid={!validation.isMemoryLimitValid}
+            invalidText="Limit must be bigger than or equal to Request and not be less than 1"
             label="Limit"
             labelType="labelAtTop"
             min={1}
-            onChange={value => setMemoryValue(value, LIMITS)}
+            onChange={value =>
+              setMemoryValue(value, LIMITS, 'isMemoryLimitValid')
+            }
             value={generateMemoryValue(data.limits.memory)}
           />
         </FunctionsPanelSection>
@@ -83,26 +89,32 @@ const FunctionsPanelResourcesView = ({
           />
           <RangeInput
             density="dense"
-            invalid={!validation.isCPURequestValid}
-            invalidText="Request must be less than or equal to Limit"
+            invalid={!validation.isCpuRequestValid}
+            invalidText="Request must be less than or equal to Limit and not be less than 1"
             label="Request"
             labelType="labelAtTop"
             min={1}
-            onChange={value => setCpuValue(value, REQUESTS)}
+            onChange={value =>
+              setCpuValue(value, REQUESTS, 'isCpuRequestValid')
+            }
             value={generateCpuValue(data.requests.cpu)}
           />
           <RangeInput
             density="dense"
+            invalid={!validation.isCpuLimitValid}
+            invalidText="Limit must be bigger than or equal to Request and not be less than 1"
             label="Limit"
             labelType="labelAtTop"
             min={1}
-            onChange={value => setCpuValue(value, LIMITS)}
+            onChange={value => setCpuValue(value, LIMITS, 'isCpuLimitValid')}
             value={generateCpuValue(data.limits.cpu)}
           />
         </FunctionsPanelSection>
         <FunctionsPanelSection title="Gpu" className="section-gpu">
           <RangeInput
             density="dense"
+            invalid={!validation.isGpuLimitValid}
+            invalidText="The minimum value should be 1"
             label="Limit"
             labelType="labelAtTop"
             min={1}

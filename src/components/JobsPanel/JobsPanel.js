@@ -66,7 +66,10 @@ const JobsPanel = ({
     isNameValid: true,
     isArtifactPathValid: true,
     isMemoryRequestValid: true,
-    isCPURequestValid: true
+    isCpuRequestValid: true,
+    isMemoryLimitValid: true,
+    isCpuLimitValid: true,
+    isGpuLimitValid: true
   })
   const history = useHistory()
 
@@ -222,7 +225,10 @@ const JobsPanel = ({
       validation.isNameValid &&
       validation.isArtifactPathValid &&
       validation.isMemoryRequestValid &&
-      validation.isCPURequestValid
+      validation.isMemoryLimitValid &&
+      validation.isCpuRequestValid &&
+      validation.isCpuLimitValid &&
+      validation.isGpuLimitValid
     )
   }
 
