@@ -172,7 +172,6 @@ const FunctionsPanelCodeView = ({
           }
           onBlur={event => {
             if (
-              event.target.value.length > 0 &&
               !isEqual(
                 event.target.value.split('\n'),
                 functionsStore.newFunction.spec.build.commands
