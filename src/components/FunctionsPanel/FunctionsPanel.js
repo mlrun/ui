@@ -10,12 +10,12 @@ import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
 
 const FunctionsPanel = ({
-  checkExistingName,
   functionsStore,
   closePanel,
   createFunctionSuccess,
   defaultData,
   deployFunction,
+  getFunction,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   project,
@@ -29,7 +29,12 @@ const FunctionsPanel = ({
   const [confirmData, setConfirmData] = useState(null)
   const [validation, setValidation] = useState({
     isNameValid: true,
-    isHandlerValid: true
+    isHandlerValid: true,
+    isMemoryRequestValid: true,
+    isMemoryLimitValid: true,
+    isCpuRequestValid: true,
+    isCpuLimitValid: true,
+    isGpuLimitValid: true
   })
   const history = useHistory()
 
@@ -81,6 +86,18 @@ const FunctionsPanel = ({
     setNewFunctionProject
   ])
 
+  const checkValidation = () => {
+    return (
+      validation.isNameValid &&
+      validation.isHandlerValid &&
+      validation.isMemoryRequestValid &&
+      validation.isMemoryLimitValid &&
+      validation.isCpuRequestValid &&
+      validation.isCpuLimitValid &&
+      validation.isGpuLimitValid
+    )
+  }
+
   const createFunction = deploy => {
     createNewFunction(project, functionsStore.newFunction).then(result => {
       if (deploy) {
@@ -109,7 +126,7 @@ const FunctionsPanel = ({
         removeFunctionsError()
       }
 
-      checkExistingName(project, functionsStore.newFunction.metadata.name)
+      getFunction(project, functionsStore.newFunction.metadata.name)
         .then(() => {
           setConfirmData({
             title: `Overwrite function "${functionsStore.newFunction.metadata.name}"?`,
@@ -144,6 +161,7 @@ const FunctionsPanel = ({
 
   return (
     <FunctionsPanelView
+      checkValidation={checkValidation()}
       closePanel={closePanel}
       confirmData={confirmData}
       defaultData={defaultData ?? {}}

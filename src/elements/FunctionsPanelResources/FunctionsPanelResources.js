@@ -9,7 +9,8 @@ import functionsActions from '../../actions/functions'
 import {
   getDefaultCpuUnit,
   getDefaultMemoryUnit,
-  getDefaultVolumeMounts
+  getDefaultVolumeMounts,
+  setRangeInputValidation
 } from './functionsPanelResources.util'
 import { FUNCTION_PANEL_MODE } from '../../types'
 
@@ -19,7 +20,9 @@ const FunctionsPanelResources = ({
   mode,
   setNewFunctionVolumeMounts,
   setNewFunctionVolumes,
-  setNewFunctionResources
+  setNewFunctionResources,
+  setValidation,
+  validation
 }) => {
   const [data, setData] = useState({
     volumeMounts: getDefaultVolumeMounts(
@@ -101,14 +104,17 @@ const FunctionsPanelResources = ({
     }
   }
 
-  const setMemoryValue = (value, type) => {
-    const memory = `${value}${
-      data.memoryUnit.length === 0 || data.memoryUnit === 'Bytes'
+  const setMemoryValue = (value, type, validationField) => {
+    const memory =
+      value.length === 0
         ? ''
-        : data.memoryUnit.match(/i/)
-        ? data.memoryUnit.slice(0, 2)
-        : data.memoryUnit.slice(0, 1)
-    }`
+        : `${value}${
+            data.memoryUnit.length === 0 || data.memoryUnit === 'Bytes'
+              ? ''
+              : data.memoryUnit.match(/i/)
+              ? data.memoryUnit.slice(0, 2)
+              : data.memoryUnit.slice(0, 1)
+          }`
     setData(state => ({
       ...state,
       [type]: {
@@ -123,6 +129,14 @@ const FunctionsPanelResources = ({
         memory
       }
     })
+    setRangeInputValidation(
+      data,
+      setValidation,
+      value,
+      type,
+      validationField,
+      'memory'
+    )
   }
 
   const handleSelectCpuUnit = value => {
@@ -181,7 +195,7 @@ const FunctionsPanelResources = ({
     }
   }
 
-  const setCpuValue = (value, type) => {
+  const setCpuValue = (value, type, validationField) => {
     setData(state => ({
       ...state,
       [type]: {
@@ -196,6 +210,14 @@ const FunctionsPanelResources = ({
         cpu: `${value}${data.cpuUnit === 'millicpu' ? 'm' : ''}`
       }
     })
+    setRangeInputValidation(
+      data,
+      setValidation,
+      value,
+      type,
+      validationField,
+      'cpu'
+    )
   }
 
   const handleAddNewVolume = newVolume => {
@@ -254,6 +276,12 @@ const FunctionsPanelResources = ({
   }
 
   const setGpuValue = value => {
+    let isValid = true
+
+    if (value && Number(value) <= 0) {
+      isValid = false
+    }
+
     setData(state => ({
       ...state,
       limits: {
@@ -268,6 +296,7 @@ const FunctionsPanelResources = ({
         'nvidia.com/gpu': String(value)
       }
     })
+    setValidation(prevState => ({ ...prevState, isGpuLimitValid: isValid }))
   }
 
   return (
@@ -282,6 +311,7 @@ const FunctionsPanelResources = ({
       handleSelectCpuUnit={handleSelectCpuUnit}
       setCpuValue={setCpuValue}
       setGpuValue={setGpuValue}
+      validation={validation}
     />
   )
 }
@@ -292,7 +322,9 @@ FunctionsPanelResources.defaultProp = {
 
 FunctionsPanelResources.propTypes = {
   defaultData: PropTypes.shape({}),
-  mode: FUNCTION_PANEL_MODE.isRequired
+  mode: FUNCTION_PANEL_MODE.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({})
 }
 
 export default connect(functionsStore => ({ ...functionsStore }), {

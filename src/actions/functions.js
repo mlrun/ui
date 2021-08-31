@@ -45,9 +45,6 @@ import {
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
 const functionsActions = {
-  checkExistingName: (project, name) => dispatch => {
-    return functionsApi.checkExistingName(project, name)
-  },
   createNewFunction: (project, data) => dispatch => {
     dispatch(functionsActions.createNewFunctionBegin())
 
@@ -208,6 +205,9 @@ const functionsActions = {
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
+  getFunction: (project, name) => dispatch => {
+    return functionsApi.getFunction(project, name)
+  },
   removeFunctionLogs: () => ({
     type: REMOVE_FUNCTION_LOGS
   }),

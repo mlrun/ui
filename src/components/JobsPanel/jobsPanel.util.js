@@ -5,6 +5,9 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getVolumeType } from '../../utils/panelResources.util'
 import { PANEL_EDIT_MODE } from '../../constants'
 
+export const REQUESTS = 'REQUESTS'
+export const LIMITS = 'LIMITS'
+
 export const getDefaultData = functionParameters => {
   const parameters = functionParameters
     .filter(parameter => parameter.type !== 'DataItem')

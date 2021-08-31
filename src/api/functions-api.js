@@ -1,8 +1,6 @@
 import { functionTemplatesHttpClient, mainHttpClient } from '../httpClient'
 
 export default {
-  checkExistingName: (project, name) =>
-    mainHttpClient.get(`/func/${project}/${name}`),
   createNewFunction: (project, data) =>
     mainHttpClient.post(`/func/${project}/${data.metadata.name}`, data, {
       params: {
@@ -25,6 +23,8 @@ export default {
 
     return mainHttpClient.get('/funcs', { params })
   },
+  getFunction: (project, name) =>
+    mainHttpClient.get(`/func/${project}/${name}`),
   getFunctionLogs: (project, name, tag, offset) => {
     const params = {
       project,

@@ -64,7 +64,12 @@ const JobsPanel = ({
   )
   const [validation, setValidation] = useState({
     isNameValid: true,
-    isArtifactPathValid: true
+    isArtifactPathValid: true,
+    isMemoryRequestValid: true,
+    isCpuRequestValid: true,
+    isMemoryLimitValid: true,
+    isCpuLimitValid: true,
+    isGpuLimitValid: true
   })
   const history = useHistory()
 
@@ -215,6 +220,18 @@ const JobsPanel = ({
     removeJobError
   ])
 
+  const checkValidation = () => {
+    return (
+      validation.isNameValid &&
+      validation.isArtifactPathValid &&
+      validation.isMemoryRequestValid &&
+      validation.isMemoryLimitValid &&
+      validation.isCpuRequestValid &&
+      validation.isCpuLimitValid &&
+      validation.isGpuLimitValid
+    )
+  }
+
   const functionData = useMemo(() => {
     if (!isEmpty(selectedFunction)) {
       const versionOptions = getVersionOptions(selectedFunction)
@@ -352,6 +369,7 @@ const JobsPanel = ({
 
   return (
     <JobsPanelView
+      checkValidation={checkValidation()}
       closePanel={closePanel}
       defaultData={defaultData}
       functionData={functionData}
