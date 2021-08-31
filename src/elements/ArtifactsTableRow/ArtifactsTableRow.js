@@ -31,7 +31,7 @@ const ArtifactsTableRow = ({
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    selectedItem.name &&
+    (selectedItem.db_key || selectedItem?.spec?.model) &&
       getArtifactIdentifier(selectedItem, true) ===
         rowItem.key.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
