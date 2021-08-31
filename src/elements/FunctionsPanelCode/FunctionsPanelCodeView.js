@@ -171,13 +171,16 @@ const FunctionsPanelCodeView = ({
             }))
           }
           onBlur={event => {
+            const currentValue = event.target.value.trim()
             if (
               !isEqual(
-                event.target.value.split('\n'),
+                currentValue ? currentValue.split('\n') : [],
                 functionsStore.newFunction.spec.build.commands
               )
             ) {
-              setNewFunctionCommands(data.commands.split('\n'))
+              setNewFunctionCommands(
+                data.commands.trim() ? data.commands.trim().split('\n') : []
+              )
             }
           }}
           type="text"
