@@ -11,6 +11,7 @@ import Select from '../../common/Select/Select'
 import { selectOptions } from '../../components/JobsPanelAdvanced/jobsPanelAdvanced.util'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
+import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Plus } from '../../images/plus.svg'
 
 export const JobsPanelAdvancedTable = ({
@@ -20,6 +21,7 @@ export const JobsPanelAdvancedTable = ({
   handleAddNewItem,
   handleDeleteItems,
   handleEditItems,
+  handleResetForm,
   headers,
   match,
   newName,
@@ -29,8 +31,14 @@ export const JobsPanelAdvancedTable = ({
   setAddNewItem,
   setNewItemName,
   setNewItemValue,
-  setSelectedItem
+  setSelectedItem,
+  setValidation,
+  validation
 }) => {
+  const dataKey = section.includes('secrets')
+    ? 'secretsSourceValue'
+    : 'envVariablesValue'
+
   return (
     <JobsPanelTable
       addNewItem={addNewItem}
@@ -43,6 +51,8 @@ export const JobsPanelAdvancedTable = ({
       section={section}
       selectedItem={selectedItem}
       setSelectedItem={setSelectedItem}
+      setValidation={setValidation}
+      validation={validation}
     >
       {addNewItem ? (
         <div className="table__row-add-item">
@@ -59,10 +69,24 @@ export const JobsPanelAdvancedTable = ({
                 className="input-row__item"
                 density="medium"
                 floatingLabel
-                invalid={isNameNotUnique(newName, content)}
-                invalidText="Name already exists"
+                invalid={
+                  isNameNotUnique(newName, content) ||
+                  !validation.envVariablesName
+                }
+                invalidText={
+                  isNameNotUnique(newName, content)
+                    ? 'Name already exists'
+                    : 'This field is invalid'
+                }
                 label="Name"
                 onChange={setNewItemName}
+                required
+                setInvalid={value =>
+                  setValidation(state => ({
+                    ...state,
+                    envVariablesName: value
+                  }))
+                }
                 type="text"
               />
             )}
@@ -70,18 +94,33 @@ export const JobsPanelAdvancedTable = ({
               className="input-row__item input-row__item_edit"
               density="medium"
               floatingLabel
+              invalid={!validation[dataKey]}
               label="Value"
               onChange={setNewItemValue}
+              required
+              setInvalid={value =>
+                setValidation(state => ({
+                  ...state,
+                  [dataKey]: value
+                }))
+              }
               type="text"
             />
           </div>
           <button
-            className="add-input btn-add"
+            className="btn-add"
             disabled={isNameNotUnique(newName, content)}
             onClick={() => handleAddNewItem(section.includes('env') && true)}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
+            </Tooltip>
+          </button>
+          <button
+            onClick={() => handleResetForm(section.includes('env') && true)}
+          >
+            <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
+              <Delete />
             </Tooltip>
           </button>
         </div>
@@ -108,6 +147,7 @@ JobsPanelAdvancedTable.propTypes = {
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
+  handleResetForm: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape).isRequired,
   match: PropTypes.shape({}).isRequired,
   newName: PropTypes.string,
@@ -117,5 +157,7 @@ JobsPanelAdvancedTable.propTypes = {
   setAddNewItem: PropTypes.func.isRequired,
   setNewItemName: PropTypes.func.isRequired,
   setNewItemValue: PropTypes.func.isRequired,
-  setSelectedItem: PropTypes.func.isRequired
+  setSelectedItem: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.object.isRequired
 }

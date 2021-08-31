@@ -156,14 +156,6 @@ const TextArea = React.forwardRef(
             <Invalid />
           </Tooltip>
         )}
-        {/*{required && (*/}
-        {/*  <Tooltip*/}
-        {/*    template={<TextTooltipTemplate text={requiredText} warning />}*/}
-        {/*    className="text-area__warning"*/}
-        {/*  >*/}
-        {/*    <Warning />*/}
-        {/*  </Tooltip>*/}
-        {/*)}*/}
         {tip && !required && <Tip text={tip} className="text-area__tip" />}
         {textAreaIcon && (
           <span data-testid="text-area__icon" className={iconClass}>

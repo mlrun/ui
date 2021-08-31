@@ -16,6 +16,7 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 
 const JobsPanelView = ({
+  checkValidation,
   closePanel,
   defaultData,
   functionData,
@@ -89,6 +90,8 @@ const JobsPanelView = ({
               <JobsPanelResources
                 panelDispatch={panelDispatch}
                 panelState={panelState}
+                setValidation={setValidation}
+                validation={validation}
               />
             </Accordion>
             <Accordion
@@ -118,34 +121,28 @@ const JobsPanelView = ({
                 />
               )}
               <Button
-                variant="tertiary"
-                label="Schedule for later"
                 className="pop-up-dialog__btn_cancel"
-                onClick={() =>
-                  validation.isNameValid &&
-                  validation.isArtifactPathValid &&
-                  setOpenScheduleJob(true)
-                }
+                disabled={!checkValidation}
+                label="Schedule for later"
+                onClick={() => setOpenScheduleJob(true)}
+                variant="tertiary"
               />
               {withSaveChanges ? (
                 <Button
-                  variant="secondary"
                   label="Save"
                   onClick={event => handleEditJob(event, defaultData.schedule)}
+                  variant="secondary"
                 />
               ) : (
                 <Button
-                  variant="secondary"
                   label={
                     <>
                       <Run /> <span> Run now </span>
                     </>
                   }
-                  onClick={() =>
-                    validation.isNameValid &&
-                    validation.isArtifactPathValid &&
-                    handleRunJob()
-                  }
+                  disabled={!checkValidation}
+                  onClick={() => handleRunJob()}
+                  variant="secondary"
                 />
               )}
             </div>
@@ -169,6 +166,7 @@ JobsPanelView.defaultProps = {
 }
 
 JobsPanelView.propTypes = {
+  checkValidation: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
   defaultData: PropTypes.shape({}),
   functionData: PropTypes.shape({}).isRequired,

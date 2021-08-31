@@ -2,16 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Input from '../Input/Input'
-import Tooltip from '../Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Select from '../Select/Select'
-
-import { ReactComponent as Plus } from '../../images/plus.svg'
-import { ReactComponent as Delete } from '../../images/delete.svg'
-import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
-
-import './keyValueTable.scss'
+import KeyValueTableView from './KeyValueTableView'
 
 const KeyValueTable = ({
   addNewItem,
@@ -20,6 +11,8 @@ const KeyValueTable = ({
   content,
   deleteItem,
   editItem,
+  isKeyRequired,
+  isValueRequired,
   keyHeader,
   keyLabel,
   keyOptions,
@@ -31,28 +24,114 @@ const KeyValueTable = ({
   const [isAddNewItem, setIsAddNewItem] = useState(false)
   const [isEditMode, setEditMode] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
+  const [validation, setValidation] = useState({
+    isKeyValid: true,
+    isValueValid: true
+  })
   const [key, setKey] = useState('')
   const [value, setValue] = useState('')
 
   const tableClassNames = classnames('key-value-table', className)
 
-  const saveNewItem = () => {
-    if (key !== '' && value !== '') {
+  const saveItem = () => {
+    const save = () => {
       addNewItem({ key, value })
+      setKey('')
+      setValue('')
+      setIsAddNewItem(false)
     }
 
-    setKey('')
-    setValue('')
-    setIsAddNewItem(false)
+    if (isKeyRequired && !isValueRequired) {
+      if (key.length > 0 && validation.isKeyValid) {
+        save()
+      } else {
+        setValidation(state => ({
+          ...state,
+          isKeyValid: false
+        }))
+      }
+    } else if (isValueRequired && !isKeyRequired) {
+      if (value.length > 0 && validation.isValueValid) {
+        save()
+      } else {
+        setValidation(state => ({
+          ...state,
+          isValueValid: false
+        }))
+      }
+    } else if (isKeyRequired && isValueRequired) {
+      if (
+        key.length > 0 &&
+        validation.isKeyValid &&
+        value.length > 0 &&
+        validation.isValueValid
+      ) {
+        save()
+      } else {
+        setValidation(state => ({
+          isKeyValid: key.length > 0 && state.isKeyValid,
+          isValueValid: value.length > 0 && state.isValueValid
+        }))
+      }
+    } else if (key.length === 0 && value.length === 0) {
+      setKey('')
+      setValue('')
+      setIsAddNewItem(false)
+    } else {
+      save()
+    }
   }
 
   const handleEditItem = () => {
-    if (selectedItem.newKey !== '') {
+    const saveEdit = () => {
       editItem(selectedItem)
+      setEditMode(false)
+      setSelectedItem(null)
     }
 
-    setEditMode(false)
-    setSelectedItem(null)
+    if (isKeyRequired && !isValueRequired) {
+      if (
+        (selectedItem.newKey?.length > 0 || selectedItem.key.length > 0) &&
+        validation.isKeyValid
+      ) {
+        saveEdit()
+      } else {
+        setValidation(state => ({
+          ...state,
+          isKeyValid: false
+        }))
+      }
+    } else if (isValueRequired && !isKeyRequired) {
+      if (selectedItem.value.length > 0 && validation.isValueValid) {
+        saveEdit()
+      } else {
+        setValidation(state => ({
+          ...state,
+          isValueValid: false
+        }))
+      }
+    } else if (isKeyRequired && isValueRequired) {
+      if (
+        (selectedItem.newKey?.length > 0 || selectedItem.key.length > 0) &&
+        validation.isKeyValid &&
+        selectedItem.value.length > 0 &&
+        validation.isValueValid
+      ) {
+        saveEdit()
+      }
+    } else {
+      saveEdit()
+    }
+  }
+
+  const handleResetForm = () => {
+    setKey('')
+    setValue('')
+    setIsAddNewItem(false)
+    setValidation({
+      isKeyValid: true,
+      isValueValid: true
+    })
   }
 
   const isKeyNotUnique = (newKey, keys) => {
@@ -60,168 +139,44 @@ const KeyValueTable = ({
   }
 
   return (
-    <div className={tableClassNames}>
-      <div className="table-row table-row__header no-hover">
-        <div className="table-cell table-cell__key">{keyHeader}</div>
-        <div className="table-cell table-cell__value">{valueHeader}</div>
-        <div className="table-cell table-cell__actions" />
-      </div>
-      {content.map((contentItem, index) => {
-        return isEditMode && contentItem.key === selectedItem.key ? (
-          <div className="table-row table-row_edit" key={index}>
-            <div className="table-cell table-cell__key">
-              {keyType === 'select' ? (
-                <Select
-                  density="dense"
-                  onClick={key =>
-                    setSelectedItem({
-                      ...selectedItem,
-                      newKey: key
-                    })
-                  }
-                  options={keyOptions}
-                  selectedId={selectedItem.newKey ?? selectedItem.key}
-                />
-              ) : (
-                <Input
-                  density="dense"
-                  className="input_edit"
-                  invalid={
-                    selectedItem.newKey !== selectedItem.key &&
-                    isKeyNotUnique(selectedItem.newKey, content)
-                  }
-                  invalidText="Name already exists"
-                  onChange={key =>
-                    setSelectedItem({
-                      ...selectedItem,
-                      newKey: key
-                    })
-                  }
-                  type="text"
-                  value={selectedItem.newKey ?? selectedItem.key}
-                />
-              )}
-            </div>
-            <div className="table-cell table-cell__value">
-              <Input
-                density="dense"
-                className="input_edit"
-                onChange={value =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    value
-                  })
-                }
-                type="text"
-                value={selectedItem.value}
-              />
-            </div>
-            <div className="table-cell table-cell__actions">
-              <button
-                className="delete-btn"
-                onClick={handleEditItem}
-                disabled={
-                  selectedItem.newKey !== selectedItem.key &&
-                  isKeyNotUnique(selectedItem.newKey, content)
-                }
-              >
-                <Checkmark />
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div
-            className="table-row"
-            key={index}
-            onClick={() => {
-              if (withEditMode) {
-                setSelectedItem(contentItem)
-                setEditMode(true)
-              }
-            }}
-          >
-            <div className="table-cell table-cell__key">
-              <Tooltip
-                template={<TextTooltipTemplate text={contentItem.key} />}
-              >
-                {contentItem.key}
-              </Tooltip>
-            </div>
-            <div className="table-cell table-cell__value">
-              <Tooltip
-                template={<TextTooltipTemplate text={contentItem.value} />}
-              >
-                {contentItem.value}
-              </Tooltip>
-            </div>
-            <div className="table-cell table-cell__actions">
-              <button
-                className="delete-btn"
-                onClick={() => {
-                  deleteItem(index, contentItem)
-                }}
-              >
-                <Delete />
-              </button>
-            </div>
-          </div>
-        )
-      })}
-      {isAddNewItem ? (
-        <div className="table-row no-hover">
-          {keyType === 'select' ? (
-            <Select
-              className="table-cell__key"
-              density="dense"
-              label={key || keyLabel}
-              onClick={setKey}
-              options={keyOptions}
-            />
-          ) : (
-            <Input
-              floatingLabel
-              onChange={setKey}
-              label={keyLabel}
-              type="text"
-              wrapperClassName="table-cell__key"
-              invalid={isKeyNotUnique(key, content)}
-              invalidText="Name already exists"
-            />
-          )}
-
-          <Input
-            floatingLabel
-            onChange={setValue}
-            label={valueLabel}
-            type="text"
-            wrapperClassName="table-cell__value"
-          />
-          <button onClick={saveNewItem} disabled={isKeyNotUnique(key, content)}>
-            <Tooltip template={<TextTooltipTemplate text="Add item" />}>
-              <Plus />
-            </Tooltip>
-          </button>
-        </div>
-      ) : (
-        <div className="table-row no-hover">
-          <button
-            className="add-new-item-btn"
-            onClick={() => {
-              setIsAddNewItem(true)
-            }}
-          >
-            <Plus />
-            {addNewItemLabel}
-          </button>
-        </div>
-      )}
-    </div>
+    <KeyValueTableView
+      addNewItemLabel={addNewItemLabel}
+      content={content}
+      deleteItem={deleteItem}
+      handleEditItem={handleEditItem}
+      handleResetForm={handleResetForm}
+      isAddNewItem={isAddNewItem}
+      isEditMode={isEditMode}
+      isKeyNotUnique={isKeyNotUnique}
+      isKeyRequired={isKeyRequired}
+      isValueRequired={isValueRequired}
+      keyHeader={keyHeader}
+      keyLabel={keyLabel}
+      keyOptions={keyOptions}
+      keyType={keyType}
+      keyValue={key}
+      saveItem={saveItem}
+      selectedItem={selectedItem}
+      setEditMode={setEditMode}
+      setIsAddNewItem={setIsAddNewItem}
+      setKey={setKey}
+      setSelectedItem={setSelectedItem}
+      setValidation={setValidation}
+      setValue={setValue}
+      tableClassNames={tableClassNames}
+      validation={validation}
+      valueHeader={valueHeader}
+      valueLabel={valueLabel}
+      withEditMode={withEditMode}
+    />
   )
 }
 
 KeyValueTable.defaultProps = {
   className: '',
   editItem: () => {},
+  isKeyRequired: false,
+  isValueRequired: false,
   keyLabel: 'Key',
   keyOptions: [],
   keyType: 'input',
@@ -241,6 +196,8 @@ KeyValueTable.propTypes = {
   ).isRequired,
   deleteItem: PropTypes.func.isRequired,
   editItem: PropTypes.func,
+  isKeyRequired: PropTypes.bool,
+  isValueRequired: PropTypes.bool,
   keyHeader: PropTypes.string.isRequired,
   keyLabel: PropTypes.string,
   keyOptions: PropTypes.arrayOf(

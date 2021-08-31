@@ -18,8 +18,8 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import './functionsPanel.scss'
 
 const FunctionsPanelView = ({
-  closePanel,
   checkValidation,
+  closePanel,
   defaultData,
   error,
   handleSave,
@@ -72,7 +72,12 @@ const FunctionsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FunctionsPanelResources defaultData={defaultData} mode={mode} />
+            <FunctionsPanelResources
+              defaultData={defaultData}
+              mode={mode}
+              setValidation={setValidation}
+              validation={validation}
+            />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -133,8 +138,8 @@ FunctionsPanelView.defaultProps = {
 }
 
 FunctionsPanelView.propTypes = {
-  closePanel: PropTypes.func.isRequired,
   checkValidation: PropTypes.func.isRequired,
+  closePanel: PropTypes.func.isRequired,
   defaultData: PropTypes.shape({}),
   error: PropTypes.string,
   handleSave: PropTypes.func.isRequired,
