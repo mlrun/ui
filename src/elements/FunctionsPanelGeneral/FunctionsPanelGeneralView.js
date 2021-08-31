@@ -8,6 +8,7 @@ import Select from '../../common/Select/Select'
 import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
 
+import { PANEL_EDIT_MODE } from '../../constants'
 import { typeOptions } from './functionsPanelGeneral.util'
 
 import './functionsPanelGeneral.scss'
@@ -20,6 +21,7 @@ const FunctionsPanelGeneralView = ({
   handleNameOnBlur,
   handleTagOnBlur,
   isNameValid,
+  mode,
   setData,
   setNameValid,
   setNewFunctionDescription,
@@ -40,6 +42,7 @@ const FunctionsPanelGeneralView = ({
       <FunctionsPanelSection title="General">
         <div className="general__required-info">
           <Input
+            disabled={mode === PANEL_EDIT_MODE}
             floatingLabel
             invalid={!isNameValid}
             invalidText="This field is invalid"
@@ -74,6 +77,7 @@ const FunctionsPanelGeneralView = ({
             selectedId={data.type}
           />
           <Input
+            disabled={mode === PANEL_EDIT_MODE}
             floatingLabel
             label="Tag"
             onChange={tag => setData(state => ({ ...state, tag }))}
@@ -129,6 +133,7 @@ FunctionsPanelGeneralView.propTypes = {
   handleNameOnBlur: PropTypes.func.isRequired,
   handleTagOnBlur: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
+  mode: PropTypes.string.isRequired,
   setData: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired,
   setNewFunctionDescription: PropTypes.func.isRequired,
