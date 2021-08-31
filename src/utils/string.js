@@ -19,7 +19,7 @@ export const deleteUnsafeHtml = unsafeStr => {
   return unsafeStr.replace(/[&<>"']/g, '')
 }
 
-export const trimSplit = (value = '', delimiter) => {
+export const trimSplit = (value, delimiter) => {
   const trimmed = (value ?? '').trim()
   return trimmed ? trimmed.split(delimiter) : []
 }
