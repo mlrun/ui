@@ -6,7 +6,7 @@ export const initialState = {
     value: ''
   },
   newSecret: {
-    kind: '',
+    kind: 'file',
     source: ''
   },
   selectedEnvironmentVariable: {},
@@ -40,7 +40,7 @@ export const jobsPanelAdvancedReducer = (state, { type, payload }) => {
       return {
         ...state,
         newSecret: {
-          kind: '',
+          kind: 'file',
           source: ''
         }
       }
