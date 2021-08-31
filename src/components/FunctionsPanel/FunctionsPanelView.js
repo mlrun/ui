@@ -18,6 +18,7 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import './functionsPanel.scss'
 
 const FunctionsPanelView = ({
+  checkValidation,
   closePanel,
   defaultData,
   error,
@@ -64,7 +65,12 @@ const FunctionsPanelView = ({
             iconClassName="new-item-side-panel__expand-icon"
             openByDefault
           >
-            <FunctionsPanelResources defaultData={defaultData} mode={mode} />
+            <FunctionsPanelResources
+              defaultData={defaultData}
+              mode={mode}
+              setValidation={setValidation}
+              validation={validation}
+            />
           </Accordion>
           <Accordion
             accordionClassName="new-item-side-panel__accordion"
@@ -101,7 +107,7 @@ const FunctionsPanelView = ({
             />
             <Button
               className="btn_save"
-              disabled={!validation.isNameValid || !validation.isHandlerValid}
+              disabled={!checkValidation}
               variant="tertiary"
               label="Save"
               onClick={() => handleSave()}
@@ -110,7 +116,7 @@ const FunctionsPanelView = ({
               variant="secondary"
               label="Deploy"
               onClick={() => handleSave(true)}
-              disabled={!validation.isNameValid || !validation.isHandlerValid}
+              disabled={!checkValidation}
             />
           </div>
         </div>
@@ -125,6 +131,7 @@ FunctionsPanelView.defaultProps = {
 }
 
 FunctionsPanelView.propTypes = {
+  checkValidation: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
   defaultData: PropTypes.shape({}),
   error: PropTypes.string,

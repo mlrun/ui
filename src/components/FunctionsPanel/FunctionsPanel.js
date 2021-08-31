@@ -27,7 +27,12 @@ const FunctionsPanel = ({
 }) => {
   const [validation, setValidation] = useState({
     isNameValid: true,
-    isHandlerValid: true
+    isHandlerValid: true,
+    isMemoryRequestValid: true,
+    isMemoryLimitValid: true,
+    isCpuRequestValid: true,
+    isCpuLimitValid: true,
+    isGpuLimitValid: true
   })
   const history = useHistory()
 
@@ -79,6 +84,18 @@ const FunctionsPanel = ({
     setNewFunctionProject
   ])
 
+  const checkValidation = () => {
+    return (
+      validation.isNameValid &&
+      validation.isHandlerValid &&
+      validation.isMemoryRequestValid &&
+      validation.isMemoryLimitValid &&
+      validation.isCpuRequestValid &&
+      validation.isCpuLimitValid &&
+      validation.isGpuLimitValid
+    )
+  }
+
   const handleSave = deploy => {
     if (validation.isNameValid && validation.isHandlerValid) {
       if (functionsStore.newFunction.metadata.name.length === 0) {
@@ -119,6 +136,7 @@ const FunctionsPanel = ({
 
   return (
     <FunctionsPanelView
+      checkValidation={checkValidation()}
       closePanel={closePanel}
       defaultData={defaultData ?? {}}
       error={functionsStore.error}
