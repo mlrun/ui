@@ -12,13 +12,17 @@ import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 const EditableAdvancedRow = ({
   content,
   handleEdit,
+  index,
   selectedItem,
   setEditItem,
   setSelectedItem,
-  table
+  setValidation,
+  table,
+  validation
 }) => {
   const dataValue = table === 'env' ? 'value' : 'source'
-
+  const validationKey =
+    table === 'env' ? 'envVariablesValue' : 'secretsSourceValue'
   const tableRowRef = useRef(null)
 
   const handleDocumentClick = useCallback(
@@ -48,15 +52,27 @@ const EditableAdvancedRow = ({
           <Input
             density="dense"
             invalid={
-              selectedItem.newName !== selectedItem.data.name &&
-              isNameNotUnique(selectedItem.newName, content)
+              (selectedItem.newName !== selectedItem.data.name &&
+                isNameNotUnique(selectedItem.newName, content)) ||
+              !validation.envVariablesName
             }
-            invalidText="Name already exists"
+            invalidText={
+              isNameNotUnique(selectedItem.newName, content)
+                ? 'Name already exists'
+                : 'This field is invalid'
+            }
             onChange={name =>
               setSelectedItem({
                 ...selectedItem,
                 newName: name
               })
+            }
+            required
+            setInvalid={value =>
+              setValidation(state => ({
+                ...state,
+                envVariablesName: value
+              }))
             }
             type="text"
             value={selectedItem.newName ?? selectedItem.data.name}
@@ -82,11 +98,19 @@ const EditableAdvancedRow = ({
       <div className="table__cell table__cell_edit">
         <Input
           density="dense"
+          invalid={!validation[validationKey]}
           onChange={value =>
             setSelectedItem({
               ...selectedItem,
               data: { ...selectedItem.data, [dataValue]: value }
             })
+          }
+          required
+          setInvalid={value =>
+            setValidation(state => ({
+              ...state,
+              [validationKey]: value
+            }))
           }
           type="text"
           value={selectedItem.data[dataValue]}
@@ -96,10 +120,12 @@ const EditableAdvancedRow = ({
         <button
           className="apply-edit-btn"
           disabled={
-            selectedItem.newName !== selectedItem.data.name &&
-            isNameNotUnique(selectedItem.newName, content)
+            (selectedItem.newName !== selectedItem.data.name &&
+              isNameNotUnique(selectedItem.newName, content)) ||
+            (table === 'env' && !validation.envVariablesName) ||
+            !validation[validationKey]
           }
-          onClick={() => handleEdit(selectedItem.data, table === 'env')}
+          onClick={() => handleEdit(selectedItem.data, index)}
         >
           <Checkmark />
         </button>
@@ -111,11 +137,14 @@ const EditableAdvancedRow = ({
 EditableAdvancedRow.propTypes = {
   content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
   match: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setEditItem: PropTypes.func.isRequired,
   setSelectedItem: PropTypes.func.isRequired,
-  table: PropTypes.string.isRequired
+  setValidation: PropTypes.func.isRequired,
+  table: PropTypes.string.isRequired,
+  validation: PropTypes.object.isRequired
 }
 
 export default EditableAdvancedRow

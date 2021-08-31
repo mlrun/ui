@@ -20,6 +20,7 @@
   }
 
   &:disabled {
+    color: $spunPearl;
     cursor: not-allowed;
   }
 
@@ -107,6 +108,10 @@
 
     &-mandatory {
       color: $amaranth;
+
+      &_disabled {
+        color: $spunPearl;
+      }
     }
 
     &.active-label {
@@ -115,7 +120,7 @@
       font-size: 10px;
       line-height: 12px;
 
-      .input__label-mandatory {
+      .input__label-mandatory:not(.input__label-mandatory_disabled) {
         color: $topaz;
       }
     }
@@ -126,6 +131,10 @@
       left: 16px;
       color: $topaz;
       transition: 300ms ease all;
+    }
+
+    &_disabled {
+      color: $spunPearl;
     }
   }
 

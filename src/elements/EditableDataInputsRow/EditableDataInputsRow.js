@@ -21,6 +21,7 @@ const EditableDataInputsRow = ({
   comboboxMatchesList,
   content,
   handleEdit,
+  index,
   inputsDispatch,
   inputsState,
   selectedDataInput,
@@ -187,6 +188,7 @@ const EditableDataInputsRow = ({
           onClick={() => {
             applyEditButtonHandler(
               handleEdit,
+              index,
               inputName,
               inputsDispatch,
               requiredField,
@@ -206,6 +208,7 @@ EditableDataInputsRow.propTypes = {
   comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
   selectedDataInput: PropTypes.shape({}).isRequired,
