@@ -22,10 +22,14 @@
     }
   }
 
+  &:invalid {
+    border: $errorBorder;
+  }
+
   &-wrapper {
     position: relative;
 
-    .text-area.text-area_required {
+    .text-area.text-area_invalid {
       border: $errorBorder;
 
       & ~ .text-area__warning {
@@ -53,9 +57,17 @@
     background-color: transparent;
     pointer-events: none;
 
+    &-mandatory {
+      color: $amaranth;
+    }
+
     &.active-label {
       top: 10px;
       font-size: 10px;
+
+      .text-area__label-mandatory {
+        color: $topaz;
+      }
     }
 
     &-floating {

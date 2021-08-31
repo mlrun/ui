@@ -19,12 +19,16 @@ import './functionsPanel.scss'
 
 const FunctionsPanelView = ({
   closePanel,
+  checkValidation,
   defaultData,
   error,
   handleSave,
+  imageType,
   loading,
+  match,
   mode,
   removeFunctionsError,
+  setImageType,
   setValidation,
   validation
 }) => {
@@ -54,8 +58,12 @@ const FunctionsPanelView = ({
           >
             <FunctionsPanelCode
               defaultData={defaultData}
-              isHandlerValid={validation.isHandlerValid}
-              setHandlerValid={setValidation}
+              imageType={imageType}
+              match={match}
+              mode={mode}
+              setImageType={setImageType}
+              setValidation={setValidation}
+              validation={validation}
             />
           </Accordion>
           <Accordion
@@ -101,7 +109,7 @@ const FunctionsPanelView = ({
             />
             <Button
               className="btn_save"
-              disabled={!validation.isNameValid || !validation.isHandlerValid}
+              disabled={!checkValidation()}
               variant="tertiary"
               label="Save"
               onClick={() => handleSave()}
@@ -110,7 +118,7 @@ const FunctionsPanelView = ({
               variant="secondary"
               label="Deploy"
               onClick={() => handleSave(true)}
-              disabled={!validation.isNameValid || !validation.isHandlerValid}
+              disabled={!checkValidation()}
             />
           </div>
         </div>
@@ -126,6 +134,7 @@ FunctionsPanelView.defaultProps = {
 
 FunctionsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
+  checkValidation: PropTypes.func.isRequired,
   defaultData: PropTypes.shape({}),
   error: PropTypes.string,
   handleSave: PropTypes.func.isRequired,

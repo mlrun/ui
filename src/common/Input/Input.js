@@ -205,7 +205,6 @@ const Input = React.forwardRef(
             {inputIcon}
           </span>
         )}
-
         {suggestionList?.length > 0 && inputIsFocused && (
           <ul className="suggestion-list">
             {suggestionList.map((item, index) => {
