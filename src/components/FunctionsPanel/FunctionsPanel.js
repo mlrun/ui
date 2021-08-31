@@ -15,6 +15,7 @@ const FunctionsPanel = ({
   createFunctionSuccess,
   defaultData,
   deployFunction,
+  getFunction,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   project,
@@ -25,6 +26,7 @@ const FunctionsPanel = ({
   setNewFunction,
   setNewFunctionProject
 }) => {
+  const [confirmData, setConfirmData] = useState(null)
   const [validation, setValidation] = useState({
     isNameValid: true,
     isHandlerValid: true,
@@ -96,6 +98,20 @@ const FunctionsPanel = ({
     )
   }
 
+  const createFunction = deploy => {
+    createNewFunction(project, functionsStore.newFunction).then(result => {
+      if (deploy) {
+        return handleDeploy(functionsStore.newFunction)
+      }
+
+      createFunctionSuccess().then(() => {
+        history.push(
+          `/projects/${project}/functions/${result.data.hash_key}/overview`
+        )
+      })
+    })
+  }
+
   const handleSave = deploy => {
     if (validation.isNameValid && validation.isHandlerValid) {
       if (functionsStore.newFunction.metadata.name.length === 0) {
@@ -110,17 +126,26 @@ const FunctionsPanel = ({
         removeFunctionsError()
       }
 
-      createNewFunction(project, functionsStore.newFunction).then(result => {
-        if (deploy) {
-          return handleDeploy(functionsStore.newFunction)
-        }
-
-        createFunctionSuccess().then(() => {
-          history.push(
-            `/projects/${project}/functions/${result.data.hash_key}/overview`
-          )
+      getFunction(project, functionsStore.newFunction.metadata.name)
+        .then(() => {
+          setConfirmData({
+            title: `Overwrite function "${functionsStore.newFunction.metadata.name}"?`,
+            description:
+              'The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?',
+            btnCancelLabel: 'Cancel',
+            btnCancelVariant: 'label',
+            btnConfirmLabel: 'Overwrite',
+            btnConfirmVariant: 'secondary',
+            rejectHandler: () => setConfirmData(null),
+            confirmHandler: () => {
+              createFunction(deploy)
+              setConfirmData(null)
+            }
+          })
         })
-      })
+        .catch(() => {
+          createFunction(deploy)
+        })
     }
   }
 
@@ -138,6 +163,7 @@ const FunctionsPanel = ({
     <FunctionsPanelView
       checkValidation={checkValidation()}
       closePanel={closePanel}
+      confirmData={confirmData}
       defaultData={defaultData ?? {}}
       error={functionsStore.error}
       handleSave={handleSave}
