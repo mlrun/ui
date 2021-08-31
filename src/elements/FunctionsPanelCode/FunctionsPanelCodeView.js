@@ -9,6 +9,7 @@ import EditorModal from '../../common/EditorModal/EditorModal'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
 import RadioButtons from '../../common/RadioButtons/RadioButtons'
+import { trimSplit } from '../../utils'
 
 import {
   DEFAULT_ENTRY,
@@ -172,13 +173,12 @@ const FunctionsPanelCodeView = ({
           }
           onBlur={event => {
             if (
-              event.target.value.length > 0 &&
               !isEqual(
-                event.target.value.split('\n'),
+                trimSplit(event.target.value, '\n'),
                 functionsStore.newFunction.spec.build.commands
               )
             ) {
-              setNewFunctionCommands(data.commands.split('\n'))
+              setNewFunctionCommands(trimSplit(data.commands, '\n'))
             }
           }}
           type="text"
