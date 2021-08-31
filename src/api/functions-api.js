@@ -1,6 +1,8 @@
 import { functionTemplatesHttpClient, mainHttpClient } from '../httpClient'
 
 export default {
+  checkExistingName: (project, name) =>
+    mainHttpClient.get(`/func/${project}/${name}`),
   createNewFunction: (project, data) =>
     mainHttpClient.post(`/func/${project}/${data.metadata.name}`, data, {
       params: {
