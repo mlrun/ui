@@ -2,6 +2,8 @@ import React from 'react'
 
 import Button from './Button'
 
+import { DANGER_BUTTON, LABEL_BUTTON, PRIMARY_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+
 export default {
   title: 'Example/Button',
   component: Button
@@ -18,33 +20,33 @@ export const Primary = Template.bind({})
 Primary.args = {
   ...commonArgs,
   label: 'Primary button',
-  variant: 'primary'
+  variant: PRIMARY_BUTTON
 }
 
 export const Secondary = Template.bind({})
 Secondary.args = {
   ...commonArgs,
   label: 'Secondary button',
-  variant: 'secondary'
+  variant: SECONDARY_BUTTON
 }
 
 export const Tertiary = Template.bind({})
 Tertiary.args = {
   ...commonArgs,
   label: 'Tertiary button',
-  variant: 'tertiary'
+  variant: TERTIARY_BUTTON
 }
 
 export const Danger = Template.bind({})
 Danger.args = {
   ...commonArgs,
   label: 'Danger button',
-  variant: 'danger'
+  variant: DANGER_BUTTON
 }
 
 export const Label = Template.bind({})
 Label.args = {
   ...commonArgs,
   label: 'Label button',
-  variant: 'label'
+  variant: LABEL_BUTTON
 }

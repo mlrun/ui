@@ -1,5 +1,13 @@
 import PropTypes from 'prop-types'
-import { PANEL_CREATE_MODE, PANEL_EDIT_MODE } from './constants'
+import {
+  DANGER_BUTTON,
+  LABEL_BUTTON,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE,
+  PRIMARY_BUTTON,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from './constants'
 
 export const COMBOBOX_MATCHES = PropTypes.arrayOf(
   PropTypes.shape({
@@ -87,3 +95,11 @@ export const RADIO_BUTTONS_ELEMENT = PropTypes.shape({
 })
 
 export const RADIO_BUTTONS_ELEMENTS = PropTypes.arrayOf(RADIO_BUTTONS_ELEMENT)
+
+export const BUTTON_VARIANTS = PropTypes.oneOf([
+  PRIMARY_BUTTON,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON,
+  DANGER_BUTTON,
+  LABEL_BUTTON
+])

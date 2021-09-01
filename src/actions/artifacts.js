@@ -167,7 +167,7 @@ const artifactsAction = {
         )
 
         dispatch(
-          artifactsAction.fetchDataSetSuccess({
+          artifactsAction.fetchFileSuccess({
             [getArtifactIdentifier(generatedArtifacts[0])]: generatedArtifacts
           })
         )

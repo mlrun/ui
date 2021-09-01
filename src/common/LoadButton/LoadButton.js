@@ -2,6 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
+import {
+  PRIMARY_BUTTON,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from '../../constants'
+
 import './loadButton.scss'
 
 const LoadButton = React.forwardRef(
@@ -23,14 +29,17 @@ const LoadButton = React.forwardRef(
 LoadButton.defaultProps = {
   className: '',
   label: 'Load button',
-  variant: 'tertiary'
+  variant: TERTIARY_BUTTON
 }
 
 LoadButton.propTypes = {
   className: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  variant: PropTypes.PropTypes.oneOf(['primary', 'secondary', 'tertiary'])
-    .isRequired
+  variant: PropTypes.PropTypes.oneOf([
+    PRIMARY_BUTTON,
+    SECONDARY_BUTTON,
+    TERTIARY_BUTTON
+  ]).isRequired
 }
 
 export default LoadButton

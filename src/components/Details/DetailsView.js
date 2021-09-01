@@ -24,7 +24,10 @@ import {
   FEATURE_STORE_PAGE,
   FUNCTIONS_PAGE,
   FEATURE_VECTORS_TAB,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  TERTIARY_BUTTON,
+  PRIMARY_BUTTON,
+  LABEL_BUTTON
 } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -117,7 +120,7 @@ const DetailsView = React.forwardRef(
           {pageData.page === FEATURE_STORE_PAGE && (
             <>
               <Button
-                variant="label"
+                variant={LABEL_BUTTON}
                 label="Cancel"
                 onClick={cancelChanges}
                 disabled={detailsStore.changes.counter === 0}
@@ -214,7 +217,7 @@ const DetailsView = React.forwardRef(
           >
             <div className="pop-up-dialog__footer-container">
               <Button
-                variant="tertiary"
+                variant={TERTIARY_BUTTON}
                 label={
                   detailsStore.refreshWasHandled
                     ? "Don't refresh"
@@ -226,7 +229,7 @@ const DetailsView = React.forwardRef(
                 }}
               />
               <Button
-                variant="primary"
+                variant={PRIMARY_BUTTON}
                 label={detailsStore.refreshWasHandled ? 'Refresh' : 'Leave'}
                 className="pop-up-dialog__btn_cancel"
                 onClick={leavePage}

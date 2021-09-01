@@ -12,6 +12,11 @@ import {
   EXISTING_IMAGE,
   NEW_IMAGE
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
+import {
+  LABEL_BUTTON,
+  PANEL_CREATE_MODE,
+  SECONDARY_BUTTON
+} from '../../constants'
 
 const FunctionsPanel = ({
   functionsStore,
@@ -152,26 +157,30 @@ const FunctionsPanel = ({
         removeFunctionsError()
       }
 
-      getFunction(project, functionsStore.newFunction.metadata.name)
-        .then(() => {
-          setConfirmData({
-            title: `Overwrite function "${functionsStore.newFunction.metadata.name}"?`,
-            description:
-              'The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?',
-            btnCancelLabel: 'Cancel',
-            btnCancelVariant: 'label',
-            btnConfirmLabel: 'Overwrite',
-            btnConfirmVariant: 'secondary',
-            rejectHandler: () => setConfirmData(null),
-            confirmHandler: () => {
-              createFunction(deploy)
-              setConfirmData(null)
-            }
+      if (mode === PANEL_CREATE_MODE) {
+        getFunction(project, functionsStore.newFunction.metadata.name)
+          .then(() => {
+            setConfirmData({
+              title: `Overwrite function "${functionsStore.newFunction.metadata.name}"?`,
+              description:
+                'The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?',
+              btnCancelLabel: 'Cancel',
+              btnCancelVariant: LABEL_BUTTON,
+              btnConfirmLabel: 'Overwrite',
+              btnConfirmVariant: SECONDARY_BUTTON,
+              rejectHandler: () => setConfirmData(null),
+              confirmHandler: () => {
+                createFunction(deploy)
+                setConfirmData(null)
+              }
+            })
           })
-        })
-        .catch(() => {
-          createFunction(deploy)
-        })
+          .catch(() => {
+            createFunction(deploy)
+          })
+      } else {
+        createFunction(deploy)
+      }
     }
   }
 
@@ -191,8 +200,8 @@ const FunctionsPanel = ({
 
   return (
     <FunctionsPanelView
-      closePanel={closePanel}
       checkValidation={checkValidation}
+      closePanel={closePanel}
       confirmData={confirmData}
       defaultData={defaultData ?? {}}
       error={functionsStore.error}

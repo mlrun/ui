@@ -7,6 +7,8 @@ import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
 import Button from '../../../common/Button/Button'
 
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../../constants'
+
 import './createProjectDialog.scss'
 
 const CreateProjectDialog = ({
@@ -65,7 +67,7 @@ const CreateProjectDialog = ({
             />
           )}
           <Button
-            variant="tertiary"
+            variant={TERTIARY_BUTTON}
             label="Cancel"
             className="pop-up-dialog__btn_cancel"
             onClick={closeNewProjectPopUp}
@@ -76,7 +78,7 @@ const CreateProjectDialog = ({
                 /^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
               )
             }
-            variant="secondary"
+            variant={SECONDARY_BUTTON}
             label="Create"
             onClick={handleCreateProject}
           />

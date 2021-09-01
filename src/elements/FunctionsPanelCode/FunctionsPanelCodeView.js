@@ -18,6 +18,7 @@ import {
   NEW_IMAGE,
   EXISTING_IMAGE
 } from './functionsPanelCode.util'
+import { LABEL_BUTTON } from '../../constants'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
@@ -68,7 +69,7 @@ const FunctionsPanelCodeView = ({
                 </span>
               }
               onClick={() => setEditCode(true)}
-              variant="label"
+              variant={LABEL_BUTTON}
             />
           )}
         </div>
