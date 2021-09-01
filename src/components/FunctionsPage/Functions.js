@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { chain, isEqual, isEmpty } from 'lodash'
-import { useLocation } from 'react-router-dom'
 
 import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
@@ -61,7 +60,6 @@ const Functions = ({
   const [editableItem, setEditableItem] = useState(null)
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
-  const location = useLocation()
   let fetchFunctionLogsTimeout = useRef(null)
 
   const handleFetchFunctionLogs = useCallback(
@@ -108,7 +106,6 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          new URLSearchParams(location.search).get('demo') !== 'true' ||
           !['job', ''].includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
@@ -126,8 +123,7 @@ const Functions = ({
     filterMenuActionButton: {
       label: 'New',
       onClick: () => setFunctionsPanelIsOpen(true),
-      variant: SECONDARY_BUTTON,
-      hidden: new URLSearchParams(location.search).get('demo') !== 'true'
+      variant: SECONDARY_BUTTON
     },
     refreshLogs: handleFetchFunctionLogs,
     removeLogs: handleRemoveLogs,
