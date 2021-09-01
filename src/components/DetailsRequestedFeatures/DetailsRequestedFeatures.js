@@ -18,6 +18,7 @@ import {
   detailsRequestedFeaturesReducer,
   initialState
 } from './detailsRequestedFeaturesReducer.js'
+import { DANGER_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -319,7 +320,7 @@ const DetailsRequestedFeatures = ({
           <div>The feature could be added back later.</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="tertiary"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={() => {
@@ -332,7 +333,7 @@ const DetailsRequestedFeatures = ({
             <Button
               label="Delete"
               onClick={() => handleDelete(confirmDialogData.index)}
-              variant="danger"
+              variant={DANGER_BUTTON}
             />
           </div>
         </PopUpDialog>

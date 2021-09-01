@@ -6,9 +6,10 @@ import ScheduleJobSimple from '../ScheduleJobSimple/ScheduleJobSimple'
 import ScheduleCron from '../ScheduleCron/ScheduleCron'
 import Button from '../../common/Button/Button'
 
-import { ReactComponent as Schedule } from '../../images/clock.svg'
-
+import { SECONDARY_BUTTON } from '../../constants'
 import { tabs } from './scheduleJobData'
+
+import { ReactComponent as Schedule } from '../../images/clock.svg'
 
 import './scheduleJob.scss'
 
@@ -75,7 +76,7 @@ const ScheduleJobView = ({
         )}
       </div>
       <Button
-        variant="secondary"
+        variant={SECONDARY_BUTTON}
         label={
           <>
             <Schedule />

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { JOB_STEADY_STATES } from './jobsPage.utils'
+import { TERTIARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
@@ -150,7 +151,7 @@ export const generatePageData = (
   let filterMenuActionButton = {
     label: 'Resource monitoring',
     tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
-    variant: 'tertiary',
+    variant: TERTIARY_BUTTON,
     disabled: !jobsDashboardUrl,
     onClick: event => handleMonitoring()
   }

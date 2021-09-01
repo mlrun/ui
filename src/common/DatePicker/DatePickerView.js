@@ -11,6 +11,8 @@ import Tip from '../Tip/Tip'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
+import { SECONDARY_BUTTON } from '../../constants'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Invalid } from '../../images/invalid.svg'
 
@@ -242,7 +244,7 @@ const DatePickerView = React.forwardRef(
                 <ErrorMessage message="“To” must be later than “From”" />
               )}
               <Button
-                variant="secondary"
+                variant={SECONDARY_BUTTON}
                 label="Apply"
                 onClick={onApplyChanges}
                 className="date-picker__apply-btn"

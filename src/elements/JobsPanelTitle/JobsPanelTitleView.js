@@ -17,6 +17,7 @@ import { ReactComponent as Edit } from '../../images/edit.svg'
 
 import { panelActions } from '../../components/JobsPanel/panelReducer'
 import { getChipOptions } from '../../utils/getChipOptions'
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 const JobsPanelTitleView = ({
   closePanel,
@@ -172,9 +173,13 @@ const JobsPanelTitleView = ({
           <Button
             label="Cancel"
             onClick={event => handleFinishEdit(event, true)}
-            variant="tertiary"
+            variant={TERTIARY_BUTTON}
           />
-          <Button variant="primary" label="Done" onClick={handleFinishEdit} />
+          <Button
+            variant={PRIMARY_BUTTON}
+            label="Done"
+            onClick={handleFinishEdit}
+          />
         </div>
       )}
       <button onClick={() => closePanel({})} className="panel-title__btn_close">

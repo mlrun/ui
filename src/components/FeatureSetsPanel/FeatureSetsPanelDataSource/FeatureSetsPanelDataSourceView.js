@@ -16,8 +16,12 @@ import {
   kindOptions,
   PARQUET
 } from './featureSetsPanelDataSource.util'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
+import {
+  MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  SECONDARY_BUTTON
+} from '../../../constants'
 import { pathPlaceholders } from '../../../utils/panelPathScheme'
+
 import { ReactComponent as Pencil } from '../../../images/edit.svg'
 
 import './featureSetsPanelDataSource.scss'
@@ -94,7 +98,7 @@ const FeatureSetsPanelDataSourceView = ({
                 </>
               }
               onClick={() => setShowSchedule(state => !state)}
-              variant="secondary"
+              variant={SECONDARY_BUTTON}
             />
             {showSchedule && (
               <ScheduleFeatureSet

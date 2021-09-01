@@ -11,6 +11,12 @@ import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSe
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 
+import {
+  PRIMARY_BUTTON,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from '../../constants'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './featureSetsPanel.scss'
@@ -40,7 +46,11 @@ const FeatureSetsPanelView = ({
               transformation graph unless you delete the data first.
             </div>
             <div className="pop-up-dialog__footer-container">
-              <Button variant="primary" label="Okay" onClick={handleSave} />
+              <Button
+                variant={PRIMARY_BUTTON}
+                label="Okay"
+                onClick={handleSave}
+              />
             </div>
           </PopUpDialog>
         )}
@@ -96,13 +106,13 @@ const FeatureSetsPanelView = ({
               />
             )}
             <Button
-              variant="tertiary"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={closePanel}
             />
             <Button
-              variant="secondary"
+              variant={SECONDARY_BUTTON}
               label="Save"
               onClick={() => handleSaveOnClick(false)}
             />
@@ -110,7 +120,7 @@ const FeatureSetsPanelView = ({
               className="btn_start-ingestion"
               label="Save and ingest"
               onClick={() => handleSaveOnClick(true)}
-              variant="secondary"
+              variant={SECONDARY_BUTTON}
             />
           </div>
         </div>

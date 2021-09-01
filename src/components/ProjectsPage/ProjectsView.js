@@ -19,6 +19,7 @@ import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Button from '../../common/Button/Button'
 
 import { pageData, projectsSortOptions, projectsStates } from './projectsData'
+import { TERTIARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
@@ -80,7 +81,7 @@ const ProjectsView = ({
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="tertiary"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={confirmData.rejectHandler}

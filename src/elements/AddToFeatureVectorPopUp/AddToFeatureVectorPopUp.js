@@ -12,6 +12,7 @@ import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureV
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import { generateProjectsList } from '../../utils/projects'
 import tableActions from '../../actions/table'
+import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
 
 import { ReactComponent as AddCircle } from '../../images/add-circle.svg'
 
@@ -220,13 +221,13 @@ const AddToFeatureVectorPopUp = ({
           </div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="label"
+              variant={LABEL_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={closePopUp}
             />
             <Button
-              variant="primary"
+              variant={PRIMARY_BUTTON}
               disabled={[
                 selectedProject,
                 selectedFeatureVector,
