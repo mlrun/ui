@@ -26,7 +26,9 @@ import {
   SCHEDULE_TAB,
   INIT_GROUP_FILTER,
   JOBS_PAGE,
-  PANEL_EDIT_MODE
+  PANEL_EDIT_MODE,
+  TERTIARY_BUTTON,
+  DANGER_BUTTON
 } from '../../constants'
 
 const Jobs = ({
@@ -119,7 +121,7 @@ const Jobs = ({
       title: `Delete scheduled job "${scheduledJob.name}"?`,
       description: 'Deleted scheduled jobs can not be restored.',
       btnConfirmLabel: 'Delete',
-      btnConfirmType: 'danger',
+      btnConfirmType: DANGER_BUTTON,
       rejectHandler: () => {
         setConfirmData(null)
       },
@@ -209,7 +211,7 @@ const Jobs = ({
       item: job,
       title: `Abort job "${job.name}"?`,
       btnConfirmLabel: 'Abort',
-      btnConfirmType: 'danger',
+      btnConfirmType: DANGER_BUTTON,
       rejectHandler: () => {
         setConfirmData(null)
       },
@@ -405,7 +407,7 @@ const Jobs = ({
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="tertiary"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               onClick={confirmData.rejectHandler}
               className="pop-up-dialog__btn_cancel"

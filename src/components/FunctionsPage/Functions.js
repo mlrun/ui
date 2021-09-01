@@ -28,9 +28,12 @@ import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
 import {
+  DANGER_BUTTON,
   FUNCTIONS_PAGE,
+  LABEL_BUTTON,
   PANEL_CREATE_MODE,
-  PANEL_EDIT_MODE
+  PANEL_EDIT_MODE,
+  SECONDARY_BUTTON
 } from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -123,7 +126,7 @@ const Functions = ({
     filterMenuActionButton: {
       label: 'New',
       onClick: () => setFunctionsPanelIsOpen(true),
-      variant: 'secondary',
+      variant: SECONDARY_BUTTON,
       hidden: new URLSearchParams(location.search).get('demo') !== 'true'
     },
     refreshLogs: handleFetchFunctionLogs,
@@ -284,9 +287,9 @@ const Functions = ({
       title: `Delete function "${func.name}"?`,
       description: 'Deleted functions cannot be restored.',
       btnCancelLabel: 'Cancel',
-      btnCancelVariant: 'label',
+      btnCancelVariant: LABEL_BUTTON,
       btnConfirmLabel: 'Delete',
-      btnConfirmVariant: 'danger',
+      btnConfirmVariant: DANGER_BUTTON,
       rejectHandler: () => setConfirmData(null),
       confirmHandler: () => removeFunction(func)
     })

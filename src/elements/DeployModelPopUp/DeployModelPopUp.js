@@ -12,7 +12,8 @@ import Input from '../../common/Input/Input'
 import artifactsAction from '../../actions/artifacts'
 import notificationActions from '../../actions/notification'
 import { generateUri } from '../../utils/resources'
-import { MODELS_TAB } from '../../constants'
+import { LABEL_BUTTON, MODELS_TAB, PRIMARY_BUTTON } from '../../constants'
+
 import './deployModelPopUp.scss'
 
 const DeployModelPopUp = ({
@@ -181,13 +182,13 @@ const DeployModelPopUp = ({
         />
         <div className="pop-up-dialog__footer-container">
           <Button
-            variant="label"
+            variant={LABEL_BUTTON}
             label="Cancel"
             className="pop-up-dialog__btn_cancel"
             onClick={closePopUp}
           />
           <Button
-            variant="primary"
+            variant={PRIMARY_BUTTON}
             disabled={[
               selectedFunctionName,
               selectedTag,

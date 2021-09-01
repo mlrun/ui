@@ -12,6 +12,8 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import Loader from '../../common/Loader/Loader'
 import Button from '../../common/Button/Button'
 
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 
@@ -125,13 +127,13 @@ const JobsPanelView = ({
                 disabled={!checkValidation}
                 label="Schedule for later"
                 onClick={() => setOpenScheduleJob(true)}
-                variant="tertiary"
+                variant={TERTIARY_BUTTON}
               />
               {withSaveChanges ? (
                 <Button
                   label="Save"
                   onClick={event => handleEditJob(event, defaultData.schedule)}
-                  variant="secondary"
+                  variant={SECONDARY_BUTTON}
                 />
               ) : (
                 <Button
@@ -142,7 +144,7 @@ const JobsPanelView = ({
                   }
                   disabled={!checkValidation}
                   onClick={() => handleRunJob()}
-                  variant="secondary"
+                  variant={SECONDARY_BUTTON}
                 />
               )}
             </div>

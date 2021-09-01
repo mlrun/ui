@@ -14,6 +14,12 @@ import FunctionsPanelSecrets from '../../elements/FunctionsPanelSecrets/Function
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import { FUNCTION_PANEL_MODE } from '../../types'
 
+import {
+  LABEL_BUTTON,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from '../../constants'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './functionsPanel.scss'
@@ -125,19 +131,19 @@ const FunctionsPanelView = ({
               )}
               <Button
                 className="btn_cancel"
-                variant="label"
+                variant={LABEL_BUTTON}
                 label="Cancel"
                 onClick={closePanel}
               />
               <Button
                 className="btn_save"
                 disabled={!checkValidation}
-                variant="tertiary"
+                variant={TERTIARY_BUTTON}
                 label="Save"
                 onClick={() => handleSave()}
               />
               <Button
-                variant="secondary"
+                variant={SECONDARY_BUTTON}
                 label="Deploy"
                 onClick={() => handleSave(true)}
                 disabled={!checkValidation}

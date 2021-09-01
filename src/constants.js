@@ -374,3 +374,11 @@ export const REMOVE_FILTERS = 'REMOVE_FILTERS'
 export const INIT_GROUP_FILTER = 'name'
 export const INIT_STATE_FILTER = 'all'
 export const INIT_TAG_FILTER = 'latest'
+
+/*=========== BUTTONS =============*/
+
+export const PRIMARY_BUTTON = 'primary'
+export const SECONDARY_BUTTON = 'secondary'
+export const TERTIARY_BUTTON = 'tertiary'
+export const DANGER_BUTTON = 'danger'
+export const LABEL_BUTTON = 'label'
