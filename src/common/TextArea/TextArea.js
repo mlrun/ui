@@ -6,7 +6,7 @@ import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tip from '../Tip/Tip'
 
-import { ReactComponent as Warning } from '../../images/warning.svg'
+import { ReactComponent as Invalid } from '../../images/invalid.svg'
 
 import './textArea.scss'
 
@@ -16,8 +16,10 @@ const TextArea = React.forwardRef(
       className,
       disabled,
       floatingLabel,
+      focused,
       iconClass,
-      textAreaIcon,
+      invalid,
+      invalidText,
       label,
       onBlur,
       onChange,
@@ -25,7 +27,8 @@ const TextArea = React.forwardRef(
       placeholder,
       required,
       requiredText,
-      focused,
+      setInvalid,
+      textAreaIcon,
       tip,
       value,
       wrapperClassName
@@ -33,13 +36,14 @@ const TextArea = React.forwardRef(
     ref
   ) => {
     const [textAreaIsFocused, setTextAreaIsFocused] = useState(false)
+    const [isInvalid, setIsInvalid] = useState(false)
     const textArea = React.createRef()
     const labelRef = React.createRef()
     const textAreaClassNames = classnames(
       'text-area',
       className,
       textAreaIsFocused && floatingLabel && 'text-area_active',
-      required && 'text-area_required'
+      isInvalid && 'text-area_invalid'
     )
     const wrapperClassNames = classnames(wrapperClassName, 'text-area-wrapper')
     const labelClassNames = classnames(
@@ -59,6 +63,17 @@ const TextArea = React.forwardRef(
         textArea.current.focus()
       }
     }, [focused, textArea, textAreaIsFocused])
+
+    useEffect(() => {
+      if (isInvalid !== invalid) {
+        if (required && value.trim().length === 0) {
+          setIsInvalid(true)
+          setInvalid && setInvalid(false)
+        } else {
+          setIsInvalid(invalid)
+        }
+      }
+    }, [invalid, isInvalid, required, setInvalid, value])
 
     const handleTextAreaScroll = useCallback(
       event => {
@@ -95,6 +110,14 @@ const TextArea = React.forwardRef(
         setTextAreaIsFocused(false)
       }
 
+      if (required && event.target.value.trim().length === 0) {
+        setIsInvalid(true)
+        setInvalid && setInvalid(false)
+      } else {
+        setIsInvalid(false)
+        setInvalid && setInvalid(true)
+      }
+
       onChange(event.target.value)
     }
 
@@ -108,20 +131,29 @@ const TextArea = React.forwardRef(
           onChange={handleClick}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
+          required={isInvalid}
           ref={textArea}
           value={value && value}
         />
         {label && (
           <label data-testid="label" className={labelClassNames} ref={labelRef}>
             {label}
+            {required && <span className="text-area__label-mandatory"> *</span>}
           </label>
         )}
-        {required && (
+        {isInvalid && (
           <Tooltip
-            template={<TextTooltipTemplate text={requiredText} warning />}
             className="text-area__warning"
+            template={
+              <TextTooltipTemplate
+                text={
+                  required && value.length === 0 ? requiredText : invalidText
+                }
+                warning
+              />
+            }
           >
-            <Warning />
+            <Invalid />
           </Tooltip>
         )}
         {tip && !required && <Tip text={tip} className="text-area__tip" />}
@@ -142,13 +174,16 @@ TextArea.defaultProps = {
   focused: false,
   iconClass: '',
   inputIcon: null,
+  invalid: false,
+  invalidText: 'This field is invalid',
   label: '',
   onBlur: () => {},
   onChange: () => {},
   onKeyDown: () => {},
   placeholder: '',
   required: false,
-  requiredText: '',
+  requiredText: 'This field is required',
+  setInvalid: () => {},
   tip: '',
   value: '',
   wrapperClassName: ''
@@ -161,6 +196,8 @@ TextArea.propTypes = {
   focused: PropTypes.bool,
   iconClass: PropTypes.string,
   inputIcon: PropTypes.element,
+  invalid: PropTypes.bool,
+  invalidText: PropTypes.string,
   label: PropTypes.string,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
@@ -168,6 +205,7 @@ TextArea.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   requiredText: PropTypes.string,
+  setInvalid: PropTypes.func,
   tip: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   wrapperClassName: PropTypes.string

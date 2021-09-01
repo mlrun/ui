@@ -9,6 +9,10 @@ import FunctionsPanelView from './FunctionsPanelView'
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
 import {
+  EXISTING_IMAGE,
+  NEW_IMAGE
+} from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
+import {
   LABEL_BUTTON,
   PANEL_CREATE_MODE,
   SECONDARY_BUTTON
@@ -35,12 +39,22 @@ const FunctionsPanel = ({
   const [validation, setValidation] = useState({
     isNameValid: true,
     isHandlerValid: true,
+    isCodeImageValid: true,
+    isBaseImageValid: true,
+    isBuildCommandsValid: true,
     isMemoryRequestValid: true,
     isMemoryLimitValid: true,
     isCpuRequestValid: true,
     isCpuLimitValid: true,
     isGpuLimitValid: true
   })
+  const [imageType, setImageType] = useState(
+    defaultData?.build?.image ||
+      defaultData?.build?.base_image ||
+      defaultData?.build?.commands?.length > 0
+      ? NEW_IMAGE
+      : ''
+  )
   const history = useHistory()
 
   useEffect(() => {
@@ -91,18 +105,6 @@ const FunctionsPanel = ({
     setNewFunctionProject
   ])
 
-  const checkValidation = () => {
-    return (
-      validation.isNameValid &&
-      validation.isHandlerValid &&
-      validation.isMemoryRequestValid &&
-      validation.isMemoryLimitValid &&
-      validation.isCpuRequestValid &&
-      validation.isCpuLimitValid &&
-      validation.isGpuLimitValid
-    )
-  }
-
   const createFunction = deploy => {
     createNewFunction(project, functionsStore.newFunction).then(result => {
       if (deploy) {
@@ -118,13 +120,37 @@ const FunctionsPanel = ({
   }
 
   const handleSave = deploy => {
-    if (validation.isNameValid && validation.isHandlerValid) {
+    if (checkValidation()) {
       if (functionsStore.newFunction.metadata.name.length === 0) {
         return setValidation(state => ({ ...state, isNameValid: false }))
       }
 
       if (functionsStore.newFunction.spec.default_handler.length === 0) {
         return setValidation(state => ({ ...state, isHandlerValid: false }))
+      }
+
+      if (
+        functionsStore.newFunction.spec.image.length === 0 &&
+        imageType === EXISTING_IMAGE
+      ) {
+        return setValidation(state => ({
+          ...state,
+          isCodeImageValid: false
+        }))
+      }
+
+      if (
+        imageType === NEW_IMAGE &&
+        (functionsStore.newFunction.spec.build.base_image.length === 0 ||
+          functionsStore.newFunction.spec.build.commands.length === 0)
+      ) {
+        return setValidation(state => ({
+          ...state,
+          isBaseImageValid:
+            functionsStore.newFunction.spec.build.base_image.length > 0,
+          isBuildCommandsValid:
+            functionsStore.newFunction.spec.build.commands.length > 0
+        }))
       }
 
       if (functionsStore.error) {
@@ -168,17 +194,24 @@ const FunctionsPanel = ({
       })
   }
 
+  const checkValidation = () => {
+    return Object.values(validation).find(value => value === false) ?? true
+  }
+
   return (
     <FunctionsPanelView
-      checkValidation={checkValidation()}
+      checkValidation={checkValidation}
       closePanel={closePanel}
       confirmData={confirmData}
       defaultData={defaultData ?? {}}
       error={functionsStore.error}
       handleSave={handleSave}
+      imageType={imageType}
       loading={functionsStore.loading}
+      match={match}
       mode={mode}
       removeFunctionsError={removeFunctionsError}
+      setImageType={setImageType}
       setValidation={setValidation}
       validation={validation}
     />
