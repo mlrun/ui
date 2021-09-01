@@ -57,40 +57,40 @@ const DetailsStatistics = ({ selectedItem }) => {
                     `statistics-cell__type_${headers[index].type}`,
                     headers[index].hidden && 'statistics-cell_hidden'
                   )
-                  const config =
-                    statisticsValue.type === 'chart'
-                      ? {
-                          ...chartConfig,
-                          data: {
-                            labels: statisticsValue.value[1],
-                            datasets: [
-                              {
-                                data: statisticsValue.value[0],
-                                showLine: false,
-                                backgroundColor: [colors.amethyst]
-                              }
-                            ]
-                          },
-                          options: {
-                            ...chartConfig.options,
-                            scales: {
-                              ...chartConfig.options.scales,
-                              y: {
-                                ...chartConfig.options.scales.y,
-                                display: true,
-                                min: Math.min(...statisticsValue.value[0]),
-                                max: Math.max(...statisticsValue.value[0]),
-                                ticks: {
-                                  ...chartConfig.options.scales.y.ticks,
-                                  stepSize: Math.max(
-                                    ...statisticsValue.value[0]
-                                  )
-                                }
-                              }
+
+                  let config = {}
+
+                  if (statisticsValue.type === 'chart') {
+                    config = {
+                      ...chartConfig,
+                      data: {
+                        labels: statisticsValue.value[1],
+                        datasets: [
+                          {
+                            data: statisticsValue.value[0],
+                            showLine: false,
+                            backgroundColor: [colors.amethyst]
+                          }
+                        ]
+                      },
+                      options: {
+                        ...chartConfig.options,
+                        scales: {
+                          ...chartConfig.options.scales,
+                          y: {
+                            ...chartConfig.options.scales.y,
+                            display: true,
+                            min: 0,
+                            max: Math.max(...statisticsValue.value[0]),
+                            ticks: {
+                              ...chartConfig.options.scales.y.ticks,
+                              stepSize: Math.max(...statisticsValue.value[0])
                             }
                           }
                         }
-                      : {}
+                      }
+                    }
+                  }
 
                   return (
                     <div
