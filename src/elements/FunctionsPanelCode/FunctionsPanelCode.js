@@ -14,6 +14,7 @@ import {
   NEW_IMAGE
 } from './functionsPanelCode.util'
 import { PANEL_CREATE_MODE } from '../../constants'
+import { trimSplit } from '../../utils'
 
 const FunctionsPanelCode = ({
   appStore,
@@ -85,7 +86,10 @@ const FunctionsPanelCode = ({
         }))
       } else {
         setNewFunctionCommands(
-          appStore.frontendSpec?.function_deployment_mlrun_command.split('\n')
+          trimSplit(
+            appStore.frontendSpec?.function_deployment_mlrun_command,
+            '\n'
+          )
         )
         setImageType(NEW_IMAGE)
         setNewFunctionBaseImage(
@@ -155,7 +159,10 @@ const FunctionsPanelCode = ({
     } else {
       setNewFunctionImage('')
       setNewFunctionCommands(
-        appStore.frontendSpec?.function_deployment_mlrun_command.split('\n')
+        trimSplit(
+          appStore.frontendSpec?.function_deployment_mlrun_command,
+          '\n'
+        )
       )
       setNewFunctionBaseImage(
         appStore.frontendSpec?.default_function_image_by_kind?.[
