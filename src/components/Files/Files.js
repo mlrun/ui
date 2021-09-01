@@ -200,7 +200,7 @@ const Files = ({
         artifactsStore.files.selectedRowData.content[name] ||
         artifactsStore.files.allData
 
-      if (artifacts.length) {
+      if (artifacts.length > 0) {
         const searchItem = searchArtifactItem(artifacts, name, tag, iter)
 
         if (!searchItem) {
