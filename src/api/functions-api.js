@@ -23,6 +23,8 @@ export default {
 
     return mainHttpClient.get('/funcs', { params })
   },
+  getFunction: (project, name) =>
+    mainHttpClient.get(`/func/${project}/${name}`),
   getFunctionLogs: (project, name, tag, offset) => {
     const params = {
       project,

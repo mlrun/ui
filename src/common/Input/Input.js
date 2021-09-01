@@ -62,6 +62,7 @@ const Input = React.forwardRef(
     )
     const labelClassNames = classnames(
       'input__label',
+      disabled && 'input__label_disabled',
       floatingLabel && 'input__label-floating',
       (inputIsFocused || placeholder || typedValue.length > 0) &&
         floatingLabel &&
@@ -69,6 +70,10 @@ const Input = React.forwardRef(
       infoLabel && 'input__label_info'
     )
     const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
+    const inputLabelMandatoryClassNames = classnames(
+      'input__label-mandatory',
+      disabled && 'input__label-mandatory_disabled'
+    )
 
     useEffect(() => {
       setTypedValue(String(value ?? '')) // convert from number to string
@@ -183,7 +188,9 @@ const Input = React.forwardRef(
             }
           >
             {label}
-            {required && <span className="input__label-mandatory"> *</span>}
+            {required && (
+              <span className={inputLabelMandatoryClassNames}> *</span>
+            )}
           </label>
         )}
         {isInvalid && (

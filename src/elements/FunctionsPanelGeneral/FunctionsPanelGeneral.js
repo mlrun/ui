@@ -12,6 +12,7 @@ const FunctionsPanelGeneral = ({
   defaultData,
   functionsStore,
   isNameValid,
+  mode,
   setNameValid,
   setNewFunctionDescription,
   setNewFunctionLabels,
@@ -76,6 +77,7 @@ const FunctionsPanelGeneral = ({
       handleNameOnBlur={handleNameOnBlur}
       handleTagOnBlur={handleTagOnBlur}
       isNameValid={isNameValid}
+      mode={mode}
       setData={setData}
       setNameValid={setNameValid}
       setNewFunctionDescription={setNewFunctionDescription}
@@ -91,6 +93,7 @@ FunctionsPanelGeneral.defaultProps = {
 FunctionsPanelGeneral.propTypes = {
   defaultData: PropTypes.shape({}),
   isNameValid: PropTypes.bool.isRequired,
+  mode: PropTypes.string.isRequired,
   setNameValid: PropTypes.func.isRequired
 }
 

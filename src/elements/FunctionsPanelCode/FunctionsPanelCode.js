@@ -8,6 +8,7 @@ import FunctionsPanelCodeView from './FunctionsPanelCodeView'
 import functionsActions from '../../actions/functions'
 import {
   DEFAULT_ENTRY,
+  DEFAULT_IMAGE,
   DEFAULT_SOURCE_CODE,
   EXISTING_IMAGE,
   NEW_IMAGE
@@ -74,6 +75,7 @@ const FunctionsPanelCode = ({
             functionsStore.newFunction.kind
           ]
         )
+        console.log('here')
         setImageType(EXISTING_IMAGE)
         setData(state => ({
           ...state,
@@ -106,9 +108,25 @@ const FunctionsPanelCode = ({
             )
         }))
       }
+    } else if (
+      defaultData.build?.base_image?.length === 0 &&
+      defaultData.build?.commands?.length === 0 &&
+      defaultData.build?.image?.length === 0 &&
+      imageType.length === 0
+    ) {
+      setNewFunctionImage(defaultData.image || DEFAULT_IMAGE)
+      setImageType(EXISTING_IMAGE)
+      setData(state => ({
+        ...state,
+        image: defaultData.image || DEFAULT_IMAGE
+      }))
+    } else if (imageType.length === 0) {
+      setImageType(NEW_IMAGE)
     }
   }, [
     appStore.frontendSpec,
+    defaultData.build,
+    defaultData.image,
     functionsStore.newFunction.kind,
     functionsStore.newFunction.metadata.tag,
     imageType.length,

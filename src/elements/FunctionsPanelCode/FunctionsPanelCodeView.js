@@ -9,6 +9,7 @@ import EditorModal from '../../common/EditorModal/EditorModal'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
 import RadioButtons from '../../common/RadioButtons/RadioButtons'
+import { trimSplit } from '../../utils'
 
 import {
   DEFAULT_ENTRY,
@@ -203,17 +204,16 @@ const FunctionsPanelCodeView = ({
           invalid={!validation.isBuildCommandsValid && imageType === NEW_IMAGE}
           onBlur={event => {
             if (
-              event.target.value.length > 0 &&
               !isEqual(
-                event.target.value.split('\n'),
+                trimSplit(event.target.value, '\n'),
                 functionsStore.newFunction.spec.build.commands
               )
             ) {
-              setNewFunctionCommands(data.commands.split('\n'))
               setNewFunctionWithMlrun(
                 appStore.frontendSpec.function_deployment_mlrun_command ===
                   event.target.value
               )
+              setNewFunctionCommands(trimSplit(data.commands, '\n'))
             }
           }}
           required={imageType === NEW_IMAGE}
