@@ -75,37 +75,31 @@ const FunctionsPanelCode = ({
             functionsStore.newFunction.kind
           ]
         )
-        console.log('here')
         setImageType(EXISTING_IMAGE)
         setData(state => ({
           ...state,
           image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
-            ] ?? ''
+            ]
         }))
       } else {
-        setNewFunctionBuildImage(
-          appStore.frontendSpec.function_deployment_target_image_template
-            .replace('{project}', match.params.projectName)
-            .replace(
-              '{tag}',
-              functionsStore.newFunction.metadata.tag || 'latest'
-            )
-        )
         setNewFunctionCommands(
           appStore.frontendSpec?.function_deployment_mlrun_command
         )
         setImageType(NEW_IMAGE)
+        setNewFunctionBaseImage(
+          appStore.frontendSpec?.default_function_image_by_kind?.[
+            functionsStore.newFunction.kind
+          ]
+        )
         setData(state => ({
           ...state,
           commands: appStore.frontendSpec?.function_deployment_mlrun_command,
-          build_image: appStore.frontendSpec.function_deployment_target_image_template
-            .replace('{project}', match.params.projectName)
-            .replace(
-              '{tag}',
-              functionsStore.newFunction.metadata.tag || 'latest'
-            )
+          base_image:
+            appStore.frontendSpec?.default_function_image_by_kind?.[
+              functionsStore.newFunction.kind
+            ]
         }))
       }
     } else if (
@@ -133,6 +127,7 @@ const FunctionsPanelCode = ({
     match.params.projectName,
     mode,
     setImageType,
+    setNewFunctionBaseImage,
     setNewFunctionBuildImage,
     setNewFunctionCommands,
     setNewFunctionImage
@@ -159,21 +154,22 @@ const FunctionsPanelCode = ({
       setNewFunctionWithMlrun(false)
     } else {
       setNewFunctionImage('')
-      setNewFunctionBuildImage(
-        appStore.frontendSpec.function_deployment_target_image_template
-          .replace('{project}', match.params.projectName)
-          .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
-      )
       setNewFunctionCommands(
         appStore.frontendSpec?.function_deployment_mlrun_command
+      )
+      setNewFunctionBaseImage(
+        appStore.frontendSpec?.default_function_image_by_kind?.[
+          functionsStore.newFunction.kind
+        ]
       )
       setData(state => ({
         ...state,
         image: '',
         commands: appStore.frontendSpec?.function_deployment_mlrun_command,
-        build_image: appStore.frontendSpec.function_deployment_target_image_template
-          .replace('{project}', match.params.projectName)
-          .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
+        base_image:
+          appStore.frontendSpec?.default_function_image_by_kind?.[
+            functionsStore.newFunction.kind
+          ]
       }))
       setNewFunctionWithMlrun(true)
     }
@@ -182,7 +178,6 @@ const FunctionsPanelCode = ({
     setValidation(state => ({
       ...state,
       isCodeImageValid: true,
-      isBuildImageValid: true,
       isBaseImageValid: true,
       isBuildCommandsValid: true
     }))

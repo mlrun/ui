@@ -130,9 +130,6 @@ const FunctionsPanelCodeView = ({
                 className="input__wide"
                 disabled={imageType !== NEW_IMAGE}
                 floatingLabel
-                invalid={
-                  !validation.isBuildImageValid && imageType === NEW_IMAGE
-                }
                 label="Resulting Image"
                 onBlur={event => {
                   if (
@@ -144,13 +141,6 @@ const FunctionsPanelCodeView = ({
                 }}
                 onChange={build_image =>
                   setData(state => ({ ...state, build_image }))
-                }
-                required={imageType === NEW_IMAGE}
-                setInvalid={value =>
-                  setValidation(state => ({
-                    ...state,
-                    isBuildImageValid: value
-                  }))
                 }
                 tip="The name of the built container image"
                 type="text"

@@ -35,7 +35,6 @@ const FunctionsPanel = ({
     isNameValid: true,
     isHandlerValid: true,
     isCodeImageValid: true,
-    isBuildImageValid: true,
     isBaseImageValid: true,
     isBuildCommandsValid: true,
     isMemoryRequestValid: true,
@@ -137,14 +136,11 @@ const FunctionsPanel = ({
 
       if (
         imageType === NEW_IMAGE &&
-        (functionsStore.newFunction.spec.build.image.length === 0 ||
-          functionsStore.newFunction.spec.build.base_image.length === 0 ||
+        (functionsStore.newFunction.spec.build.base_image.length === 0 ||
           functionsStore.newFunction.spec.build.commands.length === 0)
       ) {
         return setValidation(state => ({
           ...state,
-          isBuildImageValid:
-            functionsStore.newFunction.spec.build.image.length > 0,
           isBaseImageValid:
             functionsStore.newFunction.spec.build.base_image.length > 0,
           isBuildCommandsValid:
