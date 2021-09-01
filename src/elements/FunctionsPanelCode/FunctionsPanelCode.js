@@ -85,7 +85,7 @@ const FunctionsPanelCode = ({
         }))
       } else {
         setNewFunctionCommands(
-          appStore.frontendSpec?.function_deployment_mlrun_command
+          appStore.frontendSpec?.function_deployment_mlrun_command.split('\n')
         )
         setImageType(NEW_IMAGE)
         setNewFunctionBaseImage(
@@ -155,7 +155,7 @@ const FunctionsPanelCode = ({
     } else {
       setNewFunctionImage('')
       setNewFunctionCommands(
-        appStore.frontendSpec?.function_deployment_mlrun_command
+        appStore.frontendSpec?.function_deployment_mlrun_command.split('\n')
       )
       setNewFunctionBaseImage(
         appStore.frontendSpec?.default_function_image_by_kind?.[
