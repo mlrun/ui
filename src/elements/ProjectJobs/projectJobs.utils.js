@@ -71,7 +71,7 @@ export const getJobsTableData = (jobs, match) => {
           className: 'table-cell_big'
         },
         type: {
-          value: job[0].metadata.kind ?? '',
+          value: job[0].metadata.kind ?? job[0].metadata.labels?.kind ?? '',
           class: 'project-data-card__table-cell table-cell_small'
         },
         status: {
