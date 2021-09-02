@@ -19,6 +19,7 @@ const TableTypeCell = ({ data }) => {
     dask: { label: 'Dask', icon: null },
     handler: { label: 'Handler', icon: <Jupyter /> },
     job: { label: 'Job', icon: <Package /> },
+    local: { label: 'Local', icon: <Code /> },
     mpijob: { label: 'Horovod', icon: <Horovod /> },
     nuclio: { label: 'Nuclio', icon: <Nuclio /> },
     remote: { label: 'Remote', icon: <Remote /> },
