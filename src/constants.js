@@ -371,6 +371,7 @@ export const UPDATE_FEATURE_VECTOR = 'UPDATE_FEATURE_VECTOR'
 /*=========== FILTERS =============*/
 
 export const SET_FILTERS = 'SET_FILTERS'
+export const SET_FILTER_TAG_OPTIONS = 'SET_FILTER_TAG_OPTIONS'
 export const REMOVE_FILTERS = 'REMOVE_FILTERS'
 export const INIT_GROUP_FILTER = 'name'
 export const INIT_STATE_FILTER = 'all'
