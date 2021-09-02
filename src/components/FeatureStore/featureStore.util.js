@@ -231,6 +231,11 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
       class: 'artifacts_big'
     },
     {
+      header: '',
+      class: 'artifacts_small',
+      hidden: isTablePanelOpen
+    },
+    {
       header: 'Validator',
       class: 'artifacts_medium',
       hidden: isTablePanelOpen
