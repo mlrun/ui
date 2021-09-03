@@ -90,21 +90,21 @@ const Project = ({
   const closeEditMode = useCallback(() => {
     setEditProject(prevState => ({
       name: {
-        value: prevState.name.value || projectStore.project.data.metadata.name,
+        value: prevState.name.value ?? projectStore.project.data.metadata.name,
         isEdit: false
       },
       description: {
         value:
-          prevState.description.value ||
+          prevState.description.value ??
           projectStore.project.data.spec.description,
         isEdit: false
       },
       goals: {
-        value: prevState.goals.value || projectStore.project.data.spec.goals,
+        value: prevState.goals.value ?? projectStore.project.data.spec.goals,
         isEdit: false
       },
       source: {
-        value: prevState.source.value || projectStore.project.data.spec.source,
+        value: prevState.source.value ?? projectStore.project.data.spec.source,
         isEdit: false
       }
     }))
@@ -417,11 +417,7 @@ const Project = ({
     }
 
     setVisibleChipsMaxLength(1)
-    editProjectLabels(
-      match.params.projectName,
-      { ...data },
-      objectLabels
-    ).then(() => fetchProject(match.params.projectName))
+    editProjectLabels(match.params.projectName, { ...data }, objectLabels)
   }
 
   const projectLabels = useMemo(
