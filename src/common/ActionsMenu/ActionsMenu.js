@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import ActionsMenuItem from '../../elements/ActionMenuItem/ActionsMenuItem'
 
@@ -10,11 +11,13 @@ import './actionsMenu.scss'
 const ActionsMenu = ({ dataItem, menu, time }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
-  const [actionMenu, setActionMenu] = useState([])
+  const [actionMenu, setActionMenu] = useState(menu)
   let idTimeout = null
 
   useEffect(() => {
-    setActionMenu(typeof menu === 'function' ? menu(dataItem) : menu)
+    if (!isEmpty(dataItem) && typeof menu === 'function') {
+      setActionMenu(menu(dataItem))
+    }
   }, [dataItem, menu])
 
   useEffect(() => {

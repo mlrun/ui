@@ -53,7 +53,10 @@ const TableView = ({
   }
   const actionsMenu =
     typeof pageData.actionsMenu === 'function'
-      ? item => [viewYamlAction, ...(pageData.actionsMenu(item) ?? [])]
+      ? item =>
+          item
+            ? [viewYamlAction, ...(pageData.actionsMenu(item) ?? [])]
+            : [viewYamlAction]
       : [viewYamlAction, ...(pageData.actionsMenu ?? [])]
 
   return (

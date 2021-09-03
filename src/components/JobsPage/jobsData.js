@@ -228,10 +228,10 @@ export const generateActionsMenu = (
         {
           label: 'Re-run',
           icon: <Run />,
-          onClick: handleRerunJob,
           hidden: ['local', ''].includes(
             job.ui.originalContent.metadata.labels.kind
-          )
+          ),
+          onClick: handleRerunJob
         },
         {
           label: 'Monitoring',
