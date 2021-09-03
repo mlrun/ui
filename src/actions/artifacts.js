@@ -315,8 +315,6 @@ const artifactsAction = {
     type: FETCH_MODELS_SUCCESS,
     payload: models
   }),
-  getFeatureVectorsTags: project => () =>
-    artifactsApi.getFeatureVectorsTags(project),
   removeArtifacts: () => ({
     type: REMOVE_ARTIFACTS
   }),

@@ -54,7 +54,8 @@ const FeatureStore = ({
   fetchFeatureVectors,
   fetchFeatures,
   filtersStore,
-  getFeatureVectorsTags,
+  fetchFeatureSetsTags,
+  fetchFeatureVectorsTags,
   getFilterTagOptions,
   history,
   match,
@@ -376,13 +377,16 @@ const FeatureStore = ({
       if (match.params.pageTab === DATASETS_TAB) {
         getFilterTagOptions(fetchArtifactTags, match.params.projectName)
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
-        getFilterTagOptions(getFeatureVectorsTags, match.params.projectName)
+        getFilterTagOptions(fetchFeatureVectorsTags, match.params.projectName)
+      } else if (match.params.pageTab === FEATURES_TAB) {
+        getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
       }
     }
   }, [
     fetchArtifactTags,
+    fetchFeatureSetsTags,
+    fetchFeatureVectorsTags,
     filtersStore.tagOptions.length,
-    getFeatureVectorsTags,
     getFilterTagOptions,
     match.params.pageTab,
     match.params.projectName
