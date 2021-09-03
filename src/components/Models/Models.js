@@ -33,12 +33,14 @@ import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 const Models = ({
   artifactsStore,
   detailsStore,
+  fetchArtifactTags,
   fetchModel,
   fetchModelEndpointWithAnalysis,
   fetchModelEndpoints,
   fetchModelFeatureVector,
   fetchModels,
   filtersStore,
+  getFilterTagOptions,
   history,
   match,
   removeModel,
@@ -305,6 +307,21 @@ const Models = ({
     match.params.pageTab,
     match.params.projectName,
     selectedModel.item
+  ])
+
+  useEffect(() => {
+    if (
+      filtersStore.tagOptions.length === 0 &&
+      match.params.pageTab === MODELS_TAB
+    ) {
+      getFilterTagOptions(fetchArtifactTags, match.params.projectName)
+    }
+  }, [
+    fetchArtifactTags,
+    filtersStore.tagOptions.length,
+    getFilterTagOptions,
+    match.params.pageTab,
+    match.params.projectName
   ])
 
   return (
