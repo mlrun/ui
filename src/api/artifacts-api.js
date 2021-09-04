@@ -69,8 +69,6 @@ export default {
       true
     )
   },
-  getFeatureVectorsTags: project =>
-    mainHttpClient.get(`/projects/${project}/feature-vectors/*/tags`),
   getFile: (project, file) => {
     return fetchArtifacts(
       '/artifacts',
