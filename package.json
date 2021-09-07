@@ -4,8 +4,11 @@
   "private": true,
   "homepage": "/mlrun",
   "dependencies": {
+    "@babel/node": "^7.14.9",
     "@monaco-editor/react": "^4.1.3",
+    "acorn": "^7.4.1",
     "axios": "^0.21.1",
+    "babel-node": "*",
     "camelcase": "^5.2.0",
     "chart.js": "^3.0.0-beta.11",
     "classnames": "^2.2.6",
@@ -53,7 +56,8 @@
     "test:ui": "node scripts/testui.js",
     "report": "node tests/report.js",
     "test:regression": "npm run test:ui && npm run report",
-    "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\""
+    "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\"",
+    "ui-steps": "export BABEL_ENV=test; export NODE_ENV=test; npx -p @babel/core -p @babel/node babel-node --presets @babel/preset-env scripts/collectUITestsSteps.js"
   },
   "eslintConfig": {
     "extends": "react-app"
