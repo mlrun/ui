@@ -11,6 +11,12 @@ import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSe
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 
+import {
+  PRIMARY_BUTTON,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from '../../constants'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './featureSetsPanel.scss'
@@ -21,16 +27,12 @@ const FeatureSetsPanelView = ({
   error,
   handleSave,
   handleSaveOnClick,
-  isExternalOfflineTargetsPathValid,
-  isNameValid,
-  isSchemaEntitiesValid,
-  isUrlValid,
   loading,
+  project,
   removeFeatureStoreError,
   setConfirmDialog,
-  setExternalOfflineTargetsPathValid,
-  setNameValid,
-  setUrlValid
+  setValidation,
+  validation
 }) => {
   return (
     <div className="new-item-side-panel-container">
@@ -44,14 +46,18 @@ const FeatureSetsPanelView = ({
               transformation graph unless you delete the data first.
             </div>
             <div className="pop-up-dialog__footer-container">
-              <Button variant="primary" label="Okay" onClick={handleSave} />
+              <Button
+                variant={PRIMARY_BUTTON}
+                label="Okay"
+                onClick={handleSave}
+              />
             </div>
           </PopUpDialog>
         )}
         <FeatureSetsPanelTitle
           closePanel={closePanel}
-          isNameValid={isNameValid}
-          setNameValid={setNameValid}
+          isNameValid={validation.isNameValid}
+          setNameValid={setValidation}
         />
         <div className="new-item-side-panel__body">
           <Accordion
@@ -61,8 +67,9 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelDataSource
-              isUrlValid={isUrlValid}
-              setUrlValid={setUrlValid}
+              project={project}
+              setValidation={setValidation}
+              validation={validation}
             />
           </Accordion>
           <Accordion
@@ -72,7 +79,8 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelSchema
-              isSchemaEntitiesValid={isSchemaEntitiesValid}
+              isEntitiesValid={validation.isEntitiesValid}
+              setEntitiesValid={setValidation}
             />
           </Accordion>
           <Accordion
@@ -82,12 +90,8 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelTargetStore
-              isExternalOfflineTargetsPathValid={
-                isExternalOfflineTargetsPathValid
-              }
-              setExternalOfflineTargetsPathValid={
-                setExternalOfflineTargetsPathValid
-              }
+              isTargetsPathValid={validation.isTargetsPathValid}
+              setTargetsPathValid={setValidation}
             />
           </Accordion>
           <div className="new-item-side-panel__buttons-container">
@@ -102,13 +106,13 @@ const FeatureSetsPanelView = ({
               />
             )}
             <Button
-              variant="tertiary"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={closePanel}
             />
             <Button
-              variant="secondary"
+              variant={SECONDARY_BUTTON}
               label="Save"
               onClick={() => handleSaveOnClick(false)}
             />
@@ -116,7 +120,7 @@ const FeatureSetsPanelView = ({
               className="btn_start-ingestion"
               label="Save and ingest"
               onClick={() => handleSaveOnClick(true)}
-              variant="secondary"
+              variant={SECONDARY_BUTTON}
             />
           </div>
         </div>
@@ -137,16 +141,12 @@ FeatureSetsPanelView.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   handleSave: PropTypes.func.isRequired,
   handleSaveOnClick: PropTypes.func.isRequired,
-  isExternalOfflineTargetsPathValid: PropTypes.bool.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
-  isSchemaEntitiesValid: PropTypes.bool.isRequired,
-  isUrlValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
+  project: PropTypes.string.isRequired,
   removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
-  setExternalOfflineTargetsPathValid: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired,
-  setUrlValid: PropTypes.func.isRequired
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default FeatureSetsPanelView

@@ -93,6 +93,7 @@ const createModelsRowData = (artifact, project) => {
   return {
     key: {
       identifier: getArtifactIdentifier(artifact),
+      identifierUnique: getArtifactIdentifier(artifact, true),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -188,6 +189,7 @@ const createFilesRowData = (artifact, project) => {
   return {
     key: {
       identifier: getArtifactIdentifier(artifact),
+      identifierUnique: getArtifactIdentifier(artifact, true),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -288,10 +290,17 @@ const createModelEndpointsRowData = (artifact, project) => {
     (artifact.spec?.model ?? '').match(/^(?<name>.*?)(:(?<tag>.*))?$/)
       ?.groups ?? {}
   const { key: modelArtifact } = parseUri(artifact.spec?.model_uri)
+  const functionUri = artifact.spec?.function_uri
+    ? `store://functions/${artifact.spec.function_uri}`
+    : ''
+  const { key: functionName } = parseUri(functionUri)
+  const averageLatency =
+    artifact.status?.metrics?.latency_avg_1h?.values?.[0]?.[1]
 
   return {
     key: {
       identifier: getArtifactIdentifier(artifact),
+      identifierUnique: getArtifactIdentifier(artifact, true),
       value: name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -304,24 +313,30 @@ const createModelEndpointsRowData = (artifact, project) => {
           tab
         )
     },
-    state: {
-      value: artifact.status?.state,
-      class: 'artifacts_extra-small',
-      type: 'hidden'
-    },
-    version: {
-      value: tag,
-      class: 'artifacts_extra-small'
-    },
-    modelClass: {
-      value: artifact.spec?.model_class,
-      class: 'artifacts_small'
+    functionName: {
+      value: functionName,
+      class: 'artifacts_small',
+      link: `${generateLinkPath(functionUri)}/overview`,
+      tooltip: functionUri
     },
     modelArtifact: {
       value: modelArtifact,
       class: 'artifacts_small',
       link: `${generateLinkPath(artifact.spec?.model_uri)}/overview`,
       tooltip: artifact.spec?.model_uri
+    },
+    state: {
+      value: artifact.status?.state,
+      class: 'artifacts_extra-small',
+      type: 'hidden'
+    },
+    version: {
+      value: artifact?.status?.children ? 'Router' : tag,
+      class: 'artifacts_extra-small'
+    },
+    modelClass: {
+      value: artifact.spec?.model_class,
+      class: 'artifacts_small'
     },
     labels: {
       value: parseKeyValues(artifact.metadata?.labels),
@@ -336,6 +351,10 @@ const createModelEndpointsRowData = (artifact, project) => {
       value: formatDatetime(new Date(artifact.status?.last_request), '-'),
       class: 'artifacts_small'
     },
+    averageLatency: {
+      value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
+      class: 'artifacts_small'
+    },
     errorCount: {
       value: artifact.status?.error_count ?? '-',
       class: 'artifacts_small'
@@ -344,12 +363,6 @@ const createModelEndpointsRowData = (artifact, project) => {
       value: driftStatusIcons[artifact.status?.drift_status]?.value,
       class: 'artifacts_extra-small',
       tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip
-    },
-    accuracy: {
-      value: artifact.status?.accuracy
-        ? `${Math.round(artifact.status.accuracy * 100)}%`
-        : '-',
-      class: 'artifacts_extra-small'
     }
   }
 }
@@ -360,6 +373,7 @@ const createDatasetsRowData = (artifact, project) => {
   return {
     key: {
       identifier: getArtifactIdentifier(artifact),
+      identifierUnique: getArtifactIdentifier(artifact, true),
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>

@@ -18,9 +18,14 @@ const JobsPanelDataInputsView = ({
   handlePathTypeChange,
   inputsDispatch,
   inputsState,
+  isArtifactPathValid,
   match,
   panelDispatch,
-  panelState
+  panelState,
+  resetDataInputsData,
+  setArtifactPathValid,
+  setValidation,
+  validation
 }) => {
   return (
     <div className="job-panel__item new-item-side-panel__item">
@@ -37,6 +42,9 @@ const JobsPanelDataInputsView = ({
           inputsState={inputsState}
           match={match}
           panelState={panelState}
+          resetDataInputsData={resetDataInputsData}
+          setValidation={setValidation}
+          validation={validation}
         />
       </JobsPanelSection>
       <JobsPanelSection title="General">
@@ -55,7 +63,7 @@ const JobsPanelDataInputsView = ({
         <Input
           label="Default artifact path"
           floatingLabel
-          invalid={panelState.outputPath.length === 0}
+          invalid={!isArtifactPathValid}
           onChange={inputValue => {
             panelDispatch({
               type: panelActions.SET_OUTPUT_PATH,
@@ -64,6 +72,12 @@ const JobsPanelDataInputsView = ({
           }}
           required
           requiredText="This field is required"
+          setInvalid={value =>
+            setArtifactPathValid(state => ({
+              ...state,
+              isArtifactPathValid: value
+            }))
+          }
           value={panelState.outputPath}
           type="text"
         />
@@ -81,9 +95,14 @@ JobsPanelDataInputsView.propTypes = {
   handlePathTypeChange: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
+  isArtifactPathValid: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
-  panelState: PropTypes.shape({}).isRequired
+  panelState: PropTypes.shape({}).isRequired,
+  resetDataInputsData: PropTypes.func.isRequired,
+  setArtifactPathValid: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.object.isRequired
 }
 
 export default JobsPanelDataInputsView

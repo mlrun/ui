@@ -3,6 +3,7 @@ import {
   INIT_STATE_FILTER,
   INIT_TAG_FILTER,
   REMOVE_FILTERS,
+  SET_FILTER_TAG_OPTIONS,
   SET_FILTERS
 } from '../constants'
 
@@ -14,6 +15,7 @@ const initialState = {
   groupBy: INIT_GROUP_FILTER,
   state: INIT_STATE_FILTER,
   tag: INIT_TAG_FILTER,
+  tagOptions: [],
   showUntagged: ''
 }
 
@@ -23,6 +25,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         ...payload
+      }
+    case SET_FILTER_TAG_OPTIONS:
+      return {
+        ...state,
+        tagOptions: payload
       }
     case REMOVE_FILTERS:
       return initialState

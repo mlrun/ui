@@ -25,8 +25,8 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
   const [searchValue, setSearchValue] = useState('')
 
   const projectScreens = generateProjectScreens(match)
-  const pathItems = match.path.slice(1).split('/')
-  const urlItems = match.url.slice(1).split('/')
+  const pathItems = match.path.split('/').slice(1, 4)
+  const urlItems = match.url.split('/').slice(1, 4)
   const screen = pathItems.find(
     pathItem =>
       !pathItem.startsWith(':') && pathItem !== PROJECTS_PAGE.toLowerCase()
@@ -151,10 +151,6 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
           }`
           const to = `/${urlItems.slice(0, i + 1).join('/')}`
           const last = i === urlItems.length - 1
-          const id =
-            item === match.params.jobId ||
-            item === match.params.name ||
-            item === match.params.tag
           const separatorClassNames = classnames(
             'breadcrumbs__separator',
             ((urlItems[i + 1] === screen &&
@@ -174,19 +170,6 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
                 {label}
               </li>
             )
-          } else if (id) {
-            return [
-              <li
-                data-testid="breadcrumbs-id"
-                key={`${i}${item}`}
-                className="breadcrumbs__item data-ellipsis"
-              >
-                {label}
-              </li>,
-              <li key={i} className={separatorClassNames}>
-                <Arrow />
-              </li>
-            ]
           } else {
             return [
               <li key={`${i}${item}`} className="breadcrumbs__item">
@@ -226,6 +209,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
                       screen={screen}
                       searchOnChange={setSearchValue}
                       selectedItem={match.params.projectName}
+                      tab={match.params.pageTab}
                       withSearch
                     />
                   )}

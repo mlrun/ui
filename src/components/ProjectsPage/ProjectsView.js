@@ -19,6 +19,7 @@ import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Button from '../../common/Button/Button'
 
 import { pageData, projectsSortOptions, projectsStates } from './projectsData'
+import { TERTIARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
@@ -37,7 +38,7 @@ const ProjectsView = ({
   handleCreateProject,
   handleSearchOnChange,
   isDescendingOrder,
-  isEmptyValue,
+  isNameValid,
   match,
   projectStore,
   refreshProjects,
@@ -46,6 +47,7 @@ const ProjectsView = ({
   setCreateProject,
   setFilterMatches,
   setIsDescendingOrder,
+  setNameValid,
   setNewProjectDescription,
   setNewProjectName,
   setSelectedProjectsState,
@@ -64,8 +66,9 @@ const ProjectsView = ({
         <CreateProjectDialog
           closeNewProjectPopUp={closeNewProjectPopUp}
           handleCreateProject={handleCreateProject}
-          isEmptyValue={isEmptyValue}
+          isNameValid={isNameValid}
           removeNewProjectError={removeNewProjectError}
+          setNameValid={setNameValid}
           setNewProjectDescription={setNewProjectDescription}
           setNewProjectName={setNewProjectName}
         />
@@ -78,7 +81,7 @@ const ProjectsView = ({
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="tertiary"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={confirmData.rejectHandler}
@@ -191,7 +194,7 @@ ProjectsView.propTypes = {
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
   handleSearchOnChange: PropTypes.func.isRequired,
-  isEmptyValue: PropTypes.bool.isRequired,
+  isNameValid: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
@@ -200,6 +203,7 @@ ProjectsView.propTypes = {
   setFilterMatches: PropTypes.func.isRequired,
   setIsDescendingOrder: PropTypes.func.isRequired,
   setNewProjectDescription: PropTypes.func.isRequired,
+  setNameValid: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
   setSortProjectId: PropTypes.func.isRequired,

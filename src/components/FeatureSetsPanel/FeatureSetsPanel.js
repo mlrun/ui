@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
 import featureStoreActions from '../../actions/featureStore'
+import { checkValidation } from './featureSetPanel.util'
 
 const FeatureSetsPanel = ({
   closePanel,
@@ -16,13 +17,15 @@ const FeatureSetsPanel = ({
   removeFeatureStoreError,
   startFeatureSetIngest
 }) => {
-  const [isNameValid, setNameValid] = useState(true)
-  const [isUrlValid, setUrlValid] = useState(true)
-  const [
-    isExternalOfflineTargetsPathValid,
-    setExternalOfflineTargetsPathValid
-  ] = useState(true)
-  const [isSchemaEntitiesValid, setIsSchemaEntitiesValid] = useState(true)
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isUrlValid: true,
+    isTimeFieldValid: true,
+    isStartTimeValid: true,
+    isEndTimeValid: true,
+    isEntitiesValid: true,
+    isTargetsPathValid: true
+  })
   const [confirmDialog, setConfirmDialog] = useState(null)
   const history = useHistory()
 
@@ -53,32 +56,13 @@ const FeatureSetsPanel = ({
   }
 
   const handleSaveOnClick = startIngestion => {
-    const externalOfflineTarget = featureStore.newFeatureSet.spec.targets.find(
-      targetKind => targetKind.name === 'externalOffline'
-    )
-
-    if (featureStore.newFeatureSet.metadata.name.length === 0) {
-      return setNameValid(false)
-    }
-
-    if (featureStore.newFeatureSet.spec.source.path.length === 0) {
-      return setUrlValid(false)
-    }
-
-    if (featureStore.newFeatureSet.spec.entities.length === 0) {
-      return setIsSchemaEntitiesValid(false)
-    }
-
     if (
-      externalOfflineTarget &&
-      (!externalOfflineTarget.path || externalOfflineTarget.path.length === 0)
+      checkValidation(featureStore.newFeatureSet, setValidation, validation)
     ) {
-      return setExternalOfflineTargetsPathValid(false)
+      setConfirmDialog({
+        action: startIngestion ? 'save and ingest' : 'save'
+      })
     }
-
-    setConfirmDialog({
-      action: startIngestion ? 'save and ingest' : 'save'
-    })
   }
 
   const handleStartFeatureSetIngest = result => {
@@ -107,16 +91,12 @@ const FeatureSetsPanel = ({
       error={featureStore.error}
       handleSave={handleSave}
       handleSaveOnClick={handleSaveOnClick}
-      isExternalOfflineTargetsPathValid={isExternalOfflineTargetsPathValid}
-      isNameValid={isNameValid}
-      isSchemaEntitiesValid={isSchemaEntitiesValid}
-      isUrlValid={isUrlValid}
       loading={featureStore.loading}
+      project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
-      setNameValid={setNameValid}
-      setExternalOfflineTargetsPathValid={setExternalOfflineTargetsPathValid}
-      setUrlValid={setUrlValid}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }

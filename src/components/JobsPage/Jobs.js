@@ -19,12 +19,16 @@ import { generatePageData } from './jobsData'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import getState from '../../utils/getState.js'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 
 import {
   MONITOR_TAB,
   SCHEDULE_TAB,
   INIT_GROUP_FILTER,
-  JOBS_PAGE
+  JOBS_PAGE,
+  PANEL_EDIT_MODE,
+  TERTIARY_BUTTON,
+  DANGER_BUTTON
 } from '../../constants'
 
 const Jobs = ({
@@ -117,7 +121,7 @@ const Jobs = ({
       title: `Delete scheduled job "${scheduledJob.name}"?`,
       description: 'Deleted scheduled jobs can not be restored.',
       btnConfirmLabel: 'Delete',
-      btnConfirmType: 'danger',
+      btnConfirmType: DANGER_BUTTON,
       rejectHandler: () => {
         setConfirmData(null)
       },
@@ -207,7 +211,7 @@ const Jobs = ({
       item: job,
       title: `Abort job "${job.name}"?`,
       btnConfirmLabel: 'Abort',
-      btnConfirmType: 'danger',
+      btnConfirmType: DANGER_BUTTON,
       rejectHandler: () => {
         setConfirmData(null)
       },
@@ -251,9 +255,12 @@ const Jobs = ({
               lastRunUri: job.last_run_uri,
               scheduled_object: job.scheduled_object,
               start_time: new Date(job.last_run?.status.start_time),
-              state: getState(job.last_run?.status.state),
+              state: getState(job.last_run?.status.state, JOBS_PAGE, 'job'),
               type: job.kind === 'pipeline' ? 'workflow' : job.kind,
-              project: job.project
+              project: job.project,
+              ui: {
+                originalContent: job
+              }
             }
           } else {
             return {
@@ -262,7 +269,7 @@ const Jobs = ({
               iterationStats: job.status.iterations || [],
               iterations: [],
               startTime: new Date(job.status.start_time),
-              state: getState(job.status.state),
+              state: getState(job.status.state, JOBS_PAGE, 'job'),
               name: job.metadata.name,
               labels: parseKeyValues(job.metadata.labels || {}),
               logLevel: job.spec.log_level,
@@ -276,7 +283,10 @@ const Jobs = ({
               updated: new Date(job.status.last_update),
               function: job?.spec?.function ?? '',
               project: job.metadata.project,
-              hyperparams: job.spec?.hyperparams || {}
+              hyperparams: job.spec?.hyperparams || {},
+              ui: {
+                originalContent: job
+              }
             }
           }
         })
@@ -397,7 +407,7 @@ const Jobs = ({
           <div>{confirmData.description}</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="tertiary"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               onClick={confirmData.rejectHandler}
               className="pop-up-dialog__btn_cancel"
@@ -421,7 +431,7 @@ const Jobs = ({
         refresh={refreshJobs}
         selectedItem={selectedJob}
         setLoading={setLoading}
-        yamlContent={jobsStore.jobs}
+        getIdentifier={getJobIdentifier}
       />
       {editableItem && (
         <JobsPanel
@@ -434,6 +444,7 @@ const Jobs = ({
           }
           handleRunNewJob={{}}
           match={match}
+          mode={PANEL_EDIT_MODE}
           onEditJob={onEditJob}
           onSuccessRun={tab => {
             if (editableItem) {

@@ -12,16 +12,18 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import Loader from '../../common/Loader/Loader'
 import Button from '../../common/Button/Button'
 
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 
 const JobsPanelView = ({
+  checkValidation,
   closePanel,
   defaultData,
   functionData,
   handleEditJob,
   handleRunJob,
-  isTitleValid,
   jobsStore,
   loading,
   match,
@@ -33,6 +35,8 @@ const JobsPanelView = ({
   setNewJobInputs,
   setNewJobSecretSources,
   setOpenScheduleJob,
+  setValidation,
+  validation,
   withSaveChanges
 }) => {
   return (
@@ -43,11 +47,12 @@ const JobsPanelView = ({
           closePanel={closePanel}
           editModeEnabled={!defaultData}
           functionData={functionData}
-          isTitleValid={isTitleValid}
+          isNameValid={validation.isNameValid}
           match={match}
           openScheduleJob={openScheduleJob}
           panelState={panelState}
           panelDispatch={panelDispatch}
+          setNameValid={setValidation}
           setOpenScheduleJob={setOpenScheduleJob}
         />
         {!openScheduleJob ? (
@@ -60,9 +65,11 @@ const JobsPanelView = ({
             >
               <JobsPanelDataInputs
                 inputs={jobsStore.newJob.task.spec.inputs}
+                isArtifactPathValid={validation.isArtifactPathValid}
                 match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
+                setArtifactPathValid={setValidation}
                 setNewJobInputs={setNewJobInputs}
               />
             </Accordion>
@@ -85,6 +92,8 @@ const JobsPanelView = ({
               <JobsPanelResources
                 panelDispatch={panelDispatch}
                 panelState={panelState}
+                setValidation={setValidation}
+                validation={validation}
               />
             </Accordion>
             <Accordion
@@ -114,26 +123,28 @@ const JobsPanelView = ({
                 />
               )}
               <Button
-                variant="tertiary"
-                label="Schedule for later"
                 className="pop-up-dialog__btn_cancel"
-                onClick={() => isTitleValid() && setOpenScheduleJob(true)}
+                disabled={!checkValidation}
+                label="Schedule for later"
+                onClick={() => setOpenScheduleJob(true)}
+                variant={TERTIARY_BUTTON}
               />
               {withSaveChanges ? (
                 <Button
-                  variant="secondary"
                   label="Save"
                   onClick={event => handleEditJob(event, defaultData.schedule)}
+                  variant={SECONDARY_BUTTON}
                 />
               ) : (
                 <Button
-                  variant="secondary"
                   label={
                     <>
                       <Run /> <span> Run now </span>
                     </>
                   }
-                  onClick={() => isTitleValid() && handleRunJob()}
+                  disabled={!checkValidation}
+                  onClick={() => handleRunJob()}
+                  variant={SECONDARY_BUTTON}
                 />
               )}
             </div>
@@ -157,6 +168,7 @@ JobsPanelView.defaultProps = {
 }
 
 JobsPanelView.propTypes = {
+  checkValidation: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
   defaultData: PropTypes.shape({}),
   functionData: PropTypes.shape({}).isRequired,
@@ -172,6 +184,8 @@ JobsPanelView.propTypes = {
   setNewJobInputs: PropTypes.func.isRequired,
   setNewJobSecretSources: PropTypes.func.isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired,
   withSaveChanges: PropTypes.bool.isRequired
 }
 

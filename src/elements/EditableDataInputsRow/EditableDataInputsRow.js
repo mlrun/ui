@@ -7,7 +7,7 @@ import Combobox from '../../common/Combobox/Combobox'
 
 import {
   comboboxSelectList,
-  pathPlaceholders
+  pathTips
 } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
@@ -16,6 +16,7 @@ import {
   handleEditInputPath
 } from './EditableDataInputsRow.utils'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
+import { pathPlaceholders } from '../../utils/panelPathScheme'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 
@@ -23,6 +24,7 @@ const EditableDataInputsRow = ({
   comboboxMatchesList,
   content,
   handleEdit,
+  index,
   inputsDispatch,
   inputsState,
   selectedDataInput,
@@ -35,6 +37,7 @@ const EditableDataInputsRow = ({
     label: ''
   })
   const [inputName, setInputName] = useState(selectedDataInput.data.name)
+  const [isPathValid, setIsPathValid] = useState(true)
   const [requiredField, setRequiredField] = useState({
     path: false,
     name: false
@@ -146,6 +149,8 @@ const EditableDataInputsRow = ({
                 }
               })
             }}
+            required
+            requiredText="This field is required"
             type="text"
             value={inputName}
           />
@@ -155,6 +160,10 @@ const EditableDataInputsRow = ({
         <Combobox
           comboboxClassName={comboboxClassNames}
           inputPlaceholder={inputsState.pathPlaceholder}
+          invalid={!isPathValid}
+          invalidText={`Field must be in "${
+            pathTips[selectedDataInput.data.path.pathType]
+          }" format`}
           matches={comboboxMatchesList}
           maxSuggestedMatches={
             inputsState.selectedDataInput.data.path.pathType ===
@@ -169,14 +178,16 @@ const EditableDataInputsRow = ({
               inputsState,
               path,
               selectedDataInput,
-              setSelectedDataInput
+              setSelectedDataInput,
+              setIsPathValid
             )
           }}
           hideSearchInput={!inputsState.inputStorePathTypeEntered}
+          required
+          requiredText="This field is required"
           selectDefaultValue={selectDefaultValue}
           selectDropdownList={comboboxSelectList}
           selectOnChange={path => selectOnChangeComboboxHandler(path)}
-          selectPlaceholder="Path Scheme"
         />
       </div>
       <div className="table__cell table__cell-actions">
@@ -189,6 +200,7 @@ const EditableDataInputsRow = ({
           onClick={() => {
             applyEditButtonHandler(
               handleEdit,
+              index,
               inputName,
               inputsDispatch,
               requiredField,
@@ -208,6 +220,7 @@ EditableDataInputsRow.propTypes = {
   comboboxMatchesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
   selectedDataInput: PropTypes.shape({}).isRequired,

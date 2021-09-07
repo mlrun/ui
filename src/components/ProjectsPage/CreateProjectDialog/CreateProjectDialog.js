@@ -7,13 +7,16 @@ import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
 import Button from '../../../common/Button/Button'
 
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../../constants'
+
 import './createProjectDialog.scss'
 
 const CreateProjectDialog = ({
   closeNewProjectPopUp,
   handleCreateProject,
-  isEmptyValue,
+  isNameValid,
   removeNewProjectError,
+  setNameValid,
   setNewProjectDescription,
   setNewProjectName
 }) => {
@@ -30,13 +33,15 @@ const CreateProjectDialog = ({
           <Input
             className="pop-up-dialog__form-input"
             floatingLabel
-            invalid={isEmptyValue && projectStore.newProject.name.length === 0}
+            invalid={!isNameValid}
+            invalidText="This field is invalid"
             label="Name"
             maxLength={63}
             onChange={setNewProjectName}
             required
             requiredText="Name is required"
             pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+            setInvalid={value => setNameValid(value)}
             tip="&bull; Valid characters: a-z, 0-9, -&#13;&#10;&bull; Must being and end with: a-z, 0-9&#13;&#10;&bull; Length - max: 63"
             type="text"
             value={projectStore.newProject.name}
@@ -62,7 +67,7 @@ const CreateProjectDialog = ({
             />
           )}
           <Button
-            variant="tertiary"
+            variant={TERTIARY_BUTTON}
             label="Cancel"
             className="pop-up-dialog__btn_cancel"
             onClick={closeNewProjectPopUp}
@@ -73,7 +78,7 @@ const CreateProjectDialog = ({
                 /^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
               )
             }
-            variant="secondary"
+            variant={SECONDARY_BUTTON}
             label="Create"
             onClick={handleCreateProject}
           />
@@ -86,8 +91,9 @@ const CreateProjectDialog = ({
 CreateProjectDialog.propTypes = {
   closeNewProjectPopUp: PropTypes.func.isRequired,
   handleCreateProject: PropTypes.func.isRequired,
-  isEmptyValue: PropTypes.bool.isRequired,
+  isNameValid: PropTypes.bool.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
+  setNameValid: PropTypes.func.isRequired,
   setNewProjectDescription: PropTypes.func.isRequired,
   setNewProjectName: PropTypes.func.isRequired
 }

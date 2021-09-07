@@ -56,6 +56,12 @@
       margin: 10px 25px;
       color: $topaz;
     }
+
+    &__label {
+      .tip-container {
+        margin-left: 5px;
+      }
+    }
   }
 
   &.disabled {

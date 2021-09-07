@@ -3,6 +3,10 @@ import { panelActions } from './panelReducer'
 import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getVolumeType } from '../../utils/panelResources.util'
+import { PANEL_EDIT_MODE } from '../../constants'
+
+export const REQUESTS = 'REQUESTS'
+export const LIMITS = 'LIMITS'
 
 export const getDefaultData = functionParameters => {
   const parameters = functionParameters
@@ -94,7 +98,7 @@ export const getNodeSelectors = selectedFunction => {
     .value()
 }
 
-export const getVolumeMounts = (selectedFunction, volumes) => {
+export const getVolumeMounts = (selectedFunction, volumes, mode) => {
   if (!selectedFunction.some(func => func.spec.volume_mounts)) {
     return []
   }
@@ -114,7 +118,8 @@ export const getVolumeMounts = (selectedFunction, volumes) => {
           name: volume_mounts?.name,
           mountPath: volume_mounts?.mountPath
         },
-        isDefault: true
+        isDefault: true,
+        canBeModified: mode === PANEL_EDIT_MODE
       }
     })
     .value()
@@ -188,7 +193,8 @@ export const generateTableData = (
   panelDispatch,
   setNewJob,
   stateLimits,
-  stateRequests
+  stateRequests,
+  mode
 ) => {
   const functionParameters = getParameters(selectedFunction, method)
   const [{ limits, requests }] = getResources(selectedFunction)
@@ -227,7 +233,7 @@ export const generateTableData = (
   if (!isEmpty(functionParameters)) {
     const { parameters, dataInputs } = getDefaultData(functionParameters)
     const volumes = getVolume(selectedFunction)
-    const volumeMounts = getVolumeMounts(selectedFunction, volumes)
+    const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
 
     panelDispatch({
       type: panelActions.SET_TABLE_DATA,
@@ -331,7 +337,8 @@ export const generateTableDataFromDefaultData = (
   panelLimits,
   panelRequests,
   setNewJob,
-  setDefaultDataIsLoaded
+  setDefaultDataIsLoaded,
+  mode
 ) => {
   const parameters = generateDefaultParameters(
     Object.entries(defaultData.task.spec.parameters ?? {})
@@ -353,7 +360,8 @@ export const generateTableDataFromDefaultData = (
           name: volume_mounts?.name,
           mountPath: volume_mounts?.mountPath
         },
-        isDefault: true
+        isDefault: true,
+        canBeModified: mode === PANEL_EDIT_MODE
       }
     }
   )

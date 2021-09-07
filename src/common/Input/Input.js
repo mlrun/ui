@@ -17,6 +17,7 @@ const Input = React.forwardRef(
       density,
       disabled,
       floatingLabel,
+      focused,
       iconClass,
       infoLabel,
       inputIcon,
@@ -32,7 +33,7 @@ const Input = React.forwardRef(
       placeholder,
       required,
       requiredText,
-      focused,
+      setInvalid,
       tip,
       type,
       value,
@@ -45,6 +46,7 @@ const Input = React.forwardRef(
     const [labelWidth, setLabelWidth] = useState(0)
     const [isInvalid, setIsInvalid] = useState(false)
     const [typedValue, setTypedValue] = useState('')
+    const [validationPattern] = useState(RegExp(pattern))
     const input = React.createRef()
     const inputLabel = useRef(null)
     const inputClassNames = classnames(
@@ -60,6 +62,7 @@ const Input = React.forwardRef(
     )
     const labelClassNames = classnames(
       'input__label',
+      disabled && 'input__label_disabled',
       floatingLabel && 'input__label-floating',
       (inputIsFocused || placeholder || typedValue.length > 0) &&
         floatingLabel &&
@@ -67,6 +70,10 @@ const Input = React.forwardRef(
       infoLabel && 'input__label_info'
     )
     const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
+    const inputLabelMandatoryClassNames = classnames(
+      'input__label-mandatory',
+      disabled && 'input__label-mandatory_disabled'
+    )
 
     useEffect(() => {
       setTypedValue(String(value ?? '')) // convert from number to string
@@ -74,9 +81,26 @@ const Input = React.forwardRef(
 
     useEffect(() => {
       if (isInvalid !== invalid) {
-        setIsInvalid(invalid)
+        if (
+          (required && typedValue.trim().length === 0) ||
+          (pattern && !validationPattern.test(typedValue)) ||
+          typedValue.startsWith(' ')
+        ) {
+          setIsInvalid(true)
+          setInvalid && setInvalid(false)
+        } else {
+          setIsInvalid(invalid)
+        }
       }
-    }, [invalid, isInvalid])
+    }, [
+      invalid,
+      isInvalid,
+      pattern,
+      required,
+      setInvalid,
+      typedValue,
+      validationPattern
+    ])
 
     useEffect(() => {
       if (focused) {
@@ -112,8 +136,16 @@ const Input = React.forwardRef(
       setTypedValue(event.target.value)
       onChange(event.target.value)
 
-      if (required && event.target.value.length === 0) {
+      if (
+        (required && event.target.value.trim().length === 0) ||
+        (validationPattern && !validationPattern.test(event.target.value)) ||
+        event.target.value.startsWith(' ')
+      ) {
         setIsInvalid(true)
+        setInvalid && setInvalid(false)
+      } else {
+        setIsInvalid(false)
+        setInvalid && setInvalid(true)
       }
     }
 
@@ -138,7 +170,7 @@ const Input = React.forwardRef(
             pattern,
             placeholder,
             type,
-            value
+            value: typedValue
           }}
           style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px` }}
         />
@@ -156,7 +188,9 @@ const Input = React.forwardRef(
             }
           >
             {label}
-            {required && <span className="input__label-mandatory"> *</span>}
+            {required && (
+              <span className={inputLabelMandatoryClassNames}> *</span>
+            )}
           </label>
         )}
         {isInvalid && (
@@ -178,7 +212,6 @@ const Input = React.forwardRef(
             {inputIcon}
           </span>
         )}
-
         {suggestionList?.length > 0 && inputIsFocused && (
           <ul className="suggestion-list">
             {suggestionList.map((item, index) => {
@@ -204,6 +237,7 @@ const Input = React.forwardRef(
     )
   }
 )
+
 Input.defaultProps = {
   className: '',
   density: 'normal',
@@ -214,7 +248,7 @@ Input.defaultProps = {
   infoLabel: false,
   inputIcon: null,
   invalid: false,
-  invalidText: '',
+  invalidText: 'This field is invalid',
   label: '',
   maxLength: null,
   onBlur: () => {},
@@ -222,7 +256,8 @@ Input.defaultProps = {
   onKeyDown: () => {},
   placeholder: '',
   required: false,
-  requiredText: '',
+  requiredText: 'This field is required',
+  setInvalid: () => {},
   tip: '',
   value: undefined,
   withoutBorder: false,
@@ -249,6 +284,7 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   requiredText: PropTypes.string,
+  setInvalid: PropTypes.func,
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

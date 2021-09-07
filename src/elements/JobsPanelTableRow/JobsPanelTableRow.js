@@ -20,14 +20,13 @@ const JobsPanelTableRow = ({
   checkboxOnChange,
   className,
   contentItem,
+  index,
   editItem,
   handleDelete,
   handleEdit,
   section,
   withCheckbox
 }) => {
-  const isInputsOrEnv =
-    section.includes('data-inputs') || section.includes('env')
   const rowClassNames = classnames('table__row', className)
 
   return (
@@ -68,7 +67,7 @@ const JobsPanelTableRow = ({
               key={property}
               onClick={
                 isEditable && !editItem
-                  ? () => handleEdit(contentItem, isInputsOrEnv)
+                  ? () => handleEdit(contentItem, index)
                   : null
               }
             >
@@ -102,7 +101,7 @@ const JobsPanelTableRow = ({
               <button
                 className="btn_delete"
                 onClick={() => {
-                  handleDelete(contentItem)
+                  handleDelete(contentItem, section, index)
                 }}
               >
                 <Delete />
@@ -127,6 +126,7 @@ JobsPanelTableRow.propTypes = {
   editItem: PropTypes.bool.isRequired,
   handleDelete: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
   section: PropTypes.string.isRequired,
   withCheckbox: PropTypes.bool
 }

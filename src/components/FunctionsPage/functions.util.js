@@ -1,5 +1,24 @@
-export const detailsMenu = ['overview', 'code', 'logs']
+export const detailsMenu = [
+  {
+    id: 'overview',
+    label: 'overview'
+  },
+  {
+    id: 'code',
+    label: 'code'
+  },
+  {
+    id: 'build-log',
+    label: 'build log'
+  }
+]
 export const FUNCTIONS_FAILED_STATES = ['failed', 'error']
+export const FUNCTIONS_READY_STATES = ['ready']
+export const FUNCTIONS_EDITABLE_STATES = [
+  'created',
+  ...FUNCTIONS_READY_STATES,
+  ...FUNCTIONS_FAILED_STATES
+]
 export const page = 'FUNCTIONS'
 export const tableHeaders = [
   {
@@ -43,8 +62,7 @@ export const infoHeaders = [
   { label: 'Updated', id: 'updated' },
   { label: 'Command', id: 'command' },
   { label: 'Image', id: 'image' },
-  { label: 'Description', id: 'description' },
-  { label: 'State', id: 'state' }
+  { label: 'Description', id: 'description' }
 ]
 export const filters = [
   { type: 'name', label: 'Name:' },

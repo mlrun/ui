@@ -16,6 +16,7 @@ import {
 import nuclioActions from '../../actions/nuclio'
 import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
+import { DANGER_BUTTON, PRIMARY_BUTTON } from '../../constants'
 
 const Projects = ({
   changeProjectState,
@@ -41,7 +42,7 @@ const Projects = ({
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [isDescendingOrder, setIsDescendingOrder] = useState(false)
-  const [isEmptyValue, setIsEmptyValue] = useState(false)
+  const [isNameValid, setNameValid] = useState(true)
   const [selectedProjectsState, setSelectedProjectsState] = useState(
     'allProjects'
   )
@@ -144,7 +145,7 @@ const Projects = ({
           "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that " +
           "before setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
         btnConfirmLabel: 'Archive',
-        btnConfirmType: 'primary',
+        btnConfirmType: PRIMARY_BUTTON,
         rejectHandler: () => {
           setConfirmData(null)
         },
@@ -161,7 +162,7 @@ const Projects = ({
         title: `Delete project "${project.metadata.name}"?`,
         description: 'Deleted projects can not be restored.',
         btnConfirmLabel: 'Delete',
-        btnConfirmType: 'danger',
+        btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
           setConfirmData(null)
         },
@@ -219,7 +220,7 @@ const Projects = ({
     }
 
     removeNewProject()
-    setIsEmptyValue(false)
+    setNameValid(true)
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProject, removeNewProjectError])
 
@@ -238,10 +239,10 @@ const Projects = ({
     }
 
     if (projectStore.newProject.name.length === 0) {
-      setIsEmptyValue(true)
+      setNameValid(false)
       return false
-    } else if (isEmptyValue) {
-      setIsEmptyValue(false)
+    } else if (isNameValid) {
+      setNameValid(true)
     }
 
     createNewProject({
@@ -278,7 +279,7 @@ const Projects = ({
       handleCreateProject={handleCreateProject}
       handleSearchOnChange={handleSearchOnChange}
       isDescendingOrder={isDescendingOrder}
-      isEmptyValue={isEmptyValue}
+      isNameValid={isNameValid}
       match={match}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
@@ -287,6 +288,7 @@ const Projects = ({
       setCreateProject={setCreateProject}
       setFilterMatches={setFilterMatches}
       setIsDescendingOrder={setIsDescendingOrder}
+      setNameValid={setNameValid}
       setNewProjectDescription={setNewProjectDescription}
       setNewProjectName={setNewProjectName}
       setSelectedProjectsState={setSelectedProjectsState}

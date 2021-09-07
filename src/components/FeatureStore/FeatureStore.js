@@ -27,6 +27,7 @@ import {
   pageDataInitialState
 } from './featureStore.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 import {
   DATASETS_TAB,
   FEATURES_TAB,
@@ -42,24 +43,32 @@ import './featureStore.scss'
 const FeatureStore = ({
   artifactsStore,
   featureStore,
+  fetchArtifactTags,
   fetchDataSet,
   fetchDataSets,
+  fetchEntities,
+  fetchEntity,
   fetchFeature,
   fetchFeatureSets,
   fetchFeatureVector,
   fetchFeatureVectors,
   fetchFeatures,
   filtersStore,
+  fetchFeatureSetsTags,
+  fetchFeatureVectorsTags,
+  getFilterTagOptions,
   history,
   match,
   removeDataSet,
   removeDataSets,
+  removeEntities,
+  removeEntity,
   removeFeature,
-  removeFeatures,
   removeFeatureSets,
   removeFeatureStoreError,
   removeFeatureVector,
   removeFeatureVectors,
+  removeFeatures,
   removeNewFeatureSet,
   setFilters,
   setNotification,
@@ -67,10 +76,6 @@ const FeatureStore = ({
   updateFeatureStoreData
 }) => {
   const [content, setContent] = useState([])
-  const [yamlContent, setYamlContent] = useState({
-    allData: [],
-    selectedRowData: []
-  })
   const [selectedItem, setSelectedItem] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
@@ -84,6 +89,7 @@ const FeatureStore = ({
         fetchDataSets,
         fetchFeatureSets,
         fetchFeatures,
+        fetchEntities,
         fetchFeatureVectors,
         filters,
         match.params.projectName,
@@ -92,18 +98,18 @@ const FeatureStore = ({
 
       if (data.content) {
         setContent(data.content)
-        setYamlContent(state => ({ ...state, allData: data.yamlContent }))
       }
 
-      return data.yamlContent
+      return data.originalContent
     },
     [
-      match.params.pageTab,
       fetchDataSets,
       fetchFeatureSets,
       fetchFeatures,
+      fetchEntities,
       fetchFeatureVectors,
-      match.params.projectName
+      match.params.projectName,
+      match.params.pageTab
     ]
   )
 
@@ -127,8 +133,8 @@ const FeatureStore = ({
       }
       const newPageDataSelectedRowData = { ...pageData.selectedRowData }
 
-      delete newStoreSelectedRowData[featureVector.key.value]
-      delete newPageDataSelectedRowData[featureVector.key.value]
+      delete newStoreSelectedRowData[featureVector.key.identifier]
+      delete newPageDataSelectedRowData[featureVector.key.identifier]
 
       removeFeatureVector(newStoreSelectedRowData)
       setPageData(state => ({
@@ -145,24 +151,31 @@ const FeatureStore = ({
 
   const handleRemoveFeature = useCallback(
     feature => {
-      const key = `${feature.key.value}-${feature.feature_set.value}`
+      const content =
+        feature.key.type === 'feature'
+          ? featureStore.features.selectedRowData.content
+          : featureStore.entities.selectedRowData.content
+      const removeData =
+        feature.key.type === 'feature' ? removeFeature : removeEntity
       const newStoreSelectedRowData = {
-        ...featureStore.features.selectedRowData.content
+        ...content
       }
       const newPageDataSelectedRowData = { ...pageData.selectedRowData }
 
-      delete newStoreSelectedRowData[key]
-      delete newPageDataSelectedRowData[key]
+      delete newStoreSelectedRowData[feature.key.identifier]
+      delete newPageDataSelectedRowData[feature.key.identifier]
 
-      removeFeature(newStoreSelectedRowData)
+      removeData(newStoreSelectedRowData)
       setPageData(state => ({
         ...state,
         selectedRowData: newPageDataSelectedRowData
       }))
     },
     [
+      featureStore.entities.selectedRowData.content,
       featureStore.features.selectedRowData.content,
       pageData.selectedRowData,
+      removeEntity,
       removeFeature
     ]
   )
@@ -193,31 +206,23 @@ const FeatureStore = ({
   const handleRequestOnExpand = useCallback(
     async item => {
       if (match.params.pageTab === FEATURES_TAB) {
-        await fetchFeatureRowData(
-          fetchFeature,
-          item,
-          setPageData,
-          setYamlContent
-        )
+        const fetchData =
+          item.ui?.type === 'feature' ? fetchFeature : fetchEntity
+        await fetchFeatureRowData(fetchData, item, setPageData)
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
-        await fetchFeatureVectorRowData(
-          fetchFeatureVector,
-          item,
-          setPageData,
-          setYamlContent
-        )
+        await fetchFeatureVectorRowData(fetchFeatureVector, item, setPageData)
       } else if (match.params.pageTab === DATASETS_TAB) {
         await fetchDataSetRowData(
           fetchDataSet,
           item,
           setPageData,
-          setYamlContent,
           !filtersStore.iter
         )
       }
     },
     [
       fetchDataSet,
+      fetchEntity,
       fetchFeature,
       fetchFeatureVector,
       filtersStore.iter,
@@ -225,17 +230,13 @@ const FeatureStore = ({
     ]
   )
 
-  const handleExpandRow = useCallback(
-    (item, isCollapse) => {
-      if (match.params.pageTab !== FEATURE_SETS_TAB && isCollapse) {
-        setYamlContent(state => ({
-          ...state,
-          selectedRowData: []
-        }))
-      }
-    },
-    [match.params.pageTab]
-  )
+  useEffect(() => {
+    removeDataSet({})
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {}
+    }))
+  }, [filtersStore.iter, removeDataSet])
 
   useEffect(() => {
     fetchData({
@@ -245,12 +246,9 @@ const FeatureStore = ({
 
     return () => {
       setContent([])
-      setYamlContent({
-        allData: [],
-        selectedRowData: []
-      })
       removeDataSets()
       removeFeatures()
+      removeEntities()
       removeFeatureSets()
       removeFeatureVectors()
       setSelectedItem({})
@@ -262,7 +260,8 @@ const FeatureStore = ({
     removeDataSets,
     removeFeatureSets,
     removeFeatureVectors,
-    removeFeatures
+    removeFeatures,
+    removeEntities
   ])
 
   useEffect(() => {
@@ -294,12 +293,12 @@ const FeatureStore = ({
       }
     })
   }, [
+    getPopUpTemplate,
+    handleRemoveDataSet,
+    handleRemoveFeature,
     handleRemoveFeatureVector,
     handleRequestOnExpand,
-    handleRemoveFeature,
     match.params.pageTab,
-    handleRemoveDataSet,
-    getPopUpTemplate,
     tableStore.isTablePanelOpen
   ])
 
@@ -307,6 +306,7 @@ const FeatureStore = ({
     navigateToDetailsPane(
       featureStore.featureSets,
       featureStore.features.allData,
+      featureStore.entities.allData,
       artifactsStore.dataSets,
       featureStore.featureVectors,
       history,
@@ -318,6 +318,7 @@ const FeatureStore = ({
     featureStore.featureSets,
     featureStore.featureVectors,
     featureStore.features.allData,
+    featureStore.entities.allData,
     history,
     match
   ])
@@ -370,6 +371,26 @@ const FeatureStore = ({
   ])
 
   useEffect(() => setContent([]), [filtersStore.tag])
+
+  useEffect(() => {
+    if (filtersStore.tagOptions.length === 0) {
+      if (match.params.pageTab === DATASETS_TAB) {
+        getFilterTagOptions(fetchArtifactTags, match.params.projectName)
+      } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
+        getFilterTagOptions(fetchFeatureVectorsTags, match.params.projectName)
+      } else if (match.params.pageTab === FEATURES_TAB) {
+        getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
+      }
+    }
+  }, [
+    fetchArtifactTags,
+    fetchFeatureSetsTags,
+    fetchFeatureVectorsTags,
+    filtersStore.tagOptions.length,
+    getFilterTagOptions,
+    match.params.pageTab,
+    match.params.projectName
+  ])
 
   const applyDetailsChanges = changes => {
     return handleApplyDetailsChanges(
@@ -429,7 +450,6 @@ const FeatureStore = ({
             featureStoreRef.current.cancel(message)
         }}
         content={content}
-        expandRow={handleExpandRow}
         handleCancel={() => setSelectedItem({})}
         loading={
           match.params.pageTab === DATASETS_TAB
@@ -441,7 +461,7 @@ const FeatureStore = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedItem.item}
-        yamlContent={yamlContent}
+        getIdentifier={getIdentifierMethod(match.params.pageTab)}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup

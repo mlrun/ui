@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelAdvancedView from './JobsPanelAdvancedView'
@@ -12,7 +12,8 @@ import { panelActions } from '../JobsPanel/panelReducer'
 import {
   handleAddItem,
   handleDelete,
-  handleEdit
+  handleEdit,
+  handleReset
 } from './jobsPanelAdvanced.util'
 
 const JobsPanelAdvanced = ({
@@ -28,6 +29,11 @@ const JobsPanelAdvanced = ({
     jobsPanelAdvancedReducer,
     initialState
   )
+  const [validation, setValidation] = useState({
+    envVariablesName: true,
+    envVariablesValue: true,
+    secretsSourceValue: true
+  })
 
   const handleAddNewItem = isEnv => {
     if (isEnv) {
@@ -43,7 +49,9 @@ const JobsPanelAdvanced = ({
         advancedActions.SET_ADD_NEW_ENVIRONMENT_VARIABLE,
         panelActions.SET_TABLE_DATA_ENVIRONMENT_VARIABLES,
         panelActions.SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES,
-        setNewJobEnvironmentVariables
+        setNewJobEnvironmentVariables,
+        setValidation,
+        validation
       )
     } else {
       handleAddItem(
@@ -58,12 +66,14 @@ const JobsPanelAdvanced = ({
         advancedActions.SET_ADD_NEW_SECRET,
         panelActions.SET_TABLE_DATA_SECRET_SOURCES,
         panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES,
-        setNewJobSecretSources
+        setNewJobSecretSources,
+        setValidation,
+        validation
       )
     }
   }
 
-  const handleEditItems = isEnv => {
+  const handleEditItems = (isEnv, index) => {
     if (isEnv) {
       handleEdit(
         environmentVariables,
@@ -76,7 +86,8 @@ const JobsPanelAdvanced = ({
         advancedState.selectedEnvironmentVariable.data,
         setNewJobEnvironmentVariables,
         panelActions.SET_TABLE_DATA_ENVIRONMENT_VARIABLES,
-        panelActions.SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES
+        panelActions.SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES,
+        index
       )
     } else {
       handleEdit(
@@ -90,17 +101,18 @@ const JobsPanelAdvanced = ({
         advancedState.selectedSecret.data,
         setNewJobSecretSources,
         panelActions.SET_TABLE_DATA_SECRET_SOURCES,
-        panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES
+        panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES,
+        index
       )
     }
   }
 
-  const handleDeleteItems = (item, isEnv) => {
-    if (isEnv) {
+  const handleDeleteItems = (item, section, index) => {
+    if (section.includes('env')) {
       handleDelete(
         environmentVariables,
         panelState.tableData.environmentVariables,
-        isEnv,
+        index,
         panelDispatch,
         panelState.previousPanelData.tableData.environmentVariables,
         item,
@@ -112,13 +124,31 @@ const JobsPanelAdvanced = ({
       handleDelete(
         secretSources,
         panelState.tableData.secretSources,
-        isEnv,
+        index,
         panelDispatch,
         panelState.previousPanelData.tableData.secretSources,
         item,
         setNewJobSecretSources,
         panelActions.SET_TABLE_DATA_SECRET_SOURCES,
         panelActions.SET_PREVIOUS_PANEL_DATA_SECRET_SOURCES
+      )
+    }
+  }
+
+  const handleResetForm = isEnv => {
+    if (isEnv) {
+      handleReset(
+        advancedDispatch,
+        advancedActions.REMOVE_NEW_ENVIRONMENT_VARIABLE_DATA,
+        advancedActions.SET_ADD_NEW_ENVIRONMENT_VARIABLE,
+        setValidation
+      )
+    } else {
+      handleReset(
+        advancedDispatch,
+        advancedActions.REMOVE_NEW_SECRET_DATA,
+        advancedActions.SET_ADD_NEW_SECRET,
+        setValidation
       )
     }
   }
@@ -130,8 +160,11 @@ const JobsPanelAdvanced = ({
       handleAddNewItem={handleAddNewItem}
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
+      handleResetForm={handleResetForm}
       match={match}
       panelState={panelState}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }

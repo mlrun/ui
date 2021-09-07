@@ -8,10 +8,12 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import PopUpDialog from '../PopUpDialog/PopUpDialog'
 import Button from '../Button/Button'
 
+import { SELECT_OPTIONS } from '../../types'
+import { TERTIARY_BUTTON } from '../../constants'
+
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
 
 import './select.scss'
-import { SELECT_OPTIONS } from '../../types'
 
 const Select = ({
   className,
@@ -151,7 +153,7 @@ const Select = ({
           <div>{selectedItemAction.confirm.description}</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="tertiary"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={() => {

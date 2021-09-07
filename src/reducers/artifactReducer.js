@@ -293,8 +293,8 @@ export default (state = initialState, { type, payload }) => {
     case REMOVE_MODEL:
       return {
         ...state,
-        model: {
-          ...state.model,
+        models: {
+          ...state.models,
           selectedRowData: {
             content: payload,
             error: null,

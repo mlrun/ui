@@ -9,6 +9,7 @@ import Input from '../../common/Input/Input'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { deleteUnsafeHtml } from '../../utils'
+import { LABEL_BUTTON, SECONDARY_BUTTON } from '../../constants'
 
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
@@ -170,13 +171,13 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
               className="pop-up-dialog__btn_cancel"
               label="Discard"
               onClick={discardChanges}
-              variant="label"
+              variant={LABEL_BUTTON}
             />
             <Button
               disabled={!newOwnerId}
               label="Apply"
               onClick={applyChanges}
-              variant="secondary"
+              variant={SECONDARY_BUTTON}
             />
           </div>
         </div>

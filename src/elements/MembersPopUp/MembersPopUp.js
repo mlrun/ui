@@ -14,6 +14,12 @@ import ChipInput from '../../common/ChipInput/ChipInput'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
 import { membersActions } from './membersReducer'
+import {
+  DANGER_BUTTON,
+  LABEL_BUTTON,
+  PRIMARY_BUTTON,
+  SECONDARY_BUTTON
+} from '../../constants'
 
 import { ReactComponent as Add } from '../../images/add.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -262,7 +268,7 @@ const MembersPopUp = ({
               </span>
               &nbsp;admins&nbsp;
             </span>
-            <Tip text="Some of the users might be user groups" />
+            <Tip text="Some of the members might be user groups" />
           </div>
           <div
             className={inviteMembersBtnClassNames}
@@ -304,7 +310,7 @@ const MembersPopUp = ({
               />
               <div className="new-member-btn">
                 <Button
-                  variant="secondary"
+                  variant={SECONDARY_BUTTON}
                   disabled={newMembers.length === 0 || !newMembersRole}
                   label="Add"
                   onClick={addNewMembers}
@@ -405,7 +411,7 @@ const MembersPopUp = ({
                       <div>Removing a member will provoke all access.</div>
                       <div className="pop-up-dialog__footer-container">
                         <Button
-                          variant="danger"
+                          variant={DANGER_BUTTON}
                           label="Remove member"
                           onClick={() => deleteMember(member)}
                         />
@@ -431,13 +437,13 @@ const MembersPopUp = ({
           />
           <div className="apply-discard-buttons">
             <Button
-              variant="label"
+              variant={LABEL_BUTTON}
               label="Discard"
               className="pop-up-dialog__btn_cancel"
               onClick={closeMemberPopUp}
             />
             <Button
-              variant="secondary"
+              variant={SECONDARY_BUTTON}
               disabled={!areChangesMade()}
               label="Apply"
               onClick={applyMembersChanges}
@@ -466,14 +472,14 @@ const MembersPopUp = ({
         >
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="label"
+              variant={LABEL_BUTTON}
               label="No"
               onClick={() => {
                 setConfirmDiscard(false)
               }}
             />
             <Button
-              variant="primary"
+              variant={PRIMARY_BUTTON}
               label="Discard"
               onClick={discardChanges}
             />

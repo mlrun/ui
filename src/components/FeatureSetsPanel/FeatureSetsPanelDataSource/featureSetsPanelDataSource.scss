@@ -1,4 +1,5 @@
 @import '../../../scss/colors';
+@import '../../../scss/borders';
 
 .data-source {
   &__inputs {
@@ -7,18 +8,36 @@
     width: 100%;
     margin-bottom: 15px;
 
-    .url {
+    &-container {
+      display: flex;
+      flex-direction: column;
       width: 100%;
+    }
+
+    &-item {
+      margin-bottom: 10px;
+    }
+
+    .url {
+      height: 52px;
       margin-left: 10px;
 
-      .input {
-        width: 100%;
+      .combobox {
+        &-input {
+          padding: 15px 5px 15px 0;
+        }
       }
     }
 
     .select {
       min-width: 230px;
+      margin-bottom: 0;
     }
+  }
+
+  &__description {
+    width: 100%;
+    margin-bottom: 15px;
   }
 
   &__table.key-value-table {
@@ -38,6 +57,10 @@
         width: 67%;
       }
     }
+  }
+
+  .panel-section {
+    width: 100%;
   }
 
   .schedule {
@@ -81,9 +104,5 @@
         }
       }
     }
-  }
-
-  p {
-    margin-bottom: 0;
   }
 }

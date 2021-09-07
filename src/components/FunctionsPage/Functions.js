@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { chain, isEqual, isEmpty } from 'lodash'
-import { useLocation } from 'react-router-dom'
 
 import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
@@ -14,20 +13,27 @@ import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import {
   detailsMenu,
   filters,
-  FUNCTIONS_FAILED_STATES,
+  FUNCTIONS_EDITABLE_STATES,
+  FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
   tableHeaders,
   TRANSIENT_FUNCTION_STATUSES
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import getState from '../../utils/getState.js'
-
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
-
-import { FUNCTIONS_PAGE } from '../../constants'
+import {
+  DANGER_BUTTON,
+  FUNCTIONS_PAGE,
+  LABEL_BUTTON,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE,
+  SECONDARY_BUTTON
+} from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
@@ -54,7 +60,6 @@ const Functions = ({
   const [editableItem, setEditableItem] = useState(null)
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
-  const location = useLocation()
   let fetchFunctionLogsTimeout = useRef(null)
 
   const handleFetchFunctionLogs = useCallback(
@@ -91,7 +96,7 @@ const Functions = ({
         label: 'Run',
         icon: <Run />,
         onClick: func => setEditableItem(func),
-        hidden: FUNCTIONS_FAILED_STATES.includes(item?.state?.value)
+        hidden: !FUNCTIONS_READY_STATES.includes(item?.state?.value)
       },
       {
         label: 'Edit',
@@ -100,7 +105,9 @@ const Functions = ({
           setFunctionsPanelIsOpen(true)
           setEditableItem(func)
         },
-        hidden: item?.type !== 'job'
+        hidden:
+          !['job', ''].includes(item?.type) ||
+          !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
         label: 'Delete',
@@ -116,8 +123,7 @@ const Functions = ({
     filterMenuActionButton: {
       label: 'New',
       onClick: () => setFunctionsPanelIsOpen(true),
-      variant: 'secondary',
-      hidden: new URLSearchParams(location.search).get('demo') !== 'true'
+      variant: SECONDARY_BUTTON
     },
     refreshLogs: handleFetchFunctionLogs,
     removeLogs: handleRemoveLogs,
@@ -144,12 +150,15 @@ const Functions = ({
               project: func.metadata?.project || match.params.projectName,
               resources: func.spec?.resources ?? {},
               secret_sources: func.spec?.secret_sources ?? [],
-              state: getState(func.status?.state, page),
+              state: getState(func.status?.state, page, 'function'),
               tag: func.metadata.tag,
               type: func.kind,
               volume_mounts: func.spec?.volume_mounts ?? [],
               volumes: func.spec?.volumes ?? [],
-              updated: new Date(func.metadata.updated)
+              updated: new Date(func.metadata.updated),
+              ui: {
+                originalContent: func
+              }
             }))
             .value()
 
@@ -274,9 +283,9 @@ const Functions = ({
       title: `Delete function "${func.name}"?`,
       description: 'Deleted functions cannot be restored.',
       btnCancelLabel: 'Cancel',
-      btnCancelVariant: 'label',
+      btnCancelVariant: LABEL_BUTTON,
       btnConfirmLabel: 'Delete',
-      btnConfirmVariant: 'danger',
+      btnConfirmVariant: DANGER_BUTTON,
       rejectHandler: () => setConfirmData(null),
       confirmHandler: () => removeFunction(func)
     })
@@ -307,8 +316,10 @@ const Functions = ({
   }
 
   const handleDeployFunctionSuccess = ready => {
-    const { name, tag } = functionsStore.newFunction.metadata
+    let { name, tag } = functionsStore.newFunction.metadata
     const tab = ready === false ? 'logs' : 'overview'
+
+    tag ||= 'latest'
 
     setFunctionsPanelIsOpen(false)
     setEditableItem(null)
@@ -386,7 +397,7 @@ const Functions = ({
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
         setLoading={setLoading}
-        yamlContent={functionsStore.functions}
+        getIdentifier={getFunctionIdentifier}
       />
       {editableItem && !functionsPanelIsOpen && (
         <JobsPanel
@@ -402,6 +413,7 @@ const Functions = ({
             )
           }}
           match={match}
+          mode={PANEL_EDIT_MODE}
           project={match.params.projectName}
           redirectToDetailsPane
         />
@@ -414,6 +426,7 @@ const Functions = ({
           handleDeployFunctionFailure={handleDeployFunctionFailure}
           handleDeployFunctionSuccess={handleDeployFunctionSuccess}
           match={match}
+          mode={editableItem ? PANEL_EDIT_MODE : PANEL_CREATE_MODE}
           project={match.params.projectName}
         />
       )}

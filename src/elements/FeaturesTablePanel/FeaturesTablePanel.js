@@ -12,6 +12,7 @@ import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureV
 import tableActions from '../../actions/table'
 import featureStoreActions from '../../actions/featureStore'
 import notificationActions from '../../actions/notification'
+import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
@@ -213,12 +214,12 @@ const FeaturesTablePanel = ({
       <div className="features-panel__buttons">
         <Button
           label="Cancel"
-          variant="label"
+          variant={LABEL_BUTTON}
           onClick={() => {
             setTablePanelOpen(false)
           }}
         />
-        <Button variant="primary" label="Add" onClick={addFeatures} />
+        <Button variant={PRIMARY_BUTTON} label="Add" onClick={addFeatures} />
       </div>
     </div>
   )

@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import VolumesTableView from './VolumesTableView'
+import { CONFIG_MAP, PVC, SECRET, V3IO } from './volumesTable.util'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -16,14 +17,37 @@ export const VolumesTable = ({
 }) => {
   const [newVolume, setNewVolume] = useState({
     name: '',
-    type: '',
+    type: V3IO,
     typeName: '',
     path: '',
     accessKey: '',
     subPath: ''
   })
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isTypeValid: true,
+    isTypeNameValid: true,
+    isPathValid: true,
+    isAccessKeyValid: true
+  })
   const [showAddNewVolumeRow, setShowAddNewVolumeRow] = useState(false)
   const [selectedVolume, setSelectedVolume] = useState(null)
+
+  useEffect(() => {
+    setValidation({
+      isNameValid: true,
+      isTypeValid: true,
+      isTypeNameValid: true,
+      isPathValid: true,
+      isAccessKeyValid: true
+    })
+    setNewVolume(state => ({
+      ...state,
+      typeName: '',
+      accessKey: '',
+      subPath: ''
+    }))
+  }, [newVolume.type])
 
   const handleSetSelectedVolume = useCallback(
     selectedVolume => {
@@ -35,7 +59,7 @@ export const VolumesTable = ({
         return setSelectedVolume({
           ...selectedVolume,
           type: {
-            value: 'Config Map',
+            value: CONFIG_MAP,
             name: searchItem.configMap.name
           }
         })
@@ -43,7 +67,7 @@ export const VolumesTable = ({
         return setSelectedVolume({
           ...selectedVolume,
           type: {
-            value: 'PVC',
+            value: PVC,
             name: searchItem.persistentVolumeClaim.claimName
           }
         })
@@ -51,7 +75,7 @@ export const VolumesTable = ({
         return setSelectedVolume({
           ...selectedVolume,
           type: {
-            value: 'Secret',
+            value: SECRET,
             name: searchItem.secret.secretName
           }
         })
@@ -59,7 +83,7 @@ export const VolumesTable = ({
         return setSelectedVolume({
           ...selectedVolume,
           type: {
-            value: 'V3IO',
+            value: V3IO,
             name: searchItem.flexVolume.options.container,
             accessKey: searchItem.flexVolume.options.accessKey,
             subPath: searchItem.flexVolume.options.subPath
@@ -92,7 +116,7 @@ export const VolumesTable = ({
       {
         label: 'Remove',
         icon: <Delete />,
-        hidden: rowItem.isDefault,
+        hidden: rowItem.isDefault && !rowItem.canBeModified,
         onClick: selectedItem => {
           deleteVolume(selectedItem)
         }
@@ -102,23 +126,65 @@ export const VolumesTable = ({
   )
 
   const addVolume = () => {
-    if (
+    let volumeIsValid =
       newVolume.name.length > 0 &&
+      validation.isNameValid &&
       newVolume.path.length > 0 &&
-      newVolume.type.length > 0
-    ) {
-      handleAddNewVolume(newVolume)
+      validation.isPathValid &&
+      newVolume.type.length > 0 &&
+      validation.isTypeValid &&
+      newVolume.typeName.length > 0 &&
+      validation.isTypeNameValid
+
+    if (newVolume.type === V3IO) {
+      volumeIsValid =
+        newVolume.name.length > 0 &&
+        validation.isNameValid &&
+        newVolume.path.length > 0 &&
+        validation.isPathValid &&
+        newVolume.type.length > 0 &&
+        validation.isTypeValid &&
+        newVolume.accessKey.length > 0 &&
+        validation.isAccessKeyValid
     }
 
+    if (volumeIsValid) {
+      handleAddNewVolume(newVolume)
+      resetVolumesData()
+    } else {
+      setValidation(state => ({
+        isNameValid: newVolume.name.length > 0 && state.isNameValid,
+        isTypeValid: newVolume.type.length > 0 && state.isTypeValid,
+        isTypeNameValid:
+          newVolume.type === V3IO
+            ? true
+            : newVolume.typeName.length > 0 && state.isTypeNameValid,
+        isPathValid: newVolume.path.length > 0 && state.isPathValid,
+        isAccessKeyValid:
+          newVolume.type === V3IO
+            ? newVolume.accessKey.length > 0 && state.isAccessKeyValid
+            : true
+      }))
+    }
+  }
+
+  const resetVolumesData = () => {
     setNewVolume({
       name: '',
-      type: '',
+      type: V3IO,
       typeName: '',
       path: '',
       accessKey: '',
       subPath: ''
     })
     setShowAddNewVolumeRow(false)
+    setValidation({
+      isNameValid: true,
+      isTypeValid: true,
+      isTypeNameValid: true,
+      isPathValid: true,
+      isAccessKeyValid: true
+    })
   }
 
   const editVolume = () => {
@@ -127,13 +193,13 @@ export const VolumesTable = ({
         volume.name = selectedVolume.newName || selectedVolume.data.name
 
         switch (selectedVolume.type.value) {
-          case 'Config Map':
+          case CONFIG_MAP:
             volume.configMap.name = selectedVolume.type.name
             break
-          case 'PVC':
+          case PVC:
             volume.persistentVolumeClaim.claimName = selectedVolume.type.name
             break
-          case 'Secret':
+          case SECRET:
             volume.secret.secretName = selectedVolume.type.name
             break
           default:
@@ -151,7 +217,8 @@ export const VolumesTable = ({
       if (volumeMount.data.name === selectedVolume.data.name) {
         volumeMount.data.name =
           selectedVolume.newName || selectedVolume.data.name
-        volumeMount.data.mountPath = selectedVolume.data.mountPath
+        volumeMount.data.mountPath =
+          selectedVolume.newPath || selectedVolume.data.mountPath
       }
 
       return volumeMount
@@ -169,11 +236,14 @@ export const VolumesTable = ({
       generateActionsMenu={generateActionsMenu}
       newVolume={newVolume}
       volumeMounts={volumeMounts}
+      resetVolumesData={resetVolumesData}
       selectedVolume={selectedVolume}
       setNewVolume={setNewVolume}
       setSelectedVolume={setSelectedVolume}
       setShowAddNewVolumeRow={setShowAddNewVolumeRow}
+      setValidation={setValidation}
       showAddNewVolumeRow={showAddNewVolumeRow}
+      validation={validation}
     />
   )
 }

@@ -1,0 +1,70 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.details-menu {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  margin: 29px 0 0;
+  padding: 7px 0 0;
+  list-style-type: none;
+  background-color: $white;
+  border-bottom: $secondaryBorder;
+
+  &__tabs-wrapper {
+    overflow-x: hidden;
+  }
+
+  &__tabs {
+    display: flex;
+    transition: 0.2s;
+  }
+
+  &__tab {
+    padding: 8px 24px;
+    color: $topaz;
+    font-weight: bold;
+    text-transform: capitalize;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+
+    &_active {
+      color: $cornflowerBlue;
+      border-bottom-color: $cornflowerBlue;
+    }
+  }
+
+  &__arrow {
+    min-width: fit-content;
+    max-width: 24px;
+    height: 100%;
+
+    &_left {
+      padding-top: 3px;
+      transform: rotate(180deg);
+    }
+
+    &_right {
+      padding-bottom: 3px;
+    }
+
+    &_hidden {
+      display: none;
+    }
+
+    &_disabled {
+      pointer-events: none;
+
+      & path {
+        fill: $spunPearl;
+      }
+    }
+
+    &:hover:not(.details-menu__arrow_disabled) {
+      background-color: $mulledWineThree;
+      cursor: pointer;
+    }
+  }
+}

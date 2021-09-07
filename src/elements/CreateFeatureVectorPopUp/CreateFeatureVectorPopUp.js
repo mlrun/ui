@@ -8,6 +8,7 @@ import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
 
 import { generateKeyValues, parseKeyValues } from '../../utils'
+import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
 
 import './createFeatureVectorPopUp.scss'
 
@@ -79,13 +80,13 @@ const CreateFeatureVectorPopUp = ({
       </div>
       <div className="pop-up-dialog__footer-container">
         <Button
-          variant="label"
+          variant={LABEL_BUTTON}
           label="Cancel"
           className="pop-up-dialog__btn_cancel"
           onClick={closePopUp}
         />
         <Button
-          variant="primary"
+          variant={PRIMARY_BUTTON}
           label="Create"
           disabled={!featureVectorName.trim() || !featureVectorTag.trim()}
           onClick={() =>

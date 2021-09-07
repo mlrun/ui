@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
-import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
+import DetailsMenu from '../../elements/DetailsMenu/DetailsMenu'
 import Download from '../../common/Download/Download'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
@@ -24,7 +24,10 @@ import {
   FEATURE_STORE_PAGE,
   FUNCTIONS_PAGE,
   FEATURE_VECTORS_TAB,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  TERTIARY_BUTTON,
+  PRIMARY_BUTTON,
+  LABEL_BUTTON
 } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -55,7 +58,8 @@ const DetailsView = React.forwardRef(
       'table__item',
       detailsStore.showWarning && 'pop-up-dialog-opened'
     )
-    const { value: statusValue, label: statusLabel } = selectedItem.state || {}
+    const { value: stateValue, label: stateLabel, className: stateClassName } =
+      selectedItem.state || {}
 
     return (
       <div className={detailsPanelClassNames} ref={ref}>
@@ -86,7 +90,7 @@ const DetailsView = React.forwardRef(
             {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
               ? formatDatetime(
                   selectedItem?.startTime,
-                  statusValue === 'aborted' ? 'N/A' : 'Not yet started'
+                  stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                 )
               : selectedItem?.updated
               ? formatDatetime(new Date(selectedItem?.updated), 'N/A')
@@ -95,9 +99,9 @@ const DetailsView = React.forwardRef(
               : selectedItem?.spec?.model
               ? selectedItem?.metadata?.uid
               : ''}
-            {statusValue && statusLabel && (
-              <Tooltip template={<TextTooltipTemplate text={statusLabel} />}>
-                <i className={statusValue} />
+            {stateValue && stateLabel && (
+              <Tooltip template={<TextTooltipTemplate text={stateLabel} />}>
+                <i className={stateClassName} />
               </Tooltip>
             )}
             {!isEmpty(detailsStore.pods.podsPending) && (
@@ -116,7 +120,7 @@ const DetailsView = React.forwardRef(
           {pageData.page === FEATURE_STORE_PAGE && (
             <>
               <Button
-                variant="label"
+                variant={LABEL_BUTTON}
                 label="Cancel"
                 onClick={cancelChanges}
                 disabled={detailsStore.changes.counter === 0}
@@ -141,7 +145,7 @@ const DetailsView = React.forwardRef(
               </Tooltip>
             </>
           )}
-          {match.params.tab?.toUpperCase() === DETAILS_ARTIFACTS_TAB && (
+          {match.params.tab === DETAILS_ARTIFACTS_TAB && (
             <Select
               density="dense"
               key="Iteration"
@@ -188,21 +192,16 @@ const DetailsView = React.forwardRef(
             </Tooltip>
           </Link>
         </div>
-        <ul className="item-menu">
-          {detailsMenu.map(link => (
-            <DetailsMenuItem
-              hash={selectedItem.hash}
-              id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
-              iter={selectedItem.iter}
-              key={link}
-              match={match}
-              name={selectedItem.db_key || selectedItem.name}
-              onClick={detailsMenuClick}
-              page={pageData.page}
-              tab={link}
-            />
-          ))}
-        </ul>
+        <DetailsMenu
+          detailsMenu={detailsMenu}
+          hash={selectedItem.hash}
+          id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
+          iter={selectedItem.iter}
+          match={match}
+          name={selectedItem.db_key || selectedItem.name}
+          onClick={detailsMenuClick}
+          page={pageData.page}
+        />
         {tabsContent}
         {detailsStore.showWarning && (
           <PopUpDialog
@@ -218,16 +217,20 @@ const DetailsView = React.forwardRef(
           >
             <div className="pop-up-dialog__footer-container">
               <Button
-                variant="tertiary"
-                label="Don't Leave"
+                variant={TERTIARY_BUTTON}
+                label={
+                  detailsStore.refreshWasHandled
+                    ? "Don't refresh"
+                    : "Don't Leave"
+                }
                 onClick={() => {
                   handleShowWarning(false)
                   setRefreshWasHandled(false)
                 }}
               />
               <Button
-                variant="primary"
-                label="Leave"
+                variant={PRIMARY_BUTTON}
+                label={detailsStore.refreshWasHandled ? 'Refresh' : 'Leave'}
                 className="pop-up-dialog__btn_cancel"
                 onClick={leavePage}
               />

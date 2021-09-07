@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
-import { isNil } from 'lodash'
+import { cloneDeep, isNil } from 'lodash'
 
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 
@@ -18,6 +18,7 @@ import {
   detailsRequestedFeaturesReducer,
   initialState
 } from './detailsRequestedFeaturesReducer.js'
+import { DANGER_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -26,7 +27,6 @@ import './detailsRequestedFeatures.scss'
 
 const DetailsRequestedFeatures = ({
   changes,
-  detailsState,
   handleEditInput,
   match,
   selectedItem,
@@ -43,11 +43,13 @@ const DetailsRequestedFeatures = ({
     index: null,
     feature: null
   })
-  const [editableItem, setEditableItem] = useState(null)
+  const [editableItemIndex, setEditableItemIndex] = useState(null)
+  const [labelFetureIsEditable, setLabelFeatureIsEditable] = useState(false)
 
   useEffect(() => {
     return () => {
-      setEditableItem(null)
+      setEditableItemIndex(null)
+      setLabelFeatureIsEditable(false)
     }
   }, [selectedItem])
 
@@ -67,9 +69,37 @@ const DetailsRequestedFeatures = ({
     }
   }, [changes.data.features, selectedItem.specFeatures])
 
-  const handleItemClick = (field, fieldType, info, index) => {
-    if (isNil(editableItem)) {
-      setEditableItem(index)
+  useEffect(() => {
+    if (
+      labelFetureIsEditable &&
+      !isNil(editableItemIndex) &&
+      !isNil(changes.data.label_feature) &&
+      !isNil(changes.data.features) &&
+      changes.data.features.currentFieldValue[editableItemIndex] !==
+        changes.data.label_feature.currentFieldValue
+    ) {
+      handleEditInput(
+        changes.data.features.currentFieldValue[editableItemIndex],
+        'label_feature'
+      )
+    }
+  }, [
+    changes.data.features,
+    changes.data.label_feature,
+    editableItemIndex,
+    handleEditInput,
+    labelFetureIsEditable
+  ])
+
+  const handleAliasChange = (index, alias) => {
+    const generatedFeaturesArray = generateChangedArray(index, alias)
+
+    handleEditInput(generatedFeaturesArray, 'features')
+  }
+
+  const handleItemClick = (field, fieldType, info, index, featureTemplate) => {
+    if (isNil(editableItemIndex)) {
+      setEditableItemIndex(index)
       detailsRequestedFeaturesDispatch({
         type: detailsRequestedFeaturesActions.SET_EDIT_MODE,
         payload: {
@@ -78,29 +108,56 @@ const DetailsRequestedFeatures = ({
         }
       })
 
-      if (isNil(changes.data[field]?.initialFieldValue)) {
-        setChangesData({
-          [field]: {
-            initialFieldValue: selectedItem.specFeatures,
-            currentFieldValue: selectedItem.specFeatures,
-            previousFieldValue: selectedItem.specFeatures
-          }
-        })
+      const changesData = cloneDeep(changes.data)
+
+      if (
+        isNil(changesData.label_feature) &&
+        featureTemplate === selectedItem.label_feature
+      ) {
+        setLabelFeatureIsEditable(true)
+
+        changesData.label_feature = {
+          initialFieldValue: selectedItem.label_feature,
+          currentFieldValue: selectedItem.label_feature,
+          previousFieldValue: selectedItem.label_feature
+        }
+      } else if (
+        !isNil(changesData.label_feature) &&
+        featureTemplate === changesData.label_feature.currentFieldValue
+      ) {
+        setLabelFeatureIsEditable(true)
+
+        changesData.label_feature = {
+          ...changesData.label_feature,
+          currentFieldValue: changesData.label_feature.previousFieldValue
+        }
+      }
+
+      if (isNil(changesData[field]?.initialFieldValue)) {
+        changesData[field] = {
+          initialFieldValue: selectedItem.specFeatures,
+          currentFieldValue: selectedItem.specFeatures,
+          previousFieldValue: selectedItem.specFeatures
+        }
+
+        setChangesData(changesData)
       } else {
-        setChangesData({
-          [field]: {
-            ...changes.data[field],
-            currentFieldValue: changes.data[field].previousFieldValue
-          }
-        })
+        changesData[field] = {
+          ...changesData[field],
+          currentFieldValue: changesData[field].previousFieldValue
+        }
+
+        setChangesData(changesData)
       }
     }
   }
 
-  const onFinishEdit = field => {
-    setEditableItem(null)
+  const onFinishEdit = fields => {
+    setEditableItemIndex(null)
+    setLabelFeatureIsEditable(false)
+
     handleFinishEdit(
-      field,
+      fields,
       changes,
       detailsRequestedFeaturesActions,
       detailsRequestedFeaturesDispatch,
@@ -111,33 +168,37 @@ const DetailsRequestedFeatures = ({
   }
 
   const handleDelete = index => {
-    if (editableItem) setEditableItem(null)
+    if (!isNil(editableItemIndex)) setEditableItemIndex(null)
+    if (labelFetureIsEditable) setLabelFeatureIsEditable(false)
 
-    if (!changes.data.features) {
-      setChangesData({
-        features: {
-          initialFieldValue: selectedItem.specFeatures,
-          currentFieldValue: selectedItem.specFeatures,
-          previousFieldValue: selectedItem.specFeatures
-        }
-      })
+    const changesData = cloneDeep(changes.data)
+    const editedFeatures = [...currentData]
+    const [deletedFeature] = editedFeatures.splice(index, 1)
+
+    changesData.features = {
+      initialFieldValue: selectedItem.specFeatures,
+      currentFieldValue: editedFeatures,
+      previousFieldValue: editedFeatures
     }
 
-    let editedArr = [...currentData]
+    if (
+      (changesData.label_feature &&
+        deletedFeature === changesData.label_feature.currentFieldValue) ||
+      deletedFeature === selectedItem.label_feature
+    ) {
+      changesData.label_feature = {
+        initialFieldValue: selectedItem.label_feature,
+        currentFieldValue: '',
+        previousFieldValue: ''
+      }
+    }
 
-    editedArr.splice(index, 1)
-    setConfirmDialogData({ index: null, feature: null })
     setChanges({
-      ...detailsState.changes,
-      data: {
-        features: {
-          initialFieldValue: selectedItem.specFeatures,
-          currentFieldValue: editedArr,
-          previousFieldValue: editedArr
-        }
-      },
-      counter: Object.keys(changes.data).length + 1
+      data: changesData,
+      counter: Object.keys(changesData).length
     })
+
+    setConfirmDialogData({ index: null, feature: null })
   }
 
   const generateChangedArray = (index, changedAlias) => {
@@ -199,24 +260,21 @@ const DetailsRequestedFeatures = ({
                 <div className="item-requested-features__table-cell cell_feature">
                   {feature}
                 </div>
-                {editableItem === index ? (
+                {editableItemIndex === index ? (
                   <div className="item-requested-features__table-cell cell_alias">
                     <div className="cell_alias__input-wrapper">
                       <Input
                         className="input"
                         focused
-                        onChange={alias =>
-                          handleEditInput(
-                            generateChangedArray(index, alias),
-                            'features'
-                          )
-                        }
+                        onChange={alias => handleAliasChange(index, alias)}
                         type="text"
                         value={alias}
                       />
                       <Checkmark
                         className="cell_alias__input-btn"
-                        onClick={() => onFinishEdit('features')}
+                        onClick={() =>
+                          onFinishEdit(['features', 'label_feature'])
+                        }
                       />
                     </div>
                   </div>
@@ -224,7 +282,13 @@ const DetailsRequestedFeatures = ({
                   <div
                     className="item-requested-features__table-cell cell_alias"
                     onClick={() =>
-                      handleItemClick('features', 'input', currentData, index)
+                      handleItemClick(
+                        'features',
+                        'input',
+                        currentData,
+                        index,
+                        featureTemplate
+                      )
                     }
                   >
                     <Tooltip
@@ -256,7 +320,7 @@ const DetailsRequestedFeatures = ({
           <div>The feature could be added back later.</div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant="tertiary"
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={() => {
@@ -269,7 +333,7 @@ const DetailsRequestedFeatures = ({
             <Button
               label="Delete"
               onClick={() => handleDelete(confirmDialogData.index)}
-              variant="danger"
+              variant={DANGER_BUTTON}
             />
           </div>
         </PopUpDialog>
@@ -280,7 +344,6 @@ const DetailsRequestedFeatures = ({
 
 DetailsRequestedFeatures.propTypes = {
   changes: PropTypes.object.isRequired,
-  detailsState: PropTypes.object.isRequired,
   handleEditInput: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   selectedItem: PropTypes.shape({}).isRequired

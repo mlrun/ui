@@ -20,7 +20,9 @@ const SelectOption = ({ item, onClick, selectType, selectedId }) => {
     return (
       <div data-testid="select-checkbox" className="select__item">
         <CheckBox item={item} selectedId={selectedId} onChange={onClick}>
-          {item.status && <span className={`status ${item.status}`} />}
+          {item.status && (
+            <span className={`state-${item.status}-job status`} />
+          )}
           {item.label}
         </CheckBox>
       </div>
@@ -40,7 +42,7 @@ const SelectOption = ({ item, onClick, selectType, selectedId }) => {
           {item.icon}
         </span>
       )}
-      {item.status && <span className={`status ${item.status}`} />}
+      {item.status && <span className={`state-${item.status}-job status`} />}
       <div className="data-ellipsis">
         <Tooltip template={<TextTooltipTemplate text={item.label} />}>
           {item.label}

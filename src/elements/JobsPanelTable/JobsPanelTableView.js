@@ -23,7 +23,9 @@ const JobsPanelTableView = ({
   sectionState,
   selectedItem,
   setEditItem,
-  setSelectedItem
+  setSelectedItem,
+  setValidation,
+  validation
 }) => {
   const tableClassNames = classnames(
     'new-item-side-panel__table',
@@ -45,13 +47,7 @@ const JobsPanelTableView = ({
         </div>
       )}
       {content?.map((contentItem, index) => {
-        const contentItemName = section.includes('secrets') ? 'kind' : 'name'
-
-        if (
-          editItem &&
-          contentItem.data[contentItemName] ===
-            selectedItem.data[contentItemName]
-        ) {
+        if (editItem && index === selectedItem.index) {
           return section === 'data-inputs' ? (
             <EditableDataInputsRow
               comboboxMatchesList={sectionData.comboboxMatchesList}
@@ -59,6 +55,7 @@ const JobsPanelTableView = ({
               handleEdit={handleEdit}
               inputsDispatch={sectionDispatch}
               inputsState={sectionState}
+              index={index}
               key={index}
               selectedDataInput={selectedItem}
               setEditItem={setEditItem}
@@ -68,22 +65,26 @@ const JobsPanelTableView = ({
             <EditableAdvancedRow
               content={content}
               handleEdit={handleEdit}
+              index={index}
               key={index}
               match={match}
               selectedItem={selectedItem}
               setEditItem={setEditItem}
               setSelectedItem={setSelectedItem}
+              setValidation={setValidation}
               table={section.includes('secrets') ? 'secrets' : 'env'}
+              validation={validation}
             />
           )
         } else {
           return (
             <JobsPanelTableRow
-              actionsMenu={generateActionsMenu(contentItem)}
+              actionsMenu={generateActionsMenu(contentItem, index)}
               contentItem={contentItem}
               editItem={editItem}
               handleDelete={handleDelete}
               handleEdit={handleEdit}
+              index={index}
               key={index}
               section={section}
             />
@@ -119,7 +120,9 @@ JobsPanelTableView.propTypes = {
   sectionState: PropTypes.shape({}),
   selectedItem: PropTypes.shape({}).isRequired,
   setEditItem: PropTypes.func,
-  setSelectedItem: PropTypes.func.isRequired
+  setSelectedItem: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.object.isRequired
 }
 
 export default JobsPanelTableView

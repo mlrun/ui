@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -7,8 +7,9 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
+import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
+
 import { ACTION_CELL_ID, DETAILS_OVERVIEW_TAB } from '../../constants'
-import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 
 const FeatureStoreTableRow = ({
   actionsMenu,
@@ -24,10 +25,15 @@ const FeatureStoreTableRow = ({
 }) => {
   const [currentItem, setCurrentItem] = useState(null)
   const parent = useRef()
+  const getIdentifier = useMemo(
+    () => getIdentifierMethod(match.params.pageTab),
+    [match.params.pageTab]
+  )
   const rowClassNames = classnames(
     'table-body__row',
     'parent-row',
-    getFeatureIdentifier(selectedItem) === rowItem.key?.identifier &&
+    selectedItem.name &&
+      getIdentifier(selectedItem, true) === rowItem.key?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -38,16 +44,17 @@ const FeatureStoreTableRow = ({
   const findCurrentItem = useCallback(
     feature => {
       const currentContent =
-        pageData.selectedRowData?.[feature.key.value]?.content || content
+        pageData.selectedRowData?.[feature.key.identifier]?.content || content
 
       return (
-        currentContent.find(
-          contentItem =>
-            getFeatureIdentifier(contentItem) === feature.key.identifier
-        ) ?? {}
+        currentContent.find(contentItem => {
+          return (
+            getIdentifier(contentItem, true) === feature.key.identifierUnique
+          )
+        }) ?? {}
       )
     },
-    [content, pageData.selectedRowData]
+    [content, getIdentifier, pageData.selectedRowData]
   )
 
   useEffect(() => {
@@ -85,32 +92,25 @@ const FeatureStoreTableRow = ({
             const subRowCurrentItem = findCurrentItem(tableContentItem)
             const subRowClassNames = classnames(
               'table-body__row',
-              getFeatureIdentifier(selectedItem) ===
-                getFeatureIdentifier(subRowCurrentItem) && 'row_active'
+              selectedItem.name &&
+                getIdentifier(selectedItem, true) ===
+                  getIdentifier(subRowCurrentItem, true) &&
+                'row_active'
             )
 
             return (
               <div className={subRowClassNames} key={index}>
                 {pageData.selectedRowData &&
-                (pageData.selectedRowData[tableContentItem.key?.value]
-                  ?.loading ||
-                  pageData.selectedRowData[
-                    `${tableContentItem.key?.value}-${tableContentItem.feature_set?.value}`
-                  ]?.loading) ? (
+                pageData.selectedRowData[tableContentItem.key?.identifier]
+                  ?.loading ? (
                   <Loader key={index} />
                 ) : pageData.selectedRowData &&
-                  (pageData.selectedRowData[tableContentItem.key?.value]
-                    ?.error ||
-                    pageData.selectedRowData[
-                      `${tableContentItem.key.value}-${tableContentItem.feature_set?.value}`
-                    ]?.error) ? (
+                  pageData.selectedRowData[tableContentItem.key?.identifier]
+                    ?.error ? (
                   <ErrorMessage
                     message={
-                      pageData.selectedRowData[tableContentItem.key?.value]
-                        ?.error?.message ||
-                      pageData.selectedRowData[
-                        `${tableContentItem.key.value}-${tableContentItem.feature_set?.value}`
-                      ]?.error.message
+                      pageData.selectedRowData[tableContentItem.key?.identifier]
+                        ?.error?.message
                     }
                   />
                 ) : (

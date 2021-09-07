@@ -8,58 +8,45 @@ import FunctionsPanelCodeView from './FunctionsPanelCodeView'
 import functionsActions from '../../actions/functions'
 import {
   DEFAULT_ENTRY,
-  DEFAULT_HANDLER,
   DEFAULT_IMAGE,
   DEFAULT_SOURCE_CODE,
   EXISTING_IMAGE,
   NEW_IMAGE
 } from './functionsPanelCode.util'
+import { PANEL_CREATE_MODE } from '../../constants'
+import { trimSplit } from '../../utils'
 
 const FunctionsPanelCode = ({
+  appStore,
   defaultData,
   functionsStore,
-  isHandlerValid,
+  imageType,
+  match,
+  mode,
   resetNewFunctionCodeCustomImage,
-  setHandlerValid,
+  setImageType,
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
   setNewFunctionCommands,
   setNewFunctionHandler,
   setNewFunctionImage,
-  setNewFunctionSourceCode
+  setNewFunctionSourceCode,
+  setNewFunctionWithMlrun,
+  setValidation,
+  validation
 }) => {
   const [data, setData] = useState({
     entry: DEFAULT_ENTRY,
-    handler: defaultData.default_handler ?? DEFAULT_HANDLER,
-    image: defaultData.image ?? DEFAULT_IMAGE,
+    handler: defaultData.default_handler ?? '',
+    image: defaultData.image ?? '',
     base_image: defaultData.build?.base_image ?? '',
     commands: (defaultData.build?.commands || []).join('\n') ?? '',
     build_image: defaultData.build?.image ?? ''
   })
   const [editCode, setEditCode] = useState(false)
-  const [imageType, setImageType] = useState(
-    defaultData.build?.image || defaultData.build?.base_image
-      ? NEW_IMAGE
-      : EXISTING_IMAGE
-  )
-
-  const handleHandlerChange = handler => {
-    if (!isHandlerValid && handler.length > 0) {
-      setHandlerValid(true)
-    }
-
-    setData(state => ({
-      ...state,
-      handler
-    }))
-  }
 
   const handleHandlerOnBlur = event => {
-    if (data.handler.length === 0) {
-      setHandlerValid(false)
-    } else if (
-      functionsStore.newFunction.spec.default_handler !== event.target.value
-    ) {
+    if (functionsStore.newFunction.spec.default_handler !== data.handler) {
       setNewFunctionHandler(data.handler)
     }
   }
@@ -78,60 +65,150 @@ const FunctionsPanelCode = ({
   ])
 
   useEffect(() => {
-    if (
-      !functionsStore.newFunction.spec.default_handler &&
-      isNil(defaultData.default_handler)
+    if (mode === PANEL_CREATE_MODE && imageType.length === 0) {
+      if (
+        appStore.frontendSpec.default_function_image_by_kind?.[
+          functionsStore.newFunction.kind
+        ]
+      ) {
+        setNewFunctionImage(
+          appStore.frontendSpec.default_function_image_by_kind[
+            functionsStore.newFunction.kind
+          ]
+        )
+        setImageType(EXISTING_IMAGE)
+        setData(state => ({
+          ...state,
+          image:
+            appStore.frontendSpec?.default_function_image_by_kind?.[
+              functionsStore.newFunction.kind
+            ]
+        }))
+      } else {
+        setNewFunctionCommands(
+          trimSplit(
+            appStore.frontendSpec?.function_deployment_mlrun_command,
+            '\n'
+          )
+        )
+        setImageType(NEW_IMAGE)
+        setNewFunctionBaseImage(
+          appStore.frontendSpec?.default_function_image_by_kind?.[
+            functionsStore.newFunction.kind
+          ]
+        )
+        setData(state => ({
+          ...state,
+          commands: appStore.frontendSpec?.function_deployment_mlrun_command,
+          base_image:
+            appStore.frontendSpec?.default_function_image_by_kind?.[
+              functionsStore.newFunction.kind
+            ]
+        }))
+      }
+    } else if (
+      defaultData.build?.base_image?.length === 0 &&
+      defaultData.build?.commands?.length === 0 &&
+      defaultData.build?.image?.length === 0 &&
+      imageType.length === 0
     ) {
-      setNewFunctionHandler(DEFAULT_HANDLER)
+      setNewFunctionImage(defaultData.image || DEFAULT_IMAGE)
+      setImageType(EXISTING_IMAGE)
+      setData(state => ({
+        ...state,
+        image: defaultData.image || DEFAULT_IMAGE
+      }))
+    } else if (imageType.length === 0) {
+      setImageType(NEW_IMAGE)
     }
   }, [
-    defaultData.default_handler,
-    functionsStore.newFunction.spec.default_handler,
-    setNewFunctionHandler
+    appStore.frontendSpec,
+    defaultData.build,
+    defaultData.image,
+    functionsStore.newFunction.kind,
+    functionsStore.newFunction.metadata.tag,
+    imageType.length,
+    match.params.projectName,
+    mode,
+    setImageType,
+    setNewFunctionBaseImage,
+    setNewFunctionBuildImage,
+    setNewFunctionCommands,
+    setNewFunctionImage
   ])
 
-  useEffect(() => {
+  const handleImageTypeChange = imageType => {
     if (imageType === EXISTING_IMAGE) {
-      setNewFunctionImage(defaultData.image ?? DEFAULT_IMAGE)
+      setNewFunctionImage(
+        appStore.frontendSpec?.default_function_image_by_kind?.[
+          functionsStore.newFunction.kind
+        ]
+      )
       resetNewFunctionCodeCustomImage()
       setData(state => ({
         ...state,
         base_image: '',
         commands: '',
         build_image: '',
-        image: DEFAULT_IMAGE
+        image:
+          appStore.frontendSpec?.default_function_image_by_kind?.[
+            functionsStore.newFunction.kind
+          ]
       }))
+      setNewFunctionWithMlrun(false)
     } else {
       setNewFunctionImage('')
+      setNewFunctionCommands(
+        trimSplit(
+          appStore.frontendSpec?.function_deployment_mlrun_command,
+          '\n'
+        )
+      )
+      setNewFunctionBaseImage(
+        appStore.frontendSpec?.default_function_image_by_kind?.[
+          functionsStore.newFunction.kind
+        ]
+      )
       setData(state => ({
         ...state,
-        image: ''
+        image: '',
+        commands: appStore.frontendSpec?.function_deployment_mlrun_command,
+        base_image:
+          appStore.frontendSpec?.default_function_image_by_kind?.[
+            functionsStore.newFunction.kind
+          ]
       }))
+      setNewFunctionWithMlrun(true)
     }
-  }, [
-    defaultData.image,
-    imageType,
-    resetNewFunctionCodeCustomImage,
-    setNewFunctionImage
-  ])
+
+    setImageType(imageType)
+    setValidation(state => ({
+      ...state,
+      isCodeImageValid: true,
+      isBaseImageValid: true,
+      isBuildCommandsValid: true
+    }))
+  }
 
   return (
     <FunctionsPanelCodeView
+      appStore={appStore}
       data={data}
       editCode={editCode}
       functionsStore={functionsStore}
-      handleHandlerChange={handleHandlerChange}
       handleHandlerOnBlur={handleHandlerOnBlur}
+      handleImageTypeChange={handleImageTypeChange}
       imageType={imageType}
-      isHandlerValid={isHandlerValid}
       setData={setData}
       setEditCode={setEditCode}
-      setImageType={setImageType}
+      setValidation={setValidation}
       setNewFunctionBaseImage={setNewFunctionBaseImage}
       setNewFunctionBuildImage={setNewFunctionBuildImage}
       setNewFunctionCommands={setNewFunctionCommands}
       setNewFunctionImage={setNewFunctionImage}
       setNewFunctionSourceCode={setNewFunctionSourceCode}
+      setNewFunctionWithMlrun={setNewFunctionWithMlrun}
+      validation={validation}
     />
   )
 }
@@ -142,10 +219,17 @@ FunctionsPanelCode.defaultProps = {
 
 FunctionsPanelCode.propTypes = {
   defaultData: PropTypes.shape({}),
-  isHandlerValid: PropTypes.bool.isRequired,
-  setHandlerValid: PropTypes.func.isRequired
+  imageType: PropTypes.string.isRequired,
+  match: PropTypes.shape({}).isRequired,
+  mode: PropTypes.string.isRequired,
+  setImageType: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(functionsStore => ({ ...functionsStore }), {
-  ...functionsActions
-})(FunctionsPanelCode)
+export default connect(
+  (functionsStore, appStore) => ({ ...functionsStore, ...appStore }),
+  {
+    ...functionsActions
+  }
+)(FunctionsPanelCode)

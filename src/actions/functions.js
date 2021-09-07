@@ -40,7 +40,8 @@ import {
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_BEGIN,
   REMOVE_FUNCTION_LOGS,
-  SET_NEW_FUNCTION
+  SET_NEW_FUNCTION,
+  SET_NEW_FUNCTION_WITH_MLRUN
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -205,6 +206,9 @@ const functionsActions = {
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
+  getFunction: (project, name) => dispatch => {
+    return functionsApi.getFunction(project, name)
+  },
   removeFunctionLogs: () => ({
     type: REMOVE_FUNCTION_LOGS
   }),
@@ -299,6 +303,10 @@ const functionsActions = {
   setNewFunctionVolumes: volumes => ({
     type: SET_NEW_FUNCTION_VOLUMES,
     payload: volumes
+  }),
+  setNewFunctionWithMlrun: value => ({
+    type: SET_NEW_FUNCTION_WITH_MLRUN,
+    payload: value
   })
 }
 

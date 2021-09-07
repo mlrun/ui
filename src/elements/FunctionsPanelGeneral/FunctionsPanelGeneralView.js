@@ -8,6 +8,7 @@ import Select from '../../common/Select/Select'
 import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
 
+import { PANEL_EDIT_MODE } from '../../constants'
 import { typeOptions } from './functionsPanelGeneral.util'
 
 import './functionsPanelGeneral.scss'
@@ -17,12 +18,12 @@ const FunctionsPanelGeneralView = ({
   functionsStore,
   handleAddLabel,
   handleChangeLabels,
-  handleNameChange,
   handleNameOnBlur,
-  handleTagChange,
   handleTagOnBlur,
   isNameValid,
+  mode,
   setData,
+  setNameValid,
   setNewFunctionDescription,
   setNewFunctionType
 }) => {
@@ -41,15 +42,20 @@ const FunctionsPanelGeneralView = ({
       <FunctionsPanelSection title="General">
         <div className="general__required-info">
           <Input
+            disabled={mode === PANEL_EDIT_MODE}
             floatingLabel
             invalid={!isNameValid}
             invalidText="This field is invalid"
             label="Function Name"
             maxLength={63}
-            onChange={handleNameChange}
+            onChange={name => setData(state => ({ ...state, name }))}
             onBlur={handleNameOnBlur}
+            pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
             required
             requiredText="This field is required"
+            setInvalid={value =>
+              setNameValid(state => ({ ...state, isNameValid: value }))
+            }
             tip={nameValidationTip}
             type="text"
             value={data.name}
@@ -71,9 +77,10 @@ const FunctionsPanelGeneralView = ({
             selectedId={data.type}
           />
           <Input
+            disabled={mode === PANEL_EDIT_MODE}
             floatingLabel
             label="Tag"
-            onChange={handleTagChange}
+            onChange={tag => setData(state => ({ ...state, tag }))}
             onBlur={handleTagOnBlur}
             placeholder="latest"
             type="text"
@@ -123,12 +130,12 @@ FunctionsPanelGeneralView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   handleAddLabel: PropTypes.func.isRequired,
   handleChangeLabels: PropTypes.func.isRequired,
-  handleNameChange: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
-  handleTagChange: PropTypes.func.isRequired,
   handleTagOnBlur: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
+  mode: PropTypes.string.isRequired,
   setData: PropTypes.func.isRequired,
+  setNameValid: PropTypes.func.isRequired,
   setNewFunctionDescription: PropTypes.func.isRequired,
   setNewFunctionType: PropTypes.func.isRequired
 }

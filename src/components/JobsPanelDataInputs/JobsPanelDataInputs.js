@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useCallback } from 'react'
+import React, { useReducer, useEffect, useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { uniqBy } from 'lodash'
@@ -17,17 +17,19 @@ import {
   handleDelete,
   handleEdit,
   handleInputPathChange,
-  handleInputPathTypeChange
+  handleInputPathTypeChange,
+  resetDataInputsData
 } from './jobsPanelDataInputs.util'
 import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { getFeatureReference, getParsedResource } from '../../utils/resources'
 import {
-  getArtifactReference,
-  getFeatureReference,
-  getParsedResource
-} from '../../utils/resources'
+  generateArtifactsList,
+  generateArtifactsReferencesList,
+  generateProjectsList
+} from '../../utils/panelPathScheme'
 
 const JobsPanelDataInputs = ({
   fetchArtifact,
@@ -35,16 +37,22 @@ const JobsPanelDataInputs = ({
   fetchFeatureVector,
   fetchFeatureVectors,
   inputs,
+  isArtifactPathValid,
   match,
   panelDispatch,
   panelState,
   projectStore,
+  setArtifactPathValid,
   setNewJobInputs
 }) => {
   const [inputsState, inputsDispatch] = useReducer(
     jobsPanelDataInputsReducer,
     initialState
   )
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isPathValid: true
+  })
 
   const getInputValue = useCallback(
     inputItem => {
@@ -74,25 +82,12 @@ const JobsPanelDataInputs = ({
           inputsState.selectedDataInput.data.path.value.split('/')[1]
             ?.length === 0))
     ) {
-      const projectsList = projectStore.projects
-        .map(project => ({
-          label:
-            project.metadata.name === match.params.projectName
-              ? 'Current project'
-              : project.metadata.name,
-          id: project.metadata.name
-        }))
-        .sort((prevProject, nextProject) => {
-          return prevProject.id === match.params.projectName
-            ? -1
-            : nextProject.id === match.params.projectName
-            ? 1
-            : prevProject.id.localeCompare(nextProject.id)
-        })
-
       inputsDispatch({
         type: inputsActions.SET_PROJECTS,
-        payload: projectsList
+        payload: generateProjectsList(
+          projectStore.projects,
+          match.params.projectName
+        )
       })
     }
   }, [
@@ -111,24 +106,9 @@ const JobsPanelDataInputs = ({
     if (inputsState.inputProjectPathEntered && storePathType && projectName) {
       if (storePathType === 'artifacts' && inputsState.artifacts.length === 0) {
         fetchArtifacts(projectName).then(artifacts => {
-          const artifactsList = artifacts
-            .map(artifact => {
-              const key = artifact.link_iteration
-                ? artifact.link_iteration.db_key
-                : artifact.key ?? ''
-              return {
-                label: key,
-                id: key
-              }
-            })
-            .filter(artifact => artifact.label !== '')
-            .sort((prevArtifact, nextArtifact) =>
-              prevArtifact.id.localeCompare(nextArtifact.id)
-            )
-
           inputsDispatch({
             type: inputsActions.SET_ARTIFACTS,
-            payload: artifactsList
+            payload: generateArtifactsList(artifacts)
           })
         })
       } else if (
@@ -178,31 +158,9 @@ const JobsPanelDataInputs = ({
       ) {
         fetchArtifact(projectName, projectItem).then(artifacts => {
           if (artifacts.length > 0 && artifacts[0].data) {
-            const artifactsReferencesList = artifacts[0].data
-              .map(artifact => {
-                let artifactReference = getArtifactReference(artifact)
-
-                return {
-                  label: artifactReference,
-                  id: artifactReference,
-                  customDelimiter: artifactReference[0]
-                }
-              })
-              .filter(reference => reference.label !== '')
-              .sort((prevRef, nextRef) => {
-                const [prevRefIter, prevRefTree] = prevRef.id.split('@')
-                const [nextRefIter, nextRefTree] = nextRef.id.split('@')
-
-                if (prevRefTree === nextRefTree) {
-                  return prevRefIter.localeCompare(nextRefIter)
-                } else {
-                  return prevRefTree.localeCompare(nextRefTree)
-                }
-              })
-
             inputsDispatch({
               type: inputsActions.SET_ARTIFACTS_REFERENCES,
-              payload: artifactsReferencesList
+              payload: generateArtifactsReferencesList(artifacts[0].data)
             })
           }
         })
@@ -293,14 +251,12 @@ const JobsPanelDataInputs = ({
       inputs,
       panelDispatch,
       panelState.previousPanelData.tableData.dataInputs,
-      inputsActions.REMOVE_NEW_INPUT_DATA,
-      inputsActions.SET_ADD_NEW_INPUT,
+      panelState.tableData.dataInputs,
       panelActions.SET_TABLE_DATA_INPUTS,
       panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS,
       setNewJobInputs,
-      inputsActions.SET_PATH_PLACEHOLDER,
       inputsState.newInputUrlPath,
-      inputsActions.SET_NEW_INPUT_URL_PATH
+      setValidation
     )
   }
 
@@ -363,18 +319,25 @@ const JobsPanelDataInputs = ({
       handlePathTypeChange={handlePathTypeChange}
       inputsState={inputsState}
       inputsDispatch={inputsDispatch}
+      isArtifactPathValid={isArtifactPathValid}
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
+      resetDataInputsData={resetDataInputsData}
+      setArtifactPathValid={setArtifactPathValid}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }
 
 JobsPanelDataInputs.propTypes = {
   inputs: PropTypes.shape({}).isRequired,
+  isArtifactPathValid: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
+  setArtifactPathValid: PropTypes.func.isRequired,
   setNewJobInputs: PropTypes.func.isRequired
 }
 

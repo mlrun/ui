@@ -11,111 +11,155 @@ import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnv
 import Button from '../../common/Button/Button'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FunctionsPanelSecrets from '../../elements/FunctionsPanelSecrets/FunctionsPanelSecrets'
+import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import { FUNCTION_PANEL_MODE } from '../../types'
+
+import {
+  LABEL_BUTTON,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from '../../constants'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './functionsPanel.scss'
 
 const FunctionsPanelView = ({
+  checkValidation,
   closePanel,
+  confirmData,
   defaultData,
   error,
   handleSave,
-  isHandlerValid,
-  isNameValid,
+  imageType,
   loading,
+  match,
+  mode,
   removeFunctionsError,
-  setHandlerValid,
-  setNameValid
+  setImageType,
+  setValidation,
+  validation
 }) => {
   return (
-    <div className="new-item-side-panel-container">
-      <div className="functions-panel new-item-side-panel">
-        {loading && <Loader />}
-        <FunctionsPanelTitle closePanel={closePanel} />
-        <div className="new-item-side-panel__body">
-          <Accordion
-            accordionClassName="new-item-side-panel__accordion"
-            icon={<Arrow />}
-            iconClassName="new-item-side-panel__expand-icon"
-            openByDefault
-          >
-            <FunctionsPanelGeneral
-              defaultData={defaultData}
-              isNameValid={isNameValid}
-              setNameValid={setNameValid}
+    <>
+      {confirmData && (
+        <PopUpDialog
+          headerText={confirmData.title}
+          closePopUp={confirmData.rejectHandler}
+        >
+          <div>{confirmData.description}</div>
+          <div className="pop-up-dialog__footer-container">
+            <Button
+              label={confirmData.btnCancelLabel}
+              onClick={confirmData.rejectHandler}
+              variant={confirmData.btnCancelVariant}
             />
-          </Accordion>
-          <Accordion
-            accordionClassName="new-item-side-panel__accordion"
-            icon={<Arrow />}
-            iconClassName="new-item-side-panel__expand-icon"
-            openByDefault
-          >
-            <FunctionsPanelCode
-              defaultData={defaultData}
-              isHandlerValid={isHandlerValid}
-              setHandlerValid={setHandlerValid}
+            <Button
+              label={confirmData.btnConfirmLabel}
+              onClick={confirmData.confirmHandler}
+              variant={confirmData.btnConfirmVariant}
             />
-          </Accordion>
-          <Accordion
-            accordionClassName="new-item-side-panel__accordion"
-            icon={<Arrow />}
-            iconClassName="new-item-side-panel__expand-icon"
-            openByDefault
-          >
-            <FunctionsPanelResources defaultData={defaultData} />
-          </Accordion>
-          <Accordion
-            accordionClassName="new-item-side-panel__accordion"
-            icon={<Arrow />}
-            iconClassName="new-item-side-panel__expand-icon"
-            openByDefault
-          >
-            <FunctionsPanelEnvironmentVariables defaultData={defaultData} />
-          </Accordion>
-          <Accordion
-            accordionClassName="new-item-side-panel__accordion hidden"
-            icon={<Arrow />}
-            iconClassName="new-item-side-panel__expand-icon"
-            openByDefault
-          >
-            <FunctionsPanelSecrets />
-          </Accordion>
-          <div className="new-item-side-panel__buttons-container">
-            {error && (
-              <ErrorMessage
-                closeError={() => {
-                  if (error) {
-                    removeFunctionsError()
-                  }
-                }}
-                message={error}
+          </div>
+        </PopUpDialog>
+      )}
+      <div className="new-item-side-panel-container">
+        <div className="functions-panel new-item-side-panel">
+          {loading && <Loader />}
+          <FunctionsPanelTitle closePanel={closePanel} />
+          <div className="new-item-side-panel__body">
+            <Accordion
+              accordionClassName="new-item-side-panel__accordion"
+              icon={<Arrow />}
+              iconClassName="new-item-side-panel__expand-icon"
+              openByDefault
+            >
+              <FunctionsPanelGeneral
+                defaultData={defaultData}
+                isNameValid={validation.isNameValid}
+                mode={mode}
+                setNameValid={setValidation}
               />
-            )}
-            <Button
-              className="btn_cancel"
-              variant="label"
-              label="Cancel"
-              onClick={closePanel}
-            />
-            <Button
-              className="btn_save"
-              disabled={!isNameValid || !isHandlerValid}
-              variant="tertiary"
-              label="Save"
-              onClick={() => handleSave()}
-            />
-            <Button
-              variant="secondary"
-              label="Deploy"
-              onClick={() => handleSave(true)}
-              disabled={!isNameValid || !isHandlerValid}
-            />
+            </Accordion>
+            <Accordion
+              accordionClassName="new-item-side-panel__accordion"
+              icon={<Arrow />}
+              iconClassName="new-item-side-panel__expand-icon"
+              openByDefault
+            >
+              <FunctionsPanelCode
+                defaultData={defaultData}
+                imageType={imageType}
+                match={match}
+                mode={mode}
+                setImageType={setImageType}
+                setValidation={setValidation}
+                validation={validation}
+              />
+            </Accordion>
+            <Accordion
+              accordionClassName="new-item-side-panel__accordion"
+              icon={<Arrow />}
+              iconClassName="new-item-side-panel__expand-icon"
+              openByDefault
+            >
+              <FunctionsPanelResources
+                defaultData={defaultData}
+                mode={mode}
+                setValidation={setValidation}
+                validation={validation}
+              />
+            </Accordion>
+            <Accordion
+              accordionClassName="new-item-side-panel__accordion"
+              icon={<Arrow />}
+              iconClassName="new-item-side-panel__expand-icon"
+              openByDefault
+            >
+              <FunctionsPanelEnvironmentVariables />
+            </Accordion>
+            <Accordion
+              accordionClassName="new-item-side-panel__accordion hidden"
+              icon={<Arrow />}
+              iconClassName="new-item-side-panel__expand-icon"
+              openByDefault
+            >
+              <FunctionsPanelSecrets />
+            </Accordion>
+            <div className="new-item-side-panel__buttons-container">
+              {error && (
+                <ErrorMessage
+                  closeError={() => {
+                    if (error) {
+                      removeFunctionsError()
+                    }
+                  }}
+                  message={error}
+                />
+              )}
+              <Button
+                className="btn_cancel"
+                variant={LABEL_BUTTON}
+                label="Cancel"
+                onClick={closePanel}
+              />
+              <Button
+                className="btn_save"
+                disabled={!checkValidation()}
+                variant={TERTIARY_BUTTON}
+                label="Save"
+                onClick={() => handleSave()}
+              />
+              <Button
+                variant={SECONDARY_BUTTON}
+                label="Deploy"
+                onClick={() => handleSave(true)}
+                disabled={!checkValidation()}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -125,16 +169,17 @@ FunctionsPanelView.defaultProps = {
 }
 
 FunctionsPanelView.propTypes = {
+  checkValidation: PropTypes.func.isRequired,
   closePanel: PropTypes.func.isRequired,
+  confirmData: PropTypes.shape({}),
   defaultData: PropTypes.shape({}),
   error: PropTypes.string,
   handleSave: PropTypes.func.isRequired,
-  isHandlerValid: PropTypes.bool.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
+  mode: FUNCTION_PANEL_MODE.isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
-  setHandlerValid: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({})
 }
 
 export default FunctionsPanelView

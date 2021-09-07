@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { JOB_STEADY_STATES } from './jobsPage.utils'
+import { TERTIARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
@@ -13,7 +14,6 @@ export const infoHeaders = [
   { label: 'UID', id: 'uid' },
   { label: 'Start time', id: 'startTime' },
   { label: 'Last Updated', id: 'updated' },
-  { label: 'Status', id: 'state' },
   { label: 'Parameters', id: 'parameters' },
   { label: 'Function', id: 'function' },
   { label: 'Results', id: 'resultsChips' },
@@ -96,12 +96,30 @@ export const generateTableHeaders = scheduled => {
   ]
 }
 export const detailsMenu = [
-  'overview',
-  'inputs',
-  'artifacts',
-  'results',
-  'logs',
-  'pods'
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'inputs',
+    id: 'inputs'
+  },
+  {
+    label: 'artifacts',
+    id: 'artifacts'
+  },
+  {
+    label: 'results',
+    id: 'results'
+  },
+  {
+    label: 'logs',
+    id: 'logs'
+  },
+  {
+    label: 'pods',
+    id: 'pods'
+  }
 ]
 export const filters = [
   { type: 'period', label: 'Period:' },
@@ -133,7 +151,7 @@ export const generatePageData = (
   let filterMenuActionButton = {
     label: 'Resource monitoring',
     tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
-    variant: 'tertiary',
+    variant: TERTIARY_BUTTON,
     disabled: !jobsDashboardUrl,
     onClick: event => handleMonitoring()
   }
@@ -210,6 +228,9 @@ export const generateActionsMenu = (
         {
           label: 'Re-run',
           icon: <Run />,
+          hidden: ['local', ''].includes(
+            job.ui.originalContent.metadata.labels.kind
+          ),
           onClick: handleRerunJob
         },
         {
@@ -230,6 +251,6 @@ export const generateActionsMenu = (
             ? ''
             : 'Cannot abort jobs of this kind',
           disabled: !isJobAbortable(job, abortableFunctionKinds),
-          hidden: JOB_STEADY_STATES.includes(job.state?.value)
+          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
         }
       ]

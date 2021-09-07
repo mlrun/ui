@@ -4,9 +4,17 @@
     flex-direction: column;
     width: 100%;
 
-    .input {
+    .input-wrapper {
       width: 100%;
       margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
+  }
+
+  &__description {
+    margin-bottom: 10px;
   }
 }

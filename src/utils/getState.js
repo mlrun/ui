@@ -1,15 +1,17 @@
 import { FUNCTIONS_PAGE } from '../constants'
 
-const getState = (state, page) => {
+const getState = (state, page, kind) => {
   if (page === FUNCTIONS_PAGE) {
     return {
-      value: state || 'empty',
-      label: state ? functionStateLabels[state] : 'Created'
+      value: state || 'created',
+      label: state ? functionStateLabels[state] : 'Created',
+      className: `state-${state || 'created'}${kind ? '-' + kind : ''}`
     }
   } else {
     return {
       value: state ?? null,
-      label: state ? commonStateLabels[state] : ''
+      label: state ? commonStateLabels[state] : '',
+      className: `state-${state ?? ''}${kind ? '-' + kind : ''}`
     }
   }
 }

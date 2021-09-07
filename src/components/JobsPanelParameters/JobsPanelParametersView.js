@@ -126,7 +126,7 @@ const JobsPanelParametersView = ({
                 />
               </div>
               <button
-                className="add-input btn-add"
+                className="add-input"
                 disabled={isNameNotUnique(
                   parametersState.newParameter.name,
                   parameters

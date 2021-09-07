@@ -10,6 +10,8 @@ import Select from '../../../common/Select/Select'
 import TextArea from '../../../common/TextArea/TextArea'
 import RadioButtons from '../../../common/RadioButtons/RadioButtons'
 import { kindList } from '../detailsTransformations.util'
+// import { DANGER_BUTTON } from '../../../constants'
+
 import './configSteps.scss'
 
 const ConfigSteps = ({
@@ -135,7 +137,7 @@ const ConfigSteps = ({
           //     title: `Delete step ${selectedStep}?`,
           //     description: 'Deleted steps cannot be restored.',
           //     btnConfirmLabel: 'Delete',
-          //     btnConfirmType: 'danger'
+          //     btnConfirmType: DANGER_BUTTON
           //   },
           //   handler: deleteSelectedStep
           // }}

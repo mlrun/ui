@@ -91,9 +91,7 @@ export default {
       { params: { project, name: model, tag: '*' } }
     )
   },
-  getModelEndpoints: (project, filters) => {
-    const params = {}
-
+  getModelEndpoints: (project, filters, params = {}) => {
     if (filters?.labels) {
       params.label = filters.labels?.split(',')
     }

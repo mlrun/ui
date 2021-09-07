@@ -1,7 +1,11 @@
 import { chain } from 'lodash'
 import { getVolumeType } from '../../utils/panelResources.util'
+import { PANEL_EDIT_MODE } from '../../constants'
 
-export const getDefaultVolumeMounts = (volume_mounts, volumes) =>
+export const REQUESTS = 'requests'
+export const LIMITS = 'limits'
+
+export const getDefaultVolumeMounts = (volume_mounts, volumes, mode) =>
   chain(volume_mounts)
     .flatten()
     .unionBy('name')
@@ -13,7 +17,8 @@ export const getDefaultVolumeMounts = (volume_mounts, volumes) =>
         ),
         name: volumeMount.name,
         mountPath: volumeMount.mountPath
-      }
+      },
+      canBeModified: mode === PANEL_EDIT_MODE
     }))
     .value()
 
@@ -33,4 +38,46 @@ export const getDefaultCpuUnit = (limits, requests) => {
   } else if (limits.cpu?.length > 0 || requests.cpu?.length > 0) {
     return 'cpu'
   } else return null
+}
+
+export const setRangeInputValidation = (
+  data,
+  setValidation,
+  value,
+  type,
+  validationField,
+  kind
+) => {
+  const validationKind = kind.charAt(0).toUpperCase() + kind.slice(1)
+  const limitsValue = Number.parseInt(data.limits[kind])
+  const requestsValue = Number.parseInt(data.requests[kind])
+  const isValid =
+    type === REQUESTS
+      ? value <= limitsValue && limitsValue > 0
+      : value >= requestsValue && requestsValue > 0
+
+  if (value > 0) {
+    if (
+      (type === REQUESTS && data.limits[kind].length > 0) ||
+      (type === LIMITS && data.requests[kind].length > 0)
+    ) {
+      setValidation(prevState => ({
+        ...prevState,
+        [`is${validationKind}RequestValid`]: isValid,
+        [`is${validationKind}LimitValid`]: isValid
+      }))
+    } else {
+      setValidation(prevState => ({ ...prevState, [validationField]: true }))
+    }
+  } else if (value.length === 0) {
+    setValidation(prevState => ({
+      ...prevState,
+      [`is${validationKind}LimitValid`]:
+        type === LIMITS || !limitsValue ? true : limitsValue > 0,
+      [`is${validationKind}RequestValid`]:
+        type === REQUESTS || !requestsValue ? true : requestsValue > 0
+    }))
+  } else {
+    setValidation(prevState => ({ ...prevState, [validationField]: false }))
+  }
 }

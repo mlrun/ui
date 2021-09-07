@@ -37,12 +37,17 @@ import {
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_SUCCESS,
   REMOVE_FUNCTION_LOGS,
-  SET_NEW_FUNCTION
+  SET_NEW_FUNCTION,
+  SET_NEW_FUNCTION_WITH_MLRUN
 } from '../constants'
 
 const initialState = {
   functions: [],
-  logs: '',
+  logs: {
+    data: '',
+    loading: false,
+    error: null
+  },
   loading: false,
   error: null,
   newFunction: {
@@ -133,20 +138,28 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_FUNCTION_LOGS_BEGIN:
       return {
         ...state,
-        loading: true
+        logs: {
+          ...state.logs,
+          loading: true
+        }
       }
     case FETCH_FUNCTION_LOGS_FAILURE:
       return {
         ...state,
-        logs: initialState.logs,
-        loading: false,
-        error: payload
+        logs: {
+          data: initialState.logs.data,
+          loading: false,
+          error: payload
+        }
       }
     case FETCH_FUNCTION_LOGS_SUCCESS:
       return {
         ...state,
-        logs: `${state.logs}${payload}`,
-        loading: false
+        logs: {
+          data: `${state.logs.data}${payload}`,
+          loading: false,
+          error: null
+        }
       }
     case SET_FUNCTIONS_TEMPLATES:
       return {
@@ -406,6 +419,14 @@ export default (state = initialState, { type, payload }) => {
             ...state.newFunction.spec,
             volumes: payload
           }
+        }
+      }
+    case SET_NEW_FUNCTION_WITH_MLRUN:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          with_mlrun: payload
         }
       }
     default:

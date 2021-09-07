@@ -7,6 +7,7 @@ import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 export const applyEditButtonHandler = (
   handleEdit,
+  index,
   inputName,
   inputsDispatch,
   requiredField,
@@ -30,7 +31,7 @@ export const applyEditButtonHandler = (
     type: inputsActions.SET_COMBOBOX_MATCHES,
     payload: []
   })
-  handleEdit(selectedDataInput, true)
+  handleEdit(selectedDataInput, index)
 }
 
 export const handleEditInputPath = (
@@ -38,7 +39,8 @@ export const handleEditInputPath = (
   inputsState,
   path,
   selectedDataInput,
-  setSelectedDataInput
+  setSelectedDataInput,
+  setIsPathValid
 ) => {
   if (path !== selectedDataInput.data.path.value) {
     setSelectedDataInput({
@@ -59,4 +61,6 @@ export const handleEditInputPath = (
   ) {
     handleStoreInputPathChange(false, inputsDispatch, inputsState, path)
   }
+
+  setIsPathValid(isPathInputValid(selectedDataInput.data.path.pathType, path))
 }

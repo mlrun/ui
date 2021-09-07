@@ -4,6 +4,8 @@ import { createPortal } from 'react-dom'
 import Editor from '@monaco-editor/react'
 import { Base64 } from 'js-base64'
 
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+
 import Button from '../Button/Button'
 
 import './editorModal.scss'
@@ -14,11 +16,15 @@ const EditorModalView = ({ closeModal, data, handleSaveCode, setData }) =>
       <div className="editor-modal">
         <div className="editor-modal__header">
           <span>Code must be written in Python</span>
-          <Button label="Cancel" onClick={closeModal} variant="tertiary" />
+          <Button
+            label="Cancel"
+            onClick={closeModal}
+            variant={TERTIARY_BUTTON}
+          />
           <Button
             label="Save"
             onClick={() => handleSaveCode(Base64.encode(data))}
-            variant="secondary"
+            variant={SECONDARY_BUTTON}
           />
         </div>
         <Editor

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { find, has, map } from 'lodash'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
@@ -11,11 +11,18 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 
-import { selectTypeOptions, tableHeaders } from './volumesTable.util'
+import {
+  getVolumeTypeInput,
+  isPathNotUnique,
+  selectTypeOptions,
+  tableHeaders,
+  V3IO
+} from './volumesTable.util'
 import { joinDataOfArrayOrObject } from '../../utils'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 import './volumesTable.scss'
 
@@ -26,32 +33,27 @@ const VolumesTableView = ({
   generateActionsMenu,
   newVolume,
   volumeMounts,
+  resetVolumesData,
   selectedVolume,
   setNewVolume,
   setSelectedVolume,
   setShowAddNewVolumeRow,
-  showAddNewVolumeRow
+  setValidation,
+  showAddNewVolumeRow,
+  validation
 }) => {
-  const volumeTypeNameLabel =
-    newVolume.type === 'V3IO'
-      ? {
-          label: 'Container',
-          tip: 'The name of the data container that contains the data'
-        }
-      : newVolume.type === 'PVC'
-      ? {
-          label: 'Claim name'
-        }
-      : newVolume.type.length > 0
-      ? {
-          label: `${newVolume.type} name`
-        }
-      : ''
+  const volumeTypeInput = useMemo(() => getVolumeTypeInput(newVolume.type), [
+    newVolume.type
+  ])
   const tableClassNames = classnames(
     'new-item-side-panel__table',
     'volumes-table',
     showAddNewVolumeRow && 'no-border',
     className
+  )
+  const volumeTypeInputRowWrapperClassNames = classnames(
+    'input-row-wrapper',
+    newVolume.type === V3IO && 'no-border'
   )
 
   return (
@@ -76,6 +78,8 @@ const VolumesTableView = ({
               key={index}
               selectedVolume={selectedVolume}
               setSelectedVolume={setSelectedVolume}
+              setValidation={setValidation}
+              validation={validation}
             />
           )
         } else {
@@ -126,83 +130,134 @@ const VolumesTableView = ({
           <div className="table__body-column">
             <div className="input-row-wrapper no-border">
               <Select
-                label={newVolume.type.length ? newVolume.type : 'Type'}
-                options={selectTypeOptions.volumeType}
                 onClick={type => {
                   setNewVolume(state => ({
                     ...state,
                     type: find(selectTypeOptions.volumeType, ['id', type]).id
                   }))
+                  setValidation(state => ({
+                    ...state,
+                    isTypeValid: true,
+                    isAccessKeyValid: true
+                  }))
                 }}
+                options={selectTypeOptions.volumeType}
+                selectedId={newVolume.type}
               />
               <Input
                 className="input-row__item"
                 floatingLabel
-                invalid={isNameNotUnique(newVolume.name, volumeMounts)}
-                invalidText="Name already exists"
-                label="Name"
+                invalid={
+                  isNameNotUnique(newVolume.name, volumeMounts) ||
+                  !validation.isNameValid
+                }
+                invalidText={
+                  isNameNotUnique(newVolume.name, volumeMounts)
+                    ? 'Name already exists'
+                    : 'This field is invalid'
+                }
+                label="Volume Name"
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
+                required
+                requiredText="This field is required"
+                setInvalid={value =>
+                  setValidation(state => ({ ...state, isNameValid: value }))
+                }
                 type="text"
               />
               <Input
-                onChange={path => setNewVolume(state => ({ ...state, path }))}
-                label="Path"
                 className="input-row__item input-row__item_edit"
                 floatingLabel
-                type="text"
+                invalid={
+                  isPathNotUnique(newVolume.path, volumeMounts) ||
+                  !validation.isPathValid
+                }
+                invalidText={
+                  isPathNotUnique(newVolume.path, volumeMounts)
+                    ? 'Multiple volumes cannot share the same path'
+                    : 'This field is invalid'
+                }
+                label="Path"
+                onChange={path => setNewVolume(state => ({ ...state, path }))}
+                required
+                requiredText="This field is required"
+                setInvalid={value =>
+                  setValidation(state => ({ ...state, isPathValid: value }))
+                }
                 tip="A mount path for referencing the data from the function"
+                type="text"
               />
             </div>
-            <div
-              className={`input-row-wrapper no-border_top
-                  ${newVolume.type === 'V3IO' && 'no-border'}`}
-            >
+            <div className={volumeTypeInputRowWrapperClassNames}>
               <Input
-                onChange={typeName =>
-                  setNewVolume(state => ({ ...state, typeName }))
-                }
-                label={volumeTypeNameLabel.label}
                 className="input-row__item"
                 disabled={newVolume.type.length === 0}
                 floatingLabel
+                invalid={!validation.isTypeNameValid}
+                label={volumeTypeInput.label}
+                onChange={typeName =>
+                  setNewVolume(state => ({ ...state, typeName }))
+                }
+                required={newVolume.type !== V3IO}
+                requiredText="This field is required"
+                setInvalid={value =>
+                  setValidation(state => ({ ...state, isTypeNameValid: value }))
+                }
+                tip={volumeTypeInput.tip}
                 type="text"
-                tip={volumeTypeNameLabel.tip}
               />
-              {newVolume.type === 'V3IO' && (
+              {newVolume.type === V3IO && (
                 <Input
+                  className="input-row__item"
+                  floatingLabel
+                  invalid={!validation.isAccessKeyValid}
+                  label="Access Key"
                   onChange={accessKey =>
                     setNewVolume(state => ({ ...state, accessKey }))
                   }
-                  label="Access Key"
-                  className="input-row__item"
-                  floatingLabel
-                  type="text"
+                  required
+                  requiredText="This field is required"
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isAccessKeyValid: value
+                    }))
+                  }
                   tip="A platform data-access key"
+                  type="text"
                 />
               )}
             </div>
-            {newVolume.type === 'V3IO' && (
-              <div className="input-row-wrapper no-border_top">
+            {newVolume.type === V3IO && (
+              <div className="input-row-wrapper">
                 <Input
+                  className="input-row__item"
+                  floatingLabel
+                  label="Resource path"
                   onChange={subPath =>
                     setNewVolume(state => ({ ...state, subPath }))
                   }
-                  label="Resource path"
-                  className="input-row__item"
-                  floatingLabel
-                  type="text"
                   tip="A relative directory path within the data container"
+                  type="text"
                 />
               </div>
             )}
           </div>
           <button
-            className="add-input btn-add"
-            disabled={isNameNotUnique(newVolume.name, volumeMounts)}
+            className="btn-add"
+            disabled={
+              isNameNotUnique(newVolume.name, volumeMounts) ||
+              isPathNotUnique(newVolume.path, volumeMounts)
+            }
             onClick={addVolume}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
+            </Tooltip>
+          </button>
+          <button onClick={resetVolumesData}>
+            <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
+              <Delete />
             </Tooltip>
           </button>
         </div>
@@ -230,11 +285,14 @@ VolumesTableView.propTypes = {
   generateActionsMenu: PropTypes.func.isRequired,
   newVolume: PropTypes.shape({}).isRequired,
   volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  resetVolumesData: PropTypes.func.isRequired,
   selectedVolume: PropTypes.shape({}),
   setNewVolume: PropTypes.func.isRequired,
   setSelectedVolume: PropTypes.func.isRequired,
   setShowAddNewVolumeRow: PropTypes.func.isRequired,
-  showAddNewVolumeRow: PropTypes.bool.isRequired
+  setValidation: PropTypes.func.isRequired,
+  showAddNewVolumeRow: PropTypes.bool.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default VolumesTableView

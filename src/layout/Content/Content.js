@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import yaml from 'js-yaml'
@@ -14,20 +14,20 @@ import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import Notification from '../../common/Notification/Notification'
 
+import { generateGroupedItems } from './content.util'
+
 import {
   ARTIFACTS_PAGE,
-  FEATURES_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
+  FEATURES_TAB,
   FILES_PAGE,
   JOBS_PAGE,
-  MODELS_PAGE,
   MODEL_ENDPOINTS_TAB,
+  MODELS_PAGE,
   PROJECTS_PAGE
 } from '../../constants'
-
-import { generateGroupedItems, getJson } from './content.util'
 
 import './content.scss'
 
@@ -35,9 +35,9 @@ const Content = ({
   applyDetailsChanges,
   cancelRequest,
   content,
-  expandRow,
-  filtersStore,
   filtersChangeCallback,
+  filtersStore,
+  getIdentifier,
   handleCancel,
   handleSelectItem,
   loading,
@@ -46,8 +46,7 @@ const Content = ({
   pageData,
   refresh,
   selectedItem,
-  setLoading,
-  yamlContent
+  setLoading
 }) => {
   const [convertedYaml, setConvertedYaml] = useState('')
   const [expandedItems, setExpandedItems] = useState([])
@@ -85,9 +84,11 @@ const Content = ({
   }, [location.search, match.params.pageTab, pageData.page, showRegisterDialog])
 
   const handleGroupByName = useCallback(() => {
-    setGroupedByName(generateGroupedItems(content, pageData.selectedRowData))
+    setGroupedByName(
+      generateGroupedItems(content, pageData.selectedRowData, getIdentifier)
+    )
     setGroupedByWorkflow({})
-  }, [content, pageData.selectedRowData])
+  }, [content, getIdentifier, pageData.selectedRowData])
 
   const handleGroupByNone = useCallback(() => {
     const rows = [...document.getElementsByClassName('parent-row')]
@@ -146,32 +147,33 @@ const Content = ({
       return setConvertedYaml('')
     }
 
-    const json = getJson(pageData.page, match.params.pageTab, yamlContent, item)
+    const json = item.ui?.originalContent ?? {}
 
     setConvertedYaml(yaml.dump(json, { lineWidth: -1 }))
   }
 
   const handleExpandRow = (e, item) => {
     const parentRow = e.target.closest('.parent-row')
+    let newArray = []
 
     if (parentRow.classList.contains('parent-row-expanded')) {
-      const newArray = expandedItems.filter(
-        expanded =>
-          expanded.name?.value !== item.name?.value ||
-          expanded.name !== item.name ||
-          expanded.name !== item.key.value
+      newArray = expandedItems.filter(expanded =>
+        item.key?.value
+          ? expanded.name !== item.key?.value
+          : expanded.name !== item.name?.value
       )
 
       parentRow.classList.remove('parent-row-expanded')
       pageData.handleRemoveRequestData && pageData.handleRemoveRequestData(item)
-      setExpandedItems(newArray)
-      expandRow && expandRow(item, true)
     } else {
       parentRow.classList.remove('row_active')
       parentRow.classList.add('parent-row-expanded')
       pageData.handleRequestOnExpand && pageData.handleRequestOnExpand(item)
-      setExpandedItems([...expandedItems, item])
+      newArray = [...expandedItems, item]
     }
+
+    setExpandedItems(newArray)
+    setExpand(newArray.length === Object.keys(groupedByName).length)
   }
 
   const handleExpandAll = collapseRows => {
@@ -264,7 +266,6 @@ const Content = ({
 
 Content.defaultProps = {
   activeScreenTab: '',
-  expandRow: null,
   filtersChangeCallback: null,
   handleSelectItem: () => {},
   selectedItem: {},
@@ -273,8 +274,8 @@ Content.defaultProps = {
 
 Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  expandRow: PropTypes.func,
   filtersChangeCallback: PropTypes.func,
+  getIdentifier: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
@@ -282,11 +283,7 @@ Content.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}),
-  setLoading: PropTypes.func,
-  yamlContent: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.shape({})
-  ]).isRequired
+  setLoading: PropTypes.func
 }
 
 export default connect(({ filtersStore }) => ({ filtersStore }), null)(Content)

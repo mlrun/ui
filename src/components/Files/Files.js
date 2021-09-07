@@ -20,6 +20,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateUri } from '../../utils/resources'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 import {
   ARTIFACTS,
@@ -31,9 +32,11 @@ import filtersActions from '../../actions/filters'
 
 const Files = ({
   artifactsStore,
+  fetchArtifactTags,
   fetchFile,
   fetchFiles,
   filtersStore,
+  getFilterTagOptions,
   history,
   match,
   removeFile,
@@ -41,10 +44,6 @@ const Files = ({
   setFilters
 }) => {
   const [files, setFiles] = useState([])
-  const [yamlContent, setYamlContent] = useState({
-    allData: [],
-    selectedRowData: []
-  })
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
@@ -61,10 +60,6 @@ const Files = ({
       fetchFiles(match.params.projectName, filters).then(result => {
         if (result) {
           setFiles(generateArtifacts(filterArtifacts(result)))
-          setYamlContent(state => ({
-            ...state,
-            allData: result
-          }))
         }
 
         return result
@@ -97,28 +92,29 @@ const Files = ({
   )
 
   const handleRequestOnExpand = useCallback(
-    async item => {
+    async file => {
+      const fileIdentifier = getArtifactIdentifier(file)
       let result = []
 
       setPageData(state => ({
         ...state,
         selectedRowData: {
           ...state.selectedRowData,
-          [item.db_key]: {
+          [fileIdentifier]: {
             loading: true
           }
         }
       }))
 
       try {
-        result = await fetchFile(item.project, item.db_key, !filtersStore.iter)
+        result = await fetchFile(file.project, file.db_key, !filtersStore.iter)
       } catch (error) {
         setPageData(state => ({
           ...state,
           selectedRowData: {
             ...state.selectedRowData,
-            [item.db_key]: {
-              ...state.selectedRowData[item.db_key],
+            [fileIdentifier]: {
+              ...state.selectedRowData[fileIdentifier],
               error,
               loading: false
             }
@@ -127,16 +123,12 @@ const Files = ({
       }
 
       if (result?.length > 0) {
-        setYamlContent(state => ({
-          ...state,
-          selectedRowData: result
-        }))
         setPageData(state => {
           return {
             ...state,
             selectedRowData: {
               ...state.selectedRowData,
-              [item.db_key]: {
+              [fileIdentifier]: {
                 content: [
                   ...generateArtifacts(
                     filterArtifacts(result),
@@ -154,14 +146,13 @@ const Files = ({
     [fetchFile, filtersStore.iter]
   )
 
-  const handleExpandRow = useCallback((item, isCollapse) => {
-    if (isCollapse) {
-      setYamlContent(state => ({
-        ...state,
-        selectedRowData: []
-      }))
-    }
-  }, [])
+  useEffect(() => {
+    removeFile({})
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {}
+    }))
+  }, [filtersStore.iter, removeFile])
 
   useEffect(() => {
     if (
@@ -185,10 +176,6 @@ const Files = ({
       setFiles([])
       removeFiles()
       setSelectedFile({})
-      setYamlContent({
-        allData: [],
-        selectedRowData: []
-      })
     }
   }, [fetchData, removeFiles])
 
@@ -215,7 +202,7 @@ const Files = ({
         artifactsStore.files.selectedRowData.content[name] ||
         artifactsStore.files.allData
 
-      if (artifacts.length) {
+      if (artifacts.length > 0) {
         const searchItem = searchArtifactItem(artifacts, name, tag, iter)
 
         if (!searchItem) {
@@ -238,12 +225,23 @@ const Files = ({
 
   useEffect(() => setFiles([]), [filtersStore.tag])
 
+  useEffect(() => {
+    if (filtersStore.tagOptions.length === 0) {
+      getFilterTagOptions(fetchArtifactTags, match.params.projectName)
+    }
+  }, [
+    fetchArtifactTags,
+    filtersStore.tagOptions.length,
+    getFilterTagOptions,
+    match.params.projectName,
+    pageData.page
+  ])
+
   return (
     <>
       {artifactsStore.loading && <Loader />}
       <Content
         content={files}
-        expandRow={handleExpandRow}
         handleCancel={() => setSelectedFile({})}
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
@@ -252,7 +250,7 @@ const Files = ({
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedFile.item}
-        yamlContent={yamlContent}
+        getIdentifier={getArtifactIdentifier}
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
