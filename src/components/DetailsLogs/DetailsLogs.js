@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import NoData from '../../common/NoData/NoData'
+import Loader from '../../common/Loader/Loader'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
@@ -18,12 +19,12 @@ const DetailsLogs = ({
   const [detailsLogs, setDetailsLogs] = useState('')
 
   useEffect(() => {
-    setDetailsLogs(jobsStore.logs || functionsStore.logs)
+    setDetailsLogs(jobsStore.logs || functionsStore.logs.data)
 
     return () => {
       setDetailsLogs('')
     }
-  }, [functionsStore.logs, jobsStore.logs])
+  }, [functionsStore.logs.data, jobsStore.logs])
 
   useEffect(() => {
     if (withLogsRefreshBtn) {
@@ -49,7 +50,9 @@ const DetailsLogs = ({
     <div className="table__item_logs">
       {detailsLogs.length > 0 ? (
         <div className="table__item_logs__content">{detailsLogs}</div>
-      ) : functionsStore.loading || jobsStore.loading ? null : (
+      ) : functionsStore.logs.loading || jobsStore.loading ? (
+        <Loader section secondary />
+      ) : (
         <NoData />
       )}
       {withLogsRefreshBtn && (
