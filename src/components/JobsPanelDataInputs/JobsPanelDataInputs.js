@@ -18,7 +18,6 @@ import {
   handleEdit,
   handleInputPathChange,
   handleInputPathTypeChange,
-  isPathInputValid,
   resetDataInputsData
 } from './jobsPanelDataInputs.util'
 import artifactsAction from '../../actions/artifacts'
@@ -317,12 +316,6 @@ const JobsPanelDataInputs = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handlePathChange={handlePathChange}
-      handlePathOnBlur={(selectValue, inputValue) => {
-        setValidation(prevState => ({
-          ...prevState,
-          isPathValid: isPathInputValid(selectValue, inputValue)
-        }))
-      }}
       handlePathTypeChange={handlePathTypeChange}
       inputsState={inputsState}
       inputsDispatch={inputsDispatch}

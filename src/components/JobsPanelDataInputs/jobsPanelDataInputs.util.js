@@ -230,12 +230,10 @@ export const resetDataInputsData = (
   inputsDispatch({
     type: inputsActions.REMOVE_NEW_INPUT_DATA
   })
-
   inputsDispatch({
     type: inputsActions.SET_PATH_PLACEHOLDER,
     payload: ''
   })
-
   inputsDispatch({
     type: inputsActions.SET_ADD_NEW_INPUT,
     payload: false

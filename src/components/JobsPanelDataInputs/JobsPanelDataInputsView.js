@@ -15,7 +15,6 @@ const JobsPanelDataInputsView = ({
   handleDeleteItems,
   handleEditItems,
   handlePathChange,
-  handlePathOnBlur,
   handlePathTypeChange,
   inputsDispatch,
   inputsState,
@@ -38,7 +37,6 @@ const JobsPanelDataInputsView = ({
           handleEditItems={handleEditItems}
           handleDeleteItems={handleDeleteItems}
           handlePathChange={handlePathChange}
-          handlePathOnBlur={handlePathOnBlur}
           handlePathTypeChange={handlePathTypeChange}
           inputsDispatch={inputsDispatch}
           inputsState={inputsState}
@@ -94,7 +92,6 @@ JobsPanelDataInputsView.propTypes = {
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handlePathChange: PropTypes.func.isRequired,
-  handlePathOnBlur: PropTypes.func.isRequired,
   handlePathTypeChange: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,

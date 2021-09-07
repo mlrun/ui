@@ -13,7 +13,10 @@ import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDat
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { COMBOBOX_MATCHES } from '../../types'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
-import { pathTips } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import {
+  isPathInputValid,
+  pathTips
+} from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -25,7 +28,6 @@ export const JobsPanelDataInputsTable = ({
   handleEditItems,
   handleDeleteItems,
   handlePathChange,
-  handlePathOnBlur,
   handlePathTypeChange,
   inputsDispatch,
   inputsState,
@@ -79,7 +81,6 @@ export const JobsPanelDataInputsTable = ({
                 })
               }
               required
-              requiredText="This field is required"
               setInvalid={value =>
                 setValidation(state => ({
                   ...state,
@@ -107,7 +108,12 @@ export const JobsPanelDataInputsTable = ({
                   ? 3
                   : 2
               }
-              onBlur={handlePathOnBlur}
+              onBlur={(selectValue, inputValue) => {
+                setValidation(prevState => ({
+                  ...prevState,
+                  isPathValid: isPathInputValid(selectValue, inputValue)
+                }))
+              }}
               required
               requiredText="This field is required"
               selectDropdownList={comboboxSelectList}
@@ -159,7 +165,6 @@ JobsPanelDataInputsTable.propTypes = {
   handleEditItems: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
   handlePathChange: PropTypes.func.isRequired,
-  handlePathOnBlur: PropTypes.func.isRequired,
   handlePathTypeChange: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,

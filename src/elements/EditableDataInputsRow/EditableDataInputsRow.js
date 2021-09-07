@@ -37,7 +37,7 @@ const EditableDataInputsRow = ({
     label: ''
   })
   const [inputName, setInputName] = useState(selectedDataInput.data.name)
-  const [isComboboxValid, setIsComboboxValid] = useState(true)
+  const [isPathValid, setIsPathValid] = useState(true)
   const [requiredField, setRequiredField] = useState({
     path: false,
     name: false
@@ -160,7 +160,7 @@ const EditableDataInputsRow = ({
         <Combobox
           comboboxClassName={comboboxClassNames}
           inputPlaceholder={inputsState.pathPlaceholder}
-          invalid={!isComboboxValid}
+          invalid={!isPathValid}
           invalidText={`Field must be in "${
             pathTips[selectedDataInput.data.path.pathType]
           }" format`}
@@ -179,7 +179,7 @@ const EditableDataInputsRow = ({
               path,
               selectedDataInput,
               setSelectedDataInput,
-              setIsComboboxValid
+              setIsPathValid
             )
           }}
           hideSearchInput={!inputsState.inputStorePathTypeEntered}
