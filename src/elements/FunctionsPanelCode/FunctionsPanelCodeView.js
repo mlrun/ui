@@ -25,7 +25,6 @@ import { ReactComponent as Edit } from '../../images/edit.svg'
 import './functionsPanelCode.scss'
 
 const FunctionsPanelCodeView = ({
-  appStore,
   data,
   editCode,
   functionsStore,
@@ -40,7 +39,6 @@ const FunctionsPanelCodeView = ({
   setNewFunctionImage,
   setNewFunctionSourceCode,
   setValidation,
-  setNewFunctionWithMlrun,
   validation
 }) => {
   return (
@@ -200,10 +198,6 @@ const FunctionsPanelCodeView = ({
                 functionsStore.newFunction.spec.build.commands
               )
             ) {
-              setNewFunctionWithMlrun(
-                appStore.frontendSpec.function_deployment_mlrun_command ===
-                  event.target.value
-              )
               setNewFunctionCommands(trimSplit(data.commands, '\n'))
             }
           }}
@@ -236,7 +230,6 @@ const FunctionsPanelCodeView = ({
 }
 
 FunctionsPanelCodeView.propTypes = {
-  appStore: PropTypes.shape({}).isRequired,
   data: PropTypes.shape({}).isRequired,
   editCode: PropTypes.bool.isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
