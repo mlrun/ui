@@ -13,8 +13,13 @@ import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDat
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { COMBOBOX_MATCHES } from '../../types'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
+import {
+  isPathInputValid,
+  pathTips
+} from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
@@ -27,7 +32,10 @@ export const JobsPanelDataInputsTable = ({
   inputsDispatch,
   inputsState,
   match,
-  panelState
+  panelState,
+  resetDataInputsData,
+  setValidation,
+  validation
 }) => {
   return (
     <JobsPanelTable
@@ -57,10 +65,13 @@ export const JobsPanelDataInputsTable = ({
               className="input-row__item"
               density="medium"
               floatingLabel
-              invalid={isNameNotUnique(
-                inputsState.newInput.name,
-                panelState.tableData.dataInputs
-              )}
+              invalid={
+                !validation.isNameValid ||
+                isNameNotUnique(
+                  inputsState.newInput.name,
+                  panelState.tableData.dataInputs
+                )
+              }
               invalidText="Name already exists"
               label="Input name"
               onChange={name =>
@@ -68,6 +79,13 @@ export const JobsPanelDataInputsTable = ({
                   type: inputsActions.SET_NEW_INPUT_NAME,
                   payload: name
                 })
+              }
+              required
+              setInvalid={value =>
+                setValidation(state => ({
+                  ...state,
+                  isNameValid: value
+                }))
               }
               type="text"
             />
@@ -79,6 +97,10 @@ export const JobsPanelDataInputsTable = ({
                 handlePathChange(path)
               }}
               inputPlaceholder={inputsState.pathPlaceholder}
+              invalid={!validation.isPathValid}
+              invalidText={`Field must be in "${
+                pathTips[inputsState.newInput.path.pathType]
+              }" format`}
               matches={comboboxMatchesList}
               maxSuggestedMatches={
                 inputsState.newInput.path.pathType ===
@@ -86,6 +108,14 @@ export const JobsPanelDataInputsTable = ({
                   ? 3
                   : 2
               }
+              onBlur={(selectValue, inputValue) => {
+                setValidation(prevState => ({
+                  ...prevState,
+                  isPathValid: isPathInputValid(selectValue, inputValue)
+                }))
+              }}
+              required
+              requiredText="This field is required"
               selectDropdownList={comboboxSelectList}
               selectOnChange={path => {
                 handlePathTypeChange(path)
@@ -94,7 +124,7 @@ export const JobsPanelDataInputsTable = ({
             />
           </div>
           <button
-            className="add-input btn-add"
+            className="btn-add"
             disabled={isNameNotUnique(
               inputsState.newInput.name,
               panelState.tableData.dataInputs
@@ -103,6 +133,13 @@ export const JobsPanelDataInputsTable = ({
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
+            </Tooltip>
+          </button>
+          <button
+            onClick={() => resetDataInputsData(inputsDispatch, setValidation)}
+          >
+            <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
+              <Delete />
             </Tooltip>
           </button>
         </div>
@@ -132,5 +169,8 @@ JobsPanelDataInputsTable.propTypes = {
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  panelState: PropTypes.shape({}).isRequired
+  panelState: PropTypes.shape({}).isRequired,
+  resetDataInputsData: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.object.isRequired
 }
