@@ -111,16 +111,10 @@ const FunctionsPanel = ({
     createNewFunction(project, functionsStore.newFunction).then(result => {
       if (deploy) {
         const data = {
-          ...functionsStore.newFunction
-        }
-
-        if (
-          data.spec.build.commands.length > 0 &&
-          data.spec.build.commands.includes(
+          function: { ...functionsStore.newFunction },
+          with_mlrun: functionsStore.newFunction.spec.build.commands.includes(
             appStore.frontendSpec.function_deployment_mlrun_command
           )
-        ) {
-          data.with_mlrun = true
         }
 
         return handleDeploy(data)
@@ -199,8 +193,8 @@ const FunctionsPanel = ({
     }
   }
 
-  const handleDeploy = func => {
-    deployFunction(func)
+  const handleDeploy = data => {
+    deployFunction(data)
       .then(response => {
         handleDeployFunctionSuccess(response.data.ready)
       })

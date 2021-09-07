@@ -37,8 +37,7 @@ import {
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_SUCCESS,
   REMOVE_FUNCTION_LOGS,
-  SET_NEW_FUNCTION,
-  SET_NEW_FUNCTION_WITH_MLRUN
+  SET_NEW_FUNCTION
 } from '../constants'
 
 const initialState = {
@@ -407,14 +406,6 @@ export default (state = initialState, { type, payload }) => {
             ...state.newFunction.spec,
             volumes: payload
           }
-        }
-      }
-    case SET_NEW_FUNCTION_WITH_MLRUN:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          with_mlrun: payload
         }
       }
     default:

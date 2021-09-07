@@ -10,8 +10,7 @@ export default {
     }),
   deleteSelectedFunction: (func, project) =>
     mainHttpClient.delete(`/projects/${project}/functions/${func}`),
-  deployFunction: func =>
-    mainHttpClient.post('/build/function', { function: func }),
+  deployFunction: data => mainHttpClient.post('/build/function', data),
   getAll: (project, name) => {
     const params = {
       project
