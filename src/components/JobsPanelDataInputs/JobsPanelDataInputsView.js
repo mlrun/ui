@@ -11,10 +11,12 @@ import { COMBOBOX_MATCHES } from '../../types'
 
 const JobsPanelDataInputsView = ({
   comboboxMatchesList,
+  dataInputsValidations,
   handleAddNewItem,
   handleDeleteItems,
   handleEditItems,
   handlePathChange,
+  handlePathOnBlur,
   handlePathTypeChange,
   inputsDispatch,
   inputsState,
@@ -22,7 +24,9 @@ const JobsPanelDataInputsView = ({
   match,
   panelDispatch,
   panelState,
-  setArtifactPathValid
+  resetDataInputsData,
+  setArtifactPathValid,
+  setDataInputsValidations
 }) => {
   return (
     <div className="job-panel__item new-item-side-panel__item">
@@ -30,15 +34,19 @@ const JobsPanelDataInputsView = ({
         <JobsPanelDataInputsTable
           comboboxMatchesList={comboboxMatchesList}
           comboboxSelectList={comboboxSelectList}
+          dataInputsValidations={dataInputsValidations}
           handleAddNewItem={handleAddNewItem}
           handleEditItems={handleEditItems}
           handleDeleteItems={handleDeleteItems}
           handlePathChange={handlePathChange}
+          handlePathOnBlur={handlePathOnBlur}
           handlePathTypeChange={handlePathTypeChange}
           inputsDispatch={inputsDispatch}
           inputsState={inputsState}
           match={match}
           panelState={panelState}
+          resetDataInputsData={resetDataInputsData}
+          setDataInputsValidations={setDataInputsValidations}
         />
       </JobsPanelSection>
       <JobsPanelSection title="General">
@@ -82,10 +90,12 @@ const JobsPanelDataInputsView = ({
 
 JobsPanelDataInputsView.propTypes = {
   comboboxMatchesList: COMBOBOX_MATCHES.isRequired,
+  dataInputsValidations: PropTypes.object.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handlePathChange: PropTypes.func.isRequired,
+  handlePathOnBlur: PropTypes.func.isRequired,
   handlePathTypeChange: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
@@ -93,7 +103,9 @@ JobsPanelDataInputsView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  setArtifactPathValid: PropTypes.func.isRequired
+  resetDataInputsData: PropTypes.func.isRequired,
+  setArtifactPathValid: PropTypes.func.isRequired,
+  setDataInputsValidations: PropTypes.func.isRequired
 }
 
 export default JobsPanelDataInputsView

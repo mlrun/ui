@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useCallback } from 'react'
+import React, { useReducer, useEffect, useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { uniqBy } from 'lodash'
@@ -17,7 +17,9 @@ import {
   handleDelete,
   handleEdit,
   handleInputPathChange,
-  handleInputPathTypeChange
+  handleInputPathTypeChange,
+  handleResetDataInputs,
+  isPathInputValid
 } from './jobsPanelDataInputs.util'
 import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
@@ -48,6 +50,10 @@ const JobsPanelDataInputs = ({
     jobsPanelDataInputsReducer,
     initialState
   )
+  const [dataInputsValidations, setDataInputsValidations] = useState({
+    isNameValid: true,
+    isPathValid: true
+  })
 
   const getInputValue = useCallback(
     inputItem => {
@@ -246,14 +252,12 @@ const JobsPanelDataInputs = ({
       inputs,
       panelDispatch,
       panelState.previousPanelData.tableData.dataInputs,
-      inputsActions.REMOVE_NEW_INPUT_DATA,
-      inputsActions.SET_ADD_NEW_INPUT,
+      panelState.tableData.dataInputs,
       panelActions.SET_TABLE_DATA_INPUTS,
       panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS,
       setNewJobInputs,
-      inputsActions.SET_PATH_PLACEHOLDER,
       inputsState.newInputUrlPath,
-      inputsActions.SET_NEW_INPUT_URL_PATH
+      setDataInputsValidations
     )
   }
 
@@ -299,6 +303,26 @@ const JobsPanelDataInputs = ({
     handleInputPathChange(inputsDispatch, inputsState, path)
   }
 
+  const handlePathOnBlur = (selectValue, inputValue) => {
+    if (!isPathInputValid(selectValue, inputValue)) {
+      setDataInputsValidations(prevState => ({
+        ...prevState,
+        isPathValid: false
+      }))
+    } else {
+      if (!dataInputsValidations.isPathValid) {
+        setDataInputsValidations(prevState => ({
+          ...prevState,
+          isPathValid: true
+        }))
+      }
+    }
+  }
+
+  const resetDataInputsData = () => {
+    handleResetDataInputs(inputsDispatch, setDataInputsValidations)
+  }
+
   return (
     <JobsPanelDataInputsView
       comboboxMatchesList={
@@ -309,10 +333,12 @@ const JobsPanelDataInputs = ({
           ? inputsState.comboboxMatches
           : []
       }
+      dataInputsValidations={dataInputsValidations}
       handleAddNewItem={handleAddNewItem}
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handlePathChange={handlePathChange}
+      handlePathOnBlur={handlePathOnBlur}
       handlePathTypeChange={handlePathTypeChange}
       inputsState={inputsState}
       inputsDispatch={inputsDispatch}
@@ -320,7 +346,9 @@ const JobsPanelDataInputs = ({
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
+      resetDataInputsData={resetDataInputsData}
       setArtifactPathValid={setArtifactPathValid}
+      setDataInputsValidations={setDataInputsValidations}
     />
   )
 }

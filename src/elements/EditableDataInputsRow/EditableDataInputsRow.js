@@ -5,7 +5,10 @@ import classNames from 'classnames'
 import Input from '../../common/Input/Input'
 import Combobox from '../../common/Combobox/Combobox'
 
-import { comboboxSelectList } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
+import {
+  comboboxSelectList,
+  pathTips
+} from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDataInputsReducer'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import {
@@ -34,6 +37,7 @@ const EditableDataInputsRow = ({
     label: ''
   })
   const [inputName, setInputName] = useState(selectedDataInput.data.name)
+  const [isComboboxValid, setIsComboboxValid] = useState(true)
   const [requiredField, setRequiredField] = useState({
     path: false,
     name: false
@@ -147,6 +151,8 @@ const EditableDataInputsRow = ({
             }}
             type="text"
             value={inputName}
+            required
+            requiredText="This field is required"
           />
         </div>
       )}
@@ -154,6 +160,10 @@ const EditableDataInputsRow = ({
         <Combobox
           comboboxClassName={comboboxClassNames}
           inputPlaceholder={inputsState.pathPlaceholder}
+          invalid={!isComboboxValid}
+          invalidText={`Field must be in "${
+            pathTips[selectedDataInput.data.path.pathType]
+          }" format`}
           matches={comboboxMatchesList}
           maxSuggestedMatches={
             inputsState.selectedDataInput.data.path.pathType ===
@@ -168,7 +178,8 @@ const EditableDataInputsRow = ({
               inputsState,
               path,
               selectedDataInput,
-              setSelectedDataInput
+              setSelectedDataInput,
+              setIsComboboxValid
             )
           }}
           hideSearchInput={!inputsState.inputStorePathTypeEntered}
@@ -176,6 +187,8 @@ const EditableDataInputsRow = ({
           selectDropdownList={comboboxSelectList}
           selectOnChange={path => selectOnChangeComboboxHandler(path)}
           selectPlaceholder="Path Scheme"
+          required
+          requiredText="This field is required"
         />
       </div>
       <div className="table__cell table__cell-actions">

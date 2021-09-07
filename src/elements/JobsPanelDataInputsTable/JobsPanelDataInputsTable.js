@@ -13,21 +13,27 @@ import { inputsActions } from '../../components/JobsPanelDataInputs/jobsPanelDat
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { COMBOBOX_MATCHES } from '../../types'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
+import { pathTips } from '../../components/JobsPanelDataInputs/jobsPanelDataInputs.util'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
   comboboxSelectList,
+  dataInputsValidations,
   handleAddNewItem,
   handleEditItems,
   handleDeleteItems,
   handlePathChange,
+  handlePathOnBlur,
   handlePathTypeChange,
   inputsDispatch,
   inputsState,
   match,
-  panelState
+  panelState,
+  resetDataInputsData,
+  setDataInputsValidations
 }) => {
   return (
     <JobsPanelTable
@@ -57,10 +63,13 @@ export const JobsPanelDataInputsTable = ({
               className="input-row__item"
               density="medium"
               floatingLabel
-              invalid={isNameNotUnique(
-                inputsState.newInput.name,
-                panelState.tableData.dataInputs
-              )}
+              invalid={
+                !dataInputsValidations.isNameValid ||
+                isNameNotUnique(
+                  inputsState.newInput.name,
+                  panelState.tableData.dataInputs
+                )
+              }
               invalidText="Name already exists"
               label="Input name"
               onChange={name =>
@@ -70,6 +79,14 @@ export const JobsPanelDataInputsTable = ({
                 })
               }
               type="text"
+              required
+              requiredText="This field is required"
+              setInvalid={value =>
+                setDataInputsValidations(state => ({
+                  ...state,
+                  isNameValid: value
+                }))
+              }
             />
             <Combobox
               comboboxClassName="input-row__item"
@@ -79,6 +96,10 @@ export const JobsPanelDataInputsTable = ({
                 handlePathChange(path)
               }}
               inputPlaceholder={inputsState.pathPlaceholder}
+              invalid={!dataInputsValidations.isPathValid}
+              invalidText={`Field must be in "${
+                pathTips[inputsState.newInput.path.pathType]
+              }" format`}
               matches={comboboxMatchesList}
               maxSuggestedMatches={
                 inputsState.newInput.path.pathType ===
@@ -91,10 +112,13 @@ export const JobsPanelDataInputsTable = ({
                 handlePathTypeChange(path)
               }}
               selectPlaceholder="Path Scheme"
+              onBlur={handlePathOnBlur}
+              required
+              requiredText="This field is required"
             />
           </div>
           <button
-            className="add-input btn-add"
+            className="btn-add"
             disabled={isNameNotUnique(
               inputsState.newInput.name,
               panelState.tableData.dataInputs
@@ -103,6 +127,11 @@ export const JobsPanelDataInputsTable = ({
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
+            </Tooltip>
+          </button>
+          <button onClick={resetDataInputsData}>
+            <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
+              <Delete />
             </Tooltip>
           </button>
         </div>
@@ -124,13 +153,16 @@ export const JobsPanelDataInputsTable = ({
 JobsPanelDataInputsTable.propTypes = {
   comboboxMatchesList: COMBOBOX_MATCHES.isRequired,
   comboboxSelectList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  dataInputsValidations: PropTypes.object.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
   handlePathChange: PropTypes.func.isRequired,
+  handlePathOnBlur: PropTypes.func.isRequired,
   handlePathTypeChange: PropTypes.func.isRequired,
   inputsDispatch: PropTypes.func.isRequired,
   inputsState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
-  panelState: PropTypes.shape({}).isRequired
+  panelState: PropTypes.shape({}).isRequired,
+  resetDataInputsData: PropTypes.func.isRequired
 }

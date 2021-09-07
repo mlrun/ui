@@ -39,7 +39,8 @@ export const handleEditInputPath = (
   inputsState,
   path,
   selectedDataInput,
-  setSelectedDataInput
+  setSelectedDataInput,
+  setValidation
 ) => {
   if (path !== selectedDataInput.data.path.value) {
     setSelectedDataInput({
@@ -54,6 +55,11 @@ export const handleEditInputPath = (
       }
     })
   }
+
+  setValidation(state => ({
+    ...state,
+    isPathValid: isPathInputValid(selectedDataInput.data.path.pathType, path)
+  }))
 
   if (
     selectedDataInput.data.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME

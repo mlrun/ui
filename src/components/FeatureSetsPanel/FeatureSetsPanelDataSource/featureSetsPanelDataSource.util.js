@@ -45,7 +45,10 @@ export const generateComboboxMatchesList = (
     )
       ? projectItemsPathTypes
       : []
-  } else if (!urlProjectPathEntered) {
+  } else if (
+    !urlProjectPathEntered &&
+    projectItemsPathTypes.some(type => type.id === url.projectItemType)
+  ) {
     return projects.filter(project => {
       return project.id.startsWith(url.project)
     })
