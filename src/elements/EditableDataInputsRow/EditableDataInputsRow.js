@@ -149,10 +149,10 @@ const EditableDataInputsRow = ({
                 }
               })
             }}
-            type="text"
-            value={inputName}
             required
             requiredText="This field is required"
+            type="text"
+            value={inputName}
           />
         </div>
       )}
@@ -183,12 +183,11 @@ const EditableDataInputsRow = ({
             )
           }}
           hideSearchInput={!inputsState.inputStorePathTypeEntered}
+          required
+          requiredText="This field is required"
           selectDefaultValue={selectDefaultValue}
           selectDropdownList={comboboxSelectList}
           selectOnChange={path => selectOnChangeComboboxHandler(path)}
-          selectPlaceholder="Path Scheme"
-          required
-          requiredText="This field is required"
         />
       </div>
       <div className="table__cell table__cell-actions">

@@ -18,8 +18,8 @@ import {
   handleEdit,
   handleInputPathChange,
   handleInputPathTypeChange,
-  handleResetDataInputs,
-  isPathInputValid
+  isPathInputValid,
+  resetDataInputsData
 } from './jobsPanelDataInputs.util'
 import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
@@ -50,7 +50,7 @@ const JobsPanelDataInputs = ({
     jobsPanelDataInputsReducer,
     initialState
   )
-  const [dataInputsValidations, setDataInputsValidations] = useState({
+  const [validation, setValidation] = useState({
     isNameValid: true,
     isPathValid: true
   })
@@ -257,7 +257,7 @@ const JobsPanelDataInputs = ({
       panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS,
       setNewJobInputs,
       inputsState.newInputUrlPath,
-      setDataInputsValidations
+      setValidation
     )
   }
 
@@ -304,23 +304,10 @@ const JobsPanelDataInputs = ({
   }
 
   const handlePathOnBlur = (selectValue, inputValue) => {
-    if (!isPathInputValid(selectValue, inputValue)) {
-      setDataInputsValidations(prevState => ({
-        ...prevState,
-        isPathValid: false
-      }))
-    } else {
-      if (!dataInputsValidations.isPathValid) {
-        setDataInputsValidations(prevState => ({
-          ...prevState,
-          isPathValid: true
-        }))
-      }
-    }
-  }
-
-  const resetDataInputsData = () => {
-    handleResetDataInputs(inputsDispatch, setDataInputsValidations)
+    setValidation(prevState => ({
+      ...prevState,
+      isPathValid: isPathInputValid(selectValue, inputValue)
+    }))
   }
 
   return (
@@ -333,7 +320,6 @@ const JobsPanelDataInputs = ({
           ? inputsState.comboboxMatches
           : []
       }
-      dataInputsValidations={dataInputsValidations}
       handleAddNewItem={handleAddNewItem}
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
@@ -346,9 +332,12 @@ const JobsPanelDataInputs = ({
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
-      resetDataInputsData={resetDataInputsData}
+      resetDataInputsData={() =>
+        resetDataInputsData(inputsDispatch, setValidation)
+      }
       setArtifactPathValid={setArtifactPathValid}
-      setDataInputsValidations={setDataInputsValidations}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }

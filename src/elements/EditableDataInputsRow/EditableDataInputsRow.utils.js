@@ -56,10 +56,7 @@ export const handleEditInputPath = (
     })
   }
 
-  setValidation(state => ({
-    ...state,
-    isPathValid: isPathInputValid(selectedDataInput.data.path.pathType, path)
-  }))
+  setValidation(isPathInputValid(selectedDataInput.data.path.pathType, path))
 
   if (
     selectedDataInput.data.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME

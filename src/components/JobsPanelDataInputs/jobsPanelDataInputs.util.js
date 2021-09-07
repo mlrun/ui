@@ -170,7 +170,7 @@ export const handleAddItem = (
         ? `${newItemObj.path.pathType}${mlRunStorePath}`
         : `${newItemObj.path.pathType}${newInputUrlPath}`
     })
-    handleResetDataInputs(inputsDispatch, setDataInputsValidations)
+    resetDataInputsData(inputsDispatch, setDataInputsValidations)
   }
 }
 
@@ -223,7 +223,7 @@ export const handleEdit = (
   })
 }
 
-export const handleResetDataInputs = (
+export const resetDataInputsData = (
   inputsDispatch,
   setDataInputsValidations
 ) => {

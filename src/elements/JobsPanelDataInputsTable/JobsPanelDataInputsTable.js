@@ -21,7 +21,6 @@ import { ReactComponent as Delete } from '../../images/delete.svg'
 export const JobsPanelDataInputsTable = ({
   comboboxMatchesList,
   comboboxSelectList,
-  dataInputsValidations,
   handleAddNewItem,
   handleEditItems,
   handleDeleteItems,
@@ -33,7 +32,8 @@ export const JobsPanelDataInputsTable = ({
   match,
   panelState,
   resetDataInputsData,
-  setDataInputsValidations
+  setValidation,
+  validation
 }) => {
   return (
     <JobsPanelTable
@@ -64,7 +64,7 @@ export const JobsPanelDataInputsTable = ({
               density="medium"
               floatingLabel
               invalid={
-                !dataInputsValidations.isNameValid ||
+                !validation.isNameValid ||
                 isNameNotUnique(
                   inputsState.newInput.name,
                   panelState.tableData.dataInputs
@@ -82,7 +82,7 @@ export const JobsPanelDataInputsTable = ({
               required
               requiredText="This field is required"
               setInvalid={value =>
-                setDataInputsValidations(state => ({
+                setValidation(state => ({
                   ...state,
                   isNameValid: value
                 }))
@@ -96,7 +96,7 @@ export const JobsPanelDataInputsTable = ({
                 handlePathChange(path)
               }}
               inputPlaceholder={inputsState.pathPlaceholder}
-              invalid={!dataInputsValidations.isPathValid}
+              invalid={!validation.isPathValid}
               invalidText={`Field must be in "${
                 pathTips[inputsState.newInput.path.pathType]
               }" format`}
@@ -107,14 +107,14 @@ export const JobsPanelDataInputsTable = ({
                   ? 3
                   : 2
               }
+              onBlur={handlePathOnBlur}
+              required
+              requiredText="This field is required"
               selectDropdownList={comboboxSelectList}
               selectOnChange={path => {
                 handlePathTypeChange(path)
               }}
               selectPlaceholder="Path Scheme"
-              onBlur={handlePathOnBlur}
-              required
-              requiredText="This field is required"
             />
           </div>
           <button
@@ -153,7 +153,6 @@ export const JobsPanelDataInputsTable = ({
 JobsPanelDataInputsTable.propTypes = {
   comboboxMatchesList: COMBOBOX_MATCHES.isRequired,
   comboboxSelectList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  dataInputsValidations: PropTypes.object.isRequired,
   handleAddNewItem: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
@@ -164,5 +163,7 @@ JobsPanelDataInputsTable.propTypes = {
   inputsState: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  resetDataInputsData: PropTypes.func.isRequired
+  resetDataInputsData: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.object.isRequired
 }
