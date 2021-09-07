@@ -303,13 +303,6 @@ const JobsPanelDataInputs = ({
     handleInputPathChange(inputsDispatch, inputsState, path)
   }
 
-  const handlePathOnBlur = (selectValue, inputValue) => {
-    setValidation(prevState => ({
-      ...prevState,
-      isPathValid: isPathInputValid(selectValue, inputValue)
-    }))
-  }
-
   return (
     <JobsPanelDataInputsView
       comboboxMatchesList={
@@ -324,7 +317,12 @@ const JobsPanelDataInputs = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handlePathChange={handlePathChange}
-      handlePathOnBlur={handlePathOnBlur}
+      handlePathOnBlur={(selectValue, inputValue) => {
+        setValidation(prevState => ({
+          ...prevState,
+          isPathValid: isPathInputValid(selectValue, inputValue)
+        }))
+      }}
       handlePathTypeChange={handlePathTypeChange}
       inputsState={inputsState}
       inputsDispatch={inputsDispatch}
@@ -332,9 +330,7 @@ const JobsPanelDataInputs = ({
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
-      resetDataInputsData={() =>
-        resetDataInputsData(inputsDispatch, setValidation)
-      }
+      resetDataInputsData={resetDataInputsData}
       setArtifactPathValid={setArtifactPathValid}
       setValidation={setValidation}
       validation={validation}

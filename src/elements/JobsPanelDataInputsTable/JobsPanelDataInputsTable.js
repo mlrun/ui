@@ -78,7 +78,6 @@ export const JobsPanelDataInputsTable = ({
                   payload: name
                 })
               }
-              type="text"
               required
               requiredText="This field is required"
               setInvalid={value =>
@@ -87,6 +86,7 @@ export const JobsPanelDataInputsTable = ({
                   isNameValid: value
                 }))
               }
+              type="text"
             />
             <Combobox
               comboboxClassName="input-row__item"
@@ -129,7 +129,9 @@ export const JobsPanelDataInputsTable = ({
               <Plus />
             </Tooltip>
           </button>
-          <button onClick={resetDataInputsData}>
+          <button
+            onClick={() => resetDataInputsData(inputsDispatch, setValidation)}
+          >
             <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
               <Delete />
             </Tooltip>

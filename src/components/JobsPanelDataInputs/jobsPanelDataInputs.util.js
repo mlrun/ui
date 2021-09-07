@@ -248,6 +248,10 @@ export const resetDataInputsData = (
     isNameValid: true,
     isPathValid: true
   })
+  inputsDispatch({
+    type: inputsActions.SET_NEW_INPUT_URL_PATH,
+    payload: ''
+  })
 }
 
 export const handleDelete = (
