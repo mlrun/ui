@@ -76,8 +76,10 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           }
         }
       } else {
-        let type = contentItem.labels?.find(label => label.includes('kind:'))
-        type = type?.slice(type.indexOf(':') + 2)
+        const type =
+          contentItem.labels
+            ?.find(label => label.includes('kind:'))
+            ?.replace('kind: ', '') ?? ''
 
         return {
           name: {

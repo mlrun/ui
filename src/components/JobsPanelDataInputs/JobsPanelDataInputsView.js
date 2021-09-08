@@ -22,7 +22,10 @@ const JobsPanelDataInputsView = ({
   match,
   panelDispatch,
   panelState,
-  setArtifactPathValid
+  resetDataInputsData,
+  setArtifactPathValid,
+  setValidation,
+  validation
 }) => {
   return (
     <div className="job-panel__item new-item-side-panel__item">
@@ -39,6 +42,9 @@ const JobsPanelDataInputsView = ({
           inputsState={inputsState}
           match={match}
           panelState={panelState}
+          resetDataInputsData={resetDataInputsData}
+          setValidation={setValidation}
+          validation={validation}
         />
       </JobsPanelSection>
       <JobsPanelSection title="General">
@@ -93,7 +99,10 @@ JobsPanelDataInputsView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  setArtifactPathValid: PropTypes.func.isRequired
+  resetDataInputsData: PropTypes.func.isRequired,
+  setArtifactPathValid: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.object.isRequired
 }
 
 export default JobsPanelDataInputsView

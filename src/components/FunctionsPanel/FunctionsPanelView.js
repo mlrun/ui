@@ -14,6 +14,12 @@ import FunctionsPanelSecrets from '../../elements/FunctionsPanelSecrets/Function
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import { FUNCTION_PANEL_MODE } from '../../types'
 
+import {
+  LABEL_BUTTON,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from '../../constants'
+
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './functionsPanel.scss'
@@ -25,9 +31,12 @@ const FunctionsPanelView = ({
   defaultData,
   error,
   handleSave,
+  imageType,
   loading,
+  match,
   mode,
   removeFunctionsError,
+  setImageType,
   setValidation,
   validation
 }) => {
@@ -79,8 +88,12 @@ const FunctionsPanelView = ({
             >
               <FunctionsPanelCode
                 defaultData={defaultData}
-                isHandlerValid={validation.isHandlerValid}
-                setHandlerValid={setValidation}
+                imageType={imageType}
+                match={match}
+                mode={mode}
+                setImageType={setImageType}
+                setValidation={setValidation}
+                validation={validation}
               />
             </Accordion>
             <Accordion
@@ -125,22 +138,22 @@ const FunctionsPanelView = ({
               )}
               <Button
                 className="btn_cancel"
-                variant="label"
+                variant={LABEL_BUTTON}
                 label="Cancel"
                 onClick={closePanel}
               />
               <Button
                 className="btn_save"
-                disabled={!checkValidation}
-                variant="tertiary"
+                disabled={!checkValidation()}
+                variant={TERTIARY_BUTTON}
                 label="Save"
                 onClick={() => handleSave()}
               />
               <Button
-                variant="secondary"
+                variant={SECONDARY_BUTTON}
                 label="Deploy"
                 onClick={() => handleSave(true)}
-                disabled={!checkValidation}
+                disabled={!checkValidation()}
               />
             </div>
           </div>
@@ -156,7 +169,7 @@ FunctionsPanelView.defaultProps = {
 }
 
 FunctionsPanelView.propTypes = {
-  checkValidation: PropTypes.bool.isRequired,
+  checkValidation: PropTypes.func.isRequired,
   closePanel: PropTypes.func.isRequired,
   confirmData: PropTypes.shape({}),
   defaultData: PropTypes.shape({}),

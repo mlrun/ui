@@ -11,8 +11,7 @@ import artifactsAction from '../../../actions/artifacts'
 import { getParsedResource } from '../../../utils/resources'
 import {
   generateComboboxMatchesList,
-  isUrlInputValid,
-  projectItemsPathTypes
+  isUrlInputValid
 } from './featureSetsPanelDataSource.util'
 import projectsAction from '../../../actions/projects'
 import {
@@ -205,10 +204,7 @@ const FeatureSetsPanelDataSource = ({
           artifactReference: artifactReference ?? ''
         }
       }))
-      setUrlProjectItemTypeEntered(
-        projectItemsPathTypes.some(type => type.id === pathItems[0]) &&
-          typeof pathItems[1] === 'string'
-      )
+      setUrlProjectItemTypeEntered(typeof pathItems[1] === 'string')
       setUrlProjectPathEntered(typeof pathItems[2] === 'string')
       setUrlArtifactPathEntered(
         artifacts.some(artifactItem => artifactItem.id === artifact)

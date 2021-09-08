@@ -39,6 +39,10 @@ export default {
       `/projects/${data.metadata.project}/feature-vectors`,
       data
     ),
+  fetchFeatureSetsTags: project =>
+    mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`),
+  fetchFeatureVectorsTags: project =>
+    mainHttpClient.get(`/projects/${project}/feature-vectors/*/tags`),
   getEntity: (project, entity) =>
     mainHttpClient.get(`/projects/${project}/entities`, {
       params: { name: entity }

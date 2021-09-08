@@ -32,9 +32,11 @@ import filtersActions from '../../actions/filters'
 
 const Files = ({
   artifactsStore,
+  fetchArtifactTags,
   fetchFile,
   fetchFiles,
   filtersStore,
+  getFilterTagOptions,
   history,
   match,
   removeFile,
@@ -200,7 +202,7 @@ const Files = ({
         artifactsStore.files.selectedRowData.content[name] ||
         artifactsStore.files.allData
 
-      if (artifacts.length) {
+      if (artifacts.length > 0) {
         const searchItem = searchArtifactItem(artifacts, name, tag, iter)
 
         if (!searchItem) {
@@ -222,6 +224,18 @@ const Files = ({
   ])
 
   useEffect(() => setFiles([]), [filtersStore.tag])
+
+  useEffect(() => {
+    if (filtersStore.tagOptions.length === 0) {
+      getFilterTagOptions(fetchArtifactTags, match.params.projectName)
+    }
+  }, [
+    fetchArtifactTags,
+    filtersStore.tagOptions.length,
+    getFilterTagOptions,
+    match.params.projectName,
+    pageData.page
+  ])
 
   return (
     <>

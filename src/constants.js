@@ -111,6 +111,7 @@ export const SET_NEW_FUNCTION_TAG = 'SET_NEW_FUNCTION_TAG'
 export const SET_NEW_FUNCTION_TYPE = 'SET_NEW_FUNCTION_TYPE'
 export const SET_NEW_FUNCTION_VOLUMES = 'SET_NEW_FUNCTION_VOLUMES'
 export const SET_NEW_FUNCTION_VOLUME_MOUNTS = 'SET_NEW_FUNCTION_VOLUME_MOUNTS'
+export const SET_NEW_FUNCTION_WITH_MLRUN = 'SET_NEW_FUNCTION_WITH_MLRUN'
 
 /*=========== ARTIFACTS =============*/
 
@@ -370,7 +371,16 @@ export const UPDATE_FEATURE_VECTOR = 'UPDATE_FEATURE_VECTOR'
 /*=========== FILTERS =============*/
 
 export const SET_FILTERS = 'SET_FILTERS'
+export const SET_FILTER_TAG_OPTIONS = 'SET_FILTER_TAG_OPTIONS'
 export const REMOVE_FILTERS = 'REMOVE_FILTERS'
 export const INIT_GROUP_FILTER = 'name'
 export const INIT_STATE_FILTER = 'all'
 export const INIT_TAG_FILTER = 'latest'
+
+/*=========== BUTTONS =============*/
+
+export const PRIMARY_BUTTON = 'primary'
+export const SECONDARY_BUTTON = 'secondary'
+export const TERTIARY_BUTTON = 'tertiary'
+export const DANGER_BUTTON = 'danger'
+export const LABEL_BUTTON = 'label'

@@ -12,7 +12,8 @@ import {
   DETAILS_STATISTICS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
-  FEATURES_TAB
+  FEATURES_TAB,
+  SECONDARY_BUTTON
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -230,6 +231,11 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
       class: 'artifacts_big'
     },
     {
+      header: '',
+      class: 'artifacts_small',
+      hidden: isTablePanelOpen
+    },
+    {
       header: 'Validator',
       class: 'artifacts_medium',
       hidden: isTablePanelOpen
@@ -289,7 +295,7 @@ export const generatePageData = (
     data.handleRemoveRequestData = handleRemoveRequestData
     data.filterMenuActionButton = {
       label: 'Add to feature vector',
-      variant: 'secondary',
+      variant: SECONDARY_BUTTON,
       getCustomTemplate: getPopUpTemplate
     }
     data.handleRequestOnExpand = handleRequestOnExpand

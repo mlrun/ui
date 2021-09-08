@@ -16,6 +16,7 @@ import {
 import nuclioActions from '../../actions/nuclio'
 import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
+import { DANGER_BUTTON, PRIMARY_BUTTON } from '../../constants'
 
 const Projects = ({
   changeProjectState,
@@ -144,7 +145,7 @@ const Projects = ({
           "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that " +
           "before setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
         btnConfirmLabel: 'Archive',
-        btnConfirmType: 'primary',
+        btnConfirmType: PRIMARY_BUTTON,
         rejectHandler: () => {
           setConfirmData(null)
         },
@@ -161,7 +162,7 @@ const Projects = ({
         title: `Delete project "${project.metadata.name}"?`,
         description: 'Deleted projects can not be restored.',
         btnConfirmLabel: 'Delete',
-        btnConfirmType: 'danger',
+        btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
           setConfirmData(null)
         },

@@ -39,7 +39,8 @@ export const handleEditInputPath = (
   inputsState,
   path,
   selectedDataInput,
-  setSelectedDataInput
+  setSelectedDataInput,
+  setIsPathValid
 ) => {
   if (path !== selectedDataInput.data.path.value) {
     setSelectedDataInput({
@@ -60,4 +61,6 @@ export const handleEditInputPath = (
   ) {
     handleStoreInputPathChange(false, inputsDispatch, inputsState, path)
   }
+
+  setIsPathValid(isPathInputValid(selectedDataInput.data.path.pathType, path))
 }
