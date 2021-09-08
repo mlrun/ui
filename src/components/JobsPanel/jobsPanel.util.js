@@ -49,6 +49,7 @@ export const getDataInputs = functionParameters => {
 
 export const getFunctionParameters = (selectedFunction, method) => {
   return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
     .map(func => {
       return func.spec.entry_points
         ? func.spec.entry_points[method]?.parameters ?? []
@@ -59,11 +60,25 @@ export const getFunctionParameters = (selectedFunction, method) => {
     .value()
 }
 
-export const getResources = selectedFunction => {
+export const getLimits = selectedFunction => {
   return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.resources ?? {}
+      return func.spec.resources?.limits ?? {}
     })
+    .filter(limits => !isEveryObjectValueEmpty(limits))
+    .flatten()
+    .unionBy('name')
+    .value()
+}
+
+export const getRequests = selectedFunction => {
+  return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => {
+      return func.spec.resources?.requests ?? {}
+    })
+    .filter(request => !isEveryObjectValueEmpty(request))
     .flatten()
     .unionBy('name')
     .value()
@@ -71,8 +86,9 @@ export const getResources = selectedFunction => {
 
 export const getEnvironmentVariables = selectedFunction => {
   return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.env ?? {}
+      return func.spec.env ?? []
     })
     .flatten()
     .unionBy('name')
@@ -81,6 +97,7 @@ export const getEnvironmentVariables = selectedFunction => {
 
 export const getNodeSelectors = selectedFunction => {
   return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
     .map(func => {
       return func.spec.node_selector ?? {}
     })
@@ -100,12 +117,9 @@ export const getNodeSelectors = selectedFunction => {
 }
 
 export const getVolumeMounts = (selectedFunction, volumes, mode) => {
-  if (selectedFunction.some(func => !func.spec.volume_mounts)) {
-    return []
-  }
-
   return chain(selectedFunction)
-    .map(func => func.spec.volume_mounts)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => func.spec.volume_mounts ?? [])
     .flatten()
     .unionBy('name')
     .map(volume_mounts => {
@@ -127,12 +141,9 @@ export const getVolumeMounts = (selectedFunction, volumes, mode) => {
 }
 
 export const getVolumes = selectedFunction => {
-  if (selectedFunction.some(func => !func.spec.volumes)) {
-    return []
-  }
-
   return chain(selectedFunction)
-    .map(func => func.spec.volumes)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => func.spec.volumes ?? [])
     .flatten()
     .unionBy('name')
     .value()
@@ -198,7 +209,8 @@ export const generateTableData = (
   mode
 ) => {
   const functionParameters = getFunctionParameters(selectedFunction, method)
-  const [{ limits, requests }] = getResources(selectedFunction)
+  const [limits] = getLimits(selectedFunction)
+  const [requests] = getRequests(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
   const node_selector = getNodeSelectors(selectedFunction)
   const volumes = getVolumes(selectedFunction)
