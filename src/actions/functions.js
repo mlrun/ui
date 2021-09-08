@@ -40,8 +40,7 @@ import {
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_BEGIN,
   REMOVE_FUNCTION_LOGS,
-  SET_NEW_FUNCTION,
-  SET_NEW_FUNCTION_WITH_MLRUN
+  SET_NEW_FUNCTION
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -75,11 +74,11 @@ const functionsActions = {
   deleteFunction: (func, project) => () => {
     return functionsApi.deleteSelectedFunction(func, project)
   },
-  deployFunction: func => dispatch => {
+  deployFunction: data => dispatch => {
     dispatch(functionsActions.deployFunctionBegin())
 
     return functionsApi
-      .deployFunction(func)
+      .deployFunction(data)
       .then(result => {
         dispatch(functionsActions.deployFunctionSuccess())
 
@@ -303,10 +302,6 @@ const functionsActions = {
   setNewFunctionVolumes: volumes => ({
     type: SET_NEW_FUNCTION_VOLUMES,
     payload: volumes
-  }),
-  setNewFunctionWithMlrun: value => ({
-    type: SET_NEW_FUNCTION_WITH_MLRUN,
-    payload: value
   })
 }
 

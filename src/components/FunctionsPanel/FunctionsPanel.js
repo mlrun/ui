@@ -19,6 +19,7 @@ import {
 } from '../../constants'
 
 const FunctionsPanel = ({
+  appStore,
   functionsStore,
   closePanel,
   createFunctionSuccess,
@@ -49,9 +50,10 @@ const FunctionsPanel = ({
     isGpuLimitValid: true
   })
   const [imageType, setImageType] = useState(
-    defaultData?.build?.image ||
+    (defaultData?.build?.image ||
       defaultData?.build?.base_image ||
-      defaultData?.build?.commands?.length > 0
+      defaultData?.build?.commands?.length > 0) &&
+      defaultData.image?.length === 0
       ? NEW_IMAGE
       : ''
   )
@@ -108,7 +110,14 @@ const FunctionsPanel = ({
   const createFunction = deploy => {
     createNewFunction(project, functionsStore.newFunction).then(result => {
       if (deploy) {
-        return handleDeploy(functionsStore.newFunction)
+        const data = {
+          function: { ...functionsStore.newFunction },
+          with_mlrun: functionsStore.newFunction.spec.build.commands.includes(
+            appStore.frontendSpec.function_deployment_mlrun_command
+          )
+        }
+
+        return handleDeploy(data)
       }
 
       createFunctionSuccess().then(() => {
@@ -184,8 +193,8 @@ const FunctionsPanel = ({
     }
   }
 
-  const handleDeploy = func => {
-    deployFunction(func)
+  const handleDeploy = data => {
+    deployFunction(data)
       .then(response => {
         handleDeployFunctionSuccess(response.data.ready)
       })
@@ -233,6 +242,9 @@ FunctionsPanel.propTypes = {
   project: PropTypes.string.isRequired
 }
 
-export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions
-})(FunctionsPanel)
+export default connect(
+  ({ appStore, functionsStore }) => ({ appStore, functionsStore }),
+  {
+    ...functionsActions
+  }
+)(FunctionsPanel)
