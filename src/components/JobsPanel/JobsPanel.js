@@ -62,6 +62,7 @@ const JobsPanel = ({
       ? functionsStore.template.functions
       : groupedFunctions.functions || {}
   )
+  const [tableDataIsLoaded, setTableDataIsLoaded] = useState(false)
   const [validation, setValidation] = useState({
     isNameValid: true,
     isArtifactPathValid: true,
@@ -158,7 +159,8 @@ const JobsPanel = ({
       isEveryObjectValueEmpty(panelState.tableData) &&
       isEveryObjectValueEmpty(panelState.requests) &&
       isEveryObjectValueEmpty(panelState.limits) &&
-      !isEveryObjectValueEmpty(selectedFunction)
+      !isEveryObjectValueEmpty(selectedFunction) &&
+      !tableDataIsLoaded
     ) {
       generateTableData(
         panelState.currentFunctionInfo.method,
@@ -169,6 +171,7 @@ const JobsPanel = ({
         panelState.requests,
         mode
       )
+      setTableDataIsLoaded(true)
     } else if (
       !panelState.editMode &&
       isEveryObjectValueEmpty(panelState.tableData) &&
@@ -196,7 +199,8 @@ const JobsPanel = ({
     panelState.requests,
     panelState.tableData,
     selectedFunction,
-    setNewJob
+    setNewJob,
+    tableDataIsLoaded
   ])
 
   useEffect(() => {
