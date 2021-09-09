@@ -1,6 +1,10 @@
 import { expect } from 'chai'
 import { differenceWith, isEqual } from 'lodash'
-import { openDropdown, getOptionValues } from './dropdown.action'
+import {
+  openDropdown,
+  selectOptionInDropdownWithoutCheck,
+  getOptionValues
+} from './dropdown.action'
 
 async function getColumnValues(driver, table, columnName) {
   return await driver
@@ -57,6 +61,12 @@ const action = {
         table.tableFields[column](i).options
       )
       flag = flag && options.some(item => item.includes(subStirng))
+      // TODO: that is a workarround for collapsing labels dropdown
+      await selectOptionInDropdownWithoutCheck(
+        driver,
+        table.tableFields[column](i),
+        options[0]
+      )
     }
     expect(flag).equal(true)
   },
@@ -122,7 +132,6 @@ const action = {
   },
   checkTableColumnValues: async function(driver, table, columnName, values) {
     const arr = await getColumnValues(driver, table, columnName)
-    // console.log('debug: ', arr)
     expect(differenceWith(arr, values, isEqual).length).equal(0)
   },
   getAllCellsWithAttribute: async function(driver, table, attribute) {

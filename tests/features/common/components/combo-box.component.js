@@ -2,7 +2,6 @@ import { By } from 'selenium-webdriver'
 import dropdownComponent from './dropdown.component'
 
 module.exports = function(comboBoxStructure) {
-  // console.log('debug: ', inputStructure.elements.dropdown)
   const element = {}
   element.root = By.css(comboBoxStructure.root)
 
