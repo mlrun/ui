@@ -31,7 +31,7 @@ const FeatureSetsPanelTitleView = ({
       <br />
       <span>&bull; Must begin and end with: A-Z, a-z, 0-9</span>
       <br />
-      <span>&bull; Length - max: 63</span>
+      <span>&bull; Length - max: 56</span>
     </>
   )
 
@@ -45,10 +45,10 @@ const FeatureSetsPanelTitleView = ({
             invalid={!isNameValid}
             invalidText="This field is invalid"
             label="Feature Set Name"
-            maxLength={63}
+            maxLength={56}
             onChange={name => setData(state => ({ ...state, name }))}
             onBlur={handleNameOnBlur}
-            pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
+            pattern="^(?=[\S\s]{1,56}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
             required
             requiredText="This field is required"
             setInvalid={value =>
