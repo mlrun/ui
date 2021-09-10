@@ -15,8 +15,8 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
   let idTimeout = null
 
   useEffect(() => {
-    if (!isEmpty(dataItem) && typeof menu === 'function') {
-      setActionMenu(menu(dataItem))
+    if (!isEmpty(dataItem)) {
+      setActionMenu(typeof menu === 'function' ? menu(dataItem) : menu)
     }
   }, [dataItem, menu])
 
