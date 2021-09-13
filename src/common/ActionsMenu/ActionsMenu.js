@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import classnames from 'classnames'
 
 import ActionsMenuItem from '../../elements/ActionMenuItem/ActionsMenuItem'
 
@@ -12,6 +13,15 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
   const [isShowMenu, setIsShowMenu] = useState(false)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [actionMenu, setActionMenu] = useState(menu)
+  const [renderMenu, setRenderMenu] = useState(false)
+  const [openToBottom, setOpenToBottom] = useState(false)
+  const actionMenuRef = useRef()
+  const dropDownMenuRef = useRef()
+  const dropDownMenuClassNames = classnames(
+    'actions-menu__body',
+    openToBottom && 'open-to-bottom',
+    isShowMenu && 'show'
+  )
   let idTimeout = null
 
   useEffect(() => {
@@ -26,17 +36,25 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
 
   const showActionsList = () => {
     setIsShowMenu(show => !show)
+    setOpenToBottom(
+      dropDownMenuRef.current?.offsetHeight +
+        actionMenuRef.current?.getBoundingClientRect().bottom <
+        window.innerHeight
+    )
   }
 
   const handleMouseLeave = () => {
     if (isShowMenu) {
       idTimeout = setTimeout(() => {
         setIsShowMenu(false)
+        setRenderMenu(false)
       }, time)
     }
   }
 
-  const handleMouseEnter = () => {
+  const handleMouseOver = () => {
+    setRenderMenu(true)
+
     if (idTimeout) clearTimeout(idTimeout)
   }
 
@@ -44,16 +62,18 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
     <div
       className="actions-menu__container"
       onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseEnter}
+      onMouseOver={handleMouseOver}
+      ref={actionMenuRef}
     >
       <button onClick={showActionsList}>
         <ActionMenu />
       </button>
-      {isShowMenu && (
+      {renderMenu && (
         <div
           data-testid="actions-drop-down-menu"
-          className="actions-menu__body"
+          className={dropDownMenuClassNames}
           onClick={() => setIsShowMenu(false)}
+          ref={dropDownMenuRef}
         >
           {actionMenu.map(
             menuItem =>
