@@ -8,6 +8,8 @@ import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterAr
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import Button from '../../common/Button/Button'
 
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+
 import artifactApi from '../../api/artifacts-api'
 
 const RegisterArtifactPopup = ({
@@ -164,12 +166,16 @@ const RegisterArtifactPopup = ({
           />
         )}
         <Button
-          variant="tertiary"
+          variant={TERTIARY_BUTTON}
           label="Cancel"
           className="pop-up-dialog__btn_cancel"
           onClick={closePopupDialog}
         />
-        <Button variant="primary" label="Register" onClick={registerArtifact} />
+        <Button
+          variant={PRIMARY_BUTTON}
+          label="Register"
+          onClick={registerArtifact}
+        />
       </div>
     </PopUpDialog>
   )

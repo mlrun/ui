@@ -22,6 +22,7 @@ import { joinDataOfArrayOrObject } from '../../utils'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 import './volumesTable.scss'
 
@@ -32,6 +33,7 @@ const VolumesTableView = ({
   generateActionsMenu,
   newVolume,
   volumeMounts,
+  resetVolumesData,
   selectedVolume,
   setNewVolume,
   setSelectedVolume,
@@ -48,6 +50,10 @@ const VolumesTableView = ({
     'volumes-table',
     showAddNewVolumeRow && 'no-border',
     className
+  )
+  const volumeTypeInputRowWrapperClassNames = classnames(
+    'input-row-wrapper',
+    newVolume.type === V3IO && 'no-border'
   )
 
   return (
@@ -124,8 +130,6 @@ const VolumesTableView = ({
           <div className="table__body-column">
             <div className="input-row-wrapper no-border">
               <Select
-                label={newVolume.type.length ? newVolume.type : 'Type'}
-                options={selectTypeOptions.volumeType}
                 onClick={type => {
                   setNewVolume(state => ({
                     ...state,
@@ -134,10 +138,11 @@ const VolumesTableView = ({
                   setValidation(state => ({
                     ...state,
                     isTypeValid: true,
-                    isAccessKeyValid: true,
-                    isSubPathValid: true
+                    isAccessKeyValid: true
                   }))
                 }}
+                options={selectTypeOptions.volumeType}
+                selectedId={newVolume.type}
               />
               <Input
                 className="input-row__item"
@@ -151,7 +156,7 @@ const VolumesTableView = ({
                     ? 'Name already exists'
                     : 'This field is invalid'
                 }
-                label="Name"
+                label="Volume Name"
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
                 required
                 requiredText="This field is required"
@@ -183,10 +188,7 @@ const VolumesTableView = ({
                 type="text"
               />
             </div>
-            <div
-              className={`input-row-wrapper no-border_top
-                  ${newVolume.type === V3IO && 'no-border'}`}
-            >
+            <div className={volumeTypeInputRowWrapperClassNames}>
               <Input
                 className="input-row__item"
                 disabled={newVolume.type.length === 0}
@@ -196,7 +198,7 @@ const VolumesTableView = ({
                 onChange={typeName =>
                   setNewVolume(state => ({ ...state, typeName }))
                 }
-                required
+                required={newVolume.type !== V3IO}
                 requiredText="This field is required"
                 setInvalid={value =>
                   setValidation(state => ({ ...state, isTypeNameValid: value }))
@@ -227,22 +229,13 @@ const VolumesTableView = ({
               )}
             </div>
             {newVolume.type === V3IO && (
-              <div className="input-row-wrapper no-border_top">
+              <div className="input-row-wrapper">
                 <Input
                   className="input-row__item"
                   floatingLabel
-                  invalid={!validation.isSubPathValid}
                   label="Resource path"
                   onChange={subPath =>
                     setNewVolume(state => ({ ...state, subPath }))
-                  }
-                  required
-                  requiredText="This field is required"
-                  setInvalid={value =>
-                    setValidation(state => ({
-                      ...state,
-                      isSubPathValid: value
-                    }))
                   }
                   tip="A relative directory path within the data container"
                   type="text"
@@ -251,7 +244,7 @@ const VolumesTableView = ({
             )}
           </div>
           <button
-            className="add-input btn-add"
+            className="btn-add"
             disabled={
               isNameNotUnique(newVolume.name, volumeMounts) ||
               isPathNotUnique(newVolume.path, volumeMounts)
@@ -260,6 +253,11 @@ const VolumesTableView = ({
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
+            </Tooltip>
+          </button>
+          <button onClick={resetVolumesData}>
+            <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
+              <Delete />
             </Tooltip>
           </button>
         </div>
@@ -287,6 +285,7 @@ VolumesTableView.propTypes = {
   generateActionsMenu: PropTypes.func.isRequired,
   newVolume: PropTypes.shape({}).isRequired,
   volumeMounts: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  resetVolumesData: PropTypes.func.isRequired,
   selectedVolume: PropTypes.shape({}),
   setNewVolume: PropTypes.func.isRequired,
   setSelectedVolume: PropTypes.func.isRequired,

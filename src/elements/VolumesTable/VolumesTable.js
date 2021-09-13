@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import VolumesTableView from './VolumesTableView'
@@ -17,7 +17,7 @@ export const VolumesTable = ({
 }) => {
   const [newVolume, setNewVolume] = useState({
     name: '',
-    type: '',
+    type: V3IO,
     typeName: '',
     path: '',
     accessKey: '',
@@ -28,11 +28,26 @@ export const VolumesTable = ({
     isTypeValid: true,
     isTypeNameValid: true,
     isPathValid: true,
-    isAccessKeyValid: true,
-    isSubPathValid: true
+    isAccessKeyValid: true
   })
   const [showAddNewVolumeRow, setShowAddNewVolumeRow] = useState(false)
   const [selectedVolume, setSelectedVolume] = useState(null)
+
+  useEffect(() => {
+    setValidation({
+      isNameValid: true,
+      isTypeValid: true,
+      isTypeNameValid: true,
+      isPathValid: true,
+      isAccessKeyValid: true
+    })
+    setNewVolume(state => ({
+      ...state,
+      typeName: '',
+      accessKey: '',
+      subPath: ''
+    }))
+  }, [newVolume.type])
 
   const handleSetSelectedVolume = useCallback(
     selectedVolume => {
@@ -123,20 +138,40 @@ export const VolumesTable = ({
 
     if (newVolume.type === V3IO) {
       volumeIsValid =
-        volumeIsValid &&
+        newVolume.name.length > 0 &&
+        validation.isNameValid &&
+        newVolume.path.length > 0 &&
+        validation.isPathValid &&
+        newVolume.type.length > 0 &&
+        validation.isTypeValid &&
         newVolume.accessKey.length > 0 &&
-        validation.isAccessKeyValid &&
-        newVolume.subPath.length > 0 &&
-        validation.isSubPathValid
+        validation.isAccessKeyValid
     }
 
     if (volumeIsValid) {
       handleAddNewVolume(newVolume)
+      resetVolumesData()
+    } else {
+      setValidation(state => ({
+        isNameValid: newVolume.name.length > 0 && state.isNameValid,
+        isTypeValid: newVolume.type.length > 0 && state.isTypeValid,
+        isTypeNameValid:
+          newVolume.type === V3IO
+            ? true
+            : newVolume.typeName.length > 0 && state.isTypeNameValid,
+        isPathValid: newVolume.path.length > 0 && state.isPathValid,
+        isAccessKeyValid:
+          newVolume.type === V3IO
+            ? newVolume.accessKey.length > 0 && state.isAccessKeyValid
+            : true
+      }))
     }
+  }
 
+  const resetVolumesData = () => {
     setNewVolume({
       name: '',
-      type: '',
+      type: V3IO,
       typeName: '',
       path: '',
       accessKey: '',
@@ -148,8 +183,7 @@ export const VolumesTable = ({
       isTypeValid: true,
       isTypeNameValid: true,
       isPathValid: true,
-      isAccessKeyValid: true,
-      isSubPathValid: true
+      isAccessKeyValid: true
     })
   }
 
@@ -202,6 +236,7 @@ export const VolumesTable = ({
       generateActionsMenu={generateActionsMenu}
       newVolume={newVolume}
       volumeMounts={volumeMounts}
+      resetVolumesData={resetVolumesData}
       selectedVolume={selectedVolume}
       setNewVolume={setNewVolume}
       setSelectedVolume={setSelectedVolume}

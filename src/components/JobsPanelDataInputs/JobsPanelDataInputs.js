@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useCallback } from 'react'
+import React, { useReducer, useEffect, useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { uniqBy } from 'lodash'
@@ -17,7 +17,8 @@ import {
   handleDelete,
   handleEdit,
   handleInputPathChange,
-  handleInputPathTypeChange
+  handleInputPathTypeChange,
+  resetDataInputsData
 } from './jobsPanelDataInputs.util'
 import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
@@ -48,6 +49,10 @@ const JobsPanelDataInputs = ({
     jobsPanelDataInputsReducer,
     initialState
   )
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isPathValid: true
+  })
 
   const getInputValue = useCallback(
     inputItem => {
@@ -246,14 +251,12 @@ const JobsPanelDataInputs = ({
       inputs,
       panelDispatch,
       panelState.previousPanelData.tableData.dataInputs,
-      inputsActions.REMOVE_NEW_INPUT_DATA,
-      inputsActions.SET_ADD_NEW_INPUT,
+      panelState.tableData.dataInputs,
       panelActions.SET_TABLE_DATA_INPUTS,
       panelActions.SET_PREVIOUS_PANEL_DATA_INPUTS,
       setNewJobInputs,
-      inputsActions.SET_PATH_PLACEHOLDER,
       inputsState.newInputUrlPath,
-      inputsActions.SET_NEW_INPUT_URL_PATH
+      setValidation
     )
   }
 
@@ -320,7 +323,10 @@ const JobsPanelDataInputs = ({
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}
+      resetDataInputsData={resetDataInputsData}
       setArtifactPathValid={setArtifactPathValid}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }

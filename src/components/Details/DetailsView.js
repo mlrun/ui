@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
-import DetailsMenuItem from '../../elements/DetailsMenuItem/DetailsMenuItem'
+import DetailsMenu from '../../elements/DetailsMenu/DetailsMenu'
 import Download from '../../common/Download/Download'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
@@ -24,7 +24,10 @@ import {
   FEATURE_STORE_PAGE,
   FUNCTIONS_PAGE,
   FEATURE_VECTORS_TAB,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  TERTIARY_BUTTON,
+  PRIMARY_BUTTON,
+  LABEL_BUTTON
 } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
@@ -117,7 +120,7 @@ const DetailsView = React.forwardRef(
           {pageData.page === FEATURE_STORE_PAGE && (
             <>
               <Button
-                variant="label"
+                variant={LABEL_BUTTON}
                 label="Cancel"
                 onClick={cancelChanges}
                 disabled={detailsStore.changes.counter === 0}
@@ -189,24 +192,16 @@ const DetailsView = React.forwardRef(
             </Tooltip>
           </Link>
         </div>
-        <ul className="item-menu">
-          {detailsMenu.map(
-            detailsMenuItem =>
-              !detailsMenuItem.hidden && (
-                <DetailsMenuItem
-                  hash={selectedItem.hash}
-                  id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
-                  iter={selectedItem.iter}
-                  key={detailsMenuItem.id}
-                  match={match}
-                  name={selectedItem.db_key || selectedItem.name}
-                  onClick={detailsMenuClick}
-                  page={pageData.page}
-                  tab={detailsMenuItem}
-                />
-              )
-          )}
-        </ul>
+        <DetailsMenu
+          detailsMenu={detailsMenu}
+          hash={selectedItem.hash}
+          id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
+          iter={selectedItem.iter}
+          match={match}
+          name={selectedItem.db_key || selectedItem.name}
+          onClick={detailsMenuClick}
+          page={pageData.page}
+        />
         {tabsContent}
         {detailsStore.showWarning && (
           <PopUpDialog
@@ -222,7 +217,7 @@ const DetailsView = React.forwardRef(
           >
             <div className="pop-up-dialog__footer-container">
               <Button
-                variant="tertiary"
+                variant={TERTIARY_BUTTON}
                 label={
                   detailsStore.refreshWasHandled
                     ? "Don't refresh"
@@ -234,7 +229,7 @@ const DetailsView = React.forwardRef(
                 }}
               />
               <Button
-                variant="primary"
+                variant={PRIMARY_BUTTON}
                 label={detailsStore.refreshWasHandled ? 'Refresh' : 'Leave'}
                 className="pop-up-dialog__btn_cancel"
                 onClick={leavePage}

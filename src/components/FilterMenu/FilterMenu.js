@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import { useDispatch, connect } from 'react-redux'
+import { connect } from 'react-redux'
 
 import Select from '../../common/Select/Select'
 import Tooltip from '../../common/Tooltip/Tooltip'
@@ -16,8 +16,7 @@ import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
-import { INIT_TAG_FILTER, JOBS_PAGE, KEY_CODES } from '../../constants'
-import artifactsAction from '../../actions/artifacts'
+import { JOBS_PAGE, KEY_CODES } from '../../constants'
 import filtersActions from '../../actions/filters'
 import { selectOptions, tagFilterOptions } from './filterMenu.settings'
 
@@ -40,7 +39,6 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const history = useHistory()
-  const dispatch = useDispatch()
 
   useEffect(() => {
     return () => {
@@ -61,22 +59,18 @@ const FilterMenu = ({
   }, [page])
 
   useEffect(() => {
-    if (filters.find(filter => filter.type === 'tree')) {
-      dispatch(
-        artifactsAction.fetchArtifactTags(match.params.projectName)
-      ).then(({ data }) => {
-        setTagOptions(state => [
-          ...state,
-          ...data.tags
-            .filter(tag => tag !== INIT_TAG_FILTER)
-            .map(tag => ({
-              label: tag,
-              id: tag
-            }))
-        ])
-      })
+    if (
+      filtersStore.tagOptions.length > 0 &&
+      filters.find(filter => filter.type === 'tree' || filter.type === 'tag')
+    ) {
+      setTagOptions([
+        ...filtersStore.tagOptions.map(tag => ({
+          label: tag,
+          id: tag
+        }))
+      ])
     }
-  }, [dispatch, filters, match.params.projectName])
+  }, [filters, filtersStore.tagOptions])
 
   const applyChanges = (data, isRefreshed) => {
     if ((match.params.jobId || match.params.name) && !isRefreshed) {

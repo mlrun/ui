@@ -3,13 +3,18 @@ import { isNil } from 'lodash'
 
 import { joinDataOfArrayOrObject } from '../../utils'
 import {
+  AZURE_STORAGE_INPUT_PATH_SCHEME,
+  GOOGLE_STORAGE_INPUT_PATH_SCHEME,
   HTTP_STORAGE_INPUT_PATH_SCHEME,
   HTTPS_STORAGE_INPUT_PATH_SCHEME,
-  MLRUN_STORAGE_INPUT_PATH_SCHEME
+  MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  S3_INPUT_PATH_SCHEME,
+  V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getParsedResource } from '../../utils/resources'
 import { pathPlaceholders } from '../../utils/panelPathScheme'
+import { isNameNotUnique } from '../JobsPanel/jobsPanel.util'
 
 export const generateComboboxMatchesList = (
   artifacts,
@@ -26,8 +31,19 @@ export const generateComboboxMatchesList = (
   selectedDataInputPath
 ) => {
   if (!inputStorePathTypeEntered) {
-    return storePathTypes
-  } else if (!inputProjectPathEntered) {
+    return storePathTypes.some(type =>
+      type.id.startsWith(newInput.path.storePathType)
+    )
+      ? storePathTypes
+      : []
+  } else if (
+    !inputProjectPathEntered &&
+    storePathTypes.some(
+      type =>
+        type.id === newInput.path.storePathType ||
+        type.id === selectedDataInputPath.value.split('/')[0]
+    )
+  ) {
     return projects.filter(project => {
       return isEveryObjectValueEmpty(selectedDataInputPath)
         ? project.id.startsWith(newInput.path.project)
@@ -83,14 +99,12 @@ export const handleAddItem = (
   newJobData,
   panelDispatch,
   previousData,
-  removeNewItemObj,
-  setAddNewItem,
+  dataInputs,
   setCurrentTableData,
   setPreviousData,
   setNewJobData,
-  setPathPlaceholder,
   newInputUrlPath,
-  setNewInputUrl
+  setDataInputsValidations
 ) => {
   const isMlRunStorePath =
     newItemObj.path.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
@@ -100,7 +114,7 @@ export const handleAddItem = (
     mlRunStorePath = `${newItemObj.path.storePathType}/${newItemObj.path.project}/${newItemObj.path.projectItem}${newItemObj.path.projectItemReference}`
 
     inputsDispatch({
-      type: setNewInputUrl,
+      type: inputsActions.SET_NEW_INPUT_URL_PATH,
       payload: ''
     })
   }
@@ -110,66 +124,54 @@ export const handleAddItem = (
     isMlRunStorePath ? mlRunStorePath : newInputUrlPath
   )
 
-  inputsDispatch({
-    type: removeNewItemObj
-  })
-
-  inputsDispatch({
-    type: setPathPlaceholder,
-    payload: ''
-  })
-
-  inputsDispatch({
-    type: setAddNewItem,
-    payload: false
-  })
-
   if (newItemObj.name.length === 0 || !pathInputIsValid) {
-    return
+    setDataInputsValidations({
+      isNameValid:
+        !isNameNotUnique(newItemObj.name, dataInputs) &&
+        newItemObj.name.length > 0,
+      isPathValid: pathInputIsValid
+    })
+  } else {
+    panelDispatch({
+      type: setPreviousData,
+      payload: [
+        ...previousData,
+        {
+          isDefault: false,
+          data: {
+            name: newItemObj.name,
+            path: {
+              pathType: newItemObj.path.pathType,
+              value: isMlRunStorePath ? mlRunStorePath : newInputUrlPath
+            }
+          }
+        }
+      ]
+    })
+    panelDispatch({
+      type: setCurrentTableData,
+      payload: [
+        ...currentTableData,
+        {
+          isDefault: false,
+          data: {
+            name: newItemObj.name,
+            path: {
+              pathType: newItemObj.path.pathType,
+              value: isMlRunStorePath ? mlRunStorePath : newInputUrlPath
+            }
+          }
+        }
+      ]
+    })
+    setNewJobData({
+      ...newJobData,
+      [newItemObj.name]: isMlRunStorePath
+        ? `${newItemObj.path.pathType}${mlRunStorePath}`
+        : `${newItemObj.path.pathType}${newInputUrlPath}`
+    })
+    resetDataInputsData(inputsDispatch, setDataInputsValidations)
   }
-
-  panelDispatch({
-    type: setPreviousData,
-    payload: [
-      ...previousData,
-      {
-        isDefault: false,
-        data: {
-          name: newItemObj.name,
-          path: {
-            pathType: newItemObj.path.pathType,
-            value: isMlRunStorePath ? mlRunStorePath : newInputUrlPath
-          }
-        }
-      }
-    ]
-  })
-  panelDispatch({
-    type: setCurrentTableData,
-    payload: [
-      ...currentTableData,
-      {
-        isDefault: false,
-        data: {
-          name: newItemObj.name,
-          path: {
-            pathType: newItemObj.path.pathType,
-            value: isMlRunStorePath ? mlRunStorePath : newInputUrlPath
-          }
-        }
-      }
-    ]
-  })
-  setNewJobData({
-    ...newJobData,
-    [newItemObj.name]: isMlRunStorePath
-      ? `${newItemObj.path.pathType}${mlRunStorePath}`
-      : `${newItemObj.path.pathType}${newInputUrlPath}`
-  })
-  inputsDispatch({
-    type: inputsActions.SET_COMBOBOX_MATCHES,
-    payload: []
-  })
 }
 
 export const handleEdit = (
@@ -218,6 +220,35 @@ export const handleEdit = (
   })
   inputsDispatch({
     type: removeSelectedItem
+  })
+}
+
+export const resetDataInputsData = (
+  inputsDispatch,
+  setDataInputsValidations
+) => {
+  inputsDispatch({
+    type: inputsActions.REMOVE_NEW_INPUT_DATA
+  })
+  inputsDispatch({
+    type: inputsActions.SET_PATH_PLACEHOLDER,
+    payload: ''
+  })
+  inputsDispatch({
+    type: inputsActions.SET_ADD_NEW_INPUT,
+    payload: false
+  })
+  inputsDispatch({
+    type: inputsActions.SET_COMBOBOX_MATCHES,
+    payload: []
+  })
+  setDataInputsValidations({
+    isNameValid: true,
+    isPathValid: true
+  })
+  inputsDispatch({
+    type: inputsActions.SET_NEW_INPUT_URL_PATH,
+    payload: ''
   })
 }
 
@@ -427,10 +458,13 @@ export const handleStoreInputPathChange = (
   const projectItemReferenceIsEntered = projectItemsReferences.find(
     projectItemRef => projectItemRef.id === projectItemReference
   )
+  const isInputStorePathTypeValid = storePathTypes.some(type =>
+    type.id.startsWith(pathItems[0])
+  )
 
   inputsDispatch({
     type: inputsActions.SET_INPUT_STORE_PATH_TYPE_ENTERED,
-    payload: typeof pathItems[1] === 'string'
+    payload: isInputStorePathTypeValid && typeof pathItems[1] === 'string'
   })
   inputsDispatch({
     type: inputsActions.SET_INPUT_PROJECT_PATH_ENTERED,
@@ -458,4 +492,13 @@ export const isPathInputValid = (pathInputType, pathInputValue) => {
     default:
       return pathInputValue.length > 0
   }
+}
+
+export const pathTips = {
+  [MLRUN_STORAGE_INPUT_PATH_SCHEME]:
+    'artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid',
+  [S3_INPUT_PATH_SCHEME]: 'bucket/path',
+  [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
+  [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
+  [V3IO_INPUT_PATH_SCHEME]: '/container-name/file'
 }

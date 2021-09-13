@@ -5,6 +5,9 @@ import classNames from 'classnames'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
+import { BUTTON_VARIANTS } from '../../types'
+import { TERTIARY_BUTTON } from '../../constants'
+
 import './button.scss'
 
 const Button = forwardRef(
@@ -28,20 +31,14 @@ Button.defaultProps = {
   className: '',
   label: 'Button',
   tooltip: '',
-  variant: 'tertiary'
+  variant: TERTIARY_BUTTON
 }
 
 Button.propTypes = {
   className: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   tooltip: PropTypes.string,
-  variant: PropTypes.oneOf([
-    'primary',
-    'secondary',
-    'tertiary',
-    'danger',
-    'label'
-  ]).isRequired
+  variant: BUTTON_VARIANTS.isRequired
 }
 
 export default Button

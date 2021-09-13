@@ -62,9 +62,15 @@ const JobsPanel = ({
       ? functionsStore.template.functions
       : groupedFunctions.functions || {}
   )
+  const [tableDataIsLoaded, setTableDataIsLoaded] = useState(false)
   const [validation, setValidation] = useState({
     isNameValid: true,
-    isArtifactPathValid: true
+    isArtifactPathValid: true,
+    isMemoryRequestValid: true,
+    isCpuRequestValid: true,
+    isMemoryLimitValid: true,
+    isCpuLimitValid: true,
+    isGpuLimitValid: true
   })
   const history = useHistory()
 
@@ -151,7 +157,10 @@ const JobsPanel = ({
     if (
       !panelState.editMode &&
       isEveryObjectValueEmpty(panelState.tableData) &&
-      !isEveryObjectValueEmpty(selectedFunction)
+      isEveryObjectValueEmpty(panelState.requests) &&
+      isEveryObjectValueEmpty(panelState.limits) &&
+      !isEveryObjectValueEmpty(selectedFunction) &&
+      !tableDataIsLoaded
     ) {
       generateTableData(
         panelState.currentFunctionInfo.method,
@@ -162,6 +171,7 @@ const JobsPanel = ({
         panelState.requests,
         mode
       )
+      setTableDataIsLoaded(true)
     } else if (
       !panelState.editMode &&
       isEveryObjectValueEmpty(panelState.tableData) &&
@@ -189,7 +199,8 @@ const JobsPanel = ({
     panelState.requests,
     panelState.tableData,
     selectedFunction,
-    setNewJob
+    setNewJob,
+    tableDataIsLoaded
   ])
 
   useEffect(() => {
@@ -212,6 +223,18 @@ const JobsPanel = ({
     panelState.tableData,
     removeJobError
   ])
+
+  const checkValidation = () => {
+    return (
+      validation.isNameValid &&
+      validation.isArtifactPathValid &&
+      validation.isMemoryRequestValid &&
+      validation.isMemoryLimitValid &&
+      validation.isCpuRequestValid &&
+      validation.isCpuLimitValid &&
+      validation.isGpuLimitValid
+    )
+  }
 
   const functionData = useMemo(() => {
     if (!isEmpty(selectedFunction)) {
@@ -350,6 +373,7 @@ const JobsPanel = ({
 
   return (
     <JobsPanelView
+      checkValidation={checkValidation()}
       closePanel={closePanel}
       defaultData={defaultData}
       functionData={functionData}

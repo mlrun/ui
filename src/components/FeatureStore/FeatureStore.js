@@ -43,6 +43,7 @@ import './featureStore.scss'
 const FeatureStore = ({
   artifactsStore,
   featureStore,
+  fetchArtifactTags,
   fetchDataSet,
   fetchDataSets,
   fetchEntities,
@@ -53,6 +54,9 @@ const FeatureStore = ({
   fetchFeatureVectors,
   fetchFeatures,
   filtersStore,
+  fetchFeatureSetsTags,
+  fetchFeatureVectorsTags,
+  getFilterTagOptions,
   history,
   match,
   removeDataSet,
@@ -367,6 +371,26 @@ const FeatureStore = ({
   ])
 
   useEffect(() => setContent([]), [filtersStore.tag])
+
+  useEffect(() => {
+    if (filtersStore.tagOptions.length === 0) {
+      if (match.params.pageTab === DATASETS_TAB) {
+        getFilterTagOptions(fetchArtifactTags, match.params.projectName)
+      } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
+        getFilterTagOptions(fetchFeatureVectorsTags, match.params.projectName)
+      } else if (match.params.pageTab === FEATURES_TAB) {
+        getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
+      }
+    }
+  }, [
+    fetchArtifactTags,
+    fetchFeatureSetsTags,
+    fetchFeatureVectorsTags,
+    filtersStore.tagOptions.length,
+    getFilterTagOptions,
+    match.params.pageTab,
+    match.params.projectName
+  ])
 
   const applyDetailsChanges = changes => {
     return handleApplyDetailsChanges(

@@ -61,7 +61,7 @@ const EditableVolumesRow = ({
                   ? 'Name already exists'
                   : 'This field is invalid'
               }
-              label="Name"
+              label="Volume Name"
               onChange={name =>
                 setSelectedVolume({
                   ...selectedVolume,
@@ -109,11 +109,11 @@ const EditableVolumesRow = ({
         </div>
         <div className="table__cell-actions" />
       </div>
-      <div className="table__row edit-row flex-row">
+      <div className="table__row edit-row flex-row no-border_top">
         <div className="table__cell table__cell-input">
           <Input
             floatingLabel
-            invalid={!validation.isTypeValid}
+            invalid={!validation.isTypeNameValid}
             invalidText="This field is invalid"
             label={volumeTypeInput.label}
             onChange={typeName =>
@@ -122,10 +122,10 @@ const EditableVolumesRow = ({
                 type: { ...selectedVolume.type, name: typeName }
               })
             }
-            required
+            required={selectedVolume.type.value !== V3IO}
             requiredText="This field is invalid"
             setInvalid={value =>
-              setValidation(state => ({ ...state, isTypeValid: value }))
+              setValidation(state => ({ ...state, isTypeNameValid: value }))
             }
             type="text"
             value={selectedVolume.type.name}
@@ -144,8 +144,8 @@ const EditableVolumesRow = ({
               !validation.isNameValid ||
               !validation.isPathValid ||
               !validation.isTypeValid ||
-              !validation.isAccessKeyValid ||
-              !validation.isSubPathValid
+              !validation.isTypeNameValid ||
+              !validation.isAccessKeyValid
             }
           >
             <Checkmark />
@@ -153,7 +153,7 @@ const EditableVolumesRow = ({
         </div>
       </div>
       {selectedVolume.type.value === V3IO && (
-        <div className="table__row edit-row">
+        <div className="table__row edit-row no-border_top">
           <div className="table__cell table__cell-input">
             <Input
               floatingLabel
@@ -178,19 +178,12 @@ const EditableVolumesRow = ({
           <div className="table__cell table__cell-input">
             <Input
               floatingLabel
-              invalid={!validation.isSubPathValid}
-              invalidText="This field is invalid"
               label="Resource Path"
               onChange={subPath =>
                 setSelectedVolume({
                   ...selectedVolume,
                   type: { ...selectedVolume.type, subPath: subPath }
                 })
-              }
-              required
-              requiredText="This field is required"
-              setInvalid={value =>
-                setValidation(state => ({ ...state, isSubPathValid: value }))
               }
               type="text"
               value={selectedVolume.type.subPath}

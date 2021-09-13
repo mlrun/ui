@@ -2,6 +2,8 @@ import React from 'react'
 
 import LoadButton from './LoadButton'
 
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+
 export default {
   title: 'Example/LoadButton',
   component: LoadButton
@@ -17,19 +19,19 @@ export const PrimaryLoader = Template.bind({})
 PrimaryLoader.args = {
   ...commonArgs,
   label: 'Primary loader',
-  variant: 'primary'
+  variant: PRIMARY_BUTTON
 }
 
 export const SecondaryLoader = Template.bind({})
 SecondaryLoader.args = {
   ...commonArgs,
   label: 'Secondary loader',
-  variant: 'secondary'
+  variant: SECONDARY_BUTTON
 }
 
 export const TertiaryLoader = Template.bind({})
 TertiaryLoader.args = {
   ...commonArgs,
   label: 'Tertiary loader',
-  variant: 'tertiary'
+  variant: TERTIARY_BUTTON
 }

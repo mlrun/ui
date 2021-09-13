@@ -29,12 +29,19 @@
     display: flex;
     flex: 1;
     flex-direction: column;
+    align-items: flex-start;
+    overflow-x: auto;
+
+    &-wrapper {
+      min-width: 100%;
+    }
 
     &-header {
       position: sticky;
       top: 0;
       z-index: 3;
       display: flex;
+      min-width: 100%;
       padding-bottom: 10px;
       color: $topaz;
       font-weight: bold;
@@ -56,7 +63,8 @@
     &-row {
       display: flex;
       flex-direction: row;
-      height: 32px;
+      min-width: 100%;
+      height: 45px;
       border-bottom: $secondaryBorder;
     }
   }
@@ -721,6 +729,13 @@
     }
 
     .btn {
+      &-add {
+        rect {
+          min-width: 44px;
+          fill: $cornflowerBlue;
+        }
+      }
+
       &__schedule {
         margin-top: 16px;
         margin-left: auto;

@@ -1,4 +1,4 @@
-export const nameValidationPattern = /^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
+export const nameValidationPattern = /^(?=[\S\s]{1,56}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 
 export const checkValidation = (newFeatureSet, setValidation, validation) => {
   const externalOfflineTarget = newFeatureSet.spec.targets.find(
@@ -14,7 +14,7 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
     return false
   }
 
-  if (newFeatureSet.spec.source.path.length === 0) {
+  if (newFeatureSet.spec.source.path.length === 0 || !validation.isUrlValid) {
     setValidation(prevState => ({
       ...prevState,
       isUrlValid: false
@@ -47,6 +47,13 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
           ...prevState,
           isStartTimeValid: false,
           isEndTimeValid: false
+        }))
+
+        return false
+      } else if (time_field.length === 0) {
+        setValidation(prevState => ({
+          ...prevState,
+          isTimeFieldValid: false
         }))
 
         return false

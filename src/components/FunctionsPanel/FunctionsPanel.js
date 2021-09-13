@@ -9,13 +9,24 @@ import FunctionsPanelView from './FunctionsPanelView'
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { FUNCTION_TYPE_SERVING } from '../../constants'
+import {
+  EXISTING_IMAGE,
+  NEW_IMAGE
+} from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
+import {
+  LABEL_BUTTON,
+  PANEL_CREATE_MODE,
+  SECONDARY_BUTTON
+} from '../../constants'
 
 const FunctionsPanel = ({
+  appStore,
   functionsStore,
   closePanel,
   createFunctionSuccess,
   defaultData,
   deployFunction,
+  getFunction,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   project,
@@ -26,10 +37,27 @@ const FunctionsPanel = ({
   setNewFunction,
   setNewFunctionProject
 }) => {
+  const [confirmData, setConfirmData] = useState(null)
   const [validation, setValidation] = useState({
     isNameValid: true,
-    isHandlerValid: true
+    isHandlerValid: true,
+    isCodeImageValid: true,
+    isBaseImageValid: true,
+    isBuildCommandsValid: true,
+    isMemoryRequestValid: true,
+    isMemoryLimitValid: true,
+    isCpuRequestValid: true,
+    isCpuLimitValid: true,
+    isGpuLimitValid: true
   })
+  const [imageType, setImageType] = useState(
+    (defaultData?.build?.image ||
+      defaultData?.build?.base_image ||
+      defaultData?.build?.commands?.length > 0) &&
+      defaultData.image?.length === 0
+      ? NEW_IMAGE
+      : ''
+  )
   const history = useHistory()
 
   useEffect(() => {
@@ -54,16 +82,16 @@ const FunctionsPanel = ({
           description: defaultData.description,
           env: defaultData.env,
           image: defaultData.image,
-          resources: {
-            limits: defaultData.resources.limits ?? {},
-            requests: defaultData.resources.requests ?? {}
-          },
           volume_mounts:
             chain(defaultData.volume_mounts)
               .flatten()
               .unionBy('name')
               .value() ?? [],
-          volumes: defaultData.volumes
+          volumes: defaultData.volumes,
+          resources: {
+            limits: defaultData.resources.limits ?? {},
+            requests: defaultData.resources.requests ?? {}
+          }
         }
       }
 
@@ -92,8 +120,29 @@ const FunctionsPanel = ({
     setNewFunctionProject
   ])
 
+  const createFunction = deploy => {
+    createNewFunction(project, functionsStore.newFunction).then(result => {
+      if (deploy) {
+        const data = {
+          function: { ...functionsStore.newFunction },
+          with_mlrun: functionsStore.newFunction.spec.build.commands.includes(
+            appStore.frontendSpec.function_deployment_mlrun_command
+          )
+        }
+
+        return handleDeploy(data)
+      }
+
+      createFunctionSuccess().then(() => {
+        history.push(
+          `/projects/${project}/functions/${result.data.hash_key}/overview`
+        )
+      })
+    })
+  }
+
   const handleSave = deploy => {
-    if (validation.isNameValid && validation.isHandlerValid) {
+    if (checkValidation()) {
       if (functionsStore.newFunction.metadata.name.length === 0) {
         return setValidation(state => ({ ...state, isNameValid: false }))
       }
@@ -102,26 +151,63 @@ const FunctionsPanel = ({
         return setValidation(state => ({ ...state, isHandlerValid: false }))
       }
 
+      if (
+        functionsStore.newFunction.spec.image.length === 0 &&
+        imageType === EXISTING_IMAGE
+      ) {
+        return setValidation(state => ({
+          ...state,
+          isCodeImageValid: false
+        }))
+      }
+
+      if (
+        imageType === NEW_IMAGE &&
+        (functionsStore.newFunction.spec.build.base_image.length === 0 ||
+          functionsStore.newFunction.spec.build.commands.length === 0)
+      ) {
+        return setValidation(state => ({
+          ...state,
+          isBaseImageValid:
+            functionsStore.newFunction.spec.build.base_image.length > 0,
+          isBuildCommandsValid:
+            functionsStore.newFunction.spec.build.commands.length > 0
+        }))
+      }
+
       if (functionsStore.error) {
         removeFunctionsError()
       }
 
-      createNewFunction(project, functionsStore.newFunction).then(result => {
-        if (deploy) {
-          return handleDeploy(functionsStore.newFunction)
-        }
-
-        createFunctionSuccess().then(() => {
-          history.push(
-            `/projects/${project}/functions/${result.data.hash_key}/overview`
-          )
-        })
-      })
+      if (mode === PANEL_CREATE_MODE) {
+        getFunction(project, functionsStore.newFunction.metadata.name)
+          .then(() => {
+            setConfirmData({
+              title: `Overwrite function "${functionsStore.newFunction.metadata.name}"?`,
+              description:
+                'The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?',
+              btnCancelLabel: 'Cancel',
+              btnCancelVariant: LABEL_BUTTON,
+              btnConfirmLabel: 'Overwrite',
+              btnConfirmVariant: SECONDARY_BUTTON,
+              rejectHandler: () => setConfirmData(null),
+              confirmHandler: () => {
+                createFunction(deploy)
+                setConfirmData(null)
+              }
+            })
+          })
+          .catch(() => {
+            createFunction(deploy)
+          })
+      } else {
+        createFunction(deploy)
+      }
     }
   }
 
-  const handleDeploy = func => {
-    deployFunction(func)
+  const handleDeploy = data => {
+    deployFunction(data)
       .then(response => {
         handleDeployFunctionSuccess(response.data.ready)
       })
@@ -130,16 +216,25 @@ const FunctionsPanel = ({
       })
   }
 
+  const checkValidation = () => {
+    return Object.values(validation).find(value => value === false) ?? true
+  }
+
   return (
     <FunctionsPanelView
+      checkValidation={checkValidation}
       closePanel={closePanel}
+      confirmData={confirmData}
       defaultData={defaultData ?? {}}
       error={functionsStore.error}
       handleSave={handleSave}
+      imageType={imageType}
       loading={functionsStore.loading}
+      match={match}
       mode={mode}
       newFunction={functionsStore.newFunction}
       removeFunctionsError={removeFunctionsError}
+      setImageType={setImageType}
       setValidation={setValidation}
       validation={validation}
     />
@@ -161,6 +256,9 @@ FunctionsPanel.propTypes = {
   project: PropTypes.string.isRequired
 }
 
-export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions
-})(FunctionsPanel)
+export default connect(
+  ({ appStore, functionsStore }) => ({ appStore, functionsStore }),
+  {
+    ...functionsActions
+  }
+)(FunctionsPanel)

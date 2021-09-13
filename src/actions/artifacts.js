@@ -39,6 +39,7 @@ import {
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
+import { generateModelEndpoints } from '../utils/generateModelEndpoints'
 
 const artifactsAction = {
   buildFunction: func => dispatch => {
@@ -166,7 +167,7 @@ const artifactsAction = {
         )
 
         dispatch(
-          artifactsAction.fetchDataSetSuccess({
+          artifactsAction.fetchFileSuccess({
             [getArtifactIdentifier(generatedArtifacts[0])]: generatedArtifacts
           })
         )
@@ -233,13 +234,17 @@ const artifactsAction = {
   fetchFunctionsSuccess: () => ({
     type: FETCH_FUNCTIONS_SUCCESS
   }),
-  fetchModelEndpoints: (project, filters) => dispatch => {
+  fetchModelEndpoints: (project, filters, params) => dispatch => {
     dispatch(artifactsAction.fetchModelEndpointsBegin())
 
     return artifactsApi
-      .getModelEndpoints(project, filters)
+      .getModelEndpoints(project, filters, params)
       .then(({ data: { endpoints = [] } }) => {
-        dispatch(artifactsAction.fetchModelEndpointsSuccess(endpoints))
+        dispatch(
+          artifactsAction.fetchModelEndpointsSuccess(
+            generateModelEndpoints(endpoints)
+          )
+        )
 
         return endpoints
       })

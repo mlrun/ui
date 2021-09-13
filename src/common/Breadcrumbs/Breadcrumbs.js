@@ -209,6 +209,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
                       screen={screen}
                       searchOnChange={setSearchValue}
                       selectedItem={match.params.projectName}
+                      tab={match.params.pageTab}
                       withSearch
                     />
                   )}

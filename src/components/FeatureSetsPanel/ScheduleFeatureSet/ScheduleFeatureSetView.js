@@ -7,6 +7,7 @@ import ScheduleCron from '../../ScheduleCron/ScheduleCron'
 import Button from '../../../common/Button/Button'
 
 import { tabs } from './scheduleFeatureSet.util'
+import { SECONDARY_BUTTON } from '../../../constants'
 
 import { ReactComponent as Schedule } from '../../../images/clock.svg'
 
@@ -62,7 +63,7 @@ const ScheduleFeatureSetView = ({
         )}
       </div>
       <Button
-        variant="secondary"
+        variant={SECONDARY_BUTTON}
         label={
           <>
             <Schedule />

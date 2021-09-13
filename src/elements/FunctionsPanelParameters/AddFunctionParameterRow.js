@@ -108,7 +108,7 @@ const AddFunctionParameterRow = ({
 AddFunctionParameterRow.propTypes = {
   handleAddNewParameter: PropTypes.func.isRequired,
   newParameter: PropTypes.shape({}).isRequired,
-  parameters: PropTypes.arrayOf().isRequired,
+  parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   setNewParameter: PropTypes.func.isRequired
 }
 

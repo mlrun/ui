@@ -17,14 +17,18 @@ const BreadcrumbsDropdown = ({
   screen,
   searchOnChange,
   selectedItem,
+  tab,
   withSearch
 }) => {
   return (
-    <div className="breadcrumbs__dropdown" data-testid="breadcrumbs-dropdown">
+    <div
+      className="breadcrumbs__dropdown-wrapper"
+      data-testid="breadcrumbs-dropdown"
+    >
       {withSearch && (
-        <div className="dropdown__search">
+        <div className="breadcrumbs__dropdown-search">
           <input
-            className="dropdown__search-input input"
+            className="input"
             onChange={event => searchOnChange(event.target.value)}
             placeholder="Type to search"
             type="text"
@@ -32,35 +36,40 @@ const BreadcrumbsDropdown = ({
           <SearchIcon />
         </div>
       )}
-      {list.map(listItem => {
-        const dropdownItemClassNames = classnames(
-          'breadcrumbs__dropdown-item',
-          'data-ellipsis',
-          selectedItem === listItem.id && 'breadcrumbs__dropdown-item_selected'
-        )
+      <div className="breadcrumbs__dropdown">
+        {list.map(listItem => {
+          const dropdownItemClassNames = classnames(
+            'breadcrumbs__dropdown-item',
+            'data-ellipsis',
+            selectedItem === listItem.id &&
+              'breadcrumbs__dropdown-item_selected'
+          )
 
-        return listItem.link ? (
-          <a
-            href={listItem.link}
-            key={listItem.id}
-            className={dropdownItemClassNames}
-          >
-            {listItem.label}
-          </a>
-        ) : (
-          <Link
-            to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}`}
-            data-testid="breadcrumbs-dropdown-item"
-            key={listItem.id}
-            className={dropdownItemClassNames}
-            onClick={onClick}
-          >
-            <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
+          return listItem.link ? (
+            <a
+              href={listItem.link}
+              key={listItem.id}
+              className={dropdownItemClassNames}
+            >
               {listItem.label}
-            </Tooltip>
-          </Link>
-        )
-      })}
+            </a>
+          ) : (
+            <Link
+              to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${
+                tab ? `/${tab}` : ''
+              }`}
+              data-testid="breadcrumbs-dropdown-item"
+              key={listItem.id}
+              className={dropdownItemClassNames}
+              onClick={onClick}
+            >
+              <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
+                {listItem.label}
+              </Tooltip>
+            </Link>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -69,6 +78,7 @@ BreadcrumbsDropdown.defaultProps = {
   onClick: () => {},
   screen: '',
   searchOnChange: () => {},
+  tab: '',
   withSearch: false
 }
 
@@ -79,6 +89,7 @@ BreadcrumbsDropdown.propTypes = {
   screen: PropTypes.string,
   searchOnChange: PropTypes.func,
   selectedItem: PropTypes.string.isRequired,
+  tab: PropTypes.string,
   withSearch: PropTypes.bool
 }
 

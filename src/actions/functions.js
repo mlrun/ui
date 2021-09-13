@@ -78,11 +78,11 @@ const functionsActions = {
   deleteFunction: (func, project) => () => {
     return functionsApi.deleteSelectedFunction(func, project)
   },
-  deployFunction: func => dispatch => {
+  deployFunction: data => dispatch => {
     dispatch(functionsActions.deployFunctionBegin())
 
     return functionsApi
-      .deployFunction(func)
+      .deployFunction(data)
       .then(result => {
         dispatch(functionsActions.deployFunctionSuccess())
 
@@ -209,6 +209,9 @@ const functionsActions = {
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
+  getFunction: (project, name) => dispatch => {
+    return functionsApi.getFunction(project, name)
+  },
   removeFunctionLogs: () => ({
     type: REMOVE_FUNCTION_LOGS
   }),

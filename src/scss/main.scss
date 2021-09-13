@@ -11,6 +11,7 @@
 #root {
   display: flex;
   flex: 1;
+  width: 100%;
 }
 
 .App {
@@ -78,11 +79,6 @@ button {
   @include statusState($brightTurquoise);
 }
 
-.state-created-job,
-.state-created-function {
-  @include statusState($topaz);
-}
-
 [class^=state-warn] {
   @include statusState($grandis);
 }
@@ -100,6 +96,12 @@ button {
 [class^=state-broken],
 [class^=state-aborted] {
   @include statusState($burntSienna);
+}
+
+.state-created-job,
+.state-created-function,
+.state-pending-job {
+  @include statusState($topaz);
 }
 
 iframe {

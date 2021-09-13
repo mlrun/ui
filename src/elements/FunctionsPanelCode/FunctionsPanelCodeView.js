@@ -9,6 +9,7 @@ import EditorModal from '../../common/EditorModal/EditorModal'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
 import RadioButtons from '../../common/RadioButtons/RadioButtons'
+import { trimSplit } from '../../utils'
 
 import {
   DEFAULT_ENTRY,
@@ -17,6 +18,7 @@ import {
   NEW_IMAGE,
   EXISTING_IMAGE
 } from './functionsPanelCode.util'
+import { LABEL_BUTTON } from '../../constants'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
@@ -27,17 +29,17 @@ const FunctionsPanelCodeView = ({
   editCode,
   functionsStore,
   handleHandlerOnBlur,
+  handleImageTypeChange,
   imageType,
-  isHandlerValid,
   setData,
   setEditCode,
-  setHandlerValid,
-  setImageType,
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
   setNewFunctionCommands,
   setNewFunctionImage,
-  setNewFunctionSourceCode
+  setNewFunctionSourceCode,
+  setValidation,
+  validation
 }) => {
   return (
     <div className="functions-panel__item new-item-side-panel__item code">
@@ -65,7 +67,7 @@ const FunctionsPanelCodeView = ({
                 </span>
               }
               onClick={() => setEditCode(true)}
-              variant="label"
+              variant={LABEL_BUTTON}
             />
           )}
         </div>
@@ -73,15 +75,13 @@ const FunctionsPanelCodeView = ({
           <div className="code__handler">
             <Input
               floatingLabel
-              invalid={!isHandlerValid}
-              invalidText="This field is invalid"
+              invalid={!validation.isHandlerValid}
               label="Handler"
               onChange={handler => setData(state => ({ ...state, handler }))}
               onBlur={handleHandlerOnBlur}
               required
-              requiredText="This field is required"
               setInvalid={value =>
-                setHandlerValid(state => ({ ...state, isHandlerValid: value }))
+                setValidation(state => ({ ...state, isHandlerValid: value }))
               }
               tip="Enter the function handler name (e.g. for the default sample function the name should be `handler`)"
               type="text"
@@ -93,7 +93,7 @@ const FunctionsPanelCodeView = ({
             <RadioButtons
               className="radio-buttons__block"
               elements={codeOptions}
-              onChangeCallback={setImageType}
+              onChangeCallback={handleImageTypeChange}
               selectedValue={imageType}
             />
             <div className="code__images-inputs">
@@ -101,6 +101,9 @@ const FunctionsPanelCodeView = ({
                 className="input__wide"
                 disabled={imageType !== EXISTING_IMAGE}
                 floatingLabel
+                invalid={
+                  !validation.isCodeImageValid && imageType === EXISTING_IMAGE
+                }
                 label="Image name"
                 onBlur={event => {
                   if (
@@ -110,6 +113,13 @@ const FunctionsPanelCodeView = ({
                   }
                 }}
                 onChange={image => setData(state => ({ ...state, image }))}
+                required={imageType === EXISTING_IMAGE}
+                setInvalid={value =>
+                  setValidation(state => ({
+                    ...state,
+                    isCodeImageValid: value
+                  }))
+                }
                 tip="The name of the function‘s container image"
                 type="text"
                 value={data.image}
@@ -140,6 +150,9 @@ const FunctionsPanelCodeView = ({
                 className="input__wide"
                 disabled={imageType !== NEW_IMAGE}
                 floatingLabel
+                invalid={
+                  !validation.isBaseImageValid && imageType === NEW_IMAGE
+                }
                 label="Base image"
                 onBlur={event => {
                   if (
@@ -151,6 +164,13 @@ const FunctionsPanelCodeView = ({
                 }}
                 onChange={base_image =>
                   setData(state => ({ ...state, base_image }))
+                }
+                required={imageType === NEW_IMAGE}
+                setInvalid={value =>
+                  setValidation(state => ({
+                    ...state,
+                    isBaseImageValid: value
+                  }))
                 }
                 tip="The name of a base container image from which to build the function's processor image"
                 type="text"
@@ -170,17 +190,24 @@ const FunctionsPanelCodeView = ({
               commands
             }))
           }
+          invalid={!validation.isBuildCommandsValid && imageType === NEW_IMAGE}
           onBlur={event => {
             if (
-              event.target.value.length > 0 &&
               !isEqual(
-                event.target.value.split('\n'),
+                trimSplit(event.target.value, '\n'),
                 functionsStore.newFunction.spec.build.commands
               )
             ) {
-              setNewFunctionCommands(data.commands.split('\n'))
+              setNewFunctionCommands(trimSplit(data.commands, '\n'))
             }
           }}
+          required={imageType === NEW_IMAGE}
+          setInvalid={value =>
+            setValidation(state => ({
+              ...state,
+              isBuildCommandsValid: value
+            }))
+          }
           type="text"
           value={data.commands}
           wrapperClassName="commands"
@@ -207,17 +234,17 @@ FunctionsPanelCodeView.propTypes = {
   editCode: PropTypes.bool.isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
   handleHandlerOnBlur: PropTypes.func.isRequired,
+  handleImageTypeChange: PropTypes.func.isRequired,
   imageType: PropTypes.string.isRequired,
-  isHandlerValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
   setEditCode: PropTypes.func.isRequired,
-  setHandlerValid: PropTypes.func.isRequired,
-  setImageType: PropTypes.func.isRequired,
   setNewFunctionBaseImage: PropTypes.func.isRequired,
   setNewFunctionBuildImage: PropTypes.func.isRequired,
   setNewFunctionCommands: PropTypes.func.isRequired,
   setNewFunctionImage: PropTypes.func.isRequired,
-  setNewFunctionSourceCode: PropTypes.func.isRequired
+  setNewFunctionSourceCode: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default FunctionsPanelCodeView

@@ -1,4 +1,4 @@
-const regex = /(auto|scroll)/
+const regex = /(auto|scroll|hidden)/
 
 const style = (node, prop) =>
   getComputedStyle(node, null).getPropertyValue(prop)

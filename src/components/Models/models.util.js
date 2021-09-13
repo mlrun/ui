@@ -5,7 +5,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generateUri } from '../../utils/resources'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
-import getState from '../../utils/getState'
+import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
 
 export const modelsInfoHeaders = [
   {
@@ -217,18 +217,13 @@ export const handleFetchData = async (
       data.originalContent = result
     }
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-    result = await fetchModelEndpoints(project, filters)
+    result = await fetchModelEndpoints(project, filters, {
+      metric: 'latency_avg_1h',
+      start: 'now-10m'
+    })
 
     if (result) {
-      data.content = result.map(endpoint => {
-        return {
-          ...endpoint,
-          state: getState(endpoint.status.state),
-          ui: {
-            originalContent: endpoint
-          }
-        }
-      })
+      data.content = generateModelEndpoints(result)
       data.originalContent = result
     }
   }

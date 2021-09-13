@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { chain, isEqual, isEmpty } from 'lodash'
-import { useLocation } from 'react-router-dom'
 
 import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
@@ -29,9 +28,12 @@ import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
 import {
+  DANGER_BUTTON,
   FUNCTIONS_PAGE,
+  LABEL_BUTTON,
   PANEL_CREATE_MODE,
-  PANEL_EDIT_MODE
+  PANEL_EDIT_MODE,
+  SECONDARY_BUTTON
 } from '../../constants'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -59,7 +61,6 @@ const Functions = ({
   const [editableItem, setEditableItem] = useState(null)
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
-  const location = useLocation()
   let fetchFunctionLogsTimeout = useRef(null)
 
   const handleFetchFunctionLogs = useCallback(
@@ -119,7 +120,7 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          !['job', 'serving'].includes(item?.type) ||
+          !['job', 'serving', ''].includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
@@ -135,9 +136,8 @@ const Functions = ({
     infoHeaders,
     filterMenuActionButton: {
       getCustomTemplate: getPopUpTemplate,
-      hidden: new URLSearchParams(location.search).get('demo') !== 'true',
       label: 'New',
-      variant: 'secondary'
+      variant: SECONDARY_BUTTON
     },
     refreshLogs: handleFetchFunctionLogs,
     removeLogs: handleRemoveLogs,
@@ -301,9 +301,9 @@ const Functions = ({
       title: `Delete function "${func.name}"?`,
       description: 'Deleted functions cannot be restored.',
       btnCancelLabel: 'Cancel',
-      btnCancelVariant: 'label',
+      btnCancelVariant: LABEL_BUTTON,
       btnConfirmLabel: 'Delete',
-      btnConfirmVariant: 'danger',
+      btnConfirmVariant: DANGER_BUTTON,
       rejectHandler: () => setConfirmData(null),
       confirmHandler: () => removeFunction(func)
     })

@@ -38,6 +38,10 @@
             border: none;
           }
         }
+
+        .combobox_invalid {
+          border: $errorBorder;
+        }
       }
     }
   }
@@ -56,6 +60,11 @@
         &:first-child {
           max-width: 220px;
         }
+      }
+
+      .combobox_invalid {
+        border: $errorBorder;
+        border-radius: 0;
       }
 
       .input-row__item_edit {

@@ -13,8 +13,11 @@ const JobsPanelAdvancedView = ({
   handleAddNewItem,
   handleDeleteItems,
   handleEditItems,
+  handleResetForm,
   match,
-  panelState
+  panelState,
+  setValidation,
+  validation
 }) => {
   return (
     <div className="job-panel__item advanced new-item-side-panel__item">
@@ -27,6 +30,7 @@ const JobsPanelAdvancedView = ({
           handleAddNewItem={handleAddNewItem}
           handleEditItems={handleEditItems}
           handleDeleteItems={handleDeleteItems}
+          handleResetForm={handleResetForm}
           headers={panelData['env']['table-headers']}
           match={match}
           newName={advancedState.newEnvironmentVariable.name}
@@ -57,6 +61,8 @@ const JobsPanelAdvancedView = ({
               payload: selectedItem
             })
           }
+          setValidation={setValidation}
+          validation={validation}
         />
       </JobsPanelSection>
       <JobsPanelSection title="Secrets">
@@ -67,6 +73,7 @@ const JobsPanelAdvancedView = ({
           handleAddNewItem={handleAddNewItem}
           handleEditItems={handleEditItems}
           handleDeleteItems={handleDeleteItems}
+          handleResetForm={handleResetForm}
           headers={panelData['secrets']['table-headers']}
           match={match}
           panelState={panelState}
@@ -97,6 +104,8 @@ const JobsPanelAdvancedView = ({
               payload: selectedItem
             })
           }
+          setValidation={setValidation}
+          validation={validation}
         />
       </JobsPanelSection>
     </div>
@@ -109,8 +118,11 @@ JobsPanelAdvancedView.propTypes = {
   handleAddNewItem: PropTypes.func.isRequired,
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
+  handleResetForm: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
-  panelState: PropTypes.shape({}).isRequired
+  panelState: PropTypes.shape({}).isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.object.isRequired
 }
 
 export default JobsPanelAdvancedView

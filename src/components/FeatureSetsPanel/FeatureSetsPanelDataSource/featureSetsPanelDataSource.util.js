@@ -45,7 +45,10 @@ export const generateComboboxMatchesList = (
     )
       ? projectItemsPathTypes
       : []
-  } else if (!urlProjectPathEntered) {
+  } else if (
+    !urlProjectPathEntered &&
+    projectItemsPathTypes.some(type => type.id === url.projectItemType)
+  ) {
     return projects.filter(project => {
       return project.id.startsWith(url.project)
     })
@@ -62,59 +65,6 @@ export const generateComboboxMatchesList = (
   return []
 }
 
-export const handleTimestampColumnOnBlur = (
-  value,
-  timeField,
-  type,
-  setData,
-  setValidation,
-  setNewFeatureSetDataSourceTimestampColumn
-) => {
-  if (timeField !== value) {
-    setNewFeatureSetDataSourceTimestampColumn(value)
-    setData(state => ({
-      ...state,
-      [type]: value
-    }))
-  }
-}
-
-export const handleStartTimeOnBlur = (
-  data,
-  value,
-  startTime,
-  type,
-  setData,
-  setValidation,
-  setNewFeatureSetDataSourceStartTime
-) => {
-  if (startTime !== value) {
-    setNewFeatureSetDataSourceStartTime(value)
-    setData(state => ({
-      ...state,
-      [type]: value
-    }))
-  }
-}
-
-export const handleEndTimeOnBlur = (
-  data,
-  value,
-  endTime,
-  type,
-  setData,
-  setValidation,
-  setNewFeatureSetDataSourceEndTime
-) => {
-  if (endTime !== value) {
-    setNewFeatureSetDataSourceEndTime(value)
-    setData(state => ({
-      ...state,
-      [type]: value
-    }))
-  }
-}
-
 export const projectItemsPathTypes = [
   {
     label: 'Artifacts',
@@ -122,14 +72,23 @@ export const projectItemsPathTypes = [
   }
 ]
 
-export const isUrlInputValid = (pathInputType, pathInputValue) => {
+export const isUrlInputValid = (
+  pathInputType,
+  pathInputValue,
+  dataSourceKind
+) => {
+  const regExp =
+    dataSourceKind === CSV
+      ? /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?(?<!\/)$/
+      : /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
+
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
-      return /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(
-        pathInputValue
-      )
+      return regExp.test(pathInputValue)
     default:
-      return pathInputValue.length > 0
+      return dataSourceKind === CSV
+        ? pathInputValue.length > 0 && !pathInputValue.endsWith('/')
+        : pathInputValue.length > 0
   }
 }
 

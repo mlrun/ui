@@ -3,16 +3,21 @@
 @import '../../scss/borders';
 
 .breadcrumbs__dropdown {
-  position: absolute;
-  top: 30px;
-  left: 14px;
-  z-index: 5;
-  min-width: 130px;
-  padding: 12px 0;
-  font-size: 15px;
-  line-height: 18px;
-  background: $white;
-  box-shadow: $dropdownShadow;
+  max-height: 384px;
+  overflow-y: auto;
+
+  &-wrapper {
+    position: absolute;
+    top: 30px;
+    left: 14px;
+    z-index: 5;
+    min-width: 130px;
+    padding: 12px 0;
+    font-size: 15px;
+    line-height: 18px;
+    background: $white;
+    box-shadow: $dropdownShadow;
+  }
 
   &-item {
     display: block;
@@ -29,13 +34,13 @@
     }
   }
 
-  .dropdown__search {
+  &-search {
     display: flex;
     align-items: center;
     margin: 0 9px 4px;
     border-bottom: $dividerBorder;
 
-    &-input {
+    .input {
       width: 100%;
       min-width: 140px;
       padding: 12px 7px 10px;

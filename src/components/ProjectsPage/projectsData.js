@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { DANGER_BUTTON } from '../../constants'
+
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
 
@@ -85,7 +87,7 @@ export const handleDeleteProjectError = (
         'The project is not empty. Deleting it will also delete all of its resources, such as jobs, ' +
         'artifacts, and features.',
       btnConfirmLabel: 'Delete',
-      btnConfirmType: 'danger',
+      btnConfirmType: DANGER_BUTTON,
       rejectHandler: () => {
         setConfirmData(null)
       },
