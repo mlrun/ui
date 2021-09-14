@@ -27,6 +27,7 @@ import {
   pageDataInitialState
 } from './featureStore.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 import {
   DATASETS_TAB,
@@ -288,7 +289,8 @@ const FeatureStore = ({
             ? handleRemoveFeature
             : handleRemoveDataSet,
           getPopUpTemplate,
-          tableStore.isTablePanelOpen
+          tableStore.isTablePanelOpen,
+          !isEveryObjectValueEmpty(selectedItem)
         )
       }
     })
@@ -299,6 +301,7 @@ const FeatureStore = ({
     handleRemoveFeatureVector,
     handleRequestOnExpand,
     match.params.pageTab,
+    selectedItem,
     tableStore.isTablePanelOpen
   ])
 
@@ -441,7 +444,7 @@ const FeatureStore = ({
   }
 
   return (
-    <div ref={featureStoreRef} className="feature-store-container">
+    <div ref={featureStoreRef} className="content-wrapper">
       {(featureStore.loading || artifactsStore.loading) && <Loader />}
       <Content
         applyDetailsChanges={applyDetailsChanges}

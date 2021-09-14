@@ -40,50 +40,68 @@ export const filters = [
 ]
 export const page = FILES_PAGE
 export const registerArtifactDialogTitle = 'Register file'
-export const tableHeaders = [
+export const tableHeaders = isSelectedFile => [
   {
     header: 'Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Type',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedFile
   },
   {
     header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_big',
+    hidden: isSelectedFile
   },
   {
     header: 'Producer',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedFile
   },
   {
     header: 'Owner',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedFile
   },
   {
     header: 'Updated',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedFile
   },
   {
     header: 'Size',
-    class: 'artifacts_small'
-  },
-
-  {
-    header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_small',
+    hidden: isSelectedFile
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedFile
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedFile
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedFile
+  },
+  {
+    header: '',
+    class: 'action_cell',
+    hidden: isSelectedFile
   }
 ]
+
+export const generatePageData = isSelectedFile => ({
+  detailsMenu,
+  filters,
+  infoHeaders,
+  page,
+  registerArtifactDialogTitle,
+  tableHeaders: tableHeaders(isSelectedFile)
+})

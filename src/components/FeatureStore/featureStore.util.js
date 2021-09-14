@@ -104,103 +104,123 @@ export const page = 'FEATURE-STORE'
 export const registerDatasetsTitle = 'Register dataset'
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
-export const datasetsTableHeaders = [
+export const datasetsTableHeaders = isSelectedItem => [
   {
     header: 'Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_big',
+    hidden: isSelectedItem
   },
   {
     header: 'Producer',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Owner',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Updated',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Size',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
 
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'action_cell',
+    hidden: isSelectedItem
   }
 ]
-export const featureSetsTableHeaders = [
+export const featureSetsTableHeaders = isSelectedItem => [
   {
     header: 'Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Description',
-    class: 'artifacts_medium'
+    class: 'artifacts_medium',
+    hidden: isSelectedItem
   },
   {
     header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_big',
+    hidden: isSelectedItem
   },
   {
     header: 'Entities',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Targets',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'action_cell',
+    hidden: isSelectedItem
   }
 ]
-export const featureVectorsTableHeaders = [
+export const featureVectorsTableHeaders = isSelectedItem => [
   {
     header: 'Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Description',
-    class: 'artifacts_medium'
+    class: 'artifacts_medium',
+    hidden: isSelectedItem
   },
   {
     header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_big',
+    hidden: isSelectedItem
   },
   {
     header: 'Updated',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'action_cell',
+    hidden: isSelectedItem
   }
 ]
 
@@ -224,11 +244,13 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
     },
     {
       header: 'Description',
-      class: 'artifacts_medium'
+      class: 'artifacts_medium',
+      hidden: isTablePanelOpen
     },
     {
       header: 'Labels',
-      class: 'artifacts_big'
+      class: 'artifacts_big',
+      hidden: isTablePanelOpen
     },
     {
       header: '',
@@ -248,7 +270,7 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
     },
     {
       header: '',
-      class: 'artifacts_extra-small align-right',
+      class: 'artifacts_big align-right',
       hidden: !isTablePanelOpen
     }
   ]
@@ -272,7 +294,8 @@ export const generatePageData = (
   handleRequestOnExpand,
   handleRemoveRequestData,
   getPopUpTemplate,
-  isTablePanelOpen
+  isTablePanelOpen,
+  isSelectedItem
 ) => {
   let data = {
     detailsMenu: [],
@@ -284,7 +307,7 @@ export const generatePageData = (
     data.actionsMenu = generateActionsMenu(FEATURE_SETS_TAB)
     data.filters = featureSetsFilters
     data.infoHeaders = featureSetsInfoHeaders
-    data.tableHeaders = featureSetsTableHeaders
+    data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
     data.registerArtifactDialogTitle = createFeatureSetTitle
     data.filterMenuActionButton = null
   } else if (pageTab === FEATURES_TAB) {
@@ -303,7 +326,7 @@ export const generatePageData = (
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
     data.filters = featureVectorsFilters
-    data.tableHeaders = featureVectorsTableHeaders
+    data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
     data.infoHeaders = featureVectorsInfoHeaders
@@ -313,7 +336,7 @@ export const generatePageData = (
     data.actionsMenu = generateActionsMenu(DATASETS_TAB)
     data.filters = datasetsFilters
     data.infoHeaders = datasetsInfoHeaders
-    data.tableHeaders = datasetsTableHeaders
+    data.tableHeaders = datasetsTableHeaders(isSelectedItem)
     data.registerArtifactDialogTitle = registerDatasetsTitle
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData

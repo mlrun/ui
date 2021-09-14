@@ -20,6 +20,7 @@ import { generateKeyValues, parseKeyValues } from '../../utils'
 import getState from '../../utils/getState.js'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import {
   MONITOR_TAB,
@@ -233,9 +234,14 @@ const Jobs = ({
       onAbortJob,
       appStore.frontendSpec.abortable_function_kinds,
       fetchJobLogs,
-      removeJobLogs
+      removeJobLogs,
+      !isEveryObjectValueEmpty(selectedJob)
     ),
-    [match.params.pageTab, appStore.frontendSpec.jobs_dashboard_url]
+    [
+      match.params.pageTab,
+      appStore.frontendSpec.jobs_dashboard_url,
+      selectedJob
+    ]
   )
 
   const refreshJobs = useCallback(
@@ -398,7 +404,7 @@ const Jobs = ({
   }
 
   return (
-    <>
+    <div className="content-wrapper">
       {confirmData && (
         <PopUpDialog
           headerText={confirmData.title}
@@ -455,7 +461,7 @@ const Jobs = ({
           withSaveChanges={Boolean(editableItem.scheduled_object)}
         />
       )}
-    </>
+    </div>
   )
 }
 

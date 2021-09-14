@@ -99,20 +99,22 @@ const JobsTableRow = ({
                 >
                   {Object.values(job).map((cellContentObj, index) => {
                     return (
-                      <TableCell
-                        data={
-                          index === 0 && !isGroupedByWorkflow
-                            ? { class: 'jobs_medium' }
-                            : cellContentObj
-                        }
-                        item={groupCurrentItem}
-                        link={cellContentObj.getLink?.(
-                          match.params.tab ?? DETAILS_OVERVIEW_TAB
-                        )}
-                        key={`${cellContentObj.value}${index}`}
-                        selectItem={handleSelectItem}
-                        selectedItem={selectedItem}
-                      />
+                      !cellContentObj.hidden && (
+                        <TableCell
+                          data={
+                            index === 0 && !isGroupedByWorkflow
+                              ? { class: 'jobs_medium' }
+                              : cellContentObj
+                          }
+                          item={groupCurrentItem}
+                          link={cellContentObj.getLink?.(
+                            match.params.tab ?? DETAILS_OVERVIEW_TAB
+                          )}
+                          key={`${cellContentObj.value}${index}`}
+                          selectItem={handleSelectItem}
+                          selectedItem={selectedItem}
+                        />
+                      )
                     )
                   })}
                   <div className="table-body__cell action_cell">
@@ -130,23 +132,25 @@ const JobsTableRow = ({
         <>
           {Object.values(rowItem).map((rowItemProp, index) => {
             return (
-              <TableCell
-                data={rowItemProp}
-                expandLink={!isEmpty(tableContent)}
-                handleExpandRow={handleExpandRow}
-                isGroupedByWorkflow={isGroupedByWorkflow}
-                item={currentItem}
-                key={`${new Date().getTime()}${index}`}
-                link={
-                  rowItemProp.getLink
-                    ? rowItemProp.getLink?.(
-                        match.params.tab ?? DETAILS_OVERVIEW_TAB
-                      )
-                    : ''
-                }
-                selectItem={handleSelectItem}
-                selectedItem={selectedItem}
-              />
+              !rowItemProp.hidden && (
+                <TableCell
+                  data={rowItemProp}
+                  expandLink={!isEmpty(tableContent)}
+                  handleExpandRow={handleExpandRow}
+                  isGroupedByWorkflow={isGroupedByWorkflow}
+                  item={currentItem}
+                  key={`${new Date().getTime()}${index}`}
+                  link={
+                    rowItemProp.getLink
+                      ? rowItemProp.getLink?.(
+                          match.params.tab ?? DETAILS_OVERVIEW_TAB
+                        )
+                      : ''
+                  }
+                  selectItem={handleSelectItem}
+                  selectedItem={selectedItem}
+                />
+              )
             )
           })}
           <div className="table-body__cell action_cell">

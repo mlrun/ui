@@ -44,13 +44,13 @@
       &_medium {
         max-width: 240px;
 
-        @include tableColumnFlex(1, 235px);
+        @include tableColumnFlex(1, 100px);
       }
 
       &_small {
         max-width: 150px;
 
-        @include tableColumnFlex(0.5, 80px);
+        @include tableColumnFlex(0.5, 50px);
 
         a {
           display: inline;
@@ -207,7 +207,7 @@
 
       .expand-arrow {
         position: absolute;
-        left: 35px;
+        left: 10px;
         cursor: pointer;
       }
 

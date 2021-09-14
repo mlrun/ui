@@ -26,27 +26,29 @@ const FeaturesTablePanelRow = ({
     labelFeature && 'selected-feature-exists'
   )
   const actionClassNames = classnames(!isEditEnabled && 'readonly')
+  const featureTemplate = (
+    <span>
+      <span>{feature.featureSet}</span>
+      {feature.tag && <span>&nbsp;:&nbsp;{feature.tag}</span>}
+      <span>&nbsp;#{feature.feature}</span>
+      {feature.alias && (
+        <span>
+          <span>&nbsp;as&nbsp;</span>
+          {feature.alias}
+        </span>
+      )}
+    </span>
+  )
 
   return (
     <div className={featureRowClassNames} key={feature.feature}>
-      <div className="feature-row__feature-template">
-        <span className="feature-row__feature-set">{feature.featureSet}</span>
-        {feature.tag && (
-          <span className="feature-row__feature-set-tag">
-            &nbsp;:&nbsp;{feature.tag}
-          </span>
-        )}
-        <span className="feature-row__feature-name">
-          &nbsp;#{feature.feature}
-        </span>
-        {feature.alias && (
-          <span className="feature-row__feature-alias">
-            <span className="feature-row__feature-alias-preposition">
-              &nbsp;as&nbsp;
-            </span>
-            {feature.alias}
-          </span>
-        )}
+      <div className="feature-row__feature-template data-ellipsis">
+        <Tooltip
+          className="data-ellipsis"
+          template={<TextTooltipTemplate text={featureTemplate} />}
+        >
+          {featureTemplate}
+        </Tooltip>
       </div>
       <div className="feature-row__actions">
         <div className="label-actions">
