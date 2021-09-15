@@ -39,7 +39,7 @@ const FunctionPanelTopologyModelTable = ({
   }, [defaultData.graph])
 
   const addRoute = () => {
-    const generatedRoutes = { ...functionsStore.newFunction.spec.graph.routes }
+    const generatedRoutes = { ...functionsStore.newFunction.spec.graph?.routes }
 
     generatedRoutes[newRoute.name] = {
       kind: 'task',
