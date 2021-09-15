@@ -1,15 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import FunctionsPanelSection from '../FunctionsPanelSection/FunctionsPanelSection'
 import Input from '../../common/Input/Input'
-import Select from '../../common/Select/Select'
 import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
 
 import { PANEL_EDIT_MODE } from '../../constants'
-import { typeOptions } from './functionsPanelGeneral.util'
 
 import './functionsPanelGeneral.scss'
 
@@ -24,8 +21,7 @@ const FunctionsPanelGeneralView = ({
   mode,
   setData,
   setNameValid,
-  setNewFunctionDescription,
-  setNewFunctionType
+  setNewFunctionDescription
 }) => {
   const nameValidationTip = (
     <>
@@ -60,21 +56,6 @@ const FunctionsPanelGeneralView = ({
             type="text"
             value={data.name}
             wrapperClassName="name"
-          />
-          <Select
-            className="type"
-            disabled
-            floatingLabel
-            label="Runtime type"
-            onClick={type => {
-              setNewFunctionType(type)
-              setData(state => ({
-                ...state,
-                type
-              }))
-            }}
-            options={typeOptions}
-            selectedId={data.type}
           />
           <Input
             disabled={mode === PANEL_EDIT_MODE}
@@ -128,6 +109,7 @@ const FunctionsPanelGeneralView = ({
 
 FunctionsPanelGeneralView.propTypes = {
   data: PropTypes.shape({}).isRequired,
+  functionsStore: PropTypes.shape({}).isRequired,
   handleAddLabel: PropTypes.func.isRequired,
   handleChangeLabels: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
@@ -136,10 +118,7 @@ FunctionsPanelGeneralView.propTypes = {
   mode: PropTypes.string.isRequired,
   setData: PropTypes.func.isRequired,
   setNameValid: PropTypes.func.isRequired,
-  setNewFunctionDescription: PropTypes.func.isRequired,
-  setNewFunctionType: PropTypes.func.isRequired
+  setNewFunctionDescription: PropTypes.func.isRequired
 }
 
-export default connect(({ functionsStore }) => ({ functionsStore }))(
-  FunctionsPanelGeneralView
-)
+export default FunctionsPanelGeneralView

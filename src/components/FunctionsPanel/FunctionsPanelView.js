@@ -10,9 +10,11 @@ import FunctionsPanelResources from '../../elements/FunctionsPanelResources/Func
 import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnvironmentVariables/FunctionsPanelEnvironmentVariables'
 import Button from '../../common/Button/Button'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
-import FunctionsPanelSecrets from '../../elements/FunctionsPanelSecrets/FunctionsPanelSecrets'
+import FunctionsPanelRuntime from '../../elements/FunctionsPanelRuntime/FunctionsPanelRuntime'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+
 import { FUNCTION_PANEL_MODE } from '../../types'
+import { runtimeSections } from './functionsPanel.util'
 
 import {
   LABEL_BUTTON,
@@ -35,6 +37,7 @@ const FunctionsPanelView = ({
   loading,
   match,
   mode,
+  newFunction,
   removeFunctionsError,
   setImageType,
   setValidation,
@@ -117,14 +120,19 @@ const FunctionsPanelView = ({
             >
               <FunctionsPanelEnvironmentVariables />
             </Accordion>
-            <Accordion
-              accordionClassName="new-item-side-panel__accordion hidden"
-              icon={<Arrow />}
-              iconClassName="new-item-side-panel__expand-icon"
-              openByDefault
-            >
-              <FunctionsPanelSecrets />
-            </Accordion>
+            {runtimeSections[newFunction.kind] && (
+              <Accordion
+                accordionClassName="new-item-side-panel__accordion"
+                icon={<Arrow />}
+                iconClassName="new-item-side-panel__expand-icon"
+                openByDefault
+              >
+                <FunctionsPanelRuntime
+                  defaultData={defaultData}
+                  sections={runtimeSections[newFunction.kind]}
+                />
+              </Accordion>
+            )}
             <div className="new-item-side-panel__buttons-container">
               {error && (
                 <ErrorMessage
@@ -177,6 +185,7 @@ FunctionsPanelView.propTypes = {
   handleSave: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   mode: FUNCTION_PANEL_MODE.isRequired,
+  newFunction: PropTypes.shape({}).isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({})

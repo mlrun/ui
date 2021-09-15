@@ -259,6 +259,7 @@ Input.defaultProps = {
   requiredText: 'This field is required',
   setInvalid: () => {},
   tip: '',
+  type: 'text',
   value: undefined,
   withoutBorder: false,
   wrapperClassName: ''
@@ -286,7 +287,7 @@ Input.propTypes = {
   requiredText: PropTypes.string,
   setInvalid: PropTypes.func,
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   withoutBorder: PropTypes.bool,
   wrapperClassName: PropTypes.string

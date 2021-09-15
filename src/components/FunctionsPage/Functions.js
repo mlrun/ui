@@ -9,11 +9,13 @@ import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
   detailsMenu,
   filters,
   FUNCTIONS_EDITABLE_STATES,
+  FUNCTIONS_EDITABLE_TYPES,
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
@@ -90,6 +92,19 @@ const Functions = ({
     removeFunctionLogs()
   }, [fetchFunctionLogsTimeout, removeFunctionLogs])
 
+  const getPopUpTemplate = useCallback(
+    action => {
+      return (
+        <NewFunctionPopUp
+          action={action}
+          currentProject={match.params.projectName}
+          setFunctionsPanelIsOpen={setFunctionsPanelIsOpen}
+        />
+      )
+    },
+    [match.params.projectName]
+  )
+
   const pageData = {
     actionsMenu: item => [
       {
@@ -106,7 +121,7 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          !['job', ''].includes(item?.type) ||
+          !FUNCTIONS_EDITABLE_TYPES.includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
@@ -121,8 +136,8 @@ const Functions = ({
     tableHeaders,
     infoHeaders,
     filterMenuActionButton: {
+      getCustomTemplate: getPopUpTemplate,
       label: 'New',
-      onClick: () => setFunctionsPanelIsOpen(true),
       variant: SECONDARY_BUTTON
     },
     refreshLogs: handleFetchFunctionLogs,
@@ -140,18 +155,23 @@ const Functions = ({
               args: func.spec?.args ?? [],
               build: func.spec?.build ?? {},
               command: func.spec?.command,
-              description: func.spec?.description ?? '',
+              default_class: func.spec?.default_class ?? '',
               default_handler: func.spec?.default_handler ?? '',
+              description: func.spec?.description ?? '',
               env: func.spec?.env ?? [],
+              error_stream: func.spec?.error_stream ?? '',
+              graph: func.spec?.graph ?? {},
               hash: func.metadata.hash,
               image: func.spec?.image ?? '',
               labels: func.metadata?.labels ?? {},
               name: func.metadata.name,
+              parameters: func.spec?.parameters ?? {},
               project: func.metadata?.project || match.params.projectName,
               resources: func.spec?.resources ?? {},
               secret_sources: func.spec?.secret_sources ?? [],
               state: getState(func.status?.state, page, 'function'),
               tag: func.metadata.tag,
+              track_models: func.spec?.track_models ?? false,
               type: func.kind,
               volume_mounts: func.spec?.volume_mounts ?? [],
               volumes: func.spec?.volumes ?? [],

@@ -21,25 +21,25 @@ const FunctionsPanelSecretsView = ({
   ]
 
   return (
-    <div className="functions-panel__item advanced new-item-side-panel__item">
-      <FunctionsPanelSection title="Secrets">
-        <KeyValueTable
-          addNewItem={handleAddNewSecretSource}
-          addNewItemLabel="Add secret"
-          className="secret-sources"
-          content={secretSources}
-          deleteItem={handleDeleteSecretSource}
-          editItem={handleEditSecretSource}
-          keyHeader="Kind"
-          keyLabel="Kind"
-          keyOptions={kindOptions}
-          keyType="select"
-          valueHeader="Value"
-          valueLabel="Value"
-          withEditMode
-        />
-      </FunctionsPanelSection>
-    </div>
+    <FunctionsPanelSection className="secrets" title="Secrets">
+      <KeyValueTable
+        addNewItem={handleAddNewSecretSource}
+        addNewItemLabel="Add secret"
+        className="secrets__table"
+        content={secretSources}
+        defaultKeyValue="file"
+        deleteItem={handleDeleteSecretSource}
+        editItem={handleEditSecretSource}
+        keyHeader="Kind"
+        keyLabel="Kind"
+        keyOptions={kindOptions}
+        keyType="select"
+        isValueRequired
+        valueHeader="Value"
+        valueLabel="Value"
+        withEditMode
+      />
+    </FunctionsPanelSection>
   )
 }
 

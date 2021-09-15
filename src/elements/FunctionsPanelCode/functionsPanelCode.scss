@@ -70,7 +70,8 @@
     }
   }
 
-  &__handler {
+  &__handler,
+  &__default-class {
     margin-right: 25px;
   }
 }

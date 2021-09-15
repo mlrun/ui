@@ -1,3 +1,5 @@
+import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING } from '../../constants'
+
 export const detailsMenu = [
   {
     id: 'overview',
@@ -19,6 +21,12 @@ export const FUNCTIONS_EDITABLE_STATES = [
   ...FUNCTIONS_READY_STATES,
   ...FUNCTIONS_FAILED_STATES
 ]
+export const FUNCTIONS_EDITABLE_TYPES = [
+  FUNCTION_TYPE_JOB,
+  FUNCTION_TYPE_SERVING,
+  ''
+]
+
 export const page = 'FUNCTIONS'
 export const tableHeaders = [
   {

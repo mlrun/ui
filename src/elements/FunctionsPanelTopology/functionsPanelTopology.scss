@@ -1,0 +1,11 @@
+@import '../../scss/colors';
+
+.topology {
+  .router-type {
+    width: 150px;
+  }
+
+  &__model-tracking {
+    margin: 25px 0;
+  }
+}
