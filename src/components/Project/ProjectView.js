@@ -9,8 +9,10 @@ import { groupByUniqName } from '../../utils/groupByUniqName'
 import { formatDatetime } from '../../utils'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
+import Notification from '../../common/Notification/Notification'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
@@ -36,6 +38,9 @@ const ProjectView = React.forwardRef(
       artifactKind,
       changeMembersCallback,
       changeOwnerCallback,
+      closePanel,
+      createFeatureSetPanelIsOpen,
+      createFeatureSetSuccess,
       createNewOptions,
       editProject,
       fetchProjectFeatureSets,
@@ -285,6 +290,14 @@ const ProjectView = React.forwardRef(
             projectId={membersState.projectInfo.id}
           />
         )}
+        {createFeatureSetPanelIsOpen && (
+          <FeatureSetsPanel
+            closePanel={closePanel}
+            createFeatureSetSuccess={createFeatureSetSuccess}
+            project={match.params.projectName}
+          />
+        )}
+        <Notification />
       </>
     )
   }
@@ -298,6 +311,9 @@ ProjectView.propTypes = {
   artifactKind: PropTypes.string.isRequired,
   changeMembersCallback: PropTypes.func.isRequired,
   changeOwnerCallback: PropTypes.func.isRequired,
+  closePanel: PropTypes.func.isRequired,
+  createFeatureSetPanelIsOpen: PropTypes.bool.isRequired,
+  createFeatureSetSuccess: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
   fetchProjectFeatureSets: PropTypes.func.isRequired,

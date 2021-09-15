@@ -59,7 +59,9 @@ export const generateCreateNewOptions = (
   history,
   match,
   setArtifactKind,
-  setIsPopupDialogOpen
+  setIsPopupDialogOpen,
+  location,
+  setCreateFeatureSetsPanelIsOpen
 ) => [
   {
     label: 'Job',
@@ -68,6 +70,12 @@ export const generateCreateNewOptions = (
       history.push(
         `/projects/${match.params.projectName}/jobs/monitor/create-new-job`
       )
+  },
+  {
+    label: 'Feature set',
+    id: 'featureSet',
+    handler: () => setCreateFeatureSetsPanelIsOpen(true),
+    hidden: new URLSearchParams(location.search).get('demo') !== 'true'
   },
   {
     label: 'Register File',

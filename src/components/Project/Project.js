@@ -8,11 +8,13 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { forEach, groupBy } from 'lodash'
 
 import ProjectView from './ProjectView'
 
+import featureStoreActions from '../../actions/featureStore'
+import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
@@ -34,13 +36,17 @@ const Project = ({
   addProjectLabel,
   appStore,
   editProjectLabels,
+  featureStore,
   fetchProject,
   fetchProjectFeatureSets,
   fetchProjectFiles,
   fetchProjectModels,
   match,
   projectStore,
-  removeProjectData
+  removeFeatureStoreError,
+  removeNewFeatureSet,
+  removeProjectData,
+  setNotification
 }) => {
   const [membersState, membersDispatch] = useReducer(
     membersReducer,
@@ -65,12 +71,17 @@ const Project = ({
       isEdit: false
     }
   })
+  const [
+    createFeatureSetPanelIsOpen,
+    setCreateFeatureSetPanelIsOpen
+  ] = useState(false)
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [showManageMembers, setShowManageMembers] = useState(false)
   const [showChangeOwner, setShowChangeOwner] = useState(false)
   const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
   const history = useHistory()
   const inputRef = React.createRef()
+  const location = useLocation()
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
@@ -78,14 +89,16 @@ const Project = ({
       history,
       match,
       setArtifactKind,
-      setIsPopupDialogOpen
+      setIsPopupDialogOpen,
+      location,
+      setCreateFeatureSetPanelIsOpen
     )
 
     return {
       links,
       createNewOptions
     }
-  }, [history, match, setIsPopupDialogOpen])
+  }, [history, location, match])
 
   const closeEditMode = useCallback(() => {
     setEditProject(prevState => ({
@@ -309,6 +322,26 @@ const Project = ({
     fetchProjectIdAndOwner()
   }
 
+  const closePanel = () => {
+    setCreateFeatureSetPanelIsOpen(false)
+    removeNewFeatureSet()
+
+    if (featureStore.error) {
+      removeFeatureStoreError()
+    }
+  }
+
+  const createFeatureSetSuccess = () => {
+    setCreateFeatureSetPanelIsOpen(false)
+    removeNewFeatureSet()
+
+    setNotification({
+      status: 200,
+      id: Math.random(),
+      message: 'Feature set successfully created'
+    })
+  }
+
   const handleAddProjectLabel = (label, labels) => {
     const objectLabels = generateKeyValues(labels)
     const newLabel = {
@@ -433,6 +466,9 @@ const Project = ({
       artifactKind={artifactKind}
       changeMembersCallback={changeMembersCallback}
       changeOwnerCallback={changeOwnerCallback}
+      closePanel={closePanel}
+      createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
+      createFeatureSetSuccess={createFeatureSetSuccess}
       createNewOptions={createNewOptions}
       editProject={editProject}
       fetchProjectFeatureSets={fetchProjectFeatureSets}
@@ -468,11 +504,14 @@ Project.propTypes = {
 }
 
 export default connect(
-  ({ appStore, projectStore }) => ({
-    projectStore,
-    appStore
+  ({ appStore, featureStore, projectStore }) => ({
+    appStore,
+    featureStore,
+    projectStore
   }),
   {
+    ...featureStoreActions,
+    ...notificationActions,
     ...projectsAction
   }
 )(Project)
