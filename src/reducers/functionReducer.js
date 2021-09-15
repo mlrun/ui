@@ -74,6 +74,7 @@ const initialState = {
       description: '',
       env: [],
       image: '',
+      secret_sources: [],
       volume_mounts: [],
       volumes: [],
       resources: {
