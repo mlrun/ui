@@ -111,7 +111,7 @@ const FunctionsPanel = ({
         data = {
           ...data,
           spec: {
-            ...data,
+            ...data.spec,
             default_handler: defaultData.default_handler
           }
         }
