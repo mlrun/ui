@@ -1,5 +1,4 @@
 import { isNil } from 'lodash'
-import { stringToBoolean } from '../../utils/stringToBoolean'
 
 export const STRING_TYPE = 'string'
 export const NUMBER_TYPE = 'number'
@@ -54,7 +53,7 @@ export const setFunctionParameters = (
     case BOOLEAN_TYPE:
       setNewFunctionParameters({
         ...parameters,
-        [key]: stringToBoolean(parameter.value)
+        [key]: parameter.value !== 'false'
       })
       break
     case JSON_TYPE:

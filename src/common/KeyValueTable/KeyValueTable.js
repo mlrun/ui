@@ -10,6 +10,7 @@ const KeyValueTable = ({
   className,
   content,
   deleteItem,
+  defaultKeyValue,
   editItem,
   isKeyRequired,
   isValueRequired,
@@ -28,7 +29,7 @@ const KeyValueTable = ({
     isKeyValid: true,
     isValueValid: true
   })
-  const [key, setKey] = useState('')
+  const [key, setKey] = useState(defaultKeyValue || '')
   const [value, setValue] = useState('')
 
   const tableClassNames = classnames('key-value-table', className)
@@ -36,7 +37,7 @@ const KeyValueTable = ({
   const saveItem = () => {
     const save = () => {
       addNewItem({ key, value })
-      setKey('')
+      setKey(defaultKeyValue || '')
       setValue('')
       setIsAddNewItem(false)
     }
@@ -74,7 +75,7 @@ const KeyValueTable = ({
         }))
       }
     } else if (key.length === 0 && value.length === 0) {
-      setKey('')
+      setKey(defaultKeyValue || '')
       setValue('')
       setIsAddNewItem(false)
     } else {
@@ -125,7 +126,7 @@ const KeyValueTable = ({
   }
 
   const handleResetForm = () => {
-    setKey('')
+    setKey(defaultKeyValue || '')
     setValue('')
     setIsAddNewItem(false)
     setValidation({
@@ -174,6 +175,7 @@ const KeyValueTable = ({
 
 KeyValueTable.defaultProps = {
   className: '',
+  defaultKeyValue: '',
   editItem: () => {},
   isKeyRequired: false,
   isValueRequired: false,
@@ -194,6 +196,7 @@ KeyValueTable.propTypes = {
       value: PropTypes.string
     })
   ).isRequired,
+  defaultKeyValue: PropTypes.string,
   deleteItem: PropTypes.func.isRequired,
   editItem: PropTypes.func,
   isKeyRequired: PropTypes.bool,

@@ -28,6 +28,7 @@ const FunctionsPanelCode = ({
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
   setNewFunctionCommands,
+  setNewFunctionDefaultClass,
   setNewFunctionHandler,
   setNewFunctionImage,
   setNewFunctionSourceCode,
@@ -35,6 +36,7 @@ const FunctionsPanelCode = ({
   validation
 }) => {
   const [data, setData] = useState({
+    default_class: defaultData.default_class ?? '',
     entry: DEFAULT_ENTRY,
     handler: defaultData.default_handler ?? '',
     image: defaultData.image ?? '',
@@ -43,12 +45,6 @@ const FunctionsPanelCode = ({
     build_image: defaultData.build?.image ?? ''
   })
   const [editCode, setEditCode] = useState(false)
-
-  const handleHandlerOnBlur = event => {
-    if (functionsStore.newFunction.spec.default_handler !== data.handler) {
-      setNewFunctionHandler(data.handler)
-    }
-  }
 
   useEffect(() => {
     if (
@@ -141,6 +137,18 @@ const FunctionsPanelCode = ({
     setNewFunctionImage
   ])
 
+  const handleClassOnBlur = () => {
+    if (functionsStore.newFunction.spec.default_class !== data.default_class) {
+      setNewFunctionDefaultClass(data.default_class)
+    }
+  }
+
+  const handleHandlerOnBlur = () => {
+    if (functionsStore.newFunction.spec.default_handler !== data.handler) {
+      setNewFunctionHandler(data.handler)
+    }
+  }
+
   const handleImageTypeChange = imageType => {
     if (imageType === EXISTING_IMAGE) {
       if (mode === PANEL_CREATE_MODE) {
@@ -229,6 +237,7 @@ const FunctionsPanelCode = ({
       data={data}
       editCode={editCode}
       functionsStore={functionsStore}
+      handleClassOnBlur={handleClassOnBlur}
       handleHandlerOnBlur={handleHandlerOnBlur}
       handleImageTypeChange={handleImageTypeChange}
       imageType={imageType}

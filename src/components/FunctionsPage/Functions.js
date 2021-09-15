@@ -15,6 +15,7 @@ import {
   detailsMenu,
   filters,
   FUNCTIONS_EDITABLE_STATES,
+  FUNCTIONS_EDITABLE_TYPES,
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
@@ -120,7 +121,7 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          !['job', 'serving', ''].includes(item?.type) ||
+          !FUNCTIONS_EDITABLE_TYPES.includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
@@ -154,8 +155,9 @@ const Functions = ({
               args: func.spec?.args ?? [],
               build: func.spec?.build ?? {},
               command: func.spec?.command,
-              description: func.spec?.description ?? '',
+              default_class: func.spec?.default_class ?? '',
               default_handler: func.spec?.default_handler ?? '',
+              description: func.spec?.description ?? '',
               env: func.spec?.env ?? [],
               error_stream: func.spec?.error_stream ?? '',
               graph: func.spec?.graph ?? {},

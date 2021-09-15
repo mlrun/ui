@@ -41,7 +41,8 @@ import {
   SET_NEW_FUNCTION_GRAPH,
   SET_NEW_FUNCTION_TRACK_MODELS,
   SET_NEW_FUNCTION_PARAMETERS,
-  SET_NEW_FUNCTION_ERROR_STREAM
+  SET_NEW_FUNCTION_ERROR_STREAM,
+  SET_NEW_FUNCTION_DEFAULT_CLASS
 } from '../constants'
 
 const initialState = {
@@ -68,6 +69,7 @@ const initialState = {
         functionSourceCode: '',
         image: ''
       },
+      default_class: '',
       default_handler: '',
       description: '',
       env: [],
@@ -77,8 +79,7 @@ const initialState = {
       resources: {
         limits: {},
         requests: {}
-      },
-      secret_sources: []
+      }
     }
   },
   templatesCatalog: {},
@@ -267,6 +268,17 @@ export default (state = initialState, { type, payload }) => {
               ...state.newFunction.spec.build,
               commands: payload
             }
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_DEFAULT_CLASS:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            default_class: payload
           }
         }
       }

@@ -27,12 +27,14 @@ const FunctionsPanelSecretsView = ({
         addNewItemLabel="Add secret"
         className="secrets__table"
         content={secretSources}
+        defaultKeyValue="file"
         deleteItem={handleDeleteSecretSource}
         editItem={handleEditSecretSource}
         keyHeader="Kind"
         keyLabel="Kind"
         keyOptions={kindOptions}
         keyType="select"
+        isValueRequired
         valueHeader="Value"
         valueLabel="Value"
         withEditMode

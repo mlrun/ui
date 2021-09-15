@@ -78,7 +78,6 @@ const FunctionsPanel = ({
             functionSourceCode: defaultData.build?.functionSourceCode ?? '',
             image: defaultData.build?.image ?? ''
           },
-          default_handler: defaultData.default_handler,
           description: defaultData.description,
           env: defaultData.env,
           image: defaultData.image,
@@ -98,11 +97,23 @@ const FunctionsPanel = ({
       if (defaultData.type === FUNCTION_TYPE_SERVING) {
         data = {
           ...data,
-          error_stream: defaultData.error_stream ?? '',
-          graph: defaultData.graph ?? {},
-          parameters: defaultData.parameters ?? {},
-          secret_sources: defaultData.secret_sources,
-          track_models: defaultData.track_models ?? false
+          spec: {
+            ...data.spec,
+            default_class: defaultData.default_class,
+            error_stream: defaultData.error_stream,
+            graph: defaultData.graph,
+            parameters: defaultData.parameters,
+            secret_sources: defaultData.secret_sources,
+            track_models: defaultData.track_models ?? false
+          }
+        }
+      } else {
+        data = {
+          ...data,
+          spec: {
+            ...data,
+            default_handler: defaultData.default_handler
+          }
         }
       }
 
@@ -147,7 +158,10 @@ const FunctionsPanel = ({
         return setValidation(state => ({ ...state, isNameValid: false }))
       }
 
-      if (functionsStore.newFunction.spec.default_handler.length === 0) {
+      if (
+        functionsStore.newFunction.kind === FUNCTION_TYPE_SERVING &&
+        functionsStore.newFunction.spec.default_handler.length === 0
+      ) {
         return setValidation(state => ({ ...state, isHandlerValid: false }))
       }
 

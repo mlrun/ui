@@ -17,6 +17,7 @@ import { ReactComponent as Plus } from '../../images/plus.svg'
 import './functionsPanelParameters.scss'
 
 const FunctionsPanelParametersView = ({
+  discardChanges,
   editParameter,
   generateActionsMenu,
   handleAddNewParameter,
@@ -26,7 +27,9 @@ const FunctionsPanelParametersView = ({
   setNewParameter,
   setSelectedParameter,
   setShowAddNewParameterRow,
-  showAddNewParameterRow
+  setValidation,
+  showAddNewParameterRow,
+  validation
 }) => {
   const tableClassNames = classnames(
     'new-item-side-panel__table',
@@ -77,10 +80,13 @@ const FunctionsPanelParametersView = ({
         )}
         {showAddNewParameterRow ? (
           <AddFunctionParameterRow
+            discardChanges={discardChanges}
             handleAddNewParameter={handleAddNewParameter}
             newParameter={newParameter}
             parameters={parameters}
             setNewParameter={setNewParameter}
+            setValidation={setValidation}
+            validation={validation}
           />
         ) : (
           <div className="table__row no-hover">
@@ -105,6 +111,7 @@ FunctionsPanelParametersView.defaultProps = {
 }
 
 FunctionsPanelParametersView.propTypes = {
+  discardChanges: PropTypes.func.isRequired,
   editParameter: PropTypes.func.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
@@ -114,7 +121,9 @@ FunctionsPanelParametersView.propTypes = {
   setNewParameter: PropTypes.func.isRequired,
   setSelectedParameter: PropTypes.func.isRequired,
   setShowAddNewParameterRow: PropTypes.func.isRequired,
-  showAddNewParameterRow: PropTypes.bool.isRequired
+  setValidation: PropTypes.func.isRequired,
+  showAddNewParameterRow: PropTypes.bool.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default FunctionsPanelParametersView

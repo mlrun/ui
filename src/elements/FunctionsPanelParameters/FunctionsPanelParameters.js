@@ -6,14 +6,15 @@ import FunctionsPanelParametersView from './FunctionsPanelParametersView'
 
 import {
   getParameterType,
+  isParameterValid,
   JSON_TYPE,
   setFunctionParameters
 } from './functionsPanelParameters.util'
 import functionsActions from '../../actions/functions'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const FunctionsPanelParameters = ({
   defaultData,
@@ -28,6 +29,10 @@ const FunctionsPanelParameters = ({
   })
   const [selectedParameter, setSelectedParameter] = useState(null)
   const [parameters, setParameters] = useState([])
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isValueValid: true
+  })
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(defaultData.parameters ?? {})) {
@@ -47,7 +52,27 @@ const FunctionsPanelParameters = ({
     }
   }, [defaultData.parameters])
 
+  const discardChanges = () => {
+    setNewParameter({
+      name: '',
+      type: 'string',
+      value: ''
+    })
+    setShowAddNewParameterRow(false)
+    setValidation({
+      isNameValid: true,
+      isValueValid: true
+    })
+  }
+
   const handleAddNewParameter = () => {
+    if (!isParameterValid(newParameter)) {
+      return setValidation({
+        isNameValid: newParameter.name.length > 0,
+        isValueValid: String(newParameter.value).length > 0
+      })
+    }
+
     setFunctionParameters(
       newParameter,
       newParameter.name,
@@ -143,16 +168,19 @@ const FunctionsPanelParameters = ({
 
   return (
     <FunctionsPanelParametersView
-      handleAddNewParameter={handleAddNewParameter}
+      discardChanges={discardChanges}
       editParameter={editParameter}
-      parameters={parameters}
-      showAddNewParameterRow={showAddNewParameterRow}
-      setSelectedParameter={setSelectedParameter}
-      selectedParameter={selectedParameter}
-      newParameter={newParameter}
-      setNewParameter={setNewParameter}
-      setShowAddNewParameterRow={setShowAddNewParameterRow}
       generateActionsMenu={generateActionsMenu}
+      handleAddNewParameter={handleAddNewParameter}
+      newParameter={newParameter}
+      parameters={parameters}
+      selectedParameter={selectedParameter}
+      setNewParameter={setNewParameter}
+      setSelectedParameter={setSelectedParameter}
+      setShowAddNewParameterRow={setShowAddNewParameterRow}
+      setValidation={setValidation}
+      showAddNewParameterRow={showAddNewParameterRow}
+      validation={validation}
     />
   )
 }

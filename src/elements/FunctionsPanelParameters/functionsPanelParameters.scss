@@ -3,30 +3,6 @@
 .parameters-table {
   @include newItemSidePanelTable;
 
-  .table {
-    &__body {
-      &-column {
-        .input-wrapper {
-          &:first-child {
-            max-width: 236px;
-          }
-        }
-
-        .range {
-          margin-top: 3px;
-
-          &:not(.range-warning) {
-            border: none;
-
-            .range__button {
-              border: none;
-            }
-          }
-        }
-      }
-    }
-  }
-
   .edit-row {
     .input-wrapper {
       margin-right: 5px;
@@ -55,6 +31,47 @@
       margin-right: 5px;
       padding-left: 10px;
     }
+  }
+
+  .table {
+    &__body {
+      align-items: center;
+
+      &-column {
+        height: 56px;
+
+        .input-wrapper {
+          &:first-child {
+            max-width: 236px;
+          }
+
+          &:last-child {
+            max-width: 230px;
+          }
+
+          .input {
+            padding-top: 21px;
+            border-radius: unset;
+          }
+        }
+
+        .range {
+          margin: 2px 0;
+
+          &:not(.range-warning) {
+            border: none;
+
+            .range__button {
+              border: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__btn {
+    padding: 0;
   }
 
   .parameter-type.select {

@@ -11,18 +11,21 @@ import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import {
   BOOLEAN_TYPE,
   isNameNotUnique,
-  isParameterValid,
   NUMBER_TYPE,
   parameterTypeOptions
 } from './functionsPanelParameters.util'
 
 import { ReactComponent as Plus } from '../../images/plus.svg'
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
 const AddFunctionParameterRow = ({
+  discardChanges,
   handleAddNewParameter,
   newParameter,
   parameters,
-  setNewParameter
+  setNewParameter,
+  setValidation,
+  validation
 }) => {
   return (
     <div className="table__body">
@@ -31,23 +34,38 @@ const AddFunctionParameterRow = ({
           <Input
             className="input-row__item"
             floatingLabel
-            invalid={isNameNotUnique(newParameter.name, parameters)}
-            invalidText="Name already exists"
+            invalid={
+              isNameNotUnique(newParameter.name, parameters) ||
+              !validation.isNameValid
+            }
+            invalidText={
+              isNameNotUnique(newParameter.name, parameters)
+                ? 'Name already exists'
+                : ''
+            }
             label="Name"
             onChange={name => setNewParameter(state => ({ ...state, name }))}
             required
-            requiredText="This field is required"
-            type="text"
+            setInvalid={value =>
+              setValidation(state => ({
+                ...state,
+                isNameValid: value
+              }))
+            }
           />
           <Select
             className="parameter-type"
-            onClick={type =>
+            onClick={type => {
               setNewParameter(state => ({
                 ...state,
                 type,
                 value: type === BOOLEAN_TYPE ? 'false' : ''
               }))
-            }
+              setValidation({
+                isNameValid: true,
+                isValueValid: true
+              })
+            }}
             options={parameterTypeOptions}
             selectedId={newParameter.type}
           />
@@ -66,6 +84,7 @@ const AddFunctionParameterRow = ({
           ) : newParameter.type === NUMBER_TYPE ? (
             <RangeInput
               density="normal"
+              invalid={!validation.isValueValid}
               label="Value"
               labelType="floatingLabel"
               onChange={value =>
@@ -78,27 +97,34 @@ const AddFunctionParameterRow = ({
             <Input
               className="input-row__item"
               floatingLabel
+              invalid={!validation.isValueValid}
               label="Value"
               onChange={value =>
                 setNewParameter(state => ({ ...state, value }))
               }
+              setInvalid={value =>
+                setValidation(state => ({
+                  ...state,
+                  isValueValid: value
+                }))
+              }
               required
-              requiredText="This field is required"
-              type="text"
             />
           )}
         </div>
       </div>
       <button
-        className="add-input btn-add"
-        disabled={
-          isNameNotUnique(newParameter.name, parameters) ||
-          !isParameterValid(newParameter)
-        }
+        className="parameters-table__btn btn-add"
+        disabled={isNameNotUnique(newParameter.name, parameters)}
         onClick={handleAddNewParameter}
       >
         <Tooltip template={<TextTooltipTemplate text="Add item" />}>
           <Plus />
+        </Tooltip>
+      </button>
+      <button onClick={discardChanges} className="parameters-table__btn">
+        <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
+          <Delete />
         </Tooltip>
       </button>
     </div>
@@ -106,10 +132,13 @@ const AddFunctionParameterRow = ({
 }
 
 AddFunctionParameterRow.propTypes = {
+  discardChanges: PropTypes.func.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
   newParameter: PropTypes.shape({}).isRequired,
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  setNewParameter: PropTypes.func.isRequired
+  setNewParameter: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default AddFunctionParameterRow

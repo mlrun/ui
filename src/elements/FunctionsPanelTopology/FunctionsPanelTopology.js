@@ -25,7 +25,7 @@ const FunctionsPanelTopology = ({
   }, [defaultData, setNewFunctionGraph])
 
   const selectRouterType = type => {
-    const newFunctionGraph = functionsStore.newFunction.spec.graph
+    const newFunctionGraph = { ...functionsStore.newFunction.spec.graph }
 
     if (type === 'none') {
       delete newFunctionGraph.class_name

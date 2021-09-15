@@ -421,7 +421,7 @@
         .input {
           padding: 25px 10px 11px;
 
-          &:not(.input_required) {
+          &:not(.input_invalid) {
             border: none;
           }
 

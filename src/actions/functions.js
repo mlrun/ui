@@ -44,7 +44,8 @@ import {
   SET_NEW_FUNCTION_GRAPH,
   SET_NEW_FUNCTION_TRACK_MODELS,
   SET_NEW_FUNCTION_PARAMETERS,
-  SET_NEW_FUNCTION_ERROR_STREAM
+  SET_NEW_FUNCTION_ERROR_STREAM,
+  SET_NEW_FUNCTION_DEFAULT_CLASS
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -250,6 +251,10 @@ const functionsActions = {
   setNewFunctionCommands: commands => ({
     type: SET_NEW_FUNCTION_COMMANDS,
     payload: commands
+  }),
+  setNewFunctionDefaultClass: default_class => ({
+    type: SET_NEW_FUNCTION_DEFAULT_CLASS,
+    payload: default_class
   }),
   setNewFunctionDescription: description => ({
     type: SET_NEW_FUNCTION_DESCRIPTION,
