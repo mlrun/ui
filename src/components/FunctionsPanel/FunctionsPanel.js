@@ -159,7 +159,7 @@ const FunctionsPanel = ({
       }
 
       if (
-        functionsStore.newFunction.kind === FUNCTION_TYPE_SERVING &&
+        functionsStore.newFunction.kind !== FUNCTION_TYPE_SERVING &&
         functionsStore.newFunction.spec.default_handler.length === 0
       ) {
         return setValidation(state => ({ ...state, isHandlerValid: false }))
