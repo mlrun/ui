@@ -38,7 +38,7 @@ const ProjectView = React.forwardRef(
       artifactKind,
       changeMembersCallback,
       changeOwnerCallback,
-      closePanel,
+      closeFeatureSetPanel,
       createFeatureSetPanelIsOpen,
       createFeatureSetSuccess,
       createNewOptions,
@@ -292,7 +292,7 @@ const ProjectView = React.forwardRef(
         )}
         {createFeatureSetPanelIsOpen && (
           <FeatureSetsPanel
-            closePanel={closePanel}
+            closePanel={closeFeatureSetPanel}
             createFeatureSetSuccess={createFeatureSetSuccess}
             project={match.params.projectName}
           />
@@ -311,7 +311,7 @@ ProjectView.propTypes = {
   artifactKind: PropTypes.string.isRequired,
   changeMembersCallback: PropTypes.func.isRequired,
   changeOwnerCallback: PropTypes.func.isRequired,
-  closePanel: PropTypes.func.isRequired,
+  closeFeatureSetPanel: PropTypes.func.isRequired,
   createFeatureSetPanelIsOpen: PropTypes.bool.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,

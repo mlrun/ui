@@ -322,7 +322,7 @@ const Project = ({
     fetchProjectIdAndOwner()
   }
 
-  const closePanel = () => {
+  const closeFeatureSetPanel = () => {
     setCreateFeatureSetPanelIsOpen(false)
     removeNewFeatureSet()
 
@@ -466,7 +466,7 @@ const Project = ({
       artifactKind={artifactKind}
       changeMembersCallback={changeMembersCallback}
       changeOwnerCallback={changeOwnerCallback}
-      closePanel={closePanel}
+      closeFeatureSetPanel={closeFeatureSetPanel}
       createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
       createFeatureSetSuccess={createFeatureSetSuccess}
       createNewOptions={createNewOptions}
