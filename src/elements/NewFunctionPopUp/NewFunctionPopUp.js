@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import Button from '../../common/Button/Button'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Select from '../../common/Select/Select'
+import Input from '../../common/Input/Input'
 
 import functionsActions from '../../actions/functions'
 import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'
@@ -13,20 +14,53 @@ import './newFunctionPopUp.scss'
 
 const NewFunctionPopUp = ({
   action,
+  functionsStore,
   setNewFunctionKind,
+  setNewFunctionName,
+  setNewFunctionTag,
   setFunctionsPanelIsOpen
 }) => {
+  const [data, setData] = useState({
+    name: '',
+    runtime: DEFAULT_RUNTIME,
+    tag: ''
+  })
   const [isPopUpOpen, setIsPopUpOpen] = useState(false)
-  const [selectedRuntime, setSelectedRuntime] = useState(DEFAULT_RUNTIME)
+  const [validation, setValidation] = useState({
+    isNameValid: true
+  })
   const newFunctionBtn = useRef(null)
 
   const closePopUp = () => {
     setIsPopUpOpen(false)
-    setSelectedRuntime(DEFAULT_RUNTIME)
+    setData({
+      name: '',
+      runtime: DEFAULT_RUNTIME,
+      tag: ''
+    })
+    setValidation({
+      isNameValid: true
+    })
+  }
+
+  const checkValidation = () => {
+    return Object.values(validation).find(value => value === false) ?? true
+  }
+
+  const handleNameOnBlur = () => {
+    if (data.name !== functionsStore.newFunction.metadata.name) {
+      setNewFunctionName(data.name)
+    }
+  }
+
+  const handleTagOnBlur = () => {
+    if (data.tag !== functionsStore.newFunction.metadata.tag) {
+      setNewFunctionTag(data.tag)
+    }
   }
 
   const selectRuntime = runtime => {
-    setSelectedRuntime(runtime)
+    setData(state => ({ ...state, runtime }))
     setNewFunctionKind(runtime)
   }
 
@@ -48,8 +82,43 @@ const NewFunctionPopUp = ({
             element: newFunctionBtn,
             position: 'bottom-left'
           }}
-          headerText="Select runtime"
+          headerText="Create New Function"
         >
+          <div className="new-function__pop-up-inputs">
+            <Input
+              floatingLabel
+              invalid={!validation.isNameValid}
+              label="Name"
+              maxLength={63}
+              onChange={name => setData(state => ({ ...state, name }))}
+              onBlur={handleNameOnBlur}
+              pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+              required
+              setInvalid={value =>
+                setValidation(state => ({ ...state, isNameValid: value }))
+              }
+              tip={
+                <>
+                  <span>&bull; Valid characters: a-z, 0-9, -</span>
+                  <br />
+                  <span>&bull; Must begin and end with: a-z, 0-9</span>
+                  <br />
+                  <span>&bull; Length - max: 63</span>
+                </>
+              }
+              value={data.name}
+              wrapperClassName="name"
+            />
+            <Input
+              floatingLabel
+              label="Tag"
+              onChange={tag => setData(state => ({ ...state, tag }))}
+              onBlur={handleTagOnBlur}
+              placeholder="latest"
+              value={data.tag}
+              wrapperClassName="tag"
+            />
+          </div>
           <Select
             className="project-name"
             density="chunky"
@@ -57,7 +126,7 @@ const NewFunctionPopUp = ({
             label="Runtime"
             onClick={selectRuntime}
             options={runtimeOptions}
-            selectedId={selectedRuntime}
+            selectedId={data.runtime}
           />
           <div className="pop-up-dialog__footer-container">
             <Button
@@ -67,13 +136,22 @@ const NewFunctionPopUp = ({
               onClick={closePopUp}
             />
             <Button
-              variant="primary"
-              label="Select"
+              disabled={!checkValidation()}
+              label="Continue"
               onClick={() => {
-                setFunctionsPanelIsOpen(true)
-                setIsPopUpOpen(false)
-                setSelectedRuntime(DEFAULT_RUNTIME)
+                if (checkValidation()) {
+                  if (data.name.length === 0) {
+                    return setValidation(state => ({
+                      ...state,
+                      isNameValid: false
+                    }))
+                  }
+
+                  setFunctionsPanelIsOpen(true)
+                  closePopUp()
+                }
               }}
+              variant="primary"
             />
           </div>
         </PopUpDialog>
