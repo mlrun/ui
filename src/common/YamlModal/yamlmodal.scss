@@ -1,44 +1,26 @@
 @import '../../scss/colors';
 
 .yaml-modal {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 4;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  background-color: $scorpion;
+  .pop-up-dialog {
+    display: flex;
+    flex-direction: column;
+    width: 70vw;
 
-  pre {
-    position: relative;
-    width: 60%;
-    height: 100%;
-    padding: 15px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    background-color: $white;
-  }
-
-  button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-
-    &:active,
-    &:focus {
-      outline: none;
-      box-shadow: none;
+    &__header {
+      margin-top: 0;
     }
   }
-}
 
-.modal-showed {
-  display: flex;
+  &-container {
+    position: relative;
+    bottom: 15px;
+    display: block;
+    overflow-y: auto;
+
+    pre {
+      //max-height: calc(90vh - 110px);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
 }

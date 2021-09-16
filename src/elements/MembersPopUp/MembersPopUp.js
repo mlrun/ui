@@ -246,8 +246,12 @@ const MembersPopUp = ({
   }, 200)
 
   return (
-    <div className="manage-members__pop-up">
-      <PopUpDialog headerText="Members" closePopUp={closeMemberPopUp}>
+    <>
+      <PopUpDialog
+        className="manage-members__pop-up"
+        closePopUp={closeMemberPopUp}
+        headerText="Members"
+      >
         <div className="info-row">
           <div className="members-overview">
             <span className="member-overview">
@@ -278,7 +282,6 @@ const MembersPopUp = ({
             Invite new members
           </div>
         </div>
-
         {inviteNewMembers && (
           <div className="invite-new-members">
             <div className="new-members-title">Invite new members</div>
@@ -319,7 +322,6 @@ const MembersPopUp = ({
             </div>
           </div>
         )}
-
         <div className={membersTableClassNames}>
           <div className="table-header">
             <div className="member-info">
@@ -422,7 +424,6 @@ const MembersPopUp = ({
               ))}
           </div>
         </div>
-
         <div className="footer-actions">
           <CheckBox
             className="notify-by-email"
@@ -464,7 +465,6 @@ const MembersPopUp = ({
         </div>
         <div className="divider" />
       </PopUpDialog>
-
       {confirmDiscard && (
         <PopUpDialog
           headerText="Discard all pending changes?"
@@ -486,7 +486,7 @@ const MembersPopUp = ({
           </div>
         </PopUpDialog>
       )}
-    </div>
+    </>
   )
 }
 

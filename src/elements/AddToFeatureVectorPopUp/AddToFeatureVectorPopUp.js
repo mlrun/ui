@@ -167,7 +167,7 @@ const AddToFeatureVectorPopUp = ({
   }
 
   return (
-    <div className="add-to-feature-vector">
+    <>
       <Button
         ref={addToFeatureVectorBtn}
         variant={action.variant}
@@ -184,6 +184,7 @@ const AddToFeatureVectorPopUp = ({
             position: 'bottom-left'
           }}
           closePopUp={closePopUp}
+          className="add-to-feature-vector"
         >
           <div className="select-row">
             <Select
@@ -257,7 +258,7 @@ const AddToFeatureVectorPopUp = ({
             )}
         </PopUpDialog>
       )}
-    </div>
+    </>
   )
 }
 
