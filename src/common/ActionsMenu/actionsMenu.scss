@@ -11,11 +11,21 @@
   &__body {
     position: absolute;
     right: 15px;
+    bottom: 25px;
     z-index: 4;
     width: 150px;
     background: $white;
     border: $primaryBorder;
     border-radius: $mainBorderRadius;
     box-shadow: $filterShadow;
+    visibility: hidden;
+
+    &.show {
+      visibility: visible;
+    }
+
+    &.open-to-bottom {
+      bottom: unset;
+    }
   }
 }
