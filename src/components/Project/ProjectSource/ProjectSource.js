@@ -35,11 +35,11 @@ const ProjectSource = React.forwardRef(
             {editSourceData.value || projectSource ? (
               <a
                 href={editSourceData.value || projectSource}
-                target="_blanc"
+                onClick={event => event.stopPropagation()}
+                target="_blank"
                 className="general-info__source-text data-ellipsis"
               >
-                {editSourceData.value ||
-                  (projectSource && 'Click to add source URL')}
+                {editSourceData.value || projectSource}
               </a>
             ) : (
               <span>Click to add source URL</span>
