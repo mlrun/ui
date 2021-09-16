@@ -44,7 +44,7 @@ const NewFunctionPopUp = ({
   }
 
   const checkValidation = () => {
-    return Object.values(validation).find(value => value === false) ?? true
+    return !Object.values(validation).includes(false)
   }
 
   const handleNameOnBlur = () => {
