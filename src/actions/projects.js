@@ -55,6 +55,7 @@ import {
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
   SET_NEW_PROJECT_NAME,
+  SET_PROJECT_DATA,
   SET_PROJECT_LABELS,
   FETCH_PROJECTS_NAMES_BEGIN,
   FETCH_PROJECTS_NAMES_FAILURE,
@@ -501,6 +502,10 @@ const projectsAction = {
     payload: description
   }),
   setNewProjectName: name => ({ type: SET_NEW_PROJECT_NAME, payload: name }),
+  setProjectData: data => ({
+    type: SET_PROJECT_DATA,
+    payload: data
+  }),
   setProjectLabels: labels => ({
     type: SET_PROJECT_LABELS,
     payload: { ...labels }
