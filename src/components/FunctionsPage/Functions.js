@@ -429,7 +429,9 @@ const Functions = ({
             name: editableItem.name,
             tag: editableItem.tag,
             functions: functionsStore.functions.filter(
-              func => func.metadata.name === editableItem.name
+              func =>
+                func.metadata.name === editableItem.name &&
+                func.metadata.hash === editableItem.hash
             )
           }}
           match={match}
