@@ -76,12 +76,7 @@ const FunctionsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
               openByDefault
             >
-              <FunctionsPanelGeneral
-                defaultData={defaultData}
-                isNameValid={validation.isNameValid}
-                mode={mode}
-                setNameValid={setValidation}
-              />
+              <FunctionsPanelGeneral defaultData={defaultData} />
             </Accordion>
             <Accordion
               accordionClassName="new-item-side-panel__accordion"

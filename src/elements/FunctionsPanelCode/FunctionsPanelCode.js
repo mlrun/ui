@@ -83,6 +83,11 @@ const FunctionsPanelCode = ({
             ]
         }))
       } else {
+        const buildImage = appStore.frontendSpec?.function_deployment_target_image_template
+          .replace('{project}', match.params.projectName)
+          .replace('{name}', functionsStore.newFunction.metadata.name)
+          .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
+
         setNewFunctionCommands(
           trimSplit(
             appStore.frontendSpec?.function_deployment_mlrun_command,
@@ -95,13 +100,15 @@ const FunctionsPanelCode = ({
             functionsStore.newFunction.kind
           ]
         )
+        setNewFunctionBuildImage(buildImage)
         setData(state => ({
           ...state,
           commands: appStore.frontendSpec?.function_deployment_mlrun_command,
           base_image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
-            ]
+            ],
+          build_image: buildImage
         }))
       }
     } else if (
@@ -126,6 +133,7 @@ const FunctionsPanelCode = ({
     defaultData.build,
     defaultData.image,
     functionsStore.newFunction.kind,
+    functionsStore.newFunction.metadata.name,
     functionsStore.newFunction.metadata.tag,
     imageType.length,
     match.params.projectName,
@@ -181,6 +189,11 @@ const FunctionsPanelCode = ({
           ]
       )
     } else {
+      const buildImage = appStore.frontendSpec?.function_deployment_target_image_template
+        .replace('{project}', match.params.projectName)
+        .replace('{name}', functionsStore.newFunction.metadata.name)
+        .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
+
       if (mode === PANEL_CREATE_MODE) {
         setNewFunctionImage('')
         setData(state => ({
@@ -190,7 +203,8 @@ const FunctionsPanelCode = ({
           base_image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
-            ]
+            ],
+          build_image: buildImage
         }))
       } else {
         setData(state => ({
@@ -202,7 +216,8 @@ const FunctionsPanelCode = ({
             state.base_image ||
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
-            ]
+            ],
+          build_image: state.build_image || buildImage
         }))
       }
 
@@ -220,7 +235,7 @@ const FunctionsPanelCode = ({
             functionsStore.newFunction.kind
           ]
       )
-      setNewFunctionBuildImage(data.build_image || '')
+      setNewFunctionBuildImage(data.build_image || buildImage)
     }
 
     setImageType(imageType)
