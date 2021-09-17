@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
+import { MONITOR_JOBS_TAB } from '../../constants'
 import {
   getJobsStatistics,
   getJobsTableData,
@@ -64,8 +65,8 @@ const ProjectJobs = ({
   return (
     <ProjectDataCard
       content={projectStore.project.jobs}
-      headerLink={`/projects/${match.params.projectName}/jobs/monitor`}
-      link={`/projects/${match.params.projectName}/jobs/monitor`}
+      headerLink={`/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+      link={`/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
       match={match}
       statistics={jobsData.statistics}
       table={jobsData.table}

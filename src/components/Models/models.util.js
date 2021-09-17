@@ -1,6 +1,14 @@
 import React from 'react'
 
-import { MODEL_ENDPOINTS_TAB, MODELS_PAGE, MODELS_TAB } from '../../constants'
+import {
+  ITERATIONS_FILTER,
+  LABELS_FILTER,
+  MODEL_ENDPOINTS_TAB,
+  MODELS_PAGE,
+  MODELS_TAB,
+  NAME_FILTER,
+  TREE_FILTER
+} from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generateUri } from '../../utils/resources'
@@ -81,12 +89,12 @@ export const modelEndpointsDetailsMenu = [
   }
 ]
 export const modelsFilters = [
-  { type: 'tree', label: 'Tree:' },
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' },
-  { type: 'iterations', label: 'Show iterations' }
+  { type: TREE_FILTER, label: 'Tree:' },
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Labels:' },
+  { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
-export const modelEndpointsFilters = [{ type: 'labels', label: 'Labels:' }]
+export const modelEndpointsFilters = [{ type: LABELS_FILTER, label: 'Labels:' }]
 export const page = MODELS_PAGE
 export const registerArtifactDialogTitle = 'Register model'
 export const modelsTableHeaders = isSelectedModel => [
@@ -213,8 +221,8 @@ export const modelEndpointsTableHeaders = isSelectedModel => [
   }
 ]
 export const tabs = [
-  { id: 'models', label: 'Models' },
-  { id: 'model-endpoints', label: 'Model endpoints', preview: true }
+  { id: MODELS_TAB, label: 'Models' },
+  { id: MODEL_ENDPOINTS_TAB, label: 'Model endpoints', preview: true }
 ]
 
 export const handleFetchData = async (

@@ -16,9 +16,21 @@ import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
 import { ReactComponent as Expand } from '../../images/expand.svg'
 
-import { JOBS_PAGE, KEY_CODES } from '../../constants'
+import {
+  DATE_RANGE_TIME_FILTER,
+  GROUP_BY_FILTER,
+  ITERATIONS_FILTER,
+  KEY_CODES,
+  LABELS_FILTER,
+  NAME_FILTER,
+  PERIOD_FILTER,
+  SHOW_UNTAGGED_FILTER,
+  STATUS_FILTER,
+  TAG_FILTER,
+  TREE_FILTER
+} from '../../constants'
 import filtersActions from '../../actions/filters'
-import { selectOptions, tagFilterOptions } from './filterMenu.settings'
+import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
 
 import './filterMenu.scss'
 
@@ -51,17 +63,10 @@ const FilterMenu = ({
 
   useEffect(() => {
     if (
-      page === JOBS_PAGE &&
-      !selectOptions.groupBy.find(option => option.id === 'workflow')
-    ) {
-      selectOptions.groupBy.push({ label: 'Workflow', id: 'workflow' })
-    }
-  }, [page])
-
-  useEffect(() => {
-    if (
       filtersStore.tagOptions.length > 0 &&
-      filters.find(filter => filter.type === 'tree' || filter.type === 'tag')
+      filters.find(
+        filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER
+      )
     ) {
       setTagOptions([
         ...filtersStore.tagOptions.map(tag => ({
@@ -85,16 +90,16 @@ const FilterMenu = ({
   }
 
   const handleSelectOption = (item, filter) => {
-    if (filter.type === 'status') {
+    if (filter.type === STATUS_FILTER) {
       setFilters({ state: item })
       applyChanges({
         ...filtersStore,
         state: item
       })
-    } else if (filter.type === 'groupBy') {
+    } else if (filter.type === GROUP_BY_FILTER) {
       setFilters({ groupBy: item })
     } else if (
-      (filter.type === 'tree' || filter.type === 'tag') &&
+      (filter.type === TREE_FILTER || filter.type === TAG_FILTER) &&
       item !== filtersStore.tag
     ) {
       setFilters({ tag: item.toLowerCase() })
@@ -170,8 +175,8 @@ const FilterMenu = ({
       <div className="filters">
         {filters.map(filter => {
           switch (filter.type) {
-            case 'tree':
-            case 'tag':
+            case TREE_FILTER:
+            case TAG_FILTER:
               return (
                 <TagFilter
                   key={filter.type}
@@ -180,10 +185,10 @@ const FilterMenu = ({
                   onChange={item => handleSelectOption(item, filter)}
                   page={page}
                   tagFilterOptions={tagOptions}
-                  value={filtersStore.tag}
+                  value={filtersStore[TAG_FILTER]}
                 />
               )
-            case 'labels':
+            case LABELS_FILTER:
               return (
                 <Input
                   density="dense"
@@ -197,7 +202,7 @@ const FilterMenu = ({
                   value={labels}
                 />
               )
-            case 'name':
+            case NAME_FILTER:
               return (
                 <Input
                   density="dense"
@@ -210,7 +215,7 @@ const FilterMenu = ({
                   value={name}
                 />
               )
-            case 'date-range-time':
+            case DATE_RANGE_TIME_FILTER:
               return (
                 <DatePicker
                   date={filtersStore.dates[0]}
@@ -222,7 +227,7 @@ const FilterMenu = ({
                   withOptions
                 />
               )
-            case 'iterations':
+            case ITERATIONS_FILTER:
               return (
                 <CheckBox
                   key={filter.type}
@@ -231,7 +236,7 @@ const FilterMenu = ({
                   selectedId={filtersStore.iter}
                 />
               )
-            case 'show-untagged':
+            case SHOW_UNTAGGED_FILTER:
               return (
                 <CheckBox
                   key={filter.type}
@@ -245,14 +250,16 @@ const FilterMenu = ({
               return (
                 <Select
                   density="dense"
-                  className={filter.type === 'period' ? 'period-filter' : ''}
+                  className={
+                    filter.type === PERIOD_FILTER ? 'period-filter' : ''
+                  }
                   label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
                   key={filter.type}
                   onClick={item => handleSelectOption(item, filter)}
-                  options={selectOptions[filter.type]}
+                  options={filterSelectOptions[filter.type]}
                   selectedId={
-                    (filter.type === 'status' && filtersStore.state) ||
-                    (filter.type === 'groupBy' && filtersStore.groupBy)
+                    (filter.type === STATUS_FILTER && filtersStore.state) ||
+                    (filter.type === GROUP_BY_FILTER && filtersStore.groupBy)
                   }
                 />
               )

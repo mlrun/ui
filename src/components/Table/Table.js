@@ -16,12 +16,12 @@ import tableActions from '../../actions/table'
 import './table.scss'
 
 const Table = ({
+  actionsMenu,
   applyDetailsChanges,
   cancelRequest,
   content,
   filtersStore,
-  groupedByName,
-  groupedByWorkflow,
+  groupedContent,
   handleCancel,
   handleExpandRow,
   handleSelectItem,
@@ -31,8 +31,7 @@ const Table = ({
   selectedItem,
   setLoading,
   setTablePanelOpen,
-  tableStore,
-  toggleConvertToYaml
+  tableStore
 }) => {
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
@@ -46,10 +45,9 @@ const Table = ({
   const previewArtifact = useSelector(
     state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
   )
-  const workflows = useSelector(
-    state =>
-      pageData.page === JOBS_PAGE && state.projectStore.project.workflows.data
-  )
+  const workflows = useSelector(state => {
+    return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
+  })
 
   useEffect(() => {
     return () => {
@@ -83,8 +81,7 @@ const Table = ({
   useEffect(() => {
     const generatedTableContent = generateTableContent(
       content,
-      groupedByName,
-      groupedByWorkflow,
+      groupedContent,
       filtersStore.groupBy,
       pageData.page,
       tableStore.isTablePanelOpen,
@@ -105,7 +102,7 @@ const Table = ({
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
     } else if (filtersStore.groupBy === 'workflow') {
-      let groupWorkflowItem = map(groupedByWorkflow, (jobs, workflowId) =>
+      let groupWorkflowItem = map(groupedContent, (jobs, workflowId) =>
         workflows.find(workflow => workflow.id === workflowId)
       )
 
@@ -114,7 +111,9 @@ const Table = ({
         groupLatestItem: [],
         groupWorkflowItems: createJobsContent(
           groupWorkflowItem,
-          groupedByWorkflow
+          !isEveryObjectValueEmpty(selectedItem),
+          match.params.projectName,
+          true
         )
       })
     } else if (filtersStore.groupBy === 'none') {
@@ -126,8 +125,7 @@ const Table = ({
     }
   }, [
     content,
-    groupedByWorkflow,
-    groupedByName,
+    groupedContent,
     pageData.page,
     setLoading,
     workflows,
@@ -142,6 +140,7 @@ const Table = ({
   return (
     <>
       <TableView
+        actionsMenu={actionsMenu}
         applyDetailsChanges={applyDetailsChanges}
         cancelRequest={cancelRequest}
         content={content}
@@ -151,8 +150,7 @@ const Table = ({
             ? tableContent.groupWorkflowItems
             : tableContent.groupLatestItem
         }
-        groupedByName={groupedByName}
-        groupedByWorkflow={groupedByWorkflow}
+        groupedContent={groupedContent}
         handleCancel={handleCancel}
         handleExpandRow={handleExpandRow}
         handleSelectItem={handleSelectItem}
@@ -165,7 +163,6 @@ const Table = ({
         tableContent={tableContent.content}
         tableHeadRef={tableHeadRef}
         tablePanelRef={tablePanelRef}
-        toggleConvertToYaml={toggleConvertToYaml}
         workflows={workflows}
       />
       {previewArtifact.isPreview && (
@@ -177,7 +174,7 @@ const Table = ({
 
 Table.defaultProps = {
   applyDetailsChanges: () => {},
-  groupedByName: {},
+  groupedContent: {},
   groupLatestJob: [],
   handleExpandRow: () => {},
   selectedItem: {},
@@ -185,17 +182,20 @@ Table.defaultProps = {
 }
 
 Table.propTypes = {
+  actionsMenu: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.func
+  ]).isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  groupedByName: PropTypes.shape({}),
+  groupedContent: PropTypes.shape({}),
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
-  setLoading: PropTypes.func,
-  toggleConvertToYaml: PropTypes.func.isRequired
+  setLoading: PropTypes.func
 }
 
 export default connect(

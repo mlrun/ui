@@ -1,25 +1,51 @@
 import workflowApi from '../api/workflow-api'
 import {
+  FETCH_WORKFLOW_BEGIN,
+  FETCH_WORKFLOW_FAILURE,
+  FETCH_WORKFLOW_SUCCESS,
   FETCH_WORKFLOWS_BEGIN,
   FETCH_WORKFLOWS_FAILURE,
   FETCH_WORKFLOWS_SUCCESS
 } from '../constants'
+import { parseWorkflows } from '../utils/parseWorkflows'
 
 const workflowActions = {
-  fetchWorkflows: (project, pageSize) => dispatch => {
+  fetchWorkflow: workflowId => dispatch => {
+    dispatch(workflowActions.fetchWorkflowBegin())
+
+    return workflowApi
+      .getWorkflow(workflowId)
+      .then(response => {
+        const workflow = response.data
+        dispatch(workflowActions.fetchWorkflowSuccess(workflow))
+
+        return workflow
+      })
+      .catch(error => dispatch(workflowActions.fetchWorkflowFailure(error)))
+  },
+  fetchWorkflowBegin: () => ({
+    type: FETCH_WORKFLOW_BEGIN
+  }),
+  fetchWorkflowSuccess: workflow => ({
+    type: FETCH_WORKFLOW_SUCCESS,
+    payload: workflow
+  }),
+  fetchWorkflowFailure: error => ({
+    type: FETCH_WORKFLOW_FAILURE,
+    payload: error
+  }),
+  fetchWorkflows: project => dispatch => {
     dispatch(workflowActions.fetchWorkflowsBegin())
 
-    const recursiveCall = pageToken =>
-      workflowApi
-        .getWorkflows(project, pageToken, pageSize)
-        .then(({ data: { runs = [], next_page_token: nextToken } }) =>
-          nextToken
-            ? recursiveCall(nextToken).then(moreRuns => runs.concat(moreRuns))
-            : runs
+    return workflowApi
+      .getWorkflows(project)
+      .then(response =>
+        dispatch(
+          workflowActions.fetchWorkflowsSuccess(
+            parseWorkflows(response.data.runs)
+          )
         )
-
-    return recursiveCall()
-      .then(runs => dispatch(workflowActions.fetchWorkflowsSuccess(runs)))
+      )
       .catch(error => dispatch(workflowActions.fetchWorkflowsFailure(error)))
   },
   fetchWorkflowsBegin: () => ({

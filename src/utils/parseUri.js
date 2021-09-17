@@ -48,6 +48,14 @@
  *         tag:       undefined,
  *         uid:       '24fce79e709f9b3fe5e8251a39e67c678d94c20c' }
  */
+import {
+  DATASETS_TAB,
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  MODELS_TAB,
+  MONITOR_JOBS_TAB
+} from '../constants'
+
 const parseUri = uri =>
   (uri ?? '').match(
     /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<uid>.+))?$/
@@ -55,12 +63,12 @@ const parseUri = uri =>
 
 const kindToScreen = {
   artifacts: 'files',
-  datasets: 'feature-store/datasets',
-  'feature-sets': 'feature-store/feature-sets',
-  'feature-vectors': 'feature-store/feature-vectors',
+  datasets: `feature-store/${DATASETS_TAB}`,
+  'feature-sets': `feature-store/${FEATURE_SETS_TAB}`,
+  'feature-vectors': `feature-store/${FEATURE_VECTORS_TAB}`,
   functions: 'functions',
-  jobs: 'jobs/monitor',
-  models: 'models/models'
+  jobs: `jobs/${MONITOR_JOBS_TAB}`,
+  models: `models/${MODELS_TAB}`
 }
 const generateLinkPath = (uri = '') => {
   const { kind, project, key, tag, uid } = parseUri(uri)

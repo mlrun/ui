@@ -32,7 +32,7 @@ const TableCell = ({
 }) => {
   const dispatch = useDispatch()
 
-  if (link && !isGroupedByWorkflow && data.type !== 'hidden') {
+  if (link && data.type !== 'hidden') {
     return (
       <TableLinkCell
         data={data}
@@ -44,7 +44,7 @@ const TableCell = ({
         selectedItem={selectedItem}
       />
     )
-  } else if (firstRow || (link && isGroupedByWorkflow)) {
+  } else if (firstRow) {
     return (
       <div className={`table-body__cell ${data.class}`}>
         {item.status && (

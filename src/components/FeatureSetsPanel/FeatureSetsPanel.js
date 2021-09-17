@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
+import { FEATURE_SETS_TAB } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import { checkValidation } from './featureSetPanel.util'
 
@@ -46,7 +47,7 @@ const FeatureSetsPanel = ({
         setConfirmDialog(null)
         createFeatureSetSuccess().then(() => {
           history.push(
-            `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
+            `/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
           )
         })
       })
@@ -78,7 +79,7 @@ const FeatureSetsPanel = ({
     ).then(() => {
       createFeatureSetSuccess().then(() => {
         history.push(
-          `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${reference}/overview`
+          `/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${result.data.metadata.name}/${reference}/overview`
         )
       })
     })

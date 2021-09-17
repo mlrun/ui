@@ -18,19 +18,18 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODELS_PAGE,
-  DATASETS_TAB
+  DATASETS_TAB,
+  MONITOR_WORKFLOWS_TAB
 } from '../../constants'
 
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
-
 const TableView = ({
+  actionsMenu,
   applyDetailsChanges,
   cancelRequest,
   content,
   groupFilter,
   groupLatestItem,
-  groupedByName,
-  groupedByWorkflow,
+  groupedContent,
   handleCancel,
   handleExpandRow,
   handleSelectItem,
@@ -43,22 +42,8 @@ const TableView = ({
   tableContent,
   tableHeadRef,
   tablePanelRef,
-  toggleConvertToYaml,
   workflows
 }) => {
-  const viewYamlAction = {
-    label: 'View YAML',
-    icon: <Yaml />,
-    onClick: toggleConvertToYaml
-  }
-  const actionsMenu =
-    typeof pageData.actionsMenu === 'function'
-      ? item =>
-          item
-            ? [viewYamlAction, ...(pageData.actionsMenu(item) ?? [])]
-            : [viewYamlAction]
-      : [viewYamlAction, ...(pageData.actionsMenu ?? [])]
-
   return (
     <div className="table">
       <div className="table__content">
@@ -81,7 +66,7 @@ const TableView = ({
         </div>
         <div className="table-body">
           {!groupFilter ||
-          (isEmpty(groupedByName) && isEmpty(groupedByWorkflow)) ||
+          isEmpty(groupedContent) ||
           (groupFilter === 'none' && isEmpty(groupLatestItem)) ? (
             tableContent.map((rowItem, i) => {
               switch (pageData.page) {
@@ -225,7 +210,9 @@ const TableView = ({
                       content={content}
                       handleExpandRow={handleExpandRow}
                       handleSelectItem={handleSelectItem}
-                      isGroupedByWorkflow={!isEmpty(groupedByWorkflow)}
+                      isGroupedByWorkflow={
+                        match.params.pageTab === MONITOR_WORKFLOWS_TAB
+                      }
                       match={match}
                       rowItem={groupLatestItem[i]}
                       selectedItem={selectedItem}
@@ -268,6 +255,10 @@ TableView.defaultProps = {
 }
 
 TableView.propTypes = {
+  actionsMenu: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.func
+  ]).isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleCancel: PropTypes.func.isRequired,
@@ -281,8 +272,7 @@ TableView.propTypes = {
     PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
   ]).isRequired,
   tableHeadRef: PropTypes.shape({}),
-  tablePanelRef: PropTypes.shape({}),
-  toggleConvertToYaml: PropTypes.func.isRequired
+  tablePanelRef: PropTypes.shape({})
 }
 
 export default TableView

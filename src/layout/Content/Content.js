@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import yaml from 'js-yaml'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 
@@ -14,7 +13,11 @@ import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import Notification from '../../common/Notification/Notification'
 
-import { generateGroupedItems } from './content.util'
+import {
+  generateContentActionsMenu,
+  generateGroupedItems
+} from './content.util'
+import { useYaml } from '../../hooks/yaml.hook'
 
 import {
   ARTIFACTS_PAGE,
@@ -29,11 +32,13 @@ import {
   PROJECTS_PAGE
 } from '../../constants'
 
+import { ReactComponent as Yaml } from '../../images/yaml.svg'
 import './content.scss'
 
 const Content = ({
   applyDetailsChanges,
   cancelRequest,
+  children,
   content,
   filtersChangeCallback,
   filtersStore,
@@ -48,11 +53,10 @@ const Content = ({
   selectedItem,
   setLoading
 }) => {
-  const [convertedYaml, setConvertedYaml] = useState('')
+  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [expandedItems, setExpandedItems] = useState([])
   const [expand, setExpand] = useState(false)
-  const [groupedByName, setGroupedByName] = useState({})
-  const [groupedByWorkflow, setGroupedByWorkflow] = useState({})
+  const [groupedContent, setGroupedContent] = useState({})
   const [showRegisterDialog, setShowRegisterDialog] = useState(false)
   const location = useLocation()
 
@@ -61,6 +65,16 @@ const Content = ({
     [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
       'content_with-menu'
   )
+
+  const actionsMenu = useMemo(() => {
+    return generateContentActionsMenu(pageData.actionsMenu, [
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      }
+    ])
+  }, [pageData.actionsMenu, toggleConvertedYaml])
 
   useEffect(() => {
     if (
@@ -84,10 +98,9 @@ const Content = ({
   }, [location.search, match.params.pageTab, pageData.page, showRegisterDialog])
 
   const handleGroupByName = useCallback(() => {
-    setGroupedByName(
+    setGroupedContent(
       generateGroupedItems(content, pageData.selectedRowData, getIdentifier)
     )
-    setGroupedByWorkflow({})
   }, [content, getIdentifier, pageData.selectedRowData])
 
   const handleGroupByNone = useCallback(() => {
@@ -96,29 +109,28 @@ const Content = ({
     rows.forEach(row => row.classList.remove('parent-row-expanded'))
 
     setExpand(false)
-    setGroupedByName({})
-    setGroupedByWorkflow({})
+    setGroupedContent({})
   }, [])
 
   const handleGroupByWorkflow = useCallback(() => {
     const groupedItems = {}
 
     content.forEach(contentItem => {
-      contentItem.labels.forEach(label => {
-        let workflowLabel = label.match('workflow')
+      contentItem.labels.length > 0 &&
+        contentItem.labels.forEach(label => {
+          let workflowLabel = label.match('workflow')
 
-        if (workflowLabel) {
-          let workflowId = workflowLabel.input.slice('workflow'.length + 2)
+          if (workflowLabel) {
+            let workflowId = workflowLabel.input.slice('workflow'.length + 2)
 
-          groupedItems[workflowId]
-            ? groupedItems[workflowId].push(contentItem)
-            : (groupedItems[workflowId] = [contentItem])
-        }
-      })
+            groupedItems[workflowId]
+              ? groupedItems[workflowId].push(contentItem)
+              : (groupedItems[workflowId] = [contentItem])
+          }
+        })
     })
 
-    setGroupedByWorkflow(groupedItems)
-    setGroupedByName({})
+    setGroupedContent(groupedItems)
   }, [content])
 
   useEffect(() => {
@@ -131,26 +143,16 @@ const Content = ({
     }
 
     return () => {
-      setGroupedByName({})
-      setGroupedByWorkflow({})
-      setConvertedYaml('')
+      setGroupedContent({})
+      toggleConvertedYaml()
     }
   }, [
     handleGroupByName,
     handleGroupByWorkflow,
     handleGroupByNone,
-    filtersStore.groupBy
+    filtersStore.groupBy,
+    toggleConvertedYaml
   ])
-
-  const toggleConvertToYaml = item => {
-    if (convertedYaml.length > 0) {
-      return setConvertedYaml('')
-    }
-
-    const json = item.ui?.originalContent ?? {}
-
-    setConvertedYaml(yaml.dump(json, { lineWidth: -1 }))
-  }
 
   const handleExpandRow = (e, item) => {
     const parentRow = e.target.closest('.parent-row')
@@ -173,7 +175,7 @@ const Content = ({
     }
 
     setExpandedItems(newArray)
-    setExpand(newArray.length === Object.keys(groupedByName).length)
+    setExpand(newArray.length === Object.keys(groupedContent).length)
   }
 
   const handleExpandAll = collapseRows => {
@@ -220,44 +222,50 @@ const Content = ({
             tabs={pageData.tabs}
           />
         )}
-        <div className="content__action-bar">
-          <FilterMenu
-            actionButton={pageData.filterMenuActionButton}
-            expand={expand}
-            filters={pageData.filters}
-            handleExpandAll={handleExpandAll}
-            match={match}
-            onChange={filtersChangeCallback ?? refresh}
-            page={pageData.page}
-            withoutExpandButton={Boolean(pageData.handleRequestOnExpand)}
-          />
-        </div>
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={toggleConvertToYaml}
-        />
-        <div className="table-container">
-          {content.length !== 0 ? (
-            <Table
-              applyDetailsChanges={applyDetailsChanges}
-              cancelRequest={cancelRequest}
-              content={content}
-              groupedByName={groupedByName}
-              groupedByWorkflow={groupedByWorkflow}
-              handleCancel={handleCancel}
-              handleExpandRow={handleExpandRow}
-              handleSelectItem={handleSelectItem}
+        {!pageData.hideFilterMenu && (
+          <div className="content__action-bar">
+            <FilterMenu
+              actionButton={pageData.filterMenuActionButton}
+              expand={expand}
+              filters={pageData.filters}
+              handleExpandAll={handleExpandAll}
               match={match}
-              pageData={pageData}
-              retryRequest={refresh}
-              selectedItem={selectedItem}
-              setLoading={setLoading}
-              toggleConvertToYaml={toggleConvertToYaml}
+              onChange={filtersChangeCallback ?? refresh}
+              page={pageData.page}
+              withoutExpandButton={Boolean(pageData.handleRequestOnExpand)}
             />
+          </div>
+        )}
+
+        <div className="table-container">
+          {children ? (
+            children
+          ) : content.length !== 0 ? (
+            <>
+              <Table
+                actionsMenu={actionsMenu}
+                applyDetailsChanges={applyDetailsChanges}
+                cancelRequest={cancelRequest}
+                content={content}
+                groupedContent={groupedContent}
+                handleCancel={handleCancel}
+                handleExpandRow={handleExpandRow}
+                handleSelectItem={handleSelectItem}
+                match={match}
+                pageData={pageData}
+                retryRequest={refresh}
+                selectedItem={selectedItem}
+                setLoading={setLoading}
+              />
+            </>
           ) : loading ? null : (
             <NoData />
           )}
         </div>
+        <YamlModal
+          convertedYaml={convertedYaml}
+          toggleConvertToYaml={toggleConvertedYaml}
+        />
         <Notification />
       </div>
     </>

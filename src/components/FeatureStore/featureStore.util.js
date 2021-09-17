@@ -10,10 +10,15 @@ import {
   DETAILS_METADATA_TAB,
   DETAILS_OVERVIEW_TAB,
   DETAILS_STATISTICS_TAB,
+  FEATURES_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
-  FEATURES_TAB,
-  SECONDARY_BUTTON
+  ITERATIONS_FILTER,
+  LABELS_FILTER,
+  NAME_FILTER,
+  SECONDARY_BUTTON,
+  TAG_FILTER,
+  TREE_FILTER
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -81,24 +86,24 @@ export const featureVectorsInfoHeaders = [
   { label: 'Usage example', id: 'usage_example' }
 ]
 export const datasetsFilters = [
-  { type: 'tree', label: 'Tree:' },
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' },
-  { type: 'iterations', label: 'Show iterations' }
+  { type: TREE_FILTER, label: 'Tree:' },
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Label:' },
+  { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
 export const featureSetsFilters = [
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' }
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Label:' }
 ]
 export const featureVectorsFilters = [
-  { type: 'tag', label: 'Tag:' },
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' }
+  { type: TAG_FILTER, label: 'Tag:' },
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Label:' }
 ]
 export const featuresFilters = [
-  { type: 'tag', label: 'Tag:' },
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' }
+  { type: TAG_FILTER, label: 'Tag:' },
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Label:' }
 ]
 export const page = 'FEATURE-STORE'
 export const registerDatasetsTitle = 'Register dataset'
@@ -281,10 +286,10 @@ const getFeaturesTablePanel = () => {
 }
 
 export const tabs = [
-  { id: 'feature-sets', label: 'Feature sets' },
-  { id: 'features', label: 'Features' },
-  { id: 'feature-vectors', label: 'Feature vectors' },
-  { id: 'datasets', label: 'Datasets' }
+  { id: FEATURE_SETS_TAB, label: 'Feature sets' },
+  { id: FEATURES_TAB, label: 'Features' },
+  { id: FEATURE_VECTORS_TAB, label: 'Feature vectors' },
+  { id: DATASETS_TAB, label: 'Datasets' }
 ]
 
 const generateActionsMenu = tab => []

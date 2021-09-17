@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
+
 import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
 import { ReactComponent as VSCode } from '../../images/vs-code.svg'
 
@@ -33,11 +35,11 @@ export const getLinks = match => [
   },
   {
     label: 'Jobs and workflows',
-    link: `/projects/${match.params.projectName}/jobs/monitor`
+    link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
   },
   {
     label: 'Schedule jobs',
-    link: `/projects/${match.params.projectName}/jobs/schedule`
+    link: `/projects/${match.params.projectName}/jobs/${SCHEDULE_TAB}`
   },
   {
     label: 'ML functions',
@@ -66,7 +68,7 @@ export const generateCreateNewOptions = (
     id: 'job',
     handler: () =>
       history.push(
-        `/projects/${match.params.projectName}/jobs/monitor/create-new-job`
+        `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}/create-new-job`
       )
   },
   {

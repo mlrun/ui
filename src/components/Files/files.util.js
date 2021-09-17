@@ -1,4 +1,10 @@
-import { FILES_PAGE } from '../../constants'
+import {
+  FILES_PAGE,
+  ITERATIONS_FILTER,
+  LABELS_FILTER,
+  NAME_FILTER,
+  TREE_FILTER
+} from '../../constants'
 
 export const infoHeaders = [
   {
@@ -33,10 +39,10 @@ export const detailsMenu = [
   }
 ]
 export const filters = [
-  { type: 'tree', label: 'Tree:' },
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' },
-  { type: 'iterations', label: 'Show iterations' }
+  { type: TREE_FILTER, label: 'Tree:' },
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Labels:' },
+  { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
 export const page = FILES_PAGE
 export const registerArtifactDialogTitle = 'Register file'

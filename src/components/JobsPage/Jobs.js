@@ -3,33 +3,35 @@ import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
+import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
+import JobsPanel from '../JobsPanel/JobsPanel'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import JobsPanel from '../JobsPanel/JobsPanel'
-import Button from '../../common/Button/Button'
+import Workflow from '../Workflow/Workflow'
 
+import detailsActions from '../../actions/details'
 import filtersActions from '../../actions/filters'
 import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
-import projectActions from '../../actions/projects'
-import detailsActions from '../../actions/details'
+import workflowsActions from '../../actions/workflow'
 
-import { generatePageData } from './jobsData'
-import { generateKeyValues, parseKeyValues } from '../../utils'
 import getState from '../../utils/getState.js'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { generateKeyValues, parseKeyValues } from '../../utils'
+import { generatePageData } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import {
-  MONITOR_TAB,
-  SCHEDULE_TAB,
+  DANGER_BUTTON,
   INIT_GROUP_FILTER,
   JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
   PANEL_EDIT_MODE,
-  TERTIARY_BUTTON,
-  DANGER_BUTTON
+  SCHEDULE_TAB,
+  TERTIARY_BUTTON
 } from '../../constants'
 
 const Jobs = ({
@@ -41,7 +43,8 @@ const Jobs = ({
   fetchJobLogs,
   fetchJobPods,
   fetchJobs,
-  fetchProjectWorkflows,
+  fetchWorkflow,
+  fetchWorkflows,
   handleRunScheduledJob,
   history,
   jobsStore,
@@ -53,6 +56,7 @@ const Jobs = ({
   setFilters,
   setLoading,
   setNotification,
+  subPage,
   workflowsStore
 }) => {
   const [jobs, setJobs] = useState([])
@@ -224,7 +228,8 @@ const Jobs = ({
 
   const pageData = useCallback(
     generatePageData(
-      match.params.pageTab === SCHEDULE_TAB,
+      match.params.pageTab,
+      subPage,
       onRemoveScheduledJob,
       handleRunJob,
       setEditableItem,
@@ -239,6 +244,7 @@ const Jobs = ({
     ),
     [
       match.params.pageTab,
+      subPage,
       appStore.frontendSpec.jobs_dashboard_url,
       selectedJob
     ]
@@ -303,12 +309,8 @@ const Jobs = ({
     [fetchJobs, match.params.pageTab, match.params.projectName]
   )
 
-  const getWorkflows = useCallback(() => {
-    fetchProjectWorkflows(match.params.projectName)
-  }, [fetchProjectWorkflows, match.params.projectName])
-
   useEffect(() => {
-    if (!isEmpty(selectedJob) && match.params.pageTab === MONITOR_TAB) {
+    if (!isEmpty(selectedJob) && match.params.pageTab === MONITOR_JOBS_TAB) {
       removePods()
       fetchJobPods(match.params.projectName, selectedJob.uid)
 
@@ -328,9 +330,26 @@ const Jobs = ({
 
   useEffect(() => {
     if (match.params.jobId && pageData.detailsMenu.length > 0) {
-      isDetailsTabExists(JOBS_PAGE, match.params, pageData.detailsMenu, history)
+      isDetailsTabExists(JOBS_PAGE, match, pageData.detailsMenu, history)
     }
-  }, [history, match.params, pageData.detailsMenu])
+  }, [history, match, pageData.detailsMenu])
+
+  useEffect(() => {
+    if (match.params.jobId && jobs.some(job => job.uid) && jobs.length > 0) {
+      let item = jobs.find(item => item.uid === match.params.jobId)
+
+      if (!item) {
+        const urlArray = match.url.split('/')
+        const newUrl = urlArray.slice(0, urlArray.length - 2).join('/')
+
+        return history.replace(newUrl)
+      }
+
+      setSelectedJob(item)
+    } else {
+      setSelectedJob({})
+    }
+  }, [history, jobs, match.params.jobId, match.url, setSelectedJob])
 
   useEffect(() => {
     refreshJobs()
@@ -341,42 +360,26 @@ const Jobs = ({
     }
   }, [refreshJobs])
 
+  const getWorkflows = useCallback(() => {
+    fetchWorkflows(match.params.projectName)
+  }, [fetchWorkflows, match.params.projectName])
+
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
       setFilters({ groupBy: 'none' })
-    } else if (match.params.pageTab !== SCHEDULE_TAB) {
-      getWorkflows()
+    } else if (match.params.pageTab === MONITOR_JOBS_TAB) {
       setFilters({ groupBy: INIT_GROUP_FILTER })
+    } else if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
+      getWorkflows()
+      setFilters({ groupBy: 'workflow' })
     }
-  }, [getWorkflows, match.params.pageTab, setFilters])
-
-  useEffect(() => {
-    if (match.params.jobId && jobs.some(job => job.uid) && jobs.length > 0) {
-      let item = jobs.find(item => item.uid === match.params.jobId)
-
-      if (!item) {
-        return history.replace(
-          `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
-        )
-      }
-
-      setSelectedJob(item)
-    } else {
-      setSelectedJob({})
-    }
-  }, [
-    match.params.jobId,
-    setSelectedJob,
-    jobs,
-    match.params.projectName,
-    history,
-    match.params.pageTab
-  ])
+  }, [getWorkflows, match.params.pageTab, subPage, setFilters])
 
   const handleSelectJob = item => {
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
     }
+
     setSelectedJob(item)
   }
 
@@ -405,6 +408,30 @@ const Jobs = ({
 
   return (
     <div className="content-wrapper">
+      <Content
+        content={jobs}
+        handleCancel={handleCancel}
+        handleSelectItem={handleSelectJob}
+        loading={jobsStore.loading}
+        match={match}
+        pageData={pageData}
+        refresh={refreshJobs}
+        selectedItem={selectedJob}
+        setLoading={setLoading}
+        getIdentifier={getJobIdentifier}
+      >
+        {match.params.workflowId ? (
+          <Workflow
+            fetchWorkflow={fetchWorkflow}
+            handleCancel={handleCancel}
+            history={history}
+            match={match}
+            pageData={pageData}
+            refreshJobs={refreshJobs}
+            selectedJob={selectedJob}
+          />
+        ) : null}
+      </Content>
       {confirmData && (
         <PopUpDialog
           headerText={confirmData.title}
@@ -426,19 +453,9 @@ const Jobs = ({
           </div>
         </PopUpDialog>
       )}
-      {(jobsStore.loading || workflowsStore.loading) && <Loader />}
-      <Content
-        content={jobs}
-        handleCancel={handleCancel}
-        handleSelectItem={handleSelectJob}
-        loading={jobsStore.loading}
-        match={match}
-        pageData={pageData}
-        refresh={refreshJobs}
-        selectedItem={selectedJob}
-        setLoading={setLoading}
-        getIdentifier={getJobIdentifier}
-      />
+      {(jobsStore.loading ||
+        workflowsStore.workflows.loading ||
+        workflowsStore.activeWorkflow.loading) && <Loader />}
       {editableItem && (
         <JobsPanel
           closePanel={() => {
@@ -465,9 +482,14 @@ const Jobs = ({
   )
 }
 
+Jobs.defaultProps = {
+  subPage: ''
+}
+
 Jobs.propTypes = {
   history: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired
+  match: PropTypes.shape({}).isRequired,
+  subPage: PropTypes.string
 }
 
 export default connect(
@@ -479,7 +501,7 @@ export default connect(
   }),
   {
     ...jobsActions,
-    ...projectActions,
+    ...workflowsActions,
     ...detailsActions,
     ...notificationActions,
     ...filtersActions

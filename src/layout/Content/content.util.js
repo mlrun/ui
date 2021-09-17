@@ -18,3 +18,9 @@ export const generateGroupedItems = (
 
   return groupedItems
 }
+
+export const generateContentActionsMenu = (actionsMenu, predefinedActions) => {
+  return typeof actionsMenu === 'function'
+    ? item => [...predefinedActions, ...(actionsMenu(item) ?? [])]
+    : [...predefinedActions, ...(actionsMenu ?? [])]
+}
