@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
 import featureStoreActions from '../../actions/featureStore'
+import notificationActions from '../../actions/notification'
 import { checkValidation } from './featureSetPanel.util'
 
 const FeatureSetsPanel = ({
@@ -15,6 +16,7 @@ const FeatureSetsPanel = ({
   featureStore,
   project,
   removeFeatureStoreError,
+  setNotification,
   startFeatureSetIngest
 }) => {
   const [validation, setValidation] = useState({
@@ -39,16 +41,16 @@ const FeatureSetsPanel = ({
       ...featureStore.newFeatureSet
     })
       .then(result => {
+        setConfirmDialog(null)
+
         if (confirmDialog.action === 'save and ingest') {
           return handleStartFeatureSetIngest(result)
         }
 
-        setConfirmDialog(null)
-        createFeatureSetSuccess().then(() => {
-          history.push(
-            `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${result.data.metadata.tag}/overview`
-          )
-        })
+        handleCreateFeatureSetSuccess(
+          result.data.metadata.name,
+          result.data.metadata.tag
+        )
       })
       .catch(() => {
         setConfirmDialog(null)
@@ -67,7 +69,6 @@ const FeatureSetsPanel = ({
 
   const handleStartFeatureSetIngest = result => {
     const reference = result.data.metadata.tag || result.data.metadata.uid
-    setConfirmDialog(null)
 
     return startFeatureSetIngest(
       project,
@@ -76,10 +77,19 @@ const FeatureSetsPanel = ({
       result.data.spec.source,
       result.data.spec.targets
     ).then(() => {
-      createFeatureSetSuccess().then(() => {
-        history.push(
-          `/projects/${project}/feature-store/feature-sets/${result.data.metadata.name}/${reference}/overview`
-        )
+      handleCreateFeatureSetSuccess(result.data.metadata.name, reference)
+    })
+  }
+
+  const handleCreateFeatureSetSuccess = (name, tag) => {
+    createFeatureSetSuccess().then(() => {
+      history.push(
+        `/projects/${project}/feature-store/feature-sets/${name}/${tag}/overview`
+      )
+      setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Feature set successfully created'
       })
     })
   }
@@ -108,5 +118,6 @@ FeatureSetsPanel.propTypes = {
 }
 
 export default connect(({ featureStore }) => ({ featureStore }), {
-  ...featureStoreActions
+  ...featureStoreActions,
+  ...notificationActions
 })(FeatureSetsPanel)

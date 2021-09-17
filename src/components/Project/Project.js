@@ -303,7 +303,16 @@ const Project = ({
           }
         })
       })
-  }, [closeEditMode, editProject, history, match, projectStore.project])
+  }, [
+    closeEditMode,
+    editProject.description.value,
+    editProject.goals.value,
+    editProject.name.value,
+    editProject.source.value,
+    match.params.projectName,
+    projectStore.project,
+    setProjectData
+  ])
 
   const handleDocumentClick = useCallback(
     event => {
