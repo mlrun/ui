@@ -14,7 +14,6 @@ import { forEach, groupBy } from 'lodash'
 import ProjectView from './ProjectView'
 
 import featureStoreActions from '../../actions/featureStore'
-import notificationActions from '../../actions/notification'
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
@@ -331,15 +330,9 @@ const Project = ({
     }
   }
 
-  const createFeatureSetSuccess = () => {
+  const createFeatureSetSuccess = async () => {
     setCreateFeatureSetPanelIsOpen(false)
     removeNewFeatureSet()
-
-    setNotification({
-      status: 200,
-      id: Math.random(),
-      message: 'Feature set successfully created'
-    })
   }
 
   const handleAddProjectLabel = (label, labels) => {
@@ -511,7 +504,6 @@ export default connect(
   }),
   {
     ...featureStoreActions,
-    ...notificationActions,
     ...projectsAction
   }
 )(Project)
