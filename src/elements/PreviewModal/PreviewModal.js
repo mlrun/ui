@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import prettyBytes from 'pretty-bytes'
 import PropTypes from 'prop-types'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
@@ -13,11 +13,9 @@ import { getArtifactPreview } from '../../utils/getArtifactPreview'
 
 import './previewModal.scss'
 
-const PreviewModal = ({ item }) => {
+const PreviewModal = ({ closeArtifactsPreview, item }) => {
   const [preview, setPreview] = useState([])
   const [noData, setNoData] = useState(false)
-
-  const dispatch = useDispatch()
 
   useEffect(() => {
     if (preview.length === 0) {
@@ -29,12 +27,10 @@ const PreviewModal = ({ item }) => {
     <PopUpDialog
       className="preview-modal"
       closePopUp={() => {
-        dispatch(
-          artifactActions.closeArtifactsPreview({
-            isPreview: false,
-            selectedItem: {}
-          })
-        )
+        closeArtifactsPreview({
+          isPreview: false,
+          selectedItem: {}
+        })
       }}
     >
       <div className="item-artifacts__modal-preview">

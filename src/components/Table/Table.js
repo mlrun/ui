@@ -7,6 +7,7 @@ import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
 import createJobsContent from '../../utils/createJobsContent'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
@@ -88,7 +89,8 @@ const Table = ({
       pageData.page,
       tableStore.isTablePanelOpen,
       match.params.pageTab,
-      match.params.projectName
+      match.params.projectName,
+      !isEveryObjectValueEmpty(selectedItem)
     )
 
     if (filtersStore.groupBy === 'name') {
@@ -133,7 +135,8 @@ const Table = ({
     tableStore.isTablePanelOpen,
     filtersStore.groupBy,
     match.params.pageTab,
-    match.params.projectName
+    match.params.projectName,
+    selectedItem
   ])
 
   return (

@@ -1,7 +1,7 @@
 import { formatDatetime } from './datetime'
 import { getFunctionIdentifier } from './getUniqueIdentifier'
 
-const createFunctionsContent = functions =>
+const createFunctionsContent = (functions, isSelectedItem) =>
   functions.map(func => {
     return {
       name: {
@@ -13,33 +13,40 @@ const createFunctionsContent = functions =>
       kind: {
         value: func.type,
         class: 'functions_small',
-        type: 'type'
+        type: 'type',
+        hidden: isSelectedItem
       },
       hash: {
         value: func.hash,
         class: 'functions_small',
-        type: 'hash'
+        type: 'hash',
+        hidden: isSelectedItem
       },
       updated: {
         value: formatDatetime(new Date(func.updated), 'N/A'),
         class: 'functions_small',
-        type: 'date'
+        type: 'date',
+        hidden: isSelectedItem
       },
       command: {
         value: func.command,
-        class: 'functions_big'
+        class: 'functions_big',
+        hidden: isSelectedItem
       },
       image: {
         value: func.image,
-        class: 'functions_big'
+        class: 'functions_big',
+        hidden: isSelectedItem
       },
       description: {
         value: func.description,
-        class: 'functions_small'
+        class: 'functions_small',
+        hidden: isSelectedItem
       },
       tag: {
         value: func.tag,
-        type: 'hidden'
+        type: 'hidden',
+        hidden: isSelectedItem
       }
     }
   })

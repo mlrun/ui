@@ -35,12 +35,18 @@
     display: flex;
     flex: 1;
     min-height: 620px;
-    overflow: hidden;
 
     .no_data {
       margin: auto;
       color: $mulledWine;
     }
+  }
+
+  &-wrapper {
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    min-width: 900px;
   }
 
   &_with-menu {

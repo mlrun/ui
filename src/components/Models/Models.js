@@ -28,6 +28,7 @@ import {
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 const Models = ({
@@ -209,7 +210,8 @@ const Models = ({
         match.params.pageTab,
         handleDeployModel,
         handleRequestOnExpand,
-        handleRemoveModel
+        handleRemoveModel,
+        !isEveryObjectValueEmpty(selectedModel)
       )
     }))
   }, [
@@ -325,7 +327,7 @@ const Models = ({
   ])
 
   return (
-    <>
+    <div className="content-wrapper">
       {artifactsStore.loading && <Loader />}
       <Content
         content={content}
@@ -353,7 +355,7 @@ const Models = ({
           model={deployModel}
         />
       )}
-    </>
+    </div>
   )
 }
 

@@ -39,7 +39,6 @@ const FunctionsPanel = ({
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [validation, setValidation] = useState({
-    isNameValid: true,
     isHandlerValid: true,
     isCodeImageValid: true,
     isBaseImageValid: true,
@@ -154,10 +153,6 @@ const FunctionsPanel = ({
 
   const handleSave = deploy => {
     if (checkValidation()) {
-      if (functionsStore.newFunction.metadata.name.length === 0) {
-        return setValidation(state => ({ ...state, isNameValid: false }))
-      }
-
       if (
         functionsStore.newFunction.kind !== FUNCTION_TYPE_SERVING &&
         functionsStore.newFunction.spec.default_handler.length === 0

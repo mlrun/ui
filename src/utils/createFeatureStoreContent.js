@@ -29,20 +29,21 @@ export const createFeatureStoreContent = (
   content,
   pageTab,
   project,
-  isTablePanelOpen
+  isTablePanelOpen,
+  isSelectedItem
 ) => {
   return content.map(contentItem => {
     if (pageTab === FEATURE_SETS_TAB) {
-      return createFeatureSetsRowData(contentItem, project)
+      return createFeatureSetsRowData(contentItem, project, isSelectedItem)
     } else if (pageTab === FEATURE_VECTORS_TAB) {
-      return createFeatureVectorsRowData(contentItem, project)
+      return createFeatureVectorsRowData(contentItem, project, isSelectedItem)
     }
 
     return createFeaturesRowData(contentItem, isTablePanelOpen)
   })
 }
 
-const createFeatureSetsRowData = (featureSet, project) => {
+const createFeatureSetsRowData = (featureSet, project, isSelectedItem) => {
   return {
     key: {
       identifier: getFeatureSetIdentifier(featureSet),
@@ -67,17 +68,20 @@ const createFeatureSetsRowData = (featureSet, project) => {
     },
     description: {
       value: featureSet.description,
-      class: 'artifacts_medium'
+      class: 'artifacts_medium',
+      hidden: isSelectedItem
     },
     labels: {
       value: parseKeyValues(featureSet.labels),
       class: 'artifacts_big',
-      type: 'labels'
+      type: 'labels',
+      hidden: isSelectedItem
     },
     version: {
       value: featureSet.tag,
       class: 'artifacts_small',
-      type: 'hidden'
+      type: 'hidden',
+      hidden: isSelectedItem
     },
     entity: {
       value:
@@ -85,14 +89,16 @@ const createFeatureSetsRowData = (featureSet, project) => {
           ?.slice(0, 2)
           .map(entity => entity.name)
           .join(', ') ?? '',
-      class: 'artifacts_small'
+      class: 'artifacts_small',
+      hidden: isSelectedItem
     },
-    targets: getFeatureSetTargetCellValue(featureSet.targets),
+    targets: getFeatureSetTargetCellValue(featureSet.targets, isSelectedItem),
     buttonCopy: {
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonCopyURI',
-      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+      actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
+      hidden: isSelectedItem
     }
   }
 }
@@ -148,12 +154,14 @@ const createFeaturesRowData = (feature, isTablePanelOpen) => {
     },
     description: {
       value: feature.description,
-      class: 'artifacts_medium'
+      class: 'artifacts_medium',
+      hidden: isTablePanelOpen
     },
     labels: {
       value: parseKeyValues(feature.labels),
       class: 'artifacts_big',
-      type: 'labels'
+      type: 'labels',
+      hidden: isTablePanelOpen
     },
     targets: {
       ...getFeatureSetTargetCellValue(feature.targets),
@@ -167,7 +175,7 @@ const createFeaturesRowData = (feature, isTablePanelOpen) => {
     },
     addFeature: {
       value: <AddFeatureButton feature={feature} />,
-      class: 'artifacts_extra-small align-right',
+      class: 'artifacts_big align-right',
       type: 'component',
       hidden: !isTablePanelOpen
     }
@@ -189,7 +197,7 @@ const kindToIcon = {
   }
 }
 
-const getFeatureSetTargetCellValue = targets => ({
+const getFeatureSetTargetCellValue = (targets, isSelectedItem) => ({
   value: (targets ?? [])
     .map(
       target =>
@@ -200,10 +208,15 @@ const getFeatureSetTargetCellValue = targets => ({
     )
     .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
   class: 'artifacts_small artifacts__targets-icon',
-  type: 'icons'
+  type: 'icons',
+  hidden: isSelectedItem
 })
 
-const createFeatureVectorsRowData = (featureVector, project) => ({
+const createFeatureVectorsRowData = (
+  featureVector,
+  project,
+  isSelectedItem
+) => ({
   key: {
     identifier: getFeatureVectorIdentifier(featureVector),
     identifierUnique: getFeatureVectorIdentifier(featureVector, true),
@@ -227,33 +240,39 @@ const createFeatureVectorsRowData = (featureVector, project) => ({
   },
   description: {
     value: featureVector.description,
-    class: 'artifacts_medium'
+    class: 'artifacts_medium',
+    hidden: isSelectedItem
   },
   labels: {
     value: parseKeyValues(featureVector.labels),
     class: 'artifacts_big',
-    type: 'labels'
+    type: 'labels',
+    hidden: isSelectedItem
   },
   version: {
     value: featureVector.tag,
     class: 'artifacts_small',
-    type: 'hidden'
+    type: 'hidden',
+    hidden: isSelectedItem
   },
   updated: {
     value: featureVector.updated
       ? formatDatetime(new Date(featureVector.updated), 'N/A')
       : 'N/A',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   buttonCopy: {
     value: '',
     class: 'artifacts_extra-small artifacts__icon',
     type: 'buttonCopyURI',
-    actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab))
+    actionHandler: (item, tab) => copyToClipboard(generateUri(item, tab)),
+    hidden: isSelectedItem
   },
   uid: {
     value: featureVector.uid,
     class: 'artifacts_small',
-    type: 'hidden'
+    type: 'hidden',
+    hidden: isSelectedItem
   }
 })

@@ -1,5 +1,22 @@
 .new-function {
   &__pop-up {
     width: 200px;
+
+    &-inputs {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 10px;
+
+      .name {
+        flex: 0.7;
+        width: 100%;
+      }
+
+      .tag {
+        flex: 0.3;
+        margin-left: 10px;
+      }
+    }
   }
 }

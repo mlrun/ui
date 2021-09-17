@@ -22,7 +22,7 @@ export const infoHeaders = [
   { label: 'Output path', id: 'outputPath' },
   { label: 'Iterations', id: 'iterations' }
 ]
-export const generateTableHeaders = scheduled => {
+export const generateTableHeaders = (scheduled, isSelectedItem) => {
   if (scheduled) {
     return [
       {
@@ -31,31 +31,38 @@ export const generateTableHeaders = scheduled => {
       },
       {
         header: 'Type',
-        class: 'jobs_big'
+        class: 'jobs_big',
+        hidden: isSelectedItem
       },
       {
         header: 'Next run (Local TZ)',
-        class: 'jobs_big'
+        class: 'jobs_big',
+        hidden: isSelectedItem
       },
       {
         header: 'Schedule (UTC)',
-        class: 'jobs_big'
+        class: 'jobs_big',
+        hidden: isSelectedItem
       },
       {
         header: 'Labels',
-        class: 'jobs_big'
+        class: 'jobs_big',
+        hidden: isSelectedItem
       },
       {
         header: 'Last run (Local TZ)',
-        class: 'jobs_big'
+        class: 'jobs_big',
+        hidden: isSelectedItem
       },
       {
         header: 'Created time (Local TZ)',
-        class: 'jobs_medium'
+        class: 'jobs_medium',
+        hidden: isSelectedItem
       },
       {
         header: '',
-        class: 'action_cell'
+        class: 'action_cell',
+        hidden: isSelectedItem
       }
     ]
   }
@@ -67,31 +74,38 @@ export const generateTableHeaders = scheduled => {
     },
     {
       header: 'Type',
-      class: 'jobs_extra-small'
+      class: 'jobs_extra-small',
+      hidden: isSelectedItem
     },
     {
       header: 'Duration',
-      class: 'jobs_extra-small'
+      class: 'jobs_extra-small',
+      hidden: isSelectedItem
     },
     {
       header: 'Owner',
-      class: 'jobs_extra-small'
+      class: 'jobs_extra-small',
+      hidden: isSelectedItem
     },
     {
       header: 'Labels',
-      class: 'jobs_extra-small'
+      class: 'jobs_extra-small',
+      hidden: isSelectedItem
     },
     {
       header: 'Parameters',
-      class: 'jobs_extra-small'
+      class: 'jobs_extra-small',
+      hidden: isSelectedItem
     },
     {
       header: 'Results',
-      class: 'jobs_big'
+      class: 'jobs_big',
+      hidden: isSelectedItem
     },
     {
       header: '',
-      class: 'action_cell'
+      class: 'action_cell',
+      hidden: isSelectedItem
     }
   ]
 }
@@ -145,7 +159,8 @@ export const generatePageData = (
   onAbortJob,
   abortableFunctionKinds,
   fetchJobLogs,
-  removeJobLogs
+  removeJobLogs,
+  isSelectedItem
 ) => {
   let jobFilters = []
   let filterMenuActionButton = {
@@ -181,7 +196,7 @@ export const generatePageData = (
     filterMenuActionButton,
     filters: jobFilters,
     page,
-    tableHeaders: generateTableHeaders(scheduled),
+    tableHeaders: generateTableHeaders(scheduled, isSelectedItem),
     tabs,
     infoHeaders,
     refreshLogs: fetchJobLogs,

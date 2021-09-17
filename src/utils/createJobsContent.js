@@ -7,7 +7,12 @@ import { getJobIdentifier } from './getUniqueIdentifier'
 
 import { FUNCTIONS_PAGE, JOBS_PAGE, MONITOR_TAB } from '../constants'
 
-const createJobsContent = (content, groupedByWorkflow, scheduled) => {
+const createJobsContent = (
+  content,
+  isSelectedItem,
+  groupedByWorkflow,
+  scheduled
+) => {
   return content.map(contentItem => {
     if (contentItem) {
       if (scheduled) {
@@ -39,40 +44,47 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           type: {
             value: contentItem.type,
             class: 'jobs_big',
-            type: 'type'
+            type: 'type',
+            hidden: isSelectedItem
           },
           nextRun: {
             value: formatDatetime(contentItem.nextRun),
             class: 'jobs_big',
-            type: 'date'
+            type: 'date',
+            hidden: isSelectedItem
           },
           schedule: {
             value: contentItem.scheduled_object
               ? cronstrue.toString(contentItem.scheduled_object?.schedule)
               : null,
-            class: 'jobs_big'
+            class: 'jobs_big',
+            hidden: isSelectedItem
           },
           labels: {
             value: parseKeyValues(
               contentItem.scheduled_object?.task.metadata.labels || {}
             ),
             class: 'jobs_big',
-            type: 'labels'
+            type: 'labels',
+            hidden: isSelectedItem
           },
           lastRun: {
             value: formatDatetime(contentItem.start_time),
             class: 'jobs_big',
-            getLink: lastRunLink
+            getLink: lastRunLink,
+            hidden: isSelectedItem
           },
           createdTime: {
             value: formatDatetime(contentItem.createdTime, 'Not yet started'),
             class: 'jobs_medium',
-            type: 'date'
+            type: 'date',
+            hidden: isSelectedItem
           },
           func: {
             value: contentItem.func,
             class: '',
-            type: 'hidden'
+            type: 'hidden',
+            hidden: isSelectedItem
           }
         }
       } else {
@@ -100,12 +112,14 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
           type: {
             value: typeof groupedByWorkflow !== 'boolean' ? 'workflow' : type,
             class: 'jobs_extra-small',
-            type: 'type'
+            type: 'type',
+            hidden: isSelectedItem
           },
           uid: {
             value: contentItem.uid || contentItem?.id,
             class: 'jobs_small',
-            type: 'hidden'
+            type: 'hidden',
+            hidden: isSelectedItem
           },
           duration: {
             value: measureTime(
@@ -115,31 +129,37 @@ const createJobsContent = (content, groupedByWorkflow, scheduled) => {
                   new Date(contentItem.finished_at))
             ),
             class: 'jobs_extra-small',
-            type: 'duration'
+            type: 'duration',
+            hidden: isSelectedItem
           },
           owner: {
             value: contentItem.owner,
-            class: 'jobs_extra-small'
+            class: 'jobs_extra-small',
+            hidden: isSelectedItem
           },
           labels: {
             value: contentItem.labels,
             class: 'jobs_extra-small',
-            type: 'labels'
+            type: 'labels',
+            hidden: isSelectedItem
           },
           parameters: {
             value: contentItem.parameters,
             class: 'jobs_extra-small',
-            type: 'parameters'
+            type: 'parameters',
+            hidden: isSelectedItem
           },
           resultsChips: {
             value: contentItem.resultsChips,
             class: 'jobs_big',
-            type: 'results'
+            type: 'results',
+            hidden: isSelectedItem
           },
           updated: {
             value: contentItem.updated || new Date(contentItem.finished_at),
             class: 'jobs_small',
-            type: 'hidden'
+            type: 'hidden',
+            hidden: isSelectedItem
           }
         }
       }

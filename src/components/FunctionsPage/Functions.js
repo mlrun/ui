@@ -19,12 +19,13 @@ import {
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
-  tableHeaders,
+  getTableHeaders,
   TRANSIENT_FUNCTION_STATUSES
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import getState from '../../utils/getState.js'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
@@ -133,7 +134,7 @@ const Functions = ({
     detailsMenu,
     filters,
     page,
-    tableHeaders,
+    tableHeaders: getTableHeaders(!isEveryObjectValueEmpty(selectedFunction)),
     infoHeaders,
     filterMenuActionButton: {
       getCustomTemplate: getPopUpTemplate,
@@ -384,7 +385,7 @@ const Functions = ({
   }
 
   return (
-    <>
+    <div className="content-wrapper">
       {confirmData && (
         <PopUpDialog
           headerText={confirmData.title}
@@ -452,7 +453,7 @@ const Functions = ({
           project={match.params.projectName}
         />
       )}
-    </>
+    </div>
   )
 }
 
