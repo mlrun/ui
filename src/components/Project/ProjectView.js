@@ -12,7 +12,6 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
-import Notification from '../../common/Notification/Notification'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
@@ -297,7 +296,6 @@ const ProjectView = React.forwardRef(
             project={match.params.projectName}
           />
         )}
-        <Notification />
       </>
     )
   }

@@ -9,9 +9,9 @@ import functionsActions from '../../actions/functions'
 import {
   DEFAULT_ENTRY,
   DEFAULT_IMAGE,
-  DEFAULT_SOURCE_CODE,
   EXISTING_IMAGE,
-  NEW_IMAGE
+  NEW_IMAGE,
+  sourceCodeInBase64
 } from './functionsPanelCode.util'
 import { PANEL_CREATE_MODE } from '../../constants'
 import { trimSplit } from '../../utils'
@@ -28,6 +28,7 @@ const FunctionsPanelCode = ({
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
   setNewFunctionCommands,
+  setNewFunctionDefaultClass,
   setNewFunctionHandler,
   setNewFunctionImage,
   setNewFunctionSourceCode,
@@ -35,6 +36,7 @@ const FunctionsPanelCode = ({
   validation
 }) => {
   const [data, setData] = useState({
+    default_class: defaultData.default_class ?? '',
     entry: DEFAULT_ENTRY,
     handler: defaultData.default_handler ?? '',
     image: defaultData.image ?? '',
@@ -44,21 +46,18 @@ const FunctionsPanelCode = ({
   })
   const [editCode, setEditCode] = useState(false)
 
-  const handleHandlerOnBlur = event => {
-    if (functionsStore.newFunction.spec.default_handler !== data.handler) {
-      setNewFunctionHandler(data.handler)
-    }
-  }
-
   useEffect(() => {
     if (
       !functionsStore.newFunction.spec.build.functionSourceCode &&
       isNil(defaultData.build?.functionSourceCode)
     ) {
-      setNewFunctionSourceCode(DEFAULT_SOURCE_CODE)
+      setNewFunctionSourceCode(
+        sourceCodeInBase64[functionsStore.newFunction.kind]
+      )
     }
   }, [
     defaultData.build,
+    functionsStore.newFunction.kind,
     functionsStore.newFunction.spec.build.functionSourceCode,
     setNewFunctionSourceCode
   ])
@@ -137,6 +136,18 @@ const FunctionsPanelCode = ({
     setNewFunctionCommands,
     setNewFunctionImage
   ])
+
+  const handleClassOnBlur = () => {
+    if (functionsStore.newFunction.spec.default_class !== data.default_class) {
+      setNewFunctionDefaultClass(data.default_class)
+    }
+  }
+
+  const handleHandlerOnBlur = () => {
+    if (functionsStore.newFunction.spec.default_handler !== data.handler) {
+      setNewFunctionHandler(data.handler)
+    }
+  }
 
   const handleImageTypeChange = imageType => {
     if (imageType === EXISTING_IMAGE) {
@@ -226,6 +237,7 @@ const FunctionsPanelCode = ({
       data={data}
       editCode={editCode}
       functionsStore={functionsStore}
+      handleClassOnBlur={handleClassOnBlur}
       handleHandlerOnBlur={handleHandlerOnBlur}
       handleImageTypeChange={handleImageTypeChange}
       imageType={imageType}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -15,11 +15,12 @@ const BreadcrumbsDropdown = ({
   list,
   onClick,
   screen,
-  searchOnChange,
   selectedItem,
   tab,
   withSearch
 }) => {
+  const [searchValue, setSearchValue] = useState('')
+
   return (
     <div
       className="breadcrumbs__dropdown-wrapper"
@@ -29,7 +30,7 @@ const BreadcrumbsDropdown = ({
         <div className="breadcrumbs__dropdown-search">
           <input
             className="input"
-            onChange={event => searchOnChange(event.target.value)}
+            onChange={event => setSearchValue(event.target.value)}
             placeholder="Type to search"
             type="text"
           />
@@ -37,38 +38,42 @@ const BreadcrumbsDropdown = ({
         </div>
       )}
       <div className="breadcrumbs__dropdown">
-        {list.map(listItem => {
-          const dropdownItemClassNames = classnames(
-            'breadcrumbs__dropdown-item',
-            'data-ellipsis',
-            selectedItem === listItem.id &&
-              'breadcrumbs__dropdown-item_selected'
-          )
+        {list
+          .filter(project => project.id.startsWith(searchValue))
+          .map(listItem => {
+            const dropdownItemClassNames = classnames(
+              'breadcrumbs__dropdown-item',
+              'data-ellipsis',
+              selectedItem === listItem.id &&
+                'breadcrumbs__dropdown-item_selected'
+            )
 
-          return listItem.link ? (
-            <a
-              href={listItem.link}
-              key={listItem.id}
-              className={dropdownItemClassNames}
-            >
-              {listItem.label}
-            </a>
-          ) : (
-            <Link
-              to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${
-                tab ? `/${tab}` : ''
-              }`}
-              data-testid="breadcrumbs-dropdown-item"
-              key={listItem.id}
-              className={dropdownItemClassNames}
-              onClick={onClick}
-            >
-              <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
+            return listItem.link ? (
+              <a
+                href={listItem.link}
+                key={listItem.id}
+                className={dropdownItemClassNames}
+              >
                 {listItem.label}
-              </Tooltip>
-            </Link>
-          )
-        })}
+              </a>
+            ) : (
+              <Link
+                to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${
+                  tab ? `/${tab}` : ''
+                }`}
+                data-testid="breadcrumbs-dropdown-item"
+                key={listItem.id}
+                className={dropdownItemClassNames}
+                onClick={onClick}
+              >
+                <Tooltip
+                  template={<TextTooltipTemplate text={listItem.label} />}
+                >
+                  {listItem.label}
+                </Tooltip>
+              </Link>
+            )
+          })}
       </div>
     </div>
   )
@@ -87,7 +92,6 @@ BreadcrumbsDropdown.propTypes = {
   list: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onClick: PropTypes.func,
   screen: PropTypes.string,
-  searchOnChange: PropTypes.func,
   selectedItem: PropTypes.string.isRequired,
   tab: PropTypes.string,
   withSearch: PropTypes.bool

@@ -24,40 +24,62 @@ export const generateTableContent = (
   page,
   isTablePanelOpen,
   pageTab,
-  projectName
+  projectName,
+  isSelectedItem
 ) => {
   if (!isEmpty(groupedByName) && groupFilter === INIT_GROUP_FILTER) {
     return map(groupedByName, group =>
       page === JOBS_PAGE
-        ? createJobsContent(group, false)
+        ? createJobsContent(group, isSelectedItem, false)
         : page === FUNCTIONS_PAGE
-        ? createFunctionsContent(group)
+        ? createFunctionsContent(group, isSelectedItem)
         : page === FEATURE_STORE_PAGE && pageTab !== DATASETS_TAB
         ? createFeatureStoreContent(
             group,
             pageTab,
             projectName,
-            isTablePanelOpen
+            isTablePanelOpen,
+            isSelectedItem
           )
-        : createArtifactsContent(group, page, pageTab, projectName)
+        : createArtifactsContent(
+            group,
+            page,
+            pageTab,
+            projectName,
+            isSelectedItem
+          )
     )
   } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
-    return map(groupedByWorkflow, group => createJobsContent(group, true))
+    return map(groupedByWorkflow, group =>
+      createJobsContent(group, isSelectedItem, true)
+    )
   } else if (groupFilter === 'none' || !groupFilter) {
     return page === JOBS_PAGE
-      ? createJobsContent(content, false, pageTab === SCHEDULE_TAB)
+      ? createJobsContent(
+          content,
+          isSelectedItem,
+          false,
+          pageTab === SCHEDULE_TAB
+        )
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
         page === MODELS_PAGE ||
         pageTab === DATASETS_TAB
-      ? createArtifactsContent(content, page, pageTab, projectName)
+      ? createArtifactsContent(
+          content,
+          page,
+          pageTab,
+          projectName,
+          isSelectedItem
+        )
       : page === FEATURE_STORE_PAGE
       ? createFeatureStoreContent(
           content,
           pageTab,
           projectName,
-          isTablePanelOpen
+          isTablePanelOpen,
+          isSelectedItem
         )
-      : createFunctionsContent(content)
+      : createFunctionsContent(content, isSelectedItem)
   } else return []
 }

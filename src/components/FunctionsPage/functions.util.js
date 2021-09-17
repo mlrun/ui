@@ -1,3 +1,5 @@
+import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING } from '../../constants'
+
 export const detailsMenu = [
   {
     id: 'overview',
@@ -19,39 +21,52 @@ export const FUNCTIONS_EDITABLE_STATES = [
   ...FUNCTIONS_READY_STATES,
   ...FUNCTIONS_FAILED_STATES
 ]
+export const FUNCTIONS_EDITABLE_TYPES = [
+  FUNCTION_TYPE_JOB,
+  FUNCTION_TYPE_SERVING,
+  ''
+]
+
 export const page = 'FUNCTIONS'
-export const tableHeaders = [
+export const getTableHeaders = isSelectedItem => [
   {
     header: 'Name',
     class: 'functions_medium'
   },
   {
     header: 'Kind',
-    class: 'functions_small'
+    class: 'functions_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Hash',
-    class: 'functions_small'
+    class: 'functions_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Updated',
-    class: 'functions_small'
+    class: 'functions_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Command',
-    class: 'functions_big'
+    class: 'functions_big',
+    hidden: isSelectedItem
   },
   {
     header: 'Image',
-    class: 'functions_big'
+    class: 'functions_big',
+    hidden: isSelectedItem
   },
   {
     header: 'Description',
-    class: 'functions_small'
+    class: 'functions_small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'action_cell',
+    hidden: isSelectedItem
   }
 ]
 export const infoHeaders = [

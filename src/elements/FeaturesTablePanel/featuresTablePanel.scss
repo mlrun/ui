@@ -5,7 +5,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 500px;
+  min-width: 400px;
+  max-width: 500px;
   height: 100%;
 
   .features-panel__content {

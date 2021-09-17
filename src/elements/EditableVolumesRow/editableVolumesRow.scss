@@ -1,5 +1,13 @@
 .volumes {
   .edit-row {
+    .table__cell {
+      margin-right: 5px;
+
+      &-input {
+        padding: 0;
+      }
+    }
+
     .input-wrapper {
       .input {
         padding-top: 20px;

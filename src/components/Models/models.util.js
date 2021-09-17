@@ -89,30 +89,35 @@ export const modelsFilters = [
 export const modelEndpointsFilters = [{ type: 'labels', label: 'Labels:' }]
 export const page = MODELS_PAGE
 export const registerArtifactDialogTitle = 'Register model'
-export const modelsTableHeaders = [
+export const modelsTableHeaders = isSelectedModel => [
   {
     header: 'Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Labels',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedModel
   },
   {
     header: 'Producer',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Owner',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Updated',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Metrics',
-    class: 'artifacts_big'
+    class: 'artifacts_big',
+    hidden: isSelectedModel
   },
   {
     header: (
@@ -122,73 +127,89 @@ export const modelsTableHeaders = [
         <span>Algorithm</span>
       </span>
     ),
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedModel
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedModel
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedModel
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'action_cell',
+    hidden: isSelectedModel
   }
 ]
-export const modelEndpointsTableHeaders = [
+export const modelEndpointsTableHeaders = isSelectedModel => [
   {
     header: 'Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Function',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Model',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Version',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedModel
   },
   {
     header: 'Class',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_big',
+    hidden: isSelectedModel
   },
   {
     header: 'Uptime',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Last prediction',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Average latency',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Error count',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedModel
   },
   {
     header: 'Drift',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedModel
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'action_cell',
+    hidden: isSelectedModel
   }
 ]
 export const tabs = [
@@ -236,7 +257,8 @@ export const generatePageData = (
   pageTab,
   handleDeployModel,
   handleRequestOnExpand,
-  handleRemoveRequestData
+  handleRemoveRequestData,
+  isSelectedModel
 ) => {
   const data = {
     page,
@@ -247,7 +269,7 @@ export const generatePageData = (
     data.detailsMenu = generateModelsDetailsMenu(selectedModel)
     data.filters = modelsFilters
     data.registerArtifactDialogTitle = registerArtifactDialogTitle
-    data.tableHeaders = modelsTableHeaders
+    data.tableHeaders = modelsTableHeaders(isSelectedModel)
     data.infoHeaders = modelsInfoHeaders
     data.actionsMenu = generateModelsActionMenu(handleDeployModel)
     data.handleRequestOnExpand = handleRequestOnExpand
@@ -255,7 +277,7 @@ export const generatePageData = (
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
     data.detailsMenu = modelEndpointsDetailsMenu
     data.filters = modelEndpointsFilters
-    data.tableHeaders = modelEndpointsTableHeaders
+    data.tableHeaders = modelEndpointsTableHeaders(isSelectedModel)
     data.infoHeaders = modelEndpointsInfoHeaders
   }
 

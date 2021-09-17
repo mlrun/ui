@@ -45,7 +45,7 @@ const Project = ({
   removeFeatureStoreError,
   removeNewFeatureSet,
   removeProjectData,
-  setNotification
+  setProjectData
 }) => {
   const [membersState, membersDispatch] = useReducer(
     membersReducer,
@@ -252,6 +252,25 @@ const Project = ({
         projectStore.project.data.spec.description
     }
 
+    setProjectData({
+      ...projectStore.project,
+      data: {
+        ...projectStore.project.data,
+        spec: {
+          ...projectStore.project.data.spec,
+          description: data.description,
+          goals: data.goals,
+          source: data.source
+        },
+        metadata: {
+          ...projectStore.project.data.metadata,
+          labels: {
+            ...projectStore.project.data.metadata.labels,
+            ...data.labels
+          }
+        }
+      }
+    })
     closeEditMode()
     projectsApi
       .updateProject(match.params.projectName, {
@@ -263,9 +282,6 @@ const Project = ({
           goals: data.goals,
           source: data.source
         }
-      })
-      .then(() => {
-        history.push(`/projects/${data.name}`)
       })
       .catch(() => {
         setEditProject({

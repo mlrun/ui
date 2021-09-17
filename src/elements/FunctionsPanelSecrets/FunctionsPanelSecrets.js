@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { connect } from 'react-redux'
 
 import FunctionsPanelSecretsView from './FunctionsPanelSecretsView'
@@ -9,40 +9,58 @@ const FunctionsPanelSecrets = ({
   functionsStore,
   setNewFunctionSecretSources
 }) => {
-  const handleAddNewSecretSource = secretSource => {
-    setNewFunctionSecretSources([
-      ...functionsStore.newFunction.spec.env,
-      { kind: secretSource.key, source: secretSource.value }
-    ])
-  }
+  const handleAddNewSecretSource = useCallback(
+    secretSource => {
+      setNewFunctionSecretSources([
+        ...functionsStore.newFunction.spec.secret_sources,
+        { kind: secretSource.key, source: secretSource.value }
+      ])
+    },
+    [
+      functionsStore.newFunction.spec.secret_sources,
+      setNewFunctionSecretSources
+    ]
+  )
 
-  const handleEditSecretSource = secretSource => {
-    setNewFunctionSecretSources(
-      functionsStore.newFunction.spec.secret_sources.map(item => {
-        if (item.kind === secretSource.key) {
-          item.kind = secretSource.newKey || secretSource.key
-          item.source = secretSource.value
-        }
+  const handleEditSecretSource = useCallback(
+    secretSource => {
+      setNewFunctionSecretSources(
+        functionsStore.newFunction.spec.secret_sources.map(item => {
+          if (item.kind === secretSource.key) {
+            item.kind = secretSource.newKey || secretSource.key
+            item.source = secretSource.value
+          }
 
-        return item
-      })
-    )
-  }
-
-  const handleDeleteSecretSource = secretSourceIndex => {
-    setNewFunctionSecretSources(
-      functionsStore.newFunction.spec.secret_sources.filter(
-        (secretSource, index) => index !== secretSourceIndex
+          return item
+        })
       )
-    )
-  }
+    },
+    [
+      functionsStore.newFunction.spec.secret_sources,
+      setNewFunctionSecretSources
+    ]
+  )
+
+  const handleDeleteSecretSource = useCallback(
+    secretSourceIndex => {
+      setNewFunctionSecretSources(
+        functionsStore.newFunction.spec.secret_sources.filter(
+          (secretSource, index) => index !== secretSourceIndex
+        )
+      )
+    },
+    [
+      functionsStore.newFunction.spec.secret_sources,
+      setNewFunctionSecretSources
+    ]
+  )
 
   return (
     <FunctionsPanelSecretsView
       handleAddNewSecretSource={handleAddNewSecretSource}
       handleDeleteSecretSource={handleDeleteSecretSource}
       handleEditSecretSource={handleEditSecretSource}
-      secretSources={functionsStore.newFunction.spec.secret_sources.map(
+      secretSources={(functionsStore.newFunction.spec.secret_sources ?? []).map(
         secretSource => ({
           key: secretSource.kind,
           value: secretSource.source

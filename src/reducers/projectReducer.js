@@ -57,7 +57,8 @@ import {
   FETCH_PROJECTS_SUMMARY_SUCCESS,
   FETCH_PROJECTS_NAMES_BEGIN,
   FETCH_PROJECTS_NAMES_FAILURE,
-  FETCH_PROJECTS_NAMES_SUCCESS
+  FETCH_PROJECTS_NAMES_SUCCESS,
+  SET_PROJECT_DATA
 } from '../constants'
 
 const initialState = {
@@ -814,6 +815,12 @@ export default (state = initialState, { type, payload }) => {
           name: payload
         }
       }
+    case SET_PROJECT_DATA: {
+      return {
+        ...state,
+        project: payload
+      }
+    }
     case SET_PROJECT_LABELS: {
       return {
         ...state,

@@ -12,7 +12,6 @@ import {
   SET_LOADING,
   SET_NEW_FUNCTION_NAME,
   SET_NEW_FUNCTION_TAG,
-  SET_NEW_FUNCTION_TYPE,
   SET_NEW_FUNCTION_DESCRIPTION,
   SET_NEW_FUNCTION_LABELS,
   SET_NEW_FUNCTION_SOURCE_CODE,
@@ -40,7 +39,13 @@ import {
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_BEGIN,
   REMOVE_FUNCTION_LOGS,
-  SET_NEW_FUNCTION
+  SET_NEW_FUNCTION,
+  SET_NEW_FUNCTION_KIND,
+  SET_NEW_FUNCTION_GRAPH,
+  SET_NEW_FUNCTION_TRACK_MODELS,
+  SET_NEW_FUNCTION_PARAMETERS,
+  SET_NEW_FUNCTION_ERROR_STREAM,
+  SET_NEW_FUNCTION_DEFAULT_CLASS
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -247,6 +252,10 @@ const functionsActions = {
     type: SET_NEW_FUNCTION_COMMANDS,
     payload: commands
   }),
+  setNewFunctionDefaultClass: default_class => ({
+    type: SET_NEW_FUNCTION_DEFAULT_CLASS,
+    payload: default_class
+  }),
   setNewFunctionDescription: description => ({
     type: SET_NEW_FUNCTION_DESCRIPTION,
     payload: description
@@ -254,6 +263,14 @@ const functionsActions = {
   setNewFunctionEnv: env => ({
     type: SET_NEW_FUNCTION_ENV,
     payload: env
+  }),
+  setNewFunctionErrorStream: error_stream => ({
+    type: SET_NEW_FUNCTION_ERROR_STREAM,
+    payload: error_stream
+  }),
+  setNewFunctionGraph: graph => ({
+    type: SET_NEW_FUNCTION_GRAPH,
+    payload: graph
   }),
   setNewFunctionHandler: handler => ({
     type: SET_NEW_FUNCTION_HANDLER,
@@ -263,6 +280,10 @@ const functionsActions = {
     type: SET_NEW_FUNCTION_IMAGE,
     payload: image
   }),
+  setNewFunctionKind: kind => ({
+    type: SET_NEW_FUNCTION_KIND,
+    payload: kind
+  }),
   setNewFunctionLabels: labels => ({
     type: SET_NEW_FUNCTION_LABELS,
     payload: labels
@@ -270,6 +291,10 @@ const functionsActions = {
   setNewFunctionName: name => ({
     type: SET_NEW_FUNCTION_NAME,
     payload: name
+  }),
+  setNewFunctionParameters: parameters => ({
+    type: SET_NEW_FUNCTION_PARAMETERS,
+    payload: parameters
   }),
   setNewFunctionProject: project => ({
     type: SET_NEW_FUNCTION_PROJECT,
@@ -291,9 +316,9 @@ const functionsActions = {
     type: SET_NEW_FUNCTION_TAG,
     payload: tag
   }),
-  setNewFunctionType: type => ({
-    type: SET_NEW_FUNCTION_TYPE,
-    payload: type
+  setNewFunctionTrackModels: trackModels => ({
+    type: SET_NEW_FUNCTION_TRACK_MODELS,
+    payload: trackModels
   }),
   setNewFunctionVolumeMounts: volumeMounts => ({
     type: SET_NEW_FUNCTION_VOLUME_MOUNTS,

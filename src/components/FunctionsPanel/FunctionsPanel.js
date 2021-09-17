@@ -8,6 +8,7 @@ import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
+import { FUNCTION_TYPE_SERVING } from '../../constants'
 import {
   EXISTING_IMAGE,
   NEW_IMAGE
@@ -61,7 +62,7 @@ const FunctionsPanel = ({
 
   useEffect(() => {
     if (defaultData) {
-      setNewFunction({
+      let data = {
         kind: defaultData.type,
         metadata: {
           labels: defaultData.labels,
@@ -77,7 +78,6 @@ const FunctionsPanel = ({
             functionSourceCode: defaultData.build?.functionSourceCode ?? '',
             image: defaultData.build?.image ?? ''
           },
-          default_handler: defaultData.default_handler,
           description: defaultData.description,
           env: defaultData.env,
           image: defaultData.image,
@@ -90,10 +90,34 @@ const FunctionsPanel = ({
           resources: {
             limits: defaultData.resources.limits ?? {},
             requests: defaultData.resources.requests ?? {}
-          },
-          secret_sources: defaultData.secret_sources
+          }
         }
-      })
+      }
+
+      if (defaultData.type === FUNCTION_TYPE_SERVING) {
+        data = {
+          ...data,
+          spec: {
+            ...data.spec,
+            default_class: defaultData.default_class,
+            error_stream: defaultData.error_stream,
+            graph: defaultData.graph,
+            parameters: defaultData.parameters,
+            secret_sources: defaultData.secret_sources,
+            track_models: defaultData.track_models ?? false
+          }
+        }
+      } else {
+        data = {
+          ...data,
+          spec: {
+            ...data.spec,
+            default_handler: defaultData.default_handler
+          }
+        }
+      }
+
+      setNewFunction(data)
     }
   }, [defaultData, setNewFunction])
 
@@ -134,7 +158,10 @@ const FunctionsPanel = ({
         return setValidation(state => ({ ...state, isNameValid: false }))
       }
 
-      if (functionsStore.newFunction.spec.default_handler.length === 0) {
+      if (
+        functionsStore.newFunction.kind !== FUNCTION_TYPE_SERVING &&
+        functionsStore.newFunction.spec.default_handler.length === 0
+      ) {
         return setValidation(state => ({ ...state, isHandlerValid: false }))
       }
 
@@ -219,6 +246,7 @@ const FunctionsPanel = ({
       loading={functionsStore.loading}
       match={match}
       mode={mode}
+      newFunction={functionsStore.newFunction}
       removeFunctionsError={removeFunctionsError}
       setImageType={setImageType}
       setValidation={setValidation}
