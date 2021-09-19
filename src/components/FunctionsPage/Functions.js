@@ -338,7 +338,7 @@ const Functions = ({
 
   const handleDeployFunctionSuccess = ready => {
     let { name, tag } = functionsStore.newFunction.metadata
-    const tab = ready === false ? 'logs' : 'overview'
+    const tab = ready === false ? 'build-log' : 'overview'
 
     tag ||= 'latest'
 

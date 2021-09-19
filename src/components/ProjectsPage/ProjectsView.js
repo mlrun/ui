@@ -10,7 +10,6 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
 import NoData from '../../common/NoData/NoData'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import Notification from '../../common/Notification/Notification'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -171,7 +170,6 @@ const ProjectsView = ({
         convertedYaml={convertedYaml}
         toggleConvertToYaml={convertToYaml}
       />
-      <Notification />
     </div>
   )
 }
