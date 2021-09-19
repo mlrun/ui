@@ -152,7 +152,9 @@ const ProjectView = React.forwardRef(
                   <div className="general-info__row owner-row">
                     <div className="row-value">
                       <span className="row-label">Owner:</span>
-                      <span>{membersState.projectInfo?.owner?.username}</span>
+                      <span className="row-name">
+                        {membersState.projectInfo?.owner?.username}
+                      </span>
                     </div>
                     <span
                       className="row-action link"
@@ -164,7 +166,7 @@ const ProjectView = React.forwardRef(
                   <div className="general-info__row members-row">
                     <div className="row-value">
                       <span className="row-label">Members:</span>
-                      <span>
+                      <span className="row-name">
                         {membersState.users.length +
                           membersState.userGroups.length}
                       </span>
