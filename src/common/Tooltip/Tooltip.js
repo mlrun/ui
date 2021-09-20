@@ -2,6 +2,9 @@ import React, { useRef, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 import classnames from 'classnames'
+import { debounce } from 'lodash'
+
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import './tooltip.scss'
 
@@ -81,6 +84,12 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
     [hidden, textShow]
   )
 
+  const clearStyles = debounce(() => {
+    if (!isEveryObjectValueEmpty(style)) {
+      setStyle({})
+    }
+  }, 100)
+
   useEffect(() => {
     const node = parentRef.current
     if (node) {
@@ -97,9 +106,18 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
   useEffect(() => {
     if (show) {
       window.addEventListener('scroll', handleScroll, true)
-      return () => window.removeEventListener('scroll', handleScroll, true)
     }
+
+    return () => window.removeEventListener('scroll', handleScroll, true)
   }, [show])
+
+  useEffect(() => {
+    window.addEventListener('resize', clearStyles)
+
+    return () => {
+      window.removeEventListener('resize', clearStyles)
+    }
+  }, [clearStyles, style])
 
   return (
     <>

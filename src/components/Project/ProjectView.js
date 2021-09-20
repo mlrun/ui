@@ -10,6 +10,7 @@ import { groupByUniqName } from '../../utils/groupByUniqName'
 import { formatDatetime } from '../../utils'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
@@ -37,6 +38,9 @@ const ProjectView = React.forwardRef(
       artifactKind,
       changeMembersCallback,
       changeOwnerCallback,
+      closeFeatureSetPanel,
+      createFeatureSetPanelIsOpen,
+      createFeatureSetSuccess,
       createNewOptions,
       editProject,
       fetchProjectFeatureSets,
@@ -149,7 +153,9 @@ const ProjectView = React.forwardRef(
                   <div className="general-info__row owner-row">
                     <div className="row-value">
                       <span className="row-label">Owner:</span>
-                      <span>{membersState.projectInfo?.owner?.username}</span>
+                      <span className="row-name">
+                        {membersState.projectInfo?.owner?.username}
+                      </span>
                     </div>
                     <span
                       className="row-action link"
@@ -161,7 +167,7 @@ const ProjectView = React.forwardRef(
                   <div className="general-info__row members-row">
                     <div className="row-value">
                       <span className="row-label">Members:</span>
-                      <span>
+                      <span className="row-name">
                         {membersState.users.length +
                           membersState.userGroups.length}
                       </span>
@@ -286,6 +292,13 @@ const ProjectView = React.forwardRef(
             projectId={membersState.projectInfo.id}
           />
         )}
+        {createFeatureSetPanelIsOpen && (
+          <FeatureSetsPanel
+            closePanel={closeFeatureSetPanel}
+            createFeatureSetSuccess={createFeatureSetSuccess}
+            project={match.params.projectName}
+          />
+        )}
       </>
     )
   }
@@ -299,6 +312,9 @@ ProjectView.propTypes = {
   artifactKind: PropTypes.string.isRequired,
   changeMembersCallback: PropTypes.func.isRequired,
   changeOwnerCallback: PropTypes.func.isRequired,
+  closeFeatureSetPanel: PropTypes.func.isRequired,
+  createFeatureSetPanelIsOpen: PropTypes.bool.isRequired,
+  createFeatureSetSuccess: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
   fetchProjectFeatureSets: PropTypes.func.isRequired,

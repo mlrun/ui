@@ -425,12 +425,6 @@ const FeatureStore = ({
     return fetchData({
       project: match.params.projectName,
       tag: INIT_TAG_FILTER
-    }).then(() => {
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Feature set successfully created'
-      })
     })
   }
 

@@ -167,10 +167,12 @@ const ProjectsView = ({
           <NoData />
         )}
       </div>
-      <YamlModal
-        convertedYaml={convertedYaml}
-        toggleConvertToYaml={convertToYaml}
-      />
+      {convertedYaml.length > 0 && (
+        <YamlModal
+          convertedYaml={convertedYaml}
+          toggleConvertToYaml={convertToYaml}
+        />
+      )}
       <Notification />
     </div>
   )

@@ -11,7 +11,6 @@ import Table from '../../components/Table/Table'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
-import Notification from '../../common/Notification/Notification'
 
 import {
   generateContentActionsMenu,
@@ -262,11 +261,12 @@ const Content = ({
             <NoData />
           )}
         </div>
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={toggleConvertedYaml}
-        />
-        <Notification />
+        {convertedYaml.length > 0 && (
+          <YamlModal
+            convertedYaml={convertedYaml}
+            toggleConvertToYaml={toggleConvertedYaml}
+          />
+        )}
       </div>
     </>
   )

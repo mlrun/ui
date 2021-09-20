@@ -8,11 +8,12 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { forEach, groupBy } from 'lodash'
 
 import ProjectView from './ProjectView'
 
+import featureStoreActions from '../../actions/featureStore'
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
@@ -34,12 +35,15 @@ const Project = ({
   addProjectLabel,
   appStore,
   editProjectLabels,
+  featureStore,
   fetchProject,
   fetchProjectFeatureSets,
   fetchProjectFiles,
   fetchProjectModels,
   match,
   projectStore,
+  removeFeatureStoreError,
+  removeNewFeatureSet,
   removeProjectData,
   setProjectData
 }) => {
@@ -66,12 +70,17 @@ const Project = ({
       isEdit: false
     }
   })
+  const [
+    createFeatureSetPanelIsOpen,
+    setCreateFeatureSetPanelIsOpen
+  ] = useState(false)
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [showManageMembers, setShowManageMembers] = useState(false)
   const [showChangeOwner, setShowChangeOwner] = useState(false)
   const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
   const history = useHistory()
   const inputRef = React.createRef()
+  const location = useLocation()
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
@@ -79,14 +88,16 @@ const Project = ({
       history,
       match,
       setArtifactKind,
-      setIsPopupDialogOpen
+      setIsPopupDialogOpen,
+      location,
+      setCreateFeatureSetPanelIsOpen
     )
 
     return {
       links,
       createNewOptions
     }
-  }, [history, match, setIsPopupDialogOpen])
+  }, [history, location, match])
 
   const closeEditMode = useCallback(() => {
     setEditProject(prevState => ({
@@ -292,7 +303,16 @@ const Project = ({
           }
         })
       })
-  }, [closeEditMode, editProject, history, match, projectStore.project])
+  }, [
+    closeEditMode,
+    editProject.description.value,
+    editProject.goals.value,
+    editProject.name.value,
+    editProject.source.value,
+    match.params.projectName,
+    projectStore.project,
+    setProjectData
+  ])
 
   const handleDocumentClick = useCallback(
     event => {
@@ -324,6 +344,20 @@ const Project = ({
 
   const changeOwnerCallback = () => {
     fetchProjectIdAndOwner()
+  }
+
+  const closeFeatureSetPanel = () => {
+    setCreateFeatureSetPanelIsOpen(false)
+    removeNewFeatureSet()
+
+    if (featureStore.error) {
+      removeFeatureStoreError()
+    }
+  }
+
+  const createFeatureSetSuccess = async () => {
+    setCreateFeatureSetPanelIsOpen(false)
+    removeNewFeatureSet()
   }
 
   const handleAddProjectLabel = (label, labels) => {
@@ -450,6 +484,9 @@ const Project = ({
       artifactKind={artifactKind}
       changeMembersCallback={changeMembersCallback}
       changeOwnerCallback={changeOwnerCallback}
+      closeFeatureSetPanel={closeFeatureSetPanel}
+      createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
+      createFeatureSetSuccess={createFeatureSetSuccess}
       createNewOptions={createNewOptions}
       editProject={editProject}
       fetchProjectFeatureSets={fetchProjectFeatureSets}
@@ -485,11 +522,13 @@ Project.propTypes = {
 }
 
 export default connect(
-  ({ appStore, projectStore }) => ({
-    projectStore,
-    appStore
+  ({ appStore, featureStore, projectStore }) => ({
+    appStore,
+    featureStore,
+    projectStore
   }),
   {
+    ...featureStoreActions,
     ...projectsAction
   }
 )(Project)

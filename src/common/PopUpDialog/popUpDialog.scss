@@ -4,7 +4,7 @@
 
 .pop-up-dialog {
   width: 477px;
-  height: auto;
+  max-height: 90vh;
   padding: 20px;
   background-color: $white;
   border-radius: $mainBorderRadius;
@@ -14,7 +14,6 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 6;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,7 +44,7 @@
     &-close {
       width: 14px;
       height: 14px;
-      margin: 5px;
+      margin: 5px 5px 5px auto;
       cursor: pointer;
     }
   }
