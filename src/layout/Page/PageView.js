@@ -1,5 +1,6 @@
 import React from 'react'
 import Header from '../Header/Header'
+import Notification from '../../common/Notification/Notification'
 
 export default function PageView({ children }) {
   const headerShown =
@@ -8,6 +9,7 @@ export default function PageView({ children }) {
     <div className="App">
       {headerShown && <Header />}
       <main id="main">{children}</main>
+      <Notification />
     </div>
   )
 }

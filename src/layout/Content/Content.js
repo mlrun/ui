@@ -12,7 +12,6 @@ import Table from '../../components/Table/Table'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
-import Notification from '../../common/Notification/Notification'
 
 import { generateGroupedItems } from './content.util'
 
@@ -260,7 +259,6 @@ const Content = ({
             <NoData />
           )}
         </div>
-        <Notification />
       </div>
     </>
   )

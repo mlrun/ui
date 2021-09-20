@@ -37,6 +37,7 @@ const ProjectSource = React.forwardRef(
                 href={editSourceData.value || projectSource}
                 onClick={event => event.stopPropagation()}
                 target="_blank"
+                rel="noreferrer"
                 className="general-info__source-text data-ellipsis"
               >
                 {editSourceData.value || projectSource}
