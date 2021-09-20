@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { createPortal } from 'react-dom'
 
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -59,7 +60,7 @@ const PopUpDialog = ({
     }
   })
 
-  return (
+  return createPortal(
     <div ref={popUpOverlayRef} className={popUpClassNames}>
       <div data-testid="pop-up-dialog" className="pop-up-dialog">
         <div className="pop-up-dialog__header">
@@ -79,7 +80,8 @@ const PopUpDialog = ({
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.getElementById('overlay_container')
   )
 }
 

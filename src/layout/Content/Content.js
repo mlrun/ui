@@ -231,10 +231,12 @@ const Content = ({
             withoutExpandButton={Boolean(pageData.handleRequestOnExpand)}
           />
         </div>
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={toggleConvertToYaml}
-        />
+        {convertedYaml.length > 0 && (
+          <YamlModal
+            convertedYaml={convertedYaml}
+            toggleConvertToYaml={toggleConvertToYaml}
+          />
+        )}
         <div className="table-container">
           {content.length !== 0 ? (
             <Table

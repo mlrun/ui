@@ -3,6 +3,14 @@
     &__footer-container {
       align-items: center;
     }
+
+    .input-wrapper {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .error-message {

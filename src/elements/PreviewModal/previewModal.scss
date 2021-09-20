@@ -3,12 +3,10 @@
 @import '../../scss/shadows';
 
 .item-artifacts__modal-preview {
-  position: fixed;
-  top: 0;
+  position: relative;
+  bottom: 20px;
   width: 100%;
-  height: 100vh;
-  padding: 50px;
-  background-color: rgba($black, 0.5);
+  overflow-y: auto;
 
   .preview {
     &-body {
@@ -16,10 +14,6 @@
       flex: 1;
       flex-direction: column;
       height: 100%;
-      overflow-y: scroll;
-      background-color: $white;
-      border-radius: 2px;
-      box-shadow: $previewBoxShadow;
 
       &__download,
       &__close {
@@ -84,6 +78,18 @@
           }
         }
       }
+    }
+  }
+}
+
+.preview-modal {
+  .pop-up-dialog {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+
+    &__header {
+      margin-top: 0;
     }
   }
 }
