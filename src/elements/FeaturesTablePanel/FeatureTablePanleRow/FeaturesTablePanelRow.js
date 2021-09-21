@@ -52,7 +52,10 @@ const FeaturesTablePanelRow = ({
       </div>
       <div className="feature-row__actions">
         <div className="label-actions">
-          <Tooltip template={<TextTooltipTemplate text="Set as label" />}>
+          <Tooltip
+            hidden={labelFeature.length > 0}
+            template={<TextTooltipTemplate text="Set as label" />}
+          >
             <Target
               className={`action set-as-label ${actionClassNames}`}
               onClick={() =>
