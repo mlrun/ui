@@ -44,12 +44,18 @@ import {
   SET_NEW_FEATURE_SET_TARGET,
   SET_NEW_FEATURE_SET_VERSION,
   START_FEATURE_SET_INGEST_BEGIN,
-  START_FEATURE_SET_INGEST_SUCCESS
+  START_FEATURE_SET_INGEST_SUCCESS,
+  FETCH_FEATURE_SET_SUCCESS
 } from '../constants'
 
 const initialState = {
   error: null,
-  featureSets: [],
+  featureSets: {
+    allData: [],
+    selectedRowData: {
+      content: {}
+    }
+  },
   featureVectors: {
     allData: [],
     selectedRowData: {
@@ -155,11 +161,28 @@ export default (state = initialState, { type, payload }) => {
         error: payload,
         loading: false
       }
+    case FETCH_FEATURE_SET_SUCCESS:
+      return {
+        ...state,
+        featureSets: {
+          ...state.featureSets,
+          selectedRowData: {
+            ...state.featureSets.selectedRowData,
+            content: {
+              ...state.featureSets.selectedRowData.content,
+              ...payload
+            }
+          }
+        }
+      }
     case FETCH_FEATURE_SETS_SUCCESS:
       return {
         ...state,
         error: false,
-        featureSets: payload,
+        featureSets: {
+          ...state.featureSets,
+          allData: payload
+        },
         loading: false
       }
     case FETCH_FEATURE_VECTOR_SUCCESS:
@@ -278,7 +301,12 @@ export default (state = initialState, { type, payload }) => {
     case REMOVE_FEATURE_SETS:
       return {
         ...state,
-        featureSets: []
+        featureSets: {
+          allData: [],
+          selectedRowData: {
+            content: {}
+          }
+        }
       }
     case REMOVE_FEATURE_VECTOR:
       return {

@@ -16,6 +16,7 @@ import {
   checkTabIsValid,
   fetchDataSetRowData,
   fetchFeatureRowData,
+  fetchFeatureSetRowData,
   fetchFeatureVectorRowData,
   generateDataSetsDetailsMenu,
   generateFeatureSetsDetailsMenu,
@@ -50,6 +51,7 @@ const FeatureStore = ({
   fetchEntities,
   fetchEntity,
   fetchFeature,
+  fetchFeatureSet,
   fetchFeatureSets,
   fetchFeatureVector,
   fetchFeatureVectors,
@@ -212,6 +214,8 @@ const FeatureStore = ({
         await fetchFeatureRowData(fetchData, item, setPageData)
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
         await fetchFeatureVectorRowData(fetchFeatureVector, item, setPageData)
+      } else if (match.params.pageTab === FEATURE_SETS_TAB) {
+        await fetchFeatureSetRowData(fetchFeatureSet, item, setPageData)
       } else if (match.params.pageTab === DATASETS_TAB) {
         await fetchDataSetRowData(
           fetchDataSet,
@@ -225,6 +229,7 @@ const FeatureStore = ({
       fetchDataSet,
       fetchEntity,
       fetchFeature,
+      fetchFeatureSet,
       fetchFeatureVector,
       filtersStore.iter,
       match.params.pageTab
@@ -266,10 +271,7 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    if (
-      match.params.pageTab === FEATURE_SETS_TAB ||
-      filtersStore.tag === INIT_TAG_FILTER
-    ) {
+    if (filtersStore.tag === INIT_TAG_FILTER) {
       setFilters({ groupBy: INIT_GROUP_FILTER })
     } else if (filtersStore.groupBy === INIT_GROUP_FILTER) {
       setFilters({ groupBy: 'none' })
@@ -381,7 +383,10 @@ const FeatureStore = ({
         getFilterTagOptions(fetchArtifactTags, match.params.projectName)
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
         getFilterTagOptions(fetchFeatureVectorsTags, match.params.projectName)
-      } else if (match.params.pageTab === FEATURES_TAB) {
+      } else if (
+        match.params.pageTab === FEATURES_TAB ||
+        match.params.pageTab === FEATURE_SETS_TAB
+      ) {
         getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
       }
     }
