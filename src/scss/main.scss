@@ -93,6 +93,10 @@ button {
   @include statusState($brightTurquoise);
 }
 
+[class^=state-all] {
+  @include statusState(transparent);
+}
+
 [class^=state-warn] {
   @include statusState($grandis);
 }
