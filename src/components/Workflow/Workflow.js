@@ -40,6 +40,7 @@ const Workflow = ({
     selectedJob.uid && 'with-selected-job'
   )
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
+  const [jobIsSelected, setJobIsSelected] = useState(false)
   const [workflow, setWorkflow] = useState({})
   const [elements, setElements] = useState([])
   const [viewMode, setViewMode] = useState('graph')
@@ -61,6 +62,10 @@ const Workflow = ({
       })
     }
   }, [fetchWorkflow, match.params.workflowId, workflow.graph])
+
+  useEffect(() => {
+    setJobIsSelected(Boolean(match.params.jobId))
+  }, [match.params.jobId])
 
   useEffect(() => {
     const edges = []
@@ -142,7 +147,7 @@ const Workflow = ({
           <div className={graphViewClassNames}>
             <MlReactFlow
               elements={elements}
-              alignTriggerItem={match.params.jobId}
+              alignTriggerItem={jobIsSelected}
               onElementClick={(event, element) => {
                 if (element?.data.run_uid) {
                   history.push(
@@ -204,10 +209,12 @@ const Workflow = ({
             selectedItem={selectedJob}
           />
         )}
-        <YamlModal
-          convertedYaml={convertedYaml}
-          toggleConvertToYaml={toggleConvertedYaml}
-        />
+        {convertedYaml.length > 0 && (
+          <YamlModal
+            convertedYaml={convertedYaml}
+            toggleConvertToYaml={toggleConvertedYaml}
+          />
+        )}
       </div>
     </div>
   )

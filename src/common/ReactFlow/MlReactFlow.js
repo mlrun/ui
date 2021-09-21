@@ -44,7 +44,7 @@ MlReactFlow.defaultProps = {
 }
 
 MlReactFlow.propTypes = {
-  alignTriggerItem: PropTypes.string,
+  alignTriggerItem: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   elements: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onElementClick: PropTypes.func
 }

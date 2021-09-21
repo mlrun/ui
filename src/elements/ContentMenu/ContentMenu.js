@@ -16,18 +16,20 @@ const ContentMenu = ({ activeTab, match, screen, tabs }) => {
           )
 
           return (
-            <li data-testid={tab.id} className={tabClassNames} key={tab.id}>
-              <Link
-                to={`/projects/${
-                  match.params.projectName
-                }/${screen.toLowerCase()}/${tab.id}`}
-              >
-                {tab.label ?? tab.id}
-                {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
-                  <span className="content-menu__item__preview"> (Beta)</span>
-                )}
-              </Link>
-            </li>
+            !tab.hidden && (
+              <li data-testid={tab.id} className={tabClassNames} key={tab.id}>
+                <Link
+                  to={`/projects/${
+                    match.params.projectName
+                  }/${screen.toLowerCase()}/${tab.id}`}
+                >
+                  {tab.label ?? tab.id}
+                  {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
+                    <span className="content-menu__item__preview"> (Beta)</span>
+                  )}
+                </Link>
+              </li>
+            )
           )
         })}
       </ul>

@@ -142,9 +142,7 @@ const DetailsMenu = ({ detailsMenu, match, onClick }) => {
           }}
         >
           {detailsMenu.map(tab => {
-            const urlArray = match.url.split('/')
-            urlArray[urlArray.length - 1] = tab.id
-            const tabLink = urlArray.join('/')
+            const tabLink = match.url?.replace(/^$|([^/]+$)/, tab.id)
 
             return (
               !tab.hidden && (

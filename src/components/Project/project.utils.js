@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
+import { isDemoMode } from '../../utils/helper'
 
 import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
 import { ReactComponent as VSCode } from '../../images/vs-code.svg'
@@ -77,7 +78,7 @@ export const generateCreateNewOptions = (
     label: 'Feature set',
     id: 'featureSet',
     handler: () => setCreateFeatureSetsPanelIsOpen(true),
-    hidden: new URLSearchParams(location.search).get('demo') !== 'true'
+    hidden: !isDemoMode(location.search)
   },
   {
     label: 'Register File',

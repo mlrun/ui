@@ -48,6 +48,7 @@ const Jobs = ({
   handleRunScheduledJob,
   history,
   jobsStore,
+  location,
   match,
   removeJobLogs,
   removeNewJob,
@@ -229,6 +230,7 @@ const Jobs = ({
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab,
+      location.search,
       subPage,
       onRemoveScheduledJob,
       handleRunJob,
@@ -244,6 +246,7 @@ const Jobs = ({
     ),
     [
       match.params.pageTab,
+      location.search,
       subPage,
       appStore.frontendSpec.jobs_dashboard_url,
       selectedJob

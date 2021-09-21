@@ -13,6 +13,7 @@ import {
   TERTIARY_BUTTON,
   WORKFLOW_SUB_PAGE
 } from '../../constants'
+import { isDemoMode } from '../../utils/helper'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
@@ -172,14 +173,21 @@ const filtersByTab = {
   ]
 }
 
-export const tabs = [
-  { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },
-  { id: MONITOR_WORKFLOWS_TAB, label: 'Monitor Workflows' },
-  { id: SCHEDULE_TAB, label: 'Schedule' }
-]
+const generateTabs = search => {
+  return [
+    { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },
+    {
+      id: MONITOR_WORKFLOWS_TAB,
+      label: 'Monitor Workflows',
+      hidden: !isDemoMode(search)
+    },
+    { id: SCHEDULE_TAB, label: 'Schedule' }
+  ]
+}
 
 export const generatePageData = (
   pageTab,
+  search,
   subPage,
   removeScheduledJob,
   handleSubmitJob,
@@ -223,7 +231,7 @@ export const generatePageData = (
     filters: filtersByTab[pageTab],
     page,
     tableHeaders: generateTableHeaders(pageTab, isSelectedItem),
-    tabs,
+    tabs: generateTabs(search),
     infoHeaders,
     refreshLogs: fetchJobLogs,
     removeLogs: removeJobLogs,

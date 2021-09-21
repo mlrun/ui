@@ -16,6 +16,7 @@ import {
   generateContentActionsMenu,
   generateGroupedItems
 } from './content.util'
+import { isDemoMode } from '../../utils/helper'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import {
@@ -88,7 +89,7 @@ const Content = ({
       (![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
         match.params.pageTab
       ) ||
-        new URLSearchParams(location.search).get('demo') === 'true')
+        isDemoMode(location.search))
     ) {
       setShowRegisterDialog(true)
     } else if (showRegisterDialog) {
@@ -216,6 +217,7 @@ const Content = ({
         ) && (
           <ContentMenu
             activeTab={match.params.pageTab}
+            location={location}
             match={match}
             screen={pageData.page}
             tabs={pageData.tabs}
