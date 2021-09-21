@@ -244,7 +244,7 @@ export const generateActionsMenu = (
           label: 'Re-run',
           icon: <Run />,
           hidden: ['local', ''].includes(
-            job.ui.originalContent.metadata.labels.kind
+            job.ui?.originalContent.metadata.labels.kind
           ),
           onClick: handleRerunJob
         },

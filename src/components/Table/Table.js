@@ -114,6 +114,7 @@ const Table = ({
         groupLatestItem: [],
         groupWorkflowItems: createJobsContent(
           groupWorkflowItem,
+          !isEveryObjectValueEmpty(selectedItem),
           groupedByWorkflow
         )
       })
