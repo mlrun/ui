@@ -81,7 +81,7 @@ const ProjectView = React.forwardRef(
     }`
 
     return (
-      <>
+      <div className="project-wrapper">
         <div className="project__header">
           <Breadcrumbs match={match} />
         </div>
@@ -298,7 +298,7 @@ const ProjectView = React.forwardRef(
             project={match.params.projectName}
           />
         )}
-      </>
+      </div>
     )
   }
 )

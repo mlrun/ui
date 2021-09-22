@@ -3,6 +3,13 @@
 @import '../../scss/shadows';
 
 .project {
+  &-wrapper {
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    min-width: 1100px;
+  }
+
   &__header {
     padding: 20px 24px;
     background-color: $white;
