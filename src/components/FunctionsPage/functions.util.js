@@ -1,4 +1,9 @@
-import { FUNCTION_TYPE_JOB, FUNCTION_TYPE_SERVING } from '../../constants'
+import {
+  FUNCTION_TYPE_JOB,
+  FUNCTION_TYPE_SERVING,
+  NAME_FILTER,
+  SHOW_UNTAGGED_FILTER
+} from '../../constants'
 
 export const detailsMenu = [
   {
@@ -80,8 +85,8 @@ export const infoHeaders = [
   { label: 'Description', id: 'description' }
 ]
 export const filters = [
-  { type: 'name', label: 'Name:' },
-  { type: 'show-untagged', label: 'Show untagged' }
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: SHOW_UNTAGGED_FILTER, label: 'Show untagged' }
 ]
 
 export const TRANSIENT_FUNCTION_STATUSES = ['pending', 'running']

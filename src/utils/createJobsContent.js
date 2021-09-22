@@ -1,15 +1,23 @@
+import cronstrue from 'cronstrue'
+
+import {
+  FUNCTIONS_PAGE,
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB
+} from '../constants'
 import { formatDatetime } from './datetime'
 import measureTime from './measureTime'
-import cronstrue from 'cronstrue'
 import { parseKeyValues } from './object'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getJobIdentifier } from './getUniqueIdentifier'
-
-import { FUNCTIONS_PAGE, JOBS_PAGE, MONITOR_TAB } from '../constants'
+import { isDemoMode } from './helper'
 
 const createJobsContent = (
   content,
   isSelectedItem,
+  projectName,
+  search,
   groupedByWorkflow,
   scheduled
 ) => {
@@ -23,7 +31,7 @@ const createJobsContent = (
         const lastRunLink = () =>
           projectName &&
           jobUid &&
-          `/projects/${projectName}/jobs/monitor/${jobUid}/overview`
+          `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobUid}/overview`
 
         return {
           name: {
@@ -91,26 +99,34 @@ const createJobsContent = (
         const type =
           contentItem.labels
             ?.find(label => label.includes('kind:'))
-            ?.replace('kind: ', '') ?? ''
+            ?.replace('kind: ', '') ??
+          (groupedByWorkflow && 'workflow') ??
+          ''
 
         return {
           name: {
             value: contentItem.name,
             class: 'jobs_medium',
+            type: type === 'workflow' && !isDemoMode(search) ? 'hidden' : '',
             identifier: getJobIdentifier(contentItem),
             identifierUnique: getJobIdentifier(contentItem, true),
-            getLink: tab =>
-              generateLinkToDetailsPanel(
-                contentItem.project,
-                JOBS_PAGE,
-                MONITOR_TAB,
-                contentItem.uid,
-                null,
-                tab
-              )
+            getLink: tab => {
+              return type === 'workflow'
+                ? `/projects/${projectName}/${JOBS_PAGE.toLowerCase()}/${MONITOR_WORKFLOWS_TAB}/workflow/${
+                    contentItem.id
+                  }`
+                : generateLinkToDetailsPanel(
+                    contentItem.project,
+                    JOBS_PAGE,
+                    MONITOR_JOBS_TAB,
+                    contentItem.uid,
+                    null,
+                    tab
+                  )
+            }
           },
           type: {
-            value: typeof groupedByWorkflow !== 'boolean' ? 'workflow' : type,
+            value: type,
             class: 'jobs_extra-small',
             type: 'type',
             hidden: isSelectedItem

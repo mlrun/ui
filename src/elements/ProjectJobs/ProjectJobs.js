@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
+import { MONITOR_JOBS_TAB } from '../../constants'
 import {
   getJobsStatistics,
   getJobsTableData,
@@ -19,6 +21,7 @@ const ProjectJobs = ({
   match,
   projectStore
 }) => {
+  const location = useLocation()
   const [groupedLatestItem, setGroupedLatestItem] = useState([])
 
   useEffect(() => {
@@ -44,6 +47,7 @@ const ProjectJobs = ({
     const statistics = getJobsStatistics(
       projectStore.project.jobs,
       match,
+      location.search,
       projectStore.project.scheduledJobs,
       projectStore.project.workflows
     )
@@ -56,6 +60,7 @@ const ProjectJobs = ({
   }, [
     groupedLatestItem,
     match,
+    location.search,
     projectStore.project.jobs,
     projectStore.project.scheduledJobs,
     projectStore.project.workflows
@@ -64,8 +69,8 @@ const ProjectJobs = ({
   return (
     <ProjectDataCard
       content={projectStore.project.jobs}
-      headerLink={`/projects/${match.params.projectName}/jobs/monitor`}
-      link={`/projects/${match.params.projectName}/jobs/monitor`}
+      headerLink={`/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+      link={`/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
       match={match}
       statistics={jobsData.statistics}
       table={jobsData.table}

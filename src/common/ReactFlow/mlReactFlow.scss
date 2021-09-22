@@ -1,0 +1,114 @@
+@import '../../scss/borders';
+
+.react-flow__renderer {
+  z-index: 5;
+
+  .react-flow__node {
+    padding: 15px 10px;
+    font-size: 14px;
+    border-width: 2px;
+    border-radius: 8px;
+    cursor: unset;
+
+    &:hover {
+      box-shadow: unset;
+    }
+
+    .react-flow__node-label {
+      position: relative;
+
+      &::before {
+        position: absolute;
+        right: 0;
+        bottom: 25px;
+        z-index: 10;
+        width: 150%;
+        min-width: fit-content;
+        padding: 6px 8px;
+        color: $white;
+        font-weight: 400;
+        font-size: 15px;
+        background-color: $primary;
+        border-radius: 4px;
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+        content: attr(data-title);
+      }
+
+      &:hover::before {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+
+    &.react-flow__node-input {
+      color: $white;
+      background-color: $hotPink;
+      border-color: $hotPink;
+      box-shadow: 0 3px 14px rgba($hotPink, 0.34);
+    }
+
+    &.react-flow__node-default {
+      color: $malibu;
+      border-color: $malibu;
+    }
+
+    &.react-flow__node-output {
+      &:not(.error-handler) {
+        color: $white;
+        background-color: $malibu;
+        border-color: $malibu;
+        box-shadow: 0 3px 14px rgba($malibu, 0.5);
+      }
+    }
+
+    &.error-handler {
+      color: rgba($black, 0.2);
+      background-color: $white;
+
+      &:not(.selected) {
+        border-color: $bombay;
+      }
+    }
+
+    &.selectable {
+      cursor: pointer;
+    }
+
+    &.selected {
+      border-color: $brightTurquoise;
+      box-shadow: 0 4px 20px rgba($brightTurquoise, 0.5);
+    }
+
+    .react-flow__handle {
+      width: 12px;
+      height: 12px;
+      background: $white;
+      border: 2px solid $bombay;
+
+      &-top {
+        top: -6px;
+        visibility: hidden;
+      }
+
+      &-bottom {
+        bottom: -6px;
+      }
+
+      &-left {
+        left: -6px;
+        visibility: hidden;
+      }
+
+      &-right {
+        right: -6px;
+      }
+    }
+  }
+
+  .react-flow__edge-path {
+    stroke: $bombay;
+    stroke-width: 2px;
+  }
+}

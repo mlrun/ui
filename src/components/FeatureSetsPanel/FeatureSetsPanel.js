@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
+import { FEATURE_SETS_TAB } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import notificationActions from '../../actions/notification'
 import { checkValidation } from './featureSetPanel.util'
@@ -84,7 +85,7 @@ const FeatureSetsPanel = ({
   const handleCreateFeatureSetSuccess = (name, tag) => {
     createFeatureSetSuccess().then(() => {
       history.push(
-        `/projects/${project}/feature-store/feature-sets/${name}/${tag}/overview`
+        `/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${name}/${tag}/overview`
       )
       setNotification({
         status: 200,

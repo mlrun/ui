@@ -211,14 +211,9 @@ const Functions = ({
 
   useEffect(() => {
     if (match.params.hash && pageData.detailsMenu.length > 0) {
-      isDetailsTabExists(
-        FUNCTIONS_PAGE,
-        match.params,
-        pageData.detailsMenu,
-        history
-      )
+      isDetailsTabExists(FUNCTIONS_PAGE, match, pageData.detailsMenu, history)
     }
-  }, [history, match.params, pageData.detailsMenu])
+  }, [history, match, pageData.detailsMenu])
 
   useEffect(() => {
     let item = {}

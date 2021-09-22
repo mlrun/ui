@@ -6,11 +6,12 @@ import classnames from 'classnames'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
+import { FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../../constants'
 import { formatDatetime, truncateUid } from '../../utils'
 
-import './tableLinkCell.scss'
-
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
+
+import './tableLinkCell.scss'
 
 const TableLinkCell = ({
   data,
@@ -55,7 +56,9 @@ const TableLinkCell = ({
           >
             <span className="link data-ellipsis">{data.value}</span>
           </Tooltip>
-          {link.match(/functions|feature-sets|feature-vectors/) &&
+          {link.match(
+            new RegExp(`functions|${FEATURE_SETS_TAB}|${FEATURE_VECTORS_TAB}`)
+          ) &&
             data.value !== item.tag && (
               <Tooltip
                 className="item-tag"

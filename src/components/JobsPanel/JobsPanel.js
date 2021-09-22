@@ -12,6 +12,7 @@ import { isEmpty } from 'lodash'
 
 import JobsPanelView from './JobsPanelView'
 
+import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
 import {
@@ -336,18 +337,21 @@ const JobsPanel = ({
 
         if (redirectToDetailsPane) {
           return history.push(
-            `/projects/${project}/jobs/${cronString ? 'schedule' : 'monitor'}/${
-              result.data.data.metadata.uid
-            }/overview`
+            `/projects/${project}/jobs/${
+              cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB
+            }/${result.data.data.metadata.uid}/overview`
           )
         }
 
         return history.push(
-          `/projects/${project}/jobs/${cronString ? 'schedule' : 'monitor'}`
+          `/projects/${project}/jobs/${
+            cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB
+          }`
         )
       })
       .then(() => {
-        onSuccessRun && onSuccessRun(cronString ? 'schedule' : 'monitor')
+        onSuccessRun &&
+          onSuccessRun(cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB)
       })
   }
 

@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer'
-import { map, forEach, find, reject, concat, cloneDeep } from 'lodash'
+import { cloneDeep, concat, find, forEach, map, reject } from 'lodash'
 
 import ConfigFunctionTemplate from './ConfigFunctionTemplate/ConfigFunctionTemplate'
 import ConfigSource from './ConfigSource/ConfigSource'
 import ConfigSteps from './ConfigSteps/ConfigSteps'
 import ConfigTargets from './ConfigTargets/ConfigTargets'
-import { getLayoutedElements } from './detailsTransformations.util'
+import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
+import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
+
 import './detailsTransformations.scss'
 
 const DetailsTransformations = ({ selectedItem }) => {
@@ -20,7 +21,6 @@ const DetailsTransformations = ({ selectedItem }) => {
   const [selectedStep, setSelectedStep] = useState('')
   const [selectedAfterStep, setSelectedAfterStep] = useState('')
   const [selectedErrorStep, setSelectedErrorStep] = useState('')
-  const [reactFlowInstance, setReactFlowInstance] = useState(null)
   const [selectedItemUid, setSelectedItemUid] = useState(null)
 
   const generateGraphData = useCallback(() => {
@@ -109,10 +109,6 @@ const DetailsTransformations = ({ selectedItem }) => {
     setErrorSteps(stepsList)
   }, [states, targets, selectedStep])
 
-  const onLoad = reactFlowInstance => {
-    setReactFlowInstance(reactFlowInstance)
-  }
-
   useEffect(() => {
     setStates(cloneDeep(selectedItem.graph?.steps))
   }, [selectedItem.graph])
@@ -159,29 +155,10 @@ const DetailsTransformations = ({ selectedItem }) => {
     }
   }, [selectedItem, selectedItemUid])
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (reactFlowInstance) {
-        reactFlowInstance.fitView()
-        const { position, zoom } = reactFlowInstance.toObject()
-
-        reactFlowInstance.setTransform({ x: position[0], y: 50, zoom: zoom })
-      }
-    }, 100)
-  }, [reactFlowInstance, selectedItemUid])
-
   return (
     <div className="transformations-tab">
       <div className="graph-view">
-        <ReactFlowProvider>
-          <ReactFlow
-            elements={elements}
-            onLoad={onLoad}
-            elementsSelectable={false}
-            nodesDraggable={false}
-            nodesConnectable={false}
-          />
-        </ReactFlowProvider>
+        <MlReactFlow elements={elements} alignTriggerItem={selectedItemUid} />
       </div>
       <div className="config-pane">
         <div className="config-pane__title">Configuration</div>

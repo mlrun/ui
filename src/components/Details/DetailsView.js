@@ -174,11 +174,10 @@ const DetailsView = React.forwardRef(
           <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
           <Link
             data-testid="details-close-btn"
-            to={`/projects/${
-              match.params.projectName
-            }/${pageData.page.toLowerCase()}${
-              match.params.pageTab ? `/${match.params.pageTab}` : ''
-            }`}
+            to={location => {
+              const urlArray = location.pathname.split('/')
+              return urlArray.slice(0, urlArray.length - 2).join('/')
+            }}
             onClick={() => {
               if (detailsStore.changes.counter > 0) {
                 handleShowWarning(true)
@@ -194,13 +193,8 @@ const DetailsView = React.forwardRef(
         </div>
         <DetailsMenu
           detailsMenu={detailsMenu}
-          hash={selectedItem.hash}
-          id={pageData.page === JOBS_PAGE ? selectedItem.uid : ''}
-          iter={selectedItem.iter}
           match={match}
-          name={selectedItem.db_key || selectedItem.name}
           onClick={detailsMenuClick}
-          page={pageData.page}
         />
         {tabsContent}
         {detailsStore.showWarning && (
