@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
 import { isEmpty, map } from 'lodash'
@@ -33,6 +34,7 @@ const Table = ({
   setTablePanelOpen,
   tableStore
 }) => {
+  const location = useLocation()
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
     groupWorkflowItems: [],
@@ -87,6 +89,7 @@ const Table = ({
       tableStore.isTablePanelOpen,
       match.params.pageTab,
       match.params.projectName,
+      location.search,
       !isEveryObjectValueEmpty(selectedItem)
     )
 
@@ -113,6 +116,7 @@ const Table = ({
           groupWorkflowItem,
           !isEveryObjectValueEmpty(selectedItem),
           match.params.projectName,
+          location.search,
           true
         )
       })
@@ -134,6 +138,7 @@ const Table = ({
     filtersStore.groupBy,
     match.params.pageTab,
     match.params.projectName,
+    location.search,
     selectedItem
   ])
 

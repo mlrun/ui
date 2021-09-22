@@ -1,11 +1,22 @@
 import { orderBy } from 'lodash'
 
-import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
+import {
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  SCHEDULE_TAB
+} from '../../constants'
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
 import { groupByUniqName } from '../../utils/groupByUniqName'
+import { isDemoMode } from '../../utils/helper'
 
-export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
+export const getJobsStatistics = (
+  jobs,
+  match,
+  search,
+  scheduledJobs,
+  workflows
+) => {
   let jobsRunning = 0
   let jobsFailed = 0
   let workflowsRunning = 0
@@ -40,7 +51,9 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
       label: 'Running workflows',
       className:
         workflows.error || workflowsRunning === 0 ? 'default' : 'running',
-      link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
+      link: `/projects/${match.params.projectName}/jobs/${
+        isDemoMode(search) ? MONITOR_WORKFLOWS_TAB : MONITOR_JOBS_TAB
+      }`
     },
     failed: {
       value: jobs.error ? 'N/A' : jobsFailed,

@@ -33,6 +33,7 @@ import {
   SCHEDULE_TAB,
   TERTIARY_BUTTON
 } from '../../constants'
+import { isDemoMode } from '../../utils/helper'
 
 const Jobs = ({
   abortJob,
@@ -387,12 +388,15 @@ const Jobs = ({
     if (match.params.pageTab === SCHEDULE_TAB) {
       setFilters({ groupBy: 'none' })
     } else if (match.params.pageTab === MONITOR_JOBS_TAB) {
+      if (!isDemoMode(location.search)) {
+        getWorkflows()
+      }
       setFilters({ groupBy: INIT_GROUP_FILTER })
     } else if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
       getWorkflows()
       setFilters({ groupBy: 'workflow' })
     }
-  }, [getWorkflows, match.params.pageTab, subPage, setFilters])
+  }, [getWorkflows, match.params.pageTab, location.search, subPage, setFilters])
 
   const handleSelectJob = item => {
     if (document.getElementsByClassName('view')[0]) {

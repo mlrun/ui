@@ -23,7 +23,6 @@ const TableCell = ({
   expandLink,
   firstRow,
   handleExpandRow,
-  isGroupedByWorkflow,
   item,
   link,
   match,
@@ -44,7 +43,7 @@ const TableCell = ({
         selectedItem={selectedItem}
       />
     )
-  } else if (firstRow) {
+  } else if (firstRow || link) {
     return (
       <div className={`table-body__cell ${data.class}`}>
         {item.status && (
@@ -177,7 +176,6 @@ TableCell.defaultProps = {
   expandLink: false,
   firstRow: false,
   handleExpandRow: null,
-  isGroupedByWorkflow: false,
   item: {
     target_path: '',
     schema: ''
@@ -191,7 +189,6 @@ TableCell.propTypes = {
   expandLink: PropTypes.bool,
   firstRow: PropTypes.bool,
   handleExpandRow: PropTypes.func,
-  isGroupedByWorkflow: PropTypes.bool,
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.bool]),
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   match: PropTypes.shape({}),

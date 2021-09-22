@@ -18,8 +18,7 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODELS_PAGE,
-  DATASETS_TAB,
-  MONITOR_WORKFLOWS_TAB
+  DATASETS_TAB
 } from '../../constants'
 
 const TableView = ({
@@ -210,9 +209,7 @@ const TableView = ({
                       content={content}
                       handleExpandRow={handleExpandRow}
                       handleSelectItem={handleSelectItem}
-                      isGroupedByWorkflow={
-                        match.params.pageTab === MONITOR_WORKFLOWS_TAB
-                      }
+                      isGroupedByWorkflow={groupFilter === 'workflow'}
                       match={match}
                       rowItem={groupLatestItem[i]}
                       selectedItem={selectedItem}

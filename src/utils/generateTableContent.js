@@ -23,6 +23,7 @@ export const generateTableContent = (
   isTablePanelOpen,
   pageTab,
   projectName,
+  search,
   isSelectedItem
 ) => {
   if (
@@ -35,6 +36,7 @@ export const generateTableContent = (
             group,
             isSelectedItem,
             projectName,
+            search,
             groupFilter === 'workflow'
           )
         : page === FUNCTIONS_PAGE
@@ -61,6 +63,7 @@ export const generateTableContent = (
           content,
           isSelectedItem,
           projectName,
+          search,
           false,
           pageTab === SCHEDULE_TAB
         )

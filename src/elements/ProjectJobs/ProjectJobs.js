@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
@@ -20,6 +21,7 @@ const ProjectJobs = ({
   match,
   projectStore
 }) => {
+  const location = useLocation()
   const [groupedLatestItem, setGroupedLatestItem] = useState([])
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const ProjectJobs = ({
     const statistics = getJobsStatistics(
       projectStore.project.jobs,
       match,
+      location.search,
       projectStore.project.scheduledJobs,
       projectStore.project.workflows
     )
@@ -57,6 +60,7 @@ const ProjectJobs = ({
   }, [
     groupedLatestItem,
     match,
+    location.search,
     projectStore.project.jobs,
     projectStore.project.scheduledJobs,
     projectStore.project.workflows

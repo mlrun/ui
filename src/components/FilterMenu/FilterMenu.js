@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { cloneDeep } from 'lodash'
 
 import Select from '../../common/Select/Select'
 import Tooltip from '../../common/Tooltip/Tooltip'
@@ -11,6 +12,7 @@ import CheckBox from '../../common/CheckBox/CheckBox'
 import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import TagFilter from '../../common/TagFilter/TagFilter'
+import { isDemoMode } from '../../utils/helper'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
@@ -20,6 +22,7 @@ import {
   DATE_RANGE_TIME_FILTER,
   GROUP_BY_FILTER,
   ITERATIONS_FILTER,
+  JOBS_PAGE,
   KEY_CODES,
   LABELS_FILTER,
   NAME_FILTER,
@@ -51,6 +54,20 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const history = useHistory()
+  const location = useLocation()
+  const selectOptions = useMemo(() => {
+    const options = cloneDeep(filterSelectOptions)
+
+    if (
+      !isDemoMode(location.search) &&
+      page === JOBS_PAGE &&
+      !options.groupBy.find(option => option.id === 'workflow')
+    ) {
+      options.groupBy.push({ label: 'Workflow', id: 'workflow' })
+    }
+
+    return options
+  }, [location.search, page])
 
   useEffect(() => {
     return () => {
@@ -256,7 +273,7 @@ const FilterMenu = ({
                   label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
                   key={filter.type}
                   onClick={item => handleSelectOption(item, filter)}
-                  options={filterSelectOptions[filter.type]}
+                  options={selectOptions[filter.type]}
                   selectedId={
                     (filter.type === STATUS_FILTER && filtersStore.state) ||
                     (filter.type === GROUP_BY_FILTER && filtersStore.groupBy)

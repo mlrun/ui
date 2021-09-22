@@ -11,11 +11,13 @@ import measureTime from './measureTime'
 import { parseKeyValues } from './object'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getJobIdentifier } from './getUniqueIdentifier'
+import { isDemoMode } from './helper'
 
 const createJobsContent = (
   content,
   isSelectedItem,
   projectName,
+  search,
   groupedByWorkflow,
   scheduled
 ) => {
@@ -105,10 +107,11 @@ const createJobsContent = (
           name: {
             value: contentItem.name,
             class: 'jobs_medium',
+            type: type === 'workflow' && !isDemoMode(search) ? 'hidden' : '',
             identifier: getJobIdentifier(contentItem),
             identifierUnique: getJobIdentifier(contentItem, true),
             getLink: tab => {
-              return groupedByWorkflow
+              return type === 'workflow'
                 ? `/projects/${projectName}/${JOBS_PAGE.toLowerCase()}/${MONITOR_WORKFLOWS_TAB}/workflow/${
                     contentItem.id
                   }`
