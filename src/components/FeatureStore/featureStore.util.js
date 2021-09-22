@@ -239,7 +239,7 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
       class: 'artifacts_extra-small'
     },
     {
-      header: 'Entity',
+      header: 'Entities',
       class: 'artifacts_big'
     },
     {
