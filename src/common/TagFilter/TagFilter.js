@@ -19,14 +19,14 @@ const TagFilter = ({
   value
 }) => {
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false)
-  const [tagFilter, setTagFilter] = useState(value)
+  const [tagFilter, setTagFilter] = useState(INIT_TAG_FILTER)
 
   const history = useHistory()
   const tagFilterRef = useRef()
 
   useEffect(() => {
-    setTagFilter(INIT_TAG_FILTER)
-  }, [setTagFilter, match.params.pageTab])
+    setTagFilter(value)
+  }, [setTagFilter, match.params.pageTab, value])
 
   const handlerOverall = useCallback(
     event => {
