@@ -239,8 +239,8 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
       class: 'artifacts_extra-small'
     },
     {
-      header: 'Entity',
-      class: 'artifacts_small'
+      header: 'Entities',
+      class: 'artifacts_big'
     },
     {
       header: 'Description',

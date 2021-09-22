@@ -149,8 +149,9 @@ const createFeaturesRowData = (feature, isTablePanelOpen) => {
       class: 'artifacts_extra-small'
     },
     entity: {
-      value: feature.spec?.entities[0]?.name,
-      class: 'artifacts_small'
+      type: 'labels',
+      value: feature.spec?.entities.map(entity => entity.name),
+      class: 'artifacts_big'
     },
     description: {
       value: feature.description,
