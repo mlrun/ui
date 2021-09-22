@@ -441,9 +441,9 @@ export const navigateToDetailsPane = (
     featureSets.allData.length > 0
   ) {
     if (featureSets.selectedRowData.content[name]) {
-      content = parseFeatureSets(featureSets.selectedRowData.content[name])
+      content = featureSets.selectedRowData.content[name]
     } else {
-      content = parseFeatureSets(featureSets.allData)
+      content = featureSets.allData
     }
   } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
     content = [...features, ...entities]
@@ -471,10 +471,7 @@ export const navigateToDetailsPane = (
     const selectedItem = content.find(contentItem => {
       const searchKey = contentItem.name ? 'name' : 'db_key'
 
-      if (
-        match.params.pageTab === FEATURE_SETS_TAB ||
-        match.params.pageTab === FEATURE_VECTORS_TAB
-      ) {
+      if ([FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)) {
         return (
           contentItem[searchKey] === name &&
           (contentItem.tag === tag || contentItem.uid === tag)
@@ -730,6 +727,7 @@ export const fetchFeatureSetRowData = async (
     selectedRowData: {
       ...state.selectedRowData,
       [featureSetIdentifier]: {
+        ...state.selectedRowData[featureSetIdentifier],
         loading: true
       }
     }

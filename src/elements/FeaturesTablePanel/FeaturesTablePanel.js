@@ -34,8 +34,22 @@ const FeaturesTablePanel = ({
   )
 
   useEffect(() => {
-    setLabelFeature(tableStore.features.featureVector.spec.label_feature ?? '')
-  }, [tableStore.features.featureVector.spec.label_feature])
+    setLabelFeature(
+      tableStore.features.groupedFeatures[
+        tableStore.features.currentProject
+      ]?.some(
+        feature =>
+          feature.originalTemplate ===
+          tableStore.features.featureVector.spec.label_feature
+      )
+        ? tableStore.features.featureVector.spec.label_feature
+        : ''
+    )
+  }, [
+    tableStore.features.currentProject,
+    tableStore.features.featureVector.spec.label_feature,
+    tableStore.features.groupedFeatures
+  ])
 
   const addFeatures = () => {
     let featureVector = cloneDeep(tableStore.features.featureVector)

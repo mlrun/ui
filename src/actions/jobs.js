@@ -125,7 +125,11 @@ const jobsActions = {
 
         return newJobs
       })
-      .catch(error => dispatch(jobsActions.fetchJobsFailure(error)))
+      .catch(error => {
+        dispatch(jobsActions.fetchJobsFailure(error))
+
+        throw error
+      })
   },
   fetchJobsBegin: () => ({
     type: FETCH_JOBS_BEGIN

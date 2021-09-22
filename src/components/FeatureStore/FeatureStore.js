@@ -384,8 +384,7 @@ const FeatureStore = ({
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
         getFilterTagOptions(fetchFeatureVectorsTags, match.params.projectName)
       } else if (
-        match.params.pageTab === FEATURES_TAB ||
-        match.params.pageTab === FEATURE_SETS_TAB
+        [FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)
       ) {
         getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
       }

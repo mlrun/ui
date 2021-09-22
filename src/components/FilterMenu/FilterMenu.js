@@ -81,6 +81,10 @@ const FilterMenu = ({
       )
     }
 
+    if (!isRefreshed) {
+      handleExpandAll(true)
+    }
+
     onChange(data)
   }
 
@@ -143,7 +147,6 @@ const FilterMenu = ({
   const handleIter = iteration => {
     const iterValue = filtersStore.iter === iteration ? 'iter' : ''
 
-    handleExpandAll(true)
     setFilters({
       iter: iterValue
     })

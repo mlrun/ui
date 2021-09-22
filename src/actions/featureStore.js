@@ -147,7 +147,7 @@ const featureStoreActions = {
       .then(response => {
         dispatch(
           featureStoreActions.fetchFeatureSetsSuccess(
-            response.data?.feature_sets
+            parseFeatureSets(response.data?.feature_sets)
           )
         )
 
@@ -172,14 +172,15 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeatureSet(project, featureSet)
       .then(response => {
-        const [generatedFeatureSet] = parseFeatureSets(
+        const generatedFeatureSets = parseFeatureSets(
           response.data?.feature_sets
         )
 
         dispatch(
           featureStoreActions.fetchFeatureSetSuccess({
-            [getFeatureSetIdentifier(generatedFeatureSet)]: response.data
-              .feature_sets
+            [getFeatureSetIdentifier(
+              generatedFeatureSets[0]
+            )]: generatedFeatureSets
           })
         )
 
