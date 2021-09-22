@@ -116,14 +116,15 @@
     top: 0;
     z-index: 2;
     display: flex;
-    min-height: 59px;
     background-color: $white;
 
     &__item {
-      flex: 1;
-
       @include tableDet;
       @include tableHeader(5px);
+
+      flex: 1;
+      height: 50px;
+      line-height: 18px;
 
       &.buttonPopout,
       &.buttonDownload {
@@ -266,7 +267,7 @@
           .table-body__row {
             &:first-child {
               position: sticky;
-              top: 35px;
+              top: 50px;
               z-index: 1;
               background-color: $white;
 
