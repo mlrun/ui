@@ -440,31 +440,20 @@ export const navigateToDetailsPane = (
     match.params.pageTab === FEATURE_SETS_TAB &&
     featureSets.allData.length > 0
   ) {
-    if (featureSets.selectedRowData.content[name]) {
-      content = featureSets.selectedRowData.content[name]
-    } else {
-      content = featureSets.allData
-    }
+    content = featureSets.selectedRowData.content[name] || featureSets.allData
   } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
     content = [...features, ...entities]
   } else if (
     match.params.pageTab === DATASETS_TAB &&
     dataSets.allData.length > 0
   ) {
-    if (dataSets.selectedRowData.content[name]) {
-      content = dataSets.selectedRowData.content[name]
-    } else {
-      content = dataSets.allData
-    }
+    content = dataSets.selectedRowData.content[name] || dataSets.allData
   } else if (
     match.params.pageTab === FEATURE_VECTORS_TAB &&
     featureVectors.allData.length > 0
   ) {
-    if (featureVectors.selectedRowData.content[name]) {
-      content = featureVectors.selectedRowData.content[name]
-    } else {
-      content = featureVectors.allData
-    }
+    content =
+      featureVectors.selectedRowData.content[name] || featureVectors.allData
   }
 
   if (match.params.name && content.length !== 0) {
