@@ -45,14 +45,17 @@ import {
   SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN,
   SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
-  SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME
+  SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
+  FETCH_FEATURE_SET_SUCCESS
 } from '../constants'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
 import {
   getFeatureIdentifier,
+  getFeatureSetIdentifier,
   getFeatureVectorIdentifier
 } from '../utils/getUniqueIdentifier'
+import { parseFeatureSets } from '../utils/parseFeatureSets'
 
 const featureStoreActions = {
   createNewFeatureSet: (project, data) => dispatch => {
@@ -144,7 +147,7 @@ const featureStoreActions = {
       .then(response => {
         dispatch(
           featureStoreActions.fetchFeatureSetsSuccess(
-            response.data?.feature_sets
+            parseFeatureSets(response.data?.feature_sets)
           )
         )
 
@@ -163,6 +166,32 @@ const featureStoreActions = {
   }),
   fetchFeatureSetsSuccess: featureSets => ({
     type: FETCH_FEATURE_SETS_SUCCESS,
+    payload: featureSets
+  }),
+  fetchFeatureSet: (project, featureSet) => dispatch => {
+    return featureStoreApi
+      .getFeatureSet(project, featureSet)
+      .then(response => {
+        const generatedFeatureSets = parseFeatureSets(
+          response.data?.feature_sets
+        )
+
+        dispatch(
+          featureStoreActions.fetchFeatureSetSuccess({
+            [getFeatureSetIdentifier(
+              generatedFeatureSets[0]
+            )]: generatedFeatureSets
+          })
+        )
+
+        return response.data?.feature_sets
+      })
+      .catch(error => {
+        throw error
+      })
+  },
+  fetchFeatureSetSuccess: featureSets => ({
+    type: FETCH_FEATURE_SET_SUCCESS,
     payload: featureSets
   }),
   fetchFeatureVector: (project, featureVector) => dispatch => {

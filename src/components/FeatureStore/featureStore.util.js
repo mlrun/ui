@@ -25,6 +25,7 @@ import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 import {
   getArtifactIdentifier,
   getFeatureIdentifier,
+  getFeatureSetIdentifier,
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
@@ -87,6 +88,7 @@ export const datasetsFilters = [
   { type: 'iterations', label: 'Show iterations' }
 ]
 export const featureSetsFilters = [
+  { type: 'tag', label: 'Tag:' },
   { type: 'name', label: 'Name:' },
   { type: 'labels', label: 'Label:' }
 ]
@@ -310,6 +312,7 @@ export const generatePageData = (
     data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
     data.registerArtifactDialogTitle = createFeatureSetTitle
     data.filterMenuActionButton = null
+    data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
     data.filters = featuresFilters
@@ -377,7 +380,7 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureSets(project, { ...filters, tag: null }, config)
+    result = await fetchFeatureSets(project, filters, config)
 
     if (result) {
       data.content = parseFeatureSets(result)
@@ -433,38 +436,31 @@ export const navigateToDetailsPane = (
   const { name, tag, iter } = match.params
   let content = []
 
-  if (match.params.pageTab === FEATURE_SETS_TAB && featureSets.length > 0) {
-    content = parseFeatureSets(featureSets)
+  if (
+    match.params.pageTab === FEATURE_SETS_TAB &&
+    featureSets.allData.length > 0
+  ) {
+    content = featureSets.selectedRowData.content[name] || featureSets.allData
   } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
     content = [...features, ...entities]
   } else if (
     match.params.pageTab === DATASETS_TAB &&
     dataSets.allData.length > 0
   ) {
-    if (dataSets.selectedRowData.content[name]) {
-      content = dataSets.selectedRowData.content[name]
-    } else {
-      content = dataSets.allData
-    }
+    content = dataSets.selectedRowData.content[name] || dataSets.allData
   } else if (
     match.params.pageTab === FEATURE_VECTORS_TAB &&
     featureVectors.allData.length > 0
   ) {
-    if (featureVectors.selectedRowData.content[name]) {
-      content = featureVectors.selectedRowData.content[name]
-    } else {
-      content = featureVectors.allData
-    }
+    content =
+      featureVectors.selectedRowData.content[name] || featureVectors.allData
   }
 
   if (match.params.name && content.length !== 0) {
     const selectedItem = content.find(contentItem => {
       const searchKey = contentItem.name ? 'name' : 'db_key'
 
-      if (
-        match.params.pageTab === FEATURE_SETS_TAB ||
-        match.params.pageTab === FEATURE_VECTORS_TAB
-      ) {
+      if ([FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)) {
         return (
           contentItem[searchKey] === name &&
           (contentItem.tag === tag || contentItem.uid === tag)
@@ -491,9 +487,8 @@ export const navigateToDetailsPane = (
         match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
         selectedItem.usage_example = generateUsageSnippets(
-          match.params,
-          featureSets,
-          featureVectors
+          match.params.pageTab,
+          selectedItem
         )
       }
 
@@ -701,6 +696,56 @@ export const fetchFeatureRowData = async (fetchData, feature, setPageData) => {
         ...state.selectedRowData,
         [featureIdentifier]: {
           content: [...parseFeatures(result)],
+          error: null,
+          loading: false
+        }
+      }
+    }))
+  }
+}
+
+export const fetchFeatureSetRowData = async (
+  fetchFeatureSet,
+  featureSet,
+  setPageData
+) => {
+  const featureSetIdentifier = getFeatureSetIdentifier(featureSet)
+
+  setPageData(state => ({
+    ...state,
+    selectedRowData: {
+      ...state.selectedRowData,
+      [featureSetIdentifier]: {
+        ...state.selectedRowData[featureSetIdentifier],
+        loading: true
+      }
+    }
+  }))
+
+  const result = await fetchFeatureSet(
+    featureSet.project,
+    featureSet.name
+  ).catch(error => {
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        ...state.selectedRowData,
+        [featureSetIdentifier]: {
+          ...state.selectedRowData[featureSetIdentifier],
+          error,
+          loading: false
+        }
+      }
+    }))
+  })
+
+  if (result?.length > 0) {
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        ...state.selectedRowData,
+        [featureSetIdentifier]: {
+          content: [...parseFeatureSets(result)],
           error: null,
           loading: false
         }

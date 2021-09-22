@@ -1,30 +1,13 @@
 import { FEATURE_SETS_TAB, FEATURE_VECTORS_TAB } from '../constants'
 import { generateUri } from './resources'
 
-export const generateUsageSnippets = (
-  { pageTab, name, tag },
-  featureSets,
-  featureVectors
-) => {
-  const [currentFeatureSet] = featureSets.filter(
-    featureSet =>
-      featureSet.metadata.name === name &&
-      (featureSet.metadata.tag === tag || featureSet.metadata.uid === tag)
-  )
-  const currentFeatureVectorData =
-    featureVectors.selectedRowData.content[name] ?? featureVectors.allData
-  const [currentFeatureVector] = currentFeatureVectorData.filter(
-    featureVector =>
-      featureVector.name === name &&
-      (featureVector.tag === tag || featureVector.uid === tag)
-  )
-
+export const generateUsageSnippets = (pageTab, selectedItem) => {
   if (pageTab === FEATURE_SETS_TAB) {
     return [
       {
         title: 'Get offline features for training:',
         code: `features = [
-    "${currentFeatureSet.metadata.name}.*",
+    "${selectedItem.name}.*",
 ]
 
 vector = fs.FeatureVector("<vector-name>",features=features,description="this is my vector")
@@ -33,14 +16,13 @@ resp = fs.get_offline_features(vector)`
       {
         title: 'Getting online features:',
         code: `svc = fs.get_online_feature_service("<vector-uri>")
-resp = svc.get([{"${currentFeatureSet.spec.entities[0]?.name ??
-          ''}": <value>}])`
+resp = svc.get([{"${selectedItem.entities[0]?.name ?? ''}": <value>}])`
       }
     ]
   }
 
   if (pageTab === FEATURE_VECTORS_TAB) {
-    const uri = generateUri(currentFeatureVector, pageTab)
+    const uri = generateUri(selectedItem, pageTab)
 
     return [
       {

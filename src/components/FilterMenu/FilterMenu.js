@@ -81,7 +81,10 @@ const FilterMenu = ({
       )
     }
 
-    handleExpandAll(true)
+    if (!isRefreshed) {
+      handleExpandAll(true)
+    }
+
     onChange(data)
   }
 
