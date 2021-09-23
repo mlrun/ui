@@ -24,7 +24,8 @@ const TextTooltipTemplate = ({ text, warning }) => {
           width > window.innerWidth
             ? window.innerWidth - offset
             : width + horizontalPadding * 2,
-        wordBreak: width > window.innerWidth ? 'break-word' : 'unset'
+        wordBreak: width > window.innerWidth ? 'break-word' : 'unset',
+        whiteSpace: width > window.innerWidth ? 'pre-wrap' : 'nowrap'
       })
     }
   }, [])
