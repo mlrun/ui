@@ -6,9 +6,6 @@ import { artifactInfoSourcesHeaders } from './artifactInfoSources.utils'
 
 import './artifactInfoSources.scss'
 
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 const ArtifactInfoSources = ({ header, sources }) => {
@@ -17,10 +14,6 @@ const ArtifactInfoSources = ({ header, sources }) => {
   const sourcesClassNames = classnames(
     'info-sources',
     isExpanded && 'info-sources_expanded'
-  )
-  const contentValueClassNames = classnames(
-    'info-sources-table__content-value',
-    'data-ellipsis'
   )
 
   const sourcesLength = Object.values(sources).length
@@ -76,11 +69,7 @@ const ArtifactInfoSources = ({ header, sources }) => {
               className="info-sources-table__content"
             >
               <div className="info-sources-table__content-key">{key}</div>
-              <div className={contentValueClassNames}>
-                <Tooltip template={<TextTooltipTemplate text={value} />}>
-                  {value}
-                </Tooltip>
-              </div>
+              <div className="info-sources-table__content-value">{value}</div>
             </div>
           ))}
         </div>

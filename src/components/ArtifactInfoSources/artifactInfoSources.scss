@@ -82,8 +82,12 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      height: 56px;
+      min-height: 56px;
       border-bottom: $secondaryBorder;
+
+      &-value {
+        word-break: break-word;
+      }
 
       &:last-child {
         border: none;
@@ -97,7 +101,6 @@
   }
 
   &_expanded {
-    overflow: hidden;
     box-shadow: $previewBoxShadow;
   }
 }
