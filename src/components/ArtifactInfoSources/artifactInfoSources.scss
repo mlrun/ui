@@ -18,6 +18,10 @@
     padding: 18px 25px;
     cursor: pointer;
 
+    &_empty {
+      padding: 8px;
+    }
+
     &__header {
       min-width: 100px;
       font-weight: bold;
@@ -93,6 +97,7 @@
   }
 
   &_expanded {
+    overflow: hidden;
     box-shadow: $previewBoxShadow;
   }
 }
