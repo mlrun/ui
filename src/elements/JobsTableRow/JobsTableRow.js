@@ -137,7 +137,6 @@ const JobsTableRow = ({
                   data={rowItemProp}
                   expandLink={!isEmpty(tableContent)}
                   handleExpandRow={handleExpandRow}
-                  isGroupedByWorkflow={isGroupedByWorkflow}
                   item={currentItem}
                   key={`${new Date().getTime()}${index}`}
                   link={

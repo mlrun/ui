@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
 
+import { DATASETS_TAB } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { formatDatetime } from '../../utils'
@@ -74,7 +75,7 @@ const ProjectView = React.forwardRef(
       artifactKind === 'model'
         ? 'models'
         : artifactKind === 'dataset'
-        ? 'feature-store/datasets'
+        ? `feature-store/${DATASETS_TAB}`
         : artifactKind === 'file'
         ? 'files'
         : 'artifacts'

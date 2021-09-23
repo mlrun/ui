@@ -5,8 +5,8 @@ import PropTypes from 'prop-types'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 
+import { DETAILS_OVERVIEW_TAB, MONITOR_JOBS_TAB } from '../../constants'
 import { detailsMenu } from '../../components/JobsPage/jobsData'
-import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
 const TableProducerCell = ({ data }) => {
   const [project, uid] = data.value.uri?.split('/') || []
@@ -26,9 +26,9 @@ const TableProducerCell = ({ data }) => {
         >
           <Link
             className="link"
-            to={`/projects/${project}/jobs/monitor/${uid.split('-')[0]}/${
-              overviewTab.id
-            }`}
+            to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${
+              uid.split('-')[0]
+            }/${overviewTab.id}`}
           >
             {data.value.name}
           </Link>

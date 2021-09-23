@@ -336,12 +336,12 @@ const FeatureStore = ({
     ) {
       isDetailsTabExists(
         FEATURE_STORE_PAGE,
-        match.params,
+        match,
         pageData.detailsMenu,
         history
       )
     }
-  }, [history, match.params, pageData.detailsMenu])
+  }, [history, match, pageData.detailsMenu])
 
   useEffect(() => {
     checkTabIsValid(history, match, selectedItem)

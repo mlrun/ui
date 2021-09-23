@@ -7,6 +7,8 @@ import Download from '../../common/Download/Download'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
 
+import { DATASETS_TAB, MODELS_TAB } from '../../constants'
+
 import { ReactComponent as Popout } from '../../images/popout.svg'
 import { ReactComponent as DetailsIcon } from '../../images/view-details.svg'
 
@@ -26,10 +28,11 @@ const DetailsArtifactsView = ({
       const artifactScreenLinks = {
         model: `/projects/${
           match.params.projectName
-        }/models/models/${artifact.db_key || artifact.key}/overview`,
+        }/models/${MODELS_TAB}/${artifact.db_key || artifact.key}/overview`,
         dataset: `/projects/${
           match.params.projectName
-        }/feature-store/datasets/${artifact.db_key || artifact.key}/overview`
+        }/feature-store/${DATASETS_TAB}/${artifact.db_key ||
+          artifact.key}/overview`
       }
 
       return (

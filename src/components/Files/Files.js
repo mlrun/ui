@@ -161,14 +161,9 @@ const Files = ({
       match.params.tag &&
       pageData.detailsMenu.length > 0
     ) {
-      isDetailsTabExists(
-        FILES_PAGE,
-        match.params,
-        pageData.detailsMenu,
-        history
-      )
+      isDetailsTabExists(FILES_PAGE, match, pageData.detailsMenu, history)
     }
-  }, [history, match.params, pageData.detailsMenu])
+  }, [history, match, pageData.detailsMenu])
 
   useEffect(() => {
     fetchData({ tag: INIT_TAG_FILTER, iter: 'iter' })

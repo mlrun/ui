@@ -1,7 +1,19 @@
 import React from 'react'
 
-import { JOB_STEADY_STATES } from './jobsPage.utils'
-import { TERTIARY_BUTTON } from '../../constants'
+import {
+  DATE_RANGE_TIME_FILTER,
+  GROUP_BY_FILTER,
+  LABELS_FILTER,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  NAME_FILTER,
+  PERIOD_FILTER,
+  SCHEDULE_TAB,
+  STATUS_FILTER,
+  TERTIARY_BUTTON,
+  WORKFLOW_SUB_PAGE
+} from '../../constants'
+import { isDemoMode } from '../../utils/helper'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
@@ -22,8 +34,11 @@ export const infoHeaders = [
   { label: 'Output path', id: 'outputPath' },
   { label: 'Iterations', id: 'iterations' }
 ]
-export const generateTableHeaders = (scheduled, isSelectedItem) => {
-  if (scheduled) {
+
+const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
+
+export const generateTableHeaders = (pageTab, isSelectedItem) => {
+  if (pageTab === SCHEDULE_TAB) {
     return [
       {
         header: 'Name',
@@ -135,21 +150,45 @@ export const detailsMenu = [
     id: 'pods'
   }
 ]
-export const filters = [
-  { type: 'period', label: 'Period:' },
-  { type: 'status', label: 'Status:' },
-  { type: 'groupBy', label: 'Group by:' },
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Labels:' },
-  { type: 'date-range-time', label: 'Start time:' }
-]
 
-export const tabs = [
-  { id: 'monitor', label: 'Monitor' },
-  { id: 'schedule', label: 'Schedule' }
-]
+const filtersByTab = {
+  [MONITOR_JOBS_TAB]: [
+    { type: PERIOD_FILTER, label: 'Period:' },
+    { type: STATUS_FILTER, label: 'Status:' },
+    { type: GROUP_BY_FILTER, label: 'Group by:' },
+    { type: NAME_FILTER, label: 'Name:' },
+    { type: LABELS_FILTER, label: 'Labels:' },
+    { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
+  ],
+  [MONITOR_WORKFLOWS_TAB]: [
+    { type: PERIOD_FILTER, label: 'Period:' },
+    { type: STATUS_FILTER, label: 'Status:' },
+    { type: NAME_FILTER, label: 'Name:' },
+    { type: LABELS_FILTER, label: 'Labels:' },
+    { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
+  ],
+  [SCHEDULE_TAB]: [
+    { type: NAME_FILTER, label: 'Name:' },
+    { type: LABELS_FILTER, label: 'Labels:' }
+  ]
+}
+
+const generateTabs = search => {
+  return [
+    { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },
+    {
+      id: MONITOR_WORKFLOWS_TAB,
+      label: 'Monitor Workflows',
+      hidden: !isDemoMode(search)
+    },
+    { id: SCHEDULE_TAB, label: 'Schedule' }
+  ]
+}
+
 export const generatePageData = (
-  scheduled,
+  pageTab,
+  search,
+  subPage,
   removeScheduledJob,
   handleSubmitJob,
   setEditableItem,
@@ -162,7 +201,6 @@ export const generatePageData = (
   removeJobLogs,
   isSelectedItem
 ) => {
-  let jobFilters = []
   let filterMenuActionButton = {
     label: 'Resource monitoring',
     tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
@@ -171,18 +209,13 @@ export const generatePageData = (
     onClick: event => handleMonitoring()
   }
 
-  if (scheduled) {
-    jobFilters = [
-      { type: 'name', label: 'Name:' },
-      { type: 'labels', label: 'Labels:' }
-    ]
+  if (pageTab === SCHEDULE_TAB) {
     filterMenuActionButton = null
-  } else {
-    jobFilters = [...filters]
   }
+
   return {
     actionsMenu: generateActionsMenu(
-      scheduled,
+      pageTab,
       removeScheduledJob,
       handleSubmitJob,
       setEditableItem,
@@ -193,11 +226,12 @@ export const generatePageData = (
       abortableFunctionKinds
     ),
     detailsMenu,
+    hideFilterMenu: subPage === WORKFLOW_SUB_PAGE,
     filterMenuActionButton,
-    filters: jobFilters,
+    filters: filtersByTab[pageTab],
     page,
-    tableHeaders: generateTableHeaders(scheduled, isSelectedItem),
-    tabs,
+    tableHeaders: generateTableHeaders(pageTab, isSelectedItem),
+    tabs: generateTabs(search),
     infoHeaders,
     refreshLogs: fetchJobLogs,
     removeLogs: removeJobLogs,
@@ -211,7 +245,7 @@ const isJobAbortable = (job, abortableFunctionKinds) =>
     .some(kindLabel => job?.labels?.includes(kindLabel))
 
 export const generateActionsMenu = (
-  scheduled,
+  pageTab,
   removeScheduledJob,
   handleSubmitJob,
   setEditableItem,
@@ -220,8 +254,8 @@ export const generateActionsMenu = (
   jobsDashboardUrl,
   onAbortJob,
   abortableFunctionKinds
-) => job =>
-  scheduled
+) => job => {
+  return pageTab === SCHEDULE_TAB
     ? [
         {
           label: 'Run now',
@@ -239,7 +273,8 @@ export const generateActionsMenu = (
           onClick: removeScheduledJob
         }
       ]
-    : [
+    : job?.uid
+    ? [
         {
           label: 'Re-run',
           icon: <Run />,
@@ -269,3 +304,5 @@ export const generateActionsMenu = (
           hidden: JOB_STEADY_STATES.includes(job?.state?.value)
         }
       ]
+    : []
+}

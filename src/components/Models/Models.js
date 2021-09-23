@@ -281,14 +281,9 @@ const Models = ({
       match.params.tag &&
       pageData.detailsMenu.length > 0
     ) {
-      isDetailsTabExists(
-        MODELS_PAGE,
-        match.params,
-        pageData.detailsMenu,
-        history
-      )
+      isDetailsTabExists(MODELS_PAGE, match, pageData.detailsMenu, history)
     }
-  }, [history, match.params, pageData.detailsMenu])
+  }, [history, match, pageData.detailsMenu])
 
   useEffect(() => {
     if (

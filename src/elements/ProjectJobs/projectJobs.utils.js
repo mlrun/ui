@@ -1,9 +1,22 @@
+import { orderBy } from 'lodash'
+
+import {
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  SCHEDULE_TAB
+} from '../../constants'
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
 import { groupByUniqName } from '../../utils/groupByUniqName'
-import { orderBy } from 'lodash'
+import { isDemoMode } from '../../utils/helper'
 
-export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
+export const getJobsStatistics = (
+  jobs,
+  match,
+  search,
+  scheduledJobs,
+  workflows
+) => {
   let jobsRunning = 0
   let jobsFailed = 0
   let workflowsRunning = 0
@@ -31,20 +44,22 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
       value: jobs.error ? 'N/A' : jobsRunning,
       label: 'Running jobs',
       className: jobs.error || jobsRunning === 0 ? 'default' : 'running',
-      link: `/projects/${match.params.projectName}/jobs/monitor`
+      link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     workflows: {
       value: workflows.error ? 'N/A' : workflowsRunning,
       label: 'Running workflows',
       className:
         workflows.error || workflowsRunning === 0 ? 'default' : 'running',
-      link: `/projects/${match.params.projectName}/jobs/monitor`
+      link: `/projects/${match.params.projectName}/jobs/${
+        isDemoMode(search) ? MONITOR_WORKFLOWS_TAB : MONITOR_JOBS_TAB
+      }`
     },
     failed: {
       value: jobs.error ? 'N/A' : jobsFailed,
       label: 'Failed',
       className: jobsFailed > 0 && !jobs.error ? 'failed' : 'default',
-      link: `/projects/${match.params.projectName}/jobs/monitor`
+      link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     scheduled: {
       value: scheduledJobs.error
@@ -56,7 +71,7 @@ export const getJobsStatistics = (jobs, match, scheduledJobs, workflows) => {
         groupByUniqName(scheduledJobs.data, 'name').length === 0
           ? 'default'
           : 'scheduled',
-      link: `/projects/${match.params.projectName}/jobs/schedule`
+      link: `/projects/${match.params.projectName}/jobs/${SCHEDULE_TAB}`
     }
   }
 }
@@ -67,7 +82,7 @@ export const getJobsTableData = (jobs, match) => {
       return {
         name: {
           value: job[0].metadata.name,
-          link: `/projects/${match.params.projectName}/jobs/monitor/${job[0].metadata.uid}/overview`,
+          link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}/${job[0].metadata.uid}/overview`,
           className: 'table-cell_big'
         },
         type: {

@@ -8,8 +8,7 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODELS_PAGE,
-  SCHEDULE_TAB,
-  INIT_GROUP_FILTER
+  SCHEDULE_TAB
 } from '../constants'
 import createJobsContent from './createJobsContent'
 import createFunctionsContent from './createFunctionsContent'
@@ -18,19 +17,28 @@ import { createFeatureStoreContent } from './createFeatureStoreContent'
 
 export const generateTableContent = (
   content,
-  groupedByName,
-  groupedByWorkflow,
+  groupedContent,
   groupFilter,
   page,
   isTablePanelOpen,
   pageTab,
   projectName,
+  search,
   isSelectedItem
 ) => {
-  if (!isEmpty(groupedByName) && groupFilter === INIT_GROUP_FILTER) {
-    return map(groupedByName, group =>
+  if (
+    !isEmpty(groupedContent) &&
+    (groupFilter === 'name' || groupFilter === 'workflow')
+  ) {
+    return map(groupedContent, group =>
       page === JOBS_PAGE
-        ? createJobsContent(group, isSelectedItem, false)
+        ? createJobsContent(
+            group,
+            isSelectedItem,
+            projectName,
+            search,
+            groupFilter === 'workflow'
+          )
         : page === FUNCTIONS_PAGE
         ? createFunctionsContent(group, isSelectedItem)
         : page === FEATURE_STORE_PAGE && pageTab !== DATASETS_TAB
@@ -49,15 +57,13 @@ export const generateTableContent = (
             isSelectedItem
           )
     )
-  } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
-    return map(groupedByWorkflow, group =>
-      createJobsContent(group, isSelectedItem, true)
-    )
   } else if (groupFilter === 'none' || !groupFilter) {
     return page === JOBS_PAGE
       ? createJobsContent(
           content,
           isSelectedItem,
+          projectName,
+          search,
           false,
           pageTab === SCHEDULE_TAB
         )
