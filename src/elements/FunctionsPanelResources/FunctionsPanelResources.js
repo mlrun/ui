@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -10,14 +10,18 @@ import {
   getDefaultCpuUnit,
   getDefaultMemoryUnit,
   getDefaultVolumeMounts,
-  setRangeInputValidation
+  setRangeInputValidation,
+  VOLUME_MOUNT_AUTO_TYPE,
+  VOLUME_MOUNT_NONE_TYPE
 } from './functionsPanelResources.util'
 import { FUNCTION_PANEL_MODE } from '../../types'
+import { PANEL_CREATE_MODE } from '../../constants'
 
 const FunctionsPanelResources = ({
   defaultData,
   functionsStore,
   mode,
+  setNewFunctionDisableAutoMount,
   setNewFunctionVolumeMounts,
   setNewFunctionVolumes,
   setNewFunctionResources,
@@ -30,6 +34,7 @@ const FunctionsPanelResources = ({
       defaultData.volumes ?? [],
       mode
     ),
+    volumeMount: VOLUME_MOUNT_AUTO_TYPE,
     volumes: defaultData.volumes ?? [],
     memoryUnit:
       getDefaultMemoryUnit(
@@ -51,6 +56,12 @@ const FunctionsPanelResources = ({
       memory: defaultData.resources?.requests?.memory ?? ''
     }
   })
+
+  useEffect(() => {
+    if (mode === PANEL_CREATE_MODE) {
+      setNewFunctionDisableAutoMount(false)
+    }
+  }, [mode, setNewFunctionDisableAutoMount])
 
   const handleSelectMemoryUnit = value => {
     const unit = value.match(/i/)
@@ -275,6 +286,39 @@ const FunctionsPanelResources = ({
     setNewFunctionVolumes(volumes)
   }
 
+  const handleSelectVolumeMount = value => {
+    switch (value) {
+      case VOLUME_MOUNT_AUTO_TYPE:
+        setData(state => ({
+          ...state,
+          volumes: [],
+          volumeMounts: [],
+          volumeMount: value
+        }))
+        setNewFunctionVolumes([])
+        setNewFunctionVolumeMounts([])
+        setNewFunctionDisableAutoMount(false)
+        break
+      case VOLUME_MOUNT_NONE_TYPE:
+        setData(state => ({
+          ...state,
+          volumes: [],
+          volumeMounts: [],
+          volumeMount: value
+        }))
+        setNewFunctionVolumes([])
+        setNewFunctionVolumeMounts([])
+        setNewFunctionDisableAutoMount(true)
+        break
+      default:
+        setData(state => ({
+          ...state,
+          volumeMount: value
+        }))
+        setNewFunctionDisableAutoMount(true)
+    }
+  }
+
   const setGpuValue = value => {
     let isValid = true
 
@@ -305,10 +349,12 @@ const FunctionsPanelResources = ({
       handleAddNewVolume={handleAddNewVolume}
       handleDeleteVolume={handleDeleteVolume}
       handleEditVolume={handleEditVolume}
+      handleSelectCpuUnit={handleSelectCpuUnit}
       handleSelectMemoryUnit={handleSelectMemoryUnit}
+      handleSelectVolumeMount={handleSelectVolumeMount}
+      mode={mode}
       setData={setData}
       setMemoryValue={setMemoryValue}
-      handleSelectCpuUnit={handleSelectCpuUnit}
       setCpuValue={setCpuValue}
       setGpuValue={setGpuValue}
       validation={validation}
