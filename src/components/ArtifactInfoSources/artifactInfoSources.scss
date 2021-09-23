@@ -19,7 +19,7 @@
     cursor: pointer;
 
     &_empty {
-      padding: 8px;
+      padding: 18px 8px;
     }
 
     &__header {
@@ -94,7 +94,7 @@
       }
 
       &-key {
-        min-width: 220px;
+        width: 220px;
         padding-left: 18px;
       }
     }
