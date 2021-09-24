@@ -8,8 +8,8 @@ import { PANEL_EDIT_MODE } from '../../constants'
 export const REQUESTS = 'REQUESTS'
 export const LIMITS = 'LIMITS'
 
-export const getDefaultData = functionParameters => {
-  const parameters = functionParameters
+export const getParameters = functionParameters => {
+  return functionParameters
     .filter(parameter => parameter.type !== 'DataItem')
     .map(parameter => ({
       doc: parameter.doc,
@@ -22,8 +22,10 @@ export const getDefaultData = functionParameters => {
         value: parameter.default ?? ''
       }
     }))
+}
 
-  const dataInputs = functionParameters
+export const getDataInputs = functionParameters => {
+  return functionParameters
     .filter(dataInputs => dataInputs.type === 'DataItem')
     .map(input => {
       const inputPath = {
@@ -43,12 +45,11 @@ export const getDefaultData = functionParameters => {
         }
       }
     })
-
-  return { parameters, dataInputs }
 }
 
-export const getParameters = (selectedFunction, method) => {
+export const getFunctionParameters = (selectedFunction, method) => {
   return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
     .map(func => {
       return func.spec.entry_points
         ? func.spec.entry_points[method]?.parameters ?? []
@@ -58,11 +59,26 @@ export const getParameters = (selectedFunction, method) => {
     .unionBy('name')
     .value()
 }
-export const getResources = selectedFunction => {
+
+export const getLimits = selectedFunction => {
   return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.resources ?? {}
+      return func.spec.resources?.limits ?? {}
     })
+    .filter(limits => !isEveryObjectValueEmpty(limits))
+    .flatten()
+    .unionBy('name')
+    .value()
+}
+
+export const getRequests = selectedFunction => {
+  return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => {
+      return func.spec.resources?.requests ?? {}
+    })
+    .filter(request => !isEveryObjectValueEmpty(request))
     .flatten()
     .unionBy('name')
     .value()
@@ -70,8 +86,9 @@ export const getResources = selectedFunction => {
 
 export const getEnvironmentVariables = selectedFunction => {
   return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.env ?? {}
+      return func.spec.env ?? []
     })
     .flatten()
     .unionBy('name')
@@ -80,6 +97,7 @@ export const getEnvironmentVariables = selectedFunction => {
 
 export const getNodeSelectors = selectedFunction => {
   return chain(selectedFunction)
+    .orderBy('metadata.updated', 'desc')
     .map(func => {
       return func.spec.node_selector ?? {}
     })
@@ -99,12 +117,9 @@ export const getNodeSelectors = selectedFunction => {
 }
 
 export const getVolumeMounts = (selectedFunction, volumes, mode) => {
-  if (!selectedFunction.some(func => func.spec.volume_mounts)) {
-    return []
-  }
-
   return chain(selectedFunction)
-    .map(func => func.spec.volume_mounts)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => func.spec.volume_mounts ?? [])
     .flatten()
     .unionBy('name')
     .map(volume_mounts => {
@@ -125,13 +140,10 @@ export const getVolumeMounts = (selectedFunction, volumes, mode) => {
     .value()
 }
 
-export const getVolume = selectedFunction => {
-  if (!selectedFunction.some(func => func.spec.volumes)) {
-    return []
-  }
-
+export const getVolumes = selectedFunction => {
   return chain(selectedFunction)
-    .map(func => func.spec.volumes)
+    .orderBy('metadata.updated', 'desc')
+    .map(func => func.spec.volumes ?? [])
     .flatten()
     .unionBy('name')
     .value()
@@ -196,10 +208,15 @@ export const generateTableData = (
   stateRequests,
   mode
 ) => {
-  const functionParameters = getParameters(selectedFunction, method)
-  const [{ limits, requests }] = getResources(selectedFunction)
+  const functionParameters = getFunctionParameters(selectedFunction, method)
+  const [limits] = getLimits(selectedFunction)
+  const [requests] = getRequests(selectedFunction)
   const environmentVariables = getEnvironmentVariables(selectedFunction)
   const node_selector = getNodeSelectors(selectedFunction)
+  const volumes = getVolumes(selectedFunction)
+  const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
+  let parameters = []
+  let dataInputs = []
 
   if (limits?.memory?.match(/[a-zA-Z]/)) {
     panelDispatch({
@@ -231,39 +248,8 @@ export const generateTableData = (
   }
 
   if (!isEmpty(functionParameters)) {
-    const { parameters, dataInputs } = getDefaultData(functionParameters)
-    const volumes = getVolume(selectedFunction)
-    const volumeMounts = getVolumeMounts(selectedFunction, volumes, mode)
-
-    panelDispatch({
-      type: panelActions.SET_TABLE_DATA,
-      payload: {
-        dataInputs,
-        parameters,
-        volume_mounts: volumeMounts,
-        volumes,
-        environmentVariables: environmentVariables.map(env => ({
-          data: {
-            name: env.name,
-            value: env.value ?? ''
-          }
-        })),
-        secretSources: [],
-        node_selector
-      }
-    })
-    setNewJob({
-      inputs: parseDefaultDataInputsContent(dataInputs),
-      parameters: parseDefaultContent(parameters),
-      volume_mounts: (volumeMounts ?? []).map(volumeMounts => ({
-        name: volumeMounts.data.name,
-        mountPath: volumeMounts.data.mountPath
-      })),
-      volumes,
-      environmentVariables,
-      secret_sources: [],
-      node_selector: parseDefaultNodeSelectorContent(node_selector)
-    })
+    parameters = getParameters(functionParameters)
+    dataInputs = getDataInputs(functionParameters)
   }
 
   if (limits && !isEveryObjectValueEmpty(limits)) {
@@ -282,6 +268,36 @@ export const generateTableData = (
       payload: { ...stateRequests, ...requests }
     })
   }
+
+  panelDispatch({
+    type: panelActions.SET_TABLE_DATA,
+    payload: {
+      dataInputs,
+      parameters,
+      volume_mounts: volumeMounts,
+      volumes,
+      environmentVariables: environmentVariables.map(env => ({
+        data: {
+          name: env.name,
+          value: env.value ?? ''
+        }
+      })),
+      secretSources: [],
+      node_selector
+    }
+  })
+  setNewJob({
+    inputs: parseDefaultDataInputsContent(dataInputs),
+    parameters: parseDefaultContent(parameters),
+    volume_mounts: (volumeMounts ?? []).map(volumeMounts => ({
+      name: volumeMounts.data.name,
+      mountPath: volumeMounts.data.mountPath
+    })),
+    volumes,
+    environmentVariables,
+    secret_sources: [],
+    node_selector: parseDefaultNodeSelectorContent(node_selector)
+  })
 }
 
 const generateDefaultParameters = parameters => {

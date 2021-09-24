@@ -3,22 +3,11 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import { FUNCTIONS_PAGE } from '../../constants'
-
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './detailsMenu.scss'
 
-const DetailsMenu = ({
-  detailsMenu,
-  hash,
-  id,
-  iter,
-  match,
-  name,
-  onClick,
-  page
-}) => {
+const DetailsMenu = ({ detailsMenu, match, onClick }) => {
   const [arrowsAreHidden, setArrowsAreHidden] = useState(true)
   const [scrolledWidth, setScrolledWidth] = useState(0)
   const [rightArrowDisabled, setRightArrowDisabled] = useState(false)
@@ -152,20 +141,12 @@ const DetailsMenu = ({
             transform: `translateX(${-scrolledWidth}px)`
           }}
         >
-          {detailsMenu.map(
-            tab =>
+          {detailsMenu.map(tab => {
+            const tabLink = match.url?.replace(/^$|([^/]+$)/, tab.id)
+
+            return (
               !tab.hidden && (
-                <Link
-                  to={`/projects/${
-                    match.params.projectName
-                  }/${page.toLowerCase()}/${
-                    match.params.pageTab ? `${match.params.pageTab}/` : ''
-                  }${page === FUNCTIONS_PAGE ? hash : id || name}/${
-                    match.params.tag ? `${match.params.tag}/` : ''
-                  }${isNaN(parseInt(iter)) ? '' : `${iter}/`}${tab.id}`}
-                  onClick={onClick}
-                  key={tab.id}
-                >
+                <Link to={tabLink} onClick={onClick} key={tab.id}>
                   <li
                     data-tab={tab.id}
                     className={classnames(
@@ -177,7 +158,8 @@ const DetailsMenu = ({
                   </li>
                 </Link>
               )
-          )}
+            )
+          })}
         </div>
       </div>
       <Arrow
@@ -189,22 +171,13 @@ const DetailsMenu = ({
 }
 
 DetailsMenu.defaultProps = {
-  hash: '',
-  id: '',
-  iter: null,
-  name: '',
   onClick: () => {}
 }
 
 DetailsMenu.propTypes = {
   detailsMenu: PropTypes.array.isRequired,
-  hash: PropTypes.string,
-  id: PropTypes.string,
-  iter: PropTypes.number,
   match: PropTypes.shape({}).isRequired,
-  name: PropTypes.string,
-  onClick: PropTypes.func,
-  page: PropTypes.string.isRequired
+  onClick: PropTypes.func
 }
 
 export default DetailsMenu

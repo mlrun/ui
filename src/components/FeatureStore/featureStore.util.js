@@ -10,10 +10,15 @@ import {
   DETAILS_METADATA_TAB,
   DETAILS_OVERVIEW_TAB,
   DETAILS_STATISTICS_TAB,
+  FEATURES_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
-  FEATURES_TAB,
-  SECONDARY_BUTTON
+  ITERATIONS_FILTER,
+  LABELS_FILTER,
+  NAME_FILTER,
+  SECONDARY_BUTTON,
+  TAG_FILTER,
+  TREE_FILTER
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -25,6 +30,7 @@ import { generateUsageSnippets } from '../../utils/generateUsageSnippets'
 import {
   getArtifactIdentifier,
   getFeatureIdentifier,
+  getFeatureSetIdentifier,
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
@@ -81,126 +87,147 @@ export const featureVectorsInfoHeaders = [
   { label: 'Usage example', id: 'usage_example' }
 ]
 export const datasetsFilters = [
-  { type: 'tree', label: 'Tree:' },
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' },
-  { type: 'iterations', label: 'Show iterations' }
+  { type: TREE_FILTER, label: 'Tree:' },
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Label:' },
+  { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
 export const featureSetsFilters = [
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' }
+  { type: TAG_FILTER, label: 'Tag:' },
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Label:' }
 ]
 export const featureVectorsFilters = [
-  { type: 'tag', label: 'Tag:' },
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' }
+  { type: TAG_FILTER, label: 'Tag:' },
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Label:' }
 ]
 export const featuresFilters = [
-  { type: 'tag', label: 'Tag:' },
-  { type: 'name', label: 'Name:' },
-  { type: 'labels', label: 'Label:' }
+  { type: TAG_FILTER, label: 'Tag:' },
+  { type: NAME_FILTER, label: 'Name:' },
+  { type: LABELS_FILTER, label: 'Label:' }
 ]
 export const page = 'FEATURE-STORE'
 export const registerDatasetsTitle = 'Register dataset'
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
-export const datasetsTableHeaders = [
+export const datasetsTableHeaders = isSelectedItem => [
   {
     header: 'Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_big',
+    hidden: isSelectedItem
   },
   {
     header: 'Producer',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Owner',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Updated',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Size',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
 
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'action_cell',
+    hidden: isSelectedItem
   }
 ]
-export const featureSetsTableHeaders = [
+export const featureSetsTableHeaders = isSelectedItem => [
   {
     header: 'Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Description',
-    class: 'artifacts_medium'
+    class: 'artifacts_medium',
+    hidden: isSelectedItem
   },
   {
     header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_big',
+    hidden: isSelectedItem
   },
   {
     header: 'Entities',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: 'Targets',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'action_cell',
+    hidden: isSelectedItem
   }
 ]
-export const featureVectorsTableHeaders = [
+export const featureVectorsTableHeaders = isSelectedItem => [
   {
     header: 'Name',
     class: 'artifacts_medium'
   },
   {
     header: 'Description',
-    class: 'artifacts_medium'
+    class: 'artifacts_medium',
+    hidden: isSelectedItem
   },
   {
     header: 'Labels',
-    class: 'artifacts_big'
+    class: 'artifacts_big',
+    hidden: isSelectedItem
   },
   {
     header: 'Updated',
-    class: 'artifacts_small'
+    class: 'artifacts_small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'artifacts_extra-small'
+    class: 'artifacts_extra-small',
+    hidden: isSelectedItem
   },
   {
     header: '',
-    class: 'action_cell'
+    class: 'action_cell',
+    hidden: isSelectedItem
   }
 ]
 
@@ -219,16 +246,18 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
       class: 'artifacts_extra-small'
     },
     {
-      header: 'Entity',
-      class: 'artifacts_small'
+      header: 'Entities',
+      class: 'artifacts_big'
     },
     {
       header: 'Description',
-      class: 'artifacts_medium'
+      class: 'artifacts_medium',
+      hidden: isTablePanelOpen
     },
     {
       header: 'Labels',
-      class: 'artifacts_big'
+      class: 'artifacts_big',
+      hidden: isTablePanelOpen
     },
     {
       header: '',
@@ -248,7 +277,7 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
     },
     {
       header: '',
-      class: 'artifacts_extra-small align-right',
+      class: 'artifacts_big align-right',
       hidden: !isTablePanelOpen
     }
   ]
@@ -259,10 +288,10 @@ const getFeaturesTablePanel = () => {
 }
 
 export const tabs = [
-  { id: 'feature-sets', label: 'Feature sets' },
-  { id: 'features', label: 'Features' },
-  { id: 'feature-vectors', label: 'Feature vectors' },
-  { id: 'datasets', label: 'Datasets' }
+  { id: FEATURE_SETS_TAB, label: 'Feature sets' },
+  { id: FEATURES_TAB, label: 'Features' },
+  { id: FEATURE_VECTORS_TAB, label: 'Feature vectors' },
+  { id: DATASETS_TAB, label: 'Datasets' }
 ]
 
 const generateActionsMenu = tab => []
@@ -272,7 +301,8 @@ export const generatePageData = (
   handleRequestOnExpand,
   handleRemoveRequestData,
   getPopUpTemplate,
-  isTablePanelOpen
+  isTablePanelOpen,
+  isSelectedItem
 ) => {
   let data = {
     detailsMenu: [],
@@ -284,9 +314,10 @@ export const generatePageData = (
     data.actionsMenu = generateActionsMenu(FEATURE_SETS_TAB)
     data.filters = featureSetsFilters
     data.infoHeaders = featureSetsInfoHeaders
-    data.tableHeaders = featureSetsTableHeaders
+    data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
     data.registerArtifactDialogTitle = createFeatureSetTitle
     data.filterMenuActionButton = null
+    data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
     data.filters = featuresFilters
@@ -303,7 +334,7 @@ export const generatePageData = (
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
     data.filters = featureVectorsFilters
-    data.tableHeaders = featureVectorsTableHeaders
+    data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
     data.infoHeaders = featureVectorsInfoHeaders
@@ -313,7 +344,7 @@ export const generatePageData = (
     data.actionsMenu = generateActionsMenu(DATASETS_TAB)
     data.filters = datasetsFilters
     data.infoHeaders = datasetsInfoHeaders
-    data.tableHeaders = datasetsTableHeaders
+    data.tableHeaders = datasetsTableHeaders(isSelectedItem)
     data.registerArtifactDialogTitle = registerDatasetsTitle
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
@@ -354,7 +385,7 @@ export const handleFetchData = async (
       })
     }
 
-    result = await fetchFeatureSets(project, { ...filters, tag: null }, config)
+    result = await fetchFeatureSets(project, filters, config)
 
     if (result) {
       data.content = parseFeatureSets(result)
@@ -410,38 +441,31 @@ export const navigateToDetailsPane = (
   const { name, tag, iter } = match.params
   let content = []
 
-  if (match.params.pageTab === FEATURE_SETS_TAB && featureSets.length > 0) {
-    content = parseFeatureSets(featureSets)
+  if (
+    match.params.pageTab === FEATURE_SETS_TAB &&
+    featureSets.allData.length > 0
+  ) {
+    content = featureSets.selectedRowData.content[name] || featureSets.allData
   } else if (match.params.pageTab === FEATURES_TAB && features.length > 0) {
     content = [...features, ...entities]
   } else if (
     match.params.pageTab === DATASETS_TAB &&
     dataSets.allData.length > 0
   ) {
-    if (dataSets.selectedRowData.content[name]) {
-      content = dataSets.selectedRowData.content[name]
-    } else {
-      content = dataSets.allData
-    }
+    content = dataSets.selectedRowData.content[name] || dataSets.allData
   } else if (
     match.params.pageTab === FEATURE_VECTORS_TAB &&
     featureVectors.allData.length > 0
   ) {
-    if (featureVectors.selectedRowData.content[name]) {
-      content = featureVectors.selectedRowData.content[name]
-    } else {
-      content = featureVectors.allData
-    }
+    content =
+      featureVectors.selectedRowData.content[name] || featureVectors.allData
   }
 
   if (match.params.name && content.length !== 0) {
     const selectedItem = content.find(contentItem => {
       const searchKey = contentItem.name ? 'name' : 'db_key'
 
-      if (
-        match.params.pageTab === FEATURE_SETS_TAB ||
-        match.params.pageTab === FEATURE_VECTORS_TAB
-      ) {
+      if ([FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)) {
         return (
           contentItem[searchKey] === name &&
           (contentItem.tag === tag || contentItem.uid === tag)
@@ -468,9 +492,8 @@ export const navigateToDetailsPane = (
         match.params.pageTab === FEATURE_VECTORS_TAB
       ) {
         selectedItem.usage_example = generateUsageSnippets(
-          match.params,
-          featureSets,
-          featureVectors
+          match.params.pageTab,
+          selectedItem
         )
       }
 
@@ -678,6 +701,56 @@ export const fetchFeatureRowData = async (fetchData, feature, setPageData) => {
         ...state.selectedRowData,
         [featureIdentifier]: {
           content: [...parseFeatures(result)],
+          error: null,
+          loading: false
+        }
+      }
+    }))
+  }
+}
+
+export const fetchFeatureSetRowData = async (
+  fetchFeatureSet,
+  featureSet,
+  setPageData
+) => {
+  const featureSetIdentifier = getFeatureSetIdentifier(featureSet)
+
+  setPageData(state => ({
+    ...state,
+    selectedRowData: {
+      ...state.selectedRowData,
+      [featureSetIdentifier]: {
+        ...state.selectedRowData[featureSetIdentifier],
+        loading: true
+      }
+    }
+  }))
+
+  const result = await fetchFeatureSet(
+    featureSet.project,
+    featureSet.name
+  ).catch(error => {
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        ...state.selectedRowData,
+        [featureSetIdentifier]: {
+          ...state.selectedRowData[featureSetIdentifier],
+          error,
+          loading: false
+        }
+      }
+    }))
+  })
+
+  if (result?.length > 0) {
+    setPageData(state => ({
+      ...state,
+      selectedRowData: {
+        ...state.selectedRowData,
+        [featureSetIdentifier]: {
+          content: [...parseFeatureSets(result)],
           error: null,
           loading: false
         }

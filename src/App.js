@@ -9,6 +9,13 @@ import {
 import Page from './layout/Page/Page'
 import Loader from './common/Loader/Loader'
 
+import {
+  FEATURE_SETS_TAB,
+  MODELS_TAB,
+  MONITOR_JOBS_TAB,
+  WORKFLOW_SUB_PAGE
+} from './constants'
+
 import './scss/main.scss'
 
 const CreateJobPage = React.lazy(() =>
@@ -43,20 +50,31 @@ const App = () => {
               render={routeProps => <Project {...routeProps} />}
             />
             <Route
-              path="/projects/:projectName/jobs/:pageTab/:jobId/:tab"
+              path="/projects/:projectName/jobs/:pageTab/create-new-job"
+              render={routeProps => <CreateJobPage {...routeProps} />}
+            />
+            <Route
+              path={[
+                `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId/:jobId/:tab`,
+                `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId`
+              ]}
+              exact
+              render={routeProps => (
+                <Jobs {...routeProps} subPage={WORKFLOW_SUB_PAGE} />
+              )}
+            />
+            <Route
+              path={[
+                '/projects/:projectName/jobs/:pageTab/:jobId/:tab',
+                '/projects/:projectName/jobs/:pageTab'
+              ]}
               exact
               render={routeProps => <Jobs {...routeProps} />}
             />
             <Redirect
               exact
               from="/projects/:projectName/jobs"
-              to="/projects/:projectName/jobs/monitor"
-            />
-            <Route
-              path="/projects/:projectName/jobs/:pageTab"
-              exact
-              strict
-              render={routeProps => <Jobs {...routeProps} />}
+              to={`/projects/:projectName/jobs/${MONITOR_JOBS_TAB}`}
             />
             <Route
               exact
@@ -68,16 +86,10 @@ const App = () => {
               path="/projects/:projectName/functions/:hash/:tab"
               render={routeProps => <Functions {...routeProps} />}
             />
-            <Route
-              path="/projects/:projectName/jobs/:pageTab/create-new-job"
-              exact
-              strict
-              render={routeProps => <CreateJobPage {...routeProps} />}
-            />
             <Redirect
               exact
               from="/projects/:projectName/feature-store"
-              to="/projects/:projectName/feature-store/feature-sets"
+              to={`/projects/:projectName/feature-store/${FEATURE_SETS_TAB}`}
             />
             <Route
               exact
@@ -102,7 +114,7 @@ const App = () => {
             <Redirect
               exact
               from="/projects/:projectName/models"
-              to="/projects/:projectName/models/models"
+              to={`/projects/:projectName/models/${MODELS_TAB}`}
             />
             <Route
               exact

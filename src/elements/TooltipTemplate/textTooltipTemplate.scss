@@ -4,8 +4,6 @@
 .tooltip {
   &__text {
     color: $white;
-    white-space: pre-wrap;
-    word-break: break-word;
     background-color: $primary;
     border-radius: 4px;
   }

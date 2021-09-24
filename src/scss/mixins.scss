@@ -1,3 +1,6 @@
+@import './colors';
+@import './borders';
+
 @mixin fixed {
   position: fixed;
   top: 0;
@@ -17,7 +20,7 @@
   border-bottom: $secondaryBorder;
 
   &:first-child {
-    padding-left: 67px;
+    padding-left: 40px;
   }
 }
 
@@ -398,7 +401,7 @@
 @mixin newItemSidePanelTable {
   position: relative;
   width: 100%;
-  border-bottom: $secondaryBorder;
+  border-bottom: $primaryBorder;
 
   .table {
     &__header {
@@ -415,8 +418,16 @@
       &-column {
         width: 100%;
 
-        .input:not(.input_required) {
-          border: none;
+        .input {
+          padding: 25px 10px 11px;
+
+          &:not(.input_invalid) {
+            border: none;
+          }
+
+          &__label-floating {
+            left: 10px;
+          }
         }
       }
     }
@@ -458,7 +469,7 @@
       flex-direction: row;
       align-items: center;
       height: 55px;
-      border-top: $secondaryBorder;
+      border-top: $primaryBorder;
 
       .tip-container {
         display: none;
@@ -560,11 +571,6 @@
         min-width: 175px;
         padding: 10px 0;
 
-        &:first-child {
-          padding-right: 7px;
-          padding-left: 7px;
-        }
-
         .select {
           width: 100%;
           border-radius: 2px;
@@ -575,25 +581,6 @@
 
           &__label {
             padding-left: 0;
-          }
-        }
-      }
-
-      &-input {
-        padding: 0;
-
-        &:first-child {
-          .input-wrapper {
-            min-width: 204px;
-            margin-right: 5px;
-
-            .input {
-              padding-left: 17px;
-
-              &__label {
-                padding-left: 5px;
-              }
-            }
           }
         }
       }

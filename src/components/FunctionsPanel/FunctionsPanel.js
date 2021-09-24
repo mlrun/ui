@@ -8,6 +8,7 @@ import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
+import { FUNCTION_TYPE_SERVING } from '../../constants'
 import {
   EXISTING_IMAGE,
   NEW_IMAGE
@@ -19,6 +20,7 @@ import {
 } from '../../constants'
 
 const FunctionsPanel = ({
+  appStore,
   functionsStore,
   closePanel,
   createFunctionSuccess,
@@ -37,7 +39,6 @@ const FunctionsPanel = ({
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [validation, setValidation] = useState({
-    isNameValid: true,
     isHandlerValid: true,
     isCodeImageValid: true,
     isBaseImageValid: true,
@@ -49,9 +50,10 @@ const FunctionsPanel = ({
     isGpuLimitValid: true
   })
   const [imageType, setImageType] = useState(
-    defaultData?.build?.image ||
+    (defaultData?.build?.image ||
       defaultData?.build?.base_image ||
-      defaultData?.build?.commands?.length > 0
+      defaultData?.build?.commands?.length > 0) &&
+      defaultData.image?.length === 0
       ? NEW_IMAGE
       : ''
   )
@@ -59,7 +61,7 @@ const FunctionsPanel = ({
 
   useEffect(() => {
     if (defaultData) {
-      setNewFunction({
+      let data = {
         kind: defaultData.type,
         metadata: {
           labels: defaultData.labels,
@@ -75,7 +77,6 @@ const FunctionsPanel = ({
             functionSourceCode: defaultData.build?.functionSourceCode ?? '',
             image: defaultData.build?.image ?? ''
           },
-          default_handler: defaultData.default_handler,
           description: defaultData.description,
           env: defaultData.env,
           image: defaultData.image,
@@ -88,10 +89,34 @@ const FunctionsPanel = ({
           resources: {
             limits: defaultData.resources.limits ?? {},
             requests: defaultData.resources.requests ?? {}
-          },
-          secret_sources: defaultData.secret_sources
+          }
         }
-      })
+      }
+
+      if (defaultData.type === FUNCTION_TYPE_SERVING) {
+        data = {
+          ...data,
+          spec: {
+            ...data.spec,
+            default_class: defaultData.default_class,
+            error_stream: defaultData.error_stream,
+            graph: defaultData.graph,
+            parameters: defaultData.parameters,
+            secret_sources: defaultData.secret_sources,
+            track_models: defaultData.track_models ?? false
+          }
+        }
+      } else {
+        data = {
+          ...data,
+          spec: {
+            ...data.spec,
+            default_handler: defaultData.default_handler
+          }
+        }
+      }
+
+      setNewFunction(data)
     }
   }, [defaultData, setNewFunction])
 
@@ -108,7 +133,14 @@ const FunctionsPanel = ({
   const createFunction = deploy => {
     createNewFunction(project, functionsStore.newFunction).then(result => {
       if (deploy) {
-        return handleDeploy(functionsStore.newFunction)
+        const data = {
+          function: { ...functionsStore.newFunction },
+          with_mlrun: functionsStore.newFunction.spec.build.commands.includes(
+            appStore.frontendSpec.function_deployment_mlrun_command
+          )
+        }
+
+        return handleDeploy(data)
       }
 
       createFunctionSuccess().then(() => {
@@ -121,11 +153,10 @@ const FunctionsPanel = ({
 
   const handleSave = deploy => {
     if (checkValidation()) {
-      if (functionsStore.newFunction.metadata.name.length === 0) {
-        return setValidation(state => ({ ...state, isNameValid: false }))
-      }
-
-      if (functionsStore.newFunction.spec.default_handler.length === 0) {
+      if (
+        functionsStore.newFunction.kind !== FUNCTION_TYPE_SERVING &&
+        functionsStore.newFunction.spec.default_handler.length === 0
+      ) {
         return setValidation(state => ({ ...state, isHandlerValid: false }))
       }
 
@@ -184,8 +215,8 @@ const FunctionsPanel = ({
     }
   }
 
-  const handleDeploy = func => {
-    deployFunction(func)
+  const handleDeploy = data => {
+    deployFunction(data)
       .then(response => {
         handleDeployFunctionSuccess(response.data.ready)
       })
@@ -210,6 +241,7 @@ const FunctionsPanel = ({
       loading={functionsStore.loading}
       match={match}
       mode={mode}
+      newFunction={functionsStore.newFunction}
       removeFunctionsError={removeFunctionsError}
       setImageType={setImageType}
       setValidation={setValidation}
@@ -233,6 +265,9 @@ FunctionsPanel.propTypes = {
   project: PropTypes.string.isRequired
 }
 
-export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions
-})(FunctionsPanel)
+export default connect(
+  ({ appStore, functionsStore }) => ({ appStore, functionsStore }),
+  {
+    ...functionsActions
+  }
+)(FunctionsPanel)

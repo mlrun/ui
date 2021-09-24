@@ -5,40 +5,21 @@ import { connect } from 'react-redux'
 import FunctionsPanelGeneralView from './FunctionsPanelGeneralView'
 
 import functionsActions from '../../actions/functions'
-import { DEFAULT_TYPE } from './functionsPanelGeneral.util'
 import { parseKeyValues } from '../../utils'
 
 const FunctionsPanelGeneral = ({
   defaultData,
   functionsStore,
-  isNameValid,
-  mode,
-  setNameValid,
   setNewFunctionDescription,
-  setNewFunctionLabels,
-  setNewFunctionName,
-  setNewFunctionTag,
-  setNewFunctionType
+  setNewFunctionLabels
 }) => {
   const [data, setData] = useState({
-    name: defaultData.name ?? '',
     description: defaultData.description ?? '',
-    type: defaultData.type ?? DEFAULT_TYPE,
+    kind: defaultData.type ?? functionsStore.newFunction.kind,
     labels: parseKeyValues(defaultData.labels) ?? [],
-    tag: defaultData.tag ?? ''
+    name: defaultData.name ?? functionsStore.newFunction.metadata.name,
+    tag: defaultData.tag ?? functionsStore.newFunction.metadata.tag
   })
-
-  const handleNameOnBlur = event => {
-    if (data.name !== functionsStore.newFunction.metadata.name) {
-      setNewFunctionName(event.target.value)
-    }
-  }
-
-  const handleTagOnBlur = event => {
-    if (data.tag !== functionsStore.newFunction.metadata.tag) {
-      setNewFunctionTag(event.target.value)
-    }
-  }
 
   const handleAddLabel = (label, labels) => {
     const newLabels = {}
@@ -69,19 +50,20 @@ const FunctionsPanelGeneral = ({
     }))
   }
 
+  const handleDescriptionOnBlur = () => {
+    if (functionsStore.newFunction.spec.description !== data.description) {
+      setNewFunctionDescription(data.description)
+    }
+  }
+
   return (
     <FunctionsPanelGeneralView
       data={data}
       handleAddLabel={handleAddLabel}
       handleChangeLabels={handleChangeLabels}
-      handleNameOnBlur={handleNameOnBlur}
-      handleTagOnBlur={handleTagOnBlur}
-      isNameValid={isNameValid}
-      mode={mode}
+      handleDescriptionOnBlur={handleDescriptionOnBlur}
       setData={setData}
-      setNameValid={setNameValid}
       setNewFunctionDescription={setNewFunctionDescription}
-      setNewFunctionType={setNewFunctionType}
     />
   )
 }
@@ -91,10 +73,7 @@ FunctionsPanelGeneral.defaultProps = {
 }
 
 FunctionsPanelGeneral.propTypes = {
-  defaultData: PropTypes.shape({}),
-  isNameValid: PropTypes.bool.isRequired,
-  mode: PropTypes.string.isRequired,
-  setNameValid: PropTypes.func.isRequired
+  defaultData: PropTypes.shape({})
 }
 
 export default connect(functionsStore => ({ ...functionsStore }), {

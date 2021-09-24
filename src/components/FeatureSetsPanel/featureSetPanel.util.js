@@ -1,4 +1,4 @@
-export const nameValidationPattern = /^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
+export const nameValidationPattern = /^(?=[\S\s]{1,56}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 
 export const checkValidation = (newFeatureSet, setValidation, validation) => {
   const externalOfflineTarget = newFeatureSet.spec.targets.find(

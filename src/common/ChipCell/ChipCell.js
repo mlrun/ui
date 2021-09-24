@@ -224,7 +224,7 @@ const ChipCell = ({
       isEditMode={isEditMode}
       ref={chipRef}
       setEditConfig={setEditConfig}
-      shortChips
+      shortChips={shortChips}
       showHiddenChips={showHiddenChips}
     />
   )

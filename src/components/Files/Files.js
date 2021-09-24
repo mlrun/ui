@@ -8,19 +8,13 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 
 import artifactsAction from '../../actions/artifacts'
 import { generateArtifacts } from '../../utils/generateArtifacts'
-import {
-  detailsMenu,
-  filters,
-  page,
-  registerArtifactDialogTitle,
-  tableHeaders,
-  infoHeaders
-} from './files.util'
+import { generatePageData } from './files.util'
 import { filterArtifacts } from '../../utils/filterArtifacts'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateUri } from '../../utils/resources'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import {
   ARTIFACTS,
@@ -47,12 +41,12 @@ const Files = ({
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
-    detailsMenu,
-    filters,
-    page,
-    registerArtifactDialogTitle,
-    tableHeaders,
-    infoHeaders
+    detailsMenu: [],
+    filters: [],
+    infoHeaders: [],
+    page: '',
+    registerArtifactDialogTitle: '',
+    tableHeaders: []
   })
 
   const fetchData = useCallback(
@@ -147,6 +141,13 @@ const Files = ({
   )
 
   useEffect(() => {
+    setPageData(state => ({
+      ...state,
+      ...generatePageData(!isEveryObjectValueEmpty(selectedFile))
+    }))
+  }, [selectedFile])
+
+  useEffect(() => {
     removeFile({})
     setPageData(state => ({
       ...state,
@@ -160,14 +161,9 @@ const Files = ({
       match.params.tag &&
       pageData.detailsMenu.length > 0
     ) {
-      isDetailsTabExists(
-        FILES_PAGE,
-        match.params,
-        pageData.detailsMenu,
-        history
-      )
+      isDetailsTabExists(FILES_PAGE, match, pageData.detailsMenu, history)
     }
-  }, [history, match.params, pageData.detailsMenu])
+  }, [history, match, pageData.detailsMenu])
 
   useEffect(() => {
     fetchData({ tag: INIT_TAG_FILTER, iter: 'iter' })
@@ -219,8 +215,7 @@ const Files = ({
     artifactsStore.files.allData,
     artifactsStore.files.selectedRowData.content,
     history,
-    match.params,
-    pageData
+    match.params
   ])
 
   useEffect(() => setFiles([]), [filtersStore.tag])
@@ -238,7 +233,7 @@ const Files = ({
   ])
 
   return (
-    <>
+    <div className="content-wrapper">
       {artifactsStore.loading && <Loader />}
       <Content
         content={files}
@@ -261,7 +256,7 @@ const Files = ({
           title={pageData.registerArtifactDialogTitle}
         />
       )}
-    </>
+    </div>
   )
 }
 

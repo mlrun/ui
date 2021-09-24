@@ -26,6 +26,7 @@ const commonStateLabels = {
   fail: 'Fail',
   failed: 'Error',
   info: 'Info',
+  pending: 'Pending',
   ready: 'Ready',
   running: 'Deploying',
   succeeded: 'Succeeded',

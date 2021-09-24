@@ -8,8 +8,7 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODELS_PAGE,
-  SCHEDULE_TAB,
-  INIT_GROUP_FILTER
+  SCHEDULE_TAB
 } from '../constants'
 import createJobsContent from './createJobsContent'
 import createFunctionsContent from './createFunctionsContent'
@@ -18,46 +17,75 @@ import { createFeatureStoreContent } from './createFeatureStoreContent'
 
 export const generateTableContent = (
   content,
-  groupedByName,
-  groupedByWorkflow,
+  groupedContent,
   groupFilter,
   page,
   isTablePanelOpen,
   pageTab,
-  projectName
+  projectName,
+  search,
+  isSelectedItem
 ) => {
-  if (!isEmpty(groupedByName) && groupFilter === INIT_GROUP_FILTER) {
-    return map(groupedByName, group =>
+  if (
+    !isEmpty(groupedContent) &&
+    (groupFilter === 'name' || groupFilter === 'workflow')
+  ) {
+    return map(groupedContent, group =>
       page === JOBS_PAGE
-        ? createJobsContent(group, false)
+        ? createJobsContent(
+            group,
+            isSelectedItem,
+            projectName,
+            search,
+            groupFilter === 'workflow'
+          )
         : page === FUNCTIONS_PAGE
-        ? createFunctionsContent(group)
+        ? createFunctionsContent(group, isSelectedItem)
         : page === FEATURE_STORE_PAGE && pageTab !== DATASETS_TAB
         ? createFeatureStoreContent(
             group,
             pageTab,
             projectName,
-            isTablePanelOpen
+            isTablePanelOpen,
+            isSelectedItem
           )
-        : createArtifactsContent(group, page, pageTab, projectName)
+        : createArtifactsContent(
+            group,
+            page,
+            pageTab,
+            projectName,
+            isSelectedItem
+          )
     )
-  } else if (!isEmpty(groupedByWorkflow) && groupFilter === 'workflow') {
-    return map(groupedByWorkflow, group => createJobsContent(group, true))
   } else if (groupFilter === 'none' || !groupFilter) {
     return page === JOBS_PAGE
-      ? createJobsContent(content, false, pageTab === SCHEDULE_TAB)
+      ? createJobsContent(
+          content,
+          isSelectedItem,
+          projectName,
+          search,
+          false,
+          pageTab === SCHEDULE_TAB
+        )
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
         page === MODELS_PAGE ||
         pageTab === DATASETS_TAB
-      ? createArtifactsContent(content, page, pageTab, projectName)
+      ? createArtifactsContent(
+          content,
+          page,
+          pageTab,
+          projectName,
+          isSelectedItem
+        )
       : page === FEATURE_STORE_PAGE
       ? createFeatureStoreContent(
           content,
           pageTab,
           projectName,
-          isTablePanelOpen
+          isTablePanelOpen,
+          isSelectedItem
         )
-      : createFunctionsContent(content)
+      : createFunctionsContent(content, isSelectedItem)
   } else return []
 }

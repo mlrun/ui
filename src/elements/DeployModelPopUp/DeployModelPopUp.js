@@ -126,81 +126,83 @@ const DeployModelPopUp = ({
   }
 
   return (
-    <div className="deploy-model">
-      <PopUpDialog headerText="Deploy model" closePopUp={closePopUp}>
-        <div className="select-row">
-          <Select
-            label="Serving function"
-            floatingLabel
-            disabled={functionOptionList.length === 0}
-            options={functionOptionList}
-            selectedId={selectedFunctionName}
-            onClick={onSelectFunction}
-          />
-          <Select
-            label="Tag"
-            floatingLabel
-            search
-            disabled={tagOptionList.length === 0}
-            options={tagOptionList}
-            selectedId={selectedTag}
-            onClick={handleTagSelect}
-          />
-        </div>
-        <div className="input-row">
-          <Input
-            label="Model name"
-            floatingLabel
-            type="text"
-            tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
-            onChange={setModelName}
-            value={modelName}
-          />
-          <Input
-            label="Class"
-            type="text"
-            floatingLabel
-            onChange={setClassName}
-            value={className}
-          />
-        </div>
-        <KeyValueTable
-          keyHeader="Class argument name"
-          keyLabel="Class argument name"
-          valueHeader="Value"
-          valueLabel="Value"
-          addNewItemLabel="Add class argument"
-          content={classArgumentsList}
-          addNewItem={newItem => {
-            setClassArgumentsList([...classArgumentsList, newItem])
-          }}
-          deleteItem={deleteIndex => {
-            setClassArgumentsList(
-              classArgumentsList.filter((item, index) => index !== deleteIndex)
-            )
-          }}
+    <PopUpDialog
+      className="deploy-model"
+      closePopUp={closePopUp}
+      headerText="Deploy model"
+    >
+      <div className="select-row">
+        <Select
+          label="Serving function"
+          floatingLabel
+          disabled={functionOptionList.length === 0}
+          options={functionOptionList}
+          selectedId={selectedFunctionName}
+          onClick={onSelectFunction}
         />
-        <div className="pop-up-dialog__footer-container">
-          <Button
-            variant={LABEL_BUTTON}
-            label="Cancel"
-            className="pop-up-dialog__btn_cancel"
-            onClick={closePopUp}
-          />
-          <Button
-            variant={PRIMARY_BUTTON}
-            disabled={[
-              selectedFunctionName,
-              selectedTag,
-              modelName,
-              className
-            ].includes('')}
-            label="Deploy"
-            onClick={deployModel}
-          />
-        </div>
-      </PopUpDialog>
-    </div>
+        <Select
+          label="Tag"
+          floatingLabel
+          search
+          disabled={tagOptionList.length === 0}
+          options={tagOptionList}
+          selectedId={selectedTag}
+          onClick={handleTagSelect}
+        />
+      </div>
+      <div className="input-row">
+        <Input
+          label="Model name"
+          floatingLabel
+          type="text"
+          tip="After the function is deployed, it will have a URL for calling the model that is based upon this name."
+          onChange={setModelName}
+          value={modelName}
+        />
+        <Input
+          label="Class"
+          type="text"
+          floatingLabel
+          onChange={setClassName}
+          value={className}
+        />
+      </div>
+      <KeyValueTable
+        keyHeader="Class argument name"
+        keyLabel="Class argument name"
+        valueHeader="Value"
+        valueLabel="Value"
+        addNewItemLabel="Add class argument"
+        content={classArgumentsList}
+        addNewItem={newItem => {
+          setClassArgumentsList([...classArgumentsList, newItem])
+        }}
+        deleteItem={deleteIndex => {
+          setClassArgumentsList(
+            classArgumentsList.filter((item, index) => index !== deleteIndex)
+          )
+        }}
+      />
+      <div className="pop-up-dialog__footer-container">
+        <Button
+          variant={LABEL_BUTTON}
+          label="Cancel"
+          className="pop-up-dialog__btn_cancel"
+          onClick={closePopUp}
+        />
+        <Button
+          variant={PRIMARY_BUTTON}
+          disabled={[
+            selectedFunctionName,
+            selectedTag,
+            modelName,
+            className
+          ].includes('')}
+          label="Deploy"
+          onClick={deployModel}
+        />
+      </div>
+    </PopUpDialog>
   )
 }
 

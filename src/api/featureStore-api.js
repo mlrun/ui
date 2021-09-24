@@ -54,6 +54,10 @@ export default {
       {},
       true
     ),
+  getFeatureSet: (project, featureSet) =>
+    mainHttpClient.get(`/projects/${project}/feature-sets`, {
+      params: { name: featureSet }
+    }),
   getFeatureSets: (project, filters, config) => {
     return fetchFeatureStoreContent(
       `/projects/${project}/${FEATURE_SETS_TAB}`,

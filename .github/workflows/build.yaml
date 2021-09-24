@@ -32,7 +32,7 @@ jobs:
     - name: Extract git hashes and latest version
       id: git_info
       run: |
-        echo "::set-output name=mlrun_commit_hash::$(git rev-parse --short $GITHUB_SHA)"
+        echo "::set-output name=mlrun_commit_hash::$(git rev-parse --short=8 $GITHUB_SHA)"
         echo "::set-output name=latest_version::$(curl -sf https://pypi.org/pypi/mlrun/json | jq -r '.info.version')"
     - name: Set computed versions params
       id: computed_params

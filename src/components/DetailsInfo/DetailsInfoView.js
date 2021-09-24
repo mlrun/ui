@@ -15,7 +15,8 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODELS_PAGE
+  MODELS_PAGE,
+  MONITOR_JOBS_TAB
 } from '../../constants'
 import { parseKeyValues } from '../../utils'
 
@@ -182,7 +183,7 @@ const DetailsInfoView = React.forwardRef(
                       const [project, rest] = value.split('/')
                       const [uid] = rest?.split('-') ?? []
                       if (uid) {
-                        url = `/projects/${project}/jobs/monitor/${uid}/overview`
+                        url = `/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${uid}/overview`
                       }
                     }
 

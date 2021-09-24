@@ -12,6 +12,7 @@ import { isEmpty } from 'lodash'
 
 import JobsPanelView from './JobsPanelView'
 
+import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
 import {
@@ -62,6 +63,7 @@ const JobsPanel = ({
       ? functionsStore.template.functions
       : groupedFunctions.functions || {}
   )
+  const [tableDataIsLoaded, setTableDataIsLoaded] = useState(false)
   const [validation, setValidation] = useState({
     isNameValid: true,
     isArtifactPathValid: true,
@@ -158,7 +160,8 @@ const JobsPanel = ({
       isEveryObjectValueEmpty(panelState.tableData) &&
       isEveryObjectValueEmpty(panelState.requests) &&
       isEveryObjectValueEmpty(panelState.limits) &&
-      !isEveryObjectValueEmpty(selectedFunction)
+      !isEveryObjectValueEmpty(selectedFunction) &&
+      !tableDataIsLoaded
     ) {
       generateTableData(
         panelState.currentFunctionInfo.method,
@@ -169,6 +172,7 @@ const JobsPanel = ({
         panelState.requests,
         mode
       )
+      setTableDataIsLoaded(true)
     } else if (
       !panelState.editMode &&
       isEveryObjectValueEmpty(panelState.tableData) &&
@@ -196,7 +200,8 @@ const JobsPanel = ({
     panelState.requests,
     panelState.tableData,
     selectedFunction,
-    setNewJob
+    setNewJob,
+    tableDataIsLoaded
   ])
 
   useEffect(() => {
@@ -332,18 +337,21 @@ const JobsPanel = ({
 
         if (redirectToDetailsPane) {
           return history.push(
-            `/projects/${project}/jobs/${cronString ? 'schedule' : 'monitor'}/${
-              result.data.data.metadata.uid
-            }/overview`
+            `/projects/${project}/jobs/${
+              cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB
+            }/${result.data.data.metadata.uid}/overview`
           )
         }
 
         return history.push(
-          `/projects/${project}/jobs/${cronString ? 'schedule' : 'monitor'}`
+          `/projects/${project}/jobs/${
+            cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB
+          }`
         )
       })
       .then(() => {
-        onSuccessRun && onSuccessRun(cronString ? 'schedule' : 'monitor')
+        onSuccessRun &&
+          onSuccessRun(cronString ? SCHEDULE_TAB : MONITOR_JOBS_TAB)
       })
   }
 

@@ -16,6 +16,7 @@ import {
   checkTabIsValid,
   fetchDataSetRowData,
   fetchFeatureRowData,
+  fetchFeatureSetRowData,
   fetchFeatureVectorRowData,
   generateDataSetsDetailsMenu,
   generateFeatureSetsDetailsMenu,
@@ -27,6 +28,7 @@ import {
   pageDataInitialState
 } from './featureStore.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 import {
   DATASETS_TAB,
@@ -49,6 +51,7 @@ const FeatureStore = ({
   fetchEntities,
   fetchEntity,
   fetchFeature,
+  fetchFeatureSet,
   fetchFeatureSets,
   fetchFeatureVector,
   fetchFeatureVectors,
@@ -211,6 +214,8 @@ const FeatureStore = ({
         await fetchFeatureRowData(fetchData, item, setPageData)
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
         await fetchFeatureVectorRowData(fetchFeatureVector, item, setPageData)
+      } else if (match.params.pageTab === FEATURE_SETS_TAB) {
+        await fetchFeatureSetRowData(fetchFeatureSet, item, setPageData)
       } else if (match.params.pageTab === DATASETS_TAB) {
         await fetchDataSetRowData(
           fetchDataSet,
@@ -224,6 +229,7 @@ const FeatureStore = ({
       fetchDataSet,
       fetchEntity,
       fetchFeature,
+      fetchFeatureSet,
       fetchFeatureVector,
       filtersStore.iter,
       match.params.pageTab
@@ -265,10 +271,7 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    if (
-      match.params.pageTab === FEATURE_SETS_TAB ||
-      filtersStore.tag === INIT_TAG_FILTER
-    ) {
+    if (filtersStore.tag === INIT_TAG_FILTER) {
       setFilters({ groupBy: INIT_GROUP_FILTER })
     } else if (filtersStore.groupBy === INIT_GROUP_FILTER) {
       setFilters({ groupBy: 'none' })
@@ -288,7 +291,8 @@ const FeatureStore = ({
             ? handleRemoveFeature
             : handleRemoveDataSet,
           getPopUpTemplate,
-          tableStore.isTablePanelOpen
+          tableStore.isTablePanelOpen,
+          !isEveryObjectValueEmpty(selectedItem)
         )
       }
     })
@@ -299,6 +303,7 @@ const FeatureStore = ({
     handleRemoveFeatureVector,
     handleRequestOnExpand,
     match.params.pageTab,
+    selectedItem,
     tableStore.isTablePanelOpen
   ])
 
@@ -331,12 +336,12 @@ const FeatureStore = ({
     ) {
       isDetailsTabExists(
         FEATURE_STORE_PAGE,
-        match.params,
+        match,
         pageData.detailsMenu,
         history
       )
     }
-  }, [history, match.params, pageData.detailsMenu])
+  }, [history, match, pageData.detailsMenu])
 
   useEffect(() => {
     checkTabIsValid(history, match, selectedItem)
@@ -378,7 +383,9 @@ const FeatureStore = ({
         getFilterTagOptions(fetchArtifactTags, match.params.projectName)
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
         getFilterTagOptions(fetchFeatureVectorsTags, match.params.projectName)
-      } else if (match.params.pageTab === FEATURES_TAB) {
+      } else if (
+        [FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)
+      ) {
         getFilterTagOptions(fetchFeatureSetsTags, match.params.projectName)
       }
     }
@@ -422,12 +429,6 @@ const FeatureStore = ({
     return fetchData({
       project: match.params.projectName,
       tag: INIT_TAG_FILTER
-    }).then(() => {
-      setNotification({
-        status: 200,
-        id: Math.random(),
-        message: 'Feature set successfully created'
-      })
     })
   }
 
@@ -441,7 +442,7 @@ const FeatureStore = ({
   }
 
   return (
-    <div ref={featureStoreRef} className="feature-store-container">
+    <div ref={featureStoreRef} className="content-wrapper">
       {(featureStore.loading || artifactsStore.loading) && <Loader />}
       <Content
         applyDetailsChanges={applyDetailsChanges}

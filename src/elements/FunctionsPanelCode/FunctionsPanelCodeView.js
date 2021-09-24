@@ -18,17 +18,17 @@ import {
   NEW_IMAGE,
   EXISTING_IMAGE
 } from './functionsPanelCode.util'
-import { LABEL_BUTTON } from '../../constants'
+import { FUNCTION_TYPE_SERVING, LABEL_BUTTON } from '../../constants'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
 import './functionsPanelCode.scss'
 
 const FunctionsPanelCodeView = ({
-  appStore,
   data,
   editCode,
   functionsStore,
+  handleClassOnBlur,
   handleHandlerOnBlur,
   handleImageTypeChange,
   imageType,
@@ -40,7 +40,6 @@ const FunctionsPanelCodeView = ({
   setNewFunctionImage,
   setNewFunctionSourceCode,
   setValidation,
-  setNewFunctionWithMlrun,
   validation
 }) => {
   return (
@@ -74,23 +73,36 @@ const FunctionsPanelCodeView = ({
           )}
         </div>
         <div className="code__info">
-          <div className="code__handler">
-            <Input
-              floatingLabel
-              invalid={!validation.isHandlerValid}
-              label="Handler"
-              onChange={handler => setData(state => ({ ...state, handler }))}
-              onBlur={handleHandlerOnBlur}
-              required
-              setInvalid={value =>
-                setValidation(state => ({ ...state, isHandlerValid: value }))
-              }
-              tip="Enter the function handler name (e.g. for the default sample function the name should be `handler`)"
-              type="text"
-              value={data.handler}
-              wrapperClassName="handler"
-            />
-          </div>
+          {functionsStore.newFunction.kind === FUNCTION_TYPE_SERVING ? (
+            <div className="code__default-class">
+              <Input
+                floatingLabel
+                label="Default class"
+                onChange={default_class =>
+                  setData(state => ({ ...state, default_class }))
+                }
+                onBlur={handleClassOnBlur}
+                value={data.default_class}
+              />
+            </div>
+          ) : (
+            <div className="code__handler">
+              <Input
+                floatingLabel
+                invalid={!validation.isHandlerValid}
+                label="Handler"
+                onChange={handler => setData(state => ({ ...state, handler }))}
+                onBlur={handleHandlerOnBlur}
+                required
+                setInvalid={value =>
+                  setValidation(state => ({ ...state, isHandlerValid: value }))
+                }
+                tip="Enter the function handler name (e.g. for the default sample function the name should be `handler`)"
+                value={data.handler}
+                wrapperClassName="handler"
+              />
+            </div>
+          )}
           <div className="code__existing-image">
             <RadioButtons
               className="radio-buttons__block"
@@ -123,7 +135,6 @@ const FunctionsPanelCodeView = ({
                   }))
                 }
                 tip="The name of the function‘s container image"
-                type="text"
                 value={data.image}
                 wrapperClassName="image-name"
               />
@@ -200,10 +211,6 @@ const FunctionsPanelCodeView = ({
                 functionsStore.newFunction.spec.build.commands
               )
             ) {
-              setNewFunctionWithMlrun(
-                appStore.frontendSpec.function_deployment_mlrun_command ===
-                  event.target.value
-              )
               setNewFunctionCommands(trimSplit(data.commands, '\n'))
             }
           }}
@@ -236,10 +243,10 @@ const FunctionsPanelCodeView = ({
 }
 
 FunctionsPanelCodeView.propTypes = {
-  appStore: PropTypes.shape({}).isRequired,
   data: PropTypes.shape({}).isRequired,
   editCode: PropTypes.bool.isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
+  handleClassOnBlur: PropTypes.func.isRequired,
   handleHandlerOnBlur: PropTypes.func.isRequired,
   handleImageTypeChange: PropTypes.func.isRequired,
   imageType: PropTypes.string.isRequired,

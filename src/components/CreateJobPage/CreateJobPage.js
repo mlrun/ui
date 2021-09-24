@@ -5,7 +5,6 @@ import { includes, isEmpty } from 'lodash'
 
 import CreateJobPageView from './CreateJobPageView'
 import JobsPanel from '../JobsPanel/JobsPanel'
-import Notification from '../../common/Notification/Notification'
 
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
@@ -182,7 +181,6 @@ const CreateJobPage = ({
           project={selectedProject}
         />
       )}
-      <Notification />
     </>
   )
 }
