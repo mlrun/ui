@@ -16,7 +16,9 @@ import {
   collapseAccorditionSection,
   expandAccorditionSection,
   isAccorditionSectionCollapsed,
-  clickNearComponent
+  clickNearComponent,
+  verifyElementDisabled,
+  verifyElementEnabled
 } from '../common/actions/common.action'
 import {
   findRowIndexesByColumnValue,
@@ -36,7 +38,9 @@ import {
   getInputValue,
   checkHintText,
   verifyTypedValue,
-  checkWarningHintText
+  checkWarningHintText,
+  verifyInputDisabled,
+  verifyInputEnabled
 } from '../common/actions/input-group.action'
 import {
   incrementValue,
@@ -58,7 +62,11 @@ import {
   isContainsSubstringInSuggestedOptions
 } from '../common/actions/input-with-autocomplete.action'
 
-import { isRadioButtonSelected } from '../common/actions/radio-button.action'
+import {
+  isRadioButtonSelected,
+  isRadioButtonUnselected,
+  selectRadiobutton
+} from '../common/actions/radio-button.action'
 
 Given('open url', async function() {
   await navigateToPage(this.driver, `http://${test_url}:${test_port}`)
@@ -106,6 +114,40 @@ Then('type value {string} to {string} field on {string} wizard', async function(
   await typeValue(this.driver, pageObjects[wizard][inputField], value)
   await verifyTypedValue(this.driver, pageObjects[wizard][inputField], value)
 })
+
+Then('verify {string} element on {string} wizard is enabled', async function(
+  elementName,
+  wizardName
+) {
+  await verifyElementEnabled(this.driver, pageObjects[wizardName][elementName])
+})
+
+Then('verify {string} element on {string} wizard is disabled', async function(
+  elementName,
+  wizardName
+) {
+  await verifyElementDisabled(this.driver, pageObjects[wizardName][elementName])
+})
+
+Then(
+  'verify {string} element in {string} on {string} wizard is enabled',
+  async function(inputField, accordionName, wizardName) {
+    await verifyInputEnabled(
+      this.driver,
+      pageObjects[wizardName][accordionName][inputField]
+    )
+  }
+)
+
+Then(
+  'verify {string} element in {string} on {string} wizard is disabled',
+  async function(inputField, accordionName, wizardName) {
+    await verifyInputDisabled(
+      this.driver,
+      pageObjects[wizardName][accordionName][inputField]
+    )
+  }
+)
 
 When(
   'type searchable fragment {string} into {string} on {string} wizard',
@@ -201,41 +243,62 @@ Then(
 
 When(
   'select {string} option in {string} dropdown on {string} wizard',
-  async function(option, dropdown, wizard) {
-    await openDropdown(this.driver, pageObjects[wizard][dropdown])
+  async function(optionValue, dropdownName, wizardName) {
+    await openDropdown(this.driver, pageObjects[wizardName][dropdownName])
     await selectOptionInDropdown(
       this.driver,
-      pageObjects[wizard][dropdown],
-      option
+      pageObjects[wizardName][dropdownName],
+      optionValue
     )
     await this.driver.sleep(500)
     await checkDropdownSelectedOption(
       this.driver,
-      pageObjects[wizard][dropdown],
-      option
+      pageObjects[wizardName][dropdownName],
+      optionValue
+    )
+  }
+)
+
+When(
+  'select {string} option in {string} dropdown on {string} on {string} wizard',
+  async function(optionValue, dropdownName, accordionName, wizardName) {
+    await openDropdown(
+      this.driver,
+      pageObjects[wizardName][accordionName][dropdownName]
+    )
+    await selectOptionInDropdown(
+      this.driver,
+      pageObjects[wizardName][accordionName][dropdownName],
+      optionValue
+    )
+    await this.driver.sleep(500)
+    await checkDropdownSelectedOption(
+      this.driver,
+      pageObjects[wizardName][accordionName][dropdownName],
+      optionValue
     )
   }
 )
 
 When(
   'select {string} option in {string} filter dropdown on {string} wizard',
-  async function(option, dropdown, wizard) {
-    await openDropdown(this.driver, pageObjects[wizard][dropdown])
+  async function(optionValue, dropdownName, wizardName) {
+    await openDropdown(this.driver, pageObjects[wizardName][dropdownName])
     await selectOptionInDropdownWithoutCheck(
       this.driver,
-      pageObjects[wizard][dropdown],
-      option
+      pageObjects[wizardName][dropdownName],
+      optionValue
     )
   }
 )
 
 Then(
   'verify {string} filter band in {string} filter dropdown on {string} wizard',
-  async function(option, dropdown, wizard) {
+  async function(optionValue, dropdownName, wizardName) {
     await verifyTimeFilterBand(
       this.driver,
-      pageObjects[wizard][dropdown],
-      pageObjectsConsts[wizard][option]
+      pageObjects[wizardName][dropdownName],
+      pageObjectsConsts[wizardName][optionValue]
     )
   }
 )
@@ -243,39 +306,39 @@ Then(
 When(
   'pick up {string} from {string} to {string} in {string} via {string} on {string} wizard',
   async function(
-    option,
+    optionValue,
     fromDatetime,
     toDatetime,
     datetimePicker,
-    dropdown,
-    wizard
+    dropdownName,
+    wizardName
   ) {
-    await openDropdown(this.driver, pageObjects[wizard][dropdown])
+    await openDropdown(this.driver, pageObjects[wizardName][dropdownName])
     await selectOptionInDropdownWithoutCheck(
       this.driver,
-      pageObjects[wizard][dropdown],
-      option
+      pageObjects[wizardName][dropdownName],
+      optionValue
     )
     await this.driver.sleep(100)
     await pickUpCustomDatetimeRange(
       this.driver,
-      pageObjects[wizard][datetimePicker],
+      pageObjects[wizardName][datetimePicker],
       fromDatetime,
       toDatetime
     )
     await applyDatetimePickerRange(
       this.driver,
-      pageObjects[wizard][datetimePicker]
+      pageObjects[wizardName][datetimePicker]
     )
   }
 )
 
 Then(
   'verify from {string} to {string} filter band in {string} filter dropdown on {string} wizard',
-  async function(fromDatetime, toDatetime, dropdown, wizard) {
+  async function(fromDatetime, toDatetime, dropdownName, wizardName) {
     await verifyTimeFilterBand(
       this.driver,
-      pageObjects[wizard][dropdown],
+      pageObjects[wizardName][dropdownName],
       Date.parse(toDatetime) - Date.parse(fromDatetime)
     )
   }
@@ -530,20 +593,64 @@ Then(
   }
 )
 
+When('click on {string} element in {string} on {string} wizard', async function(
+  component,
+  accordion,
+  wizardName
+) {
+  await clickOnComponent(
+    this.driver,
+    pageObjects[wizardName][accordion][component]
+  )
+})
+
 Then('is {string} on {string} selected', async function(radiobutton, wizard) {
   await isRadioButtonSelected(this.driver, pageObjects[wizard][radiobutton])
 })
 
+Then('is {string} in {string} on {string} selected', async function(
+  radiobutton,
+  accordion,
+  wizard
+) {
+  await isRadioButtonSelected(
+    this.driver,
+    pageObjects[wizard][accordion][radiobutton]
+  )
+})
+
+Then('is not {string} in {string} on {string} selected', async function(
+  radiobutton,
+  accordion,
+  wizard
+) {
+  await isRadioButtonUnselected(
+    this.driver,
+    pageObjects[wizard][accordion][radiobutton]
+  )
+})
+
+When('select {string} in {string} on {string}', async function(
+  radiobutton,
+  accordion,
+  wizard
+) {
+  await selectRadiobutton(
+    this.driver,
+    pageObjects[wizard][accordion][radiobutton]
+  )
+})
+
 When(
   'select {string} option in {string} combobox on {string} accordion on {string} wizard',
-  async function(option, comboBox, accordion, wizard) {
+  async function(option, comboBox, accordion, wizardName) {
     await openDropdown(
       this.driver,
-      pageObjects[wizard][accordion][comboBox]['dropdown']
+      pageObjects[wizardName][accordion][comboBox]['dropdown']
     )
     await selectOptionInDropdownWithoutCheck(
       this.driver,
-      pageObjects[wizard][accordion][comboBox]['dropdown'],
+      pageObjects[wizardName][accordion][comboBox]['dropdown'],
       option
     )
   }

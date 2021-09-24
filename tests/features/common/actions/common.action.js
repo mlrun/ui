@@ -30,6 +30,24 @@ const action = {
       .click()
       .perform()
   },
+  hoverComponent: async function(driver, component) {
+    const element = await driver.findElement(component)
+    const coordinates = await element.getRect()
+    const actions = driver.actions({ async: true })
+    await actions
+      .move({ x: parseInt(coordinates.x), y: parseInt(coordinates.y) })
+      .perform()
+  },
+  verifyElementDisabled: async function(driver, component) {
+    const element = await driver.findElement(component)
+    const flag = await element.getAttribute('disabled')
+    expect(flag).equal('true')
+  },
+  verifyElementEnabled: async function(driver, component) {
+    const element = await driver.findElement(component)
+    const flag = await element.getAttribute('disabled')
+    expect(flag).equal(null)
+  },
   componentIsPresent: async function(driver, component) {
     const _component = component.root ?? component
     const elements = await driver.findElements(_component)

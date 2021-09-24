@@ -46,6 +46,16 @@ const action = {
   verifyTypedValue: async function(driver, inputGroup, value) {
     const txt = await getInputValue(driver, inputGroup)
     expect(txt).equal(value)
+  },
+  verifyInputDisabled: async function(driver, inputGroup) {
+    const inputField = await driver.findElement(inputGroup.inputField)
+    const flag = await inputField.getAttribute('disabled')
+    expect(flag).equal('true')
+  },
+  verifyInputEnabled: async function(driver, inputGroup) {
+    const inputField = await driver.findElement(inputGroup.inputField)
+    const flag = await inputField.getAttribute('disabled')
+    expect(flag).equal(null)
   }
 }
 

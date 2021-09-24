@@ -40,7 +40,8 @@ module.exports = {
     root,
     incDecBtn = false,
     label = false,
-    hint = false
+    hint = false,
+    warning = false
   ) {
     const structure = { elements: {} }
     structure.root = root
@@ -63,6 +64,10 @@ module.exports = {
       } else {
         structure.elements.hint = 'div.tip-container svg'
       }
+    }
+    if (warning) {
+      structure.elements.warningHint = '.range__warning svg'
+      structure.elements.warningText = 'div.tooltip div.tooltip__text'
     }
 
     return structure

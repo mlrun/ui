@@ -7,6 +7,7 @@ import radiobuttonComponent from '../components/radio-button.component'
 import labelComponent from '../components/label.component'
 import actionMenu from '../components/action-menu.component'
 import comboBox from '../components/combo-box.component'
+import singleDatepicker from '../components/single-date-picker.component'
 import {
   generateInputGroup,
   generateNumberInputGroup,
@@ -59,51 +60,84 @@ const labelsTable = {
   }
 }
 
-const dataSorceAttributesTable = {
-  root: 'div.data-source__table',
+// date picker start
+const calendarTable = {
+  root: '',
   header: {
-    root: 'div.table-row__header',
+    root: 'div.date-picker__weeks',
     sorters: {
-      attribute_name: 'div.table-cell__key',
-      value: 'div.table-cell__value'
+      Sunday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Monday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Tuesday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Wednesday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Thursday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Friday: 'div.date-picker__weeks-day:nth-of-type(1)',
+      Saturday: 'div.date-picker__weeks-day:nth-of-type(1)'
     }
   },
   body: {
-    add_row_btn: 'div.table-row button.add-new-item-btn',
-    offset: 1,
+    offset: 3,
     row: {
-      root: 'div[class*=table-row]:not([class*=table-row__header])',
+      root: 'div.date-picker__week',
       fields: {
-        attribute_name: 'div.table-cell__key',
-        value: 'div.table-cell__value',
-        action: 'div.table-cell__actions',
-        attribute_name_input: 'div.table-cell__key input',
-        value_input: 'div.table-cell__value input',
-        add_row_btn: 'button'
+        Sunday: 'div.date-picker__week-day-wrapper:nth-of-type(1)',
+        Monday: 'div.date-picker__week-day-wrapper:nth-of-type(2)',
+        Tuesday: 'div.date-picker__week-day-wrapper:nth-of-type(3)',
+        Wednesday: 'div.date-picker__week-day-wrapper:nth-of-type(4)',
+        Thursday: 'div.date-picker__week-day-wrapper:nth-of-type(5)',
+        Friday: 'div.date-picker__week-day-wrapper:nth-of-type(6)',
+        Saturday: 'div.date-picker__week-day-wrapper:nth-of-type(7)'
       }
     }
   }
 }
 
-const partitionGranularityDropdown = {
+const startDateTimePickerCalendar = {
   root:
-    'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.select',
-  dropdownElements: {
-    open_button: 'div.select__header div.select__value',
-    options: 'div.select__body div.select__item',
-    option_name: 'div.data-ellipsis > div.data-ellipsis'
+    '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .data-source__inputs-container .date-picker-container:nth-of-type(2)',
+  apply_button: 'button.date-picker__apply-btn',
+  error_message: 'div.error-message',
+  datePicker: {
+    root: 'div.date-picker__calendars div.date-picker__calendar:nth-of-type(1)',
+    elements: {
+      month_prev_btn:
+        'div.date-picker__header svg.date-picker__header-previous-month',
+      month_next_btn:
+        'div.date-picker__header svg.date-picker__header-next-month',
+      month_label: 'div.date-picker__header div span.date-picker__header-month',
+      year_label: 'div.date-picker__header div span.date-picker__header-year',
+      time_input: 'div.date-picker__time input',
+      calendar: {
+        componentType: commonTable,
+        structure: calendarTable
+      }
+    }
   }
 }
 
-const fileTypeDropdown = {
+const endDateTimePickerCalendar = {
   root:
-    'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(3) div.select',
-  dropdownElements: {
-    open_button: 'div.select__header div.select__value',
-    options: 'div.select__body div.select__item',
-    option_name: 'div.data-ellipsis > div.data-ellipsis'
+    '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .data-source__inputs-container .date-picker-container:nth-of-type(3)',
+  apply_button: 'button.date-picker__apply-btn',
+  error_message: 'div.error-message',
+  datePicker: {
+    root: 'div.date-picker__calendars div.date-picker__calendar:nth-of-type(1)',
+    elements: {
+      month_prev_btn:
+        'div.date-picker__header svg.date-picker__header-previous-month',
+      month_next_btn:
+        'div.date-picker__header svg.date-picker__header-next-month',
+      month_label: 'div.date-picker__header div span.date-picker__header-month',
+      year_label: 'div.date-picker__header div span.date-picker__header-year',
+      time_input: 'div.date-picker__time input',
+      calendar: {
+        componentType: commonTable,
+        structure: calendarTable
+      }
+    }
   }
 }
+// Datepicker end
 
 // New job components
 const dataSourceInputSourcesTable = {
@@ -422,9 +456,114 @@ const advancedSecretsTable = {
   }
 }
 
+// New Function Complex elements descriptions
+const newFunctionLabelsTable = {
+  root:
+    '.new-item-side-panel .accordion__container:nth-of-type(1) .accordion__body .panel-section__body .general__labels-container',
+  header: {},
+  body: {
+    root: 'div.chips-wrapper',
+    add_row_btn: 'button.button-add',
+    row: {
+      root: 'div.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        label: 'div.chip_short',
+        remove_btn: '.item-icon-close'
+      }
+    }
+  }
+}
+
+const functionVolumePathsTable = {
+  root:
+    '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body',
+  header: {
+    root: '.table__header',
+    sorters: {
+      type: '.table__cell:nth-of-type(1)',
+      volume_name: '.table__cell:nth-of-type(2)',
+      path: '.table__cell:nth-of-type(3)'
+    }
+  },
+  body: {
+    offset: 1,
+    add_row_btn: '.no-hover .add-input',
+    row: {
+      root: 'div[class=table__row]',
+      fields: {
+        type: '.table__cell:nth-of-type(1) .data-ellipsis',
+        volume_name: '.table__cell:nth-of-type(2) .data-ellipsis',
+        path: '.table__cell:nth-of-type(3) .data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: {
+            root: '.table__cell-actions',
+            menuElements: {
+              open_button: 'button',
+              options: '.actions-menu__body .actions-menu__option'
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+const functionEnvironmentVariablesTable = {
+  root:
+    '.new-item-side-panel .accordion__container:nth-of-type(4)  .panel-section__body .key-value-table',
+  header: {
+    root: '.table-row__header',
+    sorters: {
+      name: '.table-cell__key',
+      value: '.table-cell__value'
+    }
+  },
+  body: {
+    offset: 1,
+    add_row_btn: '.add-new-item-btn',
+    row: {
+      root: '.table-row',
+      fields: {
+        name: '.table-cell__key .data-ellipsis',
+        value: '.table-cell__value .data-ellipsis',
+        delete_btn: '.table-cell:nth-of-type(3) .key-value-table__btn',
+        name_input: {
+          componentType: inputGroup,
+          structure: generateInputGroup(
+            '.table-cell__key.input-wrapper',
+            true,
+            false,
+            false
+          )
+        },
+        value_input: {
+          componentType: inputGroup,
+          structure: generateInputGroup(
+            '.table-cell__value.input-wrapper',
+            true,
+            false,
+            false
+          )
+        },
+        add_row_btn: 'button svg'
+      }
+    }
+  }
+}
+
 // common components
 const commonCrossCloseButton = By.css(
   'div.new-item-side-panel button.panel-title__btn_close'
+)
+
+const resourcesTableCommonInpute21 = generateInputGroup(
+  '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(2) .input-wrapper:nth-of-type(1)',
+  true,
+  true,
+  true
 )
 
 module.exports = {
@@ -461,7 +600,7 @@ module.exports = {
       Collapse_Button: By.css(
         'div.feature-set-panel div.accordion__container:nth-of-type(1) button.new-item-side-panel__expand-icon'
       ),
-      URL_Input: comboBox({
+      URL_Combobox: comboBox({
         root:
           '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .combobox',
         elements: {
@@ -487,22 +626,6 @@ module.exports = {
           }
         }
       }),
-      Key_Input: inputGroup(
-        generateInputGroup(
-          'div.feature-set-panel div.accordion__container:nth-of-type(1) div.panel-section__body div.input-wrapper:nth-of-type(3)',
-          true,
-          false,
-          false
-        )
-      ),
-      Time_Input: inputGroup(
-        generateInputGroup(
-          'div.feature-set-panel div.accordion__container:nth-of-type(1) div.panel-section__body div.input-wrapper:nth-of-type(4)',
-          true,
-          false,
-          false
-        )
-      ),
       Kind_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .select',
@@ -511,7 +634,24 @@ module.exports = {
           '.data-ellipsis > .data-ellipsis'
         )
       ),
-      Attributes_Table: commonTable(dataSorceAttributesTable)
+      Attributes_Input: inputGroup(
+        generateInputGroup(
+          '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .input-wrapper',
+          true,
+          false,
+          true
+        )
+      ),
+      Parquet_Timestamp_Column_Input: inputGroup(
+        generateInputGroup(
+          '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .data-source__inputs-item.input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      Start_Date_Time_Picker: singleDatepicker(startDateTimePickerCalendar),
+      End_Date_Time_Picker: singleDatepicker(endDateTimePickerCalendar)
     },
     Schema_Accordion: {
       Accordion_Header: By.css(
@@ -589,27 +729,83 @@ module.exports = {
           icon: 'svg:not([class])'
         }
       }),
+      Offline_Partition_ShowHide_Link: By.css(
+        '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .partition-fields .link'
+      ),
+      Offline_Partition_By_Key_Checkbox: checkboxComponent({
+        root:
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .partition-fields .partition-fields__checkbox-container .checkbox:nth-of-type(1)',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: ''
+        }
+      }),
+      Offline_Partition_By_Time_Checkbox: checkboxComponent({
+        root:
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .partition-fields .partition-fields__checkbox-container .checkbox:nth-of-type(2)',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: ''
+        }
+      }),
+      Offline_Partition_By_Columns_Checkbox: checkboxComponent({
+        root:
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .partition-fields .partition-fields__checkbox-container .checkbox:nth-of-type(3)',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: ''
+        }
+      }),
+      Offline_Partition_Distinct_Keys_Radiobutton: radiobuttonComponent({
+        root:
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .partition-fields .radio-buttons-container .radio-buttons__content:nth-of-type(1)',
+        elements: {
+          radiobutton: 'label.radio-button input',
+          mark: 'label.radio-button .checkmark',
+          name: 'span.radio-button__label',
+          description: 'span.radio-button__info'
+        }
+      }),
+      Offline_Partition_Number_Of_Buckets_Radiobutton: radiobuttonComponent({
+        root:
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .partition-fields .radio-buttons-container .radio-buttons__content:nth-of-type(2)',
+        elements: {
+          radiobutton: 'label.radio-button input',
+          mark: 'label.radio-button .checkmark',
+          name: 'span.radio-button__label',
+          description: 'span.radio-button__info'
+        }
+      }),
       Offline_Partition_Key_Buckering_Number_Input: numberInputGroup(
         generateNumberInputGroup(
           '.feature-set-panel div.accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .range-normal',
           false,
           true,
-          true
+          true,
+          false
         )
       ),
       Offline_Partition_Columns_Input: inputGroup(
         generateInputGroup(
-          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.target-store__inputs-container > div.partition-cols.input-wrapper',
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .partition-fields__inputs-container .partition-cols.input-wrapper',
           true,
           false,
           false
         )
       ),
       Offline_Partition_Granularity_Dropdown: dropdownComponent(
-        partitionGranularityDropdown
+        generateDropdownGroup(
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(2) div.select',
+          'div.select__header div.select__value',
+          'div.select__body div.select__item',
+          'div.data-ellipsis > div.data-ellipsis'
+        )
       ),
       // Other group
-      Other_Checkbox: checkboxComponent({
+      External_Offline_Checkbox: checkboxComponent({
         root:
           'div.feature-set-panel div.accordion__container:nth-of-type(3) div.accordion__body div.target-store__item:nth-of-type(3) span.checkbox',
         elements: {
@@ -618,7 +814,14 @@ module.exports = {
           icon: 'svg:not([class])'
         }
       }),
-      File_Type_Dropdown: dropdownComponent(fileTypeDropdown),
+      File_Type_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(3) div.select',
+          'div.select__header div.select__value',
+          'div.select__body div.select__item',
+          'div.data-ellipsis > div.data-ellipsis'
+        )
+      ),
       URL_Input: inputGroup(
         generateInputGroup(
           'div.feature-set-panel div.accordion__container:nth-of-type(3) div.input-wrapper',
@@ -626,28 +829,96 @@ module.exports = {
           false,
           false
         )
+      ),
+      External_Offline_Partition_Checkbox: checkboxComponent({
+        root:
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(3) div.target-store__inputs-container span.checkbox',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: 'svg:not([class])'
+        }
+      }),
+      External_Offline_Partition_ShowHide_Link: By.css(
+        '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .partition-fields .link'
+      ),
+      External_Offline_Partition_By_Key_Checkbox: checkboxComponent({
+        root:
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .partition-fields .partition-fields__checkbox-container .checkbox:nth-of-type(1)',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: ''
+        }
+      }),
+      External_Offline_Partition_By_Time_Checkbox: checkboxComponent({
+        root:
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .partition-fields .partition-fields__checkbox-container .checkbox:nth-of-type(2)',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: ''
+        }
+      }),
+      External_Offline_Partition_By_Columns_Checkbox: checkboxComponent({
+        root:
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .partition-fields .partition-fields__checkbox-container .checkbox:nth-of-type(3)',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: ''
+        }
+      }),
+      External_Offline_Partition_Distinct_Keys_Radiobutton: radiobuttonComponent(
+        {
+          root:
+            '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .partition-fields .radio-buttons-container .radio-buttons__content:nth-of-type(1)',
+          elements: {
+            radiobutton: 'label.radio-button input',
+            mark: 'label.radio-button .checkmark',
+            name: 'span.radio-button__label',
+            description: 'span.radio-button__info'
+          }
+        }
+      ),
+      External_Offline_Partition_Number_Of_Buckets_Radiobutton: radiobuttonComponent(
+        {
+          root:
+            '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .partition-fields .radio-buttons-container .radio-buttons__content:nth-of-type(2)',
+          elements: {
+            radiobutton: 'label.radio-button input',
+            mark: 'label.radio-button .checkmark',
+            name: 'span.radio-button__label',
+            description: 'span.radio-button__info'
+          }
+        }
+      ),
+      External_Offline_Partition_Key_Buckering_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.feature-set-panel div.accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .range-normal',
+          false,
+          true,
+          true,
+          false
+        )
+      ),
+      External_Offline_Partition_Columns_Input: inputGroup(
+        generateInputGroup(
+          '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(3) .target-store__inputs-container .partition-fields__inputs-container .partition-cols.input-wrapper',
+          true,
+          false,
+          false
+        )
+      ),
+      External_Offline_Partition_Granularity_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          'div.feature-set-panel div.accordion__container:nth-of-type(3) div.panel-section__body div.target-store__item:nth-of-type(3) div.select',
+          'div.select__header div.select__value',
+          'div.select__body div.select__item',
+          'div.data-ellipsis > div.data-ellipsis'
+        )
       )
     },
-    No_Transformation_Radiobutton: radiobuttonComponent({
-      root:
-        'div.feature-set-panel div.radio-buttons div.radio-buttons__content:nth-of-type(1)',
-      elements: {
-        radiobutton: 'label.radio-button input',
-        mark: 'label.radio-button .checkmark',
-        name: 'span.radio-button__label',
-        description: 'span.radio-button__info'
-      }
-    }),
-    Add_Transformation_Via_API_Radiobutton: radiobuttonComponent({
-      root:
-        'div.feature-set-panel div.radio-buttons div.radio-buttons__content:nth-of-type(2)',
-      elements: {
-        radiobutton: 'label.radio-button input',
-        mark: 'label.radio-button .checkmark',
-        name: 'span.radio-button__label',
-        description: 'span.radio-button__info'
-      }
-    }),
     Cancel_Batton: By.css(
       'div.feature-set-panel div.new-item-side-panel__buttons-container button.pop-up-dialog__btn_cancel'
     ),
@@ -769,7 +1040,8 @@ module.exports = {
             dec_btn: '.range__buttons button[class*=decrease]'
           },
           true,
-          false
+          false,
+          true
         )
       ),
       Memory_Limit_Number_Input: numberInputGroup(
@@ -777,7 +1049,8 @@ module.exports = {
           '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .memory .range-dense:nth-of-type(3)',
           false,
           true,
-          false
+          false,
+          true
         )
       ),
       CPU_Unit_Dropdown: dropdownComponent(
@@ -793,7 +1066,8 @@ module.exports = {
           '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .cpu .range-dense:nth-of-type(2)',
           false,
           true,
-          false
+          false,
+          true
         )
       ),
       CPU_Limit_Number_Input: numberInputGroup(
@@ -801,7 +1075,8 @@ module.exports = {
           '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .cpu .range-dense:nth-of-type(3)',
           false,
           true,
-          false
+          false,
+          true
         )
       ),
       GPU_Limit_Number_Input: numberInputGroup(
@@ -809,7 +1084,8 @@ module.exports = {
           '.new-item-side-panel__body .accordion__container:nth-of-type(3) .inputs .section-gpu .range-dense',
           false,
           true,
-          false
+          false,
+          true
         )
       ),
       Resources_Node_Selector_Table: commonTable(resourcesNodeSelectorTable)
@@ -831,6 +1107,276 @@ module.exports = {
     ),
     Run_Now_Button: By.css(
       '.new-item-side-panel__body .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(2) button'
+    )
+  },
+  newFunction: {
+    Cross_Close_Button: commonCrossCloseButton,
+    General_Accordion: {
+      Accordion_Header: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(1) h5'
+      ),
+      Collapse_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(1) button.new-item-side-panel__expand-icon'
+      ),
+      New_Function_Name_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(1) .general__required-info .name.input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      New_Function_Tag_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(1) .general__required-info .tag.input-wrapper',
+          true,
+          false,
+          false
+        )
+      ),
+      New_Function_Run_Time_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(1) .general__required-info .select',
+          false,
+          false,
+          false
+        )
+      ),
+      New_Function_Description_Text_Area: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(1) .accordion__body .panel-section__body .description .text-area'
+      ),
+      Labels_Table: commonTable(newFunctionLabelsTable)
+    },
+    Code_Accordion: {
+      Accordion_Header: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(2) h5'
+      ),
+      Collapse_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(2) button.new-item-side-panel__expand-icon'
+      ),
+      New_Function_Code_Entry_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(2) .select',
+          false,
+          false,
+          false
+        )
+      ),
+      New_Function_Handler_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(2) .handler.input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      Use_An_Existing_Image_Radiobutton: radiobuttonComponent({
+        root:
+          '.new-item-side-panel .accordion__container:nth-of-type(2) .radio-buttons__block .radio-buttons__content:nth-of-type(1)',
+        elements: {
+          radiobutton: 'label.radio-button input',
+          mark: 'label.radio-button .checkmark',
+          name: 'span.radio-button__label',
+          description: 'span.radio-button__info'
+        }
+      }),
+      Build_A_New_Image_Radiobutton: radiobuttonComponent({
+        root:
+          '.new-item-side-panel .accordion__container:nth-of-type(2) .radio-buttons__block .radio-buttons__content:nth-of-type(2)',
+        elements: {
+          radiobutton: 'label.radio-button input',
+          mark: 'label.radio-button .checkmark',
+          name: 'span.radio-button__label',
+          description: 'span.radio-button__info'
+        }
+      }),
+      New_Function_Image_Name_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(2) .code__images-inputs .image-name.input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      New_Function_Resulting_Image_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(2) .code__images-inputs .build-image.input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      New_Function_Base_Image_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(2) .code__images-inputs .base-image.input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      New_Function_Build_Commands_Text_Area: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(2) .commands.text-area-wrapper .text-area'
+      )
+    },
+    Resouces_Accordion: {
+      Accordion_Header: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(3) h5'
+      ),
+      Collapse_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(3) button.new-item-side-panel__expand-icon'
+      ),
+      Volumes_Subheader: labelComponent(
+        generateLabelGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__title',
+          'h5',
+          true
+        )
+      ),
+      Volume_Paths_Table: commonTable(functionVolumePathsTable),
+      // Volume Path inputs
+      Volume_Paths_Table_Type_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(1) .select',
+          '.select__value',
+          '.select__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      Volume_Paths_Table_Volume_Name_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(1) .input-wrapper:nth-of-type(2)',
+          true,
+          false,
+          true
+        )
+      ),
+      Volume_Paths_Table_Path_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(1) .input-wrapper:nth-of-type(3)',
+          true,
+          true,
+          true
+        )
+      ),
+      Volume_Paths_Table_Container_Input: inputGroup(
+        resourcesTableCommonInpute21
+      ),
+      Volume_Paths_Table_Config_Map_Input: inputGroup(
+        resourcesTableCommonInpute21
+      ),
+      Volume_Paths_Table_Secret_Name_Input: inputGroup(
+        resourcesTableCommonInpute21
+      ),
+      Volume_Paths_Table_Claime_Name_Input: inputGroup(
+        resourcesTableCommonInpute21
+      ),
+      Volume_Paths_Table_Access_Key_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(2) .input-wrapper:nth-of-type(2)',
+          true,
+          true,
+          true
+        )
+      ),
+      Volume_Paths_Table_Resource_Path_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(3) .input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      Add_New_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body button.btn-add'
+      ),
+      Delete_New_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body button:not([class])'
+      ),
+      // Number input groups
+      Memory_Unit_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs div.memory .select',
+          '.select__value',
+          '.select__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      Memory_Request_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .range-dense:nth-of-type(2)',
+          {
+            inc_btn: '.range__buttons button[class*=increase]',
+            dec_btn: '.range__buttons button[class*=decrease]'
+          },
+          true,
+          false,
+          true
+        )
+      ),
+      Memory_Limit_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .memory .range-dense:nth-of-type(3)',
+          false,
+          true,
+          false,
+          true
+        )
+      ),
+      CPU_Unit_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs div.cpu .select',
+          '.select__value',
+          '.select__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      CPU_Request_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .range-dense:nth-of-type(2)',
+          false,
+          true,
+          false,
+          true
+        )
+      ),
+      CPU_Limit_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .cpu .range-dense:nth-of-type(3)',
+          false,
+          true,
+          false,
+          true
+        )
+      ),
+      GPU_Limit_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .resources__inputs .section-gpu .range-dense',
+          false,
+          true,
+          false,
+          true
+        )
+      )
+    },
+    Environment_Variables_Accordion: {
+      Accordion_Header: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(3) h5'
+      ),
+      Collapse_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(3) button.new-item-side-panel__expand-icon'
+      ),
+      Function_Environment_Variables_Table: commonTable(
+        functionEnvironmentVariablesTable
+      )
+    },
+    Cansel_Button: By.css(
+      '.new-item-side-panel .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(1) button'
+    ),
+    Save_Button: By.css(
+      '.new-item-side-panel .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(2) button'
+    ),
+    Deploy_Button: By.css(
+      '.new-item-side-panel .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(3) button'
     )
   }
 }

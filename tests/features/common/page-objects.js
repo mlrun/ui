@@ -7,6 +7,7 @@ import infoPane from './page-objects/info-pane.po'
 import interactivePopup from './page-objects/interactive-popup.po'
 import sidePanel from './page-objects/side-panel.po'
 import jobsAndWorkflows from './page-objects/jobs-and-workflows.po'
+import Functions from './page-objects/ml-functions.po'
 
 module.exports = {
   commonPagesHeader: {
@@ -35,5 +36,9 @@ module.exports = {
   Create_Feature_Set_Popup_Dialog:
     interactivePopup['createFeatureSetPopupDialog'],
   Create_Job: jobsAndWorkflows['CreateJob'],
-  New_JobTemplate_Edit: sidePanel['newJobTemplateEdit']
+  New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
+  ML_Functions: Functions['mlFunctions'],
+  New_Function: sidePanel['newFunction'],
+  ML_Function_Info_Pane: infoPane['featuresInfoPane'],
+  Delete_Function_Popup: interactivePopup['deleteFunction']
 }

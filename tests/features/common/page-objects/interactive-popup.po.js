@@ -57,6 +57,13 @@ module.exports = {
     Cancel_Button: commonCancelButton,
     Delete_Button: By.css('div.pop-up-dialog button.btn-danger')
   },
+  deleteFunction: {
+    Title: By.css('div.pop-up-dialog div.pop-up-dialog__header-text'),
+    Description: By.css('div.pop-up-dialog > div:not([class])'),
+    Cross_Cancel_Button: commonCrossCancelButton,
+    Cancel_Button: commonCancelButton,
+    Delete_Button: By.css('div.pop-up-dialog button.btn-danger')
+  },
   registerDataset: {
     Title: By.css('div.pop-up-dialog div.pop-up-dialog__header-text'),
     Cross_Cancel_Button: commonCrossCancelButton,

@@ -12,13 +12,13 @@ const actionMenuStructure = {
 }
 
 const infoPaneTabSelector = {
-  root: 'div.table__item ul.item-menu',
+  root: '.table__item .details-menu__tabs',
   header: {},
   body: {
     row: {
       root: 'a',
       fields: {
-        tab: 'li.menu-tab'
+        tab: '.details-menu__tab'
       }
     }
   }
@@ -200,5 +200,8 @@ module.exports = {
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector
+  },
+  mlFunctionInfoPane: {
+    Cross_Close_Button: crossCloseButton
   }
 }
