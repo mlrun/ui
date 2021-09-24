@@ -360,7 +360,7 @@ const Jobs = ({
 
       if (!item) {
         const urlArray = match.url.split('/')
-        const newUrl = urlArray.slice(0, urlArray.length - 2).join('/')
+        const newUrl = urlArray.slice(0, -2).join('/')
 
         return history.replace(newUrl)
       }
