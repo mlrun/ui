@@ -100,6 +100,11 @@ const Workflow = ({
     setElements(getLayoutedElements(nodes.concat(edges)))
   }, [selectedJob.uid, workflow])
 
+  const getCloseDetailsLink = location => {
+    const urlArray = location.pathname.split('/')
+    return urlArray.slice(0, urlArray.length - 2).join('/')
+  }
+
   return (
     <div className={workflowContainerClassNames}>
       <div className="workflow-header">
@@ -202,6 +207,7 @@ const Workflow = ({
           <Details
             actionsMenu={actionsMenu}
             detailsMenu={pageData.detailsMenu}
+            getCloseDetailsLink={getCloseDetailsLink}
             handleCancel={handleCancel}
             match={match}
             pageData={pageData}

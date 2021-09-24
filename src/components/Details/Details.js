@@ -34,6 +34,7 @@ const Details = ({
   detailsMenu,
   detailsStore,
   filtersStore,
+  getCloseDetailsLink,
   handleCancel,
   match,
   pageData,
@@ -322,6 +323,7 @@ const Details = ({
       detailsMenu={detailsMenu}
       detailsMenuClick={detailsMenuClick}
       detailsStore={detailsStore}
+      getCloseDetailsLink={getCloseDetailsLink}
       handleCancel={handleCancel}
       handleShowWarning={handleShowWarning}
       leavePage={leavePage}
@@ -339,6 +341,7 @@ const Details = ({
 Details.defaultProps = {
   applyDetailsChanges: () => {},
   cancelRequest: () => {},
+  getCloseDetailsLink: null,
   item: {},
   retryRequest: () => {},
   removeModelFeatureVector: () => {}
@@ -358,6 +361,7 @@ Details.propTypes = {
       hidden: PropTypes.bool
     })
   ).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
