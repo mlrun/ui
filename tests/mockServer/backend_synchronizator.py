@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import shutil
+from lxml import html
 
 
 react_app_mlrun_api_url = 'http://mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
@@ -17,6 +18,7 @@ endpoint_project_feature_sets = '/api/projects/{project}/feature-sets'
 endpoint_project_schedules = '/api/projects/{project}/schedules'
 endpoint_project_pipelines = '/api/projects/{project}/pipelines'
 endpoint_project_features = '/api/projects/{project}/features'
+endpoint_project_entities = '/api/projects/{project}/entities'
 endpoint_project_feature_vectors = '/api/projects/{project}/feature-vectors'
 endpoint_project_artifact_tags = '/api/projects/{project}/artifact-tags'
 endpoint_runs = '/api/runs?project={project}'
@@ -28,6 +30,12 @@ endpoint_files = '/api/files?path='
 endpoint_nuclio_functions = '/api/functions'
 endpoint_nuclio_api_gateways = '/api/api_gateways'
 
+
+# github functions
+github_functions = 'https://github.com/mlrun/functions/tree/master'
+github_function = 'https://raw.githubusercontent.com/mlrun/functions/master/{func_template}/function.yaml'
+
+locator = '//div[contains(@class,"Box")]//div[@class="js-details-container Details"]/div[contains(@class,"js-navigation-container")]/div[@role="row"]//span/a'
 
 def clear_data_folder(path_to_data):
     try:
@@ -77,6 +85,21 @@ def getFile(host, endpoint, file_sub_url, save_path):
             with open(save_file_path, 'wb') as wf:
                 wf.write(f.content)
 
+def get_function_yaml(file_url, save_path):
+    save_file_path = save_path + file_url.replace('https://raw.githubusercontent.com/','')
+    save_folder = os.path.dirname(save_file_path)
+
+    if not os.path.exists(save_folder):
+        try:
+            os.makedirs(save_folder)
+        except OSError:
+            pass
+
+    with requests.get(file_url) as f:
+        if f.status_code == 200:
+            with open(save_file_path, 'wb') as wf:
+                wf.write(f.content)
+
 
 if __name__ == '__main__':
     # mlrun endpoint
@@ -91,6 +114,7 @@ if __name__ == '__main__':
     feature_sets_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_feature_sets, *project_names)
     schedules_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_schedules, *project_names)
     features_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_features, *project_names)
+    entities_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_entities, *project_names)
     feature_vectors_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_feature_vectors, *project_names)
     artifact_tags_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_artifact_tags, *project_names)
     funcs_arr = get_jsons(react_app_mlrun_api_url, endpoint_funcs, *project_names)
@@ -100,6 +124,7 @@ if __name__ == '__main__':
     feature_sets_all = convert_array_to_json(*feature_sets_arr)
     schedules_all = convert_array_to_json(*schedules_arr)
     features_all = convert_array_to_json(*features_arr)
+    entities_all = convert_array_to_json(*entities_arr)
     feature_vectors_all = convert_array_to_json(*feature_vectors_arr)
     funcs_all = convert_array_to_json(*funcs_arr)
     runs_all = convert_array_to_json(*runs_arr)
@@ -128,6 +153,7 @@ if __name__ == '__main__':
 
     save_dict_to_json(save_folder + '/artifacts.json', **artifacts_all)
     save_dict_to_json(save_folder + '/features.json', **features_all)
+    save_dict_to_json(save_folder + '/entities.json', **entities_all) # entities_all
     save_dict_to_json(save_folder + '/featureSets.json', **feature_sets_all)
     save_dict_to_json(save_folder + '/featureVectors.json', **feature_vectors_all)
     save_dict_to_json(save_folder + '/pipelines.json', **pipelines_all)
@@ -148,3 +174,13 @@ if __name__ == '__main__':
 
     save_dict_to_json(save_folder + '/nuclioFunctions.json', **json.loads(nuclio_functions))
     save_dict_to_json(save_folder + '/nuclioAPIGateways.json', **json.loads(nuclio_api_gateways))
+
+    # github functions
+    functions_thml = get_json(github_functions, '')
+    functions_tree = html.fromstring(functions_thml)
+
+    not_functions = {None, '.gitignore', 'CONTRIBUTING.md', 'LICENSE', 'README.md', 'catalog.json', 'catalog.yaml', 'functions.py', 'requirements.txt'}
+    func_template_names = set([item.text for item in functions_tree.xpath(locator)]) - not_functions
+
+    for item in func_template_names:
+        get_function_yaml(github_function.format(func_template=item), save_folder+'/')

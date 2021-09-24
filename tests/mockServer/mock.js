@@ -1,5 +1,8 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import yaml from 'js-yaml'
+import fs from 'fs'
+import crypto from 'crypto'
 import { cloneDeep, remove } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
@@ -8,6 +11,7 @@ import projectsSummary from './data/summary.json'
 import artifacts from './data/artifacts.json'
 import featureSets from './data/featureSets.json'
 import features from './data/features.json'
+import entities from './data/entities.json'
 import featureVectors from './data/featureVectors.json'
 import runs from './data/runs.json'
 import pipelines from './data/pipelines.json'
@@ -52,6 +56,7 @@ const summuryTemplate = {
   runs_failed_recent_count: 0,
   runs_running_count: 0
 }
+const jobTemplate = { kind: 'run', metadata: {}, spec: {}, status: {} }
 const projectExistsConflict = {
   detail: "MLRunConflictError('Conflict - Project already exists')"
 }
@@ -75,6 +80,13 @@ function makeUID(length) {
   }
 
   return result
+}
+
+function generateHash(txt) {
+  return crypto
+    .createHash('sha1')
+    .update(JSON.stringify(txt))
+    .digest('hex')
 }
 
 // Request Handlers
@@ -192,7 +204,7 @@ function deleteProject(req, res) {
   res.send({})
 }
 
-function archiveProject(req, res) {
+function patchProject(req, res) {
   const project = projects.projects.find(
     project => project.metadata.name === req.params['project']
   )
@@ -208,6 +220,14 @@ function archiveProject(req, res) {
       break
     default:
       break
+  }
+
+  // TODO: Should be rewiwed
+  if ('description' in req.body.spec) {
+    project.spec['description'] = req.body.spec['description']
+  }
+  if ('goals' in req.body.spec) {
+    project.spec['goals'] = req.body.spec['goals']
   }
 
   res.send(project)
@@ -293,21 +313,30 @@ function getProjectsPipelines(req, res) {
   res.send(collectedPipelines)
 }
 
-function getProjectsFeatures(req, res) {
-  let collectedFeatures = features.features.filter(
-    feature =>
-      feature.feature_set_digest.metadata.project === req.params['project']
-  )
+function getProjectsFeaturesEntities(req, res) {
+  const artifact = req.params.artifact
+  let collectedArtifacts = []
 
-  if (collectedFeatures.length) {
+  if (artifact === 'features') {
+    collectedArtifacts = features.features.filter(
+      item => item.feature_set_digest.metadata.project === req.params.project
+    )
+  }
+  if (artifact === 'entities') {
+    collectedArtifacts = entities.entities.filter(
+      item => item.feature_set_digest.metadata.project === req.params.project
+    )
+  }
+
+  if (collectedArtifacts.length) {
     if (req.query['tag']) {
-      collectedFeatures = collectedFeatures.filter(
-        feature => feature.feature_set_digest.metadata.tag === req.query['tag']
+      collectedArtifacts = collectedArtifacts.filter(
+        item => item.feature_set_digest.metadata.tag === req.query['tag']
       )
     }
 
     if (req.query['name']) {
-      collectedFeatures = collectedFeatures.filter(feature => {
+      collectedArtifacts = collectedArtifacts.filter(feature => {
         if (req.query['name'].includes('~')) {
           return feature.feature.name.includes(req.query['name'].slice(1))
         } else {
@@ -317,7 +346,15 @@ function getProjectsFeatures(req, res) {
     }
   }
 
-  res.send({ features: collectedFeatures })
+  let result = {}
+  if (artifact === 'features') {
+    result = { features: collectedArtifacts }
+  }
+  if (artifact === 'entities') {
+    result = { entities: collectedArtifacts }
+  }
+
+  res.send(result)
 }
 
 function getProjectsFeatureVectors(req, res) {
@@ -345,6 +382,27 @@ function getProjectsFeatureVectors(req, res) {
   res.send({ feature_vectors: featureVector })
 }
 
+function getProjectsFeatureArtifactTags(req, res) {
+  let featureArtifactTags = []
+
+  if (req.params.featureArtifact === 'feature-vectors') {
+    featureArtifactTags = featureVectors.feature_vectors.filter(
+      artifact => artifact.metadata.project === req.params.project
+    )
+  }
+  if (req.params.featureArtifact === 'feature-sets') {
+    featureArtifactTags = featureSets.feature_sets.filter(
+      artifact => artifact.metadata.project === req.params.project
+    )
+  }
+  featureArtifactTags = featureArtifactTags
+    .map(item => item.metadata.tag)
+    .filter(item => item !== null)
+  featureArtifactTags = [...new Set(featureArtifactTags)]
+
+  res.send({ tags: featureArtifactTags })
+}
+
 function getProjectsArtifactTags(req, res) {
   let artifactTag = artifactTags.find(
     aTag => aTag.project === req.params['project']
@@ -354,8 +412,6 @@ function getProjectsArtifactTags(req, res) {
 }
 
 function getArtifacts(req, res) {
-  // console.log('requests log: ', req.method, req.url)
-  // console.log('debug: ', req.params, req.query, req.body)
   const categories = {
     dataset: ['dataset'],
     model: ['model'],
@@ -399,10 +455,187 @@ function getArtifacts(req, res) {
 }
 
 function getFuncs(req, res) {
-  const collectedFuncs = funcs.funcs.filter(
-    func => func.metadata.project === req.query['project']
-  )
+  const dt = parseInt(Date.now())
+
+  const collectedFuncsByPrjTime = funcs.funcs
+    .filter(func => func.metadata.project === req.query.project)
+    .filter(func => Date.parse(func.metadata.updated) > dt)
+
+  let collectedFuncs = []
+  const newArray = cloneDeep(funcs.funcs)
+  if (collectedFuncsByPrjTime.length) {
+    collectedFuncs = newArray.filter(
+      func => func.metadata.project === req.query.project
+    )
+
+    collectedFuncs.forEach(func => {
+      if (Date.parse(func.metadata.updated) > dt) {
+        func.metadata.updated = new Date(dt).toISOString()
+      }
+    })
+  } else {
+    collectedFuncs = funcs.funcs
+      .filter(func => func.metadata.project === req.query.project)
+      .filter(func => func.metadata.tag === 'latest')
+      .filter(func => func.status?.state === 'deploying')
+
+    collectedFuncs.forEach(func => {
+      func.status.state = 'ready'
+    })
+
+    collectedFuncs = funcs.funcs.filter(
+      func => func.metadata.project === req.query.project
+    )
+  }
+
+  if (req.query['name']) {
+    collectedFuncs = collectedFuncs.filter(func => {
+      if (req.query['name'].includes('~')) {
+        return func.metadata.name.includes(req.query['name'].slice(1))
+      } else {
+        return func.metadata.name === func.query['name']
+      }
+    })
+  }
+
   res.send({ funcs: collectedFuncs })
+}
+
+function getFunc(req, res) {
+  const collectedFunc = funcs.funcs
+    .filter(func => func.metadata.project === req.params['project'])
+    .filter(func => func.metadata.name === req.params['func'])
+
+  let respBody = {}
+  if (collectedFunc.length === 0) {
+    res.statusCode = 404
+    respBody = {
+      detail: {
+        reason: `MLRunNotFoundError('Function tag not found ${req.params['project']}/${req.params['func']}')`
+      }
+    }
+  } else {
+    respBody = { func: collectedFunc[0] }
+  }
+
+  res.send(respBody)
+}
+
+function postFunc(req, res) {
+  const hashPwd = generateHash(req.body)
+
+  const dt0 = parseInt(Date.now())
+
+  let baseFunc = req.body
+  baseFunc.metadata.updated = new Date(dt0).toISOString()
+  baseFunc.metadata.hash = hashPwd
+  baseFunc.metadata.tag = 'latest'
+  baseFunc.status = {}
+
+  funcs.funcs.push(baseFunc)
+
+  res.send({ hash_key: hashPwd })
+}
+
+function deleteFunc(req, res) {
+  const collectedFunc = funcs.funcs
+    .filter(func => func.metadata.project === req.params.project)
+    .filter(func => func.metadata.name === req.params.func)
+
+  if (collectedFunc.length) {
+    remove(
+      funcs.funcs,
+      func =>
+        func.metadata.project === req.params.project &&
+        func.metadata.name === req.params.func
+    )
+    res.statusCode = 204
+  } else {
+    res.statusCode = 500
+  }
+
+  res.send()
+}
+
+function getBuildStatus(req, res) {
+  const dt = parseInt(Date.now())
+
+  const collectedFunc = funcs.funcs
+    .filter(func => func.metadata.project === req.query.project)
+    .filter(func => func.metadata.name === req.query.name)
+    .filter(func => func.metadata.tag === req.query.tag)
+    .filter(func => Date.parse(func.metadata.updated) > dt)
+
+  let logText = ''
+  if (collectedFunc.length === 0) {
+    res.set({
+      function_status: 'ready',
+      'x-mlrun-function-status': 'ready'
+    })
+    logText = `ML Run mock log message for "${req.query.name}" function in "${req.query.project}" project`
+  } else {
+    res.set({
+      function_status: 'running',
+      'x-mlrun-function-status': 'running'
+    })
+  }
+
+  res.send(logText)
+}
+
+function deployMLFunction(req, res) {
+  const respBody = { data: cloneDeep(req.body.function) }
+  respBody.data.metadata.categories = []
+  delete respBody.data.spec.secret_sources
+  respBody.data.spec.affinity = null
+  respBody.data.spec.command = ''
+  respBody.data.spec.disable_auto_mount = false
+  respBody.data.spec.priority_class_name = ''
+  respBody.data.spec.build.image = `.mlrun/func-${respBody.data.metadata.project}-${respBody.data.metadata.name}:latest`
+  respBody.data.status = {
+    build_pod: `mlrun-build-${respBody.data.metadata.name}-mocks`,
+    state: 'deploying'
+  }
+  respBody.data.verbose = false
+  respBody.ready = false
+
+  const collectedFunc = funcs.funcs
+    .filter(
+      func => func.metadata.project === req.body.function.metadata.project
+    )
+    .filter(func => func.metadata.name === req.body.function.metadata.name)
+
+  collectedFunc[0].metadata.tag = ''
+
+  let baseFunc = cloneDeep(collectedFunc[0])
+
+  const dt0 = Date.parse(baseFunc.metadata.updated)
+  const dt1 = dt0 + 1000
+  const dt2 = dt1 + 30000
+
+  baseFunc = cloneDeep(baseFunc)
+  baseFunc.metadata.hash = generateHash(baseFunc)
+  baseFunc.metadata.updated = new Date(dt1).toISOString()
+  baseFunc.metadata.categories = []
+  baseFunc.spec.affinity = null
+  baseFunc.spec.command = ''
+  baseFunc.spec.disable_auto_mount = false
+  baseFunc.spec.priority_class_name = ''
+  baseFunc.verbose = false
+  baseFunc.status = null
+  funcs.funcs.push(baseFunc)
+
+  baseFunc = cloneDeep(baseFunc)
+  baseFunc.metadata.hash = generateHash(baseFunc)
+  baseFunc.metadata.updated = new Date(dt2).toISOString()
+  baseFunc.metadata.tag = 'latest'
+  baseFunc.status = {
+    build_pod: `mlrun-build-${respBody.data.metadata.name}-mocks`,
+    state: 'deploying'
+  }
+  funcs.funcs.push(baseFunc)
+
+  setTimeout(() => res.send(respBody), 1050)
 }
 
 function getFile(req, res) {
@@ -419,6 +652,102 @@ function getLog(req, res) {
 
 function getRuntimeResources(req, res) {
   res.send({})
+}
+
+function postSubmitJob(req, res) {
+  const currentDate = new Date()
+
+  let respTemplate = {
+    data: {
+      spec: {
+        parameters: {},
+        outputs: [],
+        output_path: '',
+        function: '',
+        secret_sources: [],
+        data_stores: []
+      },
+      metadata: {
+        uid: '',
+        name: '',
+        labels: { v3io_user: 'admin', owner: 'admin', kind: 'job' },
+        iteration: 0
+      },
+      status: {
+        state: 'running',
+        status_text:
+          'Job is running in the background, pod: {{run.name}}-mocks',
+        artifacts: [],
+        start_time: '',
+        last_update: ''
+      }
+    }
+  }
+  const runUID = makeUID(32)
+  const runProject = req.body.task.metadata.project
+  const runName = req.body.task.metadata.name
+  const runAuthor = req.body.task.metadata.labels.author
+  const outputPath = req.body.task.spec.output_path
+    .replace('{{run.project}}', runProject)
+    .replace('{{run.uid}}', runUID)
+  const jobStart = currentDate.toISOString()
+
+  respTemplate.data.metadata.uid = runUID
+  respTemplate.data.metadata.project = runProject
+  respTemplate.data.metadata.labels.author = runAuthor
+  respTemplate.data.metadata.name = runName
+  respTemplate.data.status.start_time = jobStart
+  respTemplate.data.status.last_update = jobStart
+  respTemplate.data.status.status_text = respTemplate.data.status.status_text.replace(
+    '{{run.name}}',
+    runName
+  )
+  respTemplate.data.spec.output_path = outputPath
+  respTemplate.data.spec.parameters = req.body.task.spec.parameters
+
+  let job = { ...jobTemplate }
+  job.metadata = { ...respTemplate.data.metadata }
+  job.metadata.anotations = {}
+  job.spec = { ...respTemplate.data.spec }
+  delete job.spec.secret_sources
+  job.spec.hyper_param_options = {}
+  job.spec.hyperparams = {}
+  job.spec.inputs = {}
+  job.spec.log_level = 'info'
+  job.status = { ...respTemplate.data.status }
+  delete job.status.status_text
+  job.status.results = {}
+
+  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/master/${req.body.task.spec.function.slice(
+    6
+  )}/function.yaml`
+  const funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
+  const funcUID = makeUID(32)
+  // funcObject.kind = respTemplate.data.metadata.labels.kind
+  funcObject.metadata.hash = funcUID
+  funcObject.metadata.project = runProject
+  funcObject.metadata.tag = 'latest'
+  funcObject.metadata.updated = currentDate.toISOString()
+  funcObject.spec.disable_auto_mount = false
+  funcObject.spec.priority_class_name = ''
+  funcObject.spec.volume_mounts = req.body.function.spec.volume_mounts
+  funcObject.spec.volumes = req.body.function.spec.volumes
+  funcObject.status = {}
+
+  const functionSpec = `${runProject}/${req.body.task.spec.handler}@${funcUID}`
+  respTemplate.data.spec.function = functionSpec
+  job.spec.function = functionSpec
+
+  const jobLogs = {
+    uid: runUID,
+    log: `> ${currentDate.toISOString()} Mock autogenerated log data`
+  }
+
+  runs.runs.push(job)
+  funcs.funcs.push(funcObject)
+  logs.logs.push(jobLogs)
+
+  res.send(respTemplate)
 }
 
 function getNuclioFunctions(req, res) {
@@ -442,7 +771,7 @@ app.get(`${mlrunAPIIngress}/api/projects`, getProjects)
 app.post(`${mlrunAPIIngress}/api/projects`, createNewProject)
 app.get(`${mlrunAPIIngress}/api/projects/:project`, getProject)
 app.delete(`${mlrunAPIIngress}/api/projects/:project`, deleteProject)
-app.patch(`${mlrunAPIIngress}/api/projects/:project`, archiveProject)
+app.patch(`${mlrunAPIIngress}/api/projects/:project`, patchProject)
 app.put(`${mlrunAPIIngress}/api/projects/:project`, putProject)
 
 app.get(`${mlrunAPIIngress}/api/runs`, getRuns)
@@ -456,8 +785,8 @@ app.get(
   getProjectsPipelines
 )
 app.get(
-  `${mlrunAPIIngress}/api/projects/:project/features`,
-  getProjectsFeatures
+  `${mlrunAPIIngress}/api/projects/:project/:artifact`,
+  getProjectsFeaturesEntities
 )
 app.get(
   `${mlrunAPIIngress}/api/projects/:project/feature-vectors`,
@@ -471,6 +800,22 @@ app.get(`${mlrunAPIIngress}/api/artifacts`, getArtifacts)
 
 app.get(`${mlrunAPIIngress}/api/funcs`, getFuncs)
 
+app.get(`${mlrunAPIIngress}/api/func/:project/:func`, getFunc)
+app.post(`${mlrunAPIIngress}/api/func/:project/:func`, postFunc)
+
+app.get(
+  `${mlrunAPIIngress}/api/projects/:project/:featureArtifact/*/tags`,
+  getProjectsFeatureArtifactTags
+)
+
+app.delete(
+  `${mlrunAPIIngress}/api/projects/:project/functions/:func`,
+  deleteFunc
+)
+
+app.get(`${mlrunAPIIngress}/api/build/status`, getBuildStatus)
+app.post(`${mlrunAPIIngress}/api/build/function`, deployMLFunction)
+
 app.get(`${mlrunAPIIngress}/api/files`, getFile)
 
 app.get(`${mlrunAPIIngress}/api/log/:project/:uid`, getLog)
@@ -479,6 +824,8 @@ app.get(
   `${mlrunAPIIngress}/api/projects/:project/runtime-resources`,
   getRuntimeResources
 )
+
+app.post(`${mlrunAPIIngress}/api/submit_job`, postSubmitJob)
 
 app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)
 

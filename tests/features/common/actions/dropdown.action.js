@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import { differenceWith, isEqual } from 'lodash'
+import { clickNearComponent } from './common.action'
 
 async function getOptionValues(driver, options) {
   return await driver.findElements(options).then(function(elements) {
@@ -15,6 +16,11 @@ const action = {
       await element.click()
     }
     await driver.sleep(500)
+  },
+  collapseDropdown: async function(driver, dropdown) {
+    // const element = await driver.findElement(dropdown.root)
+    await clickNearComponent(dropdown.root)
+    await driver.sleep(100)
   },
   selectOptionInDropdown: async function(driver, dropdown, option) {
     const selectedElement = await driver.findElement(dropdown.open_button)

@@ -10,6 +10,7 @@ const action = {
     const attributes2 = await element2.getAttribute('class')
     const flag =
       attributes1.includes('content-menu__item_active') ||
+      attributes2.includes('details-menu__tab_active') ||
       attributes2.includes('active-tab')
     expect(flag).equal(true)
   }
