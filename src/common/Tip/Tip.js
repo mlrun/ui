@@ -91,7 +91,7 @@ const Tip = ({ className, text }) => {
             {text}
           </div>
         </CSSTransition>,
-        document.getElementById('root')
+        document.getElementById('overlay_container')
       )}
     </div>
   )
