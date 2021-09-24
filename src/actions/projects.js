@@ -448,11 +448,11 @@ const projectsAction = {
     dispatch(projectsAction.fetchProjectsSummaryBegin())
 
     return projectsApi
-      .getProjectsSummary(cancelToken)
-      .then(({ data: { projects } }) => {
-        dispatch(projectsAction.fetchProjectsSummarySuccess(projects))
+      .getProjectSummaries(cancelToken)
+      .then(({ data: { project_summaries } }) => {
+        dispatch(projectsAction.fetchProjectsSummarySuccess(project_summaries))
 
-        return projects
+        return project_summaries
       })
       .catch(err => {
         dispatch(projectsAction.fetchProjectsSummaryFailure(err))
