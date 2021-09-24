@@ -5,7 +5,8 @@ import {
   verifyText,
   waitPageLoad,
   clickNearComponent,
-  typeIntoInputField
+  typeIntoInputField,
+  hoverComponent
 } from '../common/actions/common.action'
 import {
   getTableRows,
@@ -21,6 +22,12 @@ import {
   openActionMenu,
   selectOptionInActionMenu
 } from '../common/actions/action-menu.action'
+import { typeValue } from '../common/actions/input-group.action'
+import {
+  openDropdown,
+  selectOptionInDropdown,
+  checkDropdownSelectedOption
+} from '../common/actions/dropdown.action'
 
 Then(
   'check {string} value in {string} column in {string} table on {string} wizard',
@@ -172,20 +179,27 @@ When(
       )
       await this.driver.sleep(100)
       for (const i in inputFields) {
-        await typeIntoInputField(
+        const component = pageObjects[wizard][accordion][table]['tableFields'][
+          inputFields[i]
+        ](parseInt(row_indx) + 1)
+        const inputField = component.inputField ?? component
+        await typeIntoInputField(this.driver, inputField, rows[row_indx][i])
+      }
+
+      if (pageObjects[wizard][accordion][table]['tableFields']['add_row_btn']) {
+        await clickOnComponent(
           this.driver,
-          pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]](
+          pageObjects[wizard][accordion][table]['tableFields']['add_row_btn'](
             parseInt(row_indx) + 1
-          ),
-          rows[row_indx][i]
+          )
+        )
+      } else {
+        await clickNearComponent(
+          this.driver,
+          pageObjects[wizard][accordion][table]['root']
         )
       }
-      await clickOnComponent(
-        this.driver,
-        pageObjects[wizard][accordion][table]['tableFields']['add_row_btn'](
-          parseInt(row_indx) + 1
-        )
-      )
+
       await this.driver.sleep(100)
     }
   }
@@ -223,6 +237,10 @@ When(
         rows[row_indx][0]
       )
       const indx = arr[0]
+      await hoverComponent(
+        this.driver,
+        pageObjects[wizard][accordion][table]['tableFields'][field](indx)
+      )
       await clickOnComponent(
         this.driver,
         pageObjects[wizard][accordion][table]['tableFields'][field](indx)
@@ -337,7 +355,6 @@ When(
       indx,
       'expand_btn'
     )
-    // console.log('debug path: ', expandBtn)
     await clickOnComponent(this.driver, expandBtn)
   }
 )
@@ -422,5 +439,94 @@ When(
       this.driver,
       pageObjects[wizard][table]['tableFields'][columnName](indx)
     )
+  }
+)
+
+When(
+  'add new volume rows to {string} table in {string} on {string} wizard using nontable inputs',
+  async function(tableName, accordionName, wizardName, dataTable) {
+    const pageComponents = dataTable['rawTable'][0]
+    const rows = dataTable.rows()
+
+    for (const row of rows) {
+      await clickOnComponent(
+        this.driver,
+        pageObjects[wizardName][accordionName][tableName]['add_row_btn']
+      )
+      for (const indx in pageComponents) {
+        if (pageComponents[indx].includes('Dropdown')) {
+          await openDropdown(
+            this.driver,
+            pageObjects[wizardName][accordionName][pageComponents[indx]]
+          )
+          await selectOptionInDropdown(
+            this.driver,
+            pageObjects[wizardName][accordionName][pageComponents[indx]],
+            row[indx]
+          )
+          await this.driver.sleep(500)
+          await checkDropdownSelectedOption(
+            this.driver,
+            pageObjects[wizardName][accordionName][pageComponents[indx]],
+            row[indx]
+          )
+        }
+
+        if (pageComponents[indx].includes('Input')) {
+          await typeValue(
+            this.driver,
+            pageObjects[wizardName][accordionName][pageComponents[indx]],
+            row[indx]
+          )
+        }
+
+        if (pageComponents[indx].includes('Button')) {
+          if (row[indx] === 'yes') {
+            await clickOnComponent(
+              this.driver,
+              pageObjects[wizardName][accordionName][pageComponents[indx]]
+            )
+          }
+        }
+      }
+    }
+  }
+)
+
+When(
+  'click on {string} in action menu in {string} table in {string} on {string} wizard',
+  async function(option, tableName, accordionName, wizardName, dataTable) {
+    const column = dataTable['rawTable'][0][0]
+    const rows = dataTable.rows()
+
+    for (const row_indx in rows) {
+      const arr = await findRowIndexesByColumnValue(
+        this.driver,
+        pageObjects[wizardName][accordionName][tableName],
+        column,
+        rows[row_indx][0]
+      )
+
+      const indx = arr[0]
+
+      const cell = await getCellByIndexColumn(
+        this.driver,
+        pageObjects[wizardName][accordionName][tableName],
+        indx,
+        column
+      )
+      const actionMenuSel = await getCellByIndexColumn(
+        this.driver,
+        pageObjects[wizardName][accordionName][tableName],
+        indx,
+        'action_menu'
+      )
+      await hoverComponent(this.driver, cell)
+      await this.driver.sleep(500)
+      await openActionMenu(this.driver, actionMenuSel)
+      await this.driver.sleep(500)
+      await selectOptionInActionMenu(this.driver, actionMenuSel, option)
+      await this.driver.sleep(500)
+    }
   }
 )

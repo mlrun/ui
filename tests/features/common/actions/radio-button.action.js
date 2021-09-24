@@ -2,27 +2,21 @@ import { expect } from 'chai'
 
 const action = {
   isRadioButtonSelected: async function(driver, radiobutton) {
-    const element = await driver.findElement(radiobutton['mark'])
-    const classes = await element.getAttribute('value')
-    expect(classes.includes('unchecked')).equal(false)
+    const element = await driver.findElement(radiobutton['radiobutton'])
+    const selected = await element.isSelected()
+    expect(selected).equal(true)
   },
   isRadioButtonUnselected: async function(driver, radiobutton) {
-    const checkboxElement = await driver.findElement(radiobutton['checkbox'])
-    const classes = await checkboxElement.getAttribute('class')
-    expect(classes.includes('unchecked')).equal(true)
+    const element = await driver.findElement(radiobutton['radiobutton'])
+    const selected = await element.isSelected()
+    expect(selected).equal(false)
   },
   selectRadiobutton: async function(driver, radiobutton) {
-    const checkboxElement = await driver.findElement(radiobutton['checkbox'])
-    const classes = await checkboxElement.getAttribute('class')
-    if (classes.includes('unchecked')) {
-      await checkboxElement.click()
-    }
-  },
-  unselectRadiobutton: async function(driver, radiobutton) {
-    const checkboxElement = await driver.findElement(radiobutton['checkbox'])
-    const classes = await checkboxElement.getAttribute('class')
-    if (!classes.includes('unchecked')) {
-      await checkboxElement.click()
+    const element = await driver.findElement(radiobutton['radiobutton'])
+    const elementName = await driver.findElement(radiobutton['name'])
+    const selected = await element.isSelected()
+    if (!selected) {
+      await elementName.click()
     }
   }
 }
