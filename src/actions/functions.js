@@ -45,7 +45,8 @@ import {
   SET_NEW_FUNCTION_TRACK_MODELS,
   SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_ERROR_STREAM,
-  SET_NEW_FUNCTION_DEFAULT_CLASS
+  SET_NEW_FUNCTION_DEFAULT_CLASS,
+  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -259,6 +260,10 @@ const functionsActions = {
   setNewFunctionDescription: description => ({
     type: SET_NEW_FUNCTION_DESCRIPTION,
     payload: description
+  }),
+  setNewFunctionDisableAutoMount: value => ({
+    type: SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+    payload: value
   }),
   setNewFunctionEnv: env => ({
     type: SET_NEW_FUNCTION_ENV,

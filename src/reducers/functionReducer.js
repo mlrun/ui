@@ -42,7 +42,8 @@ import {
   SET_NEW_FUNCTION_TRACK_MODELS,
   SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_ERROR_STREAM,
-  SET_NEW_FUNCTION_DEFAULT_CLASS
+  SET_NEW_FUNCTION_DEFAULT_CLASS,
+  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT
 } from '../constants'
 
 const initialState = {
@@ -291,6 +292,17 @@ export default (state = initialState, { type, payload }) => {
           spec: {
             ...state.newFunction.spec,
             description: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          spec: {
+            ...state.newFunction.spec,
+            disable_auto_mount: payload
           }
         }
       }
