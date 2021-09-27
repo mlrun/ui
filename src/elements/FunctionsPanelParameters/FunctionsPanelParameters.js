@@ -66,10 +66,14 @@ const FunctionsPanelParameters = ({
   }
 
   const handleAddNewParameter = () => {
-    if (!isParameterValid(newParameter)) {
+    if (
+      !isParameterValid(newParameter) ||
+      !validation.isNameValid ||
+      !validation.isValueValid
+    ) {
       return setValidation({
         isNameValid: newParameter.name.length > 0,
-        isValueValid: String(newParameter.value).length > 0
+        isValueValid: newParameter.value.length > 0
       })
     }
 
@@ -106,6 +110,17 @@ const FunctionsPanelParameters = ({
 
     if (selectedParameter.newName) {
       delete generatedParameters[selectedParameter.data.name]
+    }
+
+    if (
+      !isParameterValid(selectedParameter.data) ||
+      !validation.isNameValid ||
+      !validation.isValueValid
+    ) {
+      return setValidation({
+        isNameValid: selectedParameter.data.name.length > 0,
+        isValueValid: selectedParameter.data.value.length > 0
+      })
     }
 
     setFunctionParameters(
