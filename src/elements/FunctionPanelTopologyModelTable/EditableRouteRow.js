@@ -26,7 +26,7 @@ const EditableRouteRow = ({
           invalid={
             (selectedRoute.newName !== selectedRoute.data.name &&
               isNameNotUnique(selectedRoute.newName, routes)) ||
-            !validation.isNameValid
+            !validation.isEditNameValid
           }
           invalidText={
             isNameNotUnique(selectedRoute.newName, routes)
@@ -45,7 +45,7 @@ const EditableRouteRow = ({
           setInvalid={value =>
             setValidation(state => ({
               ...state,
-              isNameValid: value
+              isEditNameValid: value
             }))
           }
           type="text"
@@ -55,7 +55,7 @@ const EditableRouteRow = ({
       <div className="table__cell">
         <Input
           floatingLabel
-          invalid={!validation.isClassNameValid}
+          invalid={!validation.isEditClassNameValid}
           label="Class"
           onChange={class_name =>
             setSelectedRoute({
@@ -71,7 +71,7 @@ const EditableRouteRow = ({
           setInvalid={value =>
             setValidation(state => ({
               ...state,
-              isClassNameValid: value
+              isEditClassNameValid: value
             }))
           }
           type="text"
@@ -81,7 +81,7 @@ const EditableRouteRow = ({
       <div className="table__cell">
         <Input
           floatingLabel
-          invalid={!validation.isModelPathValid}
+          invalid={!validation.isEditModelPathValid}
           label="Path"
           onChange={model_path =>
             setSelectedRoute({
@@ -97,7 +97,7 @@ const EditableRouteRow = ({
           setInvalid={value =>
             setValidation(state => ({
               ...state,
-              isModelPathValid: value
+              isEditModelPathValid: value
             }))
           }
           type="text"

@@ -5,7 +5,11 @@ import FunctionPanelTopologyModelTableView from './FunctionPanelTopologyModelTab
 
 import functionsActions from '../../actions/functions'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { isRouteValid } from './functionPanelTopologyModelTable.util'
+import {
+  isRouteValid,
+  newRouteInitialState,
+  validationInitialState
+} from './functionPanelTopologyModelTable.util'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -16,18 +20,10 @@ const FunctionPanelTopologyModelTable = ({
   setNewFunctionGraph
 }) => {
   const [data, setData] = useState([])
-  const [newRoute, setNewRoute] = useState({
-    name: '',
-    class_name: '',
-    model_path: ''
-  })
+  const [newRoute, setNewRoute] = useState(newRouteInitialState)
   const [showAddNewRouteRow, setShowAddNewRouteRow] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(null)
-  const [validation, setValidation] = useState({
-    isNameValid: true,
-    isClassNameValid: true,
-    isModelPathValid: true
-  })
+  const [validation, setValidation] = useState(validationInitialState)
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(defaultData.graph?.routes ?? {})) {
@@ -52,11 +48,12 @@ const FunctionPanelTopologyModelTable = ({
       !validation.isClassNameValid ||
       !validation.isModelPathValid
     ) {
-      return setValidation({
+      return setValidation(state => ({
+        ...state,
         isNameValid: newRoute.name.length > 0,
         isClassNameValid: newRoute.class_name.length > 0,
         isModelPathValid: newRoute.model_path.length > 0
-      })
+      }))
     }
 
     generatedRoutes[newRoute.name] = {
@@ -82,11 +79,7 @@ const FunctionPanelTopologyModelTable = ({
       ...functionsStore.newFunction.spec.graph,
       routes: generatedRoutes
     })
-    setNewRoute({
-      name: '',
-      class_name: '',
-      model_path: ''
-    })
+    setNewRoute(newRouteInitialState)
     setShowAddNewRouteRow(false)
   }
 
@@ -118,15 +111,16 @@ const FunctionPanelTopologyModelTable = ({
     }
     if (
       !isRouteValid(selectedRoute.data) ||
-      !validation.isNameValid ||
-      !validation.isClassNameValid ||
-      !validation.isModelPathValid
+      !validation.isEditNameValid ||
+      !validation.isEditClassNameValid ||
+      !validation.isEditModelPathValid
     ) {
-      return setValidation({
-        isNameValid: selectedRoute.data.name.length > 0,
-        isClassNameValid: selectedRoute.data.class_name.length > 0,
-        isModelPathValid: selectedRoute.data.model_path.length > 0
-      })
+      return setValidation(state => ({
+        ...state,
+        isEditNameValid: selectedRoute.data.name.length > 0,
+        isEditClassNameValid: selectedRoute.data.class_name.length > 0,
+        isEditModelPathValid: selectedRoute.data.model_path.length > 0
+      }))
     }
 
     generatedRoutes[key] = {
@@ -158,17 +152,9 @@ const FunctionPanelTopologyModelTable = ({
   }
 
   const discardChanges = () => {
-    setNewRoute({
-      name: '',
-      class_name: '',
-      model_path: ''
-    })
+    setNewRoute(newRouteInitialState)
     setShowAddNewRouteRow(false)
-    setValidation({
-      isNameValid: true,
-      isClassNameValid: true,
-      isModelPathValid: true
-    })
+    setValidation(validationInitialState)
   }
 
   const generateActionsMenu = useCallback(
@@ -176,7 +162,10 @@ const FunctionPanelTopologyModelTable = ({
       {
         label: 'Edit',
         icon: <Edit />,
-        onClick: route => setSelectedRoute(route)
+        onClick: route => {
+          setSelectedRoute(route)
+          setValidation(validationInitialState)
+        }
       },
       {
         label: 'Remove',

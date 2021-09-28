@@ -30,3 +30,18 @@ export const isEditableRouteValid = (route, routes) => {
     return isRouteValid(route.data)
   }
 }
+
+export const validationInitialState = {
+  isNameValid: true,
+  isClassNameValid: true,
+  isModelPathValid: true,
+  isEditNameValid: true,
+  isEditClassNameValid: true,
+  isEditModelPathValid: true
+}
+
+export const newRouteInitialState = {
+  name: '',
+  class_name: '',
+  model_path: ''
+}

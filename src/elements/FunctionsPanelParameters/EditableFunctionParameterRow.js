@@ -32,7 +32,7 @@ const EditableFunctionParameterRow = ({
           invalid={
             (selectedParameter.newName !== selectedParameter.data.name &&
               isNameNotUnique(selectedParameter.newName, parameters)) ||
-            !validation.isNameValid
+            !validation.isEditNameValid
           }
           invalidText={
             isNameNotUnique(selectedParameter.newName, parameters)
@@ -50,7 +50,7 @@ const EditableFunctionParameterRow = ({
           setInvalid={value =>
             setValidation(state => ({
               ...state,
-              isNameValid: value
+              isEditNameValid: value
             }))
           }
           type="text"
@@ -109,7 +109,7 @@ const EditableFunctionParameterRow = ({
         ) : (
           <Input
             floatingLabel
-            invalid={!validation.isValueValid}
+            invalid={!validation.isEditValueValid}
             label="Value"
             onChange={value => {
               setSelectedParameter({
@@ -124,7 +124,7 @@ const EditableFunctionParameterRow = ({
             setInvalid={value =>
               setValidation(state => ({
                 ...state,
-                isValueValid: value
+                isEditValueValid: value
               }))
             }
             type="text"

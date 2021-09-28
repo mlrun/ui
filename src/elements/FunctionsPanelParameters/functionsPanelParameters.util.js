@@ -83,3 +83,16 @@ export const getParameterType = parameterValue => {
       return JSON_TYPE
   }
 }
+
+export const validationInitialState = {
+  isNameValid: true,
+  isValueValid: true,
+  isEditNameValid: true,
+  isEditValueValid: true
+}
+
+export const newParameterInitialState = {
+  name: '',
+  type: 'string',
+  value: ''
+}

@@ -72,7 +72,7 @@ const KeyValueTableView = ({
                   invalid={
                     (selectedItem.newKey !== selectedItem.key &&
                       isKeyNotUnique(selectedItem.newKey, content)) ||
-                    !validation.isKeyValid
+                    !validation.isEditKeyValid
                   }
                   invalidText={
                     isKeyNotUnique(selectedItem.newKey, content)
@@ -89,7 +89,7 @@ const KeyValueTableView = ({
                   setInvalid={value =>
                     setValidation(state => ({
                       ...state,
-                      isKeyValid: value
+                      isEditKeyValid: value
                     }))
                   }
                   type="text"
@@ -101,7 +101,7 @@ const KeyValueTableView = ({
               <Input
                 className="input_edit"
                 density="dense"
-                invalid={!validation.isValueValid}
+                invalid={!validation.isEditValueValid}
                 onChange={value =>
                   setSelectedItem({
                     ...selectedItem,
@@ -112,7 +112,7 @@ const KeyValueTableView = ({
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,
-                    isValueValid: value
+                    isEditValueValid: value
                   }))
                 }
                 type="text"
@@ -125,8 +125,8 @@ const KeyValueTableView = ({
                 disabled={
                   isValueRequired &&
                   isKeyRequired &&
-                  (!validation.isKeyValid ||
-                    !validation.isValueValid ||
+                  (!validation.isEditKeyValid ||
+                    !validation.isEditValueValid ||
                     (selectedItem.newKey !== selectedItem.key &&
                       isKeyNotUnique(selectedItem.newKey, content)))
                 }
@@ -144,6 +144,12 @@ const KeyValueTableView = ({
               if (withEditMode) {
                 setSelectedItem(contentItem)
                 setEditMode(true)
+                setValidation({
+                  isKeyValid: true,
+                  isValueValid: true,
+                  isEditKeyValid: true,
+                  isEditValueValid: true
+                })
               }
             }}
           >
