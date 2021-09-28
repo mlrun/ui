@@ -16,3 +16,4 @@ Feature: MLRun Project Page
         Then verify "Jobs_Info_Card_Statistics" element visibility on "Project" wizard
         Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
         Then verify "General_Info_Quick_Links" element visibility on "Project" wizard
+        Then verify "Add_Source_URL_Label" element visibility on "Project" wizard

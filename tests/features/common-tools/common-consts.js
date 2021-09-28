@@ -28,6 +28,8 @@ module.exports = {
     Project_Name_Hint:
       '• Valid characters: a-z, 0-9, -\n• Must being and end with: a-z, 0-9\n• Length - max: 63',
     Feature_Set_Name_Hint:
+      '• Valid characters: A-Z, a-z, 0-9, -, _, .\n• Must begin and end with: A-Z, a-z, 0-9\n• Length - max: 56',
+    Jobs_Name_Hint:
       '• Valid characters: A-Z, a-z, 0-9, -, _, .\n• Must begin and end with: A-Z, a-z, 0-9\n• Length - max: 63',
     Input_Field_Require: 'This field is required',
     Input_Field_Invalid: 'This field is invalid',
@@ -67,7 +69,7 @@ module.exports = {
     Delete_Project: 'Deleted projects can not be restored.'
   },
   Jobs_And_Workflows: {
-    Tab_List: ['Monitor', 'Schedule']
+    Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule']
   },
   Jobs_Monitor_Tab: {
     'Any time': 'Any time',

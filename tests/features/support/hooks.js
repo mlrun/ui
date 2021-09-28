@@ -1,10 +1,7 @@
 import { Before, After, Status } from '@cucumber/cucumber'
 
 Before(async function() {
-  await this.driver
-    .manage()
-    .window()
-    .maximize()
+  await this.driver.manage().window()
 })
 
 After(async function(testCase) {

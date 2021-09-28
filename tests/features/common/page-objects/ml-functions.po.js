@@ -68,9 +68,7 @@ module.exports = {
         icon: ''
       }
     }),
-    New_Function_Button: By.css(
-      '.content .content__action-bar > .data-ellipsis button'
-    ),
+    New_Function_Button: By.css('.content .new-function .data-ellipsis button'),
     Table_Refresh_Button: By.css(
       '.content .content__action-bar .actions .data-ellipsis:nth-of-type(1) button'
     ),
