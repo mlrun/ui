@@ -30,7 +30,8 @@ export const isEditableParameterValid = (parameter, parameters) => {
   if (!isNil(parameter.newName) && parameter.newName !== parameter.data.name) {
     return (
       parameter.newName.length > 0 &&
-      !isNameNotUnique(parameter.newName, parameters)
+      !isNameNotUnique(parameter.newName, parameters) &&
+      String(parameter.value).length > 0
     )
   } else {
     return isParameterValid(parameter.data)
@@ -81,4 +82,17 @@ export const getParameterType = parameterValue => {
     default:
       return JSON_TYPE
   }
+}
+
+export const validationInitialState = {
+  isNameValid: true,
+  isValueValid: true,
+  isEditNameValid: true,
+  isEditValueValid: true
+}
+
+export const newParameterInitialState = {
+  name: '',
+  type: 'string',
+  value: ''
 }

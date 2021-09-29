@@ -41,7 +41,7 @@ const AddFunctionParameterRow = ({
             invalidText={
               isNameNotUnique(newParameter.name, parameters)
                 ? 'Name already exists'
-                : ''
+                : 'This field is invalid'
             }
             label="Name"
             onChange={name => setNewParameter(state => ({ ...state, name }))}
@@ -87,10 +87,15 @@ const AddFunctionParameterRow = ({
               invalid={!validation.isValueValid}
               label="Value"
               labelType="floatingLabel"
-              onChange={value =>
+              onChange={value => {
+                setValidation(state => ({
+                  ...state,
+                  isValueValid: String(value).length > 0
+                }))
                 setNewParameter(state => ({ ...state, value }))
-              }
+              }}
               required
+              requiredText="This field is required"
               value={newParameter.value}
             />
           ) : (

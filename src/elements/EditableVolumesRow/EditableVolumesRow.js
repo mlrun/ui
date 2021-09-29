@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { forEach } from 'lodash'
 
@@ -19,15 +19,19 @@ const EditableVolumesRow = ({
   content,
   handleEdit,
   selectedVolume,
-  setSelectedVolume,
-  setValidation,
-  validation
+  setSelectedVolume
 }) => {
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isTypeValid: true,
+    isTypeNameValid: true,
+    isPathValid: true,
+    isAccessKeyValid: true
+  })
   const volumeTypeInput = useMemo(
     () => getVolumeTypeInput(selectedVolume.type.value),
     [selectedVolume.type.value]
   )
-
   const isVolumeInvalid = selectedVolume => {
     forEach(selectedVolume.data, value => {
       if (!value) {
