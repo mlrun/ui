@@ -54,11 +54,11 @@ const RangeInput = ({
     onChange(+inputValue - 1)
   }
 
-  const rangeOnFocus = event => {
+  const rangeOnFocus = () => {
     setIsRequired(false)
   }
 
-  const rangeOnBlur = event => {
+  const rangeOnBlur = () => {
     if (required && inputValue.length === 0) {
       setIsRequired(true)
     }
@@ -116,7 +116,9 @@ const RangeInput = ({
           className="range__warning"
           template={
             <TextTooltipTemplate
-              text={invalid ? invalidText : requiredText}
+              text={
+                invalid && inputValue.length > 0 ? invalidText : requiredText
+              }
               warning
             />
           }
@@ -135,14 +137,14 @@ RangeInput.defaultProps = {
   density: 'normal',
   disabled: false,
   invalid: false,
-  invalidText: 'invalid',
+  invalidText: 'This field is invalid',
   label: '',
   labelType: 'labelAtTop',
   max: undefined,
   min: 0,
   tip: '',
   required: false,
-  requiredText: 'required'
+  requiredText: 'This field is required'
 }
 
 RangeInput.propTypes = {

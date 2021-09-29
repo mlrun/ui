@@ -62,7 +62,7 @@ const FunctionsPanelParameters = ({
       return setValidation(state => ({
         ...state,
         isNameValid: newParameter.name.length > 0,
-        isValueValid: newParameter.value.length > 0
+        isValueValid: String(newParameter.value).length > 0
       }))
     }
 

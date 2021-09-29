@@ -23,7 +23,7 @@ export const isNameNotUnique = (name, parameters) => {
 }
 
 export const isParameterValid = parameter => {
-  return parameter.name.length > 0 && parameter.value.length > 0
+  return parameter.name.length > 0 && String(parameter.value).length > 0
 }
 
 export const isEditableParameterValid = (parameter, parameters) => {
@@ -31,7 +31,7 @@ export const isEditableParameterValid = (parameter, parameters) => {
     return (
       parameter.newName.length > 0 &&
       !isNameNotUnique(parameter.newName, parameters) &&
-      parameter.data.value.length > 0
+      String(parameter.value).length > 0
     )
   } else {
     return isParameterValid(parameter.data)
