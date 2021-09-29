@@ -60,7 +60,13 @@ import {
   SET_PROJECT_LABELS,
   FETCH_PROJECTS_NAMES_BEGIN,
   FETCH_PROJECTS_NAMES_FAILURE,
-  FETCH_PROJECTS_NAMES_SUCCESS
+  FETCH_PROJECTS_NAMES_SUCCESS,
+  SET_PROJECT_SETTINGS,
+  SET_PROJECT_PARAMS,
+  FETCH_PROJECT_SECRETS_BEGIN,
+  FETCH_PROJECT_SECRETS_FAILURE,
+  FETCH_PROJECT_SECRETS_SUCCESS,
+  SET_PROJECT_SECRETS
 } from '../constants'
 
 const projectsAction = {
@@ -394,6 +400,31 @@ const projectsAction = {
     type: FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS,
     payload: jobs
   }),
+  fetchProjectSecrets: project => dispatch => {
+    dispatch(projectsAction.fetchProjectSecretsBegin())
+
+    return projectsApi
+      .getProjectSecrets(project)
+      .then(response => {
+        dispatch(projectsAction.fetchProjectSecretsSuccess(response.data))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectSecretsFailure(error.message))
+
+        throw error.message
+      })
+  },
+  fetchProjectSecretsBegin: () => ({
+    type: FETCH_PROJECT_SECRETS_BEGIN
+  }),
+  fetchProjectSecretsFailure: error => ({
+    type: FETCH_PROJECT_SECRETS_FAILURE,
+    payload: error
+  }),
+  fetchProjectSecretsSuccess: secrets => ({
+    type: FETCH_PROJECT_SECRETS_SUCCESS,
+    payload: secrets
+  }),
   fetchProjectSuccess: project => ({
     type: FETCH_PROJECT_SUCCESS,
     payload: project
@@ -510,6 +541,18 @@ const projectsAction = {
   setProjectLabels: labels => ({
     type: SET_PROJECT_LABELS,
     payload: { ...labels }
+  }),
+  setProjectParams: params => ({
+    type: SET_PROJECT_PARAMS,
+    payload: params
+  }),
+  setProjectSecrets: secrets => ({
+    type: SET_PROJECT_SECRETS,
+    payload: secrets
+  }),
+  setProjectSettings: settings => ({
+    type: SET_PROJECT_SETTINGS,
+    payload: settings
   })
 }
 

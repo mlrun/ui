@@ -4,50 +4,53 @@ import PropTypes from 'prop-types'
 import Input from '../../../common/Input/Input'
 
 import { ReactComponent as Edit } from '../../../images/edit.svg'
+import { SOURCE_URL } from '../projectSettings.util'
 
-const ProjectSource = React.forwardRef(
+const SettingsSource = React.forwardRef(
   (
     {
       editSourceData,
       handleEditProject,
-      handleOnChangeProject,
+      handleOnChangeSettings,
       handleOnKeyDown,
-      projectSource
+      settingsSource
     },
     ref
   ) => {
     return (
       <div
-        className="general-info__source"
-        onClick={() => handleEditProject('source')}
+        className="settings__source"
+        onClick={() => handleEditProject(SOURCE_URL)}
       >
         {editSourceData.isEdit ? (
           <Input
+            floatingLabel
+            label="Source URL"
             focused
-            onChange={handleOnChangeProject}
+            onChange={handleOnChangeSettings}
             onKeyDown={handleOnKeyDown}
             ref={ref}
             type="text"
-            value={editSourceData.value ?? projectSource}
+            value={editSourceData.value ?? settingsSource}
           />
         ) : (
           <>
-            {editSourceData.value || projectSource ? (
+            {editSourceData.value || settingsSource ? (
               <a
-                href={editSourceData.value || projectSource}
+                href={editSourceData.value || settingsSource}
                 onClick={event => event.stopPropagation()}
                 target="_blank"
                 rel="noreferrer"
-                className="general-info__source-text data-ellipsis"
+                className="settings__source-text data-ellipsis"
               >
-                {editSourceData.value || projectSource}
+                {editSourceData.value || settingsSource}
               </a>
             ) : (
               <span>Click to add source URL</span>
             )}
             <Edit
-              className="general-info__source-edit"
-              onClick={() => handleEditProject('source')}
+              className="settings__source-edit"
+              onClick={() => handleEditProject(SOURCE_URL)}
             />
           </>
         )}
@@ -56,12 +59,12 @@ const ProjectSource = React.forwardRef(
   }
 )
 
-ProjectSource.propTypes = {
+SettingsSource.propTypes = {
   editSourceData: PropTypes.shape({}).isRequired,
   handleEditProject: PropTypes.func.isRequired,
-  handleOnChangeProject: PropTypes.func.isRequired,
+  handleOnChangeSettings: PropTypes.func.isRequired,
   handleOnKeyDown: PropTypes.func.isRequired,
-  projectSource: PropTypes.string.isRequired
+  settingsSource: PropTypes.string.isRequired
 }
 
-export default ProjectSource
+export default SettingsSource

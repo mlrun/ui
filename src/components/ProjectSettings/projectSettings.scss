@@ -1,0 +1,79 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
+
+.settings {
+  &-wrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 900px;
+  }
+
+  &__content {
+    display: flex;
+    flex: 1 1;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 45px;
+  }
+
+  &__header {
+    padding: 20px 24px;
+    background-color: $white;
+    box-shadow: $headerShadow;
+  }
+
+  &__card {
+    width: 50%;
+    padding: 40px;
+    background-color: rgba($white, 0.84);
+    border-radius: 4px;
+  }
+
+  &__card:first-child {
+    margin-right: 45px;
+  }
+
+  &__description {
+    margin-top: 16px;
+    color: rgba($mulledWine, 0.88);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+  }
+}
+
+.card {
+  &__header {
+    margin-bottom: 25px;
+    color: $primary;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
+  }
+
+  &__divider {
+    margin: 16px 0;
+    border-top: $primaryBorder;
+  }
+
+  &__description {
+    margin-bottom: 25px;
+    color: rgba($mulledWine, 0.88);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+  }
+}
+
+.new-secret__button {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.action__button {
+  cursor: pointer;
+}
