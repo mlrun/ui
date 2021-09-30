@@ -233,7 +233,10 @@ const Content = ({
               match={match}
               onChange={filtersChangeCallback ?? refresh}
               page={pageData.page}
-              withoutExpandButton={Boolean(pageData.handleRequestOnExpand)}
+              withoutExpandButton={
+                Boolean(pageData.handleRequestOnExpand) ||
+                pageData.withoutExpandButton
+              }
             />
           </div>
         )}
