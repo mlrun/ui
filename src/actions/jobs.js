@@ -34,7 +34,10 @@ import {
   SET_NEW_JOB_SELECTOR_RESULT,
   RUN_NEW_JOB_BEGIN,
   RUN_NEW_JOB_SUCCESS,
-  SET_NEW_JOB_NODE_SELECTOR
+  SET_NEW_JOB_NODE_SELECTOR,
+  FETCH_JOB_SUCCESS,
+  FETCH_JOB_BEGIN,
+  FETCH_JOB_FAILURE
 } from '../constants'
 
 const jobsActions = {
@@ -63,6 +66,30 @@ const jobsActions = {
   editJobFailure: error => ({
     type: EDIT_JOB_FAILURE,
     payload: error
+  }),
+  fetchJob: (project, jobId) => dispatch => {
+    dispatch(jobsActions.fetchJobBegin())
+
+    return jobsApi
+      .getJob(project, jobId)
+      .then(res => {
+        dispatch(jobsActions.fetchJobSuccess(res.data.data))
+
+        return res.data.data
+      })
+      .catch(error => {
+        dispatch(jobsActions.fetchJobFailure(error.message))
+      })
+  },
+  fetchJobBegin: () => ({
+    type: FETCH_JOB_BEGIN
+  }),
+  fetchJobFailure: error => ({
+    type: FETCH_JOB_FAILURE,
+    payload: error
+  }),
+  fetchJobSuccess: () => ({
+    type: FETCH_JOB_SUCCESS
   }),
   fetchJobFunction: (project, functionName, hash) => dispatch => {
     dispatch(jobsActions.fetchJobFunctionBegin())

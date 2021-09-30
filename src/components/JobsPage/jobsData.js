@@ -226,7 +226,7 @@ export const generatePageData = (
       abortableFunctionKinds
     ),
     detailsMenu,
-    hideFilterMenu: subPage === WORKFLOW_SUB_PAGE,
+    hideFilterMenu: subPage === WORKFLOW_SUB_PAGE || isSelectedItem,
     filterMenuActionButton,
     filters: filtersByTab[pageTab],
     page,
