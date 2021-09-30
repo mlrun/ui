@@ -161,7 +161,7 @@ const FeatureSetsPanelDataSource = ({
       ...state,
       url: {
         ...state.url,
-        placeholder: pathPlaceholders[path],
+        placeholder: pathPlaceholders[path] || '',
         path: '',
         pathType: path,
         project: '',
