@@ -14,7 +14,7 @@ export const comboboxSelectList = [
   {
     className: 'path-type-v3io',
     label: 'V3IO',
-    id: 'v3io://'
+    id: 'v3io:///'
   },
   {
     className: 'path-type-s3',

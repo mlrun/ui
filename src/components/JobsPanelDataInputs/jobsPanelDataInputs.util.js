@@ -289,7 +289,7 @@ export const comboboxSelectList = [
   {
     className: 'path-type-v3io',
     label: 'V3IO',
-    id: 'v3io://'
+    id: 'v3io:///'
   },
   {
     className: 'path-type-s3',
@@ -500,5 +500,5 @@ export const pathTips = {
   [S3_INPUT_PATH_SCHEME]: 'bucket/path',
   [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
   [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
-  [V3IO_INPUT_PATH_SCHEME]: '/container-name/file'
+  [V3IO_INPUT_PATH_SCHEME]: 'container-name/file'
 }
