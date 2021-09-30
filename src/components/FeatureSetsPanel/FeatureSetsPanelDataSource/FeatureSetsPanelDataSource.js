@@ -161,9 +161,9 @@ const FeatureSetsPanelDataSource = ({
       ...state,
       url: {
         ...state.url,
-        placeholder: pathPlaceholders[path.replace(/:\/\/.*$/g, '://')] || '',
+        placeholder: pathPlaceholders[path] || '',
         path: '',
-        pathType: path.replace(/:\/\/.*$/g, '://'),
+        pathType: path,
         project: '',
         artifact: '',
         artifactReference: '',

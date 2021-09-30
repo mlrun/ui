@@ -17,7 +17,7 @@ export const HTTP_STORAGE_INPUT_PATH_SCHEME = 'http://'
 export const HTTPS_STORAGE_INPUT_PATH_SCHEME = 'https://'
 export const MLRUN_STORAGE_INPUT_PATH_SCHEME = 'store://'
 export const S3_INPUT_PATH_SCHEME = 's3://'
-export const V3IO_INPUT_PATH_SCHEME = 'v3io://'
+export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 
 export const FETCH_FRONTEND_SPEC_SUCCESS = 'FETCH_FRONTEND_SPEC_SUCCESS'
 
