@@ -18,7 +18,6 @@ const action = {
   clearManualy: clearManualy,
   getOptionValues: getOptionValues,
   typeSearchebleValue: async function(driver, inputGroup, value) {
-    // console.log('debug: ', inputGroup.inputField)
     const inputField = await driver.findElement(inputGroup.inputField)
     await clearManualy(inputField)
     return await inputField.sendKeys(value)

@@ -40,6 +40,7 @@ const DetailsView = React.forwardRef(
       applyChanges,
       applyChangesRef,
       cancelChanges,
+      getCloseDetailsLink,
       detailsMenu,
       detailsMenuClick,
       detailsStore,
@@ -197,10 +198,14 @@ const DetailsView = React.forwardRef(
           <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
           <Link
             data-testid="details-close-btn"
-            to={location => {
-              const urlArray = location.pathname.split('/')
-              return urlArray.slice(0, urlArray.length - 2).join('/')
-            }}
+            to={
+              getCloseDetailsLink ??
+              `/projects/${
+                match.params.projectName
+              }/${pageData.page.toLowerCase()}${
+                match.params.pageTab ? `/${match.params.pageTab}` : ''
+              }`
+            }
             onClick={() => {
               if (detailsStore.changes.counter > 0) {
                 handleShowWarning(true)
@@ -261,6 +266,7 @@ const DetailsView = React.forwardRef(
 
 DetailsView.defaultProps = {
   detailsMenuClick: () => {},
+  getCloseDetailsLink: null,
   tabsContent: null
 }
 
@@ -274,6 +280,7 @@ DetailsView.propTypes = {
   detailsMenu: PropTypes.array.isRequired,
   detailsMenuClick: PropTypes.func,
   detailsStore: PropTypes.shape({}).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleShowWarning: PropTypes.func.isRequired,
   isDetailsScreen: PropTypes.bool.isRequired,

@@ -8,7 +8,9 @@ import {
   getParameterType,
   isParameterValid,
   JSON_TYPE,
-  setFunctionParameters
+  newParameterInitialState,
+  setFunctionParameters,
+  validationInitialState
 } from './functionsPanelParameters.util'
 import functionsActions from '../../actions/functions'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -22,17 +24,10 @@ const FunctionsPanelParameters = ({
   setNewFunctionParameters
 }) => {
   const [showAddNewParameterRow, setShowAddNewParameterRow] = useState(false)
-  const [newParameter, setNewParameter] = useState({
-    name: '',
-    type: 'string',
-    value: ''
-  })
+  const [newParameter, setNewParameter] = useState(newParameterInitialState)
   const [selectedParameter, setSelectedParameter] = useState(null)
   const [parameters, setParameters] = useState([])
-  const [validation, setValidation] = useState({
-    isNameValid: true,
-    isValueValid: true
-  })
+  const [validation, setValidation] = useState(validationInitialState)
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(defaultData.parameters ?? {})) {
@@ -53,24 +48,22 @@ const FunctionsPanelParameters = ({
   }, [defaultData.parameters])
 
   const discardChanges = () => {
-    setNewParameter({
-      name: '',
-      type: 'string',
-      value: ''
-    })
+    setNewParameter(newParameterInitialState)
     setShowAddNewParameterRow(false)
-    setValidation({
-      isNameValid: true,
-      isValueValid: true
-    })
+    setValidation(validationInitialState)
   }
 
   const handleAddNewParameter = () => {
-    if (!isParameterValid(newParameter)) {
-      return setValidation({
+    if (
+      !isParameterValid(newParameter) ||
+      !validation.isNameValid ||
+      !validation.isValueValid
+    ) {
+      return setValidation(state => ({
+        ...state,
         isNameValid: newParameter.name.length > 0,
         isValueValid: String(newParameter.value).length > 0
-      })
+      }))
     }
 
     setFunctionParameters(
@@ -91,11 +84,7 @@ const FunctionsPanelParameters = ({
       }
     ])
     setShowAddNewParameterRow(false)
-    setNewParameter({
-      name: '',
-      type: 'string',
-      value: ''
-    })
+    setNewParameter(newParameterInitialState)
   }
 
   const editParameter = () => {
@@ -108,6 +97,17 @@ const FunctionsPanelParameters = ({
       delete generatedParameters[selectedParameter.data.name]
     }
 
+    if (
+      !isParameterValid(selectedParameter.data) ||
+      !validation.isEditNameValid ||
+      !validation.isEditValueValid
+    ) {
+      return setValidation(state => ({
+        ...state,
+        isEditNameValid: selectedParameter.data.name.length > 0,
+        isEditValueValid: selectedParameter.data.value.length > 0
+      }))
+    }
     setFunctionParameters(
       selectedParameter.data,
       key,
@@ -153,7 +153,10 @@ const FunctionsPanelParameters = ({
       {
         label: 'Edit',
         icon: <Edit />,
-        onClick: parameter => setSelectedParameter(parameter)
+        onClick: parameter => {
+          setSelectedParameter(parameter)
+          setValidation(validationInitialState)
+        }
       },
       {
         label: 'Remove',

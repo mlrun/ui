@@ -21,6 +21,7 @@ import { generateKeyValues } from '../../utils'
 import { generatePageData } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+
 import {
   DANGER_BUTTON,
   INIT_GROUP_FILTER,
@@ -33,7 +34,6 @@ import {
 } from '../../constants'
 import { isDemoMode } from '../../utils/helper'
 import { parseJob } from '../../utils/parseJob'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const Jobs = ({
   abortJob,
@@ -245,7 +245,7 @@ const Jobs = ({
       appStore.frontendSpec.abortable_function_kinds,
       fetchJobLogs,
       removeJobLogs,
-      !isEveryObjectValueEmpty(selectedJob)
+      !isEmpty(selectedJob)
     ),
     [
       match.params.pageTab,

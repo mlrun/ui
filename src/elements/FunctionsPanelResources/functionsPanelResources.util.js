@@ -81,3 +81,13 @@ export const setRangeInputValidation = (
     setValidation(prevState => ({ ...prevState, [validationField]: false }))
   }
 }
+
+export const VOLUME_MOUNT_AUTO_TYPE = 'auto'
+export const VOLUME_MOUNT_MANUAL_TYPE = 'manual'
+export const VOLUME_MOUNT_NONE_TYPE = 'none'
+
+export const volumeMountOptions = [
+  { label: 'Auto', id: VOLUME_MOUNT_AUTO_TYPE },
+  { label: 'Manual', id: VOLUME_MOUNT_MANUAL_TYPE },
+  { label: 'None', id: VOLUME_MOUNT_NONE_TYPE }
+]

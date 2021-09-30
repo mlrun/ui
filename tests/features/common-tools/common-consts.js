@@ -35,7 +35,26 @@ module.exports = {
     Key_Buckering_Number_Hint:
       'If you partition by key and the number of unique keys is very high it is recommended to use buckets for ' +
       'better performance. In this case the path would be path/bucket-num/year=/month=/day= etc.. In case the ' +
-      'value is 0 then no bucketing will be done and your data will be partitioned by key.'
+      'value is 0 then no bucketing will be done and your data will be partitioned by key.',
+    Function_Name_Hint:
+      '• Valid characters: a-z, 0-9, -\n• Must begin and end with: a-z, 0-9\n• Length - max: 63',
+    Function_Handler_Hint:
+      'Enter the function handler name (e.g. for the default sample function the name should be `handler`)',
+    Image_Name_Hint: 'The name of the function‘s container image',
+    Resulting_Image_Hint: 'The name of the built container image',
+    Base_Image_Hint:
+      "The name of a base container image from which to build the function's processor image",
+    Limit_Number_Warning:
+      'Limit must be bigger than or equal to Request and not be less than 1',
+    Limit_Number_Request_Warning:
+      'Request must be less than or equal to Limit and not be less than 1',
+    GPU_Minimum_Value_Warning: 'The minimum value should be 1',
+    Moumt_Path_Hint: 'A mount path for referencing the data from the function',
+    Data_Container_Hint:
+      'The name of the data container that contains the data',
+    DataAccess_Key_Hint: 'A platform data-access key',
+    Relative_Directory_Path_Hint:
+      'A relative directory path within the data container'
   },
   Label_Hint: {
     New_Job_Volumes:

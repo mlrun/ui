@@ -35,6 +35,7 @@ const Details = ({
   detailsMenu,
   detailsStore,
   filtersStore,
+  getCloseDetailsLink,
   handleCancel,
   isDetailsScreen,
   match,
@@ -335,6 +336,7 @@ const Details = ({
       detailsMenu={detailsMenu}
       detailsMenuClick={detailsMenuClick}
       detailsStore={detailsStore}
+      getCloseDetailsLink={getCloseDetailsLink}
       handleCancel={handleCancel}
       handleShowWarning={handleShowWarning}
       isDetailsScreen={isDetailsScreen}
@@ -354,6 +356,7 @@ const Details = ({
 Details.defaultProps = {
   applyDetailsChanges: () => {},
   cancelRequest: () => {},
+  getCloseDetailsLink: null,
   isDetailsScreen: false,
   item: {},
   retryRequest: () => {},
@@ -374,6 +377,7 @@ Details.propTypes = {
       hidden: PropTypes.bool
     })
   ).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   isDetailsScreen: PropTypes.bool,
   match: PropTypes.shape({}).isRequired,

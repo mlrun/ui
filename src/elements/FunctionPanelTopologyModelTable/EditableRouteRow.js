@@ -14,7 +14,9 @@ const EditableRouteRow = ({
   editRoute,
   routes,
   selectedRoute,
-  setSelectedRoute
+  setSelectedRoute,
+  setValidation,
+  validation
 }) => {
   return (
     <div className="table__row edit-row">
@@ -22,10 +24,15 @@ const EditableRouteRow = ({
         <Input
           floatingLabel
           invalid={
-            selectedRoute.newName !== selectedRoute.data.name &&
-            isNameNotUnique(selectedRoute.newName, routes)
+            (selectedRoute.newName !== selectedRoute.data.name &&
+              isNameNotUnique(selectedRoute.newName, routes)) ||
+            !validation.isEditNameValid
           }
-          invalidText="Name already exists"
+          invalidText={
+            isNameNotUnique(selectedRoute.newName, routes)
+              ? 'Name already exists'
+              : 'This field is invalid'
+          }
           label="Name"
           onChange={name =>
             setSelectedRoute({
@@ -35,6 +42,12 @@ const EditableRouteRow = ({
           }
           required
           requiredText="This field is required"
+          setInvalid={value =>
+            setValidation(state => ({
+              ...state,
+              isEditNameValid: value
+            }))
+          }
           type="text"
           value={selectedRoute.newName ?? selectedRoute.data.name}
         />
@@ -42,6 +55,7 @@ const EditableRouteRow = ({
       <div className="table__cell">
         <Input
           floatingLabel
+          invalid={!validation.isEditClassNameValid}
           label="Class"
           onChange={class_name =>
             setSelectedRoute({
@@ -54,6 +68,12 @@ const EditableRouteRow = ({
           }
           required
           requiredText="This field is required"
+          setInvalid={value =>
+            setValidation(state => ({
+              ...state,
+              isEditClassNameValid: value
+            }))
+          }
           type="text"
           value={selectedRoute.data.class_name}
         />
@@ -61,6 +81,7 @@ const EditableRouteRow = ({
       <div className="table__cell">
         <Input
           floatingLabel
+          invalid={!validation.isEditModelPathValid}
           label="Path"
           onChange={model_path =>
             setSelectedRoute({
@@ -73,6 +94,12 @@ const EditableRouteRow = ({
           }
           required
           requiredText="This field is required"
+          setInvalid={value =>
+            setValidation(state => ({
+              ...state,
+              isEditModelPathValid: value
+            }))
+          }
           type="text"
           value={selectedRoute.data.model_path}
         />
@@ -94,7 +121,9 @@ EditableRouteRow.propTypes = {
   editRoute: PropTypes.func.isRequired,
   routes: PropTypes.array.isRequired,
   selectedRoute: PropTypes.shape({}).isRequired,
-  setSelectedRoute: PropTypes.func.isRequired
+  setSelectedRoute: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default EditableRouteRow

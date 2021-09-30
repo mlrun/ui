@@ -57,6 +57,8 @@ const FunctionsPanelParametersView = ({
               parameters={parameters}
               selectedParameter={selectedParameter}
               setSelectedParameter={setSelectedParameter}
+              setValidation={setValidation}
+              validation={validation}
             />
           ) : (
             <div className="table__row" key={index}>

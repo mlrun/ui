@@ -18,6 +18,7 @@ import './functionPanelTopologyModelTable.scss'
 const FunctionPanelTopologyModelTableView = ({
   addRoute,
   data,
+  discardChanges,
   editRoute,
   generateActionsMenu,
   newRoute,
@@ -25,7 +26,9 @@ const FunctionPanelTopologyModelTableView = ({
   setNewRoute,
   setSelectedRoute,
   setShowAddNewRouteRow,
-  showAddNewRouteRow
+  setValidation,
+  showAddNewRouteRow,
+  validation
 }) => {
   const tableClassNames = classnames(
     'new-item-side-panel__table',
@@ -53,6 +56,8 @@ const FunctionPanelTopologyModelTableView = ({
               routes={data}
               selectedRoute={selectedRoute}
               setSelectedRoute={setSelectedRoute}
+              setValidation={setValidation}
+              validation={validation}
             />
           )
         } else {
@@ -81,8 +86,11 @@ const FunctionPanelTopologyModelTableView = ({
         <AddRouteRow
           addRoute={addRoute}
           data={data}
+          discardChanges={discardChanges}
           newRoute={newRoute}
           setNewRoute={setNewRoute}
+          setValidation={setValidation}
+          validation={validation}
         />
       ) : (
         <div className="table__row no-hover">
@@ -104,6 +112,7 @@ const FunctionPanelTopologyModelTableView = ({
 FunctionPanelTopologyModelTableView.propTypes = {
   addRoute: PropTypes.func.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  discardChanges: PropTypes.func.isRequired,
   editRoute: PropTypes.func.isRequired,
   generateActionsMenu: PropTypes.func.isRequired,
   newRoute: PropTypes.shape({}).isRequired,
@@ -111,7 +120,9 @@ FunctionPanelTopologyModelTableView.propTypes = {
   setNewRoute: PropTypes.func.isRequired,
   setSelectedRoute: PropTypes.func.isRequired,
   setShowAddNewRouteRow: PropTypes.func.isRequired,
-  showAddNewRouteRow: PropTypes.bool.isRequired
+  setValidation: PropTypes.func.isRequired,
+  showAddNewRouteRow: PropTypes.bool.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default FunctionPanelTopologyModelTableView

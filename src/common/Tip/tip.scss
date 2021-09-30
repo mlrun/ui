@@ -10,7 +10,7 @@ $arrowOffset: 20px;
 }
 
 .tip {
-  position: absolute;
+  position: fixed;
   z-index: 10;
   display: block;
   padding: 6px 8px;
