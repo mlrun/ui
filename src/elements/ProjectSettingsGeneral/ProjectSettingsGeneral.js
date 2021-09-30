@@ -2,20 +2,19 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import Input from '../../common/Input/Input'
-import SettingsSource from '../../components/ProjectSettings/SettingsSource/SettingsSource'
-import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
+import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
+
 import {
   ARTIFACT_PATH,
   SOURCE_URL
 } from '../../components/ProjectSettings/projectSettings.util'
-
-import './settingsGeneral.scss'
 import { KEY_CODES } from '../../constants'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 
-const SettingsGeneral = ({
+import './projectSettingsGeneral.scss'
+
+const ProjectSettingsGeneral = ({
   match,
   projectStore,
   setProjectParams,
@@ -239,56 +238,23 @@ const SettingsGeneral = ({
   }, [editProject, handleDocumentClick])
 
   return (
-    <div className="settings__card">
-      <div className="card__header">General</div>
-      <div className="card__content">
-        <SettingsSource
-          editSourceData={editProject.source}
-          handleEditProject={handleEditProject}
-          handleOnChangeSettings={handleOnChangeSettings}
-          handleOnKeyDown={handleOnKeyDown}
-          ref={inputRef}
-          settingsSource={projectStore.project.data?.spec.source ?? ''}
-        />
-        <div className="card__divider" />
-        <div
-          className="settings__description"
-          data-testid="project-goals"
-          onClick={() => handleEditProject(ARTIFACT_PATH)}
-        >
-          <Input
-            floatingLabel
-            label="Artifact path"
-            onChange={handleOnChangeSettings}
-            onKeyDown={handleOnKeyDown}
-            ref={inputRef}
-            value={
-              editProject.artifact_path.value ??
-              projectStore.project.data?.spec.artifact_path
-            }
-          />
-        </div>
-        <KeyValueTable
-          addNewItem={handleAddNewParameter}
-          addNewItemLabel="Add parameters"
-          className="settings__params"
-          content={generalParams}
-          deleteItem={handleDeleteParameter}
-          editItem={handleEditParameter}
-          isKeyRequired={true}
-          isValueRequired={true}
-          keyHeader="Key"
-          keyLabel="Key"
-          valueHeader="Value"
-          valueLabel="Value"
-          withEditMode
-        />
-      </div>
-    </div>
+    <ProjectSettingsGeneralView
+      artifactPath={projectStore.project.data?.spec.artifact_path ?? ''}
+      editProject={editProject}
+      generalParams={generalParams}
+      handleAddNewParameter={handleAddNewParameter}
+      handleDeleteParameter={handleDeleteParameter}
+      handleEditParameter={handleEditParameter}
+      handleEditProject={handleEditProject}
+      handleOnChangeSettings={handleOnChangeSettings}
+      handleOnKeyDown={handleOnKeyDown}
+      ref={inputRef}
+      source={projectStore.project.data?.spec.source ?? ''}
+    />
   )
 }
 
-SettingsGeneral.propTypes = {
+ProjectSettingsGeneral.propTypes = {
   match: PropTypes.object.isRequired
 }
 
@@ -297,4 +263,4 @@ export default connect(
     projectStore
   }),
   { ...projectsAction }
-)(SettingsGeneral)
+)(ProjectSettingsGeneral)

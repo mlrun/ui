@@ -1,12 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Input from '../../../common/Input/Input'
+import Input from '../../common/Input/Input'
 
-import { ReactComponent as Edit } from '../../../images/edit.svg'
-import { SOURCE_URL } from '../projectSettings.util'
+import { SOURCE_URL } from '../../components/ProjectSettings/projectSettings.util'
 
-const SettingsSource = React.forwardRef(
+import { ReactComponent as Edit } from '../../images/edit.svg'
+
+import './projectSettingsSource.scss'
+
+const ProjectSettingsSource = React.forwardRef(
   (
     {
       editSourceData,
@@ -59,7 +62,7 @@ const SettingsSource = React.forwardRef(
   }
 )
 
-SettingsSource.propTypes = {
+ProjectSettingsSource.propTypes = {
   editSourceData: PropTypes.shape({}).isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleOnChangeSettings: PropTypes.func.isRequired,
@@ -67,4 +70,4 @@ SettingsSource.propTypes = {
   settingsSource: PropTypes.string.isRequired
 }
 
-export default SettingsSource
+export default ProjectSettingsSource

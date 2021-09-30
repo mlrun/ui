@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
 import PropTypes from 'prop-types'
 
-import SettingsGeneral from '../../elements/SettingsGeneral/SettingsGeneral'
-import SettingsSecrets from '../../elements/SettingsSecrets/SettingsSecrets'
+import ProjectSettingsGeneral from '../../elements/ProjectSettingsGeneral/ProjectSettingsGeneral'
+import ProjectSettingsSecrets from '../../elements/ProjectSettingsSecrets/ProjectSettingsSecrets'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import NoData from '../../common/NoData/NoData'
 import Loader from '../../common/Loader/Loader'
+
 import projectsAction from '../../actions/projects'
 
 import './projectSettings.scss'
@@ -23,21 +24,16 @@ const ProjectSettings = ({
     fetchProject(match.params.projectName)
   }, [fetchProject, match.params.projectName])
 
-  const fetchSecrets = useCallback(() => {
-    fetchProjectSecrets(match.params.projectName)
-  }, [fetchProjectSecrets, match.params.projectName])
-
   useEffect(() => {
     fetchProjectData()
-    fetchSecrets()
 
     return () => {
       removeProjectData()
     }
-  }, [fetchProjectData, fetchSecrets, removeProjectData])
+  }, [fetchProjectData, removeProjectData])
 
   return (
-    <div className="settings-wrapper">
+    <div className="settings">
       <div className="settings__header">
         <Breadcrumbs match={match} />
       </div>
@@ -51,8 +47,8 @@ const ProjectSettings = ({
         <NoData />
       ) : (
         <div className="settings__content">
-          <SettingsGeneral match={match} />
-          <SettingsSecrets match={match} />
+          <ProjectSettingsGeneral match={match} />
+          <ProjectSettingsSecrets match={match} />
         </div>
       )}
     </div>

@@ -1,15 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Tooltip from '../../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
-import { ReactComponent as Edit } from '../../../images/edit.svg'
-import { ReactComponent as Delete } from '../../../images/delete.svg'
+import { ReactComponent as Edit } from '../../images/edit.svg'
+import { ReactComponent as Delete } from '../../images/delete.svg'
 
-import './secretRow.scss'
+import './projectSecretRow.scss'
 
-const SecretRow = ({ handleEditClick, handleSecretDelete, secret }) => {
+const ProjectSecretRow = ({ handleEditClick, handleSecretDelete, secret }) => {
   return (
     <div className="secret__row">
       <div className="secret__cell">{secret}</div>
@@ -35,10 +35,10 @@ const SecretRow = ({ handleEditClick, handleSecretDelete, secret }) => {
   )
 }
 
-SecretRow.propTypes = {
+ProjectSecretRow.propTypes = {
   handleEditClick: PropTypes.func.isRequired,
   handleSecretDelete: PropTypes.func.isRequired,
   secret: PropTypes.string.isRequired
 }
 
-export default SecretRow
+export default ProjectSecretRow

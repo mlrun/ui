@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 
-import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
-import Input from '../../../common/Input/Input'
-import Button from '../../../common/Button/Button'
-import projectApi from '../../../api/projects-api'
-import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../../constants'
+import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import Input from '../../common/Input/Input'
+import Button from '../../common/Button/Button'
+
+import projectApi from '../../api/projects-api'
+import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
 
 import './createNewSecretPopUp.scss'
 

@@ -3,12 +3,10 @@
 @import '../../scss/shadows';
 
 .settings {
-  &-wrapper {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-width: 900px;
-  }
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 900px;
 
   &__content {
     display: flex;
