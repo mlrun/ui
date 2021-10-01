@@ -215,31 +215,8 @@ const createJobsContent = (
                 (contentItem.state?.value !== 'error' &&
                   new Date(contentItem.finished_at))
             ),
-            class: 'jobs_extra-small',
+            class: 'jobs_small',
             type: 'duration',
-            hidden: isSelectedItem
-          },
-          owner: {
-            value: contentItem.owner,
-            class: 'jobs_extra-small',
-            hidden: isSelectedItem
-          },
-          labels: {
-            value: contentItem.labels,
-            class: 'jobs_extra-small',
-            type: 'labels',
-            hidden: isSelectedItem
-          },
-          parameters: {
-            value: contentItem.parameters,
-            class: 'jobs_extra-small',
-            type: 'parameters',
-            hidden: isSelectedItem
-          },
-          resultsChips: {
-            value: contentItem.resultsChips,
-            class: 'jobs_big',
-            type: 'results',
             hidden: isSelectedItem
           },
           updated: {

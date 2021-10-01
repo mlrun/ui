@@ -99,27 +99,7 @@ export const generateTableHeaders = (params, isSelectedItem) => {
       },
       {
         header: 'Duration',
-        class: 'jobs_extra-small',
-        hidden: isSelectedItem
-      },
-      {
-        header: 'Owner',
-        class: 'jobs_extra-small',
-        hidden: isSelectedItem
-      },
-      {
-        header: 'Labels',
-        class: 'jobs_extra-small',
-        hidden: isSelectedItem
-      },
-      {
-        header: 'Parameters',
-        class: 'jobs_extra-small',
-        hidden: isSelectedItem
-      },
-      {
-        header: 'Results',
-        class: 'jobs_big',
+        class: 'jobs_small',
         hidden: isSelectedItem
       },
       {
