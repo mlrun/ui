@@ -57,8 +57,8 @@
     border-top: $primaryBorder;
   }
 
-  &__description {
-    margin-bottom: 25px;
+  &__subtitle {
+    margin-bottom: 5px;
     color: rgba($mulledWine, 0.88);
     font-weight: 500;
     font-size: 14px;
@@ -68,8 +68,22 @@
 
 .new-secret__button {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 44px;
+  padding: 10px;
+  color: #6279e7;
+  font-size: 15px;
+  line-height: 18px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+
+    rect {
+      fill: $cornflowerBlue;
+    }
+  }
 }
 
 .action__button {

@@ -1,9 +1,11 @@
 @import '../../scss/colors';
 
 .settings {
-  &__params {
-    margin-top: 16px;
+  &__artifact-path {
+    margin-bottom: 25px;
+  }
 
+  &__params {
     .table-cell__actions {
       display: flex;
       justify-content: flex-end;

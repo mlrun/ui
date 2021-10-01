@@ -21,43 +21,48 @@ const ProjectSettingsSource = React.forwardRef(
     ref
   ) => {
     return (
-      <div
-        className="settings__source"
-        onClick={() => handleEditProject(SOURCE_URL)}
-      >
-        {editSourceData.isEdit ? (
-          <Input
-            floatingLabel
-            label="Source URL"
-            focused
-            onChange={handleOnChangeSettings}
-            onKeyDown={handleOnKeyDown}
-            ref={ref}
-            type="text"
-            value={editSourceData.value ?? settingsSource}
-          />
-        ) : (
-          <>
-            {editSourceData.value || settingsSource ? (
-              <a
-                href={editSourceData.value || settingsSource}
-                onClick={event => event.stopPropagation()}
-                target="_blank"
-                rel="noreferrer"
-                className="settings__source-text data-ellipsis"
-              >
-                {editSourceData.value || settingsSource}
-              </a>
-            ) : (
-              <span>Click to add source URL</span>
-            )}
-            <Edit
-              className="settings__source-edit"
-              onClick={() => handleEditProject(SOURCE_URL)}
+      <>
+        <div
+          className="settings__source"
+          onClick={() => handleEditProject(SOURCE_URL)}
+        >
+          {editSourceData.isEdit ? (
+            <Input
+              floatingLabel
+              label="Source URL"
+              focused
+              onChange={handleOnChangeSettings}
+              onKeyDown={handleOnKeyDown}
+              ref={ref}
+              type="text"
+              value={editSourceData.value ?? settingsSource}
             />
-          </>
-        )}
-      </div>
+          ) : (
+            <>
+              {editSourceData.value || settingsSource ? (
+                <div>
+                  <p className="card__subtitle">Source URL</p>
+                  <a
+                    href={editSourceData.value || settingsSource}
+                    onClick={event => event.stopPropagation()}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="settings__source-text data-ellipsis"
+                  >
+                    {editSourceData.value || settingsSource}
+                  </a>
+                </div>
+              ) : (
+                <span>Click to add source URL</span>
+              )}
+              <Edit
+                className="settings__source-edit"
+                onClick={() => handleEditProject(SOURCE_URL)}
+              />
+            </>
+          )}
+        </div>
+      </>
     )
   }
 )

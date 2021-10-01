@@ -37,8 +37,7 @@ const ProjectSettingsGeneralView = React.forwardRef(
           />
           <div className="card__divider" />
           <div
-            className="settings__description"
-            data-testid="project-goals"
+            className="settings__artifact-path"
             onClick={() => handleEditProject(ARTIFACT_PATH)}
           >
             <Input
@@ -50,9 +49,10 @@ const ProjectSettingsGeneralView = React.forwardRef(
               value={editProject.artifact_path.value ?? artifactPath}
             />
           </div>
+          <p className="card__subtitle">Parameters</p>
           <KeyValueTable
             addNewItem={handleAddNewParameter}
-            addNewItemLabel="Add parameters"
+            addNewItemLabel="Add parameter"
             className="settings__params"
             content={generalParams}
             deleteItem={handleDeleteParameter}

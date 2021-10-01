@@ -3,10 +3,9 @@ import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
 import ProjectSecretRow from '../ProjectSecretRow/ProjectSecretRow'
-import Button from '../../common/Button/Button'
 import CreateNewSecretPopUp from '../CreateNewSecretPopUp/CreateNewSecretPopUp'
 
-import { PRIMARY_BUTTON } from '../../constants'
+import { ReactComponent as Plus } from '../../images/plus.svg'
 
 const ProjectSettingsSecretsView = ({
   editableSecret,
@@ -26,7 +25,7 @@ const ProjectSettingsSecretsView = ({
     <>
       <div className="settings__card">
         <div className="card__header">Secrets</div>
-        <div className="card__description">
+        <div className="card__subtitle">
           These secrets will automatically be available to all jobs belonging to
           this project.
         </div>
@@ -49,12 +48,16 @@ const ProjectSettingsSecretsView = ({
                   secret={secret}
                 />
               ))}
-            <div className="new-secret__button">
-              <Button
-                label="New"
-                onClick={() => setCreateNewSecretDialogOpen(true)}
-                variant={PRIMARY_BUTTON}
-              />
+            <div className="secret__row">
+              <button
+                className="new-secret__button"
+                onClick={() => {
+                  setCreateNewSecretDialogOpen(true)
+                }}
+              >
+                <Plus />
+                Add secret
+              </button>
             </div>
           </div>
         )}
