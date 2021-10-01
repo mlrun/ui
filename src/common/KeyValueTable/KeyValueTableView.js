@@ -50,7 +50,7 @@ const KeyValueTableView = ({
         <div className="table-cell table-cell__actions" />
       </div>
       {content.map((contentItem, index) => {
-        return isEditMode && contentItem.key === selectedItem.key ? (
+        return isEditMode && index === selectedItem.index ? (
           <div className="table-row table-row_edit" key={index}>
             <div className="table-cell table-cell__key">
               {keyType === 'select' ? (
@@ -59,7 +59,8 @@ const KeyValueTableView = ({
                   onClick={key =>
                     setSelectedItem({
                       ...selectedItem,
-                      newKey: key
+                      newKey: key,
+                      index
                     })
                   }
                   options={keyOptions}
@@ -82,7 +83,8 @@ const KeyValueTableView = ({
                   onChange={key =>
                     setSelectedItem({
                       ...selectedItem,
-                      newKey: key
+                      newKey: key,
+                      index
                     })
                   }
                   required={isKeyRequired}
@@ -105,7 +107,8 @@ const KeyValueTableView = ({
                 onChange={value =>
                   setSelectedItem({
                     ...selectedItem,
-                    value
+                    value,
+                    index
                   })
                 }
                 required={isValueRequired}
@@ -142,7 +145,7 @@ const KeyValueTableView = ({
             key={index}
             onClick={() => {
               if (withEditMode) {
-                setSelectedItem(contentItem)
+                setSelectedItem({ ...contentItem, index })
                 setEditMode(true)
                 setValidation({
                   isKeyValid: true,
@@ -170,7 +173,8 @@ const KeyValueTableView = ({
             <div className="table-cell table-cell__actions">
               <button
                 className="key-value-table__btn"
-                onClick={() => {
+                onClick={event => {
+                  event.stopPropagation()
                   deleteItem(index, contentItem)
                 }}
               >
