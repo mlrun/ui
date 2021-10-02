@@ -25,17 +25,23 @@
     transform: translate(0%, -50%);
   }
 
-  &.without-border {
-    border: none;
+  &.without {
+    &-border {
+      border: none;
 
-    .select__caret {
-      display: none;
+      .select__caret {
+        display: none;
+      }
+
+      &:hover {
+        .select__caret {
+          display: block;
+        }
+      }
     }
 
-    &:hover {
-      .select__caret {
-        display: block;
-      }
+    &-label {
+      padding-left: 16px;
     }
   }
 
