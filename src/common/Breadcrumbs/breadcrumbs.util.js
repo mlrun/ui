@@ -15,5 +15,9 @@ export const generateProjectScreens = match => [
     label: 'API gateways',
     id: 'API gateways',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
+  },
+  {
+    label: 'Settings',
+    id: 'settings'
   }
 ]
