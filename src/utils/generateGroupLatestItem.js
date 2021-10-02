@@ -9,8 +9,8 @@ export const generateGroupLatestItem = (page, tableContent, pageTab) =>
   tableContent?.map(group =>
     Array.isArray(group) && [FUNCTIONS_PAGE, JOBS_PAGE].includes(page)
       ? group.reduce((prev, curr) => {
-          const prevDate = new Date(prev.updated.value)
-          const currDate = new Date(curr.updated.value)
+          const prevDate = new Date(prev.updated?.value)
+          const currDate = new Date(curr.updated?.value)
 
           // if either dates is invalid - return the other one
           // if both are valid - return the later one
