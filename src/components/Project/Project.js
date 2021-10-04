@@ -37,9 +37,7 @@ const Project = ({
   editProjectLabels,
   featureStore,
   fetchProject,
-  fetchProjectFeatureSets,
-  fetchProjectFiles,
-  fetchProjectModels,
+  fetchProjectCounters,
   match,
   projectStore,
   removeFeatureStoreError,
@@ -241,6 +239,10 @@ const Project = ({
       resetProjectData()
     }
   }, [fetchProjectData, removeProjectData, resetProjectData])
+
+  useEffect(() => {
+    fetchProjectCounters(match.params.projectName)
+  }, [fetchProjectCounters, match.params.projectName])
 
   const handleSetProjectData = useCallback(() => {
     const data = {
@@ -489,9 +491,6 @@ const Project = ({
       createFeatureSetSuccess={createFeatureSetSuccess}
       createNewOptions={createNewOptions}
       editProject={editProject}
-      fetchProjectFeatureSets={fetchProjectFeatureSets}
-      fetchProjectFiles={fetchProjectFiles}
-      fetchProjectModels={fetchProjectModels}
       frontendSpec={appStore.frontendSpec}
       handleAddProjectLabel={handleAddProjectLabel}
       handleEditProject={handleEditProject}
@@ -504,6 +503,7 @@ const Project = ({
       match={match}
       membersDispatch={membersDispatch}
       membersState={membersState}
+      projectCounters={projectStore.projectCounters}
       projectLabels={projectLabels}
       ref={inputRef}
       refresh={handleRefresh}

@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux'
 
 import { DATASETS_TAB } from '../../constants'
 import { launchIDEOptions } from './project.utils'
-import { groupByUniqName } from '../../utils/groupByUniqName'
 import { formatDatetime } from '../../utils'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -43,9 +42,6 @@ const ProjectView = React.forwardRef(
       createFeatureSetSuccess,
       createNewOptions,
       editProject,
-      fetchProjectFeatureSets,
-      fetchProjectFiles,
-      fetchProjectModels,
       frontendSpec,
       handleAddProjectLabel,
       handleEditProject,
@@ -58,6 +54,7 @@ const ProjectView = React.forwardRef(
       match,
       membersDispatch,
       membersState,
+      projectCounters,
       projectLabels,
       refresh,
       setIsPopupDialogOpen,
@@ -235,27 +232,21 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="main-info__statistics-section">
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(project.models, 'db_key')}
-                  fetchArtifacts={fetchProjectModels}
                   link={`/projects/${match.params.projectName}/models`}
-                  match={match}
+                  projectCounter={projectCounters.data.models_count ?? 0}
+                  projectCounters={projectCounters}
                   title="Models"
                 />
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(
-                    project.featureSets,
-                    'metadata.name'
-                  )}
-                  fetchArtifacts={fetchProjectFeatureSets}
                   link={`/projects/${match.params.projectName}/feature-store`}
-                  match={match}
+                  projectCounter={projectCounters.data.feature_sets_count ?? 0}
+                  projectCounters={projectCounters}
                   title="Feature sets"
                 />
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(project.files, 'db_key')}
-                  fetchArtifacts={fetchProjectFiles}
                   link={`/projects/${match.params.projectName}/files`}
-                  match={match}
+                  projectCounter={projectCounters.data.files_count ?? 0}
+                  projectCounters={projectCounters}
                   title="Files"
                 />
               </div>
@@ -317,9 +308,6 @@ ProjectView.propTypes = {
   createFeatureSetSuccess: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
-  fetchProjectFeatureSets: PropTypes.func.isRequired,
-  fetchProjectFiles: PropTypes.func.isRequired,
-  fetchProjectModels: PropTypes.func.isRequired,
   handleAddProjectLabel: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
@@ -331,6 +319,7 @@ ProjectView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
+  projectCounters: PropTypes.object.isRequired,
   projectLabels: PropTypes.array.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowChangeOwner: PropTypes.func.isRequired,

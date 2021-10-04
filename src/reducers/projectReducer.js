@@ -10,6 +10,9 @@ import {
   DELETE_PROJECT_SUCCESS,
   ADD_PROJECT_LABEL,
   FETCH_PROJECT_BEGIN,
+  FETCH_PROJECT_COUNTERS_SUCCESS,
+  FETCH_PROJECT_COUNTERS_BEGIN,
+  FETCH_PROJECT_COUNTERS_FAILURE,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
@@ -125,6 +128,11 @@ const initialState = {
     }
   },
   projects: [],
+  projectCounters: {
+    error: null,
+    loading: false,
+    data: []
+  },
   projectsNames: {
     error: null,
     loading: false,
@@ -678,6 +686,32 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         projectsSummary: {
           ...state.projectsSummary,
+          data: payload,
+          loading: false
+        }
+      }
+    case FETCH_PROJECT_COUNTERS_BEGIN:
+      return {
+        ...state,
+        projectCounters: {
+          ...state.projectCounters,
+          loading: true
+        }
+      }
+    case FETCH_PROJECT_COUNTERS_FAILURE:
+      return {
+        ...state,
+        projectCounters: {
+          data: [],
+          loading: false,
+          error: payload
+        }
+      }
+    case FETCH_PROJECT_COUNTERS_SUCCESS:
+      return {
+        ...state,
+        projectCounters: {
+          ...state.projectCounters,
           data: payload,
           loading: false
         }

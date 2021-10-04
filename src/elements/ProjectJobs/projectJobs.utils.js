@@ -7,68 +7,52 @@ import {
 } from '../../constants'
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
-import { groupByUniqName } from '../../utils/groupByUniqName'
 import { isDemoMode } from '../../utils/helper'
 
-export const getJobsStatistics = (
-  jobs,
-  match,
-  search,
-  scheduledJobs,
-  workflows
-) => {
-  let jobsRunning = 0
-  let jobsFailed = 0
-  let workflowsRunning = 0
-
-  if (jobs.data) {
-    jobsRunning = groupByUniqName(jobs.data, 'metadata.name').reduce(
-      (prev, curr) => (curr.status.state === 'running' ? prev + 1 : prev),
-      0
-    )
-    jobsFailed = groupByUniqName(jobs.data, 'metadata.name').reduce(
-      (prev, curr) =>
-        curr.status.state === 'error' || curr.status.state === 'aborted'
-          ? prev + 1
-          : prev,
-      0
-    )
-  }
-  if (Array.isArray(workflows.data)) {
-    workflowsRunning = workflows.data.filter(workflow => workflow === 'Running')
-      .length
-  }
-
+export const getJobsStatistics = (projectCounter, match, search) => {
   return {
     running: {
-      value: jobs.error ? 'N/A' : jobsRunning,
+      value: projectCounter.error
+        ? 'N/A'
+        : projectCounter.data.runs_running_count,
       label: 'Running jobs',
-      className: jobs.error || jobsRunning === 0 ? 'default' : 'running',
+      className:
+        projectCounter.error || projectCounter.data.runs_running_count === 0
+          ? 'default'
+          : 'running',
       link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     workflows: {
-      value: workflows.error ? 'N/A' : workflowsRunning,
+      value: projectCounter.error
+        ? 'N/A'
+        : projectCounter.data.pipelines_running_count,
       label: 'Running workflows',
       className:
-        workflows.error || workflowsRunning === 0 ? 'default' : 'running',
+        projectCounter.error ||
+        projectCounter.data.pipelines_running_count === 0
+          ? 'default'
+          : 'running',
       link: `/projects/${match.params.projectName}/jobs/${
         isDemoMode(search) ? MONITOR_WORKFLOWS_TAB : MONITOR_JOBS_TAB
       }`
     },
     failed: {
-      value: jobs.error ? 'N/A' : jobsFailed,
+      value: projectCounter.error
+        ? 'N/A'
+        : projectCounter.data.runs_failed_recent_count,
       label: 'Failed',
-      className: jobsFailed > 0 && !jobs.error ? 'failed' : 'default',
+      className:
+        projectCounter.data.runs_failed_recent_count > 0 &&
+        !projectCounter.error
+          ? 'failed'
+          : 'default',
       link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     scheduled: {
-      value: scheduledJobs.error
-        ? 'N/A'
-        : groupByUniqName(scheduledJobs.data, 'name').length,
+      value: projectCounter.error ? 'N/A' : projectCounter.data.schedules_count,
       label: 'Scheduled',
       className:
-        scheduledJobs.error ||
-        groupByUniqName(scheduledJobs.data, 'name').length === 0
+        projectCounter.error || projectCounter.data.schedules_count === 0
           ? 'default'
           : 'scheduled',
       link: `/projects/${match.params.projectName}/jobs/${SCHEDULE_TAB}`
