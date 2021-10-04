@@ -39,7 +39,7 @@
       &__name {
         display: flex;
         flex: 2;
-        max-width: 335px;
+        width: 100%;
         color: rgba($mulledWine, 0.88);
         font-weight: 300;
         font-size: 36px;
@@ -53,44 +53,7 @@
       }
 
       &__settings {
-        display: none;
-        margin-left: 10px;
-      }
-
-      &__source {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 26px;
-
-        .input {
-          width: 100%;
-
-          &-wrapper {
-            width: 100%;
-          }
-        }
-
-        &-edit {
-          position: relative;
-          display: none;
-          margin-left: 10px;
-          text-decoration: underline;
-          cursor: pointer;
-        }
-
-        &-text {
-          max-width: 230px;
-          color: $cornflowerBlue;
-        }
-
-        &:hover {
-          .general-info {
-            &__source-edit {
-              display: block;
-            }
-          }
-        }
+        cursor: pointer;
       }
 
       &__labels {

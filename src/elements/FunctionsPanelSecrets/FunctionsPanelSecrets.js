@@ -25,8 +25,8 @@ const FunctionsPanelSecrets = ({
   const handleEditSecretSource = useCallback(
     secretSource => {
       setNewFunctionSecretSources(
-        functionsStore.newFunction.spec.secret_sources.map(item => {
-          if (item.kind === secretSource.key) {
+        functionsStore.newFunction.spec.secret_sources.map((item, index) => {
+          if (index === secretSource.index) {
             item.kind = secretSource.newKey || secretSource.key
             item.source = secretSource.value
           }

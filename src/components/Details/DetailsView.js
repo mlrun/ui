@@ -78,7 +78,8 @@ const DetailsView = React.forwardRef(
                 className="item-header__back-btn"
                 to={location => {
                   const urlArray = location.pathname.split('/')
-                  return urlArray.slice(0, urlArray.length - 2).join('/')
+
+                  return urlArray.slice(0, -2).join('/')
                 }}
                 onClick={() => {
                   if (detailsStore.changes.counter > 0) {

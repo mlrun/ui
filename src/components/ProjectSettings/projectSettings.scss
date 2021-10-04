@@ -1,0 +1,91 @@
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
+
+.settings {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 900px;
+
+  &__content {
+    display: flex;
+    flex: 1 1;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 45px;
+  }
+
+  &__header {
+    padding: 20px 24px;
+    background-color: $white;
+    box-shadow: $headerShadow;
+  }
+
+  &__card {
+    width: 50%;
+    padding: 40px;
+    background-color: rgba($white, 0.84);
+    border-radius: 4px;
+  }
+
+  &__card:first-child {
+    margin-right: 45px;
+  }
+
+  &__description {
+    margin-top: 16px;
+    color: rgba($mulledWine, 0.88);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+  }
+}
+
+.card {
+  &__header {
+    margin-bottom: 25px;
+    color: $primary;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
+  }
+
+  &__divider {
+    margin: 16px 0;
+    border-top: $primaryBorder;
+  }
+
+  &__subtitle {
+    margin-bottom: 5px;
+    color: rgba($mulledWine, 0.88);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+  }
+}
+
+.new-secret__button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 44px;
+  padding: 10px;
+  color: #6279e7;
+  font-size: 15px;
+  line-height: 18px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+
+    rect {
+      fill: $cornflowerBlue;
+    }
+  }
+}
+
+.action__button {
+  cursor: pointer;
+}

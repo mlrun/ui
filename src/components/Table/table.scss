@@ -150,6 +150,7 @@
 
   &-body {
     color: $mulledWine;
+    background-color: $white;
 
     &__cell {
       @include tableDet;

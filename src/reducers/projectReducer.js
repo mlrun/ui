@@ -58,7 +58,13 @@ import {
   FETCH_PROJECTS_NAMES_BEGIN,
   FETCH_PROJECTS_NAMES_FAILURE,
   FETCH_PROJECTS_NAMES_SUCCESS,
-  SET_PROJECT_DATA
+  SET_PROJECT_DATA,
+  SET_PROJECT_SETTINGS,
+  SET_PROJECT_PARAMS,
+  FETCH_PROJECT_SECRETS_BEGIN,
+  FETCH_PROJECT_SECRETS_FAILURE,
+  FETCH_PROJECT_SECRETS_SUCCESS,
+  SET_PROJECT_SECRETS
 } from '../constants'
 
 const initialState = {
@@ -115,6 +121,11 @@ const initialState = {
     },
     scheduledJobs: {
       data: [],
+      error: null,
+      loading: false
+    },
+    secrets: {
+      data: {},
       error: null,
       loading: false
     },
@@ -612,6 +623,42 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case FETCH_PROJECT_SECRETS_BEGIN:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          secrets: {
+            ...state.project.secrets,
+            loading: true
+          }
+        }
+      }
+    case FETCH_PROJECT_SECRETS_FAILURE:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          secrets: {
+            ...state.project.secrets,
+            error: payload,
+            loading: false
+          }
+        }
+      }
+    case FETCH_PROJECT_SECRETS_SUCCESS:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          secrets: {
+            ...state.project.secrets,
+            data: payload,
+            error: null,
+            loading: false
+          }
+        }
+      }
     case FETCH_PROJECTS_BEGIN:
       return {
         ...state,
@@ -833,6 +880,54 @@ export default (state = initialState, { type, payload }) => {
               labels: {
                 ...payload
               }
+            }
+          }
+        }
+      }
+    }
+    case SET_PROJECT_PARAMS: {
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          data: {
+            ...state.project.data,
+            spec: {
+              ...state.project.data.spec,
+              params: payload
+            }
+          }
+        }
+      }
+    }
+    case SET_PROJECT_SECRETS: {
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          secrets: {
+            ...state.project.secrets,
+            data: {
+              ...state.project.secrets.data,
+              secret_keys: payload
+            },
+            error: null,
+            loading: false
+          }
+        }
+      }
+    }
+    case SET_PROJECT_SETTINGS: {
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          data: {
+            ...state.project.data,
+            spec: {
+              ...state.project.data.spec,
+              artifact_path: payload.artifact_path,
+              source: payload.source
             }
           }
         }

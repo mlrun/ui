@@ -2,13 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
-import { isEmpty, map } from 'lodash'
+import { isEmpty, map, intersectionWith } from 'lodash'
 
 import Details from '../Details/Details'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import YamlModal from '../../common/YamlModal/YamlModal'
+import Table from '../Table/Table'
 
 import { generateContentActionsMenu } from '../../layout/Content/content.util'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
@@ -23,25 +24,27 @@ import { ReactComponent as Yaml } from '../../images/yaml.svg'
 import './workflow.scss'
 
 const Workflow = ({
+  content,
   fetchWorkflow,
   handleCancel,
+  handleSelectItem,
   history,
   match,
   pageData,
+  refresh,
   refreshJobs,
-  selectedJob
+  selectedJob,
+  setLoading
 }) => {
   const graphViewClassNames = classnames(
     'graph-view',
     selectedJob.uid && 'with-selected-job'
   )
-  const workflowContainerClassNames = classnames(
-    'workflow-container',
-    selectedJob.uid && 'with-selected-job'
-  )
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [jobIsSelected, setJobIsSelected] = useState(false)
+  const [jobsContent, setJobsContent] = useState([])
   const [workflow, setWorkflow] = useState({})
+  const [workflowJobsIds, setWorkflowJobsIds] = useState([])
   const [elements, setElements] = useState([])
   const [viewMode, setViewMode] = useState('graph')
 
@@ -59,9 +62,24 @@ const Workflow = ({
     if (!workflow.graph) {
       fetchWorkflow(match.params.workflowId).then(workflow => {
         setWorkflow(workflow)
+        setWorkflowJobsIds(
+          Object.values(workflow.graph).map(jobData => jobData.run_uid)
+        )
       })
     }
   }, [fetchWorkflow, match.params.workflowId, workflow.graph])
+
+  useEffect(() => {
+    if (workflowJobsIds.length > 0 && content.length > 0) {
+      setJobsContent(
+        intersectionWith(
+          content,
+          workflowJobsIds,
+          (contentItem, jobId) => contentItem.uid === jobId
+        )
+      )
+    }
+  }, [content, workflowJobsIds])
 
   useEffect(() => {
     setJobIsSelected(Boolean(match.params.jobId))
@@ -106,14 +124,16 @@ const Workflow = ({
   }
 
   return (
-    <div className={workflowContainerClassNames}>
+    <div className="workflow-container">
       <div className="workflow-header">
         <div className="link-back">
           <Link
             to={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}`}
             className="link-back__icon"
           >
-            <Back />
+            <Tooltip template={<TextTooltipTemplate text="Back" />}>
+              <Back />
+            </Tooltip>
           </Link>
           <div className="link-back__title">
             <Tooltip
@@ -149,72 +169,52 @@ const Workflow = ({
 
       <div className="workflow-content">
         {viewMode === 'graph' ? (
-          <div className={graphViewClassNames}>
-            <MlReactFlow
-              elements={elements}
-              alignTriggerItem={jobIsSelected}
-              onElementClick={(event, element) => {
-                if (element?.data.run_uid) {
-                  history.push(
-                    getWorkflowDetailsLink({
-                      match,
-                      id: element.data.run_uid,
-                      tab: { id: match.params.tab || 'overview' }
-                    })
-                  )
-                }
-              }}
-            />
-          </div>
-        ) : (
-          <div className="list-view">
-            {Object.entries(workflow.graph).map(([id, jobData]) => {
-              const listViewRowClassNames = classnames(
-                'list-view__row',
-                jobData.run_uid &&
-                  selectedJob.uid === jobData.run_uid &&
-                  'list-view__row_selected',
-                jobData.run_uid && 'list-view__row_selectable'
-              )
-
-              return (
-                <div
-                  key={id}
-                  className={listViewRowClassNames}
-                  onClick={(event, element) => {
-                    if (jobData.run_uid) {
-                      history.push(
-                        getWorkflowDetailsLink({
-                          match,
-                          id: jobData.run_uid,
-                          tab: { id: match.params.tab || 'overview' }
-                        })
+          <>
+            <div className={graphViewClassNames}>
+              <MlReactFlow
+                elements={elements}
+                alignTriggerItem={jobIsSelected}
+                onElementClick={(event, element) => {
+                  if (element?.data.run_uid) {
+                    history.push(
+                      getWorkflowDetailsLink(
+                        match.params,
+                        null,
+                        element.data.run_uid
                       )
-                    }
-                  }}
-                >
-                  <Tooltip
-                    template={<TextTooltipTemplate text={jobData.name} />}
-                  >
-                    {jobData.name}
-                  </Tooltip>
-                </div>
-              )
-            })}
-          </div>
-        )}
-        {!isEmpty(selectedJob) && (
-          <Details
+                    )
+                  }
+                }}
+              />
+              {!isEmpty(selectedJob) && (
+                <Details
+                  actionsMenu={actionsMenu}
+                  detailsMenu={pageData.detailsMenu}
+                  getCloseDetailsLink={getCloseDetailsLink}
+                  handleCancel={handleCancel}
+                  match={match}
+                  pageData={pageData}
+                  retryRequest={refreshJobs}
+                  selectedItem={selectedJob}
+                />
+              )}
+            </div>
+          </>
+        ) : (
+          <Table
             actionsMenu={actionsMenu}
-            detailsMenu={pageData.detailsMenu}
+            content={jobsContent}
             getCloseDetailsLink={getCloseDetailsLink}
             handleCancel={handleCancel}
+            handleSelectItem={handleSelectItem}
             match={match}
             pageData={pageData}
-            retryRequest={refreshJobs}
+            retryRequest={refresh}
             selectedItem={selectedJob}
+            setLoading={setLoading}
           />
         )}
+
         {convertedYaml.length > 0 && (
           <YamlModal
             convertedYaml={convertedYaml}
@@ -226,14 +226,22 @@ const Workflow = ({
   )
 }
 
+Workflow.defaultProps = {
+  setLoading: null
+}
+
 Workflow.propTypes = {
+  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   fetchWorkflow: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
+  handleSelectItem: PropTypes.func.isRequired,
   history: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
+  refresh: PropTypes.func.isRequired,
   refreshJobs: PropTypes.func.isRequired,
-  selectedJob: PropTypes.shape({}).isRequired
+  selectedJob: PropTypes.shape({}).isRequired,
+  setLoading: PropTypes.func
 }
 
 export default React.memo(Workflow)

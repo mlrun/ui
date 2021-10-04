@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
 
@@ -24,7 +24,6 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import ProjectName from './ProjectName/ProjectName'
 import ProjectDescription from './ProjectDescription/ProjectDescription'
 import ProjectGoals from './ProjectGoals/ProjectGoals'
-import ProjectSource from './ProjectSource/ProjectSource'
 import ProjectLinks from './ProjectLinks/ProjectLinks'
 import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
@@ -106,7 +105,14 @@ const ProjectView = React.forwardRef(
                     projectName={project.data.metadata.name}
                     ref={ref}
                   />
-                  <Settings className="general-info__settings" />
+                  <Link
+                    className="general-info__settings"
+                    to={`/projects/${match.params.projectName}/settings`}
+                  >
+                    <Tooltip template={<TextTooltipTemplate text="Settings" />}>
+                      <Settings />
+                    </Tooltip>
+                  </Link>
                 </div>
                 <ProjectDescription
                   editDescriptionData={editProject.description}
@@ -181,15 +187,6 @@ const ProjectView = React.forwardRef(
                   </div>
                 </>
               )}
-              <div className="general-info__divider" />
-              <ProjectSource
-                editSourceData={editProject.source}
-                handleEditProject={handleEditProject}
-                handleOnChangeProject={handleOnChangeProject}
-                handleOnKeyDown={handleOnKeyDown}
-                projectSource={project.data.spec.source ?? ''}
-                ref={ref}
-              />
               <div className="general-info__divider" />
               <div className="general-info__labels">
                 <div className="general-info__labels-text">Labels</div>

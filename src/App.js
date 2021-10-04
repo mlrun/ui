@@ -32,6 +32,9 @@ const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
 const Project = React.lazy(() => import('./components/Project/Project'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
+const ProjectSettings = React.lazy(() =>
+  import('./components/ProjectSettings/ProjectSettings')
+)
 
 const App = () => {
   return (
@@ -48,6 +51,11 @@ const App = () => {
               path="/projects/:projectName"
               exact
               render={routeProps => <Project {...routeProps} />}
+            />
+            <Route
+              exact
+              path="/projects/:projectName/settings"
+              render={routeProps => <ProjectSettings {...routeProps} />}
             />
             <Route
               path="/projects/:projectName/jobs/:pageTab/create-new-job"

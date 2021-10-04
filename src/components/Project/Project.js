@@ -64,10 +64,6 @@ const Project = ({
     goals: {
       value: null,
       isEdit: false
-    },
-    source: {
-      value: null,
-      isEdit: false
     }
   })
   const [
@@ -113,10 +109,6 @@ const Project = ({
       },
       goals: {
         value: prevState.goals.value ?? projectStore.project.data.spec.goals,
-        isEdit: false
-      },
-      source: {
-        value: prevState.source.value ?? projectStore.project.data.spec.source,
         isEdit: false
       }
     }))
@@ -246,7 +238,6 @@ const Project = ({
     const data = {
       name: editProject.name.value ?? projectStore.project.data.metadata.name,
       goals: editProject.goals.value ?? projectStore.project.data.spec.goals,
-      source: editProject.source.value ?? projectStore.project.data.spec.source,
       description:
         editProject.description.value ??
         projectStore.project.data.spec.description
@@ -259,8 +250,7 @@ const Project = ({
         spec: {
           ...projectStore.project.data.spec,
           description: data.description,
-          goals: data.goals,
-          source: data.source
+          goals: data.goals
         },
         metadata: {
           ...projectStore.project.data.metadata,
@@ -280,7 +270,7 @@ const Project = ({
         spec: {
           description: data.description,
           goals: data.goals,
-          source: data.source
+          source: projectStore.project.data.spec.source
         }
       })
       .catch(() => {
@@ -296,10 +286,6 @@ const Project = ({
           goals: {
             value: projectStore.project.data.spec.goals,
             isEdit: false
-          },
-          source: {
-            value: projectStore.project.data.spec.source,
-            isEdit: false
           }
         })
       })
@@ -308,7 +294,6 @@ const Project = ({
     editProject.description.value,
     editProject.goals.value,
     editProject.name.value,
-    editProject.source.value,
     match.params.projectName,
     projectStore.project,
     setProjectData
@@ -327,8 +312,7 @@ const Project = ({
     if (
       editProject.name.isEdit ||
       editProject.description.isEdit ||
-      editProject.goals.isEdit ||
-      editProject.source.isEdit
+      editProject.goals.isEdit
     ) {
       document.addEventListener('click', handleDocumentClick)
     }
@@ -384,10 +368,6 @@ const Project = ({
       goals: {
         ...prevState.goals,
         isEdit: inputName === 'goals'
-      },
-      source: {
-        ...prevState.source,
-        isEdit: inputName === 'source'
       }
     }))
   }, [])
@@ -411,10 +391,6 @@ const Project = ({
         goals: {
           ...prevState.goals,
           value: editProject.goals.isEdit ? value : prevState.goals.value
-        },
-        source: {
-          ...prevState.source,
-          value: editProject.source.isEdit ? value : prevState.source.value
         }
       }))
     },
@@ -449,8 +425,7 @@ const Project = ({
         editProject.description.value ??
         projectStore.project.data.spec.description,
       goals: editProject.goals.value ?? projectStore.project.data.spec.goals,
-      name: editProject.name.value ?? projectStore.project.data.metadata.name,
-      source: editProject.source.value ?? projectStore.project.data.spec.source
+      name: editProject.name.value ?? projectStore.project.data.metadata.name
     }
     const data = {
       ...projectStore.project.data,
@@ -462,8 +437,7 @@ const Project = ({
       spec: {
         ...projectStore.project.data.spec,
         description: projectData.description,
-        goals: projectData.goals,
-        source: projectData.source
+        goals: projectData.goals
       }
     }
 

@@ -234,7 +234,6 @@ const Jobs = ({
     generatePageData(
       match.params.pageTab,
       location.search,
-      subPage,
       onRemoveScheduledJob,
       handleRunJob,
       setEditableItem,
@@ -245,12 +244,13 @@ const Jobs = ({
       appStore.frontendSpec.abortable_function_kinds,
       fetchJobLogs,
       removeJobLogs,
-      !isEmpty(selectedJob)
+      !isEmpty(selectedJob),
+      match.params.workflowId
     ),
     [
       match.params.pageTab,
       location.search,
-      subPage,
+      match.params.workflowId,
       appStore.frontendSpec.jobs_dashboard_url,
       selectedJob
     ]
@@ -361,15 +361,21 @@ const Jobs = ({
       }
       setFilters({ groupBy: INIT_GROUP_FILTER })
     } else if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
-      getWorkflows()
-      setFilters({ groupBy: 'workflow' })
+      if (match.params.workflowId) {
+        setFilters({ groupBy: 'none' })
+      } else {
+        getWorkflows()
+        setFilters({ groupBy: 'workflow' })
+      }
     }
   }, [
     getWorkflows,
-    location.search,
-    match.params.jobId,
     match.params.pageTab,
-    setFilters
+    match.params.workflowId,
+    location.search,
+    subPage,
+    setFilters,
+    match.params.jobId
   ])
 
   const handleSelectJob = item => {
@@ -421,11 +427,15 @@ const Jobs = ({
           <Workflow
             fetchWorkflow={fetchWorkflow}
             handleCancel={handleCancel}
+            content={jobs}
+            handleSelectItem={handleSelectJob}
+            refresh={refreshJobs}
             history={history}
             match={match}
             pageData={pageData}
             refreshJobs={refreshJobs}
             selectedJob={selectedJob}
+            setLoading={setLoading}
           />
         ) : !isEmpty(selectedJob) ? (
           <Details
