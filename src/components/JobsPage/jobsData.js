@@ -36,8 +36,8 @@ export const infoHeaders = [
 
 const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
 
-export const generateTableHeaders = (params, isSelectedItem) => {
-  if (params.pageTab === SCHEDULE_TAB) {
+export const generateTableHeaders = (pageTab, workflowId, isSelectedItem) => {
+  if (pageTab === SCHEDULE_TAB) {
     return [
       {
         header: 'Name',
@@ -81,7 +81,7 @@ export const generateTableHeaders = (params, isSelectedItem) => {
     ]
   }
 
-  if (params.pageTab === MONITOR_WORKFLOWS_TAB && !params.workflowId) {
+  if (pageTab === MONITOR_WORKFLOWS_TAB && !workflowId) {
     return [
       {
         header: 'Name',
@@ -214,7 +214,7 @@ const generateTabs = search => {
 }
 
 export const generatePageData = (
-  params,
+  pageTab,
   search,
   removeScheduledJob,
   handleSubmitJob,
@@ -226,7 +226,8 @@ export const generatePageData = (
   abortableFunctionKinds,
   fetchJobLogs,
   removeJobLogs,
-  isSelectedItem
+  isSelectedItem,
+  workflowId
 ) => {
   let filterMenuActionButton = {
     label: 'Resource monitoring',
@@ -236,13 +237,13 @@ export const generatePageData = (
     onClick: event => handleMonitoring()
   }
 
-  if (params.pageTab === SCHEDULE_TAB) {
+  if (pageTab === SCHEDULE_TAB) {
     filterMenuActionButton = null
   }
 
   return {
     actionsMenu: generateActionsMenu(
-      params.pageTab,
+      pageTab,
       removeScheduledJob,
       handleSubmitJob,
       setEditableItem,
@@ -253,18 +254,17 @@ export const generatePageData = (
       abortableFunctionKinds
     ),
     detailsMenu,
-    hideFilterMenu: params.pageTab === MONITOR_WORKFLOWS_TAB,
+    hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,
-    filters: filtersByTab[params.pageTab],
+    filters: filtersByTab[pageTab],
     page,
-    tableHeaders: generateTableHeaders(params, isSelectedItem),
+    tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
     tabs: generateTabs(search),
     infoHeaders,
     refreshLogs: fetchJobLogs,
     removeLogs: removeJobLogs,
     withLogsRefreshBtn: true,
-    withoutExpandButton:
-      params.pageTab === MONITOR_WORKFLOWS_TAB && !params.workflowId
+    withoutExpandButton: pageTab === MONITOR_WORKFLOWS_TAB && !workflowId
   }
 }
 

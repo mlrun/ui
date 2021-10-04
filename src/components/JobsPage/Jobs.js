@@ -9,6 +9,7 @@ import JobsPanel from '../JobsPanel/JobsPanel'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Workflow from '../Workflow/Workflow'
+import Details from '../Details/Details'
 
 import detailsActions from '../../actions/details'
 import filtersActions from '../../actions/filters'
@@ -16,12 +17,10 @@ import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import workflowsActions from '../../actions/workflow'
 
-import getState from '../../utils/getState.js'
-import { generateKeyValues, parseKeyValues } from '../../utils'
+import { generateKeyValues } from '../../utils'
 import { generatePageData } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import {
   DANGER_BUTTON,
@@ -34,12 +33,14 @@ import {
   TERTIARY_BUTTON
 } from '../../constants'
 import { isDemoMode } from '../../utils/helper'
+import { parseJob } from '../../utils/parseJob'
 
 const Jobs = ({
   abortJob,
   appStore,
   editJob,
   editJobFailure,
+  fetchJob,
   fetchJobFunction,
   fetchJobLogs,
   fetchJobPods,
@@ -231,7 +232,7 @@ const Jobs = ({
 
   const pageData = useCallback(
     generatePageData(
-      match.params,
+      match.params.pageTab,
       location.search,
       onRemoveScheduledJob,
       handleRunJob,
@@ -243,11 +244,13 @@ const Jobs = ({
       appStore.frontendSpec.abortable_function_kinds,
       fetchJobLogs,
       removeJobLogs,
-      !isEveryObjectValueEmpty(selectedJob)
+      !isEmpty(selectedJob),
+      match.params.workflowId
     ),
     [
-      match.params,
+      match.params.pageTab,
       location.search,
+      match.params.workflowId,
       appStore.frontendSpec.jobs_dashboard_url,
       selectedJob
     ]
@@ -261,53 +264,7 @@ const Jobs = ({
         match.params.pageTab === SCHEDULE_TAB
       )
         .then(jobs => {
-          const newJobs = jobs.map(job => {
-            if (match.params.pageTab === SCHEDULE_TAB) {
-              return {
-                createdTime: new Date(job.creation_time),
-                func: job.scheduled_object.task.spec.function,
-                name: job.name,
-                nextRun: new Date(job.next_run_time),
-                lastRunUri: job.last_run_uri,
-                scheduled_object: job.scheduled_object,
-                start_time: new Date(job.last_run?.status.start_time),
-                state: getState(job.last_run?.status.state, JOBS_PAGE, 'job'),
-                type: job.kind === 'pipeline' ? 'workflow' : job.kind,
-                project: job.project,
-                ui: {
-                  originalContent: job
-                }
-              }
-            } else {
-              return {
-                uid: job.metadata.uid,
-                iteration: job.metadata.iteration,
-                iterationStats: job.status.iterations || [],
-                iterations: [],
-                startTime: new Date(job.status.start_time),
-                state: getState(job.status.state, JOBS_PAGE, 'job'),
-                name: job.metadata.name,
-                labels: parseKeyValues(job.metadata.labels || {}),
-                logLevel: job.spec.log_level,
-                inputs: job.spec.inputs || {},
-                parameters: parseKeyValues(job.spec.parameters || {}),
-                results: job.status.results || {},
-                resultsChips: parseKeyValues(job.status.results || {}),
-                artifacts: job.status.artifacts || [],
-                outputPath: job.spec.output_path,
-                owner: job.metadata.labels?.owner,
-                updated: new Date(job.status.last_update),
-                function: job?.spec?.function ?? '',
-                project: job.metadata.project,
-                hyperparams: job.spec?.hyperparams || {},
-                ui: {
-                  originalContent: job
-                }
-              }
-            }
-          })
-
-          return setJobs(newJobs)
+          return setJobs(jobs.map(job => parseJob(job, match.params.pageTab)))
         })
         .catch(error => {
           setNotification({
@@ -329,14 +286,16 @@ const Jobs = ({
 
   useEffect(() => {
     if (!isEmpty(selectedJob) && match.params.pageTab === MONITOR_JOBS_TAB) {
-      removePods()
       fetchJobPods(match.params.projectName, selectedJob.uid)
 
       const interval = setInterval(() => {
         fetchJobPods(match.params.projectName, selectedJob.uid)
       }, 30000)
 
-      return () => clearInterval(interval)
+      return () => {
+        removePods()
+        clearInterval(interval)
+      }
     }
   }, [
     fetchJobPods,
@@ -353,30 +312,38 @@ const Jobs = ({
   }, [history, match, pageData.detailsMenu])
 
   useEffect(() => {
-    if (match.params.jobId && jobs.some(job => job.uid) && jobs.length > 0) {
-      let item = jobs.find(item => item.uid === match.params.jobId)
-
-      if (!item) {
-        const urlArray = match.url.split('/')
-        const newUrl = urlArray.slice(0, -2).join('/')
-
-        return history.replace(newUrl)
-      }
-
-      setSelectedJob(item)
-    } else {
+    if (match.params.jobId && isEmpty(selectedJob)) {
+      fetchJob(match.params.projectName, match.params.jobId)
+        .then(job => {
+          setSelectedJob(parseJob(job))
+        })
+        .catch(error => {
+          setNotification({
+            status: error?.response?.status || 400,
+            id: Math.random(),
+            message: 'Failed to fetch job'
+          })
+        })
+    } else if (!isEmpty(selectedJob) && !match.params.jobId) {
       setSelectedJob({})
     }
-  }, [history, jobs, match.params.jobId, match.url, setSelectedJob])
+  }, [
+    fetchJob,
+    match.params.jobId,
+    match.params.projectName,
+    selectedJob,
+    setNotification
+  ])
 
   useEffect(() => {
-    refreshJobs()
+    if (isEmpty(selectedJob) && !match.params.jobId) {
+      refreshJobs()
 
-    return () => {
-      setSelectedJob({})
-      setJobs([])
+      return () => {
+        setJobs([])
+      }
     }
-  }, [refreshJobs])
+  }, [match.params.jobId, refreshJobs, selectedJob])
 
   const getWorkflows = useCallback(() => {
     fetchWorkflows(match.params.projectName)
@@ -385,7 +352,10 @@ const Jobs = ({
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
       setFilters({ groupBy: 'none' })
-    } else if (match.params.pageTab === MONITOR_JOBS_TAB) {
+    } else if (
+      match.params.pageTab === MONITOR_JOBS_TAB &&
+      !match.params.jobId
+    ) {
       if (!isDemoMode(location.search)) {
         getWorkflows()
       }
@@ -404,7 +374,8 @@ const Jobs = ({
     match.params.workflowId,
     location.search,
     subPage,
-    setFilters
+    setFilters,
+    match.params.jobId
   ])
 
   const handleSelectJob = item => {
@@ -465,6 +436,16 @@ const Jobs = ({
             refreshJobs={refreshJobs}
             selectedJob={selectedJob}
             setLoading={setLoading}
+          />
+        ) : !isEmpty(selectedJob) ? (
+          <Details
+            actionsMenu={pageData.actionsMenu}
+            detailsMenu={pageData.detailsMenu}
+            handleCancel={handleCancel}
+            isDetailsScreen
+            match={match}
+            pageData={pageData}
+            selectedItem={selectedJob}
           />
         ) : null}
       </Content>
