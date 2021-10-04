@@ -40,6 +40,7 @@ export const pageDataInitialState = {
   filters: [],
   infoHeaders: [],
   page: '',
+  selectedRowData: {},
   registerArtifactDialogTitle: '',
   tabs: []
 }
