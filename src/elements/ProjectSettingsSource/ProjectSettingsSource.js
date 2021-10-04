@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { SOURCE_URL } from '../../components/ProjectSettings/projectSettings.util'
 
@@ -55,10 +57,12 @@ const ProjectSettingsSource = React.forwardRef(
               ) : (
                 <span>Click to add source URL</span>
               )}
-              <Edit
-                className="settings__source-edit"
-                onClick={() => handleEditProject(SOURCE_URL)}
-              />
+              <Tooltip template={<TextTooltipTemplate text="Edit" />}>
+                <Edit
+                  className="settings__source-edit"
+                  onClick={() => handleEditProject(SOURCE_URL)}
+                />
+              </Tooltip>
             </>
           )}
         </div>

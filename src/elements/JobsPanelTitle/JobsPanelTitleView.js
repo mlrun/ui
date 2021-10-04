@@ -67,11 +67,13 @@ const JobsPanelTitleView = ({
           closeOnBlur={!isNameValid ? null : () => setEditTitle(false)}
           icon={
             editModeEnabled ? (
-              <Edit
-                onClick={() => {
-                  setEditTitle(true)
-                }}
-              />
+              <Tooltip template={<TextTooltipTemplate text="Edit" />}>
+                <Edit
+                  onClick={() => {
+                    setEditTitle(true)
+                  }}
+                />
+              </Tooltip>
             ) : null
           }
           iconClassName={accordionIconClassNames}

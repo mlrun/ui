@@ -104,7 +104,9 @@ const JobsPanelTableRow = ({
                   handleDelete(contentItem, section, index)
                 }}
               >
-                <Delete />
+                <Tooltip template={<TextTooltipTemplate text="Delete" />}>
+                  <Delete />
+                </Tooltip>
               </button>
             )
           )}

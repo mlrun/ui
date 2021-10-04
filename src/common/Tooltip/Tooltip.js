@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 import classnames from 'classnames'
 import { debounce } from 'lodash'
+import { createPortal } from 'react-dom'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
@@ -128,24 +129,27 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
       >
         {children}
       </div>
-      <CSSTransition
-        in={show}
-        timeout={duration}
-        classNames="fade"
-        unmountOnExit
-      >
-        <div
-          data-testid="tooltip"
-          ref={tooltipRef}
-          style={{
-            ...defaultStyle,
-            ...style
-          }}
-          className="tooltip"
+      {createPortal(
+        <CSSTransition
+          in={show}
+          timeout={duration}
+          classNames="fade"
+          unmountOnExit
         >
-          {template}
-        </div>
-      </CSSTransition>
+          <div
+            data-testid="tooltip"
+            ref={tooltipRef}
+            style={{
+              ...defaultStyle,
+              ...style
+            }}
+            className="tooltip"
+          >
+            {template}
+          </div>
+        </CSSTransition>,
+        document.getElementById('overlay_container')
+      )}
     </>
   )
 }
