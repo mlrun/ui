@@ -1,5 +1,6 @@
 import React, { useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useLocation } from 'react-router-dom'
 
 import JobsPanelAdvancedView from './JobsPanelAdvancedView'
 
@@ -34,6 +35,7 @@ const JobsPanelAdvanced = ({
     envVariablesValue: true,
     secretsSourceValue: true
   })
+  const location = useLocation()
 
   const handleAddNewItem = isEnv => {
     if (isEnv) {
@@ -161,6 +163,7 @@ const JobsPanelAdvanced = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handleResetForm={handleResetForm}
+      location={location}
       match={match}
       panelState={panelState}
       setValidation={setValidation}
