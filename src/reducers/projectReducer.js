@@ -47,6 +47,7 @@ import {
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
+  REMOVE_PROJECT_COUNTERS,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
@@ -711,9 +712,9 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         projectCounters: {
-          ...state.projectCounters,
           data: payload,
-          loading: false
+          loading: false,
+          error: null
         }
       }
     case FETCH_PROJECT_WORKFLOWS_BEGIN:
@@ -759,6 +760,15 @@ export default (state = initialState, { type, payload }) => {
         newProject: {
           name: '',
           description: ''
+        }
+      }
+    case REMOVE_PROJECT_COUNTERS:
+      return {
+        ...state,
+        projectCounters: {
+          error: null,
+          loading: false,
+          data: []
         }
       }
     case REMOVE_PROJECT_DATA:

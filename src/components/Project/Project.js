@@ -42,6 +42,7 @@ const Project = ({
   projectStore,
   removeFeatureStoreError,
   removeNewFeatureSet,
+  removeProjectCounters,
   removeProjectData,
   setProjectData
 }) => {
@@ -234,15 +235,19 @@ const Project = ({
 
   useEffect(() => {
     fetchProjectData()
+    fetchProjectCounters(match.params.projectName)
 
     return () => {
       resetProjectData()
+      removeProjectCounters()
     }
-  }, [fetchProjectData, removeProjectData, resetProjectData])
-
-  useEffect(() => {
-    fetchProjectCounters(match.params.projectName)
-  }, [fetchProjectCounters, match.params.projectName])
+  }, [
+    fetchProjectCounters,
+    fetchProjectData,
+    match.params.projectName,
+    removeProjectCounters,
+    resetProjectData
+  ])
 
   const handleSetProjectData = useCallback(() => {
     const data = {

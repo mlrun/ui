@@ -232,20 +232,20 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="main-info__statistics-section">
                 <ProjectArtifacts
+                  counterValue={projectCounters.data.models_count ?? 0}
                   link={`/projects/${match.params.projectName}/models`}
-                  projectCounter={projectCounters.data.models_count ?? 0}
                   projectCounters={projectCounters}
                   title="Models"
                 />
                 <ProjectArtifacts
+                  counterValue={projectCounters.data.feature_sets_count ?? 0}
                   link={`/projects/${match.params.projectName}/feature-store`}
-                  projectCounter={projectCounters.data.feature_sets_count ?? 0}
                   projectCounters={projectCounters}
                   title="Feature sets"
                 />
                 <ProjectArtifacts
+                  counterValue={projectCounters.data.files_count ?? 0}
                   link={`/projects/${match.params.projectName}/files`}
-                  projectCounter={projectCounters.data.files_count ?? 0}
                   projectCounters={projectCounters}
                   title="Files"
                 />
