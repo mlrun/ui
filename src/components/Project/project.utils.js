@@ -64,7 +64,8 @@ export const generateCreateNewOptions = (
   setArtifactKind,
   setIsPopupDialogOpen,
   location,
-  setCreateFeatureSetsPanelIsOpen
+  setCreateFeatureSetsPanelIsOpen,
+  setIsNewFunctionPopUpOpen
 ) => [
   {
     label: 'Job',
@@ -75,7 +76,14 @@ export const generateCreateNewOptions = (
       )
   },
   {
-    label: 'Feature set',
+    label: 'ML Function',
+    id: 'mlFunction',
+    handler: () => {
+      setIsNewFunctionPopUpOpen(true)
+    }
+  },
+  {
+    label: 'Feature Set',
     id: 'featureSet',
     handler: () => setCreateFeatureSetsPanelIsOpen(true),
     hidden: !isDemoMode(location.search)

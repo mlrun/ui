@@ -99,6 +99,7 @@ const Functions = ({
         <NewFunctionPopUp
           action={action}
           currentProject={match.params.projectName}
+          isCustomPosition
           setFunctionsPanelIsOpen={setFunctionsPanelIsOpen}
         />
       )
