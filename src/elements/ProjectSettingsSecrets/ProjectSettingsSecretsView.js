@@ -85,7 +85,8 @@ const ProjectSettingsSecretsView = ({
 }
 
 ProjectSettingsSecretsView.defaultProps = {
-  error: null
+  error: null,
+  loading: null
 }
 
 ProjectSettingsSecretsView.propTypes = {
@@ -94,7 +95,7 @@ ProjectSettingsSecretsView.propTypes = {
   handleEditClick: PropTypes.func.isRequired,
   handleSecretDelete: PropTypes.func.isRequired,
   isCreateNewSecretDialogOpen: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
   match: PropTypes.object.isRequired,
   secrets: PropTypes.object.isRequired,
   setCreateNewSecretDialogOpen: PropTypes.func.isRequired,

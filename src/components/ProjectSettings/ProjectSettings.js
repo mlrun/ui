@@ -15,7 +15,6 @@ import './projectSettings.scss'
 
 const ProjectSettings = ({
   fetchProject,
-  fetchProjectSecrets,
   match,
   projectStore,
   removeProjectData
