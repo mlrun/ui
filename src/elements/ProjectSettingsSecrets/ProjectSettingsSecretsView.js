@@ -24,11 +24,6 @@ const ProjectSettingsSecretsView = ({
   return (
     <>
       <div className="settings__card">
-        <div className="card__header">Secrets</div>
-        <div className="card__subtitle">
-          These secrets will automatically be available to all jobs belonging to
-          this project.
-        </div>
         {loading ? (
           <Loader />
         ) : error ? (
@@ -36,30 +31,37 @@ const ProjectSettingsSecretsView = ({
             <h1>{error}</h1>
           </div>
         ) : (
-          <div className="card__content">
-            {secrets?.['secret_keys'] &&
-              secrets['secret_keys'].map((secret, index) => (
-                <ProjectSecretRow
-                  handleEditClick={handleEditClick}
-                  handleSecretDelete={secret =>
-                    handleSecretDelete(secret, index)
-                  }
-                  key={index}
-                  secret={secret}
-                />
-              ))}
-            <div className="secret__row">
-              <button
-                className="new-secret__button"
-                onClick={() => {
-                  setCreateNewSecretDialogOpen(true)
-                }}
-              >
-                <Plus />
-                Add secret
-              </button>
+          <>
+            <div className="card__header">Secrets</div>
+            <div className="card__subtitle">
+              These secrets will automatically be available to all jobs
+              belonging to this project.
             </div>
-          </div>
+            <div className="card__content">
+              {secrets?.['secret_keys'] &&
+                secrets['secret_keys'].map((secret, index) => (
+                  <ProjectSecretRow
+                    handleEditClick={handleEditClick}
+                    handleSecretDelete={secret =>
+                      handleSecretDelete(secret, index)
+                    }
+                    key={index}
+                    secret={secret}
+                  />
+                ))}
+              <div className="secret__row">
+                <button
+                  className="new-secret__button"
+                  onClick={() => {
+                    setCreateNewSecretDialogOpen(true)
+                  }}
+                >
+                  <Plus />
+                  Add secret
+                </button>
+              </div>
+            </div>
+          </>
         )}
       </div>
       {isCreateNewSecretDialogOpen && (
@@ -91,7 +93,7 @@ ProjectSettingsSecretsView.defaultProps = {
 
 ProjectSettingsSecretsView.propTypes = {
   editableSecret: PropTypes.string.isRequired,
-  error: PropTypes.bool,
+  error: PropTypes.string,
   handleEditClick: PropTypes.func.isRequired,
   handleSecretDelete: PropTypes.func.isRequired,
   isCreateNewSecretDialogOpen: PropTypes.bool.isRequired,

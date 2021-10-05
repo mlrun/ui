@@ -13,6 +13,7 @@ import {
   FEATURE_SETS_TAB,
   MODELS_TAB,
   MONITOR_JOBS_TAB,
+  PROJECTS_SETTINGS_GENERAL_TAB,
   WORKFLOW_SUB_PAGE
 } from './constants'
 
@@ -54,8 +55,13 @@ const App = () => {
             />
             <Route
               exact
-              path="/projects/:projectName/settings"
+              path="/projects/:projectName/settings/:pageTab"
               render={routeProps => <ProjectSettings {...routeProps} />}
+            />
+            <Redirect
+              exact
+              from="/projects/:projectName/settings"
+              to={`/projects/:projectName/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
             />
             <Route
               path="/projects/:projectName/jobs/:pageTab/create-new-job"

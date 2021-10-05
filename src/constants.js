@@ -27,6 +27,9 @@ export const PANEL_CREATE_MODE = 'CREATE'
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
+export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
+export const PROJECTS_SETTINGS_GENERAL_TAB = 'general'
+export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
 
 export const JOBS_PAGE = 'JOBS'
 export const SCHEDULE_TAB = 'schedule'

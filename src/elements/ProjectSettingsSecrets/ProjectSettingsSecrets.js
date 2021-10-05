@@ -36,7 +36,7 @@ const ProjectSettingsSecrets = ({
     return () => {
       removeProjectData()
     }
-  }, [fetchSecrets, removeProjectData])
+  }, [fetchSecrets, removeProjectData, match.params.projectName])
 
   const handleSecretDelete = (secret, index) => {
     const filteredArray = projectStore.project.secrets?.data[

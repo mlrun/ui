@@ -15,8 +15,10 @@ import projectsAction from '../../actions/projects'
 import './projectSettingsGeneral.scss'
 
 const ProjectSettingsGeneral = ({
+  fetchProject,
   match,
   projectStore,
+  removeProjectData,
   setProjectParams,
   setProjectSettings
 }) => {
@@ -32,6 +34,19 @@ const ProjectSettingsGeneral = ({
   })
 
   const inputRef = React.createRef()
+
+  useEffect(() => {
+    fetchProject(match.params.projectName)
+
+    return () => {
+      removeProjectData()
+    }
+  }, [
+    removeProjectData,
+    match.params.pageTab,
+    match.params.projectName,
+    fetchProject
+  ])
 
   const generalParams = useMemo(
     () =>
@@ -243,6 +258,7 @@ const ProjectSettingsGeneral = ({
     <ProjectSettingsGeneralView
       artifactPath={projectStore.project.data?.spec.artifact_path ?? ''}
       editProject={editProject}
+      error={projectStore.project?.error}
       generalParams={generalParams}
       handleAddNewParameter={handleAddNewParameter}
       handleDeleteParameter={handleDeleteParameter}
@@ -250,6 +266,7 @@ const ProjectSettingsGeneral = ({
       handleEditProject={handleEditProject}
       handleOnChangeSettings={handleOnChangeSettings}
       handleOnKeyDown={handleOnKeyDown}
+      loading={projectStore.project?.loading}
       ref={inputRef}
       source={projectStore.project.data?.spec.source ?? ''}
     />
