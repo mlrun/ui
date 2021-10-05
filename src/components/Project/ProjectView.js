@@ -4,11 +4,6 @@ import { Link, useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
 
-import { DATASETS_TAB } from '../../constants'
-import { launchIDEOptions } from './project.utils'
-import { groupByUniqName } from '../../utils/groupByUniqName'
-import { formatDatetime } from '../../utils'
-
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import Loader from '../../common/Loader/Loader'
@@ -27,9 +22,18 @@ import ProjectGoals from './ProjectGoals/ProjectGoals'
 import ProjectLinks from './ProjectLinks/ProjectLinks'
 import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
+import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
+import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
+
+import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
+import { launchIDEOptions } from './project.utils'
+import { groupByUniqName } from '../../utils/groupByUniqName'
+import { formatDatetime } from '../../utils'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
+
+import './project.scss'
 
 const ProjectView = React.forwardRef(
   (
@@ -38,8 +42,10 @@ const ProjectView = React.forwardRef(
       changeMembersCallback,
       changeOwnerCallback,
       closeFeatureSetPanel,
+      closeFunctionsPanel,
       createFeatureSetPanelIsOpen,
       createFeatureSetSuccess,
+      createFunctionSuccess,
       createNewOptions,
       editProject,
       fetchProjectFeatureSets,
@@ -47,11 +53,14 @@ const ProjectView = React.forwardRef(
       fetchProjectModels,
       frontendSpec,
       handleAddProjectLabel,
+      handleDeployFunctionSuccess,
+      handleDeployFunctionFailure,
       handleEditProject,
       handleLaunchIDE,
       handleOnChangeProject,
       handleOnKeyDown,
       handleUpdateProjectLabels,
+      isNewFunctionPopUpOpen,
       isPopupDialogOpen,
       links,
       match,
@@ -59,10 +68,13 @@ const ProjectView = React.forwardRef(
       membersState,
       projectLabels,
       refresh,
+      setIsNewFunctionPopUpOpen,
       setIsPopupDialogOpen,
       setShowChangeOwner,
+      setShowFunctionsPanel,
       setShowManageMembers,
       showChangeOwner,
+      showFunctionsPanel,
       showManageMembers,
       visibleChipsMaxLength
     },
@@ -296,6 +308,25 @@ const ProjectView = React.forwardRef(
             project={match.params.projectName}
           />
         )}
+        {isNewFunctionPopUpOpen && (
+          <NewFunctionPopUp
+            closePopUp={() => setIsNewFunctionPopUpOpen(false)}
+            currentProject={match.params.projectName}
+            isOpened={isNewFunctionPopUpOpen}
+            setFunctionsPanelIsOpen={setShowFunctionsPanel}
+          />
+        )}
+        {showFunctionsPanel && (
+          <FunctionsPanel
+            closePanel={closeFunctionsPanel}
+            createFunctionSuccess={createFunctionSuccess}
+            handleDeployFunctionFailure={handleDeployFunctionFailure}
+            handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+            match={match}
+            mode={PANEL_CREATE_MODE}
+            project={match.params.projectName}
+          />
+        )}
       </div>
     )
   }
@@ -310,29 +341,37 @@ ProjectView.propTypes = {
   changeMembersCallback: PropTypes.func.isRequired,
   changeOwnerCallback: PropTypes.func.isRequired,
   closeFeatureSetPanel: PropTypes.func.isRequired,
+  closeFunctionsPanel: PropTypes.func.isRequired,
   createFeatureSetPanelIsOpen: PropTypes.bool.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
+  createFunctionSuccess: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
   fetchProjectFeatureSets: PropTypes.func.isRequired,
   fetchProjectFiles: PropTypes.func.isRequired,
   fetchProjectModels: PropTypes.func.isRequired,
   handleAddProjectLabel: PropTypes.func.isRequired,
+  handleDeployFunctionSuccess: PropTypes.func.isRequired,
+  handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   handleOnChangeProject: PropTypes.func.isRequired,
   handleOnKeyDown: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,
+  isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
   links: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
   projectLabels: PropTypes.array.isRequired,
+  setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowChangeOwner: PropTypes.func.isRequired,
+  setShowFunctionsPanel: PropTypes.func.isRequired,
   setShowManageMembers: PropTypes.func.isRequired,
   showChangeOwner: PropTypes.bool,
+  showFunctionsPanel: PropTypes.bool.isRequired,
   showManageMembers: PropTypes.bool,
   visibleChipsMaxLength: PropTypes.number
 }

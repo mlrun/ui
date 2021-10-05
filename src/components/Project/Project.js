@@ -25,11 +25,11 @@ import {
   membersActions,
   membersReducer
 } from '../../elements/MembersPopUp/membersReducer'
+import notificationActions from '../../actions/notification'
+import functionsActions from '../../actions/functions'
 
 import { ReactComponent as User } from '../../images/user.svg'
 import { ReactComponent as Users } from '../../images/users.svg'
-
-import './project.scss'
 
 const Project = ({
   addProjectLabel,
@@ -39,12 +39,17 @@ const Project = ({
   fetchProject,
   fetchProjectFeatureSets,
   fetchProjectFiles,
+  fetchProjectFunctions,
   fetchProjectModels,
+  functionsStore,
   match,
   projectStore,
   removeFeatureStoreError,
+  removeFunctionsError,
+  removeNewFunction,
   removeNewFeatureSet,
   removeProjectData,
+  setNotification,
   setProjectData
 }) => {
   const [membersState, membersDispatch] = useReducer(
@@ -74,6 +79,8 @@ const Project = ({
   const [showManageMembers, setShowManageMembers] = useState(false)
   const [showChangeOwner, setShowChangeOwner] = useState(false)
   const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
+  const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
+  const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const history = useHistory()
   const inputRef = React.createRef()
   const location = useLocation()
@@ -86,7 +93,8 @@ const Project = ({
       setArtifactKind,
       setIsPopupDialogOpen,
       location,
-      setCreateFeatureSetPanelIsOpen
+      setCreateFeatureSetPanelIsOpen,
+      setIsNewFunctionPopUpOpen
     )
 
     return {
@@ -339,9 +347,110 @@ const Project = ({
     }
   }
 
+  const closeFunctionsPanel = () => {
+    setShowFunctionsPanel(false)
+    removeNewFunction()
+
+    if (functionsStore.error) {
+      removeFunctionsError()
+    }
+  }
+
   const createFeatureSetSuccess = async () => {
     setCreateFeatureSetPanelIsOpen(false)
     removeNewFeatureSet()
+  }
+
+  const createFunctionSuccess = async () => {
+    setShowFunctionsPanel(false)
+    removeNewFunction()
+
+    return setNotification({
+      status: 200,
+      id: Math.random(),
+      message: 'Function created successfully'
+    })
+  }
+
+  const handleDeployFunctionSuccess = async ready => {
+    let { name, tag } = functionsStore.newFunction.metadata
+    const tab = ready === false ? 'build-log' : 'overview'
+
+    tag ||= 'latest'
+
+    setShowFunctionsPanel(false)
+    removeNewFunction()
+
+    const funcs = await fetchProjectFunctions(match.params.projectName).catch(
+      () => {
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Function deployment initiated successfully'
+        })
+
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Failed to fetch functions'
+        })
+      }
+    )
+
+    if (funcs) {
+      const currentItem = funcs.find(func => {
+        return func.metadata.name === name && func.metadata.tag === tag
+      })
+
+      history.push(
+        `/projects/${match.params.projectName}/functions/${currentItem.metadata.hash}/${tab}`
+      )
+
+      return setNotification({
+        status: 200,
+        id: Math.random(),
+        message: 'Function deployment initiated successfully'
+      })
+    }
+  }
+
+  const handleDeployFunctionFailure = async () => {
+    const { name, tag } = functionsStore.newFunction.metadata
+
+    setShowFunctionsPanel(false)
+    removeNewFunction()
+
+    const funcs = await fetchProjectFunctions(match.params.projectName).catch(
+      () => {
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Function deployment failed to initiate'
+        })
+
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          message: 'Failed to fetch functions'
+        })
+      }
+    )
+
+    if (funcs) {
+      const currentItem = funcs.find(func => {
+        return func.metadata.name === name && func.metadata.tag === tag
+      })
+
+      history.push(
+        `/projects/${match.params.projectName}/functions/${currentItem.metadata.hash}/overview`
+      )
+
+      return setNotification({
+        status: 400,
+        id: Math.random(),
+        message: 'Function deployment failed to initiate'
+      })
+    }
   }
 
   const handleAddProjectLabel = (label, labels) => {
@@ -459,8 +568,10 @@ const Project = ({
       changeMembersCallback={changeMembersCallback}
       changeOwnerCallback={changeOwnerCallback}
       closeFeatureSetPanel={closeFeatureSetPanel}
+      closeFunctionsPanel={closeFunctionsPanel}
       createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
       createFeatureSetSuccess={createFeatureSetSuccess}
+      createFunctionSuccess={createFunctionSuccess}
       createNewOptions={createNewOptions}
       editProject={editProject}
       fetchProjectFeatureSets={fetchProjectFeatureSets}
@@ -468,11 +579,14 @@ const Project = ({
       fetchProjectModels={fetchProjectModels}
       frontendSpec={appStore.frontendSpec}
       handleAddProjectLabel={handleAddProjectLabel}
+      handleDeployFunctionFailure={handleDeployFunctionFailure}
+      handleDeployFunctionSuccess={handleDeployFunctionSuccess}
       handleEditProject={handleEditProject}
       handleLaunchIDE={handleLaunchIDE}
       handleOnChangeProject={handleOnChangeProject}
       handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
+      isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
       links={links}
       match={match}
@@ -481,10 +595,13 @@ const Project = ({
       projectLabels={projectLabels}
       ref={inputRef}
       refresh={handleRefresh}
+      setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
       setIsPopupDialogOpen={setIsPopupDialogOpen}
       setShowChangeOwner={setShowChangeOwner}
+      setShowFunctionsPanel={setShowFunctionsPanel}
       setShowManageMembers={setShowManageMembers}
       showChangeOwner={showChangeOwner}
+      showFunctionsPanel={showFunctionsPanel}
       showManageMembers={showManageMembers}
       visibleChipsMaxLength={visibleChipsMaxLength}
     />
@@ -496,13 +613,16 @@ Project.propTypes = {
 }
 
 export default connect(
-  ({ appStore, featureStore, projectStore }) => ({
+  ({ appStore, functionsStore, featureStore, projectStore }) => ({
     appStore,
     featureStore,
+    functionsStore,
     projectStore
   }),
   {
     ...featureStoreActions,
-    ...projectsAction
+    ...functionsActions,
+    ...projectsAction,
+    ...notificationActions
   }
 )(Project)
