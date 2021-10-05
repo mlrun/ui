@@ -100,7 +100,7 @@ const ProjectSettingsGeneral = ({
         [parameter.key]: parameter.value
       })
     },
-    [projectStore.project.data.spec.params, setNewProjectParams]
+    [projectStore.project.data, setNewProjectParams]
   )
 
   const handleDeleteParameter = useCallback(
@@ -113,7 +113,7 @@ const ProjectSettingsGeneral = ({
 
       setNewProjectParams(paramsArray)
     },
-    [projectStore.project.data.spec.params, setNewProjectParams]
+    [projectStore.project.data, setNewProjectParams]
   )
 
   const handleEditParameter = useCallback(
@@ -131,7 +131,7 @@ const ProjectSettingsGeneral = ({
         ...paramsArray
       })
     },
-    [projectStore.project.data.spec.params, setNewProjectParams]
+    [projectStore.project.data, setNewProjectParams]
   )
 
   const handleEditProject = useCallback(inputName => {
