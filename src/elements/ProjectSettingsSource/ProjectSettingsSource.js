@@ -41,7 +41,7 @@ const ProjectSettingsSource = React.forwardRef(
             <>
               {editSourceData.value || settingsSource ? (
                 <div>
-                  <p className="card__subtitle">Source URL</p>
+                  <p className="settings__card-subtitle">Source URL</p>
                   <a
                     href={editSourceData.value || settingsSource}
                     onClick={event => event.stopPropagation()}

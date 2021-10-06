@@ -6,14 +6,14 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  min-width: 900px;
+  min-width: 600px;
 
   &__content {
+    position: relative;
     display: flex;
     flex: 1 1;
     flex-direction: row;
-    justify-content: space-between;
-    padding: 45px;
+    margin: 45px 25px 25px;
   }
 
   &__header {
@@ -23,14 +23,35 @@
   }
 
   &__card {
-    width: 50%;
+    &-content {
+      max-width: 800px;
+    }
+
+    width: 100%;
     padding: 40px;
     background-color: rgba($white, 0.84);
     border-radius: 4px;
-  }
 
-  &__card:first-child {
-    margin-right: 45px;
+    &-header {
+      margin-bottom: 25px;
+      color: $primary;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 23px;
+    }
+
+    &-divider {
+      margin: 16px 0;
+      border-top: $primaryBorder;
+    }
+
+    &-subtitle {
+      margin: 0 0 5px;
+      color: rgba($mulledWine, 0.88);
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+    }
   }
 
   &__description {
@@ -40,29 +61,6 @@
     font-size: 14px;
     line-height: 16px;
     cursor: pointer;
-  }
-}
-
-.card {
-  &__header {
-    margin-bottom: 25px;
-    color: $primary;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 23px;
-  }
-
-  &__divider {
-    margin: 16px 0;
-    border-top: $primaryBorder;
-  }
-
-  &__subtitle {
-    margin-bottom: 5px;
-    color: rgba($mulledWine, 0.88);
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
   }
 }
 
