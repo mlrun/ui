@@ -23,6 +23,10 @@
   }
 
   &__card {
+    &-content {
+      max-width: 800px;
+    }
+
     width: 100%;
     padding: 40px;
     background-color: rgba($white, 0.84);

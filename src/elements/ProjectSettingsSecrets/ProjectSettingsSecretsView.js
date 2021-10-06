@@ -32,12 +32,12 @@ const ProjectSettingsSecretsView = ({
           </div>
         ) : (
           <>
-            <div className="card__header">Secrets</div>
-            <div className="card__subtitle">
+            <div className="settings__card-header">Secrets</div>
+            <div className="settings__card-subtitle">
               These secrets will automatically be available to all jobs
               belonging to this project.
             </div>
-            <div className="card__content">
+            <div className="settings__card-content">
               {secrets?.['secret_keys'] &&
                 secrets['secret_keys'].map((secret, index) => (
                   <ProjectSecretRow
