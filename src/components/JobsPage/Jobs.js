@@ -140,6 +140,12 @@ const Jobs = ({
     })
   }
 
+  const handleActionsMenuClick = () => {
+    history.push(
+      `/projects/${match.params.projectName}/jobs/${match.params.pageTab}/create-new-job`
+    )
+  }
+
   const handleRerunJob = async job => {
     const [project = '', func = ''] = job?.function?.split('/') ?? []
     const functionData = await fetchJobFunction(
@@ -413,6 +419,7 @@ const Jobs = ({
     <div className="content-wrapper">
       <Content
         content={jobs}
+        handleActionsMenuClick={handleActionsMenuClick}
         handleCancel={handleCancel}
         handleSelectItem={handleSelectJob}
         loading={jobsStore.loading}

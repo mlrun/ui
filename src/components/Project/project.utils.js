@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
-import { isDemoMode } from '../../utils/helper'
 
 import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
 import { ReactComponent as VSCode } from '../../images/vs-code.svg'
@@ -63,7 +62,6 @@ export const generateCreateNewOptions = (
   match,
   setArtifactKind,
   setIsPopupDialogOpen,
-  location,
   setCreateFeatureSetsPanelIsOpen,
   setIsNewFunctionPopUpOpen
 ) => [
@@ -85,8 +83,7 @@ export const generateCreateNewOptions = (
   {
     label: 'Feature Set',
     id: 'featureSet',
-    handler: () => setCreateFeatureSetsPanelIsOpen(true),
-    hidden: !isDemoMode(location.search)
+    handler: () => setCreateFeatureSetsPanelIsOpen(true)
   },
   {
     label: 'Register File',

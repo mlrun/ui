@@ -18,7 +18,7 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Button from '../../common/Button/Button'
 
-import { pageData, projectsSortOptions, projectsStates } from './projectsData'
+import { projectsSortOptions, projectsStates } from './projectsData'
 import { TERTIARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
@@ -97,11 +97,9 @@ const ProjectsView = ({
       <div className="projects__header">
         <Breadcrumbs match={match} />
         <PageActionsMenu
-          match={match}
+          actionsMenuHeader={'New Project'}
           onClick={() => setCreateProject(true)}
-          pageData={pageData}
-          registerDialog
-          registerDialogHeader="New Project"
+          showActionsMenu
         />
       </div>
       <div className="projects__wrapper">
