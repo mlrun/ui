@@ -31,6 +31,7 @@ import {
 } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Back } from '../../images/back-arrow.svg'
 
 const DetailsView = React.forwardRef(
   (
@@ -45,12 +46,14 @@ const DetailsView = React.forwardRef(
       detailsStore,
       handleCancel,
       handleShowWarning,
+      isDetailsScreen,
       leavePage,
       match,
       pageData,
       selectedItem,
       setIteration,
       setRefreshWasHandled,
+      style,
       tabsContent
     },
     ref
@@ -63,13 +66,34 @@ const DetailsView = React.forwardRef(
       selectedItem.state || {}
 
     return (
-      <div className={detailsPanelClassNames} ref={ref}>
+      <div className={detailsPanelClassNames} ref={ref} style={style}>
         {detailsStore.loading && <Loader />}
         {detailsStore.error && (
           <ErrorMessage message={detailsStore.error.message} />
         )}
         <div className="item-header__data">
           <h3 className="item-header__title">
+            {isDetailsScreen && (
+              <Link
+                className="item-header__back-btn"
+                to={location => {
+                  const urlArray = location.pathname.split('/')
+
+                  return urlArray.slice(0, -2).join('/')
+                }}
+                onClick={() => {
+                  if (detailsStore.changes.counter > 0) {
+                    handleShowWarning(true)
+                  } else {
+                    handleCancel()
+                  }
+                }}
+              >
+                <Tooltip template={<TextTooltipTemplate text="Go to list" />}>
+                  <Back />
+                </Tooltip>
+              </Link>
+            )}
             <Tooltip
               template={
                 <TextTooltipTemplate
@@ -260,12 +284,14 @@ DetailsView.propTypes = {
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleShowWarning: PropTypes.func.isRequired,
+  isDetailsScreen: PropTypes.bool.isRequired,
   leavePage: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
   setRefreshWasHandled: PropTypes.func.isRequired,
+  style: PropTypes.shape({}).isRequired,
   tabsContent: PropTypes.element
 }
 

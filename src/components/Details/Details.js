@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useCallback, useRef } from 'react'
+import React, { useEffect, useMemo, useCallback, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { connect, useDispatch } from 'react-redux'
+
+import DetailsView from './DetailsView'
 
 import artifactActions from '../../actions/artifacts'
 import {
@@ -22,8 +24,7 @@ import {
   renderContent
 } from './details.util'
 import detailsActions from '../../actions/details'
-
-import DetailsView from './DetailsView'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import './details.scss'
 
@@ -36,6 +37,7 @@ const Details = ({
   filtersStore,
   getCloseDetailsLink,
   handleCancel,
+  isDetailsScreen,
   match,
   pageData,
   removeInfoContent,
@@ -52,12 +54,21 @@ const Details = ({
   setRefreshWasHandled,
   showWarning
 }) => {
+  const [style, setStyle] = useState({})
   const applyChangesRef = useRef()
   const history = useHistory()
   const dispatch = useDispatch()
   let unblockRootChange = useRef()
   let pathname = useRef()
   const detailsRef = useRef()
+
+  useEffect(() => {
+    if (isDetailsScreen) {
+      setStyle({
+        width: '100%'
+      })
+    }
+  }, [isDetailsScreen])
 
   const handlePreview = useCallback(() => {
     dispatch(
@@ -126,42 +137,44 @@ const Details = ({
   }, [match.params.name, setChangesData])
 
   useEffect(() => {
-    if (pageData.page === JOBS_PAGE) {
-      setInfoContent(generateJobsContent(selectedItem))
-    } else if (
-      pageData.page === ARTIFACTS_PAGE ||
-      pageData.page === FILES_PAGE ||
-      pageData.page === MODELS_PAGE ||
-      match.params.pageTab === DATASETS_TAB
-    ) {
-      setInfoContent(
-        generateArtifactsContent(
-          pageData.page,
-          match.params.pageTab,
-          selectedItem
+    if (!isEveryObjectValueEmpty(selectedItem)) {
+      if (pageData.page === JOBS_PAGE) {
+        setInfoContent(generateJobsContent(selectedItem))
+      } else if (
+        pageData.page === ARTIFACTS_PAGE ||
+        pageData.page === FILES_PAGE ||
+        pageData.page === MODELS_PAGE ||
+        match.params.pageTab === DATASETS_TAB
+      ) {
+        setInfoContent(
+          generateArtifactsContent(
+            pageData.page,
+            match.params.pageTab,
+            selectedItem
+          )
         )
-      )
-    } else if (pageData.page === FUNCTIONS_PAGE) {
-      setInfoContent(generateFunctionsContent(selectedItem))
-    } else if (pageData.page === FEATURE_STORE_PAGE) {
-      setInfoContent(
-        generateFeatureStoreContent(
-          handleAddChip,
-          handleDeleteChip,
-          handleEditChips,
-          handleEditInput,
-          match.params.pageTab,
-          selectedItem
+      } else if (pageData.page === FUNCTIONS_PAGE) {
+        setInfoContent(generateFunctionsContent(selectedItem))
+      } else if (pageData.page === FEATURE_STORE_PAGE) {
+        setInfoContent(
+          generateFeatureStoreContent(
+            handleAddChip,
+            handleDeleteChip,
+            handleEditChips,
+            handleEditInput,
+            match.params.pageTab,
+            selectedItem
+          )
         )
-      )
-    }
-
-    return () => {
-      if (match.params.pageTab === MODELS_TAB) {
-        removeModelFeatureVector()
       }
 
-      removeInfoContent()
+      return () => {
+        if (match.params.pageTab === MODELS_TAB) {
+          removeModelFeatureVector()
+        }
+
+        removeInfoContent()
+      }
     }
   }, [
     detailsStore.changes.counter,
@@ -326,6 +339,7 @@ const Details = ({
       getCloseDetailsLink={getCloseDetailsLink}
       handleCancel={handleCancel}
       handleShowWarning={handleShowWarning}
+      isDetailsScreen={isDetailsScreen}
       leavePage={leavePage}
       match={match}
       pageData={pageData}
@@ -333,6 +347,7 @@ const Details = ({
       selectedItem={selectedItem}
       setIteration={setIteration}
       setRefreshWasHandled={setRefreshWasHandled}
+      style={style}
       tabsContent={tabsContent}
     />
   )
@@ -342,6 +357,7 @@ Details.defaultProps = {
   applyDetailsChanges: () => {},
   cancelRequest: () => {},
   getCloseDetailsLink: null,
+  isDetailsScreen: false,
   item: {},
   retryRequest: () => {},
   removeModelFeatureVector: () => {}
@@ -363,6 +379,7 @@ Details.propTypes = {
   ).isRequired,
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
+  isDetailsScreen: PropTypes.bool,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   removeModelFeatureVector: PropTypes.func,

@@ -6,6 +6,7 @@ import { JobsPanelAdvancedTable } from '../../elements/JobsPanelAdvancedTable/Jo
 
 import panelData from '../JobsPanel/panelData'
 import { advancedActions } from './jobsPanelAdvancedReducer'
+import { isDemoMode } from '../../utils/helper'
 
 const JobsPanelAdvancedView = ({
   advancedDispatch,
@@ -14,6 +15,7 @@ const JobsPanelAdvancedView = ({
   handleDeleteItems,
   handleEditItems,
   handleResetForm,
+  location,
   match,
   panelState,
   setValidation,
@@ -65,49 +67,51 @@ const JobsPanelAdvancedView = ({
           validation={validation}
         />
       </JobsPanelSection>
-      <JobsPanelSection title="Secrets">
-        <JobsPanelAdvancedTable
-          addNewItem={advancedState.addNewSecret}
-          className="advanced secrets"
-          content={panelState.tableData.secretSources}
-          handleAddNewItem={handleAddNewItem}
-          handleEditItems={handleEditItems}
-          handleDeleteItems={handleDeleteItems}
-          handleResetForm={handleResetForm}
-          headers={panelData['secrets']['table-headers']}
-          match={match}
-          panelState={panelState}
-          section="advanced secrets"
-          selectedId={advancedState.newSecret.kind}
-          selectedItem={advancedState.selectedSecret}
-          setAddNewItem={value =>
-            advancedDispatch({
-              type: advancedActions.SET_ADD_NEW_SECRET,
-              payload: value
-            })
-          }
-          setNewItemName={kind =>
-            advancedDispatch({
-              type: advancedActions.SET_NEW_SECRET_KIND,
-              payload: kind
-            })
-          }
-          setNewItemValue={source =>
-            advancedDispatch({
-              type: advancedActions.SET_NEW_SECRET_SOURCE,
-              payload: source
-            })
-          }
-          setSelectedItem={selectedItem =>
-            advancedDispatch({
-              type: advancedActions.SET_SELECTED_SECRET,
-              payload: selectedItem
-            })
-          }
-          setValidation={setValidation}
-          validation={validation}
-        />
-      </JobsPanelSection>
+      {!isDemoMode(location.search) && (
+        <JobsPanelSection title="Secrets">
+          <JobsPanelAdvancedTable
+            addNewItem={advancedState.addNewSecret}
+            className="advanced secrets"
+            content={panelState.tableData.secretSources}
+            handleAddNewItem={handleAddNewItem}
+            handleEditItems={handleEditItems}
+            handleDeleteItems={handleDeleteItems}
+            handleResetForm={handleResetForm}
+            headers={panelData['secrets']['table-headers']}
+            match={match}
+            panelState={panelState}
+            section="advanced secrets"
+            selectedId={advancedState.newSecret.kind}
+            selectedItem={advancedState.selectedSecret}
+            setAddNewItem={value =>
+              advancedDispatch({
+                type: advancedActions.SET_ADD_NEW_SECRET,
+                payload: value
+              })
+            }
+            setNewItemName={kind =>
+              advancedDispatch({
+                type: advancedActions.SET_NEW_SECRET_KIND,
+                payload: kind
+              })
+            }
+            setNewItemValue={source =>
+              advancedDispatch({
+                type: advancedActions.SET_NEW_SECRET_SOURCE,
+                payload: source
+              })
+            }
+            setSelectedItem={selectedItem =>
+              advancedDispatch({
+                type: advancedActions.SET_SELECTED_SECRET,
+                payload: selectedItem
+              })
+            }
+            setValidation={setValidation}
+            validation={validation}
+          />
+        </JobsPanelSection>
+      )}
     </div>
   )
 }
@@ -119,6 +123,7 @@ JobsPanelAdvancedView.propTypes = {
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
+  location: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
   panelState: PropTypes.shape({}).isRequired,
   setValidation: PropTypes.func.isRequired,

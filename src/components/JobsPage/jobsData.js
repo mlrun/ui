@@ -10,8 +10,7 @@ import {
   PERIOD_FILTER,
   SCHEDULE_TAB,
   STATUS_FILTER,
-  TERTIARY_BUTTON,
-  WORKFLOW_SUB_PAGE
+  TERTIARY_BUTTON
 } from '../../constants'
 import { isDemoMode } from '../../utils/helper'
 
@@ -37,7 +36,7 @@ export const infoHeaders = [
 
 const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
 
-export const generateTableHeaders = (pageTab, isSelectedItem) => {
+export const generateTableHeaders = (pageTab, workflowId, isSelectedItem) => {
   if (pageTab === SCHEDULE_TAB) {
     return [
       {
@@ -72,6 +71,35 @@ export const generateTableHeaders = (pageTab, isSelectedItem) => {
       {
         header: 'Created time (Local TZ)',
         class: 'jobs_medium',
+        hidden: isSelectedItem
+      },
+      {
+        header: '',
+        class: 'action_cell',
+        hidden: isSelectedItem
+      }
+    ]
+  }
+
+  if (pageTab === MONITOR_WORKFLOWS_TAB && !workflowId) {
+    return [
+      {
+        header: 'Name',
+        class: 'jobs_big'
+      },
+      {
+        header: 'Created at',
+        class: 'jobs_small',
+        hidden: isSelectedItem
+      },
+      {
+        header: 'Finished at',
+        class: 'jobs_small',
+        hidden: isSelectedItem
+      },
+      {
+        header: 'Duration',
+        class: 'jobs_small',
         hidden: isSelectedItem
       },
       {
@@ -188,7 +216,6 @@ const generateTabs = search => {
 export const generatePageData = (
   pageTab,
   search,
-  subPage,
   removeScheduledJob,
   handleSubmitJob,
   setEditableItem,
@@ -199,7 +226,8 @@ export const generatePageData = (
   abortableFunctionKinds,
   fetchJobLogs,
   removeJobLogs,
-  isSelectedItem
+  isSelectedItem,
+  workflowId
 ) => {
   let filterMenuActionButton = {
     label: 'Resource monitoring',
@@ -226,16 +254,17 @@ export const generatePageData = (
       abortableFunctionKinds
     ),
     detailsMenu,
-    hideFilterMenu: subPage === WORKFLOW_SUB_PAGE,
+    hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,
     filters: filtersByTab[pageTab],
     page,
-    tableHeaders: generateTableHeaders(pageTab, isSelectedItem),
+    tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
     tabs: generateTabs(search),
     infoHeaders,
     refreshLogs: fetchJobLogs,
     removeLogs: removeJobLogs,
-    withLogsRefreshBtn: true
+    withLogsRefreshBtn: true,
+    withoutExpandButton: pageTab === MONITOR_WORKFLOWS_TAB && !workflowId
   }
 }
 

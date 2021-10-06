@@ -51,6 +51,7 @@ export default {
 
     return mainHttpClient.get('/runs', { params })
   },
+  getJob: (project, jobId) => mainHttpClient.get(`/run/${project}/${jobId}`),
   getJobFunction: (project, functionName, hash) =>
     mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),

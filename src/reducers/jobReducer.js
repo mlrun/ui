@@ -33,11 +33,15 @@ import {
   SET_NEW_JOB_SELECTOR_RESULT,
   RUN_NEW_JOB_BEGIN,
   RUN_NEW_JOB_SUCCESS,
-  SET_NEW_JOB_NODE_SELECTOR
+  SET_NEW_JOB_NODE_SELECTOR,
+  FETCH_JOB_BEGIN,
+  FETCH_JOB_FAILURE,
+  FETCH_JOB_SUCCESS
 } from '../constants'
 
 const initialState = {
   allJobsData: [],
+  job: {},
   jobs: [],
   logs: '',
   loading: false,
@@ -96,6 +100,24 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: true
+      }
+    case FETCH_JOB_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_JOB_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case FETCH_JOB_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        job: payload
       }
     case FETCH_JOB_FUNCTION_BEGIN:
       return {

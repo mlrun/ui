@@ -68,5 +68,5 @@ export const pathPlaceholders = {
   [S3_INPUT_PATH_SCHEME]: 'bucket/path',
   [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
   [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',
-  [V3IO_INPUT_PATH_SCHEME]: '/container-name/file'
+  [V3IO_INPUT_PATH_SCHEME]: 'container-name/file'
 }
