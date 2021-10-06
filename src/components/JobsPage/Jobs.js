@@ -21,6 +21,10 @@ import { generateKeyValues } from '../../utils'
 import { generatePageData } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import {
+  datePickerOptions,
+  PAST_WEEK_DATE_OPTION
+} from '../../utils/datePicker.util'
 
 import {
   DANGER_BUTTON,
@@ -337,13 +341,36 @@ const Jobs = ({
 
   useEffect(() => {
     if (isEmpty(selectedJob) && !match.params.jobId) {
-      refreshJobs()
+      let filters = {}
+
+      if (match.params.pageTab === MONITOR_JOBS_TAB) {
+        const pastWeekOption = datePickerOptions.find(
+          option => option.id === PAST_WEEK_DATE_OPTION
+        )
+
+        filters = {
+          dates: {
+            value: pastWeekOption.handler(),
+            isPredefined: pastWeekOption.isPredefined
+          }
+        }
+
+        setFilters(filters)
+      }
+
+      refreshJobs(filters)
 
       return () => {
         setJobs([])
       }
     }
-  }, [match.params.jobId, refreshJobs, selectedJob])
+  }, [
+    match.params.jobId,
+    match.params.pageTab,
+    refreshJobs,
+    selectedJob,
+    setFilters
+  ])
 
   const getWorkflows = useCallback(() => {
     fetchWorkflows(match.params.projectName)

@@ -8,7 +8,10 @@ import {
 } from '../constants'
 
 const initialState = {
-  dates: ['', ''],
+  dates: {
+    value: ['', ''],
+    isPredefined: false
+  },
   iter: 'iter',
   labels: '',
   name: '',

@@ -128,7 +128,7 @@ const DatePickerView = React.forwardRef(
               <SelectOption
                 item={option}
                 key={option.id}
-                onClick={() => onSelectOption(option.handler)}
+                onClick={() => onSelectOption(option)}
                 selectType=""
               />
             ))}
