@@ -17,15 +17,24 @@ export const months = [
   'December'
 ]
 
+export const ANY_TIME_DATE_OPTION = 'anyTime'
+export const PAST_HOUR_DATE_OPTION = 'pastHour'
+export const PAST_24_HOUR_DATE_OPTION = 'past24hours'
+export const PAST_WEEK_DATE_OPTION = 'pastWeek'
+export const PAST_MONTH_DATE_OPTION = 'pastMonth'
+export const PAST_YEAR_DATE_OPTION = 'pastYear'
+export const CUSTOM_RANGE_DATE_OPTION = 'customRange'
+
 export const datePickerOptions = [
   {
-    id: 'anyTime',
+    id: ANY_TIME_DATE_OPTION,
     label: 'Any time',
     handler: () => ['', '']
   },
   {
-    id: 'pastHour',
+    id: PAST_HOUR_DATE_OPTION,
     label: 'Past hour',
+    isPredefined: true,
     handler: () => {
       return getPastDate((fromDate, toDate) => {
         fromDate.setHours(toDate.getHours() - 1)
@@ -33,8 +42,9 @@ export const datePickerOptions = [
     }
   },
   {
-    id: 'past24hours',
+    id: PAST_24_HOUR_DATE_OPTION,
     label: 'Past 24 hours',
+    isPredefined: true,
     handler: () => {
       return getPastDate((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() - 1)
@@ -42,8 +52,9 @@ export const datePickerOptions = [
     }
   },
   {
-    id: 'pastWeek',
+    id: PAST_WEEK_DATE_OPTION,
     label: 'Past week',
+    isPredefined: true,
     handler: () => {
       return getPastDate((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() - 7)
@@ -51,8 +62,9 @@ export const datePickerOptions = [
     }
   },
   {
-    id: 'pastMonth',
+    id: PAST_MONTH_DATE_OPTION,
     label: 'Past month',
+    isPredefined: true,
     handler: () => {
       return getPastDate((fromDate, toDate) => {
         fromDate.setMonth(toDate.getMonth() - 1)
@@ -60,8 +72,9 @@ export const datePickerOptions = [
     }
   },
   {
-    id: 'pastYear',
+    id: PAST_YEAR_DATE_OPTION,
     label: 'Past year',
+    isPredefined: true,
     handler: () => {
       return getPastDate((fromDate, toDate) => {
         fromDate.setFullYear(toDate.getFullYear() - 1)
@@ -69,7 +82,7 @@ export const datePickerOptions = [
     }
   },
   {
-    id: 'customRange',
+    id: CUSTOM_RANGE_DATE_OPTION,
     label: 'Custom range',
     handler: null
   }

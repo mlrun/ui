@@ -40,12 +40,12 @@ export default {
     }
 
     if (filters?.dates) {
-      if (filters.dates[0]) {
-        params.start_time_from = filters.dates[0].toISOString()
+      if (filters.dates.value[0]) {
+        params.start_time_from = filters.dates.value[0].toISOString()
       }
 
-      if (filters.dates[1]) {
-        params.start_time_to = filters.dates[1].toISOString()
+      if (filters.dates.value[1] && !filters.dates.isPredefined) {
+        params.start_time_to = filters.dates.value[1].toISOString()
       }
     }
 

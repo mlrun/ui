@@ -152,17 +152,25 @@ const FilterMenu = ({
     })
   }
 
-  const handleChangeDates = dates => {
+  const handleChangeDates = (dates, isPredefined) => {
     const generatedDates = [...dates]
 
     if (generatedDates.length === 1) {
       generatedDates.push(new Date())
     }
 
-    setFilters({ dates: generatedDates })
+    setFilters({
+      dates: {
+        value: generatedDates,
+        isPredefined
+      }
+    })
     applyChanges({
       ...filtersStore,
-      dates: generatedDates
+      dates: {
+        value: generatedDates,
+        isPredefined
+      }
     })
   }
 
@@ -238,8 +246,8 @@ const FilterMenu = ({
             case DATE_RANGE_TIME_FILTER:
               return (
                 <DatePicker
-                  date={filtersStore.dates[0]}
-                  dateTo={filtersStore.dates[1]}
+                  date={filtersStore.dates.value[0]}
+                  dateTo={filtersStore.dates.value[1]}
                   key={filter.type}
                   label={filter.label}
                   onChange={handleChangeDates}
