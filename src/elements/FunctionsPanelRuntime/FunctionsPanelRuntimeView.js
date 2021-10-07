@@ -27,7 +27,7 @@ const FunctionsPanelRuntimeView = ({
               defaultData={defaultData}
               key={section.id}
             />
-          ) : section.id === 'secrets' && !isDemoMode(location.search) ? (
+          ) : section.id === 'secrets' && isDemoMode(location.search) ? (
             <FunctionsPanelSecrets defaultData={defaultData} key={section.id} />
           ) : section.id === 'advanced' ? (
             <FunctionsPanelAdvanced
