@@ -67,7 +67,7 @@ const JobsPanelAdvancedView = ({
           validation={validation}
         />
       </JobsPanelSection>
-      {!isDemoMode(location.search) && (
+      {isDemoMode(location.search) && (
         <JobsPanelSection title="Secrets">
           <JobsPanelAdvancedTable
             addNewItem={advancedState.addNewSecret}
