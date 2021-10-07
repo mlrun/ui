@@ -45,11 +45,9 @@ const ProjectJobs = ({
 
   const jobsData = useMemo(() => {
     const statistics = getJobsStatistics(
-      projectStore.project.jobs,
+      projectStore.projectCounters,
       match,
-      location.search,
-      projectStore.project.scheduledJobs,
-      projectStore.project.workflows
+      location.search
     )
     const table = getJobsTableData(groupedLatestItem, match)
 
@@ -57,14 +55,7 @@ const ProjectJobs = ({
       statistics,
       table
     }
-  }, [
-    groupedLatestItem,
-    match,
-    location.search,
-    projectStore.project.jobs,
-    projectStore.project.scheduledJobs,
-    projectStore.project.workflows
-  ])
+  }, [projectStore.projectCounters, match, location.search, groupedLatestItem])
 
   return (
     <ProjectDataCard

@@ -10,6 +10,9 @@ import {
   DELETE_PROJECT_SUCCESS,
   ADD_PROJECT_LABEL,
   FETCH_PROJECT_BEGIN,
+  FETCH_PROJECT_COUNTERS_SUCCESS,
+  FETCH_PROJECT_COUNTERS_BEGIN,
+  FETCH_PROJECT_COUNTERS_FAILURE,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
@@ -44,6 +47,7 @@ import {
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
+  REMOVE_PROJECT_COUNTERS,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
@@ -136,6 +140,11 @@ const initialState = {
     }
   },
   projects: [],
+  projectCounters: {
+    error: null,
+    loading: false,
+    data: []
+  },
   projectsNames: {
     error: null,
     loading: false,
@@ -729,6 +738,32 @@ export default (state = initialState, { type, payload }) => {
           loading: false
         }
       }
+    case FETCH_PROJECT_COUNTERS_BEGIN:
+      return {
+        ...state,
+        projectCounters: {
+          ...state.projectCounters,
+          loading: true
+        }
+      }
+    case FETCH_PROJECT_COUNTERS_FAILURE:
+      return {
+        ...state,
+        projectCounters: {
+          data: [],
+          loading: false,
+          error: payload
+        }
+      }
+    case FETCH_PROJECT_COUNTERS_SUCCESS:
+      return {
+        ...state,
+        projectCounters: {
+          data: payload,
+          loading: false,
+          error: null
+        }
+      }
     case FETCH_PROJECT_WORKFLOWS_BEGIN:
       return {
         ...state,
@@ -772,6 +807,15 @@ export default (state = initialState, { type, payload }) => {
         newProject: {
           name: '',
           description: ''
+        }
+      }
+    case REMOVE_PROJECT_COUNTERS:
+      return {
+        ...state,
+        projectCounters: {
+          error: null,
+          loading: false,
+          data: []
         }
       }
     case REMOVE_PROJECT_DATA:

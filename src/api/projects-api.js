@@ -68,6 +68,9 @@ export default {
     mainHttpClient.get('/project-summaries', {
       cancelToken
     }),
+  getProjectSummary: project => {
+    return mainHttpClient.get(`/project-summaries/${project}`)
+  },
   getProjectWorkflows: project => {
     return mainHttpClient.get(`/projects/${project}/pipelines`)
   },

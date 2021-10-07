@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
@@ -8,6 +9,13 @@ import Loader from '../../common/Loader/Loader'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 const ProjectStatisticsCounter = ({ counterObject }) => {
+  const dataCardStatisticsValueClassNames = classnames(
+    'project-data-card__statistics-value',
+    `statistics_${counterObject.className}`,
+    typeof counterObject.value !== 'number' &&
+      'project-data-card__statistics-value_not-available'
+  )
+
   return counterObject.counterTooltip ? (
     <Tooltip
       template={<TextTooltipTemplate text={counterObject.counterTooltip} />}
@@ -38,7 +46,7 @@ const ProjectStatisticsCounter = ({ counterObject }) => {
     [
       <div
         key={counterObject.value + Math.random()}
-        className={`project-data-card__statistics-value statistics_${counterObject.className}`}
+        className={dataCardStatisticsValueClassNames}
       >
         {counterObject.loading ? (
           <Loader section small secondary />

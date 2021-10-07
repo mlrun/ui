@@ -12,6 +12,9 @@ import {
   DELETE_PROJECT_FAILURE,
   DELETE_PROJECT_SUCCESS,
   FETCH_PROJECT_BEGIN,
+  FETCH_PROJECT_COUNTERS_BEGIN,
+  FETCH_PROJECT_COUNTERS_FAILURE,
+  FETCH_PROJECT_COUNTERS_SUCCESS,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
@@ -52,6 +55,7 @@ import {
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
+  REMOVE_PROJECT_COUNTERS,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
@@ -313,6 +317,31 @@ const projectsAction = {
     type: FETCH_PROJECT_JOBS_SUCCESS,
     payload: jobs
   }),
+  fetchProjectCounters: project => dispatch => {
+    dispatch(projectsAction.fetchProjectCountersBegin())
+
+    return projectsApi
+      .getProjectSummary(project)
+      .then(({ data }) => {
+        return dispatch(projectsAction.fetchProjectCountersSuccess(data))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectCountersFailure(error.message))
+
+        throw error
+      })
+  },
+  fetchProjectCountersBegin: () => ({
+    type: FETCH_PROJECT_COUNTERS_BEGIN
+  }),
+  fetchProjectCountersFailure: error => ({
+    type: FETCH_PROJECT_COUNTERS_FAILURE,
+    payload: error
+  }),
+  fetchProjectCountersSuccess: summary => ({
+    type: FETCH_PROJECT_COUNTERS_SUCCESS,
+    payload: summary
+  }),
   fetchProjectModels: (project, cancelToken) => dispatch => {
     dispatch(projectsAction.fetchProjectModelsBegin())
 
@@ -527,6 +556,7 @@ const projectsAction = {
   }),
   removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
+  removeProjectCounters: () => ({ type: REMOVE_PROJECT_COUNTERS }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
   setNewProjectDescription: description => ({

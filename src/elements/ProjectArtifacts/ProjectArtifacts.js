@@ -1,40 +1,37 @@
-import React, { useEffect } from 'react'
-import { isEmpty } from 'lodash'
+import React from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-const ProjectArtifacts = ({
-  artifacts,
-  fetchArtifacts,
-  link,
-  match,
-  title
-}) => {
-  useEffect(() => {
-    fetchArtifacts(match.params.projectName)
-  }, [fetchArtifacts, match.params.projectName])
+import Loader from '../../common/Loader/Loader'
 
+const ProjectArtifacts = ({ counterValue, link, projectCounters, title }) => {
   return (
     <Link to={link} className="project-data-card project-data-card_small">
       <div className="project-data-card__header">
         <div className="project-data-card__header-text data-ellipsis">
           {title}
         </div>
-        {artifacts.error ? (
-          <div className="error-container">
-            <h1>{artifacts.error}</h1>
-          </div>
-        ) : (
-          <div className="project-data-card__statistics">
-            <div className="project-data-card__statistics-item">
+        <div className="project-data-card__statistics">
+          <div className="project-data-card__statistics-item">
+            {projectCounters.loading ? (
+              <Loader section />
+            ) : (
               <div className="project-data-card__statistics-value statistics_default">
-                {!isEmpty(artifacts.data) ? artifacts.data.length : 0}
+                {projectCounters.error ? 'N/A' : counterValue}
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </Link>
   )
+}
+
+ProjectArtifacts.propTypes = {
+  counterValue: PropTypes.number.isRequired,
+  link: PropTypes.string.isRequired,
+  projectCounters: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired
 }
 
 export default ProjectArtifacts

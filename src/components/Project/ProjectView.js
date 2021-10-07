@@ -27,7 +27,6 @@ import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
-import { groupByUniqName } from '../../utils/groupByUniqName'
 import { formatDatetime } from '../../utils'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
@@ -48,9 +47,6 @@ const ProjectView = React.forwardRef(
       createFunctionSuccess,
       createNewOptions,
       editProject,
-      fetchProjectFeatureSets,
-      fetchProjectFiles,
-      fetchProjectModels,
       frontendSpec,
       handleAddProjectLabel,
       handleDeployFunctionSuccess,
@@ -66,6 +62,7 @@ const ProjectView = React.forwardRef(
       match,
       membersDispatch,
       membersState,
+      projectCounters,
       projectLabels,
       refresh,
       setIsNewFunctionPopUpOpen,
@@ -244,27 +241,21 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="main-info__statistics-section">
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(project.models, 'db_key')}
-                  fetchArtifacts={fetchProjectModels}
+                  counterValue={projectCounters.data.models_count ?? 0}
                   link={`/projects/${match.params.projectName}/models`}
-                  match={match}
+                  projectCounters={projectCounters}
                   title="Models"
                 />
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(
-                    project.featureSets,
-                    'metadata.name'
-                  )}
-                  fetchArtifacts={fetchProjectFeatureSets}
+                  counterValue={projectCounters.data.feature_sets_count ?? 0}
                   link={`/projects/${match.params.projectName}/feature-store`}
-                  match={match}
+                  projectCounters={projectCounters}
                   title="Feature sets"
                 />
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(project.files, 'db_key')}
-                  fetchArtifacts={fetchProjectFiles}
+                  counterValue={projectCounters.data.files_count ?? 0}
                   link={`/projects/${match.params.projectName}/files`}
-                  match={match}
+                  projectCounters={projectCounters}
                   title="Files"
                 />
               </div>
@@ -347,9 +338,6 @@ ProjectView.propTypes = {
   createFunctionSuccess: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
-  fetchProjectFeatureSets: PropTypes.func.isRequired,
-  fetchProjectFiles: PropTypes.func.isRequired,
-  fetchProjectModels: PropTypes.func.isRequired,
   handleAddProjectLabel: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleDeployFunctionFailure: PropTypes.func.isRequired,
@@ -364,6 +352,7 @@ ProjectView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
+  projectCounters: PropTypes.object.isRequired,
   projectLabels: PropTypes.array.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
