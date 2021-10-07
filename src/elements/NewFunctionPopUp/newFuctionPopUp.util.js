@@ -1,4 +1,4 @@
-export const runtimeOptions = isDemo => [
+export const runtimeOptions = isDemoMode => [
   {
     id: 'job',
     label: 'Job'
@@ -6,7 +6,7 @@ export const runtimeOptions = isDemo => [
   {
     id: 'serving',
     label: 'Serving',
-    hidden: !isDemo
+    hidden: !isDemoMode
   }
 ]
 

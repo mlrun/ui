@@ -31,11 +31,11 @@ const NewFunctionPopUp = ({
     runtime: DEFAULT_RUNTIME,
     tag: ''
   })
-  const location = useLocation()
   const [isPopUpOpen, setIsPopUpOpen] = useState(isOpened ?? false)
   const [validation, setValidation] = useState({
     isNameValid: true
   })
+  const location = useLocation()
   const newFunctionBtn = useRef(null)
   const popUpClassNames = classnames(
     'new-function__pop-up',
