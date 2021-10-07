@@ -1,11 +1,12 @@
-export const runtimeOptions = [
+export const runtimeOptions = isDemo => [
   {
     id: 'job',
     label: 'Job'
   },
   {
     id: 'serving',
-    label: 'Serving'
+    label: 'Serving',
+    hidden: !isDemo
   }
 ]
 
