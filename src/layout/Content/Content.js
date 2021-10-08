@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -244,7 +245,11 @@ const Content = ({
         <div className="table-container">
           {children ? (
             children
-          ) : content.length !== 0 ? (
+          ) : loading ? null : (filtersStore.groupBy !== 'none' &&
+              isEmpty(groupedContent)) ||
+            content.length === 0 ? (
+            <NoData />
+          ) : (
             <>
               <Table
                 actionsMenu={actionsMenu}
@@ -262,8 +267,6 @@ const Content = ({
                 setLoading={setLoading}
               />
             </>
-          ) : loading ? null : (
-            <NoData />
           )}
         </div>
         {convertedYaml.length > 0 && (
