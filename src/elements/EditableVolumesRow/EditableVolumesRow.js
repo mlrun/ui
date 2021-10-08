@@ -204,9 +204,7 @@ EditableVolumesRow.propTypes = {
   content: PropTypes.array.isRequired,
   handleEdit: PropTypes.func.isRequired,
   selectedVolume: PropTypes.shape({}).isRequired,
-  setSelectedVolume: PropTypes.func.isRequired,
-  setValidation: PropTypes.func.isRequired,
-  validation: PropTypes.shape({}).isRequired
+  setSelectedVolume: PropTypes.func.isRequired
 }
 
 export default EditableVolumesRow
