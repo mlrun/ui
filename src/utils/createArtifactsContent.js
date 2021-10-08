@@ -327,24 +327,26 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
     key: {
       identifier: getArtifactIdentifier(artifact),
       identifierUnique: getArtifactIdentifier(artifact, true),
-      value: name,
-      class: 'artifacts_medium',
-      getLink: tab =>
-        generateLinkToDetailsPanel(
-          project,
-          MODELS_TAB,
-          MODEL_ENDPOINTS_TAB,
-          name,
-          artifact.metadata?.uid,
-          tab
-        )
-    },
-    functionName: {
       value: functionName,
-      class: 'artifacts_small',
-      link: `${generateLinkPath(functionUri)}/overview`,
-      tooltip: functionUri,
-      hidden: isSelectedItem
+      class: 'artifacts_medium',
+      getLink: () => `${generateLinkPath(functionUri)}/overview`,
+      expandedCellContent: {
+        class: 'artifacts_medium',
+        value: artifact.spec?.model,
+        tooltip: artifact.spec?.model,
+        getLink: tab =>
+          generateLinkToDetailsPanel(
+            project,
+            MODELS_TAB,
+            MODEL_ENDPOINTS_TAB,
+            name,
+            artifact.metadata?.uid,
+            tab
+          )
+      },
+      rowExpanded: {
+        getLink: () => `${generateLinkPath(functionUri)}/overview`
+      }
     },
     modelArtifact: {
       value: modelArtifact,
@@ -396,6 +398,7 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
       hidden: isSelectedItem
     },
     driftStatus: {
+      status: artifact.status?.drift_status,
       value: driftStatusIcons[artifact.status?.drift_status]?.value,
       class: 'artifacts_extra-small',
       tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip,

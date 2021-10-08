@@ -7,11 +7,7 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
-import {
-  ACTION_CELL_ID,
-  DETAILS_OVERVIEW_TAB,
-  MODEL_ENDPOINTS_TAB
-} from '../../constants'
+import { ACTION_CELL_ID, DETAILS_OVERVIEW_TAB } from '../../constants'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 const ArtifactsTableRow = ({
@@ -121,11 +117,17 @@ const ArtifactsTableRow = ({
                                 : value
                             }
                             item={subRowCurrentItem}
-                            link={value.getLink?.(
-                              match.params.tab ?? DETAILS_OVERVIEW_TAB
-                            )}
+                            link={
+                              value.expandedCellContent?.getLink
+                                ? value.expandedCellContent.getLink(
+                                    match.params.tab ?? DETAILS_OVERVIEW_TAB
+                                  )
+                                : value.getLink?.(
+                                    match.params.tab ?? DETAILS_OVERVIEW_TAB
+                                  )
+                            }
                             match={match}
-                            key={value.value + i ?? Date.now()}
+                            key={value.value ? value.value + i : Math.random()}
                             selectItem={handleSelectItem}
                             selectedItem={selectedItem}
                           />
@@ -155,10 +157,7 @@ const ArtifactsTableRow = ({
               currentItem &&
               !value.hidden && (
                 <TableCell
-                  expandLink={
-                    Array.isArray(tableContent) &&
-                    match.params.pageTab !== MODEL_ENDPOINTS_TAB
-                  }
+                  expandLink={Array.isArray(tableContent)}
                   handleExpandRow={handleExpandRow}
                   data={value}
                   item={currentItem}

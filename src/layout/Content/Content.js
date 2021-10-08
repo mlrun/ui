@@ -99,9 +99,14 @@ const Content = ({
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
-      generateGroupedItems(content, pageData.selectedRowData, getIdentifier)
+      generateGroupedItems(
+        content,
+        pageData.selectedRowData,
+        getIdentifier,
+        match
+      )
     )
-  }, [content, getIdentifier, pageData.selectedRowData])
+  }, [content, getIdentifier, match, pageData.selectedRowData])
 
   const handleGroupByNone = useCallback(() => {
     const rows = [...document.getElementsByClassName('parent-row')]

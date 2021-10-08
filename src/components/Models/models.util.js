@@ -165,11 +165,6 @@ export const modelEndpointsTableHeaders = isSelectedModel => [
     class: 'artifacts_medium'
   },
   {
-    header: 'Function',
-    class: 'artifacts_small',
-    hidden: isSelectedModel
-  },
-  {
     header: 'Model',
     class: 'artifacts_small',
     hidden: isSelectedModel

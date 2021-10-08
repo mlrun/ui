@@ -224,7 +224,7 @@ const Models = ({
 
   useEffect(() => {
     if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
-      setFilters({ groupBy: 'none' })
+      setFilters({ groupBy: 'name' })
     } else if (filtersStore.tag === INIT_TAG_FILTER) {
       setFilters({ groupBy: INIT_GROUP_FILTER })
     } else {

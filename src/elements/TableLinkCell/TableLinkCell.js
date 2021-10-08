@@ -32,7 +32,7 @@ const TableLinkCell = ({
     link.match(/functions/) && 'function-name'
   )
   const { value: stateValue, label: stateLabel, className: stateClassName } =
-    item.state ?? {}
+    data.rowExpanded?.state || item.state || {}
 
   return (
     <div className={tableCellClassNames}>
