@@ -2,11 +2,15 @@ import {
   DATASETS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
-  FEATURES_TAB
+  FEATURES_TAB,
+  MODEL_ENDPOINTS_TAB
 } from '../constants'
 
-export const getArtifactIdentifier = (artifact, unique) => {
-  let identifier = `${artifact?.db_key || artifact?.spec?.model || ''}`
+export const getArtifactIdentifier = (artifact, unique, pageTab) => {
+  let identifier =
+    pageTab === MODEL_ENDPOINTS_TAB
+      ? artifact?.spec?.function_uri
+      : `${artifact?.db_key || artifact?.spec?.model || ''}`
 
   if (unique) {
     if (artifact?.tag) identifier += `.${artifact.tag}`

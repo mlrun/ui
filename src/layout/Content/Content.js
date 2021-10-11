@@ -103,10 +103,10 @@ const Content = ({
         content,
         pageData.selectedRowData,
         getIdentifier,
-        match
+        match.params.pageTab
       )
     )
-  }, [content, getIdentifier, match, pageData.selectedRowData])
+  }, [content, getIdentifier, match.params.pageTab, pageData.selectedRowData])
 
   const handleGroupByNone = useCallback(() => {
     const rows = [...document.getElementsByClassName('parent-row')]
