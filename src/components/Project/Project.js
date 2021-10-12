@@ -102,7 +102,7 @@ const Project = ({
     }
   }, [history, location, match])
 
-  const isProjectMembershipEnabled = useMemo(
+  const projectMembershipIsEnabled = useMemo(
     () =>
       appStore.frontendSpec?.feature_flags?.project_membership === 'enabled',
     [appStore.frontendSpec]
@@ -229,14 +229,14 @@ const Project = ({
 
   const fetchProjectData = useCallback(() => {
     fetchProject(match.params.projectName)
-    if (isProjectMembershipEnabled) {
+    if (projectMembershipIsEnabled) {
       fetchProjectIdAndOwner().then(fetchProjectMembers)
     }
   }, [
     fetchProject,
     fetchProjectIdAndOwner,
     match.params.projectName,
-    isProjectMembershipEnabled
+    projectMembershipIsEnabled
   ])
 
   const resetProjectData = useCallback(() => {
@@ -604,13 +604,13 @@ const Project = ({
       handleUpdateProjectLabels={handleUpdateProjectLabels}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
-      isProjectMembershipEnabled={isProjectMembershipEnabled}
       links={links}
       match={match}
       membersDispatch={membersDispatch}
       membersState={membersState}
       projectCounters={projectStore.projectCounters}
       projectLabels={projectLabels}
+      projectMembershipIsEnabled={projectMembershipIsEnabled}
       ref={inputRef}
       refresh={handleRefresh}
       setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
