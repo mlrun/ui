@@ -33,6 +33,7 @@ export const infoHeaders = [
   { label: 'Output path', id: 'outputPath' },
   { label: 'Iterations', id: 'iterations' }
 ]
+export const actionsMenuHeader = 'New Job'
 
 const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
 
@@ -253,6 +254,7 @@ export const generatePageData = (
       onAbortJob,
       abortableFunctionKinds
     ),
+    actionsMenuHeader: actionsMenuHeader,
     detailsMenu,
     hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,

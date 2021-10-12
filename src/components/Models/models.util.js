@@ -96,7 +96,7 @@ export const modelsFilters = [
 ]
 export const modelEndpointsFilters = [{ type: LABELS_FILTER, label: 'Labels:' }]
 export const page = MODELS_PAGE
-export const registerArtifactDialogTitle = 'Register model'
+export const actionsMenuHeader = 'Register model'
 export const modelsTableHeaders = isSelectedModel => [
   {
     header: 'Name',
@@ -274,9 +274,9 @@ export const generatePageData = (
   }
 
   if (pageTab === MODELS_TAB) {
+    data.actionsMenuHeader = actionsMenuHeader
     data.detailsMenu = generateModelsDetailsMenu(selectedModel)
     data.filters = modelsFilters
-    data.registerArtifactDialogTitle = registerArtifactDialogTitle
     data.tableHeaders = modelsTableHeaders(isSelectedModel)
     data.infoHeaders = modelsInfoHeaders
     data.actionsMenu = generateModelsActionMenu(handleDeployModel)

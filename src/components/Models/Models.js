@@ -326,10 +326,10 @@ const Models = ({
       {artifactsStore.loading && <Loader />}
       <Content
         content={content}
+        handleActionsMenuClick={() => setIsRegisterArtifactPopupOpen(true)}
         handleCancel={() => setSelectedModel({})}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() => setIsRegisterArtifactPopupOpen(true)}
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
@@ -341,7 +341,7 @@ const Models = ({
           match={match}
           refresh={fetchData}
           setIsPopupOpen={setIsRegisterArtifactPopupOpen}
-          title={pageData.registerArtifactDialogTitle}
+          title={pageData.actionsMenuHeader}
         />
       )}
       {isDeployPopupOpen && (
