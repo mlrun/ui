@@ -15,6 +15,10 @@ import { generateContentActionsMenu } from '../../layout/Content/content.util'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 import { getWorkflowDetailsLink } from './workflow.util'
 import { useYaml } from '../../hooks/yaml.hook'
+import functionsActions from '../../actions/functions'
+import { connect } from 'react-redux'
+import { page } from '../JobsPage/jobsData'
+import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
 import { ReactComponent as ListView } from '../../images/listview.svg'
@@ -33,20 +37,22 @@ const Workflow = ({
   pageData,
   refresh,
   refreshJobs,
+  selectedFunction,
   selectedJob,
   setLoading
 }) => {
-  const graphViewClassNames = classnames(
-    'graph-view',
-    selectedJob.uid && 'with-selected-job'
-  )
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [jobIsSelected, setJobIsSelected] = useState(false)
+  const [isSelectedItem, setIsSelectedeItem] = useState(false)
   const [jobsContent, setJobsContent] = useState([])
   const [workflow, setWorkflow] = useState({})
   const [workflowJobsIds, setWorkflowJobsIds] = useState([])
   const [elements, setElements] = useState([])
   const [viewMode, setViewMode] = useState('graph')
+
+  const graphViewClassNames = classnames(
+    'graph-view',
+    (selectedJob?.uid || selectedFunction?.hash) && 'with-selected-job'
+  )
 
   const actionsMenu = useMemo(() => {
     return generateContentActionsMenu(pageData.actionsMenu, [
@@ -82,8 +88,12 @@ const Workflow = ({
   }, [content, workflowJobsIds])
 
   useEffect(() => {
-    setJobIsSelected(Boolean(match.params.jobId))
-  }, [match.params.jobId])
+    setIsSelectedeItem(isEmpty(selectedFunction))
+  }, [selectedFunction])
+
+  useEffect(() => {
+    setIsSelectedeItem(isEmpty(selectedJob))
+  }, [selectedJob])
 
   useEffect(() => {
     const edges = []
@@ -91,12 +101,18 @@ const Workflow = ({
       let nodeItem = {
         id: job.id,
         data: {
+          function: job.function,
           label: job.name,
-          run_uid: job.run_uid
+          run_uid: job.run_uid,
+          run_type: job.run_type
         },
         className: classnames(
-          job.run_uid && selectedJob.uid === job.run_uid && 'selected',
-          job.run_uid && 'selectable'
+          ((job.run_uid && selectedJob.uid === job.run_uid) ||
+            (job.run_type === 'deploy' &&
+              job.function.includes(selectedFunction.hash))) &&
+            'selected',
+          (job.run_uid || (job.run_type === 'deploy' && job.function)) &&
+            'selectable'
         ),
         position: { x: 0, y: 0 }
       }
@@ -116,11 +132,13 @@ const Workflow = ({
     })
 
     setElements(getLayoutedElements(nodes.concat(edges)))
-  }, [selectedJob.uid, workflow])
+  }, [selectedFunction.hash, selectedJob.uid, workflow])
 
   const getCloseDetailsLink = location => {
-    const urlArray = location.pathname.split('/')
-    return urlArray.slice(0, -2).join('/')
+    return match.url
+      .split('/')
+      .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
+      .join('/')
   }
 
   return (
@@ -166,14 +184,13 @@ const Workflow = ({
           </Tooltip>
         </div>
       </div>
-
       <div className="workflow-content">
         {viewMode === 'graph' ? (
           <>
             <div className={graphViewClassNames}>
               <MlReactFlow
                 elements={elements}
-                alignTriggerItem={jobIsSelected}
+                alignTriggerItem={isSelectedItem}
                 onElementClick={(event, element) => {
                   if (element?.data.run_uid) {
                     history.push(
@@ -183,19 +200,34 @@ const Workflow = ({
                         element.data.run_uid
                       )
                     )
+                  } else if (
+                    element?.data.run_type === 'deploy' &&
+                    element?.data.function
+                  ) {
+                    const funcName = element.data.function.match(/\/(.*?)@/i)[1]
+                    const funcHash = element.data.function.replace(/.*@/g, '')
+                    const link = `/projects/${
+                      match.params.projectName
+                    }/${page.toLowerCase()}/${match.params.pageTab}/workflow/${
+                      match.params.workflowId
+                    }/${funcName}/${funcHash}/${DETAILS_OVERVIEW_TAB}`
+
+                    history.push(link)
                   }
                 }}
               />
-              {!isEmpty(selectedJob) && (
+              {(!isEmpty(selectedJob) || !isEmpty(selectedFunction)) && (
                 <Details
                   actionsMenu={actionsMenu}
-                  detailsMenu={pageData.detailsMenu}
+                  detailsMenu={pageData.details.menu}
                   getCloseDetailsLink={getCloseDetailsLink}
                   handleCancel={handleCancel}
                   match={match}
                   pageData={pageData}
                   retryRequest={refreshJobs}
-                  selectedItem={selectedJob}
+                  selectedItem={
+                    !isEmpty(selectedFunction) ? selectedFunction : selectedJob
+                  }
                 />
               )}
             </div>
@@ -227,6 +259,8 @@ const Workflow = ({
 }
 
 Workflow.defaultProps = {
+  selectedFunction: {},
+  selectedJob: {},
   setLoading: null
 }
 
@@ -240,8 +274,9 @@ Workflow.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   refreshJobs: PropTypes.func.isRequired,
-  selectedJob: PropTypes.shape({}).isRequired,
+  selectedFunction: PropTypes.shape({}),
+  selectedJob: PropTypes.shape({}),
   setLoading: PropTypes.func
 }
 
-export default React.memo(Workflow)
+export default connect(null, { ...functionsActions })(React.memo(Workflow))

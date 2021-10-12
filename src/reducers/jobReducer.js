@@ -36,7 +36,8 @@ import {
   SET_NEW_JOB_NODE_SELECTOR,
   FETCH_JOB_BEGIN,
   FETCH_JOB_FAILURE,
-  FETCH_JOB_SUCCESS
+  FETCH_JOB_SUCCESS,
+  REMOVE_JOB
 } from '../constants'
 
 const initialState = {
@@ -166,6 +167,11 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         jobs: payload,
         loading: false
+      }
+    case REMOVE_JOB:
+      return {
+        ...state,
+        job: {}
       }
     case REMOVE_JOB_LOGS:
       return {

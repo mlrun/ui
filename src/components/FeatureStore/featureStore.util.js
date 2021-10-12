@@ -36,9 +36,11 @@ import {
 
 export const pageDataInitialState = {
   actionsMenu: [],
-  detailsMenu: [],
+  details: {
+    menu: [],
+    infoHeaders: []
+  },
   filters: [],
-  infoHeaders: [],
   page: '',
   selectedRowData: {},
   registerArtifactDialogTitle: '',
@@ -306,7 +308,9 @@ export const generatePageData = (
   isSelectedItem
 ) => {
   let data = {
-    detailsMenu: [],
+    details: {
+      menu: []
+    },
     page,
     tabs
   }
@@ -314,7 +318,8 @@ export const generatePageData = (
   if (pageTab === FEATURE_SETS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_SETS_TAB)
     data.filters = featureSetsFilters
-    data.infoHeaders = featureSetsInfoHeaders
+    data.details.infoHeaders = featureSetsInfoHeaders
+    data.details.type = FEATURES_TAB
     data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
     data.registerArtifactDialogTitle = createFeatureSetTitle
     data.filterMenuActionButton = null
@@ -338,13 +343,15 @@ export const generatePageData = (
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
-    data.infoHeaders = featureVectorsInfoHeaders
+    data.details.infoHeaders = featureVectorsInfoHeaders
+    data.details.type = FEATURE_VECTORS_TAB
     data.registerArtifactDialogTitle = createFeatureVectorTitle
     data.filterMenuActionButton = null
   } else {
     data.actionsMenu = generateActionsMenu(DATASETS_TAB)
     data.filters = datasetsFilters
-    data.infoHeaders = datasetsInfoHeaders
+    data.details.infoHeaders = datasetsInfoHeaders
+    data.details.type = DATASETS_TAB
     data.tableHeaders = datasetsTableHeaders(isSelectedItem)
     data.registerArtifactDialogTitle = registerDatasetsTitle
     data.handleRequestOnExpand = handleRequestOnExpand

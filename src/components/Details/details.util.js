@@ -45,8 +45,8 @@ import DetailsDriftAnalysis from '../DetailsDriftAnalysis/DetailsDriftAnalysis'
 import DetailsFeatureAnalysis from '../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 import DetailsPods from '../DetailsPods/DetailsPods'
 
-export const generateArtifactsContent = (page, pageTab, selectedItem) => {
-  if (pageTab === MODEL_ENDPOINTS_TAB) {
+export const generateArtifactsContent = (detailsType, selectedItem) => {
+  if (detailsType === MODEL_ENDPOINTS_TAB) {
     return {
       uid: {
         value: selectedItem?.metadata?.uid ?? '-'
@@ -95,7 +95,7 @@ export const generateArtifactsContent = (page, pageTab, selectedItem) => {
       },
       kind: {
         value:
-          page !== FEATURE_STORE_PAGE && page !== FILES_PAGE
+          detailsType !== FEATURE_STORE_PAGE && detailsType !== FILES_PAGE
             ? selectedItem.kind || ' '
             : null
       },
@@ -125,7 +125,7 @@ export const generateArtifactsContent = (page, pageTab, selectedItem) => {
         value: formatDatetime(new Date(selectedItem.updated), 'N/A')
       },
       framework: {
-        value: page === MODELS_PAGE ? selectedItem.framework ?? '' : null
+        value: detailsType === MODELS_PAGE ? selectedItem.framework ?? '' : null
       },
       algorithm: {
         value: selectedItem.algorithm
@@ -145,10 +145,10 @@ export const generateFeatureStoreContent = (
   deleteChip,
   editChips,
   editDescription,
-  pageTab,
+  detailsType,
   selectedItem
 ) => {
-  if (pageTab === FEATURE_SETS_TAB) {
+  if (detailsType === FEATURE_SETS_TAB) {
     return generateFeatureSetsOverviewContent(
       addChip,
       deleteChip,
@@ -156,7 +156,7 @@ export const generateFeatureStoreContent = (
       editDescription,
       selectedItem
     )
-  } else if (pageTab === FEATURE_VECTORS_TAB) {
+  } else if (detailsType === FEATURE_VECTORS_TAB) {
     return generateFeatureVectorsOverviewContent(selectedItem)
   }
 }
@@ -281,9 +281,9 @@ export const renderContent = (
         <DetailsLogs
           item={selectedItem}
           match={match}
-          refreshLogs={pageData.refreshLogs}
-          removeLogs={pageData.removeLogs}
-          withLogsRefreshBtn={pageData.withLogsRefreshBtn}
+          refreshLogs={pageData.details.refreshLogs}
+          removeLogs={pageData.details.removeLogs}
+          withLogsRefreshBtn={pageData.details.withLogsRefreshBtn}
         />
       )
     case DETAILS_CODE_TAB:

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
@@ -38,12 +38,16 @@ import {
 } from '../../constants'
 import { isDemoMode } from '../../utils/helper'
 import { parseJob } from '../../utils/parseJob'
+import { parseFunction } from '../../utils/parseFunction'
+import functionsActions from '../../actions/functions'
+import { getFunctionLogs } from '../../utils/getFunctionLogs'
 
 const Jobs = ({
   abortJob,
   appStore,
   editJob,
   editJobFailure,
+  fetchFunctionLogs,
   fetchJob,
   fetchJobFunction,
   fetchJobLogs,
@@ -52,11 +56,16 @@ const Jobs = ({
   fetchWorkflow,
   fetchWorkflows,
   filtersStore,
+  functionsStore,
+  getFunctionWithHash,
   handleRunScheduledJob,
   history,
   jobsStore,
   location,
   match,
+  removeFunction,
+  removeFunctionLogs,
+  removeJob,
   removeJobLogs,
   removeNewJob,
   removePods,
@@ -71,8 +80,29 @@ const Jobs = ({
   const [confirmData, setConfirmData] = useState(null)
   const [selectedJob, setSelectedJob] = useState({})
   const [editableItem, setEditableItem] = useState(null)
+  const [selectedFunction, setSelectedFunction] = useState({})
 
   const dispatch = useDispatch()
+  let fetchFunctionLogsTimeout = useRef(null)
+
+  const handleFetchFunctionLogs = useCallback(
+    (projectName, name, tag, offset) => {
+      return getFunctionLogs(
+        fetchFunctionLogs,
+        fetchFunctionLogsTimeout,
+        projectName,
+        name,
+        tag,
+        offset
+      )
+    },
+    [fetchFunctionLogs, fetchFunctionLogsTimeout]
+  )
+
+  const handleRemoveFunctionLogs = useCallback(() => {
+    clearTimeout(fetchFunctionLogsTimeout.current)
+    removeFunctionLogs()
+  }, [fetchFunctionLogsTimeout, removeFunctionLogs])
 
   const handleRemoveScheduledJob = schedule => {
     removeScheduledJob(match.params.projectName, schedule.name).then(() => {
@@ -249,14 +279,18 @@ const Jobs = ({
       fetchJobLogs,
       removeJobLogs,
       !isEmpty(selectedJob),
-      match.params.workflowId
+      match.params.workflowId,
+      selectedFunction,
+      handleFetchFunctionLogs,
+      handleRemoveFunctionLogs
     ),
     [
       match.params.pageTab,
       location.search,
       match.params.workflowId,
       appStore.frontendSpec.jobs_dashboard_url,
-      selectedJob
+      selectedJob,
+      selectedFunction
     ]
   )
 
@@ -310,13 +344,16 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    if (match.params.jobId && pageData.detailsMenu.length > 0) {
-      isDetailsTabExists(JOBS_PAGE, match, pageData.detailsMenu, history)
+    if (match.params.jobId && pageData.details.menu.length > 0) {
+      isDetailsTabExists(JOBS_PAGE, match, pageData.details.menu, history)
     }
-  }, [history, match, pageData.detailsMenu])
+  }, [history, match, pageData.details.menu])
 
   useEffect(() => {
-    if (match.params.jobId && isEmpty(selectedJob)) {
+    if (
+      match.params.jobId &&
+      (isEmpty(selectedJob) || match.params.jobId !== selectedJob.uid)
+    ) {
       fetchJob(match.params.projectName, match.params.jobId)
         .then(job => {
           setSelectedJob(parseJob(job))
@@ -327,14 +364,59 @@ const Jobs = ({
             id: Math.random(),
             message: 'Failed to fetch job'
           })
+          history.push(
+            match.url
+              .split('/')
+              .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
+              .join('/')
+          )
         })
     } else if (!isEmpty(selectedJob) && !match.params.jobId) {
       setSelectedJob({})
+      removeJob()
+    } else if (
+      match.params.functionHash &&
+      (isEmpty(selectedFunction) ||
+        match.params.functionHash !== selectedFunction.hash)
+    ) {
+      getFunctionWithHash(
+        match.params.projectName,
+        match.params.functionName,
+        match.params.functionHash
+      )
+        .then(func => {
+          setSelectedFunction(parseFunction(func, match.params.projectName))
+        })
+        .catch(error => {
+          setNotification({
+            status: error?.response?.status || 400,
+            id: Math.random(),
+            message: 'Failed to fetch function'
+          })
+          history.push(
+            match.url
+              .split('/')
+              .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
+              .join('/')
+          )
+        })
+    } else if (!isEmpty(selectedFunction) && !match.params.functionHash) {
+      setSelectedFunction({})
+      removeFunction()
     }
   }, [
     fetchJob,
+    getFunctionWithHash,
+    history,
+    match.params.functionHash,
+    match.params.functionName,
     match.params.jobId,
     match.params.projectName,
+    match.path,
+    match.url,
+    removeFunction,
+    removeJob,
+    selectedFunction,
     selectedJob,
     setNotification
   ])
@@ -461,13 +543,14 @@ const Jobs = ({
             match={match}
             pageData={pageData}
             refreshJobs={refreshJobs}
+            selectedFunction={selectedFunction}
             selectedJob={selectedJob}
             setLoading={setLoading}
           />
         ) : !isEmpty(selectedJob) ? (
           <Details
             actionsMenu={pageData.actionsMenu}
-            detailsMenu={pageData.detailsMenu}
+            detailsMenu={pageData.details.menu}
             handleCancel={handleCancel}
             isDetailsScreen
             match={match}
@@ -499,7 +582,8 @@ const Jobs = ({
       )}
       {(jobsStore.loading ||
         workflowsStore.workflows.loading ||
-        workflowsStore.activeWorkflow.loading) && <Loader />}
+        workflowsStore.activeWorkflow.loading ||
+        functionsStore.loading) && <Loader />}
       {editableItem && (
         <JobsPanel
           closePanel={() => {
@@ -537,14 +621,23 @@ Jobs.propTypes = {
 }
 
 export default connect(
-  ({ appStore, filtersStore, jobsStore, detailsStore, workflowsStore }) => ({
+  ({
+    appStore,
+    filtersStore,
+    functionsStore,
+    jobsStore,
+    detailsStore,
+    workflowsStore
+  }) => ({
     appStore,
     detailsStore,
     filtersStore,
+    functionsStore,
     jobsStore,
     workflowsStore
   }),
   {
+    ...functionsActions,
     ...jobsActions,
     ...workflowsActions,
     ...detailsActions,

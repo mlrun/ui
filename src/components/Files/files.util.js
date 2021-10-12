@@ -104,9 +104,8 @@ export const tableHeaders = isSelectedFile => [
 ]
 
 export const generatePageData = isSelectedFile => ({
-  detailsMenu,
+  details: { menu: detailsMenu, infoHeaders, type: FILES_PAGE },
   filters,
-  infoHeaders,
   page,
   registerArtifactDialogTitle,
   tableHeaders: tableHeaders(isSelectedFile)
