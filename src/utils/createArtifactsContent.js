@@ -376,69 +376,109 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
     },
     modelArtifact: {
       id: `modelArtifact${identifier}`,
-      value: modelArtifact,
+      value: '',
       class: 'artifacts_small',
-      link: `${generateLinkPath(artifact.spec?.model_uri)}/overview`,
-      tooltip: artifact.spec?.model_uri,
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        class: 'artifacts_small',
+        value: modelArtifact,
+        tooltip: artifact.spec?.model_uri,
+        getLink: () => `${generateLinkPath(artifact.spec?.model_uri)}/overview`
+      }
     },
     state: {
       id: `state${identifier}`,
-      value: artifact.status?.state,
+      value: '',
       class: 'artifacts_extra-small',
       type: 'hidden',
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        value: artifact.status?.state,
+        class: 'artifacts_extra-small'
+      }
     },
     version: {
       id: `version${identifier}`,
-      value: artifact?.status?.children ? 'Router' : tag,
+      value: '',
       class: 'artifacts_extra-small',
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        value: artifact?.status?.children ? 'Router' : tag,
+        class: 'artifacts_extra-small'
+      }
     },
     modelClass: {
       id: `modelClass${identifier}`,
-      value: artifact.spec?.model_class,
+      value: '',
       class: 'artifacts_small',
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        value: artifact.spec?.model_class,
+        class: 'artifacts_small'
+      }
     },
     labels: {
       id: `labels${identifier}`,
-      value: parseKeyValues(artifact.metadata?.labels),
+      value: '',
       class: 'artifacts_big',
-      type: 'labels',
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        value: parseKeyValues(artifact.metadata?.labels),
+        class: 'artifacts_big',
+        type: 'labels'
+      }
     },
     firstRequest: {
       id: `firstRequest${identifier}`,
-      value: formatDatetime(new Date(artifact.status?.first_request), '-'),
+      value: '',
       class: 'artifacts_small',
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        value: formatDatetime(new Date(artifact.status?.first_request), '-'),
+        class: 'artifacts_small'
+      }
     },
     lastRequest: {
       id: `lastRequest${identifier}`,
-      value: formatDatetime(new Date(artifact.status?.last_request), '-'),
+      value: '',
       class: 'artifacts_small',
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        value: formatDatetime(new Date(artifact.status?.last_request), '-'),
+        class: 'artifacts_small'
+      }
     },
     averageLatency: {
       id: `averageLatency${identifier}`,
-      value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
+      value: '',
       class: 'artifacts_small',
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
+        class: 'artifacts_small'
+      }
     },
     errorCount: {
       id: `errorCount${identifier}`,
-      value: artifact.status?.error_count ?? '-',
+      value: '',
       class: 'artifacts_small',
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        value: artifact.status?.error_count ?? '-',
+        class: 'artifacts_small'
+      }
     },
     driftStatus: {
       id: `driftStatus${identifier}`,
-      status: artifact.status?.drift_status,
-      value: driftStatusIcons[artifact.status?.drift_status]?.value,
+      value: '',
       class: 'artifacts_extra-small',
-      tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip,
-      hidden: isSelectedItem
+      hidden: isSelectedItem,
+      expandedCellContent: {
+        status: artifact.status?.drift_status,
+        value: driftStatusIcons[artifact.status?.drift_status]?.value,
+        class: 'artifacts_extra-small',
+        tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip
+      }
     }
   }
 }
