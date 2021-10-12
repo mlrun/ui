@@ -974,3 +974,26 @@
     }
   }
 }
+
+//Padding mixin
+@mixin padding($padding) {
+  @if length($padding) > 1 {
+    padding-top: nth($padding, 1) !important;
+    padding-right: nth($padding, 2) !important;
+    padding-bottom: nth($padding, 3) !important;
+    padding-left: nth($padding, 4) !important;
+  } @else {
+    padding: $padding !important;
+  }
+}
+//Margin mixin
+@mixin margin($margin) {
+  @if length($margin) > 1 {
+    margin-top: nth($margin, 1) !important;
+    margin-right: nth($margin, 2) !important;
+    margin-bottom: nth($margin, 3) !important;
+    margin-left: nth($margin, 4) !important;
+  } @else {
+    margin: $margin !important;
+  }
+}

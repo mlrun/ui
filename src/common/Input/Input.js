@@ -1,8 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import lodash from 'lodash'
 
-import { ReactComponent as Invalid } from '../../images/invalid.svg'
+import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
+
+import OptionsMenu from '../OptionsMenu/OptionsMenu'
+import ValidationTemplate from '../OptionsMenu/ValidationTemplate/ValidationTemplate'
+
+import { ReactComponent as InvalidIcon } from '../../images/invalid.svg'
+import { ReactComponent as WarningIcon } from '../../images/warning.svg'
+// import { ReactComponent as CheckmarkIcon } from '../../images/success_done.svg'
+
+import { checkPatternsValidity } from '../../services/validationService'
 
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -38,17 +48,25 @@ const Input = React.forwardRef(
       type,
       value,
       withoutBorder,
-      wrapperClassName
+      wrapperClassName,
+      validationRules: rules
     },
     ref
   ) => {
+    ref = useRef()
+    const input = React.createRef()
+    const inputLabel = useRef(null)
     const [inputIsFocused, setInputIsFocused] = useState(false)
     const [labelWidth, setLabelWidth] = useState(0)
     const [isInvalid, setIsInvalid] = useState(false)
     const [typedValue, setTypedValue] = useState('')
     const [validationPattern] = useState(RegExp(pattern))
-    const input = React.createRef()
-    const inputLabel = useRef(null)
+    const [validationRules, setValidationRules] = useState(rules || [])
+    const [showValidationRules, setShowValidationRules] = useState(false)
+    const [isClickedOutside, setIsClickedOutside] = useDetectOutsideClick(
+      ref,
+      false
+    )
     const inputClassNames = classnames(
       'input',
       className,
@@ -56,7 +74,8 @@ const Input = React.forwardRef(
       (inputIsFocused || placeholder || typedValue.length > 0) &&
         floatingLabel &&
         'active-input',
-      isInvalid && 'input_invalid',
+      isInvalid ? 'input_invalid' : 'input_valid',
+      !lodash.isEmpty(validationRules) && 'has-icon',
       tip && 'input-short',
       withoutBorder && 'without-border'
     )
@@ -74,33 +93,32 @@ const Input = React.forwardRef(
       'input__label-mandatory',
       disabled && 'input__label-mandatory_disabled'
     )
-
     useEffect(() => {
       setTypedValue(String(value ?? '')) // convert from number to string
     }, [value])
 
-    useEffect(() => {
-      if (isInvalid !== invalid) {
-        if (
-          (required && typedValue.trim().length === 0) ||
-          (pattern && !validationPattern.test(typedValue)) ||
-          typedValue.startsWith(' ')
-        ) {
-          setIsInvalid(true)
-          setInvalid && setInvalid(false)
-        } else {
-          setIsInvalid(invalid)
-        }
-      }
-    }, [
-      invalid,
-      isInvalid,
-      pattern,
-      required,
-      setInvalid,
-      typedValue,
-      validationPattern
-    ])
+    // useEffect(() => {
+    //   if (isInvalid !== invalid) {
+    //     if (
+    //       (required && typedValue.trim().length === 0) ||
+    //       (pattern && !validationPattern.test(typedValue)) ||
+    //       typedValue.startsWith(' ')
+    //     ) {
+    //       setIsInvalid(true)
+    //       setInvalid && setInvalid(false)
+    //     } else {
+    //       setIsInvalid(invalid)
+    //     }
+    //   }
+    // }, [
+    //   invalid,
+    //   isInvalid,
+    //   pattern,
+    //   required,
+    //   setInvalid,
+    //   typedValue,
+    //   validationPattern
+    // ])
 
     useEffect(() => {
       if (focused) {
@@ -115,13 +133,50 @@ const Input = React.forwardRef(
       }
     }, [label])
 
-    const matchOnClick = item => {
-      setTypedValue(item)
-      setInputIsFocused(false)
-      onChange(item)
+    const validateField = value => {
+      let isFieldValidByPattern = true
+
+      if (!lodash.isEmpty(validationRules)) {
+        const [newRules, isValidField] = checkPatternsValidity(
+          validationRules,
+          value
+        )
+        isFieldValidByPattern = isValidField
+        setValidationRules(newRules)
+
+        if (isFieldValidByPattern && showValidationRules) {
+          setShowValidationRules(false)
+        }
+      }
+
+      if (
+        (required && value.trim().length === 0) ||
+        (pattern && !validationPattern.test(value)) ||
+        typedValue.startsWith(' ') ||
+        typedValue.trim().length > 0 ||
+        !isFieldValidByPattern
+      ) {
+        setIsInvalid(true)
+        setInvalid && setInvalid(false)
+      } else {
+        setIsInvalid(false)
+        setInvalid && setInvalid(true)
+      }
     }
 
-    const inputOnBlur = event => {
+    const changeValue = value => {
+      setTypedValue(value)
+      onChange(value)
+      validateField(value)
+    }
+
+    const handleSuggestionClick = item => {
+      setInputIsFocused(false)
+
+      changeValue(item)
+    }
+
+    const handleInputBlur = event => {
       if (
         !event.relatedTarget ||
         !event.relatedTarget?.closest('.suggestion-list')
@@ -132,27 +187,30 @@ const Input = React.forwardRef(
       }
     }
 
-    const inputOnChange = event => {
-      setTypedValue(event.target.value)
-      onChange(event.target.value)
-
-      if (
-        (required && event.target.value.trim().length === 0) ||
-        (validationPattern &&
-          !validationPattern.test(event.target.value) &&
-          event.target.value.trim().length > 0) ||
-        event.target.value.startsWith(' ')
-      ) {
-        setIsInvalid(true)
-        setInvalid && setInvalid(false)
-      } else {
-        setIsInvalid(false)
-        setInvalid && setInvalid(true)
-      }
+    const handleInputChange = ({ target: { value } }) => {
+      changeValue(value)
     }
 
-    const inputOnFocus = event => {
+    const renderValidationRules = validationRules.map(
+      ({ isValid = false, label, name }) => {
+        return (
+          <ValidationTemplate
+            valid={isValid}
+            validationMessage={label}
+            key={name}
+          />
+        )
+      }
+    )
+
+    const handleInputFocus = event => {
       setInputIsFocused(true)
+    }
+
+    const handleOptionMenu = () => {
+      setIsClickedOutside(!isClickedOutside || !showValidationRules)
+      setShowValidationRules(!isClickedOutside || !showValidationRules)
+      input.current.focus()
     }
 
     return (
@@ -160,9 +218,9 @@ const Input = React.forwardRef(
         <input
           data-testid="input"
           className={inputClassNames}
-          onBlur={inputOnBlur}
-          onChange={inputOnChange}
-          onFocus={inputOnFocus}
+          onBlur={handleInputBlur}
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
           ref={input}
           required={isInvalid}
           {...{
@@ -195,9 +253,18 @@ const Input = React.forwardRef(
             )}
           </label>
         )}
-        {isInvalid && (
+
+        {!lodash.isEmpty(validationRules) && typedValue && isInvalid && (
+          <i
+            className="validation__icon p-1 pointer"
+            onClick={handleOptionMenu}
+          >
+            <WarningIcon />
+          </i>
+        )}
+        {isInvalid && !typedValue && (
           <Tooltip
-            className="input__warning"
+            className="validation__icon"
             template={
               <TextTooltipTemplate
                 text={required && !typedValue ? requiredText : invalidText}
@@ -205,7 +272,7 @@ const Input = React.forwardRef(
               />
             }
           >
-            <Invalid />
+            <InvalidIcon />
           </Tooltip>
         )}
         {tip && <Tip text={tip} className="input__tip" />}
@@ -222,7 +289,7 @@ const Input = React.forwardRef(
                   className="suggestion-item"
                   key={`${item}${index}`}
                   onClick={() => {
-                    matchOnClick(item)
+                    handleSuggestionClick(item)
                   }}
                   tabIndex={index}
                   dangerouslySetInnerHTML={{
@@ -235,6 +302,9 @@ const Input = React.forwardRef(
             })}
           </ul>
         )}
+        <OptionsMenu show={showValidationRules && typedValue !== ''}>
+          {renderValidationRules}
+        </OptionsMenu>
       </div>
     )
   }
@@ -292,7 +362,17 @@ Input.propTypes = {
   type: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   withoutBorder: PropTypes.bool,
-  wrapperClassName: PropTypes.string
+  wrapperClassName: PropTypes.string,
+  validationRules: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      pattern: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.instanceOf(RegExp)
+      ]).isRequired
+    })
+  )
 }
 
 export default React.memo(Input)

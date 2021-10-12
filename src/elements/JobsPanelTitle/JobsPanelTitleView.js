@@ -19,6 +19,8 @@ import { panelActions } from '../../components/JobsPanel/panelReducer'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
+import { validationService } from '../../services/validationService'
+
 const JobsPanelTitleView = ({
   closePanel,
   currentFunctionInfo,
@@ -39,17 +41,6 @@ const JobsPanelTitleView = ({
   const accordionIconClassNames = classnames(
     'job-panel__title-edit-icon',
     openScheduleJob && 'job-panel__title-edit-icon_disabled'
-  )
-  const titleValidationTip = editTitle ? (
-    <>
-      <span>&bull; Valid characters: A-Z, a-z, 0-9, -, _, .</span>
-      <br />
-      <span>&bull; Must begin and end with: A-Z, a-z, 0-9</span>
-      <br />
-      <span>&bull; Length - max: 63</span>
-    </>
-  ) : (
-    ''
   )
 
   return (
@@ -93,14 +84,17 @@ const JobsPanelTitleView = ({
                     payload: name
                   })
                 }
-                maxLength={63}
-                pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
+                validationRules={[
+                  validationService.generateRule.validCharacters(
+                    'a-z A-Z 0-9 - _ .'
+                  ),
+                  validationService.generateRule.beginEndWith('a-z A-Z 0-9'),
+                  validationService.generateRule.length({ max: 63 })
+                ]}
                 required
-                requiredText="This field is required"
                 setInvalid={value =>
                   setNameValid(state => ({ ...state, isNameValid: value }))
                 }
-                tip={titleValidationTip}
                 type="text"
                 value={currentFunctionInfo.name}
                 wrapperClassName={

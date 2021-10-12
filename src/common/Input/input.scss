@@ -24,7 +24,7 @@
     cursor: not-allowed;
   }
 
-  &__warning {
+  & ~ .validation__icon {
     position: absolute;
     top: 50%;
     right: 10px;
@@ -40,7 +40,7 @@
   &-short {
     margin-right: 22px;
 
-    & ~ .input__warning {
+    & ~ .validation__icon {
       right: 30px;
     }
   }
@@ -48,12 +48,24 @@
   &-wrapper {
     position: relative;
     display: flex;
+    .input {
+      &.input_invalid {
+        border: $errorBorder;
+        &.has-icon {
+          padding-right: 38px;
+        }
 
-    .input.input_invalid {
-      border: $errorBorder;
-
-      & ~ .input__warning {
+        & ~ .validation__icon {
+          display: block;
+        }
+      }
+      &.input_valid {
         display: block;
+        & ~ .validation__icon {
+          path {
+            fill: var(--ml-alert-green);
+          }
+        }
       }
     }
 
@@ -93,13 +105,13 @@
     transform: translateY(-50%);
   }
 
-  &.active-input {
-    padding: 25px 16px 11px;
-  }
+  // &.active-input {
+  //   // padding: 25px 16px 11px;
+  // }
 
   &__label {
     position: absolute;
-    top: 15px;
+    top: 17px;
     left: 16px;
     color: $topaz;
     text-transform: capitalize;
@@ -115,11 +127,13 @@
     }
 
     &.active-label {
-      top: 9px;
-      font-weight: 700;
+      background-color: var(--ml-white-color);
+      top: -4px;
+      left: 12px;
+      font-weight: noraml;
       font-size: 10px;
-      line-height: 12px;
-
+      // line-height: 12px;
+      padding: 0 5px;
       .input__label-mandatory:not(.input__label-mandatory_disabled) {
         color: $topaz;
       }
@@ -127,7 +141,7 @@
 
     &-floating {
       position: absolute;
-      top: 15px;
+      top: 17px;
       left: 16px;
       color: $topaz;
       transition: 300ms ease all;
@@ -142,14 +156,14 @@
     height: 40px;
 
     & ~ .input__label {
-      top: 11px;
+      top: 13px;
 
       &.input__label-floating {
-        top: 11px;
+        top: 13px;
       }
 
       &.active-label {
-        top: 6px;
+        top: -4px;
       }
     }
   }
@@ -169,7 +183,7 @@
       }
 
       &.active-label {
-        top: 11px;
+        top: -4px;
       }
     }
   }
@@ -185,7 +199,7 @@
       }
 
       &.active-label {
-        top: 13px;
+        top: -4px;
       }
     }
   }
