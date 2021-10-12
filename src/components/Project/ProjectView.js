@@ -47,7 +47,6 @@ const ProjectView = React.forwardRef(
       createFunctionSuccess,
       createNewOptions,
       editProject,
-      frontendSpec,
       handleAddProjectLabel,
       handleDeployFunctionSuccess,
       handleDeployFunctionFailure,
@@ -58,6 +57,7 @@ const ProjectView = React.forwardRef(
       handleUpdateProjectLabels,
       isNewFunctionPopUpOpen,
       isPopupDialogOpen,
+      isProjectMembershipEnabled,
       links,
       match,
       membersDispatch,
@@ -162,8 +162,7 @@ const ProjectView = React.forwardRef(
                   </span>
                 </div>
               </div>
-              {frontendSpec?.feature_flags?.project_membership ===
-                'enabled' && (
+              {isProjectMembershipEnabled && (
                 <>
                   <div className="general-info__row owner-row">
                     <div className="row-value">
@@ -348,6 +347,7 @@ ProjectView.propTypes = {
   handleUpdateProjectLabels: PropTypes.func.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
+  isProjectMembershipEnabled: PropTypes.bool.isRequired,
   links: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
