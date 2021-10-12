@@ -28,11 +28,10 @@ const Page = ({ children, fetchFrontendSpec, history, location }) => {
   useLayoutEffect(() => {
     if (savedDemoMode && !isDemoMode(location.search)) {
       history.replace({
-        pathname: location.pathname,
         search: '?demo=true'
       })
     }
-  }, [savedDemoMode, history, location.pathname, location.search])
+  }, [history, location.search, savedDemoMode])
 
   return <PageView>{children}</PageView>
 }
