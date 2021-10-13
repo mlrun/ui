@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { isEmpty, cloneDeep } from 'lodash'
 
 import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
@@ -533,8 +533,16 @@ const Jobs = ({
   }
 
   const onEditJob = (event, postData) => {
+    const generatedData = cloneDeep(postData)
+
+    delete generatedData.function.metadata
+
     editJob(
-      { scheduled_object: postData, cron_trigger: postData.schedule },
+      {
+        credentials: postData.function.metadata.credentials,
+        scheduled_object: generatedData,
+        cron_trigger: generatedData.schedule
+      },
       match.params.projectName
     )
       .then(() => {

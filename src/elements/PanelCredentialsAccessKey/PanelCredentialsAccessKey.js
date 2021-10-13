@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
@@ -21,6 +21,12 @@ const PanelCredentialsAccessKey = ({
     'new-item-side-panel__item',
     'access-key'
   )
+
+  useEffect(() => {
+    if (credentialsAccessKey !== PANEL_DEFAULT_ACCESS_KEY) {
+      setInputValue(credentialsAccessKey)
+    }
+  }, [credentialsAccessKey])
 
   return (
     <div className={accessKeyClassNames}>
