@@ -17,7 +17,6 @@ const FeatureSetsPanel = ({
   featureStore,
   project,
   removeFeatureStoreError,
-  setNewFeatureSetCredentialsAccessKey,
   setNotification,
   startFeatureSetIngest
 }) => {
@@ -77,8 +76,9 @@ const FeatureSetsPanel = ({
     const reference = result.data.metadata.tag || result.data.metadata.uid
     const data = {
       source: { ...result.data.spec.source, name: 'source' },
-      targets: result.data.spec.targets,
-      credentials: featureStore.newFeatureSet.credentials
+      targets: result.data.spec.targets
+      // commented till be implemented on back end
+      // credentials: featureStore.newFeatureSet.credentials
     }
 
     return startFeatureSetIngest(
@@ -109,16 +109,12 @@ const FeatureSetsPanel = ({
       closePanel={closePanel}
       confirmDialog={confirmDialog}
       error={featureStore.error}
-      featureStore={featureStore}
       handleSave={handleSave}
       handleSaveOnClick={handleSaveOnClick}
       loading={featureStore.loading}
       project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
-      setNewFeatureSetCredentialsAccessKey={
-        setNewFeatureSetCredentialsAccessKey
-      }
       setValidation={setValidation}
       validation={validation}
     />

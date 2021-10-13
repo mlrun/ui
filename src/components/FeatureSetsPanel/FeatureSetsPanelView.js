@@ -10,7 +10,6 @@ import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSch
 import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSetsPanelTargetStore'
 import Loader from '../../common/Loader/Loader'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
 
 import {
   PRIMARY_BUTTON,
@@ -26,14 +25,12 @@ const FeatureSetsPanelView = ({
   closePanel,
   confirmDialog,
   error,
-  featureStore,
   handleSave,
   handleSaveOnClick,
   loading,
   project,
   removeFeatureStoreError,
   setConfirmDialog,
-  setNewFeatureSetCredentialsAccessKey,
   setValidation,
   validation
 }) => {
@@ -97,12 +94,13 @@ const FeatureSetsPanelView = ({
               setTargetsPathValid={setValidation}
             />
           </Accordion>
-          <PanelCredentialsAccessKey
-            credentialsAccessKey={
-              featureStore.newFeatureSet.credentials.access_key
-            }
-            setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
-          />
+          {/*commented till be implemented on back end*/}
+          {/*<PanelCredentialsAccessKey*/}
+          {/*  credentialsAccessKey={*/}
+          {/*    featureStore.newFeatureSet.credentials.access_key*/}
+          {/*  }*/}
+          {/*  setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}*/}
+          {/*/>*/}
           <div className="new-item-side-panel__buttons-container">
             {error && (
               <ErrorMessage
@@ -148,14 +146,12 @@ FeatureSetsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   confirmDialog: PropTypes.shape({ action: PropTypes.string.isRequired }),
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  featureStore: PropTypes.shape({}).isRequired,
   handleSave: PropTypes.func.isRequired,
   handleSaveOnClick: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   project: PropTypes.string.isRequired,
   removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
-  setNewFeatureSetCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }
