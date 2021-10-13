@@ -21,9 +21,6 @@ export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 
 export const FETCH_FRONTEND_SPEC_SUCCESS = 'FETCH_FRONTEND_SPEC_SUCCESS'
 
-export const PANEL_EDIT_MODE = 'EDIT'
-export const PANEL_CREATE_MODE = 'CREATE'
-
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
@@ -435,3 +432,11 @@ export const SECONDARY_BUTTON = 'secondary'
 export const TERTIARY_BUTTON = 'tertiary'
 export const DANGER_BUTTON = 'danger'
 export const LABEL_BUTTON = 'label'
+
+/*=========== PANEL =============*/
+
+export const PANEL_EDIT_MODE = 'EDIT'
+export const PANEL_CREATE_MODE = 'CREATE'
+
+export const ENV_VARIABLE_TYPE_VALUE = 'value'
+export const ENV_VARIABLE_TYPE_SECRET = 'secret'

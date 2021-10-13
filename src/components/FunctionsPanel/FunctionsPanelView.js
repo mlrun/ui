@@ -113,7 +113,10 @@ const FunctionsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
               openByDefault
             >
-              <FunctionsPanelEnvironmentVariables />
+              <FunctionsPanelEnvironmentVariables
+                setValidation={setValidation}
+                validation={validation}
+              />
             </Accordion>
             {runtimeSections[newFunction.kind] && (
               <Accordion
