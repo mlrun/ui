@@ -35,6 +35,7 @@ const FunctionsPanel = ({
   removeFunctionsError,
   createNewFunction,
   setNewFunction,
+  setNewFunctionCredentialsAccessKey,
   setNewFunctionProject
 }) => {
   const [confirmData, setConfirmData] = useState(null)
@@ -64,6 +65,9 @@ const FunctionsPanel = ({
       let data = {
         kind: defaultData.type,
         metadata: {
+          credentials: {
+            access_key: defaultData.access_key
+          },
           labels: defaultData.labels,
           name: defaultData.name,
           project: defaultData.project,
@@ -236,6 +240,7 @@ const FunctionsPanel = ({
       confirmData={confirmData}
       defaultData={defaultData ?? {}}
       error={functionsStore.error}
+      functionsStore={functionsStore}
       handleSave={handleSave}
       imageType={imageType}
       loading={functionsStore.loading}
@@ -244,6 +249,7 @@ const FunctionsPanel = ({
       newFunction={functionsStore.newFunction}
       removeFunctionsError={removeFunctionsError}
       setImageType={setImageType}
+      setNewFunctionCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
       setValidation={setValidation}
       validation={validation}
     />

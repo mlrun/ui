@@ -54,6 +54,10 @@ const JobsPanelTitle = ({
         type: panelActions.SET_TABLE_DATA,
         payload: panelState.previousPanelData.tableData
       })
+      panelDispatch({
+        type: panelActions.SET_ACCESS_KEY,
+        payload: panelState.previousPanelData.access_key
+      })
     }
   }
 

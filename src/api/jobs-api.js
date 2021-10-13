@@ -55,6 +55,10 @@ export default {
   getJobFunction: (project, functionName, hash) =>
     mainHttpClient.get(`/func/${project}/${functionName}?hash_key=${hash}`),
   getJobLogs: (id, project) => mainHttpClient.get(`/log/${project}/${id}`),
+  getScheduledJobAccessKey: (project, job) =>
+    mainHttpClient.get(
+      `/projects/${project}/schedules/${job}?include-credentials=true`
+    ),
   getScheduledJobs: (project, status, filters) => {
     const params = {
       include_last_run: 'yes'

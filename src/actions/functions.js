@@ -46,7 +46,8 @@ import {
   SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_ERROR_STREAM,
   SET_NEW_FUNCTION_DEFAULT_CLASS,
-  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT
+  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+  SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -292,6 +293,10 @@ const functionsActions = {
   setNewFunctionLabels: labels => ({
     type: SET_NEW_FUNCTION_LABELS,
     payload: labels
+  }),
+  setNewFunctionCredentialsAccessKey: accessKey => ({
+    type: SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
+    payload: accessKey
   }),
   setNewFunctionName: name => ({
     type: SET_NEW_FUNCTION_NAME,

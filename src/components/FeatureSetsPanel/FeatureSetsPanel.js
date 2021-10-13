@@ -17,6 +17,7 @@ const FeatureSetsPanel = ({
   featureStore,
   project,
   removeFeatureStoreError,
+  setNewFeatureSetCredentialsAccessKey,
   setNotification,
   startFeatureSetIngest
 }) => {
@@ -33,14 +34,18 @@ const FeatureSetsPanel = ({
   const history = useHistory()
 
   const handleSave = () => {
+    const data = {
+      kind: 'FeatureSet',
+      ...featureStore.newFeatureSet
+    }
+
+    delete data.credentials
+
     if (featureStore.error) {
       removeFeatureStoreError()
     }
 
-    createNewFeatureSet(project, {
-      kind: 'FeatureSet',
-      ...featureStore.newFeatureSet
-    })
+    createNewFeatureSet(project, data)
       .then(result => {
         setConfirmDialog(null)
 
@@ -70,13 +75,17 @@ const FeatureSetsPanel = ({
 
   const handleStartFeatureSetIngest = result => {
     const reference = result.data.metadata.tag || result.data.metadata.uid
+    const data = {
+      source: { ...result.data.spec.source, name: 'source' },
+      targets: result.data.spec.targets,
+      credentials: featureStore.newFeatureSet.credentials
+    }
 
     return startFeatureSetIngest(
       project,
       result.data.metadata.name,
       reference,
-      result.data.spec.source,
-      result.data.spec.targets
+      data
     ).then(() => {
       handleCreateFeatureSetSuccess(result.data.metadata.name, reference)
     })
@@ -100,12 +109,16 @@ const FeatureSetsPanel = ({
       closePanel={closePanel}
       confirmDialog={confirmDialog}
       error={featureStore.error}
+      featureStore={featureStore}
       handleSave={handleSave}
       handleSaveOnClick={handleSaveOnClick}
       loading={featureStore.loading}
       project={project}
       removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
+      setNewFeatureSetCredentialsAccessKey={
+        setNewFeatureSetCredentialsAccessKey
+      }
       setValidation={setValidation}
       validation={validation}
     />

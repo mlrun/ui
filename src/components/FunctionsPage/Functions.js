@@ -154,6 +154,7 @@ const Functions = ({
           const newFunctions = chain(functions)
             .orderBy('metadata.updated', 'desc')
             .map(func => ({
+              access_key: func.metadata.credentials?.access_key ?? '',
               args: func.spec?.args ?? [],
               build: func.spec?.build ?? {},
               command: func.spec?.command,

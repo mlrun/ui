@@ -43,7 +43,9 @@ import {
   SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_ERROR_STREAM,
   SET_NEW_FUNCTION_DEFAULT_CLASS,
-  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT
+  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+  SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
+  PANEL_DEFAULT_ACCESS_KEY
 } from '../constants'
 
 const initialState = {
@@ -58,6 +60,9 @@ const initialState = {
   newFunction: {
     kind: 'job',
     metadata: {
+      credentials: {
+        access_key: PANEL_DEFAULT_ACCESS_KEY
+      },
       labels: {},
       name: '',
       tag: ''
@@ -377,6 +382,20 @@ export default (state = initialState, { type, payload }) => {
           metadata: {
             ...state.newFunction.metadata,
             labels: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          metadata: {
+            ...state.newFunction.metadata,
+            credentials: {
+              ...state.newFunction.metadata.credentials,
+              access_key: payload
+            }
           }
         }
       }

@@ -49,6 +49,7 @@ const Jobs = ({
   fetchJobLogs,
   fetchJobPods,
   fetchJobs,
+  fetchScheduledJobAccessKey,
   fetchWorkflow,
   fetchWorkflows,
   filtersStore,
@@ -168,6 +169,9 @@ const Jobs = ({
 
     setEditableItem({
       rerun_object: {
+        credentials: {
+          access_key: functionData?.metadata?.credentials?.access_key ?? ''
+        },
         function: {
           spec: {
             env: functionData?.spec.env ?? [],
@@ -240,13 +244,36 @@ const Jobs = ({
     })
   }
 
+  const handleEditScheduleJob = editableItem => {
+    fetchScheduledJobAccessKey(match.params.projectName, editableItem.name)
+      .then(result => {
+        setEditableItem({
+          ...editableItem,
+          scheduled_object: {
+            ...editableItem.scheduled_object,
+            credentials: {
+              access_key: result.data.credentials.access_key
+            }
+          }
+        })
+      })
+      .catch(() => {
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          retry: () => handleEditScheduleJob(editableItem),
+          message: 'Failed to fetch job access key'
+        })
+      })
+  }
+
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab,
       location.search,
       onRemoveScheduledJob,
       handleRunJob,
-      setEditableItem,
+      handleEditScheduleJob,
       handleRerunJob,
       handleMonitoring,
       appStore.frontendSpec.jobs_dashboard_url,

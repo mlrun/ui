@@ -12,6 +12,7 @@ import { tabs } from './scheduleJobData'
 import { ReactComponent as Schedule } from '../../images/clock.svg'
 
 import './scheduleJob.scss'
+import JobsPanelCredentialsAccessKey from '../../elements/JobsPanelCredentialsAccessKey/JobsPanelCredentialsAccessKey'
 
 const ScheduleJobView = ({
   activeTab,
@@ -22,6 +23,8 @@ const ScheduleJobView = ({
   isRecurring,
   match,
   onSchedule,
+  panelDispatch,
+  panelState,
   recurringDispatch,
   recurringState,
   setActiveTab,
@@ -75,6 +78,11 @@ const ScheduleJobView = ({
           <ScheduleCron cron={cron} setCron={setCron} />
         )}
       </div>
+      <JobsPanelCredentialsAccessKey
+        isScheduled
+        panelDispatch={panelDispatch}
+        panelState={panelState}
+      />
       <Button
         variant={SECONDARY_BUTTON}
         label={
@@ -99,6 +107,8 @@ ScheduleJobView.propTypes = {
   isRecurring: PropTypes.string.isRequired,
   match: PropTypes.shape({}).isRequired,
   onSchedule: PropTypes.func.isRequired,
+  panelDispatch: PropTypes.func.isRequired,
+  panelState: PropTypes.shape({}).isRequired,
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,

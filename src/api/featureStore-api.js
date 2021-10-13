@@ -89,13 +89,10 @@ export default {
       {},
       true
     ),
-  startIngest: (project, featureSet, reference, source, targets) =>
+  startIngest: (project, featureSet, reference, data) =>
     mainHttpClient.post(
       `/projects/${project}/feature-sets/${featureSet}/references/${reference}/ingest`,
-      {
-        source: { ...source, name: 'source' },
-        targets
-      }
+      data
     ),
   updateFeatureStoreData: (projectName, featureData, tag, data, pageTab) =>
     mainHttpClient.patch(

@@ -219,7 +219,7 @@ export const generatePageData = (
   search,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem,
+  handleEditScheduleJob,
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
@@ -247,7 +247,7 @@ export const generatePageData = (
       pageTab,
       removeScheduledJob,
       handleSubmitJob,
-      setEditableItem,
+      handleEditScheduleJob,
       handleRerunJob,
       handleMonitoring,
       jobsDashboardUrl,
@@ -279,7 +279,7 @@ export const generateActionsMenu = (
   pageTab,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem,
+  handleEditScheduleJob,
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
@@ -296,7 +296,7 @@ export const generateActionsMenu = (
         {
           label: 'Edit',
           icon: <Edit />,
-          onClick: setEditableItem
+          onClick: handleEditScheduleJob
         },
         {
           label: 'Delete',
