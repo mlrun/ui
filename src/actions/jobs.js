@@ -37,7 +37,8 @@ import {
   SET_NEW_JOB_NODE_SELECTOR,
   FETCH_JOB_SUCCESS,
   FETCH_JOB_BEGIN,
-  FETCH_JOB_FAILURE
+  FETCH_JOB_FAILURE,
+  REMOVE_JOB
 } from '../constants'
 
 const jobsActions = {
@@ -171,6 +172,9 @@ const jobsActions = {
   }),
   handleRunScheduledJob: (postData, project, job) => () =>
     jobsApi.runScheduledJob(postData, project, job),
+  removeJob: () => ({
+    type: REMOVE_JOB
+  }),
   removeJobError: () => ({
     type: REMOVE_JOB_ERROR
   }),

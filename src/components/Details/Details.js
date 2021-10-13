@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { connect, useDispatch } from 'react-redux'
@@ -8,7 +8,6 @@ import DetailsView from './DetailsView'
 import artifactActions from '../../actions/artifacts'
 import {
   ARTIFACTS_PAGE,
-  FEATURE_STORE_PAGE,
   DATASETS_TAB,
   FILES_PAGE,
   FUNCTIONS_PAGE,
@@ -54,21 +53,12 @@ const Details = ({
   setRefreshWasHandled,
   showWarning
 }) => {
-  const [style, setStyle] = useState({})
   const applyChangesRef = useRef()
   const history = useHistory()
   const dispatch = useDispatch()
   let unblockRootChange = useRef()
   let pathname = useRef()
   const detailsRef = useRef()
-
-  useEffect(() => {
-    if (isDetailsScreen) {
-      setStyle({
-        width: '100%'
-      })
-    }
-  }, [isDetailsScreen])
 
   const handlePreview = useCallback(() => {
     dispatch(
@@ -121,73 +111,72 @@ const Details = ({
   )
 
   useEffect(() => {
-    if (pageData.page === JOBS_PAGE) {
+    if (pageData.details.type === JOBS_PAGE) {
       setIteration('0')
     }
 
     return () => {
       resetChanges()
     }
-  }, [pageData.page, resetChanges, selectedItem.uid, setIteration])
+  }, [pageData.details.type, resetChanges, setIteration])
 
   useEffect(() => {
-    return () => {
-      setChangesData({})
-    }
-  }, [match.params.name, setChangesData])
-
-  useEffect(() => {
-    if (!isEveryObjectValueEmpty(selectedItem)) {
-      if (pageData.page === JOBS_PAGE) {
+    if (
+      !isEveryObjectValueEmpty(selectedItem) &&
+      isEveryObjectValueEmpty(detailsStore.infoContent)
+    ) {
+      if (pageData.details.type === JOBS_PAGE) {
         setInfoContent(generateJobsContent(selectedItem))
       } else if (
-        pageData.page === ARTIFACTS_PAGE ||
-        pageData.page === FILES_PAGE ||
-        pageData.page === MODELS_PAGE ||
-        match.params.pageTab === DATASETS_TAB
+        pageData.details.type === ARTIFACTS_PAGE ||
+        pageData.details.type === FILES_PAGE ||
+        pageData.details.type === MODELS_PAGE ||
+        pageData.details.type === DATASETS_TAB
       ) {
         setInfoContent(
-          generateArtifactsContent(
-            pageData.page,
-            match.params.pageTab,
-            selectedItem
-          )
+          generateArtifactsContent(pageData.details.type, selectedItem)
         )
-      } else if (pageData.page === FUNCTIONS_PAGE) {
+      } else if (pageData.details.type === FUNCTIONS_PAGE) {
         setInfoContent(generateFunctionsContent(selectedItem))
-      } else if (pageData.page === FEATURE_STORE_PAGE) {
+      } else {
         setInfoContent(
           generateFeatureStoreContent(
             handleAddChip,
             handleDeleteChip,
             handleEditChips,
             handleEditInput,
-            match.params.pageTab,
+            pageData.details.type,
             selectedItem
           )
         )
       }
-
-      return () => {
-        if (match.params.pageTab === MODELS_TAB) {
-          removeModelFeatureVector()
-        }
-
-        removeInfoContent()
-      }
     }
   }, [
-    detailsStore.changes.counter,
+    detailsStore.infoContent,
     handleAddChip,
     handleDeleteChip,
     handleEditChips,
     handleEditInput,
-    match.params.pageTab,
-    pageData.page,
+    pageData.details.type,
+    selectedItem,
+    setInfoContent
+  ])
+
+  useEffect(() => {
+    return () => {
+      if (pageData.details.type === MODELS_TAB) {
+        removeModelFeatureVector()
+      }
+
+      removeInfoContent()
+      setChangesData({})
+    }
+  }, [
+    pageData.details.type,
     removeInfoContent,
     removeModelFeatureVector,
     selectedItem,
-    setInfoContent
+    setChangesData
   ])
 
   const handleShowWarning = useCallback(
@@ -347,7 +336,6 @@ const Details = ({
       selectedItem={selectedItem}
       setIteration={setIteration}
       setRefreshWasHandled={setRefreshWasHandled}
-      style={style}
       tabsContent={tabsContent}
     />
   )

@@ -332,16 +332,16 @@ const FeatureStore = ({
     if (
       match.params.name &&
       match.params.tag &&
-      pageData.detailsMenu.length > 0
+      pageData.details.menu.length > 0
     ) {
       isDetailsTabExists(
         FEATURE_STORE_PAGE,
         match,
-        pageData.detailsMenu,
+        pageData.details.menu,
         history
       )
     }
-  }, [history, match, pageData.detailsMenu])
+  }, [history, match, pageData.details.menu])
 
   useEffect(() => {
     checkTabIsValid(history, match, selectedItem)
@@ -350,17 +350,29 @@ const FeatureStore = ({
       if (match.params.pageTab === FEATURE_SETS_TAB) {
         return {
           ...state,
-          detailsMenu: [...generateFeatureSetsDetailsMenu(selectedItem)]
+          details: {
+            ...state.details,
+            menu: [...generateFeatureSetsDetailsMenu(selectedItem)],
+            type: FEATURE_SETS_TAB
+          }
         }
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
         return {
           ...state,
-          detailsMenu: [...generateFeatureVectorsDetailsMenu(selectedItem)]
+          details: {
+            ...state.details,
+            menu: [...generateFeatureVectorsDetailsMenu(selectedItem)],
+            type: FEATURE_VECTORS_TAB
+          }
         }
       } else if (match.params.pageTab === DATASETS_TAB) {
         return {
           ...state,
-          detailsMenu: [...generateDataSetsDetailsMenu(selectedItem)]
+          details: {
+            ...state.details,
+            menu: [...generateDataSetsDetailsMenu(selectedItem)],
+            type: DATASETS_TAB
+          }
         }
       }
 

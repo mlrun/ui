@@ -46,7 +46,11 @@ import {
   SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_ERROR_STREAM,
   SET_NEW_FUNCTION_DEFAULT_CLASS,
-  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT
+  SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+  GET_FUNCTION_WITH_HASH_BEGIN,
+  GET_FUNCTION_WITH_HASH_FAILURE,
+  GET_FUNCTION_WITH_HASH_SUCCESS,
+  REMOVE_FUNCTION
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -214,6 +218,35 @@ const functionsActions = {
   getFunction: (project, name) => dispatch => {
     return functionsApi.getFunction(project, name)
   },
+  getFunctionWithHash: (project, name, hash) => dispatch => {
+    dispatch(functionsActions.getFunctionWithHashBegin())
+
+    return functionsApi
+      .getFunctionWithHash(project, name, hash)
+      .then(result => {
+        dispatch(functionsActions.getFunctionWithHashSuccess(result.data.func))
+
+        return result.data.func
+      })
+      .catch(error => {
+        dispatch(functionsActions.getFunctionWithHashFailure(error.message))
+        throw error
+      })
+  },
+  getFunctionWithHashBegin: () => ({
+    type: GET_FUNCTION_WITH_HASH_BEGIN
+  }),
+  getFunctionWithHashFailure: error => ({
+    type: GET_FUNCTION_WITH_HASH_FAILURE,
+    payload: error
+  }),
+  getFunctionWithHashSuccess: func => ({
+    type: GET_FUNCTION_WITH_HASH_SUCCESS,
+    payload: func
+  }),
+  removeFunction: () => ({
+    type: REMOVE_FUNCTION
+  }),
   removeFunctionLogs: () => ({
     type: REMOVE_FUNCTION_LOGS
   }),

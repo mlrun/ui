@@ -53,20 +53,20 @@ const DetailsView = React.forwardRef(
       selectedItem,
       setIteration,
       setRefreshWasHandled,
-      style,
       tabsContent
     },
     ref
   ) => {
     const detailsPanelClassNames = classnames(
       'table__item',
-      detailsStore.showWarning && 'pop-up-dialog-opened'
+      detailsStore.showWarning && 'pop-up-dialog-opened',
+      isDetailsScreen && 'table__item_big'
     )
     const { value: stateValue, label: stateLabel, className: stateClassName } =
       selectedItem.state || {}
 
     return (
-      <div className={detailsPanelClassNames} ref={ref} style={style}>
+      <div className={detailsPanelClassNames} ref={ref}>
         {detailsStore.loading && <Loader />}
         {detailsStore.error && (
           <ErrorMessage message={detailsStore.error.message} />
@@ -291,7 +291,6 @@ DetailsView.propTypes = {
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
   setRefreshWasHandled: PropTypes.func.isRequired,
-  style: PropTypes.shape({}).isRequired,
   tabsContent: PropTypes.element
 }
 
