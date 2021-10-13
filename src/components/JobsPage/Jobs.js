@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { isEmpty, cloneDeep } from 'lodash'
 
 import Button from '../../common/Button/Button'
 import Content from '../../layout/Content/Content'
@@ -53,6 +53,7 @@ const Jobs = ({
   fetchJobLogs,
   fetchJobPods,
   fetchJobs,
+  fetchScheduledJobAccessKey,
   fetchWorkflow,
   fetchWorkflows,
   filtersStore,
@@ -198,6 +199,9 @@ const Jobs = ({
 
     setEditableItem({
       rerun_object: {
+        credentials: {
+          access_key: functionData?.metadata?.credentials?.access_key ?? ''
+        },
         function: {
           spec: {
             env: functionData?.spec.env ?? [],
@@ -270,13 +274,36 @@ const Jobs = ({
     })
   }
 
+  const handleEditScheduleJob = editableItem => {
+    fetchScheduledJobAccessKey(match.params.projectName, editableItem.name)
+      .then(result => {
+        setEditableItem({
+          ...editableItem,
+          scheduled_object: {
+            ...editableItem.scheduled_object,
+            credentials: {
+              access_key: result.data.credentials.access_key
+            }
+          }
+        })
+      })
+      .catch(() => {
+        setNotification({
+          status: 400,
+          id: Math.random(),
+          retry: () => handleEditScheduleJob(editableItem),
+          message: 'Failed to fetch job access key'
+        })
+      })
+  }
+
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab,
       location.search,
       onRemoveScheduledJob,
       handleRunJob,
-      setEditableItem,
+      handleEditScheduleJob,
       handleRerunJob,
       handleMonitoring,
       appStore.frontendSpec.jobs_dashboard_url,
@@ -506,8 +533,16 @@ const Jobs = ({
   }
 
   const onEditJob = (event, postData) => {
+    const generatedData = cloneDeep(postData)
+
+    delete generatedData.function.metadata
+
     editJob(
-      { scheduled_object: postData, cron_trigger: postData.schedule },
+      {
+        credentials: postData.function.metadata.credentials,
+        scheduled_object: generatedData,
+        cron_trigger: generatedData.schedule
+      },
       match.params.projectName
     )
       .then(() => {

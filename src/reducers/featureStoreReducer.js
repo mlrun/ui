@@ -45,7 +45,9 @@ import {
   SET_NEW_FEATURE_SET_VERSION,
   START_FEATURE_SET_INGEST_BEGIN,
   START_FEATURE_SET_INGEST_SUCCESS,
-  FETCH_FEATURE_SET_SUCCESS
+  FETCH_FEATURE_SET_SUCCESS,
+  SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY,
+  PANEL_DEFAULT_ACCESS_KEY
 } from '../constants'
 
 const initialState = {
@@ -76,6 +78,9 @@ const initialState = {
   },
   loading: false,
   newFeatureSet: {
+    credentials: {
+      access_key: PANEL_DEFAULT_ACCESS_KEY
+    },
     metadata: {
       labels: {},
       name: '',
@@ -358,6 +363,17 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         newFeatureSet: { ...initialState.newFeatureSet }
+      }
+    case SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY:
+      return {
+        ...state,
+        newFeatureSet: {
+          ...state.newFeatureSet,
+          credentials: {
+            ...state.newFeatureSet.credentials,
+            access_key: payload
+          }
+        }
       }
     case SET_NEW_FEATURE_SET_NAME:
       return {

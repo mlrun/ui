@@ -46,7 +46,8 @@ import {
   SET_NEW_FEATURE_SET_DATA_SOURCE_PARSE_DATES,
   SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
-  FETCH_FEATURE_SET_SUCCESS
+  FETCH_FEATURE_SET_SUCCESS,
+  SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY
 } from '../constants'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
@@ -333,6 +334,10 @@ const featureStoreActions = {
   removeNewFeatureSet: () => ({
     type: REMOVE_NEW_FEATURE_SET
   }),
+  setNewFeatureSetCredentialsAccessKey: access_key => ({
+    type: SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY,
+    payload: access_key
+  }),
   setNewFeatureSetDataSourceAttributes: attributes => ({
     type: SET_NEW_FEATURE_SET_DATA_SOURCE_ATTRIBUTES,
     payload: attributes
@@ -401,17 +406,11 @@ const featureStoreActions = {
     type: SET_NEW_FEATURE_SET_VERSION,
     payload: version
   }),
-  startFeatureSetIngest: (
-    project,
-    featureSet,
-    reference,
-    source,
-    targets
-  ) => dispatch => {
+  startFeatureSetIngest: (project, featureSet, reference, data) => dispatch => {
     dispatch(featureStoreActions.startFeatureSetIngestBegin())
 
     return featureStoreApi
-      .startIngest(project, featureSet, reference, source, targets)
+      .startIngest(project, featureSet, reference, data)
       .then(result => {
         dispatch(featureStoreActions.startFeatureSetIngestSuccess())
 

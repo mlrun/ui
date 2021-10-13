@@ -22,6 +22,8 @@ const ScheduleJob = ({
   handleEditJob,
   handleRunJob,
   match,
+  panelDispatch,
+  panelState,
   setOpenScheduleJob
 }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
@@ -179,6 +181,8 @@ const ScheduleJob = ({
       isRecurring={isRecurring}
       match={match}
       onSchedule={onSchedule}
+      panelDispatch={panelDispatch}
+      panelState={panelState}
       recurringDispatch={recurringDispatch}
       recurringState={recurringState}
       setActiveTab={setActiveTab}
@@ -201,6 +205,8 @@ ScheduleJob.propTypes = {
   handleEditJob: PropTypes.func,
   handleRunJob: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
+  panelDispatch: PropTypes.func.isRequired,
+  panelState: PropTypes.shape({}).isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired
 }
 

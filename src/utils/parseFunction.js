@@ -2,6 +2,7 @@ import getState from './getState'
 import { page } from '../components/FunctionsPage/functions.util'
 
 export const parseFunction = (func, projectName) => ({
+  access_key: func.metadata.credentials?.access_key ?? '',
   args: func.spec?.args ?? [],
   build: func.spec?.build ?? {},
   command: func.spec?.command,

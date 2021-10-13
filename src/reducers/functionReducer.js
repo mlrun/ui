@@ -47,7 +47,9 @@ import {
   GET_FUNCTION_WITH_HASH_BEGIN,
   GET_FUNCTION_WITH_HASH_FAILURE,
   GET_FUNCTION_WITH_HASH_SUCCESS,
-  REMOVE_FUNCTION
+  REMOVE_FUNCTION,
+  SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
+  PANEL_DEFAULT_ACCESS_KEY
 } from '../constants'
 
 const initialState = {
@@ -63,6 +65,9 @@ const initialState = {
   newFunction: {
     kind: 'job',
     metadata: {
+      credentials: {
+        access_key: PANEL_DEFAULT_ACCESS_KEY
+      },
       labels: {},
       name: '',
       tag: ''
@@ -406,6 +411,20 @@ export default (state = initialState, { type, payload }) => {
           metadata: {
             ...state.newFunction.metadata,
             labels: payload
+          }
+        }
+      }
+    case SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          metadata: {
+            ...state.newFunction.metadata,
+            credentials: {
+              ...state.newFunction.metadata.credentials,
+              access_key: payload
+            }
           }
         }
       }

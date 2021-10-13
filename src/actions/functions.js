@@ -47,6 +47,7 @@ import {
   SET_NEW_FUNCTION_ERROR_STREAM,
   SET_NEW_FUNCTION_DEFAULT_CLASS,
   SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+  SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
   GET_FUNCTION_WITH_HASH_BEGIN,
   GET_FUNCTION_WITH_HASH_FAILURE,
   GET_FUNCTION_WITH_HASH_SUCCESS,
@@ -325,6 +326,10 @@ const functionsActions = {
   setNewFunctionLabels: labels => ({
     type: SET_NEW_FUNCTION_LABELS,
     payload: labels
+  }),
+  setNewFunctionCredentialsAccessKey: accessKey => ({
+    type: SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
+    payload: accessKey
   }),
   setNewFunctionName: name => ({
     type: SET_NEW_FUNCTION_NAME,
