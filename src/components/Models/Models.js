@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { isEmpty, orderBy } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -60,7 +60,7 @@ const Models = ({
     detailsMenu: [],
     filters: [],
     infoHeaders: [],
-    page: '',
+    page: MODELS_PAGE,
     registerArtifactDialogTitle: '',
     tabs: []
   })
@@ -224,13 +224,13 @@ const Models = ({
 
   useEffect(() => {
     if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
-      setFilters({ groupBy: 'none' })
+      setFilters({ groupBy: 'none', sortBy: 'function' })
     } else if (filtersStore.tag === INIT_TAG_FILTER) {
       setFilters({ groupBy: INIT_GROUP_FILTER })
     } else {
       setFilters({ groupBy: 'none' })
     }
-  }, [match.params.pageTab, filtersStore.tag, setFilters])
+  }, [filtersStore.tag, match.params.pageTab, setFilters])
 
   useEffect(() => {
     if (
@@ -321,11 +321,18 @@ const Models = ({
     match.params.projectName
   ])
 
+  const sortedContent = useMemo(() => {
+    const path =
+      filtersStore.sortBy === 'function' ? 'spec.model_uri' : 'spec.model'
+
+    return orderBy(content, [path], ['asc'])
+  }, [content, filtersStore.sortBy])
+
   return (
     <div className="content-wrapper">
       {artifactsStore.loading && <Loader />}
       <Content
-        content={content}
+        content={sortedContent}
         handleActionsMenuClick={() => setIsRegisterArtifactPopupOpen(true)}
         handleCancel={() => setSelectedModel({})}
         loading={artifactsStore.loading}

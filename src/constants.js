@@ -427,6 +427,7 @@ export const LABELS_FILTER = 'labels'
 export const ITERATIONS_FILTER = 'iterations'
 export const DATE_RANGE_TIME_FILTER = 'dateRangeTime'
 export const SHOW_UNTAGGED_FILTER = 'showUntagged'
+export const SORT_BY = 'sortBy'
 
 /*=========== BUTTONS =============*/
 
