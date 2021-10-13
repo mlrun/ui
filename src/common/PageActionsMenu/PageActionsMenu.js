@@ -1,34 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 
 import Button from '../Button/Button'
 
 import { PRIMARY_BUTTON } from '../../constants'
 
-const PageActionsMenu = ({
-  createJob,
-  match,
-  onClick,
-  registerDialog,
-  registerDialogHeader
-}) => {
+const PageActionsMenu = ({ actionsMenuHeader, onClick, showActionsMenu }) => {
   return (
     <>
-      {createJob && (
-        <div data-testid="actions-link" className="page-actions-container">
-          <Link
-            to={`/projects/${match.params.projectName}/jobs/${match.params.pageTab}/create-new-job`}
-          >
-            <Button variant={PRIMARY_BUTTON} label="New Job" />
-          </Link>
-        </div>
-      )}
-      {registerDialog && (
+      {showActionsMenu && (
         <div data-testid="actions-button" className="page-actions-container">
           <Button
             variant={PRIMARY_BUTTON}
-            label={registerDialogHeader}
+            label={actionsMenuHeader}
             className="btn_register"
             onClick={onClick}
           />
@@ -39,18 +23,15 @@ const PageActionsMenu = ({
 }
 
 PageActionsMenu.defaultProps = {
-  createJob: false,
-  onClick: null,
-  registerDialog: false,
-  registerDialogHeader: ''
+  actionsMenuHeader: '',
+  onClick: () => {},
+  showActionsMenu: false
 }
 
 PageActionsMenu.propTypes = {
-  createJob: PropTypes.bool,
-  match: PropTypes.shape({}).isRequired,
+  actionsMenuHeader: PropTypes.string,
   onClick: PropTypes.func,
-  registerDialog: PropTypes.bool,
-  registerDialogHeader: PropTypes.string
+  showActionsMenu: PropTypes.bool
 }
 
 export default PageActionsMenu

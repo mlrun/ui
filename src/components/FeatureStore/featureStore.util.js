@@ -36,6 +36,7 @@ import {
 
 export const pageDataInitialState = {
   actionsMenu: [],
+  actionsMenuHeader: '',
   details: {
     menu: [],
     infoHeaders: []
@@ -43,7 +44,6 @@ export const pageDataInitialState = {
   filters: [],
   page: '',
   selectedRowData: {},
-  registerArtifactDialogTitle: '',
   tabs: []
 }
 export const datasetsInfoHeaders = [
@@ -317,11 +317,11 @@ export const generatePageData = (
 
   if (pageTab === FEATURE_SETS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_SETS_TAB)
+    data.actionsMenuHeader = createFeatureSetTitle
     data.filters = featureSetsFilters
     data.details.infoHeaders = featureSetsInfoHeaders
     data.details.type = FEATURES_TAB
     data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
-    data.registerArtifactDialogTitle = createFeatureSetTitle
     data.filterMenuActionButton = null
     data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === FEATURES_TAB) {
@@ -339,21 +339,21 @@ export const generatePageData = (
     data.mainRowItemsCount = 2
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
+    data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
     data.details.infoHeaders = featureVectorsInfoHeaders
     data.details.type = FEATURE_VECTORS_TAB
-    data.registerArtifactDialogTitle = createFeatureVectorTitle
     data.filterMenuActionButton = null
   } else {
     data.actionsMenu = generateActionsMenu(DATASETS_TAB)
+    data.actionsMenuHeader = registerDatasetsTitle
     data.filters = datasetsFilters
     data.details.infoHeaders = datasetsInfoHeaders
     data.details.type = DATASETS_TAB
     data.tableHeaders = datasetsTableHeaders(isSelectedItem)
-    data.registerArtifactDialogTitle = registerDatasetsTitle
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
     data.filterMenuActionButton = null

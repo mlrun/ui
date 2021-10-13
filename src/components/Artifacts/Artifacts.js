@@ -146,11 +146,11 @@ const Artifacts = ({
       {artifactsStore.loading && <Loader />}
       <Content
         content={artifacts}
+        handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
         handleCancel={() => setSelectedArtifact({})}
         handleSelectItem={item => setSelectedArtifact({ item })}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedArtifact.item}
@@ -162,7 +162,7 @@ const Artifacts = ({
           pageData={pageData}
           refresh={fetchData}
           setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.registerArtifactDialogTitle}
+          title={pageData.actionsMenuHeader}
         />
       )}
     </>

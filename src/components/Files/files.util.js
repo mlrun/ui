@@ -45,7 +45,7 @@ export const filters = [
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
 export const page = FILES_PAGE
-export const registerArtifactDialogTitle = 'Register file'
+export const actionsMenuHeader = 'Register file'
 export const tableHeaders = isSelectedFile => [
   {
     header: 'Name',
@@ -104,9 +104,9 @@ export const tableHeaders = isSelectedFile => [
 ]
 
 export const generatePageData = isSelectedFile => ({
+  actionsMenuHeader,
   details: { menu: detailsMenu, infoHeaders, type: FILES_PAGE },
   filters,
   page,
-  registerArtifactDialogTitle,
   tableHeaders: tableHeaders(isSelectedFile)
 })

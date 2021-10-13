@@ -243,7 +243,7 @@ const Files = ({
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() => setIsPopupDialogOpen(true)}
+        handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedFile.item}
@@ -255,7 +255,7 @@ const Files = ({
           match={match}
           refresh={fetchData}
           setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.registerArtifactDialogTitle}
+          title={pageData.actionsMenuHeader}
         />
       )}
     </div>

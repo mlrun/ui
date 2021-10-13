@@ -423,7 +423,7 @@ const FeatureStore = ({
     )
   }
 
-  const openPopupDialog = () => {
+  const handleActionsMenuClick = () => {
     switch (match.params.pageTab) {
       case DATASETS_TAB:
         return setIsPopupDialogOpen(true)
@@ -470,7 +470,7 @@ const FeatureStore = ({
             : featureStore.loading
         }
         match={match}
-        openPopupDialog={openPopupDialog}
+        handleActionsMenuClick={handleActionsMenuClick}
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedItem.item}
@@ -482,7 +482,7 @@ const FeatureStore = ({
           match={match}
           refresh={fetchData}
           setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.registerArtifactDialogTitle}
+          title={pageData.actionsMenuHeader}
         />
       )}
       {featureSetsPanelIsOpen && (

@@ -6,6 +6,7 @@ import Input from '../../../common/Input/Input'
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
 import Button from '../../../common/Button/Button'
+import Loader from '../../../common/Loader/Loader'
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../../constants'
 
@@ -28,6 +29,7 @@ const CreateProjectDialog = ({
       className="create-project-dialog"
       closePopUp={closeNewProjectPopUp}
     >
+      {projectStore.loading && <Loader />}
       <form noValidate>
         <div className="pop-up-dialog__form">
           <Input
@@ -67,6 +69,7 @@ const CreateProjectDialog = ({
             />
           )}
           <Button
+            disabled={projectStore.loading}
             variant={TERTIARY_BUTTON}
             label="Cancel"
             className="pop-up-dialog__btn_cancel"
@@ -74,6 +77,7 @@ const CreateProjectDialog = ({
           />
           <Button
             disabled={
+              projectStore.loading ||
               !projectStore.newProject.name.match(
                 /^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
               )

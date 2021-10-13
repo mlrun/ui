@@ -8,7 +8,7 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { forEach, groupBy } from 'lodash'
 
 import ProjectView from './ProjectView'
@@ -82,7 +82,6 @@ const Project = ({
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const history = useHistory()
   const inputRef = React.createRef()
-  const location = useLocation()
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
@@ -91,7 +90,6 @@ const Project = ({
       match,
       setArtifactKind,
       setIsPopupDialogOpen,
-      location,
       setCreateFeatureSetPanelIsOpen,
       setIsNewFunctionPopUpOpen
     )
@@ -100,7 +98,7 @@ const Project = ({
       links,
       createNewOptions
     }
-  }, [history, location, match])
+  }, [history, match])
 
   const closeEditMode = useCallback(() => {
     setEditProject(prevState => ({
