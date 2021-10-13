@@ -53,7 +53,6 @@ const JobsPanel = ({
   removeNewJob,
   runNewJob,
   setNewJob,
-  setNewJobEnvironmentVariables,
   setNewJobInputs,
   setNewJobSecretSources,
   setNotification,
@@ -398,7 +397,6 @@ const JobsPanel = ({
       panelDispatch={panelDispatch}
       panelState={panelState}
       removeJobError={removeJobError}
-      setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobInputs={setNewJobInputs}
       setNewJobSecretSources={setNewJobSecretSources}
       setOpenScheduleJob={setOpenScheduleJob}

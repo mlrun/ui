@@ -371,7 +371,7 @@ export default (state = initialState, { type, payload }) => {
           ...state.newFeatureSet,
           credentials: {
             ...state.newFeatureSet.credentials,
-            accessKey: payload
+            access_key: payload
           }
         }
       }

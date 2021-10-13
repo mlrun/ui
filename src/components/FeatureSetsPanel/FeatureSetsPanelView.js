@@ -98,7 +98,6 @@ const FeatureSetsPanelView = ({
             />
           </Accordion>
           <PanelCredentialsAccessKey
-            className="functions-panel__item"
             credentialsAccessKey={
               featureStore.newFeatureSet.credentials.access_key
             }

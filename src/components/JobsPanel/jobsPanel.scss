@@ -14,6 +14,10 @@
       }
     }
 
+    .new-item-side-panel__item {
+      padding: 0;
+    }
+
     &.resources {
       .inputs {
         display: flex;

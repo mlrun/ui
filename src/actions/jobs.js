@@ -40,7 +40,8 @@ import {
   FETCH_JOB_FAILURE,
   SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
-  FETCH_SCHEDULED_JOB_ACCESS_KEY_END
+  FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
+  REMOVE_JOB
 } from '../constants'
 
 const jobsActions = {
@@ -195,6 +196,9 @@ const jobsActions = {
   }),
   handleRunScheduledJob: (postData, project, job) => () =>
     jobsApi.runScheduledJob(postData, project, job),
+  removeJob: () => ({
+    type: REMOVE_JOB
+  }),
   removeJobError: () => ({
     type: REMOVE_JOB_ERROR
   }),

@@ -49,7 +49,7 @@ const DetailsInfoView = React.forwardRef(
               <h3 className="item-info__header">General</h3>
             )}
           <ul className="item-info__details">
-            {pageData.infoHeaders?.map(header => {
+            {pageData.details.infoHeaders?.map(header => {
               let chipsData = {
                 chips: [],
                 chipOptions: {},

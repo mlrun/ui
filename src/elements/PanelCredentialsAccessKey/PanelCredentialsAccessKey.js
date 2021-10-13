@@ -30,7 +30,10 @@ const PanelCredentialsAccessKey = ({
           label: 'Auto-generate access key'
         }}
         onChange={value => {
-          console.log(value === credentialsAccessKey)
+          if (value !== credentialsAccessKey && inputValue.length > 0) {
+            setInputValue('')
+          }
+
           setCredentialsAccessKey(value === credentialsAccessKey ? '' : value)
         }}
         selectedId={credentialsAccessKey}

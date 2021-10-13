@@ -44,12 +44,17 @@ import {
   SET_NEW_FUNCTION_ERROR_STREAM,
   SET_NEW_FUNCTION_DEFAULT_CLASS,
   SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+  GET_FUNCTION_WITH_HASH_BEGIN,
+  GET_FUNCTION_WITH_HASH_FAILURE,
+  GET_FUNCTION_WITH_HASH_SUCCESS,
+  REMOVE_FUNCTION,
   SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
   PANEL_DEFAULT_ACCESS_KEY
 } from '../constants'
 
 const initialState = {
   functions: [],
+  func: {},
   logs: {
     data: '',
     loading: false,
@@ -194,6 +199,30 @@ export default (state = initialState, { type, payload }) => {
         loading: false,
         template: {},
         error: payload
+      }
+    case GET_FUNCTION_WITH_HASH_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case GET_FUNCTION_WITH_HASH_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        func: {},
+        error: payload
+      }
+    case GET_FUNCTION_WITH_HASH_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        template: payload,
+        error: null
+      }
+    case REMOVE_FUNCTION:
+      return {
+        ...state,
+        func: {}
       }
     case REMOVE_FUNCTION_LOGS:
       return {

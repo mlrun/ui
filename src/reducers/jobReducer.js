@@ -39,7 +39,8 @@ import {
   FETCH_JOB_SUCCESS,
   SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
   FETCH_SCHEDULED_JOB_ACCESS_KEY_BEGIN,
-  FETCH_SCHEDULED_JOB_ACCESS_KEY_END
+  FETCH_SCHEDULED_JOB_ACCESS_KEY_END,
+  REMOVE_JOB
 } from '../constants'
 
 const initialState = {
@@ -184,6 +185,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false
+      }
+    case REMOVE_JOB:
+      return {
+        ...state,
+        job: {}
       }
     case REMOVE_JOB_LOGS:
       return {

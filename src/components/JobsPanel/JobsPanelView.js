@@ -32,7 +32,6 @@ const JobsPanelView = ({
   panelDispatch,
   panelState,
   removeJobError,
-  setNewJobEnvironmentVariables,
   setNewJobInputs,
   setNewJobSecretSources,
   setOpenScheduleJob,
@@ -103,12 +102,10 @@ const JobsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
             >
               <JobsPanelAdvanced
-                environmentVariables={jobsStore.newJob.function.spec.env}
                 match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
                 secretSources={jobsStore.newJob.task.spec.secret_sources}
-                setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
                 setNewJobSecretSources={setNewJobSecretSources}
               />
             </Accordion>
