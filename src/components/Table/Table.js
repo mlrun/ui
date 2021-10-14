@@ -5,13 +5,12 @@ import { connect, useSelector } from 'react-redux'
 import { isEmpty, map } from 'lodash'
 
 import TableView from './TableView'
-import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
 import createJobsContent from '../../utils/createJobsContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
-import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
+import { JOBS_PAGE } from '../../constants'
 import tableActions from '../../actions/table'
 
 import './table.scss'
@@ -45,9 +44,6 @@ const Table = ({
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
 
-  const previewArtifact = useSelector(
-    state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
-  )
   const workflows = useSelector(state => {
     return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
   })
@@ -144,38 +140,33 @@ const Table = ({
   ])
 
   return (
-    <>
-      <TableView
-        actionsMenu={actionsMenu}
-        applyDetailsChanges={applyDetailsChanges}
-        cancelRequest={cancelRequest}
-        content={content}
-        getCloseDetailsLink={getCloseDetailsLink}
-        groupFilter={filtersStore.groupBy}
-        groupLatestItem={
-          isEmpty(tableContent.groupLatestItem)
-            ? tableContent.groupWorkflowItems
-            : tableContent.groupLatestItem
-        }
-        groupedContent={groupedContent}
-        handleCancel={handleCancel}
-        handleExpandRow={handleExpandRow}
-        handleSelectItem={handleSelectItem}
-        isTablePanelOpen={tableStore.isTablePanelOpen}
-        mainRowItemsCount={tableContent.mainRowItemsCount}
-        match={match}
-        pageData={pageData}
-        retryRequest={retryRequest}
-        selectedItem={selectedItem}
-        tableContent={tableContent.content}
-        tableHeadRef={tableHeadRef}
-        tablePanelRef={tablePanelRef}
-        workflows={workflows}
-      />
-      {previewArtifact.isPreview && (
-        <PreviewModal item={previewArtifact.selectedItem} />
-      )}
-    </>
+    <TableView
+      actionsMenu={actionsMenu}
+      applyDetailsChanges={applyDetailsChanges}
+      cancelRequest={cancelRequest}
+      content={content}
+      getCloseDetailsLink={getCloseDetailsLink}
+      groupFilter={filtersStore.groupBy}
+      groupLatestItem={
+        isEmpty(tableContent.groupLatestItem)
+          ? tableContent.groupWorkflowItems
+          : tableContent.groupLatestItem
+      }
+      groupedContent={groupedContent}
+      handleCancel={handleCancel}
+      handleExpandRow={handleExpandRow}
+      handleSelectItem={handleSelectItem}
+      isTablePanelOpen={tableStore.isTablePanelOpen}
+      mainRowItemsCount={tableContent.mainRowItemsCount}
+      match={match}
+      pageData={pageData}
+      retryRequest={retryRequest}
+      selectedItem={selectedItem}
+      tableContent={tableContent.content}
+      tableHeadRef={tableHeadRef}
+      tablePanelRef={tablePanelRef}
+      workflows={workflows}
+    />
   )
 }
 

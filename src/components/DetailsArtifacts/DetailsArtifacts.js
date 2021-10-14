@@ -81,7 +81,7 @@ const DetailsArtifacts = ({
         }
       })
     }
-  })
+  }, [artifactsIndexes, content, noData, preview])
 
   const showPreview = artifact => {
     dispatch(

@@ -12,6 +12,7 @@ import Table from '../../components/Table/Table'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
+import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
 import {
   generateContentActionsMenu,
@@ -33,10 +34,12 @@ import {
 } from '../../constants'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
+
 import './content.scss'
 
 const Content = ({
   applyDetailsChanges,
+  artifactsStore,
   cancelRequest,
   children,
   content,
@@ -267,6 +270,9 @@ const Content = ({
           />
         )}
       </div>
+      {artifactsStore?.preview?.isPreview && (
+        <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+      )}
     </>
   )
 }
@@ -295,4 +301,7 @@ Content.propTypes = {
   setLoading: PropTypes.func
 }
 
-export default connect(({ filtersStore }) => ({ filtersStore }), null)(Content)
+export default connect(
+  ({ artifactsStore, filtersStore }) => ({ artifactsStore, filtersStore }),
+  null
+)(Content)
