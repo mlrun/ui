@@ -102,6 +102,12 @@ const Project = ({
     }
   }, [history, match])
 
+  const projectMembershipIsEnabled = useMemo(
+    () =>
+      appStore.frontendSpec?.feature_flags?.project_membership === 'enabled',
+    [appStore.frontendSpec]
+  )
+
   const closeEditMode = useCallback(() => {
     setEditProject(prevState => ({
       name: {
@@ -221,14 +227,14 @@ const Project = ({
       })
   }
 
-  const fetchProjectMembersVisability = project => {
+  const fetchProjectMembersVisibility = project => {
     projectsIguazioApi
       .getProjectMembersVisibility(project)
       .then(setProjectMembersIsShown(true))
       .catch(setProjectMembersIsShown(false))
   }
 
-  const fetchProjectOwnerVisability = project => {
+  const fetchProjectOwnerVisibility = project => {
     projectsIguazioApi
       .getProjectOwnerVisibility(project)
       .then(setProjectOwnerIsShown(true))
@@ -237,10 +243,18 @@ const Project = ({
 
   const fetchProjectData = useCallback(() => {
     fetchProject(match.params.projectName)
-    fetchProjectIdAndOwner().then(fetchProjectMembers)
-    fetchProjectMembersVisability(match.params.projectName)
-    fetchProjectOwnerVisability(match.params.projectName)
-  }, [fetchProject, fetchProjectIdAndOwner, match.params.projectName])
+
+    if (projectMembershipIsEnabled) {
+      fetchProjectIdAndOwner().then(fetchProjectMembers)
+      fetchProjectMembersVisibility(match.params.projectName)
+      fetchProjectOwnerVisibility(match.params.projectName)
+    }
+  }, [
+    fetchProject,
+    fetchProjectIdAndOwner,
+    match.params.projectName,
+    projectMembershipIsEnabled
+  ])
 
   const resetProjectData = useCallback(() => {
     removeProjectData()
@@ -597,7 +611,6 @@ const Project = ({
       createFunctionSuccess={createFunctionSuccess}
       createNewOptions={createNewOptions}
       editProject={editProject}
-      frontendSpec={appStore.frontendSpec}
       handleAddProjectLabel={handleAddProjectLabel}
       handleDeployFunctionFailure={handleDeployFunctionFailure}
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
@@ -615,6 +628,7 @@ const Project = ({
       projectCounters={projectStore.projectCounters}
       projectLabels={projectLabels}
       projectMembersIsShown={projectMembersIsShown}
+      projectMembershipIsEnabled={projectMembershipIsEnabled}
       projectOwnerIsShown={projectOwnerIsShown}
       ref={inputRef}
       refresh={handleRefresh}
