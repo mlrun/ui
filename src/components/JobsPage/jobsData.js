@@ -2,7 +2,9 @@ import React from 'react'
 
 import {
   DATE_RANGE_TIME_FILTER,
+  FUNCTIONS_PAGE,
   GROUP_BY_FILTER,
+  JOBS_PAGE,
   LABELS_FILTER,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
@@ -13,12 +15,16 @@ import {
   TERTIARY_BUTTON
 } from '../../constants'
 import { isDemoMode } from '../../utils/helper'
+import { infoHeaders as functionsInfoHeaders } from '../FunctionsPage/functions.util'
+import { detailsMenu as functionsDetailsMenu } from '../FunctionsPage/functions.util'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Dropdown } from '../../images/dropdown.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 import { ReactComponent as Cancel } from '../../images/close.svg'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -189,8 +195,7 @@ const filtersByTab = (pageTab, search) => {
         type: GROUP_BY_FILTER,
         label: 'Group by:',
         options: !isDemoMode(search) && [
-          { label: 'None', id: 'none' },
-          { label: 'Name', id: 'name' },
+          ...filterSelectOptions.groupBy,
           { label: 'Workflow', id: 'workflow' }
         ]
       },
@@ -231,7 +236,7 @@ export const generatePageData = (
   search,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem,
+  handleEditScheduleJob,
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
@@ -240,7 +245,10 @@ export const generatePageData = (
   fetchJobLogs,
   removeJobLogs,
   isSelectedItem,
-  workflowId
+  workflowId,
+  selectedFunction,
+  handleFetchFunctionLogs,
+  handleRemoveFunctionLogs
 ) => {
   let filterMenuActionButton = {
     label: 'Resource monitoring',
@@ -253,13 +261,13 @@ export const generatePageData = (
   if (pageTab === SCHEDULE_TAB) {
     filterMenuActionButton = null
   }
-  // ----------------
+
   return {
     actionsMenu: generateActionsMenu(
       pageTab,
       removeScheduledJob,
       handleSubmitJob,
-      setEditableItem,
+      handleEditScheduleJob,
       handleRerunJob,
       handleMonitoring,
       jobsDashboardUrl,
@@ -267,17 +275,30 @@ export const generatePageData = (
       abortableFunctionKinds
     ),
     actionsMenuHeader: actionsMenuHeader,
-    detailsMenu,
+    details: {
+      type: !isEveryObjectValueEmpty(selectedFunction)
+        ? FUNCTIONS_PAGE
+        : JOBS_PAGE,
+      menu: !isEveryObjectValueEmpty(selectedFunction)
+        ? functionsDetailsMenu
+        : detailsMenu,
+      infoHeaders: !isEveryObjectValueEmpty(selectedFunction)
+        ? functionsInfoHeaders
+        : infoHeaders,
+      refreshLogs: !isEveryObjectValueEmpty(selectedFunction)
+        ? handleFetchFunctionLogs
+        : fetchJobLogs,
+      removeLogs: !isEveryObjectValueEmpty(selectedFunction)
+        ? handleRemoveFunctionLogs
+        : removeJobLogs,
+      withLogsRefreshBtn: !isEveryObjectValueEmpty(selectedFunction)
+    },
     hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,
     filters: filtersByTab(pageTab, search),
     page,
     tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
     tabs: generateTabs(search),
-    infoHeaders,
-    refreshLogs: fetchJobLogs,
-    removeLogs: removeJobLogs,
-    withLogsRefreshBtn: true,
     withoutExpandButton: pageTab === MONITOR_WORKFLOWS_TAB && !workflowId
   }
 }
@@ -291,7 +312,7 @@ export const generateActionsMenu = (
   pageTab,
   removeScheduledJob,
   handleSubmitJob,
-  setEditableItem,
+  handleEditScheduleJob,
   handleRerunJob,
   handleMonitoring,
   jobsDashboardUrl,
@@ -308,7 +329,7 @@ export const generateActionsMenu = (
         {
           label: 'Edit',
           icon: <Edit />,
-          onClick: setEditableItem
+          onClick: handleEditScheduleJob
         },
         {
           label: 'Delete',

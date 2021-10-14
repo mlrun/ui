@@ -138,7 +138,9 @@ const Input = React.forwardRef(
 
       if (
         (required && event.target.value.trim().length === 0) ||
-        (validationPattern && !validationPattern.test(event.target.value)) ||
+        (validationPattern &&
+          !validationPattern.test(event.target.value) &&
+          event.target.value.trim().length > 0) ||
         event.target.value.startsWith(' ')
       ) {
         setIsInvalid(true)

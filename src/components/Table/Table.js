@@ -109,7 +109,8 @@ const Table = ({
         workflows.find(workflow => workflow.id === workflowId)
       )
 
-      setTableContent({
+      setTableContent(state => ({
+        ...state,
         content: generatedTableContent,
         groupLatestItem: [],
         groupWorkflowItems: createJobsContent(
@@ -119,13 +120,14 @@ const Table = ({
           location.search,
           true
         )
-      })
+      }))
     } else if (filtersStore.groupBy === 'none') {
-      setTableContent({
+      setTableContent(state => ({
+        ...state,
         groupLatestItem: [],
         groupWorkflowItems: [],
         content: generatedTableContent
-      })
+      }))
     }
   }, [
     content,

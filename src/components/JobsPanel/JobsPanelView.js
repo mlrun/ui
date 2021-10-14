@@ -16,6 +16,7 @@ import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
+import JobsPanelCredentialsAccessKey from '../../elements/JobsPanelCredentialsAccessKey/JobsPanelCredentialsAccessKey'
 
 const JobsPanelView = ({
   checkValidation,
@@ -31,7 +32,6 @@ const JobsPanelView = ({
   panelDispatch,
   panelState,
   removeJobError,
-  setNewJobEnvironmentVariables,
   setNewJobInputs,
   setNewJobSecretSources,
   setOpenScheduleJob,
@@ -102,15 +102,17 @@ const JobsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
             >
               <JobsPanelAdvanced
-                environmentVariables={jobsStore.newJob.function.spec.env}
                 match={match}
                 panelDispatch={panelDispatch}
                 panelState={panelState}
                 secretSources={jobsStore.newJob.task.spec.secret_sources}
-                setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
                 setNewJobSecretSources={setNewJobSecretSources}
               />
             </Accordion>
+            <JobsPanelCredentialsAccessKey
+              panelDispatch={panelDispatch}
+              panelState={panelState}
+            />
             <div className="new-item-side-panel__buttons-container">
               {jobsStore.error && (
                 <ErrorMessage
@@ -155,6 +157,8 @@ const JobsPanelView = ({
             handleEditJob={handleEditJob}
             handleRunJob={handleRunJob}
             match={match}
+            panelDispatch={panelDispatch}
+            panelState={panelState}
             setOpenScheduleJob={setOpenScheduleJob}
           />
         )}

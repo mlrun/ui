@@ -57,7 +57,7 @@ const Models = ({
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
   const [pageData, setPageData] = useState({
-    detailsMenu: [],
+    details: { menu: [], infoHeaders: [] },
     filters: [],
     infoHeaders: [],
     page: MODELS_PAGE,
@@ -279,11 +279,11 @@ const Models = ({
     if (
       match.params.name &&
       match.params.tag &&
-      pageData.detailsMenu.length > 0
+      pageData.details.menu.length > 0
     ) {
-      isDetailsTabExists(MODELS_PAGE, match, pageData.detailsMenu, history)
+      isDetailsTabExists(MODELS_PAGE, match, pageData.details.menu, history)
     }
-  }, [history, match, pageData.detailsMenu])
+  }, [history, match, pageData.details.menu])
 
   useEffect(() => {
     if (

@@ -35,10 +35,6 @@ export const JobsPanelAdvancedTable = ({
   setValidation,
   validation
 }) => {
-  const dataKey = section.includes('secrets')
-    ? 'secretsSourceValue'
-    : 'envVariablesValue'
-
   return (
     <JobsPanelTable
       addNewItem={addNewItem}
@@ -94,14 +90,14 @@ export const JobsPanelAdvancedTable = ({
               className="input-row__item input-row__item_edit"
               density="medium"
               floatingLabel
-              invalid={!validation[dataKey]}
+              invalid={!validation.secretsSourceValue}
               label="Value"
               onChange={setNewItemValue}
               required
               setInvalid={value =>
                 setValidation(state => ({
                   ...state,
-                  [dataKey]: value
+                  secretsSourceValue: value
                 }))
               }
               type="text"
@@ -110,25 +106,20 @@ export const JobsPanelAdvancedTable = ({
           <button
             className="btn-add"
             disabled={isNameNotUnique(newName, content)}
-            onClick={() => handleAddNewItem(section.includes('env') && true)}
+            onClick={handleAddNewItem}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>
               <Plus />
             </Tooltip>
           </button>
-          <button
-            onClick={() => handleResetForm(section.includes('env') && true)}
-          >
+          <button onClick={handleResetForm}>
             <Tooltip template={<TextTooltipTemplate text="Discard changes" />}>
               <Delete />
             </Tooltip>
           </button>
         </div>
       ) : (
-        <JobsPanelTableAddItemRow
-          onClick={setAddNewItem}
-          text={section.includes('secrets') ? 'secret' : 'environment variable'}
-        />
+        <JobsPanelTableAddItemRow onClick={setAddNewItem} text="secret" />
       )}
     </JobsPanelTable>
   )

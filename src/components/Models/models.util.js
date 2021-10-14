@@ -15,6 +15,7 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generateUri } from '../../utils/resources'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
+import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
 
 export const modelsInfoHeaders = [
   {
@@ -102,7 +103,7 @@ export const modelEndpointsFilters = [
     label: 'Sort By:',
     options: [
       { label: 'Function', id: 'function' },
-      { label: 'Name', id: 'name' }
+      ...filterSelectOptions.sortBy
     ]
   }
 ]
@@ -275,24 +276,29 @@ export const generatePageData = (
   isSelectedModel
 ) => {
   const data = {
+    details: {
+      menu: []
+    },
     page,
     tabs
   }
 
   if (pageTab === MODELS_TAB) {
     data.actionsMenuHeader = actionsMenuHeader
-    data.detailsMenu = generateModelsDetailsMenu(selectedModel)
+    data.details.menu = generateModelsDetailsMenu(selectedModel)
+    data.details.type = MODELS_TAB
     data.filters = modelsFilters
     data.tableHeaders = modelsTableHeaders(isSelectedModel)
-    data.infoHeaders = modelsInfoHeaders
+    data.details.infoHeaders = modelsInfoHeaders
     data.actionsMenu = generateModelsActionMenu(handleDeployModel)
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-    data.detailsMenu = modelEndpointsDetailsMenu
+    data.details.menu = modelEndpointsDetailsMenu
+    data.details.type = MODEL_ENDPOINTS_TAB
     data.filters = modelEndpointsFilters
     data.tableHeaders = modelEndpointsTableHeaders(isSelectedModel)
-    data.infoHeaders = modelEndpointsInfoHeaders
+    data.details.infoHeaders = modelEndpointsInfoHeaders
   }
 
   return data

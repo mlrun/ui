@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import JobsPanelSection from '../../elements/JobsPanelSection/JobsPanelSection'
 import { JobsPanelAdvancedTable } from '../../elements/JobsPanelAdvancedTable/JobsPanelAdvancedTable'
+import JobsPanelEnvironmentVariables from '../../elements/JobsPanelEnvironmentVariables/JobsPanelEnvironmentVariables'
 
 import panelData from '../JobsPanel/panelData'
 import { advancedActions } from './jobsPanelAdvancedReducer'
@@ -17,6 +18,7 @@ const JobsPanelAdvancedView = ({
   handleResetForm,
   location,
   match,
+  panelDispatch,
   panelState,
   setValidation,
   validation
@@ -24,50 +26,15 @@ const JobsPanelAdvancedView = ({
   return (
     <div className="job-panel__item advanced new-item-side-panel__item">
       <JobsPanelSection title="Advanced" />
-      <JobsPanelSection title="Environment Variables">
-        <JobsPanelAdvancedTable
-          addNewItem={advancedState.addNewEnvironmentVariable}
-          className="advanced"
-          content={panelState.tableData.environmentVariables}
-          handleAddNewItem={handleAddNewItem}
-          handleEditItems={handleEditItems}
-          handleDeleteItems={handleDeleteItems}
-          handleResetForm={handleResetForm}
-          headers={panelData['env']['table-headers']}
-          match={match}
-          newName={advancedState.newEnvironmentVariable.name}
-          panelState={panelState}
-          section="advanced env"
-          selectedItem={advancedState.selectedEnvironmentVariable}
-          setAddNewItem={value =>
-            advancedDispatch({
-              type: advancedActions.SET_ADD_NEW_ENVIRONMENT_VARIABLE,
-              payload: value
-            })
+      {isDemoMode(location.search) ? (
+        <JobsPanelEnvironmentVariables
+          panelDispatch={panelDispatch}
+          panelEnvData={panelState.tableData.environmentVariables}
+          previousPanelEnvData={
+            panelState.previousPanelData.tableData.environmentVariables
           }
-          setNewItemName={name =>
-            advancedDispatch({
-              type: advancedActions.SET_NEW_ENVIRONMENT_VARIABLE_NAME,
-              payload: name
-            })
-          }
-          setNewItemValue={value =>
-            advancedDispatch({
-              type: advancedActions.SET_NEW_ENVIRONMENT_VARIABLE_VALUE,
-              payload: value
-            })
-          }
-          setSelectedItem={selectedItem =>
-            advancedDispatch({
-              type: advancedActions.SET_SELECTED_ENVIRONMENT_VARIABLE,
-              payload: selectedItem
-            })
-          }
-          setValidation={setValidation}
-          validation={validation}
         />
-      </JobsPanelSection>
-      {isDemoMode(location.search) && (
+      ) : (
         <JobsPanelSection title="Secrets">
           <JobsPanelAdvancedTable
             addNewItem={advancedState.addNewSecret}
@@ -125,6 +92,7 @@ JobsPanelAdvancedView.propTypes = {
   handleResetForm: PropTypes.func.isRequired,
   location: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({}).isRequired,
+  panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.object.isRequired
