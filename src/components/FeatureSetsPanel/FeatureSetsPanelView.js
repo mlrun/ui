@@ -94,6 +94,13 @@ const FeatureSetsPanelView = ({
               setTargetsPathValid={setValidation}
             />
           </Accordion>
+          {/*commented till be implemented on back end*/}
+          {/*<PanelCredentialsAccessKey*/}
+          {/*  credentialsAccessKey={*/}
+          {/*    featureStore.newFeatureSet.credentials.access_key*/}
+          {/*  }*/}
+          {/*  setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}*/}
+          {/*/>*/}
           <div className="new-item-side-panel__buttons-container">
             {error && (
               <ErrorMessage

@@ -1,4 +1,9 @@
-import { GROUP_BY_FILTER, PERIOD_FILTER, STATUS_FILTER } from '../../constants'
+import {
+  GROUP_BY_FILTER,
+  PERIOD_FILTER,
+  SORT_BY,
+  STATUS_FILTER
+} from '../../constants'
 
 export const filterSelectOptions = {
   [PERIOD_FILTER]: [
@@ -18,7 +23,8 @@ export const filterSelectOptions = {
   [GROUP_BY_FILTER]: [
     { label: 'None', id: 'none' },
     { label: 'Name', id: 'name' }
-  ]
+  ],
+  [SORT_BY]: [{ label: 'Name', id: 'name' }]
 }
 
 export const tagFilterOptions = [

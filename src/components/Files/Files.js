@@ -41,9 +41,11 @@ const Files = ({
   const [selectedFile, setSelectedFile] = useState({})
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [pageData, setPageData] = useState({
-    detailsMenu: [],
+    details: {
+      menu: [],
+      infoHeaders: []
+    },
     filters: [],
-    infoHeaders: [],
     page: '',
     registerArtifactDialogTitle: '',
     tableHeaders: []
@@ -159,11 +161,11 @@ const Files = ({
     if (
       match.params.name &&
       match.params.tag &&
-      pageData.detailsMenu.length > 0
+      pageData.details.menu.length > 0
     ) {
-      isDetailsTabExists(FILES_PAGE, match, pageData.detailsMenu, history)
+      isDetailsTabExists(FILES_PAGE, match, pageData.details.menu, history)
     }
-  }, [history, match, pageData.detailsMenu])
+  }, [history, match, pageData.details.menu])
 
   useEffect(() => {
     fetchData({ tag: INIT_TAG_FILTER, iter: 'iter' })
@@ -241,7 +243,7 @@ const Files = ({
         handleSelectItem={item => setSelectedFile({ item })}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() => setIsPopupDialogOpen(true)}
+        handleActionsMenuClick={() => setIsPopupDialogOpen(true)}
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedFile.item}
@@ -253,7 +255,7 @@ const Files = ({
           match={match}
           refresh={fetchData}
           setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.registerArtifactDialogTitle}
+          title={pageData.actionsMenuHeader}
         />
       )}
     </div>

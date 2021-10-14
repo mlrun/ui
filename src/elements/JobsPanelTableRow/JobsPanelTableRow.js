@@ -101,7 +101,7 @@ const JobsPanelTableRow = ({
               <button
                 className="btn_delete"
                 onClick={() => {
-                  handleDelete(contentItem, section, index)
+                  handleDelete(contentItem, index)
                 }}
               >
                 <Delete />

@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { connect, useDispatch } from 'react-redux'
 
+import DetailsView from './DetailsView'
+
 import artifactActions from '../../actions/artifacts'
 import {
   ARTIFACTS_PAGE,
-  FEATURE_STORE_PAGE,
   DATASETS_TAB,
   FILES_PAGE,
   FUNCTIONS_PAGE,
@@ -22,8 +23,7 @@ import {
   renderContent
 } from './details.util'
 import detailsActions from '../../actions/details'
-
-import DetailsView from './DetailsView'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import './details.scss'
 
@@ -34,7 +34,9 @@ const Details = ({
   detailsMenu,
   detailsStore,
   filtersStore,
+  getCloseDetailsLink,
   handleCancel,
+  isDetailsScreen,
   match,
   pageData,
   removeInfoContent,
@@ -109,71 +111,72 @@ const Details = ({
   )
 
   useEffect(() => {
-    if (pageData.page === JOBS_PAGE) {
+    if (pageData.details.type === JOBS_PAGE) {
       setIteration('0')
     }
 
     return () => {
       resetChanges()
     }
-  }, [pageData.page, resetChanges, selectedItem.uid, setIteration])
+  }, [pageData.details.type, resetChanges, setIteration])
 
   useEffect(() => {
-    return () => {
-      setChangesData({})
-    }
-  }, [match.params.name, setChangesData])
-
-  useEffect(() => {
-    if (pageData.page === JOBS_PAGE) {
-      setInfoContent(generateJobsContent(selectedItem))
-    } else if (
-      pageData.page === ARTIFACTS_PAGE ||
-      pageData.page === FILES_PAGE ||
-      pageData.page === MODELS_PAGE ||
-      match.params.pageTab === DATASETS_TAB
+    if (
+      !isEveryObjectValueEmpty(selectedItem) &&
+      isEveryObjectValueEmpty(detailsStore.infoContent)
     ) {
-      setInfoContent(
-        generateArtifactsContent(
-          pageData.page,
-          match.params.pageTab,
-          selectedItem
+      if (pageData.details.type === JOBS_PAGE) {
+        setInfoContent(generateJobsContent(selectedItem))
+      } else if (
+        pageData.details.type === ARTIFACTS_PAGE ||
+        pageData.details.type === FILES_PAGE ||
+        pageData.details.type === MODELS_PAGE ||
+        pageData.details.type === DATASETS_TAB
+      ) {
+        setInfoContent(
+          generateArtifactsContent(pageData.details.type, selectedItem)
         )
-      )
-    } else if (pageData.page === FUNCTIONS_PAGE) {
-      setInfoContent(generateFunctionsContent(selectedItem))
-    } else if (pageData.page === FEATURE_STORE_PAGE) {
-      setInfoContent(
-        generateFeatureStoreContent(
-          handleAddChip,
-          handleDeleteChip,
-          handleEditChips,
-          handleEditInput,
-          match.params.pageTab,
-          selectedItem
+      } else if (pageData.details.type === FUNCTIONS_PAGE) {
+        setInfoContent(generateFunctionsContent(selectedItem))
+      } else {
+        setInfoContent(
+          generateFeatureStoreContent(
+            handleAddChip,
+            handleDeleteChip,
+            handleEditChips,
+            handleEditInput,
+            pageData.details.type,
+            selectedItem
+          )
         )
-      )
-    }
-
-    return () => {
-      if (match.params.pageTab === MODELS_TAB) {
-        removeModelFeatureVector()
       }
-
-      removeInfoContent()
     }
   }, [
-    detailsStore.changes.counter,
+    detailsStore.infoContent,
     handleAddChip,
     handleDeleteChip,
     handleEditChips,
     handleEditInput,
-    match.params.pageTab,
-    pageData.page,
+    pageData.details.type,
+    selectedItem,
+    setInfoContent
+  ])
+
+  useEffect(() => {
+    return () => {
+      if (pageData.details.type === MODELS_TAB) {
+        removeModelFeatureVector()
+      }
+
+      removeInfoContent()
+      setChangesData({})
+    }
+  }, [
+    pageData.details.type,
     removeInfoContent,
     removeModelFeatureVector,
     selectedItem,
-    setInfoContent
+    setChangesData
   ])
 
   const handleShowWarning = useCallback(
@@ -322,8 +325,10 @@ const Details = ({
       detailsMenu={detailsMenu}
       detailsMenuClick={detailsMenuClick}
       detailsStore={detailsStore}
+      getCloseDetailsLink={getCloseDetailsLink}
       handleCancel={handleCancel}
       handleShowWarning={handleShowWarning}
+      isDetailsScreen={isDetailsScreen}
       leavePage={leavePage}
       match={match}
       pageData={pageData}
@@ -339,6 +344,8 @@ const Details = ({
 Details.defaultProps = {
   applyDetailsChanges: () => {},
   cancelRequest: () => {},
+  getCloseDetailsLink: null,
+  isDetailsScreen: false,
   item: {},
   retryRequest: () => {},
   removeModelFeatureVector: () => {}
@@ -358,7 +365,9 @@ Details.propTypes = {
       hidden: PropTypes.bool
     })
   ).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
+  isDetailsScreen: PropTypes.bool,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   removeModelFeatureVector: PropTypes.func,

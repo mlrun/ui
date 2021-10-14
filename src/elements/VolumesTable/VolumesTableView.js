@@ -78,8 +78,6 @@ const VolumesTableView = ({
               key={index}
               selectedVolume={selectedVolume}
               setSelectedVolume={setSelectedVolume}
-              setValidation={setValidation}
-              validation={validation}
             />
           )
         } else {

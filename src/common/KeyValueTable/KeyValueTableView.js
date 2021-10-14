@@ -50,7 +50,7 @@ const KeyValueTableView = ({
         <div className="table-cell table-cell__actions" />
       </div>
       {content.map((contentItem, index) => {
-        return isEditMode && contentItem.key === selectedItem.key ? (
+        return isEditMode && index === selectedItem.index ? (
           <div className="table-row table-row_edit" key={index}>
             <div className="table-cell table-cell__key">
               {keyType === 'select' ? (
@@ -59,7 +59,8 @@ const KeyValueTableView = ({
                   onClick={key =>
                     setSelectedItem({
                       ...selectedItem,
-                      newKey: key
+                      newKey: key,
+                      index
                     })
                   }
                   options={keyOptions}
@@ -72,7 +73,7 @@ const KeyValueTableView = ({
                   invalid={
                     (selectedItem.newKey !== selectedItem.key &&
                       isKeyNotUnique(selectedItem.newKey, content)) ||
-                    !validation.isKeyValid
+                    !validation.isEditKeyValid
                   }
                   invalidText={
                     isKeyNotUnique(selectedItem.newKey, content)
@@ -82,14 +83,15 @@ const KeyValueTableView = ({
                   onChange={key =>
                     setSelectedItem({
                       ...selectedItem,
-                      newKey: key
+                      newKey: key,
+                      index
                     })
                   }
                   required={isKeyRequired}
                   setInvalid={value =>
                     setValidation(state => ({
                       ...state,
-                      isKeyValid: value
+                      isEditKeyValid: value
                     }))
                   }
                   type="text"
@@ -101,18 +103,19 @@ const KeyValueTableView = ({
               <Input
                 className="input_edit"
                 density="dense"
-                invalid={!validation.isValueValid}
+                invalid={!validation.isEditValueValid}
                 onChange={value =>
                   setSelectedItem({
                     ...selectedItem,
-                    value
+                    value,
+                    index
                   })
                 }
                 required={isValueRequired}
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,
-                    isValueValid: value
+                    isEditValueValid: value
                   }))
                 }
                 type="text"
@@ -125,8 +128,8 @@ const KeyValueTableView = ({
                 disabled={
                   isValueRequired &&
                   isKeyRequired &&
-                  (!validation.isKeyValid ||
-                    !validation.isValueValid ||
+                  (!validation.isEditKeyValid ||
+                    !validation.isEditValueValid ||
                     (selectedItem.newKey !== selectedItem.key &&
                       isKeyNotUnique(selectedItem.newKey, content)))
                 }
@@ -142,8 +145,14 @@ const KeyValueTableView = ({
             key={index}
             onClick={() => {
               if (withEditMode) {
-                setSelectedItem(contentItem)
+                setSelectedItem({ ...contentItem, index })
                 setEditMode(true)
+                setValidation({
+                  isKeyValid: true,
+                  isValueValid: true,
+                  isEditKeyValid: true,
+                  isEditValueValid: true
+                })
               }
             }}
           >
@@ -164,7 +173,8 @@ const KeyValueTableView = ({
             <div className="table-cell table-cell__actions">
               <button
                 className="key-value-table__btn"
-                onClick={() => {
+                onClick={event => {
+                  event.stopPropagation()
                   deleteItem(index, contentItem)
                 }}
               >

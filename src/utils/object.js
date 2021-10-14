@@ -17,11 +17,18 @@ export const parseKeyValues = (object = {}) =>
       })
 
 // ['key: value'] -> {key: 'value'}
-export const generateKeyValues = (chips = []) => {
+export const generateKeyValues = (data = []) => {
   const keyValuePairs = {}
 
-  chips.forEach(chip => {
-    const [key, value] = chip.split(': ')
+  data.forEach(dataItem => {
+    const key = dataItem.replace(/:.*$/g, '')
+    let value = dataItem.replace(/.*: /g, '')
+
+    if (dataItem.includes(': {')) {
+      value = dataItem.replace(/.*: {/g, '{')
+    } else if (dataItem.includes(': [')) {
+      value = dataItem.replace(/.*: \[/g, '[')
+    }
 
     keyValuePairs[key] = value
   })

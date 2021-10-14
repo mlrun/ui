@@ -12,6 +12,7 @@ import Button from '../../common/Button/Button'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FunctionsPanelRuntime from '../../elements/FunctionsPanelRuntime/FunctionsPanelRuntime'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
 
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { runtimeSections } from './functionsPanel.util'
@@ -32,6 +33,7 @@ const FunctionsPanelView = ({
   confirmData,
   defaultData,
   error,
+  functionsStore,
   handleSave,
   imageType,
   loading,
@@ -40,6 +42,7 @@ const FunctionsPanelView = ({
   newFunction,
   removeFunctionsError,
   setImageType,
+  setNewFunctionCredentialsAccessKey,
   setValidation,
   validation
 }) => {
@@ -113,7 +116,10 @@ const FunctionsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
               openByDefault
             >
-              <FunctionsPanelEnvironmentVariables />
+              <FunctionsPanelEnvironmentVariables
+                setValidation={setValidation}
+                validation={validation}
+              />
             </Accordion>
             {runtimeSections[newFunction.kind] && (
               <Accordion
@@ -128,6 +134,13 @@ const FunctionsPanelView = ({
                 />
               </Accordion>
             )}
+            <PanelCredentialsAccessKey
+              className="functions-panel__item"
+              credentialsAccessKey={
+                functionsStore.newFunction.metadata.credentials.access_key
+              }
+              setCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
+            />
             <div className="new-item-side-panel__buttons-container">
               {error && (
                 <ErrorMessage
@@ -177,11 +190,13 @@ FunctionsPanelView.propTypes = {
   confirmData: PropTypes.shape({}),
   defaultData: PropTypes.shape({}),
   error: PropTypes.string,
+  functionsStore: PropTypes.shape({}).isRequired,
   handleSave: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   mode: FUNCTION_PANEL_MODE.isRequired,
   newFunction: PropTypes.shape({}).isRequired,
   removeFunctionsError: PropTypes.func.isRequired,
+  setNewFunctionCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({})
 }

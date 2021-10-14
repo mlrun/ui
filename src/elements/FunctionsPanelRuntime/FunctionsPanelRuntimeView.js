@@ -6,11 +6,14 @@ import FunctionsPanelSecrets from '../FunctionsPanelSecrets/FunctionsPanelSecret
 import FunctionsPanelTopology from '../FunctionsPanelTopology/FunctionsPanelTopology'
 import FunctionsPanelAdvanced from '../FunctionsPanelAdvanced/FunctionsPanelAdvanced'
 
+import { isDemoMode } from '../../utils/helper'
+
 import './functionsPanelRuntime.scss'
 
 const FunctionsPanelRuntimeView = ({
   defaultData,
   functionsStore,
+  location,
   sections
 }) => {
   return (
@@ -24,7 +27,7 @@ const FunctionsPanelRuntimeView = ({
               defaultData={defaultData}
               key={section.id}
             />
-          ) : section.id === 'secrets' ? (
+          ) : section.id === 'secrets' && isDemoMode(location.search) ? (
             <FunctionsPanelSecrets defaultData={defaultData} key={section.id} />
           ) : section.id === 'advanced' ? (
             <FunctionsPanelAdvanced
@@ -41,6 +44,7 @@ const FunctionsPanelRuntimeView = ({
 FunctionsPanelRuntimeView.propTypes = {
   defaultData: PropTypes.shape({}).isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
+  location: PropTypes.shape({}).isRequired,
   sections: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

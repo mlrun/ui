@@ -7,7 +7,7 @@ import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
-import { DETAILS_OVERVIEW_TAB } from '../../constants'
+import { DETAILS_OVERVIEW_TAB, MONITOR_WORKFLOWS_TAB } from '../../constants'
 
 const JobsTableRow = ({
   actionsMenu,
@@ -135,7 +135,12 @@ const JobsTableRow = ({
               !rowItemProp.hidden && (
                 <TableCell
                   data={rowItemProp}
-                  expandLink={!isEmpty(tableContent)}
+                  expandLink={
+                    !isEmpty(tableContent) &&
+                    (match.params.pageTab !== MONITOR_WORKFLOWS_TAB ||
+                      (match.params.pageTab === MONITOR_WORKFLOWS_TAB &&
+                        match.params.workflowId))
+                  }
                   handleExpandRow={handleExpandRow}
                   item={currentItem}
                   key={`${new Date().getTime()}${index}`}

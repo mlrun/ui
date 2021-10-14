@@ -41,6 +41,7 @@ const Select = ({
     `select-${density}`,
     isOpen && 'select_active',
     withoutBorder && 'without-border',
+    label.length === 0 && 'without-label',
     disabled && 'disabled'
   )
   const selectLabelClassName = classNames(

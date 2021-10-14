@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
@@ -22,6 +22,7 @@ const Table = ({
   cancelRequest,
   content,
   filtersStore,
+  getCloseDetailsLink,
   groupedContent,
   handleCancel,
   handleExpandRow,
@@ -80,15 +81,14 @@ const Table = ({
     }
   }, [tableStore.isTablePanelOpen])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const generatedTableContent = generateTableContent(
       content,
       groupedContent,
       filtersStore.groupBy,
       pageData.page,
       tableStore.isTablePanelOpen,
-      match.params.pageTab,
-      match.params.projectName,
+      match.params,
       location.search,
       !isEveryObjectValueEmpty(selectedItem)
     )
@@ -109,23 +109,25 @@ const Table = ({
         workflows.find(workflow => workflow.id === workflowId)
       )
 
-      setTableContent({
+      setTableContent(state => ({
+        ...state,
         content: generatedTableContent,
         groupLatestItem: [],
         groupWorkflowItems: createJobsContent(
           groupWorkflowItem,
           !isEveryObjectValueEmpty(selectedItem),
-          match.params.projectName,
+          match.params,
           location.search,
           true
         )
-      })
+      }))
     } else if (filtersStore.groupBy === 'none') {
-      setTableContent({
+      setTableContent(state => ({
+        ...state,
         groupLatestItem: [],
         groupWorkflowItems: [],
         content: generatedTableContent
-      })
+      }))
     }
   }, [
     content,
@@ -136,8 +138,7 @@ const Table = ({
     pageData.mainRowItemsCount,
     tableStore.isTablePanelOpen,
     filtersStore.groupBy,
-    match.params.pageTab,
-    match.params.projectName,
+    match.params,
     location.search,
     selectedItem
   ])
@@ -149,6 +150,7 @@ const Table = ({
         applyDetailsChanges={applyDetailsChanges}
         cancelRequest={cancelRequest}
         content={content}
+        getCloseDetailsLink={getCloseDetailsLink}
         groupFilter={filtersStore.groupBy}
         groupLatestItem={
           isEmpty(tableContent.groupLatestItem)
@@ -179,6 +181,7 @@ const Table = ({
 
 Table.defaultProps = {
   applyDetailsChanges: () => {},
+  getCloseDetailsLink: null,
   groupedContent: {},
   groupLatestJob: [],
   handleExpandRow: () => {},
@@ -193,11 +196,13 @@ Table.propTypes = {
   ]).isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),
   handleCancel: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
+  retryRequest: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
   setLoading: PropTypes.func

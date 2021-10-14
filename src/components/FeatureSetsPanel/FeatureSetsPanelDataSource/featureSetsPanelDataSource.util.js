@@ -1,4 +1,9 @@
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
+import {
+  AZURE_STORAGE_INPUT_PATH_SCHEME,
+  MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  S3_INPUT_PATH_SCHEME,
+  V3IO_INPUT_PATH_SCHEME
+} from '../../../constants'
 
 export const kindOptions = [
   { label: 'CSV', id: 'csv' },
@@ -9,22 +14,22 @@ export const comboboxSelectList = [
   {
     className: 'path-type-store',
     label: 'MLRun store',
-    id: 'store://'
+    id: MLRUN_STORAGE_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-v3io',
     label: 'V3IO',
-    id: 'v3io://'
+    id: V3IO_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-s3',
     label: 'S3',
-    id: 's3://'
+    id: S3_INPUT_PATH_SCHEME
   },
   {
     className: 'path-type-az',
     label: 'Azure storage',
-    id: 'az://'
+    id: AZURE_STORAGE_INPUT_PATH_SCHEME
   }
 ]
 

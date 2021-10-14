@@ -26,6 +26,7 @@ const TableView = ({
   applyDetailsChanges,
   cancelRequest,
   content,
+  getCloseDetailsLink,
   groupFilter,
   groupLatestItem,
   groupedContent,
@@ -234,7 +235,8 @@ const TableView = ({
           actionsMenu={actionsMenu}
           applyDetailsChanges={applyDetailsChanges}
           cancelRequest={cancelRequest}
-          detailsMenu={pageData.detailsMenu}
+          getCloseDetailsLink={getCloseDetailsLink}
+          detailsMenu={pageData.details.menu}
           handleCancel={handleCancel}
           match={match}
           pageData={pageData}
@@ -248,6 +250,7 @@ const TableView = ({
 
 TableView.defaultProps = {
   applyDetailsChanges: () => {},
+  getCloseDetailsLink: null,
   groupLatestJob: {}
 }
 
@@ -258,6 +261,7 @@ TableView.propTypes = {
   ]).isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   isTablePanelOpen: PropTypes.bool.isRequired,

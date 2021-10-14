@@ -36,11 +36,14 @@ import {
 
 export const pageDataInitialState = {
   actionsMenu: [],
-  detailsMenu: [],
+  actionsMenuHeader: '',
+  details: {
+    menu: [],
+    infoHeaders: []
+  },
   filters: [],
-  infoHeaders: [],
   page: '',
-  registerArtifactDialogTitle: '',
+  selectedRowData: {},
   tabs: []
 }
 export const datasetsInfoHeaders = [
@@ -305,17 +308,20 @@ export const generatePageData = (
   isSelectedItem
 ) => {
   let data = {
-    detailsMenu: [],
+    details: {
+      menu: []
+    },
     page,
     tabs
   }
 
   if (pageTab === FEATURE_SETS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_SETS_TAB)
+    data.actionsMenuHeader = createFeatureSetTitle
     data.filters = featureSetsFilters
-    data.infoHeaders = featureSetsInfoHeaders
+    data.details.infoHeaders = featureSetsInfoHeaders
+    data.details.type = FEATURES_TAB
     data.tableHeaders = featureSetsTableHeaders(isSelectedItem)
-    data.registerArtifactDialogTitle = createFeatureSetTitle
     data.filterMenuActionButton = null
     data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === FEATURES_TAB) {
@@ -333,19 +339,21 @@ export const generatePageData = (
     data.mainRowItemsCount = 2
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
+    data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
-    data.infoHeaders = featureVectorsInfoHeaders
-    data.registerArtifactDialogTitle = createFeatureVectorTitle
+    data.details.infoHeaders = featureVectorsInfoHeaders
+    data.details.type = FEATURE_VECTORS_TAB
     data.filterMenuActionButton = null
   } else {
     data.actionsMenu = generateActionsMenu(DATASETS_TAB)
+    data.actionsMenuHeader = registerDatasetsTitle
     data.filters = datasetsFilters
-    data.infoHeaders = datasetsInfoHeaders
+    data.details.infoHeaders = datasetsInfoHeaders
+    data.details.type = DATASETS_TAB
     data.tableHeaders = datasetsTableHeaders(isSelectedItem)
-    data.registerArtifactDialogTitle = registerDatasetsTitle
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
     data.filterMenuActionButton = null

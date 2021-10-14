@@ -13,6 +13,7 @@ import {
   FEATURE_SETS_TAB,
   MODELS_TAB,
   MONITOR_JOBS_TAB,
+  PROJECTS_SETTINGS_GENERAL_TAB,
   WORKFLOW_SUB_PAGE
 } from './constants'
 
@@ -32,6 +33,9 @@ const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
 const Project = React.lazy(() => import('./components/Project/Project'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
+const ProjectSettings = React.lazy(() =>
+  import('./components/ProjectSettings/ProjectSettings')
+)
 
 const App = () => {
   return (
@@ -50,11 +54,22 @@ const App = () => {
               render={routeProps => <Project {...routeProps} />}
             />
             <Route
+              exact
+              path="/projects/:projectName/settings/:pageTab"
+              render={routeProps => <ProjectSettings {...routeProps} />}
+            />
+            <Redirect
+              exact
+              from="/projects/:projectName/settings"
+              to={`/projects/:projectName/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
+            />
+            <Route
               path="/projects/:projectName/jobs/:pageTab/create-new-job"
               render={routeProps => <CreateJobPage {...routeProps} />}
             />
             <Route
               path={[
+                `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId/:functionName/:functionHash/:tab`,
                 `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId/:jobId/:tab`,
                 `/projects/:projectName/jobs/:pageTab/${WORKFLOW_SUB_PAGE}/:workflowId`
               ]}

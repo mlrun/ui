@@ -1,13 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
-
-import { DATASETS_TAB } from '../../constants'
-import { launchIDEOptions } from './project.utils'
-import { groupByUniqName } from '../../utils/groupByUniqName'
-import { formatDatetime } from '../../utils'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
@@ -24,13 +19,20 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import ProjectName from './ProjectName/ProjectName'
 import ProjectDescription from './ProjectDescription/ProjectDescription'
 import ProjectGoals from './ProjectGoals/ProjectGoals'
-import ProjectSource from './ProjectSource/ProjectSource'
 import ProjectLinks from './ProjectLinks/ProjectLinks'
 import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
+import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
+import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
+
+import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
+import { launchIDEOptions } from './project.utils'
+import { formatDatetime } from '../../utils'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
+
+import './project.scss'
 
 const ProjectView = React.forwardRef(
   (
@@ -39,31 +41,37 @@ const ProjectView = React.forwardRef(
       changeMembersCallback,
       changeOwnerCallback,
       closeFeatureSetPanel,
+      closeFunctionsPanel,
       createFeatureSetPanelIsOpen,
       createFeatureSetSuccess,
+      createFunctionSuccess,
       createNewOptions,
       editProject,
-      fetchProjectFeatureSets,
-      fetchProjectFiles,
-      fetchProjectModels,
-      frontendSpec,
       handleAddProjectLabel,
+      handleDeployFunctionFailure,
+      handleDeployFunctionSuccess,
       handleEditProject,
       handleLaunchIDE,
       handleOnChangeProject,
       handleOnKeyDown,
       handleUpdateProjectLabels,
+      isNewFunctionPopUpOpen,
       isPopupDialogOpen,
       links,
       match,
       membersDispatch,
       membersState,
+      projectCounters,
       projectLabels,
+      projectMembershipIsEnabled,
       refresh,
+      setIsNewFunctionPopUpOpen,
       setIsPopupDialogOpen,
       setShowChangeOwner,
+      setShowFunctionsPanel,
       setShowManageMembers,
       showChangeOwner,
+      showFunctionsPanel,
       showManageMembers,
       visibleChipsMaxLength
     },
@@ -106,7 +114,14 @@ const ProjectView = React.forwardRef(
                     projectName={project.data.metadata.name}
                     ref={ref}
                   />
-                  <Settings className="general-info__settings" />
+                  <Link
+                    className="general-info__settings"
+                    to={`/projects/${match.params.projectName}/settings`}
+                  >
+                    <Tooltip template={<TextTooltipTemplate text="Settings" />}>
+                      <Settings />
+                    </Tooltip>
+                  </Link>
                 </div>
                 <ProjectDescription
                   editDescriptionData={editProject.description}
@@ -147,8 +162,7 @@ const ProjectView = React.forwardRef(
                   </span>
                 </div>
               </div>
-              {frontendSpec?.feature_flags?.project_membership ===
-                'enabled' && (
+              {projectMembershipIsEnabled && (
                 <>
                   <div className="general-info__row owner-row">
                     <div className="row-value">
@@ -181,15 +195,6 @@ const ProjectView = React.forwardRef(
                   </div>
                 </>
               )}
-              <div className="general-info__divider" />
-              <ProjectSource
-                editSourceData={editProject.source}
-                handleEditProject={handleEditProject}
-                handleOnChangeProject={handleOnChangeProject}
-                handleOnKeyDown={handleOnKeyDown}
-                projectSource={project.data.spec.source ?? ''}
-                ref={ref}
-              />
               <div className="general-info__divider" />
               <div className="general-info__labels">
                 <div className="general-info__labels-text">Labels</div>
@@ -235,27 +240,21 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="main-info__statistics-section">
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(project.models, 'db_key')}
-                  fetchArtifacts={fetchProjectModels}
+                  counterValue={projectCounters.data.models_count ?? 0}
                   link={`/projects/${match.params.projectName}/models`}
-                  match={match}
+                  projectCounters={projectCounters}
                   title="Models"
                 />
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(
-                    project.featureSets,
-                    'metadata.name'
-                  )}
-                  fetchArtifacts={fetchProjectFeatureSets}
+                  counterValue={projectCounters.data.feature_sets_count ?? 0}
                   link={`/projects/${match.params.projectName}/feature-store`}
-                  match={match}
+                  projectCounters={projectCounters}
                   title="Feature sets"
                 />
                 <ProjectArtifacts
-                  artifacts={groupByUniqName(project.files, 'db_key')}
-                  fetchArtifacts={fetchProjectFiles}
+                  counterValue={projectCounters.data.files_count ?? 0}
                   link={`/projects/${match.params.projectName}/files`}
-                  match={match}
+                  projectCounters={projectCounters}
                   title="Files"
                 />
               </div>
@@ -299,6 +298,25 @@ const ProjectView = React.forwardRef(
             project={match.params.projectName}
           />
         )}
+        {isNewFunctionPopUpOpen && (
+          <NewFunctionPopUp
+            closePopUp={() => setIsNewFunctionPopUpOpen(false)}
+            currentProject={match.params.projectName}
+            isOpened={isNewFunctionPopUpOpen}
+            setFunctionsPanelIsOpen={setShowFunctionsPanel}
+          />
+        )}
+        {showFunctionsPanel && (
+          <FunctionsPanel
+            closePanel={closeFunctionsPanel}
+            createFunctionSuccess={createFunctionSuccess}
+            handleDeployFunctionFailure={handleDeployFunctionFailure}
+            handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+            match={match}
+            mode={PANEL_CREATE_MODE}
+            project={match.params.projectName}
+          />
+        )}
       </div>
     )
   }
@@ -313,29 +331,36 @@ ProjectView.propTypes = {
   changeMembersCallback: PropTypes.func.isRequired,
   changeOwnerCallback: PropTypes.func.isRequired,
   closeFeatureSetPanel: PropTypes.func.isRequired,
+  closeFunctionsPanel: PropTypes.func.isRequired,
   createFeatureSetPanelIsOpen: PropTypes.bool.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
+  createFunctionSuccess: PropTypes.func.isRequired,
   createNewOptions: PropTypes.array.isRequired,
   editProject: PropTypes.shape({}).isRequired,
-  fetchProjectFeatureSets: PropTypes.func.isRequired,
-  fetchProjectFiles: PropTypes.func.isRequired,
-  fetchProjectModels: PropTypes.func.isRequired,
   handleAddProjectLabel: PropTypes.func.isRequired,
+  handleDeployFunctionFailure: PropTypes.func.isRequired,
+  handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleLaunchIDE: PropTypes.func.isRequired,
   handleOnChangeProject: PropTypes.func.isRequired,
   handleOnKeyDown: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,
+  isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
   links: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
+  projectCounters: PropTypes.object.isRequired,
   projectLabels: PropTypes.array.isRequired,
+  projectMembershipIsEnabled: PropTypes.bool.isRequired,
+  setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowChangeOwner: PropTypes.func.isRequired,
+  setShowFunctionsPanel: PropTypes.func.isRequired,
   setShowManageMembers: PropTypes.func.isRequired,
   showChangeOwner: PropTypes.bool,
+  showFunctionsPanel: PropTypes.bool.isRequired,
   showManageMembers: PropTypes.bool,
   visibleChipsMaxLength: PropTypes.number
 }

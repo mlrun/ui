@@ -7,8 +7,7 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODELS_PAGE,
-  SCHEDULE_TAB
+  MODELS_PAGE
 } from '../constants'
 import createJobsContent from './createJobsContent'
 import createFunctionsContent from './createFunctionsContent'
@@ -21,8 +20,7 @@ export const generateTableContent = (
   groupFilter,
   page,
   isTablePanelOpen,
-  pageTab,
-  projectName,
+  params,
   search,
   isSelectedItem
 ) => {
@@ -35,54 +33,47 @@ export const generateTableContent = (
         ? createJobsContent(
             group,
             isSelectedItem,
-            projectName,
+            params,
             search,
             groupFilter === 'workflow'
           )
         : page === FUNCTIONS_PAGE
         ? createFunctionsContent(group, isSelectedItem)
-        : page === FEATURE_STORE_PAGE && pageTab !== DATASETS_TAB
+        : page === FEATURE_STORE_PAGE && params.pageTab !== DATASETS_TAB
         ? createFeatureStoreContent(
             group,
-            pageTab,
-            projectName,
+            params.pageTab,
+            params.projectName,
             isTablePanelOpen,
             isSelectedItem
           )
         : createArtifactsContent(
             group,
             page,
-            pageTab,
-            projectName,
+            params.pageTab,
+            params.projectName,
             isSelectedItem
           )
     )
   } else if (groupFilter === 'none' || !groupFilter) {
     return page === JOBS_PAGE
-      ? createJobsContent(
-          content,
-          isSelectedItem,
-          projectName,
-          search,
-          false,
-          pageTab === SCHEDULE_TAB
-        )
+      ? createJobsContent(content, isSelectedItem, params, search, false)
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
         page === MODELS_PAGE ||
-        pageTab === DATASETS_TAB
+        params.pageTab === DATASETS_TAB
       ? createArtifactsContent(
           content,
           page,
-          pageTab,
-          projectName,
+          params.pageTab,
+          params.projectName,
           isSelectedItem
         )
       : page === FEATURE_STORE_PAGE
       ? createFeatureStoreContent(
           content,
-          pageTab,
-          projectName,
+          params.pageTab,
+          params.projectName,
           isTablePanelOpen,
           isSelectedItem
         )

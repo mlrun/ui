@@ -1,0 +1,19 @@
+@import '../../scss/colors';
+
+.settings {
+  &__artifact-path {
+    margin-bottom: 25px;
+  }
+
+  &__params {
+    .table-cell__actions {
+      display: flex;
+      justify-content: flex-end;
+      min-width: 70px;
+    }
+
+    .table-row__header {
+      border-top: 0;
+    }
+  }
+}

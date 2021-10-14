@@ -19,12 +19,10 @@ import {
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
-  getTableHeaders,
-  TRANSIENT_FUNCTION_STATUSES
+  getTableHeaders
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import getState from '../../utils/getState.js'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
@@ -41,6 +39,8 @@ import {
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
+import { parseFunction } from '../../utils/parseFunction'
+import { getFunctionLogs } from '../../utils/getFunctionLogs'
 
 const Functions = ({
   deleteFunction,
@@ -67,23 +67,14 @@ const Functions = ({
 
   const handleFetchFunctionLogs = useCallback(
     (projectName, name, tag, offset) => {
-      return fetchFunctionLogs(projectName, name, tag, offset).then(result => {
-        if (
-          TRANSIENT_FUNCTION_STATUSES.includes(
-            result.headers?.['x-mlrun-function-status']
-          )
-        ) {
-          fetchFunctionLogsTimeout.current = setTimeout(() => {
-            let currentOffset = offset
-              ? offset + result.data.length
-              : result.data.length
-
-            handleFetchFunctionLogs(projectName, name, tag, currentOffset)
-          }, 2000)
-        } else {
-          clearTimeout(fetchFunctionLogsTimeout.current)
-        }
-      })
+      return getFunctionLogs(
+        fetchFunctionLogs,
+        fetchFunctionLogsTimeout,
+        projectName,
+        name,
+        tag,
+        offset
+      )
     },
     [fetchFunctionLogs]
   )
@@ -99,6 +90,7 @@ const Functions = ({
         <NewFunctionPopUp
           action={action}
           currentProject={match.params.projectName}
+          isCustomPosition
           setFunctionsPanelIsOpen={setFunctionsPanelIsOpen}
         />
       )
@@ -131,19 +123,22 @@ const Functions = ({
         onClick: onRemoveFunction
       }
     ],
-    detailsMenu,
+    details: {
+      menu: detailsMenu,
+      infoHeaders,
+      refreshLogs: handleFetchFunctionLogs,
+      removeLogs: handleRemoveLogs,
+      withLogsRefreshBtn: false,
+      type: FUNCTIONS_PAGE
+    },
     filters,
     page,
     tableHeaders: getTableHeaders(!isEveryObjectValueEmpty(selectedFunction)),
-    infoHeaders,
     filterMenuActionButton: {
       getCustomTemplate: getPopUpTemplate,
       label: 'New',
       variant: SECONDARY_BUTTON
-    },
-    refreshLogs: handleFetchFunctionLogs,
-    removeLogs: handleRemoveLogs,
-    withLogsRefreshBtn: false
+    }
   }
 
   const refreshFunctions = useCallback(
@@ -152,35 +147,7 @@ const Functions = ({
         functions => {
           const newFunctions = chain(functions)
             .orderBy('metadata.updated', 'desc')
-            .map(func => ({
-              args: func.spec?.args ?? [],
-              build: func.spec?.build ?? {},
-              command: func.spec?.command,
-              default_class: func.spec?.default_class ?? '',
-              default_handler: func.spec?.default_handler ?? '',
-              description: func.spec?.description ?? '',
-              env: func.spec?.env ?? [],
-              error_stream: func.spec?.error_stream ?? '',
-              graph: func.spec?.graph ?? {},
-              hash: func.metadata?.hash ?? '',
-              image: func.spec?.image ?? '',
-              labels: func.metadata?.labels ?? {},
-              name: func.metadata?.name ?? '',
-              parameters: func.spec?.parameters ?? {},
-              project: func.metadata?.project || match.params.projectName,
-              resources: func.spec?.resources ?? {},
-              secret_sources: func.spec?.secret_sources ?? [],
-              state: getState(func.status?.state, page, 'function'),
-              tag: func.metadata?.tag ?? '',
-              track_models: func.spec?.track_models ?? false,
-              type: func.kind,
-              volume_mounts: func.spec?.volume_mounts ?? [],
-              volumes: func.spec?.volumes ?? [],
-              updated: new Date(func.metadata?.updated ?? ''),
-              ui: {
-                originalContent: func
-              }
-            }))
+            .map(func => parseFunction(func, match.params.projectName))
             .value()
 
           setFunctions(newFunctions)
@@ -210,10 +177,10 @@ const Functions = ({
   }, [filtersStore.showUntagged, functions])
 
   useEffect(() => {
-    if (match.params.hash && pageData.detailsMenu.length > 0) {
-      isDetailsTabExists(FUNCTIONS_PAGE, match, pageData.detailsMenu, history)
+    if (match.params.hash && pageData.details.menu.length > 0) {
+      isDetailsTabExists(FUNCTIONS_PAGE, match, pageData.details.menu, history)
     }
-  }, [history, match, pageData.detailsMenu])
+  }, [history, match, pageData.details.menu])
 
   useEffect(() => {
     let item = {}

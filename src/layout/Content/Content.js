@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -21,7 +22,6 @@ import { useYaml } from '../../hooks/yaml.hook'
 
 import {
   ARTIFACTS_PAGE,
-  FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
@@ -43,11 +43,11 @@ const Content = ({
   filtersChangeCallback,
   filtersStore,
   getIdentifier,
+  handleActionsMenuClick,
   handleCancel,
   handleSelectItem,
   loading,
   match,
-  openPopupDialog,
   pageData,
   refresh,
   selectedItem,
@@ -57,7 +57,7 @@ const Content = ({
   const [expandedItems, setExpandedItems] = useState([])
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
-  const [showRegisterDialog, setShowRegisterDialog] = useState(false)
+  const [showActionsMenu, setShowActionsMenu] = useState(false)
   const location = useLocation()
 
   const contentClassName = classnames(
@@ -83,19 +83,18 @@ const Content = ({
         ARTIFACTS_PAGE,
         FILES_PAGE,
         MODELS_PAGE,
-        FEATURE_STORE_PAGE
+        FEATURE_STORE_PAGE,
+        JOBS_PAGE
       ].includes(pageData.page) &&
       ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
-      (![FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
-        match.params.pageTab
-      ) ||
+      (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) ||
         isDemoMode(location.search))
     ) {
-      setShowRegisterDialog(true)
-    } else if (showRegisterDialog) {
-      setShowRegisterDialog(false)
+      setShowActionsMenu(true)
+    } else if (showActionsMenu) {
+      setShowActionsMenu(false)
     }
-  }, [location.search, match.params.pageTab, pageData.page, showRegisterDialog])
+  }, [location.search, match.params.pageTab, pageData.page, showActionsMenu])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
@@ -199,16 +198,9 @@ const Content = ({
       <div className="content__header">
         <Breadcrumbs match={match} />
         <PageActionsMenu
-          createJob={pageData.page === JOBS_PAGE}
-          registerDialog={showRegisterDialog}
-          registerDialogHeader={
-            pageData.page === PROJECTS_PAGE
-              ? 'New Project'
-              : pageData.registerArtifactDialogTitle
-          }
-          match={match}
-          pageData={pageData}
-          onClick={openPopupDialog}
+          actionsMenuHeader={pageData.actionsMenuHeader}
+          onClick={handleActionsMenuClick}
+          showActionsMenu={showActionsMenu}
         />
       </div>
       <div className={contentClassName}>
@@ -233,7 +225,10 @@ const Content = ({
               match={match}
               onChange={filtersChangeCallback ?? refresh}
               page={pageData.page}
-              withoutExpandButton={Boolean(pageData.handleRequestOnExpand)}
+              withoutExpandButton={
+                Boolean(pageData.handleRequestOnExpand) ||
+                pageData.withoutExpandButton
+              }
             />
           </div>
         )}
@@ -241,7 +236,11 @@ const Content = ({
         <div className="table-container">
           {children ? (
             children
-          ) : content.length !== 0 ? (
+          ) : loading ? null : (filtersStore.groupBy !== 'none' &&
+              isEmpty(groupedContent)) ||
+            content.length === 0 ? (
+            <NoData />
+          ) : (
             <>
               <Table
                 actionsMenu={actionsMenu}
@@ -259,8 +258,6 @@ const Content = ({
                 setLoading={setLoading}
               />
             </>
-          ) : loading ? null : (
-            <NoData />
           )}
         </div>
         {convertedYaml.length > 0 && (
@@ -277,6 +274,7 @@ const Content = ({
 Content.defaultProps = {
   activeScreenTab: '',
   filtersChangeCallback: null,
+  handleActionsMenuClick: () => {},
   handleSelectItem: () => {},
   selectedItem: {},
   setLoading: () => {}
@@ -286,6 +284,7 @@ Content.propTypes = {
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filtersChangeCallback: PropTypes.func,
   getIdentifier: PropTypes.func.isRequired,
+  handleActionsMenuClick: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,

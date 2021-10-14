@@ -31,6 +31,7 @@ import {
 } from '../../constants'
 
 import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as Back } from '../../images/back-arrow.svg'
 
 const DetailsView = React.forwardRef(
   (
@@ -39,11 +40,13 @@ const DetailsView = React.forwardRef(
       applyChanges,
       applyChangesRef,
       cancelChanges,
+      getCloseDetailsLink,
       detailsMenu,
       detailsMenuClick,
       detailsStore,
       handleCancel,
       handleShowWarning,
+      isDetailsScreen,
       leavePage,
       match,
       pageData,
@@ -56,7 +59,8 @@ const DetailsView = React.forwardRef(
   ) => {
     const detailsPanelClassNames = classnames(
       'table__item',
-      detailsStore.showWarning && 'pop-up-dialog-opened'
+      detailsStore.showWarning && 'pop-up-dialog-opened',
+      isDetailsScreen && 'table__item_big'
     )
     const { value: stateValue, label: stateLabel, className: stateClassName } =
       selectedItem.state || {}
@@ -69,6 +73,27 @@ const DetailsView = React.forwardRef(
         )}
         <div className="item-header__data">
           <h3 className="item-header__title">
+            {isDetailsScreen && (
+              <Link
+                className="item-header__back-btn"
+                to={location => {
+                  const urlArray = location.pathname.split('/')
+
+                  return urlArray.slice(0, -2).join('/')
+                }}
+                onClick={() => {
+                  if (detailsStore.changes.counter > 0) {
+                    handleShowWarning(true)
+                  } else {
+                    handleCancel()
+                  }
+                }}
+              >
+                <Tooltip template={<TextTooltipTemplate text="Go to list" />}>
+                  <Back />
+                </Tooltip>
+              </Link>
+            )}
             <Tooltip
               template={
                 <TextTooltipTemplate
@@ -174,10 +199,14 @@ const DetailsView = React.forwardRef(
           <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
           <Link
             data-testid="details-close-btn"
-            to={location => {
-              const urlArray = location.pathname.split('/')
-              return urlArray.slice(0, urlArray.length - 2).join('/')
-            }}
+            to={
+              getCloseDetailsLink ??
+              `/projects/${
+                match.params.projectName
+              }/${pageData.page.toLowerCase()}${
+                match.params.pageTab ? `/${match.params.pageTab}` : ''
+              }`
+            }
             onClick={() => {
               if (detailsStore.changes.counter > 0) {
                 handleShowWarning(true)
@@ -238,6 +267,7 @@ const DetailsView = React.forwardRef(
 
 DetailsView.defaultProps = {
   detailsMenuClick: () => {},
+  getCloseDetailsLink: null,
   tabsContent: null
 }
 
@@ -251,8 +281,10 @@ DetailsView.propTypes = {
   detailsMenu: PropTypes.array.isRequired,
   detailsMenuClick: PropTypes.func,
   detailsStore: PropTypes.shape({}).isRequired,
+  getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
   handleShowWarning: PropTypes.func.isRequired,
+  isDetailsScreen: PropTypes.bool.isRequired,
   leavePage: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,

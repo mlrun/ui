@@ -14,13 +14,7 @@ import {
 } from './projectJobs.utils'
 import projectsAction from '../../actions/projects'
 
-const ProjectJobs = ({
-  fetchProjectJobs,
-  fetchProjectScheduledJobs,
-  fetchProjectWorkflows,
-  match,
-  projectStore
-}) => {
+const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
   const location = useLocation()
   const [groupedLatestItem, setGroupedLatestItem] = useState([])
 
@@ -34,22 +28,13 @@ const ProjectJobs = ({
 
   useEffect(() => {
     fetchProjectJobs(match.params.projectName)
-    fetchProjectScheduledJobs(match.params.projectName)
-    fetchProjectWorkflows(match.params.projectName)
-  }, [
-    match.params.projectName,
-    fetchProjectJobs,
-    fetchProjectScheduledJobs,
-    fetchProjectWorkflows
-  ])
+  }, [fetchProjectJobs, match.params.projectName])
 
   const jobsData = useMemo(() => {
     const statistics = getJobsStatistics(
-      projectStore.project.jobs,
+      projectStore.projectCounters,
       match,
-      location.search,
-      projectStore.project.scheduledJobs,
-      projectStore.project.workflows
+      location.search
     )
     const table = getJobsTableData(groupedLatestItem, match)
 
@@ -57,14 +42,7 @@ const ProjectJobs = ({
       statistics,
       table
     }
-  }, [
-    groupedLatestItem,
-    match,
-    location.search,
-    projectStore.project.jobs,
-    projectStore.project.scheduledJobs,
-    projectStore.project.workflows
-  ])
+  }, [projectStore.projectCounters, match, location.search, groupedLatestItem])
 
   return (
     <ProjectDataCard

@@ -7,6 +7,7 @@ import {
   MODELS_PAGE,
   MODELS_TAB,
   NAME_FILTER,
+  SORT_BY,
   TREE_FILTER
 } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -14,6 +15,7 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generateUri } from '../../utils/resources'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
+import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
 
 export const modelsInfoHeaders = [
   {
@@ -94,9 +96,19 @@ export const modelsFilters = [
   { type: LABELS_FILTER, label: 'Labels:' },
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
-export const modelEndpointsFilters = [{ type: LABELS_FILTER, label: 'Labels:' }]
+export const modelEndpointsFilters = [
+  { type: LABELS_FILTER, label: 'Labels:' },
+  {
+    type: SORT_BY,
+    label: 'Sort By:',
+    options: [
+      { label: 'Function', id: 'function' },
+      ...filterSelectOptions.sortBy
+    ]
+  }
+]
 export const page = MODELS_PAGE
-export const registerArtifactDialogTitle = 'Register model'
+export const actionsMenuHeader = 'Register model'
 export const modelsTableHeaders = isSelectedModel => [
   {
     header: 'Name',
@@ -166,11 +178,6 @@ export const modelEndpointsTableHeaders = isSelectedModel => [
   },
   {
     header: 'Function',
-    class: 'artifacts_small',
-    hidden: isSelectedModel
-  },
-  {
-    header: 'Model',
     class: 'artifacts_small',
     hidden: isSelectedModel
   },
@@ -269,24 +276,29 @@ export const generatePageData = (
   isSelectedModel
 ) => {
   const data = {
+    details: {
+      menu: []
+    },
     page,
     tabs
   }
 
   if (pageTab === MODELS_TAB) {
-    data.detailsMenu = generateModelsDetailsMenu(selectedModel)
+    data.actionsMenuHeader = actionsMenuHeader
+    data.details.menu = generateModelsDetailsMenu(selectedModel)
+    data.details.type = MODELS_TAB
     data.filters = modelsFilters
-    data.registerArtifactDialogTitle = registerArtifactDialogTitle
     data.tableHeaders = modelsTableHeaders(isSelectedModel)
-    data.infoHeaders = modelsInfoHeaders
+    data.details.infoHeaders = modelsInfoHeaders
     data.actionsMenu = generateModelsActionMenu(handleDeployModel)
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-    data.detailsMenu = modelEndpointsDetailsMenu
+    data.details.menu = modelEndpointsDetailsMenu
+    data.details.type = MODEL_ENDPOINTS_TAB
     data.filters = modelEndpointsFilters
     data.tableHeaders = modelEndpointsTableHeaders(isSelectedModel)
-    data.infoHeaders = modelEndpointsInfoHeaders
+    data.details.infoHeaders = modelEndpointsInfoHeaders
   }
 
   return data

@@ -49,7 +49,7 @@ const ArtifactsPreviewView = ({
               })}
             </div>
             <div className="artifact-preview__table-body">
-              {preview.data.content.map((contentItem, index) => (
+              {preview.data.content.splice(0, 100).map((contentItem, index) => (
                 <div key={index} className="artifact-preview__table-row">
                   {Array.isArray(contentItem) ? (
                     contentItem.map(value => (

@@ -10,6 +10,9 @@ import {
   DELETE_PROJECT_SUCCESS,
   ADD_PROJECT_LABEL,
   FETCH_PROJECT_BEGIN,
+  FETCH_PROJECT_COUNTERS_SUCCESS,
+  FETCH_PROJECT_COUNTERS_BEGIN,
+  FETCH_PROJECT_COUNTERS_FAILURE,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
@@ -44,6 +47,7 @@ import {
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
+  REMOVE_PROJECT_COUNTERS,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
@@ -58,7 +62,13 @@ import {
   FETCH_PROJECTS_NAMES_BEGIN,
   FETCH_PROJECTS_NAMES_FAILURE,
   FETCH_PROJECTS_NAMES_SUCCESS,
-  SET_PROJECT_DATA
+  SET_PROJECT_DATA,
+  SET_PROJECT_SETTINGS,
+  SET_PROJECT_PARAMS,
+  FETCH_PROJECT_SECRETS_BEGIN,
+  FETCH_PROJECT_SECRETS_FAILURE,
+  FETCH_PROJECT_SECRETS_SUCCESS,
+  SET_PROJECT_SECRETS
 } from '../constants'
 
 const initialState = {
@@ -118,6 +128,11 @@ const initialState = {
       error: null,
       loading: false
     },
+    secrets: {
+      data: {},
+      error: null,
+      loading: false
+    },
     workflows: {
       data: [],
       error: null,
@@ -125,6 +140,11 @@ const initialState = {
     }
   },
   projects: [],
+  projectCounters: {
+    error: null,
+    loading: false,
+    data: []
+  },
   projectsNames: {
     error: null,
     loading: false,
@@ -612,6 +632,42 @@ export default (state = initialState, { type, payload }) => {
           }
         }
       }
+    case FETCH_PROJECT_SECRETS_BEGIN:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          secrets: {
+            ...state.project.secrets,
+            loading: true
+          }
+        }
+      }
+    case FETCH_PROJECT_SECRETS_FAILURE:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          secrets: {
+            ...state.project.secrets,
+            error: payload,
+            loading: false
+          }
+        }
+      }
+    case FETCH_PROJECT_SECRETS_SUCCESS:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          secrets: {
+            ...state.project.secrets,
+            data: payload,
+            error: null,
+            loading: false
+          }
+        }
+      }
     case FETCH_PROJECTS_BEGIN:
       return {
         ...state,
@@ -682,6 +738,32 @@ export default (state = initialState, { type, payload }) => {
           loading: false
         }
       }
+    case FETCH_PROJECT_COUNTERS_BEGIN:
+      return {
+        ...state,
+        projectCounters: {
+          ...state.projectCounters,
+          loading: true
+        }
+      }
+    case FETCH_PROJECT_COUNTERS_FAILURE:
+      return {
+        ...state,
+        projectCounters: {
+          data: [],
+          loading: false,
+          error: payload
+        }
+      }
+    case FETCH_PROJECT_COUNTERS_SUCCESS:
+      return {
+        ...state,
+        projectCounters: {
+          data: payload,
+          loading: false,
+          error: null
+        }
+      }
     case FETCH_PROJECT_WORKFLOWS_BEGIN:
       return {
         ...state,
@@ -727,63 +809,20 @@ export default (state = initialState, { type, payload }) => {
           description: ''
         }
       }
+    case REMOVE_PROJECT_COUNTERS:
+      return {
+        ...state,
+        projectCounters: {
+          error: null,
+          loading: false,
+          data: []
+        }
+      }
     case REMOVE_PROJECT_DATA:
       return {
         ...state,
         project: {
-          data: null,
-          error: null,
-          loading: false,
-          dataSets: {
-            data: null,
-            error: null,
-            loading: false
-          },
-          failedJobs: {
-            data: [],
-            error: null,
-            loading: false
-          },
-          featureSets: {
-            data: [],
-            error: null,
-            loading: false
-          },
-          files: {
-            data: null,
-            error: null,
-            loading: false
-          },
-          jobs: {
-            data: null,
-            error: null,
-            loading: false
-          },
-          functions: {
-            data: null,
-            error: null,
-            loading: false
-          },
-          models: {
-            data: [],
-            error: null,
-            loading: false
-          },
-          runningJobs: {
-            data: [],
-            error: null,
-            loading: false
-          },
-          scheduledJobs: {
-            data: [],
-            error: null,
-            loading: false
-          },
-          workflows: {
-            data: [],
-            error: null,
-            loading: false
-          }
+          ...initialState.project
         }
       }
     case REMOVE_PROJECTS:
@@ -833,6 +872,54 @@ export default (state = initialState, { type, payload }) => {
               labels: {
                 ...payload
               }
+            }
+          }
+        }
+      }
+    }
+    case SET_PROJECT_PARAMS: {
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          data: {
+            ...state.project.data,
+            spec: {
+              ...state.project.data.spec,
+              params: payload
+            }
+          }
+        }
+      }
+    }
+    case SET_PROJECT_SECRETS: {
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          secrets: {
+            ...state.project.secrets,
+            data: {
+              ...state.project.secrets.data,
+              secret_keys: payload
+            },
+            error: null,
+            loading: false
+          }
+        }
+      }
+    }
+    case SET_PROJECT_SETTINGS: {
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          data: {
+            ...state.project.data,
+            spec: {
+              ...state.project.data.spec,
+              artifact_path: payload.artifact_path,
+              source: payload.source
             }
           }
         }

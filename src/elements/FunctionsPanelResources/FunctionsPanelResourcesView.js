@@ -11,7 +11,13 @@ import {
   generateMemoryValue,
   selectMemoryOptions
 } from '../../utils/panelResources.util'
-import { LIMITS, REQUESTS } from './functionsPanelResources.util'
+import {
+  LIMITS,
+  REQUESTS,
+  VOLUME_MOUNT_MANUAL_TYPE,
+  volumeMountOptions
+} from './functionsPanelResources.util'
+import { PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
 
 import './functionsPanelResources.scss'
 
@@ -20,8 +26,10 @@ const FunctionsPanelResourcesView = ({
   handleAddNewVolume,
   handleDeleteVolume,
   handleEditVolume,
-  handleSelectMemoryUnit,
   handleSelectCpuUnit,
+  handleSelectMemoryUnit,
+  handleSelectVolumeMount,
+  mode,
   setMemoryValue,
   setCpuValue,
   setGpuValue,
@@ -34,14 +42,27 @@ const FunctionsPanelResourcesView = ({
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
       >
-        <VolumesTable
-          handleAddNewVolume={handleAddNewVolume}
-          handleDelete={handleDeleteVolume}
-          handleEdit={handleEditVolume}
-          className="volumes"
-          volumeMounts={data.volumeMounts}
-          volumes={data.volumes}
-        />
+        {mode === PANEL_CREATE_MODE && (
+          <Select
+            className="volume-mount"
+            floatingLabel
+            label="Volume mount"
+            options={volumeMountOptions}
+            onClick={handleSelectVolumeMount}
+            selectedId={data.volumeMount}
+          />
+        )}
+        {(data.volumeMount === VOLUME_MOUNT_MANUAL_TYPE ||
+          mode === PANEL_EDIT_MODE) && (
+          <VolumesTable
+            handleAddNewVolume={handleAddNewVolume}
+            handleDelete={handleDeleteVolume}
+            handleEdit={handleEditVolume}
+            className="volumes"
+            volumeMounts={data.volumeMounts}
+            volumes={data.volumes}
+          />
+        )}
       </FunctionsPanelSection>
       <div className="resources__inputs">
         <FunctionsPanelSection title="Memory" className="memory">
@@ -132,8 +153,10 @@ FunctionsPanelResourcesView.propTypes = {
   handleAddNewVolume: PropTypes.func.isRequired,
   handleDeleteVolume: PropTypes.func.isRequired,
   handleEditVolume: PropTypes.func.isRequired,
-  handleSelectMemoryUnit: PropTypes.func.isRequired,
   handleSelectCpuUnit: PropTypes.func.isRequired,
+  handleSelectMemoryUnit: PropTypes.func.isRequired,
+  handleSelectVolumeMount: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired,
   setMemoryValue: PropTypes.func.isRequired,
   setCpuValue: PropTypes.func.isRequired,
   setGpuValue: PropTypes.func.isRequired,

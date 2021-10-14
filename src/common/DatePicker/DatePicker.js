@@ -394,9 +394,9 @@ const DatePicker = ({
     }
   }
 
-  const onSelectOption = optionHandler => {
-    if (optionHandler) {
-      onChange(optionHandler())
+  const onSelectOption = option => {
+    if (option.handler) {
+      onChange(option.handler(), option.isPredefined)
     } else {
       setIsDatePickerOpened(true)
     }

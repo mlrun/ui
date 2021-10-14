@@ -79,15 +79,15 @@ export const generateProjectStatistic = (
         ? '-'
         : projectSummary.feature_sets_count
     },
-    functions: {
+    files: {
       className: 'default',
-      label: 'ML functions',
+      label: 'Files',
       loading: projectsSummaryLoading,
       value: fetchProjectsSummaryFailure
         ? 'N/A'
         : isEmpty(projectSummary)
         ? '-'
-        : projectSummary.functions_count
+        : projectSummary.files_count
     }
   }
 }

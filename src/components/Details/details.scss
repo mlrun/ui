@@ -19,10 +19,21 @@
     background-color: $white;
     border-left: $secondaryBorder;
 
+    &_big {
+      width: 100%;
+    }
+
     .item {
       &-header {
         &__title {
+          display: flex;
+          align-items: center;
           max-width: calc(100% - 370px);
+        }
+
+        &__back-btn {
+          margin-right: 5px;
+          margin-bottom: -5px;
         }
 
         &__pods {

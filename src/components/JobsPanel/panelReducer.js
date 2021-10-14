@@ -1,4 +1,5 @@
 export const initialState = {
+  access_key: '',
   cpuUnit: 'cpu',
   currentFunctionInfo: {
     labels: [],
@@ -17,6 +18,7 @@ export const initialState = {
   memoryUnit: 'Bytes',
   outputPath: 'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}',
   previousPanelData: {
+    access_key: '',
     tableData: {
       dataInputs: [],
       parameters: [],
@@ -50,6 +52,7 @@ export const panelActions = {
   EDIT_JOB_LABEL: 'EDIT_JOB_LABEL',
   REMOVE_JOB_LABEL: 'REMOVE_JOB_LABEL',
   REMOVE_PREVIOUS_PANEL_DATA: 'REMOVE_PREVIOUS_PANEL_DATA',
+  SET_ACCESS_KEY: 'SET_ACCESS_KEY',
   SET_CPU_UNIT: 'SET_CPU_UNIT',
   SET_CURRENT_FUNCTION_INFO: 'SET_CURRENT_FUNCTION_INFO',
   SET_CURRENT_FUNCTION_INFO_LABELS: 'SET_CURRENT_FUNCTION_INFO_LABELS',
@@ -66,6 +69,7 @@ export const panelActions = {
   SET_MEMORY_UNIT: 'SET_MEMORY_UNIT',
   SET_OUTPUT_PATH: 'SET_OUTPUT_PATH',
   SET_PREVIOUS_PANEL_DATA: 'SET_PREVIOUS_PANEL_DATA',
+  SET_PREVIOUS_PANEL_DATA_ACCESS_KEY: 'SET_PREVIOUS_PANEL_DATA_ACCESS_KEY',
   SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES:
     'SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES',
   SET_PREVIOUS_PANEL_DATA_INPUTS: 'SET_PREVIOUS_PANEL_DATA_INPUTS',
@@ -107,20 +111,7 @@ export const panelReducer = (state, { type, payload }) => {
     case panelActions.REMOVE_PREVIOUS_PANEL_DATA:
       return {
         ...state,
-        previousPanelData: {
-          tableData: {
-            dataInputs: {},
-            parameters: {},
-            volumes: [],
-            volume_mounts: [],
-            environmentVariables: [],
-            secretSources: []
-          },
-          titleInfo: {
-            method: '',
-            version: ''
-          }
-        }
+        previousPanelData: initialState.previousPanelData
       }
     case panelActions.REMOVE_JOB_LABEL: {
       return {
@@ -131,6 +122,11 @@ export const panelReducer = (state, { type, payload }) => {
         }
       }
     }
+    case panelActions.SET_ACCESS_KEY:
+      return {
+        ...state,
+        access_key: payload
+      }
     case panelActions.SET_JOB_LABELS:
       return {
         ...state,
@@ -235,6 +231,14 @@ export const panelReducer = (state, { type, payload }) => {
       return {
         ...state,
         previousPanelData: payload
+      }
+    case panelActions.SET_PREVIOUS_PANEL_DATA_ACCESS_KEY:
+      return {
+        ...state,
+        previousPanelData: {
+          ...state.previousPanelData,
+          access_key: payload
+        }
       }
     case panelActions.SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES:
       return {

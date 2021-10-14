@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { isEmpty, orderBy } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import Content from '../../layout/Content/Content'
@@ -57,10 +57,10 @@ const Models = ({
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
   const [pageData, setPageData] = useState({
-    detailsMenu: [],
+    details: { menu: [], infoHeaders: [] },
     filters: [],
     infoHeaders: [],
-    page: '',
+    page: MODELS_PAGE,
     registerArtifactDialogTitle: '',
     tabs: []
   })
@@ -224,13 +224,13 @@ const Models = ({
 
   useEffect(() => {
     if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
-      setFilters({ groupBy: 'none' })
+      setFilters({ groupBy: 'none', sortBy: 'function' })
     } else if (filtersStore.tag === INIT_TAG_FILTER) {
       setFilters({ groupBy: INIT_GROUP_FILTER })
     } else {
       setFilters({ groupBy: 'none' })
     }
-  }, [match.params.pageTab, filtersStore.tag, setFilters])
+  }, [filtersStore.tag, match.params.pageTab, setFilters])
 
   useEffect(() => {
     if (
@@ -279,11 +279,11 @@ const Models = ({
     if (
       match.params.name &&
       match.params.tag &&
-      pageData.detailsMenu.length > 0
+      pageData.details.menu.length > 0
     ) {
-      isDetailsTabExists(MODELS_PAGE, match, pageData.detailsMenu, history)
+      isDetailsTabExists(MODELS_PAGE, match, pageData.details.menu, history)
     }
-  }, [history, match, pageData.detailsMenu])
+  }, [history, match, pageData.details.menu])
 
   useEffect(() => {
     if (
@@ -321,15 +321,22 @@ const Models = ({
     match.params.projectName
   ])
 
+  const sortedContent = useMemo(() => {
+    const path =
+      filtersStore.sortBy === 'function' ? 'spec.model_uri' : 'spec.model'
+
+    return orderBy(content, [path], ['asc'])
+  }, [content, filtersStore.sortBy])
+
   return (
     <div className="content-wrapper">
       {artifactsStore.loading && <Loader />}
       <Content
-        content={content}
+        content={sortedContent}
+        handleActionsMenuClick={() => setIsRegisterArtifactPopupOpen(true)}
         handleCancel={() => setSelectedModel({})}
         loading={artifactsStore.loading}
         match={match}
-        openPopupDialog={() => setIsRegisterArtifactPopupOpen(true)}
         pageData={pageData}
         refresh={fetchData}
         selectedItem={selectedModel.item}
@@ -341,7 +348,7 @@ const Models = ({
           match={match}
           refresh={fetchData}
           setIsPopupOpen={setIsRegisterArtifactPopupOpen}
-          title={pageData.registerArtifactDialogTitle}
+          title={pageData.actionsMenuHeader}
         />
       )}
       {isDeployPopupOpen && (

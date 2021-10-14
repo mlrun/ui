@@ -12,6 +12,9 @@ import {
   DELETE_PROJECT_FAILURE,
   DELETE_PROJECT_SUCCESS,
   FETCH_PROJECT_BEGIN,
+  FETCH_PROJECT_COUNTERS_BEGIN,
+  FETCH_PROJECT_COUNTERS_FAILURE,
+  FETCH_PROJECT_COUNTERS_SUCCESS,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
@@ -52,6 +55,7 @@ import {
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
+  REMOVE_PROJECT_COUNTERS,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
@@ -60,7 +64,13 @@ import {
   SET_PROJECT_LABELS,
   FETCH_PROJECTS_NAMES_BEGIN,
   FETCH_PROJECTS_NAMES_FAILURE,
-  FETCH_PROJECTS_NAMES_SUCCESS
+  FETCH_PROJECTS_NAMES_SUCCESS,
+  SET_PROJECT_SETTINGS,
+  SET_PROJECT_PARAMS,
+  FETCH_PROJECT_SECRETS_BEGIN,
+  FETCH_PROJECT_SECRETS_FAILURE,
+  FETCH_PROJECT_SECRETS_SUCCESS,
+  SET_PROJECT_SECRETS
 } from '../constants'
 
 const projectsAction = {
@@ -307,6 +317,31 @@ const projectsAction = {
     type: FETCH_PROJECT_JOBS_SUCCESS,
     payload: jobs
   }),
+  fetchProjectCounters: project => dispatch => {
+    dispatch(projectsAction.fetchProjectCountersBegin())
+
+    return projectsApi
+      .getProjectSummary(project)
+      .then(({ data }) => {
+        return dispatch(projectsAction.fetchProjectCountersSuccess(data))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectCountersFailure(error.message))
+
+        throw error
+      })
+  },
+  fetchProjectCountersBegin: () => ({
+    type: FETCH_PROJECT_COUNTERS_BEGIN
+  }),
+  fetchProjectCountersFailure: error => ({
+    type: FETCH_PROJECT_COUNTERS_FAILURE,
+    payload: error
+  }),
+  fetchProjectCountersSuccess: summary => ({
+    type: FETCH_PROJECT_COUNTERS_SUCCESS,
+    payload: summary
+  }),
   fetchProjectModels: (project, cancelToken) => dispatch => {
     dispatch(projectsAction.fetchProjectModelsBegin())
 
@@ -394,6 +429,31 @@ const projectsAction = {
     type: FETCH_PROJECT_SCHEDULED_JOBS_SUCCESS,
     payload: jobs
   }),
+  fetchProjectSecrets: project => dispatch => {
+    dispatch(projectsAction.fetchProjectSecretsBegin())
+
+    return projectsApi
+      .getProjectSecrets(project)
+      .then(response => {
+        dispatch(projectsAction.fetchProjectSecretsSuccess(response.data))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectSecretsFailure(error.message))
+
+        throw error.message
+      })
+  },
+  fetchProjectSecretsBegin: () => ({
+    type: FETCH_PROJECT_SECRETS_BEGIN
+  }),
+  fetchProjectSecretsFailure: error => ({
+    type: FETCH_PROJECT_SECRETS_FAILURE,
+    payload: error
+  }),
+  fetchProjectSecretsSuccess: secrets => ({
+    type: FETCH_PROJECT_SECRETS_SUCCESS,
+    payload: secrets
+  }),
   fetchProjectSuccess: project => ({
     type: FETCH_PROJECT_SUCCESS,
     payload: project
@@ -448,11 +508,11 @@ const projectsAction = {
     dispatch(projectsAction.fetchProjectsSummaryBegin())
 
     return projectsApi
-      .getProjectsSummary(cancelToken)
-      .then(({ data: { projects } }) => {
-        dispatch(projectsAction.fetchProjectsSummarySuccess(projects))
+      .getProjectSummaries(cancelToken)
+      .then(({ data: { project_summaries } }) => {
+        dispatch(projectsAction.fetchProjectsSummarySuccess(project_summaries))
 
-        return projects
+        return project_summaries
       })
       .catch(err => {
         dispatch(projectsAction.fetchProjectsSummaryFailure(err))
@@ -496,6 +556,7 @@ const projectsAction = {
   }),
   removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
+  removeProjectCounters: () => ({ type: REMOVE_PROJECT_COUNTERS }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
   setNewProjectDescription: description => ({
@@ -510,6 +571,18 @@ const projectsAction = {
   setProjectLabels: labels => ({
     type: SET_PROJECT_LABELS,
     payload: { ...labels }
+  }),
+  setProjectParams: params => ({
+    type: SET_PROJECT_PARAMS,
+    payload: params
+  }),
+  setProjectSecrets: secrets => ({
+    type: SET_PROJECT_SECRETS,
+    payload: secrets
+  }),
+  setProjectSettings: settings => ({
+    type: SET_PROJECT_SETTINGS,
+    payload: settings
   })
 }
 

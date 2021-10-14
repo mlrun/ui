@@ -12,7 +12,11 @@ import { isEmpty } from 'lodash'
 
 import JobsPanelView from './JobsPanelView'
 
-import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
+import {
+  MONITOR_JOBS_TAB,
+  PANEL_DEFAULT_ACCESS_KEY,
+  SCHEDULE_TAB
+} from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionActions from '../../actions/functions'
 import {
@@ -49,7 +53,6 @@ const JobsPanel = ({
   removeNewJob,
   runNewJob,
   setNewJob,
-  setNewJobEnvironmentVariables,
   setNewJobInputs,
   setNewJobSecretSources,
   setNotification,
@@ -212,6 +215,10 @@ const JobsPanel = ({
       panelDispatch({
         type: panelActions.SET_PREVIOUS_PANEL_DATA_TABLE_DATA,
         payload: panelState.tableData
+      })
+      panelDispatch({
+        type: panelActions.SET_PREVIOUS_PANEL_DATA_ACCESS_KEY,
+        payload: PANEL_DEFAULT_ACCESS_KEY
       })
     }
 
@@ -390,7 +397,6 @@ const JobsPanel = ({
       panelDispatch={panelDispatch}
       panelState={panelState}
       removeJobError={removeJobError}
-      setNewJobEnvironmentVariables={setNewJobEnvironmentVariables}
       setNewJobInputs={setNewJobInputs}
       setNewJobSecretSources={setNewJobSecretSources}
       setOpenScheduleJob={setOpenScheduleJob}

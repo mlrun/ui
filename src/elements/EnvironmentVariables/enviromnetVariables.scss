@@ -1,0 +1,90 @@
+@import '../../scss/mixins';
+
+.env-variables-table {
+  @include newItemSidePanelTable;
+
+  .table {
+    &__body {
+      align-items: center;
+
+      &-column {
+        height: 56px;
+
+        .input-wrapper {
+          &:first-child {
+            max-width: 200px;
+          }
+
+          &:last-child {
+            max-width: 360px;
+          }
+
+          .input {
+            padding-top: 21px;
+            border-radius: unset;
+          }
+
+          .input-row__item {
+            height: 48px;
+          }
+        }
+
+        .select {
+          flex: unset;
+          width: 140px;
+
+          &__value {
+            padding-left: 10px;
+          }
+        }
+
+        .input-row__item-secret {
+          display: inline-flex;
+          max-width: 360px;
+        }
+      }
+    }
+
+    &__row {
+      .active-input {
+        padding: 25px 16px 11px 16px;
+      }
+
+      .table-cell {
+        &__key {
+          flex: unset;
+          width: 200px;
+        }
+
+        &__type {
+          flex: unset;
+          width: 140px;
+          margin-right: 3px;
+        }
+
+        &__value {
+          width: 360px;
+        }
+
+        &__secret {
+          display: inline-flex;
+          max-width: 360px;
+
+          .input-wrapper {
+            &:first-child {
+              margin-right: 2px;
+            }
+          }
+
+          .input__tip {
+            right: 2px;
+          }
+        }
+      }
+    }
+  }
+
+  &__btn {
+    padding: 0;
+  }
+}
