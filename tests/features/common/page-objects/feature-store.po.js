@@ -3,16 +3,19 @@ import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
 import inputGroup from '../components/input-group.component'
-import { generateInputGroup } from '../../common-tools/common-tools'
+import {
+  generateInputGroup,
+  generateDropdownGroup
+} from '../../common-tools/common-tools'
 
 // Feature Sets
 const tabSelector = {
-  root: 'div.feature-store-container div.content_with-menu div.content-menu',
+  root: '.content-menu',
   header: {},
   body: {
     root: 'ul.content-menu__list',
     row: {
-      root: 'li.content-menu__item',
+      root: '.content-menu__item',
       fields: {
         tab: 'a'
       }
@@ -53,7 +56,7 @@ const labelsDropdown = {
 }
 
 const featureSetsTable = {
-  root: 'div.feature-store-container div.table-container div.table__content',
+  root: '.content .table-container .table__content',
   header: {
     root: 'div.table-head',
     sorters: {
@@ -94,18 +97,8 @@ const featureSetsTable = {
 }
 
 // Features
-const tagFilterDropdown = {
-  root: '.feature-store-container .content__action-bar .filters .tag-filter',
-  dropdownElements: {
-    open_button: 'input.artifact_filter_tree',
-    options: 'div.drop_down_menu div.drop_down_menu_item',
-    option_name: ''
-  }
-}
-
 const featuresTable = {
-  root:
-    'div.feature-store-container div.table-container div.table div.table__content',
+  root: '.table-container .table .table__content',
   header: {
     root: 'div.table-head',
     sorters: {
@@ -145,8 +138,7 @@ const featuresTable = {
 
 // Feature Vectors
 const featureVectorTable = {
-  root:
-    'div.feature-store-container div.table-container div.table div.table__content',
+  root: '.table-container .table .table__content',
   header: {
     root: 'div.table-head',
     sorters: {
@@ -181,8 +173,7 @@ const featureVectorTable = {
 
 // Datasets
 const datasetsTable = {
-  root:
-    'div.feature-store-container div.table-container div.table div.table__content',
+  root: '.table-container .table .table__content',
   header: {
     root: 'div.table-head',
     sorters: {
@@ -217,11 +208,33 @@ const datasetsTable = {
 
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
-const tableRefreshButton = By.css(
-  'div.feature-store-container div.content__action-bar div.actions button#refresh'
-)
+const tableRefreshButton = By.css('.content__action-bar .actions #refresh')
 const pageHeaderButton = By.css(
   'div.content__header div.page-actions-container button'
+)
+const commonNameFilterInput = inputGroup(
+  generateInputGroup(
+    '.content .content__action-bar .input-wrapper:nth-of-type(2)',
+    true,
+    false,
+    true
+  )
+)
+const commonLabelFilterInput = inputGroup(
+  generateInputGroup(
+    '.content .content__action-bar .input-wrapper:nth-of-type(3)',
+    true,
+    false,
+    true
+  )
+)
+const commonTableTreeFilterDropdown = dropdownComponent(
+  generateDropdownGroup(
+    '.content .content__action-bar .filters .tag-filter',
+    'input',
+    '.tag-filter__dropdown .tag-filter__dropdown-item',
+    ''
+  )
 )
 
 module.exports = {
@@ -231,20 +244,9 @@ module.exports = {
     Table_Expand_Rows_Button: By.css(
       'div.feature-store-container div.content__action-bar div.data-ellipsis:nth-of-type(2) button'
     ),
-    Table_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(1)',
-        true,
-        false
-      )
-    ),
-    Table_Label_Filter_Input: inputGroup(
-      generateInputGroup(
-        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2)',
-        true,
-        false
-      )
-    ),
+    Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
+    Table_Name_Filter_Input: commonNameFilterInput,
+    Table_Label_Filter_Input: commonLabelFilterInput,
     Feature_Sets_Table: commonTable(featureSetsTable),
     Feature_Store_Tab_Selector: featureStoreTabSelector
   },
@@ -253,63 +255,27 @@ module.exports = {
     Add_To_Feature_Vector_Button: By.css(
       'div.feature-store-container div.content__action-bar div.add-to-feature-vector button'
     ),
-    Table_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2)',
-        true,
-        false
-      )
-    ),
-    Table_Label_Filter_Input: inputGroup(
-      generateInputGroup(
-        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(3)',
-        true,
-        false
-      )
-    ),
-    Table_Tag_Filter_Dropdown: dropdownComponent(tagFilterDropdown),
+    Table_Name_Filter_Input: commonNameFilterInput,
+    Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
     Features_Table: commonTable(featuresTable)
   },
   featureVectorsTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Create_Vector_Button: pageHeaderButton,
-    Table_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2)',
-        true,
-        false
-      )
-    ),
-    Table_Label_Filter_Input: inputGroup(
-      generateInputGroup(
-        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(3)',
-        true,
-        false
-      )
-    ),
-    Table_Tag_Filter_Dropdown: dropdownComponent(tagFilterDropdown),
+    Table_Name_Filter_Input: commonNameFilterInput,
+    Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
     Feature_Vectors_Table: commonTable(featureVectorTable)
   },
   datasets: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Register_Dataset_Button: pageHeaderButton,
-    Table_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(2)',
-        true,
-        false
-      )
-    ),
-    Table_Label_Filter_Input: inputGroup(
-      generateInputGroup(
-        'div.feature-store-container div.content__action-bar div.filters div.input-wrapper:nth-of-type(3)',
-        true,
-        false
-      )
-    ),
-    Table_Tree_Filter_Dropdown: dropdownComponent(tagFilterDropdown),
+    Table_Name_Filter_Input: commonNameFilterInput,
+    Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
     Feature_Datasets_Table: commonTable(datasetsTable)
   }
