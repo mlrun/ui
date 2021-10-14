@@ -100,6 +100,12 @@ const Project = ({
     }
   }, [history, match])
 
+  const projectMembershipIsEnabled = useMemo(
+    () =>
+      appStore.frontendSpec?.feature_flags?.project_membership === 'enabled',
+    [appStore.frontendSpec]
+  )
+
   const closeEditMode = useCallback(() => {
     setEditProject(prevState => ({
       name: {
@@ -221,8 +227,15 @@ const Project = ({
 
   const fetchProjectData = useCallback(() => {
     fetchProject(match.params.projectName)
-    fetchProjectIdAndOwner().then(fetchProjectMembers)
-  }, [fetchProject, fetchProjectIdAndOwner, match.params.projectName])
+    if (projectMembershipIsEnabled) {
+      fetchProjectIdAndOwner().then(fetchProjectMembers)
+    }
+  }, [
+    fetchProject,
+    fetchProjectIdAndOwner,
+    match.params.projectName,
+    projectMembershipIsEnabled
+  ])
 
   const resetProjectData = useCallback(() => {
     removeProjectData()
@@ -579,7 +592,6 @@ const Project = ({
       createFunctionSuccess={createFunctionSuccess}
       createNewOptions={createNewOptions}
       editProject={editProject}
-      frontendSpec={appStore.frontendSpec}
       handleAddProjectLabel={handleAddProjectLabel}
       handleDeployFunctionFailure={handleDeployFunctionFailure}
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
@@ -596,6 +608,7 @@ const Project = ({
       membersState={membersState}
       projectCounters={projectStore.projectCounters}
       projectLabels={projectLabels}
+      projectMembershipIsEnabled={projectMembershipIsEnabled}
       ref={inputRef}
       refresh={handleRefresh}
       setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}
