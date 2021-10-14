@@ -6,7 +6,9 @@ import {
   waitPageLoad,
   clickNearComponent,
   typeIntoInputField,
-  hoverComponent
+  hoverComponent,
+  componentIsVisible,
+  componentIsNotVisible
 } from '../common/actions/common.action'
 import {
   getTableRows,
@@ -90,6 +92,10 @@ Then(
       pageObjects[wizard][table],
       indx,
       'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
     )
     await openActionMenu(this.driver, actionMenuSel)
     await this.driver.sleep(500)
@@ -527,6 +533,39 @@ When(
       await this.driver.sleep(500)
       await selectOptionInActionMenu(this.driver, actionMenuSel, option)
       await this.driver.sleep(500)
+    }
+  }
+)
+
+Then('check {string} visibility in {string} on {string} wizard', async function(
+  cellName,
+  tableName,
+  wizardName
+) {
+  const rowsNumber = await getTableRows(
+    this.driver,
+    pageObjects[wizardName][tableName]
+  )
+  for (let i = 0; i < rowsNumber; i++) {
+    await componentIsVisible(
+      this.driver,
+      pageObjects[wizardName][tableName].tableFields[cellName](i + 1)
+    )
+  }
+})
+
+Then(
+  'check {string} not visibile in {string} on {string} wizard',
+  async function(cellName, tableName, wizardName) {
+    const rowsNumber = await getTableRows(
+      this.driver,
+      pageObjects[wizardName][tableName]
+    )
+    for (let i = 0; i < rowsNumber; i++) {
+      await componentIsNotVisible(
+        this.driver,
+        pageObjects[wizardName][tableName].tableFields[cellName](i + 1)
+      )
     }
   }
 )
