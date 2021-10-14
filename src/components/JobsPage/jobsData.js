@@ -24,6 +24,7 @@ import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 import { ReactComponent as Cancel } from '../../images/close.svg'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -185,26 +186,37 @@ export const detailsMenu = [
   }
 ]
 
-const filtersByTab = {
-  [MONITOR_JOBS_TAB]: [
-    { type: PERIOD_FILTER, label: 'Period:' },
-    { type: STATUS_FILTER, label: 'Status:' },
-    { type: GROUP_BY_FILTER, label: 'Group by:' },
-    { type: NAME_FILTER, label: 'Name:' },
-    { type: LABELS_FILTER, label: 'Labels:' },
-    { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
-  ],
-  [MONITOR_WORKFLOWS_TAB]: [
-    { type: PERIOD_FILTER, label: 'Period:' },
-    { type: STATUS_FILTER, label: 'Status:' },
-    { type: NAME_FILTER, label: 'Name:' },
-    { type: LABELS_FILTER, label: 'Labels:' },
-    { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
-  ],
-  [SCHEDULE_TAB]: [
-    { type: NAME_FILTER, label: 'Name:' },
-    { type: LABELS_FILTER, label: 'Labels:' }
-  ]
+const filtersByTab = (pageTab, search) => {
+  if (pageTab === MONITOR_JOBS_TAB) {
+    return [
+      { type: PERIOD_FILTER, label: 'Period:' },
+      { type: STATUS_FILTER, label: 'Status:' },
+      {
+        type: GROUP_BY_FILTER,
+        label: 'Group by:',
+        options: !isDemoMode(search) && [
+          ...filterSelectOptions.groupBy,
+          { label: 'Workflow', id: 'workflow' }
+        ]
+      },
+      { type: NAME_FILTER, label: 'Name:' },
+      { type: LABELS_FILTER, label: 'Labels:' },
+      { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
+    ]
+  } else if (pageTab === MONITOR_WORKFLOWS_TAB) {
+    return [
+      { type: PERIOD_FILTER, label: 'Period:' },
+      { type: STATUS_FILTER, label: 'Status:' },
+      { type: NAME_FILTER, label: 'Name:' },
+      { type: LABELS_FILTER, label: 'Labels:' },
+      { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
+    ]
+  } else if (pageTab === SCHEDULE_TAB) {
+    return [
+      { type: NAME_FILTER, label: 'Name:' },
+      { type: LABELS_FILTER, label: 'Labels:' }
+    ]
+  }
 }
 
 const generateTabs = search => {
@@ -283,7 +295,7 @@ export const generatePageData = (
     },
     hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,
-    filters: filtersByTab[pageTab],
+    filters: filtersByTab(pageTab, search),
     page,
     tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
     tabs: generateTabs(search),

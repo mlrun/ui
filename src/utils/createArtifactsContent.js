@@ -315,7 +315,6 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
   const { name, tag = '-' } =
     (artifact.spec?.model ?? '').match(/^(?<name>.*?)(:(?<tag>.*))?$/)
       ?.groups ?? {}
-  const { key: modelArtifact } = parseUri(artifact.spec?.model_uri)
   const functionUri = artifact.spec?.function_uri
     ? `store://functions/${artifact.spec.function_uri}`
     : ''
@@ -337,20 +336,16 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
           name,
           artifact.metadata?.uid,
           tab
-        )
+        ),
+      tooltip: artifact.spec?.model_uri
+        ? `${name} - ${artifact.spec?.model_uri}`
+        : name
     },
     functionName: {
       value: functionName,
       class: 'artifacts_small',
       link: `${generateLinkPath(functionUri)}/overview`,
       tooltip: functionUri,
-      hidden: isSelectedItem
-    },
-    modelArtifact: {
-      value: modelArtifact,
-      class: 'artifacts_small',
-      link: `${generateLinkPath(artifact.spec?.model_uri)}/overview`,
-      tooltip: artifact.spec?.model_uri,
       hidden: isSelectedItem
     },
     state: {

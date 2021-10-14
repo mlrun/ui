@@ -12,14 +12,15 @@ const initialState = {
     value: ['', ''],
     isPredefined: false
   },
+  groupBy: INIT_GROUP_FILTER,
   iter: 'iter',
   labels: '',
   name: '',
-  groupBy: INIT_GROUP_FILTER,
+  showUntagged: '',
   state: INIT_STATE_FILTER,
+  sortBy: '',
   tag: INIT_TAG_FILTER,
-  tagOptions: [],
-  showUntagged: ''
+  tagOptions: []
 }
 
 export default (state = initialState, { type, payload }) => {

@@ -7,6 +7,7 @@ import {
   MODELS_PAGE,
   MODELS_TAB,
   NAME_FILTER,
+  SORT_BY,
   TREE_FILTER
 } from '../../constants'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -14,6 +15,7 @@ import { generateArtifacts } from '../../utils/generateArtifacts'
 import { generateUri } from '../../utils/resources'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
+import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
 
 export const modelsInfoHeaders = [
   {
@@ -94,7 +96,17 @@ export const modelsFilters = [
   { type: LABELS_FILTER, label: 'Labels:' },
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
-export const modelEndpointsFilters = [{ type: LABELS_FILTER, label: 'Labels:' }]
+export const modelEndpointsFilters = [
+  { type: LABELS_FILTER, label: 'Labels:' },
+  {
+    type: SORT_BY,
+    label: 'Sort By:',
+    options: [
+      { label: 'Function', id: 'function' },
+      ...filterSelectOptions.sortBy
+    ]
+  }
+]
 export const page = MODELS_PAGE
 export const actionsMenuHeader = 'Register model'
 export const modelsTableHeaders = isSelectedModel => [
@@ -166,11 +178,6 @@ export const modelEndpointsTableHeaders = isSelectedModel => [
   },
   {
     header: 'Function',
-    class: 'artifacts_small',
-    hidden: isSelectedModel
-  },
-  {
-    header: 'Model',
     class: 'artifacts_small',
     hidden: isSelectedModel
   },
