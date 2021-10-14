@@ -251,11 +251,6 @@ When(
       optionValue
     )
     await this.driver.sleep(500)
-    await checkDropdownSelectedOption(
-      this.driver,
-      pageObjects[wizardName][dropdownName],
-      optionValue
-    )
   }
 )
 

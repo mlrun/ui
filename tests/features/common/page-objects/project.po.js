@@ -139,5 +139,6 @@ module.exports = {
   Real_Time_Functions_Card_Statistics: commonTable(
     generalInfoRealTimeFunctionsCardStat
   ),
+  Add_Source_URL_Label: By.css('.general-info .general-info__source'),
   General_Info_Quick_Links: commonTable(generalInfoQuickLinks)
 }

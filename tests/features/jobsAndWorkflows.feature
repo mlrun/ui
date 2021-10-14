@@ -11,7 +11,7 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
-        Then verify "Monitor" tab is activ in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Monitor Jobs" tab is activ in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "New_Job_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
@@ -144,7 +144,7 @@ Feature: Jobs and workflows
         When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
         And wait load page
         Then click on "Name_Edit_Button" element on "New_JobTemplate_Edit" wizard
-        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display "Input_Hint"."Feature_Set_Name_Hint"
+        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display "Input_Hint"."Jobs_Name_Hint"
         Then type value "" to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
         Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
@@ -188,6 +188,85 @@ Feature: Jobs and workflows
         Then verify "Result_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Turning_Stratedgy_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Criteria_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+
+    @passive
+    Scenario: Verify behaviour of Volume Paths Table in Resources Accordion on create New JobTemplate edit wizard
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        When expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
+            |             V3IO                 |                                      |                               |                                    |                                     |                                        |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Moumt_Path_Hint"
+        Then verify "Volume_Paths_Table_Container_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Data_Container_Hint"
+        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."DataAccess_Key_Hint"
+        Then verify "Volume_Paths_Table_Resource_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Relative_Directory_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Config_Map_Input | Add_New_Row_Button |
+            |           Config Map             |                                      |                               |                                     |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Moumt_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
+            |             Secret               |                                      |                               |                                      |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Moumt_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claime_Name_Input | Add_New_Row_Button |
+            |               PVC                |                                      |                               |                                      |         yes        |
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."Moumt_Path_Hint"
+        When click on "Delete_New_Row_Button" element in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button | Delete_New_Row_Button |
+            |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
+            |               V3IO               |            Volume_Name_2             |       /path/to/happines2      |         Container_Input_2          |           Access_Key_2              |            /resource/path_2            |                    |         yes           |
+            |               V3IO               |            Volume_Name_3             |       /path/to/happines3      |         Container_Input_3          |           Access_Key_3              |            /resource/path_3            |         yes        |                       |
+            |               V3IO               |            Volume_Name_4             |       /path/to/happines4      |         Container_Input_4          |           Access_Key_4              |            /resource/path_4            |                    |         yes           |
+            |               V3IO               |            Volume_Name_5             |       /path/to/happines5      |         Container_Input_5          |           Access_Key_5              |            /resource/path_5            |         yes        |                       |
+            |               V3IO               |            Volume_Name_6             |       /path/to/happines6      |         Container_Input_6          |           Access_Key_6              |            /resource/path_6            |                    |         yes           |
+            |               V3IO               |            Volume_Name_7             |       /path/to/happines7      |         Container_Input_7          |           Access_Key_7              |            /resource/path_7            |         yes        |                       |
+            |               V3IO               |            Volume_Name_8             |       /path/to/happines8      |         Container_Input_8          |           Access_Key_8              |            /resource/path_8            |                    |         yes           |
+            |               V3IO               |            Volume_Name_9             |       /path/to/happines9      |         Container_Input_9          |           Access_Key_9              |            /resource/path_9            |                    |         yes           |
+            |               V3IO               |            Volume_Name_0             |       /path/to/happines0      |         Container_Input_0          |           Access_Key_0              |            /resource/path_0            |         yes        |                       |
+        Then verify values in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+            |  volume_name  |        path        |
+            | Volume_Name_1 | /path/to/happines1 |
+            | Volume_Name_3 | /path/to/happines3 |
+            | Volume_Name_5 | /path/to/happines5 |
+            | Volume_Name_7 | /path/to/happines7 |
+            | Volume_Name_0 | /path/to/happines0 |
+        When click on "Remove" in action menu in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+            |  volume_name  |
+            | Volume_Name_0 |
+            | Volume_Name_3 |
+        Then verify values in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_JobTemplate_Edit" wizard
+            |  volume_name  |        path        |
+            | Volume_Name_1 | /path/to/happines1 |
+            | Volume_Name_5 | /path/to/happines5 |
+            | Volume_Name_7 | /path/to/happines7 |
 
     @passive
     Scenario: verify mandatory elements in Resouces Accordion on Create New Jobs side panel
