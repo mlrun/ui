@@ -75,6 +75,8 @@ const Project = ({
     setCreateFeatureSetPanelIsOpen
   ] = useState(false)
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
+  const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
   const [showManageMembers, setShowManageMembers] = useState(false)
   const [showChangeOwner, setShowChangeOwner] = useState(false)
   const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
@@ -219,9 +221,25 @@ const Project = ({
       })
   }
 
+  const fetchProjectMembersVisability = project => {
+    projectsIguazioApi
+      .getProjectMembersVisibility(project)
+      .then(setProjectMembersIsShown(true))
+      .catch(setProjectMembersIsShown(false))
+  }
+
+  const fetchProjectOwnerVisability = project => {
+    projectsIguazioApi
+      .getProjectOwnerVisibility(project)
+      .then(setProjectOwnerIsShown(true))
+      .catch(setProjectOwnerIsShown(false))
+  }
+
   const fetchProjectData = useCallback(() => {
     fetchProject(match.params.projectName)
     fetchProjectIdAndOwner().then(fetchProjectMembers)
+    fetchProjectMembersVisability(match.params.projectName)
+    fetchProjectOwnerVisability(match.params.projectName)
   }, [fetchProject, fetchProjectIdAndOwner, match.params.projectName])
 
   const resetProjectData = useCallback(() => {
@@ -596,6 +614,8 @@ const Project = ({
       membersState={membersState}
       projectCounters={projectStore.projectCounters}
       projectLabels={projectLabels}
+      projectMembersIsShown={projectMembersIsShown}
+      projectOwnerIsShown={projectOwnerIsShown}
       ref={inputRef}
       refresh={handleRefresh}
       setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}

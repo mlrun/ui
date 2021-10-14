@@ -14,6 +14,20 @@ export default {
       }
     })
   },
+  getProjectMembersVisibility: project => {
+    return iguazioHttpClient.get(`/projects/__name__/${project}`, {
+      params: {
+        include: 'authorization?action=update&sub_resource=authorization/roles'
+      }
+    })
+  },
+  getProjectOwnerVisibility: project => {
+    return iguazioHttpClient.get(`/projects/__name__/${project}`, {
+      params: {
+        include: 'authorization?action=update&sub_resource=authorization/owner'
+      }
+    })
+  },
   updateProjectMembers: data => {
     return iguazioHttpClient.post('/async_transactions', data)
   },
