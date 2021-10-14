@@ -47,7 +47,11 @@ const initialState = {
   allJobsData: [],
   job: {},
   jobs: [],
-  logs: '',
+  logs: {
+    data: '',
+    loading: false,
+    error: null
+  },
   loading: false,
   error: null,
   newJob: {
@@ -108,7 +112,10 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_JOB_LOGS_BEGIN:
       return {
         ...state,
-        loading: true
+        logs: {
+          ...state.logs,
+          loading: true
+        }
       }
     case FETCH_JOB_BEGIN:
       return {
@@ -148,15 +155,20 @@ export default (state = initialState, { type, payload }) => {
     case FETCH_JOB_LOGS_FAILURE:
       return {
         ...state,
-        logs: [],
-        loading: false,
-        error: payload
+        logs: {
+          data: [],
+          loading: false,
+          error: payload
+        }
       }
     case FETCH_JOB_LOGS_SUCCESS:
       return {
         ...state,
-        logs: payload,
-        loading: false
+        logs: {
+          data: payload,
+          loading: false,
+          error: null
+        }
       }
     case FETCH_JOBS_BEGIN:
       return {
@@ -194,7 +206,7 @@ export default (state = initialState, { type, payload }) => {
     case REMOVE_JOB_LOGS:
       return {
         ...state,
-        logs: ''
+        logs: initialState.logs
       }
     case REMOVE_JOB_ERROR:
       return {

@@ -19,12 +19,12 @@ const DetailsLogs = ({
   const [detailsLogs, setDetailsLogs] = useState('')
 
   useEffect(() => {
-    setDetailsLogs(jobsStore.logs || functionsStore.logs.data)
+    setDetailsLogs(jobsStore.logs.data || functionsStore.logs.data)
 
     return () => {
       setDetailsLogs('')
     }
-  }, [functionsStore.logs.data, jobsStore.logs])
+  }, [functionsStore.logs.data, jobsStore.logs.data])
 
   useEffect(() => {
     if (withLogsRefreshBtn) {
@@ -50,7 +50,7 @@ const DetailsLogs = ({
     <div className="table__item_logs">
       {detailsLogs.length > 0 ? (
         <div className="table__item_logs__content">{detailsLogs}</div>
-      ) : functionsStore.logs.loading || jobsStore.loading ? (
+      ) : functionsStore.logs.loading || jobsStore.logs.loading ? (
         <Loader section secondary />
       ) : (
         <NoData />
