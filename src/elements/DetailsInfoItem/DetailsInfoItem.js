@@ -41,10 +41,12 @@ const DetailsInfoItem = React.forwardRef(
         return (
           <div className="details-item__input-wrapper" ref={ref}>
             <Input onChange={item.onChange} value={info} type="text" focused />
-            <Checkmark
-              className="details-item__input-btn"
-              onClick={() => handleFinishEdit(currentField)}
-            />
+            <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+              <Checkmark
+                className="details-item__input-btn"
+                onClick={() => handleFinishEdit(currentField)}
+              />
+            </Tooltip>
           </div>
         )
       } else if (editableFieldType === 'chips') {
@@ -62,10 +64,12 @@ const DetailsInfoItem = React.forwardRef(
               isEditMode={true}
               removeChip={chips => item.handleDelete(chips, currentField)}
             />
-            <Checkmark
-              className="details-item__input-btn"
-              onClick={() => handleFinishEdit(currentField)}
-            />
+            <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+              <Checkmark
+                className="details-item__input-btn"
+                onClick={() => handleFinishEdit(currentField)}
+              />
+            </Tooltip>
           </div>
         )
       }

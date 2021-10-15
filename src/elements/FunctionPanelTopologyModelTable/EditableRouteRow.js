@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import {
   isEditableRouteValid,
@@ -110,7 +112,9 @@ const EditableRouteRow = ({
           disabled={!isEditableRouteValid(selectedRoute, routes)}
           onClick={editRoute}
         >
-          <Checkmark />
+          <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+            <Checkmark />
+          </Tooltip>
         </button>
       </div>
     </div>

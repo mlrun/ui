@@ -135,7 +135,9 @@ const KeyValueTableView = ({
                 }
                 onClick={handleEditItem}
               >
-                <Checkmark />
+                <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+                  <Checkmark />
+                </Tooltip>
               </button>
             </div>
           </div>
@@ -178,7 +180,9 @@ const KeyValueTableView = ({
                   deleteItem(index, contentItem)
                 }}
               >
-                <Delete />
+                <Tooltip template={<TextTooltipTemplate text="Delete" />}>
+                  <Delete />
+                </Tooltip>
               </button>
             </div>
           </div>
