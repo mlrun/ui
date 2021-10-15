@@ -10,10 +10,14 @@
 
   .memory,
   .cpu {
-    margin-right: 30px;
+    margin-right: 20px;
 
     .panel-section__body {
       align-items: center;
+    }
+
+    .select__value {
+      min-width: 120px;
     }
   }
 
