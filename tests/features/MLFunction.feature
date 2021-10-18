@@ -32,6 +32,26 @@ Feature: ML Functions
         Then value in "name" column with "text" in "Functions_Table" on "ML_Functions" wizard should contains "test"
 
     @passive
+    Scenario: Check all mandatory components on Create ML Function Popup
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then click on "New_Function_Button" element on "ML_Functions" wizard
+        And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
+        Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
+        Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display "Input_Hint"."Function_Name_Hint"
+        Then type value "   " to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Runtime_Dropdown" element visibility on "Create_ML_Function_Popup" wizard
+        Then verify "Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
+        Then verify "Continue_Button" element visibility on "Create_ML_Function_Popup" wizard
+
+    @passive
     Scenario: Check all mandatory components in General Accordion on create New Function page
         Given open url
         And wait load page
@@ -39,15 +59,11 @@ Feature: ML Functions
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        And verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
-        Then click on "New_Function_Button" element on "ML_Functions" wizard
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Function" wizard
-        Then verify "Collapse_Button" element visibility in "General_Accordion" on "New_Function" wizard
-        Then type value "   " to "New_Function_Name_Input" field on "General_Accordion" on "New_Function" wizard
-        Then verify "New_Function_Name_Input" element in "General_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "New_Function_Name_Input" element in "General_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Function_Name_Hint"
-        Then verify "New_Function_Tag_Input" element visibility in "General_Accordion" on "New_Function" wizard
-        Then verify "New_Function_Run_Time_Dropdown" element visibility in "General_Accordion" on "New_Function" wizard
         Then verify "New_Function_Description_Text_Area" element visibility in "General_Accordion" on "New_Function" wizard
         Then verify "Labels_Table" element visibility in "General_Accordion" on "New_Function" wizard
         When add rows to "Labels_Table" table in "General_Accordion" on "New_Function" wizard
@@ -76,8 +92,10 @@ Feature: ML Functions
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        And verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then verify "New_Function_Code_Entry_Dropdown" element visibility in "Code_Accordion" on "New_Function" wizard
         Then type value "   " to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
@@ -114,8 +132,10 @@ Feature: ML Functions
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        And verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-02" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Volumes_Subheader" element in "Resouces_Accordion" on "New_Function" wizard should display hint "Label_Hint"."New_Job_Volumes"
@@ -164,8 +184,10 @@ Feature: ML Functions
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        And verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-03" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_Function" wizard using nontable inputs
@@ -224,14 +246,15 @@ Feature: ML Functions
             | Volume_Name_0 | /path/to/happines0 |
         When click on "Remove" in action menu in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_Function" wizard
             |  volume_name  |
-            | Volume_Name_0 |
             | Volume_Name_3 |
+            | Volume_Name_0 |
         Then verify values in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_Function" wizard
             |  volume_name  |        path        |
             | Volume_Name_1 | /path/to/happines1 |
             | Volume_Name_5 | /path/to/happines5 |
             | Volume_Name_7 | /path/to/happines7 |
 
+    @debug
     @passive
     Scenario: Check all mandatory components in Resources Accordion on create New Function page
         Given open url
@@ -240,8 +263,10 @@ Feature: ML Functions
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        And verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-04" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         When collapse "Resouces_Accordion" on "New_Function" wizard
@@ -279,10 +304,10 @@ Feature: ML Functions
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        And verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         And click on "New_Function_Button" element on "ML_Functions" wizard
-        Then type value "new-aqa-function-00" to "New_Function_Name_Input" field on "General_Accordion" on "New_Function" wizard
-        Then type value "latest" to "New_Function_Tag_Input" field on "General_Accordion" on "New_Function" wizard
+        And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then type value "demo" to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
@@ -294,3 +319,156 @@ Feature: ML Functions
             | new-aqa-function-00 |
         And select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "new-aqa-function-00" value in "name" column
         And click on "Delete_Button" element on "Delete_Function_Popup" wizard
+
+    @passive
+    Scenario: Check all mandatory components in Serving Runtime Configuration Accordion on create New Serving Function page
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And select "Serving" option in "New_Function_Runtime_Dropdown" dropdown on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        When collapse "General_Accordion" on "New_Function" wizard
+        When collapse "Code_Accordion" on "New_Function" wizard
+        When collapse "Resouces_Accordion" on "New_Function" wizard
+        When collapse "Environment_Variables_Accordion" on "New_Function" wizard
+        Then verify "Topology_Router_Type_Dropdown" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify "Serving_Runtime_Configuration_Model_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify "Model_Tracking_Checkbox" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify "Secret_Runtime_Configuration_Model_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify "Stream_Path_Input" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify "Parameters_Runtime_Configuration_Model_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+
+    @passive
+    @inProgress
+    Scenario: Check Model Table in Serving Runtime Configuration Accordion on create New Serving Function page
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And select "Serving" option in "New_Function_Runtime_Dropdown" dropdown on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        When collapse "General_Accordion" on "New_Function" wizard
+        When collapse "Code_Accordion" on "New_Function" wizard
+        When collapse "Resouces_Accordion" on "New_Function" wizard
+        When collapse "Environment_Variables_Accordion" on "New_Function" wizard
+        When add new volume rows to "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard using nontable inputs
+            | Model_Table_Name_Input | Model_Table_Class_Input | Model_Table_Path_Input | Add_Model_Table_Row_Button |
+            |          name0         |          class0         |         /path/0        |            yes             |
+            |          name1         |          class1         |         /path/1        |            yes             |
+            |          name2         |          class2         |         /path/2        |            yes             |
+            |          name3         |          class3         |         /path/3        |            yes             |
+            |          name4         |          class4         |         /path/4        |            yes             |
+        Then verify values in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  | class  |  path   |
+            | name0 | class0 | /path/0 |
+            | name1 | class1 | /path/1 |
+            | name2 | class2 | /path/2 |
+            | name3 | class3 | /path/3 |
+            | name4 | class4 | /path/4 |
+        When click on "Remove" in action menu in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  |
+            | name0 |
+            | name2 |
+            | name4 |
+        Then verify values in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  | class  |  path   |
+            | name0 | class0 | /path/0 |
+            | name2 | class2 | /path/2 |
+            | name4 | class4 | /path/4 |
+
+    @passive
+    @inProgress
+    @failed
+    Scenario: Check Secret Table in Serving Runtime Configuration Accordion on create New Serving Function page
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And select "Serving" option in "New_Function_Runtime_Dropdown" dropdown on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        When collapse "General_Accordion" on "New_Function" wizard
+        When collapse "Code_Accordion" on "New_Function" wizard
+        When collapse "Resouces_Accordion" on "New_Function" wizard
+        When collapse "Environment_Variables_Accordion" on "New_Function" wizard
+        When add rows to "Secret_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | value_input |
+            |    value0   |
+            |    value1   |
+            |    value2   |
+            |    value3   |
+            |    value4   |
+        Then verify values in "Secret_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | kind | value  |
+            | file | value0 |
+            | file | value1 |
+            | file | value2 |
+            | file | value3 |
+            | file | value4 |
+        When click on "delete_btn" in "Secret_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | value  |
+            | value0 |
+            | value2 |
+            | value4 |
+        Then verify values in "Secret_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | kind | value  |
+            | file | value1 |
+            | file | value3 |
+
+    @passive
+    @failed
+    @inProgress
+    Scenario: Check Parameters Table in Serving Runtime Configuration Accordion on create New Serving Function page
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And select "Serving" option in "New_Function_Runtime_Dropdown" dropdown on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        When collapse "General_Accordion" on "New_Function" wizard
+        When collapse "Code_Accordion" on "New_Function" wizard
+        When collapse "Resouces_Accordion" on "New_Function" wizard
+        When collapse "Environment_Variables_Accordion" on "New_Function" wizard
+        When add new volume rows to "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard using nontable inputs
+            | Parameters_Table_Name_Input | Parameters_Table_Type_Dropdown | Parameters_Table_Value_Input | Add_Parameter_Table_Row_Button | Remove_Parameter_Table_Row_Button |
+            |            name0            |             String             |            valueA            |                yes             |                                   |
+            |            name1            |             String             |            valueB            |                yes             |                                   |
+            |            name2            |             String             |            valueC            |                yes             |                                   |
+            |            name3            |             String             |            valueD            |                yes             |                                   |
+            |            name4            |             String             |            valueE            |                yes             |                                   |
+        Then verify values in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  |  type  | value  |
+            | name0 | string | valueA |
+            | name1 | string | valueB |
+            | name2 | string | valueC |
+            | name3 | string | valueD |
+            | name4 | string | valueE |
+        When click on "Remove" in action menu in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  |
+            | name0 |
+            | name3 |
+            | name1 |
+            | name4 |
+        Then verify values in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+            | name  |  type  | value  |
+            | name2 | string | valueC |

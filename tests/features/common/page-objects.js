@@ -40,5 +40,6 @@ module.exports = {
   ML_Functions: Functions['mlFunctions'],
   New_Function: sidePanel['newFunction'],
   ML_Function_Info_Pane: infoPane['featuresInfoPane'],
-  Delete_Function_Popup: interactivePopup['deleteFunction']
+  Delete_Function_Popup: interactivePopup['deleteFunction'],
+  Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup']
 }

@@ -270,12 +270,14 @@ const DetailsRequestedFeatures = ({
                         type="text"
                         value={alias}
                       />
-                      <Checkmark
-                        className="cell_alias__input-btn"
-                        onClick={() =>
-                          onFinishEdit(['features', 'label_feature'])
-                        }
-                      />
+                      <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+                        <Checkmark
+                          className="cell_alias__input-btn"
+                          onClick={() =>
+                            onFinishEdit(['features', 'label_feature'])
+                          }
+                        />
+                      </Tooltip>
                     </div>
                   </div>
                 ) : (

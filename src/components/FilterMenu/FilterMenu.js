@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
@@ -12,7 +12,6 @@ import CheckBox from '../../common/CheckBox/CheckBox'
 import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import TagFilter from '../../common/TagFilter/TagFilter'
-import { isDemoMode } from '../../utils/helper'
 
 import { ReactComponent as Refresh } from '../../images/refresh.svg'
 import { ReactComponent as Collapse } from '../../images/collapse.svg'
@@ -22,12 +21,12 @@ import {
   DATE_RANGE_TIME_FILTER,
   GROUP_BY_FILTER,
   ITERATIONS_FILTER,
-  JOBS_PAGE,
   KEY_CODES,
   LABELS_FILTER,
   NAME_FILTER,
   PERIOD_FILTER,
   SHOW_UNTAGGED_FILTER,
+  SORT_BY,
   STATUS_FILTER,
   TAG_FILTER,
   TREE_FILTER
@@ -54,20 +53,7 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const history = useHistory()
-  const location = useLocation()
-  const selectOptions = useMemo(() => {
-    const options = cloneDeep(filterSelectOptions)
-
-    if (
-      !isDemoMode(location.search) &&
-      page === JOBS_PAGE &&
-      !options.groupBy.find(option => option.id === 'workflow')
-    ) {
-      options.groupBy.push({ label: 'Workflow', id: 'workflow' })
-    }
-
-    return options
-  }, [location.search, page])
+  const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
 
   useEffect(() => {
     return () => {
@@ -117,6 +103,8 @@ const FilterMenu = ({
         ...filtersStore,
         state: item
       })
+    } else if (filter.type === SORT_BY) {
+      setFilters({ sortBy: item })
     } else if (filter.type === GROUP_BY_FILTER) {
       setFilters({ groupBy: item })
     } else if (
@@ -284,10 +272,11 @@ const FilterMenu = ({
                   label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
                   key={filter.type}
                   onClick={item => handleSelectOption(item, filter)}
-                  options={selectOptions[filter.type]}
+                  options={filter.options || selectOptions[filter.type]}
                   selectedId={
                     (filter.type === STATUS_FILTER && filtersStore.state) ||
-                    (filter.type === GROUP_BY_FILTER && filtersStore.groupBy)
+                    (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
+                    (filter.type === SORT_BY && filtersStore.sortBy)
                   }
                 />
               )

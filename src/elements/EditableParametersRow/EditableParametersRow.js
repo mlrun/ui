@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
 import { selectOptions as selectOption } from '../../components/JobsPanelParameters/jobsPanelParameters.util'
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
@@ -129,7 +131,9 @@ const EditableParametersRow = ({
           }
           onClick={() => handleEdit(selectedParameter, false)}
         >
-          <Checkmark />
+          <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+            <Checkmark />
+          </Tooltip>
         </button>
       </div>
     </div>

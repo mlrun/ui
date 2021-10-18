@@ -5,6 +5,8 @@ import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import RangeInput from '../../common/RangeInput/RangeInput'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import {
   BOOLEAN_TYPE,
@@ -138,7 +140,9 @@ const EditableFunctionParameterRow = ({
           disabled={!isEditableParameterValid(selectedParameter, parameters)}
           onClick={handleEdit}
         >
-          <Checkmark />
+          <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+            <Checkmark />
+          </Tooltip>
         </button>
       </div>
     </div>

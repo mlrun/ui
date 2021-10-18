@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { forEach } from 'lodash'
 
 import Input from '../../common/Input/Input'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
 import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 import {
@@ -152,7 +154,9 @@ const EditableVolumesRow = ({
               !validation.isAccessKeyValid
             }
           >
-            <Checkmark />
+            <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+              <Checkmark />
+            </Tooltip>
           </button>
         </div>
       </div>
