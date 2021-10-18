@@ -7,6 +7,8 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import PreviewError from './PreviewError/PreviewError'
 
+import { ARTIFACT_PREVIEW_TABLE_ROW_LIMIT } from '../../constants'
+
 import './artifactsPreview.scss'
 
 const ArtifactsPreviewView = ({
@@ -15,9 +17,13 @@ const ArtifactsPreviewView = ({
   setShowErrorBody,
   showErrorBody
 }) => {
-  const content = useMemo(() => preview?.data?.content.slice(0, 100), [
-    preview.data
-  ])
+  const content = useMemo(
+    () =>
+      preview.data && preview.data.content
+        ? preview.data.content.slice(0, ARTIFACT_PREVIEW_TABLE_ROW_LIMIT)
+        : [],
+    [preview.data]
+  )
 
   return (
     <div className={className}>
