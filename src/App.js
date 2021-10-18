@@ -63,6 +63,11 @@ const App = () => {
               from="/projects/:projectName/settings"
               to={`/projects/:projectName/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
             />
+            {/* Adding the next redirect for backwards compatability */}
+            <Redirect
+              from="/projects/:projectName/jobs/monitor/*"
+              to={'/projects/:projectName/jobs/monitor-jobs/*'}
+            />
             <Route
               path="/projects/:projectName/jobs/:pageTab/create-new-job"
               render={routeProps => <CreateJobPage {...routeProps} />}
