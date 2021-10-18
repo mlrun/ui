@@ -55,6 +55,7 @@ const ProjectView = React.forwardRef(
       handleOnChangeProject,
       handleOnKeyDown,
       handleUpdateProjectLabels,
+      isDemoMode,
       isNewFunctionPopUpOpen,
       isPopupDialogOpen,
       links,
@@ -116,14 +117,18 @@ const ProjectView = React.forwardRef(
                     projectName={project.data.metadata.name}
                     ref={ref}
                   />
-                  <Link
-                    className="general-info__settings"
-                    to={`/projects/${match.params.projectName}/settings`}
-                  >
-                    <Tooltip template={<TextTooltipTemplate text="Settings" />}>
-                      <Settings />
-                    </Tooltip>
-                  </Link>
+                  {isDemoMode && (
+                    <Link
+                      className="general-info__settings"
+                      to={`/projects/${match.params.projectName}/settings`}
+                    >
+                      <Tooltip
+                        template={<TextTooltipTemplate text="Settings" />}
+                      >
+                        <Settings />
+                      </Tooltip>
+                    </Link>
+                  )}
                 </div>
                 <ProjectDescription
                   editDescriptionData={editProject.description}
@@ -351,6 +356,7 @@ ProjectView.propTypes = {
   handleOnChangeProject: PropTypes.func.isRequired,
   handleOnKeyDown: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,
+  isDemoMode: PropTypes.bool.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
   links: PropTypes.array.isRequired,

@@ -9,20 +9,22 @@ import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsD
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
-import { PROJECTS_PAGE } from '../../constants'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 import { betaBreadcrumbs, generateProjectScreens } from './breadcrumbs.util'
 import { generateProjectsList } from '../../utils/projects'
 import projectsAction from '../../actions/projects'
+import { PROJECTS_PAGE } from '../../constants'
 
 import './breadcrums.scss'
 
 const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
+  const isDemoModeEnabled = useDemoMode()
 
   const projectScreens = useMemo(() => {
-    return generateProjectScreens(match)
-  }, [match])
+    return generateProjectScreens(match, isDemoModeEnabled)
+  }, [isDemoModeEnabled, match])
   const projectsList = useMemo(() => {
     return generateProjectsList(projectStore.projectsNames.data)
   }, [projectStore.projectsNames.data])

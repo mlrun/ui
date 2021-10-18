@@ -19,6 +19,7 @@ import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getLinks, generateCreateNewOptions } from './project.utils'
 import { generateKeyValues, parseKeyValues } from '../../utils'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 import { KEY_CODES } from '../../constants'
 import {
   initialMembersState,
@@ -84,6 +85,7 @@ const Project = ({
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const history = useHistory()
   const inputRef = React.createRef()
+  const isDemoModeEnabled = useDemoMode()
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
@@ -627,6 +629,7 @@ const Project = ({
       handleOnChangeProject={handleOnChangeProject}
       handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
+      isDemoMode={isDemoModeEnabled}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
       links={links}

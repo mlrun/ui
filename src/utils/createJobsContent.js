@@ -11,14 +11,13 @@ import measureTime from './measureTime'
 import { parseKeyValues } from './object'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getJobIdentifier } from './getUniqueIdentifier'
-import { isDemoMode } from './helper'
 import { getWorkflowDetailsLink } from '../components/Workflow/workflow.util'
 
 const createJobsContent = (
   content,
   isSelectedItem,
   params,
-  search,
+  isDemoModeEnabled,
   groupedByWorkflow
 ) => {
   return content.map(contentItem => {
@@ -107,7 +106,7 @@ const createJobsContent = (
           name: {
             value: contentItem.name,
             class: 'jobs_medium',
-            type: type === 'workflow' && !isDemoMode(search) ? 'hidden' : '',
+            type: type === 'workflow' && !isDemoModeEnabled ? 'hidden' : '',
             identifier: getJobIdentifier(contentItem),
             identifierUnique: getJobIdentifier(contentItem, true),
             getLink: tab => {

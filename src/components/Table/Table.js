@@ -1,5 +1,4 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
 import { isEmpty, map } from 'lodash'
@@ -7,6 +6,7 @@ import { isEmpty, map } from 'lodash'
 import TableView from './TableView'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
+import { useDemoMode } from '../../hooks/demoMode.hook'
 import createJobsContent from '../../utils/createJobsContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
@@ -35,7 +35,6 @@ const Table = ({
   setTablePanelOpen,
   tableStore
 }) => {
-  const location = useLocation()
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
     groupWorkflowItems: [],
@@ -44,6 +43,7 @@ const Table = ({
   })
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
+  const isDemoModeEnabled = useDemoMode()
 
   const previewArtifact = useSelector(
     state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
@@ -89,7 +89,7 @@ const Table = ({
       pageData.page,
       tableStore.isTablePanelOpen,
       match.params,
-      location.search,
+      isDemoModeEnabled,
       !isEveryObjectValueEmpty(selectedItem)
     )
 
@@ -117,7 +117,7 @@ const Table = ({
           groupWorkflowItem,
           !isEveryObjectValueEmpty(selectedItem),
           match.params,
-          location.search,
+          isDemoModeEnabled,
           true
         )
       }))
@@ -131,16 +131,15 @@ const Table = ({
     }
   }, [
     content,
-    groupedContent,
-    pageData.page,
-    setLoading,
-    workflows,
-    pageData.mainRowItemsCount,
-    tableStore.isTablePanelOpen,
     filtersStore.groupBy,
+    groupedContent,
+    isDemoModeEnabled,
     match.params,
-    location.search,
-    selectedItem
+    pageData.mainRowItemsCount,
+    pageData.page,
+    selectedItem,
+    tableStore.isTablePanelOpen,
+    workflows
   ])
 
   return (
