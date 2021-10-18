@@ -230,15 +230,23 @@ const Project = ({
   const fetchProjectMembersVisibility = project => {
     projectsIguazioApi
       .getProjectMembersVisibility(project)
-      .then(setProjectMembersIsShown(true))
-      .catch(setProjectMembersIsShown(false))
+      .then(() => {
+        setProjectMembersIsShown(true)
+      })
+      .catch(() => {
+        setProjectMembersIsShown(false)
+      })
   }
 
   const fetchProjectOwnerVisibility = project => {
     projectsIguazioApi
       .getProjectOwnerVisibility(project)
-      .then(setProjectOwnerIsShown(true))
-      .catch(setProjectOwnerIsShown(false))
+      .then(() => {
+        setProjectOwnerIsShown(true)
+      })
+      .catch(() => {
+        setProjectOwnerIsShown(false)
+      })
   }
 
   const fetchProjectData = useCallback(() => {
