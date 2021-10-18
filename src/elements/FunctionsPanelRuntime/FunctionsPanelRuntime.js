@@ -1,18 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 
 import FunctionsPanelRuntimeView from './FunctionsPanelRuntimeView'
 
+import { useDemoMode } from '../../hooks/demoMode.hook'
+
 const FunctionsPanelRuntime = ({ defaultData, functionsStore, sections }) => {
-  const location = useLocation()
+  const isDemoModeEnabled = useDemoMode()
 
   return (
     <FunctionsPanelRuntimeView
       defaultData={defaultData}
       functionsStore={functionsStore}
-      location={location}
+      isDemoModeEnabled={isDemoModeEnabled}
       sections={sections}
     />
   )

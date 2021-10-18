@@ -6,16 +6,15 @@ import KeyValueTable from '../../common/KeyValueTable/KeyValueTable'
 import EnvironmentVariables from '../EnvironmentVariables/EnvironmentVariables'
 
 import './functionPanelEnviromnetVariables.scss'
-import { isDemoMode } from '../../utils/helper'
 
 const FunctionsPanelEnvironmentVariablesView = ({
   envVariables,
   handleAddNewEnv,
   handleDeleteEnv,
   handleEditEnv,
-  location
+  isDemoModeEnabled
 }) => {
-  return isDemoMode(location.search) ? (
+  return isDemoModeEnabled ? (
     <EnvironmentVariables
       envVariables={envVariables}
       handleAddNewEnv={handleAddNewEnv}
@@ -67,7 +66,7 @@ FunctionsPanelEnvironmentVariablesView.propTypes = {
   handleAddNewEnv: PropTypes.func.isRequired,
   handleDeleteEnv: PropTypes.func.isRequired,
   handleEditEnv: PropTypes.func.isRequired,
-  location: PropTypes.object.isRequired
+  isDemoModeEnabled: PropTypes.bool.isRequired
 }
 
 export default FunctionsPanelEnvironmentVariablesView

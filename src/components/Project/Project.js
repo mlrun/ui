@@ -8,7 +8,7 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { forEach, groupBy } from 'lodash'
 
 import ProjectView from './ProjectView'
@@ -19,7 +19,7 @@ import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getLinks, generateCreateNewOptions } from './project.utils'
 import { generateKeyValues, parseKeyValues } from '../../utils'
-import { isDemoMode } from '../../utils/helper'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 import { KEY_CODES } from '../../constants'
 import {
   initialMembersState,
@@ -82,8 +82,8 @@ const Project = ({
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const history = useHistory()
-  const location = useLocation()
   const inputRef = React.createRef()
+  const isDemoModeEnabled = useDemoMode()
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
@@ -602,7 +602,7 @@ const Project = ({
       handleOnChangeProject={handleOnChangeProject}
       handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
-      isDemoMode={isDemoMode(location.search)}
+      isDemoMode={isDemoModeEnabled}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
       links={links}
