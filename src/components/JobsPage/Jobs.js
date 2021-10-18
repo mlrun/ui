@@ -17,6 +17,7 @@ import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import workflowsActions from '../../actions/workflow'
 
+import { useDemoMode } from '../../hooks/demoMode.hook'
 import { generateKeyValues } from '../../utils'
 import { generatePageData } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
@@ -36,7 +37,6 @@ import {
   SCHEDULE_TAB,
   TERTIARY_BUTTON
 } from '../../constants'
-import { isDemoMode } from '../../utils/helper'
 import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
 import functionsActions from '../../actions/functions'
@@ -62,7 +62,6 @@ const Jobs = ({
   handleRunScheduledJob,
   history,
   jobsStore,
-  location,
   match,
   removeFunction,
   removeFunctionLogs,
@@ -83,6 +82,7 @@ const Jobs = ({
   const [editableItem, setEditableItem] = useState(null)
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
+  const isDemoModeEnabled = useDemoMode()
 
   const dispatch = useDispatch()
   let fetchFunctionLogsTimeout = useRef(null)
@@ -301,7 +301,7 @@ const Jobs = ({
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab,
-      location.search,
+      isDemoModeEnabled,
       onRemoveScheduledJob,
       handleRunJob,
       handleEditScheduleJob,
@@ -320,7 +320,6 @@ const Jobs = ({
     ),
     [
       match.params.pageTab,
-      location.search,
       match.params.workflowId,
       appStore.frontendSpec.jobs_dashboard_url,
       selectedJob,
@@ -499,14 +498,6 @@ const Jobs = ({
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
       setFilters({ groupBy: 'none' })
-    } else if (
-      match.params.pageTab === MONITOR_JOBS_TAB &&
-      !match.params.jobId
-    ) {
-      if (!isDemoMode(location.search)) {
-        getWorkflows()
-      }
-      setFilters({ groupBy: INIT_GROUP_FILTER })
     } else if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
       if (match.params.workflowId) {
         setFilters({ groupBy: 'none' })
@@ -515,14 +506,21 @@ const Jobs = ({
         setFilters({ groupBy: 'workflow' })
       }
     }
+  }, [getWorkflows, match.params.pageTab, match.params.workflowId, setFilters])
+
+  useEffect(() => {
+    if (match.params.pageTab === MONITOR_JOBS_TAB && !match.params.jobId) {
+      if (!isDemoModeEnabled) {
+        getWorkflows()
+      }
+      setFilters({ groupBy: INIT_GROUP_FILTER })
+    }
   }, [
     getWorkflows,
+    isDemoModeEnabled,
+    match.params.jobId,
     match.params.pageTab,
-    match.params.workflowId,
-    location.search,
-    subPage,
-    setFilters,
-    match.params.jobId
+    setFilters
   ])
 
   const handleSelectJob = item => {

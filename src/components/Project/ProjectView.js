@@ -55,6 +55,7 @@ const ProjectView = React.forwardRef(
       handleOnChangeProject,
       handleOnKeyDown,
       handleUpdateProjectLabels,
+      isDemoMode,
       isNewFunctionPopUpOpen,
       isPopupDialogOpen,
       links,
@@ -63,7 +64,9 @@ const ProjectView = React.forwardRef(
       membersState,
       projectCounters,
       projectLabels,
+      projectMembersIsShown,
       projectMembershipIsEnabled,
+      projectOwnerIsShown,
       refresh,
       setIsNewFunctionPopUpOpen,
       setIsPopupDialogOpen,
@@ -114,14 +117,18 @@ const ProjectView = React.forwardRef(
                     projectName={project.data.metadata.name}
                     ref={ref}
                   />
-                  <Link
-                    className="general-info__settings"
-                    to={`/projects/${match.params.projectName}/settings`}
-                  >
-                    <Tooltip template={<TextTooltipTemplate text="Settings" />}>
-                      <Settings />
-                    </Tooltip>
-                  </Link>
+                  {isDemoMode && (
+                    <Link
+                      className="general-info__settings"
+                      to={`/projects/${match.params.projectName}/settings`}
+                    >
+                      <Tooltip
+                        template={<TextTooltipTemplate text="Settings" />}
+                      >
+                        <Settings />
+                      </Tooltip>
+                    </Link>
+                  )}
                 </div>
                 <ProjectDescription
                   editDescriptionData={editProject.description}
@@ -164,35 +171,39 @@ const ProjectView = React.forwardRef(
               </div>
               {projectMembershipIsEnabled && (
                 <>
-                  <div className="general-info__row owner-row">
-                    <div className="row-value">
-                      <span className="row-label">Owner:</span>
-                      <span className="row-name">
-                        {membersState.projectInfo?.owner?.username}
+                  {projectMembersIsShown && (
+                    <div className="general-info__row owner-row">
+                      <div className="row-value">
+                        <span className="row-label">Owner:</span>
+                        <span className="row-name">
+                          {membersState.projectInfo?.owner?.username}
+                        </span>
+                      </div>
+                      <span
+                        className="row-action link"
+                        onClick={() => setShowChangeOwner(true)}
+                      >
+                        Change
                       </span>
                     </div>
-                    <span
-                      className="row-action link"
-                      onClick={() => setShowChangeOwner(true)}
-                    >
-                      Change
-                    </span>
-                  </div>
-                  <div className="general-info__row members-row">
-                    <div className="row-value">
-                      <span className="row-label">Members:</span>
-                      <span className="row-name">
-                        {membersState.users.length +
-                          membersState.userGroups.length}
+                  )}
+                  {projectOwnerIsShown && (
+                    <div className="general-info__row members-row">
+                      <div className="row-value">
+                        <span className="row-label">Members:</span>
+                        <span className="row-name">
+                          {membersState.users.length +
+                            membersState.userGroups.length}
+                        </span>
+                      </div>
+                      <span
+                        className="row-action link"
+                        onClick={() => setShowManageMembers(true)}
+                      >
+                        Manage
                       </span>
                     </div>
-                    <span
-                      className="row-action link"
-                      onClick={() => setShowManageMembers(true)}
-                    >
-                      Manage
-                    </span>
-                  </div>
+                  )}
                 </>
               )}
               <div className="general-info__divider" />
@@ -345,6 +356,7 @@ ProjectView.propTypes = {
   handleOnChangeProject: PropTypes.func.isRequired,
   handleOnKeyDown: PropTypes.func.isRequired,
   handleUpdateProjectLabels: PropTypes.func.isRequired,
+  isDemoMode: PropTypes.bool.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
   links: PropTypes.array.isRequired,
@@ -353,7 +365,9 @@ ProjectView.propTypes = {
   membersState: PropTypes.shape({}).isRequired,
   projectCounters: PropTypes.object.isRequired,
   projectLabels: PropTypes.array.isRequired,
+  projectMembersIsShown: PropTypes.bool.isRequired,
   projectMembershipIsEnabled: PropTypes.bool.isRequired,
+  projectOwnerIsShown: PropTypes.bool.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowChangeOwner: PropTypes.func.isRequired,

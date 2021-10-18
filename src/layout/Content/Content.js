@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
@@ -17,8 +16,8 @@ import {
   generateContentActionsMenu,
   generateGroupedItems
 } from './content.util'
-import { isDemoMode } from '../../utils/helper'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import {
   ARTIFACTS_PAGE,
@@ -58,7 +57,7 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
-  const location = useLocation()
+  const isDemoModeEnabled = useDemoMode()
 
   const contentClassName = classnames(
     'content',
@@ -88,13 +87,13 @@ const Content = ({
       ].includes(pageData.page) &&
       ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
       (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) ||
-        isDemoMode(location.search))
+        isDemoModeEnabled)
     ) {
       setShowActionsMenu(true)
     } else if (showActionsMenu) {
       setShowActionsMenu(false)
     }
-  }, [location.search, match.params.pageTab, pageData.page, showActionsMenu])
+  }, [isDemoModeEnabled, match.params.pageTab, pageData.page, showActionsMenu])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
@@ -209,7 +208,6 @@ const Content = ({
         ) && (
           <ContentMenu
             activeTab={match.params.pageTab}
-            location={location}
             match={match}
             screen={pageData.page}
             tabs={pageData.tabs}

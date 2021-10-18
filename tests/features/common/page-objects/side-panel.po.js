@@ -17,10 +17,10 @@ import {
 const { By } = require('selenium-webdriver')
 
 const actionMenuStructure = {
-  root: 'div.actions-menu__container',
+  root: '.table__cell-actions',
   menuElements: {
-    open_button: 'div.data-ellipsis button',
-    options: 'div.actions-menu__body div.actions-menu__option'
+    open_button: 'button',
+    options: '.actions-menu__body .actions-menu__option'
   }
 }
 
@@ -35,25 +35,7 @@ const labelsTable = {
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
-        // key_input: {
-        //   componentType: inputGroup,
-        //   structure: {
-        //     root: '',
-        //     elements: {
-        //       input: 'input.input-label-key'
-        //     }
-        //   }
-        // },
-        // value_input: {
-        //   componentType: inputGroup,
-        //   structure: {
-        //     root: '',
-        //     elements: {
-        //       input: 'input.input-label-value'
-        //     }
-        //   }
-        // },
-        label: 'div.chip_short',
+        label: '.chip',
         remove_btn: '.item-icon-close'
       }
     }
@@ -320,7 +302,7 @@ const volumePathsTable = {
     }
   },
   body: {
-    offset: 0,
+    offset: 1,
     add_row_btn: '.no-hover .add-input',
     row: {
       root: 'div[class=table__row]',
@@ -469,7 +451,7 @@ const newFunctionLabelsTable = {
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
-        label: 'div.chip_short',
+        label: '.chip',
         remove_btn: '.item-icon-close'
       }
     }
@@ -498,13 +480,7 @@ const functionVolumePathsTable = {
         path: '.table__cell:nth-of-type(3) .data-ellipsis',
         action_menu: {
           componentType: actionMenu,
-          structure: {
-            root: '.table__cell-actions',
-            menuElements: {
-              open_button: 'button',
-              options: '.actions-menu__body .actions-menu__option'
-            }
-          }
+          structure: actionMenuStructure
         }
       }
     }
@@ -513,7 +489,7 @@ const functionVolumePathsTable = {
 
 const functionEnvironmentVariablesTable = {
   root:
-    '.new-item-side-panel .accordion__container:nth-of-type(4)  .panel-section__body .key-value-table',
+    '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .key-value-table',
   header: {
     root: '.table-row__header',
     sorters: {
@@ -554,16 +530,132 @@ const functionEnvironmentVariablesTable = {
   }
 }
 
+// MLFunction Serving Runtime Configuration Accordion
+const servingRuntimeConfigurationModelTable = {
+  root:
+    '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table',
+  header: {
+    root: '.table__header',
+    sorters: {
+      name: '.table__cell:nth-of-type(1)',
+      class: '.table__cell:nth-of-type(2)',
+      path: '.table__cell:nth-of-type(3)'
+    }
+  },
+  body: {
+    offset: 1,
+    add_row_btn: '.table__row .add-input',
+    row: {
+      root: '.table__row',
+      fields: {
+        name: '.table__cell:nth-of-type(1)',
+        class: '.table__cell:nth-of-type(2)',
+        path: '.table__cell:nth-of-type(3)',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
+  }
+}
+
+const secretRuntimeConfigurationTable = {
+  root:
+    '.new-item-side-panel .accordion__container:nth-of-type(5) .secrets .secrets__table',
+  header: {
+    root: '.table-row__header',
+    sorters: {
+      kind: '.table-cell:nth-of-type(1)',
+      value: '.table-cell:nth-of-type(2)'
+    }
+  },
+  body: {
+    offset: 1,
+    add_row_btn: '.table-row .add-new-item-btn',
+    row: {
+      root: '.table-row',
+      fields: {
+        kind: '.table-cell__key',
+        value: '.table-cell__value',
+        delete_btn: '.table-cell__actions button',
+        kind_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.select',
+            '.select__value',
+            '.select__body .select__item',
+            '.data-ellipsis .data-ellipsis'
+          )
+        },
+        value_input: {
+          componentType: inputGroup,
+          structure: generateInputGroup('.input-wrapper', true, false, true)
+        },
+        add_row_btn: '.btn-add',
+        remove_row_btn: 'button:not([class])'
+      }
+    }
+  }
+}
+
+const parametersRuntimeConfigurationTable = {
+  root:
+    '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body',
+  header: {
+    root: '.table__header',
+    sorters: {
+      name: '.table__cell:nth-of-type(1)',
+      type: '.table__cell:nth-of-type(2)',
+      value: '.table__cell:nth-of-type(3)'
+    }
+  },
+  body: {
+    offset: 1,
+    add_row_btn: '.table__row .add-input',
+    row: {
+      root: '.table__row',
+      fields: {
+        name: '.table__cell:nth-of-type(1)',
+        type: '.table__cell:nth-of-type(2)',
+        value: '.table__cell:nth-of-type(3)',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
+  }
+}
+
 // common components
 const commonCrossCloseButton = By.css(
   'div.new-item-side-panel button.panel-title__btn_close'
 )
 
-const resourcesTableCommonInpute21 = generateInputGroup(
-  '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(2) .input-wrapper:nth-of-type(1)',
-  true,
-  true,
-  true
+const commonVolumePathsTableTypeDropdown = dropdownComponent(
+  generateDropdownGroup(
+    '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(1) .select',
+    '.select__value',
+    '.select__body .select__item',
+    '.data-ellipsis .data-ellipsis'
+  )
+)
+
+function resourcesTableCommonInpute(accordionIndx, rowIndx, inputIndx) {
+  return generateInputGroup(
+    `.new-item-side-panel .accordion__container:nth-of-type(${accordionIndx}) .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(${rowIndx}) .input-wrapper:nth-of-type(${inputIndx})`,
+    true,
+    true,
+    true
+  )
+}
+
+const commonAddNewRowButton = By.css(
+  '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(2) .panel-section__body .table__body button.btn-add'
+)
+const commonDeleteNewRowButton = By.css(
+  '.new-item-side-panel .accordion__container:nth-of-type(3) .panel-section:nth-of-type(2) .panel-section__body .table__body button:not([class])'
 )
 
 module.exports = {
@@ -1023,6 +1115,34 @@ module.exports = {
           true
         )
       ),
+      // Volume Path inputs
+      Volume_Paths_Table_Type_Dropdown: commonVolumePathsTableTypeDropdown,
+      Volume_Paths_Table_Volume_Name_Input: inputGroup(
+        resourcesTableCommonInpute(3, 1, 2)
+      ),
+      Volume_Paths_Table_Path_Input: inputGroup(
+        resourcesTableCommonInpute(3, 1, 3)
+      ),
+      Volume_Paths_Table_Container_Input: inputGroup(
+        resourcesTableCommonInpute(3, 2, 1)
+      ),
+      Volume_Paths_Table_Config_Map_Input: inputGroup(
+        resourcesTableCommonInpute(3, 2, 1)
+      ),
+      Volume_Paths_Table_Secret_Name_Input: inputGroup(
+        resourcesTableCommonInpute(3, 2, 1)
+      ),
+      Volume_Paths_Table_Claime_Name_Input: inputGroup(
+        resourcesTableCommonInpute(3, 2, 1)
+      ),
+      Volume_Paths_Table_Access_Key_Input: inputGroup(
+        resourcesTableCommonInpute(3, 2, 2)
+      ),
+      Volume_Paths_Table_Resource_Path_Input: inputGroup(
+        resourcesTableCommonInpute(3, 3, 1)
+      ),
+      Add_New_Row_Button: commonAddNewRowButton,
+      Delete_New_Row_Button: commonDeleteNewRowButton,
       Volume_Paths_Table: commonTable(volumePathsTable),
       Memory_Unit_Dropdown: dropdownComponent(
         generateDropdownGroup(
@@ -1118,30 +1238,7 @@ module.exports = {
       Collapse_Button: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(1) button.new-item-side-panel__expand-icon'
       ),
-      New_Function_Name_Input: inputGroup(
-        generateInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(1) .general__required-info .name.input-wrapper',
-          true,
-          true,
-          true
-        )
-      ),
-      New_Function_Tag_Input: inputGroup(
-        generateInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(1) .general__required-info .tag.input-wrapper',
-          true,
-          false,
-          false
-        )
-      ),
-      New_Function_Run_Time_Dropdown: dropdownComponent(
-        generateDropdownGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(1) .general__required-info .select',
-          false,
-          false,
-          false
-        )
-      ),
+      // TODO: add labels for name, tag and runtime
       New_Function_Description_Text_Area: By.css(
         '.new-item-side-panel .accordion__container:nth-of-type(1) .accordion__body .panel-section__body .description .text-area'
       ),
@@ -1234,64 +1331,33 @@ module.exports = {
       ),
       Volume_Paths_Table: commonTable(functionVolumePathsTable),
       // Volume Path inputs
-      Volume_Paths_Table_Type_Dropdown: dropdownComponent(
-        generateDropdownGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(1) .select',
-          '.select__value',
-          '.select__body .select__item',
-          '.data-ellipsis .data-ellipsis'
-        )
-      ),
+      Volume_Paths_Table_Type_Dropdown: commonVolumePathsTableTypeDropdown,
       Volume_Paths_Table_Volume_Name_Input: inputGroup(
-        generateInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(1) .input-wrapper:nth-of-type(2)',
-          true,
-          false,
-          true
-        )
+        resourcesTableCommonInpute(3, 1, 2)
       ),
       Volume_Paths_Table_Path_Input: inputGroup(
-        generateInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(1) .input-wrapper:nth-of-type(3)',
-          true,
-          true,
-          true
-        )
+        resourcesTableCommonInpute(3, 1, 3)
       ),
       Volume_Paths_Table_Container_Input: inputGroup(
-        resourcesTableCommonInpute21
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Config_Map_Input: inputGroup(
-        resourcesTableCommonInpute21
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Secret_Name_Input: inputGroup(
-        resourcesTableCommonInpute21
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Claime_Name_Input: inputGroup(
-        resourcesTableCommonInpute21
+        resourcesTableCommonInpute(3, 2, 1)
       ),
       Volume_Paths_Table_Access_Key_Input: inputGroup(
-        generateInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(2) .input-wrapper:nth-of-type(2)',
-          true,
-          true,
-          true
-        )
+        resourcesTableCommonInpute(3, 2, 2)
       ),
       Volume_Paths_Table_Resource_Path_Input: inputGroup(
-        generateInputGroup(
-          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body .input-row-wrapper:nth-of-type(3) .input-wrapper',
-          true,
-          true,
-          true
-        )
+        resourcesTableCommonInpute(3, 3, 1)
       ),
-      Add_New_Row_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body button.btn-add'
-      ),
-      Delete_New_Row_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .table__body button:not([class])'
-      ),
+      Add_New_Row_Button: commonAddNewRowButton,
+      Delete_New_Row_Button: commonDeleteNewRowButton,
       // Number input groups
       Memory_Unit_Dropdown: dropdownComponent(
         generateDropdownGroup(
@@ -1360,13 +1426,130 @@ module.exports = {
     },
     Environment_Variables_Accordion: {
       Accordion_Header: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(3) h5'
+        '.new-item-side-panel .accordion__container:nth-of-type(4) h5'
       ),
       Collapse_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(3) button.new-item-side-panel__expand-icon'
+        '.new-item-side-panel .accordion__container:nth-of-type(4) button.new-item-side-panel__expand-icon'
       ),
       Function_Environment_Variables_Table: commonTable(
         functionEnvironmentVariablesTable
+      )
+    },
+    Serving_Runtime_Configuration_Accordion: {
+      Accordion_Header: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(5) h5'
+      ),
+      Collapse_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(5) button.new-item-side-panel__expand-icon'
+      ),
+      Topology_Router_Type_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .select',
+          false,
+          false,
+          false
+        )
+      ),
+      Serving_Runtime_Configuration_Model_Table: commonTable(
+        servingRuntimeConfigurationModelTable
+      ),
+      Model_Table_Name_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table .table__body-column .input-wrapper:nth-of-type(1)',
+          true,
+          false,
+          true
+        )
+      ),
+      Model_Table_Class_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table .table__body-column .input-wrapper:nth-of-type(2)',
+          true,
+          false,
+          true
+        )
+      ),
+      Model_Table_Path_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table .table__body-column .input-wrapper:nth-of-type(3)',
+          true,
+          false,
+          true
+        )
+      ),
+      Add_Model_Table_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table .add-input.btn-add'
+      ),
+      Model_Tracking_Checkbox: checkboxComponent({
+        root:
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .checkbox.topology__model-tracking',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: ''
+        }
+      }),
+      Secret_Runtime_Configuration_Table: commonTable(
+        secretRuntimeConfigurationTable
+      ),
+      Stream_Path_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body > .input-wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      Parameters_Runtime_Configuration_Table: commonTable(
+        parametersRuntimeConfigurationTable
+      ),
+      Parameters_Table_Name_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body .table__body .input-row-wrapper .input-wrapper:nth-of-type(1)',
+          true,
+          false,
+          true
+        )
+      ),
+      Parameters_Table_Type_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body .table__body .input-row-wrapper .select',
+          false,
+          false,
+          false
+        )
+      ),
+      Parameters_Table_Value_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body .table__body .input-row-wrapper .input-wrapper:nth-of-type(3)',
+          true,
+          false,
+          true
+        )
+      ),
+      Parameters_Table_Value_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body .table__body .input-row-wrapper .range.range-normal',
+          false,
+          true,
+          false,
+          true
+        )
+      ),
+      Parameters_Table_Value_Checkbox: checkboxComponent({
+        root:
+          '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body .table__body .input-row-wrapper .checkbox',
+        elements: {
+          checkbox: 'svg[class]',
+          name: '',
+          icon: ''
+        }
+      }),
+      Add_Parameter_Table_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body .table__body .parameters-table__btn.btn-add'
+      ),
+      Remove_Parameter_Table_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(5) .advanced .panel-section__body .table__body button[class=parameters-table__btn]'
       )
     },
     Cansel_Button: By.css(

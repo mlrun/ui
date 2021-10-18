@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 
 import FunctionsPanelEnvironmentVariablesView from './FunctionsPanelEnvironmentVariablesView'
 
 import functionsActions from '../../actions/functions'
-import { isDemoMode } from '../../utils/helper'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const FunctionsPanelEnvironmentVariables = ({
   functionsStore,
@@ -16,10 +15,10 @@ const FunctionsPanelEnvironmentVariables = ({
   const [envVariables, setEnvVariables] = useState(
     parseEnvVariables(functionsStore.newFunction.spec.env)
   )
-  const location = useLocation()
+  const isDemoModeEnabled = useDemoMode()
 
   const handleAddNewEnv = env => {
-    if (isDemoMode(location.search)) {
+    if (isDemoModeEnabled) {
       const generatedVariable = generateEnvVariable(env)
 
       setEnvVariables(state => [
@@ -37,7 +36,7 @@ const FunctionsPanelEnvironmentVariables = ({
   }
 
   const handleEditEnv = env => {
-    if (isDemoMode(location.search)) {
+    if (isDemoModeEnabled) {
       const generatedVariables = env.map(variable =>
         generateEnvVariable(variable)
       )
@@ -58,7 +57,7 @@ const FunctionsPanelEnvironmentVariables = ({
   }
 
   const handleDeleteEnv = env => {
-    if (isDemoMode(location.search)) {
+    if (isDemoModeEnabled) {
       const generatedVariables = env.map(item => generateEnvVariable(item))
 
       setNewFunctionEnv([...generatedVariables])
@@ -77,7 +76,7 @@ const FunctionsPanelEnvironmentVariables = ({
       handleAddNewEnv={handleAddNewEnv}
       handleDeleteEnv={handleDeleteEnv}
       handleEditEnv={handleEditEnv}
-      location={location}
+      isDemoModeEnabled={isDemoModeEnabled}
     />
   )
 }
