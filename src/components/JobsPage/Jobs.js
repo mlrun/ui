@@ -82,6 +82,7 @@ const Jobs = ({
   const [selectedJob, setSelectedJob] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [selectedFunction, setSelectedFunction] = useState({})
+  const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
 
   const dispatch = useDispatch()
   let fetchFunctionLogsTimeout = useRef(null)
@@ -455,7 +456,10 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    if (isEmpty(selectedJob) && !match.params.jobId) {
+    if (
+      (isEmpty(selectedJob) && !match.params.jobId) ||
+      workflowsViewMode === 'list'
+    ) {
       let filters = {}
 
       if (match.params.pageTab === MONITOR_JOBS_TAB) {
@@ -484,7 +488,8 @@ const Jobs = ({
     match.params.pageTab,
     refreshJobs,
     selectedJob,
-    setFilters
+    setFilters,
+    workflowsViewMode
   ])
 
   const getWorkflows = useCallback(() => {
@@ -588,6 +593,8 @@ const Jobs = ({
             selectedFunction={selectedFunction}
             selectedJob={selectedJob}
             setLoading={setLoading}
+            setWorkflowsViewMode={setWorkflowsViewMode}
+            workflowsViewMode={workflowsViewMode}
           />
         ) : !isEmpty(selectedJob) ? (
           <Details

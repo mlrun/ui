@@ -39,7 +39,9 @@ const Workflow = ({
   refreshJobs,
   selectedFunction,
   selectedJob,
-  setLoading
+  setLoading,
+  setWorkflowsViewMode,
+  workflowsViewMode
 }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [isSelectedItem, setIsSelectedeItem] = useState(false)
@@ -47,7 +49,6 @@ const Workflow = ({
   const [workflow, setWorkflow] = useState({})
   const [workflowJobsIds, setWorkflowJobsIds] = useState([])
   const [elements, setElements] = useState([])
-  const [viewMode, setViewMode] = useState('graph')
 
   const graphViewClassNames = classnames(
     'graph-view',
@@ -166,7 +167,7 @@ const Workflow = ({
             template={
               <TextTooltipTemplate
                 text={
-                  viewMode === 'graph'
+                  workflowsViewMode === 'graph'
                     ? 'Switch to list view'
                     : 'Switch to graph view'
                 }
@@ -176,16 +177,18 @@ const Workflow = ({
             <button
               className="toggle-view-btn"
               onClick={() =>
-                setViewMode(viewMode === 'graph' ? 'list' : 'graph')
+                setWorkflowsViewMode(
+                  workflowsViewMode === 'graph' ? 'list' : 'graph'
+                )
               }
             >
-              {viewMode === 'graph' ? <ListView /> : <Pipelines />}
+              {workflowsViewMode === 'graph' ? <ListView /> : <Pipelines />}
             </button>
           </Tooltip>
         </div>
       </div>
       <div className="workflow-content">
-        {viewMode === 'graph' ? (
+        {workflowsViewMode === 'graph' ? (
           <>
             <div className={graphViewClassNames}>
               <MlReactFlow
