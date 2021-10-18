@@ -279,7 +279,9 @@ Workflow.propTypes = {
   refreshJobs: PropTypes.func.isRequired,
   selectedFunction: PropTypes.shape({}),
   selectedJob: PropTypes.shape({}),
-  setLoading: PropTypes.func
+  setLoading: PropTypes.func,
+  setWorkflowsViewMode: PropTypes.func.isRequired,
+  workflowsViewMode: PropTypes.string.isRequired
 }
 
 export default connect(null, { ...functionsActions })(React.memo(Workflow))

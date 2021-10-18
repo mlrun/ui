@@ -513,6 +513,7 @@ const Jobs = ({
       if (!isDemoModeEnabled) {
         getWorkflows()
       }
+
       setFilters({ groupBy: INIT_GROUP_FILTER })
     }
   }, [
