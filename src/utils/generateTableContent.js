@@ -7,7 +7,8 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODELS_PAGE
+  MODELS_PAGE,
+  REAL_TIME_PIPELINES_TAB
 } from '../constants'
 import createJobsContent from './createJobsContent'
 import createFunctionsContent from './createFunctionsContent'
@@ -37,8 +38,9 @@ export const generateTableContent = (
             isDemoModeEnabled,
             groupFilter === 'workflow'
           )
-        : page === FUNCTIONS_PAGE
-        ? createFunctionsContent(group, isSelectedItem)
+        : page === FUNCTIONS_PAGE ||
+          (page === MODELS_PAGE && params.pageTab === REAL_TIME_PIPELINES_TAB)
+        ? createFunctionsContent(group, isSelectedItem, params)
         : page === FEATURE_STORE_PAGE && params.pageTab !== DATASETS_TAB
         ? createFeatureStoreContent(
             group,
@@ -66,7 +68,7 @@ export const generateTableContent = (
         )
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
-        page === MODELS_PAGE ||
+        (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB) ||
         params.pageTab === DATASETS_TAB
       ? createArtifactsContent(
           content,
@@ -83,6 +85,6 @@ export const generateTableContent = (
           isTablePanelOpen,
           isSelectedItem
         )
-      : createFunctionsContent(content, isSelectedItem)
+      : createFunctionsContent(content, isSelectedItem, params)
   } else return []
 }

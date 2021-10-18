@@ -214,7 +214,7 @@ const artifactsAction = {
     dispatch(artifactsAction.fetchFunctionsBegin())
 
     return functionsApi
-      .getAll(projectName)
+      .getFunctions(projectName)
       .then(({ data }) => {
         dispatch(artifactsAction.fetchFunctionsSuccess())
 

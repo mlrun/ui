@@ -28,7 +28,8 @@ import {
   JOBS_PAGE,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
-  PROJECTS_PAGE
+  PROJECTS_PAGE,
+  REAL_TIME_PIPELINES_TAB
 } from '../../constants'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
@@ -85,7 +86,9 @@ const Content = ({
         FEATURE_STORE_PAGE,
         JOBS_PAGE
       ].includes(pageData.page) &&
-      ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
+      ![FEATURES_TAB, MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB].includes(
+        match.params.pageTab
+      ) &&
       (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) ||
         isDemoModeEnabled)
     ) {

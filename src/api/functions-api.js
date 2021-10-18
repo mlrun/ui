@@ -11,13 +11,13 @@ export default {
   deleteSelectedFunction: (func, project) =>
     mainHttpClient.delete(`/projects/${project}/functions/${func}`),
   deployFunction: data => mainHttpClient.post('/build/function', data),
-  getAll: (project, name) => {
+  getFunctions: (project, filters) => {
     const params = {
       project
     }
 
-    if (name) {
-      params.name = `~${name}`
+    if (filters?.name) {
+      params.name = `~${filters.name}`
     }
 
     return mainHttpClient.get('/funcs', { params })
