@@ -35,12 +35,13 @@ import {
   PANEL_EDIT_MODE,
   SECONDARY_BUTTON
 } from '../../constants'
+import { parseFunction } from '../../utils/parseFunction'
+import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
-import { parseFunction } from '../../utils/parseFunction'
-import { getFunctionLogs } from '../../utils/getFunctionLogs'
 
 const Functions = ({
   deleteFunction,
@@ -64,6 +65,7 @@ const Functions = ({
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   let fetchFunctionLogsTimeout = useRef(null)
+  const isDemoModeEnabled = useDemoMode()
 
   const handleFetchFunctionLogs = useCallback(
     (projectName, name, tag, offset) => {
@@ -115,7 +117,8 @@ const Functions = ({
         },
         hidden:
           !FUNCTIONS_EDITABLE_TYPES.includes(item?.type) ||
-          !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
+          !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value) ||
+          !isDemoModeEnabled
       },
       {
         label: 'Delete',
