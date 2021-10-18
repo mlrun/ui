@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { startCase } from 'lodash'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 
@@ -9,20 +9,22 @@ import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsD
 
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
-import { PROJECTS_PAGE } from '../../constants'
+import { isDemoMode } from '../../utils/helper'
 import { betaBreadcrumbs, generateProjectScreens } from './breadcrumbs.util'
 import { generateProjectsList } from '../../utils/projects'
 import projectsAction from '../../actions/projects'
+import { PROJECTS_PAGE } from '../../constants'
 
 import './breadcrums.scss'
 
 const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
+  const location = useLocation()
 
   const projectScreens = useMemo(() => {
-    return generateProjectScreens(match)
-  }, [match])
+    return generateProjectScreens(match, isDemoMode(location.search))
+  }, [location.search, match])
   const projectsList = useMemo(() => {
     return generateProjectsList(projectStore.projectsNames.data)
   }, [projectStore.projectsNames.data])
