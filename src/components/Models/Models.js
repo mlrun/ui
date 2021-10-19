@@ -59,7 +59,6 @@ const Models = ({
   const [pageData, setPageData] = useState({
     details: { menu: [], infoHeaders: [] },
     filters: [],
-    infoHeaders: [],
     page: MODELS_PAGE,
     registerArtifactDialogTitle: '',
     tabs: []
