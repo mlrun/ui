@@ -34,7 +34,7 @@ const NewFunctionPopUp = ({
   const [validation, setValidation] = useState({
     isNameValid: true
   })
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
   const newFunctionBtn = useRef(null)
   const popUpClassNames = classnames(
     'new-function__pop-up',
@@ -141,7 +141,7 @@ const NewFunctionPopUp = ({
             floatingLabel
             label="Runtime"
             onClick={selectRuntime}
-            options={runtimeOptions(isDemoModeEnabled)}
+            options={runtimeOptions(isDemoMode)}
             selectedId={data.runtime}
           />
           <div className="pop-up-dialog__footer-container">

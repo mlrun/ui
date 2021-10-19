@@ -17,7 +17,7 @@ const createJobsContent = (
   content,
   isSelectedItem,
   params,
-  isDemoModeEnabled,
+  isDemoMode,
   groupedByWorkflow
 ) => {
   return content.map(contentItem => {
@@ -106,7 +106,7 @@ const createJobsContent = (
           name: {
             value: contentItem.name,
             class: 'jobs_medium',
-            type: type === 'workflow' && !isDemoModeEnabled ? 'hidden' : '',
+            type: type === 'workflow' && !isDemoMode ? 'hidden' : '',
             identifier: getJobIdentifier(contentItem),
             identifierUnique: getJobIdentifier(contentItem, true),
             getLink: tab => {

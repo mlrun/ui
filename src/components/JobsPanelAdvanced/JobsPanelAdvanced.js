@@ -26,7 +26,7 @@ const JobsPanelAdvanced = ({
   const [validation, setValidation] = useState({
     secretsSourceValue: true
   })
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   const handleAddNewItem = () => {
     let data = {}
@@ -143,7 +143,7 @@ const JobsPanelAdvanced = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handleResetForm={handleResetForm}
-      isDemoModeEnabled={isDemoModeEnabled}
+      isDemoMode={isDemoMode}
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}

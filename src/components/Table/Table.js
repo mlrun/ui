@@ -42,7 +42,7 @@ const Table = ({
   })
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   const workflows = useSelector(state => {
     return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
@@ -85,7 +85,7 @@ const Table = ({
       pageData.page,
       tableStore.isTablePanelOpen,
       match.params,
-      isDemoModeEnabled,
+      isDemoMode,
       !isEveryObjectValueEmpty(selectedItem)
     )
 
@@ -113,7 +113,7 @@ const Table = ({
           groupWorkflowItem,
           !isEveryObjectValueEmpty(selectedItem),
           match.params,
-          isDemoModeEnabled,
+          isDemoMode,
           true
         )
       }))
@@ -129,7 +129,7 @@ const Table = ({
     content,
     filtersStore.groupBy,
     groupedContent,
-    isDemoModeEnabled,
+    isDemoMode,
     match.params,
     pageData.mainRowItemsCount,
     pageData.page,

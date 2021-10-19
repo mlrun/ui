@@ -85,7 +85,7 @@ const Project = ({
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const history = useHistory()
   const inputRef = React.createRef()
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
@@ -629,7 +629,7 @@ const Project = ({
       handleOnChangeProject={handleOnChangeProject}
       handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
-      isDemoMode={isDemoModeEnabled}
+      isDemoMode={isDemoMode}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
       links={links}

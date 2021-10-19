@@ -16,7 +16,7 @@ import projectsAction from '../../actions/projects'
 
 const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
   const [groupedLatestItem, setGroupedLatestItem] = useState([])
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   useEffect(() => {
     if (projectStore.project.jobs.data) {
@@ -34,7 +34,7 @@ const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
     const statistics = getJobsStatistics(
       projectStore.projectCounters,
       match,
-      isDemoModeEnabled
+      isDemoMode
     )
     const table = getJobsTableData(groupedLatestItem, match)
 
@@ -42,12 +42,7 @@ const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
       statistics,
       table
     }
-  }, [
-    groupedLatestItem,
-    isDemoModeEnabled,
-    match,
-    projectStore.projectCounters
-  ])
+  }, [groupedLatestItem, isDemoMode, match, projectStore.projectCounters])
 
   return (
     <ProjectDataCard

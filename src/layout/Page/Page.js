@@ -7,9 +7,9 @@ import PageView from './PageView'
 import appActions from '../../actions/app'
 
 const Page = ({ children, fetchFrontendSpec, history }) => {
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
-  const [savedDemoMode, setSavedDemoMode] = useState(isDemoModeEnabled)
+  const [savedDemoMode, setSavedDemoMode] = useState(isDemoMode)
 
   useEffect(() => {
     fetchFrontendSpec()
@@ -20,18 +20,18 @@ const Page = ({ children, fetchFrontendSpec, history }) => {
   }, [fetchFrontendSpec])
 
   useEffect(() => {
-    if (isDemoModeEnabled) {
+    if (isDemoMode) {
       setSavedDemoMode(true)
     }
-  }, [isDemoModeEnabled])
+  }, [isDemoMode])
 
   useLayoutEffect(() => {
-    if (savedDemoMode && !isDemoModeEnabled) {
+    if (savedDemoMode && !isDemoMode) {
       history.replace({
         search: '?demo=true'
       })
     }
-  }, [history, isDemoModeEnabled, savedDemoMode])
+  }, [history, isDemoMode, savedDemoMode])
 
   return <PageView>{children}</PageView>
 }

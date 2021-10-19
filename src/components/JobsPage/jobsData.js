@@ -185,7 +185,7 @@ export const detailsMenu = [
   }
 ]
 
-const filtersByTab = (pageTab, isDemoModeEnabled) => {
+const filtersByTab = (pageTab, isDemoMode) => {
   if (pageTab === MONITOR_JOBS_TAB) {
     return [
       { type: PERIOD_FILTER, label: 'Period:' },
@@ -193,7 +193,7 @@ const filtersByTab = (pageTab, isDemoModeEnabled) => {
       {
         type: GROUP_BY_FILTER,
         label: 'Group by:',
-        options: !isDemoModeEnabled && [
+        options: !isDemoMode && [
           ...filterSelectOptions.groupBy,
           { label: 'Workflow', id: 'workflow' }
         ]
@@ -218,13 +218,13 @@ const filtersByTab = (pageTab, isDemoModeEnabled) => {
   }
 }
 
-const generateTabs = isDemoModeEnabled => {
+const generateTabs = isDemoMode => {
   return [
     { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },
     {
       id: MONITOR_WORKFLOWS_TAB,
       label: 'Monitor Workflows',
-      hidden: !isDemoModeEnabled
+      hidden: !isDemoMode
     },
     { id: SCHEDULE_TAB, label: 'Schedule' }
   ]
@@ -232,7 +232,7 @@ const generateTabs = isDemoModeEnabled => {
 
 export const generatePageData = (
   pageTab,
-  isDemoModeEnabled,
+  isDemoMode,
   removeScheduledJob,
   handleSubmitJob,
   handleEditScheduleJob,
@@ -294,10 +294,10 @@ export const generatePageData = (
     },
     hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,
-    filters: filtersByTab(pageTab, isDemoModeEnabled),
+    filters: filtersByTab(pageTab, isDemoMode),
     page,
     tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
-    tabs: generateTabs(isDemoModeEnabled),
+    tabs: generateTabs(isDemoMode),
     withoutExpandButton: pageTab === MONITOR_WORKFLOWS_TAB && !workflowId
   }
 }
