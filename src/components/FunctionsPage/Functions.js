@@ -37,8 +37,6 @@ import {
   PANEL_EDIT_MODE,
   SECONDARY_BUTTON
 } from '../../constants'
-import { parseFunction } from '../../utils/parseFunction'
-import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
