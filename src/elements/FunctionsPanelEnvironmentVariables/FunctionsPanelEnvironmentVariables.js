@@ -15,10 +15,10 @@ const FunctionsPanelEnvironmentVariables = ({
   const [envVariables, setEnvVariables] = useState(
     parseEnvVariables(functionsStore.newFunction.spec.env)
   )
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   const handleAddNewEnv = env => {
-    if (isDemoModeEnabled) {
+    if (isDemoMode) {
       const generatedVariable = generateEnvVariable(env)
 
       setEnvVariables(state => [
@@ -36,7 +36,7 @@ const FunctionsPanelEnvironmentVariables = ({
   }
 
   const handleEditEnv = env => {
-    if (isDemoModeEnabled) {
+    if (isDemoMode) {
       const generatedVariables = env.map(variable =>
         generateEnvVariable(variable)
       )
@@ -57,7 +57,7 @@ const FunctionsPanelEnvironmentVariables = ({
   }
 
   const handleDeleteEnv = env => {
-    if (isDemoModeEnabled) {
+    if (isDemoMode) {
       const generatedVariables = env.map(item => generateEnvVariable(item))
 
       setNewFunctionEnv([...generatedVariables])
@@ -76,7 +76,7 @@ const FunctionsPanelEnvironmentVariables = ({
       handleAddNewEnv={handleAddNewEnv}
       handleDeleteEnv={handleDeleteEnv}
       handleEditEnv={handleEditEnv}
-      isDemoModeEnabled={isDemoModeEnabled}
+      isDemoMode={isDemoMode}
     />
   )
 }

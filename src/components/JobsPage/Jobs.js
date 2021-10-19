@@ -81,7 +81,8 @@ const Jobs = ({
   const [selectedJob, setSelectedJob] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [selectedFunction, setSelectedFunction] = useState({})
-  const isDemoModeEnabled = useDemoMode()
+  const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
+  const isDemoMode = useDemoMode()
 
   const dispatch = useDispatch()
   let fetchFunctionLogsTimeout = useRef(null)
@@ -300,7 +301,7 @@ const Jobs = ({
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab,
-      isDemoModeEnabled,
+      isDemoMode,
       onRemoveScheduledJob,
       handleRunJob,
       handleEditScheduleJob,
@@ -321,6 +322,7 @@ const Jobs = ({
       match.params.pageTab,
       match.params.workflowId,
       appStore.frontendSpec.jobs_dashboard_url,
+      isDemoMode,
       selectedJob,
       selectedFunction
     ]
@@ -454,7 +456,10 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    if (isEmpty(selectedJob) && !match.params.jobId) {
+    if (
+      (isEmpty(selectedJob) && !match.params.jobId) ||
+      workflowsViewMode === 'list'
+    ) {
       let filters = {}
 
       if (match.params.pageTab === MONITOR_JOBS_TAB) {
@@ -483,7 +488,8 @@ const Jobs = ({
     match.params.pageTab,
     refreshJobs,
     selectedJob,
-    setFilters
+    setFilters,
+    workflowsViewMode
   ])
 
   const getWorkflows = useCallback(() => {
@@ -493,14 +499,6 @@ const Jobs = ({
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
       setFilters({ groupBy: 'none' })
-    } else if (
-      match.params.pageTab === MONITOR_JOBS_TAB &&
-      !match.params.jobId
-    ) {
-      if (!isDemoModeEnabled) {
-        getWorkflows()
-      }
-      setFilters({ groupBy: INIT_GROUP_FILTER })
     } else if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
       if (match.params.workflowId) {
         setFilters({ groupBy: 'none' })
@@ -509,12 +507,21 @@ const Jobs = ({
         setFilters({ groupBy: 'workflow' })
       }
     }
+  }, [getWorkflows, match.params.pageTab, match.params.workflowId, setFilters])
+
+  useEffect(() => {
+    if (match.params.pageTab === MONITOR_JOBS_TAB && !match.params.jobId) {
+      if (!isDemoMode) {
+        getWorkflows()
+      }
+
+      setFilters({ groupBy: INIT_GROUP_FILTER })
+    }
   }, [
     getWorkflows,
-    isDemoModeEnabled,
+    isDemoMode,
     match.params.jobId,
     match.params.pageTab,
-    match.params.workflowId,
     setFilters
   ])
 
@@ -586,6 +593,8 @@ const Jobs = ({
             selectedFunction={selectedFunction}
             selectedJob={selectedJob}
             setLoading={setLoading}
+            setWorkflowsViewMode={setWorkflowsViewMode}
+            workflowsViewMode={workflowsViewMode}
           />
         ) : !isEmpty(selectedJob) ? (
           <Details

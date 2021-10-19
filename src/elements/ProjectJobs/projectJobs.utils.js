@@ -8,7 +8,7 @@ import {
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
 
-export const getJobsStatistics = (projectCounter, match, isDemoModeEnabled) => {
+export const getJobsStatistics = (projectCounter, match, isDemoMode) => {
   return {
     running: {
       value: projectCounter.error
@@ -32,7 +32,7 @@ export const getJobsStatistics = (projectCounter, match, isDemoModeEnabled) => {
           ? 'default'
           : 'running',
       link: `/projects/${match.params.projectName}/jobs/${
-        isDemoModeEnabled ? MONITOR_WORKFLOWS_TAB : MONITOR_JOBS_TAB
+        isDemoMode ? MONITOR_WORKFLOWS_TAB : MONITOR_JOBS_TAB
       }`
     },
     failed: {

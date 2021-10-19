@@ -22,7 +22,7 @@ export const generateTableContent = (
   page,
   isTablePanelOpen,
   params,
-  isDemoModeEnabled,
+  isDemoMode,
   isSelectedItem
 ) => {
   if (
@@ -35,7 +35,7 @@ export const generateTableContent = (
             group,
             isSelectedItem,
             params,
-            isDemoModeEnabled,
+            isDemoMode,
             groupFilter === 'workflow'
           )
         : page === FUNCTIONS_PAGE ||
@@ -59,13 +59,7 @@ export const generateTableContent = (
     )
   } else if (groupFilter === 'none' || !groupFilter) {
     return page === JOBS_PAGE
-      ? createJobsContent(
-          content,
-          isSelectedItem,
-          params,
-          isDemoModeEnabled,
-          false
-        )
+      ? createJobsContent(content, isSelectedItem, params, isDemoMode, false)
       : page === ARTIFACTS_PAGE ||
         page === FILES_PAGE ||
         (page === MODELS_PAGE && params.pageTab !== REAL_TIME_PIPELINES_TAB) ||

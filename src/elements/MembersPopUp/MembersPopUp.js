@@ -366,7 +366,7 @@ const MembersPopUp = ({
                 )
               })
               .map(member => (
-                <div className="table-row" key={member.name + member.role}>
+                <div className="table-row" key={`${member.name}${member.role}`}>
                   <div className="member-info">
                     <div
                       className={`member-status ${
@@ -376,7 +376,9 @@ const MembersPopUp = ({
                     <div className="member-symbol">
                       {member.name[0].toUpperCase()}
                     </div>
-                    <div className="member-icon">{member.icon}</div>
+                    <div className={`member-icon ${member.type}`}>
+                      {member.icon}
+                    </div>
                     <div className="member-name">{member.name}</div>
                   </div>
                   <div className="member-roles">

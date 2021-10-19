@@ -311,7 +311,9 @@ export const generatePageData = (
 ) => {
   const data = {
     details: {
-      menu: []
+      menu: [],
+      infoHeaders: [],
+      type: ''
     },
     page,
     tabs
