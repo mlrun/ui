@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import lodash from 'lodash'
+import { isEmpty } from 'lodash'
 
 import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
@@ -63,10 +63,8 @@ const Input = React.forwardRef(
     const [validationPattern] = useState(RegExp(pattern))
     const [validationRules, setValidationRules] = useState(rules || [])
     const [showValidationRules, setShowValidationRules] = useState(false)
-    const [isClickedOutside, setIsClickedOutside] = useDetectOutsideClick(
-      ref,
-      false
-    )
+    useDetectOutsideClick(ref, () => setShowValidationRules(false))
+
     const inputClassNames = classnames(
       'input',
       className,
@@ -75,7 +73,7 @@ const Input = React.forwardRef(
         floatingLabel &&
         'active-input',
       isInvalid ? 'input_invalid' : 'input_valid',
-      !lodash.isEmpty(validationRules) && 'has-icon',
+      !isEmpty(validationRules) && 'has-icon',
       tip && 'input-short',
       withoutBorder && 'without-border'
     )
@@ -97,29 +95,6 @@ const Input = React.forwardRef(
       setTypedValue(String(value ?? '')) // convert from number to string
     }, [value])
 
-    // useEffect(() => {
-    //   if (isInvalid !== invalid) {
-    //     if (
-    //       (required && typedValue.trim().length === 0) ||
-    //       (pattern && !validationPattern.test(typedValue)) ||
-    //       typedValue.startsWith(' ')
-    //     ) {
-    //       setIsInvalid(true)
-    //       setInvalid && setInvalid(false)
-    //     } else {
-    //       setIsInvalid(invalid)
-    //     }
-    //   }
-    // }, [
-    //   invalid,
-    //   isInvalid,
-    //   pattern,
-    //   required,
-    //   setInvalid,
-    //   typedValue,
-    //   validationPattern
-    // ])
-
     useEffect(() => {
       if (focused) {
         input.current.focus()
@@ -136,7 +111,7 @@ const Input = React.forwardRef(
     const validateField = value => {
       let isFieldValidByPattern = true
 
-      if (!lodash.isEmpty(validationRules)) {
+      if (!isEmpty(validationRules)) {
         const [newRules, isValidField] = checkPatternsValidity(
           validationRules,
           value
@@ -149,19 +124,14 @@ const Input = React.forwardRef(
         }
       }
 
-      if (
+      const fieldInvalid =
         (required && value.trim().length === 0) ||
         (pattern && !validationPattern.test(value)) ||
-        typedValue.startsWith(' ') ||
-        typedValue.trim().length > 0 ||
-        !isFieldValidByPattern
-      ) {
-        setIsInvalid(true)
-        setInvalid && setInvalid(false)
-      } else {
-        setIsInvalid(false)
-        setInvalid && setInvalid(true)
-      }
+        value.startsWith(' ') ||
+        (value.trim().length > 0 && !isFieldValidByPattern)
+
+      setIsInvalid(fieldInvalid)
+      setInvalid(!fieldInvalid)
     }
 
     const changeValue = value => {
@@ -208,9 +178,9 @@ const Input = React.forwardRef(
     }
 
     const handleOptionMenu = () => {
-      setIsClickedOutside(!isClickedOutside || !showValidationRules)
-      setShowValidationRules(!isClickedOutside || !showValidationRules)
+      setShowValidationRules(!showValidationRules)
       input.current.focus()
+      setInputIsFocused(true)
     }
 
     return (
@@ -254,7 +224,7 @@ const Input = React.forwardRef(
           </label>
         )}
 
-        {!lodash.isEmpty(validationRules) && typedValue && isInvalid && (
+        {!isEmpty(validationRules) && typedValue && isInvalid && (
           <i
             className="validation__icon p-1 pointer"
             onClick={handleOptionMenu}
