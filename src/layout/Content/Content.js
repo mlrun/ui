@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
@@ -12,13 +11,14 @@ import Table from '../../components/Table/Table'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
+import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
 import {
   generateContentActionsMenu,
   generateGroupedItems
 } from './content.util'
-import { isDemoMode } from '../../utils/helper'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import {
   ARTIFACTS_PAGE,
@@ -33,10 +33,12 @@ import {
 } from '../../constants'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
+
 import './content.scss'
 
 const Content = ({
   applyDetailsChanges,
+  artifactsStore,
   cancelRequest,
   children,
   content,
@@ -58,7 +60,7 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
-  const location = useLocation()
+  const isDemoModeEnabled = useDemoMode()
 
   const contentClassName = classnames(
     'content',
@@ -88,13 +90,13 @@ const Content = ({
       ].includes(pageData.page) &&
       ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
       (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) ||
-        isDemoMode(location.search))
+        isDemoModeEnabled)
     ) {
       setShowActionsMenu(true)
     } else if (showActionsMenu) {
       setShowActionsMenu(false)
     }
-  }, [location.search, match.params.pageTab, pageData.page, showActionsMenu])
+  }, [isDemoModeEnabled, match.params.pageTab, pageData.page, showActionsMenu])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
@@ -209,7 +211,6 @@ const Content = ({
         ) && (
           <ContentMenu
             activeTab={match.params.pageTab}
-            location={location}
             match={match}
             screen={pageData.page}
             tabs={pageData.tabs}
@@ -267,6 +268,9 @@ const Content = ({
           />
         )}
       </div>
+      {artifactsStore?.preview?.isPreview && (
+        <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+      )}
     </>
   )
 }
@@ -295,4 +299,7 @@ Content.propTypes = {
   setLoading: PropTypes.func
 }
 
-export default connect(({ filtersStore }) => ({ filtersStore }), null)(Content)
+export default connect(
+  ({ artifactsStore, filtersStore }) => ({ artifactsStore, filtersStore }),
+  null
+)(Content)

@@ -34,42 +34,20 @@ export const initialMembersState = {
 }
 
 export const membersActions = {
-  SET_PROJECT_INFO: 'SET_PROJECT_INFO',
-  SET_PROJECT_AUTHORIZATION_ROLES: 'SET_PROJECT_AUTHORIZATION_ROLES',
-  SET_USERS: 'SET_USERS',
-  SET_USER_GROUPS: 'SET_USER_GROUPS',
+  RESET_MEMBERS_STATE: 'RESET_MEMBERS_STATE',
   SET_MEMBERS: 'SET_MEMBERS',
   SET_MEMBERS_ORIGINAL: 'SET_MEMBERS_ORIGINAL',
-  RESET_MEMBERS_STATE: 'RESET_MEMBERS_STATE'
+  SET_PROJECT_AUTHORIZATION_ROLES: 'SET_PROJECT_AUTHORIZATION_ROLES',
+  SET_PROJECT_INFO: 'SET_PROJECT_INFO',
+  SET_USERS: 'SET_USERS',
+  SET_USER_GROUPS: 'SET_USER_GROUPS'
 }
 
 export const membersReducer = (state, { type, payload }) => {
   switch (type) {
-    case membersActions.SET_PROJECT_INFO:
+    case membersActions.RESET_MEMBERS_STATE:
       return {
-        ...state,
-        projectInfo: payload
-      }
-    case membersActions.SET_PROJECT_AUTHORIZATION_ROLES:
-      return {
-        ...state,
-        projectAuthorizationRoles: payload
-      }
-    case membersActions.SET_USERS:
-      return {
-        ...state,
-        users: payload
-      }
-    case membersActions.SET_USER_GROUPS:
-      return {
-        ...state,
-        userGroups: payload
-      }
-    case membersActions.SET_MEMBERS_ORIGINAL:
-      return {
-        ...state,
-        membersOriginal: payload,
-        groupedOriginalMembers: groupBy(payload, item => item.role)
+        ...initialMembersState
       }
     case membersActions.SET_MEMBERS:
       return {
@@ -93,11 +71,32 @@ export const membersReducer = (state, { type, payload }) => {
           }, new Set())
         )
       }
-    case membersActions.RESET_MEMBERS_STATE:
+    case membersActions.SET_MEMBERS_ORIGINAL:
       return {
-        ...initialMembersState
+        ...state,
+        membersOriginal: payload,
+        groupedOriginalMembers: groupBy(payload, item => item.role)
       }
-
+    case membersActions.SET_PROJECT_AUTHORIZATION_ROLES:
+      return {
+        ...state,
+        projectAuthorizationRoles: payload
+      }
+    case membersActions.SET_PROJECT_INFO:
+      return {
+        ...state,
+        projectInfo: payload
+      }
+    case membersActions.SET_USERS:
+      return {
+        ...state,
+        users: payload
+      }
+    case membersActions.SET_USER_GROUPS:
+      return {
+        ...state,
+        userGroups: payload
+      }
     default:
       return state
   }
