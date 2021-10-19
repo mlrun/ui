@@ -111,11 +111,11 @@ const Details = ({
   )
 
   useEffect(() => {
-    if (pageData.details.type === JOBS_PAGE) {
-      setIteration('0')
-    }
-
     return () => {
+      if (pageData.details.type === JOBS_PAGE) {
+        setIteration('0')
+      }
+
       resetChanges()
     }
   }, [pageData.details.type, resetChanges, setIteration])
