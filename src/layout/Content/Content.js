@@ -60,7 +60,7 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   const contentClassName = classnames(
     'content',
@@ -89,14 +89,13 @@ const Content = ({
         JOBS_PAGE
       ].includes(pageData.page) &&
       ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
-      (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) ||
-        isDemoModeEnabled)
+      (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) || isDemoMode)
     ) {
       setShowActionsMenu(true)
     } else if (showActionsMenu) {
       setShowActionsMenu(false)
     }
-  }, [isDemoModeEnabled, match.params.pageTab, pageData.page, showActionsMenu])
+  }, [isDemoMode, match.params.pageTab, pageData.page, showActionsMenu])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(

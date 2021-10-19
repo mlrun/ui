@@ -11,7 +11,7 @@ import './functionsPanelRuntime.scss'
 const FunctionsPanelRuntimeView = ({
   defaultData,
   functionsStore,
-  isDemoModeEnabled,
+  isDemoMode,
   sections
 }) => {
   return (
@@ -25,7 +25,7 @@ const FunctionsPanelRuntimeView = ({
               defaultData={defaultData}
               key={section.id}
             />
-          ) : section.id === 'secrets' && isDemoModeEnabled ? (
+          ) : section.id === 'secrets' && isDemoMode ? (
             <FunctionsPanelSecrets defaultData={defaultData} key={section.id} />
           ) : section.id === 'advanced' ? (
             <FunctionsPanelAdvanced
@@ -42,7 +42,7 @@ const FunctionsPanelRuntimeView = ({
 FunctionsPanelRuntimeView.propTypes = {
   defaultData: PropTypes.shape({}).isRequired,
   functionsStore: PropTypes.shape({}).isRequired,
-  isDemoModeEnabled: PropTypes.bool.isRequired,
+  isDemoMode: PropTypes.bool.isRequired,
   sections: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 }
 

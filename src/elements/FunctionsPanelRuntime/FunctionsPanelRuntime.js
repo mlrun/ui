@@ -7,13 +7,13 @@ import FunctionsPanelRuntimeView from './FunctionsPanelRuntimeView'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const FunctionsPanelRuntime = ({ defaultData, functionsStore, sections }) => {
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   return (
     <FunctionsPanelRuntimeView
       defaultData={defaultData}
       functionsStore={functionsStore}
-      isDemoModeEnabled={isDemoModeEnabled}
+      isDemoMode={isDemoMode}
       sections={sections}
     />
   )

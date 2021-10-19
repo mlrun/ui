@@ -20,11 +20,11 @@ import './breadcrums.scss'
 const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   const projectScreens = useMemo(() => {
-    return generateProjectScreens(match, isDemoModeEnabled)
-  }, [isDemoModeEnabled, match])
+    return generateProjectScreens(match, isDemoMode)
+  }, [isDemoMode, match])
   const projectsList = useMemo(() => {
     return generateProjectsList(projectStore.projectsNames.data)
   }, [projectStore.projectsNames.data])
