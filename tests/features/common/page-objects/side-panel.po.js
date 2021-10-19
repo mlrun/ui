@@ -20,7 +20,7 @@ const actionMenuStructure = {
   root: '.table__cell-actions',
   menuElements: {
     open_button: 'button',
-    options: '.actions-menu__body .actions-menu__option'
+    options: '.actions-menu__body .data-ellipsis'
   }
 }
 
@@ -373,28 +373,52 @@ const advancedEnvironmentVariablesTable = {
     row: {
       root: 'div[class^=table__row]',
       fields: {
-        name: '.table__cell:nth-of-type(1) .data-ellipsis',
+        kind: '.table__cell:nth-of-type(1) .data-ellipsis',
         value: '.table__cell:nth-of-type(2) .data-ellipsis',
-        delete_btn: '.table__cell:nth-of-type(3) .btn_delete',
-        name_input: {
-          componentType: inputGroup,
-          structure: generateInputGroup(
-            '.input-row-wrapper .input-wrapper:nth-of-type(1)',
-            true,
-            false,
-            false
+        delete_btn: '.btn_delete',
+        kind_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.select',
+            '.select__value',
+            '.select__body .select__item',
+            '.data-ellipsis .data-ellipsis'
           )
         },
         value_input: {
           componentType: inputGroup,
-          structure: generateInputGroup(
-            '.input-row-wrapper .input-wrapper:nth-of-type(1)',
-            true,
-            false,
-            false
-          )
+          structure: generateInputGroup('.input-wrapper', true, false, false)
         },
         add_row_btn: 'button svg'
+      }
+    }
+  }
+}
+
+const advancedEnvironmentVariablesDemoTable = {
+  root:
+    '.new-item-side-panel__body .accordion__container:nth-of-type(4) .env-variables-table',
+  header: {
+    root: '.table__header',
+    sorters: {
+      name: '.table-cell__key',
+      type: '.table-cell__type',
+      value: '.table-cell__value'
+    }
+  },
+  body: {
+    offset: 1,
+    add_row_btn: '.table__row .add-input',
+    row: {
+      root: '.table__row',
+      fields: {
+        name: '.table-cell__key .data-ellipsis',
+        type: '.table-cell__type .data-ellipsis',
+        value: '.table-cell__value .data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
       }
     }
   }
@@ -473,7 +497,7 @@ const functionVolumePathsTable = {
     offset: 1,
     add_row_btn: '.no-hover .add-input',
     row: {
-      root: 'div[class=table__row]',
+      root: '.table__row',
       fields: {
         type: '.table__cell:nth-of-type(1) .data-ellipsis',
         volume_name: '.table__cell:nth-of-type(2) .data-ellipsis',
@@ -530,6 +554,34 @@ const functionEnvironmentVariablesTable = {
   }
 }
 
+const functionEnvironmentVariablesDemoTable = {
+  root:
+    '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table',
+  header: {
+    root: '.table-row__header',
+    sorters: {
+      name: '.table-cell__key',
+      value: '.table-cell__value'
+    }
+  },
+  body: {
+    offset: 1,
+    add_row_btn: '.add-input',
+    row: {
+      root: '.table__row',
+      fields: {
+        name: '.table-cell__key .data-ellipsis',
+        type: '.table-cell__type .data-ellipsis',
+        value: '.table-cell__value .data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
+  }
+}
+
 // MLFunction Serving Runtime Configuration Accordion
 const servingRuntimeConfigurationModelTable = {
   root:
@@ -572,7 +624,7 @@ const secretRuntimeConfigurationTable = {
   },
   body: {
     offset: 1,
-    add_row_btn: '.table-row .add-new-item-btn',
+    add_row_btn: '.add-new-item-btn',
     row: {
       root: '.table-row',
       fields: {
@@ -593,7 +645,7 @@ const secretRuntimeConfigurationTable = {
           structure: generateInputGroup('.input-wrapper', true, false, true)
         },
         add_row_btn: '.btn-add',
-        remove_row_btn: 'button:not([class])'
+        remove_row_btn: 'button:nth-of-type(2)'
       }
     }
   }
@@ -1220,7 +1272,57 @@ module.exports = {
       Advanced_Environment_Variables_Table: commonTable(
         advancedEnvironmentVariablesTable
       ),
-      Advanced_Secrets_Table: commonTable(advancedSecretsTable)
+      Advanced_Secrets_Table: commonTable(advancedSecretsTable),
+      Advanced_Environment_Variables_Demo_Table: commonTable(
+        advancedEnvironmentVariablesDemoTable
+      ),
+
+      Environment_Variables_Name_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row-wrapper .input-wrapper:nth-of-type(1)',
+          true,
+          false,
+          true
+        )
+      ),
+      Environment_Variables_Type_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row-wrapper .select',
+          false,
+          false,
+          false
+        )
+      ),
+      Environment_Variables_Value_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row-wrapper .input-wrapper:nth-of-type(3)',
+          true,
+          false,
+          true
+        )
+      ),
+      Environment_Variables_Seret_Name_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(1)',
+          true,
+          true,
+          true
+        )
+      ),
+      Environment_Variables_Seret_Key_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(2)',
+          true,
+          true,
+          true
+        )
+      ),
+      Add_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .variables-table__btn.btn-add'
+      ),
+      Discard_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body button[class=variables-table__btn]'
+      )
     },
     Shedule_For_Later_Button: By.css(
       '.new-item-side-panel__body .new-item-side-panel__buttons-container .data-ellipsis:nth-of-type(1) button'
@@ -1329,6 +1431,14 @@ module.exports = {
           true
         )
       ),
+      New_Function_Volume_Mount_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(3) .functions-panel__item > .panel-section:nth-of-type(2) .panel-section__body .select.volume-mount',
+          false,
+          false,
+          false
+        )
+      ),
       Volume_Paths_Table: commonTable(functionVolumePathsTable),
       // Volume Path inputs
       Volume_Paths_Table_Type_Dropdown: commonVolumePathsTableTypeDropdown,
@@ -1433,6 +1543,55 @@ module.exports = {
       ),
       Function_Environment_Variables_Table: commonTable(
         functionEnvironmentVariablesTable
+      ),
+      Function_Environment_Variables_Demo_Table: commonTable(
+        functionEnvironmentVariablesDemoTable
+      ),
+      Function_Environment_Variables_Name_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row-wrapper .input-wrapper:nth-of-type(1)',
+          true,
+          false,
+          true
+        )
+      ),
+      Function_Environment_Variables_Type_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row-wrapper .select',
+          false,
+          false,
+          false
+        )
+      ),
+      Function_Environment_Variables_Value_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row-wrapper .input-wrapper:nth-of-type(3)',
+          true,
+          false,
+          true
+        )
+      ),
+      Function_Environment_Variables_Seret_Name_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(1)',
+          true,
+          true,
+          true
+        )
+      ),
+      Function_Environment_Variables_Seret_Key_Input: inputGroup(
+        generateInputGroup(
+          '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .input-row__item-secret .input-wrapper:nth-of-type(2)',
+          true,
+          true,
+          true
+        )
+      ),
+      Add_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body .variables-table__btn.btn-add'
+      ),
+      Discard_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(4) .panel-section__body .env-variables-table .table__body button[class=variables-table__btn]'
       )
     },
     Serving_Runtime_Configuration_Accordion: {
@@ -1478,7 +1637,10 @@ module.exports = {
         )
       ),
       Add_Model_Table_Row_Button: By.css(
-        '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table .add-input.btn-add'
+        '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table .btn-add'
+      ),
+      Discard_Model_Table_Row_Button: By.css(
+        '.new-item-side-panel .accordion__container:nth-of-type(5) .topology .model-table button:nth-of-type(2)'
       ),
       Model_Tracking_Checkbox: checkboxComponent({
         root:
@@ -1489,7 +1651,7 @@ module.exports = {
           icon: ''
         }
       }),
-      Secret_Runtime_Configuration_Table: commonTable(
+      Secrets_Runtime_Configuration_Table: commonTable(
         secretRuntimeConfigurationTable
       ),
       Stream_Path_Input: inputGroup(

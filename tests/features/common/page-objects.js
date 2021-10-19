@@ -8,6 +8,7 @@ import interactivePopup from './page-objects/interactive-popup.po'
 import sidePanel from './page-objects/side-panel.po'
 import jobsAndWorkflows from './page-objects/jobs-and-workflows.po'
 import Functions from './page-objects/ml-functions.po'
+import projectsSettings from './page-objects/project-settings.po'
 
 module.exports = {
   commonPagesHeader: {
@@ -41,5 +42,6 @@ module.exports = {
   New_Function: sidePanel['newFunction'],
   ML_Function_Info_Pane: infoPane['featuresInfoPane'],
   Delete_Function_Popup: interactivePopup['deleteFunction'],
-  Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup']
+  Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup'],
+  Project_Settings_General_Tab: projectsSettings['generalTab']
 }

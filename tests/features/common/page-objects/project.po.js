@@ -126,6 +126,9 @@ const generalInfoQuickLinks = {
 }
 
 module.exports = {
+  Project_Settings_Button: By.css(
+    '.project__content .general-info .general-info__main-data-wrapper .general-info__settings'
+  ),
   Create_New: dropdownComponent(createNewObject),
   Refresh_Button: By.css(
     'div.main-info__toolbar div.refresh button[id=refresh]'

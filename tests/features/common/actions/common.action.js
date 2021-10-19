@@ -37,6 +37,7 @@ const action = {
     await actions
       .move({ x: parseInt(coordinates.x), y: parseInt(coordinates.y) })
       .perform()
+    await driver.sleep(250)
   },
   verifyElementDisabled: async function(driver, component) {
     const element = await driver.findElement(component)

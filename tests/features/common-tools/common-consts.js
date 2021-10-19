@@ -23,6 +23,9 @@ module.exports = {
       'Custom'
     ]
   },
+  Project_Settings: {
+    Tab_List: ['General', 'Secrets']
+  },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
     Project_Name_Hint:
@@ -56,7 +59,18 @@ module.exports = {
       'The name of the data container that contains the data',
     DataAccess_Key_Hint: 'A platform data-access key',
     Relative_Directory_Path_Hint:
-      'A relative directory path within the data container'
+      'A relative directory path within the data container',
+    SECRET_INPUT_HINT:
+      '• Valid characters: A-Z, a-z, 0-9, -, _, .\n' +
+      '• Must begin and end with: A-Z, a-z, 0-9\n' +
+      '• No consecutive characters: .., .–, –.\n' +
+      '• Max length between two periods: 63\n' +
+      '• Length - max: 253',
+    VALUE_INPUT_HINT:
+      '• Valid characters: A-Z, a-z, 0-9, -, _, .\n' +
+      '• Must not start with: ..\n' +
+      '• Must not be: ., ..\n' +
+      '• Length - max: 253'
   },
   Label_Hint: {
     New_Job_Volumes:

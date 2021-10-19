@@ -10,7 +10,7 @@ react_app_nuclio_api_url='http://nuclio-ingress.default-tenant.app.vmdev36.lab.i
 save_folder = 'tests/mockServer/data'
 
 endpoint_frontend_spec = '/api/frontend-spec'
-endpoint_projects_summary = '/api/projects?format=summary'
+endpoint_projects_summary = '/api/project-summaries'
 endpoint_projects = '/api/projects/'
 
 endpoint_artifacts = '/api/artifacts?project={project}&tag=*'
@@ -22,8 +22,10 @@ endpoint_project_entities = '/api/projects/{project}/entities'
 endpoint_project_feature_vectors = '/api/projects/{project}/feature-vectors'
 endpoint_project_artifact_tags = '/api/projects/{project}/artifact-tags'
 endpoint_runs = '/api/runs?project={project}'
+endpoint_run = '/api/run/{project}/{run_uid}'
 endpoint_funcs = '/api/funcs?project={project}'
 endpoint_log = '/api/log/{project}/{uid}'
+endpoint_pipline = '/api/pipelines/{id}'
 
 endpoint_files = '/api/files?path='
 
@@ -50,16 +52,19 @@ def get_json(host, endpoint):
         return rf.text
 
 def get_jsons(host, endpoint, *args):
-    return [get_json(host, endpoint.format(project=item)) for item in args]
+    return [get_json(host, endpoint.format(**item)) for item in args]
 
 def get_jsons_per_project(host, endpoint, *args):
-    return {item:json.loads(get_json(host, endpoint.format(project=item))) for item in args}
+    return {item['project']:json.loads(get_json(host, endpoint.format(**item))) for item in args}
 
 def convert_array_to_json(*arr):
     artifact_name = list(json.loads(arr[0]))[0]
     result = {artifact_name: []}
     for item in arr:
-        result[artifact_name] += json.loads(item)[artifact_name]
+        if isinstance(json.loads(item)[artifact_name], list):
+            result[artifact_name] += json.loads(item)[artifact_name]
+        else:
+            result[artifact_name].append(json.loads(item)[artifact_name])
     return result
 
 def save_dict_to_json(path_to_save, **kwargs):
@@ -108,7 +113,7 @@ if __name__ == '__main__':
     frontend_spec = get_json(react_app_mlrun_api_url, endpoint_frontend_spec)
 
     project_dict = json.loads(projects)
-    project_names = [item['metadata']['name'] for item in project_dict['projects']]
+    project_names = [{'project': item['metadata']['name']} for item in project_dict['projects']]
 
     artifacts_arr = get_jsons(react_app_mlrun_api_url, endpoint_artifacts, *project_names)
     feature_sets_arr = get_jsons(react_app_mlrun_api_url, endpoint_project_feature_sets, *project_names)
@@ -132,6 +137,16 @@ if __name__ == '__main__':
     artifact_tags_all = [json.loads(item) for item in artifact_tags_arr]
 
     pipelines_all = get_jsons_per_project(react_app_mlrun_api_url, endpoint_project_pipelines, *project_names)
+
+    runs_prj_uid = [{'project': job['metadata']['project'], 'run_uid': job['metadata']['uid']} for job in runs_all['runs']]
+    run_prj_uid_arr = get_jsons(react_app_mlrun_api_url, endpoint_run, *runs_prj_uid)
+    run_prj_uid_all = convert_array_to_json(*run_prj_uid_arr)
+
+    tmp = [pipelines_all[item]['runs'] for item in pipelines_all]
+    pipline_ids = [{'id': item['id']} for sublist in tmp for item in sublist]
+    pipline_ids_arr = get_jsons(react_app_mlrun_api_url, endpoint_pipline, *pipline_ids)
+    pipline_ids_all = [json.loads(item) for item in pipline_ids_arr]
+
 
     # collect logs
     logs_artifacts = [
@@ -161,8 +176,10 @@ if __name__ == '__main__':
     save_dict_to_json(save_folder + '/funcs.json', **funcs_all)
     save_dict_to_json(save_folder + '/runs.json', **runs_all)
     save_dict_to_json(save_folder + '/logs.json', **logs_all)
+    save_dict_to_json(save_folder + '/run.json', **run_prj_uid_all)
 
     save_arr_to_json(save_folder + '/artifactsTags.json', *artifact_tags_all)
+    save_arr_to_json(save_folder + '/piplineIDs.json', *pipline_ids_all)
 
     files_filtered = [list(item['spec'].get('analysis', {}).values()) for item in feature_sets_all['feature_sets']]
     files_to_download = {item for sublist in files_filtered for item in sublist}

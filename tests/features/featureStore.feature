@@ -258,7 +258,6 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Feature_Set" wizard
@@ -282,7 +281,6 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Feature_Set" wizard
@@ -325,7 +323,6 @@ Feature: Feature Store Page
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display "Input_Hint"."Feature_Set_Name_Hint"
         Then type value "#$@" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
@@ -346,7 +343,6 @@ Feature: Feature Store Page
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Entities_Input" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
@@ -363,7 +359,6 @@ Feature: Feature Store Page
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
@@ -422,7 +417,6 @@ Feature: Feature Store Page
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When add rows to "Labels_Table" table on "New_Feature_Set" wizard
             | key_input | value_input |
@@ -454,7 +448,6 @@ Feature: Feature Store Page
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "demo_feature_set" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then type value "0.0.1" to "Version_Input" field on "New_Feature_Set" wizard
