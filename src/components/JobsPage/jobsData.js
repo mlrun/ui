@@ -290,7 +290,7 @@ export const generatePageData = (
       removeLogs: !isEveryObjectValueEmpty(selectedFunction)
         ? handleRemoveFunctionLogs
         : removeJobLogs,
-      withLogsRefreshBtn: !isEveryObjectValueEmpty(selectedFunction)
+      withLogsRefreshBtn: isEveryObjectValueEmpty(selectedFunction)
     },
     hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,

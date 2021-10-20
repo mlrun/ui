@@ -17,6 +17,7 @@ const PopUpDialog = ({
   closePopUp,
   customPosition,
   headerText,
+  style,
   tooltipText
 }) => {
   const popUpOverlayRef = useRef(null)
@@ -62,7 +63,7 @@ const PopUpDialog = ({
   })
 
   return createPortal(
-    <div ref={popUpOverlayRef} className={popUpClassNames}>
+    <div ref={popUpOverlayRef} className={popUpClassNames} style={style}>
       <div data-testid="pop-up-dialog" className="pop-up-dialog">
         <div className="pop-up-dialog__header">
           {headerText && (
@@ -94,16 +95,19 @@ const PopUpDialog = ({
 
 PopUpDialog.defaultProps = {
   className: '',
+  closePopUp: () => {},
   customPosition: {},
   headerText: '',
+  style: {},
   tooltipText: ''
 }
 
 PopUpDialog.propTypes = {
   className: PropTypes.string,
-  closePopUp: PropTypes.func.isRequired,
+  closePopUp: PropTypes.func,
   customPosition: POP_UP_CUSTOM_POSITION,
   headerText: PropTypes.string,
+  style: PropTypes.object,
   tooltipText: PropTypes.string
 }
 
