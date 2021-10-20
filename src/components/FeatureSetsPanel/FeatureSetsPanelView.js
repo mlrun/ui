@@ -79,8 +79,8 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelSchema
-              isEntitiesValid={validation.isEntitiesValid}
-              setEntitiesValid={setValidation}
+              setValidation={setValidation}
+              validation={validation}
             />
           </Accordion>
           <Accordion
@@ -90,8 +90,8 @@ const FeatureSetsPanelView = ({
             openByDefault
           >
             <FeatureSetsPanelTargetStore
-              isTargetsPathValid={validation.isTargetsPathValid}
-              setTargetsPathValid={setValidation}
+              setValidation={setValidation}
+              validation={validation}
             />
           </Accordion>
           {/*commented till be implemented on back end*/}

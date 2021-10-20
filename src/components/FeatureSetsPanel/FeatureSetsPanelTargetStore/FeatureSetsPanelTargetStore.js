@@ -19,9 +19,9 @@ import {
 
 const FeatureSetsPanelTargetStore = ({
   featureStore,
-  isTargetsPathValid,
-  setTargetsPathValid,
-  setNewFeatureSetTarget
+  setNewFeatureSetTarget,
+  setValidation,
+  validation
 }) => {
   const [data, setData] = useState(dataInitialState)
   const [selectedTargetKind, setSelectedTargetKind] = useState(
@@ -155,8 +155,8 @@ const FeatureSetsPanelTargetStore = ({
   }
 
   const handleExternalOfflineKindPathOnChange = path => {
-    if (!isTargetsPathValid && path.length > 0) {
-      setTargetsPathValid(state => ({
+    if (!validation.isTargetsPathValid && path.length > 0) {
+      setValidation(state => ({
         ...state,
         isTargetsPathValid: true
       }))
@@ -233,8 +233,11 @@ const FeatureSetsPanelTargetStore = ({
 
       setSelectedTargetKind(state => state.filter(kind => kind !== kindId))
 
-      if (kindId === checkboxModels.externalOffline.id && !isTargetsPathValid) {
-        setTargetsPathValid(state => ({
+      if (
+        kindId === checkboxModels.externalOffline.id &&
+        !validation.isTargetsPathValid
+      ) {
+        setValidation(state => ({
           ...state,
           isTargetsPathValid: true
         }))
@@ -398,6 +401,10 @@ const FeatureSetsPanelTargetStore = ({
         return targetKind
       })
     )
+    setValidation(state => ({
+      ...state,
+      isTimestampKeyValid: true
+    }))
   }
 
   const triggerPartitionCheckbox = (id, kind) => {
@@ -466,6 +473,10 @@ const FeatureSetsPanelTargetStore = ({
         return targetKind
       })
     )
+    setValidation(state => ({
+      ...state,
+      isTimestampKeyValid: true
+    }))
   }
 
   return (
@@ -487,22 +498,22 @@ const FeatureSetsPanelTargetStore = ({
       handleTimePartitioningGranularityChange={
         handleTimePartitioningGranularityChange
       }
-      isTargetsPathValid={isTargetsPathValid}
       partitionRadioButtonsState={partitionRadioButtonsState}
       selectedPartitionKind={selectedPartitionKind}
       selectedTargetKind={selectedTargetKind}
       setData={setData}
-      setTargetsPathValid={setTargetsPathValid}
+      setValidation={setValidation}
       showAdvanced={showAdvanced}
       triggerPartitionAdvancedCheckboxes={triggerPartitionAdvancedCheckboxes}
       triggerPartitionCheckbox={triggerPartitionCheckbox}
+      validation={validation}
     />
   )
 }
 
 FeatureSetsPanelTargetStore.propTypes = {
-  isTargetsPathValid: PropTypes.bool.isRequired,
-  setTargetsPathValid: PropTypes.func.isRequired
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(featureStore => ({ ...featureStore }), {

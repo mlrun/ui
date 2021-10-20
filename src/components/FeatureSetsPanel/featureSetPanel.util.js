@@ -1,8 +1,15 @@
+import { isNil } from 'lodash'
+
 export const nameValidationPattern = /^(?=[\S\s]{1,56}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 
 export const checkValidation = (newFeatureSet, setValidation, validation) => {
   const externalOfflineTarget = newFeatureSet.spec.targets.find(
     targetKind => targetKind.name === 'externalOffline'
+  )
+  const isPartitionByTimeExist = Boolean(
+    newFeatureSet.spec.targets.find(
+      target => !isNil(target.time_partitioning_granularity)
+    )
   )
 
   if (newFeatureSet.metadata.name.length === 0 || !validation.isNameValid) {
@@ -81,6 +88,15 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
     setValidation(prevState => ({
       ...prevState,
       isTargetsPathValid: false
+    }))
+
+    return false
+  }
+
+  if (isPartitionByTimeExist && newFeatureSet.spec.timestamp_key.length === 0) {
+    setValidation(prevState => ({
+      ...prevState,
+      isTimestampKeyValid: false
     }))
 
     return false
