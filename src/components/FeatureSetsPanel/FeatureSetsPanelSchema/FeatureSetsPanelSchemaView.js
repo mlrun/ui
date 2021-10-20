@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { isNil } from 'lodash'
 
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import Input from '../../../common/Input/Input'
@@ -67,10 +66,8 @@ const FeatureSetsPanelSchemaView = ({
               }
             }}
             placeholder="Timestamp key"
-            required={Boolean(
-              featureStore.newFeatureSet.spec.targets.find(
-                target => !isNil(target.time_partitioning_granularity)
-              )
+            required={featureStore.newFeatureSet.spec.targets.some(target =>
+              Boolean(target.time_partitioning_granularity)
             )}
             requiredText="Timestamp Key is required for offline target when partitioning by time is enabled - see the Target Store section."
             setInvalid={value =>
