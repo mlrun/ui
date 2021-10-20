@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { isNil } from 'lodash'
 
 import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
@@ -31,6 +32,10 @@ const ProjectSettingsGeneral = ({
       value: null,
       isEdit: false
     }
+  })
+  const [validation, setValidation] = useState({
+    isSourceValid: true,
+    isPathValid: true
   })
 
   const inputRef = React.createRef()
@@ -183,47 +188,90 @@ const ProjectSettingsGeneral = ({
   )
 
   const handleSetProjectData = useCallback(() => {
-    const projectData = {
-      source: editProject.source.value ?? projectStore.project.data.spec.source,
-      artifact_path:
-        editProject.artifact_path.value ??
-        projectStore.project.data.spec.artifact_path,
-      params: projectStore.project.data.spec.params
-    }
-    const data = {
-      ...projectStore.project.data,
-      spec: {
-        ...projectStore.project.data.spec,
-        source: projectData.source,
-        artifact_path: projectData.artifact_path,
-        params: projectData.params
+    if (
+      (validation.isSourceValid &&
+        !isNil(editProject.source.value) &&
+        projectStore.project.data.spec.source !== editProject.source.value) ||
+      (validation.isPathValid &&
+        !isNil(editProject.artifact_path.value) &&
+        projectStore.project.data.spec.artifact_path !==
+          editProject.artifact_path.value)
+    ) {
+      const projectData = {
+        source:
+          editProject.source.value ?? projectStore.project.data.spec.source,
+        artifact_path:
+          editProject.artifact_path.value ??
+          projectStore.project.data.spec.artifact_path,
+        params: projectStore.project.data.spec.params
       }
+      const data = {
+        ...projectStore.project.data,
+        spec: {
+          ...projectStore.project.data.spec,
+          source: projectData.source,
+          artifact_path: projectData.artifact_path,
+          params: projectData.params
+        }
+      }
+
+      setProjectSettings({
+        source: projectData.source,
+        artifact_path: projectData.artifact_path
+      })
+      projectsApi
+        .editProject(match.params.projectName, { ...data })
+        .catch(() => {
+          setEditProject({
+            source: {
+              value: projectStore.project.data.metadata.name,
+              isEdit: false
+            },
+            artifact_path: {
+              value: projectStore.project.data.spec.artifact_path,
+              isEdit: false
+            }
+          })
+        })
     }
 
-    setProjectSettings({
-      source: projectData.source,
-      artifact_path: projectData.artifact_path
-    })
-    closeEditMode()
-    projectsApi.editProject(match.params.projectName, { ...data }).catch(() => {
-      setEditProject({
+    if (!validation.isSourceValid) {
+      setEditProject(prevState => ({
+        ...prevState,
         source: {
-          value: projectStore.project.data.metadata.name,
-          isEdit: false
-        },
-        artifact_path: {
-          value: projectStore.project.data.spec.artifact_path,
-          isEdit: false
+          ...prevState.source,
+          value: projectStore.project.data.spec.source
         }
-      })
-    })
+      }))
+      setValidation(state => ({
+        ...state,
+        isSourceValid: true
+      }))
+    }
+
+    if (!validation.isPathValid) {
+      setEditProject(prevState => ({
+        ...prevState,
+        artifact_path: {
+          ...prevState.artifact_path,
+          value: projectStore.project.data.spec.artifact_path
+        }
+      }))
+      setValidation(state => ({
+        ...state,
+        isPathValid: true
+      }))
+    }
+
+    closeEditMode()
   }, [
     closeEditMode,
     editProject.artifact_path.value,
     editProject.source.value,
     match.params.projectName,
     projectStore.project.data,
-    setProjectSettings
+    setProjectSettings,
+    validation
   ])
 
   const handleOnKeyDown = useCallback(
@@ -268,7 +316,9 @@ const ProjectSettingsGeneral = ({
       handleOnKeyDown={handleOnKeyDown}
       loading={projectStore.project?.loading}
       ref={inputRef}
+      setValidation={setValidation}
       source={projectStore.project.data?.spec.source ?? ''}
+      validation={validation}
     />
   )
 }

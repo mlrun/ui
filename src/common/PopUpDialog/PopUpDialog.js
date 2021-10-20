@@ -16,7 +16,8 @@ const PopUpDialog = ({
   className,
   closePopUp,
   customPosition,
-  headerText
+  headerText,
+  tooltipText
 }) => {
   const popUpOverlayRef = useRef(null)
   const popUpClassNames = classnames(
@@ -69,7 +70,13 @@ const PopUpDialog = ({
               data-testid="pop-up-dialog-header"
               className="pop-up-dialog__header-text"
             >
-              {headerText}
+              <Tooltip
+                template={
+                  <TextTooltipTemplate text={tooltipText || headerText} />
+                }
+              >
+                <span>{headerText}</span>
+              </Tooltip>
             </div>
           )}
           <div className="pop-up-dialog__header-close">
@@ -88,14 +95,16 @@ const PopUpDialog = ({
 PopUpDialog.defaultProps = {
   className: '',
   customPosition: {},
-  headerText: ''
+  headerText: '',
+  tooltipText: ''
 }
 
 PopUpDialog.propTypes = {
   className: PropTypes.string,
   closePopUp: PropTypes.func.isRequired,
   customPosition: POP_UP_CUSTOM_POSITION,
-  headerText: PropTypes.string
+  headerText: PropTypes.string,
+  tooltipText: PropTypes.string
 }
 
 export default PopUpDialog
