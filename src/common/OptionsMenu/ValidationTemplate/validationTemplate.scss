@@ -1,0 +1,27 @@
+.validation-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  .validation__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+    .valid-icon {
+      width: 14px;
+      height: 15px;
+      path {
+        fill: var(--ml-alert-green);
+      }
+    }
+    .invalid-icon {
+      width: 12px;
+      height: 12px;
+      path {
+        fill: var(--ml-alert-red);
+      }
+    }
+  }
+}

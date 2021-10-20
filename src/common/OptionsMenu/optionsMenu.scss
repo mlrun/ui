@@ -1,0 +1,36 @@
+@import '../../scss/shadows';
+
+.options-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  z-index: 6;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  color: rgba(72, 63, 86, 0.87);
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  box-shadow: $previewBoxShadow;
+  list-style-type: none;
+  margin: 0;
+  padding: 10px;
+  &-enter {
+    opacity: 0;
+    // transform: scale(0.9);
+  }
+  &-enter-active {
+    opacity: 1;
+    // transform: translateX(0);
+    transition: opacity 300ms ease-in-out;
+  }
+  &-exit {
+    opacity: 1;
+  }
+  &-exit-active {
+    opacity: 0;
+    // transform: scale(0.9);
+    transition: opacity 300ms ease-in-out;
+  }
+}

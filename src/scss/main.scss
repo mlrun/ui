@@ -4,6 +4,26 @@
 @import './borders';
 @import './fonts';
 
+:root {
+  // Main monochrome
+  --ml-white-color: #{$white};
+  --ml-black-color: #{$black};
+  // Main Colors - Zeplin
+  --ml-primary-color: #{$primary};
+  --ml-scondery-color: #{$brightTurquoise};
+
+  // Alerts
+  --ml-alert-red: #{$amaranth};
+  --ml-alert-yellow: #{$supernova};
+  --ml-alert-green: var(--ml-scondery-color);
+  --ml-alert-purple: #{$cornflowerBlueTwo};
+
+  //Text
+  --ml-text-primary: var(--ml-primary-color: );
+  --ml-text-secondary: #{$topaz};
+  --ml-text-disabled: #{$spunPearl};
+}
+
 * {
   box-sizing: border-box;
 }
@@ -43,7 +63,7 @@ body {
   font-size: 15px;
   font-family: Roboto, sans-serif;
   font-style: normal;
-  line-height: 18px;
+  line-height: 1;
   background: $gallery;
 
   @include resetSpaces;
@@ -84,35 +104,35 @@ button {
   }
 }
 
-[class^=state-completed],
-[class^=state-ready],
-[class^=state-succeeded],
-[class^=state-active],
-[class^=state-created],
-[class^=state-info] {
+[class^='state-completed'],
+[class^='state-ready'],
+[class^='state-succeeded'],
+[class^='state-active'],
+[class^='state-created'],
+[class^='state-info'] {
   @include statusState($brightTurquoise);
 }
 
-[class^=state-all] {
+[class^='state-all'] {
   @include statusState(transparent);
 }
 
-[class^=state-warn] {
+[class^='state-warn'] {
   @include statusState($grandis);
 }
 
-[class^=state-deploying],
-[class^=state-build],
-[class^=state-pending],
-[class^=state-running] {
+[class^='state-deploying'],
+[class^='state-build'],
+[class^='state-pending'],
+[class^='state-running'] {
   @include statusState($pictonBlue);
 }
 
-[class^=state-failed],
-[class^=state-fail],
-[class^=state-error],
-[class^=state-broken],
-[class^=state-aborted] {
+[class^='state-failed'],
+[class^='state-fail'],
+[class^='state-error'],
+[class^='state-broken'],
+[class^='state-aborted'] {
   @include statusState($burntSienna);
 }
 
@@ -258,4 +278,36 @@ textarea {
       color: $sorbus;
     }
   }
+}
+
+.pointer {
+  cursor: pointer;
+}
+.text-muted {
+  color: var(--ml-text-disabled);
+}
+.text-alert {
+  color: var(--ml-alert-red);
+}
+.text-success {
+  color: var(--ml-scondery-color);
+}
+
+.p-0 {
+  @include padding(0);
+}
+.p-1 {
+  @include padding(0.25rem);
+}
+.p-2 {
+  @include padding(0.5rem);
+}
+.p-4 {
+  @include padding(1rem);
+}
+.p-5 {
+  @include padding(1.5rem);
+}
+.p-5 {
+  @include padding(3rem);
 }

@@ -12,6 +12,8 @@ import functionsActions from '../../actions/functions'
 import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 
+import { validationService } from '../../services/validationService'
+
 import './newFunctionPopUp.scss'
 
 const NewFunctionPopUp = ({
@@ -105,22 +107,16 @@ const NewFunctionPopUp = ({
               floatingLabel
               invalid={!validation.isNameValid}
               label="Name"
-              maxLength={63}
               onChange={name => setData(state => ({ ...state, name }))}
               onBlur={handleNameOnBlur}
-              pattern="^(?=[\S\s]{1,63}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
               required
+              validationRules={[
+                validationService.generateRule.validCharacters('a-z 0-9 -'),
+                validationService.generateRule.beginEndWith('a-z 0-9'),
+                validationService.generateRule.length({ max: 63 })
+              ]}
               setInvalid={value =>
                 setValidation(state => ({ ...state, isNameValid: value }))
-              }
-              tip={
-                <>
-                  <span>&bull; Valid characters: a-z, 0-9, -</span>
-                  <br />
-                  <span>&bull; Must begin and end with: a-z, 0-9</span>
-                  <br />
-                  <span>&bull; Length - max: 63</span>
-                </>
               }
               value={data.name}
               wrapperClassName="name"
