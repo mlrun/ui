@@ -91,15 +91,13 @@ export const onlineKindDataInitialState = {
 export const offlineKindDataInitialState = {
   name: 'parquet',
   kind: 'parquet',
-  path: 'v3io:///projects/my-proj/FeatureStore/my-fs/parquet/sets/my-fs-my-tag',
-  time_partitioning_granularity: 'hour'
+  path: 'v3io:///projects/my-proj/FeatureStore/my-fs/parquet/sets/my-fs-my-tag'
 }
 
 export const externalOfflineKindDataInitialState = {
   name: 'externalOffline',
   kind: EXTERNAL_OFFLINE_KIND_DEFAULT_FILE_TYPE,
-  path: '',
-  time_partitioning_granularity: 'hour'
+  path: ''
 }
 
 export const dataInitialState = {
