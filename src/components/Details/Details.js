@@ -12,7 +12,7 @@ import {
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODELS_PAGE,
+  MODEL_ENDPOINTS_TAB,
   MODELS_TAB
 } from '../../constants'
 import {
@@ -130,7 +130,8 @@ const Details = ({
       } else if (
         pageData.details.type === ARTIFACTS_PAGE ||
         pageData.details.type === FILES_PAGE ||
-        pageData.details.type === MODELS_PAGE ||
+        pageData.details.type === MODELS_TAB ||
+        pageData.details.type === MODEL_ENDPOINTS_TAB ||
         pageData.details.type === DATASETS_TAB
       ) {
         setInfoContent(

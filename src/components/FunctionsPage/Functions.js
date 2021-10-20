@@ -65,7 +65,7 @@ const Functions = ({
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   let fetchFunctionLogsTimeout = useRef(null)
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   const handleFetchFunctionLogs = useCallback(
     (projectName, name, tag, offset) => {
@@ -118,7 +118,7 @@ const Functions = ({
         hidden:
           !FUNCTIONS_EDITABLE_TYPES.includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value) ||
-          !isDemoModeEnabled
+          !isDemoMode
       },
       {
         label: 'Delete',

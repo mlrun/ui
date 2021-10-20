@@ -15,7 +15,7 @@ const JobsPanelAdvancedView = ({
   handleDeleteItems,
   handleEditItems,
   handleResetForm,
-  isDemoModeEnabled,
+  isDemoMode,
   match,
   panelDispatch,
   panelState,
@@ -25,7 +25,7 @@ const JobsPanelAdvancedView = ({
   return (
     <div className="job-panel__item advanced new-item-side-panel__item">
       <JobsPanelSection title="Advanced" />
-      {isDemoModeEnabled ? (
+      {isDemoMode ? (
         <JobsPanelEnvironmentVariables
           panelDispatch={panelDispatch}
           panelEnvData={panelState.tableData.environmentVariables}
@@ -89,7 +89,7 @@ JobsPanelAdvancedView.propTypes = {
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
-  isDemoModeEnabled: PropTypes.bool.isRequired,
+  isDemoMode: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,

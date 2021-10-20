@@ -82,7 +82,7 @@ const Jobs = ({
   const [editableItem, setEditableItem] = useState(null)
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
-  const isDemoModeEnabled = useDemoMode()
+  const isDemoMode = useDemoMode()
 
   const dispatch = useDispatch()
   let fetchFunctionLogsTimeout = useRef(null)
@@ -301,7 +301,7 @@ const Jobs = ({
   const pageData = useCallback(
     generatePageData(
       match.params.pageTab,
-      isDemoModeEnabled,
+      isDemoMode,
       onRemoveScheduledJob,
       handleRunJob,
       handleEditScheduleJob,
@@ -322,6 +322,7 @@ const Jobs = ({
       match.params.pageTab,
       match.params.workflowId,
       appStore.frontendSpec.jobs_dashboard_url,
+      isDemoMode,
       selectedJob,
       selectedFunction
     ]
@@ -510,7 +511,7 @@ const Jobs = ({
 
   useEffect(() => {
     if (match.params.pageTab === MONITOR_JOBS_TAB && !match.params.jobId) {
-      if (!isDemoModeEnabled) {
+      if (!isDemoMode) {
         getWorkflows()
       }
 
@@ -518,7 +519,7 @@ const Jobs = ({
     }
   }, [
     getWorkflows,
-    isDemoModeEnabled,
+    isDemoMode,
     match.params.jobId,
     match.params.pageTab,
     setFilters

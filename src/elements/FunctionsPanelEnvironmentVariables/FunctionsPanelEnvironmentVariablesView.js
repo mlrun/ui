@@ -12,9 +12,9 @@ const FunctionsPanelEnvironmentVariablesView = ({
   handleAddNewEnv,
   handleDeleteEnv,
   handleEditEnv,
-  isDemoModeEnabled
+  isDemoMode
 }) => {
-  return isDemoModeEnabled ? (
+  return isDemoMode ? (
     <EnvironmentVariables
       envVariables={envVariables}
       handleAddNewEnv={handleAddNewEnv}
@@ -66,7 +66,7 @@ FunctionsPanelEnvironmentVariablesView.propTypes = {
   handleAddNewEnv: PropTypes.func.isRequired,
   handleDeleteEnv: PropTypes.func.isRequired,
   handleEditEnv: PropTypes.func.isRequired,
-  isDemoModeEnabled: PropTypes.bool.isRequired
+  isDemoMode: PropTypes.bool.isRequired
 }
 
 export default FunctionsPanelEnvironmentVariablesView

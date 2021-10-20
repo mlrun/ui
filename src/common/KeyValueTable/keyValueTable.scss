@@ -1,4 +1,5 @@
 @import '../../scss/borders';
+$actionsBlockWidth: 72px;
 
 .key-value-table {
   &__btn {
@@ -28,20 +29,27 @@
   .table-cell {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 10px 16px;
     color: $primary;
   }
 
+  .table-cell__inputs-wrapper {
+    display: flex;
+    width: calc(100% - #{$actionsBlockWidth});
+  }
+
   .table-cell__key {
-    width: 47%;
+    width: 50%;
   }
 
   .table-cell__value {
-    width: 47%;
+    width: 50%;
   }
 
   .table-cell__actions {
-    width: 2%;
+    justify-content: flex-end;
+    min-width: $actionsBlockWidth;
+    padding: 0;
   }
 
   .add-new-item-btn {

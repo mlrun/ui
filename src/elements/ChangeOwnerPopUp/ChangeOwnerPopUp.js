@@ -72,7 +72,12 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
 
   const generateSuggestionList = useCallback(
     debounce(async resolve => {
-      const response = await projectsIguazioApi.getScrubbedUsers()
+      const response = await projectsIguazioApi.getScrubbedUsers({
+        params: {
+          'filter[assigned_policies]':
+            '[$contains_any]Developer,Project Admin,Project Read Only'
+        }
+      })
       const {
         data: { data: users }
       } = response
