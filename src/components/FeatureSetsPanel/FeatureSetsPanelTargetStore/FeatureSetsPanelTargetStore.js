@@ -36,44 +36,6 @@ const FeatureSetsPanelTargetStore = ({
   )
 
   const handleAdvancedLinkClick = kind => {
-    if (!showAdvanced[kind] && selectedPartitionKind[kind].includes('byTime')) {
-      setNewFeatureSetTarget(
-        featureStore.newFeatureSet.spec.targets.map(targetKind => {
-          if (targetKind.name === kind) {
-            targetKind.time_partitioning_granularity = 'hour'
-          }
-
-          return targetKind
-        })
-      )
-    } else {
-      setNewFeatureSetTarget(
-        featureStore.newFeatureSet.spec.targets.map(targetKind => {
-          if (targetKind.name === kind) {
-            delete targetKind.time_partitioning_granularity
-            delete targetKind.key_bucketing_number
-            delete targetKind.partition_cols
-          }
-
-          return targetKind
-        })
-      )
-      setData(state => ({
-        ...state,
-        [kind]: {
-          ...data[kind],
-          key_bucketing_number: '',
-          partition_cols: '',
-          time_partitioning_granularity: 'hour'
-        }
-      }))
-      setPartitionRadioButtonsState(state => ({
-        ...state,
-        [kind]: 'districtKeys'
-      }))
-      setSelectedPartitionKind(state => ({ ...state, [kind]: ['byTime'] }))
-    }
-
     setShowAdvanced(prev => ({
       ...prev,
       [kind]: !prev[kind]
@@ -445,6 +407,7 @@ const FeatureSetsPanelTargetStore = ({
             data[kind].partitioned !== id
           ) {
             targetKind.partitioned = true
+            targetKind.time_partitioning_granularity = 'hour'
           } else {
             setData(state => ({
               ...state,
