@@ -35,6 +35,8 @@ const Select = ({
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [isOpen, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+  const { width: dropdownWidth } =
+    selectRef?.current?.getBoundingClientRect() || {}
   const selectClassName = classNames(
     'select',
     className,
@@ -56,15 +58,26 @@ const Select = ({
   const selectedOption = options.find(option => option.id === selectedId)
 
   useEffect(() => {
+    if (isOpen) {
+      window.addEventListener('scroll', handleScroll, true)
+    }
+
     window.addEventListener('click', clickHandler)
 
     return () => {
       window.removeEventListener('click', clickHandler)
+      window.removeEventListener('scroll', handleScroll, true)
     }
   }, [isOpen])
 
   const clickHandler = event => {
     if (selectRef.current !== event.target.closest('.select')) {
+      setOpen(false)
+    }
+  }
+
+  const handleScroll = event => {
+    if (!event.target.closest('.select__body')) {
       setOpen(false)
     }
   }
@@ -173,42 +186,51 @@ const Select = ({
         </PopUpDialog>
       )}
       {isOpen && (
-        <div
-          data-testid="select-body"
-          className="select__body"
-          onClick={handleCloseSelectBody}
+        <PopUpDialog
+          className="select__options-list"
+          customPosition={{
+            element: selectRef,
+            position: 'bottom-right'
+          }}
+          style={{ width: `${dropdownWidth}px` }}
         >
-          {search && (
-            <div className="select__search">
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchValue}
-                onChange={event => setSearchValue(event.target.value)}
-              />
-            </div>
-          )}
-          {options
-            .filter(option => {
-              return (
-                !search ||
-                option.label.toLowerCase().includes(searchValue.toLowerCase())
-              )
-            })
-            .map(option => {
-              return (
-                <SelectOption
-                  item={option}
-                  key={option.id}
-                  onClick={selectedOption => {
-                    handleSelectOptionClick(selectedOption, option)
-                  }}
-                  selectType={selectType}
-                  selectedId={selectedId}
+          <div
+            data-testid="select-body"
+            className="select__body"
+            onClick={handleCloseSelectBody}
+          >
+            {search && (
+              <div className="select__search">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchValue}
+                  onChange={event => setSearchValue(event.target.value)}
                 />
-              )
-            })}
-        </div>
+              </div>
+            )}
+            {options
+              .filter(option => {
+                return (
+                  !search ||
+                  option.label.toLowerCase().includes(searchValue.toLowerCase())
+                )
+              })
+              .map(option => {
+                return (
+                  <SelectOption
+                    item={option}
+                    key={option.id}
+                    onClick={selectedOption => {
+                      handleSelectOptionClick(selectedOption, option)
+                    }}
+                    selectType={selectType}
+                    selectedId={selectedId}
+                  />
+                )
+              })}
+          </div>
+        </PopUpDialog>
       )}
     </div>
   )
