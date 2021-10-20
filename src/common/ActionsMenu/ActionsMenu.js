@@ -14,15 +14,14 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [actionMenu, setActionMenu] = useState(menu)
   const [renderMenu, setRenderMenu] = useState(false)
-  const [openToBottom, setOpenToBottom] = useState(false)
   const actionMenuRef = useRef()
   const dropDownMenuRef = useRef()
   const dropDownMenuClassNames = classnames(
     'actions-menu__body',
-    openToBottom && 'open-to-bottom',
     isShowMenu && 'show'
   )
   let idTimeout = null
+  const offset = 15
 
   useEffect(() => {
     if (!isEmpty(dataItem)) {
@@ -36,11 +35,26 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
 
   const showActionsList = () => {
     setIsShowMenu(show => !show)
-    setOpenToBottom(
-      dropDownMenuRef.current?.offsetHeight +
-        actionMenuRef.current?.getBoundingClientRect().bottom <
-        window.innerHeight
-    )
+    const actionMenuRect = actionMenuRef.current.getBoundingClientRect()
+    const dropDownMenuRect = dropDownMenuRef.current.getBoundingClientRect()
+
+    if (
+      actionMenuRect.top +
+        actionMenuRect.height +
+        offset +
+        dropDownMenuRect.height >=
+      window.innerHeight
+    ) {
+      dropDownMenuRef.current.style.top = `${actionMenuRect.top -
+        dropDownMenuRect.height}px`
+      dropDownMenuRef.current.style.left = `${actionMenuRect.left -
+        dropDownMenuRect.width +
+        offset}px`
+    } else {
+      dropDownMenuRef.current.style.top = `${actionMenuRect.bottom}px`
+      dropDownMenuRef.current.style.left = `${actionMenuRect.left -
+        (dropDownMenuRect.width - offset)}px`
+    }
   }
 
   const handleMouseLeave = () => {
@@ -57,6 +71,18 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
 
     if (idTimeout) clearTimeout(idTimeout)
   }
+
+  const handleScroll = () => {
+    setIsShowMenu(false)
+  }
+
+  useEffect(() => {
+    if (isShowMenu) {
+      window.addEventListener('scroll', handleScroll, true)
+    }
+
+    return () => window.removeEventListener('scroll', handleScroll, true)
+  }, [isShowMenu])
 
   return (
     <div
