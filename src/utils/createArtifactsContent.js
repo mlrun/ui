@@ -201,6 +201,7 @@ const createModelsRowData = (artifact, project, isSelectedItem) => {
 
 const createFilesRowData = (artifact, project, isSelectedItem) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
+  console.log(artifact)
 
   return {
     key: {
@@ -250,7 +251,7 @@ const createFilesRowData = (artifact, project, isSelectedItem) => {
       hidden: isSelectedItem
     },
     producer: {
-      value: artifact.producer,
+      value: artifact.producer || {},
       class: 'artifacts_small',
       type: 'producer',
       hidden: isSelectedItem
