@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 import FunctionsPanelEnvironmentVariablesView from './FunctionsPanelEnvironmentVariablesView'
@@ -12,10 +12,12 @@ const FunctionsPanelEnvironmentVariables = ({
   functionsStore,
   setNewFunctionEnv
 }) => {
-  const [envVariables, setEnvVariables] = useState(
-    parseEnvVariables(functionsStore.newFunction.spec.env)
-  )
+  const [envVariables, setEnvVariables] = useState([])
   const isDemoMode = useDemoMode()
+
+  useEffect(() => {
+    setEnvVariables(parseEnvVariables(functionsStore.newFunction.spec.env))
+  }, [functionsStore.newFunction.spec.env])
 
   const handleAddNewEnv = env => {
     if (isDemoMode) {
