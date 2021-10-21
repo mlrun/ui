@@ -116,9 +116,8 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          !FUNCTIONS_EDITABLE_TYPES.includes(item?.type) ||
-          !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value) ||
-          !isDemoMode
+          (!isDemoMode && !FUNCTIONS_EDITABLE_TYPES.includes(item?.type)) ||
+          !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
         label: 'Delete',
