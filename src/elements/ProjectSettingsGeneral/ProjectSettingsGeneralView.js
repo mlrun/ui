@@ -22,7 +22,9 @@ const ProjectSettingsGeneralView = React.forwardRef(
       handleOnChangeSettings,
       handleOnKeyDown,
       loading,
-      source
+      setValidation,
+      source,
+      validation
     },
     ref
   ) => {
@@ -44,7 +46,9 @@ const ProjectSettingsGeneralView = React.forwardRef(
                 handleOnChangeSettings={handleOnChangeSettings}
                 handleOnKeyDown={handleOnKeyDown}
                 ref={ref}
+                setValidation={setValidation}
                 settingsSource={source}
+                validation={validation}
               />
               <div className="settings__card-divider" />
               <div
@@ -53,10 +57,17 @@ const ProjectSettingsGeneralView = React.forwardRef(
               >
                 <Input
                   floatingLabel
+                  invalid={!validation.isPathValid}
                   label="Artifact path"
                   onChange={handleOnChangeSettings}
                   onKeyDown={handleOnKeyDown}
                   ref={ref}
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isPathValid: value
+                    }))
+                  }
                   value={editProject.artifact_path.value ?? artifactPath}
                 />
               </div>
@@ -105,7 +116,9 @@ ProjectSettingsGeneralView.propTypes = {
   handleOnChangeSettings: PropTypes.func.isRequired,
   handleOnKeyDown: PropTypes.func.isRequired,
   loading: PropTypes.bool,
-  source: PropTypes.string.isRequired
+  setValidation: PropTypes.func.isRequired,
+  source: PropTypes.string.isRequired,
+  validation: PropTypes.object.isRequired
 }
 
 export default ProjectSettingsGeneralView
