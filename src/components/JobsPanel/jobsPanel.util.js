@@ -4,6 +4,8 @@ import { parseDefaultContent } from '../../utils/parseDefaultContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getVolumeType } from '../../utils/panelResources.util'
 import { PANEL_DEFAULT_ACCESS_KEY, PANEL_EDIT_MODE } from '../../constants'
+import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
+import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 
 export const REQUESTS = 'REQUESTS'
 export const LIMITS = 'LIMITS'
@@ -276,12 +278,11 @@ export const generateTableData = (
       parameters,
       volume_mounts: volumeMounts,
       volumes,
-      environmentVariables: environmentVariables.map(env => ({
-        data: {
-          name: env.name,
-          value: env.value ?? ''
-        }
-      })),
+      environmentVariables: parseEnvVariables(environmentVariables).map(
+        env => ({
+          data: generateEnvVariable(env)
+        })
+      ),
       secretSources: [],
       node_selector
     }
@@ -424,11 +425,8 @@ export const generateTableDataFromDefaultData = (
       volume_mounts: volumeMounts ?? [],
       volumes: defaultData.function?.spec.volumes ?? [],
       environmentVariables:
-        defaultData.function?.spec.env.map(env => ({
-          data: {
-            name: env.name,
-            value: env.value ?? ''
-          }
+        parseEnvVariables(defaultData.function?.spec.env).map(env => ({
+          data: generateEnvVariable(env)
         })) ?? [],
       secretSources: secrets,
       node_selector: Object.entries(
