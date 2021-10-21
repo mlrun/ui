@@ -2,24 +2,27 @@
 @import './colors';
 @import './mixins';
 @import './borders';
+@import './spacing';
 @import './fonts';
 
 :root {
+  font-size: 15px;
   // Main monochrome
   --ml-white-color: #{$white};
   --ml-black-color: #{$black};
   // Main Colors - Zeplin
   --ml-primary-color: #{$primary};
   --ml-scondery-color: #{$brightTurquoise};
-
   // Alerts
   --ml-alert-red: #{$amaranth};
   --ml-alert-yellow: #{$supernova};
   --ml-alert-green: var(--ml-scondery-color);
   --ml-alert-purple: #{$cornflowerBlueTwo};
-
+  //Borders
+  --ml-border-active: #{$malibu};
+  --ml-border-invalid: var(--ml-alert-red);
   //Text
-  --ml-text-primary: var(--ml-primary-color: );
+  --ml-text-primary: var(--ml-primary-color);
   --ml-text-secondary: #{$topaz};
   --ml-text-disabled: #{$spunPearl};
 }
@@ -60,7 +63,6 @@ body {
   height: 100vh;
   overflow-x: hidden;
   font-weight: normal;
-  font-size: 15px;
   font-family: Roboto, sans-serif;
   font-style: normal;
   line-height: 1;
@@ -283,6 +285,8 @@ textarea {
 .pointer {
   cursor: pointer;
 }
+
+//text
 .text-muted {
   color: var(--ml-text-disabled);
 }
@@ -293,21 +297,6 @@ textarea {
   color: var(--ml-scondery-color);
 }
 
-.p-0 {
-  @include padding(0);
-}
-.p-1 {
-  @include padding(0.25rem);
-}
-.p-2 {
-  @include padding(0.5rem);
-}
-.p-4 {
-  @include padding(1rem);
-}
-.p-5 {
-  @include padding(1.5rem);
-}
-.p-5 {
-  @include padding(3rem);
+.h-inherit {
+  height: inherit !important;
 }

@@ -62,9 +62,7 @@ export const JobsPanelAdvancedTable = ({
               />
             ) : (
               <Input
-                className="input-row__item"
                 density="medium"
-                floatingLabel
                 invalid={
                   isNameNotUnique(newName, content) ||
                   !validation.envVariablesName
@@ -74,7 +72,7 @@ export const JobsPanelAdvancedTable = ({
                     ? 'Name already exists'
                     : 'This field is invalid'
                 }
-                label="Name"
+                placeholder="Name"
                 onChange={setNewItemName}
                 required
                 setInvalid={value =>
@@ -87,11 +85,9 @@ export const JobsPanelAdvancedTable = ({
               />
             )}
             <Input
-              className="input-row__item input-row__item_edit"
               density="medium"
-              floatingLabel
               invalid={!validation.secretsSourceValue}
-              label="Value"
+              placeholder="Value"
               onChange={setNewItemValue}
               required
               setInvalid={value =>
@@ -101,6 +97,7 @@ export const JobsPanelAdvancedTable = ({
                 }))
               }
               type="text"
+              withoutBorder
             />
           </div>
           <button

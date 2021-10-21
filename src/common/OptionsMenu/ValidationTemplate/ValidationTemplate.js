@@ -5,16 +5,18 @@ import classnames from 'classnames'
 import { ReactComponent as Checkmark } from '../../../images/success_done.svg'
 import { ReactComponent as Close } from '../../../images/close.svg'
 
-import './validationTemplate.scss'
+import classes from './ValidationTemplate.module.scss'
 
 const ValidationTemplate = ({ valid, validationMessage }) => {
   return (
-    <li className={classnames('validation-option', valid && 'text-muted')}>
-      <i className="validation__icon">
+    <li
+      className={classnames(classes.validation_option, valid && 'text-muted')}
+    >
+      <i className={classes.validation__icon}>
         {valid ? (
-          <Checkmark className="valid-icon" />
+          <Checkmark className={classes.valid__icon} />
         ) : (
-          <Close className="invalid-icon" />
+          <Close className={classes.invalid__icon} />
         )}
       </i>
       <span>{validationMessage}</span>

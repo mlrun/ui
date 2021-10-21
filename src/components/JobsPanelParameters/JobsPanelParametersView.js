@@ -70,15 +70,14 @@ const JobsPanelParametersView = ({
             <div className="table__row-add-item">
               <div className="input-row-wrapper">
                 <Input
-                  className="input-row__item"
+                  wrapperClassName="m-0 me-3 h-inherit"
                   density="chunky"
-                  floatingLabel
                   invalid={isNameNotUnique(
                     parametersState.newParameter.name,
                     parameters
                   )}
                   invalidText="Name already exists"
-                  label="Name"
+                  placeholder="Name"
                   onChange={value =>
                     parametersDispatch({
                       type: parametersActions.SET_NEW_PARAMETER_NAME,
@@ -86,6 +85,7 @@ const JobsPanelParametersView = ({
                     })
                   }
                   type="text"
+                  withoutBorder
                 />
                 <Select
                   className="parameters-value-type"
@@ -112,10 +112,9 @@ const JobsPanelParametersView = ({
                   options={parameterTypeOptions}
                 />
                 <Input
-                  className="input-row__item parameter-value"
+                  wrapperClassName="m-0 me-3 h-inherit"
                   density="chunky"
-                  floatingLabel
-                  label="Value/s"
+                  placeholder="Value/s"
                   onChange={value =>
                     parametersDispatch({
                       type: parametersActions.SET_NEW_PARAMETER_VALUE,
@@ -123,6 +122,7 @@ const JobsPanelParametersView = ({
                     })
                   }
                   type="text"
+                  withoutBorder
                 />
               </div>
               <button
@@ -159,9 +159,8 @@ const JobsPanelParametersView = ({
           <div className="parameters-additional-settings">
             <div className={urlTypeClassName}>
               <Input
-                className="default-input"
+                wrapperClassName="m-0 me-3"
                 density="chunky"
-                floatingLabel
                 label="Read hyper params from a file"
                 onChange={setUrl}
                 placeholder="v3io:///projects/my-proj/param.txt"
@@ -181,9 +180,8 @@ const JobsPanelParametersView = ({
           <div className="parameters-additional-settings">
             <div className="parameters-additional-settings__input-wrapper">
               <Input
-                className="default-input"
+                wrapperClassName="m-0 me-3"
                 density="chunky"
-                floatingLabel
                 label="Result"
                 onChange={setNewJobSelectorResult}
                 type="text"

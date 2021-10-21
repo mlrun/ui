@@ -62,9 +62,8 @@ export const JobsPanelDataInputsTable = ({
         <div className="table__row-add-item">
           <div className="input-row-wrapper">
             <Input
-              className="input-row__item"
+              wrapperClassName="m-0 me-3 h-inherit"
               density="medium"
-              floatingLabel
               invalid={
                 !validation.isNameValid ||
                 isNameNotUnique(
@@ -73,7 +72,7 @@ export const JobsPanelDataInputsTable = ({
                 )
               }
               invalidText="Name already exists"
-              label="Input name"
+              placeholder="Input name"
               onChange={name =>
                 inputsDispatch({
                   type: inputsActions.SET_NEW_INPUT_NAME,
@@ -88,6 +87,7 @@ export const JobsPanelDataInputsTable = ({
                 }))
               }
               type="text"
+              withoutBorder
             />
             <Combobox
               comboboxClassName="input-row__item"

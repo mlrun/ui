@@ -74,7 +74,6 @@ const JobsPanelTitleView = ({
           ) : (
             <>
               <Input
-                className="panel-title__input"
                 disabled={!editTitle}
                 invalid={!isNameValid}
                 invalidText="This field is invalid"
@@ -97,9 +96,8 @@ const JobsPanelTitleView = ({
                 }
                 type="text"
                 value={currentFunctionInfo.name}
-                wrapperClassName={
-                  !editTitle ? 'panel-title__input-wrapper' : ''
-                }
+                wrapperClassName={`fs-2 ${!editTitle ? 'm-0' : 'mb-3'}`}
+                withoutBorder={!editTitle}
               />
               {editTitle && (
                 <div className="panel-title__labels-container">

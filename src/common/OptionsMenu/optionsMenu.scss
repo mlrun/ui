@@ -1,21 +1,22 @@
 @import '../../scss/shadows';
 
 .options-menu {
-  position: absolute;
-  top: calc(100% + 5px);
-  left: 0;
-  z-index: 6;
-  width: 100%;
-  max-height: 250px;
   overflow-y: auto;
   color: rgba(72, 63, 86, 0.87);
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 2px;
   box-shadow: $previewBoxShadow;
+  font-size: 1rem;
   list-style-type: none;
   margin: 0;
   padding: 10px;
+  max-height: 250px;
+  width: 100%;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  z-index: 6;
   &-enter {
     opacity: 0;
     // transform: scale(0.9);

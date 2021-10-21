@@ -19,6 +19,7 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import Tip from '../Tip/Tip'
 
 import './input.scss'
+import classNames from 'classnames'
 
 const Input = React.forwardRef(
   (
@@ -57,7 +58,7 @@ const Input = React.forwardRef(
     const input = React.createRef()
     const inputLabel = useRef(null)
     const [inputIsFocused, setInputIsFocused] = useState(false)
-    const [labelWidth, setLabelWidth] = useState(0)
+    // const [labelWidth, setLabelWidth] = useState(0)
     const [isInvalid, setIsInvalid] = useState(false)
     const [typedValue, setTypedValue] = useState('')
     const [validationPattern] = useState(RegExp(pattern))
@@ -65,31 +66,46 @@ const Input = React.forwardRef(
     const [showValidationRules, setShowValidationRules] = useState(false)
     useDetectOutsideClick(ref, () => setShowValidationRules(false))
 
-    const inputClassNames = classnames(
-      'input',
-      className,
-      `input-${density}`,
-      (inputIsFocused || placeholder || typedValue.length > 0) &&
-        floatingLabel &&
-        'active-input',
-      isInvalid ? 'input_invalid' : 'input_valid',
-      !isEmpty(validationRules) && 'has-icon',
-      tip && 'input-short',
-      withoutBorder && 'without-border'
+    const fieldControlClassNames = classnames(
+      'field-control',
+      wrapperClassName,
+      `field-control-${density}`
     )
-    const labelClassNames = classnames(
-      'input__label',
-      disabled && 'input__label_disabled',
-      floatingLabel && 'input__label-floating',
+
+    const eventClassNames = classNames(
       (inputIsFocused || placeholder || typedValue.length > 0) &&
-        floatingLabel &&
         'active-label',
-      infoLabel && 'input__label_info'
+      isInvalid && 'field_invalid',
+      disabled && 'field_disabled',
+      inputIsFocused && 'focus',
+      (withoutBorder || type === 'number') && 'without-border'
     )
-    const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
+
+    // const inputClassNames = classnames(
+    //   'input',
+    //   className,
+    //   `input-${density}`,
+    //   (inputIsFocused || placeholder || typedValue.length > 0) &&
+    //     floatingLabel &&
+    //     'active-input',
+    //   isInvalid ? 'input_invalid' : 'input_valid',
+    //   !isEmpty(validationRules) && 'has-icon',
+    //   tip && 'input-short',
+    //   withoutBorder && 'without-border'
+    // )
+    // const labelClassNames = classnames(
+    //   'input__label',
+    //   disabled && 'input__label_disabled',
+    //   floatingLabel && 'input__label-floating',
+    //   (inputIsFocused || placeholder || typedValue.length > 0) &&
+    //     floatingLabel &&
+    //     'active-label',
+    //   infoLabel && 'input__label_info'
+    // )
+    // const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
     const inputLabelMandatoryClassNames = classnames(
-      'input__label-mandatory',
-      disabled && 'input__label-mandatory_disabled'
+      'field-control-mandatory',
+      disabled && 'field-control-mandatory_disabled'
     )
     useEffect(() => {
       setTypedValue(String(value ?? '')) // convert from number to string
@@ -102,11 +118,11 @@ const Input = React.forwardRef(
       }
     }, [input, focused])
 
-    useEffect(() => {
-      if (inputLabel) {
-        setLabelWidth(inputLabel.current?.clientWidth)
-      }
-    }, [label])
+    // useEffect(() => {
+    //   if (inputLabel) {
+    //     setLabelWidth(inputLabel.current?.clientWidth)
+    //   }
+    // }, [label])
 
     const validateField = value => {
       let isFieldValidByPattern = true
@@ -184,98 +200,214 @@ const Input = React.forwardRef(
     }
 
     return (
-      <div ref={ref} className={wrapperClassNames}>
-        <input
-          data-testid="input"
-          className={inputClassNames}
-          onBlur={handleInputBlur}
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-          ref={input}
-          required={isInvalid}
-          {...{
-            disabled,
-            maxLength,
-            onKeyDown,
-            pattern,
-            placeholder,
-            type,
-            value: typedValue
-          }}
-          style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px` }}
-        />
-        {label && (
-          <label
-            data-testid="label"
-            className={labelClassNames}
-            ref={inputLabel}
-            style={
-              infoLabel
-                ? {
-                    left: (value ? value.length + 2 : 2) * 10
-                  }
-                : {}
-            }
-          >
-            {label}
-            {required && (
-              <span className={inputLabelMandatoryClassNames}> *</span>
-            )}
-          </label>
-        )}
+      <>
+        <div className={fieldControlClassNames} ref={ref}>
+          {label && (
+            <label
+              data-testid="label"
+              className={`field-control__label ${eventClassNames}`}
+              ref={inputLabel}
+            >
+              {label}
+              {required && (
+                <span className={inputLabelMandatoryClassNames}> *</span>
+              )}
+            </label>
+          )}
 
-        {!isEmpty(validationRules) && typedValue && isInvalid && (
-          <i
-            className="validation__icon p-1 pointer"
-            onClick={handleOptionMenu}
-          >
-            <WarningIcon />
-          </i>
-        )}
-        {isInvalid && !typedValue && (
-          <Tooltip
-            className="validation__icon"
-            template={
-              <TextTooltipTemplate
-                text={required && !typedValue ? requiredText : invalidText}
-                warning
+          <div className="flex-with-icons">
+            {inputIcon && (
+              <span data-testid="input-icon" className={iconClass}>
+                {inputIcon}
+              </span>
+            )}
+            <div
+              className={`field-control__input-wrapper ${eventClassNames} ${className}`}
+            >
+              <input
+                // className={className}
+                data-testid="input"
+                onBlur={handleInputBlur}
+                onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                ref={input}
+                required={isInvalid}
+                {...{
+                  disabled,
+                  maxLength,
+                  onKeyDown,
+                  pattern,
+                  placeholder,
+                  type,
+                  value: typedValue
+                }}
               />
-            }
-          >
-            <InvalidIcon />
-          </Tooltip>
-        )}
-        {tip && <Tip text={tip} className="input__tip" />}
-        {inputIcon && (
-          <span data-testid="input-icon" className={iconClass}>
-            {inputIcon}
-          </span>
-        )}
-        {suggestionList?.length > 0 && inputIsFocused && (
-          <ul className="suggestion-list">
-            {suggestionList.map((item, index) => {
-              return (
-                <li
-                  className="suggestion-item"
-                  key={`${item}${index}`}
-                  onClick={() => {
-                    handleSuggestionClick(item)
-                  }}
-                  tabIndex={index}
-                  dangerouslySetInnerHTML={{
-                    __html: item.replace(new RegExp(typedValue, 'gi'), match =>
-                      match ? `<b>${match}</b>` : match
-                    )
-                  }}
+              {!withoutBorder && (
+                <fieldset>
+                  <legend>
+                    {label && (
+                      <span className="field-control__legend-span">
+                        {label}
+                        {required && (
+                          <span className={inputLabelMandatoryClassNames}>
+                            {' '}
+                            *
+                          </span>
+                        )}
+                      </span>
+                    )}
+                  </legend>
+                </fieldset>
+              )}
+              {!isEmpty(validationRules) && typedValue && isInvalid && (
+                <i
+                  className="validation__icon p-1 pointer"
+                  onClick={handleOptionMenu}
+                >
+                  <WarningIcon />
+                </i>
+              )}
+              {isInvalid && !typedValue && (
+                <Tooltip
+                  className="validation__icon p-1"
+                  template={
+                    <TextTooltipTemplate
+                      text={
+                        required && !typedValue ? requiredText : invalidText
+                      }
+                      warning
+                    />
+                  }
+                >
+                  <InvalidIcon />
+                </Tooltip>
+              )}
+            </div>
+            {tip && <Tip text={tip} className="input__tip" />}
+          </div>
+          {suggestionList?.length > 0 && inputIsFocused && (
+            <ul className="suggestion-list">
+              {suggestionList.map((item, index) => {
+                return (
+                  <li
+                    className="suggestion-item"
+                    key={`${item}${index}`}
+                    onClick={() => {
+                      handleSuggestionClick(item)
+                    }}
+                    tabIndex={index}
+                    dangerouslySetInnerHTML={{
+                      __html: item.replace(
+                        new RegExp(typedValue, 'gi'),
+                        match => (match ? `<b>${match}</b>` : match)
+                      )
+                    }}
+                  />
+                )
+              })}
+            </ul>
+          )}
+          {!isEmpty(validationRules) && (
+            <OptionsMenu show={showValidationRules && typedValue !== ''}>
+              {renderValidationRules}
+            </OptionsMenu>
+          )}
+        </div>
+        {/* //////////////////// */}
+        {/* <div ref={ref} className={wrapperClassNames}>
+          <input
+            data-testid="input"
+            className={inputClassNames}
+            onBlur={handleInputBlur}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            ref={input}
+            required={isInvalid}
+            {...{
+              disabled,
+              maxLength,
+              onKeyDown,
+              pattern,
+              placeholder,
+              type,
+              value: typedValue
+            }}
+            style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px` }}
+          />
+          {label && (
+            <label
+              data-testid="label"
+              className={labelClassNames}
+              ref={inputLabel}
+              style={
+                infoLabel
+                  ? {
+                      left: (value ? value.length + 2 : 2) * 10
+                    }
+                  : {}
+              }
+            >
+              {label}
+              {required && (
+                <span className={inputLabelMandatoryClassNames}> *</span>
+              )}
+            </label>
+          )}
+
+          {!isEmpty(validationRules) && typedValue && isInvalid && (
+            <i
+              className="validation__icon p-1 pointer"
+              onClick={handleOptionMenu}
+            >
+              <WarningIcon />
+            </i>
+          )}
+          {isInvalid && !typedValue && (
+            <Tooltip
+              className="validation__icon"
+              template={
+                <TextTooltipTemplate
+                  text={required && !typedValue ? requiredText : invalidText}
+                  warning
                 />
-              )
-            })}
-          </ul>
-        )}
-        <OptionsMenu show={showValidationRules && typedValue !== ''}>
-          {renderValidationRules}
-        </OptionsMenu>
-      </div>
+              }
+            >
+              <InvalidIcon />
+            </Tooltip>
+          )}
+          {tip && <Tip text={tip} className="input__tip" />}
+          {inputIcon && (
+            <span data-testid="input-icon" className={iconClass}>
+              {inputIcon}
+            </span>
+          )}
+          {suggestionList?.length > 0 && inputIsFocused && (
+            <ul className="suggestion-list">
+              {suggestionList.map((item, index) => {
+                return (
+                  <li
+                    className="suggestion-item"
+                    key={`${item}${index}`}
+                    onClick={() => {
+                      handleSuggestionClick(item)
+                    }}
+                    tabIndex={index}
+                    dangerouslySetInnerHTML={{
+                      __html: item.replace(
+                        new RegExp(typedValue, 'gi'),
+                        match => (match ? `<b>${match}</b>` : match)
+                      )
+                    }}
+                  />
+                )
+              })}
+            </ul>
+          )}
+          <OptionsMenu show={showValidationRules && typedValue !== ''}>
+            {renderValidationRules}
+          </OptionsMenu>
+        </div> */}
+      </>
     )
   }
 )

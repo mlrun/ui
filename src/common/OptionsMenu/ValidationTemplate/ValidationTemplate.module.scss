@@ -1,4 +1,4 @@
-.validation-option {
+.validation_option {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
@@ -9,14 +9,14 @@
     width: 20px;
     height: 20px;
     margin-right: 0.5rem;
-    .valid-icon {
+    .valid__icon {
       width: 14px;
       height: 15px;
       path {
         fill: var(--ml-alert-green);
       }
     }
-    .invalid-icon {
+    .invalid__icon {
       width: 12px;
       height: 12px;
       path {

@@ -50,10 +50,7 @@ const EditableDataInputsRow = ({
     'input-row__item',
     requiredField.path && 'required'
   )
-  const inputNameClassNames = classNames(
-    'input',
-    requiredField.name && 'input_required'
-  )
+  const inputNameClassNames = classNames(requiredField.name && 'input_required')
 
   useEffect(() => {
     if (selectDefaultValue.label?.length === 0) {
@@ -135,6 +132,7 @@ const EditableDataInputsRow = ({
         <div className="table__cell table__cell_edit">
           <Input
             className={inputNameClassNames}
+            wrapperClassName="me-3"
             density="dense"
             invalid={
               inputName !== selectedDataInput.data.name &&

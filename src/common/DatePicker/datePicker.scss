@@ -30,8 +30,11 @@
   }
 
   .input__label {
-    top: 13px;
+    color: var(--ml-text-secondary);
     font-weight: normal;
+    position: absolute;
+    top: 13px;
+    left: 14px;
 
     .input__label-value {
       font-size: 14px;

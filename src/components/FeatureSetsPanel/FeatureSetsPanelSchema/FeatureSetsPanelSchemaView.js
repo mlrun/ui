@@ -35,7 +35,6 @@ const FeatureSetsPanelSchemaView = ({
         </div>
         <div className="schema__inputs">
           <Input
-            floatingLabel
             invalid={!isEntitiesValid}
             label="Entities"
             onBlur={handleEntitiesOnBlur}
@@ -51,11 +50,13 @@ const FeatureSetsPanelSchemaView = ({
             }
             type="text"
             value={data.entities}
+            wrapperClassName="mb-3"
           />
           <Input
             onChange={timestamp_key =>
               setData(state => ({ ...state, timestamp_key }))
             }
+            label="Timestamp key"
             onBlur={event => {
               if (
                 featureStore.newFeatureSet.spec.timestamp_key !==

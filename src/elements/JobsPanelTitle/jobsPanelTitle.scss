@@ -7,7 +7,7 @@
 
   &-accordion {
     border-bottom: $primaryBorder;
-
+    height: auto;
     .accordion {
       &__body {
         overflow: visible;
@@ -19,7 +19,7 @@
     position: absolute;
     top: 0;
     right: 0;
-
+    transform: translateY(45%);
     &.open {
       display: none;
     }

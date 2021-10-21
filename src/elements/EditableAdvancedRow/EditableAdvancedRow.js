@@ -82,6 +82,7 @@ const EditableAdvancedRow = ({
         ) : (
           <Select
             density="dense"
+            className="me-3"
             label={
               selectedItem.newKind
                 ? selectedItem.newKind

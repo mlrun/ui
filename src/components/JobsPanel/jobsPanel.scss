@@ -12,6 +12,13 @@
         border: $primaryBorder;
         border-radius: 4px;
       }
+      .field-control {
+        &.default-input {
+          border: 0;
+          margin-right: 0.7rem;
+          width: 100%;
+        }
+      }
     }
 
     .new-item-side-panel__item {

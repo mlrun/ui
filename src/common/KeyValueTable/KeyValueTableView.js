@@ -205,8 +205,8 @@ const KeyValueTableView = ({
               />
             ) : (
               <Input
-                floatingLabel
-                label={keyLabel}
+                placeholder={keyLabel}
+                wrapperClassName="m-0 me-3"
                 invalid={
                   isKeyNotUnique(keyValue, content) || !validation.isKeyValid
                 }
@@ -224,13 +224,13 @@ const KeyValueTableView = ({
                   }))
                 }
                 type="text"
-                wrapperClassName="table-cell__key"
+                withoutBorder
               />
             )}
             <Input
-              floatingLabel
+              wrapperClassName="m-0 me-3"
               invalid={!validation.isValueValid}
-              label={valueLabel}
+              placeholder={valueLabel}
               onChange={setValue}
               required={isValueRequired}
               setInvalid={value =>
@@ -240,7 +240,7 @@ const KeyValueTableView = ({
                 }))
               }
               type="text"
-              wrapperClassName="table-cell__value"
+              withoutBorder
             />
           </div>
           <div className="table-cell table-cell__actions">

@@ -50,19 +50,17 @@ const JobsPanelDataInputsView = ({
       <JobsPanelSection title="General">
         <Input
           label="Default input path"
-          className="default-input"
           onChange={inputValue => {
             panelDispatch({
               type: panelActions.SET_INPUT_PATH,
               payload: inputValue
             })
           }}
-          floatingLabel
           type="text"
+          wrapperClassName="m-0 me-3"
         />
         <Input
           label="Default artifact path"
-          floatingLabel
           invalid={!isArtifactPathValid}
           onChange={inputValue => {
             panelDispatch({
@@ -80,6 +78,7 @@ const JobsPanelDataInputsView = ({
           }
           value={panelState.outputPath}
           type="text"
+          wrapperClassName="m-0"
         />
       </JobsPanelSection>
     </div>

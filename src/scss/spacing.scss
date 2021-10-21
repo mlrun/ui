@@ -1,0 +1,77 @@
+//Padding
+.p-0 {
+  @include padding(0);
+}
+.p-1 {
+  @include padding(0.25rem);
+}
+.p-2 {
+  @include padding(0.5rem);
+}
+.p-4 {
+  @include padding(1rem);
+}
+.p-5 {
+  @include padding(1.5rem);
+}
+.p-5 {
+  @include padding(3rem);
+}
+
+//Margin
+.m-0 {
+  @include margin(0);
+}
+.m-1 {
+  @include margin(0.25rem);
+}
+.m-2 {
+  @include margin(0.5rem);
+}
+.m-4 {
+  @include margin(1rem);
+}
+.m-5 {
+  @include margin(1.5rem);
+}
+.m-5 {
+  @include margin(3rem);
+}
+
+.me-1 {
+  margin-right: 0.25rem !important;
+}
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+.me-3 {
+  margin-right: 1rem !important;
+}
+.me-4 {
+  margin-right: 1.5rem !important;
+}
+.me-5 {
+  margin-right: 3rem !important;
+}
+.me-auto {
+  margin-right: auto !important;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem !important;
+}
+.mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+.mb-5 {
+  margin-bottom: 3rem !important;
+}
+.mb-auto {
+  margin-bottom: auto !important;
+}

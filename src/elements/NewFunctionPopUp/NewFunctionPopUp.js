@@ -104,7 +104,6 @@ const NewFunctionPopUp = ({
         >
           <div className="new-function__pop-up-inputs">
             <Input
-              floatingLabel
               invalid={!validation.isNameValid}
               label="Name"
               onChange={name => setData(state => ({ ...state, name }))}
@@ -119,16 +118,15 @@ const NewFunctionPopUp = ({
                 setValidation(state => ({ ...state, isNameValid: value }))
               }
               value={data.name}
-              wrapperClassName="name"
+              wrapperClassName="name mb-3 me-3"
             />
             <Input
-              floatingLabel
               label="Tag"
               onChange={tag => setData(state => ({ ...state, tag }))}
               onBlur={handleTagOnBlur}
               placeholder="latest"
               value={data.tag}
-              wrapperClassName="tag"
+              wrapperClassName="tag mb-0"
             />
           </div>
           <Select

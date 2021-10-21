@@ -59,6 +59,7 @@ const EditableParametersRow = ({
         <>
           <div className="table__cell table__cell_edit">
             <Input
+              wrapperClassName="me-3"
               density="dense"
               invalid={
                 selectedParameter.newName !== selectedParameter.data.name &&
@@ -77,6 +78,7 @@ const EditableParametersRow = ({
           </div>
           <div className="table__cell table__cell_edit">
             <Select
+              className="me-3"
               density="dense"
               label={selectedParameter.data.valueType}
               onClick={valueType =>
@@ -95,6 +97,7 @@ const EditableParametersRow = ({
       )}
       <div className="table__cell table__cell_edit">
         <Select
+          className="me-3"
           density="dense"
           label={selectedParameter.data.parameterType}
           onClick={parameterType =>
@@ -108,6 +111,7 @@ const EditableParametersRow = ({
       </div>
       <div className="table__cell table__cell_edit">
         <Input
+          wrapperClassName="me-3"
           density="dense"
           onChange={value => {
             setSelectedParameter({

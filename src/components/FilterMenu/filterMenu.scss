@@ -8,14 +8,18 @@
   flex-wrap: wrap;
   align-items: center;
 
+  .field-control,
   .input-wrapper {
-    margin: 7px 15px 7px 0;
-
+    flex: 0 1 200px;
+    margin: 0.5rem 1rem 7px 0;
     .input {
       width: 200px;
-      padding: 10px 10px 10px 64px;
+      padding: 10px 10px 10px 90px;
 
       &.date-picker__input {
+        border: $primaryBorder;
+        border-radius: 4px;
+        color: var(--ml-text-primary);
         &.long-input {
           width: 330px;
         }
@@ -24,11 +28,11 @@
   }
 
   .select {
-    margin: 7px 15px 7px 0;
+    margin: 0.5rem 1rem 7px 0;
   }
 
   .filters-checkbox {
-    margin-top: 7px;
+    margin-top: 0.5rem;
     margin-bottom: 7px;
   }
 

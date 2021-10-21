@@ -36,13 +36,13 @@ const JobsPanelParametersTableView = ({
     <div className={tableClassNames}>
       {headers.length > 0 && (
         <div className="table__header table__row no-hover">
-          <div className="table__cell table__cell-checkbox" />
+          {/* <div className="table__cell table__cell-checkbox" /> */}
           {headers.map((header, index) => (
             <div className="table__cell" key={index}>
               {header.label}
             </div>
           ))}
-          <div className="table__cell-actions" />
+          {/* <div className="table__cell-actions" /> */}
         </div>
       )}
       {Object.entries(tableContent)?.map(([key, value], index) =>

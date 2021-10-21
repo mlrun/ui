@@ -143,8 +143,7 @@ const VolumesTableView = ({
                 selectedId={newVolume.type}
               />
               <Input
-                className="input-row__item"
-                floatingLabel
+                wrapperClassName="m-0 me-3 h-inherit"
                 invalid={
                   isNameNotUnique(newVolume.name, volumeMounts) ||
                   !validation.isNameValid
@@ -154,7 +153,7 @@ const VolumesTableView = ({
                     ? 'Name already exists'
                     : 'This field is invalid'
                 }
-                label="Volume Name"
+                placeholder="Volume Name"
                 onChange={name => setNewVolume(state => ({ ...state, name }))}
                 required
                 requiredText="This field is required"
@@ -162,10 +161,10 @@ const VolumesTableView = ({
                   setValidation(state => ({ ...state, isNameValid: value }))
                 }
                 type="text"
+                withoutBorder
               />
               <Input
-                className="input-row__item input-row__item_edit"
-                floatingLabel
+                wrapperClassName="m-0 h-inherit"
                 invalid={
                   isPathNotUnique(newVolume.path, volumeMounts) ||
                   !validation.isPathValid
@@ -175,7 +174,7 @@ const VolumesTableView = ({
                     ? 'Multiple volumes cannot share the same path'
                     : 'This field is invalid'
                 }
-                label="Path"
+                placeholder="Path"
                 onChange={path => setNewVolume(state => ({ ...state, path }))}
                 required
                 requiredText="This field is required"
@@ -184,15 +183,15 @@ const VolumesTableView = ({
                 }
                 tip="A mount path for referencing the data from the function"
                 type="text"
+                withoutBorder
               />
             </div>
             <div className={volumeTypeInputRowWrapperClassNames}>
               <Input
-                className="input-row__item"
+                wrapperClassName="m-0"
                 disabled={newVolume.type.length === 0}
-                floatingLabel
                 invalid={!validation.isTypeNameValid}
-                label={volumeTypeInput.label}
+                placeholder={volumeTypeInput.label}
                 onChange={typeName =>
                   setNewVolume(state => ({ ...state, typeName }))
                 }
@@ -203,13 +202,13 @@ const VolumesTableView = ({
                 }
                 tip={volumeTypeInput.tip}
                 type="text"
+                withoutBorder
               />
               {newVolume.type === V3IO && (
                 <Input
-                  className="input-row__item"
-                  floatingLabel
+                  wrapperClassName="m-0"
                   invalid={!validation.isAccessKeyValid}
-                  label="Access Key"
+                  placeholder="Access Key"
                   onChange={accessKey =>
                     setNewVolume(state => ({ ...state, accessKey }))
                   }
@@ -223,20 +222,21 @@ const VolumesTableView = ({
                   }
                   tip="A platform data-access key"
                   type="text"
+                  withoutBorder
                 />
               )}
             </div>
             {newVolume.type === V3IO && (
               <div className="input-row-wrapper">
                 <Input
-                  className="input-row__item"
-                  floatingLabel
-                  label="Resource path"
+                  wrapperClassName="m-0"
+                  placeholder="Resource path"
                   onChange={subPath =>
                     setNewVolume(state => ({ ...state, subPath }))
                   }
                   tip="A relative directory path within the data container"
                   type="text"
+                  withoutBorder
                 />
               </div>
             )}

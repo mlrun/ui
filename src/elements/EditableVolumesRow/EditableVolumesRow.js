@@ -56,7 +56,6 @@ const EditableVolumesRow = ({
         ) : (
           <div className="table__cell table__cell-input">
             <Input
-              floatingLabel
               invalid={
                 (selectedVolume.newName !== selectedVolume.data.name &&
                   isNameNotUnique(selectedVolume.newName, content)) ||
@@ -67,7 +66,7 @@ const EditableVolumesRow = ({
                   ? 'Name already exists'
                   : 'This field is invalid'
               }
-              label="Volume Name"
+              placeholder="Volume Name"
               onChange={name =>
                 setSelectedVolume({
                   ...selectedVolume,
@@ -86,8 +85,7 @@ const EditableVolumesRow = ({
         )}
         <div className="table__cell table__cell-input">
           <Input
-            floatingLabel
-            label="Path"
+            placeholder="Path"
             invalid={
               (selectedVolume.newPath !== selectedVolume.data.mountPath &&
                 isPathNotUnique(selectedVolume.newPath, content)) ||
@@ -118,10 +116,9 @@ const EditableVolumesRow = ({
       <div className="table__row edit-row flex-row no-border_top">
         <div className="table__cell table__cell-input">
           <Input
-            floatingLabel
             invalid={!validation.isTypeNameValid}
             invalidText="This field is invalid"
-            label={volumeTypeInput.label}
+            placeholder={volumeTypeInput.label}
             onChange={typeName =>
               setSelectedVolume({
                 ...selectedVolume,
@@ -164,10 +161,9 @@ const EditableVolumesRow = ({
         <div className="table__row edit-row no-border_top">
           <div className="table__cell table__cell-input">
             <Input
-              floatingLabel
               invalid={!validation.isAccessKeyValid}
               invalidText="This field is invalid"
-              label="Access Key"
+              placeholder="Access Key"
               onChange={accessKey =>
                 setSelectedVolume({
                   ...selectedVolume,
@@ -185,8 +181,7 @@ const EditableVolumesRow = ({
           </div>
           <div className="table__cell table__cell-input">
             <Input
-              floatingLabel
-              label="Resource Path"
+              placeholder="Resource Path"
               onChange={subPath =>
                 setSelectedVolume({
                   ...selectedVolume,

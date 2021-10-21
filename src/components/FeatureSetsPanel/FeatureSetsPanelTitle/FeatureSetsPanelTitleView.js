@@ -40,8 +40,6 @@ const FeatureSetsPanelTitleView = ({
       <div className="panel-title__container">
         <div className="feature-sets-panel__title-required-info">
           <Input
-            className="panel-title__input"
-            floatingLabel
             invalid={!isNameValid}
             invalidText="This field is invalid"
             label="Feature Set Name"
@@ -57,11 +55,9 @@ const FeatureSetsPanelTitleView = ({
             tip={titleValidationTip}
             type="text"
             value={data.name}
-            wrapperClassName="name"
+            wrapperClassName="name me-2 mb-3 fs-5"
           />
           <Input
-            className="panel-title__input"
-            floatingLabel
             label="Version"
             onChange={version =>
               setData(state => ({
@@ -79,11 +75,11 @@ const FeatureSetsPanelTitleView = ({
             placeholder="latest"
             type="text"
             value={data.version}
-            wrapperClassName="version"
+            wrapperClassName="version mb-3 fs-5"
           />
         </div>
         <TextArea
-          className="panel-title__input"
+          className="panel-title__input mb-3"
           floatingLabel
           label="Description"
           onChange={description =>

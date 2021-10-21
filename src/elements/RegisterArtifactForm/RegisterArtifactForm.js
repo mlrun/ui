@@ -38,7 +38,7 @@ const RegisterArtifactForm = ({
       <Input
         className="pop-up-dialog__form-input"
         density="chunky"
-        floatingLabel
+        wrapperClassName="mb-3"
         invalid={!validation.isNameValid}
         invalidText="This field is invalid"
         label="Name"
@@ -55,7 +55,7 @@ const RegisterArtifactForm = ({
       <Input
         className="pop-up-dialog__form-input"
         density="chunky"
-        floatingLabel
+        wrapperClassName="mb-3"
         invalid={!validation.isTargetPathValid}
         invalidText="This field is invalid"
         label="Target Path"
@@ -73,7 +73,7 @@ const RegisterArtifactForm = ({
       <Input
         className="pop-up-dialog__form-input"
         density="chunky"
-        floatingLabel
+        wrapperClassName="mb-3"
         label="Description"
         onChange={value =>
           onChange(prevData => ({ ...prevData, description: value }))
