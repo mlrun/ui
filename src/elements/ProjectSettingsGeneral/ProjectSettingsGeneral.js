@@ -154,33 +154,29 @@ const ProjectSettingsGeneral = ({
     [projectStore.project.data, setNewProjectParams]
   )
 
-  const handleEditProject = useCallback(inputName => {
+  const handleEditSource = useCallback(() => {
     setEditProject(prevState => ({
       ...prevState,
       source: {
         ...prevState.source,
-        isEdit: inputName === SOURCE_URL
-      },
-      artifact_path: {
-        ...prevState.artifact_path,
-        isEdit: inputName === ARTIFACT_PATH
+        isEdit: true
       }
     }))
   }, [])
 
   const handleOnChangeSettings = useCallback(
-    value => {
+    (value, inputName) => {
       setEditProject(prevState => ({
         ...prevState,
         source: {
-          ...prevState.source,
-          value: editProject.source.isEdit ? value : prevState.source.value
+          value: editProject.source.isEdit ? value : prevState.source.value,
+          isEdit: inputName === SOURCE_URL
         },
         artifact_path: {
-          ...prevState.artifact_path,
           value: editProject.artifact_path.isEdit
             ? value
-            : prevState.artifact_path.value
+            : prevState.artifact_path.value,
+          isEdit: inputName === ARTIFACT_PATH
         }
       }))
     },
@@ -311,7 +307,7 @@ const ProjectSettingsGeneral = ({
       handleAddNewParameter={handleAddNewParameter}
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
-      handleEditProject={handleEditProject}
+      handleEditSource={handleEditSource}
       handleOnChangeSettings={handleOnChangeSettings}
       handleOnKeyDown={handleOnKeyDown}
       loading={projectStore.project?.loading}

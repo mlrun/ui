@@ -15,7 +15,7 @@ const ProjectSettingsSource = React.forwardRef(
   (
     {
       editSourceData,
-      handleEditProject,
+      handleEditSource,
       handleOnChangeSettings,
       handleOnKeyDown,
       setValidation,
@@ -26,17 +26,14 @@ const ProjectSettingsSource = React.forwardRef(
   ) => {
     return (
       <>
-        <div
-          className="settings__source"
-          onClick={() => handleEditProject(SOURCE_URL)}
-        >
+        <div className="settings__source" onClick={handleEditSource}>
           {editSourceData.isEdit ? (
             <Input
               floatingLabel
               invalid={!validation.isSourceValid}
               label="Source URL"
               focused
-              onChange={handleOnChangeSettings}
+              onChange={event => handleOnChangeSettings(event, SOURCE_URL)}
               onKeyDown={handleOnKeyDown}
               ref={ref}
               setInvalid={value =>
@@ -77,7 +74,7 @@ const ProjectSettingsSource = React.forwardRef(
               <Tooltip template={<TextTooltipTemplate text="Edit" />}>
                 <Edit
                   className="settings__source-edit"
-                  onClick={() => handleEditProject(SOURCE_URL)}
+                  onClick={handleEditSource}
                 />
               </Tooltip>
             </>
@@ -90,7 +87,7 @@ const ProjectSettingsSource = React.forwardRef(
 
 ProjectSettingsSource.propTypes = {
   editSourceData: PropTypes.shape({}).isRequired,
-  handleEditProject: PropTypes.func.isRequired,
+  handleEditSource: PropTypes.func.isRequired,
   handleOnChangeSettings: PropTypes.func.isRequired,
   handleOnKeyDown: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
