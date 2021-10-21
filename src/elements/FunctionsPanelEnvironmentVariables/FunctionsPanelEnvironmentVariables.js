@@ -23,17 +23,12 @@ const FunctionsPanelEnvironmentVariables = ({
     if (isDemoMode) {
       const generatedVariable = generateEnvVariable(env)
 
-      setEnvVariables(state => [
-        ...state,
-        ...parseEnvVariables([generatedVariable])
-      ])
       setNewFunctionEnv([
         ...functionsStore.newFunction.spec.env,
         generatedVariable
       ])
     } else {
       setNewFunctionEnv([...envVariables, { name: env.key, value: env.value }])
-      setEnvVariables([...envVariables, { name: env.key, value: env.value }])
     }
   }
 
@@ -63,12 +58,10 @@ const FunctionsPanelEnvironmentVariables = ({
       const generatedVariables = env.map(item => generateEnvVariable(item))
 
       setNewFunctionEnv([...generatedVariables])
-      setEnvVariables([...parseEnvVariables(generatedVariables)])
     } else {
       const newData = envVariables.filter((_, index) => index !== env)
 
       setNewFunctionEnv([...newData])
-      setEnvVariables([...newData])
     }
   }
 
