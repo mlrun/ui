@@ -61,6 +61,10 @@ const ProjectSettingsGeneralView = React.forwardRef(
                 />
               </div>
               <p className="settings__card-subtitle">Parameters</p>
+              <p>
+                The parameters enable users to pass key/value to the project
+                context that can later be used for running jobs & pipelines
+              </p>
               <KeyValueTable
                 addNewItem={handleAddNewParameter}
                 addNewItemLabel="Add parameter"
