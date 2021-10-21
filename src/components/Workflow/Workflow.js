@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
-import { isEmpty, map, intersectionWith } from 'lodash'
+import { forEach, isEmpty, intersectionWith } from 'lodash'
 
 import Details from '../Details/Details'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
@@ -44,7 +44,7 @@ const Workflow = ({
   workflowsViewMode
 }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [isSelectedItem, setIsSelectedeItem] = useState(false)
+  const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobsContent, setJobsContent] = useState([])
   const [workflow, setWorkflow] = useState({})
   const [workflowJobsIds, setWorkflowJobsIds] = useState([])
@@ -89,16 +89,20 @@ const Workflow = ({
   }, [content, workflowJobsIds])
 
   useEffect(() => {
-    setIsSelectedeItem(isEmpty(selectedFunction))
+    setItemIsSelected(isEmpty(selectedFunction))
   }, [selectedFunction])
 
   useEffect(() => {
-    setIsSelectedeItem(isEmpty(selectedJob))
+    setItemIsSelected(isEmpty(selectedJob))
   }, [selectedJob])
 
   useEffect(() => {
     const edges = []
-    const nodes = map(workflow.graph, job => {
+    const nodes = []
+
+    forEach(workflow.graph, job => {
+      if (job.type === 'DAG') return
+
       let nodeItem = {
         id: job.id,
         data: {
@@ -129,13 +133,13 @@ const Workflow = ({
         })
       })
 
-      return nodeItem
+      nodes.push(nodeItem)
     })
 
     setElements(getLayoutedElements(nodes.concat(edges)))
   }, [selectedFunction.hash, selectedJob.uid, workflow])
 
-  const getCloseDetailsLink = location => {
+  const getCloseDetailsLink = () => {
     return match.url
       .split('/')
       .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
@@ -193,7 +197,7 @@ const Workflow = ({
             <div className={graphViewClassNames}>
               <MlReactFlow
                 elements={elements}
-                alignTriggerItem={isSelectedItem}
+                alignTriggerItem={itemIsSelected}
                 onElementClick={(event, element) => {
                   if (element?.data.run_uid) {
                     history.push(
