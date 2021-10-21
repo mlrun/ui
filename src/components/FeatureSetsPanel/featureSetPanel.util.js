@@ -4,6 +4,9 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
   const externalOfflineTarget = newFeatureSet.spec.targets.find(
     targetKind => targetKind.name === 'externalOffline'
   )
+  const isPartitionByTimeExist = newFeatureSet.spec.targets.some(target =>
+    Boolean(target.time_partitioning_granularity)
+  )
 
   if (newFeatureSet.metadata.name.length === 0 || !validation.isNameValid) {
     setValidation(prevState => ({
@@ -81,6 +84,15 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
     setValidation(prevState => ({
       ...prevState,
       isTargetsPathValid: false
+    }))
+
+    return false
+  }
+
+  if (isPartitionByTimeExist && newFeatureSet.spec.timestamp_key.length === 0) {
+    setValidation(prevState => ({
+      ...prevState,
+      isTimestampKeyValid: false
     }))
 
     return false

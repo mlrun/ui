@@ -27,7 +27,8 @@ const FeatureSetsPanel = ({
     isStartTimeValid: true,
     isEndTimeValid: true,
     isEntitiesValid: true,
-    isTargetsPathValid: true
+    isTargetsPathValid: true,
+    isTimestampKeyValid: true
   })
   const [confirmDialog, setConfirmDialog] = useState(null)
   const history = useHistory()
