@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
-import { find, forEach, map, concat } from 'lodash'
+import { forEach, map, concat } from 'lodash'
 
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -49,7 +49,7 @@ const Pipeline = ({ content, match }) => {
       }
 
       forEach(steps, (step, stepName) => {
-        let subLabel =
+        const subLabel =
           step.kind === 'queue'
             ? '« queue »'
             : step.kind === 'router'
@@ -90,7 +90,7 @@ const Pipeline = ({ content, match }) => {
         }
       })
 
-      let nodesEdges = map(edgesMap, (source, target) => {
+      const nodesEdges = map(edgesMap, (source, target) => {
         return {
           id: `e.${source}.${target}`,
           source: source,
@@ -101,8 +101,8 @@ const Pipeline = ({ content, match }) => {
         }
       })
 
-      let errorEdges = map(errorsMap, (target, source) => {
-        let errorHandlerElement = find(nodes, ['id', target])
+      const errorEdges = map(errorsMap, (target, source) => {
+        const errorHandlerElement = nodes.find(node => node.id === target)
         errorHandlerElement.className += ' error-handler'
 
         return {
@@ -119,6 +119,8 @@ const Pipeline = ({ content, match }) => {
     }
   }, [pipeline])
 
+  const linkBackTitle = pipeline?.nuclio_name || pipeline?.name
+
   return (
     <div className="pipeline-container">
       <div className="pipeline-header">
@@ -132,14 +134,8 @@ const Pipeline = ({ content, match }) => {
             </Tooltip>
           </Link>
           <div className="link-back__title">
-            <Tooltip
-              template={
-                <TextTooltipTemplate
-                  text={pipeline?.nuclio_name || pipeline?.name}
-                />
-              }
-            >
-              {pipeline?.nuclio_name || pipeline?.name}
+            <Tooltip template={<TextTooltipTemplate text={linkBackTitle} />}>
+              {linkBackTitle}
             </Tooltip>
           </div>
         </div>
