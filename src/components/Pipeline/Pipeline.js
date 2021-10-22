@@ -26,47 +26,66 @@ const Pipeline = ({ content, match }) => {
   }, [content, match.params.pipelineId])
 
   useEffect(() => {
-    const steps = pipeline?.graph?.routes || pipeline?.graph?.steps
+    const graph = pipeline?.graph
+    const steps = graph?.routes || graph?.steps
 
     if (steps) {
+      let mainRouterStepId = ''
       const nodes = []
       const edgesMap = {}
       const errorsMap = {}
 
-      forEach(steps, (route, routeName) => {
+      if (graph.kind === 'router') {
+        mainRouterStepId = graph.class_args?.name || 'router'
+
+        nodes.push({
+          id: mainRouterStepId,
+          data: {
+            label: graph.class_args?.name ?? '',
+            subLabel: '« router »'
+          },
+          position: { x: 0, y: 0 }
+        })
+      }
+
+      forEach(steps, (step, stepName) => {
         let subLabel =
-          route.kind === 'queue'
-            ? 'queue'
-            : route.kind === 'router'
-            ? 'router'
+          step.kind === 'queue'
+            ? '« queue »'
+            : step.kind === 'router'
+            ? '« router »'
             : ''
 
         nodes.push({
-          id: routeName,
+          id: stepName,
           data: {
-            label: routeName,
+            label: stepName,
             subLabel: subLabel
           },
           position: { x: 0, y: 0 }
         })
 
-        if (route.after) {
-          edgesMap[routeName] = route.after[0]
+        if (mainRouterStepId) {
+          edgesMap[stepName] = mainRouterStepId
         }
 
-        if (route.on_error) {
-          errorsMap[routeName] = route.on_error
+        if (step.after) {
+          edgesMap[stepName] = step.after[0]
         }
 
-        if (route.kind === 'router' && route.routes) {
-          forEach(route.routes, (routeInner, routeInnerName) => {
+        if (step.on_error) {
+          errorsMap[stepName] = step.on_error
+        }
+
+        if (step.kind === 'router' && step.routes) {
+          forEach(step.routes, (routeInner, routeInnerName) => {
             nodes.push({
               id: routeInnerName,
               data: { label: routeInnerName },
               position: { x: 0, y: 0 }
             })
 
-            edgesMap[routeInnerName] = routeName
+            edgesMap[routeInnerName] = stepName
           })
         }
       })
