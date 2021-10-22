@@ -243,9 +243,9 @@
       color: $white;
       font-weight: normal;
     }
+  }
 
-    &__footer-container {
-      justify-content: center;
-    }
+  .confirm-dialog__btn-container {
+    justify-content: center;
   }
 }

@@ -6,7 +6,7 @@ import SelectOption from '../../elements/SelectOption/SelectOption'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import PopUpDialog from '../PopUpDialog/PopUpDialog'
-import Button from '../Button/Button'
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 
 import { SELECT_OPTIONS } from '../../types'
 import { TERTIARY_BUTTON } from '../../constants'
@@ -158,32 +158,28 @@ const Select = ({
         <Caret className="select__caret" />
       </div>
       {isConfirmDialogOpen && (
-        <PopUpDialog
-          headerText={selectedItemAction.confirm.title}
+        <ConfirmDialog
+          cancelButton={{
+            handler: () => {
+              setConfirmDialogOpen(false)
+            },
+            label: 'Cancel',
+            variant: TERTIARY_BUTTON
+          }}
           closePopUp={() => {
             setConfirmDialogOpen(false)
           }}
-        >
-          <div>{selectedItemAction.confirm.description}</div>
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              variant={TERTIARY_BUTTON}
-              label="Cancel"
-              className="pop-up-dialog__btn_cancel"
-              onClick={() => {
-                setConfirmDialogOpen(false)
-              }}
-            />
-            <Button
-              variant={selectedItemAction.confirm.btnConfirmType}
-              label={selectedItemAction.confirm.btnConfirmLabel}
-              onClick={() => {
-                selectedItemAction.handler(selectedId)
-                setConfirmDialogOpen(false)
-              }}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: () => {
+              selectedItemAction.handler(selectedId)
+              setConfirmDialogOpen(false)
+            },
+            label: selectedItemAction.confirm.btnConfirmLabel,
+            variant: selectedItemAction.confirm.btnConfirmType
+          }}
+          header={selectedItemAction.confirm.title}
+          message={selectedItemAction.confirm.message}
+        />
       )}
       {isOpen && (
         <PopUpDialog

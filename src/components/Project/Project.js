@@ -17,7 +17,11 @@ import featureStoreActions from '../../actions/featureStore'
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { getLinks, generateCreateNewOptions } from './project.utils'
+import {
+  getLinks,
+  generateCreateNewOptions,
+  handleFetchProjectError
+} from './project.utils'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { KEY_CODES } from '../../constants'
@@ -83,6 +87,7 @@ const Project = ({
   const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
+  const [confirmData, setConfirmData] = useState(null)
   const history = useHistory()
   const inputRef = React.createRef()
   const isDemoMode = useDemoMode()
@@ -252,7 +257,9 @@ const Project = ({
   }
 
   const fetchProjectData = useCallback(() => {
-    fetchProject(match.params.projectName)
+    fetchProject(match.params.projectName).catch(error => {
+      handleFetchProjectError(error, history, setConfirmData)
+    })
 
     if (projectMembershipIsEnabled) {
       fetchProjectIdAndOwner().then(fetchProjectMembers)
@@ -262,6 +269,7 @@ const Project = ({
   }, [
     fetchProject,
     fetchProjectIdAndOwner,
+    history,
     match.params.projectName,
     projectMembershipIsEnabled
   ])
@@ -616,6 +624,7 @@ const Project = ({
       changeOwnerCallback={changeOwnerCallback}
       closeFeatureSetPanel={closeFeatureSetPanel}
       closeFunctionsPanel={closeFunctionsPanel}
+      confirmData={confirmData}
       createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
       createFeatureSetSuccess={createFeatureSetSuccess}
       createFunctionSuccess={createFunctionSuccess}

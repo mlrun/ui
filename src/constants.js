@@ -21,6 +21,8 @@ export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 
 export const FETCH_FRONTEND_SPEC_SUCCESS = 'FETCH_FRONTEND_SPEC_SUCCESS'
 
+export const STATUS_CODE_FORBIDDEN = 403
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'

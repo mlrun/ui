@@ -9,7 +9,7 @@ import FeatureSetsPanelDataSource from './FeatureSetsPanelDataSource/FeatureSets
 import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSchema'
 import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSetsPanelTargetStore'
 import Loader from '../../common/Loader/Loader'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import {
   PRIMARY_BUTTON,
@@ -39,20 +39,15 @@ const FeatureSetsPanelView = ({
       <div className="feature-set-panel new-item-side-panel">
         {loading && <Loader />}
         {confirmDialog && (
-          <PopUpDialog closePopUp={() => setConfirmDialog(null)}>
-            <div>
-              Note that data will be ingested to the feature set without any
-              transformation and therefore you won't be able to add a
-              transformation graph unless you delete the data first.
-            </div>
-            <div className="pop-up-dialog__footer-container">
-              <Button
-                variant={PRIMARY_BUTTON}
-                label="Okay"
-                onClick={handleSave}
-              />
-            </div>
-          </PopUpDialog>
+          <ConfirmDialog
+            closePopUp={() => setConfirmDialog(null)}
+            confirmButton={{
+              handler: handleSave,
+              label: 'Okay',
+              variant: PRIMARY_BUTTON
+            }}
+            message="Note that data will be ingested to the feature set without any transformation and therefore you won't be able to add a transformation graph unless you delete the data first."
+          />
         )}
         <FeatureSetsPanelTitle
           closePanel={closePanel}
