@@ -7,13 +7,7 @@ import { ReactComponent as Primary } from '../../images/ic-key.svg'
 import { ReactComponent as LabelColumn } from '../../images/ic_target-with-dart.svg'
 
 export const generateStatistics = selectedItem => {
-  const content = selectedItem.entities
-    ? selectedItem.entities
-        .map(item => ({ ...item, entity: 'entity' }))
-        .concat(selectedItem.features)
-    : selectedItem.features
-
-  return content.map(item => {
+  return Object.entries(selectedItem?.stats ?? {}).map(([name, metrics]) => {
     return {
       entityIcon: {
         value: (
@@ -22,7 +16,7 @@ export const generateStatistics = selectedItem => {
           </Tooltip>
         ),
         type: 'icon',
-        hidden: !item.entity
+        hidden: !selectedItem.entities?.some(entity => entity.name === name)
       },
       labelColumnIcon: {
         value: (
@@ -31,46 +25,46 @@ export const generateStatistics = selectedItem => {
           </Tooltip>
         ),
         type: 'icon',
-        hidden: selectedItem.label_column !== item.name
+        hidden: selectedItem.label_column !== name
       },
       name: {
-        value: item.name ?? '',
+        value: name ?? '',
         type: 'text'
       },
       count: {
-        value: selectedItem?.stats?.[item.name]?.count ?? '',
+        value: metrics?.count ?? '',
         type: 'text'
       },
       mean: {
-        value: selectedItem?.stats?.[item.name]?.mean ?? '',
+        value: metrics?.mean ?? '',
         type: 'text'
       },
       std: {
-        value: selectedItem?.stats?.[item.name]?.std?.toFixed(8) ?? '',
+        value: metrics?.std?.toFixed(8) ?? '',
         type: 'text'
       },
       min: {
-        value: selectedItem?.stats?.[item.name]?.min ?? '',
+        value: metrics?.min ?? '',
         type: 'text'
       },
       max: {
-        value: selectedItem?.stats?.[item.name]?.max ?? '',
+        value: metrics?.max ?? '',
         type: 'text'
       },
       unique: {
-        value: selectedItem?.stats?.[item.name]?.unique ?? '',
+        value: metrics?.unique ?? '',
         type: 'text'
       },
       top: {
-        value: selectedItem?.stats?.[item.name]?.top ?? '',
+        value: metrics?.top ?? '',
         type: 'text'
       },
       freq: {
-        value: selectedItem?.stats?.[item.name]?.freq ?? '',
+        value: metrics?.freq ?? '',
         type: 'text'
       },
       histogram: {
-        value: selectedItem?.stats?.[item.name]?.hist ?? [[], []],
+        value: metrics?.hist ?? [[], []],
         type: 'chart'
       }
     }
