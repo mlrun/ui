@@ -26,12 +26,14 @@ const Pipeline = ({ content, match }) => {
   }, [content, match.params.pipelineId])
 
   useEffect(() => {
-    if (pipeline?.graph?.routes) {
+    const steps = pipeline?.graph?.routes || pipeline?.graph?.steps
+
+    if (steps) {
       const nodes = []
       const edgesMap = {}
       const errorsMap = {}
 
-      forEach(pipeline.graph.routes, (route, routeName) => {
+      forEach(steps, (route, routeName) => {
         let subLabel =
           route.kind === 'queue'
             ? 'queue'
