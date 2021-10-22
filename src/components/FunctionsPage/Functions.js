@@ -15,10 +15,10 @@ import {
   detailsMenu,
   filters,
   FUNCTIONS_EDITABLE_STATES,
-  FUNCTIONS_EDITABLE_TYPES,
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
+  getFunctionsEditableTypes,
   getTableHeaders
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -116,7 +116,7 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          (!isDemoMode && !FUNCTIONS_EDITABLE_TYPES.includes(item?.type)) ||
+          !getFunctionsEditableTypes(isDemoMode).includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {

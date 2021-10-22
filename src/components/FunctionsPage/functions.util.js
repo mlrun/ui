@@ -1,6 +1,7 @@
 import {
   FUNCTION_TYPE_JOB,
   FUNCTION_TYPE_LOCAL,
+  FUNCTION_TYPE_SERVING,
   NAME_FILTER,
   SHOW_UNTAGGED_FILTER
 } from '../../constants'
@@ -26,11 +27,15 @@ export const FUNCTIONS_EDITABLE_STATES = [
   ...FUNCTIONS_READY_STATES,
   ...FUNCTIONS_FAILED_STATES
 ]
-export const FUNCTIONS_EDITABLE_TYPES = [
-  FUNCTION_TYPE_JOB,
-  FUNCTION_TYPE_LOCAL,
-  ''
-]
+export const getFunctionsEditableTypes = isDemoMode => {
+  const editableTypes = [FUNCTION_TYPE_JOB, FUNCTION_TYPE_LOCAL, '']
+
+  if (isDemoMode) {
+    editableTypes.push(FUNCTION_TYPE_SERVING)
+  }
+
+  return editableTypes
+}
 
 export const page = 'FUNCTIONS'
 export const getTableHeaders = isSelectedItem => [
