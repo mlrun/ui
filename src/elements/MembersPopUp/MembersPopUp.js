@@ -233,7 +233,16 @@ const MembersPopUp = ({
             id: identity.id,
             subLabel: existingMember?.role ?? '',
             disabled: Boolean(existingMember),
-            icon: identity.type === 'user' ? <User /> : <Users />,
+            icon:
+              identity.type === 'user' ? (
+                <i data-identity-type="user">
+                  <User />
+                </i>
+              ) : (
+                <i data-identity-type="user_group">
+                  <Users />
+                </i>
+              ),
             ui: {
               type: identity.type
             }
