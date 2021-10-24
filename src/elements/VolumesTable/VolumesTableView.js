@@ -143,7 +143,7 @@ const VolumesTableView = ({
                 selectedId={newVolume.type}
               />
               <Input
-                wrapperClassName="m-0 me-3 h-inherit"
+                wrapperClassName="m-0 me-3"
                 invalid={
                   isNameNotUnique(newVolume.name, volumeMounts) ||
                   !validation.isNameValid
@@ -164,7 +164,7 @@ const VolumesTableView = ({
                 withoutBorder
               />
               <Input
-                wrapperClassName="m-0 h-inherit"
+                wrapperClassName="m-0"
                 invalid={
                   isPathNotUnique(newVolume.path, volumeMounts) ||
                   !validation.isPathValid

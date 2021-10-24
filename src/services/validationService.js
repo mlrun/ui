@@ -109,7 +109,7 @@ export const validationService = {
       }
     },
     beginEndWith: chars => {
-      var convertedPattern = convertToPattern(chars)
+      const convertedPattern = convertToPattern(chars)
 
       return {
         name: 'beginEnd',
@@ -121,7 +121,7 @@ export const validationService = {
       }
     },
     beginEndNotWith: chars => {
-      var convertedPattern = convertToPattern(chars)
+      const convertedPattern = convertToPattern(chars)
 
       return {
         name: 'beginEndNot',
@@ -133,7 +133,7 @@ export const validationService = {
       }
     },
     onlyAtTheBeginning: chars => {
-      var convertedPattern = convertToPattern(chars)
+      const convertedPattern = convertToPattern(chars)
 
       return {
         name: 'onlyAtTheBeginning',
@@ -155,10 +155,10 @@ export const validationService = {
       }
     },
     noConsecutiveCharacters: chars => {
-      var convertedPattern = chars
+      const convertedPattern = chars
         .split(' ')
         .map(charPair => {
-          var charsPairArray = charPair.split('')
+          const charsPairArray = charPair.split('')
 
           return `(?!.*\\${charsPairArray[0]}\\${charsPairArray[1]})`
         })
@@ -192,7 +192,7 @@ export const validationService = {
       }
     },
     mustNotBe: function(words) {
-      var wordsArray = words.split(' ')
+      const wordsArray = words.split(' ')
 
       return {
         name: 'mustNotBe',
@@ -203,11 +203,11 @@ export const validationService = {
       }
     },
     length: function(options) {
-      var min = Number.isSafeInteger(options.min) ? options.min : 0
-      var max = Number.isSafeInteger(options.max) ? options.max : ''
+      const min = Number.isSafeInteger(options.min) ? options.min : 0
+      const max = Number.isSafeInteger(options.max) ? options.max : ''
 
       if (min || max) {
-        var label =
+        const label =
           'Length – ' +
           (min ? 'min: ' + options.min + '\xa0\xa0' : '') +
           (max ? 'max: ' + options.max : '')

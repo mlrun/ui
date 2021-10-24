@@ -55,7 +55,7 @@ const FeatureSetsPanelTitleView = ({
             tip={titleValidationTip}
             type="text"
             value={data.name}
-            wrapperClassName="name me-2 mb-3 fs-5"
+            wrapperClassName="name me-2 mb-3 fs-6"
           />
           <Input
             label="Version"
@@ -75,7 +75,7 @@ const FeatureSetsPanelTitleView = ({
             placeholder="latest"
             type="text"
             value={data.version}
-            wrapperClassName="version mb-3 fs-5"
+            wrapperClassName="version mb-3 fs-6"
           />
         </div>
         <TextArea

@@ -34,7 +34,7 @@ const CreateProjectDialog = ({
         <div className="pop-up-dialog__form">
           <Input
             className="pop-up-dialog__form-input"
-            floatingLabel
+            wrapperClassName="mb-3"
             invalid={!isNameValid}
             invalidText="This field is invalid"
             label="Name"
@@ -50,7 +50,6 @@ const CreateProjectDialog = ({
           />
           <Input
             className="pop-up-dialog__form-input"
-            floatingLabel
             label="Description"
             onChange={setNewProjectDescription}
             type="text"

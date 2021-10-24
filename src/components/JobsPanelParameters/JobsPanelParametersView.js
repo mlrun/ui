@@ -70,7 +70,7 @@ const JobsPanelParametersView = ({
             <div className="table__row-add-item">
               <div className="input-row-wrapper">
                 <Input
-                  wrapperClassName="m-0 me-3 h-inherit"
+                  wrapperClassName="m-0 me-3"
                   density="chunky"
                   invalid={isNameNotUnique(
                     parametersState.newParameter.name,
@@ -112,8 +112,8 @@ const JobsPanelParametersView = ({
                   options={parameterTypeOptions}
                 />
                 <Input
-                  wrapperClassName="m-0 me-3 h-inherit"
-                  density="chunky"
+                  wrapperClassName="m-0 me-3"
+                  density="full"
                   placeholder="Value/s"
                   onChange={value =>
                     parametersDispatch({

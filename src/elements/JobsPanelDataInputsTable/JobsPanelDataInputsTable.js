@@ -62,8 +62,8 @@ export const JobsPanelDataInputsTable = ({
         <div className="table__row-add-item">
           <div className="input-row-wrapper">
             <Input
-              wrapperClassName="m-0 me-3 h-inherit"
-              density="medium"
+              wrapperClassName="m-0 me-3"
+              density="full"
               invalid={
                 !validation.isNameValid ||
                 isNameNotUnique(

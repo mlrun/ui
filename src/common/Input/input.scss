@@ -2,187 +2,20 @@
 @import '../../scss/borders';
 @import '../../scss/shadows';
 @import '../../scss/mixins.scss';
-// .input {
-//   position: relative;
-//   width: 100%;
-//   padding: 18px 16px;
-//   color: $primary;
-//   background-color: transparent;
-//   border: $primaryBorder;
-//   border-radius: 4px;
-//   &.without-border {
-//     border: none;
-//   }
-//   &:invalid {
-//     border: $errorBorder;
-//   }
-//   &:disabled {
-//     color: $spunPearl;
-//     cursor: not-allowed;
-//   }
-//   & ~ .validation__icon {
-//     position: absolute;
-//     top: 50%;
-//     right: 10px;
-//     display: block;
-//     transform: translateY(-45%);
-//     svg {
-//       width: 12px;
-//       height: 12px;
-//     }
-//   }
-//   &-short {
-//     margin-right: 22px;
-//     & ~ .validation__icon {
-//       right: 30px;
-//     }
-//   }
-//   &-wrapper {
-//     position: relative;
-//     display: flex;
-//     .input {
-//       &.input_invalid {
-//         border: $errorBorder;
-//         &.has-icon {
-//           padding-right: 38px;
-//         }
-//         & ~ .validation__icon {
-//           display: block;
-//         }
-//       }
-//       &.input_valid {
-//         display: block;
-//         & ~ .validation__icon {
-//           path {
-//             fill: var(--ml-alert-green);
-//           }
-//         }
-//       }
-//     }
-//     .suggestion-list {
-//       position: absolute;
-//       top: 100%;
-//       left: 0;
-//       z-index: 5;
-//       margin: 0;
-//       padding: 7px 0;
-//       background-color: $white;
-//       border-radius: 4px;
-//       box-shadow: $previewBoxShadow;
-//       .suggestion-item {
-//         padding: 7px 15px;
-//         color: $mulledWine;
-//         list-style-type: none;
-//         &:hover {
-//           background-color: $alabaster;
-//           cursor: pointer;
-//         }
-//       }
-//     }
-//   }
-//   &__label_info {
-//     top: 50%;
-//     transform: translate(0, -40%);
-//   }
-//   &__tip {
-//     position: absolute;
-//     top: 50%;
-//     right: 0;
-//     transform: translateY(-50%);
-//   }
-//   // &.active-input {
-//   //   // padding: 25px 16px 11px;
-//   // }
-//   &__label {
-//     position: absolute;
-//     top: 17px;
-//     left: 16px;
-//     color: $topaz;
-//     text-transform: capitalize;
-//     background-color: transparent;
-//     pointer-events: none;
-//     &-mandatory {
-//       color: $amaranth;
-//       &_disabled {
-//         color: $spunPearl;
-//       }
-//     }
-//     &.active-label {
-//       background-color: var(--ml-white-color);
-//       top: -4px;
-//       left: 12px;
-//       font-weight: noraml;
-//       font-size: 10px;
-//       // line-height: 12px;
-//       padding: 0 5px;
-//       .input__label-mandatory:not(.input__label-mandatory_disabled) {
-//         color: $topaz;
-//       }
-//     }
-//     &-floating {
-//       position: absolute;
-//       top: 17px;
-//       left: 16px;
-//       color: $topaz;
-//       transition: 300ms ease all;
-//     }
-//     &_disabled {
-//       color: $spunPearl;
-//     }
-//   }
-//   &-dense {
-//     height: 40px;
-//     & ~ .input__label {
-//       top: 13px;
-//       &.input__label-floating {
-//         top: 13px;
-//       }
-//       &.active-label {
-//         top: -4px;
-//       }
-//     }
-//   }
-//   &-normal {
-//     height: 48px;
-//   }
-//   &-medium {
-//     height: 52px;
-//     & ~ .input__label {
-//       top: 17px;
-//       &.input__label-floating {
-//         top: 17px;
-//       }
-//       &.active-label {
-//         top: -4px;
-//       }
-//     }
-//   }
-//   &-chunky {
-//     height: 56px;
-//     & ~ .input__label {
-//       top: 20px;
-//       &.input__label-floating {
-//         top: 20px;
-//       }
-//       &.active-label {
-//         top: -4px;
-//       }
-//     }
-//   }
-// }
+
 // TODO: Move to mixing or global scss to be used in other Field controllers
 .field-control {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 1 1;
   position: relative;
   min-width: 0;
-  height: inherit;
+  height: 100%;
   padding: 0;
   margin: 0;
   border: 0;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: inherit;
   vertical-align: top;
   z-index: 1;
   &-mandatory {
@@ -355,5 +188,8 @@
 
   &-chunky {
     height: 56px;
+  }
+  &-full {
+    height: 100%;
   }
 }

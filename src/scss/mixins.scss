@@ -527,7 +527,7 @@
 
       .select {
         flex: 1;
-        margin: 1px 0;
+        // margin: 1px 0;
         padding: 0;
         border: none;
 
@@ -624,10 +624,11 @@
       display: flex;
       flex: 1;
       flex-direction: column;
+      padding: 16px 2.5rem 0;
     }
 
     &__accordion {
-      margin: 16px 40px 0;
+      margin-bottom: 1rem;
       background-color: $white;
       border: $primaryBorder;
       border-radius: 4px;
@@ -639,14 +640,6 @@
           min-height: 100px;
           overflow: visible;
         }
-      }
-
-      &:first-child {
-        margin-top: 0;
-      }
-
-      &:last-child {
-        margin-bottom: 16px;
       }
     }
 
@@ -695,9 +688,9 @@
       flex: 0.1;
       align-items: center;
       justify-content: flex-end;
-      margin-top: 16px;
-      margin-bottom: 16px;
-      padding: 0 40px;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      padding: 0;
     }
 
     .add-input {
@@ -746,7 +739,7 @@
 
 @mixin panelTitle {
   position: relative;
-  margin: 36px 90px 33px 55px;
+  padding: 3rem 2.5rem 0 2.5rem;
 
   .panel-title {
     &__container {
@@ -835,8 +828,9 @@
 
     &__btn_close {
       position: absolute;
-      top: -20px;
-      right: -75px;
+      top: 1rem;
+      right: 1rem;
+      padding: 5px;
       height: 24px;
     }
   }

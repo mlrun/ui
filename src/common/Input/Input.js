@@ -10,7 +10,6 @@ import ValidationTemplate from '../OptionsMenu/ValidationTemplate/ValidationTemp
 
 import { ReactComponent as InvalidIcon } from '../../images/invalid.svg'
 import { ReactComponent as WarningIcon } from '../../images/warning.svg'
-// import { ReactComponent as CheckmarkIcon } from '../../images/success_done.svg'
 
 import { checkPatternsValidity } from '../../services/validationService'
 
@@ -58,7 +57,6 @@ const Input = React.forwardRef(
     const input = React.createRef()
     const inputLabel = useRef(null)
     const [inputIsFocused, setInputIsFocused] = useState(false)
-    // const [labelWidth, setLabelWidth] = useState(0)
     const [isInvalid, setIsInvalid] = useState(false)
     const [typedValue, setTypedValue] = useState('')
     const [validationPattern] = useState(RegExp(pattern))
@@ -68,41 +66,17 @@ const Input = React.forwardRef(
 
     const fieldControlClassNames = classnames(
       'field-control',
-      wrapperClassName,
       `field-control-${density}`
     )
 
     const eventClassNames = classNames(
       (inputIsFocused || placeholder || typedValue.length > 0) &&
         'active-label',
-      isInvalid && 'field_invalid',
+      (isInvalid || invalid) && 'field_invalid',
       disabled && 'field_disabled',
       inputIsFocused && 'focus',
       (withoutBorder || type === 'number') && 'without-border'
     )
-
-    // const inputClassNames = classnames(
-    //   'input',
-    //   className,
-    //   `input-${density}`,
-    //   (inputIsFocused || placeholder || typedValue.length > 0) &&
-    //     floatingLabel &&
-    //     'active-input',
-    //   isInvalid ? 'input_invalid' : 'input_valid',
-    //   !isEmpty(validationRules) && 'has-icon',
-    //   tip && 'input-short',
-    //   withoutBorder && 'without-border'
-    // )
-    // const labelClassNames = classnames(
-    //   'input__label',
-    //   disabled && 'input__label_disabled',
-    //   floatingLabel && 'input__label-floating',
-    //   (inputIsFocused || placeholder || typedValue.length > 0) &&
-    //     floatingLabel &&
-    //     'active-label',
-    //   infoLabel && 'input__label_info'
-    // )
-    // const wrapperClassNames = classnames(wrapperClassName, 'input-wrapper')
     const inputLabelMandatoryClassNames = classnames(
       'field-control-mandatory',
       disabled && 'field-control-mandatory_disabled'
@@ -117,12 +91,6 @@ const Input = React.forwardRef(
         setInputIsFocused(true)
       }
     }, [input, focused])
-
-    // useEffect(() => {
-    //   if (inputLabel) {
-    //     setLabelWidth(inputLabel.current?.clientWidth)
-    //   }
-    // }, [label])
 
     const validateField = value => {
       let isFieldValidByPattern = true
@@ -200,8 +168,8 @@ const Input = React.forwardRef(
     }
 
     return (
-      <>
-        <div className={fieldControlClassNames} ref={ref}>
+      <div className={`input-wrapper ${wrapperClassName}`} ref={ref}>
+        <div className={fieldControlClassNames}>
           {label && (
             <label
               data-testid="label"
@@ -225,7 +193,6 @@ const Input = React.forwardRef(
               className={`field-control__input-wrapper ${eventClassNames} ${className}`}
             >
               <input
-                // className={className}
                 data-testid="input"
                 onBlur={handleInputBlur}
                 onChange={handleInputChange}
@@ -313,101 +280,7 @@ const Input = React.forwardRef(
             </OptionsMenu>
           )}
         </div>
-        {/* //////////////////// */}
-        {/* <div ref={ref} className={wrapperClassNames}>
-          <input
-            data-testid="input"
-            className={inputClassNames}
-            onBlur={handleInputBlur}
-            onChange={handleInputChange}
-            onFocus={handleInputFocus}
-            ref={input}
-            required={isInvalid}
-            {...{
-              disabled,
-              maxLength,
-              onKeyDown,
-              pattern,
-              placeholder,
-              type,
-              value: typedValue
-            }}
-            style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px` }}
-          />
-          {label && (
-            <label
-              data-testid="label"
-              className={labelClassNames}
-              ref={inputLabel}
-              style={
-                infoLabel
-                  ? {
-                      left: (value ? value.length + 2 : 2) * 10
-                    }
-                  : {}
-              }
-            >
-              {label}
-              {required && (
-                <span className={inputLabelMandatoryClassNames}> *</span>
-              )}
-            </label>
-          )}
-
-          {!isEmpty(validationRules) && typedValue && isInvalid && (
-            <i
-              className="validation__icon p-1 pointer"
-              onClick={handleOptionMenu}
-            >
-              <WarningIcon />
-            </i>
-          )}
-          {isInvalid && !typedValue && (
-            <Tooltip
-              className="validation__icon"
-              template={
-                <TextTooltipTemplate
-                  text={required && !typedValue ? requiredText : invalidText}
-                  warning
-                />
-              }
-            >
-              <InvalidIcon />
-            </Tooltip>
-          )}
-          {tip && <Tip text={tip} className="input__tip" />}
-          {inputIcon && (
-            <span data-testid="input-icon" className={iconClass}>
-              {inputIcon}
-            </span>
-          )}
-          {suggestionList?.length > 0 && inputIsFocused && (
-            <ul className="suggestion-list">
-              {suggestionList.map((item, index) => {
-                return (
-                  <li
-                    className="suggestion-item"
-                    key={`${item}${index}`}
-                    onClick={() => {
-                      handleSuggestionClick(item)
-                    }}
-                    tabIndex={index}
-                    dangerouslySetInnerHTML={{
-                      __html: item.replace(
-                        new RegExp(typedValue, 'gi'),
-                        match => (match ? `<b>${match}</b>` : match)
-                      )
-                    }}
-                  />
-                )
-              })}
-            </ul>
-          )}
-          <OptionsMenu show={showValidationRules && typedValue !== ''}>
-            {renderValidationRules}
-          </OptionsMenu>
-        </div> */}
-      </>
+      </div>
     )
   }
 )

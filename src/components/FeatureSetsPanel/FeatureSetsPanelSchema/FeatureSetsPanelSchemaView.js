@@ -19,19 +19,17 @@ const FeatureSetsPanelSchemaView = ({
   return (
     <div className="feature-set-panel__item new-item-side-panel__item schema">
       <FeatureSetsPanelSection title="Schema">
-        <div className="schema__description">
-          <span>
-            Each feature set must be associated with one or more index column.
-            when joining feature sets the entity is used as the key column.
-            <a
-              className="link"
-              href="https://docs.mlrun.org/en/latest/feature-store/feature-sets.html"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read more
-            </a>
-          </span>
+        <div className=" mb-3">
+          Each feature set must be associated with one or more index column.
+          when joining feature sets the entity is used as the key column.
+          <a
+            className="link"
+            href="https://docs.mlrun.org/en/latest/feature-store/feature-sets.html"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Read more
+          </a>
         </div>
         <div className="schema__inputs">
           <Input
