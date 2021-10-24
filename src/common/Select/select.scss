@@ -202,4 +202,19 @@
       padding-top: 13px;
     }
   }
+  &.btn-secondary {
+    background: $malibu;
+
+    &:hover:not(:disabled) {
+      background: $cornflowerBlue;
+    }
+
+    &:active:not(:disabled) {
+      background: $indigo;
+    }
+
+    &:disabled {
+      border: 1px solid $malibu;
+    }
+  }
 }

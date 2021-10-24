@@ -242,7 +242,7 @@ const ProjectView = React.forwardRef(
                   options={launchIDEOptions}
                 />
                 <Select
-                  className="main-info__toolbar-menu create-new-menu"
+                  className="main-info__toolbar-menu create-new-menu btn-secondary"
                   density="dense"
                   hideSelectedOption
                   label="Create new"
