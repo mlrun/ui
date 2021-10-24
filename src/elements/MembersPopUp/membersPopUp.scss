@@ -2,6 +2,14 @@
 @import '../../scss/borders';
 
 .manage-members__pop-up {
+  .flex-row-with-icon {
+    display: flex;
+    justify-content: space-between;
+    .close-icon {
+      margin: 1rem;
+      cursor: pointer;
+    }
+  }
   .pop-up-dialog {
     width: 700px;
     max-height: 100vh;

@@ -8,8 +8,12 @@ import CheckBox from '../../common/CheckBox/CheckBox'
 import Input from '../../common/Input/Input'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Select from '../../common/Select/Select'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tip from '../../common/Tip/Tip'
 import ChipInput from '../../common/ChipInput/ChipInput'
+
+import { ReactComponent as CloseIcon } from '../../images/close.svg'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
@@ -284,7 +288,17 @@ const MembersPopUp = ({
         </div>
         {inviteNewMembers && (
           <div className="invite-new-members">
-            <div className="new-members-title">Invite new members</div>
+            <div className="flex-row-with-icon">
+              <div className="new-members-title">Invite new members</div>
+
+              <Tooltip template={<TextTooltipTemplate text="Close" />}>
+                <CloseIcon
+                  className="close-icon"
+                  data-testid="pop-up-close-btn"
+                  onClick={() => setInviteNewMembers(false)}
+                />
+              </Tooltip>
+            </div>
             <div className="new-members-row">
               <ChipInput
                 className="new-member-name"
