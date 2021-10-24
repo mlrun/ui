@@ -12,7 +12,11 @@ import './projectSecretRow.scss'
 const ProjectSecretRow = ({ handleEditClick, handleSecretDelete, secret }) => {
   return (
     <div className="secret__row">
-      <div className="secret__cell">{secret}</div>
+      <div className="secret__cell secret__body">
+        <Tooltip template={<TextTooltipTemplate text={secret} />}>
+          <span>{secret}</span>
+        </Tooltip>
+      </div>
       <div className="secret__cell secret__actions">
         <Tooltip template={<TextTooltipTemplate text="Edit" />}>
           <button

@@ -11,10 +11,10 @@ const FeatureSetsPanelSchemaView = ({
   featureStore,
   handleEntitiesOnBlur,
   handleEntitiesOnChange,
-  isEntitiesValid,
   setData,
-  setEntitiesValid,
-  setNewFeatureSetSchemaTimestampKey
+  setNewFeatureSetSchemaTimestampKey,
+  setValidation,
+  validation
 }) => {
   return (
     <div className="feature-set-panel__item new-item-side-panel__item schema">
@@ -35,7 +35,7 @@ const FeatureSetsPanelSchemaView = ({
         </div>
         <div className="schema__inputs">
           <Input
-            invalid={!isEntitiesValid}
+            invalid={!validation.isEntitiesValid}
             label="Entities"
             onBlur={handleEntitiesOnBlur}
             onChange={handleEntitiesOnChange}
@@ -43,7 +43,7 @@ const FeatureSetsPanelSchemaView = ({
             required
             requiredText="This field is required"
             setInvalid={value =>
-              setEntitiesValid(state => ({
+              setValidation(state => ({
                 ...state,
                 isEntitiesValid: value
               }))
@@ -53,6 +53,7 @@ const FeatureSetsPanelSchemaView = ({
             wrapperClassName="mb-3"
           />
           <Input
+            invalid={!validation.isTimestampKeyValid}
             onChange={timestamp_key =>
               setData(state => ({ ...state, timestamp_key }))
             }
@@ -66,6 +67,16 @@ const FeatureSetsPanelSchemaView = ({
               }
             }}
             placeholder="Timestamp key"
+            required={featureStore.newFeatureSet.spec.targets.some(target =>
+              Boolean(target.time_partitioning_granularity)
+            )}
+            requiredText="Timestamp Key is required for offline target when partitioning by time is enabled - see the Target Store section."
+            setInvalid={value =>
+              setValidation(state => ({
+                ...state,
+                isTimestampKeyValid: value
+              }))
+            }
             tip="Used for specifying the time field when joining by time"
             type="text"
           />
@@ -80,10 +91,10 @@ FeatureSetsPanelSchemaView.propTypes = {
   featureStore: PropTypes.shape({}).isRequired,
   handleEntitiesOnBlur: PropTypes.func.isRequired,
   handleEntitiesOnChange: PropTypes.func.isRequired,
-  isEntitiesValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
-  setEntitiesValid: PropTypes.func.isRequired,
-  setNewFeatureSetSchemaTimestampKey: PropTypes.func.isRequired
+  setNewFeatureSetSchemaTimestampKey: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default FeatureSetsPanelSchemaView

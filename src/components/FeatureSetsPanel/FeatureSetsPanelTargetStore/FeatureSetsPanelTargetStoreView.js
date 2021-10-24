@@ -36,15 +36,15 @@ const FeatureSetsPanelTargetStoreView = ({
   handlePartitionRadioButtonClick,
   handleSelectTargetKind,
   handleTimePartitioningGranularityChange,
-  isTargetsPathValid,
   partitionRadioButtonsState,
   selectedPartitionKind,
   selectedTargetKind,
   setData,
-  setTargetsPathValid,
+  setValidation,
   showAdvanced,
   triggerPartitionAdvancedCheckboxes,
-  triggerPartitionCheckbox
+  triggerPartitionCheckbox,
+  validation
 }) => {
   return (
     <div className="feature-set-panel__item new-item-side-panel__item target-store">
@@ -205,7 +205,7 @@ const FeatureSetsPanelTargetStoreView = ({
               <Input
                 density="normal"
                 floatingLabel
-                invalid={!isTargetsPathValid}
+                invalid={!validation.isTargetsPathValid}
                 label="URL"
                 onBlur={handleExternalOfflineKindPathOnBlur}
                 onChange={handleExternalOfflineKindPathOnChange}
@@ -213,7 +213,7 @@ const FeatureSetsPanelTargetStoreView = ({
                 required
                 requiredText="This field is required"
                 setInvalid={value =>
-                  setTargetsPathValid(state => ({
+                  setValidation(state => ({
                     ...state,
                     isTargetsPathValid: value
                   }))
@@ -308,7 +308,6 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   handlePartitionRadioButtonClick: PropTypes.func.isRequired,
   handleSelectTargetKind: PropTypes.func.isRequired,
   handleTimePartitioningGranularityChange: PropTypes.func.isRequired,
-  isTargetsPathValid: PropTypes.bool.isRequired,
   partitionRadioButtonsState: PropTypes.shape({
     parquet: PropTypes.string.isRequired,
     externalOffline: PropTypes.string.isRequired
@@ -319,13 +318,14 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   }).isRequired,
   selectedTargetKind: PropTypes.arrayOf(PropTypes.string).isRequired,
   setData: PropTypes.func.isRequired,
-  setTargetsPathValid: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
   showAdvanced: PropTypes.shape({
     parquet: PropTypes.bool.isRequired,
     externalOffline: PropTypes.bool.isRequired
   }).isRequired,
   triggerPartitionAdvancedCheckboxes: PropTypes.func.isRequired,
-  triggerPartitionCheckbox: PropTypes.func.isRequired
+  triggerPartitionCheckbox: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default FeatureSetsPanelTargetStoreView

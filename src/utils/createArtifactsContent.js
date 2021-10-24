@@ -250,7 +250,7 @@ const createFilesRowData = (artifact, project, isSelectedItem) => {
       hidden: isSelectedItem
     },
     producer: {
-      value: artifact.producer,
+      value: artifact.producer || {},
       class: 'artifacts_small',
       type: 'producer',
       hidden: isSelectedItem

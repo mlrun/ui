@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 
 import ProjectSettingsGeneral from '../../elements/ProjectSettingsGeneral/ProjectSettingsGeneral'
 import ProjectSettingsSecrets from '../../elements/ProjectSettingsSecrets/ProjectSettingsSecrets'
@@ -10,12 +10,19 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 
 import projectsAction from '../../actions/projects'
 import { PROJECTS_SETTINGS_GENERAL_TAB } from '../../constants'
-import { page, tabs } from './projectSettings.util'
+import { page, tabs, validTabs } from './projectSettings.util'
 
 import './projectSettings.scss'
 
 const ProjectSettings = ({ match }) => {
   const location = useLocation()
+  const history = useHistory()
+
+  useEffect(() => {
+    if (!validTabs.includes(match.params.pageTab)) {
+      history.push(`/projects/${match.params.projectName}/settings/general`)
+    }
+  }, [history, match.params.pageTab, match.params.projectName])
 
   return (
     <div className="settings">

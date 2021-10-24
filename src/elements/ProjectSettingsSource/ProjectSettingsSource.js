@@ -18,7 +18,9 @@ const ProjectSettingsSource = React.forwardRef(
       handleEditProject,
       handleOnChangeSettings,
       handleOnKeyDown,
-      settingsSource
+      setValidation,
+      settingsSource,
+      validation
     },
     ref
   ) => {
@@ -31,28 +33,43 @@ const ProjectSettingsSource = React.forwardRef(
           {editSourceData.isEdit ? (
             <Input
               floatingLabel
+              invalid={!validation.isSourceValid}
               label="Source URL"
               focused
               onChange={handleOnChangeSettings}
               onKeyDown={handleOnKeyDown}
               ref={ref}
+              setInvalid={value =>
+                setValidation(state => ({
+                  ...state,
+                  isSourceValid: value
+                }))
+              }
               type="text"
               value={editSourceData.value ?? settingsSource}
             />
           ) : (
             <>
               {editSourceData.value || settingsSource ? (
-                <div>
+                <div className="settings__source-link">
                   <p className="settings__card-subtitle">Source URL</p>
-                  <a
-                    href={editSourceData.value || settingsSource}
-                    onClick={event => event.stopPropagation()}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="settings__source-text data-ellipsis"
+                  <Tooltip
+                    template={
+                      <TextTooltipTemplate
+                        text={editSourceData.value || settingsSource}
+                      />
+                    }
                   >
-                    {editSourceData.value || settingsSource}
-                  </a>
+                    <a
+                      href={editSourceData.value || settingsSource}
+                      onClick={event => event.stopPropagation()}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="settings__source-text"
+                    >
+                      {editSourceData.value || settingsSource}
+                    </a>
+                  </Tooltip>
                 </div>
               ) : (
                 <span>Click to add source URL</span>
@@ -76,7 +93,9 @@ ProjectSettingsSource.propTypes = {
   handleEditProject: PropTypes.func.isRequired,
   handleOnChangeSettings: PropTypes.func.isRequired,
   handleOnKeyDown: PropTypes.func.isRequired,
-  settingsSource: PropTypes.string.isRequired
+  setValidation: PropTypes.func.isRequired,
+  settingsSource: PropTypes.string.isRequired,
+  validation: PropTypes.object.isRequired
 }
 
 export default ProjectSettingsSource
