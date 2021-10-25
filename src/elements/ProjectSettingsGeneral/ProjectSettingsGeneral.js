@@ -150,98 +150,114 @@ const ProjectSettingsGeneral = ({
     }))
   }, [])
 
-  const handleOnChangeSettings = useCallback(
-    debounce((value, isValid, inputName) => {
-      const isSourceUrl = inputName === SOURCE_URL
-      const isValueValid =
-        isValid &&
-        value !==
-          projectStore.project.data.spec[
-            isSourceUrl ? 'source' : 'artifact_path'
-          ]
-
-      if (isValueValid) {
-        const projectData = {
-          source: isSourceUrl
-            ? value
-            : !isNil(editProject.source.value)
-            ? editProject.source.value
-            : projectStore.project.data.spec.source,
-          artifact_path: !isSourceUrl
-            ? value
-            : !isNil(editProject.artifact_path.value)
-            ? editProject.artifact_path.value
-            : projectStore.project.data.spec.artifact_path,
-          params: projectStore.project.data.spec.params
-        }
+  const handleArtifactPathChange = useCallback(
+    debounce((value, isValid) => {
+      if (isValid && value !== projectStore.project.data.spec.artifact_path) {
         const data = {
           ...projectStore.project.data,
           spec: {
             ...projectStore.project.data.spec,
-            source: projectData.source,
-            artifact_path: projectData.artifact_path,
-            params: projectData.params
+            source: !isNil(editProject.source.value)
+              ? editProject.source.value
+              : projectStore.project.data.spec.source,
+            artifact_path: value,
+            params: projectStore.project.data.spec.params
           }
         }
 
-        setEditProject(prevState => ({
-          source: {
-            ...prevState.source,
-            value: projectData.source
-          },
-          artifact_path: {
-            ...prevState.artifact_path,
-            value: projectData.artifact_path
-          }
-        }))
-
-        setProjectSettings({
-          source: projectData.source,
-          artifact_path: projectData.artifact_path
-        })
-        projectsApi
-          .editProject(match.params.projectName, { ...data })
-          .catch(() => {
-            setEditProject({
-              source: {
-                value: projectStore.project.data.metadata.name,
-                isEdit: false
-              },
-              artifact_path: {
-                value: projectStore.project.data.spec.artifact_path,
-                isEdit: false
-              }
-            })
-          })
+        sendProjectSettingsData(data)
       }
     }, 250),
     [
       editProject.artifact_path.value,
-      editProject.source.value,
       match.params.projectName,
       projectStore.project.data,
       setProjectSettings,
-      validation.isPathValid,
-      validation.isSourceValid
+      validation.isPathValid
     ]
   )
 
-  const handleOnBlur = () => {
+  const sendProjectSettingsData = data => {
     setEditProject(prevState => ({
-      source: {
-        ...prevState.source,
-        isEdit: false
-      },
+      ...prevState,
       artifact_path: {
         ...prevState.artifact_path,
-        isEdit: false
+        value: data.spec.artifact_path
       }
     }))
+    setProjectSettings({
+      source: data.spec.source,
+      artifact_path: data.spec.artifact_path
+    })
+    projectsApi.editProject(match.params.projectName, { ...data }).catch(() => {
+      setEditProject({
+        source: {
+          value: projectStore.project.data.metadata.name,
+          isEdit: false
+        },
+        artifact_path: {
+          value: projectStore.project.data.spec.artifact_path,
+          isEdit: false
+        }
+      })
+    })
+  }
 
-    if (!validation.isSourceValid) {
-      setValidation(state => ({
-        ...state,
-        isSourceValid: true
+  const handleSourceChange = value => {
+    setEditProject(prevState => ({
+      ...prevState,
+      source: {
+        ...prevState.source,
+        value
+      }
+    }))
+  }
+
+  const handleOnBlur = tab => {
+    if (tab === SOURCE_URL) {
+      if (
+        !isNil(editProject.source.value) &&
+        validation.isSourceValid &&
+        editProject.source.value !== projectStore.project.data.spec.source
+      ) {
+        const data = {
+          ...projectStore.project.data,
+          spec: {
+            ...projectStore.project.data.spec,
+            source: !isNil(editProject.source.value)
+              ? editProject.source.value
+              : projectStore.project.data.spec.source
+          }
+        }
+
+        sendProjectSettingsData(data)
+        setEditProject(prevState => ({
+          ...prevState,
+          source: {
+            ...prevState.source,
+            isEdit: false
+          }
+        }))
+      } else {
+        setEditProject(prevState => ({
+          ...prevState,
+          source: {
+            value: projectStore.project.data.spec.source,
+            isEdit: false
+          }
+        }))
+        setValidation(prevState => ({
+          ...prevState,
+          isSourceValid: true
+        }))
+      }
+    } else {
+      setEditProject(prevState => ({
+        ...prevState,
+        artifact_path: {
+          ...prevState.artifact_path,
+          isEdit: false
+        }
       }))
     }
   }
@@ -253,11 +269,12 @@ const ProjectSettingsGeneral = ({
       error={projectStore.project?.error}
       generalParams={generalParams}
       handleAddNewParameter={handleAddNewParameter}
+      handleArtifactPathChange={handleArtifactPathChange}
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
       handleEditProject={handleEditProject}
       handleOnBlur={handleOnBlur}
-      handleOnChangeSettings={handleOnChangeSettings}
+      handleSourceChange={handleSourceChange}
       loading={projectStore.project?.loading}
       setValidation={setValidation}
       source={projectStore.project.data?.spec.source ?? ''}

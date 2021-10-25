@@ -14,11 +14,12 @@ const ProjectSettingsGeneralView = ({
   error,
   generalParams,
   handleAddNewParameter,
+  handleArtifactPathChange,
   handleDeleteParameter,
   handleEditParameter,
   handleEditProject,
   handleOnBlur,
-  handleOnChangeSettings,
+  handleSourceChange,
   loading,
   setValidation,
   source,
@@ -40,7 +41,7 @@ const ProjectSettingsGeneralView = ({
               editSourceData={editProject.source}
               handleEditProject={handleEditProject}
               handleOnBlur={handleOnBlur}
-              handleOnChangeSettings={handleOnChangeSettings}
+              handleSourceChange={handleSourceChange}
               setValidation={setValidation}
               settingsSource={source}
               validation={validation}
@@ -54,10 +55,8 @@ const ProjectSettingsGeneralView = ({
                 floatingLabel
                 invalid={!validation.isPathValid}
                 label="Artifact path"
-                onBlur={handleOnBlur}
-                onChange={(event, valid) =>
-                  handleOnChangeSettings(event, valid, ARTIFACT_PATH)
-                }
+                onBlur={() => handleOnBlur(ARTIFACT_PATH)}
+                onChange={handleArtifactPathChange}
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,
@@ -105,11 +104,12 @@ ProjectSettingsGeneralView.propTypes = {
   error: PropTypes.string,
   generalParams: PropTypes.array.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
+  handleArtifactPathChange: PropTypes.func.isRequired,
   handleDeleteParameter: PropTypes.func.isRequired,
   handleEditParameter: PropTypes.func.isRequired,
   handleEditProject: PropTypes.func.isRequired,
   handleOnBlur: PropTypes.func.isRequired,
-  handleOnChangeSettings: PropTypes.func.isRequired,
+  handleSourceChange: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   setValidation: PropTypes.func.isRequired,
   source: PropTypes.string.isRequired,

@@ -15,7 +15,7 @@ const ProjectSettingsSource = ({
   editSourceData,
   handleEditProject,
   handleOnBlur,
-  handleOnChangeSettings,
+  handleSourceChange,
   setValidation,
   settingsSource,
   validation
@@ -32,10 +32,8 @@ const ProjectSettingsSource = ({
             invalid={!validation.isSourceValid}
             label="Source URL"
             focused
-            onBlur={handleOnBlur}
-            onChange={(event, valid) =>
-              handleOnChangeSettings(event, valid, SOURCE_URL)
-            }
+            onBlur={() => handleOnBlur(SOURCE_URL)}
+            onChange={handleSourceChange}
             setInvalid={value =>
               setValidation(state => ({
                 ...state,
@@ -87,7 +85,7 @@ const ProjectSettingsSource = ({
 ProjectSettingsSource.propTypes = {
   editSourceData: PropTypes.shape({}).isRequired,
   handleEditProject: PropTypes.func.isRequired,
-  handleOnChangeSettings: PropTypes.func.isRequired,
+  handleSourceChange: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   settingsSource: PropTypes.string.isRequired,
   validation: PropTypes.object.isRequired
