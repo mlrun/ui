@@ -69,9 +69,14 @@
       border-radius: $mainBorderRadius;
 
       .new-members-title {
+        display: flex;
+        justify-content: space-between;
         padding: 15px;
         font-weight: bold;
         font-size: 18px;
+      }
+      .close-icon {
+        cursor: pointer;
       }
 
       .new-members-row {
