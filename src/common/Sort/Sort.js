@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
+import { ReactComponent as Caret } from '../../images/dropdown.svg'
+
 import SelectOption from '../../elements/SelectOption/SelectOption'
 
 import { ReactComponent as Arrow } from '../../images/back-arrow.svg'
@@ -52,10 +54,18 @@ const Sort = ({
   return (
     <div className="sort">
       <div className="sort__header">
-        <div onClick={() => setIsBodyOpen(state => !state)} ref={labelRef}>
-          {selectedOption.label}
-        </div>
-        <button onClick={() => setIsDescendingOrder(state => !state)}>
+        <button
+          className="btn btn-secondary sort__select"
+          onClick={() => setIsBodyOpen(state => !state)}
+          ref={labelRef}
+        >
+          <span>{selectedOption.label}</span>
+          <Caret className="sort__caret" />
+        </button>
+        <button
+          className="rounded-icon"
+          onClick={() => setIsDescendingOrder(state => !state)}
+        >
           <Arrow className={arrowDirectionClassName} />
         </button>
       </div>

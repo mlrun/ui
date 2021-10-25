@@ -47,4 +47,11 @@
     width: 20px;
     transform: rotate(90deg);
   }
+  &__select {
+    position: relative;
+    margin-right: 5px;
+  }
+  &__caret {
+    transform: translateX(10px);
+  }
 }

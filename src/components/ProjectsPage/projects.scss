@@ -27,19 +27,23 @@
       display: flex;
       flex: 1;
       flex-flow: row wrap;
-      justify-content: space-between;
+      max-width: 448px;
+      width: 100%;
+      align-items: flex-start;
       padding-left: 15px;
+      margin-bottom: 1rem;
 
       &-item {
         display: flex;
-
-        .sort {
-          margin-left: 30px;
-        }
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        width: 100%;
       }
 
       .project-types-select {
-        width: 210px;
+        padding: 0;
+        // width: 210px;
 
         .select__header {
           width: auto;
@@ -74,8 +78,8 @@
     }
   }
 
-  &-search {
-    min-width: 500px;
-    margin-bottom: 15px;
-  }
+  // &-search {
+  //   min-width: 500px;
+  //   margin-bottom: 15px;
+  // }
 }
