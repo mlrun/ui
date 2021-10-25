@@ -1,0 +1,15 @@
+.confirm-dialog {
+  &__message {
+    font-size: 15px;
+
+    &-only {
+      font-size: 22px;
+    }
+  }
+
+  &__btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+}

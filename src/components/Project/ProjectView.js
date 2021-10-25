@@ -24,6 +24,7 @@ import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
@@ -42,6 +43,7 @@ const ProjectView = React.forwardRef(
       changeOwnerCallback,
       closeFeatureSetPanel,
       closeFunctionsPanel,
+      confirmData,
       createFeatureSetPanelIsOpen,
       createFeatureSetSuccess,
       createFunctionSuccess,
@@ -100,8 +102,21 @@ const ProjectView = React.forwardRef(
         {project.loading ? (
           <Loader />
         ) : project.error ? (
-          <div className=" project__error-container">
-            <h1>{project.error}</h1>
+          <div className="project__error-container">
+            {confirmData ? (
+              <ConfirmDialog
+                closePopUp={confirmData.confirmHandler}
+                confirmButton={{
+                  handler: confirmData.confirmHandler,
+                  label: confirmData.btnConfirmLabel,
+                  variant: confirmData.btnConfirmType
+                }}
+                message={confirmData.message}
+                messageOnly={confirmData.messageOnly}
+              />
+            ) : (
+              <h1>{project.error.message}</h1>
+            )}
           </div>
         ) : isEmpty(project.data) ? (
           <NoData />
@@ -334,6 +349,7 @@ const ProjectView = React.forwardRef(
 )
 
 ProjectView.defaultProps = {
+  confirmData: null,
   visibleChipsMaxLength: null
 }
 
@@ -343,6 +359,7 @@ ProjectView.propTypes = {
   changeOwnerCallback: PropTypes.func.isRequired,
   closeFeatureSetPanel: PropTypes.func.isRequired,
   closeFunctionsPanel: PropTypes.func.isRequired,
+  confirmData: PropTypes.object,
   createFeatureSetPanelIsOpen: PropTypes.bool.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
   createFunctionSuccess: PropTypes.func.isRequired,

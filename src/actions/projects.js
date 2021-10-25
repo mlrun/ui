@@ -139,13 +139,15 @@ const projectsAction = {
   fetchProject: project => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
-    projectsApi
+    return projectsApi
       .getProject(project)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
       })
       .catch(error => {
-        dispatch(projectsAction.fetchProjectFailure(error.message))
+        dispatch(projectsAction.fetchProjectFailure(error))
+
+        throw error
       })
   },
   fetchProjectBegin: () => ({ type: FETCH_PROJECT_BEGIN }),

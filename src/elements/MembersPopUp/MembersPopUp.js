@@ -10,6 +10,7 @@ import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Select from '../../common/Select/Select'
 import Tip from '../../common/Tip/Tip'
 import ChipInput from '../../common/ChipInput/ChipInput'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
@@ -403,24 +404,21 @@ const MembersPopUp = ({
                     </button>
                   </div>
                   {deleteMemberId === member.name && (
-                    <PopUpDialog
+                    <ConfirmDialog
                       className="delete-member__pop-up"
+                      closePopUp={() => setDeleteMemberId('')}
+                      confirmButton={{
+                        handler: () => deleteMember(member),
+                        label: 'Remove member',
+                        variant: DANGER_BUTTON
+                      }}
                       customPosition={{
                         element: member.actionElement,
                         position: 'top-right'
                       }}
-                      headerText="Are you sure?"
-                      closePopUp={() => setDeleteMemberId('')}
-                    >
-                      <div>Removing a member will provoke all access.</div>
-                      <div className="pop-up-dialog__footer-container">
-                        <Button
-                          variant={DANGER_BUTTON}
-                          label="Remove member"
-                          onClick={() => deleteMember(member)}
-                        />
-                      </div>
-                    </PopUpDialog>
+                      header="Are you sure?"
+                      message="Removing a member will provoke all access."
+                    />
                   )}
                 </div>
               ))}
@@ -468,25 +466,22 @@ const MembersPopUp = ({
         <div className="divider" />
       </PopUpDialog>
       {confirmDiscard && (
-        <PopUpDialog
-          headerText="Discard all pending changes?"
+        <ConfirmDialog
+          cancelButton={{
+            handler: () => {
+              setConfirmDiscard(false)
+            },
+            label: 'No',
+            variant: LABEL_BUTTON
+          }}
           closePopUp={() => setConfirmDiscard(false)}
-        >
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              variant={LABEL_BUTTON}
-              label="No"
-              onClick={() => {
-                setConfirmDiscard(false)
-              }}
-            />
-            <Button
-              variant={PRIMARY_BUTTON}
-              label="Discard"
-              onClick={discardChanges}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: discardChanges,
+            label: 'Discard',
+            variant: PRIMARY_BUTTON
+          }}
+          header="Discard all pending changes?"
+        />
       )}
     </>
   )
