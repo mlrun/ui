@@ -119,7 +119,7 @@ export const generateCreateNewOptions = (
 export const handleFetchProjectError = (error, history, setConfirmData) => {
   if (error.response?.status === STATUS_CODE_FORBIDDEN) {
     setConfirmData({
-      message: 'You are not permitted to view this project.',
+      message: 'You are not permitted to view this project,',
       messageOnly: true,
       btnConfirmLabel: 'Okay',
       btnConfirmType: PRIMARY_BUTTON,
