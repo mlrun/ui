@@ -132,7 +132,7 @@ const ProjectsView = ({
                   value={filterByName}
                 />
                 <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
-                  <button onClick={refreshProjects}>
+                  <button className="rounded-icon" onClick={refreshProjects}>
                     <Refresh />
                   </button>
                 </Tooltip>

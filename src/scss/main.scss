@@ -87,9 +87,10 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5px;
-    width: 28px;
-    height: 28px;
+    padding: 0;
+    width: 34px;
+    height: 34px;
+    z-index: 1;
     &:before {
       content: '';
       border-radius: 50%;
@@ -104,6 +105,10 @@ button {
       &:before {
         background-color: $mercury;
       }
+    }
+    svg {
+      position: relative;
+      z-index: 2;
     }
   }
 }

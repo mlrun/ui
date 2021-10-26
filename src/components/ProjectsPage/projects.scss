@@ -27,9 +27,9 @@
       display: flex;
       flex: 1;
       flex-flow: row wrap;
-      max-width: 448px;
       width: 100%;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: start;
       padding-left: 15px;
       margin-bottom: 1rem;
 
@@ -37,8 +37,15 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 1rem;
-        width: 100%;
+        min-width: 100%;
+        // margin-bottom: 1rem;
+        // width: 100%;
+        &:not(:last-child) {
+          margin-right: 24px;
+        }
+        @media screen and (min-width: 576px) {
+          min-width: 442px;
+        }
       }
 
       .project-types-select {
