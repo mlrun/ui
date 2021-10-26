@@ -82,6 +82,7 @@ const Jobs = ({
   const [editableItem, setEditableItem] = useState(null)
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
+  const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const isDemoMode = useDemoMode()
 
   const dispatch = useDispatch()
@@ -343,17 +344,11 @@ const Jobs = ({
             status: error?.response?.status || 400,
             id: Math.random(),
             message: 'Failed to fetch jobs',
-            retry: () => refreshJobs(filtersStore.filters)
+            retry: () => refreshJobs(filters)
           })
         })
     },
-    [
-      fetchJobs,
-      filtersStore.filters,
-      match.params.pageTab,
-      match.params.projectName,
-      setNotification
-    ]
+    [fetchJobs, match.params.pageTab, match.params.projectName, setNotification]
   )
 
   useEffect(() => {
@@ -456,10 +451,7 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    if (
-      (isEmpty(selectedJob) && !match.params.jobId) ||
-      workflowsViewMode === 'list'
-    ) {
+    if (isEmpty(selectedJob) && !match.params.jobId && !dataIsLoaded) {
       let filters = {}
 
       if (match.params.pageTab === MONITOR_JOBS_TAB) {
@@ -478,19 +470,23 @@ const Jobs = ({
       }
 
       refreshJobs(filters)
-
-      return () => {
-        setJobs([])
-      }
+      setDataIsLoaded(true)
     }
   }, [
+    dataIsLoaded,
     match.params.jobId,
     match.params.pageTab,
     refreshJobs,
     selectedJob,
-    setFilters,
-    workflowsViewMode
+    setFilters
   ])
+
+  useEffect(() => {
+    return () => {
+      setJobs([])
+      setDataIsLoaded(false)
+    }
+  }, [match.params.projectName, match.params.pageTab])
 
   const getWorkflows = useCallback(() => {
     fetchWorkflows(match.params.projectName)
