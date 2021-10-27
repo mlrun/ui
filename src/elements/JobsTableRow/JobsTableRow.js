@@ -54,7 +54,7 @@ const JobsTableRow = ({
                     firstRow={rowItemKey === 'name'}
                     handleExpandRow={handleExpandRow}
                     item={rowItem}
-                    key={rowItemKey}
+                    key={rowItemData.id}
                     selectItem={handleSelectItem}
                     selectedItem={selectedItem}
                   />
@@ -110,7 +110,7 @@ const JobsTableRow = ({
                           link={cellContentObj.getLink?.(
                             match.params.tab ?? DETAILS_OVERVIEW_TAB
                           )}
-                          key={`${cellContentObj.value}${index}`}
+                          key={cellContentObj.id}
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
                         />
@@ -130,7 +130,7 @@ const JobsTableRow = ({
         </div>
       ) : (
         <>
-          {Object.values(rowItem).map((rowItemProp, index) => {
+          {Object.values(rowItem).map(rowItemProp => {
             return (
               !rowItemProp.hidden && (
                 <TableCell
@@ -143,7 +143,7 @@ const JobsTableRow = ({
                   }
                   handleExpandRow={handleExpandRow}
                   item={currentItem}
-                  key={`${new Date().getTime()}${index}`}
+                  key={rowItemProp.id}
                   link={
                     rowItemProp.getLink
                       ? rowItemProp.getLink?.(

@@ -103,7 +103,11 @@ const Files = ({
       }))
 
       try {
-        result = await fetchFile(file.project, file.db_key, !filtersStore.iter)
+        result = await fetchFile(
+          file.project ?? match.params.projectName,
+          file.db_key,
+          !filtersStore.iter
+        )
       } catch (error) {
         setPageData(state => ({
           ...state,
@@ -139,7 +143,7 @@ const Files = ({
         })
       }
     },
-    [fetchFile, filtersStore.iter]
+    [fetchFile, filtersStore.iter, match.params.projectName]
   )
 
   useEffect(() => {
