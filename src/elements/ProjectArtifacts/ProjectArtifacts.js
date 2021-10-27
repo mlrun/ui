@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
 
-const ProjectArtifacts = ({ counterValue, link, projectCounters, title }) => {
+const ProjectArtifacts = ({ counterValue, link, projectSummary, title }) => {
   return (
     <Link to={link} className="project-data-card project-data-card_small">
       <div className="project-data-card__header">
@@ -13,11 +13,11 @@ const ProjectArtifacts = ({ counterValue, link, projectCounters, title }) => {
         </div>
         <div className="project-data-card__statistics">
           <div className="project-data-card__statistics-item">
-            {projectCounters.loading ? (
+            {projectSummary.loading ? (
               <Loader section />
             ) : (
               <div className="project-data-card__statistics-value statistics_default">
-                {projectCounters.error ? 'N/A' : counterValue}
+                {projectSummary.error ? 'N/A' : counterValue}
               </div>
             )}
           </div>
@@ -30,7 +30,7 @@ const ProjectArtifacts = ({ counterValue, link, projectCounters, title }) => {
 ProjectArtifacts.propTypes = {
   counterValue: PropTypes.number.isRequired,
   link: PropTypes.string.isRequired,
-  projectCounters: PropTypes.object.isRequired,
+  projectSummary: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired
 }
 
