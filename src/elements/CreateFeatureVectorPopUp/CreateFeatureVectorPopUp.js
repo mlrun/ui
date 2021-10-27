@@ -45,6 +45,7 @@ const CreateFeatureVectorPopUp = ({
           onChange={setFeatureVectorName}
           type="text"
           value={featureVectorName}
+          required
         />
         <Input
           className="vector-tag"
@@ -54,6 +55,7 @@ const CreateFeatureVectorPopUp = ({
           onChange={setFeatureVectorTag}
           type="text"
           value={featureVectorTag}
+          required
         />
       </div>
       <div className="new-feature-vector__row new-feature-vector__description-row">
