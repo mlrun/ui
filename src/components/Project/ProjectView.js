@@ -24,6 +24,7 @@ import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
@@ -42,6 +43,7 @@ const ProjectView = React.forwardRef(
       changeOwnerCallback,
       closeFeatureSetPanel,
       closeFunctionsPanel,
+      confirmData,
       createFeatureSetPanelIsOpen,
       createFeatureSetSuccess,
       createFunctionSuccess,
@@ -62,11 +64,11 @@ const ProjectView = React.forwardRef(
       match,
       membersDispatch,
       membersState,
-      projectCounters,
       projectLabels,
       projectMembersIsShown,
       projectMembershipIsEnabled,
       projectOwnerIsShown,
+      projectSummary,
       refresh,
       setIsNewFunctionPopUpOpen,
       setIsPopupDialogOpen,
@@ -100,8 +102,21 @@ const ProjectView = React.forwardRef(
         {project.loading ? (
           <Loader />
         ) : project.error ? (
-          <div className=" project__error-container">
-            <h1>{project.error}</h1>
+          <div className="project__error-container">
+            {confirmData ? (
+              <ConfirmDialog
+                closePopUp={confirmData.confirmHandler}
+                confirmButton={{
+                  handler: confirmData.confirmHandler,
+                  label: confirmData.btnConfirmLabel,
+                  variant: confirmData.btnConfirmType
+                }}
+                message={confirmData.message}
+                messageOnly={confirmData.messageOnly}
+              />
+            ) : (
+              <h1>{project.error.message}</h1>
+            )}
           </div>
         ) : isEmpty(project.data) ? (
           <NoData />
@@ -251,21 +266,21 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="main-info__statistics-section">
                 <ProjectArtifacts
-                  counterValue={projectCounters.data.models_count ?? 0}
+                  counterValue={projectSummary.data.models_count ?? 0}
                   link={`/projects/${match.params.projectName}/models`}
-                  projectCounters={projectCounters}
+                  projectSummary={projectSummary}
                   title="Models"
                 />
                 <ProjectArtifacts
-                  counterValue={projectCounters.data.feature_sets_count ?? 0}
+                  counterValue={projectSummary.data.feature_sets_count ?? 0}
                   link={`/projects/${match.params.projectName}/feature-store`}
-                  projectCounters={projectCounters}
+                  projectSummary={projectSummary}
                   title="Feature sets"
                 />
                 <ProjectArtifacts
-                  counterValue={projectCounters.data.files_count ?? 0}
+                  counterValue={projectSummary.data.files_count ?? 0}
                   link={`/projects/${match.params.projectName}/files`}
-                  projectCounters={projectCounters}
+                  projectSummary={projectSummary}
                   title="Files"
                 />
               </div>
@@ -334,6 +349,7 @@ const ProjectView = React.forwardRef(
 )
 
 ProjectView.defaultProps = {
+  confirmData: null,
   visibleChipsMaxLength: null
 }
 
@@ -343,6 +359,7 @@ ProjectView.propTypes = {
   changeOwnerCallback: PropTypes.func.isRequired,
   closeFeatureSetPanel: PropTypes.func.isRequired,
   closeFunctionsPanel: PropTypes.func.isRequired,
+  confirmData: PropTypes.object,
   createFeatureSetPanelIsOpen: PropTypes.bool.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
   createFunctionSuccess: PropTypes.func.isRequired,
@@ -363,11 +380,11 @@ ProjectView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
-  projectCounters: PropTypes.object.isRequired,
   projectLabels: PropTypes.array.isRequired,
   projectMembersIsShown: PropTypes.bool.isRequired,
   projectMembershipIsEnabled: PropTypes.bool.isRequired,
   projectOwnerIsShown: PropTypes.bool.isRequired,
+  projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowChangeOwner: PropTypes.func.isRequired,

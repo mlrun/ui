@@ -10,6 +10,11 @@ import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Select from '../../common/Select/Select'
 import Tip from '../../common/Tip/Tip'
 import ChipInput from '../../common/ChipInput/ChipInput'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+import { ReactComponent as Close } from '../../images/close.svg'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
@@ -233,7 +238,16 @@ const MembersPopUp = ({
             id: identity.id,
             subLabel: existingMember?.role ?? '',
             disabled: Boolean(existingMember),
-            icon: identity.type === 'user' ? <User /> : <Users />,
+            icon:
+              identity.type === 'user' ? (
+                <i data-identity-type="user">
+                  <User />
+                </i>
+              ) : (
+                <i data-identity-type="user_group">
+                  <Users />
+                </i>
+              ),
             ui: {
               type: identity.type
             }
@@ -284,7 +298,17 @@ const MembersPopUp = ({
         </div>
         {inviteNewMembers && (
           <div className="invite-new-members">
-            <div className="new-members-title">Invite new members</div>
+            <div className="new-members-title">
+              <span>Invite new members</span>
+              <div className="close-icon">
+                <Tooltip template={<TextTooltipTemplate text="Close" />}>
+                  <Close
+                    data-testid="pop-up-close-btn"
+                    onClick={() => setInviteNewMembers(false)}
+                  />
+                </Tooltip>
+              </div>
+            </div>
             <div className="new-members-row">
               <ChipInput
                 className="new-member-name"
@@ -403,24 +427,21 @@ const MembersPopUp = ({
                     </button>
                   </div>
                   {deleteMemberId === member.name && (
-                    <PopUpDialog
+                    <ConfirmDialog
                       className="delete-member__pop-up"
+                      closePopUp={() => setDeleteMemberId('')}
+                      confirmButton={{
+                        handler: () => deleteMember(member),
+                        label: 'Remove member',
+                        variant: DANGER_BUTTON
+                      }}
                       customPosition={{
                         element: member.actionElement,
                         position: 'top-right'
                       }}
-                      headerText="Are you sure?"
-                      closePopUp={() => setDeleteMemberId('')}
-                    >
-                      <div>Removing a member will provoke all access.</div>
-                      <div className="pop-up-dialog__footer-container">
-                        <Button
-                          variant={DANGER_BUTTON}
-                          label="Remove member"
-                          onClick={() => deleteMember(member)}
-                        />
-                      </div>
-                    </PopUpDialog>
+                      header="Are you sure?"
+                      message="Removing a member will provoke all access."
+                    />
                   )}
                 </div>
               ))}
@@ -468,25 +489,22 @@ const MembersPopUp = ({
         <div className="divider" />
       </PopUpDialog>
       {confirmDiscard && (
-        <PopUpDialog
-          headerText="Discard all pending changes?"
+        <ConfirmDialog
+          cancelButton={{
+            handler: () => {
+              setConfirmDiscard(false)
+            },
+            label: 'No',
+            variant: LABEL_BUTTON
+          }}
           closePopUp={() => setConfirmDiscard(false)}
-        >
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              variant={LABEL_BUTTON}
-              label="No"
-              onClick={() => {
-                setConfirmDiscard(false)
-              }}
-            />
-            <Button
-              variant={PRIMARY_BUTTON}
-              label="Discard"
-              onClick={discardChanges}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: discardChanges,
+            label: 'Discard',
+            variant: PRIMARY_BUTTON
+          }}
+          header="Discard all pending changes?"
+        />
       )}
     </>
   )

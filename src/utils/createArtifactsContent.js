@@ -95,13 +95,13 @@ const createArtifactsRowData = artifact => {
 
 const createModelsRowData = (artifact, project, isSelectedItem) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
-  const identifier = getArtifactIdentifier(artifact, true)
+  const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
     key: {
-      id: `key.${identifier}`,
+      id: `key.${identifierUnique}`,
       identifier: getArtifactIdentifier(artifact),
-      identifierUnique: identifier,
+      identifierUnique: identifierUnique,
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -129,28 +129,28 @@ const createModelsRowData = (artifact, project, isSelectedItem) => {
       }
     },
     labels: {
-      id: `labels.${identifier}`,
+      id: `labels.${identifierUnique}`,
       value: parseKeyValues(artifact.labels),
       class: 'artifacts_extra-small',
       type: 'labels',
       hidden: isSelectedItem
     },
     producer: {
-      id: `producer.${identifier}`,
+      id: `producer.${identifierUnique}`,
       value: artifact.producer,
       class: 'artifacts_small',
       type: 'producer',
       hidden: isSelectedItem
     },
     owner: {
-      id: `owner.${identifier}`,
+      id: `owner.${identifierUnique}`,
       value: artifact.producer?.owner,
       class: 'artifacts_small',
       type: 'owner',
       hidden: isSelectedItem
     },
     updated: {
-      id: `updated.${identifier}`,
+      id: `updated.${identifierUnique}`,
       value: artifact.updated
         ? formatDatetime(new Date(artifact.updated), 'N/A')
         : 'N/A',
@@ -158,14 +158,14 @@ const createModelsRowData = (artifact, project, isSelectedItem) => {
       hidden: isSelectedItem
     },
     metrics: {
-      id: `metrics.${identifier}`,
+      id: `metrics.${identifierUnique}`,
       value: parseKeyValues(artifact.metrics),
       class: 'artifacts_big',
       type: 'metrics',
       hidden: isSelectedItem
     },
     frameWorkAndAlgorithm: {
-      id: `frameWorkAndAlgorithm.${identifier}`,
+      id: `frameWorkAndAlgorithm.${identifierUnique}`,
       value:
         artifact.framework || artifact.algorithm ? (
           <span>
@@ -180,28 +180,28 @@ const createModelsRowData = (artifact, project, isSelectedItem) => {
       hidden: isSelectedItem
     },
     version: {
-      id: `version.${identifier}`,
+      id: `version.${identifierUnique}`,
       value: artifact.tag,
       class: 'artifacts_small',
       type: 'hidden',
       hidden: isSelectedItem
     },
     buttonPopout: {
-      id: `buttonPopout.${identifier}`,
+      id: `buttonPopout.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonPopout',
       hidden: isSelectedItem
     },
     buttonDownload: {
-      id: `buttonDownload.${identifier}`,
+      id: `buttonDownload.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonDownload',
       hidden: isSelectedItem
     },
     buttonCopy: {
-      id: `buttonCopy.${identifier}`,
+      id: `buttonCopy.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonCopyURI',
@@ -213,13 +213,13 @@ const createModelsRowData = (artifact, project, isSelectedItem) => {
 
 const createFilesRowData = (artifact, project, isSelectedItem) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
-  const identifier = getArtifactIdentifier(artifact, true)
+  const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
     key: {
-      id: `key.${identifier}`,
+      id: `key.${identifierUnique}`,
       identifier: getArtifactIdentifier(artifact),
-      identifierUnique: identifier,
+      identifierUnique: identifierUnique,
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -247,41 +247,41 @@ const createFilesRowData = (artifact, project, isSelectedItem) => {
       }
     },
     version: {
-      id: `version.${identifier}`,
+      id: `version.${identifierUnique}`,
       value: artifact.tag,
       class: 'artifacts_small',
       type: 'hidden',
       hidden: isSelectedItem
     },
     kind: {
-      id: `kind.${identifier}`,
+      id: `kind.${identifierUnique}`,
       value: artifact.kind,
       class: 'artifacts_extra-small',
       hidden: isSelectedItem
     },
     labels: {
-      id: `labels.${identifier}`,
+      id: `labels.${identifierUnique}`,
       value: parseKeyValues(artifact.labels),
       class: 'artifacts_big',
       type: 'labels',
       hidden: isSelectedItem
     },
     producer: {
-      id: `producer.${identifier}`,
+      id: `producer.${identifierUnique}`,
       value: artifact.producer || {},
       class: 'artifacts_small',
       type: 'producer',
       hidden: isSelectedItem
     },
     owner: {
-      id: `owner.${identifier}`,
+      id: `owner.${identifierUnique}`,
       value: artifact.producer?.owner,
       class: 'artifacts_small',
       type: 'owner',
       hidden: isSelectedItem
     },
     updated: {
-      id: `updated.${identifier}`,
+      id: `updated.${identifierUnique}`,
       value: artifact.updated
         ? formatDatetime(new Date(artifact.updated), 'N/A')
         : 'N/A',
@@ -289,27 +289,27 @@ const createFilesRowData = (artifact, project, isSelectedItem) => {
       hidden: isSelectedItem
     },
     size: {
-      id: `size.${identifier}`,
-      value: convertBytes(artifact.size || 0),
+      id: `size.${identifierUnique}`,
+      value: artifact.size ? convertBytes(artifact.size) : 'N/A',
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
     buttonPopout: {
-      id: `buttonPopout.${identifier}`,
+      id: `buttonPopout.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonPopout',
       hidden: isSelectedItem
     },
     buttonDownload: {
-      id: `buttonDownload.${identifier}`,
+      id: `buttonDownload.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonDownload',
       hidden: isSelectedItem
     },
     buttonCopy: {
-      id: `buttonCopy.${identifier}`,
+      id: `buttonCopy.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonCopyURI',
@@ -345,13 +345,13 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
   const { key: functionName } = parseUri(functionUri)
   const averageLatency =
     artifact.status?.metrics?.latency_avg_1h?.values?.[0]?.[1]
-  const identifier = getArtifactIdentifier(artifact, true)
+  const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
     key: {
-      id: `key.${identifier}`,
+      id: `key.${identifierUnique}`,
       identifier: getArtifactIdentifier(artifact),
-      identifierUnique: identifier,
+      identifierUnique: identifierUnique,
       value: name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -375,57 +375,57 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
       hidden: isSelectedItem
     },
     state: {
-      id: `state.${identifier}`,
+      id: `state.${identifierUnique}`,
       value: artifact.status?.state,
       class: 'artifacts_extra-small',
       type: 'hidden',
       hidden: isSelectedItem
     },
     version: {
-      id: `version.${identifier}`,
+      id: `version.${identifierUnique}`,
       value: artifact?.status?.children ? 'Router' : tag,
       class: 'artifacts_extra-small',
       hidden: isSelectedItem
     },
     modelClass: {
-      id: `modelClass.${identifier}`,
+      id: `modelClass.${identifierUnique}`,
       value: artifact.spec?.model_class,
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
     labels: {
-      id: `labels.${identifier}`,
+      id: `labels.${identifierUnique}`,
       value: parseKeyValues(artifact.metadata?.labels),
       class: 'artifacts_big',
       type: 'labels',
       hidden: isSelectedItem
     },
     firstRequest: {
-      id: `firstRequest.${identifier}`,
+      id: `firstRequest.${identifierUnique}`,
       value: formatDatetime(new Date(artifact.status?.first_request), '-'),
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
     lastRequest: {
-      id: `lastRequest.${identifier}`,
+      id: `lastRequest.${identifierUnique}`,
       value: formatDatetime(new Date(artifact.status?.last_request), '-'),
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
     averageLatency: {
-      id: `averageLatency.${identifier}`,
+      id: `averageLatency.${identifierUnique}`,
       value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
     errorCount: {
-      id: `errorCount.${identifier}`,
+      id: `errorCount.${identifierUnique}`,
       value: artifact.status?.error_count ?? '-',
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
     driftStatus: {
-      id: `driftStatus.${identifier}`,
+      id: `driftStatus.${identifierUnique}`,
       value: driftStatusIcons[artifact.status?.drift_status]?.value,
       class: 'artifacts_extra-small',
       tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip,
@@ -436,13 +436,13 @@ const createModelEndpointsRowData = (artifact, project, isSelectedItem) => {
 
 const createDatasetsRowData = (artifact, project, isSelectedItem) => {
   const iter = isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`
-  const identifier = getArtifactIdentifier(artifact, true)
+  const identifierUnique = getArtifactIdentifier(artifact, true)
 
   return {
     key: {
-      id: `key.${identifier}`,
+      id: `key.${identifierUnique}`,
       identifier: getArtifactIdentifier(artifact),
-      identifierUnique: identifier,
+      identifierUnique: identifierUnique,
       value: artifact.db_key,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -470,28 +470,28 @@ const createDatasetsRowData = (artifact, project, isSelectedItem) => {
       }
     },
     labels: {
-      id: `labels.${identifier}`,
+      id: `labels.${identifierUnique}`,
       value: parseKeyValues(artifact.labels),
       class: 'artifacts_big',
       type: 'labels',
       hidden: isSelectedItem
     },
     producer: {
-      id: `producer.${identifier}`,
+      id: `producer.${identifierUnique}`,
       value: artifact.producer,
       class: 'artifacts_small',
       type: 'producer',
       hidden: isSelectedItem
     },
     owner: {
-      id: `owner.${identifier}`,
+      id: `owner.${identifierUnique}`,
       value: artifact.producer?.owner,
       class: 'artifacts_small',
       type: 'owner',
       hidden: isSelectedItem
     },
     updated: {
-      id: `updated.${identifier}`,
+      id: `updated.${identifierUnique}`,
       value: artifact.updated
         ? formatDatetime(new Date(artifact.updated), 'N/A')
         : 'N/A',
@@ -499,34 +499,34 @@ const createDatasetsRowData = (artifact, project, isSelectedItem) => {
       hidden: isSelectedItem
     },
     size: {
-      id: `size.${identifier}`,
+      id: `size.${identifierUnique}`,
       value: convertBytes(artifact.size || 0),
       class: 'artifacts_small',
       hidden: isSelectedItem
     },
     version: {
-      id: `version.${identifier}`,
+      id: `version.${identifierUnique}`,
       value: artifact.tag,
       class: 'artifacts_small',
       type: 'hidden',
       hidden: isSelectedItem
     },
     buttonPopout: {
-      id: `buttonPopout.${identifier}`,
+      id: `buttonPopout.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonPopout',
       hidden: isSelectedItem
     },
     buttonDownload: {
-      id: `buttonDownload.${identifier}`,
+      id: `buttonDownload.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonDownload',
       hidden: isSelectedItem
     },
     buttonCopy: {
-      id: `buttonCopy.${identifier}`,
+      id: `buttonCopy.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonCopyURI',

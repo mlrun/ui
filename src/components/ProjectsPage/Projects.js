@@ -140,8 +140,8 @@ const Projects = ({
     project => {
       setConfirmData({
         item: project,
-        title: 'Archive project',
-        description:
+        header: 'Archive project',
+        message:
           "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that " +
           "before setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
         btnConfirmLabel: 'Archive',
@@ -159,8 +159,8 @@ const Projects = ({
     project => {
       setConfirmData({
         item: project,
-        title: `Delete project "${project.metadata.name}"?`,
-        description: 'Deleted projects can not be restored.',
+        header: 'Delete project?',
+        message: `You try to delete project "${project.metadata.name}". Deleted projects can not be restored.`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {

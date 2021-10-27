@@ -22,7 +22,7 @@ const createJobsContent = (
 ) => {
   return content.map(contentItem => {
     if (contentItem) {
-      const identifier = getJobIdentifier(contentItem, true)
+      const identifierUnique = getJobIdentifier(contentItem, true)
 
       if (params.pageTab === SCHEDULE_TAB) {
         const [, , scheduleJobFunctionUid] =
@@ -36,11 +36,11 @@ const createJobsContent = (
 
         return {
           name: {
-            id: `name.${identifier}`,
+            id: `name.${identifierUnique}`,
             value: contentItem.name,
             class: 'jobs_big',
             identifier: getJobIdentifier(contentItem),
-            identifierUnique: identifier,
+            identifierUnique: identifierUnique,
             getLink: tab =>
               generateLinkToDetailsPanel(
                 contentItem.project,
@@ -52,21 +52,21 @@ const createJobsContent = (
               )
           },
           type: {
-            id: `type.${identifier}`,
+            id: `type.${identifierUnique}`,
             value: contentItem.type,
             class: 'jobs_big',
             type: 'type',
             hidden: isSelectedItem
           },
           nextRun: {
-            id: `nextRun.${identifier}`,
+            id: `nextRun.${identifierUnique}`,
             value: formatDatetime(contentItem.nextRun),
             class: 'jobs_big',
             type: 'date',
             hidden: isSelectedItem
           },
           schedule: {
-            id: `schedule.${identifier}`,
+            id: `schedule.${identifierUnique}`,
             value: contentItem.scheduled_object
               ? cronstrue.toString(contentItem.scheduled_object?.schedule)
               : null,
@@ -74,7 +74,7 @@ const createJobsContent = (
             hidden: isSelectedItem
           },
           labels: {
-            id: `labels.${identifier}`,
+            id: `labels.${identifierUnique}`,
             value: parseKeyValues(
               contentItem.scheduled_object?.task.metadata.labels || {}
             ),
@@ -83,21 +83,21 @@ const createJobsContent = (
             hidden: isSelectedItem
           },
           lastRun: {
-            id: `lastRun.${identifier}`,
+            id: `lastRun.${identifierUnique}`,
             value: formatDatetime(contentItem.start_time),
             class: 'jobs_big',
             getLink: lastRunLink,
             hidden: isSelectedItem
           },
           createdTime: {
-            id: `createdTime.${identifier}`,
+            id: `createdTime.${identifierUnique}`,
             value: formatDatetime(contentItem.createdTime, 'Not yet started'),
             class: 'jobs_medium',
             type: 'date',
             hidden: isSelectedItem
           },
           func: {
-            id: `func.${identifier}`,
+            id: `func.${identifierUnique}`,
             value: contentItem.func,
             class: '',
             type: 'hidden',
@@ -114,12 +114,12 @@ const createJobsContent = (
 
         return {
           name: {
-            id: `name.${identifier}`,
+            id: `name.${identifierUnique}`,
             value: contentItem.name,
             class: 'jobs_medium',
             type: type === 'workflow' && !isDemoMode ? 'hidden' : '',
             identifier: getJobIdentifier(contentItem),
-            identifierUnique: identifier,
+            identifierUnique: identifierUnique,
             getLink: tab => {
               return type === 'workflow' || params.workflowId
                 ? getWorkflowDetailsLink(
@@ -139,21 +139,21 @@ const createJobsContent = (
             }
           },
           type: {
-            id: `type.${identifier}`,
+            id: `type.${identifierUnique}`,
             value: type,
             class: 'jobs_extra-small',
             type: 'type',
             hidden: isSelectedItem
           },
           uid: {
-            id: `uid.${identifier}`,
+            id: `uid.${identifierUnique}`,
             value: contentItem.uid || contentItem?.id,
             class: 'jobs_small',
             type: 'hidden',
             hidden: isSelectedItem
           },
           duration: {
-            id: `duration.${identifier}`,
+            id: `duration.${identifierUnique}`,
             value: measureTime(
               contentItem.startTime || new Date(contentItem.created_at),
               (contentItem.state?.value !== 'running' && contentItem.updated) ||
@@ -165,34 +165,34 @@ const createJobsContent = (
             hidden: isSelectedItem
           },
           owner: {
-            id: `owner.${identifier}`,
+            id: `owner.${identifierUnique}`,
             value: contentItem.owner,
             class: 'jobs_extra-small',
             hidden: isSelectedItem
           },
           labels: {
-            id: `labels.${identifier}`,
+            id: `labels.${identifierUnique}`,
             value: contentItem.labels,
             class: 'jobs_extra-small',
             type: 'labels',
             hidden: isSelectedItem
           },
           parameters: {
-            id: `parameters.${identifier}`,
+            id: `parameters.${identifierUnique}`,
             value: contentItem.parameters,
             class: 'jobs_extra-small',
             type: 'parameters',
             hidden: isSelectedItem
           },
           resultsChips: {
-            id: `resultsChips.${identifier}`,
+            id: `resultsChips.${identifierUnique}`,
             value: contentItem.resultsChips,
             class: 'jobs_big',
             type: 'results',
             hidden: isSelectedItem
           },
           updated: {
-            id: `updated.${identifier}`,
+            id: `updated.${identifierUnique}`,
             value: contentItem.updated || new Date(contentItem.finished_at),
             class: 'jobs_small',
             type: 'hidden',
@@ -202,36 +202,36 @@ const createJobsContent = (
       } else {
         return {
           name: {
-            id: `name.${identifier}`,
+            id: `name.${identifierUnique}`,
             value: contentItem.name,
             class: 'jobs_big',
             identifier: getJobIdentifier(contentItem),
-            identifierUnique: identifier,
+            identifierUnique: identifierUnique,
             getLink: () => {
               return getWorkflowDetailsLink(params, contentItem.id)
             }
           },
           uid: {
-            id: `uid.${identifier}`,
+            id: `uid.${identifierUnique}`,
             value: contentItem?.id,
             class: 'jobs_small',
             type: 'hidden',
             hidden: isSelectedItem
           },
           createdAt: {
-            id: `createdAt.${identifier}`,
+            id: `createdAt.${identifierUnique}`,
             value: formatDatetime(new Date(contentItem.created_at), 'N/A'),
             class: 'jobs_small',
             hidden: isSelectedItem
           },
           finishedAt: {
-            id: `finishedAt.${identifier}`,
+            id: `finishedAt.${identifierUnique}`,
             value: formatDatetime(new Date(contentItem.finished_at), 'N/A'),
             class: 'jobs_small',
             hidden: isSelectedItem
           },
           duration: {
-            id: `duration.${identifier}`,
+            id: `duration.${identifierUnique}`,
             value: measureTime(
               contentItem.startTime || new Date(contentItem.created_at),
               (contentItem.state?.value !== 'running' && contentItem.updated) ||
@@ -243,7 +243,7 @@ const createJobsContent = (
             hidden: isSelectedItem
           },
           updated: {
-            id: `updated.${identifier}`,
+            id: `updated.${identifierUnique}`,
             value: contentItem.updated || new Date(contentItem.finished_at),
             class: 'jobs_small',
             type: 'hidden',

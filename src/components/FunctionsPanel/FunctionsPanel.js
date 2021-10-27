@@ -196,9 +196,8 @@ const FunctionsPanel = ({
         getFunction(project, functionsStore.newFunction.metadata.name)
           .then(() => {
             setConfirmData({
-              title: `Overwrite function "${functionsStore.newFunction.metadata.name}"?`,
-              description:
-                'The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?',
+              header: 'Overwrite function?',
+              message: `You try to overwrite function "${functionsStore.newFunction.metadata.name}". The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?`,
               btnCancelLabel: 'Cancel',
               btnCancelVariant: LABEL_BUTTON,
               btnConfirmLabel: 'Overwrite',

@@ -82,9 +82,9 @@ export const handleDeleteProjectError = (
   if (error.response?.status === 412) {
     setConfirmData({
       item: project,
-      title: `Delete project "${project.metadata.name}"?`,
-      description:
-        'The project is not empty. Deleting it will also delete all of its resources, such as jobs, ' +
+      header: 'Delete project?',
+      message:
+        `You try to delete project "${project.metadata.name}". 'The project is not empty. Deleting it will also delete all of its resources, such as jobs, '` +
         'artifacts, and features.',
       btnConfirmLabel: 'Delete',
       btnConfirmType: DANGER_BUTTON,

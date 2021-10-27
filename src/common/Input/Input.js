@@ -134,7 +134,6 @@ const Input = React.forwardRef(
 
     const inputOnChange = event => {
       setTypedValue(event.target.value)
-      onChange(event.target.value)
 
       if (
         (required && event.target.value.trim().length === 0) ||
@@ -145,13 +144,15 @@ const Input = React.forwardRef(
       ) {
         setIsInvalid(true)
         setInvalid && setInvalid(false)
+        onChange(event.target.value, false)
       } else {
         setIsInvalid(false)
         setInvalid && setInvalid(true)
+        onChange(event.target.value, true)
       }
     }
 
-    const inputOnFocus = event => {
+    const inputOnFocus = () => {
       setInputIsFocused(true)
     }
 

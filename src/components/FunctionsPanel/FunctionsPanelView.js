@@ -11,8 +11,8 @@ import FunctionsPanelEnvironmentVariables from '../../elements/FunctionsPanelEnv
 import Button from '../../common/Button/Button'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FunctionsPanelRuntime from '../../elements/FunctionsPanelRuntime/FunctionsPanelRuntime'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { runtimeSections } from './functionsPanel.util'
@@ -49,24 +49,21 @@ const FunctionsPanelView = ({
   return (
     <>
       {confirmData && (
-        <PopUpDialog
-          headerText={confirmData.title}
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: confirmData.btnCancelLabel,
+            variant: confirmData.btnCancelVariant
+          }}
           closePopUp={confirmData.rejectHandler}
-        >
-          <div>{confirmData.description}</div>
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              label={confirmData.btnCancelLabel}
-              onClick={confirmData.rejectHandler}
-              variant={confirmData.btnCancelVariant}
-            />
-            <Button
-              label={confirmData.btnConfirmLabel}
-              onClick={confirmData.confirmHandler}
-              variant={confirmData.btnConfirmVariant}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: confirmData.confirmHandler,
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmVariant
+          }}
+          header={confirmData.header}
+          message={confirmData.message}
+        />
       )}
       <div className="new-item-side-panel-container">
         <div className="functions-panel new-item-side-panel">

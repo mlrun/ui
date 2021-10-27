@@ -44,13 +44,13 @@ export const createFeatureStoreContent = (
 }
 
 const createFeatureSetsRowData = (featureSet, project, isSelectedItem) => {
-  const identifier = getFeatureSetIdentifier(featureSet, true)
+  const identifierUnique = getFeatureSetIdentifier(featureSet, true)
 
   return {
     key: {
-      id: `key.${identifier}`,
+      id: `key.${identifierUnique}`,
       identifier: getFeatureSetIdentifier(featureSet),
-      identifierUnique: identifier,
+      identifierUnique: identifierUnique,
       value: featureSet.name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -70,27 +70,27 @@ const createFeatureSetsRowData = (featureSet, project, isSelectedItem) => {
       }
     },
     description: {
-      id: `description.${identifier}`,
+      id: `description.${identifierUnique}`,
       value: featureSet.description,
       class: 'artifacts_medium',
       hidden: isSelectedItem
     },
     labels: {
-      id: `labels.${identifier}`,
+      id: `labels.${identifierUnique}`,
       value: parseKeyValues(featureSet.labels),
       class: 'artifacts_big',
       type: 'labels',
       hidden: isSelectedItem
     },
     version: {
-      id: `version.${identifier}`,
+      id: `version.${identifierUnique}`,
       value: featureSet.tag,
       class: 'artifacts_small',
       type: 'hidden',
       hidden: isSelectedItem
     },
     entity: {
-      id: `entity.${identifier}`,
+      id: `entity.${identifierUnique}`,
       value:
         featureSet.entities
           ?.slice(0, 2)
@@ -101,7 +101,7 @@ const createFeatureSetsRowData = (featureSet, project, isSelectedItem) => {
     },
     targets: getFeatureSetTargetCellValue(featureSet.targets, isSelectedItem),
     buttonCopy: {
-      id: `buttonCopy.${identifier}`,
+      id: `buttonCopy.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonCopyURI',
@@ -112,13 +112,13 @@ const createFeatureSetsRowData = (featureSet, project, isSelectedItem) => {
 }
 
 const createFeaturesRowData = (feature, isTablePanelOpen) => {
-  const identifier = getFeatureIdentifier(feature, true)
+  const identifierUnique = getFeatureIdentifier(feature, true)
 
   return {
     key: {
-      id: `key.${identifier}`,
+      id: `key.${identifierUnique}`,
       identifier: getFeatureIdentifier(feature),
-      identifierUnique: identifier,
+      identifierUnique: identifierUnique,
       type: feature.ui.type,
       value: feature.name,
       class: 'artifacts_medium',
@@ -128,7 +128,7 @@ const createFeaturesRowData = (feature, isTablePanelOpen) => {
       }
     },
     feature_set: {
-      id: `feature_set.${identifier}`,
+      id: `feature_set.${identifierUnique}`,
       value: feature.metadata?.name,
       class: 'artifacts_small',
       getLink: tab =>
@@ -157,24 +157,24 @@ const createFeaturesRowData = (feature, isTablePanelOpen) => {
       }
     },
     type: {
-      id: `type.${identifier}`,
+      id: `type.${identifierUnique}`,
       value: feature.value_type,
       class: 'artifacts_extra-small'
     },
     entity: {
-      id: `entity.${identifier}`,
+      id: `entity.${identifierUnique}`,
       type: 'labels',
       value: feature.spec?.entities.map(entity => entity.name),
       class: 'artifacts_big'
     },
     description: {
-      id: `description.${identifier}`,
+      id: `description.${identifierUnique}`,
       value: feature.description,
       class: 'artifacts_medium',
       hidden: isTablePanelOpen
     },
     labels: {
-      id: `labels.${identifier}`,
+      id: `labels.${identifierUnique}`,
       value: parseKeyValues(feature.labels),
       class: 'artifacts_big',
       type: 'labels',
@@ -185,14 +185,14 @@ const createFeaturesRowData = (feature, isTablePanelOpen) => {
       hidden: isTablePanelOpen
     },
     validator: {
-      id: `validator.${identifier}`,
+      id: `validator.${identifierUnique}`,
       value: <FeatureValidator validator={feature.validator} />,
       class: 'artifacts_medium',
       type: 'component',
       hidden: isTablePanelOpen
     },
     addFeature: {
-      id: `addFeature.${identifier}`,
+      id: `addFeature.${identifierUnique}`,
       value: <AddFeatureButton feature={feature} />,
       class: 'artifacts_big align-right',
       type: 'component',
@@ -216,7 +216,11 @@ const kindToIcon = {
   }
 }
 
-const getFeatureSetTargetCellValue = (targets, isSelectedItem, identifier) => ({
+const getFeatureSetTargetCellValue = (
+  targets,
+  isSelectedItem,
+  identifierUnique
+) => ({
   value: (targets ?? [])
     .map(
       target =>
@@ -226,7 +230,7 @@ const getFeatureSetTargetCellValue = (targets, isSelectedItem, identifier) => ({
         }
     )
     .sort((icon, otherIcon) => (icon.tooltip < otherIcon.tooltip ? -1 : 1)),
-  id: `targets.${identifier}`,
+  id: `targets.${identifierUnique}`,
   class: 'artifacts_small artifacts__targets-icon',
   type: 'icons',
   hidden: isSelectedItem
@@ -237,13 +241,13 @@ const createFeatureVectorsRowData = (
   project,
   isSelectedItem
 ) => {
-  const identifier = getFeatureVectorIdentifier(featureVector, true)
+  const identifierUnique = getFeatureVectorIdentifier(featureVector, true)
 
   return {
     key: {
-      id: `key.${identifier}`,
+      id: `key.${identifierUnique}`,
       identifier: getFeatureVectorIdentifier(featureVector),
-      identifierUnique: identifier,
+      identifierUnique: identifierUnique,
       value: featureVector.name,
       class: 'artifacts_medium',
       getLink: tab =>
@@ -263,27 +267,27 @@ const createFeatureVectorsRowData = (
       }
     },
     description: {
-      id: `description.${identifier}`,
+      id: `description.${identifierUnique}`,
       value: featureVector.description,
       class: 'artifacts_medium',
       hidden: isSelectedItem
     },
     labels: {
-      id: `labels.${identifier}`,
+      id: `labels.${identifierUnique}`,
       value: parseKeyValues(featureVector.labels),
       class: 'artifacts_big',
       type: 'labels',
       hidden: isSelectedItem
     },
     version: {
-      id: `version.${identifier}`,
+      id: `version.${identifierUnique}`,
       value: featureVector.tag,
       class: 'artifacts_small',
       type: 'hidden',
       hidden: isSelectedItem
     },
     updated: {
-      id: `updated.${identifier}`,
+      id: `updated.${identifierUnique}`,
       value: featureVector.updated
         ? formatDatetime(new Date(featureVector.updated), 'N/A')
         : 'N/A',
@@ -291,7 +295,7 @@ const createFeatureVectorsRowData = (
       hidden: isSelectedItem
     },
     buttonCopy: {
-      id: `buttonCopy.${identifier}`,
+      id: `buttonCopy.${identifierUnique}`,
       value: '',
       class: 'artifacts_extra-small artifacts__icon',
       type: 'buttonCopyURI',
@@ -299,7 +303,7 @@ const createFeatureVectorsRowData = (
       hidden: isSelectedItem
     },
     uid: {
-      id: `uid.${identifier}`,
+      id: `uid.${identifierUnique}`,
       value: featureVector.uid,
       class: 'artifacts_small',
       type: 'hidden',

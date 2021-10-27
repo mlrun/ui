@@ -67,6 +67,10 @@ const Content = ({
     [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
       'content_with-menu'
   )
+  const filterMenuClassNames = classnames(
+    'content__action-bar',
+    pageData.hideFilterMenu && 'content__action-bar_hidden'
+  )
 
   const actionsMenu = useMemo(() => {
     return generateContentActionsMenu(pageData.actionsMenu, [
@@ -154,6 +158,13 @@ const Content = ({
     toggleConvertedYaml
   ])
 
+  useEffect(() => {
+    return () => {
+      setExpand(false)
+      setExpandedItems([])
+    }
+  }, [match.params.jobId])
+
   const handleExpandRow = (e, item) => {
     const parentRow = e.target.closest('.parent-row')
     let newArray = []
@@ -215,31 +226,28 @@ const Content = ({
             tabs={pageData.tabs}
           />
         )}
-        {!pageData.hideFilterMenu && (
-          <div className="content__action-bar">
-            <FilterMenu
-              actionButton={pageData.filterMenuActionButton}
-              expand={expand}
-              filters={pageData.filters}
-              handleExpandAll={handleExpandAll}
-              match={match}
-              onChange={filtersChangeCallback ?? refresh}
-              page={pageData.page}
-              withoutExpandButton={
-                Boolean(pageData.handleRequestOnExpand) ||
-                pageData.withoutExpandButton
-              }
-            />
-          </div>
-        )}
-
+        <div className={filterMenuClassNames}>
+          <FilterMenu
+            actionButton={pageData.filterMenuActionButton}
+            expand={expand}
+            filters={pageData.filters}
+            handleExpandAll={handleExpandAll}
+            match={match}
+            onChange={filtersChangeCallback ?? refresh}
+            page={pageData.page}
+            withoutExpandButton={
+              Boolean(pageData.handleRequestOnExpand) ||
+              pageData.withoutExpandButton
+            }
+          />
+        </div>
         <div className="table-container">
           {children ? (
             children
           ) : loading ? null : (filtersStore.groupBy !== 'none' &&
               isEmpty(groupedContent)) ||
             content.length === 0 ? (
-            <NoData />
+            <NoData message={pageData.noDataMessage} />
           ) : (
             <>
               <Table

@@ -3,11 +3,10 @@ import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isEmpty, cloneDeep } from 'lodash'
 
-import Button from '../../common/Button/Button'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Content from '../../layout/Content/Content'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import Loader from '../../common/Loader/Loader'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Workflow from '../Workflow/Workflow'
 import Details from '../Details/Details'
 
@@ -26,7 +25,6 @@ import {
   datePickerOptions,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
-
 import {
   DANGER_BUTTON,
   INIT_GROUP_FILTER,
@@ -82,6 +80,7 @@ const Jobs = ({
   const [editableItem, setEditableItem] = useState(null)
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
+  const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const isDemoMode = useDemoMode()
 
   const dispatch = useDispatch()
@@ -163,8 +162,8 @@ const Jobs = ({
   const onRemoveScheduledJob = scheduledJob => {
     setConfirmData({
       item: scheduledJob,
-      title: `Delete scheduled job "${scheduledJob.name}"?`,
-      description: 'Deleted scheduled jobs can not be restored.',
+      header: 'Delete scheduled job?',
+      message: `You try to delete scheduled job "${scheduledJob.name}". Deleted scheduled jobs can not be restored.`,
       btnConfirmLabel: 'Delete',
       btnConfirmType: DANGER_BUTTON,
       rejectHandler: () => {
@@ -263,7 +262,8 @@ const Jobs = ({
   const onAbortJob = job => {
     setConfirmData({
       item: job,
-      title: `Abort job "${job.name}"?`,
+      header: 'Abort job?',
+      message: `You try to abort job "${job.name}".`,
       btnConfirmLabel: 'Abort',
       btnConfirmType: DANGER_BUTTON,
       rejectHandler: () => {
@@ -343,17 +343,11 @@ const Jobs = ({
             status: error?.response?.status || 400,
             id: Math.random(),
             message: 'Failed to fetch jobs',
-            retry: () => refreshJobs(filtersStore.filters)
+            retry: () => refreshJobs(filters)
           })
         })
     },
-    [
-      fetchJobs,
-      filtersStore.filters,
-      match.params.pageTab,
-      match.params.projectName,
-      setNotification
-    ]
+    [fetchJobs, match.params.pageTab, match.params.projectName, setNotification]
   )
 
   useEffect(() => {
@@ -456,10 +450,7 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    if (
-      (isEmpty(selectedJob) && !match.params.jobId) ||
-      workflowsViewMode === 'list'
-    ) {
+    if (isEmpty(selectedJob) && !match.params.jobId && !dataIsLoaded) {
       let filters = {}
 
       if (match.params.pageTab === MONITOR_JOBS_TAB) {
@@ -478,19 +469,23 @@ const Jobs = ({
       }
 
       refreshJobs(filters)
-
-      return () => {
-        setJobs([])
-      }
+      setDataIsLoaded(true)
     }
   }, [
+    dataIsLoaded,
     match.params.jobId,
     match.params.pageTab,
     refreshJobs,
     selectedJob,
-    setFilters,
-    workflowsViewMode
+    setFilters
   ])
+
+  useEffect(() => {
+    return () => {
+      setJobs([])
+      setDataIsLoaded(false)
+    }
+  }, [match.params.projectName, match.params.pageTab])
 
   const getWorkflows = useCallback(() => {
     fetchWorkflows(match.params.projectName)
@@ -609,25 +604,21 @@ const Jobs = ({
         ) : null}
       </Content>
       {confirmData && (
-        <PopUpDialog
-          headerText={confirmData.title}
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: 'Cancel',
+            variant: TERTIARY_BUTTON
+          }}
           closePopUp={confirmData.rejectHandler}
-        >
-          <div>{confirmData.description}</div>
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              variant={TERTIARY_BUTTON}
-              label="Cancel"
-              onClick={confirmData.rejectHandler}
-              className="pop-up-dialog__btn_cancel"
-            />
-            <Button
-              variant={confirmData.btnConfirmType}
-              label={confirmData.btnConfirmLabel}
-              onClick={() => confirmData.confirmHandler(confirmData.item)}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: () => confirmData.confirmHandler(confirmData.item),
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmType
+          }}
+          header={confirmData.header}
+          message={confirmData.message}
+        />
       )}
       {(jobsStore.loading ||
         workflowsStore.workflows.loading ||
