@@ -337,6 +337,8 @@ export const generatePageData = (
     }
     data.handleRequestOnExpand = handleRequestOnExpand
     data.mainRowItemsCount = 2
+    data.noDataMessage =
+      'No features yet. Go to "Feature Sets" tab to create your first feature set.'
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
     data.actionsMenuHeader = createFeatureVectorTitle

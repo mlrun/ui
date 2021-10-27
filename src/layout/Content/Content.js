@@ -247,7 +247,7 @@ const Content = ({
           ) : loading ? null : (filtersStore.groupBy !== 'none' &&
               isEmpty(groupedContent)) ||
             content.length === 0 ? (
-            <NoData />
+            <NoData message={pageData.noDataMessage} />
           ) : (
             <>
               <Table
