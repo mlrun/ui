@@ -447,6 +447,19 @@ const MembersPopUp = ({
               ))}
           </div>
         </div>
+        <p className="footer-annotation">
+          Note that adding users to the project doesn't mean they can access the
+          project data. In order to access the project data they need to set
+          access permission for the project folder.{' '}
+          <a
+            href="https://www.iguazio.com/docs/latest-release/users-and-security/security/#data-access-policy-rules"
+            className="link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read more
+          </a>
+        </p>
         <div className="footer-actions">
           <CheckBox
             className="notify-by-email"
@@ -474,19 +487,6 @@ const MembersPopUp = ({
             />
           </div>
         </div>
-        <div className="footer-annotation">
-          Refer to the data access policy to define the&nbsp;
-          <a
-            className="link"
-            href="https://www.iguazio.com/docs/latest-release/users-and-security/security/#data-access-policy-rules"
-            target="_blank"
-            rel="noreferrer"
-          >
-            data access policy
-          </a>
-          &nbsp;rules.
-        </div>
-        <div className="divider" />
       </PopUpDialog>
       {confirmDiscard && (
         <ConfirmDialog
