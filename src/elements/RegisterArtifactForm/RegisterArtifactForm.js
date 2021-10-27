@@ -46,7 +46,7 @@ const RegisterArtifactForm = ({
             <a
               href="https://docs.mlrun.org/en/latest/store/artifacts.html"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="link"
             >
               Read more

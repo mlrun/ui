@@ -269,7 +269,7 @@ const createFilesRowData = (artifact, project, isSelectedItem) => {
       hidden: isSelectedItem
     },
     size: {
-      value: convertBytes(artifact.size || 0),
+      value: artifact.size ? convertBytes(artifact.size) : 'N/A',
       class: 'artifacts_small',
       hidden: isSelectedItem
     },

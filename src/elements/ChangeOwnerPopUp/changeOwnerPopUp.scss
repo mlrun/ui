@@ -80,6 +80,8 @@
 
   .members-list {
     width: 100%;
+    max-height: 306px;
+    overflow-y: auto;
     background-color: $white;
     border: $primaryBorder;
     border-radius: 0 0 $mainBorderRadius $mainBorderRadius;
