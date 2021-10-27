@@ -7,10 +7,10 @@ export const parseEnvVariables = envVariables => {
       : ENV_VARIABLE_TYPE_SECRET
     let value = envVariable.value ?? ''
 
-    if (envVariable?.value_from?.secret_key_ref) {
+    if (envVariable?.valueFrom?.secretKeyRef) {
       type = ENV_VARIABLE_TYPE_SECRET
-      value = `${envVariable.value_from.secret_key_ref.name ?? ''}:${envVariable
-        .value_from.secret_key_ref.key ?? ''}`
+      value = `${envVariable.valueFrom.secretKeyRef.name ?? ''}:${envVariable
+        .valueFrom.secretKeyRef.key ?? ''}`
     }
 
     return { name: envVariable.name, type, value }
