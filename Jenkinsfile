@@ -1,4 +1,4 @@
-@Library('pipelinex@development') _
+@Library('pipelinex@ML-1206_enable_skip_mlrunui') _
 import com.iguazio.pipelinex.DockerRepo
 
 workDir = '/home/jenkins'
