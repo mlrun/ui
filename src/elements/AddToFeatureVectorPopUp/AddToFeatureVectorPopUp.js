@@ -22,6 +22,7 @@ const AddToFeatureVectorPopUp = ({
   action,
   currentProject,
   fetchFeatureVectors,
+  featureStore,
   projectStore,
   setFeaturesPanelData,
   setTablePanelOpen
@@ -172,8 +173,12 @@ const AddToFeatureVectorPopUp = ({
         ref={addToFeatureVectorBtn}
         variant={action.variant}
         label={action.label}
-        tooltip={action.tooltip}
-        disabled={action.disabled}
+        tooltip={
+          action.tooltip ||
+          (!featureStore.features?.allData.length &&
+            'No features in the project.')
+        }
+        disabled={action.disabled || !featureStore.features?.allData.length}
         onClick={handleAddToFeatureVector}
       />
       {isPopUpOpen && (
@@ -269,8 +274,9 @@ AddToFeatureVectorPopUp.propTypes = {
 }
 
 export default connect(
-  projectStore => ({
-    ...projectStore
+  (projectStore, featureStore) => ({
+    ...projectStore,
+    ...featureStore
   }),
   { ...tableActions }
 )(AddToFeatureVectorPopUp)
