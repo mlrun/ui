@@ -42,7 +42,7 @@ const Project = ({
   editProjectLabels,
   featureStore,
   fetchProject,
-  fetchProjectCounters,
+  fetchProjectSummary,
   fetchProjectFunctions,
   functionsStore,
   match,
@@ -51,7 +51,7 @@ const Project = ({
   removeFunctionsError,
   removeNewFunction,
   removeNewFeatureSet,
-  removeProjectCounters,
+  removeProjectSummary,
   removeProjectData,
   setNotification,
   setProjectData
@@ -283,17 +283,17 @@ const Project = ({
 
   useEffect(() => {
     fetchProjectData()
-    fetchProjectCounters(match.params.projectName)
+    fetchProjectSummary(match.params.projectName)
 
     return () => {
       resetProjectData()
-      removeProjectCounters()
+      removeProjectSummary()
     }
   }, [
-    fetchProjectCounters,
+    fetchProjectSummary,
     fetchProjectData,
     match.params.projectName,
-    removeProjectCounters,
+    removeProjectSummary,
     resetProjectData
   ])
 
@@ -572,7 +572,9 @@ const Project = ({
 
   const handleRefresh = () => {
     removeProjectData()
+    removeProjectSummary()
     fetchProjectData()
+    fetchProjectSummary(match.params.projectName)
   }
 
   const handleUpdateProjectLabels = labels => {
@@ -645,7 +647,7 @@ const Project = ({
       match={match}
       membersDispatch={membersDispatch}
       membersState={membersState}
-      projectCounters={projectStore.projectCounters}
+      projectSummary={projectStore.projectSummary}
       projectLabels={projectLabels}
       projectMembersIsShown={projectMembersIsShown}
       projectMembershipIsEnabled={projectMembershipIsEnabled}

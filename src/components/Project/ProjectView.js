@@ -64,11 +64,11 @@ const ProjectView = React.forwardRef(
       match,
       membersDispatch,
       membersState,
-      projectCounters,
       projectLabels,
       projectMembersIsShown,
       projectMembershipIsEnabled,
       projectOwnerIsShown,
+      projectSummary,
       refresh,
       setIsNewFunctionPopUpOpen,
       setIsPopupDialogOpen,
@@ -266,21 +266,21 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="main-info__statistics-section">
                 <ProjectArtifacts
-                  counterValue={projectCounters.data.models_count ?? 0}
+                  counterValue={projectSummary.data.models_count ?? 0}
                   link={`/projects/${match.params.projectName}/models`}
-                  projectCounters={projectCounters}
+                  projectSummary={projectSummary}
                   title="Models"
                 />
                 <ProjectArtifacts
-                  counterValue={projectCounters.data.feature_sets_count ?? 0}
+                  counterValue={projectSummary.data.feature_sets_count ?? 0}
                   link={`/projects/${match.params.projectName}/feature-store`}
-                  projectCounters={projectCounters}
+                  projectSummary={projectSummary}
                   title="Feature sets"
                 />
                 <ProjectArtifacts
-                  counterValue={projectCounters.data.files_count ?? 0}
+                  counterValue={projectSummary.data.files_count ?? 0}
                   link={`/projects/${match.params.projectName}/files`}
-                  projectCounters={projectCounters}
+                  projectSummary={projectSummary}
                   title="Files"
                 />
               </div>
@@ -380,11 +380,11 @@ ProjectView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
-  projectCounters: PropTypes.object.isRequired,
   projectLabels: PropTypes.array.isRequired,
   projectMembersIsShown: PropTypes.bool.isRequired,
   projectMembershipIsEnabled: PropTypes.bool.isRequired,
   projectOwnerIsShown: PropTypes.bool.isRequired,
+  projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowChangeOwner: PropTypes.func.isRequired,

@@ -10,9 +10,9 @@ import {
   DELETE_PROJECT_SUCCESS,
   ADD_PROJECT_LABEL,
   FETCH_PROJECT_BEGIN,
-  FETCH_PROJECT_COUNTERS_SUCCESS,
-  FETCH_PROJECT_COUNTERS_BEGIN,
-  FETCH_PROJECT_COUNTERS_FAILURE,
+  FETCH_PROJECT_SUMMARY_SUCCESS,
+  FETCH_PROJECT_SUMMARY_BEGIN,
+  FETCH_PROJECT_SUMMARY_FAILURE,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
@@ -47,7 +47,7 @@ import {
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
-  REMOVE_PROJECT_COUNTERS,
+  REMOVE_PROJECT_SUMMARY,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
@@ -140,12 +140,12 @@ const initialState = {
     }
   },
   projects: [],
-  projectCounters: {
+  projectsNames: {
     error: null,
     loading: false,
     data: []
   },
-  projectsNames: {
+  projectSummary: {
     error: null,
     loading: false,
     data: []
@@ -738,27 +738,27 @@ export default (state = initialState, { type, payload }) => {
           loading: false
         }
       }
-    case FETCH_PROJECT_COUNTERS_BEGIN:
+    case FETCH_PROJECT_SUMMARY_BEGIN:
       return {
         ...state,
-        projectCounters: {
-          ...state.projectCounters,
+        projectSummary: {
+          ...state.projectSummary,
           loading: true
         }
       }
-    case FETCH_PROJECT_COUNTERS_FAILURE:
+    case FETCH_PROJECT_SUMMARY_FAILURE:
       return {
         ...state,
-        projectCounters: {
+        projectSummary: {
           data: [],
           loading: false,
           error: payload
         }
       }
-    case FETCH_PROJECT_COUNTERS_SUCCESS:
+    case FETCH_PROJECT_SUMMARY_SUCCESS:
       return {
         ...state,
-        projectCounters: {
+        projectSummary: {
           data: payload,
           loading: false,
           error: null
@@ -809,10 +809,10 @@ export default (state = initialState, { type, payload }) => {
           description: ''
         }
       }
-    case REMOVE_PROJECT_COUNTERS:
+    case REMOVE_PROJECT_SUMMARY:
       return {
         ...state,
-        projectCounters: {
+        projectSummary: {
           error: null,
           loading: false,
           data: []
