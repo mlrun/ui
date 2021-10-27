@@ -6,6 +6,7 @@
   width: 477px;
   max-height: 90vh;
   padding: 20px;
+  overflow-y: auto;
   background-color: $white;
   border-radius: $mainBorderRadius;
   box-shadow: 0 6px 26px rgba($black, 0.2);
