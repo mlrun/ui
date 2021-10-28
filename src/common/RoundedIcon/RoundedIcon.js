@@ -8,29 +8,27 @@ import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 const RoundedIcon = React.forwardRef(
-  ({ onClick, className, children, tooltipText }, ref) => {
+  ({ onClick, className, children, id, tooltipText }, ref) => {
     const wrapperClassNames = classNames(classes.wrapper, className)
     return (
       <div className={wrapperClassNames} ref={ref}>
         <Tooltip
-          hidden={tooltipText === ''}
+          hidden={!tooltipText || tooltipText === ''}
           template={<TextTooltipTemplate text={tooltipText} />}
         >
-          <button onClick={onClick}>{children}</button>
+          <button onClick={onClick} id={id}>
+            {children}
+          </button>
         </Tooltip>
       </div>
     )
   }
 )
-
-RoundedIcon.defaultProps = {
-  tooltipText: ''
-}
-
 RoundedIcon.propTypes = {
   onClick: PropTypes.func,
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
+  id: PropTypes.string,
   tooltipText: PropTypes.string
 }
 

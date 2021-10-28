@@ -5,17 +5,19 @@ import { connect } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
 import Select from '../../common/Select/Select'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
+// import Tooltip from '../../common/Tooltip/Tooltip'
+// import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import TagFilter from '../../common/TagFilter/TagFilter'
 
-import { ReactComponent as Refresh } from '../../images/refresh.svg'
-import { ReactComponent as Collapse } from '../../images/collapse.svg'
-import { ReactComponent as Expand } from '../../images/expand.svg'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+
+import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
+import { ReactComponent as CollapseIcon } from '../../images/collapse.svg'
+import { ReactComponent as ExpandIcon } from '../../images/expand.svg'
 
 import {
   DATE_RANGE_TIME_FILTER,
@@ -296,22 +298,22 @@ const FilterMenu = ({
             onClick={actionButton.onClick}
           />
         ))}
+
       <div className="actions">
-        <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
-          <button onClick={() => applyChanges(filtersStore, true)} id="refresh">
-            <Refresh />
-          </button>
-        </Tooltip>
+        <RoundedIcon
+          tooltipText="Refresh"
+          onClick={() => applyChanges(filtersStore, true)}
+          id="refresh"
+        >
+          <RefreshIcon />
+        </RoundedIcon>
         {!withoutExpandButton && filtersStore.groupBy !== 'none' && (
-          <Tooltip
-            template={
-              <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand all'} />
-            }
+          <RoundedIcon
+            tooltipText={expand ? 'Collapse' : 'Expand all'}
+            onClick={() => handleExpandAll()}
           >
-            <button onClick={() => handleExpandAll()}>
-              {expand ? <Collapse /> : <Expand />}
-            </button>
-          </Tooltip>
+            {expand ? <CollapseIcon /> : <ExpandIcon />}
+          </RoundedIcon>
         )}
       </div>
     </>
