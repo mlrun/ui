@@ -7,24 +7,31 @@ import classes from './RoundedIcon.module.scss'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
-const RoundedIcon = ({ onClick, className, children, tooltipText }) => {
-  const wrapperClassNames = classNames(classes.wrapper, className)
-  return (
-    <div className={wrapperClassNames}>
-      <button onClick={onClick}>
-        <Tooltip template={<TextTooltipTemplate text={tooltipText} />}>
-          {children}
+const RoundedIcon = React.forwardRef(
+  ({ onClick, className, children, tooltipText }, ref) => {
+    const wrapperClassNames = classNames(classes.wrapper, className)
+    return (
+      <div className={wrapperClassNames} ref={ref}>
+        <Tooltip
+          hidden={tooltipText === ''}
+          template={<TextTooltipTemplate text={tooltipText} />}
+        >
+          <button onClick={onClick}>{children}</button>
         </Tooltip>
-      </button>
-    </div>
-  )
+      </div>
+    )
+  }
+)
+
+RoundedIcon.defaultProps = {
+  tooltipText: ''
 }
 
 RoundedIcon.propTypes = {
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
   tooltipText: PropTypes.string
 }
 
-export default RoundedIcon
+export default React.memo(RoundedIcon)
