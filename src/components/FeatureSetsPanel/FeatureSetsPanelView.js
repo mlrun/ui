@@ -10,6 +10,7 @@ import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSch
 import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSetsPanelTargetStore'
 import Loader from '../../common/Loader/Loader'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
 
 import {
   PRIMARY_BUTTON,
@@ -20,7 +21,6 @@ import {
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './featureSetsPanel.scss'
-import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
 
 const FeatureSetsPanelView = ({
   closePanel,
