@@ -8,7 +8,10 @@ import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
-import { FUNCTION_TYPE_SERVING } from '../../constants'
+import {
+  FUNCTION_TYPE_SERVING,
+  PANEL_DEFAULT_ACCESS_KEY
+} from '../../constants'
 import {
   EXISTING_IMAGE,
   NEW_IMAGE
@@ -66,7 +69,7 @@ const FunctionsPanel = ({
         kind: defaultData.type,
         metadata: {
           credentials: {
-            access_key: defaultData.access_key
+            access_key: defaultData.access_key || PANEL_DEFAULT_ACCESS_KEY
           },
           labels: defaultData.labels,
           name: defaultData.name,
