@@ -29,9 +29,11 @@ const FeatureSetsPanel = ({
     isEndTimeValid: true,
     isEntitiesValid: true,
     isTargetsPathValid: true,
-    isTimestampKeyValid: true
+    isTimestampKeyValid: true,
+    isAccessKeyValid: true
   })
   const [confirmDialog, setConfirmDialog] = useState(null)
+  const [accessKeyRequired, setAccessKeyRequired] = useState(false)
   const history = useHistory()
 
   const handleSave = () => {
@@ -66,7 +68,13 @@ const FeatureSetsPanel = ({
 
   const handleSaveOnClick = startIngestion => {
     if (
-      checkValidation(featureStore.newFeatureSet, setValidation, validation)
+      checkValidation(
+        featureStore.newFeatureSet,
+        setValidation,
+        validation,
+        startIngestion,
+        setAccessKeyRequired
+      )
     ) {
       setConfirmDialog({
         action: startIngestion ? 'save and ingest' : 'save'
@@ -107,6 +115,7 @@ const FeatureSetsPanel = ({
 
   return (
     <FeatureSetsPanelView
+      accessKeyRequired={accessKeyRequired}
       closePanel={closePanel}
       confirmDialog={confirmDialog}
       error={featureStore.error}

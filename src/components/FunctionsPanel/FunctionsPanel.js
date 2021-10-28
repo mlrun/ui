@@ -51,7 +51,8 @@ const FunctionsPanel = ({
     isMemoryLimitValid: true,
     isCpuRequestValid: true,
     isCpuLimitValid: true,
-    isGpuLimitValid: true
+    isGpuLimitValid: true,
+    isAccessKeyValid: true
   })
   const [imageType, setImageType] = useState(
     (defaultData?.build?.image ||
@@ -191,6 +192,15 @@ const FunctionsPanel = ({
         }))
       }
 
+      if (
+        functionsStore.newFunction.metadata.credentials.access_key.length === 0
+      ) {
+        return setValidation(state => ({
+          ...state,
+          isAccessKeyValid: false
+        }))
+      }
+
       if (functionsStore.error) {
         removeFunctionsError()
       }
@@ -232,7 +242,7 @@ const FunctionsPanel = ({
   }
 
   const checkValidation = () => {
-    return Object.values(validation).find(value => value === false) ?? true
+    return Object.values(validation).every(value => value)
   }
 
   return (

@@ -112,6 +112,8 @@ const JobsPanelView = ({
             <JobsPanelCredentialsAccessKey
               panelDispatch={panelDispatch}
               panelState={panelState}
+              setValidation={setValidation}
+              validation={validation}
             />
             <div className="new-item-side-panel__buttons-container">
               {jobsStore.error && (

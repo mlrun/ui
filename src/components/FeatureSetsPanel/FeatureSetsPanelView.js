@@ -23,6 +23,7 @@ import { ReactComponent as Arrow } from '../../images/arrow.svg'
 import './featureSetsPanel.scss'
 
 const FeatureSetsPanelView = ({
+  accessKeyRequired,
   closePanel,
   confirmDialog,
   error,
@@ -96,7 +97,10 @@ const FeatureSetsPanelView = ({
             credentialsAccessKey={
               featureStore.newFeatureSet.credentials.access_key
             }
+            required={accessKeyRequired}
             setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
+            setValidation={setValidation}
+            validation={validation}
           />
           <div className="new-item-side-panel__buttons-container">
             {error && (
@@ -140,6 +144,7 @@ FeatureSetsPanelView.defaultProps = {
 }
 
 FeatureSetsPanelView.propTypes = {
+  accessKeyRequired: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
   confirmDialog: PropTypes.shape({ action: PropTypes.string.isRequired }),
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
