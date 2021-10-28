@@ -20,17 +20,20 @@ import {
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 import './featureSetsPanel.scss'
+import PanelCredentialsAccessKey from '../../elements/PanelCredentialsAccessKey/PanelCredentialsAccessKey'
 
 const FeatureSetsPanelView = ({
   closePanel,
   confirmDialog,
   error,
+  featureStore,
   handleSave,
   handleSaveOnClick,
   loading,
   project,
   removeFeatureStoreError,
   setConfirmDialog,
+  setNewFeatureSetCredentialsAccessKey,
   setValidation,
   validation
 }) => {
@@ -89,13 +92,12 @@ const FeatureSetsPanelView = ({
               validation={validation}
             />
           </Accordion>
-          {/*commented till be implemented on back end*/}
-          {/*<PanelCredentialsAccessKey*/}
-          {/*  credentialsAccessKey={*/}
-          {/*    featureStore.newFeatureSet.credentials.access_key*/}
-          {/*  }*/}
-          {/*  setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}*/}
-          {/*/>*/}
+          <PanelCredentialsAccessKey
+            credentialsAccessKey={
+              featureStore.newFeatureSet.credentials.access_key
+            }
+            setCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
+          />
           <div className="new-item-side-panel__buttons-container">
             {error && (
               <ErrorMessage
@@ -141,12 +143,14 @@ FeatureSetsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   confirmDialog: PropTypes.shape({ action: PropTypes.string.isRequired }),
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  featureStore: PropTypes.shape({}).isRequired,
   handleSave: PropTypes.func.isRequired,
   handleSaveOnClick: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   project: PropTypes.string.isRequired,
   removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
+  setNewFeatureSetCredentialsAccessKey: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,
   validation: PropTypes.shape({}).isRequired
 }
