@@ -242,7 +242,7 @@ const FunctionsPanel = ({
   }
 
   const checkValidation = () => {
-    return Object.values(validation).find(value => value === false) ?? true
+    return Object.values(validation).every(value => value)
   }
 
   return (
