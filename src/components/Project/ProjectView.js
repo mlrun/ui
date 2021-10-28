@@ -25,13 +25,14 @@ import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 
 import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
-import { ReactComponent as Refresh } from '../../images/refresh.svg'
+import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './project.scss'
 
@@ -240,14 +241,14 @@ const ProjectView = React.forwardRef(
             </div>
             <div className="main-info">
               <div className="main-info__toolbar">
-                <Tooltip
+                <RoundedIcon
+                  onClick={refresh}
+                  id="refresh"
+                  tooltipText="Refresh"
                   className="refresh"
-                  template={<TextTooltipTemplate text="Refresh" />}
                 >
-                  <button onClick={refresh} id="refresh">
-                    <Refresh />
-                  </button>
-                </Tooltip>
+                  <RefreshIcon />
+                </RoundedIcon>
                 <Select
                   className="main-info__toolbar-menu launch-menu"
                   density="dense"

@@ -10,9 +10,10 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import Button from '../../common/Button/Button'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 
 import { ReactComponent as BackArrow } from '../../images/back-arrow.svg'
-import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as CloseIcon } from '../../images/close.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
 import { panelActions } from '../../components/JobsPanel/panelReducer'
@@ -184,11 +185,14 @@ const JobsPanelTitleView = ({
           />
         </div>
       )}
-      <button onClick={() => closePanel({})} className="panel-title__btn_close">
-        <Tooltip template={<TextTooltipTemplate text="Close" />}>
-          <Close />
-        </Tooltip>
-      </button>
+      <RoundedIcon
+        onClick={() => closePanel({})}
+        className="panel-title__btn_close"
+        tooltipText="Close"
+        data-testid="pop-up-close-btn"
+      >
+        <CloseIcon />
+      </RoundedIcon>
     </div>
   )
 }

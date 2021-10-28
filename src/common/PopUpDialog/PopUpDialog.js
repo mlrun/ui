@@ -7,7 +7,9 @@ import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { POP_UP_CUSTOM_POSITION } from '../../types'
-import { ReactComponent as Close } from '../../images/close.svg'
+import { ReactComponent as CloseIcon } from '../../images/close.svg'
+
+import RoundedIcon from '../RoundedIcon/RoundedIcon'
 
 import './popUpDialog.scss'
 
@@ -80,11 +82,14 @@ const PopUpDialog = ({
               </Tooltip>
             </div>
           )}
-          <div className="pop-up-dialog__header-close">
-            <Tooltip template={<TextTooltipTemplate text="Close" />}>
-              <Close data-testid="pop-up-close-btn" onClick={closePopUp} />
-            </Tooltip>
-          </div>
+          <RoundedIcon
+            onClick={closePopUp}
+            className=""
+            tooltipText="Close"
+            data-testid="pop-up-close-btn"
+          >
+            <CloseIcon />
+          </RoundedIcon>
         </div>
         {children}
       </div>
