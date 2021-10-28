@@ -366,6 +366,16 @@ const JobsPanel = ({
   }
 
   const handleEditJob = (event, cronString) => {
+    if (
+      validation.isAccessKeyValid &&
+      jobsStore.newJob.function.metadata.credentials.access_key.length === 0
+    ) {
+      return setValidation(state => ({
+        ...state,
+        isAccessKeyValid: false
+      }))
+    }
+
     const postData = generateRequestData(
       jobsStore,
       cronString,
