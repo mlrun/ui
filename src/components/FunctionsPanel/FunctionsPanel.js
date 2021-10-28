@@ -51,7 +51,8 @@ const FunctionsPanel = ({
     isMemoryLimitValid: true,
     isCpuRequestValid: true,
     isCpuLimitValid: true,
-    isGpuLimitValid: true
+    isGpuLimitValid: true,
+    isAccessKeyValid: true
   })
   const [imageType, setImageType] = useState(
     (defaultData?.build?.image ||
@@ -188,6 +189,15 @@ const FunctionsPanel = ({
             functionsStore.newFunction.spec.build.base_image.length > 0,
           isBuildCommandsValid:
             functionsStore.newFunction.spec.build.commands.length > 0
+        }))
+      }
+
+      if (
+        functionsStore.newFunction.metadata.credentials.access_key.length === 0
+      ) {
+        return setValidation(state => ({
+          ...state,
+          isAccessKeyValid: false
         }))
       }
 

@@ -1,6 +1,12 @@
 export const nameValidationPattern = /^(?=[\S\s]{1,56}$)[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 
-export const checkValidation = (newFeatureSet, setValidation, validation) => {
+export const checkValidation = (
+  newFeatureSet,
+  setValidation,
+  validation,
+  startIngestion,
+  setAccessKeyRequired
+) => {
   const externalOfflineTarget = newFeatureSet.spec.targets.find(
     targetKind => targetKind.name === 'externalOffline'
   )
@@ -96,6 +102,22 @@ export const checkValidation = (newFeatureSet, setValidation, validation) => {
     }))
 
     return false
+  }
+
+  if (newFeatureSet.credentials.access_key.length === 0 && startIngestion) {
+    setValidation(state => ({
+      ...state,
+      isAccessKeyValid: false
+    }))
+    setAccessKeyRequired(true)
+
+    return false
+  } else {
+    setValidation(state => ({
+      ...state,
+      isAccessKeyValid: true
+    }))
+    setAccessKeyRequired(false)
   }
 
   return true
