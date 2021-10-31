@@ -40,5 +40,17 @@
 
       @include statusState(none);
     }
+    .flex-row {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .checkmark {
+      margin: 0 0 0 10px;
+      path {
+        fill: $chateauGreen;
+      }
+    }
   }
 }

@@ -74,6 +74,7 @@ const Sort = ({
           {options.map(option => {
             return (
               <SelectOption
+                withSelectedIcon
                 item={option}
                 key={option.id}
                 onClick={onSelectOption}
