@@ -1,6 +1,11 @@
 import React from 'react'
 
-import { MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
+import {
+  MONITOR_JOBS_TAB,
+  PRIMARY_BUTTON,
+  SCHEDULE_TAB,
+  STATUS_CODE_FORBIDDEN
+} from '../../constants'
 
 import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
 import { ReactComponent as VSCode } from '../../images/vs-code.svg'
@@ -110,3 +115,17 @@ export const generateCreateNewOptions = (
     }
   }
 ]
+
+export const handleFetchProjectError = (error, history, setConfirmData) => {
+  if (error.response?.status === STATUS_CODE_FORBIDDEN) {
+    setConfirmData({
+      message: 'You are not permitted to view this project.',
+      messageOnly: true,
+      btnConfirmLabel: 'Okay',
+      btnConfirmType: PRIMARY_BUTTON,
+      confirmHandler: () => {
+        history.push('/projects/')
+      }
+    })
+  }
+}

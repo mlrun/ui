@@ -17,7 +17,11 @@ import featureStoreActions from '../../actions/featureStore'
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { getLinks, generateCreateNewOptions } from './project.utils'
+import {
+  getLinks,
+  generateCreateNewOptions,
+  handleFetchProjectError
+} from './project.utils'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { KEY_CODES } from '../../constants'
@@ -38,7 +42,7 @@ const Project = ({
   editProjectLabels,
   featureStore,
   fetchProject,
-  fetchProjectCounters,
+  fetchProjectSummary,
   fetchProjectFunctions,
   functionsStore,
   match,
@@ -47,7 +51,7 @@ const Project = ({
   removeFunctionsError,
   removeNewFunction,
   removeNewFeatureSet,
-  removeProjectCounters,
+  removeProjectSummary,
   removeProjectData,
   setNotification,
   setProjectData
@@ -83,6 +87,7 @@ const Project = ({
   const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
+  const [confirmData, setConfirmData] = useState(null)
   const history = useHistory()
   const inputRef = React.createRef()
   const isDemoMode = useDemoMode()
@@ -252,7 +257,9 @@ const Project = ({
   }
 
   const fetchProjectData = useCallback(() => {
-    fetchProject(match.params.projectName)
+    fetchProject(match.params.projectName).catch(error => {
+      handleFetchProjectError(error, history, setConfirmData)
+    })
 
     if (projectMembershipIsEnabled) {
       fetchProjectIdAndOwner().then(fetchProjectMembers)
@@ -262,6 +269,7 @@ const Project = ({
   }, [
     fetchProject,
     fetchProjectIdAndOwner,
+    history,
     match.params.projectName,
     projectMembershipIsEnabled
   ])
@@ -275,17 +283,17 @@ const Project = ({
 
   useEffect(() => {
     fetchProjectData()
-    fetchProjectCounters(match.params.projectName)
+    fetchProjectSummary(match.params.projectName)
 
     return () => {
       resetProjectData()
-      removeProjectCounters()
+      removeProjectSummary()
     }
   }, [
-    fetchProjectCounters,
+    fetchProjectSummary,
     fetchProjectData,
     match.params.projectName,
-    removeProjectCounters,
+    removeProjectSummary,
     resetProjectData
   ])
 
@@ -564,7 +572,9 @@ const Project = ({
 
   const handleRefresh = () => {
     removeProjectData()
+    removeProjectSummary()
     fetchProjectData()
+    fetchProjectSummary(match.params.projectName)
   }
 
   const handleUpdateProjectLabels = labels => {
@@ -616,6 +626,7 @@ const Project = ({
       changeOwnerCallback={changeOwnerCallback}
       closeFeatureSetPanel={closeFeatureSetPanel}
       closeFunctionsPanel={closeFunctionsPanel}
+      confirmData={confirmData}
       createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
       createFeatureSetSuccess={createFeatureSetSuccess}
       createFunctionSuccess={createFunctionSuccess}
@@ -636,7 +647,7 @@ const Project = ({
       match={match}
       membersDispatch={membersDispatch}
       membersState={membersState}
-      projectCounters={projectStore.projectCounters}
+      projectSummary={projectStore.projectSummary}
       projectLabels={projectLabels}
       projectMembersIsShown={projectMembersIsShown}
       projectMembershipIsEnabled={projectMembershipIsEnabled}

@@ -103,3 +103,9 @@ export const BUTTON_VARIANTS = PropTypes.oneOf([
   DANGER_BUTTON,
   LABEL_BUTTON
 ])
+
+export const CONFIRM_DIALOG_BUTTON = PropTypes.shape({
+  handler: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
+  variant: PropTypes.string.isRequired
+})

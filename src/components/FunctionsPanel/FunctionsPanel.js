@@ -8,7 +8,10 @@ import FunctionsPanelView from './FunctionsPanelView'
 
 import functionsActions from '../../actions/functions'
 import { FUNCTION_PANEL_MODE } from '../../types'
-import { FUNCTION_TYPE_SERVING } from '../../constants'
+import {
+  FUNCTION_TYPE_SERVING,
+  PANEL_DEFAULT_ACCESS_KEY
+} from '../../constants'
 import {
   EXISTING_IMAGE,
   NEW_IMAGE
@@ -48,7 +51,8 @@ const FunctionsPanel = ({
     isMemoryLimitValid: true,
     isCpuRequestValid: true,
     isCpuLimitValid: true,
-    isGpuLimitValid: true
+    isGpuLimitValid: true,
+    isAccessKeyValid: true
   })
   const [imageType, setImageType] = useState(
     (defaultData?.build?.image ||
@@ -66,7 +70,7 @@ const FunctionsPanel = ({
         kind: defaultData.type,
         metadata: {
           credentials: {
-            access_key: defaultData.access_key
+            access_key: defaultData.access_key || PANEL_DEFAULT_ACCESS_KEY
           },
           labels: defaultData.labels,
           name: defaultData.name,
@@ -188,6 +192,15 @@ const FunctionsPanel = ({
         }))
       }
 
+      if (
+        functionsStore.newFunction.metadata.credentials.access_key.length === 0
+      ) {
+        return setValidation(state => ({
+          ...state,
+          isAccessKeyValid: false
+        }))
+      }
+
       if (functionsStore.error) {
         removeFunctionsError()
       }
@@ -196,9 +209,8 @@ const FunctionsPanel = ({
         getFunction(project, functionsStore.newFunction.metadata.name)
           .then(() => {
             setConfirmData({
-              title: `Overwrite function "${functionsStore.newFunction.metadata.name}"?`,
-              description:
-                'The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?',
+              header: 'Overwrite function?',
+              message: `You try to overwrite function "${functionsStore.newFunction.metadata.name}". The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?`,
               btnCancelLabel: 'Cancel',
               btnCancelVariant: LABEL_BUTTON,
               btnConfirmLabel: 'Overwrite',
@@ -230,7 +242,7 @@ const FunctionsPanel = ({
   }
 
   const checkValidation = () => {
-    return Object.values(validation).find(value => value === false) ?? true
+    return Object.values(validation).every(value => value)
   }
 
   return (

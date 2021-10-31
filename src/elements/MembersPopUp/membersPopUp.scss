@@ -69,9 +69,14 @@
       border-radius: $mainBorderRadius;
 
       .new-members-title {
+        display: flex;
+        justify-content: space-between;
         padding: 15px;
         font-weight: bold;
         font-size: 18px;
+      }
+      .close-icon {
+        cursor: pointer;
       }
 
       .new-members-row {
@@ -209,9 +214,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 15px;
-      padding: 15px 0;
-      border-bottom: $dividerBorder;
 
       .apply-discard-buttons {
         display: flex;
@@ -243,9 +245,9 @@
       color: $white;
       font-weight: normal;
     }
+  }
 
-    &__footer-container {
-      justify-content: center;
-    }
+  .confirm-dialog__btn-container {
+    justify-content: center;
   }
 }

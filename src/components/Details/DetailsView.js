@@ -10,11 +10,11 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Select from '../../common/Select/Select'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Button from '../../common/Button/Button'
 import LoadButton from '../../common/LoadButton/LoadButton'
 import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { formatDatetime } from '../../utils'
 import {
@@ -227,38 +227,33 @@ const DetailsView = React.forwardRef(
         />
         {tabsContent}
         {detailsStore.showWarning && (
-          <PopUpDialog
-            headerText={`You have unsaved changes. ${
-              detailsStore.refreshWasHandled
-                ? 'Refreshing the list'
-                : 'Leaving this page'
-            } will discard your changes.`}
+          <ConfirmDialog
+            cancelButton={{
+              handler: () => {
+                handleShowWarning(false)
+                setRefreshWasHandled(false)
+              },
+              label: detailsStore.refreshWasHandled
+                ? "Don't refresh"
+                : "Don't Leave",
+              variant: TERTIARY_BUTTON
+            }}
             closePopUp={() => {
               handleShowWarning(false)
               setRefreshWasHandled(false)
             }}
-          >
-            <div className="pop-up-dialog__footer-container">
-              <Button
-                variant={TERTIARY_BUTTON}
-                label={
-                  detailsStore.refreshWasHandled
-                    ? "Don't refresh"
-                    : "Don't Leave"
-                }
-                onClick={() => {
-                  handleShowWarning(false)
-                  setRefreshWasHandled(false)
-                }}
-              />
-              <Button
-                variant={PRIMARY_BUTTON}
-                label={detailsStore.refreshWasHandled ? 'Refresh' : 'Leave'}
-                className="pop-up-dialog__btn_cancel"
-                onClick={leavePage}
-              />
-            </div>
-          </PopUpDialog>
+            confirmButton={{
+              handler: leavePage,
+              label: detailsStore.refreshWasHandled ? 'Refresh' : 'Leave',
+              variant: PRIMARY_BUTTON
+            }}
+            header="You have unsaved changes."
+            message={`${
+              detailsStore.refreshWasHandled
+                ? 'Refreshing the list'
+                : 'Leaving this page'
+            } will discard your changes.`}
+          />
         )}
       </div>
     )
