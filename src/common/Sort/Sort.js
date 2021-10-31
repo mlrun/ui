@@ -53,20 +53,20 @@ const Sort = ({
 
   return (
     <div className="sort">
-      <div className="sort__header">
+      <div className="btn-group">
         <button
-          className="btn btn-secondary sort__select"
-          onClick={() => setIsBodyOpen(state => !state)}
+          className="btn-tertiary btn__sort"
+          onClick={() => setIsDescendingOrder(state => !state)}
           ref={labelRef}
         >
+          <Arrow className={arrowDirectionClassName} />
           <span>{selectedOption.label}</span>
-          <Caret className="sort__caret" />
         </button>
         <button
-          className="rounded-icon"
-          onClick={() => setIsDescendingOrder(state => !state)}
+          className="btn-tertiary btn__dropdown"
+          onClick={() => setIsBodyOpen(state => !state)}
         >
-          <Arrow className={arrowDirectionClassName} />
+          <Caret />
         </button>
       </div>
       {isBodyOpen && (
