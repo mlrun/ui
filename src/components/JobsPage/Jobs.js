@@ -220,9 +220,7 @@ const Jobs = ({
           },
           spec: {
             function: job.function,
-            handler:
-              Object.values(functionData?.spec?.entry_points ?? {})[0]?.name ??
-              '',
+            handler: job?.handler ?? '',
             hyperparams: job.hyperparams,
             input_path: job.input_path ?? '',
             inputs: job.inputs ?? {},
