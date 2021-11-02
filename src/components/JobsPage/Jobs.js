@@ -54,7 +54,6 @@ const Jobs = ({
   fetchScheduledJobAccessKey,
   fetchWorkflow,
   fetchWorkflows,
-  filtersStore,
   functionsStore,
   getFunctionWithHash,
   handleRunScheduledJob,
@@ -71,7 +70,6 @@ const Jobs = ({
   setFilters,
   setLoading,
   setNotification,
-  subPage,
   workflowsStore
 }) => {
   const [jobs, setJobs] = useState([])
@@ -350,6 +348,34 @@ const Jobs = ({
     [fetchJobs, match.params.pageTab, match.params.projectName, setNotification]
   )
 
+  const fetchCurrentJob = useCallback(() => {
+    fetchJob(match.params.projectName, match.params.jobId)
+      .then(job => {
+        setSelectedJob(parseJob(job))
+      })
+      .catch(error => {
+        setNotification({
+          status: error?.response?.status || 400,
+          id: Math.random(),
+          message: 'Failed to fetch job'
+        })
+        history.push(
+          match.url
+            .split('/')
+            .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
+            .join('/')
+        )
+      })
+  }, [
+    fetchJob,
+    history,
+    match.params.jobId,
+    match.params.projectName,
+    match.path,
+    match.url,
+    setNotification
+  ])
+
   useEffect(() => {
     if (!isEmpty(selectedJob) && match.params.pageTab === MONITOR_JOBS_TAB) {
       fetchJobPods(match.params.projectName, selectedJob.uid)
@@ -382,23 +408,7 @@ const Jobs = ({
       match.params.jobId &&
       (isEmpty(selectedJob) || match.params.jobId !== selectedJob.uid)
     ) {
-      fetchJob(match.params.projectName, match.params.jobId)
-        .then(job => {
-          setSelectedJob(parseJob(job))
-        })
-        .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch job'
-          })
-          history.push(
-            match.url
-              .split('/')
-              .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
-              .join('/')
-          )
-        })
+      fetchCurrentJob()
     } else if (!isEmpty(selectedJob) && !match.params.jobId) {
       setSelectedJob({})
       removeJob()
@@ -433,7 +443,7 @@ const Jobs = ({
       removeFunction()
     }
   }, [
-    fetchJob,
+    fetchCurrentJob,
     getFunctionWithHash,
     history,
     match.params.functionHash,
@@ -596,6 +606,7 @@ const Jobs = ({
             actionsMenu={pageData.actionsMenu}
             detailsMenu={pageData.details.menu}
             handleCancel={handleCancel}
+            handleRefresh={fetchCurrentJob}
             isDetailsScreen
             match={match}
             pageData={pageData}
@@ -650,28 +661,15 @@ const Jobs = ({
   )
 }
 
-Jobs.defaultProps = {
-  subPage: ''
-}
-
 Jobs.propTypes = {
   history: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired,
-  subPage: PropTypes.string
+  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(
-  ({
-    appStore,
-    filtersStore,
-    functionsStore,
-    jobsStore,
-    detailsStore,
-    workflowsStore
-  }) => ({
+  ({ appStore, functionsStore, jobsStore, detailsStore, workflowsStore }) => ({
     appStore,
     detailsStore,
-    filtersStore,
     functionsStore,
     jobsStore,
     workflowsStore
