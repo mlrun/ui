@@ -10,6 +10,7 @@ import Tip from '../../common/Tip/Tip'
 import CheckBox from '../../common/CheckBox/CheckBox'
 
 import { joinDataOfArrayOrObject } from '../../utils'
+import { ACTIONS_MENU } from '../../types'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 
@@ -123,7 +124,7 @@ JobsPanelTableRow.defaultProps = {
 }
 
 JobsPanelTableRow.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   contentItem: PropTypes.shape({}).isRequired,
   editItem: PropTypes.bool.isRequired,
   handleDelete: PropTypes.func.isRequired,

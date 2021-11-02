@@ -109,3 +109,8 @@ export const CONFIRM_DIALOG_BUTTON = PropTypes.shape({
   label: PropTypes.string.isRequired,
   variant: PropTypes.string.isRequired
 })
+
+export const ACTIONS_MENU = PropTypes.oneOfType([
+  PropTypes.arrayOf(PropTypes.shape({})),
+  PropTypes.func
+])

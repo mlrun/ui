@@ -5,6 +5,8 @@ import classnames from 'classnames'
 
 import ActionsMenuItem from '../../elements/ActionMenuItem/ActionsMenuItem'
 
+import { ACTIONS_MENU } from '../../types'
+
 import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
 
 import './actionsMenu.scss'
@@ -125,10 +127,7 @@ ActionsMenu.defaultProps = {
 
 ActionsMenu.propTypes = {
   dataItem: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
-  menu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  menu: ACTIONS_MENU.isRequired,
   time: PropTypes.number
 }
 
