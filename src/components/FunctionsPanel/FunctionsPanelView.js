@@ -19,6 +19,7 @@ import { runtimeSections } from './functionsPanel.util'
 
 import {
   LABEL_BUTTON,
+  PANEL_DEFAULT_ACCESS_KEY,
   SECONDARY_BUTTON,
   TERTIARY_BUTTON
 } from '../../constants'
@@ -136,7 +137,13 @@ const FunctionsPanelView = ({
               credentialsAccessKey={
                 functionsStore.newFunction.metadata.credentials.access_key
               }
+              required={
+                functionsStore.newFunction.metadata.credentials.access_key !==
+                PANEL_DEFAULT_ACCESS_KEY
+              }
               setCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
+              setValidation={setValidation}
+              validation={validation}
             />
             <div className="new-item-side-panel__buttons-container">
               {error && (
