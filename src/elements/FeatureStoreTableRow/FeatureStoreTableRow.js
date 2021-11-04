@@ -69,7 +69,7 @@ const FeatureStoreTableRow = ({
             {mainRowData.map((data, index) => {
               return index < mainRowItemsCount ? (
                 <TableCell
-                  key={data.value || index}
+                  key={data.id}
                   handleExpandRow={handleExpandRow}
                   data={data}
                   item={rowItem}
@@ -115,7 +115,7 @@ const FeatureStoreTableRow = ({
                   />
                 ) : (
                   <>
-                    {Object.values(tableContentItem).map((value, i) => {
+                    {Object.values(tableContentItem).map(value => {
                       return (
                         !value.hidden && (
                           <TableCell
@@ -129,7 +129,7 @@ const FeatureStoreTableRow = ({
                               match.params.tab ?? DETAILS_OVERVIEW_TAB
                             )}
                             match={match}
-                            key={value.value + i ?? Date.now()}
+                            key={value.id}
                             selectItem={handleSelectItem}
                             selectedItem={selectedItem}
                           />
@@ -154,7 +154,7 @@ const FeatureStoreTableRow = ({
         </div>
       ) : (
         <>
-          {mainRowData.map((value, i) => {
+          {mainRowData.map(value => {
             return (
               currentItem &&
               !value.hidden && (
@@ -163,7 +163,7 @@ const FeatureStoreTableRow = ({
                   handleExpandRow={handleExpandRow}
                   data={value}
                   item={currentItem}
-                  key={Math.random() + i}
+                  key={value.id}
                   link={value.getLink?.(
                     match.params.tab ?? DETAILS_OVERVIEW_TAB
                   )}

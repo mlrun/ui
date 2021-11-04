@@ -68,6 +68,7 @@ const CreateProjectDialog = ({
             />
           )}
           <Button
+            type="button"
             disabled={projectStore.loading}
             variant={TERTIARY_BUTTON}
             label="Cancel"

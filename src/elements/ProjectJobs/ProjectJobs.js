@@ -32,7 +32,7 @@ const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
 
   const jobsData = useMemo(() => {
     const statistics = getJobsStatistics(
-      projectStore.projectCounters,
+      projectStore.projectSummary,
       match,
       isDemoMode
     )
@@ -42,7 +42,7 @@ const ProjectJobs = ({ fetchProjectJobs, match, projectStore }) => {
       statistics,
       table
     }
-  }, [groupedLatestItem, isDemoMode, match, projectStore.projectCounters])
+  }, [groupedLatestItem, isDemoMode, match, projectStore.projectSummary])
 
   return (
     <ProjectDataCard

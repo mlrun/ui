@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 
+import { messagesByKind } from './messagesByKind'
+
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
@@ -157,6 +159,7 @@ const RegisterArtifactPopup = ({
         setValidation={setValidation}
         showType={artifactKind === 'file'}
         validation={validation}
+        messageByKind={messagesByKind[artifactKind.toLowerCase()]}
       />
       <div className="pop-up-dialog__footer-container">
         {registerArtifactData.error && (

@@ -11,7 +11,8 @@ const RegisterArtifactForm = ({
   registerArtifactData,
   setValidation,
   showType,
-  validation
+  validation,
+  messageByKind
 }) => {
   const { description, key, kind, target_path } = registerArtifactData
   const kindOptions = [
@@ -32,9 +33,27 @@ const RegisterArtifactForm = ({
       id: 'table'
     }
   ]
-
   return (
     <div className="artifact-register-form">
+      {messageByKind && (
+        <div className="msg">
+          <p>{messageByKind}</p>
+          <div>
+            <p>
+              All you need to do is enter the name of the artifact and the URL
+              (e.g. s3://my-bucket/path).
+            </p>
+            <a
+              href="https://docs.mlrun.org/en/latest/store/artifacts.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link"
+            >
+              Read more
+            </a>
+          </div>
+        </div>
+      )}
       <Input
         className="pop-up-dialog__form-input"
         density="chunky"
@@ -105,7 +124,8 @@ RegisterArtifactForm.propTypes = {
   registerArtifactData: PropTypes.shape({}).isRequired,
   setValidation: PropTypes.func.isRequired,
   showType: PropTypes.bool,
-  validation: PropTypes.shape({}).isRequired
+  validation: PropTypes.shape({}).isRequired,
+  messageByKind: PropTypes.string
 }
 
 export default RegisterArtifactForm

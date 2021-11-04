@@ -12,7 +12,10 @@ import './panelCredentialsAccessKey.scss'
 const PanelCredentialsAccessKey = ({
   className,
   credentialsAccessKey,
-  setCredentialsAccessKey
+  required,
+  setCredentialsAccessKey,
+  setValidation,
+  validation
 }) => {
   const [inputValue, setInputValue] = useState('')
 
@@ -41,6 +44,10 @@ const PanelCredentialsAccessKey = ({
           }
 
           setCredentialsAccessKey(value === credentialsAccessKey ? '' : value)
+          setValidation(state => ({
+            ...state,
+            isAccessKeyValid: true
+          }))
         }}
         selectedId={credentialsAccessKey}
       />
@@ -48,12 +55,20 @@ const PanelCredentialsAccessKey = ({
         <Input
           floatingLabel
           label="Access Key"
+          invalid={!validation.isAccessKeyValid}
           onBlur={event => {
             if (credentialsAccessKey !== event.target.value) {
               setCredentialsAccessKey(event.target.value)
             }
           }}
           onChange={setInputValue}
+          required={required}
+          setInvalid={value =>
+            setValidation(state => ({
+              ...state,
+              isAccessKeyValid: value
+            }))
+          }
           value={inputValue}
           wrapperClassName="access-key__input"
         />
@@ -63,13 +78,17 @@ const PanelCredentialsAccessKey = ({
 }
 
 PanelCredentialsAccessKey.defaultProps = {
-  className: ''
+  className: '',
+  required: false
 }
 
 PanelCredentialsAccessKey.propTypes = {
   className: PropTypes.string,
   credentialsAccessKey: PropTypes.string.isRequired,
-  setCredentialsAccessKey: PropTypes.func.isRequired
+  required: PropTypes.bool,
+  setCredentialsAccessKey: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default PanelCredentialsAccessKey

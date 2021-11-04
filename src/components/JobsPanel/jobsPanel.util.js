@@ -439,10 +439,10 @@ export const generateTableDataFromDefaultData = (
   })
   panelDispatch({
     type: panelActions.SET_ACCESS_KEY,
-    payload: defaultData.credentials?.access_key ?? PANEL_DEFAULT_ACCESS_KEY
+    payload: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY
   })
   setNewJob({
-    access_key: defaultData.credentials?.access_key ?? PANEL_DEFAULT_ACCESS_KEY,
+    access_key: defaultData.credentials?.access_key || PANEL_DEFAULT_ACCESS_KEY,
     inputs: defaultData.task.spec.inputs ?? {},
     parameters: defaultData.task.spec.parameters ?? {},
     volume_mounts: volumeMounts?.length
