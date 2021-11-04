@@ -56,6 +56,7 @@ const Jobs = ({
   fetchWorkflows,
   filtersStore,
   functionsStore,
+  getFunction,
   getFunctionWithHash,
   handleRunScheduledJob,
   history,
@@ -275,6 +276,23 @@ const Jobs = ({
     })
   }
 
+  const handleCatchRequest = useCallback(
+    (error, message) => {
+      setNotification({
+        status: error?.response?.status || 400,
+        id: Math.random(),
+        message
+      })
+      history.push(
+        match.url
+          .split('/')
+          .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
+          .join('/')
+      )
+    },
+    [history, match.path, match.url, setNotification]
+  )
+
   const handleEditScheduleJob = editableItem => {
     fetchScheduledJobAccessKey(match.params.projectName, editableItem.name)
       .then(result => {
@@ -386,19 +404,7 @@ const Jobs = ({
         .then(job => {
           setSelectedJob(parseJob(job))
         })
-        .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch job'
-          })
-          history.push(
-            match.url
-              .split('/')
-              .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
-              .join('/')
-          )
-        })
+        .catch(error => handleCatchRequest(error, 'Failed to fetch job'))
     } else if (!isEmpty(selectedJob) && !match.params.jobId) {
       setSelectedJob({})
       removeJob()
@@ -407,33 +413,33 @@ const Jobs = ({
       (isEmpty(selectedFunction) ||
         match.params.functionHash !== selectedFunction.hash)
     ) {
-      getFunctionWithHash(
-        match.params.projectName,
-        match.params.functionName,
-        match.params.functionHash
-      )
-        .then(func => {
-          setSelectedFunction(parseFunction(func, match.params.projectName))
-        })
-        .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch function'
+      if (
+        match.params.functionHash === 'latest' &&
+        match.params.functionHash !== selectedFunction.tag
+      ) {
+        getFunction(match.params.projectName, match.params.functionName)
+          .then(func => {
+            setSelectedFunction(parseFunction(func, match.params.projectName))
           })
-          history.push(
-            match.url
-              .split('/')
-              .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
-              .join('/')
-          )
-        })
+          .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
+      } else if (match.params.functionHash !== selectedFunction.tag) {
+        getFunctionWithHash(
+          match.params.projectName,
+          match.params.functionName,
+          match.params.functionHash
+        )
+          .then(func => {
+            setSelectedFunction(parseFunction(func, match.params.projectName))
+          })
+          .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
+      }
     } else if (!isEmpty(selectedFunction) && !match.params.functionHash) {
       setSelectedFunction({})
       removeFunction()
     }
   }, [
     fetchJob,
+    getFunction,
     getFunctionWithHash,
     history,
     match.params.functionHash,
@@ -442,6 +448,7 @@ const Jobs = ({
     match.params.projectName,
     match.path,
     match.url,
+    handleCatchRequest,
     removeFunction,
     removeJob,
     selectedFunction,
