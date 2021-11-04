@@ -29,7 +29,7 @@
       flex-flow: row wrap;
       width: 100%;
       align-items: center;
-      justify-content: start;
+      justify-content: flex-start;
       padding-left: 15px;
       margin-bottom: 1rem;
 
@@ -38,8 +38,6 @@
         align-items: center;
         justify-content: space-between;
         min-width: 100%;
-        // margin-bottom: 1rem;
-        // width: 100%;
         &:not(:last-child) {
           margin-right: 24px;
         }
@@ -50,8 +48,6 @@
 
       .project-types-select {
         padding: 0;
-        // width: 210px;
-
         .select__header {
           width: auto;
           font-size: 20px;
@@ -84,9 +80,4 @@
       margin: 10px 0;
     }
   }
-
-  // &-search {
-  //   min-width: 500px;
-  //   margin-bottom: 15px;
-  // }
 }

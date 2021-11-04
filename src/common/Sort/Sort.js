@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import { ReactComponent as Caret } from '../../images/dropdown.svg'
-
 import SelectOption from '../../elements/SelectOption/SelectOption'
 
+import { ReactComponent as Caret } from '../../images/dropdown.svg'
 import { ReactComponent as Arrow } from '../../images/back-arrow.svg'
 
 import './sort.scss'

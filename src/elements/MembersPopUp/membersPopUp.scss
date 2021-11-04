@@ -231,7 +231,7 @@
 
 .delete-member__pop-up {
   .pop-up-dialog {
-    width: 200px;
+    width: 230px;
     color: $white;
     background-color: $primary;
     box-shadow: unset;
@@ -244,6 +244,11 @@
     &__header-text {
       color: $white;
       font-weight: normal;
+    }
+    &__header-close {
+      path {
+        fill: $white;
+      }
     }
   }
 

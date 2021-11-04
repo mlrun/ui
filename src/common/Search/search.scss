@@ -7,7 +7,6 @@
     position: relative;
     display: flex;
     align-items: center;
-    // padding-bottom: 10px;
     flex: 1;
     border-bottom: $primaryBorder;
   }
@@ -15,7 +14,6 @@
   &-input {
     z-index: 2;
     width: 100%;
-    // margin-left: 13px;
     padding: 10px 10px 5px;
     color: $primary;
     background-color: transparent;
@@ -25,7 +23,7 @@
   &-label {
     position: absolute;
     top: 10px;
-    left: 34px;
+    left: 33px;
     z-index: 1;
     color: $topaz;
     user-select: none;
