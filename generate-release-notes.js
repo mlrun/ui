@@ -159,7 +159,7 @@ Skipping this commit.
       // If PR body was retrieved successfully, use it for the realease-notes
       // entry instead of the default commit message used above (skipping some
       // irrelevant lines from it)
-      entry = body
+      entry = (body || '')
         .replace(/\r\n/, '\n')
         .split('\n')
         .filter(line =>
