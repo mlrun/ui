@@ -92,6 +92,9 @@ const SKIP_LINES_STARTING_WITH = [
   'originated',
   'originates',
   'originating',
+  'relates',
+  'relating',
+  'related',
   'jira ticket'
 ]
 
@@ -145,30 +148,32 @@ Skipping this commit.
       )
       const body = prJson.body
 
-      // For GA skip PRs marked with "In-release (GA)" or "In-release (RC)"
-      // For RC skip only PRs marked with "In-release (RC)"
-      const skip =
-        releaseType === 'GA'
-          ? /^in[- ]?release\s+\((GA|RC)\)/im.test(body)
-          : /^in[- ]?release\s+\([RC]\)/im.test(body)
-      if (skip) {
-        console.log(`skipped PR ${pr}`)
-        return true // continue to the next iteration of `forEach`
-      }
+      if (body) {
+        // For GA skip PRs marked with "In-release (GA)" or "In-release (RC)"
+        // For RC skip only PRs marked with "In-release (RC)"
+        const skip =
+          releaseType === 'GA'
+            ? /^in[- ]?release\s+\((GA|RC)\)/im.test(body)
+            : /^in[- ]?release\s+\([RC]\)/im.test(body)
+        if (skip) {
+          console.log(`skipped PR ${pr}`)
+          return true // continue to the next iteration of `forEach`
+        }
 
-      // If PR body was retrieved successfully, use it for the realease-notes
-      // entry instead of the default commit message used above (skipping some
-      // irrelevant lines from it)
-      entry = (body || '')
-        .replace(/\r\n/, '\n')
-        .split('\n')
-        .filter(line =>
-          SKIP_LINES_STARTING_WITH.every(
-            prefix => !line.toLowerCase().startsWith(prefix)
+        // If PR body was retrieved successfully, use it for the realease-notes
+        // entry instead of the default commit message used above (skipping some
+        // irrelevant lines from it)
+        entry = body
+          .replace(/\r\n/, '\n')
+          .split('\n')
+          .filter(line =>
+            SKIP_LINES_STARTING_WITH.every(
+              prefix => !line.toLowerCase().startsWith(prefix)
+            )
           )
-        )
-        .join('\n')
-        .trim()
+          .join('\n')
+          .trim()
+      }
     }
 
     // If commit message has the verb "Fix" — add to "Bug Fixes" section of the
