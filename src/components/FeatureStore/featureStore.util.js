@@ -475,7 +475,11 @@ export const navigateToDetailsPane = (
     const selectedItem = content.find(contentItem => {
       const searchKey = contentItem.name ? 'name' : 'db_key'
 
-      if ([FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)) {
+      if (
+        [FEATURES_TAB, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
+          match.params.pageTab
+        )
+      ) {
         return (
           contentItem[searchKey] === name &&
           (contentItem.tag === tag || contentItem.uid === tag)
