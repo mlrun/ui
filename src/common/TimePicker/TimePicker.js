@@ -9,13 +9,12 @@ const TimePicker = ({ onChange, value, hideLabel }) => {
   const [valueInput, setValueInput] = useState(value)
 
   const timePickerClassName = classNames(
-    'input input-wrapper',
-    valueInput.length > 1 && !hideLabel && 'active-input'
+    'field-control__input-wrapper',
+    valueInput.length > 1 && !hideLabel && 'active-label'
   )
 
   const labelClassName = classNames(
-    'input__label',
-    'input__label-floating',
+    'field-control__label',
     valueInput.length > 1 && 'active-label'
   )
 
@@ -39,14 +38,22 @@ const TimePicker = ({ onChange, value, hideLabel }) => {
 
   return (
     <div data-testid="time-picker" className="time-picker-container">
-      {!hideLabel && <span className={labelClassName}>Time</span>}
-      <MaskedInput
-        className={timePickerClassName}
-        keepCharPositions
-        mask={timeMask}
-        onChange={onHandleInputChange}
-        value={valueInput}
-      />
+      <div className="field-control field-control-dense">
+        {!hideLabel && <label className={labelClassName}>Time</label>}
+        <div className={timePickerClassName}>
+          <MaskedInput
+            keepCharPositions
+            mask={timeMask}
+            onChange={onHandleInputChange}
+            value={valueInput}
+          />
+          <fieldset>
+            <legend>
+              <span class="field-control__legend-span">Time</span>
+            </legend>
+          </fieldset>
+        </div>
+      </div>
     </div>
   )
 }
