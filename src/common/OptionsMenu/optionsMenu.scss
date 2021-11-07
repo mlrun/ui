@@ -5,17 +5,17 @@
   color: rgba(72, 63, 86, 0.87);
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
+  border-radius: 4px;
   box-shadow: $previewBoxShadow;
   font-size: 1rem;
   list-style-type: none;
   margin: 0;
-  padding: 10px;
+  padding: 5px 1rem;
   max-height: 250px;
   width: 100%;
-  position: absolute;
-  top: calc(100% + 5px);
-  left: 0;
+  // position: absolute;
+  // top: calc(100% + 5px);
+  // left: 0;
   z-index: 6;
   &-enter {
     opacity: 0;

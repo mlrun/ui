@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
 
-import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
-
 import OptionsMenu from '../OptionsMenu/OptionsMenu'
 import ValidationTemplate from '../OptionsMenu/ValidationTemplate/ValidationTemplate'
 
@@ -54,7 +52,7 @@ const Input = React.forwardRef(
     ref
   ) => {
     ref = useRef()
-    const input = React.createRef()
+    const input = useRef()
     const inputLabel = useRef(null)
     const [inputIsFocused, setInputIsFocused] = useState(false)
     const [isInvalid, setIsInvalid] = useState(false)
@@ -62,7 +60,6 @@ const Input = React.forwardRef(
     const [validationPattern] = useState(RegExp(pattern))
     const [validationRules, setValidationRules] = useState(rules || [])
     const [showValidationRules, setShowValidationRules] = useState(false)
-    useDetectOutsideClick(ref, () => setShowValidationRules(false))
 
     const fieldControlClassNames = classnames(
       'field-control',
@@ -103,7 +100,10 @@ const Input = React.forwardRef(
         isFieldValidByPattern = isValidField
         setValidationRules(newRules)
 
-        if (isFieldValidByPattern && showValidationRules) {
+        if (
+          (isFieldValidByPattern && showValidationRules) ||
+          value.trim() === ''
+        ) {
           setShowValidationRules(false)
         }
       }
@@ -275,7 +275,10 @@ const Input = React.forwardRef(
             </ul>
           )}
           {!isEmpty(validationRules) && (
-            <OptionsMenu show={showValidationRules && typedValue !== ''}>
+            <OptionsMenu
+              show={showValidationRules && typedValue !== ''}
+              ref={ref}
+            >
               {renderValidationRules}
             </OptionsMenu>
           )}
