@@ -317,7 +317,7 @@ Input.defaultProps = {
 
 Input.propTypes = {
   className: PropTypes.string,
-  density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky']),
+  density: PropTypes.oneOf(['dense', 'normal', 'medium', 'chunky', 'full']),
   disabled: PropTypes.bool,
   floatingLabel: PropTypes.bool,
   focused: PropTypes.bool,

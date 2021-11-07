@@ -144,6 +144,7 @@ const VolumesTableView = ({
               />
               <Input
                 wrapperClassName="m-0 me-3"
+                density="full"
                 invalid={
                   isNameNotUnique(newVolume.name, volumeMounts) ||
                   !validation.isNameValid
@@ -165,6 +166,7 @@ const VolumesTableView = ({
               />
               <Input
                 wrapperClassName="m-0"
+                density="full"
                 invalid={
                   isPathNotUnique(newVolume.path, volumeMounts) ||
                   !validation.isPathValid
