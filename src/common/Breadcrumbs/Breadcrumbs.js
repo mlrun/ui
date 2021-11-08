@@ -6,8 +6,8 @@ import classnames from 'classnames'
 import { connect } from 'react-redux'
 
 import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
-
 import RoundedIcon from '../RoundedIcon/RoundedIcon'
+
 import { ReactComponent as ArrowIcon } from '../../images/arrow.svg'
 
 import { useDemoMode } from '../../hooks/demoMode.hook'

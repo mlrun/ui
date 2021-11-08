@@ -2,14 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import classes from './RoundedIcon.module.scss'
-
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
+import classes from './RoundedIcon.module.scss'
+
 const RoundedIcon = React.forwardRef(
   ({ onClick, className, children, id, tooltipText }, ref) => {
-    const wrapperClassNames = classNames(classes.wrapper, className)
+    const wrapperClassNames = classNames(classes.roundIconWrapper, className)
     return (
       <div className={wrapperClassNames} ref={ref}>
         <Tooltip
@@ -24,11 +24,19 @@ const RoundedIcon = React.forwardRef(
     )
   }
 )
+
+RoundedIcon.defaultProps = {
+  className: '',
+  id: '',
+  onClick: () => {},
+  tooltipText: ''
+}
+
 RoundedIcon.propTypes = {
-  onClick: PropTypes.func,
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
   id: PropTypes.string,
+  onClick: PropTypes.func,
   tooltipText: PropTypes.string
 }
 

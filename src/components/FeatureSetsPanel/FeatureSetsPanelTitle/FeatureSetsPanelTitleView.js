@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import Input from '../../../common/Input/Input'
 import ChipCell from '../../../common/ChipCell/ChipCell'
 import TextArea from '../../../common/TextArea/TextArea'
-
 import RoundedIcon from '../../../common/RoundedIcon/RoundedIcon'
+
 import { ReactComponent as CloseIcon } from '../../../images/close.svg'
 
 import './featureSetsPanelTitle.scss'

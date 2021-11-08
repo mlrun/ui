@@ -3,13 +3,12 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { createPortal } from 'react-dom'
 
+import RoundedIcon from '../RoundedIcon/RoundedIcon'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import { POP_UP_CUSTOM_POSITION } from '../../types'
 import { ReactComponent as CloseIcon } from '../../images/close.svg'
-
-import RoundedIcon from '../RoundedIcon/RoundedIcon'
 
 import './popUpDialog.scss'
 
@@ -84,7 +83,6 @@ const PopUpDialog = ({
           )}
           <RoundedIcon
             onClick={closePopUp}
-            className=""
             tooltipText="Close"
             data-testid="pop-up-close-btn"
           >
