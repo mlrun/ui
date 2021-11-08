@@ -22,6 +22,13 @@ import artifactTags from './data/artifactsTags.json'
 import funcs from './data/funcs.json'
 import logs from './data/logs.json'
 
+import iguazioProjects from './data/iguazioProjects.json'
+import iguazioUserGrops from './data/iguazioUserGroups.json'
+import iguazioProjectAuthorizationRoles from './data/iguazioProjectAuthorizationRoles.json'
+import iguazioUsers from './data/iguazioUsers.json'
+import iguazioUserRelations from './data/iguazioUserRelations.json'
+import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
+
 import nuclioFunctions from './data/nuclioFunctions.json'
 import nuclioAPIGateways from './data/nuclioAPIGateways.json'
 
@@ -71,6 +78,8 @@ const mlrunAPIIngress =
   '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const nuclioApiUrl =
   '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
+const iguazioApiUrl =
+  '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
 const port = 30000
 
 // Support function
@@ -863,6 +872,166 @@ function getNuclioAPIGateways(req, res) {
   res.send(nuclioAPIGateways)
 }
 
+// Iguazio
+function getIguazioProjects(req, res) {
+  // console.log('requests log: ', req.method, req.url)
+  // console.log('debug: ', req.params, req.query, req.body)
+
+  let resultTemplate = cloneDeep(iguazioProjects)
+
+  let filteredProject = {}
+  if (req.query.filter.name) {
+    filteredProject = cloneDeep(
+      iguazioProjects.data.find(
+        item => item.attributes.name === req.query.filter.name
+      )
+    )
+  }
+
+  let owner
+  if (req.query.include === 'owner') {
+    let ownerID
+    const keys = Object.keys(iguazioUserRelations)
+    for (let key of keys) {
+      const filterArr = iguazioUserRelations[key]
+        .filter(item => item.type === 'project')
+        .find(item => item.id === filteredProject.id)
+      if (filterArr) {
+        ownerID = key
+        break
+      }
+    }
+    owner = iguazioUsers.data.find(item => item.id === ownerID)
+  }
+
+  filteredProject.attributes.owner_username = owner.attributes.username
+  filteredProject.relationships = {
+    owner: {
+      data: {
+        type: owner.type,
+        id: owner.id
+      }
+    }
+  }
+
+  delete resultTemplate.data
+  resultTemplate.data = [filteredProject]
+  resultTemplate.included.push(owner)
+
+  res.send(resultTemplate)
+}
+
+function getIguazioProject(req, res) {
+  // console.log('requests log: ', req.method, req.url)
+  // console.log('debug: ', req.params, req.query, req.body)
+
+  let filteredProject = iguazioProjects.data.find(
+    item => item.id === req.params.id
+  )
+
+  let filteredAuthRoles = []
+  if (req.query.include.includes('project_authorization_roles')) {
+    filteredAuthRoles = cloneDeep(
+      iguazioProjectAuthorizationRoles.data.filter(
+        item => item.relationships.project.data.id === req.params.id
+      )
+    )
+  }
+  const authRolesIDs = filteredAuthRoles.map(item => item.id)
+  for (let authRole of filteredAuthRoles) {
+    delete authRole.relationships
+  }
+  // console.log(
+  //   'debug authRolesIDs',
+  //   Array.isArray(authRolesIDs),
+  //   authRolesIDs.length,
+  //   authRolesIDs
+  // )
+
+  let filteredPrincipalUsers = []
+  if (
+    req.query.include.includes('project_authorization_roles.principal_users')
+  ) {
+    let principalUserIDs = []
+    for (let authID of authRolesIDs) {
+      // console.log('debug authID: ', authID)
+      let tmp = iguazioProjectsRelations[req.params.id].find(
+        item => item.id === authID
+      ).relationships
+      if (tmp) {
+        let tmpIDs = tmp.principal_users?.data.map(item => item.id)
+        if (tmpIDs) {
+          principalUserIDs = [...principalUserIDs, ...tmpIDs]
+        }
+
+        filteredAuthRoles.find(item => item.id === authID).relationships = tmp
+      }
+    }
+    for (let userID of principalUserIDs) {
+      filteredPrincipalUsers.push(
+        iguazioUsers.data.find(item => item.id === userID)
+      )
+    }
+    // console.log(
+    //   'debug authRolesIDs 2',
+    //   Array.isArray(authRolesIDs),
+    //   authRolesIDs.length,
+    //   authRolesIDs
+    // )
+  }
+
+  let filteredPrincipalUserGroups = []
+  if (
+    req.query.include.includes(
+      'project_authorization_roles.principal_user_groups'
+    )
+  ) {
+    let principalUserGroupIDs = []
+    for (let authID of authRolesIDs) {
+      let tmp = iguazioProjectsRelations[req.params.id].find(
+        item => item.id === authID
+      ).relationships
+      if (tmp) {
+        let tmpIDs = tmp.principal_user_groups?.data.map(item => item.id)
+        if (tmpIDs) {
+          principalUserGroupIDs = [...principalUserGroupIDs, ...tmpIDs]
+        }
+
+        filteredAuthRoles.find(item => item.id === authID).relationships = tmp
+      }
+    }
+    for (let groupID of principalUserGroupIDs) {
+      filteredPrincipalUserGroups.push(
+        iguazioUserGrops.data.find(item => item.id === groupID)
+      )
+    }
+  }
+
+  res.send({
+    data: filteredProject,
+    included: [
+      ...filteredAuthRoles,
+      ...filteredPrincipalUsers,
+      ...filteredPrincipalUserGroups
+    ],
+    meta: iguazioProjectAuthorizationRoles.meta
+  })
+}
+
+function getIguazioUserGrops(req, res) {
+  // console.log('requests log: ', req.method, req.url)
+  // console.log('debug: ', req.params, req.query, req.body)
+
+  res.send(iguazioUserGrops)
+}
+
+function getIguazioUsers(req, res) {
+  // console.log('requests log: ', req.method, req.url)
+  // console.log('debug: ', req.params, req.query, req.body)
+
+  res.send(iguazioUsers)
+}
+
 // REQUESTS
 app.get(`${mlrunAPIIngress}/api/frontend-spec`, getFrontendSpec)
 
@@ -951,6 +1120,18 @@ app.post(`${mlrunAPIIngress}/api/submit_job`, postSubmitJob)
 app.get(`${nuclioApiUrl}/api/functions`, getNuclioFunctions)
 
 app.get(`${nuclioApiUrl}/api/api_gateways`, getNuclioAPIGateways)
+
+app.get(`${iguazioApiUrl}/api/projects`, getIguazioProjects)
+
+app.get(`${iguazioApiUrl}/api/projects/:id`, getIguazioProject)
+
+app.get(`${iguazioApiUrl}/api/user_groups`, getIguazioUserGrops)
+
+app.get(`${iguazioApiUrl}/api/scrubbed_user_groups`, getIguazioUserGrops)
+
+app.get(`${iguazioApiUrl}/api/users`, getIguazioUsers)
+
+app.get(`${iguazioApiUrl}/api/scrubbed_users`, getIguazioUsers)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

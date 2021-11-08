@@ -164,6 +164,10 @@ const action = {
     await req.once('response', async function(res) {
       expect(res.statusCode).equal(expectedStatusCode)
     })
+  },
+  getElementText: async function(driver, component) {
+    const element = await driver.findElement(component)
+    return await element.getText('value')
   }
 }
 

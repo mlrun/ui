@@ -18,11 +18,13 @@ import {
   getCellByIndexColumn,
   isContainsSubstringInColumnCels,
   isContainsSubstringInColumnDropdownCels,
-  isDatetimeCelsValueInRange
+  isDatetimeCelsValueInRange,
+  findRowIndexesByColumnTooltipsValue
 } from '../common/actions/table.action'
 import {
   openActionMenu,
-  selectOptionInActionMenu
+  selectOptionInActionMenu,
+  checkActionMenuOptions
 } from '../common/actions/action-menu.action'
 import { typeValue } from '../common/actions/input-group.action'
 import {
@@ -30,6 +32,7 @@ import {
   selectOptionInDropdown,
   checkDropdownSelectedOption
 } from '../common/actions/dropdown.action'
+import pageObjectsConsts from '../common-tools/common-consts'
 
 Then(
   'check {string} value in {string} column in {string} table on {string} wizard',
@@ -267,6 +270,33 @@ When(
   }
 )
 
+When('click on {string} in {string} table on {string} wizard', async function(
+  field,
+  tableName,
+  wizardName,
+  dataTable
+) {
+  const column = dataTable['rawTable'][0][0]
+  const rows = dataTable.rows()
+  for (const row_indx in rows) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizardName][tableName],
+      column,
+      rows[row_indx][0]
+    )
+    const indx = arr[0] - pageObjects[wizardName][tableName].offset
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizardName][tableName]['tableFields'][field](indx)
+    )
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizardName][tableName]['tableFields'][field](indx)
+    )
+  }
+})
+
 When(
   'click on {string} in {string} table in {string} on {string} wizard with offset {string}',
   async function(
@@ -291,12 +321,11 @@ When(
       if (offsetFlag === 'true') {
         indx -= pageObjects[wizardName][accordionName][tableName].offset
       }
-
       await hoverComponent(
         this.driver,
-        pageObjects[wizardName][accordionName][tableName]['tableFields'][field](
-          indx
-        )
+        pageObjects[wizardName][accordionName][tableName]['tableFields'][
+          column
+        ](indx)
       )
       await clickOnComponent(
         this.driver,
@@ -349,6 +378,37 @@ Then(
         substring
       )
     }
+  }
+)
+
+Then(
+  'verify options in action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string}',
+  async function(wizard, table, kindName, columnName, constWizard, constValue) {
+    const arr = await findRowIndexesByColumnTooltipsValue(
+      this.driver,
+      pageObjects[wizard][table],
+      columnName,
+      kindName
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][columnName](indx)['label']
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await checkActionMenuOptions(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['action_menu'](indx),
+      pageObjectsConsts[constWizard][constValue]
+    )
   }
 )
 
