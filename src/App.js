@@ -18,7 +18,6 @@ import {
 } from './constants'
 
 import './scss/main.scss'
-import AddToFeatureVectorPage from './components/AddToFeatureVectorPage/AddToFeatureVectorPage'
 
 const CreateJobPage = React.lazy(() =>
   import('./components/CreateJobPage/CreateJobPage')
@@ -36,6 +35,9 @@ const Project = React.lazy(() => import('./components/Project/Project'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const ProjectSettings = React.lazy(() =>
   import('./components/ProjectSettings/ProjectSettings')
+)
+const AddToFeatureVectorPage = React.lazy(() =>
+  import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
 )
 
 const App = () => {

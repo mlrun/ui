@@ -421,12 +421,12 @@ const MembersPopUp = ({
                   <div className="member-actions actions">
                     <button
                       ref={member.actionElement}
-                      onClick={() => setDeleteMemberId(member.name)}
+                      onClick={() => setDeleteMemberId(member.id)}
                     >
                       <Delete />
                     </button>
                   </div>
-                  {deleteMemberId === member.name && (
+                  {deleteMemberId === member.id && (
                     <ConfirmDialog
                       className="delete-member__pop-up"
                       closePopUp={() => setDeleteMemberId('')}

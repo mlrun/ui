@@ -32,6 +32,8 @@ const ScheduleJobView = ({
   setDate,
   setIsRecurring,
   setTime,
+  setValidation,
+  validation,
   time
 }) => {
   return (
@@ -82,6 +84,8 @@ const ScheduleJobView = ({
         isScheduled
         panelDispatch={panelDispatch}
         panelState={panelState}
+        setValidation={setValidation}
+        validation={validation}
       />
       <Button
         variant={SECONDARY_BUTTON}

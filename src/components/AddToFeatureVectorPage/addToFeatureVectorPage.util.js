@@ -1,5 +1,7 @@
 import React from 'react'
 
+import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
+
 import {
   ACTION_CELL_ID,
   LABELS_FILTER,
@@ -7,7 +9,6 @@ import {
   PROJECT_FILTER,
   TAG_FILTER
 } from '../../constants'
-import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
 
 export const page = 'FEATURE-STORE'
 
