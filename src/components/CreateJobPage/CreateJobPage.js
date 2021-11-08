@@ -9,13 +9,13 @@ import JobsPanel from '../JobsPanel/JobsPanel'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
-import { generateProjectsList } from './createJobPage.util'
+import { generateProjectsList } from '../../utils/projects'
 import { PANEL_CREATE_MODE } from '../../constants'
 
 const CreateJobPage = ({
   fetchFunctions,
   fetchFunctionsTemplates,
-  fetchProjects,
+  fetchProjectsNames,
   functionsStore,
   match,
   projectStore,
@@ -27,7 +27,10 @@ const CreateJobPage = ({
   const [filteredTemplates, setFilteredTemplates] = useState({})
   const [functions, setFunctions] = useState([])
   const [projects, setProjects] = useState(
-    generateProjectsList(projectStore.projects, match.params.projectName)
+    generateProjectsList(
+      projectStore.projectsNames.data,
+      match.params.projectName
+    )
   )
   const [selectedGroupFunctions, setSelectedGroupFunctions] = useState({})
   const [selectedProject, setSelectedProject] = useState(
@@ -47,11 +50,11 @@ const CreateJobPage = ({
 
   useEffect(() => {
     if (projects.length === 0) {
-      fetchProjects().then(projects => {
+      fetchProjectsNames().then(projects => {
         setProjects(generateProjectsList(projects, match.params.projectName))
       })
     }
-  }, [fetchProjects, match.params.projectName, projects.length])
+  }, [fetchProjectsNames, match.params.projectName, projects.length])
 
   useEffect(() => {
     fetchFunctions(selectedProject).then(functions => {
