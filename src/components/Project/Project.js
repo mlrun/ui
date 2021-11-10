@@ -260,16 +260,16 @@ const Project = ({
     fetchProject(match.params.projectName).catch(error => {
       handleFetchProjectError(error, history, setConfirmData)
     })
+  }, [fetchProject, history, match.params.projectName])
 
+  const fetchProjectUsersData = useCallback(() => {
     if (projectMembershipIsEnabled) {
       fetchProjectIdAndOwner().then(fetchProjectMembers)
       fetchProjectMembersVisibility(match.params.projectName)
       fetchProjectOwnerVisibility(match.params.projectName)
     }
   }, [
-    fetchProject,
     fetchProjectIdAndOwner,
-    history,
     match.params.projectName,
     projectMembershipIsEnabled
   ])
@@ -296,6 +296,10 @@ const Project = ({
     removeProjectSummary,
     resetProjectData
   ])
+
+  useEffect(() => {
+    fetchProjectUsersData()
+  }, [fetchProjectUsersData])
 
   const handleSetProjectData = useCallback(() => {
     const data = {
@@ -575,6 +579,7 @@ const Project = ({
     removeProjectSummary()
     fetchProjectData()
     fetchProjectSummary(match.params.projectName)
+    fetchProjectUsersData()
   }
 
   const handleUpdateProjectLabels = labels => {
