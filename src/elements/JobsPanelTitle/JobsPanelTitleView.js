@@ -18,8 +18,7 @@ import { ReactComponent as Edit } from '../../images/edit.svg'
 import { panelActions } from '../../components/JobsPanel/panelReducer'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
-
-import { validationService } from '../../services/validationService'
+import { getValidationRules } from '../../utils/validationService'
 
 const JobsPanelTitleView = ({
   closePanel,
@@ -42,7 +41,6 @@ const JobsPanelTitleView = ({
     'job-panel__title-edit-icon',
     openScheduleJob && 'job-panel__title-edit-icon_disabled'
   )
-
   return (
     <div className="panel-title job-panel__title">
       <div className="panel-title__container">
@@ -84,14 +82,7 @@ const JobsPanelTitleView = ({
                     payload: name
                   })
                 }
-                maxLength={63}
-                validationRules={[
-                  validationService.generateRule.validCharacters(
-                    'a-z A-Z 0-9 - _ .'
-                  ),
-                  validationService.generateRule.beginEndWith('a-z A-Z 0-9'),
-                  validationService.generateRule.length({ max: 63 })
-                ]}
+                validationRules={getValidationRules('jobName')}
                 required
                 requiredText="This field is required"
                 setInvalid={value =>

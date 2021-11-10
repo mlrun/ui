@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { CSSTransition } from 'react-transition-group'
 
 import PopUpDialog from '../PopUpDialog/PopUpDialog'
 
-import { CSSTransition } from 'react-transition-group'
 import './optionsMenu.scss'
 
 const OptionsMenu = React.forwardRef(({ children, show, timeout }, ref) => {
@@ -11,17 +11,17 @@ const OptionsMenu = React.forwardRef(({ children, show, timeout }, ref) => {
     <CSSTransition
       in={show}
       timeout={timeout}
-      classNames="options-menu"
+      classNames="options-menu-transition"
       unmountOnExit
     >
       <PopUpDialog
-        className="select__options-list"
+        className="options-menu"
         customPosition={{
           element: ref,
           position: 'bottom-right'
         }}
       >
-        <ul className="options-menu">{children}</ul>
+        <ul className="options-menu__body">{children}</ul>
       </PopUpDialog>
     </CSSTransition>
   )
