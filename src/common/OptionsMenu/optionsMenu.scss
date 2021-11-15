@@ -1,0 +1,49 @@
+@import '../../scss/colors.scss';
+@import '../../scss/shadows.scss';
+@import '../../scss/borders.scss';
+
+.options-menu {
+  &__body {
+    overflow-y: auto;
+    color: $mulledWineTwo;
+    background-color: $white;
+    border: $primaryBorder;
+    border-radius: 4px;
+    box-shadow: $previewBoxShadow;
+    font-size: 1rem;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 1rem;
+    max-height: 250px;
+    width: 100%;
+  }
+
+  .pop-up-dialog {
+    width: 100%;
+    padding: 0;
+
+    &__header {
+      display: none;
+    }
+  }
+
+  &-transition {
+    &-enter {
+      opacity: 0;
+    }
+
+    &-enter-active {
+      opacity: 1;
+      transition: opacity 300ms ease-in-out;
+    }
+
+    &-exit {
+      opacity: 1;
+    }
+
+    &-exit-active {
+      opacity: 0;
+      transition: opacity 300ms ease-in-out;
+    }
+  }
+}

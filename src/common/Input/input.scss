@@ -24,7 +24,14 @@
     cursor: not-allowed;
   }
 
+  &_rules {
+    &-invalid {
+      padding-right: 30px !important;
+    }
+  }
+
   &__warning {
+    cursor: pointer;
     position: absolute;
     top: 50%;
     right: 10px;
@@ -51,7 +58,6 @@
 
     .input.input_invalid {
       border: $errorBorder;
-
       & ~ .input__warning {
         display: block;
       }

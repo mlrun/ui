@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react'
+import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { startCase } from 'lodash'
 import { Link } from 'react-router-dom'
@@ -22,6 +22,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
   const isDemoMode = useDemoMode()
+  const breadcrumbsRef = useRef()
 
   const projectScreens = useMemo(() => {
     return generateProjectScreens(match, isDemoMode)
@@ -41,7 +42,6 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
       )
     }
   }, [match.path, match.url])
-  const breadcrumbsRef = React.createRef()
 
   const handleCloseDropdown = useCallback(
     event => {

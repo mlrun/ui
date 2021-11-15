@@ -83,7 +83,9 @@ const FunctionsPanelCode = ({
             ]
         }))
       } else {
-        const buildImage = appStore.frontendSpec?.function_deployment_target_image_template
+        const buildImage = (
+          appStore.frontendSpec?.function_deployment_target_image_template || ''
+        )
           .replace('{project}', match.params.projectName)
           .replace('{name}', functionsStore.newFunction.metadata.name)
           .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')
@@ -189,7 +191,9 @@ const FunctionsPanelCode = ({
           ]
       )
     } else {
-      const buildImage = appStore.frontendSpec?.function_deployment_target_image_template
+      const buildImage = (
+        appStore.frontendSpec?.function_deployment_target_image_template || ''
+      )
         .replace('{project}', match.params.projectName)
         .replace('{name}', functionsStore.newFunction.metadata.name)
         .replace('{tag}', functionsStore.newFunction.metadata.tag || 'latest')

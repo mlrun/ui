@@ -133,18 +133,14 @@ const ProjectView = React.forwardRef(
                     projectName={project.data.metadata.name}
                     ref={ref}
                   />
-                  {isDemoMode && (
-                    <Link
-                      className="general-info__settings"
-                      to={`/projects/${match.params.projectName}/settings`}
-                    >
-                      <Tooltip
-                        template={<TextTooltipTemplate text="Settings" />}
-                      >
-                        <Settings />
-                      </Tooltip>
-                    </Link>
-                  )}
+                  <Link
+                    className="general-info__settings"
+                    to={`/projects/${match.params.projectName}/settings`}
+                  >
+                    <Tooltip template={<TextTooltipTemplate text="Settings" />}>
+                      <Settings />
+                    </Tooltip>
+                  </Link>
                 </div>
                 <ProjectDescription
                   editDescriptionData={editProject.description}

@@ -19,6 +19,7 @@ import { ReactComponent as Edit } from '../../images/edit.svg'
 import { panelActions } from '../../components/JobsPanel/panelReducer'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import { getValidationRules } from '../../utils/validationService'
 
 const JobsPanelTitleView = ({
   closePanel,
@@ -41,18 +42,6 @@ const JobsPanelTitleView = ({
     'job-panel__title-edit-icon',
     openScheduleJob && 'job-panel__title-edit-icon_disabled'
   )
-  const titleValidationTip = editTitle ? (
-    <>
-      <span>&bull; Valid characters: A-Z, a-z, 0-9, -, _, .</span>
-      <br />
-      <span>&bull; Must begin and end with: A-Z, a-z, 0-9</span>
-      <br />
-      <span>&bull; Length - max: 63</span>
-    </>
-  ) : (
-    ''
-  )
-
   return (
     <div className="panel-title job-panel__title">
       <div className="panel-title__container">
@@ -94,14 +83,12 @@ const JobsPanelTitleView = ({
                     payload: name
                   })
                 }
-                maxLength={63}
-                pattern="^(?=[\S\s]{1,63}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
+                validationRules={getValidationRules('jobName')}
                 required
                 requiredText="This field is required"
                 setInvalid={value =>
                   setNameValid(state => ({ ...state, isNameValid: value }))
                 }
-                tip={titleValidationTip}
                 type="text"
                 value={currentFunctionInfo.name}
                 wrapperClassName={
