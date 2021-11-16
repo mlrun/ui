@@ -11,38 +11,4 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/preset-scss'
   ]
-  // webpackFinal: (config, { configType }) => {
-  //   config.module.rules.push(
-  //     {
-  //       test: /\.scss$/,
-  //       use: [
-  //         'style-loader',
-  //         'css-loader',
-  //         {
-  //           loader: 'sass-loader',
-  //           options: {
-  //             indentedSyntax: true
-  //           }
-  //         }
-  //       ],
-  //       include: path.resolve(__dirname, '../')
-  //     },
-  //     {
-  //       test: /\.module.scss$/,
-  //       use: [
-  //         'style-loader',
-  //         'css-loader',
-  //         {
-  //           loader: 'sass-loader?modules=true',
-  //           options: {
-  //             indentedSyntax: true
-  //           }
-  //         }
-  //       ],
-  //       include: path.resolve(__dirname, '../')
-  //     }
-  //   )
-
-  //   return config
-  // }
 }

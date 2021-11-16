@@ -5,14 +5,11 @@ import classNames from 'classnames'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
-import * as styles from './RoundedIcon.module.scss'
+import './RoundedIcon.scss'
 
 const RoundedIcon = React.forwardRef(
   ({ onClick, className, children, id, tooltipText }, ref) => {
-    const wrapperClassNames = classNames(
-      styles['round-icon-wrapper'],
-      className
-    )
+    const wrapperClassNames = classNames('round-icon-cp', className)
     return (
       <div className={wrapperClassNames} ref={ref}>
         <Tooltip
@@ -22,7 +19,7 @@ const RoundedIcon = React.forwardRef(
           <button
             onClick={onClick ? onClick : null}
             id={id}
-            className={styles['round-icon-wrapper__icon']}
+            className="round-icon-cp__icon"
           >
             <i>{children}</i>
           </button>
