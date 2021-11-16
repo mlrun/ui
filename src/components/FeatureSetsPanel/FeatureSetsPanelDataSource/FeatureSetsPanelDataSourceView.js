@@ -84,7 +84,7 @@ const FeatureSetsPanelDataSourceView = ({
             selectPlaceholder="URL"
           />
         </div>
-        {data.kind !== 'csv' && ( // was: , disabling temporarily until backend supports scheduling
+        {data.kind !== CSV && (
           <div className="schedule-content">
             <Button
               className="schedule-tumbler"
