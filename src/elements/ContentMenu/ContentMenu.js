@@ -3,9 +3,13 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import { useDemoMode } from '../../hooks/demoMode.hook'
+
 import './contentMenu.scss'
 
 const ContentMenu = ({ activeTab, match, screen, tabs }) => {
+  const isDemoMode = useDemoMode()
+
   return (
     <div className="content-menu">
       <ul className="content-menu__list">
@@ -21,7 +25,9 @@ const ContentMenu = ({ activeTab, match, screen, tabs }) => {
                 <Link
                   to={`/projects/${
                     match.params.projectName
-                  }/${screen.toLowerCase()}/${tab.id}`}
+                  }/${screen.toLowerCase()}/${tab.id}${
+                    isDemoMode ? '?demo=true' : ''
+                  }`}
                 >
                   {tab.label ?? tab.id}
                   {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (

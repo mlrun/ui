@@ -218,6 +218,11 @@ const filtersByTab = (pageTab, isDemoMode) => {
   }
 }
 
+export const getValidTabs = isDemoMode =>
+  isDemoMode
+    ? [MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB]
+    : [MONITOR_JOBS_TAB, SCHEDULE_TAB]
+
 const generateTabs = isDemoMode => {
   return [
     { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },

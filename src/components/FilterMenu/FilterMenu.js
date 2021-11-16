@@ -317,12 +317,13 @@ const FilterMenu = ({
 
 FilterMenu.defaultProps = {
   actionButton: null,
+  filters: [],
   withoutExpandButton: false
 }
 
 FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
-  filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  filters: PropTypes.arrayOf(PropTypes.shape({})),
   withoutExpandButton: PropTypes.bool
 }
 

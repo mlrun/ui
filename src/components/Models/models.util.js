@@ -17,6 +17,8 @@ import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
 import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
 
+export const validTabs = [MODELS_TAB, MODEL_ENDPOINTS_TAB]
+
 export const modelsInfoHeaders = [
   {
     label: 'Hash',
