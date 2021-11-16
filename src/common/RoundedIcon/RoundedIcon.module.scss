@@ -1,11 +1,11 @@
 @import '../../scss//colors.scss';
 
-.roundIconWrapper {
+.round-icon-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  button {
+  &__icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,11 +14,11 @@
     padding: 0;
 
     & > * {
-      //   background-size: 12px 12px;
       display: inline-flex;
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: $mulledWineThree;
       border-radius: 20px;
     }
