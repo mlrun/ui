@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { connect } from 'react-redux'
 import { cloneDeep } from 'lodash'
+import PropTypes from 'prop-types'
 
 import Button from '../../common/Button/Button'
 import Tip from '../../common/Tip/Tip'
@@ -21,6 +22,8 @@ import './featuresTablePanel.scss'
 
 const FeaturesTablePanel = ({
   createNewFeatureVector,
+  handleCancel,
+  onSubmit,
   setTablePanelOpen,
   tableStore,
   setNotification,
@@ -60,30 +63,34 @@ const FeaturesTablePanel = ({
     ].map(feature => feature.originalTemplate)
     featureVector.spec.label_feature = labelFeature
 
-    if (tableStore.features.isNewFeatureVector) {
-      addFeaturesPromise = createNewFeatureVector(featureVector)
+    if (onSubmit) {
+      onSubmit(featureVector)
     } else {
-      addFeaturesPromise = updateFeatureVectorData(featureVector)
+      if (tableStore.features.isNewFeatureVector) {
+        addFeaturesPromise = createNewFeatureVector(featureVector)
+      } else {
+        addFeaturesPromise = updateFeatureVectorData(featureVector)
+      }
+
+      addFeaturesPromise
+        .then(response => {
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Features successfully added'
+          })
+        })
+        .catch(() => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            message: 'Failed to add features',
+            retry: addFeatures
+          })
+        })
+
+      setTablePanelOpen(false)
     }
-
-    addFeaturesPromise
-      .then(response => {
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Features successfully added'
-        })
-      })
-      .catch(() => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to add features',
-          retry: addFeatures
-        })
-      })
-
-    setTablePanelOpen(false)
   }
 
   const deleteFeature = featureName => {
@@ -230,13 +237,23 @@ const FeaturesTablePanel = ({
           label="Cancel"
           variant={LABEL_BUTTON}
           onClick={() => {
-            setTablePanelOpen(false)
+            handleCancel ? handleCancel() : setTablePanelOpen(false)
           }}
         />
         <Button variant={PRIMARY_BUTTON} label="Add" onClick={addFeatures} />
       </div>
     </div>
   )
+}
+
+FeaturesTablePanel.defaultProps = {
+  handleCancel: null,
+  onSubmit: null
+}
+
+FeaturesTablePanel.propTypes = {
+  handleCancel: PropTypes.func,
+  onSubmit: PropTypes.func
 }
 
 export default connect(

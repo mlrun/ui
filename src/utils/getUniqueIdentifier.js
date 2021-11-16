@@ -77,6 +77,6 @@ export const getIdentifierMethod = tab => {
     case DATASETS_TAB:
       return getArtifactIdentifier
     default:
-      return null
+      return getFeatureIdentifier
   }
 }

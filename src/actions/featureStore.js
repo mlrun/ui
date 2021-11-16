@@ -113,11 +113,11 @@ const featureStoreActions = {
     type: FETCH_ENTITY_SUCCESS,
     payload: entities
   }),
-  fetchEntities: (project, filters) => dispatch => {
+  fetchEntities: (project, filters, config) => dispatch => {
     dispatch(featureStoreActions.fetchEntitiesBegin())
 
     return featureStoreApi
-      .getEntities(project, filters)
+      .getEntities(project, filters, config)
       .then(response => {
         dispatch(
           featureStoreActions.fetchEntitiesSuccess(response.data.entities)
@@ -273,11 +273,11 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SUCCESS,
     payload: features
   }),
-  fetchFeatures: (project, filters) => dispatch => {
+  fetchFeatures: (project, filters, config) => dispatch => {
     dispatch(featureStoreActions.fetchFeaturesBegin())
 
     return featureStoreApi
-      .getFeatures(project, filters)
+      .getFeatures(project, filters, config)
       .then(response => {
         dispatch(
           featureStoreActions.fetchFeaturesSuccess(response.data.features)
