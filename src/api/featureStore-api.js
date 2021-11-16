@@ -47,11 +47,11 @@ export default {
     mainHttpClient.get(`/projects/${project}/entities`, {
       params: { name: entity }
     }),
-  getEntities: (project, filters) =>
+  getEntities: (project, filters, config) =>
     fetchFeatureStoreContent(
       `/projects/${project}/entities`,
       filters,
-      {},
+      config ?? {},
       true
     ),
   getFeatureSet: (project, featureSet) =>
@@ -82,11 +82,11 @@ export default {
     mainHttpClient.get(`/projects/${project}/features`, {
       params: { name: feature }
     }),
-  getFeatures: (project, filters) =>
+  getFeatures: (project, filters, config) =>
     fetchFeatureStoreContent(
       `/projects/${project}/${FEATURES_TAB}`,
       filters,
-      {},
+      config ?? {},
       true
     ),
   startIngest: (project, featureSet, reference, data) =>

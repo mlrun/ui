@@ -106,14 +106,6 @@ const Jobs = ({
     removeFunctionLogs()
   }, [fetchFunctionLogsTimeout, removeFunctionLogs])
 
-  const handleRemoveScheduledJob = schedule => {
-    removeScheduledJob(match.params.projectName, schedule.name).then(() => {
-      refreshJobs()
-    })
-
-    setConfirmData(null)
-  }
-
   const handleMonitoring = item => {
     let redirectUrl = appStore.frontendSpec.jobs_dashboard_url
       .replace('{filter_name}', item ? 'uid' : 'project')
@@ -149,7 +141,7 @@ const Jobs = ({
 
   const handleSuccessRerunJob = tab => {
     if (tab === match.params.pageTab) {
-      refreshJobs()
+      refreshJobs(filtersStore)
     }
 
     setEditableItem(null)
@@ -242,7 +234,7 @@ const Jobs = ({
   const handleAbortJob = job => {
     abortJob(match.params.projectName, job)
       .then(() => {
-        refreshJobs()
+        refreshJobs(filtersStore)
         setNotification({
           status: 200,
           id: Math.random(),
@@ -349,6 +341,17 @@ const Jobs = ({
         })
     },
     [fetchJobs, match.params.pageTab, match.params.projectName, setNotification]
+  )
+
+  const handleRemoveScheduledJob = useCallback(
+    schedule => {
+      removeScheduledJob(match.params.projectName, schedule.name).then(() => {
+        refreshJobs(filtersStore)
+      })
+
+      setConfirmData(null)
+    },
+    [filtersStore, match.params.projectName, refreshJobs, removeScheduledJob]
   )
 
   useEffect(() => {
@@ -557,7 +560,7 @@ const Jobs = ({
           `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
         )
         setEditableItem(null)
-        refreshJobs()
+        refreshJobs(filtersStore)
       })
       .catch(error => {
         dispatch(editJobFailure(error.message))

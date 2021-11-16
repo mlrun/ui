@@ -25,6 +25,7 @@ import {
   LABELS_FILTER,
   NAME_FILTER,
   PERIOD_FILTER,
+  PROJECT_FILTER,
   SHOW_UNTAGGED_FILTER,
   SORT_BY,
   STATUS_FILTER,
@@ -33,6 +34,7 @@ import {
 } from '../../constants'
 import filtersActions from '../../actions/filters'
 import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
+import { generateProjectsList } from '../../utils/projects'
 
 import './filterMenu.scss'
 
@@ -45,7 +47,9 @@ const FilterMenu = ({
   match,
   onChange,
   page,
+  projectStore,
   removeFilters,
+  setFilterProjectOptions,
   setFilters,
   withoutExpandButton
 }) => {
@@ -80,6 +84,30 @@ const FilterMenu = ({
     }
   }, [filters, filtersStore.tagOptions])
 
+  useEffect(() => {
+    if (
+      filtersStore.projectOptions.length === 0 &&
+      filters.some(filter => filter.type === PROJECT_FILTER)
+    ) {
+      setFilterProjectOptions(
+        generateProjectsList(
+          projectStore.projectsNames.data,
+          match.params.projectName
+        )
+      )
+      setFilters({
+        project: match.params.projectName
+      })
+    }
+  }, [
+    filters,
+    filtersStore.projectOptions.length,
+    match.params.projectName,
+    projectStore.projectsNames.data,
+    setFilterProjectOptions,
+    setFilters
+  ])
+
   const applyChanges = (data, isRefreshed) => {
     if ((match.params.jobId || match.params.name) && !isRefreshed) {
       history.push(
@@ -112,6 +140,14 @@ const FilterMenu = ({
       applyChanges({
         ...filtersStore,
         tag: item.toLowerCase()
+      })
+    } else if (filter.type === PROJECT_FILTER) {
+      setFilters({
+        project: item
+      })
+      applyChanges({
+        ...filtersStore,
+        project: item.toLowerCase()
       })
     }
   }
@@ -259,6 +295,18 @@ const FilterMenu = ({
                   selectedId={filtersStore.showUntagged}
                 />
               )
+            case PROJECT_FILTER:
+              return (
+                <Select
+                  density="dense"
+                  className={''}
+                  label={filter.label}
+                  key={filter.type}
+                  onClick={project => handleSelectOption(project, filter)}
+                  options={filtersStore.projectOptions}
+                  selectedId={filtersStore.project}
+                />
+              )
             default:
               return (
                 <Select
@@ -317,19 +365,19 @@ const FilterMenu = ({
 
 FilterMenu.defaultProps = {
   actionButton: null,
-  filters: [],
   withoutExpandButton: false
 }
 
 FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
-  filters: PropTypes.arrayOf(PropTypes.shape({})),
+  filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   withoutExpandButton: PropTypes.bool
 }
 
 export default connect(
-  ({ filtersStore }) => ({
-    filtersStore
+  ({ filtersStore, projectStore }) => ({
+    filtersStore,
+    projectStore
   }),
-  filtersActions
+  { ...filtersActions }
 )(FilterMenu)

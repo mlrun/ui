@@ -299,7 +299,7 @@ export const generatePageData = (
     },
     hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,
-    filters: filtersByTab(pageTab, isDemoMode),
+    filters: filtersByTab(pageTab, isDemoMode) ?? [],
     page,
     tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
     tabs: generateTabs(isDemoMode),

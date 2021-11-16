@@ -5,9 +5,15 @@ import {
   V3IO_INPUT_PATH_SCHEME
 } from '../../../constants'
 
+export const TIME_FIELD = 'timeField'
+export const START_TIME = 'startTime'
+export const END_TIME = 'endTime'
+export const CSV = 'csv'
+export const PARQUET = 'parquet'
+
 export const kindOptions = [
-  { label: 'CSV', id: 'csv' },
-  { label: 'PARQUET', id: 'parquet' }
+  { label: 'CSV', id: CSV },
+  { label: 'PARQUET', id: PARQUET }
 ]
 
 export const comboboxSelectList = [
@@ -96,9 +102,3 @@ export const isUrlInputValid = (
         : pathInputValue.length > 0
   }
 }
-
-export const TIME_FIELD = 'timeField'
-export const START_TIME = 'startTime'
-export const END_TIME = 'endTime'
-export const CSV = 'csv'
-export const PARQUET = 'parquet'
