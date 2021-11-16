@@ -7,11 +7,13 @@ import Content from '../../layout/Content/Content'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import AddToFeatureVectorPopUp from '../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
+import CreateFeatureVectorPopUp from '../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
 
 import artifactsAction from '../../actions/artifacts'
 import featureStoreActions from '../../actions/featureStore'
 import filtersActions from '../../actions/filters'
 import notificationActions from '../../actions/notification'
+import tableActions from '../../actions/table'
 import {
   checkTabIsValid,
   fetchDataSetRowData,
@@ -39,8 +41,6 @@ import {
   INIT_TAG_FILTER,
   FEATURE_STORE_PAGE
 } from '../../constants'
-
-import './featureStore.scss'
 
 const FeatureStore = ({
   artifactsStore,
@@ -73,6 +73,7 @@ const FeatureStore = ({
   removeFeatureVectors,
   removeFeatures,
   removeNewFeatureSet,
+  setFeaturesPanelData,
   setFilters,
   setNotification,
   tableStore,
@@ -83,6 +84,7 @@ const FeatureStore = ({
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [pageData, setPageData] = useState(pageDataInitialState)
+  const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const featureStoreRef = useRef(null)
 
   const fetchData = useCallback(
@@ -116,6 +118,10 @@ const FeatureStore = ({
     ]
   )
 
+  const cancelRequest = message => {
+    featureStoreRef.current?.cancel && featureStoreRef.current.cancel(message)
+  }
+
   const getPopUpTemplate = useCallback(
     action => {
       return (
@@ -128,6 +134,35 @@ const FeatureStore = ({
     },
     [fetchFeatureVectors, match.params.projectName]
   )
+
+  const createFeatureVector = featureVectorData => {
+    setCreateVectorPopUpIsOpen(false)
+    setFeaturesPanelData({
+      currentProject: match.params.projectName,
+      featureVector: {
+        kind: 'FeatureVector',
+        metadata: {
+          name: featureVectorData.name,
+          project: match.params.projectName,
+          tag: featureVectorData.tag,
+          labels: featureVectorData.labels
+        },
+        spec: {
+          description: featureVectorData.description,
+          features: [],
+          label_feature: ''
+        },
+        status: {}
+      },
+      groupedFeatures: {
+        [match.params.projectName]: []
+      },
+      isNewFeatureVector: true
+    })
+    history.push(
+      `/projects/${match.params.projectName}/feature-store/add-to-feature-vector`
+    )
+  }
 
   const handleRemoveFeatureVector = useCallback(
     featureVector => {
@@ -259,6 +294,7 @@ const FeatureStore = ({
       removeFeatureVectors()
       setSelectedItem({})
       setPageData(pageDataInitialState)
+      cancelRequest('cancel')
     }
   }, [
     fetchData,
@@ -429,6 +465,8 @@ const FeatureStore = ({
         return setIsPopupDialogOpen(true)
       case FEATURE_SETS_TAB:
         return setFeatureSetsPanelIsOpen(true)
+      case FEATURE_VECTORS_TAB:
+        return setCreateVectorPopUpIsOpen(true)
       default:
         return null
     }
@@ -458,10 +496,7 @@ const FeatureStore = ({
       {(featureStore.loading || artifactsStore.loading) && <Loader />}
       <Content
         applyDetailsChanges={applyDetailsChanges}
-        cancelRequest={message => {
-          featureStoreRef.current?.cancel &&
-            featureStoreRef.current.cancel(message)
-        }}
+        cancelRequest={cancelRequest}
         content={content}
         handleCancel={() => setSelectedItem({})}
         loading={
@@ -492,6 +527,14 @@ const FeatureStore = ({
           project={match.params.projectName}
         />
       )}
+      {createVectorPopUpIsOpen && (
+        <CreateFeatureVectorPopUp
+          closePopUp={() => {
+            setCreateVectorPopUpIsOpen(false)
+          }}
+          createFeatureVector={createFeatureVector}
+        />
+      )}
     </div>
   )
 }
@@ -511,6 +554,7 @@ export default connect(
     ...artifactsAction,
     ...featureStoreActions,
     ...notificationActions,
-    ...filtersActions
+    ...filtersActions,
+    ...tableActions
   }
 )(FeatureStore)

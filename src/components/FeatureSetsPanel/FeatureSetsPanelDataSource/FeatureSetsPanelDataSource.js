@@ -10,8 +10,10 @@ import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
 import artifactsAction from '../../../actions/artifacts'
 import { getParsedResource } from '../../../utils/resources'
 import {
+  CSV,
   generateComboboxMatchesList,
-  isUrlInputValid
+  isUrlInputValid,
+  PARQUET
 } from './featureSetsPanelDataSource.util'
 import projectsAction from '../../../actions/projects'
 import {
@@ -36,7 +38,7 @@ const FeatureSetsPanelDataSource = ({
 }) => {
   const [data, setData] = useState({
     attributes: [],
-    kind: 'csv',
+    kind: CSV,
     parseDates: '',
     url: {
       pathType: '',
@@ -232,7 +234,7 @@ const FeatureSetsPanelDataSource = ({
           ? data.url.fullPath.replace(/.*:\/\//g, '')
           : data.url.path
 
-      if (kind === 'csv') {
+      if (kind === CSV) {
         setValidation(prevState => ({
           ...prevState,
           isUrlValid:
@@ -240,7 +242,7 @@ const FeatureSetsPanelDataSource = ({
               ? isUrlInputValid(data.url.pathType, url, kind)
               : true
         }))
-      } else if (kind === 'parquet') {
+      } else if (kind === PARQUET) {
         setNewFeatureSetDataSourceParseDates('')
         setValidation(state => ({
           ...state,

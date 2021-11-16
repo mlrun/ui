@@ -52,7 +52,7 @@ const Table = ({
     return () => {
       setTablePanelOpen(false)
     }
-  }, [setTablePanelOpen])
+  }, [setTablePanelOpen, match.params.projectName, match.params.pageTab])
 
   useEffect(() => {
     const calculatePanelHeight = () => {

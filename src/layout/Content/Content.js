@@ -21,6 +21,7 @@ import { useYaml } from '../../hooks/yaml.hook'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import {
+  ADD_TO_FEATURE_VECTOR_TAB,
   ARTIFACTS_PAGE,
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
@@ -48,6 +49,7 @@ const Content = ({
   handleActionsMenuClick,
   handleCancel,
   handleSelectItem,
+  header,
   loading,
   match,
   pageData,
@@ -65,6 +67,7 @@ const Content = ({
   const contentClassName = classnames(
     'content',
     [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
+      !match.path.includes(ADD_TO_FEATURE_VECTOR_TAB) &&
       'content_with-menu'
   )
   const filterMenuClassNames = classnames(
@@ -93,13 +96,20 @@ const Content = ({
         JOBS_PAGE
       ].includes(pageData.page) &&
       ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
-      (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) || isDemoMode)
+      (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) || isDemoMode) &&
+      !pageData.hidePageActionMenu
     ) {
       setShowActionsMenu(true)
     } else if (showActionsMenu) {
       setShowActionsMenu(false)
     }
-  }, [isDemoMode, match.params.pageTab, pageData.page, showActionsMenu])
+  }, [
+    isDemoMode,
+    match.params.pageTab,
+    pageData.hidePageActionMenu,
+    pageData.page,
+    showActionsMenu
+  ])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
@@ -208,7 +218,7 @@ const Content = ({
   return (
     <>
       <div className="content__header">
-        <Breadcrumbs match={match} />
+        {header ? header : <Breadcrumbs match={match} />}
         <PageActionsMenu
           actionsMenuHeader={pageData.actionsMenuHeader}
           onClick={handleActionsMenuClick}
@@ -216,16 +226,15 @@ const Content = ({
         />
       </div>
       <div className={contentClassName}>
-        {[JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(
-          pageData.page
-        ) && (
-          <ContentMenu
-            activeTab={match.params.pageTab}
-            match={match}
-            screen={pageData.page}
-            tabs={pageData.tabs}
-          />
-        )}
+        {[JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
+          !match.path.includes(ADD_TO_FEATURE_VECTOR_TAB) && (
+            <ContentMenu
+              activeTab={match.params.pageTab}
+              match={match}
+              screen={pageData.page}
+              tabs={pageData.tabs}
+            />
+          )}
         <div className={filterMenuClassNames}>
           <FilterMenu
             actionButton={pageData.filterMenuActionButton}
@@ -286,6 +295,7 @@ Content.defaultProps = {
   activeScreenTab: '',
   filtersChangeCallback: null,
   handleActionsMenuClick: () => {},
+  handleCancel: () => {},
   handleSelectItem: () => {},
   selectedItem: {},
   setLoading: () => {}
@@ -296,7 +306,7 @@ Content.propTypes = {
   filtersChangeCallback: PropTypes.func,
   getIdentifier: PropTypes.func.isRequired,
   handleActionsMenuClick: PropTypes.func,
-  handleCancel: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func,
   handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,

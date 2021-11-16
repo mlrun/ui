@@ -54,6 +54,7 @@ const Jobs = ({
   fetchScheduledJobAccessKey,
   fetchWorkflow,
   fetchWorkflows,
+  filtersStore,
   functionsStore,
   getFunctionWithHash,
   handleRunScheduledJob,
@@ -146,7 +147,7 @@ const Jobs = ({
 
   const handleSuccessRerunJob = tab => {
     if (tab === match.params.pageTab) {
-      refreshJobs()
+      refreshJobs(filtersStore)
     }
 
     setEditableItem(null)
@@ -239,7 +240,7 @@ const Jobs = ({
   const handleAbortJob = job => {
     abortJob(match.params.projectName, job)
       .then(() => {
-        refreshJobs()
+        refreshJobs(filtersStore)
         setNotification({
           status: 200,
           id: Math.random(),
@@ -562,7 +563,7 @@ const Jobs = ({
           `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
         )
         setEditableItem(null)
-        refreshJobs()
+        refreshJobs(filtersStore)
       })
       .catch(error => {
         dispatch(editJobFailure(error.message))
@@ -667,9 +668,17 @@ Jobs.propTypes = {
 }
 
 export default connect(
-  ({ appStore, functionsStore, jobsStore, detailsStore, workflowsStore }) => ({
+  ({
+    appStore,
+    filtersStore,
+    functionsStore,
+    jobsStore,
+    detailsStore,
+    workflowsStore
+  }) => ({
     appStore,
     detailsStore,
+    filtersStore,
     functionsStore,
     jobsStore,
     workflowsStore
