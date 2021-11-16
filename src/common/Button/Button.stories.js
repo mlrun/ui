@@ -2,7 +2,13 @@ import React from 'react'
 
 import Button from './Button'
 
-import { DANGER_BUTTON, LABEL_BUTTON, PRIMARY_BUTTON, SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
+import {
+  DANGER_BUTTON,
+  LABEL_BUTTON,
+  PRIMARY_BUTTON,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from '../../constants'
 
 export default {
   title: 'Example/Button',
