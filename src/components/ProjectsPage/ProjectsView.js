@@ -12,15 +12,14 @@ import YamlModal from '../../common/YamlModal/YamlModal'
 import Notification from '../../common/Notification/Notification'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
 import { TERTIARY_BUTTON } from '../../constants'
 
-import { ReactComponent as Refresh } from '../../images/refresh.svg'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './projects.scss'
 
@@ -126,11 +125,14 @@ const ProjectsView = ({
                   setMatches={setFilterMatches}
                   value={filterByName}
                 />
-                <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
-                  <button onClick={refreshProjects}>
-                    <Refresh />
-                  </button>
-                </Tooltip>
+                <RoundedIcon
+                  onClick={refreshProjects}
+                  className="panel-title__btn_close"
+                  tooltipText="Refresh"
+                  data-testid="pop-up-close-btn"
+                >
+                  <RefreshIcon />
+                </RoundedIcon>
               </div>
             </div>
             <div className="projects-content">
