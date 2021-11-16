@@ -82,35 +82,6 @@ button {
   &:disabled {
     cursor: not-allowed;
   }
-  &.rounded-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    width: 34px;
-    height: 34px;
-    z-index: 1;
-    &:before {
-      content: '';
-      border-radius: 50%;
-      background-color: transparent;
-      width: inherit;
-      height: inherit;
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-    &:hover {
-      &:before {
-        background-color: $mercury;
-      }
-    }
-    svg {
-      position: relative;
-      z-index: 2;
-    }
-  }
 }
 
 [class^=state-completed],
