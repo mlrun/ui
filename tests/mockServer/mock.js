@@ -14,7 +14,9 @@ import features from './data/features.json'
 import entities from './data/entities.json'
 import featureVectors from './data/featureVectors.json'
 import runs from './data/runs.json'
+import run from './data/run.json'
 import pipelines from './data/pipelines.json'
+import pipelineIDs from './data/piplineIDs.json'
 import schedules from './data/schedules.json'
 import artifactTags from './data/artifactsTags.json'
 import funcs from './data/funcs.json'
@@ -50,11 +52,13 @@ const projectTemplate = {
 }
 const summuryTemplate = {
   name: '',
-  functions_count: 0,
+  files_count: 0,
   feature_sets_count: 0,
   models_count: 0,
   runs_failed_recent_count: 0,
-  runs_running_count: 0
+  runs_running_count: 0,
+  schedules_count: 0,
+  pipelines_running_count: 0
 }
 const jobTemplate = { kind: 'run', metadata: {}, spec: {}, status: {} }
 const projectExistsConflict = {
@@ -132,9 +136,6 @@ function getProjects(req, res) {
   let data = projects
 
   switch (req.query['format']) {
-    case 'summary':
-      data = projectsSummary
-      break
     case 'name_only':
       data = { projects: [] }
       for (let project of projects.projects) {
@@ -163,7 +164,7 @@ function createNewProject(req, res) {
     projects.projects.push(project)
     const summary = cloneDeep(summuryTemplate)
     summary.name = req.body.metadata.name
-    projectsSummary.projects.push(summary)
+    projectsSummary.project_summaries.push(summary)
     data = project
   } else {
     res.statusCode = 409
@@ -247,6 +248,18 @@ function putProject(req, res) {
   )
 }
 
+function getProjectsSummaries(req, res) {
+  res.send(projectsSummary)
+}
+
+function getProjectSummary(req, res) {
+  const collectedProjet = projectsSummary.project_summaries.find(
+    item => item.name === req.params['project']
+  )
+
+  res.send(collectedProjet)
+}
+
 function getRuns(req, res) {
   let collectedRuns = runs.runs.filter(
     run => run.metadata.project === req.query['project']
@@ -259,7 +272,7 @@ function getRuns(req, res) {
         Date.parse(req.query['start_time_from'])
     )
   }
-  if (req.query['start_time_from']) {
+  if (req.query['start_time_to']) {
     collectedRuns = collectedRuns.filter(
       run =>
         Date.parse(run.status.start_time) <=
@@ -296,6 +309,16 @@ function getRuns(req, res) {
   res.send({ runs: collectedRuns })
 }
 
+function getRun(req, res) {
+  const run_prj_uid = run.data.find(
+    item =>
+      item.metadata.project === req.params['project'] &&
+      item.metadata.uid === req.params['uid']
+  )
+
+  res.send({ data: run_prj_uid })
+}
+
 function getProjectsShedules(req, res) {
   let collectedShedules = schedules.schedules.filter(
     schedule =>
@@ -305,18 +328,18 @@ function getProjectsShedules(req, res) {
   res.send({ schedules: collectedShedules })
 }
 
-function getProjectsPipelines(req, res) {
-  let collectedPipelines = pipelines[req.params['project']]
-    ? pipelines[req.params['project']]
-    : pipelines['_empty']
-
-  res.send(collectedPipelines)
-}
-
 function getProjectsFeaturesEntities(req, res) {
+  // console.log('requests log: ', req.method, req.url)
+  // console.log('debug: ', req.params, req.query, req.body)
+
   const artifact = req.params.artifact
   let collectedArtifacts = []
 
+  if (artifact === 'feature-vectors') {
+    collectedArtifacts = featureVectors.feature_vectors.filter(
+      item => item.metadata.project === req.params.project
+    )
+  }
   if (artifact === 'features') {
     collectedArtifacts = features.features.filter(
       item => item.feature_set_digest.metadata.project === req.params.project
@@ -327,12 +350,24 @@ function getProjectsFeaturesEntities(req, res) {
       item => item.feature_set_digest.metadata.project === req.params.project
     )
   }
+  if (artifact === 'pipelines') {
+    collectedArtifacts = pipelines[req.params.project]
+      ? pipelines[req.params.project]
+      : pipelines['_empty']
+  }
 
   if (collectedArtifacts.length) {
     if (req.query['tag']) {
-      collectedArtifacts = collectedArtifacts.filter(
-        item => item.feature_set_digest.metadata.tag === req.query['tag']
-      )
+      collectedArtifacts = collectedArtifacts.filter(item => {
+        let tag = ''
+        if (artifact === 'features' || artifact === 'entities') {
+          tag = item.feature_set_digest.metadata.tag
+        } else {
+          tag = item.metadata.tag
+        }
+
+        return tag === req.query['tag']
+      })
     }
 
     if (req.query['name']) {
@@ -347,39 +382,20 @@ function getProjectsFeaturesEntities(req, res) {
   }
 
   let result = {}
+  if (artifact === 'feature-vectors') {
+    result = { feature_vectors: collectedArtifacts }
+  }
   if (artifact === 'features') {
     result = { features: collectedArtifacts }
   }
   if (artifact === 'entities') {
     result = { entities: collectedArtifacts }
   }
-
-  res.send(result)
-}
-
-function getProjectsFeatureVectors(req, res) {
-  let featureVector = featureVectors.feature_vectors.filter(
-    vector => vector.metadata.project === req.params['project']
-  )
-
-  if (featureVector.length) {
-    if (req.query['tag']) {
-      featureVector = featureVector.filter(
-        vector => vector.metadata.tag === req.query['tag']
-      )
-    }
-    if (req.query['name']) {
-      featureVector = featureVector.filter(vector => {
-        if (req.query['name'].includes('~')) {
-          return vector.metadata.name.includes(req.query['name'].slice(1))
-        } else {
-          return vector.metadata.name === req.query['name']
-        }
-      })
-    }
+  if (artifact === 'pipelines') {
+    result = collectedArtifacts
   }
 
-  res.send({ feature_vectors: featureVector })
+  res.send(result)
 }
 
 function getProjectsFeatureArtifactTags(req, res) {
@@ -452,6 +468,92 @@ function getArtifacts(req, res) {
   }
 
   res.send({ artifacts: collectedArtifacts })
+}
+
+function postProjectsFeatureVectors(req, res) {
+  const collectedFV = featureVectors.feature_vectors.filter(
+    item => item.metadata.name === req.body.metadata.name
+  )
+  if (!collectedFV.length) {
+    const currentDate = new Date()
+
+    let newFeatureVector = req.body
+    newFeatureVector.metadata.created = currentDate.toISOString()
+    newFeatureVector.metadata.updated = currentDate.toISOString()
+    newFeatureVector.metadata.uid = generateHash(40)
+    newFeatureVector.status.state = null
+
+    featureVectors.feature_vectors.push(newFeatureVector)
+
+    res.send(newFeatureVector)
+  } else {
+    res.status = 409
+    res.send({
+      detail: {
+        reason: `MLRunConflictError('Adding an already-existing FeatureVector - ${req.body.metadata.project}/${req.body.metadata.name}:${req.body.metadata.tag}')`
+      }
+    })
+  }
+}
+
+function putProjectsFeatureVectors(req, res) {
+  const collectedFV = featureVectors.feature_vectors
+    .filter(item => item.metadata.project === req.body.metadata.project)
+    .filter(item => item.metadata.name === req.body.metadata.name)
+    .filter(item => item.metadata.tag === req.body.metadata.tag)
+
+  collectedFV[0] = req.body
+
+  res.send(req.body)
+}
+
+function patchProjectsFeatureVectors(req, res) {
+  const currentDate = new Date()
+
+  const collectedFV = featureVectors.feature_vectors
+    .filter(item => item.metadata.project === req.params.project)
+    .filter(item => item.metadata.name === req.params.name)
+    .filter(item => item.metadata.tag === req.params.tag)
+
+  if (collectedFV.length) {
+    if (req.body.spec.features) {
+      collectedFV[0].spec.features = req.body.spec.features
+    }
+    if (req.body.spec.label_feature) {
+      collectedFV[0].spec.label_feature = req.body.spec.label_feature
+    }
+    collectedFV[0].metadata.updated = currentDate.toISOString()
+    collectedFV[0].metadata.uid = generateHash(40)
+  }
+
+  res.send('')
+}
+
+function deleteProjectsFeatureVectors(req, res) {
+  const collectedFV = featureVectors.feature_vectors
+    .filter(item => item.metadata.project === req.params.project)
+    .filter(item => item.metadata.name === req.params.name)
+
+  if (collectedFV.length) {
+    remove(
+      featureVectors.feature_vectors,
+      item =>
+        item.metadata.project === req.params.project &&
+        item.metadata.name === req.params.name
+    )
+    res.statusCode = 204
+  }
+
+  res.status = 204
+  res.send('')
+}
+
+function getPipeline(req, res) {
+  const collectedPipeline = pipelineIDs.find(
+    item => item.run.id === req.params.pipelineID
+  )
+
+  res.send(collectedPipeline)
 }
 
 function getFuncs(req, res) {
@@ -655,6 +757,9 @@ function getRuntimeResources(req, res) {
 }
 
 function postSubmitJob(req, res) {
+  // console.log('requests log: ', req.method, req.url)
+  // console.log('debug: ', req.params, req.query, req.body)
+
   const currentDate = new Date()
 
   let respTemplate = {
@@ -774,29 +879,45 @@ app.delete(`${mlrunAPIIngress}/api/projects/:project`, deleteProject)
 app.patch(`${mlrunAPIIngress}/api/projects/:project`, patchProject)
 app.put(`${mlrunAPIIngress}/api/projects/:project`, putProject)
 
+app.get(`${mlrunAPIIngress}/api/project-summaries`, getProjectsSummaries)
+app.get(`${mlrunAPIIngress}/api/project-summaries/:project`, getProjectSummary)
+
 app.get(`${mlrunAPIIngress}/api/runs`, getRuns)
+
+app.get(`${mlrunAPIIngress}/api/run/:project/:uid`, getRun)
 
 app.get(
   `${mlrunAPIIngress}/api/projects/:project/schedules`,
   getProjectsShedules
 )
 app.get(
-  `${mlrunAPIIngress}/api/projects/:project/pipelines`,
-  getProjectsPipelines
-)
-app.get(
   `${mlrunAPIIngress}/api/projects/:project/:artifact`,
   getProjectsFeaturesEntities
-)
-app.get(
-  `${mlrunAPIIngress}/api/projects/:project/feature-vectors`,
-  getProjectsFeatureVectors
 )
 app.get(
   `${mlrunAPIIngress}/api/projects/:project/artifact-tags`,
   getProjectsArtifactTags
 )
 app.get(`${mlrunAPIIngress}/api/artifacts`, getArtifacts)
+
+app.post(
+  `${mlrunAPIIngress}/api/projects/:project/feature-vectors`,
+  postProjectsFeatureVectors
+)
+app.put(
+  `${mlrunAPIIngress}/api/projects/:project/feature-vectors/:name/references/:tag`,
+  putProjectsFeatureVectors
+)
+app.patch(
+  `${mlrunAPIIngress}/api/projects/:project/feature-vectors/:name/references/:tag`,
+  patchProjectsFeatureVectors
+)
+app.delete(
+  `${mlrunAPIIngress}/api/projects/:project/feature-vectors/:name`,
+  deleteProjectsFeatureVectors
+)
+
+app.get(`${mlrunAPIIngress}/api/pipelines/:pipelineID`, getPipeline)
 
 app.get(`${mlrunAPIIngress}/api/funcs`, getFuncs)
 

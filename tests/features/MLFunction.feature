@@ -190,6 +190,7 @@ Feature: ML Functions
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
+        When select "Manual" option in "New_Function_Volume_Mount_Dropdown" dropdown on "Resouces_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resouces_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
             |             V3IO                 |                                      |                               |                                    |                                     |                                        |         yes        |
@@ -244,7 +245,7 @@ Feature: ML Functions
             | Volume_Name_5 | /path/to/happines5 |
             | Volume_Name_7 | /path/to/happines7 |
             | Volume_Name_0 | /path/to/happines0 |
-        When click on "Remove" in action menu in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_Function" wizard
+        When click on "Remove" in action menu in "Volume_Paths_Table" table in "Resouces_Accordion" on "New_Function" wizard with offset "false"
             |  volume_name  |
             | Volume_Name_3 |
             | Volume_Name_0 |
@@ -254,7 +255,6 @@ Feature: ML Functions
             | Volume_Name_5 | /path/to/happines5 |
             | Volume_Name_7 | /path/to/happines7 |
 
-    @debug
     @passive
     Scenario: Check all mandatory components in Resources Accordion on create New Function page
         Given open url
@@ -280,7 +280,7 @@ Feature: ML Functions
             | name1 | value1 |
             | name2 | value2 |
             | name3 | value3 |
-        When click on "delete_btn" in "Function_Environment_Variables_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
+        When click on "delete_btn" in "Function_Environment_Variables_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
             | name  |
             | name1 |
             | name3 |
@@ -295,6 +295,90 @@ Feature: ML Functions
         Then verify "Cansel_Button" element on "New_Function" wizard is enabled
         Then verify "Save_Button" element on "New_Function" wizard is disabled
         Then verify "Deploy_Button" element on "New_Function" wizard is disabled
+
+
+    @passive
+    @demo
+    @failed
+    Scenario: Check all mandatory components in Resources Accordion on create New Function page in Demo mode
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And turn on demo mode
+        And wait load page
+        And click on "New_Function_Button" element on "ML_Functions" wizard
+        And type value "demo-function-04" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
+        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
+        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
+        When collapse "General_Accordion" on "New_Function" wizard
+        When collapse "Code_Accordion" on "New_Function" wizard
+        When collapse "Resouces_Accordion" on "New_Function" wizard
+        When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
+            | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Value_Input | Add_Row_Button |
+            |                                           |                    Value                     |                                            |       yes      |
+        Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Function_Environment_Variables_Value_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        When click on "Discard_Row_Button" element in "Environment_Variables_Accordion" on "New_Function" wizard
+        When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
+            | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Seret_Name_Input | Function_Environment_Variables_Seret_Key_Input | Add_Row_Button |
+            |                                           |                    Secret                    |                                                 |                        @#$                     |       yes      |
+        Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Function_Environment_Variables_Seret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Function_Environment_Variables_Seret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
+        Then verify "Function_Environment_Variables_Seret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Function_Environment_Variables_Seret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
+        When click on "Discard_Row_Button" element in "Environment_Variables_Accordion" on "New_Function" wizard
+        When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
+            | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Value_Input | Add_Row_Button | Discard_Row_Button |
+            |                 name0                     |                    Value                     |                  value0                    |       yes      |                    |
+            |                 name1                     |                    Value                     |                  value1                    |                |        yes         |
+            |                 name2                     |                    Value                     |                  value2                    |       yes      |                    |
+            |                 name3                     |                    Value                     |                  value3                    |                |        yes         |
+            |                 name4                     |                    Value                     |                  value4                    |       yes      |                    |
+            |                 name5                     |                    Value                     |                  value5                    |       yes      |                    |
+            |                 name6                     |                    Value                     |                  value6                    |                |        yes         |
+            |                 name7                     |                    Value                     |                  value7                    |                |        yes         |
+            |                 name8                     |                    Value                     |                  value8                    |       yes      |                    |
+            |                 name9                     |                    Value                     |                  value9                    |                |        yes         |
+        When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
+            | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Seret_Name_Input | Function_Environment_Variables_Seret_Key_Input | Add_Row_Button | Discard_Row_Button |
+            |                 name0                     |                    Secret                    |                  value0                         |                    key0                        |                |        yes         |
+            |                 name1                     |                    Secret                    |                  value1                         |                    key1                        |       yes      |                    |
+            |                 name2                     |                    Secret                    |                  value2                         |                    key2                        |                |        yes         |
+            |                 name3                     |                    Secret                    |                  value3                         |                    key3                        |       yes      |                    |
+            |                 name4                     |                    Secret                    |                  value4                         |                    key4                        |                |        yes         |
+            |                 name5                     |                    Secret                    |                  value5                         |                    key5                        |                |        yes         |
+            |                 name6                     |                    Secret                    |                  value6                         |                    key6                        |       yes      |                    |
+            |                 name7                     |                    Secret                    |                  value7                         |                    key7                        |       yes      |                    |
+            |                 name8                     |                    Secret                    |                  value8                         |                    key8                        |                |        yes         |
+            |                 name9                     |                    Secret                    |                  value9                         |                    key9                        |       yes      |                    |
+        Then verify values in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
+            | name  |  type  |    value    |
+            | name0 | value  | value0      |
+            | name2 | value  | value2      |
+            | name4 | value  | value4      |
+            | name5 | value  | value5      |
+            | name8 | value  | value8      |
+            | name1 | secret | value1:key1 |
+            | name3 | secret | value3:key3 |
+            | name6 | secret | value6:key6 |
+            | name7 | secret | value7:key7 |
+            | name9 | secret | value9:key9 |
+        When click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
+            | name  |
+            | name2 |
+            | name4 |
+            | name8 |
+            | name1 |
+            | name9 |
+        Then verify values in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
+            | name  |  type  |    value    |
+            | name0 | value  | value0      |
+            | name5 | value  | value5      |
+            | name3 | secret | value3:key3 |
+            | name6 | secret | value6:key6 |
 
     @inProgress
     Scenario: Save new ml-function
@@ -321,12 +405,14 @@ Feature: ML Functions
         And click on "Delete_Button" element on "Delete_Function_Popup" wizard
 
     @passive
+    @demo
     Scenario: Check all mandatory components in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
         And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -340,18 +426,20 @@ Feature: ML Functions
         Then verify "Topology_Router_Type_Dropdown" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
         Then verify "Serving_Runtime_Configuration_Model_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
         Then verify "Model_Tracking_Checkbox" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
-        Then verify "Secret_Runtime_Configuration_Model_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify "Secrets_Runtime_Configuration_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
         Then verify "Stream_Path_Input" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
-        Then verify "Parameters_Runtime_Configuration_Model_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify "Parameters_Runtime_Configuration_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
 
     @passive
     @inProgress
+    @demo
     Scenario: Check Model Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
         And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -363,39 +451,47 @@ Feature: ML Functions
         When collapse "Resouces_Accordion" on "New_Function" wizard
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
         When add new volume rows to "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard using nontable inputs
-            | Model_Table_Name_Input | Model_Table_Class_Input | Model_Table_Path_Input | Add_Model_Table_Row_Button |
-            |          name0         |          class0         |         /path/0        |            yes             |
-            |          name1         |          class1         |         /path/1        |            yes             |
-            |          name2         |          class2         |         /path/2        |            yes             |
-            |          name3         |          class3         |         /path/3        |            yes             |
-            |          name4         |          class4         |         /path/4        |            yes             |
+            | Model_Table_Name_Input | Model_Table_Class_Input | Model_Table_Path_Input | Add_Model_Table_Row_Button | Discard_Model_Table_Row_Button |
+            |          name0         |          class0         |         /path/0        |            yes             |                                |
+            |          name1         |          class1         |         /path/1        |                            |               yes              |
+            |          name2         |          class2         |         /path/2        |            yes             |                                |
+            |          name3         |          class3         |         /path/3        |                            |               yes              |
+            |          name4         |          class4         |         /path/4        |            yes             |                                |
+            |          name5         |          class5         |         /path/5        |            yes             |                                |
+            |          name6         |          class6         |         /path/6        |                            |               yes              |
+            |          name7         |          class7         |         /path/7        |                            |               yes              |
+            |          name8         |          class8         |         /path/8        |            yes             |                                |
+            |          name9         |          class9         |         /path/9        |            yes             |                                |
         Then verify values in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | name  | class  |  path   |
             | name0 | class0 | /path/0 |
-            | name1 | class1 | /path/1 |
             | name2 | class2 | /path/2 |
-            | name3 | class3 | /path/3 |
             | name4 | class4 | /path/4 |
+            | name5 | class5 | /path/5 |
+            | name8 | class8 | /path/8 |
+            | name9 | class9 | /path/9 |
         When click on "Remove" in action menu in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | name  |
             | name0 |
-            | name2 |
-            | name4 |
+            # | name2 | do not able remove second first element !!!!!!
+            | name9 |
+            | name5 |
         Then verify values in "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | name  | class  |  path   |
-            | name0 | class0 | /path/0 |
             | name2 | class2 | /path/2 |
             | name4 | class4 | /path/4 |
+            | name8 | class8 | /path/8 |
 
     @passive
+    @demo
     @inProgress
-    @failed
     Scenario: Check Secret Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
         And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -406,32 +502,32 @@ Feature: ML Functions
         When collapse "Code_Accordion" on "New_Function" wizard
         When collapse "Resouces_Accordion" on "New_Function" wizard
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
-        When add rows to "Secret_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        When add rows to "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | value_input |
             |    value0   |
             |    value1   |
             |    value2   |
             |    value3   |
             |    value4   |
-        Then verify values in "Secret_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify values in "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | kind | value  |
             | file | value0 |
             | file | value1 |
             | file | value2 |
             | file | value3 |
             | file | value4 |
-        When click on "delete_btn" in "Secret_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        When click on "delete_btn" in "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | value  |
             | value0 |
             | value2 |
             | value4 |
-        Then verify values in "Secret_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
+        Then verify values in "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | kind | value  |
             | file | value1 |
             | file | value3 |
 
     @passive
-    @failed
+    @demo
     @inProgress
     Scenario: Check Parameters Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
@@ -439,6 +535,7 @@ Feature: ML Functions
         And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And turn on demo mode
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -467,8 +564,8 @@ Feature: ML Functions
             | name  |
             | name0 |
             | name3 |
-            | name1 |
+            | name2 |
             | name4 |
         Then verify values in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | name  |  type  | value  |
-            | name2 | string | valueC |
+            | name1 | string | valueB |

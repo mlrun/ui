@@ -328,3 +328,122 @@ Feature: Jobs and workflows
         Then verify "Advanced_Environment_Variables_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Advanced_Secrets_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+
+    @passive
+    @inProgress
+    @failed
+    Scenario: verify Advanced Environment Variables Table in Advanced Accordion on Create New Jobs side panel
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        When add rows to "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | value_input |
+            |    value1   |
+            |    value2   |
+            |    value3   |
+        Then verify values in "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | kind | value  |
+            | file | value1 |
+            | file | value2 |
+            | file | value3 |
+         When click on "delete_btn" in "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard with offset "false"
+            | value  |
+            | value3 |
+            | value1 |
+        Then verify values in "Advanced_Environment_Variables_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | kind | value  |
+            | file | value2 |
+
+    @passive
+    @inProgress
+    @failed
+    @demo
+    Scenario: verify Advanced Environment Variables Table in Advanced Accordion on Create New Jobs side panel
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And turn on demo mode
+        And wait load page
+        And click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
+        And wait load page
+        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
+        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
+        When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Environment_Variables_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Value_Input | Add_Row_Button |
+            |                                  |               Value                 |                                   |       yes      |
+        Then verify "Environment_Variables_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Environment_Variables_Value_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        When click on "Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Environment_Variables_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button |
+            |                                  |              Secret                 |                                        |                 @#$                   |       yes      |
+        Then verify "Environment_Variables_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Environment_Variables_Seret_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Environment_Variables_Seret_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
+        Then verify "Environment_Variables_Seret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Environment_Variables_Seret_Key_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
+        When click on "Discard_Row_Button" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+        When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Environment_Variables_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Value_Input | Add_Row_Button | Discard_Row_Button |
+            |              name0               |                Value                |              value0               |       yes      |                    |
+            |              name1               |                Value                |              value1               |                |        yes         |
+            |              name2               |                Value                |              value2               |       yes      |                    |
+            |              name3               |                Value                |              value3               |                |        yes         |
+            |              name4               |                Value                |              value4               |       yes      |                    |
+            |              name5               |                Value                |              value5               |       yes      |                    |
+            |              name6               |                Value                |              value6               |                |        yes         |
+            |              name7               |                Value                |              value7               |                |        yes         |
+            |              name8               |                Value                |              value8               |       yes      |                    |
+            |              name9               |                Value                |              value9               |                |        yes         |
+        When add new volume rows to "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard using nontable inputs
+            | Environment_Variables_Name_Input | Environment_Variables_Type_Dropdown | Environment_Variables_Seret_Name_Input | Environment_Variables_Seret_Key_Input | Add_Row_Button | Discard_Row_Button |
+            |            name0                 |             Secret                  |               value0                   |                key0                   |                |        yes         |
+            |            name1                 |             Secret                  |               value1                   |                key1                   |       yes      |                    |
+            |            name2                 |             Secret                  |               value2                   |                key2                   |                |        yes         |
+            |            name3                 |             Secret                  |               value3                   |                key3                   |       yes      |                    |
+            |            name4                 |             Secret                  |               value4                   |                key4                   |                |        yes         |
+            |            name5                 |             Secret                  |               value5                   |                key5                   |                |        yes         |
+            |            name6                 |             Secret                  |               value6                   |                key6                   |       yes      |                    |
+            |            name7                 |             Secret                  |               value7                   |                key7                   |       yes      |                    |
+            |            name8                 |             Secret                  |               value8                   |                key8                   |                |        yes         |
+            |            name9                 |             Secret                  |               value9                   |                key9                   |       yes      |                    |
+        Then verify values in "Advanced_Environment_Variables_Demo_Table" table in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
+            | name  |  type  |    value    |
+            | name0 | value  | value0      |
+            | name2 | value  | value2      |
+            | name4 | value  | value4      |
+            | name5 | value  | value5      |
+            | name8 | value  | value8      |
+            | name1 | secret | value1:key1 |
+            | name3 | secret | value3:key3 |
+            | name6 | secret | value6:key6 |
+            | name7 | secret | value7:key7 |
+            | name9 | secret | value9:key9 |
+        When click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
+            | name  |
+            | name2 |
+            | name4 |
+            | name8 |
+            | name1 |
+            | name9 |
+        Then verify values in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
+            | name  |  type  |    value    |
+            | name0 | value  | value0      |
+            | name5 | value  | value5      |
+            | name3 | secret | value3:key3 |
+            | name6 | secret | value6:key6 |

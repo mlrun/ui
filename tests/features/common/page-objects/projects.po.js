@@ -60,5 +60,7 @@ module.exports = {
       '.sort__body .select__item', // Options
       '.data-ellipsis > .tooltip-wrapper' // Option value
     )
-  )
+  ),
+  No_Archived_Projects_Label:
+    '.projects .projects__wrapper .projects-content .no-filtered-data'
 }
