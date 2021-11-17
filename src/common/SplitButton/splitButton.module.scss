@@ -1,0 +1,77 @@
+@import '../../scss/mixins.scss';
+@import '../../scss/colors';
+@import '../../scss/borders';
+@import '../../scss/shadows';
+
+.split-btn {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: inherit;
+
+  &__button {
+    display: inline-flex;
+    flex: 1 1 auto;
+    min-width: auto;
+    justify-content: center;
+    align-items: center;
+
+    &-label {
+      margin: 0 5px;
+    }
+
+    button {
+      margin: 0;
+      min-width: inherit;
+      svg {
+        & > * {
+          fill: currentColor;
+        }
+      }
+    }
+
+    &:not(:last-child) {
+      button {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+    &:last-child {
+      margin: 0 0 0 -1px;
+      button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        padding: 5px;
+        & > * {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  &__header {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+    color: $gunsmoke;
+  }
+
+  &__body {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    z-index: 6;
+    min-width: 100px;
+    max-height: 250px;
+    overflow-y: auto;
+    color: $mulledWineTwo;
+    background-color: $white;
+    border: $primaryBorder;
+    border-radius: 2px;
+    box-shadow: $filterShadow;
+  }
+}

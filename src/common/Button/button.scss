@@ -19,8 +19,8 @@
   border-radius: $mainBorderRadius;
 
   svg {
-    path {
-      fill: $white;
+    & > * {
+      fill: currentColor;
     }
   }
 
@@ -38,7 +38,7 @@
     cursor: not-allowed;
 
     svg {
-      path {
+      & > * {
         fill: $alto;
       }
     }
@@ -70,7 +70,7 @@
     border: $primaryBorder;
 
     svg {
-      path {
+      & > * {
         fill: $primary;
       }
     }
@@ -127,7 +127,7 @@
     border: 0;
 
     svg {
-      path {
+      & > * {
         fill: $primary;
       }
     }

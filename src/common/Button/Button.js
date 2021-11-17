@@ -11,7 +11,7 @@ import { TERTIARY_BUTTON } from '../../constants'
 import './button.scss'
 
 const Button = forwardRef(
-  ({ className, label, tooltip, variant, ...restProps }, ref) => {
+  ({ children, className, label, tooltip, variant, ...restProps }, ref) => {
     const buttonClassName = classNames('btn', `btn-${variant}`, className)
 
     return (
@@ -20,7 +20,7 @@ const Button = forwardRef(
         hidden={!tooltip}
       >
         <button {...restProps} className={buttonClassName} ref={ref}>
-          {label}
+          {children || label}
         </button>
       </Tooltip>
     )
