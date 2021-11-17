@@ -199,11 +199,15 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeatureVector(project, featureVector)
       .then(response => {
+        const generatedFeatureVectors = parseFeatureVectors(
+          response.data?.feature_vectors
+        )
+
         dispatch(
           featureStoreActions.fetchFeatureVectorSuccess({
-            [getFeatureVectorIdentifier(featureVector)]: parseFeatureVectors(
-              response.data?.feature_vectors
-            )
+            [getFeatureVectorIdentifier(
+              generatedFeatureVectors[0]
+            )]: generatedFeatureVectors
           })
         )
 
