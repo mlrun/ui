@@ -334,7 +334,9 @@ const JobsPanel = ({
       match,
       selectedFunction,
       isFunctionTemplate,
-      defaultData?.task.spec.function
+      defaultData?.task.spec.function,
+      mode,
+      defaultData?.task.spec.handler
     )
 
     if (jobsStore.error) {
