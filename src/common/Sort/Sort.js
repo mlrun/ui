@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
+import GroupButton from '../GroupButton/GroupButton'
 import SelectOption from '../../elements/SelectOption/SelectOption'
 
 import { ReactComponent as Caret } from '../../images/dropdown.svg'
@@ -40,6 +41,11 @@ const Sort = ({
     [isBodyOpen]
   )
 
+  const handleSortClick = () => {
+    setIsDescendingOrder(state => !state)
+    setIsBodyOpen(false)
+  }
+
   useEffect(() => {
     if (labelRef.current) {
       document.addEventListener('click', handleDocumentClick)
@@ -52,10 +58,10 @@ const Sort = ({
 
   return (
     <div className="sort">
-      <div className="sort__btn-group">
+      <GroupButton>
         <button
           className="btn btn-tertiary sort__btn"
-          onClick={() => setIsDescendingOrder(state => !state)}
+          onClick={handleSortClick}
           ref={labelRef}
         >
           <Arrow className={arrowDirectionClassName} />
@@ -67,7 +73,7 @@ const Sort = ({
         >
           <Caret />
         </button>
-      </div>
+      </GroupButton>
       {isBodyOpen && (
         <div className="sort__body" onClick={() => setIsBodyOpen(false)}>
           {options.map(option => {
