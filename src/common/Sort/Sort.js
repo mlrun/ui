@@ -52,17 +52,17 @@ const Sort = ({
 
   return (
     <div className="sort">
-      <div className="btn-group">
+      <div className="sort__btn-group">
         <button
-          className="btn-tertiary btn__sort"
+          className="btn btn-tertiary sort__btn"
           onClick={() => setIsDescendingOrder(state => !state)}
           ref={labelRef}
         >
           <Arrow className={arrowDirectionClassName} />
-          <span>{selectedOption.label}</span>
+          <span className="sort__btn-label">{selectedOption.label}</span>
         </button>
         <button
-          className="btn-tertiary btn__dropdown"
+          className="btn btn-tertiary sort__dropdown"
           onClick={() => setIsBodyOpen(state => !state)}
         >
           <Caret />

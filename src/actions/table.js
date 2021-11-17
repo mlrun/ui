@@ -12,12 +12,10 @@ const tableActions = {
       payload: panelData
     })
   },
-  setTablePanelOpen: isOpen => dispatch => {
-    return dispatch({
-      type: SET_TABLE_PANEL_OPEN,
-      payload: isOpen
-    })
-  },
+  setTablePanelOpen: toggleOpen => ({
+    type: SET_TABLE_PANEL_OPEN,
+    payload: toggleOpen
+  }),
   updateFeatureVector: featureVectorData => dispatch => {
     return dispatch({
       type: UPDATE_FEATURE_VECTOR,

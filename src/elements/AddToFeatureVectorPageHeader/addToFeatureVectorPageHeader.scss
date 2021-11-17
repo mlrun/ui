@@ -1,0 +1,13 @@
+@import '../../scss/colors';
+@import '../../scss/shadows';
+
+.add-to-feature-vector-header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+
+  &__title {
+    margin: 0 10px;
+  }
+}

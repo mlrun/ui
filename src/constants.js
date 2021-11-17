@@ -45,6 +45,7 @@ export const DATASETS_TAB = 'datasets'
 export const FEATURES_TAB = 'features'
 export const FEATURE_SETS_TAB = 'feature-sets'
 export const FEATURE_VECTORS_TAB = 'feature-vectors'
+export const ADD_TO_FEATURE_VECTOR_TAB = 'add-to-feature-vector'
 
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
@@ -426,12 +427,13 @@ export const UPDATE_FEATURE_VECTOR = 'UPDATE_FEATURE_VECTOR'
 
 /*=========== FILTERS =============*/
 
-export const SET_FILTERS = 'SET_FILTERS'
-export const SET_FILTER_TAG_OPTIONS = 'SET_FILTER_TAG_OPTIONS'
 export const REMOVE_FILTERS = 'REMOVE_FILTERS'
 export const INIT_GROUP_FILTER = 'name'
 export const INIT_STATE_FILTER = 'all'
 export const INIT_TAG_FILTER = 'latest'
+export const SET_FILTERS = 'SET_FILTERS'
+export const SET_FILTER_TAG_OPTIONS = 'SET_FILTER_TAG_OPTIONS'
+export const SET_FILTER_PROJECT_OPTIONS = 'SET_FILTER_PROJECT_OPTIONS'
 
 export const TREE_FILTER = 'tree'
 export const TAG_FILTER = 'tag'
@@ -444,6 +446,7 @@ export const ITERATIONS_FILTER = 'iterations'
 export const DATE_RANGE_TIME_FILTER = 'dateRangeTime'
 export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
+export const PROJECT_FILTER = 'project'
 
 /*=========== BUTTONS =============*/
 
