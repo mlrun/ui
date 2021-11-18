@@ -7,7 +7,7 @@ import { MAIN_SPLIT_BUTTON, ADDITIONAL_SPLIT_BUTTON } from '../../types'
 
 import { ReactComponent as CaretIcon } from '../../images/dropdown.svg'
 
-import * as classes from './splitButton.module.scss'
+import './splitButton.scss'
 
 const SplitButton = ({ mainButton, additionalButton }, ref) => {
   const {
@@ -56,15 +56,15 @@ const SplitButton = ({ mainButton, additionalButton }, ref) => {
   }, [handleDocumentClick, mainRef])
 
   return (
-    <div className={classes['split-btn']} ref={mainRef}>
-      <div className={classes['split-btn__header']}>
-        <div className={classes['split-btn__button']}>
+    <div className="split-btn" ref={mainRef}>
+      <div className="split-btn__header">
+        <div className="split-btn__button">
           <Button {...mainProps} onClick={handleMainAction}>
             {Icon && <Icon className={iconClassName} />}
-            <span className={classes['split-btn__button-label']}>{label}</span>
+            <span className="split-btn__button-label">{label}</span>
           </Button>
         </div>
-        <div className={classes['split-btn__button']}>
+        <div className="split-btn__button">
           <Button
             {...additionalProps}
             onClick={() => setIsBodyOpen(state => !state)}
@@ -74,10 +74,7 @@ const SplitButton = ({ mainButton, additionalButton }, ref) => {
         </div>
       </div>
       {isBodyOpen && (
-        <div
-          className={classes['split-btn__body']}
-          onClick={() => setIsBodyOpen(false)}
-        >
+        <div className="split-btn__body" onClick={() => setIsBodyOpen(false)}>
           {options.map(option => {
             return (
               <SelectOption
