@@ -34,7 +34,6 @@ const ProjectsView = ({
   filteredProjects,
   filterMatches,
   handleCreateProject,
-  handleSearchOnChange,
   isDescendingOrder,
   isNameValid,
   match,
@@ -43,6 +42,7 @@ const ProjectsView = ({
   removeNewProjectError,
   selectedProjectsState,
   setCreateProject,
+  setFilterByName,
   setFilterMatches,
   setIsDescendingOrder,
   setNameValid,
@@ -120,7 +120,7 @@ const ProjectsView = ({
                 <Search
                   className="projects-search"
                   matches={filterMatches}
-                  onChange={value => handleSearchOnChange(value)}
+                  onChange={setFilterByName}
                   placeholder="Search projects..."
                   setMatches={setFilterMatches}
                   value={filterByName}
@@ -174,15 +174,13 @@ const ProjectsView = ({
 }
 
 ProjectsView.defaultProps = {
-  searchValue: null
+  confirmData: null
 }
 
 ProjectsView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
   closeNewProjectPopUp: PropTypes.func.isRequired,
-  confirmData: PropTypes.oneOfType([
-    PropTypes.shape({}, PropTypes.instanceOf(null))
-  ]),
+  confirmData: PropTypes.shape({}),
   convertedYaml: PropTypes.string.isRequired,
   convertToYaml: PropTypes.func.isRequired,
   createProject: PropTypes.bool.isRequired,
@@ -190,13 +188,13 @@ ProjectsView.propTypes = {
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
-  handleSearchOnChange: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
   setCreateProject: PropTypes.func.isRequired,
+  setFilterByName: PropTypes.func.isRequired,
   setFilterMatches: PropTypes.func.isRequired,
   setIsDescendingOrder: PropTypes.func.isRequired,
   setNewProjectDescription: PropTypes.func.isRequired,
