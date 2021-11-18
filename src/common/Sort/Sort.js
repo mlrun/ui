@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import GroupButton from '../SplitButton/SplitButton'
+import SplitButton from '../SplitButton/SplitButton'
 
 import { ReactComponent as ArrowIcon } from '../../images/back-arrow.svg'
 
@@ -33,7 +33,7 @@ const Sort = ({
 
   return (
     <div className="sort">
-      <GroupButton
+      <SplitButton
         mainButton={mainButton}
         additionalButton={{
           onSelectOption,
