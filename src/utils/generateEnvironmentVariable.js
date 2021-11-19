@@ -12,8 +12,8 @@ export const generateEnvVariable = variable => {
   ) {
     return {
       name: variable.name,
-      value_from: {
-        secret_key_ref: {
+      valueFrom: {
+        secretKeyRef: {
           name: variable.secretName,
           key: variable.secretKey
         }
@@ -27,8 +27,8 @@ export const generateEnvVariable = variable => {
 
     return {
       name: variable.name,
-      value_from: {
-        secret_key_ref: { name, key }
+      valueFrom: {
+        secretKeyRef: { name, key }
       }
     }
   }

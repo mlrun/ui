@@ -52,7 +52,7 @@ FunctionsPanelEnvironmentVariablesView.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       value: PropTypes.string,
-      value_from: PropTypes.shape({
+      valueFrom: PropTypes.shape({
         name: PropTypes.string,
         key: PropTypes.string
       }),

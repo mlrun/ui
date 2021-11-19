@@ -11,72 +11,84 @@ import { ReactComponent as Edit } from '../../images/edit.svg'
 
 import './projectSettingsSource.scss'
 
-const ProjectSettingsSource = React.forwardRef(
-  (
-    {
-      editSourceData,
-      handleEditProject,
-      handleOnChangeSettings,
-      handleOnKeyDown,
-      settingsSource
-    },
-    ref
-  ) => {
-    return (
-      <>
-        <div
-          className="settings__source"
-          onClick={() => handleEditProject(SOURCE_URL)}
-        >
-          {editSourceData.isEdit ? (
-            <Input
-              floatingLabel
-              label="Source URL"
-              focused
-              onChange={handleOnChangeSettings}
-              onKeyDown={handleOnKeyDown}
-              ref={ref}
-              type="text"
-              value={editSourceData.value ?? settingsSource}
-            />
-          ) : (
-            <>
-              {editSourceData.value || settingsSource ? (
-                <div>
-                  <p className="settings__card-subtitle">Source URL</p>
+const ProjectSettingsSource = ({
+  editSourceData,
+  handleEditProject,
+  handleOnBlur,
+  handleSourceChange,
+  setValidation,
+  settingsSource,
+  validation
+}) => {
+  return (
+    <>
+      <div
+        className="settings__source"
+        onClick={() => handleEditProject(SOURCE_URL)}
+      >
+        {editSourceData.isEdit ? (
+          <Input
+            floatingLabel
+            invalid={!validation.isSourceValid}
+            label="Source URL"
+            focused
+            onBlur={() => handleOnBlur(SOURCE_URL)}
+            onChange={handleSourceChange}
+            setInvalid={value =>
+              setValidation(state => ({
+                ...state,
+                isSourceValid: value
+              }))
+            }
+            type="text"
+            value={editSourceData.value ?? settingsSource}
+          />
+        ) : (
+          <>
+            {editSourceData.value || settingsSource ? (
+              <div className="settings__source-link">
+                <p className="settings__card-subtitle">Source URL</p>
+                <Tooltip
+                  template={
+                    <TextTooltipTemplate
+                      text={editSourceData.value || settingsSource}
+                    />
+                  }
+                >
                   <a
                     href={editSourceData.value || settingsSource}
                     onClick={event => event.stopPropagation()}
                     target="_blank"
                     rel="noreferrer"
-                    className="settings__source-text data-ellipsis"
+                    className="settings__source-text"
                   >
                     {editSourceData.value || settingsSource}
                   </a>
-                </div>
-              ) : (
-                <span>Click to add source URL</span>
-              )}
-              <Tooltip template={<TextTooltipTemplate text="Edit" />}>
-                <Edit
-                  className="settings__source-edit"
-                  onClick={() => handleEditProject(SOURCE_URL)}
-                />
-              </Tooltip>
-            </>
-          )}
-        </div>
-      </>
-    )
-  }
-)
+                </Tooltip>
+              </div>
+            ) : (
+              <span>Click to add source URL</span>
+            )}
+            <Tooltip template={<TextTooltipTemplate text="Edit" />}>
+              <Edit
+                className="settings__source-edit"
+                onClick={() => handleEditProject(SOURCE_URL)}
+              />
+            </Tooltip>
+          </>
+        )}
+      </div>
+    </>
+  )
+}
 
 ProjectSettingsSource.propTypes = {
   editSourceData: PropTypes.shape({}).isRequired,
   handleEditProject: PropTypes.func.isRequired,
-  handleOnChangeSettings: PropTypes.func.isRequired,
-  handleOnKeyDown: PropTypes.func.isRequired,
-  settingsSource: PropTypes.string.isRequired
+  handleSourceChange: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  settingsSource: PropTypes.string.isRequired,
+  validation: PropTypes.object.isRequired
 }
 
 export default ProjectSettingsSource

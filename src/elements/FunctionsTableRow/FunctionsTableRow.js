@@ -95,7 +95,7 @@ const FunctionsTableRow = ({
                               : `/${detailsMenu[0].id}`
                           }`
                         }
-                        key={value.value + i}
+                        key={value.id}
                         selectItem={handleSelectItem}
                         selectedItem={selectedItem}
                       />
@@ -123,7 +123,7 @@ const FunctionsTableRow = ({
                   expandLink={Array.isArray(tableContent)}
                   handleExpandRow={handleExpandRow}
                   item={currentItem}
-                  key={rowItemProp.value + i}
+                  key={rowItemProp.id}
                   link={
                     rowItemProp.getLink
                       ? rowItemProp.getLink(currentItem?.hash)

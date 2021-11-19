@@ -36,7 +36,10 @@ const DeployModelPopUp = ({
     if (functionOptionList.length === 0) {
       fetchFunctions(model.project).then(functions => {
         const functionOptions = chain(functions)
-          .filter(func => func.kind === 'serving')
+          .filter(
+            func =>
+              func.kind === 'serving' && func?.spec?.graph?.kind === 'router'
+          )
           .uniqBy('metadata.name')
           .map(func => ({ label: func.metadata.name, id: func.metadata.name }))
           .value()
@@ -133,7 +136,7 @@ const DeployModelPopUp = ({
     >
       <div className="select-row">
         <Select
-          label="Serving function"
+          label="Serving function (router)"
           floatingLabel
           disabled={functionOptionList.length === 0}
           options={functionOptionList}

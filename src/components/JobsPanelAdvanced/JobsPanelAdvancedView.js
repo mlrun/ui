@@ -24,8 +24,7 @@ const JobsPanelAdvancedView = ({
 }) => {
   return (
     <div className="job-panel__item advanced new-item-side-panel__item">
-      <JobsPanelSection title="Advanced" />
-      {isDemoMode ? (
+      <JobsPanelSection title="Advanced">
         <JobsPanelEnvironmentVariables
           panelDispatch={panelDispatch}
           panelEnvData={panelState.tableData.environmentVariables}
@@ -33,7 +32,9 @@ const JobsPanelAdvancedView = ({
             panelState.previousPanelData.tableData.environmentVariables
           }
         />
-      ) : (
+      </JobsPanelSection>
+
+      {isDemoMode && (
         <JobsPanelSection title="Secrets">
           <JobsPanelAdvancedTable
             addNewItem={advancedState.addNewSecret}

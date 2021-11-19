@@ -11,6 +11,7 @@ import NoData from '../../common/NoData/NoData'
 import ProjectFunctions from '../../elements/ProjectFunctions/ProjectFunctions'
 import ProjectJobs from '../../elements/ProjectJobs/ProjectJobs'
 import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopup'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Select from '../../common/Select/Select'
 import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
 import Tooltip from '../../common/Tooltip/Tooltip'
@@ -24,13 +25,14 @@ import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
 
 import { ReactComponent as Settings } from '../../images/settings.svg'
-import { ReactComponent as Refresh } from '../../images/refresh.svg'
+import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './project.scss'
 
@@ -42,6 +44,7 @@ const ProjectView = React.forwardRef(
       changeOwnerCallback,
       closeFeatureSetPanel,
       closeFunctionsPanel,
+      confirmData,
       createFeatureSetPanelIsOpen,
       createFeatureSetSuccess,
       createFunctionSuccess,
@@ -62,11 +65,11 @@ const ProjectView = React.forwardRef(
       match,
       membersDispatch,
       membersState,
-      projectCounters,
       projectLabels,
       projectMembersIsShown,
       projectMembershipIsEnabled,
       projectOwnerIsShown,
+      projectSummary,
       refresh,
       setIsNewFunctionPopUpOpen,
       setIsPopupDialogOpen,
@@ -100,8 +103,21 @@ const ProjectView = React.forwardRef(
         {project.loading ? (
           <Loader />
         ) : project.error ? (
-          <div className=" project__error-container">
-            <h1>{project.error}</h1>
+          <div className="project__error-container">
+            {confirmData ? (
+              <ConfirmDialog
+                closePopUp={confirmData.confirmHandler}
+                confirmButton={{
+                  handler: confirmData.confirmHandler,
+                  label: confirmData.btnConfirmLabel,
+                  variant: confirmData.btnConfirmType
+                }}
+                message={confirmData.message}
+                messageOnly={confirmData.messageOnly}
+              />
+            ) : (
+              <h1>{project.error.message}</h1>
+            )}
           </div>
         ) : isEmpty(project.data) ? (
           <NoData />
@@ -117,18 +133,14 @@ const ProjectView = React.forwardRef(
                     projectName={project.data.metadata.name}
                     ref={ref}
                   />
-                  {isDemoMode && (
-                    <Link
-                      className="general-info__settings"
-                      to={`/projects/${match.params.projectName}/settings`}
-                    >
-                      <Tooltip
-                        template={<TextTooltipTemplate text="Settings" />}
-                      >
-                        <Settings />
-                      </Tooltip>
-                    </Link>
-                  )}
+                  <Link
+                    className="general-info__settings"
+                    to={`/projects/${match.params.projectName}/settings`}
+                  >
+                    <Tooltip template={<TextTooltipTemplate text="Settings" />}>
+                      <Settings />
+                    </Tooltip>
+                  </Link>
                 </div>
                 <ProjectDescription
                   editDescriptionData={editProject.description}
@@ -225,14 +237,14 @@ const ProjectView = React.forwardRef(
             </div>
             <div className="main-info">
               <div className="main-info__toolbar">
-                <Tooltip
+                <RoundedIcon
+                  onClick={refresh}
+                  id="refresh"
+                  tooltipText="Refresh"
                   className="refresh"
-                  template={<TextTooltipTemplate text="Refresh" />}
                 >
-                  <button onClick={refresh} id="refresh">
-                    <Refresh />
-                  </button>
-                </Tooltip>
+                  <RefreshIcon />
+                </RoundedIcon>
                 <Select
                   className="main-info__toolbar-menu launch-menu"
                   density="dense"
@@ -251,21 +263,21 @@ const ProjectView = React.forwardRef(
               </div>
               <div className="main-info__statistics-section">
                 <ProjectArtifacts
-                  counterValue={projectCounters.data.models_count ?? 0}
+                  counterValue={projectSummary.data.models_count ?? 0}
                   link={`/projects/${match.params.projectName}/models`}
-                  projectCounters={projectCounters}
+                  projectSummary={projectSummary}
                   title="Models"
                 />
                 <ProjectArtifacts
-                  counterValue={projectCounters.data.feature_sets_count ?? 0}
+                  counterValue={projectSummary.data.feature_sets_count ?? 0}
                   link={`/projects/${match.params.projectName}/feature-store`}
-                  projectCounters={projectCounters}
+                  projectSummary={projectSummary}
                   title="Feature sets"
                 />
                 <ProjectArtifacts
-                  counterValue={projectCounters.data.files_count ?? 0}
+                  counterValue={projectSummary.data.files_count ?? 0}
                   link={`/projects/${match.params.projectName}/files`}
-                  projectCounters={projectCounters}
+                  projectSummary={projectSummary}
                   title="Files"
                 />
               </div>
@@ -334,6 +346,7 @@ const ProjectView = React.forwardRef(
 )
 
 ProjectView.defaultProps = {
+  confirmData: null,
   visibleChipsMaxLength: null
 }
 
@@ -343,6 +356,7 @@ ProjectView.propTypes = {
   changeOwnerCallback: PropTypes.func.isRequired,
   closeFeatureSetPanel: PropTypes.func.isRequired,
   closeFunctionsPanel: PropTypes.func.isRequired,
+  confirmData: PropTypes.object,
   createFeatureSetPanelIsOpen: PropTypes.bool.isRequired,
   createFeatureSetSuccess: PropTypes.func.isRequired,
   createFunctionSuccess: PropTypes.func.isRequired,
@@ -363,11 +377,11 @@ ProjectView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
-  projectCounters: PropTypes.object.isRequired,
   projectLabels: PropTypes.array.isRequired,
   projectMembersIsShown: PropTypes.bool.isRequired,
   projectMembershipIsEnabled: PropTypes.bool.isRequired,
   projectOwnerIsShown: PropTypes.bool.isRequired,
+  projectSummary: PropTypes.object.isRequired,
   setIsNewFunctionPopUpOpen: PropTypes.func.isRequired,
   setIsPopupDialogOpen: PropTypes.func.isRequired,
   setShowChangeOwner: PropTypes.func.isRequired,

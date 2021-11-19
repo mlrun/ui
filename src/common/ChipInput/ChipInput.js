@@ -73,7 +73,7 @@ const ChipInput = ({
   )
 
   const handleRemoveChip = useCallback(
-    chipIndex => {
+    (event, chipIndex) => {
       removeChip(chipIndex)
     },
     [removeChip]

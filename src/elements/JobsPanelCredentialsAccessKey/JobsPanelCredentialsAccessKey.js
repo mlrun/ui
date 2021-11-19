@@ -7,6 +7,7 @@ import PanelCredentialsAccessKey from '../PanelCredentialsAccessKey/PanelCredent
 
 import jobsActions from '../../actions/jobs'
 import { panelActions } from '../../components/JobsPanel/panelReducer'
+import { PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
 
 import './jobsPanelCredentialsAccessKey.scss'
 
@@ -14,7 +15,9 @@ const JobsPanelCredentialsAccessKey = ({
   isScheduled,
   panelDispatch,
   panelState,
-  setNewJobCredentialsAccessKey
+  setNewJobCredentialsAccessKey,
+  setValidation,
+  validation
 }) => {
   const accessKeyClassNames = classnames(
     isScheduled && 'without-padding',
@@ -37,7 +40,10 @@ const JobsPanelCredentialsAccessKey = ({
     <PanelCredentialsAccessKey
       className={accessKeyClassNames}
       credentialsAccessKey={panelState.access_key}
+      required={panelState.access_key !== PANEL_DEFAULT_ACCESS_KEY}
       setCredentialsAccessKey={handleSetCredentialsAccessKey}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }
@@ -50,7 +56,9 @@ JobsPanelCredentialsAccessKey.propTypes = {
   isScheduled: PropTypes.bool,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  setNewJobCredentialsAccessKey: PropTypes.func.isRequired
+  setNewJobCredentialsAccessKey: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(jobsStore => ({ ...jobsStore }), { ...jobsActions })(

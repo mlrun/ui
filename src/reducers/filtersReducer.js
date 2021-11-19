@@ -3,6 +3,7 @@ import {
   INIT_STATE_FILTER,
   INIT_TAG_FILTER,
   REMOVE_FILTERS,
+  SET_FILTER_PROJECT_OPTIONS,
   SET_FILTER_TAG_OPTIONS,
   SET_FILTERS
 } from '../constants'
@@ -16,15 +17,19 @@ const initialState = {
   iter: 'iter',
   labels: '',
   name: '',
+  project: '',
   showUntagged: '',
   state: INIT_STATE_FILTER,
   sortBy: '',
   tag: INIT_TAG_FILTER,
-  tagOptions: []
+  tagOptions: [],
+  projectOptions: []
 }
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case REMOVE_FILTERS:
+      return initialState
     case SET_FILTERS:
       return {
         ...state,
@@ -35,8 +40,11 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         tagOptions: payload
       }
-    case REMOVE_FILTERS:
-      return initialState
+    case SET_FILTER_PROJECT_OPTIONS:
+      return {
+        ...state,
+        projectOptions: payload
+      }
     default:
       return state
   }

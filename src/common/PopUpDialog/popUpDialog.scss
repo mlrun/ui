@@ -6,6 +6,7 @@
   width: 477px;
   max-height: 90vh;
   padding: 20px;
+  overflow-y: auto;
   background-color: $white;
   border-radius: $mainBorderRadius;
   box-shadow: 0 6px 26px rgba($black, 0.2);
@@ -31,10 +32,12 @@
   &__header {
     position: relative;
     display: flex;
+    align-items: baseline;
     justify-content: space-between;
-    margin: 10px 0 20px;
+    margin-bottom: 10px;
 
     &-text {
+      width: 100%;
       color: $primary;
       font-size: 24px;
       line-height: 28px;
@@ -44,7 +47,7 @@
     &-close {
       width: 14px;
       height: 14px;
-      margin: 5px 5px 5px auto;
+      margin: 5px 0 5px auto;
       cursor: pointer;
     }
   }

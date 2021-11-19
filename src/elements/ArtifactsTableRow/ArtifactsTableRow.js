@@ -69,7 +69,7 @@ const ArtifactsTableRow = ({
             {mainRowData.map((data, index) => {
               return index < mainRowItemsCount ? (
                 <TableCell
-                  key={data.value || index}
+                  key={data.id}
                   handleExpandRow={handleExpandRow}
                   data={data}
                   item={rowItem}
@@ -111,7 +111,7 @@ const ArtifactsTableRow = ({
                   />
                 ) : (
                   <>
-                    {Object.values(artifact).map((value, i) => {
+                    {Object.values(artifact).map(value => {
                       return (
                         !value.hidden && (
                           <TableCell
@@ -125,7 +125,7 @@ const ArtifactsTableRow = ({
                               match.params.tab ?? DETAILS_OVERVIEW_TAB
                             )}
                             match={match}
-                            key={value.value + i ?? Date.now()}
+                            key={value.id}
                             selectItem={handleSelectItem}
                             selectedItem={selectedItem}
                           />
@@ -150,7 +150,7 @@ const ArtifactsTableRow = ({
         </div>
       ) : (
         <>
-          {mainRowData.map((value, i) => {
+          {mainRowData.map(value => {
             return (
               currentItem &&
               !value.hidden && (
@@ -162,7 +162,7 @@ const ArtifactsTableRow = ({
                   handleExpandRow={handleExpandRow}
                   data={value}
                   item={currentItem}
-                  key={Math.random() + i}
+                  key={value.id}
                   link={value.getLink?.(
                     match.params.tab ?? DETAILS_OVERVIEW_TAB
                   )}

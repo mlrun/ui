@@ -24,7 +24,9 @@ const ScheduleJob = ({
   match,
   panelDispatch,
   panelState,
-  setOpenScheduleJob
+  setOpenScheduleJob,
+  setValidation,
+  validation
 }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
   const [cron, setCron] = useState(defaultCron || '10 * * * *')
@@ -191,6 +193,8 @@ const ScheduleJob = ({
       setIsRecurring={setIsRecurring}
       setTime={onHandleTimeChange}
       time={time}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }

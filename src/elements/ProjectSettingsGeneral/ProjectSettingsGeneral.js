@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { debounce, isNil } from 'lodash'
 
 import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
@@ -8,7 +9,6 @@ import {
   ARTIFACT_PATH,
   SOURCE_URL
 } from '../../components/ProjectSettings/projectSettings.util'
-import { KEY_CODES } from '../../constants'
 import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 
@@ -32,8 +32,10 @@ const ProjectSettingsGeneral = ({
       isEdit: false
     }
   })
-
-  const inputRef = React.createRef()
+  const [validation, setValidation] = useState({
+    isSourceValid: true,
+    isPathValid: true
+  })
 
   useEffect(() => {
     fetchProject(match.params.projectName)
@@ -60,21 +62,6 @@ const ProjectSettingsGeneral = ({
         : [],
     [projectStore.project.data]
   )
-
-  const closeEditMode = useCallback(() => {
-    setEditProject(prevState => ({
-      source: {
-        value: prevState.source.value ?? projectStore.project.data.spec.source,
-        isEdit: false
-      },
-      artifact_path: {
-        value:
-          prevState.artifact_path.value ??
-          projectStore.project.data.spec.artifact_path,
-        isEdit: false
-      }
-    }))
-  }, [projectStore.project])
 
   const setNewProjectParams = useCallback(
     params => {
@@ -149,62 +136,59 @@ const ProjectSettingsGeneral = ({
     [projectStore.project.data, setNewProjectParams]
   )
 
-  const handleEditProject = useCallback(inputName => {
+  const handleEditProject = useCallback(type => {
     setEditProject(prevState => ({
       ...prevState,
       source: {
         ...prevState.source,
-        isEdit: inputName === SOURCE_URL
+        isEdit: type === SOURCE_URL
       },
       artifact_path: {
         ...prevState.artifact_path,
-        isEdit: inputName === ARTIFACT_PATH
+        isEdit: type === ARTIFACT_PATH
       }
     }))
   }, [])
 
-  const handleOnChangeSettings = useCallback(
-    value => {
-      setEditProject(prevState => ({
-        ...prevState,
-        source: {
-          ...prevState.source,
-          value: editProject.source.isEdit ? value : prevState.source.value
-        },
-        artifact_path: {
-          ...prevState.artifact_path,
-          value: editProject.artifact_path.isEdit
-            ? value
-            : prevState.artifact_path.value
+  const handleArtifactPathChange = useCallback(
+    debounce((value, isValid) => {
+      if (isValid && value !== projectStore.project.data.spec.artifact_path) {
+        const data = {
+          ...projectStore.project.data,
+          spec: {
+            ...projectStore.project.data.spec,
+            source: !isNil(editProject.source.value)
+              ? editProject.source.value
+              : projectStore.project.data.spec.source,
+            artifact_path: value,
+            params: projectStore.project.data.spec.params
+          }
         }
-      }))
-    },
-    [editProject]
+
+        sendProjectSettingsData(data)
+      }
+    }, 250),
+    [
+      editProject.artifact_path.value,
+      match.params.projectName,
+      projectStore.project.data,
+      setProjectSettings,
+      validation.isPathValid
+    ]
   )
 
-  const handleSetProjectData = useCallback(() => {
-    const projectData = {
-      source: editProject.source.value ?? projectStore.project.data.spec.source,
-      artifact_path:
-        editProject.artifact_path.value ??
-        projectStore.project.data.spec.artifact_path,
-      params: projectStore.project.data.spec.params
-    }
-    const data = {
-      ...projectStore.project.data,
-      spec: {
-        ...projectStore.project.data.spec,
-        source: projectData.source,
-        artifact_path: projectData.artifact_path,
-        params: projectData.params
+  const sendProjectSettingsData = data => {
+    setEditProject(prevState => ({
+      ...prevState,
+      artifact_path: {
+        ...prevState.artifact_path,
+        value: data.spec.artifact_path
       }
-    }
-
+    }))
     setProjectSettings({
-      source: projectData.source,
-      artifact_path: projectData.artifact_path
+      source: data.spec.source,
+      artifact_path: data.spec.artifact_path
     })
-    closeEditMode()
     projectsApi.editProject(match.params.projectName, { ...data }).catch(() => {
       setEditProject({
         source: {
@@ -217,42 +201,66 @@ const ProjectSettingsGeneral = ({
         }
       })
     })
-  }, [
-    closeEditMode,
-    editProject.artifact_path.value,
-    editProject.source.value,
-    match.params.projectName,
-    projectStore.project.data,
-    setProjectSettings
-  ])
+  }
 
-  const handleOnKeyDown = useCallback(
-    event => {
-      if (event.keyCode === KEY_CODES.ENTER) {
-        handleSetProjectData()
+  const handleSourceChange = value => {
+    setEditProject(prevState => ({
+      ...prevState,
+      source: {
+        ...prevState.source,
+        value
       }
-    },
-    [handleSetProjectData]
-  )
+    }))
+  }
 
-  const handleDocumentClick = useCallback(
-    event => {
-      if (inputRef.current && event.target !== inputRef.current) {
-        handleSetProjectData()
+  const handleOnBlur = tab => {
+    if (tab === SOURCE_URL) {
+      if (
+        !isNil(editProject.source.value) &&
+        validation.isSourceValid &&
+        editProject.source.value !== projectStore.project.data.spec.source
+      ) {
+        const data = {
+          ...projectStore.project.data,
+          spec: {
+            ...projectStore.project.data.spec,
+            source: !isNil(editProject.source.value)
+              ? editProject.source.value
+              : projectStore.project.data.spec.source
+          }
+        }
+
+        sendProjectSettingsData(data)
+        setEditProject(prevState => ({
+          ...prevState,
+          source: {
+            ...prevState.source,
+            isEdit: false
+          }
+        }))
+      } else {
+        setEditProject(prevState => ({
+          ...prevState,
+          source: {
+            value: projectStore.project.data.spec.source,
+            isEdit: false
+          }
+        }))
+        setValidation(prevState => ({
+          ...prevState,
+          isSourceValid: true
+        }))
       }
-    },
-    [handleSetProjectData, inputRef]
-  )
-
-  useEffect(() => {
-    if (editProject.source.isEdit || editProject.artifact_path.isEdit) {
-      document.addEventListener('click', handleDocumentClick)
+    } else {
+      setEditProject(prevState => ({
+        ...prevState,
+        artifact_path: {
+          ...prevState.artifact_path,
+          isEdit: false
+        }
+      }))
     }
-
-    return () => {
-      document.removeEventListener('click', handleDocumentClick)
-    }
-  }, [editProject, handleDocumentClick])
+  }
 
   return (
     <ProjectSettingsGeneralView
@@ -261,14 +269,16 @@ const ProjectSettingsGeneral = ({
       error={projectStore.project?.error}
       generalParams={generalParams}
       handleAddNewParameter={handleAddNewParameter}
+      handleArtifactPathChange={handleArtifactPathChange}
       handleDeleteParameter={handleDeleteParameter}
       handleEditParameter={handleEditParameter}
       handleEditProject={handleEditProject}
-      handleOnChangeSettings={handleOnChangeSettings}
-      handleOnKeyDown={handleOnKeyDown}
+      handleOnBlur={handleOnBlur}
+      handleSourceChange={handleSourceChange}
       loading={projectStore.project?.loading}
-      ref={inputRef}
+      setValidation={setValidation}
       source={projectStore.project.data?.spec.source ?? ''}
+      validation={validation}
     />
   )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react'
+import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { startCase } from 'lodash'
 import { Link } from 'react-router-dom'
@@ -6,8 +6,9 @@ import classnames from 'classnames'
 import { connect } from 'react-redux'
 
 import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
+import RoundedIcon from '../RoundedIcon/RoundedIcon'
 
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import { ReactComponent as ArrowIcon } from '../../images/arrow.svg'
 
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { betaBreadcrumbs, generateProjectScreens } from './breadcrumbs.util'
@@ -21,6 +22,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
   const isDemoMode = useDemoMode()
+  const breadcrumbsRef = useRef()
 
   const projectScreens = useMemo(() => {
     return generateProjectScreens(match, isDemoMode)
@@ -40,7 +42,6 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
       )
     }
   }, [match.path, match.url])
-  const breadcrumbsRef = React.createRef()
 
   const handleCloseDropdown = useCallback(
     event => {
@@ -111,7 +112,6 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
           setShowScreensList(false)
         }
       }
-
       separatorRef.current.classList.toggle('breadcrumbs__separator_active')
     }
   }
@@ -170,7 +170,7 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
                 </Link>
               </li>,
               <li key={i} className="breadcrumbs__item">
-                <Arrow
+                <RoundedIcon
                   className={separatorClassNames}
                   data-testid="separator"
                   ref={separatorRef}
@@ -181,7 +181,10 @@ const Breadcrumbs = ({ match, onClick, projectStore, fetchProjectsNames }) => {
                       matchItems.pathItems[i + 1]?.startsWith(':')
                     )
                   }
-                />
+                >
+                  <ArrowIcon />
+                </RoundedIcon>
+
                 {showScreensList &&
                   matchItems.urlItems[i + 1] === matchItems.screen &&
                   !matchItems.pathItems[i + 1]?.startsWith(':') && (

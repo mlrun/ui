@@ -9,10 +9,7 @@
   }
 
   &__body {
-    position: absolute;
-    right: 15px;
-    bottom: 25px;
-    z-index: 4;
+    position: fixed;
     width: 150px;
     background: $white;
     border: $primaryBorder;
@@ -22,10 +19,6 @@
 
     &.show {
       visibility: visible;
-    }
-
-    &.open-to-bottom {
-      bottom: unset;
     }
   }
 }
