@@ -41,6 +41,7 @@ import {
   INIT_TAG_FILTER,
   FEATURE_STORE_PAGE
 } from '../../constants'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const FeatureStore = ({
   artifactsStore,
@@ -86,6 +87,7 @@ const FeatureStore = ({
   const [pageData, setPageData] = useState(pageDataInitialState)
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const featureStoreRef = useRef(null)
+  const isDemoMode = useDemoMode()
 
   const fetchData = useCallback(
     async filters => {
@@ -328,7 +330,8 @@ const FeatureStore = ({
             : handleRemoveDataSet,
           getPopUpTemplate,
           tableStore.isTablePanelOpen,
-          !isEveryObjectValueEmpty(selectedItem)
+          !isEveryObjectValueEmpty(selectedItem),
+          isDemoMode
         )
       }
     })
@@ -338,6 +341,7 @@ const FeatureStore = ({
     handleRemoveFeature,
     handleRemoveFeatureVector,
     handleRequestOnExpand,
+    isDemoMode,
     match.params.pageTab,
     selectedItem,
     tableStore.isTablePanelOpen
