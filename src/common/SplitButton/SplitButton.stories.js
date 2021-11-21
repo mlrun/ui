@@ -2,7 +2,6 @@ import React from 'react'
 
 import SplitButton from './SplitButton'
 
-import { ReactComponent as CaretIcon } from '../../images/dropdown.svg'
 import { ReactComponent as EyeIcon } from '../../images/eye.svg'
 
 export default {
@@ -46,7 +45,6 @@ WithIcon.args = {
   additionalButton: {
     ...commonArgs['additionalButton'],
     label: '',
-
     variant: 'primary'
   }
 }
