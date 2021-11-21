@@ -82,6 +82,7 @@ const PopUpDialog = ({
             </div>
           )}
           <RoundedIcon
+            className="pop-up-dialog__btn_close"
             onClick={closePopUp}
             tooltipText="Close"
             data-testid="pop-up-close-btn"
