@@ -5,12 +5,8 @@
 
 .sort {
   position: relative;
-  display: flex;
-  align-items: center;
   min-width: 80px;
-  height: 40px;
   background-color: transparent;
-  cursor: pointer;
   &_down {
     width: 20px;
     transform: rotate(-90deg);
