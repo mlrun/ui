@@ -11,16 +11,19 @@ import { TERTIARY_BUTTON } from '../../constants'
 import './button.scss'
 
 const Button = forwardRef(
-  ({ children, className, label, tooltip, variant, ...restProps }, ref) => {
+  (
+    { children, className, icon, label, tooltip, variant, ...restProps },
+    ref
+  ) => {
     const buttonClassName = classNames('btn', `btn-${variant}`, className)
-
     return (
       <Tooltip
         template={<TextTooltipTemplate text={tooltip} />}
         hidden={!tooltip}
       >
         <button {...restProps} className={buttonClassName} ref={ref}>
-          {children || label}
+          {icon}
+          {(children || label) && <span>{children || label}</span>}
         </button>
       </Tooltip>
     )
@@ -36,6 +39,7 @@ Button.defaultProps = {
 
 Button.propTypes = {
   className: PropTypes.string,
+  icon: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   tooltip: PropTypes.string,
   variant: BUTTON_VARIANTS.isRequired

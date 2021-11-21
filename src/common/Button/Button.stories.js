@@ -10,6 +10,9 @@ import {
   TERTIARY_BUTTON
 } from '../../constants'
 
+import { ReactComponent as EyeIcon } from '../../images/eye.svg'
+import { ReactComponent as CaretIcon } from '../../images/dropdown.svg'
+
 export default {
   title: 'Example/Button',
   component: Button
@@ -55,4 +58,18 @@ Label.args = {
   ...commonArgs,
   label: 'Label button',
   variant: LABEL_BUTTON
+}
+
+export const Icon = Template.bind({})
+Icon.args = {
+  ...commonArgs,
+  label: '',
+  icon: <CaretIcon />
+}
+
+export const IconWithLabel = Template.bind({})
+IconWithLabel.args = {
+  ...commonArgs,
+  label: 'Awesome Button',
+  icon: <EyeIcon />
 }

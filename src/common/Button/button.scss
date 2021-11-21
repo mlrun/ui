@@ -11,8 +11,7 @@
   padding: 0 16px;
   color: $white;
   font-weight: 500;
-  font-size: 14px;
-  font-family: Roboto, sans-serif;
+  font-size: 0.875rem;
   font-style: normal;
   line-height: 16px;
   border: $transparentBorder;
@@ -44,8 +43,11 @@
     }
   }
 
-  :first-child {
-    margin-right: 5px;
+  :not(last-child) {
+    margin-right: 10px;
+  }
+  :last-child {
+    margin: 0;
   }
 
   &-primary {

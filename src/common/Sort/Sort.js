@@ -24,18 +24,16 @@ const Sort = ({
     setSelectedOption(options.find(option => option.id === selectedId))
   }, [options, selectedId])
 
-  const mainButton = {
-    icon: ArrowIcon,
-    iconClassName: arrowDirectionClassName,
-    label: selectedOption?.label || 'Sort',
-    onClick: () => setIsDescendingOrder(state => !state)
-  }
-
   return (
     <div className="sort">
       <SplitButton
-        mainButton={mainButton}
+        mainButton={{
+          icon: <ArrowIcon className={arrowDirectionClassName} />,
+          label: selectedOption?.label || 'Sort',
+          onClick: () => setIsDescendingOrder(state => !state)
+        }}
         additionalButton={{
+          label: '',
           onSelectOption,
           options,
           selectedOption

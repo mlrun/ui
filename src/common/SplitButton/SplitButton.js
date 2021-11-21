@@ -10,14 +10,9 @@ import { ReactComponent as CaretIcon } from '../../images/dropdown.svg'
 import './splitButton.scss'
 
 const SplitButton = ({ mainButton, additionalButton }, ref) => {
+  const { onClick: mainAction, ...mainProps } = mainButton
   const {
-    icon: Icon,
-    iconClassName,
-    onClick: mainAction,
-    label,
-    ...mainProps
-  } = mainButton
-  const {
+    icon,
     options,
     onSelectOption,
     selectedOption,
@@ -59,18 +54,14 @@ const SplitButton = ({ mainButton, additionalButton }, ref) => {
     <div className="split-btn" ref={mainRef}>
       <div className="split-btn__header">
         <div className="split-btn__button">
-          <Button {...mainProps} onClick={handleMainAction}>
-            {Icon && <Icon className={iconClassName} />}
-            <span className="split-btn__button-label">{label}</span>
-          </Button>
+          <Button {...mainProps} onClick={handleMainAction} />
         </div>
         <div className="split-btn__button">
           <Button
             {...additionalProps}
+            icon={icon ?? <CaretIcon />}
             onClick={() => setIsBodyOpen(state => !state)}
-          >
-            <CaretIcon />
-          </Button>
+          />
         </div>
       </div>
       {isBodyOpen && (
