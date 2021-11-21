@@ -18,19 +18,12 @@ import {
   generateGroupedItems
 } from './content.util'
 import { useYaml } from '../../hooks/yaml.hook'
-import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
-  ARTIFACTS_PAGE,
   FEATURE_STORE_PAGE,
-  FEATURE_VECTORS_TAB,
-  FEATURES_TAB,
-  FILES_PAGE,
   JOBS_PAGE,
-  MODEL_ENDPOINTS_TAB,
-  MODELS_PAGE,
-  PROJECTS_PAGE
+  MODELS_PAGE
 } from '../../constants'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
@@ -62,7 +55,6 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
-  const isDemoMode = useDemoMode()
 
   const contentClassName = classnames(
     'content',
@@ -86,30 +78,12 @@ const Content = ({
   }, [pageData.actionsMenu, toggleConvertedYaml])
 
   useEffect(() => {
-    if (
-      [
-        PROJECTS_PAGE,
-        ARTIFACTS_PAGE,
-        FILES_PAGE,
-        MODELS_PAGE,
-        FEATURE_STORE_PAGE,
-        JOBS_PAGE
-      ].includes(pageData.page) &&
-      ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
-      (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) || isDemoMode) &&
-      !pageData.hidePageActionMenu
-    ) {
+    if (!pageData.hidePageActionMenu) {
       setShowActionsMenu(true)
     } else if (showActionsMenu) {
       setShowActionsMenu(false)
     }
-  }, [
-    isDemoMode,
-    match.params.pageTab,
-    pageData.hidePageActionMenu,
-    pageData.page,
-    showActionsMenu
-  ])
+  }, [pageData.hidePageActionMenu, showActionsMenu])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
