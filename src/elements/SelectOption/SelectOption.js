@@ -50,7 +50,7 @@ const SelectOption = ({
         </span>
       )}
       {item.status && <span className={`state-${item.status}-job status`} />}
-      <div className="data-ellipsis flex-row">
+      <div className="data-ellipsis label-row">
         <Tooltip template={<TextTooltipTemplate text={item.label} />}>
           {item.label}
         </Tooltip>
