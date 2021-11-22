@@ -4,12 +4,13 @@ import Button from '../Button/Button'
 import SelectOption from '../../elements/SelectOption/SelectOption'
 
 import { MAIN_SPLIT_BUTTON, ADDITIONAL_SPLIT_BUTTON } from '../../types'
+import { TERTIARY_BUTTON } from '../../constants'
 
 import { ReactComponent as CaretIcon } from '../../images/dropdown.svg'
 
 import './splitButton.scss'
 
-const SplitButton = ({ mainButton, additionalButton }, ref) => {
+const SplitButton = ({ mainButton, additionalButton }) => {
   const { onClick: mainAction, ...mainProps } = mainButton
   const {
     icon,
@@ -82,6 +83,22 @@ const SplitButton = ({ mainButton, additionalButton }, ref) => {
       )}
     </div>
   )
+}
+
+SplitButton.defaultProps = {
+  mainButton: {
+    label: 'Main',
+    onClick: () => {},
+    variant: TERTIARY_BUTTON
+  },
+  additionalButton: {
+    icon: <CaretIcon />,
+    label: '',
+    options: [],
+    onSelectOption: () => {},
+    selectedOption: {},
+    variant: TERTIARY_BUTTON
+  }
 }
 
 SplitButton.propTypes = {

@@ -35,10 +35,15 @@
       button {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
+        border-right-color: transparent;
+
+        &:focus,
+        &:active {
+          border-right-color: rgba($black, 0.4);
+        }
       }
     }
     &:last-child {
-      margin: 0 0 0 -1px;
       button {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
@@ -62,7 +67,7 @@
     top: calc(100% + 5px);
     left: 0;
     z-index: 6;
-    min-width: 100px;
+    min-width: 100%;
     max-height: 250px;
     overflow-y: auto;
     color: $mulledWineTwo;

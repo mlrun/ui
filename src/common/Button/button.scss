@@ -46,6 +46,7 @@
   :not(last-child) {
     margin-right: 10px;
   }
+
   :last-child {
     margin: 0;
   }
@@ -93,6 +94,7 @@
   &-secondary {
     background: $malibu;
     color: $white;
+
     &:hover:not(:disabled) {
       background: $cornflowerBlue;
     }

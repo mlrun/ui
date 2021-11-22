@@ -15,7 +15,7 @@ const Sort = ({
   selectedId,
   setIsDescendingOrder
 }) => {
-  const [selectedOption, setSelectedOption] = useState({})
+  const [selectedOption, setSelectedOption] = useState(null)
   const arrowDirectionClassName = classNames(
     isDescendingOrder ? 'sort_down' : 'sort_up'
   )
@@ -29,7 +29,7 @@ const Sort = ({
       <SplitButton
         mainButton={{
           icon: <ArrowIcon className={arrowDirectionClassName} />,
-          label: selectedOption?.label || 'Sort',
+          label: selectedOption?.label ?? 'Sort',
           onClick: () => setIsDescendingOrder(state => !state)
         }}
         additionalButton={{

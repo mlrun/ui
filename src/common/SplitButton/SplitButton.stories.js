@@ -10,16 +10,11 @@ export default {
 }
 
 const commonArgs = {
-  mainButton: {
-    label: 'Test',
-    onClick: () => {}
-  },
   additionalButton: {
     options: [
       { id: 'min', label: 'long-long-long-long-long-long-long-long' },
       { id: 'max', label: 'Max' }
     ],
-    onSelectOption: () => {},
     selectedOption: { id: 'max', label: 'Max' }
   }
 }

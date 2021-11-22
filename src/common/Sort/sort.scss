@@ -7,6 +7,7 @@
   position: relative;
   min-width: 80px;
   background-color: transparent;
+
   &_down {
     width: 20px;
     transform: rotate(-90deg);
@@ -15,12 +16,5 @@
   &_up {
     width: 20px;
     transform: rotate(90deg);
-  }
-  &__select {
-    position: relative;
-    margin-right: 5px;
-  }
-  &__caret {
-    transform: translateX(10px);
   }
 }
