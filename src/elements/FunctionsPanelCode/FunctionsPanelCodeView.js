@@ -14,7 +14,7 @@ import { trimSplit } from '../../utils'
 import {
   DEFAULT_ENTRY,
   entryOptions,
-  codeOptions,
+  generateCodeOptions,
   NEW_IMAGE,
   EXISTING_IMAGE
 } from './functionsPanelCode.util'
@@ -32,6 +32,7 @@ const FunctionsPanelCodeView = ({
   handleHandlerOnBlur,
   handleImageTypeChange,
   imageType,
+  mode,
   setData,
   setEditCode,
   setNewFunctionBaseImage,
@@ -106,7 +107,7 @@ const FunctionsPanelCodeView = ({
           <div className="code__existing-image">
             <RadioButtons
               className="radio-buttons__block"
-              elements={codeOptions}
+              elements={generateCodeOptions(mode)}
               onChangeCallback={handleImageTypeChange}
               selectedValue={imageType}
             />
@@ -250,6 +251,7 @@ FunctionsPanelCodeView.propTypes = {
   handleHandlerOnBlur: PropTypes.func.isRequired,
   handleImageTypeChange: PropTypes.func.isRequired,
   imageType: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
   setData: PropTypes.func.isRequired,
   setEditCode: PropTypes.func.isRequired,
   setNewFunctionBaseImage: PropTypes.func.isRequired,

@@ -49,7 +49,8 @@ import {
   GET_FUNCTION_WITH_HASH_SUCCESS,
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
-  PANEL_DEFAULT_ACCESS_KEY
+  PANEL_DEFAULT_ACCESS_KEY,
+  SET_NEW_FUNCTION_FORCE_BUILD
 } from '../constants'
 
 const initialState = {
@@ -360,6 +361,14 @@ export default (state = initialState, { type, payload }) => {
             ...state.newFunction.spec,
             error_stream: payload
           }
+        }
+      }
+    case SET_NEW_FUNCTION_FORCE_BUILD:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          skip_deployed: payload
         }
       }
     case SET_NEW_FUNCTION_GRAPH:

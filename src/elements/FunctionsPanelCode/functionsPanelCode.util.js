@@ -1,3 +1,5 @@
+import { PANEL_CREATE_MODE } from '../../constants'
+
 export const entryOptions = [{ label: 'Source code', id: 'source-code' }]
 
 export const DEFAULT_ENTRY = 'source-code'
@@ -11,8 +13,9 @@ export const sourceCodeInBase64 = {
 
 export const NEW_IMAGE = 'newImage'
 export const EXISTING_IMAGE = 'existingImage'
+export const FORCE_BUILD = 'forceBuild'
 
-export const codeOptions = [
+export const generateCodeOptions = mode => [
   {
     value: EXISTING_IMAGE,
     label: 'Use an existing image'
@@ -20,5 +23,12 @@ export const codeOptions = [
   {
     value: NEW_IMAGE,
     label: 'Build a new image'
+  },
+  {
+    value: FORCE_BUILD,
+    label: 'Force build',
+    tip:
+      'When enabled this forces an image rebuild, if not the same image is used.',
+    hidden: mode === PANEL_CREATE_MODE
   }
 ]

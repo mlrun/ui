@@ -80,7 +80,7 @@
   display: block;
   width: 200px;
 
-  div:first-child {
-    margin: 10px 0 50px 0;
+  div:not(:last-child) {
+    margin: 10px 0 43px 0;
   }
 }

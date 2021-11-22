@@ -29,6 +29,7 @@ const FunctionsPanelCode = ({
   setNewFunctionBuildImage,
   setNewFunctionCommands,
   setNewFunctionDefaultClass,
+  setNewFunctionForceBuild,
   setNewFunctionHandler,
   setNewFunctionImage,
   setNewFunctionSourceCode,
@@ -159,8 +160,8 @@ const FunctionsPanelCode = ({
     }
   }
 
-  const handleImageTypeChange = imageType => {
-    if (imageType === EXISTING_IMAGE) {
+  const handleImageTypeChange = type => {
+    if (type === EXISTING_IMAGE) {
       if (mode === PANEL_CREATE_MODE) {
         resetNewFunctionCodeCustomImage()
         setData(state => ({
@@ -183,14 +184,14 @@ const FunctionsPanelCode = ({
             ]
         }))
       }
-
       setNewFunctionImage(
         data.image ||
           appStore.frontendSpec?.default_function_image_by_kind?.[
             functionsStore.newFunction.kind
           ]
       )
-    } else {
+      setNewFunctionForceBuild(false)
+    } else if (type === NEW_IMAGE) {
       const buildImage = (
         appStore.frontendSpec?.function_deployment_target_image_template || ''
       )
@@ -223,6 +224,7 @@ const FunctionsPanelCode = ({
             ],
           build_image: state.build_image || buildImage
         }))
+        setNewFunctionForceBuild(false)
       }
 
       setNewFunctionCommands(
@@ -240,9 +242,11 @@ const FunctionsPanelCode = ({
           ]
       )
       setNewFunctionBuildImage(data.build_image || buildImage)
+    } else {
+      setNewFunctionForceBuild(true)
     }
 
-    setImageType(imageType)
+    setImageType(type)
     setValidation(state => ({
       ...state,
       isCodeImageValid: true,
@@ -260,6 +264,7 @@ const FunctionsPanelCode = ({
       handleHandlerOnBlur={handleHandlerOnBlur}
       handleImageTypeChange={handleImageTypeChange}
       imageType={imageType}
+      mode={mode}
       setData={setData}
       setEditCode={setEditCode}
       setValidation={setValidation}
