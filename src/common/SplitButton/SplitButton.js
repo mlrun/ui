@@ -1,7 +1,11 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import { isEmpty } from 'lodash'
 
 import Button from '../Button/Button'
+import OptionsMenu from '../OptionsMenu/OptionsMenu'
 import SelectOption from '../../elements/SelectOption/SelectOption'
+
+import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick'
 
 import { MAIN_SPLIT_BUTTON, ADDITIONAL_SPLIT_BUTTON } from '../../types'
 import { TERTIARY_BUTTON } from '../../constants'
@@ -22,19 +26,13 @@ const SplitButton = ({ mainButton, additionalButton }) => {
 
   const [isBodyOpen, setIsBodyOpen] = useState(false)
   const mainRef = useRef()
+  useDetectOutsideClick(mainRef, () => setIsBodyOpen(false))
 
-  const handleDocumentClick = useCallback(
-    event => {
-      if (
-        event.target &&
-        !mainRef.current?.contains(event.target) &&
-        isBodyOpen
-      ) {
-        setIsBodyOpen(false)
-      }
-    },
-    [isBodyOpen]
-  )
+  const handleScroll = event => {
+    if (!event.target.closest('.options-menu')) {
+      setIsBodyOpen(false)
+    }
+  }
 
   const handleMainAction = () => {
     mainAction()
@@ -42,14 +40,13 @@ const SplitButton = ({ mainButton, additionalButton }) => {
   }
 
   useEffect(() => {
-    if (mainRef.current) {
-      document.addEventListener('click', handleDocumentClick)
-
-      return () => {
-        document.removeEventListener('click', handleDocumentClick)
-      }
+    if (isBodyOpen) {
+      window.addEventListener('scroll', handleScroll, true)
     }
-  }, [handleDocumentClick, mainRef])
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true)
+    }
+  }, [isBodyOpen])
 
   return (
     <div className="split-btn" ref={mainRef}>
@@ -65,8 +62,8 @@ const SplitButton = ({ mainButton, additionalButton }) => {
           />
         </div>
       </div>
-      {isBodyOpen && (
-        <div className="split-btn__body" onClick={() => setIsBodyOpen(false)}>
+      {!isEmpty(options) && (
+        <OptionsMenu show={isBodyOpen} ref={mainRef}>
           {options.map(option => {
             return (
               <SelectOption
@@ -75,11 +72,11 @@ const SplitButton = ({ mainButton, additionalButton }) => {
                 key={option.id}
                 onClick={onSelectOption}
                 selectType=""
-                selectedId={selectedOption.id}
+                selectedId={selectedOption?.id}
               />
             )
           })}
-        </div>
+        </OptionsMenu>
       )}
     </div>
   )

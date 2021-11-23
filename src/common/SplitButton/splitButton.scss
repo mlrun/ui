@@ -61,19 +61,4 @@
     height: 100%;
     color: $gunsmoke;
   }
-
-  &__body {
-    position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
-    z-index: 6;
-    min-width: 100%;
-    max-height: 250px;
-    overflow-y: auto;
-    color: $mulledWineTwo;
-    background-color: $white;
-    border: $primaryBorder;
-    border-radius: 2px;
-    box-shadow: $filterShadow;
-  }
 }
