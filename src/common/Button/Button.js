@@ -36,7 +36,7 @@ Button.defaultProps = {
 
 Button.propTypes = {
   className: PropTypes.string,
-  icon: PropTypes.object,
+  icon: PropTypes.element,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   tooltip: PropTypes.string,
   variant: BUTTON_VARIANTS
