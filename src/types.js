@@ -109,3 +109,20 @@ export const CONFIRM_DIALOG_BUTTON = PropTypes.shape({
   label: PropTypes.string.isRequired,
   variant: PropTypes.string.isRequired
 })
+
+export const MAIN_SPLIT_BUTTON = PropTypes.shape({
+  className: PropTypes.string,
+  icon: PropTypes.element,
+  label: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  variant: BUTTON_VARIANTS
+})
+
+export const ADDITIONAL_SPLIT_BUTTON = PropTypes.shape({
+  className: PropTypes.string,
+  icon: PropTypes.element,
+  options: SELECT_OPTIONS,
+  onSelectOption: PropTypes.func.isRequired,
+  selectedOption: SELECT_OPTION,
+  variant: BUTTON_VARIANTS
+})

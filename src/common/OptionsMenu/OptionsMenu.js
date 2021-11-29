@@ -7,6 +7,7 @@ import PopUpDialog from '../PopUpDialog/PopUpDialog'
 import './optionsMenu.scss'
 
 const OptionsMenu = React.forwardRef(({ children, show, timeout }, ref) => {
+  const { width: dropdownWidth } = ref?.current?.getBoundingClientRect() || {}
   return (
     <CSSTransition
       in={show}
@@ -20,6 +21,7 @@ const OptionsMenu = React.forwardRef(({ children, show, timeout }, ref) => {
           element: ref,
           position: 'bottom-right'
         }}
+        style={{ width: `${dropdownWidth}px` }}
       >
         <ul className="options-menu__body">{children}</ul>
       </PopUpDialog>
