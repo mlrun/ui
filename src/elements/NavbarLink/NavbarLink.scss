@@ -1,0 +1,56 @@
+@import '../../scss/colors.scss';
+
+.nav-link {
+  margin-bottom: 10px;
+
+  &__button {
+    &.btn {
+      background-color: transparent;
+      border: 2px solid transparent;
+      color: $poloBlue;
+      cursor: pointer;
+      font-weight: normal;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+
+      svg {
+        width: 20px;
+        height: 20px;
+        & * {
+          fill: $poloBlue;
+        }
+      }
+
+      &.active {
+        background-color: $malibu;
+        color: $white;
+        cursor: default;
+        svg {
+          & * {
+            fill: $white;
+          }
+        }
+      }
+    }
+
+    &-icon {
+      flex: 0 0 25px;
+    }
+
+    &:hover {
+      &.btn {
+        &:not(:disabled):not([class*='active']) {
+          background-color: transparent;
+          color: $poloBlue;
+          border-color: $poloBlue;
+
+          svg {
+            & * {
+              fill: $poloBlue;
+            }
+          }
+        }
+      }
+    }
+  }
+}

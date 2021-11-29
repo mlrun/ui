@@ -57,6 +57,11 @@ const App = () => {
               render={routeProps => <Project {...routeProps} />}
             />
             <Route
+              path="/projects/:projectName/monitor"
+              exact
+              render={routeProps => <Project {...routeProps} />}
+            />
+            <Route
               exact
               path="/projects/:projectName/settings/:pageTab"
               render={routeProps => <ProjectSettings {...routeProps} />}

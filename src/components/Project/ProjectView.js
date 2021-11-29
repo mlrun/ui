@@ -20,7 +20,6 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import ProjectName from './ProjectName/ProjectName'
 import ProjectDescription from './ProjectDescription/ProjectDescription'
 import ProjectGoals from './ProjectGoals/ProjectGoals'
-import ProjectLinks from './ProjectLinks/ProjectLinks'
 import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
@@ -232,8 +231,6 @@ const ProjectView = React.forwardRef(
                   />
                 </div>
               </div>
-              <div className="general-info__divider" />
-              <ProjectLinks links={links} />
             </div>
             <div className="main-info">
               <div className="main-info__toolbar">

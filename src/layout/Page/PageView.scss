@@ -1,0 +1,9 @@
+.page-view {
+  &__container {
+    display: flex;
+    position: relative;
+    width: 100%;
+    margin-top: 64px;
+    justify-content: flex-end;
+  }
+}

@@ -1,33 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-const ProjectLinks = ({ links }) => {
-  return (
-    <div className="general-info__links">
-      <div className="general-info__links-label">Quick Links</div>
-      {links.map(({ label, link, externalLink }) => {
-        if (externalLink) {
-          return (
-            <a
-              href={link}
-              target="_top"
-              className="link general-info__links-link"
-              key={label}
-            >
-              {label}
-            </a>
-          )
-        }
+import NavbarLink from '../../../elements/NavbarLink/NavbarLink'
 
-        return (
-          <Link key={label} className="link general-info__links-link" to={link}>
-            {label}
-          </Link>
-        )
-      })}
-    </div>
-  )
+const ProjectLinks = ({ links }) => {
+  return links.map(link => <NavbarLink key={link.label} {...link} />)
 }
 
 ProjectLinks.propTypes = {

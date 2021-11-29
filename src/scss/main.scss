@@ -8,11 +8,16 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100vh;
+}
+
 #root {
   z-index: 1;
   display: flex;
   flex: 1;
   width: 100%;
+  height: inherit;
   isolation: isolate;
 }
 
@@ -32,12 +37,13 @@
   display: flex;
   flex: 1;
   width: 100%;
+  height: inherit;
 }
 
 body {
   display: flex;
   flex: 1;
-  height: 100vh;
+  height: inherit;
   overflow-x: hidden;
   font-weight: normal;
   font-size: 15px;
@@ -52,13 +58,13 @@ body {
 main {
   position: relative;
   display: flex;
-  flex: 1;
+  flex: 0 0 100%;
   flex-flow: column nowrap;
   height: auto;
   overflow: auto;
-
-  &:not(:first-child) {
-    margin-top: 64px;
+  transition: flex 0.3s ease-in-out;
+  &.pinned {
+    flex: 0 0 calc(100% - #{$navbarWidth});
   }
 }
 
@@ -84,35 +90,35 @@ button {
   }
 }
 
-[class^=state-completed],
-[class^=state-ready],
-[class^=state-succeeded],
-[class^=state-active],
-[class^=state-created],
-[class^=state-info] {
+[class^='state-completed'],
+[class^='state-ready'],
+[class^='state-succeeded'],
+[class^='state-active'],
+[class^='state-created'],
+[class^='state-info'] {
   @include statusState($brightTurquoise);
 }
 
-[class^=state-all] {
+[class^='state-all'] {
   @include statusState(transparent);
 }
 
-[class^=state-warn] {
+[class^='state-warn'] {
   @include statusState($grandis);
 }
 
-[class^=state-deploying],
-[class^=state-build],
-[class^=state-pending],
-[class^=state-running] {
+[class^='state-deploying'],
+[class^='state-build'],
+[class^='state-pending'],
+[class^='state-running'] {
   @include statusState($pictonBlue);
 }
 
-[class^=state-failed],
-[class^=state-fail],
-[class^=state-error],
-[class^=state-broken],
-[class^=state-aborted] {
+[class^='state-failed'],
+[class^='state-fail'],
+[class^='state-error'],
+[class^='state-broken'],
+[class^='state-aborted'] {
   @include statusState($burntSienna);
 }
 
