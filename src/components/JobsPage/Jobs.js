@@ -272,28 +272,31 @@ const Jobs = ({
     })
   }
 
-  const handleEditScheduleJob = editableItem => {
-    fetchScheduledJobAccessKey(match.params.projectName, editableItem.name)
-      .then(result => {
-        setEditableItem({
-          ...editableItem,
-          scheduled_object: {
-            ...editableItem.scheduled_object,
-            credentials: {
-              access_key: result.data.credentials.access_key
+  const handleEditScheduleJob = useCallback(
+    editableItem => {
+      fetchScheduledJobAccessKey(match.params.projectName, editableItem.name)
+        .then(result => {
+          setEditableItem({
+            ...editableItem,
+            scheduled_object: {
+              ...editableItem.scheduled_object,
+              credentials: {
+                access_key: result.data.credentials.access_key
+              }
             }
-          }
+          })
         })
-      })
-      .catch(() => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          retry: () => handleEditScheduleJob(editableItem),
-          message: 'Failed to fetch job access key'
+        .catch(() => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            retry: () => handleEditScheduleJob(editableItem),
+            message: 'Failed to fetch job access key'
+          })
         })
-      })
-  }
+    },
+    [fetchScheduledJobAccessKey, match.params.projectName, setNotification]
+  )
 
   const pageData = useCallback(
     generatePageData(
@@ -316,6 +319,7 @@ const Jobs = ({
       handleRemoveFunctionLogs
     ),
     [
+      match.params.projectName,
       match.params.pageTab,
       match.params.workflowId,
       appStore.frontendSpec.jobs_dashboard_url,

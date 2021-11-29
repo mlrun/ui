@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import SelectOption from '../../elements/SelectOption/SelectOption'
+import SplitButton from '../SplitButton/SplitButton'
 
-import { ReactComponent as Arrow } from '../../images/back-arrow.svg'
+import { ReactComponent as ArrowIcon } from '../../images/back-arrow.svg'
 
 import './sort.scss'
 
@@ -15,9 +15,7 @@ const Sort = ({
   selectedId,
   setIsDescendingOrder
 }) => {
-  const [isBodyOpen, setIsBodyOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState({})
-  const labelRef = useRef(null)
+  const [selectedOption, setSelectedOption] = useState(null)
   const arrowDirectionClassName = classNames(
     isDescendingOrder ? 'sort_down' : 'sort_up'
   )
@@ -26,54 +24,21 @@ const Sort = ({
     setSelectedOption(options.find(option => option.id === selectedId))
   }, [options, selectedId])
 
-  const handleDocumentClick = useCallback(
-    event => {
-      if (
-        event.target &&
-        !labelRef.current?.contains(event.target) &&
-        isBodyOpen
-      ) {
-        setIsBodyOpen(false)
-      }
-    },
-    [isBodyOpen]
-  )
-
-  useEffect(() => {
-    if (labelRef.current) {
-      document.addEventListener('click', handleDocumentClick)
-
-      return () => {
-        document.removeEventListener('click', handleDocumentClick)
-      }
-    }
-  }, [handleDocumentClick, labelRef])
-
   return (
     <div className="sort">
-      <div className="sort__header">
-        <div onClick={() => setIsBodyOpen(state => !state)} ref={labelRef}>
-          {selectedOption.label}
-        </div>
-        <button onClick={() => setIsDescendingOrder(state => !state)}>
-          <Arrow className={arrowDirectionClassName} />
-        </button>
-      </div>
-      {isBodyOpen && (
-        <div className="sort__body" onClick={() => setIsBodyOpen(false)}>
-          {options.map(option => {
-            return (
-              <SelectOption
-                item={option}
-                key={option.id}
-                onClick={onSelectOption}
-                selectType=""
-                selectedId={selectedOption.id}
-              />
-            )
-          })}
-        </div>
-      )}
+      <SplitButton
+        mainButton={{
+          icon: <ArrowIcon className={arrowDirectionClassName} />,
+          label: selectedOption?.label ?? 'Sort',
+          onClick: () => setIsDescendingOrder(state => !state)
+        }}
+        additionalButton={{
+          label: '',
+          onSelectOption,
+          options,
+          selectedOption
+        }}
+      />
     </div>
   )
 }
