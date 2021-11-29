@@ -34,7 +34,7 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     &-text {
       width: 100%;
@@ -58,8 +58,14 @@
     margin-top: 20px;
   }
 
-  &__btn_cancel {
-    margin: 0 10px;
+  &__btn {
+    &_cancel {
+      margin: 0 10px;
+    }
+
+    &_close {
+      margin-left: auto;
+    }
   }
 
   &__form-input {

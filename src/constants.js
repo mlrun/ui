@@ -482,3 +482,7 @@ export const validation = {
   ONLY_AT_THE_BEGINNING: 'Only at the beginning',
   VALID_CHARACTERS: 'Valid characters'
 }
+
+/*=========== STATUS CODES =============*/
+
+export const CONFLICT = 409

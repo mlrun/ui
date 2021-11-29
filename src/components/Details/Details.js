@@ -36,6 +36,7 @@ const Details = ({
   filtersStore,
   getCloseDetailsLink,
   handleCancel,
+  handleRefresh,
   isDetailsScreen,
   match,
   pageData,
@@ -328,6 +329,7 @@ const Details = ({
       detailsStore={detailsStore}
       getCloseDetailsLink={getCloseDetailsLink}
       handleCancel={handleCancel}
+      handleRefresh={handleRefresh}
       handleShowWarning={handleShowWarning}
       isDetailsScreen={isDetailsScreen}
       leavePage={leavePage}
@@ -346,6 +348,7 @@ Details.defaultProps = {
   applyDetailsChanges: () => {},
   cancelRequest: () => {},
   getCloseDetailsLink: null,
+  handleRefresh: () => {},
   isDetailsScreen: false,
   item: {},
   retryRequest: () => {},
@@ -368,6 +371,7 @@ Details.propTypes = {
   ).isRequired,
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func,
   isDetailsScreen: PropTypes.bool,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,

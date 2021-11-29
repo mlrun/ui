@@ -92,13 +92,15 @@ export const isUrlInputValid = (
     dataSourceKind === CSV
       ? /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?(?<!\/)$/
       : /^artifacts\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
+  const defaultValidation =
+    pathInputValue.length > 0 && /.*?\/(.*?)/.test(pathInputValue)
 
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
       return regExp.test(pathInputValue)
     default:
       return dataSourceKind === CSV
-        ? pathInputValue.length > 0 && !pathInputValue.endsWith('/')
-        : pathInputValue.length > 0
+        ? defaultValidation && !pathInputValue.endsWith('/')
+        : defaultValidation
   }
 }

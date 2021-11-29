@@ -72,7 +72,6 @@ const Jobs = ({
   setFilters,
   setLoading,
   setNotification,
-  subPage,
   workflowsStore
 }) => {
   const [jobs, setJobs] = useState([])
@@ -105,6 +104,14 @@ const Jobs = ({
     clearTimeout(fetchFunctionLogsTimeout.current)
     removeFunctionLogs()
   }, [fetchFunctionLogsTimeout, removeFunctionLogs])
+
+  const handleRemoveScheduledJob = schedule => {
+    removeScheduledJob(match.params.projectName, schedule.name).then(() => {
+      refreshJobs()
+    })
+
+    setConfirmData(null)
+  }
 
   const handleMonitoring = item => {
     let redirectUrl = appStore.frontendSpec.jobs_dashboard_url
@@ -213,9 +220,7 @@ const Jobs = ({
           },
           spec: {
             function: job.function,
-            handler:
-              Object.values(functionData?.spec?.entry_points ?? {})[0]?.name ??
-              '',
+            handler: job?.handler ?? '',
             hyperparams: job.hyperparams,
             input_path: job.input_path ?? '',
             inputs: job.inputs ?? {},
@@ -343,16 +348,33 @@ const Jobs = ({
     [fetchJobs, match.params.pageTab, match.params.projectName, setNotification]
   )
 
-  const handleRemoveScheduledJob = useCallback(
-    schedule => {
-      removeScheduledJob(match.params.projectName, schedule.name).then(() => {
-        refreshJobs(filtersStore)
+  const fetchCurrentJob = useCallback(() => {
+    fetchJob(match.params.projectName, match.params.jobId)
+      .then(job => {
+        setSelectedJob(parseJob(job))
       })
-
-      setConfirmData(null)
-    },
-    [filtersStore, match.params.projectName, refreshJobs, removeScheduledJob]
-  )
+      .catch(error => {
+        setNotification({
+          status: error?.response?.status || 400,
+          id: Math.random(),
+          message: 'Failed to fetch job'
+        })
+        history.push(
+          match.url
+            .split('/')
+            .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
+            .join('/')
+        )
+      })
+  }, [
+    fetchJob,
+    history,
+    match.params.jobId,
+    match.params.projectName,
+    match.path,
+    match.url,
+    setNotification
+  ])
 
   useEffect(() => {
     if (!isEmpty(selectedJob) && match.params.pageTab === MONITOR_JOBS_TAB) {
@@ -390,23 +412,7 @@ const Jobs = ({
       match.params.jobId &&
       (isEmpty(selectedJob) || match.params.jobId !== selectedJob.uid)
     ) {
-      fetchJob(match.params.projectName, match.params.jobId)
-        .then(job => {
-          setSelectedJob(parseJob(job))
-        })
-        .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch job'
-          })
-          history.push(
-            match.url
-              .split('/')
-              .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
-              .join('/')
-          )
-        })
+      fetchCurrentJob()
     } else if (!isEmpty(selectedJob) && !match.params.jobId) {
       setSelectedJob({})
       removeJob()
@@ -441,7 +447,7 @@ const Jobs = ({
       removeFunction()
     }
   }, [
-    fetchJob,
+    fetchCurrentJob,
     getFunctionWithHash,
     history,
     match.params.functionHash,
@@ -604,6 +610,7 @@ const Jobs = ({
             actionsMenu={pageData.actionsMenu}
             detailsMenu={pageData.details.menu}
             handleCancel={handleCancel}
+            handleRefresh={fetchCurrentJob}
             isDetailsScreen
             match={match}
             pageData={pageData}
@@ -658,14 +665,9 @@ const Jobs = ({
   )
 }
 
-Jobs.defaultProps = {
-  subPage: ''
-}
-
 Jobs.propTypes = {
   history: PropTypes.shape({}).isRequired,
-  match: PropTypes.shape({}).isRequired,
-  subPage: PropTypes.string
+  match: PropTypes.shape({}).isRequired
 }
 
 export default connect(

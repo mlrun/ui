@@ -489,7 +489,9 @@ export const generateRequestData = (
   match,
   selectedFunction,
   isFunctionTemplate,
-  defaultFunc
+  defaultFunc,
+  mode,
+  defaultHandler
 ) => {
   const func = isFunctionTemplate
     ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
@@ -519,7 +521,10 @@ export const generateRequestData = (
   const taskSpec = {
     ...jobsStore.newJob.task.spec,
     function: func,
-    handler: panelState.currentFunctionInfo.method,
+    handler:
+      mode === PANEL_EDIT_MODE
+        ? defaultHandler
+        : panelState.currentFunctionInfo.method,
     input_path: panelState.inputPath,
     output_path: panelState.outputPath
   }

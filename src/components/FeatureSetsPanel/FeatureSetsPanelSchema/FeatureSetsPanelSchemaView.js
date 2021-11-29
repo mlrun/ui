@@ -53,7 +53,9 @@ const FeatureSetsPanelSchemaView = ({
             value={data.entities}
           />
           <Input
+            floatingLabel
             invalid={!validation.isTimestampKeyValid}
+            label="Timestamp key"
             onChange={timestamp_key =>
               setData(state => ({ ...state, timestamp_key }))
             }
@@ -65,7 +67,6 @@ const FeatureSetsPanelSchemaView = ({
                 setNewFeatureSetSchemaTimestampKey(event.target.value)
               }
             }}
-            placeholder="Timestamp key"
             required={featureStore.newFeatureSet.spec.targets.some(target =>
               Boolean(target.time_partitioning_granularity)
             )}

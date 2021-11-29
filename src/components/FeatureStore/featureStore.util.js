@@ -312,7 +312,8 @@ export const generatePageData = (
   handleRemoveRequestData,
   getPopUpTemplate,
   isTablePanelOpen,
-  isSelectedItem
+  isSelectedItem,
+  isDemoMode
 ) => {
   let data = {
     details: {
@@ -333,6 +334,7 @@ export const generatePageData = (
     data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
+    data.hidePageActionMenu = true
     data.filters = featuresFilters
     data.tableHeaders = generateFeaturesTableHeaders(isTablePanelOpen)
     data.tablePanel = getFeaturesTablePanel()
@@ -348,6 +350,7 @@ export const generatePageData = (
       'No features yet. Go to "Feature Sets" tab to create your first feature set.'
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
+    data.hidePageActionMenu = !isDemoMode
     data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
@@ -475,7 +478,11 @@ export const navigateToDetailsPane = (
     const selectedItem = content.find(contentItem => {
       const searchKey = contentItem.name ? 'name' : 'db_key'
 
-      if ([FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)) {
+      if (
+        [FEATURES_TAB, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
+          match.params.pageTab
+        )
+      ) {
         return (
           contentItem[searchKey] === name &&
           (contentItem.tag === tag || contentItem.uid === tag)

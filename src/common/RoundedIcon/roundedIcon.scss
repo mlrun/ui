@@ -1,0 +1,26 @@
+@import '../../scss/colors.scss';
+
+.round-icon-cp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    & > * {
+      display: inline-flex;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: $mulledWineThree;
+      border-radius: 20px;
+    }
+  }
+}

@@ -70,7 +70,8 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS
+  SET_PROJECT_SECRETS,
+  CONFLICT
 } from '../constants'
 
 const projectsAction = {
@@ -100,7 +101,12 @@ const projectsAction = {
         return result
       })
       .catch(error => {
-        dispatch(projectsAction.createProjectFailure(error.message))
+        const message =
+          error.response.status === CONFLICT
+            ? `Project name "${postData.metadata.name}" already exists`
+            : error.message
+
+        dispatch(projectsAction.createProjectFailure(message))
       })
   },
   createProjectBegin: () => ({ type: CREATE_PROJECT_BEGIN }),
