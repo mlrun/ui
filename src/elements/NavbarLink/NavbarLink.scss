@@ -12,8 +12,11 @@
       font-weight: normal;
       flex-flow: row nowrap;
       justify-content: flex-start;
+      min-height: 48px;
+      width: 100%;
 
       svg {
+        flex: 0 0 20px;
         width: 20px;
         height: 20px;
         & * {
@@ -25,6 +28,7 @@
         background-color: $malibu;
         color: $white;
         cursor: default;
+
         svg {
           & * {
             fill: $white;
@@ -33,11 +37,12 @@
       }
     }
 
-    &-icon {
-      flex: 0 0 25px;
-    }
+    // &-icon {
+    //   flex: 0 0 25px;
+    // }
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       &.btn {
         &:not(:disabled):not([class*='active']) {
           background-color: transparent;

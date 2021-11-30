@@ -16,7 +16,8 @@
   width: $navbarWidth;
   z-index: 3;
 
-  &:hover {
+  &:hover,
+  &:focus-within {
     transform: translateX(0);
   }
 
@@ -80,6 +81,7 @@
     justify-content: space-between;
     padding: 0.5rem 1rem;
     position: relative;
+    width: 100%;
     z-index: 2;
   }
 

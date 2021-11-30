@@ -11,7 +11,6 @@ import localStorageService from '../../utils/localStorageService'
 
 import { ReactComponent as PinIcon } from '../../images/pin-icon.svg'
 import { ReactComponent as UnPinIcon } from '../../images/unpin-icon.svg'
-
 import { ReactComponent as SettingsIcon } from '../../images/pref-icon.svg'
 
 import './Navbar.scss'
