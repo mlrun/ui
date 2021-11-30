@@ -4,3 +4,12 @@ export const isUrlValid = (match, tabs, history) => {
     history.replace([...match.url.split('/').slice(0, -1), tabs[0]].join('/'))
   }
 }
+
+export const isProjectValid = (history, projectsNames, currentProjectName) => {
+  if (
+    projectsNames.length > 0 &&
+    !projectsNames.some(project => project === currentProjectName)
+  ) {
+    history.push('/projects')
+  }
+}

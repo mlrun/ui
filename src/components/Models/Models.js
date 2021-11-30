@@ -31,7 +31,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { isUrlValid } from '../../utils/isUrlValid'
+import { isUrlValid } from '../../utils/handleRedirect'
 
 const Models = ({
   artifactsStore,

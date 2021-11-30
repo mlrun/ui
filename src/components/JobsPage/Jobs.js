@@ -39,7 +39,7 @@ import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
 import functionsActions from '../../actions/functions'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
-import { isUrlValid } from '../../utils/isUrlValid'
+import { isUrlValid } from '../../utils/handleRedirect'
 
 const Jobs = ({
   abortJob,
