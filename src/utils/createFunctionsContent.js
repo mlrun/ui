@@ -10,6 +10,7 @@ const createFunctionsContent = (functions, isSelectedItem, params) =>
     return params.pageTab === REAL_TIME_PIPELINES_TAB
       ? {
           name: {
+            id: `name.${identifierUnique}`,
             value: func.nuclio_name || func.name,
             class: 'functions_medium',
             identifier: getFunctionIdentifier(func),
@@ -21,53 +22,61 @@ const createFunctionsContent = (functions, isSelectedItem, params) =>
             }
           },
           kind: {
+            id: `kind.${identifierUnique}`,
             value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
             class: 'functions_big',
             type: 'type'
           }
         }
       : {
-          name: {id: `name.${identifierUnique}`,
+          name: {
+            id: `name.${identifierUnique}`,
             value: func.name,
             class: 'functions_medium',
             identifier: getFunctionIdentifier(func),
             identifierUnique: identifierUnique
-      },
+          },
           kind: {
-          id: `kind.${identifierUnique}`,
+            id: `kind.${identifierUnique}`,
             value: func.type,
             class: 'functions_small',
             type: 'type',
             hidden: isSelectedItem
           },
-          hash: {id: `hash.${identifierUnique}`,
+          hash: {
+            id: `hash.${identifierUnique}`,
             value: func.hash,
             class: 'functions_small',
             type: 'hash',
             hidden: isSelectedItem
           },
           updated: {
-            id: `updated.${identifierUnique}`,value: formatDatetime(new Date(func.updated), 'N/A'),
+            id: `updated.${identifierUnique}`,
+            value: formatDatetime(new Date(func.updated), 'N/A'),
             class: 'functions_small',
             type: 'date',
             hidden: isSelectedItem
           },
           command: {
-            id: `command.${identifierUnique}`,value: func.command,
+            id: `command.${identifierUnique}`,
+            value: func.command,
             class: 'functions_big',
             hidden: isSelectedItem
           },
           image: {
-            id: `image.${identifierUnique}`,value: func.image,
+            id: `image.${identifierUnique}`,
+            value: func.image,
             class: 'functions_big',
             hidden: isSelectedItem
           },
-          description: {id: `description.${identifierUnique}`,
+          description: {
+            id: `description.${identifierUnique}`,
             value: func.description,
             class: 'functions_small',
             hidden: isSelectedItem
           },
-          tag: {id: `tag.${identifierUnique}`,
+          tag: {
+            id: `tag.${identifierUnique}`,
             value: func.tag,
             type: 'hidden',
             hidden: isSelectedItem

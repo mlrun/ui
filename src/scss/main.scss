@@ -259,3 +259,39 @@ textarea {
     }
   }
 }
+
+.graph-container {
+  display: flex;
+  flex: 1 1;
+
+  .graph-view {
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    background-color: $gallery;
+  }
+
+  .graph-pane {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    min-width: 350px;
+    overflow: hidden;
+    background: $white;
+    border: $secondaryBorder;
+    box-shadow: 0 0 30px rgba($black, 0.15);
+
+    &.scrollable {
+      overflow-y: auto;
+    }
+
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  }
+}

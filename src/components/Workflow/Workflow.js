@@ -191,7 +191,7 @@ const Workflow = ({
           </Tooltip>
         </div>
       </div>
-      <div className="workflow-content">
+      <div className="graph-container workflow-content">
         {workflowsViewMode === 'graph' ? (
           <>
             <div className={graphViewClassNames}>

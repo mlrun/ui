@@ -7,10 +7,13 @@ import { forEach, map, concat } from 'lodash'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
+import CodeBlock from '../../common/CodeBlock/CodeBlock'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
+import { ReactComponent as CloseIcon } from '../../images/close.svg'
 
 import './pipeline.scss'
 
@@ -18,12 +21,58 @@ const Pipeline = ({ content, match }) => {
   const graphViewClassNames = classnames('graph-view')
   const [elements, setElements] = useState([])
   const [pipeline, setPipeline] = useState({})
+  const [selectedStep, setSelectedStep] = useState({})
+  const [selectedStepData, setSelectedStepData] = useState([])
+  const [stepIsSelected, setStepIsSelected] = useState(false)
 
   useEffect(() => {
     setPipeline(
       content.find(contentItem => contentItem.hash === match.params.pipelineId)
     )
   }, [content, match.params.pipelineId])
+
+  useEffect(() => {
+    if (selectedStep.data) {
+      const selectedStepData = selectedStep.data.originalData
+
+      setSelectedStepData([
+        {
+          label: 'Type:',
+          value: selectedStepData.kind
+        },
+        {
+          label: 'After:',
+          value: selectedStepData.after?.[0]
+        },
+        {
+          label: 'Class name:',
+          value: selectedStepData.class_name
+        },
+        {
+          label: 'Function name:',
+          value: selectedStepData.function
+        },
+        {
+          label: 'Handler:',
+          value: selectedStepData.handler
+        },
+        {
+          label: 'Arguments:',
+          value: selectedStepData.class_args,
+          type: 'codeblock'
+        },
+        {
+          label: 'Input path:',
+          value: ''
+        },
+        {
+          label: 'Result path:',
+          value: ''
+        }
+      ])
+    }
+    setStepIsSelected(Boolean(selectedStep.id))
+  }, [selectedStep])
 
   useEffect(() => {
     const graph = pipeline?.graph
@@ -60,8 +109,13 @@ const Pipeline = ({ content, match }) => {
           id: stepName,
           data: {
             label: stepName,
-            subLabel: subLabel
+            subLabel: subLabel,
+            originalData: step
           },
+          className: classnames(
+            selectedStep.id === stepName && 'selected',
+            'selectable'
+          ),
           position: { x: 0, y: 0 }
         })
 
@@ -81,7 +135,11 @@ const Pipeline = ({ content, match }) => {
           forEach(step.routes, (routeInner, routeInnerName) => {
             nodes.push({
               id: routeInnerName,
-              data: { label: routeInnerName },
+              data: { label: routeInnerName, originalData: routeInner },
+              className: classnames(
+                selectedStep.id === routeInnerName && 'selected',
+                'selectable'
+              ),
               position: { x: 0, y: 0 }
             })
 
@@ -117,7 +175,7 @@ const Pipeline = ({ content, match }) => {
 
       setElements(getLayoutedElements(concat(nodes, nodesEdges, errorEdges)))
     }
-  }, [pipeline])
+  }, [pipeline, selectedStep])
 
   const linkBackTitle = pipeline?.nuclio_name || pipeline?.name
 
@@ -140,10 +198,43 @@ const Pipeline = ({ content, match }) => {
           </div>
         </div>
       </div>
-      <div className="pipeline-content">
+      <div className="graph-container pipeline-content">
         <div className={graphViewClassNames}>
-          <MlReactFlow elements={elements} />
+          <MlReactFlow
+            elements={elements}
+            alignTriggerItem={stepIsSelected}
+            onElementClick={(event, element) => {
+              if (element.data?.originalData) {
+                setSelectedStep(element)
+              }
+            }}
+          />
         </div>
+        {stepIsSelected && (
+          <div className="graph-pane">
+            <div className="graph-pane__title">
+              <span>{selectedStep.id}</span>
+              <RoundedIcon
+                onClick={() => setSelectedStep({})}
+                tooltipText="Close"
+              >
+                <CloseIcon />
+              </RoundedIcon>
+            </div>
+            {selectedStepData.map(rowData => (
+              <div className="graph-pane__row" key={rowData.label}>
+                {rowData.type === 'codeblock' ? (
+                  <CodeBlock label="Arguments" codeData={rowData.value} />
+                ) : (
+                  <>
+                    <div className="graph-pane__row-label">{rowData.label}</div>
+                    <div className="graph-pane__row-value">{rowData.value}</div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

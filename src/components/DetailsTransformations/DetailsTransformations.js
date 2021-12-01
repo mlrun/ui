@@ -156,12 +156,12 @@ const DetailsTransformations = ({ selectedItem }) => {
   }, [selectedItem, selectedItemUid])
 
   return (
-    <div className="transformations-tab">
+    <div className="graph-container transformations-tab">
       <div className="graph-view">
         <MlReactFlow elements={elements} alignTriggerItem={selectedItemUid} />
       </div>
-      <div className="config-pane">
-        <div className="config-pane__title">Configuration</div>
+      <div className="graph-pane">
+        <div className="graph-pane__title">Configuration</div>
         <ConfigFunctionTemplate selectedItem={selectedItem} />
         <ConfigSource selectedItem={selectedItem} />
         <ConfigSteps
