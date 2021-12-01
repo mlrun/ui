@@ -51,7 +51,8 @@ import {
   GET_FUNCTION_WITH_HASH_BEGIN,
   GET_FUNCTION_WITH_HASH_FAILURE,
   GET_FUNCTION_WITH_HASH_SUCCESS,
-  REMOVE_FUNCTION
+  REMOVE_FUNCTION,
+  SET_NEW_FUNCTION_FORCE_BUILD
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -306,6 +307,10 @@ const functionsActions = {
   setNewFunctionErrorStream: error_stream => ({
     type: SET_NEW_FUNCTION_ERROR_STREAM,
     payload: error_stream
+  }),
+  setNewFunctionForceBuild: forceBuild => ({
+    type: SET_NEW_FUNCTION_FORCE_BUILD,
+    payload: forceBuild
   }),
   setNewFunctionGraph: graph => ({
     type: SET_NEW_FUNCTION_GRAPH,
