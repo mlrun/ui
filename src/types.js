@@ -91,7 +91,8 @@ export const RADIO_BUTTONS_ELEMENT = PropTypes.shape({
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   info: PropTypes.string,
-  tip: PropTypes.string
+  tip: PropTypes.string,
+  hidden: PropTypes.bool
 })
 
 export const RADIO_BUTTONS_ELEMENTS = PropTypes.arrayOf(RADIO_BUTTONS_ELEMENT)

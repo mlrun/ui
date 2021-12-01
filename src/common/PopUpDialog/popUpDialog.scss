@@ -34,6 +34,7 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    min-height: 30px;
     margin-bottom: 20px;
 
     &-text {
@@ -64,7 +65,9 @@
     }
 
     &_close {
-      margin-left: auto;
+      position: absolute;
+      top: 0;
+      right: -7px;
     }
   }
 
