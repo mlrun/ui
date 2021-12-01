@@ -90,13 +90,13 @@ export const getLinks = match => [
   // },
   {
     icon: <NuclioIcon />,
-    label: 'Real-time functions (Nuclio)',
+    label: 'Real-time functions',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`,
     externalLink: true
   },
   {
     icon: <APIIcon />,
-    label: 'API gateways (Nuclio)',
+    label: 'API gateways',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`,
     externalLink: true
   }

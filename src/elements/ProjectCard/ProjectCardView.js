@@ -7,12 +7,15 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 
+import { getTimeElapsedByDate } from '../../utils'
+
+import { ReactComponent as CreatedIcon } from '../../images/clock.svg'
+
 import './projectCard.scss'
 
 const ProjectCardView = React.forwardRef(
   ({ actionsMenu, project, statistics }, ref) => {
     const history = useHistory()
-
     return (
       <div
         className="project-card"
@@ -28,11 +31,26 @@ const ProjectCardView = React.forwardRef(
         <div className="project-card__general-info">
           <div className="project-card__header">
             <Tooltip
+              className="project-card__title"
               template={<TextTooltipTemplate text={project.metadata.name} />}
             >
               {project.metadata.name}
             </Tooltip>
+
+            <div className="project-card__info">
+              <CreatedIcon className="project-card__info-icon" />
+              <span>{getTimeElapsedByDate(project.metadata.created)}</span>
+            </div>
           </div>
+
+          {project.spec.owner && (
+            <div className="project-card__info f-12">
+              <span>Owner:</span>
+              <span>{project.spec.owner}</span>
+            </div>
+          )}
+        </div>
+        <div>
           {project?.spec.description && (
             <Tooltip
               className="project-card_description"

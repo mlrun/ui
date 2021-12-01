@@ -7,42 +7,105 @@
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
-  width: 438px;
-  height: 166px;
+  width: 25%;
   margin: 9px 12px;
   padding: 25px 25px 20px;
   background-color: $white;
-  border: $secondaryBorder;
-  border-radius: 4px;
+  border-radius: 8px;
+  box-shadow: $previewBoxShadowInit;
+  overflow: hidden;
   cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out;
 
-  &__statistic {
-    display: flex;
-    flex-direction: row;
+  &::before {
+    content: '';
+    background: linear-gradient(
+      90deg,
+      #d873e1 -20.43%,
+      #dd71d5 -20.42%,
+      #fc658f 48.31%,
+      #ffb971 111.56%
+    );
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 8px;
   }
 
   &__header {
     display: flex;
+    justify-content: space-between;
+    font-size: 1.25rem;
     margin-bottom: 5px;
     color: $primary;
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 21px;
+    font-weight: normal;
+    font-size: 1.25rem;
+
+    :not(:first-child) {
+      flex: 1 0 auto;
+    }
+  }
+
+  &__general-info {
+    margin-bottom: 1rem;
+  }
+
+  &__statistic {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  &__title {
+    flex: 0 1 100%;
+    margin-right: 1rem;
   }
 
   &_description {
-    color: $spunPearl;
+    color: $topaz;
     font-size: 15px;
     line-height: 18px;
   }
 
+  &__info {
+    display: flex;
+    align-items: center;
+    color: $topaz;
+    font-size: 0.625rem;
+    margin-right: 10px;
+
+    :first-child {
+      color: $spunPearl;
+      margin-right: 5px;
+    }
+
+    &-icon {
+      flex: 0 1 25px;
+    }
+
+    & * {
+      fill: $spunPearl;
+    }
+
+    &.f-12 {
+      font-size: 0.75rem;
+    }
+  }
+
   &:hover {
     box-shadow: $previewBoxShadow;
+    .project-card__actions-menu {
+      opacity: 1;
+    }
   }
 
   .project-data-card__statistics {
     &-item {
+      min-width: 65px;
       max-width: 80px;
+      margin: 0 27px;
 
       &::after {
         display: none;
@@ -60,16 +123,13 @@
       justify-content: center;
       margin-bottom: 5px;
       font-size: 32px;
-      line-height: 37px;
+      min-width: 65px;
+      min-height: 65px;
+      background-color: $wildSand;
+      border-radius: 50%;
 
-      &::after {
-        position: absolute;
-        bottom: 0;
-        width: 28px;
-        height: 1px;
-        margin: auto 0;
-        border-bottom: $dividerBorder;
-        content: '';
+      &.statistics_failed {
+        background-color: $carouselPink;
       }
     }
 
@@ -80,9 +140,11 @@
 
   &__actions-menu {
     position: absolute;
-    top: 10px;
+    top: 22px;
     right: 0;
     z-index: 4;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 
     .actions-menu {
       &__container {
