@@ -190,7 +190,6 @@ const FunctionsPanelCode = ({
             functionsStore.newFunction.kind
           ]
       )
-      setNewFunctionForceBuild(false)
     } else if (type === NEW_IMAGE) {
       const buildImage = (
         appStore.frontendSpec?.function_deployment_target_image_template || ''
@@ -204,7 +203,8 @@ const FunctionsPanelCode = ({
         setData(state => ({
           ...state,
           image: '',
-          commands: appStore.frontendSpec?.function_deployment_mlrun_command,
+          commands:
+            appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
           base_image:
             appStore.frontendSpec?.default_function_image_by_kind?.[
               functionsStore.newFunction.kind
@@ -216,7 +216,7 @@ const FunctionsPanelCode = ({
           ...state,
           commands:
             state.commands ||
-            appStore.frontendSpec?.function_deployment_mlrun_command,
+            (appStore.frontendSpec?.function_deployment_mlrun_command ?? ''),
           base_image:
             state.base_image ||
             appStore.frontendSpec?.default_function_image_by_kind?.[
@@ -224,14 +224,13 @@ const FunctionsPanelCode = ({
             ],
           build_image: state.build_image || buildImage
         }))
-        setNewFunctionForceBuild(false)
       }
 
       setNewFunctionCommands(
         data.commands.length > 0
           ? trimSplit(data.commands, '\n')
           : trimSplit(
-              appStore.frontendSpec?.function_deployment_mlrun_command,
+              appStore.frontendSpec?.function_deployment_mlrun_command ?? '',
               '\n'
             )
       )
@@ -242,8 +241,6 @@ const FunctionsPanelCode = ({
           ]
       )
       setNewFunctionBuildImage(data.build_image || buildImage)
-    } else {
-      setNewFunctionForceBuild(true)
     }
 
     setImageType(type)
@@ -271,6 +268,7 @@ const FunctionsPanelCode = ({
       setNewFunctionBaseImage={setNewFunctionBaseImage}
       setNewFunctionBuildImage={setNewFunctionBuildImage}
       setNewFunctionCommands={setNewFunctionCommands}
+      setNewFunctionForceBuild={setNewFunctionForceBuild}
       setNewFunctionImage={setNewFunctionImage}
       setNewFunctionSourceCode={setNewFunctionSourceCode}
       validation={validation}
