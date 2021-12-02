@@ -67,12 +67,12 @@ export const generateModelsDetailsMenu = selectedModel => [
   {
     label: 'features',
     id: 'features',
-    hidden: !selectedModel.item?.feature_vector
+    hidden: !selectedModel.item?.features && !selectedModel.item?.feature_vector
   },
   {
     label: 'statistics',
     id: 'statistics',
-    hidden: !selectedModel.item?.feature_vector
+    hidden: !selectedModel.item?.stats && !selectedModel.item?.feature_vector
   }
 ]
 

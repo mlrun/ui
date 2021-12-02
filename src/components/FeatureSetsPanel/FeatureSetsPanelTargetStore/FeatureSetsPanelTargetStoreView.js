@@ -107,27 +107,29 @@ const FeatureSetsPanelTargetStoreView = ({
             kind => checkboxModels.parquet.id === kind
           ) && (
             <div className="target-store__inputs-container">
-              <Input
-                density="normal"
-                floatingLabel
-                label="Path"
-                onBlur={handleOfflineKindPathOnBlur}
-                onChange={path =>
-                  setData(state => ({
-                    ...state,
-                    parquet: { ...state.parquet, path }
-                  }))
-                }
-                placeholder={data.parquet.path}
-                type="text"
-                value={data.parquet.path}
-                wrapperClassName="offline-path"
-              />
-              <CheckBox
-                item={{ id: 'partitioned', label: 'Partition' }}
-                onChange={id => triggerPartitionCheckbox(id, PARQUET)}
-                selectedId={data.parquet.partitioned}
-              />
+              <div className="target-store__item">
+                <Input
+                  density="normal"
+                  floatingLabel
+                  label="Path"
+                  onBlur={handleOfflineKindPathOnBlur}
+                  onChange={path =>
+                    setData(state => ({
+                      ...state,
+                      parquet: { ...state.parquet, path }
+                    }))
+                  }
+                  placeholder={data.parquet.path}
+                  type="text"
+                  value={data.parquet.path}
+                  wrapperClassName="offline-path"
+                />
+                <CheckBox
+                  item={{ id: 'partitioned', label: 'Partition' }}
+                  onChange={id => triggerPartitionCheckbox(id, PARQUET)}
+                  selectedId={data.parquet.partitioned}
+                />
+              </div>
               {data.parquet.partitioned && (
                 <div className="partition-fields">
                   <span
@@ -194,43 +196,45 @@ const FeatureSetsPanelTargetStoreView = ({
             kind => checkboxModels.externalOffline.id === kind
           ) && (
             <div className="target-store__inputs-container">
-              <Select
-                density="normal"
-                floatingLabel
-                label="File type"
-                onClick={handleExternalOfflineKindTypeChange}
-                options={externalOfflineKindOptions}
-                selectedId={data.externalOffline.kind}
-              />
-              <Input
-                density="normal"
-                floatingLabel
-                invalid={!validation.isTargetsPathValid}
-                label="URL"
-                onBlur={handleExternalOfflineKindPathOnBlur}
-                onChange={handleExternalOfflineKindPathOnChange}
-                placeholder="s3://bucket/path"
-                required
-                requiredText="This field is required"
-                setInvalid={value =>
-                  setValidation(state => ({
-                    ...state,
-                    isTargetsPathValid: value
-                  }))
-                }
-                type="text"
-                value={data.externalOffline.path}
-                wrapperClassName="url"
-              />
-              {data.externalOffline.kind === PARQUET && (
-                <CheckBox
-                  item={{ id: 'partitioned', label: 'Partition' }}
-                  onChange={id =>
-                    triggerPartitionCheckbox(id, EXTERNAL_OFFLINE)
-                  }
-                  selectedId={data.externalOffline.partitioned}
+              <div className="target-store__item v-center">
+                <Select
+                  density="normal"
+                  floatingLabel
+                  label="File type"
+                  onClick={handleExternalOfflineKindTypeChange}
+                  options={externalOfflineKindOptions}
+                  selectedId={data.externalOffline.kind}
                 />
-              )}
+                <Input
+                  density="normal"
+                  floatingLabel
+                  invalid={!validation.isTargetsPathValid}
+                  label="URL"
+                  onBlur={handleExternalOfflineKindPathOnBlur}
+                  onChange={handleExternalOfflineKindPathOnChange}
+                  placeholder="s3://bucket/path"
+                  required
+                  requiredText="This field is required"
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isTargetsPathValid: value
+                    }))
+                  }
+                  type="text"
+                  value={data.externalOffline.path}
+                  wrapperClassName="url"
+                />
+                {data.externalOffline.kind === PARQUET && (
+                  <CheckBox
+                    item={{ id: 'partitioned', label: 'Partition' }}
+                    onChange={id =>
+                      triggerPartitionCheckbox(id, EXTERNAL_OFFLINE)
+                    }
+                    selectedId={data.externalOffline.partitioned}
+                  />
+                )}
+              </div>
               {data.externalOffline.partitioned && (
                 <div className="partition-fields">
                   <span
