@@ -18,7 +18,7 @@ const DetailsResults = ({ job }) => {
   return (
     <div className="table__item-results">
       <div className="results-table">
-        {job.iterationStats.length !== 0 ? (
+        {job.iterationStats && job.iterationStats.length !== 0 ? (
           <>
             <div className="results-table__header">
               <div className="results-table__row">
@@ -101,8 +101,8 @@ const DetailsResults = ({ job }) => {
               ))}
             </div>
           </>
-        ) : job.iterations.length === 0 &&
-          Object.keys(job.results).length !== 0 ? (
+        ) : job.iterations?.length === 0 &&
+          Object.keys(job.results ?? {}).length !== 0 ? (
           Object.keys(job.results).map(key => {
             return (
               <div key={key} className="results-table__row">
