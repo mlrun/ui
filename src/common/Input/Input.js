@@ -271,7 +271,7 @@ const Input = React.forwardRef(
             <WarningIcon />
           </i>
         )}
-        {isInvalid && isEmpty(validationRules) && (
+        {isInvalid && !typedValue && (
           <Tooltip
             className="input__warning"
             template={
