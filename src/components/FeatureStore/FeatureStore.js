@@ -56,12 +56,12 @@ const FeatureStore = ({
   fetchFeature,
   fetchFeatureSet,
   fetchFeatureSets,
+  fetchFeatureSetsTags,
   fetchFeatureVector,
   fetchFeatureVectors,
+  fetchFeatureVectorsTags,
   fetchFeatures,
   filtersStore,
-  fetchFeatureSetsTags,
-  fetchFeatureVectorsTags,
   getFilterTagOptions,
   history,
   match,
@@ -79,6 +79,7 @@ const FeatureStore = ({
   setFeaturesPanelData,
   setFilters,
   setNotification,
+  setTablePanelOpen,
   tableStore,
   updateFeatureStoreData
 }) => {
@@ -167,6 +168,11 @@ const FeatureStore = ({
       `/projects/${match.params.projectName}/feature-store/add-to-feature-vector`
     )
   }
+  useEffect(() => {
+    return () => {
+      setTablePanelOpen(false)
+    }
+  }, [setTablePanelOpen, match.params.projectName, match.params.pageTab])
 
   const handleRemoveFeatureVector = useCallback(
     featureVector => {
