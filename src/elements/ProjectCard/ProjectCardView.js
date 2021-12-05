@@ -93,7 +93,7 @@ const ProjectCardView = React.forwardRef(
                     // isEditMode={true}
                     shortChips
                     tooltip
-                    visibleChipsMaxLength="0"
+                    visibleChipsMaxLength="1"
                   />
                 </div>
               </>
