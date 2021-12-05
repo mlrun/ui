@@ -28,7 +28,7 @@ const ProjectSettingsSecretsView = ({
           <Loader />
         ) : error ? (
           <div>
-            <h1>{error}</h1>
+            <h1>{error.message}</h1>
           </div>
         ) : (
           <>
@@ -93,7 +93,7 @@ ProjectSettingsSecretsView.defaultProps = {
 
 ProjectSettingsSecretsView.propTypes = {
   editableSecret: PropTypes.string.isRequired,
-  error: PropTypes.string,
+  error: PropTypes.object,
   handleEditClick: PropTypes.func.isRequired,
   handleSecretDelete: PropTypes.func.isRequired,
   isCreateNewSecretDialogOpen: PropTypes.bool.isRequired,
