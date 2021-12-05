@@ -1,6 +1,7 @@
 @import '../../scss/colors.scss';
 
 .round-icon-cp {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,10 +18,23 @@
       display: inline-flex;
     }
 
-    &:hover,
-    &:focus {
+    &::before {
+      content: '';
+      width: inherit;
+      height: inherit;
       background-color: $mulledWineThree;
       border-radius: 20px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    &:hover {
+      &::before {
+        opacity: 1;
+      }
     }
   }
 }

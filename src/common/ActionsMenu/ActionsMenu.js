@@ -5,6 +5,7 @@ import { isEmpty } from 'lodash'
 import classnames from 'classnames'
 
 import ActionsMenuItem from '../../elements/ActionMenuItem/ActionsMenuItem'
+import RoundedIcon from '../RoundedIcon/RoundedIcon'
 
 import { ReactComponent as ActionMenu } from '../../images/elipsis.svg'
 
@@ -92,9 +93,10 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
       onMouseOver={handleMouseOver}
       ref={actionMenuRef}
     >
-      <button onClick={showActionsList}>
+      <RoundedIcon onClick={showActionsList}>
         <ActionMenu />
-      </button>
+      </RoundedIcon>
+
       {renderMenu &&
         createPortal(
           <div

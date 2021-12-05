@@ -4,16 +4,13 @@
 
 .project-card {
   position: relative;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-  width: 25%;
+  flex: 0 0 23%;
+  min-height: 240px;
+  min-width: 400px;
   margin: 9px 12px;
-  padding: 25px 25px 20px;
   background-color: $white;
   border-radius: 8px;
   box-shadow: $previewBoxShadowInit;
-  overflow: hidden;
   cursor: pointer;
   transition: box-shadow 0.3s ease-in-out;
 
@@ -26,6 +23,7 @@
       #fc658f 48.31%,
       #ffb971 111.56%
     );
+    border-radius: 8px 8px 0 0;
     position: absolute;
     top: 0;
     left: 0;
@@ -34,28 +32,51 @@
     height: 8px;
   }
 
-  &__header {
+  &__general-info {
     display: flex;
-    justify-content: space-between;
-    font-size: 1.25rem;
-    margin-bottom: 5px;
-    color: $primary;
-    font-weight: normal;
-    font-size: 1.25rem;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    height: 100%;
+    padding: 25px 25px 20px 25px;
+  }
 
-    :not(:first-child) {
-      flex: 1 0 auto;
+  &__header {
+    margin-bottom: 0.75rem;
+    padding-right: 1rem;
+    &-title {
+      display: flex;
+      align-items: baseline;
+      font-size: 1.25rem;
+      font-weight: normal;
+      margin-bottom: 5px;
+      color: $primary;
+
+      :not(:first-child) {
+        flex: 1 0 auto;
+      }
+    }
+    &-sub-title {
+      width: 100%;
     }
   }
 
-  &__general-info {
-    margin-bottom: 1rem;
+  &__content {
+    width: 100%;
+    min-height: 72px;
+    height: 100%;
   }
 
   &__statistic {
-    display: flex;
-    flex-direction: row;
+    position: absolute;
+    display: inline-flex;
     justify-content: center;
+    width: auto;
+    right: 50%;
+    top: 55%;
+    bottom: 0;
+    transform-origin: right bottom;
+    transform: translate(50%, -50%);
+    transition: all 0.5s ease-in-out;
   }
 
   &__title {
@@ -65,8 +86,13 @@
 
   &_description {
     color: $topaz;
-    font-size: 15px;
-    line-height: 18px;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    display: -webkit-box;
+    max-width: 100%;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    white-space: normal;
   }
 
   &__info {
@@ -76,17 +102,17 @@
     font-size: 0.625rem;
     margin-right: 10px;
 
-    :first-child {
+    & > * {
       color: $spunPearl;
       margin-right: 5px;
     }
 
     &-icon {
       flex: 0 1 25px;
-    }
 
-    & * {
-      fill: $spunPearl;
+      & * {
+        fill: $spunPearl;
+      }
     }
 
     &.f-12 {
@@ -96,16 +122,39 @@
 
   &:hover {
     box-shadow: $previewBoxShadow;
-    .project-card__actions-menu {
-      opacity: 1;
+  }
+
+  &.with-description {
+    &:hover {
+      .project-card {
+        &__statistic {
+          bottom: 0;
+          right: 10px;
+          transform: translate(0, 0) scale(0.7);
+        }
+
+        &_description {
+          opacity: 1;
+        }
+      }
+
+      .project-data-card__statistics {
+        &-item {
+          margin: 0 7px;
+        }
+        &-value {
+          min-width: 40px;
+          min-height: 40px;
+        }
+      }
     }
   }
 
   .project-data-card__statistics {
     &-item {
-      min-width: 65px;
-      max-width: 80px;
       margin: 0 27px;
+      display: inline-flex;
+      transition: margin 0.5s ease-in-out;
 
       &::after {
         display: none;
@@ -122,11 +171,12 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 5px;
-      font-size: 32px;
+      font-size: 22px;
       min-width: 65px;
       min-height: 65px;
       background-color: $wildSand;
       border-radius: 50%;
+      transition: all 0.5s ease-in-out;
 
       &.statistics_failed {
         background-color: $carouselPink;
@@ -140,10 +190,9 @@
 
   &__actions-menu {
     position: absolute;
-    top: 22px;
-    right: 0;
+    top: 20px;
+    right: 9px;
     z-index: 4;
-    opacity: 0;
     transition: opacity 0.3s ease-in-out;
 
     .actions-menu {
