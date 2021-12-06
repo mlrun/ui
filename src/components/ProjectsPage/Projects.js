@@ -43,16 +43,14 @@ const Projects = ({
   const [filterMatches, setFilterMatches] = useState([])
   const [isDescendingOrder, setIsDescendingOrder] = useState(false)
   const [isNameValid, setNameValid] = useState(true)
-  const [selectedProjectsState, setSelectedProjectsState] = useState(
-    'allProjects'
-  )
+  const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [source] = useState(axios.CancelToken.source())
 
   const isValidProjectState = useCallback(
     project => {
       return (
-        (selectedProjectsState === 'allProjects' &&
+        (selectedProjectsState === 'active' &&
           project.status.state !== 'archived') ||
         project.status.state === selectedProjectsState
       )

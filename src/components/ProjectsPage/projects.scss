@@ -73,6 +73,28 @@
         font-size: 16px;
       }
     }
+
+    .content-menu {
+      position: relative;
+      top: 0;
+      width: auto;
+      min-width: auto;
+      margin-right: 1rem;
+      &__item {
+        font-size: 24px;
+        font-weight: normal;
+        margin: 0 24px 0 0;
+
+        &_active {
+          font-weight: bold;
+          color: $primary;
+        }
+
+        a {
+          padding: 8px 0;
+        }
+      }
+    }
   }
 
   &-search {

@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+// import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import Loader from '../../common/Loader/Loader'
 import Select from '../../common/Select/Select'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -96,6 +97,13 @@ const ProjectsView = ({
           <>
             <div className="projects-content-header">
               <div className="projects-content-header-item">
+                {/* <ContentMenu
+                  activeTab={selectedProjectsState}
+                  match={match}
+                  screen="active"
+                  tabs={projectsStates}
+                /> */}
+
                 <Select
                   onClick={setSelectedProjectsState}
                   options={projectsStates}
@@ -103,6 +111,7 @@ const ProjectsView = ({
                   className="project-types-select"
                   withoutBorder
                 />
+
                 <Sort
                   isDescendingOrder={isDescendingOrder}
                   onSelectOption={setSortProjectId}

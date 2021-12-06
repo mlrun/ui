@@ -49,12 +49,12 @@ export const generateProjectActionsMenu = (
 }
 export const projectsStates = [
   {
-    id: 'allProjects',
-    label: 'All Projects'
+    id: 'active',
+    label: 'Active'
   },
   {
     id: 'archived',
-    label: 'Archived Projects'
+    label: 'Archived'
   }
 ]
 export const projectsSortOptions = [

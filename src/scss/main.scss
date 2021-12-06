@@ -4,7 +4,9 @@
 @import './borders';
 @import './fonts';
 
-* {
+*,
+::after,
+::before {
   box-sizing: border-box;
 }
 
@@ -49,7 +51,7 @@ body {
   font-size: 15px;
   font-family: Roboto, sans-serif;
   font-style: normal;
-  line-height: 1;
+  line-height: 18px;
   background: $gallery;
 
   @include resetSpaces;
