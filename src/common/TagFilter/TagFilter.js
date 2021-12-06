@@ -54,7 +54,7 @@ const TagFilter = ({
       event.preventDefault()
 
       let searchItem = tagFilterOptions.find(tag => {
-        return tagFilter.toLowerCase() === tag.id
+        return tagFilter === tag.id
       })
 
       if (match.params.jobId || match.params.name) {

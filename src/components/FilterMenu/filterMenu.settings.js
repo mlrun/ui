@@ -1,5 +1,7 @@
 import {
+  ALL_ITEMS_TAG_FILTER,
   GROUP_BY_FILTER,
+  INIT_TAG_FILTER,
   PERIOD_FILTER,
   SORT_BY,
   STATUS_FILTER
@@ -28,8 +30,6 @@ export const filterSelectOptions = {
 }
 
 export const tagFilterOptions = [
-  {
-    label: 'latest',
-    id: 'latest'
-  }
+  { label: 'All', id: ALL_ITEMS_TAG_FILTER },
+  { label: 'latest', id: INIT_TAG_FILTER }
 ]

@@ -74,12 +74,23 @@ const FilterMenu = ({
         filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER
       )
     ) {
-      setTagOptions([
-        ...filtersStore.tagOptions.map(tag => ({
-          label: tag,
-          id: tag
-        }))
-      ])
+      setTagOptions(prevOptions => {
+        const prevOptionsTags = prevOptions.map(option => option.id)
+
+        return [
+          ...prevOptions,
+          ...filtersStore.tagOptions.reduce((acc, tag) => {
+            if (!prevOptionsTags.includes(tag)) {
+              acc.push({
+                label: tag,
+                id: tag
+              })
+            }
+
+            return acc
+          }, [])
+        ]
+      })
     }
   }, [filters, filtersStore.tagOptions])
 
@@ -135,10 +146,10 @@ const FilterMenu = ({
       (filter.type === TREE_FILTER || filter.type === TAG_FILTER) &&
       item !== filtersStore.tag
     ) {
-      setFilters({ tag: item.toLowerCase() })
+      setFilters({ tag: item })
       applyChanges({
         ...filtersStore,
-        tag: item.toLowerCase()
+        tag: item
       })
     } else if (filter.type === PROJECT_FILTER) {
       setFilters({
