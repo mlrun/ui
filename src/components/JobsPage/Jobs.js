@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isEmpty, cloneDeep } from 'lodash'
@@ -9,14 +9,17 @@ import JobsPanel from '../JobsPanel/JobsPanel'
 import Loader from '../../common/Loader/Loader'
 import Workflow from '../Workflow/Workflow'
 import Details from '../Details/Details'
+import YamlModal from '../../common/YamlModal/YamlModal'
 
 import detailsActions from '../../actions/details'
 import filtersActions from '../../actions/filters'
 import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import workflowsActions from '../../actions/workflow'
+import functionsActions from '../../actions/functions'
 
 import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useYaml } from '../../hooks/yaml.hook'
 import { generateKeyValues } from '../../utils'
 import { generatePageData, getValidTabs } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
@@ -37,9 +40,11 @@ import {
 } from '../../constants'
 import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
-import functionsActions from '../../actions/functions'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isUrlValid } from '../../utils/handleRedirect'
+import { generateContentActionsMenu } from '../../layout/Content/content.util'
+
+import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const Jobs = ({
   abortJob,
@@ -57,6 +62,7 @@ const Jobs = ({
   fetchWorkflows,
   filtersStore,
   functionsStore,
+  getFunction,
   getFunctionWithHash,
   handleRunScheduledJob,
   history,
@@ -74,6 +80,7 @@ const Jobs = ({
   setNotification,
   workflowsStore
 }) => {
+  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
   const [selectedJob, setSelectedJob] = useState({})
@@ -273,6 +280,23 @@ const Jobs = ({
     })
   }
 
+  const handleCatchRequest = useCallback(
+    (error, message) => {
+      setNotification({
+        status: error?.response?.status || 400,
+        id: Math.random(),
+        message
+      })
+      history.push(
+        match.url
+          .split('/')
+          .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
+          .join('/')
+      )
+    },
+    [history, match.path, match.url, setNotification]
+  )
+
   const handleEditScheduleJob = useCallback(
     editableItem => {
       fetchScheduledJobAccessKey(match.params.projectName, editableItem.name)
@@ -330,6 +354,16 @@ const Jobs = ({
     ]
   )
 
+  const actionsMenu = useMemo(() => {
+    return generateContentActionsMenu(pageData.actionsMenu, [
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      }
+    ])
+  }, [pageData.actionsMenu, toggleConvertedYaml])
+
   const refreshJobs = useCallback(
     filters => {
       fetchJobs(
@@ -357,19 +391,7 @@ const Jobs = ({
       .then(job => {
         setSelectedJob(parseJob(job))
       })
-      .catch(error => {
-        setNotification({
-          status: error?.response?.status || 400,
-          id: Math.random(),
-          message: 'Failed to fetch job'
-        })
-        history.push(
-          match.url
-            .split('/')
-            .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
-            .join('/')
-        )
-      })
+      .catch(error => handleCatchRequest(error, 'Failed to fetch job'))
   }, [
     fetchJob,
     history,
@@ -425,27 +447,26 @@ const Jobs = ({
       (isEmpty(selectedFunction) ||
         match.params.functionHash !== selectedFunction.hash)
     ) {
-      getFunctionWithHash(
-        match.params.projectName,
-        match.params.functionName,
-        match.params.functionHash
-      )
-        .then(func => {
-          setSelectedFunction(parseFunction(func, match.params.projectName))
-        })
-        .catch(error => {
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch function'
+      if (
+        match.params.functionHash === 'latest' &&
+        match.params.functionHash !== selectedFunction.tag
+      ) {
+        getFunction(match.params.projectName, match.params.functionName)
+          .then(func => {
+            setSelectedFunction(parseFunction(func, match.params.projectName))
           })
-          history.push(
-            match.url
-              .split('/')
-              .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
-              .join('/')
-          )
-        })
+          .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
+      } else if (match.params.functionHash !== selectedFunction.tag) {
+        getFunctionWithHash(
+          match.params.projectName,
+          match.params.functionName,
+          match.params.functionHash
+        )
+          .then(func => {
+            setSelectedFunction(parseFunction(func, match.params.projectName))
+          })
+          .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
+      }
     } else if (!isEmpty(selectedFunction) && !match.params.functionHash) {
       setSelectedFunction({})
       removeFunction()
@@ -460,6 +481,7 @@ const Jobs = ({
     match.params.projectName,
     match.path,
     match.url,
+    handleCatchRequest,
     removeFunction,
     removeJob,
     selectedFunction,
@@ -594,6 +616,7 @@ const Jobs = ({
       >
         {match.params.workflowId ? (
           <Workflow
+            actionsMenu={actionsMenu}
             fetchWorkflow={fetchWorkflow}
             handleCancel={handleCancel}
             content={jobs}
@@ -611,7 +634,7 @@ const Jobs = ({
           />
         ) : !isEmpty(selectedJob) ? (
           <Details
-            actionsMenu={pageData.actionsMenu}
+            actionsMenu={actionsMenu}
             detailsMenu={pageData.details.menu}
             handleCancel={handleCancel}
             handleRefresh={fetchCurrentJob}
@@ -663,6 +686,13 @@ const Jobs = ({
           }}
           project={match.params.projectName}
           withSaveChanges={Boolean(editableItem.scheduled_object)}
+        />
+      )}
+
+      {convertedYaml.length > 0 && (
+        <YamlModal
+          convertedYaml={convertedYaml}
+          toggleConvertToYaml={toggleConvertedYaml}
         />
       )}
     </div>

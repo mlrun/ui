@@ -6,6 +6,7 @@ import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { detailsMenu } from '../../components/FunctionsPage/functions.util'
+import { ACTIONS_MENU } from '../../types'
 
 const FunctionsTableRow = ({
   actionsMenu,
@@ -146,7 +147,7 @@ const FunctionsTableRow = ({
 }
 
 FunctionsTableRow.propTypes = {
-  actionsMenu: PropTypes.func.isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
