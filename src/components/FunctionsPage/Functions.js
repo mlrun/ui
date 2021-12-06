@@ -135,6 +135,7 @@ const Functions = ({
     filters,
     page,
     tableHeaders: getTableHeaders(!isEveryObjectValueEmpty(selectedFunction)),
+    hidePageActionMenu: true,
     filterMenuActionButton: {
       getCustomTemplate: getPopUpTemplate,
       label: 'New',

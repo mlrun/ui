@@ -142,9 +142,9 @@ const Project = ({
       .then(projects => {
         const currentProjectInfo = projects.data
         const currentProjectData = currentProjectInfo.data?.[0]
-        const projectId = currentProjectData.id
-        const ownerId = currentProjectData.relationships?.owner?.data?.id ?? ''
-        const ownerInfo = currentProjectInfo.included.find(
+        const projectId = currentProjectData?.id
+        const ownerId = currentProjectData?.relationships?.owner?.data?.id ?? ''
+        const ownerInfo = currentProjectInfo?.included.find(
           data => data.id === ownerId
         )
         const {

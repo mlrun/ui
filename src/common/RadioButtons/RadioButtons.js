@@ -34,28 +34,31 @@ const RadioButtons = ({
 
   return (
     <div className={radioButtonsClassNames}>
-      {elements.map((element, index) => (
-        <div key={index} className="radio-buttons__content">
-          <label className="radio-button">
-            <input
-              type="radio"
-              value={element.value}
-              disabled={disabled}
-              checked={checked === element.value}
-              onChange={onChange}
-            />
-            <span className="checkmark" />
-            <span className="radio-button__label">
-              {element.label}
-              {element.tip && <Tip text={element.tip} />}
-            </span>
-          </label>
+      {elements.map(
+        (element, index) =>
+          !element.hidden && (
+            <div key={index} className="radio-buttons__content">
+              <label className="radio-button">
+                <input
+                  type="radio"
+                  value={element.value}
+                  disabled={disabled}
+                  checked={checked === element.value}
+                  onChange={onChange}
+                />
+                <span className="checkmark" />
+                <span className="radio-button__label">
+                  {element.label}
+                  {element.tip && <Tip text={element.tip} />}
+                </span>
+              </label>
 
-          {element.info && (
-            <span className="radio-button__info">{element.info}</span>
-          )}
-        </div>
-      ))}
+              {element.info && (
+                <span className="radio-button__info">{element.info}</span>
+              )}
+            </div>
+          )
+      )}
     </div>
   )
 }

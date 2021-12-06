@@ -19,7 +19,8 @@ import {
   getFeatureVectorData,
   checkForSelectedModel,
   checkForSelectedModelEndpoint,
-  pageDataInitialState
+  pageDataInitialState,
+  validTabs
 } from './models.util'
 import {
   INIT_GROUP_FILTER,
@@ -37,6 +38,7 @@ import {
   getArtifactIdentifier,
   getFunctionIdentifier
 } from '../../utils/getUniqueIdentifier'
+import { isUrlValid } from '../../utils/handleRedirect'
 
 const Models = ({
   artifactsStore,
@@ -335,6 +337,10 @@ const Models = ({
     match.params.pageTab,
     match.params.projectName
   ])
+
+  useEffect(() => {
+    isUrlValid(match, validTabs, history)
+  }, [history, match])
 
   const sortedContent = useMemo(() => {
     const path =

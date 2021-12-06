@@ -59,7 +59,7 @@ const Input = React.forwardRef(
     const [validationRules, setValidationRules] = useState(rules)
     const [showValidationRules, setShowValidationRules] = useState(false)
     ref ??= useRef()
-    const inputRef = React.createRef()
+    const inputRef = useRef()
     const inputLabelRef = useRef(null)
     useDetectOutsideClick(ref, () => setShowValidationRules(false))
 
@@ -271,7 +271,7 @@ const Input = React.forwardRef(
             <WarningIcon />
           </i>
         )}
-        {isInvalid && !typedValue && (
+        {isInvalid && isEmpty(validationRules) && (
           <Tooltip
             className="input__warning"
             template={
@@ -314,7 +314,7 @@ const Input = React.forwardRef(
         {!isEmpty(validationRules) && (
           <OptionsMenu
             show={showValidationRules && typedValue !== ''}
-            ref={inputRef}
+            ref={ref}
           >
             {renderValidationRules}
           </OptionsMenu>

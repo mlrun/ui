@@ -18,7 +18,7 @@ import workflowsActions from '../../actions/workflow'
 
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { generateKeyValues } from '../../utils'
-import { generatePageData } from './jobsData'
+import { generatePageData, getValidTabs } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import {
@@ -39,6 +39,7 @@ import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
 import functionsActions from '../../actions/functions'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { isUrlValid } from '../../utils/handleRedirect'
 
 const Jobs = ({
   abortJob,
@@ -272,28 +273,31 @@ const Jobs = ({
     })
   }
 
-  const handleEditScheduleJob = editableItem => {
-    fetchScheduledJobAccessKey(match.params.projectName, editableItem.name)
-      .then(result => {
-        setEditableItem({
-          ...editableItem,
-          scheduled_object: {
-            ...editableItem.scheduled_object,
-            credentials: {
-              access_key: result.data.credentials.access_key
+  const handleEditScheduleJob = useCallback(
+    editableItem => {
+      fetchScheduledJobAccessKey(match.params.projectName, editableItem.name)
+        .then(result => {
+          setEditableItem({
+            ...editableItem,
+            scheduled_object: {
+              ...editableItem.scheduled_object,
+              credentials: {
+                access_key: result.data.credentials.access_key
+              }
             }
-          }
+          })
         })
-      })
-      .catch(() => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          retry: () => handleEditScheduleJob(editableItem),
-          message: 'Failed to fetch job access key'
+        .catch(() => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            retry: () => handleEditScheduleJob(editableItem),
+            message: 'Failed to fetch job access key'
+          })
         })
-      })
-  }
+    },
+    [fetchScheduledJobAccessKey, match.params.projectName, setNotification]
+  )
 
   const pageData = useCallback(
     generatePageData(
@@ -316,6 +320,7 @@ const Jobs = ({
       handleRemoveFunctionLogs
     ),
     [
+      match.params.projectName,
       match.params.pageTab,
       match.params.workflowId,
       appStore.frontendSpec.jobs_dashboard_url,
@@ -401,6 +406,10 @@ const Jobs = ({
       isDetailsTabExists(JOBS_PAGE, match, pageData.details.menu, history)
     }
   }, [history, match, pageData.details.menu])
+
+  useEffect(() => {
+    isUrlValid(match, getValidTabs(isDemoMode), history)
+  }, [history, isDemoMode, match])
 
   useEffect(() => {
     if (

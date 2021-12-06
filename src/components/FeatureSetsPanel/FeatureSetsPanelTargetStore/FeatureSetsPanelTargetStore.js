@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { cloneDeep } from 'lodash'
 
 import FeatureSetsPanelTargetStoreView from './FeatureSetsPanelTargetStoreView'
 
@@ -406,8 +407,8 @@ const FeatureSetsPanelTargetStore = ({
       }
     }
 
-    setNewFeatureSetTarget(
-      featureStore.newFeatureSet.spec.targets.map(targetKind => {
+    const targets = cloneDeep(featureStore.newFeatureSet.spec.targets).map(
+      targetKind => {
         if (targetKind.name === kind) {
           if (
             (kind === PARQUET || kind === EXTERNAL_OFFLINE) &&
@@ -434,8 +435,10 @@ const FeatureSetsPanelTargetStore = ({
         }
 
         return targetKind
-      })
+      }
     )
+
+    setNewFeatureSetTarget(targets)
     setValidation(state => ({
       ...state,
       isTimestampKeyValid: true

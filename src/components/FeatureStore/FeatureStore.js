@@ -27,11 +27,13 @@ import {
   handleApplyDetailsChanges,
   handleFetchData,
   navigateToDetailsPane,
-  pageDataInitialState
+  pageDataInitialState,
+  validTabs
 } from './featureStore.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
+import { isUrlValid } from '../../utils/handleRedirect'
 import {
   DATASETS_TAB,
   FEATURES_TAB,
@@ -41,6 +43,7 @@ import {
   INIT_TAG_FILTER,
   FEATURE_STORE_PAGE
 } from '../../constants'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const FeatureStore = ({
   artifactsStore,
@@ -53,12 +56,12 @@ const FeatureStore = ({
   fetchFeature,
   fetchFeatureSet,
   fetchFeatureSets,
+  fetchFeatureSetsTags,
   fetchFeatureVector,
   fetchFeatureVectors,
+  fetchFeatureVectorsTags,
   fetchFeatures,
   filtersStore,
-  fetchFeatureSetsTags,
-  fetchFeatureVectorsTags,
   getFilterTagOptions,
   history,
   match,
@@ -76,6 +79,7 @@ const FeatureStore = ({
   setFeaturesPanelData,
   setFilters,
   setNotification,
+  setTablePanelOpen,
   tableStore,
   updateFeatureStoreData
 }) => {
@@ -86,6 +90,7 @@ const FeatureStore = ({
   const [pageData, setPageData] = useState(pageDataInitialState)
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const featureStoreRef = useRef(null)
+  const isDemoMode = useDemoMode()
 
   const fetchData = useCallback(
     async filters => {
@@ -163,6 +168,11 @@ const FeatureStore = ({
       `/projects/${match.params.projectName}/feature-store/add-to-feature-vector`
     )
   }
+  useEffect(() => {
+    return () => {
+      setTablePanelOpen(false)
+    }
+  }, [setTablePanelOpen, match.params.projectName, match.params.pageTab])
 
   const handleRemoveFeatureVector = useCallback(
     featureVector => {
@@ -328,7 +338,8 @@ const FeatureStore = ({
             : handleRemoveDataSet,
           getPopUpTemplate,
           tableStore.isTablePanelOpen,
-          !isEveryObjectValueEmpty(selectedItem)
+          !isEveryObjectValueEmpty(selectedItem),
+          isDemoMode
         )
       }
     })
@@ -338,6 +349,7 @@ const FeatureStore = ({
     handleRemoveFeature,
     handleRemoveFeatureVector,
     handleRequestOnExpand,
+    isDemoMode,
     match.params.pageTab,
     selectedItem,
     tableStore.isTablePanelOpen
@@ -446,6 +458,10 @@ const FeatureStore = ({
     match.params.pageTab,
     match.params.projectName
   ])
+
+  useEffect(() => {
+    isUrlValid(match, validTabs, history)
+  }, [history, match])
 
   const applyDetailsChanges = changes => {
     return handleApplyDetailsChanges(

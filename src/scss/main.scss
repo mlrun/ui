@@ -84,35 +84,35 @@ button {
   }
 }
 
-[class^=state-completed],
-[class^=state-ready],
-[class^=state-succeeded],
-[class^=state-active],
-[class^=state-created],
-[class^=state-info] {
+[class^='state-completed'],
+[class^='state-ready'],
+[class^='state-succeeded'],
+[class^='state-active'],
+[class^='state-created'],
+[class^='state-info'] {
   @include statusState($brightTurquoise);
 }
 
-[class^=state-all] {
+[class^='state-all'] {
   @include statusState(transparent);
 }
 
-[class^=state-warn] {
+[class^='state-warn'] {
   @include statusState($grandis);
 }
 
-[class^=state-deploying],
-[class^=state-build],
-[class^=state-pending],
-[class^=state-running] {
+[class^='state-deploying'],
+[class^='state-build'],
+[class^='state-pending'],
+[class^='state-running'] {
   @include statusState($pictonBlue);
 }
 
-[class^=state-failed],
-[class^=state-fail],
-[class^=state-error],
-[class^=state-broken],
-[class^=state-aborted] {
+[class^='state-failed'],
+[class^='state-fail'],
+[class^='state-error'],
+[class^='state-broken'],
+[class^='state-aborted'] {
   @include statusState($burntSienna);
 }
 

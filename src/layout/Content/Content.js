@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
@@ -17,21 +18,14 @@ import {
   generateContentActionsMenu,
   generateGroupedItems
 } from './content.util'
+import { isProjectValid } from '../../utils/handleRedirect'
 import { useYaml } from '../../hooks/yaml.hook'
-import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
-  ARTIFACTS_PAGE,
   FEATURE_STORE_PAGE,
-  FEATURE_VECTORS_TAB,
-  FEATURES_TAB,
-  FILES_PAGE,
   JOBS_PAGE,
-  MODEL_ENDPOINTS_TAB,
-  MODELS_PAGE,
-  PROJECTS_PAGE,
-  REAL_TIME_PIPELINES_TAB
+  MODELS_PAGE
 } from '../../constants'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
@@ -54,6 +48,7 @@ const Content = ({
   loading,
   match,
   pageData,
+  projectStore,
   refresh,
   selectedItem,
   setLoading
@@ -63,7 +58,7 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
-  const isDemoMode = useDemoMode()
+  const history = useHistory()
 
   const contentClassName = classnames(
     'content',
@@ -87,32 +82,20 @@ const Content = ({
   }, [pageData.actionsMenu, toggleConvertedYaml])
 
   useEffect(() => {
-    if (
-      [
-        PROJECTS_PAGE,
-        ARTIFACTS_PAGE,
-        FILES_PAGE,
-        MODELS_PAGE,
-        FEATURE_STORE_PAGE,
-        JOBS_PAGE
-      ].includes(pageData.page) &&
-      ![FEATURES_TAB, MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB].includes(
-        match.params.pageTab
-      ) &&
-      (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) || isDemoMode) &&
-      !pageData.hidePageActionMenu
-    ) {
+    if (!pageData.hidePageActionMenu) {
       setShowActionsMenu(true)
     } else if (showActionsMenu) {
       setShowActionsMenu(false)
     }
-  }, [
-    isDemoMode,
-    match.params.pageTab,
-    pageData.hidePageActionMenu,
-    pageData.page,
-    showActionsMenu
-  ])
+  }, [pageData.hidePageActionMenu, showActionsMenu])
+
+  useEffect(() => {
+    isProjectValid(
+      history,
+      projectStore.projectsNames.data,
+      match.params.projectName
+    )
+  }, [history, match.params.projectName, projectStore.projectsNames.data])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
@@ -320,6 +303,10 @@ Content.propTypes = {
 }
 
 export default connect(
-  ({ artifactsStore, filtersStore }) => ({ artifactsStore, filtersStore }),
+  ({ artifactsStore, filtersStore, projectStore }) => ({
+    artifactsStore,
+    filtersStore,
+    projectStore
+  }),
   null
 )(Content)

@@ -34,6 +34,13 @@ import {
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
+export const validTabs = [
+  FEATURE_SETS_TAB,
+  FEATURES_TAB,
+  FEATURE_VECTORS_TAB,
+  DATASETS_TAB
+]
+
 export const pageDataInitialState = {
   actionsMenu: [],
   actionsMenuHeader: '',
@@ -305,7 +312,8 @@ export const generatePageData = (
   handleRemoveRequestData,
   getPopUpTemplate,
   isTablePanelOpen,
-  isSelectedItem
+  isSelectedItem,
+  isDemoMode
 ) => {
   let data = {
     details: {
@@ -326,6 +334,7 @@ export const generatePageData = (
     data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
+    data.hidePageActionMenu = true
     data.filters = featuresFilters
     data.tableHeaders = generateFeaturesTableHeaders(isTablePanelOpen)
     data.tablePanel = getFeaturesTablePanel()
@@ -341,6 +350,7 @@ export const generatePageData = (
       'No features yet. Go to "Feature Sets" tab to create your first feature set.'
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
+    data.hidePageActionMenu = !isDemoMode
     data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
