@@ -6,6 +6,7 @@ import { connect, useDispatch } from 'react-redux'
 import DetailsView from './DetailsView'
 
 import artifactActions from '../../actions/artifacts'
+import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
   DATASETS_TAB,
@@ -15,6 +16,7 @@ import {
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB
 } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 import {
   generateArtifactsContent,
   generateFeatureStoreContent,
@@ -22,7 +24,6 @@ import {
   generateJobsContent,
   renderContent
 } from './details.util'
-import detailsActions from '../../actions/details'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import './details.scss'
@@ -360,10 +361,7 @@ Details.defaultProps = {
 }
 
 Details.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   cancelRequest: PropTypes.func,
   detailsMenu: PropTypes.arrayOf(

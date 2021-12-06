@@ -29,6 +29,7 @@ import {
   PRIMARY_BUTTON,
   LABEL_BUTTON
 } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
@@ -277,10 +278,7 @@ DetailsView.defaultProps = {
 }
 
 DetailsView.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyChanges: PropTypes.func.isRequired,
   cancelChanges: PropTypes.func.isRequired,
   detailsMenu: PropTypes.array.isRequired,

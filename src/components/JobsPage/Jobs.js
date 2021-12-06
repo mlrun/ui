@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { isEmpty, cloneDeep } from 'lodash'
@@ -9,14 +9,17 @@ import JobsPanel from '../JobsPanel/JobsPanel'
 import Loader from '../../common/Loader/Loader'
 import Workflow from '../Workflow/Workflow'
 import Details from '../Details/Details'
+import YamlModal from '../../common/YamlModal/YamlModal'
 
 import detailsActions from '../../actions/details'
 import filtersActions from '../../actions/filters'
 import jobsActions from '../../actions/jobs'
 import notificationActions from '../../actions/notification'
 import workflowsActions from '../../actions/workflow'
+import functionsActions from '../../actions/functions'
 
 import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useYaml } from '../../hooks/yaml.hook'
 import { generateKeyValues } from '../../utils'
 import { generatePageData, getValidTabs } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
@@ -37,9 +40,11 @@ import {
 } from '../../constants'
 import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
-import functionsActions from '../../actions/functions'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isUrlValid } from '../../utils/handleRedirect'
+import { generateContentActionsMenu } from '../../layout/Content/content.util'
+
+import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 const Jobs = ({
   abortJob,
@@ -75,6 +80,7 @@ const Jobs = ({
   setNotification,
   workflowsStore
 }) => {
+  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
   const [selectedJob, setSelectedJob] = useState({})
@@ -348,6 +354,16 @@ const Jobs = ({
     ]
   )
 
+  const actionsMenu = useMemo(() => {
+    return generateContentActionsMenu(pageData.actionsMenu, [
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      }
+    ])
+  }, [pageData.actionsMenu, toggleConvertedYaml])
+
   const refreshJobs = useCallback(
     filters => {
       fetchJobs(
@@ -600,6 +616,7 @@ const Jobs = ({
       >
         {match.params.workflowId ? (
           <Workflow
+            actionsMenu={actionsMenu}
             fetchWorkflow={fetchWorkflow}
             handleCancel={handleCancel}
             content={jobs}
@@ -617,7 +634,7 @@ const Jobs = ({
           />
         ) : !isEmpty(selectedJob) ? (
           <Details
-            actionsMenu={pageData.actionsMenu}
+            actionsMenu={actionsMenu}
             detailsMenu={pageData.details.menu}
             handleCancel={handleCancel}
             handleRefresh={fetchCurrentJob}
@@ -669,6 +686,13 @@ const Jobs = ({
           }}
           project={match.params.projectName}
           withSaveChanges={Boolean(editableItem.scheduled_object)}
+        />
+      )}
+
+      {convertedYaml.length > 0 && (
+        <YamlModal
+          convertedYaml={convertedYaml}
+          toggleConvertToYaml={toggleConvertedYaml}
         />
       )}
     </div>

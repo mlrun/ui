@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
@@ -8,26 +8,24 @@ import Details from '../Details/Details'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Tooltip from '../../common/Tooltip/Tooltip'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import Table from '../Table/Table'
 
-import { generateContentActionsMenu } from '../../layout/Content/content.util'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 import { getWorkflowDetailsLink } from './workflow.util'
-import { useYaml } from '../../hooks/yaml.hook'
 import functionsActions from '../../actions/functions'
 import { connect } from 'react-redux'
 import { page } from '../JobsPage/jobsData'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
 import { ReactComponent as ListView } from '../../images/listview.svg'
 import { ReactComponent as Pipelines } from '../../images/pipelines.svg'
-import { ReactComponent as Yaml } from '../../images/yaml.svg'
 
 import './workflow.scss'
 
 const Workflow = ({
+  actionsMenu,
   content,
   fetchWorkflow,
   handleCancel,
@@ -43,7 +41,6 @@ const Workflow = ({
   setWorkflowsViewMode,
   workflowsViewMode
 }) => {
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobsContent, setJobsContent] = useState([])
   const [workflow, setWorkflow] = useState({})
@@ -54,16 +51,6 @@ const Workflow = ({
     'graph-view',
     (selectedJob?.uid || selectedFunction?.hash) && 'with-selected-job'
   )
-
-  const actionsMenu = useMemo(() => {
-    return generateContentActionsMenu(pageData.actionsMenu, [
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
-    ])
-  }, [pageData.actionsMenu, toggleConvertedYaml])
 
   useEffect(() => {
     if (!workflow.graph) {
@@ -266,13 +253,6 @@ const Workflow = ({
             setLoading={setLoading}
           />
         )}
-
-        {convertedYaml.length > 0 && (
-          <YamlModal
-            convertedYaml={convertedYaml}
-            toggleConvertToYaml={toggleConvertedYaml}
-          />
-        )}
       </div>
     </div>
   )
@@ -285,6 +265,7 @@ Workflow.defaultProps = {
 }
 
 Workflow.propTypes = {
+  actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   fetchWorkflow: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
