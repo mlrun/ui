@@ -53,7 +53,7 @@ const FeaturesTablePanelRow = ({
       <div className="feature-row__actions">
         <div className="label-actions">
           <Tooltip
-            hidden={labelFeature.length > 0}
+            hidden={labelFeature.length > 0 || !isEditEnabled}
             template={<TextTooltipTemplate text="Set as label" />}
           >
             <Target
@@ -70,7 +70,10 @@ const FeaturesTablePanelRow = ({
             />
           </Tooltip>
         </div>
-        <Tooltip template={<TextTooltipTemplate text="Remove from vector" />}>
+        <Tooltip
+          hidden={!isEditEnabled}
+          template={<TextTooltipTemplate text="Remove from vector" />}
+        >
           <Delete
             className={`action remove ${actionClassNames}`}
             onClick={() => {

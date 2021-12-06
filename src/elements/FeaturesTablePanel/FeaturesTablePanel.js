@@ -22,36 +22,30 @@ import './featuresTablePanel.scss'
 
 const FeaturesTablePanel = ({
   createNewFeatureVector,
+  filtersStore,
   handleCancel,
   onSubmit,
   setTablePanelOpen,
   tableStore,
+  setLabelFeature,
   setNotification,
+  updateCurrentProjectName,
   updateFeatureVector,
   updateFeatureVectorData,
   updateGroupedFeatures
 }) => {
-  const [labelFeature, setLabelFeature] = useState('')
   const [isCreateFeaturePopUpOpen, setIsCreateFeaturePopUpOpen] = useState(
     false
   )
 
   useEffect(() => {
-    setLabelFeature(
-      tableStore.features.groupedFeatures[
-        tableStore.features.currentProject
-      ]?.some(
-        feature =>
-          feature.originalTemplate ===
-          tableStore.features.featureVector.spec.label_feature
-      )
-        ? tableStore.features.featureVector.spec.label_feature
-        : ''
-    )
+    if (tableStore.features.isNewFeatureVector) {
+      updateCurrentProjectName(filtersStore.project)
+    }
   }, [
-    tableStore.features.currentProject,
-    tableStore.features.featureVector.spec.label_feature,
-    tableStore.features.groupedFeatures
+    filtersStore.project,
+    tableStore.features.isNewFeatureVector,
+    updateCurrentProjectName
   ])
 
   const addFeatures = () => {
@@ -61,7 +55,8 @@ const FeaturesTablePanel = ({
     featureVector.spec.features = tableStore.features.groupedFeatures[
       tableStore.features.currentProject
     ].map(feature => feature.originalTemplate)
-    featureVector.spec.label_feature = labelFeature
+    featureVector.spec.label_feature =
+      tableStore.features.labelFeature?.[tableStore.features.currentProject]
 
     if (onSubmit) {
       onSubmit(featureVector)
@@ -100,8 +95,14 @@ const FeaturesTablePanel = ({
 
     updateGroupedFeatures(filteredFeatures)
 
-    if (featureName === labelFeature) {
-      setLabelFeature('')
+    if (
+      featureName ===
+      tableStore.features.labelFeature?.[tableStore.features.currentProject]
+    ) {
+      setLabelFeature({
+        ...tableStore.features.labelFeature,
+        [tableStore.features.currentProject]: ''
+      })
     }
   }
 
@@ -120,7 +121,14 @@ const FeaturesTablePanel = ({
   }
 
   const toggleLabelFeature = featureTemplate => {
-    setLabelFeature(labelFeature ? '' : featureTemplate)
+    setLabelFeature({
+      ...tableStore.features.labelFeature,
+      [tableStore.features.currentProject]: tableStore.features.labelFeature?.[
+        tableStore.features.currentProject
+      ]
+        ? ''
+        : featureTemplate
+    })
   }
 
   return (
@@ -184,7 +192,15 @@ const FeaturesTablePanel = ({
               ].map(feature => (
                 <FeaturesTablePanelRow
                   key={feature.originalTemplate}
-                  labelFeature={labelFeature}
+                  labelFeature={
+                    tableStore.features.labelFeature?.[
+                      tableStore.features.currentProject
+                    ]
+                      ? tableStore.features.labelFeature[
+                          tableStore.features.currentProject
+                        ]
+                      : ''
+                  }
                   isEditEnabled={
                     tableStore.features.currentProject === feature.project
                   }
@@ -218,7 +234,11 @@ const FeaturesTablePanel = ({
                   {features.map(feature => (
                     <FeaturesTablePanelRow
                       key={feature.originalTemplate}
-                      labelFeature={labelFeature}
+                      labelFeature={
+                        tableStore.features.labelFeature?.[projectName]
+                          ? tableStore.features.labelFeature[projectName]
+                          : ''
+                      }
                       isEditEnabled={
                         tableStore.features.currentProject === feature.project
                       }
@@ -257,8 +277,9 @@ FeaturesTablePanel.propTypes = {
 }
 
 export default connect(
-  tableStore => ({
-    ...tableStore
+  (tableStore, filtersStore) => ({
+    ...tableStore,
+    ...filtersStore
   }),
   { ...tableActions, ...featureStoreActions, ...notificationActions }
 )(FeaturesTablePanel)
