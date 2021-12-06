@@ -45,6 +45,7 @@ export const DATASETS_TAB = 'datasets'
 export const FEATURES_TAB = 'features'
 export const FEATURE_SETS_TAB = 'feature-sets'
 export const FEATURE_VECTORS_TAB = 'feature-vectors'
+export const ADD_TO_FEATURE_VECTOR_TAB = 'add-to-feature-vector'
 
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
@@ -147,6 +148,7 @@ export const SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT =
   'SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT'
 export const SET_NEW_FUNCTION_ENV = 'SET_NEW_FUNCTION_ENV'
 export const SET_NEW_FUNCTION_ERROR_STREAM = 'SET_NEW_FUNCTION_ERROR_STREAM'
+export const SET_NEW_FUNCTION_FORCE_BUILD = 'SET_NEW_FUNCTION_FORCE_BUILD'
 export const SET_NEW_FUNCTION_GRAPH = 'SET_NEW_FUNCTION_GRAPH'
 export const SET_NEW_FUNCTION_HANDLER = 'SET_NEW_FUNCTION_HANDLER'
 export const SET_NEW_FUNCTION_IMAGE = 'SET_NEW_FUNCTION_IMAGE'
@@ -426,12 +428,13 @@ export const UPDATE_FEATURE_VECTOR = 'UPDATE_FEATURE_VECTOR'
 
 /*=========== FILTERS =============*/
 
-export const SET_FILTERS = 'SET_FILTERS'
-export const SET_FILTER_TAG_OPTIONS = 'SET_FILTER_TAG_OPTIONS'
 export const REMOVE_FILTERS = 'REMOVE_FILTERS'
 export const INIT_GROUP_FILTER = 'name'
 export const INIT_STATE_FILTER = 'all'
 export const INIT_TAG_FILTER = 'latest'
+export const SET_FILTERS = 'SET_FILTERS'
+export const SET_FILTER_TAG_OPTIONS = 'SET_FILTER_TAG_OPTIONS'
+export const SET_FILTER_PROJECT_OPTIONS = 'SET_FILTER_PROJECT_OPTIONS'
 
 export const TREE_FILTER = 'tree'
 export const TAG_FILTER = 'tag'
@@ -444,6 +447,7 @@ export const ITERATIONS_FILTER = 'iterations'
 export const DATE_RANGE_TIME_FILTER = 'dateRangeTime'
 export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
+export const PROJECT_FILTER = 'project'
 
 /*=========== BUTTONS =============*/
 
@@ -462,3 +466,24 @@ export const ENV_VARIABLE_TYPE_VALUE = 'value'
 export const ENV_VARIABLE_TYPE_SECRET = 'secret'
 
 export const PANEL_DEFAULT_ACCESS_KEY = '$generate'
+
+/*=========== VALITATION =============*/
+
+export const validation = {
+  BEGIN_END_NOT_WITH: 'Must not begin and end with',
+  BEGIN_END_WITH: 'Must begin and end with',
+  BEGIN_NOT_WITH: 'Must not begin with',
+  BEGIN_WITH: 'Must begin with',
+  END_NOT_WITH: 'Must not end with',
+  END_WITH: 'Must end with',
+  MUST_CONTAIN_EXACTLY_ONE: 'Must contain exactly one',
+  MUST_HAVE_DOT_AFTER_AT: 'Must have at least one . after @',
+  MUST_NOT_BE: 'Must not be',
+  NO_CONSECUTIVE_CHARACTER: 'No consecutive characters',
+  ONLY_AT_THE_BEGINNING: 'Only at the beginning',
+  VALID_CHARACTERS: 'Valid characters'
+}
+
+/*=========== STATUS CODES =============*/
+
+export const CONFLICT = 409

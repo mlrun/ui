@@ -129,11 +129,11 @@ const artifactsAction = {
     type: FETCH_DATA_SET_SUCCESS,
     payload: dataSets
   }),
-  fetchDataSets: (project, filters) => dispatch => {
+  fetchDataSets: (project, filters, config) => dispatch => {
     dispatch(artifactsAction.fetchDataSetsBegin())
 
     return artifactsApi
-      .getDataSets(project, filters)
+      .getDataSets(project, filters, config)
       .then(({ data }) => {
         dispatch(
           artifactsAction.fetchDataSetsSuccess(

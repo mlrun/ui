@@ -50,12 +50,16 @@ const TableLinkCell = ({
         className="data-ellipsis"
       >
         <div className="name-wrapper">
-          <Tooltip
-            className={itemNameCLassNames}
-            template={<TextTooltipTemplate text={data.tooltip || data.value} />}
-          >
-            <span className="link data-ellipsis">{data.value}</span>
-          </Tooltip>
+          <span className="link">
+            <Tooltip
+              className={itemNameCLassNames}
+              template={
+                <TextTooltipTemplate text={data.tooltip || data.value} />
+              }
+            >
+              {data.value}
+            </Tooltip>
+          </span>
           {link.match(
             new RegExp(`functions|${FEATURE_SETS_TAB}|${FEATURE_VECTORS_TAB}`)
           ) &&

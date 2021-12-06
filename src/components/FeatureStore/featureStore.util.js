@@ -34,6 +34,13 @@ import {
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
+export const validTabs = [
+  FEATURE_SETS_TAB,
+  FEATURES_TAB,
+  FEATURE_VECTORS_TAB,
+  DATASETS_TAB
+]
+
 export const pageDataInitialState = {
   actionsMenu: [],
   actionsMenuHeader: '',
@@ -305,7 +312,8 @@ export const generatePageData = (
   handleRemoveRequestData,
   getPopUpTemplate,
   isTablePanelOpen,
-  isSelectedItem
+  isSelectedItem,
+  isDemoMode
 ) => {
   let data = {
     details: {
@@ -326,6 +334,7 @@ export const generatePageData = (
     data.handleRequestOnExpand = handleRequestOnExpand
   } else if (pageTab === FEATURES_TAB) {
     data.actionsMenu = []
+    data.hidePageActionMenu = true
     data.filters = featuresFilters
     data.tableHeaders = generateFeaturesTableHeaders(isTablePanelOpen)
     data.tablePanel = getFeaturesTablePanel()
@@ -341,6 +350,7 @@ export const generatePageData = (
       'No features yet. Go to "Feature Sets" tab to create your first feature set.'
   } else if (pageTab === FEATURE_VECTORS_TAB) {
     data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
+    data.hidePageActionMenu = !isDemoMode
     data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
     data.tableHeaders = featureVectorsTableHeaders(isSelectedItem)
@@ -380,21 +390,20 @@ export const handleFetchData = async (
     originalContent: []
   }
   let result = null
+  const config = {
+    cancelToken: new axios.CancelToken(cancel => {
+      featureStoreRef.current.cancel = cancel
+    })
+  }
 
   if (pageTab === DATASETS_TAB) {
-    result = await fetchDataSets(project, filters)
+    result = await fetchDataSets(project, filters, config)
 
     if (result) {
       data.content = generateArtifacts(filterArtifacts(result))
       data.originalContent = result
     }
   } else if (pageTab === FEATURE_SETS_TAB) {
-    const config = {
-      cancelToken: new axios.CancelToken(cancel => {
-        featureStoreRef.current.cancel = cancel
-      })
-    }
-
     result = await fetchFeatureSets(project, filters, config)
 
     if (result) {
@@ -406,8 +415,8 @@ export const handleFetchData = async (
     }
   } else if (pageTab === FEATURES_TAB) {
     const allSettledResult = await Promise.allSettled([
-      fetchFeatures(project, filters),
-      fetchEntities(project, filters)
+      fetchFeatures(project, filters, config),
+      fetchEntities(project, filters, config)
     ])
     const result = allSettledResult.reduce((prevValue, nextValue) => {
       return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
@@ -418,12 +427,6 @@ export const handleFetchData = async (
       data.originalContent = result
     }
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    const config = {
-      cancelToken: new axios.CancelToken(cancel => {
-        featureStoreRef.current.cancel = cancel
-      })
-    }
-
     result = await fetchFeatureVectors(project, filters, config)
 
     if (result) {
@@ -475,7 +478,11 @@ export const navigateToDetailsPane = (
     const selectedItem = content.find(contentItem => {
       const searchKey = contentItem.name ? 'name' : 'db_key'
 
-      if ([FEATURES_TAB, FEATURE_SETS_TAB].includes(match.params.pageTab)) {
+      if (
+        [FEATURES_TAB, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB].includes(
+          match.params.pageTab
+        )
+      ) {
         return (
           contentItem[searchKey] === name &&
           (contentItem.tag === tag || contentItem.uid === tag)

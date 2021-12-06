@@ -10,37 +10,38 @@ export const parseJob = (job, tab) => {
       name: job.name,
       nextRun: new Date(job.next_run_time),
       lastRunUri: job.last_run_uri,
+      project: job.project,
       scheduled_object: job.scheduled_object,
       start_time: new Date(job.last_run?.status.start_time),
       state: getState(job.last_run?.status.state, JOBS_PAGE, 'job'),
       type: job.kind === 'pipeline' ? 'workflow' : job.kind,
-      project: job.project,
       ui: {
         originalContent: job
       }
     }
   } else {
     return {
-      uid: job.metadata.uid,
+      artifacts: job.status.artifacts || [],
+      function: job?.spec?.function ?? '',
+      handler: job.spec?.handler ?? '',
+      hyperparams: job.spec?.hyperparams || {},
+      inputs: job.spec.inputs || {},
       iteration: job.metadata.iteration,
       iterationStats: job.status.iterations || [],
       iterations: [],
-      startTime: new Date(job.status.start_time),
-      state: getState(job.status.state, JOBS_PAGE, 'job'),
-      name: job.metadata.name,
       labels: parseKeyValues(job.metadata.labels || {}),
       logLevel: job.spec.log_level,
-      inputs: job.spec.inputs || {},
-      parameters: parseKeyValues(job.spec.parameters || {}),
-      results: job.status.results || {},
-      resultsChips: parseKeyValues(job.status.results || {}),
-      artifacts: job.status.artifacts || [],
+      name: job.metadata.name,
       outputPath: job.spec.output_path,
       owner: job.metadata.labels?.owner,
-      updated: new Date(job.status.last_update),
-      function: job?.spec?.function ?? '',
+      parameters: parseKeyValues(job.spec.parameters || {}),
       project: job.metadata.project,
-      hyperparams: job.spec?.hyperparams || {},
+      results: job.status.results || {},
+      resultsChips: parseKeyValues(job.status.results || {}),
+      startTime: new Date(job.status.start_time),
+      state: getState(job.status.state, JOBS_PAGE, 'job'),
+      uid: job.metadata.uid,
+      updated: new Date(job.status.last_update),
       ui: {
         originalContent: job
       }

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import classnames from 'classnames'
@@ -96,26 +97,28 @@ const ActionsMenu = ({ dataItem, menu, time }) => {
       <button onClick={showActionsList}>
         <ActionMenu />
       </button>
-      {renderMenu && (
-        <div
-          data-testid="actions-drop-down-menu"
-          className={dropDownMenuClassNames}
-          onClick={() => setIsShowMenu(false)}
-          ref={dropDownMenuRef}
-        >
-          {actionMenu.map(
-            menuItem =>
-              !menuItem.hidden && (
-                <ActionsMenuItem
-                  dataItem={dataItem}
-                  isIconDisplayed={isIconDisplayed}
-                  key={menuItem.label}
-                  menuItem={menuItem}
-                />
-              )
-          )}
-        </div>
-      )}
+      {renderMenu &&
+        createPortal(
+          <div
+            data-testid="actions-drop-down-menu"
+            className={dropDownMenuClassNames}
+            onClick={() => setIsShowMenu(false)}
+            ref={dropDownMenuRef}
+          >
+            {actionMenu.map(
+              menuItem =>
+                !menuItem.hidden && (
+                  <ActionsMenuItem
+                    dataItem={dataItem}
+                    isIconDisplayed={isIconDisplayed}
+                    key={menuItem.label}
+                    menuItem={menuItem}
+                  />
+                )
+            )}
+          </div>,
+          document.getElementById('overlay_container')
+        )}
     </div>
   )
 }

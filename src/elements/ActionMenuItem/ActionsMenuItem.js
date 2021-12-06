@@ -25,7 +25,8 @@ const ActionsMenuItem = ({ dataItem, isIconDisplayed, menuItem }) => {
     >
       <div
         className={menuClassNames}
-        onClick={() => {
+        onClick={event => {
+          event.stopPropagation()
           !menuItem.disabled && menuItem.onClick(dataItem)
         }}
       >

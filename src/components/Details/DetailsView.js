@@ -33,6 +33,7 @@ import { ACTIONS_MENU } from '../../types'
 
 import { ReactComponent as Close } from '../../images/close.svg'
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
+import { ReactComponent as Refresh } from '../../images/refresh.svg'
 
 const DetailsView = React.forwardRef(
   (
@@ -46,6 +47,7 @@ const DetailsView = React.forwardRef(
       detailsMenuClick,
       detailsStore,
       handleCancel,
+      handleRefresh,
       handleShowWarning,
       isDetailsScreen,
       leavePage,
@@ -197,6 +199,13 @@ const DetailsView = React.forwardRef(
                 />
               </Tooltip>
             )}
+          {isDetailsScreen && (
+            <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
+              <button onClick={handleRefresh} id="refresh">
+                <Refresh />
+              </button>
+            </Tooltip>
+          )}
           <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
           <Link
             data-testid="details-close-btn"
@@ -264,6 +273,7 @@ const DetailsView = React.forwardRef(
 DetailsView.defaultProps = {
   detailsMenuClick: () => {},
   getCloseDetailsLink: null,
+  handleRefresh: () => {},
   tabsContent: null
 }
 
@@ -276,6 +286,7 @@ DetailsView.propTypes = {
   detailsStore: PropTypes.shape({}).isRequired,
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func,
   handleShowWarning: PropTypes.func.isRequired,
   isDetailsScreen: PropTypes.bool.isRequired,
   leavePage: PropTypes.func.isRequired,

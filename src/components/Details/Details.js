@@ -37,6 +37,7 @@ const Details = ({
   filtersStore,
   getCloseDetailsLink,
   handleCancel,
+  handleRefresh,
   isDetailsScreen,
   match,
   pageData,
@@ -122,10 +123,7 @@ const Details = ({
   }, [pageData.details.type, resetChanges, setIteration])
 
   useEffect(() => {
-    if (
-      !isEveryObjectValueEmpty(selectedItem) &&
-      isEveryObjectValueEmpty(detailsStore.infoContent)
-    ) {
+    if (!isEveryObjectValueEmpty(selectedItem)) {
       if (pageData.details.type === JOBS_PAGE) {
         setInfoContent(generateJobsContent(selectedItem))
       } else if (
@@ -154,7 +152,6 @@ const Details = ({
       }
     }
   }, [
-    detailsStore.infoContent,
     handleAddChip,
     handleDeleteChip,
     handleEditChips,
@@ -240,15 +237,23 @@ const Details = ({
   const detailsMenuClick = () => {
     let changesData = {}
 
-    Object.keys(detailsStore.changes.data).forEach(key => {
-      changesData[key] = {
-        initialFieldValue: detailsStore.changes.data[key].initialFieldValue,
-        previousFieldValue: detailsStore.changes.data[key].previousFieldValue,
-        currentFieldValue: detailsStore.changes.data[key].previousFieldValue
-      }
-    })
-
-    setChangesData({ ...changesData })
+    if (
+      Object.keys(detailsStore.changes.data).some(key => {
+        return (
+          detailsStore.changes.data[key].currentFieldValue !==
+          detailsStore.changes.data[key].previousFieldValue
+        )
+      })
+    ) {
+      Object.keys(detailsStore.changes.data).forEach(key => {
+        changesData[key] = {
+          initialFieldValue: detailsStore.changes.data[key].initialFieldValue,
+          previousFieldValue: detailsStore.changes.data[key].previousFieldValue,
+          currentFieldValue: detailsStore.changes.data[key].previousFieldValue
+        }
+      })
+      setChangesData({ ...changesData })
+    }
 
     if (unblockRootChange.current) {
       unblockRootChange.current()
@@ -329,6 +334,7 @@ const Details = ({
       detailsStore={detailsStore}
       getCloseDetailsLink={getCloseDetailsLink}
       handleCancel={handleCancel}
+      handleRefresh={handleRefresh}
       handleShowWarning={handleShowWarning}
       isDetailsScreen={isDetailsScreen}
       leavePage={leavePage}
@@ -347,6 +353,7 @@ Details.defaultProps = {
   applyDetailsChanges: () => {},
   cancelRequest: () => {},
   getCloseDetailsLink: null,
+  handleRefresh: () => {},
   isDetailsScreen: false,
   item: {},
   retryRequest: () => {},
@@ -366,6 +373,7 @@ Details.propTypes = {
   ).isRequired,
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func,
   isDetailsScreen: PropTypes.bool,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,

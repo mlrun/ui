@@ -5,38 +5,8 @@
 
 .sort {
   position: relative;
-  display: flex;
-  align-items: center;
   min-width: 80px;
-  height: 40px;
   background-color: transparent;
-  cursor: pointer;
-
-  &__body {
-    position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
-    z-index: 6;
-    min-width: 100px;
-    max-height: 250px;
-    overflow-y: auto;
-    color: $mulledWineTwo;
-    background-color: $white;
-    border: $primaryBorder;
-    border-radius: 2px;
-    box-shadow: $filterShadow;
-  }
-
-  &__header {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 100%;
-    color: $gunsmoke;
-    font-size: 12px;
-  }
 
   &_down {
     width: 20px;

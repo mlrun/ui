@@ -6,10 +6,18 @@ import CheckBox from '../../common/CheckBox/CheckBox'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
+import { ReactComponent as Checkmark } from '../../images/checkmark.svg'
+
 import './selectOption.scss'
 import { SELECT_OPTION } from '../../types'
 
-const SelectOption = ({ item, onClick, selectType, selectedId }) => {
+const SelectOption = ({
+  item,
+  onClick,
+  selectType,
+  selectedId,
+  withSelectedIcon
+}) => {
   const selectClassName = classnames(
     'select__item',
     item.hidden && 'hidden',
@@ -28,7 +36,6 @@ const SelectOption = ({ item, onClick, selectType, selectedId }) => {
       </div>
     )
   }
-
   return (
     <div
       data-testid="select-option"
@@ -43,10 +50,13 @@ const SelectOption = ({ item, onClick, selectType, selectedId }) => {
         </span>
       )}
       {item.status && <span className={`state-${item.status}-job status`} />}
-      <div className="data-ellipsis">
+      <div className="data-ellipsis label-row">
         <Tooltip template={<TextTooltipTemplate text={item.label} />}>
           {item.label}
         </Tooltip>
+        {withSelectedIcon && item.id === selectedId && (
+          <Checkmark className="checkmark" />
+        )}
       </div>
       {item.subLabel && (
         <Tooltip
@@ -62,7 +72,8 @@ const SelectOption = ({ item, onClick, selectType, selectedId }) => {
 
 SelectOption.defaultProps = {
   onClick: () => {},
-  selectType: ''
+  selectType: '',
+  withSelectedIcon: false
 }
 
 SelectOption.propTypes = {
@@ -70,7 +81,8 @@ SelectOption.propTypes = {
   item: SELECT_OPTION.isRequired,
   onClick: PropTypes.func,
   selectType: PropTypes.string,
-  selectedId: PropTypes.string
+  selectedId: PropTypes.string,
+  withSelectedIcon: PropTypes.bool
 }
 
 export default SelectOption
