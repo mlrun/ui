@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
@@ -17,6 +18,7 @@ import {
   generateContentActionsMenu,
   generateGroupedItems
 } from './content.util'
+import { isProjectValid } from '../../utils/handleRedirect'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import {
@@ -46,6 +48,7 @@ const Content = ({
   loading,
   match,
   pageData,
+  projectStore,
   refresh,
   selectedItem,
   setLoading
@@ -55,6 +58,7 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
+  const history = useHistory()
 
   const contentClassName = classnames(
     'content',
@@ -84,6 +88,14 @@ const Content = ({
       setShowActionsMenu(false)
     }
   }, [pageData.hidePageActionMenu, showActionsMenu])
+
+  useEffect(() => {
+    isProjectValid(
+      history,
+      projectStore.projectsNames.data,
+      match.params.projectName
+    )
+  }, [history, match.params.projectName, projectStore.projectsNames.data])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
@@ -291,6 +303,10 @@ Content.propTypes = {
 }
 
 export default connect(
-  ({ artifactsStore, filtersStore }) => ({ artifactsStore, filtersStore }),
+  ({ artifactsStore, filtersStore, projectStore }) => ({
+    artifactsStore,
+    filtersStore,
+    projectStore
+  }),
   null
 )(Content)

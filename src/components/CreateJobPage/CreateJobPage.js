@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { includes, isEmpty } from 'lodash'
@@ -11,6 +12,7 @@ import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
 import { generateProjectsList } from '../../utils/projects'
 import { PANEL_CREATE_MODE } from '../../constants'
+import { isProjectValid } from '../../utils/handleRedirect'
 
 const CreateJobPage = ({
   fetchFunctions,
@@ -41,6 +43,15 @@ const CreateJobPage = ({
   )
   const [templates, setTemplates] = useState([])
   const [showPanel, setShowPanel] = useState(false)
+  const history = useHistory()
+
+  useEffect(() => {
+    isProjectValid(
+      history,
+      projectStore.projectsNames.data,
+      match.params.projectName
+    )
+  }, [history, match.params.projectName, projectStore.projectsNames.data])
 
   useEffect(() => {
     if (!selectedProject) {

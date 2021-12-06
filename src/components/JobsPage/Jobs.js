@@ -18,7 +18,7 @@ import workflowsActions from '../../actions/workflow'
 
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { generateKeyValues } from '../../utils'
-import { generatePageData } from './jobsData'
+import { generatePageData, getValidTabs } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import {
@@ -39,6 +39,7 @@ import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
 import functionsActions from '../../actions/functions'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { isUrlValid } from '../../utils/handleRedirect'
 
 const Jobs = ({
   abortJob,
@@ -405,6 +406,10 @@ const Jobs = ({
       isDetailsTabExists(JOBS_PAGE, match, pageData.details.menu, history)
     }
   }, [history, match, pageData.details.menu])
+
+  useEffect(() => {
+    isUrlValid(match, getValidTabs(isDemoMode), history)
+  }, [history, isDemoMode, match])
 
   useEffect(() => {
     if (

@@ -49,12 +49,6 @@ const Table = ({
   })
 
   useEffect(() => {
-    return () => {
-      setTablePanelOpen(false)
-    }
-  }, [setTablePanelOpen, match.params.projectName, match.params.pageTab])
-
-  useEffect(() => {
     const calculatePanelHeight = () => {
       if (tableHeadRef && tablePanelRef.current) {
         const cords = tableHeadRef.current.getBoundingClientRect()
