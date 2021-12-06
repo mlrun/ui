@@ -5,13 +5,18 @@ import Button from '../Button/Button'
 
 import { PRIMARY_BUTTON } from '../../constants'
 
-const PageActionsMenu = ({ actionsMenuHeader, onClick, showActionsMenu }) => {
+const PageActionsMenu = ({
+  actionsMenuHeader,
+  onClick,
+  showActionsMenu,
+  variant
+}) => {
   return (
     <>
       {showActionsMenu && (
         <div data-testid="actions-button" className="page-actions-container">
           <Button
-            variant={PRIMARY_BUTTON}
+            variant={variant ?? PRIMARY_BUTTON}
             label={actionsMenuHeader}
             className="btn_register"
             onClick={onClick}
@@ -25,13 +30,15 @@ const PageActionsMenu = ({ actionsMenuHeader, onClick, showActionsMenu }) => {
 PageActionsMenu.defaultProps = {
   actionsMenuHeader: '',
   onClick: () => {},
-  showActionsMenu: false
+  showActionsMenu: false,
+  variant: PRIMARY_BUTTON
 }
 
 PageActionsMenu.propTypes = {
   actionsMenuHeader: PropTypes.string,
   onClick: PropTypes.func,
-  showActionsMenu: PropTypes.bool
+  showActionsMenu: PropTypes.bool,
+  variant: PropTypes.string
 }
 
 export default PageActionsMenu

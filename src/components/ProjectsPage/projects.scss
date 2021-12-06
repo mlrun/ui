@@ -15,14 +15,13 @@
     justify-content: space-between;
     padding: 14px 24px;
     background-color: $white;
-    box-shadow: $headerShadow;
     min-height: 70px;
   }
 
   &__wrapper {
     position: relative;
     min-height: 700px;
-    padding: 15px 12px;
+    padding: 0 12px 15px;
     background-color: $white;
     height: 100%;
 
@@ -32,21 +31,21 @@
       flex-flow: row wrap;
       width: 100%;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: space-between;
       padding-left: 15px;
       margin-bottom: 1rem;
 
       &-item {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        min-width: 100%;
-        &:not(:last-child) {
-          margin-right: 24px;
-        }
-        @media screen and (min-width: 576px) {
-          min-width: 435px;
-        }
+        // justify-content: space-between;
+        // min-width: 100%;
+        // &:not(:last-child) {
+        //   margin-right: 24px;
+        // }
+        // @media screen and (min-width: 576px) {
+        //   min-width: 435px;
+        // }
       }
 
       .project-types-select {

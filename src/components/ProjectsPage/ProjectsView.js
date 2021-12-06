@@ -16,7 +16,7 @@ import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
-import { TERTIARY_BUTTON } from '../../constants'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
@@ -90,11 +90,6 @@ const ProjectsView = ({
       )}
       <div className="projects__header">
         <Breadcrumbs match={match} />
-        <PageActionsMenu
-          actionsMenuHeader={'New Project'}
-          onClick={() => setCreateProject(true)}
-          showActionsMenu
-        />
       </div>
       <div className="projects__wrapper">
         {projectStore.projects.length > 0 && !projectStore.error ? (
@@ -124,6 +119,12 @@ const ProjectsView = ({
                   placeholder="Search projects..."
                   setMatches={setFilterMatches}
                   value={filterByName}
+                />
+                <PageActionsMenu
+                  actionsMenuHeader={'New Project'}
+                  onClick={() => setCreateProject(true)}
+                  showActionsMenu
+                  variant={SECONDARY_BUTTON}
                 />
                 <RoundedIcon
                   onClick={refreshProjects}

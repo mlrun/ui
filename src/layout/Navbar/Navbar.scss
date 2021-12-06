@@ -32,6 +32,7 @@
     z-index: 1;
 
     &-button {
+      position: relative;
       background-color: $wildSand;
       width: $navbarTogglerWidth;
       height: $navbarTogglerWidth;
@@ -39,8 +40,8 @@
       border-left: 0;
       border-radius: 0px 8px 8px 0px;
       padding: 7px;
-      // margin-top: 0.3rem;
       margin-top: 70px;
+      z-index: 2;
     }
 
     &-icon {

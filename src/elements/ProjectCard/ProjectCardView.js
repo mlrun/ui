@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import classNames from 'classnames'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import ChipCell from '../../common/ChipCell/ChipCell'
@@ -22,13 +21,9 @@ const ProjectCardView = React.forwardRef(
     const chipRef = useRef()
     const history = useHistory()
 
-    const cardsClasses = classNames(
-      'project-card',
-      project.spec.description && 'with-description'
-    )
     return (
       <div
-        className={cardsClasses}
+        className="project-card"
         onClick={event => {
           if (
             event.target.tagName !== 'A' &&
@@ -67,16 +62,18 @@ const ProjectCardView = React.forwardRef(
           </div>
 
           <div className="project-card__content">
-            {project?.spec.description && (
-              <Tooltip
-                className="project-card_description"
-                template={
-                  <TextTooltipTemplate text={project.spec.description} />
-                }
-              >
-                {project.spec.description}
-              </Tooltip>
-            )}
+            <div className="project-card__description">
+              {project?.spec.description && (
+                <Tooltip
+                  template={
+                    <TextTooltipTemplate text={project.spec.description} />
+                  }
+                >
+                  {project.spec.description}
+                </Tooltip>
+              )}
+            </div>
+
             <div className="project-card__statistic">
               <ProjectStatistics statistics={statistics} />
             </div>
@@ -90,7 +87,6 @@ const ProjectCardView = React.forwardRef(
                   <ChipCell
                     chipOptions={getChipOptions('labels')}
                     elements={parseKeyValues(project.metadata.labels || {})}
-                    // isEditMode={true}
                     shortChips
                     tooltip
                     visibleChipsMaxLength="1"

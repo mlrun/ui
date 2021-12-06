@@ -49,7 +49,7 @@ export const generateProjectStatistic = (
           ? 'failed'
           : 'default',
       counterTooltip: 'ML jobs and Nuclio functions',
-      label: 'Failed (24hrs)',
+      label: 'Failed',
       labelClassName: 'wrap',
       loading: projectsSummaryLoading || nuclioFunctionsLoading,
       value:

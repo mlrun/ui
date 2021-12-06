@@ -4,6 +4,7 @@
 
 .project-card {
   position: relative;
+  color: $topaz;
   flex: 0 0 23%;
   min-height: 240px;
   min-width: 400px;
@@ -37,11 +38,11 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     height: 100%;
-    padding: 25px 25px 20px 25px;
+    padding: 25px 25px 20px;
   }
 
   &__header {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     padding-right: 1rem;
     &-title {
       display: flex;
@@ -60,6 +61,11 @@
     }
   }
 
+  &__description {
+    margin-bottom: 0.75rem;
+    min-height: 20px;
+  }
+
   &__content {
     width: 100%;
     min-height: 72px;
@@ -67,16 +73,10 @@
   }
 
   &__statistic {
-    position: absolute;
-    display: inline-flex;
+    display: flex;
     justify-content: center;
-    width: auto;
-    right: 50%;
-    top: 55%;
-    bottom: 0;
-    transform-origin: right bottom;
-    transform: translate(50%, -50%);
-    transition: all 0.5s ease-in-out;
+    margin-bottom: 1rem;
+    width: 100%;
   }
 
   &__title {
@@ -84,25 +84,13 @@
     margin-right: 1rem;
   }
 
-  &_description {
-    color: $topaz;
-    opacity: 0;
-    transition: all 0.5s ease-in-out;
-    display: -webkit-box;
-    max-width: 100%;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    white-space: normal;
-  }
-
   &__info {
     display: flex;
     align-items: center;
-    color: $topaz;
     font-size: 0.625rem;
     margin-right: 10px;
 
-    & > * {
+    & > *:first-child {
       color: $spunPearl;
       margin-right: 5px;
     }
@@ -124,37 +112,10 @@
     box-shadow: $previewBoxShadow;
   }
 
-  &.with-description {
-    &:hover {
-      .project-card {
-        &__statistic {
-          bottom: 0;
-          right: 10px;
-          transform: translate(0, 0) scale(0.7);
-        }
-
-        &_description {
-          opacity: 1;
-        }
-      }
-
-      .project-data-card__statistics {
-        &-item {
-          margin: 0 7px;
-        }
-        &-value {
-          min-width: 40px;
-          min-height: 40px;
-        }
-      }
-    }
-  }
-
   .project-data-card__statistics {
     &-item {
       margin: 0 27px;
-      display: inline-flex;
-      transition: margin 0.5s ease-in-out;
+      flex: 0 0 auto;
 
       &::after {
         display: none;
@@ -163,6 +124,8 @@
 
     &-data {
       padding: 0;
+      margin: 0;
+      width: auto;
     }
 
     &-value {
@@ -172,11 +135,10 @@
       justify-content: center;
       margin-bottom: 5px;
       font-size: 22px;
-      min-width: 65px;
-      min-height: 65px;
+      width: 65px;
+      height: 65px;
       background-color: $wildSand;
       border-radius: 50%;
-      transition: all 0.5s ease-in-out;
 
       &.statistics_failed {
         background-color: $carouselPink;
@@ -191,7 +153,7 @@
   &__actions-menu {
     position: absolute;
     top: 20px;
-    right: 9px;
+    right: 0;
     z-index: 4;
     transition: opacity 0.3s ease-in-out;
 
