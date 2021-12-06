@@ -182,7 +182,7 @@ const FeaturesTablePanel = ({
           iconClassName="features-panel__expand-icon"
           openByDefault
         >
-          <div className="features-panel__expand-title">Current project</div>
+          <div className="features-panel__expand-title">Selected project</div>
           <div className="features-panel__expand-content">
             {tableStore.features.groupedFeatures[
               tableStore.features.currentProject
