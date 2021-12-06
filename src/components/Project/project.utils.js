@@ -167,5 +167,7 @@ export const handleFetchProjectError = (error, history, setConfirmData) => {
         history.push('/projects/')
       }
     })
+  } else {
+    history.push('/projects/')
   }
 }
