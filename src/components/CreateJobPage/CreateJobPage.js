@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { includes, isEmpty } from 'lodash'
@@ -9,13 +10,14 @@ import JobsPanel from '../JobsPanel/JobsPanel'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
-import { generateProjectsList } from './createJobPage.util'
+import { generateProjectsList } from '../../utils/projects'
 import { PANEL_CREATE_MODE } from '../../constants'
+import { isProjectValid } from '../../utils/handleRedirect'
 
 const CreateJobPage = ({
   fetchFunctions,
   fetchFunctionsTemplates,
-  fetchProjects,
+  fetchProjectsNames,
   functionsStore,
   match,
   projectStore,
@@ -27,7 +29,10 @@ const CreateJobPage = ({
   const [filteredTemplates, setFilteredTemplates] = useState({})
   const [functions, setFunctions] = useState([])
   const [projects, setProjects] = useState(
-    generateProjectsList(projectStore.projects, match.params.projectName)
+    generateProjectsList(
+      projectStore.projectsNames.data,
+      match.params.projectName
+    )
   )
   const [selectedGroupFunctions, setSelectedGroupFunctions] = useState({})
   const [selectedProject, setSelectedProject] = useState(
@@ -38,6 +43,15 @@ const CreateJobPage = ({
   )
   const [templates, setTemplates] = useState([])
   const [showPanel, setShowPanel] = useState(false)
+  const history = useHistory()
+
+  useEffect(() => {
+    isProjectValid(
+      history,
+      projectStore.projectsNames.data,
+      match.params.projectName
+    )
+  }, [history, match.params.projectName, projectStore.projectsNames.data])
 
   useEffect(() => {
     if (!selectedProject) {
@@ -47,11 +61,11 @@ const CreateJobPage = ({
 
   useEffect(() => {
     if (projects.length === 0) {
-      fetchProjects().then(projects => {
+      fetchProjectsNames().then(projects => {
         setProjects(generateProjectsList(projects, match.params.projectName))
       })
     }
-  }, [fetchProjects, match.params.projectName, projects.length])
+  }, [fetchProjectsNames, match.params.projectName, projects.length])
 
   useEffect(() => {
     fetchFunctions(selectedProject).then(functions => {

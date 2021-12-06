@@ -2,6 +2,8 @@ import React from 'react'
 
 import Input from './Input'
 
+import { getValidationRules } from '../../utils/validationService'
+
 export default {
   title: 'Example/Input',
   component: Input
@@ -75,4 +77,14 @@ ChunkyMandatory.args = {
   label: 'Field is required',
   required: true,
   requiredText: 'Field is required'
+}
+
+export const withValidationRules = Template.bind({})
+withValidationRules.args = {
+  ...commonArgs,
+  density: 'chunky',
+  label: 'Field is required',
+  required: true,
+  requiredText: 'Field is required',
+  validationRules: getValidationRules('jobName')
 }

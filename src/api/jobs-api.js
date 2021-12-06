@@ -59,7 +59,7 @@ export default {
     mainHttpClient.get(
       `/projects/${project}/schedules/${job}?include-credentials=true`
     ),
-  getScheduledJobs: (project, status, filters) => {
+  getScheduledJobs: (project, filters) => {
     const params = {
       include_last_run: 'yes'
     }

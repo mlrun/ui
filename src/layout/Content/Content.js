@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
@@ -17,19 +18,14 @@ import {
   generateContentActionsMenu,
   generateGroupedItems
 } from './content.util'
+import { isProjectValid } from '../../utils/handleRedirect'
 import { useYaml } from '../../hooks/yaml.hook'
-import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import {
-  ARTIFACTS_PAGE,
+  ADD_TO_FEATURE_VECTOR_TAB,
   FEATURE_STORE_PAGE,
-  FEATURE_VECTORS_TAB,
-  FEATURES_TAB,
-  FILES_PAGE,
   JOBS_PAGE,
-  MODEL_ENDPOINTS_TAB,
-  MODELS_PAGE,
-  PROJECTS_PAGE
+  MODELS_PAGE
 } from '../../constants'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
@@ -48,9 +44,11 @@ const Content = ({
   handleActionsMenuClick,
   handleCancel,
   handleSelectItem,
+  header,
   loading,
   match,
   pageData,
+  projectStore,
   refresh,
   selectedItem,
   setLoading
@@ -60,11 +58,12 @@ const Content = ({
   const [expand, setExpand] = useState(false)
   const [groupedContent, setGroupedContent] = useState({})
   const [showActionsMenu, setShowActionsMenu] = useState(false)
-  const isDemoMode = useDemoMode()
+  const history = useHistory()
 
   const contentClassName = classnames(
     'content',
     [JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
+      !match.path.includes(ADD_TO_FEATURE_VECTOR_TAB) &&
       'content_with-menu'
   )
   const filterMenuClassNames = classnames(
@@ -83,23 +82,20 @@ const Content = ({
   }, [pageData.actionsMenu, toggleConvertedYaml])
 
   useEffect(() => {
-    if (
-      [
-        PROJECTS_PAGE,
-        ARTIFACTS_PAGE,
-        FILES_PAGE,
-        MODELS_PAGE,
-        FEATURE_STORE_PAGE,
-        JOBS_PAGE
-      ].includes(pageData.page) &&
-      ![FEATURES_TAB, MODEL_ENDPOINTS_TAB].includes(match.params.pageTab) &&
-      (![FEATURE_VECTORS_TAB].includes(match.params.pageTab) || isDemoMode)
-    ) {
+    if (!pageData.hidePageActionMenu) {
       setShowActionsMenu(true)
     } else if (showActionsMenu) {
       setShowActionsMenu(false)
     }
-  }, [isDemoMode, match.params.pageTab, pageData.page, showActionsMenu])
+  }, [pageData.hidePageActionMenu, showActionsMenu])
+
+  useEffect(() => {
+    isProjectValid(
+      history,
+      projectStore.projectsNames.data,
+      match.params.projectName
+    )
+  }, [history, match.params.projectName, projectStore.projectsNames.data])
 
   const handleGroupByName = useCallback(() => {
     setGroupedContent(
@@ -208,7 +204,7 @@ const Content = ({
   return (
     <>
       <div className="content__header">
-        <Breadcrumbs match={match} />
+        {header ? header : <Breadcrumbs match={match} />}
         <PageActionsMenu
           actionsMenuHeader={pageData.actionsMenuHeader}
           onClick={handleActionsMenuClick}
@@ -216,16 +212,15 @@ const Content = ({
         />
       </div>
       <div className={contentClassName}>
-        {[JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(
-          pageData.page
-        ) && (
-          <ContentMenu
-            activeTab={match.params.pageTab}
-            match={match}
-            screen={pageData.page}
-            tabs={pageData.tabs}
-          />
-        )}
+        {[JOBS_PAGE, FEATURE_STORE_PAGE, MODELS_PAGE].includes(pageData.page) &&
+          !match.path.includes(ADD_TO_FEATURE_VECTOR_TAB) && (
+            <ContentMenu
+              activeTab={match.params.pageTab}
+              match={match}
+              screen={pageData.page}
+              tabs={pageData.tabs}
+            />
+          )}
         <div className={filterMenuClassNames}>
           <FilterMenu
             actionButton={pageData.filterMenuActionButton}
@@ -286,6 +281,7 @@ Content.defaultProps = {
   activeScreenTab: '',
   filtersChangeCallback: null,
   handleActionsMenuClick: () => {},
+  handleCancel: () => {},
   handleSelectItem: () => {},
   selectedItem: {},
   setLoading: () => {}
@@ -296,7 +292,7 @@ Content.propTypes = {
   filtersChangeCallback: PropTypes.func,
   getIdentifier: PropTypes.func.isRequired,
   handleActionsMenuClick: PropTypes.func,
-  handleCancel: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func,
   handleSelectItem: PropTypes.func,
   loading: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
@@ -307,6 +303,10 @@ Content.propTypes = {
 }
 
 export default connect(
-  ({ artifactsStore, filtersStore }) => ({ artifactsStore, filtersStore }),
+  ({ artifactsStore, filtersStore, projectStore }) => ({
+    artifactsStore,
+    filtersStore,
+    projectStore
+  }),
   null
 )(Content)

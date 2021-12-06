@@ -37,6 +37,10 @@
     width: 100%;
     margin-bottom: 10px;
 
+    &_left {
+      margin-right: 25px;
+    }
+
     .input {
       max-width: 180px;
 
@@ -59,7 +63,6 @@
 
   &__existing-image {
     display: flex;
-    width: 73%;
   }
 
   &__images-inputs {
@@ -70,9 +73,8 @@
     }
   }
 
-  &__handler,
-  &__default-class {
-    margin-right: 25px;
+  &__force-build {
+    margin-top: 19px;
   }
 }
 
@@ -80,7 +82,7 @@
   display: block;
   width: 200px;
 
-  div:first-child {
-    margin: 10px 0 50px 0;
+  div:not(:last-child) {
+    margin: 10px 0 43px 0;
   }
 }

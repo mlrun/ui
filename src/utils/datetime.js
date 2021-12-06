@@ -1,7 +1,7 @@
 export const formatDatetime = (datetime, invalidDateMessage) =>
   typeof datetime !== 'object' || !(datetime instanceof Date) || isNaN(datetime)
     ? invalidDateMessage
-    : new Intl.DateTimeFormat('en-GB', {
+    : new Intl.DateTimeFormat('en-US', {
         month: 'short',
         day: 'numeric',
         hour: '2-digit',

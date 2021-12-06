@@ -162,6 +162,8 @@ const JobsPanelView = ({
             panelDispatch={panelDispatch}
             panelState={panelState}
             setOpenScheduleJob={setOpenScheduleJob}
+            setValidation={setValidation}
+            validation={validation}
           />
         )}
       </div>

@@ -5,17 +5,16 @@ import { connect } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
 import Select from '../../common/Select/Select'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import Input from '../../common/Input/Input'
 import CheckBox from '../../common/CheckBox/CheckBox'
 import Button from '../../common/Button/Button'
 import DatePicker from '../../common/DatePicker/DatePicker'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import TagFilter from '../../common/TagFilter/TagFilter'
 
-import { ReactComponent as Refresh } from '../../images/refresh.svg'
-import { ReactComponent as Collapse } from '../../images/collapse.svg'
-import { ReactComponent as Expand } from '../../images/expand.svg'
+import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
+import { ReactComponent as CollapseIcon } from '../../images/collapse.svg'
+import { ReactComponent as ExpandIcon } from '../../images/expand.svg'
 
 import {
   DATE_RANGE_TIME_FILTER,
@@ -25,6 +24,7 @@ import {
   LABELS_FILTER,
   NAME_FILTER,
   PERIOD_FILTER,
+  PROJECT_FILTER,
   SHOW_UNTAGGED_FILTER,
   SORT_BY,
   STATUS_FILTER,
@@ -33,6 +33,7 @@ import {
 } from '../../constants'
 import filtersActions from '../../actions/filters'
 import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
+import { generateProjectsList } from '../../utils/projects'
 
 import './filterMenu.scss'
 
@@ -45,7 +46,9 @@ const FilterMenu = ({
   match,
   onChange,
   page,
+  projectStore,
   removeFilters,
+  setFilterProjectOptions,
   setFilters,
   withoutExpandButton
 }) => {
@@ -80,6 +83,30 @@ const FilterMenu = ({
     }
   }, [filters, filtersStore.tagOptions])
 
+  useEffect(() => {
+    if (
+      filtersStore.projectOptions.length === 0 &&
+      filters.some(filter => filter.type === PROJECT_FILTER)
+    ) {
+      setFilterProjectOptions(
+        generateProjectsList(
+          projectStore.projectsNames.data,
+          match.params.projectName
+        )
+      )
+      setFilters({
+        project: match.params.projectName
+      })
+    }
+  }, [
+    filters,
+    filtersStore.projectOptions.length,
+    match.params.projectName,
+    projectStore.projectsNames.data,
+    setFilterProjectOptions,
+    setFilters
+  ])
+
   const applyChanges = (data, isRefreshed) => {
     if ((match.params.jobId || match.params.name) && !isRefreshed) {
       history.push(
@@ -89,10 +116,7 @@ const FilterMenu = ({
       )
     }
 
-    if (!isRefreshed) {
-      handleExpandAll(true)
-    }
-
+    handleExpandAll(true)
     onChange(data)
   }
 
@@ -115,6 +139,14 @@ const FilterMenu = ({
       applyChanges({
         ...filtersStore,
         tag: item.toLowerCase()
+      })
+    } else if (filter.type === PROJECT_FILTER) {
+      setFilters({
+        project: item
+      })
+      applyChanges({
+        ...filtersStore,
+        project: item.toLowerCase()
       })
     }
   }
@@ -262,6 +294,18 @@ const FilterMenu = ({
                   selectedId={filtersStore.showUntagged}
                 />
               )
+            case PROJECT_FILTER:
+              return (
+                <Select
+                  density="dense"
+                  className={''}
+                  label={filter.label}
+                  key={filter.type}
+                  onClick={project => handleSelectOption(project, filter)}
+                  options={filtersStore.projectOptions}
+                  selectedId={filtersStore.project}
+                />
+              )
             default:
               return (
                 <Select
@@ -296,22 +340,22 @@ const FilterMenu = ({
             onClick={actionButton.onClick}
           />
         ))}
+
       <div className="actions">
-        <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
-          <button onClick={() => applyChanges(filtersStore, true)} id="refresh">
-            <Refresh />
-          </button>
-        </Tooltip>
+        <RoundedIcon
+          tooltipText="Refresh"
+          onClick={() => applyChanges(filtersStore, true)}
+          id="refresh"
+        >
+          <RefreshIcon />
+        </RoundedIcon>
         {!withoutExpandButton && filtersStore.groupBy !== 'none' && (
-          <Tooltip
-            template={
-              <TextTooltipTemplate text={expand ? 'Collapse' : 'Expand all'} />
-            }
+          <RoundedIcon
+            tooltipText={expand ? 'Collapse' : 'Expand all'}
+            onClick={() => handleExpandAll()}
           >
-            <button onClick={() => handleExpandAll()}>
-              {expand ? <Collapse /> : <Expand />}
-            </button>
-          </Tooltip>
+            {expand ? <CollapseIcon /> : <ExpandIcon />}
+          </RoundedIcon>
         )}
       </div>
     </>
@@ -330,8 +374,9 @@ FilterMenu.propTypes = {
 }
 
 export default connect(
-  ({ filtersStore }) => ({
-    filtersStore
+  ({ filtersStore, projectStore }) => ({
+    filtersStore,
+    projectStore
   }),
-  filtersActions
+  { ...filtersActions }
 )(FilterMenu)

@@ -3,7 +3,11 @@
 .target-store {
   &__item {
     display: flex;
+    align-items: baseline;
     width: 100%;
+    &.v-center {
+      align-items: center;
+    }
   }
 
   &__checkbox-container {
@@ -42,14 +46,12 @@
 
       &-wrapper {
         &.url {
-          flex: unset;
           width: 300px;
           margin-right: 5px;
           margin-bottom: 5px;
         }
 
         &.offline-path {
-          flex: unset;
           width: 515px;
           margin: 5px 5px 5px 0;
         }
@@ -63,17 +65,22 @@
 
     .partition-fields {
       margin-bottom: 10px;
+      width: 100%;
 
       &__checkbox-container {
         display: flex;
         flex-direction: column;
         width: fit-content;
+        margin-bottom: 10px;
+        .checkbox {
+          margin: 5px 0;
+        }
       }
 
       &__inputs-container {
         display: flex;
         flex-wrap: wrap;
-        width: 600px;
+        width: 100%;
       }
 
       .error-message {
@@ -84,15 +91,16 @@
     .range {
       width: 150px;
       margin-bottom: 5px;
+      margin-right: 35px;
     }
 
     .radio-buttons {
       flex-direction: column;
       align-items: start;
-      margin: 10px 3px;
+      margin: 0 3px 10px;
 
       .radio-button {
-        margin-bottom: 5px;
+        margin: 5px 0;
         color: $primary;
 
         .tip-container {
