@@ -5,6 +5,7 @@ import {
   selectOptionInDropdownWithoutCheck,
   getOptionValues
 } from './dropdown.action'
+import { hoverComponent, getElementText } from './common.action'
 
 async function getColumnValues(driver, table, columnName) {
   return await driver
@@ -95,6 +96,39 @@ const action = {
       }
     }
     return indexes
+  },
+  findRowIndexesByColumnTooltipsValue: async function(
+    driver,
+    table,
+    columnName,
+    value
+  ) {
+    const indexes = []
+    const rowsNumber = await getTableRows(driver, table)
+    for (let row = rowsNumber; row >= 1; row--) {
+      const temp = await getElementText(
+        driver,
+        table.tableFields[columnName](row)['label']
+      )
+      if (temp) {
+        if (temp === value) {
+          indexes.push(row)
+        }
+      } else {
+        await hoverComponent(
+          driver,
+          table.tableFields[columnName](row)['label']
+        )
+        const text = await getElementText(
+          driver,
+          table.tableFields[columnName](row)['hint']
+        )
+        if (text === value) {
+          indexes.push(row)
+        }
+      }
+    }
+    return indexes.reverse()
   },
   openActionMenuByIndex: async function(driver, table, index) {
     const elements = await driver.findElements(

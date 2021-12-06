@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { Key } from 'selenium-webdriver'
 
-async function clearManualy(inputField) {
+async function clearManually(inputField) {
   const existValue = await inputField.getAttribute('value')
   for (let i = 0; i <= existValue.length; i++) {
     await inputField.sendKeys(Key.BACK_SPACE, Key.DELETE)
@@ -15,11 +15,11 @@ async function getOptionValues(driver, options) {
 }
 
 const action = {
-  clearManualy: clearManualy,
+  clearManually,
   getOptionValues: getOptionValues,
   typeSearchebleValue: async function(driver, inputGroup, value) {
     const inputField = await driver.findElement(inputGroup.inputField)
-    await clearManualy(inputField)
+    await clearManually(inputField)
     return await inputField.sendKeys(value)
   },
   verifyTypedValue: async function(driver, inputGroup, value) {

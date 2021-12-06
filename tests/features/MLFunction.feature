@@ -1,6 +1,6 @@
 Feature: ML Functions
 
-    Tescases that verifies functionality on ML Functions Pages
+    Testcases that verifies functionality on ML Functions Pages
 
     @passive
     Scenario: Check all mandatory components on ML Functions Page
@@ -32,6 +32,53 @@ Feature: ML Functions
         Then value in "name" column with "text" in "Functions_Table" on "ML_Functions" wizard should contains "test"
 
     @passive
+    Scenario: Check all mandatory components in Item infopane on Overview tab table
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Cross_Close_Button" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
+        Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
+
+    @passive
+    Scenario: Verify all mandatory components on Delete existing function
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
+        Then verify if "Delete_Function_Popup" popup dialog appears
+        Then "Description" component on "Delete_Function_Popup" should contains "Descriptions"."Delete_Function"
+        Then verify "Cancel_Button" element visibility on "Delete_Function_Popup" wizard
+        Then verify "Delete_Button" element visibility on "Delete_Function_Popup" wizard
+
+    @passive
+    Scenario: Verify all mandatory components on Delete existing function in Item infopane
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
+        Then select "Delete" option in action menu on "ML_Function_Info_Pane" wizard
+        Then verify if "Delete_Function_Popup" popup dialog appears
+        Then "Description" component on "Delete_Function_Popup" should contains "Descriptions"."Delete_Function"
+        Then verify "Cancel_Button" element visibility on "Delete_Function_Popup" wizard
+        Then verify "Delete_Button" element visibility on "Delete_Function_Popup" wizard
+
+    @passive
     Scenario: Check all mandatory components on Create ML Function Popup
         Given open url
         And wait load page
@@ -45,6 +92,7 @@ Feature: ML Functions
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display "Input_Hint"."Function_Name_Hint"
+        Then verify "New_Function_Name_Input" according hint rules on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_Function_Runtime_Dropdown" element visibility on "Create_ML_Function_Popup" wizard
@@ -569,3 +617,117 @@ Feature: ML Functions
         Then verify values in "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | name  |  type  | value  |
             | name1 | string | valueB |
+
+    @passive
+    Scenario: Check MLRun logo redirection
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And click on "MLRun_Logo" element on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Projects_Table" element visibility on "Projects" wizard
+
+    @passive
+    Scenario: Verify View YAML action
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+    @passive
+    Scenario: Verify View YAML action in Item infopane
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
+        Then select "View YAML" option in action menu on "ML_Function_Info_Pane" wizard
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+    @passive
+    Scenario: Verify Edit action visibility in action menu
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Job" value in "kind" column should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
+        Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Serving" value in "kind" column should contains "ML_Functions_Tab"."Serving_Action_Menu_Options"
+
+    @passive
+    Scenario: Verify Edit action visibility in Item infopane for Job function
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
+
+    @passive
+    Scenario: Verify Edit action visibility in Item infopane for Serving function
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        When click on cell with row index 9 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Serving_Action_Menu_Options"
+
+    @passive
+    Scenario: Verify all mandatory component on Edit Function sidebar
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then select "Edit" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
+        And wait load page
+        Then verify "New_Function_Description_Text_Area" element visibility in "General_Accordion" on "New_Function" wizard
+        Then verify "Labels_Table" element visibility in "General_Accordion" on "New_Function" wizard
+        When collapse "General_Accordion" on "New_Function" wizard
+        Then verify "New_Function_Code_Entry_Dropdown" element visibility in "Code_Accordion" on "New_Function" wizard
+        Then verify "New_Function_Handler_Input" element visibility in "Code_Accordion" on "New_Function" wizard
+        Then verify "Build_A_New_Image_Radiobutton" element visibility in "Code_Accordion" on "New_Function" wizard
+        Then verify "Use_An_Existing_Image_Radiobutton" element visibility in "Code_Accordion" on "New_Function" wizard
+        Then verify "New_Function_Image_Name_Input" element visibility in "Code_Accordion" on "New_Function" wizard
+        Then verify "New_Function_Resulting_Image_Input" element visibility in "Code_Accordion" on "New_Function" wizard
+        Then verify "New_Function_Build_Commands_Text_Area" element visibility in "Code_Accordion" on "New_Function" wizard
+        Then verify "New_Function_Base_Image_Input" element visibility in "Code_Accordion" on "New_Function" wizard
+        When collapse "Code_Accordion" on "New_Function" wizard
+        Then verify "Volumes_Subheader" element visibility in "Resouces_Accordion" on "New_Function" wizard
+        Then verify "Volume_Paths_Table" element visibility in "Resouces_Accordion" on "New_Function" wizard
+        Then verify "Memory_Unit_Dropdown" element visibility in "Resouces_Accordion" on "New_Function" wizard
+        Then verify "Memory_Limit_Number_Input" element visibility in "Resouces_Accordion" on "New_Function" wizard
+        Then verify "Memory_Request_Number_Input" element visibility in "Resouces_Accordion" on "New_Function" wizard
+        Then verify "CPU_Unit_Dropdown" element visibility in "Resouces_Accordion" on "New_Function" wizard
+        Then verify "CPU_Request_Number_Input" element visibility in "Resouces_Accordion" on "New_Function" wizard
+        Then verify "CPU_Limit_Number_Input" element visibility in "Resouces_Accordion" on "New_Function" wizard
+        Then verify "GPU_Limit_Number_Input" element visibility in "Resouces_Accordion" on "New_Function" wizard
+        When collapse "Resouces_Accordion" on "New_Function" wizard
+        Then verify "Function_Environment_Variables_Table" element visibility in "Environment_Variables_Accordion" on "New_Function" wizard
+        When collapse "Environment_Variables_Accordion" on "New_Function" wizard
+        Then verify "Cansel_Button" element visibility on "New_Function" wizard
+        Then verify "Save_Button" element visibility on "New_Function" wizard
+        Then verify "Deploy_Button" element visibility on "New_Function" wizard
+

@@ -143,5 +143,7 @@ module.exports = {
     generalInfoRealTimeFunctionsCardStat
   ),
   Add_Source_URL_Label: By.css('.general-info .general-info__source'),
-  General_Info_Quick_Links: commonTable(generalInfoQuickLinks)
+  General_Info_Quick_Links: commonTable(generalInfoQuickLinks),
+  Owner_Link: By.css('.project__content .general-info .owner-row .link'),
+  Members_Link: By.css('.project__content .general-info .members-row .link')
 }

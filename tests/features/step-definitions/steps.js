@@ -37,6 +37,7 @@ import {
   typeValue,
   getInputValue,
   checkHintText,
+  checkInputAccordingHintText,
   verifyTypedValue,
   checkWarningHintText,
   verifyInputDisabled,
@@ -67,6 +68,10 @@ import {
   isRadioButtonUnselected,
   selectRadiobutton
 } from '../common/actions/radio-button.action'
+import {
+  openActionMenu,
+  selectOptionInActionMenu
+} from '../common/actions/action-menu.action'
 
 Given('open url', async function() {
   await navigateToPage(this.driver, `http://${test_url}:${test_port}`)
@@ -367,6 +372,22 @@ Then(
   }
 )
 
+Then(
+  'verify {string} dropdown element on {string} wizard should contains {string}.{string}',
+  async function(dropdown, wizard, constStorage, constValue) {
+    await openDropdown(this.driver, pageObjects[wizard][dropdown])
+    await checkDropdownOptions(
+      this.driver,
+      pageObjects[wizard][dropdown],
+      pageObjectsConsts[constStorage][constValue]
+    )
+    await clickNearComponent(
+      this.driver,
+      pageObjects[wizard][dropdown]['open_button']
+    )
+  }
+)
+
 Then('verify {string} element visibility on {string} wizard', async function(
   component,
   wizard
@@ -445,7 +466,7 @@ Then('sort projects in descending order', async function() {
 })
 
 Then(
-  'verify {string} tab is activ in {string} on {string} wizard',
+  'verify {string} tab is active in {string} on {string} wizard',
   async function(tabName, tabSelector, wizard) {
     const arr = await findRowIndexesByColumnValue(
       this.driver,
@@ -675,4 +696,25 @@ When('create {string} MLRun Project with code {int}', async function(
 ) {
   await createAPIMLProject(nameProject, status)
   await this.driver.sleep(2000)
+})
+
+Then('select {string} option in action menu on {string} wizard', async function(
+  option,
+  wizard
+) {
+  const actionMenu = pageObjects[wizard]['Action_Menu']
+  await openActionMenu(this.driver, actionMenu)
+  await this.driver.sleep(500)
+  await selectOptionInActionMenu(this.driver, actionMenu, option)
+})
+
+Then('verify {string} according hint rules on {string} wizard', async function(
+  inputField,
+  wizardName
+) {
+  await checkInputAccordingHintText(
+    this.driver,
+    pageObjects[wizardName][inputField],
+    pageObjects['commonPagesHeader']['Common_Hint']
+  )
 })
