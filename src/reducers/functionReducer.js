@@ -44,6 +44,9 @@ import {
   SET_NEW_FUNCTION_ERROR_STREAM,
   SET_NEW_FUNCTION_DEFAULT_CLASS,
   SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+  GET_FUNCTION_SUCCESS,
+  GET_FUNCTION_FAILURE,
+  GET_FUNCTION_BEGIN,
   GET_FUNCTION_WITH_HASH_BEGIN,
   GET_FUNCTION_WITH_HASH_FAILURE,
   GET_FUNCTION_WITH_HASH_SUCCESS,
@@ -200,6 +203,25 @@ export default (state = initialState, { type, payload }) => {
         loading: false,
         template: {},
         error: payload
+      }
+    case GET_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case GET_FUNCTION_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        func: {},
+        error: payload
+      }
+    case GET_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        template: payload,
+        error: null
       }
     case GET_FUNCTION_WITH_HASH_BEGIN:
       return {

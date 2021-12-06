@@ -114,9 +114,13 @@ const Workflow = ({
         className: classnames(
           ((job.run_uid && selectedJob.uid === job.run_uid) ||
             (job.run_type === 'deploy' &&
-              job.function.includes(selectedFunction.hash))) &&
+              job.function.includes(selectedFunction.hash)) ||
+            (job.run_type === 'build' &&
+              job.function.includes(selectedFunction.name))) &&
             'selected',
-          (job.run_uid || (job.run_type === 'deploy' && job.function)) &&
+          (job.run_uid ||
+            ((job.run_type === 'deploy' || job.run_type === 'build') &&
+              job.function)) &&
             'selectable'
         ),
         position: { x: 0, y: 0 }
@@ -137,13 +141,45 @@ const Workflow = ({
     })
 
     setElements(getLayoutedElements(nodes.concat(edges)))
-  }, [selectedFunction.hash, selectedJob.uid, workflow])
+  }, [
+    selectedFunction.hash,
+    selectedFunction.name,
+    selectedJob.uid,
+    workflow.graph
+  ])
 
   const getCloseDetailsLink = () => {
     return match.url
       .split('/')
       .splice(0, match.path.split('/').indexOf(':workflowId') + 1)
       .join('/')
+  }
+
+  const onElementClick = (event, element) => {
+    if (element.data?.run_uid) {
+      history.push(
+        getWorkflowDetailsLink(match.params, null, element.data.run_uid)
+      )
+    } else if (element.data?.run_type === 'deploy' && element.data?.function) {
+      const funcName = element.data.function.match(/\/(.*?)@/i)[1]
+      const funcHash = element.data.function.replace(/.*@/g, '')
+      const link = `/projects/${
+        match.params.projectName
+      }/${page.toLowerCase()}/${match.params.pageTab}/workflow/${
+        match.params.workflowId
+      }/${funcName}/${funcHash}/${DETAILS_OVERVIEW_TAB}`
+
+      history.push(link)
+    } else if (element.data?.run_type === 'build' && element.data?.function) {
+      const funcName = element.data.function.match(/\/(.*)/i)[1]
+      const link = `/projects/${
+        match.params.projectName
+      }/${page.toLowerCase()}/${match.params.pageTab}/workflow/${
+        match.params.workflowId
+      }/${funcName}/latest/${DETAILS_OVERVIEW_TAB}`
+
+      history.push(link)
+    }
   }
 
   return (
@@ -198,30 +234,7 @@ const Workflow = ({
               <MlReactFlow
                 elements={elements}
                 alignTriggerItem={itemIsSelected}
-                onElementClick={(event, element) => {
-                  if (element?.data.run_uid) {
-                    history.push(
-                      getWorkflowDetailsLink(
-                        match.params,
-                        null,
-                        element.data.run_uid
-                      )
-                    )
-                  } else if (
-                    element?.data.run_type === 'deploy' &&
-                    element?.data.function
-                  ) {
-                    const funcName = element.data.function.match(/\/(.*?)@/i)[1]
-                    const funcHash = element.data.function.replace(/.*@/g, '')
-                    const link = `/projects/${
-                      match.params.projectName
-                    }/${page.toLowerCase()}/${match.params.pageTab}/workflow/${
-                      match.params.workflowId
-                    }/${funcName}/${funcHash}/${DETAILS_OVERVIEW_TAB}`
-
-                    history.push(link)
-                  }
-                }}
+                onElementClick={onElementClick}
               />
               {(!isEmpty(selectedJob) || !isEmpty(selectedFunction)) && (
                 <Details
