@@ -29,7 +29,11 @@ export const pageDataInitialState = {
   tabs: []
 }
 
-export const validTabs = [MODELS_TAB, MODEL_ENDPOINTS_TAB]
+export const validTabs = [
+  MODELS_TAB,
+  MODEL_ENDPOINTS_TAB,
+  REAL_TIME_PIPELINES_TAB
+]
 
 export const modelsInfoHeaders = [
   {

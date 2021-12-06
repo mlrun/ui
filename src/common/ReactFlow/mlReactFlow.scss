@@ -72,6 +72,19 @@
       }
     }
 
+    &.react-flow__node-secondary {
+      color: $orchid;
+      border-color: $orchid;
+    }
+
+    &.oval-shape {
+      border-radius: 30px;
+    }
+
+    &.with-opacity {
+      opacity: 0.7 !important;
+    }
+
     &.error-handler {
       color: rgba($black, 0.2);
       background-color: $white;

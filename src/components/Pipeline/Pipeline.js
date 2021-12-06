@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
-import { forEach, map, concat } from 'lodash'
+import { groupBy, forEach, map, concat } from 'lodash'
 
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
@@ -82,6 +82,7 @@ const Pipeline = ({ content, match }) => {
       let mainRouterStepId = ''
       const nodes = []
       const edgesMap = {}
+      const edgesRouterMap = []
       const errorsMap = {}
 
       if (graph.kind === 'router') {
@@ -137,14 +138,29 @@ const Pipeline = ({ content, match }) => {
               id: routeInnerName,
               data: { label: routeInnerName, originalData: routeInner },
               className: classnames(
+                'react-flow__node-secondary',
                 selectedStep.id === routeInnerName && 'selected',
-                'selectable'
+                'selectable',
+                'oval-shape',
+                'with-opacity'
               ),
               position: { x: 0, y: 0 }
             })
 
-            edgesMap[routeInnerName] = stepName
+            edgesRouterMap.push([routeInnerName, stepName])
+            edgesRouterMap.push([stepName, routeInnerName])
           })
+        }
+      })
+
+      const nodesRouterEdges = map(edgesRouterMap, ([source, target]) => {
+        return {
+          id: `e.${source}.${target}`,
+          source: source,
+          target: target,
+          type: 'floating',
+          animated: false,
+          arrowHeadType: 'arrowclosed'
         }
       })
 
@@ -153,7 +169,6 @@ const Pipeline = ({ content, match }) => {
           id: `e.${source}.${target}`,
           source: source,
           target: target,
-          type: 'smoothstep',
           animated: false,
           arrowHeadType: 'arrowclosed'
         }
@@ -167,13 +182,46 @@ const Pipeline = ({ content, match }) => {
           id: `e.${source}.${target}`,
           source: source,
           target: target,
-          type: 'smoothstep',
           arrowHeadType: 'arrowclosed',
           animated: true
         }
       })
 
-      setElements(getLayoutedElements(concat(nodes, nodesEdges, errorEdges)))
+      const groupedNodesEdges = groupBy(nodesEdges, 'source')
+      const sortedNodesEdges = []
+
+      forEach(groupedNodesEdges, (edgesGroup, edgesSource) => {
+        const filteredRouterEdges = nodesRouterEdges.filter(routerEdge => {
+          return (
+            routerEdge.source === edgesSource ||
+            routerEdge.target === edgesSource
+          )
+        })
+
+        if (filteredRouterEdges.length > 1) {
+          const routerEdgesHalfLength = filteredRouterEdges.length / 2
+          const routerEdgesFirstHalf = filteredRouterEdges.slice(
+            0,
+            routerEdgesHalfLength
+          )
+          const routerEdgesSecondHalf = filteredRouterEdges.slice(
+            routerEdgesHalfLength
+          )
+          const mergedRouterEdges = [
+            ...routerEdgesFirstHalf,
+            ...edgesGroup,
+            ...routerEdgesSecondHalf
+          ]
+
+          sortedNodesEdges.push(...mergedRouterEdges)
+        } else {
+          sortedNodesEdges.push(...edgesGroup)
+        }
+      })
+
+      setElements(
+        getLayoutedElements(concat(nodes, sortedNodesEdges, errorEdges))
+      )
     }
   }, [pipeline, selectedStep])
 

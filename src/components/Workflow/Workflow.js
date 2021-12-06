@@ -127,7 +127,6 @@ const Workflow = ({
           id: `e.${job.id}.${childId}`,
           source: job.id,
           target: childId,
-          type: 'smoothstep',
           animated: false,
           arrowHeadType: 'arrowclosed'
         })

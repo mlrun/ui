@@ -65,7 +65,6 @@ const DetailsTransformations = ({ selectedItem }) => {
         id: `e.${source}.${target}`,
         source: source,
         target: target,
-        type: 'smoothstep',
         animated: false,
         arrowHeadType: 'arrowclosed'
       }
@@ -83,7 +82,6 @@ const DetailsTransformations = ({ selectedItem }) => {
           id: `e.${target.after_state}.${target.name}`,
           source: target.after_state,
           target: target.name,
-          type: 'smoothstep',
           arrowHeadType: 'arrowclosed'
         })
       }
@@ -97,7 +95,6 @@ const DetailsTransformations = ({ selectedItem }) => {
         id: `e.${source}.${target}`,
         source: source,
         target: target,
-        type: 'smoothstep',
         arrowHeadType: 'arrowclosed',
         animated: true
       }
