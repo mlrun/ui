@@ -48,6 +48,29 @@ const FeaturesTablePanel = ({
     updateCurrentProjectName
   ])
 
+  useEffect(() => {
+    if (!tableStore.features.isNewFeatureVector) {
+      setLabelFeature({
+        [tableStore.features
+          .currentProject]: tableStore.features.groupedFeatures[
+          tableStore.features.currentProject
+        ]?.some(
+          feature =>
+            feature.originalTemplate ===
+            tableStore.features.featureVector.spec.label_feature
+        )
+          ? tableStore.features.featureVector.spec.label_feature
+          : ''
+      })
+    }
+  }, [
+    setLabelFeature,
+    tableStore.features.currentProject,
+    tableStore.features.featureVector.spec.label_feature,
+    tableStore.features.groupedFeatures,
+    tableStore.features.isNewFeatureVector
+  ])
+
   const addFeatures = () => {
     let featureVector = cloneDeep(tableStore.features.featureVector)
     let addFeaturesPromise = null
@@ -100,7 +123,6 @@ const FeaturesTablePanel = ({
       tableStore.features.labelFeature?.[tableStore.features.currentProject]
     ) {
       setLabelFeature({
-        ...tableStore.features.labelFeature,
         [tableStore.features.currentProject]: ''
       })
     }
@@ -122,7 +144,6 @@ const FeaturesTablePanel = ({
 
   const toggleLabelFeature = featureTemplate => {
     setLabelFeature({
-      ...tableStore.features.labelFeature,
       [tableStore.features.currentProject]: tableStore.features.labelFeature?.[
         tableStore.features.currentProject
       ]
