@@ -57,5 +57,11 @@
         }
       }
     }
+    &:focus,
+    &:active {
+      &.btn {
+        border-color: transparent;
+      }
+    }
   }
 }

@@ -51,7 +51,7 @@ const Navbar = ({ match, isPinned, setIsPinned }) => {
             <NavbarLink
               icon={<SettingsIcon />}
               label="Project settings"
-              link={`/projects/${match.params.projectName}/settings/general`}
+              link={`/projects/${match.params.projectName}/settings`}
             />
           </ul>
         </div>

@@ -38,7 +38,8 @@ export const getLinks = match => [
   {
     icon: <DashboardIcon />,
     label: 'Project overview',
-    link: `/projects/${match.params.projectName}`
+    link: `/projects/${match.params.projectName}`,
+    rootPath: '/'
   },
 
   //  {
@@ -51,7 +52,7 @@ export const getLinks = match => [
     label: `Feature store${
       window.mlrunConfig.betaMode === 'enabled' ? ' (Beta)' : ''
     }`,
-    link: `/projects/${match.params.projectName}/feature-store/feature-sets`
+    link: `/projects/${match.params.projectName}/feature-store`
   },
   {
     icon: <FileIcon />,
@@ -61,7 +62,7 @@ export const getLinks = match => [
   {
     icon: <ModelsIcon />,
     label: 'Models',
-    link: `/projects/${match.params.projectName}/models/models`
+    link: `/projects/${match.params.projectName}/models`
   },
   {
     icon: <JobsWorkflowIcon />,

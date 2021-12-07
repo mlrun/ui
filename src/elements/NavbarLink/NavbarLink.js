@@ -1,18 +1,13 @@
 import React from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
-
-import Button from '../../common/Button/Button'
 
 import './NavbarLink.scss'
 
-const NavbarLink = ({ externalLink, icon, label, link }) => {
-  const history = useHistory()
-  const location = useLocation()
-
-  if (externalLink) {
-    return (
-      <li className="nav-link">
+const NavbarLink = ({ externalLink, icon, label, link, rootPath }) => {
+  return (
+    <li className="nav-link">
+      {externalLink ? (
         <a
           href={link}
           target="_top"
@@ -22,21 +17,17 @@ const NavbarLink = ({ externalLink, icon, label, link }) => {
           {icon}
           <span>{label}</span>
         </a>
-      </li>
-    )
-  }
-
-  return (
-    <li className="nav-link">
-      <Button
-        className={`nav-link__button ${
-          link === location.pathname ? 'active' : ''
-        }`}
-        label={label}
-        icon={icon}
-        onClick={() => history.push(link)}
-        variant="secondary"
-      />
+      ) : (
+        <NavLink
+          to={link}
+          exact={rootPath}
+          className="nav-link__button btn btn-secondary"
+          activeClassName="active"
+        >
+          {icon}
+          <span>{label}</span>
+        </NavLink>
+      )}
     </li>
   )
 }
@@ -45,7 +36,8 @@ NavbarLink.propTypes = {
   externalLink: PropTypes.bool,
   icon: PropTypes.object,
   label: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired
+  link: PropTypes.string.isRequired,
+  rootPath: PropTypes.string
 }
 
 export default NavbarLink
