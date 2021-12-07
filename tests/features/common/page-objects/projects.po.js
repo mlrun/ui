@@ -2,7 +2,11 @@ import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
-import { generateDropdownGroup } from '../../common-tools/common-tools'
+import {
+  generateDropdownGroup,
+  generateInputGroup
+} from '../../common-tools/common-tools'
+import inputGroup from '../components/input-group.component'
 
 const ProjectsTableSelector = {
   root: 'div.projects-content',
@@ -59,6 +63,13 @@ module.exports = {
       '.sort__header > div', // Open Component
       '.sort__body .select__item', // Options
       '.data-ellipsis > .tooltip-wrapper' // Option value
+    )
+  ),
+  No_Archived_Projects_Label:
+    '.projects .projects__wrapper .projects-content .no-filtered-data',
+  Search_Projects_Input: inputGroup(
+    generateInputGroup(
+      '.projects__wrapper .projects-content-header .search-container'
     )
   )
 }
