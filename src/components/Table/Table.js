@@ -10,6 +10,7 @@ import createJobsContent from '../../utils/createJobsContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
+import { ACTIONS_MENU } from '../../types'
 import { JOBS_PAGE } from '../../constants'
 import tableActions from '../../actions/table'
 
@@ -174,10 +175,7 @@ Table.defaultProps = {
 }
 
 Table.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   getCloseDetailsLink: PropTypes.func,

@@ -12,6 +12,7 @@ import {
   DETAILS_OVERVIEW_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 const ArtifactsTableRow = ({
@@ -192,7 +193,7 @@ ArtifactsTableRow.defaultProps = {
 }
 
 ArtifactsTableRow.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,

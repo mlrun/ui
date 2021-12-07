@@ -17,6 +17,7 @@ import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
 import { TERTIARY_BUTTON } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
@@ -178,7 +179,7 @@ ProjectsView.defaultProps = {
 }
 
 ProjectsView.propTypes = {
-  actionsMenu: PropTypes.shape({}).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   closeNewProjectPopUp: PropTypes.func.isRequired,
   confirmData: PropTypes.shape({}),
   convertedYaml: PropTypes.string.isRequired,

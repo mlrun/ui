@@ -21,6 +21,7 @@ import {
   DATASETS_TAB,
   REAL_TIME_PIPELINES_TAB
 } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
 const TableView = ({
   actionsMenu,
@@ -266,10 +267,7 @@ TableView.defaultProps = {
 }
 
 TableView.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   getCloseDetailsLink: PropTypes.func,

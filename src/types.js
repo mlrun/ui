@@ -111,6 +111,11 @@ export const CONFIRM_DIALOG_BUTTON = PropTypes.shape({
   variant: PropTypes.string.isRequired
 })
 
+export const ACTIONS_MENU = PropTypes.oneOfType([
+  PropTypes.arrayOf(PropTypes.shape({})),
+  PropTypes.func
+])
+
 export const MAIN_SPLIT_BUTTON = PropTypes.shape({
   className: PropTypes.string,
   icon: PropTypes.element,
