@@ -394,12 +394,9 @@ const Jobs = ({
       .catch(error => handleCatchRequest(error, 'Failed to fetch job'))
   }, [
     fetchJob,
-    history,
+    handleCatchRequest,
     match.params.jobId,
-    match.params.projectName,
-    match.path,
-    match.url,
-    setNotification
+    match.params.projectName
   ])
 
   useEffect(() => {
@@ -486,7 +483,8 @@ const Jobs = ({
     removeJob,
     selectedFunction,
     selectedJob,
-    setNotification
+    setNotification,
+    getFunction
   ])
 
   useEffect(() => {
