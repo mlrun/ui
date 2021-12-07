@@ -28,7 +28,10 @@ export const getLayoutedElements = (elements, direction = 'TB') => {
       el.sourcePosition = isHorizontal ? 'right' : 'bottom'
 
       el.data.label = (
-        <div className="react-flow__node-label" data-title={el.data.label}>
+        <div
+          className="react-flow__node-label"
+          data-title={el.data.label || el.data.subLabel}
+        >
           <div className="data-ellipsis">{el.data.label}</div>
           {el.data.subLabel && (
             <div className="react-flow__node-sub-label">{el.data.subLabel}</div>
