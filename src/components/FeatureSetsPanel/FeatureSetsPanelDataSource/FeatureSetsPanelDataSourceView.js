@@ -43,7 +43,6 @@ const FeatureSetsPanelDataSourceView = ({
   urlProjectItemTypeEntered,
   validation
 }) => {
-  // const httpKind = 'http', disabling temporarily until backend supports scheduling
   return (
     <div className="feature-set-panel__item new-item-side-panel__item data-source">
       <FeatureSetsPanelSection title="Data Source">
@@ -85,7 +84,7 @@ const FeatureSetsPanelDataSourceView = ({
             selectPlaceholder="URL"
           />
         </div>
-        {false && ( // was: data.kind !== httpKind, disabling temporarily until backend supports scheduling
+        {data.kind !== CSV && (
           <div className="schedule-content">
             <Button
               className="schedule-tumbler"

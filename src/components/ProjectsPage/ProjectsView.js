@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import Loader from '../../common/Loader/Loader'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Select from '../../common/Select/Select'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
@@ -13,15 +12,15 @@ import YamlModal from '../../common/YamlModal/YamlModal'
 import Notification from '../../common/Notification/Notification'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import Tooltip from '../../common/Tooltip/Tooltip'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
-import Button from '../../common/Button/Button'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
 import { TERTIARY_BUTTON } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
-import { ReactComponent as Refresh } from '../../images/refresh.svg'
+import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
+import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './projects.scss'
 
@@ -36,7 +35,6 @@ const ProjectsView = ({
   filteredProjects,
   filterMatches,
   handleCreateProject,
-  handleSearchOnChange,
   isDescendingOrder,
   isNameValid,
   match,
@@ -45,6 +43,7 @@ const ProjectsView = ({
   removeNewProjectError,
   selectedProjectsState,
   setCreateProject,
+  setFilterByName,
   setFilterMatches,
   setIsDescendingOrder,
   setNameValid,
@@ -74,25 +73,21 @@ const ProjectsView = ({
         />
       )}
       {confirmData && (
-        <PopUpDialog
-          headerText={confirmData.title}
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: 'Cancel',
+            variant: TERTIARY_BUTTON
+          }}
           closePopUp={confirmData.rejectHandler}
-        >
-          <div>{confirmData.description}</div>
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              variant={TERTIARY_BUTTON}
-              label="Cancel"
-              className="pop-up-dialog__btn_cancel"
-              onClick={confirmData.rejectHandler}
-            />
-            <Button
-              variant={confirmData.btnConfirmType}
-              label={confirmData.btnConfirmLabel}
-              onClick={() => confirmData.confirmHandler(confirmData.item)}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: () => confirmData.confirmHandler(confirmData.item),
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmType
+          }}
+          header={confirmData.header}
+          message={confirmData.message}
+        />
       )}
       <div className="projects__header">
         <Breadcrumbs match={match} />
@@ -126,16 +121,19 @@ const ProjectsView = ({
                 <Search
                   className="projects-search"
                   matches={filterMatches}
-                  onChange={value => handleSearchOnChange(value)}
+                  onChange={setFilterByName}
                   placeholder="Search projects..."
                   setMatches={setFilterMatches}
                   value={filterByName}
                 />
-                <Tooltip template={<TextTooltipTemplate text="Refresh" />}>
-                  <button onClick={refreshProjects}>
-                    <Refresh />
-                  </button>
-                </Tooltip>
+                <RoundedIcon
+                  onClick={refreshProjects}
+                  className="panel-title__btn_close"
+                  tooltipText="Refresh"
+                  data-testid="pop-up-close-btn"
+                >
+                  <RefreshIcon />
+                </RoundedIcon>
               </div>
             </div>
             <div className="projects-content">
@@ -177,15 +175,13 @@ const ProjectsView = ({
 }
 
 ProjectsView.defaultProps = {
-  searchValue: null
+  confirmData: null
 }
 
 ProjectsView.propTypes = {
-  actionsMenu: PropTypes.shape({}).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   closeNewProjectPopUp: PropTypes.func.isRequired,
-  confirmData: PropTypes.oneOfType([
-    PropTypes.shape({}, PropTypes.instanceOf(null))
-  ]),
+  confirmData: PropTypes.shape({}),
   convertedYaml: PropTypes.string.isRequired,
   convertToYaml: PropTypes.func.isRequired,
   createProject: PropTypes.bool.isRequired,
@@ -193,13 +189,13 @@ ProjectsView.propTypes = {
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
-  handleSearchOnChange: PropTypes.func.isRequired,
   isNameValid: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
   setCreateProject: PropTypes.func.isRequired,
+  setFilterByName: PropTypes.func.isRequired,
   setFilterMatches: PropTypes.func.isRequired,
   setIsDescendingOrder: PropTypes.func.isRequired,
   setNewProjectDescription: PropTypes.func.isRequired,

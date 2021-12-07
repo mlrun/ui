@@ -2,16 +2,15 @@ import React, { useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useLocation } from 'react-router-dom'
 
 import Button from '../../common/Button/Button'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import Select from '../../common/Select/Select'
 import Input from '../../common/Input/Input'
-import { isDemoMode } from '../../utils/helper'
 
 import functionsActions from '../../actions/functions'
 import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import './newFunctionPopUp.scss'
 
@@ -35,7 +34,7 @@ const NewFunctionPopUp = ({
   const [validation, setValidation] = useState({
     isNameValid: true
   })
-  const location = useLocation()
+  const isDemoMode = useDemoMode()
   const newFunctionBtn = useRef(null)
   const popUpClassNames = classnames(
     'new-function__pop-up',
@@ -142,7 +141,7 @@ const NewFunctionPopUp = ({
             floatingLabel
             label="Runtime"
             onClick={selectRuntime}
-            options={runtimeOptions(isDemoMode(location.search))}
+            options={runtimeOptions(isDemoMode)}
             selectedId={data.runtime}
           />
           <div className="pop-up-dialog__footer-container">

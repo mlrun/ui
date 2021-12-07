@@ -77,16 +77,16 @@ const CreateNewSecretPopUp = ({
             }
           }
 
-    if (editableSecret.length === 0) {
-      secretKeys.push(createSecretData.key)
-      setProjectSecrets(secretKeys)
-    }
-
     closePopupDialog()
 
     projectApi
       .setProjectSecret(match.params.projectName, data)
       .then(() => {
+        if (editableSecret.length === 0) {
+          secretKeys.push(createSecretData.key)
+          setProjectSecrets(secretKeys)
+        }
+
         setNotification({
           status: 200,
           id: Math.random(),
@@ -114,7 +114,11 @@ const CreateNewSecretPopUp = ({
   ])
 
   return (
-    <PopUpDialog headerText={popUpTitle} closePopUp={closePopupDialog}>
+    <PopUpDialog
+      headerText={popUpTitle}
+      closePopUp={closePopupDialog}
+      tooltipText={editableSecret}
+    >
       {editableSecret.length === 0 && (
         <div className="secrets__form-input">
           <Input

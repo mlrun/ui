@@ -5,8 +5,7 @@ import { cloneDeep, isNil } from 'lodash'
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 
 import Input from '../../common/Input/Input'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
-import Button from '../../common/Button/Button'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 
@@ -270,12 +269,14 @@ const DetailsRequestedFeatures = ({
                         type="text"
                         value={alias}
                       />
-                      <Checkmark
-                        className="cell_alias__input-btn"
-                        onClick={() =>
-                          onFinishEdit(['features', 'label_feature'])
-                        }
-                      />
+                      <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+                        <Checkmark
+                          className="cell_alias__input-btn"
+                          onClick={() =>
+                            onFinishEdit(['features', 'label_feature'])
+                          }
+                        />
+                      </Tooltip>
                     </div>
                   </div>
                 ) : (
@@ -311,32 +312,28 @@ const DetailsRequestedFeatures = ({
         </div>
       </div>
       {confirmDialogData.feature && (
-        <PopUpDialog
-          headerText={`Delete feature ${confirmDialogData.feature} from vector ${match.params.name}?`}
+        <ConfirmDialog
+          cancelButton={{
+            handler: () => {
+              setConfirmDialogData({
+                index: null,
+                feature: null
+              })
+            },
+            label: 'Cancel',
+            variant: TERTIARY_BUTTON
+          }}
           closePopUp={() => {
             setConfirmDialogData({ index: null, feature: null })
           }}
-        >
-          <div>The feature could be added back later.</div>
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              variant={TERTIARY_BUTTON}
-              label="Cancel"
-              className="pop-up-dialog__btn_cancel"
-              onClick={() => {
-                setConfirmDialogData({
-                  index: null,
-                  feature: null
-                })
-              }}
-            />
-            <Button
-              label="Delete"
-              onClick={() => handleDelete(confirmDialogData.index)}
-              variant={DANGER_BUTTON}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: () => handleDelete(confirmDialogData.index),
+            label: 'Delete',
+            variant: DANGER_BUTTON
+          }}
+          header="Delete feature?"
+          message={`You try to delete feature "${confirmDialogData.feature}" from vector "${match.params.name}". The feature could be added back later.`}
+        />
       )}
     </div>
   )

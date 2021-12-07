@@ -6,6 +6,7 @@ import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { detailsMenu } from '../../components/FunctionsPage/functions.util'
+import { ACTIONS_MENU } from '../../types'
 
 const FunctionsTableRow = ({
   actionsMenu,
@@ -90,7 +91,7 @@ const FunctionsTableRow = ({
                               : `/${detailsMenu[0].id}`
                           }`
                         }
-                        key={value.value + i}
+                        key={value.id}
                         selectItem={handleSelectItem}
                         selectedItem={selectedItem}
                       />
@@ -118,7 +119,7 @@ const FunctionsTableRow = ({
                   expandLink={Array.isArray(tableContent)}
                   handleExpandRow={handleExpandRow}
                   item={currentItem}
-                  key={value.value + i}
+                  key={value.id}
                   link={
                     i === 0 &&
                     `/projects/${
@@ -146,7 +147,7 @@ const FunctionsTableRow = ({
 }
 
 FunctionsTableRow.propTypes = {
-  actionsMenu: PropTypes.func.isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,

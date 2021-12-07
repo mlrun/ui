@@ -3,22 +3,21 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { chain, isEqual, isEmpty } from 'lodash'
 
-import Button from '../../common/Button/Button'
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Content from '../../layout/Content/Content'
 import Loader from '../../common/Loader/Loader'
 import JobsPanel from '../JobsPanel/JobsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
   detailsMenu,
   filters,
   FUNCTIONS_EDITABLE_STATES,
-  FUNCTIONS_EDITABLE_TYPES,
   FUNCTIONS_READY_STATES,
   infoHeaders,
   page,
+  getFunctionsEditableTypes,
   getTableHeaders
 } from './functions.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -35,12 +34,13 @@ import {
   PANEL_EDIT_MODE,
   SECONDARY_BUTTON
 } from '../../constants'
+import { parseFunction } from '../../utils/parseFunction'
+import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 import { ReactComponent as Edit } from '../../images/edit.svg'
-import { parseFunction } from '../../utils/parseFunction'
-import { getFunctionLogs } from '../../utils/getFunctionLogs'
 
 const Functions = ({
   deleteFunction,
@@ -64,6 +64,7 @@ const Functions = ({
   const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   let fetchFunctionLogsTimeout = useRef(null)
+  const isDemoMode = useDemoMode()
 
   const handleFetchFunctionLogs = useCallback(
     (projectName, name, tag, offset) => {
@@ -114,7 +115,7 @@ const Functions = ({
           setEditableItem(func)
         },
         hidden:
-          !FUNCTIONS_EDITABLE_TYPES.includes(item?.type) ||
+          !getFunctionsEditableTypes(isDemoMode).includes(item?.type) ||
           !FUNCTIONS_EDITABLE_STATES.includes(item?.state?.value)
       },
       {
@@ -134,6 +135,7 @@ const Functions = ({
     filters,
     page,
     tableHeaders: getTableHeaders(!isEveryObjectValueEmpty(selectedFunction)),
+    hidePageActionMenu: true,
     filterMenuActionButton: {
       getCustomTemplate: getPopUpTemplate,
       label: 'New',
@@ -263,8 +265,8 @@ const Functions = ({
   const onRemoveFunction = func => {
     setConfirmData({
       item: func,
-      title: `Delete function "${func.name}"?`,
-      description: 'Deleted functions cannot be restored.',
+      header: 'Delete function?',
+      message: `You try to delete function "${func.name}". Deleted functions cannot be restored.`,
       btnCancelLabel: 'Cancel',
       btnCancelVariant: LABEL_BUTTON,
       btnConfirmLabel: 'Delete',
@@ -349,24 +351,21 @@ const Functions = ({
   return (
     <div className="content-wrapper">
       {confirmData && (
-        <PopUpDialog
-          headerText={confirmData.title}
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: confirmData.btnCancelLabel,
+            variant: confirmData.btnCancelVariant
+          }}
           closePopUp={confirmData.rejectHandler}
-        >
-          <div>{confirmData.description}</div>
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              label={confirmData.btnCancelLabel}
-              onClick={confirmData.rejectHandler}
-              variant={confirmData.btnCancelVariant}
-            />
-            <Button
-              label={confirmData.btnConfirmLabel}
-              onClick={() => confirmData.confirmHandler(confirmData.item)}
-              variant={confirmData.btnConfirmVariant}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: () => confirmData.confirmHandler(confirmData.item),
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmVariant
+          }}
+          header={confirmData.header}
+          message={confirmData.message}
+        />
       )}
       {functionsStore.loading && <Loader />}
       <Content

@@ -17,6 +17,8 @@ import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
 import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
 
+export const validTabs = [MODELS_TAB, MODEL_ENDPOINTS_TAB]
+
 export const modelsInfoHeaders = [
   {
     label: 'Hash',
@@ -67,12 +69,12 @@ export const generateModelsDetailsMenu = selectedModel => [
   {
     label: 'features',
     id: 'features',
-    hidden: !selectedModel.item?.feature_vector
+    hidden: !selectedModel.item?.features && !selectedModel.item?.feature_vector
   },
   {
     label: 'statistics',
     id: 'statistics',
-    hidden: !selectedModel.item?.feature_vector
+    hidden: !selectedModel.item?.stats && !selectedModel.item?.feature_vector
   }
 ]
 
@@ -277,7 +279,9 @@ export const generatePageData = (
 ) => {
   const data = {
     details: {
-      menu: []
+      menu: [],
+      infoHeaders: [],
+      type: ''
     },
     page,
     tabs
@@ -294,6 +298,7 @@ export const generatePageData = (
     data.handleRequestOnExpand = handleRequestOnExpand
     data.handleRemoveRequestData = handleRemoveRequestData
   } else if (pageTab === MODEL_ENDPOINTS_TAB) {
+    data.hidePageActionMenu = true
     data.details.menu = modelEndpointsDetailsMenu
     data.details.type = MODEL_ENDPOINTS_TAB
     data.filters = modelEndpointsFilters

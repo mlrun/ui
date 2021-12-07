@@ -12,4 +12,9 @@ export const tabs = [
   { id: PROJECTS_SETTINGS_SECRETS_TAB, label: 'Secrets' }
 ]
 
+export const validTabs = [
+  PROJECTS_SETTINGS_GENERAL_TAB,
+  PROJECTS_SETTINGS_SECRETS_TAB
+]
+
 export const page = PROJECTS_SETTINGS_PAGE

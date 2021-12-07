@@ -12,9 +12,9 @@ import {
   DELETE_PROJECT_FAILURE,
   DELETE_PROJECT_SUCCESS,
   FETCH_PROJECT_BEGIN,
-  FETCH_PROJECT_COUNTERS_BEGIN,
-  FETCH_PROJECT_COUNTERS_FAILURE,
-  FETCH_PROJECT_COUNTERS_SUCCESS,
+  FETCH_PROJECT_SUMMARY_BEGIN,
+  FETCH_PROJECT_SUMMARY_FAILURE,
+  FETCH_PROJECT_SUMMARY_SUCCESS,
   FETCH_PROJECT_DATASETS_BEGIN,
   FETCH_PROJECT_DATASETS_FAILURE,
   FETCH_PROJECT_DATASETS_SUCCESS,
@@ -55,7 +55,7 @@ import {
   FETCH_PROJECTS_SUCCESS,
   REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
-  REMOVE_PROJECT_COUNTERS,
+  REMOVE_PROJECT_SUMMARY,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
@@ -70,7 +70,8 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS
+  SET_PROJECT_SECRETS,
+  CONFLICT
 } from '../constants'
 
 const projectsAction = {
@@ -100,7 +101,12 @@ const projectsAction = {
         return result
       })
       .catch(error => {
-        dispatch(projectsAction.createProjectFailure(error.message))
+        const message =
+          error.response.status === CONFLICT
+            ? `Project name "${postData.metadata.name}" already exists`
+            : error.message
+
+        dispatch(projectsAction.createProjectFailure(message))
       })
   },
   createProjectBegin: () => ({ type: CREATE_PROJECT_BEGIN }),
@@ -139,16 +145,26 @@ const projectsAction = {
   fetchProject: project => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
-    projectsApi
+    return projectsApi
       .getProject(project)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
       })
       .catch(error => {
-        dispatch(projectsAction.fetchProjectFailure(error.message))
+        dispatch(projectsAction.fetchProjectFailure(error))
+
+        throw error
       })
   },
   fetchProjectBegin: () => ({ type: FETCH_PROJECT_BEGIN }),
+  fetchProjectFailure: error => ({
+    type: FETCH_PROJECT_FAILURE,
+    payload: error
+  }),
+  fetchProjectSuccess: project => ({
+    type: FETCH_PROJECT_SUCCESS,
+    payload: project
+  }),
   fetchProjectDataSets: project => dispatch => {
     dispatch(projectsAction.fetchProjectDataSetsBegin())
 
@@ -204,10 +220,6 @@ const projectsAction = {
   fetchProjectFailedJobsSuccess: jobs => ({
     type: FETCH_PROJECT_FAILED_JOBS_SUCCESS,
     payload: jobs
-  }),
-  fetchProjectFailure: error => ({
-    type: FETCH_PROJECT_FAILURE,
-    payload: error
   }),
   fetchProjectFiles: project => dispatch => {
     dispatch(projectsAction.fetchProjectFilesBegin())
@@ -316,31 +328,6 @@ const projectsAction = {
   fetchProjectJobsSuccess: jobs => ({
     type: FETCH_PROJECT_JOBS_SUCCESS,
     payload: jobs
-  }),
-  fetchProjectCounters: project => dispatch => {
-    dispatch(projectsAction.fetchProjectCountersBegin())
-
-    return projectsApi
-      .getProjectSummary(project)
-      .then(({ data }) => {
-        return dispatch(projectsAction.fetchProjectCountersSuccess(data))
-      })
-      .catch(error => {
-        dispatch(projectsAction.fetchProjectCountersFailure(error.message))
-
-        throw error
-      })
-  },
-  fetchProjectCountersBegin: () => ({
-    type: FETCH_PROJECT_COUNTERS_BEGIN
-  }),
-  fetchProjectCountersFailure: error => ({
-    type: FETCH_PROJECT_COUNTERS_FAILURE,
-    payload: error
-  }),
-  fetchProjectCountersSuccess: summary => ({
-    type: FETCH_PROJECT_COUNTERS_SUCCESS,
-    payload: summary
   }),
   fetchProjectModels: (project, cancelToken) => dispatch => {
     dispatch(projectsAction.fetchProjectModelsBegin())
@@ -454,9 +441,30 @@ const projectsAction = {
     type: FETCH_PROJECT_SECRETS_SUCCESS,
     payload: secrets
   }),
-  fetchProjectSuccess: project => ({
-    type: FETCH_PROJECT_SUCCESS,
-    payload: project
+  fetchProjectSummary: project => dispatch => {
+    dispatch(projectsAction.fetchProjectSummaryBegin())
+
+    return projectsApi
+      .getProjectSummary(project)
+      .then(({ data }) => {
+        return dispatch(projectsAction.fetchProjectSummarySuccess(data))
+      })
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectSummaryFailure(error.message))
+
+        throw error
+      })
+  },
+  fetchProjectSummaryBegin: () => ({
+    type: FETCH_PROJECT_SUMMARY_BEGIN
+  }),
+  fetchProjectSummaryFailure: error => ({
+    type: FETCH_PROJECT_SUMMARY_FAILURE,
+    payload: error
+  }),
+  fetchProjectSummarySuccess: summary => ({
+    type: FETCH_PROJECT_SUMMARY_SUCCESS,
+    payload: summary
   }),
   fetchProjects: () => dispatch => {
     dispatch(projectsAction.fetchProjectsBegin())
@@ -556,8 +564,8 @@ const projectsAction = {
   }),
   removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
-  removeProjectCounters: () => ({ type: REMOVE_PROJECT_COUNTERS }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
+  removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
   setNewProjectDescription: description => ({
     type: SET_NEW_PROJECT_DESCRIPTION,

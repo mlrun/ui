@@ -74,7 +74,8 @@ const JobsPanel = ({
     isCpuRequestValid: true,
     isMemoryLimitValid: true,
     isCpuLimitValid: true,
-    isGpuLimitValid: true
+    isGpuLimitValid: true,
+    isAccessKeyValid: true
   })
   const history = useHistory()
 
@@ -233,15 +234,7 @@ const JobsPanel = ({
   ])
 
   const checkValidation = () => {
-    return (
-      validation.isNameValid &&
-      validation.isArtifactPathValid &&
-      validation.isMemoryRequestValid &&
-      validation.isMemoryLimitValid &&
-      validation.isCpuRequestValid &&
-      validation.isCpuLimitValid &&
-      validation.isGpuLimitValid
-    )
+    return Object.values(validation).every(value => value)
   }
 
   const functionData = useMemo(() => {
@@ -308,6 +301,16 @@ const JobsPanel = ({
   ])
 
   const handleRunJob = (event, cronString) => {
+    if (
+      validation.isAccessKeyValid &&
+      jobsStore.newJob.function.metadata.credentials.access_key.length === 0
+    ) {
+      return setValidation(state => ({
+        ...state,
+        isAccessKeyValid: false
+      }))
+    }
+
     const selectedFunction = functionsStore.template.name
       ? functionsStore.template.functions[0]
       : groupedFunctions.functions
@@ -331,7 +334,9 @@ const JobsPanel = ({
       match,
       selectedFunction,
       isFunctionTemplate,
-      defaultData?.task.spec.function
+      defaultData?.task.spec.function,
+      mode,
+      defaultData?.task.spec.handler
     )
 
     if (jobsStore.error) {
@@ -363,6 +368,16 @@ const JobsPanel = ({
   }
 
   const handleEditJob = (event, cronString) => {
+    if (
+      validation.isAccessKeyValid &&
+      jobsStore.newJob.function.metadata.credentials.access_key.length === 0
+    ) {
+      return setValidation(state => ({
+        ...state,
+        isAccessKeyValid: false
+      }))
+    }
+
     const postData = generateRequestData(
       jobsStore,
       cronString,

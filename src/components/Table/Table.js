@@ -1,17 +1,17 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
 import { isEmpty, map } from 'lodash'
 
 import TableView from './TableView'
-import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
+import { useDemoMode } from '../../hooks/demoMode.hook'
 import createJobsContent from '../../utils/createJobsContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
-import { FUNCTIONS_PAGE, JOBS_PAGE } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
+import { JOBS_PAGE } from '../../constants'
 import tableActions from '../../actions/table'
 
 import './table.scss'
@@ -35,7 +35,6 @@ const Table = ({
   setTablePanelOpen,
   tableStore
 }) => {
-  const location = useLocation()
   const [tableContent, setTableContent] = useState({
     groupLatestItem: [],
     groupWorkflowItems: [],
@@ -44,19 +43,11 @@ const Table = ({
   })
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
+  const isDemoMode = useDemoMode()
 
-  const previewArtifact = useSelector(
-    state => pageData.page !== FUNCTIONS_PAGE && state.artifactsStore.preview
-  )
   const workflows = useSelector(state => {
     return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
   })
-
-  useEffect(() => {
-    return () => {
-      setTablePanelOpen(false)
-    }
-  }, [setTablePanelOpen])
 
   useEffect(() => {
     const calculatePanelHeight = () => {
@@ -89,7 +80,7 @@ const Table = ({
       pageData.page,
       tableStore.isTablePanelOpen,
       match.params,
-      location.search,
+      isDemoMode,
       !isEveryObjectValueEmpty(selectedItem)
     )
 
@@ -117,7 +108,7 @@ const Table = ({
           groupWorkflowItem,
           !isEveryObjectValueEmpty(selectedItem),
           match.params,
-          location.search,
+          isDemoMode,
           true
         )
       }))
@@ -131,51 +122,45 @@ const Table = ({
     }
   }, [
     content,
-    groupedContent,
-    pageData.page,
-    setLoading,
-    workflows,
-    pageData.mainRowItemsCount,
-    tableStore.isTablePanelOpen,
     filtersStore.groupBy,
+    groupedContent,
+    isDemoMode,
     match.params,
-    location.search,
-    selectedItem
+    pageData.mainRowItemsCount,
+    pageData.page,
+    selectedItem,
+    tableStore.isTablePanelOpen,
+    workflows
   ])
 
   return (
-    <>
-      <TableView
-        actionsMenu={actionsMenu}
-        applyDetailsChanges={applyDetailsChanges}
-        cancelRequest={cancelRequest}
-        content={content}
-        getCloseDetailsLink={getCloseDetailsLink}
-        groupFilter={filtersStore.groupBy}
-        groupLatestItem={
-          isEmpty(tableContent.groupLatestItem)
-            ? tableContent.groupWorkflowItems
-            : tableContent.groupLatestItem
-        }
-        groupedContent={groupedContent}
-        handleCancel={handleCancel}
-        handleExpandRow={handleExpandRow}
-        handleSelectItem={handleSelectItem}
-        isTablePanelOpen={tableStore.isTablePanelOpen}
-        mainRowItemsCount={tableContent.mainRowItemsCount}
-        match={match}
-        pageData={pageData}
-        retryRequest={retryRequest}
-        selectedItem={selectedItem}
-        tableContent={tableContent.content}
-        tableHeadRef={tableHeadRef}
-        tablePanelRef={tablePanelRef}
-        workflows={workflows}
-      />
-      {previewArtifact.isPreview && (
-        <PreviewModal item={previewArtifact.selectedItem} />
-      )}
-    </>
+    <TableView
+      actionsMenu={actionsMenu}
+      applyDetailsChanges={applyDetailsChanges}
+      cancelRequest={cancelRequest}
+      content={content}
+      getCloseDetailsLink={getCloseDetailsLink}
+      groupFilter={filtersStore.groupBy}
+      groupLatestItem={
+        isEmpty(tableContent.groupLatestItem)
+          ? tableContent.groupWorkflowItems
+          : tableContent.groupLatestItem
+      }
+      groupedContent={groupedContent}
+      handleCancel={handleCancel}
+      handleExpandRow={handleExpandRow}
+      handleSelectItem={handleSelectItem}
+      isTablePanelOpen={tableStore.isTablePanelOpen}
+      mainRowItemsCount={tableContent.mainRowItemsCount}
+      match={match}
+      pageData={pageData}
+      retryRequest={retryRequest}
+      selectedItem={selectedItem}
+      tableContent={tableContent.content}
+      tableHeadRef={tableHeadRef}
+      tablePanelRef={tablePanelRef}
+      workflows={workflows}
+    />
   )
 }
 
@@ -190,10 +175,7 @@ Table.defaultProps = {
 }
 
 Table.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   getCloseDetailsLink: PropTypes.func,

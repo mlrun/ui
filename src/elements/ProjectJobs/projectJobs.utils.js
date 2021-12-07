@@ -7,9 +7,8 @@ import {
 } from '../../constants'
 import { formatDatetime } from '../../utils'
 import measureTime from '../../utils/measureTime'
-import { isDemoMode } from '../../utils/helper'
 
-export const getJobsStatistics = (projectCounter, match, search) => {
+export const getJobsStatistics = (projectCounter, match, isDemoMode) => {
   return {
     running: {
       value: projectCounter.error
@@ -33,7 +32,7 @@ export const getJobsStatistics = (projectCounter, match, search) => {
           ? 'default'
           : 'running',
       link: `/projects/${match.params.projectName}/jobs/${
-        isDemoMode(search) ? MONITOR_WORKFLOWS_TAB : MONITOR_JOBS_TAB
+        isDemoMode ? MONITOR_WORKFLOWS_TAB : MONITOR_JOBS_TAB
       }`
     },
     failed: {

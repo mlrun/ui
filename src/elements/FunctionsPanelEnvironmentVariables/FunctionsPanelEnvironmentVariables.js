@@ -1,43 +1,39 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 
 import FunctionsPanelEnvironmentVariablesView from './FunctionsPanelEnvironmentVariablesView'
 
 import functionsActions from '../../actions/functions'
-import { isDemoMode } from '../../utils/helper'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 const FunctionsPanelEnvironmentVariables = ({
   functionsStore,
   setNewFunctionEnv
 }) => {
-  const [envVariables, setEnvVariables] = useState(
-    parseEnvVariables(functionsStore.newFunction.spec.env)
-  )
-  const location = useLocation()
+  const [envVariables, setEnvVariables] = useState([])
+  const isDemoMode = useDemoMode()
+
+  useEffect(() => {
+    setEnvVariables(parseEnvVariables(functionsStore.newFunction.spec.env))
+  }, [functionsStore.newFunction.spec.env])
 
   const handleAddNewEnv = env => {
-    if (isDemoMode(location.search)) {
+    if (isDemoMode) {
       const generatedVariable = generateEnvVariable(env)
 
-      setEnvVariables(state => [
-        ...state,
-        ...parseEnvVariables([generatedVariable])
-      ])
       setNewFunctionEnv([
         ...functionsStore.newFunction.spec.env,
         generatedVariable
       ])
     } else {
       setNewFunctionEnv([...envVariables, { name: env.key, value: env.value }])
-      setEnvVariables([...envVariables, { name: env.key, value: env.value }])
     }
   }
 
   const handleEditEnv = env => {
-    if (isDemoMode(location.search)) {
+    if (isDemoMode) {
       const generatedVariables = env.map(variable =>
         generateEnvVariable(variable)
       )
@@ -58,16 +54,14 @@ const FunctionsPanelEnvironmentVariables = ({
   }
 
   const handleDeleteEnv = env => {
-    if (isDemoMode(location.search)) {
+    if (isDemoMode) {
       const generatedVariables = env.map(item => generateEnvVariable(item))
 
       setNewFunctionEnv([...generatedVariables])
-      setEnvVariables([...parseEnvVariables(generatedVariables)])
     } else {
       const newData = envVariables.filter((_, index) => index !== env)
 
       setNewFunctionEnv([...newData])
-      setEnvVariables([...newData])
     }
   }
 
@@ -77,7 +71,7 @@ const FunctionsPanelEnvironmentVariables = ({
       handleAddNewEnv={handleAddNewEnv}
       handleDeleteEnv={handleDeleteEnv}
       handleEditEnv={handleEditEnv}
-      location={location}
+      isDemoMode={isDemoMode}
     />
   )
 }

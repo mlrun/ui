@@ -61,11 +61,11 @@ export default {
       { params: { project, name: dataSet, tag: '*' } }
     )
   },
-  getDataSets: (project, filters) => {
+  getDataSets: (project, filters, config) => {
     return fetchArtifacts(
       '/artifacts',
       filters,
-      { params: { project, category: 'dataset' } },
+      { ...config, params: { project, category: 'dataset' } },
       true
     )
   },

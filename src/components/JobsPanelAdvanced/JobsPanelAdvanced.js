@@ -1,8 +1,9 @@
 import React, { useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useLocation } from 'react-router-dom'
 
 import JobsPanelAdvancedView from './JobsPanelAdvancedView'
+
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import {
   initialState,
@@ -25,7 +26,7 @@ const JobsPanelAdvanced = ({
   const [validation, setValidation] = useState({
     secretsSourceValue: true
   })
-  const location = useLocation()
+  const isDemoMode = useDemoMode()
 
   const handleAddNewItem = () => {
     let data = {}
@@ -142,7 +143,7 @@ const JobsPanelAdvanced = ({
       handleDeleteItems={handleDeleteItems}
       handleEditItems={handleEditItems}
       handleResetForm={handleResetForm}
-      location={location}
+      isDemoMode={isDemoMode}
       match={match}
       panelDispatch={panelDispatch}
       panelState={panelState}

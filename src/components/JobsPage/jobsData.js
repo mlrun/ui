@@ -14,7 +14,6 @@ import {
   STATUS_FILTER,
   TERTIARY_BUTTON
 } from '../../constants'
-import { isDemoMode } from '../../utils/helper'
 import { infoHeaders as functionsInfoHeaders } from '../FunctionsPage/functions.util'
 import { detailsMenu as functionsDetailsMenu } from '../FunctionsPage/functions.util'
 
@@ -186,7 +185,7 @@ export const detailsMenu = [
   }
 ]
 
-const filtersByTab = (pageTab, search) => {
+const filtersByTab = (pageTab, isDemoMode) => {
   if (pageTab === MONITOR_JOBS_TAB) {
     return [
       { type: PERIOD_FILTER, label: 'Period:' },
@@ -194,7 +193,7 @@ const filtersByTab = (pageTab, search) => {
       {
         type: GROUP_BY_FILTER,
         label: 'Group by:',
-        options: !isDemoMode(search) && [
+        options: !isDemoMode && [
           ...filterSelectOptions.groupBy,
           { label: 'Workflow', id: 'workflow' }
         ]
@@ -219,13 +218,18 @@ const filtersByTab = (pageTab, search) => {
   }
 }
 
-const generateTabs = search => {
+export const getValidTabs = isDemoMode =>
+  isDemoMode
+    ? [MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB, SCHEDULE_TAB]
+    : [MONITOR_JOBS_TAB, SCHEDULE_TAB]
+
+const generateTabs = isDemoMode => {
   return [
     { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },
     {
       id: MONITOR_WORKFLOWS_TAB,
       label: 'Monitor Workflows',
-      hidden: !isDemoMode(search)
+      hidden: !isDemoMode
     },
     { id: SCHEDULE_TAB, label: 'Schedule' }
   ]
@@ -233,7 +237,7 @@ const generateTabs = search => {
 
 export const generatePageData = (
   pageTab,
-  search,
+  isDemoMode,
   removeScheduledJob,
   handleSubmitJob,
   handleEditScheduleJob,
@@ -291,14 +295,14 @@ export const generatePageData = (
       removeLogs: !isEveryObjectValueEmpty(selectedFunction)
         ? handleRemoveFunctionLogs
         : removeJobLogs,
-      withLogsRefreshBtn: !isEveryObjectValueEmpty(selectedFunction)
+      withLogsRefreshBtn: isEveryObjectValueEmpty(selectedFunction)
     },
     hideFilterMenu: pageTab === MONITOR_WORKFLOWS_TAB || isSelectedItem,
     filterMenuActionButton,
-    filters: filtersByTab(pageTab, search),
+    filters: filtersByTab(pageTab, isDemoMode) ?? [],
     page,
     tableHeaders: generateTableHeaders(pageTab, workflowId, isSelectedItem),
-    tabs: generateTabs(search),
+    tabs: generateTabs(isDemoMode),
     withoutExpandButton: pageTab === MONITOR_WORKFLOWS_TAB && !workflowId
   }
 }

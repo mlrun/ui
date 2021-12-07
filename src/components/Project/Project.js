@@ -17,8 +17,13 @@ import featureStoreActions from '../../actions/featureStore'
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { getLinks, generateCreateNewOptions } from './project.utils'
+import {
+  getLinks,
+  generateCreateNewOptions,
+  handleFetchProjectError
+} from './project.utils'
 import { generateKeyValues, parseKeyValues } from '../../utils'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 import { KEY_CODES } from '../../constants'
 import {
   initialMembersState,
@@ -37,7 +42,7 @@ const Project = ({
   editProjectLabels,
   featureStore,
   fetchProject,
-  fetchProjectCounters,
+  fetchProjectSummary,
   fetchProjectFunctions,
   functionsStore,
   match,
@@ -46,7 +51,7 @@ const Project = ({
   removeFunctionsError,
   removeNewFunction,
   removeNewFeatureSet,
-  removeProjectCounters,
+  removeProjectSummary,
   removeProjectData,
   setNotification,
   setProjectData
@@ -75,13 +80,17 @@ const Project = ({
     setCreateFeatureSetPanelIsOpen
   ] = useState(false)
   const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false)
+  const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
+  const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
   const [showManageMembers, setShowManageMembers] = useState(false)
   const [showChangeOwner, setShowChangeOwner] = useState(false)
   const [visibleChipsMaxLength, setVisibleChipsMaxLength] = useState(1)
   const [isNewFunctionPopUpOpen, setIsNewFunctionPopUpOpen] = useState(false)
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
+  const [confirmData, setConfirmData] = useState(null)
   const history = useHistory()
   const inputRef = React.createRef()
+  const isDemoMode = useDemoMode()
 
   const { links, createNewOptions } = useMemo(() => {
     const links = getLinks(match)
@@ -133,9 +142,9 @@ const Project = ({
       .then(projects => {
         const currentProjectInfo = projects.data
         const currentProjectData = currentProjectInfo.data?.[0]
-        const projectId = currentProjectData.id
-        const ownerId = currentProjectData.relationships?.owner?.data?.id ?? ''
-        const ownerInfo = currentProjectInfo.included.find(
+        const projectId = currentProjectData?.id
+        const ownerId = currentProjectData?.relationships?.owner?.data?.id ?? ''
+        const ownerInfo = currentProjectInfo?.included.find(
           data => data.id === ownerId
         )
         const {
@@ -225,13 +234,41 @@ const Project = ({
       })
   }
 
+  const fetchProjectMembersVisibility = project => {
+    projectsIguazioApi
+      .getProjectMembersVisibility(project)
+      .then(() => {
+        setProjectMembersIsShown(true)
+      })
+      .catch(() => {
+        setProjectMembersIsShown(false)
+      })
+  }
+
+  const fetchProjectOwnerVisibility = project => {
+    projectsIguazioApi
+      .getProjectOwnerVisibility(project)
+      .then(() => {
+        setProjectOwnerIsShown(true)
+      })
+      .catch(() => {
+        setProjectOwnerIsShown(false)
+      })
+  }
+
   const fetchProjectData = useCallback(() => {
-    fetchProject(match.params.projectName)
+    fetchProject(match.params.projectName).catch(error => {
+      handleFetchProjectError(error, history, setConfirmData)
+    })
+  }, [fetchProject, history, match.params.projectName])
+
+  const fetchProjectUsersData = useCallback(() => {
     if (projectMembershipIsEnabled) {
       fetchProjectIdAndOwner().then(fetchProjectMembers)
+      fetchProjectMembersVisibility(match.params.projectName)
+      fetchProjectOwnerVisibility(match.params.projectName)
     }
   }, [
-    fetchProject,
     fetchProjectIdAndOwner,
     match.params.projectName,
     projectMembershipIsEnabled
@@ -246,19 +283,23 @@ const Project = ({
 
   useEffect(() => {
     fetchProjectData()
-    fetchProjectCounters(match.params.projectName)
+    fetchProjectSummary(match.params.projectName)
 
     return () => {
       resetProjectData()
-      removeProjectCounters()
+      removeProjectSummary()
     }
   }, [
-    fetchProjectCounters,
+    fetchProjectSummary,
     fetchProjectData,
     match.params.projectName,
-    removeProjectCounters,
+    removeProjectSummary,
     resetProjectData
   ])
+
+  useEffect(() => {
+    fetchProjectUsersData()
+  }, [fetchProjectUsersData])
 
   const handleSetProjectData = useCallback(() => {
     const data = {
@@ -535,7 +576,10 @@ const Project = ({
 
   const handleRefresh = () => {
     removeProjectData()
+    removeProjectSummary()
     fetchProjectData()
+    fetchProjectSummary(match.params.projectName)
+    fetchProjectUsersData()
   }
 
   const handleUpdateProjectLabels = labels => {
@@ -587,6 +631,7 @@ const Project = ({
       changeOwnerCallback={changeOwnerCallback}
       closeFeatureSetPanel={closeFeatureSetPanel}
       closeFunctionsPanel={closeFunctionsPanel}
+      confirmData={confirmData}
       createFeatureSetPanelIsOpen={createFeatureSetPanelIsOpen}
       createFeatureSetSuccess={createFeatureSetSuccess}
       createFunctionSuccess={createFunctionSuccess}
@@ -600,15 +645,18 @@ const Project = ({
       handleOnChangeProject={handleOnChangeProject}
       handleOnKeyDown={handleOnKeyDown}
       handleUpdateProjectLabels={handleUpdateProjectLabels}
+      isDemoMode={isDemoMode}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
       links={links}
       match={match}
       membersDispatch={membersDispatch}
       membersState={membersState}
-      projectCounters={projectStore.projectCounters}
+      projectSummary={projectStore.projectSummary}
       projectLabels={projectLabels}
+      projectMembersIsShown={projectMembersIsShown}
       projectMembershipIsEnabled={projectMembershipIsEnabled}
+      projectOwnerIsShown={projectOwnerIsShown}
       ref={inputRef}
       refresh={handleRefresh}
       setIsNewFunctionPopUpOpen={setIsNewFunctionPopUpOpen}

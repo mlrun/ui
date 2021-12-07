@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { connect } from 'react-redux'
 import { cloneDeep } from 'lodash'
+import PropTypes from 'prop-types'
 
 import Button from '../../common/Button/Button'
 import Tip from '../../common/Tip/Tip'
@@ -21,34 +22,53 @@ import './featuresTablePanel.scss'
 
 const FeaturesTablePanel = ({
   createNewFeatureVector,
+  filtersStore,
+  handleCancel,
+  onSubmit,
   setTablePanelOpen,
   tableStore,
+  setLabelFeature,
   setNotification,
+  updateCurrentProjectName,
   updateFeatureVector,
   updateFeatureVectorData,
   updateGroupedFeatures
 }) => {
-  const [labelFeature, setLabelFeature] = useState('')
   const [isCreateFeaturePopUpOpen, setIsCreateFeaturePopUpOpen] = useState(
     false
   )
 
   useEffect(() => {
-    setLabelFeature(
-      tableStore.features.groupedFeatures[
-        tableStore.features.currentProject
-      ]?.some(
-        feature =>
-          feature.originalTemplate ===
-          tableStore.features.featureVector.spec.label_feature
-      )
-        ? tableStore.features.featureVector.spec.label_feature
-        : ''
-    )
+    if (tableStore.features.isNewFeatureVector) {
+      updateCurrentProjectName(filtersStore.project)
+    }
   }, [
+    filtersStore.project,
+    tableStore.features.isNewFeatureVector,
+    updateCurrentProjectName
+  ])
+
+  useEffect(() => {
+    if (!tableStore.features.isNewFeatureVector) {
+      setLabelFeature({
+        [tableStore.features
+          .currentProject]: tableStore.features.groupedFeatures[
+          tableStore.features.currentProject
+        ]?.some(
+          feature =>
+            feature.originalTemplate ===
+            tableStore.features.featureVector.spec.label_feature
+        )
+          ? tableStore.features.featureVector.spec.label_feature
+          : ''
+      })
+    }
+  }, [
+    setLabelFeature,
     tableStore.features.currentProject,
     tableStore.features.featureVector.spec.label_feature,
-    tableStore.features.groupedFeatures
+    tableStore.features.groupedFeatures,
+    tableStore.features.isNewFeatureVector
   ])
 
   const addFeatures = () => {
@@ -58,32 +78,37 @@ const FeaturesTablePanel = ({
     featureVector.spec.features = tableStore.features.groupedFeatures[
       tableStore.features.currentProject
     ].map(feature => feature.originalTemplate)
-    featureVector.spec.label_feature = labelFeature
+    featureVector.spec.label_feature =
+      tableStore.features.labelFeature?.[tableStore.features.currentProject]
 
-    if (tableStore.features.isNewFeatureVector) {
-      addFeaturesPromise = createNewFeatureVector(featureVector)
+    if (onSubmit) {
+      onSubmit(featureVector)
     } else {
-      addFeaturesPromise = updateFeatureVectorData(featureVector)
+      if (tableStore.features.isNewFeatureVector) {
+        addFeaturesPromise = createNewFeatureVector(featureVector)
+      } else {
+        addFeaturesPromise = updateFeatureVectorData(featureVector)
+      }
+
+      addFeaturesPromise
+        .then(response => {
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Features successfully added'
+          })
+        })
+        .catch(() => {
+          setNotification({
+            status: 400,
+            id: Math.random(),
+            message: 'Failed to add features',
+            retry: addFeatures
+          })
+        })
+
+      setTablePanelOpen(false)
     }
-
-    addFeaturesPromise
-      .then(response => {
-        setNotification({
-          status: response.status,
-          id: Math.random(),
-          message: 'Features successfully added'
-        })
-      })
-      .catch(() => {
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to add features',
-          retry: addFeatures
-        })
-      })
-
-    setTablePanelOpen(false)
   }
 
   const deleteFeature = featureName => {
@@ -93,8 +118,13 @@ const FeaturesTablePanel = ({
 
     updateGroupedFeatures(filteredFeatures)
 
-    if (featureName === labelFeature) {
-      setLabelFeature('')
+    if (
+      featureName ===
+      tableStore.features.labelFeature?.[tableStore.features.currentProject]
+    ) {
+      setLabelFeature({
+        [tableStore.features.currentProject]: ''
+      })
     }
   }
 
@@ -113,7 +143,13 @@ const FeaturesTablePanel = ({
   }
 
   const toggleLabelFeature = featureTemplate => {
-    setLabelFeature(labelFeature ? '' : featureTemplate)
+    setLabelFeature({
+      [tableStore.features.currentProject]: tableStore.features.labelFeature?.[
+        tableStore.features.currentProject
+      ]
+        ? ''
+        : featureTemplate
+    })
   }
 
   return (
@@ -167,7 +203,7 @@ const FeaturesTablePanel = ({
           iconClassName="features-panel__expand-icon"
           openByDefault
         >
-          <div className="features-panel__expand-title">Current project</div>
+          <div className="features-panel__expand-title">Selected project</div>
           <div className="features-panel__expand-content">
             {tableStore.features.groupedFeatures[
               tableStore.features.currentProject
@@ -177,7 +213,15 @@ const FeaturesTablePanel = ({
               ].map(feature => (
                 <FeaturesTablePanelRow
                   key={feature.originalTemplate}
-                  labelFeature={labelFeature}
+                  labelFeature={
+                    tableStore.features.labelFeature?.[
+                      tableStore.features.currentProject
+                    ]
+                      ? tableStore.features.labelFeature[
+                          tableStore.features.currentProject
+                        ]
+                      : ''
+                  }
                   isEditEnabled={
                     tableStore.features.currentProject === feature.project
                   }
@@ -211,7 +255,11 @@ const FeaturesTablePanel = ({
                   {features.map(feature => (
                     <FeaturesTablePanelRow
                       key={feature.originalTemplate}
-                      labelFeature={labelFeature}
+                      labelFeature={
+                        tableStore.features.labelFeature?.[projectName]
+                          ? tableStore.features.labelFeature[projectName]
+                          : ''
+                      }
                       isEditEnabled={
                         tableStore.features.currentProject === feature.project
                       }
@@ -230,7 +278,7 @@ const FeaturesTablePanel = ({
           label="Cancel"
           variant={LABEL_BUTTON}
           onClick={() => {
-            setTablePanelOpen(false)
+            handleCancel ? handleCancel() : setTablePanelOpen(false)
           }}
         />
         <Button variant={PRIMARY_BUTTON} label="Add" onClick={addFeatures} />
@@ -239,9 +287,20 @@ const FeaturesTablePanel = ({
   )
 }
 
+FeaturesTablePanel.defaultProps = {
+  handleCancel: null,
+  onSubmit: null
+}
+
+FeaturesTablePanel.propTypes = {
+  handleCancel: PropTypes.func,
+  onSubmit: PropTypes.func
+}
+
 export default connect(
-  tableStore => ({
-    ...tableStore
+  (tableStore, filtersStore) => ({
+    ...tableStore,
+    ...filtersStore
   }),
   { ...tableActions, ...featureStoreActions, ...notificationActions }
 )(FeaturesTablePanel)

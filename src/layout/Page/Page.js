@@ -1,15 +1,15 @@
 import React, { useLayoutEffect, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import PageView from './PageView'
 import appActions from '../../actions/app'
-import { isDemoMode } from '../../utils/helper'
 
-const Page = ({ children, fetchFrontendSpec, history, location }) => {
-  const [savedDemoMode, setSavedDemoMode] = useState(
-    isDemoMode(location.search)
-  )
+const Page = ({ children, fetchFrontendSpec, history }) => {
+  const isDemoMode = useDemoMode()
+
+  const [savedDemoMode, setSavedDemoMode] = useState(isDemoMode)
 
   useEffect(() => {
     fetchFrontendSpec()
@@ -20,18 +20,18 @@ const Page = ({ children, fetchFrontendSpec, history, location }) => {
   }, [fetchFrontendSpec])
 
   useEffect(() => {
-    if (isDemoMode(location.search)) {
+    if (isDemoMode) {
       setSavedDemoMode(true)
     }
-  }, [location.search])
+  }, [isDemoMode])
 
   useLayoutEffect(() => {
-    if (savedDemoMode && !isDemoMode(location.search)) {
+    if (savedDemoMode && !isDemoMode) {
       history.replace({
         search: '?demo=true'
       })
     }
-  }, [history, location.search, savedDemoMode])
+  }, [history, isDemoMode, savedDemoMode])
 
   return <PageView>{children}</PageView>
 }

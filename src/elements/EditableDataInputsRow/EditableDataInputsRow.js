@@ -4,6 +4,8 @@ import classNames from 'classnames'
 
 import Input from '../../common/Input/Input'
 import Combobox from '../../common/Combobox/Combobox'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import {
   comboboxSelectList,
@@ -209,7 +211,9 @@ const EditableDataInputsRow = ({
             )
           }}
         >
-          <Checkmark />
+          <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+            <Checkmark />
+          </Tooltip>
         </button>
       </div>
     </div>

@@ -21,6 +21,10 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
   const [usersList, setUsersList] = useState([])
   const [showSuggestionList, setShowSuggestionList] = useState(false)
   const searchInputRef = useRef(null)
+  const searchRowRef = useRef(null)
+
+  const { width: dropdownWidth } =
+    searchRowRef?.current?.getBoundingClientRect() || {}
 
   const closeSuggestionList = useCallback(
     event => {
@@ -72,7 +76,11 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
 
   const generateSuggestionList = useCallback(
     debounce(async resolve => {
-      const response = await projectsIguazioApi.getScrubbedUsers()
+      const response = await projectsIguazioApi.getScrubbedUsers({
+        params: {
+          'filter[assigned_policies]': '[$contains_any]Developer,Project Admin'
+        }
+      })
       const {
         data: { data: users }
       } = response
@@ -112,7 +120,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
       headerText="Change owner"
     >
       <div className="owner-table">
-        <div className="search-row">
+        <div className="search-row" ref={searchRowRef}>
           <div className="search-input">
             <SearchIcon />
             <Input
@@ -127,43 +135,52 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
           </div>
           <div className="search-role">Owner</div>
           {showSuggestionList && (
-            <div className="members-list">
-              {usersList
-                .filter(member => {
-                  return member.name.includes(searchValue)
-                })
-                .map(member => {
-                  const memberClassNames = classnames(
-                    'member-row',
-                    member.role && 'disabled'
-                  )
+            <PopUpDialog
+              className="search-dropdown"
+              customPosition={{
+                element: searchRowRef,
+                position: 'bottom-right'
+              }}
+              style={{ width: `${dropdownWidth}px` }}
+            >
+              <div className="members-list">
+                {usersList
+                  .filter(member => {
+                    return member.name.includes(searchValue)
+                  })
+                  .map(member => {
+                    const memberClassNames = classnames(
+                      'member-row',
+                      member.role && 'disabled'
+                    )
 
-                  return (
-                    <div
-                      className={memberClassNames}
-                      key={member.id}
-                      onClick={() => {
-                        if (!member.role) {
-                          setNewOwnerId(member.id)
-                          setSearchValue(member.name)
-                          setShowSuggestionList(false)
-                        }
-                      }}
-                    >
-                      <span
-                        className="member-name"
-                        dangerouslySetInnerHTML={{
-                          __html: member.name.replace(
-                            new RegExp(searchValue, 'gi'),
-                            match => (match ? `<b>${match}</b>` : match)
-                          )
+                    return (
+                      <div
+                        className={memberClassNames}
+                        key={member.id}
+                        onClick={() => {
+                          if (!member.role) {
+                            setNewOwnerId(member.id)
+                            setSearchValue(member.name)
+                            setShowSuggestionList(false)
+                          }
                         }}
-                      />
-                      <span className="member-role">{member.role}</span>
-                    </div>
-                  )
-                })}
-            </div>
+                      >
+                        <span
+                          className="member-name"
+                          dangerouslySetInnerHTML={{
+                            __html: member.name.replace(
+                              new RegExp(searchValue, 'gi'),
+                              match => (match ? `<b>${match}</b>` : match)
+                            )
+                          }}
+                        />
+                        <span className="member-role">{member.role}</span>
+                      </div>
+                    )
+                  })}
+              </div>
+            </PopUpDialog>
           )}
         </div>
       </div>

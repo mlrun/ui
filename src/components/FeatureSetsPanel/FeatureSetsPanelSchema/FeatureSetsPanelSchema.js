@@ -8,10 +8,10 @@ import featureStoreActions from '../../../actions/featureStore'
 
 const FeatureSetsPanelSchema = ({
   featureStore,
-  isEntitiesValid,
   setNewFeatureSetDataSourceEntities,
   setNewFeatureSetSchemaTimestampKey,
-  setEntitiesValid
+  setValidation,
+  validation
 }) => {
   const [data, setData] = useState({
     entities: '',
@@ -34,7 +34,7 @@ const FeatureSetsPanelSchema = ({
         JSON.stringify(featureStore.newFeatureSet.spec.entities)
     ) {
       setNewFeatureSetDataSourceEntities(entitiesArray)
-      setEntitiesValid(prevState => ({
+      setValidation(prevState => ({
         ...prevState,
         isEntitiesValid: true
       }))
@@ -47,8 +47,8 @@ const FeatureSetsPanelSchema = ({
   }
 
   const handleEntitiesOnChange = entities => {
-    if (!isEntitiesValid && entities.length > 0) {
-      setEntitiesValid(prevState => ({
+    if (!validation.isEntitiesValid && entities.length > 0) {
+      setValidation(prevState => ({
         ...prevState,
         isEntitiesValid: true
       }))
@@ -66,17 +66,17 @@ const FeatureSetsPanelSchema = ({
       featureStore={featureStore}
       handleEntitiesOnBlur={handleEntitiesOnBlur}
       handleEntitiesOnChange={handleEntitiesOnChange}
-      isEntitiesValid={isEntitiesValid}
       setData={setData}
-      setEntitiesValid={setEntitiesValid}
       setNewFeatureSetSchemaTimestampKey={setNewFeatureSetSchemaTimestampKey}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }
 
 FeatureSetsPanelSchema.propTypes = {
-  isEntitiesValid: PropTypes.bool.isRequired,
-  setEntitiesValid: PropTypes.func.isRequired
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(featureStore => ({ ...featureStore }), {

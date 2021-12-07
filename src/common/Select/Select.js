@@ -6,7 +6,7 @@ import SelectOption from '../../elements/SelectOption/SelectOption'
 import Tooltip from '../Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import PopUpDialog from '../PopUpDialog/PopUpDialog'
-import Button from '../Button/Button'
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 
 import { SELECT_OPTIONS } from '../../types'
 import { TERTIARY_BUTTON } from '../../constants'
@@ -35,6 +35,8 @@ const Select = ({
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [isOpen, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+  const { width: dropdownWidth } =
+    selectRef?.current?.getBoundingClientRect() || {}
   const selectClassName = classNames(
     'select',
     className,
@@ -56,15 +58,26 @@ const Select = ({
   const selectedOption = options.find(option => option.id === selectedId)
 
   useEffect(() => {
+    if (isOpen) {
+      window.addEventListener('scroll', handleScroll, true)
+    }
+
     window.addEventListener('click', clickHandler)
 
     return () => {
       window.removeEventListener('click', clickHandler)
+      window.removeEventListener('scroll', handleScroll, true)
     }
   }, [isOpen])
 
   const clickHandler = event => {
     if (selectRef.current !== event.target.closest('.select')) {
+      setOpen(false)
+    }
+  }
+
+  const handleScroll = event => {
+    if (!event.target.closest('.select__body')) {
       setOpen(false)
     }
   }
@@ -145,70 +158,75 @@ const Select = ({
         <Caret className="select__caret" />
       </div>
       {isConfirmDialogOpen && (
-        <PopUpDialog
-          headerText={selectedItemAction.confirm.title}
+        <ConfirmDialog
+          cancelButton={{
+            handler: () => {
+              setConfirmDialogOpen(false)
+            },
+            label: 'Cancel',
+            variant: TERTIARY_BUTTON
+          }}
           closePopUp={() => {
             setConfirmDialogOpen(false)
           }}
-        >
-          <div>{selectedItemAction.confirm.description}</div>
-          <div className="pop-up-dialog__footer-container">
-            <Button
-              variant={TERTIARY_BUTTON}
-              label="Cancel"
-              className="pop-up-dialog__btn_cancel"
-              onClick={() => {
-                setConfirmDialogOpen(false)
-              }}
-            />
-            <Button
-              variant={selectedItemAction.confirm.btnConfirmType}
-              label={selectedItemAction.confirm.btnConfirmLabel}
-              onClick={() => {
-                selectedItemAction.handler(selectedId)
-                setConfirmDialogOpen(false)
-              }}
-            />
-          </div>
-        </PopUpDialog>
+          confirmButton={{
+            handler: () => {
+              selectedItemAction.handler(selectedId)
+              setConfirmDialogOpen(false)
+            },
+            label: selectedItemAction.confirm.btnConfirmLabel,
+            variant: selectedItemAction.confirm.btnConfirmType
+          }}
+          header={selectedItemAction.confirm.title}
+          message={selectedItemAction.confirm.message}
+        />
       )}
       {isOpen && (
-        <div
-          data-testid="select-body"
-          className="select__body"
-          onClick={handleCloseSelectBody}
+        <PopUpDialog
+          className="select__options-list"
+          customPosition={{
+            element: selectRef,
+            position: 'bottom-right'
+          }}
+          style={{ width: `${dropdownWidth}px` }}
         >
-          {search && (
-            <div className="select__search">
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchValue}
-                onChange={event => setSearchValue(event.target.value)}
-              />
-            </div>
-          )}
-          {options
-            .filter(option => {
-              return (
-                !search ||
-                option.label.toLowerCase().includes(searchValue.toLowerCase())
-              )
-            })
-            .map(option => {
-              return (
-                <SelectOption
-                  item={option}
-                  key={option.id}
-                  onClick={selectedOption => {
-                    handleSelectOptionClick(selectedOption, option)
-                  }}
-                  selectType={selectType}
-                  selectedId={selectedId}
+          <div
+            data-testid="select-body"
+            className="select__body"
+            onClick={handleCloseSelectBody}
+          >
+            {search && (
+              <div className="select__search">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchValue}
+                  onChange={event => setSearchValue(event.target.value)}
                 />
-              )
-            })}
-        </div>
+              </div>
+            )}
+            {options
+              .filter(option => {
+                return (
+                  !search ||
+                  option.label.toLowerCase().includes(searchValue.toLowerCase())
+                )
+              })
+              .map(option => {
+                return (
+                  <SelectOption
+                    item={option}
+                    key={option.id}
+                    onClick={selectedOption => {
+                      handleSelectOptionClick(selectedOption, option)
+                    }}
+                    selectType={selectType}
+                    selectedId={selectedId}
+                  />
+                )
+              })}
+          </div>
+        </PopUpDialog>
       )}
     </div>
   )

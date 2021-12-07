@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
 import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import artifactActions from '../../actions/artifacts'
 import { formatDatetime } from '../../utils'
@@ -52,12 +54,14 @@ const PreviewModal = ({ closeArtifactsPreview, item }) => {
               {formatDatetime(new Date(item.updated || item.date), 'N/A')}
             </div>
             <div className="preview-body__download">
-              <Download
-                path={`${item.target_path}${
-                  item.model_file ? item.model_file : ''
-                }`}
-                user={item.user ?? item.producer?.owner}
-              />
+              <Tooltip template={<TextTooltipTemplate text="Download" />}>
+                <Download
+                  path={`${item.target_path}${
+                    item.model_file ? item.model_file : ''
+                  }`}
+                  user={item.user ?? item.producer?.owner}
+                />
+              </Tooltip>
             </div>
           </div>
           <div className="item-artifacts__preview">

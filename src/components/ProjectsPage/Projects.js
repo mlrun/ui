@@ -140,8 +140,8 @@ const Projects = ({
     project => {
       setConfirmData({
         item: project,
-        title: 'Archive project',
-        description:
+        header: 'Archive project',
+        message:
           "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that " +
           "before setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
         btnConfirmLabel: 'Archive',
@@ -159,8 +159,8 @@ const Projects = ({
     project => {
       setConfirmData({
         item: project,
-        title: `Delete project "${project.metadata.name}"?`,
-        description: 'Deleted projects can not be restored.',
+        header: 'Delete project?',
+        message: `You try to delete project "${project.metadata.name}". Deleted projects can not be restored.`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
@@ -234,35 +234,29 @@ const Projects = ({
   const handleCreateProject = e => {
     e.preventDefault()
 
-    if (!e.currentTarget.checkValidity()) {
-      return false
-    }
-
-    if (projectStore.newProject.name.length === 0) {
-      setNameValid(false)
-      return false
-    } else if (isNameValid) {
-      setNameValid(true)
-    }
-
-    createNewProject({
-      metadata: {
-        name: projectStore.newProject.name
-      },
-      spec: {
-        description: projectStore.newProject.description
+    if (e.currentTarget.checkValidity()) {
+      if (projectStore.newProject.name.length === 0) {
+        setNameValid(false)
+        return false
+      } else if (isNameValid) {
+        setNameValid(true)
       }
-    }).then(result => {
-      if (result) {
-        setCreateProject(false)
-        removeNewProject()
-        refreshProjects()
-      }
-    })
-  }
 
-  const handleSearchOnChange = value => {
-    setFilterByName(value)
+      createNewProject({
+        metadata: {
+          name: projectStore.newProject.name
+        },
+        spec: {
+          description: projectStore.newProject.description
+        }
+      }).then(result => {
+        if (result) {
+          setCreateProject(false)
+          removeNewProject()
+          refreshProjects()
+        }
+      })
+    }
   }
 
   return (
@@ -277,7 +271,6 @@ const Projects = ({
       filteredProjects={filteredProjects}
       filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
-      handleSearchOnChange={handleSearchOnChange}
       isDescendingOrder={isDescendingOrder}
       isNameValid={isNameValid}
       match={match}
@@ -286,6 +279,7 @@ const Projects = ({
       removeNewProjectError={removeNewProjectError}
       selectedProjectsState={selectedProjectsState}
       setCreateProject={setCreateProject}
+      setFilterByName={setFilterByName}
       setFilterMatches={setFilterMatches}
       setIsDescendingOrder={setIsDescendingOrder}
       setNameValid={setNameValid}

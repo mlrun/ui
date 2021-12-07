@@ -6,15 +6,17 @@ import { connect, useDispatch } from 'react-redux'
 import DetailsView from './DetailsView'
 
 import artifactActions from '../../actions/artifacts'
+import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
   DATASETS_TAB,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  MODELS_PAGE,
+  MODEL_ENDPOINTS_TAB,
   MODELS_TAB
 } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 import {
   generateArtifactsContent,
   generateFeatureStoreContent,
@@ -22,7 +24,6 @@ import {
   generateJobsContent,
   renderContent
 } from './details.util'
-import detailsActions from '../../actions/details'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 import './details.scss'
@@ -36,6 +37,7 @@ const Details = ({
   filtersStore,
   getCloseDetailsLink,
   handleCancel,
+  handleRefresh,
   isDetailsScreen,
   match,
   pageData,
@@ -111,26 +113,24 @@ const Details = ({
   )
 
   useEffect(() => {
-    if (pageData.details.type === JOBS_PAGE) {
-      setIteration('0')
-    }
-
     return () => {
+      if (pageData.details.type === JOBS_PAGE) {
+        setIteration('0')
+      }
+
       resetChanges()
     }
   }, [pageData.details.type, resetChanges, setIteration])
 
   useEffect(() => {
-    if (
-      !isEveryObjectValueEmpty(selectedItem) &&
-      isEveryObjectValueEmpty(detailsStore.infoContent)
-    ) {
+    if (!isEveryObjectValueEmpty(selectedItem)) {
       if (pageData.details.type === JOBS_PAGE) {
         setInfoContent(generateJobsContent(selectedItem))
       } else if (
         pageData.details.type === ARTIFACTS_PAGE ||
         pageData.details.type === FILES_PAGE ||
-        pageData.details.type === MODELS_PAGE ||
+        pageData.details.type === MODELS_TAB ||
+        pageData.details.type === MODEL_ENDPOINTS_TAB ||
         pageData.details.type === DATASETS_TAB
       ) {
         setInfoContent(
@@ -152,7 +152,6 @@ const Details = ({
       }
     }
   }, [
-    detailsStore.infoContent,
     handleAddChip,
     handleDeleteChip,
     handleEditChips,
@@ -238,15 +237,23 @@ const Details = ({
   const detailsMenuClick = () => {
     let changesData = {}
 
-    Object.keys(detailsStore.changes.data).forEach(key => {
-      changesData[key] = {
-        initialFieldValue: detailsStore.changes.data[key].initialFieldValue,
-        previousFieldValue: detailsStore.changes.data[key].previousFieldValue,
-        currentFieldValue: detailsStore.changes.data[key].previousFieldValue
-      }
-    })
-
-    setChangesData({ ...changesData })
+    if (
+      Object.keys(detailsStore.changes.data).some(key => {
+        return (
+          detailsStore.changes.data[key].currentFieldValue !==
+          detailsStore.changes.data[key].previousFieldValue
+        )
+      })
+    ) {
+      Object.keys(detailsStore.changes.data).forEach(key => {
+        changesData[key] = {
+          initialFieldValue: detailsStore.changes.data[key].initialFieldValue,
+          previousFieldValue: detailsStore.changes.data[key].previousFieldValue,
+          currentFieldValue: detailsStore.changes.data[key].previousFieldValue
+        }
+      })
+      setChangesData({ ...changesData })
+    }
 
     if (unblockRootChange.current) {
       unblockRootChange.current()
@@ -327,6 +334,7 @@ const Details = ({
       detailsStore={detailsStore}
       getCloseDetailsLink={getCloseDetailsLink}
       handleCancel={handleCancel}
+      handleRefresh={handleRefresh}
       handleShowWarning={handleShowWarning}
       isDetailsScreen={isDetailsScreen}
       leavePage={leavePage}
@@ -345,6 +353,7 @@ Details.defaultProps = {
   applyDetailsChanges: () => {},
   cancelRequest: () => {},
   getCloseDetailsLink: null,
+  handleRefresh: () => {},
   isDetailsScreen: false,
   item: {},
   retryRequest: () => {},
@@ -352,10 +361,7 @@ Details.defaultProps = {
 }
 
 Details.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   cancelRequest: PropTypes.func,
   detailsMenu: PropTypes.arrayOf(
@@ -367,6 +373,7 @@ Details.propTypes = {
   ).isRequired,
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func,
   isDetailsScreen: PropTypes.bool,
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,

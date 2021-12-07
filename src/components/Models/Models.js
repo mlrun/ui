@@ -16,7 +16,8 @@ import {
   generatePageData,
   getFeatureVectorData,
   checkForSelectedModel,
-  checkForSelectedModelEndpoint
+  checkForSelectedModelEndpoint,
+  validTabs
 } from './models.util'
 import {
   INIT_GROUP_FILTER,
@@ -30,6 +31,7 @@ import { filterArtifacts } from '../../utils/filterArtifacts'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { isUrlValid } from '../../utils/handleRedirect'
 
 const Models = ({
   artifactsStore,
@@ -59,7 +61,6 @@ const Models = ({
   const [pageData, setPageData] = useState({
     details: { menu: [], infoHeaders: [] },
     filters: [],
-    infoHeaders: [],
     page: MODELS_PAGE,
     registerArtifactDialogTitle: '',
     tabs: []
@@ -320,6 +321,10 @@ const Models = ({
     match.params.pageTab,
     match.params.projectName
   ])
+
+  useEffect(() => {
+    isUrlValid(match, validTabs, history)
+  }, [history, match])
 
   const sortedContent = useMemo(() => {
     const path =

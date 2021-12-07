@@ -36,6 +36,9 @@ const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
 const ProjectSettings = React.lazy(() =>
   import('./components/ProjectSettings/ProjectSettings')
 )
+const AddToFeatureVectorPage = React.lazy(() =>
+  import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
+)
 
 const App = () => {
   return (
@@ -62,6 +65,11 @@ const App = () => {
               exact
               from="/projects/:projectName/settings"
               to={`/projects/:projectName/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
+            />
+            {/* Adding the next redirect for backwards compatability */}
+            <Redirect
+              from="/projects/:projectName/jobs/monitor/*"
+              to={'/projects/:projectName/jobs/monitor-jobs/*'}
             />
             <Route
               path="/projects/:projectName/jobs/:pageTab/create-new-job"
@@ -101,6 +109,11 @@ const App = () => {
               path="/projects/:projectName/functions/:hash/:tab"
               render={routeProps => <Functions {...routeProps} />}
             />
+            <Route
+              exact
+              path="/projects/:projectName/feature-store/add-to-feature-vector"
+              render={routeProps => <AddToFeatureVectorPage {...routeProps} />}
+            />
             <Redirect
               exact
               from="/projects/:projectName/feature-store"
@@ -108,22 +121,12 @@ const App = () => {
             />
             <Route
               exact
-              path="/projects/:projectName/feature-store/:pageTab"
-              render={routeProps => <FeatureStore {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/feature-store/:pageTab/:name/:tab"
-              render={routeProps => <FeatureStore {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/feature-store/:pageTab/:name/:tag/:tab"
-              render={routeProps => <FeatureStore {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/feature-store/:pageTab/:name/:tag/:iter/:tab"
+              path={[
+                '/projects/:projectName/feature-store/:pageTab',
+                '/projects/:projectName/feature-store/:pageTab/:name/:tab',
+                '/projects/:projectName/feature-store/:pageTab/:name/:tag/:tab',
+                '/projects/:projectName/feature-store/:pageTab/:name/:tag/:iter/:tab'
+              ]}
               render={routeProps => <FeatureStore {...routeProps} />}
             />
             <Redirect

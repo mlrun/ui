@@ -7,7 +7,6 @@ import JobsPanelEnvironmentVariables from '../../elements/JobsPanelEnvironmentVa
 
 import panelData from '../JobsPanel/panelData'
 import { advancedActions } from './jobsPanelAdvancedReducer'
-import { isDemoMode } from '../../utils/helper'
 
 const JobsPanelAdvancedView = ({
   advancedDispatch,
@@ -16,7 +15,7 @@ const JobsPanelAdvancedView = ({
   handleDeleteItems,
   handleEditItems,
   handleResetForm,
-  location,
+  isDemoMode,
   match,
   panelDispatch,
   panelState,
@@ -25,8 +24,7 @@ const JobsPanelAdvancedView = ({
 }) => {
   return (
     <div className="job-panel__item advanced new-item-side-panel__item">
-      <JobsPanelSection title="Advanced" />
-      {isDemoMode(location.search) ? (
+      <JobsPanelSection title="Advanced">
         <JobsPanelEnvironmentVariables
           panelDispatch={panelDispatch}
           panelEnvData={panelState.tableData.environmentVariables}
@@ -34,7 +32,9 @@ const JobsPanelAdvancedView = ({
             panelState.previousPanelData.tableData.environmentVariables
           }
         />
-      ) : (
+      </JobsPanelSection>
+
+      {isDemoMode && (
         <JobsPanelSection title="Secrets">
           <JobsPanelAdvancedTable
             addNewItem={advancedState.addNewSecret}
@@ -90,7 +90,7 @@ JobsPanelAdvancedView.propTypes = {
   handleDeleteItems: PropTypes.func.isRequired,
   handleEditItems: PropTypes.func.isRequired,
   handleResetForm: PropTypes.func.isRequired,
-  location: PropTypes.shape({}).isRequired,
+  isDemoMode: PropTypes.bool.isRequired,
   match: PropTypes.shape({}).isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
