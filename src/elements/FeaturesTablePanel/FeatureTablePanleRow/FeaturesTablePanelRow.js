@@ -26,6 +26,10 @@ const FeaturesTablePanelRow = ({
     labelFeature && 'selected-feature-exists'
   )
   const actionClassNames = classnames(!isEditEnabled && 'readonly')
+  const actionBlockClassNames = classnames(
+    'label-actions',
+    isEditEnabled && 'with-hover'
+  )
   const featureTemplate = (
     <span>
       <span>{feature.featureSet}</span>
@@ -51,9 +55,9 @@ const FeaturesTablePanelRow = ({
         </Tooltip>
       </div>
       <div className="feature-row__actions">
-        <div className="label-actions">
+        <div className={actionBlockClassNames}>
           <Tooltip
-            hidden={labelFeature.length > 0}
+            hidden={labelFeature.length > 0 || !isEditEnabled}
             template={<TextTooltipTemplate text="Set as label" />}
           >
             <Target
@@ -70,7 +74,10 @@ const FeaturesTablePanelRow = ({
             />
           </Tooltip>
         </div>
-        <Tooltip template={<TextTooltipTemplate text="Remove from vector" />}>
+        <Tooltip
+          hidden={!isEditEnabled}
+          template={<TextTooltipTemplate text="Remove from vector" />}
+        >
           <Delete
             className={`action remove ${actionClassNames}`}
             onClick={() => {

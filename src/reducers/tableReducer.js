@@ -1,6 +1,8 @@
 import {
   SET_FEATURES_PANEL_DATA,
+  SET_LABEL_FEATURE,
   SET_TABLE_PANEL_OPEN,
+  UPDATE_CURRENT_PROJECT_NAME,
   UPDATE_FEATURE_VECTOR,
   UPDATE_GROUPED_FEATURES
 } from '../constants'
@@ -11,7 +13,8 @@ const initialState = {
     currentProject: '',
     featureVector: {},
     groupedFeatures: {},
-    isNewFeatureVector: false
+    isNewFeatureVector: false,
+    labelFeature: {}
   }
 }
 
@@ -22,10 +25,29 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         features: { ...payload }
       }
+    case SET_LABEL_FEATURE:
+      return {
+        ...state,
+        features: {
+          ...state.features,
+          labelFeature: {
+            ...state.features.labelFeature,
+            ...payload
+          }
+        }
+      }
     case SET_TABLE_PANEL_OPEN:
       return {
         ...state,
         isTablePanelOpen: payload
+      }
+    case UPDATE_CURRENT_PROJECT_NAME:
+      return {
+        ...state,
+        features: {
+          ...state.features,
+          currentProject: payload
+        }
       }
     case UPDATE_FEATURE_VECTOR:
       return {
@@ -52,7 +74,7 @@ export default (state = initialState, { type, payload }) => {
           ...state.features,
           groupedFeatures: {
             ...state.features.groupedFeatures,
-            [state.features.featureVector.metadata.project]: payload
+            [state.features.currentProject]: payload
           }
         }
       }
