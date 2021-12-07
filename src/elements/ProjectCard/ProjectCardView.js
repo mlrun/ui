@@ -7,8 +7,6 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 
-import { ACTIONS_MENU } from '../../types'
-
 import './projectCard.scss'
 
 const ProjectCardView = React.forwardRef(
@@ -59,7 +57,7 @@ const ProjectCardView = React.forwardRef(
 )
 
 ProjectCardView.propTypes = {
-  actionsMenu: ACTIONS_MENU.isRequired,
+  actionsMenu: PropTypes.shape({}).isRequired,
   project: PropTypes.shape({}).isRequired,
   statistics: PropTypes.shape({}).isRequired
 }
