@@ -17,7 +17,7 @@ import {
   getFeatureVectorData,
   checkForSelectedModel,
   checkForSelectedModelEndpoint,
-  validTabs
+  tabs
 } from './models.util'
 import {
   INIT_GROUP_FILTER,
@@ -323,7 +323,11 @@ const Models = ({
   ])
 
   useEffect(() => {
-    isUrlValid(match, validTabs, history)
+    isUrlValid(
+      match,
+      tabs.map(tab => tab.id),
+      history
+    )
   }, [history, match])
 
   const sortedContent = useMemo(() => {

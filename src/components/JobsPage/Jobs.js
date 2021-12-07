@@ -21,7 +21,7 @@ import functionsActions from '../../actions/functions'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import { generateKeyValues } from '../../utils'
-import { generatePageData, getValidTabs } from './jobsData'
+import { generatePageData } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import {
@@ -391,13 +391,12 @@ const Jobs = ({
       .then(job => {
         setSelectedJob(parseJob(job))
       })
-      .catch(error => handleCatchRequest(error, 'Failed to fetch job'))
-  }, [
-    fetchJob,
-    handleCatchRequest,
-    match.params.jobId,
-    match.params.projectName
-  ])
+      .catch(() =>
+        history.replace(
+          `/projects/${match.params.projectName}/jobs/monitor-jobs`
+        )
+      )
+  }, [fetchJob, history, match.params.jobId, match.params.projectName])
 
   useEffect(() => {
     if (!isEmpty(selectedJob) && match.params.pageTab === MONITOR_JOBS_TAB) {
@@ -427,8 +426,12 @@ const Jobs = ({
   }, [history, match, pageData.details.menu])
 
   useEffect(() => {
-    isUrlValid(match, getValidTabs(isDemoMode), history)
-  }, [history, isDemoMode, match])
+    isUrlValid(
+      match,
+      pageData.tabs.map(tab => tab.id),
+      history
+    )
+  }, [history, match, pageData.tabs])
 
   useEffect(() => {
     if (

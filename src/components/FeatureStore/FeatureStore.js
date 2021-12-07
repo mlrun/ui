@@ -28,7 +28,7 @@ import {
   handleFetchData,
   navigateToDetailsPane,
   pageDataInitialState,
-  validTabs
+  tabs
 } from './featureStore.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -460,7 +460,11 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    isUrlValid(match, validTabs, history)
+    isUrlValid(
+      match,
+      tabs.map(tab => tab.id),
+      history
+    )
   }, [history, match])
 
   const applyDetailsChanges = changes => {
