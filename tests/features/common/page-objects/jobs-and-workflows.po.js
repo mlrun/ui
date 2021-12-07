@@ -42,7 +42,7 @@ const resultsTable = {
 const actionMenuStructure = {
   root: 'div.actions-menu__container',
   menuElements: {
-    open_button: 'div.data-ellipsis button',
+    open_button: 'button',
     options: 'div.actions-menu__body div.actions-menu__option'
   }
 }
@@ -97,6 +97,78 @@ const jobsMonitorTable = {
           componentType: commonTable,
           structure: resultsTable
         },
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
+  }
+}
+
+const workflowsMonitorTable = {
+  root: 'div.table div.table__content',
+  header: {
+    root: 'div.table-head',
+    sorters: {
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      created: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      finished: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      duration: 'div.table-head__item:nth-of-type(4) div.data-ellipsis'
+    }
+  },
+  body: {
+    root: 'div.table-body',
+    row: {
+      root: 'div.table-body__row',
+      fields: {
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        created: 'div.table-body__cell:nth-of-type(2) div.data-ellipsis',
+        finished: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        duration: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
+  }
+}
+
+const scheduleMonitorTable = {
+  root: 'div.table div.table__content',
+  header: {
+    root: 'div.table-head',
+    sorters: {
+      name: 'div.table-head__item:nth-of-type(1) div.data-ellipsis',
+      type: 'div.table-head__item:nth-of-type(2) div.data-ellipsis',
+      nextRun: 'div.table-head__item:nth-of-type(3) div.data-ellipsis',
+      schedule: 'div.table-head__item:nth-of-type(4) div.data-ellipsis',
+      labels: 'div.table-head__item:nth-of-type(5) div.data-ellipsis',
+      lastRun: 'div.table-head__item:nth-of-type(6) div.data-ellipsis',
+      createdTime: 'div.table-head__item:nth-of-type(7) div.data-ellipsis'
+    }
+  },
+  body: {
+    root: 'div.table-body',
+    row: {
+      root: 'div.table-body__row',
+      fields: {
+        name: 'div.table-body__cell:nth-of-type(1) a span.link',
+        type: 'div.table-body__cell:nth-of-type(2) div.data-ellipsis svg',
+        nextRun: 'div.table-body__cell:nth-of-type(3) div.data-ellipsis',
+        schedule: 'div.table-body__cell:nth-of-type(4) div.data-ellipsis',
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(5)',
+            '.chip-block span.chips_button',
+            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false
+          )
+        },
+        lastRun: 'div.table-head__item:nth-of-type(6) div.data-ellipsis',
+        createdTime: 'div.table-head__item:nth-of-type(7) div.data-ellipsis',
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
@@ -297,6 +369,27 @@ module.exports = {
     Start_Time_Filter_Dropdown: dropdownComponent(startTimeFilterDropdown),
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Jobs_Monitor_Table: commonTable(jobsMonitorTable)
+  },
+  WorkflowsMonitorTab: {
+    Workflows_Monitor_Table: commonTable(workflowsMonitorTable)
+  },
+  ScheduleMonitorTab: {
+    Table_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(1)',
+        true,
+        false
+      )
+    ),
+    Table_Labels_Filter_Input: inputGroup(
+      generateInputGroup(
+        'div.content__action-bar div.filters > div.input-wrapper:nth-of-type(2)',
+        true,
+        false
+      )
+    ),
+    Table_Refresh_Button: tableRefreshButton,
+    Schedule_Monitor_Table: commonTable(scheduleMonitorTable)
   },
   CreateJob: {
     Back_Arrow_Button: By.css(

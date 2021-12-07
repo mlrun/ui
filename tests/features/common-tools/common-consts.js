@@ -12,6 +12,37 @@ module.exports = {
       'Analysis'
     ]
   },
+  ML_Functions_Tab: {
+    Common_Action_Menu_Options: ['View YAML', 'Edit', 'Delete'],
+    Serving_Action_Menu_Options: ['View YAML', 'Delete']
+  },
+  ML_Function_Info_Pane: {
+    Tab_List: ['Overview', 'Code', 'Build Log'],
+    Overview_Headers: [
+      'Name',
+      'Kind',
+      'Hash',
+      'Code origin',
+      'Updated',
+      'Command',
+      'Image',
+      'Description'
+    ]
+  },
+  Files_Info_Pane: {
+    Tab_List: ['Overview', 'Preview'],
+    Overview_General_Headers: [
+      'Hash',
+      'Key',
+      'Iter',
+      'Size',
+      'Path',
+      'URI',
+      'UID',
+      'Updated',
+      'Labels'
+    ]
+  },
   New_Feature_Store: {
     Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
     Target_Store_File_Type: [
@@ -22,6 +53,9 @@ module.exports = {
       'Dataframe',
       'Custom'
     ]
+  },
+  Project_Settings: {
+    Tab_List: ['General', 'Secrets']
   },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
@@ -56,20 +90,52 @@ module.exports = {
       'The name of the data container that contains the data',
     DataAccess_Key_Hint: 'A platform data-access key',
     Relative_Directory_Path_Hint:
-      'A relative directory path within the data container'
+      'A relative directory path within the data container',
+    SECRET_INPUT_HINT:
+      '• Valid characters: A-Z, a-z, 0-9, -, _, .\n' +
+      '• Must begin and end with: A-Z, a-z, 0-9\n' +
+      '• No consecutive characters: .., .–, –.\n' +
+      '• Max length between two periods: 63\n' +
+      '• Length - max: 253',
+    VALUE_INPUT_HINT:
+      '• Valid characters: A-Z, a-z, 0-9, -, _, .\n' +
+      '• Must not start with: ..\n' +
+      '• Must not be: ., ..\n' +
+      '• Length - max: 253'
   },
   Label_Hint: {
     New_Job_Volumes:
-      'Volumes that define data paths and the required information for accessing the data from the function'
+      'Volumes that define data paths and the required information for accessing the data from the function',
+    Files_Hash:
+      'Represents hash of the data. when the data changes the hash would change',
+    Files_UID:
+      'Unique identifier representing the job or the workflow that generated the artifact'
   },
   Descriptions: {
     Archive_Project:
       "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that before " +
       "setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
-    Delete_Project: 'Deleted projects can not be restored.'
+    Delete_Project: 'Deleted projects can not be restored.',
+    Delete_Function: 'Deleted functions cannot be restored.',
+    Delete_Scheduled_Job: 'Deleted scheduled jobs can not be restored.'
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule']
+  },
+  Jobs_Monitor_Tab_Info_Pane: {
+    Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
+    Overview_Headers: [
+      'UID',
+      'Start time',
+      'Last Updated',
+      'Parameters',
+      'Function',
+      'Results',
+      'Labels',
+      'Log level',
+      'Output path',
+      'Iterations'
+    ]
   },
   Jobs_Monitor_Tab: {
     'Any time': 'Any time',

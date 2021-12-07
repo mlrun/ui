@@ -107,6 +107,7 @@ module.exports = function(tableStructure) {
   const resultTable = {
     root: root,
     headerSorters: sorters,
+    offset: offset,
     rowRoot: row,
     tableColumns: columnSelector,
     tableFields: fieldSelector,

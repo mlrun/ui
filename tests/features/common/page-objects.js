@@ -8,12 +8,16 @@ import interactivePopup from './page-objects/interactive-popup.po'
 import sidePanel from './page-objects/side-panel.po'
 import jobsAndWorkflows from './page-objects/jobs-and-workflows.po'
 import Functions from './page-objects/ml-functions.po'
+import projectsSettings from './page-objects/project-settings.po'
+import files from './page-objects/files.po'
+import models from './page-objects/models.po'
 
 module.exports = {
   commonPagesHeader: {
     loader: By.css('div.loader-wrapper div.loader'),
     See_On_Github: By.css('header.header a.header__link'),
-    Common_Hint: By.css('div.tip')
+    Common_Hint: By.css('div.tip'),
+    MLRun_Logo: By.css('header.header a.header__logo')
   },
   Projects: projects,
   Project: project,
@@ -33,13 +37,26 @@ module.exports = {
   Register_Dataset: interactivePopup['registerDataset'],
   New_Feature_Set: sidePanel['newFeatureSet'],
   Jobs_Monitor_Tab: jobsAndWorkflows['JobsMonitorTab'],
+  Jobs_Monitor_Tab_Info_Pane: infoPane['jobsMonitorTabInfoPane'],
+  Workflows_Monitor_Tab: jobsAndWorkflows['WorkflowsMonitorTab'],
+  Schedule_Monitor_Tab: jobsAndWorkflows['ScheduleMonitorTab'],
+  Delete_Scheduled_Job_Popup: interactivePopup['deleteScheduledJob'],
   Create_Feature_Set_Popup_Dialog:
     interactivePopup['createFeatureSetPopupDialog'],
   Create_Job: jobsAndWorkflows['CreateJob'],
   New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
   ML_Functions: Functions['mlFunctions'],
   New_Function: sidePanel['newFunction'],
-  ML_Function_Info_Pane: infoPane['featuresInfoPane'],
+  ML_Function_Info_Pane: infoPane['mlFunctionInfoPane'],
   Delete_Function_Popup: interactivePopup['deleteFunction'],
-  Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup']
+  Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup'],
+  Project_Settings_General_Tab: projectsSettings['generalTab'],
+  Change_Project_Owner_Popup: interactivePopup['changeProjectOwnerPopup'],
+  Project_Members_Popup: interactivePopup['projectMembersPopup'],
+  Files: files['filesTab'],
+  Register_File_Popup: interactivePopup['registerFilePopup'],
+  Files_Info_Pane: infoPane['filesInfoPane'],
+  Models: models['modelsTab'],
+  Register_Model_Popup: interactivePopup['registerModelPopup'],
+  View_YAML: interactivePopup['viewYamlPopup']
 }

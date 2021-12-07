@@ -1,12 +1,14 @@
 import actionMenu from '../components/action-menu.component'
 import commonTable from '../components/table.component'
+import { generateLabelGroup } from '../../common-tools/common-tools'
+import labelComponent from '../components/label.component'
 const { By } = require('selenium-webdriver')
 
 // TO DO: that is dublicate from Feature Store PO. In feuture that should be fixed
 const actionMenuStructure = {
   root: 'div.table__item div.item-header__buttons>div.actions-menu__container',
   menuElements: {
-    open_button: 'div.data-ellipsis button',
+    open_button: 'button',
     options: 'div.actions-menu__body div.actions-menu__option'
   }
 }
@@ -19,6 +21,39 @@ const infoPaneTabSelector = {
       root: 'a',
       fields: {
         tab: '.details-menu__tab'
+      }
+    }
+  }
+}
+
+const infoPaneOverviewHeaders = {
+  root: '.table__item .item-info__details:nth-of-type(1)',
+  header: {},
+  body: {
+    row: {
+      root: 'li',
+      fields: {
+        tab: '.details-item__header'
+      }
+    }
+  }
+}
+
+const filesInfoSourcesTable = {
+  root: '.info-sources .info-sources-table',
+  header: {
+    root: '.info-sources-table__header',
+    sorters: {
+      name: '.info-sources-table__header-item:nth-of-type(1)',
+      path: '.info-sources-table__header-item:nth-of-type(2)'
+    }
+  },
+  body: {
+    row: {
+      root: '.info-sources-table__content',
+      fields: {
+        name: '.info-sources-table__content-key .data-ellipsis',
+        path: '.info-sources-table__content-value'
       }
     }
   }
@@ -202,6 +237,47 @@ module.exports = {
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector
   },
   mlFunctionInfoPane: {
-    Cross_Close_Button: crossCloseButton
+    Header: header,
+    Updated: updated,
+    Action_Menu: commonActionMenu,
+    Cross_Close_Button: crossCloseButton,
+    Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Overview_Headers: commonTable(infoPaneOverviewHeaders)
+  },
+  jobsMonitorTabInfoPane: {
+    Arrow_Back: By.css('div.table__item a.item-header__back-btn'),
+    Header: header,
+    Updated: updated,
+    Action_Menu: commonActionMenu,
+    Cross_Close_Button: crossCloseButton,
+    Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Overview_Headers: commonTable(infoPaneOverviewHeaders)
+  },
+  filesInfoPane: {
+    Header: header,
+    Updated: updated,
+    Download_Button: By.css(
+      'div.table__item .item-header__buttons .download-container'
+    ),
+    Action_Menu: commonActionMenu,
+    Cross_Close_Button: crossCloseButton,
+    Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Hash_Header: labelComponent(
+      generateLabelGroup(
+        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
+        false,
+        true
+      )
+    ),
+    Overview_UID_Header: labelComponent(
+      generateLabelGroup(
+        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(7) .details-item__header',
+        false,
+        true
+      )
+    ),
+    Expand_Sources: By.css('.details-item .info-sources'),
+    Info_Sources_Table: commonTable(filesInfoSourcesTable)
   }
 }
