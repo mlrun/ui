@@ -6,7 +6,6 @@ import ProjectCardView from './ProjectCardView'
 
 import { generateProjectStatistic } from './projectCard.util'
 import projectsAction from '../../actions/projects'
-import { ACTIONS_MENU } from '../../types'
 
 const ProjectCard = ({
   actionsMenu,
@@ -58,7 +57,7 @@ const ProjectCard = ({
 }
 
 ProjectCard.propTypes = {
-  actionsMenu: ACTIONS_MENU.isRequired,
+  actionsMenu: PropTypes.shape({}).isRequired,
   project: PropTypes.shape({}).isRequired
 }
 
