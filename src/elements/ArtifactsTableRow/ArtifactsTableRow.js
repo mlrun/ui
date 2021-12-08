@@ -34,7 +34,7 @@ const ArtifactsTableRow = ({
     'parent-row',
     (selectedItem.db_key || selectedItem?.spec?.model) &&
       getArtifactIdentifier(selectedItem, true) ===
-        rowItem.key.identifierUnique &&
+        rowItem.key?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -45,13 +45,13 @@ const ArtifactsTableRow = ({
   const findCurrentItem = useCallback(
     artifact => {
       const currentContent =
-        pageData.selectedRowData?.[artifact.key.value]?.content || content
+        pageData.selectedRowData?.[artifact.key?.value]?.content || content
 
       return (
         currentContent.find(
           contentItem =>
             getArtifactIdentifier(contentItem, true) ===
-            artifact.key.identifierUnique
+            artifact.key?.identifierUnique
         ) ?? {}
       )
     },

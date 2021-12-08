@@ -65,7 +65,6 @@ const DetailsTransformations = ({ selectedItem }) => {
         id: `e.${source}.${target}`,
         source: source,
         target: target,
-        type: 'smoothstep',
         animated: false,
         arrowHeadType: 'arrowclosed'
       }
@@ -83,7 +82,6 @@ const DetailsTransformations = ({ selectedItem }) => {
           id: `e.${target.after_state}.${target.name}`,
           source: target.after_state,
           target: target.name,
-          type: 'smoothstep',
           arrowHeadType: 'arrowclosed'
         })
       }
@@ -97,7 +95,6 @@ const DetailsTransformations = ({ selectedItem }) => {
         id: `e.${source}.${target}`,
         source: source,
         target: target,
-        type: 'smoothstep',
         arrowHeadType: 'arrowclosed',
         animated: true
       }
@@ -156,12 +153,12 @@ const DetailsTransformations = ({ selectedItem }) => {
   }, [selectedItem, selectedItemUid])
 
   return (
-    <div className="transformations-tab">
+    <div className="graph-container transformations-tab">
       <div className="graph-view">
         <MlReactFlow elements={elements} alignTriggerItem={selectedItemUid} />
       </div>
-      <div className="config-pane">
-        <div className="config-pane__title">Configuration</div>
+      <div className="graph-pane">
+        <div className="graph-pane__title">Configuration</div>
         <ConfigFunctionTemplate selectedItem={selectedItem} />
         <ConfigSource selectedItem={selectedItem} />
         <ConfigSteps

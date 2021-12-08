@@ -41,7 +41,7 @@ import {
 import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
-import { isUrlValid } from '../../utils/handleRedirect'
+import { isPageTabValid } from '../../utils/handleRedirect'
 import { generateContentActionsMenu } from '../../layout/Content/content.util'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
@@ -393,13 +393,23 @@ const Jobs = ({
       })
       .catch(() =>
         history.replace(
-          `/projects/${match.params.projectName}/jobs/monitor-jobs`
+          `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
         )
       )
-  }, [fetchJob, history, match.params.jobId, match.params.projectName])
+  }, [
+    fetchJob,
+    history,
+    match.params.jobId,
+    match.params.pageTab,
+    match.params.projectName
+  ])
 
   useEffect(() => {
-    if (!isEmpty(selectedJob) && match.params.pageTab === MONITOR_JOBS_TAB) {
+    if (
+      !isEmpty(selectedJob) &&
+      (match.params.pageTab === MONITOR_JOBS_TAB ||
+        match.params.pageTab === MONITOR_WORKFLOWS_TAB)
+    ) {
       fetchJobPods(match.params.projectName, selectedJob.uid)
 
       const interval = setInterval(() => {
@@ -426,12 +436,12 @@ const Jobs = ({
   }, [history, match, pageData.details.menu])
 
   useEffect(() => {
-    isUrlValid(
+    isPageTabValid(
       match,
       pageData.tabs.map(tab => tab.id),
       history
     )
-  }, [history, match, pageData.tabs])
+  }, [history, pageData.tabs, match])
 
   useEffect(() => {
     if (

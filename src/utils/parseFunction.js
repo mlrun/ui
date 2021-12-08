@@ -16,6 +16,7 @@ export const parseFunction = (func, projectName) => ({
   image: func.spec?.image ?? '',
   labels: func.metadata?.labels ?? {},
   name: func.metadata?.name ?? '',
+  nuclio_name: func.status?.nuclio_name ?? '',
   parameters: func.spec?.parameters ?? {},
   project: func.metadata?.project || projectName,
   resources: func.spec?.resources ?? {},

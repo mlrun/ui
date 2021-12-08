@@ -33,7 +33,7 @@ import {
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
-import { isUrlValid } from '../../utils/handleRedirect'
+import { isPageTabValid } from '../../utils/handleRedirect'
 import {
   DATASETS_TAB,
   FEATURES_TAB,
@@ -460,7 +460,7 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    isUrlValid(
+    isPageTabValid(
       match,
       tabs.map(tab => tab.id),
       history

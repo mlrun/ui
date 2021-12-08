@@ -143,7 +143,7 @@ const functionsActions = {
     dispatch(functionsActions.fetchFunctionsBegin())
 
     return functionsApi
-      .getAll(project, name)
+      .getFunctions(project, name)
       .then(({ data }) => {
         dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 

@@ -3,34 +3,8 @@
 .transformations-tab {
   display: flex;
   flex: 1 1;
-  background-color: $gallery;
 
-  .graph-view {
-    display: flex;
-    flex-direction: column;
-    width: 75%;
-  }
-
-  .config-pane {
-    display: flex;
-    flex-direction: column;
-    width: 25%;
-    min-width: 320px;
-    overflow: hidden;
-    background: $white;
-    border: $secondaryBorder;
-    box-shadow: 0 0 30px rgba($black, 0.15);
-
-    &.scrollable {
-      overflow-y: auto;
-    }
-
-    &__title {
-      padding: 25px;
-      font-weight: bold;
-      font-size: 20px;
-    }
-
+  .graph-pane {
     .config-item {
       height: 50px;
       border-top: $secondaryBorder;
