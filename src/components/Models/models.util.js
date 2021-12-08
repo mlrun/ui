@@ -345,6 +345,7 @@ export const generatePageData = (
   } else if (pageTab === REAL_TIME_PIPELINES_TAB) {
     data.filters = realTimePipelinesFilters
     data.hideFilterMenu = subPage === PIPELINE_SUB_PAGE
+    data.hidePageActionMenu = true
     data.tableHeaders = realTimePipelinesTableHeaders()
   }
 
