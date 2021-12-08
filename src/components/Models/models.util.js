@@ -346,6 +346,7 @@ export const generatePageData = (
     data.filters = realTimePipelinesFilters
     data.hideFilterMenu = subPage === PIPELINE_SUB_PAGE
     data.tableHeaders = realTimePipelinesTableHeaders()
+    data.hidePageActionMenu = true
   }
 
   return data
@@ -405,6 +406,19 @@ export const checkForSelectedModelEndpoint = (
       searchItem.metadata.uid
     )
     setSelectedModel({ item: searchItem })
+  }
+}
+
+export const checkForSelectedRealTimePipelines = (
+  history,
+  pipelineId,
+  match,
+  realTimePipelines
+) => {
+  if (!realTimePipelines.find(item => item.hash === pipelineId)) {
+    history.replace(
+      `/projects/${match.params.projectName}/models/${match.params.pageTab}`
+    )
   }
 }
 

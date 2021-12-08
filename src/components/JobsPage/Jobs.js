@@ -41,7 +41,7 @@ import {
 import { parseJob } from '../../utils/parseJob'
 import { parseFunction } from '../../utils/parseFunction'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
-import { isUrlValid } from '../../utils/handleRedirect'
+import { isPageTabValid } from '../../utils/handleRedirect'
 import { generateContentActionsMenu } from '../../layout/Content/content.util'
 
 import { ReactComponent as Yaml } from '../../images/yaml.svg'
@@ -391,11 +391,16 @@ const Jobs = ({
       .then(job => {
         setSelectedJob(parseJob(job))
       })
-      .catch(error => handleCatchRequest(error, 'Failed to fetch job'))
+      .catch(() =>
+        history.replace(
+          `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
+        )
+      )
   }, [
     fetchJob,
-    handleCatchRequest,
+    history,
     match.params.jobId,
+    match.params.pageTab,
     match.params.projectName
   ])
 
@@ -431,7 +436,7 @@ const Jobs = ({
   }, [history, match, pageData.details.menu])
 
   useEffect(() => {
-    isUrlValid(
+    isPageTabValid(
       match,
       pageData.tabs.map(tab => tab.id),
       history

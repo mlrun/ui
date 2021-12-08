@@ -28,12 +28,12 @@ import {
   handleFetchData,
   navigateToDetailsPane,
   pageDataInitialState,
-  validTabs
+  tabs
 } from './featureStore.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
-import { isUrlValid } from '../../utils/handleRedirect'
+import { isPageTabValid } from '../../utils/handleRedirect'
 import {
   DATASETS_TAB,
   FEATURES_TAB,
@@ -460,7 +460,11 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    isUrlValid(match, validTabs, history)
+    isPageTabValid(
+      match,
+      tabs.map(tab => tab.id),
+      history
+    )
   }, [history, match])
 
   const applyDetailsChanges = changes => {

@@ -34,13 +34,6 @@ import {
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
-export const validTabs = [
-  FEATURE_SETS_TAB,
-  FEATURES_TAB,
-  FEATURE_VECTORS_TAB,
-  DATASETS_TAB
-]
-
 export const pageDataInitialState = {
   actionsMenu: [],
   actionsMenuHeader: '',

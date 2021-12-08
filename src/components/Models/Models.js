@@ -14,13 +14,14 @@ import functionsAction from '../../actions/functions'
 import detailsActions from '../../actions/details'
 import filtersActions from '../../actions/filters'
 import {
-  handleFetchData,
-  generatePageData,
-  getFeatureVectorData,
   checkForSelectedModel,
   checkForSelectedModelEndpoint,
+  checkForSelectedRealTimePipelines,
+  generatePageData,
+  getFeatureVectorData,
+  handleFetchData,
   pageDataInitialState,
-  validTabs
+  tabs
 } from './models.util'
 import {
   INIT_GROUP_FILTER,
@@ -38,7 +39,7 @@ import {
   getArtifactIdentifier,
   getFunctionIdentifier
 } from '../../utils/getUniqueIdentifier'
-import { isUrlValid } from '../../utils/handleRedirect'
+import { isPageTabValid } from '../../utils/handleRedirect'
 
 const Models = ({
   artifactsStore,
@@ -251,13 +252,16 @@ const Models = ({
 
   useEffect(() => {
     if (
-      match.params.name &&
-      ((match.params.pageTab === MODELS_TAB &&
-        artifactsStore.models.allData.length > 0) ||
-        (match.params.pageTab === MODEL_ENDPOINTS_TAB &&
-          artifactsStore.modelEndpoints.length > 0))
+      (match.params.name &&
+        ((match.params.pageTab === MODELS_TAB &&
+          artifactsStore.models.allData.length > 0) ||
+          (match.params.pageTab === MODEL_ENDPOINTS_TAB &&
+            artifactsStore.modelEndpoints.length > 0))) ||
+      (match.params.pipelineId &&
+        match.params.pageTab === REAL_TIME_PIPELINES_TAB &&
+        content.length > 0)
     ) {
-      const { name, tag, iter } = match.params
+      const { name, tag, iter, pipelineId } = match.params
 
       if (match.params.pageTab === MODELS_TAB) {
         checkForSelectedModel(
@@ -278,6 +282,8 @@ const Models = ({
           tag,
           setSelectedModel
         )
+      } else if (match.params.pageTab === REAL_TIME_PIPELINES_TAB) {
+        checkForSelectedRealTimePipelines(history, pipelineId, match, content)
       }
     } else {
       setSelectedModel({})
@@ -285,6 +291,7 @@ const Models = ({
   }, [
     artifactsStore.modelEndpoints,
     artifactsStore.models,
+    content,
     fetchModelEndpointWithAnalysis,
     history,
     match
@@ -339,7 +346,11 @@ const Models = ({
   ])
 
   useEffect(() => {
-    isUrlValid(match, validTabs, history)
+    isPageTabValid(
+      match,
+      tabs.map(tab => tab.id),
+      history
+    )
   }, [history, match])
 
   const sortedContent = useMemo(() => {
