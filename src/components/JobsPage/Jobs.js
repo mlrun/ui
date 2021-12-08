@@ -21,7 +21,7 @@ import functionsActions from '../../actions/functions'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import { generateKeyValues } from '../../utils'
-import { generatePageData, getValidTabs } from './jobsData'
+import { generatePageData } from './jobsData'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import {
@@ -400,7 +400,11 @@ const Jobs = ({
   ])
 
   useEffect(() => {
-    if (!isEmpty(selectedJob) && match.params.pageTab === MONITOR_JOBS_TAB) {
+    if (
+      !isEmpty(selectedJob) &&
+      (match.params.pageTab === MONITOR_JOBS_TAB ||
+        match.params.pageTab === MONITOR_WORKFLOWS_TAB)
+    ) {
       fetchJobPods(match.params.projectName, selectedJob.uid)
 
       const interval = setInterval(() => {
@@ -427,8 +431,12 @@ const Jobs = ({
   }, [history, match, pageData.details.menu])
 
   useEffect(() => {
-    isUrlValid(match, getValidTabs(isDemoMode), history)
-  }, [history, isDemoMode, match])
+    isUrlValid(
+      match,
+      pageData.tabs.map(tab => tab.id),
+      history
+    )
+  }, [history, pageData.tabs, match])
 
   useEffect(() => {
     if (
