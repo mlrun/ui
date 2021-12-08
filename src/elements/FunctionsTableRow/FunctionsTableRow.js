@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -24,22 +24,27 @@ const FunctionsTableRow = ({
     'table-body__row',
     'parent-row',
     getFunctionIdentifier(selectedItem, true) ===
-      rowItem.name.identifierUnique &&
+      rowItem.name?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
       'parent-row-expanded'
   )
 
-  useEffect(() => {
-    setCurrentItem(
-      content.find(
+  const findCurrentItem = useCallback(
+    rowItem => {
+      return content.find(
         contentItem =>
           getFunctionIdentifier(contentItem, true) ===
-          rowItem.name.identifierUnique
+          rowItem.name?.identifierUnique
       )
-    )
-  }, [content, rowItem.name.identifierUnique, selectedItem])
+    },
+    [content]
+  )
+
+  useEffect(() => {
+    setCurrentItem(findCurrentItem(rowItem))
+  }, [findCurrentItem, rowItem])
 
   return (
     <div className={rowClassNames} ref={parent}>
@@ -110,25 +115,28 @@ const FunctionsTableRow = ({
         </div>
       ) : (
         <>
-          {Object.values(rowItem).map((value, i) => {
+          {Object.values(rowItem).map((rowItemProp, i) => {
             return (
               currentItem &&
-              !value.hidden && (
+              !rowItemProp.hidden && (
                 <TableCell
-                  data={value}
+                  data={rowItemProp}
                   expandLink={Array.isArray(tableContent)}
                   handleExpandRow={handleExpandRow}
                   item={currentItem}
-                  key={value.id}
+                  key={rowItemProp.id}
                   link={
-                    i === 0 &&
-                    `/projects/${
-                      match.params.projectName
-                    }/functions/${content.length > 0 && currentItem?.hash}/${
-                      match.params.tab
-                        ? match.params.tab
-                        : `${detailsMenu[0].id}`
-                    }`
+                    rowItemProp.getLink
+                      ? rowItemProp.getLink(currentItem?.hash)
+                      : i === 0 &&
+                        `/projects/${
+                          match.params.projectName
+                        }/functions/${content.length > 0 &&
+                          currentItem?.hash}/${
+                          match.params.tab
+                            ? match.params.tab
+                            : `${detailsMenu[0].id}`
+                        }`
                   }
                   match={match}
                   selectedItem={selectedItem}

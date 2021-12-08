@@ -18,7 +18,8 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODELS_PAGE,
-  DATASETS_TAB
+  DATASETS_TAB,
+  REAL_TIME_PIPELINES_TAB
 } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 
@@ -74,7 +75,7 @@ const TableView = ({
                 case ARTIFACTS_PAGE:
                 case FILES_PAGE:
                 case MODELS_PAGE:
-                  return (
+                  return match.params.pageTab !== REAL_TIME_PIPELINES_TAB ? (
                     <ArtifactsTableRow
                       actionsMenu={actionsMenu}
                       content={content}
@@ -84,6 +85,16 @@ const TableView = ({
                       rowItem={rowItem}
                       pageData={pageData}
                       selectedItem={selectedItem}
+                    />
+                  ) : (
+                    <FunctionsTableRow
+                      actionsMenu={actionsMenu}
+                      key={i}
+                      content={content}
+                      match={match}
+                      rowItem={rowItem}
+                      selectedItem={selectedItem}
+                      handleSelectItem={handleSelectItem}
                     />
                   )
                 case FEATURE_STORE_PAGE:

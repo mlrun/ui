@@ -118,7 +118,6 @@ const Workflow = ({
           id: `e.${job.id}.${childId}`,
           source: job.id,
           target: childId,
-          type: 'smoothstep',
           animated: false,
           arrowHeadType: 'arrowclosed'
         })
@@ -214,7 +213,7 @@ const Workflow = ({
           </Tooltip>
         </div>
       </div>
-      <div className="workflow-content">
+      <div className="graph-container workflow-content">
         {workflowsViewMode === 'graph' ? (
           <>
             <div className={graphViewClassNames}>

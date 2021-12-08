@@ -13,6 +13,7 @@ import {
   FEATURE_SETS_TAB,
   MODELS_TAB,
   MONITOR_JOBS_TAB,
+  PIPELINE_SUB_PAGE,
   PROJECTS_SETTINGS_GENERAL_TAB,
   WORKFLOW_SUB_PAGE
 } from './constants'
@@ -136,17 +137,20 @@ const App = () => {
             />
             <Route
               exact
-              path="/projects/:projectName/models/:pageTab"
-              render={routeProps => <Models {...routeProps} />}
+              path={[
+                `/projects/:projectName/models/:pageTab/${PIPELINE_SUB_PAGE}/:pipelineId`
+              ]}
+              render={routeProps => (
+                <Models {...routeProps} subPage={PIPELINE_SUB_PAGE} />
+              )}
             />
             <Route
               exact
-              path="/projects/:projectName/models/:pageTab/:name/:tab"
-              render={routeProps => <Models {...routeProps} />}
-            />
-            <Route
-              exact
-              path="/projects/:projectName/models/:pageTab/:name/:tag/:tab"
+              path={[
+                '/projects/:projectName/models/:pageTab',
+                '/projects/:projectName/models/:pageTab/:name/:tab',
+                '/projects/:projectName/models/:pageTab/:name/:tag/:tab'
+              ]}
               render={routeProps => <Models {...routeProps} />}
             />
             <Route
