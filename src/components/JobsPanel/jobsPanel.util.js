@@ -362,6 +362,7 @@ export const generateTableDataFromDefaultData = (
   setDefaultDataIsLoaded,
   mode
 ) => {
+  console.log('here')
   const parameters = generateDefaultParameters(
     Object.entries(defaultData.task.spec.parameters ?? {})
   )
@@ -425,7 +426,7 @@ export const generateTableDataFromDefaultData = (
       volume_mounts: volumeMounts ?? [],
       volumes: defaultData.function?.spec.volumes ?? [],
       environmentVariables:
-        parseEnvVariables(defaultData.function?.spec.env).map(env => ({
+        parseEnvVariables(defaultData.function?.spec.env ?? []).map(env => ({
           data: generateEnvVariable(env)
         })) ?? [],
       secretSources: secrets,
