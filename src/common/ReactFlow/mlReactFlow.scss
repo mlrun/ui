@@ -127,6 +127,31 @@
         right: -6px;
       }
     }
+
+    &.status-succeeded {
+      .react-flow__handle {
+        background: $brightTurquoise;
+      }
+    }
+
+    &.status-failed {
+      .react-flow__handle {
+        background: $burntSienna;
+      }
+    }
+
+    &.status-pending,
+    &.status-running {
+      .react-flow__handle {
+        background: $pictonBlue;
+      }
+    }
+
+    &.status-unknown {
+      .react-flow__handle {
+        background: $white;
+      }
+    }
   }
 
   .react-flow__edge-path {

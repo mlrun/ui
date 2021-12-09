@@ -1,12 +1,14 @@
 @import '../../scss/colors.scss';
+
 .artifact-register-form {
   margin-bottom: 15px;
 
   .input-wrapper {
     margin: 10px 0;
   }
+
   .msg {
-    font-size: 12px;
     color: $primary;
+    font-size: 12px;
   }
 }
