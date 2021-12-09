@@ -1,6 +1,6 @@
 Feature: Feature Store Page
 
-    Tescases that verifies functionality on Feature Store Page
+    Testcases that verifies functionality on Feature Store Page
 
     @passive
     Scenario: Check all mandatory components on Feature Store tab
@@ -11,7 +11,7 @@ Feature: Feature Store Page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Tag_Filter_Dropdown" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "   " to "Table_Name_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
@@ -31,7 +31,7 @@ Feature: Feature Store Page
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then verify "Features" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Features_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Feature_Store_Features_Tab" wizard
@@ -48,7 +48,7 @@ Feature: Feature Store Page
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then verify "Feature Vectors" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Feature_Store"."Tab_List"
         And turn on demo mode
         Then verify "Create_Vector_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
@@ -67,7 +67,7 @@ Feature: Feature Store Page
         And wait load page
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then verify "Datasets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
+        Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Register_Dataset_Button" element visibility on "Feature_Store_Datasets_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Feature_Store_Datasets_Tab" wizard
@@ -85,7 +85,7 @@ Feature: Feature Store Page
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Header" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Updated" element visibility on "Feature_Sets_Info_Pane" wizard
@@ -94,7 +94,7 @@ Feature: Feature Store Page
         Then verify "Cross_Close_Button" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
-        Then verify "Overview" tab is activ in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         # TO DO: Overview Tab info should be verified
 
     @passive
@@ -104,10 +104,10 @@ Feature: Feature Store Page
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard  
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Features" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
-        Then verify "Features" tab is activ in "Info_Pane_Tab_Selector" on "Features_Info_Pane" wizard
+        Then verify "Features" tab is active in "Info_Pane_Tab_Selector" on "Features_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Features_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Features_Info_Pane" wizard
         Then verify "Header" element visibility on "Features_Info_Pane" wizard
@@ -125,10 +125,10 @@ Feature: Feature Store Page
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard  
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Transformations" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
-        Then verify "Transformations" tab is activ in "Info_Pane_Tab_Selector" on "Transformations_Info_Pane" wizard
+        Then verify "Transformations" tab is active in "Info_Pane_Tab_Selector" on "Transformations_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Features_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Transformations_Info_Pane" wizard
         Then verify "Header" element visibility on "Transformations_Info_Pane" wizard
@@ -146,10 +146,10 @@ Feature: Feature Store Page
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard  
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
-        Then verify "Preview" tab is activ in "Info_Pane_Tab_Selector" on "Preview_Info_Pane" wizard
+        Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Preview_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Preview_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Preview_Info_Pane" wizard
         Then verify "Header" element visibility on "Preview_Info_Pane" wizard
@@ -167,10 +167,10 @@ Feature: Feature Store Page
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard  
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
-        Then verify "Analysis" tab is activ in "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard
+        Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Info_Pane_Tab_Selector" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Header" element visibility on "Analysis_Info_Pane" wizard
@@ -189,7 +189,7 @@ Feature: Feature Store Page
         And wait load page
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then verify "Datasets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
+        Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
         Then click on "Register_Dataset_Button" element on "Feature_Store_Datasets_Tab" wizard
         Then verify if "Register_Dataset" popup dialog appears
         Then verify "Name_Input" element visibility on "Register_Dataset" wizard
@@ -206,9 +206,10 @@ Feature: Feature Store Page
         And wait load page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then value in "name" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "ea"
 
     @passive
@@ -221,6 +222,7 @@ Feature: Feature Store Page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        And wait load page
         Then value in "feature_name" column with "text" in "Features_Table" on "Feature_Store_Features_Tab" wizard should contains "ea"
 
     @passive
@@ -233,6 +235,7 @@ Feature: Feature Store Page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "io" to "Table_Name_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        And wait load page
         Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "io"
 
     @passive
@@ -245,6 +248,7 @@ Feature: Feature Store Page
         And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Datasets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Datasets_Tab" wizard
+        And wait load page
         Then value in "name" column with "text" in "Feature_Datasets_Table" on "Feature_Store_Datasets_Tab" wizard should contains "ea"
 
     @passive
@@ -257,8 +261,7 @@ Feature: Feature Store Page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Feature_Set" wizard
@@ -281,8 +284,7 @@ Feature: Feature Store Page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Cross_Close_Button" element visibility on "New_Feature_Set" wizard
@@ -324,10 +326,10 @@ Feature: Feature Store Page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
+        And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display "Input_Hint"."Feature_Set_Name_Hint"
+        Then verify "Feature_Set_Name_Input" according hint rules on "New_Feature_Set" wizard
         Then type value "#$@" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Kind_Dropdown" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Kind_Options"
@@ -345,8 +347,7 @@ Feature: Feature Store Page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
+        And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Entities_Input" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
@@ -362,8 +363,7 @@ Feature: Feature Store Page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
+        And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
@@ -421,8 +421,7 @@ Feature: Feature Store Page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
+        And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When add rows to "Labels_Table" table on "New_Feature_Set" wizard
             | key_input | value_input |
@@ -434,7 +433,7 @@ Feature: Feature Store Page
             | key1\n:\nvalue1 |
             | key2\n:\nvalue2 |
             | key3\n:\nvalue3 |
-        When click on "remove_btn" in "Labels_Table" table on "New_Feature_Set" wizard
+        When click on "remove_btn" in "Labels_Table" table on "New_Feature_Set" wizard with offset "false"
             |      label      |
             | key1\n:\nvalue1 |
             | key3\n:\nvalue3 |
@@ -453,8 +452,7 @@ Feature: Feature Store Page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        And verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        And turn on demo mode
+        And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "demo_feature_set" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then type value "0.0.1" to "Version_Input" field on "New_Feature_Set" wizard
@@ -495,7 +493,96 @@ Feature: Feature Store Page
         And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
-        Then verify "Feature Sets" tab is activ in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then check "expand_btn" visibility in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
         When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
         Then check "expand_btn" not visibile in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
+
+    @passive
+    Scenario: Check MLRun logo redirection
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And click on "MLRun_Logo" element on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Projects_Table" element visibility on "Projects" wizard
+
+    @passive
+    Scenario: Verify View YAML action on Feature Sets tab
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then select "View YAML" option in action menu on "Feature_Store_Feature_Sets_Tab" wizard in "Feature_Sets_Table" table at row with "test-i" value in "name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+    @passive
+    Scenario: Verify View YAML action on Features tab
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "View YAML" option in action menu on "Feature_Store_Features_Tab" wizard in "Features_Table" table at row with "test" value in "feature_name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+    @passive
+    Scenario: Verify View YAML action on Feature Vectors tab
+        Given open url
+        And wait load page
+        And click on cell with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "View YAML" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "test-m" value in "name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+    @passive
+    Scenario: Verify View YAML action on Datasets tab
+        Given open url
+        And wait load page
+        And click on cell with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        And select "Datasets" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
+        Then verify "Datasets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Datasets_Tab" wizard
+        Then select "View YAML" option in action menu on "Feature_Store_Datasets_Tab" wizard in "Feature_Datasets_Table" table at row with "data_clean_cleaned-data" value in "name" column
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+    @passive
+    Scenario: Verify View YAML action in Item infopane on Feature Sets tab
+        Given open url
+        And wait load page
+        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And click on cell with value "Feature store (Beta)" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
+        And wait load page
+        Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Action_Menu" element visibility on "Feature_Sets_Info_Pane" wizard
+        Then select "View YAML" option in action menu on "Feature_Sets_Info_Pane" wizard
+        Then verify if "View_YAML" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+        Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard

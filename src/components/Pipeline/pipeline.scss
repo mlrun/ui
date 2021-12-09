@@ -1,0 +1,56 @@
+@import '../../scss/borders';
+
+.pipeline-container {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+
+  .pipeline-header {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    padding: 5px 10px;
+    border-bottom: $secondaryBorder;
+
+    .link-back {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+
+      &__icon {
+        display: flex;
+        align-items: center;
+      }
+
+      &__title {
+        margin: 0 5px;
+        overflow: hidden;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .pipeline-content {
+    position: relative;
+
+    .graph-pane {
+      &__row {
+        display: flex;
+        align-items: center;
+        margin: 5px 25px;
+
+        &-label {
+          margin-right: 10px;
+          color: $spunPearl;
+          font-weight: bold;
+          white-space: nowrap;
+        }
+
+        &-value {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+

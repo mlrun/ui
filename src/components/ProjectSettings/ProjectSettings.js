@@ -11,12 +11,21 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import projectsAction from '../../actions/projects'
 import { PROJECTS_SETTINGS_GENERAL_TAB } from '../../constants'
 import { page, tabs, validTabs } from './projectSettings.util'
+import { isProjectValid } from '../../utils/handleRedirect'
 
 import './projectSettings.scss'
 
-const ProjectSettings = ({ match }) => {
+const ProjectSettings = ({ match, projectStore }) => {
   const location = useLocation()
   const history = useHistory()
+
+  useEffect(() => {
+    isProjectValid(
+      history,
+      projectStore.projectsNames.data,
+      match.params.projectName
+    )
+  }, [history, match.params.projectName, projectStore.projectsNames.data])
 
   useEffect(() => {
     if (!validTabs.includes(match.params.pageTab)) {

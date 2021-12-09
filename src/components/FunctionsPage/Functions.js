@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { chain, isEqual, isEmpty } from 'lodash'
+import { isEqual, isEmpty } from 'lodash'
 
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Content from '../../layout/Content/Content'
@@ -23,6 +23,8 @@ import {
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { parseFunctions } from '../../utils/parseFunctions'
 import functionsActions from '../../actions/functions'
 import notificationActions from '../../actions/notification'
 import jobsActions from '../../actions/jobs'
@@ -34,8 +36,6 @@ import {
   PANEL_EDIT_MODE,
   SECONDARY_BUTTON
 } from '../../constants'
-import { parseFunction } from '../../utils/parseFunction'
-import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { useDemoMode } from '../../hooks/demoMode.hook'
 
 import { ReactComponent as Delete } from '../../images/delete.svg'
@@ -145,12 +145,12 @@ const Functions = ({
 
   const refreshFunctions = useCallback(
     filters => {
-      return fetchFunctions(match.params.projectName, filters?.name).then(
+      return fetchFunctions(match.params.projectName, filters).then(
         functions => {
-          const newFunctions = chain(functions)
-            .orderBy('metadata.updated', 'desc')
-            .map(func => parseFunction(func, match.params.projectName))
-            .value()
+          const newFunctions = parseFunctions(
+            functions,
+            match.params.projectName
+          )
 
           setFunctions(newFunctions)
 

@@ -126,6 +126,9 @@ const generalInfoQuickLinks = {
 }
 
 module.exports = {
+  Project_Settings_Button: By.css(
+    '.project__content .general-info .general-info__main-data-wrapper .general-info__settings'
+  ),
   Create_New: dropdownComponent(createNewObject),
   Refresh_Button: By.css(
     'div.main-info__toolbar div.refresh button[id=refresh]'
@@ -140,5 +143,7 @@ module.exports = {
     generalInfoRealTimeFunctionsCardStat
   ),
   Add_Source_URL_Label: By.css('.general-info .general-info__source'),
-  General_Info_Quick_Links: commonTable(generalInfoQuickLinks)
+  General_Info_Quick_Links: commonTable(generalInfoQuickLinks),
+  Owner_Link: By.css('.project__content .general-info .owner-row .link'),
+  Members_Link: By.css('.project__content .general-info .members-row .link')
 }

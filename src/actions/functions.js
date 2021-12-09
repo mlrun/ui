@@ -48,10 +48,14 @@ import {
   SET_NEW_FUNCTION_DEFAULT_CLASS,
   SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
   SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
+  GET_FUNCTION_SUCCESS,
+  GET_FUNCTION_FAILURE,
+  GET_FUNCTION_BEGIN,
   GET_FUNCTION_WITH_HASH_BEGIN,
   GET_FUNCTION_WITH_HASH_FAILURE,
   GET_FUNCTION_WITH_HASH_SUCCESS,
-  REMOVE_FUNCTION
+  REMOVE_FUNCTION,
+  SET_NEW_FUNCTION_FORCE_BUILD
 } from '../constants'
 import { generateCategories } from '../utils/generateTemplatesCategories'
 
@@ -139,7 +143,7 @@ const functionsActions = {
     dispatch(functionsActions.fetchFunctionsBegin())
 
     return functionsApi
-      .getAll(project, name)
+      .getFunctions(project, name)
       .then(({ data }) => {
         dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 
@@ -217,8 +221,31 @@ const functionsActions = {
     payload: err
   }),
   getFunction: (project, name) => dispatch => {
-    return functionsApi.getFunction(project, name)
+    dispatch(functionsActions.getFunctionBegin())
+
+    return functionsApi
+      .getFunction(project, name)
+      .then(result => {
+        dispatch(functionsActions.getFunctionSuccess(result.data.func))
+
+        return result.data.func
+      })
+      .catch(error => {
+        dispatch(functionsActions.getFunctionFailure(error.message))
+        throw error
+      })
   },
+  getFunctionBegin: () => ({
+    type: GET_FUNCTION_BEGIN
+  }),
+  getFunctionFailure: error => ({
+    type: GET_FUNCTION_FAILURE,
+    payload: error
+  }),
+  getFunctionSuccess: func => ({
+    type: GET_FUNCTION_SUCCESS,
+    payload: func
+  }),
   getFunctionWithHash: (project, name, hash) => dispatch => {
     dispatch(functionsActions.getFunctionWithHashBegin())
 
@@ -306,6 +333,10 @@ const functionsActions = {
   setNewFunctionErrorStream: error_stream => ({
     type: SET_NEW_FUNCTION_ERROR_STREAM,
     payload: error_stream
+  }),
+  setNewFunctionForceBuild: forceBuild => ({
+    type: SET_NEW_FUNCTION_FORCE_BUILD,
+    payload: forceBuild
   }),
   setNewFunctionGraph: graph => ({
     type: SET_NEW_FUNCTION_GRAPH,
