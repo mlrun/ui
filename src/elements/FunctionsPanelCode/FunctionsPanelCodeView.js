@@ -9,16 +9,21 @@ import EditorModal from '../../common/EditorModal/EditorModal'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
 import RadioButtons from '../../common/RadioButtons/RadioButtons'
-import { trimSplit } from '../../utils'
+import CheckBox from '../../common/CheckBox/CheckBox'
 
+import { trimSplit } from '../../utils'
 import {
   DEFAULT_ENTRY,
   entryOptions,
-  codeOptions,
+  generateCodeOptions,
   NEW_IMAGE,
   EXISTING_IMAGE
 } from './functionsPanelCode.util'
-import { FUNCTION_TYPE_SERVING, LABEL_BUTTON } from '../../constants'
+import {
+  FUNCTION_TYPE_SERVING,
+  LABEL_BUTTON,
+  PANEL_EDIT_MODE
+} from '../../constants'
 
 import { ReactComponent as Edit } from '../../images/edit.svg'
 
@@ -32,11 +37,13 @@ const FunctionsPanelCodeView = ({
   handleHandlerOnBlur,
   handleImageTypeChange,
   imageType,
+  mode,
   setData,
   setEditCode,
   setNewFunctionBaseImage,
   setNewFunctionBuildImage,
   setNewFunctionCommands,
+  setNewFunctionForceBuild,
   setNewFunctionImage,
   setNewFunctionSourceCode,
   setValidation,
@@ -73,123 +80,148 @@ const FunctionsPanelCodeView = ({
           )}
         </div>
         <div className="code__info">
-          {functionsStore.newFunction.kind === FUNCTION_TYPE_SERVING ? (
-            <div className="code__default-class">
-              <Input
-                floatingLabel
-                label="Default class"
-                onChange={default_class =>
-                  setData(state => ({ ...state, default_class }))
-                }
-                onBlur={handleClassOnBlur}
-                value={data.default_class}
-              />
-            </div>
-          ) : (
-            <div className="code__handler">
-              <Input
-                floatingLabel
-                invalid={!validation.isHandlerValid}
-                label="Handler"
-                onChange={handler => setData(state => ({ ...state, handler }))}
-                onBlur={handleHandlerOnBlur}
-                required
-                setInvalid={value =>
-                  setValidation(state => ({ ...state, isHandlerValid: value }))
-                }
-                tip="Enter the function handler name (e.g. for the default sample function the name should be `handler`)"
-                value={data.handler}
-                wrapperClassName="handler"
-              />
-            </div>
-          )}
-          <div className="code__existing-image">
-            <RadioButtons
-              className="radio-buttons__block"
-              elements={codeOptions}
-              onChangeCallback={handleImageTypeChange}
-              selectedValue={imageType}
-            />
-            <div className="code__images-inputs">
-              <Input
-                className="input__wide"
-                disabled={imageType !== EXISTING_IMAGE}
-                floatingLabel
-                invalid={
-                  !validation.isCodeImageValid && imageType === EXISTING_IMAGE
-                }
-                label="Image name"
-                onBlur={event => {
-                  if (
-                    event.target.value !== functionsStore.newFunction.spec.image
-                  ) {
-                    setNewFunctionImage(data.image)
+          <div className="code__info_left">
+            {functionsStore.newFunction.kind === FUNCTION_TYPE_SERVING ? (
+              <div className="code__default-class">
+                <Input
+                  floatingLabel
+                  label="Default class"
+                  onChange={default_class =>
+                    setData(state => ({ ...state, default_class }))
                   }
-                }}
-                onChange={image => setData(state => ({ ...state, image }))}
-                required={imageType === EXISTING_IMAGE}
-                setInvalid={value =>
-                  setValidation(state => ({
-                    ...state,
-                    isCodeImageValid: value
-                  }))
-                }
-                tip="The name of the function‘s container image"
-                value={data.image}
-                wrapperClassName="image-name"
-              />
-              <Input
-                className="input__wide"
-                disabled={imageType !== NEW_IMAGE}
-                floatingLabel
-                label="Resulting Image"
-                onBlur={event => {
-                  if (
-                    event.target.value !==
-                    functionsStore.newFunction.spec.build.image
-                  ) {
-                    setNewFunctionBuildImage(data.build_image)
+                  onBlur={handleClassOnBlur}
+                  value={data.default_class}
+                />
+              </div>
+            ) : (
+              <div className="code__handler">
+                <Input
+                  floatingLabel
+                  invalid={!validation.isHandlerValid}
+                  label="Handler"
+                  onChange={handler =>
+                    setData(state => ({ ...state, handler }))
                   }
-                }}
-                onChange={build_image =>
-                  setData(state => ({ ...state, build_image }))
-                }
-                tip="The name of the built container image"
-                type="text"
-                value={data.build_image}
-                wrapperClassName="build-image"
-              />
-              <Input
-                className="input__wide"
-                disabled={imageType !== NEW_IMAGE}
-                floatingLabel
-                invalid={
-                  !validation.isBaseImageValid && imageType === NEW_IMAGE
-                }
-                label="Base image"
-                onBlur={event => {
-                  if (
-                    event.target.value !==
-                    functionsStore.newFunction.spec.build.base_image
-                  ) {
-                    setNewFunctionBaseImage(data.base_image)
+                  onBlur={handleHandlerOnBlur}
+                  required
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isHandlerValid: value
+                    }))
                   }
-                }}
-                onChange={base_image =>
-                  setData(state => ({ ...state, base_image }))
-                }
-                required={imageType === NEW_IMAGE}
-                setInvalid={value =>
-                  setValidation(state => ({
-                    ...state,
-                    isBaseImageValid: value
-                  }))
-                }
-                tip="The name of a base container image from which to build the function's processor image"
-                type="text"
-                value={data.base_image}
-                wrapperClassName="base-image"
+                  tip="Enter the function handler name (e.g. for the default sample function the name should be `handler`)"
+                  value={data.handler}
+                  wrapperClassName="handler"
+                />
+              </div>
+            )}
+            {mode === PANEL_EDIT_MODE && (
+              <div className="code__force-build">
+                <CheckBox
+                  item={{ id: 'enabled', label: 'Force build' }}
+                  onChange={() =>
+                    setNewFunctionForceBuild(
+                      !functionsStore.newFunction.skip_deployed
+                    )
+                  }
+                  selectedId={
+                    functionsStore.newFunction.skip_deployed ? 'enabled' : ''
+                  }
+                />
+              </div>
+            )}
+          </div>
+          <div className="code__info_right">
+            <div className="code__existing-image">
+              <RadioButtons
+                className="radio-buttons__block"
+                elements={generateCodeOptions(mode)}
+                onChangeCallback={handleImageTypeChange}
+                selectedValue={imageType}
               />
+              <div className="code__images-inputs">
+                <Input
+                  className="input__wide"
+                  disabled={imageType !== EXISTING_IMAGE}
+                  floatingLabel
+                  invalid={
+                    !validation.isCodeImageValid && imageType === EXISTING_IMAGE
+                  }
+                  label="Image name"
+                  onBlur={event => {
+                    if (
+                      event.target.value !==
+                      functionsStore.newFunction.spec.image
+                    ) {
+                      setNewFunctionImage(data.image)
+                    }
+                  }}
+                  onChange={image => setData(state => ({ ...state, image }))}
+                  required={imageType === EXISTING_IMAGE}
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isCodeImageValid: value
+                    }))
+                  }
+                  tip="The name of the function‘s container image"
+                  value={data.image}
+                  wrapperClassName="image-name"
+                />
+                <Input
+                  className="input__wide"
+                  disabled={imageType !== NEW_IMAGE}
+                  floatingLabel
+                  label="Resulting Image"
+                  onBlur={event => {
+                    if (
+                      event.target.value !==
+                      functionsStore.newFunction.spec.build.image
+                    ) {
+                      setNewFunctionBuildImage(data.build_image)
+                    }
+                  }}
+                  onChange={build_image =>
+                    setData(state => ({ ...state, build_image }))
+                  }
+                  tip="The name of the built container image"
+                  type="text"
+                  value={data.build_image}
+                  wrapperClassName="build-image"
+                />
+                <Input
+                  className="input__wide"
+                  disabled={imageType !== NEW_IMAGE}
+                  floatingLabel
+                  invalid={
+                    !validation.isBaseImageValid && imageType === NEW_IMAGE
+                  }
+                  label="Base image"
+                  onBlur={event => {
+                    if (
+                      event.target.value !==
+                      functionsStore.newFunction.spec.build.base_image
+                    ) {
+                      setNewFunctionBaseImage(data.base_image)
+                    }
+                  }}
+                  onChange={base_image =>
+                    setData(state => ({ ...state, base_image }))
+                  }
+                  required={imageType === NEW_IMAGE}
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isBaseImageValid: value
+                    }))
+                  }
+                  tip="The name of a base container image from which to build the function's processor image"
+                  type="text"
+                  value={data.base_image}
+                  wrapperClassName="base-image"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -250,11 +282,13 @@ FunctionsPanelCodeView.propTypes = {
   handleHandlerOnBlur: PropTypes.func.isRequired,
   handleImageTypeChange: PropTypes.func.isRequired,
   imageType: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
   setData: PropTypes.func.isRequired,
   setEditCode: PropTypes.func.isRequired,
   setNewFunctionBaseImage: PropTypes.func.isRequired,
   setNewFunctionBuildImage: PropTypes.func.isRequired,
   setNewFunctionCommands: PropTypes.func.isRequired,
+  setNewFunctionForceBuild: PropTypes.func.isRequired,
   setNewFunctionImage: PropTypes.func.isRequired,
   setNewFunctionSourceCode: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,

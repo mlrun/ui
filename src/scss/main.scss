@@ -84,35 +84,35 @@ button {
   }
 }
 
-[class^=state-completed],
-[class^=state-ready],
-[class^=state-succeeded],
-[class^=state-active],
-[class^=state-created],
-[class^=state-info] {
+[class^='state-completed'],
+[class^='state-ready'],
+[class^='state-succeeded'],
+[class^='state-active'],
+[class^='state-created'],
+[class^='state-info'] {
   @include statusState($brightTurquoise);
 }
 
-[class^=state-all] {
+[class^='state-all'] {
   @include statusState(transparent);
 }
 
-[class^=state-warn] {
+[class^='state-warn'] {
   @include statusState($grandis);
 }
 
-[class^=state-deploying],
-[class^=state-build],
-[class^=state-pending],
-[class^=state-running] {
+[class^='state-deploying'],
+[class^='state-build'],
+[class^='state-pending'],
+[class^='state-running'] {
   @include statusState($pictonBlue);
 }
 
-[class^=state-failed],
-[class^=state-fail],
-[class^=state-error],
-[class^=state-broken],
-[class^=state-aborted] {
+[class^='state-failed'],
+[class^='state-fail'],
+[class^='state-error'],
+[class^='state-broken'],
+[class^='state-aborted'] {
   @include statusState($burntSienna);
 }
 
@@ -256,6 +256,42 @@ textarea {
     &-https,
     &-s3 {
       color: $sorbus;
+    }
+  }
+}
+
+.graph-container {
+  display: flex;
+  flex: 1 1;
+
+  .graph-view {
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    background-color: $gallery;
+  }
+
+  .graph-pane {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    min-width: 350px;
+    overflow: hidden;
+    background: $white;
+    border: $secondaryBorder;
+    box-shadow: 0 0 30px rgba($black, 0.15);
+
+    &.scrollable {
+      overflow-y: auto;
+    }
+
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px;
+      font-weight: bold;
+      font-size: 20px;
     }
   }
 }

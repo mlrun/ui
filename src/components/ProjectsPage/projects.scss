@@ -27,20 +27,27 @@
       display: flex;
       flex: 1;
       flex-flow: row wrap;
-      justify-content: space-between;
+      width: 100%;
+      align-items: center;
+      justify-content: flex-start;
       padding-left: 15px;
+      margin-bottom: 1rem;
 
       &-item {
         display: flex;
-        align-items: baseline;
-        .sort {
-          margin-left: 30px;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 100%;
+        &:not(:last-child) {
+          margin-right: 24px;
+        }
+        @media screen and (min-width: 576px) {
+          min-width: 435px;
         }
       }
 
       .project-types-select {
-        width: 210px;
-
+        padding: 0;
         .select__header {
           width: auto;
           font-size: 20px;
@@ -72,10 +79,5 @@
     .input-wrapper {
       margin: 10px 0;
     }
-  }
-
-  &-search {
-    min-width: 500px;
-    margin-bottom: 15px;
   }
 }

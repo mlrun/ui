@@ -362,7 +362,6 @@ export const generateTableDataFromDefaultData = (
   setDefaultDataIsLoaded,
   mode
 ) => {
-  console.log('here')
   const parameters = generateDefaultParameters(
     Object.entries(defaultData.task.spec.parameters ?? {})
   )

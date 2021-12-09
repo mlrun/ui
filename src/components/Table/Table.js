@@ -10,6 +10,7 @@ import createJobsContent from '../../utils/createJobsContent'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
+import { ACTIONS_MENU } from '../../types'
 import { JOBS_PAGE } from '../../constants'
 import tableActions from '../../actions/table'
 
@@ -47,12 +48,6 @@ const Table = ({
   const workflows = useSelector(state => {
     return pageData.page === JOBS_PAGE && state.workflowsStore.workflows.data
   })
-
-  useEffect(() => {
-    return () => {
-      setTablePanelOpen(false)
-    }
-  }, [setTablePanelOpen, match.params.projectName, match.params.pageTab])
 
   useEffect(() => {
     const calculatePanelHeight = () => {
@@ -180,10 +175,7 @@ Table.defaultProps = {
 }
 
 Table.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   getCloseDetailsLink: PropTypes.func,

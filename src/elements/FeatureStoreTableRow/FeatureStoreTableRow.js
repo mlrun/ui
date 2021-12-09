@@ -10,6 +10,7 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 
 import { ACTION_CELL_ID, DETAILS_OVERVIEW_TAB } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
 const FeatureStoreTableRow = ({
   actionsMenu,
@@ -193,7 +194,7 @@ FeatureStoreTableRow.defaultProps = {
 }
 
 FeatureStoreTableRow.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,

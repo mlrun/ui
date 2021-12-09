@@ -2,6 +2,7 @@ import { By } from 'selenium-webdriver'
 
 module.exports = function(menuStructure) {
   return {
+    root: By.css(menuStructure.root),
     open_button: By.css(
       `${menuStructure.root} ${menuStructure.menuElements.open_button}`
     ),

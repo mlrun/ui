@@ -12,6 +12,7 @@ import {
   DETAILS_OVERVIEW_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 
 const ArtifactsTableRow = ({
@@ -33,7 +34,7 @@ const ArtifactsTableRow = ({
     'parent-row',
     (selectedItem.db_key || selectedItem?.spec?.model) &&
       getArtifactIdentifier(selectedItem, true) ===
-        rowItem.key.identifierUnique &&
+        rowItem.key?.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row-expanded') &&
       'row_active',
     parent.current?.classList.value.includes('parent-row-expanded') &&
@@ -44,13 +45,13 @@ const ArtifactsTableRow = ({
   const findCurrentItem = useCallback(
     artifact => {
       const currentContent =
-        pageData.selectedRowData?.[artifact.key.value]?.content || content
+        pageData.selectedRowData?.[artifact.key?.value]?.content || content
 
       return (
         currentContent.find(
           contentItem =>
             getArtifactIdentifier(contentItem, true) ===
-            artifact.key.identifierUnique
+            artifact.key?.identifierUnique
         ) ?? {}
       )
     },
@@ -192,7 +193,7 @@ ArtifactsTableRow.defaultProps = {
 }
 
 ArtifactsTableRow.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,

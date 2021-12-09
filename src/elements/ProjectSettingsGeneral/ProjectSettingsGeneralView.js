@@ -31,7 +31,7 @@ const ProjectSettingsGeneralView = ({
         <Loader />
       ) : error ? (
         <div>
-          <h1>{error}</h1>
+          <h1>{error.message}</h1>
         </div>
       ) : (
         <>
@@ -101,7 +101,7 @@ ProjectSettingsGeneralView.defaultProps = {
 ProjectSettingsGeneralView.propTypes = {
   artifactPath: PropTypes.string.isRequired,
   editProject: PropTypes.object.isRequired,
-  error: PropTypes.string,
+  error: PropTypes.object,
   generalParams: PropTypes.array.isRequired,
   handleAddNewParameter: PropTypes.func.isRequired,
   handleArtifactPathChange: PropTypes.func.isRequired,

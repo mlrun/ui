@@ -8,6 +8,7 @@ import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 import { DETAILS_OVERVIEW_TAB, MONITOR_WORKFLOWS_TAB } from '../../constants'
+import { ACTIONS_MENU } from '../../types'
 
 const JobsTableRow = ({
   actionsMenu,
@@ -174,10 +175,7 @@ JobsTableRow.defaultProps = {
 }
 
 JobsTableRow.propTypes = {
-  actionsMenu: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ]).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func.isRequired,

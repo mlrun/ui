@@ -32,16 +32,9 @@
 
   .workflow-content {
     position: relative;
-    display: flex;
-    flex: 1 1;
     flex-direction: column;
 
     .graph-view {
-      display: flex;
-      flex: 1 1;
-      flex-direction: column;
-      background-color: $gallery;
-
       &.with-selected-job {
         width: 35%;
       }

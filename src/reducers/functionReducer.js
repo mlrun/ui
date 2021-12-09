@@ -44,12 +44,16 @@ import {
   SET_NEW_FUNCTION_ERROR_STREAM,
   SET_NEW_FUNCTION_DEFAULT_CLASS,
   SET_NEW_FUNCTION_DISABLE_AUTO_MOUNT,
+  GET_FUNCTION_SUCCESS,
+  GET_FUNCTION_FAILURE,
+  GET_FUNCTION_BEGIN,
   GET_FUNCTION_WITH_HASH_BEGIN,
   GET_FUNCTION_WITH_HASH_FAILURE,
   GET_FUNCTION_WITH_HASH_SUCCESS,
   REMOVE_FUNCTION,
   SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,
-  PANEL_DEFAULT_ACCESS_KEY
+  PANEL_DEFAULT_ACCESS_KEY,
+  SET_NEW_FUNCTION_FORCE_BUILD
 } from '../constants'
 
 const initialState = {
@@ -199,6 +203,25 @@ export default (state = initialState, { type, payload }) => {
         loading: false,
         template: {},
         error: payload
+      }
+    case GET_FUNCTION_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case GET_FUNCTION_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        func: {},
+        error: payload
+      }
+    case GET_FUNCTION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        template: payload,
+        error: null
       }
     case GET_FUNCTION_WITH_HASH_BEGIN:
       return {
@@ -360,6 +383,14 @@ export default (state = initialState, { type, payload }) => {
             ...state.newFunction.spec,
             error_stream: payload
           }
+        }
+      }
+    case SET_NEW_FUNCTION_FORCE_BUILD:
+      return {
+        ...state,
+        newFunction: {
+          ...state.newFunction,
+          skip_deployed: payload
         }
       }
     case SET_NEW_FUNCTION_GRAPH:

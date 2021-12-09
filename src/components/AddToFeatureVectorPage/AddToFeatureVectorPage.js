@@ -268,7 +268,10 @@ const AddToFeatureVectorPage = ({
   ])
 
   return (
-    <div ref={addToFeatureVectorPageRef} className="add-to-feature-vector">
+    <div
+      ref={addToFeatureVectorPageRef}
+      className="add-to-feature-vector content-wrapper"
+    >
       {featureStore.loading && <Loader />}
       <Content
         content={content}
