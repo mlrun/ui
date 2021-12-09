@@ -639,7 +639,8 @@ export const generateFeatureVectorsDetailsMenu = selectedItem => [
   },
   {
     label: 'preview',
-    id: 'preview'
+    id: 'preview',
+    hidden: true // Temporary hidden because there is no implementation yet
   },
   {
     label: 'statistics',
