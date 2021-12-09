@@ -425,7 +425,7 @@ export const generateTableDataFromDefaultData = (
       volume_mounts: volumeMounts ?? [],
       volumes: defaultData.function?.spec.volumes ?? [],
       environmentVariables:
-        parseEnvVariables(defaultData.function?.spec.env).map(env => ({
+        parseEnvVariables(defaultData.function?.spec.env ?? []).map(env => ({
           data: generateEnvVariable(env)
         })) ?? [],
       secretSources: secrets,

@@ -54,14 +54,27 @@ const Workflow = ({
 
   useEffect(() => {
     if (!workflow.graph) {
-      fetchWorkflow(match.params.workflowId).then(workflow => {
-        setWorkflow(workflow)
-        setWorkflowJobsIds(
-          Object.values(workflow.graph).map(jobData => jobData.run_uid)
+      fetchWorkflow(match.params.workflowId)
+        .then(workflow => {
+          setWorkflow(workflow)
+          setWorkflowJobsIds(
+            Object.values(workflow.graph).map(jobData => jobData.run_uid)
+          )
+        })
+        .catch(() =>
+          history.replace(
+            `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
+          )
         )
-      })
     }
-  }, [fetchWorkflow, match.params.workflowId, workflow.graph])
+  }, [
+    fetchWorkflow,
+    history,
+    match.params.pageTab,
+    match.params.projectName,
+    match.params.workflowId,
+    workflow.graph
+  ])
 
   useEffect(() => {
     if (workflowJobsIds.length > 0 && content.length > 0) {
@@ -118,7 +131,6 @@ const Workflow = ({
           id: `e.${job.id}.${childId}`,
           source: job.id,
           target: childId,
-          type: 'smoothstep',
           animated: false,
           arrowHeadType: 'arrowclosed'
         })
@@ -214,7 +226,7 @@ const Workflow = ({
           </Tooltip>
         </div>
       </div>
-      <div className="workflow-content">
+      <div className="graph-container workflow-content">
         {workflowsViewMode === 'graph' ? (
           <>
             <div className={graphViewClassNames}>

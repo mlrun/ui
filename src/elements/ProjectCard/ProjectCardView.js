@@ -13,8 +13,6 @@ import { getChipOptions } from '../../utils/getChipOptions'
 
 import { ReactComponent as ClockIcon } from '../../images/clock.svg'
 
-import { ACTIONS_MENU } from '../../types'
-
 import './projectCard.scss'
 
 const ProjectCardView = React.forwardRef(
@@ -111,7 +109,7 @@ const ProjectCardView = React.forwardRef(
 )
 
 ProjectCardView.propTypes = {
-  actionsMenu: ACTIONS_MENU.isRequired,
+  actionsMenu: PropTypes.shape({}).isRequired,
   project: PropTypes.shape({}).isRequired,
   statistics: PropTypes.shape({}).isRequired
 }

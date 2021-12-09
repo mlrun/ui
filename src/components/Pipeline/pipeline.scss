@@ -1,11 +1,11 @@
 @import '../../scss/borders';
 
-.workflow-container {
+.pipeline-container {
   display: flex;
   flex: 1 1;
   flex-direction: column;
 
-  .workflow-header {
+  .pipeline-header {
     display: flex;
     justify-content: space-between;
     height: 50px;
@@ -30,18 +30,27 @@
     }
   }
 
-  .workflow-content {
+  .pipeline-content {
     position: relative;
-    flex-direction: column;
 
-    .graph-view {
-      &.with-selected-job {
-        width: 35%;
-      }
+    .graph-pane {
+      &__row {
+        display: flex;
+        align-items: center;
+        margin: 5px 25px;
 
-      .table__item {
-        width: 65%;
+        &-label {
+          margin-right: 10px;
+          color: $spunPearl;
+          font-weight: bold;
+          white-space: nowrap;
+        }
+
+        &-value {
+          width: 100%;
+        }
       }
     }
   }
 }
+

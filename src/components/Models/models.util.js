@@ -7,6 +7,8 @@ import {
   MODELS_PAGE,
   MODELS_TAB,
   NAME_FILTER,
+  PIPELINE_SUB_PAGE,
+  REAL_TIME_PIPELINES_TAB,
   SORT_BY,
   TREE_FILTER
 } from '../../constants'
@@ -16,8 +18,22 @@ import { generateUri } from '../../utils/resources'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { generateModelEndpoints } from '../../utils/generateModelEndpoints'
 import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
+import { parseFunctions } from '../../utils/parseFunctions'
 
-export const validTabs = [MODELS_TAB, MODEL_ENDPOINTS_TAB]
+export const page = MODELS_PAGE
+export const pageDataInitialState = {
+  details: { menu: [], infoHeaders: [] },
+  filters: [],
+  page,
+  registerArtifactDialogTitle: '',
+  tabs: []
+}
+
+export const validTabs = [
+  MODELS_TAB,
+  MODEL_ENDPOINTS_TAB,
+  REAL_TIME_PIPELINES_TAB
+]
 
 export const modelsInfoHeaders = [
   {
@@ -109,7 +125,7 @@ export const modelEndpointsFilters = [
     ]
   }
 ]
-export const page = MODELS_PAGE
+export const realTimePipelinesFilters = [{ type: NAME_FILTER, label: 'Name:' }]
 export const actionsMenuHeader = 'Register model'
 export const modelsTableHeaders = isSelectedModel => [
   {
@@ -229,14 +245,26 @@ export const modelEndpointsTableHeaders = isSelectedModel => [
     hidden: isSelectedModel
   }
 ]
+const realTimePipelinesTableHeaders = () => [
+  {
+    header: 'Name',
+    class: 'functions_medium'
+  },
+  {
+    header: 'Type',
+    class: 'functions_big'
+  }
+]
 export const tabs = [
   { id: MODELS_TAB, label: 'Models' },
-  { id: MODEL_ENDPOINTS_TAB, label: 'Model endpoints', preview: true }
+  { id: MODEL_ENDPOINTS_TAB, label: 'Model endpoints', preview: true },
+  { id: REAL_TIME_PIPELINES_TAB, label: 'Real-time pipelines' }
 ]
 
 export const handleFetchData = async (
   fetchModelEndpoints,
   fetchModels,
+  fetchFunctions,
   filters,
   project,
   pageTab
@@ -264,12 +292,22 @@ export const handleFetchData = async (
       data.content = generateModelEndpoints(result)
       data.originalContent = result
     }
+  } else if (pageTab === REAL_TIME_PIPELINES_TAB) {
+    result = await fetchFunctions(project, filters)
+
+    if (result) {
+      data.content = parseFunctions(
+        result.filter(func => func.kind === 'serving')
+      )
+      data.originalContent = result
+    }
   }
 
   return data
 }
 
 export const generatePageData = (
+  subPage,
   selectedModel,
   pageTab,
   handleDeployModel,
@@ -304,6 +342,12 @@ export const generatePageData = (
     data.filters = modelEndpointsFilters
     data.tableHeaders = modelEndpointsTableHeaders(isSelectedModel)
     data.details.infoHeaders = modelEndpointsInfoHeaders
+  } else if (pageTab === REAL_TIME_PIPELINES_TAB) {
+    data.filters = realTimePipelinesFilters
+    data.hideFilterMenu = subPage === PIPELINE_SUB_PAGE
+    data.hidePageActionMenu = true
+    data.tableHeaders = realTimePipelinesTableHeaders()
+    data.hidePageActionMenu = true
   }
 
   return data
@@ -363,6 +407,19 @@ export const checkForSelectedModelEndpoint = (
       searchItem.metadata.uid
     )
     setSelectedModel({ item: searchItem })
+  }
+}
+
+export const checkForSelectedRealTimePipelines = (
+  history,
+  pipelineId,
+  match,
+  realTimePipelines
+) => {
+  if (!realTimePipelines.find(item => item.hash === pipelineId)) {
+    history.replace(
+      `/projects/${match.params.projectName}/models/${match.params.pageTab}`
+    )
   }
 }
 

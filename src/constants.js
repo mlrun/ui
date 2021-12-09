@@ -39,6 +39,8 @@ export const WORKFLOW_SUB_PAGE = 'workflow'
 export const MODELS_PAGE = 'MODELS'
 export const MODELS_TAB = 'models'
 export const MODEL_ENDPOINTS_TAB = 'model-endpoints'
+export const REAL_TIME_PIPELINES_TAB = 'real-time-pipelines'
+export const PIPELINE_SUB_PAGE = 'pipeline'
 
 export const FEATURE_STORE_PAGE = 'FEATURE-STORE'
 export const DATASETS_TAB = 'datasets'

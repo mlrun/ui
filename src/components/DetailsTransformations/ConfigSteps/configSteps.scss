@@ -16,28 +16,4 @@
       width: 100%;
     }
   }
-
-  .code-block {
-    width: 100%;
-    height: 200px;
-    overflow: auto;
-    border: $primaryBorder;
-    border-radius: $mainBorderRadius;
-
-    &__label {
-      padding: 5px 10px;
-      color: $topaz;
-      font-size: 10px;
-    }
-
-    &__content {
-      pre {
-        margin: 0;
-
-        code {
-          white-space: pre-wrap;
-        }
-      }
-    }
-  }
 }

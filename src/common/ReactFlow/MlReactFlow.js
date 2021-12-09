@@ -2,10 +2,16 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer'
 
+import FloatingEdge from './FloatingEdge'
+
 import './mlReactFlow.scss'
 
 const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
+
+  const edgeTypes = {
+    floating: FloatingEdge
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -27,6 +33,7 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
       <ReactFlow
         elements={elements}
         onLoad={onLoad}
+        edgeTypes={edgeTypes}
         onElementClick={onElementClick}
         selectionKeyCode={null}
         multiSelectionKeyCode={null}
