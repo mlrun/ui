@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import ProjectLinks from '../../components/Project/ProjectLinks/ProjectLinks'
 import NavbarLink from '../../elements/NavbarLink/NavbarLink'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 
@@ -15,8 +14,12 @@ import { ReactComponent as SettingsIcon } from '../../images/pref-icon.svg'
 
 import './Navbar.scss'
 
-const Navbar = ({ match, isPinned, setIsPinned }) => {
-  const navbarClasses = classNames('navbar', isPinned && 'pinned')
+const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
+  const navbarClasses = classNames(
+    'navbar',
+    isPinned && 'pinned',
+    headerShown && 'has-header'
+  )
 
   const { links } = useMemo(() => {
     let links = match ? getLinks(match) : []
@@ -43,7 +46,9 @@ const Navbar = ({ match, isPinned, setIsPinned }) => {
             {isPinned ? <UnPinIcon /> : <PinIcon />}
           </RoundedIcon>
           <ul className="navbar-links">
-            <ProjectLinks links={links} />
+            {links.map(link => (
+              <NavbarLink key={link.label} {...link} />
+            ))}
           </ul>
         </div>
         <div className="navbar__additional">

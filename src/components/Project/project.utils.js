@@ -3,13 +3,14 @@ import React from 'react'
 import {
   MONITOR_JOBS_TAB,
   PRIMARY_BUTTON,
+  PROJECT_MONITOR,
   SCHEDULE_TAB,
   STATUS_CODE_FORBIDDEN
 } from '../../constants'
 
 import { ReactComponent as APIIcon } from '../../images/api-getaway-icon.svg'
 import { ReactComponent as DashboardIcon } from '../../images/dashboard-icon.svg'
-// import { ReactComponent as EyeIcon } from '../../images/eye.svg'
+import { ReactComponent as EyeIcon } from '../../images/eye.svg'
 import { ReactComponent as FileIcon } from '../../images/file-icon.svg'
 import { ReactComponent as FunctionIcon } from '../../images/function-icon.svg'
 import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
@@ -84,11 +85,11 @@ export const getLinks = match => [
     label: 'ML functions',
     link: `/projects/${match.params.projectName}/functions`
   },
-  // {
-  //   icon: <EyeIcon />,
-  //   label: 'Project monitoring',
-  //   link: `/projects/${match.params.projectName}/monitor`
-  // },
+  {
+    icon: <EyeIcon />,
+    label: 'Project monitoring',
+    link: `/projects/${match.params.projectName}/${PROJECT_MONITOR}`
+  },
   {
     icon: <NuclioIcon />,
     label: 'Real-time functions',

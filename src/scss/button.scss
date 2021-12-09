@@ -1,13 +1,13 @@
-@import '../../scss/variables';
-@import '../../scss/colors';
-@import '../../scss/borders';
+@import './variables';
+@import './colors';
+@import './borders';
 
 .btn {
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 90px;
-  min-height: 36px;
+  height: 36px;
   padding: 0 16px;
   color: $white;
   font-weight: 500;

@@ -8,8 +8,6 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import { BUTTON_VARIANTS } from '../../types'
 import { TERTIARY_BUTTON } from '../../constants'
 
-import './button.scss'
-
 const Button = forwardRef(
   ({ className, icon, label, tooltip, variant, ...restProps }, ref) => {
     const buttonClassName = classNames('btn', `btn-${variant}`, className)

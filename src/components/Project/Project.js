@@ -12,19 +12,19 @@ import { useHistory } from 'react-router-dom'
 import { forEach, groupBy } from 'lodash'
 
 import ProjectView from './ProjectView'
+import ProjectOverview from './ProjectOverview/ProjectOverview'
 
 import featureStoreActions from '../../actions/featureStore'
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import {
-  getLinks,
   generateCreateNewOptions,
   handleFetchProjectError
 } from './project.utils'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { useDemoMode } from '../../hooks/demoMode.hook'
-import { KEY_CODES } from '../../constants'
+import { KEY_CODES, PROJECT_MONITOR } from '../../constants'
 import {
   initialMembersState,
   membersActions,
@@ -89,11 +89,10 @@ const Project = ({
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const history = useHistory()
-  const inputRef = React.createRef()
+  const inputRef = React.useRef()
   const isDemoMode = useDemoMode()
 
-  const { links, createNewOptions } = useMemo(() => {
-    const links = getLinks(match)
+  const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       history,
       match,
@@ -104,7 +103,6 @@ const Project = ({
     )
 
     return {
-      links,
       createNewOptions
     }
   }, [history, match])
@@ -624,6 +622,10 @@ const Project = ({
     [projectStore.project.data]
   )
 
+  if (!match.path.includes(PROJECT_MONITOR)) {
+    return <ProjectOverview confirmData={confirmData} />
+  }
+
   return (
     <ProjectView
       artifactKind={artifactKind}
@@ -648,7 +650,6 @@ const Project = ({
       isDemoMode={isDemoMode}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
-      links={links}
       match={match}
       membersDispatch={membersDispatch}
       membersState={membersState}

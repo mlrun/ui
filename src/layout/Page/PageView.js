@@ -17,22 +17,29 @@ export default function PageView({ children }) {
 
   const match = useRouteMatch('/projects/:projectName')
 
-  const mainClasses = classNames(isPinned && match && 'pinned')
-
   const headerShown =
     window.localStorage.getItem('mlrunUi.headerHidden') !== 'true'
+
+  const pinnedClasses = classNames(
+    isPinned && match ? 'pinned' : 'unpinned',
+    headerShown && 'has-header'
+  )
 
   return (
     <div className="App">
       {headerShown && <Header />}
-      <div className="page-view__container">
-        {match && (
-          <Navbar match={match} isPinned={isPinned} setIsPinned={setIsPinned} />
-        )}
-        <main id="main" className={mainClasses}>
-          {children}
-        </main>
-      </div>
+      {match && (
+        <Navbar
+          match={match}
+          isPinned={isPinned}
+          headerShown={headerShown}
+          setIsPinned={setIsPinned}
+        />
+      )}
+      <main id="main" className={pinnedClasses}>
+        {children}
+      </main>
+
       <Notification />
     </div>
   )

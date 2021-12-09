@@ -53,8 +53,15 @@ const ContentMenu = ({ activeTab, match, screen, tabs, onClick }) => {
   )
 }
 
+ContentMenu.defaultProps = {
+  activeTab: '',
+  onClick: () => {},
+  tabs: []
+}
+
 ContentMenu.propTypes = {
   activeTab: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
   tabs: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 

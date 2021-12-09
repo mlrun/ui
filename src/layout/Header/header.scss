@@ -1,4 +1,4 @@
-@import "../../scss/variables";
+@import '../../scss/variables';
 @import '../../scss/colors';
 @import '../../scss/mixins';
 @import '../../scss/shadows';
@@ -7,7 +7,7 @@
 .header {
   @include fixed;
 
-  z-index: 5;
+  z-index: 1;
   display: flex;
   align-items: center;
   width: 100%;

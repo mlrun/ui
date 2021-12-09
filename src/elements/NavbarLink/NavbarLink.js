@@ -20,7 +20,7 @@ const NavbarLink = ({ externalLink, icon, label, link, rootPath }) => {
       ) : (
         <NavLink
           to={link}
-          exact={rootPath}
+          exact={rootPath === '/'}
           className="nav-link__button btn btn-secondary"
           activeClassName="active"
         >
@@ -30,6 +30,14 @@ const NavbarLink = ({ externalLink, icon, label, link, rootPath }) => {
       )}
     </li>
   )
+}
+
+NavbarLink.defaultProps = {
+  externalLink: false,
+  icon: {},
+  label: '',
+  link: '',
+  rootPath: ''
 }
 
 NavbarLink.propTypes = {

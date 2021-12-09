@@ -54,7 +54,7 @@ const ProjectCardView = React.forwardRef(
             </div>
 
             <div
-              className={`project-card__header-sub-title project-card__info f-12 ${
+              className={`project-card__header-sub-title project-card__info ${
                 !project.spec.owner ? 'visiblity-hidden' : ''
               } `}
             >
@@ -81,7 +81,7 @@ const ProjectCardView = React.forwardRef(
             </div>
           </div>
 
-          <div className="project-card__info f-12" ref={chipRef}>
+          <div className="project-card__info" ref={chipRef}>
             {project.metadata.labels && (
               <>
                 <span>Labels:</span>

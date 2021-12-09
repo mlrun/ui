@@ -51,6 +51,8 @@ export const FUNCTIONS_PAGE = 'FUNCTIONS'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
 export const FILES_PAGE = 'FILES'
 
+export const PROJECT_MONITOR = 'monitor'
+
 /*=========== JOBS =============*/
 
 export const ABORT_JOB_BEGIN = 'ABORT_JOB_BEGIN'

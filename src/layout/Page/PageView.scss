@@ -1,9 +1,13 @@
+@import '../../scss/variables.scss';
+
 .page-view {
   &__container {
     display: flex;
     position: relative;
     width: 100%;
-    margin-top: 64px;
     justify-content: flex-end;
+    z-index: 5;
+    // transform: translateX($navbarTogglerWidth);
+    transition: all 0.3s ease-in-out;
   }
 }

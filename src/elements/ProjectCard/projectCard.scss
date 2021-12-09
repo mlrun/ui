@@ -1,6 +1,7 @@
 @import '../../scss/colors';
 @import '../../scss/borders';
 @import '../../scss/shadows';
+@import '../../scss/mixins';
 
 .project-card {
   position: relative;
@@ -17,13 +18,6 @@
 
   &::before {
     content: '';
-    background: linear-gradient(
-      90deg,
-      #d873e1 -20.43%,
-      #dd71d5 -20.42%,
-      #fc658f 48.31%,
-      #ffb971 111.56%
-    );
     border-radius: 8px 8px 0 0;
     position: absolute;
     top: 0;
@@ -31,6 +25,8 @@
     display: block;
     width: 100%;
     height: 8px;
+
+    @include gradient;
   }
 
   &__general-info {
@@ -44,9 +40,10 @@
   &__header {
     margin-bottom: 0.5rem;
     padding-right: 1rem;
+
     &-title {
       display: flex;
-      align-items: baseline;
+      align-items: stretch;
       font-size: 1.25rem;
       font-weight: normal;
       margin-bottom: 5px;
@@ -56,6 +53,7 @@
         flex: 1 0 auto;
       }
     }
+
     &-sub-title {
       width: 100%;
     }
@@ -87,7 +85,7 @@
   &__info {
     display: flex;
     align-items: center;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     margin-right: 10px;
 
     & > *:first-child {
@@ -101,10 +99,6 @@
       & * {
         fill: $spunPearl;
       }
-    }
-
-    &.f-12 {
-      font-size: 0.75rem;
     }
   }
 
@@ -152,7 +146,7 @@
 
   &__actions-menu {
     position: absolute;
-    top: 20px;
+    top: 22px;
     right: 0;
     z-index: 4;
     transition: opacity 0.3s ease-in-out;

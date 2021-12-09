@@ -16,7 +16,7 @@ const PageActionsMenu = ({
       {showActionsMenu && (
         <div data-testid="actions-button" className="page-actions-container">
           <Button
-            variant={variant ?? PRIMARY_BUTTON}
+            variant={variant}
             label={actionsMenuHeader}
             className="btn_register"
             onClick={onClick}

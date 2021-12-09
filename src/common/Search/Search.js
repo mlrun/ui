@@ -77,9 +77,7 @@ const Search = ({
         placeholder={placeholder}
         inputIcon={<SearchIcon />}
         iconClass="search-icon"
-        onChange={event => {
-          searchOnChange(event)
-        }}
+        onChange={searchOnChange}
         focused={inputIsFocused}
         onKeyDown={event => {
           if (

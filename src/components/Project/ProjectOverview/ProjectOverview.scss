@@ -1,0 +1,120 @@
+@import '../../../scss/colors';
+@import '../../../scss/mixins';
+
+.project-overview {
+  height: 100%;
+  background: $white;
+
+  &__header {
+    display: flex;
+    color: $white;
+    padding: 3.2em 4em;
+    min-height: 300px;
+    @include gradient;
+
+    &-cell {
+      flex: 0 0 50%;
+    }
+
+    &-title {
+      font-size: 3.2em;
+      font-weight: 300;
+      margin-top: 0;
+      margin-bottom: 0.5em;
+    }
+
+    &-subtitle {
+      margin: 0;
+    }
+  }
+
+  &__content {
+    position: relative;
+    background: inherit;
+
+    &-cards {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: stretch;
+      transform: translateY(-75px);
+      width: 100%;
+    }
+  }
+}
+
+.project-overview-card {
+  display: flex;
+  flex: 0 0 30%;
+  flex-flow: column nowrap;
+  color: $primary;
+  background-color: $white;
+  border: 1px solid $mercury;
+  box-shadow: 7px 8px 25px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  max-width: 460px;
+  width: 100%;
+  margin: 0 22px;
+  overflow: hidden;
+
+  &_top {
+    background-color: $zircon;
+    border-bottom: 1px solid $athensGray;
+    min-height: 430px;
+  }
+  &_bottom {
+    border-bottom: 1px solid $athensGray;
+  }
+
+  &__header {
+    padding: 1.6em;
+
+    &-title {
+      font-size: 2em;
+      font-weight: 300;
+      margin: 0;
+    }
+  }
+
+  &__actions {
+    padding: 0 1.6em;
+  }
+}
+
+.actions {
+  &__list {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    &-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-flow: column nowrap;
+    }
+
+    &-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: $gallery;
+
+      &::before {
+        content: url('../../../images/dots-icon.png');
+        width: 48px;
+        height: 48px;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+      }
+    }
+  }
+}
