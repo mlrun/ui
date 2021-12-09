@@ -75,9 +75,18 @@ const FeaturesTablePanel = ({
     let featureVector = cloneDeep(tableStore.features.featureVector)
     let addFeaturesPromise = null
 
-    featureVector.spec.features = tableStore.features.groupedFeatures[
-      tableStore.features.currentProject
-    ].map(feature => feature.originalTemplate)
+    featureVector.spec.features = Object.keys(
+      tableStore.features.groupedFeatures
+    ).reduce(
+      (accum, project) => [
+        ...accum,
+        ...tableStore.features.groupedFeatures[project].map(
+          feature => feature.originalTemplate
+        )
+      ],
+      []
+    )
+
     featureVector.spec.label_feature =
       tableStore.features.labelFeature?.[tableStore.features.currentProject]
 
