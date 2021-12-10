@@ -96,7 +96,6 @@ const TableCell = ({
       <div className={`table-body__cell ${data.class}`}>
         <ChipCell
           chipOptions={getChipOptions(data.type)}
-          shortChips
           elements={data.value}
           tooltip
         />

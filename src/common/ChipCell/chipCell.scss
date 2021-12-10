@@ -5,9 +5,18 @@
 .chips {
   &-wrapper {
     display: flex;
+    align-items: center;
+  }
+
+  &-cell {
+    display: flex;
     flex: 1;
     align-items: center;
     max-width: 100%;
+
+    .fixed-max-width {
+      max-width: 100%;
+    }
 
     .chip {
       &-block {
