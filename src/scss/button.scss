@@ -92,8 +92,8 @@
   }
 
   &-secondary {
-    background: $malibu;
     color: $white;
+    background: $malibu;
 
     &:hover:not(:disabled) {
       background: $cornflowerBlue;

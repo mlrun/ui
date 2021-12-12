@@ -28,27 +28,31 @@
       display: flex;
       flex: 1;
       flex-flow: row wrap;
-      width: 100%;
       align-items: center;
-      justify-content: space-between;
-      padding-left: 15px;
+      justify-content: flex-start;
+      width: 100%;
       margin-bottom: 1rem;
+      padding-left: 15px;
 
       &-item {
         display: flex;
+        flex: 0 0 23%;
         align-items: center;
-        // justify-content: space-between;
-        // min-width: 100%;
-        // &:not(:last-child) {
-        //   margin-right: 24px;
-        // }
-        // @media screen and (min-width: 576px) {
-        //   min-width: 435px;
-        // }
+        justify-content: space-between;
+        min-width: 100%;
+
+        &:not(:last-child) {
+          margin-right: 24px;
+        }
+
+        @media screen and (min-width: 576px) {
+          min-width: 435px;
+        }
       }
 
       .project-types-select {
         padding: 0;
+
         .select__header {
           width: auto;
           font-size: 20px;

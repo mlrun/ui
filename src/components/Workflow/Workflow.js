@@ -121,7 +121,8 @@ const Workflow = ({
           (job.run_uid ||
             ((job.run_type === 'deploy' || job.run_type === 'build') &&
               job.function)) &&
-            'selectable'
+            'selectable',
+          `status-${job.phase?.toLowerCase()}`
         ),
         position: { x: 0, y: 0 }
       }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -26,8 +26,11 @@ const Chip = React.forwardRef(
       isDeleteMode,
       isEditMode,
       onClick,
+      setChipsSizes,
       setEditConfig,
-      shortChip
+      shortChip,
+      showChips,
+      textOverflowEllipsis
     },
     ref
   ) => {
@@ -45,7 +48,7 @@ const Chip = React.forwardRef(
     const chipClassNames = classnames(
       'chip',
       'chip__content',
-      'data-ellipsis',
+      (textOverflowEllipsis || isEditMode) && 'data-ellipsis',
       shortChip && 'chip_short',
       hiddenChips && 'chip_hidden',
       density && `chip-density_${density}`,
@@ -54,14 +57,27 @@ const Chip = React.forwardRef(
       borderColor && `chip-border_${borderColor}`,
       font && `chip-font_${font}`,
       isEditMode && 'editable',
+      (showChips || isEditMode) && 'chip_visible',
       className
     )
-    const chipLabelClassNames = classnames('chip__label', 'data-ellipsis')
+    const chipLabelClassNames = classnames(
+      'chip__label',
+      (textOverflowEllipsis || isEditMode) && 'data-ellipsis'
+    )
     const chipValueClassNames = classnames(
       'chip__value',
-      'data-ellipsis',
+      (textOverflowEllipsis || isEditMode) && 'data-ellipsis',
       boldValue && 'chip-value_bold'
     )
+
+    useEffect(() => {
+      if (chipRef.current && setChipsSizes) {
+        setChipsSizes(state => ({
+          ...state,
+          [chipIndex]: chipRef.current.getBoundingClientRect().width
+        }))
+      }
+    }, [chipIndex, setChipsSizes])
 
     if (!chip.value.match(/^\+ [\d]+/g)) {
       return isEditMode && chipIndex === editConfig.chipIndex ? (
@@ -118,8 +134,10 @@ Chip.defaultProps = {
   isDeleteMode: false,
   isEditMode: false,
   onClick: null,
+  setChipsSizes: () => {},
   setEditConfig: () => {},
-  shortChip: false
+  shortChip: false,
+  textOverflowEllipsis: false
 }
 
 Chip.propTypes = {
@@ -135,8 +153,11 @@ Chip.propTypes = {
   isDeleteMode: PropTypes.bool,
   isEditMode: PropTypes.bool,
   onClick: PropTypes.func,
+  setChipsSizes: PropTypes.func,
   setEditConfig: PropTypes.func,
-  shortChip: PropTypes.bool
+  shortChip: PropTypes.bool,
+  showChips: PropTypes.bool.isRequired,
+  textOverflowEllipsis: PropTypes.bool
 }
 
 export default Chip

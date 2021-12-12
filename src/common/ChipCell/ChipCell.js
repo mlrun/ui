@@ -4,10 +4,8 @@ import PropTypes from 'prop-types'
 import ChipCellView from './ChipCellView'
 
 import { cutChips } from '../../utils/cutChips'
-import { sizeChips } from './SizeChips'
 import { CHIP_OPTIONS } from '../../types'
-
-import './chipCell.scss'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const ChipCell = ({
   addChip,
@@ -22,7 +20,7 @@ const ChipCell = ({
   shortChips,
   visibleChipsMaxLength
 }) => {
-  const [sizeContainer, setSizeContainer] = useState(0)
+  const [chipsSizes, setChipsSizes] = useState({})
   const [showHiddenChips, setShowHiddenChips] = useState(false)
   const [editConfig, setEditConfig] = useState({
     chipIndex: null,
@@ -31,7 +29,10 @@ const ChipCell = ({
     isValueFocused: false,
     isNewChip: false
   })
-  const chipRef = useRef()
+  const [showChips, setShowChips] = useState(false)
+  const [visibleChipsCount, setVisibleChipsCount] = useState(8)
+  const chipsCellRef = useRef()
+  const chipsWrapperRef = React.createRef()
 
   let chips = useMemo(() => {
     return (isEditMode && !visibleChipsMaxLength) ||
@@ -42,14 +43,18 @@ const ChipCell = ({
             delimiter
           }))
         }
-      : sizeContainer <= 1000 && !visibleChipsMaxLength
-      ? sizeChips[sizeContainer](elements, delimiter)
       : cutChips(
           elements,
-          visibleChipsMaxLength ? visibleChipsMaxLength : 8,
+          visibleChipsMaxLength ? visibleChipsMaxLength : visibleChipsCount,
           delimiter
         )
-  }, [elements, isEditMode, sizeContainer, visibleChipsMaxLength, delimiter])
+  }, [
+    delimiter,
+    elements,
+    isEditMode,
+    visibleChipsCount,
+    visibleChipsMaxLength
+  ])
 
   const handleShowElements = useCallback(() => {
     if (!isEditMode || (isEditMode && visibleChipsMaxLength)) {
@@ -65,19 +70,40 @@ const ChipCell = ({
   }, [showHiddenChips, handleShowElements])
 
   const handleResize = useCallback(() => {
-    if (!isEditMode) {
-      if (chipRef.current) {
-        const sizeParent =
-          parseInt(chipRef.current.parentNode.offsetWidth / 100) * 100
+    if (!isEditMode && !isEveryObjectValueEmpty(chipsSizes)) {
+      const parentSize = chipsCellRef.current.getBoundingClientRect().width
+      let maxLength = 0
+      let chipIndex = 0
+      const padding = 65
 
-        setSizeContainer(sizeParent)
-      }
+      Object.values(chipsSizes).every((chipSize, index) => {
+        if (
+          maxLength + chipSize > parentSize ||
+          (Object.values(chipsSizes).length > 1 &&
+            maxLength + chipSize + padding > parentSize)
+        ) {
+          chipIndex = index
+
+          return false
+        } else {
+          maxLength += chipSize
+
+          if (index === Object.values(chipsSizes).length - 1) {
+            chipIndex = 8
+          }
+
+          return true
+        }
+      })
+
+      setVisibleChipsCount(chipIndex)
+      setShowChips(true)
     }
-  }, [isEditMode, chipRef])
+  }, [chipsSizes, isEditMode])
 
   useEffect(() => {
     handleResize()
-  }, [handleResize, chipRef])
+  }, [handleResize])
 
   useEffect(() => {
     if (!isEditMode) {
@@ -222,9 +248,11 @@ const ChipCell = ({
       handleRemoveChip={handleRemoveChip}
       handleShowElements={handleShowElements}
       isEditMode={isEditMode}
-      ref={chipRef}
+      ref={{ chipsCellRef, chipsWrapperRef }}
+      setChipsSizes={setChipsSizes}
       setEditConfig={setEditConfig}
       shortChips={shortChips}
+      showChips={showChips}
       showHiddenChips={showHiddenChips}
     />
   )
