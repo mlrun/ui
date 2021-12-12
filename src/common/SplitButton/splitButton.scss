@@ -6,24 +6,25 @@
 .split-btn {
   position: relative;
   display: inline-flex;
-  justify-content: center;
   align-items: stretch;
+  justify-content: center;
   height: inherit;
 
   &__button {
     display: inline-flex;
     flex: 1 1 auto;
-    min-width: auto;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    min-width: auto;
 
     &-label {
       margin: 0 5px;
     }
 
     button {
-      margin: 0;
       min-width: inherit;
+      margin: 0;
+
       svg {
         & > * {
           fill: currentColor;
@@ -33,9 +34,9 @@
 
     &:not(:last-child) {
       button {
+        border-right-color: transparent;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
-        border-right-color: transparent;
 
         &:focus,
         &:active {
@@ -43,11 +44,12 @@
         }
       }
     }
+
     &:last-child {
       button {
+        padding: 5px;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
-        padding: 5px;
       }
     }
   }

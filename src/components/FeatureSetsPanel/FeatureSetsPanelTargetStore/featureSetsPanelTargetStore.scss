@@ -5,6 +5,7 @@
     display: flex;
     align-items: baseline;
     width: 100%;
+
     &.v-center {
       align-items: center;
     }
@@ -64,14 +65,15 @@
     }
 
     .partition-fields {
-      margin-bottom: 10px;
       width: 100%;
+      margin-bottom: 10px;
 
       &__checkbox-container {
         display: flex;
         flex-direction: column;
         width: fit-content;
         margin-bottom: 10px;
+
         .checkbox {
           margin: 5px 0;
         }
@@ -90,8 +92,8 @@
 
     .range {
       width: 150px;
-      margin-bottom: 5px;
       margin-right: 35px;
+      margin-bottom: 5px;
     }
 
     .radio-buttons {

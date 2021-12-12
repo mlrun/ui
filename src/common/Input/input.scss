@@ -31,12 +31,12 @@
   }
 
   &__warning {
-    cursor: pointer;
     position: absolute;
     top: 50%;
     right: 10px;
     display: block;
     transform: translateY(-45%);
+    cursor: pointer;
 
     svg {
       width: 12px;
@@ -58,6 +58,7 @@
 
     .input.input_invalid {
       border: $errorBorder;
+
       & ~ .input__warning {
         display: block;
       }
