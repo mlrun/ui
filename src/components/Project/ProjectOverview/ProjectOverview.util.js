@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { ReactComponent as SetIcon } from '../../../images/set-icon.svg'
+import { ReactComponent as DataSetIcon } from '../../../images/overview-icon.svg'
+import { ReactComponent as FeatureSetIcon } from '../../../images/set-icon.svg'
 import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
 
 export const InitialCards = {
@@ -10,15 +11,24 @@ export const InitialCards = {
       'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
     actions: [
       {
+        handler: 'uploaddata',
         icon: <UploadIcon />,
+        id: 'uploaddata',
         label: 'Upload data',
-        link: '',
         tooltip: ''
       },
       {
-        icon: <SetIcon />,
+        handler: '/feature-store/feature-sets',
+        icon: <FeatureSetIcon />,
+        id: 'createfeatureset',
         label: 'Create features set',
-        link: '',
+        tooltip: ''
+      },
+      {
+        handler: '/feature-store/datasets',
+        icon: <DataSetIcon />,
+        id: 'registerdataset',
+        label: 'Register dataset',
         tooltip: ''
       }
     ]
