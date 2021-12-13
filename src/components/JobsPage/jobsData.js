@@ -221,11 +221,7 @@ const filtersByTab = (pageTab, isDemoMode) => {
 const generateTabs = isDemoMode => {
   return [
     { id: MONITOR_JOBS_TAB, label: 'Monitor Jobs' },
-    {
-      id: MONITOR_WORKFLOWS_TAB,
-      label: 'Monitor Workflows',
-      hidden: !isDemoMode
-    },
+    { id: MONITOR_WORKFLOWS_TAB, label: 'Monitor Workflows' },
     { id: SCHEDULE_TAB, label: 'Schedule' }
   ]
 }
