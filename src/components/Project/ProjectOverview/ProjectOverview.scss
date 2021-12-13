@@ -56,6 +56,11 @@
       flex: 0 0 28%;
       min-width: 340px;
     }
+
+    // .link {
+    //   ::after {
+    //   }
+    // }
   }
 
   .actions {
@@ -93,6 +98,7 @@
   }
   &_bottom {
     border-bottom: 1px solid $athensGray;
+    padding: 1em;
   }
 
   &__header {

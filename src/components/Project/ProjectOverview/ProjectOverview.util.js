@@ -21,21 +21,21 @@ export const getInitialCards = projectName => ({
       //   tooltip: ''
       // },
       {
-        handler: `/projects/${projectName}/feature-store/feature-sets`,
+        handler: `/projects/${projectName}/feature-store/feature-sets?openPanel=true`,
         icon: <FeatureSetIcon />,
         id: 'createFeatureSet',
         label: 'Create features set',
         tooltip: ''
       },
       {
-        handler: `/projects/${projectName}/feature-store/datasets`,
+        handler: `/projects/${projectName}/feature-store/datasets?openPanel=true`,
         icon: <DataSetIcon />,
         id: 'registerDataset',
         label: 'Register dataset',
         tooltip: ''
       },
       {
-        handler: `/projects/${projectName}/files`,
+        handler: `/projects/${projectName}/files?openPanel=true`,
         icon: <RegisterFileIcon />,
         id: 'registerFile',
         label: 'Register file',
@@ -49,7 +49,28 @@ export const getInitialCards = projectName => ({
       //   tooltip: ''
       // }
     ],
-    additionalLinks: [{}]
+    additionalLinks: [
+      {
+        id: 'featureset',
+        label: 'feature set',
+        path: ''
+      },
+      {
+        id: 'files',
+        label: 'files',
+        path: ''
+      },
+      {
+        id: 'dataset',
+        label: 'dataset',
+        path: ''
+      },
+      {
+        id: 'featurevectors',
+        label: 'feature vectors',
+        path: ''
+      }
+    ]
   },
   development: {
     title: 'Development',
@@ -86,7 +107,7 @@ export const getInitialCards = projectName => ({
         externalLink: true
       },
       {
-        handler: `/projects/${projectName}/functions?demo=true`,
+        handler: `/projects/${projectName}/functions`,
         icon: <CreateJobIcon />,
         id: 'deployServingFunction',
         label: 'Deploy serving function',

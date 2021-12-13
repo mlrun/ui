@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
+import { Link } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
 import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
@@ -9,6 +10,7 @@ import NoData from '../../../common/NoData/NoData'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
 
 import { getInitialCards } from './ProjectOverview.util'
+import { useDemoMode } from '../../../hooks/demoMode.hook'
 
 import './ProjectOverview.scss'
 
@@ -18,6 +20,7 @@ const ProjectOverview = ({ confirmData }) => {
 
   const history = useHistory()
   const { projectName } = useParams()
+  const isDemoMode = useDemoMode()
 
   const cards = useMemo(() => {
     return projectName ? getInitialCards(projectName) : {}
@@ -29,12 +32,17 @@ const ProjectOverview = ({ confirmData }) => {
     })
   }
 
+  const calcIsDemoPrefix = path => {
+    let prefix = path.includes('?') ? '&' : '?'
+    return isDemoMode ? prefix.concat('demo=true') : ''
+  }
+
   const handleActionClick = (path, externalLink) => {
     return path.indexOf('/') < 0
       ? handlePopupDialogOpen(path)
       : externalLink
       ? (window.top.location.href = path)
-      : history.push(path)
+      : history.push(`${path}${calcIsDemoPrefix(path)}`)
   }
 
   const handlePopupDialogClose = actionKey => {
@@ -91,7 +99,9 @@ const ProjectOverview = ({ confirmData }) => {
             <div className="project-overview__content-cards">
               {/* move to card */}
               {Object.keys(cards).map(card => {
-                const { actions, subTitle, title } = cards[card]
+                const { actions, additionalLinks, subTitle, title } = cards[
+                  card
+                ]
                 return (
                   <div className="project-overview-card" key={card}>
                     <div className="project-overview-card_top">
@@ -127,7 +137,12 @@ const ProjectOverview = ({ confirmData }) => {
                       </div>
                     </div>
                     <div className="project-overview-card_bottom">
-                      bottom stats
+                      {additionalLinks &&
+                        additionalLinks.map(link => (
+                          <Link to={link.path} key={link.id} className="link">
+                            {link.label}
+                          </Link>
+                        ))}
                     </div>
                   </div>
                 )

@@ -44,6 +44,7 @@ import {
   FEATURE_STORE_PAGE
 } from '../../constants'
 import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useOpenPanel } from '../../hooks/openPanel.hook'
 
 const FeatureStore = ({
   artifactsStore,
@@ -91,6 +92,7 @@ const FeatureStore = ({
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const featureStoreRef = useRef(null)
   const isDemoMode = useDemoMode()
+  const openPanelByDefault = useOpenPanel()
 
   const fetchData = useCallback(
     async filters => {
@@ -466,6 +468,19 @@ const FeatureStore = ({
       history
     )
   }, [history, match])
+
+  useEffect(() => {
+    if (openPanelByDefault) {
+      switch (match.params.pageTab) {
+        case DATASETS_TAB:
+          return setIsPopupDialogOpen(true)
+        case FEATURE_SETS_TAB:
+          return setFeatureSetsPanelIsOpen(true)
+        default:
+          return
+      }
+    }
+  }, [openPanelByDefault, match.params.pageTab])
 
   const applyDetailsChanges = changes => {
     return handleApplyDetailsChanges(
