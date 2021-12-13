@@ -495,4 +495,5 @@ export const validation = {
 
 /*=========== STATUS CODES =============*/
 
-export const CONFLICT = 409
+export const AMOUNT_LIMIT_CODE = 405
+export const CONFLICT_CODE = 409

@@ -71,7 +71,8 @@ import {
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
   SET_PROJECT_SECRETS,
-  CONFLICT
+  CONFLICT_CODE,
+  AMOUNT_LIMIT_CODE
 } from '../constants'
 
 const projectsAction = {
@@ -102,8 +103,10 @@ const projectsAction = {
       })
       .catch(error => {
         const message =
-          error.response.status === CONFLICT
+          error.response.status === CONFLICT_CODE
             ? `Project name "${postData.metadata.name}" already exists`
+            : error.response.status === AMOUNT_LIMIT_CODE
+            ? 'Resource limit reached. Cannot create more records'
             : error.message
 
         dispatch(projectsAction.createProjectFailure(message))
