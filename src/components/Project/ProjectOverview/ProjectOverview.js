@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { isEmpty } from 'lodash'
 
 import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
@@ -8,7 +8,7 @@ import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
 
-import { InitialCards } from './ProjectOverview.util'
+import { getInitialCards } from './ProjectOverview.util'
 
 import './ProjectOverview.scss'
 
@@ -17,17 +17,24 @@ const ProjectOverview = ({ confirmData }) => {
   const [popupDialog, setPopupDialog] = useState({})
 
   const history = useHistory()
+  const { projectName } = useParams()
 
-  const setNewState = actionKey => {
+  const cards = useMemo(() => {
+    return projectName ? getInitialCards(projectName) : {}
+  }, [projectName])
+
+  const handlePopupDialogOpen = actionKey => {
     return setPopupDialog(prev => {
       return { ...prev, [actionKey]: true }
     })
   }
 
-  const handleActionClick = handler => {
-    return handler.indexOf('/') > -1
-      ? history.push(`${history.location.pathname}${handler}`)
-      : setNewState(handler)
+  const handleActionClick = (path, externalLink) => {
+    return path.indexOf('/') < 0
+      ? handlePopupDialogOpen(path)
+      : externalLink
+      ? (window.top.location.href = path)
+      : history.push(path)
   }
 
   const handlePopupDialogClose = actionKey => {
@@ -83,8 +90,8 @@ const ProjectOverview = ({ confirmData }) => {
           <div className="project-overview__content">
             <div className="project-overview__content-cards">
               {/* move to card */}
-              {Object.keys(InitialCards).map(card => {
-                const { actions, subTitle, title } = InitialCards[card]
+              {Object.keys(cards).map(card => {
+                const { actions, subTitle, title } = cards[card]
                 return (
                   <div className="project-overview-card" key={card}>
                     <div className="project-overview-card_top">
@@ -99,20 +106,24 @@ const ProjectOverview = ({ confirmData }) => {
                       {/* move to additional links */}
                       <div className="project-overview-card__actions">
                         <ul className="actions__list">
-                          {actions.map(({ handler, icon, label }) => {
-                            return (
-                              <li
-                                key={label}
-                                className="actions-item"
-                                onClick={() => handleActionClick(handler)}
-                              >
-                                <i className="actions-icon">{icon}</i>
-                                <span className="link">{label}</span>
-                              </li>
-                            )
-                          })}
+                          {actions.map(
+                            ({ externalLink, handler, icon, label }) => {
+                              return (
+                                <li
+                                  key={label}
+                                  className="actions-item"
+                                  onClick={() =>
+                                    handleActionClick(handler, externalLink)
+                                  }
+                                >
+                                  <i className="actions-icon">{icon}</i>
+                                  <span className="link">{label}</span>
+                                </li>
+                              )
+                            }
+                          )}
                         </ul>
-                        <p>additional-links</p>
+                        {actions.length > 3 && <p>additional-links</p>}
                       </div>
                     </div>
                     <div className="project-overview-card_bottom">

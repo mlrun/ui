@@ -10,7 +10,8 @@
     color: $white;
     padding: 3.2em 4em;
     min-height: 300px;
-    @include gradient;
+
+    @include gradient('page');
 
     &-cell {
       &:first-child {
