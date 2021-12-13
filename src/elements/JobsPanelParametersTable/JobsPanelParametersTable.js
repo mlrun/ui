@@ -38,7 +38,7 @@ const JobsPanelParametersTable = ({
   )
 
   const generateActionsMenu = useCallback(
-    rowItem => [
+    (rowItem, index) => [
       {
         label: 'Edit',
         icon: <Edit />,
@@ -49,7 +49,7 @@ const JobsPanelParametersTable = ({
         icon: <Delete />,
         hidden: rowItem.isDefault,
         onClick: selectedItem => {
-          handleDeleteParameter(selectedItem)
+          handleDeleteParameter(selectedItem, index)
         }
       }
     ],

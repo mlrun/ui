@@ -214,7 +214,7 @@ const JobsPanelParameters = ({
     )
   }
 
-  const handleDeleteParameter = item => {
+  const handleDeleteParameter = (item, index) => {
     const newParameters = { ...jobsStore.newJob.task.spec.parameters }
 
     delete newParameters[item.data.name]
