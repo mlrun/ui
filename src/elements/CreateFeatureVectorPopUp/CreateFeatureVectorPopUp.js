@@ -17,6 +17,7 @@ const CreateFeatureVectorPopUp = ({
   createFeatureVector,
   featureVectorData
 }) => {
+  const [nameIsValid, setNameIsValid] = useState(true)
   const [featureVectorName, setFeatureVectorName] = useState(
     featureVectorData.name
   )
@@ -30,6 +31,16 @@ const CreateFeatureVectorPopUp = ({
     parseKeyValues(featureVectorData.labels)
   )
 
+  const nameValidationTip = (
+    <>
+      <span>&bull; Valid characters: A-Z, a-z, 0-9, -, _, .</span>
+      <br />
+      <span>&bull; Must begin and end with: A-Z, a-z, 0-9</span>
+      <br />
+      <span>&bull; Length - max: 56</span>
+    </>
+  )
+
   return (
     <PopUpDialog
       className="new-feature-vector__pop-up"
@@ -39,31 +50,35 @@ const CreateFeatureVectorPopUp = ({
       <div className="new-feature-vector__row new-feature-vector__name-tag-row">
         <Input
           className="vector-name"
-          wrapperClassName="vector-name-wrapper"
           floatingLabel
+          invalid={!nameIsValid}
           label="Vector name"
           onChange={setFeatureVectorName}
+          pattern="^(?=[\S\s]{1,56}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
+          required
+          setInvalid={value => setNameIsValid(value)}
+          tip={nameValidationTip}
           type="text"
           value={featureVectorName}
-          required
+          wrapperClassName="vector-name-wrapper"
         />
         <Input
           className="vector-tag"
-          wrapperClassName="vector-tag-wrapper"
           floatingLabel
           label="Tag"
           onChange={setFeatureVectorTag}
+          required
           type="text"
           value={featureVectorTag}
-          required
+          wrapperClassName="vector-tag-wrapper"
         />
       </div>
       <div className="new-feature-vector__row new-feature-vector__description-row">
         <TextArea
           floatingLabel
           label="Description"
-          value={featureVectorDescription}
           onChange={setFeatureVectorDescription}
+          value={featureVectorDescription}
         />
       </div>
       <div className="new-feature-vector__row new-feature-vector__labels-row">
@@ -90,7 +105,11 @@ const CreateFeatureVectorPopUp = ({
         <Button
           variant={PRIMARY_BUTTON}
           label="Create"
-          disabled={!featureVectorName.trim() || !featureVectorTag.trim()}
+          disabled={
+            !featureVectorName.trim() ||
+            !featureVectorTag.trim() ||
+            !nameIsValid
+          }
           onClick={() =>
             createFeatureVector({
               name: featureVectorName,
