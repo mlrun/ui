@@ -15,8 +15,10 @@
     padding: 0;
 
     & > * {
+      position: relative;
       display: inline-flex;
       margin: 0 !important;
+      z-index: 2;
     }
 
     &::before {
@@ -30,6 +32,7 @@
       right: 0;
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
+      z-index: 1;
     }
 
     &:hover {
