@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -35,6 +35,17 @@ const KeyValueTable = ({
   const [value, setValue] = useState('')
 
   const tableClassNames = classnames('key-value-table', className)
+
+  useEffect(() => {
+    return () => {
+      setValidation({
+        isKeyValid: true,
+        isValueValid: true,
+        isEditKeyValid: true,
+        isEditValueValid: true
+      })
+    }
+  }, [isAddNewItem])
 
   const saveItem = () => {
     const save = () => {
@@ -81,7 +92,7 @@ const KeyValueTable = ({
       setKey(defaultKeyValue || '')
       setValue('')
       setIsAddNewItem(false)
-    } else {
+    } else if (validation.isKeyValid && validation.isValueValid) {
       save()
     }
   }
