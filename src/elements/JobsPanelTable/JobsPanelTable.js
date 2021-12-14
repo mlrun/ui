@@ -43,7 +43,7 @@ const JobsPanelTable = ({
 
   const handleDelete = useCallback(
     (item, index) => {
-      handleDeleteItems(index)
+      handleDeleteItems(item, index)
     },
     [handleDeleteItems]
   )
@@ -60,7 +60,7 @@ const JobsPanelTable = ({
         icon: <Delete />,
         hidden: rowItem.isDefault,
         onClick: selectedItem => {
-          handleDelete(selectedItem)
+          handleDelete(selectedItem, index)
         }
       }
     ],
