@@ -30,7 +30,6 @@ import {
 } from '../../utils/datePicker.util'
 import {
   DANGER_BUTTON,
-  INIT_GROUP_FILTER,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
@@ -407,8 +406,7 @@ const Jobs = ({
   useEffect(() => {
     if (
       !isEmpty(selectedJob) &&
-      (match.params.pageTab === MONITOR_JOBS_TAB ||
-        match.params.pageTab === MONITOR_WORKFLOWS_TAB)
+      [MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB].includes(match.params.pageTab)
     ) {
       fetchJobPods(match.params.projectName, selectedJob.uid)
 
@@ -554,22 +552,6 @@ const Jobs = ({
       }
     }
   }, [getWorkflows, match.params.pageTab, match.params.workflowId, setFilters])
-
-  useEffect(() => {
-    if (match.params.pageTab === MONITOR_JOBS_TAB && !match.params.jobId) {
-      if (!isDemoMode) {
-        getWorkflows()
-      }
-
-      setFilters({ groupBy: INIT_GROUP_FILTER })
-    }
-  }, [
-    getWorkflows,
-    isDemoMode,
-    match.params.jobId,
-    match.params.pageTab,
-    setFilters
-  ])
 
   const handleSelectJob = item => {
     if (document.getElementsByClassName('view')[0]) {

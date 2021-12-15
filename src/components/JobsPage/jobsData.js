@@ -23,7 +23,6 @@ import { ReactComponent as Edit } from '../../images/edit.svg'
 import { ReactComponent as Run } from '../../images/run.svg'
 import { ReactComponent as Cancel } from '../../images/close.svg'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { filterSelectOptions } from '../FilterMenu/filterMenu.settings'
 
 export const page = 'JOBS'
 export const infoHeaders = [
@@ -190,14 +189,7 @@ const filtersByTab = (pageTab, isDemoMode) => {
     return [
       { type: PERIOD_FILTER, label: 'Period:' },
       { type: STATUS_FILTER, label: 'Status:' },
-      {
-        type: GROUP_BY_FILTER,
-        label: 'Group by:',
-        options: !isDemoMode && [
-          ...filterSelectOptions.groupBy,
-          { label: 'Workflow', id: 'workflow' }
-        ]
-      },
+      { type: GROUP_BY_FILTER, label: 'Group by:' },
       { type: NAME_FILTER, label: 'Name:' },
       { type: LABELS_FILTER, label: 'Labels:' },
       { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
