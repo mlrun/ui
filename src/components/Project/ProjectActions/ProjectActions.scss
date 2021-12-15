@@ -55,7 +55,7 @@
       transition: background-color 0.3s ease-in-out;
 
       &::before {
-        content: url('../../../images/dots-icon.png');
+        content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFISURBVHgB7dZBToNAFAbg/2HTrb2B9AIGTqDcwF5A8QS6Y6sLE2s39ATShWt15RI9QfEGHIGtSWF8kNRUSNOmm2Hxf8kkzMAk8yZv3iA4gIlSFyWe9fEcBjkcTGQWZLDAwSFW5g714msCF6bpWzFoD5jl7QjO8AZGLrQ70lZoy3SnF+JPP5uPHDnT/gY5hiWD7tAw1sVftQY93enQZFGiC7/Hi6YNdOfXjJPAkn8pZJaRC+ksflOogbw2QfxN0mDK6guWtM5ANdpjjofLjxOsMG5aCV/iIIcl0h7QNEmxPqDbJeJNr9ED3SpkfiZaVRY75rnoiU4A4seF+E+h5vZYD3O9y0VnlsE3emLrPaAlMxf/UatONe+8PBqk6Il9LrK3Vj+T04d39MTOAMSf1b8IdRCFps5cz0gAIiIiIiIiIiIiIiIiIrLmFxC4VbDK/2hOAAAAAElFTkSuQmCC');
         width: 48px;
         height: 48px;
         position: absolute;
