@@ -1,4 +1,5 @@
 import { mainHttpClient } from '../httpClient'
+import { ALL_ITEMS_TAG_FILTER, INIT_TAG_FILTER } from '../constants'
 
 const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
   const params = {}
@@ -11,7 +12,11 @@ const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
     params['best-iteration'] = true
   }
 
-  if (filters?.tag && (withLatestTag || !/latest/i.test(filters.tag))) {
+  if (
+    filters?.tag &&
+    (withLatestTag || filters.tag !== INIT_TAG_FILTER) &&
+    filters.tag !== ALL_ITEMS_TAG_FILTER
+  ) {
     params.tag = filters.tag
   }
 
