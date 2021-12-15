@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
 import { isEmpty } from 'lodash'
+import { CSSTransition } from 'react-transition-group'
 
 import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../../common/Loader/Loader'
@@ -62,11 +63,17 @@ const ProjectOverview = ({ confirmData }) => {
   return (
     <div className="project-overview">
       {/* popupDialogs to be implemnted later */}
-      {popupDialog.uploaddata && (
+
+      <CSSTransition
+        in={popupDialog.uploaddata}
+        timeout={300}
+        classNames="project-overview-transition"
+        unmountOnExit
+      >
         <PopUpDialog closePopUp={() => handlePopupDialogClose('uploaddata')}>
           uploaddata
         </PopUpDialog>
-      )}
+      </CSSTransition>
 
       {project.loading ? (
         <Loader />

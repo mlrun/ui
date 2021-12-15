@@ -8,6 +8,7 @@ import React, {
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash'
 
 import JobsPanelView from './JobsPanelView'
@@ -397,7 +398,7 @@ const JobsPanel = ({
     onEditJob(event, postData)
   }
 
-  return (
+  return createPortal(
     <JobsPanelView
       checkValidation={checkValidation()}
       closePanel={closePanel}
@@ -418,7 +419,8 @@ const JobsPanel = ({
       setValidation={setValidation}
       validation={validation}
       withSaveChanges={withSaveChanges}
-    />
+    />,
+    document.getElementById('overlay_container')
   )
 }
 

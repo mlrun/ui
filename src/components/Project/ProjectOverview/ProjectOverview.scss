@@ -85,7 +85,7 @@
     }
 
     &__header {
-      min-height: 185px;
+      min-height: 165px;
     }
 
     .additional-links {
@@ -122,7 +122,7 @@
 
         svg {
           transform: rotate(90deg);
-          transition: transform 0.3s ease-in-out;
+          transition: transform 0.5s ease-in-out 0.3s;
         }
 
         &[aria-expanded='true'] {
@@ -131,6 +131,26 @@
           }
         }
       }
+    }
+  }
+
+  &-transition {
+    &-enter {
+      opacity: 0;
+    }
+
+    &-enter-active {
+      opacity: 1;
+      transition: opacity 300ms ease-in-out;
+    }
+
+    &-exit {
+      opacity: 1;
+    }
+
+    &-exit-active {
+      opacity: 0;
+      transition: opacity 300ms ease-in-out;
     }
   }
 }
@@ -162,11 +182,12 @@
     &-title {
       font-size: 2em;
       font-weight: 300;
-      margin: 0;
+      margin: 0 0 0.3em;
     }
 
     &-subtitle {
       line-height: 1.4;
+      margin: 0;
     }
   }
 }
