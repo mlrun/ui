@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
@@ -113,7 +114,7 @@ const FeatureSetsPanel = ({
     })
   }
 
-  return (
+  return createPortal(
     <FeatureSetsPanelView
       accessKeyRequired={accessKeyRequired}
       closePanel={closePanel}
@@ -131,7 +132,8 @@ const FeatureSetsPanel = ({
       }
       setValidation={setValidation}
       validation={validation}
-    />
+    />,
+    document.getElementById('overlay_container')
   )
 }
 

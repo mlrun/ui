@@ -21,6 +21,7 @@
     width: 100%;
     height: 100%;
     background: $mineshaftTwo;
+    z-index: 6;
 
     &.custom-position {
       width: auto;
