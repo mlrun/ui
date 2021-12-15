@@ -3,12 +3,13 @@
 @import '../../../scss/mixins';
 
 .project-overview {
-  height: 100%;
+  height: inherit;
   background: $white;
 
   &__header {
     display: flex;
     color: $white;
+    line-height: 1.4;
     padding: 3.2em 4em;
     min-height: 300px;
 
@@ -24,8 +25,7 @@
     &-title {
       font-size: 3.2em;
       font-weight: 300;
-      margin-top: 0;
-      margin-bottom: 0.5em;
+      margin: 0 0 0.3em;
     }
 
     &-subtitle {
@@ -34,18 +34,14 @@
   }
 
   &__content {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: stretch;
+    transform: translateY(-60px);
+    width: 100%;
     position: relative;
-    background: inherit;
     padding: 0 2em;
-
-    &-cards {
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: center;
-      align-items: stretch;
-      transform: translateY(-60px);
-      width: 100%;
-    }
   }
 
   &-card {
@@ -60,19 +56,23 @@
     }
 
     &__top {
+      position: relative;
       display: flex;
       flex-flow: column;
       flex: 1 0 auto;
+      padding-bottom: 50px;
     }
 
     &__center {
-      flex: 0 1 0;
-      padding-top: 20px;
-      transition: flex 1s ease-in-out;
+      display: flex;
+      flex-flow: column nowrap;
+      padding: 20px 1em 0;
+      height: 0;
+      overflow: hidden;
+      transition: height 1s ease-in-out;
 
       &[aria-expanded='true'] {
-        flex: 0 1 100%;
-        max-height: 200px;
+        height: 220px;
       }
     }
 
@@ -91,10 +91,11 @@
     .additional-links {
       & > * {
         padding: 5px 0;
-        margin: 0 10px 0 0;
         cursor: pointer;
 
         &:not(:last-child) {
+          margin: 0 10px 0 0;
+
           &::after {
             content: '';
             margin-left: 10px;
@@ -107,32 +108,17 @@
     &__actions {
       display: flex;
       flex-flow: column nowrap;
-    }
-  }
-
-  .actions {
-    &__list {
-      display: inline-flex;
-      flex-flow: row wrap;
-      align-items: flex-start;
-      justify-content: flex-start;
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 0;
-      max-height: 256px;
-      transition: height 1s ease-in-out;
-
-      &[aria-expanded='true'] {
-        height: 152px;
-      }
+      padding: 0 1.6em;
 
       &-toogler {
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
 
         svg {
           transform: rotate(90deg);
@@ -145,10 +131,6 @@
           }
         }
       }
-    }
-
-    &-item {
-      margin: 0 1.6em 1.5em;
     }
   }
 }
@@ -168,6 +150,7 @@
     background-color: $zircon;
     border-bottom: 1px solid $athensGray;
   }
+
   &__bottom {
     border-top: 1px solid $athensGray;
     padding: 1em;
@@ -183,55 +166,7 @@
     }
 
     &-subtitle {
-      line-height: 22px;
-    }
-  }
-
-  &__actions {
-    padding: 0 1.6em;
-  }
-}
-
-.actions {
-  &-item {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-flow: column nowrap;
-    text-align: center;
-    cursor: pointer;
-    max-width: 80px;
-
-    &:hover {
-      .actions-icon {
-        background-color: $gallery;
-      }
-
-      .link {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  &-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: $selago;
-    margin-bottom: 0.5rem;
-    transition: background-color 0.3s ease-in-out;
-
-    &::before {
-      content: url('../../../images/dots-icon.png');
-      width: 48px;
-      height: 48px;
-      position: absolute;
-      top: 10px;
-      left: 15px;
+      line-height: 1.4;
     }
   }
 }

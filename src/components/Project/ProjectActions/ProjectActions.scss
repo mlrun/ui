@@ -1,0 +1,67 @@
+@import '../../../scss/colors';
+
+.project-overview-actions {
+  display: inline-flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 0;
+  max-height: 256px;
+  transition: height 1s ease-in-out;
+
+  &[aria-expanded='true'] {
+    height: 152px;
+  }
+
+  &__item {
+    margin: 0 0.5em 1.5em;
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-flow: column nowrap;
+    text-align: center;
+    cursor: pointer;
+    flex: 1 0 0%;
+    max-width: 28%;
+
+    &:hover {
+      .project-overview-actions__item-icon {
+        background-color: $gallery;
+      }
+
+      .link {
+        text-decoration: underline;
+      }
+    }
+
+    &-wrapper {
+      max-width: 80px;
+    }
+
+    &-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: $selago;
+      margin-bottom: 0.5rem;
+      transition: background-color 0.3s ease-in-out;
+
+      &::before {
+        content: url('../../../images/dots-icon.png');
+        width: 48px;
+        height: 48px;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+      }
+    }
+  }
+}

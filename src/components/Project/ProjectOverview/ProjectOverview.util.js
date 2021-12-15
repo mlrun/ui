@@ -5,7 +5,7 @@ import { ReactComponent as DataSetIcon } from '../../../images/overview-icon.svg
 import { ReactComponent as FeatureSetIcon } from '../../../images/set-icon.svg'
 import { ReactComponent as RegisterFileIcon } from '../../../images/flow-icon.svg'
 import { ReactComponent as CreateJobIcon } from '../../../images/run2-icon.svg'
-// import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
+import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
 
 export const getInitialCards = projectName => {
   const base_url = `/projects/${projectName}`
@@ -16,13 +16,13 @@ export const getInitialCards = projectName => {
       subTitle:
         'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
       actions: [
-        // {
-        //   path: 'uploaddata',
-        //   icon: <UploadIcon />,
-        //   id: 'uploadData',
-        //   label: 'Upload data',
-        //   tooltip: ''
-        // },
+        {
+          path: 'uploaddata',
+          icon: <UploadIcon />,
+          id: 'uploadData',
+          label: 'Upload data',
+          tooltip: ''
+        },
         {
           path: `${base_url}/feature-store/feature-sets?openPanel=true`,
           icon: <FeatureSetIcon />,

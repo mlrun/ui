@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
 import { isEmpty } from 'lodash'
@@ -7,7 +8,9 @@ import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
+import ProjectActions from '../ProjectActions/ProjectActions'
 
+import { calcIsDemoPrefix } from '../../../utils/helper'
 import { getInitialCards } from './ProjectOverview.util'
 import { useDemoMode } from '../../../hooks/demoMode.hook'
 
@@ -18,7 +21,7 @@ import './ProjectOverview.scss'
 const ProjectOverview = ({ confirmData }) => {
   const project = useSelector(store => store.projectStore.project)
   const [popupDialog, setPopupDialog] = useState({})
-  const [showAdditionalLinks, setshowAdditionalLinks] = useState(false)
+  const [clicked, setClicked] = useState(null)
 
   const history = useHistory()
   const { projectName } = useParams()
@@ -28,15 +31,17 @@ const ProjectOverview = ({ confirmData }) => {
     return projectName ? getInitialCards(projectName) : {}
   }, [projectName])
 
-  const handlePopupDialogOpen = actionKey => {
+  const handlePopupDialogOpen = popupName => {
+    console.log('actionKey', popupName)
     return setPopupDialog(prev => {
-      return { ...prev, [actionKey]: true }
+      return { ...prev, [popupName]: true }
     })
   }
 
-  const calcIsDemoPrefix = path => {
-    let prefix = path.includes('?') ? '&' : '?'
-    return isDemoMode ? prefix.concat('demo=true') : ''
+  const handlePopupDialogClose = actionKey => {
+    return setPopupDialog(prev => {
+      return { ...prev, [actionKey]: false }
+    })
   }
 
   const handlePathLink = (path, externalLink) => {
@@ -44,13 +49,14 @@ const ProjectOverview = ({ confirmData }) => {
       ? handlePopupDialogOpen(path)
       : externalLink
       ? (window.top.location.href = path)
-      : history.push(`${path}${calcIsDemoPrefix(path)}`)
+      : history.push(`${path}${calcIsDemoPrefix(path, isDemoMode)}`)
   }
 
-  const handlePopupDialogClose = actionKey => {
-    return setPopupDialog(prev => {
-      return { ...prev, [actionKey]: false }
-    })
+  const handleToggle = index => {
+    if (clicked === index) {
+      return setClicked(null)
+    }
+    setClicked(index)
   }
 
   return (
@@ -98,110 +104,84 @@ const ProjectOverview = ({ confirmData }) => {
           </div>
 
           <div className="project-overview__content">
-            <div className="project-overview__content-cards">
-              {/* move to card */}
-              {Object.keys(cards).map(card => {
-                const { actions, additionalLinks, subTitle, title } = cards[
-                  card
-                ]
-                return (
-                  <div className="project-overview-card" key={card}>
-                    <div className="project-overview-card__top">
-                      <div className="project-overview-card__header">
-                        <h3 className="project-overview-card__header-title">
-                          {title}
-                        </h3>
-                        <p className="project-overview-card__header-subtitle">
-                          {subTitle ?? ''}
-                        </p>
-                      </div>
-                      {/* move to actions */}
-                      <div className="project-overview-card__actions">
-                        <ul className="actions__list" aria-expanded>
-                          {actions
-                            .slice(0, 3)
-                            .map(({ externalLink, icon, id, label, path }) => {
-                              return (
-                                <li
-                                  key={id}
-                                  className="actions-item"
-                                  onClick={() =>
-                                    handlePathLink(path, externalLink)
-                                  }
-                                >
-                                  <i className="actions-icon">{icon}</i>
-                                  <span className="link">{label}</span>
-                                </li>
-                              )
-                            })}
-                        </ul>
-
-                        <ul
-                          className="actions__list"
-                          aria-expanded={showAdditionalLinks}
-                        >
-                          {actions
-                            .slice(3, actions.length)
-                            .map(({ externalLink, icon, id, label, path }) => {
-                              return (
-                                <li
-                                  key={id}
-                                  className="actions-item"
-                                  onClick={() =>
-                                    handlePathLink(path, externalLink)
-                                  }
-                                >
-                                  <i className="actions-icon">{icon}</i>
-                                  <span className="link">{label}</span>
-                                </li>
-                              )
-                            })}
-                        </ul>
-                      </div>
+            {/* move to card */}
+            {Object.keys(cards).map((card, index) => {
+              const { actions, additionalLinks, subTitle, title } = cards[card]
+              return (
+                <div className="project-overview-card" key={card}>
+                  <div className="project-overview-card__top">
+                    <div className="project-overview-card__header">
+                      <h3 className="project-overview-card__header-title">
+                        {title}
+                      </h3>
+                      <p className="project-overview-card__header-subtitle">
+                        {subTitle ?? ''}
+                      </p>
+                    </div>
+                    <div className="project-overview-card__actions">
+                      <ProjectActions
+                        actions={actions.slice(0, 3)}
+                        handleLinks={handlePathLink}
+                        showActions={true}
+                      />
+                      <ProjectActions
+                        actions={actions.slice(3, actions.length)}
+                        handleLinks={handlePathLink}
+                        showActions={clicked === index}
+                      />
+                    </div>
+                    {actions.length > 3 && (
                       <p
-                        className={`actions__list-toogler ${
-                          actions.length <= 3 ? 'visiblity-hidden' : ''
-                        }`}
-                        aria-expanded={showAdditionalLinks}
-                        onClick={() =>
-                          setshowAdditionalLinks(!showAdditionalLinks)
-                        }
+                        className="project-overview-card__actions-toogler"
+                        aria-expanded={clicked === index}
+                        onClick={() => handleToggle(index)}
                       >
                         <ArrowIcon />
                         <span>Additional Actions</span>
                       </p>
-                    </div>
-                    <div
-                      className="project-overview-card__center"
-                      aria-expanded={!showAdditionalLinks}
-                    ></div>
-                    <div className="project-overview-card__bottom">
-                      <div className="additional-links">
-                        {additionalLinks &&
-                          additionalLinks.map(
-                            ({ externalLink, id, label, path }) => (
-                              <span
-                                key={id}
-                                className="link"
-                                onClick={() =>
-                                  handlePathLink(path, externalLink)
-                                }
-                              >
-                                {label}
-                              </span>
-                            )
-                          )}
-                      </div>
+                    )}
+                  </div>
+                  <div
+                    className="project-overview-card__center"
+                    aria-expanded={clicked !== index}
+                  >
+                    <p>API</p>
+                    <p>API</p>
+                    <p>API</p>
+                    <p>API</p>
+                  </div>
+                  <div className="project-overview-card__bottom">
+                    <div className="additional-links">
+                      {additionalLinks &&
+                        additionalLinks.map(
+                          ({ externalLink, id, label, path }) => (
+                            <span
+                              key={id}
+                              className="link"
+                              onClick={() => handlePathLink(path, externalLink)}
+                            >
+                              {label}
+                            </span>
+                          )
+                        )}
                     </div>
                   </div>
-                )
-              })}
-            </div>
+                </div>
+              )
+            })}
           </div>
         </>
       )}
     </div>
   )
+}
+
+ProjectOverview.defaultProps = {
+  confirmData: null
+}
+
+ProjectOverview.propTypes = {
+  confirmData: PropTypes.object
 }
 
 export default React.memo(ProjectOverview)
