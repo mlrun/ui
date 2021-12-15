@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import RoundedIcon from '../RoundedIcon/RoundedIcon'
+
 import './accordion.scss'
 
 const Accordion = ({
@@ -62,13 +64,13 @@ const Accordion = ({
       ref={accordionRef}
     >
       {icon && (
-        <button
+        <RoundedIcon
           data-testid="accordion-btn"
           onClick={handleOpenAccordion}
           className={iconClassNames}
         >
-          <span>{icon}</span>
-        </button>
+          {icon}
+        </RoundedIcon>
       )}
       <div className="accordion__body">{children}</div>
     </div>

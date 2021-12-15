@@ -104,7 +104,7 @@ const JobsPanelAdvanced = ({
     })
   }
 
-  const handleDeleteItems = index => {
+  const handleDeleteItems = (item, index) => {
     setNewJobSecretSources(
       secretSources.filter((dataItem, dataIndex) => dataIndex !== index)
     )
