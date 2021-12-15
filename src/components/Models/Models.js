@@ -24,12 +24,14 @@ import {
   tabs
 } from './models.util'
 import {
-  INIT_GROUP_FILTER,
-  INIT_TAG_FILTER,
-  MODELS_TAB,
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
   MODEL_ENDPOINTS_TAB,
   MODELS_PAGE,
-  REAL_TIME_PIPELINES_TAB
+  MODELS_TAB,
+  REAL_TIME_PIPELINES_TAB,
+  SHOW_ITERATIONS,
+  TAG_FILTER_LATEST
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
 import { filterArtifacts } from '../../utils/filterArtifacts'
@@ -198,8 +200,8 @@ const Models = ({
 
   useEffect(() => {
     fetchData({
-      tag: INIT_TAG_FILTER,
-      iter: match.params.pageTab === MODELS_TAB ? 'iter' : ''
+      tag: TAG_FILTER_LATEST,
+      iter: match.params.pageTab === MODELS_TAB ? SHOW_ITERATIONS : ''
     })
 
     return () => {
@@ -234,13 +236,13 @@ const Models = ({
 
   useEffect(() => {
     if (match.params.pageTab === MODEL_ENDPOINTS_TAB) {
-      setFilters({ groupBy: 'none', sortBy: 'function' })
+      setFilters({ groupBy: GROUP_BY_NONE, sortBy: 'function' })
     } else if (match.params.pageTab === REAL_TIME_PIPELINES_TAB) {
-      setFilters({ groupBy: 'none' })
-    } else if (filtersStore.tag === INIT_TAG_FILTER) {
-      setFilters({ groupBy: INIT_GROUP_FILTER })
+      setFilters({ groupBy: GROUP_BY_NONE })
+    } else if (filtersStore.tag === TAG_FILTER_LATEST) {
+      setFilters({ groupBy: GROUP_BY_NAME })
     } else {
-      setFilters({ groupBy: 'none' })
+      setFilters({ groupBy: GROUP_BY_NONE })
     }
   }, [
     match.params.pageTab,

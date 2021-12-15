@@ -30,7 +30,9 @@ import {
 } from '../../utils/datePicker.util'
 import {
   DANGER_BUTTON,
-  INIT_GROUP_FILTER,
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
@@ -544,13 +546,13 @@ const Jobs = ({
 
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
-      setFilters({ groupBy: 'none' })
+      setFilters({ groupBy: GROUP_BY_NONE })
     } else if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
       if (match.params.workflowId) {
-        setFilters({ groupBy: 'none' })
+        setFilters({ groupBy: GROUP_BY_NONE })
       } else {
         getWorkflows()
-        setFilters({ groupBy: 'workflow' })
+        setFilters({ groupBy: GROUP_BY_WORKFLOW })
       }
     }
   }, [getWorkflows, match.params.pageTab, match.params.workflowId, setFilters])
@@ -561,7 +563,7 @@ const Jobs = ({
         getWorkflows()
       }
 
-      setFilters({ groupBy: INIT_GROUP_FILTER })
+      setFilters({ groupBy: GROUP_BY_NAME })
     }
   }, [
     getWorkflows,

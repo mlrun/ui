@@ -1,3 +1,5 @@
+import { TAG_FILTER_LATEST } from '../constants'
+
 export const handleArtifactTreeFilterChange = (
   fetchData,
   filters,
@@ -7,11 +9,11 @@ export const handleArtifactTreeFilterChange = (
   setContent([])
   fetchData({
     ...filters,
-    tag: (filters.tag || 'latest').toLowerCase()
+    tag: (filters.tag || TAG_FILTER_LATEST).toLowerCase()
   })
   setFilter({
     name: filters.name,
     labels: filters.labels,
-    tag: (filters.tag || 'latest').toLowerCase()
+    tag: (filters.tag || TAG_FILTER_LATEST).toLowerCase()
   })
 }

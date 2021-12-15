@@ -16,7 +16,8 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
 import {
   generateContentActionsMenu,
-  generateGroupedItems
+  generateGroupedItems,
+  getNoDataMessage
 } from './content.util'
 import { isProjectValid } from '../../utils/handleRedirect'
 import { useYaml } from '../../hooks/yaml.hook'
@@ -24,6 +25,9 @@ import { useYaml } from '../../hooks/yaml.hook'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   FEATURE_STORE_PAGE,
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   MODELS_PAGE
 } from '../../constants'
@@ -134,11 +138,11 @@ const Content = ({
   }, [content])
 
   useEffect(() => {
-    if (filtersStore.groupBy === 'name') {
+    if (filtersStore.groupBy === GROUP_BY_NAME) {
       handleGroupByName()
-    } else if (filtersStore.groupBy === 'none') {
+    } else if (filtersStore.groupBy === GROUP_BY_NONE) {
       handleGroupByNone()
-    } else if (filtersStore.groupBy === 'workflow') {
+    } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
       handleGroupByWorkflow()
     }
 
@@ -186,7 +190,7 @@ const Content = ({
   }
 
   const handleExpandAll = collapseRows => {
-    if (filtersStore.groupBy !== 'none') {
+    if (filtersStore.groupBy !== GROUP_BY_NONE) {
       const rows = [...document.getElementsByClassName('parent-row')]
 
       if (collapseRows || expand) {
@@ -239,10 +243,17 @@ const Content = ({
         <div className="table-container">
           {children ? (
             children
-          ) : loading ? null : (filtersStore.groupBy !== 'none' &&
+          ) : loading ? null : (filtersStore.groupBy !== GROUP_BY_NONE &&
               isEmpty(groupedContent)) ||
             content.length === 0 ? (
-            <NoData message={pageData.noDataMessage} />
+            <NoData
+              message={getNoDataMessage(
+                filtersStore,
+                pageData.filters,
+                match.params.pageTab,
+                pageData.page
+              )}
+            />
           ) : (
             <>
               <Table

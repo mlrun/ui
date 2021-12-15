@@ -4,6 +4,7 @@ import {
   DATE_RANGE_TIME_FILTER,
   FUNCTIONS_PAGE,
   GROUP_BY_FILTER,
+  GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   LABELS_FILTER,
   MONITOR_JOBS_TAB,
@@ -195,7 +196,7 @@ const filtersByTab = (pageTab, isDemoMode) => {
         label: 'Group by:',
         options: !isDemoMode && [
           ...filterSelectOptions.groupBy,
-          { label: 'Workflow', id: 'workflow' }
+          { label: 'Workflow', id: GROUP_BY_WORKFLOW }
         ]
       },
       { type: NAME_FILTER, label: 'Name:' },

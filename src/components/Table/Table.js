@@ -11,7 +11,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { generateTableContent } from '../../utils/generateTableContent'
 import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
-import { JOBS_PAGE } from '../../constants'
+import { GROUP_BY_NONE, GROUP_BY_WORKFLOW, JOBS_PAGE } from '../../constants'
 import tableActions from '../../actions/table'
 
 import './table.scss'
@@ -95,7 +95,7 @@ const Table = ({
         groupWorkflowItems: [],
         mainRowItemsCount: pageData.mainRowItemsCount ?? 1
       })
-    } else if (filtersStore.groupBy === 'workflow') {
+    } else if (filtersStore.groupBy === GROUP_BY_WORKFLOW) {
       let groupWorkflowItem = map(groupedContent, (jobs, workflowId) =>
         workflows.find(workflow => workflow.id === workflowId)
       )
@@ -112,7 +112,7 @@ const Table = ({
           true
         )
       }))
-    } else if (filtersStore.groupBy === 'none') {
+    } else if (filtersStore.groupBy === GROUP_BY_NONE) {
       setTableContent(state => ({
         ...state,
         groupLatestItem: [],

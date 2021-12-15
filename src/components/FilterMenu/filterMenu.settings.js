@@ -1,10 +1,13 @@
 import {
-  ALL_ITEMS_TAG_FILTER,
   GROUP_BY_FILTER,
-  INIT_TAG_FILTER,
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
   PERIOD_FILTER,
   SORT_BY,
-  STATUS_FILTER
+  STATE_FILTER_ALL_ITEMS,
+  STATUS_FILTER,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
 } from '../../constants'
 
 export const filterSelectOptions = {
@@ -15,7 +18,7 @@ export const filterSelectOptions = {
     { label: 'Last 6 months', id: 'last6Months' }
   ],
   [STATUS_FILTER]: [
-    { label: 'All', id: 'all', status: 'all' },
+    { label: 'All', id: STATE_FILTER_ALL_ITEMS, status: 'all' },
     { label: 'Completed', id: 'completed', status: 'completed' },
     { label: 'Running', id: 'running', status: 'running' },
     { label: 'Pending', id: 'pending', status: 'pending' },
@@ -23,13 +26,13 @@ export const filterSelectOptions = {
     { label: 'Aborted', id: 'aborted', status: 'aborted' }
   ],
   [GROUP_BY_FILTER]: [
-    { label: 'None', id: 'none' },
-    { label: 'Name', id: 'name' }
+    { label: 'None', id: GROUP_BY_NONE },
+    { label: 'Name', id: GROUP_BY_NAME }
   ],
   [SORT_BY]: [{ label: 'Name', id: 'name' }]
 }
 
 export const tagFilterOptions = [
-  { label: 'All', id: ALL_ITEMS_TAG_FILTER },
-  { label: 'latest', id: INIT_TAG_FILTER }
+  { label: 'All', id: TAG_FILTER_ALL_ITEMS },
+  { label: 'latest', id: TAG_FILTER_LATEST }
 ]

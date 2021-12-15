@@ -1,27 +1,29 @@
 import {
-  INIT_GROUP_FILTER,
-  INIT_STATE_FILTER,
-  INIT_TAG_FILTER,
+  DATE_FILTER_ANY_TIME,
+  GROUP_BY_NAME,
   REMOVE_FILTERS,
   SET_FILTER_PROJECT_OPTIONS,
   SET_FILTER_TAG_OPTIONS,
-  SET_FILTERS
+  SET_FILTERS,
+  SHOW_ITERATIONS,
+  STATE_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
 } from '../constants'
 
 const initialState = {
   dates: {
-    value: ['', ''],
+    value: DATE_FILTER_ANY_TIME,
     isPredefined: false
   },
-  groupBy: INIT_GROUP_FILTER,
-  iter: 'iter',
+  groupBy: GROUP_BY_NAME,
+  iter: SHOW_ITERATIONS,
   labels: '',
   name: '',
   project: '',
   showUntagged: '',
-  state: INIT_STATE_FILTER,
+  state: STATE_FILTER_ALL_ITEMS,
   sortBy: '',
-  tag: INIT_TAG_FILTER,
+  tag: TAG_FILTER_LATEST,
   tagOptions: [],
   projectOptions: []
 }
