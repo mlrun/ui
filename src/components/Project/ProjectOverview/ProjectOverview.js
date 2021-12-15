@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
-import { Link } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
 import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
@@ -12,11 +11,14 @@ import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
 import { getInitialCards } from './ProjectOverview.util'
 import { useDemoMode } from '../../../hooks/demoMode.hook'
 
+import { ReactComponent as ArrowIcon } from '../../../images/arrow.svg'
+
 import './ProjectOverview.scss'
 
 const ProjectOverview = ({ confirmData }) => {
   const project = useSelector(store => store.projectStore.project)
   const [popupDialog, setPopupDialog] = useState({})
+  const [showAdditionalLinks, setshowAdditionalLinks] = useState(false)
 
   const history = useHistory()
   const { projectName } = useParams()
@@ -37,7 +39,7 @@ const ProjectOverview = ({ confirmData }) => {
     return isDemoMode ? prefix.concat('demo=true') : ''
   }
 
-  const handleActionClick = (path, externalLink) => {
+  const handlePathLink = (path, externalLink) => {
     return path.indexOf('/') < 0
       ? handlePopupDialogOpen(path)
       : externalLink
@@ -104,7 +106,7 @@ const ProjectOverview = ({ confirmData }) => {
                 ]
                 return (
                   <div className="project-overview-card" key={card}>
-                    <div className="project-overview-card_top">
+                    <div className="project-overview-card__top">
                       <div className="project-overview-card__header">
                         <h3 className="project-overview-card__header-title">
                           {title}
@@ -113,36 +115,83 @@ const ProjectOverview = ({ confirmData }) => {
                           {subTitle ?? ''}
                         </p>
                       </div>
-                      {/* move to additional links */}
+                      {/* move to actions */}
                       <div className="project-overview-card__actions">
-                        <ul className="actions__list">
-                          {actions.map(
-                            ({ externalLink, handler, icon, label }) => {
+                        <ul className="actions__list" aria-expanded>
+                          {actions
+                            .slice(0, 3)
+                            .map(({ externalLink, icon, id, label, path }) => {
                               return (
                                 <li
-                                  key={label}
+                                  key={id}
                                   className="actions-item"
                                   onClick={() =>
-                                    handleActionClick(handler, externalLink)
+                                    handlePathLink(path, externalLink)
                                   }
                                 >
                                   <i className="actions-icon">{icon}</i>
                                   <span className="link">{label}</span>
                                 </li>
                               )
-                            }
-                          )}
+                            })}
                         </ul>
-                        {actions.length > 3 && <p>additional-links</p>}
+
+                        <ul
+                          className="actions__list"
+                          aria-expanded={showAdditionalLinks}
+                        >
+                          {actions
+                            .slice(3, actions.length)
+                            .map(({ externalLink, icon, id, label, path }) => {
+                              return (
+                                <li
+                                  key={id}
+                                  className="actions-item"
+                                  onClick={() =>
+                                    handlePathLink(path, externalLink)
+                                  }
+                                >
+                                  <i className="actions-icon">{icon}</i>
+                                  <span className="link">{label}</span>
+                                </li>
+                              )
+                            })}
+                        </ul>
                       </div>
+                      <p
+                        className={`actions__list-toogler ${
+                          actions.length <= 3 ? 'visiblity-hidden' : ''
+                        }`}
+                        aria-expanded={showAdditionalLinks}
+                        onClick={() =>
+                          setshowAdditionalLinks(!showAdditionalLinks)
+                        }
+                      >
+                        <ArrowIcon />
+                        <span>Additional Actions</span>
+                      </p>
                     </div>
-                    <div className="project-overview-card_bottom">
-                      {additionalLinks &&
-                        additionalLinks.map(link => (
-                          <Link to={link.path} key={link.id} className="link">
-                            {link.label}
-                          </Link>
-                        ))}
+                    <div
+                      className="project-overview-card__center"
+                      aria-expanded={!showAdditionalLinks}
+                    ></div>
+                    <div className="project-overview-card__bottom">
+                      <div className="additional-links">
+                        {additionalLinks &&
+                          additionalLinks.map(
+                            ({ externalLink, id, label, path }) => (
+                              <span
+                                key={id}
+                                className="link"
+                                onClick={() =>
+                                  handlePathLink(path, externalLink)
+                                }
+                              >
+                                {label}
+                              </span>
+                            )
+                          )}
+                      </div>
                     </div>
                   </div>
                 )

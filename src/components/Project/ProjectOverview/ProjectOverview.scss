@@ -1,4 +1,5 @@
 @import '../../../scss/colors';
+@import '../../../scss/borders';
 @import '../../../scss/mixins';
 
 .project-overview {
@@ -42,7 +43,7 @@
       flex-flow: row wrap;
       justify-content: center;
       align-items: stretch;
-      transform: translateY(-75px);
+      transform: translateY(-60px);
       width: 100%;
     }
   }
@@ -50,6 +51,7 @@
   &-card {
     flex: 0 0 100%;
     max-width: 460px;
+    min-height: 635px;
     margin: 0 22px 2em;
 
     @media screen and (min-width: 576px) {
@@ -57,10 +59,55 @@
       min-width: 340px;
     }
 
-    // .link {
-    //   ::after {
-    //   }
-    // }
+    &__top {
+      display: flex;
+      flex-flow: column;
+      flex: 1 0 auto;
+    }
+
+    &__center {
+      flex: 0 1 0;
+      padding-top: 20px;
+      transition: flex 1s ease-in-out;
+
+      &[aria-expanded='true'] {
+        flex: 0 1 100%;
+        max-height: 200px;
+      }
+    }
+
+    &__bottom {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-height: 66px;
+      max-height: 66px;
+    }
+
+    &__header {
+      min-height: 185px;
+    }
+
+    .additional-links {
+      & > * {
+        padding: 5px 0;
+        margin: 0 10px 0 0;
+        cursor: pointer;
+
+        &:not(:last-child) {
+          &::after {
+            content: '';
+            margin-left: 10px;
+            border-right: $dividerBorder;
+          }
+        }
+      }
+    }
+
+    &__actions {
+      display: flex;
+      flex-flow: column nowrap;
+    }
   }
 
   .actions {
@@ -70,8 +117,34 @@
       align-items: flex-start;
       justify-content: flex-start;
       list-style-type: none;
-      margin: 0 auto;
+      margin: 0;
       padding: 0;
+      overflow: hidden;
+      height: 0;
+      max-height: 256px;
+      transition: height 1s ease-in-out;
+
+      &[aria-expanded='true'] {
+        height: 152px;
+      }
+
+      &-toogler {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        svg {
+          transform: rotate(90deg);
+          transition: transform 0.3s ease-in-out;
+        }
+
+        &[aria-expanded='true'] {
+          svg {
+            transform: rotate(-90deg);
+          }
+        }
+      }
     }
 
     &-item {
@@ -91,23 +164,26 @@
   width: 100%;
   overflow: hidden;
 
-  &_top {
+  &__top {
     background-color: $zircon;
     border-bottom: 1px solid $athensGray;
-    min-height: 430px;
   }
-  &_bottom {
-    border-bottom: 1px solid $athensGray;
+  &__bottom {
+    border-top: 1px solid $athensGray;
     padding: 1em;
   }
 
   &__header {
-    padding: 1.6em;
+    padding: 1em 1.6em;
 
     &-title {
       font-size: 2em;
       font-weight: 300;
       margin: 0;
+    }
+
+    &-subtitle {
+      line-height: 22px;
     }
   }
 

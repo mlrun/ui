@@ -86,11 +86,6 @@ export const getLinks = match => [
     link: `/projects/${match.params.projectName}/functions`
   },
   {
-    icon: <EyeIcon />,
-    label: 'Project monitoring',
-    link: `/projects/${match.params.projectName}/${PROJECT_MONITOR}`
-  },
-  {
     icon: <NuclioIcon />,
     label: 'Real-time functions',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`,
@@ -101,6 +96,11 @@ export const getLinks = match => [
     label: 'API gateways',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`,
     externalLink: true
+  },
+  {
+    icon: <EyeIcon />,
+    label: 'Project monitoring',
+    link: `/projects/${match.params.projectName}/${PROJECT_MONITOR}`
   }
 ]
 
