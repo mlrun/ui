@@ -1,5 +1,5 @@
 import { mainHttpClient } from '../httpClient'
-import { INIT_STATE_FILTER } from '../constants'
+import { STATE_FILTER_ALL_ITEMS } from '../constants'
 
 export default {
   abortJob: (project, jobId, iter) => {
@@ -35,7 +35,7 @@ export default {
       params.name = `~${filters.name}`
     }
 
-    if (filters?.state && filters.state !== INIT_STATE_FILTER) {
+    if (filters?.state && filters.state !== STATE_FILTER_ALL_ITEMS) {
       params.state = filters.state
     }
 
