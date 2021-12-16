@@ -17,31 +17,31 @@ export const getInitialCards = projectName => {
         'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
       actions: [
         {
-          path: 'uploaddata',
-          icon: <UploadIcon />,
           id: 'uploadData',
+          icon: <UploadIcon />,
           label: 'Upload data',
+          path: 'uploaddata',
           tooltip: 'Test'
         },
         {
-          path: `${base_url}/feature-store/feature-sets?openPanel=true`,
-          icon: <FeatureSetIcon />,
           id: 'createFeatureSet',
+          icon: <FeatureSetIcon />,
           label: 'Create features set',
+          path: `${base_url}/feature-store/feature-sets?openPanel=true`,
           tooltip: ''
         },
         {
-          path: `${base_url}/feature-store/datasets?openPanel=true`,
-          icon: <DataSetIcon />,
           id: 'registerDataset',
+          icon: <DataSetIcon />,
           label: 'Register dataset',
+          path: `${base_url}/feature-store/datasets?openPanel=true`,
           tooltip: ''
         },
         {
-          path: `${base_url}/files?openPanel=true`,
-          icon: <RegisterFileIcon />,
           id: 'registerFile',
+          icon: <RegisterFileIcon />,
           label: 'Register file',
+          path: `${base_url}/files?openPanel=true`,
           tooltip: ''
         }
         // {
@@ -81,17 +81,17 @@ export const getInitialCards = projectName => {
         'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more. This is not the final version.',
       actions: [
         {
-          path: `${base_url}/functions?openPanel=true`,
-          icon: <CreatFunctionIcon />,
           id: 'createNewFunction',
+          icon: <CreatFunctionIcon />,
           label: 'Create new function',
+          path: `${base_url}/functions?openPanel=true`,
           tooltip: ''
         },
         {
-          path: `${base_url}/jobs/monitor-jobs/create-new-job`,
-          icon: <CreateJobIcon />,
           id: 'createNewJob',
+          icon: <CreateJobIcon />,
           label: 'Create new job',
+          path: `${base_url}/jobs/monitor-jobs/create-new-job`,
           tooltip: ''
         }
       ],
@@ -119,17 +119,17 @@ export const getInitialCards = projectName => {
         'This section enables users to deploy models, deploy real time graph and run real time pipelines at scale. This is not the final version.',
       actions: [
         {
-          path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
-          icon: <CreateJobIcon />,
           id: 'createRealTimeFunction',
+          icon: <CreateJobIcon />,
           label: 'Create RT function',
+          path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
           tooltip: '',
           externalLink: true
         },
         {
-          path: `${base_url}/functions`,
-          icon: <CreateJobIcon />,
           id: 'deployServingFunction',
+          icon: <CreateJobIcon />,
+          path: `${base_url}/functions`,
           label: 'Deploy serving function',
           tooltip: ''
         }

@@ -9,31 +9,30 @@ import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
-import ProjectActions from '../ProjectActions/ProjectActions'
+import ProjectAction from '../ProjectAction/ProjectAction'
+import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
 
 import { calcIsDemoPrefix } from '../../../utils/helper'
 import { getInitialCards } from './ProjectOverview.util'
-import { useDemoMode } from '../../../hooks/demoMode.hook'
 
 import { ReactComponent as ArrowIcon } from '../../../images/arrow.svg'
 
 import './ProjectOverview.scss'
 
-const ProjectOverview = ({ confirmData }) => {
+const ProjectOverview = ({ confirmData, isDemoMode }) => {
   const project = useSelector(store => store.projectStore.project)
+
   const [popupDialog, setPopupDialog] = useState({})
   const [clicked, setClicked] = useState(null)
 
   const history = useHistory()
   const { projectName } = useParams()
-  const isDemoMode = useDemoMode()
 
   const cards = useMemo(() => {
     return projectName ? getInitialCards(projectName) : {}
   }, [projectName])
 
   const handlePopupDialogOpen = popupName => {
-    console.log('actionKey', popupName)
     return setPopupDialog(prev => {
       return { ...prev, [popupName]: true }
     })
@@ -113,7 +112,7 @@ const ProjectOverview = ({ confirmData }) => {
           <div className="project-overview__content">
             {/* move to card */}
             {Object.keys(cards).map((card, index) => {
-              const { actions, additionalLinks, subTitle, title } = cards[card]
+              const { additionalLinks, actions, subTitle, title } = cards[card]
               return (
                 <div className="project-overview-card" key={card}>
                   <div className="project-overview-card__top">
@@ -126,12 +125,12 @@ const ProjectOverview = ({ confirmData }) => {
                       </p>
                     </div>
                     <div className="project-overview-card__actions">
-                      <ProjectActions
+                      <ProjectAction
                         actions={actions.slice(0, 3)}
                         handleLinks={handlePathLink}
                         showActions={true}
                       />
-                      <ProjectActions
+                      <ProjectAction
                         actions={actions.slice(3, actions.length)}
                         handleLinks={handlePathLink}
                         showActions={clicked === index}
@@ -152,10 +151,7 @@ const ProjectOverview = ({ confirmData }) => {
                     className="project-overview-card__center"
                     aria-expanded={clicked !== index}
                   >
-                    <p>API</p>
-                    <p>API</p>
-                    <p>API</p>
-                    <p>API</p>
+                    <ProjectOverviewTableRow />
                   </div>
                   <div className="project-overview-card__bottom">
                     <div className="additional-links">
@@ -188,7 +184,8 @@ ProjectOverview.defaultProps = {
 }
 
 ProjectOverview.propTypes = {
-  confirmData: PropTypes.object
+  confirmData: PropTypes.object,
+  isDemoMode: PropTypes.bool
 }
 
 export default React.memo(ProjectOverview)

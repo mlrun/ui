@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 
 import Tip from '../../../common/Tip/Tip'
 
-import './ProjectActions.scss'
+import './ProjectAction.scss'
 
-const ProjectActions = ({ actions, handleLinks, showActions }) => {
+const ProjectAction = ({ actions, handleLinks, showActions }) => {
   return (
     <ul className="project-overview-actions" aria-expanded={showActions}>
       {actions.map(({ externalLink, icon, id, label, path, tooltip }) => {
@@ -27,16 +27,16 @@ const ProjectActions = ({ actions, handleLinks, showActions }) => {
   )
 }
 
-ProjectActions.defaultProps = {
+ProjectAction.defaultProps = {
   actions: [],
   handleLinks: () => {},
   showActions: false
 }
 
-ProjectActions.propTypes = {
+ProjectAction.propTypes = {
   actions: PropTypes.array.isRequired,
   handleLinks: PropTypes.func.isRequired,
   showActions: PropTypes.bool.isRequired
 }
 
-export default ProjectActions
+export default ProjectAction
