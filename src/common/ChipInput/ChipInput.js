@@ -96,6 +96,7 @@ const ChipInput = ({
             handleRemoveChip={handleRemoveChip}
             isDeleteMode={isDeleteMode}
             key={`${chip.value}${index}`}
+            showChips
           />
         )
       })}

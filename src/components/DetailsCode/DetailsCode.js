@@ -8,7 +8,7 @@ const DetailsCode = ({ code }) => {
   const [decoded, setDecoded] = useState('')
 
   const decodeCode = useCallback(() => {
-    setDecoded(Base64.decode(code))
+    setDecoded(Base64.decode(code ?? ''))
   }, [code])
 
   useEffect(() => {

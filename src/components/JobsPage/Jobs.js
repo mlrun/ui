@@ -30,7 +30,6 @@ import {
 } from '../../utils/datePicker.util'
 import {
   DANGER_BUTTON,
-  GROUP_BY_NAME,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
   JOBS_PAGE,
@@ -409,8 +408,7 @@ const Jobs = ({
   useEffect(() => {
     if (
       !isEmpty(selectedJob) &&
-      (match.params.pageTab === MONITOR_JOBS_TAB ||
-        match.params.pageTab === MONITOR_WORKFLOWS_TAB)
+      [MONITOR_JOBS_TAB, MONITOR_WORKFLOWS_TAB].includes(match.params.pageTab)
     ) {
       fetchJobPods(match.params.projectName, selectedJob.uid)
 
@@ -461,14 +459,14 @@ const Jobs = ({
     ) {
       if (
         match.params.functionHash === 'latest' &&
-        match.params.functionHash !== selectedFunction.tag
+        match.params.functionName !== selectedFunction.name
       ) {
         getFunction(match.params.projectName, match.params.functionName)
           .then(func => {
             setSelectedFunction(parseFunction(func, match.params.projectName))
           })
           .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
-      } else if (match.params.functionHash !== selectedFunction.tag) {
+      } else if (match.params.functionName !== selectedFunction.name) {
         getFunctionWithHash(
           match.params.projectName,
           match.params.functionName,
@@ -556,22 +554,6 @@ const Jobs = ({
       }
     }
   }, [getWorkflows, match.params.pageTab, match.params.workflowId, setFilters])
-
-  useEffect(() => {
-    if (match.params.pageTab === MONITOR_JOBS_TAB && !match.params.jobId) {
-      if (!isDemoMode) {
-        getWorkflows()
-      }
-
-      setFilters({ groupBy: GROUP_BY_NAME })
-    }
-  }, [
-    getWorkflows,
-    isDemoMode,
-    match.params.jobId,
-    match.params.pageTab,
-    setFilters
-  ])
 
   const handleSelectJob = item => {
     if (document.getElementsByClassName('view')[0]) {

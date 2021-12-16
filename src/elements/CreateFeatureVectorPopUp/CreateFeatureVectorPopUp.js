@@ -44,7 +44,9 @@ const CreateFeatureVectorPopUp = ({
   return (
     <PopUpDialog
       className="new-feature-vector__pop-up"
-      headerText="Create feature vector"
+      headerText={`${
+        !featureVectorData.name ? 'Create' : 'Edit'
+      } feature vector`}
       closePopUp={closePopUp}
     >
       <div className="new-feature-vector__row new-feature-vector__name-tag-row">
