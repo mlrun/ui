@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer'
 
 import FloatingEdge from './FloatingEdge'
+import MlReactFlowNode from './MlReactFlowNode'
+
+import { ML_NODE } from '../../constants'
 
 import './mlReactFlow.scss'
 
@@ -11,6 +14,10 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
 
   const edgeTypes = {
     floating: FloatingEdge
+  }
+
+  const nodeTypes = {
+    [ML_NODE]: MlReactFlowNode
   }
 
   useEffect(() => {
@@ -31,15 +38,16 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
   return (
     <ReactFlowProvider>
       <ReactFlow
-        elements={elements}
-        onLoad={onLoad}
         edgeTypes={edgeTypes}
-        onElementClick={onElementClick}
-        selectionKeyCode={null}
-        multiSelectionKeyCode={null}
+        elements={elements}
         elementsSelectable={false}
-        nodesDraggable={false}
+        multiSelectionKeyCode={null}
+        nodeTypes={nodeTypes}
         nodesConnectable={false}
+        nodesDraggable={false}
+        onElementClick={onElementClick}
+        onLoad={onLoad}
+        selectionKeyCode={null}
       />
     </ReactFlowProvider>
   )

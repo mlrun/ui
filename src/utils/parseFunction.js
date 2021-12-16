@@ -1,7 +1,7 @@
 import getState from './getState'
 import { page } from '../components/FunctionsPage/functions.util'
 
-export const parseFunction = (func, projectName) => ({
+export const parseFunction = (func, projectName, customState) => ({
   access_key: func.metadata.credentials?.access_key ?? '',
   args: func.spec?.args ?? [],
   base_spec: func.spec?.base_spec ?? {},
@@ -22,7 +22,7 @@ export const parseFunction = (func, projectName) => ({
   project: func.metadata?.project || projectName,
   resources: func.spec?.resources ?? {},
   secret_sources: func.spec?.secret_sources ?? [],
-  state: getState(func.status?.state, page, 'function'),
+  state: getState(customState || func.status?.state, page, 'function'),
   tag: func.metadata?.tag ?? '',
   track_models: func.spec?.track_models ?? false,
   type: func.kind,

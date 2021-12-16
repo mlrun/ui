@@ -496,3 +496,13 @@ export const validation = {
 
 export const AMOUNT_LIMIT_CODE = 405
 export const CONFLICT_CODE = 409
+
+/*=========== ML REACT FLOW =============*/
+
+export const ML_NODE = 'ml-node'
+
+export const INPUT_NODE = 'input-node'
+export const OUTPUT_NODE = 'output-node'
+export const PRIMARY_NODE = 'primary-node'
+export const SECONDARY_NODE = 'secondary-node'
+export const ERROR_NODE = 'error-node'

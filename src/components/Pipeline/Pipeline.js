@@ -10,6 +10,12 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import CodeBlock from '../../common/CodeBlock/CodeBlock'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 
+import {
+  ERROR_NODE,
+  ML_NODE,
+  PRIMARY_NODE,
+  SECONDARY_NODE
+} from '../../constants'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
@@ -33,7 +39,7 @@ const Pipeline = ({ content, match }) => {
 
   useEffect(() => {
     if (selectedStep.data) {
-      const selectedStepData = selectedStep.data.originalData
+      const selectedStepData = selectedStep.data.customData
 
       setSelectedStepData([
         {
@@ -90,7 +96,9 @@ const Pipeline = ({ content, match }) => {
 
         nodes.push({
           id: mainRouterStepId,
+          type: ML_NODE,
           data: {
+            subType: PRIMARY_NODE,
             label: graph.class_args?.name ?? '',
             subLabel: '« router »'
           },
@@ -108,15 +116,15 @@ const Pipeline = ({ content, match }) => {
 
         nodes.push({
           id: stepName,
+          type: ML_NODE,
           data: {
+            subType: PRIMARY_NODE,
             label: stepName,
             subLabel: subLabel,
-            originalData: step
+            isSelectable: true,
+            customData: step
           },
-          className: classnames(
-            selectedStep.id === stepName && 'selected',
-            'selectable'
-          ),
+          className: classnames(selectedStep.id === stepName && 'selected'),
           position: { x: 0, y: 0 }
         })
 
@@ -136,13 +144,17 @@ const Pipeline = ({ content, match }) => {
           forEach(step.routes, (routeInner, routeInnerName) => {
             nodes.push({
               id: routeInnerName,
-              data: { label: routeInnerName, originalData: routeInner },
+              type: ML_NODE,
+              data: {
+                subType: SECONDARY_NODE,
+                label: routeInnerName,
+                isSelectable: true,
+                isOvalShape: true,
+                isOpacity: true,
+                customData: routeInner
+              },
               className: classnames(
-                'react-flow__node-secondary',
-                selectedStep.id === routeInnerName && 'selected',
-                'selectable',
-                'oval-shape',
-                'with-opacity'
+                selectedStep.id === routeInnerName && 'selected'
               ),
               position: { x: 0, y: 0 }
             })
@@ -176,7 +188,7 @@ const Pipeline = ({ content, match }) => {
 
       const errorEdges = map(errorsMap, (target, source) => {
         const errorHandlerElement = nodes.find(node => node.id === target)
-        errorHandlerElement.className += ' error-handler'
+        errorHandlerElement.data.subType = ERROR_NODE
 
         return {
           id: `e.${source}.${target}`,
@@ -252,7 +264,7 @@ const Pipeline = ({ content, match }) => {
             elements={elements}
             alignTriggerItem={stepIsSelected}
             onElementClick={(event, element) => {
-              if (element.data?.originalData) {
+              if (element.data?.customData) {
                 setSelectedStep(element)
               }
             }}
