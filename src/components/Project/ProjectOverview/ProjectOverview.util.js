@@ -21,7 +21,7 @@ export const getInitialCards = projectName => {
           icon: <UploadIcon />,
           id: 'uploadData',
           label: 'Upload data',
-          tooltip: ''
+          tooltip: 'Test'
         },
         {
           path: `${base_url}/feature-store/feature-sets?openPanel=true`,

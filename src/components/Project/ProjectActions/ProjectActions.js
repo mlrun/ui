@@ -1,12 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import Tip from '../../../common/Tip/Tip'
+
 import './ProjectActions.scss'
 
 const ProjectActions = ({ actions, handleLinks, showActions }) => {
   return (
     <ul className="project-overview-actions" aria-expanded={showActions}>
-      {actions.map(({ externalLink, icon, id, label, path }) => {
+      {actions.map(({ externalLink, icon, id, label, path, tooltip }) => {
         return (
           <li
             key={id}
@@ -16,6 +18,7 @@ const ProjectActions = ({ actions, handleLinks, showActions }) => {
             <div className="project-overview-actions__item-wrapper">
               <i className="project-overview-actions__item-icon">{icon}</i>
               <span className="link">{label}</span>
+              {tooltip && <Tip text={tooltip} />}
             </div>
           </li>
         )

@@ -34,7 +34,14 @@
     }
 
     &-wrapper {
+      position: relative;
       max-width: 80px;
+
+      .tip-container {
+        position: absolute;
+        top: 0;
+        right: -7px;
+      }
     }
 
     &-icon {
