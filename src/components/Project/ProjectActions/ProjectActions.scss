@@ -9,13 +9,6 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  height: 0;
-  max-height: 256px;
-  transition: height 1s ease-in-out;
-
-  &[aria-expanded='true'] {
-    height: 152px;
-  }
 
   &__item {
     margin: 0 0.5em 1.5em;
@@ -25,8 +18,10 @@
     flex-flow: column nowrap;
     text-align: center;
     cursor: pointer;
-    flex: 1 0 0%;
-    max-width: 28%;
+
+    .link {
+      text-transform: capitalize;
+    }
 
     &:hover {
       .project-overview-actions__item-icon {

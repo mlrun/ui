@@ -92,6 +92,7 @@
       & > * {
         padding: 5px 0;
         cursor: pointer;
+        text-transform: capitalize;
 
         &:not(:last-child) {
           margin: 0 10px 0 0;
@@ -131,6 +132,21 @@
           }
         }
       }
+    }
+  }
+
+  &-actions {
+    height: 0;
+    max-height: 256px;
+    transition: height 1s ease-in-out;
+
+    &[aria-expanded='true'] {
+      height: 152px;
+    }
+
+    &__item {
+      flex: 1 0 0%;
+      max-width: 28%;
     }
   }
 

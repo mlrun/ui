@@ -122,7 +122,7 @@ export const getInitialCards = projectName => {
           path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
           icon: <CreateJobIcon />,
           id: 'createRealTimeFunction',
-          label: 'Create real time function',
+          label: 'Create RT function',
           tooltip: '',
           externalLink: true
         },

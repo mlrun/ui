@@ -226,7 +226,7 @@ textarea {
   align-items: center;
   justify-content: space-between;
 
-  button {
+  button:not([class*='round-icon-cp__icon']) {
     display: flex;
     align-items: center;
     justify-content: center;
