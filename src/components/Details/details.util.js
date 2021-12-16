@@ -287,7 +287,14 @@ export const renderContent = (
         />
       )
     case DETAILS_CODE_TAB:
-      return <DetailsCode code={selectedItem.build.functionSourceCode} />
+      return (
+        <DetailsCode
+          code={
+            selectedItem.build.functionSourceCode ??
+            selectedItem.base_spec.spec?.build?.functionSourceCode
+          }
+        />
+      )
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
     case DETAILS_RETURNED_FEATURES_TAB:
