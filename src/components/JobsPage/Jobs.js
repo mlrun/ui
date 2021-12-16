@@ -459,14 +459,14 @@ const Jobs = ({
     ) {
       if (
         match.params.functionHash === 'latest' &&
-        match.params.functionHash !== selectedFunction.tag
+        match.params.functionName !== selectedFunction.name
       ) {
         getFunction(match.params.projectName, match.params.functionName)
           .then(func => {
             setSelectedFunction(parseFunction(func, match.params.projectName))
           })
           .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
-      } else if (match.params.functionHash !== selectedFunction.tag) {
+      } else if (match.params.functionName !== selectedFunction.name) {
         getFunctionWithHash(
           match.params.projectName,
           match.params.functionName,

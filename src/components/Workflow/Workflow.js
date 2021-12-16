@@ -160,23 +160,22 @@ const Workflow = ({
       history.push(
         getWorkflowDetailsLink(match.params, null, element.data.run_uid)
       )
-    } else if (element.data?.run_type === 'deploy' && element.data?.function) {
-      const funcName = element.data.function.match(/\/(.*?)@/i)[1]
-      const funcHash = element.data.function.replace(/.*@/g, '')
+    } else if (
+      (element.data?.run_type === 'deploy' ||
+        element.data?.run_type === 'build') &&
+      element.data?.function
+    ) {
+      const funcName = element.data.function.includes('@')
+        ? element.data.function.match(/\/(.*?)@/i)[1]
+        : element.data.function.match(/\/(.*)/i)[1]
+      const funcHash = element.data.function.includes('@')
+        ? element.data.function.replace(/.*@/g, '')
+        : 'latest'
       const link = `/projects/${
         match.params.projectName
       }/${page.toLowerCase()}/${match.params.pageTab}/workflow/${
         match.params.workflowId
       }/${funcName}/${funcHash}/${DETAILS_OVERVIEW_TAB}`
-
-      history.push(link)
-    } else if (element.data?.run_type === 'build' && element.data?.function) {
-      const funcName = element.data.function.match(/\/(.*)/i)[1]
-      const link = `/projects/${
-        match.params.projectName
-      }/${page.toLowerCase()}/${match.params.pageTab}/workflow/${
-        match.params.workflowId
-      }/${funcName}/latest/${DETAILS_OVERVIEW_TAB}`
 
       history.push(link)
     }
