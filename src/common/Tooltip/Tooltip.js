@@ -63,11 +63,11 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
         const leftPosition =
           event.x - (event.x + tooltipWidth - window.innerWidth + offset)
         const left =
-          event.x + tooltipWidth > window.innerWidth
+          event.x + tooltipWidth + offset > window.innerWidth
             ? leftPosition > offset
               ? leftPosition
               : offset
-            : event.x
+            : event.x + offset
 
         if (top + height + offset + tooltipHeight >= window.innerHeight) {
           setStyle({
@@ -131,9 +131,9 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
       </div>
       {createPortal(
         <CSSTransition
+          classNames="fade"
           in={show}
           timeout={duration}
-          classNames="fade"
           unmountOnExit
         >
           <div

@@ -40,7 +40,8 @@ const functionStateLabels = {
   failed: 'Error',
   pending: 'Deploying',
   ready: 'Ready',
-  running: 'Deploying'
+  running: 'Deploying',
+  succeeded: 'Succeeded'
 }
 
 export default getState

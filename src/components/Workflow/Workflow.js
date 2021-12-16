@@ -10,12 +10,15 @@ import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTempl
 import Tooltip from '../../common/Tooltip/Tooltip'
 import Table from '../Table/Table'
 
-import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
+import {
+  getLayoutedElements,
+  getWorkflowSourceHandle
+} from '../../common/ReactFlow/mlReactFlow.util'
 import { getWorkflowDetailsLink } from './workflow.util'
 import functionsActions from '../../actions/functions'
 import { connect } from 'react-redux'
 import { page } from '../JobsPage/jobsData'
-import { DETAILS_OVERVIEW_TAB } from '../../constants'
+import { DETAILS_OVERVIEW_TAB, ML_NODE, PRIMARY_NODE } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
@@ -27,7 +30,6 @@ import './workflow.scss'
 const Workflow = ({
   actionsMenu,
   content,
-  fetchWorkflow,
   handleCancel,
   handleSelectItem,
   history,
@@ -39,42 +41,18 @@ const Workflow = ({
   selectedJob,
   setLoading,
   setWorkflowsViewMode,
+  workflow,
+  workflowJobsIds,
   workflowsViewMode
 }) => {
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [jobsContent, setJobsContent] = useState([])
-  const [workflow, setWorkflow] = useState({})
-  const [workflowJobsIds, setWorkflowJobsIds] = useState([])
   const [elements, setElements] = useState([])
 
   const graphViewClassNames = classnames(
     'graph-view',
     (selectedJob?.uid || selectedFunction?.hash) && 'with-selected-job'
   )
-
-  useEffect(() => {
-    if (!workflow.graph) {
-      fetchWorkflow(match.params.workflowId)
-        .then(workflow => {
-          setWorkflow(workflow)
-          setWorkflowJobsIds(
-            Object.values(workflow.graph).map(jobData => jobData.run_uid)
-          )
-        })
-        .catch(() =>
-          history.replace(
-            `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
-          )
-        )
-    }
-  }, [
-    fetchWorkflow,
-    history,
-    match.params.pageTab,
-    match.params.projectName,
-    match.params.workflowId,
-    workflow.graph
-  ])
 
   useEffect(() => {
     if (workflowJobsIds.length > 0 && content.length > 0) {
@@ -105,11 +83,21 @@ const Workflow = ({
 
       let nodeItem = {
         id: job.id,
+        type: ML_NODE,
         data: {
-          function: job.function,
+          subType: PRIMARY_NODE,
           label: job.name,
-          run_uid: job.run_uid,
-          run_type: job.run_type
+          isSelectable: Boolean(
+            job.run_uid ||
+              ((job.run_type === 'deploy' || job.run_type === 'build') &&
+                job.function)
+          ),
+          sourceHandle: getWorkflowSourceHandle(job.phase),
+          customData: {
+            function: job.function,
+            run_uid: job.run_uid,
+            run_type: job.run_type
+          }
         },
         className: classnames(
           ((job.run_uid && selectedJob.uid === job.run_uid) ||
@@ -117,12 +105,7 @@ const Workflow = ({
               job.function.includes(selectedFunction.hash)) ||
             (job.run_type === 'build' &&
               job.function.includes(selectedFunction.name))) &&
-            'selected',
-          (job.run_uid ||
-            ((job.run_type === 'deploy' || job.run_type === 'build') &&
-              job.function)) &&
-            'selectable',
-          `status-${job.phase?.toLowerCase()}`
+            'selected'
         ),
         position: { x: 0, y: 0 }
       }
@@ -156,20 +139,24 @@ const Workflow = ({
   }
 
   const onElementClick = (event, element) => {
-    if (element.data?.run_uid) {
+    if (element.data?.customData?.run_uid) {
       history.push(
-        getWorkflowDetailsLink(match.params, null, element.data.run_uid)
+        getWorkflowDetailsLink(
+          match.params,
+          null,
+          element.data.customData.run_uid
+        )
       )
     } else if (
-      (element.data?.run_type === 'deploy' ||
-        element.data?.run_type === 'build') &&
-      element.data?.function
+      (element.data?.customData?.run_type === 'deploy' ||
+        element.data?.customData?.run_type === 'build') &&
+      element.data?.customData?.function
     ) {
-      const funcName = element.data.function.includes('@')
-        ? element.data.function.match(/\/(.*?)@/i)[1]
-        : element.data.function.match(/\/(.*)/i)[1]
-      const funcHash = element.data.function.includes('@')
-        ? element.data.function.replace(/.*@/g, '')
+      const funcName = element.data.customData.function.includes('@')
+        ? element.data.customData.function.match(/\/(.*?)@/i)[1]
+        : element.data.customData.function.match(/\/(.*)/i)[1]
+      const funcHash = element.data.customData.function.includes('@')
+        ? element.data.customData.function.replace(/.*@/g, '')
         : 'latest'
       const link = `/projects/${
         match.params.projectName
@@ -273,13 +260,14 @@ const Workflow = ({
 Workflow.defaultProps = {
   selectedFunction: {},
   selectedJob: {},
-  setLoading: null
+  setLoading: null,
+  workflow: {},
+  workflowJobsIds: []
 }
 
 Workflow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  fetchWorkflow: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   history: PropTypes.shape({}).isRequired,
@@ -291,6 +279,8 @@ Workflow.propTypes = {
   selectedJob: PropTypes.shape({}),
   setLoading: PropTypes.func,
   setWorkflowsViewMode: PropTypes.func.isRequired,
+  workflow: PropTypes.shape({}),
+  workflowJobsIds: PropTypes.arrayOf(PropTypes.string),
   workflowsViewMode: PropTypes.string.isRequired
 }
 

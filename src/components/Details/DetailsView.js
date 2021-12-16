@@ -115,7 +115,11 @@ const DetailsView = React.forwardRef(
             </Tooltip>
           </h3>
           <span className="left-margin">
-            {Object.keys(selectedItem).length > 0 && pageData.page === JOBS_PAGE
+            {/*In the Workflow page we display both Jobs and Functions items. The function contains `updated` property.
+            The job contains startTime property.*/}
+            {Object.keys(selectedItem).length > 0 &&
+            pageData.page === JOBS_PAGE &&
+            !selectedItem?.updated
               ? formatDatetime(
                   selectedItem?.startTime,
                   stateValue === 'aborted' ? 'N/A' : 'Not yet started'
