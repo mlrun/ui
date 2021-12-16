@@ -4,6 +4,7 @@ import { page } from '../components/FunctionsPage/functions.util'
 export const parseFunction = (func, projectName) => ({
   access_key: func.metadata.credentials?.access_key ?? '',
   args: func.spec?.args ?? [],
+  base_spec: func.spec?.base_spec ?? {},
   build: func.spec?.build ?? {},
   command: func.spec?.command,
   default_class: func.spec?.default_class ?? '',
