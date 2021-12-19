@@ -52,3 +52,7 @@ export const getTimeElapsedByDate = creationDate => {
     )
     .fromNow()
 }
+
+export const getDateAndTimeByFormat = (date, dateFormat) => {
+  return moment(date).format(dateFormat)
+}

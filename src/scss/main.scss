@@ -132,7 +132,8 @@ button {
 [class^='state-succeeded'],
 [class^='state-active'],
 [class^='state-created'],
-[class^='state-info'] {
+[class^='state-info'],
+[class^='state-online'] {
   @include statusState($brightTurquoise);
 }
 

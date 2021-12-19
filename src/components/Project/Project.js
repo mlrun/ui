@@ -623,7 +623,7 @@ const Project = ({
   )
 
   if (!match.path.includes(PROJECT_MONITOR)) {
-    return <ProjectOverview confirmData={confirmData} />
+    return <ProjectOverview isDemoMode={isDemoMode} />
   }
 
   return (
