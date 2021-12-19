@@ -1,4 +1,4 @@
-import React from 'react'
+import classnames from 'classnames'
 import dagre from 'dagre'
 import { isNode, Position } from 'react-flow-renderer'
 
@@ -27,22 +27,20 @@ export const getLayoutedElements = (elements, direction = 'TB') => {
       el.targetPosition = isHorizontal ? 'left' : 'top'
       el.sourcePosition = isHorizontal ? 'right' : 'bottom'
 
-      el.data.label = (
-        <div
-          className="react-flow__node-label"
-          data-title={el.data.label || el.data.subLabel}
-        >
-          <div className="data-ellipsis">{el.data.label}</div>
-          {el.data.subLabel && (
-            <div className="react-flow__node-sub-label">{el.data.subLabel}</div>
-          )}
-        </div>
+      el.className = classnames(
+        el.className,
+        el.data.subType,
+        el.data.isSelectable && 'selectable',
+        el.data.isOvalShape && 'oval-shape',
+        el.data.isOpacity && 'with-opacity'
       )
+
       el.style = {
         width: elWidth,
         height: elHeight,
         pointerEvents: 'all'
       }
+
       // unfortunately we need this little hack to pass a slighltiy different position
       // in order to notify react flow about the change
       el.position = {
@@ -125,4 +123,19 @@ export const getEdgeParams = (source, target) => {
     sourcePos,
     targetPos
   }
+}
+
+export const getWorkflowSourceHandle = phase => {
+  return {
+    tooltip: nodeStates[phase?.toLowerCase()],
+    className: classnames(`status-${phase?.toLowerCase()}`)
+  }
+}
+
+const nodeStates = {
+  succeeded: 'Succeeded',
+  failed: 'Failed',
+  pending: 'Pending',
+  running: 'Running',
+  unknown: 'Unknown'
 }

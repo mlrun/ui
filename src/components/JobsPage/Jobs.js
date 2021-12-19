@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import { isEmpty, cloneDeep } from 'lodash'
+import { find, isEmpty, cloneDeep } from 'lodash'
 
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 import Content from '../../layout/Content/Content'
@@ -30,6 +30,8 @@ import {
 } from '../../utils/datePicker.util'
 import {
   DANGER_BUTTON,
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
@@ -82,8 +84,10 @@ const Jobs = ({
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [jobs, setJobs] = useState([])
   const [confirmData, setConfirmData] = useState(null)
-  const [selectedJob, setSelectedJob] = useState({})
   const [editableItem, setEditableItem] = useState(null)
+  const [workflow, setWorkflow] = useState({})
+  const [workflowJobsIds, setWorkflowJobsIds] = useState([])
+  const [selectedJob, setSelectedJob] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState('graph')
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
@@ -442,6 +446,30 @@ const Jobs = ({
   }, [history, pageData.tabs, match])
 
   useEffect(() => {
+    if (!workflow.graph) {
+      fetchWorkflow(match.params.workflowId)
+        .then(workflow => {
+          setWorkflow(workflow)
+          setWorkflowJobsIds(
+            Object.values(workflow.graph).map(jobData => jobData.run_uid)
+          )
+        })
+        .catch(() =>
+          history.replace(
+            `/projects/${match.params.projectName}/jobs/${match.params.pageTab}`
+          )
+        )
+    }
+  }, [
+    fetchWorkflow,
+    history,
+    match.params.pageTab,
+    match.params.projectName,
+    match.params.workflowId,
+    workflow.graph
+  ])
+
+  useEffect(() => {
     if (
       match.params.jobId &&
       (isEmpty(selectedJob) || match.params.jobId !== selectedJob.uid)
@@ -451,27 +479,41 @@ const Jobs = ({
       setSelectedJob({})
       removeJob()
     } else if (
+      workflow.graph &&
       match.params.functionHash &&
       (isEmpty(selectedFunction) ||
         match.params.functionHash !== selectedFunction.hash)
     ) {
+      const selectedWorkflowFunction = find(workflow.graph, workflowItem => {
+        return (
+          workflowItem.function?.includes(
+            `${match.params.functionName}@${match.params.functionHash}`
+          ) || workflowItem.function?.includes(match.params.functionName)
+        )
+      })
+      const customFunctionState = selectedWorkflowFunction?.phase?.toLowerCase()
+
       if (
         match.params.functionHash === 'latest' &&
-        match.params.functionHash !== selectedFunction.tag
+        match.params.functionName !== selectedFunction.name
       ) {
         getFunction(match.params.projectName, match.params.functionName)
           .then(func => {
-            setSelectedFunction(parseFunction(func, match.params.projectName))
+            setSelectedFunction(
+              parseFunction(func, match.params.projectName, customFunctionState)
+            )
           })
           .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
-      } else if (match.params.functionHash !== selectedFunction.tag) {
+      } else if (match.params.functionName !== selectedFunction.name) {
         getFunctionWithHash(
           match.params.projectName,
           match.params.functionName,
           match.params.functionHash
         )
           .then(func => {
-            setSelectedFunction(parseFunction(func, match.params.projectName))
+            setSelectedFunction(
+              parseFunction(func, match.params.projectName, customFunctionState)
+            )
           })
           .catch(error => handleCatchRequest(error, 'Failed to fetch function'))
       }
@@ -495,7 +537,8 @@ const Jobs = ({
     selectedFunction,
     selectedJob,
     setNotification,
-    getFunction
+    getFunction,
+    workflow
   ])
 
   useEffect(() => {
@@ -542,13 +585,13 @@ const Jobs = ({
 
   useEffect(() => {
     if (match.params.pageTab === SCHEDULE_TAB) {
-      setFilters({ groupBy: 'none' })
+      setFilters({ groupBy: GROUP_BY_NONE })
     } else if (match.params.pageTab === MONITOR_WORKFLOWS_TAB) {
       if (match.params.workflowId) {
-        setFilters({ groupBy: 'none' })
+        setFilters({ groupBy: GROUP_BY_NONE })
       } else {
         getWorkflows()
-        setFilters({ groupBy: 'workflow' })
+        setFilters({ groupBy: GROUP_BY_WORKFLOW })
       }
     }
   }, [getWorkflows, match.params.pageTab, match.params.workflowId, setFilters])
@@ -610,19 +653,20 @@ const Jobs = ({
         {match.params.workflowId ? (
           <Workflow
             actionsMenu={actionsMenu}
-            fetchWorkflow={fetchWorkflow}
-            handleCancel={handleCancel}
             content={jobs}
+            handleCancel={handleCancel}
             handleSelectItem={handleSelectJob}
-            refresh={refreshJobs}
             history={history}
             match={match}
             pageData={pageData}
+            refresh={refreshJobs}
             refreshJobs={refreshJobs}
             selectedFunction={selectedFunction}
             selectedJob={selectedJob}
             setLoading={setLoading}
             setWorkflowsViewMode={setWorkflowsViewMode}
+            workflow={workflow}
+            workflowJobsIds={workflowJobsIds}
             workflowsViewMode={workflowsViewMode}
           />
         ) : !isEmpty(selectedJob) ? (

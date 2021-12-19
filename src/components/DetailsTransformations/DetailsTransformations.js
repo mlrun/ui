@@ -8,6 +8,13 @@ import ConfigSteps from './ConfigSteps/ConfigSteps'
 import ConfigTargets from './ConfigTargets/ConfigTargets'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
+import {
+  ERROR_NODE,
+  INPUT_NODE,
+  ML_NODE,
+  OUTPUT_NODE,
+  PRIMARY_NODE
+} from '../../constants'
 
 import './detailsTransformations.scss'
 
@@ -30,7 +37,8 @@ const DetailsTransformations = ({ selectedItem }) => {
     let nodes = map(states, (stepItem, stepName) => {
       let nodeItem = {
         id: stepName,
-        data: { label: stepName },
+        type: ML_NODE,
+        data: { subType: PRIMARY_NODE, label: stepName },
         className: selectedStep === stepName ? 'selected' : '',
         position: { x: 0, y: 0 }
       }
@@ -55,8 +63,8 @@ const DetailsTransformations = ({ selectedItem }) => {
 
     nodes.unshift({
       id: 'Source',
-      data: { label: 'Source' },
-      type: 'input',
+      type: ML_NODE,
+      data: { subType: INPUT_NODE, label: 'Source' },
       position: { x: 0, y: 0 }
     })
 
@@ -74,9 +82,9 @@ const DetailsTransformations = ({ selectedItem }) => {
       if (target.after_state) {
         nodes.push({
           id: target.name,
-          data: { label: target.name },
-          position: { x: 0, y: 0 },
-          type: 'output'
+          type: ML_NODE,
+          data: { subType: OUTPUT_NODE, label: target.name },
+          position: { x: 0, y: 0 }
         })
         nodesEdges.push({
           id: `e.${target.after_state}.${target.name}`,
@@ -89,7 +97,10 @@ const DetailsTransformations = ({ selectedItem }) => {
 
     let errorEdges = map(errorsMap, (target, source) => {
       let errorHandlerElement = find(nodes, ['id', target])
-      errorHandlerElement.className += ' error-handler'
+
+      if (errorHandlerElement) {
+        errorHandlerElement.data.subType = ERROR_NODE
+      }
 
       return {
         id: `e.${source}.${target}`,

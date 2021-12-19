@@ -13,12 +13,14 @@ import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureSto
 
 import {
   ARTIFACTS_PAGE,
+  DATASETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTIONS_PAGE,
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   MODELS_PAGE,
-  DATASETS_TAB,
   REAL_TIME_PIPELINES_TAB
 } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
@@ -69,7 +71,7 @@ const TableView = ({
         <div className="table-body">
           {!groupFilter ||
           isEmpty(groupedContent) ||
-          (groupFilter === 'none' && isEmpty(groupLatestItem)) ? (
+          (groupFilter === GROUP_BY_NONE && isEmpty(groupLatestItem)) ? (
             tableContent.map((rowItem, i) => {
               switch (pageData.page) {
                 case ARTIFACTS_PAGE:
@@ -222,7 +224,7 @@ const TableView = ({
                       content={content}
                       handleExpandRow={handleExpandRow}
                       handleSelectItem={handleSelectItem}
-                      isGroupedByWorkflow={groupFilter === 'workflow'}
+                      isGroupedByWorkflow={groupFilter === GROUP_BY_WORKFLOW}
                       match={match}
                       rowItem={groupLatestItem[i]}
                       selectedItem={selectedItem}

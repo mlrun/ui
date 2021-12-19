@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import axios from 'axios'
@@ -20,8 +20,9 @@ import {
 } from '../../utils/getUniqueIdentifier'
 import {
   FEATURES_TAB,
-  INIT_GROUP_FILTER,
-  INIT_TAG_FILTER
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  TAG_FILTER_LATEST
 } from '../../constants'
 import { parseFeatures } from '../../utils/parseFeatures'
 import tableActions from '../../actions/table'
@@ -195,7 +196,7 @@ const AddToFeatureVectorPage = ({
 
   useEffect(() => {
     fetchData({
-      tag: INIT_TAG_FILTER,
+      tag: TAG_FILTER_LATEST,
       project: match.params.projectName
     })
 
@@ -208,10 +209,10 @@ const AddToFeatureVectorPage = ({
   }, [fetchData, match.params.projectName, removeFeatures])
 
   useEffect(() => {
-    if (filtersStore.tag === INIT_TAG_FILTER) {
-      setFilters({ groupBy: INIT_GROUP_FILTER })
-    } else if (filtersStore.groupBy === INIT_GROUP_FILTER) {
-      setFilters({ groupBy: 'none' })
+    if (filtersStore.tag === TAG_FILTER_LATEST) {
+      setFilters({ groupBy: GROUP_BY_NAME })
+    } else if (filtersStore.groupBy === GROUP_BY_NAME) {
+      setFilters({ groupBy: GROUP_BY_NONE })
     }
   }, [filtersStore.groupBy, filtersStore.tag, match.params.pageTab, setFilters])
 

@@ -24,6 +24,7 @@ const Projects = ({
   deleteProject,
   fetchNuclioFunctions,
   fetchProjects,
+  fetchProjectsNames,
   fetchProjectsSummary,
   match,
   projectStore,
@@ -190,9 +191,16 @@ const Projects = ({
 
   useEffect(() => {
     fetchProjects()
+    fetchProjectsNames()
     fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
-  }, [fetchNuclioFunctions, fetchProjects, fetchProjectsSummary, source.token])
+  }, [
+    fetchNuclioFunctions,
+    fetchProjects,
+    fetchProjectsNames,
+    fetchProjectsSummary,
+    source.token
+  ])
 
   useEffect(() => {
     return () => {
@@ -225,6 +233,7 @@ const Projects = ({
   const refreshProjects = () => {
     removeProjects()
     fetchProjects()
+    fetchProjectsNames()
     fetchNuclioFunctions()
     fetchProjectsSummary(source.token)
   }

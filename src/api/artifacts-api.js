@@ -1,5 +1,9 @@
 import { mainHttpClient } from '../httpClient'
-import { ALL_ITEMS_TAG_FILTER, INIT_TAG_FILTER } from '../constants'
+import {
+  SHOW_ITERATIONS,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
+} from '../constants'
 
 const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
   const params = {}
@@ -8,14 +12,14 @@ const fetchArtifacts = (path, filters, config = {}, withLatestTag) => {
     params.label = filters.labels?.split(',')
   }
 
-  if (filters?.iter === 'iter') {
+  if (filters?.iter === SHOW_ITERATIONS) {
     params['best-iteration'] = true
   }
 
   if (
     filters?.tag &&
-    (withLatestTag || filters.tag !== INIT_TAG_FILTER) &&
-    filters.tag !== ALL_ITEMS_TAG_FILTER
+    (withLatestTag || filters.tag !== TAG_FILTER_LATEST) &&
+    filters.tag !== TAG_FILTER_ALL_ITEMS
   ) {
     params.tag = filters.tag
   }

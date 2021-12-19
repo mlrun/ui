@@ -20,9 +20,11 @@ import { useOpenPanel } from '../../hooks/openPanel.hook'
 
 import {
   ARTIFACTS,
-  INIT_TAG_FILTER,
-  INIT_GROUP_FILTER,
-  FILES_PAGE
+  FILES_PAGE,
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  SHOW_ITERATIONS,
+  TAG_FILTER_LATEST
 } from '../../constants'
 import filtersActions from '../../actions/filters'
 
@@ -181,7 +183,7 @@ const Files = ({
   }, [history, match, pageData.details.menu])
 
   useEffect(() => {
-    fetchData({ tag: INIT_TAG_FILTER, iter: 'iter' })
+    fetchData({ tag: TAG_FILTER_LATEST, iter: SHOW_ITERATIONS })
 
     return () => {
       setFiles([])
@@ -191,10 +193,10 @@ const Files = ({
   }, [fetchData, removeFiles])
 
   useEffect(() => {
-    if (filtersStore.tag === INIT_TAG_FILTER) {
-      setFilters({ groupBy: INIT_GROUP_FILTER })
-    } else if (filtersStore.groupBy === INIT_GROUP_FILTER) {
-      setFilters({ groupBy: 'none' })
+    if (filtersStore.tag === TAG_FILTER_LATEST) {
+      setFilters({ groupBy: GROUP_BY_NAME })
+    } else if (filtersStore.groupBy === GROUP_BY_NAME) {
+      setFilters({ groupBy: GROUP_BY_NONE })
     }
   }, [match.params.pageTab, filtersStore.tag, filtersStore.groupBy, setFilters])
 

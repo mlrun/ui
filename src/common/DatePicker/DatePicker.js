@@ -9,6 +9,7 @@ import React, {
 import PropTypes from 'prop-types'
 
 import DatePickerView from './DatePickerView'
+import { DATE_FILTER_ANY_TIME } from '../../constants'
 import { createAutoCorrectedDatePipe } from '../../utils/createAutoCorrectedDatePipe'
 import {
   datesDivider,
@@ -323,7 +324,7 @@ const DatePicker = ({
     let isValueEmpty = getInputValueValidity(event.target.value)
 
     if (new RegExp(dateRegEx).test(event.target.value) || isValueEmpty) {
-      let dates = ['', '']
+      let dates = DATE_FILTER_ANY_TIME
 
       if (!isValueEmpty) {
         dates = event.target.value
@@ -345,7 +346,7 @@ const DatePicker = ({
     let isValueEmpty = getInputValueValidity(event.target.value)
 
     if (new RegExp(dateRegEx).test(event.target.value) || isValueEmpty) {
-      let dates = ['', '']
+      let dates = DATE_FILTER_ANY_TIME
 
       if (!isValueEmpty) {
         dates = event.target.value

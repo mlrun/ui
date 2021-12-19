@@ -1,4 +1,5 @@
 import { trim } from 'lodash'
+import { DATE_FILTER_ANY_TIME } from '../constants'
 
 export const datesDivider = ' - '
 
@@ -29,7 +30,7 @@ export const datePickerOptions = [
   {
     id: ANY_TIME_DATE_OPTION,
     label: 'Any time',
-    handler: () => ['', '']
+    handler: () => DATE_FILTER_ANY_TIME
   },
   {
     id: PAST_HOUR_DATE_OPTION,

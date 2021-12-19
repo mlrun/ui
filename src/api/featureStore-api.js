@@ -1,10 +1,10 @@
 import { mainHttpClient } from '../httpClient'
 import {
-  ALL_ITEMS_TAG_FILTER,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
-  INIT_TAG_FILTER
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
 } from '../constants'
 
 const fetchFeatureStoreContent = (
@@ -21,8 +21,8 @@ const fetchFeatureStoreContent = (
 
   if (
     filters?.tag &&
-    filters.tag !== ALL_ITEMS_TAG_FILTER &&
-    (withLatestTag || filters.tag !== INIT_TAG_FILTER)
+    filters.tag !== TAG_FILTER_ALL_ITEMS &&
+    (withLatestTag || filters.tag !== TAG_FILTER_LATEST)
   ) {
     params.tag = filters.tag
   }
