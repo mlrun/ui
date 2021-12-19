@@ -27,7 +27,11 @@ import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
-import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
+import {
+  DATASETS_TAB,
+  PANEL_CREATE_MODE,
+  PROJECTS_SETTINGS_GENERAL_TAB
+} from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
 
@@ -135,7 +139,7 @@ const ProjectView = React.forwardRef(
                   />
                   <Link
                     className="general-info__settings"
-                    to={`/projects/${match.params.projectName}/settings`}
+                    to={`/projects/${match.params.projectName}/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
                   >
                     <Tooltip template={<TextTooltipTemplate text="Settings" />}>
                       <Settings />
