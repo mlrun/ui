@@ -38,7 +38,7 @@ const functionsTable = {
       root: '.table-body__row',
       fields: {
         expand_btn: '',
-        name: '.table-body__cell:nth-of-type(1) a .item-name span',
+        name: '.table-body__cell:nth-of-type(1) a .name-wrapper span.link',
         tag: '.table-body__cell:nth-of-type(1) a .item-tag span',
         status: '.table-body__cell:nth-of-type(1) .status i',
         kind: {

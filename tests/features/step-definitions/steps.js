@@ -9,6 +9,7 @@ import {
   componentIsPresent,
   componentIsVisible,
   verifyText,
+  verifyTextRegExp,
   waitPageLoad,
   deleteAPIMLProject,
   createAPIMLProject,
@@ -165,12 +166,35 @@ When(
   }
 )
 
+When(
+  'type searchable fragment {string} into {string} combobox input in {string} on {string} wizard',
+  async function(subName, combobox, accordion, wizard) {
+    await typeSearchebleValue(
+      this.driver,
+      pageObjects[wizard][accordion][combobox]['comboDropdown'],
+      subName
+    )
+  }
+)
+
 Then(
-  'searchable fragment {string} should be in every sugested option into {string} on {string} wizard',
+  'searchable fragment {string} should be in every suggested option into {string} on {string} wizard',
   async function(subName, inputGroup, wizard) {
     await isContainsSubstringInSuggestedOptions(
       this.driver,
       pageObjects[wizard][inputGroup],
+      subName
+    )
+  }
+)
+
+Then(
+  'searchable fragment {string} should be in every suggested option into {string} combobox input in {string} on {string} wizard',
+  async function(subName, combobox, accordion, wizard) {
+    await this.driver.sleep(200)
+    await isContainsSubstringInSuggestedOptions(
+      this.driver,
+      pageObjects[wizard][accordion][combobox]['comboDropdown'],
       subName
     )
   }
@@ -239,6 +263,36 @@ Then(
   async function(component, wizard, constStorage, constValue) {
     await waiteUntilComponent(this.driver, pageObjects[wizard][component])
     await verifyText(
+      this.driver,
+      pageObjects[wizard][component],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  '{string} element on {string} should contains {string} value',
+  async function(component, wizard, value) {
+    await verifyText(this.driver, pageObjects[wizard][component], value)
+  }
+)
+
+Then(
+  '{string} element in {string} on {string} should contains {string} value',
+  async function(component, accordion, wizard, value) {
+    await verifyText(
+      this.driver,
+      pageObjects[wizard][accordion][component],
+      value
+    )
+  }
+)
+
+Then(
+  '{string} component on {string} should be equal {string}.{string}',
+  async function(component, wizard, constStorage, constValue) {
+    await waiteUntilComponent(this.driver, pageObjects[wizard][component])
+    await verifyTextRegExp(
       this.driver,
       pageObjects[wizard][component],
       pageObjectsConsts[constStorage][constValue]
@@ -379,7 +433,8 @@ Then(
     await checkDropdownOptions(
       this.driver,
       pageObjects[wizard][dropdown],
-      pageObjectsConsts[constStorage][constValue]
+      pageObjectsConsts[constStorage][constValue],
+      false
     )
     await clickNearComponent(
       this.driver,
@@ -540,6 +595,7 @@ Then(
       this.driver,
       pageObjects[wizard][input]['inputField']
     )
+    await this.driver.sleep(100)
     await clickNearComponent(
       this.driver,
       pageObjects[wizard][input]['inputField']
@@ -560,6 +616,7 @@ Then(
       this.driver,
       pageObjects[wizard][accordion][input]['inputField']
     )
+    await this.driver.sleep(100)
     await clickNearComponent(
       this.driver,
       pageObjects[wizard][accordion][input]['inputField']
@@ -587,6 +644,13 @@ When('uncheck {string} element in {string} on {string} wizard', async function(
   wizard
 ) {
   await uncheckCheckbox(this.driver, pageObjects[wizard][accordion][checkbox])
+})
+
+When('uncheck {string} element on {string} wizard', async function(
+  checkbox,
+  wizard
+) {
+  await uncheckCheckbox(this.driver, pageObjects[wizard][checkbox])
 })
 
 Then(
@@ -657,6 +721,25 @@ When('select {string} in {string} on {string}', async function(
   )
 })
 
+Then(
+  'verify options in {string} combobox in {string} on {string} wizard should contains {string}.{string}',
+  async function(combobox, accordion, wizard, constStorage, constValue) {
+    await openDropdown(
+      this.driver,
+      pageObjects[wizard][accordion][combobox]['dropdown']
+    )
+    await checkDropdownOptions(
+      this.driver,
+      pageObjects[wizard][accordion][combobox]['dropdown'],
+      pageObjectsConsts[constStorage][constValue],
+      false
+    )
+    await clickNearComponent(
+      this.driver,
+      pageObjects[wizard][accordion][combobox]['dropdown']['open_button']
+    )
+  }
+)
 When(
   'select {string} option in {string} combobox on {string} accordion on {string} wizard',
   async function(option, comboBox, accordion, wizardName) {
@@ -680,6 +763,7 @@ When(
       pageObjects[wizard][accordion][comboBox]['comboDropdown'],
       option
     )
+    await this.driver.sleep(200)
   }
 )
 
@@ -714,7 +798,49 @@ Then('verify {string} according hint rules on {string} wizard', async function(
 ) {
   await checkInputAccordingHintText(
     this.driver,
+    this.attach,
     pageObjects[wizardName][inputField],
     pageObjects['commonPagesHeader']['Common_Hint']
+  )
+})
+
+Then(
+  'set tear-down property {string} created with {string} value',
+  async function(type, name) {
+    this.parameters[type] = name
+  }
+)
+
+Then(
+  'set tear-down property {string} created in {string} project with {string} value',
+  async function(type, projectName, itemName) {
+    this.parameters[type] = { projectName, itemName }
+  }
+)
+
+Then(
+  'verify breadcrumbs {string} label should be equal {string} value',
+  async function(labelType, value) {
+    await verifyText(
+      this.driver,
+      pageObjects['commonPagesHeader']['Breadcrumbs'][`${labelType}Label`],
+      value
+    )
+  }
+)
+
+Then('select {string} with {string} value in breadcrumbs menu', async function(
+  itemType,
+  name
+) {
+  await openDropdown(
+    this.driver,
+    pageObjects['commonPagesHeader']['Breadcrumbs'][itemType]
+  )
+
+  await selectOptionInDropdown(
+    this.driver,
+    pageObjects['commonPagesHeader']['Breadcrumbs'][itemType],
+    name
   )
 })
