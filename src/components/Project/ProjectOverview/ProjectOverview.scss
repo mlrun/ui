@@ -26,10 +26,11 @@
 
     &-subtitle {
       margin: 0;
+      max-width: 75%;
     }
 
     &-created {
-      font-size: 1rem;
+      font-size: 0.75rem;
       display: flex;
       width: 100%;
 
@@ -57,13 +58,13 @@
 
   &-card {
     flex: 0 0 100%;
-    max-width: 460px;
+    min-width: 320px;
     min-height: 635px;
-    margin: 0 22px 2em;
+    margin: 0 15px 2em;
 
     @media screen and (min-width: 576px) {
-      flex: 0 0 28%;
-      min-width: 340px;
+      flex: 1 0;
+      max-width: 460px;
     }
 
     &__top {
@@ -188,6 +189,10 @@
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
     }
+  }
+
+  .link {
+    font-size: 0.75rem;
   }
 }
 

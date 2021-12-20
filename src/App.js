@@ -32,8 +32,13 @@ const Functions = React.lazy(() =>
 )
 const Jobs = React.lazy(() => import('./components/JobsPage/Jobs'))
 const Models = React.lazy(() => import('./components/Models/Models'))
-const Project = React.lazy(() => import('./components/Project/Project'))
 const Projects = React.lazy(() => import('./components/ProjectsPage/Projects'))
+const ProjectMonitor = React.lazy(() =>
+  import('./components/Project/ProjectMonitor')
+)
+const ProjectOverview = React.lazy(() =>
+  import('./components/Project/ProjectOverview/ProjectOverview')
+)
 const ProjectSettings = React.lazy(() =>
   import('./components/ProjectSettings/ProjectSettings')
 )
@@ -55,12 +60,12 @@ const App = () => {
             <Route
               path="/projects/:projectName"
               exact
-              render={routeProps => <Project {...routeProps} />}
+              render={routeProps => <ProjectOverview {...routeProps} />}
             />
             <Route
               path="/projects/:projectName/monitor"
               exact
-              render={routeProps => <Project {...routeProps} />}
+              render={routeProps => <ProjectMonitor {...routeProps} />}
             />
             <Route
               exact

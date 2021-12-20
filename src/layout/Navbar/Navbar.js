@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import NavbarLink from '../../elements/NavbarLink/NavbarLink'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 
-import { getLinks } from '../../components/Project/project.utils'
+import { getLinks } from './Navbar.utils'
 import localStorageService from '../../utils/localStorageService'
 
 import { PROJECTS_SETTINGS_GENERAL_TAB } from '../../constants'

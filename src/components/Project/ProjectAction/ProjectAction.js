@@ -14,6 +14,8 @@ const ProjectAction = ({ actions, handleLinks, showActions }) => {
             key={id}
             className="project-overview-actions__item"
             onClick={() => handleLinks(path, externalLink)}
+            title={label}
+            alt={label}
           >
             <div className="project-overview-actions__item-wrapper">
               <i className="project-overview-actions__item-icon">{icon}</i>

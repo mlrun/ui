@@ -39,7 +39,7 @@ import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './project.scss'
 
-const ProjectView = React.forwardRef(
+const ProjectMonitorView = React.forwardRef(
   (
     {
       artifactKind,
@@ -345,12 +345,12 @@ const ProjectView = React.forwardRef(
   }
 )
 
-ProjectView.defaultProps = {
+ProjectMonitorView.defaultProps = {
   confirmData: null,
   visibleChipsMaxLength: null
 }
 
-ProjectView.propTypes = {
+ProjectMonitorView.propTypes = {
   artifactKind: PropTypes.string.isRequired,
   changeMembersCallback: PropTypes.func.isRequired,
   changeOwnerCallback: PropTypes.func.isRequired,
@@ -392,4 +392,4 @@ ProjectView.propTypes = {
   visibleChipsMaxLength: PropTypes.number
 }
 
-export default ProjectView
+export default ProjectMonitorView

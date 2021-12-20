@@ -3,24 +3,11 @@ import React from 'react'
 import {
   MONITOR_JOBS_TAB,
   PRIMARY_BUTTON,
-  PROJECT_MONITOR,
-  SCHEDULE_TAB,
   STATUS_CODE_FORBIDDEN
 } from '../../constants'
 
-import { ReactComponent as APIIcon } from '../../images/api-getaway-icon.svg'
-import { ReactComponent as DashboardIcon } from '../../images/dashboard-icon.svg'
-import { ReactComponent as EyeIcon } from '../../images/eye.svg'
-import { ReactComponent as FileIcon } from '../../images/file-icon.svg'
-import { ReactComponent as FunctionIcon } from '../../images/function-icon.svg'
 import { ReactComponent as Jupyter } from '../../images/jupyter.svg'
-import { ReactComponent as JobsWorkflowIcon } from '../../images/sitemap-icon.svg'
-import { ReactComponent as ModelsIcon } from '../../images/models-icon.svg'
-import { ReactComponent as NuclioIcon } from '../../images/realtime-icon.svg'
-import { ReactComponent as PackageIcon } from '../../images/package.svg'
-// import { ReactComponent as RTPiplinesIcon } from '../../images/timer-outline-icon.svg'
 import { ReactComponent as VSCode } from '../../images/vs-code.svg'
-import { ReactComponent as ScJobsIcon } from '../../images/clock.svg'
 
 export const launchIDEOptions = [
   {
@@ -32,75 +19,6 @@ export const launchIDEOptions = [
     label: 'VS Code',
     id: 'vsCode',
     icon: <VSCode />
-  }
-]
-
-export const getLinks = match => [
-  {
-    icon: <DashboardIcon />,
-    label: 'Project overview',
-    link: `/projects/${match.params.projectName}`,
-    rootPath: '/'
-  },
-
-  //  {
-  //    icon: <FileIcon />,
-  //    label: 'Artifacts',
-  //    link: `/projects/${match.params.projectName}/feature-store/datasets` //TODO: fix path
-  //  },
-  {
-    icon: <PackageIcon />,
-    label: `Feature store${
-      window.mlrunConfig.betaMode === 'enabled' ? ' (Beta)' : ''
-    }`,
-    link: `/projects/${match.params.projectName}/feature-store`
-  },
-  {
-    icon: <FileIcon />,
-    label: 'Files',
-    link: `/projects/${match.params.projectName}/files`
-  },
-  {
-    icon: <ModelsIcon />,
-    label: 'Models',
-    link: `/projects/${match.params.projectName}/models`
-  },
-  {
-    icon: <JobsWorkflowIcon />,
-    label: 'Jobs and workflows',
-    link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}` //TODO: fix path
-  },
-  {
-    icon: <ScJobsIcon />,
-    label: 'Schedule jobs',
-    link: `/projects/${match.params.projectName}/jobs/${SCHEDULE_TAB}`
-  },
-  //  {
-  //    icon: <RTPiplinesIcon />,
-  //    label: 'Realtime pipelines',
-  //    link: `/projects/${match.params.projectName}/models` //TODO: fix path
-  //  },
-  {
-    icon: <FunctionIcon />,
-    label: 'ML functions',
-    link: `/projects/${match.params.projectName}/functions`
-  },
-  {
-    icon: <NuclioIcon />,
-    label: 'Real-time functions',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`,
-    externalLink: true
-  },
-  {
-    icon: <APIIcon />,
-    label: 'API gateways',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`,
-    externalLink: true
-  },
-  {
-    icon: <EyeIcon />,
-    label: 'Project monitoring',
-    link: `/projects/${match.params.projectName}/${PROJECT_MONITOR}`
   }
 ]
 

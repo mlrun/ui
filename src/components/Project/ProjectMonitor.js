@@ -11,11 +11,12 @@ import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { forEach, groupBy } from 'lodash'
 
-import ProjectView from './ProjectView'
-import ProjectOverview from './ProjectOverview/ProjectOverview'
+import ProjectMonitorView from './ProjectMonitorView'
 
 import featureStoreActions from '../../actions/featureStore'
 import projectsAction from '../../actions/projects'
+import notificationActions from '../../actions/notification'
+import functionsActions from '../../actions/functions'
 import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import {
@@ -24,19 +25,17 @@ import {
 } from './project.utils'
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { useDemoMode } from '../../hooks/demoMode.hook'
-import { KEY_CODES, PROJECT_MONITOR } from '../../constants'
+import { KEY_CODES } from '../../constants'
 import {
   initialMembersState,
   membersActions,
   membersReducer
 } from '../../elements/MembersPopUp/membersReducer'
-import notificationActions from '../../actions/notification'
-import functionsActions from '../../actions/functions'
 
 import { ReactComponent as User } from '../../images/user.svg'
 import { ReactComponent as Users } from '../../images/users.svg'
 
-const Project = ({
+const ProjectMonitor = ({
   addProjectLabel,
   appStore,
   editProjectLabels,
@@ -60,6 +59,7 @@ const Project = ({
     membersReducer,
     initialMembersState
   )
+
   const [artifactKind, setArtifactKind] = useState('')
   const [editProject, setEditProject] = useState({
     name: {
@@ -622,12 +622,8 @@ const Project = ({
     [projectStore.project.data]
   )
 
-  if (!match.path.includes(PROJECT_MONITOR)) {
-    return <ProjectOverview isDemoMode={isDemoMode} />
-  }
-
   return (
-    <ProjectView
+    <ProjectMonitorView
       artifactKind={artifactKind}
       changeMembersCallback={changeMembersCallback}
       changeOwnerCallback={changeOwnerCallback}
@@ -673,7 +669,7 @@ const Project = ({
   )
 }
 
-Project.propTypes = {
+ProjectMonitor.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
@@ -690,4 +686,4 @@ export default connect(
     ...projectsAction,
     ...notificationActions
   }
-)(Project)
+)(ProjectMonitor)
