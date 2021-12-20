@@ -1,23 +1,37 @@
 import { By } from 'selenium-webdriver'
 import dropdownComponent from './dropdown.component'
+import { generateDropdownGroup } from '../../common-tools/common-tools'
 
-module.exports = function(comboBoxStructure) {
+module.exports = function(comboBoxRoot) {
   const element = {}
-  element.root = By.css(comboBoxStructure.root)
+  element.root = By.css(comboBoxRoot)
 
-  let dd = { ...comboBoxStructure.elements.dropdown }
-  dd.root = `${comboBoxStructure.root} ${dd.root}`
-  element.dropdown = dropdownComponent(dd)
+  element.dropdown = dropdownComponent(
+    generateDropdownGroup(
+      `${comboBoxRoot} .combobox-select`,
+      '.combobox-select__header',
+      '.combobox-select__body .combobox-list .combobox-list__option',
+      '',
+      true
+    )
+  )
 
-  let cdd = { ...comboBoxStructure.elements.comboDropdown.dropdown }
-  cdd.root = `${comboBoxStructure.root} ${cdd.root}`
-  element.comboDropdown = dropdownComponent(cdd)
+  element.comboDropdown = dropdownComponent(
+    generateDropdownGroup(
+      `${comboBoxRoot} .combobox-dropdown`,
+      '.combobox-input',
+      '.combobox-dropdown__list .combobox-list__option',
+      '',
+      true
+    )
+  )
+  element.comboDropdown.inputField = By.css(
+    `${comboBoxRoot} .combobox-dropdown__search-input`
+  )
 
-  let inputStructure = {
-    ...comboBoxStructure.elements.comboDropdown.searchInput
-  }
-  inputStructure.root = `${comboBoxStructure.root} ${inputStructure.root}`
-  element.comboSearch = By.css(inputStructure)
+  element.inputField = By.css(`${comboBoxRoot} .combobox-input`)
+  element.warningHint = By.css(`${comboBoxRoot} .combobox-warning`)
+  element.warningText = By.css('.tooltip__warning')
 
   return element
 }
