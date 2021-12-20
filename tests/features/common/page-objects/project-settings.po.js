@@ -40,11 +40,36 @@ const parametersTable = {
   }
 }
 
+const secretsTable = {
+  root: '.settings__card-content',
+  header: {},
+  body: {
+    row: {
+      root: '.secret__row',
+      fields: {
+        key: '.secret__cell:nth-of-type(1)',
+        edit_btn:
+          '.secret__actions .data-ellipsis:nth-of-type(1) .action__button',
+        remove_btn:
+          '.secret__actions .data-ellipsis:nth-of-type(2) .action__button'
+      }
+    }
+  }
+}
+
 module.exports = {
   generalTab: {
     Project_Settings_Tab_Selector: commonTable(tabSelector),
     Source_URL_Edit_Button: By.css(
-      '.settings__card-content .settings__source .settings__source-edit'
+      '.settings__card-content .settings__source .settings__source-link'
+    ),
+    Source_URL_Edit_Input: inputGroup(
+      generateInputGroup(
+        '.settings__card-content .settings__source .input-wrapper',
+        true,
+        false,
+        true
+      )
     ),
     Artifact_Path_Input: inputGroup(
       generateInputGroup(
@@ -77,5 +102,9 @@ module.exports = {
     Parameters_Table_Discard_Row_Button: By.css(
       '.key-value-table.settings__params .table-row.no-hover button:nth-of-type(2)'
     )
+  },
+  secretsTab: {
+    Secrets_Table: commonTable(secretsTable),
+    Add_Secret_Button: By.css('.secret__row .new-secret__button')
   }
 }

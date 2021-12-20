@@ -51,6 +51,48 @@ const membersTable = {
   }
 }
 
+const deployModelTable = {
+  root: '.deploy-model .key-value-table',
+  header: {
+    root: '.table-row__header ',
+    sorters: {
+      name: '.table-cell__inputs-wrapper .table-cell__key',
+      value: '.table-cell__inputs-wrapper .table-cell__value'
+    }
+  },
+  body: {
+    add_row_btn: 'button.add-new-item-btn',
+    row: {
+      root: '.table-row',
+      fields: {
+        name: '.table-cell__key .data-ellipsis',
+        value: '.table-cell__value .data-ellipsis',
+        delete_btn: '.key-value-table__btn'
+      }
+    }
+  }
+}
+
+const artifactsPreviewHeader = {
+  root: '.pop-up-dialog .preview-body',
+  header: {
+    root: '',
+    sorters: {}
+  },
+  body: {
+    row: {
+      root: '.preview-item',
+      fields: {
+        name: '.item-data__name',
+        path: '.item-data__path',
+        size: '.item-data:nth-of-type(3)',
+        data: '.item-data:nth-of-type(4)',
+        download_btn: '.preview-body__download'
+      }
+    }
+  }
+}
+
 // Common components
 
 const commonCancelButton = By.css(
@@ -59,35 +101,35 @@ const commonCancelButton = By.css(
 
 const commonDeleteButton = By.css('div.pop-up-dialog button.btn-danger')
 
-const commonDescription = By.css('div.pop-up-dialog > div:not([class])')
+const commonDescription = By.css(
+  'div.pop-up-dialog div.confirm-dialog__message'
+)
 
 const commonCrossCancelButton = By.css(
-  'div.pop-up-dialog div.pop-up-dialog__header-close svg'
+  'div.pop-up-dialog div.pop-up-dialog__btn_close svg'
 )
 const commonNameInput = generateInputGroup(
-  '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(1)',
+  '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(2)',
   true,
   true,
   true
 )
 
 const commonTargetPathInput = generateInputGroup(
-  '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(2)',
-  true,
-  false,
-  true
-)
-
-const commonDescriptionInput = generateInputGroup(
   '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(3)',
   true,
   false,
   true
 )
 
-const commonConfirmButton = By.css(
-  '.pop-up-dialog .pop-up-dialog__footer-container .btn.btn-primary'
+const commonDescriptionInput = generateInputGroup(
+  '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(4)',
+  true,
+  false,
+  true
 )
+
+const commonConfirmButton = By.css('.pop-up-dialog .btn.btn-primary')
 
 const commonTitle = By.css('div.pop-up-dialog div.pop-up-dialog__header-text')
 
@@ -150,7 +192,7 @@ module.exports = {
     Target_Path_Input: inputGroup(commonTargetPathInput),
     Description_Input: inputGroup(commonDescriptionInput),
     Cancel_Button: commonCancelButton,
-    Archive_Button: commonConfirmButton
+    Register_Button: commonConfirmButton
   },
   createFeatureSetPopupDialog: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -182,6 +224,84 @@ module.exports = {
     Cancel_Button: commonCancelButton,
     Continue_Button: commonConfirmButton
   },
+  registerFilePopup: {
+    Title: commonTitle,
+    Cross_Cancel_Button: commonCrossCancelButton,
+    New_File_Name_Input: inputGroup(commonNameInput),
+    New_File_Target_Path_Input: inputGroup(commonTargetPathInput),
+    New_File_Description_Input: inputGroup(commonDescriptionInput),
+    New_File_Type_Dropdown: dropdownComponent(
+      generateDropdownGroup('.pop-up-dialog .artifact-register-form .select')
+    ),
+    Cancel_Button: commonCancelButton,
+    Register_Button: commonConfirmButton
+  },
+  registerModelPopup: {
+    Title: commonTitle,
+    Cross_Cancel_Button: commonCrossCancelButton,
+    New_File_Name_Input: inputGroup(
+      generateInputGroup(
+        '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(1)',
+        true,
+        true,
+        true
+      )
+    ),
+    New_File_Target_Path_Input: inputGroup(
+      generateInputGroup(
+        '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(2)',
+        true,
+        true,
+        true
+      )
+    ),
+    New_File_Description_Input: inputGroup(
+      generateInputGroup(
+        '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(3)',
+        true,
+        true,
+        true
+      )
+    ),
+    Cancel_Button: commonCancelButton,
+    Register_Button: commonConfirmButton
+  },
+  deployModelPopup: {
+    Title: commonTitle,
+    Cross_Cancel_Button: commonCrossCancelButton,
+    Serving_Function_Dropdown: dropdownComponent(
+      generateDropdownGroup('.pop-up-dialog .select-row .select:nth-of-type(1)')
+    ),
+    Tag_Dropdown: dropdownComponent(
+      generateDropdownGroup('.pop-up-dialog .select-row .select:nth-of-type(2)')
+    ),
+    Model_Name_Input: inputGroup(
+      generateInputGroup(
+        '.pop-up-dialog .input-row .input-wrapper:nth-of-type(1)',
+        true,
+        true,
+        false
+      )
+    ),
+    Class_Name_Input: inputGroup(
+      generateInputGroup(
+        '.pop-up-dialog .input-row .input-wrapper:nth-of-type(2)',
+        true,
+        false,
+        false
+      )
+    ),
+    Deploy_Model_Table: commonTable(deployModelTable),
+    Cancel_Button: commonCancelButton,
+    Deploy_Button: commonConfirmButton
+  },
+  viewYamlPopup: {
+    Title: By.css('div.pop-up-dialog div.pop-up-dialog__header'),
+    Cross_Cancel_Button: commonCrossCancelButton,
+    YAML_Modal_Container: By.css(
+      'div.pop-up-dialog div.yaml-modal-container pre'
+    )
+  },
   changeProjectOwnerPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
     Title: commonTitle,
@@ -195,7 +315,7 @@ module.exports = {
     ),
     Discard_Button: commonCancelButton,
     Apply_Button: By.css('.pop-up-dialog .data-ellipsis button.btn-secondary'),
-    Fotter_Annotation_Label: By.css(
+    Footer_Annotation_Label: By.css(
       '.change-owner__pop-up > .pop-up-dialog .footer-annotation'
     )
   },
@@ -210,7 +330,7 @@ module.exports = {
         true // for single hint
       )
     ),
-    Invate_New_Members_Button: By.css(
+    Invite_New_Members_Button: By.css(
       ' #overlay_container .pop-up-dialog .info-row .invite-new-members-btn'
     ),
     Members_Table: commonTable(membersTable),
@@ -243,36 +363,99 @@ module.exports = {
     Apply_Button: By.css(
       ' #overlay_container .pop-up-dialog .data-ellipsis button.btn-secondary'
     ),
-    Fotter_Annotation_Label: By.css(
+    Footer_Annotation_Label: By.css(
       ' #overlay_container .pop-up-dialog .footer-annotation'
     )
   },
-  registerFilePopup: {
+  createNewSecretPopup: {
     Title: commonTitle,
     Cross_Cancel_Button: commonCrossCancelButton,
-    New_File_Name_Input: inputGroup(commonNameInput),
-    New_File_Target_Path_Input: inputGroup(commonTargetPathInput),
-    New_File_Description_Input: inputGroup(commonDescriptionInput),
-    New_File_Type_Dropdown: dropdownComponent(
-      generateDropdownGroup('.pop-up-dialog .artifact-register-form .select')
+    New_Secret_Key_Input: inputGroup(
+      generateInputGroup(
+        '.secrets__form-input:nth-of-type(2) .input-wrapper',
+        true,
+        false,
+        true
+      )
+    ),
+    New_Secret_Value_Input: inputGroup(
+      generateInputGroup(
+        '.secrets__form-input:nth-of-type(3) .input-wrapper',
+        true,
+        false,
+        true
+      )
+    ),
+    Cancel_Button: By.css('div.pop-up-dialog button.btn-label'),
+    Save_Button: By.css(
+      '.pop-up-dialog .secrets__footer-container .btn.btn-primary'
+    )
+  },
+  addToFeatureVectorPopup: {
+    Title: commonTitle,
+    Cross_Cancel_Button: commonCrossCancelButton,
+    Project_Name_Dropdown: dropdownComponent(
+      generateDropdownGroup('.pop-up-dialog .select-row .project-name')
+    ),
+    Vector_Name_Dropdown: dropdownComponent(
+      generateDropdownGroup('.pop-up-dialog .select-row .vector-name')
+    ),
+    Vector_Tag_Dropdown: dropdownComponent(
+      generateDropdownGroup('.pop-up-dialog .select-row .vector-tag')
     ),
     Cancel_Button: commonCancelButton,
-    Register_Button: commonConfirmButton
+    Select_Button: commonConfirmButton,
+    Create_Feature_Vector_Button: By.css(
+      '.pop-up-dialog .create-feature-vector__btn'
+    )
   },
-  registerModelPopup: {
+  createFeatureVectorPopup: {
     Title: commonTitle,
     Cross_Cancel_Button: commonCrossCancelButton,
-    New_File_Name_Input: inputGroup(commonNameInput),
-    New_File_Target_Path_Input: inputGroup(commonTargetPathInput),
-    New_File_Description_Input: inputGroup(commonDescriptionInput),
+    Name_Input: inputGroup(
+      generateInputGroup(
+        '.pop-up-dialog .vector-name-wrapper',
+        true,
+        true,
+        true
+      )
+    ),
+    Tag_Input: inputGroup(
+      generateInputGroup(
+        '.pop-up-dialog .vector-tag-wrapper',
+        true,
+        false,
+        true
+      )
+    ),
+    Description_Input: By.css('.pop-up-dialog .text-area-wrapper textarea'),
+    Labels_Input: By.css('.pop-up-dialog .labels-container .chips-wrapper'),
     Cancel_Button: commonCancelButton,
-    Register_Button: commonConfirmButton
+    Create_Button: commonConfirmButton
   },
-  viewYamlPopup: {
-    Title: By.css('div.pop-up-dialog div.pop-up-dialog__header'),
+  featureSetSchedulePopup: {
+    Title: By.css('.feature-set-panel__schedule .schedule-title'),
+    Repeat_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '.feature-set-panel__schedule .repeat_container .select:nth-of-type(1)',
+        false,
+        true,
+
+        '.data-ellipsis > .data-ellipsis'
+      )
+    ),
+    Time_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '.feature-set-panel__schedule .repeat_container .schedule-repeat .select',
+        false,
+        false,
+        '.data-ellipsis > .data-ellipsis'
+      )
+    ),
+    Schedule_Button: By.css('.feature-set-panel__schedule .btn__schedule')
+  },
+  artifactPreviewPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
-    YAML_Modal_Container: By.css(
-      'div.pop-up-dialog div.yaml-modal-container pre'
-    )
+    Preview_Header: commonTable(artifactsPreviewHeader)
   }
 }

@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { differenceWith, isEqual } from 'lodash'
-import { clickNearComponent } from './common.action'
+import { clickNearComponent, scrollToWebElement } from './common.action'
 
 async function getOptionValues(driver, options) {
   return await driver.findElements(options).then(function(elements) {
@@ -28,10 +28,11 @@ const action = {
     if (selectedText !== option) {
       const elements = await driver.findElements(dropdown.options)
       for (const element of elements) {
+        await scrollToWebElement(driver, element)
         const txt = await element.getText()
         if (txt === option) {
           await element.click()
-          await driver.sleep(500)
+          await driver.sleep(250)
           break
         }
       }
@@ -56,7 +57,16 @@ const action = {
     const txt = await element.getText()
     expect(txt).equal(option)
   },
-  checkDropdownOptions: async function(driver, dropdown, values) {
+  checkDropdownOptions: async function(
+    driver,
+    dropdown,
+    values,
+    scroll = true
+  ) {
+    const element = await driver.findElement(dropdown.root)
+    if (scroll) {
+      await scrollToWebElement(driver, element)
+    }
     const options = await getOptionValues(driver, dropdown.options)
     expect(differenceWith(options, values, isEqual).length).equal(0)
   }
