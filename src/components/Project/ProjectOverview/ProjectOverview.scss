@@ -79,12 +79,12 @@
       display: flex;
       flex-flow: column nowrap;
       padding: 20px 1em 0;
-      height: 0;
+      height: 220px;
       overflow: hidden;
-      transition: height 1s ease-in-out;
+      transition: height 0.5s ease-in-out;
 
       &[aria-expanded='true'] {
-        height: 220px;
+        height: 0;
       }
     }
 
@@ -135,7 +135,7 @@
 
         svg {
           transform: rotate(90deg);
-          transition: transform 0.5s ease-in-out 0.3s;
+          transition: transform 0.5s ease-in-out;
         }
 
         &[aria-expanded='true'] {
@@ -150,7 +150,7 @@
   &-actions {
     height: 0;
     max-height: 256px;
-    transition: height 1s ease-in-out;
+    transition: height 0.5s ease-in-out;
 
     &[aria-expanded='true'] {
       height: 152px;

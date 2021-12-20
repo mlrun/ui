@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { CSSTransition } from 'react-transition-group'
@@ -27,36 +26,28 @@ import { ReactComponent as ArrowIcon } from '../../../images/arrow.svg'
 
 import './ProjectOverview.scss'
 
-const ProjectOverview = ({ fetchProject, history, match, projectStore }) => {
-  const [clicked, setClicked] = useState(null)
+const ProjectOverview = ({ fetchProject, history, match, project }) => {
+  const [selectedActionsID, setSelectedActionsID] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
   const [popupDialog, setPopupDialog] = useState({})
 
   const isDemoMode = useDemoMode()
-
-  const project = projectStore.project
   const { projectName } = match.params
 
   const cards = useMemo(() => {
     return projectName ? getInitialCards(projectName) : {}
   }, [projectName])
 
-  const handlePopupDialogOpen = popupName => {
+  const handlePopupDialogToogle = popupName => {
     return setPopupDialog(prev => {
-      return { ...prev, [popupName]: true }
+      return { ...prev, [popupName]: !prev[popupName] ? true : false }
     })
   }
-
-  const handlePopupDialogClose = useCallback(actionKey => {
-    return setPopupDialog(prev => {
-      return { ...prev, [actionKey]: false }
-    })
-  }, [])
 
   const handlePathLink = useCallback(
     (path, externalLink) => {
       return path.indexOf('/') < 0
-        ? handlePopupDialogOpen(path)
+        ? handlePopupDialogToogle(path)
         : externalLink
         ? (window.top.location.href = path)
         : history.push(`${path}${calcIsDemoPrefix(path, isDemoMode)}`)
@@ -64,11 +55,11 @@ const ProjectOverview = ({ fetchProject, history, match, projectStore }) => {
     [history, isDemoMode]
   )
 
-  const handleToggle = index => {
-    if (clicked === index) {
-      return setClicked(null)
+  const handleActionsViewToggle = index => {
+    if (selectedActionsID === index) {
+      return setSelectedActionsID(null)
     }
-    setClicked(index)
+    setSelectedActionsID(index)
   }
 
   const fetchProjectData = useCallback(async () => {
@@ -121,7 +112,7 @@ const ProjectOverview = ({ fetchProject, history, match, projectStore }) => {
         classNames="project-overview-transition"
         unmountOnExit
       >
-        <PopUpDialog closePopUp={() => handlePopupDialogClose('uploaddata')}>
+        <PopUpDialog closePopUp={() => handlePopupDialogToogle('uploaddata')}>
           uploaddata
         </PopUpDialog>
       </CSSTransition>
@@ -174,13 +165,13 @@ const ProjectOverview = ({ fetchProject, history, match, projectStore }) => {
                     <ProjectAction
                       actions={actions.slice(3, actions.length)}
                       handleLinks={handlePathLink}
-                      showActions={clicked === index}
+                      showActions={selectedActionsID === index}
                     />
                     {actions.length > 3 && (
                       <p
                         className="project-overview-card__actions-toogler"
-                        aria-expanded={clicked === index}
-                        onClick={() => handleToggle(index)}
+                        aria-expanded={selectedActionsID === index}
+                        onClick={() => handleActionsViewToggle(index)}
                       >
                         <ArrowIcon />
                         <span>Additional Actions</span>
@@ -190,7 +181,7 @@ const ProjectOverview = ({ fetchProject, history, match, projectStore }) => {
                 </div>
                 <div
                   className="project-overview-card__center"
-                  aria-expanded={clicked !== index}
+                  aria-expanded={selectedActionsID === index}
                 >
                   <ProjectOverviewTableRow />
                 </div>
@@ -219,19 +210,18 @@ const ProjectOverview = ({ fetchProject, history, match, projectStore }) => {
   )
 }
 
-ProjectOverview.defaultProps = {
-  isDemoMode: false
+ProjectOverview.propTypes = {
+  match: PropTypes.shape({}).isRequired
 }
 
-ProjectOverview.propTypes = {
-  isDemoMode: PropTypes.bool
-}
+const mapDispatchToProps = dispatch => ({
+  fetchProject: projectName =>
+    dispatch(projectsAction.fetchProject(projectName))
+})
 
 export default connect(
   ({ projectStore }) => ({
-    projectStore
+    project: projectStore.project
   }),
-  {
-    ...projectsAction
-  }
+  mapDispatchToProps
 )(ProjectOverview)
