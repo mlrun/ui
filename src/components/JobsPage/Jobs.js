@@ -446,7 +446,7 @@ const Jobs = ({
   }, [history, pageData.tabs, match])
 
   useEffect(() => {
-    if (!workflow.graph) {
+    if (!workflow.graph && match.params.workflowId) {
       fetchWorkflow(match.params.workflowId)
         .then(workflow => {
           setWorkflow(workflow)
