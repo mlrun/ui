@@ -5,15 +5,15 @@ import Tip from '../../../common/Tip/Tip'
 
 import './ProjectAction.scss'
 
-const ProjectAction = ({ actions, handleLinks, showActions }) => {
+const ProjectAction = ({ actions, onClick, showActions }) => {
   return (
     <ul className="project-overview-actions" aria-expanded={showActions}>
-      {actions.map(({ externalLink, icon, id, label, path, tooltip }) => {
+      {actions.map(({ icon, id, label, path, tooltip }) => {
         return (
           <li
             key={id}
             className="project-overview-actions__item"
-            onClick={() => handleLinks(path, externalLink)}
+            onClick={() => onClick(path)}
             title={label}
             alt={label}
           >
@@ -31,14 +31,14 @@ const ProjectAction = ({ actions, handleLinks, showActions }) => {
 
 ProjectAction.defaultProps = {
   actions: [],
-  handleLinks: () => {},
-  showActions: false
+  onClick: () => {},
+  showActions: true
 }
 
 ProjectAction.propTypes = {
   actions: PropTypes.array.isRequired,
-  handleLinks: PropTypes.func.isRequired,
-  showActions: PropTypes.bool.isRequired
+  onClick: PropTypes.func.isRequired,
+  showActions: PropTypes.bool
 }
 
 export default ProjectAction

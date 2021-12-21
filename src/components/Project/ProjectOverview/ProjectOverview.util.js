@@ -5,7 +5,7 @@ import { ReactComponent as DataSetIcon } from '../../../images/overview-icon.svg
 import { ReactComponent as FeatureSetIcon } from '../../../images/set-icon.svg'
 import { ReactComponent as RegisterFileIcon } from '../../../images/flow-icon.svg'
 import { ReactComponent as CreateJobIcon } from '../../../images/run2-icon.svg'
-import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
+// import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
 
 export const getInitialCards = projectName => {
   const base_url = `/projects/${projectName}`
@@ -16,32 +16,40 @@ export const getInitialCards = projectName => {
       subTitle:
         'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
       actions: [
-        {
-          id: 'uploadData',
-          icon: <UploadIcon />,
-          label: 'Upload data',
-          path: 'uploaddata',
-          tooltip: 'Test'
-        },
+        // {
+        //   id: 'uploadData',
+        //   icon: <UploadIcon />,
+        //   label: 'Upload data',
+        //   path: {
+        //   target: 'uploaddata'
+        // },
+        //   tooltip: 'Test'
+        // },
         {
           id: 'createFeatureSet',
           icon: <FeatureSetIcon />,
           label: 'Create features set',
-          path: `${base_url}/feature-store/feature-sets?openPanel=true`,
+          path: {
+            target: `${base_url}/feature-store/feature-sets?openPanel=true`
+          },
           tooltip: ''
         },
         {
           id: 'registerDataset',
           icon: <DataSetIcon />,
           label: 'Register dataset',
-          path: `${base_url}/feature-store/datasets?openPanel=true`,
-          tooltip: ''
+          path: {
+            target: `${base_url}/feature-store/datasets?openPanel=true`
+          },
+          tooltip: 'some text'
         },
         {
           id: 'registerFile',
           icon: <RegisterFileIcon />,
           label: 'Register file',
-          path: `${base_url}/files?openPanel=true`,
+          path: {
+            target: `${base_url}/files?openPanel=true`
+          },
           tooltip: ''
         }
         // {
@@ -55,23 +63,23 @@ export const getInitialCards = projectName => {
       additionalLinks: [
         {
           id: 'featureset',
-          label: 'feature set',
-          path: `${base_url}/feature-store/feature-sets`
+          label: 'Feature Set',
+          path: { target: `${base_url}/feature-store/feature-sets` }
         },
         {
           id: 'files',
-          label: 'files',
-          path: `${base_url}/files`
+          label: 'Files',
+          path: { target: `${base_url}/files` }
         },
         {
           id: 'dataset',
-          label: 'dataset',
-          path: `${base_url}/feature-store/datasets`
+          label: 'Dataset',
+          path: { target: `${base_url}/feature-store/datasets` }
         },
         {
           id: 'featurevectors',
-          label: 'feature vectors',
-          path: `${base_url}/feature-store/feature-vectors`
+          label: 'Feature Vectors',
+          path: { target: `${base_url}/feature-store/feature-vectors` }
         }
       ]
     },
@@ -84,32 +92,32 @@ export const getInitialCards = projectName => {
           id: 'createNewFunction',
           icon: <CreatFunctionIcon />,
           label: 'Create new function',
-          path: `${base_url}/functions?openPanel=true`,
+          path: { target: `${base_url}/functions?openPanel=true` },
           tooltip: ''
         },
         {
           id: 'createNewJob',
           icon: <CreateJobIcon />,
           label: 'Create new job',
-          path: `${base_url}/jobs/monitor-jobs/create-new-job`,
+          path: { target: `${base_url}/jobs/monitor-jobs/create-new-job` },
           tooltip: ''
         }
       ],
       additionalLinks: [
         {
           id: 'functions',
-          label: 'functions',
-          path: `${base_url}/functions`
+          label: 'Functions',
+          path: { target: `${base_url}/functions` }
         },
         {
           id: 'jobs',
-          label: 'jobs',
-          path: `${base_url}/jobs`
+          label: 'Jobs',
+          path: { target: `${base_url}/jobs` }
         },
         {
           id: 'workflow',
-          label: 'workflow',
-          path: `${base_url}/jobs/monitor-workflows`
+          label: 'Workflow',
+          path: { target: `${base_url}/jobs/monitor-workflows` }
         }
       ]
     },
@@ -122,14 +130,16 @@ export const getInitialCards = projectName => {
           id: 'createRealTimeFunction',
           icon: <CreateJobIcon />,
           label: 'Create RT function',
-          path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
-          tooltip: '',
-          externalLink: true
+          path: {
+            target: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
+            externalLink: true
+          },
+          tooltip: ''
         },
         {
           id: 'deployServingFunction',
           icon: <CreateJobIcon />,
-          path: `${base_url}/functions`,
+          path: { target: `${base_url}/functions` },
           label: 'Deploy serving function',
           tooltip: ''
         }
@@ -137,21 +147,39 @@ export const getInitialCards = projectName => {
       additionalLinks: [
         {
           id: 'modelEndpoints',
-          label: 'model endpoints',
-          path: `${base_url}/models/model-endpoints`
+          label: 'Model Endpoints',
+          path: { target: `${base_url}/models/model-endpoints` }
         },
         {
           id: 'realTimePipelines',
-          label: 'real time pipelines',
-          path: `${base_url}/models/real-time-pipelines`
+          label: 'Real Time Pipelines',
+          path: { target: `${base_url}/models/real-time-pipelines` }
         },
         {
           id: 'nuclioFunctions',
-          label: 'nuclio functions',
-          path: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
-          externalLink: true
+          label: 'Nuclio Functions',
+          path: {
+            target: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
+            externalLink: true
+          }
         }
       ]
     }
   }
+}
+
+export const calcIsDemoPrefix = (path, isDemoMode) => {
+  let prefix = path.includes('?') ? '&' : '?'
+  return isDemoMode ? prefix.concat('demo=true') : ''
+}
+
+export const handlePath = (history, cb, isDemoMode) => ({
+  target,
+  externalLink
+}) => {
+  return target.indexOf('/') < 0
+    ? cb(target.toLowerCase())
+    : externalLink
+    ? (window.top.location.href = target)
+    : history.push(`${target}${calcIsDemoPrefix(target, isDemoMode)}`)
 }
