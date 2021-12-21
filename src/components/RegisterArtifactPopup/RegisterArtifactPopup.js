@@ -35,7 +35,7 @@ const RegisterArtifactPopup = ({
   })
 
   useEffect(() => {
-    if (artifactKind !== 'file') {
+    if (artifactKind !== 'artifact') {
       setRegisterArtifactData(state => ({
         ...state,
         kind: artifactKind.toLowerCase()
@@ -157,7 +157,7 @@ const RegisterArtifactPopup = ({
         registerArtifactData={registerArtifactData}
         onChange={setRegisterArtifactData}
         setValidation={setValidation}
-        showType={artifactKind === 'file'}
+        showType={artifactKind === 'artifact'}
         validation={validation}
         messageByKind={messagesByKind[artifactKind.toLowerCase()]}
       />
