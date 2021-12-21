@@ -21,8 +21,8 @@ export const getInitialCards = projectName => {
         //   icon: <UploadIcon />,
         //   label: 'Upload data',
         //   path: {
-        //   target: 'uploaddata'
-        // },
+        //     target: 'uploaddata'
+        //   },
         //   tooltip: 'Test'
         // },
         {

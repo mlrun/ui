@@ -17,25 +17,26 @@
     justify-content: center;
     flex-flow: column nowrap;
     text-align: center;
-    cursor: pointer;
 
     .link {
       text-transform: capitalize;
     }
 
-    &:hover {
-      .project-overview-actions__item-icon {
-        background-color: $gallery;
-      }
-
-      .link {
-        text-decoration: underline;
-      }
-    }
-
     &-wrapper {
       position: relative;
       max-width: 80px;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        .project-overview-actions__item-icon {
+          background-color: $gallery;
+        }
+
+        .link {
+          text-decoration: underline;
+        }
+      }
 
       .tip-container {
         position: absolute;

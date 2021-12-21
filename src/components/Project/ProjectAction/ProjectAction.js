@@ -13,15 +13,17 @@ const ProjectAction = ({ actions, onClick, showActions }) => {
           <li
             key={id}
             className="project-overview-actions__item"
-            onClick={() => onClick(path)}
             title={label}
             alt={label}
           >
-            <div className="project-overview-actions__item-wrapper">
+            <button
+              className="project-overview-actions__item-wrapper"
+              onClick={() => onClick(path)}
+            >
               <i className="project-overview-actions__item-icon">{icon}</i>
               <span className="link">{label}</span>
               {tooltip && <Tip text={tooltip} />}
-            </div>
+            </button>
           </li>
         )
       })}

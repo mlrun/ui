@@ -10,7 +10,7 @@
     flex-flow: column nowrap;
     color: $white;
     line-height: 1.4;
-    padding: 2.2em 4em 4em;
+    padding: 2.2em 4em 5em;
     min-height: 300px;
 
     @include gradient('page');
@@ -97,7 +97,7 @@
     }
 
     &__header {
-      min-height: 165px;
+      min-height: 175px;
     }
 
     .additional-links {
@@ -159,35 +159,6 @@
     &__item {
       flex: 1 0 0%;
       max-width: 28%;
-    }
-  }
-
-  &-transition {
-    &-enter {
-      opacity: 0;
-      transition: all 0.3s ease-in-out;
-
-      .pop-up-dialog {
-        transform: translateY(calc(100vh));
-        transition: all 0.3s ease-in-out;
-      }
-    }
-
-    &-enter-active {
-      opacity: 1;
-
-      .pop-up-dialog {
-        transform: translateY(0);
-      }
-    }
-
-    &-exit {
-      opacity: 1;
-    }
-
-    &-exit-active {
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
     }
   }
 

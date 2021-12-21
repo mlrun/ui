@@ -2,12 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
-import { CSSTransition } from 'react-transition-group'
 
 import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../../common/Loader/Loader'
+import Modal from '../../../common/Modal/Modal'
 import NoData from '../../../common/NoData/NoData'
-import PopUpDialog from '../../../common/PopUpDialog/PopUpDialog'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
 import Tooltip from '../../../common/Tooltip/Tooltip'
@@ -111,18 +110,13 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
 
   return (
     <div className="project-overview">
-      <CSSTransition
-        in={popupDialog.isOpen}
-        timeout={300}
-        classNames="project-overview-transition"
-        unmountOnExit
+      <Modal
+        show={popupDialog.isOpen}
+        title="test"
+        onClose={() => handlePopupDialogToogle(popupDialog.name)}
       >
-        <PopUpDialog
-          closePopUp={() => handlePopupDialogToogle(popupDialog.name)}
-        >
-          {popupDialog.name && renderPopupContent()}
-        </PopUpDialog>
-      </CSSTransition>
+        {popupDialog.name && renderPopupContent()}
+      </Modal>
 
       <div className="project-overview__header">
         <div className="project-overview__header-title">

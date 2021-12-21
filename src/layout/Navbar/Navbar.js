@@ -44,7 +44,11 @@ const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
       </div>
       <div className="navbar__body">
         <div className="navbar__content">
-          <RoundedIcon onClick={handlePinClick} className="navbar__pin-icon">
+          <RoundedIcon
+            onClick={handlePinClick}
+            className="navbar__pin-icon"
+            tooltipText={`${isPinned ? 'Unpin' : 'Pin'} Menu`}
+          >
             {isPinned ? <UnPinIcon /> : <PinIcon />}
           </RoundedIcon>
           <ul className="navbar-links">

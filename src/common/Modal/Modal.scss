@@ -1,0 +1,86 @@
+@import '../../scss/variables';
+@import '../../scss/colors';
+@import '../../scss/borders';
+
+.modal {
+  position: fixed;
+  top: 30%;
+  max-width: 600px;
+  width: 100%;
+  outline: 0;
+  z-index: 2;
+
+  &-lg {
+    max-width: 800px;
+  }
+
+  &__content {
+    display: flex;
+    flex-flow: column nowrap;
+    position: relative;
+    min-height: 300px;
+    height: calc(100% - 3.5rem);
+    max-height: 90vh;
+    background-color: $white;
+    border-radius: $mainBorderRadius;
+    box-shadow: 0 6px 26px rgba($black, 0.2);
+    overflow: hidden;
+    text-align: center;
+  }
+
+  &__header {
+    position: relative;
+    padding: 2rem;
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    border-bottom: $primaryBorder;
+
+    &-title {
+      color: $primary;
+      font-size: 2em;
+      margin: 0;
+    }
+    &-button {
+      position: absolute;
+      top: 7px;
+      right: 2px;
+    }
+  }
+
+  &__body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1 1 auto;
+  }
+
+  &__footer {
+    flex-shrink: 0;
+  }
+
+  &-transition {
+    &-enter {
+      opacity: 0;
+      transform: translateY(calc(100vh));
+      transition: all 0.3s ease-in-out;
+    }
+
+    &-enter-active,
+    &-enter-done {
+      opacity: 1;
+      transform: translateY(-30%);
+    }
+
+    &-exit {
+      opacity: 1;
+      transform: translateY(-30%);
+    }
+
+    &-exit-active {
+      opacity: 0;
+      top: 20%;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+}
