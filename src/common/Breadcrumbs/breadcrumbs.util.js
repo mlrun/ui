@@ -1,9 +1,7 @@
-export const betaBreadcrumbs = ['feature-store']
-
 export const generateProjectScreens = (match, isDemoMode) => [
   { label: 'Models', id: 'models' },
   { label: 'Feature Store (Beta)', id: 'feature-store' },
-  { label: 'Files', id: 'files' },
+  { label: 'Artifacts', id: 'files' },
   { label: 'Jobs', id: 'jobs' },
   { label: 'ML functions', id: 'functions' },
   {
@@ -18,7 +16,6 @@ export const generateProjectScreens = (match, isDemoMode) => [
   },
   {
     label: 'Settings',
-    id: 'settings',
-    hidden: !isDemoMode
+    id: 'settings'
   }
 ]

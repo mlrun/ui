@@ -89,6 +89,7 @@ const ScheduleFeatureSet = ({ setNewFeatureSetSchedule, setShowSchedule }) => {
       recurringState={recurringState}
       setActiveTab={setActiveTab}
       setCron={setCron}
+      setShowSchedule={setShowSchedule}
     />
   )
 }

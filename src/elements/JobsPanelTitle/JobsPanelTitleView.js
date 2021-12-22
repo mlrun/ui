@@ -87,8 +87,6 @@ const JobsPanelTitleView = ({
                   })
                 }
                 validationRules={getValidationRules('jobName')}
-                required
-                requiredText="This field is required"
                 setInvalid={value =>
                   setNameValid(state => ({ ...state, isNameValid: value }))
                 }

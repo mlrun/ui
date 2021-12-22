@@ -45,7 +45,7 @@ export const filters = [
   { type: ITERATIONS_FILTER, label: 'Show iterations' }
 ]
 export const page = FILES_PAGE
-export const actionsMenuHeader = 'Register file'
+export const actionsMenuHeader = 'Register artifact'
 export const tableHeaders = isSelectedFile => [
   {
     header: 'Name',

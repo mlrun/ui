@@ -188,7 +188,7 @@ const Input = React.forwardRef(
         (required && value.trim().length === 0) ||
         (pattern && !validationPattern.test(value)) ||
         value.startsWith(' ') ||
-        (value.trim().length > 0 && !isFieldValidByPattern)
+        !isFieldValidByPattern
 
       setIsInvalid(fieldInvalid)
       setInvalid(!fieldInvalid)
@@ -266,7 +266,7 @@ const Input = React.forwardRef(
             )}
           </label>
         )}
-        {!isEmpty(validationRules) && isInvalid && (
+        {isInvalid && !isEmpty(validationRules) && (
           <i className="input__warning" onClick={toggleValidationRulesMenu}>
             <WarningIcon />
           </i>
