@@ -266,7 +266,7 @@ const Input = React.forwardRef(
             )}
           </label>
         )}
-        {!isEmpty(validationRules) && typedValue && isInvalid && (
+        {!isEmpty(validationRules) && isInvalid && (
           <i className="input__warning" onClick={toggleValidationRulesMenu}>
             <WarningIcon />
           </i>
@@ -312,10 +312,7 @@ const Input = React.forwardRef(
           </ul>
         )}
         {!isEmpty(validationRules) && (
-          <OptionsMenu
-            show={showValidationRules && typedValue !== ''}
-            ref={ref}
-          >
+          <OptionsMenu show={showValidationRules} ref={ref}>
             {renderValidationRules}
           </OptionsMenu>
         )}

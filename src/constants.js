@@ -495,6 +495,7 @@ export const validation = {
   MUST_NOT_BE: 'Must not be',
   NO_CONSECUTIVE_CHARACTER: 'No consecutive characters',
   ONLY_AT_THE_BEGINNING: 'Only at the beginning',
+  REQUIRED: 'This field is required',
   VALID_CHARACTERS: 'Valid characters'
 }
 

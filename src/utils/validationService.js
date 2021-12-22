@@ -211,6 +211,13 @@ const generateRule = {
         pattern: new RegExp('^[\\S\\s]{' + min + ',' + max + '}$')
       }
     }
+  },
+  required: () => {
+    return {
+      name: 'required',
+      label: ValidationConstants.REQUIRED,
+      pattern: new RegExp('\\S')
+    }
   }
 }
 
@@ -233,7 +240,8 @@ const validationRules = {
   jobName: [
     generateRule.validCharacters('a-z A-Z 0-9 - _ .'),
     generateRule.beginEndWith('a-z A-Z 0-9'),
-    generateRule.length({ max: 63 })
+    generateRule.length({ max: 63 }),
+    generateRule.required()
   ]
 }
 
