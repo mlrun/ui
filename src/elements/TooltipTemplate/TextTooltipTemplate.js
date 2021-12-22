@@ -7,7 +7,6 @@ import './textTooltipTemplate.scss'
 const TextTooltipTemplate = ({ text, warning }) => {
   const [style, setStyle] = useState({})
   const textRef = useRef()
-  const offset = 60
   const horizontalPadding = 8
   const tooltipClassNames = classnames(
     'tooltip__text',
@@ -20,10 +19,6 @@ const TextTooltipTemplate = ({ text, warning }) => {
 
       setStyle({
         padding: `6px ${horizontalPadding}px`,
-        width:
-          width > window.innerWidth
-            ? window.innerWidth - offset
-            : width + horizontalPadding * 2,
         wordBreak: width > window.innerWidth ? 'break-word' : 'unset',
         whiteSpace: width > window.innerWidth ? 'pre-wrap' : 'nowrap'
       })
