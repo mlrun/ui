@@ -86,8 +86,6 @@
     }
 
     &-tumbler {
-      display: flex;
-      align-items: center;
       padding: 0;
       color: $malibu;
       background-color: transparent;
@@ -95,6 +93,11 @@
 
       &:hover {
         background-color: transparent;
+      }
+
+      span {
+        display: flex;
+        align-items: center;
       }
 
       &__icon {
