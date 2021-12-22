@@ -159,7 +159,7 @@ const JobsPanelParametersView = ({
           <div className="parameters-additional-settings">
             <div className={urlTypeClassName}>
               <Input
-                className="default-input"
+                wrapperClassName="default-input-wrapper"
                 density="chunky"
                 floatingLabel
                 label="Read hyper params from a file"
@@ -181,7 +181,7 @@ const JobsPanelParametersView = ({
           <div className="parameters-additional-settings">
             <div className="parameters-additional-settings__input-wrapper">
               <Input
-                className="default-input"
+                wrapperClassName="default-input-wrapper"
                 density="chunky"
                 floatingLabel
                 label="Result"
