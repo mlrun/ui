@@ -194,7 +194,7 @@ const createFeaturesRowData = (feature, isTablePanelOpen) => {
     addFeature: {
       id: `addFeature.${identifierUnique}`,
       value: <AddFeatureButton feature={feature} />,
-      class: 'artifacts_big align-right',
+      class: 'artifacts_small align-right',
       type: 'component',
       hidden: !isTablePanelOpen
     }

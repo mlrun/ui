@@ -280,7 +280,7 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
     },
     {
       header: '',
-      class: 'artifacts_big align-right',
+      class: 'artifacts_small align-right',
       hidden: !isTablePanelOpen
     }
   ]

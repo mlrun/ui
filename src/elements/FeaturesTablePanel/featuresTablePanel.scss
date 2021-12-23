@@ -5,8 +5,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-width: 400px;
-  max-width: 500px;
+  width: 450px;
   height: 100%;
 
   .features-panel__content {
@@ -26,24 +25,24 @@
 
   .features-panel__header-vector {
     display: flex;
-    justify-content: space-between;
+    align-items: baseline;
 
     .features-panel__header-vector-name {
-      display: flex;
-      align-items: baseline;
       font-weight: bold;
       font-size: 24px;
     }
 
     .features-panel__header-vector-tag {
+      min-width: 25px;
       margin-left: 5px;
       color: $topaz;
       font-weight: normal;
       font-size: 16px;
     }
 
-    .features-panel__header-vector-actions {
-      display: inline-flex;
+    .features-panel__header-vector-tooltip {
+      width: 20px;
+      margin-left: auto;
     }
   }
 
@@ -62,7 +61,6 @@
     justify-content: flex-end;
     width: 100%;
     padding: 10px 15px;
-    background-color: $white;
   }
 
   .features-panel__divider {
