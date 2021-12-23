@@ -278,7 +278,7 @@ const ProjectMonitorView = React.forwardRef(
                   counterValue={projectSummary.data.files_count ?? 0}
                   link={`/projects/${match.params.projectName}/files`}
                   projectSummary={projectSummary}
-                  title="Files"
+                  title="Artifacts"
                 />
               </div>
               <div className="main-info__statistics-section">

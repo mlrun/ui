@@ -51,11 +51,11 @@ export const generateCreateNewOptions = (
     handler: () => setCreateFeatureSetsPanelIsOpen(true)
   },
   {
-    label: 'Register File',
+    label: 'Register Artifact',
     id: 'registerFile',
     handler: () => {
       setIsPopupDialogOpen(true)
-      setArtifactKind('file')
+      setArtifactKind('artifact')
     }
   },
   {

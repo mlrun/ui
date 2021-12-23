@@ -266,7 +266,7 @@ const Files = ({
       />
       {isPopupDialogOpen && (
         <RegisterArtifactPopup
-          artifactKind="file"
+          artifactKind="artifact"
           match={match}
           refresh={fetchData}
           setIsPopupOpen={setIsPopupDialogOpen}

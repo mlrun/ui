@@ -5,11 +5,13 @@ import classnames from 'classnames'
 import ScheduleFeatureSetSimple from '../ScheduleFeatureSetSimple/ScheduleFeatureSetSimple'
 import ScheduleCron from '../../ScheduleCron/ScheduleCron'
 import Button from '../../../common/Button/Button'
+import RoundedIcon from '../../../common/RoundedIcon/RoundedIcon'
 
 import { tabs } from './scheduleFeatureSet.util'
 import { SECONDARY_BUTTON } from '../../../constants'
 
 import { ReactComponent as Schedule } from '../../../images/clock.svg'
+import { ReactComponent as CloseIcon } from '../../../images/close.svg'
 
 import './scheduleFeatureSet.scss'
 
@@ -22,11 +24,21 @@ const ScheduleFeatureSetView = ({
   recurringDispatch,
   recurringState,
   setActiveTab,
-  setCron
+  setCron,
+  setShowSchedule
 }) => {
   return (
     <div className="schedule feature-set-panel__schedule">
-      <div className="schedule-title">Schedule</div>
+      <div className="schedule-title">
+        <span>Schedule</span>
+        <RoundedIcon
+          onClick={() => setShowSchedule(false)}
+          tooltipText="Close"
+          className="schedule-title__icon"
+        >
+          <CloseIcon />
+        </RoundedIcon>
+      </div>
       <div className="schedule-tabs">
         {tabs.map(tab => {
           const tabClassNames = classnames(
@@ -86,7 +98,8 @@ ScheduleFeatureSetView.propTypes = {
   recurringDispatch: PropTypes.func.isRequired,
   recurringState: PropTypes.shape({}).isRequired,
   setActiveTab: PropTypes.func.isRequired,
-  setCron: PropTypes.func.isRequired
+  setCron: PropTypes.func.isRequired,
+  setShowSchedule: PropTypes.func.isRequired
 }
 
 export default ScheduleFeatureSetView
