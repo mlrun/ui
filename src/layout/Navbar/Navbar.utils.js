@@ -36,6 +36,7 @@ export const getLinks = match => {
     //  },
     {
       icon: <PackageIcon />,
+      id: 'feature-store',
       label: `Feature store${
         window.mlrunConfig.betaMode === 'enabled' ? ' (Beta)' : ''
       }`,
@@ -43,21 +44,25 @@ export const getLinks = match => {
     },
     {
       icon: <FileIcon />,
-      label: 'Files',
+      id: 'files',
+      label: 'Artifacts',
       link: `${base_url}/files`
     },
     {
       icon: <ModelsIcon />,
+      id: 'models',
       label: 'Models',
       link: `${base_url}/models`
     },
     {
       icon: <JobsWorkflowIcon />,
+      id: 'jobs',
       label: 'Jobs and workflows',
       link: `${base_url}/jobs/${MONITOR_JOBS_TAB}` //TODO: fix path
     },
     {
       icon: <ScJobsIcon />,
+      id: 'schedule jobs',
       label: 'Schedule jobs',
       link: `${base_url}/jobs/${SCHEDULE_TAB}`
     },
@@ -68,23 +73,27 @@ export const getLinks = match => {
     //  },
     {
       icon: <FunctionIcon />,
+      id: 'functions',
       label: 'ML functions',
       link: `${base_url}/functions`
     },
     {
       icon: <NuclioIcon />,
+      id: 'Real-time functions',
       label: 'Real-time functions',
       link: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
       externalLink: true
     },
     {
       icon: <APIIcon />,
+      id: 'API gateways',
       label: 'API gateways',
       link: `${window.mlrunConfig.nuclioUiUrl}${base_url}/api-gateways`,
       externalLink: true
     },
     {
       icon: <EyeIcon />,
+      id: 'monitor',
       label: 'Project monitoring',
       link: `${base_url}/${PROJECT_MONITOR}`
     }

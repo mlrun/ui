@@ -15,6 +15,10 @@ export const generateProjectScreens = (match, isDemoMode) => [
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
   },
   {
+    label: 'Project Monitoring',
+    id: 'monitor'
+  },
+  {
     label: 'Settings',
     id: 'settings'
   }

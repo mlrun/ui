@@ -79,22 +79,21 @@ const ProjectCardView = React.forwardRef(
             </div>
           </div>
 
-          <div className="project-card__info" ref={chipRef}>
-            {project.metadata.labels && (
-              <>
-                <span>Labels:</span>
-                <div>
-                  <ChipCell
-                    chipOptions={getChipOptions('labels')}
-                    elements={parseKeyValues(project.metadata.labels || {})}
-                    shortChips
-                    tooltip
-                    visibleChipsMaxLength="1"
-                  />
-                </div>
-              </>
-            )}
-          </div>
+          {project.metadata.labels && (
+            <div
+              className="project-card__info project-card__labels"
+              ref={chipRef}
+            >
+              <span>Labels:</span>
+              <ChipCell
+                chipOptions={getChipOptions('labels')}
+                elements={parseKeyValues(project.metadata.labels || {})}
+                shortChips
+                tooltip
+                visibleChipsMaxLength="1"
+              />
+            </div>
+          )}
         </div>
 
         <div className="project-card__actions-menu" ref={ref}>

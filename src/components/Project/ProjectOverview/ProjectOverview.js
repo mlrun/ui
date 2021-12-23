@@ -52,11 +52,11 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
       case 'registerfile':
         return (
           <RegisterArtifactPopup
-            artifactKind={'file'}
+            artifactKind={'artifact'}
             match={match}
             refresh={() => {}}
             setIsPopupOpen={() => handleModalToogle()}
-            title={'Register file'}
+            title={'Register artifact'}
           />
         )
       default:

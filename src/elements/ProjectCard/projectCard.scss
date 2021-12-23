@@ -34,7 +34,7 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     height: 100%;
-    padding: 25px 25px 20px;
+    padding: 25px 25px 15px;
   }
 
   &__header {
@@ -60,20 +60,19 @@
   }
 
   &__description {
-    margin-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
     min-height: 20px;
   }
 
   &__content {
     width: 100%;
     min-height: 72px;
-    height: 100%;
   }
 
   &__statistic {
     display: flex;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
     width: 100%;
   }
 
@@ -86,9 +85,9 @@
     display: flex;
     align-items: center;
     font-size: 0.75rem;
-    margin-right: 10px;
 
     & > *:first-child {
+      flex: 0 0 auto;
       color: $spunPearl;
       margin-right: 5px;
     }
@@ -98,6 +97,20 @@
 
       & * {
         fill: $spunPearl;
+      }
+    }
+  }
+
+  &__labels {
+    .chips-cell {
+      .chip-block {
+        max-width: 250px;
+      }
+
+      .chip__value {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
   }
