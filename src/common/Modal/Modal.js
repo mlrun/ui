@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { createPortal } from 'react-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -12,16 +12,30 @@ import { ReactComponent as CloseIcon } from '../../images/close.svg'
 import './Modal.scss'
 
 const JSX_MODAL = ({ children, className, onClose, size, show, title }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const modalClassNames = classNames(
     'modal',
     className,
     size && `modal-${size}`
   )
+
+  const handleOnClose = () => {
+    setIsModalOpen(false)
+    onClose()
+  }
+
+  useEffect(() => {
+    setIsModalOpen(show)
+    return () => {
+      setIsModalOpen(false)
+    }
+  }, [show])
   return (
     <>
-      <Backdrop onClose={onClose} show={show} />
+      <Backdrop onClose={handleOnClose} show={isModalOpen} />
       <CSSTransition
-        in={show}
+        in={isModalOpen}
         timeout={300}
         classNames="modal-transition"
         unmountOnExit
@@ -29,7 +43,7 @@ const JSX_MODAL = ({ children, className, onClose, size, show, title }) => {
         <div className={modalClassNames} data-testid="modal">
           <RoundedIcon
             className="modal__header-button"
-            onClick={onClose}
+            onClick={handleOnClose}
             tooltipText="Close"
             data-testid="pop-up-close-btn"
           >
@@ -63,6 +77,7 @@ Modal.defaultProps = {
 Modal.propTypes = {
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
     .isRequired,
+  onClose: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
   size: PropTypes.oneOf(['normal', 'lg']),
   title: PropTypes.string

@@ -39,7 +39,8 @@ export const getInitialCards = projectName => {
           icon: <DataSetIcon />,
           label: 'Register dataset',
           path: {
-            target: `${base_url}/feature-store/datasets?openPanel=true`
+            // target: `${base_url}/feature-store/datasets?openPanel=true`
+            target: 'registerdataset'
           },
           tooltip: 'some text'
         },
@@ -48,7 +49,8 @@ export const getInitialCards = projectName => {
           icon: <RegisterFileIcon />,
           label: 'Register file',
           path: {
-            target: `${base_url}/files?openPanel=true`
+            // target: `${base_url}/files?openPanel=true`
+            target: 'registerfile'
           },
           tooltip: ''
         }

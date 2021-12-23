@@ -5,12 +5,13 @@ import { isEmpty } from 'lodash'
 
 import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
 import Loader from '../../../common/Loader/Loader'
-import Modal from '../../../common/Modal/Modal'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
 import Tooltip from '../../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
+
+import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 
 import projectsAction from '../../../actions/projects'
 
@@ -27,7 +28,7 @@ import './ProjectOverview.scss'
 const ProjectOverview = ({ fetchProject, history, match, project }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
-  const [popupDialog, setPopupDialog] = useState({ isOpen: false, name: '' })
+  const [modal, setModal] = useState({ isOpen: false, name: '' })
 
   const isDemoMode = useDemoMode()
   const { projectName } = match.params
@@ -37,28 +38,43 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
   }, [projectName])
 
   const renderPopupContent = () => {
-    switch (popupDialog.name) {
-      case 'uploaddata':
-        return 'hello'
+    switch (modal.name) {
+      case 'registerdataset':
+        return (
+          <RegisterArtifactPopup
+            artifactKind={'dataset'}
+            match={match}
+            refresh={() => {}}
+            setIsPopupOpen={() => handleModalToogle()}
+            title={'Register dataset'}
+          />
+        )
+      case 'registerfile':
+        return (
+          <RegisterArtifactPopup
+            artifactKind={'file'}
+            match={match}
+            refresh={() => {}}
+            setIsPopupOpen={() => handleModalToogle()}
+            title={'Register file'}
+          />
+        )
       default:
-        return
+        return ''
     }
   }
 
-  const handlePopupDialogToogle = popupName => {
-    return setPopupDialog(prev => {
+  const handleModalToogle = popupName => {
+    return setModal(prev => {
       return {
         ...prev,
         isOpen: !prev.isOpen,
-        name: popupName
+        name: !prev.isOpen ? popupName : ''
       }
     })
   }
 
-  const handlePathExecution = useCallback(
-    handlePath(history, handlePopupDialogToogle, isDemoMode),
-    [history, isDemoMode]
-  )
+  const handlePathExecution = handlePath(history, handleModalToogle, isDemoMode)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {
@@ -110,14 +126,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
 
   return (
     <div className="project-overview">
-      <Modal
-        show={popupDialog.isOpen}
-        title="test"
-        onClose={() => handlePopupDialogToogle(popupDialog.name)}
-      >
-        {popupDialog.name && renderPopupContent()}
-      </Modal>
-
+      {modal.isOpen && renderPopupContent()}
       <div className="project-overview__header">
         <div className="project-overview__header-title">
           {project.data.metadata.name}

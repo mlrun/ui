@@ -4,9 +4,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin: 0 0.5rem;
+  margin: 0 0.3rem;
 
-  &__icon {
+  &__circle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -26,7 +26,7 @@
       width: inherit;
       height: inherit;
       background-color: $mulledWineThree;
-      border-radius: 20px;
+      border-radius: 50%;
       position: absolute;
       left: 0;
       right: 0;
