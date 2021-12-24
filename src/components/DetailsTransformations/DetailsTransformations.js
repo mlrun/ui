@@ -9,8 +9,10 @@ import ConfigTargets from './ConfigTargets/ConfigTargets'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 import {
+  DEFAULT_EDGE,
   ERROR_NODE,
   INPUT_NODE,
+  ML_EDGE,
   ML_NODE,
   OUTPUT_NODE,
   PRIMARY_NODE
@@ -36,9 +38,9 @@ const DetailsTransformations = ({ selectedItem }) => {
     let stepsList = []
     let nodes = map(states, (stepItem, stepName) => {
       let nodeItem = {
-        id: stepName,
         type: ML_NODE,
         data: { subType: PRIMARY_NODE, label: stepName },
+        id: stepName,
         className: selectedStep === stepName ? 'selected' : '',
         position: { x: 0, y: 0 }
       }
@@ -62,35 +64,40 @@ const DetailsTransformations = ({ selectedItem }) => {
     })
 
     nodes.unshift({
-      id: 'Source',
       type: ML_NODE,
       data: { subType: INPUT_NODE, label: 'Source' },
+      id: 'Source',
       position: { x: 0, y: 0 }
     })
 
     let nodesEdges = map(edgesMap, (source, target) => {
       return {
+        type: ML_EDGE,
+        data: {
+          subType: DEFAULT_EDGE
+        },
         id: `e.${source}.${target}`,
         source: source,
-        target: target,
-        animated: false,
-        arrowHeadType: 'arrowclosed'
+        target: target
       }
     })
 
     forEach(targets, target => {
       if (target.after_state) {
         nodes.push({
-          id: target.name,
           type: ML_NODE,
           data: { subType: OUTPUT_NODE, label: target.name },
+          id: target.name,
           position: { x: 0, y: 0 }
         })
         nodesEdges.push({
+          type: ML_EDGE,
+          data: {
+            subType: DEFAULT_EDGE
+          },
           id: `e.${target.after_state}.${target.name}`,
           source: target.after_state,
-          target: target.name,
-          arrowHeadType: 'arrowclosed'
+          target: target.name
         })
       }
     })
@@ -103,10 +110,13 @@ const DetailsTransformations = ({ selectedItem }) => {
       }
 
       return {
+        type: ML_EDGE,
+        data: {
+          subType: DEFAULT_EDGE
+        },
         id: `e.${source}.${target}`,
         source: source,
         target: target,
-        arrowHeadType: 'arrowclosed',
         animated: true
       }
     })

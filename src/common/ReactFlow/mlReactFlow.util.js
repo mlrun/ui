@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import dagre from 'dagre'
-import { isNode, Position } from 'react-flow-renderer'
+import { isEdge, isNode, Position } from 'react-flow-renderer'
 
 export const getLayoutedElements = (elements, direction = 'TB') => {
   const elWidth = 130
@@ -20,6 +20,8 @@ export const getLayoutedElements = (elements, direction = 'TB') => {
   })
 
   dagre.layout(dagreGraph)
+
+  const selectedNode = elements.find(el => el.className?.includes('selected'))
 
   return elements.map(el => {
     if (isNode(el)) {
@@ -47,6 +49,13 @@ export const getLayoutedElements = (elements, direction = 'TB') => {
         x: nodeWithPosition.x + Math.random() / 1000,
         y: nodeWithPosition.y
       }
+    } else if (isEdge(el)) {
+      const isSelected =
+        el.data.isSelectable &&
+        selectedNode?.id &&
+        (el.source === selectedNode.id || el.target === selectedNode.id)
+
+      el.className = classnames(el.className, isSelected && 'selected')
     }
 
     return el
@@ -123,6 +132,15 @@ export const getEdgeParams = (source, target) => {
     sourcePos,
     targetPos
   }
+}
+
+export const getMarkerEnd = (arrowHeadType, markerEndId, edgeId) => {
+  if (typeof markerEndId !== 'undefined' && markerEndId) {
+    return 'url(#' + markerEndId + ')'
+  }
+  return typeof arrowHeadType !== 'undefined'
+    ? `url(#react-flow__ml-${arrowHeadType}-${edgeId})`
+    : 'none'
 }
 
 export const getWorkflowSourceHandle = phase => {

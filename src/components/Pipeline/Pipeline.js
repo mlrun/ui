@@ -11,7 +11,10 @@ import CodeBlock from '../../common/CodeBlock/CodeBlock'
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 
 import {
+  DEFAULT_EDGE,
   ERROR_NODE,
+  FLOATING_EDGE,
+  ML_EDGE,
   ML_NODE,
   PRIMARY_NODE,
   SECONDARY_NODE
@@ -159,7 +162,6 @@ const Pipeline = ({ content, match }) => {
               position: { x: 0, y: 0 }
             })
 
-            edgesRouterMap.push([routeInnerName, stepName])
             edgesRouterMap.push([stepName, routeInnerName])
           })
         }
@@ -167,22 +169,26 @@ const Pipeline = ({ content, match }) => {
 
       const nodesRouterEdges = map(edgesRouterMap, ([source, target]) => {
         return {
+          type: ML_EDGE,
+          data: {
+            subType: FLOATING_EDGE,
+            isMarkerStart: true
+          },
           id: `e.${source}.${target}`,
           source: source,
-          target: target,
-          type: 'floating',
-          animated: false,
-          arrowHeadType: 'arrowclosed'
+          target: target
         }
       })
 
       const nodesEdges = map(edgesMap, (source, target) => {
         return {
+          type: ML_EDGE,
+          data: {
+            subType: DEFAULT_EDGE
+          },
           id: `e.${source}.${target}`,
           source: source,
-          target: target,
-          animated: false,
-          arrowHeadType: 'arrowclosed'
+          target: target
         }
       })
 
@@ -191,10 +197,13 @@ const Pipeline = ({ content, match }) => {
         errorHandlerElement.data.subType = ERROR_NODE
 
         return {
+          type: ML_EDGE,
+          data: {
+            subType: DEFAULT_EDGE
+          },
           id: `e.${source}.${target}`,
           source: source,
           target: target,
-          arrowHeadType: 'arrowclosed',
           animated: true
         }
       })

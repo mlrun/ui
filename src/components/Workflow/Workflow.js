@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
@@ -16,10 +17,15 @@ import {
 } from '../../common/ReactFlow/mlReactFlow.util'
 import { getWorkflowDetailsLink } from './workflow.util'
 import functionsActions from '../../actions/functions'
-import { connect } from 'react-redux'
 import { page } from '../JobsPage/jobsData'
-import { DETAILS_OVERVIEW_TAB, ML_NODE, PRIMARY_NODE } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
+import {
+  DEFAULT_EDGE,
+  DETAILS_OVERVIEW_TAB,
+  ML_EDGE,
+  ML_NODE,
+  PRIMARY_NODE
+} from '../../constants'
 
 import { ReactComponent as Back } from '../../images/back-arrow.svg'
 import { ReactComponent as ListView } from '../../images/listview.svg'
@@ -113,10 +119,13 @@ const Workflow = ({
       job.children.forEach(childId => {
         edges.push({
           id: `e.${job.id}.${childId}`,
+          type: ML_EDGE,
+          data: {
+            subType: DEFAULT_EDGE,
+            isSelectable: true
+          },
           source: job.id,
-          target: childId,
-          animated: false,
-          arrowHeadType: 'arrowclosed'
+          target: childId
         })
       })
 
