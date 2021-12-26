@@ -602,10 +602,12 @@ const Jobs = ({
     }
 
     setSelectedJob(item)
+    setSelectedFunction({})
   }
 
   const handleCancel = () => {
     setSelectedJob({})
+    setSelectedFunction({})
   }
 
   const onEditJob = (event, postData) => {
