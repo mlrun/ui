@@ -28,7 +28,7 @@ const ProjectCardView = React.forwardRef(
           if (
             event.target.tagName !== 'A' &&
             !ref.current.contains(event.target) &&
-            !chipRef.current.contains(event.target)
+            !chipRef.current?.contains(event.target)
           ) {
             history.push(`/projects/${project.metadata.name}`)
           }
