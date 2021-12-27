@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import ComboboxView from './ComboboxView'
@@ -40,8 +40,8 @@ const Combobox = ({
   const [dropdownList, setDropdownList] = useState(matches)
   const [searchIsFocused, setSearchIsFocused] = useState(false)
   const [isInvalid, setIsInvalid] = useState(false)
-  const comboboxRef = React.createRef()
-  const inputRef = React.createRef()
+  const comboboxRef = useRef()
+  const inputRef = useRef()
 
   useEffect(() => {
     if (
