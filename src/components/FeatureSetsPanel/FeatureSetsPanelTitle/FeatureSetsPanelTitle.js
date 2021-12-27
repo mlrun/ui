@@ -9,12 +9,12 @@ import featureStoreActions from '../../../actions/featureStore'
 const FeatureSetsPanelTitle = ({
   featureStore,
   closePanel,
-  isNameValid,
-  setNameValid,
   setNewFeatureSetDescription,
   setNewFeatureSetLabels,
   setNewFeatureSetName,
-  setNewFeatureSetVersion
+  setNewFeatureSetVersion,
+  setValidation,
+  validation
 }) => {
   const [data, setData] = useState({
     name: '',
@@ -66,19 +66,19 @@ const FeatureSetsPanelTitle = ({
       handleAddLabel={handleAddLabel}
       handleChangeLabels={handleChangeLabels}
       handleNameOnBlur={handleNameOnBlur}
-      isNameValid={isNameValid}
       setData={setData}
       setNewFeatureSetDescription={setNewFeatureSetDescription}
       setNewFeatureSetVersion={setNewFeatureSetVersion}
-      setNameValid={setNameValid}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }
 
 FeatureSetsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
-  setNameValid: PropTypes.func.isRequired
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(featureStore => ({ ...featureStore }), {

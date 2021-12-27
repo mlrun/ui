@@ -14,6 +14,10 @@ export const checkValidation = (
     Boolean(target.time_partitioning_granularity)
   )
 
+  if (!Object.values(validation).every(value => value)) {
+    return false
+  }
+
   if (newFeatureSet.metadata.name.length === 0 || !validation.isNameValid) {
     setValidation(prevState => ({
       ...prevState,
@@ -85,11 +89,12 @@ export const checkValidation = (
 
   if (
     externalOfflineTarget &&
-    (externalOfflineTarget.path.length === 0 || !validation.isTargetsPathValid)
+    (externalOfflineTarget.path.length === 0 ||
+      !validation.isExternalOfflineTargetPathValid)
   ) {
     setValidation(prevState => ({
       ...prevState,
-      isTargetsPathValid: false
+      isExternalOfflineTargetPathValid: false
     }))
 
     return false

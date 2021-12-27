@@ -32,7 +32,8 @@ const NewFunctionPopUp = ({
   })
   const [isPopUpOpen, setIsPopUpOpen] = useState(isOpened ?? false)
   const [validation, setValidation] = useState({
-    isNameValid: true
+    isNameValid: true,
+    isTagValid: true
   })
   const isDemoMode = useDemoMode()
   const newFunctionBtn = useRef(null)
@@ -49,7 +50,8 @@ const NewFunctionPopUp = ({
       tag: ''
     })
     setValidation({
-      isNameValid: true
+      isNameValid: true,
+      isTagValid: true
     })
   }
 
@@ -127,10 +129,14 @@ const NewFunctionPopUp = ({
             />
             <Input
               floatingLabel
+              invalid={!validation.isTagValid}
               label="Tag"
               onChange={tag => setData(state => ({ ...state, tag }))}
               onBlur={handleTagOnBlur}
               placeholder="latest"
+              setInvalid={value =>
+                setValidation(state => ({ ...state, isTagValid: value }))
+              }
               value={data.tag}
               wrapperClassName="tag"
             />

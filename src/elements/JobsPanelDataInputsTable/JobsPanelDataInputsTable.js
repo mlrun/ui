@@ -125,10 +125,14 @@ export const JobsPanelDataInputsTable = ({
           </div>
           <button
             className="btn-add"
-            disabled={isNameNotUnique(
-              inputsState.newInput.name,
-              panelState.tableData.dataInputs
-            )}
+            disabled={
+              isNameNotUnique(
+                inputsState.newInput.name,
+                panelState.tableData.dataInputs
+              ) ||
+              !validation.isNameValid ||
+              !validation.isPathValid
+            }
             onClick={() => handleAddNewItem(true)}
           >
             <Tooltip template={<TextTooltipTemplate text="Add item" />}>

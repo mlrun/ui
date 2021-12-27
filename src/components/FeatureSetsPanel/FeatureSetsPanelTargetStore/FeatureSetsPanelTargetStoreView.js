@@ -10,9 +10,6 @@ import PartitionFields from '../../../elements/PartitionFields/PartitionFields'
 import Tip from '../../../common/Tip/Tip'
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 
-import { ReactComponent as Online } from '../../../images/nosql.svg'
-import { ReactComponent as Offline } from '../../../images/db-icon.svg'
-import { ReactComponent as ExternalOffline } from '../../../images/other.svg'
 import {
   EXTERNAL_OFFLINE,
   externalOfflineKindOptions,
@@ -20,13 +17,16 @@ import {
   checkboxModels
 } from './featureSetsPanelTargetStore.util'
 
+import { ReactComponent as Online } from '../../../images/nosql.svg'
+import { ReactComponent as Offline } from '../../../images/db-icon.svg'
+import { ReactComponent as ExternalOffline } from '../../../images/other.svg'
+
 import './featureSetsPanelTargetStore.scss'
 
 const FeatureSetsPanelTargetStoreView = ({
   data,
   handleAdvancedLinkClick,
   handleExternalOfflineKindPathOnBlur,
-  handleExternalOfflineKindPathOnChange,
   handleKeyBucketingNumberChange,
   handleOfflineKindPathOnBlur,
   handleOnlineKindPathOnBlur,
@@ -72,6 +72,7 @@ const FeatureSetsPanelTargetStoreView = ({
               <Input
                 density="normal"
                 floatingLabel
+                invalid={!validation.isOnlineTargetPathValid}
                 label="Path"
                 onBlur={handleOnlineKindPathOnBlur}
                 onChange={path =>
@@ -81,6 +82,12 @@ const FeatureSetsPanelTargetStoreView = ({
                   }))
                 }
                 placeholder={data.online.path}
+                setInvalid={value =>
+                  setValidation(state => ({
+                    ...state,
+                    isOnlineTargetPathValid: value
+                  }))
+                }
                 type="text"
                 value={data.online.path}
               />
@@ -146,6 +153,9 @@ const FeatureSetsPanelTargetStoreView = ({
                   >
                     <PartitionFields
                       data={data.parquet}
+                      handlePartitionRadioButtonClick={value =>
+                        handlePartitionRadioButtonClick(value, PARQUET)
+                      }
                       partitionColsOnBlur={() =>
                         handlePartitionColsOnBlur(PARQUET)
                       }
@@ -159,8 +169,11 @@ const FeatureSetsPanelTargetStoreView = ({
                         handleKeyBucketingNumberChange(value, PARQUET)
                       }
                       selectedPartitionKind={selectedPartitionKind.parquet}
-                      handlePartitionRadioButtonClick={value =>
-                        handlePartitionRadioButtonClick(value, PARQUET)
+                      setValidation={value =>
+                        setValidation(state => ({
+                          ...state,
+                          isOfflinePartitionColumnsValid: value
+                        }))
                       }
                       timePartitioningGranularityChange={value =>
                         handleTimePartitioningGranularityChange(value, PARQUET)
@@ -168,6 +181,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       triggerPartitionAdvancedCheckboxes={value =>
                         triggerPartitionAdvancedCheckboxes(value, PARQUET)
                       }
+                      validation={validation.isOfflinePartitionColumnsValid}
                     />
                   </CSSTransition>
                 </div>
@@ -208,17 +222,22 @@ const FeatureSetsPanelTargetStoreView = ({
                 <Input
                   density="normal"
                   floatingLabel
-                  invalid={!validation.isTargetsPathValid}
+                  invalid={!validation.isExternalOfflineTargetPathValid}
                   label="URL"
                   onBlur={handleExternalOfflineKindPathOnBlur}
-                  onChange={handleExternalOfflineKindPathOnChange}
+                  onChange={path =>
+                    setData(state => ({
+                      ...state,
+                      externalOffline: { ...state.externalOffline, path }
+                    }))
+                  }
                   placeholder="s3://bucket/path"
                   required
                   requiredText="This field is required"
                   setInvalid={value =>
                     setValidation(state => ({
                       ...state,
-                      isTargetsPathValid: value
+                      isExternalOfflineTargetPathValid: value
                     }))
                   }
                   type="text"
@@ -253,6 +272,9 @@ const FeatureSetsPanelTargetStoreView = ({
                   >
                     <PartitionFields
                       data={data.externalOffline}
+                      handlePartitionRadioButtonClick={value =>
+                        handlePartitionRadioButtonClick(value, EXTERNAL_OFFLINE)
+                      }
                       partitionColsOnBlur={() =>
                         handlePartitionColsOnBlur(EXTERNAL_OFFLINE)
                       }
@@ -268,8 +290,11 @@ const FeatureSetsPanelTargetStoreView = ({
                       selectedPartitionKind={
                         selectedPartitionKind.externalOffline
                       }
-                      handlePartitionRadioButtonClick={value =>
-                        handlePartitionRadioButtonClick(value, EXTERNAL_OFFLINE)
+                      setValidation={value =>
+                        setValidation(state => ({
+                          ...state,
+                          isExternalOfflinePartitionColumnsValid: value
+                        }))
                       }
                       timePartitioningGranularityChange={value =>
                         handleTimePartitioningGranularityChange(
@@ -282,6 +307,9 @@ const FeatureSetsPanelTargetStoreView = ({
                           value,
                           EXTERNAL_OFFLINE
                         )
+                      }
+                      validation={
+                        validation.isExternalOfflinePartitionColumnsValid
                       }
                     />
                   </CSSTransition>
@@ -302,7 +330,6 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,
-  handleExternalOfflineKindPathOnChange: PropTypes.func.isRequired,
   handleExternalOfflineKindTypeChange: PropTypes.func.isRequired,
   handleKeyBucketingNumberChange: PropTypes.func.isRequired,
   handleOfflineKindPathOnBlur: PropTypes.func.isRequired,

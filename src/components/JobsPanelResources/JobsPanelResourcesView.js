@@ -137,6 +137,7 @@ const JobsPanelResourcesView = ({
           content={panelState.tableData.node_selector}
           deleteItem={handleDeleteNodeSelector}
           editItem={handleEditNodeSelector}
+          isKeyRequired
           keyHeader="Key"
           keyType="input"
           valueHeader="Value"
