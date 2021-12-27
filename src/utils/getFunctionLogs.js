@@ -19,7 +19,14 @@ export const getFunctionLogs = (
           ? offset + result.data.length
           : result.data.length
 
-        getFunctionLogs(projectName, name, tag, currentOffset)
+        getFunctionLogs(
+          fetchFunctionLogs,
+          fetchFunctionLogsTimeout,
+          projectName,
+          name,
+          tag,
+          currentOffset
+        )
       }, 2000)
     } else {
       clearTimeout(fetchFunctionLogsTimeout.current)
