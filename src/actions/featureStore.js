@@ -47,7 +47,8 @@ import {
   SET_NEW_FEATURE_SET_DATA_SOURCE_END_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
   FETCH_FEATURE_SET_SUCCESS,
-  SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY
+  SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY,
+  CONFLICT_CODE
 } from '../constants'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
@@ -70,7 +71,12 @@ const featureStoreActions = {
         return result
       })
       .catch(error => {
-        dispatch(featureStoreActions.createNewFeatureSetFailure(error.message))
+        const message =
+          error.response.status === CONFLICT_CODE
+            ? 'Adding an already-existing FeatureSet'
+            : error.message
+
+        dispatch(featureStoreActions.createNewFeatureSetFailure(message))
 
         throw error
       })
@@ -421,7 +427,12 @@ const featureStoreActions = {
         return result
       })
       .catch(error => {
-        dispatch(featureStoreActions.createNewFeatureSetFailure(error.message))
+        const message =
+          error.response.status === CONFLICT_CODE
+            ? 'Adding an already-existing FeatureSet'
+            : error.message
+
+        dispatch(featureStoreActions.createNewFeatureSetFailure(message))
 
         throw error
       })
