@@ -91,11 +91,12 @@ const ChipCellView = React.forwardRef(
                       handleRemoveChip={handleRemoveChip}
                       isEditMode={isEditMode}
                       onClick={handleShowElements}
+                      ref={chipsCellRef}
                       setChipsSizes={setChipsSizes}
                       setEditConfig={setEditConfig}
                       shortChip={shortChips}
                       showChips={showChips}
-                      ref={chipsCellRef}
+                      textOverflowEllipsis
                     />
                   </Tooltip>
                   {chips.visibleChips.length - 1 === index &&
