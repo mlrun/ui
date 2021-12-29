@@ -26,14 +26,15 @@ export const getLinks = match => {
       icon: <DashboardIcon />,
       label: 'Project overview',
       link: base_url,
-      rootPath: '/'
+      rootPath: '/',
+      hidden: true
     },
-
-    //  {
-    //    icon: <FileIcon />,
-    //    label: 'Artifacts',
-    //    link: `${base_url}/feature-store/datasets` //TODO: fix path
-    //  },
+    {
+      icon: <EyeIcon />,
+      id: 'monitor',
+      label: 'Project monitoring',
+      link: `${base_url}/${PROJECT_MONITOR}`
+    },
     {
       icon: <PackageIcon />,
       id: 'feature-store',
@@ -90,12 +91,6 @@ export const getLinks = match => {
       label: 'API gateways',
       link: `${window.mlrunConfig.nuclioUiUrl}${base_url}/api-gateways`,
       externalLink: true
-    },
-    {
-      icon: <EyeIcon />,
-      id: 'monitor',
-      label: 'Project monitoring',
-      link: `${base_url}/${PROJECT_MONITOR}`
     }
   ]
 }

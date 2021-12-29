@@ -79,7 +79,7 @@ Modal.propTypes = {
     .isRequired,
   onClose: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
-  size: PropTypes.oneOf(['normal', 'lg']),
+  size: PropTypes.oneOf(['sm', 'normal', 'lg']),
   title: PropTypes.string
 }
 

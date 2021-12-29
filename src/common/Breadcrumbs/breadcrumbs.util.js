@@ -1,7 +1,11 @@
 export const generateProjectScreens = (match, isDemoMode) => [
-  { label: 'Models', id: 'models' },
+  {
+    label: 'Project Monitoring',
+    id: 'monitor'
+  },
   { label: 'Feature Store (Beta)', id: 'feature-store' },
   { label: 'Artifacts', id: 'files' },
+  { label: 'Models', id: 'models' },
   { label: 'Jobs', id: 'jobs' },
   { label: 'ML functions', id: 'functions' },
   {
@@ -13,10 +17,6 @@ export const generateProjectScreens = (match, isDemoMode) => [
     label: 'API gateways',
     id: 'API gateways',
     link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`
-  },
-  {
-    label: 'Project Monitoring',
-    id: 'monitor'
   },
   {
     label: 'Settings',

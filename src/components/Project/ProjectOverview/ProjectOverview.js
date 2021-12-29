@@ -137,15 +137,27 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
               className={`state-${project.data.status.state}-job status-icon`}
             />
           </Tooltip>
-          <div className="project-overview__header-created">
-            <span>Created: </span>
-            {getDateAndTimeByFormat(
-              project.data.metadata.created,
-              'YYYY-MM-DD HH:mmA'
-            )}
+        </div>
+        <div className="project-overview__header-subtitle">
+          <div>
+            <span className="project-overview__header-subtitle-name">
+              Created:
+            </span>
+            <span>
+              {getDateAndTimeByFormat(
+                project.data.metadata.created,
+                'YYYY-MM-DD, HH:mm:ss A'
+              )}
+            </span>
+          </div>
+          <div>
+            <span className="project-overview__header-subtitle-name">
+              Owner:
+            </span>
+            <span>{project.data.spec.owner}</span>
           </div>
         </div>
-        <p className="project-overview__header-subtitle">
+        <p className="project-overview__header-description">
           {project.data.spec.description ?? ''}
         </p>
       </div>

@@ -52,9 +52,9 @@ const Navbar = ({ headerShown, match, isPinned, setIsPinned }) => {
             {isPinned ? <UnPinIcon /> : <PinIcon />}
           </RoundedIcon>
           <ul className="navbar-links">
-            {links.map(link => (
-              <NavbarLink key={link.label} {...link} />
-            ))}
+            {links.map(
+              link => !link.hidden && <NavbarLink key={link.label} {...link} />
+            )}
           </ul>
         </div>
         <div className="navbar__additional">

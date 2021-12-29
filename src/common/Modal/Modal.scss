@@ -10,6 +10,10 @@
   outline: 0;
   z-index: 2;
 
+  &-sm {
+    max-width: 400px;
+  }
+
   &-lg {
     max-width: 800px;
   }
