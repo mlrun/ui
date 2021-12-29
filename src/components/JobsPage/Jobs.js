@@ -77,7 +77,6 @@ const Jobs = ({
   removePods,
   removeScheduledJob,
   setFilters,
-  setLoading,
   setNotification,
   workflowsStore
 }) => {
@@ -649,7 +648,6 @@ const Jobs = ({
         pageData={pageData}
         refresh={refreshJobs}
         selectedItem={selectedJob}
-        setLoading={setLoading}
         getIdentifier={getJobIdentifier}
       >
         {match.params.workflowId ? (
@@ -665,7 +663,6 @@ const Jobs = ({
             refreshJobs={refreshJobs}
             selectedFunction={selectedFunction}
             selectedJob={selectedJob}
-            setLoading={setLoading}
             setWorkflowsViewMode={setWorkflowsViewMode}
             workflow={workflow}
             workflowJobsIds={workflowJobsIds}
