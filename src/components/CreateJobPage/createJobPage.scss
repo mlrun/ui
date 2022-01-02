@@ -41,7 +41,7 @@
 
     .expand-icon {
       position: absolute;
-      top: 0;
+      top: -3px;
       left: 0;
     }
 
@@ -65,7 +65,7 @@
       .category-header {
         display: flex;
         align-items: center;
-        margin: 0 30px 12px;
+        margin: 0 30px 12px 40px;
         font-size: 18px;
         line-height: 21px;
         text-transform: capitalize;
@@ -115,7 +115,7 @@
         }
 
         &.other {
-          margin: 2px 30px 17px;
+          margin: 2px 30px 17px 40px;
         }
       }
     }
@@ -157,10 +157,10 @@
       &-header {
         margin-bottom: 30px;
         padding-top: 3px;
-        padding-left: 35px;
+        padding-left: 45px;
 
         &_with-select {
-          margin-top: -8px;
+          margin-top: -14px;
         }
 
         &__title {

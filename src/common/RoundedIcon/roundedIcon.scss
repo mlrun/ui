@@ -1,11 +1,12 @@
 @import '../../scss/colors.scss';
 
 .round-icon-cp {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  margin: 0 0.3rem;
 
-  &__icon {
+  &__circle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,21 +15,30 @@
     padding: 0;
 
     & > * {
+      position: relative;
       display: inline-flex;
+      margin: 0 !important;
+      z-index: 2;
     }
 
-    & > i {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-    }
-
-    &:hover,
-    &:focus {
+    &::before {
+      content: '';
+      width: inherit;
+      height: inherit;
       background-color: $mulledWineThree;
-      border-radius: 20px;
+      border-radius: 50%;
+      position: absolute;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      z-index: 1;
+    }
+
+    &:hover {
+      &::before {
+        opacity: 1;
+      }
     }
   }
 }

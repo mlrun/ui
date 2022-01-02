@@ -17,8 +17,8 @@ const RoundedIcon = React.forwardRef(
           hidden={!tooltipText}
           template={<TextTooltipTemplate text={tooltipText} />}
         >
-          <button onClick={onClick} id={id} className="round-icon-cp__icon">
-            <i>{children}</i>
+          <button onClick={onClick} id={id} className="round-icon-cp__circle">
+            {children}
           </button>
         </Tooltip>
       </div>

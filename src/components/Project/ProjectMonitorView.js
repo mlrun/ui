@@ -20,7 +20,6 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import ProjectName from './ProjectName/ProjectName'
 import ProjectDescription from './ProjectDescription/ProjectDescription'
 import ProjectGoals from './ProjectGoals/ProjectGoals'
-import ProjectLinks from './ProjectLinks/ProjectLinks'
 import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
@@ -40,7 +39,7 @@ import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './project.scss'
 
-const ProjectView = React.forwardRef(
+const ProjectMonitorView = React.forwardRef(
   (
     {
       artifactKind,
@@ -65,7 +64,6 @@ const ProjectView = React.forwardRef(
       isDemoMode,
       isNewFunctionPopUpOpen,
       isPopupDialogOpen,
-      links,
       match,
       membersDispatch,
       membersState,
@@ -236,8 +234,6 @@ const ProjectView = React.forwardRef(
                   />
                 </div>
               </div>
-              <div className="general-info__divider" />
-              <ProjectLinks links={links} />
             </div>
             <div className="main-info">
               <div className="main-info__toolbar">
@@ -349,12 +345,12 @@ const ProjectView = React.forwardRef(
   }
 )
 
-ProjectView.defaultProps = {
+ProjectMonitorView.defaultProps = {
   confirmData: null,
   visibleChipsMaxLength: null
 }
 
-ProjectView.propTypes = {
+ProjectMonitorView.propTypes = {
   artifactKind: PropTypes.string.isRequired,
   changeMembersCallback: PropTypes.func.isRequired,
   changeOwnerCallback: PropTypes.func.isRequired,
@@ -377,7 +373,6 @@ ProjectView.propTypes = {
   isDemoMode: PropTypes.bool.isRequired,
   isNewFunctionPopUpOpen: PropTypes.bool.isRequired,
   isPopupDialogOpen: PropTypes.bool.isRequired,
-  links: PropTypes.array.isRequired,
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
@@ -397,4 +392,4 @@ ProjectView.propTypes = {
   visibleChipsMaxLength: PropTypes.number
 }
 
-export default ProjectView
+export default ProjectMonitorView

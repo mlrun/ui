@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -11,6 +11,7 @@ import Input from '../../common/Input/Input'
 import functionsActions from '../../actions/functions'
 import { DEFAULT_RUNTIME, runtimeOptions } from './newFuctionPopUp.util'
 import { useDemoMode } from '../../hooks/demoMode.hook'
+import { useOpenPanel } from '../../hooks/openPanel.hook'
 
 import './newFunctionPopUp.scss'
 
@@ -36,6 +37,7 @@ const NewFunctionPopUp = ({
     isTagValid: true
   })
   const isDemoMode = useDemoMode()
+  const openPanelByDefault = useOpenPanel()
   const newFunctionBtn = useRef(null)
   const popUpClassNames = classnames(
     'new-function__pop-up',
@@ -75,6 +77,12 @@ const NewFunctionPopUp = ({
     setData(state => ({ ...state, runtime }))
     setNewFunctionKind(runtime)
   }
+
+  useEffect(() => {
+    if (openPanelByDefault) {
+      setIsPopUpOpen(true)
+    }
+  }, [openPanelByDefault])
 
   return (
     <div className="new-function">

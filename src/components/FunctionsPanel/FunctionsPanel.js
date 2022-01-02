@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 import { chain } from 'lodash'
 
 import FunctionsPanelView from './FunctionsPanelView'
@@ -248,7 +249,7 @@ const FunctionsPanel = ({
     return Object.values(validation).every(value => value)
   }
 
-  return (
+  return createPortal(
     <FunctionsPanelView
       checkValidation={checkValidation}
       closePanel={closePanel}
@@ -267,7 +268,8 @@ const FunctionsPanel = ({
       setNewFunctionCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
       setValidation={setValidation}
       validation={validation}
-    />
+    />,
+    document.getElementById('overlay_container')
   )
 }
 

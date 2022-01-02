@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import Loader from '../../common/Loader/Loader'
-import Select from '../../common/Select/Select'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
@@ -16,7 +16,7 @@ import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
 import { projectsSortOptions, projectsStates } from './projectsData'
-import { TERTIARY_BUTTON } from '../../constants'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
@@ -90,24 +90,20 @@ const ProjectsView = ({
       )}
       <div className="projects__header">
         <Breadcrumbs match={match} />
-        <PageActionsMenu
-          actionsMenuHeader={'New Project'}
-          onClick={() => setCreateProject(true)}
-          showActionsMenu
-        />
       </div>
       <div className="projects__wrapper">
         {projectStore.projects.length > 0 && !projectStore.error ? (
           <>
             <div className="projects-content-header">
               <div className="projects-content-header-item">
-                <Select
+                <ContentMenu
+                  activeTab={selectedProjectsState}
+                  match={match}
+                  screen="active"
+                  tabs={projectsStates}
                   onClick={setSelectedProjectsState}
-                  options={projectsStates}
-                  selectedId={selectedProjectsState}
-                  className="project-types-select"
-                  withoutBorder
                 />
+
                 <Sort
                   isDescendingOrder={isDescendingOrder}
                   onSelectOption={setSortProjectId}
@@ -124,6 +120,12 @@ const ProjectsView = ({
                   placeholder="Search projects..."
                   setMatches={setFilterMatches}
                   value={filterByName}
+                />
+                <PageActionsMenu
+                  actionsMenuHeader={'New Project'}
+                  onClick={() => setCreateProject(true)}
+                  showActionsMenu
+                  variant={SECONDARY_BUTTON}
                 />
                 <RoundedIcon
                   onClick={refreshProjects}

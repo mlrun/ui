@@ -35,7 +35,7 @@ const EditorModalView = ({ closeModal, data, handleSaveCode, setData }) =>
         />
       </div>
     </div>,
-    document.getElementById('root')
+    document.getElementById('overlay_container')
   )
 
 EditorModalView.propTypes = {

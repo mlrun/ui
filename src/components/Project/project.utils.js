@@ -3,7 +3,6 @@ import React from 'react'
 import {
   MONITOR_JOBS_TAB,
   PRIMARY_BUTTON,
-  SCHEDULE_TAB,
   STATUS_CODE_FORBIDDEN
 } from '../../constants'
 
@@ -20,45 +19,6 @@ export const launchIDEOptions = [
     label: 'VS Code',
     id: 'vsCode',
     icon: <VSCode />
-  }
-]
-
-export const getLinks = match => [
-  {
-    label: 'Models',
-    link: `/projects/${match.params.projectName}/models`
-  },
-  {
-    label: `Feature store${
-      window.mlrunConfig.betaMode === 'enabled' ? ' (Beta)' : ''
-    }`,
-    link: `/projects/${match.params.projectName}/feature-store`
-  },
-  {
-    label: 'Artifacts',
-    link: `/projects/${match.params.projectName}/files`
-  },
-  {
-    label: 'Jobs and workflows',
-    link: `/projects/${match.params.projectName}/jobs/${MONITOR_JOBS_TAB}`
-  },
-  {
-    label: 'Schedule jobs',
-    link: `/projects/${match.params.projectName}/jobs/${SCHEDULE_TAB}`
-  },
-  {
-    label: 'ML functions',
-    link: `/projects/${match.params.projectName}/functions`
-  },
-  {
-    label: 'Real-time functions (Nuclio)',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/functions`,
-    externalLink: true
-  },
-  {
-    label: 'API gateways (Nuclio)',
-    link: `${window.mlrunConfig.nuclioUiUrl}/projects/${match.params.projectName}/api-gateways`,
-    externalLink: true
   }
 ]
 

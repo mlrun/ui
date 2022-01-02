@@ -4,7 +4,7 @@
 
 .content-menu {
   position: absolute;
-  top: -38px;
+  top: -36px;
   left: 0;
   width: 100%;
   min-width: 510px;
@@ -12,7 +12,7 @@
   &__list {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: baseline;
     list-style-type: none;
 
     @include resetSpaces;
@@ -22,10 +22,26 @@
     color: $topaz;
     font-weight: bold;
     font-size: 15px;
-    line-height: 18px;
+    line-height: 1;
     text-align: center;
     text-transform: capitalize;
-    border-bottom: 3px solid transparent;
+
+    &::after {
+      content: '';
+      border-bottom: $activeJobTabBorder;
+      display: block;
+      width: 100%;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s ease-in-out;
+    }
+
+    &:hover:not([class*='_active']) {
+      &::after {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+    }
 
     a {
       display: block;
@@ -34,7 +50,15 @@
 
     &_active {
       color: $cornflowerBlue;
-      border-bottom: $activeJobTabBorder;
+
+      &::after {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      a {
+        cursor: default;
+      }
     }
 
     &__preview {

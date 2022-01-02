@@ -16,6 +16,8 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
+import { useOpenPanel } from '../../hooks/openPanel.hook'
+
 import {
   ARTIFACTS,
   FILES_PAGE,
@@ -52,6 +54,7 @@ const Files = ({
     registerArtifactDialogTitle: '',
     tableHeaders: []
   })
+  const openPanelByDefault = useOpenPanel()
 
   const fetchData = useCallback(
     filters => {
@@ -147,6 +150,12 @@ const Files = ({
     },
     [fetchFile, filtersStore.iter, match.params.projectName]
   )
+
+  useEffect(() => {
+    if (openPanelByDefault) {
+      setIsPopupDialogOpen(true)
+    }
+  }, [openPanelByDefault])
 
   useEffect(() => {
     setPageData(state => ({

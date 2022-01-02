@@ -661,6 +661,7 @@
       height: 32px;
       background: $malibu;
       border-radius: 50%;
+      margin: 0;
 
       &:hover {
         background-color: $cornflowerBlue;
@@ -967,4 +968,27 @@
       }
     }
   }
+}
+
+@mixin gradient($type) {
+  @if $type == 'card' {
+    background: linear-gradient(
+      90deg,
+      #d873e1cc -20.43%,
+      #dd71d5cc -20.42%,
+      #fc658fcc 48.31%,
+      #ffb971cc 111.56%
+    );
+  } @else {
+    background: linear-gradient(
+      88.84deg,
+      #d873e1 5.49%,
+      #fc658f 57.67%,
+      #ffb971 107.73%
+    );
+  }
+}
+
+@mixin gradient-hover {
+  background: linear-gradient(90deg, #d873e1 0%, #fc658f 51.04%, #ffb971 100%);
 }

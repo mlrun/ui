@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import Input from '../Input/Input'
+
 import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
 import './search.scss'
@@ -17,7 +19,8 @@ const Search = ({
   const [searchValue, setSearchValue] = useState(value ?? '')
   const [label, setLabel] = useState('')
   const [inputIsFocused, setInputFocused] = useState(false)
-  const searchRef = React.createRef()
+  const searchRef = React.useRef()
+
   const searchClassNames = classnames('search-container', className)
 
   const handleSearchOnBlur = useCallback(
@@ -43,14 +46,14 @@ const Search = ({
     }
   }, [handleSearchOnBlur])
 
-  const searchOnChange = event => {
-    if (event.target.value.length === 0 && label.length > 0) {
+  const searchOnChange = value => {
+    if (value.length === 0 && label.length > 0) {
       setLabel('')
     }
 
-    onChange(event.target.value)
+    onChange(value)
     setInputFocused(true)
-    setSearchValue(event.target.value)
+    setSearchValue(value)
   }
 
   const matchOnClick = item => {
@@ -65,23 +68,17 @@ const Search = ({
       data-testid="search-container"
       className={searchClassNames}
       ref={searchRef}
+      onClick={() => {
+        setInputFocused(true)
+      }}
     >
-      <SearchIcon
-        onClick={() => {
-          if (searchValue !== '' && !searchWhileTyping) {
-            onChange(searchValue)
-          }
-        }}
-      />
-      <input
+      <Input
         className="search-input"
         placeholder={placeholder}
-        onChange={event => {
-          searchOnChange(event)
-        }}
-        onFocus={() => {
-          setInputFocused(true)
-        }}
+        inputIcon={<SearchIcon />}
+        iconClass="search-icon"
+        onChange={searchOnChange}
+        focused={inputIsFocused}
         onKeyDown={event => {
           if (
             event.key === 'Enter' &&
@@ -94,8 +91,9 @@ const Search = ({
         }}
         value={searchValue}
       />
+
       {label.length > 0 && <label className="search-label">{label}</label>}
-      {matches.length > 0 && inputIsFocused && (
+      {matches.length > 0 && label.length > 0 && inputIsFocused && (
         <ul data-testid="search-matches" className="search-matches">
           {matches.map((item, index) => {
             return (

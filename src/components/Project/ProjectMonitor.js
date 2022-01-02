@@ -11,14 +11,15 @@ import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { forEach, groupBy } from 'lodash'
 
-import ProjectView from './ProjectView'
+import ProjectMonitorView from './ProjectMonitorView'
 
 import featureStoreActions from '../../actions/featureStore'
 import projectsAction from '../../actions/projects'
+import notificationActions from '../../actions/notification'
+import functionsActions from '../../actions/functions'
 import projectsApi from '../../api/projects-api'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import {
-  getLinks,
   generateCreateNewOptions,
   handleFetchProjectError
 } from './project.utils'
@@ -30,13 +31,11 @@ import {
   membersActions,
   membersReducer
 } from '../../elements/MembersPopUp/membersReducer'
-import notificationActions from '../../actions/notification'
-import functionsActions from '../../actions/functions'
 
 import { ReactComponent as User } from '../../images/user.svg'
 import { ReactComponent as Users } from '../../images/users.svg'
 
-const Project = ({
+const ProjectMonitor = ({
   addProjectLabel,
   appStore,
   editProjectLabels,
@@ -60,6 +59,7 @@ const Project = ({
     membersReducer,
     initialMembersState
   )
+
   const [artifactKind, setArtifactKind] = useState('')
   const [editProject, setEditProject] = useState({
     name: {
@@ -89,11 +89,10 @@ const Project = ({
   const [showFunctionsPanel, setShowFunctionsPanel] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const history = useHistory()
-  const inputRef = React.createRef()
+  const inputRef = React.useRef()
   const isDemoMode = useDemoMode()
 
-  const { links, createNewOptions } = useMemo(() => {
-    const links = getLinks(match)
+  const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
       history,
       match,
@@ -104,7 +103,6 @@ const Project = ({
     )
 
     return {
-      links,
       createNewOptions
     }
   }, [history, match])
@@ -625,7 +623,7 @@ const Project = ({
   )
 
   return (
-    <ProjectView
+    <ProjectMonitorView
       artifactKind={artifactKind}
       changeMembersCallback={changeMembersCallback}
       changeOwnerCallback={changeOwnerCallback}
@@ -648,7 +646,6 @@ const Project = ({
       isDemoMode={isDemoMode}
       isNewFunctionPopUpOpen={isNewFunctionPopUpOpen}
       isPopupDialogOpen={isPopupDialogOpen}
-      links={links}
       match={match}
       membersDispatch={membersDispatch}
       membersState={membersState}
@@ -672,7 +669,7 @@ const Project = ({
   )
 }
 
-Project.propTypes = {
+ProjectMonitor.propTypes = {
   match: PropTypes.shape({}).isRequired
 }
 
@@ -689,4 +686,4 @@ export default connect(
     ...projectsAction,
     ...notificationActions
   }
-)(Project)
+)(ProjectMonitor)

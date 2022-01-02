@@ -1,10 +1,13 @@
 @import './variables';
+@import './button';
 @import './colors';
 @import './mixins';
 @import './borders';
 @import './fonts';
 
-* {
+*,
+::after,
+::before {
   box-sizing: border-box;
 }
 
@@ -43,7 +46,6 @@ body {
   font-size: 15px;
   font-family: Roboto, sans-serif;
   font-style: normal;
-  line-height: 18px;
   background: $gallery;
 
   @include resetSpaces;
@@ -52,13 +54,53 @@ body {
 main {
   position: relative;
   display: flex;
-  flex: 1;
+  flex: 0 0 100%;
   flex-flow: column nowrap;
+  padding: 0;
   height: auto;
   overflow: auto;
+  z-index: 1;
+  transition: padding 0.3s ease-in-out;
 
-  &:not(:first-child) {
-    margin-top: 64px;
+  &.has-header {
+    margin-top: $headerHeight;
+  }
+
+  &.pinned {
+    padding-left: $navbarWidth;
+  }
+
+  &.unpinned {
+    .create-container__header,
+    .create-container__data,
+    .content__header,
+    .project__header,
+    .settings__header {
+      padding-left: 40px;
+      transition: padding 0.3s ease-in-out;
+    }
+
+    .content,
+    .settings__content {
+      margin-left: 40px;
+      transition: margin 0.3s ease-in-out;
+    }
+  }
+}
+
+.navbar {
+  &.has-header {
+    margin-top: $headerHeight;
+    padding-bottom: $headerHeight;
+  }
+
+  &.pinned {
+    transform: translateX(0);
+
+    .navbar__toggler {
+      opacity: 0;
+      right: 0;
+    }
   }
 }
 
@@ -90,7 +132,8 @@ button {
 [class^='state-succeeded'],
 [class^='state-active'],
 [class^='state-created'],
-[class^='state-info'] {
+[class^='state-info'],
+[class^='state-online'] {
   @include statusState($brightTurquoise);
 }
 
@@ -184,7 +227,7 @@ textarea {
   align-items: center;
   justify-content: space-between;
 
-  button {
+  button:not([class*='round-icon-cp__icon']) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -259,6 +302,10 @@ textarea {
       color: $sorbus;
     }
   }
+}
+
+.visiblity-hidden {
+  visibility: hidden;
 }
 
 .graph-container {
