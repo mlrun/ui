@@ -44,15 +44,18 @@ const FunctionsPanel = ({
   const [confirmData, setConfirmData] = useState(null)
   const [validation, setValidation] = useState({
     isHandlerValid: true,
+    isDefaultCLassValid: true,
     isCodeImageValid: true,
     isBaseImageValid: true,
     isBuildCommandsValid: true,
+    isBuildImageValid: true,
     isMemoryRequestValid: true,
     isMemoryLimitValid: true,
     isCpuRequestValid: true,
     isCpuLimitValid: true,
     isGpuLimitValid: true,
-    isAccessKeyValid: true
+    isAccessKeyValid: true,
+    isErrorStreamPathValid: true
   })
   const [imageType, setImageType] = useState(
     (defaultData?.build?.image ||

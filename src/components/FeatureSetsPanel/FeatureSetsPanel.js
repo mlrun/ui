@@ -23,12 +23,18 @@ const FeatureSetsPanel = ({
 }) => {
   const [validation, setValidation] = useState({
     isNameValid: true,
+    isTagValid: true,
     isUrlValid: true,
     isTimeFieldValid: true,
     isStartTimeValid: true,
     isEndTimeValid: true,
+    isParseDatesValid: true,
     isEntitiesValid: true,
-    isTargetsPathValid: true,
+    isOnlineTargetPathValid: true,
+    isOfflineTargetPathValid: true,
+    isExternalOfflineTargetPathValid: true,
+    isOfflinePartitionColumnsValid: true,
+    isExternalOfflinePartitionColumnsValid: true,
     isTimestampKeyValid: true,
     isAccessKeyValid: true
   })

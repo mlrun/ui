@@ -6,7 +6,13 @@ import FunctionsPanelRuntimeView from './FunctionsPanelRuntimeView'
 
 import { useDemoMode } from '../../hooks/demoMode.hook'
 
-const FunctionsPanelRuntime = ({ defaultData, functionsStore, sections }) => {
+const FunctionsPanelRuntime = ({
+  defaultData,
+  functionsStore,
+  sections,
+  setValidation,
+  validation
+}) => {
   const isDemoMode = useDemoMode()
 
   return (
@@ -15,6 +21,8 @@ const FunctionsPanelRuntime = ({ defaultData, functionsStore, sections }) => {
       functionsStore={functionsStore}
       isDemoMode={isDemoMode}
       sections={sections}
+      setValidation={setValidation}
+      validation={validation}
     />
   )
 }
@@ -25,7 +33,9 @@ FunctionsPanelRuntime.defaultProps = {
 
 FunctionsPanelRuntime.propTypes = {
   defaultData: PropTypes.shape({}),
-  sections: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  sections: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(

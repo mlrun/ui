@@ -129,6 +129,8 @@ const FunctionsPanelView = ({
                 <FunctionsPanelRuntime
                   defaultData={defaultData}
                   sections={runtimeSections[newFunction.kind]}
+                  setValidation={setValidation}
+                  validation={validation}
                 />
               </Accordion>
             )}

@@ -481,16 +481,20 @@ export const handleStoreInputPathChange = (
 }
 
 export const isPathInputValid = (pathInputType, pathInputValue) => {
+  const valueIsNotEmpty = pathInputValue.trim().length > 0
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:
-      return /^(artifacts|feature-vectors)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(
-        pathInputValue
+      return (
+        valueIsNotEmpty &&
+        /^(artifacts|feature-vectors)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/.test(
+          pathInputValue
+        )
       )
     case HTTP_STORAGE_INPUT_PATH_SCHEME:
     case HTTPS_STORAGE_INPUT_PATH_SCHEME:
-      return pathInputValue.split('/')?.[1]?.length > 0
+      return valueIsNotEmpty && pathInputValue.split('/')?.[1]?.length > 0
     default:
-      return pathInputValue.length > 0
+      return valueIsNotEmpty
   }
 }
 

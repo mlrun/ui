@@ -114,6 +114,7 @@ const FeatureSetsPanelDataSourceView = ({
           <Input
             className="data-source__inputs-item"
             floatingLabel
+            invalid={!validation.isParseDatesValid}
             label="Parse Dates"
             onBlur={event => {
               if (
@@ -130,6 +131,9 @@ const FeatureSetsPanelDataSourceView = ({
               }))
             }
             placeholder="col_name1,col_name2,..."
+            setInvalid={value =>
+              setValidation(state => ({ ...state, isParseDatesValid: value }))
+            }
             type="text"
           />
         )}
