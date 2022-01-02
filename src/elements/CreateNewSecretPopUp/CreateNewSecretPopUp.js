@@ -172,7 +172,16 @@ const CreateNewSecretPopUp = ({
           onClick={closePopupDialog}
           variant={LABEL_BUTTON}
         />
-        <Button label="Save" onClick={createSecrets} variant={PRIMARY_BUTTON} />
+        <Button
+          disabled={
+            !validation.isKeyValid ||
+            !validation.isValueValid ||
+            isKeyNotUnique(createSecretData.key, secretKeys)
+          }
+          label="Save"
+          onClick={createSecrets}
+          variant={PRIMARY_BUTTON}
+        />
       </div>
     </PopUpDialog>
   )

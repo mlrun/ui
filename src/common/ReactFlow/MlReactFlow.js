@@ -2,23 +2,31 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer'
 
-import FloatingEdge from './FloatingEdge'
 import MlReactFlowNode from './MlReactFlowNode'
+import MlReactFlowEdge from './MlReactFlowEdge'
 
-import { ML_NODE } from '../../constants'
+import { ML_EDGE, ML_NODE } from '../../constants'
 
 import './mlReactFlow.scss'
 
+const edgeTypes = {
+  [ML_EDGE]: MlReactFlowEdge
+}
+
+const nodeTypes = {
+  [ML_NODE]: MlReactFlowNode
+}
+
 const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
+  const domChangeHandler = () => {
+    const edgesWrapper = document.querySelector('.react-flow__edges > g')
+    const selectedEdges = edgesWrapper.getElementsByClassName('selected')
+
+    edgesWrapper.append(...selectedEdges)
+  }
+
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
-
-  const edgeTypes = {
-    floating: FloatingEdge
-  }
-
-  const nodeTypes = {
-    [ML_NODE]: MlReactFlowNode
-  }
+  const [observer] = useState(new MutationObserver(domChangeHandler))
 
   useEffect(() => {
     setTimeout(() => {
@@ -31,7 +39,24 @@ const MlReactFlow = ({ alignTriggerItem, elements, onElementClick }) => {
     }, 100)
   }, [reactFlowInstance, alignTriggerItem])
 
+  useEffect(() => {
+    return () => {
+      if (observer instanceof MutationObserver) {
+        observer.disconnect()
+      }
+    }
+  }, [observer])
+
   const onLoad = reactFlowInstance => {
+    const edgesWrapper = document.querySelector('.react-flow__nodes')
+
+    if (edgesWrapper) {
+      observer.observe(edgesWrapper, {
+        subtree: true,
+        attributes: true
+      })
+    }
+
     setReactFlowInstance(reactFlowInstance)
   }
 

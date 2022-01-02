@@ -50,7 +50,7 @@ const JobsPanelDataInputsView = ({
       <JobsPanelSection title="General">
         <Input
           label="Default input path"
-          className="default-input"
+          wrapperClassName="default-input-wrapper"
           onChange={inputValue => {
             panelDispatch({
               type: panelActions.SET_INPUT_PATH,

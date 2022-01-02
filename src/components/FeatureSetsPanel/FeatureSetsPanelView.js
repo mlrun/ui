@@ -38,6 +38,8 @@ const FeatureSetsPanelView = ({
   setValidation,
   validation
 }) => {
+  const validationIsFailed = !Object.values(validation).every(value => value)
+
   return (
     <div className="new-item-side-panel-container">
       <div className="feature-set-panel new-item-side-panel">
@@ -55,8 +57,8 @@ const FeatureSetsPanelView = ({
         )}
         <FeatureSetsPanelTitle
           closePanel={closePanel}
-          isNameValid={validation.isNameValid}
-          setNameValid={setValidation}
+          setValidation={setValidation}
+          validation={validation}
         />
         <div className="new-item-side-panel__body">
           <Accordion
@@ -120,12 +122,14 @@ const FeatureSetsPanelView = ({
               onClick={closePanel}
             />
             <Button
+              disabled={validationIsFailed}
               variant={SECONDARY_BUTTON}
               label="Save"
               onClick={() => handleSaveOnClick(false)}
             />
             <Button
               className="btn_start-ingestion"
+              disabled={validationIsFailed}
               label="Save and ingest"
               onClick={() => handleSaveOnClick(true)}
               variant={SECONDARY_BUTTON}

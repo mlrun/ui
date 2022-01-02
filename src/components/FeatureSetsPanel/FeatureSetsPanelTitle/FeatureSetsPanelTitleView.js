@@ -18,11 +18,11 @@ const FeatureSetsPanelTitleView = ({
   handleAddLabel,
   handleChangeLabels,
   handleNameOnBlur,
-  isNameValid,
   setData,
-  setNameValid,
   setNewFeatureSetDescription,
-  setNewFeatureSetVersion
+  setNewFeatureSetVersion,
+  setValidation,
+  validation
 }) => {
   const titleValidationTip = (
     <>
@@ -41,7 +41,7 @@ const FeatureSetsPanelTitleView = ({
           <Input
             className="panel-title__input"
             floatingLabel
-            invalid={!isNameValid}
+            invalid={!validation.isNameValid}
             invalidText="This field is invalid"
             label="Feature Set Name"
             maxLength={56}
@@ -51,7 +51,7 @@ const FeatureSetsPanelTitleView = ({
             required
             requiredText="This field is required"
             setInvalid={value =>
-              setNameValid(state => ({ ...state, isNameValid: value }))
+              setValidation(state => ({ ...state, isNameValid: value }))
             }
             tip={titleValidationTip}
             type="text"
@@ -61,6 +61,7 @@ const FeatureSetsPanelTitleView = ({
           <Input
             className="panel-title__input"
             floatingLabel
+            invalid={!validation.isTagValid}
             label="Version"
             onChange={version =>
               setData(state => ({
@@ -76,6 +77,9 @@ const FeatureSetsPanelTitleView = ({
               }
             }}
             placeholder="latest"
+            setInvalid={value =>
+              setValidation(state => ({ ...state, isTagValid: value }))
+            }
             type="text"
             value={data.version}
             wrapperClassName="version"
@@ -134,11 +138,11 @@ FeatureSetsPanelTitleView.propTypes = {
   handleAddLabel: PropTypes.func.isRequired,
   handleChangeLabels: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
   setData: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired,
   setNewFeatureSetDescription: PropTypes.func.isRequired,
-  setNewFeatureSetVersion: PropTypes.func.isRequired
+  setNewFeatureSetVersion: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.shape({}).isRequired
 }
 
 export default connect(({ artifactsStore }) => ({

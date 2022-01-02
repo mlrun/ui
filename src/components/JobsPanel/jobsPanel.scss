@@ -7,10 +7,8 @@
 .job-panel {
   &__item {
     .panel-section__body {
-      .default-input {
-        width: 97%;
-        border: $primaryBorder;
-        border-radius: 4px;
+      .default-input-wrapper {
+        margin-right: 15px;
       }
     }
 

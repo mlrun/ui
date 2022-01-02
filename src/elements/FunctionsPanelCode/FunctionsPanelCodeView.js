@@ -85,11 +85,18 @@ const FunctionsPanelCodeView = ({
               <div className="code__default-class">
                 <Input
                   floatingLabel
+                  invalid={!validation.isDefaultCLassValid}
                   label="Default class"
                   onChange={default_class =>
                     setData(state => ({ ...state, default_class }))
                   }
                   onBlur={handleClassOnBlur}
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isDefaultCLassValid: value
+                    }))
+                  }
                   value={data.default_class}
                 />
               </div>
@@ -173,6 +180,7 @@ const FunctionsPanelCodeView = ({
                   className="input__wide"
                   disabled={imageType !== NEW_IMAGE}
                   floatingLabel
+                  invalid={!validation.isBuildImageValid}
                   label="Resulting Image"
                   onBlur={event => {
                     if (
@@ -184,6 +192,12 @@ const FunctionsPanelCodeView = ({
                   }}
                   onChange={build_image =>
                     setData(state => ({ ...state, build_image }))
+                  }
+                  setInvalid={value =>
+                    setValidation(state => ({
+                      ...state,
+                      isBuildImageValid: value
+                    }))
                   }
                   tip="The name of the built container image"
                   type="text"

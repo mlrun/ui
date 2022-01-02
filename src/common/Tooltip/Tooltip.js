@@ -129,27 +129,28 @@ const Tooltip = ({ children, className, hidden, template, textShow }) => {
       >
         {children}
       </div>
-      {createPortal(
-        <CSSTransition
-          classNames="fade"
-          in={show}
-          timeout={duration}
-          unmountOnExit
-        >
-          <div
-            data-testid="tooltip"
-            ref={tooltipRef}
-            style={{
-              ...defaultStyle,
-              ...style
-            }}
-            className="tooltip"
+      {!hidden &&
+        createPortal(
+          <CSSTransition
+            classNames="fade"
+            in={show}
+            timeout={duration}
+            unmountOnExit
           >
-            {template}
-          </div>
-        </CSSTransition>,
-        document.getElementById('overlay_container')
-      )}
+            <div
+              data-testid="tooltip"
+              ref={tooltipRef}
+              style={{
+                ...defaultStyle,
+                ...style
+              }}
+              className="tooltip"
+            >
+              {template}
+            </div>
+          </CSSTransition>,
+          document.getElementById('overlay_container')
+        )}
     </>
   )
 }

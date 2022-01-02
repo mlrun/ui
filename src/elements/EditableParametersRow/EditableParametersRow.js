@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from 'react'
+import React, { useRef, useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import Input from '../../common/Input/Input'
@@ -20,7 +20,13 @@ const EditableParametersRow = ({
   setEditItem,
   setSelectedParameter
 }) => {
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isValueValid: true
+  })
   const tableRowRef = useRef(null)
+
+  const nameIsNotUnique = isNameNotUnique(selectedParameter.newName, content)
 
   const handleDocumentClick = useCallback(
     event => {
@@ -61,18 +67,30 @@ const EditableParametersRow = ({
             <Input
               density="dense"
               invalid={
-                selectedParameter.newName !== selectedParameter.data.name &&
-                isNameNotUnique(selectedParameter.newName, content)
+                (selectedParameter.newName !== selectedParameter.data.name &&
+                  nameIsNotUnique) ||
+                !validation.isNameValid
               }
-              invalidText="Name already exists"
+              invalidText={
+                nameIsNotUnique
+                  ? 'Name already exists'
+                  : 'This field is invalid'
+              }
               onChange={name => {
                 setSelectedParameter({
                   ...selectedParameter,
                   newName: name
                 })
               }}
+              setInvalid={value =>
+                setValidation(state => ({
+                  ...state,
+                  isNameValid: value
+                }))
+              }
               type="text"
               value={selectedParameter.newName ?? selectedParameter.data.name}
+              required
             />
           </div>
           <div className="table__cell table__cell_edit">
@@ -109,6 +127,7 @@ const EditableParametersRow = ({
       <div className="table__cell table__cell_edit">
         <Input
           density="dense"
+          invalid={!validation.isValueValid}
           onChange={value => {
             setSelectedParameter({
               ...selectedParameter,
@@ -118,16 +137,25 @@ const EditableParametersRow = ({
               }
             })
           }}
+          setInvalid={value =>
+            setValidation(state => ({
+              ...state,
+              isValueValid: value
+            }))
+          }
           type="text"
           value={`${selectedParameter.data.value}`}
+          required
         />
       </div>
       <div className="table__cell table__cell-actions">
         <button
           className="apply-edit-btn"
           disabled={
-            selectedParameter.newName !== selectedParameter.data.name &&
-            isNameNotUnique(selectedParameter.newName, content)
+            (selectedParameter.newName !== selectedParameter.data.name &&
+              nameIsNotUnique) ||
+            !validation.isNameValid ||
+            !validation.isValueValid
           }
           onClick={() => handleEdit(selectedParameter, false)}
         >

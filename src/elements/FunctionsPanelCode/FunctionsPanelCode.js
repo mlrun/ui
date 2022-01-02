@@ -248,7 +248,8 @@ const FunctionsPanelCode = ({
       ...state,
       isCodeImageValid: true,
       isBaseImageValid: true,
-      isBuildCommandsValid: true
+      isBuildCommandsValid: true,
+      isBuildImageValid: true
     }))
   }
 

@@ -117,20 +117,6 @@ const FeatureSetsPanelTargetStore = ({
     }
   }
 
-  const handleExternalOfflineKindPathOnChange = path => {
-    if (!validation.isTargetsPathValid && path.length > 0) {
-      setValidation(state => ({
-        ...state,
-        isTargetsPathValid: true
-      }))
-    }
-
-    setData(state => ({
-      ...state,
-      externalOffline: { ...state.externalOffline, path }
-    }))
-  }
-
   const handleExternalOfflineKindTypeChange = kind => {
     setData(state => ({
       ...state,
@@ -198,11 +184,11 @@ const FeatureSetsPanelTargetStore = ({
 
       if (
         kindId === checkboxModels.externalOffline.id &&
-        !validation.isTargetsPathValid
+        !validation.isExternalOfflineTargetPathValid
       ) {
         setValidation(state => ({
           ...state,
-          isTargetsPathValid: true
+          isExternalOfflineTargetPathValid: true
         }))
       }
 
@@ -450,9 +436,6 @@ const FeatureSetsPanelTargetStore = ({
       data={data}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}
-      handleExternalOfflineKindPathOnChange={
-        handleExternalOfflineKindPathOnChange
-      }
       handleExternalOfflineKindTypeChange={handleExternalOfflineKindTypeChange}
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
       handleOfflineKindPathOnBlur={handleOfflineKindPathOnBlur}

@@ -280,7 +280,7 @@ const generateFeaturesTableHeaders = isTablePanelOpen => {
     },
     {
       header: '',
-      class: 'artifacts_big align-right',
+      class: 'artifacts_small align-right',
       hidden: !isTablePanelOpen
     }
   ]
@@ -525,23 +525,29 @@ export const handleApplyDetailsChanges = (
   filters
 ) => {
   const data = {
+    metadata: {},
     spec: {}
   }
+  const metadataFields = ['labels']
 
-  Object.keys(changes.data).forEach(
-    key => (data.spec[key] = changes.data[key].previousFieldValue)
-  )
+  Object.keys(changes.data).forEach(key => {
+    if (metadataFields.includes(key)) {
+      data.metadata[key] = changes.data[key].previousFieldValue
+    } else {
+      data.spec[key] = changes.data[key].previousFieldValue
+    }
+  })
 
-  if (data.spec.labels) {
+  if (data.metadata.labels) {
     const objectLabels = {}
 
-    data.spec.labels.forEach(label => {
+    data.metadata.labels.forEach(label => {
       const splitedLabel = label.split(':')
 
       objectLabels[splitedLabel[0]] = splitedLabel[1].replace(' ', '')
     })
 
-    data.spec.labels = { ...objectLabels }
+    data.metadata.labels = { ...objectLabels }
   }
 
   return updateFeatureStoreData(
