@@ -297,7 +297,8 @@ export const generateTableData = (
     parameters: parseDefaultContent(parameters),
     volume_mounts: (volumeMounts ?? []).map(volumeMounts => ({
       name: volumeMounts.data.name,
-      mountPath: volumeMounts.data.mountPath
+      mountPath: volumeMounts.data.mountPath,
+      subPath: volumeMounts.data.subPath
     })),
     volumes,
     environmentVariables,
@@ -380,7 +381,8 @@ export const generateTableDataFromDefaultData = (
       return {
         data: {
           name: volume_mounts?.name,
-          mountPath: volume_mounts?.mountPath
+          mountPath: volume_mounts?.mountPath,
+          subPath: volume_mounts?.subPath
         },
         isDefault: true,
         canBeModified: mode === PANEL_EDIT_MODE
@@ -448,7 +450,8 @@ export const generateTableDataFromDefaultData = (
     volume_mounts: volumeMounts?.length
       ? volumeMounts.map(volumeMounts => ({
           name: volumeMounts.data.name,
-          mountPath: volumeMounts.data.mountPath
+          mountPath: volumeMounts.data.mountPath,
+          subPath: volumeMounts.data.subPath
         }))
       : [],
     volumes: defaultData.function?.spec.volumes ?? [],
