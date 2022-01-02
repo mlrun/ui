@@ -513,3 +513,11 @@ export const OUTPUT_NODE = 'output-node'
 export const PRIMARY_NODE = 'primary-node'
 export const SECONDARY_NODE = 'secondary-node'
 export const ERROR_NODE = 'error-node'
+
+export const ML_EDGE = 'ml-edge'
+
+export const DEFAULT_EDGE = 'default-edge'
+export const FLOATING_EDGE = 'floating-edge'
+export const STRAIGHT_EDGE = 'straight-edge'
+export const STEP_EDGE = 'step-edge'
+export const SMOOTH_STEP_EDGE = 'smooth-step-edge'

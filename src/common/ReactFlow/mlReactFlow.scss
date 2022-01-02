@@ -158,8 +158,31 @@
     }
   }
 
-  .react-flow__edge-path {
-    stroke: $bombay;
-    stroke-width: 2px;
+
+  .react-flow__edge {
+    path,
+    polyline {
+      stroke: $bombay;
+      stroke-width: 2px;
+    }
+
+    .react-flow__arrowhead_closed {
+      polyline {
+        fill: $bombay;
+      }
+    }
+
+    &.selected {
+      path,
+      polyline {
+        stroke: $brightTurquoise;
+      }
+
+      .react-flow__arrowhead_closed {
+        polyline {
+          fill: $brightTurquoise;
+        }
+      }
+    }
   }
 }
