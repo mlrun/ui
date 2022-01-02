@@ -146,7 +146,9 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, closePopUp, projectId }) => {
               <div className="members-list">
                 {usersList
                   .filter(member => {
-                    return member.name.includes(searchValue)
+                    return member.name
+                      .toLowerCase()
+                      .includes(searchValue.toLowerCase())
                   })
                   .map(member => {
                     const memberClassNames = classnames(
