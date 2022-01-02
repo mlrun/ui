@@ -6,6 +6,8 @@ import Button from '../../common/Button/Button'
 import Input from '../../common/Input/Input'
 import TextArea from '../../common/TextArea/TextArea'
 import ChipCell from '../../common/ChipCell/ChipCell'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
 import { generateKeyValues, parseKeyValues } from '../../utils'
 import { LABEL_BUTTON, PRIMARY_BUTTON } from '../../constants'
@@ -17,12 +19,13 @@ const CreateFeatureVectorPopUp = ({
   createFeatureVector,
   featureVectorData
 }) => {
+  const [tagTooltipIsHidden, setTagTooltipIsHidden] = useState(false)
   const [nameIsValid, setNameIsValid] = useState(true)
   const [featureVectorName, setFeatureVectorName] = useState(
     featureVectorData.name
   )
   const [featureVectorTag, setFeatureVectorTag] = useState(
-    featureVectorData.tag
+    featureVectorData.tag || 'latest'
   )
   const [featureVectorDescription, setFeatureVectorDescription] = useState(
     featureVectorData.description
@@ -64,16 +67,26 @@ const CreateFeatureVectorPopUp = ({
           value={featureVectorName}
           wrapperClassName="vector-name-wrapper"
         />
-        <Input
-          className="vector-tag"
-          floatingLabel
-          label="Tag"
-          onChange={setFeatureVectorTag}
-          required
-          type="text"
-          value={featureVectorTag}
-          wrapperClassName="vector-tag-wrapper"
-        />
+        <Tooltip
+          className="vector-tag-wrapper"
+          hidden={tagTooltipIsHidden || featureVectorTag.length === 0}
+          template={<TextTooltipTemplate text={featureVectorTag} />}
+        >
+          <Input
+            className="vector-tag"
+            floatingLabel
+            label="Tag"
+            onBlur={() => setTagTooltipIsHidden(false)}
+            onChange={value => {
+              setTagTooltipIsHidden(true)
+              setFeatureVectorTag(value)
+            }}
+            pattern="^(?=[\S\s]{1,56}$)([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$"
+            required
+            type="text"
+            value={featureVectorTag}
+          />
+        </Tooltip>
       </div>
       <div className="new-feature-vector__row new-feature-vector__description-row">
         <TextArea
