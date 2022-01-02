@@ -9,6 +9,8 @@ import Tip from '../../common/Tip/Tip'
 import Accordion from '../../common/Accordion/Accordion'
 import FeaturesTablePanelRow from './FeatureTablePanleRow/FeaturesTablePanelRow'
 import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
+import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import Tooltip from '../../common/Tooltip/Tooltip'
 
 import tableActions from '../../actions/table'
 import featureStoreActions from '../../actions/featureStore'
@@ -40,10 +42,14 @@ const FeaturesTablePanel = ({
 
   useEffect(() => {
     if (tableStore.features.isNewFeatureVector) {
-      updateCurrentProjectName(filtersStore.project)
+      updateCurrentProjectName(
+        filtersStore.project ||
+          tableStore.features.featureVector.metadata.project
+      )
     }
   }, [
     filtersStore.project,
+    tableStore.features.featureVector.metadata.project,
     tableStore.features.isNewFeatureVector,
     updateCurrentProjectName
   ])
@@ -169,37 +175,51 @@ const FeaturesTablePanel = ({
             {tableStore.features.featureVector.metadata.project}
           </div>
           <div className="features-panel__header-vector">
-            <div className="features-panel__header-vector-name">
+            <Tooltip
+              className="features-panel__header-vector-name"
+              template={
+                <TextTooltipTemplate
+                  text={tableStore.features.featureVector.metadata.name}
+                />
+              }
+            >
               {tableStore.features.featureVector.metadata.name}
-              <span className="features-panel__header-vector-tag">
-                {tableStore.features.featureVector.metadata.tag}
-              </span>
-              {tableStore.features.isNewFeatureVector && (
-                <div className="features-panel__header-vector-actions actions">
-                  <button onClick={() => setIsCreateFeaturePopUpOpen(true)}>
-                    <Edit />
-                  </button>
-                  {isCreateFeaturePopUpOpen &&
-                    createPortal(
-                      <CreateFeatureVectorPopUp
-                        closePopUp={() => {
-                          setIsCreateFeaturePopUpOpen(false)
-                        }}
-                        createFeatureVector={createFeatureVector}
-                        featureVectorData={{
-                          name: tableStore.features.featureVector.metadata.name,
-                          tag: tableStore.features.featureVector.metadata.tag,
-                          description:
-                            tableStore.features.featureVector.spec.description,
-                          labels:
-                            tableStore.features.featureVector.metadata.labels
-                        }}
-                      />,
-                      document.getElementById('root')
-                    )}
-                </div>
-              )}
-            </div>
+            </Tooltip>
+            <Tooltip
+              className="features-panel__header-vector-tag"
+              template={
+                <TextTooltipTemplate
+                  text={tableStore.features.featureVector.metadata.tag}
+                />
+              }
+            >
+              {tableStore.features.featureVector.metadata.tag}
+            </Tooltip>
+            {tableStore.features.isNewFeatureVector && (
+              <div className="features-panel__header-vector-actions actions">
+                <button onClick={() => setIsCreateFeaturePopUpOpen(true)}>
+                  <Edit />
+                </button>
+                {isCreateFeaturePopUpOpen &&
+                  createPortal(
+                    <CreateFeatureVectorPopUp
+                      closePopUp={() => {
+                        setIsCreateFeaturePopUpOpen(false)
+                      }}
+                      createFeatureVector={createFeatureVector}
+                      featureVectorData={{
+                        name: tableStore.features.featureVector.metadata.name,
+                        tag: tableStore.features.featureVector.metadata.tag,
+                        description:
+                          tableStore.features.featureVector.spec.description,
+                        labels:
+                          tableStore.features.featureVector.metadata.labels
+                      }}
+                    />,
+                    document.getElementById('root')
+                  )}
+              </div>
+            )}
             <div className="features-panel__header-vector-tooltip">
               <Tip text="Add features from the list on the left to this feature vector" />
             </div>
