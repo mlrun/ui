@@ -188,7 +188,7 @@ const Input = React.forwardRef(
         (required && value.trim().length === 0) ||
         (pattern && !validationPattern.test(value)) ||
         value.startsWith(' ') ||
-        (value.trim().length > 0 && !isFieldValidByPattern)
+        !isFieldValidByPattern
 
       setIsInvalid(fieldInvalid)
       setInvalid(!fieldInvalid)
@@ -266,7 +266,7 @@ const Input = React.forwardRef(
             )}
           </label>
         )}
-        {!isEmpty(validationRules) && typedValue && isInvalid && (
+        {isInvalid && !isEmpty(validationRules) && (
           <i className="input__warning" onClick={toggleValidationRulesMenu}>
             <WarningIcon />
           </i>
@@ -312,10 +312,7 @@ const Input = React.forwardRef(
           </ul>
         )}
         {!isEmpty(validationRules) && (
-          <OptionsMenu
-            show={showValidationRules && typedValue !== ''}
-            ref={ref}
-          >
+          <OptionsMenu show={showValidationRules} ref={ref}>
             {renderValidationRules}
           </OptionsMenu>
         )}
