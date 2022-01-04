@@ -72,10 +72,17 @@ export default {
       true
     )
   },
-  getFeatureVector: (project, featureVector) =>
-    mainHttpClient.get(`/projects/${project}/feature-vectors`, {
-      params: { name: featureVector }
-    }),
+  getFeatureVector: (project, featureVector, tag) => {
+    const params = { name: featureVector }
+
+    if (tag) {
+      params.tag = tag
+    }
+
+    return mainHttpClient.get(`/projects/${project}/feature-vectors`, {
+      params
+    })
+  },
   getFeatureVectors: (project, filters, config) => {
     return fetchFeatureStoreContent(
       `/projects/${project}/${FEATURE_VECTORS_TAB}`,

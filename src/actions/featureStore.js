@@ -201,9 +201,9 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SET_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureVector: (project, featureVector) => dispatch => {
+  fetchFeatureVector: (project, featureVector, tag) => dispatch => {
     return featureStoreApi
-      .getFeatureVector(project, featureVector)
+      .getFeatureVector(project, featureVector, tag)
       .then(response => {
         const generatedFeatureVectors = parseFeatureVectors(
           response.data?.feature_vectors

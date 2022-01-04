@@ -262,7 +262,12 @@ const FeatureStore = ({
           item.ui?.type === 'feature' ? fetchFeature : fetchEntity
         await fetchFeatureRowData(fetchData, item, setPageData)
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
-        await fetchFeatureVectorRowData(fetchFeatureVector, item, setPageData)
+        await fetchFeatureVectorRowData(
+          fetchFeatureVector,
+          item,
+          setPageData,
+          filtersStore.tag
+        )
       } else if (match.params.pageTab === FEATURE_SETS_TAB) {
         await fetchFeatureSetRowData(fetchFeatureSet, item, setPageData)
       } else if (match.params.pageTab === DATASETS_TAB) {
@@ -281,6 +286,7 @@ const FeatureStore = ({
       fetchFeatureSet,
       fetchFeatureVector,
       filtersStore.iter,
+      filtersStore.tag,
       match.params.pageTab
     ]
   )

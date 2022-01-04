@@ -779,7 +779,8 @@ export const fetchFeatureSetRowData = async (
 export const fetchFeatureVectorRowData = async (
   fetchFeatureVector,
   featureVector,
-  setPageData
+  setPageData,
+  tag
 ) => {
   const featureVectorIdentifier = getFeatureVectorIdentifier(featureVector)
 
@@ -795,7 +796,8 @@ export const fetchFeatureVectorRowData = async (
 
   const result = await fetchFeatureVector(
     featureVector.project,
-    featureVector.name
+    featureVector.name,
+    tag
   ).catch(error => {
     setPageData(state => ({
       ...state,
