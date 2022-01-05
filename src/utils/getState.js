@@ -28,7 +28,7 @@ const commonStateLabels = {
   info: 'Info',
   pending: 'Pending',
   ready: 'Ready',
-  running: 'Deploying',
+  running: 'Running',
   succeeded: 'Succeeded',
   warn: 'Warn'
 }
@@ -40,7 +40,7 @@ const functionStateLabels = {
   failed: 'Error',
   pending: 'Deploying',
   ready: 'Ready',
-  running: 'Deploying',
+  running: 'Running',
   succeeded: 'Succeeded'
 }
 
