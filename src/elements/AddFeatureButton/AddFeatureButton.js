@@ -65,7 +65,10 @@ const AddFeatureButton = ({ feature, tableStore, updateGroupedFeatures }) => {
       originalTemplate: `${feature.metadata.project}/${feature.metadata.name}.${feature.name}`
     }
 
-    updateGroupedFeatures([...existingFeatures, newFeature])
+    updateGroupedFeatures(
+      [...existingFeatures, newFeature],
+      tableStore.features.currentProject
+    )
   }
 
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { connect } from 'react-redux'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isNil } from 'lodash'
 import PropTypes from 'prop-types'
 
 import Button from '../../common/Button/Button'
@@ -55,7 +55,10 @@ const FeaturesTablePanel = ({
   ])
 
   useEffect(() => {
-    if (!tableStore.features.isNewFeatureVector) {
+    if (
+      !tableStore.features.isNewFeatureVector &&
+      isNil(tableStore.features.labelFeature)
+    ) {
       setLabelFeature({
         [tableStore.features
           .currentProject]: tableStore.features.groupedFeatures[
@@ -74,7 +77,8 @@ const FeaturesTablePanel = ({
     tableStore.features.currentProject,
     tableStore.features.featureVector.spec.label_feature,
     tableStore.features.groupedFeatures,
-    tableStore.features.isNewFeatureVector
+    tableStore.features.isNewFeatureVector,
+    tableStore.features.labelFeature
   ])
 
   const addFeatures = () => {
@@ -126,19 +130,16 @@ const FeaturesTablePanel = ({
     }
   }
 
-  const deleteFeature = featureName => {
+  const deleteFeature = (featureTemplate, project) => {
     const filteredFeatures = tableStore.features.groupedFeatures[
-      tableStore.features.currentProject
-    ].filter(feature => feature.feature !== featureName)
+      project
+    ].filter(feature => feature.originalTemplate !== featureTemplate)
 
-    updateGroupedFeatures(filteredFeatures)
+    updateGroupedFeatures(filteredFeatures, project)
 
-    if (
-      featureName ===
-      tableStore.features.labelFeature?.[tableStore.features.currentProject]
-    ) {
+    if (featureTemplate === tableStore.features.labelFeature?.[project]) {
       setLabelFeature({
-        [tableStore.features.currentProject]: ''
+        [project]: ''
       })
     }
   }
@@ -157,11 +158,9 @@ const FeaturesTablePanel = ({
     })
   }
 
-  const toggleLabelFeature = featureTemplate => {
+  const toggleLabelFeature = (featureTemplate, project) => {
     setLabelFeature({
-      [tableStore.features.currentProject]: tableStore.features.labelFeature?.[
-        tableStore.features.currentProject
-      ]
+      [project]: tableStore.features.labelFeature?.[project]
         ? ''
         : featureTemplate
     })
@@ -251,12 +250,14 @@ const FeaturesTablePanel = ({
                         ]
                       : ''
                   }
-                  isEditEnabled={
-                    tableStore.features.currentProject === feature.project
-                  }
+                  isEditEnabled={true}
                   feature={feature}
-                  toggleLabelFeature={toggleLabelFeature}
-                  deleteFeature={deleteFeature}
+                  toggleLabelFeature={featureTemplate =>
+                    toggleLabelFeature(featureTemplate, feature.project)
+                  }
+                  deleteFeature={featureTemplate =>
+                    deleteFeature(featureTemplate, feature.project)
+                  }
                 />
               ))
             ) : (
@@ -289,12 +290,14 @@ const FeaturesTablePanel = ({
                           ? tableStore.features.labelFeature[projectName]
                           : ''
                       }
-                      isEditEnabled={
-                        tableStore.features.currentProject === feature.project
-                      }
+                      isEditEnabled={true}
                       feature={feature}
-                      toggleLabelFeature={toggleLabelFeature}
-                      deleteFeature={deleteFeature}
+                      toggleLabelFeature={featureTemplate =>
+                        toggleLabelFeature(featureTemplate, feature.project)
+                      }
+                      deleteFeature={featureTemplate =>
+                        deleteFeature(featureTemplate, feature.project)
+                      }
                     />
                   ))}
                 </div>
