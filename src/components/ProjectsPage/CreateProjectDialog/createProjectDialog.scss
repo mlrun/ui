@@ -11,6 +11,10 @@
         margin-bottom: 0;
       }
     }
+
+    .chips-wrapper {
+      flex-wrap: wrap;
+    }
   }
 
   .error-message {

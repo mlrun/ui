@@ -32,6 +32,7 @@ const Projects = ({
   removeNewProjectError,
   removeProjects,
   setNewProjectDescription,
+  setNewProjectLabels,
   setNewProjectName,
   setNotification
 }) => {
@@ -251,7 +252,8 @@ const Projects = ({
 
       createNewProject({
         metadata: {
-          name: projectStore.newProject.name
+          name: projectStore.newProject.name,
+          labels: projectStore.newProject.labels
         },
         spec: {
           description: projectStore.newProject.description
@@ -292,6 +294,7 @@ const Projects = ({
       setNameValid={setNameValid}
       setNewProjectDescription={setNewProjectDescription}
       setNewProjectName={setNewProjectName}
+      setNewProjectLabels={setNewProjectLabels}
       setSelectedProjectsState={setSelectedProjectsState}
       setSortProjectId={setSortProjectId}
       sortProjectId={sortProjectId}

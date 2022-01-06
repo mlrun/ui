@@ -3,13 +3,12 @@ import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import ChipCell from '../../common/ChipCell/ChipCell'
+import ProjectLabels from '../../components/Project/ProjectLabels/ProjectLabels'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
 
-import { getTimeElapsedByDate, parseKeyValues } from '../../utils'
-import { getChipOptions } from '../../utils/getChipOptions'
+import { getTimeElapsedByDate } from '../../utils'
 
 import { ReactComponent as ClockIcon } from '../../images/clock.svg'
 
@@ -85,11 +84,9 @@ const ProjectCardView = React.forwardRef(
               ref={chipRef}
             >
               <span>Labels:</span>
-              <ChipCell
-                chipOptions={getChipOptions('labels')}
-                elements={parseKeyValues(project.metadata.labels || {})}
+              <ProjectLabels
+                labels={project.metadata.labels}
                 shortChips
-                tooltip
                 visibleChipsMaxLength="1"
               />
             </div>

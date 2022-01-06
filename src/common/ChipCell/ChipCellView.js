@@ -123,7 +123,7 @@ const ChipCellView = React.forwardRef(
             {isEditMode && (
               <button
                 className={buttonAddClassNames}
-                onClick={() => handleAddNewChip(':')}
+                onClick={e => handleAddNewChip(e, ':')}
               >
                 <Add />
               </button>
