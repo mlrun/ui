@@ -116,7 +116,7 @@ const JobsPanelTitleView = ({
                         })
                       }
                       elements={currentFunctionInfo.labels}
-                      isEditMode={true}
+                      isEditMode
                       removeChip={chips =>
                         panelDispatch({
                           type: panelActions.REMOVE_JOB_LABEL,

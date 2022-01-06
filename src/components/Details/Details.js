@@ -303,7 +303,6 @@ const Details = ({
       selectedItem,
       pageData,
       handlePreview,
-      detailsStore,
       handleEditInput,
       setChanges,
       setChangesData,
