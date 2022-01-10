@@ -5,23 +5,27 @@
 .modal {
   position: fixed;
   top: 30%;
-  max-width: 600px;
-  width: 100%;
+  width: 700px;
   outline: 0;
   z-index: 2;
 
-  &-sm {
-    max-width: 400px;
-  }
+  @media screen and (min-width: 992px) {
+    width: 1000px;
 
-  &-lg {
-    max-width: 800px;
+    &-sm {
+      width: 700px;
+    }
+
+    &-lg {
+      width: 1400px;
+    }
   }
 
   &__content {
     display: flex;
     flex-flow: column nowrap;
     position: relative;
+    padding-bottom: 1rem;
     min-height: 300px;
     height: calc(100% - 3.5rem);
     max-height: 90vh;
@@ -44,6 +48,7 @@
     &-title {
       color: $primary;
       font-size: 2em;
+      text-transform: capitalize;
       margin: 0;
     }
     &-button {

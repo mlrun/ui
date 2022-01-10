@@ -18,7 +18,7 @@ const ProjectAction = ({ actions, onClick, showActions }) => {
           >
             <button
               className="project-overview-actions__item-wrapper"
-              onClick={() => onClick(path)}
+              onClick={() => onClick({ id, label, path })}
             >
               <i className="project-overview-actions__item-icon">{icon}</i>
               <span className="link">{label}</span>

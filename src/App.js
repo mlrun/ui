@@ -47,6 +47,11 @@ const AddToFeatureVectorPage = React.lazy(() =>
 )
 
 const App = () => {
+  // TODO: Remove after ProjectOverview is Done.
+  const search = window.location.search
+  const isDemo =
+    new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
+
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Page>
@@ -57,11 +62,13 @@ const App = () => {
               exact
               render={routeProps => <Projects {...routeProps} />}
             />
-            <Redirect
-              exact
-              from="/projects/:projectName"
-              to="/projects/:projectName/monitor"
-            />
+            {!isDemo && (
+              <Redirect
+                exact
+                from="/projects/:projectName"
+                to="/projects/:projectName/monitor"
+              />
+            )}
             <Route
               path="/projects/:projectName"
               exact

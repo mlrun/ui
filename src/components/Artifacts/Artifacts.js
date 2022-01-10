@@ -156,15 +156,15 @@ const Artifacts = ({
         selectedItem={selectedArtifact.item}
         getIdentifier={getArtifactIdentifier}
       />
-      {isPopupDialogOpen && (
-        <RegisterArtifactPopup
-          match={match}
-          pageData={pageData}
-          refresh={fetchData}
-          setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.actionsMenuHeader}
-        />
-      )}
+
+      <RegisterArtifactPopup
+        match={match}
+        pageData={pageData}
+        refresh={fetchData}
+        setIsPopupOpen={setIsPopupDialogOpen}
+        show={isPopupDialogOpen}
+        title={pageData.actionsMenuHeader}
+      />
     </>
   )
 }

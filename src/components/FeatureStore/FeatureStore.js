@@ -548,15 +548,16 @@ const FeatureStore = ({
         selectedItem={selectedItem.item}
         getIdentifier={getIdentifierMethod(match.params.pageTab)}
       />
-      {isPopupDialogOpen && (
-        <RegisterArtifactPopup
-          artifactKind={match.params.pageTab.slice(0, -1)}
-          match={match}
-          refresh={fetchData}
-          setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.actionsMenuHeader}
-        />
-      )}
+
+      <RegisterArtifactPopup
+        artifactKind={match.params.pageTab.slice(0, -1)}
+        match={match}
+        refresh={fetchData}
+        setIsPopupOpen={setIsPopupDialogOpen}
+        show={isPopupDialogOpen}
+        title={pageData.actionsMenuHeader}
+      />
+
       {featureSetsPanelIsOpen && (
         <FeatureSetsPanel
           closePanel={closePanel}

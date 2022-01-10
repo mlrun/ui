@@ -28,7 +28,7 @@ export const getInitialCards = projectName => {
         {
           id: 'createFeatureSet',
           icon: <FeatureSetIcon />,
-          label: 'Create features set',
+          label: 'Create Features Set',
           path: {
             target: `${base_url}/feature-store/feature-sets?openPanel=true`
           },
@@ -37,20 +37,20 @@ export const getInitialCards = projectName => {
         {
           id: 'registerDataset',
           icon: <DataSetIcon />,
-          label: 'Register dataset',
+          label: 'Register Dataset',
           path: {
             // target: `${base_url}/feature-store/datasets?openPanel=true`
-            target: 'registerdataset'
+            target: 'dataset'
           },
           tooltip: 'some text'
         },
         {
           id: 'registerFile',
           icon: <RegisterFileIcon />,
-          label: 'Register file',
+          label: 'Register File',
           path: {
             // target: `${base_url}/files?openPanel=true`
-            target: 'registerfile'
+            target: 'artifact'
           },
           tooltip: ''
         }
@@ -93,14 +93,14 @@ export const getInitialCards = projectName => {
         {
           id: 'createNewFunction',
           icon: <CreatFunctionIcon />,
-          label: 'Create new function',
+          label: 'Create New Function',
           path: { target: `${base_url}/functions?openPanel=true` },
           tooltip: ''
         },
         {
           id: 'createNewJob',
           icon: <CreateJobIcon />,
-          label: 'Create new job',
+          label: 'Create New Job',
           path: { target: `${base_url}/jobs/monitor-jobs/create-new-job` },
           tooltip: ''
         }
@@ -142,7 +142,7 @@ export const getInitialCards = projectName => {
           id: 'deployServingFunction',
           icon: <CreateJobIcon />,
           path: { target: `${base_url}/functions` },
-          label: 'Deploy serving function',
+          label: 'Deploy Serving Function',
           tooltip: ''
         }
       ],
@@ -175,13 +175,11 @@ export const calcIsDemoPrefix = (path, isDemoMode) => {
   return isDemoMode ? prefix.concat('demo=true') : ''
 }
 
-export const handlePath = (history, cb, isDemoMode) => ({
-  target,
-  externalLink
-}) => {
-  return target.indexOf('/') < 0
-    ? cb(target.toLowerCase())
-    : externalLink
+export const handlePath = (cb, history, isDemoMode) => config => {
+  const { externalLink, target } = config.path
+  return externalLink
     ? (window.top.location.href = target)
+    : target.indexOf('/') < 0
+    ? cb(config)
     : history.push(`${target}${calcIsDemoPrefix(target, isDemoMode)}`)
 }

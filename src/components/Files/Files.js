@@ -264,15 +264,15 @@ const Files = ({
         selectedItem={selectedFile.item}
         getIdentifier={getArtifactIdentifier}
       />
-      {isPopupDialogOpen && (
-        <RegisterArtifactPopup
-          artifactKind="artifact"
-          match={match}
-          refresh={fetchData}
-          setIsPopupOpen={setIsPopupDialogOpen}
-          title={pageData.actionsMenuHeader}
-        />
-      )}
+
+      <RegisterArtifactPopup
+        artifactKind="artifact"
+        match={match}
+        refresh={fetchData}
+        setIsPopupOpen={setIsPopupDialogOpen}
+        show={isPopupDialogOpen}
+        title={pageData.actionsMenuHeader}
+      />
     </div>
   )
 }

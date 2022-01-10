@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -19,7 +19,7 @@ const ProjectCard = ({
     setFetchNuclioFunctionsFailure
   ] = useState(false)
 
-  const actionsMenuRef = React.createRef()
+  const actionsMenuRef = useRef()
 
   useEffect(() => {
     setFetchNuclioFunctionsFailure(

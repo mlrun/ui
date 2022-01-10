@@ -384,15 +384,14 @@ const Models = ({
           <Pipeline content={content} match={match} />
         ) : null}
       </Content>
-      {isRegisterArtifactPopupOpen && (
-        <RegisterArtifactPopup
-          artifactKind={pageData.page.slice(0, -1)}
-          match={match}
-          refresh={fetchData}
-          setIsPopupOpen={setIsRegisterArtifactPopupOpen}
-          title={pageData.actionsMenuHeader}
-        />
-      )}
+      <RegisterArtifactPopup
+        artifactKind={pageData.page.slice(0, -1)}
+        match={match}
+        refresh={fetchData}
+        setIsPopupOpen={setIsRegisterArtifactPopupOpen}
+        show={isRegisterArtifactPopupOpen}
+        title={pageData.actionsMenuHeader}
+      />
       {isDeployPopupOpen && (
         <DeployModelPopUp
           closePopUp={closeDeployModelPopUp}

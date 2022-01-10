@@ -28,9 +28,10 @@ import './ProjectOverview.scss'
 const ProjectOverview = ({ fetchProject, history, match, project }) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
-  const [modal, setModal] = useState({ isOpen: false, name: '' })
+  const [modal, setModal] = useState({ isOpen: false, label: '', name: '' })
 
   const isDemoMode = useDemoMode()
+
   const { projectName } = match.params
 
   const cards = useMemo(() => {
@@ -39,24 +40,18 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
 
   const renderPopupContent = () => {
     switch (modal.name) {
-      case 'registerdataset':
+      case 'dataset':
+      case 'artifact':
         return (
           <RegisterArtifactPopup
-            artifactKind={'dataset'}
+            artifactKind={modal.name}
             match={match}
             refresh={() => {}}
-            setIsPopupOpen={() => handleModalToogle()}
-            title={'Register dataset'}
-          />
-        )
-      case 'registerfile':
-        return (
-          <RegisterArtifactPopup
-            artifactKind={'artifact'}
-            match={match}
-            refresh={() => {}}
-            setIsPopupOpen={() => handleModalToogle()}
-            title={'Register artifact'}
+            setIsPopupOpen={isOpen =>
+              setModal(prevModal => ({ ...prevModal, isOpen }))
+            }
+            show={modal.isOpen}
+            title={modal.label}
           />
         )
       default:
@@ -64,17 +59,18 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
     }
   }
 
-  const handleModalToogle = popupName => {
+  const handleModalToogle = ({ label, path }) => {
     return setModal(prev => {
       return {
         ...prev,
         isOpen: !prev.isOpen,
-        name: !prev.isOpen ? popupName : ''
+        label,
+        name: !prev.isOpen ? path.target : ''
       }
     })
   }
 
-  const handlePathExecution = handlePath(history, handleModalToogle, isDemoMode)
+  const handlePathExecution = handlePath(handleModalToogle, history, isDemoMode)
 
   const handleActionsViewToggle = index => {
     if (selectedActionsIndex === index) {
@@ -85,11 +81,11 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
 
   const fetchProjectData = useCallback(async () => {
     try {
-      await fetchProject(match.params.projectName)
+      await fetchProject(projectName)
     } catch (error) {
       handleFetchProjectError(error, history, setConfirmData)
     }
-  }, [fetchProject, history, match.params.projectName])
+  }, [fetchProject, history, projectName])
 
   useEffect(() => {
     fetchProjectData()
@@ -126,7 +122,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
 
   return (
     <div className="project-overview">
-      {modal.isOpen && renderPopupContent()}
+      {renderPopupContent()}
       <div className="project-overview__header">
         <div className="project-overview__header-title">
           {project.data.metadata.name}

@@ -288,17 +288,16 @@ const ProjectMonitorView = React.forwardRef(
             </div>
           </div>
         )}
-        {isPopupDialogOpen && (
-          <RegisterArtifactPopup
-            artifactKind={artifactKind}
-            match={match}
-            refresh={() => {
-              history.push(registerArtifactLink)
-            }}
-            setIsPopupOpen={setIsPopupDialogOpen}
-            title={`Register ${artifactKind}`}
-          />
-        )}
+        <RegisterArtifactPopup
+          artifactKind={artifactKind}
+          match={match}
+          refresh={() => {
+            history.push(registerArtifactLink)
+          }}
+          setIsPopupOpen={setIsPopupDialogOpen}
+          show={isPopupDialogOpen}
+          title={`Register ${artifactKind}`}
+        />
         {showManageMembers && (
           <MembersPopUp
             changeMembersCallback={changeMembersCallback}

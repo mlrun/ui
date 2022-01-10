@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { messagesByKind } from './messagesByKind'
 
-import PopUpDialog from '../../common/PopUpDialog/PopUpDialog'
+import Modal from '../../common/Modal/Modal'
 import RegisterArtifactForm from '../../elements/RegisterArtifactForm/RegisterArtifactForm'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import Button from '../../common/Button/Button'
@@ -14,12 +14,15 @@ import { PRIMARY_BUTTON, TERTIARY_BUTTON } from '../../constants'
 
 import artifactApi from '../../api/artifacts-api'
 
+import './RegisterArtifactPopup.scss'
+
 const RegisterArtifactPopup = ({
   artifactKind,
   filtersStore,
   match,
   refresh,
   setIsPopupOpen,
+  show,
   title
 }) => {
   const [registerArtifactData, setRegisterArtifactData] = useState({
@@ -148,39 +151,43 @@ const RegisterArtifactPopup = ({
   }, [])
 
   return (
-    <PopUpDialog
+    <Modal
       data-testid="register-artifact"
-      headerText={title}
-      closePopUp={closePopupDialog}
+      onClose={closePopupDialog}
+      size="sm"
+      show={show}
+      title={title}
     >
-      <RegisterArtifactForm
-        registerArtifactData={registerArtifactData}
-        onChange={setRegisterArtifactData}
-        setValidation={setValidation}
-        showType={artifactKind === 'artifact'}
-        validation={validation}
-        messageByKind={messagesByKind[artifactKind.toLowerCase()]}
-      />
-      <div className="pop-up-dialog__footer-container">
-        {registerArtifactData.error && (
-          <ErrorMessage
-            closeError={closeErrorMessage}
-            message={registerArtifactData.error}
+      <div className="register-artifact-popup">
+        <RegisterArtifactForm
+          registerArtifactData={registerArtifactData}
+          onChange={setRegisterArtifactData}
+          setValidation={setValidation}
+          showType={artifactKind === 'artifact'}
+          validation={validation}
+          messageByKind={messagesByKind[artifactKind.toLowerCase()]}
+        />
+        <div className="pop-up-dialog__footer-container">
+          {registerArtifactData.error && (
+            <ErrorMessage
+              closeError={closeErrorMessage}
+              message={registerArtifactData.error}
+            />
+          )}
+          <Button
+            variant={TERTIARY_BUTTON}
+            label="Cancel"
+            className="pop-up-dialog__btn_cancel"
+            onClick={closePopupDialog}
           />
-        )}
-        <Button
-          variant={TERTIARY_BUTTON}
-          label="Cancel"
-          className="pop-up-dialog__btn_cancel"
-          onClick={closePopupDialog}
-        />
-        <Button
-          variant={PRIMARY_BUTTON}
-          label="Register"
-          onClick={registerArtifact}
-        />
+          <Button
+            variant={PRIMARY_BUTTON}
+            label="Register"
+            onClick={registerArtifact}
+          />
+        </div>
       </div>
-    </PopUpDialog>
+    </Modal>
   )
 }
 

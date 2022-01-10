@@ -54,7 +54,7 @@ const JSX_MODAL = ({ children, className, onClose, size, show, title }) => {
               <h5 className="modal__header-title">{title}</h5>
             </div>
             <div className="modal__body">{children}</div>
-            <div className="modal__footer"></div>
+            {/* <div className="modal__footer"></div> */}
           </div>
         </div>
       </CSSTransition>
@@ -70,16 +70,20 @@ const Modal = props => {
 
 Modal.defaultProps = {
   show: false,
-  size: 'normal',
+  size: 'md',
   title: ''
 }
 
 Modal.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
-    .isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.object,
+    PropTypes.node,
+    PropTypes.string
+  ]).isRequired,
   onClose: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
-  size: PropTypes.oneOf(['sm', 'normal', 'lg']),
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
   title: PropTypes.string
 }
 
