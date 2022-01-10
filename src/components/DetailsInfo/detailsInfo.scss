@@ -96,6 +96,10 @@
         }
       }
 
+      &_disabled {
+        pointer-events: none;
+      }
+
       &_hidden {
         display: none;
       }
