@@ -227,11 +227,10 @@ export const generateFunctionsContent = selectedItem => ({
 export const renderContent = (
   applyChangesRef,
   match,
-  detailsState,
+  detailsStore,
   selectedItem,
   pageData,
   handlePreview,
-  detailsStore,
   handleEditInput,
   setChanges,
   setChangesData,
@@ -242,8 +241,8 @@ export const renderContent = (
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
-          changes={detailsState.changes}
-          content={detailsState.infoContent}
+          changes={detailsStore.changes}
+          content={detailsStore.infoContent}
           match={match}
           pageData={pageData}
           ref={applyChangesRef}
@@ -267,7 +266,7 @@ export const renderContent = (
     case DETAILS_ARTIFACTS_TAB:
       return (
         <DetailsArtifacts
-          iteration={detailsState.iteration}
+          iteration={detailsStore.iteration}
           match={match}
           selectedItem={selectedItem}
           setIterationOption={setIterationOption}
@@ -334,7 +333,7 @@ export const renderContent = (
     case DETAILS_REQUESTED_FEATURES_TAB:
       return (
         <DetailsRequestedFeatures
-          changes={detailsState.changes}
+          changes={detailsStore.changes}
           match={match}
           selectedItem={selectedItem}
           handleEditInput={(value, field) => handleEditInput(value, field)}
@@ -429,11 +428,7 @@ export const handleFinishEdit = (
   setChangesCounter
 ) => {
   detailsTabDispatch({
-    type: detailsTabActions.SET_EDIT_MODE,
-    payload: {
-      field: '',
-      fieldType: ''
-    }
+    type: detailsTabActions.RESET_EDIT_MODE
   })
 
   const changesData = cloneDeep(changes.data)
