@@ -228,7 +228,7 @@ const ProjectMonitorView = React.forwardRef(
                     addChip={handleAddProjectLabel}
                     editChip={handleUpdateProjectLabels}
                     elements={projectLabels}
-                    isEditMode={true}
+                    isEditMode
                     removeChip={handleUpdateProjectLabels}
                     visibleChipsMaxLength={visibleChipsMaxLength}
                   />

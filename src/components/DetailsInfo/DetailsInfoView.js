@@ -28,12 +28,14 @@ const DetailsInfoView = React.forwardRef(
     {
       changes,
       content,
+      detailsInfoDispatch,
       detailsInfoState,
       handleFinishEdit,
       handleInfoItemClick,
       match,
       pageData,
       selectedItem,
+      setChangesData,
       sources
     },
     ref
@@ -142,10 +144,12 @@ const DetailsInfoView = React.forwardRef(
                         )}
                       </div>
                       <DetailsInfoItem
+                        changesData={changes.data}
                         chipsClassName={chipsClassName}
                         chipsData={chipsData}
                         chipOptions={chipsData.chipOptions}
                         currentField={header.id}
+                        detailsInfoDispatch={detailsInfoDispatch}
                         editableFieldType={detailsInfoState.editMode.fieldType}
                         func={func}
                         handleFinishEdit={handleFinishEdit}
@@ -153,13 +157,14 @@ const DetailsInfoView = React.forwardRef(
                         isFieldInEditMode={
                           detailsInfoState.editMode.field === header.id
                         }
+                        item={content[header.id]}
                         link={content[header.id]?.link}
                         match={match}
                         onClick={handleInfoItemClick}
                         ref={ref}
+                        setChangesData={setChangesData}
                         state={state}
                         target_path={target_path}
-                        item={content[header.id]}
                       />
                     </>
                   )}
@@ -212,6 +217,7 @@ DetailsInfoView.defaultProps = {
 DetailsInfoView.propTypes = {
   changes: PropTypes.shape({}).isRequired,
   content: PropTypes.shape({}).isRequired,
+  detailsInfoDispatch: PropTypes.func.isRequired,
   detailsInfoState: PropTypes.shape({}).isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   handleInfoItemClick: PropTypes.func.isRequired,
