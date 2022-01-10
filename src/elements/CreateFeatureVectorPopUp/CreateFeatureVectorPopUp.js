@@ -105,7 +105,7 @@ const CreateFeatureVectorPopUp = ({
             }}
             editChip={setFeatureVectorLabels}
             elements={featureVectorLabels}
-            isEditMode={true}
+            isEditMode
             removeChip={setFeatureVectorLabels}
           />
         </div>

@@ -7,6 +7,7 @@ import Prism from 'prismjs'
 import ChipCell from '../../common/ChipCell/ChipCell'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../TooltipTemplate/TextTooltipTemplate'
+import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
 
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import Input from '../../common/Input/Input'
@@ -18,10 +19,12 @@ import { ReactComponent as Copy } from '../../images/ic_copy-to-clipboard.svg'
 const DetailsInfoItem = React.forwardRef(
   (
     {
+      changesData,
       chipOptions,
       chipsClassName,
       chipsData,
       currentField,
+      detailsInfoDispatch,
       editableFieldType,
       func,
       handleFinishEdit,
@@ -31,12 +34,29 @@ const DetailsInfoItem = React.forwardRef(
       link,
       match,
       onClick,
+      setChangesData,
       state,
       target_path
     },
     ref
   ) => {
-    if (item?.editModeEnabled && isFieldInEditMode) {
+    if (item?.editModeEnabled && item?.editModeType === 'chips') {
+      return (
+        <DetailsInfoItemChip
+          changesData={changesData}
+          chipOptions={chipOptions}
+          chipsClassName={chipsClassName}
+          chipsData={chipsData}
+          currentField={currentField}
+          detailsInfoDispatch={detailsInfoDispatch}
+          editableFieldType={editableFieldType}
+          handleFinishEdit={handleFinishEdit}
+          isFieldInEditMode={isFieldInEditMode}
+          item={item}
+          setChangesData={setChangesData}
+        />
+      )
+    } else if (item?.editModeEnabled && isFieldInEditMode) {
       if (editableFieldType === 'input') {
         return (
           <div className="details-item__input-wrapper" ref={ref}>
@@ -44,30 +64,7 @@ const DetailsInfoItem = React.forwardRef(
             <Tooltip template={<TextTooltipTemplate text="Apply" />}>
               <Checkmark
                 className="details-item__input-btn"
-                onClick={() => handleFinishEdit(currentField)}
-              />
-            </Tooltip>
-          </div>
-        )
-      } else if (editableFieldType === 'chips') {
-        return (
-          <div className="details-item__data details-item__data-chips">
-            <ChipCell
-              addChip={(chip, chips) => item.onAdd(chip, chips, currentField)}
-              chipOptions={chipOptions}
-              className={`details-item__${chipsClassName}`}
-              delimiter={chipsData.delimiter}
-              editChip={chips => {
-                item.onChange(chips, currentField)
-              }}
-              elements={chipsData.chips}
-              isEditMode={true}
-              removeChip={chips => item.handleDelete(chips, currentField)}
-            />
-            <Tooltip template={<TextTooltipTemplate text="Apply" />}>
-              <Checkmark
-                className="details-item__input-btn"
-                onClick={() => handleFinishEdit(currentField)}
+                onClick={handleFinishEdit}
               />
             </Tooltip>
           </div>
@@ -216,6 +213,7 @@ DetailsInfoItem.defaultProps = {
 }
 
 DetailsInfoItem.propTypes = {
+  changesData: PropTypes.object,
   chipOptions: CHIP_OPTIONS,
   chipsClassName: PropTypes.string,
   chipsData: PropTypes.shape({
@@ -223,6 +221,7 @@ DetailsInfoItem.propTypes = {
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),
   currentField: PropTypes.string,
+  detailsInfoDispatch: PropTypes.func.isRequired,
   editableFieldType: PropTypes.string,
   func: PropTypes.string,
   handleFinishEdit: PropTypes.func,
@@ -232,6 +231,7 @@ DetailsInfoItem.propTypes = {
   link: PropTypes.string,
   match: PropTypes.shape({}),
   onClick: PropTypes.func,
+  setChangesData: PropTypes.func.isRequired,
   state: PropTypes.string,
   target_path: PropTypes.string
 }
