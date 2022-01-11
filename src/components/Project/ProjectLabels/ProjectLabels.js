@@ -7,16 +7,14 @@ import ChipCell from '../../../common/ChipCell/ChipCell'
 import { generateKeyValues, parseKeyValues } from '../../../utils'
 import { getChipOptions } from '../../../utils/getChipOptions'
 
-const ProjectLabels = props => {
-  const {
-    addProjectLabel,
-    isEditMode,
-    labels,
-    shortChips,
-    updateProjectLabel,
-    visibleChipsMaxLength
-  } = props
-
+const ProjectLabels = ({
+  addProjectLabel,
+  isEditMode,
+  labels,
+  shortChips,
+  updateProjectLabel,
+  visibleChipsMaxLength
+}) => {
   const projectLabels = useMemo(
     () => (!isEmpty(labels) ? parseKeyValues(labels || {}) : []),
     [labels]
@@ -58,13 +56,17 @@ const ProjectLabels = props => {
 }
 
 ProjectLabels.defaultProps = {
+  addProjectLabel: () => {},
+  isEditMode: false,
+  shortChips: false,
+  updateProjectLabel: () => {},
   visibleChipsMaxLength: 'all'
 }
 
 ProjectLabels.propTypes = {
   addProjectLabel: PropTypes.func,
   isEditMode: PropTypes.bool,
-  labels: PropTypes.arrayOf(PropTypes.string),
+  labels: PropTypes.arrayOf(PropTypes.string).isRequired,
   shortChips: PropTypes.bool,
   updateProjectLabel: PropTypes.func,
   visibleChipsMaxLength: PropTypes.oneOfType([
