@@ -45,6 +45,10 @@ export default {
       `/projects/${data.metadata.project}/feature-vectors`,
       data
     ),
+  deleteFeatureVector: (project, featureVector) =>
+    mainHttpClient.delete(
+      `/projects/${project}/feature-vectors/${featureVector}`
+    ),
   fetchFeatureSetsTags: project =>
     mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`),
   fetchFeatureVectorsTags: project =>
