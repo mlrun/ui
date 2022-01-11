@@ -44,13 +44,14 @@ const TableView = ({
   retryRequest,
   selectedItem,
   tableContent,
+  tableContentRef,
   tableHeadRef,
   tablePanelRef,
   workflows
 }) => {
   return (
     <div className="table">
-      <div className="table__content">
+      <div className="table__content" ref={tableContentRef}>
         <div className="table-head" ref={tableHeadRef}>
           {pageData.tableHeaders.map(
             (item, index) =>

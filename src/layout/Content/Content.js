@@ -54,8 +54,7 @@ const Content = ({
   pageData,
   projectStore,
   refresh,
-  selectedItem,
-  setLoading
+  selectedItem
 }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [expandedItems, setExpandedItems] = useState([])
@@ -269,7 +268,6 @@ const Content = ({
                 pageData={pageData}
                 retryRequest={refresh}
                 selectedItem={selectedItem}
-                setLoading={setLoading}
               />
             </>
           )}
@@ -294,8 +292,7 @@ Content.defaultProps = {
   handleActionsMenuClick: () => {},
   handleCancel: () => {},
   handleSelectItem: () => {},
-  selectedItem: {},
-  setLoading: () => {}
+  selectedItem: {}
 }
 
 Content.propTypes = {
@@ -309,8 +306,7 @@ Content.propTypes = {
   match: PropTypes.shape({}).isRequired,
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
-  selectedItem: PropTypes.shape({}),
-  setLoading: PropTypes.func
+  selectedItem: PropTypes.shape({})
 }
 
 export default connect(

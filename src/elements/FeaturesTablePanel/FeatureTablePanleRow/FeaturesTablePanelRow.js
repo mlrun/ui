@@ -89,7 +89,7 @@ const FeaturesTablePanelRow = ({
                   toggleLabelFeature(labelFeature)
                 }
 
-                deleteFeature(feature.feature)
+                deleteFeature(feature.originalTemplate)
               }
             }}
           />

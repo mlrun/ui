@@ -102,12 +102,14 @@ const DetailsInfoItemChip = ({
         removeChip={handleRemoveChip}
       />
       {isFieldInEditMode && (
-        <Tooltip template={<TextTooltipTemplate text="Apply" />}>
-          <Checkmark
-            className="details-item__input-btn"
-            onClick={handleFinishEdit}
-          />
-        </Tooltip>
+        <div className="details-item__apply-btn-wrapper">
+          <Tooltip template={<TextTooltipTemplate text="Apply" />}>
+            <Checkmark
+              className="details-item__apply-btn"
+              onClick={handleFinishEdit}
+            />
+          </Tooltip>
+        </div>
       )}
     </div>
   )
