@@ -166,6 +166,20 @@
       }
     }
 
+    .details-item {
+      &__apply-btn-wrapper {
+        width: 30px;
+      }
+
+      &__apply-btn {
+        display: block;
+        min-width: 30px;
+        height: 30px;
+        padding: 0;
+        cursor: pointer;
+      }
+    }
+
     .preview_container {
       position: relative;
       display: flex;
