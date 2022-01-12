@@ -199,6 +199,7 @@ DetailsInfoItem.defaultProps = {
     delimiter: null
   },
   currentField: '',
+  detailsInfoDispatch: () => {},
   editableFieldType: null,
   func: '',
   handleFinishEdit: () => {},
@@ -208,6 +209,7 @@ DetailsInfoItem.defaultProps = {
   link: '',
   match: {},
   onClick: null,
+  setChangesData: () => {},
   state: '',
   target_path: ''
 }
@@ -221,7 +223,7 @@ DetailsInfoItem.propTypes = {
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),
   currentField: PropTypes.string,
-  detailsInfoDispatch: PropTypes.func.isRequired,
+  detailsInfoDispatch: PropTypes.func,
   editableFieldType: PropTypes.string,
   func: PropTypes.string,
   handleFinishEdit: PropTypes.func,
@@ -231,7 +233,7 @@ DetailsInfoItem.propTypes = {
   link: PropTypes.string,
   match: PropTypes.shape({}),
   onClick: PropTypes.func,
-  setChangesData: PropTypes.func.isRequired,
+  setChangesData: PropTypes.func,
   state: PropTypes.string,
   target_path: PropTypes.string
 }

@@ -745,7 +745,8 @@ export const fetchFeatureRowData = async (fetchData, feature, setPageData) => {
 export const fetchFeatureSetRowData = async (
   fetchFeatureSet,
   featureSet,
-  setPageData
+  setPageData,
+  tag
 ) => {
   const featureSetIdentifier = getFeatureSetIdentifier(featureSet)
 
@@ -762,7 +763,8 @@ export const fetchFeatureSetRowData = async (
 
   const result = await fetchFeatureSet(
     featureSet.project,
-    featureSet.name
+    featureSet.name,
+    tag
   ).catch(error => {
     setPageData(state => ({
       ...state,
@@ -795,7 +797,8 @@ export const fetchFeatureSetRowData = async (
 export const fetchFeatureVectorRowData = async (
   fetchFeatureVector,
   featureVector,
-  setPageData
+  setPageData,
+  tag
 ) => {
   const featureVectorIdentifier = getFeatureVectorIdentifier(featureVector)
 
@@ -811,7 +814,8 @@ export const fetchFeatureVectorRowData = async (
 
   const result = await fetchFeatureVector(
     featureVector.project,
-    featureVector.name
+    featureVector.name,
+    tag
   ).catch(error => {
     setPageData(state => ({
       ...state,
@@ -845,7 +849,8 @@ export const fetchDataSetRowData = async (
   fetchDataSet,
   dataSet,
   setPageData,
-  iter
+  iter,
+  tag
 ) => {
   const dataSetIdentifier = getArtifactIdentifier(dataSet)
   let result = []
@@ -861,7 +866,7 @@ export const fetchDataSetRowData = async (
   }))
 
   try {
-    result = await fetchDataSet(dataSet.project, dataSet.db_key, iter)
+    result = await fetchDataSet(dataSet.project, dataSet.db_key, iter, tag)
   } catch (error) {
     setPageData(state => ({
       ...state,
