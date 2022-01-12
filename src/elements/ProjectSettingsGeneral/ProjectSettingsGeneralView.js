@@ -56,7 +56,9 @@ const ProjectSettingsGeneralView = ({
                 invalid={!validation.isPathValid}
                 label="Artifact path"
                 onBlur={() => handleOnBlur(ARTIFACT_PATH)}
-                onChange={handleArtifactPathChange}
+                onChange={value =>
+                  handleArtifactPathChange(value, validation.isPathValid)
+                }
                 setInvalid={value =>
                   setValidation(state => ({
                     ...state,

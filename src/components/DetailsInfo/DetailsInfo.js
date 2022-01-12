@@ -48,6 +48,22 @@ const DetailsInfo = React.forwardRef(
       [applyChangesRef]
     )
 
+    useEffect(() => {
+      return () => {
+        detailsInfoDispatch({
+          type: detailsInfoActions.RESET_EDIT_MODE
+        })
+      }
+    }, [detailsInfoDispatch, match.params.name])
+
+    useEffect(() => {
+      window.addEventListener('click', onApplyChanges)
+
+      return () => {
+        window.removeEventListener('click', onApplyChanges)
+      }
+    }, [onApplyChanges])
+
     const handleInfoItemClick = (field, fieldType, info) => {
       if (isEveryObjectValueEmpty(detailsInfoState.editMode)) {
         detailsInfoDispatch({
@@ -88,30 +104,15 @@ const DetailsInfo = React.forwardRef(
         }, {})
       : selectedItem.sources
 
-    useEffect(() => {
-      return () => {
-        detailsInfoDispatch({
-          type: detailsInfoActions.RESET_EDIT_MODE
-        })
-      }
-    }, [match.params.name])
-
-    useEffect(() => {
-      window.addEventListener('click', onApplyChanges)
-
-      return () => {
-        window.removeEventListener('click', onApplyChanges)
-      }
-    }, [onApplyChanges])
-
     return (
       <DetailsInfoView
         changes={changes}
         content={content}
+        detailsInfoDispatch={detailsInfoDispatch}
         detailsInfoState={detailsInfoState}
-        handleFinishEdit={field =>
+        handleFinishEdit={() =>
           handleFinishEdit(
-            [field],
+            Object.keys(changes.data),
             changes,
             detailsInfoActions,
             detailsInfoDispatch,
@@ -125,6 +126,7 @@ const DetailsInfo = React.forwardRef(
         pageData={pageData}
         ref={editItemRef}
         selectedItem={selectedItem}
+        setChangesData={setChangesData}
         sources={sources}
       />
     )

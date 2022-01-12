@@ -31,8 +31,6 @@ const Table = ({
   pageData,
   retryRequest,
   selectedItem,
-  setLoading,
-  setTablePanelOpen,
   tableStore
 }) => {
   const [tableContent, setTableContent] = useState({
@@ -41,6 +39,7 @@ const Table = ({
     content: [],
     mainRowItemsCount: 1
   })
+  const tableContentRef = useRef(null)
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
   const isDemoMode = useDemoMode()
@@ -51,10 +50,16 @@ const Table = ({
 
   useEffect(() => {
     const calculatePanelHeight = () => {
-      if (tableHeadRef && tablePanelRef.current) {
-        const cords = tableHeadRef.current.getBoundingClientRect()
-        tablePanelRef.current.style.height = `${window.innerHeight -
-          cords.top}px`
+      if (tableHeadRef && tableContentRef && tablePanelRef.current) {
+        const tableContentHeight = tableContentRef.current.getBoundingClientRect()
+          .height
+        const tableHeadCords = tableHeadRef.current.getBoundingClientRect()
+        const panelHeight = window.innerHeight - tableHeadCords.top
+
+        tablePanelRef.current.style.height =
+          tableContentHeight > panelHeight
+            ? `${panelHeight}px`
+            : `${panelHeight - (panelHeight - tableContentHeight)}px`
       }
     }
 
@@ -157,6 +162,7 @@ const Table = ({
       retryRequest={retryRequest}
       selectedItem={selectedItem}
       tableContent={tableContent.content}
+      tableContentRef={tableContentRef}
       tableHeadRef={tableHeadRef}
       tablePanelRef={tablePanelRef}
       workflows={workflows}
@@ -170,8 +176,7 @@ Table.defaultProps = {
   groupedContent: {},
   groupLatestJob: [],
   handleExpandRow: () => {},
-  selectedItem: {},
-  setLoading: null
+  selectedItem: {}
 }
 
 Table.propTypes = {
@@ -186,8 +191,7 @@ Table.propTypes = {
   match: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}),
-  setLoading: PropTypes.func
+  selectedItem: PropTypes.shape({})
 }
 
 export default connect(

@@ -32,7 +32,7 @@ const ChipCell = ({
   const [showChips, setShowChips] = useState(false)
   const [visibleChipsCount, setVisibleChipsCount] = useState(8)
   const chipsCellRef = useRef()
-  const chipsWrapperRef = React.createRef()
+  const chipsWrapperRef = useRef()
 
   let chips = useMemo(() => {
     return (isEditMode && !visibleChipsMaxLength) ||
@@ -114,7 +114,9 @@ const ChipCell = ({
   }, [handleResize, isEditMode])
 
   const handleAddNewChip = useCallback(
-    chip => {
+    (event, chip) => {
+      event.preventDefault()
+
       if (!editConfig.isEdit && !editConfig.chipIndex) {
         addChip(chip, elements)
       }
@@ -153,6 +155,7 @@ const ChipCell = ({
 
   const handleEditChip = useCallback(
     (event, chip, nameEvent) => {
+      event.preventDefault()
       const isChipNotEmpty = !!(chip.key && chip.value)
 
       if (isChipNotEmpty) {
