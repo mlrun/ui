@@ -19,8 +19,7 @@ const TextTooltipTemplate = ({ text, warning }) => {
 
       setStyle({
         padding: `6px ${horizontalPadding}px`,
-        wordBreak: width > window.innerWidth ? 'break-word' : 'unset',
-        whiteSpace: width > window.innerWidth ? 'pre-wrap' : 'nowrap'
+        wordBreak: width > window.innerWidth ? 'break-word' : 'unset'
       })
     }
   }, [])
