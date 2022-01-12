@@ -51,7 +51,6 @@ const App = () => {
   const search = window.location.search
   const isDemo =
     new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
-
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Page>

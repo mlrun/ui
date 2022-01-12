@@ -47,6 +47,7 @@ const ProjectsView = ({
   setIsDescendingOrder,
   setNameValid,
   setNewProjectDescription,
+  setNewProjectLabels,
   setNewProjectName,
   setSelectedProjectsState,
   setSortProjectId,
@@ -68,6 +69,7 @@ const ProjectsView = ({
           removeNewProjectError={removeNewProjectError}
           setNameValid={setNameValid}
           setNewProjectDescription={setNewProjectDescription}
+          setNewProjectLabels={setNewProjectLabels}
           setNewProjectName={setNewProjectName}
         />
       )}

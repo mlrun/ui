@@ -45,7 +45,6 @@ const Workflow = ({
   refreshJobs,
   selectedFunction,
   selectedJob,
-  setLoading,
   setWorkflowsViewMode,
   workflow,
   workflowJobsIds,
@@ -258,7 +257,6 @@ const Workflow = ({
             pageData={pageData}
             retryRequest={refresh}
             selectedItem={selectedJob}
-            setLoading={setLoading}
           />
         )}
       </div>
@@ -269,7 +267,6 @@ const Workflow = ({
 Workflow.defaultProps = {
   selectedFunction: {},
   selectedJob: {},
-  setLoading: null,
   workflow: {},
   workflowJobsIds: []
 }
@@ -286,7 +283,6 @@ Workflow.propTypes = {
   refreshJobs: PropTypes.func.isRequired,
   selectedFunction: PropTypes.shape({}),
   selectedJob: PropTypes.shape({}),
-  setLoading: PropTypes.func,
   setWorkflowsViewMode: PropTypes.func.isRequired,
   workflow: PropTypes.shape({}),
   workflowJobsIds: PropTypes.arrayOf(PropTypes.string),

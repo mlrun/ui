@@ -93,6 +93,9 @@ const featureStoreActions = {
   }),
   createNewFeatureVector: data => () =>
     featureStoreApi.createFeatureVector(data),
+  deleteFeatureVector: (project, featureVector) => () => {
+    return featureStoreApi.deleteFeatureVector(project, featureVector)
+  },
   fetchEntity: (project, entityName, entityMetadataName) => dispatch => {
     return featureStoreApi
       .getEntity(project, entityName)

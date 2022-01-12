@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { connect } from 'react-redux'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 import PropTypes from 'prop-types'
 
 import Button from '../../common/Button/Button'
@@ -55,7 +55,10 @@ const FeaturesTablePanel = ({
   ])
 
   useEffect(() => {
-    if (!tableStore.features.isNewFeatureVector) {
+    if (
+      !tableStore.features.isNewFeatureVector &&
+      isEmpty(tableStore.features.labelFeature)
+    ) {
       setLabelFeature({
         [tableStore.features
           .currentProject]: tableStore.features.groupedFeatures[
@@ -74,7 +77,8 @@ const FeaturesTablePanel = ({
     tableStore.features.currentProject,
     tableStore.features.featureVector.spec.label_feature,
     tableStore.features.groupedFeatures,
-    tableStore.features.isNewFeatureVector
+    tableStore.features.isNewFeatureVector,
+    tableStore.features.labelFeature
   ])
 
   const addFeatures = () => {
@@ -126,15 +130,15 @@ const FeaturesTablePanel = ({
     }
   }
 
-  const deleteFeature = featureName => {
+  const deleteFeature = featureTemplate => {
     const filteredFeatures = tableStore.features.groupedFeatures[
       tableStore.features.currentProject
-    ].filter(feature => feature.feature !== featureName)
+    ].filter(feature => feature.originalTemplate !== featureTemplate)
 
     updateGroupedFeatures(filteredFeatures)
 
     if (
-      featureName ===
+      featureTemplate ===
       tableStore.features.labelFeature?.[tableStore.features.currentProject]
     ) {
       setLabelFeature({

@@ -63,7 +63,7 @@ const DetailsInfoItem = React.forwardRef(
             <Input onChange={item.onChange} value={info} type="text" focused />
             <Tooltip template={<TextTooltipTemplate text="Apply" />}>
               <Checkmark
-                className="details-item__input-btn"
+                className="details-item__apply-btn"
                 onClick={handleFinishEdit}
               />
             </Tooltip>
