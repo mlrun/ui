@@ -51,6 +51,7 @@ import {
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
   SET_NEW_PROJECT_DESCRIPTION,
+  SET_NEW_PROJECT_LABELS,
   SET_NEW_PROJECT_NAME,
   SET_PROJECT_LABELS,
   FETCH_PROJECT_FEATURE_SETS_BEGIN,
@@ -77,6 +78,7 @@ const initialState = {
   newProject: {
     name: '',
     description: '',
+    labels: null,
     error: null
   },
   project: {
@@ -806,7 +808,8 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         newProject: {
           name: '',
-          description: ''
+          description: '',
+          labels: null
         }
       }
     case REMOVE_PROJECT_SUMMARY:
@@ -844,6 +847,16 @@ export default (state = initialState, { type, payload }) => {
         newProject: {
           ...state.newProject,
           description: payload
+        }
+      }
+    case SET_NEW_PROJECT_LABELS:
+      return {
+        ...state,
+        newProject: {
+          ...state.newProject,
+          labels: {
+            ...payload
+          }
         }
       }
     case SET_NEW_PROJECT_NAME:

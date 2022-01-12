@@ -16,9 +16,9 @@ import Select from '../../common/Select/Select'
 import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
 import Tooltip from '../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
-import ChipCell from '../../common/ChipCell/ChipCell'
 import ProjectName from './ProjectName/ProjectName'
 import ProjectDescription from './ProjectDescription/ProjectDescription'
+import ProjectLabels from './ProjectLabels/ProjectLabels'
 import ProjectGoals from './ProjectGoals/ProjectGoals'
 import MembersPopUp from '../../elements/MembersPopUp/MembersPopUp'
 import ChangeOwnerPopUp from '../../elements/ChangeOwnerPopUp/ChangeOwnerPopUp'
@@ -67,7 +67,6 @@ const ProjectMonitorView = React.forwardRef(
       match,
       membersDispatch,
       membersState,
-      projectLabels,
       projectMembersIsShown,
       projectMembershipIsEnabled,
       projectOwnerIsShown,
@@ -224,12 +223,11 @@ const ProjectMonitorView = React.forwardRef(
               <div className="general-info__labels">
                 <div className="general-info__labels-text">Labels</div>
                 <div className="general-info__labels-wrapper">
-                  <ChipCell
-                    addChip={handleAddProjectLabel}
-                    editChip={handleUpdateProjectLabels}
-                    elements={projectLabels}
+                  <ProjectLabels
+                    addProjectLabel={handleAddProjectLabel}
                     isEditMode
-                    removeChip={handleUpdateProjectLabels}
+                    labels={project.data.metadata.labels}
+                    updateProjectLabel={handleUpdateProjectLabels}
                     visibleChipsMaxLength={visibleChipsMaxLength}
                   />
                 </div>
@@ -376,7 +374,6 @@ ProjectMonitorView.propTypes = {
   match: PropTypes.shape({}).isRequired,
   membersDispatch: PropTypes.func.isRequired,
   membersState: PropTypes.shape({}).isRequired,
-  projectLabels: PropTypes.array.isRequired,
   projectMembersIsShown: PropTypes.bool.isRequired,
   projectMembershipIsEnabled: PropTypes.bool.isRequired,
   projectOwnerIsShown: PropTypes.bool.isRequired,

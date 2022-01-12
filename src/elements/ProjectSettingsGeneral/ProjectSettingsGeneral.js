@@ -160,7 +160,7 @@ const ProjectSettingsGeneral = ({
             source: !isNil(editProject.source.value)
               ? editProject.source.value
               : projectStore.project.data.spec.source,
-            artifact_path: value,
+            artifact_path: value.trim(),
             params: projectStore.project.data.spec.params
           }
         }
