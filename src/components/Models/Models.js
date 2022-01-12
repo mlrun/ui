@@ -31,6 +31,7 @@ import {
   MODELS_TAB,
   REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
+  TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../constants'
 import { generateArtifacts } from '../../utils/generateArtifacts'
@@ -150,7 +151,8 @@ const Models = ({
         result = await fetchModel(
           model.project,
           model.db_key,
-          !filtersStore.iter
+          !filtersStore.iter,
+          filtersStore.tag
         )
       } catch (error) {
         setPageData(state => ({
@@ -187,7 +189,7 @@ const Models = ({
         })
       }
     },
-    [fetchModel, filtersStore.iter]
+    [fetchModel, filtersStore.iter, filtersStore.tag]
   )
 
   useEffect(() => {
@@ -239,7 +241,10 @@ const Models = ({
       setFilters({ groupBy: GROUP_BY_NONE, sortBy: 'function' })
     } else if (match.params.pageTab === REAL_TIME_PIPELINES_TAB) {
       setFilters({ groupBy: GROUP_BY_NONE })
-    } else if (filtersStore.tag === TAG_FILTER_LATEST) {
+    } else if (
+      filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
+      filtersStore.tag === TAG_FILTER_LATEST
+    ) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else {
       setFilters({ groupBy: GROUP_BY_NONE })

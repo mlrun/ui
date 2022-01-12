@@ -269,15 +269,26 @@ const FeatureStore = ({
           item.ui?.type === 'feature' ? fetchFeature : fetchEntity
         await fetchFeatureRowData(fetchData, item, setPageData)
       } else if (match.params.pageTab === FEATURE_VECTORS_TAB) {
-        await fetchFeatureVectorRowData(fetchFeatureVector, item, setPageData)
+        await fetchFeatureVectorRowData(
+          fetchFeatureVector,
+          item,
+          setPageData,
+          filtersStore.tag
+        )
       } else if (match.params.pageTab === FEATURE_SETS_TAB) {
-        await fetchFeatureSetRowData(fetchFeatureSet, item, setPageData)
+        await fetchFeatureSetRowData(
+          fetchFeatureSet,
+          item,
+          setPageData,
+          filtersStore.tag
+        )
       } else if (match.params.pageTab === DATASETS_TAB) {
         await fetchDataSetRowData(
           fetchDataSet,
           item,
           setPageData,
-          !filtersStore.iter
+          !filtersStore.iter,
+          filtersStore.tag
         )
       }
     },
@@ -288,6 +299,7 @@ const FeatureStore = ({
       fetchFeatureSet,
       fetchFeatureVector,
       filtersStore.iter,
+      filtersStore.tag,
       match.params.pageTab
     ]
   )
@@ -401,7 +413,10 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_LATEST) {
+    if (
+      filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
+      filtersStore.tag === TAG_FILTER_LATEST
+    ) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })

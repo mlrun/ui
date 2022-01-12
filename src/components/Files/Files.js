@@ -24,6 +24,7 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
+  TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../constants'
 import filtersActions from '../../actions/filters'
@@ -111,7 +112,8 @@ const Files = ({
         result = await fetchFile(
           file.project ?? match.params.projectName,
           file.db_key,
-          !filtersStore.iter
+          !filtersStore.iter,
+          filtersStore.tag
         )
       } catch (error) {
         setPageData(state => ({
@@ -148,7 +150,7 @@ const Files = ({
         })
       }
     },
-    [fetchFile, filtersStore.iter, match.params.projectName]
+    [fetchFile, filtersStore.iter, filtersStore.tag, match.params.projectName]
   )
 
   useEffect(() => {
@@ -193,7 +195,10 @@ const Files = ({
   }, [fetchData, removeFiles])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_LATEST) {
+    if (
+      filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
+      filtersStore.tag === TAG_FILTER_LATEST
+    ) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
