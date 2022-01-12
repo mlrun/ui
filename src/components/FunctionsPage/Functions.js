@@ -54,7 +54,6 @@ const Functions = ({
   removeFunctionsError,
   removeNewFunction,
   removeNewJob,
-  setLoading,
   setNotification
 }) => {
   const [confirmData, setConfirmData] = useState(null)
@@ -378,7 +377,6 @@ const Functions = ({
         pageData={pageData}
         refresh={refreshFunctions}
         selectedItem={selectedFunction}
-        setLoading={setLoading}
         getIdentifier={getFunctionIdentifier}
       />
       {editableItem && !functionsPanelIsOpen && (

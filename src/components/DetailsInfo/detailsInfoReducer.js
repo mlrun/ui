@@ -7,8 +7,7 @@ export const initialState = {
 
 export const detailsInfoActions = {
   RESET_EDIT_MODE: 'RESET_EDIT_MODE',
-  SET_EDIT_MODE: 'SET_EDIT_MODE',
-  SET_EDIT_MODE_FIELD_TYPE: 'SET_EDIT_MODE_FIELD_TYPE'
+  SET_EDIT_MODE: 'SET_EDIT_MODE'
 }
 
 export const detailsInfoReducer = (state, { type, payload }) => {
@@ -21,13 +20,6 @@ export const detailsInfoReducer = (state, { type, payload }) => {
       return {
         ...state,
         editMode: payload
-      }
-    case detailsInfoActions.SET_EDIT_MODE_FIELD_TYPE:
-      return {
-        editMode: {
-          ...state.editMode,
-          fieldType: payload
-        }
       }
     default:
       return state

@@ -17,7 +17,7 @@ const TagFilterDropdown = ({
         const dropdownItemClassName = classnames(
           'tag-filter__dropdown-item',
           tagFilter.length !== 0 &&
-            RegExp(`^${tagFilter}`, 'i').test(tag.id) &&
+            tagFilter === tag.id &&
             'tag-filter__dropdown-item_selected'
         )
 

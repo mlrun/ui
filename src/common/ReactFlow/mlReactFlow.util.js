@@ -151,9 +151,9 @@ export const getWorkflowSourceHandle = phase => {
 }
 
 const nodeStates = {
-  succeeded: 'Succeeded',
-  failed: 'Failed',
-  pending: 'Pending',
-  running: 'Running',
-  unknown: 'Unknown'
+  succeeded: 'Completed',
+  failed: 'Error',
+  skipped: 'Skipped',
+  error: 'Error',
+  running: 'Running'
 }
