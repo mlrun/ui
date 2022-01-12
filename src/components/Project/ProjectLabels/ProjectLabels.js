@@ -19,7 +19,6 @@ const ProjectLabels = ({
     () => (!isEmpty(labels) ? parseKeyValues(labels || {}) : []),
     [labels]
   )
-
   const handleAddProjectLabel = (label, labels) => {
     const objectLabels = generateKeyValues(labels)
     const newLabel = {
@@ -58,6 +57,7 @@ const ProjectLabels = ({
 ProjectLabels.defaultProps = {
   addProjectLabel: () => {},
   isEditMode: false,
+  labels: {},
   shortChips: false,
   updateProjectLabel: () => {},
   visibleChipsMaxLength: 'all'
@@ -66,7 +66,7 @@ ProjectLabels.defaultProps = {
 ProjectLabels.propTypes = {
   addProjectLabel: PropTypes.func,
   isEditMode: PropTypes.bool,
-  labels: PropTypes.arrayOf(PropTypes.string).isRequired,
+  labels: PropTypes.object,
   shortChips: PropTypes.bool,
   updateProjectLabel: PropTypes.func,
   visibleChipsMaxLength: PropTypes.oneOfType([
