@@ -72,28 +72,31 @@ const FilterMenu = ({
 
   useEffect(() => {
     if (
-      filtersStore.tagOptions.length > 0 &&
       filters.find(
         filter => filter.type === TREE_FILTER || filter.type === TAG_FILTER
       )
     ) {
-      setTagOptions(prevOptions => {
-        const prevOptionsTags = prevOptions.map(option => option.id)
+      if (filtersStore.tagOptions.length > 0) {
+        setTagOptions(() => {
+          const defaultOptionsTags = tagFilterOptions.map(option => option.id)
 
-        return [
-          ...prevOptions,
-          ...filtersStore.tagOptions.reduce((acc, tag) => {
-            if (!prevOptionsTags.includes(tag)) {
-              acc.push({
-                label: tag,
-                id: tag
-              })
-            }
+          return [
+            ...tagFilterOptions,
+            ...filtersStore.tagOptions.reduce((acc, tag) => {
+              if (!defaultOptionsTags.includes(tag)) {
+                acc.push({
+                  label: tag,
+                  id: tag
+                })
+              }
 
-            return acc
-          }, [])
-        ]
-      })
+              return acc
+            }, [])
+          ]
+        })
+      } else {
+        setTagOptions(tagFilterOptions)
+      }
     }
   }, [filters, filtersStore.tagOptions])
 

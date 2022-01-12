@@ -34,6 +34,8 @@ import {
   getFeatureVectorIdentifier
 } from '../../utils/getUniqueIdentifier'
 
+import { ReactComponent as Delete } from '../../images/delete.svg'
+
 export const pageDataInitialState = {
   actionsMenu: [],
   actionsMenuHeader: '',
@@ -297,12 +299,23 @@ export const tabs = [
   { id: DATASETS_TAB, label: 'Datasets' }
 ]
 
-const generateActionsMenu = tab => []
+const generateActionsMenu = (tab, handleDelete) => {
+  return tab === FEATURE_VECTORS_TAB
+    ? [
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          onClick: handleDelete
+        }
+      ]
+    : []
+}
 
 export const generatePageData = (
   pageTab,
   handleRequestOnExpand,
   handleRemoveRequestData,
+  onDeleteFeatureVector,
   getPopUpTemplate,
   isTablePanelOpen,
   isSelectedItem,
@@ -342,7 +355,10 @@ export const generatePageData = (
     data.noDataMessage =
       'No features yet. Go to "Feature Sets" tab to create your first feature set.'
   } else if (pageTab === FEATURE_VECTORS_TAB) {
-    data.actionsMenu = generateActionsMenu(FEATURE_VECTORS_TAB)
+    data.actionsMenu = generateActionsMenu(
+      FEATURE_VECTORS_TAB,
+      onDeleteFeatureVector
+    )
     data.hidePageActionMenu = !isDemoMode
     data.actionsMenuHeader = createFeatureVectorTitle
     data.filters = featureVectorsFilters
