@@ -175,9 +175,9 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SETS_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureSet: (project, featureSet) => dispatch => {
+  fetchFeatureSet: (project, featureSet, tag) => dispatch => {
     return featureStoreApi
-      .getFeatureSet(project, featureSet)
+      .getFeatureSet(project, featureSet, tag)
       .then(response => {
         const generatedFeatureSets = parseFeatureSets(
           response.data?.feature_sets

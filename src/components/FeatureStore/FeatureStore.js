@@ -43,6 +43,7 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   SHOW_ITERATIONS,
+  TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../constants'
 import { useDemoMode } from '../../hooks/demoMode.hook'
@@ -269,13 +270,19 @@ const FeatureStore = ({
           filtersStore.tag
         )
       } else if (match.params.pageTab === FEATURE_SETS_TAB) {
-        await fetchFeatureSetRowData(fetchFeatureSet, item, setPageData)
+        await fetchFeatureSetRowData(
+          fetchFeatureSet,
+          item,
+          setPageData,
+          filtersStore.tag
+        )
       } else if (match.params.pageTab === DATASETS_TAB) {
         await fetchDataSetRowData(
           fetchDataSet,
           item,
           setPageData,
-          !filtersStore.iter
+          !filtersStore.iter,
+          filtersStore.tag
         )
       }
     },
@@ -327,7 +334,10 @@ const FeatureStore = ({
   ])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_LATEST) {
+    if (
+      filtersStore.tag === TAG_FILTER_ALL_ITEMS ||
+      filtersStore.tag === TAG_FILTER_LATEST
+    ) {
       setFilters({ groupBy: GROUP_BY_NAME })
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       setFilters({ groupBy: GROUP_BY_NONE })
