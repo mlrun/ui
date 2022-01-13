@@ -44,6 +44,8 @@ import {
 } from '../../utils/getUniqueIdentifier'
 import { isPageTabValid } from '../../utils/handleRedirect'
 
+import { useOpenPanel } from '../../hooks/openPanel.hook'
+
 const Models = ({
   artifactsStore,
   detailsStore,
@@ -72,6 +74,14 @@ const Models = ({
   ] = useState(false)
   const [isDeployPopupOpen, setIsDeployPopupOpen] = useState(false)
   const [pageData, setPageData] = useState(pageDataInitialState)
+
+  const openPanelByDefault = useOpenPanel()
+
+  useEffect(() => {
+    if (openPanelByDefault) {
+      setIsRegisterArtifactPopupOpen(true)
+    }
+  }, [openPanelByDefault])
 
   const fetchData = useCallback(
     async filters => {

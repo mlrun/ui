@@ -17,8 +17,8 @@ export const getInitialCards = projectName => {
         'This section enable users to upload data , crate features and register external data. Keep in mind that this explaination is only temporary and should be replaced soon enough. This is not the final version.',
       actions: [
         // {
-        //   id: 'uploadData',
         //   icon: <UploadIcon />,
+        //   id: 'uploadData',
         //   label: 'Upload data',
         //   path: {
         //     target: 'uploaddata'
@@ -26,56 +26,58 @@ export const getInitialCards = projectName => {
         //   tooltip: 'Test'
         // },
         {
-          id: 'createFeatureSet',
           icon: <FeatureSetIcon />,
-          label: 'Create features set',
+          id: 'createFeatureSet',
+          label: 'Create Features Set',
           path: {
             target: `${base_url}/feature-store/feature-sets?openPanel=true`
           },
           tooltip: ''
         },
         {
-          id: 'registerDataset',
           icon: <DataSetIcon />,
-          label: 'Register dataset',
+          id: 'registerDataset',
+          label: 'Register Dataset',
           path: {
-            // target: `${base_url}/feature-store/datasets?openPanel=true`
-            target: 'registerdataset'
+            target: `${base_url}/feature-store/datasets?openPanel=true`
+            // target: 'registerdataset' // Phase 2
           },
-          tooltip: 'some text'
+          tooltip: ''
         },
         {
-          id: 'registerFile',
           icon: <RegisterFileIcon />,
-          label: 'Register file',
+          id: 'registerArtifact',
+          label: 'Register Artifact',
           path: {
-            // target: `${base_url}/files?openPanel=true`
-            target: 'registerfile'
+            target: `${base_url}/files?openPanel=true`
+            // target: 'registerfile' // Phase 2
+          },
+          tooltip: ''
+        },
+        {
+          icon: <DataSetIcon />,
+          id: 'createFeatureVector',
+          label: 'Create a feature vector',
+          path: {
+            target: `${base_url}/feature-store/feature-vectors?openPanel=true`
           },
           tooltip: ''
         }
-        // {
-        //   path: `${base_url}/feature-store/feature-vectors`,
-        //   icon: <DataSetIcon />,
-        //   id: 'createFeatureVector',
-        //   label: 'Create a feature vector',
-        //   tooltip: ''
-        // }
       ],
       additionalLinks: [
         {
           id: 'featureset',
-          label: 'Feature Set',
+          label: 'Feature Sets',
           path: { target: `${base_url}/feature-store/feature-sets` }
         },
         {
-          id: 'files',
-          label: 'Files',
+          id: 'artifacts',
+          label: 'Artifacts',
           path: { target: `${base_url}/files` }
         },
         {
           id: 'dataset',
-          label: 'Dataset',
+          label: 'Datasets',
           path: { target: `${base_url}/feature-store/datasets` }
         },
         {
@@ -91,30 +93,42 @@ export const getInitialCards = projectName => {
         'This section enables users to develop and run functions as jobs or workflows. Those jobs can run various processing types including model training, data processing and more. This is not the final version.',
       actions: [
         {
-          id: 'createNewFunction',
+          id: 'createnewfunction',
           icon: <CreatFunctionIcon />,
-          label: 'Create new function',
+          label: 'Create New Function',
           path: { target: `${base_url}/functions?openPanel=true` },
           tooltip: ''
         },
         {
-          id: 'createNewJob',
+          id: 'createnewjob',
           icon: <CreateJobIcon />,
-          label: 'Create new job',
+          label: 'Create New Job',
           path: { target: `${base_url}/jobs/monitor-jobs/create-new-job` },
+          tooltip: ''
+        },
+        {
+          id: 'registeramodel',
+          icon: <CreateJobIcon />,
+          label: 'Register a Model',
+          path: { target: `${base_url}/models/models?openPanel=true` },
           tooltip: ''
         }
       ],
       additionalLinks: [
         {
           id: 'functions',
-          label: 'Functions',
+          label: 'ML Functions',
           path: { target: `${base_url}/functions` }
         },
         {
           id: 'jobs',
           label: 'Jobs',
           path: { target: `${base_url}/jobs` }
+        },
+        {
+          id: 'models',
+          label: 'Models',
+          path: { target: `${base_url}/models/models` }
         },
         {
           id: 'workflow',
@@ -164,6 +178,11 @@ export const getInitialCards = projectName => {
             target: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
             externalLink: true
           }
+        },
+        {
+          id: 'monitor',
+          label: 'Monitoring',
+          path: { target: `${base_url}/monitor` }
         }
       ]
     }
