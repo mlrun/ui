@@ -156,8 +156,8 @@ export const getInitialCards = projectName => {
         {
           id: 'deployServingFunction',
           icon: <CreateJobIcon />,
-          path: { target: `${base_url}/functions` },
           label: 'Deploy Serving Function',
+          path: { target: `${base_url}/functions` },
           tooltip: ''
         }
       ],

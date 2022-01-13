@@ -218,7 +218,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
                       <span
                         key={id}
                         className="link"
-                        onClick={() => handlePathExecution(path)}
+                        onClick={() => handlePathExecution({ id, label, path })}
                       >
                         {label}
                       </span>
