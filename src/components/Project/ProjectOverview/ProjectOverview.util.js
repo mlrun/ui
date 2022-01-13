@@ -5,6 +5,7 @@ import { ReactComponent as DataSetIcon } from '../../../images/overview-icon.svg
 import { ReactComponent as FeatureSetIcon } from '../../../images/set-icon.svg'
 import { ReactComponent as RegisterFileIcon } from '../../../images/flow-icon.svg'
 import { ReactComponent as CreateJobIcon } from '../../../images/run2-icon.svg'
+import { ReactComponent as DeployModelIcon } from '../../../images/rocket-icon.svg'
 // import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
 
 export const getInitialCards = projectName => {
@@ -57,7 +58,7 @@ export const getInitialCards = projectName => {
         {
           icon: <DataSetIcon />,
           id: 'createFeatureVector',
-          label: 'Create a feature vector',
+          label: 'Create a Feature Vector',
           path: {
             // target: `${base_url}/feature-store/feature-vectors?openPanel=true`
             target: 'featureVector' //  Phase 2
@@ -156,8 +157,15 @@ export const getInitialCards = projectName => {
         {
           id: 'deployServingFunction',
           icon: <CreateJobIcon />,
-          label: 'Deploy Serving Function',
-          path: { target: `${base_url}/functions` },
+          path: { target: `${base_url}/functions?openPanel=true` },
+          label: 'Deploy serving function',
+          tooltip: ''
+        },
+        {
+          id: 'deployServingFunction',
+          icon: <DeployModelIcon />,
+          path: { target: `${base_url}/models/models` },
+          label: 'Deploy Model',
           tooltip: ''
         }
       ],
