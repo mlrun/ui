@@ -1,57 +1,56 @@
 @import '../../scss/variables';
 @import '../../scss/borders';
 
-.new-feature-vector__pop-up {
-  .pop-up-dialog {
-    width: 588px;
+.new-feature-vector {
+  margin: 32px 0 15px;
+  padding: 0 2rem;
+
+  &__row {
+    margin-bottom: 15px;
   }
-}
 
-.new-feature-vector__row {
-  margin-bottom: 15px;
-}
-
-.new-feature-vector__name-tag-row {
-  display: flex;
-
-  .vector-name-wrapper {
-    width: 70%;
-    margin-right: 15px;
-
-    .vector-name {
+  &__description-row {
+    .text-area {
       width: 100%;
+      height: 164px;
     }
   }
 
-  .vector-tag-wrapper {
-    width: 30%;
+  &__name-tag-row {
+    display: flex;
 
-    .vector-tag {
-      width: 100%;
-    }
-  }
-}
+    .vector-name-wrapper {
+      width: 70%;
+      margin-right: 15px;
 
-.new-feature-vector__description-row {
-  .text-area {
-    width: 100%;
-    height: 164px;
-  }
-}
-
-.new-feature-vector__labels-row {
-  .labels-container {
-    padding: 15px;
-    border: $primaryBorder;
-    border-radius: $mainBorderRadius;
-
-    .labels-container__title {
-      color: $topaz;
+      .vector-name {
+        width: 100%;
+      }
     }
 
-    .chips-wrapper {
-      flex-wrap: wrap;
-      margin-top: 10px;
+    .vector-tag-wrapper {
+      width: 30%;
+
+      .vector-tag {
+        width: 100%;
+      }
+    }
+  }
+
+  &__labels-row {
+    .labels-container {
+      padding: 15px;
+      border: $primaryBorder;
+      border-radius: $mainBorderRadius;
+
+      .labels-container__title {
+        color: $topaz;
+      }
+
+      .chips-wrapper {
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
     }
   }
 }

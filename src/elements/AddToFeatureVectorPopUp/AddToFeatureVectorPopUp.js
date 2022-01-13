@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { groupBy, uniqBy } from 'lodash'
@@ -252,16 +251,14 @@ const AddToFeatureVectorPopUp = ({
             <AddCircle />
             Create new feature vector
           </div>
-          {isCreateFeaturePopUpOpen &&
-            createPortal(
-              <CreateFeatureVectorPopUp
-                closePopUp={() => {
-                  setIsCreateFeaturePopUpOpen(false)
-                }}
-                createFeatureVector={createFeatureVector}
-              />,
-              document.getElementById('root')
-            )}
+
+          <CreateFeatureVectorPopUp
+            closePopUp={() => {
+              setIsCreateFeaturePopUpOpen(false)
+            }}
+            createFeatureVector={createFeatureVector}
+            show={isCreateFeaturePopUpOpen}
+          />
         </PopUpDialog>
       )}
     </>

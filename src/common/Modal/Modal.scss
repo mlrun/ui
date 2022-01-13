@@ -7,7 +7,7 @@
   top: 30%;
   width: 700px;
   outline: 0;
-  z-index: 2;
+  z-index: 999;
 
   @media screen and (min-width: 992px) {
     width: 1000px;
@@ -33,12 +33,12 @@
     border-radius: $mainBorderRadius;
     box-shadow: 0 6px 26px rgba($black, 0.2);
     overflow: hidden;
-    text-align: center;
+    text-align: left;
   }
 
   &__header {
     position: relative;
-    padding: 2rem;
+    padding: 1.5rem 2rem;
     display: flex;
     flex-shrink: 0;
     justify-content: center;
@@ -48,13 +48,14 @@
     &-title {
       color: $primary;
       font-size: 2em;
+      font-weight: 400;
       text-transform: capitalize;
       margin: 0;
     }
     &-button {
       position: absolute;
-      top: 7px;
-      right: 2px;
+      top: 10px;
+      right: 5px;
     }
   }
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { connect } from 'react-redux'
 import { cloneDeep, isEmpty } from 'lodash'
 import PropTypes from 'prop-types'
@@ -204,24 +203,20 @@ const FeaturesTablePanel = ({
                 <button onClick={() => setIsCreateFeaturePopUpOpen(true)}>
                   <Edit />
                 </button>
-                {isCreateFeaturePopUpOpen &&
-                  createPortal(
-                    <CreateFeatureVectorPopUp
-                      closePopUp={() => {
-                        setIsCreateFeaturePopUpOpen(false)
-                      }}
-                      createFeatureVector={createFeatureVector}
-                      featureVectorData={{
-                        name: tableStore.features.featureVector.metadata.name,
-                        tag: tableStore.features.featureVector.metadata.tag,
-                        description:
-                          tableStore.features.featureVector.spec.description,
-                        labels:
-                          tableStore.features.featureVector.metadata.labels
-                      }}
-                    />,
-                    document.getElementById('root')
-                  )}
+                <CreateFeatureVectorPopUp
+                  closePopUp={() => {
+                    setIsCreateFeaturePopUpOpen(false)
+                  }}
+                  createFeatureVector={createFeatureVector}
+                  featureVectorData={{
+                    name: tableStore.features.featureVector.metadata.name,
+                    tag: tableStore.features.featureVector.metadata.tag,
+                    description:
+                      tableStore.features.featureVector.spec.description,
+                    labels: tableStore.features.featureVector.metadata.labels
+                  }}
+                  show={isCreateFeaturePopUpOpen}
+                />
               </div>
             )}
             <div className="features-panel__header-vector-tooltip">

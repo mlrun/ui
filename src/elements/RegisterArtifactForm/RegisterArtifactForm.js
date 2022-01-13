@@ -37,21 +37,19 @@ const RegisterArtifactForm = ({
     <div className="artifact-register-form">
       {messageByKind && (
         <div className="msg">
-          <p>{messageByKind}</p>
-          <div>
-            <p>
-              All you need to do is enter the name of the artifact and the URL
-              (e.g. s3://my-bucket/path).
-            </p>
-            <a
-              href="https://docs.mlrun.org/en/latest/store/artifacts.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link"
-            >
-              Read more
-            </a>
-          </div>
+          <p className="msg-p">{messageByKind}</p>
+          <p>
+            All you need to do is enter the name of the artifact and the URL
+            (e.g. s3://my-bucket/path).
+          </p>
+          <a
+            href="https://docs.mlrun.org/en/latest/store/artifacts.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link"
+          >
+            Read more
+          </a>
         </div>
       )}
       <Input

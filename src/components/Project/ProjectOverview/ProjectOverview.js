@@ -4,14 +4,14 @@ import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import ConfirmDialog from '../../../common/ConfirmDialog/ConfirmDialog'
+import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
 import ProjectOverviewTableRow from '../ProjectOverviewTableRow/ProjectOverviewTableRow'
+import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 import Tooltip from '../../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
-
-import RegisterArtifactPopup from '../../RegisterArtifactPopup/RegisterArtifactPopup'
 
 import projectsAction from '../../../actions/projects'
 
@@ -52,6 +52,16 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
             }
             show={modal.isOpen}
             title={modal.label}
+          />
+        )
+      case 'featureVector':
+        return (
+          <CreateFeatureVectorPopUp
+            closePopUp={isOpen =>
+              setModal(prevModal => ({ ...prevModal, isOpen }))
+            }
+            createFeatureVector={null} // TODO
+            show={modal.isOpen}
           />
         )
       default:

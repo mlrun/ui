@@ -1,7 +1,7 @@
 @import '../../scss/colors.scss';
 
 .artifact-register-form {
-  margin-bottom: 15px;
+  margin: 32px 0 15px;
   text-align: left;
 
   .input-wrapper {
@@ -10,6 +10,9 @@
 
   .msg {
     color: $primary;
-    font-size: 12px;
+
+    &-p {
+      margin: 0;
+    }
   }
 }

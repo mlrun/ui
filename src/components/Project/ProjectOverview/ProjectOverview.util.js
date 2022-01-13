@@ -28,7 +28,7 @@ export const getInitialCards = projectName => {
         {
           id: 'createFeatureSet',
           icon: <FeatureSetIcon />,
-          label: 'Create Features Set',
+          label: 'Create Feature Set',
           path: {
             target: `${base_url}/feature-store/feature-sets?openPanel=true`
           },
@@ -45,22 +45,24 @@ export const getInitialCards = projectName => {
           tooltip: 'some text'
         },
         {
-          id: 'registerFile',
+          id: 'registerArtifact',
           icon: <RegisterFileIcon />,
-          label: 'Register File',
+          label: 'Register Artifact',
           path: {
             // target: `${base_url}/files?openPanel=true`
             target: 'artifact'
           },
           tooltip: ''
+        },
+        {
+          icon: <DataSetIcon />,
+          id: 'createFeatureVector',
+          label: 'Create a feature vector',
+          path: {
+            target: 'featureVector'
+          },
+          tooltip: ''
         }
-        // {
-        //   path: `${base_url}/feature-store/feature-vectors`,
-        //   icon: <DataSetIcon />,
-        //   id: 'createFeatureVector',
-        //   label: 'Create a feature vector',
-        //   tooltip: ''
-        // }
       ],
       additionalLinks: [
         {
@@ -69,8 +71,8 @@ export const getInitialCards = projectName => {
           path: { target: `${base_url}/feature-store/feature-sets` }
         },
         {
-          id: 'files',
-          label: 'Files',
+          id: 'Artifact',
+          label: 'Artifact',
           path: { target: `${base_url}/files` }
         },
         {

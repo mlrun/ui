@@ -676,14 +676,13 @@ const FeatureStore = ({
           project={match.params.projectName}
         />
       )}
-      {createVectorPopUpIsOpen && (
-        <CreateFeatureVectorPopUp
-          closePopUp={() => {
-            setCreateVectorPopUpIsOpen(false)
-          }}
-          createFeatureVector={createFeatureVector}
-        />
-      )}
+      <CreateFeatureVectorPopUp
+        closePopUp={() => {
+          setCreateVectorPopUpIsOpen(false)
+        }}
+        createFeatureVector={createFeatureVector}
+        show={createVectorPopUpIsOpen}
+      />
     </div>
   )
 }
