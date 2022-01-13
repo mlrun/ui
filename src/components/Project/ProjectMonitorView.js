@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
 
@@ -14,8 +14,6 @@ import RegisterArtifactPopup from '../RegisterArtifactPopup/RegisterArtifactPopu
 import RoundedIcon from '../../common/RoundedIcon/RoundedIcon'
 import Select from '../../common/Select/Select'
 import ProjectArtifacts from '../../elements/ProjectArtifacts/ProjectArtifacts'
-import Tooltip from '../../common/Tooltip/Tooltip'
-import TextTooltipTemplate from '../../elements/TooltipTemplate/TextTooltipTemplate'
 import ProjectName from './ProjectName/ProjectName'
 import ProjectDescription from './ProjectDescription/ProjectDescription'
 import ProjectLabels from './ProjectLabels/ProjectLabels'
@@ -26,15 +24,10 @@ import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog'
 
-import {
-  DATASETS_TAB,
-  PANEL_CREATE_MODE,
-  PROJECTS_SETTINGS_GENERAL_TAB
-} from '../../constants'
+import { DATASETS_TAB, PANEL_CREATE_MODE } from '../../constants'
 import { launchIDEOptions } from './project.utils'
 import { formatDatetime } from '../../utils'
 
-import { ReactComponent as Settings } from '../../images/settings.svg'
 import { ReactComponent as RefreshIcon } from '../../images/refresh.svg'
 
 import './project.scss'
@@ -134,14 +127,6 @@ const ProjectMonitorView = React.forwardRef(
                     projectName={project.data.metadata.name}
                     ref={ref}
                   />
-                  <Link
-                    className="general-info__settings"
-                    to={`/projects/${match.params.projectName}/settings/${PROJECTS_SETTINGS_GENERAL_TAB}`}
-                  >
-                    <Tooltip template={<TextTooltipTemplate text="Settings" />}>
-                      <Settings />
-                    </Tooltip>
-                  </Link>
                 </div>
                 <ProjectDescription
                   editDescriptionData={editProject.description}
