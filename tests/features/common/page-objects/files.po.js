@@ -10,10 +10,10 @@ import commonTable from '../components/table.component'
 import actionMenu from '../components/action-menu.component'
 
 const actionMenuStructure = {
-  root: 'div.actions-menu__container',
+  root: '.actions-menu__container',
   menuElements: {
     open_button: 'button',
-    options: 'div.actions-menu__body div.actions-menu__option'
+    options: '.actions-menu__body .actions-menu__option'
   }
 }
 
@@ -36,7 +36,7 @@ const filesTable = {
     row: {
       root: '.table-body__row',
       fields: {
-        expand_btn: 'div.table-body__cell:nth-of-type(1) svg.expand-arrow',
+        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         name: '.table-body__cell:nth-of-type(1) a .name-wrapper span',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         labels: '.table-body__cell:nth-of-type(3)',

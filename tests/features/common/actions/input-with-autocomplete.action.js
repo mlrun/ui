@@ -17,7 +17,7 @@ async function getOptionValues(driver, options) {
 const action = {
   clearManually,
   getOptionValues: getOptionValues,
-  typeSearchebleValue: async function(driver, inputGroup, value) {
+  typeSearchableValue: async function(driver, inputGroup, value) {
     const inputField = await driver.findElement(inputGroup.inputField)
     await clearManually(inputField)
     return await inputField.sendKeys(value)

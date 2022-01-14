@@ -20,6 +20,7 @@ Feature: Files Page
     Then verify "Files_Table" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
     Then "Register_File_Button" element on "Files" should contains "Register File" value
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Files" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
 
   @passive
   Scenario: verify filtering by file name on Files page

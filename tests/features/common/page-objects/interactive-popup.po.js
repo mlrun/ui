@@ -9,6 +9,7 @@ import {
   generateInputGroup,
   generateDropdownGroup
 } from '../../common-tools/common-tools'
+import inputWithAutocomplete from '../components/input-with-autocomplete.component'
 
 const { By } = require('selenium-webdriver')
 
@@ -36,6 +37,7 @@ const membersTable = {
       root: '.table-row',
       fields: {
         name: '.member-name',
+        role: '.member-roles .select__value',
         role_dropdown: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
@@ -51,6 +53,22 @@ const membersTable = {
   }
 }
 
+const inviteNewMemberLabelTable = {
+  root: '#overlay_container .pop-up-dialog .invite-new-members',
+  header: {},
+  body: {
+    root: '.chips-input-container',
+    add_row_btn: '.new-member-btn .btn-secondary',
+    row: {
+      root: '.chip',
+      fields: {
+        label: '.chip__label',
+        remove_btn: '.item-icon-close'
+      }
+    }
+  }
+}
+
 const deployModelTable = {
   root: '.deploy-model .key-value-table',
   header: {
@@ -61,6 +79,7 @@ const deployModelTable = {
     }
   },
   body: {
+    offset: 1,
     add_row_btn: 'button.add-new-item-btn',
     row: {
       root: '.table-row',
@@ -93,20 +112,36 @@ const artifactsPreviewHeader = {
   }
 }
 
+const createFeatureVectorLabelsTable = {
+  root: '.new-feature-vector__labels-row .chips-cell',
+  header: {},
+  body: {
+    root: '.chips-wrapper',
+    add_row_btn: '.button-add',
+    row: {
+      root: '.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        label: '.chip',
+        remove_btn: '.item-icon-close'
+      }
+    }
+  }
+}
+
 // Common components
 
 const commonCancelButton = By.css(
-  'div.pop-up-dialog button.pop-up-dialog__btn_cancel'
+  '.pop-up-dialog button.pop-up-dialog__btn_cancel'
 )
 
-const commonDeleteButton = By.css('div.pop-up-dialog button.btn-danger')
+const commonDeleteButton = By.css('.pop-up-dialog .btn-danger')
 
-const commonDescription = By.css(
-  'div.pop-up-dialog div.confirm-dialog__message'
-)
+const commonDescription = By.css('.pop-up-dialog .confirm-dialog__message')
 
 const commonCrossCancelButton = By.css(
-  'div.pop-up-dialog div.pop-up-dialog__btn_close svg'
+  '.pop-up-dialog .pop-up-dialog__btn_close svg'
 )
 const commonNameInput = generateInputGroup(
   '.pop-up-dialog .artifact-register-form .input-wrapper:nth-of-type(2)',
@@ -131,14 +166,14 @@ const commonDescriptionInput = generateInputGroup(
 
 const commonConfirmButton = By.css('.pop-up-dialog .btn.btn-primary')
 
-const commonTitle = By.css('div.pop-up-dialog div.pop-up-dialog__header-text')
+const commonTitle = By.css('.pop-up-dialog .pop-up-dialog__header-text')
 
 module.exports = {
   createNewProject: {
     Title: commonTitle,
     Name_Input: inputGroup(
       generateInputGroup(
-        'div.pop-up-dialog div.input-wrapper:nth-of-type(1)',
+        '.pop-up-dialog .input-wrapper:nth-of-type(1)',
         true,
         true,
         true
@@ -146,7 +181,7 @@ module.exports = {
     ),
     Description_Input: inputGroup(
       generateInputGroup(
-        'div.pop-up-dialog div.input-wrapper:nth-of-type(2)',
+        '.pop-up-dialog .input-wrapper:nth-of-type(2)',
         true,
         false,
         true
@@ -154,35 +189,15 @@ module.exports = {
     ),
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
-    Create_Button: By.css('div.pop-up-dialog button.btn-secondary'),
-    Error_Message: By.css('div.pop-up-dialog div.error-container')
+    Create_Button: By.css('.pop-up-dialog .btn-secondary'),
+    Error_Message: By.css('.pop-up-dialog .error-message')
   },
-  archiveProject: {
+  commonPopup: {
     Title: commonTitle,
     Description: commonDescription,
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
-    Archive_Button: commonConfirmButton
-  },
-  deleteProject: {
-    Title: commonTitle,
-    Description: commonDescription,
-    Cross_Cancel_Button: commonCrossCancelButton,
-    Cancel_Button: commonCancelButton,
-    Delete_Button: commonDeleteButton
-  },
-  deleteFunction: {
-    Title: commonTitle,
-    Description: commonDescription,
-    Cross_Cancel_Button: commonCrossCancelButton,
-    Cancel_Button: By.css('div.pop-up-dialog button.btn-label'),
-    Delete_Button: commonDeleteButton
-  },
-  deleteScheduledJob: {
-    Title: commonTitle,
-    Description: commonDescription,
-    Cross_Cancel_Button: commonCrossCancelButton,
-    Cancel_Button: commonCancelButton,
+    Confirm_Button: commonConfirmButton,
     Delete_Button: commonDeleteButton
   },
   registerDataset: {
@@ -193,11 +208,6 @@ module.exports = {
     Description_Input: inputGroup(commonDescriptionInput),
     Cancel_Button: commonCancelButton,
     Register_Button: commonConfirmButton
-  },
-  createFeatureSetPopupDialog: {
-    Cross_Cancel_Button: commonCrossCancelButton,
-    Description: commonDescription,
-    OK_Button: commonConfirmButton
   },
   createMLFunctionPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -291,16 +301,38 @@ module.exports = {
         false
       )
     ),
-    Deploy_Model_Table: commonTable(deployModelTable),
+    Deploy_Model_Table: {
+      Key_Value_Table: commonTable(deployModelTable),
+      Class_Argument_Name_Input: inputGroup(
+        generateInputGroup(
+          '.deploy-model .key-value-table .input-wrapper:nth-of-type(1)',
+          true,
+          false,
+          true
+        )
+      ),
+      Class_Argument_Value_Input: inputGroup(
+        generateInputGroup(
+          '.deploy-model .key-value-table .input-wrapper:nth-of-type(2)',
+          true,
+          false,
+          true
+        )
+      ),
+      Add_New_Row_Button: By.css(
+        '.deploy-model .key-value-table .table-cell__actions .btn-add'
+      ),
+      Delete_New_Row_Button: By.css(
+        '.deploy-model .key-value-table .table-cell__actions button:nth-of-type(2)'
+      )
+    },
     Cancel_Button: commonCancelButton,
     Deploy_Button: commonConfirmButton
   },
   viewYamlPopup: {
-    Title: By.css('div.pop-up-dialog div.pop-up-dialog__header'),
+    Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
     Cross_Cancel_Button: commonCrossCancelButton,
-    YAML_Modal_Container: By.css(
-      'div.pop-up-dialog div.yaml-modal-container pre'
-    )
+    YAML_Modal_Container: By.css('.pop-up-dialog .yaml-modal-container pre')
   },
   changeProjectOwnerPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -332,6 +364,34 @@ module.exports = {
     ),
     Invite_New_Members_Button: By.css(
       ' #overlay_container .pop-up-dialog .info-row .invite-new-members-btn'
+    ),
+    Invite_New_Members_Labels_Table: commonTable(inviteNewMemberLabelTable),
+    New_Member_Name_Input: inputWithAutocomplete({
+      root: '#overlay_container .pop-up-dialog .invite-new-members',
+      elements: {
+        input: 'input',
+        options: '.suggestion-list .suggestion-row',
+        option_name: '.suggestion-row-label'
+      }
+    }),
+    New_Member_Name_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '#overlay_container .pop-up-dialog .invite-new-members .new-member-name',
+        'input',
+        '.suggestion-row',
+        '.suggestion-row-label'
+      )
+    ),
+    New_Member_Role_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '#overlay_container .pop-up-dialog .invite-new-members .new-member-role',
+        false,
+        '.select__item',
+        '.data-ellipsis'
+      )
+    ),
+    New_Member_Add_Button: By.css(
+      '#overlay_container .pop-up-dialog .invite-new-members .new-member-btn'
     ),
     Members_Table: commonTable(membersTable),
     Members_Filter_Input: inputGroup(
@@ -386,7 +446,7 @@ module.exports = {
         true
       )
     ),
-    Cancel_Button: By.css('div.pop-up-dialog button.btn-label'),
+    Cancel_Button: By.css('.pop-up-dialog .btn-label'),
     Save_Button: By.css(
       '.pop-up-dialog .secrets__footer-container .btn.btn-primary'
     )
@@ -429,7 +489,7 @@ module.exports = {
       )
     ),
     Description_Input: By.css('.pop-up-dialog .text-area-wrapper textarea'),
-    Labels_Input: By.css('.pop-up-dialog .labels-container .chips-wrapper'),
+    Labels_Table: commonTable(createFeatureVectorLabelsTable),
     Cancel_Button: commonCancelButton,
     Create_Button: commonConfirmButton
   },
@@ -457,5 +517,18 @@ module.exports = {
   artifactPreviewPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
     Preview_Header: commonTable(artifactsPreviewHeader)
+  },
+  removeMemberPopup: {
+    Title: By.css('.delete-member__pop-up .pop-up-dialog__header-text'),
+    Remove_Member_Button: By.css('.delete-member__pop-up .btn-danger')
+  },
+  discardChangesPopup: {
+    Title: By.css(
+      '.pop-up-dialog__overlay:nth-of-type(2) .pop-up-dialog__header-text'
+    ),
+    No_Button: By.css(
+      '.pop-up-dialog__overlay:nth-of-type(2) .pop-up-dialog__btn_cancel'
+    ),
+    Discard_Button: commonConfirmButton
   }
 }

@@ -9,29 +9,29 @@ import {
 import inputGroup from '../components/input-group.component'
 
 const ProjectsTableSelector = {
-  root: 'div.projects-content',
+  root: '.projects-content',
   header: {},
   body: {
     row: {
-      root: 'div.project-card',
+      root: '.project-card',
       fields: {
-        name: 'div.project-card__header div.data-ellipsis',
-        description: 'div.project-card_description',
-        running: 'div.project-card__statistic div.statistics_running',
-        failed: 'div.project-card__statistic div.statistics_failed',
+        name: '.project-card__header .data-ellipsis',
+        description: '.project-card_description',
+        running: '.project-card__statistic .statistics_running',
+        failed: '.project-card__statistic .statistics_failed',
         models:
-          'div.project-card__statistic div.project-data-card__statistics-item:nth-of-type(3) div.statistics_default',
+          '.project-card__statistic .project-data-card__statistics-item:nth-of-type(3) .statistics_default',
         features:
-          'div.project-card__statistic div.project-data-card__statistics-item:nth-of-type(4) div.statistics_default',
+          '.project-card__statistic .project-data-card__statistics-item:nth-of-type(4) .statistics_default',
         ml_functions:
-          'div.project-card__statistic div.project-data-card__statistics-item:nth-of-type(5) div.statistics_default',
+          '.project-card__statistic .project-data-card__statistics-item:nth-of-type(5) .statistics_default',
         action_menu: {
           componentType: actionMenu,
           structure: {
-            root: 'div.project-card__actions-menu',
+            root: '.project-card__actions-menu',
             menuElements: {
               open_button: 'button',
-              options: '#overlay_container div.actions-menu__option'
+              options: '#overlay_container .actions-menu__option'
             }
           }
         }
@@ -41,25 +41,25 @@ const ProjectsTableSelector = {
 }
 
 module.exports = {
-  New_Project_Button: By.css('div.projects button.btn'),
+  New_Project_Button: By.css('.projects button.btn'),
   Refresh_Projects_Button: By.css(
-    'div.projects-content-header div.data-ellipsis button'
+    '.projects-content-header .data-ellipsis button'
   ),
   Projects_Table: commonTable(ProjectsTableSelector),
   Projects_Dropdown: dropdownComponent(
     generateDropdownGroup(
-      'div.projects-content-header div.project-types-select',
+      '.projects-content-header .project-types-select',
       false, // Default Open Component
       false, // Default Options
       false // Default Option value
     )
   ),
   Projects_Sorter: By.css(
-    'div.projects-content-header-item div.sort .split-btn__button:nth-of-type(1) button > svg'
+    '.projects-content-header-item .sort .split-btn__button:nth-of-type(1) button > svg'
   ),
   Projects_Sort_Dropdown: dropdownComponent(
     generateDropdownGroup(
-      'div.projects-content-header-item div.sort .split-btn__button:nth-of-type(2)',
+      '.projects-content-header-item .sort .split-btn__button:nth-of-type(2)',
       'button > svg', // Open Component
       '.sort__body .select__item', // Options
       '.data-ellipsis > .tooltip-wrapper' // Option value

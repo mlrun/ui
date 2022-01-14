@@ -5,120 +5,112 @@ import { generateDropdownGroup } from '../../common-tools/common-tools'
 
 const createNewObject = dropdownComponent(
   generateDropdownGroup(
-    'div.main-info__toolbar div.create-new-menu',
-    'div.select__header',
+    '.main-info__toolbar .create-new-menu',
+    '.select__header',
     false,
     false
   )
 )
 
 const projectDashboardRealtimeFunctionsTable = {
-  root: 'div.project-data-card:nth-of-type(2) div.project-data-card__table',
+  root: '.project-data-card:nth-of-type(2) .project-data-card__table',
   header: {
-    root: 'div.project-data-card__table-header',
+    root: '.project-data-card__table-header',
     sorters: {
-      name: 'div.table-header__item:nth-of-type(1) div.data-ellipsis',
-      status: 'div.table-header__item:nth-of-type(2) div.data-ellipsis'
+      name: '.table-header__item:nth-of-type(1) .data-ellipsis',
+      status: '.table-header__item:nth-of-type(2) .data-ellipsis'
     }
   },
   body: {
-    root: 'div.project-data-card__table-body',
+    root: '.project-data-card__table-body',
     row: {
-      root: 'div.project-data-card__table-row',
+      root: '.project-data-card__table-row',
       fields: {
-        name:
-          'div.project-data-card__table-cell:nth-of-type(1) div.data-ellipsis',
-        status:
-          'div.project-data-card__table-cell:nth-of-type(2) div.data-ellipsis'
+        name: '.project-data-card__table-cell:nth-of-type(1) .data-ellipsis',
+        status: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis'
       }
     }
   }
 }
 
 const projectJobsAndWorkflows = {
-  root: 'div.project-data-card:nth-of-type(1) div.project-data-card__table',
+  root: '.project-data-card:nth-of-type(1) .project-data-card__table',
   header: {
-    root: 'div.project-data-card__table-header',
+    root: '.project-data-card__table-header',
     sorters: {
-      name: 'div.table-header__item:nth-of-type(1) .data-ellipsis',
-      type: 'div.table-header__item:nth-of-type(2) .data-ellipsis',
-      status: 'div.table-header__item:nth-of-type(3) .data-ellipsis',
-      started_at: 'div.table-header__item:nth-of-type(4) .data-ellipsis',
-      duration: 'div.table-header__item:nth-of-type(5) .data-ellipsis'
+      name: '.table-header__item:nth-of-type(1) .data-ellipsis',
+      type: '.table-header__item:nth-of-type(2) .data-ellipsis',
+      status: '.table-header__item:nth-of-type(3) .data-ellipsis',
+      started_at: '.table-header__item:nth-of-type(4) .data-ellipsis',
+      duration: '.table-header__item:nth-of-type(5) .data-ellipsis'
     }
   },
   body: {
-    root: 'div.project-data-card__table-body',
+    root: '.project-data-card__table-body',
     row: {
-      root: 'div.project-data-card__table-row',
+      root: '.project-data-card__table-row',
       fields: {
-        name:
-          'div.project-data-card__table-cell:nth-of-type(1) div.data-ellipsis',
-        type:
-          'div.project-data-card__table-cell:nth-of-type(2) div.data-ellipsis',
-        status:
-          'div.project-data-card__table-cell:nth-of-type(2) div.data-ellipsis',
+        name: '.project-data-card__table-cell:nth-of-type(1) .data-ellipsis',
+        type: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis',
+        status: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis',
         started_at:
-          'div.project-data-card__table-cell:nth-of-type(2) div.data-ellipsis',
-        duration:
-          'div.project-data-card__table-cell:nth-of-type(2) div.data-ellipsis'
+          '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis',
+        duration: '.project-data-card__table-cell:nth-of-type(2) .data-ellipsis'
       }
     }
   }
 }
 
 const generalInfoMonoValueCards = {
-  root: 'div.main-info__statistics-section:nth-of-type(2)',
+  root: '.main-info__statistics-section:nth-of-type(2)',
   header: {},
   body: {
     row: {
-      root: 'a.project-data-card',
+      root: '.project-data-card',
       fields: {
-        name: 'div.project-data-card__header-text',
-        value: 'div.project-data-card__statistics'
+        name: '.project-data-card__header-text',
+        value: '.project-data-card__statistics'
       }
     }
   }
 }
 
 const generalInfoJobsCardStat = {
-  root:
-    'div.main-info__statistics-section div.project-data-card:nth-of-type(1)',
+  root: '.main-info__statistics-section .project-data-card:nth-of-type(1)',
   header: {},
   body: {
-    root: 'div.project-data-card__statistics',
+    root: '.project-data-card__statistics',
     row: {
-      root: 'div.project-data-card__statistics-item',
+      root: '.project-data-card__statistics-item',
       fields: {
-        name: 'div.project-data-card__statistics-label',
-        value: 'div.project-data-card__statistics-value'
+        name: '.project-data-card__statistics-label',
+        value: '.project-data-card__statistics-value'
       }
     }
   }
 }
 
 const generalInfoRealTimeFunctionsCardStat = {
-  root:
-    'div.main-info__statistics-section div.project-data-card:nth-of-type(2)',
+  root: '.main-info__statistics-section .project-data-card:nth-of-type(2)',
   header: {},
   body: {
-    root: 'div.project-data-card__statistics',
+    root: '.project-data-card__statistics',
     row: {
-      root: 'div.project-data-card__statistics-item',
+      root: '.project-data-card__statistics-item',
       fields: {
-        name: 'div.project-data-card__statistics-label',
-        value: 'div.project-data-card__statistics-value'
+        name: '.project-data-card__statistics-label',
+        value: '.project-data-card__statistics-value'
       }
     }
   }
 }
 
 const generalInfoQuickLinks = {
-  root: 'div.general-info div.general-info__links',
+  root: '.general-info .general-info__links',
   header: {},
   body: {
     row: {
-      root: 'a.link',
+      root: '.link',
       fields: {
         link: ''
       }
@@ -131,9 +123,7 @@ module.exports = {
     '.project__content .general-info .general-info__main-data-wrapper .general-info__settings'
   ),
   Create_New: createNewObject,
-  Refresh_Button: By.css(
-    'div.main-info__toolbar div.refresh button[id=refresh]'
-  ),
+  Refresh_Button: By.css('.main-info__toolbar .refresh button[id=refresh]'),
   Dashboard_Realtime_Functions_Table: commonTable(
     projectDashboardRealtimeFunctionsTable
   ),

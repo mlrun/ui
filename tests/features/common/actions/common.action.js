@@ -1,10 +1,6 @@
-import { timeout, test_url, test_port } from '../../../config'
+import { timeout } from '../../../config'
 import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
-import http from 'http'
-
-const REACT_APP_MLRUN_API_URL =
-  'http://mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 
 async function scrollToWebElement(driver, element) {
   await driver.executeScript('arguments[0].scrollIntoView()', element)
@@ -110,144 +106,33 @@ const action = {
     const element = await driver.findElement(component)
     return (await element.getAttribute(attribute)) === value
   },
-  collapseAccorditionSection: async function(driver, collapseComponet) {
-    const element = await driver.findElement(collapseComponet)
+  collapseAccordionSection: async function(driver, collapseComponent) {
+    const element = await driver.findElement(collapseComponent)
     const attributes = await element.getAttribute('class')
     const flag = attributes.includes('open')
     if (flag) {
       await element.click()
     }
   },
-  expandAccorditionSection: async function(driver, collapseComponet) {
-    const element = await driver.findElement(collapseComponet)
+  expandAccordionSection: async function(driver, collapseComponent) {
+    const element = await driver.findElement(collapseComponent)
     const attributes = await element.getAttribute('class')
     const flag = attributes.includes('open')
     if (!flag) {
       await element.click()
     }
   },
-  isAccorditionSectionExpanded: async function(driver, collapseComponet) {
-    const element = await driver.findElement(collapseComponet)
+  isAccordionSectionExpanded: async function(driver, collapseComponent) {
+    const element = await driver.findElement(collapseComponent)
     const attributes = await element.getAttribute('class')
     const flag = attributes.includes('open')
     expect(flag).equal(true)
   },
-  isAccorditionSectionCollapsed: async function(driver, collapseComponet) {
-    const element = await driver.findElement(collapseComponet)
+  isAccordionSectionCollapsed: async function(driver, collapseComponent) {
+    const element = await driver.findElement(collapseComponent)
     const attributes = await element.getAttribute('class')
     const flag = attributes.includes('open')
     expect(flag).equal(false)
-  },
-  deleteAPIMLProject: async function(mlProjectName, expectedStatusCode) {
-    const options = {
-      host: test_url,
-      port: test_port,
-      path: `/api/projects/${mlProjectName}`,
-      method: 'DELETE'
-    }
-
-    const req = http.get(options)
-    req.end()
-
-    req.once('response', async function(res) {
-      await expect(res.statusCode).equal(expectedStatusCode)
-    })
-  },
-  deleteAPIFeatureSet: async function(
-    projectName,
-    featureSetName,
-    expectedStatusCode
-  ) {
-    const options = {
-      host: test_url,
-      port: test_port,
-      path: `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/feature-sets/${featureSetName}`,
-      method: 'DELETE'
-    }
-    const req = http.get(options)
-    req.end()
-
-    req.once('response', async function(res) {
-      await expect(res.statusCode).equal(expectedStatusCode)
-    })
-  },
-  deleteAPIFeatureVector: async function(
-    projectName,
-    featureVectorName,
-    expectedStatusCode
-  ) {
-    const options = {
-      host: test_url,
-      port: test_port,
-      path: `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/feature-vectors/${featureVectorName}`,
-      method: 'DELETE'
-    }
-    const req = http.get(options)
-    req.end()
-
-    req.once('response', async function(res) {
-      await expect(res.statusCode).equal(expectedStatusCode)
-    })
-  },
-  deleteAPIFunction: async function(
-    projectName,
-    functionName,
-    expectedStatusCode
-  ) {
-    const options = {
-      host: test_url,
-      port: test_port,
-      path: `${REACT_APP_MLRUN_API_URL}/api/projects/${projectName}/functions/${functionName}`,
-      method: 'DELETE'
-    }
-    const req = http.get(options)
-    req.end()
-
-    req.once('response', async function(res) {
-      await expect(res.statusCode).equal(expectedStatusCode)
-    })
-  },
-  deleteAPIJob: async function(projectName, jobName, expectedStatusCode) {
-    const options = {
-      host: test_url,
-      port: test_port,
-      path: `${REACT_APP_MLRUN_API_URL}/api/runs?project=${projectName}&run=${jobName}`,
-      method: 'DELETE'
-    }
-    const req = http.get(options)
-    req.end()
-
-    req.once('response', async function(res) {
-      await expect(res.statusCode).equal(expectedStatusCode)
-    })
-  },
-  createAPIMLProject: async function(mlProjectName, expectedStatusCode) {
-    const project_data = JSON.stringify({
-      metadata: {
-        name: mlProjectName
-      },
-      spec: {
-        description: 'automation test description'
-      }
-    })
-    const options = {
-      host: test_url,
-      port: test_port,
-      path: '/api/projects',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Content-Length': project_data.length
-      }
-    }
-
-    const req = await http.request(options)
-    await req.write(project_data)
-    await req.end()
-
-    await req.once('response', async function(res) {
-      expect(res.statusCode).equal(expectedStatusCode)
-    })
   },
   getElementText: async function(driver, component) {
     const element = await driver.findElement(component)

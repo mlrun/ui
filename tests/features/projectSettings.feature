@@ -6,10 +6,12 @@ Feature: Project Settings page
     @passive
     @inProgress
     Scenario: Verify all mandatory components on General Tab
+        * create "automation-test-name8" MLRun Project with code 201
+        And set tear-down property "project" created with "automation-test-name8" value
         Given open url
-        And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on cell with value "automation-test-name8" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify breadcrumbs "project" label should be equal "default" value
+        Then verify breadcrumbs "project" label should be equal "automation-test-name8" value
         Then click on "Project_Settings_Button" element on "Project" wizard
         Then verify "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard should contains "Project_Settings"."Tab_List"
         Then verify "General" tab is active in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
@@ -20,9 +22,10 @@ Feature: Project Settings page
         Then click on "Source_URL_Edit_Button" element on "Project_Settings_General_Tab" wizard
         Then type value "   " to "Source_URL_Edit_Input" field on "Project_Settings_General_Tab" wizard
         Then verify "Source_URL_Edit_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        And remove "automation-test-name8" MLRun Project with code 204
 
     Scenario: Verify Parameters Table on General Tab
-        * create "automation-test-name5" MLRun Project with code 200
+        * create "automation-test-name5" MLRun Project with code 201
         And set tear-down property "project" created with "automation-test-name5" value
         Given open url
         And click on cell with value "automation-test-name5" in "name" column in "Projects_Table" table on "Projects" wizard

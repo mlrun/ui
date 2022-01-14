@@ -53,6 +53,65 @@ Feature: MLRun Project Page
         Then verify "Apply_Button" element visibility on "Project_Members_Popup" wizard
         Then verify "Footer_Annotation_Label" element visibility on "Project_Members_Popup" wizard
 
+    @enabledProjectMembership
+    Scenario: Verify behaviour of Invite New Members on Project Member Popup
+        * create "automation-test" MLRun Project with code 200
+        And set tear-down property "project" created with "automation-test" value
+        Given open url
+        And click on cell with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then click on "Members_Link" element on "Project" wizard
+        Then verify if "Project_Members_Popup" popup dialog appears
+        Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
+        Then type value "a" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
+        Then searchable fragment "a" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
+        Then select "all_users" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
+        Then type value "a" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
+        Then type value "ig" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
+        Then searchable fragment "ig" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
+        Then select "iguazio" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
+        Then type value "adm" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
+        Then searchable fragment "adm" should be in every suggested option into "New_Member_Name_Input" on "Project_Members_Popup" wizard
+        Then select "admin" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
+        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
+            |  label    |
+            | all_users |
+            | iguazio   |
+            | admin     |
+        When click on "remove_btn" in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
+            |  label    |
+            | iguazio   |
+            | all_users |
+        Then verify values in "Invite_New_Members_Labels_Table" table on "Project_Members_Popup" wizard
+            |  label    |
+            | admin     |
+        Then select "Admin" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
+        Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
+        Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
+        Then type value "all" to "New_Member_Name_Input" field on "Project_Members_Popup" wizard
+        Then select "all_users" option in "New_Member_Name_Dropdown" dropdown on "Project_Members_Popup" wizard
+        Then select "Viewer" option in "New_Member_Role_Dropdown" dropdown on "Project_Members_Popup" wizard
+        Then click on "New_Member_Add_Button" element on "Project_Members_Popup" wizard
+        Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
+            | name      | role   |
+            | admin     | Admin  |
+            | all_users | Viewer |
+        When click on "delete_btn" in "Members_Table" table on "Project_Members_Popup" wizard with offset "false"
+            | name  |
+            | admin |
+        Then verify if "Remove_Member_Popup" popup dialog appears
+        Then verify "Remove_Member_Button" element visibility on "Remove_Member_Popup" wizard
+        Then "Remove_Member_Button" element on "Remove_Member_Popup" should contains "Remove member" value
+        Then click on "Remove_Member_Button" element on "Remove_Member_Popup" wizard
+        Then verify values in "Members_Table" table on "Project_Members_Popup" wizard
+            | name      | role   |
+            | all_users | Viewer |
+        Then click on "Discard_Button" element on "Project_Members_Popup" wizard
+        Then verify if "Discard_Changes_Popup" popup dialog appears
+        Then "No_Button" element on "Discard_Changes_Popup" should contains "No" value
+        Then "Discard_Button" element on "Discard_Changes_Popup" should contains "Discard" value
+        And remove "automation-test" MLRun Project with code 204
+
     @passive
     Scenario: Check MLRun logo redirection
         Given open url
@@ -71,7 +130,7 @@ Feature: MLRun Project Page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "Register File" option in "Create_New" dropdown on "Project" wizard
-        Then verify if "Register_File_Popup" popup dialog appears
+        Then "Title" element on "Register_File_Popup" should contains "Register file" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
@@ -99,7 +158,7 @@ Feature: MLRun Project Page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "Register Model" option in "Create_New" dropdown on "Project" wizard
-        Then verify if "Register_Model_Popup" popup dialog appears
+        Then "Title" element on "Register_Model_Popup" should contains "Register model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
@@ -125,7 +184,7 @@ Feature: MLRun Project Page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "Register Dataset" option in "Create_New" dropdown on "Project" wizard
-        Then verify if "Register_Dataset" popup dialog appears
+        Then "Title" element on "Register_Dataset" should contains "Register dataset" value
         Then verify "Name_Input" element visibility on "Register_Dataset" wizard
         Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Artifact_Names_Unique"
         Then verify "Target_Path_Input" element visibility on "Register_Dataset" wizard
@@ -191,7 +250,7 @@ Feature: MLRun Project Page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
-        Then verify if "Create_ML_Function_Popup" popup dialog appears
+        Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -245,7 +304,7 @@ Feature: MLRun Project Page
         Then verify "Create_New" element visibility on "Project" wizard
         Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then select "ML Function" option in "Create_New" dropdown on "Project" wizard
-        Then verify if "Create_ML_Function_Popup" popup dialog appears
+        Then "Title" element on "Create_ML_Function_Popup" should contains "Create New Function" value
         And verify "Cross_Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -298,7 +357,7 @@ Feature: MLRun Project Page
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
 
     @passive
-    Scenario: Check all mandatory components on Create New Job
+    Scenario: Check all mandatory components on Create New Feature Set
         Given open url
         And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -409,6 +468,7 @@ Feature: MLRun Project Page
         Then verify "Table_Labels_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Start_Time_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @passive
@@ -447,7 +507,7 @@ Feature: MLRun Project Page
         Then select "tab" with "Jobs" value in breadcrumbs menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs" value
-        When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
         Then select "tab" with "ML functions" value in breadcrumbs menu
         And wait load page
