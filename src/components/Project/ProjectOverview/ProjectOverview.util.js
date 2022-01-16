@@ -3,9 +3,13 @@ import React from 'react'
 import { ReactComponent as CreatFunctionIcon } from '../../../images/function2-icon.svg'
 import { ReactComponent as DataSetIcon } from '../../../images/overview-icon.svg'
 import { ReactComponent as FeatureSetIcon } from '../../../images/set-icon.svg'
-import { ReactComponent as RegisterFileIcon } from '../../../images/flow-icon.svg'
+import { ReactComponent as RegisterArtifactIcon } from '../../../images/flow-icon.svg'
 import { ReactComponent as CreateJobIcon } from '../../../images/run2-icon.svg'
 import { ReactComponent as DeployModelIcon } from '../../../images/rocket-icon.svg'
+import { ReactComponent as FeatureVectorIcon } from '../../../images/vector-icon.svg'
+import { ReactComponent as RegisterModelIcon } from '../../../images/model-icon.svg'
+import { ReactComponent as RTFunctionIcon } from '../../../images/realtime-icon-b.svg'
+import { ReactComponent as ServingFunctionIcon } from '../../../images/serving-icon.svg'
 // import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
 
 export const getInitialCards = projectName => {
@@ -46,7 +50,7 @@ export const getInitialCards = projectName => {
           tooltip: ''
         },
         {
-          icon: <RegisterFileIcon />,
+          icon: <RegisterArtifactIcon />,
           id: 'registerArtifact',
           label: 'Register Artifact',
           path: {
@@ -56,7 +60,7 @@ export const getInitialCards = projectName => {
           tooltip: ''
         },
         {
-          icon: <DataSetIcon />,
+          icon: <FeatureVectorIcon />,
           id: 'createFeatureVector',
           label: 'Create a Feature Vector',
           path: {
@@ -110,7 +114,7 @@ export const getInitialCards = projectName => {
         },
         {
           id: 'registeramodel',
-          icon: <CreateJobIcon />,
+          icon: <RegisterModelIcon />,
           label: 'Register Model',
           path: {
             // target: `${base_url}/models/models?openPanel=true`
@@ -149,7 +153,7 @@ export const getInitialCards = projectName => {
       actions: [
         {
           id: 'createRealTimeFunction',
-          icon: <CreateJobIcon />,
+          icon: <RTFunctionIcon />,
           label: 'Create RT function',
           path: {
             target: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
@@ -159,7 +163,7 @@ export const getInitialCards = projectName => {
         },
         {
           id: 'deployServingFunction',
-          icon: <CreateJobIcon />,
+          icon: <ServingFunctionIcon />,
           path: { target: `${base_url}/functions?openPanel=true` },
           label: 'Deploy serving function',
           tooltip: ''

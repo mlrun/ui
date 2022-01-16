@@ -77,15 +77,15 @@
       position: relative;
       display: flex;
       flex-flow: column;
-      flex: 1 0 auto;
-      padding-bottom: 50px;
+      flex: 1 0 0%;
+      padding-bottom: 40px;
     }
 
     &__center {
       display: flex;
       flex-flow: column nowrap;
       padding: 20px 1em 0;
-      height: 220px;
+      height: 200px;
       overflow: hidden;
       transition: height 0.5s ease-in-out;
 
@@ -99,7 +99,7 @@
       justify-content: flex-end;
       align-items: center;
       min-height: 66px;
-      max-height: 66px;
+      height: 66px;
     }
 
     &__header {
@@ -138,6 +138,7 @@
         bottom: 0;
         left: 0;
         right: 0;
+        font-size: 0.75rem;
 
         svg {
           transform: rotate(90deg);

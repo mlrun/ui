@@ -91,8 +91,8 @@ const ProjectOverview = ({
       case 'featureVector':
         return (
           <CreateFeatureVectorPopUp
-            closePopUp={isOpen =>
-              setModal(prevModal => ({ ...prevModal, isOpen }))
+            closePopUp={() =>
+              setModal(prevModal => ({ ...prevModal, isOpen: false }))
             }
             createFeatureVector={handleCreateFeatureVector} // TODO
             show={modal.isOpen}
@@ -227,17 +227,17 @@ const ProjectOverview = ({
                     onClick={handlePathExecution}
                     showActions={selectedActionsIndex === index}
                   />
-                  {actions.length > 3 && (
-                    <p
-                      className="project-overview-card__actions-toogler"
-                      aria-expanded={selectedActionsIndex === index}
-                      onClick={() => handleActionsViewToggle(index)}
-                    >
-                      <ArrowIcon />
-                      <span>Additional Actions</span>
-                    </p>
-                  )}
                 </div>
+                {actions.length > 3 && (
+                  <p
+                    className="project-overview-card__actions-toogler"
+                    aria-expanded={selectedActionsIndex === index}
+                    onClick={() => handleActionsViewToggle(index)}
+                  >
+                    <ArrowIcon />
+                    <span>Additional Actions</span>
+                  </p>
+                )}
               </div>
               <div
                 className="project-overview-card__center"
