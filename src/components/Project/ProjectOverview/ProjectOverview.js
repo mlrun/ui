@@ -14,6 +14,7 @@ import Tooltip from '../../../common/Tooltip/Tooltip'
 import TextTooltipTemplate from '../../../elements/TooltipTemplate/TextTooltipTemplate'
 
 import projectsAction from '../../../actions/projects'
+import tableActions from '../../../actions/table'
 
 import { handlePath, getInitialCards } from './ProjectOverview.util'
 import { handleFetchProjectError } from '../project.utils'
@@ -25,7 +26,13 @@ import { ReactComponent as ArrowIcon } from '../../../images/arrow.svg'
 
 import './ProjectOverview.scss'
 
-const ProjectOverview = ({ fetchProject, history, match, project }) => {
+const ProjectOverview = ({
+  createFeatureVector,
+  fetchProject,
+  history,
+  match,
+  project
+}) => {
   const [selectedActionsIndex, setSelectedActionsIndex] = useState(null)
   const [confirmData, setConfirmData] = useState(null)
   const [modal, setModal] = useState({ isOpen: false, label: '', name: '' })
@@ -38,10 +45,37 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
     return projectName ? getInitialCards(projectName) : {}
   }, [projectName])
 
+  const handleCreateFeatureVector = featureVectorData => {
+    createFeatureVector({
+      currentProject: projectName,
+      featureVector: {
+        kind: 'FeatureVector',
+        metadata: {
+          name: featureVectorData.name,
+          project: projectName,
+          tag: featureVectorData.tag,
+          labels: featureVectorData.labels
+        },
+        spec: {
+          description: featureVectorData.description,
+          features: [],
+          label_feature: ''
+        },
+        status: {}
+      },
+      groupedFeatures: {
+        [projectName]: []
+      },
+      isNewFeatureVector: true
+    })
+    setModal(prevModal => ({ ...prevModal, isOpen: false }))
+  }
+
   const renderPopupContent = () => {
     switch (modal.name) {
-      case 'dataset':
       case 'artifact':
+      case 'dataset':
+      case 'model':
         return (
           <RegisterArtifactPopup
             artifactKind={modal.name}
@@ -60,7 +94,7 @@ const ProjectOverview = ({ fetchProject, history, match, project }) => {
             closePopUp={isOpen =>
               setModal(prevModal => ({ ...prevModal, isOpen }))
             }
-            createFeatureVector={null} // TODO
+            createFeatureVector={handleCreateFeatureVector} // TODO
             show={modal.isOpen}
           />
         )
@@ -239,7 +273,9 @@ ProjectOverview.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
   fetchProject: projectName =>
-    dispatch(projectsAction.fetchProject(projectName))
+    dispatch(projectsAction.fetchProject(projectName)),
+  createFeatureVector: featureVectorData =>
+    dispatch(tableActions.setFeaturesPanelData(featureVectorData))
 })
 
 export default connect(

@@ -15,11 +15,13 @@ const TextTooltipTemplate = ({ text, warning }) => {
 
   useEffect(() => {
     if (textRef?.current) {
-      const { width } = textRef.current?.getBoundingClientRect()
-
+      const { right, width } = textRef.current?.getBoundingClientRect()
       setStyle({
         padding: `6px ${horizontalPadding}px`,
-        wordBreak: width > window.innerWidth ? 'break-word' : 'unset'
+        wordBreak:
+          width > window.innerWidth || right > window.innerWidth
+            ? 'break-word'
+            : 'unset'
       })
     }
   }, [])

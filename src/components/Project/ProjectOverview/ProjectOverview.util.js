@@ -111,8 +111,11 @@ export const getInitialCards = projectName => {
         {
           id: 'registeramodel',
           icon: <CreateJobIcon />,
-          label: 'Register a Model',
-          path: { target: `${base_url}/models/models?openPanel=true` },
+          label: 'Register Model',
+          path: {
+            // target: `${base_url}/models/models?openPanel=true`
+            target: 'model'
+          },
           tooltip: ''
         }
       ],
@@ -162,7 +165,7 @@ export const getInitialCards = projectName => {
           tooltip: ''
         },
         {
-          id: 'deployServingFunction',
+          id: 'deployModel',
           icon: <DeployModelIcon />,
           path: { target: `${base_url}/models/models` },
           label: 'Deploy Model',
