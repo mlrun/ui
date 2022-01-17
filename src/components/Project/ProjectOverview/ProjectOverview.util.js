@@ -3,9 +3,13 @@ import React from 'react'
 import { ReactComponent as CreatFunctionIcon } from '../../../images/function2-icon.svg'
 import { ReactComponent as DataSetIcon } from '../../../images/overview-icon.svg'
 import { ReactComponent as FeatureSetIcon } from '../../../images/set-icon.svg'
-import { ReactComponent as RegisterFileIcon } from '../../../images/flow-icon.svg'
+import { ReactComponent as RegisterArtifactIcon } from '../../../images/flow-icon.svg'
 import { ReactComponent as CreateJobIcon } from '../../../images/run2-icon.svg'
 import { ReactComponent as DeployModelIcon } from '../../../images/rocket-icon.svg'
+import { ReactComponent as FeatureVectorIcon } from '../../../images/vector-icon.svg'
+import { ReactComponent as RegisterModelIcon } from '../../../images/model-icon.svg'
+import { ReactComponent as RTFunctionIcon } from '../../../images/realtime-icon-b.svg'
+import { ReactComponent as ServingFunctionIcon } from '../../../images/serving-icon.svg'
 // import { ReactComponent as UploadIcon } from '../../../images/upload-icon.svg'
 
 export const getInitialCards = projectName => {
@@ -41,26 +45,27 @@ export const getInitialCards = projectName => {
           label: 'Register Dataset',
           path: {
             target: `${base_url}/feature-store/datasets?openPanel=true`
-            // target: 'registerdataset' // Phase 2
+            // target: 'dataset' // Phase 2
           },
           tooltip: ''
         },
         {
-          icon: <RegisterFileIcon />,
+          icon: <RegisterArtifactIcon />,
           id: 'registerArtifact',
           label: 'Register Artifact',
           path: {
             target: `${base_url}/files?openPanel=true`
-            // target: 'registerfile' // Phase 2
+            // target: 'artifact' // Phase 2
           },
           tooltip: ''
         },
         {
-          icon: <DataSetIcon />,
+          icon: <FeatureVectorIcon />,
           id: 'createFeatureVector',
           label: 'Create a Feature Vector',
           path: {
             target: `${base_url}/feature-store/feature-vectors?openPanel=true`
+            // target: 'featureVector' //  Phase 2
           },
           tooltip: ''
         }
@@ -109,9 +114,12 @@ export const getInitialCards = projectName => {
         },
         {
           id: 'registeramodel',
-          icon: <CreateJobIcon />,
-          label: 'Register a Model',
-          path: { target: `${base_url}/models/models?openPanel=true` },
+          icon: <RegisterModelIcon />,
+          label: 'Register Model',
+          path: {
+            target: `${base_url}/models/models?openPanel=true`
+            // target: 'model'
+          },
           tooltip: ''
         }
       ],
@@ -145,7 +153,7 @@ export const getInitialCards = projectName => {
       actions: [
         {
           id: 'createRealTimeFunction',
-          icon: <CreateJobIcon />,
+          icon: <RTFunctionIcon />,
           label: 'Create RT function',
           path: {
             target: `${window.mlrunConfig.nuclioUiUrl}${base_url}/functions`,
@@ -155,16 +163,16 @@ export const getInitialCards = projectName => {
         },
         {
           id: 'deployServingFunction',
-          icon: <CreateJobIcon />,
-          path: { target: `${base_url}/functions?openPanel=true` },
+          icon: <ServingFunctionIcon />,
           label: 'Deploy serving function',
+          path: { target: `${base_url}/functions?openPanel=true` },
           tooltip: ''
         },
         {
-          id: 'deployServingFunction',
+          id: 'deployModel',
           icon: <DeployModelIcon />,
-          path: { target: `${base_url}/models/models` },
           label: 'Deploy Model',
+          path: { target: `${base_url}/models/models` },
           tooltip: ''
         }
       ],
