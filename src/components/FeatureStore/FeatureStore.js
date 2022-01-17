@@ -79,6 +79,7 @@ const FeatureStore = ({
   removeEntities,
   removeEntity,
   removeFeature,
+  removeFeatureSet,
   removeFeatureSets,
   removeFeatureStoreError,
   removeFeatureVector,
@@ -185,25 +186,36 @@ const FeatureStore = ({
     }
   }, [setTablePanelOpen, match.params.projectName, match.params.pageTab])
 
-  const handleRemoveFeatureVector = useCallback(
-    featureVector => {
+  const handleRemoveRowData = useCallback(
+    (item, removeData, content) => {
       const newStoreSelectedRowData = {
-        ...featureStore.featureVectors.selectedRowData.content
+        ...content
       }
       const newPageDataSelectedRowData = { ...pageData.selectedRowData }
 
-      delete newStoreSelectedRowData[featureVector.key.identifier]
-      delete newPageDataSelectedRowData[featureVector.key.identifier]
+      delete newStoreSelectedRowData[item.key.identifier]
+      delete newPageDataSelectedRowData[item.key.identifier]
 
-      removeFeatureVector(newStoreSelectedRowData)
+      removeData(newStoreSelectedRowData)
       setPageData(state => ({
         ...state,
         selectedRowData: newPageDataSelectedRowData
       }))
     },
+    [pageData.selectedRowData]
+  )
+
+  const handleRemoveFeatureVector = useCallback(
+    featureVector => {
+      handleRemoveRowData(
+        featureVector,
+        removeFeatureVector,
+        featureStore.featureVectors.selectedRowData.content
+      )
+    },
     [
       featureStore.featureVectors.selectedRowData.content,
-      pageData.selectedRowData,
+      handleRemoveRowData,
       removeFeatureVector
     ]
   )
@@ -216,24 +228,13 @@ const FeatureStore = ({
           : featureStore.entities.selectedRowData.content
       const removeData =
         feature.key.type === 'feature' ? removeFeature : removeEntity
-      const newStoreSelectedRowData = {
-        ...content
-      }
-      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
 
-      delete newStoreSelectedRowData[feature.key.identifier]
-      delete newPageDataSelectedRowData[feature.key.identifier]
-
-      removeData(newStoreSelectedRowData)
-      setPageData(state => ({
-        ...state,
-        selectedRowData: newPageDataSelectedRowData
-      }))
+      handleRemoveRowData(feature, removeData, content)
     },
     [
       featureStore.entities.selectedRowData.content,
       featureStore.features.selectedRowData.content,
-      pageData.selectedRowData,
+      handleRemoveRowData,
       removeEntity,
       removeFeature
     ]
@@ -241,24 +242,31 @@ const FeatureStore = ({
 
   const handleRemoveDataSet = useCallback(
     dataSet => {
-      const newStoreSelectedRowData = {
-        ...artifactsStore.dataSets.selectedRowData.content
-      }
-      const newPageDataSelectedRowData = { ...pageData.selectedRowData }
-
-      delete newStoreSelectedRowData[dataSet.key.value]
-      delete newPageDataSelectedRowData[dataSet.key.value]
-
-      removeDataSet(newStoreSelectedRowData)
-      setPageData(state => ({
-        ...state,
-        selectedRowData: newPageDataSelectedRowData
-      }))
+      handleRemoveRowData(
+        dataSet,
+        removeDataSet,
+        artifactsStore.dataSets.selectedRowData.content
+      )
     },
     [
       artifactsStore.dataSets.selectedRowData.content,
-      pageData.selectedRowData,
+      handleRemoveRowData,
       removeDataSet
+    ]
+  )
+
+  const handleRemoveFeatureSet = useCallback(
+    featureSet => {
+      handleRemoveRowData(
+        featureSet,
+        removeFeatureSet,
+        featureStore.featureSets.selectedRowData.content
+      )
+    },
+    [
+      featureStore.featureSets.selectedRowData.content,
+      handleRemoveRowData,
+      removeFeatureSet
     ]
   )
 
@@ -434,6 +442,8 @@ const FeatureStore = ({
             ? handleRemoveFeatureVector
             : match.params.pageTab === FEATURES_TAB
             ? handleRemoveFeature
+            : match.params.pageTab === FEATURE_SETS_TAB
+            ? handleRemoveFeatureSet
             : handleRemoveDataSet,
           onDeleteFeatureVector,
           getPopUpTemplate,
@@ -447,6 +457,7 @@ const FeatureStore = ({
     getPopUpTemplate,
     handleRemoveDataSet,
     handleRemoveFeature,
+    handleRemoveFeatureSet,
     handleRemoveFeatureVector,
     handleRequestOnExpand,
     isDemoMode,
