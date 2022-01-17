@@ -42,7 +42,7 @@ const ProjectLabels = ({
 
   return (
     <ChipCell
-      chipOptions={getChipOptions('labels')}
+      chipOptions={getChipOptions('metrics')}
       addChip={handleAddProjectLabel}
       editChip={handleUpdateProjectLabels}
       elements={projectLabels}
