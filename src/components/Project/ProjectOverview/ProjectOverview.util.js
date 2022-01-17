@@ -164,15 +164,15 @@ export const getInitialCards = projectName => {
         {
           id: 'deployServingFunction',
           icon: <ServingFunctionIcon />,
-          path: { target: `${base_url}/functions?openPanel=true` },
           label: 'Deploy serving function',
+          path: { target: `${base_url}/functions?openPanel=true` },
           tooltip: ''
         },
         {
           id: 'deployModel',
           icon: <DeployModelIcon />,
-          path: { target: `${base_url}/models/models` },
           label: 'Deploy Model',
+          path: { target: `${base_url}/models/models` },
           tooltip: ''
         }
       ],
