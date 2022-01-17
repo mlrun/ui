@@ -972,13 +972,18 @@
 
 @mixin gradient($type) {
   @if $type == 'card' {
-    background: linear-gradient(
-      90deg,
-      #d873e1cc -20.43%,
-      #dd71d5cc -20.42%,
-      #fc658fcc 48.31%,
-      #ffb971cc 111.56%
-    );
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px;
+    padding: 4px 0 0 0;
+    background: linear-gradient(90deg, #16bc9e, #1fcc9e);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
   } @else {
     background: linear-gradient(
       88.84deg,
@@ -987,8 +992,4 @@
       #ffb971 107.73%
     );
   }
-}
-
-@mixin gradient-hover {
-  background: linear-gradient(90deg, #d873e1 0%, #fc658f 51.04%, #ffb971 100%);
 }
