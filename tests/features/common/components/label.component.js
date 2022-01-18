@@ -13,7 +13,8 @@ module.exports = function(labelStructure) {
   }
   if (labelStructure.elements.hint) {
     element.hint = By.css(
-      `${labelStructure.root} ${labelStructure.elements.hint}`
+      // `${labelStructure.root} ${labelStructure.elements.hint}`
+      `${labelStructure.elements.hint}`
     )
   }
   return element

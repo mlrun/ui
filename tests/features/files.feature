@@ -8,14 +8,18 @@ Feature: Files Page
     And wait load page
     And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
+    Then verify breadcrumbs "project" label should be equal "default" value
     And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Files" value
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "Files" wizard
     Then verify "Table_Tree_Filter_Dropdown" element visibility on "Files" wizard
     Then verify "Show_Iterations_Checkbox" element visibility on "Files" wizard
     Then verify "Table_Refresh_Button" element visibility on "Files" wizard
     Then verify "Files_Table" element visibility on "Files" wizard
+    Then verify "Register_File_Button" element visibility on "Files" wizard
+    Then "Register_File_Button" element on "Files" should contains "Register File" value
 
   @passive
   Scenario: verify filtering by file name on Files page
@@ -23,8 +27,10 @@ Feature: Files Page
     And wait load page
     And click on cell with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
+    Then verify breadcrumbs "project" label should be equal "default" value
     And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Files" value
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then type value "test" to "Table_Name_Filter_Input" field on "Files" wizard
     Then click on "Table_Refresh_Button" element on "Files" wizard
@@ -54,9 +60,11 @@ Feature: Files Page
     Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
     Then verify "New_File_Type_Dropdown" element visibility on "Register_File_Popup" wizard
+    Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_File"."Type_Options"
     Then verify "Cancel_Button" element visibility on "Register_File_Popup" wizard
+    Then "Cancel_Button" element on "Register_File_Popup" should contains "Cancel" value
     Then verify "Register_Button" element visibility on "Register_File_Popup" wizard
-#        TO DO: should refactor checking for input warnings
+    Then "Register_Button" element on "Register_File_Popup" should contains "Register" value
 
   @passive
   @inProgress
@@ -76,8 +84,8 @@ Feature: Files Page
     Then verify "Download_Button" element visibility on "Files_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
-    Then verify "Overview_Hash_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Files_Hash"
-    Then verify "Overview_UID_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Files_UID"
+    Then verify "Overview_Hash_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
+    Then verify "Overview_UID_Header" on "Files_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
 
   @passive
   @inProgress
@@ -88,7 +96,7 @@ Feature: Files Page
     And click on cell with value "Files" in "link" column in "General_Info_Quick_Links" table on "Project" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
-    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
+    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
